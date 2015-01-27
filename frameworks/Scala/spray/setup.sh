@@ -1,4 +1,5 @@
 #!/bin/bash
+export SBT_HOME=${IROOT}/sbt
 
 ${SBT_HOME}/bin/sbt assembly
 

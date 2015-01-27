@@ -75,7 +75,7 @@ $app->get('/updates', function(Request $request) {
 
 // Test 6: Plaintext
 $app->get('/plaintext', function() {
-    return new Response('Hello World!', 200, array('Content-Type' => 'text/plain'));
+    return new Response('Hello, World!', 200, array('Content-Type' => 'text/plain'));
 });
 
 $app->run();

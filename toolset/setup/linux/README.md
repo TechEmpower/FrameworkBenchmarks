@@ -105,17 +105,16 @@ The function `Installer#__install_server_software` is called to install
 server software. Here are the steps it follows: 
 
 1. Use `--test` and `--exclude` flags to decide which frameworks need installation. For each test, do the following: 
-2. If this test has a `bash_profile.sh` file, load the environment from it
-3. Find installation directory for this test, set environment variable `IROOT`
-4. Find root directory for this test, set environment variable `TROOT`
-5. Load the functions from `toolset/setup/linux/bash_functions.sh`
-6. Execute the `install.sh` for this test. This normally uses functions 
+2. Find installation directory for this test, set environment variable `IROOT`
+3. Find root directory for this test, set environment variable `TROOT`
+4. Load the functions from `toolset/setup/linux/bash_functions.sh`
+5. Execute the `install.sh` for this test. This normally uses functions 
 defined in `bash_functions.sh`, such as `fw_depends`
 
 ### How Server Installation Works (Bash)
 
-Each framework directory has two files to customize how the installation is
-run, `install.sh` and `bash_profile.sh`. To go over each: 
+Each framework directory has a files to customize how the installation is
+run, `install.sh`. 
 
 The `install.sh` file for each framework starts the bash process which will 
 install that framework. Typically, the first thing done is to call `fw_depends` 
@@ -155,28 +154,6 @@ wget mystuff.tar.gz -O mystuff.tar.gz
 untar mystuff.tar.gz
 cd mystuff
 make --prefix=$IROOT && sudo make install
-```
-
-The `bash_profile.sh` file is sourced before installing software or before
-running the framework test. This is mostly used when running your 
-framework, to perform actions such as updating `PATH` or defining environment 
-variables your framework requires e.g. `GOROOT`. It is unlikely you need to 
-reference these variables in your `install.sh`, but they are 
-available. **Only** put variables in `bash_profile.sh` if they are needed
-for running your software. If you only need variables for installation, just 
-define them in `install.sh`
-
-Example of `bash_profile.sh`. All of these variables will be available for 
-use inside `install.sh`, if they are needed. 
-
-```bash
-# Set the root of our go installation
-export GOROOT=${IROOT}/go
-
-# Where to find the go executable
-export PATH="$GOROOT/bin:$PATH"
-
-export GOPATH=${FWROOT}/go
 ```
 
 ### Available Dependency Installation Scripts (for fw_depends)
@@ -240,13 +217,6 @@ what line caused my non-zero status. This is useful, but beware that dragons
 are involved in reading bash stack traces...
 7. **Look at the examples!!**: There are tons of example installation scripts 
 inside of `toolset/setup/linux`, so please examine them
-
-### Guidelines for Using bash_profile.sh
-
-Only one guideline really...don't output any information to stdout! This file 
-should only be used for declaring environment variables e.g. `export FOO=bar`. 
-Anything you print to stdout or stderr we will ignore (or try to!), and 
-you won't see this output in your console.
 
 ### Bash Variables Available 
 

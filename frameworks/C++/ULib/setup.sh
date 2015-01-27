@@ -1,5 +1,9 @@
 #!/bin/bash
 
+export ULIB_VERSION=1.4.2
+export ULIB_ROOT=$IROOT/ULib
+export ULIB_DOCUMENT_ROOT=${ULIB_ROOT}/ULIB_DOCUMENT_ROOT
+
 export UMEMPOOL="135,0,0,34,8465,129,-17,-22,41"
 echo $UMEMPOOL
 export ORM_DRIVER="sqlite"

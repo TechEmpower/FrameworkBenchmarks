@@ -393,7 +393,6 @@ framework, please follow these steps:
 * Update/add a [benchmark_config](#the-benchmark_config-file)
 * Update/add a [setup file](#setup-files)
 * Update/add an [install.sh file](#install-file)
-* (Optional) Update/add a [bash_profile.sh file](#bash-environment-file)
 * When creating a database test, use the table/collection `hello_world`. 
   Our database setup scripts are stored inside the `config/` folder if 
   you need to see the database schema
@@ -581,32 +580,6 @@ leiningen.sh  maven.sh
 $ ls webservers
 lapis.sh  mongrel2.sh  nginx.sh  openresty.sh  resin.sh  weber.sh  zeromq.sh
 ```
-
-### Bash Environment File
-
-The `bash_profile.sh` file is sourced before installing software or before
-running the framework test. This is mostly used when running your 
-framework, to perform actions such as updating `PATH` or defining environment 
-variables your framework requires e.g. `GOROOT`. You can use these 
-variables: 
-
-* **FWROOT:** Root of project
-* **IROOT:** Root of installation for the current framework
-* **TROOT:** Root directory for the current framework 
-
-Example of `bash_profile.sh`: 
-
-```bash
-# Set the root of our go installation
-export GOROOT=${IROOT}/go
-
-# Where to find the go executable
-export PATH="$GOROOT/bin:$PATH"
-
-export GOPATH=${FWROOT}/go
-```
-
-Do not cause any output, such as using `echo`, inside of `bash_profile.sh`
 
 ### Setup Files
 

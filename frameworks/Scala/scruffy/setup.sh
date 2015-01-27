@@ -1,4 +1,5 @@
 #!/bin/bash
+export SBT_HOME=${IROOT}/sbt
 
 sed -i 's|database_host|'"${DBHOST}"'|g' src/main/scala/scruffy/examples/Test2Endpoint.scala
 
