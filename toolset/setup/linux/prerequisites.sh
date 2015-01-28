@@ -60,4 +60,7 @@ RETCODE=$(fw_exists ~/.bash_profile.bak)
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
+#Ensure llvm-dev is installed (required for ruby to install correctly)
+sudo apt-get install llvm-dev
+
 touch fwbm_prereqs_installed
