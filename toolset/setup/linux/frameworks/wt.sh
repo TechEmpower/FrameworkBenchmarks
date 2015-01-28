@@ -40,4 +40,4 @@ make
 make install
 
 cd ..
-touch duda-0.23.installed
+touch wt.installed
