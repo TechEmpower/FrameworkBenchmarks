@@ -101,6 +101,27 @@
         "display_name": "play2-scala-rmongo",
         "notes": "Uses Reactive Mongo",
         "versus": "netty"
+      },
+      "scala-activate-mysql": {
+        "setup_file": "setup_scala_activate_mysql",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/update?queries=",
+        "port": 9000,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "play2",
+        "language": "Scala",
+        "orm": "Full",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "play2-scala-activate-mysql",
+        "notes": "",
+        "versus": "netty"
       }
     }
   ]
