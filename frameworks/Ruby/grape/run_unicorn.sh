@@ -6,6 +6,7 @@
 source $HOME/.rvm/scripts/rvm
 
 sed -i 's|  host:.*|  host: '"${DBHOST}"'|g' config/database.yml
+sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' config/nginx.conf
 
 $NGINX_HOME/sbin/nginx -c $TROOT/config/nginx.conf
 
