@@ -106,7 +106,6 @@ env:
     - "TESTDIR=PHP/php-pimf"
     - "TESTDIR=PHP/php-silex"
     - "TESTDIR=PHP/php-silex-orm"
-    - "TESTDIR=PHP/php-silica"
     - "TESTDIR=PHP/php-slim"
     - "TESTDIR=PHP/symfony2"
     - "TESTDIR=PHP/symfony2-stripped"
