@@ -7,4 +7,4 @@ source $HOME/.rvm/scripts/rvm
 
 sed -i 's|  host:.*|  host: '"${DBHOST}"'|g' config/database.yml
 
-rvm jruby-1.7.8 do bundle exec trinidad --config config/trinidad.yml
+rvm jruby-1.7.8 do bundle exec trinidad --config config/trinidad.yml &
