@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sed -i 's|/usr/local/installs/nginx/|'"${IROOT}"'/nginx/|g' config/nginx.conf
+
 # We assume single-user installation as 
 # done in our rvm.sh script and 
 # in Travis-CI
