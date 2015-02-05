@@ -2,7 +2,7 @@
 
 fw_depends rvm nginx java
 
-if [ "$TRAVIS" = "true"]
+if [ "$TRAVIS" = "true" ]
 then
 	rvmsudo rvm install ruby-2.0.0-p0
 	rvmsudo rvm install jruby-1.7.8
