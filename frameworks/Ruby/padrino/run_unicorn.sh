@@ -3,7 +3,12 @@
 # We assume single-user installation as 
 # done in our rvm.sh script and 
 # in Travis-CI
-source $HOME/.rvm/scripts/rvm
+if [ "$TRAVIS" = "true" ]
+then
+	source /home/travis/.rvm/scripts/rvm
+else
+	source $HOME/.rvm/scripts/rvm
+fi
 
 $NGINX_HOME/sbin/nginx -c $TROOT/config/nginx.conf
 
