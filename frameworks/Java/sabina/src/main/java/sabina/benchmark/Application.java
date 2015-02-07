@@ -1,10 +1,12 @@
-package sabina;
+package sabina.benchmark;
 
 import static java.lang.Integer.parseInt;
 import static sabina.Sabina.*;
 import static sabina.content.JsonContent.toJson;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import sabina.Exchange;
+import sabina.Request;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +19,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.sql.DataSource;
 
-public class Application {
+/**
+ * When it is implemented, add this to benchmark_config
+ * "fortune_url": "/fortune",
+ * "update_url": "/update",
+ */
+final class Application {
     private static final Properties CONFIG = loadConfig ();
     private static final DataSource DS = createSessionFactory ();
     private static final String QUERY = "select * from world where id = ?";
@@ -71,6 +78,11 @@ public class Application {
         }
     }
 
+    private static Object getJson (Exchange it) {
+        it.response.type ("application/json");
+        return toJson (new Message ());
+    }
+
     private static Object getDb (Exchange it) {
         final int queries = getQueries (it.request);
         final World[] worlds = new World[queries];
@@ -93,36 +105,35 @@ public class Application {
             e.printStackTrace ();
         }
 
+        it.response.type ("application/json");
         return toJson (it.request.queryParams ("queries") == null? worlds[0] : worlds);
     }
 
+    private static Object getFortune (Exchange aExchange) {
+        throw new UnsupportedOperationException ();
+    }
+
+    private static Object getUpdate (Exchange aExchange) {
+        throw new UnsupportedOperationException ();
+    }
+
+    private static Object getPlaintext (Exchange it) {
+        it.response.type (CONTENT_TYPE_TEXT);
+        return MESSAGE;
+    }
+
+    private static void addCommonHeaders (Exchange it) {
+        it.header ("Server", "Undertow/1.1.2");
+        it.response.raw ().addDateHeader ("Date", new Date ().getTime ());
+    }
+
     public static void main (String[] args) {
-        get ("/json", it -> toJson (new Message ()));
-
+        get ("/json", Application::getJson);
         get ("/db", Application::getDb);
-
-        /*
-         * Add this to benchmark_config
-         * "fortune_url": "/fortune",
-         */
-//        get ("/fortune", it -> {
-//            throw new UnsupportedOperationException ();
-//        });
-
-        /*
-         * Add this to benchmark_config
-         * "update_url": "/update",
-         */
-//        get ("/update", it -> {
-//            throw new UnsupportedOperationException ();
-//        });
-
-        get ("/plaintext", it -> {
-            it.response.type (CONTENT_TYPE_TEXT);
-            return MESSAGE;
-        });
-
-        after (it -> it.response.raw ().addDateHeader ("Date", new Date ().getTime ()));
+        get ("/fortune", Application::getFortune);
+        get ("/update", Application::getUpdate);
+        get ("/plaintext", Application::getPlaintext);
+        after (Application::addCommonHeaders);
 
         setIpAddress (CONFIG.getProperty ("web.host"));
         start (parseInt (CONFIG.getProperty ("web.port")));

@@ -1,5 +1,5 @@
-package sabina;
+package sabina.benchmark;
 
-public final class Message {
+final class Message {
     public final String message = "Hello, World!";
 }

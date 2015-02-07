@@ -125,7 +125,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>sabina.Application</mainClass>
+                            <mainClass>sabina.benchmark.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
