@@ -101,6 +101,22 @@ public class Application {
 
         get ("/db", Application::getDb);
 
+        /*
+         * Add this to benchmark_config
+         * "fortune_url": "/fortune",
+         */
+//        get ("/fortune", it -> {
+//            throw new UnsupportedOperationException ();
+//        });
+
+        /*
+         * Add this to benchmark_config
+         * "update_url": "/update",
+         */
+//        get ("/update", it -> {
+//            throw new UnsupportedOperationException ();
+//        });
+
         get ("/plaintext", it -> {
             it.response.type (CONTENT_TYPE_TEXT);
             return MESSAGE;
