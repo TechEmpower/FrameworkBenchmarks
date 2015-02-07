@@ -37,3 +37,8 @@ http://localhost:4567/db?queries=5
 ### Plain Text Test
 
 http://localhost:4567/plaintext
+
+## TODO
+
+* Implement 'update' test
+* Implement 'fortunes' test
