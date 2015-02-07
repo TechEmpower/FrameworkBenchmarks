@@ -11,5 +11,5 @@ else
 	rvm install jruby-1.7.8
 fi
 
-rvm ruby-2.0.0-p0 do bundle install --gemfile=$TROOT/Gemfile-ruby
+rvm ruby-2.0.0-p0 do bundle install --gemfile=$TROOT/Gemfile-ruby --path vendor/bundle
 rvm jruby-1.7.8 do bundle install --gemfile=$TROOT/Gemfile-jruby

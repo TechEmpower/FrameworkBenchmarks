@@ -13,7 +13,7 @@ else
 	rvm install rbx-2.2.10
 fi
 
-rvm ruby-2.0.0-p0 do bundle install --gemfile=$TROOT/Gemfile
+rvm ruby-2.0.0-p0 do bundle install --gemfile=$TROOT/Gemfile --path vendor/bundle
 rvm jruby-1.7.8 do bundle install --gemfile=$TROOT/Gemfile
 
 export LC_ALL=en_US.UTF-8 
