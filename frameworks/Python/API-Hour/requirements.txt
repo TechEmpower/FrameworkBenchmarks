@@ -1,4 +1,4 @@
-api_hour==0.6.0
+api_hour==0.6.1
 aiopg==0.5.2
 gunicorn==19.1.1
 psycopg2==2.5.4
