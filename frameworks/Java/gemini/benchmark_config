@@ -4,7 +4,6 @@
     "default": {
       "setup_file": "start",
       "json_url": "/",
-      "update_url": "/update?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
