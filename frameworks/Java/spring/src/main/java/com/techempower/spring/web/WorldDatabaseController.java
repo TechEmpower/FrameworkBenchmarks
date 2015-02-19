@@ -10,6 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.techempower.spring.Common;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,9 +38,7 @@ final class WorldDatabaseController {
 	List<World> multipleQueries(@RequestParam(value="queries", required=false, defaultValue="1") String rawQueryCount) {
 		Integer queryCount = boundQueryCount(rawQueryCount);
 
-		List<World> worlds = new ArrayList<>(queryCount);
 		List<Future<World>> wfs = new ArrayList<>(queryCount);
-
 		// it gets better with Java 8, promise!
 		for (int i = 0; i < queryCount; i++) {
 			wfs.add(
@@ -53,6 +52,35 @@ final class WorldDatabaseController {
 					}));
 		}
 
+		return waitFor(wfs);
+	}
+
+	@RequestMapping(value = "/updates", produces = "application/json")
+	List<World> updateQueries(@RequestParam(value="queries", required=false, defaultValue="1") String rawQueryCount) {
+		Integer queryCount = boundQueryCount(rawQueryCount);
+
+		List<Future<World>> wfs = new ArrayList<>(queryCount);
+
+		for (int i = 0; i < queryCount; i++) {
+			wfs.add(Common.EXECUTOR.submit(
+				new Callable<World>() {
+					@Override
+					@Transactional(propagation = Propagation.REQUIRES_NEW)
+					public World call() throws Exception {
+						Random random = ThreadLocalRandom.current();
+						World world = worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
+						world.setRandomNumber(random.nextInt(DB_ROWS) + 1);
+						worldRepository.save(world);
+						return world;
+					}
+				}));
+		}
+
+		return waitFor(wfs);
+	}
+
+    private List<World> waitFor(List<Future<World>> wfs) {
+		List<World> worlds = new ArrayList<>(wfs.size());
 		for (Future<World> wf: wfs) {
 			try {
 				worlds.add(wf.get());
@@ -61,32 +89,15 @@ final class WorldDatabaseController {
 			}
 		}
 		return worlds;
-	}
-
-	@RequestMapping(value = "/updates", produces = "application/json")
-	List<World> updateQueries(@RequestParam(value="queries", required=false, defaultValue="1") String rawQueryCount) {
-		Integer queryCount = boundQueryCount(rawQueryCount);
-
-		List<World> worlds = new ArrayList<World>(queryCount);
-		Random random = ThreadLocalRandom.current();
-
-		for (int i = 0; i < queryCount; i++) {
-			World world = this.worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
-			world.setRandomNumber(random.nextInt(DB_ROWS) + 1);
-			this.worldRepository.save(world);
-			worlds.add(world);
-		}
-
-		return worlds;
-	}
+    }
 
 	private Integer boundQueryCount(final String rawString) {
-        Integer raw;
-        try {
-           raw = Integer.parseInt(rawString);
-        } catch (NumberFormatException e) {
-           raw = null;
-        }
+		Integer raw;
+		try {
+			raw = Integer.parseInt(rawString);
+		} catch (NumberFormatException e) {
+			raw = null;
+		}
 		if (raw == null || raw < 1) {
 			return 1;
 		} else if (raw > 500) {
