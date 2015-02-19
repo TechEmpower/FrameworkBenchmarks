@@ -79,7 +79,7 @@ final class WorldDatabaseController {
 		return waitFor(wfs);
 	}
 
-    private List<World> waitFor(List<Future<World>> wfs) {
+	private List<World> waitFor(List<Future<World>> wfs) {
 		List<World> worlds = new ArrayList<>(wfs.size());
 		for (Future<World> wf: wfs) {
 			try {
@@ -89,7 +89,7 @@ final class WorldDatabaseController {
 			}
 		}
 		return worlds;
-    }
+	}
 
 	private Integer boundQueryCount(final String rawString) {
 		Integer raw;
@@ -106,5 +106,4 @@ final class WorldDatabaseController {
 
 		return raw;
 	}
-
 }
