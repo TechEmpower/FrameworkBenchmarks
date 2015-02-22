@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REV='eb96604657dd940ecb70b56fef4279077e3f9c21'
+REV='8ae98d2b6e146948a7ed13e76141e0f69228d690'
 
 INSTALLED_FILE="${IROOT}/lwan-${REV}.installed"
 RETCODE=$(fw_exists ${INSTALLED_FILE})
