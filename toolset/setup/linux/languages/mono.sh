@@ -8,7 +8,7 @@ RETCODE=$(fw_exists ${IROOT}/mono.installed)
   sudo $IROOT/mono-3.6.0-install/bin/mozroots --import --sync;
   return 0; }
 
-sudo apt-get install -y build-essential \
+sudo apt-get install -qqy build-essential \
              autoconf \
              automake \
              libtool \
@@ -21,10 +21,11 @@ fw_untar mono-3.6.0.tar.bz2
 
 cd mono-3.6.0
 ./autogen.sh --prefix=${IROOT}/mono-3.6.0-install
-make -j4 EXTERNAL_MCS=${IROOT}/mono-3.6.0/mcs/class/lib/monolite/basic.exe
-make install
+echo -n "Installing Mono"
+make -j4 EXTERNAL_MCS=${IROOT}/mono-3.6.0/mcs/class/lib/monolite/basic.exe 2>&1 | tee $IROOT/mono-install.log | awk '{ if (NR%100 == 0) printf "."}'
+make install 2>&1 | tee -a $IROOT/mono-install.log | awk '{ if (NR%100 == 0) printf "."}'
 
 echo "Installing RootCAs from Mozilla..."; 
 sudo ${IROOT}/mono-3.6.0-install/bin/mozroots --import --sync;
 
-touch ${IROOT}/mono.installed
+touch $IROOT/mono.installed

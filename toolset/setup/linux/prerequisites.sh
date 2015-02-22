@@ -20,7 +20,7 @@ sudo apt-get -yq update
 sudo apt-get -yq upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
 
 # WARNING: DONT PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
-sudo apt-get -yq install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   cmake build-essential automake    `# Needed for building code` \
   curl wget unzip                   `# Common tools` \
   software-properties-common        `# Needed for add-apt-repository` \
@@ -47,7 +47,7 @@ sudo apt-get -yq install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::
 # Install gcc-4.8
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt-get -yq update
-sudo apt-get install -yq gcc-4.8 g++-4.8
+sudo apt-get install -qqy gcc-4.8 g++-4.8
 
 # Stop permanently overwriting people's files just for 
 # trying out our software!
