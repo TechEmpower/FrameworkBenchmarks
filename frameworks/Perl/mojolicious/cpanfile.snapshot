@@ -8,6 +8,14 @@ DISTRIBUTIONS
     requirements:
       ExtUtils::MakeMaker 0
       common::sense 0
+  IO-Socket-IP-0.36
+    pathname: P/PE/PEVANS/IO-Socket-IP-0.36.tar.gz
+    provides:
+      IO::Socket::IP 0.36
+    requirements:
+      IO::Socket 0
+      Socket 1.97
+      Test::More 0.88
   JSON-XS-3.01
     pathname: M/ML/MLEHMANN/JSON-XS-3.01.tar.gz
     provides:
@@ -16,10 +24,10 @@ DISTRIBUTIONS
       ExtUtils::MakeMaker 0
       Types::Serialiser 0
       common::sense 0
-  Mango-1.14
-    pathname: S/SR/SRI/Mango-1.14.tar.gz
+  Mango-1.16
+    pathname: O/OD/ODC/Mango-1.16.tar.gz
     provides:
-      Mango 1.14
+      Mango 1.16
       Mango::BSON undef
       Mango::BSON::Binary undef
       Mango::BSON::Code undef
@@ -41,8 +49,9 @@ DISTRIBUTIONS
     requirements:
       ExtUtils::MakeMaker 0
       Mojolicious 5.40
-  Mojolicious-5.65
-    pathname: S/SR/SRI/Mojolicious-5.65.tar.gz
+      perl 5.010001
+  Mojolicious-5.81
+    pathname: S/SR/SRI/Mojolicious-5.81.tar.gz
     provides:
       Mojo undef
       Mojo::Asset undef
@@ -105,7 +114,7 @@ DISTRIBUTIONS
       Mojo::UserAgent::Server undef
       Mojo::UserAgent::Transactor undef
       Mojo::Util undef
-      Mojolicious 5.65
+      Mojolicious 5.81
       Mojolicious::Command undef
       Mojolicious::Command::cgi undef
       Mojolicious::Command::cpanify undef
@@ -115,7 +124,7 @@ DISTRIBUTIONS
       Mojolicious::Command::generate::app undef
       Mojolicious::Command::generate::lite_app undef
       Mojolicious::Command::generate::makefile undef
-      Mojolicious::Command::generate::plugin 0.01
+      Mojolicious::Command::generate::plugin undef
       Mojolicious::Command::get undef
       Mojolicious::Command::inflate undef
       Mojolicious::Command::prefork undef
@@ -156,6 +165,7 @@ DISTRIBUTIONS
       IO::Socket::IP 0.26
       Pod::Simple 3.09
       Time::Local 1.2
+      perl 5.010001
   Types-Serialiser-1.0
     pathname: M/ML/MLEHMANN/Types-Serialiser-1.0.tar.gz
     provides:
