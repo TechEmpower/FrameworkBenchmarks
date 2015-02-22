@@ -22,7 +22,6 @@
 # problems are welcome
 
 set -x
-export DB_HOST=${DB_HOST:-127.0.0.1}
 export DEBIAN_FRONTEND=noninteractive
 
 source /etc/lsb-release
@@ -166,11 +165,6 @@ tar xzf apache-cassandra-$CASS_V-bin.tar.gz
 
 rm -rf /ssd/cassandra /ssd/log/cassandra
 mkdir -p /ssd/cassandra /ssd/log/cassandra
-
-sed -i "s/^.*seeds:.*/          - seeds: \"$DB_HOST\"/" cassandra/cassandra.yaml
-sed -i "s/^listen_address:.*/listen_address: $DB_HOST/" cassandra/cassandra.yaml
-sed -i "s/^rpc_address:.*/rpc_address: $DB_HOST/" cassandra/cassandra.yaml
-
 mv cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
 mv cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
 nohup apache-cassandra-$CASS_V/bin/cassandra -p c.pid > cassandra.log
@@ -181,10 +175,10 @@ for i in {1..45}; do
 done
 nc -z localhost 9160
 if [ $? -eq 0 ]; then
-  cat cassandra/cleanup-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh $DB_HOST
+  cat cassandra/cleanup-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh 127.0.0.1
   python cassandra/db-data-gen.py > cassandra/tfb-data.cql
-  apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql $DB_HOST
-  apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql $DB_HOST
+  apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql 127.0.0.1
+  apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql 127.0.0.1
   rm -rf apache-cassandra-*-bin.tar.gz cassandra
 else
   >&2 echo "Cassandra did not start, skipping"
