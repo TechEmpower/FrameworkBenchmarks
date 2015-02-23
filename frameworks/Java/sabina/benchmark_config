@@ -2,16 +2,19 @@
   "framework": "sabina",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/query?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
       "plaintext_url": "/plaintext",
-      "port": 8080,
+
+      "port": 5050,
+      "setup_file": "setup",
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
-      "framework": "sabina",
+      "framework": "Sabina",
       "language": "Java",
       "orm": "Raw",
       "platform": "Servlet",
