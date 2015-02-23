@@ -1,24 +1,26 @@
 {
-  "framework": "silica",
+  "framework": "sabina",
   "tests": [{
-    "raw": {
+    "default": {
       "setup_file": "setup",
+      "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
-      "framework": "silica",
-      "language": "PHP",
+      "framework": "sabina",
+      "language": "Java",
       "orm": "Raw",
-      "platform": "PHP-FPM",
-      "webserver": "nginx",
+      "platform": "Servlet",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "silica",
+      "display_name": "Sabina",
       "notes": "",
-      "versus": "php"
+      "versus": "servlet"
     }
   }]
 }

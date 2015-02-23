@@ -43,5 +43,4 @@ const char* hello_str = json_object_to_json_string(hello);
 USP_PUTS_STRING(hello_str);
 json_object_put(hello);
 #endif
-U_ClientImage_request_nocache = true;
 -->

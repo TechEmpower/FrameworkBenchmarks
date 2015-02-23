@@ -75,8 +75,8 @@ if [ ! -e "~/.firstboot" ]; then
   echo $CLIENT_IP TFB-client   | sudo tee --append /etc/hosts
   echo $SERVER_IP TFB-server   | sudo tee --append /etc/hosts
 
-  # Add other users:
-  sudo useradd -m testrunner
+  # Add user to run tests
+  sudo adduser --disabled-password --gecos "" testrunner
   # WARN: testrunner will NOT have sudo access by round 11
   #       please begin migrating scripts to not rely on sudo.
   sudo bash -c "echo 'testrunner ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-tfb-testrunner"

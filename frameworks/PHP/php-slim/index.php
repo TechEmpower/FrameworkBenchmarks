@@ -12,7 +12,10 @@ require 'Slim/RedBean/rb.php';
 
 \Slim\Slim::registerAutoloader();
 
-R::setup('mysql:host=localhost;dbname=hello_world','benchmarkdbuser','benchmarkdbpass');
+# Turn off 'beautiful' column names (converting tables names from camelCase to snake_case).
+RedBean_OODBBean::setFlagBeautifulColumnNames(false); 
+
+R::setup('mysql:host=127.0.0.1;dbname=hello_world','benchmarkdbuser','benchmarkdbpass');
 R::freeze(true);
 
 /**

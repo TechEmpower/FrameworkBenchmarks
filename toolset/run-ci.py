@@ -415,34 +415,48 @@ class CIRunnner:
 
     # Setup Apache Cassandra
     echo "Populating Apache Cassandra database"
-    until nc -z localhost 9160 ; do echo Waiting for Cassandra; sleep 1; done
-    cat config/cassandra/cleanup-keyspace.cql | sudo cqlsh
-    python config/cassandra/db-data-gen.py > config/cassandra/tfb-data.cql
-    sudo cqlsh -f config/cassandra/create-keyspace.cql
-    sudo cqlsh -f config/cassandra/tfb-data.cql
+    for i in {1..45}; do
+      nc -z localhost 9160 && break || sleep 1;
+      echo "Waiting for Cassandra ($i/45}"
+    done
+    nc -z localhost 9160
+    if [ $? -eq 0 ]; then
+      cat config/cassandra/cleanup-keyspace.cql | sudo cqlsh
+      python config/cassandra/db-data-gen.py > config/cassandra/tfb-data.cql
+      sudo cqlsh -f config/cassandra/create-keyspace.cql
+      sudo cqlsh -f config/cassandra/tfb-data.cql
+    else
+      >&2 echo "Cassandra did not start, skipping"
+    fi
 
     # Setup MongoDB
     echo "Populating MongoDB database"
-    until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
-    mongod --version
-    mongo < config/create.js
-
+    for i in {1..45}; do
+      nc -z localhost 27017 && break || sleep 1;
+      echo "Waiting for MongoDB ($i/45}"
+    done
+    nc -z localhost 27017
+    if [ $? -eq 0 ]; then
+      mongo < create.js
+      mongod --version
+    else
+      >&2 echo "MongoDB did not start, skipping"
+    fi
+    
     # =============Modify Configurations===========================
     # It can be useful to enable debug features for verification 
     # inside Travis-CI
     # =======================================================
 
     sed -i 's|display_errors\] = off|display_errors\] = on|' config/php-fpm.conf
+    
+    exit $?
     '''
 
-    def sh(command):
-      log.info("Running `%s`", command)
-      subprocess.check_call(command, shell=True)  
-
-    for command in script.split('\n'):
-      command = command.lstrip()
-      if command != "" and command[0] != '#':
-        sh(command.lstrip())
+    p = subprocess.Popen(["bash"], stdin=subprocess.PIPE)
+    p.communicate(script)
+    if p.wait() != 0:
+      log.critical("Non-zero exit  from running+wait on subprocess")
 
 if __name__ == "__main__":
   args = sys.argv[1:]
