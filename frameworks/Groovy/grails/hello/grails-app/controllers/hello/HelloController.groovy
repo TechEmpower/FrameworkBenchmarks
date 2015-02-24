@@ -1,13 +1,13 @@
 package hello
 
+import grails.compiler.GrailsCompileStatic
 import grails.converters.JSON
-import groovy.transform.CompileStatic
 
 import java.util.concurrent.ThreadLocalRandom
 
 import org.hibernate.Session
 
-@CompileStatic
+@GrailsCompileStatic
 class HelloController {
 
     def index() {
