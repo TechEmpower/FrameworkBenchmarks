@@ -4,11 +4,49 @@
     "default": {
       "setup_file": "start",
       "json_url": "/",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "gemini",
+      "language": "Java",
+      "orm": "Micro",
+      "platform": "Servlet",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "gemini",
+      "notes": "",
+      "versus": "servlet"
+    },
+    "mysql": {
+      "setup_file": "start",
       "db_url": "/db",
       "query_url": "/query?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
-      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "gemini",
+      "language": "Java",
+      "orm": "Micro",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "gemini",
+      "notes": "",
+      "versus": "servlet"
+    },
+    "postgres": {
+      "setup_file": "start_postgres",
+      "db_url": "/db",
+      "query_url": "/query?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -26,3 +64,5 @@
     }
   }]
 }
+
+
