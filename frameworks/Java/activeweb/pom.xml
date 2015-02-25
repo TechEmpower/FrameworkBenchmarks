@@ -9,7 +9,8 @@
     <name>ActiveWeb Benchmark App</name>
 
     <properties>
-        <activeweb.version>1.11-SNAPSHOT</activeweb.version>
+        <activeweb.version>1.11</activeweb.version>
+        <activejdbc.version>1.4.10</activejdbc.version>
     </properties>
 
     <build>
@@ -18,7 +19,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.14.1</version>
+                <version>2.18.1</version>
                 <configuration>
                     <reportFormat>brief</reportFormat>
                     <trimStackTrace>true</trimStackTrace>
@@ -51,20 +52,18 @@
                             <maxIdleTime>1000</maxIdleTime>
                         </connector>
                     </connectors>
-
                     <!--<systemProperties>-->
                         <!--<systemProperty>-->
                             <!--<name>active_reload</name>-->
                             <!--<value>true</value>-->
                         <!--</systemProperty>-->
                     <!--</systemProperties>-->
-
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.javalite</groupId>
                 <artifactId>activejdbc-instrumentation</artifactId>
-                <version>1.4.10-SNAPSHOT</version>
+                <version>${activejdbc.version}</version>
                 <executions>
                     <execution>
                         <phase>process-classes</phase>
@@ -81,7 +80,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.1</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -92,7 +91,7 @@
         <dependency>
             <groupId>org.javalite</groupId>
             <artifactId>activejdbc</artifactId>
-            <version>1.4.10-SNAPSHOT</version>
+            <version>${activejdbc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.javalite</groupId>
@@ -111,53 +110,41 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.5</version>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.sun</groupId>-->
-            <!--<artifactId>tools</artifactId>-->
-            <!--<version>1.7.0</version>-->
-            <!--<scope>system</scope>-->
-            <!--<systemPath>${java.home}/../lib/tools.jar</systemPath>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.3.1</version>
-            <scope>test</scope>
+            <version>2.4.4</version>
         </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.3.1</version>
-            <scope>test</scope>
+            <version>2.4.4</version>
         </dependency>
-
-
     </dependencies>
 
     <repositories>
         <repository>
-            <id>snapshots1</id>
-            <name>Sonatype Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <id>javaLite-snapshots</id>
+            <name>JavaLite Snapshots</name>
+            <url>http://repo.javalite.io/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
             <snapshots>
                 <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
             </snapshots>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>snapshots2</id>
-            <name>Sonatype Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <id>javaLite-plugin-snapshots</id>
+            <name>JavaLite Plugin Snapshots</name>
+            <url>http://repo.javalite.io/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
             <snapshots>
                 <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
             </snapshots>
         </pluginRepository>
     </pluginRepositories>

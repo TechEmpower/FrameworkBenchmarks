@@ -13,23 +13,30 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package app.controllers;
 
-import app.models.World;
-
-import java.util.List;
+import org.javalite.activeweb.ControllerSpec;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
- * @author Igor Polevoy: 12/18/13 9:51 PM
  * @author Eric Nielsen
  */
-public class UpdatesController extends QueriesController {
-    @Override public void index() {
-        List<World> worlds = getWorlds();
-        for (World world : worlds) {
-            world.set("randomNumber", randomNumber()).saveIt();
-        }
-        view("worlds", worlds);
-        render("/queries/index").contentType("application/json"); //same template
+public class PlaintextControllerSpec extends ControllerSpec {
+
+    @Test
+    public void shouldRenderResponse() {
+        request().get("index");
+        the(responseContent()).shouldBeEqual("Hello, World!");
+    }
+
+    @Ignore
+    public void shouldRenderHtmlOneMinute() {
+        long endMillis = System.currentTimeMillis() + 60*1000;
+        do {
+            request().get("index");
+            responseContent();
+        } while (System.currentTimeMillis() < endMillis);
     }
 }
