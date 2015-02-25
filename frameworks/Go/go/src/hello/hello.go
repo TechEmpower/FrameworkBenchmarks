@@ -30,7 +30,7 @@ type Fortune struct {
 
 const (
 	// Database
-	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
+	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?interpolateParams=true"
 	worldSelect        = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate        = "UPDATE World SET randomNumber = ? WHERE id = ?"
 	fortuneSelect      = "SELECT id, message FROM Fortune;"
@@ -45,9 +45,7 @@ var (
 	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 
 	// Database
-	worldStatement   *sql.Stmt
-	fortuneStatement *sql.Stmt
-	updateStatement  *sql.Stmt
+	db *sql.DB
 
 	helloWorldBytes = []byte(helloWorldString)
 )
@@ -55,23 +53,12 @@ var (
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	db, err := sql.Open("mysql", connectionString)
+	var err error
+	db, err = sql.Open("mysql", connectionString)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
 	}
 	db.SetMaxIdleConns(maxConnectionCount)
-	worldStatement, err = db.Prepare(worldSelect)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fortuneStatement, err = db.Prepare(fortuneSelect)
-	if err != nil {
-		log.Fatal(err)
-	}
-	updateStatement, err = db.Prepare(worldUpdate)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	http.HandleFunc("/db", dbHandler)
 	http.HandleFunc("/queries", queriesHandler)
@@ -91,7 +78,7 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 // Test 2: Single database query
 func dbHandler(w http.ResponseWriter, r *http.Request) {
 	var world World
-	err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
+	err := db.QueryRow(worldSelect, rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
 	if err != nil {
 		log.Fatalf("Error scanning world row: %s", err.Error())
 	}
@@ -114,7 +101,7 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 
 	world := make([]World, n)
 	for i := 0; i < n; i++ {
-		err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber)
+		err := db.QueryRow(worldSelect, rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber)
 		if err != nil {
 			log.Fatalf("Error scanning world row: %s", err.Error())
 		}
@@ -126,7 +113,7 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 
 // Test 4: Fortunes
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
-	rows, err := fortuneStatement.Query()
+	rows, err := db.Query(fortuneSelect)
 	if err != nil {
 		log.Fatalf("Error preparing statement: %v", err)
 	}
@@ -139,6 +126,7 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fortunes = append(fortunes, &fortune)
 	}
+	rows.Close()
 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
 
 	sort.Sort(ByMessage{fortunes})
@@ -160,18 +148,18 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 
 	if n <= 1 {
 		var world World
-		worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
+		db.QueryRow(worldSelect, rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
 		world.RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
-		updateStatement.Exec(world.RandomNumber, world.Id)
+		db.Exec(worldUpdate, world.RandomNumber, world.Id)
 		encoder.Encode(&world)
 	} else {
 		world := make([]World, n)
 		for i := 0; i < n; i++ {
-			if err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
+			if err := db.QueryRow(worldSelect, rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
 				log.Fatalf("Error scanning world row: %s", err.Error())
 			}
 			world[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
-			if _, err := updateStatement.Exec(world[i].RandomNumber, world[i].Id); err != nil {
+			if _, err := db.Exec(worldUpdate, world[i].RandomNumber, world[i].Id); err != nil {
 				log.Fatalf("Error updating world row: %s", err.Error())
 			}
 		}
