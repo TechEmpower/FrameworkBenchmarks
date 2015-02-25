@@ -33,6 +33,6 @@ public class FortunesController extends AppController {
         fortunes.add(Fortune.<Fortune>create("id", 0, "message", "Additional fortune added at request time."));
         Collections.sort(fortunes);
         view("fortunes", fortunes);
-        render().noLayout();
+        render("/fortunes/index").noLayout();
     }
 }

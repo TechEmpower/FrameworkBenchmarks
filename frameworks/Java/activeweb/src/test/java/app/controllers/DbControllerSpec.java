@@ -27,10 +27,26 @@ import org.junit.Ignore;
 public class DbControllerSpec extends org.javalite.activeweb.DBControllerSpec {
 
     @Test
-    public void shouldRenderOneRecord(){
+    public void shouldRenderOneRecord() {
         //execute controller
         request().get("index");
         //process result
+        System.out.println(responseContent());
+        Map result = JsonHelper.toMap(responseContent());
+        //test result
+        a(result.size()).shouldBeEqual(2);
+        a(result.get("id")).shouldNotBeNull();
+        a(result.get("randomNumber")).shouldNotBeNull();
+        a(contentType()).shouldBeEqual("application/json");
+    }
+
+
+    @Test
+    public void shouldRenderOneRecordWithJackson() {
+        //execute controller
+        request().get("jackson");
+        //process result
+        System.out.println(responseContent());
         Map result = JsonHelper.toMap(responseContent());
         //test result
         a(result.size()).shouldBeEqual(2);

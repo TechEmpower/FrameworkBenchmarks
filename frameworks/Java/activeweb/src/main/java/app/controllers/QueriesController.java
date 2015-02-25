@@ -16,6 +16,7 @@ limitations under the License.
 package app.controllers;
 
 import app.models.World;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,11 @@ import java.util.List;
 public class QueriesController extends DbController {
     @Override public void index() {
         view("worlds", getWorlds());
-        render().contentType("application/json");
+        render("/queries/index").contentType("application/json");
+    }
+
+    @Override public void jackson() throws IOException {
+        JsonController.WRITER.writeValue(outputStream("application/json"), getWorlds());
     }
 
     @Override protected String getLayout() {

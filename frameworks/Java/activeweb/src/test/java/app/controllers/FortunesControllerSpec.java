@@ -33,10 +33,11 @@ public class FortunesControllerSpec extends DBControllerSpec {
                 "<tr><td>11</td><td>&lt;script&gt;alert(&quot;This should not be displayed in a browser alert box.&quot;);&lt;/script&gt;</td></tr>"
                 + "<tr><td>4</td><td>A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1</td></tr>"
                 + "<tr><td>5</td><td>A computer program does what you tell it to do, not what you want it to do.</td></tr>"
-                + "<tr><td>2</td><td>A computer scientist is someone who fixes things that aren't broken.</td></tr>");
+                + "<tr><td>2</td><td>A computer scientist is someone who fixes things that aren&apos;t broken.</td></tr>");
     }
 
     @Ignore
+    @Test
     public void shouldRenderHtmlOneMinute() {
         long endMillis = System.currentTimeMillis() + 60*1000;
         do {

@@ -15,13 +15,12 @@ limitations under the License.
 */
 package app.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import app.models.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import java.io.IOException;
 import org.javalite.activeweb.AppController;
 
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @author Igor Polevoy: 12/18/13 3:51 PM
@@ -30,18 +29,12 @@ import java.util.TreeMap;
 public class JsonController extends AppController {
     static final ObjectWriter WRITER = new ObjectMapper().writer();
 
-    private Map<String, Object> newMessage() {
-        Map<String, Object> message = new TreeMap<String, Object>();
-        message.put("message", "Hello, World!");
-        return message;
-    }
-
     public void index() {
-        view("message", newMessage());
-        render().noLayout().contentType("application/json");
+        view("message", new Message("Hello, World!"));
+        render("/json/index").noLayout().contentType("application/json");
     }
 
-    public void jackson() throws JsonProcessingException {
-        respond(WRITER.writeValueAsString(newMessage())).contentType("application/json");
+    public void jackson() throws IOException {
+        WRITER.writeValue(outputStream("application/json"), new Message("Hello, World!"));
     }
 }

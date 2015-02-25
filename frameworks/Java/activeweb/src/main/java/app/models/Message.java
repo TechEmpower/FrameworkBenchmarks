@@ -13,23 +13,26 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package app.controllers;
-
-import app.models.World;
-
-import java.util.List;
+package app.models;
 
 /**
- * @author Igor Polevoy: 12/18/13 9:51 PM
  * @author Eric Nielsen
  */
-public class UpdatesController extends QueriesController {
+public class Message {
+    private String message;
 
-    @Override protected List<World> getWorlds() {
-        List<World> worlds = super.getWorlds();
-        for (World world : worlds) {
-            world.set("randomNumber", randomNumber()).saveIt();
-        }
-        return worlds;
+    public Message() {
+    }
+
+    public Message(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

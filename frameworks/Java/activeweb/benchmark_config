@@ -27,6 +27,9 @@
     "jackson": {
       "setup_file": "setup",
       "json_url": "/activeweb/json/jackson",
+      "db_url": "/activeweb/db/jackson",
+      "query_url": "/activeweb/queries/jackson?queries=",
+      "update_url": "/activeweb/updates/jackson?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",

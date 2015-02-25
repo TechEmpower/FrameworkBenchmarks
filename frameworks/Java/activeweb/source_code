@@ -10,4 +10,5 @@
 ./activeweb/src/main/java/app/controllers/QueriesController.java
 ./activeweb/src/main/java/app/controllers/UpdatesController.java
 ./activeweb/src/main/java/app/models/Fortune.java
+./activeweb/src/main/java/app/models/Message.java
 ./activeweb/src/main/java/app/models/World.java
