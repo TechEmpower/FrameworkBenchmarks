@@ -3,11 +3,11 @@ python:
   - "2.7"
 
 env:
+  global:
+    - TESTDIR=Dart/dart
   matrix:
-    - "TESTDIR=Dart/dart"
-    - "TESTDIR=Dart/dart-redstone"
-    - "TESTDIR=Dart/dart-start"
-    - "TESTDIR=Dart/dart-stream"
+    - DART_ARCH=ia32
+    - DART_ARCH=x64
 
 before_install:
   # Need to install python modules before using 
