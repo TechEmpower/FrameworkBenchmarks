@@ -28,17 +28,28 @@ type Fortune struct {
 	Message string `json:"message"`
 }
 
+// Databases
 const (
-	// Database
+	// Go 1.4's sql.DB has scalability problem when using (explicitly reused) prepared statement.
+	// https://github.com/golang/go/issues/9484
+	//
+	// Using db.Query() instead of stmt.Query() avoid the issue.
+	// But it makes 3 round trips per query: prepare, execute and close.
+	// `interpolateParams=true` enables client side parameter interpolation.
+	// It reduces round trips without prepared statement.
+	//
+	// Before Go 1.5 is released, we can see real power of Go with this benchmark.
+	// After Go 1.5 is released, we can see prepared statement vs interpolation by comparing
+	// this and another lightweight Go framework.
 	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?interpolateParams=true"
 	worldSelect        = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate        = "UPDATE World SET randomNumber = ? WHERE id = ?"
 	fortuneSelect      = "SELECT id, message FROM Fortune;"
 	worldRowCount      = 10000
 	maxConnectionCount = 256
-
-	helloWorldString = "Hello, World!"
 )
+
+const helloWorldString = "Hello, World!"
 
 var (
 	// Templates
