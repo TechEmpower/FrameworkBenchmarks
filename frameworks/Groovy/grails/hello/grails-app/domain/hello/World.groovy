@@ -1,5 +1,8 @@
 package hello
 
+import grails.compiler.GrailsCompileStatic
+
+@GrailsCompileStatic
 class World {
     Integer id
     Integer randomNumber
