@@ -1,0 +1,20 @@
+{
+    "name": "ringojs-techempower-benchmark-app",
+    "version": "0.1",
+    "description": "Ringojs benchmark application",
+    "maintainers": [{
+            "name": "Robert Gaggl",
+            "email": "robert.gaggl@orf.at"
+        }, {
+            "name": "Simon Oberhammer",
+            "email": "simon.oberhammer@orf.at"
+        }],
+    "contributors": [],
+    "dependencies": {
+        "sql-ringojs-client": ">= 0.0.1"
+    },
+    "engines": {
+        "ringojs": ">= 0.11"
+    },
+    "main": "./ringo-main.js"
+}
