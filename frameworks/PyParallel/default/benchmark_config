@@ -1,0 +1,19 @@
+{
+    "framework": "PyParallel",
+    "tests": [{
+        "default": {
+            "setup_file": "setup",
+            "port": 8080,
+            "approach": "Stripped",
+            "classification": "Platform",
+            "database": "None",
+            "orm": "Raw",
+            "platform": "PyParallel",
+            "language": "Python",
+            "webserver": "None",
+            "os": "Windows",
+            "database_os": "",
+            "display_name": "pyparallel",
+        },
+    }],
+}
