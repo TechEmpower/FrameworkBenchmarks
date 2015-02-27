@@ -7,6 +7,9 @@ $node_installer_path      = "v0.10.13/x64/$node_installer_file"
 $python_installer_file    = "python-2.7.5.amd64.msi"
 $python_installer_path    = "2.7.5/$python_installer_file"
 $python_version           = "27"
+$pyparallel_build         = "16493"
+$pyparallel_installer_file= "pyparallel-3.3.$pyparallel_build.amd64.msi"
+$pyparallel_version       = "33"
 $wincache_installer_file  = "wincache-1.3.4-5.4-nts-vc9-x86.exe"
 $wincache_installer_path  = "wincache-1.3.4/$wincache_installer_file"
 $go_installer_file        = "go1.2.windows-amd64.msi"
@@ -125,6 +128,21 @@ $python_installer_local = "$workdir\$python_installer_file"
 
 Start-Process $python_installer_local '/passive' -Wait
 $env:Path += ";C:\Python$python_version"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+#
+# PyParallel
+#
+Write-Host "Installing PyParallel...`n"
+$pyparallel_installer_url = "http://download.pyparallel.org/$pyparallel_installer_file"
+$pyparallel_installer_local = "$workdir\$pyparallel_installer_file"
+
+(New-Object System.Net.WebClient).DownloadFile($pyparallel_installer_url, $pyparallel_installer_local)
+
+# Note that we don't add C:\PyParallel33 to the PATH like we do with
+# everything else.  This is because PyParallel is indistinguishable from a
+# normal Python installation in terms of the binaries that are shipped (i.e.
+# python.exe, python33.dll, etc).
+Start-Process $pyparallel_installer_local '/passive' -Wait
 
 #
 # PHP
