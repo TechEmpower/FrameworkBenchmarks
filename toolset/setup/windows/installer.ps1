@@ -13,9 +13,9 @@ $pyparallel_version       = "33"
 $wincache_installer_file  = "wincache-1.3.4-5.4-nts-vc9-x86.exe"
 $wincache_installer_path  = "wincache-1.3.4/$wincache_installer_file"
 $go_installer_file        = "go1.2.windows-amd64.msi"
-$jre_installer_file       = "jdk-7u65-windows-x64.exe"
-$jdk_installer_file       = "jdk-7u65-windows-x64.exe"
-$jdk_master_hash          = "f0270817998c7408b24a2dd9ac420346" 
+$jre_installer_file       = "jdk-7u75-windows-x64.exe"
+$jdk_installer_file       = "jdk-7u75-windows-x64.exe"
+$jdk_master_hash          = "ff2cb8fa5b9703741d2df35ea62e0009"
 # http://www.oracle.com/technetwork/java/javase/downloads/java-se-binaries-checksum-1956892.html
 $resin_version            = "resin-4.0.41"
 $resin_installer_file     = "$resin_version.zip"
@@ -259,7 +259,11 @@ Write-Host "Installing Java...`n"
 
 # jdk
 Write-Host "Installing JDK...`n"
-$jdk_url = "http://ghaffarian.net/downloads/Java/JDK/$jdk_installer_file"
+# trent: switching to a server I control where I can ensure the JDK file isn't
+# removed; the ghaffarian.net site appears to only keep the latest one around,
+# which blows up the installer when we get a 404 trying to GET a previous one.
+#$jdk_url = "http://ghaffarian.net/downloads/Java/JDK/$jdk_installer_file"
+$jdk_url = "http://download.pyparallel.org/$jdk_installer_file"
 $jdk_local = "$workdir\$jdk_installer_file"
 $jdk_dir = "C:\Java\jdk"
 (New-Object System.Net.WebClient).DownloadFile($jdk_url, $jdk_local)
