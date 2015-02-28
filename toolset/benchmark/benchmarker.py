@@ -6,6 +6,7 @@ from benchmark.test_types import *
 from utils import header
 from utils import gather_tests
 from utils import gather_frameworks
+from utils import verify_database_connections
 
 import os
 import json
@@ -537,6 +538,15 @@ class Benchmarker:
             sudo service postgresql restart
           """)
           time.sleep(10)
+
+          st = verify_database_connections([
+            ("mysql", self.database_host, 3306),
+            ("mongodb", self.database_host, 27017),
+            ("redis", self.database_host, 6379),
+            ("postgresql", self.database_host, 5432),
+            ("cassandra", self.database_host, 9160)
+          ])
+          print "database connection test results:\n" + "\n".join(st[1])
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
