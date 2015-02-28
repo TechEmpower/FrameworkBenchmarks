@@ -9,6 +9,6 @@ sudo dpkg -i ringojs_0.11_all.deb
 
 rm -f ringojs_0.11_all.deb
 
-ringo-admin install http://packages.ringojs.org/download/rp/latest
+sudo ringo-admin install http://packages.ringojs.org/download/rp/latest
 
 touch $IROOT/ringojs_0.11.installed
