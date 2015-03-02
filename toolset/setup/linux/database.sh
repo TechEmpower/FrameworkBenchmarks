@@ -159,15 +159,24 @@ fi
 ##############################
 echo "Setting up Apache Cassandra database"
 sudo apt-get install -qqy openjdk-7-jdk
-export CASS_V=2.0.7
+
+sudo addgroup --system cassandra
+sudo adduser --system --home /ssd/cassandra --no-create-home --ingroup cassandra cassandra
+
+export CASS_V=2.0.12
 wget -nv http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
-tar xzf apache-cassandra-$CASS_V-bin.tar.gz
+sudo tar xzf apache-cassandra-$CASS_V-bin.tar.gz -C /opt
+sudo ln -s /opt/apache-cassandra-$CASS_V /opt/cassandra
 
 rm -rf /ssd/cassandra /ssd/log/cassandra
 mkdir -p /ssd/cassandra /ssd/log/cassandra
-mv cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
-mv cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
-nohup apache-cassandra-$CASS_V/bin/cassandra -p c.pid > cassandra.log
+sudo chown -R cassandra:cassandra /ssd/cassandra
+sudo cp -f cassandra/cassandra.init /etc/init.d/cassandra
+sudo cp -f cassandra/cassandra.init.env /etc/default/cassandra
+sudo cp -f cassandra/cassandra.yaml /opt/apache-cassandra-$CASS_V/conf
+sudo cp -f cassandra/log4j-server.properties /opt/apache-cassandra-$CASS_V/conf
+sudo update-rc.d cassandra defaults
+sudo service cassandra start
 
 for i in {1..45}; do
   nc -z localhost 9160 && break || sleep 1;
@@ -175,11 +184,10 @@ for i in {1..45}; do
 done
 nc -z localhost 9160
 if [ $? -eq 0 ]; then
-  cat cassandra/cleanup-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh 127.0.0.1
+  cat cassandra/cleanup-keyspace.cql | /opt/apache-cassandra-$CASS_V/bin/cqlsh 127.0.0.1
   python cassandra/db-data-gen.py > cassandra/tfb-data.cql
-  apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql 127.0.0.1
-  apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql 127.0.0.1
-  rm -rf apache-cassandra-*-bin.tar.gz cassandra
+  /opt/apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql 127.0.0.1
+  /opt/apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql 127.0.0.1
 else
   >&2 echo "Cassandra did not start, skipping"
 fi

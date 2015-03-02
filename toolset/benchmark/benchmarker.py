@@ -535,6 +535,7 @@ class Benchmarker:
             sudo restart mongod
             sudo service redis-server restart
             sudo service postgresql restart
+            sudo service cassandra restart
           """)
           time.sleep(10)
 
