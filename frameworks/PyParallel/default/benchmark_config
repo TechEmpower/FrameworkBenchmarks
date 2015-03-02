@@ -1,5 +1,5 @@
 {
-    "framework": "PyParallel",
+    "framework": "pyparallel",
     "tests": [{
         "default": {
             "setup_file": "setup",
