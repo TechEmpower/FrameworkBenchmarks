@@ -8,7 +8,6 @@
       "fortune_url": "/fortune",
       "update_url": "/update?queries=",
       "plaintext_url": "/plaintext",
-
       "port": 5050,
       "setup_file": "setup",
       "approach": "Realistic",
