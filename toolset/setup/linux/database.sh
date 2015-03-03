@@ -21,8 +21,6 @@
 # concentrated effort to address these cases, but PR's for specific 
 # problems are welcome
 
-export DB_HOST={database_host}
-
 set -x
 export DEBIAN_FRONTEND=noninteractive
 
@@ -143,10 +141,18 @@ sudo cp -R -p /var/lib/mongodb /ssd/
 sudo cp -R -p /var/log/mongodb /ssd/log/
 sudo service mongod start
 
-until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
-mongo < create.js
-rm create.js
-mongod --version
+for i in {1..45}; do
+  nc -z localhost 27017 && break || sleep 1;
+  echo "Waiting for MongoDB ($i/45}"
+done
+nc -z localhost 27017
+if [ $? -eq 0 ]; then
+  mongo < create.js
+  rm create.js
+  mongod --version
+else
+  >&2 echo "MongoDB did not start, skipping"
+fi
 
 ##############################
 # Apache Cassandra
@@ -159,21 +165,24 @@ tar xzf apache-cassandra-$CASS_V-bin.tar.gz
 
 rm -rf /ssd/cassandra /ssd/log/cassandra
 mkdir -p /ssd/cassandra /ssd/log/cassandra
-
-sed -i "s/^.*seeds:.*/          - seeds: \"$DB_HOST\"/" cassandra/cassandra.yaml
-sed -i "s/^listen_address:.*/listen_address: $DB_HOST/" cassandra/cassandra.yaml
-sed -i "s/^rpc_address:.*/rpc_address: $DB_HOST/" cassandra/cassandra.yaml
-
 mv cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
 mv cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
 nohup apache-cassandra-$CASS_V/bin/cassandra -p c.pid > cassandra.log
 
-until nc -z $DB_HOST 9160 ; do echo Waiting for Cassandra; sleep 1; done
-cat cassandra/cleanup-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh $DB_HOST
-python cassandra/db-data-gen.py > cassandra/tfb-data.cql
-apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql $DB_HOST
-apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql $DB_HOST
-rm -rf apache-cassandra-*-bin.tar.gz cassandra
+for i in {1..45}; do
+  nc -z localhost 9160 && break || sleep 1;
+  echo "Waiting for Cassandra ($i/45}"
+done
+nc -z localhost 9160
+if [ $? -eq 0 ]; then
+  cat cassandra/cleanup-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh 127.0.0.1
+  python cassandra/db-data-gen.py > cassandra/tfb-data.cql
+  apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql 127.0.0.1
+  apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql 127.0.0.1
+  rm -rf apache-cassandra-*-bin.tar.gz cassandra
+else
+  >&2 echo "Cassandra did not start, skipping"
+fi
 
 ##############################
 # Redis

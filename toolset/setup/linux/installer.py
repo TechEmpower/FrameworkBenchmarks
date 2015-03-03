@@ -26,9 +26,10 @@ class Installer:
       print("\nINSTALL: Installing database software\n")   
       self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="../config/database_sftp_batch"), True)
       with open (linux_install_root + "/database.sh", "r") as myfile:
-        remote_script=myfile.read().format(database_host=self.benchmarker.database_host)
         print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
-        p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
+        p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") +
+                             ["bash"], stdin=subprocess.PIPE)
+        remote_script = myfile.read()
         p.communicate(remote_script)
         returncode = p.returncode
         if returncode != 0:
