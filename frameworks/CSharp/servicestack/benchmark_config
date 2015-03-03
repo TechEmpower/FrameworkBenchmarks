@@ -1,7 +1,7 @@
 {
   "framework": "servicestack",
   "tests": [{
-    "iis-default": {
+    "default": {
       "setup_file": "setup_iis",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
