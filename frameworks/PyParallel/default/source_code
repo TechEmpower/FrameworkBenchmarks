@@ -1,0 +1,50 @@
+# (Note: this file isn't used by setup.py/TEFB.  We're currently still using
+#  `tefb.bat js` launcher that ships with PyParallel.  However, it works and
+#  basically does the exact same thing, just with less command line handling.)
+
+#===============================================================================
+# Imports
+#===============================================================================
+import socket
+import json
+
+import async
+import async.http.server
+#===============================================================================
+# Globals
+#===============================================================================
+HOSTNAME = socket.gethostname()
+IPADDR = socket.gethostbyname(HOSTNAME)
+
+#===============================================================================
+# Protocol
+#===============================================================================
+class TefbHttpServer(async.http.server.HttpServer):
+    concurrency = True
+
+    def get_json(self, request):
+        response = request.response
+        response.code = 200
+        response.message = 'OK'
+        response.content_type = 'application/json; charset=UTF-8'
+        response.body = json.dumps({'message': 'Hello, World'})
+
+    def get_plaintext(self, request):
+        response = request.response
+        response.code = 200
+        response.message = 'OK'
+        response.body = b'Hello, World!'
+
+#===============================================================================
+# Main
+#===============================================================================
+def main():
+    server = async.server(IPADDR, 8080)
+    protocol = TefbHttpServer
+    async.register(transport=server, protocol=protocol)
+    async.run()
+
+if __name__ == '__main__':
+    main()
+
+# vim:set syntax=python ts=8 sw=4 sts=4 tw=78 et:
