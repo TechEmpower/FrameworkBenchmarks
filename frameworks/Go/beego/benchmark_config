@@ -12,7 +12,7 @@
       "database": "MySQL",
       "framework": "beego",
       "language": "Go",
-      "orm": "beego ORM",
+      "orm": "Micro",
       "platform": "Go",
       "webserver": "None",
       "os": "Linux",
