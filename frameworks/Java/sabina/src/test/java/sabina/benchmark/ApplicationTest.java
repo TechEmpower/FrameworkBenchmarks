@@ -1,3 +1,17 @@
+/*
+ * Copyright © 2015 Juan José Aguililla. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
+ */
+
 package sabina.benchmark;
 
 import static org.apache.http.client.fluent.Request.Get;
@@ -13,26 +27,57 @@ import java.util.Scanner;
 
 import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-@org.testng.annotations.Test
+/**
+ * <p>TODO
+ * Write article about stress test with TestNG (scenarios, combine different tests in scenarios,
+ * adding random pauses...)
+ *
+ * <p>TODO Change assert's order
+ */
 public final class ApplicationTest {
+    private static final int THREADS = 32, EXECUTIONS = 64, WARM_UP = 16;
+
     private static final String ENDPOINT = "http://localhost:5050";
     private static final Gson GSON = new Gson ();
 
-    @org.testng.annotations.BeforeClass @BeforeClass
-    public static void setup () {
+    @BeforeClass public static void setup () {
         main (null);
     }
 
-    @org.testng.annotations.AfterClass @AfterClass
-    public static void close () {
+    @BeforeClass public void warm_up () throws IOException {
+        for (int ii = 0; ii < WARM_UP; ii++) {
+            json ();
+            plaintext ();
+            no_query_parameter ();
+            empty_query_parameter ();
+            text_query_parameter ();
+            zero_queries ();
+            one_thousand_queries ();
+            one_query ();
+            ten_queries ();
+            five_hundred_queries ();
+            fortunes ();
+            no_updates_parameter ();
+            empty_updates_parameter ();
+            text_updates_parameter ();
+            zero_updates ();
+            one_thousand_updates ();
+            one_update ();
+            ten_updates ();
+            five_hundred_updates ();
+        }
+    }
+
+    @AfterClass public static void close () {
         stop ();
     }
 
-    @Test public void json () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void json () throws IOException {
         HttpResponse response = get (ENDPOINT + "/json");
         String content = getContent (response);
 
@@ -40,7 +85,8 @@ public final class ApplicationTest {
         assertEquals ("Hello, World!", GSON.fromJson (content, Map.class).get ("message"));
     }
 
-    @Test public void plaintext () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void plaintext () throws IOException {
         HttpResponse response = get (ENDPOINT + "/plaintext");
         String content = getContent (response);
 
@@ -48,7 +94,8 @@ public final class ApplicationTest {
         assertEquals ("Hello, World!", content);
     }
 
-    @Test public void no_query_parameter () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void no_query_parameter () throws IOException {
         HttpResponse response = get (ENDPOINT + "/db");
         String content = getContent (response);
 
@@ -57,35 +104,43 @@ public final class ApplicationTest {
         assertTrue (resultsMap.containsKey ("id") && resultsMap.containsKey ("randomNumber"));
     }
 
-    @Test public void empty_query_parameter () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void empty_query_parameter () throws IOException {
         checkDbRequest ("/query?queries", 1);
     }
 
-    @Test public void text_query_parameter () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void text_query_parameter () throws IOException {
         checkDbRequest ("/query?queries=text", 1);
     }
 
-    @Test public void zero_queries () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void zero_queries () throws IOException {
         checkDbRequest ("/query?queries=0", 1);
     }
 
-    @Test public void one_thousand_queries () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void one_thousand_queries () throws IOException {
         checkDbRequest ("/query?queries=1000", 500);
     }
 
-    @Test public void one_query () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void one_query () throws IOException {
         checkDbRequest ("/query?queries=1", 1);
     }
 
-    @Test public void ten_queries () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void ten_queries () throws IOException {
         checkDbRequest ("/query?queries=10", 10);
     }
 
-    @Test public void five_hundred_queries () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void five_hundred_queries () throws IOException {
         checkDbRequest ("/query?queries=500", 500);
     }
 
-    @Test public void fortunes () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void fortunes () throws IOException {
         HttpResponse response = get (ENDPOINT + "/fortune");
         String content = getContent (response);
         String contentType = response.getEntity ().getContentType ().getValue ();
@@ -94,10 +149,11 @@ public final class ApplicationTest {
         assertTrue (response.getFirstHeader ("Date") != null);
         assertTrue (content.contains ("&lt;script&gt;alert(&quot;This should not be displayed"));
         assertTrue (content.contains ("フレームワークのベンチマーク"));
-        assertEquals ("text/html; charset=utf-8", contentType);
+        assertEquals ("text/html; charset=utf-8", contentType.toLowerCase ());
     }
 
-    @Test public void no_updates_parameter () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void no_updates_parameter () throws IOException {
         HttpResponse response = get (ENDPOINT + "/update");
         String content = getContent (response);
 
@@ -106,31 +162,38 @@ public final class ApplicationTest {
         assertTrue (resultsMap.containsKey ("id") && resultsMap.containsKey ("randomNumber"));
     }
 
-    @Test public void empty_updates_parameter () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void empty_updates_parameter () throws IOException {
         checkDbRequest ("/update?queries", 1);
     }
 
-    @Test public void text_updates_parameter () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void text_updates_parameter () throws IOException {
         checkDbRequest ("/update?queries=text", 1);
     }
 
-    @Test public void zero_updates () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void zero_updates () throws IOException {
         checkDbRequest ("/update?queries=0", 1);
     }
 
-    @Test public void one_thousand_updates () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void one_thousand_updates () throws IOException {
         checkDbRequest ("/update?queries=1000", 500);
     }
 
-    @Test public void one_update () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void one_update () throws IOException {
         checkDbRequest ("/update?queries=1", 1);
     }
 
-    @Test public void ten_updates () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void ten_updates () throws IOException {
         checkDbRequest ("/update?queries=10", 10);
     }
 
-    @Test public void five_hundred_updates () throws IOException {
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void five_hundred_updates () throws IOException {
         checkDbRequest ("/update?queries=500", 500);
     }
 
