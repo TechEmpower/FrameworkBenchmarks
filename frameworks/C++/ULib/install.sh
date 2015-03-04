@@ -42,6 +42,7 @@ if [ ! -f "benchmark.cfg" ]; then
 userver {
  PORT 8080
  PREFORK_CHILD 8
+ MAX_KEEP_ALIVE 1023
  LISTEN_BACKLOG 16384
  CLIENT_FOR_PARALLELIZATION 256
  ORM_DRIVER "mysql pgsql sqlite"

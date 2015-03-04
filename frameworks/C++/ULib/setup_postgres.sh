@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export UMEMPOOL="152,85,0,37,8315,105,-17,-22,40"
+export UMEMPOOL="152,85,0,37,8330,105,-17,-22,40"
 export ORM_DRIVER="pgsql"
 export ORM_OPTION="host=${DBHOST} user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world client_encoding=UTF8"
 
