@@ -15,14 +15,26 @@ limitations under the License.
 */
 package app.controllers;
 
+import app.models.World;
+import java.io.IOException;
 import org.javalite.activeweb.AppController;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
- * @author Igor Polevoy: 12/19/13 1:23 AM
+ * @author Igor Polevoy: 12/18/13 4:36 PM
  * @author Eric Nielsen
  */
-public class PlaintextController extends AppController {
+public class DbController extends AppController {
     public void index() {
-        respond("Hello, World!").contentType("text/plain");
+        respond(World.findById(randomNumber()).toJson(false, "id", "randomNumber")).contentType("application/json");
+    }
+
+    public void jackson() throws IOException {
+        JsonController.WRITER.writeValue(outputStream("application/json"), World.findById(randomNumber()));
+    }
+
+    protected int randomNumber(){
+        return ThreadLocalRandom.current().nextInt(10000) + 1;
     }
 }

@@ -13,16 +13,26 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package app.controllers;
-
-import org.javalite.activeweb.AppController;
+package app.models;
 
 /**
- * @author Igor Polevoy: 12/19/13 1:23 AM
  * @author Eric Nielsen
  */
-public class PlaintextController extends AppController {
-    public void index() {
-        respond("Hello, World!").contentType("text/plain");
+public class Message {
+    private String message;
+
+    public Message() {
+    }
+
+    public Message(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

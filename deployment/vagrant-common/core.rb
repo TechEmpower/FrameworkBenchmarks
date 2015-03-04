@@ -77,7 +77,9 @@ def provider_aws(config, role, ip_address='172.16.0.16')
   end
 end
 
-def provider_virtualbox(config, role)
+def provider_virtualbox(config, role, ip_address='172.16.0.16')
+  config.vm.network "private_network", ip: ip_address
+  
   config.vm.provider :virtualbox do |vb, override|
     override.vm.hostname = "TFB-#{role}"
 

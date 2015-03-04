@@ -13,16 +13,30 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package app.controllers;
 
-import org.javalite.activeweb.AppController;
+import org.javalite.activeweb.ControllerSpec;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
- * @author Igor Polevoy: 12/19/13 1:23 AM
  * @author Eric Nielsen
  */
-public class PlaintextController extends AppController {
-    public void index() {
-        respond("Hello, World!").contentType("text/plain");
+public class PlaintextControllerSpec extends ControllerSpec {
+
+    @Test
+    public void shouldRenderResponse() {
+        request().get("index");
+        the(responseContent()).shouldBeEqual("Hello, World!");
+    }
+
+    @Ignore
+    public void shouldRenderHtmlOneMinute() {
+        long endMillis = System.currentTimeMillis() + 60*1000;
+        do {
+            request().get("index");
+            responseContent();
+        } while (System.currentTimeMillis() < endMillis);
     }
 }
