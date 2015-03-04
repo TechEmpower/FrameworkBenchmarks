@@ -78,7 +78,7 @@
 
 * Self Hosting using HTTPListener (Windows/Linux)
 * IIS 8 (Windows) - includes [Swagger](http://www.nuget.org/packages/ServiceStack.Api.Swagger/)
-* nginx 1.4.0 & XSP FastCGI (Linux)
+* nginx 1.6.2 & XSP FastCGI (Linux)
 
 **Web Stack**
 

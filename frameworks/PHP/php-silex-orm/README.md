@@ -20,7 +20,7 @@ The tests were run with:
 * [Silex Version 1.0](http://silex.sensiolabs.org/)
 * [Doctrine ORM Service Provider](https://github.com/dflydev/dflydev-doctrine-orm-service-provider)
 * [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
-* [nginx 1.2.7](http://nginx.org/)
+* [nginx 1.6.2](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 ## Test URLs
