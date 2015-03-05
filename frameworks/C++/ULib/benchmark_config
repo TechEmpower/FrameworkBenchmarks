@@ -2,7 +2,7 @@
   "framework": "ULib",
   "tests": [{
     "default": {
-      "setup_file": "setup_sqlite",
+      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -16,7 +16,7 @@
       "webserver": "userver_tcp",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ULib-mysql",
+      "display_name": "ULib",
       "notes": "",
       "versus": ""
     },
