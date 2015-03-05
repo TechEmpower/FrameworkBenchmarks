@@ -390,7 +390,7 @@ the [deployment directory](deployment) for specifics
 When adding a new framework or new test to an existing 
 framework, please follow these steps:
 
-* Update/add a [benchmark_config](#the-benchmark_config-file)
+* Update/add a [benchmark_config.json](#the-benchmark_configjson-file)
 * Update/add a [setup file](#setup-files)
 * Update/add an [install.sh file](#install-file)
 * (Optional) Update/add a [bash_profile.sh file](#bash-environment-file)
@@ -398,13 +398,13 @@ framework, please follow these steps:
   Our database setup scripts are stored inside the `config/` folder if 
   you need to see the database schema
 
-### The benchmark_config File
+### The benchmark_config.json File
 
-The `benchmark_config` file is used by our scripts to identify 
+The `benchmark_config.json` file is used by our scripts to identify 
 available tests - it should exist at the root of the framework directory.
 We
 
-Here is an example `benchmark_config` from the `Compojure` framework. 
+Here is an example `benchmark_config.json` from the `Compojure` framework. 
 There are two different tests listed for the `Compojure` framework, 
 
     {
@@ -511,7 +511,7 @@ your code manually.
 The steps involved are:
 
 * Assuming you have implemented the Linux test already, add a new test 
-permutation to your `benchmark_config` file for the Windows test.  When 
+permutation to your `benchmark_config.json` file for the Windows test.  When 
 the benchmark script runs on Linux, it skips tests where `os` in `Windows`
 and vice versa. 
 * Add the necessary tweaks to your [setup file](#setup-files) to start and 

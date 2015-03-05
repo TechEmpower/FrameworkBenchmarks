@@ -757,7 +757,7 @@ def parse_config(config, directory, benchmarker):
 
     names = [name for (name,keys) in test.iteritems()]
     if "default" not in names:
-      logging.warn("Framework %s does not define a default test in benchmark_config", config['framework'])
+      logging.warn("Framework %s does not define a default test in benchmark_config.json", config['framework'])
     
     for test_name, test_keys in test.iteritems():
       # Prefix all test names with framework except 'default' test
@@ -770,14 +770,14 @@ def parse_config(config, directory, benchmarker):
       if not test_keys['framework']:
         test_keys['framework'] = config['framework']
       #if test_keys['framework'].lower() != config['framework'].lower():
-      #  print Exception("benchmark_config for test %s is invalid - test framework '%s' must match benchmark_config framework '%s'" % 
+      #  print Exception("benchmark_config.json for test %s is invalid - test framework '%s' must match benchmark_config.json framework '%s'" % 
       #    (test_name, test_keys['framework'], config['framework']))
 
       # Confirm required keys are present
       # TODO have a TechEmpower person confirm this list - I don't know what the website requires....
       required = ['language','webserver','classification','database','approach','orm','framework','os','database_os']
       if not all (key in test_keys for key in required):
-        raise Exception("benchmark_config for test %s is invalid - missing required keys" % test_name)      
+        raise Exception("benchmark_config.json for test %s is invalid - missing required keys" % test_name)      
       
       # Map test type to a parsed FrameworkTestType object
       runTests = dict()
