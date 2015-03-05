@@ -19,7 +19,7 @@ The tests were run with:
 
 * [Codeigniter Version 2.1.3](http://ellislab.com/codeigniter)
 * [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
-* [nginx 1.4.0](http://nginx.org/)
+* [nginx 1.6.2](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 ## Test URLs

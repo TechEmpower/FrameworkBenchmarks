@@ -24,7 +24,7 @@
 
 * IIS 8 (Windows)
 * XSP latest (Linux)
-* nginx 1.4.1 & XSP FastCGI (Linux)
+* nginx 1.6.2 & XSP FastCGI (Linux)
 
 **Web Stack**
 

@@ -21,7 +21,7 @@ The tests were run with:
 
 * [YAF 2.2.9](http://www.yafdev.com/)
 * [PHP Version 5.4.14](http://www.php.net/) with FPM, APC and YAF extension
-* [nginx 1.2.8](http://nginx.org/)
+* [nginx 1.6.2](http://nginx.org/)
 * [MySQL 5.5.31](https://dev.mysql.com/)
 
 ## Test URLs
