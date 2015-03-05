@@ -512,7 +512,7 @@ class Benchmarker:
          open(os.path.join(logDir, 'err.txt'), 'w') as err:
 
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
-        out.write("OS or Database OS specified in benchmark_config does not match the current environment. Skipping.\n")
+        out.write("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.\n")
         return exit_with_code(0)
       
       # If the test is in the excludes list, we skip it
