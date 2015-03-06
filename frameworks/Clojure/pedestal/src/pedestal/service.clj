@@ -1,4 +1,4 @@
-(ns pedestal-api.service
+(ns pedestal.service
   (:require [io.pedestal.http :as bootstrap]
             [io.pedestal.http.route :as route]
             [io.pedestal.http.body-params :as body-params]

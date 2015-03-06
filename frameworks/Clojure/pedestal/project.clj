@@ -1,4 +1,4 @@
-(defproject pedestal-api "0.0.1-SNAPSHOT"
+(defproject pedestal "0.0.1-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -14,6 +14,6 @@
                  [org.clojure/data.json "0.2.5"]]
   :min-lein-version "2.0.0"
   :resource-paths ["config", "resources"]
-  :profiles {:dev {:aliases {"run-dev" ["trampoline" "run" "-m" "pedestal-api.server/run-dev"]}
+  :profiles {:dev {:aliases {"run-dev" ["trampoline" "run" "-m" "pedestal.server/run-dev"]}
                    :dependencies [[io.pedestal/pedestal.service-tools "0.3.1"]]}}
-  :main ^{:skip-aot true} pedestal-api.server)
+  :main ^{:skip-aot true} pedestal.server)

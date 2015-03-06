@@ -5,4 +5,5 @@ This is the Pedestal portion of a [benchmarking test suite](../) comparing a var
 ## Test URLs
 ### JSON Encoding Test
 
-http://localhost:8080/
+http://localhost:8080/json
+
