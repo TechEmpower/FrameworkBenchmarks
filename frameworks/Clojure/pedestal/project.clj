@@ -1,6 +1,6 @@
-(defproject pedestal "0.0.1-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+(defproject pedestal "0.1"
+  :description "A Clojure-Pedestal server for testing in the Framework Benchmarks"
+  :url "https://github.com/TechEmpower/FrameworkBenchmarks"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
@@ -16,4 +16,7 @@
   :resource-paths ["config", "resources"]
   :profiles {:dev {:aliases {"run-dev" ["trampoline" "run" "-m" "pedestal.server/run-dev"]}
                    :dependencies [[io.pedestal/pedestal.service-tools "0.3.1"]]}}
-  :main ^{:skip-aot true} pedestal.server)
+  :auto-clean false
+  :main pedestal.server
+  :aot [pedestal.server]
+  :uberjar-name "pedestal-standalone.jar")
