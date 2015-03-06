@@ -41,7 +41,7 @@ if [ ! -f "benchmark.cfg" ]; then
   cat <<EOF >benchmark.cfg
 userver {
  PORT 8080
- PREFORK_CHILD 8
+ PREFORK_CHILD 4
  MAX_KEEP_ALIVE 1023
  LISTEN_BACKLOG 16384
  CLIENT_FOR_PARALLELIZATION 256

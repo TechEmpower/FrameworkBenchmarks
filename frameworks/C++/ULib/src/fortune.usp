@@ -1,48 +1,51 @@
+<!--#
+Test type 4: Fortunes
+TechEmpower Web Framework Benchmarks
+-->
 <!--#declaration
 #include "fortune.h"
 
-static UOrmSession*		  psql_fortune;
-static UOrmStatement*	  pstmt_fortune;
-static Fortune*			  pfortune;
+static Fortune*           pfortune;
 static UString*           pmessage;
+static UOrmSession*       psql_fortune;
+static UOrmStatement*     pstmt_fortune;
 static UVector<Fortune*>* pvfortune;
-
-static void usp_init_fortune()
-{
-	U_TRACE(5, "::usp_init_fortune()")
-
-	pfortune  = U_NEW(Fortune);
-	pvfortune = U_NEW(UVector<Fortune*>);
-	pmessage  = U_NEW(U_STRING_FROM_CONSTANT("Additional fortune added at request time."));
-}
 
 static void usp_fork_fortune()
 {
-	U_TRACE(5, "::usp_fork_fortune()")
+   U_TRACE(5, "::usp_fork_fortune()")
 
-	psql_fortune  = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
+   psql_fortune = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
 
-	if (psql_fortune->isReady())
-		{
-		pstmt_fortune = U_NEW(UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
+   if (psql_fortune->isReady())
+      {
+      pstmt_fortune = U_NEW(UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
 
-		if (pstmt_fortune == 0) U_ERROR("usp_fork_fortune(): we cound't connect to db");
+      if (pstmt_fortune == 0) U_ERROR("usp_fork_fortune(): we cound't connect to db");
 
-		pstmt_fortune->into(*pfortune);
-		}
+      pfortune = U_NEW(Fortune);
+
+      pstmt_fortune->into(*pfortune);
+
+      pmessage  = U_NEW(U_STRING_FROM_CONSTANT("Additional fortune added at request time."));
+      pvfortune = U_NEW(UVector<Fortune*>);
+      }
 }
 
 #ifdef DEBUG
 static void usp_end_fortune()
 {
-	U_TRACE(5, "::usp_end_fortune()")
+   U_TRACE(5, "::usp_end_fortune()")
 
-	if (pstmt_fortune) delete pstmt_fortune;
+   if (pstmt_fortune)
+   {
+   delete pstmt_fortune;
 
-	delete psql_fortune;
-	delete pvfortune;
-	delete pfortune;
-	delete pmessage;
+   delete psql_fortune;
+   delete pvfortune;
+   delete pfortune;
+   delete pmessage;
+   }
 }
 #endif
 -->
@@ -52,22 +55,22 @@ unsigned char encoded[1024];
 
 pstmt_fortune->execute();
 
-	  pvfortune->push_back(U_NEW(Fortune(0, *pmessage)));
-do	{ pvfortune->push_back(U_NEW(Fortune(*pfortune))); } while (pstmt_fortune->nextRow());
+     pvfortune->push_back(U_NEW(Fortune(0, *pmessage)));
+do { pvfortune->push_back(U_NEW(Fortune(*pfortune))); } while (pstmt_fortune->nextRow());
 
 pvfortune->sort(Fortune::cmp_obj);
 
 for (uint32_t i = 0, n = pvfortune->size(); i < n; ++i)
-	{
-	elem = (*pvfortune)[i];
+   {
+   elem = (*pvfortune)[i];
 
-	USP_PRINTF_ADD(
-		"<tr>"
-		"<td>%u</td>"
-		"<td>%.*s</td>"
-		"</tr>",
-		elem->id, u_xml_encode((const unsigned char*)U_STRING_TO_PARAM(elem->message), encoded), encoded);
-	}
+   USP_PRINTF_ADD(
+      "<tr>"
+      "<td>%u</td>"
+      "<td>%.*s</td>"
+      "</tr>",
+      elem->id, u_xml_encode((const unsigned char*)U_STRING_TO_PARAM(elem->message), encoded), encoded);
+   }
 
 pvfortune->clear();
 --></table></body></html>
