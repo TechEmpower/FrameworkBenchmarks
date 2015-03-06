@@ -170,7 +170,7 @@ sudo ln -s /opt/apache-cassandra-$CASS_V /opt/cassandra
 
 rm -rf /ssd/cassandra /ssd/log/cassandra
 mkdir -p /ssd/cassandra /ssd/log/cassandra
-sudo chown -R cassandra:cassandra /ssd/cassandra
+sudo chown -R cassandra:cassandra /ssd/cassandra /ssd/log/cassandra
 sudo cp -f cassandra/cassandra.init /etc/init.d/cassandra
 sudo cp -f cassandra/cassandra.init.env /etc/default/cassandra
 sudo cp -f cassandra/cassandra.yaml /opt/apache-cassandra-$CASS_V/conf
