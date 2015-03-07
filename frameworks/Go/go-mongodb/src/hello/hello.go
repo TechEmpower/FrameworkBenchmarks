@@ -107,3 +107,35 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(worlds)
 }
+
+func updateHandler(w http.ResponseWriter, r *http.Request) {
+	n := 1
+	if nStr := r.URL.Query().Get("queries"); len(nStr) > 0 {
+		n, _ = strconv.Atoi(nStr)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(w)
+
+	if n <= 1 {
+		var world World
+		colQuery := bson.M{"id": getRandomNumber()}
+		update := bson.M{"$set": bson.M{"randomNumber": getRandomNumber()}}
+		if err := c.Update(colQuery, update); err != nil {
+			log.Fatalf("Error updating world with id: %s", err.Error())
+		}
+	} else {
+		if n > 500 {
+			n = 500
+		}
+		worlds := make([]World, n)
+		for _, world := range worlds {
+			colQuery := bson.M{"id": getRandomNumber()}
+			update := bson.M{"$set": bson.M{"randomNumber": getRandomNumber()}}
+			if err := c.Update(colQuery, update); err != nil {
+				log.Fatalf("Error updating world with id: %s", err.Error())
+			}
+		}
+		encoder.Encode(worlds)
+	}
+}
