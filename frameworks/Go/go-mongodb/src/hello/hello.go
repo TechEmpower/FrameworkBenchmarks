@@ -47,8 +47,11 @@ func main() {
 		session.SetPoolLimit(5)
 		database = session.DB("hello_world")
 		collection = database.C("world")
-		http.HandleFunc("/db", dbHandler)
 		http.HandleFunc("/json", jsonHandler)
+		http.HandleFunc("/db", dbHandler)
+		http.HandleFunc("queries", queriesHandler)
+		http.HandleFunc("/update", updateHandler)
+		http.HandleFunc("/plaintext", plaintextHandler)
 		fmt.Println("Serving on http://localhost" + port)
 		http.ListenAndServe(port, nil)
 	}
@@ -138,4 +141,9 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		encoder.Encode(worlds)
 	}
+}
+
+func plaintextHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write([]byte("Hello, World!"))
 }
