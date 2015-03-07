@@ -14,7 +14,7 @@
 
 (defn json-test
   [request]
-  (ring-resp/response (json/write-str {:message "Hello, World!"})))
+  (bootstrap/json-response {:message "Hello, World!"}))
 
 (defroutes routes
   [[["/json" {:get json-test}]]])
