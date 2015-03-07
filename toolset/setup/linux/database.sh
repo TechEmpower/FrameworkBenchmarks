@@ -31,6 +31,14 @@ export TFB_DISTRIB_CODENAME=$DISTRIB_CODENAME
 export TFB_DISTRIB_DESCRIPTION=$DISTRIB_DESCRIPTION
 
 ##############################
+# check environment
+##############################
+
+# verify that $TFB_DBHOST is set
+echo "TFB_DBHOST: $TFB_DBHOST"
+[ -z "$TFB_DBHOST" ] && echo "ERROR: TFB_DBHOST is not set!"
+
+##############################
 # Prerequisites
 ##############################
 sudo apt-get -y update
@@ -171,23 +179,33 @@ sudo ln -s /opt/apache-cassandra-$CASS_V /opt/cassandra
 rm -rf /ssd/cassandra /ssd/log/cassandra
 mkdir -p /ssd/cassandra /ssd/log/cassandra
 sudo chown -R cassandra:cassandra /ssd/cassandra /ssd/log/cassandra
+
+cp cassandra/cassandra.yaml cassandra/cassandra.yaml.mod
+cat <<EOF > cassandra/cass_conf_replace.sed
+s/- seeds: "\([^"]*\)"/- seeds: "$TFB_DBHOST"/
+s/listen_address: \(.*\)/listen_address: $TFB_DBHOST/
+s/rpc_address: \(.*\)/rpc_address: $TFB_DBHOST/
+EOF
+sed -i -f cassandra/cass_conf_replace.sed cassandra/cassandra.yaml.mod
+
 sudo cp -f cassandra/cassandra.init /etc/init.d/cassandra
 sudo cp -f cassandra/cassandra.init.env /etc/default/cassandra
-sudo cp -f cassandra/cassandra.yaml /opt/apache-cassandra-$CASS_V/conf
+sudo cp -f cassandra/cassandra.yaml.mod /opt/apache-cassandra-$CASS_V/conf/cassandra.yaml
 sudo cp -f cassandra/log4j-server.properties /opt/apache-cassandra-$CASS_V/conf
+
 sudo update-rc.d cassandra defaults
-sudo service cassandra start
+sudo service cassandra restart
 
 for i in {1..45}; do
-  nc -z localhost 9160 && break || sleep 1;
+  nc -z $TFB_DBHOST 9160 && break || sleep 1;
   echo "Waiting for Cassandra ($i/45}"
 done
-nc -z localhost 9160
+nc -z $TFB_DBHOST 9160
 if [ $? -eq 0 ]; then
-  cat cassandra/cleanup-keyspace.cql | /opt/apache-cassandra-$CASS_V/bin/cqlsh 127.0.0.1
+  cat cassandra/cleanup-keyspace.cql | /opt/apache-cassandra-$CASS_V/bin/cqlsh $TFB_DBHOST
   python cassandra/db-data-gen.py > cassandra/tfb-data.cql
-  /opt/apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql 127.0.0.1
-  /opt/apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql 127.0.0.1
+  /opt/apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql $TFB_DBHOST
+  /opt/apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql $TFB_DBHOST
 else
   >&2 echo "Cassandra did not start, skipping"
 fi
