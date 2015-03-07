@@ -58,7 +58,7 @@ func main() {
 }
 
 // Helper for random numbers
-func getRandomNumber() {
+func getRandomNumber() int {
 	return rand.Intn(worldRowCount) + 1
 }
 
@@ -124,9 +124,13 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		var world World
 		colQuery := bson.M{"id": getRandomNumber()}
 		update := bson.M{"$set": bson.M{"randomNumber": getRandomNumber()}}
-		if err := c.Update(colQuery, update); err != nil {
+		if err := collection.Update(colQuery, update); err != nil {
 			log.Fatalf("Error updating world with id: %s", err.Error())
+		} else {
+			world.Id = colQuery["id"]
+			world.RandomNumber = update["$set"].(bson.M)["randomNumber"]
 		}
+		encoder.Encode(world)
 	} else {
 		if n > 500 {
 			n = 500
@@ -135,8 +139,11 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		for _, world := range worlds {
 			colQuery := bson.M{"id": getRandomNumber()}
 			update := bson.M{"$set": bson.M{"randomNumber": getRandomNumber()}}
-			if err := c.Update(colQuery, update); err != nil {
+			if err := collection.Update(colQuery, update); err != nil {
 				log.Fatalf("Error updating world with id: %s", err.Error())
+			} else {
+				world.Id = colQuery["id"]
+				world.RandomNumber = update["$set"].(bson.M)["randomNumber"]
 			}
 		}
 		encoder.Encode(worlds)
