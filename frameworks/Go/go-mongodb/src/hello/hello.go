@@ -127,8 +127,8 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		if err := collection.Update(colQuery, update); err != nil {
 			log.Fatalf("Error updating world with id: %s", err.Error())
 		} else {
-			world.Id = colQuery["id"]
-			world.RandomNumber = update["$set"].(bson.M)["randomNumber"]
+			world.Id = colQuery["id"].(uint16)
+			world.RandomNumber = update["$set"].(bson.M)["randomNumber"].(uint16)
 		}
 		encoder.Encode(world)
 	} else {
@@ -142,8 +142,8 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 			if err := collection.Update(colQuery, update); err != nil {
 				log.Fatalf("Error updating world with id: %s", err.Error())
 			} else {
-				world.Id = colQuery["id"]
-				world.RandomNumber = update["$set"].(bson.M)["randomNumber"]
+				world.Id = colQuery["id"].(uint16)
+				world.RandomNumber = update["$set"].(bson.M)["randomNumber"].(uint16)
 			}
 		}
 		encoder.Encode(worlds)
