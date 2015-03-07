@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"log"
+	"math/rand"
 	"net/http"
 	"runtime"
+	"strconv"
 )
 
 const (
@@ -17,6 +20,7 @@ const (
 
 var (
 	collection *mgo.Collection
+	database   *mgo.Database
 )
 
 type Message struct {
@@ -36,17 +40,18 @@ type Fortune struct {
 func main() {
 	port := ":8228"
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	session, err := mgo.Dial(connectionString)
-	if err != nil {
+	if session, err := mgo.Dial(connectionString); err != nil {
 		log.Fatalf("Error opening database: %v", err)
+	} else {
+		defer session.Close()
+		session.SetPoolLimit(5)
+		database = session.DB("hello_world")
+		collection = database.C("world")
+		http.HandleFunc("/db", dbHandler)
+		http.HandleFunc("/json", jsonHandler)
+		fmt.Println("Serving on http://localhost" + port)
+		http.ListenAndServe(port, nil)
 	}
-	defer session.Close()
-	session.SetPoolLimit(5)
-	collection = session.DB("hello_world").C("world")
-	http.HandleFunc("/db", dbHandler)
-	http.HandleFunc("/json", jsonHandler)
-	fmt.Println("Serving on http://localhost" + port)
-	http.ListenAndServe(port, nil)
 }
 
 // Test 1: JSON serialization
@@ -57,12 +62,11 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 
 func dbHandler(w http.ResponseWriter, r *http.Request) {
 	var world World
-	var randomNumber = rand.Intn(worldRowCount) + 1
 	query := bson.M{
-		"id": randomNumber,
+		"id": rand.Intn(worldRowCount) + 1,
 	}
 	if collection != nil {
-		if err := collection.Find(query).One(&World); err != nil {
+		if err := collection.Find(query).One(&world); err != nil {
 			log.Fatalf("Error finding world with id: %s", err.Error())
 			return
 		} else {
@@ -73,4 +77,32 @@ func dbHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		log.Fatal("Collection not initialized properly")
 	}
+}
+
+func queriesHandler(w http.ResponseWriter, r *http.Request) {
+	n := 1
+	if nStr := r.URL.Query().Get("queries"); len(nStr) > 0 {
+		n, _ = strconv.Atoi(nStr)
+	}
+
+	if n <= 1 {
+		dbHandler(w, r)
+		return
+	} else if n > 500 {
+		n = 500
+	}
+
+	worlds := make([]World, n)
+	for _, world := range worlds {
+		query := bson.M{
+			"id": rand.Intn(worldRowCount) + 1,
+		}
+		if err := collection.Find(query).One(&world); err != nil {
+			log.Fatalf("Error finding world with id: %s", err.Error())
+			return
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(worlds)
 }
