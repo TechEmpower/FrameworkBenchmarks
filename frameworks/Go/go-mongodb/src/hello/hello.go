@@ -54,6 +54,11 @@ func main() {
 	}
 }
 
+// Helper for random numbers
+func getRandomNumber() {
+	return rand.Intn(worldRowCount) + 1
+}
+
 // Test 1: JSON serialization
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/javascript")
@@ -62,9 +67,7 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 
 func dbHandler(w http.ResponseWriter, r *http.Request) {
 	var world World
-	query := bson.M{
-		"id": rand.Intn(worldRowCount) + 1,
-	}
+	query := bson.M{"id": getRandomNumber()}
 	if collection != nil {
 		if err := collection.Find(query).One(&world); err != nil {
 			log.Fatalf("Error finding world with id: %s", err.Error())
@@ -94,9 +97,7 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 
 	worlds := make([]World, n)
 	for _, world := range worlds {
-		query := bson.M{
-			"id": rand.Intn(worldRowCount) + 1,
-		}
+		query := bson.M{"id": getRandomNumber()}
 		if err := collection.Find(query).One(&world); err != nil {
 			log.Fatalf("Error finding world with id: %s", err.Error())
 			return
