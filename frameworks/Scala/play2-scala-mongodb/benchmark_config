@@ -1,8 +1,8 @@
 {
-  "framework": "play-scala-mongodb",
+  "framework": "play2-scala-mongodb",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup_scala_mongodb",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "port": 9000,
@@ -16,7 +16,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "play-scala-rmongo",
+      "display_name": "play2-scala-rmongo",
       "notes": "Uses Reactive Mongo",
       "versus": "netty"
     }
