@@ -1,2 +1,3 @@
-export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
+export JAVA_HOME=/opt/java8
+export JAVA_EXE=$JAVA_HOME/bin/java
 export RESIN_HOME=${IROOT}/resin-4.0.41

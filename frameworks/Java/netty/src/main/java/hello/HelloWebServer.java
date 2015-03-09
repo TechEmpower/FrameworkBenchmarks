@@ -1,5 +1,7 @@
 package hello;
 
+import java.net.InetSocketAddress;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
@@ -38,6 +40,8 @@ public class HelloWebServer {
 
     private void doRun(EventLoopGroup loupGroup, Class<? extends ServerChannel> serverChannelClass) throws InterruptedException {
 	try {
+		InetSocketAddress inet = new InetSocketAddress(port);
+		
 	    ServerBootstrap b = new ServerBootstrap();
 	    b.option(ChannelOption.SO_BACKLOG, 1024);
 	    b.option(ChannelOption.SO_REUSEADDR, true);
@@ -47,7 +51,10 @@ public class HelloWebServer {
 	    b.childOption(ChannelOption.SO_REUSEADDR, true);
 	    b.childOption(ChannelOption.MAX_MESSAGES_PER_READ, Integer.MAX_VALUE);
 
-	    Channel ch = b.bind(port).sync().channel();
+	    Channel ch = b.bind(inet).sync().channel();
+	    
+	    System.out.printf("Httpd started. Listening on: %s%n", inet.toString());	    
+	    
 	    ch.closeFuture().sync();
 	} finally {
 	    loupGroup.shutdownGracefully().sync();
