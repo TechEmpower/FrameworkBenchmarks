@@ -10,7 +10,7 @@ RETCODE=$(fw_exists rvm.installed)
 # Never run installation inside of TRAVIS, 
 # just rely on their default RVM installaton
 [ "$TRAVIS" != "true" ] || { \
-  source ~/.rvm/scripts/rvm
+  source /home/travis/.rvm/scripts/rvm
   touch rvm.installed
   return 0;
 }
