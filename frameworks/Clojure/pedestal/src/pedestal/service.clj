@@ -12,12 +12,21 @@
                               (clojure-version)
                               (route/url-for ::about-page))))
 
-(defn json-test
+(defn json-serialization
   [request]
   (bootstrap/json-response {:message "Hello, World!"}))
 
+(defn plaintext
+  [request]
+  (ring-resp/response "Hello, World!"))
+
+
+
+
 (defroutes routes
-  [[["/json" {:get json-test}]]])
+  [[
+  [  "/json" {:get json-serialization}]
+  [  "/plaintext" {:get plaintext}]]])
 
 ;; How the server will look, not the code to start it up
 (def service {:env :prod
