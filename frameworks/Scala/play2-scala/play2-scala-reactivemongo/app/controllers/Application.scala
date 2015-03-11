@@ -13,6 +13,8 @@ import play.api.libs.concurrent.Akka
 
 object Application extends Controller {
 
+  private val TestDatabaseRows = 10000
+
   val DEFAULT_HOST = "localhost:27017"
   val servers = current.configuration.getStringList("mongodb.servers") match {
     case Some(servers) => collectionAsScalaIterable(servers).toList
@@ -20,56 +22,56 @@ object Application extends Controller {
   }
 
   val DEFAULT_DB = "hello_world"
-  val dbName = current.configuration.getString("mongodb.db").getOrElse(DEFAULT_DB)
+  val db = current.configuration.getString("mongodb.db").getOrElse(DEFAULT_DB)
 
   //private val dbExecutionContext: ExecutionContext = Akka.system.dispatchers.lookup("dbExecutionContext")
-  private val database = {
-    ReactiveMongoPlugin
-      .driver
-      .connection(servers, nbChannelsPerNode = 10)
-      .db(dbName)//(dbExecutionContext)
-  }
+  private val database = ReactiveMongoPlugin
+    .driver
+    .connection(servers, nbChannelsPerNode = 10)
+    .db(db)//(dbExecutionContext)
 
+  private def collection: JSONCollection = database.collection[JSONCollection]("world")
   private val projection = Json.obj("_id" -> 0)
-
-  def getRandomWorlds(n: Int): Future[Seq[JsValue]] = {
-    val random = ThreadLocalRandom.current()
-    Future.sequence((for {
-      _ <- 1 to n
-    } yield {
-      database.collection[JSONCollection]("world")
-        .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)), projection)
-        .one[JsValue].map(_.get)
-    }))
-  }
-
-  // Common code between Scala database code
-
-  private val TestDatabaseRows = 10000
-
-  def db = Action.async {
-    getRandomWorlds(1).map { worlds =>
-      Ok(Json.toJson(worlds.head))
-    }
-  }
-
-  def queries(countString: String) = Action.async {
-    val n = parseCount(countString)
-    getRandomWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds))
-    }
-  }
-
-  private def parseCount(s: String): Int = {
+  /**
+   * Returns the closest number to <code>toRestrict</code> that is within the
+   * specified bounds, inclusive on both ends.
+   */
+  private def restrictWithin(toRestrict: String, lowerBound: Int, upperBound: Int): Option[Int] = {
     try {
-      val parsed = java.lang.Integer.parseInt(s, 10)
-      parsed match {
-        case i if i < 1 => 1
-        case i if i > 500 => 500
-        case i => i
-      }
+      Some(math.min(upperBound, math.max(toRestrict.toInt, lowerBound)))
     } catch {
-      case _: NumberFormatException => 1
+      case e: Exception => None
+    }
+  }
+
+  def dbqueries(requestedQueries: String) = Action.async {
+    import scala.concurrent.ExecutionContext.Implicits.global
+
+    val random = ThreadLocalRandom.current()
+    val queries = restrictWithin(requestedQueries, 1, 500).getOrElse(1)
+    val futureWorlds = Future.sequence((for {
+      _ <- 1 to queries
+    } yield { collection
+      .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)), projection)
+      .one[JsValue]
+    }))
+    futureWorlds.map { worlds =>
+      Ok(Json.toJson(worlds.map {maybeWorld =>
+        maybeWorld.map {world =>
+          world.as[Map[String, Int]]
+        }
+      }))
+    }
+  }
+  def singledb() = Action.async {
+    import scala.concurrent.ExecutionContext.Implicits.global
+
+    val random = ThreadLocalRandom.current()
+    val futureWorld = collection
+      .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)), projection)
+      .one[JsValue]
+    futureWorld.map { world =>
+      Ok(Json.toJson(world.head.as[Map[String, Int]]))
     }
   }
 }
