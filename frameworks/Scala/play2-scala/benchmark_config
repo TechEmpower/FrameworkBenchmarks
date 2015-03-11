@@ -98,7 +98,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "play2-scala-rmongo",
+        "display_name": "play2-scala-mongodb",
         "notes": "Uses Reactive Mongo",
         "versus": "netty"
       }
