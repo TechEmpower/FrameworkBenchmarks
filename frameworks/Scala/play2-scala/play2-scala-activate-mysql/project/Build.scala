@@ -4,7 +4,7 @@ import play.Project._
 
 object ApplicationBuild extends Build {
 
-  val appName         = "play-activate-mysql"
+  val appName         = "play2-scala-activate-mysql"
   val appVersion      = "1.0-SNAPSHOT"
 
   val activateVersion = "1.4.4"

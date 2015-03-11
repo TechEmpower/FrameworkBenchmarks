@@ -17,15 +17,12 @@ object Application extends Controller {
 
     private val TestDatabaseRows = 10000
 
-    def db(queries: Int) =
+    def db() =
         Action {
             transactional {
                 val random = ThreadLocalRandom.current()
 
-                val worlds =
-                    for (_ <- 1 to queries) yield {
-                        ActivateWorld.fingByLegacyId(random.nextInt(TestDatabaseRows) + 1)
-                    }
+                val worlds = ActivateWorld.fingByLegacyId(random.nextInt(TestDatabaseRows) + 1)
 
                 Ok(Json.toJson(worlds))
             }
@@ -57,6 +54,20 @@ object Application extends Controller {
                         world
                     }
                 Ok(Json.toJson(worlds)).withHeaders("Server" -> "Netty")
+            }
+        }
+
+    def queries(queries: Int) =
+        Action {
+            transactional {
+                val random = ThreadLocalRandom.current()
+
+                val worlds =
+                    for (_ <- 1 to queries) yield {
+                        ActivateWorld.fingByLegacyId(random.nextInt(TestDatabaseRows) + 1)
+                    }
+
+                Ok(Json.toJson(worlds))
             }
         }
 }
