@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"html/template"
@@ -33,13 +32,13 @@ type Message struct {
 }
 
 type World struct {
-	Id           uint16 `json:"id"`
-	RandomNumber uint16 `json:"randomNumber"`
+	Id           uint16 `bson:"id" json:"id"`
+	RandomNumber uint16 `bson:"randomNumber" json:"id"`
 }
 
 type Fortune struct {
-	Id      uint16 `json:"id"`
-	Message string `json:"message"`
+	Id      uint16 `bson:"id" json:"id"`
+	Message string `bson:"message" json:"message"`
 }
 
 type Fortunes []Fortune
@@ -72,17 +71,16 @@ func main() {
 		http.HandleFunc("/json", jsonHandler)
 		http.HandleFunc("/db", dbHandler)
 		http.HandleFunc("/fortune", fortuneHandler)
-		http.HandleFunc("queries", queriesHandler)
+		http.HandleFunc("/queries", queriesHandler)
 		http.HandleFunc("/update", updateHandler)
 		http.HandleFunc("/plaintext", plaintextHandler)
-		fmt.Println("Serving on http://localhost" + port)
 		http.ListenAndServe(port, nil)
 	}
 }
 
 // Helper for random numbers
-func getRandomNumber() int {
-	return rand.Intn(worldRowCount) + 1
+func getRandomNumber() uint16 {
+	return uint16(rand.Intn(worldRowCount) + 1)
 }
 
 // Test 1: JSON serialization
@@ -120,7 +118,6 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 	} else if n > 500 {
 		n = 500
 	}
-
 	result := make([]World, n)
 	for _, world := range result {
 		query := bson.M{"id": getRandomNumber()}
@@ -131,7 +128,7 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(&result)
 }
 
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
@@ -184,7 +181,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 				world.RandomNumber = update["$set"].(bson.M)["randomNumber"].(uint16)
 			}
 		}
-		encoder.Encode(result)
+		encoder.Encode(&result)
 	}
 }
 
