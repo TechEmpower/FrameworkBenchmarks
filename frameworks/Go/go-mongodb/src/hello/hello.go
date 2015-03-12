@@ -172,8 +172,8 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		if n > 500 {
 			n = 500
 		}
-		worlds := make([]World, n)
-		for _, world := range worlds {
+		result := make([]World, n)
+		for _, world := range result {
 			colQuery := bson.M{"id": getRandomNumber()}
 			update := bson.M{"$set": bson.M{"randomNumber": getRandomNumber()}}
 			if err := worlds.Update(colQuery, update); err != nil {
@@ -183,11 +183,11 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 				world.RandomNumber = update["$set"].(bson.M)["randomNumber"].(uint16)
 			}
 		}
-		encoder.Encode(worlds)
+		encoder.Encode(result)
 	}
 }
 
 func plaintextHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
-	w.Write([]byte("Hello, World!"))
+	w.Write([]byte(helloWorldString))
 }
