@@ -42,7 +42,8 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libpq-dev mlton \
   libjemalloc-dev libluajit-5.1-dev `# Needed by lwan at least` \
   libhiredis-dev                    `# Redis client - Needed by ngx_mruby at least` \
-  cloc dstat                        `# Collect resource usage statistics`
+  cloc dstat                        `# Collect resource usage statistics` \
+  libsasl2-dev                      `# Needed by mgo for go-mongodb test`
 
 # Install gcc-4.8
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
