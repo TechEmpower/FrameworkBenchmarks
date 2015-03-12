@@ -2,6 +2,7 @@ import ConfigParser
 import os
 import glob
 import json
+import socket
 
 from ast import literal_eval
 
@@ -138,3 +139,33 @@ def header(message, top='-', bottom='-'):
       else:
         result += "\n%s" % bottomheader
     return result + '\n'
+
+def check_services(services):
+
+  def check_service(address, port):
+    try:
+      s = socket.socket()
+      s.settimeout(20)
+      s.connect((address, port))
+      return (True, "")
+    except Exception as ex:
+      return (False, ex)
+    finally:
+      s.close
+
+  res = []
+  for s in services:
+    r = check_service(s[1], s[2])
+    res.append((s[0], r[0], str(r[1])))
+  return res
+
+def verify_database_connections(services):
+  allGo = True
+  messages = []
+  for r in check_services(services):
+    if r[1]:
+      messages.append(r[0] + ": is GO!")
+    else:
+      messages.append(r[0] + ": is _NO_ GO!: ERROR: " + r[2])
+      allGo = False
+  return (allGo, messages)

@@ -37,7 +37,7 @@
       "webserver": "Resin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "gemini",
+      "display_name": "gemini-mysql",
       "notes": "",
       "versus": "servlet"
     },
@@ -50,7 +50,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "gemini",
       "language": "Java",
       "orm": "Micro",
@@ -58,7 +58,7 @@
       "webserver": "Resin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "gemini",
+      "display_name": "gemini-postgres",
       "notes": "",
       "versus": "servlet"
     }   

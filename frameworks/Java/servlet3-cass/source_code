@@ -4,8 +4,6 @@
 ./servlet3-cass/src/main/java/fi/markoa
 ./servlet3-cass/src/main/java/fi/markoa/tfb
 ./servlet3-cass/src/main/java/fi/markoa/tfb/servlet3
-./servlet3-cass/src/main/java/fi/markoa/tfb/servlet3/AsyncErrorServlet1.java
-./servlet3-cass/src/main/java/fi/markoa/tfb/servlet3/AsyncErrorServlet2.java
 ./servlet3-cass/src/main/java/fi/markoa/tfb/servlet3/DatabaseBaseServlet.java
 ./servlet3-cass/src/main/java/fi/markoa/tfb/servlet3/DatabaseQueriesServlet.java
 ./servlet3-cass/src/main/java/fi/markoa/tfb/servlet3/DatabaseQueryServlet.java

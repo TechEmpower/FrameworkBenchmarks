@@ -11,7 +11,7 @@
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Full",
+      "classification": "Fullstack",
       "database": "MongoDB",
       "framework": "mojolicious",
       "language": "Perl",

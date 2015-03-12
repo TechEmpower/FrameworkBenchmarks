@@ -136,7 +136,6 @@ env:
     - "TESTDIR=Scala/lift-stateless"
     - "TESTDIR=Scala/plain"
     - "TESTDIR=Scala/play-activate-mysql"
-    - "TESTDIR=Scala/play-scala-mongodb"
     - "TESTDIR=Scala/play2-scala"
     - "TESTDIR=Scala/scalatra"
     - "TESTDIR=Scala/scruffy"
