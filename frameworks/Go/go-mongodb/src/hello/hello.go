@@ -19,8 +19,9 @@ const (
 )
 
 var (
-	collection *mgo.Collection
-	database   *mgo.Database
+	database *mgo.Database
+	fortunes *mgo.Collection
+	worlds   *mgo.Collection
 )
 
 type Message struct {
@@ -46,7 +47,8 @@ func main() {
 		defer session.Close()
 		session.SetPoolLimit(5)
 		database = session.DB("hello_world")
-		collection = database.C("world")
+		worlds = database.C("world")
+		fortunes = database.C("fortune")
 		http.HandleFunc("/json", jsonHandler)
 		http.HandleFunc("/db", dbHandler)
 		http.HandleFunc("queries", queriesHandler)
@@ -71,8 +73,8 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 func dbHandler(w http.ResponseWriter, r *http.Request) {
 	var world World
 	query := bson.M{"id": getRandomNumber()}
-	if collection != nil {
-		if err := collection.Find(query).One(&world); err != nil {
+	if worlds != nil {
+		if err := worlds.Find(query).One(&world); err != nil {
 			log.Fatalf("Error finding world with id: %s", err.Error())
 			return
 		} else {
@@ -98,17 +100,25 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 		n = 500
 	}
 
-	worlds := make([]World, n)
-	for _, world := range worlds {
+	result := make([]World, n)
+	for _, world := range result {
 		query := bson.M{"id": getRandomNumber()}
-		if err := collection.Find(query).One(&world); err != nil {
+		if err := worlds.Find(query).One(&world); err != nil {
 			log.Fatalf("Error finding world with id: %s", err.Error())
 			return
 		}
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(worlds)
+	json.NewEncoder(w).Encode(result)
+}
+
+func fortuneHandler(w http.ResponseWriter, r *http.Request) {
+	// query :=
+	// fortunes := make(Fortunes, 16)
+	// for _, fortune := range fortunes {
+
+	// }
 }
 
 func updateHandler(w http.ResponseWriter, r *http.Request) {
@@ -124,7 +134,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		var world World
 		colQuery := bson.M{"id": getRandomNumber()}
 		update := bson.M{"$set": bson.M{"randomNumber": getRandomNumber()}}
-		if err := collection.Update(colQuery, update); err != nil {
+		if err := worlds.Update(colQuery, update); err != nil {
 			log.Fatalf("Error updating world with id: %s", err.Error())
 		} else {
 			world.Id = colQuery["id"].(uint16)
@@ -139,7 +149,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		for _, world := range worlds {
 			colQuery := bson.M{"id": getRandomNumber()}
 			update := bson.M{"$set": bson.M{"randomNumber": getRandomNumber()}}
-			if err := collection.Update(colQuery, update); err != nil {
+			if err := worlds.Update(colQuery, update); err != nil {
 				log.Fatalf("Error updating world with id: %s", err.Error())
 			} else {
 				world.Id = colQuery["id"].(uint16)
