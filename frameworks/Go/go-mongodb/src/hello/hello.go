@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"html/template"
 	"log"
 	"math/rand"
 	"net/http"
 	"runtime"
+	"sort"
 	"strconv"
 )
 
@@ -19,6 +21,8 @@ const (
 )
 
 var (
+	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
+
 	database *mgo.Database
 	fortunes *mgo.Collection
 	worlds   *mgo.Collection
@@ -36,6 +40,22 @@ type World struct {
 type Fortune struct {
 	Id      uint16 `json:"id"`
 	Message string `json:"message"`
+}
+
+type Fortunes []Fortune
+
+func (s Fortunes) Len() int {
+	return len(s)
+}
+
+func (s Fortunes) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+type ByMessage struct{ Fortunes }
+
+func (s ByMessage) Less(i, j int) bool {
+	return s.Fortunes[i].Message < s.Fortunes[j].Message
 }
 
 func main() {
@@ -114,11 +134,18 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
-	// query :=
-	// fortunes := make(Fortunes, 16)
-	// for _, fortune := range fortunes {
+	w.Header().Set("Content-Type", "text/html")
+	f := make(Fortunes, 16)
+	if err := fortunes.Find(nil).All(&f); err == nil {
+		f = append(f, Fortune{
+			Message: "Additional fortune added at request time.",
+		})
+		sort.Sort(ByMessage{f})
+		if err := tmpl.Execute(w, f); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
 
-	// }
 }
 
 func updateHandler(w http.ResponseWriter, r *http.Request) {
