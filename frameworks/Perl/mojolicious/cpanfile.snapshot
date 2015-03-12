@@ -50,8 +50,8 @@ DISTRIBUTIONS
       ExtUtils::MakeMaker 0
       Mojolicious 5.40
       perl 5.010001
-  Mojolicious-5.81
-    pathname: S/SR/SRI/Mojolicious-5.81.tar.gz
+  Mojolicious-6.02
+    pathname: S/SR/SRI/Mojolicious-6.02.tar.gz
     provides:
       Mojo undef
       Mojo::Asset undef
@@ -114,7 +114,7 @@ DISTRIBUTIONS
       Mojo::UserAgent::Server undef
       Mojo::UserAgent::Transactor undef
       Mojo::Util undef
-      Mojolicious 5.81
+      Mojolicious 6.02
       Mojolicious::Command undef
       Mojolicious::Command::cgi undef
       Mojolicious::Command::cpanify undef
