@@ -33,7 +33,7 @@ type Message struct {
 
 type World struct {
 	Id           uint16 `bson:"id" json:"id"`
-	RandomNumber uint16 `bson:"randomNumber" json:"id"`
+	RandomNumber uint16 `bson:"randomNumber" json:"randomNumber"`
 }
 
 type Fortune struct {
@@ -58,7 +58,7 @@ func (s ByMessage) Less(i, j int) bool {
 }
 
 func main() {
-	port := ":8228"
+	port := ":8080"
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	if session, err := mgo.Dial(connectionString); err != nil {
 		log.Fatalf("Error opening database: %v", err)
@@ -112,18 +112,25 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 		n, _ = strconv.Atoi(nStr)
 	}
 
-	if n <= 1 {
-		dbHandler(w, r)
-		return
-	} else if n > 500 {
+	if n > 500 {
 		n = 500
 	}
-	result := make([]World, n)
-	for _, world := range result {
+	var result []World
+	if n <= 1 {
+		result = make([]World, 1)
 		query := bson.M{"id": getRandomNumber()}
-		if err := worlds.Find(query).One(&world); err != nil {
+		if err := worlds.Find(query).One(&result[0]); err != nil {
 			log.Fatalf("Error finding world with id: %s", err.Error())
 			return
+		}
+	} else {
+		result = make([]World, n)
+		for i := 0; i < n; i++ {
+			query := bson.M{"id": getRandomNumber()}
+			if err := worlds.Find(query).One(&result[i]); err != nil {
+				log.Fatalf("Error finding world with id: %s", err.Error())
+				return
+			}
 		}
 	}
 
