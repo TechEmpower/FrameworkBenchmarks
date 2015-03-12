@@ -137,7 +137,7 @@ final class Application {
             e.printStackTrace ();
         }
 
-        fortunes.add (new Fortune (42, "Additional fortune added at request time."));
+        fortunes.add (new Fortune (0, "Additional fortune added at request time."));
         fortunes.sort ((a, b) -> a.message.compareTo (b.message));
 
         it.response.type ("text/html; charset=utf-8");
