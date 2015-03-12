@@ -21,7 +21,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "go-mongodb",
-      "notes": "mongodb implementation of dropwizard example",
+      "notes": "mongodb implementation for go net/http",
       "versus": ""
     }
   }]

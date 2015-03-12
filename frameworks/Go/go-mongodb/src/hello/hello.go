@@ -71,6 +71,7 @@ func main() {
 		fortunes = database.C("fortune")
 		http.HandleFunc("/json", jsonHandler)
 		http.HandleFunc("/db", dbHandler)
+		http.HandleFunc("/fortune", fortuneHandler)
 		http.HandleFunc("queries", queriesHandler)
 		http.HandleFunc("/update", updateHandler)
 		http.HandleFunc("/plaintext", plaintextHandler)
