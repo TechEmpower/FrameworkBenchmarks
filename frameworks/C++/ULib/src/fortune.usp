@@ -1,43 +1,53 @@
+<!--#
+Test type 4: Fortunes
+TechEmpower Web Framework Benchmarks
+-->
 <!--#declaration
 #include "fortune.h"
 
-static UOrmSession*       psql_fortune;
-static UOrmStatement*     pstmt_fortune;
 static Fortune*           pfortune;
 static UString*           pmessage;
+static UOrmSession*       psql_fortune;
+static UOrmStatement*     pstmt_fortune;
 static UVector<Fortune*>* pvfortune;
-
-static void usp_init_fortune()
-{
-   U_TRACE(5, "::usp_init_fortune()")
-
-   pfortune  = U_NEW(Fortune);
-   pvfortune = U_NEW(UVector<Fortune*>);
-   pmessage  = U_NEW(U_STRING_FROM_CONSTANT("Additional fortune added at request time."));
-}
 
 static void usp_fork_fortune()
 {
    U_TRACE(5, "::usp_fork_fortune()")
 
-   psql_fortune  = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
-   pstmt_fortune = U_NEW(UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
+   psql_fortune = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
 
-   if (pstmt_fortune == 0) U_ERROR("usp_fork_fortune(): we cound't connect to db");
+   if (psql_fortune->isReady())
+      {
+      pstmt_fortune = U_NEW(UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
 
-   pstmt_fortune->into(*pfortune);
+      if (pstmt_fortune == 0) U_ERROR("usp_fork_fortune(): we cound't connect to db");
+
+      pfortune = U_NEW(Fortune);
+
+      pstmt_fortune->into(*pfortune);
+
+      pmessage  = U_NEW(U_STRING_FROM_CONSTANT("Additional fortune added at request time."));
+      pvfortune = U_NEW(UVector<Fortune*>);
+      }
 }
 
+#ifdef DEBUG
 static void usp_end_fortune()
 {
    U_TRACE(5, "::usp_end_fortune()")
 
+   if (pstmt_fortune)
+   {
    delete pstmt_fortune;
+
    delete psql_fortune;
    delete pvfortune;
    delete pfortune;
    delete pmessage;
+   }
 }
+#endif
 -->
 <!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
 Fortune* elem;

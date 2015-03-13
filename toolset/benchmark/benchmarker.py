@@ -493,7 +493,7 @@ class Benchmarker:
       else:
         sys.exit(code)
 
-    logDir = os.path.join(self.latest_results_directory, 'logs', test.name)
+    logDir = os.path.join(self.latest_results_directory, 'logs', test.name.lower())
 
     try:
       os.makedirs(logDir)

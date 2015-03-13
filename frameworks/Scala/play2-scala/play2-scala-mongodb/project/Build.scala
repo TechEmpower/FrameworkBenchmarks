@@ -3,7 +3,7 @@ import Keys._
 
 object ApplicationBuild extends Build {
 
-  val appName         = "play-scala-mongodb"
+  val appName         = "play2-scala-mongodb"
   val appVersion      = "1.0-SNAPSHOT"
 
   val appDependencies = Seq(

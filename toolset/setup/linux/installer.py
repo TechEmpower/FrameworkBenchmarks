@@ -19,6 +19,14 @@ class Installer:
     linux_install_root = self.fwroot + "/toolset/setup/linux"
     imode = self.benchmarker.install
 
+    script_vars = {
+      'TFB_DBHOST': self.benchmarker.database_host
+    }
+    l=[]
+    for k,v in script_vars.iteritems():
+      l.append("export %s=%s" % (k,v))
+    script_vars_str = "\n".join(l) + "\n\n"
+
     if imode == 'all' or imode == 'server':
       self.__install_server_software()
 
@@ -30,7 +38,7 @@ class Installer:
         p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") +
                              ["bash"], stdin=subprocess.PIPE)
         remote_script = myfile.read()
-        p.communicate(remote_script)
+        p.communicate(script_vars_str + remote_script)
         returncode = p.returncode
         if returncode != 0:
           self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.database_ssh_string))
