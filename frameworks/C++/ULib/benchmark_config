@@ -2,13 +2,13 @@
   "framework": "ULib",
   "tests": [{
     "default": {
-      "setup_file": "setup_mysql",
+      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
-      "database": "MySQL",
+      "database": "None",
       "framework": "ULib",
       "language": "C++",
       "orm": "Micro",

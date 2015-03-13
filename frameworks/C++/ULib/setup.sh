@@ -1,8 +1,5 @@
 #!/bin/bash
 
-export ORM_DRIVER="sqlite"
-export ORM_OPTION="host=${DBHOST} user=benchmarkdbuser password=benchmarkdbpass character-set=utf8 dbname=${ULIB_ROOT}/db/%.*s"
-
 export UMEMPOOL="176,100,0,37,1160,155,-17,-22,40"
 
 # 1. Change ULib Server configuration

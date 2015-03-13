@@ -1,3 +1,7 @@
+<!--#
+Test type 1: JSON serialization
+TechEmpower Web Framework Benchmarks
+-->
 <!--#declaration
 #ifdef AS_cpoll_cppsp_DO
 #undef AS_cpoll_cppsp_DO
@@ -19,6 +23,7 @@ static void usp_init_json()
 #endif
 }
 
+#ifdef DEBUG
 static void usp_end_json()
 {
    U_TRACE(5, "::usp_end_json()")
@@ -28,6 +33,7 @@ static void usp_end_json()
    delete pvalue;
 #endif
 }
+#endif
 -->
 <!--#header
 Content-Type: application/json; charset=UTF-8
