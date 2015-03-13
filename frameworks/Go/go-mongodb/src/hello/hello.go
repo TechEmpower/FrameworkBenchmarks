@@ -115,16 +115,20 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 	if n > 500 {
 		n = 500
 	}
-	var result []World
+
+	w.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(w)
+
 	if n <= 1 {
-		result = make([]World, 1)
+		result := make([]World, 1)
 		query := bson.M{"id": getRandomNumber()}
 		if err := worlds.Find(query).One(&result[0]); err != nil {
 			log.Fatalf("Error finding world with id: %s", err.Error())
 			return
 		}
+		encoder.Encode(&result)
 	} else {
-		result = make([]World, n)
+		result := make([]World, n)
 		for i := 0; i < n; i++ {
 			query := bson.M{"id": getRandomNumber()}
 			if err := worlds.Find(query).One(&result[i]); err != nil {
@@ -132,10 +136,8 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
+		encoder.Encode(&result)
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(&result)
 }
 
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
@@ -163,29 +165,29 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 
 	if n <= 1 {
-		var world World
+		result := make([]World, 1)
 		colQuery := bson.M{"id": getRandomNumber()}
 		update := bson.M{"$set": bson.M{"randomNumber": getRandomNumber()}}
 		if err := worlds.Update(colQuery, update); err != nil {
 			log.Fatalf("Error updating world with id: %s", err.Error())
 		} else {
-			world.Id = colQuery["id"].(uint16)
-			world.RandomNumber = update["$set"].(bson.M)["randomNumber"].(uint16)
+			result[0].Id = colQuery["id"].(uint16)
+			result[0].RandomNumber = update["$set"].(bson.M)["randomNumber"].(uint16)
 		}
-		encoder.Encode(world)
+		encoder.Encode(&result)
 	} else {
 		if n > 500 {
 			n = 500
 		}
 		result := make([]World, n)
-		for _, world := range result {
+		for i := 0; i < n; i++ {
 			colQuery := bson.M{"id": getRandomNumber()}
 			update := bson.M{"$set": bson.M{"randomNumber": getRandomNumber()}}
 			if err := worlds.Update(colQuery, update); err != nil {
 				log.Fatalf("Error updating world with id: %s", err.Error())
 			} else {
-				world.Id = colQuery["id"].(uint16)
-				world.RandomNumber = update["$set"].(bson.M)["randomNumber"].(uint16)
+				result[i].Id = colQuery["id"].(uint16)
+				result[i].RandomNumber = update["$set"].(bson.M)["randomNumber"].(uint16)
 			}
 		}
 		encoder.Encode(&result)
