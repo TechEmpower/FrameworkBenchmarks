@@ -58,7 +58,6 @@ func (s ByMessage) Less(i, j int) bool {
 }
 
 func main() {
-	port := ":8080"
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	if session, err := mgo.Dial(connectionString); err != nil {
 		log.Fatalf("Error opening database: %v", err)
@@ -74,7 +73,7 @@ func main() {
 		http.HandleFunc("/queries", queriesHandler)
 		http.HandleFunc("/update", updateHandler)
 		http.HandleFunc("/plaintext", plaintextHandler)
-		http.ListenAndServe(port, nil)
+		http.ListenAndServe(":8080", nil)
 	}
 }
 
