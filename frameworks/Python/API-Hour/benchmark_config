@@ -20,8 +20,8 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour",
-      "notes": "Python 3.4 + AsyncIO"
+      "display_name": "API-Hour+aiohttp.web+pgsql",
+      "notes": "Python 3 + AsyncIO + aiohttp.web + PostgreSQL"
     }
     "redis": {
       "setup_file": "setup",
@@ -37,8 +37,8 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour",
-      "notes": "Python 3.4 + AsyncIO"
+      "display_name": "API-Hour+aiohttp.web+redis",
+      "notes": "Python 3 + AsyncIO + aiohttp.web + Redis"
     }
   }]
 }
