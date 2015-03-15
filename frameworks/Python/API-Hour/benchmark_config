@@ -23,5 +23,22 @@
       "display_name": "API-Hour",
       "notes": "Python 3.4 + AsyncIO"
     }
+    "redis": {
+      "setup_file": "setup",
+      "db_url": "/db_redis",
+      "port": 8008,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Redis",
+      "framework": "aiohttp.web",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "API-Hour",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "API-Hour",
+      "notes": "Python 3.4 + AsyncIO"
+    }
   }]
 }

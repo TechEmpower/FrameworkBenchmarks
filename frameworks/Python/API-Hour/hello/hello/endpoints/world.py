@@ -7,6 +7,7 @@ import aiohttp_jinja2
 
 from ..services import queries_number
 from ..services.world import get_random_record, get_random_records, update_random_records, get_fortunes
+from ..services import redis
 
 LOG = logging.getLogger(__name__)
 
@@ -21,6 +22,13 @@ def db(request):
     container = request.app.ah_container
 
     return JSON((yield from get_random_record(container)))
+
+@asyncio.coroutine
+def db_redis(request):
+    """Test type 2: Single database query"""
+    container = request.app.ah_container
+
+    return JSON((yield from redis.get_random_record(container)))
 
 @asyncio.coroutine
 def queries(request):
