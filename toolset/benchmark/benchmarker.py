@@ -382,7 +382,7 @@ class Benchmarker:
       sudo sysctl net.ipv4.tcp_tw_recycle=1
       sudo sysctl -w kernel.shmmax=2147483648
       sudo sysctl -w kernel.shmall=2097152
-      sudo sysctl -w kernel.sem="250 32000 256 256"
+      sudo sysctl -w kernel.sem="250 32000 256 512"
       echo "Printing kernel configuration:" && sudo sysctl -a
     """)
         # Explanations:
