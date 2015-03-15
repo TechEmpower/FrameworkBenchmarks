@@ -29,8 +29,11 @@ class Container(api_hour.Container):
         self.servers['http'].router.add_route('GET', '/db', endpoints.world.db)
         self.servers['http'].router.add_route('GET', '/db_redis', endpoints.world.db_redis)
         self.servers['http'].router.add_route('GET', '/queries', endpoints.world.queries)
+        self.servers['http'].router.add_route('GET', '/queries_redis', endpoints.world.queries_redis)
         self.servers['http'].router.add_route('GET', '/fortunes', endpoints.world.fortunes)
+        self.servers['http'].router.add_route('GET', '/fortunes_redis', endpoints.world.fortunes_redis)
         self.servers['http'].router.add_route('GET', '/updates', endpoints.world.updates)
+        self.servers['http'].router.add_route('GET', '/updates_redis', endpoints.world.updates_redis)
         self.servers['http'].router.add_route('GET', '/plaintext', endpoints.world.plaintext)
 
     def make_servers(self):
