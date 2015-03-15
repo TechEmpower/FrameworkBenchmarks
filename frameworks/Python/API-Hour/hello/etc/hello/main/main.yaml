@@ -1,3 +1,4 @@
+---
 engines:
   pg:
     host: 127.0.0.1
@@ -7,3 +8,7 @@ engines:
     password: benchmarkdbpass
     minsize: 40
     maxsize: 40
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    poolsize: 40
