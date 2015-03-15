@@ -39,6 +39,14 @@ def queries(request):
     return JSON((yield from get_random_records(container, limit)))
 
 @asyncio.coroutine
+def queries_redis(request):
+    """Test type 3: Multiple database queries"""
+    container = request.app.ah_container
+    limit = queries_number(request.GET.get('queries', 1))
+
+    return JSON((yield from redis.get_random_records(container, limit)))
+
+@asyncio.coroutine
 def fortunes(request):
     """Test type 4: Fortunes"""
     container = request.app.ah_container
@@ -48,12 +56,29 @@ def fortunes(request):
                                           {'fortunes': (yield from get_fortunes(container))})
 
 @asyncio.coroutine
+def fortunes_redis(request):
+    """Test type 4: Fortunes"""
+    container = request.app.ah_container
+
+    return aiohttp_jinja2.render_template('fortunes.html.j2',
+                                          request,
+                                          {'fortunes': (yield from redis.get_fortunes(container))})
+
+@asyncio.coroutine
 def updates(request):
     """Test type 5: Database updates"""
     container = request.app.ah_container
     limit = queries_number(request.GET.get('queries', 1))
 
     return JSON((yield from update_random_records(container, limit)))
+
+@asyncio.coroutine
+def updates_redis(request):
+    """Test type 5: Database updates"""
+    container = request.app.ah_container
+    limit = queries_number(request.GET.get('queries', 1))
+
+    return JSON((yield from redis.update_random_records(container, limit)))
 
 @asyncio.coroutine
 def plaintext(request):
