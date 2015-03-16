@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python app.py &
+$PY2 app.py &

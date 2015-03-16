@@ -16,7 +16,26 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "cherrypy"
+      "display_name": "cherrypy",
+      "notes": "CPython 2.7"
+    },
+     "py3": {
+      "setup_file": "setup_py3",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "cherrypy",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "CherryPy",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "cherrypy-py3",
+      "notes": "CPython 3.4"
     }
   }]
 }
