@@ -1,4 +1,4 @@
-# Falcon Benchmark Test (ported from Flask example)
+# CherryPy Benchmark Test 
 
 Single file test, [app.py](app.py)
 
@@ -12,8 +12,7 @@ Falcon API framework (http://falconframework.org)
 
 ### Server
 
-* gunicorn+meinheld on CPython
-* Tornado on PyPy
+* CherryPy
 
 ## Test URLs
 ### JSON Encoding
