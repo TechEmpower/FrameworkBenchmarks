@@ -9,6 +9,8 @@ import 'package:postgresql/postgresql.dart' as pg;
 import 'package:postgresql/postgresql_pool.dart' as pgpool;
 import 'package:yaml/yaml.dart' as yaml;
 
+final _encoder = new JsonUtf8Encoder();
+
 /// Starts a new HTTP server that implements the tests to be benchmarked.  The
 /// address and port for incoming connections is configurable via command line
 /// arguments, as is the number of database connections to be maintained in the
@@ -154,7 +156,7 @@ void _sendHtml(HttpRequest request, String response) {
 /// Completes the given [request] by writing the [response] as JSON.
 void _sendJson(HttpRequest request, Object response) {
   _sendResponse(request, HttpStatus.OK,
-      type: ContentType.JSON, response: UTF8.encode(JSON.encode(response)));
+      type: ContentType.JSON, response: _encoder.convert(response));
 }
 
 /// Completes the given [request] by writing the [response] as plain text.
