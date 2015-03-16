@@ -44,10 +44,10 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libhiredis-dev                    `# Redis client - Needed by ngx_mruby at least` \
   cloc dstat                        `# Collect resource usage statistics`
 
-# Install gcc-4.8
+# Install gcc-4.8 and gcc-4.9
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt-get -yq update
-sudo apt-get install -qqy gcc-4.8 g++-4.8
+sudo apt-get install -qqy gcc-4.8 g++-4.8 gcc-4.9 g++-4.9
 
 # Stop permanently overwriting people's files just for 
 # trying out our software!
