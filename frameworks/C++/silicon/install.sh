@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sudo apt-get install -yq libmicrohttpd-dev libboost-dev
-
 rm -fr silicon;
 git clone https://github.com/matt-42/silicon.git
 cd silicon;
