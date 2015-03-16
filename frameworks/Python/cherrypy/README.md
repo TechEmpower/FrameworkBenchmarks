@@ -4,7 +4,7 @@ Single file test, [app.py](app.py)
 
 ## Description
 
-Falcon API framework (http://falconframework.org)
+CherryPy framework (http://cherrypy.org)
 
 ### Database
 
