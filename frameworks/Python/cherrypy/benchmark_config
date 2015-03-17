@@ -4,6 +4,9 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?quries=",
+      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -22,6 +25,9 @@
      "py3": {
       "setup_file": "setup_py3",
       "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?quries=",
+      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
