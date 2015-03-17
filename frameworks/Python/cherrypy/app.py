@@ -4,14 +4,12 @@ from functools import partial
 from operator import attrgetter
 from random import randint
 import json
+import bleach
 
 import cherrypy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column
 from sqlalchemy.types import String, Integer
-
-from saplugin import SAEnginePlugin
-from satool import SATool
 
 Base = declarative_base()
 
@@ -30,6 +28,12 @@ class Fortune(Base):
 
     id = Column(Integer, primary_key = True)
     message = Column(String)
+
+    def serialize(self):
+        return {
+            'id' : self.id,
+            'message' : self.message
+        }
 
 class World(Base):
     __tablename__ = "world"
@@ -98,6 +102,17 @@ class CherryPyBenchmark(object):
             world.randomNumber = rp()
             worlds.append(world.serialize())
         return worlds
+
+    @cherrypy.expose
+    def fortune(self):
+        fortunes = cherrypy.request.db.query(Fortune).all()
+        fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
+        fortunes.sort(key=attrgetter("message"))
+        html = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
+        for f in fortunes:
+            html += "<tr><td>" + str(f.id) + "</td><td>" + bleach.clean(f.message) + "</td></tr>"
+        html += "</table></body></html>"
+        return html
 
 if __name__ == "__main__":
     # Register the SQLAlchemy plugin
