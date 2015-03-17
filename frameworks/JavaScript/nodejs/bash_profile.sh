@@ -1,3 +1,3 @@
 #!/bin/bash
 
-export NODE_HOME=${IROOT}/node-v0.10.8-linux-x64
+export NODE_HOME=${IROOT}/node-v0.12.0-linux-x64

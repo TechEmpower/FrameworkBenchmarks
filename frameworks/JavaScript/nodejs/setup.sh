@@ -4,7 +4,7 @@ sed -i 's|localhost|'"${DBHOST}"'|g' hello.js
 sed -i 's|mongodb//.*/hello_world|mongodb//'"${DBHOST}"'/hello_world|g' hello.js
 
 export NODE_ENV=production
-export NODE_HOME=${IROOT}/node-v0.10.8-linux-x64
+export NODE_HOME=${IROOT}/node-v0.12.0-linux-x64
 export PATH=$PATH:$NODE_HOME/bin
 
 ${NODE_HOME}/bin/npm install
