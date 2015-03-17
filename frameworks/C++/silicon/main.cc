@@ -22,7 +22,7 @@ typedef mysql_orm_factory<fortune> fortune_orm_factory;
 typedef mysql_orm<fortune> fortune_orm;
 
 
-std::string escape_html_entities(std::string& data)
+std::string escape_html_entities(const std::string& data)
 {
     std::string buffer;
     buffer.reserve(data.size());
