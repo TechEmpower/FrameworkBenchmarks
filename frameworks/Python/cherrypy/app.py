@@ -11,6 +11,14 @@ from sqlalchemy.types import String, Integer
 
 Base = declarative_base()
 
+
+def getQueryNum(queryString):
+  try:
+    int(queryString)
+    return int(queryString)
+  except ValueError:
+    return 1
+
 class Fortune(Base):
   __tablename__ = "fortune"
 
@@ -54,7 +62,7 @@ class CherryPyBenchmark(object):
   @cherrypy.expose
   @cherrypy.tools.json_out()
   def queries(self, queries=1):
-    num_queries = int(queries)
+    num_queries = getQueryNum(queries)
     if num_queries < 1:
       num_queries = 1
     if num_queries > 500:
@@ -69,7 +77,7 @@ class CherryPyBenchmark(object):
   @cherrypy.tools.json_out()
   def updates(self, queries=1):
     cherrypy.response.headers["Content-Type"] = "application/json"
-    num_queries = int(queries)
+    num_queries = getQueryNum(queries)
     if num_queries < 1:
       num_queries = 1
     if num_queries > 500:
@@ -86,7 +94,6 @@ class CherryPyBenchmark(object):
     return worlds
 
 if __name__ == "__main__":
-    print "HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO~~~~~~~~~~~~~~"
     # Register the SQLAlchemy plugin
     from saplugin import SAEnginePlugin
     DBDRIVER = 'mysql'
