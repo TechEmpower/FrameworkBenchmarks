@@ -99,16 +99,15 @@ class CherryPyBenchmark(object):
             worlds.append(world.serialize())
         return worlds
 
-
-# Register the SQLAlchemy plugin
-DBDRIVER = 'mysql'
-DBHOSTNAME = os.environ.get('DBHOST', 'localhost')  
-DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % (DBDRIVER, DBHOSTNAME)
-SAEnginePlugin(cherrypy.engine, DATABASE_URI).subscribe()
-
-# Register the SQLAlchemy tool
-
-cherrypy.tools.db = SATool()
-
-if __name__ == '__main__':
+if __name__ == "__main__":
+    # Register the SQLAlchemy plugin
+    from saplugin import SAEnginePlugin
+    DBDRIVER = 'mysql'
+    DBHOSTNAME = os.environ.get('DBHOST', 'localhost')
+    DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % (DBDRIVER, DBHOSTNAME)
+    SAEnginePlugin(cherrypy.engine, DATABASE_URI).subscribe()
+    
+    # Register the SQLAlchemy tool
+    from satool import SATool
+    cherrypy.tools.db = SATool()
     cherrypy.quickstart(CherryPyBenchmark(), '', {'/': {'tools.db.on': True}})
