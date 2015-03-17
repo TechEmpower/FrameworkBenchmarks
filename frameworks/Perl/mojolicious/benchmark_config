@@ -12,7 +12,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MongoDB",
+      "database": "Postgres",
       "framework": "mojolicious",
       "language": "Perl",
       "orm": "Raw",
