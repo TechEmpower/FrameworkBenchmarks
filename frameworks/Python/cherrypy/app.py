@@ -1,4 +1,5 @@
 import os
+import sys
 from functools import partial
 from operator import attrgetter
 from random import randint
@@ -11,6 +12,8 @@ from sqlalchemy.types import String, Integer
 
 Base = declarative_base()
 
+if sys.version_info[0] == 3:
+  xrange = range
 
 def getQueryNum(queryString):
   try:
@@ -70,7 +73,7 @@ class CherryPyBenchmark(object):
 
     rp = partial(randint, 1, 10000)
     get = cherrypy.request.db.query(World).get
-    worlds = [get(rp()).serialize() for _ in range(num_queries)]
+    worlds = [get(rp()).serialize() for _ in xrange(num_queries)]
     return worlds
 
   @cherrypy.expose
@@ -85,7 +88,7 @@ class CherryPyBenchmark(object):
 
     worlds = []
     rp = partial(randint, 1, 10000)
-    ids = [rp() for _ in range(num_queries)]
+    ids = [rp() for _ in xrange(num_queries)]
     ids.sort() # To avoid deadlock
     for id in ids:
       world = cherrypy.request.db.query(World).get(id)
