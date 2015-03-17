@@ -9,4 +9,5 @@ include_directories($ENV{IROOT}/include
 add_definitions(-std=c++14  -ftemplate-depth=512 -DNDEBUG -O3)
 
 add_executable(silicon_app main.cc)
+
 target_link_libraries(silicon_app microhttpd mysqlclient)
