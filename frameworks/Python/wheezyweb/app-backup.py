@@ -4,8 +4,6 @@ from functools import partial
 from operator import attrgetter
 from random import randint
 
-import bleach
-
 from wheezy.http import HTTPResponse
 from wheezy.http import WSGIApplication
 from wheezy.routing import url
@@ -13,13 +11,9 @@ from wheezy.web.handlers import BaseHandler
 from wheezy.web.middleware import bootstrap_defaults
 from wheezy.web.middleware import path_routing_middleware_factory
 
-from wheezy.template.engine import Engine
-from wheezy.template.ext.core import CoreExtension
-from wheezy.template.loader import FileLoader
-
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column
-from sqlalchemy.types import String, Integer, Unicode
+from sqlalchemy.types import String, Integer
 from sqlalchemy.orm import sessionmaker
 
 DBDRIVER = 'mysql'
@@ -40,17 +34,6 @@ def getQueryNum(queryString):
 		return int(queryString)
 	except ValueError:
 		return 1
-
-class Fortune(Base):
-	__tablename__ = "Fortune"
-	id = Column(Integer, primary_key=True)
-	message = Column(String)
-
-	def serialize(self):
-		return {
-			'id': self.id,
-			'randomNumber': self.randomNumber,
-		}
 
 class World(Base):
 	__tablename__ = "World"
@@ -104,21 +87,6 @@ class UpdatesHandler(BaseHandler):
 			worlds.append(world.serialize())
 		return self.json_response(worlds)
 
-class FortuneHandler(BaseHandler):
-	def get(self):
-		fortunes = db_session.query(Fortune).all()
-		fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
-		fortunes.sort(key=attrgetter("message"))
-		engine = Engine(loader=FileLoader(["views"]), extensions=[CoreExtension()])
-		template = engine.get_template("fortune.html")
-		for f in fortunes:
-			f.message = bleach.clean(f.message)
-		template_html = template.render({"fortunes": fortunes})		
-
-		response = HTTPResponse()
-		response.write(template_html)
-		return response
-
 def plaintext(request):
 	response = HTTPResponse()
 	response.write("Hello, world!")
@@ -129,8 +97,8 @@ all_urls = [
 	url("json", JsonHandler, name="json"),
 	url("db", DbHandler, name="db"),
 	url("queries", QueriesHandler, name="queries"),
-	url("updates", UpdatesHandler, name="updates"),
-	url("fortune", FortuneHandler, name="fortune")
+	url("updates", UpdatesHandler, name="updates")
+
 
 ]
 
