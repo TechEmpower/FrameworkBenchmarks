@@ -8,7 +8,7 @@ CherryPy framework (http://cherrypy.org)
 
 ### Database
 
-(none at the moment)
+MySQL
 
 ### Server
 
