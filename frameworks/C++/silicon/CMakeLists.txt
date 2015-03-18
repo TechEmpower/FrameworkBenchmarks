@@ -2,9 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(silicon)
 
-include_directories($ENV{IROOT}/include
-                    $ENV{HOME}/projects/silicon2
-                    $ENV{HOME}/projects/iod)
+include_directories($ENV{IROOT}/include)
 
 link_directories($ENV{IROOT}/lib)
 add_definitions(-std=c++14  -ftemplate-depth=512 -DNDEBUG -O3)
