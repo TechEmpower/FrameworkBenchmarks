@@ -6,6 +6,7 @@ include_directories($ENV{IROOT}/include
                     $ENV{HOME}/projects/silicon2
                     $ENV{HOME}/projects/iod)
 
+link_directories($ENV{IROOT}/lib)
 add_definitions(-std=c++14  -ftemplate-depth=512 -DNDEBUG -O3)
 
 add_executable(silicon_app main.cc)

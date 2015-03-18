@@ -43,7 +43,7 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libjemalloc-dev libluajit-5.1-dev `# Needed by lwan at least` \
   libhiredis-dev                    `# Redis client - Needed by ngx_mruby at least` \
   cloc dstat                        `# Collect resource usage statistics` \
-  libmicrohttpd-dev libboost-dev
+  libboost-dev
 
 # Install gcc-4.8 and gcc-4.9
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
