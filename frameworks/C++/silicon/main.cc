@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <unistd.h>
 #include <iostream>
 #include <silicon/backends/mhd.hh>
