@@ -19,11 +19,11 @@ var MWorld = conn.model('World', WorldSchema);
 if (cluster.isMaster) {
   // Fork workers.
   for (var i = 0; i < numCPUs; i++) {
-  cluster.fork();
+    cluster.fork();
   }
 
   cluster.on('exit', function(worker, code, signal) {
-  console.log('worker ' + worker.process.pid + ' died');
+    console.log('worker ' + worker.process.pid + ' died');
   });
 } else {
   var app = module.exports = koa();
@@ -32,7 +32,7 @@ if (cluster.isMaster) {
 
   // routes
   app.use(route.get('/json', jsonHandler));
-  // app.use(route.get('/db', dbHandler));
+  app.use(route.get('/db', dbHandler));
   // app.use(route.get('/queries', queriesHandler));
   // app.use(route.get('/fortune', fortuneHandler));
   // app.use(route.get('/update', updateHandler));
@@ -42,6 +42,10 @@ if (cluster.isMaster) {
     this.response.body = {
       message: "Hello, world!"
     }
+  }
+
+  function *dbHandler() {
+    var queries = this.request.queries.queries
   }
 
   function *textHandler() {
