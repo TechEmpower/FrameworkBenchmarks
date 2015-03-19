@@ -1,7 +1,7 @@
 #!/bin/bash
-# adopted from compojure/setup.sh
+# Adopted from compojure/setup.sh
 
-$LEIN_HOME/bin/lein deps
+$LEIN_HOME/bin/lein clean
 rm -rf target
 # pack all dependencies into a single jar: target/pedestal-standalone.jar
 $LEIN_HOME/bin/lein uberjar
