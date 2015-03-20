@@ -1,40 +1,46 @@
-# Ruby Sinatra Benchmarking Test
+# Ruby [Sinatra](http://www.sinatrarb.com/) Benchmarking Test
 
-This is the Ruby Sinatra portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+The information below contains information specific to Sinatra. 
+For further guidance, review the 
+[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
+Also note the additional information provided in the [Ruby README](../).
 
-### JSON Encoding Test
-* [JSON test source](hello_world.rb)
-
-### Data-Store/Database Mapping Test
-
-* [Database test source](hello_world.rb)
+This is the Ruby Sinatra portion of a [benchmarking test suite](../../) 
+comparing a variety of web platforms.
 
 ## Infrastructure Software Versions
 The tests were run with:
 * [Ruby 2.0.0-p0](http://www.ruby-lang.org/)
 * [JRuby 1.7.8](http://jruby.org/)
+* [Rubinius 2.2.10](http://rubini.us/)
 * [Sinatra 1.3.4](http://www.sinatrarb.com/)
 * [Unicorn 4.6.2](http://unicorn.bogomips.org/)
 * [TorqBox 0.1.7](http://torquebox.org/torqbox/)
+* [Puma 2.9.0](http://puma.io/)
+* [Thin 1.6.2](http://code.macournoyer.com/thin/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
-## References
-* https://github.com/FooBarWidget/passenger/pull/71
+## Paths & Source for Tests
 
-## Test URLs
+* [JSON Serialization](hello_world.rb): "/json"
+* [Single Database Query](hello_world.rb): "/db"
+* [Multiple Database Queries](hello_world.rb): "/db?queries={#}"
+* [Fortunes](hello_world.rb): "/fortune"
+* [Database Updates](hello_world.rb): "/update?queries={#}"
+* [Plaintext](hello_world.rb): "/plaintext"
 
-### JSON Encoding Test
+## Get Help
 
-Ruby:
-localhost:8080/json
+### Experts
 
-JRuby:
-localhost:8080/json
+_No experts listed, yet. If you're an expert, add yourself!_
 
-### Data-Store/Database Mapping Test
+### Community
 
-Ruby:
-localhost:8080/db?queries=5
+* [Sinatra Google Group](https://groups.google.com/forum/#!forum/sinatrarb)
+* `#sinatra` IRC Channel ([irc.freenode.net](http://freenode.net/))
 
-JRuby:
-localhost:8080/db?queries=5
+### Resources
+
+* [Sinatra Source Code](https://github.com/sinatra/sinatra)
+* [PR: passenger-install-apache2-module doesn't work on ruby 2.0](https://github.com/FooBarWidget/passenger/pull/71)
