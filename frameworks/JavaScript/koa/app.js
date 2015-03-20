@@ -28,8 +28,28 @@ if (cluster.isMaster) {
   app.use(route.get('/db', dbHandler));
   app.use(route.get('/queries', queriesHandler));
   // app.use(route.get('/fortune', fortuneHandler));
-  // app.use(route.get('/update', updateHandler));
+  app.use(route.get('/update', updateHandler));
   app.use(route.get('/plaintext', textHandler));
+
+  // Helper
+  function getRandomNumber() {return Math.floor(Math.random()*10000) + 1;};
+
+  // Query Helpers
+  function *worldUpdateQuery() {
+    var randomId = getRandomNumber();
+    var randomNumber = getRandomNumber();
+    var result = yield function(callback) {
+        this.mongo.collection('world').update(
+          {id: randomId},
+          {randomNumber: randomNumber}, 
+          callback
+        );
+    }
+    return {
+      id: randomId,
+      randomNumber: randomNumber
+    }
+  }
 
   function *worldQuery() {
     return yield function(callback) {
@@ -37,6 +57,8 @@ if (cluster.isMaster) {
         this.mongo.collection('world').findOne(randomId, {_id: 0}, callback);
     }
   }
+
+  // Route handlers
 
   function *jsonHandler() {
     this.response.body = {
@@ -49,10 +71,29 @@ if (cluster.isMaster) {
   }
 
   function *queriesHandler() {
-    var numOfQueries = this.query.queries || 1,
+    var numOfQueries = isNaN(this.query.queries) ? 1 : this.query.queries,
         queries = [];
+    if (numOfQueries > 500) {
+      numOfQueries = 500;
+    } else if (numOfQueries < 1) {
+      numOfQueries = 1;
+    }
     for (var i = 0; i < numOfQueries; i++) {
       queries.push(worldQuery);
+    }
+    this.body = yield queries;
+  }
+
+  function *updateHandler() {
+    var numOfUpdates = isNaN(this.query.queries) ? 1 : this.query.queries,
+    queries = [];
+    if (numOfUpdates > 500) {
+      numOfUpdates = 500;
+    } else if (numOfUpdates < 1) {
+      numOfUpdates = 1;
+    }
+    for (var i = 0; i < numOfUpdates; i++) {
+      queries.push(worldUpdateQuery);
     }
     this.body = yield queries;
   }
@@ -60,5 +101,5 @@ if (cluster.isMaster) {
   function *textHandler() {
     this.body = 'Hello, world!'
   }
-  app.listen(3000); //used for local testing
+  app.listen(8080); //used for local testing
 }
