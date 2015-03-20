@@ -32,37 +32,54 @@
     :maximum-pool-size 256}))
 
 
-; Set up entity World and the database representation
+;; Set up entity World and the database representation
 (defentity world
   (pk :id)
   (table :world)
   (entity-fields :id :randomNumber) ;; Default fields for select
   (database mysql-db))
 
-; Query a random World record from the database
+;; Query a random World record from the database
 (defn random-world []
   (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
     (select world
       (where {:id id }))))
 
-; Run query repeatedly and return results
+;; Run query repeatedly -- Always returns an array
 (defn run-queries
   [queries]
-  (let [data (flatten (take queries (repeatedly random-world)))]
-    (if (= queries 1)
-      (first data)
-      (data))))
+  (flatten (take queries (repeatedly random-world))))
 
-(defn single-query
+(defn single-query-test
+  [request] 
+  (bootstrap/json-response (first (run-queries 1))))
+
+;; http://stackoverflow.com/questions/5621279/in-clojure-how-can-i-convert-a-string-to-a-number
+(defn parse-int [s]
+  (Integer/parseInt (re-find #"\A-?\d+" s)))
+
+(defn multiple-query-test
   [request]
-  (bootstrap/json-response (run-queries 1)))
+  (let [n (parse-int
+    (let [queries (-> request :params :queries)]
+      (if (= (re-find #"\A-?\d+" queries) nil) ; Guarantee queries to be numeric-looking
+        "1"
+        queries)))] ; queries now safely parsed into n as int
+    (bootstrap/json-response
+      (run-queries
+        (cond
+          (< n 1) 1
+          (> n 500) 500
+          :else n)))))
+
 
 ;; All of the available routes
 (defroutes routes
   [[
-  [  "/json" {:get json-serialization}]
+  [  "/json"      {:get json-serialization}]
   [  "/plaintext" {:get plaintext}]
-  [  "/db" {:get single-query}]]])
+  [  "/db"        {:get single-query-test}]
+  [  "/queries"   {:get multiple-query-test}]]])
 
 ;; How the server will look, not the code to start it up
 (def service {:env :prod
