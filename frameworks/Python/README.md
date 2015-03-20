@@ -1,9 +1,26 @@
 # Python frameworks
 
-## Experts
+The information below contains information specific to Python. 
+For further guidance, review the 
+[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
+
+## Infrastructure Software Versions
+
+* [python2 2.7.9](https://www.python.org/)
+* [python3 3.4.2](https://www.python.org/)
+* [pypy 2.4.0](http://pypy.org/)
+* [nginx 1.4.1](http://nginx.org/)
+
+## Get Help
+
+### Python Experts
 
 * INADA Naoki (@methane) -- Expert of Python and Python's MySQL driver.
 
+### [Python Community](https://www.python.org/community/)
+
+* `#python` IRC Channel ([irc.freenode.net](http://freenode.net/))
+* `#python-dev` IRC Channel ([irc.freenode.net](http://freenode.net/))
 
 ## Python interpreters
 
@@ -26,7 +43,6 @@ PyPy is the fastest Python implementation with JIT.
 
 There is PyPy's Python 3 implementation (PyPy3), but it is not so tuned like PyPy2.
 So we don't use it for now.
-
 
 ## WSGI Servers
 
@@ -99,8 +115,10 @@ You can see Flask's files to know how to write new test.
 virtualenv is installed on Python 2 and PyPy.  Use `$IROOT/py3/bin/python3 -m venv $TROOT/py3`
 for Python 3.
 
+You can set environment variables within `install.sh` or within `setup.sh`.
+
 `bechmark_config` is json file to define test.
-See [here](https://github.com/TechEmpower/FrameworkBenchmarks#the-benchmark_configjson-file)
+See [here](http://frameworkbenchmarks.readthedocs.org/en/latest/Codebase/Framework-Files/#benchmark-config-file).
 
 `setup_py2.sh` is used to run test on Python 2.  `gunicorn_conf.py` is configuration for gunicorn.
 `setup_py2.sh` and `gunicorn_conf.py` are written as generic as possible.
