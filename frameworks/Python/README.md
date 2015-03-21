@@ -104,6 +104,6 @@ for Python 3.
 `bechmark_config` is json file to define test.
 See [here](https://github.com/TechEmpower/FrameworkBenchmarks#the-benchmark_config-file)
 
-`setup_py2.py` is used to run test on Python 2.  `gunicorn_conf.py` is configuration for gunicorn.
-`setup_py2.py` and `gunicorn_conf.py` are written as generic as possible.
+`setup_py2.sh` is used to run test on Python 2.  `gunicorn_conf.py` is configuration for gunicorn.
+`setup_py2.sh` and `gunicorn_conf.py` are written as generic as possible.
 You may be able to use it with changing wsgi callable.  (`$PY2_GUNICORN wsgimodule:callable -c gunicorn_conf.py`)

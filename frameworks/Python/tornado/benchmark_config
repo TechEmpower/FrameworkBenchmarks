@@ -18,16 +18,14 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "tornado",
+      "display_name": "Tornado-MongoDB-Py2",
       "notes": "CPython 2.7",
       "versus": ""
     },
     "postgresql-raw": {
       "setup_file": "setup_pg",
-      "json_url": "/json",
       "db_url": "/dbraw",
       "query_url": "/queriesraw?queries=",
-      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -39,7 +37,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "tornado",
+      "display_name": "Tornado-Postgres-Py2",
       "notes": "CPython 2.7",
       "versus": ""
     },
@@ -60,7 +58,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "tornado-py3",
+      "display_name": "Tornado-MongoDB-Py3",
       "notes": "CPython 3.4",
       "versus": ""
     }

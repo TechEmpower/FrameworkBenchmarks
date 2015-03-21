@@ -20,7 +20,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "flask",
+      "display_name": "Flask-Py2",
       "notes": "CPython 2.7",
       "versus": "wsgi"
     },
@@ -41,7 +41,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "flask-raw",
+      "display_name": "Flask-raw",
       "notes": "CPython 2.7",
       "versus": "wsgi"
     },
@@ -64,8 +64,8 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "flask-py3",
-      "notes": "CPython 3.3",
+      "display_name": "Flask-Py3",
+      "notes": "CPython 3.4",
       "versus": "wsgi"
     },
     "pypy": {
@@ -87,8 +87,8 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "flask-pypy",
-      "notes": "PyPy 2.3",
+      "display_name": "Flask-PyPy",
+      "notes": "PyPy 2.5",
       "versus": "wsgi"
     },
     "pypy-mysql-raw": {
@@ -108,8 +108,8 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "flask-pypy-raw",
-      "notes": "PyPy 2.3",
+      "display_name": "Flask-PyPy-raw",
+      "notes": "PyPy 2.5",
       "versus": "wsgi"
     },
     "nginx-uwsgi": {
@@ -131,7 +131,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "flask-nginx-uWSGI",
+      "display_name": "Flask-nginx-uWSGI",
       "notes": "CPython 2.7",
       "versus": "wsgi"
     }
