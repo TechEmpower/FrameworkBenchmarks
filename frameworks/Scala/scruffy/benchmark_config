@@ -13,13 +13,13 @@
       "framework": "scruffy",
       "language": "Scala",
       "orm": "Raw",
-      "platform": "Netty",
+      "platform": "Undertow",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "scruffy",
       "notes": "",
-      "versus": "Netty"
+      "versus": "Undertow"
     }
   }]
 }
