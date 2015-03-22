@@ -9,7 +9,11 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 
 import javax.sql.DataSource;
 import java.util.Deque;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Provides utility methods for the benchmark tests.
@@ -79,4 +83,14 @@ final class Helper {
   static int randomWorld() {
     return 1 + ThreadLocalRandom.current().nextInt(10000);
   }
+
+  private static final int cpuCount = Runtime.getRuntime().availableProcessors();
+
+  // todo: parameterize multipliers
+  public static ExecutorService EXECUTOR =
+    new ThreadPoolExecutor(
+      cpuCount * 2, cpuCount * 25, 200, TimeUnit.MILLISECONDS,
+      new LinkedBlockingQueue<Runnable>(cpuCount * 100),
+      new ThreadPoolExecutor.CallerRunsPolicy());
+
 }
