@@ -8,9 +8,9 @@
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.cache.use_query_cache">false</property>
     <property name="hibernate.show_sql">false</property>
-    <property name="hibernate.c3p0.min_size">5</property>
-    <property name="hibernate.c3p0.max_size">40</property>
+    <property name="hibernate.c3p0.min_size">256</property>
+    <property name="hibernate.c3p0.max_size">256</property>
     <property name="hibernate.c3p0.timeout">1800</property>
-    <property name="hibernate.c3p0.max_statements">50</property>
+    <property name="hibernate.c3p0.max_statements">2048</property>
   </session-factory>
 </hibernate-configuration>
