@@ -91,16 +91,30 @@ public:
     }
 };
 
-std::mutex mtx;
+class MyConnection : public
+#ifdef BENCHMARK_USE_POSTGRES
+  Wt::Dbo::backend::Postgres
+#else
+  Wt::Dbo::backend::MySQL
+#endif
+{
+public:
+#ifdef BENCHMARK_USE_POSTGRES
+  MyConnection(const std::string &db) :
+  Wt::Dbo::backend::Postgres(db) {}
+#else
+  MyConnection(const std::string &db, const std::string &dbuser, const std::string &dbpasswd, const std::string &dbhost, unsigned int dbport) :
+  Wt::Dbo::backend::MySQL(db, dbuser, dbpasswd, dbhost, dbport) {}
+#endif
+
+  virtual void startTransaction() { }
+  virtual void commitTransaction() { }
+  virtual void rollbackTransaction() { }
+};
 
 struct DbStruct {
-#ifndef BENCHMARK_USE_POSTGRES
-  Wt::Dbo::backend::MySQL connection;
-#else
-  Wt::Dbo::backend::Postgres connection;
-#endif
+  MyConnection connection;
   Wt::Dbo::Session session;
-  Wt::Dbo::Transaction *transaction;
 
   boost::taus88 rng;
   boost::random::uniform_int_distribution<int> distribution;
@@ -115,11 +129,6 @@ struct DbStruct {
     session.setConnection(connection);
     session.mapClass<World>("world");
     session.mapClass<Fortune>("fortune");
-    transaction = new Wt::Dbo::Transaction(session);
-  }
-
-  ~DbStruct() {
-    delete transaction;
   }
 
   int rand() {
@@ -127,37 +136,11 @@ struct DbStruct {
   }
 };
 
-struct DbStructNoTransaction {
-#ifndef BENCHMARK_USE_POSTGRES
-  Wt::Dbo::backend::MySQL connection;
-#else
-  Wt::Dbo::backend::Postgres connection;
-#endif
-  Wt::Dbo::Session session;
-
-  boost::taus88 rng;
-  boost::random::uniform_int_distribution<int> distribution;
-
-#ifndef BENCHMARK_USE_POSTGRES
-  DbStructNoTransaction() : connection("hello_world", "benchmarkdbuser", "benchmarkdbpass", "INSERT_DB_HOST_HERE", 3306),
-#else
-  DbStructNoTransaction() : connection("host=INSERT_DB_HOST_HERE port=5432 user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world"),
-#endif
-      rng(clock()),
-      distribution(1, 10000) {
-    session.setConnection(connection);
-    session.mapClass<World>("world");
-    session.mapClass<Fortune>("fortune");
-  }
-
-  int rand() {
-    return distribution(rng);
-  }
-};
+namespace {
+  boost::thread_specific_ptr<DbStruct> dbStruct_;
+}
 
 class DbResource : public Wt::WResource {
-private:
-  boost::thread_specific_ptr<DbStruct> dbStruct_;
 public:
   virtual void handleRequest(const Wt::Http::Request &request, Wt::Http::Response &response) {
     response.setMimeType("application/json");
@@ -165,13 +148,11 @@ public:
 
     DbStruct* db = dbStruct_.get();
     if (!db) {
-      std::lock_guard<std::mutex> lock(mtx);
-      if (!db) {
-        db = new DbStruct();
-        dbStruct_.reset(db);
-      }
+      db = new DbStruct();
+      dbStruct_.reset(db);
     }
 
+    Wt::Dbo::Transaction transaction(db->session);
     Wt::Dbo::ptr<World> entry = db->session.load<World>(db->rand());
     
     Wt::Dbo::JsonSerializer writer(response.out());
@@ -180,8 +161,6 @@ public:
 };
 
 class QueriesResource : public Wt::WResource {
-private:
-  boost::thread_specific_ptr<DbStruct> dbStruct_;
 public:
   virtual void handleRequest(const Wt::Http::Request &request, Wt::Http::Response &response) {
     int n;
@@ -200,13 +179,11 @@ public:
 
     DbStruct* db = dbStruct_.get();
     if (!db) {
-      std::lock_guard<std::mutex> lock(mtx);
-      if (!db) {
-        db = new DbStruct();
-        dbStruct_.reset(db);
-      }
+      db = new DbStruct();
+      dbStruct_.reset(db);
     }
 
+    Wt::Dbo::Transaction transaction(db->session);
     std::vector<Wt::Dbo::ptr<World> > results;
     results.reserve(n);
     for (int i = 0; i < n; ++i) {
@@ -250,7 +227,7 @@ public:
 
   virtual void resolveString(const std::string& varName, const std::vector<Wt::WString>& vars, std::ostream& result) {
     if (varName == "id")
-      format(result, Wt::WString::fromUTF8(boost::lexical_cast<std::string>(it_->id())), Wt::XHTMLUnsafeText);
+      result << it_->id();
     else if (varName == "message")
       format(result, Wt::WString::fromUTF8((*it_)->message));
     else
@@ -259,8 +236,6 @@ public:
 };
 
 class FortuneResource : public Wt::WResource {
-private:
-  boost::thread_specific_ptr<DbStruct> dbStruct_;
 public:
   virtual void handleRequest(const Wt::Http::Request &request, Wt::Http::Response &response) {
     response.setMimeType("text/html; charset=utf-8");
@@ -268,13 +243,11 @@ public:
 
     DbStruct* db = dbStruct_.get();
     if (!db) {
-      std::lock_guard<std::mutex> lock(mtx);
-      if (!db) {
-        db = new DbStruct();
-        dbStruct_.reset(db);
-      }
+      db = new DbStruct();
+      dbStruct_.reset(db);
     }
 
+    Wt::Dbo::Transaction transaction(db->session);
     Fortunes fortunes = db->session.find<Fortune>();
     VFortunes vFortunes;
     for (Fortunes::const_iterator i = fortunes.begin(); i != fortunes.end(); ++i)
@@ -293,8 +266,6 @@ public:
 };
 
 class UpdateResource : public Wt::WResource {
-private:
-  boost::thread_specific_ptr<DbStructNoTransaction> dbStruct_;
 public:
   virtual void handleRequest(const Wt::Http::Request &request, Wt::Http::Response &response) {
     int n;
@@ -311,13 +282,10 @@ public:
     response.setMimeType("application/json");
     response.addHeader("Server", "Wt");
 
-    DbStructNoTransaction* db = dbStruct_.get();
+    DbStruct* db = dbStruct_.get();
     if (!db) {
-      std::lock_guard<std::mutex> lock(mtx);
-      if (!db) {
-        db = new DbStructNoTransaction();
-        dbStruct_.reset(db);
-      }
+      db = new DbStruct();
+      dbStruct_.reset(db);
     }
 
     std::vector<Wt::Dbo::ptr<World> > results;

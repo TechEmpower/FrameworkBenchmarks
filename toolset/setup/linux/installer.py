@@ -19,6 +19,14 @@ class Installer:
     linux_install_root = self.fwroot + "/toolset/setup/linux"
     imode = self.benchmarker.install
 
+    script_vars = {
+      'TFB_DBHOST': self.benchmarker.database_host
+    }
+    l=[]
+    for k,v in script_vars.iteritems():
+      l.append("export %s=%s" % (k,v))
+    script_vars_str = "\n".join(l) + "\n\n"
+
     if imode == 'all' or imode == 'server':
       self.__install_server_software()
 
@@ -26,10 +34,11 @@ class Installer:
       print("\nINSTALL: Installing database software\n")   
       self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="../config/database_sftp_batch"), True)
       with open (linux_install_root + "/database.sh", "r") as myfile:
-        remote_script=myfile.read().format(database_host=self.benchmarker.database_host)
         print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
-        p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
-        p.communicate(remote_script)
+        p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") +
+                             ["bash"], stdin=subprocess.PIPE)
+        remote_script = myfile.read()
+        p.communicate(script_vars_str + remote_script)
         returncode = p.returncode
         if returncode != 0:
           self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.database_ssh_string))

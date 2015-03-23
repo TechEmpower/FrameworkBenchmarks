@@ -25,7 +25,7 @@ import org.javalite.activejdbc.annotations.Table;
 
 @Table("Fortune")
 public class Fortune extends Model implements Comparable<Fortune> {
-    public int compareTo(Fortune other) {
+    @Override public int compareTo(Fortune other) {
         return getString("message").compareTo(other.getString("message"));
     }
 }

@@ -16,6 +16,10 @@
 #    . $FWROOT/ULib/install.sh (cwd=$FWROOT//installs)
 # --------------------------------------------------------------------------------------------------------
 
+ULIB_VERSION=1.4.2
+ULIB_ROOT=$IROOT/ULib
+ULIB_DOCUMENT_ROOT=${ULIB_ROOT}/ULIB_DOCUMENT_ROOT
+
 # Check if ULib is already installed
 ULIB_INSTALLED_FILE="${IROOT}/ULib-${ULIB_VERSION}.installed"
 RETCODE=$(fw_exists ${ULIB_INSTALLED_FILE})
@@ -37,12 +41,12 @@ if [ ! -f "benchmark.cfg" ]; then
   cat <<EOF >benchmark.cfg
 userver {
  PORT 8080
- PREFORK_CHILD 8
- LISTEN_BACKLOG 8192
- MAX_KEEP_ALIVE 8192
+ PREFORK_CHILD 4
+ MAX_KEEP_ALIVE 1023
+ LISTEN_BACKLOG 16384
+ CLIENT_FOR_PARALLELIZATION 256
  ORM_DRIVER "mysql pgsql sqlite"
  DOCUMENT_ROOT $ULIB_DOCUMENT_ROOT
-#PID_FILE ${ULIB_ROOT}/userver_tcp.pid
 }
 EOF
 fi
