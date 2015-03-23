@@ -34,9 +34,10 @@ public class DbResource {
   
   @GET
   @Produces(APPLICATION_JSON + "; charset=utf-8")
-  public Object db(@QueryParam("queries") @DefaultValue("1") final int queries)
+  public Object db(@QueryParam("queries") String queriesParam)
       throws ExecutionException, InterruptedException {
 
+    final int queries = getQueries(queriesParam);
     final World[] worlds = new World[queries];
     final Random random = ThreadLocalRandom.current();
     final Session session = sessionFactory.openSession();
@@ -60,5 +61,15 @@ public class DbResource {
 
     return queries == 1 ? worlds[0] : worlds;
   }
-  
+
+  private int getQueries(String proto) {
+    int result = 1;
+    try {
+      result = Integer.parseInt(proto);
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    }
+
+    return Math.max(500, Math.min(1, result));
+  }
 }
