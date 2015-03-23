@@ -376,12 +376,21 @@ class Benchmarker:
     p.communicate("""
       sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
       sudo sysctl -w net.core.somaxconn=65535
+      sudo sysctl -w kernel.sched_autogroup_enabled=0
       sudo -s ulimit -n 65535
       sudo sysctl net.ipv4.tcp_tw_reuse=1
       sudo sysctl net.ipv4.tcp_tw_recycle=1
       sudo sysctl -w kernel.shmmax=2147483648
       sudo sysctl -w kernel.shmall=2097152
+      sudo sysctl -w kernel.sem="250 32000 256 512"
+      echo "Printing kernel configuration:" && sudo sysctl -a
     """)
+        # Explanations:
+        # net.ipv4.tcp_max_syn_backlog, net.core.somaxconn, kernel.sched_autogroup_enabled: http://tweaked.io/guide/kernel/
+        # ulimit -n: http://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files/
+        # net.ipv4.tcp_tw_*: http://www.linuxbrigade.com/reduce-time_wait-socket-connections/
+        # kernel.shm*: http://seriousbirder.com/blogs/linux-understanding-shmmax-and-shmall-settings/
+        # For kernel.sem: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/5/html/Tuning_and_Optimizing_Red_Hat_Enterprise_Linux_for_Oracle_9i_and_10g_Databases/chap-Oracle_9i_and_10g_Tuning_Guide-Setting_Semaphores.html
   ############################################################
   # End __setup_database
   ############################################################
