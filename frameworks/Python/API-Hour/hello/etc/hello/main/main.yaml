@@ -1,3 +1,4 @@
+---
 engines:
   pg:
     host: 127.0.0.1
@@ -5,5 +6,5 @@ engines:
     dbname: hello_world
     user: benchmarkdbuser
     password: benchmarkdbpass
-    minsize: 40
-    maxsize: 40
+    minsize: 22
+    maxsize: 22
