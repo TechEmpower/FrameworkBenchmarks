@@ -37,31 +37,32 @@ final class UpdatesSqlHandler implements HttpHandler {
     }
     int queries = Helper.getQueries(exchange);
     World[] worlds = new World[queries];
-    try (Connection connection = database.getConnection();
-         final PreparedStatement query = connection.prepareStatement(
-             "SELECT * FROM World WHERE id = ?",
-             ResultSet.TYPE_FORWARD_ONLY,
-             ResultSet.CONCUR_READ_ONLY);
-         final PreparedStatement update = connection.prepareStatement(
-             "UPDATE World SET randomNumber = ? WHERE id= ?")) {
+    try (final Connection connection = database.getConnection()) {
       Map<Integer, Future<World>> futureWorlds = new ConcurrentHashMap<>();
       for (int i = 0; i < queries; i++) {
         futureWorlds.put(i, Helper.EXECUTOR.submit(new Callable<World>() {
           @Override
           public World call() throws Exception {
-            query.setInt(1, Helper.randomWorld());
             World world;
-            try (ResultSet resultSet = query.executeQuery()) {
-              resultSet.next();
-              world = new World(
-                resultSet.getInt("id"),
-                resultSet.getInt("randomNumber"));
+            try (PreparedStatement update = connection.prepareStatement(
+                "UPDATE World SET randomNumber = ? WHERE id= ?")) {
+              try (PreparedStatement query = connection.prepareStatement(
+                  "SELECT * FROM World WHERE id = ?",
+                  ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
+
+                query.setInt(1, Helper.randomWorld());
+                ResultSet resultSet = query.executeQuery();
+                resultSet.next();
+                world = new World(
+                  resultSet.getInt("id"),
+                  resultSet.getInt("randomNumber"));
+              }
+              world.randomNumber = Helper.randomWorld();
+              update.setInt(1, world.randomNumber);
+              update.setInt(2, world.id);
+              update.executeUpdate();
+              return world;
             }
-            world.randomNumber = Helper.randomWorld();
-            update.setInt(1, world.randomNumber);
-            update.setInt(2, world.id);
-            update.executeUpdate();
-            return world;
           }
         }));
       }
