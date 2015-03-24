@@ -70,6 +70,6 @@ public class DbResource {
       e.printStackTrace();
     }
 
-    return Math.max(500, Math.min(1, result));
+    return Math.min(500, Math.max(1, result));
   }
 }
