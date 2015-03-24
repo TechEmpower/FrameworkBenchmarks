@@ -17,11 +17,11 @@
       "language": "Python",
       "orm": "Raw",
       "platform": "API-Hour",
-      "webserver": "None",
+      "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "API-Hour+aiohttp.web+pgsql",
-      "notes": "Python 3 + AsyncIO + aiohttp.web + PostgreSQL"
+      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + PostgreSQL"
     },
     "redis": {
       "setup_file": "setup",
@@ -37,45 +37,45 @@
       "language": "Python",
       "orm": "Raw",
       "platform": "API-Hour",
-      "webserver": "None",
+      "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "API-Hour+aiohttp.web+redis",
-      "notes": "Python 3 + AsyncIO + aiohttp.web + Redis"
+      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + Redis"
     },
     "json": {
       "setup_file": "setup",
       "json_url": "/json",
       "port": 8009,
       "approach": "Stripped",
-      "classification": "Micro",
+      "classification": "Platform",
       "database": "None",
       "framework": "AsyncIO",
       "language": "Python",
       "orm": "Raw",
       "platform": "API-Hour",
-      "webserver": "None",
+      "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "None",
       "display_name": "API-Hour+AsyncIO",
-      "notes": "Python 3 + AsyncIO"
+      "notes": "Python 3 + API-Hour + AsyncIO"
     },
     "plaintext": {
       "setup_file": "setup",
       "json_url": "/plaintext",
       "port": 8011,
       "approach": "Stripped",
-      "classification": "Micro",
+      "classification": "Platform",
       "database": "None",
       "framework": "AsyncIO",
       "language": "Python",
       "orm": "Raw",
       "platform": "API-Hour",
-      "webserver": "None",
+      "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "None",
       "display_name": "API-Hour+AsyncIO",
-      "notes": "Python 3 + AsyncIO"
+      "notes": "Python 3 + API-Hour + AsyncIO"
     }
   }]
 }
