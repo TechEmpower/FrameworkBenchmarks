@@ -18,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
+import org.hibernate.IdentifierLoadAccess;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -42,6 +43,7 @@ public class DbResource {
     final Random random = ThreadLocalRandom.current();
     final Session session = sessionFactory.openSession();
     session.setDefaultReadOnly(true);
+    final IdentifierLoadAccess accessor = session.byId(World.class);
 
     Map<Integer, Future<World>> futureWorlds = new ConcurrentHashMap<>();
     for (int i = 0; i < queries; i++) {
@@ -49,7 +51,7 @@ public class DbResource {
         new Callable<World>() {
           @Override
           public World call() throws Exception {
-            return (World) session.byId(World.class).load(random.nextInt(DB_ROWS) + 1);
+            return (World) accessor.load(random.nextInt(DB_ROWS) + 1);
           }
         }
       ));
