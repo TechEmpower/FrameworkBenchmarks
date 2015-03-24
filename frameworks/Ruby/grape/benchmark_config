@@ -1,7 +1,29 @@
 {
   "framework": "grape",
   "tests": [{
-    "jruby-puma": {
+    "default": {
+      "setup_file": "run_mri_puma",
+      "json_url": "/json",
+      "db_url": "/db", 
+      "query_url": "/query?queries=", 
+      "update_url": "/updates?queries=", 
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "grape",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rack",
+      "webserver": "Puma",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "grape-puma-mri",
+      "notes": "",
+      "versus": "rack-puma"
+    }, 
+    "puma-jruby": {
       "setup_file": "run_jruby_puma",
       "json_url": "/json",
       "db_url": "/db", 
@@ -19,7 +41,7 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "puma-jruby-grape",
+      "display_name": "grape-puma-jruby",
       "notes": "",
       "versus": "rack-puma-jruby"
     },
@@ -41,32 +63,10 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "puma-rbx-grape",
+      "display_name": "grape-puma-rbx",
       "notes": "",
       "versus": "rack-puma-rbx"
-    },
-    "ruby-puma": {
-      "setup_file": "run_mri_puma",
-      "json_url": "/json",
-      "db_url": "/db", 
-      "query_url": "/query?queries=", 
-      "update_url": "/updates?queries=", 
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "MySQL",
-      "framework": "grape",
-      "language": "Ruby",
-      "orm": "Full",
-      "platform": "Rack",
-      "webserver": "Puma",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "puma-mri-grape",
-      "notes": "",
-      "versus": "rack-puma"
-    },  
+    }, 
     "thin": {
       "setup_file": "run_thin",
       "json_url": "/json",
@@ -85,11 +85,11 @@
       "webserver": "Thin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "thin-grape",
+      "display_name": "grape-thin",
       "notes": "",
       "versus": "rack-thin"
     },  
-    "torqbox": {
+    "torqbox-jruby": {
       "setup_file": "run_torqbox",
       "json_url": "/json",
       "db_url": "/db", 
@@ -107,11 +107,11 @@
       "webserver": "TorqBox",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "torqbox-grape",
+      "display_name": "grape-torqbox-jruby",
       "notes": "",
       "versus": "rack-torqbox"
     },  
-    "trinidad": {
+    "trinidad-jruby": {
       "setup_file": "run_trinidad",
       "json_url": "/json",
       "db_url": "/db", 
@@ -129,7 +129,7 @@
       "webserver": "Trinidad",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "trinidad-grape",
+      "display_name": "grape-trinidad-jruby",
       "notes": "",
       "versus": "rack-trinidad"
     },  
@@ -151,7 +151,7 @@
       "webserver": "Unicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "unicorn-grape",
+      "display_name": "grape-unicorn",
       "notes": "",
       "versus": "rack-unicorn"
     } 
