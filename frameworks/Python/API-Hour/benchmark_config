@@ -62,7 +62,7 @@
     },
     "plaintext": {
       "setup_file": "setup",
-      "json_url": "/plaintext",
+      "plaintext_url": "/plaintext",
       "port": 8011,
       "approach": "Stripped",
       "classification": "Platform",
