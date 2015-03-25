@@ -56,7 +56,7 @@
       "platform": "API-Hour",
       "webserver": "Gunicorn",
       "os": "Linux",
-      "database_os": "None",
+      "database_os": "Linux",
       "display_name": "API-Hour+AsyncIO",
       "notes": "Python 3 + API-Hour + AsyncIO"
     },
@@ -73,7 +73,7 @@
       "platform": "API-Hour",
       "webserver": "Gunicorn",
       "os": "Linux",
-      "database_os": "None",
+      "database_os": "Linux",
       "display_name": "API-Hour+AsyncIO",
       "notes": "Python 3 + API-Hour + AsyncIO"
     }
