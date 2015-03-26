@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Koa tests for TechEmpower Framework Benchmarks.",
   "main": "app.js",
+  "private": true,
   "dependencies": {
     "koa": "0.18.1",
     "koa-bodyparser": "1.4.1",
