@@ -212,7 +212,7 @@ class CIRunnner:
     self.fwroot = setup_util.get_fwroot()
     target_dir = self.fwroot + '/frameworks/' + testdir
     log.debug("Target directory is %s", target_dir)
-    dirtests = [t for t in tests if target_dir in t.directory]
+    dirtests = [t for t in tests if ("%s/" % target_dir) in t.directory or t.directory == target_dir]
     
     # Travis-CI is linux only
     osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
