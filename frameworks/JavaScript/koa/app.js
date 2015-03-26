@@ -32,8 +32,8 @@ if (cluster.isMaster) {
   app.use(route.get('/json', jsonHandler));
   app.use(route.get('/db', dbHandler));
   app.use(route.get('/queries', queriesHandler));
-  app.use(route.get('/fortune', fortuneHandler));
-  app.use(route.get('/update', updateHandler));
+  app.use(route.get('/fortunes', fortuneHandler));
+  app.use(route.get('/updates', updateHandler));
   app.use(route.get('/plaintext', textHandler));
 
   // Helper
@@ -96,13 +96,14 @@ if (cluster.isMaster) {
   }
 
   function *fortuneHandler() {
+    this.set('Server', 'Koa');
     var fortunes = yield fortunesQuery;
     fortunes.push({
       id: 0,
       message: 'Additional fortune added at request time.'
     });
     fortunes.sort(function(a, b) {
-      return a.id - b.id;
+      return a.message < b.message ? -1 : 1;
     });
     yield this.render("fortunes", {
       fortunes: fortunes
