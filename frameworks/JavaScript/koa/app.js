@@ -2,6 +2,7 @@ var cluster = require('cluster')
   , numCPUs = require('os').cpus().length
   , koa = require('koa')
   , route = require('koa-route')
+  , handlebars = require('koa-handlebars')
   , bodyParser = require('koa-bodyparser')
   , override = require('koa-override')
   , mongo = require('koa-mongo');
@@ -22,12 +23,16 @@ if (cluster.isMaster) {
   app.use(mongo({
     uri: "mongodb://localhost/hello_world"
   }));
+  app.use(handlebars({
+    // needed, otherwise missing dir err
+    partialsDir: "views"
+  }));
 
   // routes
   app.use(route.get('/json', jsonHandler));
   app.use(route.get('/db', dbHandler));
   app.use(route.get('/queries', queriesHandler));
-  // app.use(route.get('/fortune', fortuneHandler));
+  app.use(route.get('/fortune', fortuneHandler));
   app.use(route.get('/update', updateHandler));
   app.use(route.get('/plaintext', textHandler));
 
@@ -58,10 +63,16 @@ if (cluster.isMaster) {
     }
   }
 
+  function *fortunesQuery() {
+    return yield function(callback) {
+        this.mongo.collection('fortune').find({}, {_id: 0}).toArray(callback);
+    }
+  }
+
   // Route handlers
 
   function *jsonHandler() {
-    this.response.body = {
+    this.body = {
       message: "Hello, world!"
     }
   }
@@ -84,6 +95,20 @@ if (cluster.isMaster) {
     this.body = yield queries;
   }
 
+  function *fortuneHandler() {
+    var fortunes = yield fortunesQuery;
+    fortunes.push({
+      id: 0,
+      message: 'Additional fortune added at request time.'
+    });
+    fortunes.sort(function(a, b) {
+      return a.id - b.id;
+    });
+    yield this.render("fortunes", {
+      fortunes: fortunes
+    });
+  }
+
   function *updateHandler() {
     var numOfUpdates = isNaN(this.query.queries) ? 1 : this.query.queries,
     queries = [];
@@ -101,5 +126,6 @@ if (cluster.isMaster) {
   function *textHandler() {
     this.body = 'Hello, world!'
   }
-  app.listen(8080); //used for local testing
+
+  app.listen(3000); //used for local testing
 }
