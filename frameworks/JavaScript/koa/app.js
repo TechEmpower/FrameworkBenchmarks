@@ -5,7 +5,11 @@ var cluster = require('cluster')
   , handlebars = require('koa-handlebars')
   , bodyParser = require('koa-bodyparser')
   , override = require('koa-override')
-  , mongo = require('koa-mongo');
+  , monk = require('monk')
+  , wrap = require('co-monk')
+  , db = monk('localhost/hello_world')
+  , worlds = wrap(db.get('world'))
+  , fortunes = wrap(db.get('fortune'));
 
 if (cluster.isMaster) {
   // Fork workers.
@@ -20,9 +24,6 @@ if (cluster.isMaster) {
   var app = module.exports = koa();
   app.use(bodyParser());
   app.use(override());
-  app.use(mongo({
-    uri: "mongodb://localhost/hello_world"
-  }));
   app.use(handlebars({
     // needed, otherwise missing dir err
     partialsDir: "views"
@@ -43,13 +44,10 @@ if (cluster.isMaster) {
   function *worldUpdateQuery() {
     var randomId = getRandomNumber();
     var randomNumber = getRandomNumber();
-    var result = yield function(callback) {
-        this.mongo.collection('world').update(
-          {id: randomId},
-          {randomNumber: randomNumber}, 
-          callback
-        );
-    }
+    var result = yield worlds.update(
+      {id: randomId}, 
+      {randomNumber: randomNumber}
+    );
     return {
       id: randomId,
       randomNumber: randomNumber
@@ -57,16 +55,14 @@ if (cluster.isMaster) {
   }
 
   function *worldQuery() {
-    return yield function(callback) {
-        var randomId = {id: Math.floor(Math.random()*10000) + 1};
-        this.mongo.collection('world').findOne(randomId, {_id: 0}, callback);
-    }
+    var randomId = {id: getRandomNumber()};
+    var res = yield worlds.findOne(randomId, '-_id');
+    console.log(res);
+    return res;
   }
 
   function *fortunesQuery() {
-    return yield function(callback) {
-        this.mongo.collection('fortune').find({}, {_id: 0}).toArray(callback);
-    }
+    return yield fortunes.find({}, '-_id');
   }
 
   // Route handlers
@@ -128,5 +124,5 @@ if (cluster.isMaster) {
     this.body = 'Hello, world!'
   }
 
-  app.listen(3000); //used for local testing
+  app.listen(8080); //used for local testing
 }
