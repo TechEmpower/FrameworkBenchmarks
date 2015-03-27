@@ -46,7 +46,7 @@ if (cluster.isMaster) {
     var randomNumber = getRandomNumber();
     var result = yield worlds.update(
       {id: randomId}, 
-      {randomNumber: randomNumber}
+      {$set: {randomNumber: randomNumber}}
     );
     return {
       id: randomId,
