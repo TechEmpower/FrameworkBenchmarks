@@ -1,7 +1,10 @@
 (ns pedestal.service
   (:import com.mchange.v2.c3p0.ComboPooledDataSource)
   (:use korma.db
-        korma.core)
+        korma.core
+        hiccup.core
+        hiccup.util
+        hiccup.page)
   (:require [io.pedestal.http :as bootstrap]
             [io.pedestal.http.route :as route]
             [io.pedestal.http.body-params :as body-params]
@@ -72,6 +75,49 @@
           (> n 500) 500
           :else n)))))
 
+; Set up entity Fortune and the database representation
+(defentity fortune
+  (pk :id)
+  (table :fortune)
+  (entity-fields :id :message)
+  (database mysql-db))
+
+(defn get-all-fortunes []
+  "Query all Fortune records from the database."
+    (select fortune
+            (fields :id :message)))
+
+(defn get-fortunes []
+  "Fetch the full list of Fortunes from the database, sort them by the fortune
+message text, and then return the results."
+    (sort-by #(:message %)
+      (conj
+        (get-all-fortunes)
+        { :id 0 :message "Additional fortune added at request time." })))
+
+(defn fortunes-hiccup [fortunes]
+  "Render the given fortunes to simple HTML using Hiccup."
+  (html5
+   [:head
+    [:title "Fortunes"]]
+   [:body
+    [:table
+     [:tr
+      [:th "id"]
+      [:th "message"]]
+     (for [x fortunes]
+       [:tr
+        [:td (:id x)]
+        [:td (escape-html (:message x))]])
+     ]]))
+
+(defn fortune-test [request]
+  (->
+    (get-fortunes)
+    (fortunes-hiccup)
+    (ring-resp/response)
+    (ring-resp/content-type "text/html")
+    (ring-resp/charset "utf-8")))         ;; Apply charset after content type
 
 ;; All of the available routes
 (defroutes routes
@@ -79,7 +125,8 @@
   [  "/json"      {:get json-serialization}]
   [  "/plaintext" {:get plaintext}]
   [  "/db"        {:get single-query-test}]
-  [  "/queries"   {:get multiple-query-test}]]])
+  [  "/queries"   {:get multiple-query-test}]
+  [  "/fortunes"  {:get fortune-test}]]])
 
 ;; How the server will look, not the code to start it up
 (def service {:env :prod
