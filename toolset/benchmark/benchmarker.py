@@ -6,6 +6,7 @@ from benchmark.test_types import *
 from utils import header
 from utils import gather_tests
 from utils import gather_frameworks
+from utils import verify_database_connections
 
 import os
 import json
@@ -375,12 +376,21 @@ class Benchmarker:
     p.communicate("""
       sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
       sudo sysctl -w net.core.somaxconn=65535
+      sudo sysctl -w kernel.sched_autogroup_enabled=0
       sudo -s ulimit -n 65535
       sudo sysctl net.ipv4.tcp_tw_reuse=1
       sudo sysctl net.ipv4.tcp_tw_recycle=1
       sudo sysctl -w kernel.shmmax=2147483648
       sudo sysctl -w kernel.shmall=2097152
+      sudo sysctl -w kernel.sem="250 32000 256 512"
+      echo "Printing kernel configuration:" && sudo sysctl -a
     """)
+        # Explanations:
+        # net.ipv4.tcp_max_syn_backlog, net.core.somaxconn, kernel.sched_autogroup_enabled: http://tweaked.io/guide/kernel/
+        # ulimit -n: http://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files/
+        # net.ipv4.tcp_tw_*: http://www.linuxbrigade.com/reduce-time_wait-socket-connections/
+        # kernel.shm*: http://seriousbirder.com/blogs/linux-understanding-shmmax-and-shmall-settings/
+        # For kernel.sem: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/5/html/Tuning_and_Optimizing_Red_Hat_Enterprise_Linux_for_Oracle_9i_and_10g_Databases/chap-Oracle_9i_and_10g_Tuning_Guide-Setting_Semaphores.html
   ############################################################
   # End __setup_database
   ############################################################
@@ -492,7 +502,7 @@ class Benchmarker:
       else:
         sys.exit(code)
 
-    logDir = os.path.join(self.latest_results_directory, 'logs', test.name)
+    logDir = os.path.join(self.latest_results_directory, 'logs', test.name.lower())
 
     try:
       os.makedirs(logDir)
@@ -538,6 +548,15 @@ class Benchmarker:
             sudo service cassandra restart
           """)
           time.sleep(10)
+
+          st = verify_database_connections([
+            ("mysql", self.database_host, 3306),
+            ("mongodb", self.database_host, 27017),
+            ("redis", self.database_host, 6379),
+            ("postgresql", self.database_host, 5432),
+            ("cassandra", self.database_host, 9160)
+          ])
+          print "database connection test results:\n" + "\n".join(st[1])
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
