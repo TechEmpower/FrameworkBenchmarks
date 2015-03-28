@@ -21,41 +21,39 @@ import com.techempower.ee7.util.Helpers;
 @Path("/updates")
 public class Updates {
 
-  private static final int MIN_QUERIES = 1;
-  private static final int MAX_QUERIES = 500;
+    private static final Logger log = Logger.getLogger(Updates.class);
 
-  @Inject
-  private EntityManager em;
+    private static final int MIN_QUERIES = 1;
+    private static final int MAX_QUERIES = 500;
 
-  @Inject
-  private Logger log;
+    @Inject
+    private EntityManager em;
 
-  @Transactional
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public List<World> update(@QueryParam("queries") final String queries) {
-    final int iterations =
-        Helpers.boundedIntegerFromNullableString(queries, MIN_QUERIES, MAX_QUERIES);
+    @Transactional
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<World> update(@QueryParam("queries") final String queries) {
+        final int iterations = Helpers.boundedIntegerFromNullableString(queries, MIN_QUERIES, MAX_QUERIES);
 
-    List<World> worlds = new ArrayList<>(iterations);
+        List<World> worlds = new ArrayList<>(iterations);
 
-    for (int i = 0; i < iterations; i++) {
-      int id = Helpers.randomWorldId();
-      worlds.add(em.find(World.class, id));
+        for (int i = 0; i < iterations; i++) {
+            int id = Helpers.randomWorldId();
+            worlds.add(em.find(World.class, id));
+        }
+
+        for (World w : worlds) {
+            w.getRandomNumber(); // Mandatory to read for the test
+            w.setRandomNumber(Helpers.randomWorldId());
+        }
+
+        try {
+            em.flush();
+        }
+        catch (PersistenceException e) {
+            log.info("Failed to flush changes to database.");
+            throw e;
+        }
+        return worlds;
     }
-
-    for (World w : worlds) {
-      w.getRandomNumber(); // Mandatory to read for the test
-      w.setRandomNumber(Helpers.randomWorldId());
-    }
-
-    try {
-      em.joinTransaction();
-      em.flush();
-    } catch (PersistenceException e) {
-      log.info("Failed to flush changes to database.");
-      throw e;
-    }
-    return worlds;
-  }
 }

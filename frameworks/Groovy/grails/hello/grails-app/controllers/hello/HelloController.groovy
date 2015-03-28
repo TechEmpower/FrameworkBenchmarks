@@ -1,16 +1,13 @@
 package hello
 
+import grails.compiler.GrailsCompileStatic
 import grails.converters.JSON
-import grails.transaction.Transactional
-import groovy.transform.CompileStatic
-import groovy.transform.TypeCheckingMode;
 
 import java.util.concurrent.ThreadLocalRandom
 
-import org.springframework.transaction.annotation.Propagation;
-import org.hibernate.Session;
+import org.hibernate.Session
 
-@CompileStatic
+@GrailsCompileStatic
 class HelloController {
 
     def index() {

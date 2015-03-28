@@ -1,5 +1,5 @@
 use Mojolicious::Lite;
-use Mango;
+use Mojo::Pg;
 
 use JSON::XS 'encode_json';
 use Scalar::Util 'looks_like_number';
@@ -23,14 +23,8 @@ plugin Config => {
   @{app->config->{hypnotoad}}{keys %$merge} = values %$merge;
 }
 
-# Database connections
 
-helper mango   => sub { state $mango = Mango->new('mongodb://'. shift->config->{database_host}) };
-helper db      => sub { state $db = shift->mango->db('hello_world') };
-helper world   => sub { state $world = shift->db->collection('world') };
-helper fortune => sub { state $fortune = shift->db->collection('fortune') };
-
-# JSON::XS renderer
+helper pg => sub { state $pg = Mojo::Pg->new('postgresql://benchmarkdbuser:benchmarkdbpass@' . shift->config->{database_host} . '/hello_world') };
 
 helper render_json => sub { shift->render( data => encode_json(shift), format => 'json' ) }; 
 
@@ -46,13 +40,10 @@ get '/queries' => sub {
 };
 
 get '/fortunes' => sub {
-  my $c = shift->render_later;
-  my $tx = $c->tx;
-  $c->helpers->fortune->find->all(sub{
-    my ($cursor, $err, $docs) = @_;
-    push @$docs, { _id => 0, message => 'Additional fortune added at request time.' };
-    $c->render( fortunes => docs => $docs ) unless $tx->is_finished;
-  });
+  my $c = shift;
+  my $docs = $c->helpers->pg->db->query('SELECT id, message FROM Fortune')->arrays;
+  push @$docs, [0, 'Additional fortune added at request time.'];
+  $c->render( fortunes => docs => $docs->sort(sub{ $a->[1] cmp $b->[1] }) );
 };
 
 get '/updates' => sub {
@@ -69,8 +60,6 @@ helper 'render_query' => sub {
   $args ||= {};
   my $update = $args->{update};
 
-  $self->render_later;
-
   $q = 1 unless looks_like_number($q);
   $q = 1   if $q < 1;
   $q = 500 if $q > 500;
@@ -78,27 +67,17 @@ helper 'render_query' => sub {
   my $r  = [];
   my $tx = $self->tx;
 
-  my $delay = Mojo::IOLoop->delay;
-  $delay->on(finish => sub{
-    $r = $r->[0] if $args->{single};
-    $self->helpers->render_json($r) unless $tx->is_finished;
-  });
-
-  my $world = $self->helpers->world;
+  my $db = $self->helpers->pg->db;
 
   foreach (1 .. $q) {
     my $id = int rand 10_000;
-    my $end = $delay->begin;
-    $world->find_one({_id => $id} => sub {
-      my ($world, $err, $doc) = @_;
-      if ($update) { $doc->{randomNumber} = 1 + int rand 10_000 };
-      push @$r, { id => $id, randomNumber => $doc->{randomNumber} };
-      $update ? $world->save($doc, $end) : $end->();
-    });
+    my $randomNumber = $db->query('SELECT randomnumber FROM World WHERE id=?', $id)->array->[0];
+    $db->query('UPDATE World SET randomnumber=? WHERE id=?', ($randomNumber = 1 + int rand 10_000), $id) if $update; 
+    push @$r, { id => $id, randomNumber => $randomNumber };
   }
 
-  # use this line if not running under a Mojolicious server
-  # $delay->wait unless $delay->ioloop->is_running;
+  $r = $r->[0] if $args->{single};
+  $self->helpers->render_json($r);
 };
 
 app->start;
@@ -112,10 +91,10 @@ __DATA__
   <body>
     <table>
       <tr><th>id</th><th>message</th></tr>
-      % foreach my $doc (sort { $a->{message} cmp $b->{message} } @$docs) {
+      % foreach my $doc (@$docs) {
         <tr>
-          <td><%= $doc->{_id}     %></td>
-          <td><%= $doc->{message} %></td>
+          <td><%= $doc->[0] %></td>
+          <td><%= $doc->[1] %></td>
         </tr>
       % }
     </table>

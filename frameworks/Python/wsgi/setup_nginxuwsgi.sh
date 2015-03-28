@@ -3,4 +3,4 @@
 sed -i 's|include .*/conf/uwsgi_params;|include '"${NGINX_HOME}"'/conf/uwsgi_params;|g' nginx.conf
 
 $NGINX_HOME/sbin/nginx -c $TROOT/nginx.conf
-$PY2_ROOT/bin/uwsgi -d --ini uwsgi.ini --processes ${MAX_THREADS} --wsgi hello:app
+$PY2_ROOT/bin/uwsgi --ini uwsgi.ini --processes ${MAX_THREADS} --wsgi hello:app &

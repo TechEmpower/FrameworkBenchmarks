@@ -12,7 +12,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "SQL",
+      "database": "MySQL",
       "framework": "kelp",
       "language": "Perl",
       "orm": "Raw",
