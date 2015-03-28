@@ -211,8 +211,9 @@ class CIRunnner:
     tests = gather_tests()
     self.fwroot = setup_util.get_fwroot()
     target_dir = self.fwroot + '/frameworks/' + testdir
-    log.debug("Target directory is %s", target_dir)
-    dirtests = [t for t in tests if ("%s/" % target_dir) in t.directory or t.directory == target_dir]
+    log.debug("Target directory regex is '^%s'", re.escape(target_dir))
+
+    dirtests = [t for t in tests if re.match("^%s" % re.escape(target_dir), t.directory, re.IGNORECASE)]
     
     # Travis-CI is linux only
     osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
@@ -245,7 +246,7 @@ class CIRunnner:
     If you do rewrite history (e.g. rebase) then it's up to you to ensure that both 
     old and new (e.g. old...new) are available in the public repository. For simple
     rebase onto the public master this is not a problem, only more complex rebases 
-    may have issues
+    earch("^frameworks/%s/" % re.escape(self.directory), changes, re.M) is Noneay have issues
     '''
     # Don't use git diff multiple times, it's mega slow sometimes\
     # Put flag on filesystem so that future calls to run-ci see it too
