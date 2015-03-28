@@ -20,9 +20,9 @@ env:
     - "TESTDIR=C"
     - "TESTDIR=CSharp"
     # C++: cpoll_cppsp,treefrog,ULib
-    - "TESTDIR=C++\\\\/[ctU]"
+    - "TESTDIR=C\\\\+\\\\+\\\\/[ctU]"
     # C++: wt
-    - "TESTDIR=C++\\\\/wt"
+    - "TESTDIR=C\\\\+\\\\+\\\\/wt"
     - "TESTDIR=Clojure"
     - "TESTDIR=Dart"
     - "TESTDIR=Elixir"
