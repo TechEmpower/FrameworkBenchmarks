@@ -211,6 +211,38 @@ else
 fi
 
 ##############################
+# Elasticsearch
+##############################
+echo "Setting up Elasticsearch"
+
+export ES_V=1.5.0
+wget -nv https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$ES_V.tar.gz
+sudo tar zxf elasticsearch-$ES_V.tar.gz -C /opt
+sudo ln -s /opt/elasticsearch-$ES_V /opt/elasticsearch
+
+rm -rf /ssd/elasticsearch /ssd/log/elasticsearch
+mkdir -p /ssd/elasticsearch /ssd/log/elasticsearch
+
+sudo cp elasticsearch/elasticsearch.yml /opt/elasticsearch/config
+sudo cp elasticsearch/elasticsearch /opt/elasticsearch
+
+/opt/elasticsearch/elasticsearch restart
+
+for i in {1..45}; do
+  nc -z $TFB_DBHOST 9200 && break || sleep 1;
+  echo "Waiting for Elasticsearch ($i/45}"
+done
+nc -z $TFB_DBHOST 9200
+if [ $? -eq 0 ]; then
+  sh elasticsearch/es-create-index.sh
+  python elasticsearch/es-db-data-gen.py > elasticsearch/tfb-data.json
+  curl -sS -D - -o /dev/null -XPOST localhost:9200/tfb/world/_bulk --data-binary @elasticsearch/tfb-data.json
+  echo "Elasticsearch DB populated"
+else
+  >&2 echo "Elasticsearch did not start, skipping"
+fi
+
+##############################
 # Redis
 ##############################
 echo "Setting up Redis database"
