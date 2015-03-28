@@ -5,20 +5,24 @@ python:
 env:
   matrix:
 
-    # Group tests by directory to logically break up travis-CI build. Otherwise
-    # we end up starting ~200+ different workers. Seems that ~100 is the limit
-    # before their website starts to lag heavily
+    # Group tests to logically break up travis-CI build.
+    # The goal is to minimize the number of "TESTDIR=..." lines, as 
+    # each line adds a job to the travis build. The main grouping
+    # is by language, but travis jobs have a 50 minute limit so 
+    # we occasionally have to group more precisely than language.
+    # Fewer jobs per build == faster complete build and fewer 
+    # travis-ci resources consumed, so it's important to hit as 
+    # close to the 50 minute limit as is possible
     #
-    # Here's the bash if you need to update this. Be sure to maintain the 
-    # lines that are currently commented out (these cannot run in Travis)
-    #   cd frameworks 
-    #   find . -type d -depth 2 | sed 's|./|    - "TESTDIR=|' | sed 's/$/"/g'
-    #
+    # Each TESTDIR is interpreted as a regex and is not escaped 
+    # before use 
     #  
-    - "TESTDIR=C/lwan"
     - "TESTDIR=C"
     - "TESTDIR=CSharp"
-    - "TESTDIR=C++"
+    # C++: cpoll_cppsp,treefrog,ULib
+    - "TESTDIR=C++\/[ctU]"
+    # C++: wt
+    - "TESTDIR=C++\/wt"
     - "TESTDIR=Clojure"
     - "TESTDIR=Dart"
     - "TESTDIR=Elixir"
@@ -26,7 +30,16 @@ env:
     - "TESTDIR=Go"
     - "TESTDIR=Groovy"
     - "TESTDIR=Haskell"
-    - "TESTDIR=Java"
+    # Java: activeweb to dropwizard
+    - "TESTDIR=Java\/[a-d]"
+    # Java: gemini to ninja
+    - "TESTDIR=Java\/[g-n]"
+    # Java: play to restexpress
+    - "TESTDIR=Java\/[p-r]"
+    # Java: servlet to tapestry
+    - "TESTDIR=Java\/[st]"
+    # Java: undertow to wildfly
+    - "TESTDIR=Java\/[u-w]"
     - "TESTDIR=JavaScript"
     - "TESTDIR=Lua"
     - "TESTDIR=Nim"

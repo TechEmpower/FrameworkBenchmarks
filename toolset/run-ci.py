@@ -210,10 +210,10 @@ class CIRunnner:
 
     tests = gather_tests()
     self.fwroot = setup_util.get_fwroot()
-    target_dir = self.fwroot + '/frameworks/' + testdir
-    log.debug("Target directory regex is '^%s'", re.escape(target_dir))
+    target_dir = "^" + re.escape(self.fwroot + '/frameworks/') + testdir
+    log.debug("Target directory regex is '%s'", target_dir)
 
-    dirtests = [t for t in tests if re.match("^%s" % re.escape(target_dir), t.directory, re.IGNORECASE)]
+    dirtests = [t for t in tests if re.match(target_dir, t.directory)]
     
     # Travis-CI is linux only
     osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
@@ -277,7 +277,7 @@ class CIRunnner:
       log.debug("Result:\n%s", changes)
 
     # Look for changes to core TFB framework code
-    if re.search(r'^toolset/', changes, re.M) is not None: 
+    if re.search(r'^toolset/', changes, re.MULTILINE) is not None: 
       log.info("Found changes to core framework code")
       touch('.run-ci.should_run')
       return True
@@ -545,8 +545,9 @@ if __name__ == "__main__":
       log.critical("No results.json found, unable to print verification summary") 
       sys.exit(retcode)
 
-    target_dir = setup_util.get_fwroot() + '/frameworks/' + testdir
-    dirtests = [t for t in gather_tests() if t.directory == target_dir]
+    fwroot = setup_util.get_fwroot()
+    target_dir = "^" + re.escape(fwroot + '/frameworks/') + testdir
+    dirtests = [t for t in tests if re.match(target_dir, t.directory)]
 
     # Normally you don't have to use Fore.* before each line, but 
     # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
