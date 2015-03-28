@@ -106,7 +106,9 @@ class CIRunnner:
       # For pull requests, we will examine Github's automerge commit to see
       # what files would be touched if we merged this into the current master. 
       # You can't trust the travis variables here, as the automerge commit can
-      # be different for jobs on the same build. See https://github.com/travis-ci/travis-ci/issues/2666
+      # be different for jobs on the same build. 
+      # See https://github.com/travis-ci/travis-ci/issues/2666
+      # 
       # We instead use the FETCH_HEAD, which will always point to the SHA of 
       # the lastest merge commit. However, if we only used FETCH_HEAD than any
       # new commits to a pull request would instantly start affecting currently
