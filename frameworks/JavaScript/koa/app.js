@@ -1,11 +1,15 @@
 var cluster = require('cluster')
-  , numCPUs = require('os').cpus().length
-  , koa = require('koa')
+  , numCPUs = require('os').cpus().length;
+
+// Koa Deps
+var koa = require('koa')
   , route = require('koa-route')
   , handlebars = require('koa-handlebars')
   , bodyParser = require('koa-bodyparser')
-  , override = require('koa-override')
-  , monk = require('monk')
+  , override = require('koa-override');
+
+// Monk MongoDB Driver Deps
+var monk = require('monk')
   , wrap = require('co-monk')
   , db = monk('localhost/hello_world')
   , worlds = wrap(db.get('world'))
@@ -37,8 +41,20 @@ if (cluster.isMaster) {
   app.use(route.get('/updates', updateHandler));
   app.use(route.get('/plaintext', textHandler));
 
-  // Helper
-  function getRandomNumber() {return Math.floor(Math.random()*10000) + 1;};
+  // Helpers
+  function getRandomNumber() {
+    return Math.floor(Math.random()*10000) + 1;
+  };
+
+  function validateParam(param) {
+    var numOfQueries = isNaN(param) ? 1 : param;
+    if (numOfQueries > 500) {
+      numOfQueries = 500;
+    } else if (numOfQueries < 1) {
+      numOfQueries = 1;
+    }
+    return numOfQueries;
+  }
 
   // Query Helpers
   function *worldUpdateQuery() {
@@ -55,10 +71,7 @@ if (cluster.isMaster) {
   }
 
   function *worldQuery() {
-    var randomId = {id: getRandomNumber()};
-    var res = yield worlds.findOne(randomId, '-_id');
-    console.log(res);
-    return res;
+    return yield worlds.findOne({id: getRandomNumber()}, '-_id');
   }
 
   function *fortunesQuery() {
@@ -66,7 +79,6 @@ if (cluster.isMaster) {
   }
 
   // Route handlers
-
   function *jsonHandler() {
     this.body = {
       message: "Hello, world!"
@@ -78,13 +90,8 @@ if (cluster.isMaster) {
   }
 
   function *queriesHandler() {
-    var numOfQueries = isNaN(this.query.queries) ? 1 : this.query.queries,
-        queries = [];
-    if (numOfQueries > 500) {
-      numOfQueries = 500;
-    } else if (numOfQueries < 1) {
-      numOfQueries = 1;
-    }
+    var numOfQueries = validateParam(this.query.queries);
+    var queries = [];
     for (var i = 0; i < numOfQueries; i++) {
       queries.push(worldQuery);
     }
@@ -101,19 +108,12 @@ if (cluster.isMaster) {
     fortunes.sort(function(a, b) {
       return a.message < b.message ? -1 : 1;
     });
-    yield this.render("fortunes", {
-      fortunes: fortunes
-    });
+    yield this.render("fortunes", {fortunes: fortunes});
   }
 
   function *updateHandler() {
-    var numOfUpdates = isNaN(this.query.queries) ? 1 : this.query.queries,
-    queries = [];
-    if (numOfUpdates > 500) {
-      numOfUpdates = 500;
-    } else if (numOfUpdates < 1) {
-      numOfUpdates = 1;
-    }
+    var numOfUpdates = validateParam(this.query.queries);
+    var queries = [];
     for (var i = 0; i < numOfUpdates; i++) {
       queries.push(worldUpdateQuery);
     }
@@ -121,8 +121,8 @@ if (cluster.isMaster) {
   }
 
   function *textHandler() {
-    this.body = 'Hello, world!'
+    this.body = 'Hello, world!';
   }
 
-  app.listen(8080); //used for local testing
+  app.listen(8080);
 }
