@@ -44,8 +44,18 @@ env:
     - "TESTDIR=Lua"
     - "TESTDIR=Nim"
     - "TESTDIR=Perl"
-    - "TESTDIR=PHP"
-    - "TESTDIR=Python"
+    # PHP: cakephp to hhvm
+    - "TESTDIR=PHP\\\\/[c-h]"
+    # PHP: php-*
+    - "TESTDIR=PHP\\\\/[p]"
+    # PHP: remanider
+    - "TESTDIR=PHP\\\\/[q-zA-Z]"
+    # Python: API-Hour, bottle,django
+    - "TESTDIR=Python\\\\[Abd]"
+    # Python: falcon and flask
+    - "TESTDIR=Python\\\\[f]"
+    # Python: remainder
+    - "TESTDIR=Python\\\\[p-z]"
     - "TESTDIR=Racket"
     - "TESTDIR=Ruby"
     - "TESTDIR=Scala"
