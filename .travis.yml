@@ -20,9 +20,9 @@ env:
     - "TESTDIR=C"
     - "TESTDIR=CSharp"
     # C++: cpoll_cppsp,treefrog,ULib
-    - "TESTDIR=C++\/[ctU]"
+    - "TESTDIR=C++\\/[ctU]"
     # C++: wt
-    - "TESTDIR=C++\/wt"
+    - "TESTDIR=C++\\/wt"
     - "TESTDIR=Clojure"
     - "TESTDIR=Dart"
     - "TESTDIR=Elixir"
@@ -31,15 +31,15 @@ env:
     - "TESTDIR=Groovy"
     - "TESTDIR=Haskell"
     # Java: activeweb to dropwizard
-    - "TESTDIR=Java\/[a-d]"
+    - "TESTDIR=Java\\/[a-d]"
     # Java: gemini to ninja
-    - "TESTDIR=Java\/[g-n]"
+    - "TESTDIR=Java\\/[g-n]"
     # Java: play to restexpress
-    - "TESTDIR=Java\/[p-r]"
+    - "TESTDIR=Java\\/[p-r]"
     # Java: servlet to tapestry
-    - "TESTDIR=Java\/[st]"
+    - "TESTDIR=Java\\/[st]"
     # Java: undertow to wildfly
-    - "TESTDIR=Java\/[u-w]"
+    - "TESTDIR=Java\\/[u-w]"
     - "TESTDIR=JavaScript"
     - "TESTDIR=Lua"
     - "TESTDIR=Nim"
