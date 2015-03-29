@@ -22,7 +22,6 @@ typedef mysql_orm<random_number> rn_orm;
 typedef mysql_orm_factory<fortune> fortune_orm_factory;
 typedef mysql_orm<fortune> fortune_orm;
 
-
 std::string escape_html_entities(const std::string& data)
 {
     std::string buffer;
@@ -43,9 +42,9 @@ std::string escape_html_entities(const std::string& data)
 int main(int argc, char* argv[])
 {
 
-  if (argc != 4)
+  if (argc != 3)
   {
-    std::cerr << "Usage: " << argv[0] << " mysql_host port pid_file" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " mysql_host port" << std::endl;
     return 1;
   }
   
@@ -110,20 +109,15 @@ int main(int argc, char* argv[])
   
   try
   {
-    // Demonize the process.
-    if (daemon(0,0))
-    {
-      std::cerr << "Cannot start the daemon." << std::endl;
-      exit(1);
-    }
-
-    // Write the pid.
-    std::ofstream pidfile(argv[3]);
-    pidfile << getpid() << std::endl;
-    pidfile.close();
 
     // Start the server.
-    sl::mhd_json_serve(hello_api, atoi(argv[2]));
+    sl::mhd_json_serve(hello_api, atoi(argv[2])
+#ifdef TFB_USE_EPOLL
+                       , _linux_epoll, _nthreads = 1000
+#else
+                       , _one_thread_per_connection
+#endif
+      );
   }
   catch (std::exception& e)
   {
