@@ -17,7 +17,7 @@ env:
     # Each TESTDIR is interpreted as a regex and is not escaped 
     # before use 
     #  
-    - "TESTDIR=C"
+    - "TESTDIR=C\\\\/"
     - "TESTDIR=CSharp"
     # C++: cpoll_cppsp,treefrog,ULib
     - "TESTDIR=C\\\\+\\\\+\\\\/[ctU]"
@@ -51,13 +51,17 @@ env:
     # PHP: remanider
     - "TESTDIR=PHP\\\\/[q-zA-Z]"
     # Python: API-Hour, bottle,django
-    - "TESTDIR=Python\\\\[Abd]"
+    - "TESTDIR=Python\\\\/[Abd]"
     # Python: falcon and flask
-    - "TESTDIR=Python\\\\[f]"
+    - "TESTDIR=Python\\\\/[f]"
     # Python: remainder
-    - "TESTDIR=Python\\\\[p-z]"
+    - "TESTDIR=Python\\\\/[p-z]"
     - "TESTDIR=Racket"
-    - "TESTDIR=Ruby"
+    - "TESTDIR=Ruby\\\\/[gn]"
+    - "TESTDIR=Ruby\\\\/[p]"
+    - "TESTDIR=Ruby\\\\/rack"
+    - "TESTDIR=Ruby\\\\/rails"
+    - "TESTDIR=Ruby\\\\/[s]"
     - "TESTDIR=Scala"
     - "TESTDIR=Ur"
 
