@@ -30,7 +30,7 @@ class FortuneTestType(FrameworkTestType):
     # Ensure required response headers are present
     if any(v not in response for v in ('Server','Date','Content-Type: text/html')) \
        or all(v not in response for v in ('Content-Length','Transfer-Encoding')):
-      return [('fail','Required response header missing.',url)]
+      return [('warn','Required response header missing.',url)]
 
     parser = FortuneHTMLParser()
     parser.feed(body)

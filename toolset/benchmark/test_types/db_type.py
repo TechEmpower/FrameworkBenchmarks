@@ -30,7 +30,7 @@ class DBTestType(FrameworkTestType):
     # Ensure required response headers are present
     if any(v not in response for v in ('Server','Date','Content-Type: application/json')) \
        or all(v not in response for v in ('Content-Length','Transfer-Encoding')):
-      return [('fail','Required response header missing.',url)]
+      return [('warn','Required response header missing.',url)]
 
     # Valid JSON? 
     try: 
