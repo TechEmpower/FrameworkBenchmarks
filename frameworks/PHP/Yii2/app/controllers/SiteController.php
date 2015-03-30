@@ -28,6 +28,8 @@ class SiteController extends Controller
 
         if ($queries == 1) {
             $arr = $statement->bindValue(':id',mt_rand(1, 10000))->queryOne();
+            $arr['id'] = (int) $arr['id'];
+            $arr['randomNumber'] = (int) $arr['randomNumber'];
         } else {
             if ($queries > 500) $queries = 500;
             elseif ($queries <= 0 ) $queries = 1;
@@ -36,7 +38,10 @@ class SiteController extends Controller
             // For each query, store the result set values in the response array
             while (0 < $queries--) {
                 // Store result in array.
-                $arr[] = $statement->bindValue(':id',mt_rand(1, 10000))->queryOne();
+                $result = $statement->bindValue(':id',mt_rand(1, 10000))->queryOne();
+                $result['id'] = (int) $result['id'];
+                $result['randomNumber'] = (int) $result['randomNumber'];
+                $arr[] = $result;
             }
         }
 
