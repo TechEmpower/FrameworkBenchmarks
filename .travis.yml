@@ -27,7 +27,8 @@ env:
     - "TESTDIR=Dart"
     - "TESTDIR=Elixir"
     - "TESTDIR=Erlang"
-    - "TESTDIR=Go"
+    - "TESTDIR=Go\\\\/[a-g]"
+    - "TESTDIR=Go\\\\/[r-z]"
     - "TESTDIR=Groovy"
     - "TESTDIR=Haskell"
     # Java: activeweb to dropwizard
@@ -62,7 +63,8 @@ env:
     - "TESTDIR=Ruby\\\\/rack"
     - "TESTDIR=Ruby\\\\/rails"
     - "TESTDIR=Ruby\\\\/[s]"
-    - "TESTDIR=Scala"
+    - "TESTDIR=Scala\\\\/[a-p]"
+    - "TESTDIR=Scala\\\\/[s-z]"
     - "TESTDIR=Ur"
 
 before_install:
