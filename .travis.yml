@@ -27,7 +27,8 @@ env:
     - "TESTDIR=Dart"
     - "TESTDIR=Elixir"
     - "TESTDIR=Erlang"
-    - "TESTDIR=Go\\\\/[a-g]"
+    - "TESTDIR=Go\\\\/[a-f]"
+    - "TESTDIR=Go\\\\/[g]"
     - "TESTDIR=Go\\\\/[r-z]"
     - "TESTDIR=Groovy"
     - "TESTDIR=Haskell"
@@ -64,7 +65,8 @@ env:
     - "TESTDIR=Ruby\\\\/rails"
     - "TESTDIR=Ruby\\\\/[s]"
     - "TESTDIR=Scala\\\\/[a-p]"
-    - "TESTDIR=Scala\\\\/[s-z]"
+    - "TESTDIR=Scala\\\\/[s]"
+    - "TESTDIR=Scala\\\\/[u]"
     - "TESTDIR=Ur"
 
 before_install:
