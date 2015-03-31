@@ -549,7 +549,7 @@ if __name__ == "__main__":
 
     fwroot = setup_util.get_fwroot()
     target_dir = "^" + re.escape(fwroot + '/frameworks/') + testdir
-    dirtests = [t for t in tests if re.match(target_dir, t.directory)]
+    dirtests = [t for t in gather_tests() if re.match(target_dir, t.directory)]
 
     # Normally you don't have to use Fore.* before each line, but 
     # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
