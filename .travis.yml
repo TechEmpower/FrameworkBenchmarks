@@ -37,6 +37,7 @@ env:
     - "TESTDIR=Dart/dart-start"
     - "TESTDIR=Dart/dart-stream"
     - "TESTDIR=Elixir/WeberFramework"
+    - "TESTDIR=Elixir/phoenix"
     - "TESTDIR=Erlang/cowboy"
     - "TESTDIR=Erlang/elli"
     - "TESTDIR=Go/beego"

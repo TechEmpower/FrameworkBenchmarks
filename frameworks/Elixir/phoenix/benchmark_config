@@ -1,0 +1,24 @@
+{
+    "framework": "phoenix",
+    "tests": [{
+        "default": {
+            "setup_file": "setup",
+            "json_url": "/json",
+            "plaintext_url": "/plaintext",
+            "port": 8080,
+            "approach": "Realistic",
+            "classification": "Framework",
+            "database": "Postgres",
+            "framework": "Phoenix",
+            "language": "elixir",
+            "orm": "etco",
+            "platform": "Erlang/OTP",
+            "webserver": "cowboy",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "phoenix",
+            "notes": "",
+            "versus": ""
+        }
+    }]
+}
