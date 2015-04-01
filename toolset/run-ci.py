@@ -205,7 +205,7 @@ class CIRunnner:
       self.commit_range = "-m HEAD^...HEAD"
 
     #
-    # Find the one test from benchmark_config that we are going to run
+    # Find the one test from benchmark_config.json that we are going to run
     #
 
     tests = gather_tests()

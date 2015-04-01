@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import javax.sql.DataSource;
 
 /**
- * When it is implemented, add this to benchmark_config
+ * When it is implemented, add this to benchmark_config.json
  * "fortune_url": "/fortune",
  * "update_url": "/update",
  */
