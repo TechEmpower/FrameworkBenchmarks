@@ -106,7 +106,9 @@ class CIRunnner:
       # For pull requests, we will examine Github's automerge commit to see
       # what files would be touched if we merged this into the current master. 
       # You can't trust the travis variables here, as the automerge commit can
-      # be different for jobs on the same build. See https://github.com/travis-ci/travis-ci/issues/2666
+      # be different for jobs on the same build. 
+      # See https://github.com/travis-ci/travis-ci/issues/2666
+      # 
       # We instead use the FETCH_HEAD, which will always point to the SHA of 
       # the lastest merge commit. However, if we only used FETCH_HEAD than any
       # new commits to a pull request would instantly start affecting currently
@@ -210,9 +212,10 @@ class CIRunnner:
 
     tests = gather_tests()
     self.fwroot = setup_util.get_fwroot()
-    target_dir = self.fwroot + '/frameworks/' + testdir
-    log.debug("Target directory is %s", target_dir)
-    dirtests = [t for t in tests if t.directory == target_dir]
+    target_dir = "^" + re.escape(self.fwroot + '/frameworks/') + testdir
+    log.debug("Target directory regex is '%s'", target_dir)
+
+    dirtests = [t for t in tests if re.match(target_dir, t.directory)]
     
     # Travis-CI is linux only
     osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
@@ -245,7 +248,7 @@ class CIRunnner:
     If you do rewrite history (e.g. rebase) then it's up to you to ensure that both 
     old and new (e.g. old...new) are available in the public repository. For simple
     rebase onto the public master this is not a problem, only more complex rebases 
-    may have issues
+    earch("^frameworks/%s/" % re.escape(self.directory), changes, re.M) is Noneay have issues
     '''
     # Don't use git diff multiple times, it's mega slow sometimes\
     # Put flag on filesystem so that future calls to run-ci see it too
@@ -276,7 +279,7 @@ class CIRunnner:
       log.debug("Result:\n%s", changes)
 
     # Look for changes to core TFB framework code
-    if re.search(r'^toolset/', changes, re.M) is not None: 
+    if re.search(r'^toolset/', changes, re.MULTILINE) is not None: 
       log.info("Found changes to core framework code")
       touch('.run-ci.should_run')
       return True
@@ -544,8 +547,9 @@ if __name__ == "__main__":
       log.critical("No results.json found, unable to print verification summary") 
       sys.exit(retcode)
 
-    target_dir = setup_util.get_fwroot() + '/frameworks/' + testdir
-    dirtests = [t for t in gather_tests() if t.directory == target_dir]
+    fwroot = setup_util.get_fwroot()
+    target_dir = "^" + re.escape(fwroot + '/frameworks/') + testdir
+    dirtests = [t for t in gather_tests() if re.match(target_dir, t.directory)]
 
     # Normally you don't have to use Fore.* before each line, but 
     # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
