@@ -2,7 +2,7 @@
 
 import collections, json, os, textwrap
 
-# This script generates the benchmark_config and setup_*.py files.
+# This script generates the benchmark_config.json and setup_*.py files.
 # To add new tests, modify the `configurations` and `test_urls` tables.
 
 # Each line corresponds to a test application.
@@ -85,7 +85,7 @@ for lang, orm, opsyses, tests in configurations:
       lang_test_configs[lang][test_name] = test_config_json
 
 for lang, _ in langs.iteritems():
-  benchmark_config_path = os.path.join(pathForLang(lang), 'benchmark_config')
+  benchmark_config_path = os.path.join(pathForLang(lang), 'benchmark_config.json')
   print 'Generating', benchmark_config_path
   with open(benchmark_config_path, 'w') as f:
     json_str = json.dumps({
