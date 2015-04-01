@@ -19,7 +19,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "django",
+      "display_name": "Django-Py2",
       "notes": "CPython 2.7",
       "versus": "wsgi"
     },
@@ -41,7 +41,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "django-py3",
+      "display_name": "Django-Py3",
       "notes": "CPython 3.4",
       "versus": "wsgi"
     },
@@ -63,7 +63,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "django",
+      "display_name": "Django-Postgres-Py2",
       "notes": "CPython 2.7",
       "versus": "wsgi"
     }

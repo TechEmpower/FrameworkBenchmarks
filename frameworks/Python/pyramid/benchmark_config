@@ -20,7 +20,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "pyramid-py2",
+      "display_name": "Pyramid-Py2",
       "notes": "",
       "versus": "wsgi"
     },
@@ -43,7 +43,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "pyramid-py3",
+      "display_name": "Pyramid-Py3",
       "notes": "",
       "versus": "wsgi"
     }
