@@ -526,6 +526,7 @@ class Benchmarker:
       out.write("self.results['completed']: {completed}\n".format(completed=str(self.results['completed'])))
       if self.results['frameworks'] != None and test.name in self.results['completed']:
         out.write('Framework {name} found in latest saved data. Skipping.\n'.format(name=str(test.name)))
+        print 'WARNING: Test {test} exists in the results directory; this must be removed before running a new test.\n'.format(test=str(test.name))
         return exit_with_code(1)
       out.flush()
 
