@@ -102,7 +102,7 @@ for Python 3.
 `bash_profile.sh` is evaluated when running test.  You can set environment variables here.
 
 `bechmark_config` is json file to define test.
-See [here](https://github.com/TechEmpower/FrameworkBenchmarks#the-benchmark_config-file)
+See [here](http://frameworkbenchmarks.readthedocs.org/en/latest/Codebase/Framework-Files/#benchmark-config-file)
 
 `setup_py2.sh` is used to run test on Python 2.  `gunicorn_conf.py` is configuration for gunicorn.
 `setup_py2.sh` and `gunicorn_conf.py` are written as generic as possible.
