@@ -19,19 +19,25 @@ $app->get('/json', function() {
 
 // Test 2: Single database query
 $app->get('/db', function() {
-    $db = new mysqli('172.16.98.120', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+    $db = new mysqli('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
     $row = mysqli_query($db, 'SELECT id, randomNumber FROM World WHERE id = '.rand(1, 10000));
+    $result = mysqli_fetch_assoc($row);
+    $result['id'] = (int) $result['id'];
+    $result['randomNumber'] = (int) $result['randomNumber'];
 
-    return new Response(json_encode(mysqli_fetch_assoc($row)), 200, array('Content-Type' => 'application/json'));
+    return new Response(json_encode($result), 200, array('Content-Type' => 'application/json'));
 });
 
 // Test 3: Multiple database queries
 $app->get('/queries', function(Request $request) {
     $queries = max(1, min($request->query->get('queries'), 500));
-    $db = new mysqli('172.16.98.120', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+    $db = new mysqli('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
 
     for ($i=0; $i<$queries; $i++) {
-        $rows[] = mysqli_fetch_assoc(mysqli_query($db, 'SELECT id, randomNumber FROM World WHERE id = '.rand(1, 10000)));
+        $result = mysqli_fetch_assoc(mysqli_query($db, 'SELECT id, randomNumber FROM World WHERE id = '.rand(1, 10000)));
+        $result['id'] = (int) $result['id'];
+        $result['randomNumber'] = (int) $result['randomNumber'];
+        $rows[] = $result;
     }
 
     return new Response(json_encode($rows), 200, array('Content-Type' => 'application/json'));
@@ -39,12 +45,12 @@ $app->get('/queries', function(Request $request) {
 
 // Test 4: Fortunes
 $app->get('/fortunes', function() {
-    $db = new mysqli('172.16.98.120', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+    $db = new mysqli('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
     $result = mysqli_query($db, 'SELECT * FROM Fortune');
     while ($row = mysqli_fetch_row($result)) {
         $fortunes[$row[0]] = htmlspecialchars($row[1], ENT_IGNORE);
     }
-    $fortunes[] = 'Additional fortune added at request time.';
+    $fortunes[0] = 'Additional fortune added at request time.';
 
     asort($fortunes);
 
@@ -58,13 +64,14 @@ $app->get('/fortunes', function() {
 // Test 5: Database updates
 $app->get('/updates', function(Request $request) {
     $queries = max(1, min($request->query->get('queries'), 500));
-    $db = new mysqli('172.16.98.120', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+    $db = new mysqli('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
     for ($i=0; $i<$queries; $i++) {
         $rows[] = mysqli_fetch_assoc(mysqli_query($db, 'SELECT id, randomNumber FROM World WHERE id = '.rand(1, 10000)));
     }
 
     mysqli_autocommit($db, FALSE);
     foreach ($rows as $i => $row) {
+        $rows[$i]['id'] = (int) $rows[$i]['id'];
         $rows[$i]['randomNumber'] = rand(1, 10000);
         mysqli_query($db, "UPDATE World SET randomNumber = {$rows[$i]['randomNumber']} WHERE id = {$row['id']}");
     }
@@ -75,7 +82,7 @@ $app->get('/updates', function(Request $request) {
 
 // Test 6: Plaintext
 $app->get('/plaintext', function() {
-    return new Response('Hello World!', 200, array('Content-Type' => 'text/plain'));
+    return new Response('Hello, World!', 200, array('Content-Type' => 'text/plain'));
 });
 
 $app->run();
