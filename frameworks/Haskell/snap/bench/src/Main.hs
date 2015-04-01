@@ -65,6 +65,7 @@ site :: Pool Connection -> Snap ()
 site pool = route
     [ ("json",      jsonHandler)
     , ("db",        dbHandler pool)
+    , ("dbs",       dbsHandler pool)
     , ("plaintext", writeBS "Hello, World!")
     ]
 
@@ -76,15 +77,20 @@ jsonHandler = do
 dbHandler :: Pool Connection -> Snap ()
 dbHandler pool = do
     modifyResponse (setContentType "application/json")
+    r <- liftIO $ randomRIO (1, 10000)
+    qry <- liftIO $ withResource pool (flip runOne r)
+    writeLBS $ encode qry
+
+dbsHandler :: Pool Connection -> Snap ()
+dbsHandler pool = do
+    modifyResponse (setContentType "application/json")
     qs <- getQueryParam "queries"
     runAll pool $ maybe 1 fst (qs >>= B.readInt)
 
 runAll :: Pool Connection -> Int -> Snap ()
-runAll pool 1 = do
-    !rs <- take 1 . randomRs (1, 10000) <$> liftIO newStdGen
-    qry <- liftIO $ withResource pool (forM rs . runOne)
-    writeLBS $ encode $ head qry
-runAll pool i = do
+runAll pool i | i < 1 = runAll pool 1
+              | i > 500 = runAll pool 500
+              | otherwise = do
     !rs <- take i . randomRs (1, 10000) <$> liftIO newStdGen
     qry <- liftIO $ withResource pool (forM rs . runOne)
     writeLBS $ encode qry
