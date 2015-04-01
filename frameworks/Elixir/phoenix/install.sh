@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends erlang elixir
+fw_depends elixir
