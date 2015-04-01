@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.*;
 /**
  * Database Mapping Test
  */
-public class HelloDB
+public class HelloDBs
 {
   @Inject
   private org.hibernate.Session session;
@@ -32,16 +32,38 @@ public class HelloDB
 
   StreamResponse onActivate() {
 
+    // Read queries from URL, but don't bother validating
+    int queries = 1;
+    String qString = this.request.getParameter("queries");
+    if (qString != null) {
+      try {
+        queries = Integer.parseInt(qString);
+      }
+      catch (Exception e) {
+        queries = 1;
+      }
+    }
+    if (queries <= 0) {
+      queries = 1;
+    }
+    else if (queries > 500) {
+      queries = 500;
+    }
+    final World[] worlds = new World[queries];
+
     // For generating a random row ID
     final Random rand = ThreadLocalRandom.current();
 
-    final World world = (World)session.get(World.class, new Integer(rand.nextInt(DB_ROWS) + 1));
+    for (int i = 0; i < queries; i++) {
+      // Read object from database
+      worlds[i] = (World)session.get(World.class, new Integer(rand.nextInt(DB_ROWS) + 1));
+    }
 
     // Send reponse
     String response = "";
     try
     {
-      response = HelloDB.mapper.writeValueAsString(world);
+      response = HelloDBs.mapper.writeValueAsString(worlds);
     }
     catch (IOException ex)
     {
