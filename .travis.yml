@@ -43,7 +43,6 @@ env:
     - "TESTDIR=Go/falcore"
     - "TESTDIR=Go/gin"
     - "TESTDIR=Go/go"
-    - "TESTDIR=Go/gorail"
     - "TESTDIR=Go/revel"
     - "TESTDIR=Go/revel-jet"
     - "TESTDIR=Go/revel-qbs"
