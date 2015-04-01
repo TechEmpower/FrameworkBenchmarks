@@ -107,9 +107,10 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 		n, _ = strconv.Atoi(nStr)
 	}
 
-	if n <= 1 {
-		dbHandler(w, r)
-		return
+	if n < 1 {
+		n = 1
+	} else if n > 500 {
+		n = 500
 	}
 
 	world := make([]World, n)
@@ -158,25 +159,22 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	encoder := json.NewEncoder(w)
 
-	if n <= 1 {
-		var world World
-		worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
-		world.RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
-		updateStatement.Exec(world.RandomNumber, world.Id)
-		encoder.Encode(&world)
-	} else {
-		world := make([]World, n)
-		for i := 0; i < n; i++ {
-			if err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
-				log.Fatalf("Error scanning world row: %s", err.Error())
-			}
-			world[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
-			if _, err := updateStatement.Exec(world[i].RandomNumber, world[i].Id); err != nil {
-				log.Fatalf("Error updating world row: %s", err.Error())
-			}
-		}
-		encoder.Encode(world)
+	if n < 1 {
+		n = 1
+	} else if n > 500 {
+		n = 500
 	}
+	world := make([]World, n)
+	for i := 0; i < n; i++ {
+		if err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
+			log.Fatalf("Error scanning world row: %s", err.Error())
+		}
+		world[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
+		if _, err := updateStatement.Exec(world[i].RandomNumber, world[i].Id); err != nil {
+			log.Fatalf("Error updating world row: %s", err.Error())
+		}
+	}
+	encoder.Encode(world)
 }
 
 // Test 6: Plaintext
