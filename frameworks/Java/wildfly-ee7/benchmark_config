@@ -1,7 +1,7 @@
 {
   "framework": "wildfly-ee7",
   "tests": [{
-    "mysql" : {
+    "default" : {
       "setup_file": "setup",
       "json_url": "/wildfly-ee7/rest/json",
       "plaintext_url": "/wildfly-ee7/rest/plaintext",

@@ -1,7 +1,7 @@
 {
   "framework": "yaf",
   "tests": [{
-    "raw": {
+    "default": {
       "setup_file": "setup",
       "json_url": "/bench/raw/json",
       "db_url": "/bench/raw/db",
