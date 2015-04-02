@@ -58,7 +58,7 @@ class FrameworkTestType:
       raise AttributeError("A %s requires the benchmark_config to contain %s"%(self.name,self.args))
 
   def _curl(self, url):
-    '''Downloads a URL and returns the HTTP body'''
+    '''Downloads a URL and returns the HTTP response'''
     # Use -m 15 to make curl stop trying after 15sec.
     # Use -i to output response with headers
     # Don't use -f so that the HTTP response code is ignored.
@@ -72,6 +72,14 @@ class FrameworkTestType:
     self.out.write("Response: \n\"" + out+ "\"\n")
     if p.returncode != 0:
       return None
+    return out
+
+  def _curl_body(self, url):
+    '''Downloads a URL and returns the HTTP body'''
+    # Use -m 15 to make curl stop trying after 15sec.
+    # Use -i to output response with headers
+    # Don't use -f so that the HTTP response code is ignored.
+    # Use -sS to hide progress bar, but show errors.
     # Get response body
     p = subprocess.Popen(["curl", "-m", "15", "-s", url], stdout=PIPE, stderr=PIPE)
     (out, err) = p.communicate()
