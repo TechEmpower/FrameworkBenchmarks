@@ -8,6 +8,6 @@ export NGINX_HOME=${IROOT}/nginx
 
 fw_depends php nginx composer
 
-${PHP_HOME}/bin/php $COMPOSER_HOME/composer.phar install \
+${PHP_HOME}/bin/php ${COMPOSER_HOME}/composer.phar install \
   --no-interaction --working-dir $TROOT \
   --no-progress --optimize-autoloader 

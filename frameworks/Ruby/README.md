@@ -12,7 +12,7 @@ In your framework's `install.sh`, put this prior to other statements:
 Because TFB uses Python's `subprocess` module, which runs 
 all shell processes in a non-login mode, you must source the 
 `rvm` script before using `rvm` anywhere. Placing the `source`
-call in your `insatll.sh` before other commands ensures that it 
+call in your `install.sh` before other commands ensures that it 
 will be called before installation and before running `setup.py`
 
 For compatibility with how the framework rounds are executed, 

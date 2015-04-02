@@ -107,6 +107,12 @@ class Installer:
       previousDir = os.getcwd()
       os.chdir(test_dir)
 
+      # Load benchmark_profile file
+      profile="$FWROOT/config/benchmark_profile"
+      setup_util.replace_environ(config=profile, 
+        command='export TROOT=%s && export IROOT=%s' %
+        (test_dir, test_install_dir))
+
       # Run test installation script
       #   FWROOT - Path of the FwBm root
       #   IROOT  - Path of this test's install directory
