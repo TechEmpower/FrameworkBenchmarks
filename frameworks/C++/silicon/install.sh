@@ -17,5 +17,4 @@ make install
 
 cd $TROOT
 mkdir -p build
-cd build; cmake .. -DCMAKE_CXX_COMPILER=g++-4.9 && make
-
+cd build; cmake .. -DCMAKE_CXX_COMPILER=g++-4.9; make silicon_tpc_mysql; make silicon_epoll_mysql
