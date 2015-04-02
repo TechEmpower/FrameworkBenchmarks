@@ -73,3 +73,5 @@ can be found in the [TFB documentation](http://frameworkbenchmarks.readthedocs.o
 Join in the conversation at our 
 [Google Group](https://groups.google.com/forum/?fromgroups=#!forum/framework-benchmarks), 
 or chat with us on [Freenode](https://freenode.net/faq.shtml#whatwhy) at `#techempower-fwbm`. 
+
+:)
