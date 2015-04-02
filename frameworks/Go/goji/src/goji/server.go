@@ -10,6 +10,8 @@ import (
 	"log"
 	"math/rand"
 	"strconv"
+	"html/template"
+	"sort"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -27,11 +29,14 @@ const (
 	maxConnectionCount = 256
 
 	helloWorldString = "Hello, World!"
+	extraFortuneMessage = "Additional fortune added at request time."
 )
 
 var (
 	// Templates
-	// tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
+	tmpl = template.Must(template.
+		ParseFiles("templates/layout.html",
+			       "templates/fortune.html"))
 
 	// Database
 	worldStatement   *sql.Stmt
@@ -52,6 +57,29 @@ type World struct {
 
 func randomRow() *sql.Row {
 	return worldStatement.QueryRow(rand.Intn(worldRowCount) + 1)
+}
+
+type Fortune struct {
+	Id      uint16 `json:"id"`
+	Message string `json:"message"`
+}
+
+type Fortunes []*Fortune
+
+func (s Fortunes) Len() int {
+	return len(s)
+}
+
+func (s Fortunes) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+type ByMessage struct {
+	Fortunes
+}
+
+func (s ByMessage) Less(i, j int) bool {
+	return s.Fortunes[i].Message < s.Fortunes[j].Message
 }
 
 // Test 1: Json Serialization
@@ -98,6 +126,31 @@ func multipleQueries(c web.C, w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(worlds)
 }
 
+// Test 4: Fortunes
+func fortunes(c web.C, w http.ResponseWriter, r *http.Request) {
+	rows, err := fortuneStatement.Query()
+	if err != nil {
+		log.Fatalf("Error preparing statement: %v", err)
+	}
+
+	fortunes := make(Fortunes, 0, 16)
+
+	for rows.Next() {
+		fortune := Fortune{}
+		if err := rows.Scan(&fortune.Id, &fortune.Message); err != nil {
+			log.Fatalf("Error scanning fortune row: %s", err.Error())
+		}
+		fortunes = append(fortunes, &fortune)
+	}
+	fortunes = append(fortunes, &Fortune{Message: extraFortuneMessage})
+
+	sort.Sort(ByMessage{fortunes})
+	w.Header().Set("Content-Type", "text/html")
+	if err := tmpl.Execute(w, fortunes); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
 // Test 6: Plaintext
 func plaintext(c web.C, w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, World!")
@@ -128,6 +181,7 @@ func main() {
 	goji.Get("/json", serializeJson)
 	goji.Get("/db", singleQuery)
 	goji.Get("/queries", multipleQueries)
+	goji.Get("/fortunes", fortunes)
 	goji.Get("/plaintext", plaintext)
 	goji.Serve()
 }
