@@ -28,8 +28,8 @@ class FortuneTestType(FrameworkTestType):
       return [('fail','Empty Response', url)]
 
     # Ensure required response headers are present
-    if any(v not in response for v in ('Server','Date','Content-Type: text/html')) \
-       or all(v not in response for v in ('Content-Length','Transfer-Encoding')):
+    if any(v.lower() not in response.lower() for v in ('Server','Date','Content-Type: text/html')) \
+       or all(v.lower() not in response.lower() for v in ('Content-Length','Transfer-Encoding')):
       return [('warn','Required response header missing.',url)]
 
     parser = FortuneHTMLParser()
