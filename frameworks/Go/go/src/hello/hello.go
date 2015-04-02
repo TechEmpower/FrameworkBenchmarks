@@ -3,10 +3,14 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"flag"
 	"html/template"
 	"log"
 	"math/rand"
+	"net"
 	"net/http"
+	"os"
+	"os/exec"
 	"runtime"
 	"sort"
 	"strconv"
@@ -53,7 +57,46 @@ var (
 )
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
+	var err error
+	var fl *os.File
+	var tcplistener *net.TCPListener
+	var listener net.Listener
+	var child = flag.Bool("child", false, "is child proc")
+	flag.Parse()
+	if !*child {
+		var addr *net.TCPAddr
+		addr, err = net.ResolveTCPAddr("tcp", ":8080")
+		if err != nil {
+			log.Fatal(err)
+		}
+		tcplistener, err = net.ListenTCP("tcp", addr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fl, err = tcplistener.File()
+		if err != nil {
+			log.Fatal(err)
+		}
+		children := make([]*exec.Cmd, runtime.NumCPU()/2)
+		for i := range children {
+			children[i] = exec.Command(os.Args[0], "-child")
+			children[i].Stdout = os.Stdout
+			children[i].Stderr = os.Stderr
+			children[i].ExtraFiles = []*os.File{fl}
+			err = children[i].Start()
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		for _, ch := range children {
+			ch.Wait()
+		}
+		os.Exit(0)
+	} else {
+		fl = os.NewFile(3, "")
+		listener, err = net.FileListener(fl)
+		runtime.GOMAXPROCS(2)
+	}
 
 	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
@@ -79,7 +122,7 @@ func main() {
 	http.HandleFunc("/fortune", fortuneHandler)
 	http.HandleFunc("/update", updateHandler)
 	http.HandleFunc("/plaintext", plaintextHandler)
-	http.ListenAndServe(":8080", nil)
+	http.Serve(listener, nil)
 }
 
 // Test 1: JSON serialization
