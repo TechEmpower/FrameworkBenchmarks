@@ -9,6 +9,7 @@ import (
 	"database/sql"
 	"log"
 	"math/rand"
+	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -49,6 +50,10 @@ type World struct {
 	RandomNumber uint16 `json:"randomNumber"`
 }
 
+func randomRow() *sql.Row {
+	return worldStatement.QueryRow(rand.Intn(worldRowCount) + 1)
+}
+
 // Test 1: Json Serialization
 func serializeJson(c web.C, w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -57,16 +62,40 @@ func serializeJson(c web.C, w http.ResponseWriter, r *http.Request) {
 
 // Test 2: Single Database Query
 func singleQuery(c web.C, w http.ResponseWriter, r *http.Request) {
-	var world World
-	err := worldStatement.
-	    QueryRow(rand.Intn(worldRowCount)+1).
-	    Scan(&world.Id, &world.RandomNumber)
-	if err != nil {
+	world := World{}
+	if err := randomRow().Scan(&world.Id, &world.RandomNumber); err != nil {
 		log.Fatalf("Error scanning world row: %s", err.Error())
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(&world)
+}
+
+// Test 3: Multiple Database Queries
+func multipleQueries(c web.C, w http.ResponseWriter, r *http.Request) {
+	n := 1
+	if queries := r.URL.Query().Get("queries"); len(queries) > 0 {
+		if conv, err := strconv.Atoi(queries); err != nil {
+			n = 1
+		} else {
+			n = conv
+		}
+	}
+
+	if n < 1 {
+		n = 1
+	} else if n > 500 {
+		n = 500
+	}
+
+	worlds := make([]World, n)
+	for i := 0; i < n; i++ {
+		if err := randomRow().Scan(&worlds[i].Id, &worlds[i].RandomNumber); err != nil {
+			log.Fatalf("Error scanning world row: %s", err.Error())
+		}
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(&world)
+	json.NewEncoder(w).Encode(worlds)
 }
 
 // Test 6: Plaintext
@@ -98,6 +127,7 @@ func main() {
 	flag.Set("bind", ":8080")
 	goji.Get("/json", serializeJson)
 	goji.Get("/db", singleQuery)
+	goji.Get("/queries", multipleQueries)
 	goji.Get("/plaintext", plaintext)
 	goji.Serve()
 }
