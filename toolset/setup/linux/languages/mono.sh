@@ -15,7 +15,7 @@ RETCODE=$(fw_exists $IROOT/mono.installed)
 
 # save environment
 cat > $IROOT/mono.installing <<'END'
-export SNAPDATE=20140804074943
+export SNAPDATE=20141209141431
 export MONO_HOME=$IROOT/mono-snapshot-$SNAPDATE
 export MONO_PATH=$MONO_HOME/lib/mono/4.5
 export MONO_CFG_DIR=$MONO_HOME/etc
