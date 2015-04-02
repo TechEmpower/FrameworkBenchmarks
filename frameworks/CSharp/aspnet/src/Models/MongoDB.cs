@@ -48,6 +48,6 @@ namespace Benchmarks.AspNet.Models
     public class MongoWorld : World
     {
         [ScriptIgnore]
-        public ObjectId _id { get; set; }
+        public object _id { get; set; }
     }
 }
