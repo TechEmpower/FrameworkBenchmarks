@@ -4,9 +4,14 @@ project(silicon)
 
 include_directories($ENV{IROOT}/include)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 link_directories($ENV{IROOT}/lib)
-add_definitions(-std=c++14  -ftemplate-depth=512 -DNDEBUG -O3)
+add_definitions(-std=c++14  -ftemplate-depth=1024 -DNDEBUG -O3)
 
-add_executable(silicon_app main.cc)
+add_executable(silicon_tpc_mysql main.cc)
+target_link_libraries(silicon_tpc_mysql microhttpd mysqlclient)
 
-target_link_libraries(silicon_app microhttpd mysqlclient)
+add_executable(silicon_epoll_mysql main.cc)
+set_target_properties(silicon_epoll_mysql PROPERTIES COMPILE_FLAGS "-DTFB_USE_EPOLL")
+target_link_libraries(silicon_epoll_mysql microhttpd mysqlclient)
