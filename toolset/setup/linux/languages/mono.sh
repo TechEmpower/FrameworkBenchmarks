@@ -14,8 +14,8 @@ RETCODE=$(fw_exists $IROOT/mono.installed)
 # how do we want it? already compiled from packages but without sudo
 
 # save environment
-cat > $IROOT/mono.installed <<'END'
-export SNAPDATE=20150302140547
+cat > $IROOT/mono.installing <<'END'
+export SNAPDATE=20140804074943
 export MONO_HOME=$IROOT/mono-snapshot-$SNAPDATE
 export MONO_PATH=$MONO_HOME/lib/mono/4.5
 export MONO_CFG_DIR=$MONO_HOME/etc
@@ -25,7 +25,7 @@ export PKG_CONFIG_PATH=$MONO_HOME/lib/pkgconfig:$PKG_CONFIG_PATH
 END
 
 # load environment
-. $IROOT/mono.installed
+. $IROOT/mono.installing
 
 # temp dir for extracting archives
 TEMP=$IROOT/mono-snapshot-${SNAPDATE}-temp
@@ -55,4 +55,4 @@ sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_
 mozroots --import --sync
 #echo -e 'y\ny\ny\n' | certmgr -ssl https://nuget.org
 
-touch $IROOT/mono.installed
+mv $IROOT/mono.installing $IROOT/mono.installed
