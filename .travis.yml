@@ -116,6 +116,7 @@ env:
     - "TESTDIR=PHP/phreeze"
     - "TESTDIR=Python/API-Hour"
     - "TESTDIR=Python/bottle"
+    - "TESTDIR=Python/cherrypy"
     - "TESTDIR=Python/django"
     - "TESTDIR=Python/falcon"
     - "TESTDIR=Python/flask"

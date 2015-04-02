@@ -632,7 +632,7 @@ class Benchmarker:
         time.sleep(5)
 
         ##########################################################
-        # Save results thus far into toolset/benchmark/latest.json
+        # Save results thus far into the latest results directory
         ##########################################################
 
         out.write(header("Saving results through %s" % test.name))
@@ -945,26 +945,6 @@ class Benchmarker:
       self.timestamp = self.parse
     else:
       self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
-    
-    # Load the latest data
-    #self.latest = None
-    #try:
-    #  with open('toolset/benchmark/latest.json', 'r') as f:
-    #    # Load json file into config object
-    #    self.latest = json.load(f)
-    #    logging.info("toolset/benchmark/latest.json loaded to self.latest")
-    #    logging.debug("contents of latest.json: " + str(json.dumps(self.latest)))
-    #except IOError:
-    #  logging.warn("IOError on attempting to read toolset/benchmark/latest.json")
-    #
-    #self.results = None
-    #try: 
-    #  if self.latest != None and self.name in self.latest.keys():
-    #    with open(os.path.join(self.result_directory, str(self.latest[self.name]), 'results.json'), 'r') as f:
-    #      # Load json file into config object
-    #      self.results = json.load(f)
-    #except IOError:
-    #  pass
 
     self.results = None
     try:

@@ -24,24 +24,28 @@ class QueryTestType(DBTestType):
 
     problems = []
     
-    body = self._curl(url + '2')
-    problems += self._verifyQueryList(2, body, url + '2')
+    response = self._curl(url)
+    body = self._curl_body(url + '2')
+    problems += self._verifyQueryList(2, response, body, url + '2')
 
-    body = self._curl(url + '0')
-    problems += self._verifyQueryList(1, body, url + '0', 'warn')
+    response = self._curl(url)
+    body = self._curl_body(url + '0')
+    problems += self._verifyQueryList(1, response, body, url + '0', 'warn')
 
     # Note: A number of tests fail here because they only parse for 
     # a number and crash on 'foo'. For now we only warn about this
-    body = self._curl(url + 'foo')
+    response = self._curl(url)
+    body = self._curl_body(url + 'foo')
     if body is None:
       problems += [('warn','No response (this will be a failure in future rounds, please fix)', url)]
     elif len(body) == 0:
       problems += [('warn','Empty response (this will be a failure in future rounds, please fix)', url)]
     else:
-      problems += self._verifyQueryList(1, body, url + 'foo', 'warn')
+      problems += self._verifyQueryList(1, response, body, url + 'foo', 'warn')
 
-    body = self._curl(url + '501')
-    problems += self._verifyQueryList(500, body, url + '501', 'warn')
+    response = self._curl(url)
+    body = self._curl_body(url + '501')
+    problems += self._verifyQueryList(500, response, body, url + '501', 'warn')
 
     if len(problems) == 0:
       return [('pass','',url + '2'),
@@ -51,7 +55,7 @@ class QueryTestType(DBTestType):
     else:
       return problems
 
-  def _verifyQueryList(self, expectedLength, body, url, max_infraction='fail'):
+  def _verifyQueryList(self, expectedLength, curlResponse, body, url, max_infraction='fail'):
     '''Validates high-level structure (array length, object 
       types, etc) before calling into DBTestType to 
       validate a few individual JSON objects'''
@@ -61,6 +65,11 @@ class QueryTestType(DBTestType):
       return [(max_infraction,'No response', url)]
     elif len(body) == 0:
       return [(max_infraction,'Empty Response', url)]
+
+    # Ensure required response headers are present
+    if any(v not in curlResponse for v in ('Server','Date','Content-Type: application/json')) \
+       or all(v not in curlResponse for v in ('Content-Length','Transfer-Encoding')):
+      return [('warn','Required response header missing.',url)]
   
     # Valid JSON? 
     try: 
