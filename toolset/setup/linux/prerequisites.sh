@@ -17,7 +17,6 @@ echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | 
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
 sudo apt-get -yq update
-sudo apt-get -yq upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
 
 # WARNING: DONT PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
 sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
