@@ -24,7 +24,7 @@
       "notes": "",
       "versus": ""
     },
-    "silicon-epoll-mysql": {
+    "epoll-mysql": {
       "setup_file": "setup_epoll_mysql",
       "json_url"       : "/json",
       "db_url"         : "/db",
