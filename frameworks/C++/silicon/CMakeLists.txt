@@ -4,10 +4,8 @@ project(silicon)
 
 include_directories($ENV{IROOT}/include)
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
-
 link_directories($ENV{IROOT}/lib)
-add_definitions(-std=c++14  -ftemplate-depth=1024 -DNDEBUG -O3)
+add_definitions(-std=c++14  -ftemplate-depth=512 -DNDEBUG -O3)
 
 add_executable(silicon_tpc_mysql main.cc)
 target_link_libraries(silicon_tpc_mysql microhttpd mysqlclient)

@@ -50,13 +50,17 @@ int main(int argc, char* argv[])
   
   auto hello_api = make_api(
 
-    _plaintext = [] () { return "Hello, World!"; },
-    _json = [] () { return D(_message = "Hello, World!"); },
+    _plaintext = [] () { return response(_content_type = "text/plain",
+                                         _body = "Hello, World!"); },
 
+    _json = [] () { return response(_content_type = "application/json",
+                                    _body = D(_message = "Hello, World!")); },
+                        
     _db = [] (rn_orm& orm) {
       random_number r;
       orm.find_by_id(1245, r);
-      return r;
+      return response(_content_type = "application/json",
+                      _body = r);
     },
 
     _queries = [] (rn_orm& orm, get_parameters& get_params) {
@@ -66,7 +70,8 @@ int main(int argc, char* argv[])
       std::vector<random_number> qs(N);
       for (int i = 0; i < N; i++)
         orm.find_by_id(1 + rand() % 9999, qs[i]);
-      return std::move(qs);
+      return response(_content_type = "application/json",
+                      _body = std::move(qs));
     },
 
     _updates = [] (rn_orm& orm, get_parameters& get_params) {
@@ -80,7 +85,8 @@ int main(int argc, char* argv[])
         qs[i].randomNumber = 1 + rand() % 9999;
         orm.update(qs[i]);
       }
-      return std::move(qs);
+      return response(_content_type = "application/json",
+                      _body = std::move(qs));
     },
   
     _fortunes = [] (fortune_orm& orm) {
@@ -98,7 +104,8 @@ int main(int argc, char* argv[])
         ss << "<tr><td>" << f.id << "</td><td>" << escape_html_entities(f.message) << "</td></tr>";
       ss << "</table></body></html>";
 
-      return ss.str();
+      return response(_content_type = "text/html",
+                      _body = ss.str());
     }
   
     ).bind_factories(
