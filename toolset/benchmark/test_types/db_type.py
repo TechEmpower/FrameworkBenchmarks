@@ -99,7 +99,11 @@ class DBTestType(FrameworkTestType):
       response_rn = float(db_object["randomnumber"])
 
       if response_id > 10000 or response_id < 1:
-        problems.append( ('warn', "Response key 'id' should be between 1 and 10,000", url)) 
+        problems.append( ('warn', "Response key 'id' should be between 1 and 10,000", url) ) 
+
+      if response_rn > 10000:
+        problems.append( ('warn', '''Response key 'randomNumber' is over 10,000. This may negatively 
+          afect performance by sending extra bytes.''', url) )
     except ValueError:
       pass
 
