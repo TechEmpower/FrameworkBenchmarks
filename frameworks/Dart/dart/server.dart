@@ -16,11 +16,11 @@ final _encoder = new JsonUtf8Encoder();
 /// arguments, as is the number of database connections to be maintained in the
 /// connection pool.
 void main(List<String> args) {
-  var parser = new ArgParser();
-  parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
-  parser.addOption('port', abbr: 'p', defaultsTo: '8080');
-  parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
-  parser.addOption('isolates', abbr: 'i', defaultsTo: '1');
+  var parser = new ArgParser()
+    ..addOption('address', abbr: 'a', defaultsTo: '0.0.0.0')
+    ..addOption('port', abbr: 'p', defaultsTo: '8080')
+    ..addOption('dbconnections', abbr: 'd', defaultsTo: '256')
+    ..addOption('isolates', abbr: 'i', defaultsTo: '1');
   var arguments = parser.parse(args);
   var isolates = int.parse(arguments['isolates']);
   var dbConnections = int.parse(arguments['dbconnections']) ~/ isolates;
