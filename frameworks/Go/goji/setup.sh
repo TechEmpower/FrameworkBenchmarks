@@ -5,6 +5,8 @@
 # Where to find the go executable
 export PATH="$GOROOT/bin:$PATH"
 
-go get ./...
+go get github.com/go-sql-driver/mysql
+go get github.com/zenazn/goji
+go get github.com/zenazn/goji/web
 
 go run src/goji/server.go &
