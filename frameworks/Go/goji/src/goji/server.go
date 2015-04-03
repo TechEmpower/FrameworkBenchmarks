@@ -42,8 +42,6 @@ var (
 	worldStatement   *sql.Stmt
 	fortuneStatement *sql.Stmt
 	updateStatement  *sql.Stmt
-
-	// helloWorldBytes = []byte(helloWorldString)
 )
 
 type Message struct {
@@ -98,10 +96,11 @@ func singleQuery(c web.C, w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&world)
 }
 
-// Test 3: Multiple Database Queries
-func multipleQueries(c web.C, w http.ResponseWriter, r *http.Request) {
+// Caps queries parameter between 1 and 500.
+// Non-int values like "foo" and "" become 1.
+func sanitizeQueryParam(queries string) int {
 	n := 1
-	if queries := r.URL.Query().Get("queries"); len(queries) > 0 {
+	if len(queries) > 0 {
 		if conv, err := strconv.Atoi(queries); err != nil {
 			n = 1
 		} else {
@@ -114,9 +113,15 @@ func multipleQueries(c web.C, w http.ResponseWriter, r *http.Request) {
 	} else if n > 500 {
 		n = 500
 	}
+	return n
+}
 
-	worlds := make([]World, n)
-	for i := 0; i < n; i++ {
+// Test 3: Multiple Database Queries
+func multipleQueries(c web.C, w http.ResponseWriter, r *http.Request) {
+	queries := sanitizeQueryParam(r.URL.Query().Get("queries"))
+	worlds := make([]World, queries)
+
+	for i := 0; i < queries; i++ {
 		if err := randomRow().Scan(&worlds[i].Id, &worlds[i].RandomNumber); err != nil {
 			log.Fatalf("Error scanning world row: %s", err.Error())
 		}
@@ -153,23 +158,10 @@ func fortunes(c web.C, w http.ResponseWriter, r *http.Request) {
 
 // Test 5: Database Updates
 func dbupdate(c web.C, w http.ResponseWriter, r *http.Request) {
-	n := 1
-	if queries := r.URL.Query().Get("queries"); len(queries) > 0 {
-		if conv, err := strconv.Atoi(queries); err != nil {
-			n = 1
-		} else {
-			n = conv
-		}
-	}
+	queries := sanitizeQueryParam(r.URL.Query().Get("queries"))
+	worlds := make([]World, queries)
 
-	if n < 1 {
-		n = 1
-	} else if n > 500 {
-		n = 500
-	}
-
-	worlds := make([]World, n)
-	for i := 0; i < n; i++ {
+	for i := 0; i < queries; i++ {
 		if err := randomRow().Scan(&worlds[i].Id, &worlds[i].RandomNumber); err != nil {
 			log.Fatalf("Error scanning world row: %s", err.Error())
 		}
@@ -185,7 +177,7 @@ func dbupdate(c web.C, w http.ResponseWriter, r *http.Request) {
 
 // Test 6: Plaintext
 func plaintext(c web.C, w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, World!")
+	fmt.Fprintf(w, helloWorldString)
 }
 
 func main() {
