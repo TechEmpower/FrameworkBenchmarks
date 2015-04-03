@@ -15,7 +15,7 @@ RETCODE=$(fw_exists $IROOT/mono.installed)
 
 # save environment
 cat > $IROOT/mono.installing <<'END'
-export SNAPDATE=20150102075051
+export SNAPDATE=20150202010831
 export MONO_HOME=$IROOT/mono-snapshot-$SNAPDATE
 export MONO_PATH=$MONO_HOME/lib/mono/4.5
 export MONO_CFG_DIR=$MONO_HOME/etc
@@ -27,26 +27,22 @@ END
 # load environment
 . $IROOT/mono.installing
 
-# temp dir for extracting archives
-TEMP=$IROOT/mono-snapshot-${SNAPDATE}-temp
-
 # start fresh
+TEMP=$IROOT/mono-snapshot-${SNAPDATE}-temp
 rm -rf $TEMP && mkdir -p $TEMP
 rm -rf $MONO_HOME && mkdir -p $MONO_HOME
 
-# download .debs and extract them into $TEMP dir
-fw_get http://jenkins.mono-project.com/repo/debian/pool/main/m/mono-snapshot-${SNAPDATE}/mono-snapshot-${SNAPDATE}_${SNAPDATE}-1_amd64.deb
-fw_get http://jenkins.mono-project.com/repo/debian/pool/main/m/mono-snapshot-${SNAPDATE}/mono-snapshot-${SNAPDATE}-assemblies_${SNAPDATE}-1_all.deb
-dpkg-deb -x mono-*amd64.deb $TEMP
-dpkg-deb -x mono-*assemblies*.deb $TEMP
+# Add apt source
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+echo "deb http://jenkins.mono-project.com/repo/debian sid main" | sudo tee /etc/apt/sources.list.d/mono-jenkins.list
+sudo apt-get update
 
-# move /opt/mono-$SNAPDATE to /installs
-mv $TEMP/opt/mono-*/* $MONO_HOME
+# Download and extract debs
+fw_apt_to_iroot mono-snapshot-20150202010831
+fw_apt_to_iroot mono-snapshot-20150202010831-assemblies mono-snapshot-20150202010831
 
-# cleanup
-rm mono-*.deb
-rm -rf $TEMP
-
+# Simplify paths
+mv $MONO_HOME/opt/mono-*/* $MONO_HOME
 # replace /opt/mono-$SNAPDATE path
 file $MONO_HOME/bin/* | grep "POSIX shell script" | awk -F: '{print $1}' | xargs sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g"
 sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_HOME/etc/mono/config
