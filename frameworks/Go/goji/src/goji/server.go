@@ -151,6 +151,38 @@ func fortunes(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Test 5: Database Updates
+func dbupdate(c web.C, w http.ResponseWriter, r *http.Request) {
+	n := 1
+	if queries := r.URL.Query().Get("queries"); len(queries) > 0 {
+		if conv, err := strconv.Atoi(queries); err != nil {
+			n = 1
+		} else {
+			n = conv
+		}
+	}
+
+	if n < 1 {
+		n = 1
+	} else if n > 500 {
+		n = 500
+	}
+
+	worlds := make([]World, n)
+	for i := 0; i < n; i++ {
+		if err := randomRow().Scan(&worlds[i].Id, &worlds[i].RandomNumber); err != nil {
+			log.Fatalf("Error scanning world row: %s", err.Error())
+		}
+		worlds[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
+		if _, err := updateStatement.Exec(worlds[i].RandomNumber, worlds[i].Id); err != nil {
+			log.Fatalf("Error updating world row: %s", err.Error())
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(worlds)
+}
+
 // Test 6: Plaintext
 func plaintext(c web.C, w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, World!")
@@ -183,5 +215,6 @@ func main() {
 	goji.Get("/queries", multipleQueries)
 	goji.Get("/fortunes", fortunes)
 	goji.Get("/plaintext", plaintext)
+	goji.Get("/updates", dbupdate)
 	goji.Serve()
 }
