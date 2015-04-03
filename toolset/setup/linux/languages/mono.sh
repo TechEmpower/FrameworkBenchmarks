@@ -12,6 +12,7 @@ RETCODE=$(fw_exists $IROOT/mono.installed)
 
 # what do we want? latest mono
 # how do we want it? already compiled from packages but without sudo apt-get
+# See https://github.com/TechEmpower/FrameworkBenchmarks/pull/1287
 
 # Add source for prepackaged binaries
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
