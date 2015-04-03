@@ -80,9 +80,15 @@ func (s ByMessage) Less(i, j int) bool {
 	return s.Fortunes[i].Message < s.Fortunes[j].Message
 }
 
+// Sets the content type of response. Also adds the Server header.
+func setContentType(w http.ResponseWriter, contentType string) {
+	w.Header().Set("Server", "Goji")
+	w.Header().Set("Content-Type", contentType)
+}
+
 // Test 1: Json Serialization
 func serializeJson(c web.C, w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+	setContentType(w, "application/json")
     json.NewEncoder(w).Encode(&Message{helloWorldString})
 }
 
@@ -92,7 +98,8 @@ func singleQuery(c web.C, w http.ResponseWriter, r *http.Request) {
 	if err := randomRow().Scan(&world.Id, &world.RandomNumber); err != nil {
 		log.Fatalf("Error scanning world row: %s", err.Error())
 	}
-	w.Header().Set("Content-Type", "application/json")
+
+	setContentType(w, "application/json")
 	json.NewEncoder(w).Encode(&world)
 }
 
@@ -127,7 +134,7 @@ func multipleQueries(c web.C, w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	setContentType(w, "application/json")
 	json.NewEncoder(w).Encode(worlds)
 }
 
@@ -150,7 +157,7 @@ func fortunes(c web.C, w http.ResponseWriter, r *http.Request) {
 	fortunes = append(fortunes, &Fortune{Message: extraFortuneMessage})
 
 	sort.Sort(ByMessage{fortunes})
-	w.Header().Set("Content-Type", "text/html")
+	setContentType(w, "text/html")
 	if err := tmpl.Execute(w, fortunes); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -171,12 +178,13 @@ func dbupdate(c web.C, w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	setContentType(w, "application/json")
 	json.NewEncoder(w).Encode(worlds)
 }
 
 // Test 6: Plaintext
 func plaintext(c web.C, w http.ResponseWriter, r *http.Request) {
+	setContentType(w, "text/plain")
 	fmt.Fprintf(w, helloWorldString)
 }
 
