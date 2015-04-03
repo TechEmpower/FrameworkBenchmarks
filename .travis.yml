@@ -140,6 +140,7 @@ env:
     - "TESTDIR=Scala/scalatra"
     - "TESTDIR=Scala/scruffy"
     - "TESTDIR=Scala/spray"
+    - "TESTDIR=Scala/spray-es"
     - "TESTDIR=Scala/unfiltered"
     - "TESTDIR=Ur/urweb"
 

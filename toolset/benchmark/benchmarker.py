@@ -547,6 +547,7 @@ class Benchmarker:
             sudo service redis-server restart
             sudo service postgresql restart
             sudo service cassandra restart
+            /opt/elasticsearch/elasticsearch restart
           """)
           time.sleep(10)
 
@@ -555,7 +556,8 @@ class Benchmarker:
             ("mongodb", self.database_host, 27017),
             ("redis", self.database_host, 6379),
             ("postgresql", self.database_host, 5432),
-            ("cassandra", self.database_host, 9160)
+            ("cassandra", self.database_host, 9160),
+            ("elasticsearch", self.database_host, 9200)
           ])
           print "database connection test results:\n" + "\n".join(st[1])
 
