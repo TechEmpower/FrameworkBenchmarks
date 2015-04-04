@@ -1,0 +1,157 @@
+{{extend 'layout.html'}}
+{{import os, glob}}
+{{block sectionclass}}site{{end}}
+<!-- begin "site" block -->
+<div class="row-fluid">
+  <div class="applist f60 span7">
+    <div class="applist_inner">
+      <h2>{{=T("Installed applications")}}</h2>
+      <table width="100%" class="table">
+    {{for a in apps:}}
+    <tr>{{buttons = []}}
+      <td>
+          {{if a==request.application:}}
+            <h4 class="currentapp">{{=a}} ({{=T('currently running')}})</h4>
+          {{else:}}
+            <h4 class="editableapp">{{=A(a,_href=URL(a,'default','index'))}}</h4>
+            {{if MULTI_USER_MODE and db.app(name=a):}}(created by {{="%(first_name)s %(last_name)s" % db.auth_user[db.app(name=a).owner]}}){{pass}}
+        {{if not os.path.exists('applications/%s/compiled' % a):}}
+          {{buttons.append((URL('design',args=a), T("Edit")))}}
+        {{else:}}
+          {{buttons.append((URL(a,'appadmin','index'), T("appadmin")))}}
+        {{pass}}
+        {{buttons.append((URL('about',args=a), T("About")))}}
+          {{pass}}
+          {{buttons.append((URL('errors',args=a), T("Errors")))}}
+          {{buttons.append((URL('cleanup',args=a), T("Clean")))}}
+          {{buttons.append((URL('pack',args=a), T("Pack all")))}}
+          {{buttons.append((URL('pack_custom',args=a), T("Pack custom")))}}
+          {{if not os.path.exists('applications/%s/compiled' % a):}}
+                {{buttons.append((URL('compile_app',args=a), T("Compile")))}}
+          {{else:}}
+        {{buttons.append((URL('pack',args=(a, 'compiled')), T("Pack compiled")))}}
+        {{if glob.glob('applications/%s/controllers/*.py' % a):}}
+          {{buttons.append((URL('remove_compiled_app',args=a), T("Remove compiled")))}}
+        {{pass}}
+          {{pass}}
+          {{if os.path.exists(os.path.join(apath(r=request),a,'.git')): }}
+        {{buttons.append((URL('git_pull',args=a), T("Git Pull")))}}
+        {{buttons.append((URL('git_push',args=a), T("Git Push")))}}
+          {{pass}}
+          {{if a!=request.application:}}
+        {{buttons.append((URL('uninstall',args=a), T("Uninstall")))}}
+          {{pass}}
+      </td>
+      <td>
+        <div class="btn-group">
+          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+        {{=T('Manage')}}
+        <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+        {{for link,name in buttons:}}
+        {{=LI(A(name,_href=link))}}
+        {{pass}}
+          </ul>
+        </div>
+        {{=button_enable(URL('enable',args=a), a) if a!='admin' else ''}}
+      </td>
+    </tr>
+    {{pass}}
+      </table>
+    </div>
+  </div> <!-- /applist -->
+  <div class="sidebar fl60 span5">
+    <div class="sidebar_inner controls well well-small">
+      <!-- CHANGE ADMIN PWD -->
+      <div class="pwdchange pull-right">
+    {{if MULTI_USER_MODE:}}
+    {{=auth.navbar()}}
+    {{else:}}
+    {{=sp_button(URL('change_password'), T('Change admin password'))}}
+    {{=button(URL('default','reload_routes'), T('Reload routes'))}}
+    {{pass}}
+      </div> <!-- /CHANGE ADMIN PWD -->
+      {{if is_manager():}}
+      <!-- VERSION -->
+      <div class="box">
+    <h4>{{=T("Version")}}</h4>
+    <p>
+      <tt>{{=myversion}}</tt><br/>
+      {{running_on = T("Running on %s", request.env.server_software or 'Unknown')}}
+      ({{="%s, Python %s" % (running_on, myplatform)}})
+    </p>
+    <p id="check_version" class="row-buttons">
+      {{if session.check_version:}}
+        {{=T('Checking for upgrades...')}}
+        <script>ajax('{{=URL('check_version')}}',[],'check_version');</script>
+        {{session.check_version=False}}
+      {{else:}}
+        {{=button("javascript:ajax('"+URL('check_version')+"',[],'check_version')", T('Check for upgrades'))}}
+      {{pass}}
+    </p>
+    {{if session.is_mobile=='auto':}}
+      <p>{{=A(T('Try the mobile interface'),_href=URL('plugin_jqmobile','about'))}}</p>
+    {{pass}}
+      </div> <!-- /VERSION -->
+      {{pass}}
+      {{if MULTI_USER_MODE and is_manager():}}
+      <!-- MULTI_USER_INTERFACE -->
+      <div class="box">
+    <h4>{{=T("Multi User Mode")}}</h4>
+    <p class="row-buttons">
+      {{=button(URL('bulk_register'),T('Bulk Register'))}}
+      {{=button(URL('manage_students',vars={'order':'auth_user.id'}),T('Manage Students'))}}
+    </p>
+      </div> <!-- /MULTI_USER_INTERFACE -->
+      {{pass}}
+      <!-- SCAFFOLD APP -->
+      <div class="box">
+    <h4>{{=T("New simple application")}}</h4>
+    {{=form_create.custom.begin}}
+    {{=LABEL(T("Application name:"))}}
+    {{=form_create.custom.widget.name}}
+    <div class="controls"><button type="submit" class="btn">{{=T('Create')}}</button></div>
+    {{=form_create.custom.end}}
+      </div> <!-- /SCAFFOLD APP -->
+      <!-- UPLOAD PACKAGE -->
+      <div class="box">
+    <h4>{{=T("Upload and install packed application")}}</h4>
+    {{=form_update.custom.begin}}
+    <label for="appupdate_name">{{=T("Application name:")}}</label>
+    {{=form_update.custom.widget.name}}
+    <label for="appupdate_file">{{=T("Upload a package:")}}</label>
+    {{=form_update.custom.widget.file}}
+    <label for="appupdate_url">{{=T("Or Get from URL:")}}</label>
+    {{=form_update.custom.widget.url}}<small class="help-block">({{=T('can be a git repo')}})</small>
+    <div class="controls">
+      <label class="checkbox">
+        {{=form_update.custom.widget.overwrite}} {{=T("Overwrite installed app")}}
+      </label>
+      <button type="submit" class='btn'>{{=T('Install')}}</button>
+    </div>
+    {{=form_update.custom.end}}
+      </div> <!-- /UPLOAD PACKAGE -->
+      <!-- DEPLOY ON GAE -->
+      <div class="box">
+    <h4>{{=T("Deploy")}}</h4>
+    <p class="row-buttons">
+      {{=button(URL('gae','deploy'), T('Deploy on Google App Engine'))}}
+      {{=button(URL('openshift','deploy'),T('Deploy to OpenShift'))}}
+    </p>
+      </div> <!-- /DEPLOY ON GAE -->
+      <!-- APP WIZARD -->
+      <div class="box">
+    <h4>{{=T("New application wizard")}}</h4>
+    <p>{{=button(URL('wizard','index'), T('Start wizard'))}}<br/>
+      {{=T("(requires internet access, experimental)")}}</p>
+      </div> <!-- /APP WIZARD -->
+      <!-- TWITTER TIMELINE -->
+      <div class="box twitter-timeline">
+        <a class="twitter-timeline" href="https://twitter.com/web2py" data-widget-id="340456915207327745">Tweets by @web2py</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+      </div><!-- /TWITTER TIMELINE -->
+    </div>
+  </div> <!-- /sidebar -->
+</div> <!-- /row-fluid -->
+<!-- end "site" block -->

@@ -1,0 +1,162 @@
+{{extend 'layout.html'}}
+
+{{block sectionclass}}shell{{end}}
+<!--style type="text/css">
+
+.prompt, #output {
+  width: 45em;
+  border: 1px solid #CCCCCC;
+  font-size: 10pt;
+  margin: 0.5em;
+  padding: 0.5em;
+  padding-right: 0em;
+  overflow: auto;
+  wrap: hard;
+}
+
+#output {
+  height:250px;overflow:auto;
+}
+
+#toolbar {
+  margin-left: 0.5em;
+  padding-left: 0.5em;
+}
+
+#caret {
+  width: 2.5em;
+  margin-right: 0px;
+  padding-right: 0px;
+  border-right: 0px;
+}
+
+#statement {
+  width: 43em;
+  margin-left: -1em;
+  padding-left: 0px;
+  border-left: 0px;
+  background-position: top right;
+  background-repeat: no-repeat;
+}
+
+.processing {
+  background-image: url("{{=URL('static','images/spinner.gif')}}");
+}
+
+#ajax-status {
+  font-weight: bold;
+}
+
+.message {
+  color: #8AD;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.error {
+  color: #F44;
+}
+
+.username {
+  font-weight: bold;
+}
+
+</style-->
+<script src="{{=URL('static', 'js/autoscroll.js')}}"></script>
+
+<div id="wrapper">
+  <textarea id="output" readonly="readonly">{{=T('web2py Debugger')}} {{=request.env.web2py_version}}{{=data}}</textarea>
+
+  <form id="form" action="{{=URL(r=request,f='callback',args=app)}}" method="get">
+    <div id="shellwrapper">
+      <div id="caret">&gt;&gt;&gt;</div>
+      <div id="autoscroll" style="cursor:pointer;float:right;">autoscroll</div>
+      <div class="tooltip">
+        <textarea class="prompt" name="statement" id="statement"></textarea>
+        <span>{{=T('Type PDB debugger command in here and hit Return (Enter) to execute it.')}}</span>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="help">
+  <ul>
+    <li>{{=T('Using the shell may lock the database to other users of this app.')}}</li>
+  </ul>
+</div>
+
+<script type="text/javascript">
+var bShellScrolling=0
+jQuery(document).ready(function(){
+  jQuery('#statement').focus();
+
+  jQuery('#statement').keyup(function(event){
+    var t=jQuery(this),
+    s=t.val(),
+    o=jQuery('#output'),
+    RETURN = 38;
+    if(s=='\n') t.val('');
+    if(s.length>1 && s.substr(s.length-1,1)=='\n' && s.substr(s.length-2,1)!=':' &&
+    (s.indexOf(':\n ')<0 || s.substr(s.length-2,1)=='\n')) {
+      t.val('');
+      jQuery.post("{{=URL(r=request,f='callback',args=app)}}",
+      {statement:s},function(data){o.html(o.html()+data).attr('scrollTop',o.attr('scrollHeight'));});
+    } else { };
+    if(event.keyCode==RETURN){
+      var i=s.length
+      if(i==0){
+        var s=o.find('table:last pre:first').text();
+        bShellScrolling=o.find('table').length;
+      }else if(bShellScrolling){
+        var i=bShellScrolling
+        if(i<1){
+          return
+        }else{
+          i--
+          var s=o.find('table:nth-child('+(i)+') pre:first').text();
+          bShellScrolling=i
+        }
+      }else if(s.indexOf('\n')<0){
+        var oo=o.find('tr:first-child pre:contains("'+s+'")')
+        if(oo.length==0){
+          return
+        }else if(oo.length==1){
+          s=oo.text();
+        }else{
+          sVar=oo.text();
+          o.html(o.html()+'<dd>'+s+' ?</dd><dt>'+sVar+'</dt>').attr('scrollTop',o.attr('scrollHeight'))
+          return
+        }
+      }else{
+        //multistring expr
+        return;
+      }
+      //  if(s.slice(s.length-1)=='\n'){
+      s=s.slice(0,s.length-1)
+      //	}
+      t.val(s);
+    }
+    if(bShellScrolling && event.keyCode==40){
+      var i=bShellScrolling
+      i++
+      var s=o.find('table:nth-child('+i+') tr:first-child pre').text();
+      if(s){
+        s=s.slice(0,s.length-1)
+        t.val(s);
+        bShellScrolling=i
+      }else{
+        bShellScrolling=0
+        t.val('')
+      }
+    };
+    if(bShellScrolling && (event.keyCode==37 || event.keyCode==39)){
+      bShellScrolling=0;
+    };
+    if(event.keyCode==27){
+      bShellScrolling=0;
+      t.val('');
+    };
+  });
+});
+</script>
+

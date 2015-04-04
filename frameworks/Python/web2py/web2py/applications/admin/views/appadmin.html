@@ -1,0 +1,278 @@
+{{extend 'layout.html'}}
+<script><!--
+    jQuery(document).ready(function(){
+    jQuery("table.sortable tbody tr").mouseover( function() {
+    jQuery(this).addClass("highlight"); }).mouseout( function() {
+    jQuery(this).removeClass("highlight"); });
+    jQuery('table.sortable tbody tr:odd').addClass('odd');
+    jQuery('table.sortable tbody tr:even').addClass('even');
+});
+//--></script>
+
+{{if request.function=='index':}}
+<h2>{{=T("Available Databases and Tables")}}</h2>
+  {{if not databases:}}{{=T("No databases in this application")}}{{pass}}
+  <ul class="nav nav-tabs" id="myTab">
+  <li class="active" ><a href="#alltables" data-toggle="tab">Tables</a></li>
+  <li><a href="#hooks" data-toggle="tab">Hooks</a></li>
+  </ul>
+  <div class="tab-content">
+      <div class="tab-pane active" id="alltables">
+        <table class="table">
+          {{for db in sorted(databases):}}
+            {{for table in databases[db].tables:}}
+              {{qry='%s.%s.id>0'%(db,table)}}
+              {{tbl=databases[db][table]}}
+              {{if hasattr(tbl,'_primarykey'):}}
+                {{if tbl._primarykey:}}
+                    {{firstkey=tbl[tbl._primarykey[0]]}}
+                    {{if firstkey.type in ['string','text']:}}
+                      {{qry='%s.%s.%s!=""'%(db,table,firstkey.name)}}
+                    {{else:}}
+                      {{qry='%s.%s.%s>0'%(db,table,firstkey.name)}}
+                    {{pass}}
+                {{else:}}
+                     {{qry=''}}
+                {{pass}}
+              {{pass}}
+          <tr>
+            <th style="font-size: 1.75em;">
+              {{=A("%s.%s" % (db,table),_href=URL('select',args=[db],vars=dict(query=qry)))}}
+            </th>
+            <td>
+              {{=A(str(T('New Record')),_href=URL('insert',args=[db,table]),_class="btn btn-default")}}
+            </td>
+          </tr>
+          {{pass}}
+          {{pass}}
+        </table>
+      </div>
+      <div class="tab-pane" id="hooks">
+      {{=LOAD('appadmin', 'hooks', ajax=True)}}
+      </div>
+  </div>
+{{elif request.function=='select':}}
+  <h2>{{=XML(str(T("Database %s select"))%A(request.args[0],_href=URL('index'))) }}
+  </h2>
+  {{if tb:}}
+  <h3>{{=T('Traceback')}}</h3>
+  <pre>
+    {{=tb}}
+  </pre>
+  {{pass}}
+  {{if table:}}
+  {{=A(str(T('New Record')),_href=URL('insert',args=[request.args[0],table]),_class="btn btn-default")}}<br/><br/>
+    <h3>{{=T("Rows in Table")}}</h3><br/>
+   {{else:}}
+    <h3>{{=T("Rows selected")}}</h3><br/>
+   {{pass}}
+   {{=form}}
+   <p>{{=T('The "query" is a condition like "db.table1.field1==\'value\'". Something like "db.table1.field1==db.table2.field2" results in a SQL JOIN.')}}<br/>
+      {{=T('Use (...)&(...) for AND, (...)|(...) for OR, and ~(...)  for NOT to build more complex queries.')}}<br/>
+      {{=T('"update" is an optional expression like "field1=\'newvalue\'". You cannot update or delete the results of a JOIN')}}</p>
+    <br/><br/>
+    <h4>{{=T("%s selected", nrows)}}</h4>
+    {{if start>0:}}{{=A(T('previous %s rows') % step,_href=URL('select',args=request.args[0],vars=dict(start=start-step)),_class="btn btn-default")}}{{pass}}
+    {{if stop<nrows:}}{{=A(T('next %s rows') % step,_href=URL('select',args=request.args[0],vars=dict(start=start+step)),_class="btn btn-default")}}{{pass}}
+    {{if rows:}}
+       <div style="overflow:auto; width:80%;">
+       {{linkto = lambda f, t, r: URL('update', args=[request.args[0], r, f]) if f else "#"}}
+       {{upload=URL('download',args=request.args[0])}}
+       {{=SQLTABLE(rows,linkto,upload,orderby=True,_class='sortable')}}
+       </div>
+    {{pass}}
+    <br/><br/><h3>{{=T("Import/Export")}}</h3><br/>
+    <a href="{{=URL('csv',args=request.args[0],vars=dict(query=query))}}" class="btn btn-default">{{=T("export as csv file")}}</a>
+  {{=formcsv or ''}}
+
+{{elif request.function=='insert':}}
+  <h2>{{=T("Database")}} {{=A(request.args[0],_href=URL('index'))}}
+    {{if hasattr(table,'_primarykey'):}}
+      {{fieldname=table._primarykey[0]}}
+      {{dbname=request.args[0]}}
+      {{tablename=request.args[1]}}
+      {{cond = table[fieldname].type in ['string','text'] and '!=""' or '>0'}}
+      {{=T("Table")}} {{=A(tablename,_href=URL('select',args=dbname,vars=dict(query='%s.%s.%s%s'%(dbname,tablename,fieldname,cond))))}}
+    {{else:}}
+      {{=T("Table")}} {{=A(request.args[1],_href=URL('select',args=request.args[0],vars=dict(query='%s.%s.id>0'%tuple(request.args[:2]))))}}
+    {{pass}}
+  </h2>
+  <h3>{{=T("New Record")}}</h3><br/>
+  {{=form}}
+{{elif request.function=='update':}}
+  <h2>{{=T("Database")}} {{=A(request.args[0],_href=URL('index'))}}
+    {{if hasattr(table,'_primarykey'):}}
+      {{fieldname=request.vars.keys()[0]}}
+      {{dbname=request.args[0]}}
+      {{tablename=request.args[1]}}
+      {{cond = table[fieldname].type in ['string','text'] and '!=""' or '>0'}}
+      {{=T("Table")}} {{=A(tablename,_href=URL('select',args=dbname,vars=dict(query='%s.%s.%s%s'%(dbname,tablename,fieldname,cond))))}}
+      {{=T("Record")}} {{=A('%s=%s'%request.vars.items()[0],_href=URL('update',args=request.args[:2],vars=request.vars))}}
+    {{else:}}
+      {{=T("Table")}} {{=A(request.args[1],_href=URL('select',args=request.args[0],vars=dict(query='%s.%s.id>0'%tuple(request.args[:2]))))}}
+      {{=T("Record id")}} {{=A(request.args[2],_href=URL('update',args=request.args[:3]))}}
+    {{pass}}
+  </h2>
+  <h3>{{=T("Edit current record")}}</h3><br/><br/>{{=form}}
+
+{{elif request.function=='state':}}
+  <h2>{{=T("Internal State")}}</h2>
+  <h3>{{=T("Current request")}}</h3>
+  {{=BEAUTIFY(request)}}
+  <br/><h3>{{=T("Current response")}}</h3>
+  {{=BEAUTIFY(response)}}
+  <br/><h3>{{=T("Current session")}}</h3>
+  {{=BEAUTIFY(session)}}
+
+
+{{elif request.function == 'ccache':}}
+<h2>{{T("Cache")}}</h2>
+<div class="list">
+
+  <div class="list-header">
+    <h3>{{T("Statistics")}}</h3>
+  </div>
+
+  <div class="content">
+    <h4>{{=T("Overview")}}</h4>
+    <p>{{=T.M("Number of entries: **%s**", total['entries'])}}</p>
+    {{if total['entries'] > 0:}}
+      <p>{{=T.M("Hit Ratio: **%(ratio)s%%** (**%(hits)s** %%{hit(hits)} and **%(misses)s** %%{miss(misses})",
+              dict(ratio=total['ratio'], hits=total['hits'], misses=total['misses']))}}
+     </p>
+    <p>
+      {{=T("Size of cache:")}}
+      {{if object_stats:}}
+        {{=T.M("**%(items)s** %%{item(items)}, **%(bytes)s** %%{byte(bytes)}", dict(items=total['objects'], bytes=total['bytes']))}}
+        {{if total['bytes'] > 524287:}}
+          {{=T.M("(**%.0d MB**)", total['bytes'] / 1048576)}}
+        {{pass}}
+      {{else:}}
+        {{=T.M("**not available** (requires the Python [[guppy http://pypi.python.org/pypi/guppy/ popup]] library)")}}
+      {{pass}}
+    </p>
+    <p>
+      {{=T.M("Cache contains items up to **%(hours)02d** %%{hour(hours)} **%(min)02d** %%{minute(min)} **%(sec)02d** %%{second(sec)} old.",
+              dict(hours=total['oldest'][0], min=total['oldest'][1], sec=total['oldest'][2]))}}
+    </p>
+    {{=BUTTON(T('Cache Keys'), _onclick='jQuery("#all_keys").toggle();')}}
+    <div class="hidden" id="all_keys">
+      {{=total['keys']}}
+    </div>
+    <br />
+    {{pass}}
+
+    <h4>{{=T("RAM")}}</h4>
+    <p>{{=T.M("Number of entries: **%s**", ram['entries'])}}</p>
+    {{if ram['entries'] > 0:}}
+    <p>{{=T.M("Hit Ratio: **%(ratio)s%%** (**%(hits)s** %%{hit(hits)} and **%(misses)s** %%{miss(misses)})",
+             dict( ratio=ram['ratio'], hits=ram['hits'], misses=ram['misses']))}}
+    </p>
+    <p>
+      {{=T("Size of cache:")}}
+      {{if object_stats:}}
+        {{=T.M("**%(items)s** items, **%(bytes)s** %%{byte(bytes)}", dict(items=ram['objects'], bytes=ram['bytes']))}}
+        {{if ram['bytes'] > 524287:}}
+          {{=T.M("(**%.0d MB**)", ram['bytes'] / 10485576)}}
+        {{pass}}
+      {{else:}}
+        {{=T.M("``**not available**``:red (requires the Python [[guppy http://pypi.python.org/pypi/guppy/ popup]] library)")}}
+      {{pass}}
+    </p>
+    <p>
+      {{=T.M("RAM contains items up to **%(hours)02d** %%{hour(hours)} **%(min)02d** %%{minute(min)} **%(sec)02d** %%{second(sec)} old.",
+              dict(hours=ram['oldest'][0], min=ram['oldest'][1], sec=ram['oldest'][2]))}}
+    </p>
+    {{=BUTTON(T('RAM Cache Keys'), _onclick='jQuery("#ram_keys").toggle();')}}
+    <div class="hidden" id="ram_keys">
+      {{=ram['keys']}}
+    </div>
+    <br />
+    {{pass}}
+
+    <h4>{{=T("DISK")}}</h4>
+    <p>{{=T.M("Number of entries: **%s**", disk['entries'])}}</p>
+    {{if disk['entries'] > 0:}}
+      <p>
+      {{=T.M("Hit Ratio: **%(ratio)s%%** (**%(hits)s** %%{hit(hits)} and **%(misses)s** %%{miss(misses)})",
+            dict(ratio=disk['ratio'], hits=disk['hits'], misses=disk['misses']))}}
+      </p>
+      <p>
+      {{=T("Size of cache:")}}
+      {{if object_stats:}}
+        {{=T.M("**%(items)s** %%{item(items)}, **%(bytes)s** %%{byte(bytes)}", dict( items=disk['objects'], bytes=disk['bytes']))}}
+        {{if disk['bytes'] > 524287:}}
+          {{=T.M("(**%.0d MB**)", disk['bytes'] / 1048576)}}
+        {{pass}}
+      {{else:}}
+        {{=T.M("``**not available**``:red (requires the Python [[guppy http://pypi.python.org/pypi/guppy/ popup]] library)")}}
+      {{pass}}
+      </p>
+      <p>
+      {{=T.M("DISK contains items up to **%(hours)02d** %%{hour(hours)} **%(min)02d** %%{minute(min)} **%(sec)02d** %%{second(sec)} old.",
+                dict(hours=disk['oldest'][0], min=disk['oldest'][1], sec=disk['oldest'][2]))}}
+      </p>
+      {{=BUTTON(T('Disk Cache Keys'), _onclick='jQuery("#disk_keys").toggle();')}}
+      <div class="hidden" id="disk_keys">
+      {{=disk['keys']}}
+      </div>
+      <br />
+    {{pass}}
+  </div>
+
+  <div class="list-header">
+    <h3>{{=T("Manage Cache")}}</h3>
+  </div>
+
+  <div class="content">
+    <p>
+      {{=form}}
+    </p>
+  </div>
+</div>
+<div class="clear"></div>
+{{pass}}
+
+{{if request.function=='graph_model':}}
+<h2>{{=T("Graph Model")}}</h2>
+  {{if not pgv:}}
+    {{=T('pygraphviz library not found')}}
+  {{elif not databases:}}
+    {{=T("No databases in this application")}}
+  {{else:}}	   
+    <div class="btn-group">
+      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+        <i class="icon-download"></i> {{=T('Save model as...')}}
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+          <li><a href="{{=URL('appadmin', 'bg_graph_model', args=['png'])}}">png</a></li>
+          <li><a href="{{=URL('appadmin', 'bg_graph_model', args=['svg'])}}">svg</a></li>
+          <li><a href="{{=URL('appadmin', 'bg_graph_model', args=['pdf'])}}">pdf</a></li>
+          <li><a href="{{=URL('appadmin', 'bg_graph_model', args=['ps'])}}">ps</a></li>          
+          <li><a href="{{=URL('appadmin', 'bg_graph_model', args=['dot'])}}">dot</a></li>                                   
+      </ul>
+    </div>
+    <br />
+    {{=IMG(_src=URL('appadmin', 'bg_graph_model'))}}
+  {{pass}}
+{{pass}}
+
+{{if request.function == 'manage':}}
+<h2>{{=heading}}</h2>
+<ul class="nav nav-tabs">
+  {{for k, tablename in enumerate(tablenames):}}
+  <li{{=XML(' class="active"') if k == 0 else ''}}>
+    <a href="#table-{{=tablename}}" data-toggle="tab">{{=labels[k]}}</a>
+  </li>
+  {{pass}}
+</ul>
+
+<div class="tab-content">
+  {{for k, tablename in enumerate(tablenames):}}
+  <div class="tab-pane{{=XML(' active') if k == 0 else ''}}" id="table-{{=tablename}}">
+    {{=LOAD(f='manage.load', args=[request.args(0), k], ajax=True)}}
+  </div>
+  {{pass}}
+</div>
+{{pass}}

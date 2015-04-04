@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="{{=T.accepted_language or 'en'}}" class="no-js"><!-- no-js need it for modernzr -->
+  <head>
+    <meta charset="utf-8" />
+    <!-- www.phpied.com/conditional-comments-block-downloads/ -->
+    <!--[if IE]><![endif]-->
+    <!-- Always force latest IE rendering engine
+     (even in intranet) & Chrome Frame
+     Remove this if you use the .htaccess -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>{{=response.title or request.application}}</title>
+
+    <!-- http://dev.w3.org/html5/markup/meta.name.html -->
+    <meta name="application-name" content="{{=request.application}}" />
+
+    <!-- Speaking of Google, don't forget to set your site up:
+     http://google.com/webmasters -->
+    <meta name="google-site-verification" content="" />
+
+    <!--  Mobile Viewport Fix
+      j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag
+      device-width: Occupy full width of the screen in its current orientation
+      initial-scale = 1.0 retains dimensions instead of zooming out if page height > device height
+      maximum-scale = 1.0 retains dimensions instead of zooming in if page width < device width
+      -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root of your domain and delete these references -->
+    <link rel="shortcut icon" href="{{=URL('static','favicon.ico')}}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{{=URL('static','favicon.png')}}">
+
+    <!-- For the less-enabled mobile browsers like Opera Mini -->
+    <link rel="stylesheet" href="{{=URL('static','plugin_jqmobile/jquery.mobile-1.3.1.min.css')}}">
+
+    <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
+    <script src="{{=URL('static','js/modernizr.custom.js')}}"></script!>
+
+    {{include 'web2py_ajax.html'}}
+
+    <script type="text/javascript">
+    //run this script after jQuery loads, but before jQuery Mobile loads
+
+//customize jQuery Mobile to let IE7+ in (Mobile IE)
+$(document).bind("mobileinit", function(){
+  $.extend(  $.mobile , {
+
+  //extend gradeA qualifier to include IE7+
+    gradeA: function(){
+         //IE version check by James Padolsey, modified by jdalton - from http://gist.github.com/527683
+                 var ie = (function() {
+                     var v = 3, div = document.createElement('div'), a = div.all || [];
+                     while (div.innerHTML = '<!--[if gt IE '+(++v)+']><br><![endif]-->', a[0]);
+                     return v > 4 ? v : !v;
+                 }());
+
+         //must either support media queries or be IE7+
+         return $.support.mediaquery || (ie && ie >= 7);
+    }
+  });
+});
+    </script>
+
+    <script src="{{=URL('static','plugin_jqmobile/jquery.mobile-1.3.1.min.js')}}"></script>
+
+    <style>
+      .error { color: red; }
+    </style>
+  </head>
+
+  <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+  <!--[if lt IE 7 ]> <body class="ie6"> <![endif]-->
+  <!--[if IE 7 ]>    <body class="ie7"> <![endif]-->
+  <!--[if IE 8 ]>    <body class="ie8"> <![endif]-->
+  <!--[if IE 9 ]>    <body class="ie9"> <![endif]-->
+  <!--[if (gt IE 9)|!(IE)]><!--> <body> <!--<![endif]-->
+
+    <div data-role="page">
+      <div data-role="header">
+	<h1>{{=response.title}}</h1>
+	{{block header}}
+	{{if 'auth' in globals():}}
+	{{if not auth.user:}}
+	<a rel="external" href="{{=URL('default','user',args='login')}}" data-icon="login" class="ui-btn-left">Login</a>
+	{{else:}}
+	<a rel="external" href="{{=URL('default','user',args='logout')}}" data-icon="logout" class="ui-btn-left">Logout</a>
+	{{pass}}
+	{{pass}}
+	<a rel="external" href="{{=URL('default','index')}}" data-icon="home" class="ui-btn-right">{{=T("Home")}}</a>
+	{{end}}
+      </div>
+      <div data-role="content">
+	{{if response.flash:}}<div class="ui-body ui-body-e">{{=response.flash}}</div>{{pass}}
+	{{if response.menu:}}
+	<ul data-role="listview" data-inset="true">
+	  <li data-role='list-divider'>{{=T("Main Menu")}}</li>
+	  {{for _ in response.menu:}}
+	  <li><a href="{{=_[2]}}">{{=_[0]}}</a></li>
+	  {{pass}}
+	</ul>
+	{{pass}}
+	{{include}}
+      </div>
+      <div data-role="footer">
+	{{block footer}}
+	powered by web2py - @{{=request.now.year}}
+	{{end}}
+      </div>
+    </div>
+
+
+    <!--[if lt IE 7 ]>
+    <script src="{{=URL('static','plugin_jqmobile/dd_belatedpng.js')}}"></script>
+    <script> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
+    <![endif]-->
+
+  </body>
+</html>
+

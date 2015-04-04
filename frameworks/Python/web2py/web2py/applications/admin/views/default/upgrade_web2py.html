@@ -1,0 +1,17 @@
+{{extend 'layout.html'}}
+{{
+dlg = dialog
+smt_button = dlg.element(_type="submit")
+smt_button['_class'] = 'btn'
+smt_button['_style'] = 'margin-right:4px;'
+ccl_button = dlg.element(_type="button")
+ccl_button['_class'] = 'btn'
+}}
+{{block sectionclass}}upgrade{{end}}
+<!-- begin "shell" block -->
+<h2>{{=T('web2py upgrade')}}</h2>
+<p class="center"><div class="alert"><strong class="att">{{=T('ATTENTION:')}}</strong> {{=T('This is an experimental feature and it needs more testing. If you decide to upgrade you do it at your own risk')}}<br />
+{{=T('If start the upgrade, be patient, it may take a while to download')}}</p></div>
+<div class="center">
+{{=dialog}}
+</div>

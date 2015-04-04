@@ -1,0 +1,66 @@
+/* TODO rename this file as web2py-editor.css */
+/* Fullscreen */
+.CodeMirror-fullscreen {
+	z-index: 1030;
+}
+.CodeMirror {
+    border-top: 1px solid #ddd;
+    /*border-left: 1px solid #ddd;*/
+    border-bottom: 1px solid #ddd;
+}
+
+/* BREAKPOINTS */
+
+.breakpoints {width: .8em;}
+.breakpoint { color: #822; }
+
+/* Trailing Whitespace */
+
+.cm-trailingspace {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QUXCToH00Y1UgAAACFJREFUCNdjPMDBUc/AwNDAAAFMTAwMDA0OP34wQgX/AQBYgwYEx4f9lQAAAABJRU5ErkJggg==);
+	background-position: bottom left;
+	background-repeat: repeat-x;
+}
+
+/* Close button on tab*/
+.nav-tabs li a > .close {
+    font-size: 18px;
+    padding-left: 5px;
+    float: right;
+    margin-right: -10px;
+    padding-right: 5px;
+}
+
+.nav-tabs>li>a {
+    overflow: hidden;
+    white-space: nowrap;
+    word-wrap: normal;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+/*.nav-tabs>li {
+    min-width: 100px;
+}*/
+
+#windows_divs > div {
+    position: fixed;
+    height: 30%;
+    left: 0;
+    background: white;
+    right: 0;
+    bottom: 41px;
+    z-index: 1030;
+    overflow: inherit;
+    border-top: 1px solid #ddd;
+}
+
+#editor_main {
+    margin-top:40px;
+    margin-bottom:40px;
+}
+
+#editform {
+    margin-bottom: 0px;
+}
+

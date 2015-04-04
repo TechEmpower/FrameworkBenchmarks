@@ -1,0 +1,313 @@
+/** these MUST stay **/
+a {text-decoration:none; white-space:nowrap}
+a:hover {text-decoration:underline}
+a.button {text-decoration:none}
+h1,h2,h3,h4,h5,h6 {margin:0.5em 0 0.25em 0; display:block;
+  font-family:Helvetica}
+h1 {font-size:4.00em}
+h2 {font-size:3.00em}
+h3 {font-size:2.00em}
+h4 {font-size:1.50em}
+h5 {font-size:1.25em}
+h6 {font-size:1.12em}
+th,label {font-weight:bold; white-space:nowrap;}
+td,th {text-align:left; padding:2px 5px 2px 5px}
+th {vertical-align:middle; border-right:1px solid white}
+td {vertical-align:top}
+form table tr td label {text-align:left}
+p,table,ol,ul {padding:0; margin: 0.75em 0}
+p {text-align:justify}
+ol, ul {list-style-position:outside; margin-left:2em}
+li {margin-bottom:0.5em}
+span,input,select,textarea,button,label,a {display:inline}
+img {border:0}
+blockquote,blockquote p,p blockquote {
+  font-style:italic; margin:0.5em 30px 0.5em 30px; font-size:0.9em}
+i,em {font-style:italic}
+strong {font-weight:bold}
+small {font-size:0.8em}
+code {font-family:Courier}
+textarea {width:100%}
+video {width:400px}
+audio {width:200px}
+[type="text"], [type="password"], select {
+  margin-right: 5px; width: 300px;
+}
+.hidden {display:none;visibility:visible}
+.right {float:right; text-align:right}
+.left {float:left; text-align:left}
+.center {width:100%; text-align:center; vertical-align:middle}
+/** end **/
+
+/* Sticky footer begin */
+
+.main {
+  padding:20px 0 50px 0;
+}
+
+.footer,.push {
+  height:6em;
+  padding:1em 0;
+  clear:both;
+}
+
+.footer-content {position:relative; bottom:-4em; width:100%}
+
+.auth_navbar {
+    white-space:nowrap;
+}
+
+/* Sticky footer end */
+
+.footer {
+    border-top:1px #DEDEDE solid;
+}
+.header {
+        /* background:<fill here for header image>; */
+}
+
+
+fieldset {padding:16px; border-top:1px #DEDEDE solid}
+fieldset legend {text-transform:uppercase; font-weight:bold; padding:4px 16px 4px 16px; background:#f1f1f1}
+
+/* fix ie problem with menu */
+
+td.w2p_fw {padding-bottom:1px}
+td.w2p_fl,td.w2p_fw,td.w2p_fc {vertical-align:top}
+td.w2p_fl {text-align:left}
+td.w2p_fl, td.w2p_fw {padding-right:7px}
+td.w2p_fl,td.w2p_fc {padding-top:4px}
+div.w2p_export_menu {margin:5px 0}
+div.w2p_export_menu a, div.w2p_wiki_tags a, div.w2p_cloud a {margin-left:5px; padding:2px 5px; background-color:#f1f1f1; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;}
+
+/* tr#submit_record__row {border-top:1px solid #E5E5E5} */
+#submit_record__row td {padding-top:.5em}
+
+/* Fix */
+#auth_user_remember__row label {display:inline}
+#web2py_user_form td {vertical-align:top}
+
+/*********** web2py specific ***********/
+div.flash {
+    font-weight:bold;
+    display:none;
+    position:fixed;
+    padding:10px;
+    top:48px;
+    right:250px;
+    min-width:280px;
+    opacity:0.95;
+    margin:0px 0px 10px 10px;
+    vertical-align:middle;
+    cursor:pointer;
+    color:#fff;
+    background-color:#000;
+    border:2px solid #fff;
+    border-radius:8px;
+    -o-border-radius: 8px;
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;
+    background-image: -webkit-linear-gradient(top,#222,#000);
+    background-image: -o-linear-gradient(top,#222,#000);
+    background-image: -moz-linear-gradient(90deg, #222, #000);
+    background-image: linear-gradient(top,#222,#000);
+    background-repeat: repeat-x;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    z-index:2000;
+}
+
+div.flash #closeflash{color:inherit; float:right; margin-left:15px;}
+.ie-lte7  div.flash #closeflash
+{color:expression(this.parentNode.currentStyle['color']);float:none;position:absolute;right:4px;}
+
+div.flash:hover { opacity:0.25; }
+
+div.error_wrapper {display:block}
+div.error {
+    color:red;
+    padding:5px;
+    display:inline-block;
+}
+
+.topbar {
+    padding:10px 0;
+    width:100%;
+    color:#959595;
+    vertical-align:middle;
+    padding:auto;
+    background-image:-khtml-gradient(linear,left top,left bottom,from(#333333),to(#222222));
+    background-image:-moz-linear-gradient(top,#333333,#222222);
+    background-image:-ms-linear-gradient(top,#333333,#222222);
+    background-image:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#333333),color-stop(100%,#222222));
+    background-image:-webkit-linear-gradient(top,#333333,#222222);
+    background-image:-o-linear-gradient(top,#333333,#222222);
+    background-image:linear-gradient(top,#333333,#222222);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#333333',endColorstr='#222222',GradientType=0);
+    -webkit-box-shadow:0 1px 3px rgba(0,0,0,0.25),inset 0 -1px 0 rgba(0,0,0,0.1);
+    -moz-box-shadow:0 1px 3px rgba(0,0,0,0.25),inset 0 -1px 0 rgba(0,0,0,0.1);
+    box-shadow:0 1px 3px rgba(0,0,0,0.25),inset 0 -1px 0 rgba(0,0,0,0.1);
+}
+
+.topbar a {
+    color:#e1e1e1;
+}
+
+#navbar {float:right; padding:5px; /* same as superfish */}
+
+.statusbar {
+    background-color:#F5F5F5;
+    margin-top:1em;
+    margin-bottom:1em;
+    padding:.5em 1em;
+    border:1px solid #ddd;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+}
+
+.breadcrumbs {float:left}
+
+.copyright {float:left}
+#poweredBy {float:right}
+
+/* #MEDIA QUERIES SECTION */
+
+/*
+*Grid
+*
+* The default style for SQLFORM.grid even using jquery-iu or another ui framework
+* will look better with the declarations below
+* if needed to remove base.css consider keeping these following lines in some css file.
+*/
+/* .web2py_table {border:1px solid #ccc} */
+.web2py_paginator {}
+.web2py_grid {width:100%}
+.web2py_grid table {width:100%}
+.web2py_grid tbody td {padding:2px 5px 2px 5px; vertical-align: middle;}
+.web2py_grid .web2py_form td {vertical-align: top;}
+
+.web2py_grid thead th,.web2py_grid tfoot td {
+    background-color:#EAEAEA;
+    padding:10px 5px 10px 5px;
+}
+
+.web2py_grid tr.odd {background-color:#F9F9F9}
+.web2py_grid tr:hover {background-color:#F5F5F5}
+
+/*
+.web2py_breadcrumbs a {
+    line-height:20px; margin-right:5px; display:inline-block;
+    padding:3px 5px 3px 5px;
+    font-family:'lucida grande',tahoma,verdana,arial,sans-serif;
+    color:#3C3C3D;
+    text-shadow:1px 1px 0 #FFFFFF;
+    white-space:nowrap; overflow:visible; cursor:pointer;
+    background:#ECECEC;
+    border:1px solid #CACACA;
+    -webkit-border-radius:2px; -moz-border-radius:2px;
+    -webkit-background-clip:padding-box; border-radius:2px;
+    outline:none; position:relative; zoom:1; *display:inline;
+}
+*/
+
+.web2py_console form {
+    width: 100%;
+    display: inline;
+    vertical-align: middle;
+    margin: 0 0 0 5px;
+}
+
+.web2py_console form select {
+    margin:0;
+}
+
+.web2py_search_actions {
+    float:left;
+    text-align:left;
+}
+
+.web2py_grid .row_buttons {
+    min-height:25px;
+    vertical-align:middle;
+}
+.web2py_grid .row_buttons a {
+    margin:3px;
+}
+
+.web2py_search_actions {
+    width:100%;
+}
+
+.web2py_grid .row_buttons a,
+.web2py_paginator ul li a,
+.web2py_search_actions a,
+.web2py_console input[type=submit],
+.web2py_console input[type=button],
+.web2py_console button {
+    line-height:20px;
+    margin-right:2px; display:inline-block;
+    padding:3px 5px 3px 5px;
+}
+
+.web2py_counter {
+    margin-top:5px;
+    margin-right:2px;
+    width:35%;
+    float:right;
+    text-align:right;
+}
+
+/*Fix firefox problem*/
+.web2py_table {clear:both; display:block}
+
+.web2py_paginator {
+    padding:5px;
+    text-align:right;
+    background-color:#f2f2f2;
+
+}
+.web2py_paginator ul {
+    list-style-type:none;
+    margin:0px;
+    padding:0px;
+}
+
+.web2py_paginator ul li {
+    display:inline;
+}
+
+.web2py_paginator .current {
+    font-weight:bold;
+}
+
+.web2py_breadcrumbs ul {
+    list-style:none;
+    margin-bottom:18px;
+}
+
+li.w2p_grid_breadcrumb_elem {
+    display:inline-block;
+}
+
+.web2py_console form { vertical-align: middle; }
+.web2py_console input, .web2py_console select,
+.web2py_console a { margin: 2px; }
+
+
+#wiki_page_body {
+   width: 600px;
+   height: auto;
+   min-height: 400px;
+}
+
+/* fix some IE problems */
+
+.ie-lte7 .topbar .container {z-index:2}
+.ie-lte8 div.flash{ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#222222', endColorstr='#000000', GradientType=0 ); }
+.ie-lte8 div.flash:hover {filter:alpha(opacity=25);}
+.ie9 #w2p_query_panel {padding-bottom:2px}
+
+.web2py_console .form-control {width: 20%; display: inline;}
+.web2py_console #w2p_keywords {width: 50%;}
+.web2py_search_actions a, .web2py_console input[type=submit], .web2py_console input[type=button], .web2py_console button { padding: 6px 12px; }

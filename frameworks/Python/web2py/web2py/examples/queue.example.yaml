@@ -1,0 +1,8 @@
+#  To configure Google App Engine task queues, copy this file to queue.yaml
+#  and edit as required
+#  See http://code.google.com/appengine/docs/python/config/queue.html
+
+queue:
+- name: default
+  rate: 20/m
+  bucket_size: 1

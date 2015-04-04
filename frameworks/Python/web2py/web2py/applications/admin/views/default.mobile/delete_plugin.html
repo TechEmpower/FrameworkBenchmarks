@@ -1,0 +1,10 @@
+{{extend 'default.mobile/layout.html'}}
+
+{{block sectionclass}}delete_plugin{{end}}
+
+<div>
+<h2>{{=T('Are you sure you want to delete plugin "%s"?', plugin)}}</h2>
+<p>{{=FORM(INPUT(_type='submit',_name='nodelete',_value=T('NO')))}}</p>
+<p>{{=FORM(INPUT(_type='submit',_name='delete',_value=T('YES')))}}</p>
+</div>
+

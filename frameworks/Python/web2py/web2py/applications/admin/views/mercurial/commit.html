@@ -1,0 +1,32 @@
+{{extend 'layout.html'}}
+{{import time}}
+
+<h2>{{=T.M("Mercurial Version Control System Interface[[NEWLINE]]for application '%s'", request.args[0])}}</h2>
+
+<h3>{{=T('Commit form')}}</h3>
+{{=form}}
+
+{{if repo['.'].rev()>=0:}}
+<h3>{{=T('Last Revision')}}</h3>
+<table>
+<tr><td>{{=T('Revision:')}}</td><td>{{=repo['.'].rev()}}</td></tr>
+<tr><td>{{=T('Node:')}}</td><td>{{=repo['.']}}</td></tr>
+<tr><td>{{=T('Created by:')}}</td><td>{{=repo['.'].user()}}</td></tr>
+<tr><td>{{=T('Created on:')}}</td><td>{{=time.ctime(repo['.'].date()[0])}}</td></tr>
+<tr><td>{{=T('Description:')}}</td><td>{{=repo['.'].description()}}</td></tr>
+</table>
+
+<h3>{{=T('Past revisions')}}</h3>
+<div class="changes">
+  {{=changes}}
+</div>
+
+{{if files:}}
+<h3>{{=T('Committed files')}}</h3>
+<div class="files">
+{{=files}}
+</div>
+{{pass}}
+
+{{pass}}
+

@@ -1,0 +1,20 @@
+{{extend 'layout.html'}}
+{{
+# add bootstrap class to form
+form['_class']='span4 well well-small'
+# change form.custom.begin
+form.custom.begin=XML("<%s %s>" % (form.tag,form._xml()[0]))
+# new form buttons
+smt = form.element('input',_type='submit')
+smt['_class']='btn'
+form.element('input[type=submit]',replace=lambda button: DIV(button,_class="controls-inline"))
+}}
+<h2>{{=T('Bulk Student Registration').capitalize()}}</h2>
+<div id="web2py_user_form">
+{{=form.custom.begin}}
+{{for e in form.components[0]:}}
+  {{= e[0][0]}}
+  {{= e[1][0]}}
+{{pass}}
+{{=form.custom.end}}
+</div>

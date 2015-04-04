@@ -1,0 +1,14 @@
+{{extend 'default.mobile/layout.html'}}
+
+{{block sectionclass}}upgrade{{end}}
+
+<h2>{{=T('web2py downgrade')}}</h2>
+
+<p><strong>{{=T('ATTENTION:')}}</strong> {{=T('This is an experimental feature and it needs more testing. If you decide to downgrade you do it at your own risk')}}<br />
+{{=T('If start the downgrade, be patient, it may take a while to rollback')}}</p>
+
+<div>
+{{=FORM(INPUT(_type='submit',_name='nodowngrade',_value=T('Cancel')), _class='inline')}}
+{{=FORM(INPUT(_type='submit',_name='downgrade',_value=T('Downgrade')), _class='inline')}}
+</div>
+

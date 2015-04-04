@@ -1,0 +1,3 @@
+This folder contains example handlers. 
+They must be copied to the web2py root folder in order to work properly.
+They should not be used in their current location.

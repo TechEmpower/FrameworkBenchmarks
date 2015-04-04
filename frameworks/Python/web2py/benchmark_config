@@ -1,0 +1,22 @@
+{
+  "framework": "web2py",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "web2py",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "web2Py",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "web2py",
+      "notes": "CPython 2.7"
+    } 
+  }]
+}

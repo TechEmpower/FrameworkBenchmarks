@@ -1,0 +1,21 @@
+{{extend 'layout.html'}}
+{{=H3("Available plugins")}}
+{{=P("Source: web2pyslices")}}
+{{articles = []}}
+{{for article in plugins:}}
+{{screenshots = [A(" ", T("Screenshot %s") % (x+1), " ", _href=item) for (x, item) in enumerate(article["package_data"]["screenshots"])]}}
+{{articles.append(TR(TD(H5(article["article"]["title"]),
+button(URL(c="default", f="install_plugin", args=[app,], vars={"source": article["package_data"]["download"], "plugin": article["article"]["title"]}), T("Install")),
+BR(),
+IMG(_src="http://www.web2pyslices.com/download/%s" % article["article"]["thumbnail"], _style="margin-top: 1em;"), _style="width: 20em;"),
+TD(article["article"]["description"], BR(),
+A(T("Plugin page"), _href="http://www.web2pyslices.com/slice/show/%s/" % article["article"]["id"]), " | ",
+A(T("Demo"), _href=article["package_data"]["demo"]), " | ",
+A(T("Docs"), _href=article["package_data"]["documentation"]), " | ",
+A(T("Repository (%s)") % article["package_data"]["repository_brand"], _href=article["package_data"]["repository_page"]), " | ",
+A(T("License:"), " ", (article["package_data"]["license_type"] or "").upper(), " ", T("(version %s)") % article["package_data"]["license_version"] if article["package_data"]["license_version"] else "", _href=article["package_data"]["license_url"]), " | " if screenshots else "", *screenshots, _style="width: 40em;"))
+)
+}}
+{{pass}}
+{{=TABLE(*articles)}}
+

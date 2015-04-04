@@ -1,0 +1,137 @@
+{{extend 'layout.html'}}
+{{block sectionclass}}debug{{end}}
+{{
+frm_trs = form.elements('tr')
+    tbl_rows = []
+    for frm_tr in frm_trs:
+        if frm_tr['_id'] != 'submit_record__row':
+            fld_label = frm_tr.element('td.w2p_fl')
+            fld_widget = frm_tr.element('td.w2p_fw')[0]
+            fld_comment = frm_tr.element('td.w2p_fc')[0]
+            lbls = fld_label.elements('label')
+            lbl = ''
+            if len(lbls) > 0:
+                lbl = fld_label.elements('label')[0]
+                lbl['_class'] = 'control-label'
+            pass
+            if fld_widget['_type'] == 'checkbox':
+                fld_widget = LABEL(fld_widget, _class='checkbox')
+            else:
+                fld_widget = CAT(fld_widget, SPAN('', _class='help-inline'))
+            pass
+            if isinstance(fld_widget, SPAN):
+                fld_widget['_role'] = 'asinput'
+            pass
+            tbl_row = DIV(lbl, DIV(fld_widget,
+                                   TAG['SMALL'](fld_comment, 
+                                                _class='help-block'),
+                                   _class='controls'), _class='control-group')
+            tbl_rows.append(tbl_row)
+        else:
+            smt_btn = frm_tr.element('td.w2p_fw')
+            btn = smt_btn.elements('input')[0]
+            btn['_class'] = 'btn btn-primary'
+            tbl_rows.append(DIV(btn, _class='controls'))
+        pass
+    pass
+    form.element('table', replace=CAT(*tbl_rows))
+    form['_class'] = 'form-horizontal well well-small'
+    import re
+    if form.errors:
+        for key, value in form.errors.iteritems():
+            inpt = form.element(_name=key)
+            inpt_wrapper = inpt.parent
+            if inpt_wrapper['_class'] == None or \
+                                      not "controls" in inpt_wrapper['_class']:
+                inpt_wrapper = inpt_wrapper.parent
+            pass
+            inpt_wrapper.parent['_class'] += ' error'
+            inpt_wrapper.element(_class=re.compile('help-inline'),
+                            replace=lambda me:SPAN(value, _class=me['_class']))
+        pass
+        form.errors.clear()
+    pass
+}}
+<!-- begin "debug" block -->
+<div class="row-fluid">
+    <div class="applist f60 span7" style="padding-bottom:20px;">
+        <div class="applist_inner">
+            <h2>{{=T("Breakpoints")}}</h2>
+            <div class="errorform">
+                <form name="myform" method="post">
+                    <div class="tablebar">
+                        <input value="{{=T('delete all checked')}}" type="submit" class="btn"/>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12 errors">
+                            <table id="trck_breakpoints" class="sortable table table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th class="column1 cbcentered"><input type="checkbox" name="delete_all}" /></th>
+                                        <th class="column2">{{=T("Filename")}}</th>
+                                        <th class="column3">{{=T("Line Nr")}}</th>
+                                        <th>{{=T("Temporary")}}</th>
+                                        <th>{{=T("Condition")}}</th>
+                                        <th class="columnN">{{=T("Hits")}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{for bp in breakpoints:}}
+                                    <tr class="breakpoint">
+                                        <td class="cbcentered"><input type="checkbox" name="delete_{{=bp['number']}}" /></td>
+                                        <td>{{=bp['filename']}}</td>
+                                        <td>{{=A(bp['lineno'],_href="#",_onclick="collapse('%s');" % bp['number'])}}</td>
+                                        <td>{{=bp['temporary']}}</td>
+                                        <td>{{=bp['condition']}}</td>
+                                        <td>{{=bp['hits']}}</td>
+                                    </tr>
+                                    <tr id="{{=bp['number']}}" class="sourcecode traceback">
+                                        <td colspan="6">
+                                            <div class="ticket_code">
+                                            {{=CODE(open(bp['path']).read(), language='python', 
+                                                link=None, highlight_line=bp['lineno'], context_lines=10)}}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {{pass}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form><!-- /errorform -->
+            </div>
+        </div>
+    </div><!-- /applist -->
+    <div class="sidebar fl60 span5">
+        <div class="sidebar_inner controls" style="margin:0;">
+            <div class="box">
+                <h3>{{=T("Add breakpoint")}}</h3>
+                {{=form}}
+                <div class="row-fluid">
+                    <div class="help span12 alert alert-block alert-info">
+                        <ul class="unstyled">
+                            <li>{{=T("You can also set and remove breakpoint in the edit window, using the Toggle Breakpoint button")}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery('.sourcecode').hide();
+        jQuery("#trck_breakpoints thead tr th:first input[type=checkbox]").click(function() {
+            var checkedStatus = this.checked;
+            jQuery("#trck_breakpoints tbody tr td:first-child input[type=checkbox]").each(function() {
+                this.checked = checkedStatus;
+            });
+        });
+        jQuery("#trck_breakpoints tbody tr td:first-child input[type=checkbox]").change(function() {
+            var allchecked = jQuery("#trck_breakpoints tbody tr td:first-child input[type=checkbox]:checked").length == jQuery("#trck_breakpoints tbody tr td:first-child input[type=checkbox]").length;
+            jQuery("#trck_breakpoints thead tr th:first input[type=checkbox]").prop('checked', allchecked);
+        });
+    });
+</script>
+<!-- end "debug" block -->

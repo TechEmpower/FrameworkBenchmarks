@@ -1,0 +1,15 @@
+{{extend 'default.mobile/layout.html'}}
+{{
+frm = form
+smt_button = frm.element(_type="submit")
+smt_button['_class'] = 'btn'
+smt_button['_style'] = 'margin-right:4px;'
+ccl_button = frm.element(_type="button")
+ccl_button['_class'] = 'btn'
+}}
+<!-- begin "git_push" block -->
+<h2>{{=T('This will push changes to the remote repo for application "%s".', app)}}</h2>
+<center>
+{{=form}}
+</center>
+<!-- end "git_push" block -->

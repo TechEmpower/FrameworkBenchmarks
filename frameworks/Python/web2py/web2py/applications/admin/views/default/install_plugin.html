@@ -1,0 +1,9 @@
+{{extend 'layout.html'}}
+{{if True:}}
+  {{=P(T("Installation of %(plugin)s for %(app)s") % dict(plugin=plugin, app=app))}}
+  {{=H3(T("Are you sure?"))}}
+  {{form.custom.submit["_value"] = T("Yes")}}
+  {{=form}}
+{{pass}}
+{{=A(T("Back to the plugins list"), _href=URL(f="plugins", args=[app,]))}}
+{{=P("Note: this is an experimental feature; If you find problems using the automatic plugin installation, try uploading the installer directly from ", A(T("here"), _href=source))}}

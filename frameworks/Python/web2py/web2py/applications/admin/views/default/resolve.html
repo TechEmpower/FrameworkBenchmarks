@@ -1,0 +1,21 @@
+{{extend 'layout.html'}}
+{{block sectionclass}}resolve{{end}}
+<!-- begin "resolve" block -->
+<h2>{{=T('Resolve Conflict file')}} "{{=filename}}"</h2>
+<script>
+function plus() {jQuery('.plus').show(); jQuery('.minus').hide(); }
+function minus() {jQuery('.plus').hide(); jQuery('.minus').show(); }
+function all() {jQuery('.plus').show(); jQuery('.minus').show(); }
+</script>
+<div class="controls">
+<button class="btn" onclick="plus()">new</button>
+<button class="btn" onclick="minus()">old</button>
+<button class="btn" onclick="all()">all</button>
+</div>
+<div class="form">
+  <form action="{{=URL(r=request,args=request.args)}}" method="post">
+    {{=diff}}
+    <input class="btn" type="submit" name="merge" value="{{=T('merge')}}" /><br/>
+  </form>
+</div>
+<!-- end "resolve" block -->

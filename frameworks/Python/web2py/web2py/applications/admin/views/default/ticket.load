@@ -1,0 +1,130 @@
+{{block sectionclass}}ticket{{end}}
+
+<h2>{{=T('Error ticket')}} for "{{=app}}"</h2>
+<h3>{{=T('Ticket ID')}}</h3>
+<p>{{=ticket}}</p>
+{{if output:}}<h4>{{=output}}</h4>{{pass}}
+<h3>{{=T('Version')}}</h3>
+<table class="versions">
+  <tbody>
+    <tr>
+      <th>web2py&trade;</th>
+      <td>{{=myversion}}</td>
+    </tr>
+    <tr>
+      <th>Python</th>
+      <td>{{=snapshot.get('pyver','')}}</td>
+    </tr>
+  </tbody>
+</table>
+<h3>{{=T('Traceback')}}</h3>
+<div class="inspect">
+{{=traceback}}
+</div>
+
+{{if snapshot:}}
+{{try:}}
+
+    <!-- ERROR SNAPSHOT -->
+    
+    <h3>
+    {{=T('Error snapshot')}} 
+    <span class="tooltip">{{=helpicon()}} <span>{{=T('Detailed traceback description')}}</span></span>
+    </h3>
+    
+    <!-- SNAPSHOT LIST -->
+    
+    <div id="snapshot">
+    <!-- Exception details -->
+      <p class="exception_object inspect">
+      <code>{{=snapshot['etype']}}({{=snapshot['evalue']}})</code>
+      </p>
+      <p class="controls">
+      <a class="button" onclick="collapse('exception_inner');"><span>{{=T('inspect attributes')}}</span></a>
+      </p>
+      <div id="exception_inner" class="hide">
+        <div class="inspect">
+          <h5>{{=T("Exception instance attributes")}}</h5>
+          <table>
+            <tbody>
+              {{for k,v in snapshot['exception'].items():}}
+              <tr>
+                <th>{{=k}}</th>
+                <td>{{=v}}</td>
+              </tr>
+              {{pass}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- FRAMES -->
+    <div id="frames">
+    <h4>{{=T('Frames')}}</h4>
+    <ul>
+      {{for i, frame in enumerate(snapshot['frames']):}}
+      <li>
+        {{is_hidden = (i != len(snapshot['frames'])-1 and 'hide' or 'inspect')}}
+        <div class="framefile inspect controls">
+          <p>
+            <strong>File {{="%s in %s at line %s" % (frame['file'], frame['func'], frame['lnum'])}}</strong>
+            <a class="button tbbutton" onclick="collapse('{{="%s_code_inner" % i}}');"><span>{{=T("code")}}</span></a> 
+            <a class="button tbbutton" onclick="collapse('{{="%s_args_inner" % i}}');"><span>{{=T("arguments")}}</span></a> 
+            <a class="button tbbutton" onclick="collapse('{{="%s_vars_inner" % i}}');"><span>{{=T("variables")}}</span></a>
+          </p> 
+          <div id="{{="%s_args_inner" % i}}" class="{{=is_hidden}}"> 
+            <h5>Function argument list</h5>
+            <p>{{=frame['call']}}</p>
+          </div>
+          <div id="{{="%s_code_inner" % i}}" class="{{=is_hidden}}">
+            <h5>Code listing</h5>
+            {{if frame['lines']:}}
+            <pre>{{=CODE('\n'.join([x[1] for x in sorted(frame['lines'].items(),key=lambda x: x[0])]), 
+                    language='python', link=None, counter=min(frame['lines'].keys()), highlight_line=frame['lnum'])}}</pre>
+            {{pass}}
+          </div>
+          <div id="{{="%s_vars_inner" % i}}" class="{{=is_hidden}}">
+            <h5>Variables</h5>
+            <table>
+              <tbody>
+                {{for k,v in frame['dump'].items():}}
+                <tr>
+                  <th>{{=k}}</th>
+                  <td>{{=v}}</td>
+                </tr>
+                {{pass}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </li>
+    {{pass}}
+    </ul>
+    </div>
+
+    <!-- VIEW ENVIRONMENT -->
+    <div class="viewenv">
+      <h4>Context</h4>
+        <p class="controls">
+        <a class="button" onclick="jQuery('#locals').slideToggle()"><span>{{=T('locals')}}</span></a>
+        <a class="button" onclick="jQuery('#request').slideToggle()"><span>{{=T('request')}}</span></a>
+        <a class="button" onclick="jQuery('#session').slideToggle()"><span>{{=T('session')}}</span></a>
+        <a class="button" onclick="jQuery('#response').slideToggle()"><span>{{=T('response')}}</span></a>
+        </p>
+        <div class="hide inspect" id="locals"><h6>locals</h6>{{=BEAUTIFY(snapshot['locals'])}}</div>
+        <div class="hide inspect" id="request"><h6>request</h6>{{=BEAUTIFY(snapshot['request'])}}</div>
+        <div class="hide inspect" id="session"><h6>session</h6>{{=BEAUTIFY(snapshot['session'])}}</div>
+        <div class="hide inspect" id="response"><h6>response</h6>{{=BEAUTIFY(snapshot['response'])}}</div>
+    </div>
+{{except Exception, e:}}
+    <!-- this should not happen, just in case... (cannot output normal hmtl as we don't know current open tags) -->
+    {{import traceback;tb=traceback.format_exc().replace("\n","\\n") }}
+    <script language='javascript'>alert("Exception during snapshot rendering: {{=tb}} ");</script>
+{{pass}}    
+{{pass}}
+
+<div class="errorsource">
+  <h3>In file: {{=layer}}</h3>
+  {{=CODE(code.replace('\r',''),language='python',link='/examples/global/vars/')}}
+</div>

@@ -1,0 +1,124 @@
+{{extend 'layout.html'}}
+{{import os, stat, time}}
+{{block sectionclass}}errors{{end}}
+<!-- begin "errors" block -->
+{{if db_ready['status'] == False:
+    switchbutton = A(SPAN(T("switch to : db")), _href=db_ready['errlink'], _class="button unavailable btn btn-danger", _title="%s" % (db_ready['errmessage']))
+else:
+    switchbutton = A(SPAN(T("switch to : db")), _href=URL(args=[app, 'dbnew']), _class="button btn")
+pass}}
+<h2>{{=T('Error logs for "%(app)s"',dict(app=app))}}</h2>
+<div class="errorform">
+    <form name="myform" method="post">
+        {{ if 'new' in method: }}
+        {{base_url = 'db' in method and 'ticketdb' or 'ticket' }}
+        <p class="controls row-fluid">
+            <div class="controls controls-row">
+                {{if 'db' in method:}}
+                <span class="uneditable-input">{{=T('source : db')}}</span>
+                <a class="button btn" href="{{=URL(args=[app, 'new'])}}"><span>{{=T('switch to : filesystem')}}</span></a>
+                <a class="button btn" href="{{=URL(args=[app, 'dbold'])}}"><span>{{=T('lists by ticket')}}</span></a>
+                {{else:}}
+                <span class="uneditable-input">{{=T('source : filesystem')}}</span>
+                {{=switchbutton}}
+                <a class="button btn" href="{{=URL(args=[app, 'old'])}}"><span>{{=T('lists by ticket')}}</span></a>
+                {{pass}}
+            </div>
+        </p>
+        <div class="tablebar">
+            <input value="{{=T('delete all checked')}}" type="submit" class="btn"/>
+            <span class="help label label-info">{{=T('Click row to expand traceback')}}</span>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">
+                <table id="trck_errors" class="sortable table table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="column1 cbcentered"><input type="checkbox" name="delete_all}" /></th>
+                            <th class="column2">{{=T("Count")}}</th>
+                            <th class="column3">{{=T("File")}}</th>
+                            <th>{{=T("Error")}}</th>
+                            <th class="columnN"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{for e in errors:}}
+                        <tr class="error_ticket">
+                            <td class="cbcentered"><input type="checkbox" name="delete_{{=e['hash']}}" /></td>
+                            <td>{{=e['count']}}</td>
+                            <td>{{=e['causer']}}</td>
+                            <td>{{=A(e['last_line'],_href="#",_onclick="collapse('%s');return false;"%e['hash'])}}</td>
+                            <td>+&nbsp;{{=A(T('details'),_href=URL(base_url,args=[app,e['ticket']]))}}</td>
+                        </tr>
+                        <tr id="{{=e['hash']}}" class="traceback">
+                            <td colspan="5">
+                                <div class="ticket_code">
+                                    {{=CODE(e['pickel']['traceback'])}}
+                                </div>
+                            </td>
+                        </tr>
+                        {{pass}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{ else: }}
+        <p class="controls row-fluid">
+            <div class="controls controls-row">
+                {{if 'db' in method:}}
+                <span class="uneditable-input">{{=T('source : db')}}</span>
+                <a class="button btn" href="{{=URL(args=[app, 'old'])}}"><span>{{=T('switch to : filesystem')}}</span></a>
+                <a class="button btn" href="{{=URL(args=[app, 'dbnew'])}}"><span>{{=T('lists by exception')}}</span></a>
+                {{else:}}
+                <span class="uneditable-input">{{=T('source : filesystem')}}</span>
+                {{=switchbutton}}
+                <a class="button btn" href="{{=URL(args=[app, 'new'])}}"><span>{{=T('lists by exception')}}</span></a>
+                {{pass}}
+            </div>
+        </p>
+        <div class="tablebar">
+            <input value="{{=T('delete all checked')}}" type="submit" class="btn"/>
+            <span class="help label label-info">{{=T('Click row to expand traceback')}}</span>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">
+                <table id="trck_errors" class="sortable table table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="column1 cbcentered"><input type="checkbox" name="delete_all}" /></th>
+                            <th>{{=T("Ticket")}}</th>
+                            <th class="columnN1">{{=T("Date and Time")}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{for ticket in tickets:}}
+                        <tr>
+                            <td class="cbcentered"><input type="checkbox" name="delete_{{=ticket}}"/></td>
+                            {{if 'db' in method:}}
+                            <td><a href="{{=URL('ticketdb',args=[app,ticket])}}">{{=ticket}}</a></td>
+                            <td>{{=time.strftime('%Y-%m-%d %H:%M:%S',times[ticket].timetuple())}}</td>
+                            {{else:}}
+                            <td><a href="{{=URL('ticket',args=[app,ticket])}}">{{=ticket}}</a></td>
+                            <td>{{=time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(os.stat(os.path.join(request.folder,'../%s/errors/%s' % (app,ticket)))[stat.ST_CTIME]))}}</td>
+                            {{pass}}
+                        </tr>
+                        {{pass}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{ pass }}
+    </form><!-- /errorform -->
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery('.traceback').hide();
+        jQuery("#trck_errors thead tr th:first input[type=checkbox]").click(function() {
+            var checkedStatus = this.checked;
+            jQuery("#trck_errors tbody tr td:first-child input[type=checkbox]").each(function() {
+                this.checked = checkedStatus;
+            });
+        });
+    });
+</script>
+<!-- end "errors" block -->

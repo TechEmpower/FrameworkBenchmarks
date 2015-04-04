@@ -1,0 +1,11 @@
+{{
+import os
+from gluon.contrib.generics import pdf_from_html
+filename = '%s/%s.html' % (request.controller,request.function)
+if os.path.exists(os.path.join(request.folder,'views',filename)):
+   html=response.render(filename)
+else:
+   html=BODY(BEAUTIFY(response._vars)).xml()
+pass
+=pdf_from_html(html)
+}}

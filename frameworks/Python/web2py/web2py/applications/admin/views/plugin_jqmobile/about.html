@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>jQuery Mobile Plugin for web2py</title>
+    <style>
+      * {
+      border: 0; margin:0; padding: 0;
+      font-family: helvetica;
+      }
+      body {
+      background: url('{{=URL('static','plugin_jqmobile/images/iphone.jpg')}}') no-repeat white;
+      }
+      #back {
+      z-index: 1000;
+      padding: 10px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      }
+      iframe {
+      position: absolute;
+      margin-left: 320px;
+      margin-top: 110px;
+      width:340px;
+      height:550px;
+      overflow:hide;
+      z-index: 100;
+      }
+      tt { font-weight: bold}
+      ul { padding-left: 20px}
+      li { padding-bottom: 5px}
+      h1, h2, h3 {
+      padding: 0.5em 0 0.2em 0;
+      }
+      a, a:visited, a:hover { text-decoration: none; color: #6D95BD}
+      div#about {
+      position: absolute;
+      color: black;
+      padding-left: 820px;
+      padding-top: 110px;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe src="{{=URL('default','index',vars=dict(is_mobile='true'))}}"></iframe>
+    <div id="back"><a href="{{=URL('default','index',vars=dict(is_mobile='false'))}}">Back</a></div>
+    <div id="about">
+      <h1><a href="http://web2py.com">web2py</a> plugin</h1>
+      <h2>for <a href="http://jquerymobile.com/">jQuery Mobile</a></h2>
+      <p>Try click on a button on the left, it is a demo!</p>
+      <h3>License</h3>
+      MIT (same as jQuery Mobile)
+      <h3>Instructions</h3>
+      <ul>
+	<li><a href="/admin/default/pack_plugin/admin/jqmobile">Download</a>
+and install the plugin in a web2py app.</li>
+	<li>Replace extend <tt>"layout.html"</tt> with extend <tt>"plugin_jqmobile/layout.html"</tt> in all your views.</li>
+	<li>Only link pages that extend this layout.</li>
+	<li>Link external pages with <tt>&lt;a rel="external" ...&gt;</tt>.</li>
+	<li>Optional: make a different response.menu for each action.</li>
+      </ul>
+      <h3>Created by</h3>
+      <ul>
+	<li>Jason Blum</li>
+	<li>Timothy Stockman</li>
+	<li>Harkirat Singh</li>
+	<li>Massimo Di Pierro</li>
+      </ul>
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,18 @@
+<html>
+  <head>
+    {{response.files.append(URL('static','js/jquery.js'))}}
+    {{include 'web2py_ajax.html'}}
+  </head>
+  <body style="border:0; margin:0; padding:0;">
+    <div style="background: #aaaaaa; font-family:hevetica;font-size:9px">
+      URL: {{=URL(app,'default','index')}}
+      <button onclick="ajax('{{=URL('admin','toolbar','profiler')}}',[],'profiler_inner');jQuery('#profiler').slideDown()">profiler</button>
+      <div id="profiler" class="hidden">
+	<button onclick="jQuery('#profiler').slideUp()">close</button>
+	<pre id="profiler_inner">profiler info</pre>
+      </div>
+    </div>
+    <iframe style="border:0;" width="100%" height="100%" src="{{=URL(app,'default','index')}}"></iframe>
+  </body>
+</html>
+

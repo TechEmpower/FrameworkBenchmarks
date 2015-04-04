@@ -1,0 +1,11 @@
+<div class="btn-group" id='manage_sessions'>
+  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Saved session <span class="caret"></span></a>
+  <ul class="dropdown-menu" id="saved_sessions">
+    {{for name, files in editor_sessions.items():}}
+       <li><a href="" data-files='{{=files}}'>{{=name}}</a></li>
+    {{pass}}
+    <li class="divider"></li>
+    <li><a id="save_session" href="">Save current session</a></li>
+  </ul>
+</div>
+

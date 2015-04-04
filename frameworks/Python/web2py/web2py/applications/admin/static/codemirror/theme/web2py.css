@@ -1,0 +1,36 @@
+.cm-s-web2py span.cm-meta {color: #FF1717;}
+.cm-s-web2py span.cm-keyword { line-height: 1em; font-weight: bold; color: #7F0055; }
+.cm-s-web2py span.cm-atom {color: #219;}
+.cm-s-web2py span.cm-number {color: #164;}
+.cm-s-web2py span.cm-def {color: #00f;}
+.cm-s-web2py span.cm-variable {color: black;}
+.cm-s-web2py span.cm-variable-2 {color: #0000C0;}
+.cm-s-web2py span.cm-variable-3 {color: #0000C0;}
+.cm-s-web2py span.cm-property {color: black;}
+.cm-s-web2py span.cm-operator {color: black;}
+.cm-s-web2py span.cm-comment {color: #3F7F5F;}
+.cm-s-web2py span.cm-string {color: #2A00FF;}
+.cm-s-web2py span.cm-string-2 {color: #f50;}
+.cm-s-web2py span.cm-error {color: #f00;}
+.cm-s-web2py span.cm-qualifier {color: #555;}
+.cm-s-web2py span.cm-builtin {color: #30a;}
+.cm-s-web2py span.cm-bracket {color: #cc7;}
+.cm-s-web2py span.cm-tag {color: #170;}
+.cm-s-web2py span.cm-attribute {color: #00c;}
+.cm-s-web2py span.cm-link {color: #219;}
+
+.cm-s-web2py .CodeMirror-matchingbracket {
+	border:1px solid grey;
+	color:black !important;;
+}
+
+/* Editor styling */
+
+.cm-s-web2py {
+	line-height: 1.40em;
+	font-family: Monaco, Menlo,"Andale Mono","lucida console","Courier New",monospace !important;
+	background: white;
+}
+
+
+.CodeMirror-activeline-background {background: #e8f2ff !important;}

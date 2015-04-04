@@ -1,0 +1,163 @@
+{{extend 'layout.html'}}
+{{
+#grid['_class'] = 'web2py_grid'
+if not request.args:
+	add_btn = grid.elements('div.web2py_console a.w2p_trap',replace=None)[0]
+	add_btn['_id'] = 'w2p_grid_addbtn'
+	add_btn['_class'] = 'w2p_trap btn'
+	qry_pnl_rows = grid.elements('div',_class="w2p_query_row hidden")
+	for qry_pnl_row in qry_pnl_rows:
+		qry_pnl_btn1 = qry_pnl_row.elements('input',_value="New",replace=None)[0]
+		qry_pnl_btn2 = qry_pnl_row.elements('input',_value="And",replace=None)[0]
+		qry_pnl_btn3 = qry_pnl_row.elements('input',_value="Or",replace=None)[0]
+		qry_pnl_btngrp = qry_pnl_row.elements('input',_value="Close",replace=lambda me:DIV(qry_pnl_btn1,qry_pnl_btn2,qry_pnl_btn3,me,_class="qry_pnl_btns"))
+	pass
+	qry_pnl = grid.elements('div#w2p_query_panel',replace=None)
+	csl_frm = grid.elements('div.web2py_console form')[0]
+	csl_frm['_class'] = 'form-inline'
+	csl_frm_search = grid.elements('#web2py_keywords',replace=lambda me:DIV(me,TAG['button'](T('Search'),_class='btn',_type='submit'),TAG['button'](T('Clear'),_class='btn',_type='button',_onclick='jQuery("#web2py_keywords").val("");'),_class="input-append"))
+	csl_frm_search_btn1 = grid.elements('input',_value="Search",replace=None)
+	csl_frm_search_btn2 = grid.elements('input',_value="Clear",replace=None)
+	new_console = grid.elements('div.web2py_console form',replace=lambda frm_csl:DIV(SPAN(add_btn,_class='span1'),SPAN(DIV(frm_csl,qry_pnl[0],_id='w2p_search-form'),_class='span5'),_class='row-fluid'))
+	w2p_grid_tbl = grid.element('table')
+	if w2p_grid_tbl:
+		w2p_grid_tbl['_class'] = 'table table-condensed table-hover table-bordered'
+		tbl_button_rows = grid.elements('td',_class="row_buttons")
+		for tbl_button_row in tbl_button_rows:
+			buttons = tbl_button_row.elements('a.w2p_trap')
+			for button in buttons:
+				button['_class'] = 'w2p_trap btn'
+			pass
+		pass
+		export_menu = grid.element('div.w2p_export_menu')
+		export_menu_links = export_menu.elements('a')
+		export_menu_items = []
+		for link in export_menu_links:
+			item = LI(link)
+			export_menu_items.append(item)
+		pass
+		new_export_menu = DIV(A(T('Exports:'),SPAN(_class='caret'),_href='#',_class='btn dropdown-toggle',**{'_data-toggle':"dropdown"}),UL(*export_menu_items,_class='dropdown-menu'),_class='w2p_export_menu btn-group pull-left')
+		grid_pagination = grid.element('div.web2py_paginator')
+		if grid_pagination:
+			export_menu = grid.element('div.w2p_export_menu',replace=None)
+			new_grid_pagination = grid.element('div.web2py_paginator',replace=lambda me:DIV(new_export_menu,me,_class='w2p_grid_bottom_bar'))
+			grid_pagination['_class'] = 'web2py_paginator pagination pagination-right'
+			grid_page_active = grid.element('li.current')
+			grid_page_active['_class'] = 'current active'
+		else:
+			new_grid_pagination = grid.element('div.w2p_export_menu',replace=DIV(new_export_menu))
+		pass
+		records_counter = grid.element('div.web2py_counter')
+		records_found = int(records_counter[0].partition('records')[0].strip())
+		paginate = 5 # TODO: get it from the controller 
+		pages = records_found/paginate
+		tot_pages = pages if records_found%paginate == 0 else pages+1
+		current_page = int(request.vars.page) if request.vars.page else 1
+		end_record = paginate*current_page if current_page < tot_pages else records_found
+		begin_record = 1 if current_page == 1 else (paginate*(current_page-1))+1
+		rec = "records" if records_found>1 else "record"
+		record_shown_in_the_page = T("Showing %s to %s of %s %s found")%(begin_record,end_record,records_found,rec)
+		new_record_counter = grid.element('div.web2py_counter',replace=DIV(record_shown_in_the_page,_class="web2py_counter span6 pull-right"))
+	pass
+elif request.args(0)=='new':
+	bck_btn = grid.element('div.web2py_grid span.leftarrow').parent
+	bck_btn['_id'] = 'w2p_grid_bckbtn'
+	bck_btn['_class'] = 'w2p_trap btn'
+	frm = grid.element('div.web2py_grid form')
+	frm['_class'] = 'web2py_form span4 well well-small'
+	
+	checkbox_lbl = frm.element('label',_for='auth_user_is_manager')
+	checkbox_inp = frm.element(_name='is_manager',replace=CAT())
+	checkbox_lbl[0] = checkbox_inp
+	checkbox_lbl[1] = 'Is Manager'
+	checkbox_lbl['_class'] = "checkbox"
+	
+	inp_smt = frm.element('input',_type='submit',replace=TAG['button'](T('Submit'),_type='submit',_class='btn'))
+	
+	new_form_flds = []
+	frm_trs = frm.elements('tr')
+	for tr in frm_trs:
+		label = tr[0][0]
+		input = tr[1][0]
+		help  = tr[2][0]
+		new_form_flds.append(label)
+		new_form_flds.append(input)
+		new_form_flds.append(help)
+	pass
+	new_frm_content = frm.element('table',replace=CAT(*new_form_flds))
+	new_frm = grid.element('div.web2py_grid form',replace=lambda me:DIV(me,_class='row-fluid'))
+elif request.args(0)=='view':
+	bck_btn = grid.element('div.web2py_grid span.leftarrow').parent
+	bck_btn['_id'] = 'w2p_grid_bckbtn'
+	bck_btn['_class'] = 'w2p_trap btn'
+	pen_btn = grid.element('div.web2py_grid span.pen').parent
+	pen_btn['_id'] = 'w2p_grid_penbtn'
+	pen_btn['_class'] = 'w2p_trap btn'
+	frm = grid.element('div.web2py_grid form')
+	frm['_class'] = 'web2py_form span4 well well-small'
+	
+	checkbox_lbl = frm.element('label',_for='auth_user_is_manager')
+	checkbox_inp = frm.element(_name='is_manager',replace=CAT())
+	checkbox_lbl[0] = checkbox_inp
+	checkbox_lbl[1] = 'Is Manager'
+	checkbox_lbl['_class'] = "checkbox"
+	
+	new_form_flds = []
+	frm_trs = frm.elements('tr')
+	for tr in frm_trs:
+		label = tr[0][0]
+		input = tr[1][0]
+		help  = tr[2][0]
+		new_form_flds.append(label)
+		if len(input) > 0 :
+			new_form_flds.append(SPAN(input,_class='uneditable-input'))
+		pass
+		new_form_flds.append(help)
+	pass
+	new_frm_content = frm.element('table',replace=CAT(*new_form_flds))
+	new_frm = grid.element('div.web2py_grid form',replace=lambda me:DIV(me,_class='row-fluid'))
+elif request.args(0)=='edit':
+	bck_btn = grid.element('div.web2py_grid span.leftarrow').parent
+	bck_btn['_id'] = 'w2p_grid_bckbtn'
+	bck_btn['_class'] = 'w2p_trap btn'
+	viw_btn = grid.element('div.web2py_grid span.magnifier').parent
+	viw_btn['_id'] = 'w2p_grid_viwbtn'
+	viw_btn['_class'] = 'w2p_trap btn'
+	frm = grid.element('div.web2py_grid form')
+	frm['_class'] = 'web2py_form span4 well well-small'
+	
+	checkbox_lbl = frm.element('label',_for='auth_user_is_manager')
+	checkbox_inp = frm.element(_name='is_manager',replace=CAT())
+	checkbox_lbl[0] = checkbox_inp
+	checkbox_lbl[1] = 'Is Manager'
+	checkbox_lbl['_class'] = "checkbox"
+	
+	checkbox1_lbl = frm.element('label',_for='delete_record')
+	checkbox1_inp = frm.element(_id='delete_record',replace=CAT())
+	checkbox1_lbl[0] = checkbox1_inp
+	checkbox1_lbl[1] = T('Check to delete')
+	checkbox1_lbl['_class'] = "checkbox"
+	
+	inp_smt = frm.element('input',_type='submit',replace=TAG['button'](T('Submit'),_type='submit',_class='btn'))
+	
+	id_input = frm.element(_id='auth_user_id')
+	id_input['_class'] = 'uneditable-input'
+	
+	new_form_flds = []
+	frm_trs = frm.elements('tr')
+	for tr in frm_trs:
+		label = tr[0][0]
+		input = tr[1][0]
+		help  = tr[2][0]
+		new_form_flds.append(label)
+		print label
+		new_form_flds.append(input)
+		new_form_flds.append(help)
+	pass
+	new_frm_content = frm.element('table',replace=CAT(*new_form_flds))
+	new_frm = grid.element('div.web2py_grid form',replace=lambda me:DIV(me,_class='row-fluid'))
+pass
+}}
+
+<h2>{{=T('Manage Admin Users/Students')}}</h2>
+{{=grid}}

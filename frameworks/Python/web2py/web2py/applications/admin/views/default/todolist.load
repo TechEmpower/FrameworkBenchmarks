@@ -1,0 +1,18 @@
+<div>
+<!--div class="page-header"-->
+    {{n_todo=reduce(lambda x,y: x + len(y['matches']), todo, 0)}}
+    <h4>{{="%s TODO in %s" % (n_todo, app)}}</h4>
+<!--/div-->
+<ul class="nav nav-list cm-s-web2py">
+    {{for pos_file, file in enumerate(todo):}}
+        <li onclick="collapse('{{=pos_file}}_matches');"><a ><i class='icon-chevron-right'></i>{{=file['filename']}} <span class='small'>({{=len(file['matches'])}} TODO)</span></a></li>
+        <li id="{{=pos_file}}_matches" style="display: none;"><ul class="nav nav-list">
+            {{for m in file['matches']:}}
+                <li><a href="{{=URL('edit', args=[app,file['dir'], file['filename']], vars={'lineno':m['lineno']}, extension="")}}" data-lineno="{{=m['lineno']-1}}" class="editor_filelink">
+                    <span class='cm-comment'>{{=m['text']}}</span>
+                </a></li>
+            {{pass}}
+        </ul></li>
+    {{pass}}
+</ul>
+</div>

@@ -1,0 +1,47 @@
+{{extend 'default.mobile/layout.html'}}
+{{import os, glob}}
+{{block sectionclass}}site{{end}}
+
+<h2>{{=T("Installed applications")}}</h2>
+
+<ul data-role="listview" data-inset="true">
+  {{for a in apps:}}
+  <li>
+    {{if a==request.application:}}
+    <h3>{{=a}} ({{=T('currently running')}})</h3>
+    {{else:}}
+    <h3>{{=T("Application")}} {{=a}}</h3>
+    {{if MULTI_USER_MODE and db.app(name=a):}}<p>created by {{="%(first_name)s %(last_name)s" % db.auth_user[db.app(name=a).owner]}}</p>{{pass}}
+    {{pass}}
+    <ul data-role="listview" data-inset="true">
+      {{if a!=request.application:}}
+      {{=LI(A(T('Goto'),_rel="external",_href=URL(a,'default','index')))}}
+      {{if not os.path.exists('applications/%s/compiled' % a):}}
+      {{=LI(A(T('Edit'),_href=URL('design',args=a)))}}
+      {{else:}}
+      {{=LI(A(T('appadmin'),_rel="external",_href=URL(a,'appadmin','index')))}}
+      {{pass}}
+      {{=LI(A(T('About'),_href=URL('about',args=a)))}}
+      {{pass}}
+      {{=LI(A(T('Errors'),_href=URL('errors',args=a)))}}
+      {{=LI(A(T('Clean'),_href=URL('cleanup',args=a)))}}
+
+	{{if not os.path.exists('applications/%s/compiled' % a):}}
+      {{=LI(A(T('Compile'),_href=URL('compile_app',args=a)))}}
+      {{else:}}
+      {{=LI(A(T('Pack compiled'),_href=URL('pack',args=(a, 'compiled'))))}}
+      {{if glob.glob('applications/%s/controllers/*.py' % a):}}
+	{{=LI(A(T('Remove compiled'),_href=URL('remove_compiled_app',args=a)))}}
+      {{pass}}
+      {{pass}}
+      {{=LI(A(T('Git Pull'),_href=URL('git_pull',args=a)))}}
+      {{=LI(A(T('Git Push'),_href=URL('git_push',args=a)))}}
+      {{if a!=request.application:}}
+      {{=LI(A(T('Uninstall'),_href=URL('uninstall',args=a)))}}
+      {{=LI(button_enable(URL('enable',args=a), a))}}
+      {{pass}}
+    </ul>
+  </li>
+  {{pass}}
+</ul>
+

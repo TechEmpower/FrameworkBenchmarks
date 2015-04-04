@@ -1,0 +1,49 @@
+pydal changelog
+===============
+
+Version 15.03
+-------------
+
+Released on March 23rd 2015
+
+- Fixed `redefine` with lazy tables
+- Added tests for `update_or_insert`, `bulk_insert`,
+  `validate_and_update_or_insert`
+- Enhanced connections open/close flow
+- Enhanced logging flow
+- Refactored google adapters: `ndb` is now used by default
+- Added default representation for `reference` fields
+- Fixed some caching issues when using `pickle`
+- Several improvements and fixes in `MongoDBAdapter`
+
+
+Version 15.02.27
+----------------
+
+Released on February 27th 2015
+
+- Fixed a connection bug
+- Fixed a security flaw which could lead to db password storing in cache
+
+
+Version 15.02
+-------------
+
+Released on February 11th 2015
+
+- Updated pg8000 support in `PostgreSQLAdapter`
+- Fixed `ilike` for `Field` type 'list:string' in `PostgreSQLAdapter`
+- Added case sensitive/insensitive tests for `contains`
+- Fixed expression evaluation on `PostgreSQLAdapter`
+- Fixed `common_filter` issue in `_enable_record_versioning`
+- Removed contrib drivers
+- Fixed `uuid` attribute of `DAL` class
+- Added caching tests
+
+
+Version 0.12.25
+---------------
+
+Released on December 25th 2014
+
+First public preview release.

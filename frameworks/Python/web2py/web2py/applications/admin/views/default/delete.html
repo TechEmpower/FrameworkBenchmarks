@@ -1,0 +1,16 @@
+{{extend 'layout.html'}}
+{{
+dlg = dialog
+smt_button = dlg.element(_type="submit")
+smt_button['_class'] = 'btn'
+smt_button['_style'] = 'margin-right:4px;'
+ccl_button = dlg.element(_type="button")
+ccl_button['_class'] = 'btn'
+}}
+{{block sectionclass}}delete{{end}}
+<!-- begin "delete" block -->
+<h2>{{=T('Are you sure you want to delete file "%s"?', filename)}}</h2>
+<div class="center">
+{{=dialog}}
+</div>
+<!-- end "delete" block -->

@@ -1,0 +1,21 @@
+{{extend 'default.mobile/layout.html'}}
+
+{{block sectionclass}}test{{end}}
+
+<h2>{{=T('Testing application')}} "{{=app}}"</h2>
+
+{{for controller in sorted(controllers):}}
+<div id='output_{{=controller[:-3]}}'>
+  <h3>Testing controller "{{=controller}}"... <blink>please wait!</blink></h3>
+</div>
+
+<script><!--
+ajax('{{=URL(a=app,c=controller[:-3],f='_TEST')}}',[],'output_{{=controller[:-3]}}');
+//--></script>
+{{pass}}
+
+<p class="help">{{=T("""If the report above contains a ticket number it indicates a failure in executing the controller, before any attempt to execute the doctests. This is usually due to an indentation error or an error outside function code.
+A green title indicates that all tests (if defined) passed. In this case test results are not shown.""")}}</p>
+<p class="help">{{=T('Functions with no doctests will result in [passed] tests.')}}</p>
+<p class="help">{{=T('ATTENTION: TESTING IS NOT THREAD SAFE SO DO NOT PERFORM MULTIPLE TESTS CONCURRENTLY.')}}</p>
+

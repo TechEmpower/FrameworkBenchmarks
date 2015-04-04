@@ -1,0 +1,23 @@
+{{
+###
+# response._vars contains the dictionary returned by the controller action
+###
+
+# security check! This file is an example for a jsonp view.
+# it is not safe to use as a generic.jsonp because of security implications.
+
+if response.view == 'generic.jsonp':
+   raise HTTP(501,'generic.jsonp diasbled for security reasons')
+
+try:
+       from gluon.serializers import json
+       result = "%s(%s)" % (request.vars['callback'], json(response._vars))
+       response.write(result, escape=False)
+       response.headers['Content-Type'] = 'application/jsonp'
+except (TypeError, ValueError):
+       raise HTTP(405, 'JSON serialization error')
+except ImportError:
+       raise HTTP(405, 'JSON not available')
+except:
+       raise HTTP(405, 'JSON error')
+}}

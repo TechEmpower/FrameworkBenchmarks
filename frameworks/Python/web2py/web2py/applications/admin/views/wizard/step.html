@@ -1,0 +1,183 @@
+{{extend 'layout.html'}}
+{{block sectionclass}}step{{end}}
+<!-- begin "step" block -->
+<h2>{{=T('New Application Wizard')}}</h2>
+<div class='row-fluid'>
+	<div id="wizard_nav" class="f20 controls span3">
+		{{if request.function=='index':}}
+		<h3>{{=T('Start a new app')}}</h3>
+		{{else:}}
+		<div class="box first-box">
+			<h3>{{=T('Basics')}}</h3>
+			<p>{{=button(URL('index'), T('restart'))}}</p>
+			<p><strong>App Name:</strong> {{=session.app['name']}}</p>
+		</div>
+		<div class="box">
+			<h3>Current settings</h3>
+			<p>{{=button(URL('step1')+'/#xwizard_form', T('Edit'))}}</p>
+			<ul id="current_settings" class="unstyled">
+				{{for key,value in session.app['params']:}}
+				<li><b>{{=key}}:</b> {{=value}}</li>
+				{{pass}}
+			</ul>
+		</div>
+		<div class="box">
+			<h3>Tables</h3>
+			<p>{{=button(URL('step2')+'/#xwizard_form', T('edit all'))}}</p>
+			<ul class="unstyled">
+				{{for i,table in enumerate(session.app['tables']):}}
+				<li>{{=button(URL('step3',args=[i])+'/#xwizard_form', T('Edit'))}} <strong>{{=table}}</strong></li>
+				{{pass}}
+			</ul>
+		</div>
+		<div class="box">
+			<h3>Pages</h3>
+			<p>{{=button(URL('step4')+'/#xwizard_form', T('edit all'))}}</p>
+			<ul class="unstyled">
+				{{for i,page in enumerate(session.app['pages']):}}
+				<li>{{=button(URL('step5',args=i)+'/#xwizard_form', T('Edit'))}} <strong>{{=page}}</strong></li>
+				{{pass}}
+			</ul>
+		</div>
+		<div class="box">
+			<h3>{{=T('Generate')}}</h3>
+			<p>{{=button(URL('step6')+'/#xwizard_form', T('go!'))}}</p>
+		</div>
+		{{pass}}
+	</div> <!-- /wizard nav -->
+	<div id="wizard_form" class="fl20 controls span9" rel="pagebookmark"><span id="xwizard_form" class="hashstick">&nbsp;</span>
+		<!-- FORM -->
+	{{if 'step' in request.function:}}
+		<h3>{{=T('Step')}} {{=step}}</h3>
+		{{if request.function!='step1':}}
+		{{=button(URL('step' + str(int(request.function[-1])-1)) + '/#xwizard_form', T('back'))}}
+		{{pass}}
+	{{else:}}
+		<h3>{{=T('Begin')}}</h3>
+	{{pass}}
+		{{if request.function in ('step1','step2','step3','step4','step5'):}}
+		{{=button(URL('step6') + '/#xwizard_form', T('skip to generate'))}}
+		{{pass}}
+		<br /><br />
+		{{if request.function in ('step1','step6'):}}
+		{{pass}}
+		{{if request.function!='step6':}}
+		<div class="form row-fluid">
+			{{=form.custom.begin}}
+				{{ for fieldname in form.table.fields: }} 
+					{{if fieldname is not 'id':}}
+						<label>{{=form.custom.label[fieldname]}}:</label> 
+						{{=form.custom.widget[fieldname]}}
+						{{if fieldname=='layout_theme':}}
+						<span class="help-inline">
+							<img src="{{=LAYOUTS_APP}}/static/plugin_layouts/layouts/{{=dict(session.app['params'])['layout_theme']}}/preview.png" alt="" align="right" id="preview" class="img-polaroid"/>
+						</span>
+						{{pass}}
+					{{pass}}
+				{{pass}} 
+				<div class="controls"><button type="submit" class="btn">{{=T('Submit')}}</button></div>
+			{{=form.custom.end}}
+		</div>
+		<script>
+			jQuery(function(){
+				var t=jQuery('#no_table_layout_theme');
+				t.change(function(){
+					jQuery('#preview').attr('src','{{=LAYOUTS_APP}}/static/plugin_layouts/layouts/'+t.val()+'/preview.png');
+				});
+				jQuery("#preview").error(function (){ 
+					jQuery('#preview').attr('src','http://placehold.it/190x141&text=no+preview+available'); 
+				});
+				jQuery('ul[id$="_grow_input"] li').addClass('input-append');
+				jQuery('ul[id$="_grow_input"] li a').addClass('btn');
+			});
+		</script>
+		{{else:}}
+		<div class="form row-fluid">
+			{{=form.custom.begin}}
+				{{ for fieldname in form.table.fields: }} 
+					{{if fieldname is not 'id':}}
+						<div class="control-group">
+							<label class="control-label">{{=form.custom.label[fieldname]}}:</label>
+							<div class="controls">
+								<label class="checkbox">{{=form.custom.widget[fieldname]}}</label>
+							</div>
+						</div>
+					{{pass}}
+				{{pass}}
+				<div class="control-group">
+					<label class="control-label empty">&nbsp;</label>
+					<div class="controls">
+						<button type="submit" class="btn">{{=T('Submit')}}</button>
+					</div>
+				</div>
+			{{=form.custom.end}}
+		</div>
+		{{pass}}
+		<!-- INSTRUCTIONS -->
+		<div class="box">
+			<h4>Instructions</h4>
+			<div class="row-fluid">
+				<div class="help span7 alert alert-block alert-info">
+					{{if request.function=='index':}}
+					<ul class="unstyled">
+						<li>Insert the name of a new app.</li>
+						<li>If the app exists and was created with the wizard, you will be able to edit it, but any manual editing to the app <b>will be lost</b>.</li>
+					</ul>
+					{{elif request.function=='step1':}}
+					<ul class="unstyled">
+						<li>This Wizard will help you build a new web2py app.</li>
+						<li>You can create an app with a name that already exists.</li>
+						<li>If you do not have an email server set email server to "logging".</li>
+						<li>If you want to use Janrain Engage for login: 1) Sign up for a <a href="http://www.janrain.com/products/engage">Janrain Engage</a> account; 2) Register you hostname, domain, and obtain an api key; 3) Set Login Config above to "domain:api_key".</li>
+					<li>ATTENTION: you can use the wizard to download plugins BUT we cannot guarantee the stability or backward compatibility of plugins. Moreover plugins may conflict with each other. Anyway, we do recommend installing plugin "wiki" with adds CMS like capabilities to your app.</li>
+					</ul>
+					{{elif request.function=='step2':}}
+					<ul class="unstyled">
+						<li>List the names of table that you need.</li>
+						<li>If you do not need authentication remove the table "auth_user".</li>
+						<li>Press enter to create a new input row.</li>
+						<li>Empty rows are ignored.</li>
+						<li>Other tables for role based access control will be created automatically, and do not need to be listed.</li>
+						<li>You will be able to add fields later.</li>
+					</ul>
+					{{elif request.function=='step3':}}
+					<ul class="unstyled">
+						<li>List the fields for this table (do not include an id field, it is automatic), for example "name unique" or "birthday date" or "image upload" or "comments multiple" or "description wiki required"</li>
+						<li>The first keyword(s) for each entry will be used to generate a name for the table field and its label. You can use spaces an other unicode characters.</li>
+						<li>Keywords "string" (default), "text", "integer", "boolean", "float", "double", "file", "date", "time", "datetime", "file", "upload" will be used to determine the field type and they will not be made part of the field name.</ li>
+						<li>For a reference field use a field name, followed by the name of the referenced table.</li>
+						<li>Other special keywords are "required", "notnull" or "notempty", "unique". They map into equivalent validators but (at this time) should only be used with string and text types.</li>
+						<li>The keywords "html" and "wiki" force a text type and set a representation for the field value as sanitized HTML and MARKMIN resepectively.</li>
+						<li>string, integer and reference fields can be "multiple", i.e. multiple values will be allowed</li>
+						<li>For the "auth_user" table do not add attributes to the default fields (username, first_name, last_name, password and email). They are handled automatically.</li>
+						<li>Some fields will be added automatically upon creation and handled automatically: "created_by", "created_on", "modified_by", "modified_on", "active" (only active fields can be selected).</li>
+						<li>For every table "table" another table "table_archive" is created and it contains the previous versions of each record. This is only accessible via appadmin or programmatically.</li>
+					</ul>
+					{{elif request.function=='step4':}}
+					<ul class="unstyled">
+						<li>List the names of the pages you want to create.</li>
+						<li>Some pages are listed automatically because they expose Create/Read/Update/Delete for each tables you have created.</li>
+						<li>All pages, except "error" and those with name starting in underscore willbe listed in the menu. You will be able to edit the menu later.</li>
+						<li>You should have page "index", the starting point of your app, and page "error", where web2py will redirect to in case of error.</li>
+					</ul>
+					{{elif request.function=='step5':}}
+					<ul class="unstyled">
+						<li>Use the markmin syntax to add text to your pages.</li>
+					</ul>
+					{{elif request.function=='step6':}}
+					<ul class="unstyled">
+						<li>Almost done. Click on the button above to create your new app.</li>
+						<li>Once done you will be able to edit it as any normal web2py app.</li>
+					</ul>
+					{{pass}}
+				</div>
+			</div>
+		</div>
+	</div> <!-- /wizard form -->
+</div>
+<script type="text/javascript">
+	//jQuery(document).ready(function() {
+		//jQuery(":input:visible:enabled:first").focus();
+	//});
+</script>
+<!-- end "step" block -->

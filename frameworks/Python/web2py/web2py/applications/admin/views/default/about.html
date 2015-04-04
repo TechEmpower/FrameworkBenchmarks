@@ -1,0 +1,26 @@
+{{extend 'layout.html'}}
+{{block sectionclass}}about{{end}}
+<!-- begin "about" block -->
+<h2>{{=T("About application")}} "{{=app}}"</h2>
+<h3>{{=T("About")}} {{=app}}</h3>
+<p class="controls">{{=button(URL('edit/%s/ABOUT' % (app)), T('Edit'))}}</p>
+<div class="about_text legalese well well-small">{{=about}}</div>
+<h3>{{=T('License for')}} {{=app}}</h3>
+<p class="controls">{{=button(URL('edit/%s/LICENSE' % (app)), T('Edit'))}}</p>
+<div class="license_text legalese well well-small">{{=license}}</div>
+<h3>{{=T('Project Progress')}}</h3>
+<script language="javascript" type="text/javascript" src="{{=URL('static','js/jquery.flot.js')}}"></script>
+<script language="javascript" type="text/javascript" src="{{=URL('static','js/jquery.flot.resize.js')}}"></script>
+<div class="row-fluid">
+	<div class="span2"> </div>
+	<div class="span8 center"> 
+		<div id="placeholder"></div>
+	</div>
+	<div class="span2"> </div>
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+	jQuery.plot(jQuery("#placeholder"), [ {{=progress}} ]);
+})
+</script>
+<!-- end "about" block -->

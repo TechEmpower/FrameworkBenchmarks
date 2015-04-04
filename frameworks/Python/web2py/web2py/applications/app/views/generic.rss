@@ -1,0 +1,10 @@
+{{
+###
+# response._vars contains the dictionary returned by the controller action
+# for this to work the action must return something like
+#
+#   dict(title=...,link=...,description=...,created_on='...',items=...)
+#
+# items is a list of dictionaries each with title, link, description, pub_date.
+###
+from gluon.serializers import rss}}{{=XML(rss(response._vars))}}

@@ -1,0 +1,15 @@
+{{extend 'default.mobile/layout.html'}}
+{{
+dlg = dialog
+smt_button = dlg.element(_type="submit")
+smt_button['_class'] = 'btn'
+smt_button['_style'] = 'margin-right:4px;'
+ccl_button = dlg.element(_type="button")
+ccl_button['_class'] = 'btn'
+}}
+<!-- begin "git_pull" block -->
+<div class="center">
+<h2>{{=T('This will pull changes from the remote repo for application "%s"?', app)}}</h2>
+{{=dialog}}
+</div>
+<!-- end "git_pull" block -->

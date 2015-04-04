@@ -1,0 +1,13 @@
+{{extend 'default.mobile/layout.html'}}
+
+{{block sectionclass}}about{{end}}
+
+<h2>{{=T("About application")}} "{{=app}}"</h2>
+<h3>{{=T("About")}} {{=app}}</h3>
+<p>{{=button(URL('edit/%s/ABOUT' % (app)), T('Edit'))}}</p>
+<div>{{=about}}</div>
+<h3>{{=T('License for')}} {{=app}}</h3>
+<p>{{=button(URL('edit/%s/LICENSE' % (app)), T('Edit'))}}</p>
+<div>{{=license}}</div>
+</ul>
+

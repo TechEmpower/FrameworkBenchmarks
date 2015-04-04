@@ -1,0 +1,19 @@
+{{extend 'default.mobile/layout.html'}}
+
+<h2>web2py&trade; {{=T('Web Framework')}}</h2>
+<h3>{{=T('Login to the Administrative Interface')}}</h3>
+
+{{if request.is_https or request.is_local:}}
+<div class="form">
+  <form action="{{=URL(r=request)}}" method="post">
+    <div><input type="hidden" name="send" value="{{=send}}"/></div>
+    <table>
+      <tr><td>{{=T('Administrator Password:')}}</td><td><input type="password" name="password" id="password"/></td></tr>
+      <tr><td></td><td><button name="login">{{=T('Login')}}</button></td></tr>
+    </table>
+    <input type="hidden" name="is_mobile" value="true"/>
+  </form>
+</div>
+{{else:}}
+<p class="help">{{=T('ATTENTION: Login requires a secure (HTTPS) connection or running on localhost.')}}</p>
+{{pass}}
