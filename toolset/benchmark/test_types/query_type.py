@@ -67,8 +67,8 @@ class QueryTestType(DBTestType):
       return [(max_infraction,'Empty Response', url)]
 
     # Ensure required response headers are present
-    if any(v not in curlResponse for v in ('Server','Date','Content-Type: application/json')) \
-       or all(v not in curlResponse for v in ('Content-Length','Transfer-Encoding')):
+    if any(v.lower() not in curlResponse.lower() for v in ('Server','Date','Content-Type: application/json')) \
+       or all(v.lower() not in curlResponse.lower() for v in ('Content-Length','Transfer-Encoding')):
       return [('warn','Required response header missing.',url)]
   
     # Valid JSON? 
