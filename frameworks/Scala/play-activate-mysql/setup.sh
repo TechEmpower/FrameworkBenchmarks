@@ -1,4 +1,5 @@
 #!/bin/bash
+export PLAY2_HOME=${IROOT}/play-2.2.0
 
 sed -i 's|jdbc:mysql://.*:3306|jdbc:mysql://'"${DBHOST}"':3306|g' conf/application.conf
 
