@@ -66,7 +66,9 @@ class World(Base):
 
 class JsonHandler(BaseHandler):
     def get(self):
-        return self.json_response({"message": "Hello, world!"})
+        response = self.json_response({"message": "Hello, World!"})
+        response.headers = [("Content-Type", "application/json; charset=UTF-8")]
+        return response
 
 class DbHandler(BaseHandler):
     def get(self):
@@ -123,6 +125,7 @@ class FortuneHandler(BaseHandler):
 
 def plaintext(request):
     response = HTTPResponse()
+    response.headers = [("Content-Type", "text/plain; charset=UTF-8")]
     response.write("Hello, world!")
     return response
 
