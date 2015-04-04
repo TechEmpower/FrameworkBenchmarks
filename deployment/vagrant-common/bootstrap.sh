@@ -106,8 +106,17 @@ if [ ! -e "~/.firstboot" ]; then
   # If they didn't sync, we need to clone it
   if [ -d "/FrameworkBenchmarks" ]; then
     ln -s /FrameworkBenchmarks $FWROOT
-    echo "Removing installs/ and results/ folders so they do not interfere"
+    echo "Removing your current results folder to avoid interference"
     rm -rf $FWROOT/installs $FWROOT/results
+
+    # vboxfs does not support chown or chmod, which we need. 
+    # We therefore bind-mount a normal linux directory so we can
+    # use these operations. This enables us to 
+    # use `chown -R testrunner:testrunner $FWROOT/installs` later
+    echo "Mounting over your installs folder"
+    mkdir -p /tmp/TFB_installs
+    mkdir -p /FrameworkBenchmarks/installs
+    sudo mount -o bind /tmp/TFB_installs $FWROOT/installs
   else
     # If there is no synced folder, clone the project
     echo "Cloning project from $GH_REPO $GH_BRANCH"

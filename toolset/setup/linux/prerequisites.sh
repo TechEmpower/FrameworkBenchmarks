@@ -61,4 +61,8 @@ RETCODE=$(fw_exists ~/.bash_profile.bak)
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
-touch fwbm_prereqs_installed
+# Sudo in case we don't have permissions on IROOT
+sudo touch fwbm_prereqs_installed
+
+# Ensure everyone can see the file
+sudo chmod 775 fwbm_prereqs_installed
