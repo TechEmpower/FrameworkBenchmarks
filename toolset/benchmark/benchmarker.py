@@ -773,6 +773,11 @@ class Benchmarker:
       
       try:
         command = "cloc --list-file=%s/source_code --yaml" % testlist[0].directory
+
+        if os.path.exists(os.path.join(testlist[0].directory, "cloc_defs.txt")):
+          command += " --read-lang-def %s" % os.path.join(testlist[0].directory, "cloc_defs.txt")
+          logging.info("Using custom cloc definitions for %s", framework)
+
         # Find the last instance of the word 'code' in the yaml output. This should
         # be the line count for the sum of all listed files or just the line count
         # for the last file in the case where there's only one file listed.
