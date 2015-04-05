@@ -1,7 +1,30 @@
 {
   "framework": "rails",
   "tests": [{
-    "jruby-puma": {
+    "default": {
+      "setup_file": "run_mri_puma",
+      "json_url": "/hello_world/json",
+      "db_url": "/hello_world/db",
+      "query_url": "/hello_world/query?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "rails",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rack",
+      "webserver": "Puma",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rails-puma-mri",
+      "notes": "",
+      "versus": "rack-puma"
+    },
+    "puma-jruby": {
       "setup_file": "run_jruby_puma",
       "json_url": "/hello_world/json",
       "db_url": "/hello_world/db",
@@ -20,7 +43,7 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "puma-jruby-rails",
+      "display_name": "rails-puma-jruby",
       "notes": "",
       "versus": "rack-puma-jruby"
     },
@@ -43,32 +66,9 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "puma-rbx-rails",
+      "display_name": "rails-puma-rbx",
       "notes": "",
       "versus": "rack-puma-rbx"
-    },
-    "ruby-puma": {
-      "setup_file": "run_mri_puma",
-      "json_url": "/hello_world/json",
-      "db_url": "/hello_world/db",
-      "query_url": "/hello_world/query?queries=",
-      "fortune_url": "/fortune",
-      "update_url": "/update?queries=",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "MySQL",
-      "framework": "rails",
-      "language": "Ruby",
-      "orm": "Full",
-      "platform": "Rack",
-      "webserver": "Puma",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "puma-mri-rails",
-      "notes": "",
-      "versus": "rack-puma"
     },
     "thin": {
       "setup_file": "run_thin",
@@ -89,11 +89,11 @@
       "webserver": "Thin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "thin-rails",
+      "display_name": "rails-thin",
       "notes": "",
       "versus": "rack-thin"
     },
-    "torqbox": {
+    "torqbox-jruby": {
       "setup_file": "run_torqbox",
       "json_url": "/hello_world/json",
       "db_url": "/hello_world/db",
@@ -112,11 +112,11 @@
       "webserver": "TorqBox",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "torqbox-rails",
+      "display_name": "rails-torqbox-jruby",
       "notes": "",
-      "versus": "rack-torqbox"
+      "versus": "rack-torqbox-jruby"
     },
-    "trinidad": {
+    "trinidad-jruby": {
       "setup_file": "run_trinidad",
       "json_url": "/hello_world/json",
       "db_url": "/hello_world/db",
@@ -135,9 +135,9 @@
       "webserver": "Trinidad",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "trinidad-rails",
+      "display_name": "rails-trinidad-jruby",
       "notes": "",
-      "versus": "rack-trinidad"
+      "versus": "rack-trinidad-jruby"
     },
     "unicorn": {
       "setup_file": "run_unicorn",
@@ -158,7 +158,7 @@
       "webserver": "Unicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "unicorn-rails",
+      "display_name": "rails-unicorn",
       "notes": "",
       "versus": "rack-unicorn"
     }

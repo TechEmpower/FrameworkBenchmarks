@@ -1,4 +1,5 @@
 #!/bin/bash
+export NGINX_HOME=${IROOT}/nginx
 
 # We assume single-user installation as 
 # done in our rvm.sh script and 
@@ -9,6 +10,8 @@ then
 else
 	source $HOME/.rvm/scripts/rvm
 fi
+
+sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' config/nginx.conf
 
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' config/nginx.conf
 

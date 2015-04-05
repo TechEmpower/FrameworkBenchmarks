@@ -43,13 +43,33 @@ $app->get('/json', function () use($app) {
 });
 
 $app->get('/db', function () use($app) {
+    $world = R::load('World', mt_rand(1, 10000))->export();
+    # Cast fields to int so they don't get wrapped with quotes
+    $world['id'] = (int) $world['id'];
+    $world['randomNumber'] = (int) $world['randomNumber'];
+
+    $app->contentType('application/json');
+    echo json_encode($world);
+});
+
+$app->get('/dbs', function () use($app) {
     $queries = ($app->request()->get('queries') !== null)
         ? $app->request()->get('queries')
         : 1;
+    if ($queries < 1) {
+        $queries = 1;
+    }
+    else if ($queries > 500) {
+        $queries = 500;
+    }
     $worlds = array();
 
     for ($i = 0; $i < $queries; ++$i) {
-        $worlds[] = R::load('World', mt_rand(1, 10000))->export();
+        $world = R::load('World', mt_rand(1, 10000))->export();
+        # Cast fields to int so they don't get wrapped with quotes
+        $world['id'] = (int) $world['id'];
+        $world['randomNumber'] = (int) $world['randomNumber'];
+        $worlds[] = $world;
     }
 
     $app->contentType('application/json');

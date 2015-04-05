@@ -34,7 +34,7 @@ class CIRunnner:
   Only verifies the first test in each directory 
   '''
 
-  SUPPORTED_DATABASES = "mysql postgres mongodb cassandra sqlite none".split()
+  SUPPORTED_DATABASES = "mysql postgres mongodb cassandra elasticsearch sqlite none".split()
   
   def __init__(self, mode, testdir=None):
     '''
@@ -429,6 +429,28 @@ class CIRunnner:
       >&2 echo "Cassandra did not start, skipping"
     fi
 
+    # Setup Elasticsearch
+    curl -O https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.5.0.deb
+    sudo dpkg -i --force-confnew elasticsearch-1.5.0.deb
+    sudo update-rc.d elasticsearch defaults 95 10
+    sudo service elasticsearch restart
+
+    echo "Populating Elasticsearch database"
+    for i in {1..45}; do
+      nc -z localhost 9200 && break || sleep 1;
+      echo "Waiting for Elasticsearch ($i/45}"
+    done
+    nc -z localhost 9200
+    if [ $? -eq 0 ]; then
+      curl localhost:9200
+      sh config/elasticsearch/es-create-index.sh
+      python config/elasticsearch/es-db-data-gen.py > config/elasticsearch/tfb-data.json
+      curl -sS -D - -o /dev/null -XPOST localhost:9200/tfb/world/_bulk --data-binary @config/elasticsearch/tfb-data.json
+      echo "Elasticsearch DB populated"
+    else
+      >&2 echo "Elasticsearch did not start, skipping"
+    fi
+
     # Setup MongoDB
     echo "Populating MongoDB database"
     for i in {1..45}; do
@@ -437,7 +459,7 @@ class CIRunnner:
     done
     nc -z localhost 27017
     if [ $? -eq 0 ]; then
-      mongo < create.js
+      mongo < config/create.js
       mongod --version
     else
       >&2 echo "MongoDB did not start, skipping"

@@ -1,5 +1,5 @@
 {
-  "framework": "aiohttp.web",
+  "framework": "AsyncIO",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -17,11 +17,65 @@
       "language": "Python",
       "orm": "Raw",
       "platform": "API-Hour",
-      "webserver": "None",
+      "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour",
-      "notes": "Python 3.4 + AsyncIO"
+      "display_name": "API-Hour+aiohttp.web+pgsql",
+      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + PostgreSQL"
+    },
+    "redis": {
+      "setup_file": "setup",
+      "db_url": "/db_redis",
+      "query_url": "/queries_redis?queries=",
+      "fortune_url": "/fortunes_redis",
+      "update_url": "/updates_redis?queries=",
+      "port": 8008,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Redis",
+      "framework": "aiohttp.web",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "API-Hour",
+      "webserver": "Gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "API-Hour+aiohttp.web+redis",
+      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + Redis"
+    },
+    "json": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "port": 8009,
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "AsyncIO",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "API-Hour",
+      "webserver": "Gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "API-Hour+AsyncIO",
+      "notes": "Python 3 + API-Hour + AsyncIO"
+    },
+    "plaintext": {
+      "setup_file": "setup",
+      "plaintext_url": "/plaintext",
+      "port": 8011,
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "AsyncIO",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "API-Hour",
+      "webserver": "Gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "API-Hour+AsyncIO",
+      "notes": "Python 3 + API-Hour + AsyncIO"
     }
   }]
 }

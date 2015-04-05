@@ -4,6 +4,8 @@ In order to declare that your framework requires Perl, you should have an `insta
 that contains at least
 
     #!/bin/bash
+    export PERL_HOME=${IROOT}/perl-5.18
+    export PATH="$PERL_HOME/bin:$PATH"
 
     fw_depends perl
 
@@ -12,15 +14,7 @@ The `install.sh` file should then install any required perl modules or other sup
 applications.
 
 Perl is installed in the `$IROOT` directory. Currently, the Perl interpreter
-used by the test is in version 5.18 family. It is highly recommended that
-you have a `bash_profile.sh` in your app's directory that contains at least
-
-    #!/bin/bash
-
-    export PERL_HOME=${IROOT}/perl-5.18
-    export PATH="$PERL_HOME/bin:$PATH"
-
-This will provide the `$PERL_HOME` path - should you need it - and 
+used by the test is in version 5.18 family. This will provide the `$PERL_HOME` path - should you need it - and 
 allow all apps installed by Perl to be used directly.
 
 # Dependency Management

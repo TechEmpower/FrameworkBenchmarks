@@ -3,10 +3,14 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"flag"
 	"html/template"
 	"log"
 	"math/rand"
+	"net"
 	"net/http"
+	"os"
+	"os/exec"
 	"runtime"
 	"sort"
 	"strconv"
@@ -52,8 +56,17 @@ var (
 	helloWorldBytes = []byte(helloWorldString)
 )
 
+var prefork = flag.Bool("prefork", false, "use prefork")
+var child = flag.Bool("child", false, "is child proc")
+
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
+	var listener net.Listener
+	flag.Parse()
+	if !*prefork {
+		runtime.GOMAXPROCS(runtime.NumCPU())
+	} else {
+		listener = doPrefork()
+	}
 
 	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
@@ -79,12 +92,63 @@ func main() {
 	http.HandleFunc("/fortune", fortuneHandler)
 	http.HandleFunc("/update", updateHandler)
 	http.HandleFunc("/plaintext", plaintextHandler)
-	http.ListenAndServe(":8080", nil)
+	if !*prefork {
+		http.ListenAndServe(":8080", nil)
+	} else {
+		http.Serve(listener, nil)
+	}
+}
+
+func doPrefork() (listener net.Listener) {
+	var err error
+	var fl *os.File
+	var tcplistener *net.TCPListener
+	if !*child {
+		var addr *net.TCPAddr
+		addr, err = net.ResolveTCPAddr("tcp", ":8080")
+		if err != nil {
+			log.Fatal(err)
+		}
+		tcplistener, err = net.ListenTCP("tcp", addr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fl, err = tcplistener.File()
+		if err != nil {
+			log.Fatal(err)
+		}
+		children := make([]*exec.Cmd, runtime.NumCPU()/2)
+		for i := range children {
+			children[i] = exec.Command(os.Args[0], "-prefork", "-child")
+			children[i].Stdout = os.Stdout
+			children[i].Stderr = os.Stderr
+			children[i].ExtraFiles = []*os.File{fl}
+			err = children[i].Start()
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		for _, ch := range children {
+			var err error = ch.Wait()
+			if err != nil {
+				log.Print(err)
+			}
+		}
+		os.Exit(0)
+	} else {
+		fl = os.NewFile(3, "")
+		listener, err = net.FileListener(fl)
+		if err != nil {
+			log.Fatal(err)
+		}
+		runtime.GOMAXPROCS(2)
+	}
+	return listener
 }
 
 // Test 1: JSON serialization
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/javascript")
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(&Message{helloWorldString})
 }
 
@@ -107,9 +171,10 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 		n, _ = strconv.Atoi(nStr)
 	}
 
-	if n <= 1 {
-		dbHandler(w, r)
-		return
+	if n < 1 {
+		n = 1
+	} else if n > 500 {
+		n = 500
 	}
 
 	world := make([]World, n)
@@ -158,25 +223,22 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	encoder := json.NewEncoder(w)
 
-	if n <= 1 {
-		var world World
-		worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
-		world.RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
-		updateStatement.Exec(world.RandomNumber, world.Id)
-		encoder.Encode(&world)
-	} else {
-		world := make([]World, n)
-		for i := 0; i < n; i++ {
-			if err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
-				log.Fatalf("Error scanning world row: %s", err.Error())
-			}
-			world[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
-			if _, err := updateStatement.Exec(world[i].RandomNumber, world[i].Id); err != nil {
-				log.Fatalf("Error updating world row: %s", err.Error())
-			}
-		}
-		encoder.Encode(world)
+	if n < 1 {
+		n = 1
+	} else if n > 500 {
+		n = 500
 	}
+	world := make([]World, n)
+	for i := 0; i < n; i++ {
+		if err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
+			log.Fatalf("Error scanning world row: %s", err.Error())
+		}
+		world[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
+		if _, err := updateStatement.Exec(world[i].RandomNumber, world[i].Id); err != nil {
+			log.Fatalf("Error updating world row: %s", err.Error())
+		}
+	}
+	encoder.Encode(world)
 }
 
 // Test 6: Plaintext

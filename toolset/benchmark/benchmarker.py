@@ -376,12 +376,21 @@ class Benchmarker:
     p.communicate("""
       sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
       sudo sysctl -w net.core.somaxconn=65535
+      sudo sysctl -w kernel.sched_autogroup_enabled=0
       sudo -s ulimit -n 65535
       sudo sysctl net.ipv4.tcp_tw_reuse=1
       sudo sysctl net.ipv4.tcp_tw_recycle=1
       sudo sysctl -w kernel.shmmax=2147483648
       sudo sysctl -w kernel.shmall=2097152
+      sudo sysctl -w kernel.sem="250 32000 256 512"
+      echo "Printing kernel configuration:" && sudo sysctl -a
     """)
+        # Explanations:
+        # net.ipv4.tcp_max_syn_backlog, net.core.somaxconn, kernel.sched_autogroup_enabled: http://tweaked.io/guide/kernel/
+        # ulimit -n: http://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files/
+        # net.ipv4.tcp_tw_*: http://www.linuxbrigade.com/reduce-time_wait-socket-connections/
+        # kernel.shm*: http://seriousbirder.com/blogs/linux-understanding-shmmax-and-shmall-settings/
+        # For kernel.sem: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/5/html/Tuning_and_Optimizing_Red_Hat_Enterprise_Linux_for_Oracle_9i_and_10g_Databases/chap-Oracle_9i_and_10g_Tuning_Guide-Setting_Semaphores.html
   ############################################################
   # End __setup_database
   ############################################################
@@ -517,6 +526,7 @@ class Benchmarker:
       out.write("self.results['completed']: {completed}\n".format(completed=str(self.results['completed'])))
       if self.results['frameworks'] != None and test.name in self.results['completed']:
         out.write('Framework {name} found in latest saved data. Skipping.\n'.format(name=str(test.name)))
+        print 'WARNING: Test {test} exists in the results directory; this must be removed before running a new test.\n'.format(test=str(test.name))
         return exit_with_code(1)
       out.flush()
 
@@ -537,6 +547,7 @@ class Benchmarker:
             sudo service redis-server restart
             sudo service postgresql restart
             sudo service cassandra restart
+            /opt/elasticsearch/elasticsearch restart
           """)
           time.sleep(10)
 
@@ -545,7 +556,8 @@ class Benchmarker:
             ("mongodb", self.database_host, 27017),
             ("redis", self.database_host, 6379),
             ("postgresql", self.database_host, 5432),
-            ("cassandra", self.database_host, 9160)
+            ("cassandra", self.database_host, 9160),
+            ("elasticsearch", self.database_host, 9200)
           ])
           print "database connection test results:\n" + "\n".join(st[1])
 
@@ -622,7 +634,7 @@ class Benchmarker:
         time.sleep(5)
 
         ##########################################################
-        # Save results thus far into toolset/benchmark/latest.json
+        # Save results thus far into the latest results directory
         ##########################################################
 
         out.write(header("Saving results through %s" % test.name))
@@ -935,26 +947,6 @@ class Benchmarker:
       self.timestamp = self.parse
     else:
       self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
-    
-    # Load the latest data
-    #self.latest = None
-    #try:
-    #  with open('toolset/benchmark/latest.json', 'r') as f:
-    #    # Load json file into config object
-    #    self.latest = json.load(f)
-    #    logging.info("toolset/benchmark/latest.json loaded to self.latest")
-    #    logging.debug("contents of latest.json: " + str(json.dumps(self.latest)))
-    #except IOError:
-    #  logging.warn("IOError on attempting to read toolset/benchmark/latest.json")
-    #
-    #self.results = None
-    #try: 
-    #  if self.latest != None and self.name in self.latest.keys():
-    #    with open(os.path.join(self.result_directory, str(self.latest[self.name]), 'results.json'), 'r') as f:
-    #      # Load json file into config object
-    #      self.results = json.load(f)
-    #except IOError:
-    #  pass
 
     self.results = None
     try:

@@ -1,4 +1,5 @@
 #!/bin/bash
+export CPPSP_HOME=$IROOT/cppsp_0.2.3
 
 sed -i 's|#define BENCHMARK_DB_HOST ".*"|#define BENCHMARK_DB_HOST "'"$DBHOST"'"|g' www/connectioninfo.H
 

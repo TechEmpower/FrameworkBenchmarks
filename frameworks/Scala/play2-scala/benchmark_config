@@ -1,8 +1,8 @@
 {
-  "framework": "play2", 
+  "framework": "play2-scala", 
   "tests": [
     {
-      "scala": {
+      "default": {
         "display_name": "play2-scala", 
         "setup_file": "setup_scala", 
         "framework": "play2", 
@@ -20,7 +20,7 @@
         "port": "9000", 
         "json_url": "/json"
       }, 
-      "scala-anorm-linux": {
+      "anorm-linux": {
         "display_name": "play2-scala-anorm-linux", 
         "setup_file": "setup_scala_anorm", 
         "framework": "play2", 
@@ -41,7 +41,7 @@
         "fortune_url": "/fortunes", 
         "update_url": "/update?queries="
       }, 
-      "scala-anorm-windows": {
+      "anorm-windows": {
         "display_name": "play2-scala-anorm-windows", 
         "setup_file": "setup_scala_anorm", 
         "framework": "play2", 
@@ -62,7 +62,7 @@
         "fortune_url": "/fortunes", 
         "update_url": "/update?queries="
       }, 
-      "scala-slick": {
+      "slick": {
         "display_name": "play2-scala-slick", 
         "setup_file": "setup_scala_slick", 
         "framework": "play2", 

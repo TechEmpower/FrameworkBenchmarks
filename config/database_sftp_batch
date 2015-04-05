@@ -13,5 +13,7 @@ put config/mysql
 put config/mysql.conf
 -mkdir cassandra
 put -r config/cassandra
+-mkdir elasticsearch
+put -r config/elasticsearch
 put config/redis.conf
 put config/create-redis.sh

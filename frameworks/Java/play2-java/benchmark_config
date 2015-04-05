@@ -2,7 +2,7 @@
   "framework": "play2", 
   "tests": [
     {
-      "java": {
+      "default": {
         "display_name": "play2-java", 
         "setup_file": "setup_java", 
         "framework": "play2", 
