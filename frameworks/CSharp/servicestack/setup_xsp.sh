@@ -1,4 +1,7 @@
 #!/bin/bash
+
+export NGINX_HOME=${IROOT}/nginx
+
 set -e
 # mono environment variables
 . ${IROOT}/mono.installed

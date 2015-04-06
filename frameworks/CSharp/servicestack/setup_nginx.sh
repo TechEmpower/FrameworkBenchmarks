@@ -1,8 +1,10 @@
 #!/bin/bash
+
+export NGINX_HOME=${IROOT}/nginx
+
 set -e
 # mono environment variables
 . ${IROOT}/mono.installed
-
 sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' nginx.conf
 
