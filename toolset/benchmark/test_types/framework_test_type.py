@@ -8,9 +8,9 @@ from pprint import pprint
 class FrameworkTestType:
   '''Interface between a test type (json, query, plaintext, etc) and 
   the rest of TFB. A test type defines a number of keys it expects
-  to find in the benchmark_config, and this base class handles extracting
+  to find in the benchmark_config.json, and this base class handles extracting
   those keys and injecting them into the test. For example, if 
-  benchmark_config contains a line `"spam" : "foobar"` and a subclasses X
+  benchmark_config.json contains a line `"spam" : "foobar"` and a subclasses X
   passes an argument list of ['spam'], then after parsing there will 
   exist a member `X.spam = 'foobar'`. 
   '''
@@ -55,7 +55,7 @@ class FrameworkTestType:
       self.__dict__.update({ arg:test_keys[arg] for arg in self.args})
       return self
     else: # This is quite common - most tests don't support all types
-      raise AttributeError("A %s requires the benchmark_config to contain %s"%(self.name,self.args))
+      raise AttributeError("A %s requires the benchmark_config.json to contain %s"%(self.name,self.args))
 
   def _curl(self, url):
     '''Downloads a URL and returns the HTTP response'''
