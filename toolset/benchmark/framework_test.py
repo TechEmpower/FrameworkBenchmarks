@@ -169,20 +169,6 @@ class FrameworkTest:
               command='export TROOT=%s && export IROOT=%s && export DBHOST=%s && export MAX_THREADS=%s && export OUT=%s && export ERR=%s' %
               (self.directory, self.install_root, self.database_host, self.benchmarker.threads, os.path.join(self.fwroot, out.name), os.path.join(self.fwroot, err.name)))
 
-    # Because start can take so long, we print a dot to let the user know 
-    # we are working
-    class ProgressPrinterThread(Thread):
-      def __init__(self, event):
-          Thread.__init__(self)
-          self.stopped = event
-
-      def run(self):
-        while not self.stopped.wait(20):
-          sys.stderr.write("Waiting for start to return...\n")
-    stopFlag = Event()
-    thread = ProgressPrinterThread(stopFlag)
-    thread.start()
-
     # Run the module start (inside parent of TROOT)
     #     - we use the parent as a historical accident - a lot of tests
     #       use subprocess's cwd argument already
@@ -190,40 +176,43 @@ class FrameworkTest:
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", self.directory)
       
+    # Run the start script for the test as the "testrunner" user.
+    # This requires superuser privs, so `sudo` is necessary.
+    #   -u [username] The username
+    #   -E Preserves the current environment variables
+    #   -H Forces the home var (~) to be reset to the user specified
+    #   -e Force bash to exit on first error
+    # Note: check_call is a blocking call, so any startup scripts
+    # run by the framework that need to continue (read: server has
+    # started and needs to remain that way), then they should be
+    # executed in the background.
+    command = 'sudo -u %s -E -H bash -e %s.sh' % (self.benchmarker.runner_user, self.setup_file)
+    
+    debug_command = '''\
+      export FWROOT=%s && \\
+      export TROOT=%s && \\
+      export IROOT=%s && \\
+      export DBHOST=%s && \\
+      export MAX_THREADS=%s && \\
+      export OUT=%s && \\
+      export ERR=%s && \\
+      cd %s && \\
+      %s''' % (self.fwroot, 
+        self.directory, 
+        self.install_root, 
+        self.database_host, 
+        self.benchmarker.threads, 
+        os.path.join(self.fwroot, out.name), 
+        os.path.join(self.fwroot, err.name),
+        self.directory,
+        command)
+    logging.info("To run framework manually, copy/paste this:\n%s", debug_command)
+
+    '''
     # Write the stderr to our temp.txt file to be read and fed back
     # to the user via logging later.
     with open('temp', 'w') as errout:
-      # Run the start script for the test as the "testrunner" user.
-      # This requires superuser privs, so `sudo` is necessary.
-      #   -u [username] The username
-      #   -E Preserves the current environment variables
-      #   -H Forces the home var (~) to be reset to the user specified
-      #   -e Force bash to exit on first error
-      # Note: check_call is a blocking call, so any startup scripts
-      # run by the framework that need to continue (read: server has
-      # started and needs to remain that way), then they should be
-      # executed in the background.
-      command = 'sudo -u %s -E -H bash -e %s.sh' % (self.benchmarker.runner_user, self.setup_file)
-      
-      debug_command = '''\
-        export FWROOT=%s && \\
-        export TROOT=%s && \\
-        export IROOT=%s && \\
-        export DBHOST=%s && \\
-        export MAX_THREADS=%s && \\
-        export OUT=%s && \\
-        export ERR=%s && \\
-        cd %s && \\
-        %s''' % (self.fwroot, 
-          self.directory, 
-          self.install_root, 
-          self.database_host, 
-          self.benchmarker.threads, 
-          os.path.join(self.fwroot, out.name), 
-          os.path.join(self.fwroot, err.name),
-          self.directory,
-          command)
-      logging.info("To run framework manually, copy/paste this:\n%s", debug_command)
+
 
       try:
         subprocess.check_call(command, cwd=self.directory, 
@@ -232,6 +221,7 @@ class FrameworkTest:
       except Exception:
         logging.exception("Failure running setup.sh")
         retcode = 1
+    
     with open('temp', 'r') as errout:
       # Read out temp error output in its entirety
       body = errout.read()
@@ -242,12 +232,62 @@ class FrameworkTest:
         err.write(body)
     # We are done with our temp file - delete it
     os.remove('temp')
-    os.chdir(previousDir)
+    
+    '''
 
-    # Stop the progress printer
-    stopFlag.set()
+    # Run setup.sh
+    # Printing output until subprocess terminates
+    class RunSetup(Thread):
+      def __init__(self, command, directory, deadProcessFlag, name):
+          Thread.__init__(self)
+          self.command = command
+          self.directory = directory
+          self.deadProcessFlag = deadProcessFlag
+          self.prefix = "Setup %s:" % name
+
+      def run(self):
+        # Run in backgroud, using line buffered output
+        # Thanks: http://www.saltycrane.com/blog/2009/10/how-capture-stdout-in-real-time-python/
+        p = subprocess.Popen(self.command, cwd=self.directory, 
+          shell=True, stdout=subprocess.PIPE, bufsize=1, 
+          stderr=subprocess.STDOUT)
+        
+        # Flush output until process dies
+        # Output is sent to current terminal (via logging)
+        # Output is sent to file
+        while p.returncode is None:
+          line = p.stdout.readline()
+          if not line:
+            time.sleep(0.5)
+            continue
+          
+          # Log to current terminal
+          # Needs to be one atomic write, so we join because 
+          # list operations are faster than string concat
+          sys.stdout.write("".join([self.prefix, line]))
+          sys.stdout.flush()
+          # logging.error(body)
+        
+          # Log it to file
+          out.write(line)
+
+        # Process has died (may have left children, but setup.sh has
+        # exited), so signal that it's safe to return from start
+        deadProcessFlag.set()
+
+    deadProcessFlag = Event()
+    setup_thread = RunSetup(command, self.directory, deadProcessFlag, self.name)
+    setup_thread.start()
+
+    # We can return once the port is bound or the process is dead
+    while not (self.benchmarker.is_port_bound(self.port) or deadProcessFlag.wait(5)):
+      sys.stderr.write("Waiting for start to return...\n")
 
     logging.info("Executed %s.sh", self.setup_file)
+
+    retcode = 0
+
+    os.chdir(previousDir)
 
     return retcode
   ############################################################

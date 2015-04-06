@@ -692,6 +692,9 @@ class Benchmarker:
   # End __stop_test
   ############################################################
 
+  def is_port_bound(self, port):
+    return self.__is_port_bound(port)
+
   ############################################################
   # __is_port_bound
   # Check if the requested port is available. If it

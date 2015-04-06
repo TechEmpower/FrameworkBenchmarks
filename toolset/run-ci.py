@@ -536,6 +536,7 @@ if __name__ == "__main__":
     if os.path.isfile('.run-ci.should_not_run'):
       sys.exit(retcode)
 
+    '''
     log.error("Running inside Travis-CI, so I will print err and out to console...")
     
     for name in runner.names:
@@ -555,6 +556,7 @@ if __name__ == "__main__":
             log.info(line.rstrip('\n'))
       except IOError:
         log.error("No OUT file found")
+    '''
 
     log.error("Running inside Travis-CI, so I will print a copy of the verification summary")
 
