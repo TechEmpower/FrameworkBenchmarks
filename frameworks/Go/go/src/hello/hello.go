@@ -14,6 +14,7 @@ import (
 	"runtime"
 	"sort"
 	"strconv"
+	"sync/atomic"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -32,6 +33,12 @@ type Fortune struct {
 	Message string `json:"message"`
 }
 
+type atomicCount uint64
+
+func (i *atomicCount) next() uint64 {
+	return atomic.AddUint64((*uint64)(i), 1)
+}
+
 const (
 	// Database
 	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
@@ -45,13 +52,16 @@ const (
 )
 
 var (
+	npool   = runtime.NumCPU()
+	lbIndex atomicCount
+
 	// Templates
 	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 
 	// Database
-	worldStatement   *sql.Stmt
-	fortuneStatement *sql.Stmt
-	updateStatement  *sql.Stmt
+	worldStatements   = make([]*sql.Stmt, npool)
+	fortuneStatements = make([]*sql.Stmt, npool)
+	updateStatements  = make([]*sql.Stmt, npool)
 
 	helloWorldBytes = []byte(helloWorldString)
 )
@@ -68,22 +78,24 @@ func main() {
 		listener = doPrefork()
 	}
 
-	db, err := sql.Open("mysql", connectionString)
-	if err != nil {
-		log.Fatalf("Error opening database: %v", err)
-	}
-	db.SetMaxIdleConns(maxConnectionCount)
-	worldStatement, err = db.Prepare(worldSelect)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fortuneStatement, err = db.Prepare(fortuneSelect)
-	if err != nil {
-		log.Fatal(err)
-	}
-	updateStatement, err = db.Prepare(worldUpdate)
-	if err != nil {
-		log.Fatal(err)
+	for i := 0; i < npool; i++ {
+		db, err := sql.Open("mysql", connectionString)
+		if err != nil {
+			log.Fatalf("Error opening database: %v", err)
+		}
+		db.SetMaxIdleConns(maxConnectionCount)
+		worldStatements[i], err = db.Prepare(worldSelect)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fortuneStatements[i], err = db.Prepare(fortuneSelect)
+		if err != nil {
+			log.Fatal(err)
+		}
+		updateStatements[i], err = db.Prepare(worldUpdate)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	http.HandleFunc("/db", dbHandler)
@@ -154,6 +166,8 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 
 // Test 2: Single database query
 func dbHandler(w http.ResponseWriter, r *http.Request) {
+	worldStatement := worldStatements[lbIndex.next()%uint64(npool)]
+
 	var world World
 	err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
 	if err != nil {
@@ -166,6 +180,8 @@ func dbHandler(w http.ResponseWriter, r *http.Request) {
 
 // Test 3: Multiple database queries
 func queriesHandler(w http.ResponseWriter, r *http.Request) {
+	worldStatement := worldStatements[lbIndex.next()%uint64(npool)]
+
 	n := 1
 	if nStr := r.URL.Query().Get("queries"); len(nStr) > 0 {
 		n, _ = strconv.Atoi(nStr)
@@ -191,6 +207,8 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 
 // Test 4: Fortunes
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
+	fortuneStatement := fortuneStatements[lbIndex.next()%uint64(npool)]
+
 	rows, err := fortuneStatement.Query()
 	if err != nil {
 		log.Fatalf("Error preparing statement: %v", err)
@@ -215,6 +233,10 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 
 // Test 5: Database updates
 func updateHandler(w http.ResponseWriter, r *http.Request) {
+	stmtId := lbIndex.next() % uint64(npool)
+	worldStatement := worldStatements[stmtId]
+	updateStatement := updateStatements[stmtId]
+
 	n := 1
 	if nStr := r.URL.Query().Get("queries"); len(nStr) > 0 {
 		n, _ = strconv.Atoi(nStr)
