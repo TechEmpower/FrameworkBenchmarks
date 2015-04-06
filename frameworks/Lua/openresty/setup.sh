@@ -1,4 +1,5 @@
 #!/bin/bash
+export OPENRESTY_HOME=${IROOT}/openresty-1.7.7.1
 
 sed -i 's|CWD|'"${TROOT}"'|g' nginx.conf
 sed -i 's|DBHOSTNAME|'"${DBHOST}"'|g' app.lua

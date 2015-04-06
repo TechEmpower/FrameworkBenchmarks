@@ -1,4 +1,6 @@
 #!/bin/bash
+export SBT_HOME=${IROOT}/sbt
+export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
 
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' src/main/resources/application.conf
 

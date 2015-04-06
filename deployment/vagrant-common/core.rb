@@ -98,8 +98,19 @@ def provider_virtualbox(config, role, ip_address='172.16.0.16')
     vb.memory = ENV.fetch('TFB_VB_MEM', 3022)
     vb.cpus = ENV.fetch('TFB_VB_CPU', 2)
 
-    # mount_options addresses issue mitchellh/vagrant#4997
-    override.vm.synced_folder "../..", "/FrameworkBenchmarks", mount_options: ['fmode=777', 'dmode=777']
+    # The VirtualBox file system for shared folders (vboxfs)
+    # does not support posix's chown/chmod - these can only 
+    # be set at mount time, and they are uniform for the entire
+    # shared directory. We require chown, because we have the 
+    # testrunner user account, so this is a problem. To mitigate
+    # the effects, we set the folders and files to 777 permissions. 
+    # Even though we cannot chown them to testrunner, with 777 and 
+    # owner vagrant *most* of the software works ok. Occasional 
+    # issues are still possible. 
+    #
+    # See mitchellh/vagrant#4997
+    # See http://superuser.com/a/640028/136050
+    override.vm.synced_folder "../..", "/FrameworkBenchmarks", :mount_options => ["dmode=777", "fmode=777"]
 
     if role.eql? "all" or role.eql? "app"
       override.vm.network :forwarded_port, guest: 8080, host: 28080

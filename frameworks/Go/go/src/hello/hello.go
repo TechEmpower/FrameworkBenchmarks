@@ -3,10 +3,14 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"flag"
 	"html/template"
 	"log"
 	"math/rand"
+	"net"
 	"net/http"
+	"os"
+	"os/exec"
 	"runtime"
 	"sort"
 	"strconv"
@@ -52,8 +56,17 @@ var (
 	helloWorldBytes = []byte(helloWorldString)
 )
 
+var prefork = flag.Bool("prefork", false, "use prefork")
+var child = flag.Bool("child", false, "is child proc")
+
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
+	var listener net.Listener
+	flag.Parse()
+	if !*prefork {
+		runtime.GOMAXPROCS(runtime.NumCPU())
+	} else {
+		listener = doPrefork()
+	}
 
 	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
@@ -79,7 +92,58 @@ func main() {
 	http.HandleFunc("/fortune", fortuneHandler)
 	http.HandleFunc("/update", updateHandler)
 	http.HandleFunc("/plaintext", plaintextHandler)
-	http.ListenAndServe(":8080", nil)
+	if !*prefork {
+		http.ListenAndServe(":8080", nil)
+	} else {
+		http.Serve(listener, nil)
+	}
+}
+
+func doPrefork() (listener net.Listener) {
+	var err error
+	var fl *os.File
+	var tcplistener *net.TCPListener
+	if !*child {
+		var addr *net.TCPAddr
+		addr, err = net.ResolveTCPAddr("tcp", ":8080")
+		if err != nil {
+			log.Fatal(err)
+		}
+		tcplistener, err = net.ListenTCP("tcp", addr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fl, err = tcplistener.File()
+		if err != nil {
+			log.Fatal(err)
+		}
+		children := make([]*exec.Cmd, runtime.NumCPU()/2)
+		for i := range children {
+			children[i] = exec.Command(os.Args[0], "-prefork", "-child")
+			children[i].Stdout = os.Stdout
+			children[i].Stderr = os.Stderr
+			children[i].ExtraFiles = []*os.File{fl}
+			err = children[i].Start()
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		for _, ch := range children {
+			var err error = ch.Wait()
+			if err != nil {
+				log.Print(err)
+			}
+		}
+		os.Exit(0)
+	} else {
+		fl = os.NewFile(3, "")
+		listener, err = net.FileListener(fl)
+		if err != nil {
+			log.Fatal(err)
+		}
+		runtime.GOMAXPROCS(2)
+	}
+	return listener
 }
 
 // Test 1: JSON serialization

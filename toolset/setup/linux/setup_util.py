@@ -95,8 +95,8 @@ def get_fwroot():
 # Assumes path is underneath FWROOT, not above
 # 
 # Useful for clean presentation of paths 
-# e.g. /foo/bar/benchmarks/go/bash_profile.sh
-# v.s. FWROOT/go/bash_profile.sh 
+# e.g. /foo/bar/benchmarks/go/install.sh
+# v.s. FWROOT/go/install.sh 
 def path_relative_to_root(path):
     # Requires bash shell parameter expansion
     return subprocess.check_output("D=%s && printf \"${D#%s}\""%(path, get_fwroot()), shell=True, executable='/bin/bash')

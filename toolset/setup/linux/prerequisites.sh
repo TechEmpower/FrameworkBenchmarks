@@ -41,7 +41,8 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libpq-dev mlton \
   libjemalloc-dev libluajit-5.1-dev `# Needed by lwan at least` \
   libhiredis-dev                    `# Redis client - Needed by ngx_mruby at least` \
-  cloc dstat                        `# Collect resource usage statistics`
+  cloc dstat                        `# Collect resource usage statistics` \
+  llvm-dev                          `# Required for correct Ruby installation`
 
 # Install gcc-4.8
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
@@ -60,4 +61,8 @@ RETCODE=$(fw_exists ~/.bash_profile.bak)
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
-touch fwbm_prereqs_installed
+# Sudo in case we don't have permissions on IROOT
+sudo touch fwbm_prereqs_installed
+
+# Ensure everyone can see the file
+sudo chmod 775 fwbm_prereqs_installed

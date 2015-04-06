@@ -4,6 +4,7 @@ sed -i 's|DBHOSTNAME|'"${DBHOST}"'|g' config.lua
 sed -i 's|DBHOSTNAME|'"${DBHOST}"'|g' config.moon
 sed -i 's|DBHOSTNAME|'"${DBHOST}"'|g' nginx.conf
 
-export PATH=${OPENRESTY_HOME}/nginx/sbin:$PATH
+export LAPIS_OPENRESTY=${IROOT}/openresty-1.7.7.1
+export PATH=${LAPIS_OPENRESTY}/nginx/sbin:$PATH
 
 lapis server production &

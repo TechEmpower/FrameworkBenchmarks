@@ -459,7 +459,7 @@ class CIRunnner:
     done
     nc -z localhost 27017
     if [ $? -eq 0 ]; then
-      mongo < create.js
+      mongo < config/create.js
       mongod --version
     else
       >&2 echo "MongoDB did not start, skipping"
