@@ -47,7 +47,7 @@
       "db_url": "/db",
       "query_url": "/db/",
       "port": 8080,
-	        "approach": "Realistic",
+      "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
       "framework": "nancy",
