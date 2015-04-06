@@ -32,26 +32,35 @@ type Fortune struct {
 	Message string `json:"message"`
 }
 
+// Databases
 const (
-	// Database
-	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
+	// Go 1.4's sql.DB has scalability problem when using (explicitly reused) prepared statement.
+	// https://github.com/golang/go/issues/9484
+	//
+	// Using db.Query() instead of stmt.Query() avoid the issue.
+	// But it makes 3 round trips per query: prepare, execute and close.
+	// `interpolateParams=true` enables client side parameter interpolation.
+	// It reduces round trips without prepared statement.
+	//
+	// Before Go 1.5 is released, we can see real power of Go with this benchmark.
+	// After Go 1.5 is released, we can see prepared statement vs interpolation by comparing
+	// this and another lightweight Go framework.
+	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?interpolateParams=true"
 	worldSelect        = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate        = "UPDATE World SET randomNumber = ? WHERE id = ?"
 	fortuneSelect      = "SELECT id, message FROM Fortune;"
 	worldRowCount      = 10000
 	maxConnectionCount = 256
-
-	helloWorldString = "Hello, World!"
 )
+
+const helloWorldString = "Hello, World!"
 
 var (
 	// Templates
 	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 
 	// Database
-	worldStatement   *sql.Stmt
-	fortuneStatement *sql.Stmt
-	updateStatement  *sql.Stmt
+	db *sql.DB
 
 	helloWorldBytes = []byte(helloWorldString)
 )
@@ -68,23 +77,12 @@ func main() {
 		listener = doPrefork()
 	}
 
-	db, err := sql.Open("mysql", connectionString)
+	var err error
+	db, err = sql.Open("mysql", connectionString)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
 	}
 	db.SetMaxIdleConns(maxConnectionCount)
-	worldStatement, err = db.Prepare(worldSelect)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fortuneStatement, err = db.Prepare(fortuneSelect)
-	if err != nil {
-		log.Fatal(err)
-	}
-	updateStatement, err = db.Prepare(worldUpdate)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	http.HandleFunc("/db", dbHandler)
 	http.HandleFunc("/queries", queriesHandler)
@@ -155,7 +153,7 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 // Test 2: Single database query
 func dbHandler(w http.ResponseWriter, r *http.Request) {
 	var world World
-	err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
+	err := db.QueryRow(worldSelect, rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
 	if err != nil {
 		log.Fatalf("Error scanning world row: %s", err.Error())
 	}
@@ -179,7 +177,7 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 
 	world := make([]World, n)
 	for i := 0; i < n; i++ {
-		err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber)
+		err := db.QueryRow(worldSelect, rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber)
 		if err != nil {
 			log.Fatalf("Error scanning world row: %s", err.Error())
 		}
@@ -191,7 +189,7 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 
 // Test 4: Fortunes
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
-	rows, err := fortuneStatement.Query()
+	rows, err := db.Query(fortuneSelect)
 	if err != nil {
 		log.Fatalf("Error preparing statement: %v", err)
 	}
@@ -204,6 +202,7 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fortunes = append(fortunes, &fortune)
 	}
+	rows.Close()
 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
 
 	sort.Sort(ByMessage{fortunes})
@@ -230,11 +229,11 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	world := make([]World, n)
 	for i := 0; i < n; i++ {
-		if err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
+		if err := db.QueryRow(worldSelect, rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
 			log.Fatalf("Error scanning world row: %s", err.Error())
 		}
 		world[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
-		if _, err := updateStatement.Exec(world[i].RandomNumber, world[i].Id); err != nil {
+		if _, err := db.Exec(worldUpdate, world[i].RandomNumber, world[i].Id); err != nil {
 			log.Fatalf("Error updating world row: %s", err.Error())
 		}
 	}
