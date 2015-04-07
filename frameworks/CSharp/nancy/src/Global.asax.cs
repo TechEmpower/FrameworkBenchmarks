@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 using Nancy;
+using Nancy.ErrorHandling;
 using System.Threading;
 
 namespace NancyBenchmark
@@ -10,6 +11,7 @@ namespace NancyBenchmark
     {
         protected void Application_Start()
         {
+            StaticConfiguration.DisableErrorTraces = false;
             var threads = 40 * Environment.ProcessorCount;
             ThreadPool.SetMaxThreads(threads, threads);
             ThreadPool.SetMinThreads(threads, threads);
