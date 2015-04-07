@@ -13,6 +13,6 @@ $PY2_PIP install --install-option="--prefix=${PY2_ROOT}" -r $TROOT/requirements.
 
 cd $TROOT
 rm -fr web2py
-git clone --recursive https://github.com/web2py/web2py.git 
+git clone --recursive --branch R-2.10.3 https://github.com/web2py/web2py.git 
 cp -r app/app/ web2py/applications/
 cp app/routes.py web2py/
