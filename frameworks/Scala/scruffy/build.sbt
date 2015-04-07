@@ -2,12 +2,12 @@ name := "scruffy-benchmark"
 
 organization := "com.sksamuel.scruffy"
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.6"
 
-version := "1.0.1"
+version := "10.1" // version 10 for round 10
 
 libraryDependencies ++= Seq(
-  "com.sksamuel.scruffy" %% "scruffy-server" % "1.4.15",
+  "com.sksamuel.scruffy" %% "scruffy-undertow" % "1.9.0",
   "org.mongodb" %% "casbah-core" % "2.7.1"
 )
 

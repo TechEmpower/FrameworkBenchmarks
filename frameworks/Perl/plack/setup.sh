@@ -1,4 +1,6 @@
 #!/bin/bash
+export PERL_HOME=${IROOT}/perl-5.18
+export NGINX_HOME=${IROOT}/nginx
 
 sed -i 's|localhost|'"${DBHOST}"'|g' app.psgi
 sed -i 's|server unix:.*/FrameworkBenchmarks/plack|server unix:'"${TROOT}"'|g' nginx.conf

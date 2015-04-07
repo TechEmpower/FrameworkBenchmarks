@@ -1,4 +1,6 @@
 #!/bin/bash
+export PERL_HOME=${IROOT}/perl-5.18
+export NGINX_HOME=${IROOT}/nginx
 
 sed -i 's|localhost|'"${DBHOST}"'|g' app.pl
 #sed -i 's|user .*;|user '"$(id -u -n)"';|g' nginx.conf

@@ -18,7 +18,8 @@ class FortuneTestType(FrameworkTestType):
     valid fortune response
     '''
     url = base_url + self.fortune_url
-    body = self._curl(url)
+    full_response = self._curl(url)
+    body = self._curl_body(url)
     
     # Empty response
     if body is None:
@@ -30,6 +31,11 @@ class FortuneTestType(FrameworkTestType):
     parser.feed(body)
     (valid, diff) = parser.isValidFortune(self.out)
     if valid:
+      # Ensure required response headers are present
+      if any(v.lower() not in full_response.lower() for v in ('Server','Date','Content-Type: text/html')) \
+         or all(v.lower() not in full_response.lower() for v in ('Content-Length','Transfer-Encoding')):
+        return[('warn','Required response header missing.',url)]
+
       return [('pass','',url)]
     else:
       failures = [('fail','Invalid according to FortuneHTMLParser',url)]

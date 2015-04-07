@@ -1,5 +1,5 @@
-requires 'Mojolicious', '>= 5.29';
-requires 'Mango', '>= 1.0';
+requires 'Mojolicious', '>= 6.02';
+requires 'Mojo::Pg', '>= 1.14';
 requires 'JSON::XS';
 requires 'EV';
 

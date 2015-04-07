@@ -100,7 +100,7 @@ install the dependencies required by your project.
     fw_depends php composer 
     
     # Download dependencies
-    ${IROOT}/php-5.5.17/bin/php $IROOT/composer.phar install \
+    ${IROOT}/php-5.5.17/bin/php ${COMPOSER_HOME}/composer.phar install \
     --no-interaction --working-dir $TROOT --no-progress \
     --optimize-autoloader 
 
@@ -139,7 +139,7 @@ queries as they are shown. Use these steps
     # This will manually prompt you for your Github credentials 
     # to avoid the Github rate limit
     # When this command completes, you will have a lock file 
-    ${IROOT}/php-5.5.17/bin/php $IROOT/composer.phar install \
+    ${IROOT}/php-5.5.17/bin/php ${COMPOSER_HOME}/composer.phar install \
       --working-dir $TROOT
     
     # Add the lock file to this repository

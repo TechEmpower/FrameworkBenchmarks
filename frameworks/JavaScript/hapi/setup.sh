@@ -1,4 +1,5 @@
 #!/bin/bash
+export NODE_HOME=${IROOT}/node-v0.10.8-linux-x64
 
 sed -i 's|localhost|'"${DBHOST}"'|g' app.js
 

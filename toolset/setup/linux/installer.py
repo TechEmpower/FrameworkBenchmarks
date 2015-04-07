@@ -107,12 +107,8 @@ class Installer:
       previousDir = os.getcwd()
       os.chdir(test_dir)
 
-      # Load profile for this installation
-      profile="%s/bash_profile.sh" % test_dir
-      if not os.path.exists(profile):
-        profile="$FWROOT/config/benchmark_profile"
-      else:
-        logging.info("Loading environment from %s (cwd=%s)", profile, test_dir)
+      # Load benchmark_profile file
+      profile="$FWROOT/config/benchmark_profile"
       setup_util.replace_environ(config=profile, 
         command='export TROOT=%s && export IROOT=%s' %
         (test_dir, test_install_dir))

@@ -99,11 +99,9 @@ You can see Flask's files to know how to write new test.
 virtualenv is installed on Python 2 and PyPy.  Use `$IROOT/py3/bin/python3 -m venv $TROOT/py3`
 for Python 3.
 
-`bash_profile.sh` is evaluated when running test.  You can set environment variables here.
-
 `bechmark_config` is json file to define test.
-See [here](https://github.com/TechEmpower/FrameworkBenchmarks#the-benchmark_config-file)
+See [here](https://github.com/TechEmpower/FrameworkBenchmarks#the-benchmark_configjson-file)
 
-`setup_py2.py` is used to run test on Python 2.  `gunicorn_conf.py` is configuration for gunicorn.
-`setup_py2.py` and `gunicorn_conf.py` are written as generic as possible.
+`setup_py2.sh` is used to run test on Python 2.  `gunicorn_conf.py` is configuration for gunicorn.
+`setup_py2.sh` and `gunicorn_conf.py` are written as generic as possible.
 You may be able to use it with changing wsgi callable.  (`$PY2_GUNICORN wsgimodule:callable -c gunicorn_conf.py`)
