@@ -123,6 +123,7 @@ env:
     - "TESTDIR=Python/pyramid"
     - "TESTDIR=Python/tornado"
     - "TESTDIR=Python/uwsgi"
+    - "TESTDIR=Python/web2py"
     - "TESTDIR=Python/wsgi"
     - "TESTDIR=Racket/racket-ws"
     - "TESTDIR=Ruby/grape"
