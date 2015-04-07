@@ -84,7 +84,8 @@ func getRandomNumber() uint16 {
 
 // Test 1: JSON serialization
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/javascript")
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Server", "go-mongodb")
 	json.NewEncoder(w).Encode(&Message{helloWorldString})
 }
 
@@ -97,6 +98,7 @@ func dbHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		} else {
 			w.Header().Set("Content-Type", "application/json")
+			w.Header().Set("Server", "go-mongodb")
 			json.NewEncoder(w).Encode(&world)
 			return
 		}
@@ -116,6 +118,7 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Server", "go-mongodb")
 	encoder := json.NewEncoder(w)
 
 	if n <= 1 {
@@ -141,6 +144,7 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Server", "go-mongodb")
 	f := make(Fortunes, 16)
 	if err := fortunes.Find(nil).All(&f); err == nil {
 		f = append(f, Fortune{
@@ -161,6 +165,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Server", "go-mongodb")
 	encoder := json.NewEncoder(w)
 
 	if n <= 1 {
@@ -195,5 +200,6 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 
 func plaintextHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Server", "go-mongodb")
 	w.Write([]byte(helloWorldString))
 }
