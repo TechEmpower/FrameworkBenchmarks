@@ -1,1 +1,0 @@
-sphinxcontrib-napoleon>=0.2.4

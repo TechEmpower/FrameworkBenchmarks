@@ -1,5 +1,0 @@
-include LICENSE
-include AUTHORS
-include CHANGES
-recursive-include tests *
-recursive-include docs *
