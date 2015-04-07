@@ -1,9 +1,7 @@
 #!/bin/bash
-
 export PHP_HOME=${IROOT}/php-5.5.17
-
+export COMPOSER_HOME=${IROOT}/php-composer
 export PHP_FPM=$PHP_HOME/sbin/php-fpm
-
 export NGINX_HOME=${IROOT}/nginx
 
 sed -i 's|localhost:3306|'"${DBHOST}"':3306|g' index.php

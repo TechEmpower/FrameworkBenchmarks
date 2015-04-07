@@ -26,6 +26,7 @@ env:
     - "TESTDIR=CSharp/nancy"
     - "TESTDIR=CSharp/servicestack"
     - "TESTDIR=C++/cpoll_cppsp"
+    - "TESTDIR=C++/silicon"
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ULib"
     - "TESTDIR=C++/wt"
@@ -43,7 +44,6 @@ env:
     - "TESTDIR=Go/falcore"
     - "TESTDIR=Go/gin"
     - "TESTDIR=Go/go"
-    - "TESTDIR=Go/gorail"
     - "TESTDIR=Go/revel"
     - "TESTDIR=Go/revel-jet"
     - "TESTDIR=Go/revel-qbs"
@@ -117,12 +117,14 @@ env:
     - "TESTDIR=PHP/phreeze"
     - "TESTDIR=Python/API-Hour"
     - "TESTDIR=Python/bottle"
+    - "TESTDIR=Python/cherrypy"
     - "TESTDIR=Python/django"
     - "TESTDIR=Python/falcon"
     - "TESTDIR=Python/flask"
     - "TESTDIR=Python/pyramid"
     - "TESTDIR=Python/tornado"
     - "TESTDIR=Python/uwsgi"
+    - "TESTDIR=Python/wheezyweb"
     - "TESTDIR=Python/wsgi"
     - "TESTDIR=Racket/racket-ws"
     - "TESTDIR=Ruby/grape"
@@ -140,6 +142,7 @@ env:
     - "TESTDIR=Scala/scalatra"
     - "TESTDIR=Scala/scruffy"
     - "TESTDIR=Scala/spray"
+    - "TESTDIR=Scala/spray-es"
     - "TESTDIR=Scala/unfiltered"
     - "TESTDIR=Ur/urweb"
 
@@ -165,4 +168,3 @@ install:
 script: 
   # Pick one test in this directory and verify
   - time ./toolset/run-ci.py verify "$TESTDIR"
-  
