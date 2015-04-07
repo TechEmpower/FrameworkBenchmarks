@@ -556,7 +556,7 @@ if __name__ == "__main__":
             log.info(line.rstrip('\n'))
       except IOError:
         log.error("No OUT file found")
-    '''
+
 
     log.error("Running inside Travis-CI, so I will print a copy of the verification summary")
 
@@ -594,7 +594,7 @@ if __name__ == "__main__":
       else:
         print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
     print prefix + header('', top='', bottom='=') + Style.RESET_ALL
-
+    '''
 
     sys.exit(retcode)
 

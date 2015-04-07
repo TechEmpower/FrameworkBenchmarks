@@ -563,7 +563,7 @@ class Benchmarker:
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
-          self.__stop_test(out, err)
+          self.__stop_test(test, out, err)
           out.flush()
           err.flush()
           time.sleep(15)
@@ -577,7 +577,7 @@ class Benchmarker:
 
         result = test.start(out, err)
         if result != 0: 
-          self.__stop_test(out, err)
+          self.__stop_test(test, out, err)
           time.sleep(5)
           err.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           err.flush()
@@ -611,14 +611,14 @@ class Benchmarker:
         ##########################
         out.write(header("Stopping %s" % test.name))
         out.flush()
-        self.__stop_test(out, err)
+        self.__stop_test(test, out, err)
         out.flush()
         err.flush()
         time.sleep(15)
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
-          self.__stop_test(out, err)
+          self.__stop_test(test, out, err)
           out.flush()
           err.flush()
           time.sleep(15)
@@ -650,7 +650,7 @@ class Benchmarker:
         traceback.print_exc(file=err)
         err.flush()
         try:
-          self.__stop_test(out, err)
+          self.__stop_test(test, out, err)
         except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
           err.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
@@ -662,7 +662,7 @@ class Benchmarker:
       # TODO - subprocess should not catch this exception!
       # Parent process should catch it and cleanup/exit
       except (KeyboardInterrupt) as e:
-        self.__stop_test(out, err)
+        self.__stop_test(test, out, err)
         out.write(header("Cleaning up..."))
         out.flush()
         self.__finish()
@@ -680,7 +680,7 @@ class Benchmarker:
   # __stop_test(benchmarker)
   # Stops all running tests
   ############################################################
-  def __stop_test(self, out, err):
+  def __stop_test(self, test, out, err):
     try:
       subprocess.check_call('sudo killall -s 9 -u %s' % self.runner_user, shell=True, stderr=err, stdout=out)
       retcode = 0

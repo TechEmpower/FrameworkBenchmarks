@@ -182,11 +182,12 @@ class FrameworkTest:
     #   -E Preserves the current environment variables
     #   -H Forces the home var (~) to be reset to the user specified
     #   -e Force bash to exit on first error
+    #   -x Turn on bash tracing e.g. print commands before running
     # Note: check_call is a blocking call, so any startup scripts
     # run by the framework that need to continue (read: server has
     # started and needs to remain that way), then they should be
     # executed in the background.
-    command = 'sudo -u %s -E -H bash -e %s.sh' % (self.benchmarker.runner_user, self.setup_file)
+    command = 'sudo -u %s -E -H bash -ex %s.sh' % (self.benchmarker.runner_user, self.setup_file)
     
     debug_command = '''\
       export FWROOT=%s && \\
@@ -238,61 +239,103 @@ class FrameworkTest:
     # Run setup.sh
     # Printing output until subprocess terminates
     class RunSetup(Thread):
-      def __init__(self, command, directory, deadProcessFlag, name):
-          Thread.__init__(self)
-          self.command = command
-          self.directory = directory
-          self.deadProcessFlag = deadProcessFlag
-          self.prefix = "Setup %s:" % name
+      def __init__(self, command, directory, stopFlag, setupFinished, name):
+        Thread.__init__(self)
+        self.command = command
+        self.directory = directory
+        self.stopFlag = stopFlag
+        self.setupFinished = setupFinished
+        self.setupResult = None
+        self.name = name
+        self.prefix = "Setup %s: " % self.name
+
+      def get_setup_result(self):
+        return self.setupResult
+
+      def _output(self, line):
+        # Log to current terminal
+        # Needs to be one atomic write, so we join because 
+        # list operations are faster than string concat
+        sys.stdout.write("".join([self.prefix, line]))
+        sys.stdout.flush()
+        # logging.error(body)
+
+      # Goal: Stream output of both benchmark toolset and 
+      # server to the console and to a file
+      # Problem: Capturing output of subprocess and children
+      # Solution: Use pipes provided by python
+      # Future-proof: Add unit tests that ensure this code works in all situations
 
       def run(self):
-        # Run in backgroud, using line buffered output
-        # Thanks: http://www.saltycrane.com/blog/2009/10/how-capture-stdout-in-real-time-python/
+        # Run in setup.sh in background, using line buffered output and PIPEs
         p = subprocess.Popen(self.command, cwd=self.directory, 
           shell=True, stdout=subprocess.PIPE, bufsize=1, 
           stderr=subprocess.STDOUT)
-        
-        # Flush output until process dies
-        # Output is sent to current terminal (via logging)
-        # Output is sent to file
-        while p.returncode is None:
+
+        # Flush output until setup.sh process dies. Note that 
+        # the child processes forked using & will still be alive
+        # and directing their output to the pipes
+        while p.poll() is None:
           line = p.stdout.readline()
-          if not line:
+          if line:
+            self._output(line)
+          else:
             time.sleep(0.5)
-            continue
+
+        self._output("Exited with code %s\n" % p.returncode)
+        self.prefix = "Server %s: " % self.name
+        self.setupResult = p.returncode
+        self.setupFinished.set()
+            
+        # Setup.sh process has terminated, now we watch for output from
+        # child processes until the framework_test#stop is called. 
+        # (This also captures any remaining output that may have happened 
+        # between readline and poll)
+        while self.stopFlag.wait(0.5):
+          line = p.stdout.readline()
+          if line:
+            self._output(line)
           
-          # Log to current terminal
-          # Needs to be one atomic write, so we join because 
-          # list operations are faster than string concat
-          sys.stdout.write("".join([self.prefix, line]))
-          sys.stdout.flush()
-          # logging.error(body)
+        # Grab any remaining output
+        pout = p.communicate()[0]
+        for line in pout.splitlines():
+          self._output(line)
         
-          # Log it to file
-          out.write(line)
+    '''
+    from threading import Event
+    from threading import Thread
+    import subprocess
+    import sys
+    import time
 
-        # Process has died (may have left children, but setup.sh has
-        # exited), so signal that it's safe to return from start
-        deadProcessFlag.set()
+    command = 'sudo -u testrunner -E -H bash -e setup.sh'
+    directory='/home/vagrant/FrameworkBenchmarks/frameworks/CSharp/evhttp-sharp'
+    stopFlag = Event()
+    setup_thread = RunSetup(command, directory, stopFlag, 'evhttp')
+    # setup_thread.start()
+    '''
 
-    deadProcessFlag = Event()
-    setup_thread = RunSetup(command, self.directory, deadProcessFlag, self.name)
+    self.stopFlag = Event()
+    setupFinished = Event()
+    setup_thread = RunSetup(command, self.directory, self.stopFlag, setupFinished, self.name)
     setup_thread.start()
-
-    # We can return once the port is bound or the process is dead
-    while not (self.benchmarker.is_port_bound(self.port) or deadProcessFlag.wait(5)):
+    
+    # We can return once the port is bound or the setup process is dead
+    while not setupFinished.wait(5):
       sys.stderr.write("Waiting for start to return...\n")
 
-    logging.info("Executed %s.sh", self.setup_file)
-
-    retcode = 0
+    logging.info("Executed %s.sh, returning %s", self.setup_file, setup_thread.get_setup_result())
 
     os.chdir(previousDir)
 
-    return retcode
+    return setup_thread.get_setup_result()
   ############################################################
   # End start
   ############################################################
+
+  def stop(self, out, err):
+    if self.stopFlag: 
+      self.stopFlag.set()
 
   ############################################################
   # verify_urls
