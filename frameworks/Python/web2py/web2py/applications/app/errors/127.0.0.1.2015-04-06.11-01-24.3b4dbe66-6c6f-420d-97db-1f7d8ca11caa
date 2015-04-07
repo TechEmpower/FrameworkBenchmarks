@@ -1,0 +1,21 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.TypeError'> 'NoneType' object is not callable"
+p3
+sS'layer'
+p4
+S'/home/knewman/FrameworkBenchmarks/frameworks/Python/web2py/web2py/applications/app/controllers/default.py'
+p5
+sS'code'
+p6
+S'# -*- coding: utf-8 -*-\n\ndef plaintext():\n    response.headers[\'Content-Type\']=\'text/plain; charset=UTF-8\'\n    response.write("Hello, World!")\n    return response.getvalue()\n\nresponse._vars=response._caller(plaintext)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+sS'traceback'
+p10
+S'Traceback (most recent call last):\n  File "/home/knewman/FrameworkBenchmarks/frameworks/Python/web2py/web2py/gluon/restricted.py", line 227, in restricted\n    exec ccode in environment\n  File "/home/knewman/FrameworkBenchmarks/frameworks/Python/web2py/web2py/applications/app/controllers/default.py", line 8, in <module>\n  File "/home/knewman/FrameworkBenchmarks/frameworks/Python/web2py/web2py/gluon/globals.py", line 393, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/knewman/FrameworkBenchmarks/frameworks/Python/web2py/web2py/applications/app/controllers/default.py", line 6, in plaintext\n    return response.getvalue()\nTypeError: \'NoneType\' object is not callable\n'
+p11
+s.

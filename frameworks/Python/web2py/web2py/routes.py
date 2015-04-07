@@ -1,8 +1,14 @@
-SE = dict(
+routers = dict(
+    BASE = dict(
         default_application='app',
     )
-) 
+)
+
 routes_in = (
-	("/json", "/init/default/json"),
-	("/plaintext", "/init/default/plaintext"),
+	("/json", "/app/default/json"),
+	("/plaintext", "/app/default/plaintext"),
+        ("/db", "/app/default/db"),
+	("/queries", "/app/default/queries"),
+	("/updates", "/app/default/updates"),
+	("/fortune", "/app/default/fortune")
 )
