@@ -1,0 +1,51 @@
+{
+  "framework": "silicon",
+  "tests": [{
+    "default": {
+      "setup_file": "setup_tpc_mysql",
+      "json_url"       : "/json",
+      "db_url"         : "/db",
+      "query_url"      : "/queries?queries=",
+      "fortune_url"    : "/fortunes",
+      "update_url"     : "/updates?queries=",
+      "plaintext_url"  : "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "silicon",
+      "language": "C++",
+      "orm": "Full",
+      "platform": "Silicon",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "silicon-tpc-mysql",
+      "notes": "",
+      "versus": ""
+    },
+    "epoll-mysql": {
+      "setup_file": "setup_epoll_mysql",
+      "json_url"       : "/json",
+      "db_url"         : "/db",
+      "query_url"      : "/queries?queries=",
+      "fortune_url"    : "/fortunes",
+      "update_url"     : "/updates?queries=",
+      "plaintext_url"  : "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "silicon",
+      "language": "C++",
+      "orm": "Full",
+      "platform": "Silicon",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "silicon-epoll-mysql",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
