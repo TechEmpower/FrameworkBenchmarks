@@ -1,8 +1,8 @@
 # web2py Benchmark Test 
 
-Main controller found [web2py/applications/app/controllers/default.py](here)
-Database model found [web2py/applications/app/models/db.py](here)
-Fortunes template found [web2py/applications/app/views/default/fortune.html](here)
+Main controller found [here](web2py/applications/app/controllers/default.py)
+Database model found [here](web2py/applications/app/models/db.py)
+Fortunes template found [here](web2py/applications/app/views/default/fortune.html)
 
 ## Description
 
