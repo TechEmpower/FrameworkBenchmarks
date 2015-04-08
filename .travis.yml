@@ -5,7 +5,7 @@ python:
 branches:
   only:
     - master
-    -/^round-.*$/
+    - /^round-.*$/
 
 env:
   matrix:
