@@ -293,7 +293,6 @@ class FrameworkTest:
       
       def output_result(result, reason, url):
         specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
-        prefix = Fore.CYAN
         color = Fore.GREEN
         showRules = False
         if result.upper() == "WARN":
@@ -303,8 +302,8 @@ class FrameworkTest:
           color = Fore.RED
           showRules = True
 
-        out.write((prefix + "   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
-        print (prefix + "   " + color + "%s" + Style.RESET_ALL + " for %s") % (result.upper(), url)
+        out.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
+        print ("   " + color + "%s" + Style.RESET_ALL + " for %s") % (result.upper(), url)
         if reason is not None and len(reason) != 0:
           for line in reason.splitlines():
             out.write("     " + line + '\n')
