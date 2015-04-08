@@ -300,9 +300,14 @@ class FrameworkTest:
       or self.benchmarker.is_port_bound(self.port)
       or time_remaining.total_seconds() < 0):
       
-      line = nbsr.readline(0.1)
-      if line:
-        tee_output(prefix, line)
+      # The conditions above are slow to check, so 
+      # we miss many lines of output if we only
+      # print one line per condition check. Adding a 
+      # tight loop here mitigates the effect
+      for i in xrange(10):
+        line = nbsr.readline(0.05)
+        if line:
+          tee_output(prefix, line)
       time_remaining = timeout - datetime.now()
 
     # Were we timed out?
