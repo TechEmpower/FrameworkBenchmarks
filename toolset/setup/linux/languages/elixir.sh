@@ -4,6 +4,16 @@ RETCODE=$(fw_exists ${IROOT}/elixir.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 fw_depends erlang
-sudo apt-get install -y elixir
+export PATH=$PATH:$IROOT/erlang/bin
+
+VERSION="1.0.4"
+fw_get https://codeload.github.com/elixir-lang/elixir/tar.gz/v${VERSION}
+fw_untar v${VERSION}
+
+(
+	mv elixir-${VERSION} elixir
+	cd elixir
+	make compile
+)
 
 touch ${IROOT}/elixir.installed

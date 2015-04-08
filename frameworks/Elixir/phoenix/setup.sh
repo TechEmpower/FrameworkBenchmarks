@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PATH=$PATH:$ERL_BIN:$ELX_BIN
+
 # sed -i 's|db_host: "localhost",|db_host: "${DBHOST}",|g' config/config.exs
 
 mix local.hex --force

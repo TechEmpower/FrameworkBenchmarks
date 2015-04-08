@@ -1,6 +1,8 @@
 #!/bin/bash
 export REBAR_HOME=$IROOT/rebar
 
+export PATH=$PATH:$ERL_BIN
+
 sed -i 's|"benchmarkdbpass", ".*", 3306|"benchmarkdbpass", "'"${DBHOST}"'", 3306|g' src/hello_world_app.erl
 
 rm -rf deps/*
