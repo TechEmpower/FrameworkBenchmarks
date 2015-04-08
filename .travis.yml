@@ -149,7 +149,7 @@ env:
 before_install:
   # Need to install python modules before using 
   # python
-  - pip install -r config/python_requirements.txt
+  - pip install -r requirements.txt
 
   # Configure Travis-CI build environment for TFB
   #   e.g. setup databases, users, etc
