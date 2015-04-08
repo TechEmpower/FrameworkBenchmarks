@@ -45,7 +45,6 @@ env:
     - "TESTDIR=Go/gin"
     - "TESTDIR=Go/go"
     - "TESTDIR=Go/go-mongodb"
-    - "TESTDIR=Go/gorail"
     - "TESTDIR=Go/revel"
     - "TESTDIR=Go/revel-jet"
     - "TESTDIR=Go/revel-qbs"
