@@ -45,8 +45,8 @@ class JsonTestType(FrameworkTestType):
       return [('fail',"Expected message of 'hello, world!', got '%s'"%response['message'], url)]
 
     # Ensure required response headers are present
-    if any(v.lower() not in full_response for v in ('Server','Date','Content-Type: application/json')) \
-       or all(v.lower() not in full_response for v in ('Content-Length','Transfer-Encoding')):
+    if any(v.lower() not in full_response.lower() for v in ('Server','Date','Content-Type: application/json')) \
+       or all(v.lower() not in full_response.lower() for v in ('Content-Length','Transfer-Encoding')):
       return [('warn','Required response header missing.',url)]
 
     return [('pass','',url)]
