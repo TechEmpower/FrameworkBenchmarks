@@ -140,7 +140,6 @@ env:
     - "TESTDIR=Scala/finagle"
     - "TESTDIR=Scala/lift-stateless"
     - "TESTDIR=Scala/plain"
-    - "TESTDIR=Scala/play-activate-mysql"
     - "TESTDIR=Scala/play2-scala"
     - "TESTDIR=Scala/scalatra"
     - "TESTDIR=Scala/scruffy"
