@@ -28,7 +28,7 @@ from threading import Thread
 from Queue import Queue, Empty
 
 class NonBlockingStreamReader:
-  def __init__(self, stream):
+  def __init__(self, stream, eof_message = None):
     '''
     stream: the stream to read from.
             Usually a process' stdout or stderr.
@@ -36,10 +36,11 @@ class NonBlockingStreamReader:
 
     self._s = stream
     self._q = Queue()
+    self._eof_message = eof_message
 
     def _populateQueue(stream, queue):
       '''
-      Collect lines from 'stream' and put them in 'quque'.
+      Collect lines from 'stream' and put them in 'queue'.
       '''
 
       while True:
@@ -47,7 +48,9 @@ class NonBlockingStreamReader:
         if line:
           queue.put(line)
         else:
-          raise UnexpectedEndOfStream
+          if self._eof_message:
+            sys.stdout.write(self._eof_message + '\n')
+          return
 
     self._t = Thread(target = _populateQueue,
             args = (self._s, self._q))
@@ -60,9 +63,6 @@ class NonBlockingStreamReader:
         timeout = timeout)
     except Empty:
       return None
-
-class UnexpectedEndOfStream(Exception): pass
-
 
 class FrameworkTest:
   headers_template = "-H 'Host: localhost' -H '{accept}' -H 'Connection: keep-alive'"
@@ -220,17 +220,25 @@ class FrameworkTest:
     logging.info("Running setup module start (cwd=%s)", self.directory)
       
     # Run the start script for the test as the "testrunner" user.
-    # This requires superuser privs, so `sudo` is necessary.
+    # 
+    # `sudo` - Switching user requires superuser privs
     #   -u [username] The username
     #   -E Preserves the current environment variables
     #   -H Forces the home var (~) to be reset to the user specified
+    # `stdbuf` - Disable buffering, send output to python ASAP
+    #   -o0 zero-sized buffer for stdout
+    #   -e0 zero-sized buffer for stderr
+    # `bash` - Run the setup.sh script using bash
     #   -e Force bash to exit on first error
     #   -x Turn on bash tracing e.g. print commands before running
-    # Note: check_call is a blocking call, so any startup scripts
-    # run by the framework that need to continue (read: server has
-    # started and needs to remain that way), then they should be
-    # executed in the background.
-    command = 'sudo -u %s -E -H bash -ex %s.sh' % (self.benchmarker.runner_user, self.setup_file)
+    #
+    # Most servers do not output to stdout/stderr while 
+    # serving requests so there is no performance hit from disabling 
+    # output buffering. Disabling is necessary to 
+    # a) allowing us to show output in real time b) avoiding lost 
+    # output in the buffer when the testrunner user is forcibly killed
+    # See http://www.pixelbeat.org/programming/stdio_buffering/
+    command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -ex %s.sh' % (self.benchmarker.runner_user, self.setup_file)
     
     debug_command = '''\
       export FWROOT=%s && \\
@@ -270,9 +278,9 @@ class FrameworkTest:
     # http://eyalarubas.com/python-subproc-nonblock.html
 
     p = subprocess.Popen(command, cwd=self.directory, 
-          shell=True, stdout=subprocess.PIPE, bufsize=1, 
+          shell=True, stdout=subprocess.PIPE, bufsize=0, 
           stderr=subprocess.STDOUT)
-    nbsr = NonBlockingStreamReader(p.stdout)
+    nbsr = NonBlockingStreamReader(p.stdout, "Processes for %s have terminated" % self.name)
 
     timeout = datetime.now() + timedelta(minutes = 10)
     time_remaining = timeout - datetime.now()
@@ -306,6 +314,10 @@ class FrameworkTest:
     # If setup.sh exited, use the return code
     # Else return 0 if the port was bound
     retcode = (p.poll() or 0 if self.benchmarker.is_port_bound(self.port) else 1)
+    if p.poll():
+      print "Setup.sh exited with %s" % p.poll()
+    if self.benchmarker.is_port_bound(self.port):
+      print "Setup.sh exited due to bound port"
 
     # Before we return control to the benchmarker, spin up a 
     # thread to keep an eye on the pipes in case the server 
