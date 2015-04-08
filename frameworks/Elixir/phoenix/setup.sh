@@ -4,6 +4,8 @@ export PATH=$PATH:$ERL_BIN:$ELX_BIN
 
 # sed -i 's|db_host: "localhost",|db_host: "${DBHOST}",|g' config/config.exs
 
+rm -rf _build deps
+
 mix local.hex --force
 mix local.rebar --force
 mix deps.get --force
