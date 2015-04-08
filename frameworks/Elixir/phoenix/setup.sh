@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export PATH=$PATH:$ERL_BIN:$ELX_BIN
+source $IROOT/elixir.installed
 
-# sed -i 's|db_host: "localhost",|db_host: "${DBHOST}",|g' config/config.exs
+sed -i 's|db_host: "localhost",|db_host: "${DBHOST}",|g' config/config.exs
 
 rm -rf _build deps
 

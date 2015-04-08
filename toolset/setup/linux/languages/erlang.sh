@@ -1,7 +1,7 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/erlang.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+RETCODE=$(fw_exists $IROOT/erlang.installed)
+[ ! "$RETCODE" == 0 ] || { . $IROOT/erlang.installed; return 0; }
 
 export OTP_SRC="otp_src_17.5"
 fw_get http://www.erlang.org/download/${OTP_SRC}.tar.gz
@@ -15,4 +15,4 @@ fw_untar ${OTP_SRC}.tar.gz
 	make install
 )
 
-touch ${IROOT}/erlang.installed
+echo "export PATH=$PATH:$IROOT/erlang/bin" >> $IROOT/erlang.installed

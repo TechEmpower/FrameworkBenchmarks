@@ -1,7 +1,7 @@
 #!/bin/bash
-export REBAR_HOME=$IROOT/rebar
 
-export PATH=$PATH:$ERL_BIN
+source $IROOT/erlang.installed
+source $IROOT/rebar.installed
 
 sed -i 's|"benchmarkdbpass", ".*", 3306|"benchmarkdbpass", "'"${DBHOST}"'", 3306|g' src/elli_bench_sup.erl
 
