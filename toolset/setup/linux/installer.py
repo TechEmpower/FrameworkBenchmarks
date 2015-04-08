@@ -148,47 +148,21 @@ class Installer:
   ############################################################
   # __run_command
   ############################################################
-  def __run_command(self, command, send_yes=False, cwd=None, retry=False):
+  def __run_command(self, command, send_yes=False, cwd=None):
     if cwd is None: 
         cwd = self.install_dir
 
-    if retry:
-      max_attempts = 5
-    else:
-      max_attempts = 1
-    attempt = 1
-    delay = 0
     if send_yes:
       command = "yes yes | " + command
         
     rel_cwd = setup_util.path_relative_to_root(cwd)
     print("INSTALL: %s (cwd=$FWROOT/%s)" % (command, rel_cwd))
 
-    while attempt <= max_attempts:
-      error_message = ""
-      try:
-
-        # Execute command.
-        subprocess.check_call(command, shell=True, cwd=cwd, executable='/bin/bash')
-        break  # Exit loop if successful.
-      except:
-        exceptionType, exceptionValue, exceptionTraceBack = sys.exc_info()
-        error_message = "".join(traceback.format_exception_only(exceptionType, exceptionValue))
-
-      # Exit if there are no more attempts left.
-      attempt += 1
-      if attempt > max_attempts:
-        break
-
-      # Delay before next attempt.
-      if delay == 0:
-        delay = 5
-      else:
-        delay = delay * 2
-      print("Attempt %s/%s starting in %s seconds." % (attempt, max_attempts, delay))
-      time.sleep(delay)
-
-    if error_message:
+    try:
+      subprocess.check_call(command, shell=True, cwd=cwd, executable='/bin/bash')
+    except:
+      exceptionType, exceptionValue, exceptionTraceBack = sys.exc_info()
+      error_message = "".join(traceback.format_exception_only(exceptionType, exceptionValue))
       self.__install_error(error_message)
   ############################################################
   # End __run_command
