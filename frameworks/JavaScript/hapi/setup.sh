@@ -4,7 +4,6 @@ export NODE_HOME=${IROOT}/node-v0.10.8-linux-x64
 sed -i 's|localhost|'"${DBHOST}"'|g' app.js
 
 export NODE_ENV=production
-export NODE_HOME=${IROOT}/node-v0.12.0-linux-x64
 export PATH=$PATH:$NODE_HOME/bin
 
 ${NODE_HOME}/bin/npm install
