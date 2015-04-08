@@ -216,16 +216,12 @@ class FrameworkTest:
       export IROOT=%s && \\
       export DBHOST=%s && \\
       export MAX_THREADS=%s && \\
-      export OUT=%s && \\
-      export ERR=%s && \\
       cd %s && \\
       %s''' % (self.fwroot, 
         self.directory, 
         self.install_root, 
         self.database_host, 
         self.benchmarker.threads, 
-        os.path.join(self.fwroot, out.name), 
-        os.path.join(self.fwroot, err.name),
         self.directory,
         command)
     logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)

@@ -107,22 +107,38 @@ class Installer:
       previousDir = os.getcwd()
       os.chdir(test_dir)
 
-      # Load benchmark_profile file
-      profile="$FWROOT/config/benchmark_profile"
-      setup_util.replace_environ(config=profile, 
+      # Load environment
+      setup_util.replace_environ(config='$FWROOT/config/benchmark_profile', 
         command='export TROOT=%s && export IROOT=%s' %
         (test_dir, test_install_dir))
 
-      # Run test installation script
-      #   FWROOT - Path of the FwBm root
-      #   IROOT  - Path of this test's install directory
+      # Run the install.sh script for the test as the "testrunner" user
+      # 
+      # `sudo` - Switching user requires superuser privs
+      #   -u [username] The username
+      #   -E Preserves the current environment variables
+      #   -H Forces the home var (~) to be reset to the user specified
       #   TROOT  - Path to this test's directory 
-      # Note: Cannot use ''' for newlines here or the script
-      # passed to `bash -c` will fail.
-      self.__run_command('sudo -u %s -E -H bash -c "export TROOT=%s && export IROOT=%s && source %s && source %s"' % 
-        (self.benchmarker.runner_user, test_dir, test_install_dir, 
-          bash_functions_path, test_install_file),
-          cwd=test_install_dir)
+      #   IROOT  - Path of this test's install directory
+      # TODO export bash functions and call install.sh directly
+      command = 'sudo -u %s -E -H bash -c "source %s && source %s"' % (
+        self.benchmarker.runner_user, 
+        bash_functions_path, 
+        test_install_file)
+
+      debug_command = '''\
+        export FWROOT=%s && \\
+        export TROOT=%s && \\
+        export IROOT=%s && \\
+        cd $IROOT && \\
+        %s''' % (self.fwroot, 
+          test_dir, 
+          test_install_dir,
+          command)
+      logging.info("To run installation manually, copy/paste this:\n%s", debug_command)
+
+      # Run test installation script
+      self.__run_command(command, cwd=test_install_dir)
 
       # Move back to previous directory
       os.chdir(previousDir)

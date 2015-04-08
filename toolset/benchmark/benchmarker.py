@@ -383,8 +383,10 @@ class Benchmarker:
       sudo sysctl -w kernel.shmmax=2147483648
       sudo sysctl -w kernel.shmall=2097152
       sudo sysctl -w kernel.sem="250 32000 256 512"
-      echo "Printing kernel configuration:" && sudo sysctl -a
     """)
+    # TODO - print kernel configuration to file
+    # echo "Printing kernel configuration:" && sudo sysctl -a
+
         # Explanations:
         # net.ipv4.tcp_max_syn_backlog, net.core.somaxconn, kernel.sched_autogroup_enabled: http://tweaked.io/guide/kernel/
         # ulimit -n: http://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files/
