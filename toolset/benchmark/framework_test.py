@@ -25,6 +25,8 @@ from utils import header
 from colorama import Fore, Back, Style
 
 class FrameworkTest:
+  specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
+
   headers_template = "-H 'Host: localhost' -H '{accept}' -H 'Connection: keep-alive'"
  
   # Used for test types that require no pipelining or query string params.
@@ -294,17 +296,23 @@ class FrameworkTest:
       def output_result(result, reason, url):
         prefix = Fore.CYAN
         color = Fore.GREEN
+        showRules = False
         if result.upper() == "WARN":
           color = Fore.YELLOW
+          showRules = True
         elif result.upper() == "FAIL":
           color = Fore.RED
+          showRules = True
 
-        out.write(prefix + "   " + color + "%s" + Style.RESET_ALL + " for %s\n" % (result.upper(), url))
-        print prefix + "   " + color + "%s" + Style.RESET_ALL + " for %s" % (result.upper(), url)
+        out.write((prefix + "   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
+        print (prefix + "   " + color + "%s" + Style.RESET_ALL + " for %s") % (result.upper(), url)
         if reason is not None and len(reason) != 0:
           for line in reason.splitlines():
             out.write("     " + line + '\n')
             print "     " + line
+          if showRules:
+            out.write("     See %s" % specific_rules_url);
+            print "     See %s" % specific_rules_url
 
       [output_result(r1,r2,url) for (r1, r2, url) in results]
 

@@ -21,11 +21,11 @@ class PlaintextTestType(FrameworkTestType):
     body = body.lower()
 
     if "hello, world!" not in body:
-      return [('fail', "Could not find 'Hello, World!' in response", url)]
+      return [('fail', """Could not find 'Hello, World!' in response.""", url)]
 
     if len("hello, world!") < len(body):
       return [('warn', """Server is returning %s more bytes than are required.
-        This may negatively affect benchmark performance""" % (len(body) - len("hello, world!")), url)]
+This may negatively affect benchmark performance.""" % (len(body) - len("hello, world!")), url)]
 
     # Ensure required response headers are present
     if any(v.lower() not in full_response.lower() for v in ('Server','Date','Content-Type: text/plain')) \
