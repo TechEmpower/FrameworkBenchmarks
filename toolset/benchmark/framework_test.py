@@ -246,10 +246,10 @@ class FrameworkTest:
           shell=True, stdout=subprocess.PIPE, 
           stderr=subprocess.STDOUT)
     nbsr = setup_util.NonBlockingStreamReader(p.stdout, 
-      "%s: Setup.sh and framework processes have terminated" % self.name)
+      "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
 
     # Setup a timeout
-    timeout = datetime.now() + timedelta(minutes = 10)
+    timeout = datetime.now() + timedelta(minutes = 20)
     time_remaining = timeout - datetime.now()
 
     # Flush output until setup.sh work is finished. This is 
@@ -288,7 +288,7 @@ class FrameworkTest:
 
     # Did we time out?
     if time_remaining.total_seconds() < 0: 
-      tee_output(prefix, "Setup.sh timed out!! Aborting...\n")
+      tee_output(prefix, "%s.sh timed out!! Aborting...\n" % self.setup_file)
       p.kill()
       return 1
 
@@ -297,9 +297,9 @@ class FrameworkTest:
     # Otherwise, detect if the port was bound
     retcode = (p.poll() or 0 if self.benchmarker.is_port_bound(self.port) else 1)
     if p.poll():
-      tee_output(prefix, "setup.sh process exited with %s\n" % p.poll())
+      tee_output(prefix, "%s.sh process exited with %s\n" % (self.setup_file, p.poll()))
     elif self.benchmarker.is_port_bound(self.port):
-      tee_output(prefix, "setup.sh exited due to bound port\n")
+      tee_output(prefix, "%s.sh exited due to bound port\n" % self.setup_file)
 
     # Before we return control to the benchmarker, spin up a 
     # thread to keep an eye on the pipes in case the running 
