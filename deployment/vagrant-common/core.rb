@@ -95,6 +95,11 @@ def provider_virtualbox(config, role, ip_address='172.16.0.16')
       vb.gui = true
     end
 
+    # Improve Windows VirtualBox DNS resolution speed
+    # Addresses mitchellh/vagrant#1807 and TechEmpower/FrameworkBenchmarks#1288
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+
     vb.memory = ENV.fetch('TFB_VB_MEM', 3022)
     vb.cpus = ENV.fetch('TFB_VB_CPU', 2)
 
