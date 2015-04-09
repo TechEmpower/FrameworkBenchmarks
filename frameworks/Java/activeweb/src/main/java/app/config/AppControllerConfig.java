@@ -16,7 +16,7 @@ limitations under the License.
 package app.config;
 
 
-import app.controllers.DatabaseController;
+import app.controllers.DbController;
 import app.controllers.FortunesController;
 import app.controllers.QueriesController;
 import app.controllers.UpdatesController;
@@ -33,7 +33,7 @@ public class AppControllerConfig extends AbstractControllerConfig {
     public void init(AppContext context) {
 //        addGlobalFilters(new TimingFilter()); for speed - not sure how logging is configured
 
-        add(new DBConnectionFilter()).to(DatabaseController.class, QueriesController.class,
+        add(new DBConnectionFilter()).to(DbController.class, QueriesController.class,
                 FortunesController.class, UpdatesController.class);
     }
 }

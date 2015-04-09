@@ -20,13 +20,10 @@ limitations under the License.
 
 package app.config;
 
-import app.controllers.DatabaseController;
 import org.javalite.activeweb.AbstractRouteConfig;
 import org.javalite.activeweb.AppContext;
 
 public class RouteConfig extends AbstractRouteConfig {
-    @Override
-    public void init(AppContext appContext) {
-        route("/db").to(DatabaseController.class);
+    @Override public void init(AppContext appContext) {
     }
 }

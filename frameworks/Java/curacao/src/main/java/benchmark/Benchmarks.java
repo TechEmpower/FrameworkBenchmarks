@@ -2,8 +2,8 @@ package benchmark;
 
 import benchmark.entities.HelloWorld;
 import com.kolich.curacao.annotations.Controller;
-import com.kolich.curacao.annotations.methods.RequestMapping;
-import com.kolich.curacao.handlers.requests.matchers.AntPathMatcher;
+import com.kolich.curacao.annotations.RequestMapping;
+import com.kolich.curacao.mappers.request.matchers.AntPathMatcher;
 
 @Controller
 public final class Benchmarks {

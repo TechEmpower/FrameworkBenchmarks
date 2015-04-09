@@ -8,17 +8,17 @@
 	<version>0.1</version>
 
 	<packaging>jar</packaging>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-codec-http</artifactId>
-			<version>4.0.25.Final</version>
+			<version>4.0.26.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-transport-native-epoll</artifactId>
-			<version>4.0.25.Final</version>
+			<version>4.0.26.Final</version>
 			<classifier>linux-x86_64</classifier>
 		</dependency>
 		<dependency>
