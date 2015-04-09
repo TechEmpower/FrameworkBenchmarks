@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm nginx java maven
+fw_depends rvm nginx java7 maven
 
 if [ "$TRAVIS" = "true" ]
 then
