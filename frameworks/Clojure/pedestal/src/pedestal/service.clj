@@ -57,23 +57,26 @@
   [request] 
   (bootstrap/json-response (first (run-queries 1))))
 
-;; http://stackoverflow.com/questions/5621279/in-clojure-how-can-i-convert-a-string-to-a-number
-(defn parse-int [s]
-  (Integer/parseInt (re-find #"\A-?\d+" s)))
+(defn sanitizeQueriesParam
+  "Sanitizes the `queries` parameter. Caps the value between 1 and 500.
+Invalid (stringy) values become 1"
+  [request]
+  (let [queries (-> request :params :queries)]
+    (let [n
+      (if (= (re-find #"\A-?\d+" queries) nil)
+        1
+        (Integer/parseInt queries))]
+    (cond
+      (< n 1) 1
+      (> n 500) 500
+      :else n))))
 
 (defn multiple-query-test
   [request]
-  (let [n (parse-int
-    (let [queries (-> request :params :queries)]
-      (if (= (re-find #"\A-?\d+" queries) nil) ; Guarantee queries to be numeric-looking
-        "1"
-        queries)))] ; queries now safely parsed into n as int
-    (bootstrap/json-response
-      (run-queries
-        (cond
-          (< n 1) 1
-          (> n 500) 500
-          :else n)))))
+  (-> request
+    (sanitizeQueriesParam)
+    (run-queries)
+    (bootstrap/json-response)))
 
 ; Set up entity Fortune and the database representation
 (defentity fortune
@@ -119,6 +122,22 @@ message text, and then return the results."
     (ring-resp/content-type "text/html")
     (ring-resp/charset "utf-8")))         ;; Apply charset after content type
 
+(defn update-and-persist
+  [request]
+  (let [results (-> request (sanitizeQueriesParam) (run-queries))]
+    (for [w results]
+      (update-in w [:randomNumber (inc (rand-int 9999))]
+        (update world
+          (set-fields {:randomNumber (:randomNumber w)})
+          (where {:id [:id w]}))))
+  results))
+
+(defn db-updates
+  [request]
+  (-> request
+    (update-and-persist)
+    (bootstrap/json-response)))
+
 ;; All of the available routes
 (defroutes routes
   [[
@@ -126,7 +145,8 @@ message text, and then return the results."
   [  "/plaintext" {:get plaintext}]
   [  "/db"        {:get single-query-test}]
   [  "/queries"   {:get multiple-query-test}]
-  [  "/fortunes"  {:get fortune-test}]]])
+  [  "/fortunes"  {:get fortune-test}]
+  [  "/updates"   {:get db-updates}]]])
 
 ;; How the server will look, not the code to start it up
 (def service {:env :prod
