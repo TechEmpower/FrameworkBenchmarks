@@ -253,9 +253,12 @@ class FrameworkTest:
     nbsr = setup_util.NonBlockingStreamReader(p.stdout, 
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
 
-    # Setup a timeout
+    # Set a limit on total execution time of setup.sh
     timeout = datetime.now() + timedelta(minutes = 20)
     time_remaining = timeout - datetime.now()
+
+    # Need to print to stdout once every 10 minutes or Travis-CI will abort
+    travis_timeout = datetime.now() + timedelta(minutes = 5)
 
     # Flush output until setup.sh work is finished. This is 
     # either a) when setup.sh exits b) when the port is bound
@@ -286,10 +289,18 @@ class FrameworkTest:
           line = nbsr.readline(0.05)
           if line:
             tee_output(prefix, line)
+
+            # Reset Travis-CI timer
+            travis_timeout = datetime.now() + timedelta(minutes = 5)
         except setup_util.EndOfStream:
           tee_output(prefix, "Setup has terminated\n")
           break
       time_remaining = timeout - datetime.now()
+
+      if (travis_timeout - datetime.now()).total_seconds() < 0:
+        sys.stdout.write(prefix + 'Printing so Travis-CI does not time out\n')
+        sys.stdout.flush()
+        travis_timeout = datetime.now() + timedelta(minutes = 5)
 
     # Did we time out?
     if time_remaining.total_seconds() < 0: 
