@@ -313,9 +313,9 @@ class FrameworkTest:
     # Otherwise, detect if the port was bound
     retcode = (p.poll() or 0 if self.benchmarker.is_port_bound(self.port) else 1)
     if p.poll():
-      tee_output(prefix, "%s.sh process exited with %s\n" % (self.setup_file, p.poll()))
+      tee_output(prefix, "%s.sh process exited naturally with %s\n" % (self.setup_file, p.poll()))
     elif self.benchmarker.is_port_bound(self.port):
-      tee_output(prefix, "%s.sh exited due to bound port\n" % self.setup_file)
+      tee_output(prefix, "Bound port detected on %s\n" % self.port)
 
     # Before we return control to the benchmarker, spin up a 
     # thread to keep an eye on the pipes in case the running 
