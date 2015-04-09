@@ -383,8 +383,10 @@ class Benchmarker:
       sudo sysctl -w kernel.shmmax=2147483648
       sudo sysctl -w kernel.shmall=2097152
       sudo sysctl -w kernel.sem="250 32000 256 512"
-      echo "Printing kernel configuration:" && sudo sysctl -a
     """)
+    # TODO - print kernel configuration to file
+    # echo "Printing kernel configuration:" && sudo sysctl -a
+
         # Explanations:
         # net.ipv4.tcp_max_syn_backlog, net.core.somaxconn, kernel.sched_autogroup_enabled: http://tweaked.io/guide/kernel/
         # ulimit -n: http://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files/
@@ -692,6 +694,9 @@ class Benchmarker:
   # End __stop_test
   ############################################################
 
+  def is_port_bound(self, port):
+    return self.__is_port_bound(port)
+
   ############################################################
   # __is_port_bound
   # Check if the requested port is available. If it
@@ -773,6 +778,11 @@ class Benchmarker:
       
       try:
         command = "cloc --list-file=%s/source_code --yaml" % testlist[0].directory
+
+        if os.path.exists(os.path.join(testlist[0].directory, "cloc_defs.txt")):
+          command += " --read-lang-def %s" % os.path.join(testlist[0].directory, "cloc_defs.txt")
+          logging.info("Using custom cloc definitions for %s", framework)
+
         # Find the last instance of the word 'code' in the yaml output. This should
         # be the line count for the sum of all listed files or just the line count
         # for the last file in the case where there's only one file listed.
