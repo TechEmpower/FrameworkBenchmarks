@@ -1,0 +1,16 @@
+{{extend 'layout.html'}}
+{{"""
+
+You should not modify this file. 
+It is used as default when a view is not provided for your controllers
+
+"""}}
+<h2>{{=' '.join(x.capitalize() for x in request.function.split('_'))}}</h2>
+{{if len(response._vars)==1:}}
+{{=BEAUTIFY(response._vars.values()[0])}}
+{{elif len(response._vars)>1:}}
+{{=BEAUTIFY(response._vars)}}
+{{pass}}
+{{if request.is_local:}}
+{{=response.toolbar()}}
+{{pass}}

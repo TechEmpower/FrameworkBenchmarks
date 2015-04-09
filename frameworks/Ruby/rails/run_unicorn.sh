@@ -1,4 +1,6 @@
 #!/bin/bash
+export NGINX_HOME=${IROOT}/nginx
+source $IROOT/java7.installed
 
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' config/nginx.conf
 

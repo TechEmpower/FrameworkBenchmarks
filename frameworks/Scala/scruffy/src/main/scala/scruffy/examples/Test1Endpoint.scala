@@ -1,12 +1,14 @@
 package scruffy.examples
 
-import com.sksamuel.scruffy.EndpointProvider
+import com.sksamuel.scruffy.HttpEndpointProvider
 
 /** @author Stephen Samuel */
-class Test1Endpoint extends EndpointProvider {
+class Test1Endpoint extends HttpEndpointProvider {
 
-  get("json").complete {
-    req => json(Message("Hello, World!"))
+  get("json") { implicit req =>
+    json {
+      Message("Hello, World!")
+    }
   }
 }
 

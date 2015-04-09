@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks.AspNet", "Benchmarks.AspNet.csproj", "{62C3DEA2-2696-4200-BD83-011679316847}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "Benchmarks.csproj", "{62C3DEA2-2696-4200-BD83-011679316847}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

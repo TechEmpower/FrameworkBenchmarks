@@ -32,37 +32,16 @@ public class HelloDB
 
   StreamResponse onActivate() {
 
-    // Read queries from URL, but don't bother validating
-    int queries = 1;
-    String qString = this.request.getParameter("queries");
-    if (qString != null) {
-      queries = Integer.parseInt(qString);
-    }
-    if (queries <= 0) {
-      queries = 1;
-    }
-    final World[] worlds = new World[queries];
-
     // For generating a random row ID
     final Random rand = ThreadLocalRandom.current();
 
-    for (int i = 0; i < queries; i++) {
-      // Read object from database
-      worlds[i] = (World)session.get(World.class, new Integer(rand.nextInt(DB_ROWS) + 1));
-    }
+    final World world = (World)session.get(World.class, new Integer(rand.nextInt(DB_ROWS) + 1));
 
     // Send reponse
     String response = "";
     try
     {
-      if (queries == 1)
-      {
-        response = HelloDB.mapper.writeValueAsString(worlds[0]); 
-      }
-      else
-      {
-        response = HelloDB.mapper.writeValueAsString(worlds);
-      }
+      response = HelloDB.mapper.writeValueAsString(world);
     }
     catch (IOException ex)
     {

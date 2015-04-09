@@ -4,6 +4,8 @@ using System.Configuration;
 using System.Collections.Generic;
 using System.Threading;
 
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 using ServiceStack.ServiceHost;
@@ -23,6 +25,16 @@ namespace ServiceStackBenchmark
                 var server = client.GetServer();
                 var database = server.GetDatabase("hello_world");
                 container.Register<MongoDatabase>(c => database);
+
+                BsonClassMap.RegisterClassMap<World>(cm => {
+                    cm.MapProperty(c => c.id);
+                    cm.MapProperty(c => c.randomNumber);
+                });
+
+                BsonClassMap.RegisterClassMap<Fortune>(cm => {
+                    cm.MapProperty(c => c.id);
+                    cm.MapProperty(c => c.message);
+                });
 
                 // Create needed tables in MySql Server if they do not exist
                 return database.CreateWorldTable() && database.CreateFortuneTable();

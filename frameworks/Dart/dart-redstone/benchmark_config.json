@@ -1,0 +1,49 @@
+{
+  "framework": "redstone",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/pg/db",
+      "query_url": "/pg/queries?queries=",
+      "fortune_url": "/pg/fortunes",
+      "update_url": "/pg/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "redstone",
+      "language": "Dart",
+      "orm": "Micro",
+      "platform": "Dart",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "redstone-postgresql",
+      "notes": "",
+      "versus": "dart"
+    },
+    "mongodb": {
+      "setup_file": "setup",
+      "db_url": "/mongo/db",
+      "query_url": "/mongo/queries?queries=",
+      "fortune_url": "/mongo/fortunes",
+      "update_url": "/mongo/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MongoDB",
+      "framework": "redstone",
+      "language": "Dart",
+      "orm": "Micro",
+      "platform": "Dart",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "redstone-mongodb",
+      "notes": "",
+      "versus": "dart"
+    }
+  }]
+}

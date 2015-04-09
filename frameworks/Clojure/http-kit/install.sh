@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends leiningen java
+fw_depends leiningen java7

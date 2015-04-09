@@ -62,9 +62,11 @@ mkYesod "App" [parseRoutes|
 
 /db                 DbR       GET
 /dbs/#Int           DbsR      GET
+!/dbs/#Text         DbsRdefault  GET
 
 /mongo/raw/db       MongoRawDbR  GET
 /mongo/raw/dbs/#Int MongoRawDbsR GET
+!/mongo/raw/dbs/#Text MongoRawDbsRdefault GET
 |]
 
 fakeInternalState :: InternalState
@@ -105,11 +107,24 @@ getMongoRawDbR = getDb rawMongoIntQuery
 getDbsR :: Int -> Handler Value
 getDbsR cnt = do
     App {..} <- getYesod
-    multiRandomHandler (intQuery runMySQL My.toSqlKey) cnt
+    multiRandomHandler (intQuery runMySQL My.toSqlKey) cnt'
+  where
+    cnt' | cnt < 1 = 1
+         | cnt > 500 = 500
+         | otherwise = cnt
+
+getDbsRdefault :: Text -> Handler Value
+getDbsRdefault _ = getDbsR 1
 
 getMongoRawDbsR :: Int -> Handler Value
-getMongoRawDbsR cnt = multiRandomHandler rawMongoIntQuery cnt
+getMongoRawDbsR cnt = multiRandomHandler rawMongoIntQuery cnt'
+  where
+    cnt' | cnt < 1 = 1
+         | cnt > 500 = 500
+         | otherwise = cnt
 
+getMongoRawDbsRdefault :: Text -> Handler Value
+getMongoRawDbsRdefault _ = getMongoRawDbsR 1
 
 randomNumber :: R.Gen (PrimState IO) -> IO Int64
 randomNumber appGen = R.uniformR (1, 10000) appGen

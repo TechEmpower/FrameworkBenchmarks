@@ -7,6 +7,9 @@
 # of their initial setup.  On Windows, the script can be run through 
 # Git bash.
 
+export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
+export RESIN_HOME=${IROOT}/resin-4.0.41
+
 projectName="GeminiHello"
 machineNameUpper="`echo $HOSTNAME|tr '[a-z]' '[A-Z]'`"
 machineNameLower="`echo $HOSTNAME|tr '[A-Z]' '[a-z]'`"

@@ -1,0 +1,45 @@
+{
+  "framework": "rails-stripped",
+  "tests": [{
+    "default": {
+      "setup_file": "setup_ruby",
+      "json_url": "/hello_world/json",
+      "db_url": "/hello_world/db",
+      "query_url": "/hello_world/db?queries=",
+      "port": 8080,
+      "approach": "Stripped",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "rails",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rack",
+      "webserver": "Unicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rails-ruby",
+      "notes": "",
+      "versus": "rack-unicorn"
+    },
+    "jruby": {
+      "setup_file": "setup_jruby",
+      "json_url": "/hello_world/json",
+      "db_url": "/hello_world/db",
+      "query_url": "/hello_world/db?queries=",
+      "port": 8080,
+      "approach": "Stripped",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "rails",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "JRuby",
+      "webserver": "TorqBox",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rails-jruby",
+      "notes": "",
+      "versus": "rack-torqbox"
+    }
+  }]
+}
