@@ -1,15 +1,13 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/node-v0.10.8.installed)
+RETCODE=$(fw_exists ${IROOT}/nvm-0.24.1.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
-fw_get http://nodejs.org/dist/v0.10.8/node-v0.10.8-linux-x64.tar.gz
-fw_untar node-v0.10.8-linux-x64.tar.gz
+# Install nvm (node version manager) v0.24.1
+fw_get https://raw.githubusercontent.com/creationix/nvm/v0.24.1/install.sh | \ 
+	NVM_DIR=${IROOT}/nvm bash
 
-# Upgrade npm to avoid https://github.com/npm/npm/issues/4984
-export NODE_HOME=${IROOT}/node-v0.10.8-linux-x64
-export PATH=$PATH:$NODE_HOME/bin
+export NVM_HOME=${IROOT}/nvm
+export PATH=$PATH:$NVM_HOME/nvm.sh
 
-${NODE_HOME}/bin/npm install -g npm
-
-touch ${IROOT}/node-v0.10.8.installed
+touch ${IROOT}/nvm-0.24.1.installed
