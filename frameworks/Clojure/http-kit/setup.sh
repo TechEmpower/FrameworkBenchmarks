@@ -1,5 +1,5 @@
 #!/bin/bash
-export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
+source $IROOT/java7.installed
 export LEIN_HOME=$IROOT/lein
 
 cd hello
