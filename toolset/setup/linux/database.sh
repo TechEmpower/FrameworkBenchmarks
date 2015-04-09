@@ -149,9 +149,9 @@ sudo cp -R -p /var/lib/mongodb /ssd/
 sudo cp -R -p /var/log/mongodb /ssd/log/
 sudo service mongod start
 
-for i in {1..45}; do
+for i in {1..15}; do
   nc -z localhost 27017 && break || sleep 1;
-  echo "Waiting for MongoDB ($i/45}"
+  echo "Waiting for MongoDB ($i/15}"
 done
 nc -z localhost 27017
 if [ $? -eq 0 ]; then
@@ -196,9 +196,9 @@ sudo cp -f cassandra/log4j-server.properties /opt/apache-cassandra-$CASS_V/conf
 sudo update-rc.d cassandra defaults
 sudo service cassandra restart
 
-for i in {1..45}; do
+for i in {1..15}; do
   nc -z $TFB_DBHOST 9160 && break || sleep 1;
-  echo "Waiting for Cassandra ($i/45}"
+  echo "Waiting for Cassandra ($i/15}"
 done
 nc -z $TFB_DBHOST 9160
 if [ $? -eq 0 ]; then
@@ -228,9 +228,9 @@ sudo cp elasticsearch/elasticsearch /opt/elasticsearch
 
 /opt/elasticsearch/elasticsearch restart
 
-for i in {1..45}; do
+for i in {1..15}; do
   nc -z $TFB_DBHOST 9200 && break || sleep 1;
-  echo "Waiting for Elasticsearch ($i/45}"
+  echo "Waiting for Elasticsearch ($i/15}"
 done
 nc -z $TFB_DBHOST 9200
 if [ $? -eq 0 ]; then
