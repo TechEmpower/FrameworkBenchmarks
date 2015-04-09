@@ -1,7 +1,11 @@
 #!/bin/bash
-# Adopted from compojure/setup.sh
+
+export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
+
+export LEIN_HOME=$IROOT/lein
 
 $LEIN_HOME/bin/lein clean
+
 rm -rf target
 # pack all dependencies into a single jar: target/pedestal-standalone.jar
 $LEIN_HOME/bin/lein uberjar
