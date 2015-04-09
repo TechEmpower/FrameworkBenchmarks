@@ -1,0 +1,41 @@
+{
+  "framework": "uwsgi",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "wsgi",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "wsgi",
+      "webserver": "uWSGI",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "uwsgi",
+      "notes": "",
+      "versus": ""
+    },
+    "nginx-uwsgi": {
+      "setup_file": "setup_nginx",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "wsgi",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "wsgi",
+      "webserver": "nginx-uWSGI",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "uwsgi-nginx-uWSGI",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

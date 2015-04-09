@@ -1,4 +1,7 @@
 #!/bin/bash
+export DART_HOME=$IROOT/dart-sdk
+export PUB_CACHE=$IROOT/.pubcache
+export NGINX_HOME=$IROOT/nginx
 
 sed -i 's|host: .*|host: '"${DBHOST}"'|g' postgresql.yaml
 sed -i 's|host: .*|host: '"${DBHOST}"'|g' mongodb.yaml

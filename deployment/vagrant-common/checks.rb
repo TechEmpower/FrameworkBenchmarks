@@ -81,7 +81,7 @@ To workaround, consider using the Amazon (e.g. AWS) provider
    $ vagrant up --provider=aws
 
 Or forcing FrameworkBenchmarks to attempt a 32-bit VM
-   $ TFB_VM_ARCH=32 vagrant up
+   $ TFB_VB_ARCH=32 vagrant up
   
   See http://askubuntu.com/questions/41550 for more info\033[0m"
 

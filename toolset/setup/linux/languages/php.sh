@@ -22,7 +22,7 @@ echo "Configuring PHP quietly..."
 ./configure --prefix=$IROOT/php-${VERSION} --with-pdo-mysql \
   --with-mysql --with-mcrypt --enable-intl --enable-mbstring \
   --enable-fpm --with-fpm-user=testrunner --with-fpm-group=testrunner \
-  --with-openssl --enable-opcache --quiet
+  --with-openssl --with-mysqli --with-zlib --enable-opcache --quiet
 echo "Making PHP quietly..."
 make --quiet
 echo "Installing PHP quietly"
@@ -40,6 +40,7 @@ cp $FWROOT/config/php-fpm.conf $IROOT/php-${VERSION}/lib/php-fpm.conf
 # ========================
 echo PHP compilation finished, installing extensions
 
+$IROOT/php-${VERSION}/bin/pecl channel-update pecl.php.net
 # Apc.so
 $IROOT/php-${VERSION}/bin/pecl config-set php_ini $IROOT/php-${VERSION}/lib/php.ini
 #printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f apc-beta

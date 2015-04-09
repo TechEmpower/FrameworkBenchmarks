@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends play1 java
+fw_depends java7 play1 

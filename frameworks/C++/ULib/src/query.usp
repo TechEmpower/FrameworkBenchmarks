@@ -26,6 +26,8 @@ static void usp_fork_query()
 
       if (pstmt_query == 0) U_ERROR("usp_fork_query(): we cound't connect to db");
 
+      if (UOrmDriver::isPGSQL()) *psql_query << "BEGIN TRANSACTION";
+
       pworld_query = U_NEW(World);
 
       pstmt_query->use( pworld_query->id);
@@ -45,16 +47,16 @@ static void usp_end_query()
    U_TRACE(5, "::usp_end_query()")
 
    if (pstmt_query)
-   {
-   delete   pstmt_query;
-   delete    psql_query;
-   delete pvworld_query;
-   delete  pworld_query;
+      {
+      delete   pstmt_query;
+      delete    psql_query;
+      delete pvworld_query;
+      delete  pworld_query;
 
-#ifndef AS_cpoll_cppsp_DO
-   delete pvalue;
-#endif
-   }
+#   ifndef AS_cpoll_cppsp_DO
+      delete pvalue;
+#   endif
+      }
 }
 #endif
 -->
@@ -97,6 +99,7 @@ while (true)
 USP_PUTS_CHAR(']');
 #else
 USP_JSON_stringify(*pvalue, UVector<World*>, *pvworld_query);
+pvalue->clear();
 #endif
 pvworld_query->clear();
 -->

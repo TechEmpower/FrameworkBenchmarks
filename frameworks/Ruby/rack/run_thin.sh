@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $IROOT/java7.installed
+
 sed -i 's|  host:.*|  host:'"${DBHOST}"'|g' config/database.yml
 
 # We assume single-user installation as 

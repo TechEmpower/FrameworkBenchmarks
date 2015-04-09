@@ -5,12 +5,14 @@ import os
 import aiopg
 import jinja2
 import psycopg2.extras
+import asyncio_redis
+from asyncio_redis.protocol import HiRedisProtocol
 import aiohttp.web
 import aiohttp_jinja2
 import api_hour
 
 from . import endpoints
-
+from . import servers
 
 LOG = logging.getLogger(__name__)
 
@@ -25,9 +27,13 @@ class Container(api_hour.Container):
         # routes
         self.servers['http'].router.add_route('GET', '/json', endpoints.world.json)
         self.servers['http'].router.add_route('GET', '/db', endpoints.world.db)
+        self.servers['http'].router.add_route('GET', '/db_redis', endpoints.world.db_redis)
         self.servers['http'].router.add_route('GET', '/queries', endpoints.world.queries)
+        self.servers['http'].router.add_route('GET', '/queries_redis', endpoints.world.queries_redis)
         self.servers['http'].router.add_route('GET', '/fortunes', endpoints.world.fortunes)
+        self.servers['http'].router.add_route('GET', '/fortunes_redis', endpoints.world.fortunes_redis)
         self.servers['http'].router.add_route('GET', '/updates', endpoints.world.updates)
+        self.servers['http'].router.add_route('GET', '/updates_redis', endpoints.world.updates_redis)
         self.servers['http'].router.add_route('GET', '/plaintext', endpoints.world.plaintext)
 
     def make_servers(self):
@@ -35,8 +41,9 @@ class Container(api_hour.Container):
                                                   debug=self.worker.cfg.debug,
                                                   keep_alive=self.worker.cfg.keepalive,
                                                   access_log=self.worker.log.access_log,
-                                                  access_log_format=self.worker.cfg.access_log_format)]
-
+                                                  access_log_format=self.worker.cfg.access_log_format),
+                servers.yocto_http.YoctoHttpJson,
+                servers.yocto_http.YoctoHttpText]
 
     @asyncio.coroutine
     def start(self):
@@ -50,8 +57,14 @@ class Container(api_hour.Container):
                                                                      password=self.config['engines']['pg']['password'],
                                                                      cursor_factory=psycopg2.extras.RealDictCursor,
                                                                      minsize=int(self.config['engines']['pg']['minsize']),
-                                                                     maxsize=int(self.config['engines']['pg']['maxsize'])))
+                                                                     maxsize=int(self.config['engines']['pg']['maxsize']),
+                                                                     loop=self.loop))
         yield from asyncio.wait([self.engines['pg']], return_when=asyncio.ALL_COMPLETED)
+        self.engines['redis'] = yield from asyncio_redis.Pool.create(host=self.config['engines']['redis']['host'],
+                                                                     port=self.config['engines']['redis']['port'],
+                                                                     poolsize=self.config['engines']['redis']['poolsize'],
+                                                                     loop=self.loop,
+                                                                     protocol_class=HiRedisProtocol)
 
         LOG.info('All engines ready !')
 
@@ -65,5 +78,8 @@ class Container(api_hour.Container):
                 yield from self.engines['pg'].result().wait_closed()
             else:
                 yield from self.engines['pg'].cancel()
+        if 'redis' in self.engines:
+            self.engines['redis'].close()
+            yield from asyncio.sleep(1) # wait redis close connection
         LOG.info('All engines stopped !')
         yield from super().stop()

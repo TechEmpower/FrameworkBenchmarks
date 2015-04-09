@@ -111,7 +111,7 @@ while (true)
 USP_PUTS_CHAR(']');
 #else
 USP_JSON_stringify(*pvalue, UVector<World*>, *pvworld_update);
+pvalue->clear();
 #endif
-
 pvworld_update->clear();
 -->

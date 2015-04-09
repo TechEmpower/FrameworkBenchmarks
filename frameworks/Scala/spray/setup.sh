@@ -1,4 +1,6 @@
 #!/bin/bash
+export SBT_HOME=${IROOT}/sbt
+source $IROOT/java7.installed
 
 ${SBT_HOME}/bin/sbt assembly
 

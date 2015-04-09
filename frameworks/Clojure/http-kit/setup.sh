@@ -1,4 +1,6 @@
 #!/bin/bash
+source $IROOT/java7.installed
+export LEIN_HOME=$IROOT/lein
 
 cd hello
 $LEIN_HOME/bin/lein clean
