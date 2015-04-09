@@ -13,16 +13,14 @@
             [clojure.data.json :as json]
             [clojure.java.jdbc :as jdbc]))
 
+
 (defn json-serialization
+  "Test 1: JSON serialization"
   [request]
   (bootstrap/json-response {:message "Hello, World!"}))
 
-(defn plaintext
-  [request]
-  (ring-resp/response "Hello, World!"))
 
-;; Database Tests
-;; Adopted from compojure/hello/src/hello/handler.clj
+;; MySQL connection
 (defdb mysql-db
   (mysql {
     :classname "com.mysql.jdbc.Driver"
@@ -42,20 +40,25 @@
   (entity-fields :id :randomNumber) ;; Default fields for select
   (database mysql-db))
 
-;; Query a random World record from the database
+
 (defn random-world []
+  "Query a random World record from the database"
   (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
     (select world
       (where {:id id }))))
 
-;; Run query repeatedly -- Always returns an array
+
 (defn run-queries
+  "Run query repeatedly -- Always returns an array"
   [queries]
   (flatten (take queries (repeatedly random-world))))
 
+
 (defn single-query-test
-  [request] 
+  "Test 2: Single database query"
+  [request]
   (bootstrap/json-response (first (run-queries 1))))
+
 
 (defn sanitizeQueriesParam
   "Sanitizes the `queries` parameter. Caps the value between 1 and 500.
@@ -71,12 +74,15 @@ Invalid (stringy) values become 1"
       (> n 500) 500
       :else n))))
 
+
 (defn multiple-query-test
+  "Test 3: Multiple database queries"
   [request]
   (-> request
     (sanitizeQueriesParam)
     (run-queries)
     (bootstrap/json-response)))
+
 
 ; Set up entity Fortune and the database representation
 (defentity fortune
@@ -85,18 +91,21 @@ Invalid (stringy) values become 1"
   (entity-fields :id :message)
   (database mysql-db))
 
+
 (defn get-all-fortunes []
   "Query all Fortune records from the database."
-    (select fortune
-            (fields :id :message)))
+  (select fortune
+    (fields :id :message)))
+
 
 (defn get-fortunes []
   "Fetch the full list of Fortunes from the database, sort them by the fortune
 message text, and then return the results."
-    (sort-by #(:message %)
-      (conj
-        (get-all-fortunes)
-        { :id 0 :message "Additional fortune added at request time." })))
+  (sort-by #(:message %)
+    (conj
+      (get-all-fortunes)
+      { :id 0 :message "Additional fortune added at request time." })))
+
 
 (defn fortunes-hiccup [fortunes]
   "Render the given fortunes to simple HTML using Hiccup."
@@ -114,7 +123,9 @@ message text, and then return the results."
         [:td (escape-html (:message x))]])
      ]]))
 
+
 (defn fortune-test [request]
+  "Test 4: Fortunes"
   (->
     (get-fortunes)
     (fortunes-hiccup)
@@ -122,7 +133,10 @@ message text, and then return the results."
     (ring-resp/content-type "text/html")
     (ring-resp/charset "utf-8")))         ;; Apply charset after content type
 
+
 (defn update-and-persist
+  "Changes the :randomNumber of a number of world entities.
+Persists the changes to sql then returns the updated entities"
   [request]
   (let [results (-> request (sanitizeQueriesParam) (run-queries))]
     (for [w results]
@@ -132,25 +146,35 @@ message text, and then return the results."
           (where {:id [:id w]}))))
   results))
 
+
 (defn db-updates
+  "Test 5: Database updates"
   [request]
   (-> request
     (update-and-persist)
     (bootstrap/json-response)))
 
-;; All of the available routes
+
+(defn plaintext
+  "Test 6: Plaintext"
+  [request]
+  (ring-resp/response "Hello, World!"))
+
+
 (defroutes routes
   [[
   [  "/json"      {:get json-serialization}]
-  [  "/plaintext" {:get plaintext}]
   [  "/db"        {:get single-query-test}]
   [  "/queries"   {:get multiple-query-test}]
   [  "/fortunes"  {:get fortune-test}]
-  [  "/updates"   {:get db-updates}]]])
+  [  "/updates"   {:get db-updates}]
+  [  "/plaintext" {:get plaintext}]]])
 
-;; How the server will look, not the code to start it up
-(def service {:env :prod
-              ::bootstrap/routes routes
-              ::bootstrap/resource-path "/public"
-              ::bootstrap/type :jetty
-              ::bootstrap/port 8080})
+
+(def service
+  "How the server will look, not the code to start it up"
+  { :env :prod
+    ::bootstrap/routes routes
+    ::bootstrap/resource-path "/public"
+    ::bootstrap/type :jetty
+    ::bootstrap/port 8080})
