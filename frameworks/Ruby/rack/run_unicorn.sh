@@ -1,4 +1,5 @@
 #!/bin/bash
+source $IROOT/java7.installed
 export NGINX_HOME=${IROOT}/nginx
 
 sed -i 's|  host:.*|  host:'"${DBHOST}"'|g' config/database.yml

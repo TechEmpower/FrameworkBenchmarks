@@ -1,6 +1,0 @@
-/ebin
-/deps
-erl_crash.dump
-/tmp
-_build
-/logs

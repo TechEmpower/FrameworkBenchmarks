@@ -23,6 +23,8 @@ from utils import header
 
 # Cross-platform colored text
 from colorama import Fore, Back, Style
+from datetime import datetime
+from datetime import timedelta
 
 class FrameworkTest:
   headers_template = "-H 'Host: localhost' -H '{accept}' -H 'Connection: keep-alive'"
@@ -33,19 +35,19 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -60,11 +62,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -76,19 +78,19 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -103,11 +105,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -121,19 +123,19 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " wrk {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} --latency -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}2"
+    wrk {headers} --latency -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}2"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
+    wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
     sleep 5
 
     echo ""
@@ -148,11 +150,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
+      echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
+      wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -164,93 +166,183 @@ class FrameworkTest:
   # Start the test using it's setup file
   ############################################################
   def start(self, out, err):
-    # Load profile for this installation
-    profile="$FWROOT/config/benchmark_profile"
 
-    # Setup variables for TROOT and IROOT
-    setup_util.replace_environ(config=profile, 
-              command='export TROOT=%s && export IROOT=%s && export DBHOST=%s && export MAX_THREADS=%s && export OUT=%s && export ERR=%s' %
-              (self.directory, self.install_root, self.database_host, self.benchmarker.threads, os.path.join(self.fwroot, out.name), os.path.join(self.fwroot, err.name)))
+    # Setup environment variables    
+    logDir = os.path.join(self.fwroot, self.benchmarker.latest_results_directory, 'logs', self.name.lower())
+    setup_util.replace_environ(config='$FWROOT/config/benchmark_profile', 
+              command='''\
+              export TROOT=%s       && \
+              export IROOT=%s       && \
+              export DBHOST=%s      && \
+              export LOGDIR=%s      && \
+              export MAX_THREADS=%s    \
+              ''' % (
+                self.directory, 
+                self.install_root, 
+                self.database_host, 
+                logDir,
+                self.benchmarker.threads))
 
-    # Because start can take so long, we print a dot to let the user know 
-    # we are working
-    class ProgressPrinterThread(Thread):
-      def __init__(self, event):
-          Thread.__init__(self)
-          self.stopped = event
-
-      def run(self):
-        while not self.stopped.wait(20):
-          sys.stderr.write("Waiting for start to return...\n")
-    stopFlag = Event()
-    thread = ProgressPrinterThread(stopFlag)
-    thread.start()
-
-    # Run the module start (inside parent of TROOT)
-    #     - we use the parent as a historical accident - a lot of tests
-    #       use subprocess's cwd argument already
+    # Run the module start inside parent of TROOT
+    #  - we use the parent as a historical accident, a number of tests
+    # refer to their TROOT maually still
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", self.directory)
       
-    # Write the stderr to our temp.txt file to be read and fed back
-    # to the user via logging later.
-    with open('temp', 'w') as errout:
-      # Run the start script for the test as the "testrunner" user.
-      # This requires superuser privs, so `sudo` is necessary.
-      #   -u [username] The username
-      #   -E Preserves the current environment variables
-      #   -H Forces the home var (~) to be reset to the user specified
-      #   -e Force bash to exit on first error
-      # Note: check_call is a blocking call, so any startup scripts
-      # run by the framework that need to continue (read: server has
-      # started and needs to remain that way), then they should be
-      # executed in the background.
-      command = 'sudo -u %s -E -H bash -e %s.sh' % (self.benchmarker.runner_user, self.setup_file)
+    # Run the start script for the test as the "testrunner" user
+    # 
+    # `sudo` - Switching user requires superuser privs
+    #   -u [username] The username
+    #   -E Preserves the current environment variables
+    #   -H Forces the home var (~) to be reset to the user specified
+    # `stdbuf` - Disable buffering, send output to python ASAP
+    #   -o0 zero-sized buffer for stdout
+    #   -e0 zero-sized buffer for stderr
+    # `bash` - Run the setup.sh script using bash
+    #   -e Force bash to exit on first error
+    #   -x Turn on bash tracing e.g. print commands before running
+    #
+    # Most servers do not output to stdout/stderr while serving 
+    # requests so there is no performance hit from disabling 
+    # output buffering. This disabling is necessary to 
+    # a) allow TFB to show output in real time and b) avoid loosing 
+    # output in the buffer when the testrunner processes are forcibly 
+    # killed
+    # 
+    # See http://www.pixelbeat.org/programming/stdio_buffering/
+    # See https://blogs.gnome.org/markmc/2013/06/04/async-io-and-python/
+    # See http://eyalarubas.com/python-subproc-nonblock.html
+    command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -ex %s.sh' % (self.benchmarker.runner_user, self.setup_file)
+    
+    debug_command = '''\
+      export FWROOT=%s      && \\
+      export TROOT=%s       && \\
+      export IROOT=%s       && \\
+      export DBHOST=%s      && \\
+      export LOGDIR=%s      && \\
+      export MAX_THREADS=%s && \\
+      cd %s && \\
+      %s''' % (self.fwroot, 
+        self.directory, 
+        self.install_root, 
+        self.database_host,
+        logDir,
+        self.benchmarker.threads, 
+        self.directory,
+        command)
+    logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
+
+
+    def tee_output(prefix, line):
+      # Needs to be one atomic write
+      # Explicitly use UTF-8 as it's the most common framework output 
+      # TODO improve encoding handling 
+      line = prefix.encode('utf-8') + line
+
+      # Log to current terminal
+      sys.stdout.write(line)
+      sys.stdout.flush()
+      # logging.error("".join([prefix, line]))
+
+      out.write(line)
+      out.flush()
+
+    # Start the setup.sh command
+    p = subprocess.Popen(command, cwd=self.directory, 
+          shell=True, stdout=subprocess.PIPE, 
+          stderr=subprocess.STDOUT)
+    nbsr = setup_util.NonBlockingStreamReader(p.stdout, 
+      "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
+
+    # Set a limit on total execution time of setup.sh
+    timeout = datetime.now() + timedelta(minutes = 20)
+    time_remaining = timeout - datetime.now()
+
+    # Need to print to stdout once every 10 minutes or Travis-CI will abort
+    travis_timeout = datetime.now() + timedelta(minutes = 5)
+
+    # Flush output until setup.sh work is finished. This is 
+    # either a) when setup.sh exits b) when the port is bound
+    # c) when we run out of time. Note that 'finished' doesn't 
+    # guarantee setup.sh process is dead - the OS may choose to make 
+    # setup.sh a zombie process if it still has living children
+    #
+    # Note: child processes forked (using &) will remain alive 
+    # after setup.sh has exited. The will have inherited the 
+    # stdout/stderr descriptors and will be directing their 
+    # output to the pipes. 
+    #
+    prefix = "Setup %s: " % self.name
+    while not (p.poll() 
+      or self.benchmarker.is_port_bound(self.port)
+      or time_remaining.total_seconds() < 0):
       
-      debug_command = '''\
-        export FWROOT=%s && \\
-        export TROOT=%s && \\
-        export IROOT=%s && \\
-        export DBHOST=%s && \\
-        export MAX_THREADS=%s && \\
-        export OUT=%s && \\
-        export ERR=%s && \\
-        cd %s && \\
-        %s''' % (self.fwroot, 
-          self.directory, 
-          self.install_root, 
-          self.database_host, 
-          self.benchmarker.threads, 
-          os.path.join(self.fwroot, out.name), 
-          os.path.join(self.fwroot, err.name),
-          self.directory,
-          command)
-      logging.info("To run framework manually, copy/paste this:\n%s", debug_command)
+      # The conditions above are slow to check, so 
+      # we will delay output substantially if we only
+      # print one line per condition check. 
+      # Adding a tight loop here mitigates the effect, 
+      # ensuring that most of the output directly from 
+      # setup.sh is sent to tee_output before the outer
+      # loop exits and prints things like "setup.sh exited"
+      # 
+      for i in xrange(10):
+        try:
+          line = nbsr.readline(0.05)
+          if line:
+            tee_output(prefix, line)
 
-      try:
-        subprocess.check_call(command, cwd=self.directory, 
-          shell=True, stderr=errout, stdout=out)
-        retcode = 0
-      except Exception:
-        logging.exception("Failure running setup.sh")
-        retcode = 1
-    with open('temp', 'r') as errout:
-      # Read out temp error output in its entirety
-      body = errout.read()
-      if len(body) > 0:
-        # Log it to the user.
-        logging.error(body)
-        # Log it to our err.txt file
-        err.write(body)
-    # We are done with our temp file - delete it
-    os.remove('temp')
+            # Reset Travis-CI timer
+            travis_timeout = datetime.now() + timedelta(minutes = 5)
+        except setup_util.EndOfStream:
+          tee_output(prefix, "Setup has terminated\n")
+          break
+      time_remaining = timeout - datetime.now()
+
+      if (travis_timeout - datetime.now()).total_seconds() < 0:
+        sys.stdout.write(prefix + 'Printing so Travis-CI does not time out\n')
+        sys.stdout.flush()
+        travis_timeout = datetime.now() + timedelta(minutes = 5)
+
+    # Did we time out?
+    if time_remaining.total_seconds() < 0: 
+      tee_output(prefix, "%s.sh timed out!! Aborting...\n" % self.setup_file)
+      p.kill()
+      return 1
+
+    # What's our return code? 
+    # If setup.sh has terminated, use that code
+    # Otherwise, detect if the port was bound
+    retcode = (p.poll() or 0 if self.benchmarker.is_port_bound(self.port) else 1)
+    if p.poll():
+      tee_output(prefix, "%s.sh process exited naturally with %s\n" % (self.setup_file, p.poll()))
+    elif self.benchmarker.is_port_bound(self.port):
+      tee_output(prefix, "Bound port detected on %s\n" % self.port)
+
+    # Before we return control to the benchmarker, spin up a 
+    # thread to keep an eye on the pipes in case the running 
+    # framework uses stdout/stderr. Once all processes accessing
+    # the subprocess.PIPEs are dead, this thread will terminate. 
+    # Use a different prefix to indicate this is the framework 
+    # speaking
+    prefix = "Server %s: " % self.name
+    def watch_child_pipes(nbsr, prefix):
+      while True:
+        try:
+          line = nbsr.readline(60)
+          if line:
+            tee_output(prefix, line)
+        except setup_util.EndOfStream:
+          tee_output(prefix, "Framework processes have terminated\n")
+          return
+
+    watch_thread = Thread(target = watch_child_pipes,
+      args = (nbsr, prefix))
+    watch_thread.daemon = True
+    watch_thread.start()
+
+    logging.info("Executed %s.sh, returning %s", self.setup_file, retcode)
     os.chdir(previousDir)
-
-    # Stop the progress printer
-    stopFlag.set()
-
-    logging.info("Executed %s.sh", self.setup_file)
 
     return retcode
   ############################################################

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends vertx java
+fw_depends java7 vertx 

@@ -9,6 +9,7 @@ from utils import gather_frameworks
 from utils import verify_database_connections
 
 import os
+import stat
 import json
 import subprocess
 import traceback
@@ -271,6 +272,16 @@ class Benchmarker:
       os.makedirs(path)
     except OSError:
       pass
+    
+    # Give testrunner permission to write into results directory
+    # so LOGDIR param always works in setup.sh
+    # While 775 is more preferrable, we would have to ensure that 
+    # testrunner is in the group of the current user
+    if not self.os.lower() == 'windows':
+      mode777 = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | 
+                stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | 
+                stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
+      os.chmod(path, mode777)
     return path
 
   ############################################################
@@ -383,8 +394,10 @@ class Benchmarker:
       sudo sysctl -w kernel.shmmax=2147483648
       sudo sysctl -w kernel.shmall=2097152
       sudo sysctl -w kernel.sem="250 32000 256 512"
-      echo "Printing kernel configuration:" && sudo sysctl -a
     """)
+    # TODO - print kernel configuration to file
+    # echo "Printing kernel configuration:" && sudo sysctl -a
+
         # Explanations:
         # net.ipv4.tcp_max_syn_backlog, net.core.somaxconn, kernel.sched_autogroup_enabled: http://tweaked.io/guide/kernel/
         # ulimit -n: http://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files/
@@ -691,6 +704,9 @@ class Benchmarker:
   ############################################################
   # End __stop_test
   ############################################################
+
+  def is_port_bound(self, port):
+    return self.__is_port_bound(port)
 
   ############################################################
   # __is_port_bound

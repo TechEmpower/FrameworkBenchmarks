@@ -415,9 +415,9 @@ class CIRunnner:
 
     # Setup Apache Cassandra
     echo "Populating Apache Cassandra database"
-    for i in {1..45}; do
+    for i in {1..15}; do
       nc -z localhost 9160 && break || sleep 1;
-      echo "Waiting for Cassandra ($i/45}"
+      echo "Waiting for Cassandra ($i/15}"
     done
     nc -z localhost 9160
     if [ $? -eq 0 ]; then
@@ -436,9 +436,9 @@ class CIRunnner:
     sudo service elasticsearch restart
 
     echo "Populating Elasticsearch database"
-    for i in {1..45}; do
+    for i in {1..15}; do
       nc -z localhost 9200 && break || sleep 1;
-      echo "Waiting for Elasticsearch ($i/45}"
+      echo "Waiting for Elasticsearch ($i/15}"
     done
     nc -z localhost 9200
     if [ $? -eq 0 ]; then
@@ -453,9 +453,9 @@ class CIRunnner:
 
     # Setup MongoDB
     echo "Populating MongoDB database"
-    for i in {1..45}; do
+    for i in {1..15}; do
       nc -z localhost 27017 && break || sleep 1;
-      echo "Waiting for MongoDB ($i/45}"
+      echo "Waiting for MongoDB ($i/15}"
     done
     nc -z localhost 27017
     if [ $? -eq 0 ]; then
@@ -526,75 +526,7 @@ if __name__ == "__main__":
     log.critical("Unknown error")
     print traceback.format_exc()
     retcode = 1
-  finally:  # Ensure that logs are printed
-    
-    # Only print logs if we ran a verify
-    if mode != 'verify':
-      sys.exit(retcode)
-
-    # Only print logs if we actually did something
-    if os.path.isfile('.run-ci.should_not_run'):
-      sys.exit(retcode)
-
-    log.error("Running inside Travis-CI, so I will print err and out to console...")
-    
-    for name in runner.names:
-      log.error("Test %s", name)
-      try:
-        log.error("Here is ERR:")
-        with open("results/ec2/latest/logs/%s/err.txt" % name, 'r') as err:
-          for line in err:
-            log.info(line.rstrip('\n'))
-      except IOError:
-        log.error("No ERR file found")
-
-      try:
-        log.error("Here is OUT:")
-        with open("results/ec2/latest/logs/%s/out.txt" % name, 'r') as out:
-          for line in out:
-            log.info(line.rstrip('\n'))
-      except IOError:
-        log.error("No OUT file found")
-
-    log.error("Running inside Travis-CI, so I will print a copy of the verification summary")
-
-    results = None
-    try:
-      with open('results/ec2/latest/results.json', 'r') as f:
-        results = json.load(f)
-    except IOError:
-      log.critical("No results.json found, unable to print verification summary") 
-      sys.exit(retcode)
-
-    target_dir = setup_util.get_fwroot() + '/frameworks/' + testdir
-    dirtests = [t for t in gather_tests() if t.directory == target_dir]
-
-    # Normally you don't have to use Fore.* before each line, but 
-    # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
-    # or stream flush, so we have to ensure that the color code is printed repeatedly
-    prefix = Fore.CYAN
-    for line in header("Verification Summary", top='=', bottom='').split('\n'):
-      print prefix + line
-
-    for test in dirtests:
-      print prefix + "| Test: %s" % test.name
-      if test.name not in runner.names:
-        print prefix + "|      " + Fore.YELLOW + "Unable to verify in Travis-CI"
-      elif test.name in results['verify'].keys():
-        for test_type, result in results['verify'][test.name].iteritems():
-          if result.upper() == "PASS":
-            color = Fore.GREEN
-          elif result.upper() == "WARN":
-            color = Fore.YELLOW
-          else:
-            color = Fore.RED
-          print prefix + "|       " + test_type.ljust(11) + ' : ' + color + result.upper()
-      else:
-        print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
-    print prefix + header('', top='', bottom='=') + Style.RESET_ALL
-
-
+  finally:
     sys.exit(retcode)
-
 
 # vim: set sw=2 ts=2 expandtab

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends java scala sbt
+fw_depends java7 scala sbt
