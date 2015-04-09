@@ -9,6 +9,7 @@ from utils import gather_frameworks
 from utils import verify_database_connections
 
 import os
+import stat
 import json
 import subprocess
 import traceback
@@ -271,6 +272,14 @@ class Benchmarker:
       os.makedirs(path)
     except OSError:
       pass
+    
+    # Give testrunner permission to write into results directory
+    # so LOGDIR param always works in setup.sh
+    # While 664 is more preferrable, we would have to ensure that 
+    # testrunner is in the group of the current user
+    if not self.os.lower() == 'windows':
+      mode666 = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH
+      os.chmod(path, mode666)
     return path
 
   ############################################################

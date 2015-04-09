@@ -165,17 +165,20 @@ class FrameworkTest:
   ############################################################
   def start(self, out, err):
 
-    # Setup environment variables
+    # Setup environment variables    
+    logDir = os.path.join(self.fwroot, self.benchmarker.latest_results_directory, 'logs', self.name.lower())
     setup_util.replace_environ(config='$FWROOT/config/benchmark_profile', 
               command='''\
               export TROOT=%s       && \
               export IROOT=%s       && \
               export DBHOST=%s      && \
+              export LOGDIR=%s      && \
               export MAX_THREADS=%s    \
               ''' % (
                 self.directory, 
                 self.install_root, 
                 self.database_host, 
+                logDir,
                 self.benchmarker.threads))
 
     # Run the module start inside parent of TROOT
@@ -211,16 +214,18 @@ class FrameworkTest:
     command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -ex %s.sh' % (self.benchmarker.runner_user, self.setup_file)
     
     debug_command = '''\
-      export FWROOT=%s && \\
-      export TROOT=%s && \\
-      export IROOT=%s && \\
-      export DBHOST=%s && \\
+      export FWROOT=%s      && \\
+      export TROOT=%s       && \\
+      export IROOT=%s       && \\
+      export DBHOST=%s      && \\
+      export LOGDIR=%s      && \\
       export MAX_THREADS=%s && \\
       cd %s && \\
       %s''' % (self.fwroot, 
         self.directory, 
         self.install_root, 
-        self.database_host, 
+        self.database_host,
+        logDir,
         self.benchmarker.threads, 
         self.directory,
         command)
