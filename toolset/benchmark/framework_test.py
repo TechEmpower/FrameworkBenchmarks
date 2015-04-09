@@ -306,8 +306,8 @@ class FrameworkTest:
             out.write("     " + line + '\n')
             print "     " + line
           if not test.passed:
-            out.write("     See %s" % specific_rules_url)
-            print "     See %s" % specific_rules_url
+            out.write("     See %s\n" % specific_rules_url)
+            print "     See %s\n" % specific_rules_url
 
       [output_result(r1,r2,url) for (r1, r2, url) in results]
 
