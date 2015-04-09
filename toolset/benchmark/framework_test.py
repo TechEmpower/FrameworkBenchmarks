@@ -300,7 +300,7 @@ class FrameworkTest:
           color = Fore.RED
 
         out.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
-        print ("   " + color + "%s" + Style.RESET_ALL + " for %s") % (result.upper(), url)
+        print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
         if reason is not None and len(reason) != 0:
           for line in reason.splitlines():
             out.write("     " + line + '\n')
