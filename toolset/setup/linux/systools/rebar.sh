@@ -12,4 +12,4 @@ mv rebar-2.5.1 rebar
 cd rebar
 ./bootstrap
 
-echo "export PATH=$PATH:$IROOT/rebar" >> $IROOT/rebar.installed
+echo "export REBAR_HOME=$IROOT/rebar" >> $IROOT/rebar.installed
