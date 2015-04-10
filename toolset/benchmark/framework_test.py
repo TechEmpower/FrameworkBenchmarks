@@ -167,6 +167,7 @@ class FrameworkTest:
 
     # Setup environment variables    
     logDir = os.path.join(self.fwroot, self.benchmarker.latest_results_directory, 'logs', self.name.lower())
+    bash_functions_path= os.path.join(self.fwroot 'toolset/setup/linux/bash_functions.sh')
     setup_util.replace_environ(config='$FWROOT/config/benchmark_profile', 
               command='''\
               export TROOT=%s       && \
@@ -176,7 +177,7 @@ class FrameworkTest:
               export MAX_THREADS=%s    \
               ''' % (
                 self.directory, 
-                self.install_root, 
+                self.iroot, 
                 self.database_host, 
                 logDir,
                 self.benchmarker.threads))
@@ -211,7 +212,7 @@ class FrameworkTest:
     # See http://www.pixelbeat.org/programming/stdio_buffering/
     # See https://blogs.gnome.org/markmc/2013/06/04/async-io-and-python/
     # See http://eyalarubas.com/python-subproc-nonblock.html
-    command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -ex %s.sh' % (self.benchmarker.runner_user, self.setup_file)
+    command = 'cat %s %s.sh > /tmp/command.sh && sudo -u %s -E -H stdbuf -o0 -e0 bash -ex /tmp/command.sh' % (bash_functions_path, os.path.join(self.troot, self.setup_file), self.benchmarker.runner_user)
     
     debug_command = '''\
       export FWROOT=%s      && \\
@@ -249,7 +250,8 @@ class FrameworkTest:
     # Start the setup.sh command
     p = subprocess.Popen(command, cwd=self.directory, 
           shell=True, stdout=subprocess.PIPE, 
-          stderr=subprocess.STDOUT)
+          stderr=subprocess.STDOUT,
+          executable='/bin/bash')
     nbsr = setup_util.NonBlockingStreamReader(p.stdout, 
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
 
@@ -473,6 +475,10 @@ class FrameworkTest:
         results = self.__parse_test(test_type)
         self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
 
+  ##########################################################################################
+  # Private Methods
+  ##########################################################################################
+
   ############################################################
   # __parse_test(test_type)
   ############################################################
@@ -578,10 +584,6 @@ class FrameworkTest:
   ############################################################
   # End benchmark
   ############################################################
-
-  ##########################################################################################
-  # Private Methods
-  ##########################################################################################
 
   ############################################################
   # __generate_concurrency_script(url, port)

@@ -2,8 +2,11 @@
 
 RVER=4.0.41
 
-RETCODE=$(fw_exists ${IROOT}/resin-$RVER.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+RETCODE=$(fw_exists ${IROOT}/resin-${RVER}.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  # Load environment variables
+  . $IROOT/resin-$RVER.installed 
+  return 0; }
 
 fw_depends java7
 sudo cp -r $JAVA_HOME/include $JAVA_HOME/jre/bin/
@@ -21,4 +24,7 @@ cat $FWROOT/config/resin.properties > conf/resin.properties
 mv conf/resin.xml conf/resin.xml.orig
 cat $FWROOT/config/resin.xml > conf/resin.xml
 
-touch ${IROOT}/resin-$RVER.installed
+echo "export RESIN_HOME=${IROOT}/resin-${RVER}" > ${IROOT}/resin-$RVER.installed
+chmod +x ${IROOT}/resin-$RVER.installed
+
+. ${IROOT}/resin-$RVER.installed

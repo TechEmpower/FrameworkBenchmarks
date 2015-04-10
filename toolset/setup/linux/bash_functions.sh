@@ -20,6 +20,8 @@ fw_get () {
   # Ensure the background job is killed if we are
   kill $!; trap 'kill $!' SIGTERM
 }
+# Makes it available in subshells
+export -f fw_get
 
 fw_untar() {
   echo "Running 'tar xf $@'...please wait"
@@ -29,6 +31,7 @@ fw_untar() {
   # use -f to avoid printing errors if they gave additional arguments
   rm -f "$@"
 }
+export -f fw_untar
 
 fw_unzip() {
   echo "Running 'unzip $@'...please wait"
@@ -37,6 +40,7 @@ fw_unzip() {
   # use -f to avoid printing errors if they gave additional arguments
   rm -f "$@"
 }
+export -f fw_unzip
 
 # Download *.deb file and install into IROOT without using sudo
 # Does not download dependant packages
@@ -49,6 +53,7 @@ fw_apt_to_iroot() {
   echo "Extracting $1 to $DIR"
   dpkg-deb -x $1*.deb "$IROOT/$DIR" && rm $1*.deb
 }
+export -f 
 
 # Was there an error for the current dependency?
 FW_dep_error=0
@@ -73,6 +78,7 @@ fw_traperror () {
   #echo "  Bash source stack : ${bashstack[@]}"
   #echo "  Bash line stack   : ${linestack[@]}"
 }
+export -f fw_traperror
 
 # Requires dependencies to come in order e.g. Nimrod before
 # Jester, etc. Users should be know this 
@@ -91,7 +97,7 @@ fw_depends() {
     retcode=0
 
     # Ensure we are inside the installer root for this framework
-    cd $IROOT
+    pushd $IROOT
     wd=$(pwd)
     relative_wd=\$FWROOT${wd#$FWROOT}
 
@@ -119,9 +125,14 @@ fw_depends() {
       . $FWROOT/toolset/setup/linux/frameworks/${depend}.sh
     else
       echo WARN: No installer found for $depend
+      # Return whence you came.
+      popd
       continue
     fi
     set +x
+
+    # Return whence you came.
+    popd
 
     # For a sourced script to pass, all internal commands must return
     # non-zero. If you want to intentionally cause a failed install
@@ -140,11 +151,9 @@ fw_depends() {
   set +E
   trap - ERR
 
-  # Politely return to IROOT for later install.sh code
-  cd $IROOT  
-
   return $FW_any_errors
 }
+export -f fw_depends
 
 # Echo's 0 if file or directory exists
 # To be used with or || blocks, avoids triggering our ERR 
@@ -156,5 +165,4 @@ fw_exists() {
     echo 1
   fi 
 }
-
-
+export -f fw_exists

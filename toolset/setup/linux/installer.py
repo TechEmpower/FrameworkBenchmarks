@@ -26,10 +26,7 @@ class Installer:
     for k,v in script_vars.iteritems():
       l.append("export %s=%s" % (k,v))
     script_vars_str = "\n".join(l) + "\n\n"
-
-    if imode == 'all' or imode == 'server':
-      self.__install_server_software()
-
+    
     if imode == 'all' or imode == 'database':
       print("\nINSTALL: Installing database software\n")   
       self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="../config/database_sftp_batch"), True)
