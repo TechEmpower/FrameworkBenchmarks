@@ -1,14 +1,14 @@
 #!/bin/bash
 
-INSTALLED=$IROOT/maven.installed
-RETCODE=$(fw_exists ${INSTALLED})
+MAVEN=$IROOT/maven
+RETCODE=$(fw_exists ${MAVEN}.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  source $INSTALLED
+  source $MAVEN.installed
   return 0; }
 
 sudo apt-get -y install maven
 mvn -version
 
-touch $INSTALLED
+touch $MAVEN.installed
 
-source $INSTALLED
+source $MAVEN.installed

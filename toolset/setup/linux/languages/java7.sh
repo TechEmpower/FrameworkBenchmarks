@@ -1,11 +1,10 @@
 #!/bin/bash
 
 JAVA=$IROOT/java7
-INSTALLED=$JAVA.installed
-RETCODE=$(fw_exists ${INSTALLED})
+RETCODE=$(fw_exists ${JAVA}.installed)
 [ ! "$RETCODE" == 0 ] || { \
   # Load environment variables
-  source $INSTALLED
+  source $JAVA.installed
   return 0; }
 
 # First remove java6
@@ -15,8 +14,7 @@ sudo apt-get install -y openjdk-7-jdk
 
 # Setup environment variables
 JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-`dpkg --print-architecture`
-echo "export JAVA_HOME=${JAVA_HOME}" > $INSTALLED
-echo "export PATH=${JAVA_HOME}/bin:$PATH" >> $INSTALLED
-chmod +x $INSTALLED
+echo "export JAVA_HOME=${JAVA_HOME}" > $JAVA.installed
+echo "export PATH=${JAVA_HOME}/bin:$PATH" >> $JAVA.installed
 
-source $INSTALLED
+source $JAVA.installed
