@@ -1,6 +1,7 @@
 ./grizzly-jersey/src/main/
 ./grizzly-jersey/src/main/java
 ./grizzly-jersey/src/main/java/hello
+./grizzly-jersey/src/main/java/hello/Common.java
 ./grizzly-jersey/src/main/java/hello/DbResource.java
 ./grizzly-jersey/src/main/java/hello/FortunesResource.java
 ./grizzly-jersey/src/main/java/hello/SessionFactoryProvider.java

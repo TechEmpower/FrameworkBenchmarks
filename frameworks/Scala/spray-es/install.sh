@@ -2,8 +2,8 @@
 
 fw_depends java8 sbt
 
-export JAVA_HOME=/opt/java8
-export PATH=$JAVA_HOME/bin:$PATH:$IROOT/sbt/bin
+source $IROOT/java8.installed
+export PATH=$IROOT/sbt/bin:$PATH
 
 sbt_opts='-J-XX:+UseG1GC -J-Xmx2G -J-XX:MaxMetaspaceSize=512m'
 

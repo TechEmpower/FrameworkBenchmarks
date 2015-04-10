@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# load java environment variables
+source $IROOT/java7.installed
+
 cd play2-java-ebean-hikaricp
 
 # If application is running, clear old running app.

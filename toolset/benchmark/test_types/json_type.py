@@ -17,7 +17,7 @@ class JsonTestType(FrameworkTestType):
     '''
 
     url = base_url + self.json_url
-    response = self._curl(url)
+    full_response = self._curl(url)
     body = self._curl_body(url)
     
     # Empty response
@@ -25,11 +25,6 @@ class JsonTestType(FrameworkTestType):
       return [('fail','No response', url)]
     elif len(body) == 0:
       return [('fail','Empty Response', url)]
-
-    # Ensure required response headers are present
-    if any(v not in response for v in ('Server','Date','Content-Type: application/json')) \
-       or all(v not in response for v in ('Content-Length','Transfer-Encoding')):
-      return [('warn','Required response header missing.',url)]
 
     # Valid JSON? 
     try: 
@@ -48,5 +43,10 @@ class JsonTestType(FrameworkTestType):
 
     if response['message'] != 'hello, world!':
       return [('fail',"Expected message of 'hello, world!', got '%s'"%response['message'], url)]
+
+    # Ensure required response headers are present
+    if any(v.lower() not in full_response.lower() for v in ('Server','Date','Content-Type: application/json')) \
+       or all(v.lower() not in full_response.lower() for v in ('Content-Length','Transfer-Encoding')):
+      return [('warn','Required response header missing.',url)]
 
     return [('pass','',url)]

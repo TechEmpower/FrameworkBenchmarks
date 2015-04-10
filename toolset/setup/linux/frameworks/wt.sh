@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists wt)
+RETCODE=$(fw_exists wt.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 # The commented code works. While we would love to get boost from source
@@ -38,3 +38,6 @@ cmake .. -DWT_CPP_11_MODE=-std=c++0x -DCMAKE_BUILD_TYPE=Release \
   -DWEBUSER=$(id -u -n) -DWEBGROUP=$(id -g -n)
 make
 make install
+
+cd ..
+touch wt.installed

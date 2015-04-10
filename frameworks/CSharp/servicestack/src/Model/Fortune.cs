@@ -8,6 +8,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
 using ServiceStack.DataAnnotations;
+using ServiceStack.Html;
 using ServiceStack.OrmLite;
 using ServiceStack.Text;
 
@@ -103,7 +104,8 @@ namespace ServiceStackBenchmark.Model
         public static string ToHtml(List<Fortune> fortunes)
         {
             string page = @"<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-            fortunes.ForEach(f => page += @"<tr><td>{0}</td><td>{1}</td></tr>".Fmt(f.id, f.message));
+            HtmlHelper htmlHelper = new HtmlHelper();
+            fortunes.ForEach(f => page += @"<tr><td>{0}</td><td>{1}</td></tr>".Fmt(f.id, htmlHelper.Encode(f.message)));
             page += @"</table></body></html>";
             return page;
         }

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+export PHP_HOME=${IROOT}/php-5.5.17
+export PHP_FPM=${PHP_HOME}/sbin/php-fpm
+export NGINX_HOME=${IROOT}/nginx
+
 sed -i 's|localhost|'"${DBHOST}"'|g' index.php
 sed -i 's|.*/FrameworkBenchmarks/php-fatfree|'"${TROOT}"'|g' deploy/php
 sed -i 's|Directory .*/FrameworkBenchmarks/php-fatfree|Directory '"${TROOT}"'|g' deploy/php

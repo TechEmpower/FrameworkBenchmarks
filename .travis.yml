@@ -26,6 +26,7 @@ env:
     - "TESTDIR=CSharp/nancy"
     - "TESTDIR=CSharp/servicestack"
     - "TESTDIR=C++/cpoll_cppsp"
+    - "TESTDIR=C++/silicon"
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ULib"
     - "TESTDIR=C++/wt"
@@ -36,7 +37,6 @@ env:
     - "TESTDIR=Dart/dart-redstone"
     - "TESTDIR=Dart/dart-start"
     - "TESTDIR=Dart/dart-stream"
-    - "TESTDIR=Elixir/WeberFramework"
     - "TESTDIR=Erlang/cowboy"
     - "TESTDIR=Erlang/elli"
     - "TESTDIR=Go/beego"
@@ -44,6 +44,7 @@ env:
     - "TESTDIR=Go/gin"
     - "TESTDIR=Go/go"
     - "TESTDIR=Go/goji"
+    - "TESTDIR=Go/go-mongodb"
     - "TESTDIR=Go/revel"
     - "TESTDIR=Go/revel-jet"
     - "TESTDIR=Go/revel-qbs"
@@ -124,6 +125,8 @@ env:
     - "TESTDIR=Python/pyramid"
     - "TESTDIR=Python/tornado"
     - "TESTDIR=Python/uwsgi"
+    - "TESTDIR=Python/web2py"
+    - "TESTDIR=Python/wheezyweb"
     - "TESTDIR=Python/wsgi"
     - "TESTDIR=Racket/racket-ws"
     - "TESTDIR=Ruby/grape"
@@ -136,7 +139,6 @@ env:
     - "TESTDIR=Scala/finagle"
     - "TESTDIR=Scala/lift-stateless"
     - "TESTDIR=Scala/plain"
-    - "TESTDIR=Scala/play-activate-mysql"
     - "TESTDIR=Scala/play2-scala"
     - "TESTDIR=Scala/scalatra"
     - "TESTDIR=Scala/scruffy"
@@ -148,7 +150,7 @@ env:
 before_install:
   # Need to install python modules before using 
   # python
-  - pip install -r config/python_requirements.txt
+  - pip install -r requirements.txt
 
   # Configure Travis-CI build environment for TFB
   #   e.g. setup databases, users, etc
@@ -167,4 +169,3 @@ install:
 script: 
   # Pick one test in this directory and verify
   - time ./toolset/run-ci.py verify "$TESTDIR"
-  

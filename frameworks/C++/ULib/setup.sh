@@ -1,5 +1,9 @@
 #!/bin/bash
 
+export ULIB_VERSION=1.4.2
+export ULIB_ROOT=$IROOT/ULib
+export ULIB_DOCUMENT_ROOT=${ULIB_ROOT}/ULIB_DOCUMENT_ROOT
+
 export UMEMPOOL="136,0,0,85,1160,155,-17,-22,40"
 
 # 1. Change ULib Server configuration

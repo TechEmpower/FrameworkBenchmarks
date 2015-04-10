@@ -11,7 +11,11 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 
 import static hello.HelloWebServer.JSON_UTF8;
 
@@ -43,19 +47,29 @@ final class DbSqlHandler implements HttpHandler {
     }
     
     World[] worlds = new World[queries];
-    try (Connection connection = database.getConnection();
-         PreparedStatement statement = connection.prepareStatement(
-             "SELECT * FROM World WHERE id = ?",
-             ResultSet.TYPE_FORWARD_ONLY,
-             ResultSet.CONCUR_READ_ONLY)) {
+    try (final Connection connection = database.getConnection()) {
+      Map<Integer, Future<World>> futureWorlds = new ConcurrentHashMap<>();
       for (int i = 0; i < queries; i++) {
-        statement.setInt(1, Helper.randomWorld());
-        try (ResultSet resultSet = statement.executeQuery()) {
-          resultSet.next();
-          worlds[i] = new World(
-              resultSet.getInt("id"),
-              resultSet.getInt("randomNumber"));
-        }
+        futureWorlds.put(i, Helper.EXECUTOR.submit(new Callable<World>(){
+          @Override
+          public World call() throws Exception {
+            try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT * FROM World WHERE id = ?",
+                ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
+
+              statement.setInt(1, Helper.randomWorld());
+              ResultSet resultSet = statement.executeQuery();
+              resultSet.next();
+              return new World(
+                resultSet.getInt("id"),
+                resultSet.getInt("randomNumber"));
+            }
+          }
+        }));
+      }
+
+      for (int i = 0; i < queries; i++) {
+        worlds[i] = futureWorlds.get(i).get();
       }
     }
     exchange.getResponseHeaders().put(
