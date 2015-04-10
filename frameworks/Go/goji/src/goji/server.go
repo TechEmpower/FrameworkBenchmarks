@@ -1,17 +1,17 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"database/sql"
 	"encoding/json"
 	"flag"
-	"runtime"
-	"database/sql"
+	"fmt"
+	"html/template"
 	"log"
 	"math/rand"
-	"strconv"
-	"html/template"
+	"net/http"
+	"runtime"
 	"sort"
+	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -28,7 +28,7 @@ const (
 	worldRowCount      = 10000
 	maxConnectionCount = 256
 
-	helloWorldString = "Hello, World!"
+	helloWorldString    = "Hello, World!"
 	extraFortuneMessage = "Additional fortune added at request time."
 )
 
@@ -36,7 +36,7 @@ var (
 	// Templates
 	tmpl = template.Must(template.
 		ParseFiles("templates/layout.html",
-			       "templates/fortune.html"))
+		"templates/fortune.html"))
 
 	// Database
 	worldStatement   *sql.Stmt
@@ -89,7 +89,7 @@ func setContentType(w http.ResponseWriter, contentType string) {
 // Test 1: Json Serialization
 func serializeJson(c web.C, w http.ResponseWriter, r *http.Request) {
 	setContentType(w, "application/json")
-    json.NewEncoder(w).Encode(&Message{helloWorldString})
+	json.NewEncoder(w).Encode(&Message{helloWorldString})
 }
 
 // Test 2: Single Database Query
