@@ -12,3 +12,4 @@ mix deps.get --force
 
 MIX_ENV=prod mix compile.protocols --force
 MIX_ENV=prod elixir --detached -pa _build/$MIX_ENV/consolidated -S mix phoenix.server
+
