@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $IROOT/java7.installed
+
 cd play2-scala-activate
 sed -i 's|jdbc:mysql://.*:3306|jdbc:mysql://'"${DBHOST}"':3306|g' conf/application.conf
 

@@ -33,19 +33,19 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -60,11 +60,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -76,19 +76,19 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -103,11 +103,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -121,19 +121,19 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " wrk {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} --latency -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}2"
+    wrk {headers} --latency -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}2"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
+    wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
     sleep 5
 
     echo ""
@@ -148,11 +148,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
+      echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
+      wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -165,17 +165,20 @@ class FrameworkTest:
   ############################################################
   def start(self, out, err):
 
-    # Setup environment variables
+    # Setup environment variables    
+    logDir = os.path.join(self.fwroot, self.benchmarker.latest_results_directory, 'logs', self.name.lower())
     setup_util.replace_environ(config='$FWROOT/config/benchmark_profile', 
               command='''\
               export TROOT=%s       && \
               export IROOT=%s       && \
               export DBHOST=%s      && \
+              export LOGDIR=%s      && \
               export MAX_THREADS=%s    \
               ''' % (
                 self.directory, 
                 self.install_root, 
                 self.database_host, 
+                logDir,
                 self.benchmarker.threads))
 
     # Run the module start inside parent of TROOT
@@ -211,16 +214,18 @@ class FrameworkTest:
     command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -ex %s.sh' % (self.benchmarker.runner_user, self.setup_file)
     
     debug_command = '''\
-      export FWROOT=%s && \\
-      export TROOT=%s && \\
-      export IROOT=%s && \\
-      export DBHOST=%s && \\
+      export FWROOT=%s      && \\
+      export TROOT=%s       && \\
+      export IROOT=%s       && \\
+      export DBHOST=%s      && \\
+      export LOGDIR=%s      && \\
       export MAX_THREADS=%s && \\
       cd %s && \\
       %s''' % (self.fwroot, 
         self.directory, 
         self.install_root, 
-        self.database_host, 
+        self.database_host,
+        logDir,
         self.benchmarker.threads, 
         self.directory,
         command)
@@ -248,9 +253,12 @@ class FrameworkTest:
     nbsr = setup_util.NonBlockingStreamReader(p.stdout, 
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
 
-    # Setup a timeout
+    # Set a limit on total execution time of setup.sh
     timeout = datetime.now() + timedelta(minutes = 20)
     time_remaining = timeout - datetime.now()
+
+    # Need to print to stdout once every 10 minutes or Travis-CI will abort
+    travis_timeout = datetime.now() + timedelta(minutes = 5)
 
     # Flush output until setup.sh work is finished. This is 
     # either a) when setup.sh exits b) when the port is bound
@@ -281,10 +289,18 @@ class FrameworkTest:
           line = nbsr.readline(0.05)
           if line:
             tee_output(prefix, line)
+
+            # Reset Travis-CI timer
+            travis_timeout = datetime.now() + timedelta(minutes = 5)
         except setup_util.EndOfStream:
           tee_output(prefix, "Setup has terminated\n")
           break
       time_remaining = timeout - datetime.now()
+
+      if (travis_timeout - datetime.now()).total_seconds() < 0:
+        sys.stdout.write(prefix + 'Printing so Travis-CI does not time out\n')
+        sys.stdout.flush()
+        travis_timeout = datetime.now() + timedelta(minutes = 5)
 
     # Did we time out?
     if time_remaining.total_seconds() < 0: 
@@ -297,9 +313,9 @@ class FrameworkTest:
     # Otherwise, detect if the port was bound
     retcode = (p.poll() or 0 if self.benchmarker.is_port_bound(self.port) else 1)
     if p.poll():
-      tee_output(prefix, "%s.sh process exited with %s\n" % (self.setup_file, p.poll()))
+      tee_output(prefix, "%s.sh process exited naturally with %s\n" % (self.setup_file, p.poll()))
     elif self.benchmarker.is_port_bound(self.port):
-      tee_output(prefix, "%s.sh exited due to bound port\n" % self.setup_file)
+      tee_output(prefix, "Bound port detected on %s\n" % self.port)
 
     # Before we return control to the benchmarker, spin up a 
     # thread to keep an eye on the pipes in case the running 

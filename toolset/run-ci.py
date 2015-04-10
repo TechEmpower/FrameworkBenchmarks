@@ -415,9 +415,9 @@ class CIRunnner:
 
     # Setup Apache Cassandra
     echo "Populating Apache Cassandra database"
-    for i in {1..45}; do
+    for i in {1..15}; do
       nc -z localhost 9160 && break || sleep 1;
-      echo "Waiting for Cassandra ($i/45}"
+      echo "Waiting for Cassandra ($i/15}"
     done
     nc -z localhost 9160
     if [ $? -eq 0 ]; then
@@ -436,9 +436,9 @@ class CIRunnner:
     sudo service elasticsearch restart
 
     echo "Populating Elasticsearch database"
-    for i in {1..45}; do
+    for i in {1..15}; do
       nc -z localhost 9200 && break || sleep 1;
-      echo "Waiting for Elasticsearch ($i/45}"
+      echo "Waiting for Elasticsearch ($i/15}"
     done
     nc -z localhost 9200
     if [ $? -eq 0 ]; then
@@ -453,9 +453,9 @@ class CIRunnner:
 
     # Setup MongoDB
     echo "Populating MongoDB database"
-    for i in {1..45}; do
+    for i in {1..15}; do
       nc -z localhost 27017 && break || sleep 1;
-      echo "Waiting for MongoDB ($i/45}"
+      echo "Waiting for MongoDB ($i/15}"
     done
     nc -z localhost 27017
     if [ $? -eq 0 ]; then
