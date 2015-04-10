@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# TODO include a check before we do all this, because it's 
-# annoyingly slow to run apt-get if we don't need to
-
-RETCODE=$(fw_exists java7.installed)
+JAVA=$IROOT/java7
+INSTALLED=$JAVA.installed
+RETCODE=$(fw_exists ${INSTALLED})
 [ ! "$RETCODE" == 0 ] || { \
   # Load environment variables
-  . $IROOT/java7.installed
+  source $INSTALLED
   return 0; }
 
 # First remove java6
@@ -15,8 +14,9 @@ sudo apt-get remove -y --purge openjdk-6-jre openjdk-6-jre-headless
 sudo apt-get install -y openjdk-7-jdk
 
 # Setup environment variables
-echo "export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-`dpkg --print-architecture`" > $IROOT/java7.installed
-echo "export PATH=$JAVA_HOME/bin:$PATH" >> $IROOT/java7.installed
-chmod +x $IROOT/java7.installed
+JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-`dpkg --print-architecture`
+echo "export JAVA_HOME=${JAVA_HOME}" > $INSTALLED
+echo "export PATH=${JAVA_HOME}/bin:$PATH" >> $INSTALLED
+chmod +x $INSTALLED
 
-. $IROOT/java7.installed
+source $INSTALLED
