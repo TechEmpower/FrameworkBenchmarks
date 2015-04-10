@@ -2,9 +2,17 @@
 
 sed -i 's|mongodb//.*/hello_world|mongodb//'"${DBHOST}"'/hello_world|g' app.js
 
-export NODE_ENV=production
-export NODE_HOME=${IROOT}/nvm/v0.11.16
-export PATH=$PATH:$NODE_HOME/bin
+# export NODE_ENV=production
+# export PATH=$PATH:$NODE_HOME/bin
+
+
+export NVM_HOME=${IROOT}/nvm
+# Used to avoid nvm's return 2 error.
+# Sourcing this functions if 0 is returned.
+source $NVM_HOME/nvm.sh || 0
+nvm install 0.11.16
+nvm use 0.11.16
+
 
 # run app
 npm install
