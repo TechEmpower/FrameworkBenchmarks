@@ -8,4 +8,4 @@ sed -i 's|db.Driver.Class = .*|db.Driver.Class = com.mysql.jdbc.Driver|g' Docroo
 sed -i 's|db.Driver.UrlPrefix = .*|db.Driver.UrlPrefix = jdbc:mysql://|g' Docroot/WEB-INF/GeminiHello.conf
 mkdir -p Docroot/WEB-INF/classes
 ant compile
-$RESIN_HOME/bin/resinctl -conf $TROOT/Docroot/WEB-INF/resin.xml start
+resinctl -conf $TROOT/Docroot/WEB-INF/resin.xml start
