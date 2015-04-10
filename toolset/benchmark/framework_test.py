@@ -167,7 +167,7 @@ class FrameworkTest:
 
     # Setup environment variables    
     logDir = os.path.join(self.fwroot, self.benchmarker.latest_results_directory, 'logs', self.name.lower())
-    bash_functions_path= os.path.join(self.fwroot 'toolset/setup/linux/bash_functions.sh')
+    bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
     setup_util.replace_environ(config='$FWROOT/config/benchmark_profile', 
               command='''\
               export TROOT=%s       && \
@@ -177,7 +177,7 @@ class FrameworkTest:
               export MAX_THREADS=%s    \
               ''' % (
                 self.directory, 
-                self.iroot, 
+                self.install_root, 
                 self.database_host, 
                 logDir,
                 self.benchmarker.threads))
@@ -212,7 +212,10 @@ class FrameworkTest:
     # See http://www.pixelbeat.org/programming/stdio_buffering/
     # See https://blogs.gnome.org/markmc/2013/06/04/async-io-and-python/
     # See http://eyalarubas.com/python-subproc-nonblock.html
-    command = 'cat %s %s.sh > /tmp/command.sh && sudo -u %s -E -H stdbuf -o0 -e0 bash -ex /tmp/command.sh' % (bash_functions_path, os.path.join(self.troot, self.setup_file), self.benchmarker.runner_user)
+    command = 'cat %s %s.sh > /tmp/command.sh && sudo -u %s -E -H stdbuf -o0 -e0 bash -ex /tmp/command.sh' % (
+      bash_functions_path, 
+      os.path.join(self.troot, self.setup_file), 
+      self.benchmarker.runner_user)
     
     debug_command = '''\
       export FWROOT=%s      && \\
