@@ -6,7 +6,7 @@ function configure() {
 	$cfg = ActiveRecord\Config::instance();
 	$cfg->set_model_directory("models");
 	$cfg->set_connections(array(
-		"development" => "mysql://benchmarkdbuser:benchmarkdbpass@127.0.0.1/hello_world?charset=utf8"));
+		"development" => "mysql://benchmarkdbuser:benchmarkdbpass@localhost/hello_world?charset=utf8"));
 
 option("bas_url", "/");
 }
