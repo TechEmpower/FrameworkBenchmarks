@@ -22,7 +22,7 @@ Travis-CI happy.
 
 #### Install RVM
 
-Most install.sh files will at least this ():
+Most install.sh files will at least have this:
 
     #!/bin/bash
 
