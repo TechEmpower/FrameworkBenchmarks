@@ -21,6 +21,8 @@ from threading import Event
 
 from utils import header
 
+# Cross-platform colored text
+from colorama import Fore, Back, Style
 from datetime import datetime
 from datetime import timedelta
 
@@ -382,12 +384,22 @@ class FrameworkTest:
       test.passed = all(result is 'pass' for (result, reason, url) in results)
       
       def output_result(result, reason, url):
-        out.write("   %s for %s\n" % (result.upper(), url))
-        print "   %s for %s" % (result.upper(), url)
+        specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
+        color = Fore.GREEN
+        if result.upper() == "WARN":
+          color = Fore.YELLOW
+        elif result.upper() == "FAIL":
+          color = Fore.RED
+
+        out.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
+        print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
         if reason is not None and len(reason) != 0:
           for line in reason.splitlines():
             out.write("     " + line + '\n')
             print "     " + line
+          if not test.passed:
+            out.write("     See %s\n" % specific_rules_url)
+            print "     See %s\n" % specific_rules_url
 
       [output_result(r1,r2,url) for (r1, r2, url) in results]
 
