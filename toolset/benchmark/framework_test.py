@@ -212,7 +212,7 @@ class FrameworkTest:
     # See http://www.pixelbeat.org/programming/stdio_buffering/
     # See https://blogs.gnome.org/markmc/2013/06/04/async-io-and-python/
     # See http://eyalarubas.com/python-subproc-nonblock.html
-    command = 'cat %s %s.sh > /tmp/command.sh && sudo -u %s -E -H stdbuf -o0 -e0 bash -ex /tmp/command.sh' % (
+    command = 'cat %s %s.sh | sudo -u %s -E -H stdbuf -o0 -e0 bash -ex' % (
       bash_functions_path, 
       os.path.join(self.troot, self.setup_file), 
       self.benchmarker.runner_user)
