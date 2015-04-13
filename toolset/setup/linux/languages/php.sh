@@ -49,6 +49,8 @@ printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f redis
 # yaf.so
 printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f yaf
 
+printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f mongo
+
 # phalcon.so
 #   The configure seems broken, does not respect prefix. If you 
 #   update the value of PATH then it finds the prefix from `which php`
