@@ -1,10 +1,13 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists onion)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+ONION=$IROOT/onion
+RETCODE=$(fw_exists ${ONION}.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $ONION.installed
+  return 0; }
 
 git clone https://github.com/davidmoreno/onion.git
-cd onion
+cd $ONION
 
 # Latest commit on master as of July 10 2014
 # This is post tag v0.7, but pre any later tags
@@ -14,3 +17,7 @@ mkdir -p build
 cd build
 cmake ..
 make
+
+echo "export ONION_LOG=noinfo" > $ONION.installed
+
+source $ONION.installed

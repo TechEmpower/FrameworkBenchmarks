@@ -1,7 +1,9 @@
 #!/bin/bash
 
 RETCODE=$(fw_exists ${IROOT}/nginx.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/nginx.installed
+  return 0; }
 
 fw_get http://nginx.org/download/nginx-1.4.1.tar.gz
 fw_untar nginx-1.4.1.tar.gz
@@ -15,4 +17,6 @@ echo "Compiling and installing nginx..."
 make --quiet
 make --quiet install
 
-touch ${IROOT}/nginx.installed
+echo "export PATH=${IROOT}/nginx/sbin:${PATH}" > ${IROOT}/nginx.installed
+
+source $IROOT/nginx.installed

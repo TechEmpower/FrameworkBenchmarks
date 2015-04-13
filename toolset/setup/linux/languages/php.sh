@@ -9,9 +9,11 @@ RETCODE=$(fw_exists ${IROOT}/php.installed)
   echo "Moving PHP config files into place"; 
   sudo cp $FWROOT/config/php.ini /usr/local/lib/php.ini
   sudo cp $FWROOT/config/php-fpm.conf /usr/local/lib/php-fpm.conf
+  source $IROOT/php.installed
   return 0; }
 
 VERSION="5.5.17"
+PHP_HOME=$IROOT/php-$VERSION
 
 fw_get http://php.net/distributions/php-${VERSION}.tar.gz -O php-${VERSION}.tar.gz
 fw_untar php-${VERSION}.tar.gz
@@ -49,22 +51,10 @@ printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f redis
 # yaf.so
 printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f yaf
 
-# phalcon.so
-#   The configure seems broken, does not respect prefix. If you 
-#   update the value of PATH then it finds the prefix from `which php`
-git clone --depth=1 --branch=phalcon-v1.3.2 --single-branch \
-  --quiet git://github.com/phalcon/cphalcon.git
-cd cphalcon/build/64bits 
-$IROOT/php-5.5.17/bin/phpize
-# For some reason we have to point to php-config 
-# explicitly, it's not found by the prefix settings
-./configure --prefix=$IROOT/php-${VERSION} --exec-prefix=$IROOT/php-${VERSION} \
-  --with-php-config=$IROOT/php-${VERSION}/bin/php-config \
-  --enable-phalcon --quiet
-make --quiet
-make install
-
 # Clean up a bit
 rm -rf $IROOT/php
 
-touch $IROOT/php.installed
+echo "export PHP_HOME=${IROOT}/php-5.5.17" > $IROOT/php.installed
+echo "export PATH=${PHP_HOME}/bin:$PHP_HOME/sbin:$PATH" >> $IROOT/php.installed
+
+source $IROOT/php.installed

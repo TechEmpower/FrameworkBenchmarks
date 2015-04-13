@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export ONION_LOG=noinfo
+fw_depends onion
 
 make clean
 ln -s $IROOT/onion onion

@@ -1,7 +1,9 @@
 #!/bin/bash
 
 RETCODE=$(fw_exists ${IROOT}/treefrog.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/treefrog.installed
+  return 0; }
 
 sudo apt-get install -y qt4-qmake libqt4-dev libqt4-sql-mysql libqt4-sql-psql g++
 
@@ -20,4 +22,6 @@ cd ../tools
 make -j4
 sudo make install
 
-touch $IROOT/treefrog.installed
+echo "" > $IROOT/treefrog.installed
+
+source $IROOT/treefrog.installed
