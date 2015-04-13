@@ -5,7 +5,7 @@ class Benchmark {
 
     public function setup_db($need_utf8 = true)
     {
-        $attrs     = array(PDO::ATTR_PERSISTENT => true);
+        $attrs     = array(PDO::ATTR_PERSISTENT => false);
         // hhvm doesn't support charset=utf8 in the DSN yet
         // See https://github.com/facebook/hhvm/issues/1309
         if ($need_utf8) {
@@ -30,8 +30,6 @@ class Benchmark {
     {
         $this->setup_db();
 
-        // Create an array with the response string.
-        $arr = array();
         $id = mt_rand(1, 10000);
 
         // Define query
@@ -41,7 +39,6 @@ class Benchmark {
 
         // Store result in array.
         $arr = array('id' => $id, 'randomNumber' => $statement->fetchColumn());
-        $id = mt_rand(1, 10000);
 
         // Send the required parameters
         header('Content-Type: application/json');
