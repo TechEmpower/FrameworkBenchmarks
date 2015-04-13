@@ -16,4 +16,4 @@ fw_untar v$VERSION
 	make compile
 )
 
-echo "export PATH=$PATH:$IROOT/erlang/bin:$IROOT/elixir/bin" >> $IROOT/elixir.installed
+echo "export PATH=$IROOT/erlang/bin:$IROOT/elixir/bin:$PATH" >> $IROOT/elixir.installed

@@ -15,4 +15,4 @@ fw_untar ${OTP_SRC}.tar.gz
 	make install
 )
 
-echo "export PATH=$PATH:$IROOT/erlang/bin" >> $IROOT/erlang.installed
+echo "export PATH=$IROOT/erlang/bin:$PATH" >> $IROOT/erlang.installed
