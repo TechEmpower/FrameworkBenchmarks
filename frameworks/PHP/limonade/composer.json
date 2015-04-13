@@ -1,0 +1,7 @@
+{
+   "require": {
+   	"sofadesign/limonade" : "dev-master",
+   	"php-activerecord/php-activerecord" : "1.1.2"
+   }
+}
+
