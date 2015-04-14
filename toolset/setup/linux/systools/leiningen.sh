@@ -1,11 +1,17 @@
 #!/bin/bash
 
 RETCODE=$(fw_exists ${IROOT}/lein.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/lein.installed
+  return 0; }
 
 mkdir -p lein/bin
 fw_get https://raw.github.com/technomancy/leiningen/stable/bin/lein -O leinbin
 mv leinbin lein/bin/lein
 chmod +x lein/bin/lein
 
-touch ${IROOT}/lein.installed
+LEIN_HOME=$IROOT/lein
+echo "export LEIN_HOME=${LEIN_HOME}" > $IROOT/lein.installed
+echo "export PATH=${LEIN_HOME}/bin:${PATH}" >> $IROOT/lein.installed
+
+source $IROOT/lein.installed
