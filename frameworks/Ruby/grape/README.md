@@ -23,12 +23,12 @@ The tests were run with:
 
 ## Paths & Source for Tests
 
-* [JSON Serialization](Config.ru): "/json"
-* [Single Database Query](Config.ru): "/db"
-* [Multiple Database Queries](Config.ru): "/query?queries={#}"
+* [JSON Serialization](config.ru): "/json"
+* [Single Database Query](config.ru): "/db"
+* [Multiple Database Queries](config.ru): "/query?queries={#}"
 * _Fortunes: N/A_
-* [Database Updates](Config.ru): "/updates?queries={#}"
-* [Plaintext](Config.ru): "/plaintext"
+* [Database Updates](config.ru): "/updates?queries={#}"
+* [Plaintext](config.ru): "/plaintext"
 
 ## Get Help
 
