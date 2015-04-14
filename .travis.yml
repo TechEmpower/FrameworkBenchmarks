@@ -102,6 +102,7 @@ env:
     - "TESTDIR=PHP/fuel"
     - "TESTDIR=PHP/kohana"
     - "TESTDIR=PHP/php-laravel"
+    - "TESTDIR=PHP/limonade"
     - "TESTDIR=PHP/lithium"
     - "TESTDIR=PHP/php-micromvc"
     - "TESTDIR=PHP/php-phalcon"
