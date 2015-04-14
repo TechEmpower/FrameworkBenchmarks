@@ -1,1 +1,0 @@
-lapis.serve(require("web"))

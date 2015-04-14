@@ -1,1 +1,0 @@
-These are MSBuild files that come with Visual Studio 2012 Update 2. They can be found in `C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v11.0`.
