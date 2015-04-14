@@ -12,7 +12,7 @@ For further guidance, review the
 same PHP version, but we are open to receiving a pull request
 that enables supporting multiple versions. 
 
-## Adding a new PHP Framework
+## Adding New PHP-based Frameworks
 
 ### PHP Acceleration and Caching
 
@@ -53,7 +53,7 @@ easier to use systems such as APCu.
 
 Ask if you are not certain.
 
-# Adding New PHP-based Frameworks
+## Install.sh and Setup.sh Files
 
 Most PHP frameworks use `fw_depends php nginx composer` in their `install.sh` file, 
 which installs PHP, Nginx, and Composer automatically. They then create a `setup.sh`
