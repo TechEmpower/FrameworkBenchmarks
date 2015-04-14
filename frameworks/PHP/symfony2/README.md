@@ -21,9 +21,9 @@ The tests were run with:
 * [JSON Serialization](src/Skamander/BenchmarkBundle/Controller/BenchController.php)
 : "/json" _Note: Uses the PHP standard 
 [JSON encoder](http://www.php.net/manual/en/function.json-encode.php)._
-* [Single Database Query](src/Skamander/BenchmarkBundle/Controller/BenchController.php) [Model](src/Skamander/BenchmarkBundle/Entity/World.php)
+* [Single Database Query](src/Skamander/BenchmarkBundle/Controller/BenchController.php) ([Model](src/Skamander/BenchmarkBundle/Entity/World.php))
 : "/db" _Note: Uses the Symfony 2/Doctrine 2 Entity functionality._
-* [Multiple Database Queries](src/Skamander/BenchmarkBundle/Controller/BenchController.php) [Model](src/Skamander/BenchmarkBundle/Entity/World.php)
+* [Multiple Database Queries](src/Skamander/BenchmarkBundle/Controller/BenchController.php) ([Model](src/Skamander/BenchmarkBundle/Entity/World.php))
 : "/db?queries=" _Note: Uses the Symfony 2/Doctrine 2 Entity functionality._
 * [Fortunes Template Test](src/Skamander/BenchmarkBundle/Controller/BenchController.php)
 : "/fortunes" _Note: Uses Symfony's template engine 'Twig'_
