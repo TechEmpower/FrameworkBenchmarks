@@ -1,34 +1,38 @@
-# Bottle Benchmark Test
+# [Bottle](http://bottlepy.org/docs/dev/index.html) Benchmark Test
 
-Single file test, [app.py](app.py)
+This is the Python Bottle portion of a [benchmarking tests suite](../../) 
+comparing a variety of frameworks.
 
+The information below is specific to Bottle. For further guidance, 
+review the [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
+Also note that there is additional information that's provided in 
+the [Python README](../).
 
-## Test URLs
-### JSON Encoding 
+## Test Paths and Sources
 
-http://localhost:8080/json
-
-### Single Row Random Query
-
-With ORM:
-    http://localhost:8080/dbs
-
-Without ORM (raw):
-    http://localhost:8080/dbsraw
-
-### Variable Row Query Test 
+All tests are implemented in a single file ([app.py](app.py)).
 
 With ORM:
-    http://localhost:8080/db?queries=2
+
+* [JSON Serialization](app.py): "/json"
+* [Single Database Query](app.py): "/dbs"
+* [Multiple Database Queries](app.py): "/db?queries=#"*
+* [Fortunes](app.py): "/fortunes"
+* [Database Updates](app.py): "/updates?queries=#"*
+* [Plaintext](app.py): "/plaintext"
 
 Without ORM (raw):
-    http://localhost:8080/dbraw?queries=2
 
-### Fortune Test
+* [Single Database Query](app.py): "/raw-db"
+* [Multiple Database Queries](app.py): "/raw-queries?=#"*
+* [Fortune](app.py): "/raw-fortune"
+* [Database Updates](app.py): "/raw-updates?queries=#"*
 
-With ORM:
-    http://localhost:8080/fortune
+*Replace # with an actual number.
 
-Without ORM (raw):
-    http://localhost:8080/fortuneraw
+## Get Help
 
+### Community
+
+* [bottlepy Google Group](https://groups.google.com/forum/#!forum/bottlepy)
+* `#bottlepy` IRC Channel ([irc.freenode.net](https://freenode.net/))
