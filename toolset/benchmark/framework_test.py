@@ -212,10 +212,10 @@ class FrameworkTest:
     # See http://www.pixelbeat.org/programming/stdio_buffering/
     # See https://blogs.gnome.org/markmc/2013/06/04/async-io-and-python/
     # See http://eyalarubas.com/python-subproc-nonblock.html
-    command = 'cat %s %s.sh | sudo -u %s -E -H stdbuf -o0 -e0 bash -ex' % (
+    command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -exc "source %s && source %s.sh"' % (
+      self.benchmarker.runner_user,
       bash_functions_path, 
-      os.path.join(self.troot, self.setup_file), 
-      self.benchmarker.runner_user)
+      os.path.join(self.troot, self.setup_file))
     
     debug_command = '''\
       export FWROOT=%s      && \\
@@ -253,8 +253,7 @@ class FrameworkTest:
     # Start the setup.sh command
     p = subprocess.Popen(command, cwd=self.directory, 
           shell=True, stdout=subprocess.PIPE, 
-          stderr=subprocess.STDOUT,
-          executable='/bin/bash')
+          stderr=subprocess.STDOUT)
     nbsr = setup_util.NonBlockingStreamReader(p.stdout, 
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
 
