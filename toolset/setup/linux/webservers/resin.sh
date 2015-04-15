@@ -26,6 +26,6 @@ mv conf/resin.xml conf/resin.xml.orig
 cat $FWROOT/config/resin.xml > conf/resin.xml
 
 echo "export RESIN_HOME=${RESIN_HOME}" > $RESIN_HOME.installed
-echo "export PATH=${RESIN_HOME}/bin:$PATH" >> $RESIN_HOME.installed
+echo -e "export PATH=${RESIN_HOME}/bin:\$PATH" >> $RESIN_HOME.installed
 
 source $RESIN_HOME.installed

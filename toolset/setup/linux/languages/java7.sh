@@ -15,6 +15,6 @@ sudo apt-get install -y openjdk-7-jdk
 # Setup environment variables
 JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-`dpkg --print-architecture`
 echo "export JAVA_HOME=${JAVA_HOME}" > $JAVA.installed
-echo "export PATH=${JAVA_HOME}/bin:$PATH" >> $JAVA.installed
+echo -e "export PATH=${JAVA_HOME}/bin:\$PATH" >> $JAVA.installed
 
 source $JAVA.installed
