@@ -274,9 +274,9 @@ class FrameworkTest:
     # output to the pipes. 
     #
     prefix = "Setup %s: " % self.name
-    while not (p.poll() 
-      or self.benchmarker.is_port_bound(self.port)
-      or time_remaining.total_seconds() < 0):
+    while (p.poll() is None
+      and not self.benchmarker.is_port_bound(self.port)
+      and not time_remaining.total_seconds() < 0):
       
       # The conditions above are slow to check, so 
       # we will delay output substantially if we only
@@ -301,6 +301,8 @@ class FrameworkTest:
 
       if (travis_timeout - datetime.now()).total_seconds() < 0:
         sys.stdout.write(prefix + 'Printing so Travis-CI does not time out\n')
+        sys.stdout.write(prefix + "Status: Poll: %s, Port %s bound: %s, Time Left: %s\n" % (
+          p.poll(), self.port, self.benchmarker.is_port_bound(self.port), time_remaining))
         sys.stdout.flush()
         travis_timeout = datetime.now() + timedelta(minutes = 5)
 
@@ -313,8 +315,10 @@ class FrameworkTest:
     # What's our return code? 
     # If setup.sh has terminated, use that code
     # Otherwise, detect if the port was bound
-    retcode = (p.poll() or 0 if self.benchmarker.is_port_bound(self.port) else 1)
-    if p.poll():
+    tee_output(prefix, "Status: Poll: %s, Port %s bound: %s, Time Left: %s\n" % (
+      p.poll(), self.port, self.benchmarker.is_port_bound(self.port), time_remaining))
+    retcode = (p.poll() if p.poll() is not None else 0 if self.benchmarker.is_port_bound(self.port) else 1)
+    if p.poll() is not None:
       tee_output(prefix, "%s.sh process exited naturally with %s\n" % (self.setup_file, p.poll()))
     elif self.benchmarker.is_port_bound(self.port):
       tee_output(prefix, "Bound port detected on %s\n" % self.port)
