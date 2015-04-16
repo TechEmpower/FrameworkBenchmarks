@@ -95,6 +95,14 @@ fw_depends() {
     wd=$(pwd)
     relative_wd=\$FWROOT${wd#$FWROOT}
 
+    # Check that the prerequisites have been loaded
+    RETCODE=$(fw_exists ${IROOT}/prerequisites.installed)
+    [ "$RETCODE" == 0 ] || { \
+      # Load environment variables
+      echo Installing prerequisites
+      source $FWROOT/toolset/setup/linux/prerequisites.sh
+      touch $IROOT/prerequisites.installed; }
+
     # Find and run the installer.sh file for this dependency
     # Turn on some bash options before sourcing: 
     #   - (x) errtrace : Print commands before they are run

@@ -184,6 +184,11 @@ class FrameworkTest:
                 logDir,
                 self.benchmarker.threads))
 
+    # Always ensure that IROOT belongs to the runner_user
+    chown = "sudo chown -R %s:%s %s" % (self.benchmarker.runner_user,
+      self.benchmarker.runner_user, os.path.join(self.fwroot, self.install_root))
+    subprocess.check_call(chown, shell=True, cwd=cwd, executable='/bin/bash')
+
     # Run the module start inside parent of TROOT
     #  - we use the parent as a historical accident, a number of tests
     # refer to their TROOT maually still
