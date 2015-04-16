@@ -19,9 +19,9 @@ var http = require('http')
   , url = require('url')
   , async = require('async')
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://127.0.0.1/hello_world')
+  , conn = mongoose.connect('mongodb://localhost/hello_world')
   , MongoClient = require('mongodb').MongoClient
-  , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: '127.0.0.1' };
+  , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost' };
 
 if (!windows) {
   var Mapper = require('mapper')  
