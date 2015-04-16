@@ -1,8 +1,8 @@
 #!/bin/bash
-# load java environment variables
-source $IROOT/java7.installed
 
 sed -i 's|DATABASE_HOST|'"${DBHOST}"'|g' src/main/resources/hello/server.properties
+
+fw_depends java7 maven
 
 mvn clean compile assembly:single
 cd target
