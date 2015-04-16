@@ -1,72 +1,207 @@
 (ns hello.handler
   (:gen-class)
+  (:import com.mchange.v2.c3p0.ComboPooledDataSource)
   (:use compojure.core
         ring.middleware.json
         org.httpkit.server
         [clojure.tools.cli :only [cli]]
-        ring.util.response)
+        korma.db
+        korma.core
+        hiccup.core
+        hiccup.util
+        hiccup.page)
   (:require [compojure.handler :as handler]
-            [org.httpkit.dbcp :as db]
-            [compojure.route :as route]))
+            [compojure.route :as route]
+            [ring.util.response :as ring-resp]
+            [clojure.data.json :as json]
+            [clojure.java.jdbc :as jdbc]))
 
-;;; convert to int
-(defn to-int [s] (cond
-                  (string? s) (Integer/parseInt s)
-                  (instance? Integer s) s
-                  (instance? Long s) (.intValue ^Long s)
-                  :else 0))
 
-;; Query a random World record from the database
-(defn get-world []
-  (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
-    ; Set a naming strategy to preserve column name case
-    (clojure.java.jdbc/with-naming-strategy {:keyword identity}
-      (db/query "select * from world where id = ?" id))))
+(defn parse-port [s] 
+  "Convert stringy port number int. Defaults to 8080."
+  (cond
+    (string? s) (Integer/parseInt s)
+    (instance? Integer s) s
+    (instance? Long s) (.intValue ^Long s)
+    :else 8080))
 
-;; Run the specified number of queries, return the results
-(defn run-queries [queries]
-   (flatten ; Make it a list of maps
-    (take
-     queries ; Number of queries to run
-     (repeatedly get-world))))
 
-(defn get-query-count [queries]
-  "Parse provided string value of query count, clamping values to between 1 and 500."
-  (let [q (try (Integer/parseInt queries)
+;; MySQL connection
+(defdb mysql-db
+  (mysql {
+    :classname "com.mysql.jdbc.Driver"
+    :subprotocol "mysql"
+    :subname "//127.0.0.1:3306/hello_world"
+    :user "benchmarkdbuser"
+    :password "benchmarkdbpass"
+    ;;OPTIONAL KEYS
+    :delimiters "" ;; remove delimiters
+    :maximum-pool-size 256}))
+
+
+;; Set up entity World and the database representation
+(defentity world
+  (pk :id)
+  (table :world)
+  (entity-fields :id :randomNumber) ;; Default fields for select
+  (database mysql-db))
+
+
+(defn sanitize-queries-param
+  "Sanitizes the `queries` parameter. Caps the value between 1 and 500.
+  Invalid (stringy) values become 1"
+  [queries]
+  (let [n (try (Integer/parseInt queries)
                (catch Exception e 1))] ; default to 1 on parse failure
-    (if (> q 500)
-      500 ; clamp to 500 max
-      (if (< q 1)
-        1 ; clamp to 1 min
-        q)))) ; otherwise use provided value
+    (cond
+      (< n 1) 1
+      (> n 500) 500
+      :else n)))
+
+
+(defn random-world
+  "Query a random World record from the database"
+  []
+  (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
+    (select world
+            (where {:id id }))))
+
+
+(defn run-queries
+  "Run query repeatedly -- Always returns an array"
+  [queries]
+  (flatten (take queries (repeatedly random-world))))
+
+; Set up entity Fortune and the database representation
+(defentity fortune
+  (pk :id)
+  (table :fortune)
+  (entity-fields :id :message)
+  (database mysql-db))
+
+
+(defn get-all-fortunes
+  "Query all Fortune records from the database."
+  []
+  (select fortune
+          (fields :id :message)))
+
+
+(defn get-fortunes
+  "Fetch the full list of Fortunes from the database, sort them by the fortune
+  message text, and then return the results."
+  []
+  (sort-by #(:message %)
+    (conj
+      (get-all-fortunes)
+      { :id 0 :message "Additional fortune added at request time." })))
+
+
+(defn fortunes-hiccup
+  "Render the given fortunes to simple HTML using Hiccup."
+  [fortunes]
+  (html5
+   [:head
+    [:title "Fortunes"]]
+   [:body
+    [:table
+     [:tr
+      [:th "id"]
+      [:th "message"]]
+     (for [x fortunes]
+       [:tr
+        [:td (:id x)]
+        [:td (escape-html (:message x))]])
+     ]]))
+
+
+(defn update-and-persist
+  "Changes the :randomNumber of a number of world entities.
+  Persists the changes to sql then returns the updated entities"
+  [queries]
+  (let [results (-> queries
+                    (sanitize-queries-param)
+                    (run-queries))]
+    (for [w results]
+      (update-in w [:randomNumber (inc (rand-int 9999))]
+        (update world
+                (set-fields {:randomNumber (:randomNumber w)})
+                (where {:id [:id w]}))))
+    results))
+
+
+(def json-serialization
+  "Test 1: JSON serialization"
+  (ring-resp/response {:message "Hello, World!"}))
+
+
+(def single-query-test
+  "Test 2: Single database query"
+  (ring-resp/response (first (run-queries 1))))
+
+
+(defn multiple-queries-test
+  "Test 3: Multiple database queries"
+  [queries]
+  (-> queries
+      (sanitize-queries-param)
+      (run-queries)
+      (ring-resp/response)
+      (ring-resp/content-type "application/json")))
+
+
+(def fortune-test
+  "Test 4: Fortunes"
+  (->
+    (get-fortunes)
+    (fortunes-hiccup)
+    (ring-resp/response)
+    (ring-resp/content-type "text/html")))
+
+
+(defn db-updates
+  "Test 5: Database updates"
+  [queries]
+  (-> queries
+      (update-and-persist)
+      (ring-resp/response)))
+
+
+(def plaintext
+  "Test 6: Plaintext"
+  (->
+    (ring-resp/response "Hello, World!")
+    (ring-resp/content-type "text/plain")))
+
 
 ;; Define route handlers
 (defroutes app-routes
-  (GET "/http-kit/" [] "Hello, World!")
-  (GET "/http-kit/json" [] (response {:message "Hello, World!"}))
-  (GET "/http-kit/db" []
-       (response (first (run-queries 1))))
-  (GET "/http-kit/db/:queries" [queries]
-       (response (run-queries (get-query-count queries))))
+  (GET "/"                 [] "Hello, World!")
+  (GET "/json"             [] json-serialization)
+  (GET "/db"               [] single-query-test)
+  (GET "/queries/:queries" [queries] (multiple-queries-test queries))
+  (GET "/fortunes"         [] fortune-test)
+  (GET "/updates/:queries" [queries] (db-updates queries))
+  (GET "/plaintext"        [] plaintext)
   (route/not-found "Not Found"))
 
 
-(defn start-server [{:keys [port db-host]}]
-  (db/use-database! (str "jdbc:mysql://" db-host "/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true")
-                    "benchmarkdbuser"
-                    "benchmarkdbpass")
+(defn start-server [{:keys [port]}]
   ;; Format responses as JSON
   (let [handler (wrap-json-response app-routes)
         cpu (.availableProcessors (Runtime/getRuntime))]
     ;; double worker threads should increase database access performance
-    (run-server handler {:port port :thread (* 2 cpu)})
+    (run-server handler {:port port
+                         :thread (* 2 cpu)})
     (println (str "http-kit server listens at :" port))))
+
 
 (defn -main [& args]
   (let [[options _ banner]
         (cli args
-             ["-p" "--port" "Port to listen" :default 8080 :parse-fn to-int]
-             ["--db-host" "MySQL database host" :default "localhost"]
+             ["-p" "--port" "Port to listen" :default 8080 :parse-fn parse-port]
              ["--[no-]help" "Print this help"])]
-    (when (:help options) (println banner) (System/exit 0))
+    (when (:help options)
+          (println banner)
+          (System/exit 0))
     (start-server options)))
