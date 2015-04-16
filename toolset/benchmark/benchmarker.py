@@ -715,13 +715,14 @@ class Benchmarker:
   # shutdown properly.
   ############################################################
   def __is_port_bound(self, port):
+    port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
       # Try to bind to all IP addresses, this port
       s.bind(("", port))
       # If we get here, we were able to bind successfully,
       # which means the port is free.
-    except Exception:
+    except socket.error:
       # If we get an exception, it might be because the port is still bound
       # which would be bad, or maybe it is a privileged port (<1024) and we
       # are not running as root, or maybe the server is gone, but sockets are
@@ -732,7 +733,7 @@ class Benchmarker:
         # If we get here, we were able to connect to something, which means
         # that the port is still bound.
         return True
-      except Exception:
+      except socket.error:
         # An exception means that we couldn't connect, so a server probably
         # isn't still running on the port.
         pass
