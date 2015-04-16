@@ -1,21 +1,36 @@
 # [nginx + mruby](https://github.com/matsumoto-r/ngx_mruby) Benchmark Test
 
+The information below contains information specific to nginx + mruby. 
+For further guidance, review the 
+[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
+Also note the additional information provided in the [Ruby README](../).
+
+This is the nginx + mruby portion of a [benchmarking test suite](../../) 
+comparing a variety of web platforms.
+
+---
+
 The nginx app is distributes across a few files. most of it is in [nginx.conf](nginx.conf)
 The nginx conf is inside [nginx.conf](nginx.conf)
 Requires a nginx compiled with ngx_mruby module. It has been called nginx_mruby for lack of a better name
 
+## Infrastructure Software Versions
 
-## Test URLs
-### JSON Encoding
+The tests were run with:
 
-http://localhost:8080/json
+* [Ruby 2.0.0-p0](http://www.ruby-lang.org/)
 
-### Single Row Random Query
+## Paths & Source for Tests
 
-http://localhost:8080/db
+* [JSON Serialization](nginx.conf): "/json"
+* [Single Database Query](db.rb): "/db"
+* [Multiple Database Query](queries.rb): "/queries?queries={#}"
+* _Fortunes: N/A_
+* _Database Updates: N/A_
+* [Plaintext](nginx.conf): "/plaintext"
 
-### Variable Row Query Test
+## Get Help
 
-http://localhost:8080/db?queries=2
+### Experts
 
-Based upon the [openresty](../../Lua/openresty/) implementation.
+_No experts listed, yet. If you're an expert, add yourself!_

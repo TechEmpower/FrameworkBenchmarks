@@ -1,16 +1,19 @@
 #!/bin/bash
 
-# TODO seems to be broken installation
-echo "WARN: Elixir does not install"
-return 1
+RETCODE=$(fw_exists $IROOT/elixir.installed)
+[ ! "$RETCODE" == 0 ] || { . $IROOT/elixir.installed; return 0; }
 
-# fw_exists v0.13.3.tar.gz
-# [ $? -ne 0 ] || { return 0; }
+fw_depends erlang
+export PATH=$PATH:$IROOT/erlang/bin
 
-# fw_get https://github.com/elixir-lang/elixir/archive/v0.13.3.tar.gz
-# fw_untar v0.13.3.tar.gz
+VERSION="1.0.4"
+fw_get https://codeload.github.com/elixir-lang/elixir/tar.gz/v$VERSION
+fw_untar v$VERSION
 
-# cd elixir-0.13.3 
-# bash -c -i 'sudo make install'
-# sudo make clean
-# sudo make test
+(
+	mv elixir-$VERSION elixir
+	cd elixir
+	make compile
+)
+
+echo "export PATH=$IROOT/erlang/bin:$IROOT/elixir/bin:$PATH" >> $IROOT/elixir.installed

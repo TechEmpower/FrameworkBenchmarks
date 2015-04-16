@@ -6,6 +6,9 @@ RETCODE=$(fw_exists ${REBAR_HOME}.installed)
   source $REBAR_HOME.installed
   return 0; }
 
+fw_depends erlang
+source $IROOT/erlang.installed
+
 fw_get https://github.com/rebar/rebar/archive/2.5.1.tar.gz -O rebar-2.5.1.tar.gz
 fw_untar rebar-2.5.1.tar.gz
 mv rebar-2.5.1 rebar

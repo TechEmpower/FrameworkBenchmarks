@@ -37,6 +37,8 @@ executable         bench
                  , http-types
                  , aeson
                  , blaze-builder
+                 , blaze-html
                  , bytestring                    >= 0.10
                  , resource-pool
                  , resourcet
+                 , shakespeare
