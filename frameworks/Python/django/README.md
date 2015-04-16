@@ -1,30 +1,30 @@
-# Django Benchmarking Test
+# [Django](https://www.djangoproject.com/) Benchmarking Test
 
-This is the Django portion of a benchmarking test suite comparing a variety of web development platforms.
+This is the Django portion of a [benchmarking tests suite](../../) 
+comparing a variety of web development platforms.
 
-### JSON Encoding Test
+The information below is specific to Django. For further guidance, 
+review the [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
+Also note that there is additional information provided in 
+the [Python README](../).
 
-* [JSON test source](hello/world/views.py)
+## Test Paths & Sources
 
+* [JSON Serialization](hello/world/views.py): "/json"
+* [Single Database Query](hello/world/views.py): "/db", [World Model](hello/world/models.py)
+* [Multiple Database Queries](hello/world/views.py): "/dbs?queries=#"*, [World Model](hello/world/models.py)
+* [Fortunes](hello/world/views.py): "/fortunes", [Fortune Model](hello/world/models.py)
+* [Database Updates](hello/world/views.py): "/update?queries=#"*, [World Model](hello/world/models.py)
+* _Plaintext: N/A_
 
-### Data-Store/Database Mapping Test
+*Replace # with an actual number.
 
-* [DB test controller](hello/world/views.py)
-* [DB test model](hello/world/models.py)
+## Get Help
 
+### [Community](https://www.djangoproject.com/community/)
 
-## Resources
-* https://docs.djangoproject.com/en/dev/intro/tutorial01/
+* `#django` IRC Channel ([irc.freenode.net](https://freenode.net/))
 
-## Test URLs
-### JSON Encoding Test
+### Resources
 
-http://localhost:8080/json
-
-### Data-Store/Database Mapping Test
-
-http://localhost:8080/db
-
-### Variable Query Test
-
-http://localhost:8080/db?queries=2
+* [Writing your first Django app](https://docs.djangoproject.com/en/dev/intro/tutorial01/)
