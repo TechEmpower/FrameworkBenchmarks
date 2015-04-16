@@ -1,12 +1,11 @@
 #!/bin/bash
-export DART_HOME=$IROOT/dart-sdk
-export PUB_CACHE=$IROOT/.pubcache
-export NGINX_HOME=$IROOT/nginx
 
 sed -i 's|host: .*|host: '"${DBHOST}"'|g' postgresql.yaml
 sed -i 's|host: .*|host: '"${DBHOST}"'|g' mongodb.yaml
 
-$DART_HOME/bin/pub upgrade
+fw_depends dart nginx
+
+pub upgrade
 
 #
 # start dart servers
@@ -14,7 +13,7 @@ $DART_HOME/bin/pub upgrade
 current=9001
 end=$(($current+$MAX_THREADS))
 while [ $current -lt $end ]; do
-  $DART_HOME/bin/dart server.dart -a 127.0.0.1 -p $current -d ${MAX_THREADS} &
+  dart server.dart -a 127.0.0.1 -p $current -d ${MAX_THREADS} &
   let current=current+1
 done
 
@@ -55,4 +54,4 @@ conf+="}"
 #
 echo -e $conf > nginx.conf
 
-$NGINX_HOME/sbin/nginx -c $(pwd)/nginx.conf &
+nginx -c $(pwd)/nginx.conf &

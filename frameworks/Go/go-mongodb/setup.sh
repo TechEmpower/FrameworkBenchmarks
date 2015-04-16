@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# Set the root of our go installation
-export GOROOT=${IROOT}/go
-export GOPATH=${TROOT}
+sed -i 's|connectionString = "localhost"|connectionString = "'"${DBHOST}"'"|g' src/hello/hello.go
 
-# Where to find the go executable
-export PATH="$GOROOT/bin:$PATH"
+fw_depends go
+export GOPATH=${TROOT}
 
 go get ./...
 
