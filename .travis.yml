@@ -127,6 +127,7 @@ env:
     - "TESTDIR=Python/flask"
     - "TESTDIR=Python/pyramid"
     - "TESTDIR=Python/tornado"
+    - "TESTDIR=Python/turbogears"
     - "TESTDIR=Python/uwsgi"
     - "TESTDIR=Python/web2py"
     - "TESTDIR=Python/wheezyweb"

@@ -1,0 +1,27 @@
+{
+  "framework": "turbogears",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "TurboGears",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "Meinheld",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "TurboGears",
+      "notes": "CPython 2.7"
+    }
+  }]
+}
