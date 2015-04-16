@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# load java environment variables
-source $IROOT/java7.installed
+fw_depends java7 maven
 
 mvn clean package
 
