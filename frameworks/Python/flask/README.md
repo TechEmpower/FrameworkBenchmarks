@@ -1,6 +1,15 @@
-# Flask Benchmark Test
+# [Flask](http://flask.pocoo.org/) Benchmark Test
 
-Single file test, [app.py](app.py)
+The information below is specific to Flask. For further guidance, 
+review the [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
+Also note that there is additional information that's provided in 
+the [Python README](../).
+
+This is the Python Flask portion of a [benchmarking tests suite](../../) 
+comparing a variety of frameworks.
+
+All test implementations are located within a single file 
+([app.py](app.py)).
 
 ## Description
 
@@ -19,7 +28,6 @@ MySQL (MySQL-python on CPython, PyMySQL on PyPy)
 
 * gunicorn+meinheld on CPython
 * Tornado on PyPy
-
 
 ## Test URLs
 ### JSON Encoding 

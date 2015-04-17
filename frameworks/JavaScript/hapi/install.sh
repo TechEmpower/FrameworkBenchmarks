@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends nodejs
+fw_depends nvm

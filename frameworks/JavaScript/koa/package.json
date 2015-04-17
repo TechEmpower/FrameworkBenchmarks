@@ -1,0 +1,17 @@
+{
+  "name": "koa-tfb",
+  "version": "0.0.1",
+  "description": "Koa tests for TechEmpower Framework Benchmarks.",
+  "main": "app.js",
+  "private": true,
+  "dependencies": {
+    "co-monk": "1.0.0",
+    "koa": "0.18.1",
+    "koa-bodyparser": "1.4.1",
+    "koa-handlebars": "0.5.2",
+    "koa-mongo": "0.3.0",
+    "koa-override": "1.0.0",
+    "koa-route": "2.4.0",
+    "monk": "1.0.1"
+  }
+}
