@@ -1,7 +1,10 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/mongrel2.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+MONGREL2=$IROOT/mongrel2
+RETCODE=$(fw_exists ${MONGREL2}.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $MONGREL2.installed
+  return 0; }
 
 fw_depends zeromq
 
@@ -32,4 +35,7 @@ cd mongrel2-install
   make install
 )
 
-touch ${IROOT}/mongrel2.installed
+echo "export MONGREL2_HOME=${MONGREL2}" > $MONGREL2.installed
+echo -e "export PATH=${MONGREL2}/bin:\$PATH" >> $MONGREL2.installed
+
+source $MONGREL2.installed
