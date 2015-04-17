@@ -1,21 +1,17 @@
 #!/bin/bash
-export NODE_HOME=${IROOT}/node-v0.10.8-linux-x64
-
 sed -i 's|localhost|'"${DBHOST}"'|g' hello.js
-sed -i 's|mongodb//.*/hello_world|mongodb//'"${DBHOST}"'/hello_world|g' hello.js
+sed -i 's|mongodb://.*/hello_world|mongodb://'"${DBHOST}"'/hello_world|g' hello.js
 
 export NODE_ENV=production
-export NODE_HOME=${IROOT}/node-v0.10.8-linux-x64
-export PATH=$PATH:$NODE_HOME/bin
+export NVM_HOME=${IROOT}/nvm
+# Used to avoid nvm's return 2 error.
+# Sourcing this functions if 0 is returned.
+source $NVM_HOME/nvm.sh || 0
+nvm install 0.10.8
+nvm use 0.10.8
 
-${NODE_HOME}/bin/npm install
-${NODE_HOME}/bin/node hello.js &
+# update npm before app init
+npm install -g npm
 
-# !DO NOT REMOVE!
-#
-# It takes `node app` a few seconds to turn on and 
-# then fork. If you remove this sleep, the parent shell 
-# executing this script will be terminated before the 
-# application has time to awaken and be forked, and 
-# express will fail to be started
-sleep 5
+npm install
+node hello.js &
