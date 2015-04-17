@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sed -i 's|mongodb//.*/hello_world|mongodb//'"${DBHOST}"'/hello_world|g' app.js
+sed -i 's|mongodb://.*/hello_world|mongodb://'"${DBHOST}"'/hello_world|g' app.js
 
 export NVM_HOME=${IROOT}/nvm
 # Used to avoid nvm's return 2 error.

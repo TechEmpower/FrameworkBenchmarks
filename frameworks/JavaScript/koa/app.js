@@ -11,7 +11,7 @@ var koa = require('koa')
 // Monk MongoDB Driver Deps
 var monk = require('monk')
   , wrap = require('co-monk')
-  , db = monk('localhost/hello_world')
+  , db = monk('mongodb://localhost/hello_world')
   , worlds = wrap(db.get('world'))
   , fortunes = wrap(db.get('fortune'));
 
