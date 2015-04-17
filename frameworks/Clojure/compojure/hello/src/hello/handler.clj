@@ -156,13 +156,14 @@
   "Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
-  (let [results (-> (run-queries queries))]
+  (let [results (run-queries queries)]
     (for [w results]
       (update-in w [:randomNumber (inc (rand-int 9999))]
         (update world
                 (set-fields {:randomNumber (:randomNumber w)})
                 (where {:id [:id w]}))))
     results))
+
 
 (def json-serialization
   "Test 1: JSON serialization"
@@ -198,8 +199,8 @@
   "Test 3: Multiple database queries (raw)"
   [queries]
   (-> queries
+      (get-query-count)
       (run-queries-raw)
-      (first)
       (response)))
 
 
