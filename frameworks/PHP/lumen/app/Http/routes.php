@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 function update_world(&$world, $key) {
 	$world->randomNumber = mt_rand(1, 10000);
 }
@@ -22,8 +24,8 @@ $app->get("db", function() use ($app) {
 	return response()->json($results[0]);
 });
 
-$app->get("queries/{queries}", function($queries=1) use ($app) {
-	$query_count = $queries;
+$app->get("queries", function(Request $request) {
+        $query_count = $request->input("queries");
 	if ($query_count < 1) {
 		$query_count = 1;
 	}
