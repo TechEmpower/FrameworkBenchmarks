@@ -9,6 +9,9 @@ source $NVM_HOME/nvm.sh || 0
 nvm install 0.11.16
 nvm use 0.11.16
 
+# update npm before app init
+npm install -g npm
+
 # run app
 npm install
 node --harmony app &

@@ -10,6 +10,9 @@ source $NVM_HOME/nvm.sh || 0
 nvm install 0.10.8
 nvm use 0.10.8
 
+# update npm before app init
+npm install -g npm
+
 # run app
 npm install
 node app &
