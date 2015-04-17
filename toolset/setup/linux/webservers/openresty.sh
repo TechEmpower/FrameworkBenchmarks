@@ -1,7 +1,11 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/openresty-1.7.7.1.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+VERSION="1.7.7.1"
+OPENRESTY=$IROOT/openresty-$VERSION
+RETCODE=$(fw_exists ${OPENRESTY}.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $OPENRESTY.installed
+  return 0; }
 
 fw_depends nginx lua
 
@@ -13,4 +17,7 @@ cd ngx_openresty-1.7.7.1
 make -j4
 make install
 
-touch ${IROOT}/openresty-1.7.7.1.installed
+echo "export OPENRESTY_HOME=${OPENRESTY}" > $OPENRESTY.installed
+echo -e "export PATH=${OPENRESTY}/nginx/sbin:\$PATH" >> $OPENRESTY.installed
+
+source $OPENRESTY.installed

@@ -1,14 +1,17 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/lua5.1.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+VERSION="5.1.5"
+LUA=$IROOT/lua$VERSION
+RETCODE=$(fw_exists ${LUA}.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $LUA.installed
+  return 0; }
 
-# Eventually, we should also install lua5.2 and luajit
-#
-# At the moment they seem to cause issues with lapis 
-# being able to compile. Since no Lua test is using 
-# either luajit or lua5.2 at the moment I have just
-# left them out
-sudo apt-get install -y lua5.1 luarocks
+fw_get https://github.com/LuaDist/lua/archive/5.1.5-Ubuntu-x86_64.tar.gz
+fw_untar 5.1.5-Ubuntu-x86_64
 
-touch ${IROOT}/lua5.1.installed
+LUA_HOME=$IROOT/lua-5.1.5-Ubuntu-x86_64
+echo "export LUA_HOME=${LUA_HOME}" > $LUA.installed
+echo -e "export PATH=${LUA_HOME}/bin:\$PATH" >> $LUA.installed
+
+source $LUA.installed

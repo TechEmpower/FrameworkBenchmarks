@@ -1,15 +1,21 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/node-v0.10.8.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+VERSION="0.10.8"
+NODE=$IROOT/node-v$VERSION
+NODE_HOME=$NODE-linux-x64
+RETCODE=$(fw_exists ${NODE}.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $NODE.installed
+  return 0; }
 
-fw_get http://nodejs.org/dist/v0.10.8/node-v0.10.8-linux-x64.tar.gz
-fw_untar node-v0.10.8-linux-x64.tar.gz
+fw_get http://nodejs.org/dist/v$VERSION/node-v$VERSION-linux-x64.tar.gz
+fw_untar node-v$VERSION-linux-x64.tar.gz
 
 # Upgrade npm to avoid https://github.com/npm/npm/issues/4984
-export NODE_HOME=${IROOT}/node-v0.10.8-linux-x64
-export PATH=$PATH:$NODE_HOME/bin
-
 ${NODE_HOME}/bin/npm install -g npm
 
-touch ${IROOT}/node-v0.10.8.installed
+echo "export NODE_HOME=${NODE_HOME}" > $NODE.installed
+echo "export NODE_ENV=production" >> $NODE.installed
+echo -e "export PATH=${NODE_HOME}/bin:\$PATH" >> $NODE.installed
+
+source $NODE.installed

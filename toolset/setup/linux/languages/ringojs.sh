@@ -1,12 +1,17 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/ringojs_0.10.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+VERSION="0.10"
+RINGOJS=$IROOT/ringojs_$VERSION
+RINGOJS_HOME=$IROOT/ringojs-$VERSION
+RETCODE=$(fw_exists ${RINGOJS}.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $RINGOJS.installed
+  return 0; }
 
-fw_get http://www.ringojs.org/downloads/ringojs_0.10-1_all.deb
-sudo apt-get install -y jsvc
-sudo dpkg -i ringojs_0.10-1_all.deb
+fw_get http://ringojs.org/downloads/ringojs-0.10.tar.gz
+fw_untar ringojs-0.10.tar.gz
 
-rm -f ringojs_0.10-1_all.deb
+echo "export RINGOJS_HOME=${RINGOJS_HOME}" > $RINGOJS.installed
+echo -e "export PATH=${RINGOJS_HOME}/bin:\$PATH" >> $RINGOJS.installed
 
-touch $IROOT/ringojs_0.10.installed
+source $RINGOJS.installed
