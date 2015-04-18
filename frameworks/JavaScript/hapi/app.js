@@ -36,28 +36,28 @@ if (cluster.isMaster) {
 		console.log('worker ' + worker.pid + ' died');
 	});
 } else {
-	var server = module.exports = Hapi.createServer(null, 8080, {
-		views: {
-			engines: {
-				handlebars: 'handlebars'
-			},
-			path: __dirname + '/views'
-		}
-	});
+	var server = module.exports = new Hapi.Server();
+	server.connection({port: 8080});
+	server.views({
+		engines: {
+			html: require('handlebars')
+		},
+		path: __dirname + '/views'
+	})
 
 	server.route({
 		method: 'GET',
 		path: '/json',
-		handler: function(req) {
-			req.reply({ message: 'Hello, World!' })
+		handler: function(req, reply) {
+			reply({ message: 'Hello, World!' })
 		}
 	});
 
 	server.route({
 		method: 'GET',
 		path: '/mongoose/{queries?}',
-		handler: function(req){
-			var queries = req.params.queries || 1,
+		handler: function(req, reply){
+			var queries = isNaN(req.params.queries) ? 1 : parseInt(req.params.queries, 10),
 				queryFunctions = [];
 
 			queries = Math.min(Math.max(queries, 1), 500);
@@ -69,10 +69,10 @@ if (cluster.isMaster) {
 			}
 
 			async.parallel(queryFunctions, function(err, results){
-				if (queries == 1) {
+				if (!req.params.queries) {
 					results = results[0];
 				}
-				req.reply(results).header('Server', 'hapi');
+				reply(results).header('Server', 'hapi');
 			});
 		}
 	});
@@ -106,7 +106,7 @@ if (cluster.isMaster) {
 	server.route({
 		method: 'GET',
 		path: '/fortune',
-		handler: function(req){
+		handler: function(req,reply){
 			if (windows) return req.reply(Hapi.error.internal('Not supported on windows'));
 
 			Fortune.all(function(err, fortunes){
@@ -118,7 +118,7 @@ if (cluster.isMaster) {
 					return (a.message < b.message) ? -1 : 1;
 				});
 
-				req.reply.view('fortunes.handlebars', {
+				reply.view('fortunes', {
 					fortunes: fortunes
 				}).header('Server', 'hapi');
 			});
@@ -128,8 +128,8 @@ if (cluster.isMaster) {
 	server.route({
 		method: 'GET',
 		path: '/mongoose-update/{queries?}',
-		handler: function(req){
-			var queries = req.params.queries || 1,
+		handler: function(req, reply){
+			var queries = isNaN(req.params.queries) ? 1 : parseInt(req.params.queries, 10),
 				selectFunctions = [];
 
 			queries = Math.max(Math.min(queries, 500), 1);
@@ -157,7 +157,7 @@ if (cluster.isMaster) {
 				}
 
 				async.parallel(updateFunctions, function(err, updates) {
-					req.reply(worlds).header('Server', 'hapi');
+					reply(worlds).header('Server', 'hapi');
 				});
 			});
 		}		
@@ -166,8 +166,8 @@ if (cluster.isMaster) {
 	server.route({
 		method: 'GET',
 		path: '/mysql-orm-update/{queries?}',
-		handler: function(req){
-			var queries = req.params.queries || 1,
+		handler: function(req,reply){
+			var queries = isNaN(req.params.queries) ? 1 : parseInt(req.params.queries, 10),
 				selectFunctions = [];
 
 			queries = Math.max(Math.min(queries, 500), 1);
@@ -191,7 +191,7 @@ if (cluster.isMaster) {
 				}
 
 				async.parallel(updateFunctions, function(err, updates) {
-					req.reply(worlds).header('Server', 'hapi');
+					reply(worlds).header('Server', 'hapi');
 				});
 			});
 		}

@@ -3,10 +3,10 @@
 	"version": "0.0.1",
 	"private": true,
 	"dependencies": {
-		"hapi": "1.2.0",
-		"mongoose": "3.5.5",
-		"async": "0.2.5",
-		"mapper": "0.2.4-pre",
-		"handlebars": "1.0.11"
+		"hapi": "8.4.0",
+		"mongoose": "4.0.1",
+		"async": "0.9.0",
+		"mapper": "0.2.5",
+		"handlebars": "3.0.1"
 	}
 }
