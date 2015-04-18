@@ -21,7 +21,7 @@ module.exports.http = {
   *                                                                           *
   ****************************************************************************/
 
-  // middleware: {
+  middleware: {
 
   /***************************************************************************
   *                                                                          *
@@ -30,7 +30,7 @@ module.exports.http = {
   *                                                                          *
   ***************************************************************************/
 
-    // order: [
+    order: [
     //   'startRequestTimer',
     //   'cookieParser',
     //   'session',
@@ -40,13 +40,22 @@ module.exports.http = {
     //   'compress',
     //   'methodOverride',
     //   'poweredBy',
+      'disablePoweredBy',
     //   '$custom',
-    //   'router',
+      'router'
     //   'www',
     //   'favicon',
     //   '404',
     //   '500'
-    // ],
+    ],
+
+    // Replacing the x-powered-by header with the expected
+    // server header for TFB
+    disablePoweredBy: function(req, res, next) {
+      res.removeHeader("x-powered-by")
+      res.set('Server', 'Sails <sailsjs.org>');
+      next();
+    },
 
   /****************************************************************************
   *                                                                           *
@@ -71,7 +80,7 @@ module.exports.http = {
 
     // bodyParser: require('skipper')
 
-  // },
+  },
 
   /***************************************************************************
   *                                                                          *
