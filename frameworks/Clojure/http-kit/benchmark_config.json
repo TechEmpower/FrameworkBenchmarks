@@ -3,9 +3,12 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
-      "json_url": "/http-kit/json",
-      "db_url": "/http-kit/db",
-      "query_url": "/http-kit/db/",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates/",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

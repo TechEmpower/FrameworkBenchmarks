@@ -12,15 +12,19 @@
   (entity-fields :id :randomNumber)
   (database db))
 
-; Query a random World record from the database
-(defn get-world []
+
+(defn get-world
+  "Query a random World record from the database"
+  []
   (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
     (select world
             (fields :id :randomNumber)
             (where {:id id }))))
 
-; Query a random World record from the database
-(defn get-world-raw []
+
+(defn get-world-raw
+  "Query a random World record from the database"
+  []
   (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
     (jdbc/with-connection (db-raw)
       ; Set a naming strategy to preserve column name case
@@ -28,19 +32,21 @@
         (jdbc/with-query-results rs [(str "select * from world where id = ?") id]
           (doall rs))))))
 
-; Run the specified number of queries, return the results
-(defn run-queries [queries]
-   (flatten ; Make it a list of maps
-    (take
-     queries ; Number of queries to run
-     (repeatedly get-world))))
 
-; Run the specified number of queries, return the results
+(defn run-queries
+  "Run the specified number of queries, return the results"
+  [queries]
+  (flatten ; Make it a list of maps
+    (take queries
+          (repeatedly get-world))))
+
+
 (defn run-queries-raw [queries]
-   (flatten ; Make it a list of maps
-    (take
-     queries ; Number of queries to run
-     (repeatedly get-world-raw))))
+  "Run the specified number of queries, return the results"
+  (flatten ; Make it a list of maps
+    (take queries
+          (repeatedly get-world-raw))))
+
 
 (defn get-query-count [queries]
   "Parse provided string value of query count, clamping values to between 1 and 500."
@@ -60,13 +66,29 @@
   (entity-fields :id :message)
   (database db))
 
-(defn get-all-fortunes []
-  "Query all Fortune records from the database."
-    (select fortune
-            (fields :id :message)))
 
-(defn get-fortunes []
-  "Fetch the full list of Fortunes from the database, sort them by the fortune
-   message text, and then return the results."
-  (let [fortunes (conj (get-all-fortunes) {:id 0 :message "Additional fortune added at request time."} )]
+(def get-all-fortunes
+  "Query all Fortune records from the database."
+  (select fortune
+          (fields :id :message)))
+
+
+(def get-fortunes
+  "Fetch the full list of Fortunes from the database. Insert an additional fortune at runtime.
+  Then sort all by fortune message text. Return the results."
+  (let [fortunes (conj get-all-fortunes
+                       {:id 0 :message "Additional fortune added at request time."})]
     (sort-by :message fortunes)))
+
+
+(defn update-and-persist
+  "Changes the :randomNumber of a number of world entities.
+  Persists the changes to sql then returns the updated entities"
+  [queries]
+  (let [results (run-queries queries)]
+    (for [w results]
+      (update-in w [:randomNumber (inc (rand-int 9999))]
+        (update world
+                (set-fields {:randomNumber (:randomNumber w)})
+                (where {:id [:id w]}))))
+    results))
