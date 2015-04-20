@@ -5,15 +5,15 @@ use Illuminate\Http\Request;
 require_once __DIR__.'/Models/World.php';
 require_once __DIR__.'/Models/Fortune.php';
 
-$app->get("plaintext", function() use ($app) {
+$app->get("plaintext", function() {
     return response("Hello, World!")->header("Content-Type", "text/plain");
 });
 
-$app->get("json", function() use ($app) {
+$app->get("json", function() {
 	return response()->json(["message" => "Hello, World!"]);
 });
 
-$app->get("db", function() use ($app) {
+$app->get("db", function() {
 	$id = mt_rand(1, 10000);
 	$result = World::find($id);
 	return response()->json($result);
