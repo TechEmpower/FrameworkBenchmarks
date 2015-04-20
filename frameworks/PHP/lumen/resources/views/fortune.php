@@ -11,7 +11,7 @@
 </tr>
 <?php
 foreach($fortunes as $f) {
-	echo ("<tr><td>" . $f->id . "</td><td>" . htmlspecialchars($f->message) . "</td></tr>");
+	echo ("<tr><td>" . $f["id"] . "</td><td>" . e($f["message"]) . "</td></tr>");
 }
 ?>
 </table>
