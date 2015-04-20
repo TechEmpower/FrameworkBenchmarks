@@ -106,6 +106,7 @@ class UpdatesHandler(BaseHandler):
             world = db_session.query(World).get(id)
             world.randomNumber = rp()
             worlds.append(world.serialize())
+        db_session.commit()
         return self.json_response(worlds)
 
 class FortuneHandler(BaseHandler):
