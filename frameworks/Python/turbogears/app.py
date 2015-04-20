@@ -65,6 +65,7 @@ class RootController(TGController):
             world = db_session.query(World).get(id)
             world.randomNumber = rp()
             worlds.append(world.serialize())
+        db_session.commit()
         return json.dumps(worlds)
 
     @expose("json")
