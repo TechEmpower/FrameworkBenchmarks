@@ -1,0 +1,5 @@
+klein==15.0.0
+
+bleach==1.4.1
+SQLAlchemy==0.9.9
+jinja2==2.7.3
