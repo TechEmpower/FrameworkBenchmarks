@@ -55,8 +55,10 @@ def updates():
     ids = [rp() for _ in xrange(num_queries)]
     ids.sort() # To avoid deadlock
     for id in ids:
-        world = DATABASE(DATABASE.world.id==id).select()[0]
-        world.randomNumber = rp()
+        world = DATABASE.world[id]
+        newNumber = rp()
+        DATABASE(DATABASE.world.id==id).update(randomNumber=newNumber)
+        world.randomNumber = newNumber
         worlds.append(serializeWorld(world))
     return jsonOut.dumps(worlds)
 
