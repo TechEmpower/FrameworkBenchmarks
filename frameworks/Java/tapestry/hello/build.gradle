@@ -5,8 +5,8 @@ apply plugin: "java"
 apply plugin: "jetty"
 apply plugin: "idea"
 
-sourceCompatibility = "1.5"
-targetCompatibility = "1.5"
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
 
 group = "hello"
 version = "1.0-SNAPSHOT"
@@ -38,15 +38,16 @@ sourceSets {
 dependencies {
 
     compile "mysql:mysql-connector-java:5.1.19"
-    compile "org.hibernate:hibernate-core:3.6.3.Final"
-    compile "org.apache.tapestry:tapestry-hibernate:5.3.6"
-    compile "com.fasterxml.jackson.core:jackson-databind:2.3.0"
+    compile "org.hibernate:hibernate-core:3.6.10.Final"
+    compile "org.apache.tapestry:tapestry-hibernate:5.3.8"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.5.2"
+    compile "org.javassist:javassist:3.19.0-GA"
 
     // This adds automatic compression of JavaScript and CSS in production mode:
-    compile "org.apache.tapestry:tapestry-yuicompressor:5.3.6"
+    compile "org.apache.tapestry:tapestry-yuicompressor:5.3.8"
 
     // Uncomment this to add support for file uploads:
-    // compile "org.apache.tapestry:tapestry-upload:5.3.6"
+    // compile "org.apache.tapestry:tapestry-upload:5.3.8"
 
     provided "javax.servlet:servlet-api:2.5"
 }
