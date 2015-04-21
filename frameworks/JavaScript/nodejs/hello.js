@@ -90,14 +90,14 @@ http.createServer(function (req, res) {
   switch (path) {
   case '/json':
     // JSON Response Test
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8', 'Server': 'Node'});
     // Write JSON object to response
     res.end(JSON.stringify(hello));
     break;
 
   case '/plaintext':
     // JSON Response Test
-    res.writeHead(200, {'Content-Type': 'text/plain; charset=UTF-8'});
+    res.writeHead(200, {'Content-Type': 'text/plain; charset=UTF-8', 'Server': 'Node'});
     // Write JSON object to response
     res.end(helloStr);
     break;
@@ -112,7 +112,7 @@ http.createServer(function (req, res) {
       queryFunctions[i] = mongodbDriverQuery;
     }
 
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8', 'Server': 'Node'});
 
     async.parallel(queryFunctions, function(err, results) {
       if (queries == 1) {
@@ -132,7 +132,7 @@ http.createServer(function (req, res) {
       queryFunctions[i] = mongooseQuery;
     }
 
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8', 'Server': 'Node'});
 
     async.parallel(queryFunctions, function(err, results) {
       if (queries == 1) {
@@ -151,7 +151,7 @@ http.createServer(function (req, res) {
       queryFunctions[i] = sequelizeQuery;
     }
 
-    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.writeHead(200, {'Content-Type': 'application/json', 'Server': 'Node'});
 
     async.parallel(queryFunctions, function(err, results) {
       if (queries == 1) {
@@ -162,7 +162,7 @@ http.createServer(function (req, res) {
     break;
 
   case '/mysql':
-    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.writeHead(200, {'Content-Type': 'application/json', 'Server': 'Node'});
 
     function libmysqlQuery(callback) {
       libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
@@ -201,7 +201,7 @@ http.createServer(function (req, res) {
     break;
 
   case '/update':
-    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.writeHead(200, {'Content-Type': 'application/json', 'Server': 'Node'});
 
     function libmysqlQuery(callback) {
       libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
@@ -264,7 +264,7 @@ http.createServer(function (req, res) {
       queryFunctions[i] = mongodbDriverUpdateQuery;
     }
 
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8', 'Server': 'Node'});
 
     async.parallel(queryFunctions, function(err, results) {
       res.end(JSON.stringify(results));
