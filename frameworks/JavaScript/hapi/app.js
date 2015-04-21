@@ -4,12 +4,11 @@
 
 var cluster = require('cluster'),
 	numCPUs = require('os').cpus().length,
-	windows = require('os').platform() == 'win32',
 	Hapi = require('hapi'),
+	Sequelize = require('sequelize'),
 	mongoose = require('mongoose'),
-	async = require('async'),
-	conn = mongoose.connect('mongodb://localhost/hello_world'),
-	connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost', charset: 'utf8' };
+	conn = mongoose.connect('mongodb://127.0.0.1/hello_world'),
+	async = require('async');
 
 var WorldSchema = new mongoose.Schema({
 		id          : Number,
@@ -19,12 +18,39 @@ var WorldSchema = new mongoose.Schema({
 	}),
 	MWorld = conn.model('World', WorldSchema);
 
-if (!windows) {
-	var Mapper = require('mapper');
-	Mapper.connect(connMap, {verbose: false, strict: false});
-	var World = Mapper.map('World', 'id', 'randomNumber');
-	var Fortune = Mapper.map('Fortune', 'id', 'message');
-}
+var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
+	host: '127.0.0.1',
+	dialect: 'mysql',
+	logging: false,
+	pool: {
+		max: 5000,
+		min: 0,
+		idle: 5000
+	}
+});
+
+var World = sequelize.define('World', {
+	id: {
+		type: 'Sequelize.INTEGER'
+	},
+	randomNumber: {
+		type: 'Sequelize.INTEGER'
+	}
+}, {
+	timestamps: false,
+	freezeTableName: true
+});
+var Fortune = sequelize.define('Fortune', {
+	id: {
+		type: 'Sequelize.INTEGER'
+	},
+	message: {
+		type: 'Sequelize.STRING'
+	}
+}, {
+	timestamps: false,
+	freezeTableName: true
+});
 
 if (cluster.isMaster) {
 	// Fork workers.
@@ -81,8 +107,6 @@ if (cluster.isMaster) {
 		method: 'GET',
 		path: '/mysql-orm/{queries?}',
 		handler: function(req, reply){
-			if (windows) return req.reply(Hapi.error.internal('Not supported on windows'));
-
 			var queries = isNaN(req.params.queries) ? 1 : parseInt(req.params.queries, 10),
 				queryFunctions = [];
 
@@ -90,7 +114,11 @@ if (cluster.isMaster) {
 
 			for (var i = 1; i <= queries; i++) {
 				queryFunctions.push(function(callback){
-					World.findById(Math.floor(Math.random() * 10000) + 1, callback);
+					World.findOne({
+						where: {
+							id: Math.floor(Math.random() * 10000) + 1}
+						}
+					).complete(callback);
 				});
 			}
 
@@ -107,9 +135,7 @@ if (cluster.isMaster) {
 		method: 'GET',
 		path: '/fortune',
 		handler: function(req,reply){
-			if (windows) return req.reply(Hapi.error.internal('Not supported on windows'));
-
-			Fortune.all(function(err, fortunes){
+			Fortune.findAll().complete(function(err, fortunes){
 				fortunes.push({
 					id: 0,
 					message: 'Additional fortune added at request time.'
@@ -174,7 +200,11 @@ if (cluster.isMaster) {
 
 			for (var i = 1; i <= queries; i++) {
 				selectFunctions.push(function(callback){
-					World.findById(Math.floor(Math.random() * 10000) + 1, callback);
+					World.findOne({
+						where: {
+							id: Math.floor(Math.random() * 10000) + 1}
+						}
+					).complete(callback);
 				});
 			}
 
@@ -185,7 +215,7 @@ if (cluster.isMaster) {
 					(function(i){
 						updateFunctions.push(function(callback){
 							worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
-							World.save(worlds[i], callback);
+							worlds[i].save().complete(callback);
 						});
 					})(i);
 				}
