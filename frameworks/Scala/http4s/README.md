@@ -1,18 +1,8 @@
-sbt package
-java -jar target/scala-2.11/http4s_2.11-1.0-SNAPSHOT-one-jar.jar
-
-#Lift Benchmarking Test (stateless)
-
-This is the stateless Lift portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+#http4s Benchmarking Test
 
 ### JSON Encoding Test
 
-* [JSON test source](src/main/scala/code/lib/StatelessJson.scala)
-
-### Data-Store/Database Mapping Test
-
-* [Database test snippet](src/main/scala/code/lib/StatelessDb.scala)
-* [Database test model](src/main/scala/code/model/World.scala)
+* [JSON test source](src/main/scala/code/lib/WebServer.scala)
 
 ## Infrastructure Software Versions
 The tests were run with:
@@ -24,3 +14,8 @@ The tests were run with:
 ### JSON Encoding Test
 
 http://localhost:8080/json
+
+## How to run
+sbt package
+
+java -jar target/scala-2.11/http4s_2.11-1.0-SNAPSHOT-one-jar.jar
