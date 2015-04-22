@@ -36,7 +36,8 @@ module.exports.routes = {
     view: 'homepage'
   },
 
-  'get /json': 'JsonTestController.get'
+  'get /json': 'JsonTestController.get',
+  'get /db':   'DatabaseQueryController.single'
 
   /***************************************************************************
   *                                                                          *
