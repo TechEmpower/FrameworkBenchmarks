@@ -33,6 +33,12 @@ var randomWorldId = function() {
   return Math.floor(Math.random() * 10000) + 1;
 }
 
+var worldQuery = function(callback) {
+  World.findOne({
+    where: { id: randomWorldId() }
+  }).complete(callback)
+}
+
 module.exports = {
 
 
@@ -53,9 +59,22 @@ module.exports = {
    * Test 3: Multiple Database Query
    */
   multiple: function (req, res) {
-    return res.json({
-      todo: 'multiple() is not implemented yet!'
+    var queries = req.param('queries');
+    var worlds = [];
+
+    queries = Math.min(Math.max(queries, 1), 500) || 1;
+
+    for (var i = 0; i < queries; i++) {
+      worlds.push(worldQuery)
+    }
+
+    async.parallel(worlds, function(err, results) {
+      // if (queries == 1) {
+      //   results = results[0];
+      // }
+      res.json(results);
     });
   }
+  
 };
 
