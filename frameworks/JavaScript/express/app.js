@@ -28,7 +28,7 @@ var WorldSchema = new mongoose.Schema({
   MWorld = conn.model('World', WorldSchema);
 
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: '127.0.0.1',
+  host: 'localhost',
   dialect: 'mysql',
   logging: false,
   pool: {
@@ -84,6 +84,12 @@ if (cluster.isMaster) {
       return method
     }
   }));
+
+  // Set headers for all routes
+  app.use(function(req, res, next) {
+    res.setHeader("Server", "Express");
+    return next();
+  });
 
   app.set('view engine', 'jade');
   app.set('views', __dirname + '/views');
@@ -148,8 +154,6 @@ if (cluster.isMaster) {
   });
 
   app.get('/fortune', function(req, res) {
-    if (windows) return res.send(501, 'Not supported on windows');
-    
     Fortune.findAll().complete(function (err, fortunes) {
       var newFortune = {id: 0, message: "Additional fortune added at request time."};
       fortunes.push(newFortune);
@@ -196,10 +200,10 @@ if (cluster.isMaster) {
   });
 
   app.get('/mysql-orm-update', function(req, res) {
-    var queries = isNaN(req.params.queries) ? 1 : parseInt(req.params.queries, 10)
+    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
       , selectFunctions = [];
 
-    queries = Math.min(queries, 500);
+    queries = Math.max(Math.min(queries, 500), 1);
 
     for (var i = 1; i <= queries; i++ ) {
       selectFunctions.push(function(callback) {

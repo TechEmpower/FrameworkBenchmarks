@@ -19,7 +19,7 @@ var WorldSchema = new mongoose.Schema({
 	MWorld = conn.model('World', WorldSchema);
 
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-	host: '127.0.0.1',
+	host: 'localhost',
 	dialect: 'mysql',
 	logging: false,
 	pool: {
