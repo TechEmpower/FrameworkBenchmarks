@@ -29,14 +29,26 @@ var World = sequelize.define('World', {
   timestamps: false,
 })
 
-var randomWorldId = function() {
+var randomTFBnumber = function() {
   return Math.floor(Math.random() * 10000) + 1;
 }
 
 var worldQuery = function(callback) {
   World.findOne({
-    where: { id: randomWorldId() }
-  }).complete(callback)
+    where: { id: randomTFBnumber() }
+  }).complete(callback);
+}
+
+var worldUpdate = function(callback) {
+  World.update({
+      randomNumber: randomTFBnumber()
+    },
+    {
+      where: {
+        id: randomTFBnumber()
+      }
+    }
+  ).complete(callback);
 }
 
 module.exports = {
@@ -48,7 +60,7 @@ module.exports = {
    */
   single: function (req, res) {
     World.findOne({
-      where: { id: randomWorldId() }
+      where: { id: randomTFBnumber() }
     }).then(function(results) {
       return res.json(results.get());
     })
@@ -69,9 +81,21 @@ module.exports = {
     }
 
     async.parallel(worlds, function(err, results) {
-      // if (queries == 1) {
-      //   results = results[0];
-      // }
+      res.json(results);
+    });
+  },
+
+  updates: function(req, res) {
+    var queries = req.param('queries');
+    var worlds = [];
+
+    queries = Math.min(Math.max(queries, 1), 500) || 1;
+
+    for (var i = 0; i < queries; i++) {
+      worlds.push(worldQuery);
+    }
+
+    async.parallel(worlds, function(err, results) {
       res.json(results);
     });
   }
