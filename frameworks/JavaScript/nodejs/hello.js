@@ -52,10 +52,6 @@ function getRandomNumber() {
   return Math.floor(Math.random() * 10000) + 1;
 }
 
-function resolveQueries(queries) {
-  return Math.min(Math.max(+queries || 1, 1), 500)
-}
-
 function mongooseQuery(callback) {
   MWorld.findOne({ id: getRandomNumber()}).exec(function (err, world) {
     callback(err, world);
@@ -84,34 +80,35 @@ http.createServer(function (req, res) {
   // JSON response object
   var hello = {message: "Hello, World!"};
   var helloStr = "Hello, World!";
-  var path = url.parse(req.url).pathname;
-  
+
   // mysql on windows is not supported
-  if (windows && (path.substr(0, 3) == '/my' || path == '/update')) {
-    path = '/doesntexist';
+  if (windows && (req.url.substr(0, 3) == '/my' || req.url == '/update')) {
+    req.url = '/doesntexist';
   }
 
-  switch (path) {
+  switch (req.url) {
   case '/json':
     // JSON Response Test
     res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8', 'Server': 'Node'});
     // Write JSON object to response
     res.end(JSON.stringify(hello));
-    break;
+    return;
 
   case '/plaintext':
     // JSON Response Test
     res.writeHead(200, {'Content-Type': 'text/plain; charset=UTF-8', 'Server': 'Node'});
     // Write JSON object to response
     res.end(helloStr);
-    break;
+    return;
+  }
 
+  var values = url.parse(req.url, true);
+  var queries = Math.min(Math.max(+values.query.queries || 1, 1), 500);
+  var queryFunctions = new Array(queries);
+
+  switch (values.pathname) {
   case '/mongodbdriver':
     // Database Test
-    var values = url.parse(req.url, true);
-    var queries = resolveQueries(values.query.queries);
-    var queryFunctions = new Array(queries);
-
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = mongodbDriverQuery;
     }
@@ -127,10 +124,6 @@ http.createServer(function (req, res) {
 
   case '/mongoose':
     // Database Test
-    var values = url.parse(req.url, true);
-    var queries = resolveQueries(values.query.queries);
-    var queryFunctions = new Array(queries);
-
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = mongooseQuery;
     }
@@ -145,10 +138,6 @@ http.createServer(function (req, res) {
     break;
 
   case '/mysql-orm':
-    var values = url.parse(req.url, true);
-    var queries = resolveQueries(values.query.queries);
-    var queryFunctions = new Array(queries);
-
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = sequelizeQuery;
     }
@@ -180,10 +169,6 @@ http.createServer(function (req, res) {
         });
       });
     } 
-
-    var values = url.parse(req.url, true);
-    var queries = resolveQueries(values.query.queries);
-    var queryFunctions = new Array(queries);
 
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = libmysqlQuery;
@@ -227,10 +212,6 @@ http.createServer(function (req, res) {
       });
     } 
 
-    var values = url.parse(req.url, true);
-    var queries = resolveQueries(values.query.queries);
-    var queryFunctions = new Array(queries);
-
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = libmysqlQuery;
     }
@@ -246,10 +227,6 @@ http.createServer(function (req, res) {
 
   case '/update-mongodb':
     // Database Test
-    var values = url.parse(req.url, true);
-    var queries = resolveQueries(values.query.queries);
-    var queryFunctions = new Array(queries);
-
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = mongodbDriverUpdateQuery;
     }
