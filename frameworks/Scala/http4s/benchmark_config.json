@@ -1,0 +1,20 @@
+{
+  "framework": "htt4s",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "http4s",
+      "language": "Scala",
+      "platform": "NIO",
+      "webserver": "None",
+      "os": "Linux",
+      "display_name": "http4s",
+      "notes": ""
+    }
+  }]
+}
