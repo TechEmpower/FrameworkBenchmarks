@@ -11,6 +11,11 @@ var cluster = require('cluster')
   , conn = mongoose.connect('mongodb://localhost/hello_world')
   , async = require('async');
 
+// Middleware
+var bodyParser = require('body-parser')
+  , methodOverride = require('method-override')
+  , errorHandler = require('errorhandler');
+
 var Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId;
 
@@ -69,22 +74,28 @@ if (cluster.isMaster) {
   var app = module.exports = express();
 
   // Configuration
-  app.configure(function(){
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(app.router);
+  // https://github.com/expressjs/method-override#custom-logic
+  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(methodOverride(function(req, res){
+    if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+      // look in urlencoded POST bodies and delete it
+      var method = req.body._method
+      delete req.body._method
+      return method
+    }
+  }));
 
-    app.set('view engine', 'jade');
-    app.set('views', __dirname + '/views');
-  });
+  app.set('view engine', 'jade');
+  app.set('views', __dirname + '/views');
 
-  app.configure('development', function() {
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-  });
-
-  app.configure('production', function() {
-    app.use(express.errorHandler());
-  });
+  // Check Node env.
+  var env = process.env.NODE_ENV || 'development';
+  if ('development' == env) {
+    app.use(errorHandler({ dumpExceptions: true, showStack: true }));
+  }
+  if ('production' == env) {
+    app.use(errorHandler());
+  }
 
   // Routes
 
@@ -216,7 +227,7 @@ if (cluster.isMaster) {
         res.send(worlds);
       });
     });  
- 
+
   });
 
   app.listen(8080);
