@@ -1,0 +1,2 @@
+sbt package
+java -jar target/scala-2.11/http4s_2.11-1.0-SNAPSHOT-one-jar.jar
