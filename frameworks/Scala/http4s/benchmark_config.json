@@ -1,5 +1,5 @@
 {
-  "framework": "htt4s",
+  "framework": "http4s",
   "tests": [{
     "default": {
       "setup_file": "setup",
