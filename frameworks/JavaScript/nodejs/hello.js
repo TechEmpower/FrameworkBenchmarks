@@ -66,7 +66,7 @@ function mongodbDriverQuery(callback) {
 
 function mongodbDriverUpdateQuery(callback) {
   collection.findAndModify({ id: getRandomNumber()}, [['_id','asc']], {$set: {randomNumber: getRandomNumber()}}, {}, function(err, world) {
-    callback(err, world);
+    callback(err, world && world.value);
   });
 }
 
@@ -80,89 +80,78 @@ http.createServer(function (req, res) {
   // JSON response object
   var hello = {message: "Hello, World!"};
   var helloStr = "Hello, World!";
-  var path = url.parse(req.url).pathname;
-  
+
   // mysql on windows is not supported
-  if (windows && (path.substr(0, 3) == '/my' || path == '/update')) {
-    path = '/doesntexist';
+  if (windows && (req.url.substr(0, 3) == '/my' || req.url == '/update')) {
+    req.url = '/doesntexist';
   }
 
-  switch (path) {
+  switch (req.url) {
   case '/json':
     // JSON Response Test
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8', 'Server': 'Node'});
     // Write JSON object to response
     res.end(JSON.stringify(hello));
-    break;
+    return;
 
   case '/plaintext':
     // JSON Response Test
-    res.writeHead(200, {'Content-Type': 'text/plain; charset=UTF-8'});
+    res.writeHead(200, {'Content-Type': 'text/plain; charset=UTF-8', 'Server': 'Node'});
     // Write JSON object to response
     res.end(helloStr);
-    break;
+    return;
+  }
 
+  var values = url.parse(req.url, true);
+  var queries = Math.min(Math.max(+values.query.queries || 1, 1), 500);
+  var queryFunctions = new Array(queries);
+
+  switch (values.pathname) {
   case '/mongodbdriver':
     // Database Test
-    var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
-    var queryFunctions = new Array(queries);
-
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = mongodbDriverQuery;
     }
 
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
-
     async.parallel(queryFunctions, function(err, results) {
-      if (queries == 1) {
+      if (!values.query.queries) {
         results = results[0];
       }
+      res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8', 'Server': 'Node'});
       res.end(JSON.stringify(results));
     });
     break;
 
   case '/mongoose':
     // Database Test
-    var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
-    var queryFunctions = new Array(queries);
-
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = mongooseQuery;
     }
 
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
-
     async.parallel(queryFunctions, function(err, results) {
-      if (queries == 1) {
+      if (!values.query.queries) {
         results = results[0];
       }
+      res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8', 'Server': 'Node'});
       res.end(JSON.stringify(results));
     });
     break;
 
   case '/mysql-orm':
-    var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
-    var queryFunctions = new Array(queries);
-
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = sequelizeQuery;
     }
 
-    res.writeHead(200, {'Content-Type': 'application/json'});
-
     async.parallel(queryFunctions, function(err, results) {
-      if (queries == 1) {
+      if (!values.query.queries) {
         results = results[0];
       }
+      res.writeHead(200, {'Content-Type': 'application/json', 'Server': 'Node'});
       res.end(JSON.stringify(results));
     });
     break;
 
   case '/mysql':
-    res.writeHead(200, {'Content-Type': 'application/json'});
 
     function libmysqlQuery(callback) {
       libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
@@ -181,10 +170,6 @@ http.createServer(function (req, res) {
       });
     } 
 
-    var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
-    var queryFunctions = new Array(queries);
-
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = libmysqlQuery;
     }
@@ -193,15 +178,15 @@ http.createServer(function (req, res) {
         res.writeHead(500);
         return res.end('MYSQL CONNECTION ERROR.');
       }
-      if (queries == 1) {
+      if (!values.query.queries) {
         results = results[0];
       }
+      res.writeHead(200, {'Content-Type': 'application/json', 'Server': 'Node'});
       res.end(JSON.stringify(results));
     });
     break;
 
   case '/update':
-    res.writeHead(200, {'Content-Type': 'application/json'});
 
     function libmysqlQuery(callback) {
       libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
@@ -227,15 +212,6 @@ http.createServer(function (req, res) {
       });
     } 
 
-    var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
-    if(queries < 1) {
-      queries = 1;
-    } else if(queries > 500) {
-      queries = 500;
-    }
-    var queryFunctions = new Array(queries);
-
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = libmysqlQuery;
     }
@@ -244,29 +220,19 @@ http.createServer(function (req, res) {
         res.writeHead(500);
         return res.end('MYSQL CONNECTION ERROR.');
       }
+      res.writeHead(200, {'Content-Type': 'application/json', 'Server': 'Node'});
       res.end(JSON.stringify(results));
     });
     break;
 
   case '/update-mongodb':
     // Database Test
-    var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
-    if (queries < 1) {
-      queries = 1;
-    } else if (queries > 500) {
-      queries = 500;
-    }
-
-    var queryFunctions = new Array(queries);
-
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = mongodbDriverUpdateQuery;
     }
 
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
-
     async.parallel(queryFunctions, function(err, results) {
+      res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8', 'Server': 'Node'});
       res.end(JSON.stringify(results));
     });
     break;
