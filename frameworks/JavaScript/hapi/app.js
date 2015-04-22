@@ -7,7 +7,7 @@ var cluster = require('cluster'),
 	Hapi = require('hapi'),
 	Sequelize = require('sequelize'),
 	mongoose = require('mongoose'),
-	conn = mongoose.connect('mongodb://127.0.0.1/hello_world'),
+	conn = mongoose.connect('mongodb://localhost/hello_world'),
 	async = require('async');
 
 var WorldSchema = new mongoose.Schema({

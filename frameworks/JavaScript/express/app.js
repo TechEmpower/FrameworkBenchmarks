@@ -5,28 +5,56 @@
 
 var cluster = require('cluster')
   , numCPUs = require('os').cpus().length
-  , windows = require('os').platform() == 'win32'
   , express = require('express')
+  , Sequelize = require('sequelize')
   , mongoose = require('mongoose')
-  , async = require('async')
   , conn = mongoose.connect('mongodb://localhost/hello_world')
-  , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost', charset: 'utf8' };
+  , async = require('async');
 
 var Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId;
 
-var WorldSchema = new Schema({
-    id                           : Number
-  , randomNumber                 : Number
-}, { collection : 'world' });
-var MWorld = conn.model('World', WorldSchema);
+var WorldSchema = new mongoose.Schema({
+    id          : Number,
+    randomNumber: Number
+  }, {
+    collection: 'world'
+  }),
+  MWorld = conn.model('World', WorldSchema);
 
-if (!windows) {
-  var Mapper = require('mapper');
-  Mapper.connect(connMap, {verbose: false, strict: false});
-  var World = Mapper.map("World", "id", "randomNumber");
-  var Fortune = Mapper.map("Fortune", "id", "message");
-}
+var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
+  host: '127.0.0.1',
+  dialect: 'mysql',
+  logging: false,
+  pool: {
+    max: 5000,
+    min: 0,
+    idle: 5000
+  }
+});
+
+var World = sequelize.define('World', {
+  id: {
+    type: 'Sequelize.INTEGER'
+  },
+  randomNumber: {
+    type: 'Sequelize.INTEGER'
+  }
+}, {
+  timestamps: false,
+  freezeTableName: true
+});
+var Fortune = sequelize.define('Fortune', {
+  id: {
+    type: 'Sequelize.INTEGER'
+  },
+  message: {
+    type: 'Sequelize.STRING'
+  }
+}, {
+  timestamps: false,
+  freezeTableName: true
+});
 
 if (cluster.isMaster) {
   // Fork workers.
@@ -66,67 +94,61 @@ if (cluster.isMaster) {
   
   app.get('/mongoose', function(req, res) {
     var queries = req.query.queries || 1,
-        worlds  = [],
         queryFunctions = [];
+
+    queries = Math.min(Math.max(queries, 1), 500);
 
     for (var i = 1; i <= queries; i++ ) {
       queryFunctions.push(function(callback) {
-        MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1 )}).exec(function (err, world) {
-          worlds.push(world);
-          callback(null, 'success');
-        });
+        MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) }).exec(callback);
       });
     }
 
     async.parallel(queryFunctions, function(err, results) {
-      if (queries == 1) {
-        worlds = worlds[0];
+      if (!req.query.queries) {
+        results = results[0];
       }
-      res.send(worlds);
+      res.send(results);
     });
   });
 
-  app.get('/mysql-orm', function(req, res) {
-    if (windows) return res.send(501, 'Not supported on windows');
-    
+  app.get('/mysql-orm', function(req, res) {    
     var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
-      , worlds  = []
       , queryFunctions = [];
 
     queries = Math.min(Math.max(queries, 1), 500);
 
     for (var i = 1; i <= queries; i++ ) {
       queryFunctions.push(function(callback) {
-        World.findById(Math.floor(Math.random()*10000) + 1, function (err, world) {
-          worlds.push(world);
-          callback(null, 'success');
-        });
+        World.findOne({
+          where: {
+            id: Math.floor(Math.random() * 10000) + 1}
+          }
+        ).complete(callback);
       });
     }
 
     async.parallel(queryFunctions, function(err, results) {
       if (!req.query.queries) {
-        worlds = worlds[0];
+        results = results[0];
       }
-      res.send(worlds);
+      res.send(results);
     });
   });
 
   app.get('/fortune', function(req, res) {
     if (windows) return res.send(501, 'Not supported on windows');
     
-    Fortune.all(function (err, fortunes) {
+    Fortune.findAll().complete(function (err, fortunes) {
       var newFortune = {id: 0, message: "Additional fortune added at request time."};
       fortunes.push(newFortune);
-      fortunes.sort(sortFortunes);
+      fortunes.sort(function (a, b) {
+        return (a.message < b.message) ? -1 : 1;
+      });
 
       res.render('fortunes', {fortunes: fortunes});
     });
   });
-
-  function sortFortunes(a, b) {
-    return (a.message < b.message) ? -1 : (a.message > b.message) ? 1 : 0;
-  }
 
   app.get('/mongoose-update', function(req, res) {
     var queries = req.query.queries || 1
@@ -163,16 +185,18 @@ if (cluster.isMaster) {
   });
 
   app.get('/mysql-orm-update', function(req, res) {
-    if (windows) return res.send(501, 'Not supported on windows');
-
-    var queries = req.query.queries || 1
+    var queries = isNaN(req.params.queries) ? 1 : parseInt(req.params.queries, 10)
       , selectFunctions = [];
 
     queries = Math.min(queries, 500);
 
     for (var i = 1; i <= queries; i++ ) {
       selectFunctions.push(function(callback) {
-        World.findById(Math.floor(Math.random() * 10000) + 1, callback);
+        World.findOne({
+          where: {
+            id: Math.floor(Math.random() * 10000) + 1}
+          }
+        ).complete(callback);
       });
     }
 
@@ -183,7 +207,7 @@ if (cluster.isMaster) {
         (function(i){
           updateFunctions.push(function(callback){
             worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
-            World.save(worlds[i], callback);
+            worlds[i].save().complete(callback);
           });
         })(i);
       }
@@ -191,7 +215,8 @@ if (cluster.isMaster) {
       async.parallel(updateFunctions, function(err, updates) {
         res.send(worlds);
       });
-    });   
+    });  
+ 
   });
 
   app.listen(8080);
