@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="0.10"
+VERSION="0.11"
 RINGOJS=$IROOT/ringojs_$VERSION
 RINGOJS_HOME=$IROOT/ringojs-$VERSION
 RETCODE=$(fw_exists ${RINGOJS}.installed)

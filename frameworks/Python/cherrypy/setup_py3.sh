@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export PY3_ROOT=$IROOT/py3
-export PY3=$PY3_ROOT/bin/python3
-export PY3_PIP=$PY3_ROOT/bin/pip3
+fw_depends python3
 
-$PY3 app.py &
+$PY3_ROOT/bin/pip install --install-option="--prefix=${PY3_ROOT}" -r $TROOT/requirements.txt
+
+$PY3_ROOT/bin/python3 app.py &
