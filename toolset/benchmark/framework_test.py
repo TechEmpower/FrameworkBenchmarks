@@ -172,17 +172,19 @@ class FrameworkTest:
     bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
     setup_util.replace_environ(config='$FWROOT/config/benchmark_profile', 
               command='''\
-              export TROOT=%s       && \
-              export IROOT=%s       && \
-              export DBHOST=%s      && \
-              export LOGDIR=%s      && \
-              export MAX_THREADS=%s    \
+              export TROOT=%s       &&  \
+              export IROOT=%s       &&  \
+              export DBHOST=%s      &&  \
+              export LOGDIR=%s      &&  \
+              export MAX_THREADS=%s &&  \
+              export MAX_CONCURRENCY=%s \
               ''' % (
                 self.directory, 
                 self.install_root, 
                 self.database_host, 
                 logDir,
-                self.benchmarker.threads))
+                self.benchmarker.threads,
+                max(self.benchmarker.concurrency_levels)))
 
     # Always ensure that IROOT belongs to the runner_user
     chown = "sudo chown -R %s:%s %s" % (self.benchmarker.runner_user,
@@ -225,12 +227,13 @@ class FrameworkTest:
       os.path.join(self.troot, self.setup_file))
     
     debug_command = '''\
-      export FWROOT=%s      && \\
-      export TROOT=%s       && \\
-      export IROOT=%s       && \\
-      export DBHOST=%s      && \\
-      export LOGDIR=%s      && \\
-      export MAX_THREADS=%s && \\
+      export FWROOT=%s          &&  \\
+      export TROOT=%s           &&  \\
+      export IROOT=%s           &&  \\
+      export DBHOST=%s          &&  \\
+      export LOGDIR=%s          &&  \\
+      export MAX_THREADS=%s     &&  \\
+      export MAX_CONCURRENCY=%s && \\
       cd %s && \\
       %s''' % (self.fwroot, 
         self.directory, 
@@ -239,6 +242,7 @@ class FrameworkTest:
         logDir,
         self.benchmarker.threads, 
         self.directory,
+        max(self.benchmarker.concurrency_levels),
         command)
     logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
 
