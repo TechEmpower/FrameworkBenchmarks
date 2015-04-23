@@ -7,6 +7,7 @@ var cluster = require('cluster')
   , http = require('http')
   , url = require('url')
   , Sequelize = require('sequelize')
+  , mysql = require('mysql')
   , async = require('async')
   , mongoose = require('mongoose')
   , conn = mongoose.connect('mongodb://localhost/hello_world')
@@ -16,6 +17,14 @@ var collection = null;
 MongoClient.connect('mongodb://localhost/hello_world?maxPoolSize=5', function(err, db) {
   collection = db.collection('world');
 });
+
+var connection = mysql.createConnection({
+  host     : '127.0.0.1',
+  user     : 'benchmarkdbuser',
+  password : 'benchmarkdbpass',
+  database : 'hello_world'
+});
+connection.connect();
 
 var WorldSchema = new mongoose.Schema({
     id          : Number,
@@ -85,8 +94,33 @@ function mongodbDriverUpdateQuery(callback) {
 function sequelizeQuery(callback) {
   World.findById(getRandomNumber(), function (err, world) {
     callback(null, world);
+
+
+// MySQL-Raw Query Functions
+function mysqlQuery(callback) {
+  connection.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, rows, fields) {
+    if (err) {
+      throw err;
+    }
+    callback(null, rows[0]);
   });
 }
+
+function mysqlUpdateQuery(callback) {
+  connection.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, rows, fields) {
+    if (err) {
+      throw err;
+    }
+    rows[0].randomNumber = getRandomNumber();
+    var updateQuery = "UPDATE World SET randomNumber = " + rows[0].randomNumber + " WHERE id = " + rows[0]['id'];
+    connection.query(updateQuery, function (err, rows, field) {
+      if (err) {
+        throw err;
+      }
+      callback(null, rows[0]);
+    });
+  });
+} 
 
 if(cluster.isMaster) {
   // Fork workers.
@@ -199,30 +233,16 @@ if(cluster.isMaster) {
       break;
 
     case '/mysql':
-      function libmysqlQuery(callback) {
-        libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
-          if (err) {
-  	        throw err;
-  	      }
-  	
-  	      res.fetchAll(function(err, rows) {
-        	  if (err) {
-        	    throw err;
-        	  }
-
-        	  res.freeSync();
-        	  callback(null, rows[0]);
-          });
-        });
-      } 
-
       var values = url.parse(req.url, true);
-      var queries = values.query.queries || 1;
-      var queryFunctions = new Array(queries);
+      var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
+      var queryFunctions = [];
+
+      queries = Math.min(Math.max(queries, 1), 500);
 
       for (var i = 0; i < queries; i += 1) {
-        queryFunctions[i] = libmysqlQuery;
+        queryFunctions.push(mysqlQuery);
       }
+
       async.parallel(queryFunctions, function(err, results) {
         if (err) {
           res.writeHead(500);
@@ -232,7 +252,7 @@ if(cluster.isMaster) {
           results = results[0];
         }
         res.writeHead(200, {
-          'Content-Type': 'application/json', 
+          'Content-Type': 'application/json',
           'Server': 'Node'
         });
         res.end(JSON.stringify(results));
@@ -240,31 +260,6 @@ if(cluster.isMaster) {
       break;
 
     case '/update':
-
-      function libmysqlQuery(callback) {
-        libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
-          if (err) {
-            throw err;
-          }
-    
-          res.fetchAll(function(err, rows) {
-            if (err) {
-              throw err;
-            }
-
-            res.freeSync();
-
-            rows[0].randomNumber = getRandomNumber();
-            libmysql.query("UPDATE World SET randomNumber = " + rows[0].randomNumber + " WHERE id = " + rows[0]['id'], function (err, res) {
-              if (err) {
-                throw err;
-              }
-              callback(null, rows[0]);
-            });
-          });
-        });
-      } 
-
       var values = url.parse(req.url, true);
       var queries = values.query.queries || 1;
       if(queries < 1) {
