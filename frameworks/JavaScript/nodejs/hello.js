@@ -91,9 +91,14 @@ function mongodbDriverUpdateQuery(callback) {
   });
 }
 
+// Sequelize Query Functions
 function sequelizeQuery(callback) {
-  World.findById(getRandomNumber(), function (err, world) {
-    callback(null, world);
+  World.findOne({
+    where: {
+      id: Math.floor(Math.random() * 10000) + 1}
+    }
+  ).complete(callback);
+}
 
 
 // MySQL-Raw Query Functions
@@ -204,20 +209,13 @@ if(cluster.isMaster) {
 
     case '/mysql-orm':
       var values = url.parse(req.url, true);
-      console.log(values.query.queries);
       var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
       var queryFunctions = [];
 
       queries = Math.min(Math.max(queries, 1), 500);
 
       for (var i = 0; i < queries; i += 1) {
-        queryFunctions.push(function(callback){
-          World.findOne({
-            where: {
-              id: Math.floor(Math.random() * 10000) + 1}
-            }
-          ).complete(callback);
-        });
+        queryFunctions.push(sequelizeQuery);
       }
 
       async.parallel(queryFunctions, function(err, results) {
