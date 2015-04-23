@@ -27,7 +27,7 @@ comparing a variety of web platforms.
 **Web Stack**
 
 * ASP.NET 4.5
-* Nancy 0.17.1 (custom build to address this issue: https://github.com/NancyFx/Nancy/pull/1100)
+* Nancy 1.2.0
 
 **Databases**
 

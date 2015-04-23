@@ -40,13 +40,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Nancy, Version=0.23.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Nancy.0.23.0\lib\net40\Nancy.dll</HintPath>
+    <Reference Include="Nancy, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\lib\Nancy.1.2.0\lib\net40\Nancy.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Nancy.Hosting.Aspnet, Version=0.23.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Nancy.Hosting.Aspnet.0.23.0\lib\net40\Nancy.Hosting.Aspnet.dll</HintPath>
+    <Reference Include="Nancy.Hosting.Aspnet, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\lib\Nancy.Hosting.Aspnet.1.2.0\lib\net40\Nancy.Hosting.Aspnet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nancy.Serialization.JsonNet, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\lib\Nancy.Serialization.JsonNet.1.2.0\lib\net40\Nancy.Serialization.JsonNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\lib\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

@@ -98,7 +98,7 @@
             by IEnumerable{Type} constructor dependencies.
             </summary>
             <param name="container">Container to register into</param>
-            <param name="collectionTypeRegistrationsn">Collection type registrations to register</param>
+            <param name="collectionTypeRegistrations">Collection type registrations to register</param>
         </member>
         <member name="M:Nancy.Hosting.Aspnet.DefaultNancyAspNetBootstrapper.RegisterModules(Nancy.TinyIoc.TinyIoCContainer,System.Collections.Generic.IEnumerable{Nancy.Bootstrapper.ModuleRegistration})">
             <summary>
@@ -140,7 +140,7 @@
         </member>
         <member name="M:Nancy.Hosting.Aspnet.TinyIoCAspNetExtensions.AsPerRequestSingleton(Nancy.TinyIoc.TinyIoCContainer.RegisterOptions)">
             <summary>
-            Registers the dependency as per request liftime
+            Registers the dependency as per request lifetime
             </summary>
             <param name="registerOptions">Register options</param>
             <returns>Register options</returns>
