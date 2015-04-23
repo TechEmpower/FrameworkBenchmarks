@@ -155,244 +155,218 @@ if(cluster.isMaster) {
     var helloStr = "Hello, World!";
     var path = url.parse(req.url).pathname;
 
-    switch (path) {
-    case '/json':
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Server': 'Node'
-      });
-      res.end(JSON.stringify(hello));
-      break;
-
-    case '/plaintext':
-      res.writeHead(200, {
-        'Content-Type': 'text/plain; charset=UTF-8',
-        'Server': 'Node'
-      });
-      res.end(helloStr);
-      break;
-
-    // Raw MongoDB Routes
-    case '/mongodb':
-      var values = url.parse(req.url, true);
-      var queries = Math.min(Math.max(values.query.queries, 1), 500);
-      var queryFunctions = [];
-
-      queries = Math.min(Math.max(queries, 1), 500);
-
-      for (var i = 0; i < queries; i += 1) {
-        queryFunctions.push(mongodbDriverQuery);
-      }
-
-      async.parallel(queryFunctions, function(err, results) {
-        if (!values.query.queries) {
-          results = results[0];
-        }
+    switch (req.url) {
+      case '/json':
         res.writeHead(200, {
           'Content-Type': 'application/json',
           'Server': 'Node'
         });
-        res.end(JSON.stringify(results));
-      });
-      break;
+        res.end(JSON.stringify(hello));
+        break;
 
-    case '/mongodb-update':
-      var values = url.parse(req.url, true);
-      var queries = Math.min(Math.max(values.query.queries, 1), 500);
-      var queryFunctions = [];
-
-      queries = Math.min(Math.max(queries, 1), 500);
-
-      for (var i = 0; i < queries; i += 1) {
-        queryFunctions.push(mongodbDriverUpdateQuery);
-      }
-
-      async.parallel(queryFunctions, function(err, results) {
+      case '/plaintext':
         res.writeHead(200, {
-          'Content-Type': 'application/json',
+          'Content-Type': 'text/plain; charset=UTF-8',
           'Server': 'Node'
         });
-        res.end(JSON.stringify(results));
-      });
-      break;
-
-    // Mongoose ORM Routes
-    case '/mongoose':
-      var values = url.parse(req.url, true);
-      var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
-      var queryFunctions = [];
-      
-      queries = Math.min(Math.max(queries, 1), 500);
-
-      for (var i = 0; i < queries; i += 1) {
-        queryFunctions.push(mongooseQuery);
-      }
-
-      async.parallel(queryFunctions, function(err, results) {
-        if (!values.query.queries) {
-          results = results[0];
-        }
-        res.writeHead(200, {
-          'Content-Type': 'application/json',
-          'Server': 'Node'
-        });
-        res.end(JSON.stringify(results));
-      });
-      break;
-
-    case '/mongoose-update':
-      var values = url.parse(req.url, true);
-      var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
-      var selectFunctions = [];
-      
-      queries = Math.min(Math.max(queries, 1), 500);
-
-      for (var i = 0; i < queries; i += 1) {
-        selectFunctions.push(mongooseQuery);
-      }
-
-      async.parallel(selectFunctions, function(err, worlds) {
-        var updateFunctions = [];
-
-        for (var i = 0; i < queries; i++) {
-          (function(i){
-            updateFunctions.push(function(callback){
-              worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
-              MWorld.update({
-                id: worlds[i]
-              }, {
-                randomNumber: worlds[i].randomNumber
-              }, callback);
-            });
-          })(i);
-        }
-
-        async.parallel(updateFunctions, function(err, updates) {
-          res.writeHead(200, {
-            'Content-Type': 'application/json',
-            'Server': 'Node'
-          });
-          res.end(JSON.stringify(worlds));
-        });
-      });
-      break;
-
-    // Sequelize (MySQL ORM) Routes
-    case '/mysql-orm':
-      var values = url.parse(req.url, true);
-      var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
-      var queryFunctions = [];
-
-      queries = Math.min(Math.max(queries, 1), 500);
-
-      for (var i = 0; i < queries; i += 1) {
-        queryFunctions.push(sequelizeQuery);
-      }
-
-      async.parallel(queryFunctions, function(err, results) {
-        if (!values.query.queries) {
-          results = results[0];
-        }
-        res.writeHead(200, {
-          'Content-Type': 'application/json',
-          'Server': 'Node'
-        });
-        res.end(JSON.stringify(results));
-      });
-      break;
-
-    case '/mysql-orm-update':
-      var values = url.parse(req.url, true);
-      var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
-      var selectFunctions = [];
-
-      queries = Math.min(Math.max(queries, 1), 500);
-
-      for (var i = 0; i < queries; i += 1) {
-        selectFunctions.push(sequelizeQuery);
-      }
-
-      async.parallel(selectFunctions, function(err, worlds) {
-        var updateFunctions = [];
-
-        for (var i = 0; i < queries; i++) {
-          (function(i){
-            updateFunctions.push(function(callback){
-              worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
-              worlds[i].save().complete(callback);
-            });
-          })(i);
-        }
-
-        async.parallel(updateFunctions, function(err, updates) {
-          res.writeHead(200, {
-            'Content-Type': 'application/json',
-            'Server': 'Node'
-          });
-          res.end(JSON.stringify(worlds));
-        });
-      });
-      break;
-
-    // Raw MongoDB Routes
-    case '/mysql':
-      var values = url.parse(req.url, true);
-      var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
-      var queryFunctions = [];
-
-      queries = Math.min(Math.max(queries, 1), 500);
-
-      for (var i = 0; i < queries; i += 1) {
-        queryFunctions.push(mysqlQuery);
-      }
-
-      async.parallel(queryFunctions, function(err, results) {
-        if (err) {
-          res.writeHead(500);
-          return res.end('MYSQL CONNECTION ERROR.');
-        }
-        if (!values.query.queries) {
-          results = results[0];
-        }
-        res.writeHead(200, {
-          'Content-Type': 'application/json',
-          'Server': 'Node'
-        });
-        res.end(JSON.stringify(results));
-      });
-      break;
-
-    case '/mysql-update':
-      var values = url.parse(req.url, true);
-      var queries = values.query.queries || 1;
-      if(queries < 1) {
-        queries = 1;
-      } else if(queries > 500) {
-        queries = 500;
-      }
-      var queryFunctions = new Array(queries);
-
-      for (var i = 0; i < queries; i += 1) {
-        queryFunctions[i] = libmysqlQuery;
-      }
-      async.parallel(queryFunctions, function(err, results) {
-        if (err) {
-          res.writeHead(500);
-          return res.end('MYSQL CONNECTION ERROR.');
-        }
-        res.writeHead(200, {
-          'Content-Type': 'application/json',
-          'Server': 'Node'
-        });
-        res.end(JSON.stringify(results));
-      });
-      break;
-
-
-    default:
-      // File not found handler
-      res.writeHead(501, {'Content-Type': 'text/plain; charset=UTF-8'});
-      res.end("NOT IMPLEMENTED");
+        res.end(helloStr);
+        break;
     }
-  }).listen(8080);
+    var values = url.parse(req.url, true);
+    var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
+    switch (values.pathname) {
+      // Raw MongoDB Routes
+      case '/mongodb':
+        var queryFunctions = [];
+
+        queries = Math.min(Math.max(queries, 1), 500);
+
+        for (var i = 0; i < queries; i += 1) {
+          queryFunctions.push(mongodbDriverQuery);
+        }
+
+        async.parallel(queryFunctions, function(err, results) {
+          if (!values.query.queries) {
+            results = results[0];
+          }
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Server': 'Node'
+          });
+          res.end(JSON.stringify(results));
+        });
+        break;
+
+      case '/mongodb-update':
+        var queryFunctions = [];
+
+        queries = Math.min(Math.max(queries, 1), 500);
+
+        for (var i = 0; i < queries; i += 1) {
+          queryFunctions.push(mongodbDriverUpdateQuery);
+        }
+
+        async.parallel(queryFunctions, function(err, results) {
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Server': 'Node'
+          });
+          res.end(JSON.stringify(results));
+        });
+        break;
+
+      // Mongoose ORM Routes
+      case '/mongoose':
+        var queryFunctions = [];
+        
+        queries = Math.min(Math.max(queries, 1), 500);
+
+        for (var i = 0; i < queries; i += 1) {
+          queryFunctions.push(mongooseQuery);
+        }
+
+        async.parallel(queryFunctions, function(err, results) {
+          if (!values.query.queries) {
+            results = results[0];
+          }
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Server': 'Node'
+          });
+          res.end(JSON.stringify(results));
+        });
+        break;
+
+      case '/mongoose-update':
+        var selectFunctions = [];
+        
+        queries = Math.min(Math.max(queries, 1), 500);
+
+        for (var i = 0; i < queries; i += 1) {
+          selectFunctions.push(mongooseQuery);
+        }
+
+        async.parallel(selectFunctions, function(err, worlds) {
+          var updateFunctions = [];
+
+          for (var i = 0; i < queries; i++) {
+            (function(i){
+              updateFunctions.push(function(callback){
+                worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
+                MWorld.update({
+                  id: worlds[i]
+                }, {
+                  randomNumber: worlds[i].randomNumber
+                }, callback);
+              });
+            })(i);
+          }
+
+          async.parallel(updateFunctions, function(err, updates) {
+            res.writeHead(200, {
+              'Content-Type': 'application/json',
+              'Server': 'Node'
+            });
+            res.end(JSON.stringify(worlds));
+          });
+        });
+        break;
+
+      // Sequelize (MySQL ORM) Routes
+      case '/mysql-orm':
+        var queryFunctions = [];
+
+        queries = Math.min(Math.max(queries, 1), 500);
+
+        for (var i = 0; i < queries; i += 1) {
+          queryFunctions.push(sequelizeQuery);
+        }
+
+        async.parallel(queryFunctions, function(err, results) {
+          if (!values.query.queries) {
+            results = results[0];
+          }
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Server': 'Node'
+          });
+          res.end(JSON.stringify(results));
+        });
+        break;
+
+      case '/mysql-orm-update':
+        var selectFunctions = [];
+
+        queries = Math.min(Math.max(queries, 1), 500);
+
+        for (var i = 0; i < queries; i += 1) {
+          selectFunctions.push(sequelizeQuery);
+        }
+
+        async.parallel(selectFunctions, function(err, worlds) {
+          var updateFunctions = [];
+
+          for (var i = 0; i < queries; i++) {
+            (function(i){
+              updateFunctions.push(function(callback){
+                worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
+                worlds[i].save().complete(callback);
+              });
+            })(i);
+          }
+
+          async.parallel(updateFunctions, function(err, updates) {
+            res.writeHead(200, {
+              'Content-Type': 'application/json',
+              'Server': 'Node'
+            });
+            res.end(JSON.stringify(worlds));
+          });
+        });
+        break;
+
+      // Raw MongoDB Routes
+      case '/mysql':
+        var queryFunctions = [];
+
+        queries = Math.min(Math.max(queries, 1), 500);
+
+        for (var i = 0; i < queries; i += 1) {
+          queryFunctions.push(mysqlQuery);
+        }
+
+        async.parallel(queryFunctions, function(err, results) {
+          if (!values.query.queries) {
+            results = results[0];
+          }
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Server': 'Node'
+          });
+          res.end(JSON.stringify(results));
+        });
+        break;
+
+      case '/mysql-update':
+        var queryFunctions = [];
+
+        for (var i = 0; i < queries; i += 1) {
+          queryFunctions.push(mysqlUpdateQuery);
+        }
+        async.parallel(queryFunctions, function(err, results) {
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Server': 'Node'
+          });
+          res.end(JSON.stringify(results));
+        });
+        break;
+
+
+      default:
+        // File not found handler
+        res.writeHead(501, {'Content-Type': 'text/plain; charset=UTF-8'});
+        res.end("NOT IMPLEMENTED");
+      }
+    }).listen(8080);
 }
