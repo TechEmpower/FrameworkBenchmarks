@@ -66,7 +66,7 @@ function mongodbDriverQuery(callback) {
 
 function mongodbDriverUpdateQuery(callback) {
   collection.findAndModify({ id: getRandomNumber()}, [['_id','asc']], {$set: {randomNumber: getRandomNumber()}}, {}, function(err, world) {
-    callback(err, world);
+    callback(err, world && world.value);
   });
 }
 
@@ -89,9 +89,10 @@ http.createServer(function (req, res) {
 
   switch (path) {
   case '/json':
-    // JSON Response Test
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
-    // Write JSON object to response
+    res.writeHead(200, {
+      'Content-Type': 'application/json', 
+      'Server': 'Node'
+    });
     res.end(JSON.stringify(hello));
     break;
 
@@ -105,19 +106,22 @@ http.createServer(function (req, res) {
   case '/mongodbdriver':
     // Database Test
     var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
+    var queries = Math.min(Math.max(values.query.queries, 1), 500);
     var queryFunctions = new Array(queries);
 
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = mongodbDriverQuery;
     }
 
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
 
     async.parallel(queryFunctions, function(err, results) {
-      if (queries == 1) {
+      if (!values.query.queries) {
         results = results[0];
       }
+      res.writeHead(200, {
+        'Content-Type': 'application/json', 
+        'Server': 'Node'
+      });
       res.end(JSON.stringify(results));
     });
     break;
@@ -125,45 +129,49 @@ http.createServer(function (req, res) {
   case '/mongoose':
     // Database Test
     var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
+    var queries = Math.min(Math.max(values.query.queries, 1), 500);
     var queryFunctions = new Array(queries);
 
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = mongooseQuery;
     }
-
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+    
 
     async.parallel(queryFunctions, function(err, results) {
-      if (queries == 1) {
+      if (!values.query.queries) {
         results = results[0];
       }
+      res.writeHead(200, {
+        'Content-Type': 'application/json', 
+        'Server': 'Node'
+      });
       res.end(JSON.stringify(results));
     });
     break;
 
   case '/mysql-orm':
     var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
+    var queries = Math.min(Math.max(values.query.queries, 1), 500);
     var queryFunctions = new Array(queries);
 
     for (var i = 0; i < queries; i += 1) {
       queryFunctions[i] = sequelizeQuery;
     }
 
-    res.writeHead(200, {'Content-Type': 'application/json'});
 
     async.parallel(queryFunctions, function(err, results) {
       if (queries == 1) {
         results = results[0];
       }
+      res.writeHead(200, {
+        'Content-Type': 'application/json', 
+        'Server': 'Node'
+      });
       res.end(JSON.stringify(results));
     });
     break;
 
   case '/mysql':
-    res.writeHead(200, {'Content-Type': 'application/json'});
-
     function libmysqlQuery(callback) {
       libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
         if (err) {
@@ -193,15 +201,18 @@ http.createServer(function (req, res) {
         res.writeHead(500);
         return res.end('MYSQL CONNECTION ERROR.');
       }
-      if (queries == 1) {
+      if (!values.query.queries) {
         results = results[0];
       }
+      res.writeHead(200, {
+        'Content-Type': 'application/json', 
+        'Server': 'Node'
+      });
       res.end(JSON.stringify(results));
     });
     break;
 
   case '/update':
-    res.writeHead(200, {'Content-Type': 'application/json'});
 
     function libmysqlQuery(callback) {
       libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
@@ -244,6 +255,10 @@ http.createServer(function (req, res) {
         res.writeHead(500);
         return res.end('MYSQL CONNECTION ERROR.');
       }
+      res.writeHead(200, {
+        'Content-Type': 'application/json', 
+        'Server': 'Node'
+      });
       res.end(JSON.stringify(results));
     });
     break;
@@ -264,9 +279,11 @@ http.createServer(function (req, res) {
       queryFunctions[i] = mongodbDriverUpdateQuery;
     }
 
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
-
     async.parallel(queryFunctions, function(err, results) {
+      res.writeHead(200, {
+        'Content-Type': 'application/json', 
+        'Server': 'Node'
+      });
       res.end(JSON.stringify(results));
     });
     break;
