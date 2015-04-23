@@ -158,16 +158,17 @@ if(cluster.isMaster) {
     switch (path) {
     case '/json':
       res.writeHead(200, {
-        'Content-Type': 'application/json', 
+        'Content-Type': 'application/json',
         'Server': 'Node'
       });
       res.end(JSON.stringify(hello));
       break;
 
     case '/plaintext':
-      // JSON Response Test
-      res.writeHead(200, {'Content-Type': 'text/plain; charset=UTF-8'});
-      // Write JSON object to response
+      res.writeHead(200, {
+        'Content-Type': 'text/plain; charset=UTF-8',
+        'Server': 'Node'
+      });
       res.end(helloStr);
       break;
 
@@ -181,13 +182,12 @@ if(cluster.isMaster) {
         queryFunctions[i] = mongodbDriverQuery;
       }
 
-
       async.parallel(queryFunctions, function(err, results) {
         if (!values.query.queries) {
           results = results[0];
         }
         res.writeHead(200, {
-          'Content-Type': 'application/json', 
+          'Content-Type': 'application/json',
           'Server': 'Node'
         });
         res.end(JSON.stringify(results));
@@ -211,10 +211,48 @@ if(cluster.isMaster) {
           results = results[0];
         }
         res.writeHead(200, {
-          'Content-Type': 'application/json', 
+          'Content-Type': 'application/json',
           'Server': 'Node'
         });
         res.end(JSON.stringify(results));
+      });
+      break;
+
+    case '/update-mongoose':
+      // Database Test
+      var values = url.parse(req.url, true);
+      var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
+      var selectFunctions = [];
+      
+      queries = Math.min(Math.max(queries, 1), 500);
+
+      for (var i = 0; i < queries; i += 1) {
+        selectFunctions.push(mongooseQuery);
+      }
+
+      async.parallel(selectFunctions, function(err, worlds) {
+        var updateFunctions = [];
+
+        for (var i = 0; i < queries; i++) {
+          (function(i){
+            updateFunctions.push(function(callback){
+              worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
+              MWorld.update({
+                id: worlds[i]
+              }, {
+                randomNumber: worlds[i].randomNumber
+              }, callback);
+            });
+          })(i);
+        }
+
+        async.parallel(updateFunctions, function(err, updates) {
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Server': 'Node'
+          });
+          res.end(JSON.stringify(worlds));
+        });
       });
       break;
 
@@ -234,7 +272,7 @@ if(cluster.isMaster) {
           results = results[0];
         }
         res.writeHead(200, {
-          'Content-Type': 'application/json', 
+          'Content-Type': 'application/json',
           'Server': 'Node'
         });
         res.end(JSON.stringify(results));
@@ -287,7 +325,7 @@ if(cluster.isMaster) {
           return res.end('MYSQL CONNECTION ERROR.');
         }
         res.writeHead(200, {
-          'Content-Type': 'application/json', 
+          'Content-Type': 'application/json',
           'Server': 'Node'
         });
         res.end(JSON.stringify(results));
@@ -312,7 +350,7 @@ if(cluster.isMaster) {
 
       async.parallel(queryFunctions, function(err, results) {
         res.writeHead(200, {
-          'Content-Type': 'application/json', 
+          'Content-Type': 'application/json',
           'Server': 'Node'
         });
         res.end(JSON.stringify(results));

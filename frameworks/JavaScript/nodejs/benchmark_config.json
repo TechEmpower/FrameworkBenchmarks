@@ -24,6 +24,7 @@
       "setup_file": "setup",
       "db_url": "/mongoose",
       "query_url": "/mongoose?queries=",
+      "update_url": "/update-mongoose?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
