@@ -1,16 +1,21 @@
 #!/bin/bash
 
-RET=$(fw_exists ${IROOT}/racket.installed)
-if [ "$RET" == 0 ]; then 
-  return 0;
-fi
+RACKET=$IROOT/racket
+RETCODE=$(fw_exists ${RACKET}.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  # Load environment variables
+  source $RACKET.installed
+  return 0; }
 
 fw_get http://mirror.racket-lang.org/installers/recent/racket-src.tgz -O racket-src.tar.gz
 fw_untar racket-src.tar.gz
 mv racket racket-install
 cd racket-install/src 
-./configure --prefix=${IROOT}/racket
+./configure --prefix=$RACKET
 make
 make install
 
-touch ${IROOT}/racket.installed
+echo "export RACKET_HOME=${RACKET}" > $RACKET.installed
+echo -e "export PATH=${RACKET}/bin:\$PATH" >> $RACKET.installed
+
+source $RACKET.installed

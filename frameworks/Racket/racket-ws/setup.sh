@@ -1,5 +1,6 @@
 #!/bin/bash
-export RACKET_HOME=${IROOT}/racket
+
+fw_depends racket
 
 cd bench
-$RACKET_HOME/bin/racket -t bench.rkt -- ${DBHOST} &
+racket -t bench.rkt -- ${DBHOST} &
