@@ -40,6 +40,7 @@ comparing a variety of web platforms.
 ## Paths & Source for Tests
 
 * [JSON Serialization](NancyModules/JsonModule.cs): "/json"
+* [Plaintext](NancyModules/PlaintextModule.cs): "/plaintext"
 
 ### Nancy - Dapper (ORM)
 

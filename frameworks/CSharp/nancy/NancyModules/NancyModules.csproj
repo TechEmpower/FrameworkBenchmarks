@@ -64,6 +64,7 @@
     <Compile Include="ComparableExtensions.cs" />
     <Compile Include="DbModule.cs" />
     <Compile Include="JsonModule.cs" />
+    <Compile Include="PlaintextModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
