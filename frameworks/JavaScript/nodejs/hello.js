@@ -19,7 +19,7 @@ MongoClient.connect('mongodb://localhost/hello_world?maxPoolSize=5', function(er
 });
 
 var connection = mysql.createConnection({
-  host     : '127.0.0.1',
+  host     : 'localhost',
   user     : 'benchmarkdbuser',
   password : 'benchmarkdbpass',
   database : 'hello_world'
@@ -73,20 +73,30 @@ function getRandomNumber() {
   return Math.floor(Math.random() * 10000) + 1;
 }
 
+// Mongoose Query Functions
 function mongooseQuery(callback) {
-  MWorld.findOne({ id: getRandomNumber()}).exec(function (err, world) {
+  MWorld.findOne({
+    id: getRandomNumber()
+  }).exec(function (err, world) {
     callback(err, world);
   });
 }
 
+// MongoDB-Raw Query Functions
 function mongodbDriverQuery(callback) {
-  collection.findOne({ id: getRandomNumber()}, function(err, world) {
+  collection.findOne({
+    id: getRandomNumber()
+  }, function(err, world) {
     callback(err, world);
   });
 }
 
 function mongodbDriverUpdateQuery(callback) {
-  collection.findAndModify({ id: getRandomNumber()}, [['_id','asc']], {$set: {randomNumber: getRandomNumber()}}, {}, function(err, world) {
+  collection.findAndModify({
+    id: getRandomNumber()
+  }, [['_id','asc']], {
+    $set: {randomNumber: getRandomNumber()}
+  }, {}, function(err, world) {
     callback(err, world && world.value);
   });
 }
@@ -187,13 +197,14 @@ if(cluster.isMaster) {
     case '/mongoose':
       // Database Test
       var values = url.parse(req.url, true);
-      var queries = Math.min(Math.max(values.query.queries, 1), 500);
-      var queryFunctions = new Array(queries);
+      var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
+      var queryFunctions = [];
+      
+      queries = Math.min(Math.max(queries, 1), 500);
 
       for (var i = 0; i < queries; i += 1) {
-        queryFunctions[i] = mongooseQuery;
+        queryFunctions.push(mongooseQuery);
       }
-      
 
       async.parallel(queryFunctions, function(err, results) {
         if (!values.query.queries) {
