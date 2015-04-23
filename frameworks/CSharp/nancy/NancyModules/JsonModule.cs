@@ -6,10 +6,7 @@
     {
         public JsonModule() : base("/json")
         {
-            Get["/"] = x =>
-            {
-                return Response.AsJson(new { message = "Hello, World!" });
-            };
+            Get["/"] = _ => Response.AsJson(new { message = "Hello, World!" });
         }
     }
 }
