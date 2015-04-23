@@ -279,6 +279,39 @@ if(cluster.isMaster) {
       });
       break;
 
+    case '/mysql-orm-update':
+      var values = url.parse(req.url, true);
+      var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
+      var selectFunctions = [];
+
+      queries = Math.min(Math.max(queries, 1), 500);
+
+      for (var i = 0; i < queries; i += 1) {
+        selectFunctions.push(sequelizeQuery);
+      }
+
+      async.parallel(selectFunctions, function(err, worlds) {
+        var updateFunctions = [];
+
+        for (var i = 0; i < queries; i++) {
+          (function(i){
+            updateFunctions.push(function(callback){
+              worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
+              worlds[i].save().complete(callback);
+            });
+          })(i);
+        }
+
+        async.parallel(updateFunctions, function(err, updates) {
+          res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Server': 'Node'
+          });
+          res.end(JSON.stringify(worlds));
+        });
+      });
+      break;
+
     case '/mysql':
       var values = url.parse(req.url, true);
       var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);

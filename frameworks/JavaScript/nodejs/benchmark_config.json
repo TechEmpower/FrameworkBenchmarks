@@ -64,6 +64,7 @@
       "setup_file": "setup",
       "db_url": "/mysql-orm",
       "query_url": "/mysql-orm?queries=",
+      "update_url": "/mysql-orm-update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
