@@ -170,16 +170,24 @@ if(cluster.isMaster) {
 
     case '/mysql-orm':
       var values = url.parse(req.url, true);
-      var queries = Math.min(Math.max(values.query.queries, 1), 500);
-      var queryFunctions = new Array(queries);
+      console.log(values.query.queries);
+      var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
+      var queryFunctions = [];
+
+      queries = Math.min(Math.max(queries, 1), 500);
 
       for (var i = 0; i < queries; i += 1) {
-        queryFunctions[i] = sequelizeQuery;
+        queryFunctions.push(function(callback){
+          World.findOne({
+            where: {
+              id: Math.floor(Math.random() * 10000) + 1}
+            }
+          ).complete(callback);
+        });
       }
 
-
       async.parallel(queryFunctions, function(err, results) {
-        if (queries == 1) {
+        if (!values.query.queries) {
           results = results[0];
         }
         res.writeHead(200, {
