@@ -4,60 +4,57 @@
     using System.Configuration;
     using System.Data;
     using System.Linq;
+    using System.Threading.Tasks;
     using Dapper;
     using MySql.Data.MySqlClient;
     using Nancy;
 
     public class DbModule : NancyModule
     {
-        public static string MYSQL_CONNECTION_STRING;
-        
-        static DbModule()
-        {
-            MYSQL_CONNECTION_STRING = ConfigurationManager.AppSettings["ConnectionString.MySQL"];
-        }
+        public static string MysqlConnectionString = ConfigurationManager.AppSettings["ConnectionString.MySQL"];
+
+        private static readonly Random Random = new Random();
 
         public DbModule() : base("/db")
         {
-            Get["/{queries?1}"] = paramz =>
+            Get["/", runAsync: true] = (args, ct) => UsingConnection(GetRandomWorld);
+
+            Get["/{queries}", runAsync: true] = (args, ct) =>
             {
-                var queries = (int)paramz.queries;
-                
-                var random = new Random();
-                using (var db = new MySqlConnection(MYSQL_CONNECTION_STRING))
-                {
-                    db.Open();
+                int queries = args.queries.TryParse<int>(defaultValue: 1);
 
-                    if (queries == 1)
-                        return GetRandomWorld(db, random);
-                    else
-                    {
-                        var worldCount = queries > 500 ? 500 : queries;
-                        worldCount = worldCount < 1 ? 1 : worldCount;
-
-                        // NOTE: Experiment with running the DB requests in parallel, on both Mono and Windows CLRs.
-                        var worlds = new World[worldCount];
-
-                        for (int i = 0; i < worldCount; ++i)
-                        {
-                            worlds[i] = GetRandomWorld(db, random);
-                        }
-                        return worlds;
-                    }
-                }
+                return UsingConnection(db => Task.WhenAll(
+                    Enumerable.Range(0, queries.Clamp(1, 500))
+                        .Select(_ => GetRandomWorld(db))));
             };
         }
 
-        private World GetRandomWorld(IDbConnection db, Random random)
+        private static async Task<World> GetRandomWorld(IDbConnection db)
         {
-            var id = random.Next(1, 10001);
-            return db.Query<World>("SELECT id, randomNumber FROM world WHERE id = @id", new { id = id }).Single();
-        }
-    }
+            var id = Random.Next(1, 10001);
 
-    public class World
-    {
-        public int id { get; set; }
-        public int randomNumber { get; set; }
+            var result = await db.QueryAsync<World>("SELECT id, randomNumber FROM world WHERE id = @id", new { id });
+
+            return result.Single();
+        }
+
+        private async Task<dynamic> UsingConnection<T>(Func<IDbConnection, Task<T>> function)
+        {
+            using (var db = new MySqlConnection(MysqlConnectionString))
+            {
+                await db.OpenAsync();
+
+                var result = await function.Invoke(db);
+
+                return Response.AsJson(result);
+            }
+        }
+
+        private class World
+        {
+            public int id { get; set; }
+
+            public int randomNumber { get; set; }
+        }
     }
 }

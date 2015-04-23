@@ -4,3 +4,4 @@
 ./nancy/src/NancyBenchmark.csproj
 ./nancy/src/NancyBenchmark.sln
 ./nancy/src/Global.asax
+./nancy/src/ComparableExtensions.cs
