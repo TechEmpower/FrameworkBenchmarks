@@ -10,16 +10,16 @@ var cluster = require('cluster')
   , mysql = require('mysql')
   , async = require('async')
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://localhost/hello_world')
+  , conn = mongoose.connect('mongodb://127.0.0.1/hello_world')
   , MongoClient = require('mongodb').MongoClient;
 
 var collection = null;
-MongoClient.connect('mongodb://localhost/hello_world?maxPoolSize=5', function(err, db) {
+MongoClient.connect('mongodb://127.0.0.1/hello_world?maxPoolSize=5', function(err, db) {
   collection = db.collection('world');
 });
 
 var connection = mysql.createConnection({
-  host     : 'localhost',
+  host     : '127.0.0.1',
   user     : 'benchmarkdbuser',
   password : 'benchmarkdbpass',
   database : 'hello_world'
@@ -35,7 +35,7 @@ var WorldSchema = new mongoose.Schema({
   MWorld = conn.model('World', WorldSchema);
 
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: 'localhost',
+  host: '127.0.0.1',
   dialect: 'mysql',
   logging: false,
   pool: {
@@ -172,14 +172,16 @@ if(cluster.isMaster) {
       res.end(helloStr);
       break;
 
-    case '/mongodbdriver':
-      // Database Test
+    // Raw MongoDB Routes
+    case '/mongodb':
       var values = url.parse(req.url, true);
       var queries = Math.min(Math.max(values.query.queries, 1), 500);
-      var queryFunctions = new Array(queries);
+      var queryFunctions = [];
+
+      queries = Math.min(Math.max(queries, 1), 500);
 
       for (var i = 0; i < queries; i += 1) {
-        queryFunctions[i] = mongodbDriverQuery;
+        queryFunctions.push(mongodbDriverQuery);
       }
 
       async.parallel(queryFunctions, function(err, results) {
@@ -194,8 +196,28 @@ if(cluster.isMaster) {
       });
       break;
 
+    case '/mongodb-update':
+      var values = url.parse(req.url, true);
+      var queries = Math.min(Math.max(values.query.queries, 1), 500);
+      var queryFunctions = [];
+
+      queries = Math.min(Math.max(queries, 1), 500);
+
+      for (var i = 0; i < queries; i += 1) {
+        queryFunctions.push(mongodbDriverUpdateQuery);
+      }
+
+      async.parallel(queryFunctions, function(err, results) {
+        res.writeHead(200, {
+          'Content-Type': 'application/json',
+          'Server': 'Node'
+        });
+        res.end(JSON.stringify(results));
+      });
+      break;
+
+    // Mongoose ORM Routes
     case '/mongoose':
-      // Database Test
       var values = url.parse(req.url, true);
       var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
       var queryFunctions = [];
@@ -218,8 +240,7 @@ if(cluster.isMaster) {
       });
       break;
 
-    case '/update-mongoose':
-      // Database Test
+    case '/mongoose-update':
       var values = url.parse(req.url, true);
       var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
       var selectFunctions = [];
@@ -256,6 +277,7 @@ if(cluster.isMaster) {
       });
       break;
 
+    // Sequelize (MySQL ORM) Routes
     case '/mysql-orm':
       var values = url.parse(req.url, true);
       var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
@@ -312,6 +334,7 @@ if(cluster.isMaster) {
       });
       break;
 
+    // Raw MongoDB Routes
     case '/mysql':
       var values = url.parse(req.url, true);
       var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
@@ -339,7 +362,7 @@ if(cluster.isMaster) {
       });
       break;
 
-    case '/update':
+    case '/mysql-update':
       var values = url.parse(req.url, true);
       var queries = values.query.queries || 1;
       if(queries < 1) {
@@ -365,30 +388,6 @@ if(cluster.isMaster) {
       });
       break;
 
-    case '/update-mongodb':
-      // Database Test
-      var values = url.parse(req.url, true);
-      var queries = values.query.queries || 1;
-      if (queries < 1) {
-        queries = 1;
-      } else if (queries > 500) {
-        queries = 500;
-      }
-
-      var queryFunctions = new Array(queries);
-
-      for (var i = 0; i < queries; i += 1) {
-        queryFunctions[i] = mongodbDriverUpdateQuery;
-      }
-
-      async.parallel(queryFunctions, function(err, results) {
-        res.writeHead(200, {
-          'Content-Type': 'application/json',
-          'Server': 'Node'
-        });
-        res.end(JSON.stringify(results));
-      });
-      break;
 
     default:
       // File not found handler
