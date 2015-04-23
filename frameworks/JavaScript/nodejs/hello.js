@@ -25,6 +25,39 @@ var WorldSchema = new mongoose.Schema({
   }),
   MWorld = conn.model('World', WorldSchema);
 
+var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
+  host: 'localhost',
+  dialect: 'mysql',
+  logging: false,
+  pool: {
+    max: 5000,
+    min: 0,
+    idle: 5000
+  }
+});
+
+var World = sequelize.define('World', {
+  id: {
+    type: 'Sequelize.INTEGER'
+  },
+  randomNumber: {
+    type: 'Sequelize.INTEGER'
+  }
+}, {
+  timestamps: false,
+  freezeTableName: true
+});
+var Fortune = sequelize.define('Fortune', {
+  id: {
+    type: 'Sequelize.INTEGER'
+  },
+  message: {
+    type: 'Sequelize.STRING'
+  }
+}, {
+  timestamps: false,
+  freezeTableName: true
+});
 
 // Helper functions
 function getRandomNumber() {
