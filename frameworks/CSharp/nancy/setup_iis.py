@@ -6,9 +6,9 @@ import os
 def start(args, logfile, errfile):
   if os.name != 'nt':
     return 1
-  
+
   try:
-    setup_util.replace_text("nancy/src/Web.config", "localhost", args.database_host)
+    setup_util.replace_text("nancy/src/NancyBenchmark/Web.config", "localhost", args.database_host)
     subprocess.check_call("powershell -Command .\\setup_iis.ps1 start", cwd="nancy", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
@@ -17,6 +17,6 @@ def start(args, logfile, errfile):
 def stop(logfile, errfile):
   if os.name != 'nt':
     return 0
-  
+
   subprocess.check_call("powershell -Command .\\setup_iis.ps1 stop", cwd="nancy", stderr=errfile, stdout=logfile)
   return 0

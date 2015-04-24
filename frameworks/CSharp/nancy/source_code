@@ -1,8 +1,9 @@
-./nancy/src/DbModule.cs
-./nancy/src/Global.asax.cs
-./nancy/src/JsonModule.cs
-./nancy/src/PlaintextModule.cs
-./nancy/src/NancyBenchmark.csproj
+./nancy/src/NancyModules/DbModule.cs
+./nancy/src/NancyModules/JsonModule.cs
+./nancy/src/NancyModules/PlaintextModule.cs
+./nancy/src/NancyModules/ComparableExtensions.cs
+./nancy/src/NancyBenchmark/NancyBenchmark.csproj
+./nancy/src/NancyBenchmark/Global.asax
+./nancy/src/NancyBenchmark/Global.asax.cs
+./nancy/src/LibeventHost/Program.cs
 ./nancy/src/NancyBenchmark.sln
-./nancy/src/Global.asax
-./nancy/src/ComparableExtensions.cs

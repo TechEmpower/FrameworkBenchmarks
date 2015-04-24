@@ -6,14 +6,11 @@ export MONO_GC_PARAMS="nursery-size=16m"
 
 . ${IROOT}/mono.installed
 
-sed -i 's|localhost|'"${DBHOST}"'|g' src/Web.config
+sed -i 's|localhost|'"${DBHOST}"'|g' src/NancyBenchmark/Web.config
 
-rm -rf src/bin src/obj
-xbuild src/NancyBenchmark.csproj /t:Clean
-xbuild src/NancyBenchmark.csproj /p:Configuration=Release
-
-rm -rf ${LIBEVENTHOST_HOME}/bin ${LIBEVENTHOST_HOME}/obj
-xbuild ${LIBEVENTHOST_HOME}/LibeventHost.csproj /p:Configuration=Release
+xbuild src/NancyBenchmark.build.proj /t:Clean
+xbuild src/NancyBenchmark.build.proj /t:RestorePackages
+xbuild src/NancyBenchmark.build.proj /t:Rebuild /p:Configuration=Release
 
 # nginx
 port_start=9001
