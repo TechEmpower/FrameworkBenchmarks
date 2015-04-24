@@ -3,6 +3,7 @@
 */bin/*
 */obj/*
 obj/
+lib/
 [Bb]in
 [Dd]ebug*/
 [Rr]elease*/
