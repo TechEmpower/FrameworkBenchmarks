@@ -106,7 +106,11 @@ if (cluster.isMaster) {
   // Routes
 
   app.get('/json', function(req, res) {
-    res.send({ message: 'Hello, World!' })
+    res.send({ message: 'Hello, World!' });
+  });
+
+  app.get('/plaintext', function(req, res) {
+    res.header('Content-Type', 'text/plain').send('Hello, World!');
   });
   
   app.get('/mongoose', function(req, res) {

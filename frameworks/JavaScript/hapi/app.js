@@ -69,13 +69,23 @@ if (cluster.isMaster) {
 			html: require('handlebars')
 		},
 		path: __dirname + '/views'
-	})
+	});
 
 	server.route({
 		method: 'GET',
 		path: '/json',
 		handler: function(req, reply) {
-			reply({ message: 'Hello, World!' })
+			reply({ message: 'Hello, World!' }).header('Server', 'hapi');
+		}
+	});
+
+	server.route({
+		method: 'GET',
+		path: '/plaintext',
+		handler: function(req, reply) {
+			reply('Hello, World!')
+			 .header('Server', 'hapi')
+			 .header('Content-Type', 'text/plain');
 		}
 	});
 
