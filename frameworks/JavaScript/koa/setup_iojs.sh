@@ -14,4 +14,4 @@ npm install -g npm
 
 # run app
 npm install
-iojs --harmony app &
+iojs app &
