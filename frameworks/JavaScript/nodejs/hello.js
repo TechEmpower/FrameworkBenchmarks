@@ -10,22 +10,25 @@ var cluster = require('cluster')
   , mysql = require('mysql')
   , async = require('async')
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://127.0.0.1/hello_world')
+  , conn = mongoose.connect('mongodb://localhost/hello_world')
   , MongoClient = require('mongodb').MongoClient;
 
+// MongoDB Raw Setup
 var collection = null;
-MongoClient.connect('mongodb://127.0.0.1/hello_world?maxPoolSize=5', function(err, db) {
+MongoClient.connect('mongodb://localhost/hello_world?maxPoolSize=5', function(err, db) {
   collection = db.collection('world');
 });
 
+// MySQL Raw Setup
 var connection = mysql.createConnection({
-  host     : '127.0.0.1',
+  host     : 'localhost',
   user     : 'benchmarkdbuser',
   password : 'benchmarkdbpass',
   database : 'hello_world'
 });
 connection.connect();
 
+// Mongoose Setup
 var WorldSchema = new mongoose.Schema({
     id          : Number,
     randomNumber: Number
@@ -34,8 +37,9 @@ var WorldSchema = new mongoose.Schema({
   }),
   MWorld = conn.model('World', WorldSchema);
 
+// Sequelize Setup
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: '127.0.0.1',
+  host: 'localhost',
   dialect: 'mysql',
   logging: false,
   pool: {
@@ -87,6 +91,7 @@ function mongodbDriverQuery(callback) {
   collection.findOne({
     id: getRandomNumber()
   }, function(err, world) {
+    world._id = undefined; // remove _id from query response
     callback(err, world);
   });
 }
@@ -97,8 +102,8 @@ function mongodbDriverUpdateQuery(callback) {
   }, [['_id','asc']], {
     $set: {randomNumber: getRandomNumber()}
   }, {}, function(err, world) {
-    world._id = undefined; // remove _id from query response
-    callback(err, world);
+    world.value._id = undefined; // remove _id from query response
+    callback(err, world.value);
   });
 }
 
