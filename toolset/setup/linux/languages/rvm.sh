@@ -3,15 +3,15 @@
 RETCODE=$(fw_exists rvm.installed)
 [ ! "$RETCODE" == 0 ] || { \
   # Assume single-user installation
-  source ~/.rvm/scripts/rvm
+  source $IROOT/rvm.installed
   return 0;
 }
 
 # Never run installation inside of TRAVIS, 
 # just rely on their default RVM installaton
 [ "$TRAVIS" != "true" ] || { \
-  source /home/travis/.rvm/scripts/rvm
-  touch rvm.installed
+  echo "source /home/travis/.rvm/scripts/rvm" > rvm.installed
+  source $IROOT/rvm.installed
   return 0;
 }
 
@@ -19,6 +19,7 @@ RETCODE=$(fw_exists rvm.installed)
 export SHELL=/bin/bash
 gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
 \curl -sSL https://get.rvm.io | bash -s stable
-source ~/.rvm/scripts/rvm
 
-touch $IROOT/rvm.installed
+echo "source ~/.rvm/scripts/rvm" > $IROOT/rvm.installed
+
+source $IROOT/rvm.installed
