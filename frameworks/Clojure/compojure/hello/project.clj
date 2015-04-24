@@ -9,8 +9,7 @@
                  [mysql/mysql-connector-java "5.1.6"]
                  [org.clojure/java.jdbc "0.3.0-alpha1"]
                  [c3p0/c3p0 "0.9.1.2"]
-                 [hiccup "1.0.4"]
-                 ]
+                 [hiccup "1.0.4"]]
   :plugins [[lein-ring "0.8.10"]]
   :ring {:handler hello.handler/app}
   :profiles

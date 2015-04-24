@@ -54,10 +54,6 @@ function queries() {
 
 }
 
-function update_world(&$world, $key) {
-	$world["randomnumber"] = mt_rand(1, 10000);
-}
-
 dispatch("/updates/:queries", "updates");
 function updates() {
 	header('Content-Type: application/json; charset=utf-8');
@@ -74,10 +70,10 @@ function updates() {
 	for ($i = 0; $i < $query_count; $i++) {
 		$id = mt_rand(1, 10000);
 		$world = World::find($id);
+                $world->randomnumber = mt_rand(1, 10000);
+		$world->save();
 		$worlds[] = $world->to_array();
 	}
-
-	array_walk($worlds, "update_world");
 
 	return json($worlds);
 }

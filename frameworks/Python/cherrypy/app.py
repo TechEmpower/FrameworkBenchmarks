@@ -101,6 +101,7 @@ class CherryPyBenchmark(object):
             world = cherrypy.request.db.query(World).get(id)
             world.randomNumber = rp()
             worlds.append(world.serialize())
+        cherrypy.request.db.commit()
         return worlds
 
     @cherrypy.expose
