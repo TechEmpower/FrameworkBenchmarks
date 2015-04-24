@@ -17,10 +17,33 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class WebServer extends Verticle implements Handler<HttpServerRequest> {
 
-  private Buffer helloWorldBuffer = new Buffer("Hello, World!");
-  private String helloWorldContentLength = String.valueOf(helloWorldBuffer.length());
-  private DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyyy HH:mm:ss z");
+  private final Buffer helloWorldBuffer = new Buffer("Hello, World!");
+  private final String helloWorldContentLength = String.valueOf(helloWorldBuffer.length());
+  private final DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyyy HH:mm:ss z");
   private String dateString;
+
+  private final String PATH_PLAINTEXT = "/plaintext";
+  private final String PATH_JSON = "/json";
+  private final String PATH_DB = "/db";
+  private final String PATH_QUERIES = "/queries";
+  private final String RESPONSE_TYPE_PLAIN = "text/plain";
+  private final String RESPONSE_TYPE_JSON = "application/json";
+  private final String HEADER_CONTENT_TYPE = "Content-Type";
+  private final String HEADER_CONTENT_LENGTH = "Content-Length";
+  private final String HEADER_SERVER = "Server";
+  private final String HEADER_SERVER_VERTX = "vert.x";
+  private final String HEADER_DATE = "Date";
+  private final String MONGO_ADDRESS = "hello.persistor";
+  private final String UNDERSCORE_ID = "_id";
+  private final String TEXT_ID = "id";
+  private final String TEXT_RESULT = "result";
+  private final String TEXT_QUERIES = "queries";
+  private final String TEXT_MESSAGE = "message";
+  private final String TEXT_ACTION = "action";
+  private final String TEXT_FINDONE = "findone";
+  private final String TEXT_COLLECTION = "collection";
+  private final String TEXT_WORLD = "World";
+  private final String TEXT_MATCHER = "matcher";
 
   @Override
   public void start() {
@@ -36,18 +59,17 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
 
   @Override
   public void handle(HttpServerRequest req) {
-    String path = req.path();
-    switch (path) {
-      case "/plaintext":
+    switch (req.path()) {
+      case PATH_PLAINTEXT:
         handlePlainText(req);
         break;
-      case "/json":
+      case PATH_JSON:
         handleJson(req);
         break;
-      case "/db":
+      case PATH_DB:
         handleDbMongo(req);
         break;
-      case "/queries":
+      case PATH_QUERIES:
         handleQueriesMongo(req);
         break;
       default:
@@ -62,14 +84,14 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
 
   private void handlePlainText(HttpServerRequest req) {
     HttpServerResponse resp = req.response();
-    setHeaders(resp, "text/plain", helloWorldContentLength);
+    setHeaders(resp, RESPONSE_TYPE_PLAIN, helloWorldContentLength);
     resp.end(helloWorldBuffer);
   }
 
   private void handleJson(HttpServerRequest req) {
-    Buffer buff = new Buffer(Json.encode(Collections.singletonMap("message", "Hello, world!")));
+    Buffer buff = new Buffer(Json.encode(Collections.singletonMap(TEXT_MESSAGE, "Hello, world!")));
     HttpServerResponse resp = req.response();
-    setHeaders(resp, "application/json", String.valueOf(buff.length()));
+    setHeaders(resp, RESPONSE_TYPE_JSON, String.valueOf(buff.length()));
     resp.end(buff);
   }
 
@@ -86,25 +108,26 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
 
   private JsonObject getResultFromReply(Message<JsonObject> reply) {
     JsonObject body = reply.body();
-    JsonObject world = body.getObject("result");
-    Object id = world.removeField("_id");
-    world.putValue("id", id);
+    JsonObject world = body.getObject(TEXT_RESULT);
+    Object id = world.removeField(UNDERSCORE_ID);
+    if (id instanceof Double) {
+		world.putValue(TEXT_ID, Integer.valueOf(((Double)id).intValue()));
+	} else {
+		world.putValue(TEXT_ID, id);
+	}
     return world;
   }
 
   private void handleQueriesMongo(final HttpServerRequest req) {
     int queriesParam = 1;
     try {
-      queriesParam = Integer.parseInt(req.params().get("queries"));
+      queriesParam = Integer.parseInt(req.params().get(TEXT_QUERIES));
     } catch (NumberFormatException e) {
-      e.printStackTrace();
-    }
-    if (queriesParam < 1)
-    {
       queriesParam = 1;
     }
-    if (queriesParam > 500)
-    {
+    if (queriesParam < 1) {
+      queriesParam = 1;
+    } else if (queriesParam > 500) {
       queriesParam = 500;
     }
     final MongoHandler dbh = new MongoHandler(req, queriesParam);
@@ -116,26 +139,26 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
 
   private void findRandom(Random random, Handler<Message<JsonObject>> handler) {
     vertx.eventBus().send(
-        "hello.persistor",
+        MONGO_ADDRESS,
         new JsonObject()
-            .putString("action", "findone")
-            .putString("collection", "World")
-            .putObject("matcher", new JsonObject().putNumber("_id", (random.nextInt(10000) + 1))),
+            .putString(TEXT_ACTION, TEXT_FINDONE)
+            .putString(TEXT_COLLECTION, TEXT_WORLD)
+            .putObject(TEXT_MATCHER, new JsonObject().putNumber(UNDERSCORE_ID, (random.nextInt(10000) + 1))),
         handler);
   }
 
   private void sendResponse(HttpServerRequest req, String result) {
     Buffer buff = new Buffer(result);
     HttpServerResponse resp = req.response();
-    setHeaders(resp, "application/json", String.valueOf(buff.length()));
+    setHeaders(resp, RESPONSE_TYPE_JSON, String.valueOf(buff.length()));
     resp.end(buff);
   }
 
   private void setHeaders(HttpServerResponse resp, String contentType, String contentLength) {
-    resp.putHeader("Content-Type", contentType);
-    resp.putHeader("Content-Length", contentLength);
-    resp.putHeader("Server", "vert.x");
-    resp.putHeader("Date", dateString);
+    resp.putHeader(HEADER_CONTENT_TYPE, contentType);
+    resp.putHeader(HEADER_CONTENT_LENGTH, contentLength);
+    resp.putHeader(HEADER_SERVER, HEADER_SERVER_VERTX );
+    resp.putHeader(HEADER_DATE, dateString);
   }
 
   private class MongoHandler implements Handler<Message<JsonObject>> {
