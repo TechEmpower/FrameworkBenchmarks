@@ -1,13 +1,18 @@
+import json
+from random import randint
+from functools import partial
 
 from WebKit.HTTPContent import HTTPContent
 from DbSession import Database
 from World import World
-import simplejson
-from random import randint
+import UrlHelper 
 
-class db(HTTPContent):
-	def defaultAction(self):
-		self.response().setHeader("Content-Type", "application/json; charset=UTF-8")
-		wid = randint(1, 10000)
-		world = Database.DbSession.query(World).get(wid).serialize()
-   		self.write(simplejson.dumps(world))
+class queries(HTTPContent):
+    def defaultAction(self):
+        self.response().clearHeaders()
+        self.response()._headers["Content-Type"] = "application/json"
+        num_queries = UrlHelper.getQueryNum(self.request().field("queries"))
+        rp = partial(randint, 1, 10000)
+        get = Database.DbSession.query(World).get
+        worlds = [get(rp()).serialize() for _ in xrange(num_queries)]
+        self.write(json.dumps(worlds))
