@@ -175,13 +175,11 @@ if(cluster.isMaster) {
     }
     var values = url.parse(req.url, true);
     var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
+    queries = Math.min(Math.max(queries, 1), 500);
     switch (values.pathname) {
       // Raw MongoDB Routes
       case '/mongodb':
         var queryFunctions = [];
-
-        queries = Math.min(Math.max(queries, 1), 500);
-
         for (var i = 0; i < queries; i += 1) {
           queryFunctions.push(mongodbDriverQuery);
         }
@@ -200,9 +198,6 @@ if(cluster.isMaster) {
 
       case '/mongodb-update':
         var queryFunctions = [];
-
-        queries = Math.min(Math.max(queries, 1), 500);
-
         for (var i = 0; i < queries; i += 1) {
           queryFunctions.push(mongodbDriverUpdateQuery);
         }
@@ -219,9 +214,6 @@ if(cluster.isMaster) {
       // Mongoose ORM Routes
       case '/mongoose':
         var queryFunctions = [];
-        
-        queries = Math.min(Math.max(queries, 1), 500);
-
         for (var i = 0; i < queries; i += 1) {
           queryFunctions.push(mongooseQuery);
         }
@@ -240,9 +232,6 @@ if(cluster.isMaster) {
 
       case '/mongoose-update':
         var selectFunctions = [];
-        
-        queries = Math.min(Math.max(queries, 1), 500);
-
         for (var i = 0; i < queries; i += 1) {
           selectFunctions.push(mongooseQuery);
         }
@@ -276,9 +265,6 @@ if(cluster.isMaster) {
       // Sequelize (MySQL ORM) Routes
       case '/mysql-orm':
         var queryFunctions = [];
-
-        queries = Math.min(Math.max(queries, 1), 500);
-
         for (var i = 0; i < queries; i += 1) {
           queryFunctions.push(sequelizeQuery);
         }
@@ -297,9 +283,6 @@ if(cluster.isMaster) {
 
       case '/mysql-orm-update':
         var selectFunctions = [];
-
-        queries = Math.min(Math.max(queries, 1), 500);
-
         for (var i = 0; i < queries; i += 1) {
           selectFunctions.push(sequelizeQuery);
         }
@@ -329,9 +312,6 @@ if(cluster.isMaster) {
       // Raw MongoDB Routes
       case '/mysql':
         var queryFunctions = [];
-
-        queries = Math.min(Math.max(queries, 1), 500);
-
         for (var i = 0; i < queries; i += 1) {
           queryFunctions.push(mysqlQuery);
         }
@@ -350,7 +330,6 @@ if(cluster.isMaster) {
 
       case '/mysql-update':
         var queryFunctions = [];
-
         for (var i = 0; i < queries; i += 1) {
           queryFunctions.push(mysqlUpdateQuery);
         }
@@ -362,7 +341,6 @@ if(cluster.isMaster) {
           res.end(JSON.stringify(results));
         });
         break;
-
 
       default:
         // File not found handler
