@@ -21,12 +21,7 @@ var WorldSchema = new mongoose.Schema({
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
 	host: 'localhost',
 	dialect: 'mysql',
-	logging: false,
-	pool: {
-		max: 5000,
-		min: 0,
-		idle: 5000
-	}
+	logging: false
 });
 
 var World = sequelize.define('World', {
