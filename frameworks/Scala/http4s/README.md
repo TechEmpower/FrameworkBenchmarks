@@ -16,6 +16,6 @@ The tests were run with:
 http://localhost:8080/json
 
 ## How to run
-sbt package
+sbt 'oneJar'
 
 java -jar target/scala-2.11/http4s_2.11-1.0-SNAPSHOT-one-jar.jar
