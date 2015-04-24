@@ -14,3 +14,5 @@ rm Webware-1.1.1.tar.gz
 wget downloads.sourceforge.net/webware/Webware-1.1.1.tar.gz
 tar -xf Webware-1.1.1.tar.gz
 cp -r app/ Webware-1.1.1/
+#rm -fr Webware-1.1.1/WebKit/Configs
+#cp -r app/Configs/ Webware-1.1.1/WebKit/Configs/
