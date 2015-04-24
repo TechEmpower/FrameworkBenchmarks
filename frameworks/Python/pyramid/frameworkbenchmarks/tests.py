@@ -56,7 +56,7 @@ class FunctionalTests(unittest.TestCase):
         res = self._get('/queries?queries=999')
         self.assertEqual(len(json.loads(self._str_compat(res.body))), 500)
 
-    def test_queries_999(self):
+    def test_queries_10(self):
         """
         /queries?queries=10 objects
         """
