@@ -110,8 +110,8 @@ if (cluster.isMaster) {
   });
   
   app.get('/mongoose', function(req, res) {
-    var queries = req.query.queries || 1,
-        queryFunctions = [];
+    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
+      , queryFunctions = [];
 
     queries = Math.min(Math.max(queries, 1), 500);
 
@@ -166,7 +166,7 @@ if (cluster.isMaster) {
   });
 
   app.get('/mongoose-update', function(req, res) {
-    var queries = req.query.queries || 1
+    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
       , selectFunctions = [];
 
     queries = Math.min(queries, 500);
