@@ -1,18 +1,19 @@
 local config
-do
-  local _obj_0 = require("lapis.config")
-  config = _obj_0.config
-end
+config = require("lapis.config").config
 config("development", function() end)
-return config("production", function()
+return config({
+  "production",
+  "development"
+}, function()
   port(80)
   num_workers(4)
   lua_code_cache("on")
-  return postgres({
-    backend = "pgmoon",
-    database = "hello_world",
-    user = "benchmarkdbuser",
-    password = "benchmarkdbpass",
-    host = "DBHOSTNAME"
-  })
+  logging(false)
+  return postgres(function()
+    backend("pgmoon")
+    database("hello_world")
+    user("benchmarkdbuser")
+    password("benchmarkdbpass")
+    return host("DBHOSTNAME")
+  end)
 end)
