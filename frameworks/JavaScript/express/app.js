@@ -149,6 +149,7 @@ if (cluster.isMaster) {
       if (!req.query.queries) {
         results = results[0];
       }
+      res.setHeader("Content-Type", "application/json");
       res.send(results);
     });
   });
