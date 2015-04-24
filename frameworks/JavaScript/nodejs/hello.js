@@ -97,7 +97,8 @@ function mongodbDriverUpdateQuery(callback) {
   }, [['_id','asc']], {
     $set: {randomNumber: getRandomNumber()}
   }, {}, function(err, world) {
-    callback(err, world && world.value);
+    world._id = undefined; // remove _id from query response
+    callback(err, world);
   });
 }
 
@@ -127,8 +128,8 @@ function mysqlUpdateQuery(callback) {
       throw err;
     }
     rows[0].randomNumber = getRandomNumber();
-    var updateQuery = "UPDATE World SET randomNumber = " + rows[0].randomNumber + " WHERE id = " + rows[0]['id'];
-    connection.query(updateQuery, function (err, rows, field) {
+    var updateQuery = "UPDATE world SET randomNumber = " + rows[0].randomNumber + " WHERE id = " + rows[0]['id'];
+    connection.query(updateQuery, function (err, result) {
       if (err) {
         throw err;
       }
