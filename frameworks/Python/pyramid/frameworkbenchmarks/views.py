@@ -5,6 +5,7 @@ Test views, per the spec here:
 
 from random import randint
 from pyramid.view import view_config
+from pyramid.response import Response
 from frameworkbenchmarks.models import DBSession, World, Fortune
 
 
@@ -91,7 +92,8 @@ def test_6(request):
     """
     Test type 6: Plaintext
     """
-    response = request.response
-    response.text = u"Hello, World!" # py2k/3k
-    response.content_type = "text/plain"
+    response = Response(
+        body=b'Hello, World!',
+        content_type='text/plain',
+        )
     return response
