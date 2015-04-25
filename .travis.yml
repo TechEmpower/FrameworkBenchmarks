@@ -150,6 +150,7 @@ env:
     - "TESTDIR=Scala/spray"
     - "TESTDIR=Scala/spray-es"
     - "TESTDIR=Scala/unfiltered"
+    - "TESTDIR=Scala/http4s"
     - "TESTDIR=Ur/urweb"
 
 before_install:
