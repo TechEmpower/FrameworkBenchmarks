@@ -12,7 +12,6 @@ namespace LibeventHost
             var host = args[0];
             var port = int.Parse(args[1]);
             var dbHost = args[2];
-            LibLocator.Init();
             NancyModules.DbModule.MysqlConnectionString = "server=localhost;user id=benchmarkdbuser;password=benchmarkdbpass;database=hello_world"
                 .Replace("localhost", dbHost);
             AddToIndex();
