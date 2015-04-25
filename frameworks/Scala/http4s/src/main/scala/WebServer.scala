@@ -14,12 +14,12 @@ object WebServer extends App {
       val dateHeader = Date(DateTime(4))
       Ok(Json("message" -> jString("Hello, World!")).asJson)
         .withHeaders(dateHeader)
-        .withContentType(Some(`Content-Type`(MediaType.`application/json`, Charset.`UTF-8`)))
+        .withContentType(Some(`Content-Type`(MediaType.`application/json`)))
     case GET -> Root / "plaintext" =>
       val dateHeader = Date(DateTime(4))
       Ok("Hello, World!")
         .withHeaders(dateHeader)
-        .withContentType(Some(`Content-Type`(MediaType.`text/plain`, Charset.`UTF-8`)))
+        .withContentType(Some(`Content-Type`(MediaType.`text/plain`)))
   }
 
   BlazeBuilder.bindHttp(8080)
