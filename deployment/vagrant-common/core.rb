@@ -77,6 +77,30 @@ def provider_aws(config, role, ip_address='172.16.0.16')
   end
 end
 
+def provider_digitalocean(config, role, ip_address='172.16.0.16')
+  config.vm.provider :digital_ocean do |dig, override|
+
+    override.ssh.private_key_path = ENV.fetch('TFB_DO_PRIVATE_KEY', '~/.ssh/id_rsa')
+
+    # Use a boilerplate box - this will be replaced by dig.image
+    override.vm.box = "digital_ocean"
+    override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    
+    dig.token = ENV['TFB_DO_TOKEN']
+    dig.image = ENV.fetch('TFB_DO_IMAGE', 'ubuntu-14-04-x64')
+    dig.region = ENV.fetch('TFB_DO_REGION', 'nyc2')
+    dig.size = ENV.fetch('TFB_DO_SIZE', '512mb')
+
+    # DigitalOcean plugin will create a new user named ubuntu
+    override.ssh.username = "ubuntu"
+    
+    if ENV.fetch('TFB_FORCE_SYNC', "false") == "true"
+      override.vm.synced_folder "../..", "/FrameworkBenchmarks"
+    end
+
+  end
+end
+
 def provider_virtualbox(config, role, ip_address='172.16.0.16')
   config.vm.network "private_network", ip: ip_address
   

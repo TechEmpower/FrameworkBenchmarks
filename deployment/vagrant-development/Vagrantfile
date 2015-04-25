@@ -24,4 +24,6 @@ Vagrant.configure("2") do |config|
 
   provider_aws(config, 'integrated')
   
+  provider_digitalocean(config, 'all')
+
 end

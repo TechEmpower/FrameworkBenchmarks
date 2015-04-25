@@ -14,9 +14,19 @@ while read -r line; do
   export $line; 
 done <<< "$1"
 
+# Workaround for bug in digitalocean provider
+# See https://github.com/smdahlen/vagrant-digitalocean/issues/183
+if [ "root" == "$(whoami)" ]; then
+  echo "WARNING: Detected attempt to provision as root user!"
+  echo "Aborting automatic provision, run this manually: "
+  echo "  \$ vagrant provision"
+  exit 1
+fi
+
 # Store any custom variables used at launch, in case someone forgets
 # what this instance is (e.g. SSD or HDD, etc)
 echo "$1" > ~/.tfb_launch_options
+env | sort > ~/.tfb_launch_env
 
 # Are we installing the server machine, the client machine, 
 # the database machine, or all machines? 
@@ -40,8 +50,8 @@ if [ "$ROLE" == "all" ]; then
   DATABA_IP=127.0.0.1
 fi
 
-GH_REPO=${TFB_AWS_REPO_SLUG:-TechEmpower/FrameworkBenchmarks}
-GH_BRANCH=${TFB_AWS_REPO_BRANCH:-master}
+GH_REPO=${TFB_REPO_SLUG:-TechEmpower/FrameworkBenchmarks}
+GH_BRANCH=${TFB_REPO_BRANCH:-master}
 
 # A shell provisioner is called multiple times
 if [ ! -e "~/.firstboot" ]; then
