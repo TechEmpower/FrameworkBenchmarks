@@ -80,16 +80,19 @@ if (cluster.isMaster) {
 
   // Route handlers
   function *jsonHandler() {
+    this.set('Server', 'Koa');
     this.body = {
       message: "Hello, world!"
     }
   }
 
   function *dbHandler() {
+    this.set('Server', 'Koa');
     this.body = yield worldQuery;
   }
 
   function *queriesHandler() {
+    this.set('Server', 'Koa');
     var numOfQueries = validateParam(this.query.queries);
     var queries = [];
     for (var i = 0; i < numOfQueries; i++) {
@@ -112,6 +115,7 @@ if (cluster.isMaster) {
   }
 
   function *updateHandler() {
+    this.set('Server', 'Koa');
     var numOfUpdates = validateParam(this.query.queries);
     var queries = [];
     for (var i = 0; i < numOfUpdates; i++) {
@@ -121,6 +125,7 @@ if (cluster.isMaster) {
   }
 
   function *textHandler() {
+    this.set('Server', 'Koa');
     this.body = 'Hello, world!';
   }
 

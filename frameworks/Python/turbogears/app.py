@@ -84,7 +84,7 @@ class RootController(TGController):
         fortunes.sort(key=attrgetter("message"))
         for f in fortunes:
             f.message = bleach.clean(f.message)
-            template = env.get_template("fortunes.html")
+        template = env.get_template("fortunes.html")
         return template.render(fortunes=fortunes)
 
 config = AppConfig(minimal=True, root_controller=RootController())

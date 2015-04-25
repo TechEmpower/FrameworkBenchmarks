@@ -12,23 +12,31 @@ This is the NodeJS portion of a [benchmarking test suite](../) comparing a varie
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v0.10.0](http://nodejs.org/)
-* [Mongoose 3.5.5](http://mongoosejs.com/)
-* [Mapper 0.2.4-pre](https://github.com/mgutz/mapper)
-* [MySQL 5.5.29](https://dev.mysql.com/)
+* [Node.js v0.12.2](http://nodejs.org/)
+* [Mongoose 4.0.1](http://mongoosejs.com/)
+* [Sequelize 2.0.6](https://github.com/sequelize/sequelize)
+* [Node MySQL 2.6.2](https://github.com/felixge/node-mysql/)
+* [Node MongoDB Driver 2.0.27](https://github.com/mongodb/node-mongodb-native)
 
 ## Test URLs
 ### JSON Encoding Test
 
 http://localhost:8080/json
 
+### Plaintext Test
+
+http://localhost:8080/plaintext
+
 ### Data-Store/Database Mapping Test
 
 MongoDB:
 http://localhost:8080/mongoose
 
+MongoDB Raw:
+http://localhost:8080/mongodb
+
 MySQL:
-http://localhost:8080/sequelize
+http://localhost:8080/mysql-orm
 
 MySQL Raw:
 http://localhost:8080/mysql
@@ -37,6 +45,9 @@ http://localhost:8080/mysql
 
 MongoDB:
 http://localhost:8080/mongoose?queries=2
+
+MongoDB Raw:
+http://localhost:8080/mongodb?queries=2
 
 MySQL:
 http://localhost:8080/mysql-orm?queries=2
