@@ -15,11 +15,11 @@
 
         private static readonly Random Random = new Random();
 
-        public DbModule() : base("/db")
+        public DbModule()
         {
-            Get["/", runAsync: true] = (args, ct) => UsingConnection(GetRandomWorld);
+            Get["/db", runAsync: true] = (args, ct) => UsingConnection(GetRandomWorld);
 
-            Get["/{queries}", runAsync: true] = (args, ct) =>
+            Get["/queries/{queries}", runAsync: true] = (args, ct) =>
             {
                 int queries = args.queries.TryParse<int>(defaultValue: 1);
 
