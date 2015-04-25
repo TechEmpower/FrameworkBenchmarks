@@ -124,6 +124,7 @@ if (cluster.isMaster) {
       if (!req.query.queries) {
         results = results[0];
       }
+      res.setHeader("Content-Type", "application/json");
       res.send(results);
     });
   });
@@ -169,7 +170,7 @@ if (cluster.isMaster) {
     var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
       , selectFunctions = [];
 
-    queries = Math.min(queries, 500);
+    queries = Math.min(Math.max(queries, 1), 500);
 
     for (var i = 1; i <= queries; i++ ) {
       selectFunctions.push(function(callback) {
