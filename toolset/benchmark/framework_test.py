@@ -256,7 +256,7 @@ class FrameworkTest:
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
 
     # Set a limit on total execution time of setup.sh
-    timeout = datetime.now() + timedelta(minutes = 20)
+    timeout = datetime.now() + timedelta(minutes = 105)
     time_remaining = timeout - datetime.now()
 
     # Need to print to stdout once every 10 minutes or Travis-CI will abort
