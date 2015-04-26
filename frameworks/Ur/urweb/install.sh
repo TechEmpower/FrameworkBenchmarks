@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=20150103
+VERSION=20150412
 COMPILER=${IROOT}/urweb
 
 RETCODE=$(fw_exists $COMPILER)
