@@ -1,0 +1,35 @@
+[package]
+
+name = "iron"
+version = "0.0.1"
+authors = ["Tor Hveem <tor@hveem.no>"]
+
+[[bin]]
+
+name = "iron"
+
+[dependencies.iron]
+
+git = "https://github.com/iron/iron.git"
+
+[dependencies.router]
+
+git = "https://github.com/iron/router.git"
+
+[dependencies.urlencoded]
+
+git = "https://github.com/iron/urlencoded"
+
+[dependencies.persistent]
+
+git = "https://github.com/iron/persistent.git"
+
+[dependencies.htmlescape]
+
+git = "https://github.com/torhve/rust-htmlescape.git"
+
+[dependencies.mysql]
+
+git = "https://github.com/blackbeam/rust-mysql-simple"
+# Disable SSL for mysql as it results in linking errors
+default-features = false

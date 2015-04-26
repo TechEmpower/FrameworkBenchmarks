@@ -142,6 +142,7 @@ env:
     - "TESTDIR=Ruby/rails"
     - "TESTDIR=Ruby/rails-stripped"
     - "TESTDIR=Ruby/sinatra"
+    - "TESTDIR=Rust/Iron"
     - "TESTDIR=Scala/finagle"
     - "TESTDIR=Scala/lift-stateless"
     - "TESTDIR=Scala/plain"

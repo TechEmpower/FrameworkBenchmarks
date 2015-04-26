@@ -1,0 +1,227 @@
+[root]
+name = "iron"
+version = "0.0.1"
+dependencies = [
+ "htmlescape 0.2.1 (git+https://github.com/torhve/rust-htmlescape.git)",
+ "iron 0.0.1 (git+https://github.com/iron/iron.git)",
+ "mysql 0.0.0 (git+https://github.com/blackbeam/rust-mysql-simple)",
+ "persistent 0.1.0 (git+https://github.com/iron/persistent.git)",
+ "router 0.1.0 (git+https://github.com/iron/router.git)",
+ "urlencoded 0.1.0 (git+https://github.com/iron/urlencoded)",
+]
+
+[[package]]
+name = "content_type"
+version = "0.1.0"
+source = "git+https://github.com/reem/rust-http-content-type.git#096be5c074b238cf2f8f01340a45aa020d9ab4b4"
+dependencies = [
+ "generator 0.1.0 (git+https://github.com/reem/rust-http-content-type.git)",
+ "http 0.1.0-pre (git+https://github.com/chris-morgan/rust-http.git)",
+ "phf 0.0.0 (git+https://github.com/sfackler/rust-phf.git)",
+]
+
+[[package]]
+name = "encoding"
+version = "0.2.0"
+source = "git+https://github.com/lifthrasiir/rust-encoding#a06637cc6d0da37c12c68661e2ee9ca1999764a4"
+dependencies = [
+ "encoding-index-japanese 1.0.20140915 (git+https://github.com/lifthrasiir/rust-encoding)",
+ "encoding-index-korean 1.0.20140915 (git+https://github.com/lifthrasiir/rust-encoding)",
+ "encoding-index-simpchinese 1.0.20140915 (git+https://github.com/lifthrasiir/rust-encoding)",
+ "encoding-index-singlebyte 1.0.20140915 (git+https://github.com/lifthrasiir/rust-encoding)",
+ "encoding-index-tradchinese 1.0.20140915 (git+https://github.com/lifthrasiir/rust-encoding)",
+]
+
+[[package]]
+name = "encoding-index-japanese"
+version = "1.0.20140915"
+source = "git+https://github.com/lifthrasiir/rust-encoding#a06637cc6d0da37c12c68661e2ee9ca1999764a4"
+
+[[package]]
+name = "encoding-index-korean"
+version = "1.0.20140915"
+source = "git+https://github.com/lifthrasiir/rust-encoding#a06637cc6d0da37c12c68661e2ee9ca1999764a4"
+
+[[package]]
+name = "encoding-index-simpchinese"
+version = "1.0.20140915"
+source = "git+https://github.com/lifthrasiir/rust-encoding#a06637cc6d0da37c12c68661e2ee9ca1999764a4"
+
+[[package]]
+name = "encoding-index-singlebyte"
+version = "1.0.20140915"
+source = "git+https://github.com/lifthrasiir/rust-encoding#a06637cc6d0da37c12c68661e2ee9ca1999764a4"
+
+[[package]]
+name = "encoding-index-tradchinese"
+version = "1.0.20140915"
+source = "git+https://github.com/lifthrasiir/rust-encoding#a06637cc6d0da37c12c68661e2ee9ca1999764a4"
+
+[[package]]
+name = "error"
+version = "0.0.0"
+source = "git+https://github.com/reem/rust-error.git#c068c32136431a676f55e9050002225059d523a6"
+dependencies = [
+ "typeable 0.0.1 (git+https://github.com/reem/rust-typeable.git)",
+]
+
+[[package]]
+name = "generator"
+version = "0.1.0"
+source = "git+https://github.com/reem/rust-http-content-type.git#096be5c074b238cf2f8f01340a45aa020d9ab4b4"
+dependencies = [
+ "http 0.1.0-pre (git+https://github.com/chris-morgan/rust-http.git)",
+ "phf_mac 0.0.0 (git+https://github.com/sfackler/rust-phf.git)",
+ "url 0.1.0 (git+https://github.com/servo/rust-url.git)",
+]
+
+[[package]]
+name = "htmlescape"
+version = "0.2.1"
+source = "git+https://github.com/torhve/rust-htmlescape.git#16338c1461e2a832a2a90dd1993f366a5f45d3bb"
+
+[[package]]
+name = "http"
+version = "0.1.0-pre"
+source = "git+https://github.com/chris-morgan/rust-http.git#5cce773faf57abe7637f1bb2fa3b0479473fcd73"
+dependencies = [
+ "openssl 0.0.0 (git+https://github.com/sfackler/rust-openssl.git)",
+ "url 0.1.0 (git+https://github.com/servo/rust-url.git)",
+]
+
+[[package]]
+name = "iron"
+version = "0.0.1"
+source = "git+https://github.com/iron/iron.git#98ca7f350e2cfd16672d823ea3b26b5d7848f565"
+dependencies = [
+ "content_type 0.1.0 (git+https://github.com/reem/rust-http-content-type.git)",
+ "error 0.0.0 (git+https://github.com/reem/rust-error.git)",
+ "http 0.1.0-pre (git+https://github.com/chris-morgan/rust-http.git)",
+ "modifier 0.0.1 (git+https://github.com/reem/rust-modifier.git)",
+ "plugin 0.0.0 (git+https://github.com/reem/rust-plugin.git)",
+ "typemap 0.0.0 (git+https://github.com/reem/rust-typemap.git)",
+ "url 0.1.0 (git+https://github.com/servo/rust-url.git)",
+]
+
+[[package]]
+name = "lazy_static"
+version = "0.1.0"
+source = "git+https://github.com/Kimundi/lazy-static.rs#62976cb611c5396e11315ae64c9c389576240eb7"
+
+[[package]]
+name = "modifier"
+version = "0.0.1"
+source = "git+https://github.com/reem/rust-modifier.git#a538909229291164467583221d4e6e39fd5043b6"
+
+[[package]]
+name = "mysql"
+version = "0.0.0"
+source = "git+https://github.com/blackbeam/rust-mysql-simple#15a4ad5554c455062ec069ac2a5c39fb0aec0c36"
+dependencies = [
+ "lazy_static 0.1.0 (git+https://github.com/Kimundi/lazy-static.rs)",
+]
+
+[[package]]
+name = "openssl"
+version = "0.0.0"
+source = "git+https://github.com/sfackler/rust-openssl.git#766ce4b7785c0b038bee95b74564e5b9bf7e9a4b"
+
+[[package]]
+name = "persistent"
+version = "0.1.0"
+source = "git+https://github.com/iron/persistent.git#f8249beac065f614d59115461fddad8741c448bb"
+dependencies = [
+ "iron 0.0.1 (git+https://github.com/iron/iron.git)",
+ "plugin 0.0.0 (git+https://github.com/reem/rust-plugin.git)",
+ "typemap 0.0.0 (git+https://github.com/reem/rust-typemap.git)",
+]
+
+[[package]]
+name = "phantom"
+version = "0.0.0"
+source = "git+https://github.com/reem/rust-phantom.git#deb5acfed56d485bcb2d498da51477a12cb081c3"
+
+[[package]]
+name = "phf"
+version = "0.0.0"
+source = "git+https://github.com/sfackler/rust-phf.git#18a5ecc028055c3dbd650cc5a064b6fb033d82ef"
+dependencies = [
+ "xxhash 0.0.1 (git+https://github.com/Jurily/rust-xxhash)",
+]
+
+[[package]]
+name = "phf_mac"
+version = "0.0.0"
+source = "git+https://github.com/sfackler/rust-phf.git#18a5ecc028055c3dbd650cc5a064b6fb033d82ef"
+dependencies = [
+ "xxhash 0.0.1 (git+https://github.com/Jurily/rust-xxhash)",
+]
+
+[[package]]
+name = "plugin"
+version = "0.0.0"
+source = "git+https://github.com/reem/rust-plugin.git#38c93a9b8dd3e704741d8986d4555b46040af43d"
+dependencies = [
+ "phantom 0.0.0 (git+https://github.com/reem/rust-phantom.git)",
+ "typemap 0.0.0 (git+https://github.com/reem/rust-typemap.git)",
+]
+
+[[package]]
+name = "route-recognizer"
+version = "0.1.0"
+source = "git+https://github.com/conduit-rust/route-recognizer.rs.git#4db520368a275e9cebb039fb09547066144443f2"
+
+[[package]]
+name = "router"
+version = "0.1.0"
+source = "git+https://github.com/iron/router.git#fac586df9f8841f6d180291f55a1f607f8444666"
+dependencies = [
+ "http 0.1.0-pre (git+https://github.com/chris-morgan/rust-http.git)",
+ "iron 0.0.1 (git+https://github.com/iron/iron.git)",
+ "route-recognizer 0.1.0 (git+https://github.com/conduit-rust/route-recognizer.rs.git)",
+ "typemap 0.0.0 (git+https://github.com/reem/rust-typemap.git)",
+]
+
+[[package]]
+name = "typeable"
+version = "0.0.1"
+source = "git+https://github.com/reem/rust-typeable.git#55154e1809db8ceec8f8519bdbb638c2fbd712f5"
+
+[[package]]
+name = "typemap"
+version = "0.0.0"
+source = "git+https://github.com/reem/rust-typemap.git#55f0020b670b00a3521f35408f2ea72c95b82df0"
+dependencies = [
+ "phantom 0.0.0 (git+https://github.com/reem/rust-phantom.git)",
+ "unsafe-any 0.1.0 (git+https://github.com/reem/rust-unsafe-any.git)",
+]
+
+[[package]]
+name = "unsafe-any"
+version = "0.1.0"
+source = "git+https://github.com/reem/rust-unsafe-any.git#2863af363bbd83079b6773920bba5b736408db33"
+
+[[package]]
+name = "url"
+version = "0.1.0"
+source = "git+https://github.com/servo/rust-url.git#8a61b7654ab5378b488225a1d8a9cbbbcbd38894"
+dependencies = [
+ "encoding 0.2.0 (git+https://github.com/lifthrasiir/rust-encoding)",
+]
+
+[[package]]
+name = "urlencoded"
+version = "0.1.0"
+source = "git+https://github.com/iron/urlencoded#1e12d4f5607995713dfffa61e4c9b5875ee6adbd"
+dependencies = [
+ "iron 0.0.1 (git+https://github.com/iron/iron.git)",
+ "plugin 0.0.0 (git+https://github.com/reem/rust-plugin.git)",
+ "typemap 0.0.0 (git+https://github.com/reem/rust-typemap.git)",
+ "url 0.1.0 (git+https://github.com/servo/rust-url.git)",
+]
+
+[[package]]
+name = "xxhash"
+version = "0.0.1"
+source = "git+https://github.com/Jurily/rust-xxhash#7e4174e780af0cfb29a5e53ede0b987adca16396"
+
