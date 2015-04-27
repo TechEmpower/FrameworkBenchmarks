@@ -2,7 +2,11 @@
 
 ### JSON Encoding Test
 
-* [JSON test source](src/main/scala/code/lib/WebServer.scala)
+* [JSON test source](src/main/scala/example/Main.scala)
+
+### Plaintext Test
+
+* [JSON test source](src/main/scala/example/Main.scala)
 
 ## Infrastructure Software Versions
 The tests were run with:
