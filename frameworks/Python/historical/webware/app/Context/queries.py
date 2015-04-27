@@ -15,4 +15,6 @@ class queries(HTTPContent):
         rp = partial(randint, 1, 10000)
         get = Database.DbSession.query(World).get
         worlds = [get(rp()).serialize() for _ in xrange(num_queries)]
-        self.write(json.dumps(worlds))
+        output = json.dumps(worlds)
+        self.response()._headers["Content-Length"] = len(output)
+        self.write(output)

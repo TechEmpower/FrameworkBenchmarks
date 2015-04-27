@@ -21,4 +21,6 @@ class updates(HTTPContent):
             world.randomNumber = rp()
             worlds.append(world.serialize())
         Database.DbSession.commit()
-        self.write(json.dumps(worlds))
+        output = json.dumps(worlds)
+        self.response()._headers["Content-Length"] = len(output)
+        self.write(output)
