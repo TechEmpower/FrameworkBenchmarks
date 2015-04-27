@@ -20,30 +20,37 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
   private final Buffer helloWorldBuffer = new Buffer("Hello, World!");
   private final String helloWorldContentLength = String.valueOf(helloWorldBuffer.length());
   private final DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyyy HH:mm:ss z");
+  private final Random random = ThreadLocalRandom.current();
   private String dateString;
 
-  private final String PATH_PLAINTEXT = "/plaintext";
-  private final String PATH_JSON = "/json";
-  private final String PATH_DB = "/db";
-  private final String PATH_QUERIES = "/queries";
-  private final String RESPONSE_TYPE_PLAIN = "text/plain";
-  private final String RESPONSE_TYPE_JSON = "application/json";
-  private final String HEADER_CONTENT_TYPE = "Content-Type";
-  private final String HEADER_CONTENT_LENGTH = "Content-Length";
-  private final String HEADER_SERVER = "Server";
-  private final String HEADER_SERVER_VERTX = "vert.x";
-  private final String HEADER_DATE = "Date";
-  private final String MONGO_ADDRESS = "hello.persistor";
-  private final String UNDERSCORE_ID = "_id";
-  private final String TEXT_ID = "id";
-  private final String TEXT_RESULT = "result";
-  private final String TEXT_QUERIES = "queries";
-  private final String TEXT_MESSAGE = "message";
-  private final String TEXT_ACTION = "action";
-  private final String TEXT_FINDONE = "findone";
-  private final String TEXT_COLLECTION = "collection";
-  private final String TEXT_WORLD = "World";
-  private final String TEXT_MATCHER = "matcher";
+  private static final String PATH_PLAINTEXT = "/plaintext";
+  private static final String PATH_JSON = "/json";
+  private static final String PATH_DB = "/db";
+  private static final String PATH_QUERIES = "/queries";
+  private static final String PATH_UPDATES = "/updates";
+  private static final String RESPONSE_TYPE_PLAIN = "text/plain";
+  private static final String RESPONSE_TYPE_JSON = "application/json";
+  private static final String HEADER_CONTENT_TYPE = "Content-Type";
+  private static final String HEADER_CONTENT_LENGTH = "Content-Length";
+  private static final String HEADER_SERVER = "Server";
+  private static final String HEADER_SERVER_VERTX = "vert.x";
+  private static final String HEADER_DATE = "Date";
+  private static final String MONGO_ADDRESS = "hello.persistor";
+  private static final String UNDERSCORE_ID = "_id";
+  private static final String TEXT_ID = "id";
+  private static final String RANDOM_NUMBER = "randomNumber";
+  private static final String TEXT_RESULT = "result";
+  private static final String TEXT_QUERIES = "queries";
+  private static final String TEXT_MESSAGE = "message";
+  private static final String HELLO_WORLD = "Hello, world!";
+  private static final String TEXT_ACTION = "action";
+  private static final String TEXT_CRITERIA = "criteria";
+  private static final String TEXT_UPDATE = "update";
+  private static final String TEXT_OBJ_NEW = "objNew";
+  private static final String TEXT_FINDONE = "findone";
+  private static final String TEXT_COLLECTION = "collection";
+  private static final String TEXT_WORLD = "World";
+  private static final String TEXT_MATCHER = "matcher";
 
   @Override
   public void start() {
@@ -70,7 +77,10 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
         handleDbMongo(req);
         break;
       case PATH_QUERIES:
-        handleQueriesMongo(req);
+        handleDBMongo(req,false);
+        break;
+      case PATH_UPDATES:
+        handleDBMongo(req,true);
         break;
       default:
         req.response().setStatusCode(404);
@@ -89,14 +99,14 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
   }
 
   private void handleJson(HttpServerRequest req) {
-    Buffer buff = new Buffer(Json.encode(Collections.singletonMap(TEXT_MESSAGE, "Hello, world!")));
+    Buffer buff = new Buffer(Json.encode(Collections.singletonMap(TEXT_MESSAGE, HELLO_WORLD)));
     HttpServerResponse resp = req.response();
     setHeaders(resp, RESPONSE_TYPE_JSON, String.valueOf(buff.length()));
     resp.end(buff);
   }
 
   private void handleDbMongo(final HttpServerRequest req) {
-    findRandom(ThreadLocalRandom.current(), new Handler<Message<JsonObject>>() {
+    findRandom(new Handler<Message<JsonObject>>() {
       @Override
       public void handle(Message<JsonObject> reply) {
         JsonObject world = getResultFromReply(reply);
@@ -111,14 +121,14 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
     JsonObject world = body.getObject(TEXT_RESULT);
     Object id = world.removeField(UNDERSCORE_ID);
     if (id instanceof Double) {
-		world.putValue(TEXT_ID, Integer.valueOf(((Double)id).intValue()));
-	} else {
-		world.putValue(TEXT_ID, id);
-	}
+      world.putValue(TEXT_ID, Integer.valueOf(((Double)id).intValue()));
+    } else {
+      world.putValue(TEXT_ID, id);
+    }
     return world;
   }
 
-  private void handleQueriesMongo(final HttpServerRequest req) {
+  private void handleDBMongo(final HttpServerRequest req, boolean randomUpdates) {
     int queriesParam = 1;
     try {
       queriesParam = Integer.parseInt(req.params().get(TEXT_QUERIES));
@@ -130,14 +140,13 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
     } else if (queriesParam > 500) {
       queriesParam = 500;
     }
-    final MongoHandler dbh = new MongoHandler(req, queriesParam);
-    final Random random = ThreadLocalRandom.current();
+    final MongoHandler dbh = new MongoHandler(req, queriesParam, randomUpdates);
     for (int i = 0; i < queriesParam; i++) {
-      findRandom(random, dbh);
+      findRandom(dbh);
     }
   }
 
-  private void findRandom(Random random, Handler<Message<JsonObject>> handler) {
+  private void findRandom(Handler<Message<JsonObject>> handler) {
     vertx.eventBus().send(
         MONGO_ADDRESS,
         new JsonObject()
@@ -145,6 +154,17 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
             .putString(TEXT_COLLECTION, TEXT_WORLD)
             .putObject(TEXT_MATCHER, new JsonObject().putNumber(UNDERSCORE_ID, (random.nextInt(10000) + 1))),
         handler);
+  }
+
+  private void updateRandom(JsonObject json) {
+    vertx.eventBus().send(
+        MONGO_ADDRESS,
+        new JsonObject()
+            .putString(TEXT_ACTION, TEXT_UPDATE)
+            .putString(TEXT_COLLECTION, TEXT_WORLD)
+            .putObject(TEXT_CRITERIA, new JsonObject().putValue(UNDERSCORE_ID, json.getValue(TEXT_ID)))
+            .putObject(TEXT_OBJ_NEW, json)
+             );
   }
 
   private void sendResponse(HttpServerRequest req, String result) {
@@ -165,16 +185,24 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
     private final HttpServerRequest req;
     private final int queries;
     private final JsonArray worlds;
+    private final Random random;
+    private final boolean randomUpdates;
 
-    public MongoHandler(HttpServerRequest request, int queriesParam) {
+    public MongoHandler(HttpServerRequest request, int queriesParam, boolean performRandomUpdates) {
       req = request;
       queries = queriesParam;
+      randomUpdates = performRandomUpdates;
+      random = ThreadLocalRandom.current();
       worlds = new JsonArray();
     }
 
     @Override
     public void handle(Message<JsonObject> reply) {
       JsonObject world = getResultFromReply(reply);
+      if (randomUpdates) {
+        world.putValue(RANDOM_NUMBER, (random.nextInt(10000) + 1));
+        updateRandom(world);        
+      }
       worlds.add(world);
       if (worlds.size() == this.queries) {
         // All queries have completed; send the response.
