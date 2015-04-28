@@ -15,6 +15,16 @@ import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import freemarker.template.Template;
+import freemarker.template.Configuration;
+import java.io.StringReader;
+import java.io.Writer;
+import java.io.StringWriter;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+
 public class WebServer extends Verticle implements Handler<HttpServerRequest> {
 
   private final Buffer helloWorldBuffer = new Buffer("Hello, World!");
@@ -28,7 +38,9 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
   private static final String PATH_DB = "/db";
   private static final String PATH_QUERIES = "/queries";
   private static final String PATH_UPDATES = "/updates";
+  private static final String PATH_FORTUNES = "/fortunes";
   private static final String RESPONSE_TYPE_PLAIN = "text/plain";
+  private static final String RESPONSE_TYPE_HTML = "text/html";
   private static final String RESPONSE_TYPE_JSON = "application/json";
   private static final String HEADER_CONTENT_TYPE = "Content-Type";
   private static final String HEADER_CONTENT_LENGTH = "Content-Length";
@@ -36,24 +48,34 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
   private static final String HEADER_SERVER_VERTX = "vert.x";
   private static final String HEADER_DATE = "Date";
   private static final String MONGO_ADDRESS = "hello.persistor";
+  private static final String FREEMARKER_ADDRESS = "vertx.freemarker";
   private static final String UNDERSCORE_ID = "_id";
   private static final String TEXT_ID = "id";
   private static final String RANDOM_NUMBER = "randomNumber";
   private static final String TEXT_RESULT = "result";
+  private static final String TEXT_RESULTS = "results";
   private static final String TEXT_QUERIES = "queries";
   private static final String TEXT_MESSAGE = "message";
+  private static final String TEXT_MESSAGES = "messages";
+  private static final String ADD_FORTUNE_MESSAGE = "Additional fortune added at request time.";
   private static final String HELLO_WORLD = "Hello, world!";
   private static final String TEXT_ACTION = "action";
   private static final String TEXT_CRITERIA = "criteria";
   private static final String TEXT_UPDATE = "update";
   private static final String TEXT_OBJ_NEW = "objNew";
   private static final String TEXT_FINDONE = "findone";
+  private static final String TEXT_FIND = "find";
   private static final String TEXT_COLLECTION = "collection";
   private static final String TEXT_WORLD = "World";
+  private static final String TEXT_FORTUNE = "Fortune";
   private static final String TEXT_MATCHER = "matcher";
+  private static final String TEMPLATE_FORTUNE = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><#list messages as message><tr><td>${message.id?html}</td><td>${message.message?html}</td></tr></#list></table></body></html>";
+  
+  private Template ftlTemplate;
 
   @Override
   public void start() {
+    try { ftlTemplate = new Template(TEXT_FORTUNE, new StringReader(TEMPLATE_FORTUNE), new Configuration(Configuration.VERSION_2_3_22)); } catch (Exception ex) { ex.printStackTrace(); }
     vertx.createHttpServer().requestHandler(WebServer.this).listen(8080);
     vertx.setPeriodic(1000, new Handler<Long>() {
       @Override
@@ -82,6 +104,9 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
       case PATH_UPDATES:
         handleDBMongo(req,true);
         break;
+      case PATH_FORTUNES:
+        handleFortunes(req);
+        break;
       default:
         req.response().setStatusCode(404);
         req.response().end();
@@ -90,6 +115,40 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
 
   private void formatDate() {
     dateString = DATE_FORMAT.format(new Date());
+  }
+
+  private void handleFortunes(HttpServerRequest req) {
+    final HttpServerResponse resp = req.response();
+    
+    vertx.eventBus().send(
+      MONGO_ADDRESS,
+      new JsonObject()
+          .putString(TEXT_ACTION, TEXT_FIND)
+          .putString(TEXT_COLLECTION, TEXT_FORTUNE),
+      new Handler<Message<JsonObject>>() {
+        @Override
+        public void handle(Message<JsonObject> reply) {
+          JsonArray results = reply.body().getArray(TEXT_RESULTS);
+          
+          List<Fortune> fortunes = new ArrayList<>();
+          for (Object fortune: results) {
+            fortunes.add(new Fortune(
+              ((JsonObject)fortune).getNumber(TEXT_ID).intValue(),
+              ((JsonObject)fortune).getString(TEXT_MESSAGE)));
+          }            
+          fortunes.add(new Fortune(0, ADD_FORTUNE_MESSAGE));
+          Collections.sort(fortunes);
+
+          Map model = new HashMap();
+          model.put(TEXT_MESSAGES, fortunes);
+          Writer writer = new StringWriter();
+          try { ftlTemplate.process(model, writer); } catch (Exception ex) { ex.printStackTrace(); }
+
+          Buffer buff = new Buffer(writer.toString());
+          setHeaders(resp, RESPONSE_TYPE_HTML, String.valueOf(buff.length()));
+          resp.end(buff);
+        }  
+    });
   }
 
   private void handlePlainText(HttpServerRequest req) {
@@ -120,11 +179,7 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
     JsonObject body = reply.body();
     JsonObject world = body.getObject(TEXT_RESULT);
     Object id = world.removeField(UNDERSCORE_ID);
-    if (id instanceof Double) {
-      world.putValue(TEXT_ID, Integer.valueOf(((Double)id).intValue()));
-    } else {
-      world.putValue(TEXT_ID, id);
-    }
+    world.putValue(TEXT_ID, Integer.valueOf(((Double)id).intValue()));
     return world;
   }
 
@@ -181,7 +236,7 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
     resp.putHeader(HEADER_DATE, dateString);
   }
 
-  private class MongoHandler implements Handler<Message<JsonObject>> {
+  private final class MongoHandler implements Handler<Message<JsonObject>> {
     private final HttpServerRequest req;
     private final int queries;
     private final JsonArray worlds;
@@ -195,7 +250,6 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
       random = ThreadLocalRandom.current();
       worlds = new JsonArray();
     }
-
     @Override
     public void handle(Message<JsonObject> reply) {
       JsonObject world = getResultFromReply(reply);
@@ -211,6 +265,25 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
       }
     }
   }
+  
+  public final class Fortune implements Comparable<Fortune> {
+    public int id;
+    public String message;
 
+    public int getId() {
+      return id;
+    }
+    public String getMessage() {
+      return message;
+    }
+    public Fortune(int id, String message) {
+      this.id = id;
+      this.message = message;
+    }
+    @Override
+    public int compareTo(Fortune other) {
+      return message.compareTo(other.message);
+    }
+  }  
 }
 

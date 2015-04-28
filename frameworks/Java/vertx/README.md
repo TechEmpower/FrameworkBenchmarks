@@ -22,6 +22,10 @@ This is the vertx 2.x portion of a [benchmarking test suite](../) comparing a va
 
 * [Database Data updates test source](WebServer.java)
 
+### Fortunes Test
+
+* [Fortunes test source](WebServer.java)
+
 ## Versions
 
 * [Java OpenJDK 1.7.0_79](http://openjdk.java.net/)
@@ -53,3 +57,7 @@ This is the vertx 2.x portion of a [benchmarking test suite](../) comparing a va
 ### Database Data updates Test
 
     http://localhost:8080/updates?queries=3
+
+### Fortunes Test
+
+    http://localhost:8080/fortunes
