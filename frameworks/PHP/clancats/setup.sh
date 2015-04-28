@@ -3,8 +3,8 @@ export COMPOSER_HOME=${IROOT}/php-composer
 export PHP_FPM=${PHP_HOME}/sbin/php-fpm
 export NGINX_HOME=${IROOT}/nginx
 
-sed -i 's|localhost|'"${DBHOST}"'|g' public/index.php
-sed -i 's|root .*/FrameworkBenchmarks/clancats|root '"${TROOT}"'|g' deploy/nginx.conf
+sed -i 's|localhost|'"${DBHOST}"'|g' clancatsapp/public/index.php
+sed -i 's|root .*/FrameworkBenchmarks/clancats/clancatsapp|root '"${TROOT}"'|g' deploy/nginx.conf
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
 $PHP_FPM --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid

@@ -1,1 +1,0 @@
-{% each $items as $item %}{{$item}}, {% endeach %}

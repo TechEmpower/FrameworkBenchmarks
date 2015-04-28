@@ -1,1 +1,0 @@
-CCMail:<?php echo $content; ?>
