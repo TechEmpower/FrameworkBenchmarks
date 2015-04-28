@@ -117,7 +117,7 @@
       "database_os": "Linux",
       "display_name": "nodejs",
       "notes": "",
-      "versus": "nodejs"
+      "versus": ""
     },
     "mongodb-iojs": {
       "setup_file": "setup_iojs",
@@ -137,7 +137,7 @@
       "database_os": "Linux",
       "display_name": "nodejs",
       "notes": "",
-      "versus": "nodejs"
+      "versus": ""
     },
     "mongodb-raw-iojs": {
       "setup_file": "setup_iojs",
@@ -157,7 +157,7 @@
       "database_os": "Linux",
       "display_name": "nodejs",
       "notes": "",
-      "versus": "nodejs"
+      "versus": ""
     },
     "mysql-iojs": {
       "setup_file": "setup_iojs",
@@ -177,7 +177,7 @@
       "database_os": "Linux",
       "display_name": "nodejs",
       "notes": "",
-      "versus": "nodejs"
+      "versus": ""
     },
     "mysql-raw-iojs": {
       "setup_file": "setup_iojs",
@@ -197,7 +197,7 @@
       "database_os": "Linux",
       "display_name": "nodejs",
       "notes": "",
-      "versus": "nodejs"
+      "versus": ""
     }
   }]
 }
