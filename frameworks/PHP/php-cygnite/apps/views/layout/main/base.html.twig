@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<title>{% block title %} {% endblock %}</title>
+
+<meta name="keywords" content="Cygnite Framework Base Twig Layout" />
+<meta name="author" content="Cygnite Framework Bootstrap Starter Site." />
+<!-- Google will often use this as its description of your page/site. Make it good. -->
+<meta name="description" content="Cygnite Bootstrap Layout." />
+<!--  Mobile Viewport Fix -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+{% block head %}
+    <link rel="stylesheet" href="{{ baseUrl() }}/assets/css/bootstrap/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="{{ baseUrl() }}/assets/css/bootstrap/css/bootstrap-theme.min.css" >
+    <link rel="stylesheet" href="{{ baseUrl() }}/assets/css/cygnite/bootstrap/datatables-bootstrap.css" >
+    <link rel="stylesheet" href="{{ baseUrl() }}/assets/css/cygnite/flash.css" >
+    <link rel="stylesheet" href="{{ baseUrl() }}/assets/css/cygnite/wysihtml5/prettify.css" >
+    <link rel="stylesheet" href="{{ baseUrl() }}/assets/css/cygnite/wysihtml5/bootstrap-wysihtml5.css" >
+{% endblock %}
+
+<style type="text/css"> body { padding: 60px 0; } </style>
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+</head>
+<body>
+
+{% block header %}{% endblock %}
+
+<!-- Fluid Container -->
+<div class='container'>
+
+    <!-- Navbar -->
+    <div class="navbar navbar-default navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ baseUrl() }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav pull-right">
+                    <!-- Right side menu -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- ./ navbar -->
+    <!-- ./ Navbar -->
+
+    <!-- Content -->
+    {% block content   %}{% endblock %}
+    <!-- ./ Content -->
+
+    <!-- Footer -->
+    <footer class="clearfix">
+        {% block footer %}{% endblock %}
+    </footer>
+    <!-- ./ Footer -->
+
+</div>
+<!-- ./ Container End -->
+
+{% block javascripts %}
+
+    <script type="text/javascript" src="{{ baseUrl() }}/assets/js/cygnite/jquery/1.10.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ baseUrl() }}/assets/js/twitter/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{ baseUrl() }}/assets/js/dataTables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="{{ baseUrl() }}/assets/js/dataTables/datatables-bootstrap.js"></script>
+    <script type="text/javascript" src="{{ baseUrl() }}/assets/js/dataTables/datatables.fnReloadAjax.js"></script>
+    <script type="text/javascript" src="{{ baseUrl() }}/assets/js/dataTables/prettify.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#dataGrid').DataTable();
+        });
+    </script>
+    <style type="text/css">
+        .navbar-inverse {background: none repeat scroll 0 0 #07508f!important;}
+    </style>
+
+{% endblock %}
+</body>
+</html>
