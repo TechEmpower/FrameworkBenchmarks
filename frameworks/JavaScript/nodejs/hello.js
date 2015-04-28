@@ -76,9 +76,7 @@ function getRandomNumber() {
 function mongooseQuery(callback) {
   MWorld.findOne({
     id: getRandomNumber()
-  }).exec(function (err, world) {
-    callback(err, world);
-  });
+  }).exec(callback);
 }
 
 // MongoDB-Raw Query Functions
