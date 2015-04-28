@@ -14,7 +14,7 @@
 	<?php foreach($fortunes as $fortune): ?>
 	<tr>
 		<td><?php echo $fortune->id; ?></td>
-		<td><?php echo $fortune->message; ?></td>
+		<td><?php echo htmlspecialchars($fortune->message); ?></td>
 	</tr>
 	<?php endforeach; ?>
 

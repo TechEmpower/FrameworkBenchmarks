@@ -14,6 +14,7 @@
  *
  * load the framework file wich wil initialize CCF. 
  */
+
 require_once __DIR__."/../framework.php";
 
 /*

@@ -99,7 +99,7 @@ env:
     - "TESTDIR=PHP/hhvm"
     - "TESTDIR=PHP/php"
     - "TESTDIR=PHP/codeigniter"
-    - "TESTDIR=PHP/php-clancatsframework"
+    - "TESTDIR=PHP/clancats"
     - "TESTDIR=PHP/php-fatfree"
     - "TESTDIR=PHP/fuel"
     - "TESTDIR=PHP/kohana"
