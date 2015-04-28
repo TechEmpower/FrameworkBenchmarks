@@ -18,6 +18,12 @@ local mysqlconn = {
 	password = "benchmarkdbpass"
 }
 return {
+    db = function(ngx)
+        local db = mysql:new()
+        assert(db:connect(mysqlconn))
+        ngx.print(encode(db:query('SELECT * FROM World WHERE id = '..random(1,10000))[1]))
+        db:set_keepalive(0, 256)
+    end,
     queries = function(ngx)
         local db = mysql:new()
         assert(db:connect(mysqlconn))
@@ -27,8 +33,8 @@ return {
         -- it doesn't matter. For me, after a small warmup, the performance
         -- is identical to a version without the branch
         -- http://wiki.luajit.org/Numerical-Computing-Performance-Guide
-        if num_queries == 1 then
-            ngx.print(encode(db:query('SELECT * FROM World WHERE id = '..random(1,10000))[1]))
+        if num_queries < 2 then
+            ngx.print(encode({db:query('SELECT * FROM World WHERE id = '..random(1,10000))[1]}))
         else
             local worlds = {}
             num_queries = min(500, num_queries)
