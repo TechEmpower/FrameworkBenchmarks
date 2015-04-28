@@ -8,7 +8,7 @@ local sort = table.sort
 local template = require'resty.template'
 template.caching(false)
 -- Compile template, disable cache, enable plain text view to skip filesystem loading
-local view = template.compile([[<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><tr>{% for _,f in ipairs(fortunes) do %}<tr><td>{{ f.id }}</td><td>{{ f.message }}</td></tr>{% end %}</table></body></html>]], nil, true)
+local view = template.compile([[<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>{% for _,f in ipairs(fortunes) do %}<tr><td>{{ f.id }}</td><td>{{ f.message }}</td></tr>{% end %}</table></body></html>]], nil, true)
 
 local mysqlconn = {
 	host = "DBHOSTNAME",
@@ -50,7 +50,9 @@ return {
         sort(fortunes, function(a, b)
             return a.message < b.message
         end)
-        ngx.print(view{fortunes=fortunes})
+        local res = view{fortunes=fortunes}
+        ngx.header['Content-Length'] = #res
+        ngx.print(res)
         db:set_keepalive(0, 256)
     end
 }
