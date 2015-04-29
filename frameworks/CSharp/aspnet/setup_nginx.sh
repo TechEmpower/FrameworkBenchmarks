@@ -28,5 +28,5 @@ nginx -c $TROOT/nginx.conf -g "worker_processes ${MAX_THREADS};"
 
 # To debug, use --printlog --verbose --loglevels=All
 for port in $(seq $port_start $port_end); do
-  fastcgi-mono-server4 --applications=/:${TROOT}/src --socket=tcp:127.0.0.1:$port &
+  fastcgi-mono-server4 --applications=/:$TROOT/src --socket=tcp:127.0.0.1:$port &
 done
