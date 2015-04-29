@@ -3,12 +3,20 @@
     [yesql.core :refer [defqueries]])
   (:import com.mchange.v2.c3p0.ComboPooledDataSource))
 
-(def db-spec
+#_(def db-spec
   {:classname "com.mysql.jdbc.Driver"
    :subprotocol "mysql"
    :subname "//localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
    :user "benchmarkdbuser"
    :password "benchmarkdbpass"})
+
+(def db-spec
+  {:classname "com.mysql.jdbc.Driver"
+   :subprotocol "mysql"
+   :subname "//localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
+   :user "root"
+   :password "root"
+   })
 
 (defn pool
   [spec]
@@ -54,11 +62,16 @@
   message text, and then return the results."
   (sort-by
    :message
-   (conj (get-all-fortunes) {:id 0 :message "Additional fortune added at request time."})))
+   (conj (get-all-fortunes {} {:connection @db})
+         {:id 0 :message "Additional fortune added at request time."})))
 
 (defn update-and-persist
   "Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
   (for [world (-> queries get-query-count run-queries)]
-    (update-world<! (assoc world :randomNumber (inc (rand-int 9999))) {:connection @db})))
+    (let [updated-world (assoc world :randomNumber (inc (rand-int 9999)))]
+      (update-world<! updated-world {:connection @db})
+      updated-world)))
+
+

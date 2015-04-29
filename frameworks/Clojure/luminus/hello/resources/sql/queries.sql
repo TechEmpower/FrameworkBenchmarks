@@ -16,3 +16,11 @@ WHERE id = :id
 --name: get-all-fortunes
 -- query all fortune records
 SELECT id, message FROM fortune
+
+--name: insert-world<!
+-- create a world record
+INSERT into world
+(id, randomNumber)
+values (:id, :randomNumber)
+
+

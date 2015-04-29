@@ -19,7 +19,7 @@
                  [bouncer "0.3.2"]
                  [prone "0.8.1"]
                  [org.clojure/tools.nrepl "0.2.8"]
-                 [yesql "0.5.0-rc1"]
+                 [yesql "0.5.0-rc2"]
                  [mysql/mysql-connector-java "5.1.6"]
                  [c3p0/c3p0 "0.9.1.2"]
                  [http-kit "2.1.19"]
