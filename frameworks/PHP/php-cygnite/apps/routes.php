@@ -1,5 +1,6 @@
 <?php
 use Cygnite\Foundation\Application;
+use Cygnite\Base\Router\Router;
 
 if (!defined('CF_SYSTEM')) {
     exit('No External script access allowed');
@@ -8,16 +9,33 @@ if (!defined('CF_SYSTEM')) {
 $app = Application::instance();
 
 // Before Router Middle Ware
-$app->router->before('GET', '/{:all}', function ()
+/*$app->router->before('GET', '/{:all}', function ()
 {
    //echo "This site is under maintenance.";exit;
+});*/
+
+$app->router->get('/json', function ()
+{
+    header('Content-type: application/json');
+    echo json_encode(array('message'=>'Hello, World!'));
+});
+
+$app->router->get('/plaintext', function ()
+{
+    header("Content-Type: text/plain;");
+    echo 'Hello, World!';
+});
+
+// Dynamic route: /fortunes
+$app->router->get('/fortunes', function ()
+{
+    Router::call('Bench.fortunes', array());
 });
 
 /*
-// Dynamic route: /hello/cygnite/3222
-$app->router->get('/hello/{:name}/{:digit}', function ($router, $name, $id)
+$app->router->get('/db/{:digit}', function ($router, $id)
 {
-   //Router::call('Home.welcome', array($name, $id));
+    Router::call('Bench.fortunes', array());
 });
 */
 

@@ -10,19 +10,18 @@
             "email": "dey.sanjoy0@gmail.com"
         }
     ],
-	"require": {
-		"cygnite/framework": "1.*"
-	},   
-  "autoload": {
-     "classmap": [
-          "apps/controllers",
-          "apps/models",
-          "apps/components" ,
-		  "apps/extensions" 
-     ]
-   },
-   "config": {
-		"preferred-install": "dist"
-	},
-	"minimum-stability": "stable"
+    "require": {
+        "cygnite/framework": "dev-master"
+    },
+    "autoload": {
+        "classmap": [
+            "apps/controllers",
+            "apps/models",
+            "apps/components" ,
+            "apps/extensions"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
 }

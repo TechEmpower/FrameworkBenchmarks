@@ -3,6 +3,7 @@ namespace Apps\Controllers;
 
 use Cygnite\Mvc\Controller\AbstractBaseController;
 use Apps\Models\Fortune;
+use Apps\Models\World;
 
 class BenchController extends AbstractBaseController
 {
@@ -16,21 +17,22 @@ class BenchController extends AbstractBaseController
         echo 'Hello World!';
     }
 
-    public function plaintextAction()
+    public function dbAction($queries = 1)
     {
-        header("Content-Type: text/plain;");
-        echo 'Hello, World!';
-    }
+        $worlds = array();
+        $world = null;
 
-    public function jsonAction()
-    {
+        for ($i = 0; $i < $queries; ++$i) {
+            $world = World::find(mt_rand(1, 10000));
+            $worlds[] = $world->asArray();
+        }
+
+        if ($queries == 1) {
+            $worlds = $worlds[0];
+        }
+
         header('Content-type: application/json');
-        echo json_encode(array('message'=>'Hello, World!'));
-    }
-
-    public function dbAction()
-    {
-
+        echo json_encode($worlds);
     }
 
     public function fortunesAction()
