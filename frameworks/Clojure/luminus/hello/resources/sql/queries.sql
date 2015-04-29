@@ -17,10 +17,4 @@ WHERE id = :id
 -- query all fortune records
 SELECT id, message FROM fortune
 
---name: insert-world<!
--- create a world record
-INSERT into world
-(id, randomNumber)
-values (:id, :randomNumber)
-
 

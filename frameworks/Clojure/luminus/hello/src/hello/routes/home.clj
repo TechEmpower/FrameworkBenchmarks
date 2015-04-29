@@ -18,7 +18,6 @@
   "Test 3: Multiple database query"
   [queries]
   (-> queries
-      db/get-query-count
       db/run-queries
       response))
 
@@ -31,7 +30,6 @@
   "Test 5: Database updates"
   [queries]
   (-> queries
-      db/get-query-count
       db/update-and-persist
       response))
 

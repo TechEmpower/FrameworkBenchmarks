@@ -1,5 +1,5 @@
 (ns hello.core
-  (:require [hello.handler :refer [app]]
+  (:require [hello.handler :refer [app init]]
             [clojure.tools.cli :refer [cli]]
             [org.httpkit.server :refer [run-server]])
   (:gen-class))
@@ -15,6 +15,7 @@
 (defn start-server [{:keys [port]}]
   (let [cpu (.availableProcessors (Runtime/getRuntime))]
     ;; double worker threads should increase database access performance
+    (init)
     (run-server app {:port port :thread (* 2 cpu)})
     (println (str "http-kit server listens at :" port))))
 
