@@ -45,16 +45,33 @@ echo PHP compilation finished, installing extensions
 $IROOT/php-${VERSION}/bin/pecl channel-update pecl.php.net
 # Apc.so
 $IROOT/php-${VERSION}/bin/pecl config-set php_ini $IROOT/php-${VERSION}/lib/php.ini
-#printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f apc-beta
 printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f redis
 
 # yaf.so
 printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f yaf
 
+# phalcon.so
+#   The configure seems broken, does not respect prefix. If you 
+#   update the value of PATH then it finds the prefix from `which php`
+git clone --depth=1 --branch=phalcon-v1.3.2 --single-branch \
+  --quiet git://github.com/phalcon/cphalcon.git
+cd cphalcon/build/64bits 
+$PHP_HOME/bin/phpize
+# For some reason we have to point to php-config 
+# explicitly, it's not found by the prefix settings
+./configure --prefix=$PHP_HOME --exec-prefix=$PHP_HOME \
+  --with-php-config=$PHP_HOME/bin/php-config \
+  --enable-phalcon --quiet
+make --quiet
+make install
+
+# mongo.so
+printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f mongo
+
 # Clean up a bit
 rm -rf $IROOT/php
 
 echo "export PHP_HOME=${IROOT}/php-5.5.17" > $IROOT/php.installed
-echo "export PATH=${PHP_HOME}/bin:$PHP_HOME/sbin:$PATH" >> $IROOT/php.installed
+echo -e "export PATH=${PHP_HOME}/bin:$PHP_HOME/sbin:\$PATH" >> $IROOT/php.installed
 
 source $IROOT/php.installed
