@@ -17,12 +17,13 @@ then
   # Rubinus cannot find libc during configure unless
   # you specify bash as the shell.
   SHELL="/bin/bash" rvmsudo rvm install rbx-2.2.10
+  # Bundler is SOMETIMES missing... not sure why.
+  SHELL="/bin/bash" rvmsudo rvm rbx-2.2.10 do gem install bundler
 else
   SHELL="/bin/bash" rvm install rbx-2.2.10
+  # Bundler is SOMETIMES missing... not sure why.
+  SHELL="/bin/bash" rvm rbx-2.2.10 do gem install bundler
 fi
-
-# Bundler is SOMETIMES missing... not sure why.
-rvm rbx-2.2.10 do gem install bundler
 
 echo "export LC_ALL=en_US.UTF-8" > $RBX.installed
 echo "export LANG=en_US.UTF-8" >> $RBX.installed

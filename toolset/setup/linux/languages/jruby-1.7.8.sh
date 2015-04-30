@@ -15,12 +15,13 @@ fw_depends rvm
 if [ "$TRAVIS" = "true" ]
 then
   rvmsudo rvm install jruby-1.7.8
+  # Bundler is SOMETIMES missing... not sure why.
+  rvmsudo rvm jruby-1.7.8 do gem install bundler
 else
   rvm install jruby-1.7.8
+  # Bundler is SOMETIMES missing... not sure why.
+  rvm jruby-1.7.8 do gem install bundler
 fi
-
-# Bundler is SOMETIMES missing... not sure why.
-rvm jruby-1.7.8 do gem install bundler
 
 echo "" > $JRUBY.installed
 

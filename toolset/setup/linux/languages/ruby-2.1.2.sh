@@ -15,12 +15,13 @@ fw_depends rvm
 if [ "$TRAVIS" = "true" ]
 then
   rvmsudo rvm install 2.1.2
+  # Bundler is SOMETIMES missing... not sure why.
+  rvmsudo rvm 2.1.2 do gem install bundler
 else
   rvm install 2.1.2
+  # Bundler is SOMETIMES missing... not sure why.
+  rvm 2.1.2 do gem install bundler
 fi
-
-# Bundler is SOMETIMES missing... not sure why.
-rvm 2.1.2 do gem install bundler
 
 echo "" > $RUBY.installed
 
