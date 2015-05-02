@@ -29,12 +29,7 @@ return array(
         array(
             'apps.controllers',
             'apps.models',
-            //'apps.services',
-            //'apps.components.form',
-            'apps.configs.definitions',
-            //'apps.modules',
-            //'apps.extensions',
-
+            'apps.configs.definitions'
         )
     )
 );
