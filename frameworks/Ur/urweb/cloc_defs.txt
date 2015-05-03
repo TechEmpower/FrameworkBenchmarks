@@ -1,0 +1,6 @@
+Ur/Web
+    filter call_regexp_common Pascal
+    extension ur
+    extension urs
+    end_of_line_continuation \\$
+    3rd_gen_scale 3.00

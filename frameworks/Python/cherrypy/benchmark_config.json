@@ -1,0 +1,49 @@
+{
+  "framework": "cherrypy",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "CherryPy",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "CherryPy",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "cherrypy",
+      "notes": "CPython 2.7"
+    },
+     "py3": {
+      "setup_file": "setup_py3",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "CherryPy",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "CherryPy",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "cherrypy-py3",
+      "notes": "CPython 3.4"
+    }
+  }]
+}

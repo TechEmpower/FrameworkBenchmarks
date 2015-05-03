@@ -1,0 +1,51 @@
+{
+  "framework": "pyramid",
+  "tests": [{
+    "default": {
+      "setup_file": "setup_py3",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "pyramid",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "Meinheld",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Pyramid-Py3",
+      "notes": "",
+      "versus": "wsgi"
+    },
+    "py2": {
+      "setup_file": "setup_py2",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "pyramid",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "Meinheld",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Pyramid-Py2",
+      "notes": "",
+      "versus": "wsgi"
+    }
+  }]
+}

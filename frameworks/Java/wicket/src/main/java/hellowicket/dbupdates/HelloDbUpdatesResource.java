@@ -78,15 +78,7 @@ public class HelloDbUpdatesResource extends AbstractResource
             }
           }
 
-          String data;
-          if (queries == 1)
-          {
-              data = HelloDbUpdatesResource.mapper.writeValueAsString(worlds[0]);
-          }
-          else
-          {
-              data = HelloDbUpdatesResource.mapper.writeValueAsString(worlds);
-          }
+          String data = HelloDbUpdatesResource.mapper.writeValueAsString(worlds);
           attributes.getResponse().write(data);
         }
         catch (Exception ex)

@@ -6,12 +6,15 @@
             [taoensso.timbre :as timbre]
             [taoensso.timbre.appenders.rotor :as rotor]))
 
+
 (defroutes app-routes
   (route/resources "/")
   (route/not-found "Not Found"))
 
+
 (defn destroy []
   (timbre/info "picture-gallery is shutting down"))
+
 
 (defn init
   "init will be called once when
@@ -32,6 +35,7 @@
     {:path "{{sanitized}}.log" :max-size (* 512 1024) :backlog 10})
 
   (timbre/info "hello started successfully"))
+
 
 (defn destroy
   "destroy will be called when your application

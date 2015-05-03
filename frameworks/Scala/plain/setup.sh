@@ -1,4 +1,6 @@
 #!/bin/bash
+export SBT_HOME=${IROOT}/sbt
+source $IROOT/java7.installed
 
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' src/main/resources/application.conf
 

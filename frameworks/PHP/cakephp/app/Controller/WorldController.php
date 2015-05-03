@@ -37,8 +37,12 @@ class WorldController extends AppController {
       // Retrieve a model by ID
       // http://book.cakephp.org/2.0/en/models/retrieving-your-data.html#find
       $world = $this->World->find('first', array('conditions' => array('id' => $id)));
+      // Cast numbers to int so they don't get quoted in JSON
+      $result = $world['World'];
+      $result['id'] = (int) $result['id'];
+      $result['randomNumber'] = (int) $result['randomNumber'];
       // Store result in array.
-      $arr[] = array("id" => $world['World']['id'], "randomNumber" => $world['World']['randomNumber']);
+      $arr[] = array("id" => $result['id'], "randomNumber" => $result['randomNumber']);
     }
 
     # Return either one object or a json list

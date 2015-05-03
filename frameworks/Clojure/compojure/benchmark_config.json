@@ -1,0 +1,47 @@
+{
+  "framework": "compojure",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/compojure/json",
+      "db_url": "/compojure/db",
+      "query_url": "/compojure/db/",
+      "update_url": "/compojure/updates/",
+      "fortune_url": "/compojure/fortune-hiccup",
+      "plaintext_url": "/compojure/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "compojure",
+      "language": "Clojure",
+      "orm": "Micro",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "compojure",
+      "notes": "",
+      "versus": "servlet"
+    },
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/compojure/dbraw",
+      "query_url": "/compojure/dbraw/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "compojure",
+      "language": "Clojure",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "compojure-raw",
+      "notes": "",
+      "versus": "servlet"
+    }
+  }]
+}

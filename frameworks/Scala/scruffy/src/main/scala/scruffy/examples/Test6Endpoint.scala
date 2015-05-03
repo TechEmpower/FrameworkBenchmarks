@@ -1,13 +1,12 @@
 package scruffy.examples
 
-import com.sksamuel.scruffy.EndpointProvider
+import com.sksamuel.scruffy.HttpEndpointProvider
 import com.sksamuel.scruffy.http.MediaType
 
 /** @author Stephen Samuel */
-class Test6Endpoint extends EndpointProvider {
+class Test6Endpoint extends HttpEndpointProvider {
 
-  get("plaintext").complete {
-    req => entity("Hello, World!", MediaType.TextPlain)
+  get("plaintext") { req =>
+    ok("Hello, World!", MediaType.TextPlain)
   }
-
 }

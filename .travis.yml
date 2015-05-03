@@ -26,24 +26,27 @@ env:
     - "TESTDIR=CSharp/nancy"
     - "TESTDIR=CSharp/servicestack"
     - "TESTDIR=C++/cpoll_cppsp"
+    - "TESTDIR=C++/silicon"
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ULib"
     - "TESTDIR=C++/wt"
     - "TESTDIR=Clojure/compojure"
     - "TESTDIR=Clojure/http-kit"
     - "TESTDIR=Clojure/luminus"
+    - "TESTDIR=Clojure/pedestal"
     - "TESTDIR=Dart/dart"
     - "TESTDIR=Dart/dart-redstone"
     - "TESTDIR=Dart/dart-start"
     - "TESTDIR=Dart/dart-stream"
-    - "TESTDIR=Elixir/WeberFramework"
+    - "TESTDIR=Elixir/phoenix"
     - "TESTDIR=Erlang/cowboy"
     - "TESTDIR=Erlang/elli"
     - "TESTDIR=Go/beego"
     - "TESTDIR=Go/falcore"
     - "TESTDIR=Go/gin"
     - "TESTDIR=Go/go"
-    - "TESTDIR=Go/gorail"
+    - "TESTDIR=Go/goji"
+    - "TESTDIR=Go/go-mongodb"
     - "TESTDIR=Go/revel"
     - "TESTDIR=Go/revel-jet"
     - "TESTDIR=Go/revel-qbs"
@@ -79,6 +82,7 @@ env:
     - "TESTDIR=Java/wildfly-ee7"
     - "TESTDIR=JavaScript/express"
     - "TESTDIR=JavaScript/hapi"
+    - "TESTDIR=JavaScript/koa"
     - "TESTDIR=JavaScript/nodejs"
     - "TESTDIR=JavaScript/ringojs"
     - "TESTDIR=JavaScript/ringojs-convenient"
@@ -99,6 +103,7 @@ env:
     - "TESTDIR=PHP/fuel"
     - "TESTDIR=PHP/kohana"
     - "TESTDIR=PHP/php-laravel"
+    - "TESTDIR=PHP/limonade"
     - "TESTDIR=PHP/lithium"
     - "TESTDIR=PHP/php-micromvc"
     - "TESTDIR=PHP/php-phalcon"
@@ -117,12 +122,17 @@ env:
     - "TESTDIR=PHP/phreeze"
     - "TESTDIR=Python/API-Hour"
     - "TESTDIR=Python/bottle"
+    - "TESTDIR=Python/cherrypy"
     - "TESTDIR=Python/django"
     - "TESTDIR=Python/falcon"
     - "TESTDIR=Python/flask"
+    - "TESTDIR=Python/klein"
     - "TESTDIR=Python/pyramid"
     - "TESTDIR=Python/tornado"
+    - "TESTDIR=Python/turbogears"
     - "TESTDIR=Python/uwsgi"
+    - "TESTDIR=Python/web2py"
+    - "TESTDIR=Python/wheezyweb"
     - "TESTDIR=Python/wsgi"
     - "TESTDIR=Racket/racket-ws"
     - "TESTDIR=Ruby/grape"
@@ -135,18 +145,19 @@ env:
     - "TESTDIR=Scala/finagle"
     - "TESTDIR=Scala/lift-stateless"
     - "TESTDIR=Scala/plain"
-    - "TESTDIR=Scala/play-activate-mysql"
     - "TESTDIR=Scala/play2-scala"
     - "TESTDIR=Scala/scalatra"
     - "TESTDIR=Scala/scruffy"
     - "TESTDIR=Scala/spray"
+    - "TESTDIR=Scala/spray-es"
     - "TESTDIR=Scala/unfiltered"
+    - "TESTDIR=Scala/http4s"
     - "TESTDIR=Ur/urweb"
 
 before_install:
   # Need to install python modules before using 
   # python
-  - pip install -r config/python_requirements.txt
+  - pip install -r requirements.txt
 
   # Configure Travis-CI build environment for TFB
   #   e.g. setup databases, users, etc
@@ -165,4 +176,3 @@ install:
 script: 
   # Pick one test in this directory and verify
   - time ./toolset/run-ci.py verify "$TESTDIR"
-  
