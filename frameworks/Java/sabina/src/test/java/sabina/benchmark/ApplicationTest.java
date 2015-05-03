@@ -16,7 +16,6 @@ package sabina.benchmark;
 
 import static org.apache.http.client.fluent.Request.Get;
 import static org.testng.AssertJUnit.*;
-import static sabina.benchmark.Application.main;
 import static sabina.Sabina.stop;
 
 import java.io.IOException;
@@ -39,13 +38,13 @@ import org.testng.annotations.Test;
  * <p>TODO Change assert's order
  */
 public final class ApplicationTest {
-    private static final int THREADS = 16, EXECUTIONS = 32, WARM_UP = 32;
+    private static final int THREADS = 16, EXECUTIONS = 75, WARM_UP = 10;
 
     private static final String ENDPOINT = "http://localhost:5050";
     private static final Gson GSON = new Gson ();
 
     @BeforeClass public static void setup () {
-        main (null);
+        Application.main (null);
     }
 
     @BeforeClass public void warm_up () throws IOException {
@@ -59,6 +58,7 @@ public final class ApplicationTest {
             one_thousand_queries ();
             one_query ();
             ten_queries ();
+            one_hundred_queries ();
             five_hundred_queries ();
             fortunes ();
             no_updates_parameter ();
@@ -68,6 +68,7 @@ public final class ApplicationTest {
             one_thousand_updates ();
             one_update ();
             ten_updates ();
+            one_hundred_updates ();
             five_hundred_updates ();
         }
     }
@@ -135,6 +136,11 @@ public final class ApplicationTest {
     }
 
     @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void one_hundred_queries () throws IOException {
+        checkDbRequest ("/query?queries=100", 100);
+    }
+
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void five_hundred_queries () throws IOException {
         checkDbRequest ("/query?queries=500", 500);
     }
@@ -193,6 +199,11 @@ public final class ApplicationTest {
     }
 
     @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void one_hundred_updates () throws IOException {
+        checkDbRequest ("/update?queries=100", 100);
+    }
+
+    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void five_hundred_updates () throws IOException {
         checkDbRequest ("/update?queries=500", 500);
     }
@@ -218,7 +229,7 @@ public final class ApplicationTest {
         assertTrue (res.getFirstHeader ("Server") != null);
         assertTrue (res.getFirstHeader ("Date") != null);
         assertEquals (content.length (), res.getEntity ().getContentLength ());
-        assertEquals (contentType, res.getEntity ().getContentType ().getValue ());
+        assertTrue (res.getEntity ().getContentType ().getValue ().contains (contentType));
     }
 
     private void checkResultItems (String result, int size) {

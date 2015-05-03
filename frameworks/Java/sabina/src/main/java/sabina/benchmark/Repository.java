@@ -14,12 +14,9 @@
 
 package sabina.benchmark;
 
-final class Fortune {
-    final int id;
-    final String message;
+import java.util.List;
 
-    Fortune (final int id, final String message) {
-        this.id = id;
-        this.message = message;
-    }
+interface Repository {
+    List<Fortune> getFortunes ();
+    World[] getWorlds (int queries, boolean update);
 }
