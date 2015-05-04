@@ -31,7 +31,7 @@ Configuration::initialize(
             array(
                 'db' => array(
                     'driver' => 'mysql',
-                    'host' => 'localhost',
+                    'host' => '127.0.0.1',
                     'port' => '',
                     'database' => 'hello_world',
                     'username' => 'benchmarkdbuser',
