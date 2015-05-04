@@ -27,10 +27,9 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
 final class MongoDbRepository implements Repository {
-//    private static final boolean BULK = true; // TODO
     private static final String [] FORTUNES = {
         "fortune: No such file or directory",
-        "A computer scientist is someone who fixes things that aren''t broken.",
+        "A computer scientist is someone who fixes things that aren't broken.",
         "After enough decimal places, nobody gives a damn.",
         "A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1",
         "A computer program does what you tell it to do, not what you want it to do.",
@@ -62,6 +61,7 @@ final class MongoDbRepository implements Repository {
     }
 
     private void loadData () {
+        fortuneCollection.drop ();
         if (fortuneCollection.count () == 0) {
             int id = 0;
             for (String fortune : FORTUNES) {
@@ -71,6 +71,7 @@ final class MongoDbRepository implements Repository {
             }
         }
 
+        worldCollection.drop ();
         if (worldCollection.count () == 0) {
             final Random random = ThreadLocalRandom.current ();
             for (int ii = 1; ii <= DB_ROWS; ii++) {
