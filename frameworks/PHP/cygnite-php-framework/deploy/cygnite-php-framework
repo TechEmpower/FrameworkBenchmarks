@@ -1,6 +1,6 @@
 <VirtualHost *:8080>
-  Alias /php-cygnite/ "/home/ubuntu/FrameworkBenchmarks/php-cygnite/"
-  <Directory /home/ubuntu/FrameworkBenchmarks/php-cygnite>
+  Alias /cygnite-php-framework/ "/home/ubuntu/FrameworkBenchmarks/cygnite-php-framework/"
+  <Directory /home/ubuntu/FrameworkBenchmarks/cygnite-php-framework>
           Options Indexes FollowSymLinks MultiViews
           #AllowOverride None
           Order allow,deny

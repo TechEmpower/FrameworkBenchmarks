@@ -6,7 +6,7 @@ export PHP_FPM=${PHP_HOME}/sbin/php-fpm
 export NGINX_HOME=${IROOT}/nginx
 
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' apps/configs/database.php
-sed -i 's|root .*/FrameworkBenchmarks/php-cygnite|root '"${TROOT}"'|g' deploy/nginx.conf
+sed -i 's|root .*/FrameworkBenchmarks/cygnite-php-framework|root '"${TROOT}"'|g' deploy/nginx.conf
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
 export PATH="${PHP_HOME}/bin:${PHP_HOME}/sbin:$PATH"

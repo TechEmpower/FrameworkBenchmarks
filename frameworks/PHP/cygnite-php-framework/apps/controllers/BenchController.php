@@ -37,6 +37,7 @@ class BenchController extends AbstractBaseController
 
     public function fortunesAction()
     {
+        echo "Fortunes";exit;
         $allFortunes = array();
         $allFortunes = Fortune::all();
         $fortunes = $allFortunes->asArray();
