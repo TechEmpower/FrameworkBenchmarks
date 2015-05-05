@@ -45,5 +45,5 @@
   (GET "/json"            [] json-serialization)
   (GET "/db"              [] (single-query-test))
   (GET "/db/:queries"     [queries] (multiple-query-test queries))
-  (GET "/fortune"         [] (fortunes))
+  (GET "/fortunes"         [] (fortunes))
   (GET "/update/:queries" [queries] (db-update queries)))
