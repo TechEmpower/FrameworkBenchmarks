@@ -126,6 +126,7 @@ env:
     - "TESTDIR=Python/django"
     - "TESTDIR=Python/falcon"
     - "TESTDIR=Python/flask"
+    - "TESTDIR=Python/historical"
     - "TESTDIR=Python/klein"
     - "TESTDIR=Python/pyramid"
     - "TESTDIR=Python/tornado"
