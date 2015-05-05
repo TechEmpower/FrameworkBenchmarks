@@ -62,6 +62,8 @@ RETCODE=$(fw_exists ~/.bash_profile.bak)
 }
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
+sudo sh -c "echo '*            hard    rtprio             99' >> /etc/security/limits.conf"
+sudo sh -c "echo '*            soft    rtprio             99' >> /etc/security/limits.conf"
 
 # Sudo in case we don't have permissions on IROOT
 sudo touch fwbm_prereqs_installed
