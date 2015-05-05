@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # load java environment variables
-source $IROOT/java7.installed
+source $IROOT/java8.installed
 
 cd play2-java-jpa-bonecp
 
