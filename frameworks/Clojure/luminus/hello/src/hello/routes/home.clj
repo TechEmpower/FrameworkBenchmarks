@@ -40,10 +40,10 @@
    :body "Hello, World!"})
 
 (defroutes home-routes
-  (GET "/"                [] "Hello, World!")
-  (GET "/plaintext"       [] plaintext)
-  (GET "/json"            [] json-serialization)
-  (GET "/db"              [] (single-query-test))
-  (GET "/db/:queries"     [queries] (multiple-query-test queries))
+  (GET "/"                 [] "Hello, World!")
+  (GET "/plaintext"        [] plaintext)
+  (GET "/json"             [] json-serialization)
+  (GET "/db"               [] (single-query-test))
+  (GET "/queries/:queries" [queries] (multiple-query-test queries))
   (GET "/fortunes"         [] (fortunes))
-  (GET "/update/:queries" [queries] (db-update queries)))
+  (GET "/updates/:queries"  [queries] (db-update queries)))
