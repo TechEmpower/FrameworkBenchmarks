@@ -64,9 +64,15 @@ final class Application extends MatcherFilter {
     }
 
     private static Object getDb (Request it) {
-        final World[] worlds = REPOSITORY.getWorlds (getQueries (it), false);
-        it.response.type (CONTENT_TYPE_JSON);
-        return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
+        try {
+            final World[] worlds = REPOSITORY.getWorlds (getQueries (it), false);
+            it.response.type (CONTENT_TYPE_JSON);
+            return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
+        }
+        catch (Exception e){
+            e.printStackTrace ();
+            throw e;
+        }
     }
 
     private static Object getFortunes (Request it) {

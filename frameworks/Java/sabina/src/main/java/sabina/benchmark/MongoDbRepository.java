@@ -56,38 +56,14 @@ final class MongoDbRepository implements Repository {
         MongoDatabase db = mongoClient.getDatabase (DATABASE);
         worldCollection = db.getCollection (WORLD);
         fortuneCollection = db.getCollection (FORTUNE);
-
-        loadData ();
-    }
-
-    private void loadData () {
-        fortuneCollection.drop ();
-        if (fortuneCollection.count () == 0) {
-            int id = 0;
-            for (String fortune : FORTUNES) {
-                fortuneCollection.insertOne (
-                    new Document ("_id", ++id).append ("message", fortune)
-                );
-            }
-        }
-
-        worldCollection.drop ();
-        if (worldCollection.count () == 0) {
-            final Random random = ThreadLocalRandom.current ();
-            for (int ii = 1; ii <= DB_ROWS; ii++) {
-                int randomNumber = random.nextInt (DB_ROWS) + 1;
-                worldCollection.insertOne (
-                    new Document ("_id", ii).append ("randomNumber", randomNumber)
-                );
-            }
-        }
     }
 
     @Override public List<Fortune> getFortunes () {
         List<Fortune> fortunes = new ArrayList<> ();
 
         fortuneCollection.find ().forEach ((Block<Document>)doc ->
-            fortunes.add (new Fortune ((Integer)doc.get ("_id"), (String)doc.get ("message")))
+            fortunes.add (new Fortune (doc.get ("_id", Double.class).intValue (), (String)doc.get
+                ("message")))
         );
 
         return fortunes;
@@ -106,16 +82,24 @@ final class MongoDbRepository implements Repository {
     }
 
     private World findWorld (int id) {
-        return createWorld (worldCollection.find(eq ("_id", id)).first ());
+        return createWorld (worldCollection.find(eq ("_id", (double)id)).first ());
     }
 
     private World createWorld (Document world) {
-        return new World ((Integer)world.get ("_id"), (Integer)world.get ("randomNumber"));
+        try {
+            return new World (world.get ("_id", Double.class).intValue (), world.get
+                ("randomNumber", Double.class).intValue ());
+        }
+        catch (ClassCastException e) {
+            return new World (world.get ("_id", Double.class).intValue (), world.get
+                ("randomNumber", Integer.class));
+        }
     }
 
     public World updateWorld (int id, int random) {
-        Document newWorld = new Document ("_id", id).append ("randomNumber", random);
-        worldCollection.replaceOne (eq ("_id", id), newWorld);
+        Document newWorld = new Document ("_id", (double)id).append ("randomNumber", (double)
+            random);
+        worldCollection.replaceOne (eq ("_id", (double)id), newWorld);
 
         return new World (id, random);
     }

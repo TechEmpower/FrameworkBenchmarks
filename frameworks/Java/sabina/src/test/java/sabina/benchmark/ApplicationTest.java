@@ -38,39 +38,13 @@ import org.testng.annotations.Test;
  * <p>TODO Change assert's order
  */
 public final class ApplicationTest {
-    private static final int THREADS = 16, EXECUTIONS = 75, WARM_UP = 10;
+    private static final int THREADS = 1, EXECUTIONS = 1;
 
     private static final String ENDPOINT = "http://localhost:5050";
     private static final Gson GSON = new Gson ();
 
     @BeforeClass public static void setup () {
         Application.main (null);
-    }
-
-    @BeforeClass public void warm_up () throws IOException {
-        for (int ii = 0; ii < WARM_UP; ii++) {
-            json ();
-            plaintext ();
-            no_query_parameter ();
-            empty_query_parameter ();
-            text_query_parameter ();
-            zero_queries ();
-            one_thousand_queries ();
-            one_query ();
-            ten_queries ();
-            one_hundred_queries ();
-            five_hundred_queries ();
-            fortunes ();
-            no_updates_parameter ();
-            empty_updates_parameter ();
-            text_updates_parameter ();
-            zero_updates ();
-            one_thousand_updates ();
-            one_update ();
-            ten_updates ();
-            one_hundred_updates ();
-            five_hundred_updates ();
-        }
     }
 
     @AfterClass public static void close () {
