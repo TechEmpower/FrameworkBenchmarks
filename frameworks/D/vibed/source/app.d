@@ -22,7 +22,7 @@ shared static this()
 	router.get("/queries", &queries);
 	router.get("/generate-world", &generateWorld);
 	router.get("/generate-fortunes", &generateFortunes);
-	router.get("/", &index);
+	router.get("/", staticTemplate!"index.dt");
 
 	auto settings = new HTTPServerSettings;
 	settings.port = 8080;
@@ -99,9 +99,3 @@ void plaintext(HTTPServerRequest req, HTTPServerResponse res)
 {
 	res.writeBody("Hello, World!");
 }
-
-void index(HTTPServerRequest req, HTTPServerResponse res)
-{
-	res.render!("index.dt");
-}
-
