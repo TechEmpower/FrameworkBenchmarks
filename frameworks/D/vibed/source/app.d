@@ -20,9 +20,9 @@ shared static this()
 	router.get("/json", &json);
 	router.get("/db", &db);
 	router.get("/queries", &queries);
-	router.get("/", &index);
 	router.get("/generate-world", &generateWorld);
 	router.get("/generate-fortunes", &generateFortunes);
+	router.get("/", &index);
 
 	auto settings = new HTTPServerSettings;
 	settings.port = 8080;
