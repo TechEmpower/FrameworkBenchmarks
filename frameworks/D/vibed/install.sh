@@ -7,4 +7,5 @@ sudo apt-get install -qq -y libevent-dev libssl-dev
 sudo apt-get install -qq -y g++ gcc-multilib xdg-utils
 wget "http://downloads.dlang.org/releases/2014/dmd_2.066.1-0_amd64.deb"
 sudo dpkg -i dmd_2.066.1-0_amd64.deb
+cd $TESTDIR
 dub build --build-mode=singleFile
