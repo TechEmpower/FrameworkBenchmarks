@@ -36,7 +36,7 @@
 (def plaintext
   "Test 6: Plaintext"
   {:status 200
-   :headers {"Content-Type" "text/plain; charset=utf-8"}
+   :headers {"Content-Type" "text/plain"}
    :body "Hello, World!"})
 
 (defroutes home-routes
