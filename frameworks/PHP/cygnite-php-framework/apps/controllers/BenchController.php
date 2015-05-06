@@ -7,6 +7,8 @@ use Apps\Models\World;
 
 class BenchController extends AbstractBaseController
 {
+    protected $templateEngine = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -24,8 +26,9 @@ class BenchController extends AbstractBaseController
 
         for ($i = 0; $i < $queries; ++$i) {
             $world = World::find(mt_rand(1, 10000));
-            $worlds[] = $world->asArray();
+            $worlds[] = $world->getAttributes();
         }
+
 
         if ($queries == 1) {
             $worlds = $worlds[0];
@@ -37,7 +40,6 @@ class BenchController extends AbstractBaseController
 
     public function fortunesAction()
     {
-        echo "Fortunes";exit;
         $allFortunes = array();
         $allFortunes = Fortune::all();
         $fortunes = $allFortunes->asArray();
@@ -50,18 +52,18 @@ class BenchController extends AbstractBaseController
 
         usort($fortunes, function($left, $right) {
 
-            if ($left->message === $right->message) {
-                return 0;
-            } else if ($left->message > $right->message) {
-                return 1;
-            } else {
-                return -1;
-            }
+                if ($left->message === $right->message) {
+                    return 0;
+                } else if ($left->message > $right->message) {
+                    return 1;
+                } else {
+                    return -1;
+                }
 
-        });
+            });
 
         $this->render('fortunes', array(
                 'fortunes' => $fortunes
-        ));
+            ));
     }
 }
