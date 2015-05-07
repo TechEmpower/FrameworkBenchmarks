@@ -12,7 +12,7 @@
       "framework": "aleph",
       "language": "Clojure",
       "orm": "Raw",
-      "platform": "aleph",
+      "platform": "Netty",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
