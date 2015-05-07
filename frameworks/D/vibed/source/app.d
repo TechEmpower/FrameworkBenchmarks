@@ -1,3 +1,4 @@
+import vibe.appmain;
 import vibe.d;
 import std.random;
 
