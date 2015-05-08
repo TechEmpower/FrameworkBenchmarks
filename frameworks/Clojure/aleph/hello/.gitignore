@@ -5,6 +5,7 @@
 pom.xml
 *.jar
 *.class
-/.lein-*
-/.env
-*.log
+.lein-deps-sum
+.lein-failures
+.lein-plugins
+.lein-env

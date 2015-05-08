@@ -1,0 +1,27 @@
+{
+  "framework": "historical",
+  "tests": [{
+    "webware": {
+      "setup_file": "webware/setup",
+      "json_url": "/json2",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "fortune_url": "/fortune",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "Webware",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "Apache",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Webware",
+      "notes": "CPython 2.7"
+    }
+  }]
+}

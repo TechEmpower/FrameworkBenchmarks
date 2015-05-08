@@ -1,28 +1,24 @@
 {
-  "framework": "luminus",
+  "framework": "aleph",
   "tests": [{
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/queries/",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates/",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
-      "database": "MySQL",
-      "framework": "luminus",
+      "database": "None",
+      "framework": "aleph",
       "language": "Clojure",
       "orm": "Raw",
-      "platform": "http-kit",
+      "platform": "Netty",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "luminus",
+      "display_name": "aleph",
       "notes": "",
-      "versus": ""
+      "versus": "netty"
     }
   }]
 }
