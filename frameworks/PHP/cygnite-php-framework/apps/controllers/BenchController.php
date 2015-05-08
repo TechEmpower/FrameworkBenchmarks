@@ -21,14 +21,22 @@ class BenchController extends AbstractBaseController
 
     public function dbAction($queries = 1)
     {
-        $worlds = array();
+        $worlds = $arr = array();
         $world = null;
+        $queries = intval($queries);
+
+        if ($queries < 1) {
+            $queries = 1;
+        } elseif ($queries > 500) {
+            $queries = 500;
+        }
 
         for ($i = 0; $i < $queries; ++$i) {
             $world = World::find(mt_rand(1, 10000));
-            $worlds[] = $world->getAttributes();
+            $arr['id'] = (int) $world->id;
+            $arr['randomNumber'] = (int) $world->randomnumber;
+            $worlds[] = $arr;
         }
-
 
         if ($queries == 1) {
             $worlds = $worlds[0];
@@ -40,9 +48,9 @@ class BenchController extends AbstractBaseController
 
     public function fortunesAction()
     {
-        $allFortunes = array();
-        $allFortunes = Fortune::all();
-        $fortunes = $allFortunes->asArray();
+        $fortuneCollection = array();
+        $fortuneCollection = Fortune::all();
+        $fortunes = $fortuneCollection->asArray();
 
         $runtimeFortune = new Fortune();
         $runtimeFortune->id = 0;
@@ -52,18 +60,18 @@ class BenchController extends AbstractBaseController
 
         usort($fortunes, function($left, $right) {
 
-                if ($left->message === $right->message) {
-                    return 0;
-                } else if ($left->message > $right->message) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+            if ($left->message === $right->message) {
+                return 0;
+            } else if ($left->message > $right->message) {
+                return 1;
+            } else {
+                return -1;
+            }
 
-            });
+        });
 
         $this->render('fortunes', array(
                 'fortunes' => $fortunes
-            ));
+        ));
     }
 }

@@ -10,7 +10,8 @@
     <?php foreach ($fortunes as $key => $fortune) { ?>
     <tr>
         <td><?php echo $fortune->id; ?></td>
-        <td><?php echo $fortune->message; ?></td>
+        <td><?php echo htmlentities($fortune->message, ENT_QUOTES, 'UTF-8', false); ?></td>
+
     </tr>
     <?php } ?>
 

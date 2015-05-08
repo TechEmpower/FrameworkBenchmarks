@@ -27,17 +27,10 @@ $app->router->get('/plaintext', function ()
 });
 
 // Dynamic route: /fortunes
-$app->router->get('/fortunes', function ()
+/*$app->router->get('/fortunes', function ()
 {
     Router::call('Bench.fortunes', array());
-});
-
-/*
-$app->router->get('/db/{:digit}', function ($router, $id)
-{
-    Router::call('Bench.fortunes', array());
-});
-*/
+});*/
 
 /*
 GET       - resource/           user.getIndex
