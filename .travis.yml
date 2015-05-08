@@ -34,6 +34,7 @@ env:
     - "TESTDIR=Clojure/http-kit"
     - "TESTDIR=Clojure/luminus"
     - "TESTDIR=Clojure/pedestal"
+    - "TESTDIR=Clojure/aleph"
     - "TESTDIR=Dart/dart"
     - "TESTDIR=Dart/dart-redstone"
     - "TESTDIR=Dart/dart-start"
