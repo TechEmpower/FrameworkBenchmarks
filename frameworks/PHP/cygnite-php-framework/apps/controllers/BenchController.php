@@ -24,7 +24,13 @@ class BenchController extends AbstractBaseController
         $worlds = $arr = array();
         $world = null;
 
-        if ($queries < 1 || is_null($queries)) {
+        $flag = false;
+        if (is_null($queries)) {
+            $queries = 1;
+            $flag = true;
+        }
+        $queries = intval($queries);
+        if ($queries < 1) {
             $queries = 1;
         } elseif ($queries > 500) {
             $queries = 500;
@@ -35,6 +41,10 @@ class BenchController extends AbstractBaseController
             $arr['id'] = (int) $world->id;
             $arr['randomNumber'] = (int) $world->randomnumber;
             $worlds[] = $arr;
+        }
+
+        if ($flag) {
+            $worlds = $worlds[0];
         }
 
         header('Content-type: application/json');
