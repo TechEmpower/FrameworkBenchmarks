@@ -38,10 +38,6 @@ class BenchController extends AbstractBaseController
             $worlds[] = $arr;
         }
 
-        if ($queries == 1) {
-            $worlds = $worlds[0];
-        }
-
         header('Content-type: application/json');
         echo json_encode($worlds);
     }
