@@ -19,11 +19,11 @@ class BenchController extends AbstractBaseController
         echo 'Hello World!';
     }
 
-    public function dbAction($queries = 1)
+    public function dbAction()
     {
         $worlds = $arr = array();
         $world = null;
-        $queries = intval($queries);
+        $queries = (!is_null(Url::segment('3'))) ? intval(Url::segment('3')) : intval(1);
 
         if ($queries < 1) {
             $queries = 1;
