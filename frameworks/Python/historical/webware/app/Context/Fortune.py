@@ -1,14 +1,23 @@
+import json
+import bleach
+from random import randint
+from operator import attrgetter
+
+from WebKit.Page import Page
 from DbSession import Database
-from sqlalchemy import Column
-from sqlalchemy.types import Integer, String
+from Fortune import Fortune
 
-class Fortune(Database.Base):
-    __tablename__ = "Fortune"
-    id = Column(Integer, primary_key=True)
-    message = Column(String)
-
-    def serialize(self):
-        return {
-            'id': self.id,
-            'randomNumber': self.randomNumber,
-        }
+class fortune(Page):
+	def writeHTML(self):
+		output = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
+		self.response().clearHeaders()
+		self.response()._headers["Content-Type"] = "text/html; charset=UTF-8"
+		fortunes = Database.DbSession.query(Fortune).all()
+		fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
+		fortunes.sort(key=attrgetter("message"))
+		for fortune in fortunes:
+			message = bleach.clean(fortune.message)
+			output += "<tr><td>%s</td><td>%s</td></tr>" % (fortune.id , message.encode("utf-8"))
+		output += "</table></body></html>"
+		self.response()._headers["Content-Length"] = len(output)
+		self.writeln(output)
