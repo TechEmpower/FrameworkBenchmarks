@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java7 sbt
+fw_depends java8 sbt
 
 cd play2-java-ebean-bonecp
 

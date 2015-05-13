@@ -1,2 +1,2 @@
-./vertx/App.groovy
+./vertx/app.js
 ./vertx/WebServer.java

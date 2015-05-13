@@ -1,0 +1,27 @@
+{
+    "name": "cygnite/cygnite-application",
+    "description": "Cygnite PHP Framework- Skeleton Application",
+    "keywords": ["Cygnite", "Framework"],
+    "homepage": "http://www.cygniteframework.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sanjoy Dey",
+            "email": "dey.sanjoy0@gmail.com"
+        }
+    ],
+    "require": {
+        "cygnite/framework": "dev-master"
+    },
+    "autoload": {
+        "classmap": [
+            "apps/controllers",
+            "apps/models",
+            "apps/components" ,
+            "apps/extensions"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
+}

@@ -8,8 +8,34 @@
       "fortune_url": "/fortune",
       "update_url": "/update?queries=",
       "plaintext_url": "/plaintext",
+
       "port": 5050,
-      "setup_file": "setup",
+      "setup_file": "undertow-mongodb",
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MongoDB",
+      "framework": "Sabina",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Sabina Undertow MongoDB",
+      "notes": "",
+      "versus": "servlet"
+    }
+  }, {
+    "undertow-mysql": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/query?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
+      "plaintext_url": "/plaintext",
+
+      "port": 5050,
+      "setup_file": "undertow",
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
@@ -20,7 +46,57 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Sabina",
+      "display_name": "Sabina Undertow MySQL",
+      "notes": "",
+      "versus": "servlet"
+    }
+  }, {
+    "jetty-mysql": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/query?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
+      "plaintext_url": "/plaintext",
+
+      "port": 5050,
+      "setup_file": "jetty",
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "Sabina",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Sabina Jetty MySQL",
+      "notes": "",
+      "versus": "servlet"
+    }
+  }, {
+    "jetty-mongodb": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/query?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
+      "plaintext_url": "/plaintext",
+
+      "port": 5050,
+      "setup_file": "jetty-mongodb",
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MongoDB",
+      "framework": "Sabina",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Sabina Jetty MongoDB",
       "notes": "",
       "versus": "servlet"
     }
