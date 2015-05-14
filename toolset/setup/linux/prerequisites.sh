@@ -45,7 +45,8 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libsasl2-dev                      `# Needed by mgo for go-mongodb test` \
   llvm-dev                          `# Required for correct Ruby installation` \
   libboost-dev                      `# Silicon relies on boost::lexical_cast.` \
-  postgresql-server-dev-9.3         `# Needed by cpoll.`
+  postgresql-server-dev-9.3         `# Needed by cpoll.`\
+  xdg-utils                         `# Needed by dlang.`
 
 # Install gcc-4.8 and gcc-4.9
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
