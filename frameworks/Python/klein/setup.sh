@@ -1,6 +1,5 @@
 #!/bin/bash
 
-export PY2_ROOT=$IROOT/py2
-export PY2=$PY2_ROOT/bin/python
+fw_depends python2
 
-$PY2 app.py &
+$PY2_ROOT/bin/python app.py &
