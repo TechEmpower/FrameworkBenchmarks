@@ -2,6 +2,8 @@
 
 fw_depends python2 apache
 
+$PY2_ROOT/bin/pip install --install-option="--prefix=${PY2_ROOT}" -r $TROOT/requirements.txt
+
 cd webware 
 rm -fr Webware Webware-1.1.1 Webware-1.1.1.tar.gz
 
@@ -10,6 +12,6 @@ tar -xf Webware-1.1.1.tar.gz
 cp -r app/ Webware-1.1.1/
 
 cd $TROOT/webware/Webware-1.1.1
-$PY2 install.py --no-password-prompt 
+python install.py --no-password-prompt 
 cd $TROOT/webware/Webware-1.1.1/app
-$PY2 Launch.py &
+python Launch.py &
