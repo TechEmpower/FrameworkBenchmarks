@@ -2,7 +2,7 @@
 
 fw_depends python2 apache
 
-$PY2_ROOT/bin/pip install --install-option="--prefix=${PY2_ROOT}" -r $TROOT/requirements.txt
+$PY2_ROOT/bin/pip install --install-option="--prefix=${PY2_ROOT}" -r $TROOT/webware/requirements.txt
 
 cd webware 
 rm -fr Webware Webware-1.1.1 Webware-1.1.1.tar.gz
