@@ -2,7 +2,7 @@
 
 # load java environment variables
 source $IROOT/java8.installed
-export JAVA_HOME=/opt/java8
+export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
 mvn clean compile assembly:single
 
