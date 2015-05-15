@@ -5,20 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.techempower</groupId>
-    <artifactId>jetty-servlet-example</artifactId>
-    <version>0.2</version>
+    <artifactId>jetty-example</artifactId>
+    <version>0.1</version>
 
     <dependencies>
         <!-- Web server -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>9.2.10.v20150310</version>
+            <artifactId>jetty-server</artifactId>
+            <version>9.3.0.RC0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util-ajax</artifactId>
-            <version>9.2.10.v20150310</version>
+            <version>9.3.0.RC0</version>
         </dependency>
     </dependencies>
 
@@ -30,8 +30,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <optimize>true</optimize>
                     <debug>false</debug>
                 </configuration>

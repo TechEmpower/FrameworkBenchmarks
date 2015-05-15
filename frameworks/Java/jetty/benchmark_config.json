@@ -1,5 +1,5 @@
 {
-  "framework": "jetty-servlet",
+  "framework": "jetty",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -16,8 +16,8 @@
       "webserver": "Jetty",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "jetty-servlet",
-      "notes": "Jetty 9.2 with ServletContext",
+      "display_name": "jetty",
+      "notes": "Jetty 9.3 with Handler",
       "versus": ""
     }
   }]
