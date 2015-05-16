@@ -11,6 +11,7 @@ import com.typesafe.akka.http.benchmark.util.RandomGenerator
 import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 
 import scala.concurrent.Future
+import scala.util.control.Exception._
 import scala.util.{Failure, Success}
 
 class UpdatesHandler(components: {
@@ -26,7 +27,7 @@ class UpdatesHandler(components: {
 
   def endpoint = get {
     path("updates") {
-      parameter('queries.as[Int]) { queries => onComplete(response(queries)) {
+      parameter('queries.?) { queries => onComplete(response(queries)) {
         case Success(worlds) => complete(worlds)
         case Failure(t) => failWith(t)
       }
@@ -34,10 +35,14 @@ class UpdatesHandler(components: {
     }
   }
 
+  val catcher = catching(classOf[NumberFormatException]).withApply(t => 1)
 
-  def response(queries: Int): Future[HttpResponse] = {
+  def response(queries: Option[String]): Future[HttpResponse] = {
+    val range = queries.map(i => catcher {
+      i.toInt
+    }).getOrElse(1).min(500).max(1)
     Future.sequence {
-      (0 until queries.min(500).max(1)).toList.map {
+      (0 until range).toList.map {
         _ => randomGenerator.next
       }.map {
         id => dataStore.findOne(id)
@@ -47,7 +52,7 @@ class UpdatesHandler(components: {
     }.flatMap {
       worlds => Future.sequence(worlds.map(world => dataStore.updateOne(world.id, world.randomNumber).map(_ => world)))
     }.map {
-      worlds => new HttpResponse(StatusCodes.OK, entity = HttpEntity(worlds.map(_.toResponse).toJson.toString()).withContentType(`application/json`.withCharset(`UTF-8`)))
+      worlds => new HttpResponse(StatusCodes.OK, entity = HttpEntity(worlds.map(_.toResponse).toJson.toString()).withContentType(`application/json`..withCharset(`UTF-8`)))
     }
   }
 }

@@ -13,6 +13,7 @@ import com.typesafe.akka.http.benchmark.util.RandomGenerator
 import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 
 import scala.concurrent.Future
+import scala.util.control.Exception._
 import scala.util.{Failure, Success}
 
 class QueriesHandler(components: {
@@ -31,7 +32,7 @@ class QueriesHandler(components: {
 
   def endpoint = get {
     path("queries") {
-      parameter('queries.as[Int]) { queries => onComplete(response(queries)) {
+      parameter('queries.?) { queries => onComplete(response(queries)) {
         case Success(worlds) => complete(worlds)
         case Failure(t) => failWith(t)
       }
@@ -39,10 +40,15 @@ class QueriesHandler(components: {
     }
   }
 
-  def response(queries: Int): Future[HttpResponse] = {
+  val catcher = catching(classOf[NumberFormatException]).withApply(t => 1)
 
+  def response(queries: Option[String]): Future[HttpResponse] = {
+
+    val range = queries.map(i => catcher {
+      i.toInt
+    }).getOrElse(1).min(500).max(1)
     Future.sequence {
-      (0 until queries.min(500).max(1)).map {
+      (0 until range).map {
         _ => randomGenerator.next
       }.map {
         id => dataStore.findOne(id)
