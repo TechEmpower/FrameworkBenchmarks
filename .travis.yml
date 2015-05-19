@@ -145,6 +145,7 @@ env:
     - "TESTDIR=Ruby/rails"
     - "TESTDIR=Ruby/rails-stripped"
     - "TESTDIR=Ruby/sinatra"
+    - "TESTDIR=Scala/akka-http"
     - "TESTDIR=Scala/colossus"
     - "TESTDIR=Scala/finagle"
     - "TESTDIR=Scala/lift-stateless"
@@ -156,7 +157,6 @@ env:
     - "TESTDIR=Scala/spray-es"
     - "TESTDIR=Scala/unfiltered"
     - "TESTDIR=Scala/http4s"
-    - "TESTDIR=Scala/akka-http"
     - "TESTDIR=Ur/urweb"
 
 before_install:
