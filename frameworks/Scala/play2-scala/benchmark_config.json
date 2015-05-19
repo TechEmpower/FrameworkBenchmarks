@@ -18,7 +18,8 @@
         "notes": "", 
         "versus": "netty", 
         "port": "9000", 
-        "json_url": "/json"
+        "json_url": "/json",
+        "plaintext_url": "/plaintext"
       }, 
       "activate": {
         "display_name": "play2-scala-activate", 

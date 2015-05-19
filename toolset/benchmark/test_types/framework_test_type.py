@@ -77,9 +77,8 @@ class FrameworkTestType:
   def _curl_body(self, url):
     '''Downloads a URL and returns the HTTP body'''
     # Use -m 15 to make curl stop trying after 15sec.
-    # Use -i to output response with headers
     # Don't use -f so that the HTTP response code is ignored.
-    # Use -sS to hide progress bar, but show errors.
+    # Use -s to hide progress bar
     # Get response body
     p = subprocess.Popen(["curl", "-m", "15", "-s", url], stdout=PIPE, stderr=PIPE)
     (out, err) = p.communicate()

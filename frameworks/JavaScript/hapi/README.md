@@ -12,8 +12,8 @@ This is the Hapi portion of a [benchmarking test suite](../) comparing a variety
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v0.10.0](http://nodejs.org/)
-* [Hapi 1.2.0](http://spumko.github.io/)
+* [Node.js v0.12.2](http://nodejs.org/)
+* [Hapi 8.4.0](http://hapijs.com/)
 
 ## Resources
 * http://nodejs.org/api/cluster.html
