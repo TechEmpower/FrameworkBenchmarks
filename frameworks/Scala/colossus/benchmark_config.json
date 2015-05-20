@@ -1,0 +1,23 @@
+{
+  "framework": "colossus",
+  "tests": [{
+    "default": {
+      "orm": "Raw",
+      "database_os": "Linux",
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 9007,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "colossus",
+      "language": "Scala",
+      "platform": "Akka",
+      "webserver": "None",
+      "os": "Linux",
+      "display_name": "colossus",
+      "notes": ""
+    }
+  }]
+}

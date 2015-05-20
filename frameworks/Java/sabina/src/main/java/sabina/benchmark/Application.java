@@ -20,39 +20,29 @@ import static sabina.Sabina.*;
 import static sabina.content.JsonContent.toJson;
 import static sabina.view.MustacheView.renderMustache;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import sabina.Request;
+import sabina.server.MatcherFilter;
 
-import java.sql.*;
 import java.util.*;
 import java.util.Date;
-import java.util.concurrent.ThreadLocalRandom;
-
-import javax.sql.DataSource;
+import javax.servlet.FilterConfig;
+import javax.servlet.annotation.WebFilter;
 
 /**
  * .
  */
-final class Application {
-    private static final String SETTINGS_RESOURCE = "/server.properties";
-    private static final Properties SETTINGS = loadConfiguration ();
-
-    private static final String JDBC_URL = SETTINGS.getProperty ("mysql.uri")
-        .replace ("${db.host}", "localhost"); // TODO Move this to Gradle build
-    private static final DataSource DATA_SOURCE = createSessionFactory ();
-    private static final int DB_ROWS = 10000;
-
-    private static final boolean AUTOCOMMIT = getProperty ("sabina.benchmark.autocommit") != null;
-    private static final String SELECT_WORLD = "select * from world where id = ?";
-    private static final String UPDATE_WORLD = "update world set randomNumber = ? where id = ?";
-    private static final String SELECT_FORTUNES = "select * from fortune";
+@WebFilter ("/*")
+final class Application extends MatcherFilter {
+    static final String SETTINGS_RESOURCE = "/server.properties";
+    static final Repository REPOSITORY = loadRepository ();
+    static final int DB_ROWS = 10000;
 
     private static final String MESSAGE = "Hello, World!";
     private static final String CONTENT_TYPE_TEXT = "text/plain";
     private static final String CONTENT_TYPE_JSON = "application/json";
     private static final String QUERIES_PARAM = "queries";
 
-    private static Properties loadConfiguration () {
+    static Properties loadConfiguration () {
         try {
             Properties settings = new Properties ();
             settings.load (Class.class.getResourceAsStream (SETTINGS_RESOURCE));
@@ -63,19 +53,41 @@ final class Application {
         }
     }
 
-    private static DataSource createSessionFactory () {
+    static Repository loadRepository () {
+        switch (getProperty ("sabina.benchmark.repository", "mysql")) {
+            case "mongodb":
+                return new MongoDbRepository (loadConfiguration ());
+            case "mysql":
+            default:
+                return new MySqlRepository (loadConfiguration ());
+        }
+    }
+
+    private static Object getDb (Request it) {
         try {
-            ComboPooledDataSource dataSource = new ComboPooledDataSource ();
-            dataSource.setMinPoolSize (32);
-            dataSource.setMaxPoolSize (256);
-            dataSource.setCheckoutTimeout (1800);
-            dataSource.setMaxStatements (50);
-            dataSource.setJdbcUrl (JDBC_URL);
-            return dataSource;
+            final World[] worlds = REPOSITORY.getWorlds (getQueries (it), false);
+            it.response.type (CONTENT_TYPE_JSON);
+            return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
         }
-        catch (Exception ex) {
-            throw new RuntimeException (ex);
+        catch (Exception e){
+            e.printStackTrace ();
+            throw e;
         }
+    }
+
+    private static Object getFortunes (Request it) {
+        List<Fortune> fortunes = REPOSITORY.getFortunes ();
+        fortunes.add (new Fortune (0, "Additional fortune added at request time."));
+        fortunes.sort ((a, b) -> a.message.compareTo (b.message));
+
+        it.response.type ("text/html; charset=utf-8");
+        return renderMustache ("/fortunes.mustache", fortunes);
+    }
+
+    private static Object getUpdates (Request it) {
+        World[] worlds = REPOSITORY.getWorlds (getQueries (it), true);
+        it.response.type (CONTENT_TYPE_JSON);
+        return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
     }
 
     private static int getQueries (final Request request) {
@@ -97,118 +109,22 @@ final class Application {
         }
     }
 
-    private static Object getJson (Request it) {
-        it.response.type (CONTENT_TYPE_JSON);
-        return toJson (new Message ());
-    }
-
-    private static Object getDb (Request it) {
-        final int queries = getQueries (it);
-        final World[] worlds = new World[queries];
-
-        try (final Connection con = DATA_SOURCE.getConnection ()) {
-            final Random random = ThreadLocalRandom.current ();
-            final PreparedStatement stmt = con.prepareStatement (SELECT_WORLD);
-
-            for (int ii = 0; ii < queries; ii++) {
-                stmt.setInt (1, random.nextInt (DB_ROWS) + 1);
-                final ResultSet rs = stmt.executeQuery ();
-                while (rs.next ())
-                    worlds[ii] = new World (rs.getInt (1), rs.getInt (2));
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace ();
-        }
-
-        it.response.type (CONTENT_TYPE_JSON);
-        return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
-    }
-
-    private static Object getFortunes (Request it) {
-        final List<Fortune> fortunes = new ArrayList<> ();
-
-        try (final Connection con = DATA_SOURCE.getConnection ()) {
-            final ResultSet rs = con.prepareStatement (SELECT_FORTUNES).executeQuery ();
-            while (rs.next ())
-                fortunes.add (new Fortune (rs.getInt (1), rs.getString (2)));
-        }
-        catch (SQLException e) {
-            e.printStackTrace ();
-        }
-
-        fortunes.add (new Fortune (0, "Additional fortune added at request time."));
-        fortunes.sort ((a, b) -> a.message.compareTo (b.message));
-
-        it.response.type ("text/html; charset=utf-8");
-        return renderMustache ("/fortunes.mustache", fortunes);
-    }
-
-    private static Object getUpdates (Request it) {
-        final int queries = getQueries (it);
-        final World[] worlds = new World[queries];
-
-        try (final Connection con = DATA_SOURCE.getConnection ()) {
-            con.setAutoCommit (AUTOCOMMIT);
-
-            final Random random = ThreadLocalRandom.current ();
-            final PreparedStatement stmtSelect = con.prepareStatement (SELECT_WORLD);
-            final PreparedStatement stmtUpdate = con.prepareStatement (UPDATE_WORLD);
-
-            for (int ii = 0; ii < queries; ii++) {
-                stmtSelect.setInt (1, random.nextInt (DB_ROWS) + 1);
-                final ResultSet rs = stmtSelect.executeQuery ();
-                while (rs.next ()) {
-                    worlds[ii] = new World (rs.getInt (1), rs.getInt (2));
-                    stmtUpdate.setInt (1, random.nextInt (DB_ROWS) + 1);
-                    stmtUpdate.setInt (2, worlds[ii].id);
-
-                    if (AUTOCOMMIT) {
-                        stmtUpdate.executeUpdate ();
-                    }
-                    else {
-                        stmtUpdate.addBatch ();
-                    }
-                }
-            }
-
-            if (!AUTOCOMMIT) {
-                int count = 0;
-                boolean retrying;
-
-                do {
-                    try {
-                        stmtUpdate.executeBatch ();
-                        retrying = false;
-                    }
-                    catch (BatchUpdateException e) {
-                        retrying = true;
-                    }
-                }
-                while (count++ < 10 && retrying);
-
-                con.commit ();
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace ();
-        }
-
-        it.response.type (CONTENT_TYPE_JSON);
-        return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
-    }
-
     private static Object getPlaintext (Request it) {
         it.response.type (CONTENT_TYPE_TEXT);
         return MESSAGE;
     }
 
-    private static void addCommonHeaders (Request it) {
-        it.header ("Server", "Undertow/1.1.2");
-        it.response.raw ().addDateHeader ("Date", new Date ().getTime ());
+    private static Object getJson (Request it) {
+        it.response.type (CONTENT_TYPE_JSON);
+        return toJson (new Message ());
     }
 
-    public static void main (String[] args) {
+    private static void addCommonHeaders (Request it) {
+        it.header ("Server", "Undertow/1.1.2");
+        it.response.addDateHeader ("Date", new Date ().getTime ());
+    }
+
+    private static void routes () {
         get ("/json", Application::getJson);
         get ("/db", Application::getDb);
         get ("/query", Application::getDb);
@@ -216,9 +132,18 @@ final class Application {
         get ("/update", Application::getUpdates);
         get ("/plaintext", Application::getPlaintext);
         after (Application::addCommonHeaders);
+    }
 
-        host (SETTINGS.getProperty ("web.host"));
-        port (SETTINGS.getProperty ("web.port"));
+    public static void main (String[] args) {
+        routes ();
+
+        Properties settings = loadConfiguration ();
+        host (settings.getProperty ("web.host"));
+        port (settings.getProperty ("web.port"));
         start ();
+    }
+
+    @Override protected void routes (FilterConfig filterConfig) {
+        routes ();
     }
 }
