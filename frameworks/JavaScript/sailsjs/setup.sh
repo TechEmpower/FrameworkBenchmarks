@@ -1,5 +1,3 @@
-## put sed here later
-
 export NVM_HOME=${IROOT}/nvm
 
 # Used to avoid nvm's return 2 error.
@@ -10,8 +8,11 @@ nvm use 0.12.2
 
 # update npm before app init
 npm install -g npm
+
+# let us run sails directly
 npm install -g sails
 
-# run app
+# reset cache & run app
+npm cache clean
 npm install
 sails lift --port 8080 &

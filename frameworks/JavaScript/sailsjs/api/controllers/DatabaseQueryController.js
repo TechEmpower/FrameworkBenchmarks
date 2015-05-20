@@ -28,7 +28,7 @@ var World = sequelize.define('World', {
   // prevents sequelize from assuming the table is called 'Worlds'
   freezeTableName: true,
   timestamps: false
-})
+});
 
 
 var Fortune = sequelize.define('Fortune', {
@@ -36,10 +36,10 @@ var Fortune = sequelize.define('Fortune', {
   message: Sequelize.STRING
 },
 {
-  // prevents sequelize from assuming the table is called 'Worlds'
+  // prevents sequelize from assuming the table is called 'Fortunes'
   freezeTableName: true,
   timestamps: false
-})
+});
 
 
 var randomTFBnumber = function() {
@@ -49,21 +49,38 @@ var randomTFBnumber = function() {
 
 var worldQuery = function(callback) {
   World.findOne({
-    where: { id: randomTFBnumber() }
-  }).complete(callback);
+    where: { id: randomTFBnumber()}
+  }).then(function (result) {
+    if (result) {
+      callback(null, result.get())
+    } else {
+      callback("Error in World query")
+    }
+  });
+}
+
+// arr is single-element array containing number of updated rows
+// [ 1 ] or [ 0 ]
+var oneOrMoreUpdates = function (arr) {
+  return arr[0] > 0;
 }
 
 
 var worldUpdate = function(world, callback) {
   World.update({
-      randomNumber: world.randomNumber
-    },
-    {
-      where: {
-        id: world.id
-      }
+    randomNumber: world.randomNumber
+  },
+  {
+    where: {
+      id: world.id
     }
-  ).complete(callback);
+  }).then(function (changed) {
+    if (oneOrMoreUpdates(changed)) {
+      callback(null, world);
+    } else {
+      callback("Error in World update");
+    }
+  });
 }
 
 
@@ -72,10 +89,10 @@ module.exports = {
   /**
    * Test 2: Single Database Query
    */
-  single: function (req, res) {
+  single: function(req, res) {
     World.findOne({
       where: { id: randomTFBnumber() }
-    }).then(function(results) {
+    }).then(function (results) {
       return res.json(results.get());
     })
   },
@@ -84,7 +101,7 @@ module.exports = {
   /**
    * Test 3: Multiple Database Query
    */
-  multiple: function (req, res) {
+  multiple: function(req, res) {
     var queries = req.param('queries');
     var toRun = [];
 
@@ -94,7 +111,7 @@ module.exports = {
       toRun.push(worldQuery);
     }
 
-    async.parallel(toRun, function(err, results) {
+    async.parallel(toRun, function (err, results) {
       if (!err) {
         res.json(results);
       } else {
@@ -137,9 +154,9 @@ module.exports = {
       });
     }
 
-    async.map(worlds, worldUpdate, function(err, results) {
+    async.map(worlds, worldUpdate, function (err, results) {
       if (!err) {
-        res.json(worlds);
+        res.json(results);
       } else {
         res.badRequest('Unexpected failure to update records.');
       }
