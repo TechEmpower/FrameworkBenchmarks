@@ -1,14 +1,16 @@
 #!/bin/bash
-set -ex
-
-RETCODE=$(fw_exists ${IROOT}/crystal.installed)
+REDCODE=$(fw_exists ${IROOT}/crystal.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
-sudo apt-key adv --keyserver keys.gnupg.net --recv-keys 09617FD37CC06B54
-echo "deb http://dist.crystal-lang.org/apt crystal main" | sudo tee /etc/apt/sources.list.d/crystal.list
+SAVE_AS=crystal-0.7.1-1-linux-x86_64.tar.gz
+URL=https://github.com/manastech/crystal/releases/download/0.7.1/crystal-0.7.1-1-linux-x86_64.tar.gz
 
-sudo apt-get update
+# Default filename is too long an causes problems
+# Use -O to specify
+fw_get -O $SAVE_AS $URL
 
-sudo apt-get install -y crystal
+fw_untar crystal-0.7.1-1-linux-x86_64.tar.gz
+
+ln -s ${IROOT}/crystal-0.7.1-1/bin/crystal ${IROOT}/crystal
 
 touch ${IROOT}/crystal.installed
