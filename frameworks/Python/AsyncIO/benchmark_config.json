@@ -2,7 +2,7 @@
   "framework": "AsyncIO",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "aiohttp.web/setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -24,7 +24,7 @@
       "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + PostgreSQL"
     },
     "redis": {
-      "setup_file": "setup",
+      "setup_file": "aiohttp.web/setup",
       "db_url": "/db_redis",
       "query_url": "/queries_redis?queries=",
       "fortune_url": "/fortunes_redis",
@@ -44,7 +44,7 @@
       "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + Redis"
     },
     "json": {
-      "setup_file": "setup",
+      "setup_file": "aiohttp.web/setup",
       "json_url": "/json",
       "port": 8009,
       "approach": "Stripped",
@@ -61,7 +61,7 @@
       "notes": "Python 3 + API-Hour + AsyncIO"
     },
     "plaintext": {
-      "setup_file": "setup",
+      "setup_file": "aiohttp.web/setup",
       "plaintext_url": "/plaintext",
       "port": 8011,
       "approach": "Stripped",

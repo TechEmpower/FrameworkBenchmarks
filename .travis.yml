@@ -124,7 +124,7 @@ env:
     - "TESTDIR=PHP/php-zend-framework"
     - "TESTDIR=PHP/php-zend-framework1"
     - "TESTDIR=PHP/phreeze"
-    - "TESTDIR=Python/API-Hour"
+    - "TESTDIR=Python/AsyncIO"
     - "TESTDIR=Python/bottle"
     - "TESTDIR=Python/cherrypy"
     - "TESTDIR=Python/django"
