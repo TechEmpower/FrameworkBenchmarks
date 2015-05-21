@@ -1,0 +1,3 @@
+deps do
+  github "dhruvrajvanshi/Moonshine", name: "moonshine"
+end
