@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source $IROOT/erlang.installed
 source $IROOT/elixir.installed
 
 sed -i 's|db_host: "localhost",|db_host: "${DBHOST}",|g' config/config.exs
