@@ -14,4 +14,4 @@ fw_get http://packages.erlang-solutions.com/site/esl/elixir/FLAVOUR_2_download/e
 dpkg -x elixir_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb $IROOT/elixir
 $IROOT/erlang/usr/lib/erlang/Install -minimal $IROOT/erlang/usr/lib/erlang
 
-echo "export PATH=\$IROOT/elixir/usr/local/bin:\$PATH" >> $IROOT/elixir.installed
+echo "export PATH=\$IROOT/elixir/usr/local/bin:\$IROOT/erlang/usr/bin:\$PATH" >> $IROOT/elixir.installed

@@ -1,15 +1,15 @@
 defmodule Hello.Router do
-  use Phoenix.Router
+  use Hello.Web, :router
 
   pipeline :browser do
-    plug :accepts, ~w(html)
+    plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
     plug :protect_from_forgery
   end
 
   pipeline :api do
-    plug :accepts, ~w(json)
+    plug :accepts, ["json"]
   end
 
   scope "/", Hello do
@@ -18,8 +18,8 @@ defmodule Hello.Router do
     get "/json", PageController, :_json
     get "/db", PageController, :db
     get "/queries", PageController, :queries
-    get "/fortunes", PageController, :fortunes
-    get "/updates", PageController, :updates
+    get "/fortune", PageController, :fortunes
+    get "/update", PageController, :updates
     get "/plaintext", PageController, :plaintext
     get "/", PageController, :index
   end
