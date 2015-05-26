@@ -1,5 +1,6 @@
 require "moonshine"
 require "redis"
+require "html/builder"
 
 include Moonshine
 include Moonshine::Shortcuts
@@ -12,8 +13,10 @@ redis = Redis.new
 app = Moonshine::App.new
 
 class CONTENT
-  JSON = "application/json; charset=UTF-8"
+  UTF8 = "; charset=UTF-8"
+  JSON = "application/json" + UTF8
   PLAIN = "text/plain"
+  HTML = "text/html" + UTF8
 end
 
 
@@ -22,6 +25,7 @@ app.response_middleware do |req, res|
     res.headers["Date"] = Time.now.to_s
     res
 end
+
 
 app.define do
 
@@ -34,10 +38,49 @@ app.define do
 
   # Test 4: Fortunes
   route "/fortunes", do |request|
-    res = ok({
-      :length => redis.llen("fortunes")
-    }.to_json)
-    res.headers["Content-type"] = CONTENT::JSON
+    data = [] of  Hash(Symbol, (String | Int32))
+
+    redis.lrange("fortunes", 0, -1).each_with_index do |e, i|
+      data.push({ :id => i + 1, :message => e.to_s })
+    end
+    
+    additional_fortune = {
+      :id => 0
+      :message => "Additional fortune added at request time."
+    }
+    data.push(additional_fortune)
+
+    data.sort! { |a, b|
+      a[:message].to_s <=> b[:message].to_s
+    }
+
+    # New builder for each request!
+    html = HTML::Builder.new.build do
+      html {
+        head {
+          title { text "Fortunes" }
+        }
+        body {
+          table {
+            tr {
+              thead { text "id" }
+              thead { text "message" }
+            }
+            data.each { |e|
+              tr {
+                td { text e[:id].to_s }
+                td { text e[:message].to_s }
+              }
+            }
+          }
+        }
+      }
+    end
+
+    # Doctype not available in builder
+    # builder only supports `thead`, tests need to see `th`
+    res = ok("<!doctype html>" + html.gsub("thead", "th"))
+    res.headers["Content-type"] = CONTENT::HTML
     res
   end
 
