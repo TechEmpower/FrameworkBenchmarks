@@ -35,7 +35,7 @@ env:
     - "TESTDIR=Clojure/luminus"
     - "TESTDIR=Clojure/pedestal"
     - "TESTDIR=Clojure/aleph"
-    - "TESTDIR=Crystal/stdlib"
+    - "TESTDIR=Crystal/crystal-raw"
     - "TESTDIR=Dart/dart"
     - "TESTDIR=Dart/dart-redstone"
     - "TESTDIR=Dart/dart-start"
