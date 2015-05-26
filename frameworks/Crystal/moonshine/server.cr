@@ -9,7 +9,7 @@ include Moonshine::Http
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
 
-redis = Redis.new
+REDIS = Redis.new
 app = Moonshine::App.new
 
 class CONTENT
@@ -26,6 +26,13 @@ app.response_middleware do |req, res|
     res
 end
 
+private def randomWorld
+  id = rand(1...10_000)
+  {
+    :id => id
+    :randomNumber => REDIS.get("world:" + id.to_s)
+  }
+end
 
 app.define do
 
@@ -36,11 +43,33 @@ app.define do
     res
   end
 
+  # Test 2: Single database query
+  route "/db", do |request|
+    res = ok(randomWorld.to_json)
+    res.headers["Content-type"] = CONTENT::JSON
+    res
+  end
+
+  # Test 3: Multiple database query
+  route "/queries", do |request|
+    queries = request.get["queries"].to_i
+    queries = 1 if queries < 1
+    queries = 500 if queries > 500
+
+    results = (1..queries).map do
+      randomWorld
+    end
+
+    res = ok(results.to_json)
+    res.headers["Content-type"] = CONTENT::JSON
+    res
+  end
+
   # Test 4: Fortunes
   route "/fortunes", do |request|
     data = [] of  Hash(Symbol, (String | Int32))
 
-    redis.lrange("fortunes", 0, -1).each_with_index do |e, i|
+    REDIS.lrange("fortunes", 0, -1).each_with_index do |e, i|
       data.push({ :id => i + 1, :message => e.to_s })
     end
     
