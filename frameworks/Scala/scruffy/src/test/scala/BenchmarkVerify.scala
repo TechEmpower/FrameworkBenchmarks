@@ -11,7 +11,7 @@ object BenchmarkVerify extends App {
 
   val sw = Stopwatch()
 
-  val futures = for ( k <- 1 to 10000 ) yield {
+  val futures = for ( k <- 1 to 30000 ) yield {
     client.get("http://localhost:8080/json").execute
   }
 
