@@ -36,6 +36,7 @@ env:
     - "TESTDIR=Clojure/pedestal"
     - "TESTDIR=Clojure/aleph"
     - "TESTDIR=Crystal/moonshine"
+    - "TESTDIR=Crystal/crystal-raw"
     - "TESTDIR=Dart/dart"
     - "TESTDIR=Dart/dart-redstone"
     - "TESTDIR=Dart/dart-start"
