@@ -22,6 +22,7 @@ try:
 except ImportError:
     mysql_schema = "mysql+pymysql:"
 
+
 # setup
 
 app = Flask(__name__)
@@ -30,21 +31,23 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 db = SQLAlchemy(app)
 dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], connect_args={'autocommit': True}, pool_reset_on_return=None)
 
+
 # models
 
 class World(db.Model):
-  __tablename__ = "World"
-  id = db.Column(db.Integer, primary_key=True)
-  randomNumber = db.Column(db.Integer)
-  
-  # http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
-  @property
-  def serialize(self):
-     """Return object data in easily serializeable format"""
-     return {
-         'id'         : self.id,
-         'randomNumber': self.randomNumber
-     }
+    __tablename__ = "World"
+    id = db.Column(db.Integer, primary_key=True)
+    randomNumber = db.Column(db.Integer)
+
+    # http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id'         : self.id,
+            'randomNumber': self.randomNumber
+        }
+
 
 class Fortune(db.Model):
     __tablename__ = "Fortune"
@@ -146,8 +149,9 @@ def updates():
         world = World.query.get(id)
         world.randomNumber = rp()
         worlds.append(world.serialize)
+    res = json_response(worlds)
     db.session.commit()
-    return json_response(worlds)
+    return res
 
 
 @app.route("/raw-updates")
