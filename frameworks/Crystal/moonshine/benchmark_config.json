@@ -1,0 +1,45 @@
+{
+  "framework": "moonshine",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "moonshine",
+      "language": "Crystal",
+      "orm": "raw",
+      "platform": "Crystal",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Moonshine",
+      "notes": "",
+      "versus": "ruby"
+    },
+    "redis": {
+      "setup_file": "setup",
+      "db_url": "/redis/db",
+      "query_url": "/redis/queries?queries=",
+      "fortune_url": "/redis/fortunes",
+      "update_url": "/redis/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Redis",
+      "framework": "moonshine",
+      "language": "Crystal",
+      "orm": "",
+      "platform": "Crystal",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Moonshine",
+      "notes": "",
+      "versus": "ruby"
+    }
+  }]
+}
