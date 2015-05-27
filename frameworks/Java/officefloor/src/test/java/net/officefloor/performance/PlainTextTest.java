@@ -16,7 +16,7 @@ import org.junit.Test;
 /**
  * Runs application and ensures a page is available.
  */
-public class ValidatePerformanceRequestsTest {
+public class PlainTextTest {
 
 	@Before
 	public void runApplication() throws Exception {
@@ -38,7 +38,7 @@ public class ValidatePerformanceRequestsTest {
 	}
 
 	@Test
-	public void performance() throws Exception {
+	public void performancePlainText() throws Exception {
 
 		final int threadCount = 100;
 		final int iterationCount = 10000;
@@ -74,7 +74,7 @@ public class ValidatePerformanceRequestsTest {
 
 							// Under the request so many times
 							for (int i = 0; i < iterationCount; i++) {
-								ValidatePerformanceRequestsTest.this
+								PlainTextTest.this
 										.doRequestTest(client);
 							}
 						}
