@@ -30,7 +30,6 @@ end
 private def randomWorld
   id = rand(1..ID_MAXIMUM)
   num = REDIS.get("world:" + id.to_s)
-  puts num
   {
     :id => id
     :randomNumber => num
