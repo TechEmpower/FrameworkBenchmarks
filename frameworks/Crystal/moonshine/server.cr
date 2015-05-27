@@ -19,6 +19,7 @@ class CONTENT
   HTML = "text/html" + UTF8
 end
 
+ID_MAXIMUM = 10_000
 
 app.response_middleware do |req, res|
     res.headers["Server"] = "Moonshine"
@@ -27,11 +28,30 @@ app.response_middleware do |req, res|
 end
 
 private def randomWorld
-  id = rand(1...10_000)
+  id = rand(1..ID_MAXIMUM)
+  num = REDIS.get("world:" + id.to_s)
+  puts num
   {
     :id => id
-    :randomNumber => REDIS.get("world:" + id.to_s)
+    :randomNumber => num
   }
+end
+
+private def setWorld(world)
+  id = "world:" + world[:id].to_s
+  REDIS.set(id, world[:randomNumber])
+  world
+end
+
+private def sanitizedQueryCount(request)
+  begin
+    queries = request.get["queries"].to_i
+  rescue
+    queries = 1
+  end
+  queries = 1 if queries < 1
+  queries = 500 if queries > 500
+  queries
 end
 
 app.define do
@@ -52,11 +72,7 @@ app.define do
 
   # Test 3: Multiple database query
   route "/queries", do |request|
-    queries = request.get["queries"].to_i
-    queries = 1 if queries < 1
-    queries = 500 if queries > 500
-
-    results = (1..queries).map do
+    results = (1..sanitizedQueryCount(request)).map do
       randomWorld
     end
 
@@ -110,6 +126,19 @@ app.define do
     # builder only supports `thead`, tests need to see `th`
     res = ok("<!doctype html>" + html.gsub("thead", "th"))
     res.headers["Content-type"] = CONTENT::HTML
+    res
+  end
+
+  # Test 5: Database Updates
+  route "/updates", do |request|
+    updated = (1..sanitizedQueryCount(request)).map do
+      world = randomWorld
+      world[:randomNumber] = rand(1..ID_MAXIMUM)
+      setWorld(world)
+    end
+
+    res = ok(updated.to_json)
+    res.headers["Content-type"] = CONTENT::JSON
     res
   end
 
