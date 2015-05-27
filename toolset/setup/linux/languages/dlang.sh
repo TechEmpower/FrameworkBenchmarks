@@ -18,9 +18,9 @@ dpkg-deb -x dmd_2.067.1-0_amd64.deb $DLANG
 # we need to change the DFLAGS in the dmd.conf to be correctly sandboxed
 # to the $DLANG folder (in IROOT).
 cp $DLANG/etc/dmd.conf $DLANG/usr/bin
-sed -i "s|-I/usr/|-I${DLANG}/usr/|g" $DLANG/user/bin/dmd.conf
-sed -i "s|-L/usr/|-L${DLANG}/usr/|g" $DLANG/user/bin/dmd.conf
+sed -i "s|-I/usr/|-I${DLANG}/usr/|g" $DLANG/usr/bin/dmd.conf
+sed -i "s|-L/usr/|-L${DLANG}/usr/|g" $DLANG/usr/bin/dmd.conf
 
-echo -e "export PATH=${DLANG}:\$PATH" > $DLANG.installed
+echo -e "export PATH=${DLANG}/usr/bin:\$PATH" > $DLANG.installed
 
 source $DLANG.installed
