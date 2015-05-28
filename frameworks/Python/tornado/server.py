@@ -45,7 +45,8 @@ class DBTestHandler(BaseHandler):
     def get(self):
         world = yield db.World.find_one(randint(1, 10000))
         # Get first postion on arguments, and so first postion in mongo return
-        world['id'] = str(world.pop('_id'))
+        world['id'] = int(world.pop('_id'))
+        world['randomNumber'] = int(world['randomNumber'])
         response = json.dumps(world)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(response)
@@ -68,7 +69,8 @@ class QueryTestHandler(BaseHandler):
                         for _ in xrange(queries)]
         for world in worlds:
             # Get first postion on arguments, and so first postion in mongo return
-            world['id'] = str(world.pop('_id'))
+            world['id'] = int(world.pop('_id'))
+            world['randomNumber'] = int(world['randomNumber'])
         response = json.dumps(worlds)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(response)
@@ -126,9 +128,12 @@ if __name__ == "__main__":
     server = tornado.httpserver.HTTPServer(application)
     server.bind(options.port)
     server.start(0)
+
+    ioloop = tornado.ioloop.IOLoop.instance()
     if options.postgres:
         dsn = "user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world host=%s" % options.postgres
         application.db = momoko.Pool(dsn, size=1, max_size=100)
+        ioloop.run_sync(application.db.connect)
     else:
         db = motor.MotorClient(options.mongo).hello_world
-    tornado.ioloop.IOLoop.instance().start()
+    ioloop.start()
