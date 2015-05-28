@@ -43,6 +43,7 @@ if [ ! -f "benchmark.cfg" ]; then
 userver {
  PORT 8080
  PREFORK_CHILD 4
+ TCP_LINGER_SET -1
  LISTEN_BACKLOG 256
  ORM_DRIVER "mysql pgsql sqlite"
  DOCUMENT_ROOT $ULIB_DOCUMENT_ROOT
