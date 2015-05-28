@@ -1,7 +1,7 @@
 # main configuration file
 
 # Application PID File
-PidFile = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2_hhvm/hhvm.pid
+PidFile = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2/hhvm.pid
 
 # Server settings
 Server {
@@ -16,7 +16,7 @@ Log {
   UseLogFile = false
   UseSyslog = false
   Level = Error
-  #File = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2_hhvm/error.log
+  #File = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2/error.log
 }
 
 # Enable jit for production mode

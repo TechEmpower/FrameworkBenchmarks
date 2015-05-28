@@ -5,11 +5,11 @@ export PHP_FPM=${PHP_HOME}/sbin/php-fpm
 export NGINX_HOME=${IROOT}/nginx
 
 sed -i 's|database_host: .*|database_host: '"${DBHOST}"'|g' app/config/parameters.yml
-sed -i 's|SourceRoot = .*/FrameworkBenchmarks/symfony2_hhvm|SourceRoot = '"${TROOT}"'|g' deploy/config.hdf
+sed -i 's|SourceRoot = .*/FrameworkBenchmarks/symfony2|SourceRoot = '"${TROOT}"'|g' deploy/config.hdf
 sed -i 's|Path = .*/.hhvm.hhbc|Path = '"${TROOT}"'/.hhvm.bbhc|g' deploy/config.hdf
 sed -i 's|PidFile = .*/hhvm.pid|PidFile = '"${TROOT}"'/hhvm.pid|g' deploy/config.hdf
 sed -i 's|File = .*/error.log|File = '"${TROOT}"'/error.log|g' deploy/config.hdf
-sed -i 's|root .*/FrameworkBenchmarks/php-symfony2_hhvm| root '"${TROOT}"'|g' deploy/nginx.conf
+sed -i 's|root .*/FrameworkBenchmarks/php-symfony2| root '"${TROOT}"'|g' deploy/nginx.conf
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
 ${PHP_HOME}/bin/php app/console cache:clear \
