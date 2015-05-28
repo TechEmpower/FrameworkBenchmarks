@@ -1,5 +1,5 @@
-source ${IROOT}/crystal.installed
+source ${IROOT}/crystal-0.7.1.installed
 
-$crystal deps install
+crystal deps install
 
-$crystal server.cr &
+crystal server.cr &

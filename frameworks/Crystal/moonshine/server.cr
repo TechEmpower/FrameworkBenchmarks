@@ -3,14 +3,14 @@ require "redis"
 require "html/builder"
 
 include Moonshine
-include Moonshine::Shortcuts
-include Moonshine::Http
+include Moonshine::Utils::Shortcuts
+include Moonshine::Base
 
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
 
 REDIS = Redis.new
-app = Moonshine::App.new
+app = App.new
 
 class CONTENT
   UTF8 = "; charset=UTF-8"
@@ -30,7 +30,6 @@ end
 private def randomWorld
   id = rand(1..ID_MAXIMUM)
   num = REDIS.get("world:" + id.to_s)
-  puts num
   {
     :id => id
     :randomNumber => num
