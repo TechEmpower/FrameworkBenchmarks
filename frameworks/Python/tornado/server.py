@@ -80,9 +80,7 @@ class QueryPostgresRawTestHandler(BaseHandler):
         sql = "SELECT id, randomNumber FROM World WHERE id=%s"
 
         random_id = randint(1, 10000)
-        cursor = yield momoko.Op(
-            self.application.db.execute, sql, (random_id,)
-        )
+        cursor = yield self.application.db.execute(sql, (random_id,))
         row = cursor.fetchone()
         response = json.dumps({"id": row[0], "randomNumber": row[1]})
 
@@ -106,9 +104,7 @@ class MultipleQueriesPostgresRawTestHandler(BaseHandler):
         worlds = []
         for i in xrange(int(queries)):
             random_id = randint(1, 10000)
-            cursor = yield momoko.Op(
-                self.application.db.execute, sql, (random_id,)
-            )
+            cursor = yield self.application.db.execute(sql, (random_id,))
             row = cursor.fetchone()
             worlds.append({"id": row[0], "randomNumber": row[1]})
         response = json.dumps(worlds)
@@ -132,7 +128,7 @@ if __name__ == "__main__":
     server.start(0)
     if options.postgres:
         dsn = "user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world host=%s" % options.postgres
-        application.db = momoko.Pool(dsn, size=1)
+        application.db = momoko.Pool(dsn, size=1, max_size=100)
     else:
         db = motor.MotorClient(options.mongo).hello_world
     tornado.ioloop.IOLoop.instance().start()
