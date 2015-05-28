@@ -5,7 +5,7 @@ import net.javapla.jawn.core.spi.ApplicationDatabaseBootstrap;
 import net.javapla.jawn.core.util.Modes;
 
 public class Database implements ApplicationDatabaseBootstrap {
-
+    
     @Override
     public void dbConnections(DatabaseConnections connections) {
         
@@ -25,12 +25,15 @@ public class Database implements ApplicationDatabaseBootstrap {
                 "&useServerPrepStmts" +
                 "&cacheRSMetadata=true";
         
+        String host = System.getProperty("DBHOST", "localhost");
+        String dbUrl = "jdbc:mysql://"+host+"/hello_world?";
+        
+        
         connections
             .environment(Modes.prod)
             .jdbc()
             .driver("com.mysql.jdbc.Driver")
-            .url("jdbc:mysql://localhost/hello_world?" + jdbcParams)
-//            .url("jdbc:mysql://192.168.100.11/hello_world?" + jdbcParams)
+            .url(dbUrl + jdbcParams)
             .user("benchmarkdbuser")
             .password("benchmarkdbpass")
             .maxPoolSize(256)
@@ -40,7 +43,6 @@ public class Database implements ApplicationDatabaseBootstrap {
             .environment(Modes.dev)
             .jdbc()
             .driver("com.mysql.jdbc.Driver")
-//            .url("jdbc:mysql://localhost/hello_world?" + jdbcParams)
             .url("jdbc:mysql://192.168.100.11/hello_world?" + jdbcParams)
             .user("benchmarkdbuser")
             .password("benchmarkdbpass");

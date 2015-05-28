@@ -35,7 +35,7 @@ dependencies {
 /* ****************** */
 run {
     if(project.hasProperty('args')){
-        args project.args.split('\\s')
+        args project.args.split(',')
     }
 }
 applicationDistribution.from("webapp") {

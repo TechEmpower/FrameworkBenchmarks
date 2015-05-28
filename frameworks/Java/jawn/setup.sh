@@ -5,4 +5,4 @@ source $IROOT/java8.installed
 
 ./gradlew clean --daemon
 
-./gradlew run
+./gradlew run -Pargs=production,$DBHOST

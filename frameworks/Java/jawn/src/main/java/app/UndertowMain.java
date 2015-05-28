@@ -12,6 +12,8 @@ public class UndertowMain {
         if (args.length > 0) environment = args[0];
         System.setProperty("JAWN_ENV", environment);
         
+        if (args.length > 1)  System.setProperty("DBHOST", args[1]);
+        
         ServerConfig config = new ServerConfig();
         config.setContextPath("/");
         config.setPort(8081);
