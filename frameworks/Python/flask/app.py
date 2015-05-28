@@ -10,6 +10,7 @@ import flask
 from flask import Flask, request, render_template, make_response, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
+from sqlalchemy.ext import baked
 
 if sys.version_info[0] == 3:
     xrange = range
@@ -31,6 +32,8 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 db = SQLAlchemy(app)
 dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], connect_args={'autocommit': True}, pool_reset_on_return=None)
 
+bakery = baked.bakery()
+
 
 # models
 
@@ -47,6 +50,11 @@ class World(db.Model):
             'id'         : self.id,
             'randomNumber': self.randomNumber
         }
+
+    @staticmethod
+    def get(ident):
+        baked_query = bakery(lambda s: s.query(World))
+        return baked_query(db.session()).get(ident)
 
 
 class Fortune(db.Model):
@@ -77,7 +85,7 @@ def get_random_world():
         num_queries = 1
     if num_queries > 500:
         num_queries = 500
-    worlds = [World.query.get(randint(1, 10000)).serialize
+    worlds = [World.get(randint(1, 10000)).serialize
               for _ in xrange(num_queries)]
     return json_response(worlds)
 
@@ -85,7 +93,7 @@ def get_random_world():
 @app.route("/dbs")
 def get_random_world_single():
     wid = randint(1, 10000)
-    worlds = World.query.get(wid).serialize
+    worlds = World.get(wid).serialize
     return json_response(worlds)
 
 
@@ -146,7 +154,7 @@ def updates():
     ids = [rp() for _ in xrange(num_queries)]
     ids.sort()  # To avoid deadlock
     for id in ids:
-        world = World.query.get(id)
+        world = World.get(id)
         world.randomNumber = rp()
         worlds.append(world.serialize)
     res = json_response(worlds)
