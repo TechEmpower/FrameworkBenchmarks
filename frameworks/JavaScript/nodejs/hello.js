@@ -79,6 +79,22 @@ function fillArray(value, len) {
   return arr;
 }
 
+function addTfbHeaders(res, headerType) {
+  var headers = {
+    'Server': 'Node'
+  }
+
+  if (headerType === 'plain') {
+    headers['Content-Type'] = 'text/plain; charset=UTF-8';
+  } else if (headerType === 'json') {
+    headers['Content-Type'] = 'application/json';
+  } else if (headerType === 'html') {
+    headers['Content-Type'] = 'text/plain';
+  }
+
+  res.writeHead(200, headers);
+}
+
 // Mongoose Query Functions
 function mongooseQuery(callback) {
   MWorld.findOne({
@@ -151,28 +167,19 @@ var HELLO_OBJ = { message: GREETING };
 var responses = {
 
   jsonSerialization: function (req, res) {
-    res.writeHead(200, {
-      'Content-Type': 'application/json',
-      'Server': 'Node'
-    });
+    addTfbHeaders(res, 'json');
     res.end(JSON.stringify(HELLO_OBJ));
   },
 
   plaintext: function (req, res) {
-    res.writeHead(200, {
-      'Content-Type': 'text/plain; charset=UTF-8',
-      'Server': 'Node'
-    });
+    addTfbHeaders(res, 'plain');
     res.end(GREETING);
   },
 
   mongooseSingleQuery: function (req, res) {
     mongooseQuery(function (err, result) {
       if (err) { throw err; }
-      res.writeHead(200, {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Server': 'Node'
-      });
+      addTfbHeaders(res, 'json');
       res.end(JSON.stringify(result));
     })
   },
@@ -182,10 +189,7 @@ var responses = {
 
     async.parallel(queryFunctions, function (err, results) {
       if (err) { throw err; }
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Server': 'Node'
-      });
+      addTfbHeaders(res, 'json');
       res.end(JSON.stringify(results));
     });
   },
@@ -211,12 +215,9 @@ var responses = {
 
       async.parallel(updateFunctions, function (err, results) {
         if (err) { throw err; }
-        res.writeHead(200, {
-          'Content-Type': 'application/json',
-          'Server': 'Node'
-        });
+        addTfbHeaders(res, 'json');
         // results does not have updated document information
-        // if no err was found and thrown, updates were all successful
+        // if no err was found and thrown: all updates succeeded
         res.end(JSON.stringify(worlds));
       });
     });
@@ -225,10 +226,7 @@ var responses = {
   mongodbSingleQuery: function (req, res) {
     mongodbDriverQuery(function (err, result) {
       if (err) { throw err; }
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Server': 'Node'
-      });
+      addTfbHeaders(res, 'json');
       res.end(JSON.stringify(result));
     });
   },
@@ -238,10 +236,7 @@ var responses = {
 
     async.parallel(queryFunctions, function (err, results) {
       if (err) { throw err; }
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Server': 'Node'
-      });
+      addTfbHeaders(res, 'json');
       res.end(JSON.stringify(results));
     });
   },
@@ -251,10 +246,7 @@ var responses = {
 
     async.parallel(queryFunctions, function (err, results) {
       if (err) { throw err; }
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Server': 'Node'
-      });
+      addTfbHeaders(res, 'json');
       res.end(JSON.stringify(results));
     });
   },
@@ -262,10 +254,7 @@ var responses = {
   sequelizeSingleQuery: function (req, res) {
     sequelizeQuery(function (err, result) {
       if (err) { throw err; }
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Server': 'Node'
-      });
+      addTfbHeaders(res, 'json');
       res.end(JSON.stringify(result));
     });
   },
@@ -275,10 +264,7 @@ var responses = {
 
     async.parallel(queryFunctions, function (err, results) {
       if (err) { throw err; }
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Server': 'Node'
-      });
+      addTfbHeaders(res, 'json');
       res.end(JSON.stringify(results));
     });
   },
@@ -300,12 +286,8 @@ var responses = {
 
       async.parallel(updateFunctions, function (err, updates) {
         if (err) { throw err; }
-        res.writeHead(200, {
-          'Content-Type': 'application/json',
-          'Server': 'Node'
-        });
+        addTfbHeaders(res, 'json');
         res.end(JSON.stringify(updates));
-        // res.end(JSON.stringify(worlds));
       });
     });
   },
@@ -313,10 +295,7 @@ var responses = {
   mysqlSingleQuery: function (req, res) {
     mysqlQuery(function (err, result) {
       if (err) { throw err; }
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Server': 'Node'
-      });
+      addTfbHeaders(res, 'json');
       res.end(JSON.stringify(result));
     });
   },
@@ -326,10 +305,7 @@ var responses = {
 
     async.parallel(queryFunctions, function (err, results) {
       if (err) { throw err; }
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Server': 'Node'
-      });
+      addTfbHeaders(res, 'json');
       res.end(JSON.stringify(results));
     });
   },
@@ -339,10 +315,7 @@ var responses = {
 
     async.parallel(queryFunctions, function (err, results) {
       if (err) { throw err; }
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Server': 'Node'
-      });
+      addTfbHeaders(res, 'json');
       res.end(JSON.stringify(results));
     });
   },
