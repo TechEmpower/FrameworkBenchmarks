@@ -73,11 +73,11 @@
       "framework": "symfony2",
       "language": "PHP",
       "orm": "Full",
-      "platform": "PHP-FPM",
-      "webserver": "nginx",
+      "platform": "hhvm",
+      "webserver": "HPHP",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "symfony2",
+      "display_name": "symfony2-hhvm",
       "notes": "",
       "versus": "php"
     }
