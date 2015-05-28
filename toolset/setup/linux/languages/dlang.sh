@@ -6,7 +6,7 @@ RETCODE=$(fw_exists ${DLANG}.installed)
   source $DLANG.installed
   return 0; }
 
-mkdir $DLANG
+mkdir -p $DLANG
 fw_get http://downloads.dlang.org/releases/2.x/2.067.1/dmd_2.067.1-0_amd64.deb
 dpkg-deb -x dmd_2.067.1-0_amd64.deb $DLANG
 
