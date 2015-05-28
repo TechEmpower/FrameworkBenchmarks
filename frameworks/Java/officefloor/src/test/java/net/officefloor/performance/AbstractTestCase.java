@@ -1,10 +1,17 @@
 package net.officefloor.performance;
 
+import java.io.IOException;
+
+import net.officefloor.plugin.socket.server.http.HttpHeader;
 import net.officefloor.plugin.woof.WoofOfficeFloorSource;
 
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,14 +50,21 @@ public abstract class AbstractTestCase {
 	}
 
 	@Test
-	public void ensurePlainText() throws Exception {
+	public void singleRequest() throws Exception {
 		try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
 			this.doRequestTest(client);
 		}
 	}
 
 	@Test
-	public void performancePlainText() throws Throwable {
+	public void performance() throws Throwable {
+
+		// Avoid performance test if indicate to skip
+		if ("yes".equalsIgnoreCase(System.getProperty("skipPerformance", null))) {
+			System.out.println("Skipping performance test for "
+					+ this.getClass().getSimpleName());
+			return;
+		}
 
 		final int threadCount = 100;
 		final int iterationCount = 10000;
@@ -163,6 +177,106 @@ public abstract class AbstractTestCase {
 				+ duration + " milliseconds");
 		System.out.println("Effectively 1 request every "
 				+ (duration / (totalRequestCount * 1.0)) + " milliseconds");
+	}
+
+	/**
+	 * Asserts the {@link HttpResponse} is correct.
+	 * 
+	 * @param response
+	 *            {@link HttpResponse}.
+	 * @param statusCode
+	 *            Expected status code.
+	 * @param entity
+	 *            Expected entity.
+	 * @param headerNames
+	 *            Expected {@link Header} instances.
+	 * @throws IOException
+	 *             If fails to obtain details from {@link HttpResponse}.
+	 */
+	protected void assertResponse(HttpResponse response, int statusCode,
+			String entity, String... headerNames) throws IOException {
+
+		// Ensure correct status code
+		Assert.assertEquals("Incorrect status code", 200, response
+				.getStatusLine().getStatusCode());
+
+		// Validate the content
+		this.assertEntity(response, entity);
+
+		// Ensure have appropriate headers
+		this.assertHeadersSet(response, headerNames);
+
+	}
+
+	/**
+	 * Ensures correct entity content.
+	 * 
+	 * @param response
+	 *            {@link HttpResponse}.
+	 * @param entity
+	 *            Expected entity content.
+	 * @throws IOException
+	 *             If fails to obtain entity content.
+	 */
+	protected void assertEntity(HttpResponse response, String entity)
+			throws IOException {
+		Assert.assertEquals("Incorrect entity", "Hello, World!",
+				EntityUtils.toString(response.getEntity()));
+	}
+
+	/**
+	 * Ensure all appropriate headers exist.
+	 * 
+	 * @param response
+	 *            {@link HttpResponse}.
+	 * @param headerNames
+	 *            Expected header names.
+	 */
+	protected void assertHeadersSet(HttpResponse response,
+			String... headerNames) {
+
+		// Obtain the headers
+		Header[] headers = response.getAllHeaders();
+
+		// Create the listing of expected headers
+		StringBuilder expectedHeadersText = new StringBuilder();
+		boolean isFirst = true;
+		for (String headerName : headerNames) {
+			if (!isFirst) {
+				expectedHeadersText.append(", ");
+			}
+			expectedHeadersText.append(headerName);
+		}
+
+		// Create the header text
+		StringBuilder actualHeaderText = new StringBuilder();
+		for (Header header : headers) {
+			actualHeaderText.append(header.getName() + ": " + header.getValue()
+					+ "\n");
+		}
+
+		// Validate correct number of headers
+		Assert.assertEquals("Incorrect number of headers ("
+				+ expectedHeadersText.toString() + ")\n\n" + actualHeaderText,
+				headerNames.length, headers.length);
+	}
+
+	/**
+	 * Asserts the {@link HttpHeader} is correct.
+	 * 
+	 * @param response
+	 *            {@link HttpResponse}.
+	 * @param headerName
+	 *            {@link HttpHeader} name.
+	 * @param headerValue
+	 *            Expected {@link HttpHeader} value.
+	 */
+	protected void assertHeader(HttpResponse response, String headerName,
+			String headerValue) {
+		Header header = response.getFirstHeader(headerName);
+		Assert.assertNotNull("Should have header " + headerName, header);
+		Assert.assertEquals("Incorrect value for header " + headerName,
+				headerValue, header.getValue());
 	}
 
 }
