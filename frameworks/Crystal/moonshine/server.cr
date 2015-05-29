@@ -30,10 +30,7 @@ end
 private def randomWorld
   id = rand(1..ID_MAXIMUM)
   num = REDIS.get("world:" + id.to_s)
-  {
-    :id => id
-    :randomNumber => num
-  }
+  { :id => id, :randomNumber => num }
 end
 
 private def setWorld(world)
