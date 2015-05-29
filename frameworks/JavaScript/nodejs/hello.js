@@ -11,9 +11,14 @@ var cluster = require('cluster')
   , Handlebars = require('handlebars');
 
 // MongoDB Raw Setup
-var collection = null;
-MongoClient.connect('mongodb://127.0.0.1/hello_world?maxPoolSize=5', function(err, db) {
-  collection = db.collection('world');
+var mongodbCollections = {
+  World: null,
+  Fortune: null
+};
+MongoClient.connect('mongodb://127.0.0.1/hello_world?maxPoolSize=5', function (err, db) {
+  if (err) { throw err; }
+  mongodbCollections.World = db.collection('world');
+  mongodbCollections.Fortune = db.collection('fortune');
 });
 
 // MySQL Raw Setup
@@ -143,7 +148,7 @@ function mongooseGetAllFortunes(callback) {
 
 // MongoDB-Raw Query Functions
 function mongodbDriverQuery(callback) {
-  collection.findOne({
+  mongodbCollections.World.findOne({
     id: getRandomNumber()
   }, function(err, world) {
     world._id = undefined; // remove _id from query response
@@ -151,8 +156,14 @@ function mongodbDriverQuery(callback) {
   });
 }
 
+function mongodbGetAllFortunes(callback) {
+  mongodbCollections.Fortune.find().toArray(function (err, fortunes) {
+    callback(err, fortunes);
+  })
+}
+
 function mongodbDriverUpdateQuery(callback) {
-  collection.findAndModify({
+  mongodbCollections.World.findAndModify({
     id: getRandomNumber()
   }, [['_id','asc']], {
     $set: {randomNumber: getRandomNumber()}
@@ -296,6 +307,20 @@ var responses = {
     });
   },
 
+  mongodbFortunes: function (req, res) {
+    mongodbGetAllFortunes(function (err, fortunes) {
+      if (err) { throw err; }
+      fortunes.push(ADDITIONAL_FORTUNE);
+      fortunes.sort(function (a, b) {
+        return a.message.localeCompare(b.message);
+      });
+      addTfbHeaders(res, 'html');
+      res.end(fortunesTemplate({
+        fortunes: fortunes
+      }));
+    });
+  },
+
   mongodbUpdates: function (queries, req, res) {
     var queryFunctions = fillArray(mongodbDriverUpdateQuery, queries);
 
@@ -423,9 +448,11 @@ if (cluster.isMaster) {
       return responses.mongooseFortunes(req, res);
     } else if (route === '/mongodb/db') {
       return responses.mongodbSingleQuery(req, res);
-    } else if (route === '/mysql-orm/db') {
+    } else if (route === '/mongodb/fortunes') {
+      return responses.mongodbFortunes(req, res);
+    } else if (route === '/sequelize/db') {
       return responses.sequelizeSingleQuery(req, res);
-    } else if (route === '/mysql-orm/fortunes') {
+    } else if (route === '/sequelize/fortunes') {
       return responses.sequelizeFortunes(req, res);
     } else if (route === '/mysql/db') {
       return responses.mysqlSingleQuery(req, res);
@@ -443,9 +470,9 @@ if (cluster.isMaster) {
         return responses.mongodbMultipleQueries(queries, req, res);
       } else if (route === '/mongodb/updates') {
         return responses.mongodbUpdates(queries, req, res);
-      } else if (route === '/mysql-orm/queries') {
+      } else if (route === '/sequelize/queries') {
         return responses.sequelizeMultipleQueries(queries, req, res);
-      } else if (route === '/mysql-orm/updates') {
+      } else if (route === '/sequelize/updates') {
         return responses.sequelizeUpdates(queries, req, res);
       } else if (route === '/mysql/queries') {
         return responses.mysqlMultipleQueries(queries, req, res);
