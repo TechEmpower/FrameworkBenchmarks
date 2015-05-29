@@ -25,6 +25,7 @@
       "db_url": "/mongoose/db",
       "query_url": "/mongoose/queries?queries=",
       "update_url": "/mongoose/updates?queries=",
+      "fortune_url": "/mongoose/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

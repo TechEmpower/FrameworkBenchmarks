@@ -5,8 +5,8 @@ var cluster = require('cluster')
   , Sequelize = require('sequelize')
   , mysql = require('mysql')
   , async = require('async')
-  , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://127.0.0.1/hello_world')
+  , Mongoose = require('mongoose')
+  , conn = Mongoose.connect('mongodb://127.0.0.1/hello_world')
   , MongoClient = require('mongodb').MongoClient
   , Handlebars = require('handlebars');
 
@@ -26,13 +26,23 @@ var connection = mysql.createConnection({
 connection.connect();
 
 // Mongoose Setup
-var WorldSchema = new mongoose.Schema({
+var WorldSchema = new Mongoose.Schema({
     id          : Number,
     randomNumber: Number
   }, {
     collection: 'world'
-  }),
-  MWorld = conn.model('World', WorldSchema);
+  });
+var FortuneSchema = new Mongoose.Schema({
+    id:      Number,
+    message: String
+  }, {
+    collection: 'fortune'
+  });
+var mongoose = {
+  World:   conn.model('World', WorldSchema),
+  Fortune: conn.model('Fortune', FortuneSchema)
+}
+
 
 // Sequelize Setup
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
@@ -66,7 +76,7 @@ var Fortune = sequelize.define('Fortune', {
 });
 
 // Fortunes template via handlebars setup
-var FORTUNES_TEMPLATE = [
+var fortunesTemplate = Handlebars.compile([
   "<!DOCTYPE html>",
   "<html>",
   "<head><title>Fortunes</title></head>",
@@ -85,7 +95,7 @@ var FORTUNES_TEMPLATE = [
   "</table>",
   "</body>",
   "</html>"
-].join('');
+].join(''));
 
 // Helper functions
 function getRandomNumber() {
@@ -117,11 +127,17 @@ function addTfbHeaders(res, headerType) {
 }
 
 // Mongoose Query Functions
-function mongooseQuery(callback) {
-  MWorld.findOne({
+function mongooseRandomWorld(callback) {
+  mongoose.World.findOne({
     id: getRandomNumber()
   }).exec(function (err, world) {
     callback(err, world);
+  });
+}
+
+function mongooseGetAllFortunes(callback) {
+  mongoose.Fortune.find({}).exec(function (err, fortunes) {
+    callback(err, fortunes);
   });
 }
 
@@ -202,7 +218,7 @@ var responses = {
   },
 
   mongooseSingleQuery: function (req, res) {
-    mongooseQuery(function (err, result) {
+    mongooseRandomWorld(function (err, result) {
       if (err) { throw err; }
       addTfbHeaders(res, 'json');
       res.end(JSON.stringify(result));
@@ -210,7 +226,7 @@ var responses = {
   },
 
   mongooseMultipleQueries: function (queries, req, res) {
-    var queryFunctions = fillArray(mongooseQuery, queries)
+    var queryFunctions = fillArray(mongooseRandomWorld, queries)
 
     async.parallel(queryFunctions, function (err, results) {
       if (err) { throw err; }
@@ -219,8 +235,22 @@ var responses = {
     });
   },
 
+  mongooseFortunes: function (req, res) {
+    mongooseGetAllFortunes(function (err, fortunes) {
+      if (err) { throw err; }
+      fortunes.push(ADDITIONAL_FORTUNE);
+      fortunes.sort(function (a, b) {
+        return a.message.localeCompare(b.message);
+      });
+      addTfbHeaders(res, 'html');
+      res.end(fortunesTemplate({
+        fortunes: fortunes
+      }))
+    });
+  },
+
   mongooseUpdates: function (queries, req, res) {
-    var selectFunctions = fillArray(mongooseQuery, queries);
+    var selectFunctions = fillArray(mongooseRandomWorld, queries);
 
     async.parallel(selectFunctions, function (err, worlds) {
       var updateFunctions = [];
@@ -229,7 +259,7 @@ var responses = {
         (function (i) {
           updateFunctions.push(function (callback) {
             worlds[i].randomNumber = getRandomNumber();
-            MWorld.update({
+            mongoose.World.update({
               id: worlds[i].id
             }, {
               randomNumber: worlds[i].randomNumber
@@ -301,8 +331,7 @@ var responses = {
         return a.message.localeCompare(b.message);
       });
       addTfbHeaders(res, 'html');
-      var template = Handlebars.compile(FORTUNES_TEMPLATE);
-      res.end(template({
+      res.end(fortunesTemplate({
         fortunes: fortunes
       }));
     });
@@ -390,6 +419,8 @@ if (cluster.isMaster) {
     // No queries parameter required
     } else if (route === '/mongoose/db') {
       return responses.mongooseSingleQuery(req, res);
+    } else if (route === '/mongoose/fortunes') {
+      return responses.mongooseFortunes(req, res);
     } else if (route === '/mongodb/db') {
       return responses.mongodbSingleQuery(req, res);
     } else if (route === '/mysql-orm/db') {
