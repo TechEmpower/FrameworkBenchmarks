@@ -147,7 +147,7 @@ function mongooseGetAllFortunes(callback) {
 }
 
 // MongoDB-Raw Query Functions
-function mongodbDriverQuery(callback) {
+function mongodbRandomWorld(callback) {
   mongodbCollections.World.findOne({
     id: getRandomNumber()
   }, function(err, world) {
@@ -184,20 +184,23 @@ function sequelizeQuery(callback) {
 
 
 // MySQL-Raw Query Functions
-function mysqlQuery(callback) {
+function mysqlRandomWorld(callback) {
   connection.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, rows, fields) {
-    if (err) {
-      throw err;
-    }
+    if (err) { throw err; }
     callback(null, rows[0]);
   });
 }
 
+function mysqlGetAllFortunes(callback) {
+  connection.query("SELECT * FROM fortune", function (err, rows, fields) {
+    if (err) { throw err; }
+    callback(null, rows);
+  })
+}
+
 function mysqlUpdateQuery(callback) {
   connection.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, rows, fields) {
-    if (err) {
-      throw err;
-    }
+    if (err) { throw err; }
     rows[0].randomNumber = getRandomNumber();
     var updateQuery = "UPDATE world SET randomNumber = " + rows[0].randomNumber + " WHERE id = " + rows[0]['id'];
     connection.query(updateQuery, function (err, result) {
@@ -290,7 +293,7 @@ var responses = {
   },
 
   mongodbSingleQuery: function (req, res) {
-    mongodbDriverQuery(function (err, result) {
+    mongodbRandomWorld(function (err, result) {
       if (err) { throw err; }
       addTfbHeaders(res, 'json');
       res.end(JSON.stringify(result));
@@ -298,7 +301,7 @@ var responses = {
   },
 
   mongodbMultipleQueries: function (queries, req, res) {
-    var queryFunctions = fillArray(mongodbDriverQuery, queries);
+    var queryFunctions = fillArray(mongodbRandomWorld, queries);
 
     async.parallel(queryFunctions, function (err, results) {
       if (err) { throw err; }
@@ -386,7 +389,7 @@ var responses = {
   },
 
   mysqlSingleQuery: function (req, res) {
-    mysqlQuery(function (err, result) {
+    mysqlRandomWorld(function (err, result) {
       if (err) { throw err; }
       addTfbHeaders(res, 'json');
       res.end(JSON.stringify(result));
@@ -394,13 +397,27 @@ var responses = {
   },
 
   mysqlMultipleQueries: function (queries, req, res) {
-    var queryFunctions = fillArray(mysqlQuery, queries);
+    var queryFunctions = fillArray(mysqlRandomWorld, queries);
 
     async.parallel(queryFunctions, function (err, results) {
       if (err) { throw err; }
       addTfbHeaders(res, 'json');
       res.end(JSON.stringify(results));
     });
+  },
+
+  mysqlFortunes: function (req, res) {
+    mysqlGetAllFortunes(function (err, fortunes) {
+      if (err) { throw err; }
+      fortunes.push(ADDITIONAL_FORTUNE);
+      fortunes.sort(function (a, b) {
+        return a.message.localeCompare(b.message);
+      })
+      addTfbHeaders(res, 'html');
+      res.end(fortunesTemplate({
+        fortunes: fortunes
+      }));
+    })
   },
 
   mysqlUpdates: function (queries, req, res) {
@@ -456,6 +473,8 @@ if (cluster.isMaster) {
       return responses.sequelizeFortunes(req, res);
     } else if (route === '/mysql/db') {
       return responses.mysqlSingleQuery(req, res);
+    } else if (route === '/mysql/fortunes') {
+      return responses.mysqlFortunes(req, res);
     }
 
     else {
