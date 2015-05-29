@@ -7,7 +7,8 @@ var cluster = require('cluster')
   , async = require('async')
   , mongoose = require('mongoose')
   , conn = mongoose.connect('mongodb://127.0.0.1/hello_world')
-  , MongoClient = require('mongodb').MongoClient;
+  , MongoClient = require('mongodb').MongoClient
+  , Handlebars = require('handlebars');
 
 // MongoDB Raw Setup
 var collection = null;
@@ -52,19 +53,39 @@ var World = sequelize.define('World', {
   freezeTableName: true
 });
 
-// No additional work on fortunes has been done
-//
-// var Fortune = sequelize.define('Fortune', {
-//   id: {
-//     type: 'Sequelize.INTEGER'
-//   },
-//   message: {
-//     type: 'Sequelize.STRING'
-//   }
-// }, {
-//   timestamps: false,
-//   freezeTableName: true
-// });
+var Fortune = sequelize.define('Fortune', {
+  id: {
+    type: 'Sequelize.INTEGER'
+  },
+  message: {
+    type: 'Sequelize.STRING'
+  }
+}, {
+  timestamps: false,
+  freezeTableName: true
+});
+
+// Fortunes template via handlebars setup
+var FORTUNES_TEMPLATE = [
+  "<!DOCTYPE html>",
+  "<html>",
+  "<head><title>Fortunes</title></head>",
+  "<body>",
+  "<table>",
+    "<tr>",
+      "<th>id</th>",
+      "<th>message</th>",
+    "</tr>",
+    "{{#fortunes}}",
+    "<tr>",
+      "<td>{{id}}</td>",
+      "<td>{{message}}</td>",
+    "</tr>",
+    "{{/fortunes}}",
+  "</table>",
+  "</body>",
+  "</html>"
+].join('');
 
 // Helper functions
 function getRandomNumber() {
@@ -89,7 +110,7 @@ function addTfbHeaders(res, headerType) {
   } else if (headerType === 'json') {
     headers['Content-Type'] = 'application/json';
   } else if (headerType === 'html') {
-    headers['Content-Type'] = 'text/plain';
+    headers['Content-Type'] = 'text/html; cherset=UTF-8';
   }
 
   res.writeHead(200, headers);
@@ -163,6 +184,10 @@ function mysqlUpdateQuery(callback) {
 
 var GREETING = "Hello, World!";
 var HELLO_OBJ = { message: GREETING };
+var ADDITIONAL_FORTUNE = {
+  id: 0,
+  message: 'Additional fortune added at request time.'
+};
 
 var responses = {
 
@@ -269,6 +294,20 @@ var responses = {
     });
   },
 
+  sequelizeFortunes: function (req, res) {
+    Fortune.findAll().complete(function (err, fortunes) {
+      fortunes.push(ADDITIONAL_FORTUNE);
+      fortunes.sort(function (a, b) {
+        return a.message.localeCompare(b.message);
+      });
+      addTfbHeaders(res, 'html');
+      var template = Handlebars.compile(FORTUNES_TEMPLATE);
+      res.end(template({
+        fortunes: fortunes
+      }));
+    });
+  },
+
   sequelizeUpdates: function (queries, req, res) {
     var selectFunctions = fillArray(sequelizeQuery, queries);
 
@@ -355,6 +394,8 @@ if (cluster.isMaster) {
       return responses.mongodbSingleQuery(req, res);
     } else if (route === '/mysql-orm/db') {
       return responses.sequelizeSingleQuery(req, res);
+    } else if (route === '/mysql-orm/fortunes') {
+      return responses.sequelizeFortunes(req, res);
     } else if (route === '/mysql/db') {
       return responses.mysqlSingleQuery(req, res);
     }

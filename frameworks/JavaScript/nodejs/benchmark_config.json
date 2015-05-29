@@ -65,6 +65,7 @@
       "db_url": "/mysql-orm/db",
       "query_url": "/mysql-orm/queries?queries=",
       "update_url": "/mysql-orm/updates?queries=",
+      "fortune_url": "/mysql-orm/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
