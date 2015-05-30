@@ -88,6 +88,7 @@ env:
     - "TESTDIR=JavaScript/nodejs"
     - "TESTDIR=JavaScript/ringojs"
     - "TESTDIR=JavaScript/ringojs-convenient"
+    - "TESTDIR=JavaScript/sailsjs"
     - "TESTDIR=Lua/lapis"
     - "TESTDIR=Lua/openresty"
     - "TESTDIR=Nim/jester"
