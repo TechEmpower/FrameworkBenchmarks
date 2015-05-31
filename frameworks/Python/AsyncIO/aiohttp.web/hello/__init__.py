@@ -39,8 +39,8 @@ class Container(api_hour.Container):
     def make_servers(self):
         return [self.servers['http'].make_handler(logger=self.worker.log,
                                                   debug=False,
-                                                  keep_alive=self.worker.cfg.keepalive,
-                                                  access_log=self.worker.log.access_log,
+                                                  keep_alive=0,
+                                                  access_log=None,
                                                   access_log_format=self.worker.cfg.access_log_format),
                 servers.yocto_http.YoctoHttpJson,
                 servers.yocto_http.YoctoHttpText]
