@@ -2,7 +2,7 @@ import asyncio
 
 import ujson
 
-from ..utils import generate_http_response
+from ..utils.yocto_http.utils import generate_http_response
 
 class YoctoHttpJson(asyncio.Protocol):
     def connection_made(self, transport):
