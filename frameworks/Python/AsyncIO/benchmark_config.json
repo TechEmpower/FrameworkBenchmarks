@@ -9,7 +9,7 @@
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
-      "port": 8008,
+      "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
       "database": "Postgres",
@@ -29,7 +29,7 @@
       "query_url": "/queries_redis?queries=",
       "fortune_url": "/fortunes_redis",
       "update_url": "/updates_redis?queries=",
-      "port": 8008,
+      "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
       "database": "Redis",
@@ -44,9 +44,9 @@
       "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + Redis"
     },
     "json": {
-      "setup_file": "aiohttp.web/setup",
+      "setup_file": "yocto_http/setup",
       "json_url": "/json",
-      "port": 8009,
+      "port": 8080,
       "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
@@ -61,9 +61,9 @@
       "notes": "Python 3 + API-Hour + AsyncIO"
     },
     "plaintext": {
-      "setup_file": "aiohttp.web/setup",
+      "setup_file": "yocto_http/setup",
       "plaintext_url": "/plaintext",
-      "port": 8011,
+      "port": 8084,
       "approach": "Stripped",
       "classification": "Platform",
       "database": "None",

@@ -3,15 +3,13 @@ import asyncio
 import os
 
 import aiopg
-import jinja2
 import psycopg2.extras
 import asyncio_redis
 from asyncio_redis.protocol import HiRedisProtocol
-import aiohttp.web
-import aiohttp_jinja2
 import api_hour
 
 from . import endpoints
+from . import servers
 
 LOG = logging.getLogger(__name__)
 
@@ -19,28 +17,10 @@ LOG = logging.getLogger(__name__)
 class Container(api_hour.Container):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Servers
-        self.servers['http'] = aiohttp.web.Application(loop=kwargs['loop'])
-        aiohttp_jinja2.setup(self.servers['http'], loader=jinja2.PackageLoader('hello'))
-        self.servers['http'].ah_container = self # keep a reference to Container
-        # routes
-        self.servers['http'].router.add_route('GET', '/json', endpoints.world.json)
-        self.servers['http'].router.add_route('GET', '/db', endpoints.world.db)
-        self.servers['http'].router.add_route('GET', '/db_redis', endpoints.world.db_redis)
-        self.servers['http'].router.add_route('GET', '/queries', endpoints.world.queries)
-        self.servers['http'].router.add_route('GET', '/queries_redis', endpoints.world.queries_redis)
-        self.servers['http'].router.add_route('GET', '/fortunes', endpoints.world.fortunes)
-        self.servers['http'].router.add_route('GET', '/fortunes_redis', endpoints.world.fortunes_redis)
-        self.servers['http'].router.add_route('GET', '/updates', endpoints.world.updates)
-        self.servers['http'].router.add_route('GET', '/updates_redis', endpoints.world.updates_redis)
-        self.servers['http'].router.add_route('GET', '/plaintext', endpoints.world.plaintext)
 
     def make_servers(self):
-        return [self.servers['http'].make_handler(logger=self.worker.log,
-                                                  debug=False,
-                                                  keep_alive=0,
-                                                  access_log=None,
-                                                  access_log_format=self.worker.cfg.access_log_format)]
+        return [servers.yocto_http.YoctoHttpJson,
+                servers.yocto_http.YoctoHttpText]
 
     @asyncio.coroutine
     def start(self):
