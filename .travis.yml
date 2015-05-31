@@ -156,6 +156,7 @@ env:
     - "TESTDIR=Ruby/sinatra"
     - "TESTDIR=Rust/iron"
     - "TESTDIR=Rust/nickel"
+    - "TESTDIR=Rust/hyper"
     - "TESTDIR=Scala/akka-http"
     - "TESTDIR=Scala/colossus"
     - "TESTDIR=Scala/finagle"
