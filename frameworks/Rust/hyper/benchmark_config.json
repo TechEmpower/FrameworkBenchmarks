@@ -1,0 +1,21 @@
+{
+  "framework": "compojure",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "hyper",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "Rust",
+      "webserver": "Hyper",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Hyper",
+      "notes": ""
+    }
+  }]
+}
