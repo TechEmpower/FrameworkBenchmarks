@@ -1,5 +1,5 @@
 aiohttp==0.16.3
-aiohttp-jinja2==0.4.2
+-e git+https://github.com/Eyepea/aiohttp_jinja2.git@c9675e5c1e1ee7741b30aea8d8fbffcde016c7a0#egg=aiohttp_jinja2-master
 aiopg==0.7.0
 api-hour==0.6.2
 asyncio-redis==0.13.4
