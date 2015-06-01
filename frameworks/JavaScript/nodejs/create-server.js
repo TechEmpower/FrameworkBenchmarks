@@ -2,7 +2,7 @@
 // the master of the cluster.
 
 var http = require('http');
-var url = require('url');
+var parseurl = require('parseurl'); // faster than native nodejs url package
 var h = require('./helper');
 
 // Handlers, one for each db config
@@ -19,8 +19,8 @@ var SequelizeHandler = require('./handlers/sequelize');
 var HiredisHandler = require('./handlers/redis');
 
 module.exports = http.createServer(function (req, res) {
-  var values = url.parse(req.url, true);
-  var route = values.pathname;
+  var url = parseurl(req)
+  var route = url.pathname;
 
   var basicHandlers = {
     '/json':               h.responses.jsonSerialization,
@@ -45,7 +45,9 @@ module.exports = http.createServer(function (req, res) {
   if (basicHandlers[route]) {
     return basicHandlers[route](req, res);
   } else {
-    var queries = ~~(values.query.queries) || 1;
+    // naive: only works if there is one query param, as is the case in TFB
+    var queries = url.query.split('=')[1]
+    queries = ~~(queries) || 1;
     queries = Math.min(Math.max(queries, 1), 500);
 
     var queriesHandlers = {

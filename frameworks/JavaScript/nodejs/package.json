@@ -9,6 +9,7 @@
     "mongodb": "2.0.27",
     "mongoose": "4.0.1",
     "mysql": "2.6.2",
+    "parseurl": "^1.3.0",
     "redis": "^0.12.1",
     "sequelize": "2.0.6"
   },
