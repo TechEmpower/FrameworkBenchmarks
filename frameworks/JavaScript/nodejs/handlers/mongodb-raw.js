@@ -15,6 +15,7 @@ function mongodbRandomWorld(callback) {
   collections.World.findOne({
     id: h.randomTfbNumber()
   }, function (err, world) {
+    if (err) { throw err; }
     world._id = undefined; // remove _id from query response
     callback(err, world);
   });
@@ -22,6 +23,7 @@ function mongodbRandomWorld(callback) {
 
 function mongodbGetAllFortunes(callback) {
   collections.Fortune.find().toArray(function (err, fortunes) {
+    if (err) { throw err; }
     callback(err, fortunes);
   })
 }
@@ -31,7 +33,8 @@ function mongodbDriverUpdateQuery(callback) {
     id: h.randomTfbNumber()
   }, [['_id','asc']], {
     $set: {randomNumber: h.randomTfbNumber()}
-  }, {}, function(err, world) {
+  }, {}, function (err, world) {
+    if (err) { throw err; }
     world.value._id = undefined; // remove _id from query response
     callback(err, world.value);
   });
