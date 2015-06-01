@@ -22,63 +22,56 @@ module.exports = http.createServer(function (req, res) {
   var values = url.parse(req.url, true);
   var route = values.pathname;
 
-  // Basic routes, no db required
-  if (route === '/json') {
-    return h.responses.jsonSerialization(req, res);
-  } else if (route === '/plaintext') {
-    return h.responses.plaintext(req, res);
+  var basicHandlers = {
+    '/json':               h.responses.jsonSerialization,
+    '/plaintext':          h.responses.plaintext,
 
-  // No queries parameter required
-  } else if (route === '/mongoose/db') {
-    return MongooseHandler.SingleQuery(req, res);
-  } else if (route === '/mongoose/fortunes') {
-    return MongooseHandler.Fortunes(req, res);
-  } else if (route === '/mongodb/db') {
-    return MongodbRawHandler.SingleQuery(req, res);
-  } else if (route === '/mongodb/fortunes') {
-    return MongodbRawHandler.Fortunes(req, res);
-  } else if (route === '/sequelize/db') {
-    return SequelizeHandler.SingleQuery(req, res);
-  } else if (route === '/sequelize/fortunes') {
-    return SequelizeHandler.Fortunes(req, res);
-  } else if (route === '/mysql/db') {
-    return MySQLRawHandler.SingleQuery(req, res);
-  } else if (route === '/mysql/fortunes') {
-    return MySQLRawHandler.Fortunes(req, res);
-  } else if (route === '/hiredis/db') {
-    return HiredisHandler.SingleQuery(req, res);
-  } else if (route === '/hiredis/fortunes') {
-    return HiredisHandler.Fortunes(req, res);
+    '/mongoose/db':        MongooseHandler.SingleQuery,
+    '/mongoose/fortunes':  MongooseHandler.Fortunes,
+
+    '/mongodb/db':         MongodbRawHandler.SingleQuery,
+    '/mongodb/fortunes':   MongodbRawHandler.Fortunes,
+
+    '/sequelize/db':       SequelizeHandler.SingleQuery,
+    '/sequelize/fortunes': SequelizeHandler.Fortunes,
+
+    '/mysql/db':           MySQLRawHandler.SingleQuery,
+    '/mysql/fortunes':     MySQLRawHandler.Fortunes,
+
+    '/hiredis/db':         HiredisHandler.SingleQuery,
+    '/hiredis/fortunes':   HiredisHandler.Fortunes
   }
 
-  else {
-    var queries = isNaN(values.query.queries) ? 1 : parseInt(values.query.queries, 10);
+  if (basicHandlers[route]) {
+    return basicHandlers[route](req, res);
+  } else {
+    var queries = ~~(values.query.queries) || 1;
     queries = Math.min(Math.max(queries, 1), 500);
 
-    if (route === '/mongoose/queries') {
-      return MongooseHandler.MultipleQueries(queries, req, res);
-    } else if (route === '/mongoose/updates') {
-      return MongooseHandler.Updates(queries, req, res);
-    } else if (route === '/mongodb/queries') {
-      return MongodbRawHandler.MultipleQueries(queries, req, res);
-    } else if (route === '/mongodb/updates') {
-      return MongodbRawHandler.Updates(queries, req, res);
-    } else if (route === '/sequelize/queries') {
-      return SequelizeHandler.MultipleQueries(queries, req, res);
-    } else if (route === '/sequelize/updates') {
-      return SequelizeHandler.Updates(queries, req, res);
-    } else if (route === '/mysql/queries') {
-      return MySQLRawHandler.MultipleQueries(queries, req, res);
-    } else if (route === '/mysql/updates') {
-      return MySQLRawHandler.Updates(queries, req, res);
-    } else if (route === '/hiredis/queries') {
-      return HiredisHandler.MultipleQueries(queries, req, res);
-    } else if (route === '/hiredis/updates') {
-      return HiredisHandler.Updates(queries, req, res);
+    var queriesHandlers = {
+      '/mongoose/queries':  MongooseHandler.MultipleQueries,
+      '/mongoose/updates':  MongooseHandler.Updates,
+
+      '/mongodb/queries':   MongodbRawHandler.MultipleQueries,
+      '/mongodb/updates':   MongodbRawHandler.Updates,
+
+      '/sequelize/queries': SequelizeHandler.MultipleQueries,
+      '/sequelize/updates': SequelizeHandler.Updates,
+
+      '/mysql/queries':     MySQLRawHandler.MultipleQueries,
+      '/mysql/updates':     MySQLRawHandler.Updates,
+
+      '/hiredis/queries':   HiredisHandler.MultipleQueries,
+      '/hiredis/updates':   HiredisHandler.Updates
+    }
+
+    if (queriesHandlers[route]) {
+      return queriesHandlers[route](queries, req, res);
     } else {
       return h.responses.routeNotImplemented(req, res);
     }
   }
+
 }).listen(8080, function() {
   console.log("NodeJS worker listening on port 8080");
 });
