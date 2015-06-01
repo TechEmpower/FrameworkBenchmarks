@@ -5,9 +5,11 @@
   "dependencies": {
     "async": "0.9.0",
     "handlebars": "^3.0.3",
+    "hiredis": "^0.4.0",
     "mongodb": "2.0.27",
     "mongoose": "4.0.1",
     "mysql": "2.6.2",
+    "redis": "^0.12.1",
     "sequelize": "2.0.6"
   },
   "main": "hello.js"

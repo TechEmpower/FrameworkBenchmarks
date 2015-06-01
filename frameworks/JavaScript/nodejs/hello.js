@@ -11,9 +11,11 @@ var h = require('./helper.js');
 var MongodbRawHandler = require('./handlers/mongodb-raw');
 var MySQLRawHandler = require('./handlers/mysql-raw');
 // Mongoose is a popular Node/MongoDB driver
-var MongooseHandler = require('./handlers/mongoose')
+var MongooseHandler = require('./handlers/mongoose');
 // Sequelize is a popular Node/SQL driver
-var SequelizeHandler = require('./handlers/sequelize')
+var SequelizeHandler = require('./handlers/sequelize');
+// Node's redis package uses the C bindings of the hiredis library
+var HiredisHandler = require('./handlers/redis');
 
 if (cluster.isMaster) {
   // Fork workers.
@@ -52,6 +54,10 @@ if (cluster.isMaster) {
       return MySQLRawHandler.SingleQuery(req, res);
     } else if (route === '/mysql/fortunes') {
       return MySQLRawHandler.Fortunes(req, res);
+    } else if (route === '/hiredis/db') {
+      return HiredisHandler.SingleQuery(req, res);
+    } else if (route === '/hiredis/fortunes') {
+      return HiredisHandler.Fortunes(req, res);
     }
 
     else {
@@ -74,6 +80,10 @@ if (cluster.isMaster) {
         return MySQLRawHandler.MultipleQueries(queries, req, res);
       } else if (route === '/mysql/updates') {
         return MySQLRawHandler.Updates(queries, req, res);
+      } else if (route === '/hiredis/queries') {
+        return HiredisHandler.MultipleQueries(queries, req, res);
+      } else if (route === '/hiredis/updates') {
+        return HiredisHandler.Updates(queries, req, res);
       } else {
         return responses.routeNotImplemented(req, res);
       }
