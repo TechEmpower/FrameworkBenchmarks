@@ -7,7 +7,7 @@ PidFile = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2/hhvm.pid
 Server {
   Port = 9001
   Type = fastcgi
-  SourceRoot = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2_hhvm
+  SourceRoot = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2
   DefaultDocument = index.php
 }
 
@@ -28,7 +28,7 @@ Eval {
 # Repo file
 Repo {
   Central {
-    Path = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2_hhvm/.hhvm.bbhc
+    Path = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2/.hhvm.bbhc
   }
 }
 
