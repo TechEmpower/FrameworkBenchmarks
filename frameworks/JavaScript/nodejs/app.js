@@ -8,7 +8,10 @@ if (cluster.isMaster) {
   }
 
   cluster.on('exit', function (worker, code, signal) {
-    console.log('worker ' + worker.pid + ' died');
+  	console.log([
+  	  'A process exit was triggered, most likely due to a failed database action',
+  	  'NodeJS test server shutting down now'].join('\n'));
+    process.exit(1);
   });
 } else {
   // Task for forked worker

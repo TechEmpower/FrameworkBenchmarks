@@ -35,7 +35,8 @@ module.exports = {
 
   SingleQuery: function (req, res) {
     mongooseRandomWorld(function (err, result) {
-      if (err) { throw err; }
+      if (err) { return process.exit(1); }
+
       h.addTfbHeaders(res, 'json');
       res.end(JSON.stringify(result));
     })
@@ -45,7 +46,8 @@ module.exports = {
     var queryFunctions = h.fillArray(mongooseRandomWorld, queries)
 
     async.parallel(queryFunctions, function (err, results) {
-      if (err) { throw err; }
+      if (err) { return process.exit(1); }
+
       h.addTfbHeaders(res, 'json');
       res.end(JSON.stringify(results));
     });
@@ -53,7 +55,8 @@ module.exports = {
 
   Fortunes: function (req, res) {
     mongooseGetAllFortunes(function (err, fortunes) {
-      if (err) { throw err; }
+      if (err) { return process.exit(1); }
+
       fortunes.push(h.ADDITIONAL_FORTUNE);
       fortunes.sort(function (a, b) {
         return a.message.localeCompare(b.message);
@@ -69,7 +72,8 @@ module.exports = {
     var selectFunctions = h.fillArray(mongooseRandomWorld, queries);
 
     async.parallel(selectFunctions, function (err, worlds) {
-      if (err) { throw err; }
+      if (err) { return process.exit(1); }
+
       var updateFunctions = [];
 
       for (var i = 0; i < queries; i++) {
@@ -86,10 +90,11 @@ module.exports = {
       }
 
       async.parallel(updateFunctions, function (err, results) {
-        if (err) { throw err; }
+        if (err) { return process.exit(1); }
+
         h.addTfbHeaders(res, 'json');
         // results does not have updated document information
-        // if no err was found and thrown: all updates succeeded
+        // if no err: all updates were successful
         res.end(JSON.stringify(worlds));
       });
     });

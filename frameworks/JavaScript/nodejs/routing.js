@@ -34,7 +34,6 @@ module.exports.BasicHandler = (function() {
   }
 
   self.has = function(path) {
-    console.log('checked for route')
     return self.routes[path];
   }
 

@@ -5,8 +5,9 @@ var http = require('http');
 var parseurl = require('parseurl'); // faster than native nodejs url package
 
 // Initialize routes & their handlers (once)
-var basicHandler = require('./routing').BasicHandler;
-var queryHandler = require('./routing').QueryHandler;
+var routing = require('./routing')
+var basicHandler = routing.BasicHandler;
+var queryHandler = routing.QueryHandler;
 var routeNotImplemented = require('./helper').responses.routeNotImplemented;
 
 module.exports = http.createServer(function (req, res) {
