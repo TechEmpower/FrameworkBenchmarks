@@ -64,7 +64,6 @@
       "setup_file": "yocto_http/setup",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "port": 8081,
       "approach": "Stripped",
