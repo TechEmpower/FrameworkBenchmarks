@@ -3,74 +3,29 @@
 
 var http = require('http');
 var parseurl = require('parseurl'); // faster than native nodejs url package
-var h = require('./helper');
 
-// Handlers, one for each db config
-var MongodbRawHandler = require('./handlers/mongodb-raw');
-var MySQLRawHandler = require('./handlers/mysql-raw');
-
-// Mongoose is a popular Node/MongoDB driver
-var MongooseHandler = require('./handlers/mongoose');
-
-// Sequelize is a popular Node/SQL driver
-var SequelizeHandler = require('./handlers/sequelize');
-
-// Node's redis package uses the C bindings of the hiredis library
-var HiredisHandler = require('./handlers/redis');
+// Initialize routes & their handlers (once)
+var basicHandler = require('./routing').BasicHandler;
+var queryHandler = require('./routing').QueryHandler;
+var routeNotImplemented = require('./helper').responses.routeNotImplemented;
 
 module.exports = http.createServer(function (req, res) {
-  var url = parseurl(req)
+  var url = parseurl(req);
   var route = url.pathname;
 
-  var basicHandlers = {
-    '/json':               h.responses.jsonSerialization,
-    '/plaintext':          h.responses.plaintext,
-
-    '/mongoose/db':        MongooseHandler.SingleQuery,
-    '/mongoose/fortunes':  MongooseHandler.Fortunes,
-
-    '/mongodb/db':         MongodbRawHandler.SingleQuery,
-    '/mongodb/fortunes':   MongodbRawHandler.Fortunes,
-
-    '/sequelize/db':       SequelizeHandler.SingleQuery,
-    '/sequelize/fortunes': SequelizeHandler.Fortunes,
-
-    '/mysql/db':           MySQLRawHandler.SingleQuery,
-    '/mysql/fortunes':     MySQLRawHandler.Fortunes,
-
-    '/hiredis/db':         HiredisHandler.SingleQuery,
-    '/hiredis/fortunes':   HiredisHandler.Fortunes
-  }
-
-  if (basicHandlers[route]) {
-    return basicHandlers[route](req, res);
+  // Routes that do no require a `queries` parameter
+  if (basicHandler.has(route)) {
+    return basicHandler.handle(route, req, res);
   } else {
     // naive: only works if there is one query param, as is the case in TFB
     var queries = url.query.split('=')[1]
     queries = ~~(queries) || 1;
     queries = Math.min(Math.max(queries, 1), 500);
 
-    var queriesHandlers = {
-      '/mongoose/queries':  MongooseHandler.MultipleQueries,
-      '/mongoose/updates':  MongooseHandler.Updates,
-
-      '/mongodb/queries':   MongodbRawHandler.MultipleQueries,
-      '/mongodb/updates':   MongodbRawHandler.Updates,
-
-      '/sequelize/queries': SequelizeHandler.MultipleQueries,
-      '/sequelize/updates': SequelizeHandler.Updates,
-
-      '/mysql/queries':     MySQLRawHandler.MultipleQueries,
-      '/mysql/updates':     MySQLRawHandler.Updates,
-
-      '/hiredis/queries':   HiredisHandler.MultipleQueries,
-      '/hiredis/updates':   HiredisHandler.Updates
-    }
-
-    if (queriesHandlers[route]) {
-      return queriesHandlers[route](queries, req, res);
+    if (queryHandler.has(route)) {
+      return queryHandler.handle(route, queries, req, res);
     } else {
-      return h.responses.routeNotImplemented(req, res);
+      return routeNotImplemented(req, res);
     }
   }
 
