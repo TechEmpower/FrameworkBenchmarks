@@ -23,15 +23,12 @@ var Fortunes = connection.model('Fortune', FortuneSchema);
 function mongooseRandomWorld(callback) {
   Worlds.findOne({
     id: h.randomTfbNumber()
-  }).exec(function (err, world) {
-    callback(err, world);
-  });
+  }).exec(callback);
 }
 
 function mongooseGetAllFortunes(callback) {
-  Fortunes.find({}).exec(function (err, fortunes) {
-    callback(err, fortunes);
-  });
+  Fortunes.find({})
+    .exec(callback);
 }
 
 module.exports = {
