@@ -76,6 +76,7 @@ env:
     - "TESTDIR=Java/restexpress"
     - "TESTDIR=Java/servlet"
     - "TESTDIR=Java/servlet3-cass"
+    - "TESTDIR=Java/servlet-dsl"
     - "TESTDIR=Java/spark"
     - "TESTDIR=Java/sabina"
     - "TESTDIR=Java/spring"
