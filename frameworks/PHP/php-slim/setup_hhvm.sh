@@ -4,7 +4,7 @@ export PHP_FPM=$PHP_HOME/sbin/php-fpm
 export NGINX_HOME=${IROOT}/nginx
 
 sed -i 's|localhost|'"${DBHOST}"'|g' index.php
-sed -i 's|SourceRoot = .*/FrameworkBenchmarks/codeigniter|SourceRoot = '"${TROOT}"'|g' deploy/config.hdf
+sed -i 's|SourceRoot = .*/FrameworkBenchmarks/php-slim|SourceRoot = '"${TROOT}"'|g' deploy/config.hdf
 sed -i 's|Path = .*/.hhvm.hhbc|Path = '"${TROOT}"'/.hhvm.bbhc|g' deploy/config.hdf
 sed -i 's|PidFile = .*/hhvm.pid|PidFile = '"${TROOT}"'/hhvm.pid|g' deploy/config.hdf
 sed -i 's|File = .*/error.log|File = '"${TROOT}"'/error.log|g' deploy/config.hdf
