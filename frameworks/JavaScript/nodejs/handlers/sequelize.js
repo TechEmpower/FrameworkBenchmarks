@@ -1,5 +1,7 @@
 var h = require('../helper');
-var async = require('async');
+// var async = require('async');
+var Promise = require('bluebird');
+
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
   host: '127.0.0.1',
@@ -23,72 +25,85 @@ var Fortunes = sequelize.define('Fortune', {
   freezeTableName: true
 });
 
-// Sequelize Query Functions
-function sequelizeRandomWorld(callback) {
-  Worlds.findOne({
+var randomWorldPromise = function() {
+  return Worlds.findOne({
     where: { id: h.randomTfbNumber() }
-  }).complete(callback);
+  }).then(function (results) {
+    return results;
+  }).catch(function (err) {
+    process.exit(1);
+  });
 }
 
 module.exports = {
 
   SingleQuery: function (req, res) {
-    sequelizeRandomWorld(function (err, result) {
-      if (err) { return process.exit(1); }
-
+    randomWorldPromise().then(function (world) {
       h.addTfbHeaders(res, 'json');
-      res.end(JSON.stringify(result));
+      res.end(JSON.stringify(world));
     });
   },
 
   MultipleQueries: function (queries, req, res) {
-    var queryFunctions = h.fillArray(sequelizeRandomWorld, queries);
+    var worldPromises = [];
 
-    async.parallel(queryFunctions, function (err, results) {
-      if (err) { return process.exit(1); }
+    for (var i = 0; i < queries; i++) {
+      worldPromises.push(randomWorldPromise());
+    } 
 
+    Promise.all(worldPromises).then(function (worlds) {
       h.addTfbHeaders(res, 'json');
-      res.end(JSON.stringify(results));
+      res.end(JSON.stringify(worlds));
     });
   },
 
   Fortunes: function (req, res) {
-    Fortunes.findAll().complete(function (err, fortunes) {
-      if (err) { return process.exit(1); }
-
+    Fortunes.findAll().then(function (fortunes) {
       fortunes.push(h.ADDITIONAL_FORTUNE);
       fortunes.sort(function (a, b) {
         return a.message.localeCompare(b.message);
       });
+
       h.addTfbHeaders(res, 'html');
       res.end(h.fortunesTemplate({
         fortunes: fortunes
       }));
+    }).catch(function (err) {
+      console.log(err.stack);
+      process.exit(1);
     });
   },
 
   Updates: function (queries, req, res) {
-    var selectFunctions = h.fillArray(sequelizeRandomWorld, queries);
+    var worldPromises = [];
 
-    async.parallel(selectFunctions, function (err, worlds) {
-      if (err) { return process.exit(1); }
+    for (var i = 0; i < queries; i++) {
+      worldPromises.push(randomWorldPromise());
+    }
 
-      var updateFunctions = [];
+    var worldUpdate = function(world) {
+      world.randomNumber = h.randomTfbNumber();
 
-      for (var i = 0; i < queries; i++) {
-        (function (i) {
-          updateFunctions.push(function (callback) {
-            worlds[i].randomNumber = h.randomTfbNumber();
-            worlds[i].save().complete(callback);
-          });
-        })(i);
-      }
+      return Worlds.update({
+        randomNumber: world.randomNumber
+      },
+      {
+        where: { id: world.id }
+      }).then(function (results) {
+        return world;
+      }).catch(function (err) {
+        process.exit(1);
+      });
+    }
 
-      async.parallel(updateFunctions, function (err, updates) {
-        if (err) { return process.exit(1); }
+    Promise.all(worldPromises).then(function (worlds) {
+      var updates = worlds.map(function (e) {
+        return worldUpdate(e);
+      });
 
+      Promise.all(updates).then(function (updated) {
         h.addTfbHeaders(res, 'json');
-        res.end(JSON.stringify(updates));
+        res.end(JSON.stringify(updated));
       });
     });
   }
