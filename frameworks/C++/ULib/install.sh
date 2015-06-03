@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# --------------------------------------------------------------------------------------------------------
 # install.sh
 # --------------------------------------------------------------------------------------------------------
 # toolset/run-tests.py --install server --test ULib-mysql  --type all --verbose
@@ -18,15 +19,15 @@
 
 ULIB_VERSION=1.4.2
 ULIB_ROOT=$IROOT/ULib
-ULIB_DOCUMENT_ROOT=${ULIB_ROOT}/ULIB_DOCUMENT_ROOT
+ULIB_DOCUMENT_ROOT=$ULIB_ROOT/ULIB_DOCUMENT_ROOT
 
 # Check if ULib is already installed
-ULIB_INSTALLED_FILE="${IROOT}/ULib-${ULIB_VERSION}.installed"
-RETCODE=$(fw_exists ${ULIB_INSTALLED_FILE})
+ULIB_INSTALLED_FILE="$IROOT/ULib-${ULIB_VERSION}.installed"
+RETCODE=$(fw_exists $ULIB_INSTALLED_FILE)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 # Create a run directory for ULIB
-[ ! -e ${ULIB_INSTALLED_FILE} -a -d ${IROOT}/ULib ] && rm -rf ${IROOT}/ULib*
+[ ! -e $ULIB_INSTALLED_FILE -a -d $IROOT/ULib ] && rm -rf $IROOT/ULib*
 
 if [ ! -d "$ULIB_ROOT" ]; then
   mkdir -p $ULIB_ROOT
@@ -42,9 +43,8 @@ if [ ! -f "benchmark.cfg" ]; then
 userver {
  PORT 8080
  PREFORK_CHILD 4
- MAX_KEEP_ALIVE 1023
- LISTEN_BACKLOG 16384
- CLIENT_FOR_PARALLELIZATION 256
+ TCP_LINGER_SET -1
+ LISTEN_BACKLOG 256
  ORM_DRIVER "mysql pgsql sqlite"
  DOCUMENT_ROOT $ULIB_DOCUMENT_ROOT
 }
@@ -88,10 +88,11 @@ USP_FLAGS="-DAS_cpoll_cppsp_DO" \
 #USP_LIBS="-ljson" \
 
 make install
-cp -r tests/examples/benchmark/FrameworkBenchmarks/ULib/db ${ULIB_ROOT}
+cp -r tests/examples/benchmark/FrameworkBenchmarks/ULib/db $ULIB_ROOT
 
 cd examples/userver
 make install
+setcap cap_sys_nice,cap_sys_resource+eip $ULIB_ROOT/bin/userver_tcp
 
 # 3. Compile usp pages for benchmark
 cd ../../src/ulib/net/server/plugin/usp
@@ -105,4 +106,4 @@ fi
 mkdir -p $ULIB_DOCUMENT_ROOT
 cp .libs/db.so .libs/fortune.so .libs/json.so .libs/plaintext.so .libs/query.so .libs/update.so $ULIB_DOCUMENT_ROOT
 
-touch ${ULIB_INSTALLED_FILE}
+touch $ULIB_INSTALLED_FILE
