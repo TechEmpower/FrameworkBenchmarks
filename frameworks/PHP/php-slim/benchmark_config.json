@@ -22,7 +22,7 @@
       "versus": "php"
     },
     "hhvm": {
-      "setup_file": "setup",
+      "setup_file": "setup_hhvm",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/dbs?queries=",
