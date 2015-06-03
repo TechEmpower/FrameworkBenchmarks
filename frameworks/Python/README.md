@@ -16,6 +16,7 @@ For further guidance, review the
 ### Python Experts
 
 * INADA Naoki (@methane) -- Expert of Python and Python's MySQL driver.
+* Ludovic Gasc (@GMLudo) -- Expert of AsyncIO.
 
 ### [Python Community](https://www.python.org/community/)
 

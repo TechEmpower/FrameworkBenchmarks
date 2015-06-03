@@ -7,7 +7,7 @@ workers = multiprocessing.cpu_count() * 2
 if _is_travis:
     workers = 2
 
-bind = ['0.0.0.0:8008', '0.0.0.0:8009', '0.0.0.0:8011']
+bind = ['0.0.0.0:8080']
 keepalive = 120
 errorlog = '-'
 pidfile = 'api_hour.pid'
