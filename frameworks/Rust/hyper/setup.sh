@@ -2,6 +2,8 @@
 
 sed -i 's|tcp(.*:3306)|tcp('"${DBHOST}"':3306)|g' src/main.rs
 
-cargo build --release
+set CARGO = $IROOT/rust/bin/cargo
 
-cargo run --release &
+$CARGO build --release
+
+$CARGO run --release &

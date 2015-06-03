@@ -1,5 +1,5 @@
 {
-  "framework": "compojure",
+  "framework": "hyper",
   "tests": [{
     "default": {
       "setup_file": "setup",
