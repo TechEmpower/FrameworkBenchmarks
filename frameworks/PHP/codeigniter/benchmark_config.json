@@ -58,7 +58,7 @@
       "versus": "php"
     },
     "raw_hhvm": {
-      "setup_file": "setup",
+      "setup_file": "setup_hhvm",
       "db_url": "/index.php/bench/db",
       "query_url": "/index.php/bench/db/",
       "fortune_url": "/index.php/bench/fortunes",
