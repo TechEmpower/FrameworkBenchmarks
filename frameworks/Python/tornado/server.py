@@ -45,7 +45,8 @@ class DBTestHandler(BaseHandler):
     def get(self):
         world = yield db.World.find_one(randint(1, 10000))
         # Get first postion on arguments, and so first postion in mongo return
-        world['id'] = str(world.pop('_id'))
+        world['id'] = int(world.pop('_id'))
+        world['randomNumber'] = int(world['randomNumber'])
         response = json.dumps(world)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(response)
@@ -68,7 +69,8 @@ class QueryTestHandler(BaseHandler):
                         for _ in xrange(queries)]
         for world in worlds:
             # Get first postion on arguments, and so first postion in mongo return
-            world['id'] = str(world.pop('_id'))
+            world['id'] = int(world.pop('_id'))
+            world['randomNumber'] = int(world['randomNumber'])
         response = json.dumps(worlds)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(response)
@@ -80,9 +82,7 @@ class QueryPostgresRawTestHandler(BaseHandler):
         sql = "SELECT id, randomNumber FROM World WHERE id=%s"
 
         random_id = randint(1, 10000)
-        cursor = yield momoko.Op(
-            self.application.db.execute, sql, (random_id,)
-        )
+        cursor = yield self.application.db.execute(sql, (random_id,))
         row = cursor.fetchone()
         response = json.dumps({"id": row[0], "randomNumber": row[1]})
 
@@ -106,9 +106,7 @@ class MultipleQueriesPostgresRawTestHandler(BaseHandler):
         worlds = []
         for i in xrange(int(queries)):
             random_id = randint(1, 10000)
-            cursor = yield momoko.Op(
-                self.application.db.execute, sql, (random_id,)
-            )
+            cursor = yield self.application.db.execute(sql, (random_id,))
             row = cursor.fetchone()
             worlds.append({"id": row[0], "randomNumber": row[1]})
         response = json.dumps(worlds)
@@ -130,9 +128,12 @@ if __name__ == "__main__":
     server = tornado.httpserver.HTTPServer(application)
     server.bind(options.port)
     server.start(0)
+
+    ioloop = tornado.ioloop.IOLoop.instance()
     if options.postgres:
         dsn = "user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world host=%s" % options.postgres
-        application.db = momoko.Pool(dsn, size=1)
+        application.db = momoko.Pool(dsn, size=1, max_size=100)
+        ioloop.run_sync(application.db.connect)
     else:
         db = motor.MotorClient(options.mongo).hello_world
-    tornado.ioloop.IOLoop.instance().start()
+    ioloop.start()
