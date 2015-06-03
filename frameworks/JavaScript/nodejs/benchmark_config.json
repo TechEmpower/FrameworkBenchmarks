@@ -2,7 +2,7 @@
   "framework": "nodejs",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup_node",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -21,7 +21,7 @@
       "versus": "nodejs"
     },
     "mongodb": {
-      "setup_file": "setup",
+      "setup_file": "setup_node",
       "db_url": "/mongoose",
       "query_url": "/mongoose?queries=",
       "update_url": "/mongoose-update?queries=",
@@ -41,7 +41,7 @@
       "versus": "nodejs"
     },
     "mongodb-raw": {
-      "setup_file": "setup",
+      "setup_file": "setup_node",
       "db_url": "/mongodb",
       "query_url": "/mongodb?queries=",
       "update_url": "/mongodb-update?queries=",
@@ -61,7 +61,7 @@
       "versus": "nodejs"
     },
     "mysql": {
-      "setup_file": "setup",
+      "setup_file": "setup_node",
       "db_url": "/mysql-orm",
       "query_url": "/mysql-orm?queries=",
       "update_url": "/mysql-orm-update?queries=",
@@ -81,7 +81,7 @@
       "versus": "nodejs"
     },
     "mysql-raw": {
-      "setup_file": "setup",
+      "setup_file": "setup_node",
       "db_url": "/mysql",
       "query_url": "/mysql?queries=",
       "update_url": "/mysql-update?queries=",
@@ -99,6 +99,105 @@
       "display_name": "nodejs",
       "notes": "",
       "versus": "nodejs"
+    },
+    "iojs": {
+      "setup_file": "setup_iojs",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "nodejs",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "iojs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nodejs",
+      "notes": "",
+      "versus": ""
+    },
+    "mongodb-iojs": {
+      "setup_file": "setup_iojs",
+      "db_url": "/mongoose",
+      "query_url": "/mongoose?queries=",
+      "update_url": "/mongoose-update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MongoDB",
+      "framework": "nodejs",
+      "language": "JavaScript",
+      "orm": "Full",
+      "platform": "iojs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nodejs",
+      "notes": "",
+      "versus": ""
+    },
+    "mongodb-raw-iojs": {
+      "setup_file": "setup_iojs",
+      "db_url": "/mongodb",
+      "query_url": "/mongodb?queries=",
+      "update_url": "/mongodb-update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MongoDB",
+      "framework": "nodejs",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "iojs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nodejs",
+      "notes": "",
+      "versus": ""
+    },
+    "mysql-iojs": {
+      "setup_file": "setup_iojs",
+      "db_url": "/mysql-orm",
+      "query_url": "/mysql-orm?queries=",
+      "update_url": "/mysql-orm-update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "nodejs",
+      "language": "JavaScript",
+      "orm": "Full",
+      "platform": "iojs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nodejs",
+      "notes": "",
+      "versus": ""
+    },
+    "mysql-raw-iojs": {
+      "setup_file": "setup_iojs",
+      "db_url": "/mysql",
+      "query_url": "/mysql?queries=",
+      "update_url": "/mysql-update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "nodejs",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "iojs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nodejs",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

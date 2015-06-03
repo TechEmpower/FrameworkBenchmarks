@@ -2,7 +2,7 @@
   "framework": "hapi",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup_node",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -21,7 +21,7 @@
       "versus": "node"
     },
     "mongodb": {
-      "setup_file": "setup",
+      "setup_file": "setup_node",
       "db_url": "/mongoose/",
       "query_url": "/mongoose/",
       "update_url": "/mongoose-update/",
@@ -41,7 +41,7 @@
       "versus": "node"
     },
     "mysql": {
-      "setup_file": "setup",
+      "setup_file": "setup_node",
       "db_url": "/mysql-orm/",
       "query_url": "/mysql-orm/",
       "fortune_url": "/fortune",
@@ -60,6 +60,66 @@
       "display_name": "hapi",
       "notes": "",
       "versus": "node"
+    },
+    "iojs": {
+      "setup_file": "setup_iojs",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "hapi",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "iojs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hapi",
+      "notes": "",
+      "versus": ""
+    },
+    "mongodb-iojs": {
+      "setup_file": "setup_iojs",
+      "db_url": "/mongoose/",
+      "query_url": "/mongoose/",
+      "update_url": "/mongoose-update/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MongoDB",
+      "framework": "hapi",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "iojs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hapi",
+      "notes": "",
+      "versus": ""
+    },
+    "mysql-iojs": {
+      "setup_file": "setup_iojs",
+      "db_url": "/mysql-orm/",
+      "query_url": "/mysql-orm/",
+      "fortune_url": "/fortune",
+      "update_url": "/mysql-orm-update/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "hapi",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "iojs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hapi",
+      "notes": "",
+      "versus": ""
     }
   }]
 }
