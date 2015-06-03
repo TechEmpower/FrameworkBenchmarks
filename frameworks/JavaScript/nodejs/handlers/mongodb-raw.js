@@ -6,7 +6,8 @@ var collections = {
   Fortune: null
 };
 MongoClient.connect('mongodb://127.0.0.1/hello_world?maxPoolSize=5', function (err, db) {
-  if (err) { return process.exit(1) }
+  // do nothing if there is err connecting to db
+
   collections.World = db.collection('world');
   collections.Fortune = db.collection('fortune');
 });

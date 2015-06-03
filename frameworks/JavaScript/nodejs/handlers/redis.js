@@ -8,7 +8,7 @@ var client = redis.createClient();
 
 client.on('error', function (err) {
   console.log('Redis Error: ' + err);
-  process.exit(1);
+  // Do nothing further if Redis errors/is unavailable
 });
 
 function redisWorldId(id) {
