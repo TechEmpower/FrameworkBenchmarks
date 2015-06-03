@@ -51,6 +51,11 @@
 			<version>${officefloor-version}</version>
 		</dependency>
 		<dependency>
+			<groupId>net.officefloor.plugin</groupId>
+			<artifactId>officeplugin_json</artifactId>
+			<version>${officefloor-version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-accessplatform-jpa-rdbms</artifactId>
 			<type>pom</type>
