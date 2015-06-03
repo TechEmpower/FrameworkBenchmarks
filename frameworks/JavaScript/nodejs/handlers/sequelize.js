@@ -1,5 +1,4 @@
 var h = require('../helper');
-// var async = require('async');
 var Promise = require('bluebird');
 
 var Sequelize = require('sequelize');
