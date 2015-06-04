@@ -10,5 +10,5 @@ fw_untar rust-1.0.0-x86_64-unknown-linux-gnu.tar.gz
 	./install.sh --prefix=$IROOT/rust
 )
 
-echo "export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:\$IROOT/rust/lib" >> $IROOT/rust.installed
-echo "export PATH=\$IROOT/rust/bin:$PATH" >> $IROOT/rust.installed
+echo -e "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$IROOT/rust/lib" > $IROOT/rust.installed
+echo -e "export PATH=$IROOT/rust/bin:$PATH" >> $IROOT/rust.installed
