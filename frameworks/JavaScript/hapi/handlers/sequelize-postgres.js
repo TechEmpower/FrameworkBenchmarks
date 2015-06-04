@@ -1,19 +1,19 @@
-// Connects to MySQL using the sequelize driver
+// Connects to Postgres using the sequelize driver
 // Handles related routes
 
 var h = require('../helper');
 var Promise = require('bluebird');
-
 var Sequelize = require('sequelize');
+
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
   host: '127.0.0.1',
-  dialect: 'mysql',
+  dialect: 'postgres',
   logging: false
 });
 
 var Worlds = sequelize.define('World', {
   id:           { type: 'Sequelize.INTEGER' },
-  randomNumber: { type: 'Sequelize.INTEGER' }
+  randomnumber: { type: 'Sequelize.INTEGER' }
 }, {
   timestamps: false,
   freezeTableName: true
@@ -33,7 +33,7 @@ var randomWorldPromise = function() {
   }).then(function (results) {
     return results;
   }).catch(function (err) {
-    process.exit(1);
+    console.log(err.stack);
   });
 }
 
@@ -73,7 +73,7 @@ module.exports = {
         .header('Content-Type', 'text/html')
         .header('Server', 'hapi');
     }).catch(function (err) {
-      process.exit(1);
+      console.log(err.stack);
     }); 
   },
 
@@ -96,7 +96,7 @@ module.exports = {
             return world;
           })
         .catch(function (err) {
-            process.exit(1);
+            console.log(err.stack);
           });
     }
 
@@ -110,7 +110,8 @@ module.exports = {
           .header('Server', 'hapi')
       })
       .catch(function (e) {
-        process.exit(1);
+        console.log(err.stack);
       });
   }
-}
+
+};

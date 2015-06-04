@@ -61,6 +61,27 @@
       "display_name": "hapi",
       "notes": "",
       "versus": "node"
+    },
+    "postgres": {
+      "setup_file": "setup",
+      "db_url": "/sequelize-pg/db",
+      "query_url": "/sequelize-pg/queries?queries=",
+      "fortune_url": "/sequelize-pg/fortunes",
+      "update_url": "/sequelize-pg/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "hapi",
+      "language": "JavaScript",
+      "orm": "Full",
+      "platform": "nodejs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hapi",
+      "notes": "",
+      "versus": "node"
     }
   }]
 }
