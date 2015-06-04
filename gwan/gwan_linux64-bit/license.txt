@@ -1,0 +1,131 @@
+---------------------------------------------------------------
+G-WAN's Usage Terms and Conditions (no cryptic wording)
+---------------------------------------------------------------
+In short: G-WAN is fully functional for an unlimited time with 
+no cost for personal, individual, non-profit, academic, as well
+as commercial and non-commercial use or any combination of these
+(no call-home, no spyware, no backdoor included).
+---------------------------------------------------------------
+
+These terms and conditions govern the distribution, licensing 
+and delivery of the G-WAN software product to you by TrustLeap.
+
+BY ACCEPTING DELIVERY OF THE PRODUCTS AND SERVICES DESCRIBED ON
+TRUSTLEAP'S WEB SITE OR OTHER TRUSTLEAP'S DOCUMENTATION, USER 
+AGREES TO BE BOUND BY AND ACCEPTS THESE TERMS AND CONDITIONS OF 
+USE UNLESS CUSTOMER AND TRUSTLEAP HAVE SIGNED A SEPARATE 
+AGREEMENT, IN WHICH CASE THE SEPARATE AGREEMENT WILL GOVERN.
+
+These Terms constitute a binding contract between user and 
+TrustLeap. User acknowledges agreement and acceptance of these 
+Terms by making installing the software. These Terms may change
+without prior notice.
+
+We reserve the right to make adjustments to distribution terms, 
+products and service offerings for reasons including, but not 
+limited to, changing market conditions. We make every effort to 
+ensure the accuracy of the information available on our web site.
+However, the documents and graphics published on this site may 
+contain technical inaccuracies or typographical errors. We make 
+no representations about the suitability of the information and 
+graphics presented on this site. All such documents and graphics 
+are provided "as is" without warranty of any kind.
+
+Restrictions on Use
+-------------------
+"Modifications" means any addition, alteration or deletion from 
+the original files distributed by TrustLeap.
+
+TrustLeap hereby grants you a world-wide, royalty-free, non
+-exclusive license to copy, run and distribute the binary code 
+versions of G-WAN at the condition no Modifications are made
+either to the files made available to you by TrustLeap.
+
+"Response header" is the part of the response message output by 
+the G-WAN Web server, containing but not limited to, header fields
+for date, content-type, server identification and cache control.
+
+"Server identification field" means the field in the response 
+header which contains the text "Server: G-WAN/x.y.z" where
+"x.y.z" is the program version number.
+
+You agree not to remove or modify the server identification field
+contained in the response header.
+
+In consideration for the licenses granted by TrustLeap to you 
+herein, you may also promote G-WAN by displaying the G-WAN 'powered'
+logo (http://gwan.com/imgs/trustleap_pw.gif) in marketing and 
+promotional materials such as the home page of your Web site, other
+Web pages or any other document. You also agree that TrustLeap may 
+identify your company as a user of G-WAN in conjunction with its 
+own marketing efforts.
+
+This agreement will terminate immediately and without further notice
+if you fail to comply with any provision of this agreement. Upon 
+termination, you agree to uninstall or destroy all copies of the 
+G-WAN files.
+
+Distribution
+------------
+Provided that you do not modify the files of the distribution 
+archive you are hereby licensed to make as many copies of the 
+software and documentation as you wish; give exact copies of 
+the original version to anyone; and distribute the software and
+documentation in its unmodified form via electronic means. 
+There is no charge for any of the above.
+
+You are specifically prohibited from charging, or requesting
+donations, for any such copies, however made.
+
+Obtaining the Latest Version
+----------------------------
+Before distributing G-WAN please verify that you have the latest
+version. The latest version is always available on our website 
+http://trustleap.ch/
+
+The filename of the G-WAN distribution archive is: 
+
+- for Windows: gwan_windows.zip
+- for Linux  : gwan_linux.tar.bz2
+
+Suggested One Line Program Description
+--------------------------------------
+G-WAN is a Web application server with 'edit & play' C servlets
+
+Suggested Description
+---------------------
+G-WAN is a Web server and an application server with C servlets
+and the whole takes 200 KB of code in addition to be far faster
+than *all* other available Web application servers (free or not).
+
+C servlets are 'edit & play' scripts that let you use the power
+of C with the convenience of scripts.
+
+G-WAN is free for all. Feel free to distribute it around you!!!
+
+Requirements
+------------
+G-WAN Requires Windows XP (or more recent), or Linux (Ubuntu 8+)
+
+Author
+------
+http://trustleap.ch/
+
+Documentation and Legal Notices
+-------------------------------
+http://trustleap.ch/archives/
+
+LIMITATIONS OF LIABILITY
+------------------------
+THE G-WAN WEB SERVER, G-WAN SERVLETS AND COMPLEMENTARY SERVICES 
+ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. UNDER NO 
+CIRCUMSTANCES WILL TRUSTLEAP BE LIABLE FOR LOST PROFITS, LOSS 
+OF BUSINESS OR OTHER CONSEQUENTIAL, SPECIAL, INDIRECT OR 
+PUNITIVE DAMAGES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
+DAMAGES, OR FOR ANY CLAIM BY ANY THIRD PARTY.
+
+TRUSTLEAP DOES NOT GUARANTEE FUNCTIONALITY AND APPLICATION 
+PROGRAMMING INTERFACE STABILITY BETWEEN PRODUCT RELEASES.
+---------------------------------------------------------------
+End of G-WAN's Usage Terms and Conditions
+---------------------------------------------------------------
