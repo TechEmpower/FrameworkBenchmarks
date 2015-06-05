@@ -7,6 +7,7 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
+  console.log('Master starting ' + new Date().toISOString(" "));
   cluster.on('exit', function (worker, code, signal) {
     process.exit(1);
   });

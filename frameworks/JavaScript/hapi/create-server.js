@@ -11,10 +11,29 @@ server.views({
   }
 });
 
-var MongooseHandler = require('./handlers/mongoose');
-var SequelizeHandler = require('./handlers/sequelize');
-var SequelizePgHandler = require('./handlers/sequelize-postgres');
-var RedisHandler = require('./handlers/redis');
+var Promise = require('bluebird');
+var MongooseHandler;
+var SequelizeHandler;
+var SequelizePgHandler;
+var RedisHandler;
+
+// Slight start-up improvement loading handlers in parallel
+Promise.join(
+  require('./handlers/mongoose'),
+  require('./handlers/sequelize'),
+  require('./handlers/sequelize-postgres'),
+  require('./handlers/redis'),
+  function (mongo, mysql, pg, redis) {
+    MongooseHandler = mongo;
+    SequelizeHandler = mysql;
+    SequelizePgHandler = pg;
+    RedisHandler = redis;
+  })
+  .catch(function (err) {
+    console.log('There was a problem setting up the handlers');
+    process.exit(1);
+  });
+
 
 Route('/json', JsonSerialization);
 Route('/plaintext', Plaintext);
@@ -39,6 +58,7 @@ Route('/hiredis/queries', RedisHandler.MultipleQueries);
 Route('/hiredis/fortunes', RedisHandler.Fortunes);
 Route('/hiredis/updates', RedisHandler.Updates);
 
+
 function JsonSerialization(req, reply) {
   reply({ message: 'Hello, World!' })
     .header('Server', 'hapi');
@@ -58,5 +78,6 @@ function Route(path, handler) {
 }
 
 server.start(function (err) {
-  console.log('Hapi worker started and listening on ' + server.info.uri);
+  console.log('Hapi worker started and listening on ' + server.info.uri + " "
+    + new Date().toISOString(" "));
 });
