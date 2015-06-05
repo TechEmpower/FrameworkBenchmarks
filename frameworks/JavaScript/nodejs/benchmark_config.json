@@ -124,6 +124,27 @@
       "display_name": "nodejs",
       "notes": "",
       "versus": "nodejs"
+    },
+    "postgres": {
+      "setup_file": "setup",
+      "db_url": "/sequelize-pg/db",
+      "query_url": "/sequelize-pg/queries?queries=",
+      "update_url": "/sequelize-pg/updates?queries=",
+      "fortune_url": "/sequelize-pg/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "nodejs",
+      "language": "JavaScript",
+      "orm": "Full",
+      "platform": "nodejs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nodejs",
+      "notes": "",
+      "versus": "nodejs"
     }
   }]
 }
