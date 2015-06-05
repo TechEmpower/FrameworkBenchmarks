@@ -143,6 +143,10 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 
 	r := gin.New()
+	serverHeader := []string{"Gin"}
+	r.Use(func(c *gin.Context) {
+		c.Writer.Header()["Server"] = serverHeader
+	})
 	r.LoadHTMLFiles("fortune.html")
 	r.GET("/json", json)
 	r.GET("/db", db)
