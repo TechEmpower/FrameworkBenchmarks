@@ -103,7 +103,8 @@ module.exports = {
         reply.view('fortunes', {
           fortunes: fortunes
         })
-          .header('Content-Type', 'text/html');
+          .header('Content-Type', 'text/html')
+          .header('Server', 'hapi');
       })
       .catch(function (err) {
         process.exit(1);
