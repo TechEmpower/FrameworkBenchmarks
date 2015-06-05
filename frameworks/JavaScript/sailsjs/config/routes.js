@@ -36,13 +36,6 @@ module.exports.routes = {
     view: 'homepage'
   },
 
-  'get /json':      'StaticTestController.json',
-  'get /db':        'DatabaseQueryController.single',
-  'get /queries':   'DatabaseQueryController.multiple',
-  'get /fortunes':  'DatabaseQueryController.fortunes',
-  'get /updates':   'DatabaseQueryController.updates',
-  'get /plaintext': 'StaticTestController.plaintext'
-
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
@@ -52,5 +45,15 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+
+  // TFB routes here
+
+  'get /json':      'StaticTestController.json',
+  'get /plaintext': 'StaticTestController.plaintext',
+
+  'get /mysql/db':        'SequelizeMySQLController.single',
+  'get /mysql/queries':   'SequelizeMySQLController.multiple',
+  'get /mysql/fortunes':  'SequelizeMySQLController.fortunes',
+  'get /mysql/updates':   'SequelizeMySQLController.updates'
 
 };
