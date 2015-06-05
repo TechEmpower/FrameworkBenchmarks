@@ -13,16 +13,12 @@ fn main() {
     Server::http(|req: Request, mut res: Response| {
         match (req.method, req.uri) {
             (hyper::Get, RequestUri::AbsolutePath(ref path)) if path == "/plaintext" => {
-                res.headers_mut().set(ContentLength(HELLO_WORLD.len() as u64));
                 res.headers_mut().set(ContentType::plaintext());
                 res.headers_mut().set(header::Server("Hyper".to_owned()));
 
                 res.send(HELLO_WORLD).unwrap();
-
-                StatusCode::Ok
             }
-            (hyper::Get, _) => StatusCode::NotFound,
-            _ => StatusCode::MethodNotAllowed,
+            _ => (),
         };
     }).listen("0.0.0.0:8080").unwrap();
 }
