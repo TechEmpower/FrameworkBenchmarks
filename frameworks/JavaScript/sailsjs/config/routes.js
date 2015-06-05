@@ -48,12 +48,17 @@ module.exports.routes = {
 
   // TFB routes here
 
-  'get /json':      'StaticTestController.json',
-  'get /plaintext': 'StaticTestController.plaintext',
+  'get /json':              'StaticTestController.json',
+  'get /plaintext':         'StaticTestController.plaintext',
 
-  'get /mysql/db':        'SequelizeMySQLController.single',
-  'get /mysql/queries':   'SequelizeMySQLController.multiple',
-  'get /mysql/fortunes':  'SequelizeMySQLController.fortunes',
-  'get /mysql/updates':   'SequelizeMySQLController.updates'
+  'get /mysql/db':          'SequelizeMySQLController.single',
+  'get /mysql/queries':     'SequelizeMySQLController.multiple',
+  'get /mysql/fortunes':    'SequelizeMySQLController.fortunes',
+  'get /mysql/updates':     'SequelizeMySQLController.updates',
+
+  'get /postgres/db':       'SequelizePostgresController.single',
+  'get /postgres/queries':  'SequelizePostgresController.multiple',
+  'get /postgres/fortunes': 'SequelizePostgresController.fortunes',
+  'get /postgres/updates':  'SequelizePostgresController.updates'
 
 };

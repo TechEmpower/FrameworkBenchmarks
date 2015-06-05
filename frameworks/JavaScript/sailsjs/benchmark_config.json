@@ -23,6 +23,27 @@
       "display_name": "Sails.js",
       "notes": "",
       "versus": "node"
+    },
+    "postgres": {
+      "setup_file": "setup",
+      "db_url": "/postgres/db",
+      "query_url": "/postgres/queries?queries=",
+      "fortune_url": "/postgres/fortunes",
+      "update_url": "/postgres/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "sailsjs",
+      "language": "JavaScript",
+      "orm": "Full",
+      "platform": "nodejs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Sails.js",
+      "notes": "",
+      "versus": "node"
     }
   }]
 }
