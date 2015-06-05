@@ -33,7 +33,7 @@ var randomWorldPromise = function() {
   }).then(function (results) {
     return results;
   }).catch(function (err) {
-    console.log(err.stack);
+    process.exit(1);
   });
 }
 
@@ -73,7 +73,7 @@ module.exports = {
         .header('Content-Type', 'text/html')
         .header('Server', 'hapi');
     }).catch(function (err) {
-      console.log(err.stack);
+      process.exit(1);
     }); 
   },
 
@@ -93,11 +93,11 @@ module.exports = {
           { where: { id: world.id } }
         )
         .then(function (results) {
-            return world;
-          })
+          return world;
+        })
         .catch(function (err) {
-            console.log(err.stack);
-          });
+          process.exit(1);
+        });
     }
 
     Promise
@@ -109,8 +109,8 @@ module.exports = {
         reply(updated)
           .header('Server', 'hapi')
       })
-      .catch(function (e) {
-        console.log(err.stack);
+      .catch(function (err) {
+        process.exit(1);
       });
   }
 

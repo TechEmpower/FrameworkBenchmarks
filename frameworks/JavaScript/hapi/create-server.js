@@ -14,6 +14,7 @@ server.views({
 var MongooseHandler = require('./handlers/mongoose');
 var SequelizeHandler = require('./handlers/sequelize');
 var SequelizePgHandler = require('./handlers/sequelize-postgres');
+var RedisHandler = require('./handlers/redis');
 
 Route('/json', JsonSerialization);
 Route('/plaintext', Plaintext);
@@ -32,6 +33,11 @@ Route('/sequelize-pg/db', SequelizePgHandler.SingleQuery);
 Route('/sequelize-pg/queries', SequelizePgHandler.MultipleQueries);
 Route('/sequelize-pg/fortunes', SequelizePgHandler.Fortunes);
 Route('/sequelize-pg/updates', SequelizePgHandler.Updates);
+
+Route('/hiredis/db', RedisHandler.SingleQuery);
+Route('/hiredis/queries', RedisHandler.MultipleQueries);
+Route('/hiredis/fortunes', RedisHandler.Fortunes);
+Route('/hiredis/updates', RedisHandler.Updates);
 
 function JsonSerialization(req, reply) {
   reply({ message: 'Hello, World!' })

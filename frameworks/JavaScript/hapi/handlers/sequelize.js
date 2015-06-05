@@ -93,11 +93,11 @@ module.exports = {
           { where: { id: world.id } }
         )
         .then(function (results) {
-            return world;
-          })
+          return world;
+        })
         .catch(function (err) {
-            process.exit(1);
-          });
+          process.exit(1);
+        });
     }
 
     Promise
