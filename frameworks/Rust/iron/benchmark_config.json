@@ -8,17 +8,17 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Framework",
-      "database": "",
+      "database": "None",
       "framework": "iron",
       "language": "rust",
-      "orm": "",
+      "orm": "raw",
       "platform": "Rust",
       "webserver": "hyper",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "iron",
       "notes": "",
-      "versus": ""
+      "versus": "rust"
     }
   }]
 }
