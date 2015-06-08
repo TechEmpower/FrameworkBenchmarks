@@ -7,7 +7,7 @@
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Framework",
+      "classification": "Micro",
       "database": "None",
       "framework": "nickel",
       "language": "rust",
