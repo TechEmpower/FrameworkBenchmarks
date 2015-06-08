@@ -34,7 +34,7 @@ class CIRunnner:
   Only verifies the first test in each directory 
   '''
 
-  SUPPORTED_DATABASES = "mysql postgres mongodb cassandra elasticsearch redis none".split()
+  SUPPORTED_DATABASES = "mysql postgres mongodb cassandra elasticsearch sqlite redis none".split()
   
   def __init__(self, mode, testdir=None):
     '''
