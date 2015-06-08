@@ -1,10 +1,7 @@
 
 
-
-
-
-
 module.exports = {
+
   randomTfbNumber: function() {
     return Math.floor(Math.random() * 10000) + 1
   },
@@ -19,4 +16,5 @@ module.exports = {
     id: 0,
     message: "Additional fortune added at request time."
   }
+
 }

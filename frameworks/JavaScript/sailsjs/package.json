@@ -23,6 +23,8 @@
     "handlebars": "^3.0.3",
     "include-all": "~0.1.6",
     "mysql": "^2.7.0",
+    "pg": "^4.4.0",
+    "pg-hstore": "^2.3.2",
     "rc": "~1.0.3",
     "sails": "~0.11.0",
     "sails-disk": "~0.10.8",
