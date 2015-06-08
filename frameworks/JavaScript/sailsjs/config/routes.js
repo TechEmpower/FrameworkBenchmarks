@@ -48,17 +48,22 @@ module.exports.routes = {
 
   // TFB routes here
 
-  'get /json':              'StaticTestController.json',
-  'get /plaintext':         'StaticTestController.plaintext',
+  'get /json':              'StaticTestController.Json',
+  'get /plaintext':         'StaticTestController.Plaintext',
 
-  'get /mysql/db':          'SequelizeMySQLController.single',
-  'get /mysql/queries':     'SequelizeMySQLController.multiple',
-  'get /mysql/fortunes':    'SequelizeMySQLController.fortunes',
-  'get /mysql/updates':     'SequelizeMySQLController.updates',
+  'get /mysql/db':          'SequelizeMySQLController.Single',
+  'get /mysql/queries':     'SequelizeMySQLController.Multiple',
+  'get /mysql/fortunes':    'SequelizeMySQLController.Fortunes',
+  'get /mysql/updates':     'SequelizeMySQLController.Updates',
 
-  'get /postgres/db':       'SequelizePostgresController.single',
-  'get /postgres/queries':  'SequelizePostgresController.multiple',
-  'get /postgres/fortunes': 'SequelizePostgresController.fortunes',
-  'get /postgres/updates':  'SequelizePostgresController.updates'
+  'get /postgres/db':       'SequelizePostgresController.Single',
+  'get /postgres/queries':  'SequelizePostgresController.Multiple',
+  'get /postgres/fortunes': 'SequelizePostgresController.Fortunes',
+  'get /postgres/updates':  'SequelizePostgresController.Updates',
+
+  'get /hiredis/db':        'RedisController.Single',
+  'get /hiredis/queries':   'RedisController.Multiple',
+  'get /hiredis/fortunes':  'RedisController.Fortunes',
+  'get /hiredis/updates':   'RedisController.Updates'
 
 };

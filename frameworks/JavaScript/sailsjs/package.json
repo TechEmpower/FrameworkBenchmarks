@@ -2,7 +2,7 @@
   "name": "sailsjs",
   "private": true,
   "version": "0.0.0",
-  "description": "a Sails application",
+  "description": "a Sails application for TFB testing",
   "keywords": [],
   "dependencies": {
     "async": "^1.2.0",
@@ -21,11 +21,13 @@
     "grunt-sails-linker": "~0.10.1",
     "grunt-sync": "~0.2.3",
     "handlebars": "^3.0.3",
+    "hiredis": "^0.4.0",
     "include-all": "~0.1.6",
     "mysql": "^2.7.0",
     "pg": "^4.4.0",
     "pg-hstore": "^2.3.2",
     "rc": "~1.0.3",
+    "redis": "^0.12.1",
     "sails": "~0.11.0",
     "sails-disk": "~0.10.8",
     "sequelize": "^3.2.0"
@@ -37,8 +39,8 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/zane/sailsjs.git"
+    "url": "https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/JavaScript/sailsjs"
   },
-  "author": "zane",
+  "author": "zane-techempower",
   "license": ""
 }
