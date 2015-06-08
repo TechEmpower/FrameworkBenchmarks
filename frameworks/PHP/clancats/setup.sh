@@ -4,7 +4,7 @@ export PHP_FPM=${PHP_HOME}/sbin/php-fpm
 export NGINX_HOME=${IROOT}/nginx
 
 sed -i 's|localhost|'"${DBHOST}"'|g' index.php
-sed -i 's|root .*/FrameworkBenchmarks|root '"${TROOT}"'|g' deploy/nginx.conf
+sed -i 's|root /home/ubuntu/FrameworkBenchmarks|root '"${TROOT}"'|g' deploy/nginx.conf
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
 $PHP_FPM --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
