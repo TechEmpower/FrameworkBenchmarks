@@ -22,7 +22,7 @@ object WebServer extends App {
         .withContentType(Some(`Content-Type`(MediaType.`text/plain`)))
   }
 
-  BlazeBuilder.bindHttp(8080)
+  BlazeBuilder.bindHttp(8080, "0.0.0.0")
     .mountService(service, "/")
     .run
     .awaitShutdown()

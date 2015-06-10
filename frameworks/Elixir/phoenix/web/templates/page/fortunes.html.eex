@@ -1,0 +1,1 @@
+<table><tr><th>id</th><th>message</th></tr><%= for f <- @fortunes do %><tr><td><%= f.id %></td><td><%= f.message %></td></tr><% end %></table>
