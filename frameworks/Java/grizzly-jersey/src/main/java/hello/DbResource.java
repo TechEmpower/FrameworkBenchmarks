@@ -11,7 +11,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -67,9 +66,11 @@ public class DbResource {
   private int getQueries(String proto) {
     int result = 1;
     try {
-      result = Integer.parseInt(proto);
+      if (proto != null && !proto.trim().isEmpty()) {
+        result = Integer.parseInt(proto);
+      }
     } catch (NumberFormatException e) {
-      e.printStackTrace();
+      throw new IllegalArgumentException(e);
     }
 
     return Math.min(500, Math.max(1, result));
