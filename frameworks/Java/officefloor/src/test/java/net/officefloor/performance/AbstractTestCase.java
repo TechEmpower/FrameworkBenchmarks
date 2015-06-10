@@ -220,7 +220,7 @@ public abstract class AbstractTestCase {
 	 */
 	protected void assertEntity(HttpResponse response, String entity)
 			throws IOException {
-		Assert.assertEquals("Incorrect entity", "Hello, World!",
+		Assert.assertEquals("Incorrect entity", entity,
 				EntityUtils.toString(response.getEntity()));
 	}
 

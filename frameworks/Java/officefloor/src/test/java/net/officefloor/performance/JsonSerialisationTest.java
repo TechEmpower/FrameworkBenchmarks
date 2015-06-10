@@ -9,7 +9,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
  * 
  * @author Daniel Sagenschneider
  */
-public class JavaSerialisationTest extends AbstractTestCase {
+public class JsonSerialisationTest extends AbstractTestCase {
 
 	@Override
 	protected void doRequestTest(CloseableHttpClient client) throws Exception {

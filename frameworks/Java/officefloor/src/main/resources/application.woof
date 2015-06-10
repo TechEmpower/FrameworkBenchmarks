@@ -1,6 +1,8 @@
 <woof>
   <templates>
-    <template name="plaintext" uri="plaintext" path="plaintext.woof.html" extends="" class="" content-type="text/plain; charset=UTF-8" secure="false" continue-rendering="false" x="170" y="104">
+    <template name="json" uri="json" path="service.woof.html" extends="" class="net.officefloor.performance.JsonSerialisationLogic" secure="false" continue-rendering="false" x="168" y="177">
+    </template>
+    <template name="plaintext" uri="plaintext" path="plaintext.woof.html" extends="" class="" secure="false" continue-rendering="false" x="169" y="314">
     </template>
   </templates>
   <sections>
