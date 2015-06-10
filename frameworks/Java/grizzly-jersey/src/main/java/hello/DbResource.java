@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -33,10 +34,10 @@ public class DbResource {
   
   @GET
   @Produces(APPLICATION_JSON + "; charset=utf-8")
-  public Object db(@QueryParam("queries") String queriesParam)
+  public Object db(@QueryParam("queries") @DefaultValue("1") int queryNumber, @QueryParam("single") boolean isSingle)
       throws ExecutionException, InterruptedException {
 
-    final int queries = getQueries(queriesParam);
+    final int queries = Math.min(500, Math.max(1, queryNumber));
     final World[] worlds = new World[queries];
     final Random random = ThreadLocalRandom.current();
 
@@ -59,19 +60,6 @@ public class DbResource {
       worlds[i] = futureWorlds.get(i).get();
     }
 
-    return queries == 1 ? worlds[0] : worlds;
-  }
-
-  private int getQueries(String proto) {
-    int result = 1;
-    try {
-      if (proto != null && !proto.trim().isEmpty()) {
-        result = Integer.parseInt(proto);
-      }
-    } catch (NumberFormatException e) {
-      throw new IllegalArgumentException(e);
-    }
-
-    return Math.min(500, Math.max(1, result));
+    return isSingle ? worlds[0] : worlds;
   }
 }
