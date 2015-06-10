@@ -66,11 +66,11 @@ public class DbResource {
   private int getQueries(String proto) {
     int result = 1;
     try {
-      if (proto != null) {
+      if (proto != null && !proto.trim().isEmpty()) {
         result = Integer.parseInt(proto);
       }
     } catch (NumberFormatException e) {
-      e.printStackTrace();
+      throw new IllegalArgumentException(e);
     }
 
     return Math.min(500, Math.max(1, result));
