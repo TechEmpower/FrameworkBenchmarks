@@ -1,0 +1,45 @@
+{
+  "framework": "slim",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/dbs?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "slim",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "slim",
+      "notes": "",
+      "versus": "php"
+    },
+    "hhvm": {
+      "setup_file": "setup_hhvm",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/dbs?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "slim",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "HPHP",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "slim_hhvm",
+      "notes": "",
+      "versus": "php"
+    }
+  }]
+}

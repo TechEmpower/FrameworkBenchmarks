@@ -1,0 +1,24 @@
+{
+  "framework": "cowboy",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/query?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "cowboy",
+      "language": "Erlang",
+      "orm": "Raw",
+      "platform": "Cowboy",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "cowboy",
+      "notes": "",
+      "versus": ""
+  }}]
+}

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# load java environment variables
+source $IROOT/java8.installed
+
 cd play2-java-ebean-bonecp
 
 # If application is running, clear old running app.

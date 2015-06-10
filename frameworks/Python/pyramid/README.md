@@ -1,31 +1,32 @@
 # Pyramid benchmark test
 
+This is the Python Pyramid portion of a [benchmarking tests suite](../../) 
+comparing a variety of frameworks.
+
+The information below is specific to Pyramid. For further guidance, 
+review the [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
+Also note that there is additional information that's provided in 
+the [Python README](../).
+
 [Pyramid](http://www.pylonsproject.org/) is a flexible Python 2/3 framework.
 This test uses [SQLAlchemy](http://www.sqlalchemy.org/) as its ORM, the default
 [Chameleon](http://www.pylonsproject.org/) for its templating, and
 [Gunicorn](https://github.com/benoitc/gunicorn) for the application server.
 
-## Test URLs
+## Test Paths & Source
 
-### JSON Encoding
+* [JSON Serialization](frameworkbenchmarks/tests.py): "/json"
+* [Single Database Query](frameworkbenchmarks/tests.py): "/db", [World Model](frameworkbenchmarks/models.py)
+* [Multiple Database Queries](frameworkbenchmarks/tests.py): "queries?queries=#"*, [World Model](frameworkbenchmarks/models.py)
+* [Fortunes](frameworkbenchmarks/tests.py): "/fortunes", [Fortune Model](frameworkbenchmarks/models.py)
+* [Database Updates](frameworkbenchmarks/tests.py): "updates?queries=#"*, [World Model](frameworkbenchmarks/models.py)
+* [Plaintext](frameworkbenchmarks/tests.py): "/plaintext"
 
-http://localhost:6543/json
+*Replace # with an actual number.
 
-### Single Row Random Query
+## Get Help
 
-http://localhost:6543/db
+### Community
 
-### Variable Row Query Test
-
-http://localhost:6543/queries?queries=10
-
-### Fortune Test
-
-http://localhost:6543/fortunes
-
-### Updates
-http://localhost:6543/updates?queries=10
-
-### Plaintext
-
-http://localhost:6543/plaintext
+* `#pyramid` IRC Channel ([irc.freenode.net](https://freenode.net/))
+* [Pyramid (pylons-discuss) Google Group](https://groups.google.com/forum/#!forum/pylons-discuss)

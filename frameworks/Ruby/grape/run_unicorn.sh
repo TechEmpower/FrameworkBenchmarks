@@ -1,4 +1,7 @@
 #!/bin/bash
+export NGINX_HOME=${IROOT}/nginx
+
+source $IROOT/java7.installed
 
 # We assume single-user installation as 
 # done in our rvm.sh script and 

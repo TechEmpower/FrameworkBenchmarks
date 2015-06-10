@@ -1,0 +1,27 @@
+{
+  "framework": "openresty",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "openresty",
+      "language": "Lua",
+      "orm": "Raw",
+      "platform": "OpenResty",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "openresty",
+      "notes": "",
+      "versus": "openresty"
+    }
+  }]
+}

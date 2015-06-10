@@ -1,71 +1,102 @@
+/*
+ * Copyright © 2015 Juan José Aguililla. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
+ */
+
 package sabina.benchmark;
 
 import static java.lang.Integer.parseInt;
+import static java.lang.System.getProperty;
 import static sabina.Sabina.*;
 import static sabina.content.JsonContent.toJson;
+import static sabina.view.MustacheView.renderMustache;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import sabina.Exchange;
 import sabina.Request;
+import sabina.server.MatcherFilter;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.*;
 import java.util.Date;
-import java.util.Properties;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
-import javax.sql.DataSource;
+import javax.servlet.FilterConfig;
+import javax.servlet.annotation.WebFilter;
 
 /**
- * When it is implemented, add this to benchmark_config
- * "fortune_url": "/fortune",
- * "update_url": "/update",
+ * .
  */
-final class Application {
-    private static final Properties CONFIG = loadConfig ();
-    private static final DataSource DS = createSessionFactory ();
-    private static final String QUERY = "select * from world where id = ?";
+@WebFilter ("/*")
+final class Application extends MatcherFilter {
+    static final String SETTINGS_RESOURCE = "/server.properties";
+    static final Repository REPOSITORY = loadRepository ();
+    static final int DB_ROWS = 10000;
 
-    private static final int DB_ROWS = 10000;
     private static final String MESSAGE = "Hello, World!";
     private static final String CONTENT_TYPE_TEXT = "text/plain";
+    private static final String CONTENT_TYPE_JSON = "application/json";
+    private static final String QUERIES_PARAM = "queries";
 
-    private static Properties loadConfig () {
+    static Properties loadConfiguration () {
         try {
-            Properties config = new Properties ();
-            config.load (Class.class.getResourceAsStream ("/server.properties"));
-            return config;
+            Properties settings = new Properties ();
+            settings.load (Class.class.getResourceAsStream (SETTINGS_RESOURCE));
+            return settings;
         }
         catch (Exception ex) {
             throw new RuntimeException (ex);
         }
     }
 
-    private static DataSource createSessionFactory () {
+    static Repository loadRepository () {
+        switch (getProperty ("sabina.benchmark.repository", "mysql")) {
+            case "mongodb":
+                return new MongoDbRepository (loadConfiguration ());
+            case "mysql":
+            default:
+                return new MySqlRepository (loadConfiguration ());
+        }
+    }
+
+    private static Object getDb (Request it) {
         try {
-            ComboPooledDataSource cpds = new ComboPooledDataSource ();
-            cpds.setJdbcUrl (CONFIG.getProperty ("mysql.uri"));
-            cpds.setMinPoolSize (32);
-            cpds.setMaxPoolSize (256);
-            cpds.setCheckoutTimeout (1800);
-            cpds.setMaxStatements (50);
-            return cpds;
+            final World[] worlds = REPOSITORY.getWorlds (getQueries (it), false);
+            it.response.type (CONTENT_TYPE_JSON);
+            return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
         }
-        catch (Exception ex) {
-            throw new RuntimeException (ex);
+        catch (Exception e){
+            e.printStackTrace ();
+            throw e;
         }
+    }
+
+    private static Object getFortunes (Request it) {
+        List<Fortune> fortunes = REPOSITORY.getFortunes ();
+        fortunes.add (new Fortune (0, "Additional fortune added at request time."));
+        fortunes.sort ((a, b) -> a.message.compareTo (b.message));
+
+        it.response.type ("text/html; charset=utf-8");
+        return renderMustache ("/fortunes.mustache", fortunes);
+    }
+
+    private static Object getUpdates (Request it) {
+        World[] worlds = REPOSITORY.getWorlds (getQueries (it), true);
+        it.response.type (CONTENT_TYPE_JSON);
+        return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
     }
 
     private static int getQueries (final Request request) {
         try {
-            String param = request.queryParams ("queries");
-            if (param == null)
+            String parameter = request.queryParams (QUERIES_PARAM);
+            if (parameter == null)
                 return 1;
 
-            int queries = parseInt (param);
+            int queries = parseInt (parameter);
             if (queries < 1)
                 return 1;
             if (queries > 500)
@@ -78,64 +109,41 @@ final class Application {
         }
     }
 
-    private static Object getJson (Exchange it) {
-        it.response.type ("application/json");
-        return toJson (new Message ());
-    }
-
-    private static Object getDb (Exchange it) {
-        final int queries = getQueries (it.request);
-        final World[] worlds = new World[queries];
-
-        try (final Connection con = DS.getConnection ()) {
-            final Random random = ThreadLocalRandom.current ();
-            PreparedStatement stmt = con.prepareStatement (QUERY);
-
-            for (int i = 0; i < queries; i++) {
-                stmt.setInt (1, random.nextInt (DB_ROWS) + 1);
-                ResultSet rs = stmt.executeQuery ();
-                while (rs.next ()) {
-                    worlds[i] = new World ();
-                    worlds[i].id = rs.getInt (1);
-                    worlds[i].randomNumber = rs.getInt (2);
-                }
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace ();
-        }
-
-        it.response.type ("application/json");
-        return toJson (it.request.queryParams ("queries") == null? worlds[0] : worlds);
-    }
-
-    private static Object getFortune (Exchange aExchange) {
-        throw new UnsupportedOperationException ();
-    }
-
-    private static Object getUpdate (Exchange aExchange) {
-        throw new UnsupportedOperationException ();
-    }
-
-    private static Object getPlaintext (Exchange it) {
+    private static Object getPlaintext (Request it) {
         it.response.type (CONTENT_TYPE_TEXT);
         return MESSAGE;
     }
 
-    private static void addCommonHeaders (Exchange it) {
+    private static Object getJson (Request it) {
+        it.response.type (CONTENT_TYPE_JSON);
+        return toJson (new Message ());
+    }
+
+    private static void addCommonHeaders (Request it) {
         it.header ("Server", "Undertow/1.1.2");
-        it.response.raw ().addDateHeader ("Date", new Date ().getTime ());
+        it.response.addDateHeader ("Date", new Date ().getTime ());
+    }
+
+    private static void routes () {
+        get ("/json", Application::getJson);
+        get ("/db", Application::getDb);
+        get ("/query", Application::getDb);
+        get ("/fortune", Application::getFortunes);
+        get ("/update", Application::getUpdates);
+        get ("/plaintext", Application::getPlaintext);
+        after (Application::addCommonHeaders);
     }
 
     public static void main (String[] args) {
-        get ("/json", Application::getJson);
-        get ("/db", Application::getDb);
-        get ("/fortune", Application::getFortune);
-        get ("/update", Application::getUpdate);
-        get ("/plaintext", Application::getPlaintext);
-        after (Application::addCommonHeaders);
+        routes ();
 
-        setIpAddress (CONFIG.getProperty ("web.host"));
-        start (parseInt (CONFIG.getProperty ("web.port")));
+        Properties settings = loadConfiguration ();
+        host (settings.getProperty ("web.host"));
+        port (settings.getProperty ("web.port"));
+        start ();
+    }
+
+    @Override protected void routes (FilterConfig filterConfig) {
+        routes ();
     }
 }

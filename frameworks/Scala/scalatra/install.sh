@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends resin sbt
+fw_depends java7 resin sbt

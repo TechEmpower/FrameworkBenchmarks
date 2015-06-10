@@ -1,13 +1,13 @@
 #!/bin/bash
+source $IROOT/java7.installed
+source $IROOT/lein.installed
 
-# Path vars must be set here
-export PATH="$JAVA_HOME/bin:$PATH"
-
-sed -i 's|:subname "//.*:3306|:subname "//'"${DBHOST}"':3306|g' hello/src/hello/models/schema.clj
+# Update db host in the source file
+sed -i 's|:subname "//.*:3306|:subname "//'"${DBHOST}"':3306|g' hello/src/hello/db/core.clj
 
 cd hello
-$IROOT/lein/bin/lein clean
-$IROOT/lein/bin/lein ring uberwar
-rm -rf $RESIN_HOME/webapps/*
-cp target/hello-luminus-standalone.war $RESIN_HOME/webapps/luminus.war
-$RESIN_HOME/bin/resinctl start
+lein clean
+rm -rf target
+# pack all dependencies into a single jar: target/http-kit-standalone.jar
+lein uberjar
+java -server -jar target/hello.jar  &

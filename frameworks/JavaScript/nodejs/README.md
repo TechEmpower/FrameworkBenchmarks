@@ -2,44 +2,30 @@
 
 This is the NodeJS portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-### JSON Encoding Test
+### There are individual handlers for each DB approach
+The logic for the test cases live in these.
 
-* [JSON test controller/view](hello.js)
-
-### Data-Store/Database Mapping Test
-
-* [DB test controller/model](hello.js)
+* [MySQL raw](handlers/mysql-raw.js)
+* [Sequelize (MySQL)](handlers/sequelize.js)
+* [MongoDB raw](handlers/mongodb-raw.js)
+* [Mongoose (MySQL)](handlers/mongoose.js)
+* [Hiredis (Redis)](handlers/redis)
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v0.10.0](http://nodejs.org/)
-* [Mongoose 3.5.5](http://mongoosejs.com/)
-* [Mapper 0.2.4-pre](https://github.com/mgutz/mapper)
-* [MySQL 5.5.29](https://dev.mysql.com/)
+* [Node.js v0.12.2](http://nodejs.org/)
+
+* [Node MySQL 2.7.0](https://github.com/felixge/node-mysql/)
+* [Sequelize 3.1.1](https://github.com/sequelize/sequelize)
+* [Node MongoDB Driver 2.0.33](https://github.com/mongodb/node-mongodb-native)
+* [Mongoose 4.0.4](http://mongoosejs.com/)
+* [Node Redis 0.12.1](https://github.com/mranney/node_redis)
+* [Hiredis 0.4.0 (C lib for Redis)](https://github.com/redis/hiredis)
 
 ## Test URLs
-### JSON Encoding Test
 
-http://localhost:8080/json
+See the [Benchmark config](benchmark_config.json) file for a list of the tested routes.
 
-### Data-Store/Database Mapping Test
+`/json` and `/plaintext` are implemented
 
-MongoDB:
-http://localhost:8080/mongoose
-
-MySQL:
-http://localhost:8080/sequelize
-
-MySQL Raw:
-http://localhost:8080/mysql
-
-### Variable Query Test
-
-MongoDB:
-http://localhost:8080/mongoose?queries=2
-
-MySQL:
-http://localhost:8080/mysql-orm?queries=2
-
-MySQL Raw:
-http://localhost:8080/mysql?queries=2
+The four db-required tests, Single Query, Multiple Query, Fortunes, and Updates have been implemented for each of the 5 database approaches that this test covers

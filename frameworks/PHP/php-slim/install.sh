@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends php nginx
+fw_depends php nginx hhvm

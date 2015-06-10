@@ -1,0 +1,4 @@
+.deps
+.deps.lock
+libs/
+.crystal

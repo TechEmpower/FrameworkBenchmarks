@@ -38,7 +38,3 @@ http://localhost:8080/db?queries=5
 
 http://localhost:8080/plaintext
 
-## TODO
-
-* Implement 'update' test
-* Implement 'fortunes' test

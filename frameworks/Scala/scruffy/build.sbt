@@ -2,13 +2,15 @@ name := "scruffy-benchmark"
 
 organization := "com.sksamuel.scruffy"
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.6"
 
-version := "1.0.1"
+version := "11.0" // version 0 for round 11
 
 libraryDependencies ++= Seq(
-  "com.sksamuel.scruffy" %% "scruffy-server" % "1.4.15",
-  "org.mongodb" %% "casbah-core" % "2.7.1"
+  "com.sksamuel.scruffy" %% "scruffy-undertow" % "1.13.0",
+  "com.sksamuel.scruffy" %% "scruffy-jackson" % "1.13.0",
+  "com.sksamuel.scruffy" %% "scruffy-client" % "1.13.0" % "test",
+  "org.mongodb" %% "casbah-core" % "2.8.0"
 )
 
 sbtassembly.Plugin.assemblySettings

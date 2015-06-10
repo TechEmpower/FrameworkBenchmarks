@@ -68,10 +68,7 @@ sudo useradd benchmarkdbuser -p benchmarkdbpass
 # MySQL
 ##############################
 echo "Setting up MySQL database"
-sudo sh -c "echo mysql-server mysql-server/root_password_again select secret | debconf-set-selections"
-sudo sh -c "echo mysql-server mysql-server/root_password select secret | debconf-set-selections"
-
-sudo apt-get -y install mysql-server
+sudo DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server
 
 sudo stop mysql
 # disable checking of disk size
@@ -90,6 +87,8 @@ sudo cp usr.sbin.mysqld /etc/apparmor.d/
 sudo /etc/init.d/apparmor reload
 sudo start mysql
 
+# Set root password
+sudo mysqladmin -u root password secret
 # Insert data
 mysql -uroot -psecret < create.sql
 rm create.sql
@@ -149,9 +148,9 @@ sudo cp -R -p /var/lib/mongodb /ssd/
 sudo cp -R -p /var/log/mongodb /ssd/log/
 sudo service mongod start
 
-for i in {1..45}; do
+for i in {1..15}; do
   nc -z localhost 27017 && break || sleep 1;
-  echo "Waiting for MongoDB ($i/45}"
+  echo "Waiting for MongoDB ($i/15}"
 done
 nc -z localhost 27017
 if [ $? -eq 0 ]; then
@@ -196,9 +195,9 @@ sudo cp -f cassandra/log4j-server.properties /opt/apache-cassandra-$CASS_V/conf
 sudo update-rc.d cassandra defaults
 sudo service cassandra restart
 
-for i in {1..45}; do
+for i in {1..15}; do
   nc -z $TFB_DBHOST 9160 && break || sleep 1;
-  echo "Waiting for Cassandra ($i/45}"
+  echo "Waiting for Cassandra ($i/15}"
 done
 nc -z $TFB_DBHOST 9160
 if [ $? -eq 0 ]; then
@@ -208,6 +207,38 @@ if [ $? -eq 0 ]; then
   /opt/apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql $TFB_DBHOST
 else
   >&2 echo "Cassandra did not start, skipping"
+fi
+
+##############################
+# Elasticsearch
+##############################
+echo "Setting up Elasticsearch"
+
+export ES_V=1.5.0
+wget -nv https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$ES_V.tar.gz
+sudo tar zxf elasticsearch-$ES_V.tar.gz -C /opt
+sudo ln -s /opt/elasticsearch-$ES_V /opt/elasticsearch
+
+rm -rf /ssd/elasticsearch /ssd/log/elasticsearch
+mkdir -p /ssd/elasticsearch /ssd/log/elasticsearch
+
+sudo cp elasticsearch/elasticsearch.yml /opt/elasticsearch/config
+sudo cp elasticsearch/elasticsearch /opt/elasticsearch
+
+/opt/elasticsearch/elasticsearch restart
+
+for i in {1..15}; do
+  nc -z $TFB_DBHOST 9200 && break || sleep 1;
+  echo "Waiting for Elasticsearch ($i/15}"
+done
+nc -z $TFB_DBHOST 9200
+if [ $? -eq 0 ]; then
+  sh elasticsearch/es-create-index.sh
+  python elasticsearch/es-db-data-gen.py > elasticsearch/tfb-data.json
+  curl -sS -D - -o /dev/null -XPOST localhost:9200/tfb/world/_bulk --data-binary @elasticsearch/tfb-data.json
+  echo "Elasticsearch DB populated"
+else
+  >&2 echo "Elasticsearch did not start, skipping"
 fi
 
 ##############################

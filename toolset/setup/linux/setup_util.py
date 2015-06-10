@@ -1,7 +1,61 @@
 import re
 import os
+import sys
 import subprocess
 import platform
+
+from threading import Thread
+from Queue import Queue, Empty
+
+class NonBlockingStreamReader:
+  '''
+  Enables calling readline in a non-blocking manner with a blocking stream, 
+  such as the ones returned from subprocess.Popen
+
+  Originally written by Eyal Arubas, who granted permission to use this inside TFB
+  See http://eyalarubas.com/python-subproc-nonblock.html
+  '''
+  def __init__(self, stream, eof_message = None):
+    '''
+    stream: the stream to read from.
+            Usually a process' stdout or stderr.
+    eof_message: A message to print to stdout as soon
+      as the stream's end is reached. Useful if you
+      want to track the exact moment a stream terminates
+    '''
+
+    self._s = stream
+    self._q = Queue()
+    self._eof_message = eof_message
+    self._poisonpill = 'MAGIC_POISONPILL_STRING'
+
+    def _populateQueue(stream, queue):
+      while True:
+        line = stream.readline()
+        if line: # 'data\n' or '\n'
+          queue.put(line)
+        else:    # '' e.g. EOF
+          if self._eof_message:
+            sys.stdout.write(self._eof_message + '\n')
+          queue.put(self._poisonpill)
+          return
+
+    self._t = Thread(target = _populateQueue,
+            args = (self._s, self._q))
+    self._t.daemon = True
+    self._t.start()
+
+  def readline(self, timeout = None):
+    try:
+      line = self._q.get(block = timeout is not None,
+        timeout = timeout)
+      if line == self._poisonpill: 
+        raise EndOfStream
+      return line
+    except Empty:
+      return None
+
+class EndOfStream(Exception): pass
 
 # Replaces all text found using the regular expression to_replace with the supplied replacement.
 def replace_text(file, to_replace, replacement):
@@ -29,7 +83,7 @@ def replace_environ(config=None, root=None, print_result=False, command='true'):
     
         # Clean up our current environment, preserving some important items
         mini_environ = {}
-        for envname in ['HOME', 'PATH', 'USER', 'LD_LIBRARY_PATH', 'PYTHONPATH', 'FWROOT', 'TRAVIS']:
+        for envname in ['HOME', 'PATH', 'LANG', 'USER', 'LD_LIBRARY_PATH', 'PYTHONPATH', 'FWROOT', 'TRAVIS']:
           if envname in os.environ:
             mini_environ[envname] = os.environ[envname]
         for key in os.environ:
@@ -95,8 +149,8 @@ def get_fwroot():
 # Assumes path is underneath FWROOT, not above
 # 
 # Useful for clean presentation of paths 
-# e.g. /foo/bar/benchmarks/go/bash_profile.sh
-# v.s. FWROOT/go/bash_profile.sh 
+# e.g. /foo/bar/benchmarks/go/install.sh
+# v.s. FWROOT/go/install.sh 
 def path_relative_to_root(path):
     # Requires bash shell parameter expansion
     return subprocess.check_output("D=%s && printf \"${D#%s}\""%(path, get_fwroot()), shell=True, executable='/bin/bash')

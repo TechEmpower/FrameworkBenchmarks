@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends java sbt
+fw_depends java7 sbt

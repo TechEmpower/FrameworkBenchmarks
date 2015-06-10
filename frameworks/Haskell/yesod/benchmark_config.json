@@ -1,0 +1,47 @@
+{
+  "framework": "yesod",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/dbs/",
+      "update_url": "/updates/",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "yesod",
+      "language": "Haskell",
+      "orm": "Raw",
+      "platform": "Wai",
+      "webserver": "Warp",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "yesod",
+      "notes": "",
+      "versus": "wai"
+    },
+    "mongodb-raw": {
+      "setup_file": "setup",
+      "db_url": "/mongo/raw/db",
+      "query_url": "/mongo/raw/dbs/",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MongoDB",
+      "framework": "yesod",
+      "language": "Haskell",
+      "orm": "Raw",
+      "platform": "Wai",
+      "webserver": "Warp",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "yesod",
+      "notes": "",
+      "versus": "wai"
+    }
+  }]
+}

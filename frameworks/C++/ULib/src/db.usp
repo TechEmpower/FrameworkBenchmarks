@@ -66,5 +66,6 @@ pstmt_db->execute();
 USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%u}", pworld_db->id, pworld_db->randomNumber);
 #else
 USP_JSON_stringify(*pvalue, World, *pworld_db);
+pvalue->clear();
 #endif
 -->

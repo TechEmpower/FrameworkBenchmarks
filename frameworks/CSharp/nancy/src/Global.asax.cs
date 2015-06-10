@@ -11,6 +11,7 @@ namespace NancyBenchmark
     {
         protected void Application_Start()
         {
+            StaticConfiguration.DisableErrorTraces = false;
             var threads = 40 * Environment.ProcessorCount;
             ThreadPool.SetMaxThreads(threads, threads);
             ThreadPool.SetMinThreads(threads, threads);

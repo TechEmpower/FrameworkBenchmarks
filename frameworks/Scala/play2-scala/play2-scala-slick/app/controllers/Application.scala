@@ -44,7 +44,7 @@ object Application extends Controller {
     }
   }
 
-  // Common code between Anorm and Slick
+  // Common code between Scala database code
 
   protected val TestDatabaseRows = 10000
 

@@ -9,21 +9,24 @@ import 'package:postgresql/postgresql.dart' as pg;
 import 'package:postgresql/postgresql_pool.dart' as pgpool;
 import 'package:yaml/yaml.dart' as yaml;
 
+final _encoder = new JsonUtf8Encoder();
+
 /// Starts a new HTTP server that implements the tests to be benchmarked.  The
 /// address and port for incoming connections is configurable via command line
 /// arguments, as is the number of database connections to be maintained in the
 /// connection pool.
 void main(List<String> args) {
-  var parser = new ArgParser();
-  parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
-  parser.addOption('port', abbr: 'p', defaultsTo: '8080');
-  parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
-  parser.addOption('isolates', abbr: 'i', defaultsTo: '1');
+  var parser = new ArgParser()
+    ..addOption('address', abbr: 'a', defaultsTo: '0.0.0.0')
+    ..addOption('port', abbr: 'p', defaultsTo: '8080')
+    ..addOption('dbconnections', abbr: 'd', defaultsTo: '256')
+    ..addOption('isolates', abbr: 'i', defaultsTo: '1');
   var arguments = parser.parse(args);
   var isolates = int.parse(arguments['isolates']);
   var dbConnections = int.parse(arguments['dbconnections']) ~/ isolates;
-  ServerSocket.bind(arguments['address'], int.parse(arguments['port'])).then(
-      (server) {
+  ServerSocket
+      .bind(arguments['address'], int.parse(arguments['port']))
+      .then((server) {
     var ref = server.reference;
     for (int i = 1; i < isolates; i++) {
       Isolate.spawn(startInIsolate, [ref, dbConnections]);
@@ -128,16 +131,16 @@ int _parseInt(String text) =>
 
 /// Completes the given [request] by writing the [response] with the given
 /// [statusCode] and [type].
-void _sendResponse(HttpRequest request, int statusCode, [type, response]) {
+void _sendResponse(HttpRequest request, int statusCode,
+    {ContentType type, List<int> response}) {
   request.response.statusCode = statusCode;
   request.response.headers.date = new DateTime.now();
   if (type != null) {
     request.response.headers.contentType = type;
   }
   if (response != null) {
-    var data = UTF8.encode(response);
-    request.response.contentLength = data.length;
-    request.response.add(data);
+    request.response.contentLength = response.length;
+    request.response.add(response);
   } else {
     request.response.contentLength = 0;
   }
@@ -146,18 +149,20 @@ void _sendResponse(HttpRequest request, int statusCode, [type, response]) {
 
 /// Completes the given [request] by writing the [response] as HTML.
 void _sendHtml(HttpRequest request, String response) {
-  _sendResponse(request, HttpStatus.OK, ContentType.HTML, response);
+  _sendResponse(request, HttpStatus.OK,
+      type: ContentType.HTML, response: UTF8.encode(response));
 }
 
 /// Completes the given [request] by writing the [response] as JSON.
 void _sendJson(HttpRequest request, Object response) {
-  _sendResponse(
-      request, HttpStatus.OK, ContentType.JSON, JSON.encode(response));
+  _sendResponse(request, HttpStatus.OK,
+      type: ContentType.JSON, response: _encoder.convert(response));
 }
 
 /// Completes the given [request] by writing the [response] as plain text.
 void _sendText(HttpRequest request, String response) {
-  _sendResponse(request, HttpStatus.OK, ContentType.TEXT, response);
+  _sendResponse(request, HttpStatus.OK,
+      type: ContentType.TEXT, response: UTF8.encode(response));
 }
 
 /// Responds with the JSON test to the [request].

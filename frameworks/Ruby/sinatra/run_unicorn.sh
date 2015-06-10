@@ -1,4 +1,6 @@
 #!/bin/bash
+export NGINX_HOME=${IROOT}/nginx
+source $IROOT/java7.installed
 
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' config/nginx.conf
 
@@ -11,6 +13,8 @@ then
 else
 	source $HOME/.rvm/scripts/rvm
 fi
+
+sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' config/nginx.conf
 
 rvm ruby-2.0.0-p0 do bundle --jobs 4
 
