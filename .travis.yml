@@ -38,6 +38,7 @@ env:
     - "TESTDIR=Clojure/aleph"
     - "TESTDIR=Crystal/crystal-raw"
     - "TESTDIR=Crystal/moonshine"
+    - "TESTDIR=D/vibed"
     - "TESTDIR=Dart/dart"
     - "TESTDIR=Dart/dart-redstone"
     - "TESTDIR=Dart/dart-start"

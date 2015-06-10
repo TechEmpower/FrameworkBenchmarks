@@ -1,0 +1,19 @@
+doctype html
+html
+  head
+    style a { display: block }
+  body
+    ul
+      li
+        a(href="/generate-world") generate world
+      li
+        a(href="/generate-fortunes") generate fortunes
+    ol
+      li
+        a(href="/json") json stringify
+      li
+        a(href="/db") single query
+      li
+        a(href="/queries?queries=5") multiple queries
+      li
+        a(href="/plaintext") plain text
