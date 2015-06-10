@@ -18,11 +18,16 @@
             <artifactId>rapidoid-http</artifactId>
             <version>3.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.rapidoid</groupId>
-            <artifactId>rapidoid-json</artifactId>
-            <version>3.0.0</version>
-        </dependency>
+	<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-databind</artifactId>
+		<version>2.6.0-rc2</version>
+	</dependency>
+	<dependency>
+		<groupId>com.fasterxml.jackson.module</groupId>
+		<artifactId>jackson-module-afterburner</artifactId>
+		<version>2.6.0-rc2</version>
+	</dependency>
     </dependencies>
 
 	<build>
