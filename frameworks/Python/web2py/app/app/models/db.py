@@ -20,7 +20,7 @@ DATABASE_URI = "mysql://benchmarkdbuser:benchmarkdbpass@localhost:3306/hello_wor
 db = DAL(DATABASE_URI, fake_migrate_all=True)
 DATABASE = db
 ## store sessions and tickets there
-session.connect(request, response, db=db)
+##session.connect(request, response, db=db)
 ## or store session in Memcache, Redis, etc.
 ## from gluon.contrib.memdb import MEMDB
 ## from google.appengine.api.memcache import Client
