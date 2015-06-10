@@ -11,14 +11,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
-import org.hibernate.IdentifierLoadAccess;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -41,9 +39,6 @@ public class DbResource {
     final int queries = getQueries(queriesParam);
     final World[] worlds = new World[queries];
     final Random random = ThreadLocalRandom.current();
-    final Session session = sessionFactory.openSession();
-    session.setDefaultReadOnly(true);
-    final IdentifierLoadAccess accessor = session.byId(World.class);
 
     Map<Integer, Future<World>> futureWorlds = new ConcurrentHashMap<>();
     for (int i = 0; i < queries; i++) {
@@ -51,7 +46,10 @@ public class DbResource {
         new Callable<World>() {
           @Override
           public World call() throws Exception {
-            return (World) accessor.load(random.nextInt(DB_ROWS) + 1);
+            Session session = sessionFactory.openSession();
+            session.setDefaultReadOnly(true);
+
+            return (World) session.byId(World.class).load(random.nextInt(DB_ROWS) + 1);
           }
         }
       ));
@@ -67,9 +65,11 @@ public class DbResource {
   private int getQueries(String proto) {
     int result = 1;
     try {
-      result = Integer.parseInt(proto);
+      if (proto != null && !proto.trim().isEmpty()) {
+        result = Integer.parseInt(proto);
+      }
     } catch (NumberFormatException e) {
-      e.printStackTrace();
+      throw new IllegalArgumentException(e);
     }
 
     return Math.min(500, Math.max(1, result));
