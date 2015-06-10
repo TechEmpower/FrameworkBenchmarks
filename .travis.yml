@@ -110,6 +110,7 @@ env:
     - "TESTDIR=PHP/php"
     - "TESTDIR=PHP/cygnite-php-framework"
     - "TESTDIR=PHP/codeigniter"
+    - "TESTDIR=PHP/clancats"
     - "TESTDIR=PHP/php-fatfree"
     - "TESTDIR=PHP/fuel"
     - "TESTDIR=PHP/kohana"
