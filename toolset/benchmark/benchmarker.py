@@ -567,7 +567,7 @@ class Benchmarker:
           if self.mode == "verify":
             with_logging = os.path.join('config', 'restart-mysql-with-logging.sh')
             try:
-              print 'Mode was verify, restarting MySQL with logging enabled'
+              print 'Mode was verify, restarting MySQL with logging enabled for %s' % test.name
               # Creates a temp db log and restarts MySQL to write to it for this test
               subprocess.call([with_logging])
             except Exception as e:
@@ -636,6 +636,15 @@ class Benchmarker:
         self.__stop_test(out, err)
         out.flush()
         err.flush()
+        if test.mode == "verify":
+          # this path is w.r.t. move-temp-mysql-log.sh
+          final_dest = os.path.join('../', logDir, 'mysql.log')
+          mv_db_logging = os.path.join('config', 'move-temp-mysql-log.sh')
+          try:
+            print "Mode was verify, moving MySQL test log to %s's results directory" % test.name
+            subprocess.call([mv_db_logging, final_dest, test.name])
+          except Exception as e:
+            print e
         time.sleep(15)
 
         if self.__is_port_bound(test.port):
