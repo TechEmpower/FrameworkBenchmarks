@@ -522,7 +522,8 @@ class Benchmarker:
     except Exception:
       pass
     with open(os.path.join(logDir, 'out.txt'), 'w') as out, \
-         open(os.path.join(logDir, 'err.txt'), 'w') as err:
+         open(os.path.join(logDir, 'err.txt'), 'w') as err, \
+         open(os.path.join(logDir, 'mysql.log'), 'w') as mysqlLog:
 
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         out.write("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.\n")
@@ -563,6 +564,15 @@ class Benchmarker:
             /opt/elasticsearch/elasticsearch restart
           """)
           time.sleep(10)
+
+          if self.mode == "verify":
+            enable = os.path.join('config', 'restart-mysql-with-logging.sh')
+            print enable
+            try:
+              x = subprocess.call([enable, 'first arg', 'second arg'])
+              print x
+            except Exception as e:
+              print e
 
           st = verify_database_connections([
             ("mysql", self.database_host, 3306),
