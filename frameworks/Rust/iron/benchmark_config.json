@@ -8,7 +8,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Framework",
-      "database": "",
+      "database": "None",
       "framework": "iron",
       "language": "rust",
       "orm": "",
