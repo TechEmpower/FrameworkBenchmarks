@@ -3,16 +3,12 @@
 RETCODE=$(fw_exists $IROOT/erlang.installed)
 [ ! "$RETCODE" == 0 ] || { . $IROOT/erlang.installed; return 0; }
 
-export OTP_SRC="otp_src_17.5"
-fw_get http://www.erlang.org/download/${OTP_SRC}.tar.gz
-fw_untar ${OTP_SRC}.tar.gz
+VERSION="17.4-2"
+RELEASE="trusty"
+ARCH="amd64"
 
-(
-	cd $OTP_SRC
-	export ERL_TOP=`pwd`
-	./configure --prefix=$IROOT/erlang --without-termcap
-	make
-	make install
-)
+fw_get http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_1_esl/esl-erlang_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb
+dpkg -x esl-erlang_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb $IROOT/erlang
+$IROOT/erlang/usr/lib/erlang/Install -minimal $IROOT/erlang/usr/lib/erlang
 
-echo "export PATH=$IROOT/erlang/bin:$PATH" >> $IROOT/erlang.installed
+echo "export PATH=\$IROOT/erlang/usr/bin:\$PATH" >> $IROOT/erlang.installed

@@ -1,3 +1,3 @@
 defmodule Hello.PageView do
-  use Hello.View
+  use Hello.Web, :view
 end

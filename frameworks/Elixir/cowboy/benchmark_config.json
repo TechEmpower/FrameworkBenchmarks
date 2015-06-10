@@ -1,26 +1,22 @@
 {
-    "framework": "phoenix",
+    "framework": "elixir-cowboy",
     "tests": [{
         "default": {
             "setup_file": "setup",
             "json_url": "/json",
-            "db_url": "/db",
-            "query_url": "/queries?queries=",
-            "fortune_url": "/fortune",
-            "update_url": "/update?queries=",
             "plaintext_url": "/plaintext",
             "port": 8080,
             "approach": "Realistic",
-            "classification": "Micro",
-            "database": "Postgres",
-            "framework": "Phoenix",
+            "classification": "Platform",
+            "database": "None",
+            "framework": "cowboy",
             "language": "elixir",
-            "orm": "full",
+            "orm": "raw",
             "platform": "Erlang/OTP",
             "webserver": "cowboy",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "Phoenix",
+            "display_name": "elixir-cowboy",
             "notes": "",
             "versus": ""
         }

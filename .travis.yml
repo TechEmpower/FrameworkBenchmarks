@@ -43,6 +43,7 @@ env:
     - "TESTDIR=Dart/dart-start"
     - "TESTDIR=Dart/dart-stream"
     - "TESTDIR=Elixir/phoenix"
+    - "TESTDIR=Elixir/cowboy"
     - "TESTDIR=Erlang/cowboy"
     - "TESTDIR=Erlang/elli"
     - "TESTDIR=Go/beego"

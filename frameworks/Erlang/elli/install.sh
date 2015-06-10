@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends erlang rebar
+fw_depends erlang
