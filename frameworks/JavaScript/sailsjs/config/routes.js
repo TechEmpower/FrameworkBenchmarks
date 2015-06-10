@@ -36,13 +36,6 @@ module.exports.routes = {
     view: 'homepage'
   },
 
-  'get /json':      'StaticTestController.json',
-  'get /db':        'DatabaseQueryController.single',
-  'get /queries':   'DatabaseQueryController.multiple',
-  'get /fortunes':  'DatabaseQueryController.fortunes',
-  'get /updates':   'DatabaseQueryController.updates',
-  'get /plaintext': 'StaticTestController.plaintext'
-
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
@@ -52,5 +45,25 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+
+  // TFB routes here
+
+  'get /json':              'StaticTestController.Json',
+  'get /plaintext':         'StaticTestController.Plaintext',
+
+  'get /mysql/db':          'SequelizeMySQLController.Single',
+  'get /mysql/queries':     'SequelizeMySQLController.Multiple',
+  'get /mysql/fortunes':    'SequelizeMySQLController.Fortunes',
+  'get /mysql/updates':     'SequelizeMySQLController.Updates',
+
+  'get /postgres/db':       'SequelizePostgresController.Single',
+  'get /postgres/queries':  'SequelizePostgresController.Multiple',
+  'get /postgres/fortunes': 'SequelizePostgresController.Fortunes',
+  'get /postgres/updates':  'SequelizePostgresController.Updates',
+
+  'get /hiredis/db':        'RedisController.Single',
+  'get /hiredis/queries':   'RedisController.Multiple',
+  'get /hiredis/fortunes':  'RedisController.Fortunes',
+  'get /hiredis/updates':   'RedisController.Updates'
 
 };
