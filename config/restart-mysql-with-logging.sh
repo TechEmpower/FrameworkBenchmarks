@@ -1,22 +1,28 @@
 #!/bin/sh
+
+cd "$(dirname "$0")"
+
 if [ -f /etc/mysql/my.cnf ]; then
     sudo rm /etc/mysql/my.cnf
 fi
 
-# Assumes file settings are changed by this point
 
-# Incorporate this Wednesday >>
-# vagrant@TFB-all:/var/log$ sudo mkdir mysql
-# vagrant@TFB-all:/var/log$ sudo touch mysql/mysql.log
-# vagrant@TFB-all:/var/log$ sudo touch mysql/mysql.error.log
+LOG=/tmp/tfb-temporary-mysql.log
 
+if [ -f $LOG ]; then
+	sudo rm $LOG
+fi
+# Cannot initialize log in its final location because that is a synced folder, so
+touch $LOG                                   # create a log file
+sudo chown mysql:mysql $LOG                  # in a location that mysql can own
 
-# sudo chmod 0644 my.cnf
-# sudo cp my.cnf /etc/mysql/my.cnf
-# sudo service mysql restart
+cp my.cnf my.sql-logging.cnf                 # Start with my.cnf
+sed -i "s|.*general_log_file.*|general_log_file = ${LOG}|" my.sql-logging.cnf
+sed -i 's|.*general_log .*|general_log = 1|' my.sql-logging.cnf
 
-echo "Shell script ran"
-echo $0
-echo $1
+sudo mv my.sql-logging.cnf /etc/mysql/my.cnf # Move file
+sudo chmod 0644 /etc/mysql/my.cnf            # before changing modes
+
+sudo service mysql restart
 
 return 0
