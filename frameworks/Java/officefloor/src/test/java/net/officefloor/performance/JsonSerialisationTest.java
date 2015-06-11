@@ -24,7 +24,7 @@ public class JsonSerialisationTest extends AbstractTestCase {
 				"set-cookie");
 		this.assertHeader(response, "Content-Type",
 				"application/json; charset=UTF-8");
-		this.assertHeader(response, "Content-Length", "28");
+		this.assertHeader(response, "Content-Length", "27");
 	}
 
 }

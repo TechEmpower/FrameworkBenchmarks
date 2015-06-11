@@ -56,6 +56,21 @@
 			<version>${officefloor-version}</version>
 		</dependency>
 		<dependency>
+			<groupId>net.officefloor.plugin</groupId>
+			<artifactId>officeplugin_jpa</artifactId>
+			<version>${officefloor-version}</version>
+	</dependency>
+		<dependency>
+			<groupId>hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>1.8.0.10</version>
+		</dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>javax.persistence</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-accessplatform-jpa-rdbms</artifactId>
 			<type>pom</type>
@@ -71,11 +86,6 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.3.2</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>1.8.0.10</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
