@@ -2,7 +2,9 @@
   <templates>
     <template name="json" uri="json" path="service.woof.html" extends="" class="net.officefloor.performance.logic.JsonSerialisationLogic" secure="false" continue-rendering="false" x="84" y="34">
     </template>
-    <template name="plaintext" uri="plaintext" path="plaintext.woof.html" extends="" class="" secure="false" continue-rendering="false" x="170" y="573">
+    <template name="multipleQueries" uri="multipleQueries" path="service.woof.html" extends="" class="net.officefloor.performance.logic.MultipleDatabaseQueriesLogic" secure="false" continue-rendering="false" x="91" y="182">
+    </template>
+    <template name="plaintext" uri="plaintext" path="plaintext.woof.html" extends="" class="" secure="false" continue-rendering="false" x="107" y="386">
     </template>
     <template name="singleQuery" uri="singleQuery" path="service.woof.html" extends="" class="net.officefloor.performance.logic.SingleDatabaseQueryLogic" secure="false" continue-rendering="false" x="87" y="105">
     </template>
