@@ -65,7 +65,7 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 	 * Corresponding list of the resulting request batch size.
 	 */
 	private final int[] requestBatchSizes = new int[] { 1, 1, 1, 1, 5, 10, 15,
-			20, 500, 501 };
+			20, 500, 500 };
 
 	/**
 	 * {@link Connection}.
