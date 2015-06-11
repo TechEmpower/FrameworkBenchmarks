@@ -1,4 +1,4 @@
-package net.officefloor.performance;
+package net.officefloor.performance.logic;
 
 import java.io.IOException;
 

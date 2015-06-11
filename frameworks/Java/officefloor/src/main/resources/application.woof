@@ -1,8 +1,10 @@
 <woof>
   <templates>
-    <template name="json" uri="json" path="service.woof.html" extends="" class="net.officefloor.performance.JsonSerialisationLogic" secure="false" continue-rendering="false" x="168" y="177">
+    <template name="json" uri="json" path="service.woof.html" extends="" class="net.officefloor.performance.logic.JsonSerialisationLogic" secure="false" continue-rendering="false" x="84" y="34">
     </template>
-    <template name="plaintext" uri="plaintext" path="plaintext.woof.html" extends="" class="" secure="false" continue-rendering="false" x="169" y="314">
+    <template name="plaintext" uri="plaintext" path="plaintext.woof.html" extends="" class="" secure="false" continue-rendering="false" x="170" y="573">
+    </template>
+    <template name="singleQuery" uri="singleQuery" path="service.woof.html" extends="" class="net.officefloor.performance.logic.SingleDatabaseQueryLogic" secure="false" continue-rendering="false" x="87" y="105">
     </template>
   </templates>
   <sections>
