@@ -43,10 +43,10 @@ required.
 
         $ vagrant ssh
 
-5. Run a test.
+5. Test a specific framework and only install the software needed for that one framework:
 
         vagrant@TFB-all:~$ cd ~/FrameworkBenchmarks
-        vagrant@TFB-all:~/FrameworkBenchmarks$ toolset/run-tests.py --install server --mode verify --test beego
+        vagrant@TFB-all:~/FrameworkBenchmarks$ toolset/run-tests.py --install server --mode verify --test <framework name>
 
 _Note: `--install server` only needs to be added the first time that a tests is run. 
 The dependencies should already be installed for subsequent runs._
