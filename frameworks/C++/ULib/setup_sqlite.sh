@@ -11,7 +11,7 @@ export ORM_DRIVER="sqlite"
 export UMEMPOOL="146,0,0,90,150,-22,-12,-20,0"
 export ORM_OPTION="host=${DBHOST} user=benchmarkdbuser password=benchmarkdbpass character-set=utf8 dbname=${IROOT}/ULib/db/%.*s"
 
-sudo ulimit -r
+ulimit -r
 sudo setcap cap_sys_nice,cap_sys_resource+eip $IROOT/ULib/bin/userver_tcp
 sudo getcap -v											 $IROOT/ULib/bin/userver_tcp
 
