@@ -839,165 +839,148 @@ class FrameworkTest:
 # End FrameworkTest
 ############################################################
 
-##########################################################################################
-# Static methods
-##########################################################################################
 
-##############################################################
-# parse_config(config, directory, benchmarker)
-# parses a config file and returns a list of FrameworkTest
-# objects based on that config file.
-##############################################################
+# Static methods
+
+def test_order(type_name):
+  """
+  This sort ordering is set up specifically to return the length
+  of the test name. There were SO many problems involved with
+  'plaintext' being run first (rather, just not last) that we
+  needed to ensure that it was run last for every framework.
+  """
+  return len(type_name)
+
+def validate_test(test_name, test_keys, directory):
+  """
+  Validate benchmark config values for this test based on a schema
+  """
+  # Ensure that each FrameworkTest has a framework property, inheriting from top-level if not
+  if not test_keys['framework']:
+    test_keys['framework'] = config['framework']
+
+  recommended_lang = directory.split('/')[-2]
+  windows_url = "https://github.com/TechEmpower/FrameworkBenchmarks/milestones/Windows%%20Compatibility"
+  schema = {
+    'language': {
+      'help': ('language', 'The language of the framework used, suggestion: %s' % recommended_lang)
+    },
+    'webserver': {
+      'help': ('webserver', 'Name of the webserver also referred to as the "front-end server"')
+    },
+    'classification': {
+      'allowed': [
+        ('Fullstack', '...'),
+        ('Micro', '...'),
+        ('Platform', '...')
+      ]
+    },
+    'database': {
+      'allowed': [
+        ('MySQL', 'One of the most popular databases around the web and in TFB'),
+        ('Postgres', 'An advanced SQL database with a larger feature set than MySQL'),
+        ('MongoDB', 'A popular document-store database'),
+        ('Cassandra', 'A highly performant and scalable NoSQL database'),
+        ('Elasticsearch', 'A distributed RESTful search engine that is used as a database for TFB tests'),
+        ('Redis', 'An open-sourced, BSD licensed, advanced key-value cache and store'),
+        ('SQLite', 'A network-less database, still supported for backwards compatibility'),
+        ('SQLServer', 'Microsoft\'s SQL implementation'),
+        ('None', 'No database was used for these tests, as is the case with Json Serialization and Plaintext')
+      ]
+    },
+    'approach': {
+      'allowed': [
+        ('Realistic', '...'),
+        ('Stripped', '...')
+      ]
+    },
+    'orm': {
+      'allowed': [
+        ('Full', 'Has a full suite of features like lazy loading, caching, multiple language support, sometimes pre-configured with scripts.'),
+        ('Micro', 'Has basic database driver capabilities such as establishing a connection and sending queries.'),
+        ('Raw', 'Tests that do not use an ORM will be classified as "raw" meaning they use the platform\'s raw database connectivity.')
+      ]
+    },
+    'platform': {
+      'help': ('platform', 'Name of the platform this framework runs on, e.g. Node.js, Pypy, hhvm, JRuby ...')
+    },
+    'framework': {
+      # Guranteed to be here and correct at this point
+      # key is left here to produce the set of required keys
+    },
+    'os': {
+      'allowed': [
+        ('Linux', 'Our best-supported host OS, it is recommended that you build your tests for Linux hosts'),
+        ('Windows', 'TFB is not fully-compatible on windows, contribute towards our work on compatibility: %s' % windows_url)
+      ]
+    },
+    'database_os': {
+      'allowed': [
+        ('Linux', 'Our best-supported host OS, it is recommended that you build your tests for Linux hosts'),
+        ('Windows', 'TFB is not fully-compatible on windows, contribute towards our work on compatibility: %s' % windows_url)
+      ]
+    }
+  }
+
+  # Confirm required keys are present
+  required_keys = schema.keys()
+  missing = list(set(required_keys) - set(test_keys))
+
+  if len(missing) > 0:
+    missingstr = (", ").join(map(str, missing))
+    raise Exception("benchmark_config.json for test %s is invalid, please amend by adding the following required keys: [%s]"
+      % (test_name, missingstr))
+
+  # Check values of keys against schema
+  for key in required_keys:
+    val = test_keys.get(key, "").lower()
+    has_predefined_acceptables = 'allowed' in schema[key]
+
+    if has_predefined_acceptables:
+      allowed = schema[key].get('allowed', [])
+      acceptable_values, descriptors = zip(*allowed)
+      acceptable_values = [a.lower() for a in acceptable_values]
+      
+      if val not in acceptable_values:
+        msg = ("Invalid `%s` value specified for test \"%s\" in framework \"%s\"; suggestions:\n"
+          % (key, test_name, config['framework']))
+        helpinfo = ('\n').join(["  `%s` -- %s" % (v, desc) for (v, desc) in zip(acceptable_values, descriptors)])
+        fullerr = msg + helpinfo + "\n"
+        raise Exception(fullerr)
+    
+    elif not has_predefined_acceptables and val == "":
+      msg = ("Value for `%s` in test \"%s\" in framework \"%s\" was missing:\n"
+        % (key, test_name, config['framework']))
+      helpinfo = "  %s -- %s" % schema[key]['help']
+      fullerr = msg + helpinfo + '\n'
+      raise Exception(fullerr)
+
 def parse_config(config, directory, benchmarker):
+  """
+  Parses a config file into a list of FrameworkTest objects
+  """
   tests = []
 
-  # This sort ordering is set up specifically to return the length
-  # of the test name. There were SO many problems involved with
-  # 'plaintext' being run first (rather, just not last) that we
-  # needed to ensure that it was run last for every framework.
-  def testOrder(type_name):
-    return len(type_name)
-
   # The config object can specify multiple tests
-  #   Loop over them and parse each into a FrameworkTest
+  # Loop over them and parse each into a FrameworkTest
   for test in config['tests']:
 
-    names = [name for (name,keys) in test.iteritems()]
-    if "default" not in names:
+    tests_to_run = [name for (name,keys) in test.iteritems()]
+    if "default" not in tests_to_run:
       logging.warn("Framework %s does not define a default test in benchmark_config.json", config['framework'])
     
     # Check that each test configuration is acceptable
     # Throw exceptions if a field is missing, or how to improve the field
     for test_name, test_keys in test.iteritems():
-      # Ensure that each FrameworkTest has a framework property, inheriting from top-level if not
-      if not test_keys['framework']:
-        test_keys['framework'] = config['framework']
-
-      # Confirm required keys are present
-      required_keys = ['language','webserver','classification','database','approach','orm','framework','os','database_os']
-      missing = list(set(required_keys) - set(test_keys))
-      if len(missing) > 0:
-        missingstr = (", ").join(map(str, missing))
-        raise Exception("benchmark_config.json for test %s is invalid, please amend and add the following required keys: [%s]"
-          % (test_name, missingstr))
-      
-      # Check that test url values are all appropriate
-      example_urls = {
-        "json_url":      "/json",
-        "db_url":        "/mysql/db",
-        "query_url":     "/mysql/queries?queries=  or  /mysql/queries/",
-        "fortune_url":   "/mysql/fortunes",
-        "update_url":    "/mysql/updates?queries=  or  /mysql/updates/",
-        "plaintext_url": "/plaintext"
-      }
-      for test_url in ["json_url","db_url","query_url","fortune_url","update_url","plaintext_url"]:
-        key_value = test_keys.get(test_url, None)
-        if key_value != None and not key_value.startswith('/'):
-          errmsg = """`%s` field in test \"%s\" does not appear to be a valid url: \"%s\"\n
-            Example `%s` url: \"%s\"
-          """ % (test_url, test_name, key_value, test_url, example_urls[test_url])
-          raise Exception(errmsg)
-
-      # Check database type
-      # List adopted from run-ci.py
-      SUPPORTED_DATABASES = ["mysql","postgres","mongodb","cassandra","elasticsearch","redis"]
-      EDGE_CASES = ["sqlite","sqlserver","none"]
-      db_type = test_keys.get("database", None).lower()
-
-      if db_type.lower() not in sum([SUPPORTED_DATABASES, EDGE_CASES], []):
-        supportedstr = (", ").join(map(str, SUPPORTED_DATABASES))
-        edgestr = (", ").join(map(str, EDGE_CASES))
-
-        errmsg = """Invalid db specified for test \"%s\" in framework \"%s\", please specify a supported database or \"None\"\n
-           Supported databases: [%s]\n
-           Edge cases: [%s]\n
-           Supplied (lowercased): \"%s\"
-        """ % (test_name, config["framework"], supportedstr, edgestr, db_type)
-        raise Exception(errmsg)
-
-      # Check language
-      # "Scala" from "/home/vagrant/FrameworkBenchmarks/frameworks/Scala/finagle"
-      recommended_lang = directory.split('/')[-2]
-      
-      if test_keys.get("language", "") == "":
-        raise Exception("Please specify a language for test \"%s\" in framework \"%s\", suggestion: \"%s\""
-          % (test_name, config["framework"], recommended_lang))
-
-      # Check approach
-      SUPPORTED_APPROACHES = ["realistic","stripped"]
-      test_approach = test_keys.get("approach", None).lower()
-      if test_approach not in SUPPORTED_APPROACHES:
-        approachstr = (", ").join(map(str, SUPPORTED_APPROACHES))
-
-        errmsg = """Invalid approach specified for test \"%s\" in framework \"%s\", please specify a supported approach\n
-           Supported approaches: [%s]\n
-           Suggestion: \"Realistic\"\n
-           Supplied (lowercased): \"%s\"
-        """ % (test_name, config["framework"], approachstr, test_approach)
-        raise Exception(errmsg)
-
-      # Check classification
-      SUPPORTED_CLASSIFICATIONS = ["fullstack","micro","platform"]
-      test_classification = test_keys.get("classification", None).lower()
-      if test_classification not in SUPPORTED_CLASSIFICATIONS:
-        classstr = (", ").join(map(str, SUPPORTED_CLASSIFICATIONS))
-
-        errmsg = """Invalid classification specified for test \"%s\" in framework \"%s\", please specify a supported classification\n
-           Supported classifications: [%s]\n
-           Supplied (lowercased): \"%s\"
-        """ % (test_name, config["framework"], classstr, test_classification)
-        raise Exception(errmsg)
-
-      # Check webserver
-      if test_keys.get("webserver", None) == "":
-        raise Exception("Invalid `webserver` specified for test \"%s\" in framework \"%s\", field `webserver` cannot be empty"
-          % (test_name, config["framework"]))
-
-      # Check ORM
-      SUPPORTED_ORMS = ["full","micro","raw"]
-      test_orm = test_keys.get("orm", None).lower()
-      if test_orm not in SUPPORTED_ORMS:
-        ormstr = (", ").join(map(str, SUPPORTED_ORMS))
-
-        errmsg = """Invalid orm specified for test \"%s\" in framework \"%s\", please specify a supported orm type\n
-           Supported classifications: [%s]\n
-           Supplied (lowercased): \"%s\"
-        """ % (test_name, config["framework"], ormstr, test_orm)
-        raise Exception(errmsg)
-
-      # Check OS
-      SUPPORTED_OSES = ["linux","windows"]
-      test_os = test_keys.get("os", None).lower()
-      if test_os not in SUPPORTED_OSES:
-        osstr = (", ").join(map(str, SUPPORTED_OSES))
-
-        errmsg = """Invalid OS specified for test \"%s\" in framework \"%s\", please specify a supported OS\n
-           Supported OS's: [%s]\n
-           Suggestion: \"Linux\"\n
-           Supplied (lowercased): \"%s\"
-        """ % (test_name, config["framework"], osstr, test_os)
-        raise Exception(errmsg)
-
-      # Check Database OS
-      SUPPORTED_DB_OSES = ["linux","windows"]
-      test_db_os = test_keys.get("database_os", None).lower()
-      if test_db_os not in SUPPORTED_DB_OSES:
-        db_osstr = (", ").join(map(str, SUPPORTED_DB_OSES))
-
-        errmsg = """Invalid Database OS specified for test \"%s\" in framework \"%s\", please specify a supported Database OS\n
-           Supported OS's: [%s]\n
-           Suggestion: \"Linux\"\n
-           Supplied (lowercased): \"%s\"
-        """ % (test_name, config["framework"], db_osstr, test_db_os)
-        raise Exception(errmsg)
-
-      ### Done validating benchmark_config values ###
-
+      # Validates the benchmark_config entry
+      validate_test(test_name, test_keys, directory)
       
       # Map test type to a parsed FrameworkTestType object
       runTests = dict()
       for type_name, type_obj in benchmarker.types.iteritems():
         try:
+          # Makes a FrameWorkTestType object using some of the keys in config
+          # e.g. JsonTestType uses "json_url"
           runTests[type_name] = type_obj.copy().parse(test_keys)
         except AttributeError as ae:
           # This is quite common - most tests don't support all types
@@ -1007,7 +990,7 @@ def parse_config(config, directory, benchmarker):
           pass
 
       # We need to sort by test_type to run
-      sortedTestKeys = sorted(runTests.keys(), key=testOrder)
+      sortedTestKeys = sorted(runTests.keys(), key=test_order)
       sortedRunTests = OrderedDict()
       for sortedTestKey in sortedTestKeys:
         sortedRunTests[sortedTestKey] = runTests[sortedTestKey]
@@ -1023,6 +1006,3 @@ def parse_config(config, directory, benchmarker):
       tests.append(FrameworkTest(test_name, directory, benchmarker, sortedRunTests, test_keys))
 
   return tests
-##############################################################
-# End parse_config
-##############################################################
