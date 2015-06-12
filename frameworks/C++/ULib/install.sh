@@ -92,7 +92,7 @@ cp -r tests/examples/benchmark/FrameworkBenchmarks/ULib/db $ULIB_ROOT
 
 cd examples/userver
 make install
-setcap cap_sys_nice,cap_sys_resource+eip $ULIB_ROOT/bin/userver_tcp
+sudo setcap cap_sys_nice,cap_sys_resource+eip $ULIB_ROOT/bin/userver_tcp
 
 # 3. Compile usp pages for benchmark
 cd ../../src/ulib/net/server/plugin/usp

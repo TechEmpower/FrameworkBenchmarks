@@ -9,4 +9,7 @@ sed -i "s|CLIENT_FOR_PARALLELIZATION .*|CLIENT_FOR_PARALLELIZATION 100|g" $IROOT
 # 2. Start ULib Server (userver_tcp)
 export UMEMPOOL="56,0,0,40,150,-24,-13,-20,0"
 
+ulimit -r
+getcap -v $IROOT/ULib/bin/userver_tcp
+
 $IROOT/ULib/bin/userver_tcp -c $IROOT/ULib/benchmark.cfg &
