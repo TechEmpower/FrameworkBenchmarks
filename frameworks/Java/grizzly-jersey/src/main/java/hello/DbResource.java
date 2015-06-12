@@ -49,7 +49,11 @@ public class DbResource {
             Session session = sessionFactory.openSession();
             session.setDefaultReadOnly(true);
 
-            return (World) session.byId(World.class).load(random.nextInt(DB_ROWS) + 1);
+            try {
+              return (World) session.byId(World.class).load(random.nextInt(DB_ROWS) + 1);
+            } finally {
+              session.close();
+            }
           }
         }
       ));
@@ -65,9 +69,9 @@ public class DbResource {
   private int getQueries(String proto) {
     int result = 1;
     try {
-        if (proto != null && !proto.trim().isEmpty()) {
-            result = Integer.parseInt(proto);
-        }
+      if (proto != null && !proto.trim().isEmpty()) {
+        result = Integer.parseInt(proto);
+      }
     } catch (NumberFormatException e) {/* by test contract */}
 
     return Math.min(500, Math.max(1, result));
