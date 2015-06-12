@@ -11,7 +11,8 @@ export ORM_DRIVER="mysql"
 export UMEMPOOL="146,0,0,90,150,-22,-12,-20,0"
 export ORM_OPTION="host=${DBHOST} user=benchmarkdbuser password=benchmarkdbpass character-set=utf8 dbname=hello_world"
 
-ulimit -r
-getcap -v $IROOT/ULib/bin/userver_tcp
+sudo ulimit -r
+sudo setcap cap_sys_nice,cap_sys_resource+eip $IROOT/ULib/bin/userver_tcp
+sudo getcap -v											 $IROOT/ULib/bin/userver_tcp
 
 $IROOT/ULib/bin/userver_tcp -c $IROOT/ULib/benchmark.cfg &
