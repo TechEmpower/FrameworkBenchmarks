@@ -43,7 +43,7 @@ public class DatabaseUpdateTest extends AbstractDatabaseQueryTestCase {
 
 		// Request the results
 		HttpResponse response = client.execute(new HttpGet(
-				"http://localhost:7878/multipleQueries-service.woof"
+				"http://localhost:7878/databaseUpdate-service.woof"
 						+ queryString));
 
 		// Validate the response
@@ -69,8 +69,9 @@ public class DatabaseUpdateTest extends AbstractDatabaseQueryTestCase {
 				isDifferent = true;
 			}
 		}
-		Assert.assertTrue("Should have at least one number different",
-				isDifferent);
+		Assert.assertTrue(
+				"Should have at least one number different (if batch size big enough)",
+				isDifferent || (batchSize <= 5));
 
 		// Ensure values in database are different (ie have been updated)
 		isDifferent = false;
@@ -80,7 +81,9 @@ public class DatabaseUpdateTest extends AbstractDatabaseQueryTestCase {
 				isDifferent = true;
 			}
 		}
-		Assert.assertTrue("Database should have changed", isDifferent);
+		Assert.assertTrue(
+				"Database should have changed (except unlikely case of same random number)",
+				isDifferent || (batchSize <= 2));
 	}
 
 	/**
