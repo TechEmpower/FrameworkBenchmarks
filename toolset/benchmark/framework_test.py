@@ -851,6 +851,30 @@ def test_order(type_name):
   """
   return len(type_name)
 
+
+def validate_urls(test_name, test_keys):
+  """
+  Separated from validate_test because urls are not required anywhere. We know a url is incorrect if it is
+  empty or does not start with a "/" character. There is no validation done to ensure the url conforms to
+  the suggested url specifications, although those suggestions are presented if a url fails validation here.
+  """
+  example_urls = {
+    "json_url":      "/json",
+    "db_url":        "/mysql/db",
+    "query_url":     "/mysql/queries?queries=  or  /mysql/queries/",
+    "fortune_url":   "/mysql/fortunes",
+    "update_url":    "/mysql/updates?queries=  or  /mysql/updates/",
+    "plaintext_url": "/plaintext"
+  }
+  for test_url in ["json_url","db_url","query_url","fortune_url","update_url","plaintext_url"]:
+    key_value = test_keys.get(test_url, None)
+    if key_value != None and not key_value.startswith('/'):
+      errmsg = """`%s` field in test \"%s\" does not appear to be a valid url: \"%s\"\n
+        Example `%s` url: \"%s\"
+      """ % (test_url, test_name, key_value, test_url, example_urls[test_url])
+      raise Exception(errmsg)
+ 
+
 def validate_test(test_name, test_keys, directory):
   """
   Validate benchmark config values for this test based on a schema
@@ -930,6 +954,9 @@ def validate_test(test_name, test_keys, directory):
     missingstr = (", ").join(map(str, missing))
     raise Exception("benchmark_config.json for test %s is invalid, please amend by adding the following required keys: [%s]"
       % (test_name, missingstr))
+
+  # Check the (all optional) test urls
+  validate_urls(test_name, test_keys)
 
   # Check values of keys against schema
   for key in required_keys:
