@@ -9,7 +9,7 @@
     , "errorhandler": "1.3.5"
     , "mongoose": "4.0.1"
     , "async": "0.9.0"
-    , "jade": "1.10.0"
+    , "jade": "1.11.0"
     , "sequelize": "2.0.6"
     , "mysql": "2.6.2"
   }
