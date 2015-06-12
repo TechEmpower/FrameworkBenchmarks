@@ -1,5 +1,9 @@
 <woof>
   <templates>
+    <template name="databaseUpdate" uri="databaseUpdate" path="service.woof.html" extends="" class="net.officefloor.performance.logic.DatabaseUpdateLogic" secure="false" continue-rendering="false" x="95" y="244">
+    </template>
+    <template name="fortune" uri="fortune" path="fortune.woof.html" extends="" class="net.officefloor.performance.logic.FortunesLogic" secure="false" continue-rendering="false" x="100" y="303">
+    </template>
     <template name="json" uri="json" path="service.woof.html" extends="" class="net.officefloor.performance.logic.JsonSerialisationLogic" secure="false" continue-rendering="false" x="84" y="34">
     </template>
     <template name="multipleQueries" uri="multipleQueries" path="service.woof.html" extends="" class="net.officefloor.performance.logic.MultipleDatabaseQueriesLogic" secure="false" continue-rendering="false" x="91" y="182">

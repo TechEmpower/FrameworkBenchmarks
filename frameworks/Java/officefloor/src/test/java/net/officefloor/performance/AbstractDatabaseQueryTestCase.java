@@ -116,6 +116,11 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 		this.connection.createStatement().execute("SHUTDOWN IMMEDIATELY");
 	}
 
+	@Override
+	protected int getIterationCount() {
+		return 1000;
+	}
+
 	/**
 	 * Obtains the next index.
 	 * 

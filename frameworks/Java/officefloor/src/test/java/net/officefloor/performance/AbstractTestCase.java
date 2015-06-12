@@ -67,7 +67,7 @@ public abstract class AbstractTestCase {
 		}
 
 		final int threadCount = 100;
-		final int iterationCount = 10000;
+		final int iterationCount = this.getIterationCount();
 
 		// Warm up the server
 		System.out.println("===========================================");
@@ -177,6 +177,15 @@ public abstract class AbstractTestCase {
 				+ duration + " milliseconds");
 		System.out.println("Effectively 1 request every "
 				+ (duration / (totalRequestCount * 1.0)) + " milliseconds");
+	}
+
+	/**
+	 * Obtains the iteration count for performance testing.
+	 * 
+	 * @return Iteration count for performance testing.
+	 */
+	protected int getIterationCount() {
+		return 10000;
 	}
 
 	/**
