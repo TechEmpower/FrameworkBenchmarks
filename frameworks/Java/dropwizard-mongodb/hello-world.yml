@@ -3,7 +3,7 @@ server:
   applicationContextPath: /
   connector:
     type: http
-    port: 9000
+    port: 9090
     useServerHeader: true
 
   requestLog:
