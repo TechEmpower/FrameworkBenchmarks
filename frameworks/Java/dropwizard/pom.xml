@@ -9,8 +9,8 @@
     <properties>
         <jdk.version>1.7</jdk.version>
 
-        <dropwizard.version>0.7.0</dropwizard.version>
-        <mysql-connector-java.version>5.1.30</mysql-connector-java.version>
+        <dropwizard.version>0.7.1</dropwizard.version>
+        <mysql-connector-java.version>5.1.35</mysql-connector-java.version>
     </properties>
 
     <dependencies>

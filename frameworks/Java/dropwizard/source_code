@@ -16,5 +16,6 @@
 ./dropwizard/src/main/java/com/example/helloworld/resources/JsonResource.java
 ./dropwizard/src/main/java/com/example/helloworld/resources/TextResource.java
 ./dropwizard/src/main/java/com/example/helloworld/resources/WorldResource.java
+./dropwizard/src/main/java/com/example/helloworld/resources/Helper.java
 ./dropwizard/src/main/java/com/example/helloworld/HelloWorldService.java
 ./dropwizard/src/main/resources/fortunes.mustache

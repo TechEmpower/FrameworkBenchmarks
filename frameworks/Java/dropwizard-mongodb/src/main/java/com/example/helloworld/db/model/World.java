@@ -1,11 +1,12 @@
 
-package com.example.helloworld.core;
-
-import javax.persistence.*;
-
-import org.mongojack.Id;
+package com.example.helloworld.db.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.mongojack.Id;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "World")

@@ -1,66 +1,55 @@
 package com.example.helloworld.resources;
 
+import com.example.helloworld.db.WorldDAO;
+import com.example.helloworld.db.model.World;
+import com.google.common.base.Optional;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.mongojack.DBCursor;
-import org.mongojack.JacksonDBCollection;
-
-import com.example.helloworld.core.World;
-import com.google.common.base.Optional;
-import com.google.common.primitives.Ints;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-
 @Path("/db")
 @Produces(MediaType.APPLICATION_JSON)
-public class WorldResource
-{
+public class WorldResource {
+    private final WorldDAO worldDAO;
 
-  private JacksonDBCollection<World, String> collection;
- 
-  public WorldResource(JacksonDBCollection<World, String> collection)
-  {
-    this.collection = collection;
-  }
+    public WorldResource(WorldDAO worldDAO) {
+        this.worldDAO = worldDAO;
 
-  @GET
-  public Object dbTest(@QueryParam("queries") Optional<String> queries)
-  {
-    if (!queries.isPresent()) 
-    {
-      DBObject query = new BasicDBObject();
-      query.put("_id", Helper.randomWorld());
-      DBCursor<World> dbCursor = collection.find(query);
-      return (dbCursor.hasNext()) ? dbCursor.next() : null;
     }
-    Integer totalQueries = Ints.tryParse(queries.orNull());
-    if (totalQueries != null) 
-    {
-      if (totalQueries > 500) 
-      {
-        totalQueries = 500;
-      }
-      else if (totalQueries < 1) 
-      {
-        totalQueries = 1;
-      }
-    } 
-    else 
-    {
-      totalQueries = 1;
+
+    @GET
+    public Object dbTest(@QueryParam("queries") Optional<String> queries) {
+        int totalQueries = Helper.getQueries(queries);
+        final World[] worlds = new World[totalQueries];
+
+        for (int i = 0; i < totalQueries; i++) {
+            final long worldId = Helper.randomWorld();
+            worlds[i] = worldDAO.findById(worldId).orNull();
+        }
+        if (!queries.isPresent()) {
+            return worlds[0];
+        } else {
+            return worlds;
+        }
     }
-    final World[] worlds = new World[totalQueries];
-    for (int i = 0; i < totalQueries; i++)
-    {
-      DBObject query = new BasicDBObject();
-      query.put("_id", Helper.randomWorld());
-      DBCursor<World> dbCursor = collection.find(query);
-      worlds[i] = (dbCursor.hasNext()) ? dbCursor.next() : null;
+
+    @GET
+    @Path("/update")
+    public World[] updateTest(@QueryParam("queries") Optional<String> queries) {
+        int totalQueries = Helper.getQueries(queries);
+        final World[] worlds = new World[totalQueries];
+
+        for (int i = 0; i < totalQueries; i++) {
+            final long worldId = Helper.randomWorld();
+
+            final World world = worldDAO.findById(worldId).orNull();
+            world.setRandomNumber(Helper.randomWorld());
+            worlds[i] = worldDAO.update(world);
+        }
+
+        return worlds;
     }
-    return worlds;
-  }
 }

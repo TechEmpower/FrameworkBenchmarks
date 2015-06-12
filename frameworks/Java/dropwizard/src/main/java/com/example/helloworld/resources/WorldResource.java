@@ -1,5 +1,8 @@
 package com.example.helloworld.resources;
 
+import com.example.helloworld.db.WorldDAO;
+import com.example.helloworld.db.model.World;
+import com.google.common.base.Optional;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.GET;
@@ -7,10 +10,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
-import com.example.helloworld.db.WorldDAO;
-import com.example.helloworld.db.model.World;
-import com.google.common.base.Optional;
 
 @Path("/db")
 @Produces(MediaType.APPLICATION_JSON)

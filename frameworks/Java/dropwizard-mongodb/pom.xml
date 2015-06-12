@@ -8,16 +8,27 @@
     <artifactId>dropwizard-mongodb</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+    <properties>
+        <jdk.version>1.7</jdk.version>
+
+        <dropwizard.version>0.7.1</dropwizard.version>
+    </properties>
+
     <dependencies>
         <dependency>
-            <groupId>com.yammer.dropwizard</groupId>
+            <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
-            <version>0.6.2</version>
+            <version>${dropwizard.version}</version>
         </dependency>
-		<dependency>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-views-mustache</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+        <dependency>
 			<groupId>org.mongojack</groupId>
 			<artifactId>mongojack</artifactId>
-			<version>2.0.0</version>
+			<version>2.1.0</version>
 		</dependency>
 
     </dependencies>

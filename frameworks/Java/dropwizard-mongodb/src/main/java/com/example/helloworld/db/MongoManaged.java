@@ -1,13 +1,13 @@
 package com.example.helloworld.db;
 
-import com.mongodb.Mongo;
-import com.yammer.dropwizard.lifecycle.Managed;
- 
+import com.mongodb.MongoClient;
+import io.dropwizard.lifecycle.Managed;
+
 public class MongoManaged implements Managed {
  
-    private Mongo mongo;
+    private MongoClient mongo;
  
-    public MongoManaged(Mongo mongo) {
+    public MongoManaged(MongoClient mongo) {
         this.mongo = mongo;
     }
  
