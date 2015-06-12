@@ -34,7 +34,8 @@ class CIRunnner:
   Only verifies the first test in each directory 
   '''
 
-  SUPPORTED_DATABASES = "mysql postgres mongodb cassandra elasticsearch sqlite redis none".split()
+  # Note: This list should not be updated without also updating the run_travis_setup function
+  SUPPORTED_DATABASES = "mysql postgres mongodb cassandra elasticsearch sqlite none".split()
   
   def __init__(self, mode, testdir=None):
     '''
