@@ -16,7 +16,7 @@ object Main extends App {
 
   val server = Undertow
     .builder()
-    .addHttpListener(port, "localhost")
+    .addHttpListener(port, "0.0.0.0")
     .setHandler(handler)
     .setServerOption(UndertowOptions.ALWAYS_SET_KEEP_ALIVE, java.lang.Boolean.FALSE)
     .setServerOption(UndertowOptions.ALWAYS_SET_DATE, java.lang.Boolean.TRUE)

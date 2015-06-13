@@ -12,7 +12,7 @@ module.exports = {
   /**
    * Test 1: JSON Serialization
    */
-  json: function (req, res) {
+  Json: function (req, res) {
     return res.json({
       message: 'Hello, World!'
     });
@@ -21,7 +21,7 @@ module.exports = {
   /**
    * Test 6: Plaintext
    */
-  plaintext: function (req, res) {
+  Plaintext: function (req, res) {
   	res.setHeader('Content-Type', 'text/plain');
   	return res.send("Hello, World!");
   }

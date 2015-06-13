@@ -104,9 +104,9 @@ app.get "/redis/fortunes", do |request|
   }
   data.push(additional_fortune)
 
-  data.sort! { |a, b|
+  data.sort! do |a, b|
     a[:message].to_s <=> b[:message].to_s
-  }
+  end
 
   # New builder for each request!
   html = HTML::Builder.new.build do
