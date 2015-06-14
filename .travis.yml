@@ -64,7 +64,6 @@ env:
     - "TESTDIR=Java/activeweb"
     - "TESTDIR=Java/curacao"
     - "TESTDIR=Java/dropwizard"
-    - "TESTDIR=Java/dropwizard-mongodb"
     - "TESTDIR=Java/gemini"
     - "TESTDIR=Java/grizzly-bm"
     - "TESTDIR=Java/grizzly-jersey"
