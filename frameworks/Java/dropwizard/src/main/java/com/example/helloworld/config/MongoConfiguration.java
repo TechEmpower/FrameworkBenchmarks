@@ -9,14 +9,26 @@ import javax.validation.constraints.Min;
 public class MongoConfiguration {
     @JsonProperty
     @NotEmpty
-    public String host;
+    private String host;
 
     @JsonProperty
     @Min(1)
     @Max(65535)
-    public int port;
+    private int port;
 
     @JsonProperty
     @NotEmpty
-    public String db;
+    private String db;
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getDb() {
+        return db;
+    }
 }

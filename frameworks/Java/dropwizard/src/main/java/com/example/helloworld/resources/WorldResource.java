@@ -23,10 +23,9 @@ public class WorldResource {
     @GET
     @UnitOfWork
     public Object dbTest(@QueryParam("queries") Optional<String> queries) {
-    	int totalQueries = Helper.getQueries(queries);
+        int totalQueries = Helper.getQueries(queries);
         final World[] worlds = new World[totalQueries];
 
-        // TODO: Is parallelising this cheating?
         for (int i = 0; i < totalQueries; i++) {
             final long worldId = Helper.randomWorld();
             worlds[i] = worldDAO.findById(worldId).orNull();
@@ -45,7 +44,6 @@ public class WorldResource {
         int totalQueries = Helper.getQueries(queries);
         final World[] worlds = new World[totalQueries];
 
-        // TODO: Is parallelising this cheating?
         for (int i = 0; i < totalQueries; i++) {
             final long worldId = Helper.randomWorld();
 
@@ -53,7 +51,6 @@ public class WorldResource {
             world.setRandomNumber(Helper.randomWorld());
             worlds[i] = worldDAO.update(world);
         }
-
         return worlds;
     }
 }
