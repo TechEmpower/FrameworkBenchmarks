@@ -5,6 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
+import net.officefloor.plugin.web.http.template.UnescapedHtml;
 import lombok.Data;
 import lombok.NonNull;
 
