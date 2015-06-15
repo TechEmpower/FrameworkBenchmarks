@@ -34,7 +34,7 @@ if [ ! -d "$ULIB_ROOT" ]; then
 fi
 
 # AVOID "fatal error: postgres_fe.h: No such file or directory"
-sudo apt-get install -y postgresql-server-dev-all libcap2
+sudo apt-get install -y postgresql-server-dev-all
 
 # Add a simple configuration file to it
 cd $ULIB_ROOT
@@ -94,13 +94,19 @@ cd examples/userver
 make install
 
 # 3. make use of FIFO scheduling policy possible
+type setcap >/dev/null 2>/dev/null
+
+if [ $? -ne 0 ]; then
+	sudo apt-get install -y libcap2-bin
+fi
+
 sudo setcap cap_sys_nice,cap_sys_resource+eip $ULIB_ROOT/bin/userver_tcp
 
 grep 'rtprio' /etc/security/limits.conf >/dev/null 2>/dev/null
 
 if [ $? -ne 0 ]; then
-	sudo sh -c "echo '*            hard    rtprio             99' >> /etc/security/limits.conf"
-	sudo sh -c "echo '*            soft    rtprio             99' >> /etc/security/limits.conf"
+	sudo sh -c "echo '* hard rtprio 99' >> /etc/security/limits.conf"
+	sudo sh -c "echo '* soft rtprio 99' >> /etc/security/limits.conf"
 fi
 
 # 4. Compile usp pages for benchmark
