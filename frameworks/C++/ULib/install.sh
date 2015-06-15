@@ -34,7 +34,7 @@ if [ ! -d "$ULIB_ROOT" ]; then
 fi
 
 # AVOID "fatal error: postgres_fe.h: No such file or directory"
-sudo apt-get install -y postgresql-server-dev-all
+sudo apt-get install -y postgresql-server-dev-all libcap2
 
 # Add a simple configuration file to it
 cd $ULIB_ROOT
@@ -67,8 +67,8 @@ gcc_version=`g++ -dumpversion`
 
 case "$gcc_version" in
   3*|4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*)
-	  CC='gcc-4.8'
-	 CXX='g++-4.8'
+	  CC='gcc-4.9'
+	 CXX='g++-4.9'
   ;;
 esac
 
@@ -92,9 +92,18 @@ cp -r tests/examples/benchmark/FrameworkBenchmarks/ULib/db $ULIB_ROOT
 
 cd examples/userver
 make install
+
+# 3. make use of FIFO scheduling policy possible
 sudo setcap cap_sys_nice,cap_sys_resource+eip $ULIB_ROOT/bin/userver_tcp
 
-# 3. Compile usp pages for benchmark
+grep 'rtprio' /etc/security/limits.conf >/dev/null 2>/dev/null
+
+if [ $? -ne 0 ]; then
+	sudo sh -c "echo '*            hard    rtprio             99' >> /etc/security/limits.conf"
+	sudo sh -c "echo '*            soft    rtprio             99' >> /etc/security/limits.conf"
+fi
+
+# 4. Compile usp pages for benchmark
 cd ../../src/ulib/net/server/plugin/usp
 make db.la fortune.la json.la plaintext.la query.la update.la
 
