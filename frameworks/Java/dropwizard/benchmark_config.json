@@ -9,7 +9,7 @@
       "fortune_url": "/fortunes",
       "update_url": "/db/update?queries=",
       "plaintext_url": "/plaintext",
-      "port": 9000,
+      "port": 9090,
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
@@ -21,7 +21,28 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "dropwizard",
-      "notes": "",
+      "notes": "dropwizard with mysql using hibernate",
+      "versus": ""
+    },
+    "mongodb": {
+      "setup_file": "setup",
+      "db_url": "/mongo/db",
+      "query_url": "/mongo/db?queries=",
+      "fortune_url": "/mongo/fortunes",
+      "update_url": "/mongo/db/update?queries=",
+      "port": 9090,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MongoDB",
+      "framework": "dropwizard",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Jetty",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "dropwizard-mongodb",
+      "notes": "dropwizard with mongodb using mongojack",
       "versus": ""
     }
   }]
