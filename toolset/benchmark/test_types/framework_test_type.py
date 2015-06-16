@@ -2,6 +2,12 @@ import copy
 import sys
 import subprocess
 from subprocess import PIPE
+import requests
+
+# Requests is built ontop of urllib3,
+# here we prevent general request logging
+import logging
+logging.getLogger('urllib3').setLevel(logging.CRITICAL)
 
 from pprint import pprint
 
@@ -57,33 +63,26 @@ class FrameworkTestType:
     else: # This is quite common - most tests don't support all types
       raise AttributeError("A %s requires the benchmark_config.json to contain %s"%(self.name,self.args))
 
-  def _curl(self, url):
-    '''Downloads a URL and returns the HTTP response'''
-    # Use -m 15 to make curl stop trying after 15sec.
-    # Use -i to output response with headers
-    # Don't use -f so that the HTTP response code is ignored.
-    # Use -sS to hide progress bar, but show errors.
+  def request_headers_and_body(self, url):
+    '''
+    Downloads a URL and returns the HTTP response headers
+    and body content as a tuple
+    '''
     print "Accessing URL %s:" % url
     self.err.write("Accessing URL %s \n" % url)
     self.out.write("Accessing URL %s \n" % url)
-    p = subprocess.Popen(["curl", "-m", "15", "-i", "-sS", url], stderr=PIPE, stdout=PIPE)
-    (out, err) = p.communicate()
-    self.err.write(err+'\n')
-    self.out.write("Response: \n\"" + out.strip() + "\"\n")
-    if p.returncode != 0:
-      return None
-    return out
 
-  def _curl_body(self, url):
-    '''Downloads a URL and returns the HTTP body'''
-    # Use -m 15 to make curl stop trying after 15sec.
-    # Don't use -f so that the HTTP response code is ignored.
-    # Use -s to hide progress bar
-    # Get response body
-    p = subprocess.Popen(["curl", "-m", "15", "-s", url], stdout=PIPE, stderr=PIPE)
-    (out, err) = p.communicate()
-    print "  Response (trimmed to 40 bytes): \"%s\"" % out.strip()[:40]
-    return out
+    r = requests.get(url, timeout=15)
+    try:
+      r.raise_for_status() # Throws on non-200
+      headers = r.headers
+      body = r.content
+      self.out.write(str(headers))
+      self.out.write(body)
+      return headers, body
+    except requests.HTTPError as err:
+      self.err.write(err + '\n')
+      return None, None
   
   def verify(self, base_url):
     '''Accesses URL used by this test type and checks the return 
