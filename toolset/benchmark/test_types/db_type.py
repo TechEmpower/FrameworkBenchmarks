@@ -4,10 +4,13 @@ import json
 
 class DBTestType(FrameworkTestType):
   def __init__(self):
-    args = ['db_url']
-    FrameworkTestType.__init__(self, name='db', 
-      accept_header=self.accept_json,
-      requires_db=True, args=args)
+    kwargs = {
+      'name': 'db',
+      'accept_header': self.accept_json,
+      'requires_db': True,
+      'args': ['db_url']
+    }
+    FrameworkTestType.__init__(self, **kwargs)
 
   def get_url(self):
     return self.db_url
@@ -18,8 +21,7 @@ class DBTestType(FrameworkTestType):
     '''
 
     url = base_url + self.db_url
-    full_response = self._curl(url)
-    body = self._curl_body(url)
+    headers, body = self.request_headers_and_body(url)
     
     # Empty response
     if body is None:
@@ -49,10 +51,30 @@ class DBTestType(FrameworkTestType):
 
     problems += self._verifyObject(response, url)
 
-    # Ensure required response headers are present
-    if any(v.lower() not in full_response.lower() for v in ('Server','Date','Content-Type: application/json')) \
-       or all(v.lower() not in full_response.lower() for v in ('Content-Length','Transfer-Encoding')):
-      problems.append( ('warn','Required response header missing.',url) )
+    # Verify response headers
+    if any(v.lower() not in headers for v in ('Server','Date','Content-Type')):
+      problems.append( ('warn', 'Required response header missing: %s' % v, url) )
+    elif all(v.lower() not in headers for v in ('Content-Length','Transfer-Encoding')):
+      problems.append(
+        ('warn',
+         'Required response size header missing, please include either "Content-Length" or "Transfer-Encoding"',
+         url))
+    else:
+      content_type = headers.get('Content-Type', None)
+      expected_type = 'application/json'
+      includes_charset = 'application/json; charset=utf-8'
+      if content_type == includes_charset:
+        problems.append(
+          ('warn',
+           ("Content encoding \"%s\" found where \"%s\" is acceptable.\n"
+            "Additional response bytes may negatively affect benchmark performance."
+              % (includes_charset, expected_type)),
+           url))
+      elif content_type != expected_type:
+        problems.append(
+          ('warn',
+           'Unexpected content encoding, found %s, expected %s' % (content_type, expected_type),
+           url))
 
     if len(problems) == 0:
       return [('pass','',url)]
@@ -67,6 +89,7 @@ class DBTestType(FrameworkTestType):
 
     problems = []
 
+    # Dict is expected, handle bytes in non-cases
     if type(db_object) != dict:
       got = str(db_object)[:20]
       if len(str(db_object)) > 20:
@@ -76,42 +99,36 @@ class DBTestType(FrameworkTestType):
     # Make keys case insensitive
     db_object = {k.lower(): v for k,v in db_object.iteritems()}
 
-    if "id" not in db_object:
-      problems.append( (max_infraction, "Response has no 'id' key", url) ) 
-    if "randomnumber" not in db_object:
-      problems.append( (max_infraction, "Response has no 'randomNumber' key", url) )
+    if any(v not in db_object for v in ('id','randomnumber')):
+      problems.append( (max_infraction, 'Response object was missing required key: %s' % v, url) )
     
-    # Ensure we can continue on to use these keys
-    if "id" not in db_object or "randomnumber" not in db_object:
+    # All required keys must be present
+    if len(problems) > 0:
       return problems
 
+    # Assert key types and values
     try:
-      float(db_object["id"])
+      response_id = float(db_object["id"])
+      if response_id > 10000 or response_id < 1:
+        problems.append( ('warn', "Response key 'id' should be between 1 and 10,000", url) )
+      if type(db_object["id"]) != int:
+        problems.append(
+          ('warn',
+           ('%s%s' % ("Response key 'id' was not an integer and may result in additional response bytes.",
+                      "Additional response bytes may negatively affect benchmark performance.")),
+           url))
     except ValueError as ve:
       problems.append( (max_infraction, "Response key 'id' does not map to a number - %s" % ve, url) ) 
 
     try:
-      float(db_object["randomnumber"])
+      response_rn = float(db_object["randomnumber"])
+      if response_rn > 10000:
+        problems.append(
+          ('warn',
+           "Response key 'randomNumber' is over 10,000. This may negatively affect performance by sending extra bytes.",
+           url))
+
     except ValueError as ve:
       problems.append( (max_infraction, "Response key 'randomNumber' does not map to a number - %s" % ve, url) ) 
 
-    if type(db_object["id"]) != int:
-      problems.append( ('warn', '''Response key 'id' contains extra quotations or decimal points.
-        This may negatively affect performance during benchmarking''', url) ) 
-
-    # Tests based on the value of the numbers
-    try:
-      response_id = float(db_object["id"])
-      response_rn = float(db_object["randomnumber"])
-
-      if response_id > 10000 or response_id < 1:
-        problems.append( ('warn', "Response key 'id' should be between 1 and 10,000", url) ) 
-
-      if response_rn > 10000:
-        problems.append( ('warn', '''Response key 'randomNumber' is over 10,000. This may negatively 
-          afect performance by sending extra bytes.''', url) )
-    except ValueError:
-      pass
-
     return problems
-
