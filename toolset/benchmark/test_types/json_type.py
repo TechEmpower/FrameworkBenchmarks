@@ -3,9 +3,15 @@ from benchmark.test_types.framework_test_type import FrameworkTestType
 import json
 
 class JsonTestType(FrameworkTestType):
+
   def __init__(self):
-    args = ['json_url']
-    FrameworkTestType.__init__(self, name='json', requires_db=False, accept_header=self.accept_json, args=args)
+    kwargs = {
+      'name': 'json',
+      'accept_header': self.accept_json,
+      'requires_db': False,
+      'args': ['json_url']
+    }
+    FrameworkTestType.__init__(self, **kwargs)
 
   def get_url(self):
     return self.json_url
@@ -17,8 +23,7 @@ class JsonTestType(FrameworkTestType):
     '''
 
     url = base_url + self.json_url
-    full_response = self._curl(url)
-    body = self._curl_body(url)
+    headers, body = self.request_headers_and_body(url)
     
     # Empty response
     if body is None:
@@ -32,21 +37,68 @@ class JsonTestType(FrameworkTestType):
     except ValueError as ve:
       return [('fail',"Invalid JSON - %s" % ve, url)]
     
+    problems = []
+    problems += self._verifyObject(response, url)
+    problems += self._verifyHeaders(headers, url)
+
+    if len(problems) > 0:
+      return problems
+    else:
+      return [('pass','',url)]
+
+  def _verifyObject(self, json_object, url):
+    '''
+    Ensure that the JSON object closely resembles
+    { 'message': 'Hello, World!' }
+    '''
+
+    problems = []
+
     # Make everything case insensitive
-    response = {k.lower(): v.lower() for k,v in response.iteritems()}
+    json_object = {k.lower(): v.lower() for k,v in json_object.iteritems()}
 
-    if "message" not in response:
-      return [('fail',"No JSON key 'message'", url)]
+    if 'message' not in json_object:
+      return [('fail',"Missing required key 'message'",url)]
+    else:
+      if len(json_object) != 1:
+        additional = (', ').join([k for k in json_object.keys() if k != 'message'])
+        problems.append(
+          ('warn',"Too many JSON key/value pairs, consider removing: %s" % additional,url))
 
-    if len(response) != 1:
-      return [('warn',"Too many JSON key/value pairs, expected 1", url)]
+      message = json_object['message']
+      if message != 'hello, world!':
+        return [('fail', "Expected message of 'hello, world!', got '%s'" % message)]
 
-    if response['message'] != 'hello, world!':
-      return [('fail',"Expected message of 'hello, world!', got '%s'"%response['message'], url)]
+    return problems
 
-    # Ensure required response headers are present
-    if any(v.lower() not in full_response.lower() for v in ('Server','Date','Content-Type: application/json')) \
-       or all(v.lower() not in full_response.lower() for v in ('Content-Length','Transfer-Encoding')):
-      return [('warn','Required response header missing.',url)]
+  def _verifyHeaders(self, headers, url):
+        '''Verifies the response headers'''
 
-    return [('pass','',url)]
+        problems = []
+
+        if any(v.lower() not in headers for v in ('Server', 'Date', 'Content-Type')):
+            problems.append(
+                ('warn', 'Required response header missing: %s' % v, url))
+        elif all(v.lower() not in headers for v in ('Content-Length', 'Transfer-Encoding')):
+            problems.append(
+                ('warn',
+                 'Required response size header missing, please include either "Content-Length" or "Transfer-Encoding"',
+                 url))
+        else:
+            content_type = headers.get('Content-Type', None)
+            expected_type = 'application/json'
+            includes_charset = 'application/json; charset=utf-8'
+            if content_type == includes_charset:
+                problems.append(
+                    ('warn',
+                     ("Content encoding \"%s\" found where \"%s\" is acceptable.\n"
+                      "Additional response bytes may negatively affect benchmark performance."
+                      % (includes_charset, expected_type)),
+                     url))
+            elif content_type != expected_type:
+                problems.append(
+                    ('warn',
+                     'Unexpected content encoding, found %s, expected %s' % (
+                         content_type, expected_type),
+                     url))
+        return problems
