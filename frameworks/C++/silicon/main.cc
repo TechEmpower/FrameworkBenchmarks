@@ -42,9 +42,9 @@ std::string escape_html_entities(const std::string& data)
 int main(int argc, char* argv[])
 {
 
-  if (argc != 3)
+  if (argc != 4)
   {
-    std::cerr << "Usage: " << argv[0] << " mysql_host port" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " mysql_host port nthreads" << std::endl;
     return 1;
   }
   
@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
     // Start the server.
     sl::mhd_json_serve(hello_api, atoi(argv[2])
 #ifdef TFB_USE_EPOLL
-                       , _linux_epoll, _nthreads = 1000
+                       , _linux_epoll, _nthreads = atoi(argv[3])
 #else
                        , _one_thread_per_connection
 #endif
