@@ -2,7 +2,7 @@
 
 RVER=4.0.41
 
-RETCODE=$(fw_exists ${IROOT}/resin-$RVER.installed)
+RETCODE=$(fw_exists ${IROOT}/resin-java8-$RVER.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 fw_depends java8
