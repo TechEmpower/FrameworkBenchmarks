@@ -100,8 +100,6 @@ if [ $? -ne 0 ]; then
 	sudo apt-get install -y libcap2-bin
 fi
 
-sudo setcap cap_sys_nice,cap_sys_resource+eip $ULIB_ROOT/bin/userver_tcp
-
 grep 'rtprio' /etc/security/limits.conf >/dev/null 2>/dev/null
 
 if [ $? -ne 0 ]; then
