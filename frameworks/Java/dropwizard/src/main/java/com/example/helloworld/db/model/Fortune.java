@@ -10,7 +10,7 @@ public class Fortune implements Comparable<Fortune> {
 
     @Id
     @JsonProperty
-    private long id;
+    private int id;
 
     @JsonProperty
     @Column(name = "message", nullable = false)
@@ -23,7 +23,7 @@ public class Fortune implements Comparable<Fortune> {
         this.message = message;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

@@ -1,12 +1,14 @@
 package com.example.helloworld.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mongodb.MongoClient;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.net.UnknownHostException;
 
-public class MongoConfiguration {
+public class MongoClientFactory {
     @JsonProperty
     @NotEmpty
     private String host;
@@ -30,5 +32,13 @@ public class MongoConfiguration {
 
     public String getDb() {
         return db;
+    }
+
+    public MongoClient build() {
+        try {
+            return new MongoClient(host, port);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

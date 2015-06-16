@@ -1,4 +1,4 @@
-package com.example.helloworld.db;
+package com.example.helloworld.db.mongo;
 
 import com.mongodb.MongoClient;
 import io.dropwizard.lifecycle.Managed;

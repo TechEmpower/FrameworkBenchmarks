@@ -27,8 +27,7 @@ public class WorldResource {
         final World[] worlds = new World[totalQueries];
 
         for (int i = 0; i < totalQueries; i++) {
-            final long worldId = Helper.randomWorld();
-            worlds[i] = worldDAO.findById(worldId).orNull();
+            worlds[i] = worldDAO.findById(Helper.randomWorld());
         }
         if (!queries.isPresent()) {
         	return worlds[0];
@@ -45,11 +44,7 @@ public class WorldResource {
         final World[] worlds = new World[totalQueries];
 
         for (int i = 0; i < totalQueries; i++) {
-            final long worldId = Helper.randomWorld();
-
-            final World world = worldDAO.findById(worldId).orNull();
-            world.setRandomNumber(Helper.randomWorld());
-            worlds[i] = worldDAO.update(world);
+            worlds[i] = worldDAO.findAndModify(Helper.randomWorld(), Helper.randomWorld());
         }
         return worlds;
     }
