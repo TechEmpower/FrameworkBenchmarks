@@ -12,12 +12,12 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.3.0.RC1</version>
+            <version>9.3.0.v20150612</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util-ajax</artifactId>
-            <version>9.3.0.RC1</version>
+            <version>9.3.0.v20150612</version>
         </dependency>
     </dependencies>
 
