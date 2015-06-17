@@ -2,7 +2,7 @@
 
 RVER=4.0.41
 
-RETCODE=$(fw_exists ${IROOT}/resin-java8-$RVER.installed)
+RETCODE=$(fw_exists ${IROOT}/resin-java8.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 fw_depends java8
@@ -21,4 +21,4 @@ cat $FWROOT/config/resin.properties > conf/resin.properties
 mv conf/resin.xml conf/resin.xml.orig
 cat $FWROOT/config/resin.xml > conf/resin.xml
 
-touch ${IROOT}/resin-$RVER.installed
+touch ${IROOT}/resin-java8.installed
