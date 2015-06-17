@@ -10,10 +10,11 @@
     <properties>
         <jdk.version>1.7</jdk.version>
 
-        <dropwizard.version>0.7.1</dropwizard.version>
+        <dropwizard.version>0.8.1</dropwizard.version>
         <mysql-connector-java.version>5.1.35</mysql-connector-java.version>
-        <mongojack.version>2.1.0</mongojack.version>
+        <mongojack.version>2.3.0</mongojack.version>
         <postgres-jdbc.version>9.4-1201-jdbc41</postgres-jdbc.version>
+        <dropwizard.java8.version>0.8.0-1</dropwizard.java8.version>
 
         <main.class>com.example.helloworld.HelloWorldService</main.class>
     </properties>
@@ -65,9 +66,20 @@
             <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.dropwizard.modules</groupId>
+            <artifactId>dropwizard-java8</artifactId>
+            <version>${dropwizard.java8.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.mongojack</groupId>
             <artifactId>mongojack</artifactId>
             <version>${mongojack.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
