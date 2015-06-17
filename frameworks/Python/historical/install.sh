@@ -13,6 +13,6 @@ $PY2_PIP install --install-option="--prefix=${PY2_ROOT}" -r $TROOT/webware/requi
 cd $TROOT/webware 
 rm -fr Webware Webware-1.1.1
 rm Webware-1.1.1.tar.gz
-wget downloads.sourceforge.net/webware/Webware-1.1.1.tar.gz
-tar -xf Webware-1.1.1.tar.gz
+fw_get downloads.sourceforge.net/webware/Webware-1.1.1.tar.gz -O
+fw_untar Webware-1.1.1.tar.gz
 cp -r app/ Webware-1.1.1/
