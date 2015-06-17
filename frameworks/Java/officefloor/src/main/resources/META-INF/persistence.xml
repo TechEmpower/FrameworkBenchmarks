@@ -11,6 +11,7 @@
             <property name="datanucleus.ConnectionURL" value="jdbc:hsqldb:mem:exampleDb"/>
             <property name="datanucleus.ConnectionUserName" value="sa"/>
             <property name="datanucleus.ConnectionPassword" value=""/>
+            <property name="datanucleus.connectionPoolingType" value="C3P0"/>
         </properties>
     </persistence-unit>
     
