@@ -17,7 +17,7 @@ sudo update-alternatives --set java $J7_HOME/jre/bin/java
 sudo update-alternatives --set javac $J7_HOME/bin/javac
 
 # try to make sure all JDK binaries default to OpenJDK 7, not Java 8
-update-alternatives --get-selections | grep java-8 | sed -e "s/java-8-oracle/$J7_HOME/" | while read line
+update-alternatives --get-selections | grep java-8 | sed -e "s|java-8-oracle|$J7_HOME|" | while read line
 do
   l=(${line// / })
   n=${l[0]}
@@ -28,5 +28,6 @@ do
 done
 
 # Setup environment variables
-echo "export JAVA_HOME=/usr/lib/jvm/java-8-oracle" > $IROOT/java8.installed
-echo "export PATH=$JAVA_HOME/bin:$PATH" >> $IROOT/java8.installed
+JAVA_HOME=/usr/lib/jvm/java-8-oracle
+echo "export JAVA_HOME=${JAVA_HOME}" > $IROOT/java8.installed
+echo "export PATH=${JAVA_HOME}/bin:$PATH" >> $IROOT/java8.installed

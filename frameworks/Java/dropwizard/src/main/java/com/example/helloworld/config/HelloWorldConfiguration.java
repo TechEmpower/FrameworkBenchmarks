@@ -14,7 +14,16 @@ public class HelloWorldConfiguration extends Configuration {
     @JsonProperty
     private DataSourceFactory database = new DataSourceFactory();
 
+    @Valid
+    @NotNull
+    @JsonProperty
+    private MongoConfiguration mongo = new MongoConfiguration();
+
     public DataSourceFactory getDatabaseConfiguration() {
         return database;
+    }
+
+    public MongoConfiguration getMongo() {
+        return mongo;
     }
 }

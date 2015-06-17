@@ -64,7 +64,6 @@ env:
     - "TESTDIR=Java/activeweb"
     - "TESTDIR=Java/curacao"
     - "TESTDIR=Java/dropwizard"
-    - "TESTDIR=Java/dropwizard-mongodb"
     - "TESTDIR=Java/gemini"
     - "TESTDIR=Java/grizzly-bm"
     - "TESTDIR=Java/grizzly-jersey"
@@ -172,6 +171,7 @@ env:
     - "TESTDIR=Scala/spray-es"
     - "TESTDIR=Scala/unfiltered"
     - "TESTDIR=Scala/http4s"
+    - "TESTDIR=Scala/finch"
     - "TESTDIR=Ur/urweb"
 
 before_install:
