@@ -3,6 +3,7 @@ package controllers;
 import interfaces.Constants;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import mangoo.io.routing.Response;
@@ -17,7 +18,7 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class ApplicationController {
-
+	
 	@Inject
 	private DataService dataService;
 	
@@ -34,7 +35,7 @@ public class ApplicationController {
     	return Response.withOk().andJsonBody(world);
     }
 	
-	public Response queries(int queries) {
+	public Response queries(String queries) {
 		List<World> worlds = dataService.getWorlds(queries);
 		return Response.withOk().andJsonBody(worlds);
     }
@@ -45,12 +46,13 @@ public class ApplicationController {
 	
 	public Response fortunes() {
 		List<Fortune> fortunes = dataService.findAllFortunes();
-		fortunes.add(new Fortune(1, Constants.FORTUNE_MESSAGE));
+		fortunes.add(new Fortune(0, Constants.FORTUNE_MESSAGE));
+		Collections.sort(fortunes);
 		
     	return Response.withOk().andContent("fortunes", fortunes);
     }
 	
-	public Response updates(int queries) {
+	public Response updates(String queries) {
 		List<World> worldUpdates = new ArrayList<World>();
 		
 		List<World> worlds = dataService.getWorlds(queries);

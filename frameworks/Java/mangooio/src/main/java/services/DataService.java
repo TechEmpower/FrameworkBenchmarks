@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.apache.commons.lang.StringUtils;
+
 import models.Fortune;
 import models.World;
 
@@ -34,15 +36,20 @@ public class DataService {
 		this.mongoDB.getDatastore().save(object);
 	}
 	
-	public List<World> getWorlds(int queries) {
-		if (queries <= 1) {
-			queries = 1;
-		} else if (queries > 500) {
-			queries = 500;
+	public List<World> getWorlds(String queries) {
+		int query = 1;
+		if (StringUtils.isNotBlank(queries) && StringUtils.isNumeric(queries)) {
+			query = Integer.valueOf(queries);
+		}
+		
+		if (query <= 1) {
+			query = 1;
+		} else if (query > 500) {
+			query = 500;
 		}
 		
 		List<World> worlds = new ArrayList<World>();
-		for (int i=0; i < queries; i++) {
+		for (int i=0; i < query; i++) {
 			int id = ThreadLocalRandom.current().nextInt(Constants.ROWS) + 1;
 			worlds.add(findById(id));
 		}
@@ -50,6 +57,6 @@ public class DataService {
 	}
 
 	public List<Fortune> findAllFortunes() {
-		return this.mongoDB.getDatastore().find(Fortune.class).order("message").asList();
+		return this.mongoDB.getDatastore().find(Fortune.class).retrievedFields(false, "_id").asList();
 	}
 }

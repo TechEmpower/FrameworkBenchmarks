@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
 
-public class Fortune  implements Serializable {
+public class Fortune  implements Serializable, Comparable<Fortune> {
 	private static final long serialVersionUID = 3493429313579555024L;
 
     @Id
@@ -32,4 +32,9 @@ public class Fortune  implements Serializable {
 	public long getId() {
 		return id;
 	}
+
+	@Override
+    public int compareTo(Fortune other) {
+        return message.compareTo(other.message);
+    }
 }

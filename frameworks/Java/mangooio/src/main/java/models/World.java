@@ -32,4 +32,8 @@ public class World implements Serializable {
 	public void setRandomnumber(int randomNumber) {
 		this.randomNumber = randomNumber;
 	}
+	
+	public long getId() {
+		return id;
+	}
 }
