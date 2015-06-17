@@ -53,7 +53,7 @@ fi
 
 # 1. Download ULib
 cd $IROOT
-fw_get -O ULib-${ULIB_VERSION}.tar.gz https://github.com/stefanocasazza/ULib/archive/v${ULIB_VERSION}.tar.gz 
+fw_get -o ULib-${ULIB_VERSION}.tar.gz https://github.com/stefanocasazza/ULib/archive/v${ULIB_VERSION}.tar.gz 
 fw_untar  ULib-${ULIB_VERSION}.tar.gz
 
 # 2. Compile application (userver_tcp)

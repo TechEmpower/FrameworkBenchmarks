@@ -5,7 +5,7 @@ RETCODE=$(fw_exists ${IROOT}/openresty-1.7.10.1.installed)
 
 fw_depends nginx lua
 
-fw_get http://openresty.org/download/ngx_openresty-1.7.10.1.tar.gz
+fw_get -O http://openresty.org/download/ngx_openresty-1.7.10.1.tar.gz
 fw_untar ngx_openresty-1.7.10.1.tar.gz
 
 cd ngx_openresty-1.7.10.1

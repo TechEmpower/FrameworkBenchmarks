@@ -10,7 +10,7 @@ VERSION="1.0.4-1"
 RELEASE="trusty"
 ARCH="amd64"
 
-fw_get http://packages.erlang-solutions.com/site/esl/elixir/FLAVOUR_2_download/elixir_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb
+fw_get -O http://packages.erlang-solutions.com/site/esl/elixir/FLAVOUR_2_download/elixir_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb
 dpkg -x elixir_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb $IROOT/elixir
 $IROOT/erlang/usr/lib/erlang/Install -minimal $IROOT/erlang/usr/lib/erlang
 
