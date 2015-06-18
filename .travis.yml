@@ -70,6 +70,7 @@ env:
     - "TESTDIR=Java/jawn"
     - "TESTDIR=Java/jetty-servlet"
     - "TESTDIR=Java/jetty"
+    - "TESTDIR=Java/mangooio"
     - "TESTDIR=Java/netty"
     - "TESTDIR=Java/ninja-standalone"
     - "TESTDIR=Java/play1"
