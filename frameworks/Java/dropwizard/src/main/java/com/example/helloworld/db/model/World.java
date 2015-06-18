@@ -13,24 +13,24 @@ public class World {
 
     @Id
     @JsonProperty
-    private long id;
+    private int id;
 
     @JsonProperty
     @Column(name = "randomNumber", nullable = false)
-    private long randomNumber;
+    private int randomNumber;
 
     public World() {
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public long getRandomNumber() {
+    public int getRandomNumber() {
         return randomNumber;
     }
 
-    public void setRandomNumber(long randomNumber) {
+    public void setRandomNumber(int randomNumber) {
         this.randomNumber = randomNumber;
     }
 }

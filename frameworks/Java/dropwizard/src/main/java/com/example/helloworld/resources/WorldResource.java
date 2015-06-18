@@ -23,34 +23,22 @@ public class WorldResource {
     @GET
     @UnitOfWork
     public Object dbTest(@QueryParam("queries") Optional<String> queries) {
-        int totalQueries = Helper.getQueries(queries);
-        final World[] worlds = new World[totalQueries];
-
-        for (int i = 0; i < totalQueries; i++) {
-            final long worldId = Helper.randomWorld();
-            worlds[i] = worldDAO.findById(worldId).orNull();
-        }
-        if (!queries.isPresent()) {
-        	return worlds[0];
+        if (queries.isPresent()) {
+            int totalQueries = Helper.getQueries(queries);
+            final World[] worlds = new World[totalQueries];
+            for (int i = 0; i < totalQueries; i++) {
+                worlds[i] = worldDAO.findById(Helper.randomWorld());
+            }
+            return worlds;
         } else {
-        	return worlds;
+            return worldDAO.findById(Helper.randomWorld());
         }
     }
 
     @GET
     @Path("/update")
-    @UnitOfWork
+    @UnitOfWork(transactional = false)
     public World[] updateTest(@QueryParam("queries") Optional<String> queries) {
-        int totalQueries = Helper.getQueries(queries);
-        final World[] worlds = new World[totalQueries];
-
-        for (int i = 0; i < totalQueries; i++) {
-            final long worldId = Helper.randomWorld();
-
-            final World world = worldDAO.findById(worldId).orNull();
-            world.setRandomNumber(Helper.randomWorld());
-            worlds[i] = worldDAO.update(world);
-        }
-        return worlds;
+        return worldDAO.updatesQueries(Helper.getQueries(queries));
     }
 }

@@ -2,7 +2,7 @@
   "framework": "dropwizard",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup_mysql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db?queries=",
@@ -21,15 +21,15 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "dropwizard",
-      "notes": "dropwizard with mysql using hibernate",
-      "versus": ""
+      "notes": "dropwizard mysql using hibernate",
+      "versus": "servlet"
     },
     "mongodb": {
-      "setup_file": "setup",
-      "db_url": "/mongo/db",
-      "query_url": "/mongo/db?queries=",
-      "fortune_url": "/mongo/fortunes",
-      "update_url": "/mongo/db/update?queries=",
+      "setup_file": "setup_mongo",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/db/update?queries=",
       "port": 9090,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -41,9 +41,30 @@
       "webserver": "Jetty",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "dropwizard-mongodb",
-      "notes": "dropwizard with mongodb using mongojack",
+      "display_name": "dropwizard",
+      "notes": "dropwizard mongodb using mongojack",
       "versus": ""
+    },
+    "postgres": {
+      "setup_file": "setup_postgres",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/db/update?queries=",
+      "port": 9090,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "dropwizard",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Jetty",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "dropwizard",
+      "notes": "dropwizard postgres using hibernate",
+      "versus": "servlet"
     }
   }]
 }
