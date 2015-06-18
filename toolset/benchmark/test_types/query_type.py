@@ -4,10 +4,21 @@ from benchmark.test_types.db_type import DBTestType
 import json
 
 class QueryTestType(DBTestType):
+  '''
+  This test type is used for the multiple queries test
+  Inherits from DBTestType
+  Both tests deal with the same objects;
+  this test just expects a list of them
+  '''
+
   def __init__(self):
-    args = ['query_url']
-    FrameworkTestType.__init__(self, name='query', requires_db=True, 
-      accept_header=self.accept_json, args=args)
+    kwargs = {
+      'name': 'query',
+      'accept_header': self.accept_json,
+      'requires_db': True,
+      'args': ['query_url']
+    }
+    FrameworkTestType.__init__(self, **kwargs)
 
   def get_url(self):
     return self.query_url
@@ -21,52 +32,78 @@ class QueryTestType(DBTestType):
     '''
 
     url = base_url + self.query_url
-
-    problems = []
+    cases = ('2', '0', 'foo', '501', '')
+    problems = self._verifyQueryCases(url, cases)
     
-    response = self._curl(url)
-    body = self._curl_body(url + '2')
-    problems += self._verifyQueryList(2, response, body, url + '2')
-
-    response = self._curl(url)
-    body = self._curl_body(url + '0')
-    problems += self._verifyQueryList(1, response, body, url + '0', 'warn')
-
-    # Note: A number of tests fail here because they only parse for 
-    # a number and crash on 'foo'. For now we only warn about this
-    response = self._curl(url)
-    body = self._curl_body(url + 'foo')
-    if body is None:
-      problems += [('warn','No response (this will be a failure in future rounds, please fix)', url)]
-    elif len(body) == 0:
-      problems += [('warn','Empty response (this will be a failure in future rounds, please fix)', url)]
-    else:
-      problems += self._verifyQueryList(1, response, body, url + 'foo', 'warn')
-
-    response = self._curl(url)
-    body = self._curl_body(url + '501')
-    problems += self._verifyQueryList(500, response, body, url + '501', 'warn')
-
     if len(problems) == 0:
-      return [('pass','',url + '2'),
-              ('pass','',url + '0'),
-              ('pass','',url + 'foo'),
-              ('pass','',url + '501')]
+      return [('pass','',url + case) for case in cases]
     else:
       return problems
 
-  def _verifyQueryList(self, expectedLength, curlResponse, body, url, max_infraction='fail'):
-    '''Validates high-level structure (array length, object 
-      types, etc) before calling into DBTestType to 
-      validate a few individual JSON objects'''
+  def _verifyQueryCases(self, url, cases):
+    '''
+    The queries tests accepts a `queries` parameter that should be between 1-500
+    This method execises a framework with different `queries` parameter values
+    then verifies the framework's response.
+    '''
+    problems = []
+    Q_MAX = 500
+    Q_MIN = 1
 
-    # Empty response
+    for q in cases:
+      case_url = url + q
+      headers, body = self.request_headers_and_body(case_url)
+
+      try:
+        queries = int(q) # drops down for 'foo' and ''
+        
+        if queries > Q_MAX:
+          expected_len = Q_MAX
+        elif queries < Q_MIN:
+          expected_len = Q_MIN
+        else:
+          expected_len = queries
+
+        problems += self._verifyBodyList(expected_len, headers, body, case_url)
+        problems += self._verifyHeaders(headers, case_url)
+      
+      except ValueError:
+        warning = (
+          '%s given for stringy `queries` parameter %s\n'
+          'Suggestion: modify your /queries route to handle this case '
+          '(this will be a failure in future rounds, please fix)')
+
+        if body is None:
+          problems.append(
+            ('warn',
+             warning % ('No response', q),
+             case_url))
+        elif len(body) == 0:
+          problems.append(
+            ('warn',
+             warning % ('Empty response', q),
+             case_url))
+        else:
+          expected_len = 1
+          # Strictness will be upped in a future round, i.e. Frameworks currently do not have
+          # to gracefully handle absent, or non-intlike `queries` parameter input
+          kwargs = { 'max_infraction': 'warn'}
+          problems += self._verifyBodyList(expected_len, headers, body, case_url, **kwargs)
+          problems += self._verifyHeaders(headers, case_url)
+
+    return problems
+
+
+  def _verifyBodyList(self, expectedLen, headers, body, url, max_infraction='fail'):
+    '''
+    Validates high-level structure (array length, object types, etc),
+    then verifies the inner objects of the list for correctness
+    '''
     if body is None:
       return [(max_infraction,'No response', url)]
     elif len(body) == 0:
       return [(max_infraction,'Empty Response', url)]
   
-    # Valid JSON? 
     try: 
       response = json.loads(body)
     except ValueError as ve:
@@ -74,39 +111,40 @@ class QueryTestType(DBTestType):
 
     problems = []
 
+    # This path will be hit when the framework returns a single JSON object
+    # rather than a list containing one element. We allow this with a warn,
+    # then verify the supplied object
     if type(response) != list:
-      problems.append(('warn','Top-level JSON is an object, not an array', url))
-
-      # Verify the one object they gave us before returning
+      problems.append(
+        ('warn','Top-level JSON is an object, not an array', url))
       problems += self._verifyObject(response, url, max_infraction)
-
       return problems
 
     if any(type(item) != dict for item in response):
-      problems.append((max_infraction,'All items JSON array must be JSON objects', url))
+      problems.append(
+        (max_infraction,'Not all items in the JSON array were JSON objects', url))
 
-    # For some edge cases we only warn
-    if len(response) != expectedLength:
-      problems.append((max_infraction,
-        "JSON array length of %s != expected length of %s" % (len(response), expectedLength), 
-        url))
+    if len(response) != expectedLen:
+      problems.append( 
+        (max_infraction,
+         "JSON array length of %s != expected length of %s" % (
+            len(response), expectedLen), 
+         url))
 
-    # verify individual objects
-    maxBadObjects = 5
-    for item in response:
-      obj_ok = self._verifyObject(item, url, max_infraction)
-      if len(obj_ok) > 0:
-        maxBadObjects -=  1
-        problems += obj_ok
-        if maxBadObjects == 0:
-          break
+    # Verify individual objects, arbitrarily stop after 5 bad ones are found
+    # i.e. to not look at all 500
+    badObjectsFound = 0
+    i = iter(response)
 
-    # Ensure required response headers are present
-    if any(v.lower() not in curlResponse.lower() for v in ('Server','Date','Content-Type: application/json')) \
-       or all(v.lower() not in curlResponse.lower() for v in ('Content-Length','Transfer-Encoding')):
-      problems.append( ('warn','Required response header missing.',url) )
+    try:
+      while badObjectsFound < 5:
+        obj = next(i)
+        findings = self._verifyObject(obj, url, max_infraction)      
+
+        if len(findings) > 0:
+          problems += findings
+          badObjectsFound += 1
+    except StopIteration:
+      pass
 
     return problems
-
-
-

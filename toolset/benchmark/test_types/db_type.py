@@ -94,6 +94,8 @@ class DBTestType(FrameworkTestType):
                      url))
         return problems
 
+    # Prime refactor target. This method is also utilized by the multiple queries
+    # and updates tests, yet is not separated out nicely.
     def _verifyObject(self, db_object, url, max_infraction='fail'):
         '''Ensure the passed item is a JSON object with 
         keys 'id' and 'randomNumber' mapping to ints. 
