@@ -105,7 +105,7 @@ class DBTestType(FrameworkTestType):
         problems = []
 
         # Dict is expected, handle bytes in non-cases
-        if type(db_object) != dict:
+        if type(db_object) is not dict:
             got = str(db_object)[:20]
             if len(str(db_object)) > 20:
                 got = str(db_object)[:17] + '...'
@@ -113,10 +113,18 @@ class DBTestType(FrameworkTestType):
 
         # Make keys case insensitive
         db_object = {k.lower(): v for k, v in db_object.iteritems()}
+        required_keys = set(['id', 'randomnumber'])
 
-        if any(v not in db_object for v in ('id', 'randomnumber')):
+        if any(v not in db_object for v in required_keys):
             problems.append(
                 (max_infraction, 'Response object was missing required key: %s' % v, url))
+
+        if len(db_object) > len(required_keys):
+            extras = db_object.keys() - required_keys
+            problems.append(
+                ('warn',
+                 'An extra key(s) is being included with the db object: ' + ', '.join(extras),
+                 url))
 
         # All required keys must be present
         if len(problems) > 0:
@@ -124,29 +132,27 @@ class DBTestType(FrameworkTestType):
 
         # Assert key types and values
         try:
-            response_id = float(db_object["id"])
-            if response_id > 10000 or response_id < 1:
-                problems.append(
-                    ('warn', "Response key 'id' should be between 1 and 10,000", url))
-            if type(db_object["id"]) != int:
+            o_id = int(db_object['id'])
+            
+            if o_id > 10000 or o_id < 1:
                 problems.append(
                     ('warn',
-                     ("Response key 'id' was not an integer and may result in additional response bytes.\n",
-                      "Additional response bytes may negatively affect benchmark performance."),
+                     'Response key id should be between 1 and 10,000: ' + str(o_id),
                      url))
-        except ValueError as ve:
+        except TypeError as e:
             problems.append(
-                (max_infraction, "Response key 'id' does not map to a number - %s" % ve, url))
+                (max_infraction, "Response key 'id' does not map to an integer - %s" % e, url))
 
         try:
-            response_rn = float(db_object["randomnumber"])
-            if response_rn > 10000:
+            o_rn = int(db_object['randomnumber'])
+            
+            if o_rn > 10000:
                 problems.append(
                     ('warn',
-                     "Response key 'randomNumber' is over 10,000. This may negatively affect performance by sending extra bytes.",
+                     'Response key `randomNumber` is over 10,000. This may negatively affect performance by sending extra bytes',
                      url))
-        except ValueError as ve:
+        except TypeError as e:
             problems.append(
-                (max_infraction, "Response key 'randomNumber' does not map to a number - %s" % ve, url))
+                (max_infraction, "Response key 'randomnumber' does not map to an integer - %s" % e, url))
 
         return problems
