@@ -9,7 +9,7 @@ class UpdateTestType(QueryTestType):
     def __init__(self):
         kwargs = {
             'name': 'update',
-            'accept_header': self.accept_json,
+            'accept_header': self.accept('json'),
             'requires_db': True,
             'args': ['update_url']
         }

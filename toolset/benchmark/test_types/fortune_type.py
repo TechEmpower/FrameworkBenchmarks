@@ -7,7 +7,7 @@ class FortuneTestType(FrameworkTestType):
     def __init__(self):
         kwargs = {
             'name': 'fortune',
-            'accept_header': self.accept_html,
+            'accept_header': self.accept('html'),
             'requires_db': True,
             'args': ['fortune_url']
         }

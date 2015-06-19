@@ -15,7 +15,7 @@ class QueryTestType(DBTestType):
     def __init__(self):
         kwargs = {
             'name': 'query',
-            'accept_header': self.accept_json,
+            'accept_header': self.accept('json'),
             'requires_db': True,
             'args': ['query_url']
         }

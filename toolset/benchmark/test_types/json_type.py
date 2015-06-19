@@ -8,7 +8,7 @@ class JsonTestType(FrameworkTestType):
     def __init__(self):
         kwargs = {
             'name': 'json',
-            'accept_header': self.accept_json,
+            'accept_header': self.accept('json'),
             'requires_db': False,
             'args': ['json_url']
         }

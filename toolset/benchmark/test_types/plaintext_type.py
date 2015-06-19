@@ -7,7 +7,7 @@ class PlaintextTestType(FrameworkTestType):
         kwargs = {
             'name': 'plaintext',
             'requires_db': False,
-            'accept_header': self.accept_plaintext,
+            'accept_header': self.accept('plaintext'),
             'args': ['plaintext_url']
         }
         FrameworkTestType.__init__(self, **kwargs)

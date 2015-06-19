@@ -21,23 +21,27 @@ class FrameworkTestType:
   exist a member `X.spam = 'foobar'`. 
   '''
 
-  accept_json = "Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7"
-  accept_html = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-  accept_plaintext = "Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7"
-
-  def __init__(self, name, requires_db = False, accept_header = None, args = []):
+  def __init__(self, name, requires_db=False, accept_header=None, args=[]):
     self.name = name
     self.requires_db = requires_db
     self.args = args
     self.out = sys.stdout
     self.err = sys.stderr
-    self.accept_header = accept_header
     if accept_header is None:
-      self.accept_header = self.accept_plaintext
+      self.accept_header = self.accept('json')
+    else:
+      self.accept_header = accept_header
 
     self.passed = None
     self.failed = None
     self.warned = None
+
+  def accept(self, content_type):
+    return {
+      'json': 'application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7',
+      'html': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'plaintext': 'text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7'
+    }[content_type]
 
   def setup_out_err(self, out, err):
     '''Sets up file-like objects for logging. Used in 
