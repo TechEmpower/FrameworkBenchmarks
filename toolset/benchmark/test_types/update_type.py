@@ -4,10 +4,15 @@ from benchmark.test_types.query_type import QueryTestType
 from pprint import pprint
 
 class UpdateTestType(QueryTestType):
+
   def __init__(self):
-    args = ['update_url']
-    FrameworkTestType.__init__(self, name='update', requires_db=True, 
-      accept_header=self.accept_json, args=args)
+    kwargs = {
+      'name': 'update',
+      'accept_header': self.accept_json,
+      'requires_db': True,
+      'args': ['update_url']
+    }
+    FrameworkTestType.__init__(self, **kwargs)
 
   def get_url(self):
     return self.update_url
@@ -21,23 +26,14 @@ class UpdateTestType(QueryTestType):
     '''
 
     url = base_url + self.update_url
-    problems = []
-    
-    response = self._curl(url + '2')
-    body = self._curl_body(url + '2')
-    problems += self._verifyQueryList(2, response, body, url + '2')
-
-    response = self._curl(url + '0')
-    body = self._curl_body(url + '0')
-    problems += self._verifyQueryList(1, response, body, url + '0', 'warn')
-
-    response = self._curl(url + 'foo')
-    body = self._curl_body(url + 'foo')
-    problems += self._verifyQueryList(1, response, body, url + 'foo', 'warn')
-
-    response = self._curl(url + '501')
-    body = self._curl_body(url + '501')
-    problems += self._verifyQueryList(500, response, body, url + '501', 'warn')
+    cases = [
+      ('2',   'fail'),
+      ('0',   'warn'),
+      ('foo', 'warn'),
+      ('501', 'warn'),
+      ('',    'warn')
+    ]
+    problems = self._verifyQueryCases(url, cases)
 
     if len(problems) == 0:
       return [('pass','',url + '2'),
