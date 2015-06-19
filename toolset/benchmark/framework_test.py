@@ -383,9 +383,9 @@ class FrameworkTest:
         logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
         traceback.format_exc()
 
-      test.failed = any(result is 'fail' for (result, reason, url) in results)
-      test.warned = any(result is 'warn' for (result, reason, url) in results)
-      test.passed = all(result is 'pass' for (result, reason, url) in results)
+      test.failed = any(result == 'fail' for (result, reason, url) in results)
+      test.warned = any(result == 'warn' for (result, reason, url) in results)
+      test.passed = all(result == 'pass' for (result, reason, url) in results)
       
       def output_result(result, reason, url):
         specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"

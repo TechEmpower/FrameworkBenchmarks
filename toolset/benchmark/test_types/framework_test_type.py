@@ -79,6 +79,10 @@ class FrameworkTestType:
       body = r.content
       self.out.write(str(headers))
       self.out.write(body)
+      
+      b = 40
+      print "  Response (trimmed to %d bytes): \"%s\"" % (b, body.strip()[:b])
+      
       return headers, body
     except requests.HTTPError as err:
       self.err.write(err + '\n')
