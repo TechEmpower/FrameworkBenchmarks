@@ -7,11 +7,11 @@ RETCODE=$(fw_exists ${PERL}.installed)
   source $PERL.installed
   return 0; }
 
-fw_get https://raw.github.com/tokuhirom/Perl-Build/master/perl-build -o perl-build.pl
+fw_get -o perl-build.pl https://raw.github.com/tokuhirom/Perl-Build/master/perl-build
 # compile with optimizations, n.b. this does not turn on debugging
 perl perl-build.pl -DDEBUGGING=-g 5.18.2 perl-$VERSION 2>&1 | tee $IROOT/perl-install.log | awk '{ if (NR%100 == 0) printf "."}'
 
-fw_get http://cpanmin.us -o cpanminus.pl
+fw_get -o cpanminus.pl http://cpanmin.us
 perl-$VERSION/bin/perl cpanminus.pl --notest --no-man-page App::cpanminus
 # Install only a bare-bones of Perl modules
 # Install others in the per-framework install script or cpanfile

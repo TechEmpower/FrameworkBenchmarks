@@ -9,7 +9,7 @@ RETCODE=$(fw_exists ${MICROHTTPD}.installed)
   source $MICROHTTPD.installed
   return 0; }
 
-fw_get http://mirror.ibcp.fr/pub/gnu/libmicrohttpd/libmicrohttpd-$VERSION.tar.gz
+fw_get -O http://mirror.ibcp.fr/pub/gnu/libmicrohttpd/libmicrohttpd-$VERSION.tar.gz
 fw_untar libmicrohttpd-$VERSION.tar.gz
 cd libmicrohttpd-$VERSION
 ./configure --prefix=$IROOT

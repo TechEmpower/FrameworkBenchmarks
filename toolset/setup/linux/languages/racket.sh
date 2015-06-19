@@ -7,7 +7,7 @@ RETCODE=$(fw_exists ${RACKET}.installed)
   source $RACKET.installed
   return 0; }
 
-fw_get http://mirror.racket-lang.org/installers/recent/racket-src.tgz -o racket-src.tar.gz
+fw_get -o racket-src.tar.gz http://mirror.racket-lang.org/installers/recent/racket-src.tgz
 fw_untar racket-src.tar.gz
 mv racket racket-install
 cd racket-install/src 

@@ -6,7 +6,7 @@ RETCODE=$(fw_exists ${IROOT}/sbt.installed)
   source $IROOT/sbt.installed
   return 0; }
 
-fw_get http://dl.bintray.com/sbt/native-packages/sbt/$VERSION/sbt-$VERSION.zip -O sbt-$VERSION.zip
+fw_get -o sbt-$VERSION.zip http://dl.bintray.com/sbt/native-packages/sbt/$VERSION/sbt-$VERSION.zip
 fw_unzip sbt-$VERSION.zip
 
 echo -e "export PATH=${IROOT}/sbt/bin:\$PATH" > $IROOT/sbt.installed

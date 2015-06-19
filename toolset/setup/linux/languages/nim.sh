@@ -14,7 +14,7 @@ git checkout $NIM_VERSION
 
 # Fixes a complex http request issue in 0.10.2:
 # https://github.com/Araq/Nim/pull/1848
-fw_get https://patch-diff.githubusercontent.com/raw/Araq/Nim/pull/1848.patch
+fw_get -O https://patch-diff.githubusercontent.com/raw/Araq/Nim/pull/1848.patch
 git apply 1848.patch
 rm 1848.patch
 

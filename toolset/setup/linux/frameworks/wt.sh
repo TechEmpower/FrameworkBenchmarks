@@ -22,7 +22,7 @@ RETCODE=$(fw_exists ${IROOT}/wt.installed)
 # main reasons for compilation from a specific source version), so we can 
 # just use apt. See https://github.com/TechEmpower/FrameworkBenchmarks/issues/1013
 #
-#fw_get http://downloads.sourceforge.net/project/boost/boost/1.48.0/boost_1_48_0.tar.gz -O boost_1_48_0.tar.gz
+#fw_get -o boost_1_48_0.tar.gz http://downloads.sourceforge.net/project/boost/boost/1.48.0/boost_1_48_0.tar.gz
 #fw_untar boost_1_48_0.tar.gz
 #cd boost_1_48_0
 #./bootstrap.sh --prefix=$IROOT/boost
@@ -37,7 +37,7 @@ elif [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
     sudo apt-get -y install libboost1.48-all-dev
 fi
 
-fw_get http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz -O
+fw_get -O http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz
 fw_untar wt-3.3.3.tar.gz
 
 cd wt-3.3.3

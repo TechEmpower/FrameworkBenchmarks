@@ -15,7 +15,7 @@ RETCODE=$(fw_exists ${IROOT}/php.installed)
 VERSION="5.5.17"
 PHP_HOME=$IROOT/php-$VERSION
 
-fw_get http://php.net/distributions/php-${VERSION}.tar.gz -o php-${VERSION}.tar.gz
+fw_get -o php-${VERSION}.tar.gz http://php.net/distributions/php-${VERSION}.tar.gz
 fw_untar php-${VERSION}.tar.gz
 mv php-${VERSION} php
 cd php

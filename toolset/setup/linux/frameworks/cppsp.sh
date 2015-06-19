@@ -7,7 +7,7 @@ RETCODE=$(fw_exists ${IROOT}/cppsp.installed)
   source $IROOT/cppsp.installed
   return 0; }
 
-fw_get -O cppsp_$VERSION.tar.xz http://downloads.sourceforge.net/project/cpollcppsp/CPPSP%200.2%20%28testing%29/cppsp_$VERSION.tar.xz
+fw_get -o cppsp_$VERSION.tar.xz http://downloads.sourceforge.net/project/cpollcppsp/CPPSP%200.2%20%28testing%29/cppsp_$VERSION.tar.xz
 fw_untar cppsp_$VERSION.tar.xz
 
 # Using cp+rm over mv intentionally, because apparently this download

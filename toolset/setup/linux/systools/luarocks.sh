@@ -9,7 +9,7 @@ RETCODE=$(fw_exists ${LUAROCKS}.installed)
 
 fw_depends lua
 
-fw_get http://luarocks.org/releases/luarocks-2.2.1.tar.gz
+fw_get -O http://luarocks.org/releases/luarocks-2.2.1.tar.gz
 fw_untar luarocks-2.2.1.tar.gz
 
 cd $LUAROCKS

@@ -14,7 +14,7 @@ sudo apt-get install -y sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev
 # Update linker cache
 sudo ldconfig -v
 
-fw_get https://github.com/zedshaw/mongrel2/tarball/v1.8.1 -o mongrel2.tar.gz
+fw_get -o mongrel2.tar.gz https://github.com/zedshaw/mongrel2/tarball/v1.8.1
 fw_untar mongrel2.tar.gz
 
 # mongrel2 untars into this folder 

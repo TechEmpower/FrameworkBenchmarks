@@ -8,9 +8,9 @@ RETCODE=$(fw_exists ${VERTX_HOME}.installed)
   source $VERTX_HOME.installed
   return 0; }
 
-fw_get http://dl.bintray.com/vertx/downloads/vert.x-${VERSION}.tar.gz?direct=true -O vert.x-${VERSION}.tar.gz
+fw_get -o vert.x-${VERSION}.tar.gz http://dl.bintray.com/vertx/downloads/vert.x-${VERSION}.tar.gz?direct=true
 fw_untar vert.x-${VERSION}.tar.gz
-fw_get http://central.maven.org/maven2/org/freemarker/freemarker/${FREEMAKER_VERSION}/freemarker-${FREEMAKER_VERSION}.jar -o $IROOT/vert.x-${VERSION}/lib/freemarker-${FREEMAKER_VERSION}.jar
+fw_get -o $IROOT/vert.x-${VERSION}/lib/freemarker-${FREEMAKER_VERSION}.jar http://central.maven.org/maven2/org/freemarker/freemarker/${FREEMAKER_VERSION}/freemarker-${FREEMAKER_VERSION}.jar
 
 echo "export VERTX_HOME=${VERTX_HOME}" > $VERTX_HOME.installed
 echo -e "export PATH=${VERTX_HOME}/bin:\$PATH" >> $VERTX_HOME.installed

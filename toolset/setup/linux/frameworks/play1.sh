@@ -7,7 +7,7 @@ RETCODE=$(fw_exists ${IROOT}/play1.installed)
   source $IROOT/play1.installed
   return 0; }
 
-fw_get http://downloads.typesafe.com/releases/play-$VERSION.zip -O
+fw_get -O http://downloads.typesafe.com/releases/play-$VERSION.zip
 fw_unzip play-$VERSION.zip
 
 echo "export PLAY1_HOME=${PLAY1_HOME}" > $IROOT/play1.installed

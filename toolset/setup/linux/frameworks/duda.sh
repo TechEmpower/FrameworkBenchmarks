@@ -7,7 +7,7 @@ RETCODE=$(fw_exists ${DUDA}.installed)
   source $DUDA.installed
   return 0; }
 
-fw_get http://duda.io/releases/duda-client/dudac-$VERSION.tar.gz -O
+fw_get -O http://duda.io/releases/duda-client/dudac-$VERSION.tar.gz
 fw_untar dudac-$VERSION.tar.gz
 
 DUDA_HOME=$IROOT/dudac-$VERSION
