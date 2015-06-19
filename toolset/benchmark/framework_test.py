@@ -879,25 +879,133 @@ def parse_config(config, directory, benchmarker):
     if "default" not in names:
       logging.warn("Framework %s does not define a default test in benchmark_config.json", config['framework'])
     
+    # Check that each test configuration is acceptable
+    # Throw exceptions if a field is missing, or how to improve the field
     for test_name, test_keys in test.iteritems():
-      # Prefix all test names with framework except 'default' test
-      if test_name == 'default': 
-        test_name = config['framework']
-      else:
-        test_name = "%s-%s" % (config['framework'], test_name)  
-
-      # Ensure FrameworkTest.framework is available
+      # Ensure that each FrameworkTest has a framework property, inheriting from top-level if not
       if not test_keys['framework']:
         test_keys['framework'] = config['framework']
-      #if test_keys['framework'].lower() != config['framework'].lower():
-      #  print Exception("benchmark_config.json for test %s is invalid - test framework '%s' must match benchmark_config.json framework '%s'" % 
-      #    (test_name, test_keys['framework'], config['framework']))
 
       # Confirm required keys are present
-      # TODO have a TechEmpower person confirm this list - I don't know what the website requires....
-      required = ['language','webserver','classification','database','approach','orm','framework','os','database_os']
-      if not all (key in test_keys for key in required):
-        raise Exception("benchmark_config.json for test %s is invalid - missing required keys" % test_name)      
+      required_keys = ['language','webserver','classification','database','approach','orm','framework','os','database_os']
+      missing = list(set(required_keys) - set(test_keys))
+      if len(missing) > 0:
+        missingstr = (", ").join(map(str, missing))
+        raise Exception("benchmark_config.json for test %s is invalid, please amend and add the following required keys: [%s]"
+          % (test_name, missingstr))
+      
+      # Check that test url values are all appropriate
+      example_urls = {
+        "json_url":      "/json",
+        "db_url":        "/mysql/db",
+        "query_url":     "/mysql/queries?queries=  or  /mysql/queries/",
+        "fortune_url":   "/mysql/fortunes",
+        "update_url":    "/mysql/updates?queries=  or  /mysql/updates/",
+        "plaintext_url": "/plaintext"
+      }
+      for test_url in ["json_url","db_url","query_url","fortune_url","update_url","plaintext_url"]:
+        key_value = test_keys.get(test_url, None)
+        if key_value != None and not key_value.startswith('/'):
+          errmsg = """`%s` field in test \"%s\" does not appear to be a valid url: \"%s\"\n
+            Example `%s` url: \"%s\"
+          """ % (test_url, test_name, key_value, test_url, example_urls[test_url])
+          raise Exception(errmsg)
+
+      # Check database type
+      # List adopted from run-ci.py
+      SUPPORTED_DATABASES = ["mysql","postgres","mongodb","cassandra","elasticsearch","redis"]
+      EDGE_CASES = ["sqlite","sqlserver","none"]
+      db_type = test_keys.get("database", None).lower()
+
+      if db_type.lower() not in sum([SUPPORTED_DATABASES, EDGE_CASES], []):
+        supportedstr = (", ").join(map(str, SUPPORTED_DATABASES))
+        edgestr = (", ").join(map(str, EDGE_CASES))
+
+        errmsg = """Invalid db specified for test \"%s\" in framework \"%s\", please specify a supported database or \"None\"\n
+           Supported databases: [%s]\n
+           Edge cases: [%s]\n
+           Supplied (lowercased): \"%s\"
+        """ % (test_name, config["framework"], supportedstr, edgestr, db_type)
+        raise Exception(errmsg)
+
+      # Check language
+      # "Scala" from "/home/vagrant/FrameworkBenchmarks/frameworks/Scala/finagle"
+      recommended_lang = directory.split('/')[-2]
+      
+      if test_keys.get("language", "") == "":
+        raise Exception("Please specify a language for test \"%s\" in framework \"%s\", suggestion: \"%s\""
+          % (test_name, config["framework"], recommended_lang))
+
+      # Check approach
+      SUPPORTED_APPROACHES = ["realistic","stripped"]
+      test_approach = test_keys.get("approach", None).lower()
+      if test_approach not in SUPPORTED_APPROACHES:
+        approachstr = (", ").join(map(str, SUPPORTED_APPROACHES))
+
+        errmsg = """Invalid approach specified for test \"%s\" in framework \"%s\", please specify a supported approach\n
+           Supported approaches: [%s]\n
+           Suggestion: \"Realistic\"\n
+           Supplied (lowercased): \"%s\"
+        """ % (test_name, config["framework"], approachstr, test_approach)
+        raise Exception(errmsg)
+
+      # Check classification
+      SUPPORTED_CLASSIFICATIONS = ["fullstack","micro","platform"]
+      test_classification = test_keys.get("classification", None).lower()
+      if test_classification not in SUPPORTED_CLASSIFICATIONS:
+        classstr = (", ").join(map(str, SUPPORTED_CLASSIFICATIONS))
+
+        errmsg = """Invalid classification specified for test \"%s\" in framework \"%s\", please specify a supported classification\n
+           Supported classifications: [%s]\n
+           Supplied (lowercased): \"%s\"
+        """ % (test_name, config["framework"], classstr, test_classification)
+        raise Exception(errmsg)
+
+      # Check webserver
+      if test_keys.get("webserver", None) == "":
+        raise Exception("Invalid `webserver` specified for test \"%s\" in framework \"%s\", field `webserver` cannot be empty"
+          % (test_name, config["framework"]))
+
+      # Check ORM
+      SUPPORTED_ORMS = ["full","micro","raw"]
+      test_orm = test_keys.get("orm", None).lower()
+      if test_orm not in SUPPORTED_ORMS:
+        ormstr = (", ").join(map(str, SUPPORTED_ORMS))
+
+        errmsg = """Invalid orm specified for test \"%s\" in framework \"%s\", please specify a supported orm type\n
+           Supported classifications: [%s]\n
+           Supplied (lowercased): \"%s\"
+        """ % (test_name, config["framework"], ormstr, test_orm)
+        raise Exception(errmsg)
+
+      # Check OS
+      SUPPORTED_OSES = ["linux","windows"]
+      test_os = test_keys.get("os", None).lower()
+      if test_os not in SUPPORTED_OSES:
+        osstr = (", ").join(map(str, SUPPORTED_OSES))
+
+        errmsg = """Invalid OS specified for test \"%s\" in framework \"%s\", please specify a supported OS\n
+           Supported OS's: [%s]\n
+           Suggestion: \"Linux\"\n
+           Supplied (lowercased): \"%s\"
+        """ % (test_name, config["framework"], osstr, test_os)
+        raise Exception(errmsg)
+
+      # Check Database OS
+      SUPPORTED_DB_OSES = ["linux","windows"]
+      test_db_os = test_keys.get("database_os", None).lower()
+      if test_db_os not in SUPPORTED_DB_OSES:
+        db_osstr = (", ").join(map(str, SUPPORTED_DB_OSES))
+
+        errmsg = """Invalid Database OS specified for test \"%s\" in framework \"%s\", please specify a supported Database OS\n
+           Supported OS's: [%s]\n
+           Suggestion: \"Linux\"\n
+           Supplied (lowercased): \"%s\"
+        """ % (test_name, config["framework"], db_osstr, test_db_os)
+        raise Exception(errmsg)
+
+      ### Done validating benchmark_config values ###
+
       
       # Map test type to a parsed FrameworkTestType object
       runTests = dict()
@@ -916,6 +1024,13 @@ def parse_config(config, directory, benchmarker):
       sortedRunTests = OrderedDict()
       for sortedTestKey in sortedTestKeys:
         sortedRunTests[sortedTestKey] = runTests[sortedTestKey]
+
+      # Prefix all test names with framework except 'default' test
+      # Done at the end so we may still refer to the primary test as `default` in benchmark config error messages
+      if test_name == 'default': 
+        test_name = config['framework']
+      else:
+        test_name = "%s-%s" % (config['framework'], test_name) 
 
       # By passing the entire set of keys, each FrameworkTest will have a member for each key
       tests.append(FrameworkTest(test_name, directory, benchmarker, sortedRunTests, test_keys))

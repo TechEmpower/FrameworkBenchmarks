@@ -2,4 +2,4 @@
 
 fw_depends haywire
 
-techempower_benchmark &
+techempower_benchmark 8000 48 &

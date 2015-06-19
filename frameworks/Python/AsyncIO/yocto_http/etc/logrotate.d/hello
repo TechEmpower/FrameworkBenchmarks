@@ -1,0 +1,7 @@
+/var/log/hello/hello.log {
+    daily
+    rotate 15
+    compress
+    copytruncate
+    missingok
+}

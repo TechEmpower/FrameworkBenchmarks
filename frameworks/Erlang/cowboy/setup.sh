@@ -2,9 +2,9 @@
 
 sed -i 's|"benchmarkdbpass", ".*", 3306|"benchmarkdbpass", "'"${DBHOST}"'", 3306|g' src/hello_world_app.erl
 
-fw_depends erlang rebar
+fw_depends erlang
 
-rm -rf deps/*
+rm -rf deps/* ebin/*
 rebar get-deps
 rebar compile
 

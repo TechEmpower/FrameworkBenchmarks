@@ -68,10 +68,7 @@ sudo useradd benchmarkdbuser -p benchmarkdbpass
 # MySQL
 ##############################
 echo "Setting up MySQL database"
-sudo sh -c "echo mysql-server mysql-server/root_password_again select secret | debconf-set-selections"
-sudo sh -c "echo mysql-server mysql-server/root_password select secret | debconf-set-selections"
-
-sudo apt-get -y install mysql-server
+sudo DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server
 
 sudo stop mysql
 # disable checking of disk size
@@ -90,6 +87,8 @@ sudo cp usr.sbin.mysqld /etc/apparmor.d/
 sudo /etc/init.d/apparmor reload
 sudo start mysql
 
+# Set root password
+sudo mysqladmin -u root password secret
 # Insert data
 mysql -uroot -psecret < create.sql
 rm create.sql
@@ -103,7 +102,8 @@ if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
   sudo apt-get remove -y postgresql postgresql-9.1 postgresql-client-9.1
 
   echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  #wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get update
   sudo apt-get install -y postgresql-9.3 postgresql-client-9.3
   sudo service postgresql start
@@ -172,7 +172,8 @@ sudo addgroup --system cassandra
 sudo adduser --system --home /ssd/cassandra --no-create-home --ingroup cassandra cassandra
 
 export CASS_V=2.0.12
-wget -nv http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
+#wget -nv http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
+curl -Os http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
 sudo tar xzf apache-cassandra-$CASS_V-bin.tar.gz -C /opt
 sudo ln -s /opt/apache-cassandra-$CASS_V /opt/cassandra
 
@@ -216,7 +217,8 @@ fi
 echo "Setting up Elasticsearch"
 
 export ES_V=1.5.0
-wget -nv https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$ES_V.tar.gz
+#wget -nv https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$ES_V.tar.gz
+curl -Os https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$ES_V.tar.gz
 sudo tar zxf elasticsearch-$ES_V.tar.gz -C /opt
 sudo ln -s /opt/elasticsearch-$ES_V /opt/elasticsearch
 

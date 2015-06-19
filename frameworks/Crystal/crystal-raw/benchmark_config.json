@@ -1,0 +1,25 @@
+{
+  "framework": "crystal-raw",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "crystal",
+      "language": "Crystal",
+      "orm": "Raw",
+      "platform": "Crystal",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Crystal",
+      "notes": "",
+      "versus": "ruby"
+    }
+  }]
+}
+

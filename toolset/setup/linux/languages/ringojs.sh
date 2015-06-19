@@ -8,7 +8,7 @@ RETCODE=$(fw_exists ${RINGOJS}.installed)
   source $RINGOJS.installed
   return 0; }
 
-fw_get https://github.com/ringo/ringojs/releases/download/v$VERSION.0/ringojs-$VERSION.tar.gz -O ringojs-$VERSION.tar.gz
+fw_get https://github.com/ringo/ringojs/releases/download/v$VERSION.0/ringojs-$VERSION.tar.gz -O
 fw_untar ringojs-$VERSION.tar.gz
 
 echo "export RINGOJS_HOME=${RINGOJS_HOME}" > $RINGOJS.installed

@@ -1,0 +1,23 @@
+{
+  "framework": "finch",
+  "tests": [{
+    "default": {
+      "orm": "Raw",
+      "database_os": "Linux",
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 9000,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "finch",
+      "language": "Scala",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "display_name": "finch",
+      "notes": ""
+    }
+  }]
+}

@@ -9,15 +9,14 @@ RETCODE=$(fw_exists ${ELIXIR_HOME}.installed)
 
 fw_depends erlang
 
-fw_get https://codeload.github.com/elixir-lang/elixir/tar.gz/v$VERSION
-fw_untar v$VERSION
+VERSION="1.0.4-1"
+RELEASE="trusty"
+ARCH="amd64"
 
-(
-	mv elixir-$VERSION elixir
-	cd elixir
-	make compile
-)
+fw_get -O http://packages.erlang-solutions.com/site/esl/elixir/FLAVOUR_2_download/elixir_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb
+dpkg -x elixir_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb $IROOT/elixir
+$IROOT/erlang/usr/lib/erlang/Install -minimal $IROOT/erlang/usr/lib/erlang
 
-echo -e "export PATH=${ELIXIR_HOME}/bin:\$PATH" > $ELIXIR_HOME.installed
+echo -e "export PATH=${ELIXIR_HOME}/usr/local/bin:\$PATH" > $ELIXIR_HOME.installed
 
 source $ELIXIR_HOME.installed

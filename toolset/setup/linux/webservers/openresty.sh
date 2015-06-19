@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="1.7.7.1"
+VERSION="1.7.10.1"
 OPENRESTY=$IROOT/openresty-$VERSION
 RETCODE=$(fw_exists ${OPENRESTY}.installed)
 [ ! "$RETCODE" == 0 ] || { \
@@ -9,11 +9,11 @@ RETCODE=$(fw_exists ${OPENRESTY}.installed)
 
 fw_depends nginx lua
 
-fw_get http://openresty.org/download/ngx_openresty-1.7.7.1.tar.gz
-fw_untar ngx_openresty-1.7.7.1.tar.gz
+fw_get -O http://openresty.org/download/ngx_openresty-${VERSION}.tar.gz
+fw_untar ngx_openresty-${VERSION}.tar.gz
 
-cd ngx_openresty-1.7.7.1
-./configure --with-luajit-xcflags=-DLUAJIT_NUMMODE=2 --with-http_postgres_module --prefix=${IROOT}/openresty-1.7.7.1 -j4
+cd ngx_openresty-${VERSION}
+./configure --with-luajit-xcflags=-DLUAJIT_NUMMODE=2 --with-http_postgres_module --prefix=${IROOT}/openresty-${VERSION} -j4
 make -j4
 make install
 

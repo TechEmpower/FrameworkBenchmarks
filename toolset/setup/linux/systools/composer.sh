@@ -11,7 +11,7 @@ fw_depends php
 mkdir -p php-composer
 cd php-composer
 
-fw_get https://getcomposer.org/installer -O composer-installer.php
+fw_get https://getcomposer.org/installer -o composer-installer.php
 
 # Use the PHP and composer from our PHP_HOME directory and 
 # COMPOSER_HOME directories

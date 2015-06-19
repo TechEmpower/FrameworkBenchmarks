@@ -7,7 +7,7 @@ RETCODE=$(fw_exists ${IROOT}/grails-2.4.4.installed)
   source $GRAILS_HOME.installed
   return 0; }
 
-fw_get http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-$VERSION.zip -O grails-$VERSION.zip
+fw_get http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-$VERSION.zip -O
 fw_unzip grails-$VERSION.zip
 
 echo "export GRAILS_HOME=${GRAILS_HOME}" > $GRAILS_HOME.installed

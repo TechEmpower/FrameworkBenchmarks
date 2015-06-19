@@ -8,4 +8,4 @@ cd build
 cmake .. -DCMAKE_CXX_COMPILER=g++-4.9
 make silicon_epoll_mysql
 
-$TROOT/build/silicon_epoll_mysql ${DBHOST} 8080 &
+$TROOT/build/silicon_epoll_mysql ${DBHOST} 8080 ${MAX_THREADS} &

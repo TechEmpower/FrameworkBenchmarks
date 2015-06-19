@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php nginx composer
+fw_depends php nginx composer cphalcon
 
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' app/config.app.php
 sed -i 's|".*/FrameworkBenchmarks/php-pimf|"'"${TROOT}"'|g' deploy/php-pimf

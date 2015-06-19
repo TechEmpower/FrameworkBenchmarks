@@ -12,9 +12,10 @@ RETCODE=$(fw_exists ${RESIN_HOME}.installed)
 fw_depends java7
 sudo cp -r $JAVA_HOME/include $JAVA_HOME/jre/bin/
 
-fw_get http://www.caucho.com/download/$RESIN.tar.gz
-fw_untar $RESIN.tar.gz
-cd $RESIN
+
+fw_get -O http://www.caucho.com/download/resin-$RVER.tar.gz
+fw_untar resin-$RVER.tar.gz
+cd resin-$RVER
 ./configure --prefix=`pwd`
 make
 make install

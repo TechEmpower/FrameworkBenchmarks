@@ -72,7 +72,8 @@ func db(c *gin.Context) {
 	var world World
 	err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
+		return
 	}
 	c.JSON(200, &world)
 }
@@ -85,7 +86,8 @@ func dbs(c *gin.Context) {
 	for i := 0; i < numQueries; i++ {
 		err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&worlds[i].Id, &worlds[i].RandomNumber)
 		if err != nil {
-			c.Fail(500, err)
+			c.AbortWithError(500, err)
+			return
 		}
 	}
 	c.JSON(200, &worlds)
@@ -95,14 +97,16 @@ func dbs(c *gin.Context) {
 func fortunes(c *gin.Context) {
 	rows, err := fortuneStatement.Query()
 	if err != nil {
-		c.Fail(500, err)
+		c.AbortWithError(500, err)
+		return
 	}
 
 	fortunes := make(Fortunes, 0, 16)
 	for rows.Next() { //Fetch rows
 		fortune := Fortune{}
 		if err := rows.Scan(&fortune.Id, &fortune.Message); err != nil {
-			c.Fail(500, err)
+			c.AbortWithError(500, err)
+			return
 		}
 		fortunes = append(fortunes, &fortune)
 	}
@@ -118,11 +122,13 @@ func update(c *gin.Context) {
 	world := make([]World, numQueries)
 	for i := 0; i < numQueries; i++ {
 		if err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
-			c.Fail(500, err)
+			c.AbortWithError(500, err)
+			return
 		}
 		world[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
 		if _, err := updateStatement.Exec(world[i].RandomNumber, world[i].Id); err != nil {
-			c.Fail(500, err)
+			c.AbortWithError(500, err)
+			return
 		}
 	}
 	c.JSON(200, world)
@@ -134,7 +140,13 @@ func plaintext(c *gin.Context) {
 }
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
+
 	r := gin.New()
+	serverHeader := []string{"Gin"}
+	r.Use(func(c *gin.Context) {
+		c.Writer.Header()["Server"] = serverHeader
+	})
 	r.LoadHTMLFiles("fortune.html")
 	r.GET("/json", json)
 	r.GET("/db", db)

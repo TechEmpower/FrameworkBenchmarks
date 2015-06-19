@@ -7,7 +7,7 @@ RETCODE=$(fw_exists ${GOROOT}.installed)
   source $GOROOT.installed
   return 0; }
 
-fw_get https://storage.googleapis.com/golang/go$VERSION.linux-amd64.tar.gz
+fw_get -O https://storage.googleapis.com/golang/go$VERSION.linux-amd64.tar.gz
 fw_untar go$VERSION.linux-amd64.tar.gz
 
 echo "export GOROOT=${IROOT}/go" > $GOROOT.installed

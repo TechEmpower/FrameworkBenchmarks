@@ -6,7 +6,7 @@ RETCODE=$(fw_exists ${PY3_ROOT}.installed)
   source $PY3_ROOT.installed
   return 0; }
 
-fw_get http://www.python.org/ftp/python/3.4.2/Python-3.4.2.tar.xz
+fw_get -O http://www.python.org/ftp/python/3.4.2/Python-3.4.2.tar.xz
 fw_untar Python-3.4.2.tar.xz
 cd Python-3.4.2
 ./configure --prefix=$PY3_ROOT --disable-shared --with-computed-gotos --quiet

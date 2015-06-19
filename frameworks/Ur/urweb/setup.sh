@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=20150103
+VERSION=20150520
 COMPILER=${IROOT}/urweb
 
 RETCODE=$(fw_exists ${COMPILER}.installed)
@@ -23,4 +23,5 @@ source $IROOT/urweb.installed
 
 urweb -db "dbname=hello_world user=benchmarkdbuser password=benchmarkdbpass host=${DBHOST}" bench
 
+MAX_THREADS=$((2 * $MAX_THREADS))
 ./bench.exe -q -k -t ${MAX_THREADS} &

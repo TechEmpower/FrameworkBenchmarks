@@ -17,7 +17,7 @@ sudo update-alternatives --set java $J7_HOME/jre/bin/java
 sudo update-alternatives --set javac $J7_HOME/bin/javac
 
 # try to make sure all JDK binaries default to OpenJDK 7, not Java 8
-update-alternatives --get-selections | grep java-8 | sed -e "s/java-8-oracle/$J7_HOME/" | while read line
+update-alternatives --get-selections | grep java-8 | sed -e "s|java-8-oracle|$J7_HOME|" | while read line
 do
   l=(${line// / })
   n=${l[0]}
