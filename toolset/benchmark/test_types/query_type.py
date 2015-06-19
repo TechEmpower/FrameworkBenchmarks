@@ -33,12 +33,18 @@ class QueryTestType(DBTestType):
         '''
 
         url = base_url + self.query_url
-        cases = ('2', '0', 'foo', '501', '')
+        cases = [
+            ('2',   'fail'),
+            ('0',   'warn'),
+            ('foo', 'warn'),
+            ('501', 'warn'),
+            ('',    'warn')
+        ]
 
         problems = self._verifyQueryCases(url, cases)
 
         if len(problems) == 0:
-            return [('pass', '', url + case) for case in cases]
+            return [('pass', '', url + case) for case, _ in cases]
         else:
             return problems
 
@@ -52,7 +58,7 @@ class QueryTestType(DBTestType):
         Q_MAX = 500
         Q_MIN = 1
 
-        for q in cases:
+        for q, max_infraction in cases:
             case_url = url + q
             headers, body = self.request_headers_and_body(case_url)
 
@@ -67,7 +73,7 @@ class QueryTestType(DBTestType):
                     expected_len = queries
 
                 problems += self._verifyBodyList(
-                    expected_len, headers, body, case_url)
+                    expected_len, headers, body, case_url, max_infraction)
                 problems += self._verifyHeaders(headers, case_url)
 
             except ValueError:
@@ -78,12 +84,12 @@ class QueryTestType(DBTestType):
 
                 if body is None:
                     problems.append(
-                        ('warn',
+                        (max_infraction,
                          warning % ('No response', q),
                          case_url))
                 elif len(body) == 0:
                     problems.append(
-                        ('warn',
+                        (max_infraction,
                          warning % ('Empty response', q),
                          case_url))
                 else:
@@ -91,9 +97,8 @@ class QueryTestType(DBTestType):
                     # Strictness will be upped in a future round, i.e. Frameworks currently do not have
                     # to gracefully handle absent, or non-intlike `queries`
                     # parameter input
-                    kwargs = {'max_infraction': 'warn'}
                     problems += self._verifyBodyList(
-                        expected_len, headers, body, case_url, **kwargs)
+                        expected_len, headers, body, case_url, max_infraction)
                     problems += self._verifyHeaders(headers, case_url)
 
         return problems
