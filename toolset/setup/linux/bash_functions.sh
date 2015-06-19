@@ -18,8 +18,8 @@ fw_get () {
   #  --trust-server-names "$@"
   # DEPRECATED - older versions of wget use SSLv3 for handshaking
   # and therefore don't work (Ubuntu12, for instance).
-  # Use curl instead (-s means silent)
-  curl -s "$@"
+  # Use curl instead (-s means silent; -L means follow 3xx responses)
+  curl -sL "$@"
 
   # Ensure the background job is killed if we are
   kill $!; trap 'kill $!' SIGTERM
