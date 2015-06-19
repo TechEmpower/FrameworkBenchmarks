@@ -76,17 +76,17 @@ class FrameworkTestType:
     self.err.write("Accessing URL %s \n" % url)
     self.out.write("Accessing URL %s \n" % url)
 
-    r = requests.get(url, timeout=15)
+    headers = { 'Accept': self.accept_header}
+    r = requests.get(url, timeout=15, headers=headers)
+
     try:
       r.raise_for_status() # Throws on non-200
       headers = r.headers
       body = r.content
       self.out.write(str(headers))
       self.out.write(body)
-      
       b = 40
       print "  Response (trimmed to %d bytes): \"%s\"" % (b, body.strip()[:b])
-      
       return headers, body
     except requests.HTTPError as err:
       self.err.write(err + '\n')
