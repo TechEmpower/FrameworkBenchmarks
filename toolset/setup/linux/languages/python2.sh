@@ -3,7 +3,7 @@
 RETCODE=$(fw_exists ${IROOT}/py2.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
-fw_get http://www.python.org/ftp/python/2.7.10/Python-2.7.10.tgz
+fw_get -O http://www.python.org/ftp/python/2.7.10/Python-2.7.10.tgz
 fw_untar Python-2.7.10.tgz
 cd Python-2.7.10
 ./configure --prefix=${IROOT}/py2 --disable-shared --quiet

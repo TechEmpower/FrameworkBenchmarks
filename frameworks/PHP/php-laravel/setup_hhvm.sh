@@ -15,5 +15,5 @@ sed -i 's|/home/vagrant/FrameworkBenchmarks/installs/nginx/|'"${IROOT}"'/nginx/|
 
 export PATH="${PHP_HOME}/bin:${PHP_HOME}/sbin:$PATH"
 
-hhvm --config $TROOT/deploy/config.hdf --user $(whoami) -m daemon
+hhvm -m daemon --config $TROOT/deploy/config.hdf --user $(whoami)
 ${NGINX_HOME}/sbin/nginx -c ${TROOT}/deploy/nginx.conf

@@ -12,5 +12,5 @@ sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
 export PATH="$PHP_HOME/bin:$PHP_HOME/sbin:$PATH"
 
-hhvm --config $TROOT/deploy/config.hdf --user $(whoami) -m daemon
+hhvm -m daemon --config $TROOT/deploy/config.hdf --user $(whoami)
 $NGINX_HOME/sbin/nginx -c $TROOT/deploy/nginx.conf
