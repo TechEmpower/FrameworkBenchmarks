@@ -1,5 +1,6 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
 from benchmark.fortune_html_parser import FortuneHTMLParser
+from benchmark.test_types.verifications import verify_headers
 
 
 class FortuneTestType(FrameworkTestType):
@@ -37,7 +38,7 @@ class FortuneTestType(FrameworkTestType):
 
         if valid:
             problems = []
-            problems += self._verifyHeaders(headers, url)
+            problems += verify_headers(headers, url, should_be='html')
 
             if len(problems) == 0:
                 return [('pass', '', url)]
@@ -87,38 +88,4 @@ class FortuneTestType(FrameworkTestType):
         except:
             # If there were errors reading the diff, then no diff information
             pass
-        return problems
-
-    def _verifyHeaders(self, headers, url):
-        '''Verifies the response headers for the Fortunes test'''
-
-        problems = []
-
-        if any(v.lower() not in headers for v in ('Server', 'Date', 'Content-Type')):
-            problems.append(
-                ('warn', 'Required response header missing: %s' % v, url))
-        elif all(v.lower() not in headers for v in ('Content-Length', 'Transfer-Encoding')):
-            problems.append(
-                ('warn',
-                 ('Required response size header missing, '
-                  'please include either "Content-Length" or "Transfer-Encoding"'),
-                    url))
-        else:
-            content_type = headers.get('Content-Type', '')
-            expected_type = 'text/html'
-            includes_charset = expected_type + '; charset=utf-8'
-
-            if content_type.lower() == includes_charset:
-                problems.append(
-                    ('warn',
-                     ("Content encoding \"%s\" found where \"%s\" is acceptable.\n"
-                      "Additional response bytes may negatively affect benchmark performance."
-                      % (includes_charset, expected_type)),
-                     url))
-            elif content_type != expected_type:
-                problems.append(
-                    ('warn',
-                     'Unexpected content encoding, found %s, expected %s' % (
-                         content_type, expected_type),
-                     url))
         return problems

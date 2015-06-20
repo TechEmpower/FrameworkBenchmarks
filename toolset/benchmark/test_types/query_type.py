@@ -1,5 +1,6 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
 from benchmark.test_types.db_type import DBTestType
+from benchmark.test_types.verifications import verify_headers
 
 import json
 
@@ -74,7 +75,7 @@ class QueryTestType(DBTestType):
 
                 problems += self._verifyBodyList(
                     expected_len, headers, body, case_url, max_infraction)
-                problems += self._verifyHeaders(headers, case_url)
+                problems += verify_headers(headers, case_url)
 
             except ValueError:
                 warning = (
@@ -99,7 +100,7 @@ class QueryTestType(DBTestType):
                     # parameter input
                     problems += self._verifyBodyList(
                         expected_len, headers, body, case_url, max_infraction)
-                    problems += self._verifyHeaders(headers, case_url)
+                    problems += verify_headers(headers, case_url)
 
         return problems
 
