@@ -11,4 +11,4 @@ fw_get -O $SAVE_AS $URL
 
 fw_untar crystal-0.7.1-1-linux-x86_64.tar.gz
 
-echo "export PATH=$IROOT/crystal-0.7.1-1/bin/:$PATH" >> ${IROOT}/crystal-0.7.1.installed
+echo "export PATH=$IROOT/crystal-0.7.1-1/bin/:$PATH" > ${IROOT}/crystal-0.7.1.installed
