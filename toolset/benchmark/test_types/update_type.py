@@ -1,11 +1,8 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.query_type import QueryTestType
 from benchmark.test_types.verifications import verify_query_cases
 
-from pprint import pprint
 
-
-class UpdateTestType(QueryTestType):
+class UpdateTestType(FrameworkTestType):
 
     def __init__(self):
         kwargs = {

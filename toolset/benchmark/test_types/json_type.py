@@ -1,5 +1,9 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_helloworld_object
+from benchmark.test_types.verifications import (
+    basic_body_verification,
+    verify_headers,
+    verify_helloworld_object
+)
 
 import json
 

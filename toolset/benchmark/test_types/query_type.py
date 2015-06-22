@@ -1,17 +1,15 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.db_type import DBTestType
-from benchmark.test_types.verifications import verify_headers, verify_randomnumber_list, verify_query_cases
+from benchmark.test_types.verifications import (
+    verify_headers,
+    verify_randomnumber_list,
+    verify_query_cases
+)
+
 
 import json
 
 
-class QueryTestType(DBTestType):
-
-    '''
-    This test type is used for the multiple queries test
-    Inherits from DBTestType
-    Both tests deal with the same objects; this test just expects a list of them
-    '''
+class QueryTestType(FrameworkTestType):
 
     def __init__(self):
         kwargs = {
