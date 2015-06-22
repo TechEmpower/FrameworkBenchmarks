@@ -1,5 +1,5 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.verifications import verify_headers
+from benchmark.test_types.verifications import verify_headers, verify_randomnumber_object
 
 import json
 
@@ -55,73 +55,10 @@ class DBTestType(FrameworkTestType):
                 return problems
 
         # Verify response content
-        problems += self._verifyObject(response, url)
+        problems += verify_randomnumber_object(response, url)
         problems += verify_headers(headers, url, should_be='json')
 
         if len(problems) == 0:
             return [('pass', '', url)]
         else:
             return problems
-
-    # Prime refactor target. This method is also utilized by the multiple queries
-    # and updates tests, yet is not separated out nicely.
-    def _verifyObject(self, db_object, url, max_infraction='fail'):
-        '''Ensure the passed item is a JSON object with 
-        keys 'id' and 'randomNumber' mapping to ints. 
-        Separate method allows the QueryTestType to 
-        reuse these checks'''
-
-        problems = []
-
-        # Dict is expected, handle bytes in non-cases
-        if type(db_object) is not dict:
-            got = str(db_object)[:20]
-            if len(str(db_object)) > 20:
-                got = str(db_object)[:17] + '...'
-            return [(max_infraction, "Expected a JSON object, got '%s' instead" % got, url)]
-
-        # Make keys case insensitive
-        db_object = {k.lower(): v for k, v in db_object.iteritems()}
-        required_keys = set(['id', 'randomnumber'])
-
-        if any(v not in db_object for v in required_keys):
-            problems.append(
-                (max_infraction, 'Response object was missing required key: %s' % v, url))
-
-        if len(db_object) > len(required_keys):
-            extras = db_object.keys() - required_keys
-            problems.append(
-                ('warn',
-                 'An extra key(s) is being included with the db object: ' + ', '.join(extras),
-                 url))
-
-        # All required keys must be present
-        if len(problems) > 0:
-            return problems
-
-        # Assert key types and values
-        try:
-            o_id = int(db_object['id'])
-            
-            if o_id > 10000 or o_id < 1:
-                problems.append(
-                    ('warn',
-                     'Response key id should be between 1 and 10,000: ' + str(o_id),
-                     url))
-        except TypeError as e:
-            problems.append(
-                (max_infraction, "Response key 'id' does not map to an integer - %s" % e, url))
-
-        try:
-            o_rn = int(db_object['randomnumber'])
-            
-            if o_rn > 10000:
-                problems.append(
-                    ('warn',
-                     'Response key `randomNumber` is over 10,000. This may negatively affect performance by sending extra bytes',
-                     url))
-        except TypeError as e:
-            problems.append(
-                (max_infraction, "Response key 'randomnumber' does not map to an integer - %s" % e, url))
-
-        return problems

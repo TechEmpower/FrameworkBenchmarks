@@ -1,6 +1,6 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
 from benchmark.test_types.db_type import DBTestType
-from benchmark.test_types.verifications import verify_headers
+from benchmark.test_types.verifications import verify_headers, verify_randomnumber_list
 
 import json
 
@@ -73,7 +73,7 @@ class QueryTestType(DBTestType):
                 else:
                     expected_len = queries
 
-                problems += self._verifyBodyList(
+                problems += verify_randomnumber_list(
                     expected_len, headers, body, case_url, max_infraction)
                 problems += verify_headers(headers, case_url)
 
@@ -98,63 +98,8 @@ class QueryTestType(DBTestType):
                     # Strictness will be upped in a future round, i.e. Frameworks currently do not have
                     # to gracefully handle absent, or non-intlike `queries`
                     # parameter input
-                    problems += self._verifyBodyList(
+                    problems += verify_randomnumber_list(
                         expected_len, headers, body, case_url, max_infraction)
                     problems += verify_headers(headers, case_url)
-
-        return problems
-
-    def _verifyBodyList(self, expectedLen, headers, body, url, max_infraction='fail'):
-        '''
-        Validates high-level structure (array length, object types, etc),
-        then verifies the inner objects of the list for correctness
-        '''
-        if body is None:
-            return [(max_infraction, 'No response', url)]
-        elif len(body) == 0:
-            return [(max_infraction, 'Empty Response', url)]
-
-        try:
-            response = json.loads(body)
-        except ValueError as ve:
-            return [(max_infraction, "Invalid JSON - %s" % ve, url)]
-
-        problems = []
-
-        # This path will be hit when the framework returns a single JSON object
-        # rather than a list containing one element. We allow this with a warn,
-        # then verify the supplied object
-        if type(response) is not list:
-            problems.append(
-                ('warn', 'Top-level JSON is an object, not an array', url))
-            problems += self._verifyObject(response, url, max_infraction)
-            return problems
-
-        if any(type(item) is not dict for item in response):
-            problems.append(
-                (max_infraction, 'Not all items in the JSON array were JSON objects', url))
-
-        if len(response) != expectedLen:
-            problems.append(
-                (max_infraction,
-                 "JSON array length of %s != expected length of %s" % (
-                     len(response), expectedLen),
-                 url))
-
-        # Verify individual objects, arbitrarily stop after 5 bad ones are found
-        # i.e. to not look at all 500
-        badObjectsFound = 0
-        i = iter(response)
-
-        try:
-            while badObjectsFound < 5:
-                obj = next(i)
-                findings = self._verifyObject(obj, url, max_infraction)
-
-                if len(findings) > 0:
-                    problems += findings
-                    badObjectsFound += 1
-        except StopIteration:
-            pass
 
         return problems
