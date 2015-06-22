@@ -27,20 +27,24 @@ def serializeFortune(fortune):
     }
 
 def plaintext():
+    session.forget()
     response.headers["Content-Type"]="text/plain; charset=UTF-8"
     return "Hello, World!"
 
 def json():
+    session.forget()
     response.headers["Content-Type"]="application/json; charset=UTF-8"
     return jsonOut.dumps({"message":"Hello, World!"})
 
 def db():
+    session.forget()
     response.headers["Content-Type"]="application/json; charset=UTF-8"
     wid = randint(1, 10000)
     world = DATABASE.world[wid]
     return jsonOut.dumps(serializeWorld(world))
 
 def queries():
+    session.forget()
     response.headers["Content-Type"]="application/json; charset=UTF-8"
     num_queries = getQueryNum(request.vars["queries"])
     rp = partial(randint, 1, 10000)
@@ -48,6 +52,7 @@ def queries():
     return jsonOut.dumps(worlds)
 
 def updates():
+    session.forget()
     response.headers["Content-Type"]="application/json; charset=UTF-8"
     num_queries = getQueryNum(request.vars["queries"])
     worlds = []
@@ -63,6 +68,7 @@ def updates():
     return jsonOut.dumps(worlds)
 
 def fortune():
+    session.forget()
     fortunes = DATABASE(DATABASE.fortune).select()
     fortune_list = fortunes.as_list();
     fortune_list.append({"id":0, "message":"Additional fortune added at request time."})

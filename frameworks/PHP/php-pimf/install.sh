@@ -5,7 +5,7 @@ export COMPOSER_HOME=${IROOT}/php-composer
 export PHP_FPM=${PHP_HOME}/sbin/php-fpm
 export NGINX_HOME=${IROOT}/nginx
 
-fw_depends php nginx composer
+fw_depends php nginx composer cphalcon
 
 ${PHP_HOME}/bin/php ${COMPOSER_HOME}/composer.phar install \
   --no-interaction --working-dir $TROOT \

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.xekm</groupId>
@@ -9,9 +10,44 @@
     <properties>
         <jdk.version>1.7</jdk.version>
 
-        <dropwizard.version>0.7.0</dropwizard.version>
-        <mysql-connector-java.version>5.1.30</mysql-connector-java.version>
+        <dropwizard.version>0.8.1</dropwizard.version>
+        <mysql-connector-java.version>5.1.35</mysql-connector-java.version>
+        <mongojack.version>2.3.0</mongojack.version>
+        <postgres-jdbc.version>9.4-1201-jdbc41</postgres-jdbc.version>
+        <dropwizard.java8.version>0.8.0-1</dropwizard.java8.version>
+
+        <main.class>com.example.helloworld.HelloWorldService</main.class>
     </properties>
+
+
+    <profiles>
+        <profile>
+            <id>mysql</id>
+            <dependencies>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <version>${mysql-connector-java.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>mongo</id>
+            <properties>
+                <main.class>com.example.helloworld.HelloMongoService</main.class>
+            </properties>
+        </profile>
+        <profile>
+            <id>postgres</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <version>${postgres-jdbc.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -30,9 +66,20 @@
             <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql-connector-java.version}</version>
+            <groupId>io.dropwizard.modules</groupId>
+            <artifactId>dropwizard-java8</artifactId>
+            <version>${dropwizard.java8.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongojack</groupId>
+            <artifactId>mongojack</artifactId>
+            <version>${mongojack.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -84,9 +131,11 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.example.helloworld.HelloWorldService</mainClass>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${main.class}</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

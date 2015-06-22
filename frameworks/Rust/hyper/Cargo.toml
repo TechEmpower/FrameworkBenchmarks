@@ -1,0 +1,8 @@
+[package]
+name = "hello"
+version = "0.1.0"
+authors = ["Steve Klabnik <steve@steveklabnik.com>"]
+
+[dependencies]
+
+hyper="0.5.2"

@@ -19,6 +19,24 @@
       "notes": "",
       "versus": "php"
     },
+    "hhvm": {
+      "setup_file": "setup_hhvm",
+      "json_url": "/index.php/bench/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "codeigniter",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "HPHP",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "codeigniter_hhvm",
+      "notes": "",
+      "versus": "php"
+    },
     "raw": {
       "setup_file": "setup",
       "db_url": "/index.php/bench/db",
@@ -36,6 +54,26 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "codeigniter",
+      "notes": "",
+      "versus": "php"
+    },
+    "raw_hhvm": {
+      "setup_file": "setup_hhvm",
+      "db_url": "/index.php/bench/db",
+      "query_url": "/index.php/bench/db/",
+      "fortune_url": "/index.php/bench/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "codeigniter",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "HPHP",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "codeigniter_hhvm",
       "notes": "",
       "versus": "php"
     }

@@ -26,7 +26,7 @@ elif [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
     sudo apt-get -y install libboost1.48-all-dev
 fi
 
-fw_get http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz -O wt-3.3.3.tar.gz
+fw_get http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz -O
 fw_untar wt-3.3.3.tar.gz
 
 cd wt-3.3.3

@@ -9,7 +9,7 @@ CXX=/usr/bin/g++-4.9 ./install.sh $IROOT
 
 # Install microhttpd
 cd $DIR
-fw_get http://mirror.ibcp.fr/pub/gnu/libmicrohttpd/libmicrohttpd-0.9.39.tar.gz
+fw_get -O http://mirror.ibcp.fr/pub/gnu/libmicrohttpd/libmicrohttpd-0.9.39.tar.gz
 fw_untar libmicrohttpd-0.9.39.tar.gz
 cd libmicrohttpd-0.9.39
 ./configure --prefix=$IROOT

@@ -6,16 +6,17 @@ For further guidance, review the
 
 ## Infrastructure Software Versions
 
-* [python2 2.7.9](https://www.python.org/)
-* [python3 3.4.2](https://www.python.org/)
-* [pypy 2.4.0](http://pypy.org/)
-* [nginx 1.4.1](http://nginx.org/)
+* [Python2 2.7.10](https://www.python.org/)
+* [Python3 3.4.3](https://www.python.org/)
+* [PyPy 2.6.0](http://pypy.org/)
+* [nginx](http://nginx.org/)
 
 ## Get Help
 
 ### Python Experts
 
 * INADA Naoki (@methane) -- Expert of Python and Python's MySQL driver.
+* Ludovic Gasc (@GMLudo) -- Expert of AsyncIO.
 
 ### [Python Community](https://www.python.org/community/)
 

@@ -1,0 +1,24 @@
+{
+  "framework": "jetty",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "servlet",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Jetty",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "jetty",
+      "notes": "Jetty 9.3 with Handler",
+      "versus": ""
+    }
+  }]
+}

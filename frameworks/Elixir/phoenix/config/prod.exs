@@ -1,10 +1,17 @@
 use Mix.Config
 
 config :hello, Hello.Endpoint,
-  url: [host: "localhost", port: 8080],
+  url: [host: "0.0.0.0"],
   http: [port: 8080],
-  secret_key_base: "Z18ZjzZslFpKd8HB41IljqMavPiOKVF9y1DIQ+S2Ytg7Op0EIauwJgd7mtRStssx",
-  cache_static_lookup: false
+  cache_static_lookup: false,
+  server: true
+
+config :hello, Hello.Repo,
+  adapter: Ecto.Adapters.MySQL,
+  username: "benchmarkdbuser",
+  password: "benchmarkdbpass",
+  database: "hello_world",
+  hostname: "localhost"
 
 # ## SSL Support
 #
@@ -36,3 +43,5 @@ config :logger, level: :info
 #
 #     config :hello, Hello.Endpoint, server: true
 #
+
+import_config "prod.secret.exs"

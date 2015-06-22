@@ -1,0 +1,47 @@
+# main configuration file
+
+# Application PID File
+PidFile = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/php-laravel/hhvm.pid
+
+# Server settings
+Server {
+  Port = 9001
+  Type = fastcgi
+  SourceRoot = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/php-laravel
+  DefaultDocument = index.php
+}
+
+# Disable logging completely
+Log {
+  UseLogFile = false
+  UseSyslog = false
+  Level = Error
+  #File = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/php-laravel/error.log
+}
+
+# Enable jit for production mode
+Eval {
+    Jit = true
+    CheckSymLink = false
+}
+
+# Repo file
+Repo {
+  Central {
+    Path = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/php-laravel/.hhvm.bbhc
+  }
+}
+
+# Setup basic rewrite
+VirtualHost {
+    * {
+        Pattern = .*
+        RewriteRules {
+            * {
+                pattern = ^(.*)$
+                to = $1.php
+                qsa = true
+            }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+{
+  "framework": "servlet-dsl",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/servlet-dsl/json",
+      "plaintext_url": "/servlet-dsl/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "servlet-dsl",
+      "language": "Java",
+      "orm": "raw",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "servlet-dsl",
+      "notes": "",
+      "versus": "servlet"
+    }
+  }]
+}

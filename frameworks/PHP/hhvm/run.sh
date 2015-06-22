@@ -1,5 +1,4 @@
 #!/bin/bash
 
-hhvm --config ./deploy/config.hdf -m server
+hhvm -m server --config ./deploy/config.hdf
 $NGINX_HOME/sbin/nginx -c $TROOT/deploy/nginx.conf
-
