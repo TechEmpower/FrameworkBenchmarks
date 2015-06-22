@@ -1,5 +1,6 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
 from benchmark.test_types.query_type import QueryTestType
+from benchmark.test_types.verifications import verify_query_cases
 
 from pprint import pprint
 
@@ -34,7 +35,7 @@ class UpdateTestType(QueryTestType):
             ('501', 'warn'),
             ('',    'warn')
         ]
-        problems = self._verifyQueryCases(url, cases)
+        problems = verify_query_cases(self, cases, url)
 
         if len(problems) == 0:
             return [('pass', '', url + case) for (case, _) in cases]

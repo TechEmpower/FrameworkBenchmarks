@@ -194,3 +194,76 @@ def verify_randomnumber_list(expected_len, headers, body, url, max_infraction='f
         pass
 
     return problems
+
+
+def verify_query_cases(self, cases, url):
+    '''
+    The the /updates and /queries tests accept a `queries` parameter
+    that is expected to be between 1-500.
+    This method execises a framework with different `queries` parameter values
+    then verifies that the framework responds appropriately.
+    The `cases` parameter should be a list of 2-tuples containing the query case
+    and the consequence level should the cases fail its verifications, e.g.:
+
+    cases = [
+        ('2',   'fail'),
+        ('0',   'warn'),
+        ('foo', 'warn'),
+        ('501', 'warn'),
+        ('',    'warn')
+    ]
+
+    The reason for using 'warn' is generally for a case that will be allowed in the
+    current run but that may/will be a failing case in future rounds. The cases above
+    suggest that not sanitizing the `queries` parameter against non-int input, or failing
+    to ensure the parameter is between 1-500 will just be a warn,
+    and not prevent the framework from being benchmarked.
+    '''
+    problems = []
+    MAX = 500
+    MIN = 1
+
+    for q, max_infraction in cases:
+        case_url = url + q
+        headers, body = self.request_headers_and_body(case_url)
+
+        try:
+            queries = int(q)  # drops down for 'foo' and ''
+
+            if queries > MAX:
+                expected_len = MAX
+            elif queries < MIN:
+                expected_len = MIN
+            else:
+                expected_len = queries
+
+            problems += verify_randomnumber_list(
+                expected_len, headers, body, case_url, max_infraction)
+            problems += verify_headers(headers, case_url)
+
+        except ValueError:
+            warning = (
+                '%s given for stringy `queries` parameter %s\n'
+                'Suggestion: modify your /queries route to handle this case '
+                '(this will be a failure in future rounds, please fix)')
+
+            if body is None:
+                problems.append(
+                    (max_infraction,
+                     warning % ('No response', q),
+                     case_url))
+            elif len(body) == 0:
+                problems.append(
+                    (max_infraction,
+                     warning % ('Empty response', q),
+                     case_url))
+            else:
+                expected_len = 1
+                # Strictness will be upped in a future round, i.e. Frameworks currently do not have
+                # to gracefully handle absent, or non-intlike `queries`
+                # parameter input
+                problems += verify_randomnumber_list(
+                    expected_len, headers, body, case_url, max_infraction)
+                problems += verify_headers(headers, case_url)
+
+    return problems
