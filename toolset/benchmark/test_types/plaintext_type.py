@@ -1,5 +1,5 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.verifications import verify_headers
+from benchmark.test_types.verifications import basic_body_verification, verify_headers
 
 
 class PlaintextTestType(FrameworkTestType):
@@ -17,11 +17,10 @@ class PlaintextTestType(FrameworkTestType):
         url = base_url + self.plaintext_url
         headers, body = self.request_headers_and_body(url)
 
-        # Empty response
-        if body is None:
-            return [('fail', 'No response', url)]
-        elif len(body) == 0:
-            return [('fail', 'Empty Response', url)]
+        _, problems = basic_body_verification(body, is_json_check=False)
+
+        if len(problems) > 0:
+            return problems
 
         # Case insensitive
         orig = body
@@ -31,8 +30,6 @@ class PlaintextTestType(FrameworkTestType):
 
         if expected not in body:
             return [('fail', "Could not find 'Hello, World!' in response.", url)]
-
-        problems = []
 
         if extra_bytes > 0:
             problems.append(

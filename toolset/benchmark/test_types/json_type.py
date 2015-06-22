@@ -1,5 +1,5 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.verifications import verify_headers, verify_helloworld_object
+from benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_helloworld_object
 
 import json
 
@@ -27,19 +27,11 @@ class JsonTestType(FrameworkTestType):
         url = base_url + self.json_url
         headers, body = self.request_headers_and_body(url)
 
-        # Empty response
-        if body is None:
-            return [('fail', 'No response', url)]
-        elif len(body) == 0:
-            return [('fail', 'Empty Response', url)]
+        response, problems = basic_body_verification(body)
 
-        # Valid JSON?
-        try:
-            response = json.loads(body)
-        except ValueError as ve:
-            return [('fail', "Invalid JSON - %s" % ve, url)]
+        if len(problems) > 0:
+            return problems
 
-        problems = []
         problems += verify_helloworld_object(response, url)
         problems += verify_headers(headers, url, should_be='json')
 

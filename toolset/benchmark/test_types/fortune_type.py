@@ -1,6 +1,6 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
 from benchmark.fortune_html_parser import FortuneHTMLParser
-from benchmark.test_types.verifications import verify_headers
+from benchmark.test_types.verifications import basic_body_verification, verify_headers
 
 
 class FortuneTestType(FrameworkTestType):
@@ -26,18 +26,16 @@ class FortuneTestType(FrameworkTestType):
         url = base_url + self.fortune_url
         headers, body = self.request_headers_and_body(url)
 
-        # Empty response
-        if body is None:
-            return [('fail', 'No response', url)]
-        elif len(body) == 0:
-            return [('fail', 'Empty Response', url)]
+        _, problems = basic_body_verification(body, is_json_check=False)
+
+        if len(problems) > 0:
+            return problems
 
         parser = FortuneHTMLParser()
         parser.feed(body)
         (valid, diff) = parser.isValidFortune(self.out)
 
         if valid:
-            problems = []
             problems += verify_headers(headers, url, should_be='html')
 
             if len(problems) == 0:

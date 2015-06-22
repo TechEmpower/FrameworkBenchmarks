@@ -1,6 +1,37 @@
 import json
 
 
+def basic_body_verification(body, is_json_check=True):
+    '''
+    Takes in a raw (stringy) response body, checks that it is non-empty,
+    and that it is valid JSON (i.e. can be deserialized into a dict/list of dicts)
+    Returns the deserialized body as a dict (or list of dicts), and also returns any
+    problems encountered, always as a list. If len(problems) > 0,
+    then the response body does not have to be examined further and the caller
+    should handle the failing problem(s).
+
+    Plaintext and Fortunes set `is_json_check` to False
+    '''
+
+    # Empty Response?
+    if body is None:
+        return None, [('fail', 'No response', url)]
+    elif len(body) == 0:
+        return None, [('fail', 'Empty response', url)]
+
+    # Valid JSON?
+    if is_json_check:
+        try:
+            response = json.loads(body)
+            return response, []
+        except ValueError as ve:
+            return None, [('fail', 'Invalid JSON: %s' % ve, url)]
+
+    # Fortunes and Plaintext only use this for the empty response tests
+    # they do not need or expect a dict back
+    return None, []
+
+
 def verify_headers(headers, url, should_be='json'):
     '''
     Verifies the headers of a framework response
@@ -143,19 +174,13 @@ def verify_randomnumber_list(expected_len, headers, body, url, max_infraction='f
     '''
     Validates that the object is a list containing a number of 
     randomnumber object. Should closely resemble:
-    [{ "id": 2354, "randomNumber": 8952 }, { id: }]
+    [{ "id": 2354, "randomNumber": 8952 }, { "id": 4421, "randomNumber": 32 }, ... ]
     '''
-    if body is None:
-        return [(max_infraction, 'No response', url)]
-    elif len(body) == 0:
-        return [(max_infraction, 'Empty Response', url)]
+    
+    response, problems = basic_body_verification(body)
 
-    try:
-        response = json.loads(body)
-    except ValueError as ve:
-        return [(max_infraction, "Invalid JSON - %s" % ve, url)]
-
-    problems = []
+    if len(problems) > 0:
+        return problems
 
     # This path will be hit when the framework returns a single JSON object
     # rather than a list containing one element. We allow this with a warn,
