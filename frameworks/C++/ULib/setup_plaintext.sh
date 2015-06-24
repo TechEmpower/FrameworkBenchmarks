@@ -9,4 +9,8 @@ sed -i "s|CLIENT_FOR_PARALLELIZATION .*|CLIENT_FOR_PARALLELIZATION 8000|g" $IROO
 # 2. Start ULib Server (userver_tcp)
 export UMEMPOOL="982,0,0,36,9846,-24,-23,1727,1151"
 
+if [ `ulimit -r` -eq 99 ]; then
+	sudo setcap cap_sys_nice,cap_sys_resource,cap_net_bind_service,cap_net_raw+eip $IROOT/ULib/bin/userver_tcp
+fi
+
 $IROOT/ULib/bin/userver_tcp -c $IROOT/ULib/benchmark.cfg &

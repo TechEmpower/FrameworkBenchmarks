@@ -36,6 +36,13 @@ fi
 # AVOID "fatal error: postgres_fe.h: No such file or directory"
 sudo apt-get install -y postgresql-server-dev-all
 
+# make use of FIFO scheduling policy possible
+type setcap >/dev/null 2>/dev/null
+
+if [ $? -ne 0 ]; then
+   sudo apt-get install -y libcap2-bin
+fi
+
 # Add a simple configuration file to it
 cd $ULIB_ROOT
 if [ ! -f "benchmark.cfg" ]; then
