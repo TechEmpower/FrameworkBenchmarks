@@ -6,9 +6,7 @@ import play.db.ebean.Model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class World extends Model {
@@ -19,17 +17,12 @@ public class World extends Model {
     @Column(name = "randomNumber")
     public Long randomNumber;
 
-    public static Finder<Long, World> find = new Finder<Long, World>(
-            Long.class, World.class
-    );
+    public static World find(Long id) {
+        return Ebean.find(World.class, id);
+    }
 
     public static List<World> save(final List<World> worlds) throws Throwable {
-        Set<String> updateProperties = new HashSet<>();
-        updateProperties.add("randomNumber");
-
-        for (World world : worlds) {
-            Ebean.update(world, updateProperties);
-        }
+        worlds.forEach(Ebean::update);
 
         return worlds;
     }
