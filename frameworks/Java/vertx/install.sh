@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java7
+fw_depends java8
 
 RETCODE=$(fw_exists ${IROOT}/vert.x-2.1.5.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
