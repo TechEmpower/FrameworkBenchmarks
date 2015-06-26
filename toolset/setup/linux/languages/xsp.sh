@@ -1,11 +1,11 @@
 #!/bin/bash
 
+fw_depends mono
+
 RETCODE=$(fw_exists ${IROOT}/xsp.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/xsp.installed
   return 0; }
-
-fw_depends mono
 
 # get
 git clone git://github.com/mono/xsp

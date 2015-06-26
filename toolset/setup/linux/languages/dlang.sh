@@ -1,10 +1,11 @@
 #!/bin/bash
 
-DLANG=$IROOT/dlang
-RETCODE=$(fw_exists ${DLANG}.installed)
+RETCODE=$(fw_exists ${IROOT}/dlang.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  source $DLANG.installed
+  source $IROOT/dlang.installed
   return 0; }
+  
+DLANG=$IROOT/dlang
 
 mkdir -p $DLANG
 fw_get -O http://downloads.dlang.org/releases/2.x/2.067.1/dmd_2.067.1-0_amd64.deb
@@ -21,6 +22,6 @@ cp $DLANG/etc/dmd.conf $DLANG/usr/bin
 sed -i "s|-I/usr/|-I${DLANG}/usr/|g" $DLANG/usr/bin/dmd.conf
 sed -i "s|-L/usr/|-L${DLANG}/usr/|g" $DLANG/usr/bin/dmd.conf
 
-echo -e "export PATH=${DLANG}/usr/bin:\$PATH" > $DLANG.installed
+echo -e "export PATH=${DLANG}/usr/bin:\$PATH" > $IROOT/dlang.installed
 
-source $DLANG.installed
+source $IROOT/dlang.installed

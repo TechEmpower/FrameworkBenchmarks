@@ -1,17 +1,21 @@
 #!/bin/bash
 
-VERSION="0.12.2"
-RETCODE=$(fw_exists ${IROOT}/node-${VERSION}.installed)
+RETCODE=$(fw_exists ${IROOT}/node.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/node-$VERSION.installed
+  source $IROOT/node.installed
   return 0; }
 
-fw_depends nvm
+VERSION="0.12.2"
 
-nvm install 0.12.2
+fw_get -O http://nodejs.org/dist/v$VERSION/node-v$VERSION-linux-x64.tar.gz
+fw_untar node-v$VERSION-linux-x64.tar.gz
 
-echo "export NODE_ENV=production" > $IROOT/node-$VERSION.installed
-echo "nvm use ${VERSION}" >> $IROOT/node-$VERSION.installed
-echo "npm install -g npm" >> $IROOT/node-$VERSION.installed
+NODE_HOME=$IROOT/node-v$VERSION-linux-x64
+# Upgrade npm to avoid https://github.com/npm/npm/issues/4984
+$NODE_HOME/bin/npm install -g npm
 
-source $IROOT/node-$VERSION.installed
+echo "export NODE_ENV=production" > $IROOT/node.installed
+echo "export NODE_HOME=${NODE_HOME}" >> $IROOT/node.installed
+echo -e "export PATH=\$NODE_HOME/bin:\$PATH" >> $IROOT/node.installed
+
+source $IROOT/node.installed

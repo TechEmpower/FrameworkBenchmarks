@@ -1,14 +1,14 @@
 #!/bin/bash
 
-MAVEN=$IROOT/maven
-RETCODE=$(fw_exists ${MAVEN}.installed)
+RETCODE=$(fw_exists ${IROOT}/maven.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  source $MAVEN.installed
+  source $IROOT/maven.installed
   return 0; }
 
+# TODO: Someday remove apt-get
 sudo apt-get -y install maven
 mvn -version
 
-touch $MAVEN.installed
+touch $IROOT/maven.installed
 
-source $MAVEN.installed
+source $IROOT/maven.installed

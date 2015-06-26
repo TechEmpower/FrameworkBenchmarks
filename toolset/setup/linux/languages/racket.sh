@@ -1,11 +1,12 @@
 #!/bin/bash
 
-RACKET=$IROOT/racket
-RETCODE=$(fw_exists ${RACKET}.installed)
+RETCODE=$(fw_exists ${IROOT}/racket.installed)
 [ ! "$RETCODE" == 0 ] || { \
   # Load environment variables
-  source $RACKET.installed
+  source $IROOT/racket.installed
   return 0; }
+
+RACKET=$IROOT/racket
 
 fw_get -o racket-src.tar.gz http://mirror.racket-lang.org/installers/recent/racket-src.tgz
 fw_untar racket-src.tar.gz
@@ -15,7 +16,7 @@ cd racket-install/src
 make
 make install
 
-echo "export RACKET_HOME=${RACKET}" > $RACKET.installed
-echo -e "export PATH=${RACKET}/bin:\$PATH" >> $RACKET.installed
+echo "export RACKET_HOME=${RACKET}" > $IROOT/racket.installed
+echo -e "export PATH=\$RACKET_HOME/bin:\$PATH" >> $IROOT/racket.installed
 
-source $RACKET.installed
+source $IROOT/racket.installed

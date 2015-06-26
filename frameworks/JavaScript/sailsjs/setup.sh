@@ -1,15 +1,9 @@
 #!/bin/bash
 
-fw_depends nvm
+fw_depends nodejs
 
-# Used to avoid nvm's return 2 error.
-# Sourcing this functions if 0 is returned.
-source $NVM_HOME/nvm.sh || 0
-nvm install 0.12.2
-nvm use 0.12.2
-
-# update npm before app init
-npm install -g npm
+sed -i 's|127.0.0.1|'"${DBHOST}"'|g' api/controllers/SequelizeMySQLController.js
+sed -i 's|127.0.0.1|'"${DBHOST}"'|g' api/controllers/SequelizePostgresController.js
 
 # let us run sails directly
 npm install -g sails

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+RETCODE=$(fw_exists ${IROOT}/wt.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/wt.installed
+  return 0; }
+
 BOOST_ROOT=/usr/local
 BOOST_INC=${BOOST_ROOT}/include
 BOOST_LIB=${BOOST_ROOT}/lib
@@ -8,11 +13,6 @@ WT_LIB=${WT_ROOT}/lib
 WT_INC=${WT_ROOT}/include
 LD_LIBRARY_PATH="${BOOST_LIB}:${WT_LIB}:${LD_LIBRARY_PATH}"
 CPLUS_INCLUDE_PATH=/usr/include/postgresql:/usr/include/postgresql/9.3/server:$CPLUS_INCLUDE_PATH
-
-RETCODE=$(fw_exists ${IROOT}/wt.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/wt.installed
-  return 0; }
 
 # The commented code works. While we would love to get boost from source
 # so we know exactly what we are getting, it just takes too long. Also, 
@@ -58,7 +58,7 @@ echo "export BOOST_LIB=${BOOST_LIB}" >> $IROOT/wt.installed
 echo "export WT_ROOT=${WT_ROOT}" >> $IROOT/wt.installed
 echo "export WT_LIB=${WT_LIB}" >> $IROOT/wt.installed
 echo "export WT_INC=${WT_INC}" >> $IROOT/wt.installed
-echo 'export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}' >> $IROOT/wt.installed
-echo "export CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH}" >> $IROOT/wt.installed
+echo -e "export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:\$LD_LIBRARY_PATH" >> $IROOT/wt.installed
+echo -e "export CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH}:\$CPLUS_INCLUDE_PATH" >> $IROOT/wt.installed
 
 source $IROOT/wt.installed

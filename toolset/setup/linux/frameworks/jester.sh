@@ -1,20 +1,21 @@
 #!/bin/bash
 
-JESTER=$IROOT/
-RETCODE=$(fw_exists ${JESTER}.installed)
+fw_depends nim nimble
+
+RETCODE=$(fw_exists ${IROOT}/jester.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  source $JESTER.installed
+  source $IROOT/jester.installed
   return 0; }
 
-fw_depends nim
+JESTER=$IROOT/jester
 
 git clone https://github.com/dom96/jester.git
 cd jester
-git fetch origin
-git checkout da9e3a73ecac51494430dce2a8387e5f0e32f968
+# 2015-06-25
+git checkout 71b8cc069a0d271d619c2dc41bc6479047885587
 nimble update
 nimble install
 
-echo "" > $JESTER.installed
+echo "export JESTER_HOME=${JESTER}" > $IROOT/jester.installed
 
-source $JESTER.installed
+source $IROOT/jester.installed

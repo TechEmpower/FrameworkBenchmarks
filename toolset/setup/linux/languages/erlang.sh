@@ -1,6 +1,5 @@
 #!/bin/bash
 
-OTP_SRC="otp_src_17.5"
 RETCODE=$(fw_exists ${IROOT}/erlang.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/erlang.installed
@@ -14,6 +13,6 @@ fw_get -O http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_1_esl
 dpkg -x esl-erlang_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb $IROOT/erlang
 $IROOT/erlang/usr/lib/erlang/Install -minimal $IROOT/erlang/usr/lib/erlang
 
-echo -e "export PATH=$IROOT/erlang/bin:\$PATH" > $IROOT/erlang.installed
+echo -e "export PATH=${IROOT}/erlang/usr/bin:\$PATH" > $IROOT/erlang.installed
 
 source $IROOT/erlang.installed

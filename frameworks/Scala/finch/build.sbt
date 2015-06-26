@@ -9,8 +9,8 @@ com.github.retronym.SbtOneJar.oneJarSettings
 mainClass in (Compile, run) := Some("WebServer")
 
 libraryDependencies ++= Seq(
-  "com.github.finagle" %% "finch-core" % "0.7.0",
-  "com.github.finagle" %% "finch-argonaut" % "0.7.0"
+  "com.github.finagle" %% "finch-core" % "0.7.1",
+  "com.github.finagle" %% "finch-argonaut" % "0.7.1"
 )
 
 resolvers += Resolver.sonatypeRepo("snapshots")

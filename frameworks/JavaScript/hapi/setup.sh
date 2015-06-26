@@ -2,7 +2,7 @@
 
 sed -i 's|localhost|'"${DBHOST}"'|g' app.js
 
-fw_depends nvm nodejs
+fw_depends nodejs
 
 npm install
 node app &

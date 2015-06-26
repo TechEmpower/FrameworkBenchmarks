@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
 	// Framework
-	compile 'net.javapla.jawn:jawn-server-undertow:0.8.7-SNAPSHOT'
+	compile 'net.javapla.jawn:jawn-server-undertow:0.8.7'
 	//compile project(':jawn-server'), project(':jawn-server-undertow'), project(':jawn-server-jetty')
 
 	

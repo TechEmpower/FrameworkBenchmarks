@@ -1,10 +1,11 @@
 #!/bin/bash
 
-PY2_ROOT=$IROOT/py2
-RETCODE=$(fw_exists ${PY2_ROOT}.installed)
+RETCODE=$(fw_exists ${IROOT}/py2.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  source $PY2_ROOT.installed
+  source $IROOT/py2.installed
   return 0; }
+
+PY2_ROOT=$IROOT/py2
 
 fw_get -O http://www.python.org/ftp/python/2.7.10/Python-2.7.10.tgz
 fw_untar Python-2.7.10.tgz
@@ -17,8 +18,8 @@ cd ..
 $PY2_ROOT/bin/python -m ensurepip -U
 $PY2_ROOT/bin/pip install -U setuptools pip
 
-echo "export PY2_ROOT=${PY2_ROOT}" > $PY2_ROOT.installed
-echo "export PYTHONHOME=${PY2_ROOT}" >> $PY2_ROOT.installed
-echo -e "export PATH=${PY2_ROOT}/bin:\$PATH" >> $PY2_ROOT.installed
+echo "export PY2_ROOT=${PY2_ROOT}" > $IROOT/py2.installed
+echo -e "export PYTHONHOME=\$PY2_ROOT" >> $IROOT/py2.installed
+echo -e "export PATH=\$PY2_ROOT/bin:\$PATH" >> $IROOT/py2.installed
 
-source $PY2_ROOT.installed
+source $IROOT/py2.installed

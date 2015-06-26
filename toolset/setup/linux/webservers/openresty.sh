@@ -1,23 +1,25 @@
 #!/bin/bash
 
-VERSION="1.7.10.1"
-OPENRESTY=$IROOT/openresty-$VERSION
-RETCODE=$(fw_exists ${OPENRESTY}.installed)
+fw_depends lua
+
+RETCODE=$(fw_exists ${IROOT}/openresty.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  source $OPENRESTY.installed
+  source $IROOT/openresty.installed
   return 0; }
 
-fw_depends nginx lua
+OPENRESTY_VERSION="1.7.10.1"
+OPENRESTY=$IROOT/openresty
+OPENRESTY_HOME=$OPENRESTY-$OPENRESTY_VERSION
 
-fw_get -O http://openresty.org/download/ngx_openresty-${VERSION}.tar.gz
-fw_untar ngx_openresty-${VERSION}.tar.gz
+fw_get -O http://openresty.org/download/ngx_openresty-$OPENRESTY_VERSION.tar.gz
+fw_untar ngx_openresty-$OPENRESTY_VERSION.tar.gz
 
-cd ngx_openresty-${VERSION}
-./configure --with-luajit-xcflags=-DLUAJIT_NUMMODE=2 --with-http_postgres_module --prefix=${IROOT}/openresty-${VERSION} -j4
+cd ngx_openresty-$OPENRESTY_VERSION
+./configure --with-luajit-xcflags=-DLUAJIT_NUMMODE=2 --with-lua51=$LUA_HOME --with-http_postgres_module --prefix=$OPENRESTY_HOME -j4
 make -j4
 make install
 
-echo "export OPENRESTY_HOME=${OPENRESTY}" > $OPENRESTY.installed
-echo -e "export PATH=${OPENRESTY}/nginx/sbin:\$PATH" >> $OPENRESTY.installed
+echo "export OPENRESTY_HOME=${OPENRESTY_HOME}" > $IROOT/openresty.installed
+echo -e "export PATH=\$OPENRESTY_HOME/nginx/sbin:\$PATH" >> $IROOT/openresty.installed
 
-source $OPENRESTY.installed
+source $IROOT/openresty.installed

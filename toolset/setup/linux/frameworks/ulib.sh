@@ -1,24 +1,24 @@
 #!/bin/bash
 
+
+RETCODE=$(fw_exists ${IROOT}/ulib.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/ulib.installed
+  return 0; }
+
 ULIB_VERSION=1.4.2
 ULIB_ROOT=$IROOT/ULib
 ULIB_DOCUMENT_ROOT=$ULIB_ROOT/ULIB_DOCUMENT_ROOT
 
-# Check if ULib is already installed
-ULIB_INSTALLED_FILE="${IROOT}/ULib-${ULIB_VERSION}.installed"
-RETCODE=$(fw_exists ${ULIB_INSTALLED_FILE})
-[ ! "$RETCODE" == 0 ] || { \
-  source $ULIB_INSTALLED_FILE
-  return 0; }
-
 # Create a run directory for ULIB
-[ ! -e $ULIB_INSTALLED_FILE -a -d $IROOT/ULib ] && rm -rf $IROOT/ULib*
+[ ! -e $IROOT/ulib.installed -a -d $IROOT/ULib ] && rm -rf $IROOT/ULib*
 
 if [ ! -d "$ULIB_ROOT" ]; then
   mkdir -p $ULIB_ROOT
 fi
 
 # AVOID "fatal error: postgres_fe.h: No such file or directory"
+# TODO: This should already be installed and unnecessary.
 sudo apt-get install -y postgresql-server-dev-all
 
 # Add a simple configuration file to it
@@ -90,10 +90,10 @@ fi
 mkdir -p $ULIB_DOCUMENT_ROOT
 cp .libs/db.so .libs/fortune.so .libs/json.so .libs/plaintext.so .libs/query.so .libs/update.so $ULIB_DOCUMENT_ROOT
 
-echo 'export UMEMPOOL="136,0,0,85,1160,155,-17,-22,40"' > $ULIB_INSTALLED_FILE
-echo "export PATH=${ULIB_ROOT}/bin:$PATH" >> $ULIB_INSTALLED_FILE
-echo "export ULIB_VERSION=${ULIB_VERSION}" >> $ULIB_INSTALLED_FILE
-echo "export ULIB_ROOT=${ULIB_ROOT}" >> $ULIB_INSTALLED_FILE
-echo "export ULIB_DOCUMENT_ROOT=${ULIB_DOCUMENT_ROOT}" >> $ULIB_INSTALLED_FILE
+echo 'export UMEMPOOL="136,0,0,85,1160,155,-17,-22,40"' > $IROOT/ulib.installed
+echo "export ULIB_VERSION=${ULIB_VERSION}" >> $IROOT/ulib.installed
+echo "export ULIB_ROOT=${ULIB_ROOT}" >> $IROOT/ulib.installed
+echo "export ULIB_DOCUMENT_ROOT=${ULIB_DOCUMENT_ROOT}" >> $IROOT/ulib.installed
+echo -e "export PATH=\$ULIB_ROOT/bin:\$PATH" >> $IROOT/ulib.installed
 
-source $ULIB_INSTALLED_FILE
+source $IROOT/ulib.installed

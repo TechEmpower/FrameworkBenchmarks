@@ -1,15 +1,17 @@
 #!/bin/bash
 
-VERSION="2.0.6"
-SIENNA=$IROOT/siena-$VERSION
-RETCODE=$(fw_exists ${SIENA}.installed)
+fw_depends play1
+
+RETCODE=$(fw_exists ${IROOT}/siena.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  source $SIENNA.installed
+  source $IROOT/siena.installed
   return 0; }
 
-fw_depends play1
+VERSION="2.0.6"
+SIENNA=$IROOT/siena-$VERSION
+
 yes | play install siena-2.0.6
 
-echo "" > $SIENA.installed
+echo "" > $IROOT/siena.installed
 
-source $SIENA.installed
+source $IROOT/siena.installed

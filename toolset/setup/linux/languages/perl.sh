@@ -1,11 +1,12 @@
 #!/bin/bash
 
-VERSION="5.18"
-PERL=$IROOT/perl-5.18
-RETCODE=$(fw_exists ${PERL}.installed)
+RETCODE=$(fw_exists ${IROOT}/perl.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  source $PERL.installed
+  source $IROOT/perl.installed
   return 0; }
+
+VERSION="5.18"
+PERL=$IROOT/perl-$VERSION
 
 fw_get -o perl-build.pl https://raw.github.com/tokuhirom/Perl-Build/master/perl-build
 # compile with optimizations, n.b. this does not turn on debugging
@@ -17,7 +18,7 @@ perl-$VERSION/bin/perl cpanminus.pl --notest --no-man-page App::cpanminus
 # Install others in the per-framework install script or cpanfile
 perl-$VERSION/bin/cpanm -f --notest --no-man-page Carton JSON JSON::XS IO::Socket::IP IO::Socket::SSL
 
-echo "export PERL_HOME=${PERL}" > $PERL.installed
-echo -e "export PATH=:${PERL}/bin:\$PATH" >> $PERL.installed
+echo "export PERL_HOME=${PERL}" > $IROOT/perl.installed
+echo -e "export PATH=:\$PERL/bin:\$PATH" >> $IROOT/perl.installed
 
-source $PERL.installed
+source $IROOT/perl.installed

@@ -1,28 +1,28 @@
 #!/bin/bash
 
-RUBY=$IROOT/ruby-2.1.2
-RETCODE=$(fw_exists ${RUBY}.installed)
+fw_depends rvm
+
+VERSION=2.1.2
+RETCODE=$(fw_exists ${IROOT}/ruby-${VERSION}.installed)
 [ ! "$RETCODE" == 0 ] || { \
   # Load environment variables
-  source $RUBY.installed
+  source $IROOT/ruby-$VERSION.installed
   return 0; }
-
-fw_depends rvm
 
 # We assume single-user installation as 
 # done in our rvm.sh script and 
 # in Travis-CI
 if [ "$TRAVIS" = "true" ]
 then
-  rvmsudo rvm install 2.1.2
+  rvmsudo rvm install $VERSION
   # Bundler is SOMETIMES missing... not sure why.
-  rvmsudo rvm 2.1.2 do gem install bundler
+  rvmsudo rvm $VERSION do gem install bundler
 else
-  rvm install 2.1.2
+  rvm install $VERSION
   # Bundler is SOMETIMES missing... not sure why.
-  rvm 2.1.2 do gem install bundler
+  rvm $VERSION do gem install bundler
 fi
 
-echo "" > $RUBY.installed
+echo "" > $IROOT/ruby-$VERSION.installed
 
-source $RUBY.installed
+source $IROOT/ruby-$VERSION.installed

@@ -1,10 +1,11 @@
 #!/bin/bash
 
-NGINX_HOME=$IROOT/nginx
-RETCODE=$(fw_exists ${NGINX_HOME}.installed)
+RETCODE=$(fw_exists ${IROOT}/nginx.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  source $NGINX_HOME.installed
+  source $IROOT/nginx.installed
   return 0; }
+
+NGINX_HOME=$IROOT/nginx
 
 fw_get -O http://nginx.org/download/nginx-1.4.1.tar.gz
 fw_untar nginx-1.4.1.tar.gz
@@ -18,7 +19,7 @@ echo "Compiling and installing nginx..."
 make --quiet
 make --quiet install
 
-echo "export NGINX_HOME=${NGINX_HOME}" > $NGINX_HOME.installed
-echo -e "export PATH=${IROOT}/nginx/sbin:\$PATH" >> $NGINX_HOME.installed
+echo "export NGINX_HOME=${NGINX_HOME}" > $IROOT/nginx.installed
+echo -e "export PATH=\$NGINX_HOME/sbin:\$PATH" >> $IROOT/nginx.installed
 
-source $NGINX_HOME.installed
+source $IROOT/nginx.installed

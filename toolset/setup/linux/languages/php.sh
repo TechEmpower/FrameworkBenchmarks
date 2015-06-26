@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# TODO double check this, it's logically different from original php code.
-# Two path checks would both always run in php. In this code the check 
-# for apc.so only happens if the check for php fails. Is that ok? 
-
 RETCODE=$(fw_exists ${IROOT}/php.installed)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Moving PHP config files into place"; 
@@ -15,13 +11,16 @@ RETCODE=$(fw_exists ${IROOT}/php.installed)
 VERSION="5.5.17"
 PHP_HOME=$IROOT/php-$VERSION
 
+# Precaution, unlikely to happen.
+rm -rf $IROOT/php
+
 fw_get -o php-${VERSION}.tar.gz http://php.net/distributions/php-${VERSION}.tar.gz
 fw_untar php-${VERSION}.tar.gz
 mv php-${VERSION} php
 cd php
 
 echo "Configuring PHP quietly..."
-./configure --prefix=$IROOT/php-${VERSION} --with-pdo-mysql \
+./configure --prefix=$PHP_HOME --with-pdo-mysql \
   --with-mysql --with-mcrypt --enable-intl --enable-mbstring \
   --enable-fpm --with-fpm-user=testrunner --with-fpm-group=testrunner \
   --with-openssl --with-mysqli --with-zlib --enable-opcache --quiet
@@ -31,8 +30,8 @@ echo "Installing PHP quietly"
 make --quiet install
 cd ..
 
-cp $FWROOT/config/php.ini $IROOT/php-${VERSION}/lib/php.ini
-cp $FWROOT/config/php-fpm.conf $IROOT/php-${VERSION}/lib/php-fpm.conf
+cp $FWROOT/config/php.ini $PHP_HOME/lib/php.ini
+cp $FWROOT/config/php-fpm.conf $PHP_HOME/lib/php-fpm.conf
 
 # =======================
 #
@@ -42,13 +41,13 @@ cp $FWROOT/config/php-fpm.conf $IROOT/php-${VERSION}/lib/php-fpm.conf
 # ========================
 echo PHP compilation finished, installing extensions
 
-$IROOT/php-${VERSION}/bin/pecl channel-update pecl.php.net
+$PHP_HOME/bin/pecl channel-update pecl.php.net
 # Apc.so
-$IROOT/php-${VERSION}/bin/pecl config-set php_ini $IROOT/php-${VERSION}/lib/php.ini
-printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f redis
+$PHP_HOME/bin/pecl config-set php_ini $PHP_HOME/lib/php.ini
+printf "\n" | $PHP_HOME/bin/pecl -q install -f redis
 
 # yaf.so
-printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f yaf
+printf "\n" | $PHP_HOME/bin/pecl -q install -f yaf
 
 # phalcon.so
 #   The configure seems broken, does not respect prefix. If you 
@@ -66,12 +65,12 @@ make --quiet
 make install
 
 # mongo.so
-printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f mongo
+printf "\n" | $PHP_HOME/bin/pecl -q install -f mongo
 
 # Clean up a bit
 rm -rf $IROOT/php
 
-echo "export PHP_HOME=${IROOT}/php-5.5.17" > $IROOT/php.installed
-echo -e "export PATH=${PHP_HOME}/bin:$PHP_HOME/sbin:\$PATH" >> $IROOT/php.installed
+echo "export PHP_HOME=${PHP_HOME}" > $IROOT/php.installed
+echo -e "export PATH=\$PHP_HOME/bin:\$PHP_HOME/sbin:\$PATH" >> $IROOT/php.installed
 
 source $IROOT/php.installed

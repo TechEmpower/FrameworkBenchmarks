@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sed -i 's|host=.* port=5432|host='"${DBHOST}"' port=5432|g' model_postgre.nim
+sed -i 's|host=127.0.0.1 port=5432|host='"${DBHOST}"' port=5432|g' model_postgre.nim
 
 fw_depends nim nimble zeromq mongrel2 nawak
 

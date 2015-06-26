@@ -1,13 +1,15 @@
 #!/bin/bash
 
-MONGREL2=$IROOT/mongrel2
-RETCODE=$(fw_exists ${MONGREL2}.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $MONGREL2.installed
-  return 0; }
-
 fw_depends zeromq
 
+RETCODE=$(fw_exists ${IROOT}/mongrel2.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/mongrel2.installed
+  return 0; }
+
+MONGREL2=$IROOT/mongrel2
+
+# TODO: Get away from apt-get
 # Dependencies
 sudo apt-get install -y sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev
 
@@ -35,7 +37,7 @@ cd mongrel2-install
   make install
 )
 
-echo "export MONGREL2_HOME=${MONGREL2}" > $MONGREL2.installed
-echo -e "export PATH=${MONGREL2}/bin:\$PATH" >> $MONGREL2.installed
+echo "export MONGREL2_HOME=${MONGREL2}" > $IROOT/mongrel2.installed
+echo -e "export PATH=\$MONGREL2/bin:\$PATH" >> $IROOT/mongrel2.installed
 
-source $MONGREL2.installed
+source $IROOT/mongrel2.installed
