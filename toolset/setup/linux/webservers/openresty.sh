@@ -15,7 +15,7 @@ fw_get -O http://openresty.org/download/ngx_openresty-$OPENRESTY_VERSION.tar.gz
 fw_untar ngx_openresty-$OPENRESTY_VERSION.tar.gz
 
 cd ngx_openresty-$OPENRESTY_VERSION
-./configure --with-luajit-xcflags=-DLUAJIT_NUMMODE=2 --with-lua51=$LUA_HOME --with-http_postgres_module --prefix=$OPENRESTY_HOME -j4
+./configure --with-luajit-xcflags=-DLUAJIT_NUMMODE=2 --with-http_postgres_module --prefix=$OPENRESTY_HOME -j4
 make -j4
 make install
 

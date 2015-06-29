@@ -1,8 +1,6 @@
 #!/bin/bash
 
-source $IROOT/java7.installed
-
-source $IROOT/lein.installed
+fw_depends java7 leiningen
 
 lein clean
 

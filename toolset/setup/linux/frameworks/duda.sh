@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${$IROOT}/duda.installed)
+RETCODE=$(fw_exists ${IROOT}/duda.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/duda.installed
   return 0; }

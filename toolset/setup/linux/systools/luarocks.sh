@@ -14,10 +14,9 @@ fw_get -O http://luarocks.org/releases/luarocks-$LUAROCKS_VERSION.tar.gz
 fw_untar luarocks-$LUAROCKS_VERSION.tar.gz
 
 cd $LUAROCKS
-./configure --prefix=$LUAROCKS --with-lua=$LUA_HOME
+./configure --prefix=$LUA_HOME --with-lua=$LUA_HOME
 make bootstrap
 
-echo "export LUAROCKS_HOME=${LUAROCKS}" > $IROOT/luarocks.installed
-echo -e "export PATH=\$LUAROCKS_HOME/bin:\$PATH" >> $IROOT/luarocks.installed
+echo "" > $IROOT/luarocks.installed
 
 source $IROOT/luarocks.installed

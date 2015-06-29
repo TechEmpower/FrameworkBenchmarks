@@ -19,6 +19,8 @@ perl-$VERSION/bin/perl cpanminus.pl --notest --no-man-page App::cpanminus
 perl-$VERSION/bin/cpanm -f --notest --no-man-page Carton JSON JSON::XS IO::Socket::IP IO::Socket::SSL
 
 echo "export PERL_HOME=${PERL}" > $IROOT/perl.installed
-echo -e "export PATH=:\$PERL/bin:\$PATH" >> $IROOT/perl.installed
+echo -e "export PERL_CARTON_PATH=\$TROOT/local" >> $IROOT/perl.installed
+echo -e "export PERL5LIB=\$PERL_CARTON_PATH/lib/perl5" >> $IROOT/perl.installed
+echo -e "export PATH=\$PERL_CARTON_PATH/bin:\$PERL_HOME/bin:\$PATH" >> $IROOT/perl.installed
 
 source $IROOT/perl.installed
