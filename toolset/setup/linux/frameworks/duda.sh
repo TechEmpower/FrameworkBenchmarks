@@ -17,6 +17,6 @@ git checkout 7c3d5b03b09fb4cb5f5e338fff72df2e25e95ef0
 ./dudac -s
 
 echo "export DUDA_HOME=${DUDA_HOME}" > $IROOT/duda.installed
-echo -e "export PATH=\$DUDA_HOME}:$PATH" >> $IROOT/duda.installed
+echo -e "export PATH=\$DUDA_HOME:$PATH" >> $IROOT/duda.installed
 
 source $IROOT/duda.installed
