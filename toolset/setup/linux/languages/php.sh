@@ -12,7 +12,7 @@ VERSION="5.5.17"
 PHP_HOME=$IROOT/php-$VERSION
 
 # Precaution, unlikely to happen.
-rm -rf $IROOT/php
+rm -rf $IROOT/php PHP_HOME cphalcon
 
 fw_get -o php-${VERSION}.tar.gz http://php.net/distributions/php-${VERSION}.tar.gz
 fw_untar php-${VERSION}.tar.gz

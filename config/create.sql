@@ -1,6 +1,11 @@
 # create benchmark user
-GRANT ALL ON *.* TO 'benchmarkdbuser'@'%' IDENTIFIED BY 'benchmarkdbpass';
-GRANT ALL ON *.* TO 'benchmarkdbuser'@'localhost' IDENTIFIED BY 'benchmarkdbpass';
+REVOKE ALL ON *.* FROM 'benchmarkdbuser'@'%';
+REVOKE ALL ON *.* FROM 'benchmarkdbuser'@'localhost';
+
+GRANT ALL ON hello_world.world TO 'benchmarkdbuser'@'%' IDENTIFIED BY 'benchmarkdbpass';
+GRANT ALL ON hello_world.world TO 'benchmarkdbuser'@'localhost' IDENTIFIED BY 'benchmarkdbpass';
+GRANT SELECT ON hello_world.fortune TO 'benchmarkdbuser'@'%' IDENTIFIED BY 'benchmarkdbpass';
+GRANT SELECT ON hello_world.fortune TO 'benchmarkdbuser'@'localhost' IDENTIFIED BY 'benchmarkdbpass';
 
 # modified from SO answer http://stackoverflow.com/questions/5125096/for-loop-in-mysql
 DROP DATABASE IF EXISTS hello_world;
