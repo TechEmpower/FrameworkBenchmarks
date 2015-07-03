@@ -20,7 +20,7 @@ This is the Play portion of a [benchmarking test suite](../) comparing a variety
 The tests were run with:
 
 * [Java OpenJDK 1.7](http://openjdk.java.net/)
-* [Play 2.3.7](http://http://www.playframework.com/)
+* [Play 2.4.2](http://http://www.playframework.com/)
 
 ## Test URLs
 ### JSON Encoding Test
