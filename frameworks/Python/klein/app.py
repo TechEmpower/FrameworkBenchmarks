@@ -22,9 +22,7 @@ from sqlalchemy.orm import sessionmaker
 if sys.version_info[0] == 3:
     xrange = range
 
-DBDRIVER = 'mysql'
-DBHOSTNAME = os.environ.get('DBHOST', 'localhost')
-DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % (DBDRIVER, DBHOSTNAME)
+DATABASE_URI = 'mysql://benchmarkdbuser:benchmarkdbpass@127.0.0.1:3306/hello_world?charset=utf8'
 
 Base = declarative_base()
 db_engine = create_engine(DATABASE_URI)

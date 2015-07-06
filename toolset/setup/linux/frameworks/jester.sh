@@ -14,7 +14,8 @@ cd jester
 # 2015-06-25
 git checkout 71b8cc069a0d271d619c2dc41bc6479047885587
 nimble update
-nimble install
+# If /home/testrunner/.nimble/pkgs/jester exists, write over it.
+echo 'y' | nimble install
 
 echo "export JESTER_HOME=${JESTER}" > $IROOT/jester.installed
 

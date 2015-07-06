@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sed -i 's|db_host: "localhost",|db_host: "${DBHOST}",|g' config/config.exs
-
 fw_depends elixir
+
+sed -i 's|localhost|'${DBHOST}'|g' config/prod.exs
 
 rm -rf _build deps rel
 

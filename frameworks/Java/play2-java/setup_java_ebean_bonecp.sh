@@ -2,6 +2,8 @@
 
 fw_depends java8 sbt
 
+sed -i 's|127.0.0.1:3306|'${DBHOST}':3306|g' play2-java-ebean-bonecp/conf/application.conf
+
 cd play2-java-ebean-bonecp
 
 rm -rf target/universal/stage/RUNNING_PID

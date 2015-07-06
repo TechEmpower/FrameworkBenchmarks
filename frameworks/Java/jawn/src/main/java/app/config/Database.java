@@ -22,11 +22,10 @@ public class Database implements ApplicationDatabaseBootstrap {
                 "&useUnbufferedInput=false" +
                 "&useReadAheadInput=false" +
                 "&maintainTimeStats=false" +
-                "&useServerPrepStmts" +
+                "&useServerPrepStmts=true" +
                 "&cacheRSMetadata=true";
         
-        String host = System.getProperty("DBHOST", "localhost");
-        String dbUrl = "jdbc:mysql://"+host+"/hello_world?";
+        String dbUrl = "jdbc:mysql://127.0.0.1:3306/hello_world?";
         
         
         connections

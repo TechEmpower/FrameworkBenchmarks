@@ -2,6 +2,8 @@
 
 fw_depends java7 leiningen
 
+sed -i 's|127.0.0.1:3306|'${DBHOST}':3306|g' src/pedestal/service.clj
+
 lein clean
 
 rm -rf target
