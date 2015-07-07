@@ -3,6 +3,7 @@ package hellowicket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.sql.DataSource;
@@ -10,6 +11,7 @@ import javax.sql.DataSource;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.string.StringValue;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HelloDbResponse extends AbstractResource
@@ -28,7 +30,7 @@ public class HelloDbResponse extends AbstractResource
     if (qs < 1)
     {
       qs = 1;
-    } 
+    }
     else if (qs > 500)
     {
       qs = 500;
@@ -38,55 +40,60 @@ public class HelloDbResponse extends AbstractResource
     final ResourceResponse response = new ResourceResponse();
     response.setContentType(CONTENT_TYPE);
 
-    response.setWriteCallback(new WriteCallback()
+    try
     {
-      public void writeData(Attributes attributes)
+      final String data = getDataFromDatabase(queriesParam, queries);
+      response.setWriteCallback(new WriteCallback()
       {
-        try
+        public void writeData(Attributes attributes)
         {
-          final ThreadLocalRandom random = ThreadLocalRandom.current();
-          DataSource dataSource = WicketApplication.get().getDataSource();
-          World[] worlds = new World[queries];
-          try (Connection connection = dataSource.getConnection())
-          {
-            try (PreparedStatement statement = connection.prepareStatement(
-                       "SELECT * FROM World WHERE id = ?",
-                       ResultSet.TYPE_FORWARD_ONLY,
-                       ResultSet.CONCUR_READ_ONLY))
-            {
-              for (int i = 0; i < queries; i++)
-              {
-                  statement.setInt(1, random.nextInt(DB_ROWS) + 1);
-                  try (ResultSet resultSet = statement.executeQuery())
-                  {
-                      resultSet.next();
-                      worlds[i] = new World(
-                              resultSet.getInt("id"),
-                              resultSet.getInt("randomNumber"));
-                  }
-              }
-            }
-          }
-
-          String data;
-          if (queriesParam.isNull())
-          {
-              // request to /db should return JSON object
-              data = HelloDbResponse.mapper.writeValueAsString(worlds[0]);
-          }
-          else
-          {
-              // request to /db?queries=xyz should return JSON array (issue #648)
-              data = HelloDbResponse.mapper.writeValueAsString(worlds);
-          }
           attributes.getResponse().write(data);
         }
-        catch (Exception ex)
+      });
+    }
+    catch (Exception ex)
+    {
+      response.setContentType("text/plain");
+      response.setError(500, ex.getClass().getSimpleName() + ": " + ex.getMessage());
+      ex.printStackTrace();
+    }
+    return response;
+  }
+
+  private String getDataFromDatabase(final StringValue queriesParam, final int queries)
+      throws SQLException, JsonProcessingException
+  {
+    final ThreadLocalRandom random = ThreadLocalRandom.current();
+    DataSource dataSource = WicketApplication.get().getDataSource();
+    World[] worlds = new World[queries];
+    try (Connection connection = dataSource.getConnection())
+    {
+      try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM World WHERE id = ?",
+          ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY))
+      {
+        for (int i = 0; i < queries; i++)
         {
-          // do nothing
+          statement.setInt(1, random.nextInt(DB_ROWS) + 1);
+          try (ResultSet resultSet = statement.executeQuery())
+          {
+            resultSet.next();
+            worlds[i] = new World(resultSet.getInt("id"), resultSet.getInt("randomNumber"));
+          }
         }
       }
-    });
-    return response;
+    }
+
+    String data;
+    if (queriesParam.isNull())
+    {
+      // request to /db should return JSON object
+      data = HelloDbResponse.mapper.writeValueAsString(worlds[0]);
+    }
+    else
+    {
+      // request to /db?queries=xyz should return JSON array (issue #648)
+      data = HelloDbResponse.mapper.writeValueAsString(worlds);
+    }
+    return data;
   }
 }
