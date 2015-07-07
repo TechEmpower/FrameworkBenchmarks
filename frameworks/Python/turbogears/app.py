@@ -84,5 +84,11 @@ class RootController(TGController):
 config = AppConfig(minimal=True, root_controller=RootController())
 config.renderers.append("jinja")
 
-app = config.make_wsgi_app()
+tg_app = config.make_wsgi_app()
 
+
+def app(env, start):
+    try:
+        return tg_app(env, start)
+    finally:
+        db_session.close()
