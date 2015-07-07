@@ -12,9 +12,10 @@ MICROHTTPD_HOME=$MICROHTTPD-$VERSION
 fw_get -O http://mirror.ibcp.fr/pub/gnu/libmicrohttpd/libmicrohttpd-$VERSION.tar.gz
 fw_untar libmicrohttpd-$VERSION.tar.gz
 cd libmicrohttpd-$VERSION
-./configure --prefix=$IROOT
+./configure --prefix=$MICROHTTPD_HOME
 make install
 
-echo "" > $IROOT/microhttpd.installed
+echo "export MICROHTTPD_HOME=${MICROHTTPD_HOME}" > $IROOT/microhttpd.installed
+echo -e "export PATH=${MICROHTTPD_HOME}/bin:\$PATH" >> $IROOT/microhttpd.installed
 
 source $IROOT/microhttpd.installed
