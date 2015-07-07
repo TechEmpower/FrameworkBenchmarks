@@ -22,7 +22,7 @@ public class Database implements ApplicationDatabaseBootstrap {
                 "&useUnbufferedInput=false" +
                 "&useReadAheadInput=false" +
                 "&maintainTimeStats=false" +
-                "&useServerPrepStmts" +
+                "&useServerPrepStmts=true" +
                 "&cacheRSMetadata=true";
         
         String host = System.getProperty("DBHOST", "localhost");
