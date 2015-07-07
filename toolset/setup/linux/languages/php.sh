@@ -52,10 +52,10 @@ printf "\n" | $PHP_HOME/bin/pecl -q install -f yaf
 # phalcon.so
 #   The configure seems broken, does not respect prefix. If you 
 #   update the value of PATH then it finds the prefix from `which php`
-git clone --depth=1 --branch=phalcon-v1.3.2 \ 
-  # This option doesn't work on older versions of git # --single-branch \
-  --quiet git://github.com/phalcon/cphalcon.git
-cd cphalcon/build/64bits 
+
+fw_get -O https://github.com/phalcon/cphalcon/archive/phalcon-v1.3.2.tar.gz
+fw_untar phalcon-v1.3.2.tar.gz
+cd cphalcon-phalcon-v1.3.2/build/64bits 
 $PHP_HOME/bin/phpize
 # For some reason we have to point to php-config 
 # explicitly, it's not found by the prefix settings
