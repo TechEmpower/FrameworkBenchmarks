@@ -2,7 +2,7 @@
 
 fw_depends java7 sbt
 
-sed -i 's|database_host|'"${DBHOST}"'|g' src/main/scala/scruffy/examples/Test2Endpoint.scala
+sed -i 's|127.0.0.1|'${DBHOST}'|g' src/main/scala/scruffy/examples/Test2Endpoint.scala
 
 sbt assembly
 

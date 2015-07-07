@@ -27,7 +27,6 @@ public class Database implements ApplicationDatabaseBootstrap {
         
         String dbUrl = "jdbc:mysql://127.0.0.1:3306/hello_world?";
         
-        
         connections
             .environment(Modes.prod)
             .jdbc()
