@@ -18,7 +18,7 @@ public class UndertowMain {
         ServerConfig config = new ServerConfig();
         
         config.setContextPath("/");
-        config.setPort(8081);
+        config.setPort(8080);
         config.setWebappPath("webapp");
         config.setServerPerformance(PERFORMANCE_MODE.HIGHEST);
         if (args.length > 2) config.setHost(args[2]);
