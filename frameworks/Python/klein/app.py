@@ -1,23 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import os
-import sys
-import json
-
-import bleach
-
-from random import randint
 from functools import partial
+import json
 from operator import attrgetter
-
-from klein import Klein, run, route
+import os
+from random import randint
+import sys
 
 from jinja2 import Environment, PackageLoader
-
-from sqlalchemy.ext.declarative import declarative_base
+from klein import Klein, run, route
 from sqlalchemy import create_engine, Column
-from sqlalchemy.types import String, Integer, Unicode
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.types import String, Integer, Unicode
+
 
 if sys.version_info[0] == 3:
     xrange = range
@@ -31,7 +27,7 @@ db_engine = create_engine(DATABASE_URI)
 Session = sessionmaker(bind=db_engine)
 db_session = Session()
 
-env = Environment(loader=PackageLoader("app", "templates"))
+env = Environment(loader=PackageLoader("app", "templates"), autoescape=True, auto_reload=False)
 
 app = Klein()
 
@@ -114,8 +110,6 @@ def fortune(request):
 	fortunes = db_session.query(Fortune).all()
 	fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
 	fortunes.sort(key=attrgetter("message"))
-	for f in fortunes:
-		f.message = bleach.clean(f.message)
 	template = env.get_template("fortunes.html")
 	return template.render(fortunes=fortunes)
 
