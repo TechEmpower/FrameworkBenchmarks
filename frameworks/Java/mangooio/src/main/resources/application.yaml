@@ -1,0 +1,45 @@
+default:
+    application:
+        name       : mangooio.techempower 
+        secret     : myvoiceismypassword
+        language   : en
+        host       : 127.0.0.1
+        port       : 8080
+        minify:
+            js        : false
+            css       : false
+            jsfolder  : /foo
+            cssfolder : /bar
+            gzipjs    : false
+            gzipcss   : false
+    cookie:
+        name       : TE-SESSION
+        expires    : 86400
+        encryption : false
+    smtp:
+        host       : localhost
+        port       : 25
+        username   : foo
+        password   : bar
+        ssl        : false
+    mongodb:
+        host       : 127.0.0.1
+        port       : 27017
+        dbname     : hello_world
+        authdb     : 
+        user       : 
+        pass       : 
+    morphia:
+        package    : models
+        init       : true
+        
+test:
+    application:
+        port       : 10808
+    smtp:
+        port       : 3055
+    mongodb:
+        port       : 29019
+        authdb     : 
+        user       : 
+        pass       : 
