@@ -7,23 +7,32 @@ import headers._
 
 import _root_.argonaut._, Argonaut._
 
+object Middleware {
+  def addHeaders(service: HttpService): HttpService = {
+    Service.lift { req: Request =>
+      service.map { resp =>
+        resp.putHeaders(
+          headers.Date(DateTime.now),
+          Header("Server", req.serverName)
+        )
+      }(req)
+    }
+  }
+}
+
 object WebServer extends App {
 
   val service = HttpService {
     case GET -> Root / "json" =>
-      val dateHeader = Date(DateTime(4))
-      Ok(Json("message" -> jString("Hello, World!")).asJson)
-        .withHeaders(dateHeader)
-        .withContentType(Some(`Content-Type`(MediaType.`application/json`)))
+      Ok(Json("message" -> jString("Hello, World!")))
+
     case GET -> Root / "plaintext" =>
-      val dateHeader = Date(DateTime(4))
       Ok("Hello, World!")
-        .withHeaders(dateHeader)
         .withContentType(Some(`Content-Type`(MediaType.`text/plain`)))
   }
 
   BlazeBuilder.bindHttp(8080, "0.0.0.0")
-    .mountService(service, "/")
+    .mountService(Middleware.addHeaders(service), "/")
     .run
     .awaitShutdown()
 }
