@@ -7,6 +7,7 @@
       "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
+      "query_url": "/queries?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",

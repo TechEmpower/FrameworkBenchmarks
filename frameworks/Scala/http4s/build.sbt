@@ -8,6 +8,7 @@ com.github.retronym.SbtOneJar.oneJarSettings
 
 val http4sVersion = "0.8.3"
 val doobieVersion = "0.2.2"
+val scalazVersion = "7.1.3"
 
 libraryDependencies ++= Seq(
 	"org.http4s" %% "http4s-blazeserver" % http4sVersion,
@@ -15,6 +16,8 @@ libraryDependencies ++= Seq(
 	"org.http4s" %% "http4s-argonaut" % http4sVersion,
 	"org.tpolecat" %% "doobie-core" % doobieVersion,
 	"org.tpolecat" %% "doobie-contrib-hikari" % doobieVersion,
+	"org.scalaz" %% "scalaz-core" % scalazVersion,
+	"org.scalaz" %% "scalaz-concurrent" % scalazVersion,
 	"com.github.alexarchambault" %% "argonaut-shapeless_6.1" % "0.3.1",
 	"org.postgresql" % "postgresql" % "9.4-1201-jdbc4"
 )
