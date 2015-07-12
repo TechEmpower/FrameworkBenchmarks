@@ -9,6 +9,7 @@
       "plaintext_url": "/plaintext",
       "query_url": "/queries?queries=",
       "update_url": "/updates?queries=",
+      "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",

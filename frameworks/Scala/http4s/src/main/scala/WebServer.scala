@@ -1,8 +1,11 @@
+package http4s.techempower.benchmark
+
 import org.http4s._
 import org.http4s.server._
 import org.http4s.dsl._
 import org.http4s.argonaut._
 import org.http4s.server.blaze.BlazeBuilder
+import org.http4s.twirl._
 import headers._
 
 import _root_.argonaut._, Argonaut._, Shapeless._
@@ -17,6 +20,8 @@ import scalaz.syntax.traverse._
 import java.util.concurrent.ThreadLocalRandom
 
 case class World(id: Int, randomNumber: Int)
+
+case class Fortune(id: Int, message: String)
 
 object Middleware {
   def addHeaders(service: HttpService): HttpService = {
@@ -91,6 +96,18 @@ object WebServer extends TaskApp {
     update.transact(xa)
   }
 
+  // Retrieve all fortunes from the database
+  def getFortunes(xa: Transactor[Task]): Task[List[Fortune]] = {
+    val query = sql"select id, message from Fortune".query[Fortune]
+    query.list.transact(xa)
+  }
+
+  // Add a new fortune to an existing list, and sort by message.
+  def getSortedFortunes(old: List[Fortune]): List[Fortune] = {
+    val newFortune = Fortune(0, "Additional fortune added at request time.")
+    (newFortune :: old).sortBy(_.message)
+  }
+
   // HTTP service definition
   def service(xa: Transactor[Task]) = HttpService {
     case GET -> Root / "json" =>
@@ -102,6 +119,14 @@ object WebServer extends TaskApp {
     case GET -> Root / "queries" :? Queries(rawQueries) =>
       val numQueries = Queries.clampQueries(rawQueries)
       Ok(getWorlds(xa, numQueries).map(_.asJson))
+
+    case GET -> Root / "fortunes" =>
+      val page = for {
+        oldFortunes <- getFortunes(xa)
+        newFortunes = getSortedFortunes(oldFortunes)
+      } yield html.index(newFortunes)
+
+      Ok(page)
 
     case GET -> Root / "updates" :? Queries(rawQueries) =>
       val numQueries = Queries.clampQueries(rawQueries)

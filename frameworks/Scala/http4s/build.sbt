@@ -4,6 +4,10 @@ version := "1.0-SNAPSHOT"
 
 scalaVersion := "2.11.7"
 
+enablePlugins(SbtTwirl)
+
+TwirlKeys.templateImports += "http4s.techempower.benchmark._"
+
 com.github.retronym.SbtOneJar.oneJarSettings
 
 val http4sVersion = "0.8.3"
@@ -14,6 +18,7 @@ libraryDependencies ++= Seq(
 	"org.http4s" %% "http4s-blazeserver" % http4sVersion,
 	"org.http4s" %% "http4s-dsl" % http4sVersion,
 	"org.http4s" %% "http4s-argonaut" % http4sVersion,
+	"org.http4s" %% "http4s-twirl" % http4sVersion,
 	"org.tpolecat" %% "doobie-core" % doobieVersion,
 	"org.tpolecat" %% "doobie-contrib-hikari" % doobieVersion,
 	"org.scalaz" %% "scalaz-core" % scalazVersion,
@@ -22,7 +27,7 @@ libraryDependencies ++= Seq(
 	"org.postgresql" % "postgresql" % "9.4-1201-jdbc4"
 )
 
-mainClass in oneJar := Some("WebServer")
+mainClass in oneJar := Some("http4s.techempower.benchmark.WebServer")
 
 resolvers ++= Seq(
   "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
