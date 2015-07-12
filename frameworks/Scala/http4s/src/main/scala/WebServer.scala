@@ -50,10 +50,21 @@ object WebServer extends TaskApp {
   def xaTask(host: String) =
     HikariTransactor[Task]("org.postgresql.Driver", s"jdbc:postgresql://$host/hello_world", "benchmarkdbuser", "benchmarkdbpass")
 
+  def randomWorldId = ThreadLocalRandom.current.nextInt(1, 10001)
+
   def selectRandomWorld(xa: Transactor[Task]): Task[World] = {
-    val rnd = ThreadLocalRandom.current.nextInt(1, 10001)
-    val query = sql"select id, randomNumber from World where id = $rnd".query[World]
+    val query = sql"select id, randomNumber from World where id = $randomWorldId".query[World]
     query.unique.transact(xa)
+  }
+
+  def getWorlds(xa: Transactor[Task], numQueries: Int): Task[List[World]] =
+    Nondeterminism[Task].replicateM(numQueries, selectRandomWorld(xa))
+
+  def updateWorlds(xa: Transactor[Task], worlds: List[World]): Task[List[World]] = {
+    val newWorlds = worlds.map(_.copy(randomNumber = randomWorldId))
+    val sql = "update World set randomNumber = ? where id = ?"
+    val update = Update[(Int, Int)](sql).updateMany(newWorlds.map(w => (w.randomNumber, w.id)))
+    update.transact(xa).map(_ => newWorlds)
   }
 
   def service(xa: Transactor[Task]) = HttpService {
@@ -65,8 +76,17 @@ object WebServer extends TaskApp {
 
     case GET -> Root / "queries" :? Queries(rawQueries) =>
       val numQueries = Queries.clampQueries(rawQueries)
-      val parallelQueries = Nondeterminism[Task].replicateM(numQueries, selectRandomWorld(xa))
-      Ok(parallelQueries.map(_.asJson))
+      Ok(getWorlds(xa, numQueries).map(_.asJson))
+
+    case GET -> Root / "updates" :? Queries(rawQueries) =>
+      val numQueries = Queries.clampQueries(rawQueries)
+
+      val updated = for {
+        worlds <- getWorlds(xa, numQueries)
+        updatedWorlds <- updateWorlds(xa, worlds)
+      } yield updatedWorlds
+
+      Ok(updated.map(_.asJson))
 
     case GET -> Root / "plaintext" =>
       Ok("Hello, World!")
