@@ -1,5 +1,5 @@
 {
-  "framework": "dart-raw",
+  "framework": "dart",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -20,7 +20,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "dart-raw",
+      "display_name": "dart",
       "notes": "",
       "versus": "dart"
     }
