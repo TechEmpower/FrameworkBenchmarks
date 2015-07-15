@@ -59,6 +59,7 @@ class CherryPyBenchmark(object):
 
     @cherrypy.expose
     def plaintext(self):
+        cherrypy.response.headers["Content-Type"] = "text/plain"
         return "Hello, world!"
 
     @cherrypy.expose
