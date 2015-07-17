@@ -8,19 +8,28 @@
     <artifactId>comsat-servlet</artifactId>
     <version>0.1</version>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <jackson.version>2.5.4</jackson.version>
+        <quasar.version>0.7.3-SNAPSHOT</quasar.version>
+        <comsat.version>0.5.0-SNAPSHOT</comsat.version>
+    </properties>
+
     <dependencies>
         <!-- Jackson JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.5.4</version>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- Quasar fibers -->
         <dependency>
             <groupId>co.paralleluniverse</groupId>
             <artifactId>quasar-core</artifactId>
-            <version>0.7.2</version>
+            <version>${quasar.version}</version>
             <classifier>jdk8</classifier>
         </dependency>
 
@@ -28,14 +37,14 @@
         <dependency>
             <groupId>co.paralleluniverse</groupId>
             <artifactId>comsat-test-utils</artifactId>
-            <version>0.4.0</version>
+            <version>${comsat.version}</version>
         </dependency>
 
         <!-- 'comsat-servlet' integration -->
         <dependency>
             <groupId>co.paralleluniverse</groupId>
             <artifactId>comsat-servlet</artifactId>
-            <version>0.4.0</version>
+            <version>${comsat.version}</version>
         </dependency>
     </dependencies>
 
@@ -64,7 +73,7 @@
                         <artifactItem>
                             <groupId>co.paralleluniverse</groupId>
                             <artifactId>quasar-core</artifactId>
-                            <version>0.7.2</version>
+                            <version>${quasar.version}</version>
                             <type>jar</type>
                             <classifier>jdk8</classifier>
                             <overWrite>false</overWrite>

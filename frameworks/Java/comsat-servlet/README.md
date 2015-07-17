@@ -1,17 +1,20 @@
-# Parallel Universe Comsat Servlet on Undertow Benchmarking Test
+# Parallel Universe Comsat Servlet Benchmarking Test
 
-This is the [Parallel Universe Comsat Servlet](http://docs.paralleluniverse.co/comsat/#servlets) version of a [benchmarking test suite](../) comparing a variety of web development platforms. It serves requests in lightweight [Quasar fibers](http://docs.paralleluniverse.co/quasar/#fibers) rather than heavyweight Java threads and it currently runs on an embedded Undertow server (but it can run on any servlet container).
+This is the [Parallel Universe Comsat Servlet](http://docs.paralleluniverse.co/comsat/#servlets) version of a [benchmarking test suite](../) comparing a variety of web development platforms. It serves requests in lightweight [Quasar fibers](http://docs.paralleluniverse.co/quasar/#fibers) rather than heavyweight Java threads and it any servlet containers. Configurations are provided for Jetty, Tomcat and Undertow (default).
 
-### JSON Encoding Test
+### JSON Encoding and Plaintext Tests
 
-* [JSON test source](src/main/java/hello/HelloWebServer.java)
+* [JSON test source](src/main/java/hello/JsonServlet.java)
+* [Plaintext test source](src/main/java/hello/PlaintextServlet.java)
 
 ## Versions
 
 * Jackson JSON 2.5.4 (https://github.com/FasterXML/jackson)
-* Quasar 0.7.2 (http://docs.paralleluniverse.co/quasar)
-* Comsat 0.4.0 (http://docs.paralleluniverse.co/comsat)
+* Quasar 0.7.3-SNAPSHOT (http://docs.paralleluniverse.co/quasar)
+* Comsat 0.5.0-SNAPSHOT (http://docs.paralleluniverse.co/comsat)
 * Undertow 1.2.8-final (http://undertow.io)
+* Tomcat 8.0.23 (http://tomcat.apache.org)
+* Jetty 9.2.11.v20150529 (http://eclipse.org/jetty)
 
 ## Test URLs
 
