@@ -5,26 +5,33 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.techempower</groupId>
-    <artifactId>comsat-servlet-undertow</artifactId>
+    <artifactId>comsat-servlet</artifactId>
     <version>0.1</version>
 
     <dependencies>
+        <!-- Jackson JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.5.4</version>
         </dependency>
+
+        <!-- Quasar fibers -->
         <dependency>
             <groupId>co.paralleluniverse</groupId>
             <artifactId>quasar-core</artifactId>
             <version>0.7.2</version>
+            <classifier>jdk8</classifier>
         </dependency>
-        <!-- Web server -->
+
+        <!-- Web servers -->
         <dependency>
             <groupId>co.paralleluniverse</groupId>
             <artifactId>comsat-test-utils</artifactId>
             <version>0.4.0</version>
         </dependency>
+
+        <!-- 'comsat-servlet' integration -->
         <dependency>
             <groupId>co.paralleluniverse</groupId>
             <artifactId>comsat-servlet</artifactId>
@@ -40,12 +47,14 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <optimize>true</optimize>
                     <debug>false</debug>
                 </configuration>
             </plugin>
+
+            <!-- Copy the quasar agent -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -57,6 +66,7 @@
                             <artifactId>quasar-core</artifactId>
                             <version>0.7.2</version>
                             <type>jar</type>
+                            <classifier>jdk8</classifier>
                             <overWrite>false</overWrite>
                             <outputDirectory>target</outputDirectory>
                         </artifactItem>
@@ -72,6 +82,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Fat JAR -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -94,6 +106,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 </project>

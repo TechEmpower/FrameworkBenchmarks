@@ -16,6 +16,7 @@ public final class PlaintextServlet extends FiberHttpServlet  {
     @Suspendable
     protected final void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/plain");
+        resp.setHeader("Server", "comsat-servlet");
         resp.getOutputStream().write(helloWorld);
     }
 }

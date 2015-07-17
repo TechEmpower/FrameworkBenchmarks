@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 public final class JsonServlet extends FiberHttpServlet {
     private static final class HelloWorldData {
         @SuppressWarnings("unused")
-        public final String message = "Hello world!";
+        public final String message = "Hello, World!";
     }
 
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -23,6 +23,7 @@ public final class JsonServlet extends FiberHttpServlet {
     @Suspendable
     protected final void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
+        resp.setHeader("Server", "comsat-servlet");
         mapper.writeValue(resp.getOutputStream(), helloWorld);
     }
 }
