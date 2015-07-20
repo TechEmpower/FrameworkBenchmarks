@@ -13,13 +13,13 @@ public class Application extends Controller {
     //http://stackoverflow.com/questions/3907929/should-i-make-jacksons-objectmapper-as-static-final
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public static Result json() {
+    public Result json() {
         final ObjectNode result = OBJECT_MAPPER.createObjectNode();
         result.put("message", "Hello, World!");
         return ok(result);
     }
 
-    public static Result plainText() {
+    public Result plainText() {
         return ok("Hello, World!");
     }
 

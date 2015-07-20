@@ -2,6 +2,7 @@
 # Set the root of our go installation
 export GOROOT=${IROOT}/go
 export GOPATH=${TROOT}
+export GOGC=800
 
 sed -i 's|tcp(.*:3306)|tcp('"${DBHOST}"':3306)|g' src/hello/hello.go
 
