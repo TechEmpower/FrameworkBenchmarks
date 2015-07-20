@@ -17,13 +17,12 @@ public final class JsonServlet extends FiberHttpServlet {
 	}
 
 	private static final ObjectMapper mapper = new ObjectMapper();
-	private static final HelloWorldData helloWorld = new HelloWorldData();
 
 	@Override
 	@Suspendable
 	protected final void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/json");
 		resp.setHeader("Server", "comsat-servlet");
-		mapper.writeValue(resp.getOutputStream(), helloWorld);
+		mapper.writeValue(resp.getOutputStream(), new HelloWorldData());
 	}
 }
