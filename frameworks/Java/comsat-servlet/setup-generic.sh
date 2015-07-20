@@ -6,4 +6,6 @@ source $IROOT/java8.installed
 mvn clean compile dependency:copy assembly:single
 
 cd target
-java -javaagent:quasar-core-0.7.3-SNAPSHOT-jdk8.jar $PROPS -jar comsat-servlet-0.1-jar-with-dependencies.jar
+QUASAR_AGENT=`ls quasar-core-*.jar`
+FATJAR=`ls comsat-servlet-*.jar`
+java -javaagent:$QUASAR_AGENT $PROPS -jar $FATJAR

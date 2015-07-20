@@ -11,5 +11,17 @@ public final class HelloWebServer {
 		server.addServlet("plaintext", PlaintextServlet.class, "/plaintext");
 		server.addServlet("json", JsonServlet.class, "/json");
 		server.start();
+		System.err.println("Server is up");
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				try {
+					server.stop();
+					System.err.println("Server is down");
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
 	}
 }
