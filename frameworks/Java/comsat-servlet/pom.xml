@@ -22,7 +22,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <jackson.version>2.5.4</jackson.version>
-        <quasar.version>0.7.3-SNAPSHOT</quasar.version>
+        <quasar.version>0.8.0-SNAPSHOT</quasar.version>
         <comsat.version>0.5.0-SNAPSHOT</comsat.version>
     </properties>
 
