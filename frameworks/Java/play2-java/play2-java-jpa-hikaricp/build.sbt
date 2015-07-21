@@ -10,8 +10,9 @@ libraryDependencies ++= Seq(
   javaJdbc,
   javaJpa,
   "mysql" % "mysql-connector-java" % "5.1.35",
-  "org.hibernate" % "hibernate-entitymanager" % "4.3.9.Final",
-  "com.edulify" %% "play-hikaricp" % "2.0.4"
+  "org.hibernate" % "hibernate-entitymanager" % "4.3.10.Final"
 )
 
-resolvers += Resolver.url("Edulify Repository", url("http://edulify.github.io/modules/releases/"))(Resolver.ivyStylePatterns)
+routesGenerator := InjectedRoutesGenerator
+
+PlayKeys.externalizeResources := false

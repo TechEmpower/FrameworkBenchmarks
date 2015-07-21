@@ -1,0 +1,44 @@
+{
+  "framework": "cygnite-php-framework",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/index.php/json",
+      "plaintext_url": "/index.php/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "cygnite",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "cygnite",
+      "notes": "",
+      "versus": "php"
+    },
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/index.php/bench/db",
+      "query_url": "/index.php/bench/queries/",
+      "fortune_url": "/index.php/bench/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "cygnite",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "cygnite",
+      "notes": "",
+      "versus": "php"
+    }
+  }]
+}

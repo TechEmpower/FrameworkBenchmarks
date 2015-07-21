@@ -1,12 +1,12 @@
-wheezy.web==0.1.469
-wheezy.template==0.1.159
+wheezy.web==0.1.485
+wheezy.template==0.1.167
 
 bleach==1.4.1
 
-SQLAlchemy==0.9.9
+SQLAlchemy==1.0.4
 mysqlclient==1.3.6
 
 gunicorn==19.3.0
 meinheld==0.5.7
 
-greenlet==0.4.5
+greenlet==0.4.7

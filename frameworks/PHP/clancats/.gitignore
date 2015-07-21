@@ -1,0 +1,12 @@
+public/assets/packtacular/
+CCF/app/config/migrator.json
+CCF/vendor/
+storage/
+.DS_Store
+Thumbs.db
+composer.phar
+composer.lock
+phpunit.xml
+phpunit.phar
+report/
+run

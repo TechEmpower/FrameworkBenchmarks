@@ -15,3 +15,5 @@ npm install -g npm
 # run app
 npm install
 node app &
+echo "sleeping additional 30 seconds for hapi..."
+sleep 30

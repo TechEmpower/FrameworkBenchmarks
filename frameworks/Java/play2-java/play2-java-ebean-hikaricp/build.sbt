@@ -2,15 +2,13 @@ name := "play2-java-ebean-hikaricp"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
+lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayEbean)
 
 scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
   javaJdbc,
-  javaEbean,
-  "mysql" % "mysql-connector-java" % "5.1.35",
-  "com.edulify" %% "play-hikaricp" % "2.0.4"
+  "mysql" % "mysql-connector-java" % "5.1.35"
 )
 
-resolvers += Resolver.url("Edulify Repository", url("http://edulify.github.io/modules/releases/"))(Resolver.ivyStylePatterns)
+routesGenerator := InjectedRoutesGenerator

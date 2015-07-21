@@ -1,29 +1,36 @@
 package com.example.helloworld.db.model;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "World")
 public class World {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @JsonProperty
+    private int id;
 
+    @JsonProperty
     @Column(name = "randomNumber", nullable = false)
-    private long randomNumber;
+    private int randomNumber;
 
-    public World() {}
+    public World() {
+    }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public long getRandomNumber() {
+    public int getRandomNumber() {
         return randomNumber;
     }
 
-    public void setRandomNumber(long randomNumber) {
+    public void setRandomNumber(int randomNumber) {
         this.randomNumber = randomNumber;
     }
 }

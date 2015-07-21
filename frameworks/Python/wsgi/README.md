@@ -8,13 +8,6 @@ review the [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/
 Also note that there is additional information provided in 
 the [Python README](../).
 
-## Infrastructure Software Versions
-
-The tests were run with:
-
-* [Python 2.7.3](http://www.python.org/)
-* [Gunicorn 0.17.2](http://gunicorn.org/)
-
 ## Test Paths & Sources
 
 * [JSON Serialization](hello.py): "/json"

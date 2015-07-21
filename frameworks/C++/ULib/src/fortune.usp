@@ -7,6 +7,7 @@ TechEmpower Web Framework Benchmarks
 
 static Fortune*           pfortune;
 static UString*           pmessage;
+static UString*           pencoded;
 static UOrmSession*       psql_fortune;
 static UOrmStatement*     pstmt_fortune;
 static UVector<Fortune*>* pvfortune;
@@ -29,6 +30,7 @@ static void usp_fork_fortune()
 
       pstmt_fortune->into(*pfortune);
 
+      pencoded  = U_NEW(UString(100U));
       pmessage  = U_NEW(U_STRING_FROM_CONSTANT("Additional fortune added at request time."));
       pvfortune = U_NEW(UVector<Fortune*>);
       }
@@ -40,21 +42,19 @@ static void usp_end_fortune()
    U_TRACE(5, "::usp_end_fortune()")
 
    if (pstmt_fortune)
-   {
-   delete pstmt_fortune;
+      {
+      delete pstmt_fortune;
 
-   delete psql_fortune;
-   delete pvfortune;
-   delete pfortune;
-   delete pmessage;
-   }
+      delete psql_fortune;
+      delete pvfortune;
+      delete pfortune;
+      delete pmessage;
+      delete pencoded;
+      }
 }
 #endif
 -->
 <!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
-Fortune* elem;
-unsigned char encoded[1024];
-
 pstmt_fortune->execute();
 
      pvfortune->push_back(U_NEW(Fortune(0, *pmessage)));
@@ -64,14 +64,16 @@ pvfortune->sort(Fortune::cmp_obj);
 
 for (uint32_t i = 0, n = pvfortune->size(); i < n; ++i)
    {
-   elem = (*pvfortune)[i];
+   Fortune* elem = (*pvfortune)[i];
+
+   UXMLEscape::encode(elem->message, *pencoded);
 
    USP_PRINTF_ADD(
       "<tr>"
       "<td>%u</td>"
-      "<td>%.*s</td>"
+      "<td>%v</td>"
       "</tr>",
-      elem->id, u_xml_encode((const unsigned char*)U_STRING_TO_PARAM(elem->message), encoded), encoded);
+      elem->id, pencoded->rep);
    }
 
 pvfortune->clear();

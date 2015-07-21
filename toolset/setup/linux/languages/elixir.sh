@@ -4,16 +4,14 @@ RETCODE=$(fw_exists $IROOT/elixir.installed)
 [ ! "$RETCODE" == 0 ] || { . $IROOT/elixir.installed; return 0; }
 
 fw_depends erlang
-export PATH=$PATH:$IROOT/erlang/bin
+source $IROOT/erlang.installed
 
-VERSION="1.0.4"
-fw_get https://codeload.github.com/elixir-lang/elixir/tar.gz/v$VERSION
-fw_untar v$VERSION
+VERSION="1.0.4-1"
+RELEASE="trusty"
+ARCH="amd64"
 
-(
-	mv elixir-$VERSION elixir
-	cd elixir
-	make compile
-)
+fw_get -O http://packages.erlang-solutions.com/site/esl/elixir/FLAVOUR_2_download/elixir_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb
+dpkg -x elixir_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb $IROOT/elixir
+$IROOT/erlang/usr/lib/erlang/Install -minimal $IROOT/erlang/usr/lib/erlang
 
-echo "export PATH=$IROOT/erlang/bin:$IROOT/elixir/bin:$PATH" >> $IROOT/elixir.installed
+echo "export PATH=\$IROOT/elixir/usr/local/bin:\$IROOT/erlang/usr/bin:\$PATH" >> $IROOT/elixir.installed

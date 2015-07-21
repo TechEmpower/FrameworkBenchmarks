@@ -22,6 +22,28 @@
       "display_name": "yii2",
       "notes": "",
       "versus": "php"
+    },
+    "hhvm": {
+      "setup_file": "setup_hhvm",
+      "json_url": "/site/json",
+      "db_url": "/site/db",
+      "query_url": "/site/db?queries=",
+      "fortune_url": "/site/fortunes",
+      "update_url": "/site/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "yii2",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "PHP-FPM",
+      "webserver": "HPHP",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "yii2-hhvm",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

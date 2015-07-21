@@ -3,14 +3,17 @@ defmodule Hello.Endpoint do
 
   # Serve at "/" the given assets from "priv/static" directory
   plug Plug.Static,
-    at: "/", from: :hello,
+    at: "/", from: :hello, gzip: false,
     only: ~w(css images js favicon.ico robots.txt)
-
-  plug Plug.Logger
 
   # Code reloading will only work if the :code_reloader key of
   # the :phoenix application is set to true in your config file.
-  plug Phoenix.CodeReloader
+  if code_reloading? do
+    plug Phoenix.LiveReloader
+    plug Phoenix.CodeReloader
+  end
+
+  plug Plug.Logger
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
@@ -23,8 +26,7 @@ defmodule Hello.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_hello_key",
-    signing_salt: "DNlAnJ2o",
-    encryption_salt: "AOXxaZRq"
+    signing_salt: "DNlAnJ2o"
 
   plug :router, Hello.Router
 end

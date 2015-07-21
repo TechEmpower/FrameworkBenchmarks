@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# --------------------------------------------------------------------------------------------------------
 # install.sh
 # --------------------------------------------------------------------------------------------------------
 # toolset/run-tests.py --install server --test ULib-mysql  --type all --verbose
@@ -18,15 +19,15 @@
 
 ULIB_VERSION=1.4.2
 ULIB_ROOT=$IROOT/ULib
-ULIB_DOCUMENT_ROOT=${ULIB_ROOT}/ULIB_DOCUMENT_ROOT
+ULIB_DOCUMENT_ROOT=$ULIB_ROOT/ULIB_DOCUMENT_ROOT
 
 # Check if ULib is already installed
-ULIB_INSTALLED_FILE="${IROOT}/ULib-${ULIB_VERSION}.installed"
-RETCODE=$(fw_exists ${ULIB_INSTALLED_FILE})
+ULIB_INSTALLED_FILE="$IROOT/ULib-${ULIB_VERSION}.installed"
+RETCODE=$(fw_exists $ULIB_INSTALLED_FILE)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 # Create a run directory for ULIB
-[ ! -e ${ULIB_INSTALLED_FILE} -a -d ${IROOT}/ULib ] && rm -rf ${IROOT}/ULib*
+[ ! -e $ULIB_INSTALLED_FILE -a -d $IROOT/ULib ] && rm -rf $IROOT/ULib*
 
 if [ ! -d "$ULIB_ROOT" ]; then
   mkdir -p $ULIB_ROOT
@@ -42,9 +43,8 @@ if [ ! -f "benchmark.cfg" ]; then
 userver {
  PORT 8080
  PREFORK_CHILD 4
- MAX_KEEP_ALIVE 1023
- LISTEN_BACKLOG 16384
- CLIENT_FOR_PARALLELIZATION 256
+ TCP_LINGER_SET -1
+ LISTEN_BACKLOG 256
  ORM_DRIVER "mysql pgsql sqlite"
  DOCUMENT_ROOT $ULIB_DOCUMENT_ROOT
 }
@@ -53,7 +53,7 @@ fi
 
 # 1. Download ULib
 cd $IROOT
-fw_get -O ULib-${ULIB_VERSION}.tar.gz https://github.com/stefanocasazza/ULib/archive/v${ULIB_VERSION}.tar.gz 
+fw_get -o ULib-${ULIB_VERSION}.tar.gz https://github.com/stefanocasazza/ULib/archive/v${ULIB_VERSION}.tar.gz 
 fw_untar  ULib-${ULIB_VERSION}.tar.gz
 
 # 2. Compile application (userver_tcp)
@@ -67,8 +67,8 @@ gcc_version=`g++ -dumpversion`
 
 case "$gcc_version" in
   3*|4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*)
-	  CC='gcc-4.8'
-	 CXX='g++-4.8'
+	  CC='gcc-4.9'
+	 CXX='g++-4.9'
   ;;
 esac
 
@@ -88,7 +88,7 @@ USP_FLAGS="-DAS_cpoll_cppsp_DO" \
 #USP_LIBS="-ljson" \
 
 make install
-cp -r tests/examples/benchmark/FrameworkBenchmarks/ULib/db ${ULIB_ROOT}
+cp -r tests/examples/benchmark/FrameworkBenchmarks/ULib/db $ULIB_ROOT
 
 cd examples/userver
 make install
@@ -105,4 +105,4 @@ fi
 mkdir -p $ULIB_DOCUMENT_ROOT
 cp .libs/db.so .libs/fortune.so .libs/json.so .libs/plaintext.so .libs/query.so .libs/update.so $ULIB_DOCUMENT_ROOT
 
-touch ${ULIB_INSTALLED_FILE}
+touch $ULIB_INSTALLED_FILE

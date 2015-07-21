@@ -1,6 +1,6 @@
 #!/bin/bash
-sed -i 's|localhost|'"${DBHOST}"'|g' hello.js
-sed -i 's|mongodb://.*/hello_world|mongodb://'"${DBHOST}"'/hello_world|g' hello.js
+sed -i 's|localhost|'"${DBHOST}"'|g' app.js
+sed -i 's|mongodb://.*/hello_world|mongodb://'"${DBHOST}"'/hello_world|g' app.js
 
 export NODE_ENV=production
 export NVM_HOME=${IROOT}/nvm
@@ -14,4 +14,4 @@ nvm use 0.12.2
 npm install -g npm
 
 npm install
-node hello.js &
+node app.js &

@@ -1,6 +1,5 @@
 klein==15.0.0
 
-bleach==1.4.1
 mysqlclient==1.3.6
-SQLAlchemy==0.9.9
+SQLAlchemy==1.0.4
 jinja2==2.7.3

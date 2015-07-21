@@ -79,3 +79,7 @@ frameworks/Ur/urweb/*.exe
 
 # nim
 nimcache
+
+# crystal
+.crystal
+*.out

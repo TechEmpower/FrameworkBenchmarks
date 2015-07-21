@@ -1,14 +1,14 @@
 defmodule Hello.PageController do
-  use Phoenix.Controller
+  use Hello.Web, :controller
+  alias Hello.World
+  alias Hello.Fortune
 
   plug :action
+  plug :scrub_params, "world" when action in [:create, :update]
+
 
   def index(conn, _params) do
-    json conn, %{
-      "TE Benchmarks\n" => "Started",
-      "DBHOST" => System.get_env("DBHOST"),
-      "DBPORT" => System.get_env("DBPORT"),
-    }
+    json conn, %{"TE Benchmarks\n" => "Started"}
   end
 
   # avoid namespace collision
@@ -17,22 +17,35 @@ defmodule Hello.PageController do
   end
 
   def db(conn, _params) do
-    :random.seed(:erlang.now)
-    id = :random.uniform(10000)
-    text conn, "TE Benchmarks\n"
+    json conn, Repo.get(World, :random.uniform(10000))
   end
 
   def queries(conn, _params) do
-    text conn, "TE Benchmarks\n"
+    q = case String.to_integer(_params["queries"]) do
+      x when x < 1    -> 1
+      x when x > 500  -> 500
+      x               -> x
+    end
+    json conn, Enum.map(1..q, fn _ -> Repo.get(World, :random.uniform(10000)) end)
   end
 
   def fortunes(conn, _params) do
-    text conn, "TE Benchmarks\n"
+    fortunes = List.insert_at(Repo.all(Fortune), 0, %Fortune{:id => 0, :message  => "Additional fortune added at request time."})
+    render conn, "fortunes.html", fortunes: Enum.sort(fortunes, fn f1, f2 -> f1.message < f2.message end)
   end
 
   def updates(conn, _params) do
-    text conn, "TE Benchmarks\n"
-  end
+    q = case String.to_integer(_params["queries"]) do
+      x when x < 1    -> 1
+      x when x > 500  -> 500
+      x               -> x
+    end
+    json conn, Enum.map(1..q, fn _ ->
+      w = Repo.get(World, :random.uniform(10000))
+      changeset = World.changeset(w, %{randomNumber: :random.uniform(10000)})
+      Repo.update(changeset)
+      w end)
+    end
 
   def plaintext(conn, _params) do
     text conn, "Hello, world!"
