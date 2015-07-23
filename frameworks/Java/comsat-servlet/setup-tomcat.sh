@@ -1,5 +1,5 @@
 #!/bin/bash
 
-PROPS="-DserverClass=co.paralleluniverse.embedded.containers.TomcatServer -Dco.paralleluniverse.embedded.containers.TomcatServer.defaultResDir=."
+MODE="tomcat"
 
 . $TROOT/setup-generic.sh

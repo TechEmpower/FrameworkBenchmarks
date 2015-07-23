@@ -3,9 +3,8 @@
 # load java environment variables
 source $IROOT/java8.installed
 
-mvn clean compile dependency:copy assembly:single
+mvn package
 
 cd target
-QUASAR_AGENT=`ls quasar-core-*.jar`
-FATJAR=`ls comsat-servlet-*.jar`
-java -javaagent:$QUASAR_AGENT $PROPS -Dco.paralleluniverse.fibers.detectRunawayFibers=false -jar $FATJAR
+CAPSULE=`ls comsat-servlet-*-fat.jar`
+java -Dcapsule.mode=$MODE -jar $CAPSULE

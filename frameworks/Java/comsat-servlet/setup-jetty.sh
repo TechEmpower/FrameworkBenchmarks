@@ -1,5 +1,5 @@
 #!/bin/bash
 
-PROPS="-DserverClass=co.paralleluniverse.embedded.containers.JettyServer"
+MODE="jetty"
 
 . $TROOT/setup-generic.sh

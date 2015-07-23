@@ -1,130 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.techempower</groupId>
-    <artifactId>comsat-servlet</artifactId>
-    <version>0.1</version>
+	<groupId>com.techempower</groupId>
+	<artifactId>comsat-servlet</artifactId>
+	<version>0.1</version>
 
-    <repositories>
-        <repository>
-            <id>snapshots-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases><enabled>false</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>snapshots-repo</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <jackson.version>2.5.4</jackson.version>
-        <quasar.version>0.7.2</quasar.version>
-        <comsat.version>0.5.0-SNAPSHOT</comsat.version>
-    </properties>
+		<jackson.version>2.5.4</jackson.version>
+		<quasar.version>0.7.2</quasar.version>
+		<comsat.version>0.5.0-SNAPSHOT</comsat.version>
+	</properties>
 
-    <dependencies>
-        <!-- Jackson JSON -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
+	<dependencies>
+		<!-- Jackson JSON -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 
-        <!-- Quasar fibers -->
-        <dependency>
-            <groupId>co.paralleluniverse</groupId>
-            <artifactId>quasar-core</artifactId>
-            <version>${quasar.version}</version>
-            <classifier>jdk8</classifier>
-        </dependency>
+		<!-- Quasar fibers -->
+		<dependency>
+			<groupId>co.paralleluniverse</groupId>
+			<artifactId>quasar-core</artifactId>
+			<version>${quasar.version}</version>
+			<classifier>jdk8</classifier>
+		</dependency>
 
-        <!-- Web servers -->
-        <dependency>
-            <groupId>co.paralleluniverse</groupId>
-            <artifactId>comsat-test-utils</artifactId>
-            <version>${comsat.version}</version>
-        </dependency>
+		<!-- Web servers -->
+		<dependency>
+			<groupId>co.paralleluniverse</groupId>
+			<artifactId>comsat-test-utils</artifactId>
+			<version>${comsat.version}</version>
+		</dependency>
 
-        <!-- 'comsat-servlet' integration -->
-        <dependency>
-            <groupId>co.paralleluniverse</groupId>
-            <artifactId>comsat-servlet</artifactId>
-            <version>${comsat.version}</version>
-        </dependency>
-    </dependencies>
+		<!-- 'comsat-servlet' integration -->
+		<dependency>
+			<groupId>co.paralleluniverse</groupId>
+			<artifactId>comsat-servlet</artifactId>
+			<version>${comsat.version}</version>
+		</dependency>
+	</dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <inherited>true</inherited>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <optimize>true</optimize>
-                    <debug>false</debug>
-                </configuration>
-            </plugin>
+	<build>
+		<plugins>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<optimize>true</optimize>
+					<debug>false</debug>
+				</configuration>
+			</plugin>
 
-            <!-- Copy the quasar agent -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
-                <configuration>
-                    <artifactItems>
-                        <artifactItem>
-                            <groupId>co.paralleluniverse</groupId>
-                            <artifactId>quasar-core</artifactId>
-                            <version>${quasar.version}</version>
-                            <type>jar</type>
-                            <classifier>jdk8</classifier>
-                            <overWrite>false</overWrite>
-                            <outputDirectory>target</outputDirectory>
-                        </artifactItem>
-                    </artifactItems>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>com.github.chrischristo</groupId>
+				<artifactId>capsule-maven-plugin</artifactId>
+				<version>0.10.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>build</goal>
+						</goals>
+						<configuration>
+							<appClass>hello.HelloWebServer</appClass>
 
-            <!-- Fat JAR -->
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>hello.HelloWebServer</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+							<types>fat</types>
 
-        </plugins>
-    </build>
+							<properties>
+								<property>
+									<key>serverClass</key>
+									<value>co.paralleluniverse.embedded.containers.UndertowServer</value>
+								</property>
+								<property>
+									<key>co.paralleluniverse.fibers.detectRunawayFibers</key>
+									<value>false</value>
+								</property>
+							</properties>
+
+							<manifest>
+								<entry>
+									<key>Java-Agents</key>
+									<value>quasar-core-${quasar.version}-jdk8.jar</value>
+								</entry>
+								<entry>
+									<key>Min-Java-Version</key>
+									<value>1.8.0</value>
+								</entry>
+							</manifest>
+
+							<modes>
+								<mode>
+									<name>jetty</name>
+
+									<properties>
+										<property>
+											<key>serverClass</key>
+											<value>co.paralleluniverse.embedded.containers.JettyServer</value>
+										</property>
+									</properties>
+								</mode>
+								<mode>
+									<name>tomcat</name>
+
+									<properties>
+										<property>
+											<key>serverClass</key>
+											<value>co.paralleluniverse.embedded.containers.TomcatServer</value>
+										</property>
+										<property>
+											<key>co.paralleluniverse.embedded.containers.TomcatServer.defaultResDir
+											</key>
+											<value>.</value>
+										</property>
+									</properties>
+								</mode>
+							</modes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
