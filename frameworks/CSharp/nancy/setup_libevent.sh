@@ -8,7 +8,6 @@ export MONO_GC_PARAMS="nursery-size=16m"
 
 sed -i 's|localhost|'"${DBHOST}"'|g' ${TROOT}/src/NancyBenchmark/Web.config
 
-xbuild ${TROOT}/src/NancyBenchmark.build.proj /t:Clean
 xbuild ${TROOT}/src/NancyBenchmark.build.proj /t:Rebuild /p:Configuration=Release
 
 # nginx

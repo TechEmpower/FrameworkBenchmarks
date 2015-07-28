@@ -8,7 +8,6 @@ sed -i 's|localhost|'"${DBHOST}"'|g' ${TROOT}/src/NancyBenchmark/Web.config
 sed -i 's|include /usr/local/nginx/conf/fastcgi_params;|include '"${NGINX_HOME}"'/conf/fastcgi_params;|g' nginx.conf
 
 # build
-xbuild ${TROOT}/src/NancyBenchmark.build.proj /t:Clean
 xbuild ${TROOT}/src/NancyBenchmark.build.proj /t:Rebuild /p:Configuration=Release
 
 # nginx

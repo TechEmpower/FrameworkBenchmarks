@@ -33,7 +33,5 @@ if ($action -eq 'start') {
     New-WebSite -Name Benchmarks -Port 8080 -PhysicalPath $wwwroot
 
     # Build the project
-    Exec { & $msbuild "$source\NancyBenchmark.build.proj" /t:RestorePackages }
-    Exec { & $msbuild "$source\NancyBenchmark.build.proj" /p:Configuration=Release /p:Platform="AnyCPU" /t:Clean }
-    Exec { & $msbuild "$source\NancyBenchmark.build.proj" /p:Configuration=Release /p:Platform="AnyCPU" /p:DeployOnBuild=true /p:PublishProfile=IIS }
+    Exec { & $msbuild "$source\NancyBenchmark.build.proj" /t:Rebuild /p:Configuration=Release }
 }

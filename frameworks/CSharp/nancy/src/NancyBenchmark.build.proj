@@ -38,7 +38,7 @@
   </Target>
 
   <Target Name="RestorePackages" DependsOnTargets="DownloadNuGet">
-    <Exec Command="$(NuGetCommand) restore &quot;%(Solution.Identity)&quot;" />
+    <Exec Command="$(NuGetCommand) restore &quot;%(Solution.Identity)&quot; -PackagesDirectory &quot;$(NuGetExeDir)&quot;" />
   </Target>
 
   <Target Name="Clean">
