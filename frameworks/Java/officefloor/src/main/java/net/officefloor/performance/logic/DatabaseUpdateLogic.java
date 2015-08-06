@@ -2,6 +2,7 @@ package net.officefloor.performance.logic;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.EntityManager;
 
@@ -29,12 +30,21 @@ public class DatabaseUpdateLogic {
 		// Obtain the number of queries
 		int queryCount = LogicUtil.getQueryCount(parameters.queries);
 
+		// Create the listing of random identifiers
+		int[] identifiers = new int[queryCount];
+		for (int i = 0; i < identifiers.length; i++) {
+			identifiers[i] = LogicUtil.generateRandomNumber(1, 10000);
+		}
+
+		// Sort identifiers to avoid dead locks
+		Arrays.sort(identifiers);
+
 		// Obtain the world objects (changing their random values)
 		World[] list = new World[queryCount];
 		for (int i = 0; i < list.length; i++) {
 
 			// Obtain the object
-			int identifier = LogicUtil.generateRandomNumber(1, 10000);
+			int identifier = identifiers[i];
 			World world = entityManager.find(World.class, identifier);
 			list[i] = world;
 

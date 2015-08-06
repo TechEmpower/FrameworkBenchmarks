@@ -71,11 +71,13 @@ public abstract class AbstractTestCase {
 
 		// Warm up the server
 		System.out.println("===========================================");
-		System.out.println(this.getClass().getSimpleName());
+		System.out.println(this.getClass().getSimpleName()
+				+ "    (running with " + threadCount + " threads and "
+				+ iterationCount + " iterations)");
 		System.out.print("Warming up server ");
 		System.out.flush();
 		try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-			for (int i = 0; i < 20000; i++) {
+			for (int i = 0; i < (iterationCount * 2); i++) {
 				this.doRequestTest(client);
 				if (i % 1000 == 0) {
 					System.out.print(".");
@@ -100,9 +102,25 @@ public abstract class AbstractTestCase {
 						try (CloseableHttpClient client = HttpClientBuilder
 								.create().build()) {
 
+							// Determine progress mark
+							int progressMark = iterationCount / 10;
+							int progressValue = 0;
+
 							// Under the request so many times
 							for (int i = 0; i < iterationCount; i++) {
+
+								// Undertake the request
 								AbstractTestCase.this.doRequestTest(client);
+
+								// Provide progress
+								if ((i % progressMark) == 0) {
+									System.out.print((progressValue++) + ", ");
+
+									// Provide new line to avoid off to right
+									if (threadIndex == 0) {
+										System.out.println();
+									}
+								}
 							}
 						}
 					} catch (Throwable ex) {

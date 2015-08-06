@@ -10,7 +10,7 @@ import java.sql.Statement;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.hsqldb.jdbc.jdbcDataSource;
+import org.h2.jdbcx.JdbcConnectionPool;
 import org.junit.After;
 import org.junit.Before;
 
@@ -45,7 +45,7 @@ public class FortunesTest extends AbstractTestCase {
 	/**
 	 * URL for the database.
 	 */
-	private static final String DATABASE_URL = "jdbc:hsqldb:mem:exampleDb";
+	private static final String DATABASE_URL = "jdbc:h2:mem:exampleDb";
 
 	/**
 	 * User for the database.
@@ -56,9 +56,8 @@ public class FortunesTest extends AbstractTestCase {
 	public void setupDatabase() throws SQLException {
 
 		// Obtain connection via DataSource (sets up in memory database)
-		jdbcDataSource dataSource = new jdbcDataSource();
-		dataSource.setDatabase(DATABASE_URL);
-		dataSource.setUser(DATABASE_USER);
+		JdbcConnectionPool dataSource = JdbcConnectionPool.create(DATABASE_URL,
+				DATABASE_USER, "");
 		Connection connection = dataSource.getConnection();
 
 		// Create the table
@@ -94,6 +93,11 @@ public class FortunesTest extends AbstractTestCase {
 
 		// Cleanup setup
 		connection.close();
+	}
+
+	@Override
+	protected int getIterationCount() {
+		return 1000;
 	}
 
 	/**

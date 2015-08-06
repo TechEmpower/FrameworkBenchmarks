@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 import lombok.Data;
 
-import org.hsqldb.jdbc.jdbcDataSource;
+import org.h2.jdbcx.JdbcConnectionPool;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,7 +27,7 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 	/**
 	 * URL for the database.
 	 */
-	private static final String DATABASE_URL = "jdbc:hsqldb:mem:exampleDb";
+	private static final String DATABASE_URL = "jdbc:h2:mem:exampleDb";
 
 	/**
 	 * User for the database.
@@ -90,9 +90,8 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 		}
 
 		// Obtain connection via DataSource (sets up in memory database)
-		jdbcDataSource dataSource = new jdbcDataSource();
-		dataSource.setDatabase(DATABASE_URL);
-		dataSource.setUser(DATABASE_USER);
+		JdbcConnectionPool dataSource = JdbcConnectionPool.create(DATABASE_URL,
+				DATABASE_USER, "");
 		this.connection = dataSource.getConnection();
 
 		// Create the table
@@ -112,6 +111,17 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 
 	@After
 	public void cleanupDatabase() throws SQLException {
+
+		// Allow some time for clean up of server
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException ex) {
+			// Carry on
+		}
+
+		// TODO remove
+		System.out.println("Shutting down database");
+
 		// Stop database for new instance each test
 		this.connection.createStatement().execute("SHUTDOWN IMMEDIATELY");
 	}

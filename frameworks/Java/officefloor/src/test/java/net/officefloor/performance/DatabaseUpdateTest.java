@@ -30,6 +30,11 @@ public class DatabaseUpdateTest extends AbstractDatabaseQueryTestCase {
 	}
 
 	@Override
+	protected int getIterationCount() {
+		return 100;
+	}
+
+	@Override
 	protected void doRequestTest(CloseableHttpClient client) throws Exception {
 
 		// Obtain the next index
@@ -60,24 +65,25 @@ public class DatabaseUpdateTest extends AbstractDatabaseQueryTestCase {
 		Assert.assertEquals("Incorrect number of results", batchSize,
 				results.length);
 
-		// Ensure at least one value is within database (other requests may
-		// change some rows)
+		// Ensure response value different to original value
 		boolean isDifferent = false;
 		for (Result result : results) {
-			int randomNumber = this.getDatabaseRandomNumber(result.getId());
-			if (randomNumber != this.randomNumbers[result.getId() - 1]) {
+			int responseValue = result.getRandomNumber();
+			int originalValue = this.randomNumbers[result.getId() - 1];
+			if (responseValue != originalValue) {
 				isDifferent = true;
 			}
 		}
 		Assert.assertTrue(
-				"Should have at least one number different (if batch size big enough)",
-				isDifferent || (batchSize <= 5));
+				"Should have at least one value different (if batch size big enough)",
+				isDifferent || (batchSize <= 2));
 
 		// Ensure values in database are different (ie have been updated)
 		isDifferent = false;
-		for (int i = 0; i < this.randomNumbers.length; i++) {
-			int randomNumber = this.getDatabaseRandomNumber(i + 1);
-			if (randomNumber != this.randomNumbers[i]) {
+		for (Result result : results) {
+			int databaseValue = this.getDatabaseRandomNumber(result.getId());
+			int originalValue = this.randomNumbers[result.getId() - 1];
+			if (databaseValue != originalValue) {
 				isDifferent = true;
 			}
 		}
