@@ -9,7 +9,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.junit.Assert;
-import org.junit.Before;
 
 /**
  * Ensures meets criteria for Test type 5: Database updates.
@@ -18,15 +17,9 @@ import org.junit.Before;
  */
 public class DatabaseUpdateTest extends AbstractDatabaseQueryTestCase {
 
-	/**
-	 * {@link PreparedStatement} to select the row.
-	 */
-	private PreparedStatement selectStatement;
-
-	@Before
-	public void loadSelectStatement() throws SQLException {
-		this.selectStatement = this.connection
-				.prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?");
+	@Override
+	protected int getParallelClientCount() {
+		return 10;
 	}
 
 	@Override
@@ -51,8 +44,11 @@ public class DatabaseUpdateTest extends AbstractDatabaseQueryTestCase {
 				"http://localhost:7878/databaseUpdate-service.woof"
 						+ queryString));
 
+		// Obtain the entity
+		String entity = EntityUtils.toString(response.getEntity());
+
 		// Validate the response
-		Assert.assertEquals("Should be successful", 200, response
+		Assert.assertEquals("Should be successful: " + entity, 200, response
 				.getStatusLine().getStatusCode());
 		this.assertHeadersSet(response, "Content-Length", "Content-Type",
 				"Server", "Date", "set-cookie");
@@ -60,7 +56,6 @@ public class DatabaseUpdateTest extends AbstractDatabaseQueryTestCase {
 				"application/json; charset=UTF-8");
 
 		// Validate the correct random result
-		String entity = EntityUtils.toString(response.getEntity());
 		Result[] results = (Result[]) this.readResults(entity);
 		Assert.assertEquals("Incorrect number of results", batchSize,
 				results.length);
@@ -102,10 +97,13 @@ public class DatabaseUpdateTest extends AbstractDatabaseQueryTestCase {
 	 *             If fails to obtain the random number.
 	 */
 	private int getDatabaseRandomNumber(int identifier) throws SQLException {
-		this.selectStatement.setInt(1, identifier);
-		ResultSet resultSet = this.selectStatement.executeQuery();
+		PreparedStatement selectStatement = this.connection
+				.prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?");
+		selectStatement.setInt(1, identifier);
+		ResultSet resultSet = selectStatement.executeQuery();
 		try {
-			Assert.assertTrue(resultSet.next());
+			Assert.assertTrue("No result for identifier " + identifier,
+					resultSet.next());
 			return resultSet.getInt("randomNumber");
 		} finally {
 			resultSet.close();
