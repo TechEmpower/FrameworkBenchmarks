@@ -20,8 +20,11 @@ public class SingleDatabaseQueryTest extends AbstractDatabaseQueryTestCase {
 		HttpResponse response = client.execute(new HttpGet(
 				"http://localhost:7878/singleQuery-service.woof"));
 
+		// Obtain the entity
+		String entity = EntityUtils.toString(response.getEntity());
+
 		// Validate the response
-		Assert.assertEquals("Should be successful", 200, response
+		Assert.assertEquals("Should be successful: " + entity, 200, response
 				.getStatusLine().getStatusCode());
 		this.assertHeadersSet(response, "Content-Length", "Content-Type",
 				"Server", "Date", "set-cookie");
@@ -29,7 +32,6 @@ public class SingleDatabaseQueryTest extends AbstractDatabaseQueryTestCase {
 				"application/json; charset=UTF-8");
 
 		// Validate the correct random result
-		String entity = EntityUtils.toString(response.getEntity());
 		Result result = this.readResult(entity);
 		Assert.assertEquals("Incorrect random number",
 				this.randomNumbers[result.getId() - 1],

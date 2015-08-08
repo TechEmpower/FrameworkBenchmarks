@@ -107,6 +107,16 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 			insert.setInt(2, this.randomNumbers[i]);
 			insert.executeUpdate();
 		}
+		
+		// TODO remove
+		System.out.println("Database setup");
+		
+		// Allow some time for start up of database
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException ex) {
+			// Carry on
+		}
 	}
 
 	@After

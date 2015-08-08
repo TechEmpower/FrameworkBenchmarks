@@ -66,7 +66,7 @@ public abstract class AbstractTestCase {
 			return;
 		}
 
-		final int threadCount = 100;
+		final int threadCount = this.getParallelClientCount();
 		final int iterationCount = this.getIterationCount();
 
 		// Warm up the server
@@ -176,12 +176,27 @@ public abstract class AbstractTestCase {
 		System.out.println(" requests completed");
 
 		// Report any failures
+		Throwable firstFailure = null;
 		synchronized (failures) {
 			for (int t = 0; t < threads.length; t++) {
-				if (failures[t] != null) {
-					throw failures[t];
+				Throwable failure = failures[t];
+				if (failure != null) {
+
+					// Log the failure
+					System.err.println("=========== Failure for client " + t
+							+ " ===========");
+					failure.printStackTrace();
+
+					// Capture the first failure
+					if (firstFailure == null) {
+						firstFailure = failure;
+					}
 				}
 			}
+		}
+		if (firstFailure != null) {
+			// Propagate the failure
+			throw firstFailure;
 		}
 
 		// Determine statistics
@@ -195,6 +210,15 @@ public abstract class AbstractTestCase {
 				+ duration + " milliseconds");
 		System.out.println("Effectively 1 request every "
 				+ (duration / (totalRequestCount * 1.0)) + " milliseconds");
+	}
+
+	/**
+	 * Obtains the number of parallel clients.
+	 * 
+	 * @return Number of parallel clients.
+	 */
+	protected int getParallelClientCount() {
+		return 100;
 	}
 
 	/**
@@ -223,32 +247,19 @@ public abstract class AbstractTestCase {
 	protected void assertResponse(HttpResponse response, int statusCode,
 			String entity, String... headerNames) throws IOException {
 
+		// Obtain the entity
+		String actualEntity = EntityUtils.toString(response.getEntity());
+
 		// Ensure correct status code
-		Assert.assertEquals("Incorrect status code", 200, response
-				.getStatusLine().getStatusCode());
+		Assert.assertEquals("Should be successful: " + actualEntity, 200,
+				response.getStatusLine().getStatusCode());
 
 		// Validate the content
-		this.assertEntity(response, entity);
+		Assert.assertEquals("Incorrect entity", entity, actualEntity);
 
 		// Ensure have appropriate headers
 		this.assertHeadersSet(response, headerNames);
 
-	}
-
-	/**
-	 * Ensures correct entity content.
-	 * 
-	 * @param response
-	 *            {@link HttpResponse}.
-	 * @param entity
-	 *            Expected entity content.
-	 * @throws IOException
-	 *             If fails to obtain entity content.
-	 */
-	protected void assertEntity(HttpResponse response, String entity)
-			throws IOException {
-		Assert.assertEquals("Incorrect entity", entity,
-				EntityUtils.toString(response.getEntity()));
 	}
 
 	/**
