@@ -9,8 +9,8 @@ import io.undertow.util.StatusCodes;
 import java.util.UUID;
 
 import mangoo.io.core.Application;
-import mangoo.io.testing.MangooRequest;
-import mangoo.io.testing.MangooResponse;
+import mangoo.io.test.MangooRequest;
+import mangoo.io.test.MangooResponse;
 import models.Fortune;
 import models.World;
 

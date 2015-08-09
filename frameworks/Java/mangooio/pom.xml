@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 	<url>https://mangoo.io</url>
 	<properties>
-		<mangooio.version>1.0.0-Beta1</mangooio.version>
+		<mangooio.version>1.0.0-RC3</mangooio.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<build>
@@ -61,21 +61,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<createDependencyReducedPom>false</createDependencyReducedPom>
-					<filters>
-						<filter>
-							<artifact>*:*</artifact>
-							<excludes>
-								<exclude>META-INF/*.SF</exclude>
-								<exclude>META-INF/*.DSA</exclude>
-								<exclude>META-INF/*.RSA</exclude>
-							</excludes>
-						</filter>
-					</filters>
-					<finalName>mangooioapp</finalName>
-				</configuration>
+				<version>2.4</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -91,6 +77,25 @@
 									<mainClass>mangoo.io.core.Application</mainClass>
 								</transformer>
 							</transformers>
+							<artifactSet>
+								<excludes>
+									<exclude>junit:junit</exclude>
+									<exclude>com.yahoo.platform.yui:yuicompressor</exclude>
+									<exclude>rhino:js</exclude>
+								</excludes>
+							</artifactSet>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<finalName>mangooioapp</finalName>
 						</configuration>
 					</execution>
 				</executions>

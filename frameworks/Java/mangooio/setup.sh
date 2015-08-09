@@ -3,8 +3,8 @@
 # load java environment variables
 source $IROOT/java8.installed
 
-sed -i 's|mongodb.host=.*|mongodb.host='"${DBHOST}"'|g' src/main/resources/application.conf
+sed -i 's|###DBHOST*|'"${DBHOST}"'|g' src/main/resources/application.yaml
 
 mvn clean package -Dmaven.test.skip=true
 
-java -jar target/mangooioapp.jar &
+java -jar -Xmx2048m -Xms1024m target/mangooioapp.jar &
