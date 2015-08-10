@@ -26,6 +26,8 @@ shared static this()
   router.get("/", staticTemplate!"index.dt");
 
   auto settings = new HTTPServerSettings;
+  settings.options |= HTTPServerOption.distribute;
+
   settings.port = 8080;
 
   listenHTTP(settings, router);
