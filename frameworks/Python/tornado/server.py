@@ -103,12 +103,10 @@ class MultipleQueriesPostgresRawTestHandler(BaseHandler):
 
         sql = "SELECT id, randomNumber FROM World WHERE id=%s"
 
-        worlds = []
-        for i in xrange(int(queries)):
-            random_id = randint(1, 10000)
-            cursor = yield self.application.db.execute(sql, (random_id,))
-            row = cursor.fetchone()
-            worlds.append({"id": row[0], "randomNumber": row[1]})
+        cursors = yield [self.application.db.execute(sql, (randint(1, 10000),)) for _ in xrange(int(queries))]
+        rows = [cursor.fetchone() for cursor in cursors] 
+        worlds = [{"id": row[0], "randomNumber":row[1]} for row in rows]
+
         response = json.dumps(worlds)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(response)
