@@ -1,7 +1,5 @@
 tg.devtools==2.3.5
 
-bleach==1.4.1
-
 SQLAlchemy==1.0.4
 zope.sqlalchemy==0.7.6
 mysqlclient==1.3.6
