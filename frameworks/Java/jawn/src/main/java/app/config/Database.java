@@ -30,7 +30,7 @@ public class Database implements ApplicationDatabaseBootstrap {
         
         
         connections
-            .environment(Modes.prod)
+            .environment(Modes.PROD)
             .jdbc()
             .driver("com.mysql.jdbc.Driver")
             .url(dbUrl + jdbcParams)
@@ -40,7 +40,7 @@ public class Database implements ApplicationDatabaseBootstrap {
             .minPoolSize(256);
         
         connections
-            .environment(Modes.dev)
+            .environment(Modes.DEV)
             .jdbc()
             .driver("com.mysql.jdbc.Driver")
             .url("jdbc:mysql://192.168.100.11/hello_world?" + jdbcParams)

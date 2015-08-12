@@ -3,13 +3,13 @@ package app.controllers;
 import java.util.Collections;
 import java.util.List;
 
-import net.javapla.jawn.core.ApplicationController;
+import net.javapla.jawn.core.Controller;
 import app.db.DbManager;
 import app.models.Fortune;
 
 import com.google.inject.Inject;
 
-public class FortunesController extends ApplicationController {
+public class FortunesController extends Controller {
 
     @Inject
     private DbManager db;

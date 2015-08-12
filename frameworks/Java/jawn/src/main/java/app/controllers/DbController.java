@@ -2,14 +2,14 @@ package app.controllers;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.google.inject.Inject;
-
+import net.javapla.jawn.core.Controller;
+import net.javapla.jawn.core.Param;
 import app.db.DbManager;
 import app.models.World;
-import net.javapla.jawn.core.ApplicationController;
-import net.javapla.jawn.core.Param;
 
-public class DbController extends ApplicationController {
+import com.google.inject.Inject;
+
+public class DbController extends Controller {
 
     private static final int NUMBER_OF_ROWS = 10_000;
     
