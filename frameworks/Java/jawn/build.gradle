@@ -37,6 +37,7 @@ run {
     if(project.hasProperty('args')){
         args project.args.split(',')
     }
+    jvmArgs = ['-XX:+UseNUMA','-XX:+UseParallelGC','-XX:+AggressiveOpts']
 }
 applicationDistribution.from("webapp") {
     into "webapp"
