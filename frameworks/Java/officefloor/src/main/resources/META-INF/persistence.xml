@@ -7,12 +7,8 @@
 
 	<persistence-unit name="techempower">
 		<provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
-		<properties>
-			<property name="datanucleus.ConnectionDriverName" value="org.h2.Driver" />
-			<property name="datanucleus.ConnectionURL" value="jdbc:h2:mem:exampleDb" />
-			<property name="datanucleus.ConnectionUserName" value="sa" />
-			<property name="datanucleus.ConnectionPassword" value="" />
-			<property name="datanucleus.connectionPoolingType" value="C3P0" />
+		<properties>			
+			<!-- Generic properties -->
 			<property name="datanucleus.Multithreaded" value="true" />
 			<property name="datanucleus.cache.level2.type" value="none" />
 			<property name="datanucleus.validation.mode" value="none" />

@@ -11,6 +11,7 @@
 		<officefloor-version>2.16.0</officefloor-version>
 		<compiler-version>3.1</compiler-version>
 		<datanucleus-version>4.0.0-release</datanucleus-version>
+		<postgresql-version>9.4-1201-jdbc41</postgresql-version>
 		<junit-version>4.11</junit-version>
 	</properties>
 	<build>
@@ -61,16 +62,6 @@
 			<version>${officefloor-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mchange</groupId>
-			<artifactId>c3p0</artifactId>
-			<version>0.9.5.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.4.187</version>
-		</dependency>
-		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
@@ -87,6 +78,16 @@
 			<version>${datanucleus-version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.5.1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.12.4</version>
@@ -95,6 +96,12 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.3.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.187</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
