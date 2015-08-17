@@ -10,12 +10,12 @@ TwirlKeys.templateImports += "http4s.techempower.benchmark._"
 
 com.github.retronym.SbtOneJar.oneJarSettings
 
-val http4sVersion = "0.8.3"
+val http4sVersion = "0.9.0"
 val doobieVersion = "0.2.2"
 val scalazVersion = "7.1.3"
 
 libraryDependencies ++= Seq(
-	"org.http4s" %% "http4s-blazeserver" % http4sVersion,
+	"org.http4s" %% "http4s-blaze-server" % http4sVersion,
 	"org.http4s" %% "http4s-dsl" % http4sVersion,
 	"org.http4s" %% "http4s-argonaut" % http4sVersion,
 	"org.http4s" %% "http4s-twirl" % http4sVersion,

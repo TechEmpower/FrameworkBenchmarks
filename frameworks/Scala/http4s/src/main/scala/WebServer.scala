@@ -15,6 +15,7 @@ import doobie.imports._
 
 import scalaz._
 import scalaz.concurrent.{Task, TaskApp}
+import scalaz.std.list._
 import scalaz.syntax.traverse._
 
 import java.util.concurrent.ThreadLocalRandom
@@ -29,9 +30,9 @@ object Middleware {
       service.map { resp =>
         resp.putHeaders(
           headers.Date(DateTime.now),
-          Header("Server", req.serverName)
+          Header("Server", req.serverAddr)
         )
-      }(req)
+      }.apply(req)
     }
   }
 }
