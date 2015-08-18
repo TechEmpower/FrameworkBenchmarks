@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends java7 resin maven
+fw_depends java8 resin-java8 maven
