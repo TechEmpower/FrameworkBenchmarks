@@ -1,0 +1,13 @@
+<input type="submit"/>
+lsdflsdkfjsdlflk
+<DCPB>
+string h1;
+h1 = "sdfsdf";
+</DCPB>
+
+<input type="submit"/>
+
+<DCPB>
+cout << h1 << flush;
+</DCPB>
+

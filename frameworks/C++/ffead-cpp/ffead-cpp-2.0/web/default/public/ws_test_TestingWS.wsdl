@@ -1,0 +1,318 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="ws_test_TestingWSImplService" targetNamespace="ws.test." xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="ws.test." xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:ns4="com.obj.">
+	<wsdl:types>
+		<xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="ws.test." xmlns:tns="ws.test." xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:complexType name="TestObject">
+	<xsd:sequence>
+	    
+<xsd:element name="a" type="xsd:int"/>
+
+<xsd:element name="b" type="xsd:long"/>
+
+<xsd:element name="c" type="xsd:string"/>
+
+<xsd:element name="d" type="xsd:float"/>
+
+<xsd:element name="e" type="xsd:double"/>
+
+<xsd:element name="h" type="xsd:short"/>
+
+	</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>
+<xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="com.obj." xmlns:tns="com.obj." xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:complexType name="TestObject">
+	<xsd:sequence>
+	    <xsd:complexType name="ArrayOfcom_obj_TestObjectshort"> <xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="short" nillable="true" type="xsd:short" />
+</xsd:sequence> </xsd:complexType>
+<xsd:complexType name="ArrayOfcom_obj_TestObjectint"> <xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="int" nillable="true" type="xsd:int" />
+</xsd:sequence> </xsd:complexType>
+<xsd:complexType name="ArrayOfcom_obj_TestObjectlong"> <xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="long" nillable="true" type="xsd:long" />
+</xsd:sequence> </xsd:complexType>
+<xsd:complexType name="ArrayOfcom_obj_TestObjectfloat"> <xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="float" nillable="true" type="xsd:float" />
+</xsd:sequence> </xsd:complexType>
+<xsd:complexType name="ArrayOfcom_obj_TestObjectdouble"> <xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="double" nillable="true" type="xsd:double" />
+</xsd:sequence> </xsd:complexType>
+<xsd:complexType name="ArrayOfcom_obj_TestObjectboolean"> <xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="boolean" nillable="true" type="xsd:boolean" />
+</xsd:sequence> </xsd:complexType>
+<xsd:complexType name="ArrayOfcom_obj_TestObjectstring"> <xsd:sequence>
+<xsd:element maxOccurs="unbounded" minOccurs="0" name="string" nillable="true" type="xsd:string" />
+</xsd:sequence> </xsd:complexType>
+
+	</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>
+
+		<xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="ws.test." xmlns:tns="ws.test." xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:import namespace="ws.test." />
+			
+<xsd:element name="wsmeth1" type="tns:wsmeth1" />
+<xsd:complexType name="wsmeth1">
+<xsd:sequence>
+    
+<xsd:element name="a" type="xsd:int"/>
+<xsd:element name="in2" type="xsd:string"/>
+<xsd:element name="in3" type="xsd:long"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="wsmeth1Response" type="tns:wsmeth1Response" />
+<xsd:complexType name="wsmeth1Response">
+<xsd:sequence>
+    
+</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="wsmeth2" type="tns:wsmeth2" />
+<xsd:complexType name="wsmeth2">
+<xsd:sequence>
+    
+<xsd:element name="b" type="xsd:string"/>
+<xsd:element minOccurs="0" maxOccurs="unbounded" name="c" type="xsd:int"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="wsmeth2Response" type="tns:wsmeth2Response" />
+<xsd:complexType name="wsmeth2Response">
+<xsd:sequence>
+    
+<xsd:element name="result" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="wsmeth3" type="tns:wsmeth3" />
+<xsd:complexType name="wsmeth3">
+<xsd:sequence>
+    
+<xsd:element name="in1" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="wsmeth3Response" type="tns:wsmeth3Response" />
+<xsd:complexType name="wsmeth3Response">
+<xsd:sequence>
+    
+<xsd:element name="result" type="tns:TestObject"/>
+</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="wsmeth4" type="tns:wsmeth4" />
+<xsd:complexType name="wsmeth4">
+<xsd:sequence>
+    
+<xsd:element name="in1" type="xsd:boolean"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="wsmeth4Response" type="tns:wsmeth4Response" />
+<xsd:complexType name="wsmeth4Response">
+<xsd:sequence>
+    
+<xsd:element name="result" type="ns4:TestObject"/>
+</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="wsmeth5" type="tns:wsmeth5" />
+<xsd:complexType name="wsmeth5">
+<xsd:sequence>
+    
+<xsd:element minOccurs="0" name="in1" type="tns:TestObject"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="wsmeth5Response" type="tns:wsmeth5Response" />
+<xsd:complexType name="wsmeth5Response">
+<xsd:sequence>
+    
+<xsd:element name="result" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="wsmeth6" type="tns:wsmeth6" />
+<xsd:complexType name="wsmeth6">
+<xsd:sequence>
+    
+<xsd:element minOccurs="0" name="in1" type="ns4:TestObject"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="wsmeth6Response" type="tns:wsmeth6Response" />
+<xsd:complexType name="wsmeth6Response">
+<xsd:sequence>
+    
+<xsd:element name="result" type="xsd:long"/>
+</xsd:sequence>
+</xsd:complexType>
+
+		</xsd:schema>
+	</wsdl:types>
+	
+<wsdl:message name="wsmeth1">
+    <wsdl:part element="tns:wsmeth1" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="wsmeth1Response">
+    <wsdl:part element="tns:wsmeth1Response" name="parameters">
+    </wsdl:part>
+ </wsdl:message>
+
+<wsdl:message name="wsmeth2">
+    <wsdl:part element="tns:wsmeth2" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="wsmeth2Response">
+    <wsdl:part element="tns:wsmeth2Response" name="parameters">
+    </wsdl:part>
+ </wsdl:message>
+
+<wsdl:message name="wsmeth3">
+    <wsdl:part element="tns:wsmeth3" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="wsmeth3Response">
+    <wsdl:part element="tns:wsmeth3Response" name="parameters">
+    </wsdl:part>
+ </wsdl:message>
+
+<wsdl:message name="wsmeth4">
+    <wsdl:part element="tns:wsmeth4" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="wsmeth4Response">
+    <wsdl:part element="tns:wsmeth4Response" name="parameters">
+    </wsdl:part>
+ </wsdl:message>
+
+<wsdl:message name="wsmeth5">
+    <wsdl:part element="tns:wsmeth5" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="wsmeth5Response">
+    <wsdl:part element="tns:wsmeth5Response" name="parameters">
+    </wsdl:part>
+ </wsdl:message>
+
+<wsdl:message name="wsmeth6">
+    <wsdl:part element="tns:wsmeth6" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="wsmeth6Response">
+    <wsdl:part element="tns:wsmeth6Response" name="parameters">
+    </wsdl:part>
+ </wsdl:message>
+
+	<wsdl:portType name="ws_test_TestingWS">
+		
+<wsdl:operation name="wsmeth1">
+      <wsdl:input message="tns:wsmeth1" name="wsmeth1">
+    </wsdl:input>
+      <wsdl:output message="tns:wsmeth1Response" name="wsmeth1Response">
+    </wsdl:output>
+ </wsdl:operation>
+
+<wsdl:operation name="wsmeth2">
+      <wsdl:input message="tns:wsmeth2" name="wsmeth2">
+    </wsdl:input>
+      <wsdl:output message="tns:wsmeth2Response" name="wsmeth2Response">
+    </wsdl:output>
+ </wsdl:operation>
+
+<wsdl:operation name="wsmeth3">
+      <wsdl:input message="tns:wsmeth3" name="wsmeth3">
+    </wsdl:input>
+      <wsdl:output message="tns:wsmeth3Response" name="wsmeth3Response">
+    </wsdl:output>
+ </wsdl:operation>
+
+<wsdl:operation name="wsmeth4">
+      <wsdl:input message="tns:wsmeth4" name="wsmeth4">
+    </wsdl:input>
+      <wsdl:output message="tns:wsmeth4Response" name="wsmeth4Response">
+    </wsdl:output>
+ </wsdl:operation>
+
+<wsdl:operation name="wsmeth5">
+      <wsdl:input message="tns:wsmeth5" name="wsmeth5">
+    </wsdl:input>
+      <wsdl:output message="tns:wsmeth5Response" name="wsmeth5Response">
+    </wsdl:output>
+ </wsdl:operation>
+
+<wsdl:operation name="wsmeth6">
+      <wsdl:input message="tns:wsmeth6" name="wsmeth6">
+    </wsdl:input>
+      <wsdl:output message="tns:wsmeth6Response" name="wsmeth6Response">
+    </wsdl:output>
+ </wsdl:operation>
+
+	</wsdl:portType>
+	<wsdl:binding name="ws_test_TestingWSImplServiceSoapBinding" type="tns:ws_test_TestingWS">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		
+ <wsdl:operation name="wsmeth1">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="wsmeth1">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="wsmeth1Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+ </wsdl:operation>
+
+ <wsdl:operation name="wsmeth2">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="wsmeth2">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="wsmeth2Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+ </wsdl:operation>
+
+ <wsdl:operation name="wsmeth3">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="wsmeth3">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="wsmeth3Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+ </wsdl:operation>
+
+ <wsdl:operation name="wsmeth4">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="wsmeth4">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="wsmeth4Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+ </wsdl:operation>
+
+ <wsdl:operation name="wsmeth5">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="wsmeth5">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="wsmeth5Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+ </wsdl:operation>
+
+ <wsdl:operation name="wsmeth6">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="wsmeth6">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="wsmeth6Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+ </wsdl:operation>
+
+	</wsdl:binding>
+	<wsdl:service name="ws_test_TestingWSImplService">
+		<wsdl:port binding="tns:ws_test_TestingWSImplServiceSoapBinding" name="ws_test_TestingWSImplPort">
+		<soap:address location="http://localhost:8080/default/testingWS" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

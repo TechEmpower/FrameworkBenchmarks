@@ -1,0 +1,3 @@
+function _FlexAppController()
+{
+}

@@ -1,0 +1,28 @@
+@CMP_NAME=TEST_BEAN
+@CMP_DESC=Test Bean
+
+@AJAX_AVAIL=true
+@WEBS_AVAIL=true
+@MINV_AVAIL=true
+
+@AUTO_TRANS=true
+@THRD_POOL_NUM=20
+@THRD_PER_REQ=false
+
+@AUTH_FROM=database
+@AUTH_DETS=@DB
+@AUTH_ALL=false
+@USR_GRP_ALWD=UG_1,UG_2,UG_3
+@BLOCK_USERS=user1,user2
+@PROTO_ALWD=tcp,http,udp
+
+@DB_CONN_POOL_NUM=10
+@AUTH_CONN_SRC=test_dsn
+@AUTH_USR_NAME=test
+@AUTH_USR_PASS=test
+@AUTH_ADD=
+
+@SESSION=false
+
+@SERVICE1=@NAME(myFirstService) @USR_GRP_ALWD(UG_1,UG_2) @SIGNATURE(Service1.service1) @ARGS(void) @SRV_RET(string)
+@SERVICE2=@NAME(mySecondService) @BLOCK_USERS(user7) @SIGNATURE(Service2.service2) @ARGS(string) @SRV_RET(string)

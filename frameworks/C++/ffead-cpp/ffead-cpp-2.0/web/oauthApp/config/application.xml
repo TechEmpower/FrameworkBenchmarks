@@ -1,0 +1,7 @@
+<app>
+	<controllers>
+		<controller class="OAUTHController" path="*.auth" />
+		<controller class="OAUTH2Controller" path="*.auth2" />
+		<controller fromext="lgn" toext="html" />
+	</controllers>
+</app>

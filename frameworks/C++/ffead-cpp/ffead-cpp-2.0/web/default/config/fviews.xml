@@ -1,0 +1,21 @@
+<fview>
+	<page htm="test.html" class="TestPage" name="testPage">
+		<event eid="text" type="onclick" func="textonclick"
+			args="1,document.getElementById('link').innerText,'Hello'" cb="alert(response.responseText)" />
+		<event eid="link" type="onclick" func="linkonclick"
+			cb="document.getElementById('para').innerHTML=response;alert(response.responseText)" />
+		<functions>
+			<![CDATA[
+				function test()
+				{
+					alert("Hello />");
+				}
+			]]>
+		</functions>
+		<form name="test.form" bean="TestForm" controller="TestFormController">
+			<field name="txtField" prop="txt" />
+			<field name="numField" prop="num" />
+			<field name="selField" prop="che" />
+		</form>
+	</page>
+</fview>

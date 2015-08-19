@@ -1,0 +1,38 @@
+<sdorm>
+	<data-source>
+		<config>
+			<nodes>
+				<node>
+					<username>sumeet</username>
+					<password>sumeet</password>
+					<dsn>MySQL-test</dsn>
+				</node>
+			</nodes>
+			<pool-size>5</pool-size>
+			<name>MySQL-DSN</name>
+			<type>sql</type>
+			<dialect>MySQLDialect</dialect>
+		</config>
+		<tables>
+			<table name="test4" class="Test4">
+				<col dbf="dat" obf="date"></col>
+				<col dbf="datt" obf="datt"></col>
+				<col dbf="datm" obf="dattm"></col>
+			</table>
+			<table name="test" class="Test">
+				<col dbf="id" obf="id"></col>
+				<col dbf="name" obf="name"></col>
+			</table>
+			<table name="test2" class="Test2">
+				<hasOne dfk="id" dmappedBy="test_id" field="test">Test</hasOne>
+				<col dbf="id" obf="id"></col>
+				<col dbf="test_id" obf="test_id"></col>
+			</table>
+			<table name="test3" class="Test3">
+				<hasMany dfk="id" dmappedBy="test_id" field="tests">Test</hasMany>
+				<col dbf="id" obf="id"></col>
+				<col dbf="test_id" obf="test_id"></col>
+			</table>
+		</tables>
+	</data-source>
+</sdorm>

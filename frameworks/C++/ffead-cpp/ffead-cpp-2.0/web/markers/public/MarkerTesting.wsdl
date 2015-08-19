@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="MarkerTestingImplService" targetNamespace="marker.testing.service" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="marker.testing.service" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" >
+	<wsdl:types>
+		<xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="marker.testing.service" xmlns:tns="marker.testing.service" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:complexType name="MarkerTest">
+	<xsd:sequence>
+	    
+<xsd:element name="id" type="xsd:int"/>
+
+<xsd:element name="name" type="xsd:string"/>
+
+	</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>
+
+		<xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="marker.testing.service" xmlns:tns="marker.testing.service" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:import namespace="marker.testing.service" />
+			
+<xsd:element name="test1" type="tns:test1" />
+<xsd:complexType name="test1">
+<xsd:sequence>
+    
+<xsd:element name="in" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="test1Response" type="tns:test1Response" />
+<xsd:complexType name="test1Response">
+<xsd:sequence>
+    
+</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="test2" type="tns:test2" />
+<xsd:complexType name="test2">
+<xsd:sequence>
+    
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="test2Response" type="tns:test2Response" />
+<xsd:complexType name="test2Response">
+<xsd:sequence>
+    
+<xsd:element name="result" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="test3" type="tns:test3" />
+<xsd:complexType name="test3">
+<xsd:sequence>
+    
+<xsd:element minOccurs="0" name="t" type="tns:MarkerTest"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="test3Response" type="tns:test3Response" />
+<xsd:complexType name="test3Response">
+<xsd:sequence>
+    
+</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="test4" type="tns:test4" />
+<xsd:complexType name="test4">
+<xsd:sequence>
+    
+<xsd:element name="in" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="test4Response" type="tns:test4Response" />
+<xsd:complexType name="test4Response">
+<xsd:sequence>
+    
+<xsd:element name="result" type="tns:MarkerTest"/>
+</xsd:sequence>
+</xsd:complexType>
+
+		</xsd:schema>
+	</wsdl:types>
+	
+<wsdl:message name="test1">
+    <wsdl:part element="tns:test1" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="test1Response">
+    <wsdl:part element="tns:test1Response" name="parameters">
+    </wsdl:part>
+ </wsdl:message>
+
+<wsdl:message name="test2">
+    <wsdl:part element="tns:test2" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="test2Response">
+    <wsdl:part element="tns:test2Response" name="parameters">
+    </wsdl:part>
+ </wsdl:message>
+
+<wsdl:message name="test3">
+    <wsdl:part element="tns:test3" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="test3Response">
+    <wsdl:part element="tns:test3Response" name="parameters">
+    </wsdl:part>
+ </wsdl:message>
+
+<wsdl:message name="test4">
+    <wsdl:part element="tns:test4" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="test4Response">
+    <wsdl:part element="tns:test4Response" name="parameters">
+    </wsdl:part>
+ </wsdl:message>
+
+	<wsdl:portType name="MarkerTesting">
+		
+<wsdl:operation name="test1">
+      <wsdl:input message="tns:test1" name="test1">
+    </wsdl:input>
+      <wsdl:output message="tns:test1Response" name="test1Response">
+    </wsdl:output>
+ </wsdl:operation>
+
+<wsdl:operation name="test2">
+      <wsdl:input message="tns:test2" name="test2">
+    </wsdl:input>
+      <wsdl:output message="tns:test2Response" name="test2Response">
+    </wsdl:output>
+ </wsdl:operation>
+
+<wsdl:operation name="test3">
+      <wsdl:input message="tns:test3" name="test3">
+    </wsdl:input>
+      <wsdl:output message="tns:test3Response" name="test3Response">
+    </wsdl:output>
+ </wsdl:operation>
+
+<wsdl:operation name="test4">
+      <wsdl:input message="tns:test4" name="test4">
+    </wsdl:input>
+      <wsdl:output message="tns:test4Response" name="test4Response">
+    </wsdl:output>
+ </wsdl:operation>
+
+	</wsdl:portType>
+	<wsdl:binding name="MarkerTestingImplServiceSoapBinding" type="tns:MarkerTesting">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		
+ <wsdl:operation name="test1">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="test1">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="test1Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+ </wsdl:operation>
+
+ <wsdl:operation name="test2">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="test2">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="test2Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+ </wsdl:operation>
+
+ <wsdl:operation name="test3">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="test3">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="test3Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+ </wsdl:operation>
+
+ <wsdl:operation name="test4">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="test4">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="test4Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+ </wsdl:operation>
+
+	</wsdl:binding>
+	<wsdl:service name="MarkerTestingImplService">
+		<wsdl:port binding="tns:MarkerTestingImplServiceSoapBinding" name="MarkerTestingImplPort">
+		<soap:address location="http://localhost:8080/markers/markerTesting" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
