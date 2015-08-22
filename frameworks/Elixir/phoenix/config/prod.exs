@@ -27,9 +27,7 @@ config :hello, Hello.Repo,
 # Where those two env variables point to a file on
 # disk for the key and cert.
 
-
-# Do not pring debug messages in production
-config :logger, level: :info
+config :logger, level: :error
 
 # ## Using releases
 #
