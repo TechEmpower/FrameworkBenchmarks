@@ -6,7 +6,7 @@ RETCODE=$(fw_exists $IROOT/elixir.installed)
 fw_depends erlang
 source $IROOT/erlang.installed
 
-VERSION="1.0.4-1"
+VERSION="1.0.5-2"
 RELEASE="trusty"
 ARCH="amd64"
 

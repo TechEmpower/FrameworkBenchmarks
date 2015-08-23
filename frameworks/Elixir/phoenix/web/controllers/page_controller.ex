@@ -3,8 +3,6 @@ defmodule Hello.PageController do
   alias Hello.World
   alias Hello.Fortune
 
-  plug :scrub_params, "world" when action in [:create, :update]
-
   def index(conn, _params) do
     json conn, %{"TE Benchmarks\n" => "Started"}
   end
