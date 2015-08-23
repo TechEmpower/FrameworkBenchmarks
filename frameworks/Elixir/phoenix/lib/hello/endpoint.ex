@@ -1,18 +1,25 @@
 defmodule Hello.Endpoint do
   use Phoenix.Endpoint, otp_app: :hello
 
-  # Serve at "/" the given assets from "priv/static" directory
+  socket "/socket", Hello.UserSocket
+
+  # Serve at "/" the static files from "priv/static" directory.
+  #
+  # You should set gzip to true if you are running phoenix.digest
+  # when deploying your static files in production.
   plug Plug.Static,
     at: "/", from: :hello, gzip: false,
-    only: ~w(css images js favicon.ico robots.txt)
+    only: ~w(css fonts images js favicon.ico robots.txt)
 
-  # Code reloading will only work if the :code_reloader key of
-  # the :phoenix application is set to true in your config file.
+  # Code reloading can be explicitly enabled under the
+  # :code_reloader configuration of your endpoint.
   if code_reloading? do
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
   end
 
+  plug Plug.RequestId
   plug Plug.Logger
 
   plug Plug.Parsers,
@@ -26,7 +33,7 @@ defmodule Hello.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_hello_key",
-    signing_salt: "DNlAnJ2o"
+    signing_salt: "xLdG6TUW"
 
-  plug :router, Hello.Router
+  plug Hello.Router
 end

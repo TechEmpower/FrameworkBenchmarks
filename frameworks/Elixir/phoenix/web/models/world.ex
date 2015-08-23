@@ -2,10 +2,10 @@ defmodule Hello.World do
   use Hello.Web, :model
 
   schema "world" do
-    field :randomNumber, :integer
+    field :randomnumber, :integer
   end
 
-  @required_fields ~w(randomNumber)
+  @required_fields ~w(randomnumber)
   @optional_fields ~w()
 
   def changeset(model, params \\ nil) do

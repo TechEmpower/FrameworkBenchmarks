@@ -8,8 +8,12 @@ defmodule Hello.Web do
       use Hello.Web, :controller
       use Hello.Web, :view
 
-  Keep the definitions in this module short and clean,
-  mostly focused on imports, uses and aliases.
+  The definitions below will be executed for every view,
+  controller, etc, so keep them short and clean, focused
+  on imports, uses and aliases.
+
+  Do NOT define functions inside the quoted expressions
+  below.
   """
 
   def model do
@@ -22,12 +26,10 @@ defmodule Hello.Web do
     quote do
       use Phoenix.Controller
 
-      # Alias the data repository and import query/model functions
       alias Hello.Repo
       import Ecto.Model
-      import Ecto.Query
+      import Ecto.Query, only: [from: 2]
 
-      # Import URL helpers from the router
       import Hello.Router.Helpers
     end
   end
@@ -39,11 +41,10 @@ defmodule Hello.Web do
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
 
-      # Import URL helpers from the router
-      import Hello.Router.Helpers
-
-      # Import all HTML functions (forms, tags, etc)
+      # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
+
+      import Hello.Router.Helpers
     end
   end
 
@@ -53,14 +54,14 @@ defmodule Hello.Web do
     end
   end
 
-
   def channel do
     quote do
       use Phoenix.Channel
-      # Alias the data repository and import query/model functions
+
       alias Hello.Repo
       import Ecto.Model
       import Ecto.Query, only: [from: 2]
+
     end
   end
 
