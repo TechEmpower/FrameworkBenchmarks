@@ -1,6 +1,6 @@
 #ULib Benchmarking Test
 
-This is the ULib portion of a [benchmarking test suite](https://github.com/TechEmpower/FrameworkBenchmarks) comparing a variety of web development platforms.
+This is the [ULib][http://stefanocasazza.github.io/ULib/] portion of a [benchmarking test suite](https://github.com/TechEmpower/FrameworkBenchmarks) comparing a variety of web development platforms.
 
 ### JSON Encoding Test
 
@@ -8,19 +8,23 @@ This is the ULib portion of a [benchmarking test suite](https://github.com/TechE
 
 ### Data-Store/Database Mapping Test
 
-* [Database test source](src/db.usp)
+* [Database test source](SQL)(src/db.usp)
+* [Database test source](REDIS)(src/rdb.usp)
 
 ### Variable Query Test
 
-* [Variable Query test source](src/query.usp)
+* [Variable Query test source](SQL)(src/query.usp)
+* [Variable Query test source](REDIS)(src/rquery.usp)
 
 ### Fortune Query Test
 
-* [Fortune Query test source](src/fortune.usp)
+* [Fortune Query test source](SQL)(src/fortune.usp)
+* [Fortune Query test source](REDIS)(src/rfortune.usp)
 
 ### Variable Query (update) Test
 
-* [Variable Query (update) test source](src/update.usp)
+* [Variable Query (update) test source](SQL)(src/update.usp)
+* [Variable Query (update) test source](REDIS)(src/rupdate.usp)
 
 ### Plaintext Test
 

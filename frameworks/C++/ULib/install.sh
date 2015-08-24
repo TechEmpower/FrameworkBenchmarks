@@ -102,7 +102,7 @@ make install
 
 # 3. Compile usp pages for benchmark
 cd ../../src/ulib/net/server/plugin/usp
-make db.la fortune.la json.la plaintext.la query.la update.la
+make db.la fortune.la json.la plaintext.la query.la update.la rdb.la rquery.la rupdate.la rfortune.la
 
 # Check that compilation worked
 if [ ! -e .libs/db.so ]; then
@@ -110,6 +110,6 @@ if [ ! -e .libs/db.so ]; then
 fi
 
 mkdir -p $ULIB_DOCUMENT_ROOT
-cp .libs/db.so .libs/fortune.so .libs/json.so .libs/plaintext.so .libs/query.so .libs/update.so $ULIB_DOCUMENT_ROOT
+cp .libs/db.so .libs/fortune.so .libs/json.so .libs/plaintext.so .libs/query.so .libs/update.so .libs/rdb.so .libs/rquery.so .libs/rupdate.so .libs/rfortune.so $ULIB_DOCUMENT_ROOT
 
 touch $ULIB_INSTALLED_FILE

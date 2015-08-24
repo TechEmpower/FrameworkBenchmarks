@@ -1,0 +1,72 @@
+<!--#
+Test type 2: Single database query
+TechEmpower Web Framework Benchmarks
+-->
+<!--#declaration
+#include "world.h"
+
+static World* pworld;
+static UREDISClient_Base* rc;
+
+#ifndef AS_cpoll_cppsp_DO
+static UValue* pvalue;
+#endif
+
+static void usp_fork_rdb()
+{
+   U_TRACE(5, "::usp_fork_rdb()")
+
+   rc = U_NEW(UREDISClient<UTCPSocket>);
+
+   if (rc->connect() == false)
+      {
+      U_WARNING("usp_fork_rdb(): %V", rc->UClient_Base::getResponse().rep);
+
+      return;
+      }
+
+   pworld = U_NEW(World);
+
+#ifndef AS_cpoll_cppsp_DO
+   pvalue = U_NEW(UValue(OBJECT_VALUE));
+#endif
+}
+
+#ifdef DEBUG
+static void usp_end_rdb()
+{
+   U_TRACE(5, "::usp_end_rdb()")
+
+   delete rc;
+
+   if (pworld)
+      {
+      delete pworld;
+
+#  ifndef AS_cpoll_cppsp_DO
+      delete pvalue;
+#  endif
+      }
+}
+#endif
+-->
+<!--#header
+Content-Type: application/json; charset=UTF-8
+-->
+<!--#code
+UStringRep* rep;
+
+u_put_unalignedp32(u_buffer,   U_MULTICHAR_CONSTANT32('w','o','r','l'));
+u_put_unalignedp16(u_buffer+4, U_MULTICHAR_CONSTANT16('d',':'));
+
+(void) rc->get(u_buffer, 6+u_num2str32(u_buffer+6, pworld->id = u_get_num_random(10000)));
+
+pworld->randomNumber = strtoul((rep = rc->vitem[0].rep)->data(), 0, 10);
+
+#ifdef AS_cpoll_cppsp_DO
+USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", pworld->id, rep);
+#else
+USP_JSON_stringify(*pvalue, World, *pworld);
+pvalue->clear();
+#endif
+-->
