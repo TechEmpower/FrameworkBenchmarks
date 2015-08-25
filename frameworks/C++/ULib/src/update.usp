@@ -75,7 +75,7 @@ queries;
 Content-Type: application/json; charset=UTF-8
 -->
 <!--#code
-int i = 0, num_queries = queries.strtol();
+int i = 0, num_queries = strtoul(queries.data(), 0, 10);
 
      if (num_queries <   1) num_queries = 1;
 else if (num_queries > 500) num_queries = 500;
