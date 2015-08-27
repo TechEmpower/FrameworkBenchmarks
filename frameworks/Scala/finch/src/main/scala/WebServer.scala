@@ -1,34 +1,38 @@
 import java.net.InetSocketAddress
 
-import argonaut._, Argonaut._
-
 import io.finch._
-import io.finch.{Endpoint => _, _}
-
 import io.finch.route._
-import io.finch.route.Endpoint
 import io.finch.response._
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.Httpx
+import com.twitter.finagle.httpx.{Response, Request}
 
 import com.twitter.util.Await
 
+import io.circe._
+import io.circe.generic.auto._
+import io.circe.jawn._
+import io.circe.syntax._
+import io.finch.response.EncodeResponse
+import io.circe.{Decoder, Encoder, Json}
+
 object WebServer extends App {
 
-  val json: Endpoint[HttpRequest, HttpResponse] = {
-    import io.finch.argonaut._
-    Get / "json" /> Ok(Json("message" -> jString("Hello, World!"))).toFuture
+  val json = get("json") {
+    import io.finch.circe._
+
+    case class Message(message: String)
+    Ok(Message("Hello, World!").asJson)
   }
 
-  val plaintext: Endpoint[HttpRequest, HttpResponse] =
-    Get / "plaintext" /> Ok("Hello, World!").toFuture
+  val plaintext = get("plaintext") {
+    "Hello, World!"
+  }
 
-  val api: Service[HttpRequest, HttpResponse] = plaintext | json
+  val api: Service[Request, Response] = (json :+: plaintext).toService
 
   Await.ready(
-    Httpx.serve(
-      "0.0.0.0:9000", api
-    )
+    Httpx.serve("localhost:9000", api)
   )
 }
