@@ -60,7 +60,8 @@ public abstract class AbstractTestCase {
 	public void performance() throws Throwable {
 
 		// Avoid performance test if indicate to skip
-		if ("yes".equalsIgnoreCase(System.getProperty("skipPerformance", null))) {
+		if (!("yes".equalsIgnoreCase(System.getProperty("doPerformanceTests",
+				"no")))) {
 			System.out.println("Skipping performance test for "
 					+ this.getClass().getSimpleName());
 			return;
