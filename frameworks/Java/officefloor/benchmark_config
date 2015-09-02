@@ -1,7 +1,7 @@
 {
   "framework": "officefloor",
   "tests": [{
-    "mysql": {
+    "default": {
       "setup_file": "start",
       "json_url": "/json-service.woof",
       "db_url": "/singleQuery-service.woof",
@@ -23,6 +23,6 @@
       "display_name": "officefloor-mysql",
       "notes": "",
       "versus": ""
-    }   
+    }
   }]
 }

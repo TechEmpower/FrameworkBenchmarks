@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import lombok.Data;
+import net.officefloor.plugin.woof.WoofOfficeFloorSource;
 
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.junit.After;
@@ -80,9 +81,15 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 		private int id;
 		private int randomNumber;
 	}
+	
+	@Before
+	public void runApplication() throws Exception {
+		// Start application after database setup
+	}
+
 
 	@Before
-	public void setupDatabase() throws SQLException {
+	public void setupDatabase() throws Exception {
 
 		// Generate the random number values
 		for (int i = 0; i < this.randomNumbers.length; i++) {
@@ -108,15 +115,15 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 			insert.executeUpdate();
 		}
 		
-		// TODO remove
-		System.out.println("Database setup");
-		
 		// Allow some time for start up of database
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException ex) {
 			// Carry on
 		}
+		
+		// Start the application
+		WoofOfficeFloorSource.start();
 	}
 
 	@After
@@ -129,11 +136,15 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 			// Carry on
 		}
 
-		// TODO remove
-		System.out.println("Shutting down database");
-
 		// Stop database for new instance each test
 		this.connection.createStatement().execute("SHUTDOWN IMMEDIATELY");
+		
+		// Allow some time for shutdown of database
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException ex) {
+			// Carry on
+		}
 	}
 
 	@Override
