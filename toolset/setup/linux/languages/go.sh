@@ -12,6 +12,7 @@ fw_get -O https://storage.googleapis.com/golang/go$VERSION.linux-amd64.tar.gz
 fw_untar go$VERSION.linux-amd64.tar.gz
 
 echo "export GOROOT=${IROOT}/go" > $IROOT/go.installed
+echo -e "export GOPATH=\$TROOT" >> $IROOT/go.installed
 echo -e "export PATH=\$GOROOT/bin:\$PATH" >> $IROOT/go.installed
 echo "export GOGC=800" >> $IROOT/go.installed
 

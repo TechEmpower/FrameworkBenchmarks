@@ -4,7 +4,5 @@ sed -i 's|tcp(.*:3306)|tcp('"${DBHOST}"':3306)|g' src/framework_benchmarks/falco
 
 fw_depends go
 
-export GOPATH=${TROOT}
-
 go get ./...
 go run src/framework_benchmarks/falcore.go &
