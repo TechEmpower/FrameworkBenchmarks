@@ -16,7 +16,7 @@
       "framework": "vertx",
       "language": "Java",
       "orm": "Raw",
-      "platform": "vertx",
+      "platform": "Netty",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
