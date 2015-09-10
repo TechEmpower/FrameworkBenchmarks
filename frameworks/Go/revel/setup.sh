@@ -2,6 +2,7 @@
 
 fw_depends go
 export GOPATH=${TROOT}
+export GOGC=800
 
 sed -i 's|tcp(.*:3306)|tcp('"${DBHOST}"':3306)|g' src/benchmark/conf/app.conf
 
