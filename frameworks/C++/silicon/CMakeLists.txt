@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 2.8)
 
 project(silicon)
 
-include_directories($ENV{IROOT}/include)
+include_directories($ENV{IROOT}/include $ENV{MICROHTTPD_HOME}/include)
 
-link_directories($ENV{IROOT}/lib)
+link_directories($ENV{IROOT}/lib $ENV{MICROHTTPD_HOME}/lib)
+
 add_definitions(-std=c++14  -ftemplate-depth=512 -DNDEBUG -O3)
 
 add_executable(silicon_tpc_mysql main.cc)
