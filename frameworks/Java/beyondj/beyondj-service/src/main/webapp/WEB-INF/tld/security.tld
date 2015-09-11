@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+		version="2.1">
+
+	<description>
+		Provides tags for use with the security package for the stripes web framework.
+	</description>
+	<display-name>Lenox Stripes Tag Library - Security</display-name>
+	<tlib-version>1.0</tlib-version>
+	<short-name>security</short-name>
+	<uri>http://www.lenox.com/security.tld</uri>
+	<tag>
+		<description><![CDATA[
+            <p>Wraps pieces of a JSP page to be displayed if an event is allowed for some roles, regardless of action bean event.</p>
+        ]]></description>
+		<name>protected-element</name>
+		<tag-class>com.lenox.security.ProtectedElementTag</tag-class>
+		<body-content>JSP</body-content>
+		
+		<attribute>
+			<description>
+				The name of the element to check access for. 
+			</description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<description>
+				The content id of the element to check access for. 
+			</description>
+			<name>contentId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<description>
+				The content type of the element to check access for. 
+			</description>
+			<name>contentType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+	</tag>
+	<tag>
+		<description><![CDATA[
+            <p>Wraps pieces of a JSP page to be displayed if content was not displayed at all on the page due to security constraints
+        ]]></description>
+		<name>when-no-content-displayed</name>
+		<tag-class>com.lenox.security.NoSecuredTagRenderedTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>	
+	
+</taglib>
