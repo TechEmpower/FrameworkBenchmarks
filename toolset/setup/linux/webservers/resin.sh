@@ -1,11 +1,16 @@
 #!/bin/bash
 
-RVER=4.0.41
-
-RETCODE=$(fw_exists ${IROOT}/resin-$RVER.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
-
 fw_depends java7
+
+RETCODE=$(fw_exists ${IROOT}/resin.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/resin.installed
+  return 0; }
+
+RVER=4.0.41
+RESIN=resin-$RVER
+RESIN_HOME=$IROOT/$RESIN
+
 sudo cp -r $JAVA_HOME/include $JAVA_HOME/jre/bin/
 
 fw_get -O http://www.caucho.com/download/resin-$RVER.tar.gz
@@ -21,4 +26,7 @@ cat $FWROOT/config/resin.properties > conf/resin.properties
 mv conf/resin.xml conf/resin.xml.orig
 cat $FWROOT/config/resin.xml > conf/resin.xml
 
-touch ${IROOT}/resin-$RVER.installed
+echo "export RESIN_HOME=${RESIN_HOME}" > $IROOT/resin.installed
+echo -e "export PATH=\$RESIN_HOME/bin:\$PATH" >> $IROOT/resin.installed
+
+source $IROOT/resin.installed

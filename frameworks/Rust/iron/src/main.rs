@@ -17,7 +17,7 @@ fn main() {
     router.get("/json", jsonHandler);
     router.get("/plaintext", plaintextHandler);
 
-    Iron::new(router).http("127.0.0.1:8080").unwrap();
+    Iron::new(router).http("0.0.0.0:8080").unwrap();
 }
 
 fn jsonHandler(req: &mut Request) -> IronResult<Response> {

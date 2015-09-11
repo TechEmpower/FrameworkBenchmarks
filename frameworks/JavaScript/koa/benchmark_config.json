@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "koa",
       "notes": "",
-      "versus": "node"
+      "versus": "nodejs"
     }
   }]
 }

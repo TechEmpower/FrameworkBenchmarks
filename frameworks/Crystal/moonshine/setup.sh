@@ -1,4 +1,6 @@
-source ${IROOT}/crystal-0.7.1.installed
+#!/bin/bash
+
+fw_depends crystal
 
 crystal deps install
 

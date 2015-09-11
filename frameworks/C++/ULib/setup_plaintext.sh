@@ -1,5 +1,7 @@
 #!/bin/bash
 
+fw_depends ulib
+
 # 1. Change ULib Server (userver_tcp) configuration
 sed -i "s|TCP_LINGER_SET .*|TCP_LINGER_SET 0|g"										$IROOT/ULib/benchmark.cfg
 sed -i "s|LISTEN_BACKLOG .*|LISTEN_BACKLOG 16384|g"								$IROOT/ULib/benchmark.cfg

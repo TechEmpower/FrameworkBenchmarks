@@ -2,6 +2,7 @@ package app;
 
 import net.javapla.jawn.server.UndertowServer;
 import net.javapla.jawn.server.spi.ServerConfig;
+import net.javapla.jawn.server.spi.ServerConfig.PERFORMANCE_MODE;
 
 public class UndertowMain {
 
@@ -16,8 +17,10 @@ public class UndertowMain {
         
         ServerConfig config = new ServerConfig();
         config.setContextPath("/");
-        config.setPort(8081);
+        config.setPort(8080);
         config.setWebappPath("webapp");
+        config.setServerPerformance(PERFORMANCE_MODE.HIGHEST);
+        config.setHost("0.0.0.0");
         
         UndertowServer server = new UndertowServer();
         server.setupAndStartServer(config);

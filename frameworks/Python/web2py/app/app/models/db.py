@@ -15,7 +15,7 @@ from gluon.contrib.appconfig import AppConfig
 myconf = AppConfig(reload=True)
 
 DATABASE = None
-DATABASE_URI = "mysql://benchmarkdbuser:benchmarkdbpass@localhost:3306/hello_world"
+DATABASE_URI = "mysql://benchmarkdbuser:benchmarkdbpass@127.0.0.1:3306/hello_world"
 
 db = DAL(DATABASE_URI, fake_migrate_all=True)
 DATABASE = db

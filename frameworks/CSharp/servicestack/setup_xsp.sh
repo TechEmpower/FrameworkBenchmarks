@@ -1,10 +1,7 @@
 #!/bin/bash
 
-export NGINX_HOME=${IROOT}/nginx
+fw_depends nginx xsp mono
 
-set -e
-# mono environment variables
-. ${IROOT}/mono.installed
 sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
 # extra cleaning
 rm -rf src/bin src/obj
