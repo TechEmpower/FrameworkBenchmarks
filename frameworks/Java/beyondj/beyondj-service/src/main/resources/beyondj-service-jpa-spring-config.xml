@@ -1,0 +1,70 @@
+<beans
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:conditional="http://lenox.com/beyondj/profile"
+        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+        http://www.springframework.org/schema/data/jpa
+        http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
+        http://lenox.com/beyondj/profile
+        http://lenox.com/beyondj/profile/profile.xsd">
+
+    <bean id="derbyUtil" class="com.lenox.util.DerbyUtil">
+        <constructor-arg index="0" value="${system.jdbc.database.platform:DERBY}"/>
+        <constructor-arg index="1" value="${system.derby.database.test.path:jdbc:derby://localhost:1527/beyondj;create=false;user=beyondj_user;password=_beyondj_user_}"/>
+    </bean>
+
+    <conditional:importIf test="${system.jdbc.database.platform=='DERBY'}" src="config.properties"
+                          resource="beyondj-service-derby.xml" parseValidators="com.lenox.util.DerbyUtil#isConnected"/>
+    <!--comma delimited -->
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:config.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <jpa:repositories base-package="com.techempower.beyondj.repository"></jpa:repositories>
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+
+    <bean id="jpaVendorAdapter"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="database" value="${system.jdbc.database.platform}"/>
+        <property name="databasePlatform" value="${system.jdbc.dialect}"/>
+    </bean>
+
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
+        <property name="persistenceUnitName" value="beyondj_persistence_unit"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+        <property name="jpaDialect" ref="jpaDialect"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${system.jdbc.driver}"/>
+        <property name="url" value="${system.jdbc.url}"/>
+        <property name="username" value="${system.jdbc.username}"/>
+        <property name="password" value="${system.jdbc.password}"/>
+    </bean>
+
+</beans>
+
+
+
+
+

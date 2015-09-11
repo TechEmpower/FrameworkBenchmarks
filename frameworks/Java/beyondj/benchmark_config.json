@@ -1,0 +1,28 @@
+{
+  "framework": "beyondj",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/servlets/json",
+      "db_url": "/db",
+      "query_url": "/servlets/performance?queries=",
+      "fortune_url": "/servlets/performance?op=fortunes",
+      "plaintext_url": "/servlets/performance?op=plaintext",
+      "update_url": "/servlets/performance?op=updates&queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "beyondj",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Servlet",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "spring",
+      "notes": "",
+      "versus": "servlet"
+    }
+  }]
+}

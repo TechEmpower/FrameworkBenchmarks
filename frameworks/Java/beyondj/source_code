@@ -1,0 +1,12 @@
+./beyondj/src/main/java/com/techempower/beyondj/domain/Fortune.java
+./beyondj/src/main/java/com/techempower/beyondj/domain/World.java
+./beyondj/src/main/java/com/techempower/beyondj/repository/FortuneRepository.java
+./beyondj/src/main/java/com/techempower/beyondj/repository/WorldRepository.java
+./beyondj/src/main/java/com/techempower/beyondj/SampleApplication.java
+./beyondj/src/main/java/com/techempower/beyondj/web/FortuneController.java
+./beyondj/src/main/java/com/techempower/beyondj/web/HelloController.java
+./beyondj/src/main/java/com/techempower/beyondj/web/WorldDatabaseController.java
+./beyondj/src/main/resources/application.yml
+./beyondj/src/main/resources/log4.properties
+./beyondj/src/main/resources/schema.sql
+./beyondj/src/main/resources/templates/fortunes.html
