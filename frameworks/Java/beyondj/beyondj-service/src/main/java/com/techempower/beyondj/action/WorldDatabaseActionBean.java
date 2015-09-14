@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.stripesrest.JsonResolution;
 
-import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -111,9 +110,6 @@ public class WorldDatabaseActionBean extends BaseActionBean {
 
 
     private static final int DB_ROWS = 10000;
-
-    @SpringBean
-    private EntityManagerFactory entityManagerFactory;
 
     @SpringBean
     private WorldRepository worldRepository;
