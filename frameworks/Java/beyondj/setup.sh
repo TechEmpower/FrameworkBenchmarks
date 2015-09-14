@@ -3,5 +3,5 @@
 fw_depends java8 maven
 
 mvn clean package
-cd target
-java -jar beyondj.jar &
+
+java -jar beyondj-launcher/target/beyondj.jar &

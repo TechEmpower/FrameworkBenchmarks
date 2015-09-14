@@ -4,12 +4,12 @@ This is the BeyondJ portion of a [benchmarking test suite](../) comparing a vari
 
 This is using several [BeyondJ projects](http://beyondj.com/dist/docs/README.html) to build an application.
 
-## How to run this app locally
+## How to run this app
 
 You can easily run this sample application 
 For that, simply run:
 
-    java -jar beyondj.jar
+    java -jar beyondj-launcher/target/beyondj.jar &
 
 ## Guides
 * [Building a service](http://beyondj.com/dist/docs/README.html)
@@ -19,8 +19,8 @@ See [BeyondJ projects documentation](http://beyondj.com/dist/docs/README.html).
 
 ## Application Endpoints
 
-When deployed locally, the application uses the 'beyondj-service' context; for the benchmark, all
-URLs are prefixed with "/perf".
+The application uses the 'beyondj-service' context;
+For the benchmark, all URLs are prefixed with "/perf"
 Check out [SampleApplication, the main Application file]
 (beyondj-launcher/src/main/java/com/techempower/beyondj/BeyondJApplication.java)
 
@@ -60,7 +60,7 @@ Check out [SampleApplication, the main Application file]
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [BeyondJ 1.0-SNAPSHOT](http://beyondj.com/dist/docs/README.html)
+* [BeyondJ 1.0](http://beyondj.com/dist/docs/README.html)
 * [Java HotSpot 1.8.0_20]
 
 
