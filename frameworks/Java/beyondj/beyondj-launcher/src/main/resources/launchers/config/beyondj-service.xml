@@ -19,6 +19,7 @@
         <printClassPath>true</printClassPath>
         <numInstances>3</numInstances>
         <loadBalancerDefType>ROUND_ROBIN_LOAD_BALANCER</loadBalancerDefType>
+        <enableHealthCheck>true</enableHealthCheck>
         <healthCheckInterval>1</healthCheckInterval>
         <healthCheckInitialDelay>1</healthCheckInitialDelay>
         <!--Possible values: DAYS ,HOURS, MICROSECONDS ,MILLISECONDS ,MINUTES ,NANOSECONDS ,SECONDS -->

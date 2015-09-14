@@ -49,8 +49,6 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <!-- <bean id="WorldDataSet" class="com.techempower.beyondj.dataset.WorldDataSet"/>
- -->
     <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
 
     <bean id="jpaVendorAdapter"
