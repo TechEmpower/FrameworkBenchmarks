@@ -3,12 +3,12 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
-      "json_url": "/servlets/json",
-      "db_url": "/db",
-      "query_url": "/servlets/performance?queries=",
-      "fortune_url": "/servlets/performance?op=fortunes",
-      "plaintext_url": "/servlets/performance?op=plaintext",
-      "update_url": "/servlets/performance?op=updates&queries=",
+      "json_url": "/beyondj-service/perf/hello",
+      "db_url": "/beyondj-service/perf/database/db",
+      "query_url": "/beyondj-service/perf/database/queries?&queries=",
+      "fortune_url": "/beyondj-service/perf/fortunes",
+      "plaintext_url": "/beyondj-service/perf/hello/plaintext",
+      "update_url": "/beyondj-service/perf/database/updates?&queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -20,8 +20,8 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "spring",
-      "notes": "",
+      "display_name": "Beyondj",
+      "notes": "BeyondJ is the Next Generation Reactive and Modular Java container",
       "versus": "servlet"
     }
   }]
