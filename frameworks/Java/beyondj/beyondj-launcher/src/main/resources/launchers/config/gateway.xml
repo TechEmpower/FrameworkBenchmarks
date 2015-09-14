@@ -15,6 +15,7 @@
     <healthCheckInterval>1</healthCheckInterval>
     <!--Possible values are JETTY, TOMCAT -->
     <containerType>JETTY</containerType>
+    <enableHealthCheck>true</enableHealthCheck>
     <healthCheckInitialDelay>1</healthCheckInitialDelay>
     <!--Possible values: DAYS ,HOURS, MICROSECONDS ,MILLISECONDS ,MINUTES ,NANOSECONDS ,SECONDS -->
     <healthCheckIntervalUnit>MINUTES</healthCheckIntervalUnit>
