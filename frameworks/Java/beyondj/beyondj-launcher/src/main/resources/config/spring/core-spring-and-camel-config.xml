@@ -41,15 +41,6 @@
 
     <import resource="core-jpa-spring-config.xml"/>
 
-    <!--    <profile:importIf test="${system.platform.config=='JPA'}" src="props/core-config.properties"
-                          resource="config/spring/jpa-spring-config.xml" loader="com.lenox.beyondj.BeyondJApplication"/>
-
-        <profile:importIf test="${system.platform.config=='MONGO'}" src="props/core-config.properties"
-                          resource="config/spring/mongo-spring-config.xml" loader="com.lenox.beyondj.BeyondJApplication"/>
-
-        <profile:importIf test="${system.platform.enable.activemq=='true'}" src="props/core-config.properties"
-                          resource="config/spring/activemq-config.xml" loader="com.lenox.beyondj.BeyondJApplication"/>-->
-
     <!-- aspect config-->
     <bean name="securityAspect" class="com.lenox.security.SecurityAspect"/>
     <context:annotation-config/>
@@ -185,7 +176,7 @@
     <bean id="managementService" class="com.lenox.beyondj.services.BeyondJManagementService"/>
     <bean id="installationService" class="com.lenox.beyondj.services.BeyondJInstallationService"/>
     <bean id="actorRefService" class="com.lenox.beyondj.actor.system.ActorRefServiceImpl"/>
-    <bean id="beyondJApplicationService" class="com.lenox.beyondj.BeyondJApplicationService"/>
+    <bean id="beyondJApplicationService" class="com.techempower.beyondj.BeyondJApplicationService"/>
     <bean id="applicationLaunchService" class="com.lenox.beyondj.services.ApplicationLaunchService" scope="singleton"/>
 
     <bean id="velocityEngine" class="com.beyondjservlet.gateway.velocity.VelocityEngineFactoryBean">

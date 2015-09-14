@@ -518,7 +518,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
                 <configuration>
-                    <mainClass>com.lenox.beyondj.BeyondJApplication</mainClass>
+                    <mainClass>com.techempower.beyondj.BeyondJApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -544,8 +544,8 @@
                 <configuration>
                     <programs>
                         <program>
-                            <mainClass>com.lenox.beyondj.BeyondJApplication</mainClass>
-                            <name>beyondj-app</name>
+                            <mainClass>com.techempower.beyondj.BeyondJApplication</mainClass>
+                            <name>beyondj</name>
                         </program>
                     </programs>
                     <extraJvmArguments>-Xms256M</extraJvmArguments>
@@ -587,7 +587,7 @@
                     <target>${project.build.directory}</target>
                     <daemons>
                         <daemon>
-                            <id>beyondj-service</id>
+                            <id>beyondj</id>
                             <mainClass>com.techempower.beyondj.BeyondJApplication</mainClass>
                             <commandLineArguments>
                                 <commandLineArgument>start</commandLineArgument>

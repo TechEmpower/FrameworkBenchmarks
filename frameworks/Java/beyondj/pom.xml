@@ -17,9 +17,21 @@
     <name>BeyondJ Sample Project</name>
     <packaging>pom</packaging>
 
+    <properties>
+        <mysql.connector.version>5.1.34</mysql.connector.version>
+        <commons.pool.version>1.5.1</commons.pool.version>
+        <hibernate.validator.version>5.1.3.Final</hibernate.validator.version>
+        <beyondj.stripesafe.version>1.0</beyondj.stripesafe.version>
+        <beyondj.stripesrest.version>1.0</beyondj.stripesrest.version>
+        <stripes.version>1.6.0-BEYONDJ-SNAPSHOT</stripes.version>
+        <hibernate.entitymanager.version>4.3.9.Final</hibernate.entitymanager.version>
+    </properties>
+
     <modules>
         <module>beyondj-launcher</module>
         <module>beyondj-service</module>
+        <module>beyondj-data</module>
+         <module>beyondj-data-loader</module>
     </modules>
 
 </project>

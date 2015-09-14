@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.stripesrest.JsonResolution;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,10 +28,20 @@ public class WorldDatabaseActionBean extends BaseActionBean {
     @Validate(required = false)
     private int queries = 1;
 
-    @HandlesEvent(QUERIES)
+    @HandlesEvent(DB)
     @DefaultHandler
+    public Resolution queryOne() {
+        //  validateRepository();
+        final Random random = ThreadLocalRandom.current();
+        World world = (World) worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
+        setResponseDate();
+        return new JsonResolution(world);
+    }
+
+    @HandlesEvent(QUERIES)
     @Transactional(readOnly = true)
     public Resolution queries() {
+        //    validateRepository();
         boundQueryCount();
         List<Future<World>> wfs = new ArrayList<>(queries);
         for (int i = 0; i < queries; i++) {
@@ -39,7 +50,7 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                             new Callable<World>() {
                                 @Override
                                 public World call() throws Exception {
-                                    return worldRepository.findOne(
+                                    return (World) worldRepository.findOne(
                                             ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
                                 }
                             }));
@@ -51,6 +62,7 @@ public class WorldDatabaseActionBean extends BaseActionBean {
     @HandlesEvent(UPDATES)
     @Transactional
     public Resolution updates() {
+        //   validateRepository();
         boundQueryCount();
         List<Future<World>> wfs = new ArrayList<>(queries);
         for (int i = 0; i < queries; i++) {
@@ -60,7 +72,7 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                         @Transactional(propagation = Propagation.REQUIRES_NEW)
                         public World call() throws Exception {
                             Random random = ThreadLocalRandom.current();
-                            World world = worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
+                            World world = (World) worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
                             world.setRandomNumber(random.nextInt(DB_ROWS) + 1);
                             worldRepository.save(world);
                             return world;
@@ -100,10 +112,24 @@ public class WorldDatabaseActionBean extends BaseActionBean {
         }
     }
 
+/*    private void validateRepository(){
+        if(worldRepository == null){
+            synchronized(WorldDatabaseActionBean.class){
+                worldRepository = new SimpleJpaRepository<>(
+                        World.class, entityManagerFactory.createEntityManager());
+            }
+        }
+    }*/
+
     private static final int DB_ROWS = 10000;
+    //private static SimpleJpaRepository worldRepository;
+    @SpringBean
+    private EntityManagerFactory entityManagerFactory;
+
     @SpringBean
     private WorldRepository worldRepository;
 
     private static final String QUERIES = "queries";
+    private static final String DB = "db";
     private static final String UPDATES = "updates";
 }
