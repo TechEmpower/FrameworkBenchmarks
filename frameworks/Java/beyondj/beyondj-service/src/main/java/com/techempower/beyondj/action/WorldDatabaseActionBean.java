@@ -112,17 +112,9 @@ public class WorldDatabaseActionBean extends BaseActionBean {
         }
     }
 
-/*    private void validateRepository(){
-        if(worldRepository == null){
-            synchronized(WorldDatabaseActionBean.class){
-                worldRepository = new SimpleJpaRepository<>(
-                        World.class, entityManagerFactory.createEntityManager());
-            }
-        }
-    }*/
 
     private static final int DB_ROWS = 10000;
-    //private static SimpleJpaRepository worldRepository;
+
     @SpringBean
     private EntityManagerFactory entityManagerFactory;
 

@@ -2,10 +2,8 @@ package com.techempower.beyondj.action;
 
 import com.techempower.beyondj.domain.Fortune;
 import com.techempower.beyondj.repository.FortuneRepository;
-import com.techempower.beyondj.repository.WorldRepository;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.integration.spring.SpringBean;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
@@ -38,19 +36,8 @@ public class FortuneActionBean extends BaseActionBean {
         return fortunes;
     }
 
-   /* private void validateRepository() {
-        if (fortuneRepository == null) {
-            synchronized (FortuneActionBean.class) {
-                fortuneRepository = new SimpleJpaRepository<>(
-                        Fortune.class, entityManagerFactory.createEntityManager());
-            }
-        }
-    }*/
-
     @SpringBean
     private EntityManagerFactory entityManagerFactory;
-   // private static SimpleJpaRepository fortuneRepository;
-
     @SpringBean
     private FortuneRepository fortuneRepository;
 }
