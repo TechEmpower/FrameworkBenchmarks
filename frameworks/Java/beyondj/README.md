@@ -19,41 +19,42 @@ See [BeyondJ projects documentation](http://beyondj.com/dist/docs/README.html).
 
 ## Application Endpoints
 
-When deployed locally, the application uses the 'ROOT' context; for the benchmark, all
-URLs are prefixed with "/beyondj".
-Check out [SampleApplication, the main Application file](src/main/java/com/techempower/beyondj/SampleApplication.java)
+When deployed locally, the application uses the 'beyondj-service' context; for the benchmark, all
+URLs are prefixed with "/perf".
+Check out [SampleApplication, the main Application file]
+(beyondj-launcher/src/main/java/com/techempower/beyondj/BeyondJApplication.java)
 
 ### JSON serialization
 
-* http://localhost:8080/servlets/performance?op=json
-* [JSON Controller](src/main/java/com/techempower/beyondj/web/HelloController.java)
+* http://localhost:8080/beyondj-service/perf/hello
+* [JSON ActionBean](beyondj-service/src/main/java/com/techempower/beyondj/action/HelloActionBean.java)
 
 ### Single database query
 
-* http://localhost:8080/db
-* [Database Controller](src/main/java/com/techempower/beyondj/web/WorldDatabaseController.java)
-* [Database Entity](src/main/java/com/techempower/beyondj/domain/World.java)
-* [Database Repository](src/main/java/com/techempower/beyondj/service/WorldRepository.java)
+* http://localhost:8080/beyondj-service/perf/database/db
+* [Database ActionBean](beyondj-service/src/main/java/com/techempower/beyondj/action/WorldDatabaseActionBean.java)
+* [Database Entity](beyondj-data/src/main/java/com/techempower/beyondj/domain/World.java)
+* [Database Repository](beyondj-data/src/main/java/com/techempower/beyondj/repository/WorldRepositoryImpl.java)
 
 ### Multiple database queries
 
-* http://localhost:8080/servlets/performance?queries=5
-* [Database Controller](src/main/java/com/techempower/beyondj/web/WorldDatabaseController.java)
+* http://localhost:8080/beyondj-service/perf/database/queries?&queries=5
+* [Database ActionBean](beyondj-service/src/main/java/com/techempower/beyondj/action/WorldDatabaseActionBean.java)
 
 ### Fortunes
 
-* http://localhost:8080/servlets/performance?op=fortunes
-* [Fortune Controller](src/main/java/com/techempower/beyondj/web/FortuneController.java)
+* http://localhost:8080/beyondj-service/perf/fortunes
+* [Fortune ActionBean](beyondj-service/src/main/java/com/techempower/beyondj/action/FortuneActionBean.java)
 
 ### Database updates
 
-* http://localhost:8080//servlets/performance?op=updates&queries=5
-* [Database Controller](src/main/java/com/techempower/beyondj/web/WorldDatabaseController.java)
+* http://localhost:8080/beyondj-service/perf/database/updates?&queries=5
+* [Database ActionBean](beyondj-service/src/main/java/com/techempower/beyondj/action/WorldDatabaseActionBean.java)
 
 ### Plaintext
 
-* http://localhost:8080/servlets/performance?op=plaintext
-* [Controller](src/main/java/com/techempower/beyondj/web/HelloController.java)
+* http://localhost:8080/beyondj-service/perf/hello/plaintext
+* [ActionBean](beyondj-service/src/main/java/com/techempower/beyondj/action/HelloActionBean.java)
 
 
 ## Infrastructure Software Versions
