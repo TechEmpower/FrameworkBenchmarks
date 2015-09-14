@@ -11,10 +11,12 @@ import net.sourceforge.stripes.action.UrlBinding;
 @UrlBinding("/perf/error")
 public class ErrorActionBean extends BaseActionBean {
 
+    public static final String JSP = "/WEB-INF/templates/error.jsp";
+
     @DefaultHandler
     public Resolution view() {
         setResponseDate();
-        return new ForwardResolution("/WEB-INF/templates/error.jsp");
+        return new ForwardResolution(JSP);
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.techempower.beyondj.repository.FortuneRepository;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.integration.spring.SpringBean;
 
-import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -35,8 +34,6 @@ public class FortuneActionBean extends BaseActionBean {
         return fortunes;
     }
 
-    @SpringBean
-    private EntityManagerFactory entityManagerFactory;
     @SpringBean
     private FortuneRepository fortuneRepository;
 
