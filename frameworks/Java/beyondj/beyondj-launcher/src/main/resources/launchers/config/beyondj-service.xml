@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <applicationOptions>
-        <friendlyName>Web App Sample</friendlyName>
+        <friendlyName>BeyondJ Performance Test Web App</friendlyName>
         <deploymentType>SERVLET_CONTAINER</deploymentType>
-        <war>webAppSample</war>
+        <war>beyondj-service</war>
         <requiresWar>true</requiresWar>
         <systemGateway>false</systemGateway>
-        <warLocation>webAppSample</warLocation>
-        <contextPath>/webAppSample</contextPath>
-        <port>7081</port>
-        <jmxPort>5555</jmxPort
-                >
+        <warLocation>beyondj-service</warLocation>
+        <contextPath>/beyondj-service</contextPath>
+        <port>9090</port>
         <bundleId>12dc8404-a8b7-4a79-a02d-31a715359f60</bundleId>
         <gracefulStopTimeInMillis>3000</gracefulStopTimeInMillis>
         <version>1.0</version>
@@ -18,7 +16,7 @@
         <registerJspServlet>true</registerJspServlet>
         <!--Possible values are JETTY, TOMCAT -->
         <containerType>JETTY</containerType>
-        <printClassPath>false</printClassPath>
+        <printClassPath>true</printClassPath>
         <numInstances>3</numInstances>
         <loadBalancerDefType>ROUND_ROBIN_LOAD_BALANCER</loadBalancerDefType>
         <healthCheckInterval>1</healthCheckInterval>
@@ -28,7 +26,7 @@
         <healthCheckInitialDelayUnit>MINUTES</healthCheckInitialDelayUnit>
         <deployedPostContainerStart>false</deployedPostContainerStart>
         <enableJolokia>false</enableJolokia>
-        <enableMetrics>true</enableMetrics>
+        <enableMetrics>false</enableMetrics>
         <metricsCollectionInterval>15000</metricsCollectionInterval>
         <enableJmxConnector>false</enableJmxConnector>
         <printHealthCheckNotice>false</printHealthCheckNotice>

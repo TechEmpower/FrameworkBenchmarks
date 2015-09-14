@@ -10,7 +10,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:beyondj-service-beans.xml</param-value>
+        <param-value>classpath:beyondj-service-jpa-spring-config.xml</param-value>
     </context-param>
 
     <context-param>

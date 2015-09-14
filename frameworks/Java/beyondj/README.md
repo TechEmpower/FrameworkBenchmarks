@@ -61,3 +61,6 @@ The tests were run with:
 
 * [BeyondJ 1.0-SNAPSHOT](http://beyondj.com/dist/docs/README.html)
 * [Java HotSpot 1.8.0_20]
+
+
+Note: the code was adopted from the Spring version of the benchmarks

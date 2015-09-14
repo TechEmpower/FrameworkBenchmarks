@@ -1,13 +1,10 @@
 package com.techempower.beyondj.action;
 
-import com.lenox.beyond.configuration.Config;
 import com.techempower.beyondj.BeyondJActionBeanContext;
-import com.techempower.beyondj.repository.FortuneRepository;
-import com.techempower.beyondj.repository.WorldRepository;
 import net.sourceforge.stripes.action.*;
-import net.sourceforge.stripes.integration.spring.SpringBean;
 import net.sourceforge.stripes.validation.ValidationErrorHandler;
 import net.sourceforge.stripes.validation.ValidationErrors;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -105,11 +102,4 @@ public abstract class BaseActionBean implements
     protected void setResponseDate(){
         getContext().getResponse().setHeader(DATE, new java.util.Date().toString());
     }
-
-    @SpringBean
-    protected Config config;
-    @SpringBean
-    protected FortuneRepository fortuneRepository;
-    @SpringBean
-    protected WorldRepository worldRepository;
 }

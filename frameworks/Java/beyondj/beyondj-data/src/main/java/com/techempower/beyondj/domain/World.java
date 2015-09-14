@@ -1,16 +1,20 @@
 package com.techempower.beyondj.domain;
 
+import org.springframework.data.domain.Persistable;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public final class World {
+public final class World implements Persistable<Integer> {
 
     @Id
     @GeneratedValue
     private volatile Integer id;
 
+    @Column
     private volatile Integer randomNumber;
 
     World() {
@@ -20,9 +24,16 @@ public final class World {
         this.id = id;
         this.randomNumber = randomNumber;
     }
-
+    @Override
+    public boolean isNew() {
+        return this.id == null;
+    }
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getRandomNumber() {
