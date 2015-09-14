@@ -31,7 +31,6 @@ public class WorldDatabaseActionBean extends BaseActionBean {
     @HandlesEvent(DB)
     @DefaultHandler
     public Resolution queryOne() {
-        //  validateRepository();
         final Random random = ThreadLocalRandom.current();
         World world = (World) worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
         setResponseDate();
@@ -41,7 +40,6 @@ public class WorldDatabaseActionBean extends BaseActionBean {
     @HandlesEvent(QUERIES)
     @Transactional(readOnly = true)
     public Resolution queries() {
-        //    validateRepository();
         boundQueryCount();
         List<Future<World>> wfs = new ArrayList<>(queries);
         for (int i = 0; i < queries; i++) {
@@ -62,7 +60,6 @@ public class WorldDatabaseActionBean extends BaseActionBean {
     @HandlesEvent(UPDATES)
     @Transactional
     public Resolution updates() {
-        //   validateRepository();
         boundQueryCount();
         List<Future<World>> wfs = new ArrayList<>(queries);
         for (int i = 0; i < queries; i++) {

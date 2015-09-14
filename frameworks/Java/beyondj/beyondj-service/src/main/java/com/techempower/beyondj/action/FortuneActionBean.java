@@ -17,10 +17,9 @@ public class FortuneActionBean extends BaseActionBean {
     private List<Fortune> fortunes;
 
     @DefaultHandler
-    @HandlesEvent("fortunes")
+    @HandlesEvent(FORTUNES)
     public Resolution fortunes() {
-       // validateRepository();
-        Iterable<Fortune> it = this.fortuneRepository.findAll();
+         Iterable<Fortune> it = this.fortuneRepository.findAll();
         fortunes = new ArrayList<>();
         Iterator<Fortune> iterator = it.iterator();
         while (iterator.hasNext()) {
@@ -29,7 +28,7 @@ public class FortuneActionBean extends BaseActionBean {
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
         setResponseDate();
-        return new ForwardResolution("/WEB-INF/templates/fortunes.jsp");
+        return new ForwardResolution(JSP);
     }
 
     public List<Fortune> getFortunes() {
@@ -40,4 +39,7 @@ public class FortuneActionBean extends BaseActionBean {
     private EntityManagerFactory entityManagerFactory;
     @SpringBean
     private FortuneRepository fortuneRepository;
+
+    public static final String JSP = "/WEB-INF/templates/fortunes.jsp";
+    public static final String FORTUNES = "fortunes";
 }
