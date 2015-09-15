@@ -58,15 +58,6 @@
     <camelContext id="core-camel-context"
                   useMDCLogging="true" xmlns="http://camel.apache.org/schema/spring" trace="true" autoStartup="true">
 
-        <camel:jmxAgent id="com.lenox.beyondj.jmxagent" createConnector="true"
-                        mbeanObjectDomainName="com.lenox.beyondj.routes"
-                        mbeanServerDefaultDomain="com.lenox.beyondj"
-                        xmlns:camel="http://camel.apache.org/schema/spring"
-                        registryPort="{{system.camel.jmx.registryPort}}"
-                        connectorPort="{{system.camel.jmx.connectorPort}}"
-                        usePlatformMBeanServer="true"
-                        onlyRegisterProcessorWithCustomId="true"/>
-
         <route id="updateGatewayRuleRoute" autoStartup="true">
             <from uri="direct-vm://updateGatewayRules"/>
             <setExchangePattern pattern="InOut"/>
@@ -110,12 +101,6 @@
             <setExchangePattern pattern="InOnly"/>
             <bean ref="metricMonitoringService" method="provide"/>
         </route>
-
- <!--       <route id="scheduledMetricsCollectionRoute" autoStartup="true">
-            <from uri="quartz://metricsCollectionGroup/metricsCollectionTimer?cron={{system.metrics.collection.cron}}"/>
-            <bean ref="metricMonitoringService" method="collectAndPublish"/>
-        </route>-->
-
     </camelContext>
 
     <bean id="branding" class="com.lenox.beyondj.configuration.Branding"/>
@@ -185,11 +170,13 @@
 
     <bean id="coreMetricsService" class="com.lenox.beyondj.CoreMetricsService">
         <property name="metricPublishingDelegate" ref="metricPublishingDelegate"/>
+        <property name="metricsEnabled" value="false"/>
     </bean>
 
     <bean id="metricMonitoringService" class="com.lenox.beyondj.services.BeyondJMetricMonitoringService">
         <property name="metricPublishingDelegate" ref="metricPublishingDelegate"/>
         <property name="metricPublishingListener" ref="metricPublishingListener"/>
+        <property name="metricsEnabled" value="false"/>
     </bean>
 
     <bean id="deploymentRunService" class="com.lenox.service.DeploymentRunService"/>

@@ -63,8 +63,8 @@
         <property name="password" value="${system.jdbc.password}"/>
     </bean>
 
-    <bean id="systemDataSet" class="com.lenox.dataset.SystemDataSet"/>
-
+   <!-- <bean id="systemDataSet" class="com.lenox.dataset.SystemDataSet"/>
+-->
     <bean id="roleNameParser" class="com.lenox.security.RoleNameParser">
         <constructor-arg index="0" value="config/roles.xml"/>
     </bean>
