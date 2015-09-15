@@ -9,7 +9,7 @@
       "fortune_url": "/beyondj-service/perf/fortunes",
       "plaintext_url": "/beyondj-service/perf/hello/plaintext",
       "update_url": "/beyondj-service/perf/database/updates?&queries=",
-      "port": 8080,
+      "port": 7070,
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
@@ -21,7 +21,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Beyondj",
-      "notes": "BeyondJ is the Next Generation Reactive and Modular Java container",
+      "notes": "BeyondJ, the Next Generation Reactive and Modular Java Container. One Jar to rule them all!",
       "versus": "servlet"
     }
   }]

@@ -16,7 +16,6 @@ public class TypeConverterFactory extends DefaultTypeConverterFactory {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-
 	public TypeConverter getInstance(Class<? extends TypeConverter> clazz,
 			Locale locale) throws Exception {
 		TypeConverter converter = super.getInstance(clazz, locale);
