@@ -41,6 +41,7 @@ public class WorldDatabaseActionBean extends BaseActionBean {
     public Resolution queries() {
         boundQueryCount();
         List<Future<World>> wfs = new ArrayList<>(queries);
+
         for (int i = 0; i < queries; i++) {
             wfs.add(
                     Common.EXECUTOR.submit(
