@@ -20,17 +20,17 @@
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-common-util</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-core-services</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-gateway-velocity</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>antlr</artifactId>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-profile-parse</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>antlr</groupId>
@@ -51,12 +51,12 @@
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-data-base</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-config</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>spring-boot</artifactId>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-actor</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jaxb-core</artifactId>
@@ -86,37 +86,37 @@
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-schema</artifactId>
-            <version>${beyondj.schema.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-parse</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-high-avaliability</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-java-process</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-script-process</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-loadbalancer</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-jetty</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>spring-aop</artifactId>
@@ -127,7 +127,7 @@
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-tomcat</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>spring-aop</artifactId>
@@ -138,7 +138,7 @@
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-camel-jetty</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.geronimo.specs</groupId>
@@ -162,7 +162,7 @@
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-data-jpa</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jaxb-core</artifactId>
@@ -181,20 +181,22 @@
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-core-security</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-gateway-model</artifactId>
-            <version>${project.version}</version>
+            <version>${beyondj.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-actor_2.11</artifactId>
+            <version>${akka.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-xmljson</artifactId>
+            <version>${camel.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jaxb-impl</artifactId>
@@ -205,10 +207,12 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-quartz</artifactId>
+            <version>${camel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-metrics</artifactId>
+            <version>${camel.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jaxb-core</artifactId>
@@ -223,6 +227,7 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jackson</artifactId>
+            <version>${camel.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jaxb-core</artifactId>
@@ -237,6 +242,7 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-xstream</artifactId>
+            <version>${camel.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jaxb-core</artifactId>
@@ -251,67 +257,58 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
+            <version>${spring.data.commons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
+            <version>${commons.compress.version}</version>
         </dependency>
 
-        <!-- Stripes -->
-        <dependency>
-            <groupId>net.sourceforge.stripes</groupId>
-            <artifactId>stripes</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.samaxes.stripes</groupId>
-            <artifactId>stripesafe</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>net.sourceforge.stripes</groupId>
-                    <artifactId>stripes</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
+            <version>${jstl.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
+            <version>${jsp.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
+            <version>${joda.time.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+            <version>${commons.codec.version}</version>
         </dependency>
 
         <!--Apache-->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>${commons.io.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-cxf</artifactId>
+            <version>${camel.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>spring-aop</artifactId>
@@ -330,10 +327,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jaxb</artifactId>
+            <version>${camel.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jaxb-impl</artifactId>
@@ -344,10 +343,12 @@
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
+            <version>${xml.apis.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jms</artifactId>
+            <version>${camel.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jaxb-core</artifactId>
@@ -362,7 +363,7 @@
         <dependency>
             <groupId>commons-pool</groupId>
             <artifactId>commons-pool</artifactId>
-            <version>1.5.1</version>
+            <version>${commons.pool.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>spring-aop</artifactId>
@@ -373,10 +374,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
         </dependency>
 
         <!-- Start Spring-->
@@ -392,6 +395,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>spring-aop</artifactId>
@@ -402,68 +406,56 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast</artifactId>
+            <version>${hazelcast.version}</version>
         </dependency>
 
         <!-- End Spring-->
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
+            <version>${joda.time.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jolokia</groupId>
             <artifactId>jolokia-core</artifactId>
+            <version>${jolokia.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.fusesource.insight</groupId>
-            <artifactId>insight-log4j</artifactId>
+            <version>${commons.codec.version}</version>
         </dependency>
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
+            <version>${xercesImpl.version}</version>
         </dependency>
 
         <!--Jaxrs-->
         <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-json</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>jaxb-impl</artifactId>
-                    <groupId>com.sun.xml.bind</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang.version}</version>
         </dependency>
         <dependency>
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
+            <version>${c3p0.version}</version>
         </dependency>
         <dependency>
             <groupId>tanukisoft</groupId>
             <artifactId>wrapper</artifactId>
+            <version>${tanukisoft.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
@@ -476,14 +468,9 @@
             <version>${httpclient.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.hyperic</groupId>
             <artifactId>sigar-dist</artifactId>
-            <version>1.6.5.132</version>
+            <version>${sigar.dist.version}</version>
             <type>zip</type>
         </dependency>
     </dependencies>
