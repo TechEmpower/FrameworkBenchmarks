@@ -11,12 +11,26 @@ import java.util.concurrent.TimeUnit;
  */
 public class Common {
 
-    private static final int cpuCount = Runtime.getRuntime().availableProcessors();
+    public static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+    public static int CORE_POOL_SIZE;
+    public static int MAX_POOL_SIZE;
+    public static int keepAliveTime = 200;
+
+
+    static {
+        CORE_POOL_SIZE = CPU_COUNT * 2;
+        MAX_POOL_SIZE = CPU_COUNT * 25;
+    }
 
     // todo: parameterize multipliers
     public static ExecutorService EXECUTOR = new ThreadPoolExecutor(
-        cpuCount * 2, cpuCount * 25, 200, TimeUnit.MILLISECONDS,
-        new LinkedBlockingQueue<Runnable>(cpuCount * 100),
-        new ThreadPoolExecutor.CallerRunsPolicy());
+            CORE_POOL_SIZE, MAX_POOL_SIZE, keepAliveTime, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>(CPU_COUNT * 100),
+            new ThreadPoolExecutor.CallerRunsPolicy());
 
+    static {
+        System.out.println("Common.EXECUTOR.CPU_COUNT = " + CPU_COUNT);
+        System.out.println("Common.EXECUTOR.CORE_POOL_SIZE = " + CORE_POOL_SIZE);
+        System.out.println("Common.EXECUTOR.MAX_POOL_SIZE = " + MAX_POOL_SIZE);
+    }
 }
