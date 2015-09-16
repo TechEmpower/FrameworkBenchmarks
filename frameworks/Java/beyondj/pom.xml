@@ -62,12 +62,12 @@
         <module>beyondj-data-loader</module>
     </modules>
 
-<!--    <repositories>
+      <repositories>
         <repository>
             <id>beyondj.com</id>
             <url>http://beyondj.com/maven2/</url>
         </repository>
-    </repositories>-->
+    </repositories>
 
     <build>
         <plugins>
