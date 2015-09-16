@@ -18,6 +18,9 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author nickk
@@ -28,6 +31,19 @@ public class BeyondJApplication {
     public static void main(String[] args) throws Exception {
 
         System.out.println("Start Launching Beyondj");
+
+        if (args != null && args.length > 0) {
+            for (String arg : args) {
+                Map<String, String> map = convert(arg);
+                Iterator<String> iterator = map.keySet().iterator();
+                while (iterator.hasNext()) {
+                    String key = iterator.next();
+                    String value = map.get(key);
+                    System.setProperty(key, value);
+                    System.out.println("Set System Property " + key + " to " + value);
+                }
+            }
+        }
 
         ApplicationContext context = new ClassPathXmlApplicationContext("/config/spring/core-spring-and-camel-config.xml");
         extractResources(context);
@@ -48,6 +64,13 @@ public class BeyondJApplication {
         LOG.info("BeyondJ System Started. Press CNTRL-C To Exit ");
 
         system.awaitTermination();
+    }
+
+    private static Map<String, String> convert(String str) {
+        String[] tokens = str.split(" |=");
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < tokens.length - 1; ) map.put(tokens[i++], tokens[i++]);
+        return map;
     }
 
     private static void extractResources(ApplicationContext context) throws Exception {
@@ -77,7 +100,7 @@ public class BeyondJApplication {
                 LaunchUtil.extractJar(locFile.getAbsolutePath(), installationDir.getAbsolutePath());
             }
         } else {
-           // throw new IllegalStateException("Not able to install platform. File format must be JAR");
+            // throw new IllegalStateException("Not able to install platform. File format must be JAR");
         }
 
         String webAppsPath = path + File.separator + ApplicationConfiguration.LAUNCHERS + File.separator
