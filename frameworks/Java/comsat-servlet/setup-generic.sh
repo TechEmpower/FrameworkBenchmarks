@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# load java environment variables
-source $IROOT/java8.installed
+fw_depends java8
 
-mvn package
+$TROOT/gradlew clean capsule
 
-cd target
-CAPSULE=`ls comsat-servlet-*-fat.jar`
+CAPSULE=`ls build/libs/comsat-servlet-*-capsule.jar`
 java -Dcapsule.mode=$MODE -jar $CAPSULE
