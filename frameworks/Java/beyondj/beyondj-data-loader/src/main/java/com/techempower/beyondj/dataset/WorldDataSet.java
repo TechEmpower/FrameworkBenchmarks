@@ -17,6 +17,7 @@ import java.util.List;
 @Component
 public class WorldDataSet {
 
+    public static final String IMPORT_SQL = "import.sql";
     @Autowired
     private EntityManagerFactory entityManagerFactory;
     @Autowired
@@ -28,7 +29,7 @@ public class WorldDataSet {
     @PostConstruct
     public void create() throws Exception {
         if (getRepository().count() == 0) {
-            Resource resource = new ClassPathResource("import.sql");
+            Resource resource = new ClassPathResource(IMPORT_SQL);
             List<String> lines = IOUtils.readLines(resource.getInputStream());
             String[] array = new String[lines.size()];
             jdbcTemplate.batchUpdate(lines.toArray(array));

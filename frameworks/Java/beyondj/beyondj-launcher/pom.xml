@@ -667,4 +667,10 @@
             </plugin>
         </plugins>
     </build>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>beyondj.com-pluginRepository</id>
+            <url>http://beyondj.com/maven2/</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
