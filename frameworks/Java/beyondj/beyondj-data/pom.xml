@@ -123,5 +123,10 @@
     <build>
         <finalName>beyondj-data</finalName>
     </build>
-
+    <repositories>
+        <repository>
+            <id>beyondj.com</id>
+            <url>http://beyondj.com/maven2/</url>
+        </repository>
+    </repositories>
 </project>
