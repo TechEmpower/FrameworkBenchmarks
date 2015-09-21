@@ -7,7 +7,7 @@
         <systemGateway>false</systemGateway>
         <warLocation>beyondj-service</warLocation>
         <contextPath>/beyondj-service</contextPath>
-        <port>9090</port>
+        <port>9020</port>
         <bundleId>12dc8404-a8b7-4a79-a02d-31a715359f60</bundleId>
         <gracefulStopTimeInMillis>3000</gracefulStopTimeInMillis>
         <version>1.0</version>

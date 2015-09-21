@@ -176,7 +176,6 @@
     <bean id="metricMonitoringService" class="com.lenox.beyondj.services.BeyondJMetricMonitoringService">
         <property name="metricPublishingDelegate" ref="metricPublishingDelegate"/>
         <property name="metricPublishingListener" ref="metricPublishingListener"/>
-        <property name="metricsEnabled" value="false"/>
     </bean>
 
     <bean id="deploymentRunService" class="com.lenox.service.DeploymentRunService"/>
