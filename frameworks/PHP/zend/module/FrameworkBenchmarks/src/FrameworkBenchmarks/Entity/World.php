@@ -27,8 +27,8 @@ class World extends ArrayObject
      */
     public function exchangeArray($data)
     {
-        $this->id           = $data['id'];
-        $this->randomNumber = $data['randomNumber'];
+        $this->id           = (int) $data['id'];
+        $this->randomNumber = (int) $data['randomNumber'];
     }
 
     /**
