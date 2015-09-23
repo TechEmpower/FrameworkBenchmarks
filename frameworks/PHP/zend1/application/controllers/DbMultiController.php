@@ -8,7 +8,7 @@ class DbMultiController extends Zend_Controller_Action
         $queries = max(1, $queries);
         $queries = min(500, $queries);
 
-        $table = new Zend_Db_Table('World');
+        $table = new Model_World();
 
         $worlds = array();
         for ($i = 0; $i < $queries; $i += 1) {
