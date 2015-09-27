@@ -76,19 +76,19 @@ class BenchController extends \Phalcon\Mvc\Controller
         $this->response->send();
     }
 
-    protected function getRandomWorld()
+    private function getRandomWorld()
     {
         return Worlds::findFirst(mt_rand(1, 10000));
     }
 
-    protected function getFortunesArray()
+    private function getFortunesArray()
     {
         // since the resultset is immutable get an array instead
         // so we can add the new fortune
         return Fortunes::find()->toArray();
     }
 
-    protected function buildFortune()
+    private function buildFortune()
     {
         return array(
             'id' => 0,
@@ -96,22 +96,9 @@ class BenchController extends \Phalcon\Mvc\Controller
         );
     }
 
-    protected function sortFortunes($fortunes)
+    private function sortFortunes($fortunes)
     {
-        usort($fortunes,
-                function($left, $right) {
-                    $l = $left['message'];
-                    $r = $right['message'];
-                    if ($l === $r) {
-                        return 0;
-                    } else {
-                        if ($l > $r) {
-                            return 1;
-                        } else {
-                            return -1;
-                        }
-                    }
-                });
+        asort($fortunes);
         return $fortunes;
     }
 
