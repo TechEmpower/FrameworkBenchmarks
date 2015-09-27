@@ -75,19 +75,7 @@ try {
             'message' => 'Additional fortune added at request time.'
         );
 
-        usort($fortunes, function($left, $right) {
-            $l = $left['message'];
-            $r = $right['message'];
-            if ($l === $r) {
-                return 0;
-            } else {
-                if ($l > $r) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-        });
+        asort($fortunes);
 
         header("Content-Type: text/html; charset=utf-8");
 
