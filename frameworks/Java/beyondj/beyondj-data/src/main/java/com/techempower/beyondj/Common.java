@@ -27,10 +27,4 @@ public class Common {
             CORE_POOL_SIZE, MAX_POOL_SIZE, keepAliveTime, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<Runnable>(CPU_COUNT * 100),
             new ThreadPoolExecutor.CallerRunsPolicy());
-
-    static {
-        System.out.println("Common.EXECUTOR.CPU_COUNT = " + CPU_COUNT);
-        System.out.println("Common.EXECUTOR.CORE_POOL_SIZE = " + CORE_POOL_SIZE);
-        System.out.println("Common.EXECUTOR.MAX_POOL_SIZE = " + MAX_POOL_SIZE);
-    }
 }

@@ -5,10 +5,7 @@ import com.techempower.beyondj.repository.FortuneRepository;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.integration.spring.SpringBean;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @UrlBinding("/perf/fortunes/{_eventName}")
 public class FortuneActionBean extends BaseActionBean {
@@ -26,7 +23,9 @@ public class FortuneActionBean extends BaseActionBean {
         }
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
-        setResponseDate();
+        Map<String,String> headers = new HashMap<>();
+        headers.put(TRANSFER_ENCODING, Boolean.TRUE.toString());
+        setResponseHeaders(headers);
         return new ForwardResolution(JSP);
     }
 
@@ -37,6 +36,7 @@ public class FortuneActionBean extends BaseActionBean {
     @SpringBean
     private FortuneRepository fortuneRepository;
 
-    public static final String JSP = "/WEB-INF/templates/fortunes.jsp";
     public static final String FORTUNES = "fortunes";
+    public static final String JSP = "/WEB-INF/templates/fortunes.jsp";
+    public static final String TRANSFER_ENCODING = "Transfer-Encoding";
 }
