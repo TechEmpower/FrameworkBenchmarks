@@ -99,7 +99,10 @@ public abstract class BaseActionBean implements
         return getContext().getRequest().getPathInfo();
     }
 
-    protected void setResponseDate(){
+    protected void setResponseHeaders(Map<String,String>headers){
+        for(String key: headers.keySet()){
+            getContext().getResponse().setHeader(key, headers.get(key));
+        }
         getContext().getResponse().setHeader(DATE, new java.util.Date().toString());
     }
 }
