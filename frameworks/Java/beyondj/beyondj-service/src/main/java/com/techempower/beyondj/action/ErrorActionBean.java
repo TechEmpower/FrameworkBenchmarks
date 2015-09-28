@@ -5,6 +5,8 @@ import net.sourceforge.stripes.action.ForwardResolution;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 
+import java.util.HashMap;
+
 /**
  * @author nickk
  */
@@ -15,7 +17,7 @@ public class ErrorActionBean extends BaseActionBean {
 
     @DefaultHandler
     public Resolution view() {
-        setResponseDate();
+        setResponseHeaders(new HashMap<>());
         return new ForwardResolution(JSP);
     }
 
@@ -24,3 +26,4 @@ public class ErrorActionBean extends BaseActionBean {
         return null;
     }
 }
+

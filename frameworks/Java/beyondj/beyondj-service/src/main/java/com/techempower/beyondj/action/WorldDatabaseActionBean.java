@@ -11,11 +11,10 @@ import net.sourceforge.stripes.integration.spring.SpringBean;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.stripesrest.JsonBuilder;
 import org.stripesrest.JsonResolution;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -25,24 +24,27 @@ import java.util.concurrent.ThreadLocalRandom;
 public class WorldDatabaseActionBean extends BaseActionBean {
 
     @Validate(required = false)
-    private int queries = 1;
+    private String queries;
 
     @HandlesEvent(DB)
     @DefaultHandler
     public Resolution queryOne() {
         final Random random = ThreadLocalRandom.current();
-        World world = (World) worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
-        setResponseDate();
-        return new JsonResolution(world);
+        World world = worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
+        JsonBuilder builder = new JsonBuilder(world);
+        String rawJsonText = builder.build();
+        Map<String,String> headers = new HashMap<>();
+        headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
+         setResponseHeaders(headers);
+        return new JsonResolution(rawJsonText);
     }
 
     @HandlesEvent(QUERIES)
     @Transactional(readOnly = true)
-    public Resolution queries() {
-        boundQueryCount();
-        List<Future<World>> wfs = new ArrayList<>(queries);
-
-        for (int i = 0; i < queries; i++) {
+    public Resolution queries() throws Exception{
+        int value = boundQueryCount();
+        List<Future<World>> wfs = new ArrayList<>(value);
+        for (int i = 0; i < value; i++) {
             wfs.add(
                     Common.EXECUTOR.submit(
                             new Callable<World>() {
@@ -53,16 +55,32 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                                 }
                             }));
         }
-        setResponseDate();
-        return new JsonResolution(wfs);
+        List<World> worlds = waitFor(wfs);
+        JsonBuilder builder = new JsonBuilder(worlds);
+        String rawJsonText = builder.build();
+        Map<String,String> headers = new HashMap<>();
+        headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
+         setResponseHeaders(headers);
+        return new JsonResolution(rawJsonText);
+    }
+
+    private int extractQueriesValue() {
+        int queriesValue = 1;
+        try {
+            queriesValue = Integer.valueOf(queries);
+        } catch (Exception e) {
+            //do nothing
+        }
+        return queriesValue;
     }
 
     @HandlesEvent(UPDATES)
     @Transactional
     public Resolution updates() {
-        boundQueryCount();
-        List<Future<World>> wfs = new ArrayList<>(queries);
-        for (int i = 0; i < queries; i++) {
+        int value = boundQueryCount();
+
+        List<Future<World>> wfs = new ArrayList<>(value);
+        for (int i = 0; i < value; i++) {
             wfs.add(Common.EXECUTOR.submit(
                     new Callable<World>() {
                         @Override
@@ -77,15 +95,19 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                     }));
         }
         List<World> worlds = waitFor(wfs);
-        setResponseDate();
-        return new JsonResolution(worlds);
+        JsonBuilder builder = new JsonBuilder(worlds);
+        String rawJsonText = builder.build();
+        Map<String,String> headers = new HashMap<>();
+        headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
+         setResponseHeaders(headers);
+        return new JsonResolution(rawJsonText);
     }
 
-    public int getQueries() {
+    public String getQueries() {
         return queries;
     }
 
-    public void setQueries(int queries) {
+    public void setQueries(String queries) {
         this.queries = queries;
     }
 
@@ -101,12 +123,14 @@ public class WorldDatabaseActionBean extends BaseActionBean {
         return worlds;
     }
 
-    private void boundQueryCount() {
-        if (queries < 1) {
-            queries = 1;
-        } else if (queries > 500) {
-            queries = 500;
+    private int boundQueryCount() {
+        int queriesValue = extractQueriesValue();
+        if (queriesValue < 1) {
+            queriesValue = 1;
+        } else if (queriesValue > 500) {
+            queriesValue = 500;
         }
+        return queriesValue;
     }
 
 
@@ -114,8 +138,9 @@ public class WorldDatabaseActionBean extends BaseActionBean {
 
     @SpringBean
     private WorldRepository worldRepository;
-
     private static final String QUERIES = "queries";
     private static final String DB = "db";
     private static final String UPDATES = "updates";
+    public static final String CONTENT_LENGTH = "Content-Length";
 }
+
