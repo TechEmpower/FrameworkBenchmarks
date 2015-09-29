@@ -12,7 +12,6 @@
                 <tr>
                     <td>id</td>
                     <td>${fortune.id}</td>
-                    <td>message</td>
                     <td>${fn:escapeXml(fortune.message)}</td>
                 </tr>
             </c:forEach>
