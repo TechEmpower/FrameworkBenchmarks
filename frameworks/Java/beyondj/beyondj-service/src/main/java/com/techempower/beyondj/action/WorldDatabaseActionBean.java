@@ -6,15 +6,12 @@ import com.techempower.beyondj.ApplicationContextProvider;
 import com.techempower.beyondj.Common;
 import com.techempower.beyondj.domain.World;
 import com.techempower.beyondj.repository.WorldRepository;
-import com.techempower.beyondj.repository.WorldRepositoryImpl;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.HandlesEvent;
 import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.integration.spring.SpringBean;
 import net.sourceforge.stripes.validation.Validate;
-import net.sourceforge.stripes.validation.ValidationMethod;
-import net.sourceforge.stripes.validation.ValidationState;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.stripesrest.JsonResolution;
@@ -36,7 +33,7 @@ public class WorldDatabaseActionBean extends BaseActionBean {
     public Resolution queryOne() {
 
         final Random random = ThreadLocalRandom.current();
-        World world = worldRepositoryImpl.findOne(random.nextInt(DB_ROWS) + 1);
+        World world = worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
         Gson gson = new GsonBuilder()
                 .enableComplexMapKeySerialization()
                 .serializeNulls()
@@ -64,7 +61,7 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                             new Callable<World>() {
                                 @Override
                                 public World call() throws Exception {
-                                    return (World) worldRepositoryImpl.findOne(
+                                    return (World) worldRepository.findOne(
                                             ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
                                 }
                             }));
@@ -109,9 +106,9 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                         @Transactional(propagation = Propagation.REQUIRES_NEW)
                         public World call() throws Exception {
                             Random random = ThreadLocalRandom.current();
-                            World world = (World) worldRepositoryImpl.findOne(random.nextInt(DB_ROWS) + 1);
+                            World world = (World) worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
                             world.setRandomNumber(random.nextInt(DB_ROWS) + 1);
-                            worldRepositoryImpl.save(world);
+                            worldRepository.save(world);
                             return world;
                         }
                     }));
@@ -163,33 +160,14 @@ public class WorldDatabaseActionBean extends BaseActionBean {
         return queriesValue;
     }
 
-    @ValidationMethod(when = ValidationState.ALWAYS)
-    public void validateRepository() {
-
-        String[] beanNames = applicationContextProvider.getApplicationContext().getBeanDefinitionNames();
-
-        for (String beanName : beanNames) {
-
-            System.out.println(beanName + " : " + applicationContextProvider.getApplicationContext().getBean(beanName).getClass().toString());
-        }
-       // worldRepository = (WorldRepository) applicationContextProvider.getApplicationContext().getBean(WORLD_REPOSITORY);
-    }
-
     private static final int DB_ROWS = 10000;
 
-    //private WorldRepository worldRepository;
-
     @SpringBean
-    private WorldRepositoryImpl worldRepositoryImpl;
-
-    @SpringBean
-    private ApplicationContextProvider applicationContextProvider;
+    private WorldRepository worldRepository;
 
     private static final String DB = "db";
     private static final String QUERIES = "queries";
     private static final String UPDATES = "updates";
     public static final String CONTENT_LENGTH = "Content-Length";
-    public static final String WORLD_REPOSITORY = "worldRepositoryImpl";
-
 }
 

@@ -88,7 +88,8 @@
 
     <bean id="applicationContextProvider" class="com.techempower.beyondj.ApplicationContextProvider"/>
 
-    <bean  id="worldRepositoryImpl" class="com.techempower.beyondj.repository.WorldRepositoryImpl"/>
+    <bean  id="worldRepository" class="com.techempower.beyondj.repository.WorldRepository"/>
+    <bean  id="fortuneRepository" class="com.techempower.beyondj.repository.FortuneRepository"/>
 
 </beans>
 
