@@ -8,4 +8,4 @@ mvn package
 # cp beyondj-service/target/beyondj-service.war beyondj-launcher/src/main/resources/launchers/webapp-launchers/
 # mvn clean package
 
-java -jar beyondj-launcher/target/beyondj.jar system.platform.dbserver=${DBHOST} numInstances=1
+java -jar beyondj-launcher/target/beyondj.jar system.platform.dbserver=${DBHOST} numInstances=10
