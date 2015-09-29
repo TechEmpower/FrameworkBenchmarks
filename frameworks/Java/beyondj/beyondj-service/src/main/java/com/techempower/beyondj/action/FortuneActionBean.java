@@ -1,13 +1,9 @@
 package com.techempower.beyondj.action;
 
-import com.techempower.beyondj.ApplicationContextProvider;
 import com.techempower.beyondj.domain.Fortune;
 import com.techempower.beyondj.repository.FortuneRepository;
-import com.techempower.beyondj.repository.WorldRepository;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.integration.spring.SpringBean;
-import net.sourceforge.stripes.validation.ValidationMethod;
-import net.sourceforge.stripes.validation.ValidationState;
 
 import java.util.*;
 
@@ -37,15 +33,8 @@ public class FortuneActionBean extends BaseActionBean {
         return fortunes;
     }
 
-    @ValidationMethod(when = ValidationState.ALWAYS)
-    public void validateRepository() {
-        fortuneRepository = (FortuneRepository) applicationContextProvider.getApplicationContext().getBean(FORTUNE_REPOSITORY);
-    }
-
-    private FortuneRepository fortuneRepository;
-
     @SpringBean
-    private ApplicationContextProvider applicationContextProvider;
+    private FortuneRepository fortuneRepository;
 
     public static final String FORTUNES = "fortunes";
     public static final String JSP = "/WEB-INF/templates/fortunes.jsp";

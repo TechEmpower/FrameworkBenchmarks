@@ -80,11 +80,11 @@
         <property name="password" value="${system.jdbc.password}"/>
     </bean>
 
-    <bean  id="fortuneRepository" class="com.techempower.beyondj.repository.FortuneRepositoryImpl">
+    <bean  id="fortuneRepository" class="com.techempower.beyondj.repository.FortuneRepository">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean  id="worldRepositoryImpl" class="com.techempower.beyondj.repository.WorldRepositoryImpl">
+    <bean  id="worldRepositoryImpl" class="com.techempower.beyondj.repository.WorldRepository">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
