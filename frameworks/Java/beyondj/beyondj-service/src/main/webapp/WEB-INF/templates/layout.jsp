@@ -4,12 +4,6 @@
 
     <!DOCTYPE html>
     <html>
-
-    <script type="text/javascript">
-        var cssPath = '${actionBean.cssPath}';
-        var contextPath = '${actionBean.contextPath}';
-    </script>
-
     <head>
         <%@page pageEncoding="UTF-8"%>
         <s:layout-component name="head">
