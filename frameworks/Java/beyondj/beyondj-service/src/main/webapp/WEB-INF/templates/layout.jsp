@@ -1,11 +1,12 @@
 <%@ include file="/WEB-INF/tags/taglibs.jsp" %>
+<%@page pageEncoding="UTF-8"%>
 
 <s:layout-definition>
 
     <!DOCTYPE html>
     <html>
     <head>
-        <%@page pageEncoding="UTF-8"%>
+        <title>Fortunes</title>
         <s:layout-component name="head">
         </s:layout-component>
     </head>
