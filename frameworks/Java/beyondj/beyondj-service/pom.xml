@@ -28,11 +28,6 @@
             <version>${beyondj.stripesrest.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.samaxes.stripes</groupId>
-            <artifactId>beyondj-stripesafe</artifactId>
-            <version>${beyondj.stripesafe.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>

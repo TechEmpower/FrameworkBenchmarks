@@ -11,6 +11,7 @@
     </script>
 
     <head>
+        <%@page pageEncoding="UTF-8"%>
         <s:layout-component name="head">
         </s:layout-component>
     </head>
