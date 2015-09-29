@@ -2,7 +2,6 @@ package com.techempower.beyondj.action;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.techempower.beyondj.ApplicationContextProvider;
 import com.techempower.beyondj.Common;
 import com.techempower.beyondj.domain.World;
 import com.techempower.beyondj.repository.WorldRepository;
@@ -34,6 +33,11 @@ public class WorldDatabaseActionBean extends BaseActionBean {
 
         final Random random = ThreadLocalRandom.current();
         World world = worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
+
+        if(world.getRandomNumber() ==null){
+            world.setRandomNumber(ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
+        }
+
         Gson gson = new GsonBuilder()
                 .enableComplexMapKeySerialization()
                 .serializeNulls()
@@ -142,7 +146,12 @@ public class WorldDatabaseActionBean extends BaseActionBean {
         List<World> worlds = new ArrayList<>(wfs.size());
         for (Future<World> wf : wfs) {
             try {
-                worlds.add(wf.get());
+
+                World world = wf.get();
+                if(world.getRandomNumber() ==null){
+                    world.setRandomNumber(ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
+                }
+                worlds.add(world);
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
