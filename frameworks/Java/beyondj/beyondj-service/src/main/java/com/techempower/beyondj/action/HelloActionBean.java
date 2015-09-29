@@ -1,9 +1,11 @@
 package com.techempower.beyondj.action;
 
-import net.sourceforge.stripes.action.*;
-import org.stripesrest.JsonBuilder;
-import org.stripesrest.JsonResolution;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.techempower.beyondj.Message;
+import net.sourceforge.stripes.action.*;
+import org.stripesrest.JsonResolution;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +20,15 @@ public class HelloActionBean extends BaseActionBean {
     public Resolution json() {
         Message message = new Message(HELLO_WORLD);
 
-        JsonBuilder builder = new JsonBuilder(message);
-        String rawJsonText = builder.build();
+        Gson gson = new GsonBuilder()
+                .enableComplexMapKeySerialization()
+                .serializeNulls()
+                .setPrettyPrinting()
+                .setVersion(1.0)
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+
+        String rawJsonText = gson.toJson(message);
         Map<String,String> headers = new HashMap<>();
         headers.put(CONTENT_LENGTH,String.valueOf(rawJsonText.getBytes().length));
         setResponseHeaders(headers);
