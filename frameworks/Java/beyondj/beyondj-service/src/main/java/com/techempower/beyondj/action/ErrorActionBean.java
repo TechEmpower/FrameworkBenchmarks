@@ -26,3 +26,4 @@ public class ErrorActionBean extends BaseActionBean {
         return null;
     }
 }
+

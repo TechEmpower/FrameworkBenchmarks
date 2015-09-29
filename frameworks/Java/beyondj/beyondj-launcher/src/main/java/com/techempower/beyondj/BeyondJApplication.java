@@ -80,6 +80,7 @@ public class BeyondJApplication {
         LaunchUtil.defaultConfig = config;
 
         LOG.debug("Resource install path is {}", config.getProperty(ApplicationConfiguration.BEYONDJ_HOME));
+        System.out.println("Resource install path is " + config.getProperty(ApplicationConfiguration.BEYONDJ_HOME));
 
         String path = LaunchUtil.getContainerInstallationDir(config);
         ProtectionDomain protectionDomain = BeyondJApplication.class.getProtectionDomain();
@@ -91,11 +92,13 @@ public class BeyondJApplication {
         if (codeSource.toString().indexOf(".jar") != -1) {
             if (codeSource.toString().indexOf(".jar!") != -1) {
                 LOG.debug("Copying jar resources to install folder");
+                System.out.println("Copying jar resources to install folder");
                 JarURLConnection conn = (JarURLConnection) location.openConnection();
                 LaunchUtil.copyJarResourcesToFolder(conn, installationDir);
             } else {
                 //assume we launched this from the bin folder
                 LOG.debug("Extracting jar resources to install folder");
+                System.out.println("Extracting jar resources to install folder");
                 File locFile = new File(location.toURI());
                 LaunchUtil.extractJar(locFile.getAbsolutePath(), installationDir.getAbsolutePath());
             }
@@ -110,6 +113,7 @@ public class BeyondJApplication {
         String[] fileNames = webAppLaunchersDir.list();
         if (fileNames != null) {
             LOG.debug("Extracting web-app resources to install folder");
+            System.out.println("Extracting web-app resources to install folder");
             for (String fileName : fileNames) {
                 String jarOrWarName = webAppsPath + File.separator + fileName.replace(".jar", "");
                 jarOrWarName = jarOrWarName.replace(".war", "");
@@ -128,6 +132,7 @@ public class BeyondJApplication {
 
         if (fileNames != null) {
             LOG.debug("Extracting jar-app resources to install folder");
+            System.out.println("Extracting jar-app resources to install folder");
             for (String fileName : fileNames) {
                 String jarOrWarName = jarAppsPath + File.separator + fileName.replace(".jar", "");
                 jarOrWarName = jarOrWarName.replace(".tar", "");
@@ -146,6 +151,7 @@ public class BeyondJApplication {
 
         if (fileNames != null) {
             LOG.debug("Extracting script-app resources to install folder");
+            System.out.println("Extracting script-app resources to install folder");
             for (String fileName : fileNames) {
                 String jarOrWarName = scriptAppsPath + File.separator + fileName.replace(".jar", "");
                 jarOrWarName = jarOrWarName.replace(".tar", "");

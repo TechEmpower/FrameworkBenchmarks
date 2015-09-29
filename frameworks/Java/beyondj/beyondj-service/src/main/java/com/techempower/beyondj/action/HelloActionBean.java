@@ -56,3 +56,4 @@ public class HelloActionBean extends BaseActionBean {
     private static final String HELLO_WORLD = "Hello, World!";
     private static final String TEXT_PLAIN = "text/plain";
 }
+
