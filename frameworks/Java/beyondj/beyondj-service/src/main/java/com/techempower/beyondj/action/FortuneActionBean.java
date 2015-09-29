@@ -25,6 +25,7 @@ public class FortuneActionBean extends BaseActionBean {
         Collections.sort(fortunes);
         Map<String, String> headers = new HashMap<>();
         headers.put(TRANSFER_ENCODING, Boolean.TRUE.toString());
+       getContext().getResponse().setCharacterEncoding(UTF_8);
         setResponseHeaders(headers);
         return new ForwardResolution(JSP);
     }
@@ -36,9 +37,9 @@ public class FortuneActionBean extends BaseActionBean {
     @SpringBean
     private FortuneRepository fortuneRepository;
 
+    public static final String UTF_8 = "UTF-8";
     public static final String FORTUNES = "fortunes";
     public static final String JSP = "/WEB-INF/templates/fortunes.jsp";
     public static final String TRANSFER_ENCODING = "Transfer-Encoding";
-    public static final String FORTUNE_REPOSITORY = "fortuneRepository";
 }
 

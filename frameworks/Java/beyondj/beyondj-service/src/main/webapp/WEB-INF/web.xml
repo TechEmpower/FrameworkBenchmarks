@@ -29,7 +29,7 @@
         </init-param>
         <init-param>
             <param-name>Extension.Packages</param-name>
-            <param-value>net.sourceforge.stripes.integration.spring,org.stripesrest,com.samaxes.stripes.xss
+            <param-value>net.sourceforge.stripes.integration.spring,org.stripesrest
             </param-value>
         </init-param>
 
