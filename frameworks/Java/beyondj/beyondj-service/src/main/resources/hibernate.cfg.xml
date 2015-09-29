@@ -3,6 +3,7 @@
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
+
     <session-factory>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="show_sql">false</property>
