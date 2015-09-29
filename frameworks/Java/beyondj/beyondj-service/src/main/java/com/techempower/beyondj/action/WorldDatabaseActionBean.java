@@ -2,6 +2,7 @@ package com.techempower.beyondj.action;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.techempower.beyondj.ApplicationContextProvider;
 import com.techempower.beyondj.Common;
 import com.techempower.beyondj.domain.World;
 import com.techempower.beyondj.repository.WorldRepository;
@@ -12,6 +13,8 @@ import net.sourceforge.stripes.action.Resolution;
 import net.sourceforge.stripes.action.UrlBinding;
 import net.sourceforge.stripes.integration.spring.SpringBean;
 import net.sourceforge.stripes.validation.Validate;
+import net.sourceforge.stripes.validation.ValidationMethod;
+import net.sourceforge.stripes.validation.ValidationState;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.stripesrest.JsonResolution;
@@ -31,8 +34,9 @@ public class WorldDatabaseActionBean extends BaseActionBean {
     @HandlesEvent(DB)
     @DefaultHandler
     public Resolution queryOne() {
+
         final Random random = ThreadLocalRandom.current();
-        World world = worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
+        World world = worldRepositoryImpl.findOne(random.nextInt(DB_ROWS) + 1);
         Gson gson = new GsonBuilder()
                 .enableComplexMapKeySerialization()
                 .serializeNulls()
@@ -43,15 +47,15 @@ public class WorldDatabaseActionBean extends BaseActionBean {
 
         String rawJsonText = gson.toJson(world);
 
-        Map<String,String> headers = new HashMap<>();
+        Map<String, String> headers = new HashMap<>();
         headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
-         setResponseHeaders(headers);
+        setResponseHeaders(headers);
         return new JsonResolution(rawJsonText);
     }
 
     @HandlesEvent(QUERIES)
     @Transactional
-    public Resolution queries() throws Exception{
+    public Resolution queries() throws Exception {
         int value = boundQueryCount();
         List<Future<World>> wfs = new ArrayList<>(value);
         for (int i = 0; i < value; i++) {
@@ -60,7 +64,7 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                             new Callable<World>() {
                                 @Override
                                 public World call() throws Exception {
-                                    return (World) worldRepository.findOne(
+                                    return (World) worldRepositoryImpl.findOne(
                                             ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
                                 }
                             }));
@@ -76,9 +80,9 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                 .create();
 
         String rawJsonText = gson.toJson(worlds);
-        Map<String,String> headers = new HashMap<>();
+        Map<String, String> headers = new HashMap<>();
         headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
-         setResponseHeaders(headers);
+        setResponseHeaders(headers);
         return new JsonResolution(rawJsonText);
     }
 
@@ -105,7 +109,7 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                         @Transactional(propagation = Propagation.REQUIRES_NEW)
                         public World call() throws Exception {
                             Random random = ThreadLocalRandom.current();
-                            World world = (World) worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
+                            World world = (World) worldRepositoryImpl.findOne(random.nextInt(DB_ROWS) + 1);
                             world.setRandomNumber(random.nextInt(DB_ROWS) + 1);
                             worldRepositoryImpl.save(world);
                             return world;
@@ -123,9 +127,9 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                 .create();
 
         String rawJsonText = gson.toJson(worlds);
-        Map<String,String> headers = new HashMap<>();
+        Map<String, String> headers = new HashMap<>();
         headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
-         setResponseHeaders(headers);
+        setResponseHeaders(headers);
         return new JsonResolution(rawJsonText);
     }
 
@@ -159,19 +163,33 @@ public class WorldDatabaseActionBean extends BaseActionBean {
         return queriesValue;
     }
 
+    @ValidationMethod(when = ValidationState.ALWAYS)
+    public void validateRepository() {
+
+        String[] beanNames = applicationContextProvider.getApplicationContext().getBeanDefinitionNames();
+
+        for (String beanName : beanNames) {
+
+            System.out.println(beanName + " : " + applicationContextProvider.getApplicationContext().getBean(beanName).getClass().toString());
+        }
+       // worldRepository = (WorldRepository) applicationContextProvider.getApplicationContext().getBean(WORLD_REPOSITORY);
+    }
 
     private static final int DB_ROWS = 10000;
 
-    @SpringBean
-    private WorldRepository worldRepository;
+    //private WorldRepository worldRepository;
 
     @SpringBean
     private WorldRepositoryImpl worldRepositoryImpl;
 
+    @SpringBean
+    private ApplicationContextProvider applicationContextProvider;
+
     private static final String DB = "db";
-    public static final String NEW = "new";
     private static final String QUERIES = "queries";
     private static final String UPDATES = "updates";
     public static final String CONTENT_LENGTH = "Content-Length";
+    public static final String WORLD_REPOSITORY = "worldRepositoryImpl";
+
 }
 

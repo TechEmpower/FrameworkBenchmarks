@@ -1,19 +1,7 @@
 package com.techempower.beyondj.repository;
 
 import com.techempower.beyondj.domain.World;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
-
-public interface WorldRepository {
-
-    World findOne(Integer id);
-
-    long count();
-
-    @Transactional
-    void save(World var1);
-
-    List<World> findAll();
-
+public interface WorldRepository extends CrudRepository<World, Integer>{
 }
