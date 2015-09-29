@@ -63,15 +63,15 @@
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
         <property name="jpaDialect" ref="jpaDialect"/>
         <property name="packagesToScan" value="com.techempower.beyondj.domain,com.techempower.beyondj.repository"/>
-        <!--<property name="persistenceUnitPostProcessors">
+        <property name="persistenceUnitPostProcessors">
             <list>
                 <bean
                         class="org.springframework.data.jpa.support.ClasspathScanningPersistenceUnitPostProcessor">
-                    <constructor-arg name="basePackage" value="org.xxxxxx.server.beans" />
+                    <constructor-arg name="basePackage" value="com.techempower.beyondj.domain" />
                     <property name="mappingFileNamePattern" value="**/*hbm.xml" />
                 </bean>
             </list>
-        </property>-->
+        </property>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
