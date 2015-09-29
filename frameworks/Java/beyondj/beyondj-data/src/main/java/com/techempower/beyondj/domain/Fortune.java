@@ -1,5 +1,6 @@
 package com.techempower.beyondj.domain;
 
+import com.google.gson.annotations.Expose;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.Column;
@@ -12,9 +13,11 @@ public final class Fortune implements Comparable<Fortune>, Persistable<Integer> 
 
     @Id
     @GeneratedValue
+    @Expose
     private volatile Integer id;
 
     @Column
+    @Expose
     public volatile String message;
 
     Fortune() {

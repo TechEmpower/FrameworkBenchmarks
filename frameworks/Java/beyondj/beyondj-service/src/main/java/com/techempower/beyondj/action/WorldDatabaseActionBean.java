@@ -1,8 +1,11 @@
 package com.techempower.beyondj.action;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.techempower.beyondj.Common;
 import com.techempower.beyondj.domain.World;
 import com.techempower.beyondj.repository.WorldRepository;
+import com.techempower.beyondj.repository.WorldRepositoryImpl;
 import net.sourceforge.stripes.action.DefaultHandler;
 import net.sourceforge.stripes.action.HandlesEvent;
 import net.sourceforge.stripes.action.Resolution;
@@ -11,7 +14,6 @@ import net.sourceforge.stripes.integration.spring.SpringBean;
 import net.sourceforge.stripes.validation.Validate;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.stripesrest.JsonBuilder;
 import org.stripesrest.JsonResolution;
 
 import java.util.*;
@@ -31,8 +33,16 @@ public class WorldDatabaseActionBean extends BaseActionBean {
     public Resolution queryOne() {
         final Random random = ThreadLocalRandom.current();
         World world = worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
-        JsonBuilder builder = new JsonBuilder(world);
-        String rawJsonText = builder.build();
+        Gson gson = new GsonBuilder()
+                .enableComplexMapKeySerialization()
+                .serializeNulls()
+                .setPrettyPrinting()
+                .setVersion(1.0)
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+
+        String rawJsonText = gson.toJson(world);
+
         Map<String,String> headers = new HashMap<>();
         headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
          setResponseHeaders(headers);
@@ -40,7 +50,7 @@ public class WorldDatabaseActionBean extends BaseActionBean {
     }
 
     @HandlesEvent(QUERIES)
-    @Transactional(readOnly = true)
+    @Transactional
     public Resolution queries() throws Exception{
         int value = boundQueryCount();
         List<Future<World>> wfs = new ArrayList<>(value);
@@ -56,8 +66,16 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                             }));
         }
         List<World> worlds = waitFor(wfs);
-        JsonBuilder builder = new JsonBuilder(worlds);
-        String rawJsonText = builder.build();
+
+        Gson gson = new GsonBuilder()
+                .enableComplexMapKeySerialization()
+                .serializeNulls()
+                .setPrettyPrinting()
+                .setVersion(1.0)
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+
+        String rawJsonText = gson.toJson(worlds);
         Map<String,String> headers = new HashMap<>();
         headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
          setResponseHeaders(headers);
@@ -89,14 +107,22 @@ public class WorldDatabaseActionBean extends BaseActionBean {
                             Random random = ThreadLocalRandom.current();
                             World world = (World) worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
                             world.setRandomNumber(random.nextInt(DB_ROWS) + 1);
-                            worldRepository.save(world);
+                            worldRepositoryImpl.save(world);
                             return world;
                         }
                     }));
         }
         List<World> worlds = waitFor(wfs);
-        JsonBuilder builder = new JsonBuilder(worlds);
-        String rawJsonText = builder.build();
+
+        Gson gson = new GsonBuilder()
+                .enableComplexMapKeySerialization()
+                .serializeNulls()
+                .setPrettyPrinting()
+                .setVersion(1.0)
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+
+        String rawJsonText = gson.toJson(worlds);
         Map<String,String> headers = new HashMap<>();
         headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
          setResponseHeaders(headers);
@@ -138,8 +164,13 @@ public class WorldDatabaseActionBean extends BaseActionBean {
 
     @SpringBean
     private WorldRepository worldRepository;
-    private static final String QUERIES = "queries";
+
+    @SpringBean
+    private WorldRepositoryImpl worldRepositoryImpl;
+
     private static final String DB = "db";
+    public static final String NEW = "new";
+    private static final String QUERIES = "queries";
     private static final String UPDATES = "updates";
     public static final String CONTENT_LENGTH = "Content-Length";
 }
