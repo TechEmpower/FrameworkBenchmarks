@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public final class World implements Persistable<Integer> {
+public class World implements Persistable<Integer> {
 
     @Id
     @GeneratedValue

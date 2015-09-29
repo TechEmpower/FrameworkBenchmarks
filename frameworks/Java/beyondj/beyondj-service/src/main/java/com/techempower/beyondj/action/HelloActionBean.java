@@ -21,11 +21,6 @@ public class HelloActionBean extends BaseActionBean {
         Message message = new Message(HELLO_WORLD);
 
         Gson gson = new GsonBuilder()
-                .enableComplexMapKeySerialization()
-                .serializeNulls()
-                .setPrettyPrinting()
-                .setVersion(1.0)
-                .excludeFieldsWithoutExposeAnnotation()
                 .create();
 
         String rawJsonText = gson.toJson(message);

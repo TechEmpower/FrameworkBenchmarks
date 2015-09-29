@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public final class Fortune implements Comparable<Fortune>, Persistable<Integer> {
+public class Fortune implements Comparable<Fortune>, Persistable<Integer> {
 
     @Id
     @GeneratedValue
