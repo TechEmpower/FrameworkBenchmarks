@@ -10,7 +10,6 @@
 
             <c:forEach items="${actionBean.fortunes}" var="fortune" varStatus="loopStatus">
                 <tr>
-                    <td>id</td>
                     <td>${fortune.id}</td>
                     <td>${fn:escapeXml(fortune.message)}</td>
                 </tr>
