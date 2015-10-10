@@ -39,6 +39,15 @@ private def setWorld(world)
   world
 end
 
+private def fortunes
+  data = [] of  Hash(Symbol, (String | Int32))
+
+  REDIS.lrange("fortunes", 0, -1).each_with_index do |e, i|
+    data.push({:id => i + 1, :message => e.to_s})
+  end
+  data
+end
+
 private def sanitizedQueryCount(request)
   begin
     queries = request.get["queries"].to_i
@@ -73,14 +82,14 @@ end
 #
 
 # Redis Test 2: Single database query
-app.get "/redis/db", do |request|
+app.get "/db", do |request|
   res = ok(randomWorld.to_json)
   res.headers["Content-type"] = CONTENT::JSON
   res
 end
 
 # Redis Test 3: Multiple database query
-app.get "/redis/queries", do |request|
+app.get "/queries", do |request|
   results = (1..sanitizedQueryCount(request)).map do
     randomWorld
   end
@@ -91,15 +100,11 @@ app.get "/redis/queries", do |request|
 end
 
 # Redis Test 4: Fortunes
-app.get "/redis/fortunes", do |request|
-  data = [] of  Hash(Symbol, (String | Int32))
-
-  REDIS.lrange("fortunes", 0, -1).each_with_index do |e, i|
-    data.push({ :id => i + 1, :message => e.to_s })
-  end
+app.get "/fortunes", do |request|
+  data = fortunes
   
   additional_fortune = {
-    :id => 0
+    :id => 0,
     :message => "Additional fortune added at request time."
   }
   data.push(additional_fortune)
@@ -139,7 +144,7 @@ app.get "/redis/fortunes", do |request|
 end
 
 # Redis Test 5: Database Updates
-app.get "/redis/updates", do |request|
+app.get "/updates", do |request|
   updated = (1..sanitizedQueryCount(request)).map do
     world = randomWorld
     world[:randomNumber] = rand(1..ID_MAXIMUM)

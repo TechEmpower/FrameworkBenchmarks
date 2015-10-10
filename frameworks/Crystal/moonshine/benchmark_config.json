@@ -2,12 +2,12 @@
   "framework": "moonshine",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup-redis",
       "json_url": "/json",
-      "db_url": "/redis/db",
-      "query_url": "/redis/queries?queries=",
-      "fortune_url": "/redis/fortunes",
-      "update_url": "/redis/updates?queries=",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
