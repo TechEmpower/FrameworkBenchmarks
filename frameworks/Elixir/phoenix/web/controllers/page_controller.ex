@@ -3,9 +3,7 @@ defmodule Hello.PageController do
   alias Hello.World
   alias Hello.Fortune
 
-  plug :action
   plug :scrub_params, "world" when action in [:create, :update]
-
 
   def index(conn, _params) do
     json conn, %{"TE Benchmarks\n" => "Started"}
@@ -45,7 +43,7 @@ defmodule Hello.PageController do
       changeset = World.changeset(w, %{randomNumber: :random.uniform(10000)})
       Repo.update(changeset)
       w end)
-    end
+  end
 
   def plaintext(conn, _params) do
     text conn, "Hello, world!"

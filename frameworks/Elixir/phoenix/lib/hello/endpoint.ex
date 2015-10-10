@@ -9,6 +9,7 @@ defmodule Hello.Endpoint do
   # Code reloading will only work if the :code_reloader key of
   # the :phoenix application is set to true in your config file.
   if code_reloading? do
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
   end
@@ -28,5 +29,5 @@ defmodule Hello.Endpoint do
     key: "_hello_key",
     signing_salt: "DNlAnJ2o"
 
-  plug :router, Hello.Router
+  plug Hello.Router
 end

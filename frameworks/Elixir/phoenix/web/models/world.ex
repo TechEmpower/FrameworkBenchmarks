@@ -1,6 +1,7 @@
 defmodule Hello.World do
   use Hello.Web, :model
 
+  @derive {Poison.Encoder, only: [:id, :randomNumber]}
   schema "world" do
     field :randomNumber, :integer
   end
