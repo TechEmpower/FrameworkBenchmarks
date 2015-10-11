@@ -1,6 +1,10 @@
 package net.officefloor.performance;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 import net.officefloor.plugin.socket.server.http.HttpHeader;
 import net.officefloor.plugin.woof.WoofOfficeFloorSource;
@@ -211,6 +215,53 @@ public abstract class AbstractTestCase {
 				+ duration + " milliseconds");
 		System.out.println("Effectively 1 request every "
 				+ (duration / (totalRequestCount * 1.0)) + " milliseconds");
+	}
+
+	/**
+	 * Waits for the specified table to be available.
+	 * 
+	 * @param tableName
+	 *            Name of the table.
+	 * @param dataSource
+	 *            {@link DataSource}.
+	 * @throws SQLException
+	 *             If fails to check if table available.
+	 */
+	protected void waitForTableToBeAvailable(String tableName,
+			DataSource dataSource) throws SQLException {
+
+		boolean isTableAvailable = false;
+		long startTime = System.currentTimeMillis();
+		do {
+
+			// Attempt to determine if table available
+			Connection connection = dataSource.getConnection();
+			try {
+				connection.createStatement().executeQuery(
+						"SELECT * FROM " + tableName);
+				isTableAvailable = true;
+			} catch (SQLException ex) {
+				isTableAvailable = false;
+			} finally {
+				connection.close();
+			}
+
+			if (!isTableAvailable) {
+
+				// Determine if time out
+				if ((System.currentTimeMillis() - 10000) > startTime) {
+					Assert.fail("Time out in waiting for World table to be available");
+				}
+
+				// Allow some time for start up of database
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ex) {
+					// Carry on
+				}
+			}
+
+		} while (!isTableAvailable);
 	}
 
 	/**

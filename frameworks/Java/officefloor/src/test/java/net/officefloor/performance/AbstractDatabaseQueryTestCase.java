@@ -81,12 +81,11 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 		private int id;
 		private int randomNumber;
 	}
-	
+
 	@Before
 	public void runApplication() throws Exception {
 		// Start application after database setup
 	}
-
 
 	@Before
 	public void setupDatabase() throws Exception {
@@ -114,14 +113,10 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 			insert.setInt(2, this.randomNumbers[i]);
 			insert.executeUpdate();
 		}
-		
-		// Allow some time for start up of database
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException ex) {
-			// Carry on
-		}
-		
+
+		// Wait until table available on another connection
+		this.waitForTableToBeAvailable("World", dataSource);
+
 		// Start the application
 		WoofOfficeFloorSource.start();
 	}
@@ -138,7 +133,7 @@ public abstract class AbstractDatabaseQueryTestCase extends AbstractTestCase {
 
 		// Stop database for new instance each test
 		this.connection.createStatement().execute("SHUTDOWN IMMEDIATELY");
-		
+
 		// Allow some time for shutdown of database
 		try {
 			Thread.sleep(1000);

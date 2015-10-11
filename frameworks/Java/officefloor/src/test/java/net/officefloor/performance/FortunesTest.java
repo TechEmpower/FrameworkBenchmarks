@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import net.officefloor.plugin.woof.WoofOfficeFloorSource;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -53,7 +55,12 @@ public class FortunesTest extends AbstractTestCase {
 	private static final String DATABASE_USER = "sa";
 
 	@Before
-	public void setupDatabase() throws SQLException {
+	public void runApplication() throws Exception {
+		// Start application after database setup
+	}
+
+	@Before
+	public void setupDatabase() throws Exception {
 
 		// Obtain connection via DataSource (sets up in memory database)
 		JdbcConnectionPool dataSource = JdbcConnectionPool.create(DATABASE_URL,
@@ -91,8 +98,11 @@ public class FortunesTest extends AbstractTestCase {
 				"<script>alert(\"This should not be displayed in a browser alert box.\");</script>");
 		this.loadEntry(insert, 12, "フレームワークのベンチマーク");
 
-		// Cleanup setup
-		connection.close();
+		// Ensure table is available
+		this.waitForTableToBeAvailable("Fortune", dataSource);
+
+		// Start the application
+		WoofOfficeFloorSource.start();
 	}
 
 	@Override
