@@ -11,7 +11,7 @@
 		<officefloor-version>2.16.0</officefloor-version>
 		<compiler-version>3.1</compiler-version>
 		<datanucleus-version>4.0.0-release</datanucleus-version>
-		<postgresql-version>9.4-1201-jdbc41</postgresql-version>
+		<mysql-version>5.1.36</mysql-version>
 		<junit-version>4.11</junit-version>
 	</properties>
 	<build>
@@ -83,9 +83,9 @@
 			<version>${datanucleus-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>${postgresql-version}</version>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.mchange</groupId>
