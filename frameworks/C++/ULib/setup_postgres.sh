@@ -1,5 +1,7 @@
 #!/bin/bash
 
+fw_depends ulib
+
 MAX_THREADS=$((2 * $MAX_THREADS))
 
 # 1. Change ULib Server (userver_tcp) configuration
