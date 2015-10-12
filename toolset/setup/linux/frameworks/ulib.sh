@@ -21,6 +21,13 @@ fi
 # TODO: This should already be installed and unnecessary.
 sudo apt-get install -y postgresql-server-dev-all
 
+# make use of FIFO scheduling policy possible
+type setcap >/dev/null 2>/dev/null
+
+if [ $? -ne 0 ]; then
+   sudo apt-get install -y libcap2-bin
+fi
+
 # Add a simple configuration file to it
 cd $ULIB_ROOT
 if [ ! -f "benchmark.cfg" ]; then
@@ -80,7 +87,7 @@ make install
 
 # 3. Compile usp pages for benchmark
 cd ../../src/ulib/net/server/plugin/usp
-make db.la fortune.la json.la plaintext.la query.la update.la
+make db.la fortune.la json.la plaintext.la query.la update.la rdb.la rquery.la rupdate.la rfortune.la
 
 # Check that compilation worked
 if [ ! -e .libs/db.so ]; then
@@ -88,9 +95,8 @@ if [ ! -e .libs/db.so ]; then
 fi
 
 mkdir -p $ULIB_DOCUMENT_ROOT
-cp .libs/db.so .libs/fortune.so .libs/json.so .libs/plaintext.so .libs/query.so .libs/update.so $ULIB_DOCUMENT_ROOT
+cp .libs/db.so .libs/fortune.so .libs/json.so .libs/plaintext.so .libs/query.so .libs/update.so .libs/rdb.so .libs/rquery.so .libs/rupdate.so .libs/rfortune.so $ULIB_DOCUMENT_ROOT
 
-echo 'export UMEMPOOL="136,0,0,85,1160,155,-17,-22,40"' > $IROOT/ulib.installed
 echo "export ULIB_VERSION=${ULIB_VERSION}" >> $IROOT/ulib.installed
 echo "export ULIB_ROOT=${ULIB_ROOT}" >> $IROOT/ulib.installed
 echo "export ULIB_DOCUMENT_ROOT=${ULIB_DOCUMENT_ROOT}" >> $IROOT/ulib.installed
