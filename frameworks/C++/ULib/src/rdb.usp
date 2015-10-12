@@ -61,7 +61,9 @@ u_put_unalignedp16(u_buffer+4, U_MULTICHAR_CONSTANT16('d',':'));
 
 (void) rc->get(u_buffer, 6+u_num2str32(u_buffer+6, pworld->id = u_get_num_random(10000)));
 
-pworld->randomNumber = strtoul((rep = rc->vitem[0].rep)->data(), 0, 10);
+rep = rc->vitem[0].rep;
+
+pworld->randomNumber = u_strtoul(rep->data(), rep->end());
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", pworld->id, rep);

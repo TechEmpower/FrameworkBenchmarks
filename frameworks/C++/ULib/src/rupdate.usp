@@ -58,11 +58,18 @@ Content-Type: application/json; charset=UTF-8
 -->
 <!--#code
 World* pworld;
+int i, num_queries;
 char* pbuffer = u_buffer;
-int i, num_queries = strtoul(queries.data(), 0, 10);
+const char* ptr = queries.data();
 
-     if (num_queries <   1) num_queries = 1;
-else if (num_queries > 500) num_queries = 500;
+if (u__isdigit(*ptr) == false) num_queries = 1;
+else
+   {
+   num_queries = u_strtoul(ptr, queries.end());
+
+        if (num_queries <   1) num_queries = 1;
+   else if (num_queries > 500) num_queries = 500;
+   }
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR('[');
