@@ -1,11 +1,11 @@
 sudo: required
+dist: trusty
 language: python
 python:
   - "2.7"
 
 env:
   matrix:
-
     # Group tests by directory to logically break up travis-CI build. Otherwise
     # we end up starting ~200+ different workers. Seems that ~100 is the limit
     # before their website starts to lag heavily
