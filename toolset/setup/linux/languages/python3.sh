@@ -1,18 +1,25 @@
 #!/bin/bash
 
 RETCODE=$(fw_exists ${IROOT}/py3.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/py3.installed
+  return 0; }
+  
+PY3_ROOT=$IROOT/py3
 
-fw_get -O http://www.python.org/ftp/python/3.4.3/Python-3.4.3.tar.xz
-fw_untar Python-3.4.3.tar.xz
-cd Python-3.4.3
-./configure --prefix=${IROOT}/py3 --disable-shared --with-computed-gotos --quiet
+fw_get -O http://www.python.org/ftp/python/3.4.2/Python-3.4.2.tar.xz
+fw_untar Python-3.4.2.tar.xz
+cd Python-3.4.2
+./configure --prefix=$PY3_ROOT --disable-shared --with-computed-gotos --quiet
 make -j4 --quiet 2>&1 | tee $IROOT/python3-install.log | awk '{ if (NR%100 == 0) printf "."}'
 make install --quiet 2>&1 | tee -a $IROOT/python3-install.log | awk '{ if (NR%100 == 0) printf "."}'
 cd ..
 
-ln -s ${IROOT}/py3/bin/python3.4m ${IROOT}/py3/bin/python3.4
-${IROOT}/py3/bin/python3 -m ensurepip -U
-${IROOT}/py3/bin/pip3 install -U setuptools pip
+$PY3_ROOT/bin/python3 -m ensurepip -U
+$PY3_ROOT/bin/pip3 install -U setuptools pip
 
-touch ${IROOT}/py3.installed
+echo "export PY3_ROOT=${PY3_ROOT}" > $IROOT/py3.installed
+echo -e "export PYTHONHOME=\$PY3_ROOT" >> $IROOT/py3.installed
+echo -e "export PATH=\$PY3_ROOT/bin:\$PATH" >> $IROOT/py3.installed
+
+source $IROOT/py3.installed

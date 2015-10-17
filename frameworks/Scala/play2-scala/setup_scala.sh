@@ -1,18 +1,15 @@
 #!/bin/bash
 
-source $IROOT/java7.installed
+fw_depends java7 sbt
 
 cd play2-scala
-sed -i "s|jdbc:mysql:\/\/.*:3306|jdbc:mysql://${DBHOST}:3306|g" conf/application.conf
+sed -i "s|jdbc:mysql:\/\/.*:3306|jdbc:mysql://${DBHOST}:3306|g" $TROOT/play2-scala/conf/application.conf
 
-# If application is running, clear old running app.
-if [ -f ${TROOT}/play2-scala/target/universal/stage/RUNNING_PID ]
-then
-  rm -f -r ${TROOT}/play2-scala/target/universal/stage/RUNNING_PID
-fi
+# Clear old running app.
+rm -rf $TROOT/play2-scala/target/universal/stage/RUNNING_PID
 
 # Stage application.
-${IROOT}/sbt/bin/sbt stage
+sbt stage
 
 # Execute Start script in background.
-${TROOT}/play2-scala/target/universal/stage/bin/play2-scala &
+$TROOT/play2-scala/target/universal/stage/bin/play2-scala &

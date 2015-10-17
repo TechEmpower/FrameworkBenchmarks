@@ -1,5 +1,5 @@
 {
-  "framework": "AsyncIO",
+  "framework": "asyncio",
   "tests": [{
     "default": {
       "setup_file": "aiohttp.web/setup",

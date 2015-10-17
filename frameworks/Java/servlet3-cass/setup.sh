@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# load java environment variables
-source $IROOT/java8.installed
-export RESIN_HOME=${IROOT}/resin-4.0.41
-
 sed -i 's|localhost|'"${DBHOST}"'|g' src/main/resources/application.properties
+
+fw_depends java8 resin maven
 
 mvn clean compile war:war
 rm -rf $RESIN_HOME/webapps/*

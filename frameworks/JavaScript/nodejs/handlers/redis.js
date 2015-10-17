@@ -4,7 +4,7 @@ var async = require('async');
 // Otherwise, a pure JavaScript parser will be used."
 // >> hiredis is installed for these tests
 var redis = require('redis');
-var client = redis.createClient();
+var client = redis.createClient(6379, '127.0.0.1', {});
 
 client.on('error', function (err) {
   console.log('Redis Error: ' + err);

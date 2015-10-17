@@ -1,6 +1,6 @@
 #!/bin/bash
-# load java environment variables
-source $IROOT/java7.installed
+
+fw_depends java7 maven
 
 export JAVA_OPTS="-Xms2g -Xmx2g -XX:MaxPermSize=256m -XX:+UseG1GC -XX:MaxGCPauseMillis=25 -verbosegc -Xloggc:/tmp/wildfly_gc.log"
 

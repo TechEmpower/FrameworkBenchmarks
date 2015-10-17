@@ -3,9 +3,10 @@
 RETCODE=$(fw_exists java8.installed)
 [ ! "$RETCODE" == 0 ] || { \
   # Load environment variables
-  . $IROOT/java8.installed
+  source $IROOT/java8.installed
   return 0; }
 
+# TODO: Someday get away from apt-get
 sudo add-apt-repository -y ppa:webupd8team/java
 sudo apt-get update
 echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
@@ -30,4 +31,6 @@ done
 # Setup environment variables
 JAVA_HOME=/usr/lib/jvm/java-8-oracle
 echo "export JAVA_HOME=${JAVA_HOME}" > $IROOT/java8.installed
-echo "export PATH=${JAVA_HOME}/bin:$PATH" >> $IROOT/java8.installed
+echo -e "export PATH=\$JAVA_HOME/bin:\$PATH" >> $IROOT/java8.installed
+
+source $IROOT/java8.installed

@@ -1,8 +1,7 @@
 #!/bin/bash
 
-export PY2_ROOT=$IROOT/py2
-export PY2=$PY2_ROOT/bin/python
-export PY2_PIP=$PY2_ROOT/bin/pip
-export PY2_GUNICORN=$PY2_ROOT/bin/gunicorn
+fw_depends python2
 
-$PY2_GUNICORN wsgi:app -c gunicorn_conf.py &
+pip install --install-option="--prefix=${PY2_ROOT}" -r $TROOT/requirements.txt
+
+gunicorn wsgi:app -c gunicorn_conf.py &

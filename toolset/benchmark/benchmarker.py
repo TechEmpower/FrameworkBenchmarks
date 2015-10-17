@@ -948,7 +948,7 @@ class Benchmarker:
     # pprint(self.__dict__)
 
     self.start_time = time.time()
-    self.run_test_timeout_seconds = 3600
+    self.run_test_timeout_seconds = 7200
 
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)

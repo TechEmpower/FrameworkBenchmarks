@@ -1,11 +1,6 @@
 #!/bin/bash
 
-set -e
-
-# mono environment variables
-. ${IROOT}/mono.installed
-
-export NGINX_HOME=${IROOT}/nginx
+fw_depends nginx mono xsp
 
 sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
 
@@ -29,9 +24,9 @@ done
 conf+="}"
 echo -e $conf > $TROOT/nginx.upstream.conf
 
-$NGINX_HOME/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes ${MAX_THREADS};"
+nginx -c $TROOT/nginx.conf -g "worker_processes ${MAX_THREADS};"
 
 # To debug, use --printlog --verbose --loglevels=All
 for port in $(seq $port_start $port_end); do
-  fastcgi-mono-server4 --applications=/:${TROOT}/src --socket=tcp:127.0.0.1:$port &
+  fastcgi-mono-server4 --applications=/:$TROOT/src --socket=tcp:127.0.0.1:$port &
 done

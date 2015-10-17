@@ -1,10 +1,7 @@
 #!/bin/bash
 
-export NGINX_HOME=${IROOT}/nginx
+fw_depends nginx xsp mono
 
-set -e
-# mono environment variables
-. ${IROOT}/mono.installed
 sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' nginx.conf
 
@@ -23,8 +20,8 @@ conf+="\tserver 127.0.0.1:${port};\n"
 done
 conf+="}"
 echo -e $conf > $TROOT/nginx.upstream.conf
-$NGINX_HOME/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes ${MAX_THREADS};"
+nginx -c $TROOT/nginx.conf -g "worker_processes ${MAX_THREADS};"
 # To debug, use --printlog --verbose --loglevels=All
 for port in $(seq $port_start $port_end); do
-	MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 --applications=/:${TROOT}/src --socket=tcp:127.0.0.1:$port &
+	MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 --applications=/:$TROOT/src --socket=tcp:127.0.0.1:$port &
 done

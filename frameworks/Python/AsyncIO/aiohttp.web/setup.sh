@@ -1,9 +1,10 @@
 #!/bin/bash
 
-export PY3_ROOT=$IROOT/py3
-export PY3=$PY3_ROOT/bin/python
-export PY3_PIP=$PY3_ROOT/bin/pip3
-export PY3_API_HOUR=$PY3_ROOT/bin/api_hour
+fw_depends python3
+
+sed -i 's|host: 127.0.0.1|host: '${DBHOST}'|g' aiohttp.web/etc/hello/main/main.yaml
+
+pip install --install-option="--prefix=${PY3_ROOT}" -r $TROOT/requirements.txt
 
 cd $TROOT/aiohttp.web
-$PY3_API_HOUR -ac hello:Container &
+api_hour -ac hello:Container &

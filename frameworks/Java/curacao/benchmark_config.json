@@ -12,13 +12,13 @@
       "framework": "curacao",
       "language": "Java",
       "orm": "Raw",
-      "platform": "Curacao",
+      "platform": "Servlet",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Curacao",
       "notes": "",
-      "versus": ""
+      "versus": "jetty"
     }
   }]
 }

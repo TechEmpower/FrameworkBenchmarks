@@ -1,9 +1,6 @@
 #!/bin/bash
 
-set -e
-
-#mono environment variables
-. ${IROOT}/mono.installed
+fw_depends mono
 
 #extra cleaning
 rm -rf src/bin src/obj
