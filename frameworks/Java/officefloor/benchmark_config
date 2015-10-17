@@ -20,7 +20,7 @@
       "webserver": "WoOF (Web on OfficeFloor)",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "officefloor-mysql",
+      "display_name": "officefloor",
       "notes": "",
       "versus": ""
     }

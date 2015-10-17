@@ -3,9 +3,6 @@
 # Propagate any failure
 set -e
 
-# Indicate the user running
-echo `whoami`
-
 # Ensure maven uses appropriate version of Java
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle/
 sudo update-alternatives --set java /usr/lib/jvm/java-8-oracle/jre/bin/java
@@ -25,5 +22,4 @@ echo "OfficeFloor test application built"
 
 # Run application
 echo "Starting OfficeFloor application"
-mvn -DincludeGWT=false -DenvDir=production net.officefloor.maven:maven-woof-plugin:run
-#mvn net.officefloor.maven:maven-woof-plugin:run
+mvn -DincludeGWT=false -DenvDir=production net.officefloor.maven:woof-maven-plugin:run

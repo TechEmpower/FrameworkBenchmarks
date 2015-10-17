@@ -5,7 +5,7 @@ set -e
 
 fw_depends java8
 
-# Need maven 3.1.1 or higher (default for Ubuntu 14.04 is 3.0.5)
+# Need maven 3.1.1 or higher (default for Ubuntu is 3.0.5)
 sudo add-apt-repository "deb http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main"
 sudo apt-get update
 sudo apt-get -y --force-yes install maven3
