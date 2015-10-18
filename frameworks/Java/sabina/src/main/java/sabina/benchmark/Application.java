@@ -16,25 +16,18 @@ package sabina.benchmark;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.System.getProperty;
-import static sabina.Sabina.*;
 import static sabina.content.JsonContent.toJson;
 import static sabina.view.MustacheView.renderMustache;
 
 import sabina.Request;
-import sabina.server.MatcherFilter;
 
 import java.util.*;
 import java.util.Date;
-import javax.servlet.FilterConfig;
 import javax.servlet.annotation.WebFilter;
 
-/**
- * .
- */
 @WebFilter ("/*")
-final class Application extends MatcherFilter {
+public final class Application extends sabina.Application {
     static final String SETTINGS_RESOURCE = "/server.properties";
-    static final Repository REPOSITORY = loadRepository ();
     static final int DB_ROWS = 10000;
 
     private static final String MESSAGE = "Hello, World!";
@@ -42,10 +35,12 @@ final class Application extends MatcherFilter {
     private static final String CONTENT_TYPE_JSON = "application/json";
     private static final String QUERIES_PARAM = "queries";
 
+    static Repository repository = loadRepository ();
+
     static Properties loadConfiguration () {
         try {
             Properties settings = new Properties ();
-            settings.load (Class.class.getResourceAsStream (SETTINGS_RESOURCE));
+            settings.load (Application.class.getResourceAsStream (SETTINGS_RESOURCE));
             return settings;
         }
         catch (Exception ex) {
@@ -65,29 +60,41 @@ final class Application extends MatcherFilter {
 
     private static Object getDb (Request it) {
         try {
-            final World[] worlds = REPOSITORY.getWorlds (getQueries (it), false);
+            final World[] worlds = repository.getWorlds (getQueries (it), false);
             it.response.type (CONTENT_TYPE_JSON);
             return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
         }
-        catch (Exception e){
+        catch (Exception e) {
             e.printStackTrace ();
-            throw e;
+            return e.getMessage ();
         }
     }
 
     private static Object getFortunes (Request it) {
-        List<Fortune> fortunes = REPOSITORY.getFortunes ();
-        fortunes.add (new Fortune (0, "Additional fortune added at request time."));
-        fortunes.sort ((a, b) -> a.message.compareTo (b.message));
+        try {
+            List<Fortune> fortunes = repository.getFortunes ();
+            fortunes.add (new Fortune (0, "Additional fortune added at request time."));
+            fortunes.sort ((a, b) -> a.message.compareTo (b.message));
 
-        it.response.type ("text/html; charset=utf-8");
-        return renderMustache ("/fortunes.mustache", fortunes);
+            it.response.type ("text/html; charset=utf-8");
+            return renderMustache ("fortunes.mustache", fortunes);
+        }
+        catch (Exception e) {
+            e.printStackTrace ();
+            return e.getMessage ();
+        }
     }
 
     private static Object getUpdates (Request it) {
-        World[] worlds = REPOSITORY.getWorlds (getQueries (it), true);
-        it.response.type (CONTENT_TYPE_JSON);
-        return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
+        try {
+            World[] worlds = repository.getWorlds (getQueries (it), true);
+            it.response.type (CONTENT_TYPE_JSON);
+            return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
+        }
+        catch (Exception e) {
+            e.printStackTrace ();
+            return e.getMessage ();
+        }
     }
 
     private static int getQueries (final Request request) {
@@ -124,7 +131,7 @@ final class Application extends MatcherFilter {
         it.response.addDateHeader ("Date", new Date ().getTime ());
     }
 
-    private static void routes () {
+    public Application () {
         get ("/json", Application::getJson);
         get ("/db", Application::getDb);
         get ("/query", Application::getDb);
@@ -132,18 +139,29 @@ final class Application extends MatcherFilter {
         get ("/update", Application::getUpdates);
         get ("/plaintext", Application::getPlaintext);
         after (Application::addCommonHeaders);
-    }
-
-    public static void main (String[] args) {
-        routes ();
 
         Properties settings = loadConfiguration ();
-        host (settings.getProperty ("web.host"));
-        port (settings.getProperty ("web.port"));
+
+        bind (settings.getProperty ("web.host"));
+        port (parseInt (settings.getProperty ("web.port")));
+
         start ();
     }
 
-    @Override protected void routes (FilterConfig filterConfig) {
-        routes ();
+    public static void main (String[] args) {
+        new Application ();
     }
+
+//    @Override public void init (FilterConfig filterConfig) {
+//        // Web always uses Mongo because connection pool configuration problems
+//        repository = new MongoDbRepository (loadConfiguration ());
+//
+//        get ("/json", Application::getJson);
+//        get ("/db", Application::getDb);
+//        get ("/query", Application::getDb);
+//        get ("/fortune", Application::getFortunes);
+//        get ("/update", Application::getUpdates);
+//        get ("/plaintext", Application::getPlaintext);
+//        after (Application::addCommonHeaders); // TODO Is this required inside a server?
+//    }
 }
