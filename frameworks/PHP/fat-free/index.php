@@ -1,6 +1,6 @@
 <?php
 /** @var Base $f3 */
-$f3=require('lib/base.php');
+$f3=require('src/base.php');
 
 $f3->set('DEBUG',2);
 $f3->set('CACHE','folder=tmp/cache/');
@@ -39,7 +39,10 @@ $f3->route(
         for ($i = 0; $i < $queries; $i++) {
             $id = mt_rand(1, 10000);
             $res = $db->exec('SELECT id, randomNumber FROM World WHERE id = ?',$id,0,false);
-            $result[] = $res[0];
+            $result[] = array(
+                'id' => (int) $res[0]['id'],
+                'randomNumber' => (int) $res[0]['randomNumber'],
+            );
         }
         header("Content-type: application/json");
         echo json_encode($single ? $result[0] : $result);
