@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./setup.sh -Dsabina.backend=jetty -Dsabina.benchmark.repository=mongodb
+scripts/setup.sh -Dsabina.backend=jetty -Dsabina.benchmark.repository=mongodb
