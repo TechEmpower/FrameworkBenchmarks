@@ -1,9 +1,5 @@
 #!/bin/bash
 
-export ORM_DRIVER="pgsql"
-export UMEMPOOL="146,0,0,90,150,-22,-12,-20,0"
-export ORM_OPTION="host=${DBHOST} user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world client_encoding=UTF8"
-
 fw_depends ulib
 
 MAX_THREADS=$((2 * $MAX_THREADS))
@@ -15,4 +11,15 @@ sed -i "s|PREFORK_CHILD .*|PREFORK_CHILD ${MAX_THREADS}|g"					  $IROOT/ULib/ben
 sed -i "s|CLIENT_FOR_PARALLELIZATION .*|CLIENT_FOR_PARALLELIZATION 100|g" $IROOT/ULib/benchmark.cfg
 
 # 2. Start ULib Server (userver_tcp)
-userver_tcp -c $IROOT/ULib/benchmark.cfg &
+export ORM_DRIVER="pgsql"
+export UMEMPOOL="146,0,0,90,150,-22,-12,-20,0"
+export ORM_OPTION="host=${DBHOST} user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world client_encoding=UTF8"
+
+# Never use setcap inside of TRAVIS 
+[ "$TRAVIS" != "true" ] || { \
+if [ `ulimit -r` -eq 99 ]; then
+	sudo setcap cap_sys_nice,cap_sys_resource,cap_net_bind_service,cap_net_raw+eip $IROOT/ULib/bin/userver_tcp
+fi
+}
+
+$IROOT/ULib/bin/userver_tcp -c $IROOT/ULib/benchmark.cfg &

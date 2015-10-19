@@ -6,7 +6,7 @@ TechEmpower Web Framework Benchmarks
 #include "fortune.h"
 
 static Fortune*           pfortune;
-static UString*           pmessage;
+static Fortune*           pfortune2add;
 static UString*           pencoded;
 static UOrmSession*       psql_fortune;
 static UOrmStatement*     pstmt_fortune;
@@ -30,9 +30,9 @@ static void usp_fork_fortune()
 
       pstmt_fortune->into(*pfortune);
 
-      pencoded  = U_NEW(UString(100U));
-      pmessage  = U_NEW(U_STRING_FROM_CONSTANT("Additional fortune added at request time."));
-      pvfortune = U_NEW(UVector<Fortune*>);
+      pencoded     = U_NEW(UString(100U));
+      pvfortune    = U_NEW(UVector<Fortune*>);
+      pfortune2add = U_NEW(Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
       }
 }
 
@@ -45,11 +45,11 @@ static void usp_end_fortune()
       {
       delete pstmt_fortune;
 
+      delete pencoded;
       delete psql_fortune;
       delete pvfortune;
       delete pfortune;
-      delete pmessage;
-      delete pencoded;
+      delete pfortune2add;
       }
 }
 #endif
@@ -57,7 +57,7 @@ static void usp_end_fortune()
 <!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
 pstmt_fortune->execute();
 
-     pvfortune->push_back(U_NEW(Fortune(0, *pmessage)));
+     pvfortune->push_back(U_NEW(Fortune(*pfortune2add)));
 do { pvfortune->push_back(U_NEW(Fortune(*pfortune))); } while (pstmt_fortune->nextRow());
 
 pvfortune->sort(Fortune::cmp_obj);

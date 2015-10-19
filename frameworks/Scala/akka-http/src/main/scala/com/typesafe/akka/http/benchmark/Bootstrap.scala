@@ -3,7 +3,7 @@ package com.typesafe.akka.http.benchmark
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.{Route, RoutingLog, RoutingSettings, RoutingSetup}
-import akka.stream.ActorFlowMaterializer
+import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink._
 import com.typesafe.config.Config
 
@@ -24,7 +24,7 @@ class BenchmarkBootstrap(components: {
   override def run(): Unit = {
 
     implicit val routingLog = RoutingLog(system.log)
-    implicit val materializer = ActorFlowMaterializer()
+    implicit val materializer = ActorMaterializer()
     implicit val settings = RoutingSettings.default(system)
     implicit val setup = RoutingSetup.apply
     val server = Http(components.system).bind(config.getString("akka.http.benchmark.host"), config.getInt("akka.http.benchmark.port"))

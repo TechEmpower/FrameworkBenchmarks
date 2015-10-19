@@ -10,6 +10,13 @@ defined('APPLICATION_ENV')
 
 set_include_path(realpath(dirname(__FILE__) . '/../vendor/zendframework/zendframework1/library'));
 
+require_once 'Zend/Loader/Autoloader/Resource.php';
+$resources = new Zend_Loader_Autoloader_Resource(array(
+	'namespace' => '',
+	'basePath' => APPLICATION_PATH
+));
+$resources->addResourceType('model', 'models', 'Model');
+
 require_once 'Zend/Application.php';
 
 // Create application, bootstrap, and run
