@@ -19,7 +19,7 @@ This is the Play portion of a [benchmarking test suite](../) comparing a variety
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Java OpenJDK 1.7](http://openjdk.java.net/)
+* Java 8
 * [Play 2.4.2](http://http://www.playframework.com/)
 
 ## Test URLs
