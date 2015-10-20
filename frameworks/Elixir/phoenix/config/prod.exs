@@ -7,11 +7,12 @@ config :hello, Hello.Endpoint,
   server: true
 
 config :hello, Hello.Repo,
-  adapter: Ecto.Adapters.MySQL,
+  adapter: Ecto.Adapters.Postgres,
   username: "benchmarkdbuser",
   password: "benchmarkdbpass",
   database: "hello_world",
-  hostname: "localhost"
+  hostname: "localhost",
+  pool_size: 256
 
 # ## SSL Support
 #
