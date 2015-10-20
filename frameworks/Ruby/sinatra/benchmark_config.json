@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "sinatra-puma-mri",
       "notes": "",
-      "versus": "rack-puma"
+      "versus": "rack-puma-mri"
     },
     "puma-jruby": {
       "setup_file": "run_jruby_puma",

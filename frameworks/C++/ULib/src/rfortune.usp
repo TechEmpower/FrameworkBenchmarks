@@ -1,0 +1,73 @@
+<!--#
+Test type 4: Fortunes
+TechEmpower Web Framework Benchmarks
+-->
+<!--#declaration
+#include "fortune.h"
+
+static UString* pencoded;
+static UREDISClient_Base* rc;
+static Fortune* pfortune2add;
+static UVector<Fortune*>* pvfortune;
+
+static void usp_fork_rfortune()
+{
+   U_TRACE(5, "::usp_fork_rfortune()")
+
+   rc = U_NEW(UREDISClient<UTCPSocket>);
+
+   if (rc->connect() == false)
+      {
+      U_WARNING("usp_fork_rfortune(): %V", rc->UClient_Base::getResponse().rep);
+
+      return;
+      }
+
+   pencoded     = U_NEW(UString(100U));
+   pvfortune    = U_NEW(UVector<Fortune*>);
+   pfortune2add = U_NEW(Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
+}
+
+#ifdef DEBUG
+static void usp_end_rfortune()
+{
+   U_TRACE(5, "::usp_end_rfortune()")
+
+   delete rc;
+
+   if (pencoded)
+      {
+      delete pencoded;
+      delete pvfortune;
+      delete pfortune2add;
+      }
+}
+#endif
+-->
+<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
+uint32_t i, n;
+
+(void) rc->lrange(U_CONSTANT_TO_PARAM("fortunes 0 -1"));
+
+pvfortune->push_back(U_NEW(Fortune(*pfortune2add)));
+
+for (i = 0, n = rc->vitem.size(); i < n; ++i) pvfortune->push_back(U_NEW(Fortune(i+1, rc->vitem[i])));
+
+pvfortune->sort(Fortune::cmp_obj);
+
+for (i = 0, ++n; i < n; ++i)
+   {
+   Fortune* elem = (*pvfortune)[i];
+
+   UXMLEscape::encode(elem->message, *pencoded);
+
+   USP_PRINTF_ADD(
+      "<tr>"
+      "<td>%u</td>"
+      "<td>%v</td>"
+      "</tr>",
+      elem->id, pencoded->rep);
+   }
+
+pvfortune->clear();
+--></table></body></html>

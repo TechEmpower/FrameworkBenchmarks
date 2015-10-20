@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "rails-puma-mri",
       "notes": "",
-      "versus": "rack-puma"
+      "versus": "rack-puma-mri"
     },
     "puma-jruby": {
       "setup_file": "run_jruby_puma",

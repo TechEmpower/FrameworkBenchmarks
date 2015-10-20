@@ -24,17 +24,17 @@ class QueryTestType(DBTestType):
 
     problems = []
     
-    response = self._curl(url)
+    response = self._curl(url + '2')
     body = self._curl_body(url + '2')
     problems += self._verifyQueryList(2, response, body, url + '2')
 
-    response = self._curl(url)
+    response = self._curl(url + '0')
     body = self._curl_body(url + '0')
     problems += self._verifyQueryList(1, response, body, url + '0', 'warn')
 
     # Note: A number of tests fail here because they only parse for 
     # a number and crash on 'foo'. For now we only warn about this
-    response = self._curl(url)
+    response = self._curl(url + 'foo')
     body = self._curl_body(url + 'foo')
     if body is None:
       problems += [('warn','No response (this will be a failure in future rounds, please fix)', url)]
@@ -43,7 +43,7 @@ class QueryTestType(DBTestType):
     else:
       problems += self._verifyQueryList(1, response, body, url + 'foo', 'warn')
 
-    response = self._curl(url)
+    response = self._curl(url + '501')
     body = self._curl_body(url + '501')
     problems += self._verifyQueryList(500, response, body, url + '501', 'warn')
 

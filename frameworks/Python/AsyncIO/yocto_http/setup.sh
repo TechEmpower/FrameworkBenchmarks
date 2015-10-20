@@ -1,9 +1,8 @@
 #!/bin/bash
 
-export PY3_ROOT=$IROOT/py3
-export PY3=$PY3_ROOT/bin/python
-export PY3_PIP=$PY3_ROOT/bin/pip3
-export PY3_API_HOUR=$PY3_ROOT/bin/api_hour
+fw_depends python3
+
+pip install --install-option="--prefix=${PY3_ROOT}" -r $TROOT/requirements.txt
 
 cd $TROOT/yocto_http
-$PY3_API_HOUR -ac hello:Container &
+api_hour -ac hello:Container &

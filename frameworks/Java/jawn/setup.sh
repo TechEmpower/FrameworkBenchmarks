@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# load java environment variables
-source $IROOT/java8.installed
+fw_depends java8
+
+sed -i 's|127.0.0.1|'${DBHOST}'|g' src/main/java/app/config/Database.java
 
 ./gradlew clean --daemon
 
-./gradlew run -Pargs=production,$DBHOST
+./gradlew run -Pargs=production

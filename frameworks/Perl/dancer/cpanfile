@@ -1,0 +1,7 @@
+requires 'Dancer', '1.3134';
+requires 'Dancer::Plugin::Database', '2.10';
+requires 'DBI', '1.633';
+requires 'DBD::mysql', '4.031';
+requires 'JSON::XS', '3.01';
+requires 'Plack', '1.0034';
+requires 'Starman', '0.4011';

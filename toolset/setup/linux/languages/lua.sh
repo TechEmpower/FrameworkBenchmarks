@@ -1,14 +1,24 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/lua5.1.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+RETCODE=$(fw_exists ${IROOT}/lua.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/lua.installed
+  return 0; }
 
-# Eventually, we should also install lua5.2 and luajit
-#
-# At the moment they seem to cause issues with lapis 
-# being able to compile. Since no Lua test is using 
-# either luajit or lua5.2 at the moment I have just
-# left them out
-sudo apt-get install -y lua5.1 luarocks
+LUA_VERSION="5.1"
+LUA_MICRO="5"
 
-touch ${IROOT}/lua5.1.installed
+fw_get -O https://github.com/LuaDist/lua/archive/$LUA_VERSION.$LUA_MICRO-Ubuntu-x86_64.tar.gz
+fw_untar $LUA_VERSION.$LUA_MICRO-Ubuntu-x86_64.tar.gz
+
+LUA_HOME=$IROOT/lua-$LUA_VERSION.$LUA_MICRO-Ubuntu-x86_64
+echo "export LUA_HOME=${LUA_HOME}" > $IROOT/lua.installed
+echo "export LUA_VERSION=${LUA_VERSION}" >> $IROOT/lua.installed
+echo "export LUA_MICRO=${LUA_MICRO}" >> $IROOT/lua.installed
+echo -e "export LUA=${IROOT}/lua\$LUA_VERSION.\$LUA_MICRO" >> $IROOT/lua.installed
+echo -e "export PATH=\$LUA_HOME/bin:\$PATH" >> $IROOT/lua.installed
+# TODO: This feels very hackish
+echo -e 'export LUA_PATH="./?.lua;./?.lc;$LUA_HOME/share/lua/5.1/?/init.lua;$LUA_HOME/share/lua/5.1/?.lua;$LUA_HOME/lib/lua/5.1/?/init.lua;$LUA_HOME/lib/lua/5.1/?.lua"' >> $IROOT/lua.installed
+echo -e 'export LUA_CPATH="./?.lua;./?.lc;$LUA_HOME/share/lua/5.1/?/init.so;$LUA_HOME/share/lua/5.1/?.so;$LUA_HOME/lib/lua/5.1/?/init.so;$LUA_HOME/lib/lua/5.1/?.so"' >> $IROOT/lua.installed
+
+source $IROOT/lua.installed

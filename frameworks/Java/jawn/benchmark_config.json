@@ -9,7 +9,7 @@
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
-      "port": 8081,
+      "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
@@ -17,12 +17,12 @@
       "language": "Java",
       "orm": "Raw",
       "platform": "Servlet",
-      "webserver": "Jetty",
+      "webserver": "Undertow",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "jawn",
       "notes": "",
-      "versus": "servlet"
+      "versus": ""
     }
   }]
 }

@@ -13,7 +13,7 @@ var Promise = require('bluebird')
 // Can treat redis library as one that supports Promises
 // these methods will then have "-Async" appended to them.
 var redis = Promise.promisifyAll(require('redis'))
-var client = redis.createClient()
+var client = redis.createClient(6379, '127.0.0.1', {})
 
 client.on('error', function (err) {
   console.log('Redis Error: ' + err)

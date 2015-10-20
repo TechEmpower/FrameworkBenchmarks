@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# load java environment variables
-source $IROOT/java7.installed
-
 sed -i 's|url: jdbc:mysql://.*/hello_world|url: jdbc:mysql://'"${DBHOST}"':3306/hello_world|g' hello-world-mysql.yml
+
+fw_depends java7 maven
 
 mvn -P mysql clean package
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 
-export PY2_ROOT=$IROOT/py2
-export PY2=$PY2_ROOT/bin/python
+fw_depends python2
 
-$PY2 app.py &
+sed -i 's|127.0.0.1|'${DBHOST}'|g' app.py
+
+pip install --install-option="--prefix=${PY2_ROOT}" -r $TROOT/requirements.txt
+
+python app.py &

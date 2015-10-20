@@ -1,9 +1,7 @@
 #!/bin/bash
-source $IROOT/java7.installed
-source $IROOT/lein.installed
 
+fw_depends leiningen java7
 
-# Update db host in the source file
 sed -i 's|:subname "//.*:3306|:subname "//'"${DBHOST}"':3306|g' hello/src/hello/handler.clj
 
 cd hello

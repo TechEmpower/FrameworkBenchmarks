@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $IROOT/elixir.installed
+fw_depends elixir
 
 rm -rf _build deps rel
 
