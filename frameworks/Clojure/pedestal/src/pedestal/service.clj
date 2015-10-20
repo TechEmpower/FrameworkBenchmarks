@@ -25,7 +25,7 @@
   (mysql {
     :classname "com.mysql.jdbc.Driver"
     :subprotocol "mysql"
-    :subname "//localhost:3306/hello_world"
+    :subname "//127.0.0.1:3306/hello_world"
     :user "benchmarkdbuser"
     :password "benchmarkdbpass"
     ;;OPTIONAL KEYS

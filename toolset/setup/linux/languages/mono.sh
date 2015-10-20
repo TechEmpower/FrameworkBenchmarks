@@ -1,13 +1,9 @@
 #!/bin/bash
 
-set -ex
-
 RETCODE=$(fw_exists $IROOT/mono.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  echo "Installing RootCAs from Mozilla..."; 
   # Load environment variables
-  . $IROOT/mono.installed
-  mozroots --import --sync;
+  source $IROOT/mono.installed
   return 0; }
 
 # what do we want? latest mono
@@ -20,37 +16,37 @@ echo "deb http://jenkins.mono-project.com/repo/debian sid main" | sudo tee /etc/
 sudo apt-get update
 
 # Find the most recent snapshot
-SNAPSHOT=$(apt-cache search 'mono-snapshot-.*-assemblies' | cut -d'-' -f3 | tail -1)
+#SNAPSHOT=$(apt-cache search 'mono-snapshot-.*-assemblies' | cut -d'-' -f3 | tail -1)
+SNAPSHOT="20150202010831"
 
 # save environment
 
-echo "export SNAPDATE=$SNAPSHOT" > $IROOT/mono.installing
-cat >> $IROOT/mono.installing <<'END'
-export MONO_HOME=$IROOT/mono-snapshot-$SNAPDATE
-export MONO_PATH=$MONO_HOME/lib/mono/4.5
-export MONO_CFG_DIR=$MONO_HOME/etc
-export PATH=$MONO_HOME/bin:$PATH
-export LD_LIBRARY_PATH=$MONO_HOME/lib:$LD_LIBRARY_PATH
-export PKG_CONFIG_PATH=$MONO_HOME/lib/pkgconfig:$PKG_CONFIG_PATH
-END
+MONO_HOME=$IROOT/mono-snapshot-$SNAPSHOT
+echo "export SNAPSHOT=$SNAPSHOT" > $IROOT/mono.installing
+echo "export MONO_HOME=$MONO_HOME" >> $IROOT/mono.installing
+echo "export MONO_PATH=$MONO_HOME/lib/mono/4.5" >> $IROOT/mono.installing
+echo "export MONO_CFG_DIR=$MONO_HOME/etc" >> $IROOT/mono.installing
+echo -e "export PATH=$MONO_HOME/bin:\$PATH" >> $IROOT/mono.installing
+echo -e "export LD_LIBRARY_PATH=$MONO_HOME/lib:\$LD_LIBRARY_PATH" >> $IROOT/mono.installing
+echo -e "export PKG_CONFIG_PATH=$MONO_HOME/lib/pkgconfig:\$PKG_CONFIG_PATH" >> $IROOT/mono.installing
 
 # load environment
-. $IROOT/mono.installing
+source $IROOT/mono.installing
 
 # start fresh
 rm -rf $MONO_HOME && mkdir -p $MONO_HOME
 
 # Download and extract debs
 fw_apt_to_iroot mono-snapshot-$SNAPSHOT
-fw_apt_to_iroot mono-snapshot-${SNAPSHOT}-assemblies mono-snapshot-$SNAPSHOT
+fw_apt_to_iroot mono-snapshot-$SNAPSHOT-assemblies mono-snapshot-$SNAPSHOT
 
 # Simplify paths
 mv $MONO_HOME/opt/mono-*/* $MONO_HOME
-file $MONO_HOME/bin/* | grep "POSIX shell script" | awk -F: '{print $1}' | xargs sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g"
-sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_HOME/etc/mono/config
+file $MONO_HOME/bin/* | grep "POSIX shell script" | awk -F: '{print $1}' | xargs sed -i "s|/opt/mono-$SNAPSHOT|$MONO_HOME|g"
+sed -i "s|/opt/mono-$SNAPSHOT|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_HOME/etc/mono/config
 
-# import SSL certificates
-mozroots --import --sync
-#echo -e 'y\ny\ny\n' | certmgr -ssl https://nuget.org
+echo "mozroots --import --sync" >> $IROOT/mono.installing
 
 mv $IROOT/mono.installing $IROOT/mono.installed
+
+source $IROOT/mono.installed

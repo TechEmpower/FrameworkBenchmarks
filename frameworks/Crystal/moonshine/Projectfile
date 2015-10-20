@@ -1,4 +1,0 @@
-deps do
-  github "dhruvrajvanshi/Moonshine", name: "moonshine"
-  github "stefanwille/crystal-redis"
-end

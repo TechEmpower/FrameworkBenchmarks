@@ -27,5 +27,5 @@ fn main() {
     });
 
     server.utilize(router);
-    server.listen("127.0.0.1:8080");
+    server.listen("0.0.0.0:8080");
 }

@@ -27,7 +27,7 @@ public class DbManager {
     public DbManager(DatabaseConnection spec) throws ClassNotFoundException, SQLException, PropertyVetoException {
         if (spec == null) throw new InitException("DatabaseConnection is null");
         
-        source = spec;//.createDataSource();
+        source = spec;
     }
     
     public World getWorld(int id) {

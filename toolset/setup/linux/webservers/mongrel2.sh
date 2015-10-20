@@ -1,17 +1,22 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/mongrel2.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
-
 fw_depends zeromq
 
+RETCODE=$(fw_exists ${IROOT}/mongrel2.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/mongrel2.installed
+  return 0; }
+
+MONGREL2=$IROOT/mongrel2
+
+# TODO: Get away from apt-get
 # Dependencies
 sudo apt-get install -y sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev
 
 # Update linker cache
 sudo ldconfig -v
 
-fw_get https://github.com/zedshaw/mongrel2/tarball/v1.8.1 -o mongrel2.tar.gz
+fw_get -o mongrel2.tar.gz https://github.com/zedshaw/mongrel2/tarball/v1.8.1
 fw_untar mongrel2.tar.gz
 
 # mongrel2 untars into this folder 
@@ -32,4 +37,7 @@ cd mongrel2-install
   make install
 )
 
-touch ${IROOT}/mongrel2.installed
+echo "export MONGREL2_HOME=${MONGREL2}" > $IROOT/mongrel2.installed
+echo -e "export PATH=\$MONGREL2/bin:\$PATH" >> $IROOT/mongrel2.installed
+
+source $IROOT/mongrel2.installed

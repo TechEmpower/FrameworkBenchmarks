@@ -1,11 +1,18 @@
-export PHP_HOME=${IROOT}/php-5.5.17
-export COMPOSER_HOME=${IROOT}/php-composer
-export PHP_FPM=${PHP_HOME}/sbin/php-fpm
-export NGINX_HOME=${IROOT}/nginx
+#!/bin/bash
 
 sed -i 's|localhost|'"${DBHOST}"'|g' index.php
 sed -i 's|root /home/ubuntu/FrameworkBenchmarks|root '"${TROOT}"'|g' deploy/nginx.conf
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
-$PHP_FPM --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
-$NGINX_HOME/sbin/nginx -c $TROOT/deploy/nginx.conf
+fw_depends php nginx composer
+
+rm -fr clancatsapp
+rm -fr CCF
+git clone --branch v2.0.6 https://github.com/ClanCats/Framework.git clancatsapp
+
+cp -r app/ clancatsapp/CCF/
+
+cp -r CCF/vendor/ clancatsapp/CCF/
+
+php-fpm --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
+nginx -c $TROOT/deploy/nginx.conf

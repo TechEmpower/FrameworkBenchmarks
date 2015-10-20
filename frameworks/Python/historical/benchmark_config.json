@@ -1,7 +1,7 @@
 {
   "framework": "historical",
   "tests": [{
-    "webware": {
+    "default": {
       "setup_file": "webware/setup",
       "json_url": "/json2",
       "plaintext_url": "/plaintext",

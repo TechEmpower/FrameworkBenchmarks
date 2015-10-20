@@ -1,15 +1,10 @@
 #!/bin/bash
 
-# load java environment variables
-source $IROOT/java8.installed
+fw_depends java8 sbt
 
 cd play2-java
 
-# If application is running, clear old running app.
-if [ -f ${TROOT}/play2-java/target/universal/stage/RUNNING_PID ]
-then
-  rm -f -r ${TROOT}/play2-java/target/universal/stage/RUNNING_PID
-fi
+rm -rf target/universal/stage/RUNNING_PID
 
-${IROOT}/sbt/bin/sbt stage
+sbt stage
 target/universal/stage/bin/play2-java &

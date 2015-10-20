@@ -169,19 +169,27 @@ class FrameworkTest:
 
     # Setup environment variables    
     logDir = os.path.join(self.fwroot, self.benchmarker.latest_results_directory, 'logs', self.name.lower())
+    bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
     setup_util.replace_environ(config='$FWROOT/config/benchmark_profile', 
               command='''\
-              export TROOT=%s       && \
-              export IROOT=%s       && \
-              export DBHOST=%s      && \
-              export LOGDIR=%s      && \
-              export MAX_THREADS=%s    \
+              export TROOT=%s       &&  \
+              export IROOT=%s       &&  \
+              export DBHOST=%s      &&  \
+              export LOGDIR=%s      &&  \
+              export MAX_THREADS=%s &&  \
+              export MAX_CONCURRENCY=%s \
               ''' % (
                 self.directory, 
                 self.install_root, 
                 self.database_host, 
                 logDir,
-                self.benchmarker.threads))
+                self.benchmarker.threads,
+                max(self.benchmarker.concurrency_levels)))
+
+    # Always ensure that IROOT belongs to the runner_user
+    chown = "sudo chown -R %s:%s %s" % (self.benchmarker.runner_user,
+      self.benchmarker.runner_user, os.path.join(self.fwroot, self.install_root))
+    subprocess.check_call(chown, shell=True, cwd=self.fwroot, executable='/bin/bash')
 
     # Run the module start inside parent of TROOT
     #  - we use the parent as a historical accident, a number of tests
@@ -213,15 +221,19 @@ class FrameworkTest:
     # See http://www.pixelbeat.org/programming/stdio_buffering/
     # See https://blogs.gnome.org/markmc/2013/06/04/async-io-and-python/
     # See http://eyalarubas.com/python-subproc-nonblock.html
-    command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -ex %s.sh' % (self.benchmarker.runner_user, self.setup_file)
+    command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -exc "source %s && source %s.sh"' % (
+      self.benchmarker.runner_user,
+      bash_functions_path, 
+      os.path.join(self.troot, self.setup_file))
     
     debug_command = '''\
-      export FWROOT=%s      && \\
-      export TROOT=%s       && \\
-      export IROOT=%s       && \\
-      export DBHOST=%s      && \\
-      export LOGDIR=%s      && \\
-      export MAX_THREADS=%s && \\
+      export FWROOT=%s          &&  \\
+      export TROOT=%s           &&  \\
+      export IROOT=%s           &&  \\
+      export DBHOST=%s          &&  \\
+      export LOGDIR=%s          &&  \\
+      export MAX_THREADS=%s     &&  \\
+      export MAX_CONCURRENCY=%s && \\
       cd %s && \\
       %s''' % (self.fwroot, 
         self.directory, 
@@ -230,6 +242,7 @@ class FrameworkTest:
         logDir,
         self.benchmarker.threads, 
         self.directory,
+        max(self.benchmarker.concurrency_levels),
         command)
     logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
 
@@ -489,6 +502,10 @@ class FrameworkTest:
         results = self.__parse_test(test_type)
         self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
 
+  ##########################################################################################
+  # Private Methods
+  ##########################################################################################
+
   ############################################################
   # __parse_test(test_type)
   ############################################################
@@ -594,10 +611,6 @@ class FrameworkTest:
   ############################################################
   # End benchmark
   ############################################################
-
-  ##########################################################################################
-  # Private Methods
-  ##########################################################################################
 
   ############################################################
   # __generate_concurrency_script(url, port)

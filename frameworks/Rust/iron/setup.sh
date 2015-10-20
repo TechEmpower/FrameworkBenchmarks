@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $IROOT/rust.installed
+fw_depends rust
 
 rm -rf target/
 cargo build --release

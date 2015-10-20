@@ -1,8 +1,8 @@
 #!/bin/bash
 
-source $IROOT/java7.installed
+fw_depends java7 leiningen
 
-source $IROOT/lein.installed
+sed -i 's|127.0.0.1:3306|'${DBHOST}':3306|g' src/pedestal/service.clj
 
 lein clean
 

@@ -25,9 +25,8 @@ public class Database implements ApplicationDatabaseBootstrap {
                 "&useServerPrepStmts=true" +
                 "&cacheRSMetadata=true";
         
-        String host = System.getProperty("DBHOST", "localhost");
+        String host = "127.0.0.1:3306";
         String dbUrl = "jdbc:mysql://"+host+"/hello_world?";
-        
         
         connections
             .environment(Modes.PROD)

@@ -1,8 +1,6 @@
 #!/bin/bash
 
-export NGINX_HOME=${IROOT}/nginx
-
-. ${IROOT}/mono.installed
+fw_depends nginx xsp mono
 
 sed -i 's|localhost|'"${DBHOST}"'|g' src/Web.config
 sed -i 's|include /usr/local/nginx/conf/fastcgi_params;|include '"${NGINX_HOME}"'/conf/fastcgi_params;|g' nginx.conf
@@ -21,11 +19,11 @@ for port in $(seq ${port_start} $port_end); do
 done
 conf+="}"
 
-echo -e $conf > ${TROOT}/nginx.upstream.conf
-${NGINX_HOME}/sbin/nginx -c ${TROOT}/nginx.conf -g "worker_processes '"${MAX_THREADS}"';"
+echo -e $conf > $TROOT/nginx.upstream.conf
+${NGINX_HOME}/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes '"${MAX_THREADS}"';"
 
 # Start fastcgi for each thread
 # To debug, use --printlog --verbose --loglevels=All
 for port in $(seq ${port_start} $port_end); do
-  MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 --applications=/:${TROOT}/src --socket=tcp:127.0.0.1:$port &
+  MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 --applications=/:$TROOT/src --socket=tcp:127.0.0.1:$port &
 done

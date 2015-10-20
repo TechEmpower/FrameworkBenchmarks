@@ -119,11 +119,11 @@ if __name__ == "__main__":
     # Register the SQLAlchemy plugin
     from saplugin import SAEnginePlugin
     DBDRIVER = 'mysql'
-    DBHOSTNAME = os.environ.get('DBHOST', 'localhost')
-    DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % (DBDRIVER, DBHOSTNAME)
+    DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@127.0.0.1:3306/hello_world?charset=utf8' % (DBDRIVER)
     SAEnginePlugin(cherrypy.engine, DATABASE_URI).subscribe()
     
     # Register the SQLAlchemy tool
     from satool import SATool
     cherrypy.tools.db = SATool()
+    cherrypy.server.socket_host = '0.0.0.0'
     cherrypy.quickstart(CherryPyBenchmark(), '', {'/': {'tools.db.on': True}})
