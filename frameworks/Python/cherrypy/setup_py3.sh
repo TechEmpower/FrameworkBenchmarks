@@ -1,7 +1,9 @@
 #!/bin/bash
 
-export PY3_ROOT=$IROOT/py3
-export PY3=$PY3_ROOT/bin/python3
-export PY3_PIP=$PY3_ROOT/bin/pip3
+fw_depends python3
 
-$PY3 app.py &
+sed -i 's|127.0.0.1|'${DBHOST}'|g' app.py
+
+pip install --install-option="--prefix=${PY3_ROOT}" -r $TROOT/requirements.txt
+
+python3 app.py &

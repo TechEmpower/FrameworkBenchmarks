@@ -1,8 +1,7 @@
-requires 'Mojolicious', '>= 6.02';
-requires 'Mojo::Pg', '>= 1.14';
-requires 'JSON::XS';
-requires 'EV';
+requires 'Mojolicious', '6.02';
+requires 'Mojo::Pg', '1.14';
+requires 'JSON::XS', '3.01';
+requires 'EV', '4.18';
 
-recommends 'IO::Socket::IP';
+recommends 'IO::Socket::IP', '0.36';
 recommends 'IO::Socket::SSL';
-

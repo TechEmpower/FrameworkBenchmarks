@@ -24,8 +24,7 @@
       "display_name": "Sabina Undertow MongoDB",
       "notes": "",
       "versus": "servlet"
-    }
-  }, {
+    },
     "undertow-mysql": {
       "json_url": "/json",
       "db_url": "/db",
@@ -49,8 +48,7 @@
       "display_name": "Sabina Undertow MySQL",
       "notes": "",
       "versus": "servlet"
-    }
-  }, {
+    },
     "jetty-mysql": {
       "json_url": "/json",
       "db_url": "/db",
@@ -74,8 +72,7 @@
       "display_name": "Sabina Jetty MySQL",
       "notes": "",
       "versus": "servlet"
-    }
-  }, {
+    },
     "jetty-mongodb": {
       "json_url": "/json",
       "db_url": "/db",

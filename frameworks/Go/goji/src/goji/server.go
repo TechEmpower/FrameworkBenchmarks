@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
@@ -190,7 +191,7 @@ func plaintext(c web.C, w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
-
+	log.SetOutput(ioutil.Discard) // add line 3
 	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)

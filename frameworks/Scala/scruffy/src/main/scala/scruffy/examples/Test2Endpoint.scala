@@ -10,7 +10,7 @@ object Test2Endpoint extends HttpModule {
 
   import com.sksamuel.scruffy.jackson.ScruffyJackson.Implicits._
 
-  val hostname = "localhost"
+  val hostname = "127.0.0.1"
   val connection = MongoConnection(hostname, 27017)
   val collection = connection.getDB("hello_world").getCollection("world")
 

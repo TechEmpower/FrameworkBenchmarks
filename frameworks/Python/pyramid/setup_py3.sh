@@ -1,8 +1,7 @@
 #!/bin/bash
 
-export PY3_ROOT=$IROOT/py3
-export PY3=$PY3_ROOT/bin/python3
-export PY3_PIP=$PY3_ROOT/bin/pip3
-export PY3_GUNICORN=$PY3_ROOT/bin/gunicorn
+fw_depends python3
 
-$PY3_GUNICORN wsgi:app -c gunicorn_conf.py &
+pip install --install-option="--prefix=${PY3_ROOT}" -r $TROOT/requirements.txt
+
+gunicorn wsgi:app -c gunicorn_conf.py &

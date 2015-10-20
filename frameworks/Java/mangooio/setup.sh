@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# load java environment variables
-source $IROOT/java8.installed
+fw_depends java8 maven
 
-sed -i 's|mongodb.host=.*|mongodb.host='"${DBHOST}"'|g' src/main/resources/application.conf
+sed -i 's|mongodb.host=.*|mongodb.host='${DBHOST}'|g' src/main/resources/application.conf
 
 mvn clean package -Dmaven.test.skip=true
 

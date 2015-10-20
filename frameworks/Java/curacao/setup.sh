@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# load java environment variables
-source $IROOT/java7.installed
+fw_depends java7 sbt
 
-${IROOT}/sbt/bin/sbt assembly
+sbt assembly
 
 java -jar dist/curacao-standalone.jar &

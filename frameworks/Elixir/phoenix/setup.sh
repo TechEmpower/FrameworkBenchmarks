@@ -1,8 +1,8 @@
 #!/bin/bash
 
-source $IROOT/elixir.installed
+fw_depends elixir
 
-sed -i 's|hostname: "localhost"|hostname: "'${DBHOST}'"|g' config/prod.exs
+sed -i 's|localhost|'${DBHOST}'|g' config/prod.exs
 
 rm -rf _build deps rel
 
