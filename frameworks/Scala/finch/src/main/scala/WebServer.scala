@@ -33,6 +33,6 @@ object WebServer extends App {
   val api: Service[Request, Response] = (json :+: plaintext).toService
 
   Await.ready(
-    Httpx.serve("localhost:9000", api)
+    Httpx.serve(":9000", api)
   )
 }
