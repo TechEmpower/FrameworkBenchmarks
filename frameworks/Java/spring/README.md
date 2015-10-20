@@ -61,8 +61,7 @@ Check out [SampleApplication, the main Application file](src/main/java/com/teche
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Spring 4.1.4.RELEASE](http://projects.spring.io/spring-framework/)
-* [Spring Boot 1.2.1.RELEASE](http://projects.spring.io/spring-boot/)
-* [Spring Data JPA 1.7.1.RELEASE](http://projects.spring.io/spring-data-jpa/)
-* [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Undertow 1.1.1.Final](http://undertow.io/)
+* [Spring 4.1.7.RELEASE](http://projects.spring.io/spring-framework/)
+* [Spring Boot 1.2.5.RELEASE](http://projects.spring.io/spring-boot/)
+* [Spring Data JPA 1.7.3.RELEASE](http://projects.spring.io/spring-data-jpa/)
+* [Undertow 1.1.7.Final](http://undertow.io/)
