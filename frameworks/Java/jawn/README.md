@@ -13,10 +13,7 @@ Or use the included wrapper:
 ```
 ./gradlew run
 ```
-Point your browser at `localhost:8081/json`
-
-The framework use an embedded server, that runs on port `8081` in order to
-not interfere with potentially running webcontainers.
+Point your browser at `localhost:8080/json`
 
 ### A couple of commands to get going with the benchmark framework
 
