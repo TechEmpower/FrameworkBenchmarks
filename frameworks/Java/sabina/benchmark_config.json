@@ -10,7 +10,7 @@
       "plaintext_url": "/plaintext",
 
       "port": 5050,
-      "setup_file": "./undertow-mongodb",
+      "setup_file": "undertow-mongodb",
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MongoDB",
@@ -34,7 +34,7 @@
       "plaintext_url": "/plaintext",
 
       "port": 5050,
-      "setup_file": "./undertow-mysql",
+      "setup_file": "undertow-mysql",
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
@@ -58,7 +58,7 @@
       "plaintext_url": "/plaintext",
 
       "port": 5050,
-      "setup_file": "./jetty-mysql",
+      "setup_file": "jetty-mysql",
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
@@ -82,7 +82,7 @@
       "plaintext_url": "/plaintext",
 
       "port": 5050,
-      "setup_file": "./jetty-mongodb",
+      "setup_file": "jetty-mongodb",
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MongoDB",
