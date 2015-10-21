@@ -16,11 +16,12 @@ public class UndertowMain {
         if (args.length > 1)  System.setProperty("DBHOST", args[1]);
         
         ServerConfig config = new ServerConfig();
+        
         config.setContextPath("/");
         config.setPort(8080);
         config.setWebappPath("webapp");
         config.setServerPerformance(PERFORMANCE_MODE.HIGHEST);
-        config.setHost("0.0.0.0");
+        if (args.length > 2) config.setHost(args[2]);
         
         UndertowServer server = new UndertowServer();
         server.setupAndStartServer(config);

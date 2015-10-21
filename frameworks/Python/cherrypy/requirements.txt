@@ -1,6 +1,3 @@
 cherrypy==3.7.0
-
-bleach==1.4.1
-
 SQLAlchemy==1.0.4
 mysqlclient==1.3.6

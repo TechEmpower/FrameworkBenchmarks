@@ -1,10 +1,10 @@
+import cgi
 import os
 import sys
 from functools import partial
 from operator import attrgetter
 from random import randint
 import json
-import bleach
 
 import cherrypy
 from sqlalchemy.ext.declarative import declarative_base
@@ -59,6 +59,7 @@ class CherryPyBenchmark(object):
 
     @cherrypy.expose
     def plaintext(self):
+        cherrypy.response.headers["Content-Type"] = "text/plain"
         return "Hello, world!"
 
     @cherrypy.expose
@@ -111,7 +112,7 @@ class CherryPyBenchmark(object):
         fortunes.sort(key=attrgetter("message"))
         html = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
         for f in fortunes:
-            html += "<tr><td>" + str(f.id) + "</td><td>" + bleach.clean(f.message) + "</td></tr>"
+            html += "<tr><td>" + str(f.id) + "</td><td>" + cgi.escape(f.message) + "</td></tr>"
         html += "</table></body></html>"
         return html
 

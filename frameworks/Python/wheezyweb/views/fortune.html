@@ -13,7 +13,7 @@
 @for fortune in fortunes:
 <tr>
 <td>@str(fortune.id)</td>
-<td>@fortune.message</td>
+<td>@{fortune.message !! escape}</td>
 </tr>
 @end
 </table>

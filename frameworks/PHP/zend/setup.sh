@@ -8,3 +8,6 @@ sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
 php-fpm --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
 nginx -c $TROOT/deploy/nginx.conf 
+
+mkdir -p data/cache
+chmod 777 data/cache
