@@ -1,5 +1,5 @@
+import cgi
 import json
-import bleach
 from random import randint
 from operator import attrgetter
 
@@ -16,7 +16,7 @@ class fortune(Page):
                 fortunes.append(AFortune(id=0, message="Additional fortune added at request time."))
                 fortunes.sort(key=attrgetter("message"))
                 for fortune in fortunes:
-                        message = bleach.clean(fortune.message)
+                        message = cgi.escape(fortune.message)
                         output += "<tr><td>%s</td><td>%s</td></tr>" % (fortune.id , message.encode("utf-8"))
                 output += "</table></body></html>"
                 self.response()._headers["Content-Length"] = len(output)
