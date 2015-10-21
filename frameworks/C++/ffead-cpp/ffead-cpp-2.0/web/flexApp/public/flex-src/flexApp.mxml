@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" minWidth="955" minHeight="600" 
+				creationComplete="service.send()">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.serialization.json.JSON;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			private function onJSONLoad(event:ResultEvent):void
+			{
+				Alert.show("success"); 
+				
+				//get the raw JSON data and cast to String
+				var rawData:String = String(event.result);
+				Alert.show(rawData);
+				//decode the data to ActionScript using the JSON API
+				//in this case, the JSON data is a serialize Array of Objects.
+				var arr:Array = (JSON.decode(rawData) as Array);
+				
+				//create a new ArrayCollection passing the de-serialized Array
+				//ArrayCollections work better as DataProviders, as they can
+				//be watched for changes.
+				var dp:ArrayCollection = new ArrayCollection(arr);
+				
+				//pass the ArrayCollection to the DataGrid as its dataProvider.
+				grid.dataProvider = dp;
+				
+			}
+			private function onfault(event:FaultEvent):void
+			{
+				Alert.show("error occurred");
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:HTTPService id="service" resultFormat="text"
+					url="http://localhost:8080/flexApp/getJSON.json"
+					result="onJSONLoad(event)" fault="onfault(event)"/>
+	
+	<mx:DataGrid id="grid" right="10" left="10" top="10" bottom="10">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Number" dataField="num"/>
+			<mx:DataGridColumn headerText="Name" dataField="name"/>
+			<mx:DataGridColumn headerText="Role" dataField="role"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+</mx:Application>

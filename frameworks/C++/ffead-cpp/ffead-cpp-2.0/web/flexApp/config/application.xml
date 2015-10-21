@@ -1,0 +1,5 @@
+<app>
+	<controllers>
+		<controller class="FlexAppController" path="*.json" />
+	</controllers>
+</app>

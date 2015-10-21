@@ -1,0 +1,7 @@
+<loggers>
+	<logger name="DEFAULT" mode="CONSOLE" level="INFO" />
+	<logger name="JOB" mode="FILE" level="INFO" dateformat="dd/mm/yyyy hh:mi:ss">
+		<file>jobs.log</file>
+		<pattern>.*</pattern>
+	</logger>
+</loggers>

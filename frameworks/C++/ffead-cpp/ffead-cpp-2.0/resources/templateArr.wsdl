@@ -1,0 +1,5 @@
+<xsd:complexType name="ArrayOf${OBJ}">
+<xsd:sequence>
+    <xsd:element maxOccurs="unbounded" minOccurs="0" name="${OBJ}" nillable="true" type="tns:${OBJ}" />
+</xsd:sequence>
+</xsd:complexType>

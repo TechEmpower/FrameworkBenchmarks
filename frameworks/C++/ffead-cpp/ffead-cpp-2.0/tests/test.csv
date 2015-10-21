@@ -1,0 +1,5 @@
+ENABLED,SHOW_CONTENT,REQUEST,RESP_STATUS,MATCH_FILE,RESP_CONT_LEN,REQ_CONT_TYPE,REQ_CONTENT,HEADERS,RESP_CONT_TYPE
+Y,Y,GET /te-benchmark/queries,200,,
+Y,Y,GET /te-benchmark/queries?queries=501,200,,
+Y,Y,GET /te-benchmark/updates,200,,
+Y,Y,GET /te-benchmark/updates?queries=501,200,,

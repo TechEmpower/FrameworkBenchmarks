@@ -1,0 +1,33 @@
+<DCPH>
+#include "string"
+#include <iostream>
+using namespace std;
+</DCPH>
+<html>
+<head>
+</head>
+<body>
+<input type="1"/>
+lsdflsdkfjsdlflk
+<DCPB>
+string h;
+h = "sdfsdf";
+</DCPB>
+<import>testheader.dcp</import>
+<input type="2"/>
+<input type="3"/>
+
+<DCPB>
+screen << "<button>From Screen</button>";
+cout << h << flush;
+</DCPB>
+
+<DCPF>
+void printscrn()
+{
+	cout << "sdfsdfsdf" << flush;
+}
+</DCPF>
+
+</body>
+</html>

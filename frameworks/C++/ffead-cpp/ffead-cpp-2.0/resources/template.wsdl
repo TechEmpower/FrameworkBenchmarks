@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="${WS_NAME}ImplService" targetNamespace="${WS_NMSPC}" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="${WS_NMSPC}" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ${EXTR_NMSPCS}>
+	<wsdl:types>
+		${OBJ_BINDING}
+		<xsd:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="${WS_NMSPC}" xmlns:tns="${WS_NMSPC}" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:import namespace="${WS_NMSPC}" />
+			${REQ_RES_BINDING}
+		</xsd:schema>
+	</wsdl:types>
+	${WSDL_MESSAGES}
+	<wsdl:portType name="${WS_NAME}">
+		${WSDL_OPERATIONS}
+	</wsdl:portType>
+	<wsdl:binding name="${WS_NAME}ImplServiceSoapBinding" type="tns:${WS_NAME}">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		${WSDL_BINDING}
+	</wsdl:binding>
+	<wsdl:service name="${WS_NAME}ImplService">
+		<wsdl:port binding="tns:${WS_NAME}ImplServiceSoapBinding" name="${WS_NAME}ImplPort">
+		<soap:address location="${URL}/${WS_PATH}" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,25 @@
+#declare vector<string> vect#
+#declare Test test#
+#declare int number#
+#declare string dat#
+<html>
+	<head>
+		<script src="${dat}"></script>
+		${dat}
+		$_S{test.getId()}
+	</head>
+	<body>
+		<input type="text"/>
+		<input type="submit"/>
+		#for(int i=0;i<number;i++)#
+			<input type="text" name="input$_S{i}"/>
+		#rof#
+		#for(int i=0;i<(int)vect.size();i++)#
+			<input type="text" name="input${vect.at(i)}"/>
+		#rof#
+		#if(number==0)#
+			<p>No input fields present</p>
+		#fi#
+		<p><span>$_S{test.getId()}</span><span>${test.getName()}</span></p>
+	</body>
+</html>

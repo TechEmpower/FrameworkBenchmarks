@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>Ffead Server Test Page</title>
+<script type="text/javascript" src="json2.js"></script>
+<script type="text/javascript" src="prototype.js"></script>
+<script type="text/javascript" src="afc.js"></script>
+<script type="text/javascript" src="_afc_Objects.js"></script>
+<script type="text/javascript" src="_afc_Interfaces.js"></script>
+</head>
+<body>
+	<p>Testing Framework Functionalities</p>
+	<input type="button" value="Test-AJAX(Expose)"
+		onclick="MarkerExpose.sayHello2({i:1,j:'adsasd',c:2.3},2,3,null,null,null)" />
+	<input type="button" value="Test-WebSevice" onclick="testWsCall()" />
+	<input type="button" value="Test-OAUTH"
+		onclick="afcPrototypeAjaxOAUTHCall()" />
+	<br />
+	<!--a href="/test.dcp">Dynamic C++ Pages<a/><br/-->
+	<a href="/mark.view">Dynamic Views<a /><br /> <!--a href="/mark.fview">Fviews<a/><br/-->
+		<a href="/mark.tpe">Templates<a /><br /> <a
+			href="/MarkerTesting.wsdl">MarkerTesting wsdl file<a /><br />
+				<!--a href="/ws_test_TestingWS.wsdl">ws_test_TestingWS wsdl file<a/><br/-->
+				<a href="/bg.jpg">Download Image File<a /><br />
+					<p>File Upload</p> <!--form name="name1" ENCTYPE="multipart/form-data" method="POST" action="/restupload/uploadFile">
+		<input name="file" type="file" value="Upload"/>
+		<input type="submit" value="Upload"/>
+		<input name="field" type="text" value=""/>
+	  </form>
+      <a href="/multi-file-upload1.html">Multi File Upload - Example 1<a/><br/>
+      <a href="/multi-file-upload2.html">Multi File Upload - Example 2<a/><br/-->
+</body>
+</html>

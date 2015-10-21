@@ -1,0 +1,73 @@
+#The Server listening port number
+PORT_NO=8080
+
+#The Component Invoker listening port number, feature disabled if not specified
+CMP_PORT=
+
+#The Messaging Daemon listening port number, feature disabled if not specified
+MESS_PORT=
+
+#The Method Invoker listening port number, feature disabled if not specified
+MI_PORT=
+
+#Enable SSL?
+SSL_ENAB=false
+
+#The mime types supported
+SUPP_MIMES=*
+
+#Is Authorization required
+AUTH_ENAB=false
+
+#Number of Server processes
+NUM_PROC=4
+
+#The type of Threading strategy
+THRD_PREQ=true
+
+#The Thread Pool size for Pooled implementations
+THRD_PSIZ=10
+
+#Where to store the session state Browser cookies/Server side file
+SESS_STATE=server
+
+#When to timeout the session
+SESS_TIME_OUT=3600
+
+#Compilers are generally disabled on production deployments
+#Start server with DEV_MODE=true on Development servers
+#and move the code to Production changing the flag DEV_MODE=false
+#The code would not be generated at run-time on server restart now
+DEV_MODE=false
+
+#If you want to bind the server to a particular IP
+IP_ADDR=
+
+#If this property is set to TRUE/true the invocation of php, perl, python, ruby, lua and nodejs scripts
+#will generate Warning/Error messages if any caused by the script while generating the HTML by the script
+SCRIPT_ERRS=false
+
+#Number of seconds the connection should be kept-alive, keep it low for better overall performance
+KEEP_ALIVE_SECONDS=-1
+
+TRANSFER_ENCODING_CHUNK_SIZE=8192
+
+#gzip or deflate
+CONTENT_ENCODING=gzip
+
+#disable TRACE http method
+DISABLE_TRACE=true
+
+#Maximum number of request headers allowed
+MAX_REQUEST_HEADERS_COUNT=100
+
+#Maximum Request Entity size, 2GB
+MAX_REQUEST_ENTITY_SIZE=2147483647
+
+#Session File lock default time in seconds
+SESS_LCK_TIME=5
+
+#VHOST_ENTRY=localhost;8081;markers:default,flexApp
+#VHOST_ENTRY=localhost;8082;oauthApp:default
+
+LOGGING_ENABLED=false

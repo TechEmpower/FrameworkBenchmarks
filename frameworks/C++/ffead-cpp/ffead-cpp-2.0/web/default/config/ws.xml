@@ -1,0 +1,16 @@
+<web-services>
+	<web-service location="testing" class="Testing" namespace="ws.testing.service">
+		<test1 outname="result" />
+		<test2 outname="result" />
+		<test3 outname="result" />
+		<test4 outname="result" />
+	</web-service>
+	<web-service location="testingWS" class="ws::test::TestingWS">
+		<wsmeth1 outname="result" />
+		<wsmeth2 outname="result" />
+		<wsmeth3 outname="result" />
+		<wsmeth4 outname="result" />
+		<wsmeth5 outname="result" />
+		<wsmeth6 outname="result" />
+	</web-service>
+</web-services>

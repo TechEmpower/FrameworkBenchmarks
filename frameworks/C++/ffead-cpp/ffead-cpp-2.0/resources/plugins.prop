@@ -1,0 +1,3 @@
+plugin.executable=/usr/bin/python
+plugin.entrypoint=ffead-plugins/python/FfeadPythonPlugin.py
+plugin.entrypoint.port=9002

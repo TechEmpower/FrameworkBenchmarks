@@ -1,0 +1,4 @@
+<messaging>
+	<destination type="Topic" name="myT"></destination>
+	<url>localhost:8000</url>
+</messaging>
