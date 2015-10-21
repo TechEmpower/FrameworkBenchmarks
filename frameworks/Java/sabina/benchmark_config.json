@@ -34,7 +34,7 @@
       "plaintext_url": "/plaintext",
 
       "port": 5050,
-      "setup_file": "undertow",
+      "setup_file": "undertow-mysql",
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
@@ -58,7 +58,7 @@
       "plaintext_url": "/plaintext",
 
       "port": 5050,
-      "setup_file": "jetty",
+      "setup_file": "jetty-mysql",
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",

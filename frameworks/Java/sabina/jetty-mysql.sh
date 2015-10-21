@@ -7,7 +7,7 @@ source $IROOT/java8.installed
 
 echo "PARAMS: $@"
 
-gradle/wrapper clean distZip -Dsabina.backend=jetty -Dsabina.benchmark.repository=mongodb -Ddb.host=${DBHOST}
+gradle/wrapper clean distZip -Dsabina.backend=jetty -Dsabina.benchmark.repository=mysql -Ddb.host=${DBHOST}
 
 echo "STATUS GRADLE: $#"
 

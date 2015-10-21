@@ -1,0 +1,126 @@
+/*
+ * Copyright © 2015 Juan José Aguililla. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
+ */
+
+import static java.lang.System.*
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'war'
+
+defaultTasks 'check'
+
+version = "1.0.0"
+group = "sabina"
+description = "Sinatra web framework's benchmark"
+mainClassName = "sabina.benchmark.Application"
+
+task wrapper(type: Wrapper) {
+    gradleVersion = "2.7"
+    jarFile = "${project.projectDir}/gradle/wrapper.jar"
+    scriptFile = "${project.projectDir}/gradle/wrapper"
+}
+
+repositories {
+    jcenter ()
+    mavenLocal()
+}
+
+processResources {
+    filesMatching('**/*.properties') {
+        filter {
+            //it.replace('${db.host}', 'localhost')
+            it.replace('${db.host}', System.getProperty ('db.host'))
+        }
+    }
+}
+
+dependencies {
+//    compile project(':http')
+//    compile project(':extra')
+    compile 'sabina:http:1.3.4'
+    compile 'sabina:extra:1.3.4'
+
+    compile 'com.mchange:c3p0:0.9.2.1'
+    compile 'mysql:mysql-connector-java:5.1.28'
+    compile 'org.mongodb:mongo-java-driver:3.0.2'
+
+    testCompile 'org.apache.httpcomponents:fluent-hc:4.4'
+    testCompile 'org.testng:testng:6.9.6'
+}
+
+war {
+    archiveName = "ROOT.war"
+}
+
+project.ext ['sabinaBackend'] = getProperty('sabina.backend', 'undertow')
+project.ext ['sabinaBenchmarkRepository'] = getProperty ('sabina.benchmark.repository', 'mysql')
+
+test {
+    systemProperties = [
+        'sabina.backend': sabinaBackend,
+        'sabina.benchmark.repository': sabinaBenchmarkRepository
+    ]
+
+    testLogging {
+        showStandardStreams = System.getProperty ("show.output") != null
+    }
+}
+
+check << {
+    stressTestReport ()
+}
+
+def stressTestReport () {
+    def file = "$buildDir/test-results/TEST-sabina.benchmark.ApplicationStressTest.xml"
+    if (!new File (file).exists ())
+        return
+
+    def parser = new groovy.util.XmlSlurper()
+    def testsuite = parser.parse (file)
+
+    printf ("\n\t%s - %s%n", sabinaBackend.toUpperCase (), sabinaBenchmarkRepository.toUpperCase ())
+
+    testsuite.testcase
+        .collect {                                        // Collect values
+        [
+            it.@classname.text() + '  ' + it.@name.text(),
+            it.@time.text() as double
+        ]
+    }
+    .groupBy { it[0] }                                    // Group by test name
+        .collect {
+        [
+            it.key,
+            it.value.collect { it[1] }
+        ]
+    }
+    .collect {
+        [
+            it[0],
+            it[1].size (),
+            it[1].max (),
+            it[1].min (),
+            it[1].sum (),
+            it[1].sum () / it[1].size (),
+            1 / (it[1].sum () / it[1].size ())
+        ]
+    }
+    .each {
+        printf (
+            "\t%-70s : %4d  %1.3f  %1.3f  %6.3f  %6.3f  %7.3f%n",
+            it[0], it[1], it[2], it[3], it[4], it[5], it[6]
+        )
+    }
+    println ()
+}
