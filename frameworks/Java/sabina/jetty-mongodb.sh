@@ -1,10 +1,13 @@
 #!/bin/bash
 
-fw_depends java8 maven
+fw_depends java8
+
+# load java environment variables
+source $IROOT/java8.installed
 
 echo "PARAMS: $@"
 
-gradle/wrapper clean distZip $@ -Ddb.host=${DBHOST}
+gradle/wrapper clean distZip -Dsabina.backend=jetty -Dsabina.benchmark.repository=mongodb -Ddb.host=${DBHOST}
 
 echo "STATUS GRADLE: $#"
 
