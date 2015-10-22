@@ -98,10 +98,10 @@
 			<version>1.12.4</version>
 		</dependency>
 		<dependency>
+			<!-- Should be scope test, but available to run stand alone for manual testing -->
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>1.4.187</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

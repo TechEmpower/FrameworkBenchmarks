@@ -2,7 +2,7 @@
   "framework": "officefloor",
   "tests": [{
     "default": {
-      "setup_file": "start",
+      "setup_file": "setup",
       "json_url": "/json-service.woof",
       "db_url": "/singleQuery-service.woof",
       "query_url": "/multipleQueries-service.woof?queries=",
