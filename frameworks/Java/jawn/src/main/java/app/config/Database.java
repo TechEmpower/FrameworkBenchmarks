@@ -42,7 +42,7 @@ public class Database implements ApplicationDatabaseBootstrap {
             .environment(Modes.DEV)
             .jdbc()
             .driver("com.mysql.jdbc.Driver")
-            .url("jdbc:mysql://192.168.100.11/hello_world?" + jdbcParams)
+            .url("jdbc:mysql://172.16.0.16/hello_world?" + jdbcParams)
             .user("benchmarkdbuser")
             .password("benchmarkdbpass");
     }

@@ -13,7 +13,7 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "java-web-planet",
+      "framework": "jawn",
       "language": "Java",
       "orm": "Raw",
       "platform": "Servlet",
@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "jawn",
       "notes": "",
-      "versus": ""
+      "versus": "servlet"
     }
   }]
 }
