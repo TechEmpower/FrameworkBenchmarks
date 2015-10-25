@@ -7,11 +7,12 @@ config :hello, Hello.Endpoint,
   server: true
 
 config :hello, Hello.Repo,
-  adapter: Ecto.Adapters.MySQL,
+  adapter: Ecto.Adapters.Postgres,
   username: "benchmarkdbuser",
   password: "benchmarkdbpass",
   database: "hello_world",
-  hostname: "localhost"
+  hostname: "192.168.56.101",
+  pool_size: 256
 
 # ## SSL Support
 #
@@ -27,9 +28,7 @@ config :hello, Hello.Repo,
 # Where those two env variables point to a file on
 # disk for the key and cert.
 
-
-# Do not pring debug messages in production
-config :logger, level: :info
+config :logger, level: :error
 
 # ## Using releases
 #

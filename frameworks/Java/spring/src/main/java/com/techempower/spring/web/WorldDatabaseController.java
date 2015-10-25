@@ -29,8 +29,7 @@ final class WorldDatabaseController {
 
 	@RequestMapping(value = "/db", produces = "application/json")
 	World singleQuery() {
-		final Random random = ThreadLocalRandom.current();
-		return this.worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
+		return this.worldRepository.findOne(ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
 	}
 
 	@RequestMapping(value = "/queries", produces = "application/json")
@@ -41,15 +40,12 @@ final class WorldDatabaseController {
 		List<Future<World>> wfs = new ArrayList<>(queryCount);
 		// it gets better with Java 8, promise!
 		for (int i = 0; i < queryCount; i++) {
-			wfs.add(
-				Common.EXECUTOR.submit(
-					new Callable<World>() {
-						@Override
-						public World call() throws Exception {
-							return worldRepository.findOne(
-								ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
-						}
-					}));
+			wfs.add(Common.EXECUTOR.submit(new Callable<World>() {
+				@Override
+				public World call() throws Exception {
+					return worldRepository.findOne(ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
+				}
+			}));
 		}
 
 		return waitFor(wfs);
@@ -57,23 +53,22 @@ final class WorldDatabaseController {
 
 	@RequestMapping(value = "/updates", produces = "application/json")
 	List<World> updateQueries(@RequestParam(value="queries", required=false, defaultValue="1") String rawQueryCount) {
-		Integer queryCount = boundQueryCount(rawQueryCount);
+		int queryCount = boundQueryCount(rawQueryCount);
 
 		List<Future<World>> wfs = new ArrayList<>(queryCount);
 
 		for (int i = 0; i < queryCount; i++) {
-			wfs.add(Common.EXECUTOR.submit(
-				new Callable<World>() {
-					@Override
-					@Transactional(propagation = Propagation.REQUIRES_NEW)
-					public World call() throws Exception {
-						Random random = ThreadLocalRandom.current();
-						World world = worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
-						world.setRandomNumber(random.nextInt(DB_ROWS) + 1);
-						worldRepository.save(world);
-						return world;
-					}
-				}));
+			wfs.add(Common.EXECUTOR.submit(new Callable<World>() {
+				@Override
+				@Transactional(propagation = Propagation.REQUIRES_NEW)
+				public World call() throws Exception {
+					Random random = ThreadLocalRandom.current();
+					World world = worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
+					world.setRandomNumber(random.nextInt(DB_ROWS) + 1);
+					worldRepository.save(world);
+					return world;
+				}
+			}));
 		}
 
 		return waitFor(wfs);
@@ -91,19 +86,17 @@ final class WorldDatabaseController {
 		return worlds;
 	}
 
-	private Integer boundQueryCount(final String rawString) {
-		Integer raw;
+	private int boundQueryCount(final String rawString) {
 		try {
-			raw = Integer.parseInt(rawString);
+			int raw = Integer.parseInt(rawString);
+			if (raw < 1) {
+				return 1;
+			} else if (raw > 500) {
+				return 500;
+			}
+			return raw;
 		} catch (NumberFormatException e) {
-			raw = null;
-		}
-		if (raw == null || raw < 1) {
 			return 1;
-		} else if (raw > 500) {
-			return 500;
 		}
-
-		return raw;
 	}
 }

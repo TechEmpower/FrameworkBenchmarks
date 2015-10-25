@@ -1,10 +1,9 @@
+import cgi
 import os
 import sys
 from functools import partial
 from operator import attrgetter
 from random import randint
-
-import bleach
 
 from wheezy.http import HTTPResponse
 from wheezy.http import WSGIApplication
@@ -109,15 +108,16 @@ class UpdatesHandler(BaseHandler):
         db_session.commit()
         return self.json_response(worlds)
 
+
+template_engine = Engine(loader=FileLoader(["views"]), extensions=[CoreExtension()])
+template_engine.global_vars['escape'] = cgi.escape
+
 class FortuneHandler(BaseHandler):
     def get(self):
         fortunes = db_session.query(Fortune).all()
         fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
         fortunes.sort(key=attrgetter("message"))
-        engine = Engine(loader=FileLoader(["views"]), extensions=[CoreExtension()])
-        template = engine.get_template("fortune.html")
-        for f in fortunes:
-            f.message = bleach.clean(f.message)
+        template = template_engine.get_template("fortune.html")
         template_html = template.render({"fortunes": fortunes})		
 
         response = HTTPResponse()
@@ -129,6 +129,15 @@ def plaintext(request):
     response.headers = [("Content-Type", "text/plain; charset=UTF-8")]
     response.write("Hello, world!")
     return response
+
+
+def sqlalchemy_close_middleware(request, following):
+    """Close db_session for each request"""
+    try:
+        return following(request)
+    finally:
+        db_session.remove()
+
 
 all_urls = [
     url("plaintext", plaintext, name="plaintext"),
@@ -144,7 +153,8 @@ options = {}
 app = WSGIApplication(
     middleware = [
         bootstrap_defaults(url_mapping=all_urls),
-        path_routing_middleware_factory
+        path_routing_middleware_factory,
+        lambda _: sqlalchemy_close_middleware,
     ],
     options = options
 )
