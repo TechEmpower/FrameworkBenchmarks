@@ -53,6 +53,7 @@
 #include "iostream"
 #include "DataSourceManager.h"
 #include "CacheManager.h"
+#include "CommonUtils.h"
 
 class ConfigurationHandler {
 	static Marker getRestFunctionMarker(map<string, vector<Marker> >& markers);
@@ -64,7 +65,7 @@ public:
 	ConfigurationHandler();
 	virtual ~ConfigurationHandler();
 	static void handle(strVec webdirs, const strVec& webdirs1, const string& incpath, const string& rtdcfpath, const string& serverRootDirectory, const string& respath);
-	static void listi(const string& cwd, const string& type, const bool& apDir, strVec &folders, const bool& showHidden);
+	//static void listi(const string& cwd, const string& type, const bool& apDir, strVec &folders, const bool& showHidden);
 	static void configureDataSources(const string& name, const string& configFile, map<string, ClassStructure>& allclsmap);
 	static void destroyDataSources();
 	static void configureCaches(const string& name, const string& configFile);

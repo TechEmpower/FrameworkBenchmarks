@@ -66,4 +66,31 @@ public:
 	void interrupt();
 };
 
+#ifndef HAVE_CXX11
+namespace std {
+	template<typename T>
+	class atomic {};
+	template<>
+	class atomic<bool> {
+		Mutex _l;
+		bool flag;
+	public:
+		bool operator=(bool f)
+		{
+			_l.lock();
+			flag = f;
+			_l.unlock();
+			return f;
+		}
+		operator bool()
+		{
+			_l.lock();
+			bool f = flag;
+			_l.unlock();
+			return f;
+		}
+	};
+}
+#endif
+
 #endif /* MUTEX_H_ */

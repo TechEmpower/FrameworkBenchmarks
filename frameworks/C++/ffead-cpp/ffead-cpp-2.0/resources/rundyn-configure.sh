@@ -29,4 +29,4 @@ cd $FFEAD_CPP_PATH/rtdcf/autotools
 #	echo $PATH
 #fi
 
-./configure $DEBG
+./configure $DEBG CPPFLAGS="$CPPFLAGS -I/home/vagrant/FrameworkBenchmarks/installs/include/libmongoc-1.0/ -I/home/vagrant/FrameworkBenchmarks/installs/include/libbson-1.0/" LDFLAGS="$LDFLAGS -L/home/vagrant/FrameworkBenchmarks/installs/"

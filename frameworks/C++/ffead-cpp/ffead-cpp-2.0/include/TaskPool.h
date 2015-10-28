@@ -31,7 +31,9 @@
 #include "Thread.h"
 #include "TimeUnit.h"
 #include "Timer.h"
+#ifdef HAVE_CXX11
 #include "atomic"
+#endif
 
 class TaskPool {
 	std::queue<Task*> *tasks;

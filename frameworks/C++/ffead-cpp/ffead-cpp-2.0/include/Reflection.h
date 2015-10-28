@@ -36,6 +36,7 @@
 #include "ClassStructure.h"
 #include "TemplateEngine.h"
 #include "MarkerHandler.h"
+#include "CommonUtils.h"
 
 using namespace std;
 
@@ -149,7 +150,7 @@ class Reflection {
 	void emptyBlocks(string& data, size_t);
 public:
 	map<string, ClassStructure> getClassStructures(const string& className, const string&);
-	strVec list(const string&);
+	//strVec list(const string&);
 	static bool isValidClass(const string& claz, const string& app)
 	{
 		return validcls.find(app+claz)!=validcls.end();

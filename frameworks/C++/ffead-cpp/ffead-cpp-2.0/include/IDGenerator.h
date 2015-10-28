@@ -7,10 +7,13 @@
 
 #ifndef IDGENERATOR_H_
 #define IDGENERATOR_H_
+#include "Compatibility.h"
 #include "DataSourceMapping.h"
 #include "GenericObject.h"
 #include "HiloIdGenerator.h"
+#ifdef HAVE_LIBUUID
 #include <uuid/uuid.h>
+#endif
 
 class IDGenerator {
 public:

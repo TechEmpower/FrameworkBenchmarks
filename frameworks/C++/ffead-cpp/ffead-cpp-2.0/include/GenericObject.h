@@ -14,7 +14,6 @@
 using namespace std;
 
 class GenericObject {
-	static map<string, string> _mangledClassNameMap;
 	string typeName;
 	string objSerState;
 	void* objVal;
@@ -57,26 +56,8 @@ public:
 		set(t);
 	}
 
-	template <typename T> static string getClassName(const T& t)
-	{
-		const char *mangled = typeid(t).name();
-		string sm(mangled);
-		if(_mangledClassNameMap.find(sm)!=_mangledClassNameMap.end()) {
-			string tn = _mangledClassNameMap[sm];
-			return tn;
-		}
-		int status;
-		char *demangled;
-		using namespace abi;
-		demangled = __cxa_demangle(mangled, NULL, 0, &status);
-		string tn(demangled);
-		free(demangled);
-		_mangledClassNameMap[sm] = tn;
-		return tn;
-	}
-
 	template<class T> void set(T* t, const size_t& strlength= string::npos) {
-		string typeName = getClassName(t);
+		string typeName = CastUtil::getClassName(t);
 		set((void*)t, typeName, strlength);
 	}
 
@@ -153,7 +134,7 @@ public:
 	}
 
 	template<class T> void set(T t, const size_t& strlength= -1) {
-		string typeName = getClassName(t);
+		string typeName = CastUtil::getClassName(t);
 		if(typeName.at(typeName.length()-1)=='*')
 		{
 			throw "Cannot handle pointer types use 'set(T* t)' instead...";
@@ -182,7 +163,7 @@ public:
 	}
 
 	template<class T> void get(T*& t) {
-		string typeName = getClassName(t);
+		string typeName = CastUtil::getClassName(t);
 		if(typeName.at(typeName.length()-1)=='*')
 		{
 			typeName = typeName.substr(0, typeName.length()-1);
@@ -196,7 +177,7 @@ public:
 	}
 
 	template<class T> void get(T& t) {
-		string typeName = getClassName(t);
+		string typeName = CastUtil::getClassName(t);
 		if(typeName.at(typeName.length()-1)=='*')
 		{
 			throw "Cannot handle pointer types use 'getP()' instead...";
@@ -208,7 +189,7 @@ public:
 template<typename T>
 inline T GenericObject::getObjectFromSerilaizedState(const string& serilaizedState) {
 	T t;
-	string typeName = getClassName(t);
+	string typeName = CastUtil::getClassName(t);
 	if(typeName.at(typeName.length()-1)=='*')
 	{
 		throw "Cannot handle pointer types use 'getP()' instead...";

@@ -11,7 +11,10 @@
 #define HAVE_ARPA_INET_H 1
 
 /* Define to 1 if you have the `clock_gettime' function. */
-/* #undef HAVE_CLOCK_GETTIME */
+#define HAVE_CLOCK_GETTIME 1
+
+/* Define if you have clock_nanosleep() */
+#define HAVE_CLOCK_NANOSLEEP 1
 
 /* define if the compiler supports basic C++11 syntax */
 /* #undef HAVE_CXX11 */
@@ -50,7 +53,7 @@
 #define HAVE_LIBMONGOC_1_0 1
 
 /* Define to 1 if you have the `odbc' library (-lodbc). */
-#define HAVE_LIBODBC 1
+/* #undef HAVE_LIBODBC */
 
 /* Define to 1 if you have the `pthread' library (-lpthread). */
 #define HAVE_LIBPTHREAD 1
@@ -185,7 +188,7 @@
 /* enable http framework dynamic views module */
 #define INC_DVIEW /**/
 
-/* enable scripting support module */
+/* enable sdorm gtm module */
 /* #undef INC_GTM */
 
 /* enable http module */
@@ -234,7 +237,7 @@
 #define INC_SDORM_MONGO /**/
 
 /* enable data-source-orm-sql module */
-#define INC_SDORM_SQL /**/
+/* #undef INC_SDORM_SQL */
 
 /* enable server-utility module */
 #define INC_SERVERUTIL /**/
@@ -322,7 +325,7 @@
 #define PACKAGE_NAME "ffead-cpp"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "ffead-cpp 1.9"
+#define PACKAGE_STRING "ffead-cpp 2.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "ffead-cpp"
@@ -331,7 +334,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.9"
+#define PACKAGE_VERSION "2.0"
 
 /* The size of `long', as computed by sizeof. */
 #define SIZEOF_LONG 8

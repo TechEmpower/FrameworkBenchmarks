@@ -58,13 +58,13 @@ public:
 	template <class T> static string serialize(T& t, const string& appName = "")
 	{
 		BinarySerialize serialize;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		return _handleAllSerialization(className,&t,appName, &serialize);
 	}
 	template <class T> static string serializePointer(T* t, const string& appName = "")
 	{
 		BinarySerialize serialize;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		return _handleAllSerialization(className,t,appName, &serialize);
 	}
 	static string serializeUnknown(void* t, const string& className, const string& appName = "");
@@ -75,9 +75,9 @@ public:
 		AMEFEncoder enc;
 		AMEFObject object;
 		K k;
-		string kclassName = getClassName(k);
+		string kclassName = CastUtil::getClassName(k);
 		V v;
-		string vclassName = getClassName(v);
+		string vclassName = CastUtil::getClassName(v);
 		kclassName = "map<"+kclassName+":"+vclassName+">";
 		object.setName(kclassName);
 		kvmapiter it;
@@ -113,9 +113,9 @@ public:
 		AMEFEncoder enc;
 		AMEFObject object;
 		K k;
-		string kclassName = getClassName(k);
+		string kclassName = CastUtil::getClassName(k);
 		V v;
-		string vclassName = getClassName(v);
+		string vclassName = CastUtil::getClassName(v);
 		kclassName = "multimap<"+kclassName+":"+vclassName+">";
 		object.setName(kclassName);
 		kvmapiter it;
@@ -150,7 +150,7 @@ public:
 	{
 		BinarySerialize serialize;
 		T t;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		T* tp = (T*)_handleAllUnSerialization(objXml,className,appName,&serialize,false,NULL);
 		if(tp!=NULL)
 		{
@@ -163,7 +163,7 @@ public:
 	{
 		BinarySerialize serialize;
 		T t;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		T* tp = (T*)_handleAllUnSerialization("",className,appName,&serialize,false,serObject);
 		if(tp!=NULL)
 		{
@@ -176,14 +176,14 @@ public:
 	{
 		BinarySerialize serialize;
 		T* t;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		return (T*)_handleAllUnSerialization(objXml,className,appName,&serialize,false,NULL);
 	}
 	template <class T> static T* unserializeToPointer(AMEFObject* serObject, const string& appName = "")
 	{
 		BinarySerialize serialize;
 		T* t;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		return (T*)_handleAllUnSerialization("",className,appName,&serialize,false,serObject);
 	}
 

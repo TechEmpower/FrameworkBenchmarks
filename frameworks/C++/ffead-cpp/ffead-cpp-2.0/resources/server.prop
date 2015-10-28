@@ -48,7 +48,7 @@ IP_ADDR=
 SCRIPT_ERRS=false
 
 #Number of seconds the connection should be kept-alive, keep it low for better overall performance
-KEEP_ALIVE_SECONDS=-1
+KEEP_ALIVE_SECONDS=20
 
 TRANSFER_ENCODING_CHUNK_SIZE=8192
 

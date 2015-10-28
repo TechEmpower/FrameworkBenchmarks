@@ -1,16 +1,17 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT([ffead-cpp], [1.9], [sumeet.chhetri@gmail.com])
-AM_INIT_AUTOMAKE([1.9 no-define foreign])
+AC_INIT([ffead-cpp], [2.0], [sumeet.chhetri@gmail.com])
+AM_INIT_AUTOMAKE([no-define foreign])
 AC_CONFIG_SRCDIR([../AjaxInterface.cpp])
 m4_include([m4/ax_cxx_compile_stdcxx_11.m4])
 AC_CONFIG_MACRO_DIR([m4])
 
 LT_INIT([static shared dlopen])
 
-mod_sdormsql=true
+mod_sdormsql=false
 mod_sdormmongo=true
+mod_script=true
 
 support_debug=no
 AC_ARG_ENABLE(debug,
@@ -122,6 +123,10 @@ case "$host" in
     AC_MSG_ERROR([We do not support SCO's products!])
 esac
 
+if test "x$mod_script" = "xtrue"; then
+    AM_CXXFLAGS="$AM_CXXFLAGS -U__STRICT_ANSI__"
+fi
+
 if test "x$mod_sdormmongo" = "xtrue"; then
 	AM_CXXFLAGS="$AM_CXXFLAGS -I/usr/include/libmongoc-1.0/ -I/usr/include/libbson-1.0 -I/usr/local/include/libmongoc-1.0/ -I/usr/local/include/libbson-1.0"
 fi
@@ -168,16 +173,17 @@ AC_CHECK_LIB(ssl, SSL_read, [], [AC_MSG_ERROR([ssl library not found])])
 AC_CHECK_LIB([crypto], [SHA1_Init], [], [AC_MSG_ERROR([libcrypto not found])])
 AC_CHECK_LIB(z, compress,,AC_MSG_ERROR([no zlib; please install zlib or equivalent]))
 AC_CHECK_LIB(c, dlopen, LIBDL="", [AC_CHECK_LIB(dl, dlopen, LIBDL="-ldl")])
-AC_CHECK_LIB(uuid, uuid_generate, [], [AC_MSG_ERROR([uuid library not found])])
 
 if test "x$mod_sdormsql" = "xtrue"; then
-    AC_CHECK_LIB(odbc, main, , [AC_MSG_ERROR([Not found libodbc library])])
+	AC_CHECK_LIB(uuid, uuid_generate, [], [AC_MSG_ERROR([uuid library not found])])
+	AC_CHECK_LIB(odbc, main, , [AC_MSG_ERROR([Not found libodbc library])])
 	AC_SEARCH_LIBS(SQLGetPrivateProfileString, odbcinst, [],[AC_MSG_ERROR([unixODBC library "odbcinst" not found])])
 fi
 
 if test "x$mod_sdormmongo" = "xtrue"; then
-    AC_CHECK_LIB(mongoc-1.0, mongoc_init, , [AC_MSG_ERROR([Not found libmongo library])])
-    AC_CHECK_LIB(bson-1.0, bson_new, , [AC_MSG_ERROR([Not found libbson library])])
+	AC_CHECK_LIB(uuid, uuid_generate, [], [AC_MSG_ERROR([uuid library not found])])
+	AC_CHECK_LIB(mongoc-1.0, mongoc_init, , [AC_MSG_ERROR([Not found libmongo library])])
+	AC_CHECK_LIB(bson-1.0, bson_new, , [AC_MSG_ERROR([Not found libbson library])])
 fi
 
 if test "x$is_librt_available" = "xyes"; then	

@@ -55,13 +55,13 @@ public:
 	template <class T> static string serialize(T& t, const string& appName = "")
 	{
 		JSONSerialize serialize;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		return _handleAllSerialization(className,&t,appName,&serialize);
 	}
 	template <class T> static string serializePointer(T* t, const string& appName = "")
 	{
 		JSONSerialize serialize;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		return _handleAllSerialization(className,t,appName,&serialize);
 	}
 	static string serializeUnknown(void* t, const string& className, const string& appName = "");
@@ -72,10 +72,10 @@ public:
 		AMEFEncoder enc;
 		AMEFObject object;
 		K k;
-		string kclassName = getClassName(k);
+		string kclassName = CastUtil::getClassName(k);
 		V v;
 		string serval;
-		string vclassName = getClassName(v);
+		string vclassName = CastUtil::getClassName(v);
 		kclassName = "map<"+kclassName+":"+vclassName+">";
 		object.setName(kclassName);
 		while (mpt.begin()!=mpt.end())
@@ -94,10 +94,10 @@ public:
 		AMEFEncoder enc;
 		AMEFObject object;
 		K k;
-		string kclassName = getClassName(k);
+		string kclassName = CastUtil::getClassName(k);
 		V v;
 		string serval;
-		string vclassName = getClassName(v);
+		string vclassName = CastUtil::getClassName(v);
 		kclassName = "multimap<"+kclassName+":"+vclassName+">";
 		object.setName(kclassName);
 		while (mpt.begin()!=mpt.end())
@@ -113,7 +113,7 @@ public:
 	{
 		JSONSerialize serialize;
 		T t;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		T* tp = (T*)_handleAllUnSerialization(objXml,className,appName,&serialize,true,NULL);
 		if(tp!=NULL)
 		{
@@ -126,7 +126,7 @@ public:
 	{
 		JSONSerialize serialize;
 		T t;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		T* tp = (T*)_handleAllUnSerialization("",className,appName,&serialize,true,element);
 		if(tp!=NULL)
 		{
@@ -139,14 +139,14 @@ public:
 	{
 		JSONSerialize serialize;
 		T* t;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		return (T*)_handleAllUnSerialization(objXml,className,appName,&serialize,true,NULL);
 	}
 	template <class T> static T* unserializeToPointer(JSONElement* element, const string& appName = "")
 	{
 		JSONSerialize serialize;
 		T* t;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		return (T*)_handleAllUnSerialization("",className,appName,&serialize,true,element);
 	}
 

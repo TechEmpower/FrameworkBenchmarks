@@ -31,7 +31,7 @@ public:
 	Exception();
 	Exception(const string&);
 	virtual ~Exception() throw();
-	const string& what() throw();
+	const char* what() throw();
 	const string& getMessage() const;
     void setMessage(const string&);
 private:

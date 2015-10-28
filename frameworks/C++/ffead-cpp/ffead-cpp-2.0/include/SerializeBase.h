@@ -56,8 +56,13 @@ public:
 	DummyList(){}
 	struct _List_node_base
 	{
+#ifdef __clang__
+		_List_node_base* _M_prev;
+		_List_node_base* _M_next;
+#else
 		_List_node_base* _M_next;
 		_List_node_base* _M_prev;
+#endif
 	};
 	struct _List_impl
 	{
@@ -83,10 +88,16 @@ class DummyDeque
 	};
 	struct _Deque_impl
 	{
+#ifdef __clang__
+		void** _M_map;
+		size_t _M_start;
+		size_t _M_map_size;
+#else
 		void** _M_map;
 		size_t _M_map_size;
 		Dummy_Deque_iterator _M_start;
 		Dummy_Deque_iterator _M_finish;
+#endif
 	};
 	_Deque_impl _M_impl;
 	friend class SerializeBase;
@@ -114,10 +125,17 @@ class DummySet
 	struct _Rb_tree_node_base
 	{
 	    typedef _Rb_tree_node_base* _Base_ptr;
+#ifdef __clang__
+	    _Base_ptr		_M_left;
+	    _Base_ptr		_M_right;
+	    _Base_ptr		_M_parent;
+	    bool	_M_color;
+#else
 	    _Rb_tree_color	_M_color;
 	    _Base_ptr		_M_parent;
 	    _Base_ptr		_M_left;
 	    _Base_ptr		_M_right;
+#endif
 	};
 	struct less
 	{
@@ -162,30 +180,12 @@ public:
 };
 
 class SerializeBase {
-	static map<string, string> _mangledClassNameMap;
 protected:
 	bool dlibinstantiated;
 	void* dlib;
 	static void processClassName(string& className);
 	static void processClassAndContainerNames(string& className, string& container);
 public:
-	template <typename T> static string getClassName(const T& t)
-	{
-		const char *mangled = typeid(t).name();
-		string sm(mangled);
-		if(_mangledClassNameMap.find(sm)!=_mangledClassNameMap.end()) {
-			string tn = _mangledClassNameMap[sm];
-			return tn;
-		}
-		int status;
-		char *demangled;
-		using namespace abi;
-		demangled = __cxa_demangle(mangled, NULL, 0, &status);
-		string tn(demangled);
-		free(demangled);
-		_mangledClassNameMap[sm] = tn;
-		return tn;
-	}
 	template <class T> static string serializeset(const set<T>& t, const string& app, SerializeBase* base)
 	{
 		T tr;
@@ -194,7 +194,7 @@ public:
 		int size = t.size();
 		typedef typename set<T>::iterator iterator_type;
 		iterator_type it;
-		string className = getClassName(tr);
+		string className = CastUtil::getClassName(tr);
 		void* object = base->getSerializableObject();
 		base->startContainerSerialization(object, className, "std::set");
 		for(it = t.begin(); it!= t.end(); ++it)
@@ -215,7 +215,7 @@ public:
 		int size = t.size();
 		typedef typename multiset<T>::iterator iterator_type;
 		iterator_type it;
-		string className = getClassName(tr);
+		string className = CastUtil::getClassName(tr);
 		void* object = base->getSerializableObject();
 		base->startContainerSerialization(object, className, "std::multiset");
 		for(it = t.begin(); it!= t.end(); ++it)
@@ -233,7 +233,7 @@ public:
 		T tr;
 		string appName = CommonUtils::getAppName(app);
 		int size = t.size();
-		string className = getClassName(tr);
+		string className = CastUtil::getClassName(tr);
 		void* object = base->getSerializableObject();
 		base->startContainerSerialization(object, className, "std::vector");
 		for(int var = 0; var < (int)t.size(); ++var)
@@ -251,7 +251,7 @@ public:
 		T tr;
 		string appName = CommonUtils::getAppName(app);
 		int size = t.size();
-		string className = getClassName(tr);
+		string className = CastUtil::getClassName(tr);
 		void* object = base->getSerializableObject();
 		base->startContainerSerialization(object, className, "std::deque");
 		for(int var = 0; var < (int)t.size(); ++var)
@@ -272,7 +272,7 @@ public:
 		int size = t.size();
 		typedef typename list<T>::const_iterator iterator_type;
 		iterator_type it;
-		string className = getClassName(tr);
+		string className = CastUtil::getClassName(tr);
 		void* object = base->getSerializableObject();
 		base->startContainerSerialization(object, className, "std::list");
 		for(it = t.begin(); it!= t.end(); ++it)
@@ -291,7 +291,7 @@ public:
 		string appName = CommonUtils::getAppName(app);
 		DummyQueue* dptr = (DummyQueue*)&t;
 		deque<T>* tt = (deque<T>*)&dptr->dq;
-		string className = getClassName(tr);
+		string className = CastUtil::getClassName(tr);
 		void* object = base->getSerializableObject();
 		base->startContainerSerialization(object, className, "std::queue");
 		for(int var = 0; var < (int)tt->size(); ++var)
@@ -307,13 +307,13 @@ public:
 	template <class T> static string serialize(T t, const string& app, SerializeBase* base)
 	{
 		string appName = CommonUtils::getAppName(app);
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		return base->serializeUnknownBase(&t, className, appName);
 	}
 	template <class T> static string serializePointer(T* t, const string& app, SerializeBase* base)
 	{
 		string appName = CommonUtils::getAppName(app);
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		return base->serializeUnknownBase(t, className, appName);
 	}
 	static string serializeUnknown(void* t, const string& className, const string& appName, SerializeBase* base);
@@ -321,7 +321,7 @@ public:
 	{
 		string appName = CommonUtils::getAppName(app);
 		T t;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		void* retVP = base->unSerializeUnknownBase(unserObj, className, appName);
 		if(retVP!=NULL)
 		{
@@ -334,7 +334,7 @@ public:
 	{
 		string appName = CommonUtils::getAppName(app);
 		T t;
-		string className = getClassName(t);
+		string className = CastUtil::getClassName(t);
 		void* retVP = base->unSerializeUnknownBase(unserObj, className, appName);
 		return (T*)retVP;
 	}

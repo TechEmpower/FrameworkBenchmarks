@@ -89,4 +89,3 @@ protected:
 };
 
 #endif /* MONGODBDATASOURCEIMPL_H_ */
-

@@ -34,6 +34,23 @@ using namespace std;
 
 class CastUtil {
 	static map<string, string> _mangledClassNameMap;
+	template <typename T> static string* primitive(const T& val, const char* fmt)
+	{
+		int n = snprintf(NULL, 0, fmt, val);
+		char* ty;
+		ty = (char*)malloc((n + 1) * sizeof(char));
+		int c = snprintf(ty, n+1, fmt, val);
+		assert(strlen(ty)==n);
+		assert(c == n);
+		string* d = new string(ty, n);
+		free(ty);
+		return d;
+	}
+public:
+	static const string STD_STRING;
+	CastUtil();
+	virtual ~CastUtil();
+
 	template <typename T> static string getClassName(T& t)
 	{
 		const char *mangled = typeid(t).name();
@@ -50,26 +67,18 @@ class CastUtil {
 		demangled = __cxa_demangle(mangled, NULL, 0, &status);
 		string tn(demangled);
 		free(demangled);
+		if(tn.find("std::__1::")!=string::npos) {
+			StringUtil::replaceAll(tn, "std::__1::", "std::");
+			if(tn.find("std::basic_string<char, std::char_traits<char>, std::allocator<char> >")!=string::npos) {
+				StringUtil::replaceAll(tn, "std::basic_string<char, std::char_traits<char>, std::allocator<char> >", "std::string");
+			}
+		}
 		_mangledClassNameMap[sm] = tn;
 		if(tn[tn.length()-1]=='*')
 			tn = tn.substr(0,tn.length()-1);
 		return tn;
 	}
-	template <typename T> static string* primitive(const T& val, const char* fmt)
-	{
-		const int n = snprintf(NULL, 0, fmt, val);
-		char ty[n+1];
-		memset (ty,0,n+1);
-		int c = snprintf(ty, n+1, fmt, val);
-		assert(strlen(ty)==n);
-		assert(c == n);
-		string* d = new string(ty, n);
-		return d;
-	}
-public:
-	static const string STD_STRING;
-	CastUtil();
-	virtual ~CastUtil();
+
 	template <typename T, typename R> static R cast(const T& val)
 	{
 		return lexical_cast<R>(val);

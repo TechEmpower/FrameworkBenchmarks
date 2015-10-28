@@ -83,14 +83,14 @@ public:
 
 template<class T>
 inline bool DataSourceInterface::insert(T& t) {
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	Query q(BLANK, clasName);
 	return executeInsertInternal(q, &t);
 }
 
 template<class T>
 inline bool DataSourceInterface::update(T& t) {
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	Query q(BLANK, clasName);
 	return executeUpdate(q, &t);
 }
@@ -98,7 +98,7 @@ inline bool DataSourceInterface::update(T& t) {
 template<class T>
 inline map<int, string> DataSourceInterface::bulkInsert(vector<T>& vecT) {
 	T t;
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	DataSourceEntityMapping dsemp = mapping->getDataSourceEntityMapping(clasName);
 	ClassInfo clas = reflector->getClassInfo(clasName, appName);
 	vector<void*> dbEntities;
@@ -137,7 +137,7 @@ inline map<int, string> DataSourceInterface::bulkInsert(vector<T>& vecT) {
 template<class T>
 inline map<int, string> DataSourceInterface::bulkUpdate(vector<T>& vecT) {
 	T t;
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	DataSourceEntityMapping dsemp = mapping->getDataSourceEntityMapping(clasName);
 	ClassInfo clas = reflector->getClassInfo(clasName, appName);
 	vector<void*> dbEntities;
@@ -172,7 +172,7 @@ inline map<int, string> DataSourceInterface::bulkUpdate(vector<T>& vecT) {
 template<class T>
 inline T DataSourceInterface::get(GenericObject& id) {
 	T t;
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	DataSourceEntityMapping dsemp = mapping->getDataSourceEntityMapping(clasName);
 	string idColName = dsemp.getColumnForProperty(dsemp.getIdPropertyName());
 	QueryBuilder qb;
@@ -194,7 +194,7 @@ inline T DataSourceInterface::get(GenericObject& id) {
 template<class T>
 inline vector<T> DataSourceInterface::getAll() {
 	T t;
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	Query query(BLANK, clasName);
 	vector<T> vecT;
 	void* vect = executeQuery(query, true);
@@ -209,7 +209,7 @@ template<class T>
 inline vector<T> DataSourceInterface::getList(Query& query) {
 	T t;
 	vector<T> vecT;
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	if(query.getClassName()!=clasName)return vecT;
 	void* vect = executeQuery(query, true);
 	if (vect != NULL) {
@@ -222,7 +222,7 @@ inline vector<T> DataSourceInterface::getList(Query& query) {
 template<class T>
 inline T DataSourceInterface::get(Query& query) {
 	T t;
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	if(query.getClassName()!=clasName)return t;
 	void* vect = executeQuery(query, true);
 	vector<T> vecT;
@@ -241,7 +241,7 @@ template<class T>
 inline vector<T> DataSourceInterface::getList(QueryBuilder& qb) {
 	T t;
 	vector<T> vecT;
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	if(qb.getClassName()!=clasName)return vecT;
 	void* vect = executeQuery(qb, true);
 	if (vect != NULL) {
@@ -254,7 +254,7 @@ inline vector<T> DataSourceInterface::getList(QueryBuilder& qb) {
 template<class T>
 inline T DataSourceInterface::get(QueryBuilder& qb) {
 	T t;
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	if(qb.getClassName()!=clasName)return t;
 	void* vect = executeQuery(qb, true);
 	vector<T> vecT;
@@ -272,23 +272,22 @@ inline T DataSourceInterface::get(QueryBuilder& qb) {
 template<class T>
 inline void DataSourceInterface::empty() {
 	T t;
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	return empty(clasName);
 }
 
 template<class T>
 inline long DataSourceInterface::getNumRows() {
 	T t;
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	return getNumRows(clasName);
 }
 
 template<class T>
 inline bool DataSourceInterface::remove(GenericObject& id) {
 	T t;
-	string clasName = GenericObject::getClassName(t);
+	string clasName = CastUtil::getClassName(t);
 	return remove(clasName, id);
 }
 
 #endif /* DATASOURCEINTERFACE_H_ */
-

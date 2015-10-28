@@ -65,6 +65,7 @@ public:
 };
 
 class ConnectionProperties {
+	static string BLANK;
 public:
 	bool isNewConnectionStrategy() const;
 	void setNewConnectionStrategy(const bool& newConnectionStrategy);

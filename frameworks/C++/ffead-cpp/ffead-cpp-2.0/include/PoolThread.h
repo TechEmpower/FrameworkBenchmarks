@@ -28,7 +28,9 @@
 #include "TimeUnit.h"
 #include "LoggerFactory.h"
 #include "FutureTask.h"
-#include <atomic>
+#ifdef HAVE_CXX11
+#include "atomic"
+#endif
 
 class PoolThread {
 	static void* run(void *arg);

@@ -7,6 +7,10 @@
 
 #ifndef COMMONUTILS_H_
 #define COMMONUTILS_H_
+
+#include <dirent.h>
+#include <sys/stat.h>
+#include <dirent.h>
 #include "vector"
 #include "string"
 #include "map"
@@ -18,6 +22,7 @@
 #include "ThreadLocal.h"
 #include "PropFileReader.h"
 #include "RegexUtil.h"
+
 using namespace std;
 
 class CommonUtils {
@@ -44,6 +49,8 @@ public:
 	static void loadLocales(const string& file);
 	static const string& getMimeType(const string& extension);
 	static const string& getLocale(const string& abbrev);
+	static vector<string> getFiles(const string& cwd, const string& suffix, const bool& isAbs = true);
+	static void listFiles(vector<string>& files, const string& cwd, const string& suffix, const bool& isAbs = true);
 };
 
 #endif /* COMMONUTILS_H_ */
