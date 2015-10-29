@@ -24,9 +24,10 @@ shared static this()
   router.get("/generate-world", &generateWorld);
   router.get("/generate-fortunes", &generateFortunes);
   router.get("/", staticTemplate!"index.dt");
+  router.rebuild();
 
   auto settings = new HTTPServerSettings;
-
+  settings.bindAddresses = ["0.0.0.0"];
   settings.options |= HTTPServerOption.distribute;
   settings.port = 8080;
 
