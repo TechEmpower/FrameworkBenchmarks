@@ -19,12 +19,11 @@ repositories {
 
 dependencies {
 	// Framework
-	compile 'net.javapla.jawn:jawn-server-undertow:0.8.9-b02'
-	//compile project(':jawn-server'), project(':jawn-server-undertow'), project(':jawn-server-jetty')
+	compile 'net.javapla.jawn:jawn-server-undertow:0.8.10'
 
 	
 	// Database
-	compile 'mysql:mysql-connector-java:5.1.36'
+	compile 'mysql:mysql-connector-java:5.1.37'
 	
 	//Logging 
 	runtime group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.3' exclude group: 'org.slf4j'
