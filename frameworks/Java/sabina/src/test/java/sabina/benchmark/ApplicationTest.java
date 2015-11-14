@@ -104,6 +104,10 @@ import org.testng.annotations.Test;
         checkDbRequest ("/query?queries=500", 500);
     }
 
+    public void five_hundred_and_one_queries () throws IOException {
+        checkDbRequest ("/query?queries=501", 500);
+    }
+
     public void fortunes () throws IOException {
         HttpResponse response = get (ENDPOINT + "/fortune");
         String content = getContent (response);
