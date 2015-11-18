@@ -56,7 +56,10 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   xdg-utils                         `# Needed by dlang.` \
   python-pip
 
-sudo pip install -r ../requirements.txt
+sudo pip install colorama==0.3.1
+# Version 2.3 has a nice Counter() and other features
+# but it requires —-allow-external and -—allow-unverified
+sudo pip install progressbar==2.2
 
 # Install gcc-4.8 and gcc-4.9
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
