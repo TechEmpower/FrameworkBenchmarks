@@ -1,9 +1,0 @@
-<VirtualHost *:8080>
-  Alias /fat-free/ "/home/ubuntu/FrameworkBenchmarks/fat-free/"
-  <Directory /home/ubuntu/FrameworkBenchmarks/fat-free/>
-          Options Indexes FollowSymLinks MultiViews
-          #AllowOverride None
-          Order allow,deny
-          allow from all
-  </Directory>
-</VirtualHost>
