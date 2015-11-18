@@ -53,7 +53,10 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   llvm-dev                          `# Required for correct Ruby installation` \
   libboost-dev                      `# Silicon relies on boost::lexical_cast.` \
   postgresql-server-dev-9.3         `# Needed by cpoll.` \
-  xdg-utils                         `# Needed by dlang.`
+  xdg-utils                         `# Needed by dlang.` \
+  python-pip
+
+sudo pip install -r ../requirements.txt
 
 # Install gcc-4.8 and gcc-4.9
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
