@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"database/sql"
 	"encoding/json"
 	"flag"
@@ -159,11 +158,10 @@ func doPrefork() (listener net.Listener) {
 }
 
 func jsonMarshal(ctx *fasthttp.RequestCtx, v interface{}) {
-	body, err := json.Marshal(v)
-	if err != nil {
-		log.Fatalf("Error in json.Marshal: %s", err)
+	ctx.SetContentType("application/json")
+	if err := json.NewEncoder(ctx).Encode(v); err != nil {
+		log.Fatalf("error in json.Encoder.Encode: %s", err)
 	}
-	ctx.Success("application/json", body)
 }
 
 // Test 1: JSON serialization
@@ -222,11 +220,10 @@ func fortuneHandler(ctx *fasthttp.RequestCtx) {
 
 	sort.Sort(ByMessage{fortunes})
 
-	var w bytes.Buffer
-	if err := tmpl.Execute(&w, fortunes); err != nil {
+	ctx.SetContentType("text/html")
+	if err := tmpl.Execute(ctx, fortunes); err != nil {
 		log.Fatalf("Error executing fortune: %s", err)
 	}
-	ctx.Success("text/html", w.Bytes())
 }
 
 // Test 5: Database updates
