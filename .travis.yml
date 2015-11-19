@@ -176,6 +176,11 @@ env:
     - "TESTDIR=Ur/urweb"
 
 before_install:
+  - pip install colorama==0.3.1
+  # Version 2.3 has a nice Counter() and other features
+  # but it requires —-allow-external and -—allow-unverified
+  - pip install progressbar==2.2
+  - pip install requests
   # Configure Travis-CI build environment for TFB
   #   e.g. setup databases, users, etc
   - ./toolset/run-ci.py cisetup "$TESTDIR"
