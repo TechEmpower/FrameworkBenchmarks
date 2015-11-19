@@ -11,7 +11,7 @@ echo deb http://dl.hhvm.com/ubuntu `lsb_release -sc` main | sudo tee /etc/apt/so
 sudo apt-get update
 sudo apt-get install -y hhvm
 
-sudo service stop hhvm
+sudo service hhvm stop
 
 echo "" > $IROOT/hhvm.installed
 
