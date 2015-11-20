@@ -81,8 +81,13 @@ func main() {
 	if err = db.Ping(); err != nil {
 		log.Fatalf("Cannot connect to db: %s", err)
 	}
-	db.SetMaxIdleConns(maxConnectionCount)
-	db.SetMaxOpenConns(maxConnectionCount * 2)
+
+	dbConnCount := maxConnectionCount
+	if *prefork {
+		dbConnCount = (dbConnCount + runtime.NumCPU()-1) / runtime.NumCPU()
+	}
+	db.SetMaxIdleConns(dbConnCount)
+	db.SetMaxOpenConns(dbConnCount * 2)
 
 	worldSelectStmt = mustPrepare(db, "SELECT id, randomNumber FROM World WHERE id = ?")
 	worldUpdateStmt = mustPrepare(db, "UPDATE World SET randomNumber = ? WHERE id = ?")
