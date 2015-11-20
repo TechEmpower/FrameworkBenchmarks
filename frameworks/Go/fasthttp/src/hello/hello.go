@@ -15,6 +15,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/valyala/fasthttp"
+	"github.com/valyala/fasthttp/reuseport"
 )
 
 type Message struct {
@@ -56,12 +57,16 @@ var (
 	helloWorldBytes = []byte(helloWorldString)
 )
 
-var prefork = flag.Bool("prefork", false, "use prefork")
-var child = flag.Bool("child", false, "is child proc")
+var (
+	listenAddr = flag.String("listenAddr", ":8080", "Address to listen to")
+	prefork    = flag.Bool("prefork", false, "use prefork")
+	child      = flag.Bool("child", false, "is child proc")
+)
 
 func main() {
-	var listener net.Listener
 	flag.Parse()
+
+	var listener net.Listener
 	if !*prefork {
 		runtime.GOMAXPROCS(runtime.NumCPU())
 	} else {
@@ -84,29 +89,11 @@ func main() {
 	fortuneSelectStmt = mustPrepare(db, "SELECT id, message FROM Fortune")
 
 	s := &fasthttp.Server{
-		Handler: func(ctx *fasthttp.RequestCtx) {
-			path := ctx.Path()
-			switch {
-			case fasthttp.EqualBytesStr(path, "/plaintext"):
-				plaintextHandler(ctx)
-			case fasthttp.EqualBytesStr(path, "/json"):
-				jsonHandler(ctx)
-			case fasthttp.EqualBytesStr(path, "/db"):
-				dbHandler(ctx)
-			case fasthttp.EqualBytesStr(path, "/queries"):
-				queriesHandler(ctx)
-			case fasthttp.EqualBytesStr(path, "/fortune"):
-				fortuneHandler(ctx)
-			case fasthttp.EqualBytesStr(path, "/update"):
-				updateHandler(ctx)
-			default:
-				ctx.Error("unexpected path", fasthttp.StatusBadRequest)
-			}
-		},
-		Name: "fasthttp",
+		Handler: mainHandler,
+		Name:    "fasthttp",
 	}
 	if !*prefork {
-		s.ListenAndServe(":8080")
+		s.ListenAndServe(*listenAddr)
 	} else {
 		s.Serve(listener)
 	}
@@ -120,49 +107,30 @@ func mustPrepare(db *sql.DB, query string) *sql.Stmt {
 	return stmt
 }
 
-func doPrefork() (listener net.Listener) {
-	var err error
-	var fl *os.File
-	var tcplistener *net.TCPListener
+func doPrefork() net.Listener {
 	if !*child {
-		var addr *net.TCPAddr
-		addr, err = net.ResolveTCPAddr("tcp", ":8080")
-		if err != nil {
-			log.Fatal(err)
-		}
-		tcplistener, err = net.ListenTCP("tcp", addr)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fl, err = tcplistener.File()
-		if err != nil {
-			log.Fatal(err)
-		}
 		children := make([]*exec.Cmd, runtime.NumCPU())
 		for i := range children {
 			children[i] = exec.Command(os.Args[0], "-prefork", "-child")
 			children[i].Stdout = os.Stdout
 			children[i].Stderr = os.Stderr
-			children[i].ExtraFiles = []*os.File{fl}
-			err = children[i].Start()
-			if err != nil {
+			if err := children[i].Start(); err != nil {
 				log.Fatal(err)
 			}
 		}
 		for _, ch := range children {
-			var err error = ch.Wait()
-			if err != nil {
+			if err := ch.Wait(); err != nil {
 				log.Print(err)
 			}
 		}
 		os.Exit(0)
-	} else {
-		fl = os.NewFile(3, "")
-		listener, err = net.FileListener(fl)
-		if err != nil {
-			log.Fatal(err)
-		}
-		runtime.GOMAXPROCS(1)
+		return nil
+	}
+
+	runtime.GOMAXPROCS(1)
+	listener, err := reuseport.Listen("tcp4", *listenAddr)
+	if err != nil {
+		log.Fatal(err)
 	}
 	return listener
 }
@@ -171,6 +139,26 @@ func jsonMarshal(ctx *fasthttp.RequestCtx, v interface{}) {
 	ctx.SetContentType("application/json")
 	if err := json.NewEncoder(ctx).Encode(v); err != nil {
 		log.Fatalf("error in json.Encoder.Encode: %s", err)
+	}
+}
+
+func mainHandler(ctx *fasthttp.RequestCtx) {
+	path := ctx.Path()
+	switch {
+	case fasthttp.EqualBytesStr(path, "/plaintext"):
+		plaintextHandler(ctx)
+	case fasthttp.EqualBytesStr(path, "/json"):
+		jsonHandler(ctx)
+	case fasthttp.EqualBytesStr(path, "/db"):
+		dbHandler(ctx)
+	case fasthttp.EqualBytesStr(path, "/queries"):
+		queriesHandler(ctx)
+	case fasthttp.EqualBytesStr(path, "/fortune"):
+		fortuneHandler(ctx)
+	case fasthttp.EqualBytesStr(path, "/update"):
+		updateHandler(ctx)
+	default:
+		ctx.Error("unexpected path", fasthttp.StatusBadRequest)
 	}
 }
 
