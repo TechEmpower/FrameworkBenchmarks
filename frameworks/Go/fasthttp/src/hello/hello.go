@@ -66,16 +66,8 @@ var (
 func main() {
 	flag.Parse()
 
-	var listener net.Listener
-	if !*prefork {
-		runtime.GOMAXPROCS(runtime.NumCPU())
-	} else {
-		listener = doPrefork()
-	}
-
 	var err error
-	db, err = sql.Open("mysql", connectionString)
-	if err != nil {
+	if db, err = sql.Open("mysql", connectionString); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
 	if err = db.Ping(); err != nil {
@@ -97,47 +89,10 @@ func main() {
 		Handler: mainHandler,
 		Name:    "fasthttp",
 	}
-	if !*prefork {
-		s.ListenAndServe(*listenAddr)
-	} else {
-		s.Serve(listener)
+	ln := getListener()
+	if err = s.Serve(ln); err != nil {
+		log.Fatalf("Error when serving incoming connections: %s", err)
 	}
-}
-
-func mustPrepare(db *sql.DB, query string) *sql.Stmt {
-	stmt, err := db.Prepare(query)
-	if err != nil {
-		log.Fatalf("Error when preparing statement %q: %s", query, err)
-	}
-	return stmt
-}
-
-func doPrefork() net.Listener {
-	if !*child {
-		children := make([]*exec.Cmd, runtime.NumCPU())
-		for i := range children {
-			children[i] = exec.Command(os.Args[0], "-prefork", "-child")
-			children[i].Stdout = os.Stdout
-			children[i].Stderr = os.Stderr
-			if err := children[i].Start(); err != nil {
-				log.Fatal(err)
-			}
-		}
-		for _, ch := range children {
-			if err := ch.Wait(); err != nil {
-				log.Print(err)
-			}
-		}
-		os.Exit(0)
-		return nil
-	}
-
-	runtime.GOMAXPROCS(1)
-	listener, err := reuseport.Listen("tcp4", *listenAddr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return listener
 }
 
 func mainHandler(ctx *fasthttp.RequestCtx) {
@@ -280,3 +235,48 @@ func (s Fortunes) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 type ByMessage struct{ Fortunes }
 
 func (s ByMessage) Less(i, j int) bool { return s.Fortunes[i].Message < s.Fortunes[j].Message }
+
+func mustPrepare(db *sql.DB, query string) *sql.Stmt {
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		log.Fatalf("Error when preparing statement %q: %s", query, err)
+	}
+	return stmt
+}
+
+func getListener() net.Listener {
+	if !*prefork {
+		runtime.GOMAXPROCS(runtime.NumCPU())
+		ln, err := net.Listen("tcp4", *listenAddr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return ln
+	}
+
+	if !*child {
+		children := make([]*exec.Cmd, runtime.NumCPU())
+		for i := range children {
+			children[i] = exec.Command(os.Args[0], "-prefork", "-child")
+			children[i].Stdout = os.Stdout
+			children[i].Stderr = os.Stderr
+			if err := children[i].Start(); err != nil {
+				log.Fatal(err)
+			}
+		}
+		for _, ch := range children {
+			if err := ch.Wait(); err != nil {
+				log.Print(err)
+			}
+		}
+		os.Exit(0)
+		panic("unreachable")
+	}
+
+	runtime.GOMAXPROCS(1)
+	ln, err := reuseport.Listen("tcp4", *listenAddr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return ln
+}
