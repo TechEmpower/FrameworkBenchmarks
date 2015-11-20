@@ -135,13 +135,6 @@ func doPrefork() net.Listener {
 	return listener
 }
 
-func jsonMarshal(ctx *fasthttp.RequestCtx, v interface{}) {
-	ctx.SetContentType("application/json")
-	if err := json.NewEncoder(ctx).Encode(v); err != nil {
-		log.Fatalf("error in json.Encoder.Encode: %s", err)
-	}
-}
-
 func mainHandler(ctx *fasthttp.RequestCtx) {
 	path := ctx.Path()
 	switch {
@@ -169,33 +162,21 @@ func jsonHandler(ctx *fasthttp.RequestCtx) {
 
 // Test 2: Single database query
 func dbHandler(ctx *fasthttp.RequestCtx) {
-	var world World
-	err := worldSelectStmt.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
-	if err != nil {
-		log.Fatalf("Error scanning world row: %s", err)
-	}
-
-	jsonMarshal(ctx, &world)
+	var w World
+	fetchRandomWorld(&w)
+	jsonMarshal(ctx, &w)
 }
 
 // Test 3: Multiple database queries
 func queriesHandler(ctx *fasthttp.RequestCtx) {
-	n := ctx.QueryArgs().GetUintOrZero("queries")
-	if n < 1 {
-		n = 1
-	} else if n > 500 {
-		n = 500
-	}
+	n := getQueriesCount(ctx)
 
-	world := make([]World, n)
+	worlds := make([]World, n)
 	for i := 0; i < n; i++ {
-		err := worldSelectStmt.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber)
-		if err != nil {
-			log.Fatalf("Error scanning world row: %s", err)
-		}
+		fetchRandomWorld(&worlds[i])
 	}
 
-	jsonMarshal(ctx, world)
+	jsonMarshal(ctx, worlds)
 }
 
 // Test 4: Fortunes
@@ -206,12 +187,12 @@ func fortuneHandler(ctx *fasthttp.RequestCtx) {
 	}
 
 	fortunes := make(Fortunes, 0, 16)
-	for rows.Next() { //Fetch rows
-		fortune := Fortune{}
-		if err := rows.Scan(&fortune.Id, &fortune.Message); err != nil {
+	for rows.Next() {
+		var f Fortune
+		if err := rows.Scan(&f.Id, &f.Message); err != nil {
 			log.Fatalf("Error scanning fortune row: %s", err)
 		}
-		fortunes = append(fortunes, &fortune)
+		fortunes = append(fortunes, &f)
 	}
 	rows.Close()
 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
@@ -226,29 +207,52 @@ func fortuneHandler(ctx *fasthttp.RequestCtx) {
 
 // Test 5: Database updates
 func updateHandler(ctx *fasthttp.RequestCtx) {
+	n := getQueriesCount(ctx)
+
+	worlds := make([]World, n)
+	for i := 0; i < n; i++ {
+		w := &worlds[i]
+		fetchRandomWorld(w)
+		w.RandomNumber = uint16(randomWorldNum())
+		if _, err := worldUpdateStmt.Exec(w.RandomNumber, w.Id); err != nil {
+			log.Fatalf("Error updating world row: %s", err)
+		}
+	}
+
+	jsonMarshal(ctx, worlds)
+}
+
+// Test 6: Plaintext
+func plaintextHandler(ctx *fasthttp.RequestCtx) {
+	ctx.Success("text/plain", helloWorldBytes)
+}
+
+func jsonMarshal(ctx *fasthttp.RequestCtx, v interface{}) {
+	ctx.SetContentType("application/json")
+	if err := json.NewEncoder(ctx).Encode(v); err != nil {
+		log.Fatalf("error in json.Encoder.Encode: %s", err)
+	}
+}
+
+func fetchRandomWorld(w *World) {
+	n := randomWorldNum()
+	if err := worldSelectStmt.QueryRow(n).Scan(&w.Id, &w.RandomNumber); err != nil {
+		log.Fatalf("Error scanning world row: %s", err)
+	}
+}
+
+func randomWorldNum() int {
+	return rand.Intn(worldRowCount) + 1
+}
+
+func getQueriesCount(ctx *fasthttp.RequestCtx) int {
 	n := ctx.QueryArgs().GetUintOrZero("queries")
 	if n < 1 {
 		n = 1
 	} else if n > 500 {
 		n = 500
 	}
-	world := make([]World, n)
-	for i := 0; i < n; i++ {
-		if err := worldSelectStmt.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
-			log.Fatalf("Error scanning world row: %s", err)
-		}
-		world[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
-		if _, err := worldUpdateStmt.Exec(world[i].RandomNumber, world[i].Id); err != nil {
-			log.Fatalf("Error updating world row: %s", err)
-		}
-	}
-
-	jsonMarshal(ctx, world)
-}
-
-// Test 6: Plaintext
-func plaintextHandler(ctx *fasthttp.RequestCtx) {
-	ctx.Success("text/plain", helloWorldBytes)
+	return n
 }
 
 type Fortunes []*Fortune
