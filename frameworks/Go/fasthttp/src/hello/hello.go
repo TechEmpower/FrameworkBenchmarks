@@ -84,7 +84,7 @@ func main() {
 
 	dbConnCount := maxConnectionCount
 	if *prefork {
-		dbConnCount = (dbConnCount + runtime.NumCPU()-1) / runtime.NumCPU()
+		dbConnCount = (dbConnCount + runtime.NumCPU() - 1) / runtime.NumCPU()
 	}
 	db.SetMaxIdleConns(dbConnCount)
 	db.SetMaxOpenConns(dbConnCount * 2)
@@ -219,9 +219,21 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 		w := &worlds[i]
 		fetchRandomWorld(w)
 		w.RandomNumber = uint16(randomWorldNum())
-		if _, err := worldUpdateStmt.Exec(w.RandomNumber, w.Id); err != nil {
-			log.Fatalf("Error updating world row: %s", err)
+	}
+
+	txn, err := db.Begin()
+	if err != nil {
+		log.Fatalf("Error starting transaction: %s", err)
+	}
+	stmt := txn.Stmt(worldUpdateStmt)
+	for i := 0; i < n; i++ {
+		w := &worlds[i]
+		if _, err := stmt.Exec(w.RandomNumber, w.Id); err != nil {
+			log.Fatalf("Error updating world row %d: %s", i, err)
 		}
+	}
+	if err = txn.Commit(); err != nil {
+		log.Fatalf("Error when commiting world rows: %s", err)
 	}
 
 	jsonMarshal(ctx, worlds)
