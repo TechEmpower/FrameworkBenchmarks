@@ -176,23 +176,19 @@ env:
     - "TESTDIR=Ur/urweb"
 
 before_install:
-  # Need to install python modules before using
-  # python
-  - pip install -r requirements.txt
+  - pip install colorama==0.3.1
+  # Version 2.3 has a nice Counter() and other features
+  # but it requires —-allow-external and -—allow-unverified
+  - pip install progressbar==2.2
+  - pip install requests
 
+install:
   # Configure Travis-CI build environment for TFB
   #   e.g. setup databases, users, etc
   - ./toolset/run-ci.py cisetup "$TESTDIR"
 
 addons:
   postgresql: "9.3"
-
-install:
-  # Install prerequisites
-  - ./toolset/run-ci.py prereq "$TESTDIR"
-
-  # Install software for this framework
-  - ./toolset/run-ci.py install "$TESTDIR"
 
 script:
   # Pick one test in this directory and verify

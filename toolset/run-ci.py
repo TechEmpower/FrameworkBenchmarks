@@ -38,7 +38,7 @@ class CIRunnner:
   
   def __init__(self, mode, testdir=None):
     '''
-    mode = [cisetup|prereq|install|verify] for what we want to do
+    mode = [cisetup|verify] for what we want to do
     testdir  = framework directory we are running
     '''
 
@@ -303,16 +303,8 @@ class CIRunnner:
       return 0
 
     names = ' '.join(self.names)
-    command = 'toolset/run-tests.py '
-    if self.mode == 'prereq':
-      command = command + "--install server --install-only --test '' --verbose"
-    elif self.mode == 'install':
-      command = command + "--install server --install-only --test %s" % names
-    elif self.mode == 'verify':
-      command = command + "--mode verify --test %s" % names
-    else:
-      log.critical('Unknown mode passed')
-      return 1
+    # Assume mode is verify
+    command = "toolset/run-tests.py --mode verify --test %s" % names
     
     # Run the command
     log.info("Running mode %s with commmand %s", self.mode, command)
@@ -483,7 +475,7 @@ class CIRunnner:
 if __name__ == "__main__":
   args = sys.argv[1:]
 
-  usage = '''Usage: toolset/run-ci.py [cisetup|prereq|install|verify] <framework-directory>
+  usage = '''Usage: toolset/run-ci.py [cisetup|verify] <framework-directory>
     
     run-ci.py selects one test from <framework-directory>/benchark_config, and 
     automates a number of calls into run-tests.py specific to the selected test. 
@@ -493,8 +485,6 @@ if __name__ == "__main__":
     The name of the selected test will be printed to standard output. 
 
     cisetup - configure the Travis-CI environment for our test suite
-    prereq  - trigger standard prerequisite installation
-    install - trigger server installation for the selected test_directory
     verify  - run a verification on the selected test using `--mode verify`
 
     run-ci.py expects to be run inside the Travis-CI build environment, and 
@@ -506,9 +496,7 @@ if __name__ == "__main__":
 
   mode = args[0]
   testdir = args[1]
-  if len(args) == 2 and (mode == "install" 
-    or mode == "verify"
-    or mode == 'prereq'
+  if len(args) == 2 and (mode == 'verify'
     or mode == 'cisetup'):
     runner = CIRunnner(mode, testdir)
   else:

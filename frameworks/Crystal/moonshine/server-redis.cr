@@ -14,9 +14,9 @@ app = App.new
 
 class CONTENT
   UTF8 = "; charset=UTF-8"
-  JSON = "application/json" + UTF8
+  JSON = "application/json" #+ UTF8
   PLAIN = "text/plain"
-  HTML = "text/html" + UTF8
+  HTML = "text/html" #+ UTF8
 end
 
 ID_MAXIMUM = 10_000
