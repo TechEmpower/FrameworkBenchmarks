@@ -181,9 +181,12 @@ before_install:
   # but it requires —-allow-external and -—allow-unverified
   - pip install progressbar==2.2
   - pip install requests
+
+install:
   # Configure Travis-CI build environment for TFB
   #   e.g. setup databases, users, etc
   - ./toolset/run-ci.py cisetup "$TESTDIR"
+  - cat ./benchmark.cfg
 
 addons:
   postgresql: "9.3"
