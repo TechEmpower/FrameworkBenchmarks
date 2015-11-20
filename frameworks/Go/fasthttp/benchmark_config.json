@@ -1,5 +1,5 @@
 {
-  "framework": "go",
+  "framework": "fasthttp",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -13,7 +13,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "go",
+      "framework": "fasthttp",
       "language": "Go",
       "orm": "Raw",
       "platform": "Go",
@@ -36,14 +36,14 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "go",
+      "framework": "fasthttp",
       "language": "Go",
       "orm": "Raw",
       "platform": "Go",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "fasthttp",
+      "display_name": "fasthttp-prefork",
       "notes": "",
       "versus": "go"
     }
