@@ -186,12 +186,10 @@ install:
   # Configure Travis-CI build environment for TFB
   #   e.g. setup databases, users, etc
   - ./toolset/run-ci.py cisetup "$TESTDIR"
-  - cat ./benchmark.cfg
 
 addons:
   postgresql: "9.3"
 
 script:
-  - cat ./benchmark.cfg
   # Pick one test in this directory and verify
   - time ./toolset/run-ci.py verify "$TESTDIR"
