@@ -34,7 +34,7 @@ type Fortune struct {
 
 // Databases
 const (
-	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?interpolateParams=true"
+	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
 	worldRowCount      = 10000
 	maxConnectionCount = 256
 )
@@ -146,18 +146,18 @@ func fortuneHandler(ctx *fasthttp.RequestCtx) {
 		log.Fatalf("Error preparing statement: %v", err)
 	}
 
-	fortunes := make(Fortunes, 0, 16)
+	fortunes := make([]Fortune, 0, 16)
 	for rows.Next() {
 		var f Fortune
 		if err := rows.Scan(&f.Id, &f.Message); err != nil {
 			log.Fatalf("Error scanning fortune row: %s", err)
 		}
-		fortunes = append(fortunes, &f)
+		fortunes = append(fortunes, f)
 	}
 	rows.Close()
-	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
+	fortunes = append(fortunes, Fortune{Message: "Additional fortune added at request time."})
 
-	sort.Sort(ByMessage{fortunes})
+	sort.Sort(FortunesByMessage(fortunes))
 
 	ctx.SetContentType("text/html")
 	if err := tmpl.Execute(ctx, fortunes); err != nil {
@@ -176,6 +176,8 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 		w.RandomNumber = uint16(randomWorldNum())
 	}
 
+	// sorting is required for insert deadlock prevention.
+	sort.Sort(WorldsByID(worlds))
 	txn, err := db.Begin()
 	if err != nil {
 		log.Fatalf("Error starting transaction: %s", err)
@@ -227,14 +229,17 @@ func getQueriesCount(ctx *fasthttp.RequestCtx) int {
 	return n
 }
 
-type Fortunes []*Fortune
+type FortunesByMessage []Fortune
 
-func (s Fortunes) Len() int      { return len(s) }
-func (s Fortunes) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+func (s FortunesByMessage) Len() int           { return len(s) }
+func (s FortunesByMessage) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s FortunesByMessage) Less(i, j int) bool { return s[i].Message < s[j].Message }
 
-type ByMessage struct{ Fortunes }
+type WorldsByID []World
 
-func (s ByMessage) Less(i, j int) bool { return s.Fortunes[i].Message < s.Fortunes[j].Message }
+func (w WorldsByID) Len() int           { return len(w) }
+func (w WorldsByID) Swap(i, j int)      { w[i], w[j] = w[j], w[i] }
+func (w WorldsByID) Less(i, j int) bool { return w[i].Id < w[j].Id }
 
 func mustPrepare(db *sql.DB, query string) *sql.Stmt {
 	stmt, err := db.Prepare(query)
