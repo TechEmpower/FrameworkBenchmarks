@@ -54,7 +54,7 @@ static void usp_end_rquery()
 queries;
 -->
 <!--#header
-Content-Type: application/json; charset=UTF-8
+Content-Type: application/json
 -->
 <!--#code
 World* pworld;
