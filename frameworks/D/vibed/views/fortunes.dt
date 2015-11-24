@@ -1,0 +1,15 @@
+extends layout
+
+block head
+	title Fortunes
+
+block body
+	table
+		tr
+			th id
+			th message
+		- foreach (f; data)
+			tr
+				td= f.id
+				td= f.message
+
