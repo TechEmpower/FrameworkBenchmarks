@@ -7,8 +7,7 @@ import std.conv : ConvException, to;
 import std.random : uniform;
 
 
-const worldSize = 10000;
-const fortunesSize = 100;
+enum worldSize = 10000;
 
 
 shared static this()
