@@ -6,6 +6,6 @@ fw_depends dlang dub
 rm -f fwb
 rm -rf .dub
 
-dub build
+dub build -b release
 
 ./fwb &
