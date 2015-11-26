@@ -16,6 +16,8 @@ shared static this()
 	router.registerWebInterface(new WebInterface);
 
 	auto settings = new HTTPServerSettings;
+	settings.bindAddresses = ["0.0.0.0"];
+	settings.options |= HTTPServerOption.distribute;
 	settings.port = 8080;
 	listenHTTP(settings, router);
 }
