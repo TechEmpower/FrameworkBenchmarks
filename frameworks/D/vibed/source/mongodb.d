@@ -14,6 +14,7 @@ shared static this()
 {
 	auto router = new URLRouter;
 	router.registerWebInterface(new WebInterface);
+	router.rebuild();
 
 	auto settings = new HTTPServerSettings;
 	settings.bindAddresses = ["0.0.0.0"];
