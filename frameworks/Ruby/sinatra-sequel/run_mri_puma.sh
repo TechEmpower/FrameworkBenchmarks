@@ -1,9 +1,10 @@
 #!/bin/bash
 
-fw_depends rvm ruby-2.0.0
+MRI_VERSION=ruby-2.2.1
 
-rvm jruby-1.7.8 do bundle install --gemfile=$TROOT/Gemfile
+fw_depends rvm $MRI_VERSION
 
-rvm ruby-2.0.0-p0 do bundle --jobs 4
+rvm $MRI_VERSION do bundle install --gemfile=$TROOT/Gemfile --path vendor/bundle
 
-DB_HOST=${DBHOST} rvm ruby-2.0.0-p0 do bundle exec puma -C config/puma.rb -w 8 --preload &
+DB_HOST=${DBHOST} \
+rvm $MRI_VERSION do bundle exec puma -w 8 -t 8:32 --preload -b tcp://0.0.0.0:8080 -e production &

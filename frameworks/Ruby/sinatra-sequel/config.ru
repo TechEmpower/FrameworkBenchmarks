@@ -1,2 +1,2 @@
-require './hello_world'
-run Sinatra::Application
+require_relative 'hello_world'
+run HelloWorld
