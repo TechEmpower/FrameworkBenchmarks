@@ -1,0 +1,15 @@
+source 'https://rubygems.org'
+
+platforms :ruby do
+  gem 'mysql2', '0.4.0'
+  gem 'json', '1.8.1', :require => 'json/ext'
+end
+
+gem 'puma', '2.15.3'
+
+gem 'sequel', '4.28.0'
+
+gem 'sinatra', '1.4.6', :require => 'sinatra/base'
+gem 'sinatra-contrib', '1.4.6', :require => 'sinatra/json'
+
+gem 'slim', '3.0.6'
