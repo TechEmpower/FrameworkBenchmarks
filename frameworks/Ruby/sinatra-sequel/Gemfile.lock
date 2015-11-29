@@ -1,0 +1,35 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    jdbc-mysql (5.1.37)
+    json (1.8.3)
+    json (1.8.3-java)
+    mysql2 (0.4.2)
+    puma (2.15.3)
+    puma (2.15.3-java)
+    rack (1.6.4)
+    rack-protection (1.5.3)
+      rack
+    sequel (4.28.0)
+    sinatra (1.4.6)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (>= 1.3, < 3)
+    slim (3.0.6)
+      temple (~> 0.7.3)
+      tilt (>= 1.3.3, < 2.1)
+    temple (0.7.6)
+    tilt (2.0.1)
+
+PLATFORMS
+  java
+  ruby
+
+DEPENDENCIES
+  jdbc-mysql (~> 5.1.37)
+  json (~> 1.8.3)
+  mysql2 (~> 0.4.0)
+  puma (~> 2.15.3)
+  sequel (~> 4.28.0)
+  sinatra (~> 1.4.6)
+  slim (~> 3.0.6)
