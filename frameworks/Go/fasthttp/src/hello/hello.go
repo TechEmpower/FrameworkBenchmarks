@@ -32,7 +32,6 @@ type Fortune struct {
 	Message string `json:"message"`
 }
 
-// Databases
 const (
 	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
 	worldRowCount      = 10000
@@ -48,10 +47,8 @@ var (
 const helloWorldString = "Hello, World!"
 
 var (
-	// Templates
 	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 
-	// Database
 	db *sql.DB
 
 	helloWorldBytes = []byte(helloWorldString)
@@ -143,7 +140,7 @@ func queriesHandler(ctx *fasthttp.RequestCtx) {
 func fortuneHandler(ctx *fasthttp.RequestCtx) {
 	rows, err := fortuneSelectStmt.Query()
 	if err != nil {
-		log.Fatalf("Error preparing statement: %v", err)
+		log.Fatalf("Error selecting db data: %v", err)
 	}
 
 	fortunes := make([]Fortune, 0, 16)
