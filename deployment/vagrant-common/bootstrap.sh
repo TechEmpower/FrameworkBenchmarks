@@ -122,7 +122,6 @@ if [ ! -e "~/.firstboot" ]; then
     echo "Cloning project from $GH_REPO $GH_BRANCH"
     git clone -b ${GH_BRANCH} https://github.com/${GH_REPO}.git $FWROOT
   fi
-  sudo pip install -r $FWROOT/requirements.txt
 
   # Everyone gets SSH access to localhost
   echo "Setting up SSH access to localhost"
