@@ -1,7 +1,7 @@
 #!/bin/bash
 
-fw_depends rvm rbx-2.2.10
+fw_depends rvm rbx-2.4
 
-rvm rbx-2.2.10 do bundle install --gemfile=$TROOT/Gemfile
+rvm rbx-$RBX_VERSION do bundle install --jobs=4 --gemfile=$TROOT/Gemfile --path=vendor/bundle
 
-DB_HOST=${DBHOST} rvm rbx-2.2.10 do bundle exec puma &
+DB_HOST=${DBHOST} rvm rbx-$RBX_VERSION do bundle exec puma &
