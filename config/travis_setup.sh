@@ -48,8 +48,6 @@ sudo mkdir /home/testrunner
 sudo chown testrunner:testrunner /home/testrunner
 # Add the testrunner user to every group that the travis user is in
 sudo sed -i 's|:travis|:travis,testrunner|g' /etc/group
-# Add the testrunner user to the travis group specifically
-sudo sed -i 's|travis:x:\(.*\):|travis:x:\1:testrunner:|g' /etc/group
 # Maybe unneeded - add the travis user to the testrunner group
 sudo sed -i 's|testrunner:x:\(.*\):|testrunner:x:\1:travis|g' /etc/group
 # Need to add testrunner to the sudoers group AND default him to a sudoers
