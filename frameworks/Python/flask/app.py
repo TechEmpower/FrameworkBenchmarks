@@ -8,26 +8,23 @@ import sys
 
 import flask
 from flask import Flask, request, render_template, make_response, jsonify
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.ext import baked
 
 if sys.version_info[0] == 3:
     xrange = range
 
-DBHOST = os.environ.get('DBHOST', 'localhost')
+_is_pypy = hasattr(sys, 'pypy_version_info')
 
-try:
-    import MySQLdb
-    mysql_schema = "mysql:"
-except ImportError:
-    mysql_schema = "mysql+pymysql:"
+DBDRIVER = 'mysql+pymysql' if _is_pypy else 'mysql'  # mysqlclient is slow on PyPy
+DBHOST = os.environ.get('DBHOST', 'localhost')
 
 
 # setup
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = mysql_schema + '//benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % DBHOST
+app.config['SQLALCHEMY_DATABASE_URI'] = DBDRIVER + '//benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % DBHOST
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 db = SQLAlchemy(app)
 dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], connect_args={'autocommit': True}, pool_reset_on_return=None)
