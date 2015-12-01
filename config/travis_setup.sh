@@ -18,9 +18,10 @@ sudo apt-add-repository  'deb http://www.apache.org/dist/cassandra/debian 20x ma
 # major damage and should only be used inside a VM or Linux Container
 sudo apt-get -q update
 sudo apt-get -q -y --force-yes install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-mongodb-org \
-cassandra \
-openssh-server
+  mongodb-org \
+  cassandra \
+  openssh-server \
+  mysql-server
 
 # Run as travis user (who already has passwordless sudo)
 ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa
@@ -66,8 +67,9 @@ sudo chown testrunner:testrunner installs
 
 # Setup MySQL
 echo "Populating MySQL database"
+sudo mysqladmin -u root password secret
 sudo restart mysql
-mysql -uroot < config/create.sql
+mysql -uroot -psecret < config/create.sql
 
 # Setup Postgres
 echo "Removing Postgres 9.1 from Travis-CI"
