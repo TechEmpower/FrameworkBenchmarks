@@ -1,9 +1,9 @@
 #!/bin/bash
 
-fw_depends rvm java7 jruby-1.7.8
+fw_depends rvm jruby-1.7
 
 sed -i 's|127.0.0.1|'${DBHOST}'|g' config/database.yml
 
-rvm jruby-1.7.8 do bundle install --gemfile=$TROOT/Gemfile
+rvm jruby-$JRUBY_VERSION do bundle install --jobs=4 --gemfile=$TROOT/Gemfile --path=vendor/bundle
 
-rvm jruby-1.7.8 do bundle exec puma -b tcp://0.0.0.0:8080 -e production &
+rvm jruby-$JRUBY_VERSION do bundle exec puma -b tcp://0.0.0.0:8080 -e production &

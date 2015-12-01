@@ -1,8 +1,11 @@
 #!/bin/bash
 
-fw_depends rvm
+fw_depends rvm java7
 
-JRUBY_VERSION="1.7.13"
+# rvm stable [typically] only provides one version of jruby-1.7
+# update this when it changes
+JRUBY_VERSION="1.7.19"
+
 RETCODE=$(fw_exists ${IROOT}/jruby-${JRUBY_VERSION}.installed)
 [ ! "$RETCODE" == 0 ] || { \
   # Load environment variables
