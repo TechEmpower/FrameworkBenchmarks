@@ -1,16 +1,19 @@
 #!/bin/bash
 
-fw_depends rvm
+fw_depends rvm java7
 
-JRUBY_VERSION="1.7.8"
+# rvm stable [typically] only provides one version of jruby-9.0
+# update this when it changes
+JRUBY_VERSION="9.0.0.0.pre1"
+
 RETCODE=$(fw_exists ${IROOT}/jruby-${JRUBY_VERSION}.installed)
 [ ! "$RETCODE" == 0 ] || { \
   # Load environment variables
   source $IROOT/jruby-$JRUBY_VERSION.installed
   return 0; }
 
-# We assume single-user installation as 
-# done in our rvm.sh script and 
+# We assume single-user installation as
+# done in our rvm.sh script and
 # in Travis-CI
 if [ "$TRAVIS" = "true" ]
 then

@@ -1,9 +1,7 @@
 #!/bin/bash
 
-fw_depends rvm java7 jruby-1.7.8
+fw_depends rvm jruby-1.7
 
-rvm jruby-1.7.8 do bundle install --gemfile=$TROOT/Gemfile
+rvm jruby-$JRUBY_VERSION do bundle install --jobs=4 --gemfile=$TROOT/Gemfile --path=vendor/bundle
 
-rvm jruby-1.7.8 do bundle --jobs 4
-
-DB_HOST=${DBHOST} rvm jruby-1.7.8 do bundle exec trinidad --config config/trinidad.yml &
+DB_HOST=${DBHOST} rvm jruby-$JRUBY_VERSION do bundle exec trinidad --config config/trinidad.yml &

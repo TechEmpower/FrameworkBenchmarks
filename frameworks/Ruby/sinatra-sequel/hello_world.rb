@@ -3,22 +3,19 @@ SEQUEL_NO_ASSOCIATIONS = true
 
 Bundler.require :default
 
-# Configure Slim templating engine
-Slim::Engine.set_options \
-  :format => :html,
-  :sort_attrs => false
-
-# Configure Sequel ORM
-DB = Sequel.connect \
-  :adapter => RUBY_PLATFORM == 'java' ? 'jdbc:mysql' : 'mysql2',
-  :host => ENV['DB_HOST'],
-  :database => 'hello_world',
-  :user => 'benchmarkdbuser',
-  :password => 'benchmarkdbpass',
-  :max_connections => 32, # == max worker threads per process
+# Configure Sequel ORM (Sequel::DATABASES)
+Sequel.connect \
+  '%<adapter>s://%<host>s/%<database>s?user=%<user>s&password=%<password>s' % {
+    :adapter => RUBY_PLATFORM == 'java' ? 'jdbc:mysql' : 'mysql2',
+    :host => ENV['DBHOST'],
+    :database => 'hello_world',
+    :user => 'benchmarkdbuser',
+    :password => 'benchmarkdbpass'
+  },
+  :max_connections => (ENV['MAX_THREADS'] || 4).to_i,
   :pool_timeout => 5
 
-# Allow #to_json on models and arrays of models
+# Allow #to_json on models and datasets
 Sequel::Model.plugin :json_serializer
 
 class World < Sequel::Model(:World); end
@@ -28,9 +25,15 @@ class Fortune < Sequel::Model(:Fortune)
   unrestrict_primary_key
 end
 
+# Configure Slim templating engine
+Slim::Engine.set_options \
+  :format => :html,
+  :sort_attrs => false
+
 # Our Rack application to be executed by rackup
 class HelloWorld < Sinatra::Base
   configure do
+    # XSS, CSRF, IP spoofing, etc. protection are not explicitly required
     disable :protection
 
     # Don't add ;charset= to any content types per the benchmark requirements
@@ -55,8 +58,8 @@ class HelloWorld < Sinatra::Base
 
   after do
     # Add mandatory HTTP headers to every response
-    response['Server'] = 'Puma'
-    response['Date'] = Time.now.to_s
+    response['Server'] ||= 'Puma'
+    response['Date'] ||= Time.now.to_s
   end
 
   get '/json' do
@@ -106,9 +109,12 @@ class HelloWorld < Sinatra::Base
         .where(:id => updates.transpose.first)
         .for_update
 
+      worlds
+        .each { |w| w[:randomNumber] = updates[w.id] }
+
       World.dataset
         .on_duplicate_key_update(:randomNumber)
-        .import([:id, :randomNumber], updates)
+        .multi_insert(worlds)
     end
 
     json worlds
