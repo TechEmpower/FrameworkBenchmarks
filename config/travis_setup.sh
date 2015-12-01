@@ -47,7 +47,7 @@ sudo mkdir /home/testrunner
 # Make testrunner the owner of his home dir
 sudo chown testrunner:testrunner /home/testrunner
 # Add the testrunner user to every group that the travis user is in
-sudo sed -i 's|:travis|:travis,testrunner|g' /etc/group
+sudo sed -i 's|:travis|:travis,testrunner,benchmarkdbuser|g' /etc/group
 # Maybe unneeded - add the travis user to the testrunner group
 sudo sed -i 's|testrunner:x:\(.*\):|testrunner:x:\1:travis|g' /etc/group
 # Need to add testrunner to the sudoers group AND default him to a sudoers
@@ -55,6 +55,9 @@ sudo sed -i 's|testrunner:x:\(.*\):|testrunner:x:\1:travis|g' /etc/group
 echo "testrunner ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 # Set the default shell for testrunner to /bin/bash
 sudo sed -i 's|/home/testrunner:/bin/sh|/home/testrunner:/bin/bash|g' /etc/passwd
+
+mkdir installs
+sudo chown testrunner:testrunner installs
 
 # =============Setup Databases===========================
 # NOTE: Do not run `--install database` in travis-ci! 
