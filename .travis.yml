@@ -187,7 +187,8 @@ before_install:
 install:
   # Configure Travis-CI build environment for TFB
   #   e.g. setup databases, users, etc
-  - ./toolset/run-ci.py cisetup "$TESTDIR"
+  - ./config/travis_setup.sh
+  #- ./toolset/run-ci.py cisetup "$TESTDIR"
   - cat ./benchmark.cfg
 
 addons:

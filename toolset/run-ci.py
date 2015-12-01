@@ -38,16 +38,13 @@ class CIRunnner:
   
   def __init__(self, mode, testdir=None):
     '''
-    mode = [cisetup|verify] for what we want to do
+    mode = [verify] for what we want to do
     testdir  = framework directory we are running
     '''
 
     self.directory = testdir
     self.mode = mode
-    if mode == "cisetup":
-      logging.basicConfig(level=logging.DEBUG)
-    else:
-      logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO)
 
     try:
       # NOTE: THIS IS VERY TRICKY TO GET RIGHT!
@@ -298,10 +295,6 @@ class CIRunnner:
       log.info("I found no changes to `%s` or `toolset/`, aborting verification", self.directory)
       return 0
 
-    if self.mode == 'cisetup':
-      self.run_travis_setup()
-      return 0
-
     names = ' '.join(self.names)
     # Assume mode is verify
     command = "toolset/run-tests.py --mode verify -u travis -r testrunner --database-user travis --test %s" % names
@@ -321,18 +314,10 @@ class CIRunnner:
       log.error(err.child_traceback)
       return 1
 
-  def run_travis_setup(self):
-    log.info("Setting up Travis-CI")
-
-    command = "source ./config/travis_setup.sh"
-    p = subprocess.Popen(command, shell=True)
-    if p.wait() != 0:
-      log.critical("Non-zero exit  from running+wait on subprocess")
-
 if __name__ == "__main__":
   args = sys.argv[1:]
 
-  usage = '''Usage: toolset/run-ci.py [cisetup|verify] <framework-directory>
+  usage = '''Usage: toolset/run-ci.py [verify] <framework-directory>
     
     run-ci.py selects one test from <framework-directory>/benchark_config, and 
     automates a number of calls into run-tests.py specific to the selected test. 
@@ -341,7 +326,6 @@ if __name__ == "__main__":
     multiple runs with the same <framework-directory> reference the same test. 
     The name of the selected test will be printed to standard output. 
 
-    cisetup - configure the Travis-CI environment for our test suite
     verify  - run a verification on the selected test using `--mode verify`
 
     run-ci.py expects to be run inside the Travis-CI build environment, and 
@@ -353,8 +337,7 @@ if __name__ == "__main__":
 
   mode = args[0]
   testdir = args[1]
-  if len(args) == 2 and (mode == 'verify'
-    or mode == 'cisetup'):
+  if len(args) == 2 and (mode == 'verify'):
     runner = CIRunnner(mode, testdir)
   else:
     print usage
