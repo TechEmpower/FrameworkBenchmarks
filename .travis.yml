@@ -188,6 +188,8 @@ install:
   # Configure Travis-CI build environment for TFB
   #   e.g. setup databases, users, etc
   - ./config/travis_setup.sh
+  - sudo cat /etc/group
+  - sudo cat /etc/sudoers
 
 addons:
   postgresql: "9.3"
