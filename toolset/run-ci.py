@@ -304,7 +304,7 @@ class CIRunnner:
 
     names = ' '.join(self.names)
     # Assume mode is verify
-    command = "toolset/run-tests.py --mode verify --test %s" % names
+    command = "toolset/run-tests.py --mode verify -u travis -r testrunner --database-user travis --test %s" % names
     
     # Run the command
     log.info("Running mode %s with commmand %s", self.mode, command)
