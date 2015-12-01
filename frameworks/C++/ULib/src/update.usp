@@ -72,7 +72,7 @@ static void usp_end_update()
 queries;
 -->
 <!--#header
-Content-Type: application/json; charset=UTF-8
+Content-Type: application/json
 -->
 <!--#code
 int i = 0, num_queries;
