@@ -66,6 +66,7 @@ sudo chown testrunner:testrunner installs
 
 # Setup MySQL
 echo "Populating MySQL database"
+sudo restart mysql
 mysql -uroot < config/create.sql
 
 # Setup Postgres
