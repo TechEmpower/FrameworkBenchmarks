@@ -1,7 +1,7 @@
 import json
 
 
-def basic_body_verification(body, is_json_check=True):
+def basic_body_verification(body, url, is_json_check=True):
     '''
     Takes in a raw (stringy) response body, checks that it is non-empty,
     and that it is valid JSON (i.e. can be deserialized into a dict/list of dicts)
@@ -177,7 +177,7 @@ def verify_randomnumber_list(expected_len, headers, body, url, max_infraction='f
     [{ "id": 2354, "randomNumber": 8952 }, { "id": 4421, "randomNumber": 32 }, ... ]
     '''
     
-    response, problems = basic_body_verification(body)
+    response, problems = basic_body_verification(body, url)
 
     if len(problems) > 0:
         return problems

@@ -26,7 +26,7 @@ class FortuneTestType(FrameworkTestType):
         url = base_url + self.fortune_url
         headers, body = self.request_headers_and_body(url)
 
-        _, problems = basic_body_verification(body, is_json_check=False)
+        _, problems = basic_body_verification(body, url, is_json_check=False)
 
         if len(problems) > 0:
             return problems
