@@ -70,6 +70,7 @@ echo "Populating MySQL database"
 sudo mysqladmin -u root password secret
 sudo restart mysql
 mysql -uroot -psecret < config/create.sql
+echo "select * from fortune" | mysql -ubenchmarkdbuser -pbenchmarkdbpass hello_world
 
 # Setup Postgres
 echo "Removing Postgres 9.1 from Travis-CI"
