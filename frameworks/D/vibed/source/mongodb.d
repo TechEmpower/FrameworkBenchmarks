@@ -23,20 +23,19 @@ shared static this()
 	listenHTTP(settings, router);
 }
 
+MongoCollection _worldCollection;
+MongoCollection _fortuneCollection;
+
+// sets up the MongoDB connection pools for each thread
+static this()
+{
+	import std.process : environment;
+	auto db = connectMongoDB(environment["DBHOST"]);
+	_worldCollection = db.getCollection("hello_world.World");
+	_fortuneCollection = db.getCollection("hello_world.Fortune");
+}
+
 class WebInterface {
-	private {
-		MongoCollection _worldCollection;
-		MongoCollection _fortuneCollection;
-	}
-
-	this()
-	{
-		import std.process : environment;
-		auto db = connectMongoDB(environment["DBHOST"]);
-		_worldCollection = db.getCollection("hello_world.World");
-		_fortuneCollection = db.getCollection("hello_world.Fortune");
-	}
-
 	// GET /
 	void get()
 	{
