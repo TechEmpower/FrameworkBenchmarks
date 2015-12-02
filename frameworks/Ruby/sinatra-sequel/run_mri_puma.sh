@@ -1,10 +1,13 @@
 #!/bin/bash
 
-MRI_VERSION=ruby-2.2.1
+fw_depends rvm ruby-2.2
 
-fw_depends rvm $MRI_VERSION
+rvm ruby-$MRI_VERSION do \
+  bundle install --jobs=4 --gemfile=$TROOT/Gemfile --path=vendor/bundle
 
-rvm $MRI_VERSION do bundle install --gemfile=$TROOT/Gemfile --path vendor/bundle
+WORKERS=8 # enable Puma's clustered mode
+MAX_THREADS=32 ; export MAX_THREADS
+MIN_THREADS=$(( MAX_THREADS / WORKERS * 2 ))
 
-DB_HOST=${DBHOST} \
-rvm $MRI_VERSION do bundle exec puma -w 8 -t 8:32 -b tcp://0.0.0.0:8080 -e production &
+rvm ruby-$MRI_VERSION do \
+  bundle exec puma -w $WORKERS -t $MIN_THREADS:$MAX_THREADS -b tcp://0.0.0.0:8080 -e production &
