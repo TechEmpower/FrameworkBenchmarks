@@ -198,3 +198,4 @@ script:
 
 after_script:
   - cat ./installs/resin-4.0.41/log/jvm-default.log
+  - cat ./frameworks/Java/gemini/Logs/Application-Logs/2015-12-02.log
