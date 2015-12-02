@@ -96,8 +96,12 @@ class FrameworkTestType:
             print "  Response (trimmed to %d bytes): \"%s\"" % (b, body.strip()[:b])
             return headers, body
         except requests.HTTPError as err:
-            self.err.write(err + '\n')
-            return None, None
+            if isinstance(err.reason, basestring):
+                self.err.write(err.reason + '\n')
+                return None, None
+            else:
+                self.err.write("Request returned error code " + str(err.code) + '\n')
+                return None, None
 
     def verify(self, base_url):
         '''
