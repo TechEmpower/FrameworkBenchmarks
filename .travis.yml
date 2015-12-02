@@ -195,3 +195,6 @@ addons:
 script:
   # Pick one test in this directory and verify
   - time ./toolset/run-ci.py verify "$TESTDIR"
+
+after_script:
+  - cat ./installs/resin-4.0.41/log/jvm-default.log
