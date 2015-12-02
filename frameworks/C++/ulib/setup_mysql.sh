@@ -12,7 +12,7 @@ sed -i "s|CLIENT_FOR_PARALLELIZATION .*|CLIENT_FOR_PARALLELIZATION 100|g" $IROOT
 
 # 2. Start ULib Server (userver_tcp)
 export ORM_DRIVER="mysql"
-export UMEMPOOL="146,0,0,90,150,-22,-12,-20,0:268435456,2097152"
+export UMEMPOOL="146,0,0,90,150,-22,-12,-20,0"
 export ORM_OPTION="host=${DBHOST} user=benchmarkdbuser password=benchmarkdbpass character-set=utf8 dbname=hello_world"
 
 # Never use setcap inside of TRAVIS 
