@@ -202,4 +202,4 @@ after_script:
   - cat ./frameworks/Java/gemini/Logs/Application-Logs/2015-12-02.log
   - ls ./frameworks/Java/gemini
   - ls ./frameworks/Java/gemini/Logs
-  - ls ./frameworks/Java/gemini/Logs.Application-Logs
+  - ls ./frameworks/Java/gemini/Logs/Application-Logs

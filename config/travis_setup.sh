@@ -68,6 +68,8 @@ sudo chown testrunner:testrunner installs
 # Setup MySQL
 echo "Populating MySQL database"
 sudo mysqladmin -u root password secret
+sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
+sudo mv config/my.cnf /etc/mysql/my.cnf
 sudo restart mysql
 mysql -uroot -psecret < config/create.sql
 
