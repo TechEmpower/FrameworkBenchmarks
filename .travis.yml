@@ -190,8 +190,15 @@ install:
   #   e.g. setup databases, users, etc
   - ./config/travis_setup.sh
 
+services:
+  - mysql
+  - postgresql
+
 addons:
   postgresql: "9.3"
+
+before_script:
+  - mysql -uroot < config/create.sql
 
 script:
   # Pick one test in this directory and verify

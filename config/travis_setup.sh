@@ -71,7 +71,7 @@ sudo mysqladmin -u root password secret
 sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
 sudo mv config/my.cnf /etc/mysql/my.cnf
 sudo restart mysql
-mysql -uroot -psecret < config/create.sql
+#mysql -uroot -psecret < config/create.sql
 
 # Setup Postgres
 echo "Removing Postgres 9.1 from Travis-CI"
