@@ -191,11 +191,15 @@ install:
   - ./config/travis_setup.sh
 
 services:
-  - mysql
   - postgresql
 
 addons:
   postgresql: "9.3"
+  apt:
+    sources:
+      - debian-sid
+    packages:
+      - mysql-server-5.6
 
 before_script:
   - mysql -uroot < config/create.sql
