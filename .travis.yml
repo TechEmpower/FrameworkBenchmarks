@@ -196,10 +196,8 @@ services:
 addons:
   postgresql: "9.3"
   apt:
-    sources:
-      - debian-sid
     packages:
-      - mysql-server-5.6
+      - mysql-server
 
 before_script:
   - mysql -uroot < config/create.sql
