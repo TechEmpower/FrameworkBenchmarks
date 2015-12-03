@@ -208,4 +208,4 @@ script:
 
 after_script:
   - cat ./installs/resin-4.0.41/log/jvm-default.log
-  - cat /etc/mysql/my.cnf
+  - cat /etc/postgresql/9.3/main/postgresql.conf
