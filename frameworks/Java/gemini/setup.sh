@@ -55,3 +55,4 @@ echo "EmailExceptionHandler.ToEmailAddress = $user@techempower.com" >> $configur
 echo "EmailExceptionHandler.FromEmailAddress = $user@techempower.com" >> $configurationFile
 
 exit 0
+
