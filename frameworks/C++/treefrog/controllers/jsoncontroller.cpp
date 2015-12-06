@@ -13,9 +13,7 @@ void JsonController::json()
 {
     QVariantMap obj;
     obj["message"] = "Hello, World!";
-
-    setContentType("application/json; charset=UTF-8");
-    renderText(jsonEncode(obj), false);
+    renderJson(obj);
 }
 
 // Don't remove below this line
