@@ -15,7 +15,7 @@ void WorldController::index()
 
 void WorldController::plain()
 {
-    renderJson(QStringList("Hello, World!"));
+    renderText(QLatin1String("Hello, World!"));
 }
 
 void WorldController::show(const QString &pk)
