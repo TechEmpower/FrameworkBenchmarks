@@ -185,11 +185,6 @@ before_install:
   - pip install requests
   - echo "127.0.0.1 " `hostname` | sudo tee /etc/hosts
 
-install:
-  # Configure Travis-CI build environment for TFB
-  #   e.g. setup databases, users, etc
-  - ./config/travis_setup.sh
-
 services:
   - postgresql
 

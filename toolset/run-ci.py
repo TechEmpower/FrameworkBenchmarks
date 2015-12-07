@@ -295,6 +295,19 @@ class CIRunnner:
       log.info("I found no changes to `%s` or `toolset/`, aborting verification", self.directory)
       return 0
 
+    # Do full setup now that we've verified that there's work to do
+    try:
+      p = subprocess.Popen("config/travis_setup.sh", shell=True)
+      p.wait()
+    except subprocess.CalledProcessError:
+      log.critical("Subprocess Error")
+      print trackback.format_exc()
+      return 1
+    except Exception as err:
+      log.critical("Exception from running and waiting on subprocess to set up Travis environment")
+      log.error(err.child_traceback)
+      return 1
+
     names = ' '.join(self.names)
     # Assume mode is verify
     command = "toolset/run-tests.py --mode verify --test %s" % names
