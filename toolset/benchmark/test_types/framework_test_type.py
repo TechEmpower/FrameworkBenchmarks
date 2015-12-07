@@ -90,7 +90,8 @@ class FrameworkTestType:
         body = r.content
         self.out.write(str(headers))
         self.out.write(body)
-        print "  Response: \"%s\"" % body
+        b = 40
+        print "  Response (trimmed to %d bytes): \"%s\"" % (b, body.strip()[:b])
         return headers, body
 
     def verify(self, base_url):
@@ -118,7 +119,7 @@ class FrameworkTestType:
         '''Returns the URL for this test, like '/json'''
         # This is a method because each test type uses a different key
         # for their URL so the base class can't know which arg is the URL
-        raise NotImplementedError("Subclasses must provide verify")
+        raise NotImplementedError("Subclasses must provide get_url")
 
     def copy(self):
         '''
