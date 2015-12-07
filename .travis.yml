@@ -200,7 +200,7 @@ addons:
       - mysql-server
 
 before_script:
-  - sudo echo "lower_case_table_names = 1" >> /etc/mysql/my.cnf
+  - echo "lower_case_table_names = 1" | sudo tee -a /etc/mysql/my.cnf
   - mysql -uroot < config/create.sql
 
 script:
