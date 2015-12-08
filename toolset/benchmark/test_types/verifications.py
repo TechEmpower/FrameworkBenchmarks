@@ -60,7 +60,13 @@ def verify_headers(headers, url, should_be='json'):
 
     content_type = headers.get('Content-Type', None)
 
-    if content_type.lower() == includes_charset:
+    if content_type is None:
+        problems.append(
+            ('warn',
+             'No content encoding found, expected \"%s\"' % (
+                 expected_type),
+             url))
+    elif content_type.lower() == includes_charset:
         problems.append(
             ('warn',
              ("Content encoding found \"%s\" where \"%s\" is acceptable.\n"
