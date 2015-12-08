@@ -185,6 +185,7 @@ before_install:
   - pip install requests
   - echo "127.0.0.1 " `hostname` | sudo tee /etc/hosts
   - echo "127.0.0.1 localhost" | sudo tee /etc/hosts
+  - sudo service cassandra start
 
 services:
   - postgresql
