@@ -16,6 +16,7 @@ import csv
 import shlex
 import math
 from collections import OrderedDict
+from requests import ConnectionError
 from threading import Thread
 from threading import Event
 
@@ -387,6 +388,9 @@ class FrameworkTest:
       
       try:
         results = test.verify(base_url)
+      except ConnectionError as e:
+        results = [('fail',"Server did not respond to request")]
+        logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
       except Exception as e:
         results = [('fail',"""Caused Exception in TFB
           This almost certainly means your return value is incorrect, 
