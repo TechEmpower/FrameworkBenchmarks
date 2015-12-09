@@ -38,16 +38,13 @@ class CIRunnner:
   
   def __init__(self, mode, testdir=None):
     '''
-    mode = [cisetup|verify] for what we want to do
+    mode = [verify] for what we want to do
     testdir  = framework directory we are running
     '''
 
     self.directory = testdir
     self.mode = mode
-    if mode == "cisetup":
-      logging.basicConfig(level=logging.DEBUG)
-    else:
-      logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO)
 
     try:
       # NOTE: THIS IS VERY TRICKY TO GET RIGHT!
@@ -298,9 +295,18 @@ class CIRunnner:
       log.info("I found no changes to `%s` or `toolset/`, aborting verification", self.directory)
       return 0
 
-    if self.mode == 'cisetup':
-      self.run_travis_setup()
-      return 0
+    # Do full setup now that we've verified that there's work to do
+    try:
+      p = subprocess.Popen("config/travis_setup.sh", shell=True)
+      p.wait()
+    except subprocess.CalledProcessError:
+      log.critical("Subprocess Error")
+      print trackback.format_exc()
+      return 1
+    except Exception as err:
+      log.critical("Exception from running and waiting on subprocess to set up Travis environment")
+      log.error(err.child_traceback)
+      return 1
 
     names = ' '.join(self.names)
     # Assume mode is verify
@@ -321,161 +327,10 @@ class CIRunnner:
       log.error(err.child_traceback)
       return 1
 
-  def run_travis_setup(self):
-    log.info("Setting up Travis-CI")
-    
-    script = '''
-    export DEBIAN_FRONTEND=noninteractive
-
-    # Turn on command tracing
-    set -x 
-
-    # Setup Apt For MongoDB
-    #   Due to TechEmpower/FrameworkBenchmarks#989 and travis-ci/travis-ci#2655, 
-    #   we put this into a loop
-    until timeout 15s sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10; do echo 'Waiting for apt-key' ; done
-    echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
-
-    # Setup apt for Apache Cassandra
-    until timeout 15s sudo apt-key adv --keyserver pgp.mit.edu --recv 4BD736A82B5C1B00; do echo 'Waiting for apt-key' ; done
-    sudo apt-add-repository  'deb http://www.apache.org/dist/cassandra/debian 20x main'
-
-    # Run installation 
-    # DO NOT COPY --force-yes TO ANY NON-TRAVIS-CI SCRIPTS! Seriously, it can cause some 
-    # major damage and should only be used inside a VM or Linux Container
-    sudo apt-get -q update
-    sudo apt-get -q -y --force-yes install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-      mongodb-org \
-      cassandra \
-      openssh-server
-
-    # Run as travis user (who already has passwordless sudo)
-    ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa
-    cat /home/travis/.ssh/id_rsa.pub > /home/travis/.ssh/authorized_keys
-    chmod 600 /home/travis/.ssh/authorized_keys
-
-    # Set up the benchmark.cfg for travis user
-    # NOTE: Please don't just copy the example config - it causes unexpected
-    #       issues when those example variables change
-    echo "[Defaults]"                                       > benchmark.cfg
-    echo "client_identity_file=/home/travis/.ssh/id_rsa"   >> benchmark.cfg
-    echo "database_identity_file=/home/travis/.ssh/id_rsa" >> benchmark.cfg
-    echo "client_host=127.0.0.1"                           >> benchmark.cfg
-    echo "database_host=127.0.0.1"                         >> benchmark.cfg
-    echo "server_host=127.0.0.1"                           >> benchmark.cfg
-    echo "client_user=travis"                              >> benchmark.cfg
-    echo "database_user=travis"                            >> benchmark.cfg
-    echo "runner_user=testrunner"                          >> benchmark.cfg
-
-    # Create the new testrunner user
-    sudo useradd testrunner
-    # Give him a home dir
-    sudo mkdir /home/testrunner
-    # Make testrunner the owner of his home dir
-    sudo chown testrunner:testrunner /home/testrunner
-    # Add the testrunner user to every group that the travis user is in
-    sudo sed -i 's|:travis|:travis,testrunner|g' /etc/group
-    # Add the testrunner user to the travis group specifically
-    sudo sed -i 's|travis:x:\(.*\):|travis:x:\\1:testrunner|g' /etc/group
-    # Maybe unneeded - add the travis user to the testrunner group
-    sudo sed -i 's|testrunner:x:\(.*\):|testrunner:x:\\1:travis|g' /etc/group
-    # Need to add testrunner to the sudoers group AND default him to a sudoers
-    # because the travis user isn't in the sudo group - he's a sudoer.
-    echo "testrunner ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
-    # Set the default shell for testrunner to /bin/bash
-    sudo sed -i 's|/home/testrunner:/bin/sh|/home/testrunner:/bin/bash|g' /etc/passwd
-
-    # =============Setup Databases===========================
-    # NOTE: Do not run `--install database` in travis-ci! 
-    #       It changes DB configuration files and will break everything
-    # =======================================================
-
-    # Setup MySQL
-    echo "Populating MySQL database"
-    mysql -uroot < config/create.sql
-
-    # Setup Postgres
-    echo "Removing Postgres 9.1 from Travis-CI"
-    sudo apt-get remove -qy postgresql postgresql-9.1 postgresql-client-9.1
-    sudo apt-get install -qy postgresql-9.3 postgresql-client-9.3
-
-    echo "Populating Postgres database"
-    psql --version
-    sudo useradd benchmarkdbuser -p benchmarkdbpass
-    sudo -u postgres psql template1 < config/create-postgres-database.sql
-    sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
-
-    # Setup Apache Cassandra
-    echo "Populating Apache Cassandra database"
-    for i in {1..15}; do
-      nc -z localhost 9160 && break || sleep 1;
-      echo "Waiting for Cassandra ($i/15}"
-    done
-    nc -z localhost 9160
-    if [ $? -eq 0 ]; then
-      cat config/cassandra/cleanup-keyspace.cql | sudo cqlsh
-      python config/cassandra/db-data-gen.py > config/cassandra/tfb-data.cql
-      sudo cqlsh -f config/cassandra/create-keyspace.cql
-      sudo cqlsh -f config/cassandra/tfb-data.cql
-    else
-      >&2 echo "Cassandra did not start, skipping"
-    fi
-
-    # Setup Elasticsearch
-    curl -O https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.5.0.deb
-    sudo dpkg -i --force-confnew elasticsearch-1.5.0.deb
-    sudo update-rc.d elasticsearch defaults 95 10
-    sudo service elasticsearch restart
-
-    echo "Populating Elasticsearch database"
-    for i in {1..15}; do
-      nc -z localhost 9200 && break || sleep 1;
-      echo "Waiting for Elasticsearch ($i/15}"
-    done
-    nc -z localhost 9200
-    if [ $? -eq 0 ]; then
-      curl localhost:9200
-      sh config/elasticsearch/es-create-index.sh
-      python config/elasticsearch/es-db-data-gen.py > config/elasticsearch/tfb-data.json
-      curl -sS -D - -o /dev/null -XPOST localhost:9200/tfb/world/_bulk --data-binary @config/elasticsearch/tfb-data.json
-      echo "Elasticsearch DB populated"
-    else
-      >&2 echo "Elasticsearch did not start, skipping"
-    fi
-
-    # Setup MongoDB
-    echo "Populating MongoDB database"
-    for i in {1..15}; do
-      nc -z localhost 27017 && break || sleep 1;
-      echo "Waiting for MongoDB ($i/15}"
-    done
-    nc -z localhost 27017
-    if [ $? -eq 0 ]; then
-      mongo < config/create.js
-      mongod --version
-    else
-      >&2 echo "MongoDB did not start, skipping"
-    fi
-    
-    # =============Modify Configurations===========================
-    # It can be useful to enable debug features for verification 
-    # inside Travis-CI
-    # =======================================================
-
-    sed -i 's|display_errors\] = off|display_errors\] = on|' config/php-fpm.conf
-    
-    exit $?
-    '''
-
-    p = subprocess.Popen(["bash"], stdin=subprocess.PIPE)
-    p.communicate(script)
-    if p.wait() != 0:
-      log.critical("Non-zero exit  from running+wait on subprocess")
-
 if __name__ == "__main__":
   args = sys.argv[1:]
 
-  usage = '''Usage: toolset/run-ci.py [cisetup|verify] <framework-directory>
+  usage = '''Usage: toolset/run-ci.py [verify] <framework-directory>
     
     run-ci.py selects one test from <framework-directory>/benchark_config, and 
     automates a number of calls into run-tests.py specific to the selected test. 
@@ -484,7 +339,6 @@ if __name__ == "__main__":
     multiple runs with the same <framework-directory> reference the same test. 
     The name of the selected test will be printed to standard output. 
 
-    cisetup - configure the Travis-CI environment for our test suite
     verify  - run a verification on the selected test using `--mode verify`
 
     run-ci.py expects to be run inside the Travis-CI build environment, and 
@@ -496,8 +350,7 @@ if __name__ == "__main__":
 
   mode = args[0]
   testdir = args[1]
-  if len(args) == 2 and (mode == 'verify'
-    or mode == 'cisetup'):
+  if len(args) == 2 and (mode == 'verify'):
     runner = CIRunnner(mode, testdir)
   else:
     print usage
@@ -516,5 +369,6 @@ if __name__ == "__main__":
     retcode = 1
   finally:
     sys.exit(retcode)
+
 
 # vim: set sw=2 ts=2 expandtab

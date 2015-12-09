@@ -31,7 +31,7 @@ class JsonTestType(FrameworkTestType):
         url = base_url + self.json_url
         headers, body = self.request_headers_and_body(url)
 
-        response, problems = basic_body_verification(body)
+        response, problems = basic_body_verification(body, url)
 
         if len(problems) > 0:
             return problems
