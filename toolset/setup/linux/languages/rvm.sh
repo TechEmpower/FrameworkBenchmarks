@@ -11,7 +11,7 @@ RETCODE=$(fw_exists rvm.installed)
 # just rely on their default RVM installaton
 if [ "$TRAVIS" = "true" ]
 then
-  echo "source /home/travis/.rvm/scripts/rvm" > $IROOT/rvm.installed
+  #echo "source /home/travis/.rvm/scripts/rvm" > $IROOT/rvm.installed
 else
   # Run single-user installation and source rvm
   export SHELL=/bin/bash
