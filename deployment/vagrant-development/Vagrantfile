@@ -9,10 +9,6 @@ check_provider_needs(provider)
 
 Vagrant.configure("2") do |config|
 
-  config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
-
-  #config.vm.synced_folder "/Users/qetscontractor/.m2/", "/home/vagrant/.m2/",create:false
-
   config.vm.provision :file do |file|
       file.source = "../vagrant-common/custom_motd.sh"
       file.destination = "~/.custom_motd.sh"
@@ -29,3 +25,4 @@ Vagrant.configure("2") do |config|
   provider_aws(config, 'integrated')
   
 end
+
