@@ -7,6 +7,7 @@ var MySQLRawHandler = require('./handlers/mysql-raw');
 var MongooseHandler = require('./handlers/mongoose');
 var SequelizeHandler = require('./handlers/sequelize');
 var HiredisHandler = require('./handlers/redis');
+var SequelizePgHandler = require('./handlers/sequelize-postgres');
 
 var h = require('./helper');
 
@@ -30,7 +31,10 @@ module.exports.BasicHandler = (function() {
     '/mysql/fortunes':     MySQLRawHandler.Fortunes,
 
     '/hiredis/db':         HiredisHandler.SingleQuery,
-    '/hiredis/fortunes':   HiredisHandler.Fortunes
+    '/hiredis/fortunes':   HiredisHandler.Fortunes,
+
+    '/sequelize-pg/db':       SequelizePgHandler.SingleQuery,
+    '/sequelize-pg/fortunes': SequelizePgHandler.Fortunes
   }
 
   self.has = function(path) {
@@ -61,7 +65,10 @@ module.exports.QueryHandler = (function () {
     '/mysql/updates':     MySQLRawHandler.Updates,
 
     '/hiredis/queries':   HiredisHandler.MultipleQueries,
-    '/hiredis/updates':   HiredisHandler.Updates
+    '/hiredis/updates':   HiredisHandler.Updates,
+
+    '/sequelize-pg/queries': SequelizePgHandler.MultipleQueries,
+    '/sequelize-pg/updates': SequelizePgHandler.Updates
   }
 
   self.has = function(path) {
