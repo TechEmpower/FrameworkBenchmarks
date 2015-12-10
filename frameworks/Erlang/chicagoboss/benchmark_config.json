@@ -1,0 +1,23 @@
+{
+  "framework": "chicagoboss",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "chicagoboss",
+      "language": "Erlang",
+      "orm": "raw",
+      "platform": "cowboy",
+      "webserver": "cowboy",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ChicagoBoss",
+      "notes": "",
+      "versus": ""
+  }}]
+}

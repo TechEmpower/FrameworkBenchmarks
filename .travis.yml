@@ -6,14 +6,14 @@ python:
 
 env:
   matrix:
-    # Group tests by directory to logically break up travis-CI build. Otherwise
-    # we end up starting ~200+ different workers. Seems that ~100 is the limit
-    # before their website starts to lag heavily
+    #Group tests by directory to logically break up travis-CI build. Otherwise
+    #we end up starting ~200+ different workers. Seems that ~100 is the limit
+    #before their website starts to lag heavily
     #
-    # Here's the bash if you need to update this. Be sure to maintain the
-    # lines that are currently commented out (these cannot run in Travis)
-    #   cd frameworks
-    #   find . -type d -depth 2 | sed 's|./|    - "TESTDIR=|' | sed 's/$/"/g'
+    #Here's the bash if you need to update this. Be sure to maintain the
+    #lines that are currently commented out (these cannot run in Travis)
+    #  cd frameworks
+    #  find . -type d -depth 2 | sed 's|./|    - "TESTDIR=|' | sed 's/$/"/g'
     #
     #
     - "TESTDIR=C/lwan"
@@ -45,6 +45,7 @@ env:
     - "TESTDIR=Dart/stream"
     - "TESTDIR=Elixir/phoenix"
     - "TESTDIR=Elixir/cowboy"
+    - "TESTDIR=Erlang/chicagoboss"
     - "TESTDIR=Erlang/cowboy"
     - "TESTDIR=Erlang/elli"
     - "TESTDIR=Go/beego"
@@ -158,6 +159,7 @@ env:
     - "TESTDIR=Ruby/rails"
     - "TESTDIR=Ruby/rails-stripped"
     - "TESTDIR=Ruby/sinatra"
+    - "TESTDIR=Ruby/sinatra-sequel"
     - "TESTDIR=Rust/iron"
     - "TESTDIR=Rust/nickel"
     - "TESTDIR=Rust/hyper"
@@ -182,14 +184,21 @@ before_install:
   # but it requires —-allow-external and -—allow-unverified
   - pip install progressbar==2.2
   - pip install requests
+  - echo "127.0.0.1 " `hostname` | sudo tee /etc/hosts
+  - echo "127.0.0.1 localhost" | sudo tee /etc/hosts
 
-install:
-  # Configure Travis-CI build environment for TFB
-  #   e.g. setup databases, users, etc
-  - ./toolset/run-ci.py cisetup "$TESTDIR"
+services:
+  - postgresql
 
 addons:
   postgresql: "9.3"
+  apt:
+    packages:
+      - mysql-server
+
+before_script:
+  - sudo ./config/travis_mysql_setup.sh
+  - mysql -uroot < config/create.sql
 
 script:
   # Pick one test in this directory and verify

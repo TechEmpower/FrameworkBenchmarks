@@ -1,5 +1,5 @@
 <!--#
-Test type 3: Multiple database queries
+Test type 5: Database updates
 TechEmpower Web Framework Benchmarks
 -->
 <!--#declaration
@@ -12,15 +12,15 @@ static UVector<World*>* pvworld;
 static UValue* pvalue;
 #endif
 
-static void usp_fork_rquery()
+static void usp_fork_rupdate()
 {
-   U_TRACE(5, "::usp_fork_rquery()")
+   U_TRACE(5, "::usp_fork_rupdate()")
 
    rc = U_NEW(UREDISClient<UTCPSocket>);
 
    if (rc->connect() == false)
       {
-      U_WARNING("usp_fork_rquery(): %V", rc->UClient_Base::getResponse().rep);
+      U_WARNING("usp_fork_rupdate(): %V", rc->UClient_Base::getResponse().rep);
 
       return;
       }
@@ -33,9 +33,9 @@ static void usp_fork_rquery()
 }
 
 #ifdef DEBUG
-static void usp_end_rquery()
+static void usp_end_rupdate()
 {
-   U_TRACE(5, "::usp_end_rquery()")
+   U_TRACE(5, "::usp_end_rupdate()")
 
    delete rc;
 
@@ -54,11 +54,10 @@ static void usp_end_rquery()
 queries;
 -->
 <!--#header
-Content-Type: application/json; charset=UTF-8
+Content-Type: application/json
 -->
 <!--#code
 World* pworld;
-UStringRep* rep;
 int i, num_queries;
 char* pbuffer = u_buffer;
 const char* ptr = queries.data();
@@ -88,17 +87,20 @@ for (i = 0; i < num_queries; ++i)
 (void) rc->mget(u_buffer, pbuffer-u_buffer);
 
 i = 0;
+pbuffer = u_buffer;
 
 while (true)
    {
    pworld = pvworld->at(i);
 
-   rep = rc->vitem[i].rep;
+   u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
 
-   pworld->randomNumber = u_strtoul(rep->data(), rep->end());
+   pbuffer += 7+u_num2str32(pbuffer+7, pworld->id);
+  *pbuffer  = ' ';
+   pbuffer += 1+u_num2str32(pbuffer+1, pworld->randomNumber = u_get_num_random(10000));
 
 #ifdef AS_cpoll_cppsp_DO
-   USP_PRINTF("{\"id\":%u,\"randomNumber\":%v}", pworld->id, rep);
+   USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld->id, pworld->randomNumber);
 #endif
 
    if (++i == num_queries) break;
@@ -107,6 +109,8 @@ while (true)
    USP_PUTS_CHAR(',');
 #endif
    }
+
+(void) rc->mset(u_buffer, pbuffer-u_buffer);
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR(']');

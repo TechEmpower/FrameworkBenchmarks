@@ -86,18 +86,13 @@ class FrameworkTestType:
         headers = {'Accept': self.accept_header}
         r = requests.get(url, timeout=15, headers=headers)
 
-        try:
-            r.raise_for_status()  # Throws on non-200
-            headers = r.headers
-            body = r.content
-            self.out.write(str(headers))
-            self.out.write(body)
-            b = 40
-            print "  Response (trimmed to %d bytes): \"%s\"" % (b, body.strip()[:b])
-            return headers, body
-        except requests.HTTPError as err:
-            self.err.write(err + '\n')
-            return None, None
+        headers = r.headers
+        body = r.content
+        self.out.write(str(headers))
+        self.out.write(body)
+        b = 40
+        print "  Response (trimmed to %d bytes): \"%s\"" % (b, body.strip()[:b])
+        return headers, body
 
     def verify(self, base_url):
         '''
@@ -124,7 +119,7 @@ class FrameworkTestType:
         '''Returns the URL for this test, like '/json'''
         # This is a method because each test type uses a different key
         # for their URL so the base class can't know which arg is the URL
-        raise NotImplementedError("Subclasses must provide verify")
+        raise NotImplementedError("Subclasses must provide get_url")
 
     def copy(self):
         '''

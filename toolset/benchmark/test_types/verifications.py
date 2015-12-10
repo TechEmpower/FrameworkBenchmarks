@@ -1,7 +1,7 @@
 import json
 
 
-def basic_body_verification(body, is_json_check=True):
+def basic_body_verification(body, url, is_json_check=True):
     '''
     Takes in a raw (stringy) response body, checks that it is non-empty,
     and that it is valid JSON (i.e. can be deserialized into a dict/list of dicts)
@@ -48,30 +48,37 @@ def verify_headers(headers, url, should_be='json'):
 
     problems = []
 
-    if any(v.lower() not in headers for v in ('Server', 'Date', 'Content-Type')):
+    for v in (v for v in ('Server', 'Date', 'Content-Type') if v.lower() not in headers):
         problems.append(
             ('warn', 'Required response header missing: %s' % v, url))
-    elif all(v.lower() not in headers for v in ('Content-Length', 'Transfer-Encoding')):
+
+    if all(v.lower() not in headers for v in ('Content-Length', 'Transfer-Encoding')):
         problems.append(
             ('warn',
              'Required response size header missing, please include either "Content-Length" or "Transfer-Encoding"',
              url))
-    else:
-        content_type = headers.get('Content-Type', None)
 
-        if content_type.lower() == includes_charset:
-            problems.append(
-                ('warn',
-                 ("Content encoding found \"%s\" where \"%s\" is acceptable.\n"
-                  "Additional response bytes may negatively affect benchmark performance."
-                  % (includes_charset, expected_type)),
-                 url))
-        elif content_type != expected_type:
-            problems.append(
-                ('warn',
-                 'Unexpected content encoding, found \"%s\", expected \"%s\"' % (
-                     content_type, expected_type),
-                 url))
+    content_type = headers.get('Content-Type', None)
+
+    if content_type is None:
+        problems.append(
+            ('warn',
+             'No content encoding found, expected \"%s\"' % (
+                 expected_type),
+             url))
+    elif content_type.lower() == includes_charset:
+        problems.append(
+            ('warn',
+             ("Content encoding found \"%s\" where \"%s\" is acceptable.\n"
+              "Additional response bytes may negatively affect benchmark performance."
+              % (includes_charset, expected_type)),
+             url))
+    elif content_type != expected_type:
+        problems.append(
+            ('warn',
+             'Unexpected content encoding, found \"%s\", expected \"%s\"' % (
+                 content_type, expected_type),
+             url))
     return problems
 
 
@@ -125,12 +132,12 @@ def verify_randomnumber_object(db_object, url, max_infraction='fail'):
     db_object = {k.lower(): v for k, v in db_object.iteritems()}
     required_keys = set(['id', 'randomnumber'])
 
-    if any(v not in db_object for v in required_keys):
+    for v in (v for v in required_keys if v not in db_object):
         problems.append(
             (max_infraction, 'Response object was missing required key: %s' % v, url))
 
     if len(db_object) > len(required_keys):
-        extras = db_object.keys() - required_keys
+        extras = set(db_object.keys()) - required_keys
         problems.append(
             ('warn',
              'An extra key(s) is being included with the db object: %s' % ', '.join(
@@ -177,7 +184,7 @@ def verify_randomnumber_list(expected_len, headers, body, url, max_infraction='f
     [{ "id": 2354, "randomNumber": 8952 }, { "id": 4421, "randomNumber": 32 }, ... ]
     '''
     
-    response, problems = basic_body_verification(body)
+    response, problems = basic_body_verification(body, url)
 
     if len(problems) > 0:
         return problems

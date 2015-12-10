@@ -55,7 +55,7 @@ static void usp_end_db()
 #endif
 -->
 <!--#header
-Content-Type: application/json; charset=UTF-8
+Content-Type: application/json
 -->
 <!--#code
 pworld_db->id = u_get_num_random(10000);

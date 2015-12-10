@@ -13,7 +13,7 @@ echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | su
 sudo apt-get install -y oracle-java8-installer
 
 # set Java 7 (OpenJDK) as the default, as before.
-J7_HOME=/usr/lib/jvm/java-7-openjdk-`dpkg --print-architecture`
+J7_HOME=/usr/lib/jvm/java-7-oracle
 sudo update-alternatives --set java $J7_HOME/jre/bin/java
 sudo update-alternatives --set javac $J7_HOME/bin/javac
 
