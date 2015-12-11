@@ -94,6 +94,7 @@ env:
     - "TESTDIR=Java/undertow-edge"
     - "TESTDIR=Java/vertx"
     - "TESTDIR=Java/wicket"
+    - "TESTDIR=Java/beyondj"
     - "TESTDIR=Java/wildfly-ee7"
     - "TESTDIR=JavaScript/express"
     - "TESTDIR=JavaScript/hapi"
