@@ -50,6 +50,7 @@ env:
     - "TESTDIR=Erlang/elli"
     - "TESTDIR=Go/beego"
     - "TESTDIR=Go/falcore"
+    - "TESTDIR=Go/fasthttp"
     - "TESTDIR=Go/gin"
     - "TESTDIR=Go/go-raw"
     - "TESTDIR=Go/goji"
