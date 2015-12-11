@@ -47,8 +47,12 @@ final class MongoDbRepository implements Repository {
         List<Fortune> fortunes = new ArrayList<> ();
 
         fortuneCollection.find ().forEach ((Block<Document>)doc ->
-            fortunes.add (new Fortune (doc.get ("_id", Double.class).intValue (), (String)doc.get
-                ("message")))
+            fortunes.add (
+                new Fortune (
+                    doc.get ("_id", Number.class).intValue (),
+                    (String)doc.get ("message")
+                )
+            )
         );
 
         return fortunes;
@@ -67,24 +71,19 @@ final class MongoDbRepository implements Repository {
     }
 
     private World findWorld (int id) {
-        return createWorld (worldCollection.find(eq ("_id", (double)id)).first ());
+        return createWorld (worldCollection.find(eq ("_id", id)).first ());
     }
 
     private World createWorld (Document world) {
-        try {
-            return new World (world.get ("_id", Double.class).intValue (), world.get
-                ("randomNumber", Double.class).intValue ());
-        }
-        catch (ClassCastException e) {
-            return new World (world.get ("_id", Double.class).intValue (), world.get
-                ("randomNumber", Integer.class));
-        }
+        return new World (
+            world.get ("_id", Number.class).intValue (),
+            world.get ("randomNumber", Number.class).intValue ()
+        );
     }
 
     public World updateWorld (int id, int random) {
-        Document newWorld = new Document ("_id", (double)id).append ("randomNumber", (double)
-            random);
-        worldCollection.replaceOne (eq ("_id", (double)id), newWorld);
+        Document newWorld = new Document ("_id", id).append ("randomNumber", random);
+        worldCollection.replaceOne (eq ("_id", id), newWorld);
 
         return new World (id, random);
     }
