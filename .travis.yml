@@ -8,7 +8,7 @@ env:
 
     # Group tests by directory to logically break up travis-CI build. Otherwise
     # we end up starting ~200+ different workers. Seems that ~100 is the limit
-    # before their website starts to lag heavily
+    # before their website starts to lag heavily 
     #
     # Here's the bash if you need to update this. Be sure to maintain the
     # lines that are currently commented out (these cannot run in Travis)
