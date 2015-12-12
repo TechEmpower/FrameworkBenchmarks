@@ -8,6 +8,6 @@ sed -i 's|127.0.0.1|'"${DBHOST}"'|g' source/app.d
 rm -f fwb
 rm -rf .dub
 
-dub build --force
+dub build --build=release --force
 
 ./fwb &
