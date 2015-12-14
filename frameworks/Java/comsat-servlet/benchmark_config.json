@@ -1,0 +1,64 @@
+{
+  "framework": "comsat-servlet",
+  "tests": [
+    {
+      "default": {
+        "setup_file": "setup",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "comsat-servlet",
+        "language": "Java",
+        "orm": "Raw",
+        "platform": "Comsat Servlet",
+        "webserver": "Undertow",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "comsat-servlet-undertow",
+        "notes": "Comsat servlet on embedded Undertow",
+        "versus": ""
+      },
+      "jetty": {
+        "setup_file": "setup-jetty",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "comsat-servlet",
+        "language": "Java",
+        "orm": "Raw",
+        "platform": "Comsat Servlet",
+        "webserver": "Jetty",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "comsat-servlet-jetty",
+        "notes": "Comsat servlet on embedded Jetty",
+        "versus": ""
+      },
+      "tomcat": {
+        "setup_file": "setup-tomcat",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "comsat-servlet",
+        "language": "Java",
+        "orm": "Raw",
+        "platform": "Comsat Servlet",
+        "webserver": "Tomcat",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "comsat-servlet-jetty",
+        "notes": "Comsat servlet on embedded Tomcat",
+        "versus": ""
+      }
+    }
+  ]
+}
