@@ -13,7 +13,9 @@ if [ "$TRAVIS" = "true" ]
 then
   #echo "source /home/travis/.rvm/scripts/rvm" > $IROOT/rvm.installed
   echo "" > $IROOT/rvm.installed
-  cat /home/travis/.bashrc
+  ls -l /home/travis
+  ls -l /home/travis/.rvm
+  ls -l /home/travis/.rvm/scripts
 else
   export SHELL=/bin/bash
   gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
