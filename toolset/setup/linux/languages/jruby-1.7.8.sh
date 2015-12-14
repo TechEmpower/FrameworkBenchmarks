@@ -9,19 +9,9 @@ RETCODE=$(fw_exists ${IROOT}/jruby-${JRUBY_VERSION}.installed)
   source $IROOT/jruby-$JRUBY_VERSION.installed
   return 0; }
 
-# We assume single-user installation as 
-# done in our rvm.sh script and 
-# in Travis-CI
-if [ "$TRAVIS" = "true" ]
-then
-  rvmsudo rvm install jruby-$JRUBY_VERSION
-  # Bundler is SOMETIMES missing... not sure why.
-  rvmsudo rvm jruby-$JRUBY_VERSION do gem install bundler
-else
-  rvm install jruby-$JRUBY_VERSION
-  # Bundler is SOMETIMES missing... not sure why.
-  rvm jruby-$JRUBY_VERSION do gem install bundler
-fi
+rvm install jruby-$JRUBY_VERSION
+# Bundler is SOMETIMES missing... not sure why.
+rvm jruby-$JRUBY_VERSION do gem install bundler
 
 echo "" > $IROOT/jruby-$JRUBY_VERSION.installed
 

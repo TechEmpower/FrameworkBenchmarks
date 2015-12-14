@@ -12,19 +12,9 @@ RETCODE=$(fw_exists ${IROOT}/ruby-${MRI_VERSION}.installed)
   source $IROOT/ruby-$MRI_VERSION.installed
   return 0; }
 
-# We assume single-user installation as
-# done in our rvm.sh script and
-# in Travis-CI
-if [ "$TRAVIS" = "true" ]
-then
-  rvmsudo rvm install $MRI_VERSION
-  # Bundler is SOMETIMES missing... not sure why.
-  rvmsudo rvm $MRI_VERSION do gem install bundler
-else
-  rvm install $MRI_VERSION
-  # Bundler is SOMETIMES missing... not sure why.
-  rvm $MRI_VERSION do gem install bundler
-fi
+rvm install $MRI_VERSION
+# Bundler is SOMETIMES missing... not sure why.
+rvm $MRI_VERSION do gem install bundler
 
 echo "" > $IROOT/ruby-$MRI_VERSION.installed
 
