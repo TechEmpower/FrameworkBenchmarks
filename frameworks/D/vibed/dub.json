@@ -2,9 +2,16 @@
   "name": "fwb",
   "description": "A simple vibe.d server application.",
   "copyright": "Copyright © 2015, jin",
-  "authors": ["jin"],
-  "dependencies": {
-    "vibe-d": "~>0.7.19"
-  },
-  "versions": ["VibeDefaultMain"]
+  "authors": ["jin", "Sönke Ludwig"],
+  "dependencies": { "vibe-d": "~>0.7.26" },
+  "versions": ["VibeDefaultMain"],
+  "targetType": "executable",
+  "sourcePaths": [],
+  
+  "configurations": [
+  	{
+  		"name": "mongodb",
+  		"mainSourceFile": "source/mongodb.d"
+  	}
+  ]
 }

@@ -8,8 +8,8 @@ RETCODE=$(fw_exists ${IROOT}/dlang.installed)
 DLANG=$IROOT/dlang
 
 mkdir -p $DLANG
-fw_get -O http://downloads.dlang.org/releases/2.x/2.067.1/dmd_2.067.1-0_amd64.deb
-dpkg-deb -x dmd_2.067.1-0_amd64.deb $DLANG
+fw_get -O http://downloads.dlang.org/releases/2.x/2.069.2/dmd_2.069.2-0_amd64.deb
+dpkg-deb -x dmd_2.069.2-0_amd64.deb $DLANG
 
 # According to this file (dmd.conf) dmd will, upon execution, look for
 # a dmd.conf in 1) the current working directory [bad], 2) the directory
