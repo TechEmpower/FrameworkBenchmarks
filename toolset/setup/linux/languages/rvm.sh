@@ -9,7 +9,7 @@ RETCODE=$(fw_exists rvm.installed)
 
 export SHELL=/bin/bash
 gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
-\curl -sSL https://get.rvm.io | bash -s stable
+\curl -sSL https://get.rvm.io | sudo bash -s stable
 echo "source ~/.rvm/scripts/rvm" > $IROOT/rvm.installed
 
 source $IROOT/rvm.installed
