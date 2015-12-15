@@ -1,0 +1,36 @@
+<class name="NewTest" access="public">
+	<includes names="string" />
+	<using ns="std" />
+	<constructor access="public" />
+	<constructor access="public" args="int a,string b" />
+	<property type="int" name="a" access="private" initVal="1"
+		autogenG="true" />
+	<property type="string" name="b" access="private" autogenSG="true" />
+	<property type="float" name="c" optional="static" access="public"
+		initVal="1.1" />
+	<member name="setA" return="void" args="int a" access="public">
+		<assign name="this:a">
+			<var name="a" />
+		</assign>
+	</member>
+	<member name="getstr" return="string" args="int e" access="public">
+		<return>Hi!!!</return>
+	</member>
+	<member name="service" return="string" args="int a,string message"
+		access="public">
+		<new type="string" name="ret">Sumeet\n\n\t\s</new>
+		<new type="string" name="ret2" />
+		<assign name="ret2">How are you???</assign>
+		<assignAdd rhs="ret2" lhs="ret" name="ret" />
+		<assignAdd name="ret">
+			<value>
+				<call name="getstr">
+					<arg>2</arg>
+				</call>
+			</value>
+			<var name="ret" />
+			<value>\nWhere have you been these days?</value>
+		</assignAdd>
+		<return name="ret" />
+	</member>
+</class>

@@ -1,0 +1,19 @@
+<caches>
+	<cache>
+		<nodes>
+			<node>
+				<username>sumeet</username>
+				<password>sumeet</password>
+				<dsn>MySQL-test</dsn>
+			</node>
+		</nodes>
+		<name>Memory-Cached</name>
+		<type>memory</type>
+	</cache>
+	<!-- cache> <nodes> <node> <username>sumeet</username> <password>sumeet</password> 
+		<host>localhost</host> <port>11211</port> </node> </nodes> <name>Memcached-Cached</name> 
+		<type>memcached</type> </cache -->
+	<!-- cache> <nodes> <node> <username>sumeet</username> <password>sumeet</password> 
+		<host>localhost</host> <port>6379</port> </node> </nodes> <name>Redis-Cached</name> 
+		<type>redis</type> </cache -->
+</caches>

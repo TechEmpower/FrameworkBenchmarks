@@ -1,0 +1,179 @@
+<app alias="default">
+	<cors-config>
+		<allow-origins>*</allow-origins>
+		<allow-methods>GET, POST, HEAD, PUT, DELETE</allow-methods>
+		<allow-headers>content-type, origin</allow-headers>
+		<expose-headers>content-type, origin</expose-headers>
+		<allow-credentials>true</allow-credentials>
+		<max-age>1023</max-age>
+	</cors-config>
+	<cache-control>
+		<control ext="png,css,js,jpeg,jpg,gif" header="Cache-Control"
+			value="max-age=290304000, public" />
+		<control ext="txt,xml,json" header="Cache-Control"
+			value="max-age=172800, public, must-revalidate" />
+		<control ext="html,html" header="Cache-Control"
+			value="max-age=7200, must-revalidate" />
+		<control file="video.mov" header="Expires"
+			value="Thu, 15 Apr 2020 20:00:00 GMT" />
+		<control header="Last-Modified" remove="true" />
+	</cache-control>
+	<controllers>
+		<controller class="DefaultController" path="*.action" />
+		<controller class="DefaultController" path="*.do" />
+		<controller class="DefaultOAUTHController" path="*.oauth" />
+		<controller from="/some/path" to="/somenew/path" />
+		<controller fromext="yourext" toext="html" />
+	</controllers>
+	<web-socket-handlers>
+		<web-socket-handler class="DefaultWebSocketHandler"
+			path="/websocket" />
+	</web-socket-handlers>
+	<templates>
+		<template class="DefTemp" file="test.tpe" path="test.tpe"/>
+	</templates>
+	<dynamic-cpp-pages>
+		<dynamic-cpp-page file="test.dcp" path="test.dcp"/>
+	</dynamic-cpp-pages>
+	<dviews>
+		<dview class="Dview" path="test.view" />
+	</dviews>
+	<ajax-interfaces>
+		<ajax-interface path="/expose" class="Expose" />
+	</ajax-interfaces>
+	<filters>
+		<filter class="DefaultIOFilter" type="in" />
+		<filter class="DefaultIOFilter" type="out" />
+		<filter class="DefaultIOFilter" type="handle" path="*.filter" />
+	</filters>
+	<security>
+		<providers>
+			<provider name="defProvider" logoutUrl="/logout">
+				<!-- <username from="reqparam" name="username"/> <password from="reqparam" 
+					name="password"/> -->
+				<login-handler provider="file:users" path="login.html" />
+				<welcome file="index.html" />
+				<!--login-handler provider="class:DefaultLoginHandler"/ -->
+				<!--login-handler provider="db:DefaultLoginHandler"/ -->
+				<secure path="/public/*" role="ROLE_ANONYMOUS" />
+				<secure path="/rest/*" role="ROLE_USER" />
+			</provider>
+		</providers>
+	</security>
+	<restcontrollers>
+		<restcontroller class="DefaultRestController" path="/rest/path/rest1/">
+			<restfunction name="addNumbers" path="add/{1}/{2}" meth="GET"
+				statusCode="200">
+				<param type="int" name="1" from="path" />
+				<param type="int" name="2" from="path" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/rest/reqparam/rest1/">
+			<restfunction name="addNumbers" path="add" meth="GET"
+				statusCode="200">
+				<param type="int" name="1" from="reqparam" />
+				<param type="int" name="2" from="reqparam" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/rest/postparam/rest1/">
+			<restfunction name="addNumbers" path="add" meth="POST"
+				statusCode="200">
+				<param type="int" name="1" from="postparam" />
+				<param type="int" name="2" from="postparam" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/rest/header/rest1/">
+			<restfunction name="addNumbers" path="add" meth="GET"
+				statusCode="200">
+				<param type="int" name="a" from="header" />
+				<param type="int" name="b" from="header" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/rest/path1/rest2">
+			<restfunction name="addNumbers" path="+/{1}/{2}" meth="GET"
+				statusCode="200">
+				<param type="int" name="1" from="path" />
+				<param type="int" name="2" from="path" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/rest3">
+			<restfunction name="addNumbers" path="ad/{1}/{2}" meth="GET"
+				statusCode="200">
+				<param type="int" name="1" from="path" />
+				<param type="int" name="2" from="path" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController">
+			<restfunction name="power" meth="GET"
+				path="/rest/controller/base{1}/power/exp{2}" statusCode="200">
+				<param type="int" name="1" from="path" />
+				<param type="int" name="2" from="path" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController">
+			<restfunction name="addNumbers" meth="GET"
+				path="/addNumbers/{1}/{2}" statusCode="200">
+				<param type="int" name="1" from="path" />
+				<param type="int" name="2" from="path" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/restvec">
+			<restfunction name="testVector" path="tstvec" meth="POST"
+				statusCode="200">
+				<param type="vector-of-int" from="body" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/restvecobj">
+			<restfunction name="testVectorObject" path="tstvecobj"
+				meth="POST" icontentType="application/json" statusCode="200">
+				<param type="vector-of-TestMany" from="body" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/restobj">
+			<restfunction name="testObject" path="tstobj" meth="POST"
+				icontentType="application/json" ocontentType="application/json"
+				statusCode="200">
+				<param type="TestMany" from="body" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/restvecobj">
+			<restfunction name="testVectorObject" path="tstvecobj.xml"
+				meth="POST" icontentType="application/xml" statusCode="200">
+				<param type="vector-of-TestMany" from="body" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/restobj">
+			<restfunction name="testObject" path="tstobj.xml" meth="POST"
+				icontentType="application/xml" statusCode="200">
+				<param type="TestMany" from="body" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/restupload">
+			<restfunction name="testUploadFile" path="uploadFile"
+				meth="POST" icontentType="multipart/form-data" statusCode="200">
+				<param type="filestream" name="file" from="multipart-content" />
+				<param type="string" name="field" from="multipart-content" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/restupload">
+			<restfunction name="testUploadFileMulti1" path="uploadFileMulti1"
+				meth="POST" icontentType="multipart/form-data" statusCode="200">
+				<param type="filestream" name="file1" from="multipart-content" />
+				<param type="filestream" name="file2" from="multipart-content" />
+				<param type="filestream" name="file3" from="multipart-content" />
+				<param type="string" name="field" from="multipart-content" />
+			</restfunction>
+		</restcontroller>
+		<restcontroller class="DefaultRestController" path="/restupload">
+			<restfunction name="testUploadFileMulti2" path="uploadFileMulti2"
+				meth="POST" icontentType="multipart/form-data" statusCode="200">
+				<param type="vector-of-filestream" name="files" from="multipart-content" />
+				<param type="string" name="field" from="multipart-content" />
+			</restfunction>
+		</restcontroller>
+	</restcontrollers>
+	<job-procs>
+		<job-proc cron="* * * * *" name="testCronJob" class="TestCronBasedJob"
+			method="runJob" />
+	</job-procs>
+</app>

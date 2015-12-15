@@ -1,0 +1,8 @@
+CERTFILE=client.pem
+KEYFILE=client.pem
+PASSWORD=password
+DHFILE=dh1024.pem
+CA_LIST=root.pem
+RANDOM=random.pem
+ISDH_PARAMS=true
+CLIENT_SEC_LEVEL=1

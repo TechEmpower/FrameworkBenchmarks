@@ -1,0 +1,9 @@
+ <wsdl:operation name="${METH_NAME}">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="${METH_NAME}">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="${METH_NAME}Response">
+        <soap:body use="literal" />
+      </wsdl:output>
+ </wsdl:operation>

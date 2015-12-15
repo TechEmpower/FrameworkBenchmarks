@@ -1,0 +1,12 @@
+<xsd:element name="${METH_NAME}" type="tns:${METH_NAME}" />
+<xsd:complexType name="${METH_NAME}">
+<xsd:sequence>
+    ${INP_PARAMS}
+</xsd:sequence>
+</xsd:complexType>
+<xsd:element name="${METH_NAME}Response" type="tns:${METH_NAME}Response" />
+<xsd:complexType name="${METH_NAME}Response">
+<xsd:sequence>
+    ${RET_TYPE}
+</xsd:sequence>
+</xsd:complexType>

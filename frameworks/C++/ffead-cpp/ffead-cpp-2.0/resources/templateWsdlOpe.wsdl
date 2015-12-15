@@ -1,0 +1,6 @@
+<wsdl:operation name="${METH_NAME}">
+      <wsdl:input message="tns:${METH_NAME}" name="${METH_NAME}">
+    </wsdl:input>
+      <wsdl:output message="tns:${METH_NAME}Response" name="${METH_NAME}Response">
+    </wsdl:output>
+ </wsdl:operation>
