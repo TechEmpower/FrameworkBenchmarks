@@ -100,28 +100,29 @@ if [ ! -e "~/.firstboot" ]; then
   sudo apt-get update
   sudo apt-get install -y git
   sudo apt-get install -y python-pip
+  sudo pip install progressbar
 
   # Make project available
   # If they synced it to /FwBm, just expose it at ~/FwBm
   # If they didn't sync, we need to clone it
-  if [ -d "/FrameworkBenchmarks" ]; then
-    ln -s /FrameworkBenchmarks $FWROOT
-    echo "Removing your current results folder to avoid interference"
-    rm -rf $FWROOT/installs $FWROOT/results
+  #if [ -d "/FrameworkBenchmarks" ]; then
+    #ln -s /FrameworkBenchmarks $FWROOT
+    #echo "Removing your current results folder to avoid interference"
+    #rm -rf $FWROOT/installs $FWROOT/results
 
     # vboxfs does not support chown or chmod, which we need. 
     # We therefore bind-mount a normal linux directory so we can
     # use these operations. This enables us to 
     # use `chown -R testrunner:testrunner $FWROOT/installs` later
-    echo "Mounting over your installs folder"
-    mkdir -p /tmp/TFB_installs
-    mkdir -p /FrameworkBenchmarks/installs
-    sudo mount -o bind /tmp/TFB_installs $FWROOT/installs
-  else
+    #echo "Mounting over your installs folder"
+    #mkdir -p /tmp/TFB_installs
+    #mkdir -p /FrameworkBenchmarks/installs
+    #sudo mount -o bind /tmp/TFB_installs $FWROOT/installs
+  #else
     # If there is no synced folder, clone the project
     echo "Cloning project from $GH_REPO $GH_BRANCH"
     git clone -b ${GH_BRANCH} https://github.com/${GH_REPO}.git $FWROOT
-  fi
+  #fi
 
   # Everyone gets SSH access to localhost
   echo "Setting up SSH access to localhost"
@@ -133,6 +134,16 @@ if [ ! -e "~/.firstboot" ]; then
   sudo -u testrunner bash -c "cat /home/vagrant/.ssh/authorized_keys >> /home/testrunner/.ssh/authorized_keys"
   chmod 600 ~/.ssh/authorized_keys
   sudo -u testrunner chmod 600 /home/testrunner/.ssh/authorized_keys
+  
+  export RUNNER=testrunner
+  export ME=$(id -u -n)
+  sudo chown $RUNNER:$RUNNER /home/$RUNNER
+  sudo sed -i 's|:'"$ME"'|:'"$ME"','"$RUNNER"'|g' /etc/group
+  sudo sed -i 's|'"$ME"':x:\(.*\):|'"$ME"':x:\1:'"$RUNNER"'|g' /etc/group
+  sudo sed -i 's|'"$RUNNER"':x:\(.*\):|'"$RUNNER"':x:\1:'"$ME"'|g' /etc/group
+  echo "$RUNNER ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
+  sudo sed -i 's|/home/'"$RUNNER"':.*|/home/'"$RUNNER"':/bin/bash|g' /etc/passwd
+
   # Enable remote SSH access if we are running production environment
   # Note : this are always copied from the local working copy using a
   #        file provisioner. While they exist in the git clone we just 
@@ -157,6 +168,7 @@ if [ ! -e "~/.firstboot" ]; then
   # Setup 
   echo "Installing $ROLE software"
   cd $FWROOT
+  source toolset/setup/linux/prerequisites.sh
   toolset/run-tests.py --verbose --install $ROLE --install-only --test ''
 
   # Setup a nice welcome message for our guest
