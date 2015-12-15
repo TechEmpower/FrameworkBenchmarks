@@ -13,7 +13,8 @@ gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
 
 if [ "$TRAVIS" = "true" ]
 then
-  echo "source /usr/local/rvm" > $IROOT/rvm.installed
+  ls -l /usr/local/rvm
+  echo "source /usr/local/rvm/scripts/rvm" > $IROOT/rvm.installed
 else
   echo "source ~/.rvm/scripts/rvm" > $IROOT/rvm.installed
 fi
