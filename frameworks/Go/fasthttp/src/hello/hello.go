@@ -94,18 +94,18 @@ func main() {
 
 func mainHandler(ctx *fasthttp.RequestCtx) {
 	path := ctx.Path()
-	switch {
-	case fasthttp.EqualBytesStr(path, "/plaintext"):
+	switch string(path) {
+	case "/plaintext":
 		plaintextHandler(ctx)
-	case fasthttp.EqualBytesStr(path, "/json"):
+	case "/json":
 		jsonHandler(ctx)
-	case fasthttp.EqualBytesStr(path, "/db"):
+	case "/db":
 		dbHandler(ctx)
-	case fasthttp.EqualBytesStr(path, "/queries"):
+	case "/queries":
 		queriesHandler(ctx)
-	case fasthttp.EqualBytesStr(path, "/fortune"):
+	case "/fortune":
 		fortuneHandler(ctx)
-	case fasthttp.EqualBytesStr(path, "/update"):
+	case "/update":
 		updateHandler(ctx)
 	default:
 		ctx.Error("unexpected path", fasthttp.StatusBadRequest)
