@@ -97,10 +97,9 @@ if [ ! -e "~/.firstboot" ]; then
 
   # Install prerequisite tools
   echo "Installing prerequisites"
-  sudo apt-get update
-  sudo apt-get install -y git
-  sudo apt-get install -y python-pip
   source toolset/setup/linux/prerequisites.sh
+  sudo apt-get install -y git
+
 
   # Make project available
   # If they synced it to /FwBm, just expose it at ~/FwBm
