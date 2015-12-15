@@ -100,7 +100,7 @@ if [ ! -e "~/.firstboot" ]; then
   sudo apt-get update
   sudo apt-get install -y git
   sudo apt-get install -y python-pip
-  sudo pip install progressbar
+  source toolset/setup/linux/prerequisites.sh
 
   # Make project available
   # If they synced it to /FwBm, just expose it at ~/FwBm
@@ -168,7 +168,6 @@ if [ ! -e "~/.firstboot" ]; then
   # Setup 
   echo "Installing $ROLE software"
   cd $FWROOT
-  source toolset/setup/linux/prerequisites.sh
   toolset/run-tests.py --verbose --install $ROLE --install-only --test ''
 
   # Setup a nice welcome message for our guest
