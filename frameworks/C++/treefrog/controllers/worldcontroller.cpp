@@ -32,23 +32,21 @@ void WorldController::queries()
 
 void WorldController::queries(const QString &num)
 {
-    QList<QVariantMap> worlds;
+    QVariantList worlds;
     int d = qMin(qMax(num.toInt(), 1), 500);
 
     for (int i = 0; i < d; ++i) {
         int id = Tf::random(9999) + 1;
         worlds << World::get(id).toVariantMap();
     }
-    setContentType("application/json; charset=UTF-8");
-    renderText(jsonEncode(worlds), false);
+    renderJson(worlds);
 }
 
 void WorldController::random()
 {
     int id = Tf::random(9999) + 1;
     World world = World::get(id);
-    setContentType("application/json; charset=UTF-8");
-    renderText(jsonEncode(world.toVariantMap()), false);
+    renderJson(world.toVariantMap());
 }
 
 void WorldController::entry()
@@ -125,10 +123,15 @@ void WorldController::renderEdit(const QVariantMap &world)
     render("edit");
 }
 
+void WorldController::updates()
+{
+    updates("1");
+}
+
 void WorldController::updates(const QString &num)
 {
-    QList<QVariantMap> worlds;
-    int d = num.toInt();
+    QVariantList worlds;
+    int d = qMin(qMax(num.toInt(), 1), 500);
     World world;
 
     for (int i = 0; i < d; ++i) {
@@ -138,8 +141,7 @@ void WorldController::updates(const QString &num)
         world.update();
 	worlds << world.toVariantMap();
     }
-    setContentType("application/json; charset=UTF-8");
-    renderText(jsonEncode(worlds), false);
+    renderJson(worlds);
 }
 
 void WorldController::remove(const QString &pk)
