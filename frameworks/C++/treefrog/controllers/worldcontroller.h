@@ -25,6 +25,7 @@ public slots:
     void edit(const QString &pk);
     void save(const QString &pk);
     void updates(const QString &num);
+    void updates();
     void remove(const QString &pk);
 
 private:
