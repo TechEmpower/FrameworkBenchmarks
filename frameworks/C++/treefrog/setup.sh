@@ -16,4 +16,4 @@ make -j8
 rm -f log/*.log
 
 # 4. Start TreeFrog
-treefrog -d $TROOT &
+treefrog -d $TROOT
