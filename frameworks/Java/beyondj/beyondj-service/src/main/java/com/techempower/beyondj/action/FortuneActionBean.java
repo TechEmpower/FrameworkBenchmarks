@@ -40,3 +40,4 @@ public class FortuneActionBean extends BaseActionBean {
     public static final String JSP = "/WEB-INF/templates/fortunes.jsp";
     public static final String TRANSFER_ENCODING = "Transfer-Encoding";
 }
+

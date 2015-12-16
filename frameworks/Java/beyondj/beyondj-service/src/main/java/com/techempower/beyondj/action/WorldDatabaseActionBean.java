@@ -143,3 +143,4 @@ public class WorldDatabaseActionBean extends BaseActionBean {
     private static final String UPDATES = "updates";
     public static final String CONTENT_LENGTH = "Content-Length";
 }
+

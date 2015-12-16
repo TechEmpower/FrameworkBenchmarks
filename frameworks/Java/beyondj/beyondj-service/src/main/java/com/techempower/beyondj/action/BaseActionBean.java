@@ -106,3 +106,4 @@ public abstract class BaseActionBean implements
         getContext().getResponse().setHeader(DATE, new java.util.Date().toString());
     }
 }
+
