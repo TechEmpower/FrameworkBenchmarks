@@ -97,7 +97,7 @@ if [ ! -e "~/.firstboot" ]; then
 
   # Install prerequisite tools
   echo "Installing prerequisites"
-  source ~/FrameworkBenchmarks/toolset/setup/linux/prerequisites.sh
+  sudo apt-get update
   sudo apt-get install -y git
 
 
@@ -120,7 +120,9 @@ if [ ! -e "~/.firstboot" ]; then
   #else
     # If there is no synced folder, clone the project
     echo "Cloning project from $GH_REPO $GH_BRANCH"
+    git config --global core.autocrlf input
     git clone -b ${GH_BRANCH} https://github.com/${GH_REPO}.git $FWROOT
+    source ~/FrameworkBenchmarks/toolset/setup/linux/prerequisites.sh
   #fi
 
   # Everyone gets SSH access to localhost
@@ -144,7 +146,7 @@ if [ ! -e "~/.firstboot" ]; then
   sudo sed -i 's|/home/'"$RUNNER"':.*|/home/'"$RUNNER"':/bin/bash|g' /etc/passwd
 
   # Enable remote SSH access if we are running production environment
-  # Note : this are always copied from the local working copy using a
+  # Note : this is always copied from the local working copy using a
   #        file provisioner. While they exist in the git clone we just 
   #        created (so we could use those), we want to let the user
   #        have the option of replacing the keys in their working copy
