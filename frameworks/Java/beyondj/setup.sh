@@ -2,6 +2,6 @@
 
 fw_depends java8 maven
 
-mvn package -U
+#mvn install
 
 java -jar beyondj-launcher/target/beyondj.jar system.platform.dbserver=${DBHOST} numInstances=10
