@@ -97,7 +97,7 @@ if [ ! -e "~/.firstboot" ]; then
 
   # Install prerequisite tools
   echo "Installing prerequisites"
-  source toolset/setup/linux/prerequisites.sh
+  source ~/FrameworkBenchmarks/toolset/setup/linux/prerequisites.sh
   sudo apt-get install -y git
 
 
