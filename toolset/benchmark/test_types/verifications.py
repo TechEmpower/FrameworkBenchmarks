@@ -66,19 +66,36 @@ def verify_headers(headers, url, should_be='json'):
              'No content encoding found, expected \"%s\"' % (
                  expected_type),
              url))
-    elif content_type.lower() == includes_charset:
-        problems.append(
-            ('warn',
-             ("Content encoding found \"%s\" where \"%s\" is acceptable.\n"
-              "Additional response bytes may negatively affect benchmark performance."
-              % (includes_charset, expected_type)),
-             url))
-    elif content_type != expected_type:
-        problems.append(
-            ('warn',
-             'Unexpected content encoding, found \"%s\", expected \"%s\"' % (
-                 content_type, expected_type),
-             url))
+    else:
+    	content_type = content_type.lower()
+        # "text/html" requires charset to be set. The others do not
+        if expected_type == types['html']:
+            if content_type == expected_type:
+                problems.append(
+                    ('warn',
+                     ('The \"%s\" content type requires \"charset=utf-8\" to be specified.'
+                      % content_type),
+                     url))
+            elif content_type != includes_charset:
+                problems.append(
+                    ('warn',
+                     'Unexpected content encoding, found \"%s\", expected \"%s\".' % (
+                         content_type, expected_type),
+                     url))
+        else:
+            if content_type == includes_charset:
+                problems.append(
+                    ('warn',
+                     ("Content encoding found \"%s\" where \"%s\" is acceptable.\n"
+                      "Additional response bytes may negatively affect benchmark performance."
+                      % (content_type, expected_type)),
+                     url))
+            elif content_type != expected_type:
+                problems.append(
+                    ('warn',
+                     'Unexpected content encoding, found \"%s\", expected \"%s\"' % (
+                         content_type, expected_type),
+                     url))
     return problems
 
 
