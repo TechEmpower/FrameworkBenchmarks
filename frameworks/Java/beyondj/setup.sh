@@ -2,6 +2,18 @@
 
 fw_depends java8 maven
 
-mvn install
+FILE=beyondj-launcher/deploy/beyondj.jar
 
-java -jar beyondj-launcher/target/beyondj.jar system.platform.dbserver=${DBHOST} numInstances=10
+if [ -f $FILE ];
+then
+        echo "File $FILE exists"
+        rm beyondj-launcher/deploy/beyondj.jar
+fi
+
+cd beyondj-launcher/deploy/
+jar -cvf0M beyondj.jar META-INF *
+cd ../../
+
+echo "Launching BeyondJ from location:$PWD"
+java -jar beyondj-launcher/deploy/beyondj.jar system.platform.dbserver=${DBHOST} numInstances=10
+
