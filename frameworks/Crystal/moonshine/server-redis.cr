@@ -4,7 +4,6 @@ require "html/builder"
 
 include Moonshine
 include Moonshine::Utils::Shortcuts
-include Moonshine::Base
 
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
@@ -13,7 +12,7 @@ REDIS = Redis.new
 app = App.new
 
 class CONTENT
-  UTF8 = "; charset=UTF-8"
+  UTF8 = ";charset=UTF-8"
   JSON = "application/json" + UTF8
   PLAIN = "text/plain"
   HTML = "text/html" + UTF8
@@ -102,7 +101,7 @@ end
 # Redis Test 4: Fortunes
 app.get "/fortunes", do |request|
   data = fortunes
-  
+
   additional_fortune = {
     :id => 0,
     :message => "Additional fortune added at request time."
@@ -156,4 +155,4 @@ app.get "/updates", do |request|
   res
 end
 
-app.run(8080)
+app.run(ARGV[0], 8080)
