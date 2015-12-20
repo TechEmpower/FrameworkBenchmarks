@@ -12,10 +12,10 @@ REDIS = Redis.new
 app = App.new
 
 class CONTENT
-  UTF8 = ";charset=UTF-8"
-  JSON = "application/json" + UTF8
+  UTF8 = "; charset=UTF-8"
+  JSON = "application/json" #+ UTF8
   PLAIN = "text/plain"
-  HTML = "text/html" + UTF8
+  HTML = "text/html" #+ UTF8
 end
 
 ID_MAXIMUM = 10_000
@@ -82,8 +82,7 @@ end
 
 # Redis Test 2: Single database query
 app.get "/db", do |request|
-  query = randomWorld
-  res = ok(query.to_json)
+  res = ok(randomWorld.to_json)
   res.headers["Content-type"] = CONTENT::JSON
   res
 end
