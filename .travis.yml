@@ -206,6 +206,7 @@ before_script:
   - mysql -uroot < config/create.sql
   - sudo ./config/create-redis.sh
   - echo "!!!!!!!!!!!!!!!!!!!!!"
+  - echo $SHELL
 
 script:
   # Pick one test in this directory and verify
