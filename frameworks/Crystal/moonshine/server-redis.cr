@@ -82,7 +82,8 @@ end
 
 # Redis Test 2: Single database query
 app.get "/db", do |request|
-  res = ok(randomWorld.to_json)
+  query = randomWorld
+  res = ok(query.to_json)
   res.headers["Content-type"] = CONTENT::JSON
   res
 end
