@@ -205,8 +205,7 @@ before_script:
   - sudo ./config/travis_mysql_setup.sh
   - mysql -uroot < config/create.sql
   - sudo ./config/create-redis.sh
-  - redis-cli
-  - get test:1
+  - echo "!!!!!!!!!!!!!!!!!!!!!"
 
 script:
   # Pick one test in this directory and verify
