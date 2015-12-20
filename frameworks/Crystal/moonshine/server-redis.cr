@@ -29,6 +29,11 @@ end
 private def randomWorld
   id = rand(1..ID_MAXIMUM)
   num = REDIS.get("world:" + id.to_s)
+
+  if num == nil
+    num = "world:7777"
+  end
+
   { :id => id, :randomNumber => num }
 end
 
