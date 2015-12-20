@@ -30,11 +30,10 @@ private def randomWorld
   id = rand(1..ID_MAXIMUM)
   num = REDIS.get("world:" + id.to_s)
 
-  if num == nil
-    num = "world:7777"
+  if num == Nil
+    num = 7777
   end
 
-  puts "문재의 그놈 ::: " + num
   { :id => id, :randomNumber => num }
 end
 
