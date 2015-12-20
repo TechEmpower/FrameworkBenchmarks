@@ -4,7 +4,6 @@ require "html/builder"
 
 include Moonshine
 include Moonshine::Utils::Shortcuts
-include Moonshine::Base
 
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
@@ -101,7 +100,7 @@ end
 # Postgres Test 4: Fortunes
 app.get "/fortunes", do |request|
   data = fortunes
-  
+
   additional_fortune = {
     :id => 0,
     :message => "Additional fortune added at request time."
@@ -155,4 +154,4 @@ app.get "/updates", do |request|
   res
 end
 
-app.run(8080)
+app.run(ARGV[0], 8080)
