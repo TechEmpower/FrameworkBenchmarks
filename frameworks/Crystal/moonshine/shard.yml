@@ -6,7 +6,7 @@ dependencies:
     github: "will/crystal-pg"
     version: ">= 0.4.2"
   moonshine:
-    github: "blee-techempower/Moonshine"
+    github: "dhruvrajvanshi/Moonshine"
     branch: master
   redis:
     github: "stefanwille/crystal-redis"

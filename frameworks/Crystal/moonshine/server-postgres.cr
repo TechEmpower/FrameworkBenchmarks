@@ -154,4 +154,4 @@ app.get "/updates", do |request|
   res
 end
 
-app.run(ARGV[0], 8080)
+app.run(8080)
