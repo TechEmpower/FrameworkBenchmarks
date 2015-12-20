@@ -34,6 +34,7 @@ private def randomWorld
     num = "world:7777"
   end
 
+  puts "문재의 그놈 ::: " + num
   { :id => id, :randomNumber => num }
 end
 
