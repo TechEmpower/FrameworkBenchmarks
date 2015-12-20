@@ -10,6 +10,6 @@ dependencies:
     branch: master
   redis:
     github: "stefanwille/crystal-redis"
-    version: "~> 1.2.1ll"
+    version: "~> 1.2.1"
 
 license: MIT
