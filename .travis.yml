@@ -192,6 +192,7 @@ before_install:
 
 services:
   - postgresql
+  - redis-server
 
 addons:
   postgresql: "9.3"
