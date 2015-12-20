@@ -199,6 +199,7 @@ addons:
   apt:
     packages:
       - mysql-server
+      - redis-server
 
 before_script:
   - sudo ./config/travis_mysql_setup.sh
