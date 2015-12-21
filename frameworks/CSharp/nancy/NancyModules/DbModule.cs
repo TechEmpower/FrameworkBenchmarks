@@ -29,7 +29,7 @@
                     db.Open();
 
                     if (queries == 1)
-                        return GetRandomWorld(db, random);
+                        return Response.AsJson(GetRandomWorld(db, random));
                     else
                     {
                         var worldCount = queries > 500 ? 500 : queries;
@@ -42,7 +42,7 @@
                         {
                             worlds[i] = GetRandomWorld(db, random);
                         }
-                        return worlds;
+                        return Response.AsJson(worlds);
                     }
                 }
             };
