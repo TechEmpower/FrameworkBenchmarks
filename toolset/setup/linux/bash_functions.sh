@@ -78,6 +78,11 @@ fw_traperror () {
   #echo "  Bash line stack   : ${linestack[@]}"
 }
 
+# Note :: 
+#  This fw_depend causes serious problem. So need to check this function's logic. 
+#  The problem is ${depend} variable definition.
+#  Current way does not work well with Crystal/Moonshine, CSharp/Nancy 
+
 # Requires dependencies to come in order e.g. Nimrod before
 # Jester, etc. Users should be know this 
 # fairly well (e.g. you can't use Yaf without PHP)
