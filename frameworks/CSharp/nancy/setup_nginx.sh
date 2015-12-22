@@ -10,8 +10,6 @@ rm -rf src/bin src/obj
 xbuild src/NancyBenchmark.csproj /t:Clean
 xbuild src/NancyBenchmark.csproj /p:Configuration=Release
 
-echo "TROOT" + $TROOT
-
 # Define NGINX_HOME (I don't know what happened)
 NGINX_HOME="/home/blee/FrameworkBenchmarks/installs/nginx"
 
@@ -36,5 +34,3 @@ ${NGINX_HOME}/sbin/nginx -c $TROOT/nginx.conf
 for port in $(seq ${port_start} $port_end); do
   MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 --applications=/:$TROOT/src --socket=tcp:127.0.0.1:$port &
 done
-
-curl "http://192.168.56.102:8080/plaintext"
