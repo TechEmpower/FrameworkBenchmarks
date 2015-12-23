@@ -2,7 +2,7 @@
 
 # Dependency script file call
 #fw_depends nginx xsp mono
-fw_depends nginx mono
+fw_depends nginx xsp
 
 sed -i 's|localhost|'"${DBHOST}"'|g' src/Web.config
 sed -i 's|include /usr/local/nginx/conf/fastcgi_params;|include '"${NGINX_HOME}"'/conf/fastcgi_params;|g' nginx.conf
