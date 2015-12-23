@@ -13,7 +13,7 @@ xbuild src/NancyBenchmark.csproj /t:Clean
 xbuild src/NancyBenchmark.csproj /p:Configuration=Release
 
 # Define NGINX_HOME (I don't know what happened)
-NGINX_HOME="/home/blee/FrameworkBenchmarks/installs/nginx" # NO NEED TO DEFINE THIS IF I AM GOING TO USE DEPENDENCY SCRIPT
+#NGINX_HOME="/home/blee/FrameworkBenchmarks/installs/nginx" # NO NEED TO DEFINE THIS IF I AM GOING TO USE DEPENDENCY SCRIPT
 
 # nginx
 port_start=9001
