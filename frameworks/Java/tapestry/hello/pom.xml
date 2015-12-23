@@ -26,7 +26,7 @@
         <!-- This adds automatic compression of JavaScript and CSS when in production mode. -->
         <dependency>
             <groupId>org.apache.tapestry</groupId>
-            <artifactId>tapestry-yuicompressor</artifactId>
+            <artifactId>tapestry-webresources</artifactId>
             <version>${tapestry-release-version}</version>
         </dependency>
 
