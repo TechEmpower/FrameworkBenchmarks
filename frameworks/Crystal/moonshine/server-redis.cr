@@ -30,6 +30,7 @@ private def randomWorld
   id = rand(1..ID_MAXIMUM)
   num = REDIS.get("world:" + id.to_s)
 
+  # Debug purpose To make sure what will happen
   if num == Nil
     num = 7777
   end

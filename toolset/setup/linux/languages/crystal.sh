@@ -5,9 +5,10 @@ RETCODE=$(fw_exists ${IROOT}/crystal.installed)
   source $IROOT/crystal.installed
   return 0; }
 
+echo "크리스털 인스톨전"
 # install crystal
 
-VERSION="0.8.0"
+VERSION="0.9.1"
 
 SAVE_AS=crystal-$VERSION-1-linux-x86_64.tar.gz
 URL=https://github.com/manastech/crystal/releases/download/$VERSION/crystal-$VERSION-1-linux-x86_64.tar.gz
@@ -16,6 +17,7 @@ fw_get -o $SAVE_AS $URL
 
 fw_untar ${SAVE_AS}
 
+echo "샤드 인스톨전 "
 # install shards
 
 SVERSION="0.5.1"
@@ -32,3 +34,5 @@ mv ${SAVE_AS} crystal-${VERSION}-1/bin/shards
 echo -e "export PATH=${IROOT}/crystal-${VERSION}-1/bin/:\$PATH" > $IROOT/crystal.installed
 
 source $IROOT/crystal.installed
+
+echo "크리스탈sh파일 끝 "

@@ -38,7 +38,7 @@ env:
     #- "TESTDIR=Clojure/pedestal"
     #- "TESTDIR=Clojure/aleph"
     #- "TESTDIR=Crystal/crystal-raw"
-    #- "TESTDIR=Crystal/moonshine"      # FIXED
+    - "TESTDIR=Crystal/moonshine"      # LOGIC ERROR FOUND
     #- "TESTDIR=D/vibed"
     #- "TESTDIR=Dart/dart-raw"
     #- "TESTDIR=Dart/redstone"
