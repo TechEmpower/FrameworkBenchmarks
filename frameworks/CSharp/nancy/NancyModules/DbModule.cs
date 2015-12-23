@@ -19,6 +19,8 @@
 
         public DbModule() : base("/db")
         {
+            //Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
             Get["/{queries?1}"] = paramz =>
             {
                 var queries = (int)paramz.queries;
@@ -29,7 +31,7 @@
                     db.Open();
 
                     if (queries == 1)
-                        return GetRandomWorld(db, random);
+                        return Response.AsJson(GetRandomWorld(db, random));
                     else
                     {
                         var worldCount = queries > 500 ? 500 : queries;
@@ -42,9 +44,23 @@
                         {
                             worlds[i] = GetRandomWorld(db, random);
                         }
-                        return worlds;
+                        //Console.WriteLine("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                        return Response.AsJson(worlds);
                     }
                 }
+            };
+            /*
+             *  NOT SURE THIS IS CORRECT,but since this method covers test quries it must return JSON which ahs id and randomNumber
+             */
+            Get["foo"] = parmaz => 
+            {
+                var random = new Random();
+                using (var db = new MySqlConnection(MYSQL_CONNECTION_STRING))
+                {
+                    db.Open();
+                    return Response.AsJson(GetRandomWorld(db, random));
+                }
+
             };
         }
 

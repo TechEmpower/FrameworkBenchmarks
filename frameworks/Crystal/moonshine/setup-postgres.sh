@@ -1,8 +1,6 @@
 #!/bin/bash
 
-curl http://dist.crystal-lang.org/apt/setup.sh | sudo bash
-
-sudo apt-get install crystal
+fw_depends crystal
 
 crystal deps install
 
