@@ -1,6 +1,8 @@
 #!/bin/bash
 
+# Dependency script file call
 #fw_depends nginx xsp mono
+fw_depends nginx mono
 
 sed -i 's|localhost|'"${DBHOST}"'|g' src/Web.config
 sed -i 's|include /usr/local/nginx/conf/fastcgi_params;|include '"${NGINX_HOME}"'/conf/fastcgi_params;|g' nginx.conf
@@ -11,7 +13,7 @@ xbuild src/NancyBenchmark.csproj /t:Clean
 xbuild src/NancyBenchmark.csproj /p:Configuration=Release
 
 # Define NGINX_HOME (I don't know what happened)
-NGINX_HOME="/home/blee/FrameworkBenchmarks/installs/nginx"
+NGINX_HOME="/home/blee/FrameworkBenchmarks/installs/nginx" # NO NEED TO DEFINE THIS IF I AM GOING TO USE DEPENDENCY SCRIPT
 
 # nginx
 port_start=9001
