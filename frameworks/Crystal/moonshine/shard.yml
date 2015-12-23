@@ -10,6 +10,10 @@ dependencies:
     branch: master
   redis:
     github: "stefanwille/crystal-redis"
+<<<<<<< HEAD
     version: "~> 1.2.1"
+=======
+    version: "~> 1.1.0"
+>>>>>>> parent of ddbc264... Testing Purpose
 
 license: MIT
