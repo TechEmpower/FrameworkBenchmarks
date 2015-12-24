@@ -19,6 +19,7 @@ for port in $(seq ${port_start} $port_end); do
 done
 conf+="}"
 
+echo "set \$IROOT "$IROOT"nginx/conf/fastcgi_params" > $TROOT/nginx.osenv.conf
 echo -e $conf > $TROOT/nginx.upstream.conf
 ${NGINX_HOME}/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes '"${MAX_THREADS}"';"
 
