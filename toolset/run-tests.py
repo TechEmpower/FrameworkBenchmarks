@@ -76,7 +76,7 @@ def main(argv=None):
     conf_parser.add_argument('--conf_file', default='benchmark.cfg', metavar='FILE', help='Optional configuration file to provide argument defaults. All config options can be overridden using the command line.')
     args, remaining_argv = conf_parser.parse_known_args()
 
-    print "마징가z"
+    print "!!@@!!@@!!@@!!@@!!@@"
     try:
         with open (args.conf_file):
             config = ConfigParser.SafeConfigParser()
