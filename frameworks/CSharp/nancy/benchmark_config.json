@@ -41,7 +41,7 @@
       "notes": "",
       "versus": ""
     },
-    "zibevent2": {
+    "mono-libevent2": {
       "setup_file": "setup_libevent",
       "json_url": "/json",
       "db_url": "/db",
