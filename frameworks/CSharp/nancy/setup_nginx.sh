@@ -20,7 +20,7 @@ done
 conf+="}"
 
 echo -e $conf > $TROOT/nginx.upstream.conf
-${NGINX_HOME}/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes '"${MAX_THREADS}"';"
+${NGINX_HOME}/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes '"${MAX_THREADS}"';" --with-http_perl_module
 
 # Start fastcgi for each thread
 # To debug, use --printlog --verbose --loglevels=All
