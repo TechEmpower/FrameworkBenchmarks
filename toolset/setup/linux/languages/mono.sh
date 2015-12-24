@@ -16,9 +16,9 @@ echo "deb http://jenkins.mono-project.com/repo/debian sid main" | sudo tee /etc/
 sudo apt-get update
 
 # Find the most recent snapshot
-#SNAPSHOT=$(apt-cache search 'mono-snapshot-.*-assemblies' | cut -d'-' -f3 | tail -1)
-SNAPSHOT="20150202010831"
-
+SNAPSHOT=$(apt-cache search 'mono-snapshot-.*-assemblies' | cut -d'-' -f3 | tail -1)
+#SNAPSHOT="20150202010831" // # THIS IS WRONG
+echo "형님이 나타났다!"$SNAPSHOT
 # save environment
 
 MONO_HOME=$IROOT/mono-snapshot-$SNAPSHOT
