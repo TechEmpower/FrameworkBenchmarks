@@ -52,7 +52,7 @@ fw_apt_to_iroot() {
   echo "Downloading $1 to $IROOT"
   sudo apt-get download $1
   echo "Extracting $1 to $DIR"
-  sydi dpkg-deb -x $1*.deb "$IROOT/$DIR" && sudo rm $1*.deb
+  sudo dpkg-deb -x $1*.deb "$IROOT/$DIR" && sudo rm $1*.deb
 }
 
 # Was there an error for the current dependency?
