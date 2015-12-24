@@ -7,7 +7,7 @@ import multiprocessing
 import itertools
 import copy
 import subprocess
-from pprint import pprint 
+from pprint import pprint
 from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
 from setup.linux import setup_util
@@ -29,7 +29,7 @@ class StoreSeqAction(argparse.Action):
     for sequence in sequences:
       try:
         (start,step,end) = sequence.split(':')
-      except ValueError: 
+      except ValueError:
         print "  Invalid: %s" % sequence
         print "  Requires start:step:end, e.g. 1:2:10"
         raise
@@ -42,7 +42,7 @@ class StoreSeqAction(argparse.Action):
 # Main
 ###################################################################################################
 def main(argv=None):
-    ''' Runs the program. There are three ways to pass arguments 
+    ''' Runs the program. There are three ways to pass arguments
     1) environment variables TFB_*
     2) configuration file benchmark.cfg
     3) command line flags
@@ -64,7 +64,7 @@ def main(argv=None):
 
     # Update environment for shell scripts
     fwroot = setup_util.get_fwroot()
-    if not fwroot: 
+    if not fwroot:
         fwroot = os.getcwd()
     setup_util.replace_environ(config='config/benchmark_profile', root=fwroot)
     print "FWROOT is %s"%setup_util.get_fwroot()
@@ -76,6 +76,7 @@ def main(argv=None):
     conf_parser.add_argument('--conf_file', default='benchmark.cfg', metavar='FILE', help='Optional configuration file to provide argument defaults. All config options can be overridden using the command line.')
     args, remaining_argv = conf_parser.parse_known_args()
 
+    print "마징가z"
     try:
         with open (args.conf_file):
             config = ConfigParser.SafeConfigParser()
@@ -94,7 +95,7 @@ def main(argv=None):
 
     ##########################################################
     # Set up default values
-    ##########################################################        
+    ##########################################################
     serverHost = os.environ.get('TFB_SERVER_HOST')
     clientHost = os.environ.get('TFB_CLIENT_HOST')
     clientUser = os.environ.get('TFB_CLIENT_USER')
@@ -115,10 +116,10 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Install or run the Framework Benchmarks test suite.",
         parents=[conf_parser],
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        epilog='''If an argument includes (type int-sequence), then it accepts integer lists in multiple forms. 
-        Using a single number e.g. 5 will create a list [5]. Using commas will create a list containing those 
-        values e.g. 1,3,6 creates [1, 3, 6]. Using three colon-separated numbers of start:step:end will create a 
-        list, using the semantics of python's range function, e.g. 1:3:15 creates [1, 4, 7, 10, 13] while 
+        epilog='''If an argument includes (type int-sequence), then it accepts integer lists in multiple forms.
+        Using a single number e.g. 5 will create a list [5]. Using commas will create a list containing those
+        values e.g. 1,3,6 creates [1, 3, 6]. Using three colon-separated numbers of start:step:end will create a
+        list, using the semantics of python's range function, e.g. 1:3:15 creates [1, 4, 7, 10, 13] while
         0:1:5 creates [0, 1, 2, 3, 4]
         ''')
 
@@ -136,14 +137,14 @@ def main(argv=None):
     parser.add_argument('--database-identity-file', default=dbIdenFile, dest='database_identity_file',
                         help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
     parser.add_argument('-p', dest='password_prompt', action='store_true', help='Prompt for password')
-    
-    
+
+
     # Install options
     parser.add_argument('--install', choices=['client', 'database', 'server', 'all'], default=None,
                         help='Runs installation script(s) before continuing on to execute the tests.')
     parser.add_argument('--install-error-action', choices=['abort', 'continue'], default='continue', help='action to take in case of error during installation')
-    parser.add_argument('--install-strategy', choices=['unified', 'pertest'], default='unified', 
-        help='''Affects : With unified, all server software is installed into a single directory. 
+    parser.add_argument('--install-strategy', choices=['unified', 'pertest'], default='unified',
+        help='''Affects : With unified, all server software is installed into a single directory.
         With pertest each test gets its own installs directory, but installation takes longer''')
     parser.add_argument('--install-only', action='store_true', default=False, help='Do not run benchmark or verification, just install and exit')
 
@@ -161,7 +162,7 @@ def main(argv=None):
 
     # Benchmark options
     parser.add_argument('--concurrency-levels', default=[8, 16, 32, 64, 128, 256], help='Runs wrk benchmarker with different concurrency value (type int-sequence)', action=StoreSeqAction)
-    parser.add_argument('--query-levels', default=[1, 5,10,15,20], help='Database queries requested per HTTP connection, used during query test (type int-sequence)', action=StoreSeqAction) 
+    parser.add_argument('--query-levels', default=[1, 5,10,15,20], help='Database queries requested per HTTP connection, used during query test (type int-sequence)', action=StoreSeqAction)
     parser.add_argument('--threads', default=maxThreads, help='Run wrk benchmarker with this many threads. This should probably be the number of cores for your client system', type=int)
     parser.add_argument('--duration', default=15, help='Time in seconds that each test should run for.')
     parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
@@ -183,7 +184,7 @@ def main(argv=None):
       print 'Usernames (e.g. --client-user, --runner-user, and --database-user) are required!'
       print 'The system will run each test as the runner-user'
       print 'Aborting'
-      exit(1)        
+      exit(1)
 
     if args.database_user is None:
       args.database_user = args.client_user
@@ -198,7 +199,7 @@ def main(argv=None):
     benchmarker = Benchmarker(vars(args))
 
     # Run the benchmarker in the specified mode
-    #   Do not use benchmarker variables for these checks, 
+    #   Do not use benchmarker variables for these checks,
     #   they are either str or bool based on the python version
     if args.list_tests:
       benchmarker.run_list_tests()

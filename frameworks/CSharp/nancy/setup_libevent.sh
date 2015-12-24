@@ -5,7 +5,7 @@ export LIBEVENTHOST_HOME=${TROOT}/src/LibeventHost
 export MONO_GC_PARAMS="nursery-size=16m"
 
 echo "독수리!!!"
-. ${IROOT}/mono.installed
+. ${IROOT}/mono.installed # ERROR. It seems like dependency setup failed.
 
 sed -i 's|localhost|'"${DBHOST}"'|g' src/Web.config
 
