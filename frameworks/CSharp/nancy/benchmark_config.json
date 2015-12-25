@@ -3,7 +3,7 @@
   "tests": [{
     "default": {
       "setup_file": "setup_iis",
-      "plaintext": "/plaintext",
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db/",
@@ -24,7 +24,7 @@
     },
     "mono": {
       "setup_file": "setup_nginx",
-      "plaintext": "/plaintext",
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db/",
@@ -45,7 +45,7 @@
     },
     "mono-libevent2": {
       "setup_file": "setup_libevent",
-      "plaintext": "/plaintext",
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db/",
