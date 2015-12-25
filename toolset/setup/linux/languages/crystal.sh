@@ -7,7 +7,7 @@ RETCODE=$(fw_exists ${IROOT}/crystal.installed)
 
 # install crystal
 
-VERSION="0.8.0"
+VERSION="0.9.1"
 
 SAVE_AS=crystal-$VERSION-1-linux-x86_64.tar.gz
 URL=https://github.com/manastech/crystal/releases/download/$VERSION/crystal-$VERSION-1-linux-x86_64.tar.gz

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 RANGE=10000
 for i in {1..10000}
 do
@@ -9,7 +11,7 @@ done
 echo "DEL fortunes" | redis-cli
 
 # Please don't compress these into one statement, TFB is not always
-# run using Redis 2.4+ and we don't need optimization when 
+# run using Redis 2.4+ and we don't need optimization when
 # adding ~10 entries
 echo "RPUSH fortunes \"fortune: No such file or directory\"" | redis-cli
 echo "RPUSH fortunes \"A computer scientist is someone who fixes things that aren't broken.\"" | redis-cli
