@@ -20,7 +20,7 @@ done
 conf+="}"
 
 # I hope this trick works
-echo "include $IROOT/nginx/conf/fastcgi_params"; > $TROOT/nginx.osenv.conf
+sudo echo "include $IROOT/nginx/conf/fastcgi_params"; > $TROOT/nginx.osenv.conf
 
 echo -e $conf > $TROOT/nginx.upstream.conf
 ${NGINX_HOME}/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes '"${MAX_THREADS}"';"
