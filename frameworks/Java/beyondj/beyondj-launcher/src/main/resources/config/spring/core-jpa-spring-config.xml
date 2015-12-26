@@ -17,19 +17,10 @@
             </list>
         </property>
     </bean>
-
-    <!-- <bean id="derbyUtil" class="com.lenox.util.DerbyUtil">
-         <constructor-arg index="0" value="${system.jdbc.database.platform:DERBY}"/>
-         <constructor-arg index="1" value="${system.derby.database.test.path:jdbc:derby://localhost:1527/beyondj;create=false;user=beyondj_user;password=_beyondj_user_}"/>
-     </bean>
-     <conditional:importIf test="${system.jdbc.database.platform=='DERBY'}" src="props/core-config.properties"
-                           resource="config/spring/core-derby.xml" />
- -->
-
     <jpa:repositories base-package="com.lenox.repository"></jpa:repositories>
 
-    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
-
+ <!--   <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+-->
     <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
 
     <bean id="jpaVendorAdapter"

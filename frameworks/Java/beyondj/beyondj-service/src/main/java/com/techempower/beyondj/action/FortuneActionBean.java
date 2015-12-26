@@ -4,6 +4,7 @@ import com.techempower.beyondj.domain.Fortune;
 import com.techempower.beyondj.repository.FortuneRepository;
 import net.sourceforge.stripes.action.*;
 import net.sourceforge.stripes.integration.spring.SpringBean;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.*;
 
@@ -19,13 +20,16 @@ public class FortuneActionBean extends BaseActionBean {
         fortunes = new ArrayList<>();
         Iterator<Fortune> iterator = it.iterator();
         while (iterator.hasNext()) {
-            fortunes.add(iterator.next());
+            Fortune fortune = iterator.next();
+            fortune.setMessage(StringEscapeUtils.escapeHtml4(fortune.getMessage()));
+            fortune.setMessage(fortune.getMessage().replaceAll("<script>", "&ltscript&gt"));
+            fortunes.add(fortune);
         }
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
         Map<String, String> headers = new HashMap<>();
         headers.put(TRANSFER_ENCODING, Boolean.TRUE.toString());
-       getContext().getResponse().setCharacterEncoding(UTF_8);
+        getContext().getResponse().setCharacterEncoding(UTF_8);
         setResponseHeaders(headers);
         return new ForwardResolution(JSP);
     }

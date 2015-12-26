@@ -9,6 +9,7 @@
     <bundleId>93dc8404-b8b7-3a73-b02d-31a715359fd0</bundleId>
     <gracefulStopTimeInMillis>3000</gracefulStopTimeInMillis>
     <version>1.0</version>
+    <failureActionOption>RETRY</failureActionOption>
     <sessionTimeout>10000</sessionTimeout>
     <numInstances>1</numInstances>
     <loadBalancerDefType>ROUND_ROBIN_LOAD_BALANCER</loadBalancerDefType>

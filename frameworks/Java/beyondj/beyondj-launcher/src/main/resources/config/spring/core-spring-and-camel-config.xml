@@ -103,6 +103,10 @@
         </route>
     </camelContext>
 
+    <bean id="beyondjRewrite" class="com.lenox.beyondj.routes.CamelHttpUrlRewrite">
+        <constructor-arg index="0" value="${system.gateway.route.port}"/>
+    </bean>
+
     <bean id="branding" class="com.lenox.beyondj.configuration.Branding"/>
 
     <!-- Hazelcast delegates -->

@@ -11,6 +11,7 @@
         <bundleId>12dc8404-a8b7-4a79-a02d-31a715359f60</bundleId>
         <gracefulStopTimeInMillis>3000</gracefulStopTimeInMillis>
         <version>1.0</version>
+        <failureActionOption>REMOVE</failureActionOption>
         <sessionTimeout>30</sessionTimeout>
         <registerDefaultServlet>true</registerDefaultServlet>
         <registerJspServlet>true</registerJspServlet>
