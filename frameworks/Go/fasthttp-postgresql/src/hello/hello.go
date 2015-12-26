@@ -103,8 +103,7 @@ func mainHandler(ctx *fasthttp.RequestCtx) {
 
 // Test 1: JSON serialization
 func jsonHandler(ctx *fasthttp.RequestCtx) {
-	//jsonMarshal(ctx, &Message{helloWorldString})
-	jsonMarshal(ctx, &Message{largerJson})
+	jsonMarshal(ctx, &Message{helloWorldString})
 }
 
 // Test 2: Single database query
