@@ -43,6 +43,10 @@
       "notes": "",
       "versus": ""
     },
+
+  }]
+}
+    // Temporaily remove it from the array due to it doesn't look correct
     // "mono-libevent2": {
     //   "setup_file": "setup_libevent",
     //   "plaintext": "/plaintext",
@@ -64,5 +68,3 @@
     //   "notes": "",
     //   "versus": ""
     // }
-  }]
-}
