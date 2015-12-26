@@ -12,7 +12,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "fasthttp",
       "language": "Go",
       "orm": "Raw",
@@ -20,7 +20,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "fasthttp",
+      "display_name": "fasthttp-postgresql",
       "notes": "",
       "versus": "go"
     },
@@ -35,7 +35,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "fasthttp",
       "language": "Go",
       "orm": "Raw",
@@ -43,7 +43,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "fasthttp-prefork",
+      "display_name": "fasthttp-pg-prefork",
       "notes": "",
       "versus": "go"
     }
