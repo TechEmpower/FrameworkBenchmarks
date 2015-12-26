@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sed -i 's|tcp(.*:3306)|tcp('"${DBHOST}"':3306)|g' src/hello/hello.go
+sed -i 's|localhost|'"${DBHOST}"'|g' src/hello/hello.go
 
 fw_depends go
 

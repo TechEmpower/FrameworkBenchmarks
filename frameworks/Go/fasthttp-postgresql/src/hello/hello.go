@@ -64,9 +64,9 @@ var (
 func main() {
 	flag.Parse()
 
-	// func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, dbPort int) (*pgx.ConnPool, error) {
-
 	var err error
+
+	// initialize the connection pool
 	if db, err = initDatabase("localhost", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, maxConnectionCount); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
@@ -305,6 +305,14 @@ func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, db
 		log.Println("Connecting to database ", dbName, " as user ", dbUser, " ", successOrFailure, ": \n ", err)
 	} else {
 		log.Println("Connecting to database ", dbName, " as user ", dbUser, ": ", successOrFailure)
+
+		log.Println("Fetching one record to test if db connection is valid...")
+		var w World
+		n := randomWorldNum()
+		if errPing := connPool.QueryRow("worldSelectStmt", n).Scan(&w.Id, &w.RandomNumber); errPing != nil {
+			log.Fatalf("Error scanning world row: %s", errPing)
+		}
+		log.Println("OK")
 	}
 
 	fmt.Println("--------------------------------------------------------------------------------------------")
