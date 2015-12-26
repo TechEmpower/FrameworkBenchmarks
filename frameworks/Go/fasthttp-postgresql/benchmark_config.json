@@ -1,5 +1,5 @@
 {
-  "framework": "fasthttp",
+  "framework": "fasthttp-postgresql",
   "tests": [{
     "default": {
       "setup_file": "setup",
