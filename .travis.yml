@@ -69,7 +69,7 @@ env:
     # - "TESTDIR=Java/comsat-webactors"
     # - "TESTDIR=Java/curacao"
     # - "TESTDIR=Java/dropwizard"
-     - "TESTDIR=Java/gemini"
+    # - "TESTDIR=Java/gemini"
     # - "TESTDIR=Java/grizzly-bm"
     # - "TESTDIR=Java/grizzly-jersey"
     # - "TESTDIR=Java/jawn"
