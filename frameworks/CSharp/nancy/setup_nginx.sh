@@ -19,6 +19,12 @@ for port in $(seq ${port_start} $port_end); do
 done
 conf+="}"
 
+# Store path of fastcgi_parmas dynamically. (This trick works.)
+# Since nginx include cannot recognize variables.
+# To use OS environment, 3rd party library or perl module library is needed.
+# This is one possible trick to solve the issue.
+echo "include $IROOT/nginx/conf/fastcgi_params;" > $TROOT/nginx.osenv.conf
+
 echo -e $conf > $TROOT/nginx.upstream.conf
 ${NGINX_HOME}/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes '"${MAX_THREADS}"';"
 
