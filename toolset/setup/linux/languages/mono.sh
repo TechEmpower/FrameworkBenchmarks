@@ -36,22 +36,17 @@ source $IROOT/mono.installing
 rm -rf $MONO_HOME && mkdir -p $MONO_HOME
 
 # Download and extract debs
-echo "모노스냅샷인스톨시작"
 fw_apt_to_iroot mono-snapshot-$SNAPSHOT
 fw_apt_to_iroot mono-snapshot-$SNAPSHOT-assemblies mono-snapshot-$SNAPSHOT
-echo "모노스냅샷인스톨성공"
+
 
 # Simplify paths
 sudo mv $MONO_HOME/opt/mono-*/* $MONO_HOME
-echo "꿀빨아"
 file $MONO_HOME/bin/* | grep "POSIX shell script" | awk -F: '{print $1}' | xargs sudo sed -i "s|/opt/mono-$SNAPSHOT|$MONO_HOME|g"
-echo "크리스마스"
 sudo sed -i "s|/opt/mono-$SNAPSHOT|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_HOME/etc/mono/config
-echo "멜롱"
 echo "mozroots --import --sync" >> $IROOT/mono.installing
 
 sudo mv $IROOT/mono.installing $IROOT/mono.installed
 
 source $IROOT/mono.installed
 
-echo "모노 끝났어"
