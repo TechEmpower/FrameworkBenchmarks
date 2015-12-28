@@ -192,16 +192,19 @@ before_install:
 
 services:
   - postgresql
+  - redis-server
 
 addons:
   postgresql: "9.3"
   apt:
     packages:
       - mysql-server
+      - redis-server
 
 before_script:
   - sudo ./config/travis_mysql_setup.sh
   - mysql -uroot < config/create.sql
+  - sudo ./config/create-redis.sh
 
 script:
   # Pick one test in this directory and verify
