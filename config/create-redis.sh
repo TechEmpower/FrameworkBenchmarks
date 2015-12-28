@@ -1,3 +1,5 @@
+#!/bin/bash
+
 RANGE=10000
 for i in {1..10000}
 do
