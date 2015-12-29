@@ -11,7 +11,7 @@
     public class DbModule : NancyModule
     {
         public static string MYSQL_CONNECTION_STRING;
-        
+
         static DbModule()
         {
             MYSQL_CONNECTION_STRING = ConfigurationManager.AppSettings["ConnectionString.MySQL"];
@@ -22,14 +22,14 @@
             Get["/{queries?1}"] = paramz =>
             {
                 var queries = (int)paramz.queries;
-                
+
                 var random = new Random();
                 using (var db = new MySqlConnection(MYSQL_CONNECTION_STRING))
                 {
                     db.Open();
 
                     if (queries == 1)
-                        return GetRandomWorld(db, random);
+                        return Response.AsJson( GetRandomWorld(db, random) ); // Return value must be JSON to pass the test. Please make sure it.
                     else
                     {
                         var worldCount = queries > 500 ? 500 : queries;
@@ -42,10 +42,23 @@
                         {
                             worlds[i] = GetRandomWorld(db, random);
                         }
-                        return worlds;
+                        return Response.AsJson( worlds ); // Return value must be JSON to pass the test. Please make sure it.
                     }
                 }
             };
+
+            // TEMP : THIS IS NOT CORRECT WAY. Just keep it for now.
+            Get["foo"] = parmaz =>
+            {
+                var random = new Random();
+                using (var db = new MySqlConnection(MYSQL_CONNECTION_STRING))
+                {
+                    db.Open();
+                    return Response.AsJson(GetRandomWorld(db, random));
+                }
+
+            };
+
         }
 
         private World GetRandomWorld(IDbConnection db, Random random)

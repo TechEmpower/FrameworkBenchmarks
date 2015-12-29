@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# If you are running a large number of installs back to back 
-# (e.g. for FwBm development), then setting this variable 
-# will cause apt-get and wget to use your proxy server. If 
-# your proxy server has a cache for static content, this can 
+# If you are running a large number of installs back to back
+# (e.g. for FwBm development), then setting this variable
+# will cause apt-get and wget to use your proxy server. If
+# your proxy server has a cache for static content, this can
 # save you quite a lot of download time
 # export http_proxy=http://10.0.1.0:3128
 
@@ -29,7 +29,7 @@ fw_untar() {
   echo "Running 'tar xf $@'...please wait"
   tar xf "$@"
   echo "Removing compressed tar file"
-  
+
   # use -f to avoid printing errors if they gave additional arguments
   rm -f "$@"
 }
@@ -42,16 +42,17 @@ fw_unzip() {
   rm -f "$@"
 }
 
-# Download *.deb file and install into IROOT without using sudo
-# Does not download dependant packages
-#
+# Download *.deb file and install into IROOT
+# Caution:
+#   Without using sudo,
+#   Does not download dependant packages.
 # Example: fw_apt_to_iroot <package> [<directory>]
 fw_apt_to_iroot() {
   DIR=${2:-$1}
   echo "Downloading $1 to $IROOT"
-  apt-get download $1
+  sudo apt-get download $1
   echo "Extracting $1 to $DIR"
-  dpkg-deb -x $1*.deb "$IROOT/$DIR" && rm $1*.deb
+  sudo dpkg-deb -x $1*.deb "$IROOT/$DIR" && sudo rm $1*.deb
 }
 
 # Was there an error for the current dependency?
@@ -71,7 +72,7 @@ fw_traperror () {
 
   wd=$(pwd)
   relative_wd=\$FWROOT${wd#$FWROOT}
-  
+
   echo "ERROR: $(echo ${bashstack[1]#$FWROOT}): Command '$command' exited with status $err (dependency=$depend) (cwd=$relative_wd)"
   #echo "  Function stack    : ${funcstack[@]}"
   #echo "  Bash source stack : ${bashstack[@]}"
@@ -79,7 +80,7 @@ fw_traperror () {
 }
 
 # Requires dependencies to come in order e.g. Nimrod before
-# Jester, etc. Users should be know this 
+# Jester, etc. Users should be know this
 # fairly well (e.g. you can't use Yaf without PHP)
 fw_depends() {
 
@@ -108,10 +109,10 @@ fw_depends() {
       touch $IROOT/prerequisites.installed; }
 
     # Find and run the installer.sh file for this dependency
-    # Turn on some bash options before sourcing: 
+    # Turn on some bash options before sourcing:
     #   - (x) errtrace : Print commands before they are run
-    # Note: A shebang is just a comment when you source a script, 
-    #       so if you need to modify the default options use  
+    # Note: A shebang is just a comment when you source a script,
+    #       so if you need to modify the default options use
     #       `set -e` instead of `#!/bin/bash -e`
     if [ -f $FWROOT/toolset/setup/linux/systools/${depend}.sh ]; then
       echo Installing system tool: $depend in $relative_wd
@@ -161,12 +162,12 @@ fw_depends() {
 }
 
 # Echo's 0 if file or directory exists
-# To be used with or || blocks, avoids triggering our ERR 
+# To be used with or || blocks, avoids triggering our ERR
 # trap with a return 1 statement
 fw_exists() {
   if [ -f $1 ] || [ -d $1 ]; then
     echo 0
   else
     echo 1
-  fi 
+  fi
 }
