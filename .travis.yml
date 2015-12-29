@@ -9,7 +9,6 @@ env:
     #Group tests by directory to logically break up travis-CI build. Otherwise
     #we end up starting ~200+ different workers. Seems that ~100 is the limit
     #before their website starts to lag heavily
-    #
     #Here's the bash if you need to update this. Be sure to maintain the
     #lines that are currently commented out (these cannot run in Travis)
     #  cd frameworks
@@ -21,9 +20,9 @@ env:
     - "TESTDIR=C/haywire"
     - "TESTDIR=C/onion"
     - "TESTDIR=CSharp/aspnet"
-    # - "TESTDIR=CSharp/aspnet-stripped"
+    ## - "TESTDIR=CSharp/aspnet-stripped"
     - "TESTDIR=CSharp/evhttp-sharp"
-    # - "TESTDIR=CSharp/HttpListener"
+    ## - "TESTDIR=CSharp/HttpListener"
     - "TESTDIR=CSharp/nancy"
     - "TESTDIR=CSharp/servicestack"
     - "TESTDIR=C++/cpoll_cppsp"
@@ -192,16 +191,19 @@ before_install:
 
 services:
   - postgresql
+  - redis-server
 
 addons:
   postgresql: "9.3"
   apt:
     packages:
       - mysql-server
+      - redis-server
 
 before_script:
   - sudo ./config/travis_mysql_setup.sh
   - mysql -uroot < config/create.sql
+  - sudo ./config/create-redis.sh
 
 script:
   # Pick one test in this directory and verify
