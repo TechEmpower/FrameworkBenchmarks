@@ -53,7 +53,7 @@ var self = module.exports = {
     } else if (headerType === 'json') {
       headers['Content-Type'] = 'application/json';
     } else if (headerType === 'html') {
-      headers['Content-Type'] = 'text/html; cherset=UTF-8';
+      headers['Content-Type'] = 'text/html; charset=UTF-8';
     }
 
     res.writeHead(200, headers);
