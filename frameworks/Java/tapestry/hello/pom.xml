@@ -24,11 +24,14 @@
         </dependency>
 
         <!-- This adds automatic compression of JavaScript and CSS when in production mode. -->
+        <!-- This currently breaks the resin deployment
+             (see https://github.com/TechEmpower/FrameworkBenchmarks/pull/1816#issuecomment-167749791)
         <dependency>
             <groupId>org.apache.tapestry</groupId>
             <artifactId>tapestry-webresources</artifactId>
             <version>${tapestry-release-version}</version>
         </dependency>
+        -->
 
         <!-- Uncomment this to add support for file uploads:
 
