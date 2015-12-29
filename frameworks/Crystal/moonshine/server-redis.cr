@@ -4,7 +4,6 @@ require "html/builder"
 
 include Moonshine
 include Moonshine::Utils::Shortcuts
-include Moonshine::Base
 
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
@@ -31,8 +30,13 @@ private def randomWorld
   id = rand(1..ID_MAXIMUM)
   num = REDIS.get("world:" + id.to_s)
   { :id => id, :randomNumber => num }
-end
 
+  # Debug purpose To make sure what will happen on localtest
+  # (I did not install redis, so below code mimics mock data.)
+  # if num == Nil
+  #   num = 7777
+  # end
+end
 private def setWorld(world)
   id = "world:" + world[:id].to_s
   REDIS.set(id, world[:randomNumber])
@@ -102,7 +106,7 @@ end
 # Redis Test 4: Fortunes
 app.get "/fortunes", do |request|
   data = fortunes
-  
+
   additional_fortune = {
     :id => 0,
     :message => "Additional fortune added at request time."
