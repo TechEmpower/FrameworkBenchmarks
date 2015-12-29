@@ -1,8 +1,12 @@
 package hello.services;
 
+import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.ioc.MappedConfiguration;
+import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.services.MarkupRenderer;
+import org.apache.tapestry5.services.MarkupRendererFilter;
 
 /**
  * This module is automatically included as part of the Tapestry IoC Registry, it's a good place to
@@ -41,5 +45,18 @@ public class AppModule
         // you can extend this list of locales (it's a comma separated series of locale names;
         // the first locale name is the default when there's no reasonable match).
         configuration.add(SymbolConstants.SUPPORTED_LOCALES, "en");
+        configuration.add(SymbolConstants.OMIT_GENERATOR_META, true);
+        
+    }
+    
+    public void contributeMarkupRenderer(OrderedConfiguration<MarkupRendererFilter> configuration){
+      // prevent addition of the default stylesheet. There will be a symbol to toggle this behavior in Tapestry 5.4.
+      configuration.override("InjectDefaultStylesheet", new MarkupRendererFilter() {
+        
+        @Override
+        public void renderMarkup(MarkupWriter writer, MarkupRenderer renderer) {
+          renderer.renderMarkup(writer);
+        }
+      });
     }
 }
