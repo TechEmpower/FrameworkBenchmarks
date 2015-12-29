@@ -95,7 +95,7 @@ env:
     # - "TESTDIR=Java/vertx"
     # - "TESTDIR=Java/wicket"
     # - "TESTDIR=Java/wildfly-ee7"
-    - "TESTDIR=JavaScript/express"
+    # - "TESTDIR=JavaScript/express"
     - "TESTDIR=JavaScript/hapi"
     # - "TESTDIR=JavaScript/koa"
     - "TESTDIR=JavaScript/nodejs"
