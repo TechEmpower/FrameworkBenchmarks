@@ -1,77 +1,138 @@
 package controllers
 
-import play.api.Play.current
-import play.api.mvc._
-import play.api.libs.json._
-import scala.concurrent.forkjoin.ThreadLocalRandom
-import scala.concurrent.{Future, ExecutionContext}
-import scala.collection.convert.WrapAsScala.collectionAsScalaIterable
-import play.modules.reactivemongo.ReactiveMongoPlugin
+import java.util.concurrent.ThreadLocalRandom
+import javax.inject.{Singleton, Inject}
+
+import play.api.libs.json.{JsObject, Json, JsValue}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import reactivemongo.api.ReadPreference
+
+import scala.concurrent.Future
+
+import play.api.mvc.{ Action, Controller }
+
+import play.modules.reactivemongo.{
+MongoController, ReactiveMongoApi, ReactiveMongoComponents
+}
+import play.modules.reactivemongo.json._
 import play.modules.reactivemongo.json.collection.JSONCollection
-import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.concurrent.Akka
 
-object Application extends Controller {
+@Singleton
+class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi)
+  extends Controller with MongoController with ReactiveMongoComponents {
 
-  private val TestDatabaseRows = 10000
-
-  val DEFAULT_HOST = "localhost:27017"
-  val servers = current.configuration.getStringList("mongodb.servers") match {
-    case Some(servers) => collectionAsScalaIterable(servers).toList
-    case None => List(DEFAULT_HOST)
-  }
-
-  val DEFAULT_DB = "hello_world"
-  val db = current.configuration.getString("mongodb.db").getOrElse(DEFAULT_DB)
-
-  //private val dbExecutionContext: ExecutionContext = Akka.system.dispatchers.lookup("dbExecutionContext")
-  private val database = ReactiveMongoPlugin
-    .driver
-    .connection(servers, nbChannelsPerNode = 10)
-    .db(db)//(dbExecutionContext)
-
-  private def collection: JSONCollection = database.collection[JSONCollection]("world")
+  private def worldCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("world")
+  private def fortuneCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("fortune")
   private val projection = Json.obj("_id" -> 0)
-  /**
-   * Returns the closest number to <code>toRestrict</code> that is within the
-   * specified bounds, inclusive on both ends.
-   */
-  private def restrictWithin(toRestrict: String, lowerBound: Int, upperBound: Int): Option[Int] = {
-    try {
-      Some(math.min(upperBound, math.max(toRestrict.toInt, lowerBound)))
-    } catch {
-      case e: Exception => None
-    }
-  }
 
-  def dbqueries(requestedQueries: String) = Action.async {
-    import scala.concurrent.ExecutionContext.Implicits.global
-
-    val random = ThreadLocalRandom.current()
-    val queries = restrictWithin(requestedQueries, 1, 500).getOrElse(1)
-    val futureWorlds = Future.sequence((for {
+  def getRandomWorlds(queries: Int): Future[Seq[Option[JsObject]]] = {
+    val futureWorlds: Seq[Future[Option[JsObject]]] = for {
       _ <- 1 to queries
-    } yield { collection
-      .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)), projection)
+    } yield { worldCollection
+      .find(Json.obj("_id" -> getNextRandom), projection)
+      .one[JsObject]
+    }
+    Future.sequence(futureWorlds)
+  }
+
+  def getRandomWorld = {
+    val futureWorld = worldCollection
+      .find(Json.obj("id" -> getNextRandom), projection)
       .one[JsValue]
-    }))
-    futureWorlds.map { worlds =>
-      Ok(Json.toJson(worlds.map {maybeWorld =>
-        maybeWorld.map {world =>
-          world.as[Map[String, Int]]
-        }
-      }))
+    futureWorld
+  }
+
+  def getFortunes: Future[List[JsObject]] = {
+    val futureFortunes: Future[List[JsObject]] =
+      fortuneCollection.find(Json.obj())
+        .cursor[JsObject](ReadPreference.primaryPreferred, false).collect[List]()
+    futureFortunes
+  }
+
+  def updateWorlds(queries: Int): Future[Seq[Option[JsObject]]] = {
+    val futureWorlds: Future[Seq[Option[JsObject]]] = getRandomWorlds(queries)
+    val futureNewWorlds: Future[Seq[Option[JsObject]]] = futureWorlds.map( worlds => {
+      worlds.map(worldOption => {
+        worldOption.map(world => {
+          val newWorld = world ++ Json.obj("randomNumber" -> getNextRandom)
+          worldCollection.update(world, newWorld)
+          newWorld
+        })
+      })
+    })
+    futureNewWorlds
+  }
+
+  def getNextRandom: Int = {
+    ThreadLocalRandom.current().nextInt(TestDatabaseRows) + 1
+  }
+
+  // Test seems picky about headers.  Doesn't like character set being there for JSON.  Always wants Server header set.
+  // There is a Filter which adds the Server header for all types.  Below I set Content-Type as needed to get rid of
+  // warnings.
+
+  // Easy ones
+  case class HelloWorld(message: String)
+
+  def getJsonMessage = Action {
+    val helloWorld = HelloWorld(message = "Hello, World!")
+    Ok(Json.toJson(helloWorld)(Json.writes[HelloWorld])).withHeaders(CONTENT_TYPE -> "application/json")
+  }
+
+  val plaintext = Action {
+    // default headers are correct according to docs: charset included.
+    // BUT the test harness has a WARN state and says we don't need it.
+    Ok("Hello, World!").withHeaders(CONTENT_TYPE -> "text/plain")
+  }
+
+  // Semi-Common code between Scala database code
+
+  protected val TestDatabaseRows = 10000
+
+  def doDb = Action.async {
+    getRandomWorld.map { worlds =>
+      Ok(Json.toJson(worlds.head)).withHeaders(CONTENT_TYPE -> "application/json")
     }
   }
-  def singledb() = Action.async {
-    import scala.concurrent.ExecutionContext.Implicits.global
 
-    val random = ThreadLocalRandom.current()
-    val futureWorld = collection
-      .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)), projection)
-      .one[JsValue]
-    futureWorld.map { world =>
-      Ok(Json.toJson(world.head.as[Map[String, Int]]))
+  def queries(countString: String) = Action.async {
+    val n = parseCount(countString)
+    getRandomWorlds(n).map { worlds =>
+      Ok(Json.toJson(worlds)).withHeaders(CONTENT_TYPE -> "application/json")
+    }
+  }
+
+  private def byMessage(item: JsValue): String = {
+    (item \ "message").as[String]
+  }
+
+  def fortunes() = Action.async {
+    getFortunes.map { dbFortunes =>
+      val appendedFortunes =  Json.obj("_id" -> 0, "message" -> "Additional fortune added at request time.") :: dbFortunes
+
+      val sorted = appendedFortunes.sortBy(byMessage(_))
+
+      Ok(views.html.fortune(sorted)).withHeaders(CONTENT_TYPE -> "text/html")
+    }
+  }
+
+  def update(queries: String) = Action.async {
+    val n = parseCount(queries)
+    updateWorlds(n).map { worlds =>
+      Ok(Json.toJson(worlds)).withHeaders(CONTENT_TYPE -> "application/json")
+    }
+  }
+
+  private def parseCount(s: String): Int = {
+    try {
+      val parsed = java.lang.Integer.parseInt(s, 10)
+      parsed match {
+        case i if i < 1 => 1
+        case i if i > 500 => 500
+        case i => i
+      }
+    } catch {
+      case _: NumberFormatException => 1
     }
   }
 }

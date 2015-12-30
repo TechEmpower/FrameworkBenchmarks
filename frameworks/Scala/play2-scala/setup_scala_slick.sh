@@ -1,9 +1,11 @@
 #!/bin/bash
 
-fw_depends java7 sbt
+export JAVA_HOME=/opt/java8
+
+fw_depends java8 sbt
 
 cd play2-scala-slick
-sed -i "s|jdbc:mysql:\/\/.*:3306|jdbc:mysql://${DBHOST}:3306|g" $TROOT/play2-scala-slick/conf/application.conf
+sed -i "s|jdbc:mysql:\/\/.*:3306|jdbc:mysql://${DBHOST}:3306|g" ${TROOT}/play2-scala-slick/conf/application.conf
 
 rm -rf ${TROOT}/play2-scala-slick/target/universal/stage/RUNNING_PID
 
@@ -11,4 +13,4 @@ rm -rf ${TROOT}/play2-scala-slick/target/universal/stage/RUNNING_PID
 sbt stage
 
 # Execute Start script in background.
-$TROOT/play2-scala-slick/target/universal/stage/bin/play2-scala-slick &
+${TROOT}/play2-scala-slick/target/universal/stage/bin/play2-scala-slick &

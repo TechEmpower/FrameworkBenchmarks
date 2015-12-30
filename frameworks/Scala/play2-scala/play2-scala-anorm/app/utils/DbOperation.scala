@@ -2,23 +2,24 @@ package utils
 
 import java.sql.Connection
 import java.util.concurrent._
-import play.api.db.DB
+import javax.inject.{Singleton, Inject}
+import play.api.db.Database
 import play.api.Play.current
 import play.core.NamedThreadFactory
+import play.db.NamedDatabase
 import scala.concurrent._
 import scala.concurrent.Future
 
-object DbOperation {
-
-  // Common code between Anorm and Slick
+@Singleton
+class DbOperation @Inject()(@NamedDatabase("hello_world") protected val db: Database) {
 
   private val maxDbOperations = current.configuration.underlying.getInt("max-db-ops")
 
-  private val partitionCount = current.configuration.getInt("db.default.partitionCount").getOrElse(2)
+  private val partitionCount = current.configuration.getInt("db.hello_world.partitionCount").getOrElse(2)
   private val maxConnections =
-    partitionCount * current.configuration.getInt("db.default.maxConnectionsPerPartition").getOrElse(5)
+    partitionCount * current.configuration.getInt("db.hello_world.maxConnectionsPerPartition").getOrElse(5)
   private val minConnections =
-    partitionCount * current.configuration.getInt("db.default.minConnectionsPerPartition").getOrElse(5)
+    partitionCount * current.configuration.getInt("db.hello_world.minConnectionsPerPartition").getOrElse(5)
 
   private val tpe = new ThreadPoolExecutor(minConnections, maxConnections,
     0L, TimeUnit.MILLISECONDS,
@@ -40,7 +41,7 @@ object DbOperation {
     // number of concurrent connections that we expect to be handling.
     if (tpe.getQueue.size > maxDbOperations) sys.error(s"Aborted DB operation because queue is > $maxDbOperations")
     Future {
-      DB.withConnection { connection => op(connection) }
+      db.withConnection { connection => op(connection) }
     }(dbEc)
   }
 
