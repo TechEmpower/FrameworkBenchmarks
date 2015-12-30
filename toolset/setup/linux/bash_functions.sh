@@ -42,16 +42,18 @@ fw_unzip() {
   rm -f "$@"
 }
 
-# Download *.deb file and install into IROOT without using sudo
-# Does not download dependant packages
-#
+# Download *.deb file and install into IROOT 
+# Cautions:
+#   Without using sudo,
+#   Does not download dependant packages.
+#   script will be stuck and will not make progress. (e.g: CSharp/nancy)
 # Example: fw_apt_to_iroot <package> [<directory>]
 fw_apt_to_iroot() {
   DIR=${2:-$1}
   echo "Downloading $1 to $IROOT"
-  apt-get download $1
+  sudo apt-get download $1
   echo "Extracting $1 to $DIR"
-  dpkg-deb -x $1*.deb "$IROOT/$DIR" && rm $1*.deb
+  sudo dpkg-deb -x $1*.deb "$IROOT/$DIR" && sudo rm $1*.deb
 }
 
 # Was there an error for the current dependency?
