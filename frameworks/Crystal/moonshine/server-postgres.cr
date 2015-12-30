@@ -4,7 +4,6 @@ require "html/builder"
 
 include Moonshine
 include Moonshine::Utils::Shortcuts
-include Moonshine::Base
 
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
