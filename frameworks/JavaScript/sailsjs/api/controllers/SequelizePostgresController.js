@@ -24,7 +24,10 @@ var sequelize = new Sequelize(
 
 
 var Worlds = sequelize.define('World', {
-  id: Sequelize.INTEGER,
+  id: {
+       type: Sequelize.INTEGER,
+       primaryKey: true
+  },
   randomnumber: Sequelize.INTEGER
 },
 {
@@ -35,7 +38,10 @@ var Worlds = sequelize.define('World', {
 
 
 var Fortunes = sequelize.define('Fortune', {
-  id: Sequelize.INTEGER,
+  id: {
+       type: Sequelize.INTEGER,
+       primaryKey: true
+  },
   message: Sequelize.STRING
 },
 {
