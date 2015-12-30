@@ -15,7 +15,7 @@ git checkout e272a2c006211b6b03be2ef5bbb9e3f8fefd0768
 # build
 ./autogen.sh --prefix=$MONO_HOME --disable-docs
 make
-make install
+sudo make install
 
 # cleanup
 cd ..
