@@ -1,7 +1,6 @@
 var Handlebars = require('handlebars');
 
 var GREETING = "Hello, World!";
-var HELLO_OBJ = { message: GREETING };
 
 var self = module.exports = {
 
@@ -62,6 +61,7 @@ var self = module.exports = {
   responses: {
 
     jsonSerialization: function (req, res) {
+      var HELLO_OBJ = { message: GREETING }
       self.addTfbHeaders(res, 'json');
       res.end(JSON.stringify(HELLO_OBJ));
     },
