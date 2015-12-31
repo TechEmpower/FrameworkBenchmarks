@@ -2,8 +2,13 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /db                             controllers.Application.singledb
-GET     /queries                        controllers.Application.dbqueries(queries: String ?= "1")
+# Home page
+GET     /json                           @controllers.Application.getJsonMessage
+GET     /db                             @controllers.Application.doDb
+GET     /queries                        @controllers.Application.queries(queries: String ?= "1")
+GET     /fortunes                       @controllers.Application.fortunes
+GET     /update                         @controllers.Application.update(queries ?= "1")
+GET     /plaintext                      @controllers.Application.plaintext
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                   controllers.Assets.at(path="/public", file)

@@ -1,22 +1,28 @@
 package controllers
 
+import javax.inject.Singleton
+
 import play.api.mvc._
 import play.api.libs.json.Json
 
-object Application extends Controller {
+@Singleton
+class Application extends Controller {
 
-  def json() = Action {
-    Ok(Json.obj("message" -> "Hello, World!"))
+  // Test seems picky about headers.  Doesn't like character set being there for JSON.  Always wants Server header set.
+  // There is a Filter which adds the Server header for all types.  Below I set Content-Type as needed to get rid of
+  // warnings.
+
+  // Easy ones
+  case class HelloWorld(message: String)
+
+  def getJsonMessage = Action {
+    val helloWorld = HelloWorld(message = "Hello, World!")
+    Ok(Json.toJson(helloWorld)(Json.writes[HelloWorld])).withHeaders(CONTENT_TYPE -> "application/json")
   }
 
-  def plaintext() = Action {
-    import java.util.Date
-    import java.text.SimpleDateFormat
-
-    val sdf = new SimpleDateFormat("EEE, MMM d yyyy HH:MM:ss z")
-    Ok("Hello, World!")
-      .withHeaders(
-        DATE -> sdf.format(new Date()),
-        SERVER -> "Play Framework 2.3.3")
+  val plaintext = Action {
+    // default headers are correct according to docs: charset included.
+    // BUT the test harness has a WARN state and says we don't need it.
+    Ok("Hello, World!").withHeaders(CONTENT_TYPE -> "text/plain")
   }
 }

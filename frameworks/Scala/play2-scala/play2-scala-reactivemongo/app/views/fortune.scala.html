@@ -1,0 +1,20 @@
+@import play.api.libs.json.JsValue
+@(fortunes: Seq[JsValue])
+
+@main("Fortunes") {
+    <table>
+        <tr>
+            <th>id</th>
+            <th>message</th>
+        </tr>
+
+        @fortunes.map { fortune =>
+
+            <tr>
+                <td>@{(fortune \ "_id").as[Int]}</td>
+                <td>@{(fortune \ "message").as[String]}</td>
+            </tr>
+        }
+
+    </table>
+}
