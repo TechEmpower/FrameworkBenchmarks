@@ -48,6 +48,7 @@ env:
     - "TESTDIR=Erlang/chicagoboss"
     - "TESTDIR=Erlang/cowboy"
     - "TESTDIR=Erlang/elli"
+    - "TESTDIR=Erlang/misultin"
     - "TESTDIR=Go/beego"
     - "TESTDIR=Go/falcore"
     - "TESTDIR=Go/fasthttp"
