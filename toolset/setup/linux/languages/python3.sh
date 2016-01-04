@@ -15,8 +15,8 @@ make -j4 --quiet 2>&1 | tee $IROOT/python3-install.log | awk '{ if (NR%100 == 0)
 make install --quiet 2>&1 | tee -a $IROOT/python3-install.log | awk '{ if (NR%100 == 0) printf "."}'
 cd ..
 
-$PY3_ROOT/bin/python3 -m ensurepip -U
-$PY3_ROOT/bin/pip3 install -U setuptools pip
+#$PY3_ROOT/bin/python3 -m ensurepip -U
+#$PY3_ROOT/bin/pip3 install -U setuptools pip
 
 echo "export PY3_ROOT=${PY3_ROOT}" > $IROOT/py3.installed
 echo -e "export PYTHONHOME=\$PY3_ROOT" >> $IROOT/py3.installed
