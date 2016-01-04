@@ -1,7 +1,6 @@
 var Handlebars = require('handlebars');
 
 var GREETING = "Hello, World!";
-var HELLO_OBJ = { message: GREETING };
 
 var self = module.exports = {
 
@@ -53,7 +52,7 @@ var self = module.exports = {
     } else if (headerType === 'json') {
       headers['Content-Type'] = 'application/json';
     } else if (headerType === 'html') {
-      headers['Content-Type'] = 'text/html; cherset=UTF-8';
+      headers['Content-Type'] = 'text/html; charset=UTF-8';
     }
 
     res.writeHead(200, headers);
@@ -62,6 +61,7 @@ var self = module.exports = {
   responses: {
 
     jsonSerialization: function (req, res) {
+      var HELLO_OBJ = { message: GREETING }
       self.addTfbHeaders(res, 'json');
       res.end(JSON.stringify(HELLO_OBJ));
     },
