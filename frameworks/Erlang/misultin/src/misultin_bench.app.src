@@ -1,0 +1,9 @@
+%% -*- erlang -*-
+{application, misultin_bench,
+ [{description, ""},
+  {vsn, "0.1"},
+  {modules, []},
+  {registered, []},
+  {mod, {misultin_bench_app, []}},
+  {env, []},
+  {applications, [kernel, stdlib, crypto, erl_bench]}]}.
