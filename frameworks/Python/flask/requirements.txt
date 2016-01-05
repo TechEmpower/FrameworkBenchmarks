@@ -1,11 +1,11 @@
 Jinja2==2.7.3
 Werkzeug==0.10.4
 flask==0.10.1
-SQLAlchemy==1.0.4
+SQLAlchemy==1.0.11
 Flask-SQLAlchemy==2.0
 mysqlclient==1.3.6
 gunicorn==19.3.0
 meinheld==0.5.7
-uwsgi
+uwsgi==2.0.12
 
 greenlet==0.4.7
