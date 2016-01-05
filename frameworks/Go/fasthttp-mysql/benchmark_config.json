@@ -1,5 +1,5 @@
 {
-  "framework": "fasthttp",
+  "framework": "fasthttp-mysql",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -20,7 +20,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "fasthttp",
+      "display_name": "fasthttp-mysql",
       "notes": "",
       "versus": "go"
     },
@@ -43,7 +43,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "fasthttp-prefork",
+      "display_name": "fasthttp-mysql-prefork",
       "notes": "",
       "versus": "go"
     }
