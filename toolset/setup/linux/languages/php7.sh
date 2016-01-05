@@ -1,23 +1,18 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/php.installed)
+RETCODE=$(fw_exists ${IROOT}/php7.installed)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Moving PHP config files into place";
-  sudo cp $FWROOT/config/php.ini /usr/local/lib/php.ini
-  sudo cp $FWROOT/config/php-fpm.conf /usr/local/lib/php-fpm.conf
-  source $IROOT/php.installed
+  source $IROOT/php7.installed
   return 0; }
 
 VERSION="7.0.1"
 PHP_HOME=$IROOT/php-$VERSION
 
-# Precaution, unlikely to happen.
-rm -rf $IROOT/php PHP_HOME cphalcon
-
 fw_get -o php-${VERSION}.tar.gz http://php.net/distributions/php-${VERSION}.tar.gz
 fw_untar php-${VERSION}.tar.gz
-mv php-${VERSION} php
-cd php
+mv php-${VERSION} php7
+cd php7
 
 echo "Configuring PHP quietly..."
 ./configure --prefix=$PHP_HOME --with-pdo-mysql \
@@ -39,7 +34,7 @@ cp $FWROOT/config/php-fpm.conf $PHP_HOME/lib/php-fpm.conf
 #    Install all of them here becuase our config file references
 #    all of these *.so
 # ========================
-echo PHP compilation finished, installing extensions
+echo PHP7 compilation finished, installing extensions
 
 $PHP_HOME/bin/pecl channel-update pecl.php.net
 # Apc.so
@@ -59,7 +54,7 @@ printf "\n" | $PHP_HOME/bin/pecl -q install -f mongodb
 # Clean up a bit
 rm -rf $IROOT/php
 
-echo "export PHP_HOME=${PHP_HOME}" > $IROOT/php.installed
-echo -e "export PATH=\$PHP_HOME/bin:\$PHP_HOME/sbin:\$PATH" >> $IROOT/php.installed
+echo "export PHP_HOME=${PHP_HOME}" > $IROOT/php7.installed
+echo -e "export PATH=\$PHP_HOME/bin:\$PHP_HOME/sbin:\$PATH" >> $IROOT/php7.installed
 
-source $IROOT/php.installed
+source $IROOT/php7.installed
