@@ -16,6 +16,8 @@ else
 	cd ../../
 fi
 
+
+
 echo "Launching BeyondJ from location:$PWD"
 java -jar beyondj-launcher/deploy/beyondj.jar system.platform.dbserver=${DBHOST} numInstances=10
 
