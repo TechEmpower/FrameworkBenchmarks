@@ -82,7 +82,7 @@ def verify_headers(headers, url, should_be='json'):
                      'Unexpected content encoding, found \"%s\", expected \"%s\".' % (
                          content_type, expected_type),
                      url))
-        else:
+        elif expected_type == types['json']:
             if content_type == includes_charset:
                 problems.append(
                     ('warn',
@@ -96,6 +96,12 @@ def verify_headers(headers, url, should_be='json'):
                      'Unexpected content encoding, found \"%s\", expected \"%s\"' % (
                          content_type, expected_type),
                      url))
+        elif content_type != expected_type and content_type != includes_charset:
+            problems.append(
+                ('warn',
+                 'Unexpected content encoding, found \"%s\", expected \"%s\"' % (
+                     content_type, expected_type),
+                 url))
     return problems
 
 
