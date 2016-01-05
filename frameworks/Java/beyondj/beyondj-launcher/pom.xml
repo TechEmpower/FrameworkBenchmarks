@@ -40,6 +40,11 @@
         </dependency>
         <dependency>
             <groupId>com.lenox.platform</groupId>
+            <artifactId>beyondj-parse-model</artifactId>
+            <version>${beyondj.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lenox.platform</groupId>
             <artifactId>beyondj-profile-parse</artifactId>
             <version>${beyondj.platform.version}</version>
         </dependency>

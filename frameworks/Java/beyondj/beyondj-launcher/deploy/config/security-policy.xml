@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<protected-elements>
+
+    <protected-element name="add-users">
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="list-users">
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="edit-users">
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="create-users">
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="delete-users">
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="search-users">
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="change-user-password">
+        <role name="RegisteredUser"/>
+        <role name="Guest"/>
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="list-groups">
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="list-messages">
+        <role name="RegisteredUser"/>
+        <role name="Guest"/>
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="delete-messages">
+        <role name="RegisteredUser"/>
+        <role name="Guest"/>
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="read-messages">
+        <role name="RegisteredUser"/>
+        <role name="Guest"/>
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="list-contact-requests">
+        <role name="RegisteredUser"/>
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="review-contact-requests">
+        <role name="RegisteredUser"/>
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="delete-contact-requests">
+        <role name="RegisteredUser"/>
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="request-contact">
+        <role name="RegisteredUser"/>
+        <role name="Guest"/>
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="adjust-preferences">
+        <role name="RegisteredUser"/>
+        <role name="Guest"/>
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="list-roles">
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="list-features">
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="list-protected-elements">
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="list-security-policy">
+        <role name="Administrator"/>
+        <role name="Guest"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+    <protected-element name="deploy-application">
+        <role name="Administrator"/>
+        <role name="SuperAdministrator"/>
+        <role name="RegisteredUser"/>
+    </protected-element>
+
+    <protected-element name="list-deployments">
+        <role name="Administrator"/>
+        <role name="RegisteredUser"/>
+        <role name="Guest"/>
+        <role name="SuperAdministrator"/>
+    </protected-element>
+
+</protected-elements>

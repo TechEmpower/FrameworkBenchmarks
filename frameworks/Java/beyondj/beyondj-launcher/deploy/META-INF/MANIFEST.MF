@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Built-By: nkasvosve
+Start-Class: com.techempower.beyondj.BeyondJApplication
+Spring-Boot-Version: 1.1.13-BEYONDJ
+Created-By: Apache Maven 3.3.9
+Build-Jdk: 1.8.0_05
+Main-Class: org.springframework.boot.loader.JarLauncher
+

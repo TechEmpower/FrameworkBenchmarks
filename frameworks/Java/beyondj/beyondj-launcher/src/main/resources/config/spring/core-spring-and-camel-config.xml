@@ -54,6 +54,7 @@
     <bean id="loggingInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor"/>
 
     <bean id="gatewayRulesService" class="com.beyondj.gateway.rules.GatewayRulesService"/>
+    <bean id="scalingDataService" class="com.beyondj.gateway.scaling.ScalingDataServiceImpl"/>
 
     <camelContext id="core-camel-context"
                   useMDCLogging="true" xmlns="http://camel.apache.org/schema/spring" trace="true" autoStartup="true">
