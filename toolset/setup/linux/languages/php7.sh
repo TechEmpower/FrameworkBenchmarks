@@ -52,7 +52,7 @@ $PHP_HOME/bin/pecl config-set php_ini $PHP_HOME/lib/php.ini
 printf "\n" | $PHP_HOME/bin/pecl -q install -f mongodb
 
 # Clean up a bit
-rm -rf $IROOT/php
+rm -rf $IROOT/php7
 
 echo "export PHP_HOME=${PHP_HOME}" > $IROOT/php7.installed
 echo -e "export PATH=\$PHP_HOME/bin:\$PHP_HOME/sbin:\$PATH" >> $IROOT/php7.installed
