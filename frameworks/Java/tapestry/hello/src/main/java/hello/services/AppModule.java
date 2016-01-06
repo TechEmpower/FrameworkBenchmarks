@@ -46,17 +46,7 @@ public class AppModule
         // the first locale name is the default when there's no reasonable match).
         configuration.add(SymbolConstants.SUPPORTED_LOCALES, "en");
         configuration.add(SymbolConstants.OMIT_GENERATOR_META, true);
+        configuration.add(SymbolConstants.INCLUDE_CORE_STACK, false);
         
-    }
-    
-    public void contributeMarkupRenderer(OrderedConfiguration<MarkupRendererFilter> configuration){
-      // prevent addition of the default stylesheet. There will be a symbol to toggle this behavior in Tapestry 5.4.
-      configuration.override("InjectDefaultStylesheet", new MarkupRendererFilter() {
-        
-        @Override
-        public void renderMarkup(MarkupWriter writer, MarkupRenderer renderer) {
-          renderer.renderMarkup(writer);
-        }
-      });
     }
 }
