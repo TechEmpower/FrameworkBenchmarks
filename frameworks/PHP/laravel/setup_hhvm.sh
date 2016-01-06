@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php nginx composer hhvm
+fw_depends php7 nginx composer hhvm
 
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' app/config/database.php
 sed -i 's|SourceRoot = .*/FrameworkBenchmarks/php-laravel|SourceRoot = '"${TROOT}"'|g' deploy/config.hdf
