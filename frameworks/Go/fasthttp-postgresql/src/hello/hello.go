@@ -46,7 +46,7 @@ var (
 const helloWorldString = "Hello, World!"
 
 var (
-	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
+	tmpl = template.Must(template.ParseFiles("templates/fortune.html"))
 
 	db *pgx.ConnPool
 
