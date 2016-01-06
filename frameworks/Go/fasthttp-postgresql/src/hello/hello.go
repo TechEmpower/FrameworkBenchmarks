@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"runtime"
 	"sort"
+	"time"
 
 	"github.com/jackc/pgx"
 	"github.com/valyala/fasthttp"
@@ -65,7 +66,11 @@ func main() {
 	var err error
 
 	// initialize the connection pool
-	if db, err = initDatabase("localhost", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, maxConnectionCount); err != nil {
+	dbConns := maxConnectionCount
+	if *prefork {
+		dbConns = (maxConnectionCount + runtime.NumCPU() - 1) / runtime.NumCPU()
+	}
+	if db, err = initDatabase("localhost", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, 2*dbConns); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
 
@@ -79,7 +84,16 @@ func main() {
 	}
 }
 
+const maxConnDuration = time.Millisecond * 300
+
 func mainHandler(ctx *fasthttp.RequestCtx) {
+	// Performance hack for prefork mode - periodically close keepalive
+	// connections for evenly distributing connections among available
+	// processes.
+	if *prefork && time.Since(ctx.ConnTime()) > maxConnDuration {
+		ctx.SetConnectionClose()
+	}
+
 	path := ctx.Path()
 	switch string(path) {
 	case "/plaintext":
