@@ -43,7 +43,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "fasthttp-pg-prefork",
+      "display_name": "fasthttp-postgresql-prefork",
       "notes": "",
       "versus": "go"
     }
