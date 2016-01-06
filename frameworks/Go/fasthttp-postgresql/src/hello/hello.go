@@ -145,7 +145,7 @@ func fortuneHandler(ctx *fasthttp.RequestCtx) {
 
 	sort.Sort(FortunesByMessage(fortunes))
 
-	ctx.SetContentType("text/html")
+	ctx.SetContentType("text/html; charset=utf-8")
 	if err := tmpl.Execute(ctx, fortunes); err != nil {
 		log.Fatalf("Error executing fortune: %s", err)
 	}
@@ -184,7 +184,7 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 
 // Test 6: Plaintext
 func plaintextHandler(ctx *fasthttp.RequestCtx) {
-	ctx.Success("text/plain", helloWorldBytes)
+	ctx.Write(helloWorldBytes)
 }
 
 func jsonMarshal(ctx *fasthttp.RequestCtx, v interface{}) {
