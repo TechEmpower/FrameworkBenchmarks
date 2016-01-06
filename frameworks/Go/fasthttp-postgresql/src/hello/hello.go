@@ -45,8 +45,6 @@ var (
 
 const helloWorldString = "Hello, World!"
 
-const largerJson = `{status:"0",message:"ok",data:[{item:"car"},{item:"house"},{item:"airplane"},{item:"train"}]}`
-
 var (
 	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 
