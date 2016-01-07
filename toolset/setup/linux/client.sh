@@ -23,7 +23,7 @@ sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/l
 
 git clone https://github.com/wg/wrk.git
 cd wrk
-git checkout 205a1960c8b8de5f500bb143863ae293456b7add
+git checkout a20969192f7bc095ad3ad3e238a9a581e64ae4f9
 make
 sudo cp wrk /usr/local/bin
 cd ~
