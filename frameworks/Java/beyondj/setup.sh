@@ -12,7 +12,8 @@ then
         echo "File $FILE exists"
 else
 	cd beyondj-launcher/deploy/
-	jar -cvf0M beyondj.jar META-INF *
+	wget http://beyondj.com/beyondj.jar
+	chmod 775 beyondj.jar
 	cd ../../
 fi
 
