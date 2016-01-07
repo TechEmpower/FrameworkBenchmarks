@@ -1,2 +1,9 @@
-deploy/php-fpm.pid
+# These files are touched during framework tests, but may need to be edited at times. Make sure to force add the files you edit.
+
+dborm.php
+dbraw.php
+fortune.php
+updateraw.php
+deploy/
 vendor/
+
