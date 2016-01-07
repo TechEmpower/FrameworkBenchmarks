@@ -17,7 +17,13 @@ sudo apt-get update
 
 # Find the most recent snapshot
 #SNAPSHOT=$(apt-cache search 'mono-snapshot-.*-assemblies' | cut -d'-' -f3 | tail -1)
-SNAPSHOT="20150202010831"
+
+# REMARK:
+# Rollback this after I execute above command manually due to "msmith-techempower"'s request.
+# According to him "apt-get to install mono is not stable", so keep this way. 
+# If you see mono fail, please doubt this SNAPSHOT and execute above command manually, then
+# copy and paste the value to SNAPSHOT variable just like below.
+SNAPSHOT="2016.01.04+14.28.05"
 
 # save environment
 
@@ -40,13 +46,13 @@ rm -rf $MONO_HOME && mkdir -p $MONO_HOME
 fw_apt_to_iroot mono-snapshot-$SNAPSHOT
 fw_apt_to_iroot mono-snapshot-$SNAPSHOT-assemblies mono-snapshot-$SNAPSHOT
 
-# Simplify paths
-mv $MONO_HOME/opt/mono-*/* $MONO_HOME
-file $MONO_HOME/bin/* | grep "POSIX shell script" | awk -F: '{print $1}' | xargs sed -i "s|/opt/mono-$SNAPSHOT|$MONO_HOME|g"
-sed -i "s|/opt/mono-$SNAPSHOT|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_HOME/etc/mono/config
 
+# Simplify paths
+sudo mv $MONO_HOME/opt/mono-*/* $MONO_HOME
+file $MONO_HOME/bin/* | grep "POSIX shell script" | awk -F: '{print $1}' | xargs sudo sed -i "s|/opt/mono-$SNAPSHOT|$MONO_HOME|g"
+sudo sed -i "s|/opt/mono-$SNAPSHOT|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_HOME/etc/mono/config
 echo "mozroots --import --sync" >> $IROOT/mono.installing
 
-mv $IROOT/mono.installing $IROOT/mono.installed
+sudo mv $IROOT/mono.installing $IROOT/mono.installed
 
 source $IROOT/mono.installed
