@@ -16,7 +16,7 @@ rm -rf poco-$VERSION-all/
 
 cd $POCO_HOME
 ./configure --no-tests --no-samples
-make PageCompiler-libexec XML-libexec JSON-libexec
+make --quiet PageCompiler-libexec XML-libexec JSON-libexec
 
 echo "export POCO_HOME=${POCO_HOME}" > $IROOT/poco.installed
 echo "export LD_LIBRARY_PATH=$POCO_HOME/lib/Linux/x86_64" >> $IROOT/poco.installed 
