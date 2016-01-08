@@ -196,7 +196,7 @@ var queriesFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Re
 
 		// In the case of nStr is number and its value is higher than 500, change n to 500
 		if n > 500 {
-      n = 500
+			n = 500
 		}
 
 		world := make([]World, n)
