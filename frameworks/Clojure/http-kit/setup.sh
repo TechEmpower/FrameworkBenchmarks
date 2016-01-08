@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends leiningen java7
+fw_depends leiningen java8
 
 sed -i 's|:subname "//.*:3306|:subname "//'"${DBHOST}"':3306|g' hello/src/hello/handler.clj
 

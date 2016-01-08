@@ -1,8 +1,8 @@
 (ns hello.handler
   (:import com.mchange.v2.c3p0.ComboPooledDataSource)
   (:use compojure.core
+        ring.middleware.content-type
         ring.middleware.json
-        ring.util.response
         korma.db
         korma.core
         hiccup.core
@@ -10,54 +10,40 @@
         hiccup.page)
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
-            [clojure.java.jdbc :as jdbc]
-            [clojure.java.jdbc.sql :as sql]))
+            [ring.util.response :as ring-resp]
+            [clojure.java.jdbc :as jdbc]))
 
-
-; Database connection
-(defdb db (mysql {:subname "//localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
-                  :user "benchmarkdbuser"
-                  :password "benchmarkdbpass"
-                  ;;OPTIONAL KEYS
-                  :delimiters "" ;; remove delimiters
-                  :maximum-pool-size 256
-                  }))
-
-
-; Set up entity World and the database representation
-(defentity world
-  (pk :id)
-  (table :world)
-  (entity-fields :id :randomNumber)
-  (database db))
-
-
-(defn get-world
-  "Query a random World record from the database"
-  []
-  (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
-    (select world
-            (fields :id :randomNumber)
-            (where {:id id }))))
-
-
-(defn run-queries
-  "Run the specified number of queries, return the results"
+(defn sanitize-queries-param
+  "Sanitizes the `queries` parameter. Clamps the value between 1 and 500.
+  Invalid (string) values become 1."
   [queries]
-  (flatten ; Make it a list of maps
-    (take queries ; Number of queries to run
-          (repeatedly get-world))))
+  (let [n (try (Integer/parseInt queries)
+               (catch Exception e 1))] ; default to 1 on parse failure
+    (cond
+      (< n 1) 1
+      (> n 500) 500
+      :else n)))
 
+;; MySQL database connection
+(defdb db-mysql
+  (mysql {
+          :classname "com.mysql.jdbc.Driver"
+          :subprotocol "mysql"
+          :subname "//127.0.0.1:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
+          :user "benchmarkdbuser"
+          :password "benchmarkdbpass"
+          ;;OPTIONAL KEYS
+          :delimiters "" ;; remove delimiters
+          :maximum-pool-size 256}))
 
-; Database connection for java.jdbc "raw"
-; https://github.com/clojure/java.jdbc/blob/master/doc/clojure/java/jdbc/ConnectionPooling.md
+;; MySQL database connection for java.jdbc "raw"
+;; https://github.com/clojure/java.jdbc/blob/master/doc/clojure/java/jdbc/ConnectionPooling.md
 (def db-spec-mysql-raw
   {:classname "com.mysql.jdbc.Driver"
    :subprotocol "mysql"
-   :subname "//localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
+   :subname "//127.0.0.1:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
    :user "benchmarkdbuser"
    :password "benchmarkdbpass"})
-
 
 (defn pool
   [spec]
@@ -72,67 +58,70 @@
                (.setMaxIdleTime (* 3 60 60)))]
     {:datasource cpds}))
 
-
 (def pooled-db (delay (pool db-spec-mysql-raw)))
 
+(defn db-mysql-raw [] @pooled-db)
 
-(defn db-raw [] @pooled-db)
+;; Set up entity World and the database representation
+(defentity world
+  (pk :id)
+  (table :world)
+  (entity-fields :id :randomNumber) ; Default fields for select
+  (database db-mysql))
 
+(defn get-random-world-korma
+  "Query a random World record from the database"
+  []
+  (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
+    (select world
+            (where {:id id }))))
 
-(defn get-world-raw
+(defn run-queries
+  "Run query repeatedly, return an array"
+  [queries]
+  (flatten ; Make it a list of maps
+    (take queries ; Number of queries to run
+          (repeatedly get-random-world-korma))))
+
+(defn get-random-world-raw
   "Query a random World record from the database"
   []
   (let [id (inc (rand-int 9999))]
-    (jdbc/with-connection (db-raw)
-      ; Set a naming strategy to preserve column name case
-      (jdbc/with-naming-strategy {:keyword identity}
-        (jdbc/with-query-results rs [(str "select * from world where id = ?") id]
-          (doall rs))))))
-
+    (jdbc/query (db-mysql-raw) [(str "select * from world where id = ?") id])))
 
 (defn run-queries-raw
-  "Run the specified number of queries, return the results"
+  "Run query repeatedly, return an array"
   [queries]
   (flatten ; Make it a list of maps
     (take queries
-          (repeatedly get-world-raw))))
+          (repeatedly get-random-world-raw))))
 
-
-(defn get-query-count
-  "Parse provided string value of query count, clamping values to between 1 and 500."
-  [queries]
-  (let [n (try (Integer/parseInt queries)
-               (catch Exception e 1))] ; default to 1 on parse failure
-    (cond
-      (< n 1) 1
-      (> n 500) 500
-      :else n)))
-
-
-; Set up entity World and the database representation
+;; Set up entity Fortune and the database representation
 (defentity fortune
   (pk :id)
   (table :fortune)
   (entity-fields :id :message)
-  (database db))
+  (database db-mysql))
 
-
-(defn get-all-fortunes
-  "Query all Fortune records from the database."
+(defn get-all-fortunes-korma
+  "Query all Fortune records from the database using Korma."
   []
   (select fortune
           (fields :id :message)))
 
+(defn get-all-fortunes-raw
+  "Query all Fortune records from the database using JDBC."
+  []
+  (jdbc/query (db-mysql-raw) [(str "select * from fortune")]))
 
 (defn get-fortunes
   "Fetch the full list of Fortunes from the database, sort them by the fortune
   message text, and then return the results."
-  []
-  (let [fortunes (conj (get-all-fortunes)
-                       {:id 0
-                        :message "Additional fortune added at request time."})]
-    (sort-by #(:message %) fortunes)))
-
+  [query-function]
+  (sort-by #(:message %)
+    (conj
+      (query-function)
+      { :id 0 :message "Additional fortune added at request time." })))
 
 (defn fortunes-hiccup
   "Render the given fortunes to simple HTML using Hiccup."
@@ -151,12 +140,11 @@
         [:td (escape-html (:message x))]])
      ]]))
 
-
-(defn update-and-persist
-  "Changes the :randomNumber of a number of world entities.
+(defn update-and-persist-korma
+  "Using Korma: Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
-  (let [results (run-queries queries)]
+(let [results (run-queries queries)]
     (for [w results]
       (update-in w [:randomNumber (inc (rand-int 9999))]
         (update world
@@ -164,80 +152,107 @@
                 (where {:id [:id w]}))))
     results))
 
+(defn update-and-persist-raw
+  "Using JDBC: Changes the :randomNumber of a number of world entities.
+  Persists the changes to sql then returns the updated entities"
+  [queries]
+(let [results (run-queries queries)]
+    (for [w results]
+      (update-in w [:randomNumber (inc (rand-int 9999))]
+        (jdbc/update! (db-mysql-raw) :world {:randomNumber (:randomNumber w)} ["id = ?" (:id w)])))
+    results))
 
 (def json-serialization
   "Test 1: JSON serialization"
-  (response {:message "Hello, World!"}))
-
+  (ring-resp/response {:message "Hello, World!"}))
 
 (def single-query-test
   "Test 2: Single database query"
-  (-> 1
-      (run-queries)
-      (first)
-      (response)))
+  (ring-resp/response (first (run-queries 1))))
 
-
-(defn multiple-query-test
+(defn multiple-queries-test
   "Test 3: Multiple database queries"
   [queries]
   (-> queries
-      (get-query-count)
+      (sanitize-queries-param)
       (run-queries)
-      (response)))
-
+      (ring-resp/response)))
 
 (def single-query-test-raw
   "Test 2: Single database query (raw)"
   (-> 1
       (run-queries-raw)
       (first)
-      (response)))
+      (ring-resp/response)))
 
-
-(defn multiple-query-test-raw
+(defn multiple-queries-test-raw
   "Test 3: Multiple database queries (raw)"
   [queries]
   (-> queries
-      (get-query-count)
+      (sanitize-queries-param)
       (run-queries-raw)
-      (response)))
-
+      (ring-resp/response)))
 
 (def fortune-test
   "Test 4: Fortunes"
-  (response (fortunes-hiccup (get-fortunes))))
+  (->
+    (get-fortunes get-all-fortunes-korma)
+    (fortunes-hiccup)
+    (ring-resp/response)
+    (ring-resp/content-type "text/html")
+    (ring-resp/charset "utf-8")))
 
+(def fortune-test-raw
+  "Test 4: Fortunes Raw"
+  (->
+    (get-fortunes get-all-fortunes-raw)
+    (fortunes-hiccup)
+    (ring-resp/response)
+    (ring-resp/content-type "text/html")
+    (ring-resp/charset "utf-8")))
 
 (defn db-updates
   "Test 5: Database updates"
   [queries]
   (-> queries
-      (get-query-count)
-      (update-and-persist)
-      (response)))
+      (sanitize-queries-param)
+      (update-and-persist-korma)
+      (ring-resp/response)))
+
+(defn db-updates-raw
+  "Test 5: Database updates Raw"
+  [queries]
+  (-> queries
+      (sanitize-queries-param)
+      (update-and-persist-raw)
+      (ring-resp/response)))
 
 (def plaintext
   "Test 6: Plaintext"
-  {:status 200
-   :headers {"Content-Type" "text/plain; charset=utf-8"}
-   :body "Hello, World!"})
+  (->
+    (ring-resp/response "Hello, World!")
+    (ring-resp/content-type "text/plain")))
 
-
+;; Define route handlers
 (defroutes app-routes
-  (GET "/"                 [] "Hello, World!")
-  (GET "/json"             [] json-serialization)
-  (GET "/db"               [] single-query-test)
-  (GET "/db/:queries"      [queries] (multiple-query-test queries))
-  (GET "/dbraw"            [] single-query-test-raw)
-  (GET "/dbraw/:queries"   [queries] (multiple-query-test-raw queries))
-  (GET "/fortunes"         [] (response (get-fortunes))) ; Raw json of fortunes
-  (GET "/fortune-hiccup"   [] fortune-test)
-  (GET "/updates/:queries" [queries] (db-updates queries))
-  (GET "/plaintext"        [] plaintext)
+  (GET "/"                     [] "Hello, World!")
+  (GET "/plaintext"            [] plaintext)
+  (GET "/json"                 [] json-serialization)
+  (GET "/db"                   [] single-query-test)
+  (GET "/queries/:queries"     [queries] (multiple-queries-test queries))
+  (GET "/queries/"             [] (multiple-queries-test queries)) ; When param is omitted
+  (GET "/fortunes"             [] fortune-test)
+  (GET "/updates/:queries"     [queries] (db-updates queries))
+  (GET "/updates/"             [] (db-updates queries)) ; When param is omitted
+  (GET "/raw/db"               [] single-query-test-raw)
+  (GET "/raw/queries/:queries" [queries] (multiple-queries-test-raw queries))
+  (GET "/raw/queries/"         [] (multiple-queries-test-raw queries)) ; When param is omitted
+  (GET "/raw/fortunes"         [] fortune-test-raw)
+  (GET "/raw/updates/:queries" [queries] (db-updates-raw queries))
+  (GET "/raw/updates/"         [] (db-updates-raw queries)) ; When param is omitted
   (route/not-found "Not Found"))
-
 
 (def app
   "Format responses as JSON"
-  (wrap-json-response app-routes))
+  (-> app-routes
+      (wrap-json-response)))
