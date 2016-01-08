@@ -23,7 +23,7 @@
     "raw": {
       "setup_file": "setup",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/query?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
@@ -36,7 +36,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "laravel",
+      "display_name": "laravel-raw",
       "notes": "",
       "versus": "php"
     },
@@ -62,7 +62,7 @@
     "hhvm-raw": {
       "setup_file": "setup_hhvm",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/query?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
@@ -101,7 +101,7 @@
     "php5-raw": {
       "setup_file": "setup_php5",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/query?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
