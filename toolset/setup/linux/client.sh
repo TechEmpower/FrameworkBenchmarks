@@ -21,9 +21,9 @@ sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/l
 # wrk
 ##############################
 
-git clone https://github.com/wg/wrk.git
-cd wrk
-git checkout a20969192f7bc095ad3ad3e238a9a581e64ae4f9
+curl -sL -o wrk-4.0.1.tar.gz https://github.com/wg/wrk/archive/4.0.1.tar.gz
+tar xzf wrk-4.0.1.tar.gz
+cd wrk-4.0.1
 make
 sudo cp wrk /usr/local/bin
 cd ~
