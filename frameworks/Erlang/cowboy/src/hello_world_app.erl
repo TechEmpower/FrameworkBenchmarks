@@ -25,6 +25,7 @@ start(_Type, _Args) ->
 	emysql:prepare(db_stmt, <<"SELECT * FROM World where id = ?">>),
 	Dispatch = cowboy_router:compile([
 		{'_', [
+      {"/plaintext", plaintext_handler, []},
 			{"/json", json_handler, []},
 			{"/db", db_handler, []},
       {"/query", query_handler, []}
