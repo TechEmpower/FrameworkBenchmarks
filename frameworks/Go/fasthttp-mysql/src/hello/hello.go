@@ -12,6 +12,8 @@ import (
 	"os/exec"
 	"runtime"
 	"sort"
+	"sync/atomic"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/valyala/fasthttp"
@@ -92,14 +94,20 @@ func main() {
 	}
 }
 
-const maxConnDuration = time.Millisecond * 300
+const maxConnDuration = time.Millisecond * 200
+
+var connDurationJitter uint64
 
 func mainHandler(ctx *fasthttp.RequestCtx) {
 	// Performance hack for prefork mode - periodically close keepalive
 	// connections for evenly distributing connections among available
 	// processes.
-	if *prefork && time.Since(ctx.ConnTime()) > maxConnDuration {
-		ctx.SetConnectionClose()
+	if *prefork {
+		maxDuration := maxConnDuration + time.Millisecond*time.Duration(atomic.LoadUint64(&connDurationJitter))
+		if time.Since(ctx.ConnTime()) > maxDuration {
+			atomic.StoreUint64(&connDurationJitter, uint64(rand.Intn(100)))
+			ctx.SetConnectionClose()
+		}
 	}
 
 	path := ctx.Path()
