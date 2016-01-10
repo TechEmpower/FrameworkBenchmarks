@@ -181,6 +181,7 @@ var dbFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Respons
 
 // Test 3: Multiple database queries
 var queriesFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Response {
+	
 	if req.HttpRequest.URL.Path == "/queries" {
 
 		n := 1
