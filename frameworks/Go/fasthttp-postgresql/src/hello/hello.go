@@ -71,7 +71,7 @@ func main() {
 	if *prefork {
 		dbConns = (maxConnectionCount + runtime.NumCPU() - 1) / runtime.NumCPU()
 	}
-	if db, err = initDatabase("localhost", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, 2*dbConns); err != nil {
+	if db, err = initDatabase("localhost", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, dbConns); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
 

@@ -78,7 +78,7 @@ func main() {
 		dbConnCount = (dbConnCount + runtime.NumCPU() - 1) / runtime.NumCPU()
 	}
 	db.SetMaxIdleConns(dbConnCount)
-	db.SetMaxOpenConns(dbConnCount * 2)
+	db.SetMaxOpenConns(dbConnCount)
 
 	worldSelectStmt = mustPrepare(db, "SELECT id, randomNumber FROM World WHERE id = ?")
 	worldUpdateStmt = mustPrepare(db, "UPDATE World SET randomNumber = ? WHERE id = ?")
