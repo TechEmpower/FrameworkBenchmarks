@@ -12,6 +12,8 @@ import (
 	"os/exec"
 	"runtime"
 	"sort"
+	"sync/atomic"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/valyala/fasthttp"
@@ -47,7 +49,7 @@ var (
 const helloWorldString = "Hello, World!"
 
 var (
-	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
+	tmpl = template.Must(template.ParseFiles("templates/fortune.html"))
 
 	db *sql.DB
 
@@ -76,7 +78,7 @@ func main() {
 		dbConnCount = (dbConnCount + runtime.NumCPU() - 1) / runtime.NumCPU()
 	}
 	db.SetMaxIdleConns(dbConnCount)
-	db.SetMaxOpenConns(dbConnCount * 2)
+	db.SetMaxOpenConns(dbConnCount)
 
 	worldSelectStmt = mustPrepare(db, "SELECT id, randomNumber FROM World WHERE id = ?")
 	worldUpdateStmt = mustPrepare(db, "UPDATE World SET randomNumber = ? WHERE id = ?")
@@ -92,7 +94,22 @@ func main() {
 	}
 }
 
+const maxConnDuration = time.Millisecond * 200
+
+var connDurationJitter uint64
+
 func mainHandler(ctx *fasthttp.RequestCtx) {
+	// Performance hack for prefork mode - periodically close keepalive
+	// connections for evenly distributing connections among available
+	// processes.
+	if *prefork {
+		maxDuration := maxConnDuration + time.Millisecond*time.Duration(atomic.LoadUint64(&connDurationJitter))
+		if time.Since(ctx.ConnTime()) > maxDuration {
+			atomic.StoreUint64(&connDurationJitter, uint64(rand.Intn(100)))
+			ctx.SetConnectionClose()
+		}
+	}
+
 	path := ctx.Path()
 	switch string(path) {
 	case "/plaintext":

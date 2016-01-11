@@ -12,6 +12,8 @@ import (
 	"os/exec"
 	"runtime"
 	"sort"
+	"sync/atomic"
+	"time"
 
 	"github.com/jackc/pgx"
 	"github.com/valyala/fasthttp"
@@ -45,10 +47,8 @@ var (
 
 const helloWorldString = "Hello, World!"
 
-const largerJson = `{status:"0",message:"ok",data:[{item:"car"},{item:"house"},{item:"airplane"},{item:"train"}]}`
-
 var (
-	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
+	tmpl = template.Must(template.ParseFiles("templates/fortune.html"))
 
 	db *pgx.ConnPool
 
@@ -67,7 +67,11 @@ func main() {
 	var err error
 
 	// initialize the connection pool
-	if db, err = initDatabase("localhost", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, maxConnectionCount); err != nil {
+	dbConns := maxConnectionCount
+	if *prefork {
+		dbConns = (maxConnectionCount + runtime.NumCPU() - 1) / runtime.NumCPU()
+	}
+	if db, err = initDatabase("localhost", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, dbConns); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
 
@@ -81,7 +85,22 @@ func main() {
 	}
 }
 
+const maxConnDuration = time.Millisecond * 200
+
+var connDurationJitter uint64
+
 func mainHandler(ctx *fasthttp.RequestCtx) {
+	// Performance hack for prefork mode - periodically close keepalive
+	// connections for evenly distributing connections among available
+	// processes.
+	if *prefork {
+		maxDuration := maxConnDuration + time.Millisecond*time.Duration(atomic.LoadUint64(&connDurationJitter))
+		if time.Since(ctx.ConnTime()) > maxDuration {
+			atomic.StoreUint64(&connDurationJitter, uint64(rand.Intn(100)))
+			ctx.SetConnectionClose()
+		}
+	}
+
 	path := ctx.Path()
 	switch string(path) {
 	case "/plaintext":
@@ -145,7 +164,7 @@ func fortuneHandler(ctx *fasthttp.RequestCtx) {
 
 	sort.Sort(FortunesByMessage(fortunes))
 
-	ctx.SetContentType("text/html")
+	ctx.SetContentType("text/html; charset=utf-8")
 	if err := tmpl.Execute(ctx, fortunes); err != nil {
 		log.Fatalf("Error executing fortune: %s", err)
 	}
@@ -169,9 +188,24 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 		log.Fatalf("Error starting transaction: %s", err)
 	}
 
+	// Disable synchronous commit for the current transaction
+	// as a performance optimization.
+	// See http://www.postgresql.org/docs/current/static/runtime-config-wal.html for details.
+	// Below is the relevant quote from the docs:
+	//
+	// > It is therefore possible, and useful, to have some transactions
+	// > commit synchronously and others asynchronously. For example,
+	// > to make a single multistatement transaction commit asynchronously
+	// > when the default is the opposite, issue
+	// >     SET LOCAL synchronous_commit TO OFF
+	// > within the transaction.
+	if _, err = txn.Exec("SET LOCAL synchronous_commit TO OFF"); err != nil {
+		log.Fatalf("Error when disabling synchronous commit")
+	}
+
 	for i := 0; i < n; i++ {
 		w := &worlds[i]
-		if _, err := txn.Exec("worldUpdateStmt", w.RandomNumber, w.Id); err != nil {
+		if _, err = txn.Exec("worldUpdateStmt", w.RandomNumber, w.Id); err != nil {
 			log.Fatalf("Error updating world row %d: %s", i, err)
 		}
 	}
@@ -184,7 +218,7 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 
 // Test 6: Plaintext
 func plaintextHandler(ctx *fasthttp.RequestCtx) {
-	ctx.Success("text/plain", helloWorldBytes)
+	ctx.Write(helloWorldBytes)
 }
 
 func jsonMarshal(ctx *fasthttp.RequestCtx, v interface{}) {
