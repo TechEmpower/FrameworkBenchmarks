@@ -181,14 +181,23 @@ var dbFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Respons
 
 // Test 3: Multiple database queries
 var queriesFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Response {
+	
 	if req.HttpRequest.URL.Path == "/queries" {
+
 		n := 1
+	
 		if nStr := req.HttpRequest.URL.Query().Get("queries"); len(nStr) > 0 {
-			n, _ = strconv.Atoi(nStr)
+			n, _ = strconv.Atoi(nStr) // rvalue is 0 if nStr is non-number.
 		}
 
-		if n <= 1 {
-			return dbFilter.FilterRequest(req)
+		// In the case of nStr is non-number string, n will be 0. So need to change n to 1.
+		if n == 0 {
+			n = 1
+		}
+
+		// In the case of nStr is number and its value is higher than 500, change n to 500
+		if n > 500 {
+			n = 500
 		}
 
 		world := make([]World, n)
