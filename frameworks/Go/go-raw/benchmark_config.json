@@ -24,6 +24,27 @@
       "notes": "",
       "versus": "go"
     },
+    "interpolate": {
+      "setup_file": "setup",
+      "db_url": "/dbInterpolate",
+      "query_url": "/queriesInterpolate?queries=",
+      "fortune_url": "/fortuneInterpolate",
+      "update_url": "/updateInterpolate?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "go",
+      "language": "Go",
+      "orm": "Raw",
+      "platform": "Go",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "go-interpolate",
+      "notes": "",
+      "versus": "go"
+    },
     "prefork": {
       "setup_file": "setup_prefork",
       "json_url": "/json",
@@ -43,7 +64,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "go-raw",
+      "display_name": "go-prefork",
       "notes": "",
       "versus": "go"
     }
