@@ -8,6 +8,7 @@
     using MySql.Data.MySqlClient;
     using Nancy;
 
+    
     public class DbModule : NancyModule
     {
         public static string MYSQL_CONNECTION_STRING;
@@ -16,35 +17,22 @@
         {
             MYSQL_CONNECTION_STRING = ConfigurationManager.AppSettings["ConnectionString.MySQL"];
         }
-
+        
+        /**
+         * NOTE:
+         * Return a single World objects as JSON, selected randomly from the World
+         * table.  Assume the table has 10,000 rows.
+         */
         public DbModule() : base("/db")
         {
             Get["/{queries?1}"] = paramz =>
             {
-                var queries = (int)paramz.queries;
-                
-                var random = new Random();
-                using (var db = new MySqlConnection(MYSQL_CONNECTION_STRING))
-                {
-                    db.Open();
-
-                    if (queries == 1)
-                        return GetRandomWorld(db, random);
-                    else
-                    {
-                        var worldCount = queries > 500 ? 500 : queries;
-                        worldCount = worldCount < 1 ? 1 : worldCount;
-
-                        // NOTE: Experiment with running the DB requests in parallel, on both Mono and Windows CLRs.
-                        var worlds = new World[worldCount];
-
-                        for (int i = 0; i < worldCount; ++i)
-                        {
-                            worlds[i] = GetRandomWorld(db, random);
-                        }
-                        return worlds;
-                    }
-                }
+              var random = new Random();
+              using (var db = new MySqlConnection(MYSQL_CONNECTION_STRING))
+              {
+                db.Open();
+                return Response.AsJson(GetRandomWorld(db, random));
+              }
             };
         }
 

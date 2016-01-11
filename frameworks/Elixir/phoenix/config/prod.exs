@@ -11,7 +11,7 @@ config :hello, Hello.Repo,
   username: "benchmarkdbuser",
   password: "benchmarkdbpass",
   database: "hello_world",
-  hostname: "192.168.56.101",
+  hostname: "localhost",
   pool_size: 256
 
 # ## SSL Support
@@ -28,7 +28,7 @@ config :hello, Hello.Repo,
 # Where those two env variables point to a file on
 # disk for the key and cert.
 
-config :logger, level: :error
+config :logger, level: :info
 
 # ## Using releases
 #
