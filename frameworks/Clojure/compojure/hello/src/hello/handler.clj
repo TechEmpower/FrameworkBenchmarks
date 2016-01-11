@@ -1,5 +1,4 @@
 (ns hello.handler
-  (:import com.mchange.v2.c3p0.ComboPooledDataSource)
   (:use compojure.core
         ring.middleware.content-type
         ring.middleware.json
@@ -11,7 +10,8 @@
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
             [ring.util.response :as ring-resp]
-            [clojure.java.jdbc :as jdbc]))
+            [clojure.java.jdbc :as jdbc]
+            [hikari-cp.core :refer :all]))
 
 (defn sanitize-queries-param
   "Sanitizes the `queries` parameter. Clamps the value between 1 and 500.
@@ -36,31 +36,30 @@
           :delimiters "" ;; remove delimiters
           :maximum-pool-size 256}))
 
-;; MySQL database connection for java.jdbc "raw"
-;; https://github.com/clojure/java.jdbc/blob/master/doc/clojure/java/jdbc/ConnectionPooling.md
-(def db-spec-mysql-raw
-  {:classname "com.mysql.jdbc.Driver"
-   :subprotocol "mysql"
-   :subname "//127.0.0.1:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
-   :user "benchmarkdbuser"
-   :password "benchmarkdbpass"})
+;; MySQL database connection for java.jdbc "raw" using HikariCP
+(def datasource-options-hikaricp {:auto-commit        true
+                                  :read-only          false
+                                  :connection-timeout 30000
+                                  :validation-timeout 5000
+                                  :idle-timeout       600000
+                                  :max-lifetime       1800000
+                                  :minimum-idle       10
+                                  :maximum-pool-size  256
+                                  :pool-name          "db-pool"
+                                  :adapter            "mysql"
+                                  :username           "benchmarkdbuser"
+                                  :password           "benchmarkdbpass"
+                                  :database-name      "hello_world"
+                                  :server-name        "127.0.0.1"
+                                  :port-number        3306
+                                  :register-mbeans    false})
 
-(defn pool
-  [spec]
-  (let [cpds (doto (ComboPooledDataSource.)
-               (.setDriverClass (:classname spec))
-               (.setJdbcUrl (str "jdbc:" (:subprotocol spec) ":" (:subname spec)))
-               (.setUser (:user spec))
-               (.setPassword (:password spec))
-               ;; expire excess connections after 30 minutes of inactivity:
-               (.setMaxIdleTimeExcessConnections (* 30 60))
-               ;; expire connections after 3 hours of inactivity:
-               (.setMaxIdleTime (* 3 60 60)))]
-    {:datasource cpds}))
+;; Create HikariCP-pooled "raw" jdbc data source
+(def db-spec-mysql-raw-hikaricp
+  (make-datasource datasource-options-hikaricp))
 
-(def pooled-db (delay (pool db-spec-mysql-raw)))
-
-(defn db-mysql-raw [] @pooled-db)
+;; Get a HikariCP-pooled "raw" jdbc connection
+(defn db-mysql-raw [] {:datasource db-spec-mysql-raw-hikaricp})
 
 ;; Set up entity World and the database representation
 (defentity world

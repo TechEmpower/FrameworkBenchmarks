@@ -9,7 +9,7 @@
                  [log4j "1.2.15" :exclusions [javax.mail/mail javax.jms/jms com.sun.jdmk/jmxtools com.sun.jmx/jmxri]]
                  [mysql/mysql-connector-java "5.1.38"]
                  [org.clojure/java.jdbc "0.3.7"]
-                 [c3p0/c3p0 "0.9.1.2"]
+                 [hikari-cp "1.5.0"]
                  [hiccup "1.0.5"]]
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler hello.handler/app}
