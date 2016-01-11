@@ -214,4 +214,4 @@ script:
 
 cache:
   directories:
-  - $HOME/.m2/repository
+  - /home/testrunner/.m2/repository
