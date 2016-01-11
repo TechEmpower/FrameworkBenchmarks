@@ -108,7 +108,7 @@ public class App extends AbstractVerticle {
             ctx.response()
                 .putHeader(HttpHeaders.SERVER, SERVER)
                 .putHeader(HttpHeaders.DATE, date)
-                .putHeader(HttpHeaders.CONTENT_TYPE, "text/html")
+                .putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=UTF-8")
                 .end(res.result());
           } else {
             ctx.fail(res.cause());
@@ -299,6 +299,7 @@ public class App extends AbstractVerticle {
             fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
           }
 
+          fortunes.add(new Fortune(0, "Additional fortune added at request time."));
           Collections.sort(fortunes);
 
           ctx.put("fortunes", fortunes);
@@ -309,7 +310,7 @@ public class App extends AbstractVerticle {
               ctx.response()
                   .putHeader(HttpHeaders.SERVER, SERVER)
                   .putHeader(HttpHeaders.DATE, date)
-                  .putHeader(HttpHeaders.CONTENT_TYPE, "text/html")
+                  .putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=UTF-8")
                   .end(res.result());
             } else {
               ctx.fail(res.cause());
