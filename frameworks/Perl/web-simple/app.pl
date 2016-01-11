@@ -3,7 +3,7 @@ use Web::Simple;
 use JSON::XS;
 use DBI;
 
-my $dsn = "dbi:mysql:database=hello_world;host=127.0.0.1";
+my $dsn = "dbi:mysql:database=hello_world;host=localhost";
 my $dbh = DBI->connect( $dsn, 'benchmarkdbuser', 'benchmarkdbpass', { RaiseError => 1 });
 my $sth = $dbh->prepare('SELECT * FROM World where id = ?');
 
