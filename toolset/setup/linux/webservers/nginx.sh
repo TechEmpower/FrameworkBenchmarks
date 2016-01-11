@@ -7,9 +7,9 @@ RETCODE=$(fw_exists ${IROOT}/nginx.installed)
 
 NGINX_HOME=$IROOT/nginx
 
-fw_get -O http://nginx.org/download/nginx-1.4.1.tar.gz
-fw_untar nginx-1.4.1.tar.gz
-cd nginx-1.4.1
+fw_get -O http://nginx.org/download/nginx-1.9.9.tar.gz
+fw_untar nginx-1.9.9.tar.gz
+cd nginx-1.9.9
 
 # There is no --quiet flag that I could find...
 echo "Configuring nginx..."

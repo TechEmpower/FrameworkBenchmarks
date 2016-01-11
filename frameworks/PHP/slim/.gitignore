@@ -1,3 +1,5 @@
+deploy/nginx.conf
+deploy/php-fpm.pid
 /app/cache
 /app/logs
 /bin

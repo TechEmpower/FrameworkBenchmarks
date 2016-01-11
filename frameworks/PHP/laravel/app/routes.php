@@ -21,16 +21,28 @@ Route::get('/plaintext', function()
     return "Hello, World!";
 });
 
-Route::get('/db', function()
+Route::get('/query', function()
 {
     $queries = Input::get('queries', 1);
-    $worlds = array();
 
-    for($i = 0; $i < $queries; ++$i) {
-        $worlds[] = DB::table('World')->find(mt_rand(1, 10000));
+    if (!is_numeric($queries) || $queries <= 1) {
+    	$queries = 1;
+    }
+    else if ($queries > 500) {
+        $queries = 500;
     }
 
+    $worlds = array();
+
+    for($i = 0; $i < $queries; $i++) {
+        $worlds[] = DB::table('World')->find(mt_rand(1, 10000));
+    }
     return Response::json($worlds);
+});
+
+Route::get('/db', function()
+{
+    return Response::json(DB::table('World')->find(mt_rand(1, 10000)));
 });
 
 Route::get('/fortunes', 'BenchController@fortunes');

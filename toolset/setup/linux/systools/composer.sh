@@ -1,7 +1,5 @@
 #!/bin/bash
 
-fw_depends php
-
 RETCODE=$(fw_exists ${IROOT}/composer.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/composer.installed

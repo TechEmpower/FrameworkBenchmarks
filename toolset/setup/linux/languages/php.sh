@@ -47,7 +47,7 @@ $PHP_HOME/bin/pecl config-set php_ini $PHP_HOME/lib/php.ini
 printf "\n" | $PHP_HOME/bin/pecl -q install -f redis
 
 # yaf.so
-printf "\n" | $PHP_HOME/bin/pecl -q install -f yaf
+# printf "\n" | $PHP_HOME/bin/pecl -q install -f yaf
 
 # phalcon.so
 #   The configure seems broken, does not respect prefix. If you 
@@ -65,8 +65,8 @@ $PHP_HOME/bin/phpize
 make --quiet
 make install
 
-# mongo.so
-printf "\n" | $PHP_HOME/bin/pecl -q install -f mongo
+# mongodb.so
+printf "\n" | $PHP_HOME/bin/pecl -q install -f mongodb
 
 # Clean up a bit
 rm -rf $IROOT/php
