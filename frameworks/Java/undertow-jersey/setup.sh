@@ -1,0 +1,7 @@
+#!/bin/bash
+
+fw_depends java7 maven
+
+mvn clean package
+
+java -jar target/undertow-jersey.jar -dbhost ${DBHOST} &
