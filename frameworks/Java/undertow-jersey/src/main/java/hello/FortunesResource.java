@@ -23,7 +23,7 @@ public class FortunesResource
   public Viewable fortunes()
   {
     final Session session = sessionFactory.openSession();
-    final List fortunes = new ArrayList(
+    final List<Fortune> fortunes = new ArrayList<>(
         session.createCriteria(Fortune.class).list());
     fortunes.add(new Fortune(0, "Additional fortune added at request time."));
     Collections.sort(fortunes);

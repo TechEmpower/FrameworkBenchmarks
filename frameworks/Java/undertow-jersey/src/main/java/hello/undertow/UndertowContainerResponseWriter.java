@@ -24,7 +24,7 @@ public class UndertowContainerResponseWriter
   public OutputStream writeResponseStatusAndHeaders(long contentLength,
       ContainerResponse responseContext) throws ContainerException
   {
-    httpServerExchange.setResponseCode(responseContext.getStatus());
+    httpServerExchange.setStatusCode(responseContext.getStatus());
 
     for (Map.Entry<String, List<String>> mapEntry : responseContext.getStringHeaders().entrySet())
     {
@@ -40,6 +40,7 @@ public class UndertowContainerResponseWriter
   public boolean suspend(long timeOut, TimeUnit timeUnit,
       TimeoutHandler timeoutHandler)
   {
+    // TODO implement
     return false;
   }
 
@@ -47,7 +48,7 @@ public class UndertowContainerResponseWriter
   public void setSuspendTimeout(long timeOut, TimeUnit timeUnit)
       throws IllegalStateException
   {
-    //        Util.l("suspendtimeout");
+    //TODO implement
   }
 
   @Override
@@ -59,7 +60,8 @@ public class UndertowContainerResponseWriter
   @Override
   public void failure(Throwable error)
   {
-    httpServerExchange.setResponseCode(500);
+    // TODO don't print out
+    httpServerExchange.setStatusCode(500);
     httpServerExchange.endExchange();
     error.printStackTrace();
   }
@@ -67,6 +69,7 @@ public class UndertowContainerResponseWriter
   @Override
   public boolean enableResponseBuffering()
   {
+    // TODO not sure
     return false;
   }
 }
