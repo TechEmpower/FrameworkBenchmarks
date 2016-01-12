@@ -964,10 +964,15 @@ class Benchmarker:
 
     # setup results and latest_results directories 
     self.result_directory = os.path.join("results", self.name)
-    if args['clean'] == 'results':
-        shutil.rmtree(self.result_directory)
+    if args['clean'] or args['clean_all']:
+        shutil.rmtree(os.path.join(self.fwroot, "results"))
     self.latest_results_directory = self.latest_results_directory()
   
+    # remove installs directories if --clean-all provided
+    if args['clean_all']:
+        os.system("sudo rm -rf " + os.path.join(self.fwroot, "installs"))
+        os.mkdir("installs")
+
     if hasattr(self, 'parse') and self.parse != None:
       self.timestamp = self.parse
     else:
