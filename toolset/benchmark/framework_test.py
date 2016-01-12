@@ -389,7 +389,7 @@ class FrameworkTest:
       try:
         results = test.verify(base_url)
       except ConnectionError as e:
-        results = [('fail',"Server did not respond to request")]
+        results = [('fail',"Server did not respond to request", base_url)]
         logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
       except Exception as e:
         results = [('fail',"""Caused Exception in TFB

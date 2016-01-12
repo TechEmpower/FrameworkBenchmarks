@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java7
+fw_depends java
 
 RETCODE=$(fw_exists ${IROOT}/resin.installed)
 [ ! "$RETCODE" == 0 ] || { \
