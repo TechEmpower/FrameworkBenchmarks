@@ -1,4 +1,4 @@
-# Undertow+Jersey Benchmarking Test
+# Undertow + Jersey + c3p0 Benchmarking Test
 ### Heavily borrowed from the grizzly-jersey test
 
 This is the Undertow+Jersey portion of a [benchmarking test suite](../) comparing a variety of web development platforms.

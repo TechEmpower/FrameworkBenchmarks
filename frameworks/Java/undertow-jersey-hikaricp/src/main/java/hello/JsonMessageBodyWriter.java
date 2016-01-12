@@ -15,7 +15,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Provider
 @Singleton
-@Produces(APPLICATION_JSON + "; charset=utf-8")
+@Produces(APPLICATION_JSON)
 public class JsonMessageBodyWriter
     implements MessageBodyWriter<Object>
 {

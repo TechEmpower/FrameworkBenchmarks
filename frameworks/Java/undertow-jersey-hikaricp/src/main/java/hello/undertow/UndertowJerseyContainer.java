@@ -78,8 +78,8 @@ public class UndertowJerseyContainer
 
     this.applicationHandler = new ApplicationHandler(configuration);
 
-    this.applicationHandler.onReload(this);
     this.applicationHandler.onStartup(this);
+    this.applicationHandler.onReload(this);
   }
 
   @Override

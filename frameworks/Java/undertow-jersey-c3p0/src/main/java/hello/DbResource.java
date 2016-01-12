@@ -21,7 +21,7 @@ public class DbResource
   private SessionFactory sessionFactory;
 
   @GET
-  @Produces(APPLICATION_JSON + "; charset=utf-8")
+  @Produces(APPLICATION_JSON)
   public Object db(@QueryParam("queries") String queryParam,
       @QueryParam("single") boolean isSingle)
       throws ExecutionException, InterruptedException
