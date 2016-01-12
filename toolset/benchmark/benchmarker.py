@@ -9,6 +9,7 @@ from utils import gather_frameworks
 from utils import verify_database_connections
 
 import os
+import shutil
 import stat
 import json
 import subprocess
@@ -963,6 +964,8 @@ class Benchmarker:
 
     # setup results and latest_results directories 
     self.result_directory = os.path.join("results", self.name)
+    if args['clean'] == 'results':
+        shutil.rmtree(self.result_directory)
     self.latest_results_directory = self.latest_results_directory()
   
     if hasattr(self, 'parse') and self.parse != None:

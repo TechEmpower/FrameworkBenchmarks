@@ -146,6 +146,7 @@ def main(argv=None):
         help='''Affects : With unified, all server software is installed into a single directory. 
         With pertest each test gets its own installs directory, but installation takes longer''')
     parser.add_argument('--install-only', action='store_true', default=False, help='Do not run benchmark or verification, just install and exit')
+    parser.add_argument('--clean', choices=['results'], help='Removes the results directory', default=None)
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
@@ -211,3 +212,4 @@ def main(argv=None):
 
 if __name__ == "__main__":
     sys.exit(main())
+kain
