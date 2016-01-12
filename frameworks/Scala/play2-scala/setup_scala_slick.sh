@@ -1,8 +1,6 @@
 #!/bin/bash
 
-export JAVA_HOME=/opt/java8
-
-fw_depends java8 sbt
+fw_depends java sbt
 
 cd play2-scala-slick
 sed -i "s|jdbc:mysql:\/\/.*:3306|jdbc:mysql://${DBHOST}:3306|g" ${TROOT}/play2-scala-slick/conf/application.conf

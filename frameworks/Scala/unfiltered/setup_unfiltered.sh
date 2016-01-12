@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java7 scala sbt
+fw_depends java scala sbt
 
 sed -i 's|jdbc:mysql://.*:3306|jdbc:mysql://'"${DBHOST}"':3306|g' src/main/resources/application.conf
 sed -i 's|maxThreads = .*|maxThreads = '"${MAX_THREADS}"'|g' src/main/resources/application.conf

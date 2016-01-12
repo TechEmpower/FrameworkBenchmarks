@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java8 maven
+fw_depends java maven
 
 mvn clean compile assembly:single
 

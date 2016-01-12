@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm java7 jruby-1.7.13
+fw_depends rvm java jruby-1.7.13
 
 rvm jruby-1.7.13 do bundle install --gemfile=$TROOT/Gemfile
 
