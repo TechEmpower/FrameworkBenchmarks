@@ -34,7 +34,28 @@ type Fortune struct {
 }
 
 const (
+	// Content
 	helloWorldString = "Hello, World!"
+	fortuneHTML      = `<!DOCTYPE html>
+<html>
+<head>
+<title>Fortunes</title>
+</head>
+<body>
+<table>
+<tr>
+<th>id</th>
+<th>message</th>
+</tr>
+{{range .}}
+<tr>
+<td>{{.Id}}</td>
+<td>{{.Message}}</td>
+</tr>
+{{end}}
+</table>
+</body>
+</html>`
 
 	// Databases
 	//
@@ -54,7 +75,7 @@ var (
 	helloWorldBytes = []byte(helloWorldString)
 
 	// Templates
-	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
+	tmpl = template.Must(template.New("fortune.html").Parse(fortuneHTML))
 
 	// Database
 	db                    *sql.DB
