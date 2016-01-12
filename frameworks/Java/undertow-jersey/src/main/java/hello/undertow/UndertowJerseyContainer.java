@@ -86,8 +86,14 @@ public class UndertowJerseyContainer
   public void handleRequest(final HttpServerExchange httpServerExchange)
       throws Exception
   {
+    String requestUri = httpServerExchange.getRequestURI();
+    if(httpServerExchange.getQueryString().length() > 0)
+    {
+      requestUri = requestUri + "?" + httpServerExchange.getQueryString();
+    }
+
     final ContainerRequest request = new ContainerRequest(null,
-        URI.create(httpServerExchange.getRequestURI()),
+        URI.create(requestUri),
         httpServerExchange.getRequestMethod().toString(),
         DEFAULT_SECURITY_CONTEXT, new MapPropertiesDelegate());
 
