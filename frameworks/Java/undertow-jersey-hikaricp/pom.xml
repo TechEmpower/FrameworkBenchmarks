@@ -56,12 +56,12 @@
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
-      <version>4.2.1.Final</version>
+      <version>4.3.11.Final</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-c3p0</artifactId>
-      <version>4.2.1.Final</version>
+      <artifactId>hibernate-hikaricp</artifactId>
+      <version>4.3.11.Final</version>
     </dependency>
 
     <dependency>

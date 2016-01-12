@@ -24,11 +24,11 @@ public class SessionFactoryProvider
   public SessionFactory provide()
   {
     Configuration configuration = new Configuration().configure();
-    String url = configuration.getProperty("hibernate.connection.url");
+    String url = configuration.getProperty("hibernate.hikari.dataSource.url");
     url = url.replace("//localhost:3306/",
         "//" + this.application.getProperties().get("dbhost") + ":"
             + this.application.getProperties().get("dbport") + "/");
-    configuration.setProperty("hibernate.connection.url", url);
+    configuration.setProperty("hibernate.hikari.dataSource.url", url);
     configuration.addAnnotatedClass(World.class);
     configuration.addAnnotatedClass(Fortune.class);
     ServiceRegistryBuilder serviceRegistryBuilder = new ServiceRegistryBuilder().applySettings(
