@@ -1,5 +1,5 @@
 {
-  "framework": "undertow-jersey",
+  "framework": "undertow-jersey-hikaricp",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -18,9 +18,9 @@
       "webserver": "Undertow",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "undertow-jersey",
+      "display_name": "undertow-jersey-hikaricp",
       "notes": "",
-      "versus": "grizzly-jersey"
+      "versus": "undertow-jersey-c3p0"
     }
   }]
 }
