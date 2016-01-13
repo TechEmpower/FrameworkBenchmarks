@@ -45,7 +45,7 @@
       "versus": "php"
     },
     "php5": {
-      "setup_file": "setup",
+      "setup_file": "setup_php5",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db-orm",
@@ -67,7 +67,7 @@
       "versus": "php"
     },
     "php5-raw": {
-      "setup_file": "setup",
+      "setup_file": "setup_php5",
       "db_url": "/db",
       "query_url": "/db-multiple/",
       "fortune_url": "/fortune",
