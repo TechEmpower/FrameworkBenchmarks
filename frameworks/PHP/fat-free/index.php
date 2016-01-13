@@ -1,4 +1,8 @@
 <?php
+// drop startup errors
+if (function_exists('error_clear_last'))
+    error_clear_last();
+
 /** @var Base $f3 */
 $f3=require('src/base.php');
 
