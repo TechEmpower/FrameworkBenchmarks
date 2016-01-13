@@ -280,7 +280,7 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 
 	sort.Sort(ByMessage{fortunes})
 	w.Header().Set("Server", "Go")
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := tmpl.Execute(w, fortunes); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -297,7 +297,7 @@ func fortuneInterpolateHandler(w http.ResponseWriter, r *http.Request) {
 
 	sort.Sort(ByMessage{fortunes})
 	w.Header().Set("Server", "Go")
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := tmpl.Execute(w, fortunes); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
