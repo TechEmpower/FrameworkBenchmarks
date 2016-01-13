@@ -16,7 +16,8 @@ public class FortuneActionBean extends BaseActionBean {
     @DefaultHandler
     @HandlesEvent(FORTUNES)
     public Resolution fortunes() {
-        Iterable<Fortune> it = this.fortuneRepository.findAll();
+/*
+        Itterable<Fortune> it = this.fortuneRepository.findAll();
         fortunes = new ArrayList<>();
         Iterator<Fortune> iterator = it.iterator();
         while (iterator.hasNext()) {
@@ -25,6 +26,8 @@ public class FortuneActionBean extends BaseActionBean {
             fortune.setMessage(fortune.getMessage().replaceAll("<script>", "&ltscript&gt"));
             fortunes.add(fortune);
         }
+*/
+        fortunes = this.fortuneRepository.findAll();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
         Map<String, String> headers = new HashMap<>();
