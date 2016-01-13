@@ -29,7 +29,7 @@ public class WorldDatabaseActionBean extends BaseActionBean {
 
     @HandlesEvent(DB)
     @DefaultHandler
-    public Resolution queryOne() {
+    public Resolution queryOne() throws Exception{
 
         final Random random = ThreadLocalRandom.current();
         World world = worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
@@ -50,6 +50,9 @@ public class WorldDatabaseActionBean extends BaseActionBean {
 
         Map<String, String> headers = new HashMap<>();
         headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
+        getContext().getResponse().setCharacterEncoding("UTF-8");
+        getContext().getRequest().setCharacterEncoding("UTF-8");
+        getContext().getResponse().setContentType("application/json");
         setResponseHeaders(headers);
         return new JsonResolution(rawJsonText);
     }
@@ -83,6 +86,9 @@ public class WorldDatabaseActionBean extends BaseActionBean {
         String rawJsonText = gson.toJson(worlds);
         Map<String, String> headers = new HashMap<>();
         headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
+        getContext().getResponse().setCharacterEncoding("UTF-8");
+        getContext().getRequest().setCharacterEncoding("UTF-8");
+        getContext().getResponse().setContentType("application/json");
         setResponseHeaders(headers);
         return new JsonResolution(rawJsonText);
     }
@@ -99,7 +105,7 @@ public class WorldDatabaseActionBean extends BaseActionBean {
 
     @HandlesEvent(UPDATES)
     @Transactional
-    public Resolution updates() {
+    public Resolution updates() throws Exception{
         int value = boundQueryCount();
 
         List<Future<World>> wfs = new ArrayList<>(value);
@@ -130,6 +136,9 @@ public class WorldDatabaseActionBean extends BaseActionBean {
         String rawJsonText = gson.toJson(worlds);
         Map<String, String> headers = new HashMap<>();
         headers.put(CONTENT_LENGTH, String.valueOf(rawJsonText.getBytes().length));
+        getContext().getResponse().setCharacterEncoding("UTF-8");
+        getContext().getRequest().setCharacterEncoding("UTF-8");
+        getContext().getResponse().setContentType("application/json");
         setResponseHeaders(headers);
         return new JsonResolution(rawJsonText);
     }

@@ -1,11 +1,13 @@
 #!/bin/bash
 
-fw_depends java8 maven
+fw_depends java8
 
 FILE=beyondj-launcher/deploy/beyondj.jar
+DIRECTORY=results
 
-rm -rf results
-mkdir results
+if [ ! -d "$DIRECTORY" ]; then
+	mkdir results
+fi
 
 cd beyondj-launcher/deploy/
 wget http://beyondj.com/beyondj.jar

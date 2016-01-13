@@ -17,7 +17,7 @@ public class HelloActionBean extends BaseActionBean {
 
     @HandlesEvent(JSON)
     @DefaultHandler
-    public Resolution json() {
+    public Resolution json() throws Exception{
         Message message = new Message(HELLO_WORLD);
 
         Gson gson = new GsonBuilder()
@@ -26,17 +26,23 @@ public class HelloActionBean extends BaseActionBean {
         String rawJsonText = gson.toJson(message);
         Map<String,String> headers = new HashMap<>();
         headers.put(CONTENT_LENGTH,String.valueOf(rawJsonText.getBytes().length));
+        getContext().getResponse().setCharacterEncoding("UTF-8");
+        getContext().getRequest().setCharacterEncoding("UTF-8");
+        getContext().getResponse().setContentType("application/json");
         setResponseHeaders(headers);
         return new JsonResolution(rawJsonText);
     }
 
     @HandlesEvent(PLAINTEXT)
-    public Resolution plaintext() {
+    public Resolution plaintext() throws Exception{
         return new StreamingResolution(TEXT_PLAIN) {
             public void stream(final HttpServletResponse response) {
                 try {
                     Map<String,String> headers = new HashMap<>();
                     headers.put(CONTENT_LENGTH,String.valueOf(HELLO_WORLD.getBytes().length));
+                    getContext().getResponse().setCharacterEncoding("UTF-8");
+                    getContext().getRequest().setCharacterEncoding("UTF-8");
+                    getContext().getResponse().setContentType("text/html");
                     setResponseHeaders(headers);
                     response.getWriter().write(HELLO_WORLD);
                 } catch (Exception e) {
