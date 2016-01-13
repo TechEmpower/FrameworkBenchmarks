@@ -10,7 +10,7 @@ if [ ! -d "$DIRECTORY" ]; then
 fi
 
 cd beyondj-launcher/deploy/
-wget http://beyondj.com/beyondj.jar
+fw_get http://beyondj.com/beyondj.jar
 chmod 775 beyondj.jar
 cd ../../
 
