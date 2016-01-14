@@ -16,5 +16,3 @@ WHERE id = :id
 --name: get-all-fortunes
 -- query all fortune records
 SELECT id, message FROM fortune
-
-

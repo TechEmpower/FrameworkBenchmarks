@@ -1,20 +1,13 @@
 (ns hello.handler
-  (:require [compojure.core :refer [defroutes routes]]
+  (:require [compojure.core :refer [defroutes routes wrap-routes]]
+            [hello.layout :refer [error-page]]
             [hello.routes.home :refer [home-routes]]
-            [hello.db.core :as db]
-            [hello.middleware
-             :refer [development-middleware production-middleware]]
-            [hello.session :as session]
+            [hello.middleware :as middleware]
+            [clojure.tools.logging :as log]
             [compojure.route :as route]
-            [taoensso.timbre :as timbre]
-            [taoensso.timbre.appenders.rotor :as rotor]
-            [selmer.parser :as parser]
             [environ.core :refer [env]]
-            [cronj.core :as cronj]))
-
-(defroutes base-routes
-           (route/resources "/")
-           (route/not-found "Not Found"))
+            [hello.config :refer [defaults]]
+            [mount.core :as mount]))
 
 (defn init
   "init will be called once when
@@ -22,36 +15,27 @@
    an app server such as Tomcat
    put any initialization code here"
   []
-  (timbre/set-config!
-    [:appenders :rotor]
-    {:min-level             :info
-     :enabled?              true
-     :async?                false ; should be always false for rotor
-     :max-message-per-msecs nil
-     :fn                    rotor/appender-fn})
-
-  (timbre/set-config!
-    [:shared-appender-config :rotor]
-    {:path "hello.log" :max-size (* 512 1024) :backlog 10})
-
-  (if (env :dev) (parser/cache-off!))
-  (db/connect!)
-  ;;start the expired session cleanup job
-  (cronj/start! session/cleanup-job)
-  (timbre/info "\n-=[ hello started successfully"
-               (when (env :dev) "using the development profile") "]=-"))
+  (when-let [config (:log-config env)]
+    (org.apache.log4j.PropertyConfigurator/configure config))
+  (doseq [component (:started (mount/start))]
+    (log/info component "started"))
+  ((:init defaults)))
 
 (defn destroy
   "destroy will be called when your application
    shuts down, put any clean up code here"
   []
-  (timbre/info "hello is shutting down...")
-  (cronj/shutdown! session/cleanup-job)
-  (timbre/info "shutdown complete!"))
+  (log/info "hello is shutting down...")
+  (doseq [component (:stopped (mount/stop))]
+    (log/info component "stopped"))
+  (log/info "shutdown complete!"))
 
-(def app
-  (-> (routes
-        home-routes
-        base-routes)
-      development-middleware
-      production-middleware))
+(def app-routes
+  (routes
+    (wrap-routes #'home-routes middleware/wrap-csrf)
+    (route/not-found
+      (:body
+        (error-page {:status 404
+                     :title "page not found"})))))
+
+(def app (middleware/wrap-base #'app-routes))

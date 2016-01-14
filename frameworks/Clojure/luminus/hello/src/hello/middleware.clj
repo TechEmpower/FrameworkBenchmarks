@@ -1,37 +1,61 @@
 (ns hello.middleware
-  (:require [hello.session :as session]
-            [taoensso.timbre :as timbre]
+  (:require [hello.layout :refer [*app-context* error-page]]
+            [clojure.tools.logging :as log]
             [environ.core :refer [env]]
-            [selmer.middleware :refer [wrap-error-page]]
-            [prone.middleware :refer [wrap-exceptions]]
-            [ring.util.response :refer [redirect]]
+            [ring.middleware.flash :refer [wrap-flash]]
+            [immutant.web.middleware :refer [wrap-session]]
+            [ring.middleware.webjars :refer [wrap-webjars]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
-            [ring.middleware.session-timeout :refer [wrap-idle-session-timeout]]
-            [noir-exception.core :refer [wrap-internal-error]]
-            [ring.middleware.session.memory :refer [memory-store]]
+            [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
             [ring.middleware.format :refer [wrap-restful-format]]
-            
-            ))
+            [hello.config :refer [defaults]])
+  (:import [javax.servlet ServletContext]))
 
-(defn log-request [handler]
+(defn wrap-context [handler]
+  (fn [request]
+    (binding [*app-context*
+              (if-let [context (:servlet-context request)]
+                ;; If we're not inside a servlet environment
+                ;; (for example when using mock requests), then
+                ;; .getContextPath might not exist
+                (try (.getContextPath ^ServletContext context)
+                     (catch IllegalArgumentException _ context))
+                ;; if the context is not specified in the request
+                ;; we check if one has been specified in the environment
+                ;; instead
+                (:app-context env))]
+      (handler request))))
+
+(defn wrap-internal-error [handler]
   (fn [req]
-    (timbre/debug req)
-    (handler req)))
+    (try
+      (handler req)
+      (catch Throwable t
+        (log/error t)
+        (error-page {:status 500
+                     :title "Something very bad has happened!"
+                     :message "We've dispatched a team of highly trained gnomes to take care of the problem."})))))
 
-(defn development-middleware [handler]
-  (if (env :dev)
-    (-> handler
-        wrap-error-page
-        wrap-exceptions)
-    handler))
+(defn wrap-csrf [handler]
+  (wrap-anti-forgery
+    handler
+    {:error-response
+     (error-page
+       {:status 403
+        :title "Invalid anti-forgery token"})}))
 
-(defn production-middleware [handler]
-  (-> handler
-      
-      (wrap-restful-format :formats [:json-kw :edn :transit-json :transit-msgpack])
-      (wrap-idle-session-timeout
-        {:timeout (* 60 30)
-         :timeout-response (redirect "/")})
+(defn wrap-formats [handler]
+  (wrap-restful-format handler {:formats [:json-kw :transit-json :transit-msgpack]}))
+
+(defn wrap-base [handler]
+  (-> ((:middleware defaults) handler)
+      wrap-formats
+      wrap-webjars
+      wrap-flash
+      (wrap-session {:cookie-attrs {:http-only true}})
       (wrap-defaults
-        (assoc-in site-defaults [:session :store] (memory-store session/mem)))
-      (wrap-internal-error :log #(timbre/error %))))
+        (-> site-defaults
+            (assoc-in [:security :anti-forgery] false)
+            (dissoc :session)))
+      wrap-context
+      wrap-internal-error))

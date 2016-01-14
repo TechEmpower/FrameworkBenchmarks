@@ -16,7 +16,7 @@
       "framework": "luminus",
       "language": "Clojure",
       "orm": "Raw",
-      "platform": "http-kit",
+      "platform": "Immutant",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
