@@ -1,4 +1,4 @@
-import AssemblyKeys._
+import sbtassembly.AssemblyKeys._
 
 organization := "code"
 
@@ -6,7 +6,7 @@ name := "lift-stateless"
 
 version := "0.0.1"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.11.7"
 
 scalacOptions ++= Seq(
   "-deprecation",

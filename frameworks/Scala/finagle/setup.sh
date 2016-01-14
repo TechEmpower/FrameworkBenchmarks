@@ -2,6 +2,6 @@
 
 fw_depends java sbt
 
-sbt update compile
+sbt update compile -batch
 
 sbt -Ddb.host=${DBHOST} run &

@@ -2,7 +2,7 @@ name := "finagle"
 
 organization := "com.falmarri"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.11.7"
 
 version := "1.0"
 

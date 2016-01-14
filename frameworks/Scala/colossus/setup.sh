@@ -2,6 +2,6 @@
 
 fw_depends java sbt
 
-sbt 'oneJar'
+sbt 'oneJar' -batch
 
 java -jar target/scala-2.11/colossus*one-jar.jar
