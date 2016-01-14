@@ -11,8 +11,8 @@ sed -i "s|PREFORK_CHILD .*|PREFORK_CHILD ${MAX_THREADS}|g"					  $IROOT/ULib/ben
 sed -i "s|CLIENT_FOR_PARALLELIZATION .*|CLIENT_FOR_PARALLELIZATION 100|g" $IROOT/ULib/benchmark.cfg
 
 # 2. Start ULib Server (userver_tcp)
-export REDIS_HOST=$DBHOST
-export UMEMPOOL="1261,0,0,49,274,-14,-15,-24,40"
+export MONGODB_HOST=$DBHOST
+export UMEMPOOL="1057,0,0,49,274,-14,-15,-24,40"
 
 # Never use setcap inside of TRAVIS 
 [ "$TRAVIS" != "true" ] || { \

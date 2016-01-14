@@ -5,14 +5,14 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static World*           pworld_update;
-static UOrmSession*     psql_update;
-static UOrmStatement*   pstmt1;
-static UOrmStatement*   pstmt2;
-static UVector<World*>* pvworld_update;
+static World*         pworld_update;
+static UOrmSession*   psql_update;
+static UOrmStatement* pstmt1;
+static UOrmStatement* pstmt2;
 
 #ifndef AS_cpoll_cppsp_DO
 static UValue* pvalue;
+static UVector<World*>* pvworld_update;
 #endif
 
 static void usp_fork_update()
@@ -29,7 +29,7 @@ static void usp_fork_update()
       if (pstmt1 == 0 ||
           pstmt2 == 0)
          {
-         U_ERROR("usp_fork_update(): we cound't connect to db");
+         U_WARNING("usp_fork_update(): we cound't connect to db");
          }
 
       pworld_update = U_NEW(World);
@@ -38,10 +38,9 @@ static void usp_fork_update()
       pstmt1->into(pworld_update->randomNumber);
       pstmt2->use( pworld_update->randomNumber, pworld_update->id);
 
-      pvworld_update = U_NEW(UVector<World*>(500));
-
 #  ifndef AS_cpoll_cppsp_DO
-      pvalue = U_NEW(UValue(ARRAY_VALUE));
+      pvalue         = U_NEW(UValue(ARRAY_VALUE));
+      pvworld_update = U_NEW(UVector<World*>(500));
 #  endif
       }
 }
@@ -56,36 +55,22 @@ static void usp_end_update()
       {
       delete pstmt1;
       delete pstmt2;
-
-      delete    psql_update;
-      delete pvworld_update;
-      delete  pworld_update;
+      delete psql_update;
+      delete pworld_update;
 
 #  ifndef AS_cpoll_cppsp_DO
       delete pvalue;
+      delete pvworld_update;
 #  endif
       }
 }
 #endif
 -->
-<!--#args
-queries;
--->
 <!--#header
 Content-Type: application/json
 -->
 <!--#code
-int i = 0, num_queries;
-const char* ptr = queries.data();
-
-if (u__isdigit(*ptr) == false) num_queries = 1;
-else
-   {
-   num_queries = u_strtoul(ptr, queries.end());
-
-        if (num_queries <   1) num_queries = 1;
-   else if (num_queries > 500) num_queries = 500;
-   }
+int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR('[');
@@ -103,9 +88,9 @@ while (true)
 
 #ifdef AS_cpoll_cppsp_DO
    USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld_update->id, pworld_update->randomNumber);
-#endif
-
+#else
    pvworld_update->push_back(U_NEW(World(*pworld_update)));
+#endif
 
    if (++i == num_queries) break;
 
@@ -119,6 +104,6 @@ USP_PUTS_CHAR(']');
 #else
 USP_JSON_stringify(*pvalue, UVector<World*>, *pvworld_update);
 pvalue->clear();
-#endif
 pvworld_update->clear();
+#endif
 -->

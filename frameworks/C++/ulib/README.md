@@ -10,21 +10,25 @@ This is the [ULib](http://stefanocasazza.github.io/ULib/) portion of a [benchmar
 
 * [Database test source (SQL)](src/db.usp)
 * [Database test source (REDIS)](src/rdb.usp)
+* [Database test source (MONGODB)](src/mdb.usp)
 
 ### Variable Query Test
 
 * [Variable Query test source (SQL)](src/query.usp)
 * [Variable Query test source (REDIS)](src/rquery.usp)
+* [Variable Query test source (MONGODB)](src/mquery.usp)
 
 ### Fortune Query Test
 
 * [Fortune Query test source (SQL)](src/fortune.usp)
 * [Fortune Query test source (REDIS)](src/rfortune.usp)
+* [Fortune Query test source (MONGODB)](src/mfortune.usp)
 
 ### Variable Query (update) Test
 
 * [Variable Query (update) test source (SQL)](src/update.usp)
 * [Variable Query (update) test source (REDIS)](src/rupdate.usp)
+* [Variable Query (update) test source (MONGODB)](src/mupdate.usp)
 
 ### Plaintext Test
 
@@ -80,7 +84,7 @@ Content-Type: application/json
 HTTP/1.1 200 OK
 Date: Thu, 03 Jul 2014 10:14:51 GMT
 Server: ULib 
-Content-Type: text/html
+Content-Type: text/html; charset=UTF-8
 Content-Length: 1227
 
 <!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><tr><td>11</td><td>&lt;script&gt;alert(&quot;This should not be displayed in a browser alert box.&quot;);&lt;/script&gt;</td></tr><tr><td>4</td><td>A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1</td></tr><tr><td>5</td><td>A computer program does what you tell it to do, not what you want it to do.</td></tr><tr><td>2</td><td>A computer scientist is someone who fixes things that aren&apos;t broken.</td></tr><tr><td>8</td><td>A list is only as strong as its weakest link. — Donald Knuth</td></tr><tr><td>0</td><td>Additional fortune added at request time.</td></tr><tr><td>3</td><td>After enough decimal places, nobody gives a damn.</td></tr><tr><td>7</td><td>Any program that runs right is obsolete.</td></tr><tr><td>10</td><td>Computers make very fast, very accurate mistakes.</td></tr><tr><td>6</td><td>Emacs is a nice operating system, but I prefer UNIX. — Tom Christaensen</td></tr><tr><td>9</td><td>Feature: A bug with seniority.</td></tr><tr><td>1</td><td>fortune: No such file or directory</td></tr><tr><td>12</td><td>フレームワークのベンチマーク</td></tr></table></body></html>
