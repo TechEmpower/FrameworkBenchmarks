@@ -1,4 +1,4 @@
-RKING_DIR=beyondj-launcher/deploy
+WORKING_DIR=beyondj-launcher/deploy
 FILE=beyondj-launcher/deploy/beyondj.jar
 
 if [ ! -d "$WORKING_DIR" ]; then
