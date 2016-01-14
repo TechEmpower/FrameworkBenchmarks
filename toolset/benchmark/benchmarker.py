@@ -969,9 +969,10 @@ class Benchmarker:
     self.latest_results_directory = self.latest_results_directory()
   
     # remove installs directories if --clean-all provided
+    self.install_root = "%s/%s" % (self.fwroot, "installs")
     if args['clean_all']:
-        os.system("rm -rf " + os.path.join(self.fwroot, "installs"))
-        os.mkdir("installs")
+        os.system("rm -rf " + self.install_root)
+        os.mkdir(self.install_root)
 
     if hasattr(self, 'parse') and self.parse != None:
       self.timestamp = self.parse
