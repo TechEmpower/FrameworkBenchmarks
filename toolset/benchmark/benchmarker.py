@@ -970,7 +970,7 @@ class Benchmarker:
   
     # remove installs directories if --clean-all provided
     if args['clean_all']:
-        os.system("sudo rm -rf " + os.path.join(self.fwroot, "installs"))
+        os.system("rm -rf " + os.path.join(self.fwroot, "installs"))
         os.mkdir("installs")
 
     if hasattr(self, 'parse') and self.parse != None:

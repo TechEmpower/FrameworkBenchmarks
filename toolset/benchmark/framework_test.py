@@ -188,6 +188,8 @@ class FrameworkTest:
                 max(self.benchmarker.concurrency_levels)))
 
     # Always ensure that IROOT belongs to the runner_user
+    if not os.path.exists("installs"):
+      os.mkdir("installs")
     chown = "sudo chown -R %s:%s %s" % (self.benchmarker.runner_user,
       self.benchmarker.runner_user, os.path.join(self.fwroot, self.install_root))
     subprocess.check_call(chown, shell=True, cwd=self.fwroot, executable='/bin/bash')
