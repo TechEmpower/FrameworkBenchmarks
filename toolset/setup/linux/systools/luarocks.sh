@@ -15,7 +15,7 @@ fw_untar luarocks-$LUAROCKS_VERSION.tar.gz
 
 cd $LUAROCKS
 ./configure --prefix=$LUA_HOME --with-lua=$LUA_HOME
-make bootstrap
+make --quiet bootstrap
 
 echo "" > $IROOT/luarocks.installed
 
