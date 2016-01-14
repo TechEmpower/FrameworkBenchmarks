@@ -1,5 +1,5 @@
 WORKING_DIR=beyondj-launcher/deploy
-FILE=beyondj-launcher/deploy/beyondj.jar
+#FILE=beyondj-launcher/deploy/beyondj.jar
 
 if [ ! -d "$WORKING_DIR" ]; then
         mkdir $WORKING_DIR
