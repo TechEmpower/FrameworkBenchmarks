@@ -1,1 +1,1 @@
-run folder
+run dir

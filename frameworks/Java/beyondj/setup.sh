@@ -1,18 +1,15 @@
-#!/bin/bash
-
-fw_depends java8
-
+RKING_DIR=beyondj-launcher/deploy
 FILE=beyondj-launcher/deploy/beyondj.jar
-DIRECTORY=results
 
-if [ ! -d "$DIRECTORY" ]; then
-	mkdir results
+if [ ! -d "$WORKING_DIR" ]; then
+        mkdir $WORKING_DIR
 fi
 
-cd beyondj-launcher/deploy/
-fw_get http://beyondj.com/beyondj.jar
-chmod 775 beyondj.jar
-cd ../../
+#if [ ! -f "$FILE" ]; then
+        cd beyondj-launcher/deploy/
+        wget http://beyondj.com/beyondj.jar
+        cd ../../
+#fi
 
 echo "Launching BeyondJ from location:$PWD"
 java -jar beyondj-launcher/deploy/beyondj.jar system.platform.dbserver=${DBHOST} numInstances=10
