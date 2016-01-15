@@ -16,8 +16,8 @@ fw_untar ngx_openresty-$OPENRESTY_VERSION.tar.gz
 
 cd ngx_openresty-$OPENRESTY_VERSION
 ./configure --with-luajit-xcflags=-DLUAJIT_NUMMODE=2 --with-http_postgres_module --prefix=$OPENRESTY_HOME -j4
-make -j4
-make install
+make -j4 --quiet
+make --quiet install
 
 echo "export OPENRESTY_HOME=${OPENRESTY_HOME}" > $IROOT/openresty.installed
 echo -e "export PATH=\$OPENRESTY_HOME/nginx/sbin:\$PATH" >> $IROOT/openresty.installed

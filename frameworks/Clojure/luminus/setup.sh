@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java7 resin leiningen 
+fw_depends java resin leiningen 
 
 # Update db host in the source file
 sed -i 's|:subname "//.*:3306|:subname "//'"${DBHOST}"':3306|g' hello/src/hello/db/core.clj

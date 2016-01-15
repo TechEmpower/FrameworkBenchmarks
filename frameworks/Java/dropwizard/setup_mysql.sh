@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sed -i 's|url: jdbc:mysql://.*/hello_world|url: jdbc:mysql://'"${DBHOST}"':3306/hello_world|g' hello-world-mysql.yml
+fw_depends java maven
 
-fw_depends java7 maven
+sed -i 's|url: jdbc:mysql://.*/hello_world|url: jdbc:mysql://'"${DBHOST}"':3306/hello_world|g' hello-world-mysql.yml
 
 mvn -P mysql clean package
 

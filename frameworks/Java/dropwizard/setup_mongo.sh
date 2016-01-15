@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# load java environment variables
-source $IROOT/java7.installed
+fw_depends java maven
 
 sed -i 's|host: 127.0.0.1|host: '"${DBHOST}"'|g' hello-world-mongo.yml
 

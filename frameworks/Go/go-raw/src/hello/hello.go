@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"html/template"
 	"log"
 	"math/rand"
@@ -33,7 +34,28 @@ type Fortune struct {
 }
 
 const (
+	// Content
 	helloWorldString = "Hello, World!"
+	fortuneHTML      = `<!DOCTYPE html>
+<html>
+<head>
+<title>Fortunes</title>
+</head>
+<body>
+<table>
+<tr>
+<th>id</th>
+<th>message</th>
+</tr>
+{{range .}}
+<tr>
+<td>{{.Id}}</td>
+<td>{{.Message}}</td>
+</tr>
+{{end}}
+</table>
+</body>
+</html>`
 
 	// Databases
 	//
@@ -41,7 +63,7 @@ const (
 	// It reduces round trips without prepared statement.
 	//
 	// We can see difference between prepared statement and interpolation by comparing go-raw and go-raw-interpolate
-	connectionString = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?interpolateParams=true"
+	connectionString = "benchmarkdbuser:benchmarkdbpass@tcp(%s:3306)/hello_world?interpolateParams=true"
 	worldSelect      = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate      = "UPDATE World SET randomNumber = ? WHERE id = ?"
 	fortuneSelect    = "SELECT id, message FROM Fortune"
@@ -53,7 +75,7 @@ var (
 	helloWorldBytes = []byte(helloWorldString)
 
 	// Templates
-	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
+	tmpl = template.Must(template.New("fortune.html").Parse(fortuneHTML))
 
 	// Database
 	db                    *sql.DB
@@ -67,7 +89,11 @@ var child = flag.Bool("child", false, "is child proc")
 
 func initDB() {
 	var err error
-	db, err = sql.Open("mysql", connectionString)
+	var dbhost = os.Getenv("DBHOST")
+	if dbhost == "" {
+		dbhost = "localhost"
+	}
+	db, err = sql.Open("mysql", fmt.Sprintf(connectionString, dbhost))
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
 	}
@@ -254,7 +280,7 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 
 	sort.Sort(ByMessage{fortunes})
 	w.Header().Set("Server", "Go")
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := tmpl.Execute(w, fortunes); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -271,7 +297,7 @@ func fortuneInterpolateHandler(w http.ResponseWriter, r *http.Request) {
 
 	sort.Sort(ByMessage{fortunes})
 	w.Header().Set("Server", "Go")
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := tmpl.Execute(w, fortunes); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

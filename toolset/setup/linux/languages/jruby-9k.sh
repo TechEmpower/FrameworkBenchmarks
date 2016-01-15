@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm java8
+fw_depends rvm java
 
 # rvm stable [typically] only provides one version of jruby-9.0
 # update this when it changes

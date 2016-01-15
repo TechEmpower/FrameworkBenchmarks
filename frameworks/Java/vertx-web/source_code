@@ -1,0 +1,15 @@
+./vertx-web/src
+./vertx-web/src/main
+./vertx-web/src/main/resources
+./vertx-web/src/main/resources/templates
+./vertx-web/src/main/resources/templates/fortunes.hbs
+./vertx-web/src/main/java
+./vertx-web/src/main/java/io
+./vertx-web/src/main/java/io/vertx
+./vertx-web/src/main/java/io/vertx/benchmark
+./vertx-web/src/main/java/io/vertx/benchmark/App.java
+./vertx-web/src/main/java/io/vertx/benchmark/Helper.java
+./vertx-web/src/main/java/io/vertx/benchmark/model
+./vertx-web/src/main/java/io/vertx/benchmark/model/Message.java
+./vertx-web/src/main/java/io/vertx/benchmark/model/Fortune.java
+./vertx-web/src/main/java/io/vertx/benchmark/model/World.java

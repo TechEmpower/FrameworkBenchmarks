@@ -8,10 +8,20 @@ RETCODE=$(fw_exists ${IROOT}/lua.installed)
 LUA_VERSION="5.1"
 LUA_MICRO="5"
 
-fw_get -O https://github.com/LuaDist/lua/archive/$LUA_VERSION.$LUA_MICRO-Ubuntu-x86_64.tar.gz
-fw_untar $LUA_VERSION.$LUA_MICRO-Ubuntu-x86_64.tar.gz
+fw_get -O https://github.com/LuaDist/lua/archive/$LUA_VERSION.$LUA_MICRO.tar.gz
+fw_untar $LUA_VERSION.$LUA_MICRO.tar.gz
 
-LUA_HOME=$IROOT/lua-$LUA_VERSION.$LUA_MICRO-Ubuntu-x86_64
+LUA_HOME=$IROOT/lua-$LUA_VERSION.$LUA_MICRO
+
+cd $LUA_HOME
+cp src/luaconf.h.orig src/luaconf.h
+make linux
+cd src
+mkdir ../bin ../include ../lib
+install -p -m 0755 lua luac ../bin
+install -p -m 0644 lua.h luaconf.h lualib.h lauxlib.h ../include
+install -p -m 0644 liblua.a ../lib
+
 echo "export LUA_HOME=${LUA_HOME}" > $IROOT/lua.installed
 echo "export LUA_VERSION=${LUA_VERSION}" >> $IROOT/lua.installed
 echo "export LUA_MICRO=${LUA_MICRO}" >> $IROOT/lua.installed

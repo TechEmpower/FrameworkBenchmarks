@@ -3,7 +3,7 @@
 sed -i 's|localhost|'"${DBHOST}"'|g' src/main/webapp/WEB-INF/resin-web.xml
 sed -i 's|localhost|'"${DBHOST}"'|g' src/main/java/app/config/DbConfig.java
 
-fw_depends java7 resin maven
+fw_depends java resin maven
 
 mvn clean package
 rm -rf $RESIN_HOME/webapps/*
