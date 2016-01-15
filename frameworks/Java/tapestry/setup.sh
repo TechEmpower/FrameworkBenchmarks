@@ -2,7 +2,7 @@
 
 sed -i 's|mysql://.*:3306|mysql://'"${DBHOST}"':3306|g' hello/src/main/webapp/WEB-INF/resin-web.xml
 
-fw_depends java7 resin maven
+fw_depends java resin maven
 
 cd hello
 mvn clean compile war:war

@@ -2,7 +2,7 @@
 
 sed -i 's|jdbc:mysql://.*:3306|jdbc:mysql://'"${DBHOST}"':3306|g' hello/grails-app/conf/DataSource.groovy
 
-fw_depends java7 grails resin 
+fw_depends java grails resin 
 
 cd hello
 grails -Dgrails.work.dir=${IROOT}/.grails -non-interactive -plain-output refresh-dependencies

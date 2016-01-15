@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java8 sbt
+fw_depends java sbt
 
 cd play2-scala-anorm
 sed -i "s|jdbc:mysql:\/\/.*:3306|jdbc:mysql://${DBHOST}:3306|g" ${TROOT}/play2-scala-anorm/conf/application.conf

@@ -6,7 +6,7 @@ RETCODE=$(fw_exists ${IROOT}/grails.installed)
   return 0; }
 
 VERSION="2.4.4"
-GRAINS_HOME=$IROOT/grains-$VERSION
+GRAILS_HOME=$IROOT/grails-$VERSION
 
 fw_get -O http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-$VERSION.zip
 fw_unzip grails-$VERSION.zip

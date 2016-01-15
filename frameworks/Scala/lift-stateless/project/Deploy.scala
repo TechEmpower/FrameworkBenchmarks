@@ -1,6 +1,6 @@
 import sbt._
 import Keys._
-import sbtassembly.Plugin.AssemblyKeys._
+import sbtassembly.AssemblyKeys._
 
 object Deploy {
   val deployPackTask = TaskKey[Unit]("deploy-pack")

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java8
+fw_depends java
 
 $TROOT/gradlew capsule
 
