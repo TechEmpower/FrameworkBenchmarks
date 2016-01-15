@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# load java environment variables
-source $IROOT/java7.installed
+fw_depends java maven
 
 sed -i 's|url: jdbc:postgresql://.*/hello_world|url: jdbc:postgresql://'"${DBHOST}"':5432/hello_world|g' hello-world-postgres.yml
 

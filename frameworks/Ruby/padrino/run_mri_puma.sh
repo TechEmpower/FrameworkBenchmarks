@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm java7 ruby-2.0.0-p0
+fw_depends rvm java ruby-2.0.0-p0
 
 rvm ruby-2.0.0-p0 do bundle install --gemfile=$TROOT/Gemfile --path vendor/bundle
 

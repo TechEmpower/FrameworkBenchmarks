@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm java7 jruby-1.7.8
+fw_depends rvm java jruby-1.7.8
 
 sed -i 's|127.0.0.1|'${DBHOST}'|g' config/database.yml
 

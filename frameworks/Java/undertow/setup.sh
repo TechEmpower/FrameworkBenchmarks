@@ -2,7 +2,7 @@
 
 sed -i 's|DATABASE_HOST|'"${DBHOST}"'|g' src/main/resources/hello/server.properties
 
-fw_depends java8 maven
+fw_depends java maven
 
 mvn clean compile assembly:single
 cd target

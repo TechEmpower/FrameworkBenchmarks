@@ -28,3 +28,5 @@ sleep=60
 test=None
 type=all
 verbose=True
+clean=False
+clean_all=False

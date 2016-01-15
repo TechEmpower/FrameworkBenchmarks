@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java8 sbt
+fw_depends java sbt
 
 sed -i 's|127.0.0.1:3306|'${DBHOST}':3306|g' play2-java-ebean-bonecp/conf/application.conf
 

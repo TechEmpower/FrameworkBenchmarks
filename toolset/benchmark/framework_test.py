@@ -188,6 +188,8 @@ class FrameworkTest:
                 max(self.benchmarker.concurrency_levels)))
 
     # Always ensure that IROOT belongs to the runner_user
+    if not os.path.exists(self.install_root):
+      os.mkdir(self.install_root)
     chown = "sudo chown -R %s:%s %s" % (self.benchmarker.runner_user,
       self.benchmarker.runner_user, os.path.join(self.fwroot, self.install_root))
     subprocess.check_call(chown, shell=True, cwd=self.fwroot, executable='/bin/bash')
@@ -389,7 +391,7 @@ class FrameworkTest:
       try:
         results = test.verify(base_url)
       except ConnectionError as e:
-        results = [('fail',"Server did not respond to request")]
+        results = [('fail',"Server did not respond to request", base_url)]
         logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
       except Exception as e:
         results = [('fail',"""Caused Exception in TFB
