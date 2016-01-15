@@ -85,8 +85,12 @@ public class WicketApplication extends WebApplication
 				InitialContext jndiContext = new InitialContext();
 				dataSource = (DataSource) jndiContext.lookup("java:comp/env/jdbc/hello_world");
 			}
-			else try(HikariDataSource ds = new HikariDataSource();)
+			else 
 			{
+				// allocating a resource for future use should not (auto) close the resource 
+				@SuppressWarnings("resource")
+				HikariDataSource ds = new HikariDataSource();
+
 				// use faster DataSource impl
 				ds.setJdbcUrl("jdbc:mysql://localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true");
 				ds.setDriverClassName("com.mysql.jdbc.Driver");
