@@ -24,7 +24,7 @@
                  [luminus-nrepl "0.1.2"]
                  [migratus "0.8.8"]
                  [conman "0.2.9"]
-                 [mysql/mysql-connector-java "5.1.34"]
+                 [org.postgresql/postgresql "9.4-1206-jdbc4"]
                  [org.webjars/webjars-locator-jboss-vfs "0.1.0"]
                  [luminus-immutant "0.1.0"]]
 
@@ -50,8 +50,8 @@
                                  [ring/ring-devel "1.4.0"]
                                  [pjstadig/humane-test-output "0.7.1"]
                                  [mvxcvi/puget "1.0.0"]]
-                  
-                  
+
+
                   :source-paths ["env/dev/clj"]
                   :repl-options {:init-ns hello.core}
                   :injections [(require 'pjstadig.humane-test-output)
