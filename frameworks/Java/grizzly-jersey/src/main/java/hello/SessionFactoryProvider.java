@@ -24,9 +24,9 @@ public class SessionFactoryProvider extends SingletonTypeInjectableProvider<Cont
   
   private static SessionFactory createSessionFactory(final ResourceConfig rc) {
     Configuration configuration = new Configuration().configure();
-    String url = configuration.getProperty("hibernate.connection.url");
+    String url = configuration.getProperty("hibernate.hikari.dataSource.url");
     url = url.replace("//localhost:3306/", "//" + rc.getProperty("dbhost") + ":" + rc.getProperty("dbport") + "/");
-    configuration.setProperty("hibernate.connection.url", url);
+    configuration.setProperty("hibernate.hikari.dataSource.url", url);
     configuration.addAnnotatedClass(World.class);
     configuration.addAnnotatedClass(Fortune.class);
     ServiceRegistryBuilder serviceRegistryBuilder = new ServiceRegistryBuilder().applySettings(configuration.getProperties());
