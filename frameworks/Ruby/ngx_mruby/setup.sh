@@ -7,15 +7,15 @@ fw_depends rvm nginx
 # in Travis-CI
 if [ "$TRAVIS" = "true" ]
 then
-  rvmsudo rvm install ruby-2.0.0-p0
+  rvmsudo rvm install ruby-2.0
 else
-  rvm install ruby-2.0.0-p0
+  rvm install ruby-2.0
 fi
 
 sed -i 's|CWD|'"${TROOT}"'|g' nginx.conf
 sed -i 's|DBHOSTNAME|'"${DBHOST}"'|g' nginx.conf
 
-rvm use ruby-2.0.0-p0
+rvm use ruby-2.0
 
 RETCODE=$(fw_exists ${IROOT}/nginx_mruby.installed)
 [ "$RETCODE" == 0 ] || { \

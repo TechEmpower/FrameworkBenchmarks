@@ -1,13 +1,16 @@
 #!/bin/bash
 
-fw_depends rvm
+fw_depends rvm java
 
-JRUBY_VERSION="1.7.13"
 RETCODE=$(fw_exists ${IROOT}/jruby-${JRUBY_VERSION}.installed)
 [ ! "$RETCODE" == 0 ] || { \
   # Load environment variables
   source $IROOT/jruby-$JRUBY_VERSION.installed
   return 0; }
+
+# rvm stable [typically] only provides one version of jruby-1.7
+# update this when it changes
+JRUBY_VERSION="1.7.19"
 
 # We assume single-user installation as 
 # done in our rvm.sh script and 
@@ -23,6 +26,6 @@ else
   rvm jruby-$JRUBY_VERSION do gem install bundler
 fi
 
-echo "" > $IROOT/jruby-$JRUBY_VERSION.installed
+echo "export JRUBY_VERSION=${JRUBY_VERSION}" > $IROOT/jruby-$JRUBY_VERSION.installed
 
 source $IROOT/jruby-$JRUBY_VERSION.installed
