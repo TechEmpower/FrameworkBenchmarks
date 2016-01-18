@@ -9,12 +9,12 @@ scalaVersion := "2.10.3"
 version := "1.0"
 
 resolvers ++= Seq(
-  "markkolich.github.io repo" at "http://markkolich.github.io/repo"
+  "markkolich.github.io repo" at "http://markkolich.github.io/repo/"
 )
 
 libraryDependencies ++= Seq(
-  "com.kolich.curacao" % "curacao" % "2.9-M1" % "compile",
-  "com.kolich.curacao" % "curacao-gson" % "2.9-M1" % "compile",
+  "curacao" % "curacao" % "4.0.0" % "compile",
+  "curacao" % "curacao-gson" % "4.0.0" % "compile",
   "org.eclipse.jetty" % "jetty-webapp" % "9.2.9.v20150224" % "compile",
   "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
   "org.slf4j" % "slf4j-api" % "1.7.2" % "compile",

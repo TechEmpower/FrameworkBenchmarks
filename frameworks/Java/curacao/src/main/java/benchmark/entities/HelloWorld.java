@@ -3,7 +3,7 @@ package benchmark.entities;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import com.kolich.curacao.gson.GsonAppendableCuracaoEntity;
+import curacao.gson.GsonAppendableCuracaoEntity;
 
 public final class HelloWorld extends GsonAppendableCuracaoEntity {
 
