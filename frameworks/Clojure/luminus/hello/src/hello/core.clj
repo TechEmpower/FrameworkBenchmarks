@@ -1,30 +1,41 @@
 (ns hello.core
-  (:require [hello.handler :refer [app init]]
-            [clojure.tools.cli :refer [cli]]
-            [org.httpkit.server :refer [run-server]])
+  (:require [hello.handler :refer [app init destroy]]
+            [luminus.repl-server :as repl]
+            [luminus.http-server :as http]
+            [hello.db.migrations :as migrations]
+            [environ.core :refer [env]])
   (:gen-class))
 
-(defn parse-port [s]
-  "Convert stringy port number int. Defaults to 8080."
-  (cond
-    (string? s) (Integer/parseInt s)
-    (instance? Integer s) s
-    (instance? Long s) (.intValue ^Long s)
-    :else 8080))
+(defn parse-port [port]
+  (when port
+    (cond
+      (string? port) (Integer/parseInt port)
+      (number? port) port
+      :else          (throw (Exception. (str "invalid port value: " port))))))
 
-(defn start-server [{:keys [port]}]
-  (let [cpu (.availableProcessors (Runtime/getRuntime))]
-    ;; double worker threads should increase database access performance
-    (init)
-    (run-server app {:port port :thread (* 2 cpu)})
-    (println (str "http-kit server listens at :" port))))
+(defn http-port [port]
+  (parse-port (or port (env :port) 3000)))
+
+(defn stop-app []
+  (repl/stop)
+  (http/stop destroy)
+  (shutdown-agents))
+
+(defn start-app
+  "e.g. lein run 3000"
+  [[port]]
+  (let [port (http-port port)]
+    (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app))
+    (when-let [repl-port (env :nrepl-port)]
+      (repl/start {:port (parse-port repl-port)}))
+    (http/start {:handler app
+                 :init    init
+                 :port    port})))
 
 (defn -main [& args]
-  (let [[options _ banner]
-        (cli args
-             ["-p" "--port" "Port to listen" :default 8080 :parse-fn parse-port]
-             ["--[no-]help" "Print this help"])]
-    (when (:help options)
-          (println banner)
-          (System/exit 0))
-    (start-server options)))
+  (cond
+    (some #{"migrate" "rollback"} args)
+    (do (migrations/migrate args) (System/exit 0))
+    :else
+    (start-app args)))
+  
