@@ -1,19 +1,19 @@
 package benchmark;
 
 import benchmark.entities.HelloWorld;
-import com.kolich.curacao.annotations.Controller;
-import com.kolich.curacao.annotations.RequestMapping;
-import com.kolich.curacao.mappers.request.matchers.AntPathMatcher;
+import curacao.annotations.Controller;
+import curacao.annotations.RequestMapping;
+import curacao.mappers.request.matchers.CuracaoAntPathMatcher;
 
 @Controller
 public final class Benchmarks {
 
-    @RequestMapping(value="/json", matcher=AntPathMatcher.class)
+    @RequestMapping(value="/json", matcher=CuracaoAntPathMatcher.class)
     public final HelloWorld json() {
         return new HelloWorld("Hello, World!");
     }
 
-    @RequestMapping(value="/plaintext", matcher=AntPathMatcher.class)
+    @RequestMapping(value="/plaintext", matcher=CuracaoAntPathMatcher.class)
     public final String plainText() {
         return "Hello, World!";
     }

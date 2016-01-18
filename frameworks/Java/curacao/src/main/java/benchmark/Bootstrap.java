@@ -1,7 +1,7 @@
 package benchmark;
 
-import com.kolich.curacao.CuracaoContextListener;
-import com.kolich.curacao.CuracaoDispatcherServlet;
+import curacao.CuracaoContextListener;
+import curacao.CuracaoDispatcherServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
