@@ -40,8 +40,8 @@ class HelloWorld < Sinatra::Base
     # XSS, CSRF, IP spoofing, etc. protection are not explicitly required
     disable :protection
 
-    # Don't add ;charset= to any content types per the benchmark requirements
-    set :add_charset, []
+    # Only add ;charset= to specific content types per the benchmark requirements
+    set :add_charset, %w[text/html]
   end
 
   helpers do
@@ -58,16 +58,16 @@ class HelloWorld < Sinatra::Base
 
   after do
     # Add mandatory HTTP headers to every response
-    response['Server'] ||= 'Puma'
+    response['Server'] ||= 'Puma'.freeze
     response['Date'] ||= Time.now.to_s
   end
 
   get '/json', :provides => :json do
-    JSON.fast_generate :message => 'Hello, World!'
+    JSON.fast_generate :message => 'Hello, World!'.freeze
   end
 
   get '/plaintext', :provides => :text do
-    'Hello, World!'
+    'Hello, World!'.freeze
   end
 
   get '/db', :provides => :json do
@@ -79,16 +79,17 @@ class HelloWorld < Sinatra::Base
     queries = 1 if queries < 1
     queries = 500 if queries > 500
 
-    World
-      .where(:id => randn(queries))
-      .to_json
+    # Benchmark requirements explicitly forbid a WHERE..IN here, so be good...
+    worlds = randn(queries).map! { |id| World[id] }
+
+    World.to_json :array => worlds
   end
 
   get '/fortunes' do
     @fortunes = Fortune.all
     @fortunes << Fortune.new(
       :id => 0,
-      :message => 'Additional fortune added at request time.'
+      :message => 'Additional fortune added at request time.'.freeze
     )
     @fortunes.sort_by!(&:message)
 
@@ -100,26 +101,17 @@ class HelloWorld < Sinatra::Base
     queries = 1 if queries < 1
     queries = 500 if queries > 500
 
-    # Prepare our updates in advance so transaction retries are idempotent
-    updates = randn(queries).map! { |id| [id, rand1] }.to_h
-
-    worlds = nil
-
-    World.db.transaction do
-      worlds = World
-        .where(:id => updates.keys.sort!)
-        .for_update
-        .all
-
-      worlds
-        .each { |w| w.randomNumber = updates[w.id] }
-
-      World.dataset
-        .on_duplicate_key_update(:randomNumber)
-        .import([:id, :randomNumber], worlds.map { |w| [w.id, w.randomNumber] })
+    # Benchmark requirements explicitly forbid a WHERE..IN here, and specify
+    # that each transaction only read and write a single record, so be good...
+    worlds = []
+    randn(queries).each do |id|
+      World.db.transaction do
+        world = World.for_update[id]
+        world.update :randomNumber => rand1
+        worlds << world
+      end
     end
 
-    # The models are dirty but OK to return if the batch update was successful
     World.to_json :array => worlds
   end
 end
