@@ -247,16 +247,16 @@
   (GET "/json"                 [] (json-serialization))
   (GET "/db"                   [] (single-query-test))
   (GET "/queries/:queries"     [queries] (multiple-queries-test queries))
-  (GET "/queries/"             [] (multiple-queries-test)) ; When param is omitted
-  (GET "/fortunes"             [] fortune-test)
+  (GET "/queries/"             [] (multiple-queries-test 1)) ; When param is omitted
+  (GET "/fortunes"             [] (fortune-test))
   (GET "/updates/:queries"     [queries] (db-updates queries))
-  (GET "/updates/"             [] (db-updates)) ; When param is omitted
+  (GET "/updates/"             [] (db-updates 1)) ; When param is omitted
   (GET "/raw/db"               [] (single-query-test-raw))
   (GET "/raw/queries/:queries" [queries] (multiple-queries-test-raw queries))
-  (GET "/raw/queries/"         [] (multiple-queries-test-raw)) ; When param is omitted
+  (GET "/raw/queries/"         [] (multiple-queries-test-raw 1)) ; When param is omitted
   (GET "/raw/fortunes"         [] (fortune-test-raw))
   (GET "/raw/updates/:queries" [queries] (db-updates-raw queries))
-  (GET "/raw/updates/"         [] (db-updates-raw)) ; When param is omitted
+  (GET "/raw/updates/"         [] (db-updates-raw 1)) ; When param is omitted
   (route/not-found "Not Found"))
 
 (defn parse-port [s] 
