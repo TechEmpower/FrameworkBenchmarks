@@ -231,9 +231,8 @@
       (update-and-persist-raw)
       (ring-resp/response)))
 
-(defn plaintext
+(def plaintext
   "Test 6: Plaintext"
-  []
   (->
     (ring-resp/response "Hello, World!")
     (ring-resp/content-type "text/plain")))
@@ -241,7 +240,7 @@
 ;; Define route handlers
 (defroutes app-routes
   (GET "/"                     [] "Hello, World!")
-  (GET "/plaintext"            [] (plaintext))
+  (GET "/plaintext"            [] plaintext)
   (GET "/json"                 [] (json-serialization))
   (GET "/db"                   [] (single-query-test))
   (GET "/queries/:queries"     [queries] (multiple-queries-test queries))
