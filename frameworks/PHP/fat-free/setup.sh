@@ -3,7 +3,7 @@
 fw_depends php7 nginx
 
 sed -i 's|localhost|'"${DBHOST}"'|g' index.php
-sed -i 's|root .*/FrameworkBenchmarks/frameworks/PHP/fat-free|root '"${TROOT}"'|g' deploy/nginx.conf
+sed -i 's|root .*/FrameworkBenchmarks/fat-free|root '"${TROOT}"'|g' deploy/nginx.conf
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
 F3DIR="$TROOT/src"
@@ -15,5 +15,5 @@ pushd "$F3DIR" > /dev/null
 git checkout -q "b284f0c482e858f0162cab529925e7de14d90746" # v3.5.0
 popd > /dev/null
 
-php-fpm --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
-nginx -c $TROOT/deploy/nginx.conf
+php-fpm --fpm-config "$FWROOT/config/php-fpm.conf" -g "$TROOT/deploy/php-fpm.pid"
+nginx -c "$TROOT/deploy/nginx.conf"
