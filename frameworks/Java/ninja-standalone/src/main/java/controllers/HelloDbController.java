@@ -62,7 +62,7 @@ public class HelloDbController {
 
         // now update stuff:
         for (World world : worlds) {
-            world.randomNumber = ThreadLocalRandom.current().nextInt();
+            world.randomNumber = ThreadLocalRandom.current().nextInt(DB_ROWS) + 1;
             worldDao.put(world);
         }
 

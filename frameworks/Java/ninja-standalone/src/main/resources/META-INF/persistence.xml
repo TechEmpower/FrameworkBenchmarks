@@ -20,15 +20,12 @@
                 <property name="hibernate.jdbc.batch_size" value="100" />
 
                 <!-- Connection Pooling settings -->
-                <property name="hibernate.connection.provider_class"
-                          value="org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider" />
-
-                <property name="hibernate.c3p0.max_size" value="100" />
-                <property name="hibernate.c3p0.min_size" value="0" />
-                <property name="hibernate.c3p0.acquire_increment" value="1" />
-                <property name="hibernate.c3p0.idle_test_period" value="300" />
-                <property name="hibernate.c3p0.max_statements" value="0" />
-                <property name="hibernate.c3p0.timeout" value="100" />     
+                <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+                <property name="hibernate.cache.use_query_cache" value="false" />
+                <property name="hibernate.minimumIdle" value="256" />
+                <property name="hibernate.maximumPoolSize" value="256" />
+                <property name="hibernate.idleTimeout" value="30000" />
+                <property name="hibernate.dataSourceClassName" value="org.h2.jdbcx.JdbcDataSource" />
             </properties>
         </persistence-unit>
 
@@ -44,15 +41,16 @@
 			<property name="hibernate.format_sql" value="false" />
                         <property name="hibernate.jdbc.batch_size" value="100" />
 			<!-- Connection Pooling settings -->
-			<property name="hibernate.connection.provider_class"
-				value="org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider" />
-
-			<property name="hibernate.c3p0.max_size" value="100" />
-			<property name="hibernate.c3p0.min_size" value="0" />
-			<property name="hibernate.c3p0.acquire_increment" value="1" />
-			<property name="hibernate.c3p0.idle_test_period" value="300" />
-			<property name="hibernate.c3p0.max_statements" value="0" />
-			<property name="hibernate.c3p0.timeout" value="100" />
+                        <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
+                        <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+                        <property name="hibernate.cache.use_query_cache" value="false" />
+                        <property name="hibernate.hikari.minimumIdle" value="256" />
+                        <property name="hibernate.hikari.maximumPoolSize" value="256" />
+                        <property name="hibernate.hikari.idleTimeout" value="30000" />
+                        <property name="hibernate.hikari.dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
+                        <property name="hibernate.hikari.dataSource.url" value="jdbc:mysql://localhost:3306/hello_world?jdbcCompliantTruncation=false&amp;elideSetAutoCommits=true&amp;useLocalSessionState=true&amp;cachePrepStmts=true&amp;cacheCallableStmts=true&amp;alwaysSendSetIsolation=false&amp;prepStmtCacheSize=4096&amp;cacheServerConfiguration=true&amp;prepStmtCacheSqlLimit=2048&amp;zeroDateTimeBehavior=convertToNull&amp;traceProtocol=false&amp;useUnbufferedInput=false&amp;useReadAheadInput=false&amp;maintainTimeStats=false&amp;useServerPrepStmts&amp;cacheRSMetadata=true" />
+                        <property name="hibernate.hikari.dataSource.user" value="benchmarkdbuser" />
+                        <property name="hibernate.hikari.dataSource.password" value="benchmarkdbpass" />
 		</properties>
 	</persistence-unit>
 
