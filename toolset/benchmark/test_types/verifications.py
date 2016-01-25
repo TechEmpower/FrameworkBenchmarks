@@ -1,4 +1,5 @@
 import json
+import re
 
 
 def basic_body_verification(body, url, is_json_check=True):
@@ -44,7 +45,6 @@ def verify_headers(headers, url, should_be='json'):
         'plaintext': 'text/plain'
     }
     expected_type = types[should_be]
-    includes_charset = expected_type + '; charset=utf-8'
 
     problems = []
 
@@ -67,41 +67,37 @@ def verify_headers(headers, url, should_be='json'):
                  expected_type),
              url))
     else:
-    	content_type = content_type.lower()
+        # Split out "charset=utf-8" if it's included
+        content_type_list = re.split('; *', content_type.lower())
+        charset = 'charset=utf-8'
         # "text/html" requires charset to be set. The others do not
         if expected_type == types['html']:
-            if content_type == expected_type:
-                problems.append(
-                    ('warn',
-                     ('The \"%s\" content type requires \"charset=utf-8\" to be specified.'
-                      % content_type),
-                     url))
-            elif content_type != includes_charset:
+            if expected_type not in content_type_list:
                 problems.append(
                     ('warn',
                      'Unexpected content encoding, found \"%s\", expected \"%s\".' % (
-                         content_type, expected_type),
+                         content_type, expected_type + '; ' + charset),
                      url))
-        elif expected_type == types['json']:
-            if content_type == includes_charset:
+            elif charset not in content_type_list:
                 problems.append(
                     ('warn',
-                     ("Content encoding found \"%s\" where \"%s\" is acceptable.\n"
-                      "Additional response bytes may negatively affect benchmark performance."
-                      % (content_type, expected_type)),
+                     ('The \"%s\" content type requires \"charset=utf-8\" to be specified.'
+                      % expected_type),
                      url))
-            elif content_type != expected_type:
+        else:
+            if expected_type not in content_type_list:
                 problems.append(
                     ('warn',
                      'Unexpected content encoding, found \"%s\", expected \"%s\"' % (
                          content_type, expected_type),
                      url))
-        elif content_type != expected_type and content_type != includes_charset:
-            problems.append(
-                ('warn',
-                 'Unexpected content encoding, found \"%s\", expected \"%s\"' % (
-                     content_type, expected_type),
-                 url))
+            elif charset in content_type_list:
+                problems.append(
+                    ('warn',
+                     ("Content encoding found in \"%s\" where \"%s\" is acceptable.\n"
+                      "Additional response bytes may negatively affect benchmark performance."
+                      % (content_type, expected_type)),
+                     url))
     return problems
 
 
