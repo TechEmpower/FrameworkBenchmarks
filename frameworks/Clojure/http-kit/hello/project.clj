@@ -1,7 +1,7 @@
 (defproject hello "http-kit"
   :description "FrameworkBenchmarks test implementations"
   :url "http://localhost:8080/"
-  :dependencies [[org.clojure/clojure "1.7.0"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
                  [compojure "1.4.0"]
                  [ring/ring-json "0.4.0"]
                  [org.clojure/tools.cli "0.2.1"]
