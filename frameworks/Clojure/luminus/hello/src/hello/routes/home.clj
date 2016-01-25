@@ -5,8 +5,9 @@
             [ring.util.response :refer [response content-type]]
             [clojure.java.io :as io]))
 
-(def json-serialization
+(defn json-serialization
   "Test 1: JSON serialization"
+  []
   (response {:message "Hello, World!"}))
 
 (defn single-query-test
@@ -43,7 +44,7 @@
 (defroutes home-routes
   (GET "/"                 [] "Hello, World!")
   (GET "/plaintext"        [] plaintext)
-  (GET "/json"             [] json-serialization)
+  (GET "/json"             [] (json-serialization))
   (GET "/db"               [] (single-query-test))
   (GET "/queries/"         [] (multiple-query-test 1))
   (GET "/queries/:queries" [queries] (multiple-query-test queries))
