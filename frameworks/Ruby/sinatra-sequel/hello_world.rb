@@ -79,7 +79,7 @@ class HelloWorld < Sinatra::Base
     queries = 1 if queries < 1
     queries = 500 if queries > 500
 
-    # Benchmark requirements explicitly forbid a WHERE..IN here, so be good...
+    # Benchmark requirements explicitly forbid a WHERE..IN here, so be good
     worlds = randn(queries).map! { |id| World[id] }
 
     World.to_json :array => worlds
@@ -102,7 +102,7 @@ class HelloWorld < Sinatra::Base
     queries = 500 if queries > 500
 
     # Benchmark requirements explicitly forbid a WHERE..IN here, and specify
-    # that each transaction only read and write a single record, so be good...
+    # that each transaction only read and write a single record, so be good
     worlds = []
     randn(queries).each do |id|
       World.db.transaction do
