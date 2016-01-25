@@ -163,12 +163,14 @@
         (jdbc/update! (db-mysql-raw) :world {:randomNumber (:randomNumber w)} ["id = ?" (:id w)])))
     results))
 
-(def json-serialization
+(defn json-serialization
   "Test 1: JSON serialization"
+  []
   (ring-resp/response {:message "Hello, World!"}))
 
-(def single-query-test
+(defn single-query-test
   "Test 2: Single database query"
+  []
   (ring-resp/response (first (run-queries 1))))
 
 (defn multiple-queries-test
@@ -179,8 +181,9 @@
       (run-queries)
       (ring-resp/response)))
 
-(def single-query-test-raw
+(defn single-query-test-raw
   "Test 2: Single database query (raw)"
+  []
   (-> 1
       (run-queries-raw)
       (first)
@@ -194,8 +197,9 @@
       (run-queries-raw)
       (ring-resp/response)))
 
-(def fortune-test
+(defn fortune-test
   "Test 4: Fortunes"
+  []
   (->
     (get-fortunes get-all-fortunes-korma)
     (fortunes-hiccup)
@@ -203,8 +207,9 @@
     (ring-resp/content-type "text/html")
     (ring-resp/charset "utf-8")))
 
-(def fortune-test-raw
+(defn fortune-test-raw
   "Test 4: Fortunes Raw"
+  []
   (->
     (get-fortunes get-all-fortunes-raw)
     (fortunes-hiccup)
@@ -238,19 +243,19 @@
 (defroutes app-routes
   (GET "/"                     [] "Hello, World!")
   (GET "/plaintext"            [] plaintext)
-  (GET "/json"                 [] json-serialization)
-  (GET "/db"                   [] single-query-test)
+  (GET "/json"                 [] (json-serialization))
+  (GET "/db"                   [] (single-query-test))
   (GET "/queries/:queries"     [queries] (multiple-queries-test queries))
-  (GET "/queries/"             [] (multiple-queries-test queries)) ; When param is omitted
-  (GET "/fortunes"             [] fortune-test)
+  (GET "/queries/"             [] (multiple-queries-test 1)) ; When param is omitted
+  (GET "/fortunes"             [] (fortune-test))
   (GET "/updates/:queries"     [queries] (db-updates queries))
-  (GET "/updates/"             [] (db-updates queries)) ; When param is omitted
-  (GET "/raw/db"               [] single-query-test-raw)
+  (GET "/updates/"             [] (db-updates 1)) ; When param is omitted
+  (GET "/raw/db"               [] (single-query-test-raw))
   (GET "/raw/queries/:queries" [queries] (multiple-queries-test-raw queries))
-  (GET "/raw/queries/"         [] (multiple-queries-test-raw queries)) ; When param is omitted
-  (GET "/raw/fortunes"         [] fortune-test-raw)
+  (GET "/raw/queries/"         [] (multiple-queries-test-raw 1)) ; When param is omitted
+  (GET "/raw/fortunes"         [] (fortune-test-raw))
   (GET "/raw/updates/:queries" [queries] (db-updates-raw queries))
-  (GET "/raw/updates/"         [] (db-updates-raw queries)) ; When param is omitted
+  (GET "/raw/updates/"         [] (db-updates-raw 1)) ; When param is omitted
   (route/not-found "Not Found"))
 
 (defn parse-port [s] 
