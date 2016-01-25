@@ -2,7 +2,7 @@
   :description "FrameworkBenchmarks test implementations"
   :url "http://localhost:3000/"
   :min-lein-version "2.0.0"
-  :dependencies [[org.clojure/clojure "1.7.0"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
                  [compojure "1.4.0"]
                  [ring/ring-json "0.4.0"]
                  [korma "0.4.2"]
