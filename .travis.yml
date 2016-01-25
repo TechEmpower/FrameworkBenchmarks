@@ -100,6 +100,7 @@ env:
     - "TESTDIR=Java/vertx"
     - "TESTDIR=Java/vertx-web"
     - "TESTDIR=Java/wicket"
+    - "TESTDIR=Java/beyondj"
     - "TESTDIR=Java/wildfly-ee7"
     - "TESTDIR=JavaScript/express"
     - "TESTDIR=JavaScript/hapi"

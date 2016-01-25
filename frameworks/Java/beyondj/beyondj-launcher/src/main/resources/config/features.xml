@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<features>
+
+    <!--Users-->
+    <feature name="add-users"/>
+    <feature name="list-users"/>
+    <feature name="edit-users"/>
+    <feature name="create-users"/>
+    <feature name="delete-users"/>
+    <feature name="search-users"/>
+    <feature name="change-user-password"/>
+    <feature name="list-groups"/>
+
+    <!--Messages-->
+    <feature name="list-messages"/>
+    <feature name="delete-messages"/>
+    <feature name="read-messages"/>
+
+    <!--Contact Requests-->
+    <feature name="request-contact"/>
+    <feature name="list-contact-requests"/>
+    <feature name="review-contact-requests"/>
+    <feature name="delete-contact-requests"/>
+
+    <!--Misc-->
+    <feature name="adjust-preferences"/>
+    <feature name="list-roles"/>
+    <feature name="list-features"/>
+    <feature name="list-security-policy"/>
+
+    <feature name="list-protected-elements"/>
+
+    <!--Deployment-->
+    <feature name="list-deployments"/>
+    <feature name="deploy-application"/>
+
+</features>
