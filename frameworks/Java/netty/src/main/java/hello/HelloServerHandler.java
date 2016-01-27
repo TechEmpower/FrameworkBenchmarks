@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
@@ -24,6 +25,7 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.FastThreadLocal;
 
 public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
+
 	private static final FastThreadLocal<DateFormat> FORMAT = new FastThreadLocal<DateFormat>() {
 		@Override
 		protected DateFormat initialValue() {
@@ -31,8 +33,29 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
 		}
 	};
 
-	private static final ByteBuf CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes("Hello, World!".getBytes(CharsetUtil.UTF_8)));
-	private static final CharSequence contentLength = HttpHeaders.newEntity(String.valueOf(CONTENT_BUFFER.readableBytes()));
+	private static final ObjectMapper newMapper() {
+		ObjectMapper m = new ObjectMapper();
+		m.registerModule(new AfterburnerModule());
+		return m;
+	}
+
+	private static final Message newMsg() {
+		return new Message("Hello, World!");
+	}
+
+	private static final int jsonLen() {
+		try {
+			return newMapper().writeValueAsBytes(newMsg()).length;
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static final byte[] STATIC_PLAINTEXT = "Hello, World!".getBytes(CharsetUtil.UTF_8);
+	private static final int STATIC_PLAINTEXT_LEN = STATIC_PLAINTEXT.length;
+	private static final ByteBuf PLAINTEXT_CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_PLAINTEXT));
+	private static final CharSequence PLAINTEXT_CLHEADER_VALUE = HttpHeaders.newEntity(String.valueOf(STATIC_PLAINTEXT_LEN));
+	private static final CharSequence JSON_CLHEADER_VALUE = HttpHeaders.newEntity(String.valueOf(jsonLen()));
 
 	private static final CharSequence TYPE_PLAIN = HttpHeaders.newEntity("text/plain; charset=UTF-8");
 	private static final CharSequence TYPE_JSON = HttpHeaders.newEntity("application/json; charset=UTF-8");
@@ -41,12 +64,7 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
 	private static final CharSequence DATE_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.DATE);
 	private static final CharSequence CONTENT_LENGTH_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.CONTENT_LENGTH);
 	private static final CharSequence SERVER_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.SERVER);
-	private static final ObjectMapper MAPPER;
-
-	static {
-		MAPPER = new ObjectMapper();
-		MAPPER.registerModule(new AfterburnerModule());
-	}
+	private static final ObjectMapper MAPPER = newMapper();
 
 	private volatile CharSequence date = HttpHeaders.newEntity(FORMAT.get().format(new Date()));
 
@@ -69,11 +87,11 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
 			String uri = request.getUri();
 			switch (uri) {
 			case "/plaintext":
-				writeResponse(ctx, request, CONTENT_BUFFER.duplicate(), TYPE_PLAIN, contentLength);
+				writeResponse(ctx, request, PLAINTEXT_CONTENT_BUFFER.duplicate(), TYPE_PLAIN, PLAINTEXT_CLHEADER_VALUE);
 				return;
 			case "/json":
-				byte[] json = MAPPER.writeValueAsBytes(new Message("Hello, World!"));
-				writeResponse(ctx, request, Unpooled.wrappedBuffer(json), TYPE_JSON, String.valueOf(json.length));
+				byte[] json = MAPPER.writeValueAsBytes(newMsg());
+				writeResponse(ctx, request, Unpooled.wrappedBuffer(json), TYPE_JSON, JSON_CLHEADER_VALUE);
 				return;
 			}
 			FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
