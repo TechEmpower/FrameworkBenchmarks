@@ -188,21 +188,6 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 		log.Fatalf("Error starting transaction: %s", err)
 	}
 
-	// Disable synchronous commit for the current transaction
-	// as a performance optimization.
-	// See http://www.postgresql.org/docs/current/static/runtime-config-wal.html for details.
-	// Below is the relevant quote from the docs:
-	//
-	// > It is therefore possible, and useful, to have some transactions
-	// > commit synchronously and others asynchronously. For example,
-	// > to make a single multistatement transaction commit asynchronously
-	// > when the default is the opposite, issue
-	// >     SET LOCAL synchronous_commit TO OFF
-	// > within the transaction.
-	if _, err = txn.Exec("SET LOCAL synchronous_commit TO OFF"); err != nil {
-		log.Fatalf("Error when disabling synchronous commit")
-	}
-
 	for i := 0; i < n; i++ {
 		w := &worlds[i]
 		if _, err = txn.Exec("worldUpdateStmt", w.RandomNumber, w.Id); err != nil {
@@ -321,11 +306,18 @@ func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, db
 
 	config.MaxConnections = maxConnectionsInPool
 
-	config.AfterConnect = func(eachConn *pgx.Conn) error {
+	config.AfterConnect = func(conn *pgx.Conn) error {
+		worldSelectStmt = mustPrepare(conn, "worldSelectStmt", "SELECT id, randomNumber FROM World WHERE id = $1")
+		worldUpdateStmt = mustPrepare(conn, "worldUpdateStmt", "UPDATE World SET randomNumber = $1 WHERE id = $2")
+		fortuneSelectStmt = mustPrepare(conn, "fortuneSelectStmt", "SELECT id, message FROM Fortune")
 
-		worldSelectStmt = mustPrepare(eachConn, "worldSelectStmt", "SELECT id, randomNumber FROM World WHERE id = $1")
-		worldUpdateStmt = mustPrepare(eachConn, "worldUpdateStmt", "UPDATE World SET randomNumber = $1 WHERE id = $2")
-		fortuneSelectStmt = mustPrepare(eachConn, "fortuneSelectStmt", "SELECT id, message FROM Fortune")
+		// Disable synchronous commit for the current db connection
+		// as a performance optimization.
+		// See http://www.postgresql.org/docs/current/static/runtime-config-wal.html
+		// for details.
+		if _, err := conn.Exec("SET synchronous_commit TO OFF"); err != nil {
+			log.Fatalf("Error when disabling synchronous commit")
+		}
 
 		return nil
 	}
