@@ -7,7 +7,9 @@ RETCODE=$(fw_exists ${IROOT}/stack.installed)
 
 fw_get -o $IROOT/stack.tar.gz https://www.stackage.org/stack/linux-x86_64
 tar xzf $IROOT/stack.tar.gz
-mv $IROOT/stack-1.0.2-linux-x86_64/stack $IROOT
+pushd $IROOT/stack-*
+mv stack $IROOT
+popd
 sudo apt-get -y install perl make automake gcc libgmp3-dev
 
 touch $IROOT/stack.installed
