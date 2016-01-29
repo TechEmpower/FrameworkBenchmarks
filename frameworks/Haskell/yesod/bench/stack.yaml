@@ -1,0 +1,7 @@
+flags: {}
+packages:
+- '.'
+extra-deps:
+- pool-conduit-0.1.2.3
+- monad-control-0.3.3.1
+resolver: lts-5.0
