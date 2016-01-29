@@ -2,7 +2,7 @@
 
 fw_depends java resin leiningen
 
-sed -i 's|:subname "//.*:3306|:subname "//'"${DBHOST}"':3306|g' hello/src/hello/handler.clj
+sed -i 's|127.0.0.1|'"${DBHOST}"'|g' hello/src/hello/handler.clj
 
 cd hello
 lein clean
