@@ -30,7 +30,7 @@ fi
 # We need to install mongo-c-driver (we don't have a ubuntu package)
 #RETCODE=$(fw_exists ${IROOT}/mongo-c-driver.installed)
 #if [ "$RETCODE" != 0 ]; then
-  fw_get -O https://github.com/mongodb/mongo-c-driver/releases/download/1.1.10/mongo-c-driver-1.1.10.tar.gz
+  fw_get --ignore-content-length -O https://github.com/mongodb/mongo-c-driver/releases/download/1.1.10/mongo-c-driver-1.1.10.tar.gz
   fw_untar mongo-c-driver-1.1.10.tar.gz
   cd mongo-c-driver-1.1.10/
   ./configure --prefix=$IROOT --libdir=$IROOT
