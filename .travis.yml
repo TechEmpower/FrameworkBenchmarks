@@ -82,6 +82,7 @@ env:
     - "TESTDIR=Java/jooby"
     - "TESTDIR=Java/netty"
     - "TESTDIR=Java/ninja-standalone"
+    - "TESTDIR=Java/officefloor"
     - "TESTDIR=Java/play1"
     - "TESTDIR=Java/play1siena"
     - "TESTDIR=Java/play2-java"
