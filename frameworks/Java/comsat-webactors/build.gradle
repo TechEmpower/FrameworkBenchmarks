@@ -12,7 +12,7 @@ version = '0.2'
 
 ext.jacksonVer = '2.7.0'
 ext.quasarVer  = '0.7.4'
-ext.comsatVer  = '0.6.0-SNAPSHOT'
+ext.comsatVer  = '0.6.0'
 ext.capsuleVer = '1.0.1'
 
 [compileJava, compileTestJava]*.options*.encoding = "UTF-8"
