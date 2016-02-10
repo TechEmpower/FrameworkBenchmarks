@@ -4,7 +4,7 @@
 set -e
 
 # Setup java and maven
-fw_depends java mvn
+fw_depends java maven
 
 # Setup configuration file (normally properties files contains environment specific information but create copy to avoid SCM issues)
 echo "Creating configuration for OfficeFloor environment ..."
