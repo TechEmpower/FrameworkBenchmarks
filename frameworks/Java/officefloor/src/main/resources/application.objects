@@ -1,0 +1,9 @@
+<objects>
+
+	<managed-object source="net.officefloor.plugin.jpa.JpaEntityManagerManagedObjectSource" type="javax.persistence.EntityManager">
+		<property name="persistence.unit.name" value="techempower" />
+		<property-file path="datasource.properties" />
+		<team name="CLOSE" type="javax.persistence.EntityManager" />
+	</managed-object>
+
+</objects>
