@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 
 import net.javapla.jawn.core.database.DatabaseConnection;
 import net.javapla.jawn.core.exceptions.InitException;
+import app.helpers.Helper;
 import app.models.Fortune;
 import app.models.World;
 
@@ -32,16 +33,42 @@ public class DbManager {
     
     public World getWorld(int id) {
         try (Connection connection = source.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?",
+                    ResultSet.TYPE_FORWARD_ONLY,
+                    ResultSet.CONCUR_READ_ONLY);
             statement.setInt(1, id);
-            try (ResultSet set = statement.executeQuery()) {
-                if (!set.next()) return null;
+            ResultSet set = statement.executeQuery();
+            
+            // we always expect a response in this test environment
+            //if (!set.next()) return null;
+            set.next();
+            
+            return new World(set.getInt(1), set.getInt(2));
+        } catch (SQLException e) {}
+        return null;
+    }
+    
+    public final World[] getWorlds(int number) {
+        World[] worlds = new World[number];
+        
+        try (final Connection connection = source.getConnection()) {
+            
+            for (int i = 0; i < number; i++) {
+                try(PreparedStatement statement = connection.prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?",
+                        ResultSet.TYPE_FORWARD_ONLY,
+                        ResultSet.CONCUR_READ_ONLY)) {
                 
-                return new World(set.getInt(1), set.getInt(2));
+                    statement.setInt(1, Helper.getRandomNumber());
+                    ResultSet set = statement.executeQuery();
+                    set.next();
+                    
+                    worlds[i] = new World(set.getInt(1), set.getInt(2));
+                }
             }
-        } catch (SQLException e) {
-            return null;
-        }
+            
+        } catch (SQLException e) {}
+        
+        return worlds;
     }
     
     public boolean updateWorlds(World[] worlds) {
@@ -62,8 +89,13 @@ public class DbManager {
     public List<Fortune> fetchAllFortunes() {
         List<Fortune> list = new ArrayList<>();
         try (Connection connection = source.getConnection()) {
-            PreparedStatement fetch = connection.prepareStatement("SELECT id, message FROM Fortune");
-            ResultSet set = fetch.executeQuery();
+//            PreparedStatement fetch = connection.prepareStatement("SELECT id, message FROM Fortune",
+//                    ResultSet.TYPE_FORWARD_ONLY,
+//                    ResultSet.CONCUR_READ_ONLY);
+//            ResultSet set = fetch.executeQuery();
+            ResultSet set = connection
+                    .createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
+                    .executeQuery("SELECT id, message FROM Fortune");
             while (set.next()) {
                 list.add(new Fortune(set.getInt(1), escape(set.getString(2))));
             }
