@@ -94,7 +94,7 @@ func main() {
 	}
 }
 
-const maxConnDuration = time.Millisecond * 200
+const maxConnDuration = time.Millisecond * 1500
 
 var connDurationJitter uint64
 
