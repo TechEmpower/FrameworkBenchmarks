@@ -47,6 +47,7 @@
       "setup_file": "aiohttp.web/setup",
       "db_url": "/db_mysql",
       "query_url": "/queries_mysql?queries=",
+      "fortune_url": "/fortunes_mysql",
       "update_url": "/updates_mysql?queries=",
       "port": 8080,
       "approach": "Realistic",

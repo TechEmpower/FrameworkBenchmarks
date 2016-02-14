@@ -70,6 +70,8 @@ class Container(api_hour.Container):
                 minsize=int(self.config['engines']['mysql']['minsize']),
                 maxsize=int(self.config['engines']['mysql']['maxsize']),
                 cursorclass=aiomysql.DictCursor,
+                charset='utf8',
+                use_unicode=True,
                 loop=self.loop))
         yield from asyncio.wait([self.engines['pg']], return_when=asyncio.ALL_COMPLETED)
         self.engines['redis'] = yield from asyncio_redis.Pool.create(host=self.config['engines']['redis']['host'],
