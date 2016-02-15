@@ -96,59 +96,8 @@ auto techempower_api = http_api(
       ss << "<tr><td>" << f.id << "</td><td>" << escape_html_entities(f.message) << "</td></tr>";
     ss << "</table></body></html>";
 
-    return response(_content_type = "text/html",
+    return response(_content_type = "text/html; charset=utf-8",
                     _body = ss.str());
   }
-  
-  // _plaintext = [] () { return string_ref("Hello, World!"); },
-  // _json = [] () { return D(_message = string_ref("Hello, World!")); }
-
-  // _db = [] (rn_orm& orm) {
-  //   random_number r;
-  //   orm.find_by_id(1245, r);
-  //   return r;
-  // },
-
-  // _queries * get_parameters(_queries = int()) = [] (auto param, rn_orm& orm) {
-  //   int N = param.queries;
-  //   N = std::max(1, std::min(N, 500));
-
-  //   std::vector<random_number> qs(N);
-  //   for (int i = 0; i < N; i++)
-  //     orm.find_by_id(1 + rand() % 9999, qs[i]);
-  //   return std::move(qs);
-  // },
-
-  // _updates * get_parameters(_queries = int()) = [] (auto param, rn_orm& orm) {
-  //   int N = param.queries;
-  //   N = std::max(1, std::min(N, 500));
-
-  //   std::vector<random_number> qs(N);
-  //   for (int i = 0; i < N; i++)
-  //   {
-  //     orm.find_by_id(1 + rand() % 9999, qs[i]);
-  //     qs[i].randomNumber = 1 + rand() % 9999;
-  //     orm.update(qs[i]);
-  //   }
-  //   return std::move(qs);
-  // },
-  
-  // _fortunes = [] (fortune_orm& orm) {
-  //   std::vector<fortune> table;
-  //   orm.forall([&] (fortune& f) { table.push_back(f); });
-  //   table.push_back(fortune(0, "Additional fortune added at request time."));
-
-  //   std::sort(table.begin(), table.end(),
-  //             [] (const fortune& a, const fortune& b) { return a.message < b.message; });
-
-  //   std::stringstream ss;
-
-  //   ss << "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-  //   for(auto& f : table)
-  //     ss << "<tr><td>" << f.id << "</td><td>" << escape_html_entities(f.message) << "</td></tr>";
-  //   ss << "</table></body></html>";
-
-  //   return ss.str();
-  // }
   
   );
