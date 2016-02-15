@@ -7,7 +7,6 @@ using namespace sl;
 
 int main(int argc, char* argv[])
 {
-
   if (argc != 3)
   {
     std::cerr << "Usage: " << argv[0] << " mysql_host port" << std::endl;
