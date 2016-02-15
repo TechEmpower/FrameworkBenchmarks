@@ -10,8 +10,8 @@ SILICON=$IROOT/silicon
 
 git clone https://github.com/matt-42/silicon.git
 cd silicon;
-git checkout 17167fd6065b1fd4e628a81f2327121d9f733298
-CXX=/usr/bin/g++-4.9 ./install.sh $IROOT
+git checkout 383282990a0ba12f7a74cb9d2987c7666904b279
+CXX=/usr/bin/clang++ ./install.sh $IROOT
 
 echo "" > $IROOT/silicon.installed
 
