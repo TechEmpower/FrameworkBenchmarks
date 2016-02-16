@@ -17,8 +17,9 @@ cd $LWAN_HOME
 git checkout ${REV}
 mkdir build
 cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$IROOT
 make techempower
+make install
 
 echo "export LWAN_ROOT=${LWAN_HOME}" > $IROOT/lwan.installed
 echo -e "export LWAN_BUILD=\$LWAN_ROOT/build" >> $IROOT/lwan.installed

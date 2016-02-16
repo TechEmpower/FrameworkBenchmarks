@@ -55,8 +55,8 @@ auto techempower_api = http_api(
                     _body = r);
   },
 
-  GET / _queries * get_parameters(_queries = int()) = [] (auto param, rn_orm& orm) {
-    int N = param.queries;
+  GET / _queries * get_parameters(_queries = optional(std::string("1"))) = [] (auto param, rn_orm& orm) {
+    int N = atoi(param.queries.c_str());
     N = std::max(1, std::min(N, 500));
 
     std::vector<random_number> qs(N);
@@ -66,8 +66,8 @@ auto techempower_api = http_api(
                     _body = std::move(qs));
   },
 
-  GET / _updates * get_parameters(_queries = int()) = [] (auto param, rn_orm& orm) {
-    int N = param.queries;
+  GET / _updates * get_parameters(_queries = optional(std::string("1"))) = [] (auto param, rn_orm& orm) {
+    int N = atoi(param.queries.c_str());
     N = std::max(1, std::min(N, 500));
 
     std::vector<random_number> qs(N);
