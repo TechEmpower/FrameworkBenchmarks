@@ -24,7 +24,7 @@
                  [luminus-nrepl "0.1.2"]
                  [migratus "0.8.8"]
                  [conman "0.2.9"]
-                 [org.postgresql/postgresql "9.4-1206-jdbc4"]
+                 [org.postgresql/postgresql "9.4.1208"]
                  [org.webjars/webjars-locator-jboss-vfs "0.1.0"]
                  [luminus-immutant "0.1.0"]]
 
