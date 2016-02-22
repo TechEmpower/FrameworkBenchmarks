@@ -1,4 +1,4 @@
-# [fasthttp](https://github.com/valyala/fasthttp) (GoLang) Benchmarking Test
+# [fasthttp](https://github.com/valyala/fasthttp) (GoLang) Benchmarking Test for mysql
 
 This is the go portion of a [benchmarking test suite](https://www.techempower.com/benchmarks/) comparing a variety of web development platforms.
 
