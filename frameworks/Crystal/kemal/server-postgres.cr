@@ -9,7 +9,7 @@ DB = PG.connect("postgres://benchmarkdbuser:benchmarkdbpass@#{ENV["DBHOST"]? || 
 
 class CONTENT
   UTF8 = "; charset=UTF-8"
-  JSON = "application/json" + UTF8
+  JSON = "application/json"
   PLAIN = "text/plain"
   HTML = "text/html" + UTF8
 end

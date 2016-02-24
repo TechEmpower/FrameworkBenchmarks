@@ -9,9 +9,9 @@ REDIS = Redis.new
 
 class CONTENT
   UTF8 = "; charset=UTF-8"
-  JSON = "application/json" #+ UTF8
+  JSON = "application/json"
   PLAIN = "text/plain"
-  HTML = "text/html" #+ UTF8
+  HTML = "text/html"
 end
 
 ID_MAXIMUM = 10_000
@@ -39,12 +39,18 @@ end
 
 private def sanitizedQueryCount(request)
   queries = request.params["queries"] as String
+  return 1 if queries.empty? || queries.to_i?.nil?
   if queries.to_i > 500
     queries = 500
   elsif queries.to_i < 1
     queries = 1
   end
   queries.to_i
+end
+
+before_all do |env|
+  env.response.headers["Server"] = "Kemal"
+  env.response.headers["Date"] = Time.now.to_s
 end
 
 #
