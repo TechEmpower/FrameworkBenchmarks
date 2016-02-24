@@ -20,5 +20,5 @@ fn handler(req: Request, mut res: Response) {
             res.send(HELLO_WORLD).unwrap();
         }
         _ => (),
-    };
+    }
 }

@@ -4,7 +4,7 @@ extern crate rustc_serialize;
 
 use iron::{Iron, Request, Response, IronResult};
 use iron::status;
-use router::{Router};
+use router::Router;
 use rustc_serialize::json;
 
 #[derive(RustcDecodable, RustcEncodable)]
@@ -21,9 +21,7 @@ fn main() {
 }
 
 fn jsonHandler(req: &mut Request) -> IronResult<Response> {
-    let message: Message = Message{
-        message: "Hello, World!".to_string(),
-    };
+    let message: Message = Message { message: "Hello, World!".to_string() };
     Ok(Response::with((status::Ok, json::encode(&message).unwrap())))
 }
 
