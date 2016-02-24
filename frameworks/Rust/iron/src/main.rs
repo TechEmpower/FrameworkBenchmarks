@@ -14,17 +14,17 @@ struct Message {
 
 fn main() {
     let mut router = Router::new();
-    router.get("/json", jsonHandler);
-    router.get("/plaintext", plaintextHandler);
+    router.get("/json", json_handler);
+    router.get("/plaintext", plaintext_handler);
 
     Iron::new(router).http("0.0.0.0:8080").unwrap();
 }
 
-fn jsonHandler(req: &mut Request) -> IronResult<Response> {
+fn json_handler(_: &mut Request) -> IronResult<Response> {
     let message: Message = Message { message: "Hello, World!".to_string() };
     Ok(Response::with((status::Ok, json::encode(&message).unwrap())))
 }
 
-fn plaintextHandler(req: &mut Request) -> IronResult<Response> {
+fn plaintext_handler(_: &mut Request) -> IronResult<Response> {
     Ok(Response::with((status::Ok, "Hello, World!")))
 }
