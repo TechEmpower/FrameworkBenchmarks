@@ -1,11 +1,14 @@
 require "kemal"
 require "pg"
+require "pool/connection"
 require "html_builder"
 
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
 
-DB = PG.connect("postgres://benchmarkdbuser:benchmarkdbpass@#{ENV["DBHOST"]? || "127.0.0.1"}/hello_world")
+DB = ConnectionPool.new(capacity: 25, timeout: 0.01) do
+  PG.connect("postgres://benchmarkdbuser:benchmarkdbpass@#{ENV["DBHOST"]? || "127.0.0.1"}/hello_world")
+end
 
 class CONTENT
   UTF8 = "; charset=UTF-8"
@@ -18,19 +21,19 @@ ID_MAXIMUM = 10_000
 
 private def randomWorld
   id = rand(1..ID_MAXIMUM)
-  result = DB.exec({Int32, Int32}, "SELECT id, randomNumber FROM world WHERE id = $1", [id]).rows.first
+  result = DB.connection.exec({Int32, Int32}, "SELECT id, randomNumber FROM world WHERE id = $1", [id]).rows.first
   {:id => result[0], :randomNumber => result[1]}
 end
 
 private def setWorld(world)
-  DB.exec("UPDATE world set randomNumber = $1 where id = $2", [world[:randomNumber], world[:id]])
+  DB.connection.exec("UPDATE world set randomNumber = $1 where id = $2", [world[:randomNumber], world[:id]])
   world
 end
 
 private def fortunes
   data = [] of  Hash(Symbol, (String | Int32))
 
-  DB.exec({Int32, String}, "select id, message from Fortune").rows.each do |row|
+  DB.connection.exec({Int32, String}, "select id, message from Fortune").rows.each do |row|
     data.push({:id => row[0], :message => row[1]})
   end
   data
