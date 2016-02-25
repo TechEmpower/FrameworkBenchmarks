@@ -17,9 +17,7 @@ object WebServer extends App {
 
   import io.finch.circe._
   val json = get("json") {
-
-    case class Message(message: String)
-    Ok(Message("Hello, World!").asJson)
+    Ok(Json.obj("message" -> Json.string("Hello, World!")))
   }
 
   val plaintext: Endpoint[String] = get("plaintext") {
@@ -27,9 +25,7 @@ object WebServer extends App {
       .withContentType(Some("text/plain"))
   }
 
-  val api = json :+: plaintext
-
   Await.ready(
-    Http.serve(":9000", api.toService)
+    Http.serve(":9000", (json :+: plaintext).toService)
   )
 }
