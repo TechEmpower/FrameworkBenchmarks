@@ -21,12 +21,16 @@ ID_MAXIMUM = 10_000
 
 private def randomWorld
   id = rand(1..ID_MAXIMUM)
-  result = DB.connection.exec({Int32, Int32}, "SELECT id, randomNumber FROM world WHERE id = $1", [id]).rows.first
+  conn = DB.checkout
+  result = conn.exec({Int32, Int32}, "SELECT id, randomNumber FROM world WHERE id = $1", [id]).rows.first
+  DB.checkin(conn)
   {:id => result[0], :randomNumber => result[1]}
 end
 
 private def setWorld(world)
-  DB.connection.exec("UPDATE world set randomNumber = $1 where id = $2", [world[:randomNumber], world[:id]])
+  conn = DB.checkout
+  result = conn.exec("UPDATE world set randomNumber = $1 where id = $2", [world[:randomNumber], world[:id]])
+  DB.checkin(conn)
   world
 end
 
