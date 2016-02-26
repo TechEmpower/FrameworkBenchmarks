@@ -3,12 +3,16 @@
 module Models.World
     ( World(..)
     , fetchWorldById
+    , getRandomWorld
+    , fetchRandomWorldsAsync
     ) where
 
+import           Control.Concurrent.Async
 import           Data.Aeson
 import           Data.Maybe
 import qualified Database.PostgreSQL.Simple         as PG
 import           Database.PostgreSQL.Simple.FromRow
+import           System.Random
 
 
 data World = World
@@ -34,3 +38,16 @@ fetchWorldById i c =
     listToMaybe <$> PG.query c
         "SELECT id, randomNumber FROM World WHERE id = (?)"
         (PG.Only i)
+
+-- | Get a random World from the database. For the tests
+-- the id must be bound between 1-10000
+getRandomWorld :: PG.Connection -> IO (Maybe World)
+getRandomWorld c = do
+    i <- randomRIO (1, 10000)
+    fetchWorldById i c
+
+-- | Get n random Worlds in a concurrent way.
+fetchRandomWorldsAsync :: Int -> PG.Connection -> IO [World]
+fetchRandomWorldsAsync n c = do
+    maybes <- mapConcurrently (\_ -> getRandomWorld c) [1..n]
+    return $ catMaybes maybes

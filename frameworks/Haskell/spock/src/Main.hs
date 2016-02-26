@@ -3,15 +3,12 @@
 
 module Main where
 
-import           Control.Concurrent.Async      (mapConcurrently)
 import           Control.Monad.IO.Class
 import           Data.Aeson                    hiding (json)
 import           Data.List                     (sort)
-import           Data.Maybe                    (catMaybes)
 import qualified Database.PostgreSQL.Simple    as PG
 import           GHC.Exts
 import           Network.HTTP.Types.Status
-import           System.Random
 import           Text.Blaze.Html.Renderer.Utf8
 import qualified Text.Blaze.Html5              as H
 import           Web.Spock.Safe
@@ -21,18 +18,19 @@ import           Models.World
 import           Views.Fortune
 
 
+creds :: PG.ConnectInfo
+creds =
+    PG.ConnectInfo
+        { PG.connectHost     = "localhost"
+        , PG.connectPort     = 5432
+        , PG.connectUser     = "benchmarkdbuser"
+        , PG.connectPassword = "benchmarkdbpass"
+        , PG.connectDatabase = "hello_world" }
+
+
 dbConn :: PoolOrConn PG.Connection
 dbConn =
-  PCConn (ConnBuilder
-            (PG.connect
-                PG.ConnectInfo
-                    { PG.connectHost     = "localhost"
-                    , PG.connectPort     = 5432
-                    , PG.connectUser     = "benchmarkdbuser"
-                    , PG.connectPassword = "benchmarkdbpass"
-                    , PG.connectDatabase = "hello_world" })
-            PG.close
-            (PoolCfg 5 5 60))
+  PCConn (ConnBuilder (PG.connect creds) PG.close (PoolCfg 5 5 60))
 
 
 blaze :: MonadIO m => H.Html -> ActionCtxT ctx m a
@@ -42,35 +40,54 @@ blaze h = do
 {-# INLINE blaze #-}
 
 
+-- | Test 1: JSON serialization
+test1 :: MonadIO m => ActionCtxT ctx m a
+test1 = json $ Object (fromList [("message", "Hello, World!")])
+{-# INLINE test1 #-}
+
+-- | Test 2: Single database query
+test2 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
+test2 = do
+    maybeWorld <- runQuery getRandomWorld
+    case maybeWorld of
+      Just w  -> json w
+      Nothing -> setStatus status404 >> text "World not found."
+{-# INLINE test2 #-}
+
+-- | Test 3: Multiple database queries
+test3 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
+test3 = do
+    queries <- max 1 . min 500 <$> param' "queries"
+    worlds <- runQuery $ fetchRandomWorldsAsync queries
+    json worlds
+{-# INLINE test3 #-}
+
+-- | Test 4: Fortunes
+test4 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
+test4 = do
+    fortunes <- runQuery fetchFortunes
+    blaze $ renderFortunes $ sort (newFortune : fortunes)
+    where
+      newFortune = Fortune 0 "Additional fortune added at request time."
+{-# INLINE test4 #-}
+
+-- | Test 5: Database Updates
+test5 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
+test5 = undefined
+{-# INLINE test5 #-}
+
+-- | Test 6: Plain text
+test6 :: MonadIO m => ActionCtxT ctx m a
+test6 = text "Hello, World!"
+{-# INLINE test6 #-}
+
+
 main :: IO ()
 main =
     runSpock 3000 $ spock (defaultSpockCfg Nothing dbConn ()) $ do
-        -- | Test 1: JSON serialization
-        get "json" $
-            json $ Object (fromList [("message", "Hello, World!")])
-        -- | Test 2: Single database query
-        get "db" $ do
-            rand <- liftIO $ randomRIO (1, 10000)
-            maybeWorld <- runQuery $ fetchWorldById rand
-            case maybeWorld of
-              Just w  -> json w
-              Nothing -> setStatus status404 >> text "World not found."
-        -- | Test 3: Multiple database queries
-        get "queries" $ do
-            queries <- max 1 . min 500 <$> param' "queries"
-            let runSQL core = runSpockIO core . runQuery . fetchWorldById =<< randomRIO (1, 10000)
-            spockCore <- getSpockHeart
-            maybeWorlds <- liftIO $ mapConcurrently (\_ -> runSQL spockCore) ([1..queries] :: [Int])
-            json $ catMaybes maybeWorlds
-        -- | Test 4: Fortunes
-        get "fortune" $ do
-            fortunes <- runQuery fetchFortunes
-            let newFortune = Fortune 0 "Additional fortune added at request time."
-                sortedFortunes = sort (newFortune : fortunes)
-            blaze $ renderFortunes sortedFortunes
-        -- | Test 5: Database Updates
-        -- todo
-
-        -- | Test 6: Plain text
-        get "plaintext" $
-            text "Hello, World!"
+        get "json"      test1
+        get "db"        test2
+        get "queries"   test3
+        get "fortune"   test4
+        get "updates"   test5
+        get "plaintext" test6
