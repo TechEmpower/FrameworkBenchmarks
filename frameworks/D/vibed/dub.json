@@ -3,7 +3,7 @@
   "description": "A simple vibe.d server application.",
   "copyright": "Copyright © 2015, jin",
   "authors": ["jin", "Sönke Ludwig"],
-  "dependencies": { "vibe-d": "~>0.7.27" },
+  "dependencies": { "vibe-d": "~>0.7.28" },
   "versions": ["VibeDefaultMain"],
   "targetType": "executable",
   "sourcePaths": [],
