@@ -4,7 +4,7 @@
 The tests were run with:
 
 * [Java Oracle 1.8.0_25](http://www.oracle.com/technetwork/java/javase)
-* [fintrospect 12.2.1](https://github.com/daviddenton/fintrospect)
+* [fintrospect 12.3.0](https://github.com/daviddenton/fintrospect)
 * [finagle 6.33.0](https://github.com/twitter/finagle)
 
 ## Test URLs
