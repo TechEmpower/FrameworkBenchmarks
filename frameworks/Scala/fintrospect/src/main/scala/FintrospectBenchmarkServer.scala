@@ -2,6 +2,8 @@ import com.twitter.finagle.http.Method.Get
 import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status._
 import com.twitter.finagle.http.path.Root
+import com.twitter.finagle.stats.NullStatsReceiver
+import com.twitter.finagle.tracing.NullTracer
 import com.twitter.finagle.{Http, Service}
 import com.twitter.util.Await
 import io.circe._
@@ -10,6 +12,7 @@ import io.circe.parser._
 import io.circe.syntax._
 import io.fintrospect.formats.json.Circe.ResponseBuilder._
 import io.fintrospect.formats.json.Circe.JsonFormat._
+import io.fintrospect.formats.json.Circe.ResponseBuilder._
 import io.fintrospect.{ModuleSpec, RouteSpec}
 
 object FintrospectBenchmarkServer extends App {
@@ -30,6 +33,10 @@ object FintrospectBenchmarkServer extends App {
     .withRoute(RouteSpec().at(Get) / "json" bindTo jsonHelloWorld)
 
   Await.ready(
-    Http.serve(":9000", module.toService)
+    Http.server
+      .withCompressionLevel(0)
+      .withStatsReceiver(NullStatsReceiver)
+      .withTracer(NullTracer)
+      .serve(":9000", module.toService)
   )
 }
