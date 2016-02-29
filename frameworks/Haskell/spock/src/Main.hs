@@ -41,7 +41,9 @@ blaze h = do
 
 -- | Test 1: JSON serialization
 test1 :: MonadIO m => ActionCtxT ctx m a
-test1 = json $ Object (fromList [("message", "Hello, World!")])
+test1 = do
+    setHeader "Content-Type" "application/json"
+    json $ Object (fromList [("message", "Hello, World!")])
 {-# INLINE test1 #-}
 
 -- | Test 2: Single database query
@@ -49,7 +51,7 @@ test2 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
 test2 = do
     maybeWorld <- runQuery getRandomWorld
     case maybeWorld of
-      Just w  -> json w
+      Just w  -> setHeader "Content-Type" "application/json" >> json w
       Nothing -> setStatus status404 >> text "World not found."
 {-# INLINE test2 #-}
 
@@ -58,6 +60,7 @@ test3 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
 test3 = do
     queries <- max 1 . min 500 <$> param' "queries"
     worlds <- runQuery $ fetchRandomWorldsAsync queries
+    setHeader "Content-Type" "application/json"
     json worlds
 {-# INLINE test3 #-}
 
@@ -76,12 +79,15 @@ test5 = do
     queries <- max 1 . min 500 <$> param' "queries"
     worlds <- runQuery $ fetchRandomWorldsAsync queries
     updatedWorlds <- runQuery $ updateWorldsRandomAsync worlds
+    setHeader "Content-Type" "application/json"
     json updatedWorlds
 {-# INLINE test5 #-}
 
 -- | Test 6: Plain text
 test6 :: MonadIO m => ActionCtxT ctx m a
-test6 = text "Hello, World!"
+test6 = do
+    setHeader "Content-Type" "text/plain"
+    text "Hello, World!"
 {-# INLINE test6 #-}
 
 
