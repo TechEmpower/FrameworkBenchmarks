@@ -43,16 +43,17 @@ blaze h = do
 test1 :: MonadIO m => ActionCtxT ctx m a
 test1 = do
     setHeader "Content-Type" "application/json"
-    json $ Object (fromList [("message", "Hello, World!")])
+    lazyBytes $ encode $ Object (fromList [("message", "Hello, World!")])
 {-# INLINE test1 #-}
 
 -- | Test 2: Single database query
 test2 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
 test2 = do
     maybeWorld <- runQuery getRandomWorld
+    setHeader "Content-Type" "application/json"
     case maybeWorld of
-      Just w  -> setHeader "Content-Type" "application/json" >> json w
-      Nothing -> setStatus status404 >> text "World not found."
+      Just w  -> lazyBytes $ encode w
+      Nothing -> setStatus status404 >> lazyBytes "{\"error\": \"World not found.\"}"
 {-# INLINE test2 #-}
 
 -- | Test 3: Multiple database queries
@@ -61,7 +62,7 @@ test3 = do
     queries <- max 1 . min 500 <$> param' "queries"
     worlds <- runQuery $ fetchRandomWorldsAsync queries
     setHeader "Content-Type" "application/json"
-    json worlds
+    lazyBytes $ encode worlds
 {-# INLINE test3 #-}
 
 -- | Test 4: Fortunes
@@ -80,14 +81,14 @@ test5 = do
     worlds <- runQuery $ fetchRandomWorldsAsync queries
     updatedWorlds <- runQuery $ updateWorldsRandomAsync worlds
     setHeader "Content-Type" "application/json"
-    json updatedWorlds
+    lazyBytes $ encode updatedWorlds
 {-# INLINE test5 #-}
 
 -- | Test 6: Plain text
 test6 :: MonadIO m => ActionCtxT ctx m a
 test6 = do
     setHeader "Content-Type" "text/plain"
-    text "Hello, World!"
+    lazyBytes "Hello, World!"
 {-# INLINE test6 #-}
 
 
