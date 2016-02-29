@@ -5,6 +5,7 @@ module Models.World
     , fetchWorldById
     , getRandomWorld
     , fetchRandomWorldsAsync
+    , updateWorldsRandomAsync
     ) where
 
 import           Control.Concurrent.Async
@@ -36,7 +37,7 @@ instance FromRow World where
 fetchWorldById :: Int -> PG.Connection -> IO (Maybe World)
 fetchWorldById i c =
     listToMaybe <$> PG.query c
-        "SELECT id, randomNumber FROM World WHERE id = (?)"
+        "SELECT id, randomNumber FROM World WHERE id = ?"
         (PG.Only i)
 
 -- | Get a random World from the database. For the tests
@@ -51,3 +52,15 @@ fetchRandomWorldsAsync :: Int -> PG.Connection -> IO [World]
 fetchRandomWorldsAsync n c = do
     maybes <- mapConcurrently (\_ -> getRandomWorld c) [1..n]
     return $ catMaybes maybes
+
+-- | Update a World with a random number
+updateWorldRandom :: PG.Connection -> World -> IO World
+updateWorldRandom c (World _id _) = do
+    i <- randomRIO (1, 10000)
+    _ <- PG.execute c "UPDATE World SET randomNumber = ? WHERE id = ?" (i, _id)
+    return $ World _id i
+
+-- | Update a bunch of Worlds in a concurrent way.
+updateWorldsRandomAsync :: [World] -> PG.Connection -> IO [World]
+updateWorldsRandomAsync ws c =
+    mapConcurrently (updateWorldRandom c) ws

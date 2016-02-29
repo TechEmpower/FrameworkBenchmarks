@@ -29,8 +29,7 @@ creds =
 
 
 dbConn :: PoolOrConn PG.Connection
-dbConn =
-  PCConn (ConnBuilder (PG.connect creds) PG.close (PoolCfg 5 5 60))
+dbConn = PCConn (ConnBuilder (PG.connect creds) PG.close (PoolCfg 5 5 60))
 
 
 blaze :: MonadIO m => H.Html -> ActionCtxT ctx m a
@@ -73,7 +72,11 @@ test4 = do
 
 -- | Test 5: Database Updates
 test5 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
-test5 = undefined
+test5 = do
+    queries <- max 1 . min 500 <$> param' "queries"
+    worlds <- runQuery $ fetchRandomWorldsAsync queries
+    updatedWorlds <- runQuery $ updateWorldsRandomAsync worlds
+    json updatedWorlds
 {-# INLINE test5 #-}
 
 -- | Test 6: Plain text
