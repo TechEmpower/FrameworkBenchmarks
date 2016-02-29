@@ -34,7 +34,7 @@ dbConn = PCConn (ConnBuilder (PG.connect creds) PG.close (PoolCfg 5 5 60))
 
 blaze :: MonadIO m => H.Html -> ActionCtxT ctx m a
 blaze h = do
-    setHeader "Content-Type" "text/html"
+    setHeader "Content-Type" "text/html; charset=UTF-8"
     lazyBytes $ renderHtml h
 {-# INLINE blaze #-}
 
