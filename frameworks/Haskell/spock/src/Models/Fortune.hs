@@ -23,20 +23,23 @@ instance ToJSON Fortune where
         [ "id"       .= _idF f
         , "message"  .= _messageF f
         ]
+    {-# INLINE toJSON #-}
 
 -- | Transforming a database row into a World datatype.
 instance FromRow Fortune where
     fromRow = Fortune <$> field <*> field
+    {-# INLINE fromRow #-}
 
 -- | For sorting purposes
 instance Eq Fortune where
     (==) fa fb =
         _idF fa      == _idF fb
      && _messageF fa == _messageF fb
+    {-# INLINE (==) #-}
 
 instance Ord Fortune where
     compare = comparing _messageF
-
+    {-# INLINE compare #-}
 
 fetchFortunes :: PG.Connection -> IO [Fortune]
 fetchFortunes c = PG.query_ c "SELECT id, message FROM Fortune"

@@ -27,10 +27,12 @@ instance ToJSON World where
         [ "id"            .= _idW w
         , "randomNumber"  .= _randomNumberW w
         ]
+    {-# INLINE toJSON #-}
 
 -- | Transforming a database row into a World datatype.
 instance FromRow World where
     fromRow = World <$> field <*> field
+    {-# INLINE fromRow #-}
 
 -- | Get a World by Id, this will return a Just World, or Nothing
 -- if the id is not in the database.
