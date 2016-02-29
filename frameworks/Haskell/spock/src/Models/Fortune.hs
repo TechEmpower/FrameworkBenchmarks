@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Models.Fortune
@@ -6,24 +7,26 @@ module Models.Fortune
     ) where
 
 import           Data.Aeson
+import           Data.Monoid                        ((<>))
 import           Data.Ord
 import qualified Data.Text                          as T
 import qualified Database.PostgreSQL.Simple         as PG
 import           Database.PostgreSQL.Simple.FromRow
+import           GHC.Generics
 
 
 data Fortune = Fortune
     { _idF      :: !Integer
     , _messageF :: !T.Text
-    } deriving (Show)
+    } deriving (Show, Generic)
 
 -- | JSON serialization
 instance ToJSON Fortune where
-    toJSON f = object
-        [ "id"       .= _idF f
-        , "message"  .= _messageF f
-        ]
-    {-# INLINE toJSON #-}
+    toEncoding f =
+        pairs (  "id"      .= _idF f
+              <> "message" .= _messageF f
+              )
+    {-# INLINE toEncoding #-}
 
 -- | Transforming a database row into a World datatype.
 instance FromRow Fortune where

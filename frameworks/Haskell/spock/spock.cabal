@@ -20,7 +20,7 @@ executable spock-exe
   build-depends:       base
                      , Spock
                      , text
-                     , aeson
+                     , aeson >= 0.11
                      , postgresql-simple
                      , random
                      , transformers

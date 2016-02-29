@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Models.World
@@ -11,23 +12,25 @@ module Models.World
 import           Control.Concurrent.Async
 import           Data.Aeson
 import           Data.Maybe
+import           Data.Monoid                        ((<>))
 import qualified Database.PostgreSQL.Simple         as PG
 import           Database.PostgreSQL.Simple.FromRow
+import           GHC.Generics
 import           System.Random
 
 
 data World = World
     { _idW           :: !Integer
     , _randomNumberW :: !Integer
-    } deriving (Show)
+    } deriving (Show, Generic)
 
 -- | JSON serialization
 instance ToJSON World where
-    toJSON w = object
-        [ "id"            .= _idW w
-        , "randomNumber"  .= _randomNumberW w
-        ]
-    {-# INLINE toJSON #-}
+    toEncoding w =
+        pairs (  "id"    .= _idW w
+              <> "type"  .= _randomNumberW w
+              )
+    {-# INLINE toEncoding #-}
 
 -- | Transforming a database row into a World datatype.
 instance FromRow World where
