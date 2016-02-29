@@ -1,0 +1,7 @@
+./src/
+./src/Main.hs
+./src/Models/
+./src/Models/Fortune.hs
+./src/Models/World.hs
+./src/Views/
+./src/Views/Fortune.hs
