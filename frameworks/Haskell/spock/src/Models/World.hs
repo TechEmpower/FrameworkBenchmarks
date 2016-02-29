@@ -17,8 +17,8 @@ import           System.Random
 
 
 data World = World
-    { _idW           :: Integer
-    , _randomNumberW :: Integer
+    { _idW           :: !Integer
+    , _randomNumberW :: !Integer
     } deriving (Show)
 
 -- | JSON serialization

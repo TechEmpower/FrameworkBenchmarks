@@ -13,8 +13,8 @@ import           Database.PostgreSQL.Simple.FromRow
 
 
 data Fortune = Fortune
-    { _idF      :: Integer
-    , _messageF :: T.Text
+    { _idF      :: !Integer
+    , _messageF :: !T.Text
     } deriving (Show)
 
 -- | JSON serialization
