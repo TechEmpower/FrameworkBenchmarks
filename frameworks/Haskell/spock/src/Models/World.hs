@@ -27,8 +27,8 @@ data World = World
 -- | JSON serialization
 instance ToJSON World where
     toEncoding w =
-        pairs (  "id"    .= _idW w
-              <> "type"  .= _randomNumberW w
+        pairs (  "id"            .= _idW w
+              <> "randomNumber"  .= _randomNumberW w
               )
     {-# INLINE toEncoding #-}
 
