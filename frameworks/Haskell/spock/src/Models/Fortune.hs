@@ -40,3 +40,4 @@ instance Ord Fortune where
 
 fetchFortunes :: PG.Connection -> IO [Fortune]
 fetchFortunes c = PG.query_ c "SELECT id, message FROM Fortune"
+{-# INLINE fetchFortunes #-}
