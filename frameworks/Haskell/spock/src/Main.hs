@@ -6,6 +6,7 @@ module Main where
 import           Control.Monad.IO.Class
 import           Data.Aeson                    hiding (json)
 import           Data.List                     (sort)
+import           Data.Maybe                    (fromMaybe)
 import qualified Database.PostgreSQL.Simple    as PG
 import           GHC.Exts
 import           Network.HTTP.Types.Status
@@ -39,6 +40,13 @@ blaze h = do
 {-# INLINE blaze #-}
 
 
+getQueriesNumber :: MonadIO m => ActionCtxT ctx m Int
+getQueriesNumber = do
+    queriesM <- param "queries"
+    return $ max 1 . min 500 $ fromMaybe 1 queriesM
+{-# INLINE getQueriesNumber #-}
+
+
 -- | Test 1: JSON serialization
 test1 :: MonadIO m => ActionCtxT ctx m a
 test1 = do
@@ -59,7 +67,7 @@ test2 = do
 -- | Test 3: Multiple database queries
 test3 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
 test3 = do
-    queries <- max 1 . min 500 <$> param' "queries"
+    queries <- getQueriesNumber
     worlds <- runQuery $ fetchRandomWorldsAsync queries
     setHeader "Content-Type" "application/json"
     lazyBytes $ encode worlds
@@ -77,7 +85,7 @@ test4 = do
 -- | Test 5: Database Updates
 test5 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
 test5 = do
-    queries <- max 1 . min 500 <$> param' "queries"
+    queries <- getQueriesNumber
     worlds <- runQuery $ fetchRandomWorldsAsync queries
     updatedWorlds <- runQuery $ updateWorldsRandomAsync worlds
     setHeader "Content-Type" "application/json"
