@@ -16,11 +16,11 @@ renderFortunes fs =
         H.head $
             H.title "Fortunes"
         H.body $
-            H.table $
+            H.table $ do
                 H.tr $ do
                     H.th "id"
                     H.th "message"
-                    forM_ fs $ \f ->
-                        H.tr $ do
-                            H.td $ toHtml $ _idF f
-                            H.td $ toHtml $ _messageF f
+                forM_ fs $ \f ->
+                    H.tr $ do
+                        H.td $ toHtml $ _idF f
+                        H.td $ toHtml $ _messageF f
