@@ -7,7 +7,7 @@ import           Control.Concurrent.Async
 import           Control.Monad.IO.Class
 import           Data.Aeson                    hiding (json)
 import           Data.List                     (sort)
-import           Data.Maybe                    (fromMaybe)
+import           Data.Maybe                    (catMaybes, fromMaybe)
 import           Data.Pool
 import qualified Database.PostgreSQL.Simple    as PG
 import           GHC.Exts
@@ -91,11 +91,11 @@ test4 = do
 {-# INLINE test4 #-}
 
 -- | Test 5: Database Updates
-test5 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
-test5 = do
+test5 :: Pool PG.Connection -> ActionCtxT ctx (WebStateM PG.Connection b ()) a
+test5 pool = do
     queries <- getQueriesNumber
-    worlds <- runQuery $ fetchRandomWorldsAsync queries
-    updatedWorlds <- runQuery $ updateWorldsRandomAsync worlds
+    worlds <- liftIO $ mapConcurrently (const (withResource pool getRandomWorld)) [1..queries]
+    updatedWorlds <- liftIO $ mapConcurrently (withResource pool . updateWorldRandom) (catMaybes worlds)
     setHeader "Content-Type" "application/json"
     lazyBytes $ encode updatedWorlds
 {-# INLINE test5 #-}
@@ -118,5 +118,5 @@ main = do
         get "db"          test2
         get "queries"   $ test3 pool
         get "fortune"     test4
-        get "updates"     test5
+        get "updates"   $ test5 pool
         get "plaintext"   test6
