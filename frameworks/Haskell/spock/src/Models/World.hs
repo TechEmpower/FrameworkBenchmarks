@@ -71,6 +71,7 @@ updateWorldRandom c (World _id _) = do
 
 -- | Update a bunch of Worlds in a concurrent way.
 updateWorldsRandomAsync :: [World] -> PG.Connection -> IO [World]
-updateWorldsRandomAsync ws c =
+updateWorldsRandomAsync ws c = do
+    _ <- PG.execute_ c "SET synchronous_commit TO OFF"
     mapConcurrently (updateWorldRandom c) ws
 {-# INLINE updateWorldsRandomAsync #-}

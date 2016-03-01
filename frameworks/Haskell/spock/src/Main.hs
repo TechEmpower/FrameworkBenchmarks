@@ -30,7 +30,7 @@ creds =
 
 
 dbConn :: PoolOrConn PG.Connection
-dbConn = PCConn (ConnBuilder (PG.connect creds) PG.close (PoolCfg 5 5 60))
+dbConn = PCConn (ConnBuilder (PG.connect creds) PG.close (PoolCfg 50 50 60))
 
 
 blaze :: MonadIO m => H.Html -> ActionCtxT ctx m a
