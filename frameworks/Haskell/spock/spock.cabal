@@ -19,6 +19,7 @@ executable spock-exe
   ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N -O2
   build-depends:       base
                      , Spock
+                     , resource-pool
                      , text
                      , aeson >= 0.11
                      , postgresql-simple

@@ -3,10 +3,12 @@
 
 module Main where
 
+import           Control.Concurrent.Async
 import           Control.Monad.IO.Class
 import           Data.Aeson                    hiding (json)
 import           Data.List                     (sort)
 import           Data.Maybe                    (fromMaybe)
+import           Data.Pool
 import qualified Database.PostgreSQL.Simple    as PG
 import           GHC.Exts
 import           Network.HTTP.Types.Status
@@ -22,15 +24,21 @@ import           Views.Fortune
 creds :: PG.ConnectInfo
 creds =
     PG.ConnectInfo
-        { PG.connectHost     = "localhost"
+        { PG.connectHost     = "172.16.0.16"
         , PG.connectPort     = 5432
         , PG.connectUser     = "benchmarkdbuser"
         , PG.connectPassword = "benchmarkdbpass"
         , PG.connectDatabase = "hello_world" }
 
 
+poolCfg :: PoolCfg
+poolCfg = PoolCfg 50 50 60
+
+pcconn :: ConnBuilder PG.Connection
+pcconn = ConnBuilder (PG.connect creds) PG.close poolCfg
+
 dbConn :: PoolOrConn PG.Connection
-dbConn = PCConn (ConnBuilder (PG.connect creds) PG.close (PoolCfg 50 50 60))
+dbConn = PCConn pcconn
 
 
 blaze :: MonadIO m => H.Html -> ActionCtxT ctx m a
@@ -65,10 +73,10 @@ test2 = do
 {-# INLINE test2 #-}
 
 -- | Test 3: Multiple database queries
-test3 :: ActionCtxT ctx (WebStateM PG.Connection b ()) a
-test3 = do
+test3 :: Pool PG.Connection -> ActionCtxT ctx (WebStateM PG.Connection b ()) a
+test3 pool = do
     queries <- getQueriesNumber
-    worlds <- runQuery $ fetchRandomWorldsAsync queries
+    worlds <- liftIO $ mapConcurrently (const (withResource pool getRandomWorld)) [1..queries]
     setHeader "Content-Type" "application/json"
     lazyBytes $ encode worlds
 {-# INLINE test3 #-}
@@ -101,11 +109,14 @@ test6 = do
 
 
 main :: IO ()
-main =
+main = do
+    pool <- createPool (cb_createConn pcconn) (cb_destroyConn pcconn)
+                       (pc_stripes poolCfg) (pc_keepOpenTime poolCfg)
+                       (pc_resPerStripe poolCfg)
     runSpock 3000 $ spock (defaultSpockCfg Nothing dbConn ()) $ do
-        get "json"      test1
-        get "db"        test2
-        get "queries"   test3
-        get "fortune"   test4
-        get "updates"   test5
-        get "plaintext" test6
+        get "json"        test1
+        get "db"          test2
+        get "queries"   $ test3 pool
+        get "fortune"     test4
+        get "updates"     test5
+        get "plaintext"   test6
