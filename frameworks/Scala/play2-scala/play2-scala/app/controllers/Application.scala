@@ -14,10 +14,11 @@ class Application extends Controller {
 
   // Easy ones
   case class HelloWorld(message: String)
+  implicit val helloWorldWrites = Json.writes[HelloWorld]
 
   def getJsonMessage = Action {
     val helloWorld = HelloWorld(message = "Hello, World!")
-    Ok(Json.toJson(helloWorld)(Json.writes[HelloWorld])).withHeaders(CONTENT_TYPE -> "application/json")
+    Ok(Json.toJson(helloWorld)).withHeaders(CONTENT_TYPE -> "application/json")
   }
 
   val plaintext = Action {
