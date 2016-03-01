@@ -24,7 +24,7 @@ import           Views.Fortune
 creds :: PG.ConnectInfo
 creds =
     PG.ConnectInfo
-        { PG.connectHost     = "172.16.0.16"
+        { PG.connectHost     = "localhost"
         , PG.connectPort     = 5432
         , PG.connectUser     = "benchmarkdbuser"
         , PG.connectPassword = "benchmarkdbpass"
