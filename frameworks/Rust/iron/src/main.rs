@@ -6,6 +6,9 @@ use iron::{Iron, Request, Response, IronResult};
 use iron::status;
 use router::Router;
 use rustc_serialize::json;
+use iron::mime::Mime;
+use iron::headers::Server;
+use iron::modifiers::Header;
 
 #[derive(RustcDecodable, RustcEncodable)]
 struct Message {
@@ -22,9 +25,12 @@ fn main() {
 
 fn json_handler(_: &mut Request) -> IronResult<Response> {
     let message: Message = Message { message: "Hello, World!".to_string() };
-    Ok(Response::with((status::Ok, json::encode(&message).unwrap())))
+    let mime: Mime = "application/json".parse().unwrap();
+    let server = Header(Server(String::from("Iron")));
+    Ok(Response::with((status::Ok, json::encode(&message).unwrap(), mime, server)))
 }
 
 fn plaintext_handler(_: &mut Request) -> IronResult<Response> {
-    Ok(Response::with((status::Ok, "Hello, World!")))
+    let server = Header(Server(String::from("Iron")));
+    Ok(Response::with((status::Ok, "Hello, World!", server)))
 }
