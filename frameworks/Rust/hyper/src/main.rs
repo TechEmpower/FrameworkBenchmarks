@@ -14,7 +14,7 @@ fn main() {
 fn handler(req: Request, mut res: Response) {
     match (req.method, req.uri) {
         (hyper::Get, RequestUri::AbsolutePath(ref path)) if path == "/plaintext" => {
-            res.headers_mut().set(ContentType::plaintext());
+            res.headers_mut().set(ContentType("text/plain".parse().unwrap()));
             res.headers_mut().set(header::Server("Hyper".to_owned()));
 
             res.send(HELLO_WORLD).unwrap();
