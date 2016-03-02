@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"runtime"
 	"sort"
+	"sync"
 	"sync/atomic"
 	"time"
 
@@ -20,7 +21,7 @@ import (
 	"github.com/valyala/fasthttp/reuseport"
 )
 
-type Message struct {
+type JSONResponse struct {
 	Message string `json:"message"`
 }
 
@@ -131,7 +132,16 @@ func mainHandler(ctx *fasthttp.RequestCtx) {
 
 // Test 1: JSON serialization
 func jsonHandler(ctx *fasthttp.RequestCtx) {
-	jsonMarshal(ctx, &Message{helloWorldString})
+	r := jsonResponsePool.Get().(*JSONResponse)
+	r.Message = helloWorldString
+	jsonMarshal(ctx, r)
+	jsonResponsePool.Put(r)
+}
+
+var jsonResponsePool = &sync.Pool{
+	New: func() interface{} {
+		return &JSONResponse{}
+	},
 }
 
 // Test 2: Single database query
