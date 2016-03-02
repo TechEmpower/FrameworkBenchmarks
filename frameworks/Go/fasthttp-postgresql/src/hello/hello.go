@@ -37,7 +37,7 @@ type Fortune struct {
 
 const (
 	worldRowCount      = 10000
-	maxConnectionCount = 256
+	maxConnectionCount = 40
 )
 
 var (

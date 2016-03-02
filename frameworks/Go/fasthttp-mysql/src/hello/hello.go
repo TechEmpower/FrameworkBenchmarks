@@ -38,7 +38,7 @@ type Fortune struct {
 const (
 	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
 	worldRowCount      = 10000
-	maxConnectionCount = 256
+	maxConnectionCount = 40
 )
 
 var (
