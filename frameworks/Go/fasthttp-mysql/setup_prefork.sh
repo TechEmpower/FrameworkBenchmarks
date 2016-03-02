@@ -7,4 +7,6 @@ fw_depends go
 go get -u github.com/go-sql-driver/mysql
 go get -u github.com/valyala/fasthttp
 
-go run src/hello/hello.go -prefork &
+rm -f ./hello
+go build src/hello/hello.go
+./hello -prefork &
