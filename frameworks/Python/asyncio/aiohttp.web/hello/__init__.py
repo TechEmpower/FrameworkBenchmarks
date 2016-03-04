@@ -9,6 +9,7 @@ import asyncio_redis
 from asyncio_redis.protocol import HiRedisProtocol
 import aiohttp.web
 import aiohttp_jinja2
+import aiomysql
 import api_hour
 
 from . import endpoints
@@ -27,12 +28,16 @@ class Container(api_hour.Container):
         self.servers['http'].router.add_route('GET', '/json', endpoints.world.json)
         self.servers['http'].router.add_route('GET', '/db', endpoints.world.db)
         self.servers['http'].router.add_route('GET', '/db_redis', endpoints.world.db_redis)
+        self.servers['http'].router.add_route('GET', '/db_mysql', endpoints.world.db_mysql)
         self.servers['http'].router.add_route('GET', '/queries', endpoints.world.queries)
         self.servers['http'].router.add_route('GET', '/queries_redis', endpoints.world.queries_redis)
+        self.servers['http'].router.add_route('GET', '/queries_mysql', endpoints.world.queries_mysql)
         self.servers['http'].router.add_route('GET', '/fortunes', endpoints.world.fortunes)
         self.servers['http'].router.add_route('GET', '/fortunes_redis', endpoints.world.fortunes_redis)
+        self.servers['http'].router.add_route('GET', '/fortunes_mysql', endpoints.world.fortunes_mysql)
         self.servers['http'].router.add_route('GET', '/updates', endpoints.world.updates)
         self.servers['http'].router.add_route('GET', '/updates_redis', endpoints.world.updates_redis)
+        self.servers['http'].router.add_route('GET', '/updates_mysql', endpoints.world.updates_mysql)
         self.servers['http'].router.add_route('GET', '/plaintext', endpoints.world.plaintext)
 
     def make_servers(self):
@@ -56,6 +61,18 @@ class Container(api_hour.Container):
                                                                      minsize=int(self.config['engines']['pg']['minsize']),
                                                                      maxsize=int(self.config['engines']['pg']['maxsize']),
                                                                      loop=self.loop))
+        self.engines['mysql'] = self.loop.create_task(aiomysql.create_pool(
+                host=self.config['engines']['mysql']['host'],
+                port=self.config['engines']['mysql']['port'],
+                user=self.config['engines']['mysql']['user'],
+                password=self.config['engines']['mysql']['pwd'],
+                db=self.config['engines']['mysql']['db'],
+                minsize=int(self.config['engines']['mysql']['minsize']),
+                maxsize=int(self.config['engines']['mysql']['maxsize']),
+                cursorclass=aiomysql.DictCursor,
+                charset='utf8',
+                use_unicode=True,
+                loop=self.loop))
         yield from asyncio.wait([self.engines['pg']], return_when=asyncio.ALL_COMPLETED)
         self.engines['redis'] = yield from asyncio_redis.Pool.create(host=self.config['engines']['redis']['host'],
                                                                      port=self.config['engines']['redis']['port'],
@@ -74,6 +91,12 @@ class Container(api_hour.Container):
                 yield from self.engines['pg'].result().wait_closed()
             else:
                 yield from self.engines['pg'].cancel()
+        if 'mysql' in self.engines:
+            if self.engines['mysql'].done():
+                self.engines['mysql'].result().close()
+                yield from self.engines['mysql'].result().wait_closed()
+            else:
+                yield from self.engines['mysql'].cancel()
         if 'redis' in self.engines:
             self.engines['redis'].close()
             yield from asyncio.sleep(1) # wait redis close connection

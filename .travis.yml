@@ -69,6 +69,7 @@ env:
     - "TESTDIR=Haskell/wai"
     - "TESTDIR=Haskell/yesod"
     - "TESTDIR=Java/activeweb"
+    - "TESTDIR=Java/bayou"
     - "TESTDIR=Java/comsat-servlet"
     - "TESTDIR=Java/comsat-webactors"
     - "TESTDIR=Java/curacao"

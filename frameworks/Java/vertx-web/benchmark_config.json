@@ -41,12 +41,12 @@
       "notes": "",
       "versus": ""
     },
-    "postgres": {
+    "mysql": {
       "setup_file": "setup",
-      "db_url": "/jdbc/db",
-      "query_url": "/jdbc/queries?queries=",
-      "fortune_url": "/jdbc/fortunes",
-      "update_url": "/jdbc/update?queries=",
+      "db_url": "/mysql/db",
+      "query_url": "/mysql/queries?queries=",
+      "fortune_url": "/mysql/fortunes",
+      "update_url": "/mysql/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
@@ -58,7 +58,28 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "vertx-web-jdbc",
+      "display_name": "vertx-web-mysql",
+      "notes": "",
+      "versus": ""
+    },
+    "postgres": {
+      "setup_file": "setup",
+      "db_url": "/psql/db",
+      "query_url": "/psql/queries?queries=",
+      "fortune_url": "/psql/fortunes",
+      "update_url": "/psql/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "vertx-web",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "vertx",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "vertx-web-postgres",
       "notes": "",
       "versus": ""
     }
