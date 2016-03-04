@@ -7,7 +7,9 @@ import io.vertx.core.*;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.jdbc.JDBCClient;
+import io.vertx.ext.asyncsql.AsyncSQLClient;
+import io.vertx.ext.asyncsql.MySQLClient;
+import io.vertx.ext.asyncsql.PostgreSQLClient;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.sql.SQLConnection;
 import io.vertx.ext.web.Router;
@@ -168,13 +170,30 @@ public class App extends AbstractVerticle {
   /**
    * JDBC implementation
    */
-  private final class JDBC {
-    private final JDBCClient database;
+  private final class AsyncSQL {
+
+    public static final int MYSQL = 0;
+    public static final int POSTGRES = 1;
+
+    private final AsyncSQLClient database;
+    private final int dbms;
+
     // In order to use a template we first need to create an engine
     private final HandlebarsTemplateEngine engine;
 
-    public JDBC(Vertx vertx, JsonObject config) {
-      this.database = JDBCClient.createShared(vertx, config);
+    public AsyncSQL(Vertx vertx, int driver, JsonObject config) {
+      switch (driver) {
+        case MYSQL:
+          this.database = MySQLClient.createNonShared(vertx, config);
+          this.dbms = MYSQL;
+          break;
+        case POSTGRES:
+          this.database = PostgreSQLClient.createNonShared(vertx, config);
+          this.dbms = POSTGRES;
+          break;
+        default:
+          throw new RuntimeException("Unsupported DB");
+      }
       this.engine = HandlebarsTemplateEngine.create();
     }
 
@@ -216,7 +235,7 @@ public class App extends AbstractVerticle {
 
     public final void queriesHandler(final RoutingContext ctx) {
       final int queries = Helper.getQueries(ctx.request());
-      final World[] worlds = new World[queries];
+      final JsonArray worlds = new JsonArray();
 
       database.getConnection(getConnection -> {
         if (getConnection.failed()) {
@@ -235,7 +254,7 @@ public class App extends AbstractVerticle {
                   .putHeader(HttpHeaders.SERVER, SERVER)
                   .putHeader(HttpHeaders.DATE, date)
                   .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                  .end(new JsonArray(Arrays.asList(worlds)).encode());
+                  .end(worlds.encode());
 
               conn.close();
             } else {
@@ -259,7 +278,7 @@ public class App extends AbstractVerticle {
 
                 final JsonArray row = resultSet.get(0);
 
-                worlds[idx] = new World(row.getInteger(0), row.getInteger(1));
+                worlds.add(new World(row.getInteger(0), row.getInteger(1)));
                 self.handle(idx + 1);
               });
             }
@@ -322,7 +341,16 @@ public class App extends AbstractVerticle {
 
     public final void updateHandler(final RoutingContext ctx) {
       final int queries = Helper.getQueries(ctx.request());
-      final World[] worlds = new World[queries];
+      final JsonArray worlds = new JsonArray();
+
+      final StringBuffer batch;
+
+      if (dbms == POSTGRES) {
+        // Postgres can batch queries
+        batch = new StringBuffer();
+      } else {
+        batch = null;
+      }
 
       database.getConnection(getConnection -> {
         if (getConnection.failed()) {
@@ -336,14 +364,34 @@ public class App extends AbstractVerticle {
           @Override
           public void handle(Integer idx) {
             if (idx == queries) {
-              // stop condition
-              ctx.response()
-                  .putHeader(HttpHeaders.SERVER, SERVER)
-                  .putHeader(HttpHeaders.DATE, date)
-                  .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                  .end(new JsonArray(Arrays.asList(worlds)).encode());
+              switch (dbms) {
+                case MYSQL:
+                  ctx.response()
+                      .putHeader(HttpHeaders.SERVER, SERVER)
+                      .putHeader(HttpHeaders.DATE, date)
+                      .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                      .end(worlds.encode());
 
-              conn.close();
+                  conn.close();
+                  break;
+                case POSTGRES:
+                  // stop condition, first run the batch update
+                  conn.update(batch.toString(), update -> {
+                    if (update.failed()) {
+                      ctx.fail(update.cause());
+                      conn.close();
+                      return;
+                    }
+                    ctx.response()
+                        .putHeader(HttpHeaders.SERVER, SERVER)
+                        .putHeader(HttpHeaders.DATE, date)
+                        .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                        .end(worlds.encode());
+
+                    conn.close();
+                  });
+                  break;
+              }
             } else {
 
               final Handler<Integer> self = this;
@@ -365,17 +413,31 @@ public class App extends AbstractVerticle {
                 }
 
                 final int newRandomNumber = Helper.randomWorld();
+                worlds.add(new World(id, newRandomNumber));
 
-                conn.update("UPDATE WORLD SET randomnumber = " + newRandomNumber + " WHERE id = " + id, update -> {
-                  if (update.failed()) {
-                    ctx.fail(update.cause());
-                    conn.close();
-                    return;
-                  }
+                switch (dbms) {
+                  case MYSQL:
+                    conn.update("UPDATE WORLD SET randomnumber = " + newRandomNumber + " WHERE id = " + id, update -> {
+                      if (update.failed()) {
+                        ctx.fail(update.cause());
+                        conn.close();
+                        return;
+                      }
 
-                  worlds[idx] = new World(id, newRandomNumber);
-                  self.handle(idx + 1);
-                });
+                      self.handle(idx + 1);
+                    });
+                    break;
+                  case POSTGRES:
+                    batch
+                        .append("UPDATE WORLD SET randomnumber = ")
+                        .append(newRandomNumber)
+                        .append(" WHERE id = ")
+                        .append(id)
+                        .append("; ");
+
+                    self.handle(idx + 1);
+                    break;
+                }
               });
             }
           }
@@ -394,7 +456,8 @@ public class App extends AbstractVerticle {
     vertx.setPeriodic(1000, handler -> date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
 
     final MongoDB mongoDB = new MongoDB(vertx, config());
-    final JDBC jdbc = new JDBC(vertx, config());
+    final AsyncSQL psql = new AsyncSQL(vertx, AsyncSQL.POSTGRES, config());
+    final AsyncSQL mysql = new AsyncSQL(vertx, AsyncSQL.MYSQL, config());
 
     /**
      * This test exercises the framework fundamentals including keep-alive support, request routing, request header
@@ -413,7 +476,8 @@ public class App extends AbstractVerticle {
      * and database connection pool.
      */
     app.get("/mongo/db").handler(mongoDB::dbHandler);
-    app.get("/jdbc/db").handler(jdbc::dbHandler);
+    app.get("/psql/db").handler(psql::dbHandler);
+    app.get("/mysql/db").handler(mysql::dbHandler);
 
     /**
      * This test is a variation of Test #2 and also uses the World table. Multiple rows are fetched to more dramatically
@@ -421,14 +485,16 @@ public class App extends AbstractVerticle {
      * demonstrates all frameworks' convergence toward zero requests-per-second as database activity increases.
      */
     app.get("/mongo/queries").handler(mongoDB::queriesHandler);
-    app.get("/jdbc/queries").handler(jdbc::queriesHandler);
+    app.get("/psql/queries").handler(psql::queriesHandler);
+    app.get("/mysql/queries").handler(mysql::queriesHandler);
 
     /**
      * This test exercises the ORM, database connectivity, dynamic-size collections, sorting, server-side templates,
      * XSS countermeasures, and character encoding.
      */
     app.get("/mongo/fortunes").handler(mongoDB::fortunesHandler);
-    app.get("/jdbc/fortunes").handler(jdbc::fortunesHandler);
+    app.get("/psql/fortunes").handler(psql::fortunesHandler);
+    app.get("/mysql/fortunes").handler(mysql::fortunesHandler);
 
     /**
      * This test is a variation of Test #3 that exercises the ORM's persistence of objects and the database driver's
@@ -436,7 +502,8 @@ public class App extends AbstractVerticle {
      * read-then-write style database operations.
      */
     app.route("/mongo/update").handler(mongoDB::updateHandler);
-    app.route("/jdbc/update").handler(jdbc::updateHandler);
+    app.route("/psql/update").handler(psql::updateHandler);
+    app.route("/mysql/update").handler(mysql::updateHandler);
 
     /**
      * This test is an exercise of the request-routing fundamentals only, designed to demonstrate the capacity of
