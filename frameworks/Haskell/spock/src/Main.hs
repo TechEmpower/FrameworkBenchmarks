@@ -28,7 +28,8 @@ creds =
         , PG.connectPort     = 5432
         , PG.connectUser     = "benchmarkdbuser"
         , PG.connectPassword = "benchmarkdbpass"
-        , PG.connectDatabase = "hello_world" }
+        , PG.connectDatabase = "hello_world"
+        }
 
 
 poolCfg :: PoolCfg

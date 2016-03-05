@@ -1,13 +1,13 @@
 name:                spock
 version:             0.1.0.0
-synopsis:            Initial project template from stack
+synopsis:            Spock - TechEmpower benchmark
 description:         Please see README.md
-homepage:            http://github.com/githubuser/spock#readme
+homepage:            http://spock.li
 license:             BSD3
 license-file:        LICENSE
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2016 Author Here
+author:              Jérôme Mahuet
+maintainer:          jerome.mahuet@gmail.com
+copyright:           2016 Jérôme Mahuet
 category:            Web
 build-type:          Simple
 -- extra-source-files:
@@ -33,6 +33,7 @@ executable spock-exe
                      , blaze-markup
   other-modules:       Models.Fortune
                      , Models.World
+                     , Views.Fortune
   default-language:    Haskell2010
 
 source-repository head
