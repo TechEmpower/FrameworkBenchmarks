@@ -12,7 +12,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-core-experimental" % "2.0-M2",
   "com.typesafe.akka" %% "akka-http-experimental" % "2.0-M2",
   "com.typesafe.akka" %% "akka-http-spray-json-experimental" % "2.0-M2",
-  "mysql" % "mysql-connector-java" % "5.1.35",
+  "mysql" % "mysql-connector-java" % "5.1.38",
   "org.apache.commons" % "commons-dbcp2" % "2.1",
   "org.scalatra.scalate" %% "scalate-core" % "1.7.0",
   "org.scalatest" %% "scalatest" % "2.2.4" % "test"

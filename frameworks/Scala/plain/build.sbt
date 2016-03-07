@@ -44,7 +44,7 @@ libraryDependencies ++= Seq(
   "net.lingala.zip4j" % "zip4j" % "1.3.1", 
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.3.0",
   "com.sun.jersey" % "jersey-json" % "1.17.1",
-  "mysql" % "mysql-connector-java" % "5.1.27",
+  "mysql" % "mysql-connector-java" % "5.1.38",
   "org.scala-lang" % "scala-xml" % "2.11.0-M4"
 )
 

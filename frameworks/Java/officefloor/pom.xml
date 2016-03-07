@@ -11,7 +11,7 @@
 		<officefloor-version>2.16.0</officefloor-version>
 		<compiler-version>3.1</compiler-version>
 		<datanucleus-version>4.0.0-release</datanucleus-version>
-		<mysql-version>5.1.36</mysql-version>
+		<mysql-version>5.1.38</mysql-version>
 		<junit-version>4.11</junit-version>
 	</properties>
 	<build>

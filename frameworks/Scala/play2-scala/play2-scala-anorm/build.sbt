@@ -9,7 +9,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 libraryDependencies ++= Seq(
   jdbc,
   "com.typesafe.play" %% "anorm" % "2.4.0",
-  "mysql" % "mysql-connector-java" % "5.1.37")
+  "mysql" % "mysql-connector-java" % "5.1.38")
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
