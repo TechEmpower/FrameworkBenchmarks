@@ -179,6 +179,7 @@ env:
     - "TESTDIR=Scala/akka-http"
     - "TESTDIR=Scala/colossus"
     - "TESTDIR=Scala/finagle"
+    - "TESTDIR=Scala/fintrospect"
     - "TESTDIR=Scala/lift-stateless"
     - "TESTDIR=Scala/plain"
     - "TESTDIR=Scala/play2-scala"
