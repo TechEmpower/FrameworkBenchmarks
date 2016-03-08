@@ -52,7 +52,7 @@ class UpdatesHandler(components: {
     }.flatMap {
       worlds => Future.sequence(worlds.map(world => dataStore.updateOne(world.id, world.randomNumber).map(_ => world)))
     }.map {
-      worlds => new HttpResponse(StatusCodes.OK, entity = HttpEntity(worlds.map(_.toResponse).toJson.toString()).withContentType(`application/json`.withCharset(`UTF-8`)))
+      worlds => new HttpResponse(StatusCodes.OK, entity = HttpEntity(worlds.map(_.toResponse).toJson.toString()).withContentType(`application/json`))
     }
   }
 }
