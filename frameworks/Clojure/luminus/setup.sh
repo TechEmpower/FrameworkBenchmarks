@@ -3,7 +3,7 @@
 fw_depends java resin leiningen
 
 # Update db host in the source file
-sed -i 's|:jdbc-uri   "jdbc:postgresql://.*/hello_world|:jdbc-uri   "jdbc:postgresql://'"${DBHOST}"':5432/hello_world|g' hello/src/hello/db/core.clj
+sed -i 's|:jdbc-uri   "jdbc:postgresql://.*/hello_world|:jdbc-uri   "jdbc:postgresql://'"${DBHOST}"':5432/hello_world|g' hello/env/prod/resources/config.edn
 
 cd hello
 lein clean
