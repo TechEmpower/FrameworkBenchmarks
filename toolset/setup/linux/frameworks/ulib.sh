@@ -21,11 +21,11 @@ fi
 sudo apt-get install -y postgresql-server-dev-all
 
 # make use of FIFO scheduling policy possible
-type setcap >/dev/null 2>/dev/null
+#type setcap >/dev/null 2>/dev/null
 
-if [ $? -ne 0 ]; then
+#if [ $? -ne 0 ]; then
    sudo apt-get install -y libcap2-bin
-fi
+#fi
 
 # We need to install mongo-c-driver (we don't have a ubuntu package)
 #RETCODE=$(fw_exists ${IROOT}/mongo-c-driver.installed)
@@ -68,7 +68,7 @@ CXX=g++ # C++ compiler command
 gcc_version=`g++ -dumpversion`
 
 case "$gcc_version" in
-  3*|4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*)
+  3*|4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*|4.8*)
 	  CC='gcc-4.9'
 	 CXX='g++-4.9'
   ;;
