@@ -1,4 +1,4 @@
-(ns hello.config
+(ns hello.env
   (:require [selmer.parser :as parser]
             [clojure.tools.logging :as log]
             [hello.dev-middleware :refer [wrap-dev]]))

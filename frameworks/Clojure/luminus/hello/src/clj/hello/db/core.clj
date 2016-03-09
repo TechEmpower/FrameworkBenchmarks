@@ -3,10 +3,10 @@
     [cheshire.core :refer [generate-string parse-string]]
     [clojure.java.jdbc :as jdbc]
     [conman.core :as conman]
-    [environ.core :refer [env]]
+    [hello.config :refer [env]]
     [mount.core :refer [defstate]])
   (:import org.postgresql.util.PGobject
-           org.postgresql.jdbc.PgArray
+           org.postgresql.jdbc4.Jdbc4Array
            clojure.lang.IPersistentMap
            clojure.lang.IPersistentVector
            [java.sql
@@ -15,26 +15,15 @@
             Timestamp
             PreparedStatement]))
 
-(def pool-spec
-  {:username   "benchmarkdbuser"
-   :password   "benchmarkdbpass"
-   :jdbc-url   "jdbc:postgresql://127.0.0.1:5432/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
-   :init-size  1
-   :min-idle   1
-   :max-idle   4
-   :max-active 32})
-
-(defn connect! []
-  (let [conn (atom nil)]
-    (conman/connect! conn pool-spec)
-    conn))
-
-(defn disconnect! [conn]
-  (conman/disconnect! conn))
-
 (defstate ^:dynamic *db*
-          :start (connect!)
-          :stop (disconnect! *db*))
+          :start (conman/connect!
+                   {:adapter    :postgresql
+                    :init-size  10
+                    :min-idle   1
+                    :max-idle   10
+                    :max-active 64
+                    :jdbc-url   (:database-url env)})
+          :stop (conman/disconnect! *db*))
 
 (conman/bind-connection *db* "sql/queries.sql")
 
@@ -48,7 +37,7 @@
   Timestamp
   (result-set-read-column [v _ _] (to-date v))
 
-  PgArray
+  Jdbc4Array
   (result-set-read-column [v _ _] (vec (.getArray v)))
 
   PGobject
@@ -63,8 +52,18 @@
 
 (extend-type java.util.Date
   jdbc/ISQLParameter
-  (set-parameter [v ^PreparedStatement stmt idx]
+  (set-parameter [v ^PreparedStatement stmt ^long idx]
     (.setTimestamp stmt idx (Timestamp. (.getTime v)))))
+
+(extend-type clojure.lang.IPersistentVector
+  jdbc/ISQLParameter
+  (set-parameter [v ^java.sql.PreparedStatement stmt ^long idx]
+    (let [conn      (.getConnection stmt)
+          meta      (.getParameterMetaData stmt)
+          type-name (.getParameterTypeName meta idx)]
+      (if-let [elem-type (when (= (first type-name) \_) (apply str (rest type-name)))]
+        (.setObject stmt idx (.createArrayOf conn elem-type (to-array v)))
+        (.setObject stmt idx v)))))
 
 (defn to-pg-json [value]
   (doto (PGobject.)
@@ -103,7 +102,7 @@
   message text, and then return the results."
   (sort-by
    :message
-   (conj (get-all-fortunes {})
+   (conj (get-all-fortunes)
          {:id 0 :message "Additional fortune added at request time."})))
 
 (defn update-and-persist
@@ -114,4 +113,5 @@
     (let [updated-world (assoc world :randomNumber (inc (rand-int 9999)))]
       (update-world<! updated-world)
       updated-world)))
+
 

@@ -1,4 +1,4 @@
-(ns hello.config
+(ns hello.env
   (:require [clojure.tools.logging :as log]))
 
 (def defaults
