@@ -16,3 +16,5 @@ requests-futures==0.9.5
 setproctitle==1.1.8
 six==1.9.0
 ujson==1.33
+aiomysql==0.0.7
+PyMySQL==0.6.7

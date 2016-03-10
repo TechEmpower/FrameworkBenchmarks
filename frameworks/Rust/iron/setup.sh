@@ -2,6 +2,6 @@
 
 fw_depends rust
 
-rm -rf target/
+cargo clean
 cargo build --release
 ./target/release/iron &

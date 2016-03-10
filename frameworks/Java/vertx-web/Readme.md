@@ -56,7 +56,7 @@ repo and wrk is on your path. The final argument after the `--` is the desired p
 plaintext scenario at a pipeline depth of 16, [just like the Techempower Benchmarks](https://github.com/TechEmpower/FrameworkBenchmarks/blob/6594d32db618c6ca65e0106c5adf2671f7b63654/toolset/benchmark/framework_test.py#L640).
 
 ```
-wrk -c 256 -t 32 -d 10 -s ./scripts/pipeline.lua http://127.0.0.1:8080/plaintext -- 16
+wrk -c 256 -t 32 -d 15 -s ./scripts/pipeline.lua http://localhost:8080/psql/update?queries=20 -- 16
 ```
 
 *Note you may want to tweak the number of client threads (the `-t` arg) being used based on the specs of your load

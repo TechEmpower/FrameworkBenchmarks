@@ -26,7 +26,11 @@ plugin Config => {
 
 helper pg => sub { state $pg = Mojo::Pg->new('postgresql://benchmarkdbuser:benchmarkdbpass@' . shift->config->{database_host} . '/hello_world') };
 
-helper render_json => sub { shift->render( data => encode_json(shift), format => 'json' ) }; 
+helper render_json => sub {
+  my $c = shift;
+  $c->res->headers->content_type('application/json');
+  $c->render( data => encode_json(shift) );
+};
 
 # Routes
 
@@ -51,7 +55,11 @@ get '/updates' => sub {
   $c->helpers->render_query(scalar $c->param('queries'), {update => 1});
 };
 
-get '/plaintext' => sub { shift->render( text => 'Hello, World!' ) };
+get '/plaintext' => sub {
+  my $c = shift;
+  $c->res->headers->content_type('text/plain');
+  $c->render( text => 'Hello, World!' );
+};
 
 # Additional helpers (shared code)
 

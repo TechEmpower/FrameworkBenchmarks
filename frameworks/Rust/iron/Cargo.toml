@@ -4,6 +4,6 @@ name = "iron"
 version = "0.0.1"
 
 [dependencies]
-rustc-serialize = "0.3"
-iron = "0.1.18"
-router = "0.0.10"
+rustc-serialize = "0.3.18"
+iron = "0.2.6"
+router = "0.1.0"
