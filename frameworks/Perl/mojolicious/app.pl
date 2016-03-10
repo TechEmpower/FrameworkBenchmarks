@@ -1,30 +1,26 @@
 use Mojolicious::Lite;
 use Mojo::Pg;
 
-use JSON::XS 'encode_json';
+use Cpanel::JSON::XS 'encode_json';
 use Scalar::Util 'looks_like_number';
 
 # configuration
 
-plugin Config => {
-  file => 'app.conf',
-  default => {
-    database_host => 'localhost',
-    hypnotoad => {
-      graceful_timeout => 1,
-      workers => 8,
-    },
-    hypnotoad_merge => {},
-  },
-};
-
 {
-  my $merge = app->config->{hypnotoad_merge};
-  @{app->config->{hypnotoad}}{keys %$merge} = values %$merge;
+  my $nproc = `nproc`;
+  app->config(hypnotoad => {
+    accepts => 0,
+    clients => int( 256 / $nproc ) + 1,
+    graceful_timeout => 1,
+    requests => 10000,
+    workers => $nproc,
+  });
 }
 
-
-helper pg => sub { state $pg = Mojo::Pg->new('postgresql://benchmarkdbuser:benchmarkdbpass@' . shift->config->{database_host} . '/hello_world') };
+{
+  my $db_host = $ENV{DBHOST} || 'localhost';
+  helper pg => sub { state $pg = Mojo::Pg->new('postgresql://benchmarkdbuser:benchmarkdbpass@' . $db_host . '/hello_world') };
+}
 
 helper render_json => sub {
   my $c = shift;
@@ -80,7 +76,7 @@ helper 'render_query' => sub {
   foreach (1 .. $q) {
     my $id = int rand 10_000;
     my $randomNumber = $db->query('SELECT randomnumber FROM World WHERE id=?', $id)->array->[0];
-    $db->query('UPDATE World SET randomnumber=? WHERE id=?', ($randomNumber = 1 + int rand 10_000), $id) if $update; 
+    $db->query('UPDATE World SET randomnumber=? WHERE id=?', ($randomNumber = 1 + int rand 10_000), $id) if $update;
     push @$r, { id => $id, randomNumber => $randomNumber };
   }
 
