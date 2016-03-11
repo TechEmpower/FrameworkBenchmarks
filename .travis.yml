@@ -68,6 +68,7 @@ env:
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/wai"
     - "TESTDIR=Haskell/yesod"
+    - "TESTDIR=Haskell/spock"
     - "TESTDIR=Java/activeweb"
     - "TESTDIR=Java/baratine"
     - "TESTDIR=Java/bayou"
