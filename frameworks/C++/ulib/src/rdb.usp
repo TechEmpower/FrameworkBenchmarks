@@ -30,6 +30,8 @@ static void usp_fork_rdb()
 #ifndef AS_cpoll_cppsp_DO
    pvalue = U_NEW(UValue(OBJECT_VALUE));
 #endif
+
+   u__memcpy(u_buffer, "world:", U_CONSTANT_SIZE("world:"), __PRETTY_FUNCTION__);
 }
 
 #ifdef DEBUG
@@ -55,9 +57,6 @@ Content-Type: application/json
 -->
 <!--#code
 UStringRep* rep;
-
-u_put_unalignedp32(u_buffer,   U_MULTICHAR_CONSTANT32('w','o','r','l'));
-u_put_unalignedp16(u_buffer+4, U_MULTICHAR_CONSTANT16('d',':'));
 
 (void) rc->get(u_buffer, 6+u_num2str32(u_buffer+6, pworld->id = u_get_num_random(10000)));
 

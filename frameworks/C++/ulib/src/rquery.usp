@@ -6,7 +6,7 @@ TechEmpower Web Framework Benchmarks
 #include "world.h"
 
 static UREDISClient_Base* rc;
-static UVector<World*>* pvworld;
+static UVector<World*>* pvworld_query;
 
 #ifndef AS_cpoll_cppsp_DO
 static UValue* pvalue;
@@ -25,7 +25,7 @@ static void usp_fork_rquery()
       return;
       }
 
-   pvworld = U_NEW(UVector<World*>(500));
+   pvworld_query = U_NEW(UVector<World*>(500));
 
 #ifndef AS_cpoll_cppsp_DO
    pvalue = U_NEW(UValue(ARRAY_VALUE));
@@ -39,9 +39,9 @@ static void usp_end_rquery()
 
    delete rc;
 
-   if (pvworld)
+   if (pvworld_query)
       {
-      delete pvworld;
+      delete pvworld_query;
 
 #  ifndef AS_cpoll_cppsp_DO
       delete pvalue;
@@ -50,27 +50,14 @@ static void usp_end_rquery()
 }
 #endif
 -->
-<!--#args
-queries;
--->
 <!--#header
 Content-Type: application/json
 -->
 <!--#code
 World* pworld;
 UStringRep* rep;
-int i, num_queries;
 char* pbuffer = u_buffer;
-const char* ptr = queries.data();
-
-if (u__isdigit(*ptr) == false) num_queries = 1;
-else
-   {
-   num_queries = u_strtoul(ptr, queries.end());
-
-        if (num_queries <   1) num_queries = 1;
-   else if (num_queries > 500) num_queries = 500;
-   }
+int i, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR('[');
@@ -78,7 +65,7 @@ USP_PUTS_CHAR('[');
 
 for (i = 0; i < num_queries; ++i)
    {
-   pvworld->push_back(pworld = U_NEW(World));
+   pvworld_query->push_back(pworld = U_NEW(World));
 
    u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
 
@@ -91,7 +78,7 @@ i = 0;
 
 while (true)
    {
-   pworld = pvworld->at(i);
+   pworld = pvworld_query->at(i);
 
    rep = rc->vitem[i].rep;
 
@@ -111,8 +98,8 @@ while (true)
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR(']');
 #else
-USP_JSON_stringify(*pvalue, UVector<World*>, *pvworld);
+USP_JSON_stringify(*pvalue, UVector<World*>, *pvworld_query);
 pvalue->clear();
 #endif
-pvworld->clear();
+pvworld_query->clear();
 -->

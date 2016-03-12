@@ -22,7 +22,7 @@ static void usp_fork_fortune()
       {
       pstmt_fortune = U_NEW(UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
 
-      if (pstmt_fortune == 0) U_ERROR("usp_fork_fortune(): we cound't connect to db");
+      if (pstmt_fortune == 0) U_WARNING("usp_fork_fortune(): we cound't connect to db");
 
       if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
 
