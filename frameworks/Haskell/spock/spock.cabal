@@ -1,0 +1,41 @@
+name:                spock
+version:             0.1.0.0
+synopsis:            Spock - TechEmpower benchmark
+description:         Please see README.md
+homepage:            http://spock.li
+license:             BSD3
+license-file:        LICENSE
+author:              Jérôme Mahuet
+maintainer:          jerome.mahuet@gmail.com
+copyright:           2016 Jérôme Mahuet
+category:            Web
+build-type:          Simple
+-- extra-source-files:
+cabal-version:       >=1.10
+
+executable spock-exe
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N -O2
+  build-depends:       base
+                     , Spock
+                     , resource-pool
+                     , text
+                     , aeson >= 0.11
+                     , postgresql-simple
+                     , random
+                     , transformers
+                     , async
+                     , mtl
+                     , resourcet
+                     , http-types
+                     , blaze-html
+                     , blaze-markup
+  other-modules:       Models.Fortune
+                     , Models.World
+                     , Views.Fortune
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/githubuser/spock

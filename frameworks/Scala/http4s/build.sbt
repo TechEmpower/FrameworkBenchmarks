@@ -25,7 +25,7 @@ libraryDependencies ++= Seq(
 	"org.scalaz" %% "scalaz-core" % scalazVersion,
 	"org.scalaz" %% "scalaz-concurrent" % scalazVersion,
 	"com.github.alexarchambault" %% "argonaut-shapeless_6.1" % "0.3.1",
-	"org.postgresql" % "postgresql" % "9.4-1204-jdbc4"
+	"org.postgresql" % "postgresql" % "9.4.1208"
 )
 
 mainClass in oneJar := Some("http4s.techempower.benchmark.WebServer")

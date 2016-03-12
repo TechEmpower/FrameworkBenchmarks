@@ -54,7 +54,7 @@ class QueriesHandler(components: {
         id => dataStore.findOne(id)
       }
     }.map {
-      worlds => new HttpResponse(StatusCodes.OK, entity = HttpEntity(worlds.toList.map(_.toResponse).toJson.toString()).withContentType(`application/json`.withCharset(`UTF-8`)))
+      worlds => new HttpResponse(StatusCodes.OK, entity = HttpEntity(worlds.toList.map(_.toResponse).toJson.toString()).withContentType(`application/json`))
     }
 
   }

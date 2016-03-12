@@ -1,6 +1,6 @@
 // Capsule plugin
 plugins {
-    id "us.kirchmeier.capsule" version "1.0.0"
+    id "us.kirchmeier.capsule" version "1.0.2"
 }
 
 apply plugin: 'java'
@@ -8,17 +8,19 @@ apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = '1.0'
+version = '0.2'
 
-ext.jacksonVer = '2.5.4'
-ext.quasarVer  = '0.7.3'
-ext.comsatVer  = '0.5.0'
+ext.jacksonVer = '2.7.0'
+ext.quasarVer  = '0.7.4'
+ext.comsatVer  = '0.6.0'
+ext.capsuleVer = '1.0.1'
 
 [compileJava, compileTestJava]*.options*.encoding = "UTF-8"
 
 repositories {
-    // mavenLocal()
     mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    // mavenLocal()
 }
 
 configurations {
@@ -33,7 +35,7 @@ dependencies {
     compile "co.paralleluniverse:comsat-servlet:$comsatVer"
     compile "co.paralleluniverse:comsat-test-utils:$comsatVer"
 
-    capsule "co.paralleluniverse:capsule:1.0"
+    capsule "co.paralleluniverse:capsule:$capsuleVer"
 
     quasar "co.paralleluniverse:quasar-core:$quasarVer:jdk8"
 }
@@ -43,21 +45,9 @@ task capsule(type: FatCapsule) {
 
     capsuleManifest {
         javaAgents = [configurations.quasar.iterator().next().getName()]
-
-        mode('undertow') {
-            systemProperties['serverClass'] = 'co.paralleluniverse.embedded.containers.UndertowServer'
-        }
-
-        mode('jetty') {
-            systemProperties['serverClass'] = 'co.paralleluniverse.embedded.containers.JettyServer'
-        }
-
-        mode('tomcat') {
-            systemProperties['serverClass'] = 'co.paralleluniverse.embedded.containers.TomcatServer'
-        }
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.7'
+    gradleVersion = '2.11'
 }

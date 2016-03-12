@@ -12,7 +12,7 @@
   <properties>
     <!-- the main class -->
     <main.verticle>io.vertx.benchmark.App</main.verticle>
-    <vertx.version>3.2.0</vertx.version>
+    <vertx.version>3.2.1</vertx.version>
   </properties>
 
   <dependencies>
@@ -36,7 +36,7 @@
 
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-jdbc-client</artifactId>
+      <artifactId>vertx-mysql-postgresql-client</artifactId>
       <version>${vertx.version}</version>
     </dependency>
 
@@ -44,12 +44,6 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web-templ-handlebars</artifactId>
       <version>${vertx.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>9.4-1206-jdbc42</version>
     </dependency>
 
   </dependencies>
