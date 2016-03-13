@@ -30,7 +30,7 @@ defmodule JsonHandler do
     { :ok, reply, state }
   end
 
-  def terminate(reason, request, state) do
+  def terminate(_reason, _request, _state) do
     :ok
   end
 end
@@ -48,7 +48,7 @@ defmodule PlaintextHandler do
     { :ok, reply, state }
   end
 
-  def terminate(reason, request, state) do
+  def terminate(_reason, _request, _state) do
     :ok
   end
 end
