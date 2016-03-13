@@ -16,9 +16,9 @@ defmodule Hello.PageController do
     json conn, Repo.get(World, :random.uniform(10000))
   end
 
-  def queries(conn, _params) do
+  def queries(conn, params) do
     q = try do
-      case String.to_integer(_params["queries"]) do
+      case String.to_integer(params["queries"]) do
         x when x < 1    -> 1
         x when x > 500  -> 500
         x               -> x
@@ -34,9 +34,9 @@ defmodule Hello.PageController do
     render conn, "fortunes.html", fortunes: Enum.sort(fortunes, fn f1, f2 -> f1.message < f2.message end)
   end
 
-  def updates(conn, _params) do
+  def updates(conn, params) do
     q = try do
-      case String.to_integer(_params["queries"]) do
+      case String.to_integer(params["queries"]) do
         x when x < 1    -> 1
         x when x > 500  -> 500
         x               -> x
