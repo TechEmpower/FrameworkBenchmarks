@@ -23,7 +23,6 @@ defmodule JsonHandler do
   end
 
   def handle(request, state) do
-    Poison.encode!(%{message: "Hello, World!"})
     { :ok, reply } = :cowboy_req.reply(200,
       [{"content-type", "application/json"}],
       Poison.encode!(%{:message => "Hello, World!"}),
@@ -42,7 +41,6 @@ defmodule PlaintextHandler do
   end
 
   def handle(request, state) do
-    Poison.encode!(%{message: "Hello, World!"})
     { :ok, reply } = :cowboy_req.reply(200,
       [{"content-type", "text/plain"}],
       "Hello, World!",
