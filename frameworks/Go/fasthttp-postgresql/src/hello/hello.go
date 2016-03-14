@@ -12,15 +12,14 @@ import (
 	"os/exec"
 	"runtime"
 	"sort"
-	"sync/atomic"
-	"time"
+	"sync"
 
 	"github.com/jackc/pgx"
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/reuseport"
 )
 
-type Message struct {
+type JSONResponse struct {
 	Message string `json:"message"`
 }
 
@@ -36,7 +35,7 @@ type Fortune struct {
 
 const (
 	worldRowCount      = 10000
-	maxConnectionCount = 256
+	maxConnectionCount = 40
 )
 
 var (
@@ -85,22 +84,7 @@ func main() {
 	}
 }
 
-const maxConnDuration = time.Millisecond * 200
-
-var connDurationJitter uint64
-
 func mainHandler(ctx *fasthttp.RequestCtx) {
-	// Performance hack for prefork mode - periodically close keepalive
-	// connections for evenly distributing connections among available
-	// processes.
-	if *prefork {
-		maxDuration := maxConnDuration + time.Millisecond*time.Duration(atomic.LoadUint64(&connDurationJitter))
-		if time.Since(ctx.ConnTime()) > maxDuration {
-			atomic.StoreUint64(&connDurationJitter, uint64(rand.Intn(100)))
-			ctx.SetConnectionClose()
-		}
-	}
-
 	path := ctx.Path()
 	switch string(path) {
 	case "/plaintext":
@@ -122,7 +106,16 @@ func mainHandler(ctx *fasthttp.RequestCtx) {
 
 // Test 1: JSON serialization
 func jsonHandler(ctx *fasthttp.RequestCtx) {
-	jsonMarshal(ctx, &Message{helloWorldString})
+	r := jsonResponsePool.Get().(*JSONResponse)
+	r.Message = helloWorldString
+	jsonMarshal(ctx, r)
+	jsonResponsePool.Put(r)
+}
+
+var jsonResponsePool = &sync.Pool{
+	New: func() interface{} {
+		return &JSONResponse{}
+	},
 }
 
 // Test 2: Single database query
