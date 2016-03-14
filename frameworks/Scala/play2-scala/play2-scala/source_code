@@ -1,4 +1,3 @@
 ./play-scala/app/
-./play-scala/app/Filters.scala
 ./play-scala/app/controllers
 ./play-scala/app/controllers/Application.scala
