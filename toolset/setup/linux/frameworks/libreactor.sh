@@ -10,6 +10,9 @@ LIBREACTOR_HOME=$IROOT/libreactor_techempower
 
 git clone https://github.com/fredrikwidlund/libreactor_techempower
 cd $LIBREACTOR_HOME
+export CC=gcc-4.9
+export RANLIB=gcc-ranlib-4.9
+export AR=gcc-ar-4.9
 ./autogen.sh
 ./configure
 make
