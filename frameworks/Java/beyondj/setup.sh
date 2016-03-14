@@ -1,5 +1,7 @@
 #!/bin/bash
 
+fw_depends java
+
 WORKING_DIR=beyondj-launcher/deploy
 
 if [ ! -d "$WORKING_DIR" ]; then
