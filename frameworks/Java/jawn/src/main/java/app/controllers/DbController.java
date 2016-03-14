@@ -1,50 +1,40 @@
 package app.controllers;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import net.javapla.jawn.core.Controller;
 import net.javapla.jawn.core.Param;
 import app.db.DbManager;
+import app.helpers.Helper;
 import app.models.World;
 
 import com.google.inject.Inject;
 
 public class DbController extends Controller {
 
-    private static final int NUMBER_OF_ROWS = 10_000;
-    
     @Inject
     private DbManager db;
     
+    // /db
     public void index() {
-        respond().json(db.getWorld(getRandomNumber()));
+        respond().json(db.getWorld(Helper.getRandomNumber()));
     }
     
+    // /queries?queries=
     public void getQueries() {
         int param = parseQueryParam();
         
-        World[] worlds = new World[param];
-        for (int i = 0; i < param; i++) {
-            worlds[i] = db.getWorld(getRandomNumber());
-        }
-        respond().json(worlds);
+        respond().json(db.getWorlds(param));
     }
     
+    // /updates?queries=
     public void getUpdates() {
         int param = parseQueryParam();
         
-        World[] worlds = new World[param];
+        World[] worlds = db.getWorlds(param);
         for (int i = 0; i < param; i++) {
-            World world = db.getWorld(getRandomNumber());
-            world.randomNumber = getRandomNumber();
-            worlds[i] = world;
+            worlds[i].randomNumber = Helper.getRandomNumber();
         }
         db.updateWorlds(worlds);
         respond().json(worlds);
-    }
-    
-    private int getRandomNumber() {
-        return ThreadLocalRandom.current().nextInt(NUMBER_OF_ROWS) + 1;
     }
     
     private int parseQueryParam() {
