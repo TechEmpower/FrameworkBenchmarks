@@ -33,7 +33,7 @@ object BenchmarkBuild extends Build {
     )
   )
 
-  val mysql = "mysql" % "mysql-connector-java" % "5.1.23"
+  val mysql = "mysql" % "mysql-connector-java" % "5.1.38"
 
   val json4s = "org.json4s"   %% "json4s-jackson" % "3.2.4"
 }

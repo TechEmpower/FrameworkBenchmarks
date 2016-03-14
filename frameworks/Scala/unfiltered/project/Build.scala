@@ -19,7 +19,7 @@ object Bench extends Build {
         "org.clapper" %% "avsl" % "1.0.2",
         "org.json4s" %% "json4s-jackson" % "3.3.0",
         "com.typesafe.slick" %% "slick" % "3.1.1",
-        "mysql" % "mysql-connector-java" % "5.1.24",
+        "mysql" % "mysql-connector-java" % "5.1.38",
         "com.jolbox" % "bonecp" % "0.7.1.RELEASE",
         "com.typesafe" % "config" % "1.0.0"
       )

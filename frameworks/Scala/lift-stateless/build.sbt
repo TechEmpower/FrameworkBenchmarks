@@ -21,7 +21,7 @@ libraryDependencies ++= Seq(
   "org.streum" %% "configrity-core" % "1.0.0",
   "org.rogach" %% "scallop" % "0.8.1",
   "commons-dbcp" % "commons-dbcp" % "1.4",
-  "mysql" % "mysql-connector-java" % "5.1.21",
+  "mysql" % "mysql-connector-java" % "5.1.38",
   "com.typesafe.slick" %% "slick" % "1.0.0",
   "ch.qos.logback" % "logback-classic" % "1.0.9",
   "org.eintr.loglady" %% "loglady" % "1.1.0",
