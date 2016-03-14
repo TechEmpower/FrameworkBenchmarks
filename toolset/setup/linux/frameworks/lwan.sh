@@ -5,7 +5,8 @@ RETCODE=$(fw_exists ${IROOT}/lwan.installed)
   source $IROOT/lwan.installed
   return 0; }
 
-REV='49607addb31879e2aa2b701317773674662315aa'
+#REV='49607addb31879e2aa2b701317773674662315aa'
+REV='0a4af6feb3ba1a7a7d6aa122456dd78c4a29853b'
 LWAN_HOME=$IROOT/lwan
 
 [ ! -e $IROOT/lwan.installed -a -d $LWAN_HOME ] && rm -rf $LWAN_HOME
@@ -16,8 +17,9 @@ cd $LWAN_HOME
 git checkout ${REV}
 mkdir build
 cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$IROOT
 make techempower
+make install
 
 echo "export LWAN_ROOT=${LWAN_HOME}" > $IROOT/lwan.installed
 echo -e "export LWAN_BUILD=\$LWAN_ROOT/build" >> $IROOT/lwan.installed
