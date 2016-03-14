@@ -1,12 +1,13 @@
 #!/bin/bash
 
-sed -i 's|tcp(.*:3306)|tcp('"${DBHOST}"':3306)|g' src/hello/hello.go
+sed -i 's|tcp(.*:3306)|tcp('"${DBHOST}"':3306)|g' server.go
 
 fw_depends go
 
 go get -u github.com/go-sql-driver/mysql
 go get -u github.com/valyala/fasthttp
+go get -u github.com/valyala/quicktemplate/...
 
-rm -f ./hello
-go build src/hello/hello.go
-./hello &
+rm -f ./server
+go build -o server
+./server &

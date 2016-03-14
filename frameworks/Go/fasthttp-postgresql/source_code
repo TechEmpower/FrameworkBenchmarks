@@ -1,5 +1,4 @@
-./fasthttp-postgresql/src/
-./fasthttp-postgresql/src/hello
-./fasthttp-postgresql/src/hello/hello.go
+./fasthttp-postgresql/server.go
 ./fasthttp-postgresql/templates/
-./fasthttp-postgresql/templates/fortune.html
+./fasthttp-postgresql/templates/fortune.qtpl
+./fasthttp-postgresql/templates/fortune.qtpl.go
