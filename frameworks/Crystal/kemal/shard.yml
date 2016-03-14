@@ -1,0 +1,19 @@
+name: "kemal"
+version: "0.0.1"
+
+dependencies:
+  pg:
+    github: will/crystal-pg
+    branch: master
+  pool:
+    github: ysbaddaden/pool
+    branch: master
+  kemal:
+    github: "sdogruyol/kemal"
+    branch: "master"
+  redis:
+    github: "stefanwille/crystal-redis"
+    version: "~> 1.3.1"
+  html_builder:
+    github: crystal-lang/html_builder
+license: MIT
