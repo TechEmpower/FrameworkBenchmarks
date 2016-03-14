@@ -7,9 +7,9 @@ RETCODE=$(fw_exists ${IROOT}/pypy.installed)
   
 PYPY_ROOT=$IROOT/pypy
 
-fw_get -o pypy-2.5.0-linux64.tar.bz2 https://bitbucket.org/pypy/pypy/downloads/pypy-2.5.0-linux64.tar.bz2
-fw_untar pypy-2.5.0-linux64.tar.bz2
-ln -sf pypy-2.5.0-linux64 pypy
+fw_get -o pypy-4.0.1-linux64.tar.bz2 https://bitbucket.org/pypy/pypy/downloads/pypy-4.0.1-linux64.tar.bz2
+fw_untar pypy-4.0.1-linux64.tar.bz2
+ln -sf pypy-4.0.1-linux64 pypy
 
 fw_get -o get-pip.py https://bootstrap.pypa.io/get-pip.py
 
