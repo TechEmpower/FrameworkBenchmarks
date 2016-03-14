@@ -99,27 +99,6 @@
       "notes": "",
       "versus": ""
     },
-    "redis": {
-      "setup_file": "setup_redis",
-      "db_url": "/rdb",
-      "query_url": "/rquery?queries=",
-      "fortune_url": "/rfortune",
-      "update_url": "/rupdate?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "Redis",
-      "framework": "ULib",
-      "language": "C++",
-      "orm": "Micro",
-      "platform": "ULib",
-      "webserver": "ULib",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "ULib-redis",
-      "notes": "",
-      "versus": ""
-    },
     "mongodb": {
       "setup_file": "setup_mongodb",
       "db_url": "/mdb",
