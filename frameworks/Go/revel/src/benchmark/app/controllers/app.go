@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"database/sql"
-	"github.com/robfig/revel"
-	"github.com/robfig/revel/modules/db/app"
+	"github.com/revel/revel"
+	"github.com/revel/revel/modules/db/app"
 	"math/rand"
 	"runtime"
 	"sort"
