@@ -52,7 +52,7 @@
   (GET "/json"             [] (json-serialization)))
 
 (defroutes default-routes
-  (GET "/"                 [] "Hello, World!")
+  (GET "/"                 []        "Hello, World!")
   (GET "/db"               []        (single-query-test))
   (GET "/queries/"         []        (multiple-query-test 1))
   (GET "/queries/:queries" [queries] (multiple-query-test queries))
