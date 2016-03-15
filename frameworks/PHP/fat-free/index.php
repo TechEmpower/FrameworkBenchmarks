@@ -2,9 +2,13 @@
 // drop startup errors
 if (function_exists('error_clear_last'))
     error_clear_last();
+   
+error_reporting(0);
 
 /** @var Base $f3 */
 $f3=require('src/base.php');
+
+error_reporting(-1);
 
 $f3->set('DEBUG',2);
 $f3->set('HIGHLIGHT',false);
