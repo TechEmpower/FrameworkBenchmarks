@@ -2,7 +2,7 @@
 
 fw_depends ulib
 
-MAX_THREADS=$((2 * $MAX_THREADS))
+MAX_THREADS=$(( 3 * $MAX_THREADS / 2 ))
 
 # 1. Change ULib Server (userver_tcp) configuration
 sed -i "s|TCP_LINGER_SET .*|TCP_LINGER_SET 0|g"										$IROOT/ULib/benchmark.cfg
@@ -11,7 +11,7 @@ sed -i "s|PREFORK_CHILD .*|PREFORK_CHILD ${MAX_THREADS}|g"						$IROOT/ULib/benc
 sed -i "s|CLIENT_FOR_PARALLELIZATION .*|CLIENT_FOR_PARALLELIZATION 8000|g" $IROOT/ULib/benchmark.cfg
 
 # 2. Start ULib Server (userver_tcp)
-export UMEMPOOL="58,0,0,39,16401,-14,-15,11,25"
+export UMEMPOOL="58,0,0,41,16401,-14,-15,11,25"
 
 # Never use setcap inside of TRAVIS 
 [ "$TRAVIS" != "true" ] || { \
