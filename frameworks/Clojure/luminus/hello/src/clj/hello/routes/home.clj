@@ -18,13 +18,14 @@
 (defn single-query-test
   "Test 2: Single database query"
   []
-  (-> 1 db/run-queries first response/ok))
+  (-> 1 db/run-queries generate-string response/ok))
 
 (defn multiple-query-test
   "Test 3: Multiple database query"
   [queries]
   (-> queries
       db/run-queries
+      generate-string
       response/ok))
 
 (defn fortunes
@@ -37,6 +38,7 @@
   [queries]
   (-> queries
       db/update-and-persist
+      generate-string
       response/ok))
 
 (def plaintext
@@ -51,9 +53,9 @@
 
 (defroutes default-routes
   (GET "/"                 [] "Hello, World!")
-  (GET "/db"               [] (single-query-test))
-  (GET "/queries/"         [] (multiple-query-test 1))
+  (GET "/db"               []        (single-query-test))
+  (GET "/queries/"         []        (multiple-query-test 1))
   (GET "/queries/:queries" [queries] (multiple-query-test queries))
-  (GET "/fortunes"         [] (fortunes))
-  (GET "/updates/"         [] (db-update 1))
+  (GET "/fortunes"         []        (fortunes))
+  (GET "/updates/"         []        (db-update 1))
   (GET "/updates/:queries" [queries] (db-update queries)))

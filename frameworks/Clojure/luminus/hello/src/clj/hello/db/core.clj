@@ -113,5 +113,3 @@
     (let [updated-world (assoc world :randomNumber (inc (rand-int 9999)))]
       (update-world<! updated-world)
       updated-world)))
-
-

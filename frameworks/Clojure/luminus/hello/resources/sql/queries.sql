@@ -10,5 +10,6 @@ SELECT * FROM fortune
 -- :name update-world<! :<!
 -- update an existing world record
 UPDATE world
-SET randomNumber = :randomNumber
+SET "randomNumber" = :randomNumber
 WHERE id = :id
+RETURNING id
