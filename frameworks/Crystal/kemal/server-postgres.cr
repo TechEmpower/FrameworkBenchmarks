@@ -44,7 +44,7 @@ private def fortunes
 end
 
 private def sanitizedQueryCount(request)
-  queries = request.params["queries"] as String
+  queries = request.params.query["queries"] as String
   return 1 if queries.empty? || queries.to_i?.nil?
   if queries.to_i > 500
     queries = 500
