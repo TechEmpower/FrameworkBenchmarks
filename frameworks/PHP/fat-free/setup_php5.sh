@@ -9,7 +9,7 @@ sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
 F3DIR="$TROOT/src"
 
-[[ ! -e "$F3DIR" ]] || rm -r "$F3DIR"
+[[ ! -e "$F3DIR" ]] || rm -rf "$F3DIR"
 
 git clone "https://github.com/bcosca/fatfree-core.git" "$F3DIR"
 pushd "$F3DIR" > /dev/null
