@@ -5,8 +5,7 @@ type Fortune struct {
 }
 %}
 
-{% func FortunePage(rows []Fortune) %}
-<!DOCTYPE html>
+{% func FortunePage(rows []Fortune) %}<!DOCTYPE html>
 <html>
 <head>
 <title>Fortunes</title>

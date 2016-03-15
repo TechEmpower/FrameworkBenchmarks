@@ -9,5 +9,6 @@ go get -u github.com/valyala/fasthttp
 go get -u github.com/valyala/quicktemplate/...
 
 rm -f ./server
+go generate
 go build -o server
 ./server &
