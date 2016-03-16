@@ -13,7 +13,7 @@ fw_untar go$VERSION.linux-amd64.tar.gz
 
 echo "export GOROOT=${IROOT}/go" > $IROOT/go.installed
 echo -e "export GOPATH=\$TROOT" >> $IROOT/go.installed
-echo -e "export PATH=\$GOROOT/bin:\$PATH" >> $IROOT/go.installed
+echo -e "export PATH=\$GOROOT/bin:\$GOPATH/bin:\$PATH" >> $IROOT/go.installed
 echo "export GOGC=1000" >> $IROOT/go.installed
 
 source $IROOT/go.installed

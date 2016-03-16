@@ -1,4 +1,4 @@
-//go:generate qtc -dir=templates
+//go:generate qtc -dir=src/templates
 package main
 
 import (
@@ -18,7 +18,7 @@ import (
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/reuseport"
 
-	"./templates"
+	"templates"
 )
 
 type JSONResponse struct {

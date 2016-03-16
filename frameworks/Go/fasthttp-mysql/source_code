@@ -1,3 +1,4 @@
 ./fasthttp-mysql/server.go
-./fasthttp-mysql/templates/
-./fasthttp-mysql/templates/fortune.qtpl
+./fasthttp-mysql/src/
+./fasthttp-mysql/src/templates/
+./fasthttp-mysql/src/templates/fortune.qtpl
