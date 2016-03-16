@@ -6,7 +6,7 @@ fw_depends go
 
 go get -u github.com/go-sql-driver/mysql
 go get -u github.com/valyala/fasthttp
-go get -u github.com/valyala/quicktemplate/...
+go get -u github.com/valyala/quicktemplate/qtc
 
 rm -f ./server
 go generate
