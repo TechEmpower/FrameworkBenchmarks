@@ -1,8 +1,5 @@
 import java.time.ZonedDateTime._
-import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME
-import java.time.{ZonedDateTime, ZoneId}
-import javax.swing.text.DateFormatter
 
 import com.twitter.finagle.http.Method.Get
 import com.twitter.finagle.http.Request
@@ -23,19 +20,17 @@ import io.fintrospect.{ModuleSpec, RouteSpec}
 
 object FintrospectBenchmarkServer extends App {
 
-  def plainTextHelloWorld() = {
+  val plainTextHelloWorld = {
     import io.fintrospect.formats.PlainText.ResponseBuilder._
     Service.mk { r: Request => Ok("Hello, World!")
       .withHeaders("Server" -> "Example", "Date" -> RFC_1123_DATE_TIME.format(now()))
     }
   }
 
-  def jsonHelloWorld() = {
-    case class Message(message: String)
+  case class Message(message: String)
 
-    Service.mk { r: Request => Ok(encode(Message("Hello, World!")))
-      .withHeaders("Server" -> "Example", "Date" -> RFC_1123_DATE_TIME.format(now()))
-    }
+  val jsonHelloWorld = Service.mk { r: Request => Ok(encode(Message("Hello, World!")))
+    .withHeaders("Server" -> "Example", "Date" -> RFC_1123_DATE_TIME.format(now()))
   }
 
   val module = ModuleSpec(Root)
