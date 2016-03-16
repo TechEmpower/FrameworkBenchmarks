@@ -14,7 +14,8 @@ public:
     bool transactionEnabled() const { return false; }
 
 public slots:
-    void index();
+    void index();   // SQL
+    void mindex();  // MongoDB
     void show(const QString &pk);
     void entry();
     void create();
