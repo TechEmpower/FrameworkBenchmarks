@@ -11,48 +11,16 @@ RETCODE=$(fw_exists $IROOT/mono.installed)
 # See https://github.com/TechEmpower/FrameworkBenchmarks/pull/1287
 
 # Add source for prepackaged binaries
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-echo "deb http://jenkins.mono-project.com/repo/debian sid main" | sudo tee /etc/apt/sources.list.d/mono-jenkins.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list
 sudo apt-get update
 
-# Find the most recent snapshot
-#SNAPSHOT=$(apt-cache search 'mono-snapshot-.*-assemblies' | cut -d'-' -f3 | tail -1)
+# Ideally we would install specific version of Mono, ie, mono-complete=4.2.2.30-0xamarin1 but it seems that too doesn't stick around for too long ;(
+# So we are back to square one with "unsable" Mono, although Mono is much more stable than it was at version 3
+sudo apt-get install -y mono-complete
 
-# REMARK:
-# Rollback this after I execute above command manually due to "msmith-techempower"'s request.
-# According to him "apt-get to install mono is not stable", so keep this way. 
-# If you see mono fail, please doubt this SNAPSHOT and execute above command manually, then
-# copy and paste the value to SNAPSHOT variable just like below.
-SNAPSHOT="2016.01.04+14.28.05"
+# Mono installs to PATH (/usr/bin/mono) :( so no env vars
 
-# save environment
-
-MONO_HOME=$IROOT/mono-snapshot-$SNAPSHOT
-echo "export SNAPSHOT=$SNAPSHOT" > $IROOT/mono.installing
-echo "export MONO_HOME=$MONO_HOME" >> $IROOT/mono.installing
-echo "export MONO_PATH=$MONO_HOME/lib/mono/4.5" >> $IROOT/mono.installing
-echo "export MONO_CFG_DIR=$MONO_HOME/etc" >> $IROOT/mono.installing
-echo -e "export PATH=$MONO_HOME/bin:\$PATH" >> $IROOT/mono.installing
-echo -e "export LD_LIBRARY_PATH=$MONO_HOME/lib:\$LD_LIBRARY_PATH" >> $IROOT/mono.installing
-echo -e "export PKG_CONFIG_PATH=$MONO_HOME/lib/pkgconfig:\$PKG_CONFIG_PATH" >> $IROOT/mono.installing
-
-# load environment
-source $IROOT/mono.installing
-
-# start fresh
-rm -rf $MONO_HOME && mkdir -p $MONO_HOME
-
-# Download and extract debs
-fw_apt_to_iroot mono-snapshot-$SNAPSHOT
-fw_apt_to_iroot mono-snapshot-$SNAPSHOT-assemblies mono-snapshot-$SNAPSHOT
-
-
-# Simplify paths
-sudo mv $MONO_HOME/opt/mono-*/* $MONO_HOME
-file $MONO_HOME/bin/* | grep "POSIX shell script" | awk -F: '{print $1}' | xargs sudo sed -i "s|/opt/mono-$SNAPSHOT|$MONO_HOME|g"
-sudo sed -i "s|/opt/mono-$SNAPSHOT|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_HOME/etc/mono/config
-echo "mozroots --import --sync" >> $IROOT/mono.installing
-
-sudo mv $IROOT/mono.installing $IROOT/mono.installed
+echo "# Mono installed to PATH /usr/bin " > $IROOT/mono.installed
 
 source $IROOT/mono.installed

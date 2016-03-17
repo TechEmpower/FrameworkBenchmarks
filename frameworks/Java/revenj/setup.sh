@@ -17,7 +17,7 @@ echo "Unzipping DSL compiler"
 unzip $TROOT/dsl-compiler.zip -d $TROOT
 
 echo "Prepare Revenj 0.8 dependencies"
-wget -O $TROOT/revenj-java-0.8.zip https://compiler.dsl-platform.com:8443/platform/download/revenj-java-0.8.zip
+wget -O $TROOT/revenj-java-0.8.zip https://github.com/ngs-doo/revenj/releases/download/1.2.1/revenj-java-0.8.zip
 unzip $TROOT/revenj-java-0.8.zip -d $TROOT/revenj.java
 
 echo "Compiling the server model and downloading dependencies..."
