@@ -26,6 +26,7 @@
   []
   (-> 1
       db/run-queries
+      first
       encode-json-response))
 
 (defn multiple-query-test

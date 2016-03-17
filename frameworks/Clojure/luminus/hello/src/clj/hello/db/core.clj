@@ -106,6 +106,13 @@
    (conj (get-all-fortunes)
          {:id 0 :message "Additional fortune added at request time."})))
 
+(defn update-world<! [{:keys [randomNumber id]}]
+  (jdbc/update!
+    *db*
+    :world
+    {"\"randomNumber\"" randomNumber}
+    ["id = ?" id]))
+
 (defn update-and-persist
   "Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
