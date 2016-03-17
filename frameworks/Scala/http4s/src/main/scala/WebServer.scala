@@ -57,8 +57,22 @@ object Queries extends OptionalValidatingQueryParamDecoderMatcher[Int]("queries"
 object WebServer extends TaskApp {
   implicit def jsonEncoder[A](implicit encoder: Encoder[A]) = jsonEncoderOf[A](encoder)
 
-  def xaTask(host: String) =
-    HikariTransactor[Task]("org.postgresql.Driver", s"jdbc:postgresql://$host/hello_world", "benchmarkdbuser", "benchmarkdbpass")
+  def xaTask(host: String) = {
+    val driver = "org.postgresql.Driver"
+    val url = s"jdbc:postgresql://$host/hello_world"
+    val user = "benchmarkdbuser"
+    val pass = "benchmarkdbpass"
+    val maxPoolSize = 256
+    val minIdle = 256
+
+    for {
+      xa <- HikariTransactor[Task](driver, url, user, pass)
+      _  <- xa.configure(ds => Task.delay {
+         ds.setMaximumPoolSize(maxPoolSize)
+         ds.setMinimumIdle(minIdle)
+      })
+    } yield xa
+  }
 
   // Provide a random number between 1 and 10000 (inclusive)
   val randomWorldId: Task[Int] = Task.delay(ThreadLocalRandom.current.nextInt(1, 10001))
