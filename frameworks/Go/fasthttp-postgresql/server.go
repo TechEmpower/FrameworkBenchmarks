@@ -39,14 +39,8 @@ var (
 	worldSelectStmt   *pgx.PreparedStatement
 	worldUpdateStmt   *pgx.PreparedStatement
 	fortuneSelectStmt *pgx.PreparedStatement
-)
 
-const helloWorldString = "Hello, World!"
-
-var (
 	db *pgx.ConnPool
-
-	helloWorldBytes = []byte(helloWorldString)
 )
 
 var (
@@ -71,7 +65,7 @@ func main() {
 
 	s := &fasthttp.Server{
 		Handler: mainHandler,
-		Name:    "fasthttp",
+		Name:    "go",
 	}
 	ln := getListener()
 	if err = s.Serve(ln); err != nil {
@@ -102,7 +96,7 @@ func mainHandler(ctx *fasthttp.RequestCtx) {
 // Test 1: JSON serialization
 func jsonHandler(ctx *fasthttp.RequestCtx) {
 	r := jsonResponsePool.Get().(*JSONResponse)
-	r.Message = helloWorldString
+	r.Message = "Hello, World!"
 	jsonMarshal(ctx, r)
 	jsonResponsePool.Put(r)
 }
@@ -189,7 +183,8 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 
 // Test 6: Plaintext
 func plaintextHandler(ctx *fasthttp.RequestCtx) {
-	ctx.Write(helloWorldBytes)
+	ctx.SetContentType("text/plain")
+	ctx.WriteString("Hello, World!")
 }
 
 func jsonMarshal(ctx *fasthttp.RequestCtx, v interface{}) {
