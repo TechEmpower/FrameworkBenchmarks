@@ -26,7 +26,7 @@ libraryDependencies ++= Seq(
 	"org.tpolecat" %% "doobie-contrib-hikari" % doobieVersion exclude("com.zaxxer", "HikariCP-java6"),
 	"com.zaxxer" %  "HikariCP" % "2.4.1",
 	"org.postgresql" % "postgresql" % "9.4.1208",
-	"org.slf4j" % "slf4j-nop" % "1.7.18"
+	"ch.qos.logback" % "logback-classic" % "1.1.6"
 )
 
 mainClass in oneJar := Some("http4s.techempower.benchmark.WebServer")

@@ -159,10 +159,9 @@ object WebServer extends TaskApp {
   }
 
   // Entry point when starting service
-  override val runc: Task[Unit] = {
+  override def runl(args: List[String]): Task[Unit] = {
     for {
-      dbHost <- Task.delay(System.getProperty("DBHOST", "localhost"))
-      xa <- xaTask(dbHost)
+      xa <- xaTask(args.head)
       server <- startServer(Middleware.addHeaders(service(xa)))
     } yield ()
   }
