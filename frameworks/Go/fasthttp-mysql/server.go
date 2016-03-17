@@ -1,10 +1,10 @@
+//go:generate qtc -dir=src/templates
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"flag"
-	"fmt"
-	"html/template"
 	"log"
 	"math/rand"
 	"net"
@@ -14,9 +14,11 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/jackc/pgx"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/reuseport"
+
+	"templates"
 )
 
 type JSONResponse struct {
@@ -24,34 +26,22 @@ type JSONResponse struct {
 }
 
 type World struct {
-	Id           int32 `json:"id"`
-	RandomNumber int32 `json:"randomNumber"`
-}
-
-type Fortune struct {
-	Id      int32  `json:"id"`
-	Message string `json:"message"`
+	Id           uint16 `json:"id"`
+	RandomNumber uint16 `json:"randomNumber"`
 }
 
 const (
+	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
 	worldRowCount      = 10000
 	maxConnectionCount = 40
 )
 
 var (
-	worldSelectStmt   *pgx.PreparedStatement
-	worldUpdateStmt   *pgx.PreparedStatement
-	fortuneSelectStmt *pgx.PreparedStatement
-)
+	worldSelectStmt   *sql.Stmt
+	worldUpdateStmt   *sql.Stmt
+	fortuneSelectStmt *sql.Stmt
 
-const helloWorldString = "Hello, World!"
-
-var (
-	tmpl = template.Must(template.ParseFiles("templates/fortune.html"))
-
-	db *pgx.ConnPool
-
-	helloWorldBytes = []byte(helloWorldString)
+	db *sql.DB
 )
 
 var (
@@ -64,19 +54,27 @@ func main() {
 	flag.Parse()
 
 	var err error
-
-	// initialize the connection pool
-	dbConns := maxConnectionCount
-	if *prefork {
-		dbConns = (maxConnectionCount + runtime.NumCPU() - 1) / runtime.NumCPU()
-	}
-	if db, err = initDatabase("localhost", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, dbConns); err != nil {
+	if db, err = sql.Open("mysql", connectionString); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
+	if err = db.Ping(); err != nil {
+		log.Fatalf("Cannot connect to db: %s", err)
+	}
+
+	dbConnCount := maxConnectionCount
+	if *prefork {
+		dbConnCount = (dbConnCount + runtime.NumCPU() - 1) / runtime.NumCPU()
+	}
+	db.SetMaxIdleConns(dbConnCount)
+	db.SetMaxOpenConns(dbConnCount)
+
+	worldSelectStmt = mustPrepare(db, "SELECT id, randomNumber FROM World WHERE id = ?")
+	worldUpdateStmt = mustPrepare(db, "UPDATE World SET randomNumber = ? WHERE id = ?")
+	fortuneSelectStmt = mustPrepare(db, "SELECT id, message FROM Fortune")
 
 	s := &fasthttp.Server{
 		Handler: mainHandler,
-		Name:    "fasthttp",
+		Name:    "go",
 	}
 	ln := getListener()
 	if err = s.Serve(ln); err != nil {
@@ -107,7 +105,7 @@ func mainHandler(ctx *fasthttp.RequestCtx) {
 // Test 1: JSON serialization
 func jsonHandler(ctx *fasthttp.RequestCtx) {
 	r := jsonResponsePool.Get().(*JSONResponse)
-	r.Message = helloWorldString
+	r.Message = "Hello, World!"
 	jsonMarshal(ctx, r)
 	jsonResponsePool.Put(r)
 }
@@ -139,28 +137,26 @@ func queriesHandler(ctx *fasthttp.RequestCtx) {
 
 // Test 4: Fortunes
 func fortuneHandler(ctx *fasthttp.RequestCtx) {
-	rows, err := db.Query("fortuneSelectStmt")
+	rows, err := fortuneSelectStmt.Query()
 	if err != nil {
 		log.Fatalf("Error selecting db data: %v", err)
 	}
 
-	fortunes := make([]Fortune, 0, 16)
+	fortunes := make([]templates.Fortune, 0, 16)
 	for rows.Next() {
-		var f Fortune
-		if err := rows.Scan(&f.Id, &f.Message); err != nil {
+		var f templates.Fortune
+		if err := rows.Scan(&f.ID, &f.Message); err != nil {
 			log.Fatalf("Error scanning fortune row: %s", err)
 		}
 		fortunes = append(fortunes, f)
 	}
 	rows.Close()
-	fortunes = append(fortunes, Fortune{Message: "Additional fortune added at request time."})
+	fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
 
 	sort.Sort(FortunesByMessage(fortunes))
 
 	ctx.SetContentType("text/html; charset=utf-8")
-	if err := tmpl.Execute(ctx, fortunes); err != nil {
-		log.Fatalf("Error executing fortune: %s", err)
-	}
+	templates.WriteFortunePage(ctx, fortunes)
 }
 
 // Test 5: Database updates
@@ -171,7 +167,7 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 	for i := 0; i < n; i++ {
 		w := &worlds[i]
 		fetchRandomWorld(w)
-		w.RandomNumber = int32(randomWorldNum())
+		w.RandomNumber = uint16(randomWorldNum())
 	}
 
 	// sorting is required for insert deadlock prevention.
@@ -180,10 +176,10 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 	if err != nil {
 		log.Fatalf("Error starting transaction: %s", err)
 	}
-
+	stmt := txn.Stmt(worldUpdateStmt)
 	for i := 0; i < n; i++ {
 		w := &worlds[i]
-		if _, err = txn.Exec("worldUpdateStmt", w.RandomNumber, w.Id); err != nil {
+		if _, err := stmt.Exec(w.RandomNumber, w.Id); err != nil {
 			log.Fatalf("Error updating world row %d: %s", i, err)
 		}
 	}
@@ -196,7 +192,8 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 
 // Test 6: Plaintext
 func plaintextHandler(ctx *fasthttp.RequestCtx) {
-	ctx.Write(helloWorldBytes)
+	ctx.SetContentType("text/plain")
+	ctx.WriteString("Hello, World!")
 }
 
 func jsonMarshal(ctx *fasthttp.RequestCtx, v interface{}) {
@@ -208,8 +205,7 @@ func jsonMarshal(ctx *fasthttp.RequestCtx, v interface{}) {
 
 func fetchRandomWorld(w *World) {
 	n := randomWorldNum()
-
-	if err := db.QueryRow("worldSelectStmt", n).Scan(&w.Id, &w.RandomNumber); err != nil {
+	if err := worldSelectStmt.QueryRow(n).Scan(&w.Id, &w.RandomNumber); err != nil {
 		log.Fatalf("Error scanning world row: %s", err)
 	}
 }
@@ -228,7 +224,7 @@ func getQueriesCount(ctx *fasthttp.RequestCtx) int {
 	return n
 }
 
-type FortunesByMessage []Fortune
+type FortunesByMessage []templates.Fortune
 
 func (s FortunesByMessage) Len() int           { return len(s) }
 func (s FortunesByMessage) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
@@ -240,8 +236,8 @@ func (w WorldsByID) Len() int           { return len(w) }
 func (w WorldsByID) Swap(i, j int)      { w[i], w[j] = w[j], w[i] }
 func (w WorldsByID) Less(i, j int) bool { return w[i].Id < w[j].Id }
 
-func mustPrepare(db *pgx.Conn, name, query string) *pgx.PreparedStatement {
-	stmt, err := db.Prepare(name, query)
+func mustPrepare(db *sql.DB, query string) *sql.Stmt {
+	stmt, err := db.Prepare(query)
 	if err != nil {
 		log.Fatalf("Error when preparing statement %q: %s", query, err)
 	}
@@ -283,58 +279,4 @@ func getListener() net.Listener {
 		log.Fatal(err)
 	}
 	return ln
-}
-
-func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, dbPort uint16, maxConnectionsInPool int) (*pgx.ConnPool, error) {
-
-	var successOrFailure string = "OK"
-
-	var config pgx.ConnPoolConfig
-
-	config.Host = dbHost
-	config.User = dbUser
-	config.Password = dbPass
-	config.Database = dbName
-	config.Port = dbPort
-
-	config.MaxConnections = maxConnectionsInPool
-
-	config.AfterConnect = func(conn *pgx.Conn) error {
-		worldSelectStmt = mustPrepare(conn, "worldSelectStmt", "SELECT id, randomNumber FROM World WHERE id = $1")
-		worldUpdateStmt = mustPrepare(conn, "worldUpdateStmt", "UPDATE World SET randomNumber = $1 WHERE id = $2")
-		fortuneSelectStmt = mustPrepare(conn, "fortuneSelectStmt", "SELECT id, message FROM Fortune")
-
-		// Disable synchronous commit for the current db connection
-		// as a performance optimization.
-		// See http://www.postgresql.org/docs/current/static/runtime-config-wal.html
-		// for details.
-		if _, err := conn.Exec("SET synchronous_commit TO OFF"); err != nil {
-			log.Fatalf("Error when disabling synchronous commit")
-		}
-
-		return nil
-	}
-
-	fmt.Println("--------------------------------------------------------------------------------------------")
-
-	connPool, err := pgx.NewConnPool(config)
-	if err != nil {
-		successOrFailure = "FAILED"
-		log.Println("Connecting to database ", dbName, " as user ", dbUser, " ", successOrFailure, ": \n ", err)
-	} else {
-		log.Println("Connecting to database ", dbName, " as user ", dbUser, ": ", successOrFailure)
-
-		log.Println("Fetching one record to test if db connection is valid...")
-		var w World
-		n := randomWorldNum()
-		if errPing := connPool.QueryRow("worldSelectStmt", n).Scan(&w.Id, &w.RandomNumber); errPing != nil {
-			log.Fatalf("Error scanning world row: %s", errPing)
-		}
-		log.Println("OK")
-	}
-
-	fmt.Println("--------------------------------------------------------------------------------------------")
-
-	return connPool, err
-
 }
