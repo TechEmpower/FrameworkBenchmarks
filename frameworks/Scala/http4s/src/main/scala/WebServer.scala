@@ -1,17 +1,19 @@
 package http4s.techempower.benchmark
 
 import org.http4s._
-import org.http4s.server._
+import org.http4s.circe._
 import org.http4s.dsl._
-import org.http4s.argonaut._
+import org.http4s.server._
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.twirl._
 import headers._
 
-import _root_.argonaut._, Argonaut._, Shapeless._
-
 import doobie.contrib.hikari.hikaritransactor._
 import doobie.imports._
+
+import io.circe._
+import io.circe.generic.auto._
+import io.circe.syntax._
 
 import scalaz._
 import scalaz.concurrent.{Task, TaskApp}
@@ -29,7 +31,6 @@ object Middleware {
     Service.lift { req: Request =>
       service.map { resp =>
         resp.putHeaders(
-          headers.Date(DateTime.now),
           Header("Server", req.serverAddr)
         )
       }.apply(req)
@@ -54,6 +55,8 @@ object Queries extends OptionalValidatingQueryParamDecoderMatcher[Int]("queries"
 }
 
 object WebServer extends TaskApp {
+  implicit def jsonEncoder[A](implicit encoder: Encoder[A]) = jsonEncoderOf[A](encoder)
+
   def xaTask(host: String) =
     HikariTransactor[Task]("org.postgresql.Driver", s"jdbc:postgresql://$host/hello_world", "benchmarkdbuser", "benchmarkdbpass")
 
@@ -112,14 +115,14 @@ object WebServer extends TaskApp {
   // HTTP service definition
   def service(xa: Transactor[Task]) = HttpService {
     case GET -> Root / "json" =>
-      Ok(Json("message" -> jString("Hello, World!")))
+      Ok(Json.obj("message" -> Json.string("Hello, World!")))
 
     case GET -> Root / "db" =>
-      Ok(selectRandomWorld(xa).map(_.asJson))
+      Ok(selectRandomWorld(xa))
 
     case GET -> Root / "queries" :? Queries(rawQueries) =>
       val numQueries = Queries.clampQueries(rawQueries)
-      Ok(getWorlds(xa, numQueries).map(_.asJson))
+      Ok(getWorlds(xa, numQueries))
 
     case GET -> Root / "fortunes" =>
       val page = for {
@@ -138,7 +141,7 @@ object WebServer extends TaskApp {
         _ <- updateWorlds(xa, newWorlds)
       } yield newWorlds
 
-      Ok(updated.map(_.asJson))
+      Ok(updated)
 
     case GET -> Root / "plaintext" =>
       Ok("Hello, World!")
