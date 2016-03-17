@@ -88,14 +88,15 @@
   (let [n (try (Integer/parseInt queries)
                (catch Exception e 1))] ; default to 1 on parse failure
     (cond
-      (< n 1) 1
+      (< n 1)   1
       (> n 500) 500
-      :else n)))
+      :else     n)))
 
 (defn run-queries
   "Run the specified number of queries, return the results"
   [queries]
-  (flatten (repeatedly (get-query-count queries) get-world-random)))
+  (let [num-queries (get-query-count queries)]
+    (flatten (repeatedly num-queries get-world-random))))
 
 (defn get-fortunes []
    "Fetch the full list of Fortunes from the database, sort them by the fortune
@@ -109,7 +110,6 @@
   "Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
-  (for [world (-> queries run-queries)]
+  (for [world (run-queries queries)]
     (let [updated-world (assoc world :randomNumber (inc (rand-int 9999)))]
-      (update-world<! updated-world)
-      updated-world)))
+      (assoc updated-world :id (update-world<! updated-world)))))

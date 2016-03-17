@@ -7,6 +7,12 @@
             [ring.util.response :refer [content-type]]
             [cheshire.core :refer [generate-string]]))
 
+(defn encode-json-response [rsp]
+  (-> rsp
+      generate-string
+      response/ok
+      (content-type "application/json")))
+
 (defn json-serialization
   "Test 1: JSON serialization"
   []
@@ -18,15 +24,16 @@
 (defn single-query-test
   "Test 2: Single database query"
   []
-  (-> 1 db/run-queries generate-string response/ok))
+  (-> 1
+      db/run-queries
+      encode-json-response))
 
 (defn multiple-query-test
   "Test 3: Multiple database query"
   [queries]
   (-> queries
       db/run-queries
-      generate-string
-      response/ok))
+      encode-json-response))
 
 (defn fortunes
   "Test 4: Fortunes"
@@ -38,8 +45,7 @@
   [queries]
   (-> queries
       db/update-and-persist
-      generate-string
-      response/ok))
+      encode-json-response))
 
 (def plaintext
   "Test 6: Plaintext"
