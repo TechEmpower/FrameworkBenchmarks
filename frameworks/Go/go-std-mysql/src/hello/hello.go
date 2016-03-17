@@ -62,7 +62,7 @@ const (
 	// `interpolateParams=true` enables client side parameter interpolation.
 	// It reduces round trips without prepared statement.
 	//
-	// We can see difference between prepared statement and interpolation by comparing go-raw and go-raw-interpolate
+	// We can see difference between prepared statement and interpolation by comparing go-std-mysql and go-std-mysql-interpolate
 	connectionString = "benchmarkdbuser:benchmarkdbpass@tcp(%s:3306)/hello_world?interpolateParams=true"
 	worldSelect      = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate      = "UPDATE World SET randomNumber = ? WHERE id = ?"

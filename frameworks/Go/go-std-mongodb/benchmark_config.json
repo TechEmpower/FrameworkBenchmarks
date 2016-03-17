@@ -20,7 +20,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "go-raw-mongodb",
+      "display_name": "go-std-mongodb",
       "notes": "mongodb implementation for go net/http",
       "versus": "go"
     }
