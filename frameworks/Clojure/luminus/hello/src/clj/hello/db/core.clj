@@ -5,7 +5,7 @@
     [conman.core :as conman]
     [hello.config :refer [env]]
     [mount.core :refer [defstate]]
-    clojure.set)
+    [clojure.set :refer [rename-keys]])
   (:import org.postgresql.util.PGobject
            org.postgresql.jdbc4.Jdbc4Array
            clojure.lang.IPersistentMap
@@ -39,22 +39,21 @@
       (> n 500) 500
       :else     n)))
 
-(defn rename-keys [results]
-  (map #(clojure.set/rename-keys % {:randomnumber :randomNumber}) results))
+(defn get-random-world []
+  (-> (get-world {:id (inc (rand-int 10000))})
+      (rename-keys {:randomnumber :randomNumber})))
 
 (defn run-queries
   "Run the specified number of queries, return the results"
   [queries]
-  (->> {:ids (repeatedly (get-query-count queries) #(inc (rand-int 9999)))}
-      get-worlds
-      rename-keys))
+  (repeatedly (get-query-count queries) get-random-world))
 
 (defn get-fortunes []
    "Fetch the full list of Fortunes from the database, sort them by the fortune
   message text, and then return the results."
   (sort-by
    :message
-   (conj (rename-keys (get-all-fortunes))
+   (conj (get-all-fortunes)
          {:id 0 :message "Additional fortune added at request time."})))
 
 (defn set-random-number!
