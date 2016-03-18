@@ -7,18 +7,6 @@ RETCODE=$(fw_exists ${IROOT}/xsp.installed)
   source $IROOT/xsp.installed
   return 0; }
 
-# get
-git clone git://github.com/mono/xsp
-cd xsp
-git checkout e272a2c006211b6b03be2ef5bbb9e3f8fefd0768
-
-# build
-./autogen.sh --prefix=$MONO_HOME --disable-docs
-make
-sudo make install
-
-# cleanup
-cd ..
-rm -rf xsp
+sudo apt-get install -y mono-fastcgi-server
 
 echo "" > $IROOT/xsp.installed

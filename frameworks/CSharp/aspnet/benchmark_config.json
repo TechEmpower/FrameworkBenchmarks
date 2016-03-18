@@ -1,7 +1,7 @@
 {
   "framework": "aspnet",
   "tests": [{
-    "default": {
+    "windows": {
       "setup_file": "setup_iis",
       "json_url": "/json/default",
       "plaintext_url": "/plaintext",
@@ -203,7 +203,7 @@
       "notes": "",
       "versus": ""
     },
-    "mono": {
+    "default": {
       "setup_file": "setup_nginx",
       "json_url": "/json/default",
       "plaintext_url": "/plaintext",

@@ -1,7 +1,7 @@
 {
   "framework": "servicestack",
   "tests": [{
-    "default": {
+    "windows": {
       "setup_file": "setup_iis",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
@@ -105,7 +105,7 @@
       "notes": "",
       "versus": ""
     },
-    "nginx-default": {
+    "default": {
       "setup_file": "setup_nginx",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
