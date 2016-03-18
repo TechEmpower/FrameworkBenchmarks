@@ -1,7 +1,6 @@
--- :name get-world :? :*
--- Query a World record from the database
+-- :name get-worlds :? :*
 SELECT * FROM world
-WHERE id = :id
+WHERE id IN (:v*:ids)
 
 --:name get-all-fortunes :? :*
 -- select all records from the fortune table

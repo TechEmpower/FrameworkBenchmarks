@@ -78,15 +78,10 @@
 
 ;; queries
 
-(defn get-world-random
-  "Query a random World record between 1 and 10,000 from the database"
-  []
-  (get-world {:id (inc (rand-int 9999))}))
-
 (defn get-query-count [queries]
   "Parse provided string value of query count, clamping values to between 1 and 500."
   (let [n (try (Integer/parseInt queries)
-               (catch Exception e 1))] ; default to 1 on parse failure
+               (catch Exception _ 1))] ; default to 1 on parse failure
     (cond
       (< n 1)   1
       (> n 500) 500
@@ -95,7 +90,7 @@
 (defn run-queries
   "Run the specified number of queries, return the results"
   [queries]
-  (flatten (repeatedly (get-query-count queries) get-world-random)))
+  (get-worlds {:ids (repeatedly (get-query-count queries) #(inc (rand-int 9999)))}))
 
 (defn get-fortunes []
    "Fetch the full list of Fortunes from the database, sort them by the fortune
@@ -105,13 +100,18 @@
    (conj (get-all-fortunes)
          {:id 0 :message "Additional fortune added at request time."})))
 
-(defn update-number [{:keys [id]}]
-  {:id id :randomNumber (inc (rand-int 9999))})
+(defn set-random-number!
+  "set a new randomNumber, persist, and return"
+  [{:keys [id]}]
+  (let [w {:id id :randomNumber (inc (rand-int 9999))}]
+    (try
+        (update-world! w)
+        (catch java.sql.BatchUpdateException e
+          (throw (.getNextException e))))
+    w))
 
 (defn update-and-persist
   "Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
-  (let [world (map update-number (run-queries queries))]
-    (doseq [w world] (update-world! w))
-    world))
+  (map set-random-number! (run-queries queries)))
