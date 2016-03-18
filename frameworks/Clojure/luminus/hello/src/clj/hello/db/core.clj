@@ -105,10 +105,13 @@
    (conj (get-all-fortunes)
          {:id 0 :message "Additional fortune added at request time."})))
 
+(defn update-number [{:keys [id]}]
+  {:id id :randomNumber (inc (rand-int 9999))})
+
 (defn update-and-persist
   "Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
-  (let [world (map #(assoc % :randomNumber (inc (rand-int 9999))) (run-queries queries))]
+  (let [world (map update-number (run-queries queries))]
     (doseq [w world] (update-world! w))
     world))
