@@ -26,6 +26,8 @@ toolset/run-tests.py --test jawn
 toolset/run-tests.py --test jawn --type fortune --sleep 5
 
 
+
 ### Problems with the mounting of FrameworkBenchmarks?
 * **On host**:     vagrant gem install vagrant-vbguest
 * **In guest OS**: sudo mount.vboxsf -o uid=`id -u vagrant`,gid=`getent group vagrant | cut -d: -f3`,dmode=777,fmode=777 FrameworkBenchmarks /FrameworkBenchmarks
+export FWROOT=/FrameworkBenchmarks

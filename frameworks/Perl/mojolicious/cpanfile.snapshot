@@ -1,18 +1,32 @@
 # carton snapshot format: version 1.0
 DISTRIBUTIONS
-  DBD-Pg-3.5.1
-    pathname: T/TU/TURNSTEP/DBD-Pg-3.5.1.tar.gz
+  Canary-Stability-2006
+    pathname: M/ML/MLEHMANN/Canary-Stability-2006.tar.gz
     provides:
-      Bundle::DBD::Pg v3.5.1
-      DBD::Pg v3.5.1
+      Canary::Stability 2006
+    requirements:
+      ExtUtils::MakeMaker 0
+  Cpanel-JSON-XS-3.0213
+    pathname: R/RU/RURBAN/Cpanel-JSON-XS-3.0213.tar.gz
+    provides:
+      Cpanel::JSON::XS 3.0213
+    requirements:
+      ExtUtils::MakeMaker 0
+      Pod::Text 2.08
+      Pod::Usage 1.33
+  DBD-Pg-3.5.3
+    pathname: T/TU/TURNSTEP/DBD-Pg-3.5.3.tar.gz
+    provides:
+      Bundle::DBD::Pg v3.5.3
+      DBD::Pg v3.5.3
     requirements:
       DBI 1.614
       ExtUtils::MakeMaker 6.11
       Test::More 0.88
       Time::HiRes 0
       version 0
-  DBI-1.633
-    pathname: T/TI/TIMB/DBI-1.633.tar.gz
+  DBI-1.634
+    pathname: T/TI/TIMB/DBI-1.634.tar.gz
     provides:
       Bundle::DBI 12.008696
       DBD::DBM 0.08
@@ -61,7 +75,7 @@ DISTRIBUTIONS
       DBD::Sponge::dr 12.010003
       DBD::Sponge::st 12.010003
       DBDI 12.015129
-      DBI 1.633
+      DBI 1.634
       DBI::Const::GetInfo::ANSI 2.008697
       DBI::Const::GetInfo::ODBC 2.011374
       DBI::Const::GetInfoReturn 2.008697
@@ -102,51 +116,43 @@ DISTRIBUTIONS
       DBI::SQL::Nano::Table_ 1.015544
       DBI::Util::CacheMemory 0.010315
       DBI::Util::_accessor 0.009479
-      DBI::common 1.633
+      DBI::common 1.634
     requirements:
       ExtUtils::MakeMaker 6.48
       Test::Simple 0.90
       perl 5.008
-  EV-4.18
-    pathname: M/ML/MLEHMANN/EV-4.18.tar.gz
+  EV-4.22
+    pathname: M/ML/MLEHMANN/EV-4.22.tar.gz
     provides:
-      EV 4.18
+      EV 4.22
       EV::MakeMaker undef
     requirements:
-      ExtUtils::MakeMaker 0
+      Canary::Stability 0
+      ExtUtils::MakeMaker 6.52
       common::sense 0
-  IO-Socket-IP-0.36
-    pathname: P/PE/PEVANS/IO-Socket-IP-0.36.tar.gz
+  IO-Socket-IP-0.37
+    pathname: P/PE/PEVANS/IO-Socket-IP-0.37.tar.gz
     provides:
-      IO::Socket::IP 0.36
+      IO::Socket::IP 0.37
     requirements:
       IO::Socket 0
       Socket 1.97
       Test::More 0.88
-  JSON-XS-3.01
-    pathname: M/ML/MLEHMANN/JSON-XS-3.01.tar.gz
+  Mojo-Pg-2.23
+    pathname: S/SR/SRI/Mojo-Pg-2.23.tar.gz
     provides:
-      JSON::XS 3.01
-    requirements:
-      ExtUtils::MakeMaker 0
-      Types::Serialiser 0
-      common::sense 0
-  Mojo-Pg-1.14
-    pathname: S/SR/SRI/Mojo-Pg-1.14.tar.gz
-    provides:
-      Mojo::Pg 1.14
+      Mojo::Pg 2.23
       Mojo::Pg::Database undef
       Mojo::Pg::Migrations undef
       Mojo::Pg::PubSub undef
       Mojo::Pg::Results undef
       Mojo::Pg::Transaction undef
     requirements:
-      DBD::Pg 0
+      DBD::Pg 3.005001
       ExtUtils::MakeMaker 0
       Mojolicious 6.0
-      perl 5.010001
-  Mojolicious-6.02
-    pathname: S/SR/SRI/Mojolicious-6.02.tar.gz
+  Mojolicious-6.55
+    pathname: S/SR/SRI/Mojolicious-6.55.tar.gz
     provides:
       Mojo undef
       Mojo::Asset undef
@@ -178,7 +184,6 @@ DISTRIBUTIONS
       Mojo::IOLoop::Stream undef
       Mojo::JSON undef
       Mojo::JSON::Pointer undef
-      Mojo::JSON::_Bool undef
       Mojo::Loader undef
       Mojo::Log undef
       Mojo::Message undef
@@ -209,7 +214,8 @@ DISTRIBUTIONS
       Mojo::UserAgent::Server undef
       Mojo::UserAgent::Transactor undef
       Mojo::Util undef
-      Mojolicious 6.02
+      Mojo::WebSocket undef
+      Mojolicious 6.55
       Mojolicious::Command undef
       Mojolicious::Command::cgi undef
       Mojolicious::Command::cpanify undef
@@ -257,23 +263,13 @@ DISTRIBUTIONS
       ojo undef
     requirements:
       ExtUtils::MakeMaker 0
-      IO::Socket::IP 0.26
+      IO::Socket::IP 0.37
+      JSON::PP 2.27103
       Pod::Simple 3.09
       Time::Local 1.2
-      perl 5.010001
-  Types-Serialiser-1.0
-    pathname: M/ML/MLEHMANN/Types-Serialiser-1.0.tar.gz
+  common-sense-3.74
+    pathname: M/ML/MLEHMANN/common-sense-3.74.tar.gz
     provides:
-      JSON::PP::Boolean 1.0
-      Types::Serialiser 1.0
-      Types::Serialiser::BooleanBase 1.0
-      Types::Serialiser::Error 1.0
-    requirements:
-      ExtUtils::MakeMaker 0
-      common::sense 0
-  common-sense-3.73
-    pathname: M/ML/MLEHMANN/common-sense-3.73.tar.gz
-    provides:
-      common::sense 3.73
+      common::sense 3.74
     requirements:
       ExtUtils::MakeMaker 0

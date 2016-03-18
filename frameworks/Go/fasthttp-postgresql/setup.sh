@@ -1,10 +1,14 @@
 #!/bin/bash
 
-sed -i 's|localhost|'"${DBHOST}"'|g' src/hello/hello.go
+sed -i 's|localhost|'"${DBHOST}"'|g' server.go
 
 fw_depends go
 
 go get -u github.com/jackc/pgx
 go get -u github.com/valyala/fasthttp
+go get -u github.com/valyala/quicktemplate/qtc
 
-go run src/hello/hello.go &
+rm -f ./server
+go generate
+go build -o server
+./server &

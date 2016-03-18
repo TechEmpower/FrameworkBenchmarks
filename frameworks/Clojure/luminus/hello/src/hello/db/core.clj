@@ -6,7 +6,7 @@
     [environ.core :refer [env]]
     [mount.core :refer [defstate]])
   (:import org.postgresql.util.PGobject
-           org.postgresql.jdbc4.Jdbc4Array
+           org.postgresql.jdbc.PgArray
            clojure.lang.IPersistentMap
            clojure.lang.IPersistentVector
            [java.sql
@@ -48,7 +48,7 @@
   Timestamp
   (result-set-read-column [v _ _] (to-date v))
 
-  Jdbc4Array
+  PgArray
   (result-set-read-column [v _ _] (vec (.getArray v)))
 
   PGobject

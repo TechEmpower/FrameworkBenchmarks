@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.permeagility</groupId>
+    <artifactId>permeagility-benchmark</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <permeagility.version>0.7.5</permeagility.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <exec.mainClass>permeagility.web.Server</exec.mainClass>
+    </properties>
+
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+
+        <plugins>
+            <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                  <archive>
+          	        <manifest>
+          	          <mainClass>permeagility.web.Server</mainClass>
+          	        </manifest>
+          	      </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <finalName>permeagility-${project.version}-benchmark</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+  
+            <plugin>
+                <groupId>com.lazerycode.jmeter</groupId>
+                <artifactId>jmeter-maven-plugin</artifactId>
+                <version>1.10.1</version>
+                <executions>
+                    <execution>
+                        <id>jmeter-tests</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jmeter</goal>
+                        </goals>
+                        <configuration>
+                            <testResultsTimestamp>false</testResultsTimestamp>
+                            <jmeterPlugins>
+                                <plugin>
+                                    <groupId>kg.apc</groupId>
+                                    <artifactId>jmeter-plugins-standard</artifactId>
+                                </plugin>
+                            </jmeterPlugins>
+                        </configuration>  
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>kg.apc</groupId>
+                        <artifactId>jmeter-plugins-standard</artifactId>
+                        <version>1.3.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+     
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.permeagility</groupId>
+            <artifactId>permeagility</artifactId>
+            <version>${permeagility.version}</version>
+         </dependency>
+
+    </dependencies>
+
+</project>
