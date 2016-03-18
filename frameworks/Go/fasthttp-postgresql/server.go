@@ -291,15 +291,6 @@ func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, db
 		worldSelectStmt = mustPrepare(conn, "worldSelectStmt", "SELECT id, randomNumber FROM World WHERE id = $1")
 		worldUpdateStmt = mustPrepare(conn, "worldUpdateStmt", "UPDATE World SET randomNumber = $1 WHERE id = $2")
 		fortuneSelectStmt = mustPrepare(conn, "fortuneSelectStmt", "SELECT id, message FROM Fortune")
-
-		// Disable synchronous commit for the current db connection
-		// as a performance optimization.
-		// See http://www.postgresql.org/docs/current/static/runtime-config-wal.html
-		// for details.
-		if _, err := conn.Exec("SET synchronous_commit TO OFF"); err != nil {
-			log.Fatalf("Error when disabling synchronous commit")
-		}
-
 		return nil
 	}
 
