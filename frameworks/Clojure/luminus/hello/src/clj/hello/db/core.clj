@@ -4,7 +4,8 @@
     [clojure.java.jdbc :as jdbc]
     [conman.core :as conman]
     [hello.config :refer [env]]
-    [mount.core :refer [defstate]])
+    [mount.core :refer [defstate]]
+    clojure.set)
   (:import org.postgresql.util.PGobject
            org.postgresql.jdbc4.Jdbc4Array
            clojure.lang.IPersistentMap
@@ -27,55 +28,6 @@
 
 (conman/bind-connection *db* "sql/queries.sql")
 
-(defn to-date [sql-date]
-  (-> sql-date (.getTime) (java.util.Date.)))
-
-(extend-protocol jdbc/IResultSetReadColumn
-  Date
-  (result-set-read-column [v _ _] (to-date v))
-
-  Timestamp
-  (result-set-read-column [v _ _] (to-date v))
-
-  Jdbc4Array
-  (result-set-read-column [v _ _] (vec (.getArray v)))
-
-  PGobject
-  (result-set-read-column [pgobj _metadata _index]
-    (let [type  (.getType pgobj)
-          value (.getValue pgobj)]
-      (case type
-        "json" (parse-string value true)
-        "jsonb" (parse-string value true)
-        "citext" (str value)
-        value))))
-
-(extend-type java.util.Date
-  jdbc/ISQLParameter
-  (set-parameter [v ^PreparedStatement stmt ^long idx]
-    (.setTimestamp stmt idx (Timestamp. (.getTime v)))))
-
-(extend-type clojure.lang.IPersistentVector
-  jdbc/ISQLParameter
-  (set-parameter [v ^java.sql.PreparedStatement stmt ^long idx]
-    (let [conn      (.getConnection stmt)
-          meta      (.getParameterMetaData stmt)
-          type-name (.getParameterTypeName meta idx)]
-      (if-let [elem-type (when (= (first type-name) \_) (apply str (rest type-name)))]
-        (.setObject stmt idx (.createArrayOf conn elem-type (to-array v)))
-        (.setObject stmt idx v)))))
-
-(defn to-pg-json [value]
-  (doto (PGobject.)
-    (.setType "jsonb")
-    (.setValue (generate-string value))))
-
-(extend-protocol jdbc/ISQLValue
-  IPersistentMap
-  (sql-value [value] (to-pg-json value))
-  IPersistentVector
-  (sql-value [value] (to-pg-json value)))
-
 ;; queries
 
 (defn get-query-count [queries]
@@ -87,21 +39,26 @@
       (> n 500) 500
       :else     n)))
 
+(defn rename-keys [results]
+  (map #(clojure.set/rename-keys % {:randomnumber :randomNumber}) results))
+
 (defn run-queries
   "Run the specified number of queries, return the results"
   [queries]
-  (get-worlds {:ids (repeatedly (get-query-count queries) #(inc (rand-int 9999)))}))
+  (->> {:ids (repeatedly (get-query-count queries) #(inc (rand-int 9999)))}
+      get-worlds
+      rename-keys))
 
 (defn get-fortunes []
    "Fetch the full list of Fortunes from the database, sort them by the fortune
   message text, and then return the results."
   (sort-by
    :message
-   (conj (get-all-fortunes)
+   (conj (rename-keys (get-all-fortunes))
          {:id 0 :message "Additional fortune added at request time."})))
 
 (defn set-random-number!
-  "set a new randomNumber, persist, and return"
+  "set a new randomNumber, persist, and return the record"
   [{:keys [id]}]
   (let [w {:id id :randomNumber (inc (rand-int 9999))}]
     (try
@@ -114,4 +71,4 @@
   "Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
-  (map set-random-number! (run-queries queries)))
+  (doall (map set-random-number! (run-queries queries))))
