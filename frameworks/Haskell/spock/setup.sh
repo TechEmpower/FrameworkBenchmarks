@@ -2,6 +2,8 @@
 
 fw_depends stack
 
+sed -i 's|PG.connectHost     = "localhost"|PG.connectHost     = "'"${DBHOST}"'"|g' src/Main.hs
+
 ${IROOT}/stack --allow-different-user setup
 ${IROOT}/stack --allow-different-user build
 
