@@ -7,14 +7,8 @@ WHERE id = :id
 -- select all records from the fortune table
 SELECT * FROM fortune
 
--- :name update-world<! :<! :1
+-- :name update-world! :! :1
 -- update an existing world record
 UPDATE world
 SET "randomNumber" = :randomnumber
 WHERE id = :id
-RETURNING id
-
--- :name insert-world<! :<!
-INSERT INTO world (id, "randomNumber")
-VALUES (:id, :randomNumber)
-RETURNING id

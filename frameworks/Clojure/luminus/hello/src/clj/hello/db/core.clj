@@ -95,8 +95,7 @@
 (defn run-queries
   "Run the specified number of queries, return the results"
   [queries]
-  (let [num-queries (get-query-count queries)]
-    (flatten (repeatedly num-queries get-world-random))))
+  (flatten (repeatedly (get-query-count queries) get-world-random)))
 
 (defn get-fortunes []
    "Fetch the full list of Fortunes from the database, sort them by the fortune
@@ -110,7 +109,6 @@
   "Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
-  (for [world (run-queries queries)]
-    (let [number (inc (rand-int 9999))]
-      {:randomNumber number
-       :id (:id (update-world<! (assoc world :randommumber number)))})))
+  (let [world (map #(assoc % :randomNumber (inc (rand-int 9999))) (run-queries queries))]
+    (doseq [w world] (update-world! w))
+    world))
