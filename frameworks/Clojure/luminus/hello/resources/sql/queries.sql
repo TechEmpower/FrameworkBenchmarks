@@ -1,13 +1,13 @@
 -- :name get-worlds :? :*
-SELECT * FROM world
+SELECT * FROM "World"
 WHERE id IN (:v*:ids)
 
 --:name get-all-fortunes :? :*
 -- select all records from the fortune table
-SELECT * FROM fortune
+SELECT * FROM "Fortune"
 
 -- :name update-world! :! :1
 -- update an existing world record
-UPDATE world
+UPDATE "World"
 SET "randomnumber" = :randomNumber
 WHERE id = :id
