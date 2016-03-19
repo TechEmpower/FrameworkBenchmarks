@@ -123,6 +123,9 @@ if [ ! -e "~/.firstboot" ]; then
     git config --global core.autocrlf input
     git clone -b ${GH_BRANCH} https://github.com/${GH_REPO}.git $FWROOT
     source ~/FrameworkBenchmarks/toolset/setup/linux/prerequisites.sh
+
+    # Create link between local copy and VM copy to enable mirroring
+    sudo mount.vboxsf -o uid=1000,gid=1000 FrameworkBenchmarks ~/FrameworkBenchmarks
   #fi
 
   # Everyone gets SSH access to localhost
