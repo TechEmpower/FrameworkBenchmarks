@@ -15,7 +15,7 @@ def json(environ, start_response):
         ('Content-type', 'application/json'),
         ('Content-Length', str(len(data)))
     ]
-    start_response(b'200 OK', response_headers)
+    start_response('200 OK', response_headers)
     return [data]
 
 def plaintext(environ, start_response):
@@ -24,7 +24,7 @@ def plaintext(environ, start_response):
         ('Content-type', 'text/plain'),
         ('Content-Length', str(len(data)))
     ]
-    start_response(b'200 OK', response_headers)
+    start_response('200 OK', response_headers)
     return [data]
 
 def app(environ, start_response):
