@@ -2,7 +2,7 @@ package db
 
 import (
 	"github.com/coocood/qbs"
-	"github.com/robfig/revel"
+	"github.com/revel/revel"
 )
 
 var (
