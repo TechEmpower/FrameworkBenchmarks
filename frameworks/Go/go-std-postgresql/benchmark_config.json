@@ -1,0 +1,26 @@
+{
+  "framework": "go-std-postgresql",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "go",
+      "language": "Go",
+      "orm": "Raw",
+      "platform": "Go",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "go-std-postgresql",
+      "notes": "",
+      "versus": "go"
+    }
+  }]
+}
