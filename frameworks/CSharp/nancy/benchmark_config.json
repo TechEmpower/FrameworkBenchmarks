@@ -1,7 +1,7 @@
 {
   "framework": "nancy",
   "tests": [{
-    "default": {
+    "windows": {
       "setup_file": "setup_iis",
       "plaintext_url":"/plaintext",
       "json_url": "/json",
@@ -22,7 +22,7 @@
       "notes": "",
       "versus": ""
     },
-    "mono": {
+    "default": {
       "setup_file": "setup_nginx",
       "plaintext_url":"/plaintext",
       "json_url": "/json",
