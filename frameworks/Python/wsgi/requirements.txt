@@ -1,6 +1,4 @@
-ujson==1.33
-uwsgi
-gunicorn==19.3.0
-meinheld==0.5.7
-
-greenlet==0.4.7
+ujson==1.35
+gunicorn==19.4.5
+meinheld==0.5.9
+greenlet==0.4.9
