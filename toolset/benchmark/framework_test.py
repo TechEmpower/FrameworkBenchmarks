@@ -164,9 +164,9 @@ class FrameworkTest:
 
   ############################################################
   # start(benchmarker)
-  # Start the test using it's setup file
+  # Start the test using its setup file
   ############################################################
-  def start(self, out, err):
+  def start(self, out):
 
     # Setup environment variables    
     logDir = os.path.join(self.fwroot, self.benchmarker.latest_results_directory, 'logs', self.name.lower())
@@ -377,14 +377,14 @@ class FrameworkTest:
   # or not it passed
   # Returns True if all verifications succeeded
   ############################################################
-  def verify_urls(self, out, err):
+  def verify_urls(self, verification):
     result = True
     
     def verify_type(test_type):
       
       test = self.runTests[test_type]
-      test.setup_out_err(out, err)
-      out.write(header("VERIFYING %s" % test_type.upper()))
+      test.setup_out(verification)
+      verification.write(header("VERIFYING %s" % test_type.upper()))
       
       base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
       
@@ -414,14 +414,14 @@ class FrameworkTest:
         elif result.upper() == "FAIL":
           color = Fore.RED
 
-        out.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
+        verification.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
         print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
         if reason is not None and len(reason) != 0:
           for line in reason.splitlines():
-            out.write("     " + line + '\n')
+            verification.write("     " + line + '\n')
             print "     " + line
           if not test.passed:
-            out.write("     See %s\n" % specific_rules_url)
+            verification.write("     See %s\n" % specific_rules_url)
             print "     See %s\n" % specific_rules_url
 
       [output_result(r1,r2,url) for (r1, r2, url) in results]
@@ -451,13 +451,13 @@ class FrameworkTest:
   # Runs the benchmark for each type of test that it implements
   # JSON/DB/Query.
   ############################################################
-  def benchmark(self, out, err):
+  def benchmark(self, out):
 
     def benchmark_type(test_type):  
       out.write("BENCHMARKING %s ... " % test_type.upper())
 
       test = self.runTests[test_type]
-      test.setup_out_err(out, err)
+      test.setup_out(out)
       output_file = self.benchmarker.output_file(self.name, test_type)
       if not os.path.exists(output_file):
         # Open to create the empty file
@@ -477,9 +477,9 @@ class FrameworkTest:
         
         # Run the benchmark 
         with open(output_file, 'w') as raw_file:
-          p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=err)
+          p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=raw_file)
           p.communicate(remote_script)
-          err.flush()
+          out.flush()
 
         # End resource usage metrics collection
         self.__end_logging()
