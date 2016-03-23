@@ -54,7 +54,8 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libboost-dev                      `# Silicon relies on boost::lexical_cast.` \
   postgresql-server-dev-9.3         `# Needed by cpoll.` \
   xdg-utils                         `# Needed by dlang.` \
-  python-pip
+  python-pip \
+  ant
 
 sudo pip install colorama==0.3.1
 # Version 2.3 has a nice Counter() and other features
