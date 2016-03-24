@@ -13,14 +13,15 @@
       "database": "MySQL",
       "framework": "symfony2",
       "language": "PHP",
+      "flavor": "PHP5",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "symfony2",
       "notes": "",
-      "versus": "php"
+      "versus": "php-php5"
     },
     "php-templates": {
       "setup_file": "setup",
@@ -31,14 +32,15 @@
       "database": "MySQL",
       "framework": "symfony2",
       "language": "PHP",
+      "flavor": "PHP5",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "symfony2",
       "notes": "",
-      "versus": "php"
+      "versus": "php-php5"
     },
     "raw": {
       "setup_file": "setup",
@@ -51,14 +53,15 @@
       "database": "MySQL",
       "framework": "symfony2",
       "language": "PHP",
+      "flavor": "PHP5",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "symfony2",
       "notes": "",
-      "versus": "php"
+      "versus": "php-php5"
     },
     "hhvm": {
       "setup_file": "setup_hhvm",
@@ -72,9 +75,10 @@
       "database": "MySQL",
       "framework": "symfony2",
       "language": "PHP",
+      "flavor": "HHVM",
       "orm": "Full",
-      "platform": "hhvm",
-      "webserver": "HPHP",
+      "platform": "None",
+      "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "symfony2-hhvm",

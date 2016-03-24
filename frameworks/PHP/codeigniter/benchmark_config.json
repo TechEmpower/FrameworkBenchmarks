@@ -10,14 +10,15 @@
       "database": "None",
       "framework": "codeigniter",
       "language": "PHP",
+      "flavor": "PHP5",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "codeigniter",
       "notes": "",
-      "versus": "php"
+      "versus": "php-php5"
     },
     "hhvm": {
       "setup_file": "setup_hhvm",
@@ -28,14 +29,15 @@
       "database": "None",
       "framework": "codeigniter",
       "language": "PHP",
+      "flavor": "PHP5",
       "orm": "Raw",
-      "platform": "HPHP",
+      "platform": "HHVM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "codeigniter_hhvm",
       "notes": "",
-      "versus": "php"
+      "versus": "php-php5"
     },
     "raw": {
       "setup_file": "setup",
@@ -48,14 +50,15 @@
       "database": "MySQL",
       "framework": "codeigniter",
       "language": "PHP",
+      "flavor": "PHP5",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "codeigniter",
       "notes": "",
-      "versus": "php"
+      "versus": "php-php5"
     },
     "raw_hhvm": {
       "setup_file": "setup_hhvm",
@@ -68,14 +71,15 @@
       "database": "MySQL",
       "framework": "codeigniter",
       "language": "PHP",
+      "flavor": "PHP5",
       "orm": "Raw",
-      "platform": "HPHP",
+      "platform": "HHVM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "codeigniter_hhvm",
       "notes": "",
-      "versus": "php"
+      "versus": "php-php5"
     }
   }]
 }

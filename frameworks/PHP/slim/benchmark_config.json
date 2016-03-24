@@ -12,8 +12,9 @@
       "database": "MySQL",
       "framework": "slim",
       "language": "PHP",
+      "flavor": "PHP7",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
@@ -32,12 +33,13 @@
       "database": "MySQL",
       "framework": "slim",
       "language": "PHP",
+      "flavor": "HHVM",
       "orm": "Raw",
-      "platform": "HPHP",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "slim_hhvm",
+      "display_name": "slim",
       "notes": "",
       "versus": "php"
     },
@@ -52,14 +54,15 @@
       "database": "MySQL",
       "framework": "slim",
       "language": "PHP5",
+      "flavor": "PHP5",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "slim-php5",
+      "display_name": "slim",
       "notes": "",
-      "versus": "php"
+      "versus": "php-php5"
     }
   }]
 }

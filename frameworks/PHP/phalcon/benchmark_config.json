@@ -14,14 +14,15 @@
       "database": "MySQL",
       "framework": "phalcon",
       "language": "PHP",
+      "flavor": "PHP5",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "phalcon",
       "notes": "",
-      "versus": "php"
+      "versus": "php-php5"
     },
     "mongodb": {
       "setup_file": "setup",
@@ -34,14 +35,15 @@
       "database": "MongoDB",
       "framework": "phalcon",
       "language": "PHP",
+      "flavor": "PHP5",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "phalcon",
       "notes": "",
-      "versus": "php"
+      "versus": "php-php5"
     }
   }]
 }
