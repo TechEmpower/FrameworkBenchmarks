@@ -25,6 +25,7 @@ env:
     - "TESTDIR=CSharp/evhttp-sharp"
     ## - "TESTDIR=CSharp/HttpListener"
     - "TESTDIR=CSharp/nancy"
+    - "TESTDIR=CSharp/revenj"
     - "TESTDIR=CSharp/servicestack"
     - "TESTDIR=C++/cpoll_cppsp"
     - "TESTDIR=C++/silicon"
@@ -40,6 +41,7 @@ env:
     - "TESTDIR=Clojure/aleph"
     - "TESTDIR=Crystal/crystal-raw"
     - "TESTDIR=Crystal/moonshine"
+    - "TESTDIR=Crystal/kemal"
     - "TESTDIR=D/vibed"
     - "TESTDIR=Dart/dart-raw"
     - "TESTDIR=Dart/redstone"
@@ -57,9 +59,10 @@ env:
     - "TESTDIR=Go/fasthttp-mysql"
     - "TESTDIR=Go/fasthttp-postgresql"
     - "TESTDIR=Go/gin"
-    - "TESTDIR=Go/go-raw"
     - "TESTDIR=Go/goji"
-    - "TESTDIR=Go/go-raw-mongodb"
+    - "TESTDIR=Go/go-std-mongodb"
+    - "TESTDIR=Go/go-std-mysql"
+    - "TESTDIR=Go/go-std-postgresql"
     - "TESTDIR=Go/revel"
     - "TESTDIR=Go/revel-jet"
     - "TESTDIR=Go/revel-qbs"
@@ -68,7 +71,10 @@ env:
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/wai"
     - "TESTDIR=Haskell/yesod"
+    - "TESTDIR=Haskell/spock"
     - "TESTDIR=Java/activeweb"
+    - "TESTDIR=Java/baratine"
+    - "TESTDIR=Java/bayou"
     - "TESTDIR=Java/comsat-servlet"
     - "TESTDIR=Java/comsat-webactors"
     - "TESTDIR=Java/curacao"
@@ -83,14 +89,15 @@ env:
     - "TESTDIR=Java/netty"
     - "TESTDIR=Java/ninja-standalone"
     - "TESTDIR=Java/officefloor"
+    - "TESTDIR=Java/permeagility"
     - "TESTDIR=Java/play1"
     - "TESTDIR=Java/play1siena"
     - "TESTDIR=Java/play2-java"
     - "TESTDIR=Java/rapidoid"
     - "TESTDIR=Java/restexpress"
+    - "TESTDIR=Java/revenj"
     - "TESTDIR=Java/servlet"
     - "TESTDIR=Java/servlet3-cass"
-    - "TESTDIR=Java/servlet-dsl"
     - "TESTDIR=Java/spark"
     - "TESTDIR=Java/sabina"
     - "TESTDIR=Java/spring"
@@ -178,6 +185,7 @@ env:
     - "TESTDIR=Scala/akka-http"
     - "TESTDIR=Scala/colossus"
     - "TESTDIR=Scala/finagle"
+    - "TESTDIR=Scala/fintrospect"
     - "TESTDIR=Scala/lift-stateless"
     - "TESTDIR=Scala/plain"
     - "TESTDIR=Scala/play2-scala"
@@ -211,6 +219,7 @@ addons:
       - redis-server
 
 before_script:
+  - sudo sysctl -w net.core.somaxconn=65535
   - sudo ./config/travis_mysql_setup.sh
   - mysql -uroot < config/create.sql
   - sudo ./config/create-redis.sh

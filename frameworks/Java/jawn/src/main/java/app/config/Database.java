@@ -1,7 +1,7 @@
 package app.config;
 
+import net.javapla.jawn.core.api.ApplicationDatabaseBootstrap;
 import net.javapla.jawn.core.database.DatabaseConnections;
-import net.javapla.jawn.core.spi.ApplicationDatabaseBootstrap;
 import net.javapla.jawn.core.util.Modes;
 
 public class Database implements ApplicationDatabaseBootstrap {
@@ -37,6 +37,15 @@ public class Database implements ApplicationDatabaseBootstrap {
             .password("benchmarkdbpass")
             .maxPoolSize(256)
             .minPoolSize(256);
+        
+        connections
+            .environment(Modes.TEST)
+            .jdbc()
+            .driver("com.mysql.jdbc.Driver")
+            .url("jdbc:mysql://172.16.0.16/hello_world?" + jdbcParams)
+            .user("benchmarkdbuser")
+            .password("benchmarkdbpass")
+            ;
         
         connections
             .environment(Modes.DEV)

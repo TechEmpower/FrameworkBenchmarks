@@ -82,27 +82,6 @@
       "display_name": "hapi",
       "notes": "",
       "versus": "nodejs"
-    },
-    "redis": {
-      "setup_file": "setup",
-      "db_url": "/hiredis/db",
-      "query_url": "/hiredis/queries?queries=",
-      "fortune_url": "/hiredis/fortunes",
-      "update_url": "/hiredis/updates?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "Redis",
-      "framework": "hapi",
-      "language": "JavaScript",
-      "orm": "Full",
-      "platform": "nodejs",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "hapi",
-      "notes": "",
-      "versus": "nodejs"
     }
   }]
 }

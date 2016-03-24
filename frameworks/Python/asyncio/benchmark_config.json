@@ -23,16 +23,16 @@
       "display_name": "API-Hour+aiohttp.web+pgsql",
       "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + PostgreSQL"
     },
-    "redis": {
+    "mysql": {
       "setup_file": "aiohttp.web/setup",
-      "db_url": "/db_redis",
-      "query_url": "/queries_redis?queries=",
-      "fortune_url": "/fortunes_redis",
-      "update_url": "/updates_redis?queries=",
+      "db_url": "/db_mysql",
+      "query_url": "/queries_mysql?queries=",
+      "fortune_url": "/fortunes_mysql",
+      "update_url": "/updates_mysql?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "Redis",
+      "database": "MySQL",
       "framework": "aiohttp.web",
       "language": "Python",
       "orm": "Raw",
@@ -40,8 +40,8 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour+aiohttp.web+redis",
-      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + Redis"
+      "display_name": "API-Hour+aiohttp.web+mysql",
+      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + MySQL"
     },
     "json": {
       "setup_file": "yocto_http/setup",

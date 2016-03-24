@@ -1,8 +1,7 @@
-psycopg2==2.6
-gunicorn==19.3.0
-meinheld==0.5.7
-SQLAlchemy==1.0.4
-pyramid==1.5.7
+psycopg2==2.6.1
+gunicorn==19.4.5
+meinheld==0.5.9
+SQLAlchemy==1.0.12
+pyramid==1.6.1
 pyramid_chameleon==0.3
-
-greenlet==0.4.7
+greenlet==0.4.9

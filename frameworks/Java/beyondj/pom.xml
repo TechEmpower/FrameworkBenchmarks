@@ -15,7 +15,7 @@
     <properties>
         <antlr.version>2.7.7</antlr.version>
         <camel.version>2.15.2</camel.version>
-        <mysql.connector.version>5.1.34</mysql.connector.version>
+        <mysql.connector.version>5.1.38</mysql.connector.version>
         <commons.pool.version>1.5.1</commons.pool.version>
         <commons.lang.version>3.4</commons.lang.version>
         <c3p0.version>0.9.1.2</c3p0.version>

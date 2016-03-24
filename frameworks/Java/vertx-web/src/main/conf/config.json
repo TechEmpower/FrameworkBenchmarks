@@ -2,8 +2,9 @@
   "connection_string": "mongodb://localhost:27017",
   "db_name": "hello_world",
 
-  "url": "jdbc:postgresql://localhost:5432/hello_world",
-  "driver_class": "org.postgresql.Driver",
-  "user": "benchmarkdbuser",
-  "password": "benchmarkdbpass"
+  "host": "localhost",
+  "username": "benchmarkdbuser",
+  "password": "benchmarkdbpass",
+  "database": "hello_world",
+  "maxPoolSize": 32
 }

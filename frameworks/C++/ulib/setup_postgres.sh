@@ -2,7 +2,7 @@
 
 fw_depends ulib
 
-MAX_THREADS=$((2 * $MAX_THREADS))
+MAX_THREADS=$(( 2 * $MAX_THREADS ))
 
 # 1. Change ULib Server (userver_tcp) configuration
 sed -i "s|TCP_LINGER_SET .*|TCP_LINGER_SET -2|g"								  $IROOT/ULib/benchmark.cfg

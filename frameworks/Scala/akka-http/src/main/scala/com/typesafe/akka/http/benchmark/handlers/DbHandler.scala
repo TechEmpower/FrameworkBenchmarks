@@ -35,7 +35,7 @@ class DbHandler(components: {
   def response = {
     val id = randomGenerator.next
     dataStore.findOne(id).map {
-      record => new HttpResponse(StatusCodes.OK, entity = HttpEntity(record.toResponse.toJson.toString()).withContentType(`application/json`.withCharset(`UTF-8`)))
+      record => new HttpResponse(StatusCodes.OK, entity = HttpEntity(record.toResponse.toJson.toString()).withContentType(`application/json`))
     }
   }
 

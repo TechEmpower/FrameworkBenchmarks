@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{14DC9873-30EA-41DA-8D7B-5AA03E7E2EE2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Revenj.Bench</RootNamespace>
+    <AssemblyName>Revenj.Bench</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\exe\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\exe\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Revenj.Api.Interface">
+      <HintPath>..\exe\Revenj.Api.Interface.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Revenj.DatabasePersistence.Interface">
+      <HintPath>..\exe\Revenj.DatabasePersistence.Interface.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Revenj.DatabasePersistence.Postgres">
+      <HintPath>..\exe\Revenj.DatabasePersistence.Postgres.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Revenj.DomainPatterns.Interface">
+      <HintPath>..\exe\Revenj.DomainPatterns.Interface.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Revenj.Extensibility.Interface">
+      <HintPath>..\exe\Revenj.Extensibility.Interface.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Revenj.Processing">
+      <HintPath>..\exe\Revenj.Processing.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Revenj.Serialization">
+      <HintPath>..\exe\Revenj.Serialization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Revenj.Serialization.Interface">
+      <HintPath>..\exe\Revenj.Serialization.Interface.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Revenj.Utility">
+      <HintPath>..\exe\Revenj.Utility.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ServerModel">
+      <HintPath>..\exe\ServerModel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Context.cs" />
+    <Compile Include="RestService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Revenj.Http.exe.config">
+      <Link>Revenj.Http.exe.config</Link>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="model.dsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -6,7 +6,7 @@
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db-orm",
-      "query_url": "/db-orm/",
+      "query_url": "/db-orm-multiple/",
       "update_url": "/update-orm/",
       "port": 8080,
       "approach": "Realistic",
@@ -26,7 +26,7 @@
     "raw": {
       "setup_file": "setup",
       "db_url": "/db",
-      "query_url": "/db/",
+      "query_url": "/db-multiple/",
       "fortune_url": "/fortune",
       "update_url": "/update-raw/",
       "port": 8080,
@@ -43,6 +43,6 @@
       "display_name": "fat-free",
       "notes": "",
       "versus": "php"
-    }
+    }    
   }]
 }
