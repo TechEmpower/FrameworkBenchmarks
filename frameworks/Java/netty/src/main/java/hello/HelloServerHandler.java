@@ -17,14 +17,17 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
+import io.netty.util.AsciiString;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.FastThreadLocal;
 
-public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
+public class HelloServerHandler extends SimpleChannelInboundHandler<HttpRequest> {
 
 	private static final FastThreadLocal<DateFormat> FORMAT = new FastThreadLocal<DateFormat>() {
 		@Override
@@ -54,19 +57,19 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
 	private static final byte[] STATIC_PLAINTEXT = "Hello, World!".getBytes(CharsetUtil.UTF_8);
 	private static final int STATIC_PLAINTEXT_LEN = STATIC_PLAINTEXT.length;
 	private static final ByteBuf PLAINTEXT_CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_PLAINTEXT));
-	private static final CharSequence PLAINTEXT_CLHEADER_VALUE = HttpHeaders.newEntity(String.valueOf(STATIC_PLAINTEXT_LEN));
-	private static final CharSequence JSON_CLHEADER_VALUE = HttpHeaders.newEntity(String.valueOf(jsonLen()));
+	private static final CharSequence PLAINTEXT_CLHEADER_VALUE = new AsciiString(String.valueOf(STATIC_PLAINTEXT_LEN));
+	private static final CharSequence JSON_CLHEADER_VALUE = new AsciiString(String.valueOf(jsonLen()));
 
-	private static final CharSequence TYPE_PLAIN = HttpHeaders.newEntity("text/plain; charset=UTF-8");
-	private static final CharSequence TYPE_JSON = HttpHeaders.newEntity("application/json; charset=UTF-8");
-	private static final CharSequence SERVER_NAME = HttpHeaders.newEntity("Netty");
-	private static final CharSequence CONTENT_TYPE_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.CONTENT_TYPE);
-	private static final CharSequence DATE_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.DATE);
-	private static final CharSequence CONTENT_LENGTH_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.CONTENT_LENGTH);
-	private static final CharSequence SERVER_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.SERVER);
+	private static final CharSequence TYPE_PLAIN = new AsciiString("text/plain; charset=UTF-8");
+	private static final CharSequence TYPE_JSON = new AsciiString("application/json; charset=UTF-8");
+	private static final CharSequence SERVER_NAME = new AsciiString("Netty");
+	private static final CharSequence CONTENT_TYPE_ENTITY = HttpHeaderNames.CONTENT_TYPE;
+	private static final CharSequence DATE_ENTITY = HttpHeaderNames.DATE;
+	private static final CharSequence CONTENT_LENGTH_ENTITY = HttpHeaderNames.CONTENT_LENGTH;
+	private static final CharSequence SERVER_ENTITY = HttpHeaderNames.SERVER;
 	private static final ObjectMapper MAPPER = newMapper();
 
-	private volatile CharSequence date = HttpHeaders.newEntity(FORMAT.get().format(new Date()));
+	private volatile CharSequence date = new AsciiString(FORMAT.get().format(new Date()));
 
 	HelloServerHandler(ScheduledExecutorService service) {
 		service.scheduleWithFixedDelay(new Runnable() {
@@ -74,34 +77,32 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
 
 			@Override
 			public void run() {
-				date = HttpHeaders.newEntity(format.format(new Date()));
+				date = new AsciiString(format.format(new Date()));
 			}
 		}, 1000, 1000, TimeUnit.MILLISECONDS);
 
 	}
 
 	@Override
-	public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-		if (msg instanceof HttpRequest) {
-			HttpRequest request = (HttpRequest) msg;
-			String uri = request.getUri();
-			switch (uri) {
-			case "/plaintext":
-				writeResponse(ctx, request, PLAINTEXT_CONTENT_BUFFER.duplicate(), TYPE_PLAIN, PLAINTEXT_CLHEADER_VALUE);
-				return;
-			case "/json":
-				byte[] json = MAPPER.writeValueAsBytes(newMsg());
-				writeResponse(ctx, request, Unpooled.wrappedBuffer(json), TYPE_JSON, JSON_CLHEADER_VALUE);
-				return;
-			}
-			FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
-			ctx.write(response).addListener(ChannelFutureListener.CLOSE);
+	public void channelRead0(ChannelHandlerContext ctx, HttpRequest msg) throws Exception {
+		HttpRequest request = (HttpRequest) msg;
+		String uri = request.uri();
+		switch (uri) {
+		case "/plaintext":
+			writeResponse(ctx, request, PLAINTEXT_CONTENT_BUFFER.duplicate(), TYPE_PLAIN, PLAINTEXT_CLHEADER_VALUE);
+			return;
+		case "/json":
+			byte[] json = MAPPER.writeValueAsBytes(newMsg());
+			writeResponse(ctx, request, Unpooled.wrappedBuffer(json), TYPE_JSON, JSON_CLHEADER_VALUE);
+			return;
 		}
+		FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
+		ctx.write(response).addListener(ChannelFutureListener.CLOSE);
 	}
 
 	private void writeResponse(ChannelHandlerContext ctx, HttpRequest request, ByteBuf buf, CharSequence contentType, CharSequence contentLength) {
 		// Decide whether to close the connection or not.
-		boolean keepAlive = HttpHeaders.isKeepAlive(request);
+		boolean keepAlive = HttpUtil.isKeepAlive(request);
 		// Build the response object.
 		FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buf, false);
 		HttpHeaders headers = response.headers();
