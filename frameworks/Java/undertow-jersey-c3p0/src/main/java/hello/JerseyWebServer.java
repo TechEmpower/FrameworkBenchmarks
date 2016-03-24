@@ -5,10 +5,10 @@ import io.undertow.*;
 import io.undertow.server.handlers.*;
 import org.apache.commons.cli.*;
 import org.glassfish.hk2.utilities.binding.*;
-import org.glassfish.jersey.process.internal.*;
 import org.glassfish.jersey.server.*;
 import org.hibernate.*;
 
+import javax.inject.*;
 import java.util.*;
 
 public class JerseyWebServer
@@ -55,7 +55,7 @@ public class JerseyWebServer
       protected void configure()
       {
         bindFactory(SessionFactoryProvider.class).to(SessionFactory.class).in(
-            RequestScoped.class);
+          Singleton.class);
       }
     });
 
