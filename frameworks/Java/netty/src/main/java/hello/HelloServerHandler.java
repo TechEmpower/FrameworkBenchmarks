@@ -21,7 +21,6 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.AsciiString;
 import io.netty.util.CharsetUtil;
@@ -101,8 +100,7 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<HttpRequest>
 	}
 
 	private void writeResponse(ChannelHandlerContext ctx, HttpRequest request, ByteBuf buf, CharSequence contentType, CharSequence contentLength) {
-		// Decide whether to close the connection or not.
-		boolean keepAlive = HttpUtil.isKeepAlive(request);
+
 		// Build the response object.
 		FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buf, false);
 		HttpHeaders headers = response.headers();
@@ -112,11 +110,7 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<HttpRequest>
 		headers.set(CONTENT_LENGTH_ENTITY, contentLength);
 
 		// Close the non-keep-alive connection after the write operation is done.
-		if (!keepAlive) {
-			ctx.write(response).addListener(ChannelFutureListener.CLOSE);
-		} else {
-			ctx.write(response, ctx.voidPromise());
-		}
+		ctx.write(response, ctx.voidPromise());
 	}
 
 	@Override
