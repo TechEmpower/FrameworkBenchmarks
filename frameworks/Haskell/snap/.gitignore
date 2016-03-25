@@ -1,1 +1,3 @@
 dist/
+/bench/.cabal-sandbox/
+/bench/cabal.sandbox.config
