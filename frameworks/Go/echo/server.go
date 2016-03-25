@@ -13,6 +13,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/engine/fasthttp"
 )
 
 const (
@@ -67,7 +68,7 @@ type ByMessage struct{ Fortunes }
 func (s ByMessage) Less(i, j int) bool { return s.Fortunes[i].Message < s.Fortunes[j].Message }
 
 // Render HTML
-func (t *Template) Render(w io.Writer, name string, data interface{}) error {
+func (t *Template) Render(w io.Writer, name string, data interface{}, _ echo.Context) error {
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
@@ -83,15 +84,15 @@ func sanitizeQueryParam(param string) int {
 	return queries
 }
 
-func json(c *echo.Context) error {
+func json(c echo.Context) error {
 	return c.JSON(http.StatusOK, MessageStruct{"Hello, World!"})
 }
 
-func plaintext(c *echo.Context) error {
+func plaintext(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, World!")
 }
 
-func fortunes(c *echo.Context) error {
+func fortunes(c echo.Context) error {
 	rows, err := fortuneStatement.Query()
 	if err != nil {
 		log.Fatalf("Error preparing statement: %v", err)
@@ -112,7 +113,7 @@ func fortunes(c *echo.Context) error {
 	return c.Render(http.StatusOK, "fortune.html", fortunes)
 }
 
-func singleQuery(c *echo.Context) error {
+func singleQuery(c echo.Context) error {
 	world := World{}
 	if err := randomRow().Scan(&world.Id, &world.RandomNumber); err != nil {
 		log.Fatalf("Error scanning world row: %s", err.Error())
@@ -120,7 +121,7 @@ func singleQuery(c *echo.Context) error {
 	return c.JSON(http.StatusOK, world)
 }
 
-func multipleQueries(c *echo.Context) error {
+func multipleQueries(c echo.Context) error {
 	// Get Param
 	queries := sanitizeQueryParam(c.Param("queries"))
 	worlds := make([]World, queries)
@@ -132,7 +133,7 @@ func multipleQueries(c *echo.Context) error {
 	return c.JSON(http.StatusOK, worlds)
 }
 
-func updates(c *echo.Context) error {
+func updates(c echo.Context) error {
 	// Get Param
 	queries := sanitizeQueryParam(c.Param("queries"))
 	worlds := make([]World, queries)
@@ -162,23 +163,23 @@ func main() {
 	e.Use(ServerHeader())
 
 	// Routes
-	e.Get("/json", json)
-	e.Get("/db", singleQuery)
-	e.Get("/queries/:queries", multipleQueries)
-	e.Get("/fortunes", fortunes)
-	e.Get("/updates/:queries", updates)
-	e.Get("/plaintext", plaintext)
+	e.Get("/json", echo.HandlerFunc(json))
+	e.Get("/db", echo.HandlerFunc(singleQuery))
+	e.Get("/queries/:queries", echo.HandlerFunc(multipleQueries))
+	e.Get("/fortunes", echo.HandlerFunc(fortunes))
+	e.Get("/updates/:queries", echo.HandlerFunc(updates))
+	e.Get("/plaintext", echo.HandlerFunc(plaintext))
 
 	// Start server
-	e.Run(":8080")
+	e.Run(fasthttp.New(":8080"))
 }
 
 func ServerHeader() echo.MiddlewareFunc {
-	return func(h echo.HandlerFunc) echo.HandlerFunc {
-		return func(c *echo.Context) error {
+	return func(h echo.Handler) echo.Handler {
+		return echo.HandlerFunc(func(c echo.Context) error {
 			c.Response().Header().Add("Server", "ECHO")
-			return h(c)
-		}
+			return h.Handle(c)
+		})
 	}
 }
 
