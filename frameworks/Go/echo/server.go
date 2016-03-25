@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
+	"encoding/json"
 	"html/template"
 	"io"
 	"log"
@@ -74,6 +74,9 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, _ echo.Con
 
 // queries parameter between 1 and 500.
 func sanitizeQueryParam(param string) int {
+	if param == "" { // shortcut
+		return 1
+	}
 	queries, err := strconv.Atoi(param)
 	if err != nil || queries < 1 {
 		return 1
@@ -84,12 +87,37 @@ func sanitizeQueryParam(param string) int {
 	return queries
 }
 
-func json(c echo.Context) error {
-	return c.JSON(http.StatusOK, MessageStruct{"Hello, World!"})
+// RenderJSON output JSON.
+//
+// Normally, c.JSON() should be used.  But it's mimetype contains charset.
+// In TFB, `Content-Type: application/json` is preferred.
+func RenderJSON(c echo.Context, code int, i interface{}) (err error) {
+	b, err := json.Marshal(i)
+	if err != nil {
+		return
+	}
+	res := c.Response()
+	res.Header().Set(echo.ContentType, echo.ApplicationJSON)
+	res.WriteHeader(code)
+	_, err = res.Write(b)
+	return
+}
+
+// RenderJSON output JSON without charset in mimetype.
+func RenderString(c echo.Context, code int, s string) (err error) {
+	res := c.Response()
+	res.Header().Set(echo.ContentType, echo.TextPlain)
+	res.WriteHeader(code)
+	_, err = res.Write([]byte(s))
+	return
+}
+
+func handleJSON(c echo.Context) error {
+	return RenderJSON(c, http.StatusOK, MessageStruct{"Hello, World!"})
 }
 
 func plaintext(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
+	return RenderString(c, http.StatusOK, "Hello, World!")
 }
 
 func fortunes(c echo.Context) error {
@@ -118,7 +146,7 @@ func singleQuery(c echo.Context) error {
 	if err := randomRow().Scan(&world.Id, &world.RandomNumber); err != nil {
 		log.Fatalf("Error scanning world row: %s", err.Error())
 	}
-	return c.JSON(http.StatusOK, world)
+	return RenderJSON(c, http.StatusOK, world)
 }
 
 func multipleQueries(c echo.Context) error {
@@ -130,7 +158,7 @@ func multipleQueries(c echo.Context) error {
 			log.Fatalf("Error scanning world row: %s", err.Error())
 		}
 	}
-	return c.JSON(http.StatusOK, worlds)
+	return RenderJSON(c, http.StatusOK, worlds)
 }
 
 func updates(c echo.Context) error {
@@ -147,7 +175,7 @@ func updates(c echo.Context) error {
 			log.Fatalf("Error updating world row: %s", err.Error())
 		}
 	}
-	return c.JSON(http.StatusOK, worlds)
+	return RenderJSON(c, http.StatusOK, worlds)
 }
 
 func main() {
@@ -159,14 +187,13 @@ func main() {
 	}
 	e.SetRenderer(tmpl)
 
-	// Middleware
-	e.Use(ServerHeader())
-
 	// Routes
-	e.Get("/json", echo.HandlerFunc(json))
+	e.Get("/json", echo.HandlerFunc(handleJSON))
 	e.Get("/db", echo.HandlerFunc(singleQuery))
+	e.Get("/queries/", echo.HandlerFunc(multipleQueries))
 	e.Get("/queries/:queries", echo.HandlerFunc(multipleQueries))
 	e.Get("/fortunes", echo.HandlerFunc(fortunes))
+	e.Get("/updates/", echo.HandlerFunc(updates))
 	e.Get("/updates/:queries", echo.HandlerFunc(updates))
 	e.Get("/plaintext", echo.HandlerFunc(plaintext))
 
@@ -174,17 +201,8 @@ func main() {
 	e.Run(fasthttp.New(":8080"))
 }
 
-func ServerHeader() echo.MiddlewareFunc {
-	return func(h echo.Handler) echo.Handler {
-		return echo.HandlerFunc(func(c echo.Context) error {
-			c.Response().Header().Add("Server", "ECHO")
-			return h.Handle(c)
-		})
-	}
-}
-
 func init() {
-	db, err := sql.Open("mysql", fmt.Sprintf(connectionString))
+	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
 	}
