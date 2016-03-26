@@ -20,7 +20,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "go-std-mysql",
+      "display_name": "go-mysql",
       "notes": "",
       "versus": "go"
     },
@@ -41,7 +41,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "go-std-mysql-interpolate",
+      "display_name": "go-mysql-interpolate",
       "notes": "",
       "versus": "go"
     },
@@ -64,7 +64,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "go-std-prefork-mysql",
+      "display_name": "go-mysql-prefork",
       "notes": "",
       "versus": "go"
     }

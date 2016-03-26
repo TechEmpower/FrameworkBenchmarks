@@ -1,13 +1,13 @@
 # Go Benchmarking Test
 
-This is the go portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the Go portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ### JSON Encoding Test
 * [JSON test source](src/hello/hello.go)
 
 ## Versions
 
-* [Go 1.2rc3](http://golang.org/)
+* [Go 1.6](http://golang.org/)
 
 ## Test URLs
 
