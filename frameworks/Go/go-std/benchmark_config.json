@@ -90,7 +90,7 @@
       "versus": "go"
     },
     "postgres": {
-      "setup_file": "setup",
+      "setup_file": "setup_postgres",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortune",
