@@ -230,4 +230,5 @@ script:
 
 cache:
   directories:
-  - /home/testrunner/.m2/repository
+    - $HOME/.m2/repository
+    - $HOME/.cache/pip
