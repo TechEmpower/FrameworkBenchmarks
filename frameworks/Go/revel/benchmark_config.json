@@ -23,6 +23,48 @@
       "display_name": "revel",
       "notes": "",
       "versus": "go"
+    },
+    "jet": {
+      "setup_file": "setup",
+      "db_url": "/jet-db",
+      "query_url": "/jet-db?queries=",
+      "fortune_url": "/jet-fortune",
+      "update_url": "/jet-update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "revel",
+      "language": "Go",
+      "orm": "micro",
+      "platform": "Go",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "revel-jet",
+      "notes": "",
+      "versus": "go"
+    },
+    "qbs": {
+      "setup_file": "setup",
+      "db_url": "/qbs-db",
+      "query_url": "/qbs-db?queries=",
+      "fortune_url": "/qbs-fortune",
+      "update_url": "/qbs-update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "revel",
+      "language": "Go",
+      "orm": "micro",
+      "platform": "Go",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "revel-qbs",
+      "notes": "",
+      "versus": "go"
     }
   }]
 }
