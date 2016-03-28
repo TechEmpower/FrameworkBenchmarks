@@ -9,7 +9,7 @@ app.get("plaintext") { request in
 }
 
 app.get("json") { request in 
-	return try Json([
+	return Json([
 		"message": "Hello, World!"
 	])
 }
