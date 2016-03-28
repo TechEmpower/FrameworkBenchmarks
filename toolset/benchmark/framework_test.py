@@ -63,11 +63,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -106,11 +106,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
