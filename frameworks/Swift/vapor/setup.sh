@@ -8,6 +8,7 @@ eval "$(curl -sL https://gist.githubusercontent.com/kylef/5c0475ff02b7c7671d2a/r
 
 # vapor build --release
 
+
 swift build -c release -v
 .build/release/App &
 
