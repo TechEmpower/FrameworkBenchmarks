@@ -55,6 +55,7 @@ env:
     - "TESTDIR=Erlang/mochiweb"
     - "TESTDIR=Erlang/misultin"
     - "TESTDIR=Go/beego"
+    - "TESTDIR=Go/echo"
     - "TESTDIR=Go/falcore"
     - "TESTDIR=Go/fasthttp-mysql"
     - "TESTDIR=Go/fasthttp-postgresql"
