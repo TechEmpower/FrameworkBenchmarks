@@ -165,7 +165,7 @@ def main(argv=None):
     parser.add_argument('--concurrency-levels', default=[8, 16, 32, 64, 128, 256], help='Runs wrk benchmarker with different concurrency value (type int-sequence)', action=StoreSeqAction)
     parser.add_argument('--query-levels', default=[1, 5,10,15,20], help='Database queries requested per HTTP connection, used during query test (type int-sequence)', action=StoreSeqAction) 
     parser.add_argument('--threads', default=maxThreads, help='Run wrk benchmarker with this many threads. This should probably be the number of cores for your client system', type=int)
-    parser.add_argument('--duration', default=8, help='Time in seconds that each test should run for.')
+    parser.add_argument('--duration', default=15, help='Time in seconds that each test should run for.')
     parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
 
     # Misc Options
