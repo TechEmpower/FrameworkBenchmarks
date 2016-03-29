@@ -1,0 +1,297 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "UserController"
+provides-nominal:
+- "C8VaporDev14UserController"
+provides-member:
+- ["C8VaporDev14UserController", ""]
+depends-top-level:
+- !private "Dictionary"
+- !private "Json"
+- "UserController"
+- "User"
+- !private "Log"
+- "ResponseRepresentable"
+- "Controller"
+- "Application"
+- "Request"
+- !private "StringLiteralType"
+depends-member:
+- !private ["Ps16AbsoluteValuable", "Key"]
+- ["Ps9AnyObject", "Item"]
+- !private ["Ps9AnyObject", "Json"]
+- !private ["Ps9AnyObject", "Log"]
+- ["Ps9AnyObject", "destroy"]
+- ["Ps9AnyObject", "index"]
+- !private ["Ps9AnyObject", "info"]
+- ["Ps9AnyObject", "init"]
+- !private ["Ps9AnyObject", "makeJson"]
+- ["Ps9AnyObject", "show"]
+- ["Ps9AnyObject", "store"]
+- ["Ps9AnyObject", "update"]
+- ["Ps9AnyObject", ""]
+- ["P5Vapor24ApplicationInitializable", "Item"]
+- !private ["P5Vapor24ApplicationInitializable", "Json"]
+- !private ["P5Vapor24ApplicationInitializable", "Log"]
+- ["P5Vapor24ApplicationInitializable", "destroy"]
+- ["P5Vapor24ApplicationInitializable", "index"]
+- ["P5Vapor24ApplicationInitializable", "init"]
+- ["P5Vapor24ApplicationInitializable", "show"]
+- ["P5Vapor24ApplicationInitializable", "store"]
+- ["P5Vapor24ApplicationInitializable", "update"]
+- ["P5Vapor24ApplicationInitializable", ""]
+- !private ["Sa", "Value"]
+- !private ["Sa", "deinit"]
+- !private ["Ps23ArrayLiteralConvertible", "Key"]
+- !private ["Ps23ArrayLiteralConvertible", "Value"]
+- !private ["Ps18BidirectionalIndex", "Value"]
+- !private ["P5Vapor22BitshiftOperationsType", "Value"]
+- !private ["Ps17BitwiseOperations", "Value"]
+- !private ["Sb", "Value"]
+- !private ["Sb", "deinit"]
+- !private ["Ps7Boolean", "Value"]
+- !private ["Ps25BooleanLiteralConvertible", "Key"]
+- !private ["Ps25BooleanLiteralConvertible", "Value"]
+- !private ["P5Vapor15ByteConvertible", "Value"]
+- !private ["P5Vapor11CSArrayType", "Value"]
+- !private ["Ps7CVarArg", "Key"]
+- !private ["Ps7CVarArg", "Value"]
+- !private ["Ps10Collection", "Key"]
+- !private ["Ps10Collection", "Value"]
+- !private ["Ps10Comparable", "Key"]
+- !private ["Ps10Comparable", "Value"]
+- !private ["Ps28CustomDebugStringConvertible", "Key"]
+- !private ["Ps28CustomDebugStringConvertible", "Value"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "Key"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "Value"]
+- !private ["Ps17CustomReflectable", "Key"]
+- !private ["Ps17CustomReflectable", "Value"]
+- !private ["Ps23CustomStringConvertible", "Key"]
+- !private ["Ps23CustomStringConvertible", "Value"]
+- !private ["Ps23CustomStringConvertible", "init"]
+- !private ["Ps23CustomStringConvertible", "makeJson"]
+- !private ["P2C715DataConvertible", "Key"]
+- !private ["P2C717DataInitializable", "Key"]
+- !private ["P2C717DataRepresentable", "Key"]
+- !private ["Vs10Dictionary", "Key"]
+- !private ["Vs10Dictionary", "Value"]
+- !private ["Ps28DictionaryLiteralConvertible", "Key"]
+- !private ["Ps28DictionaryLiteralConvertible", "Value"]
+- !private ["Sd", "Key"]
+- !private ["Sd", "deinit"]
+- !private ["Ps9Equatable", "Key"]
+- !private ["Ps9Equatable", "Value"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "Key"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "Value"]
+- !private ["Ps23FloatLiteralConvertible", "Key"]
+- !private ["Ps23FloatLiteralConvertible", "Value"]
+- !private ["Ps13FloatingPoint", "Key"]
+- !private ["Ps12ForwardIndex", "Value"]
+- !private ["Ps8Hashable", "Key"]
+- !private ["Ps8Hashable", "Value"]
+- !private ["Ps9Indexable", "Key"]
+- !private ["Ps9Indexable", "Value"]
+- !private ["Si", "Value"]
+- !private ["Si", "deinit"]
+- !private ["Ps7Integer", "Value"]
+- !private ["Ps17IntegerArithmetic", "Value"]
+- !private ["Ps25IntegerLiteralConvertible", "Key"]
+- !private ["Ps25IntegerLiteralConvertible", "Value"]
+- !private ["O4JSON4JSON", "Key"]
+- !private ["O4JSON4JSON", "Value"]
+- !private ["O5Vapor4Json", "init"]
+- !private ["P5Vapor17JsonRepresentable", "Key"]
+- !private ["P5Vapor17JsonRepresentable", "Value"]
+- !private ["P5Vapor17JsonRepresentable", "deinit"]
+- !private ["P5Vapor17JsonRepresentable", "makeJson"]
+- !private ["C5Vapor3Log", "info"]
+- !private ["Ps10MirrorPath", "Key"]
+- !private ["Ps10MirrorPath", "Value"]
+- !private ["Ps17MutableCollection", "Value"]
+- !private ["Ps16MutableIndexable", "Value"]
+- !private ["Ps21NilLiteralConvertible", "Key"]
+- !private ["Ps21NilLiteralConvertible", "Value"]
+- !private ["P5Vapor4Node", "Key"]
+- !private ["P5Vapor4Node", "init"]
+- !private ["P5Vapor17NodeInitializable", "Key"]
+- !private ["P5Vapor17NodeInitializable", "Value"]
+- !private ["Ps12OutputStream", "Key"]
+- !private ["Ps17RandomAccessIndex", "Value"]
+- !private ["Ps26RangeReplaceableCollection", "Value"]
+- ["P5Vapor18ResourceController", "Item"]
+- !private ["P5Vapor18ResourceController", "Json"]
+- !private ["P5Vapor18ResourceController", "Log"]
+- ["P5Vapor18ResourceController", "destroy"]
+- ["P5Vapor18ResourceController", "index"]
+- ["P5Vapor18ResourceController", "init"]
+- ["P5Vapor18ResourceController", "show"]
+- ["P5Vapor18ResourceController", "store"]
+- ["P5Vapor18ResourceController", "update"]
+- ["P5Vapor18ResourceController", ""]
+- !private ["P5Vapor21ResponseRepresentable", "Key"]
+- !private ["P5Vapor21ResponseRepresentable", "Value"]
+- !private ["P5Vapor21ResponseRepresentable", "init"]
+- !private ["P5Vapor21ResponseRepresentable", "makeJson"]
+- !private ["Ps8Sequence", "Key"]
+- !private ["Ps8Sequence", "Value"]
+- !private ["Ps13SignedInteger", "Value"]
+- !private ["Ps12SignedNumber", "Key"]
+- !private ["Ps12SignedNumber", "Value"]
+- !private ["Ps10Streamable", "Key"]
+- !private ["Ps10Strideable", "Key"]
+- !private ["Ps10Strideable", "Value"]
+- !private ["SS", "Key"]
+- !private ["SS", "deinit"]
+- !private ["P5Vapor19StringInitializable", "Key"]
+- !private ["P5Vapor19StringInitializable", "Value"]
+- !private ["P5Vapor19StringInitializable", "makeJson"]
+- !private ["Ps30StringInterpolationConvertible", "Key"]
+- !private ["Ps30StringInterpolationConvertible", "Value"]
+- !private ["Ps24StringLiteralConvertible", "Key"]
+- !private ["Ps24StringLiteralConvertible", "Value"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "Key"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "Value"]
+- ["C8VaporDev4User", "deinit"]
+- !private ["C8VaporDev4User", "makeJson"]
+- ["C8VaporDev14UserController", "Application"]
+- ["C8VaporDev14UserController", "Item"]
+- !private ["C8VaporDev14UserController", "Json"]
+- !private ["C8VaporDev14UserController", "Log"]
+- ["C8VaporDev14UserController", "Request"]
+- ["C8VaporDev14UserController", "ResponseRepresentable"]
+- ["C8VaporDev14UserController", "User"]
+- ["C8VaporDev14UserController", "deinit"]
+- ["C8VaporDev14UserController", "destroy"]
+- ["C8VaporDev14UserController", "index"]
+- ["C8VaporDev14UserController", "init"]
+- ["C8VaporDev14UserController", "show"]
+- ["C8VaporDev14UserController", "store"]
+- ["C8VaporDev14UserController", "update"]
+- !private ["Ps14_ArrayProtocol", "Value"]
+- !private ["Ps33_BuiltinBooleanLiteralConvertible", "Value"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "Key"]
+- !private ["Ps31_BuiltinFloatLiteralConvertible", "Key"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "Key"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "Value"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "Key"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "Key"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "Key"]
+- !private ["Ps15_CVarArgAligned", "Key"]
+- !private ["Ps22_CVarArgPassedAsDouble", "Key"]
+- !private ["Ps24_DestructorSafeContainer", "Value"]
+- !private ["Ps14_Incrementable", "Value"]
+- !private ["Ps8_Integer", "Value"]
+- !private ["Ps18_IntegerArithmetic", "Value"]
+- !private ["Ps22_RandomAccessAmbiguity", "Value"]
+- !private ["Ps14_SignedInteger", "Value"]
+depends-nominal:
+- !private "Ps16AbsoluteValuable"
+- "Ps9AnyObject"
+- "P5Vapor24ApplicationInitializable"
+- !private "Sa"
+- !private "Ps23ArrayLiteralConvertible"
+- !private "Ps18BidirectionalIndex"
+- !private "P5Vapor22BitshiftOperationsType"
+- !private "Ps17BitwiseOperations"
+- !private "Sb"
+- !private "Ps7Boolean"
+- !private "Ps25BooleanLiteralConvertible"
+- !private "P5Vapor15ByteConvertible"
+- !private "P5Vapor11CSArrayType"
+- !private "Ps7CVarArg"
+- !private "Ps10Collection"
+- !private "Ps10Comparable"
+- !private "Ps28CustomDebugStringConvertible"
+- !private "Ps29CustomPlaygroundQuickLookable"
+- !private "Ps17CustomReflectable"
+- !private "Ps23CustomStringConvertible"
+- !private "P2C715DataConvertible"
+- !private "P2C717DataInitializable"
+- !private "P2C717DataRepresentable"
+- !private "Vs10Dictionary"
+- !private "Ps28DictionaryLiteralConvertible"
+- !private "Sd"
+- !private "Ps9Equatable"
+- !private "Ps41ExtendedGraphemeClusterLiteralConvertible"
+- !private "Ps23FloatLiteralConvertible"
+- !private "Ps13FloatingPoint"
+- !private "Ps12ForwardIndex"
+- !private "Ps8Hashable"
+- !private "Ps9Indexable"
+- !private "Si"
+- !private "Ps7Integer"
+- !private "Ps17IntegerArithmetic"
+- !private "Ps25IntegerLiteralConvertible"
+- !private "O4JSON4JSON"
+- !private "O5Vapor4Json"
+- !private "P5Vapor17JsonRepresentable"
+- !private "C5Vapor3Log"
+- !private "Ps10MirrorPath"
+- !private "Ps17MutableCollection"
+- !private "Ps16MutableIndexable"
+- !private "Ps21NilLiteralConvertible"
+- !private "P5Vapor4Node"
+- !private "P5Vapor17NodeInitializable"
+- !private "Ps12OutputStream"
+- !private "Ps17RandomAccessIndex"
+- !private "Ps26RangeReplaceableCollection"
+- "P5Vapor18ResourceController"
+- !private "P5Vapor21ResponseRepresentable"
+- !private "Ps8Sequence"
+- !private "Ps13SignedInteger"
+- !private "Ps12SignedNumber"
+- !private "Ps10Streamable"
+- !private "Ps10Strideable"
+- !private "SS"
+- !private "P5Vapor19StringInitializable"
+- !private "Ps30StringInterpolationConvertible"
+- !private "Ps24StringLiteralConvertible"
+- !private "Ps31UnicodeScalarLiteralConvertible"
+- "C8VaporDev4User"
+- "C8VaporDev14UserController"
+- !private "Ps14_ArrayProtocol"
+- !private "Ps33_BuiltinBooleanLiteralConvertible"
+- !private "Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible"
+- !private "Ps31_BuiltinFloatLiteralConvertible"
+- !private "Ps33_BuiltinIntegerLiteralConvertible"
+- !private "Ps32_BuiltinStringLiteralConvertible"
+- !private "Ps37_BuiltinUTF16StringLiteralConvertible"
+- !private "Ps39_BuiltinUnicodeScalarLiteralConvertible"
+- !private "Ps15_CVarArgAligned"
+- !private "Ps22_CVarArgPassedAsDouble"
+- !private "Ps24_DestructorSafeContainer"
+- !private "Ps14_Incrementable"
+- !private "Ps8_Integer"
+- !private "Ps18_IntegerArithmetic"
+- !private "Ps22_RandomAccessAmbiguity"
+- !private "Ps14_SignedInteger"
+depends-dynamic-lookup:
+depends-external:
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/shims/Visibility.h"
+- "/home/tanner/swift/usr/lib/swift/shims/UnicodeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStdint.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStddef.h"
+- "/home/tanner/swift/usr/lib/swift/shims/LibcShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeStubs.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RefCount.h"
+- "/home/tanner/swift/usr/lib/swift/shims/HeapObject.h"
+- "/home/tanner/swift/usr/lib/swift/shims/GlobalObjects.h"
+- "/home/tanner/swift/usr/lib/swift/shims/FoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/CoreFoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/tanner/swift/usr/lib/swift/shims/module.map"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Vapor.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Hummingbird.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Strand.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/InterchangeData.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Data.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/OperatingSystem.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/String.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/libc.swiftmodule"
+interface-hash: "2f13b7dc3d7dd2d47360174b0984020e"

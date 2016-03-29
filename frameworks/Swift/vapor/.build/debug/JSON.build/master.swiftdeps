@@ -1,0 +1,9 @@
+version: "Swift version 3.0-dev (LLVM b010debd0e, Clang 3e4d01d89b, Swift 7182c58cb2)"
+options: "105560e336955b8178250b28a5a63c93"
+build_time: [512525441, 850887000]
+inputs:
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/JSON-0.4.1/Source/JSONInterchangeDataParser.swift": [512525428, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/JSON-0.4.1/Source/JSONParser.swift": [512525428, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/JSON-0.4.1/Source/JSONSerializer.swift": [512525428, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/JSON-0.4.1/Source/JSONInterchangeDataSerializer.swift": [512525428, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/JSON-0.4.1/Source/JSON.swift": [512525428, 0]

@@ -1,0 +1,65 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "Hash"
+provides-nominal:
+- "C5Vapor4Hash"
+provides-member:
+- ["C5Vapor4Hash", ""]
+depends-top-level:
+- "StringLiteralType"
+- "SHA256Hasher"
+- "HashDriver"
+- "Hash"
+- "String"
+depends-member:
+- ["Ps9AnyObject", "SHA256Hasher"]
+- !private ["Ps9AnyObject", "driver"]
+- ["Ps9AnyObject", "init"]
+- !private ["Ps9AnyObject", "key"]
+- ["Ps9AnyObject", ""]
+- ["C5Vapor4Hash", "HashDriver"]
+- ["C5Vapor4Hash", "SHA256Hasher"]
+- ["C5Vapor4Hash", "String"]
+- ["C5Vapor4Hash", "deinit"]
+- ["C5Vapor4Hash", "driver"]
+- ["C5Vapor4Hash", "init"]
+- ["C5Vapor4Hash", "key"]
+- ["C5Vapor4Hash", "make"]
+- !private ["P5Vapor10HashDriver", "hash"]
+- ["P5Vapor10HashDriver", "init"]
+- ["C5Vapor12SHA256Hasher", "deinit"]
+- ["C5Vapor12SHA256Hasher", "init"]
+depends-nominal:
+- "Ps9AnyObject"
+- "C5Vapor4Hash"
+- "P5Vapor10HashDriver"
+- "C5Vapor12SHA256Hasher"
+depends-dynamic-lookup:
+depends-external:
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/shims/Visibility.h"
+- "/home/tanner/swift/usr/lib/swift/shims/UnicodeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStdint.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStddef.h"
+- "/home/tanner/swift/usr/lib/swift/shims/LibcShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeStubs.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RefCount.h"
+- "/home/tanner/swift/usr/lib/swift/shims/HeapObject.h"
+- "/home/tanner/swift/usr/lib/swift/shims/GlobalObjects.h"
+- "/home/tanner/swift/usr/lib/swift/shims/FoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/CoreFoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/tanner/swift/usr/lib/swift/shims/module.map"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/InterchangeData.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Data.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/OperatingSystem.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/libc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/String.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Hummingbird.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Strand.swiftmodule"
+interface-hash: "c2db9e253eb73695e81e65b770beb7c7"

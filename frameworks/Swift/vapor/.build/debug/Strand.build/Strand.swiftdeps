@@ -1,0 +1,184 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "StrandError"
+- "Strand"
+provides-nominal:
+- "O6Strand11StrandError"
+- "C6Strand6Strand"
+provides-member:
+- ["O6Strand11StrandError", ""]
+- ["C6Strand6Strand", ""]
+depends-top-level:
+- !private "pthread_join"
+- "pthread_t"
+- !private "pthread_cancel"
+- !private "OpaquePointer"
+- "Int"
+- !private "runner"
+- !private "!="
+- !private "=="
+- "ErrorProtocol"
+- !private "pthread_detach"
+- !private "pthread_exit"
+- "IntegerLiteralType"
+- "Strand"
+- "FloatLiteralType"
+- !private "StrandClosure"
+- "StrandError"
+- "Void"
+- !private "Unmanaged"
+- !private "UnsafeMutablePointer"
+- !private "pthread_create"
+depends-member:
+- !private ["Ps9AnyObject", "Int"]
+- !private ["Ps9AnyObject", "OpaquePointer"]
+- !private ["Ps9AnyObject", "StrandClosure"]
+- !private ["Ps9AnyObject", "StrandError"]
+- !private ["Ps9AnyObject", "Unmanaged"]
+- !private ["Ps9AnyObject", "UnsafeMutablePointer"]
+- !private ["Ps9AnyObject", "closure"]
+- !private ["Ps9AnyObject", "init"]
+- !private ["Ps9AnyObject", "pthread"]
+- !private ["Ps9AnyObject", "pthread_cancel"]
+- !private ["Ps9AnyObject", "pthread_create"]
+- !private ["Ps9AnyObject", "pthread_detach"]
+- !private ["Ps9AnyObject", "pthread_exit"]
+- !private ["Ps9AnyObject", "pthread_join"]
+- !private ["Ps9AnyObject", "runner"]
+- ["Ps9AnyObject", ""]
+- !private ["Ps18BidirectionalIndex", "init"]
+- !private ["Ps17BitwiseOperations", "init"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["Ps7Boolean", "_getBuiltinLogicValue"]
+- !private ["Ps25BooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps7CVarArg", "init"]
+- !private ["Ps10Comparable", "init"]
+- !private ["Ps28CustomDebugStringConvertible", "init"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "_getBuiltinLogicValue"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "init"]
+- !private ["Ps17CustomReflectable", "_getBuiltinLogicValue"]
+- !private ["Ps17CustomReflectable", "init"]
+- !private ["Ps23CustomStringConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps23CustomStringConvertible", "init"]
+- !private ["Ps9Equatable", "_getBuiltinLogicValue"]
+- !private ["Ps9Equatable", "init"]
+- ["Ps13ErrorProtocol", "_code"]
+- ["Ps13ErrorProtocol", "_domain"]
+- !private ["Ps13ErrorProtocol", "threadCancellationFailed"]
+- !private ["Ps13ErrorProtocol", "threadCreationFailed"]
+- !private ["Ps13ErrorProtocol", "threadJoinFailed"]
+- ["Ps13ErrorProtocol", ""]
+- !private ["Ps12ForwardIndex", "init"]
+- !private ["Ps8Hashable", "_getBuiltinLogicValue"]
+- !private ["Ps8Hashable", "init"]
+- !private ["Si", "init"]
+- !private ["Ps7Integer", "init"]
+- !private ["Ps17IntegerArithmetic", "init"]
+- !private ["Ps25IntegerLiteralConvertible", "init"]
+- !private ["Ps10MirrorPath", "init"]
+- !private ["Ps21NilLiteralConvertible", "init"]
+- !private ["Vs13OpaquePointer", "init"]
+- !private ["Ps17RandomAccessIndex", "init"]
+- !private ["Ps13SignedInteger", "init"]
+- !private ["Ps12SignedNumber", "init"]
+- ["C6Strand6Strand", "Int"]
+- !private ["C6Strand6Strand", "OpaquePointer"]
+- !private ["C6Strand6Strand", "StrandClosure"]
+- !private ["C6Strand6Strand", "StrandError"]
+- !private ["C6Strand6Strand", "Unmanaged"]
+- !private ["C6Strand6Strand", "UnsafeMutablePointer"]
+- ["C6Strand6Strand", "Void"]
+- ["C6Strand6Strand", "cancel"]
+- ["C6Strand6Strand", "deinit"]
+- ["C6Strand6Strand", "exit"]
+- ["C6Strand6Strand", "init"]
+- ["C6Strand6Strand", "join"]
+- !private ["C6Strand6Strand", "pthread"]
+- !private ["C6Strand6Strand", "pthread_cancel"]
+- !private ["C6Strand6Strand", "pthread_create"]
+- !private ["C6Strand6Strand", "pthread_detach"]
+- !private ["C6Strand6Strand", "pthread_exit"]
+- !private ["C6Strand6Strand", "pthread_join"]
+- ["C6Strand6Strand", "pthread_t"]
+- !private ["C6Strand6Strand", "runner"]
+- ["O6Strand11StrandError", "Int"]
+- ["O6Strand11StrandError", "_code"]
+- ["O6Strand11StrandError", "_domain"]
+- ["O6Strand11StrandError", "deinit"]
+- ["O6Strand11StrandError", "threadCancellationFailed"]
+- ["O6Strand11StrandError", "threadCreationFailed"]
+- ["O6Strand11StrandError", "threadJoinFailed"]
+- !private ["Ps10Strideable", "init"]
+- !private ["Vs9Unmanaged", "fromOpaque"]
+- !private ["Vs9Unmanaged", "passRetained"]
+- !private ["Vs9Unmanaged", "release"]
+- !private ["Vs9Unmanaged", "takeUnretainedValue"]
+- !private ["Sp", "init"]
+- !private ["Ps33_BuiltinBooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "init"]
+- !private ["Ps14_Incrementable", "init"]
+- !private ["Ps8_Integer", "init"]
+- !private ["Ps18_IntegerArithmetic", "init"]
+- !private ["Ps8_Pointer", "init"]
+- !private ["Ps22_RandomAccessAmbiguity", "init"]
+- !private ["Ps14_SignedInteger", "init"]
+depends-nominal:
+- "Ps9AnyObject"
+- !private "Ps18BidirectionalIndex"
+- !private "Ps17BitwiseOperations"
+- !private "Sb"
+- !private "Ps7Boolean"
+- !private "Ps25BooleanLiteralConvertible"
+- !private "Ps7CVarArg"
+- !private "Ps10Comparable"
+- !private "Ps28CustomDebugStringConvertible"
+- !private "Ps29CustomPlaygroundQuickLookable"
+- !private "Ps17CustomReflectable"
+- !private "Ps23CustomStringConvertible"
+- !private "Ps9Equatable"
+- "Ps13ErrorProtocol"
+- !private "Ps12ForwardIndex"
+- !private "Ps8Hashable"
+- !private "Si"
+- !private "Ps7Integer"
+- !private "Ps17IntegerArithmetic"
+- !private "Ps25IntegerLiteralConvertible"
+- !private "Ps10MirrorPath"
+- !private "Ps21NilLiteralConvertible"
+- !private "Vs13OpaquePointer"
+- !private "Ps17RandomAccessIndex"
+- !private "Ps13SignedInteger"
+- !private "Ps12SignedNumber"
+- "C6Strand6Strand"
+- "O6Strand11StrandError"
+- !private "Ps10Strideable"
+- !private "Vs9Unmanaged"
+- !private "Sp"
+- !private "Ps33_BuiltinBooleanLiteralConvertible"
+- !private "Ps33_BuiltinIntegerLiteralConvertible"
+- !private "Ps14_Incrementable"
+- !private "Ps8_Integer"
+- !private "Ps18_IntegerArithmetic"
+- !private "Ps8_Pointer"
+- !private "Ps22_RandomAccessAmbiguity"
+- !private "Ps14_SignedInteger"
+depends-dynamic-lookup:
+depends-external:
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/shims/Visibility.h"
+- "/home/tanner/swift/usr/lib/swift/shims/UnicodeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStdint.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStddef.h"
+- "/home/tanner/swift/usr/lib/swift/shims/LibcShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeStubs.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RefCount.h"
+- "/home/tanner/swift/usr/lib/swift/shims/HeapObject.h"
+- "/home/tanner/swift/usr/lib/swift/shims/GlobalObjects.h"
+- "/home/tanner/swift/usr/lib/swift/shims/FoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/CoreFoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/tanner/swift/usr/lib/swift/shims/module.map"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+interface-hash: "e38feace0015a552469a9d8c1dbc0e07"

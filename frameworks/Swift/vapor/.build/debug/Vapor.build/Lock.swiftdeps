@@ -1,0 +1,144 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "Lock"
+provides-nominal:
+- "C5Vapor4Lock"
+provides-member:
+- ["C5Vapor4Lock", ""]
+depends-top-level:
+- !private "pthread_mutex_unlock"
+- "Lock"
+- !private "pthread_mutex_destroy"
+- !private "=="
+- "Void"
+- !private "pthread_mutex_lock"
+- "IntegerLiteralType"
+- "Bool"
+- "UnsafeMutablePointer"
+- "FloatLiteralType"
+- !private "pthread_mutex_init"
+- !private "pthread_mutex_trylock"
+- "pthread_mutex_t"
+depends-member:
+- ["Ps9AnyObject", "UnsafeMutablePointer"]
+- !private ["Ps9AnyObject", "lock"]
+- !private ["Ps9AnyObject", "mutex"]
+- !private ["Ps9AnyObject", "pthread_mutex_destroy"]
+- !private ["Ps9AnyObject", "pthread_mutex_init"]
+- !private ["Ps9AnyObject", "pthread_mutex_lock"]
+- !private ["Ps9AnyObject", "pthread_mutex_trylock"]
+- !private ["Ps9AnyObject", "pthread_mutex_unlock"]
+- !private ["Ps9AnyObject", "unlock"]
+- ["Ps9AnyObject", ""]
+- !private ["Ps18BidirectionalIndex", "deallocateCapacity"]
+- !private ["Ps18BidirectionalIndex", "deinitialize"]
+- ["Ps18BidirectionalIndex", "init"]
+- !private ["Ps7CVarArg", "deallocateCapacity"]
+- !private ["Ps7CVarArg", "deinitialize"]
+- ["Ps7CVarArg", "init"]
+- !private ["Ps10Comparable", "deallocateCapacity"]
+- !private ["Ps10Comparable", "deinitialize"]
+- ["Ps10Comparable", "init"]
+- !private ["Ps28CustomDebugStringConvertible", "deallocateCapacity"]
+- !private ["Ps28CustomDebugStringConvertible", "deinitialize"]
+- ["Ps28CustomDebugStringConvertible", "init"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "deallocateCapacity"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "deinitialize"]
+- ["Ps29CustomPlaygroundQuickLookable", "init"]
+- !private ["Ps17CustomReflectable", "deallocateCapacity"]
+- !private ["Ps17CustomReflectable", "deinitialize"]
+- ["Ps17CustomReflectable", "init"]
+- !private ["Ps9Equatable", "deallocateCapacity"]
+- !private ["Ps9Equatable", "deinitialize"]
+- ["Ps9Equatable", "init"]
+- !private ["Ps12ForwardIndex", "deallocateCapacity"]
+- !private ["Ps12ForwardIndex", "deinitialize"]
+- ["Ps12ForwardIndex", "init"]
+- !private ["Ps8Hashable", "deallocateCapacity"]
+- !private ["Ps8Hashable", "deinitialize"]
+- ["Ps8Hashable", "init"]
+- ["C5Vapor4Lock", "Bool"]
+- ["C5Vapor4Lock", "UnsafeMutablePointer"]
+- ["C5Vapor4Lock", "Void"]
+- ["C5Vapor4Lock", "deinit"]
+- ["C5Vapor4Lock", "init"]
+- ["C5Vapor4Lock", "lock"]
+- ["C5Vapor4Lock", "locked"]
+- ["C5Vapor4Lock", "mutex"]
+- !private ["C5Vapor4Lock", "pthread_mutex_destroy"]
+- !private ["C5Vapor4Lock", "pthread_mutex_init"]
+- !private ["C5Vapor4Lock", "pthread_mutex_lock"]
+- ["C5Vapor4Lock", "pthread_mutex_t"]
+- !private ["C5Vapor4Lock", "pthread_mutex_trylock"]
+- !private ["C5Vapor4Lock", "pthread_mutex_unlock"]
+- ["C5Vapor4Lock", "tryLock"]
+- ["C5Vapor4Lock", "unlock"]
+- !private ["Ps21NilLiteralConvertible", "deallocateCapacity"]
+- !private ["Ps21NilLiteralConvertible", "deinitialize"]
+- ["Ps21NilLiteralConvertible", "init"]
+- !private ["Ps17RandomAccessIndex", "deallocateCapacity"]
+- !private ["Ps17RandomAccessIndex", "deinitialize"]
+- ["Ps17RandomAccessIndex", "init"]
+- !private ["Ps10Strideable", "deallocateCapacity"]
+- !private ["Ps10Strideable", "deinitialize"]
+- ["Ps10Strideable", "init"]
+- !private ["Sp", "deallocateCapacity"]
+- !private ["Sp", "deinitialize"]
+- ["Sp", "init"]
+- !private ["Ps14_Incrementable", "deallocateCapacity"]
+- !private ["Ps14_Incrementable", "deinitialize"]
+- ["Ps14_Incrementable", "init"]
+- !private ["Ps8_Pointer", "deallocateCapacity"]
+- !private ["Ps8_Pointer", "deinitialize"]
+- ["Ps8_Pointer", "init"]
+- !private ["Ps22_RandomAccessAmbiguity", "deallocateCapacity"]
+- !private ["Ps22_RandomAccessAmbiguity", "deinitialize"]
+- ["Ps22_RandomAccessAmbiguity", "init"]
+depends-nominal:
+- "Ps9AnyObject"
+- "Ps18BidirectionalIndex"
+- "Ps7CVarArg"
+- "Ps10Comparable"
+- "Ps28CustomDebugStringConvertible"
+- "Ps29CustomPlaygroundQuickLookable"
+- "Ps17CustomReflectable"
+- "Ps9Equatable"
+- "Ps12ForwardIndex"
+- "Ps8Hashable"
+- "C5Vapor4Lock"
+- "Ps21NilLiteralConvertible"
+- "Ps17RandomAccessIndex"
+- "Ps10Strideable"
+- "Sp"
+- "Ps14_Incrementable"
+- "Ps8_Pointer"
+- "Ps22_RandomAccessAmbiguity"
+depends-dynamic-lookup:
+depends-external:
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/shims/Visibility.h"
+- "/home/tanner/swift/usr/lib/swift/shims/UnicodeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStdint.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStddef.h"
+- "/home/tanner/swift/usr/lib/swift/shims/LibcShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeStubs.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RefCount.h"
+- "/home/tanner/swift/usr/lib/swift/shims/HeapObject.h"
+- "/home/tanner/swift/usr/lib/swift/shims/GlobalObjects.h"
+- "/home/tanner/swift/usr/lib/swift/shims/FoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/CoreFoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/tanner/swift/usr/lib/swift/shims/module.map"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/InterchangeData.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Data.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/OperatingSystem.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/libc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/String.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Hummingbird.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Strand.swiftmodule"
+interface-hash: "4c4cec7a5ed2769e67ad1da1ab3820d3"

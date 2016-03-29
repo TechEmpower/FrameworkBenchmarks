@@ -1,0 +1,180 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "CaseInsensitiveString"
+- "=="
+provides-nominal:
+- "V2C721CaseInsensitiveString"
+provides-member:
+- ["V2C721CaseInsensitiveString", ""]
+- ["SS", ""]
+- ["SS", "caseInsensitive"]
+depends-top-level:
+- "StringLiteralConvertible"
+- "Bool"
+- "String"
+- "Hashable"
+- "CustomStringConvertible"
+- "CaseInsensitiveString"
+- "Int"
+- "=="
+depends-member:
+- ["V2C721CaseInsensitiveString", "ExtendedGraphemeClusterLiteralType"]
+- ["V2C721CaseInsensitiveString", "Int"]
+- ["V2C721CaseInsensitiveString", "String"]
+- ["V2C721CaseInsensitiveString", "StringLiteralType"]
+- ["V2C721CaseInsensitiveString", "UnicodeScalarLiteralType"]
+- ["V2C721CaseInsensitiveString", "deinit"]
+- ["V2C721CaseInsensitiveString", "description"]
+- ["V2C721CaseInsensitiveString", "hashValue"]
+- ["V2C721CaseInsensitiveString", "init"]
+- ["V2C721CaseInsensitiveString", "string"]
+- !private ["Ps10Comparable", "CaseInsensitiveString"]
+- !private ["Ps10Comparable", "hashValue"]
+- !private ["Ps10Comparable", "lowercased"]
+- !private ["Ps28CustomDebugStringConvertible", "CaseInsensitiveString"]
+- !private ["Ps28CustomDebugStringConvertible", "hashValue"]
+- !private ["Ps28CustomDebugStringConvertible", "lowercased"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "CaseInsensitiveString"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "hashValue"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "lowercased"]
+- !private ["Ps17CustomReflectable", "CaseInsensitiveString"]
+- !private ["Ps17CustomReflectable", "hashValue"]
+- !private ["Ps17CustomReflectable", "lowercased"]
+- ["Ps23CustomStringConvertible", "ExtendedGraphemeClusterLiteralType"]
+- ["Ps23CustomStringConvertible", "StringLiteralType"]
+- ["Ps23CustomStringConvertible", "UnicodeScalarLiteralType"]
+- ["Ps23CustomStringConvertible", "description"]
+- ["Ps23CustomStringConvertible", "hashValue"]
+- ["Ps23CustomStringConvertible", "init"]
+- !private ["Ps23CustomStringConvertible", "string"]
+- ["Ps23CustomStringConvertible", ""]
+- !private ["P2C715DataConvertible", "CaseInsensitiveString"]
+- !private ["P2C715DataConvertible", "hashValue"]
+- !private ["P2C715DataConvertible", "lowercased"]
+- !private ["P2C717DataInitializable", "CaseInsensitiveString"]
+- !private ["P2C717DataInitializable", "hashValue"]
+- !private ["P2C717DataInitializable", "lowercased"]
+- !private ["P2C717DataRepresentable", "CaseInsensitiveString"]
+- !private ["P2C717DataRepresentable", "hashValue"]
+- !private ["P2C717DataRepresentable", "lowercased"]
+- !private ["Ps9Equatable", "CaseInsensitiveString"]
+- ["Ps9Equatable", "ExtendedGraphemeClusterLiteralType"]
+- ["Ps9Equatable", "StringLiteralType"]
+- ["Ps9Equatable", "UnicodeScalarLiteralType"]
+- ["Ps9Equatable", "description"]
+- ["Ps9Equatable", "hashValue"]
+- ["Ps9Equatable", "init"]
+- !private ["Ps9Equatable", "lowercased"]
+- !private ["Ps9Equatable", "string"]
+- ["Ps9Equatable", ""]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "CaseInsensitiveString"]
+- ["Ps41ExtendedGraphemeClusterLiteralConvertible", "ExtendedGraphemeClusterLiteralType"]
+- ["Ps41ExtendedGraphemeClusterLiteralConvertible", "StringLiteralType"]
+- ["Ps41ExtendedGraphemeClusterLiteralConvertible", "UnicodeScalarLiteralType"]
+- ["Ps41ExtendedGraphemeClusterLiteralConvertible", "description"]
+- ["Ps41ExtendedGraphemeClusterLiteralConvertible", "hashValue"]
+- ["Ps41ExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "lowercased"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "string"]
+- ["Ps41ExtendedGraphemeClusterLiteralConvertible", ""]
+- !private ["Ps8Hashable", "CaseInsensitiveString"]
+- ["Ps8Hashable", "ExtendedGraphemeClusterLiteralType"]
+- ["Ps8Hashable", "StringLiteralType"]
+- ["Ps8Hashable", "UnicodeScalarLiteralType"]
+- ["Ps8Hashable", "description"]
+- ["Ps8Hashable", "hashValue"]
+- ["Ps8Hashable", "init"]
+- !private ["Ps8Hashable", "lowercased"]
+- !private ["Ps8Hashable", "string"]
+- ["Ps8Hashable", ""]
+- !private ["Ps10MirrorPath", "CaseInsensitiveString"]
+- !private ["Ps10MirrorPath", "hashValue"]
+- !private ["Ps10MirrorPath", "lowercased"]
+- !private ["Ps12OutputStream", "CaseInsensitiveString"]
+- !private ["Ps12OutputStream", "hashValue"]
+- !private ["Ps12OutputStream", "lowercased"]
+- !private ["Ps10Streamable", "CaseInsensitiveString"]
+- !private ["Ps10Streamable", "hashValue"]
+- !private ["Ps10Streamable", "lowercased"]
+- ["SS", "CaseInsensitiveString"]
+- ["SS", "caseInsensitive"]
+- !private ["SS", "hashValue"]
+- !private ["SS", "lowercased"]
+- !private ["Ps30StringInterpolationConvertible", "CaseInsensitiveString"]
+- !private ["Ps30StringInterpolationConvertible", "hashValue"]
+- !private ["Ps30StringInterpolationConvertible", "lowercased"]
+- !private ["Ps24StringLiteralConvertible", "CaseInsensitiveString"]
+- ["Ps24StringLiteralConvertible", "ExtendedGraphemeClusterLiteralType"]
+- ["Ps24StringLiteralConvertible", "StringLiteralType"]
+- ["Ps24StringLiteralConvertible", "UnicodeScalarLiteralType"]
+- ["Ps24StringLiteralConvertible", "description"]
+- ["Ps24StringLiteralConvertible", "hashValue"]
+- ["Ps24StringLiteralConvertible", "init"]
+- !private ["Ps24StringLiteralConvertible", "lowercased"]
+- !private ["Ps24StringLiteralConvertible", "string"]
+- ["Ps24StringLiteralConvertible", ""]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "CaseInsensitiveString"]
+- ["Ps31UnicodeScalarLiteralConvertible", "ExtendedGraphemeClusterLiteralType"]
+- ["Ps31UnicodeScalarLiteralConvertible", "StringLiteralType"]
+- ["Ps31UnicodeScalarLiteralConvertible", "UnicodeScalarLiteralType"]
+- ["Ps31UnicodeScalarLiteralConvertible", "description"]
+- ["Ps31UnicodeScalarLiteralConvertible", "hashValue"]
+- ["Ps31UnicodeScalarLiteralConvertible", "init"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "lowercased"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "string"]
+- ["Ps31UnicodeScalarLiteralConvertible", ""]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "CaseInsensitiveString"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "hashValue"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "lowercased"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "CaseInsensitiveString"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "hashValue"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "lowercased"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "CaseInsensitiveString"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "hashValue"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "lowercased"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "CaseInsensitiveString"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "hashValue"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "lowercased"]
+depends-nominal:
+- "V2C721CaseInsensitiveString"
+- !private "Ps10Comparable"
+- !private "Ps28CustomDebugStringConvertible"
+- !private "Ps29CustomPlaygroundQuickLookable"
+- !private "Ps17CustomReflectable"
+- "Ps23CustomStringConvertible"
+- !private "P2C715DataConvertible"
+- !private "P2C717DataInitializable"
+- !private "P2C717DataRepresentable"
+- "Ps9Equatable"
+- "Ps41ExtendedGraphemeClusterLiteralConvertible"
+- "Ps8Hashable"
+- !private "Ps10MirrorPath"
+- !private "Ps12OutputStream"
+- !private "Ps10Streamable"
+- "SS"
+- !private "Ps30StringInterpolationConvertible"
+- "Ps24StringLiteralConvertible"
+- "Ps31UnicodeScalarLiteralConvertible"
+- !private "Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible"
+- !private "Ps32_BuiltinStringLiteralConvertible"
+- !private "Ps37_BuiltinUTF16StringLiteralConvertible"
+- !private "Ps39_BuiltinUnicodeScalarLiteralConvertible"
+depends-dynamic-lookup:
+depends-external:
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/shims/Visibility.h"
+- "/home/tanner/swift/usr/lib/swift/shims/UnicodeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStdint.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStddef.h"
+- "/home/tanner/swift/usr/lib/swift/shims/LibcShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeStubs.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RefCount.h"
+- "/home/tanner/swift/usr/lib/swift/shims/HeapObject.h"
+- "/home/tanner/swift/usr/lib/swift/shims/GlobalObjects.h"
+- "/home/tanner/swift/usr/lib/swift/shims/FoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/CoreFoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/tanner/swift/usr/lib/swift/shims/module.map"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+interface-hash: "56cae35be8916241f647b26d5044f636"

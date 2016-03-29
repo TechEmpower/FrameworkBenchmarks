@@ -1,0 +1,635 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "ByteType"
+provides-nominal:
+- "P4Data8ByteType"
+- "Vs5UInt8"
+- "Vs4Int8"
+- "V2C74Data"
+provides-member:
+- ["P4Data8ByteType", ""]
+- ["Vs5UInt8", ""]
+- ["Vs4Int8", ""]
+- ["V2C74Data", ""]
+- ["V2C74Data", "init"]
+- ["V2C74Data", "hexString"]
+- ["V2C74Data", "hexDescription"]
+- ["V2C74Data", "convert"]
+- ["V2C74Data", "init"]
+depends-top-level:
+- !private "!="
+- !private "+="
+- "Int"
+- !private "UnsafeBufferPointer"
+- !private "&&"
+- !private "+"
+- !private "Array"
+- "CustomStringConvertible"
+- !private ">"
+- "String"
+- "Int8"
+- "Data"
+- "CustomDebugStringConvertible"
+- !private "FloatLiteralType"
+- !private "%"
+- !private "withUnsafePointer"
+- !private "=="
+- !private "sizeof"
+- "UInt8"
+- !private "IntegerLiteralType"
+- !private "memcpy"
+- !private "<"
+- "UnsafePointer"
+- "ByteType"
+- !private "UnicodeScalarType"
+- !private "StringLiteralType"
+- !private "Byte"
+depends-member:
+- !private ["Sa", "Index"]
+- !private ["Sa", "Iterator"]
+- !private ["Sa", "SubSequence"]
+- !private ["Sa", "_Element"]
+- !private ["Sa", "init"]
+- !private ["Sa", "withUnsafeBufferPointer"]
+- !private ["Ps23ArrayLiteralConvertible", "Array"]
+- !private ["Ps23ArrayLiteralConvertible", "Index"]
+- !private ["Ps23ArrayLiteralConvertible", "Iterator"]
+- !private ["Ps23ArrayLiteralConvertible", "String"]
+- !private ["Ps23ArrayLiteralConvertible", "SubSequence"]
+- !private ["Ps23ArrayLiteralConvertible", "UInt8"]
+- !private ["Ps23ArrayLiteralConvertible", "UnsafeBufferPointer"]
+- !private ["Ps23ArrayLiteralConvertible", "UnsafePointer"]
+- !private ["Ps23ArrayLiteralConvertible", "_Element"]
+- !private ["Ps23ArrayLiteralConvertible", "bytes"]
+- ["Ps23ArrayLiteralConvertible", "debugDescription"]
+- ["Ps23ArrayLiteralConvertible", "description"]
+- !private ["Ps23ArrayLiteralConvertible", "enumerated"]
+- !private ["Ps23ArrayLiteralConvertible", "hexDescription"]
+- !private ["Ps23ArrayLiteralConvertible", "hexString"]
+- !private ["Ps23ArrayLiteralConvertible", "init"]
+- !private ["Ps23ArrayLiteralConvertible", "memcpy"]
+- !private ["Ps23ArrayLiteralConvertible", "sizeof"]
+- !private ["Ps23ArrayLiteralConvertible", "withUnsafeBufferPointer"]
+- !private ["Ps23ArrayLiteralConvertible", "withUnsafePointer"]
+- !private ["Vs10ArraySlice", "Index"]
+- !private ["Vs10ArraySlice", "Iterator"]
+- !private ["Ps18BidirectionalIndex", "Distance"]
+- !private ["Ps18BidirectionalIndex", "IntegerLiteralType"]
+- !private ["Ps18BidirectionalIndex", "Stride"]
+- !private ["Ps18BidirectionalIndex", "_DisallowMixedSignArithmetic"]
+- !private ["Ps18BidirectionalIndex", "init"]
+- !private ["Ps18BidirectionalIndex", "pointee"]
+- !private ["Ps17BitwiseOperations", "Distance"]
+- !private ["Ps17BitwiseOperations", "IntegerLiteralType"]
+- !private ["Ps17BitwiseOperations", "Stride"]
+- !private ["Ps17BitwiseOperations", "_DisallowMixedSignArithmetic"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["Ps7Boolean", "_getBuiltinLogicValue"]
+- !private ["Ps25BooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["P4Data8ByteType", "Distance"]
+- !private ["P4Data8ByteType", "IntegerLiteralType"]
+- !private ["P4Data8ByteType", "Stride"]
+- !private ["P4Data8ByteType", "_DisallowMixedSignArithmetic"]
+- ["P4Data8ByteType", ""]
+- !private ["Ps7CVarArg", "Distance"]
+- !private ["Ps7CVarArg", "IntegerLiteralType"]
+- !private ["Ps7CVarArg", "Stride"]
+- !private ["Ps7CVarArg", "_DisallowMixedSignArithmetic"]
+- !private ["Ps7CVarArg", "init"]
+- !private ["Ps7CVarArg", "pointee"]
+- !private ["Ps10Collection", "Array"]
+- !private ["Ps10Collection", "Index"]
+- !private ["Ps10Collection", "Iterator"]
+- !private ["Ps10Collection", "String"]
+- !private ["Ps10Collection", "SubSequence"]
+- !private ["Ps10Collection", "UInt8"]
+- !private ["Ps10Collection", "UnsafeBufferPointer"]
+- !private ["Ps10Collection", "UnsafePointer"]
+- !private ["Ps10Collection", "_Element"]
+- !private ["Ps10Collection", "baseAddress"]
+- !private ["Ps10Collection", "bytes"]
+- ["Ps10Collection", "debugDescription"]
+- ["Ps10Collection", "description"]
+- !private ["Ps10Collection", "enumerated"]
+- !private ["Ps10Collection", "hexDescription"]
+- !private ["Ps10Collection", "hexString"]
+- !private ["Ps10Collection", "init"]
+- !private ["Ps10Collection", "memcpy"]
+- !private ["Ps10Collection", "sizeof"]
+- !private ["Ps10Collection", "withUnsafeBufferPointer"]
+- !private ["Ps10Collection", "withUnsafePointer"]
+- !private ["Ps10Comparable", "Distance"]
+- !private ["Ps10Comparable", "IntegerLiteralType"]
+- !private ["Ps10Comparable", "Stride"]
+- !private ["Ps10Comparable", "_DisallowMixedSignArithmetic"]
+- !private ["Ps10Comparable", "init"]
+- !private ["Ps10Comparable", "pointee"]
+- !private ["Ps28CustomDebugStringConvertible", "Array"]
+- !private ["Ps28CustomDebugStringConvertible", "Index"]
+- !private ["Ps28CustomDebugStringConvertible", "Iterator"]
+- !private ["Ps28CustomDebugStringConvertible", "String"]
+- !private ["Ps28CustomDebugStringConvertible", "SubSequence"]
+- !private ["Ps28CustomDebugStringConvertible", "UInt8"]
+- !private ["Ps28CustomDebugStringConvertible", "UnsafeBufferPointer"]
+- !private ["Ps28CustomDebugStringConvertible", "UnsafePointer"]
+- !private ["Ps28CustomDebugStringConvertible", "_Element"]
+- !private ["Ps28CustomDebugStringConvertible", "baseAddress"]
+- !private ["Ps28CustomDebugStringConvertible", "bytes"]
+- ["Ps28CustomDebugStringConvertible", "debugDescription"]
+- ["Ps28CustomDebugStringConvertible", "description"]
+- !private ["Ps28CustomDebugStringConvertible", "enumerated"]
+- !private ["Ps28CustomDebugStringConvertible", "hexDescription"]
+- !private ["Ps28CustomDebugStringConvertible", "hexString"]
+- !private ["Ps28CustomDebugStringConvertible", "init"]
+- !private ["Ps28CustomDebugStringConvertible", "memcpy"]
+- !private ["Ps28CustomDebugStringConvertible", "pointee"]
+- !private ["Ps28CustomDebugStringConvertible", "sizeof"]
+- ["Ps28CustomDebugStringConvertible", "some"]
+- !private ["Ps28CustomDebugStringConvertible", "withUnsafeBufferPointer"]
+- !private ["Ps28CustomDebugStringConvertible", "withUnsafePointer"]
+- ["Ps28CustomDebugStringConvertible", ""]
+- !private ["Ps29CustomPlaygroundQuickLookable", "Distance"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "IntegerLiteralType"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "Stride"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "_DisallowMixedSignArithmetic"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "_getBuiltinLogicValue"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "init"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "pointee"]
+- !private ["Ps17CustomReflectable", "Distance"]
+- !private ["Ps17CustomReflectable", "Index"]
+- !private ["Ps17CustomReflectable", "IntegerLiteralType"]
+- !private ["Ps17CustomReflectable", "Iterator"]
+- !private ["Ps17CustomReflectable", "Stride"]
+- !private ["Ps17CustomReflectable", "SubSequence"]
+- !private ["Ps17CustomReflectable", "_DisallowMixedSignArithmetic"]
+- !private ["Ps17CustomReflectable", "_Element"]
+- !private ["Ps17CustomReflectable", "_getBuiltinLogicValue"]
+- !private ["Ps17CustomReflectable", "init"]
+- !private ["Ps17CustomReflectable", "pointee"]
+- !private ["Ps17CustomReflectable", "withUnsafeBufferPointer"]
+- !private ["Ps23CustomStringConvertible", "Array"]
+- !private ["Ps23CustomStringConvertible", "Distance"]
+- !private ["Ps23CustomStringConvertible", "Index"]
+- !private ["Ps23CustomStringConvertible", "IntegerLiteralType"]
+- !private ["Ps23CustomStringConvertible", "Iterator"]
+- !private ["Ps23CustomStringConvertible", "Stride"]
+- !private ["Ps23CustomStringConvertible", "String"]
+- !private ["Ps23CustomStringConvertible", "SubSequence"]
+- !private ["Ps23CustomStringConvertible", "UInt8"]
+- !private ["Ps23CustomStringConvertible", "UnsafeBufferPointer"]
+- !private ["Ps23CustomStringConvertible", "UnsafePointer"]
+- !private ["Ps23CustomStringConvertible", "_DisallowMixedSignArithmetic"]
+- !private ["Ps23CustomStringConvertible", "_Element"]
+- !private ["Ps23CustomStringConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps23CustomStringConvertible", "bytes"]
+- ["Ps23CustomStringConvertible", "debugDescription"]
+- ["Ps23CustomStringConvertible", "description"]
+- !private ["Ps23CustomStringConvertible", "enumerated"]
+- !private ["Ps23CustomStringConvertible", "hexDescription"]
+- !private ["Ps23CustomStringConvertible", "hexString"]
+- !private ["Ps23CustomStringConvertible", "init"]
+- !private ["Ps23CustomStringConvertible", "memcpy"]
+- !private ["Ps23CustomStringConvertible", "sizeof"]
+- !private ["Ps23CustomStringConvertible", "withUnsafeBufferPointer"]
+- !private ["Ps23CustomStringConvertible", "withUnsafePointer"]
+- ["Ps23CustomStringConvertible", ""]
+- !private ["V2C74Data", "Array"]
+- !private ["V2C74Data", "Byte"]
+- ["V2C74Data", "ByteType"]
+- ["V2C74Data", "Int"]
+- !private ["V2C74Data", "Iterator"]
+- ["V2C74Data", "String"]
+- !private ["V2C74Data", "UInt8"]
+- !private ["V2C74Data", "UnsafeBufferPointer"]
+- ["V2C74Data", "UnsafePointer"]
+- !private ["V2C74Data", "bytes"]
+- ["V2C74Data", "convert"]
+- ["V2C74Data", "debugDescription"]
+- ["V2C74Data", "deinit"]
+- ["V2C74Data", "description"]
+- !private ["V2C74Data", "enumerated"]
+- ["V2C74Data", "hexDescription"]
+- ["V2C74Data", "hexString"]
+- ["V2C74Data", "init"]
+- !private ["V2C74Data", "memcpy"]
+- !private ["V2C74Data", "sizeof"]
+- !private ["V2C74Data", "withUnsafePointer"]
+- !private ["P2C715DataConvertible", "init"]
+- !private ["P2C717DataInitializable", "init"]
+- !private ["P2C717DataRepresentable", "init"]
+- !private ["Vs18EnumeratedIterator", "Element"]
+- !private ["Vs18EnumeratedSequence", "Iterator"]
+- !private ["Ps9Equatable", "Array"]
+- !private ["Ps9Equatable", "Distance"]
+- !private ["Ps9Equatable", "IntegerLiteralType"]
+- !private ["Ps9Equatable", "Iterator"]
+- !private ["Ps9Equatable", "Stride"]
+- !private ["Ps9Equatable", "String"]
+- !private ["Ps9Equatable", "UInt8"]
+- !private ["Ps9Equatable", "UnsafeBufferPointer"]
+- !private ["Ps9Equatable", "UnsafePointer"]
+- !private ["Ps9Equatable", "_DisallowMixedSignArithmetic"]
+- !private ["Ps9Equatable", "_getBuiltinLogicValue"]
+- !private ["Ps9Equatable", "bytes"]
+- ["Ps9Equatable", "debugDescription"]
+- ["Ps9Equatable", "description"]
+- !private ["Ps9Equatable", "enumerated"]
+- !private ["Ps9Equatable", "hexDescription"]
+- !private ["Ps9Equatable", "hexString"]
+- !private ["Ps9Equatable", "init"]
+- !private ["Ps9Equatable", "memcpy"]
+- !private ["Ps9Equatable", "pointee"]
+- !private ["Ps9Equatable", "sizeof"]
+- !private ["Ps9Equatable", "withUnsafePointer"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "Array"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "Iterator"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "String"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "UInt8"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "UnsafeBufferPointer"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "UnsafePointer"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "bytes"]
+- ["Ps41ExtendedGraphemeClusterLiteralConvertible", "debugDescription"]
+- ["Ps41ExtendedGraphemeClusterLiteralConvertible", "description"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "enumerated"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "hexDescription"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "hexString"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "memcpy"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "sizeof"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "withUnsafePointer"]
+- !private ["Ps12ForwardIndex", "Distance"]
+- !private ["Ps12ForwardIndex", "IntegerLiteralType"]
+- !private ["Ps12ForwardIndex", "Stride"]
+- !private ["Ps12ForwardIndex", "_DisallowMixedSignArithmetic"]
+- !private ["Ps12ForwardIndex", "init"]
+- !private ["Ps12ForwardIndex", "pointee"]
+- !private ["Ps8Hashable", "Distance"]
+- !private ["Ps8Hashable", "IntegerLiteralType"]
+- !private ["Ps8Hashable", "Stride"]
+- !private ["Ps8Hashable", "_DisallowMixedSignArithmetic"]
+- !private ["Ps8Hashable", "_getBuiltinLogicValue"]
+- !private ["Ps8Hashable", "init"]
+- !private ["Ps8Hashable", "pointee"]
+- !private ["Ps9Indexable", "Array"]
+- !private ["Ps9Indexable", "Index"]
+- !private ["Ps9Indexable", "Iterator"]
+- !private ["Ps9Indexable", "String"]
+- !private ["Ps9Indexable", "SubSequence"]
+- !private ["Ps9Indexable", "UInt8"]
+- !private ["Ps9Indexable", "UnsafeBufferPointer"]
+- !private ["Ps9Indexable", "UnsafePointer"]
+- !private ["Ps9Indexable", "_Element"]
+- !private ["Ps9Indexable", "baseAddress"]
+- !private ["Ps9Indexable", "bytes"]
+- ["Ps9Indexable", "debugDescription"]
+- ["Ps9Indexable", "description"]
+- !private ["Ps9Indexable", "enumerated"]
+- !private ["Ps9Indexable", "hexDescription"]
+- !private ["Ps9Indexable", "hexString"]
+- !private ["Ps9Indexable", "init"]
+- !private ["Ps9Indexable", "memcpy"]
+- !private ["Ps9Indexable", "sizeof"]
+- !private ["Ps9Indexable", "withUnsafeBufferPointer"]
+- !private ["Ps9Indexable", "withUnsafePointer"]
+- !private ["Vs16IndexingIterator", "Element"]
+- !private ["Si", "Distance"]
+- !private ["Si", "IntegerLiteralType"]
+- !private ["Si", "Stride"]
+- ["Vs4Int8", "deinit"]
+- !private ["Ps7Integer", "Distance"]
+- !private ["Ps7Integer", "IntegerLiteralType"]
+- !private ["Ps7Integer", "Stride"]
+- !private ["Ps7Integer", "_DisallowMixedSignArithmetic"]
+- !private ["Ps17IntegerArithmetic", "Distance"]
+- !private ["Ps17IntegerArithmetic", "IntegerLiteralType"]
+- !private ["Ps17IntegerArithmetic", "Stride"]
+- !private ["Ps17IntegerArithmetic", "_DisallowMixedSignArithmetic"]
+- !private ["Ps25IntegerLiteralConvertible", "Distance"]
+- !private ["Ps25IntegerLiteralConvertible", "IntegerLiteralType"]
+- !private ["Ps25IntegerLiteralConvertible", "Stride"]
+- !private ["Ps25IntegerLiteralConvertible", "_DisallowMixedSignArithmetic"]
+- !private ["Ps16IteratorProtocol", "Element"]
+- !private ["Ps10MirrorPath", "Distance"]
+- !private ["Ps10MirrorPath", "IntegerLiteralType"]
+- !private ["Ps10MirrorPath", "Stride"]
+- !private ["Ps10MirrorPath", "init"]
+- !private ["Ps17MutableCollection", "Array"]
+- !private ["Ps17MutableCollection", "Index"]
+- !private ["Ps17MutableCollection", "Iterator"]
+- !private ["Ps17MutableCollection", "String"]
+- !private ["Ps17MutableCollection", "SubSequence"]
+- !private ["Ps17MutableCollection", "UInt8"]
+- !private ["Ps17MutableCollection", "UnsafeBufferPointer"]
+- !private ["Ps17MutableCollection", "UnsafePointer"]
+- !private ["Ps17MutableCollection", "_Element"]
+- !private ["Ps17MutableCollection", "bytes"]
+- ["Ps17MutableCollection", "debugDescription"]
+- ["Ps17MutableCollection", "description"]
+- !private ["Ps17MutableCollection", "enumerated"]
+- !private ["Ps17MutableCollection", "hexDescription"]
+- !private ["Ps17MutableCollection", "hexString"]
+- !private ["Ps17MutableCollection", "init"]
+- !private ["Ps17MutableCollection", "memcpy"]
+- !private ["Ps17MutableCollection", "sizeof"]
+- !private ["Ps17MutableCollection", "withUnsafeBufferPointer"]
+- !private ["Ps17MutableCollection", "withUnsafePointer"]
+- !private ["Ps16MutableIndexable", "Array"]
+- !private ["Ps16MutableIndexable", "Index"]
+- !private ["Ps16MutableIndexable", "Iterator"]
+- !private ["Ps16MutableIndexable", "String"]
+- !private ["Ps16MutableIndexable", "SubSequence"]
+- !private ["Ps16MutableIndexable", "UInt8"]
+- !private ["Ps16MutableIndexable", "UnsafeBufferPointer"]
+- !private ["Ps16MutableIndexable", "UnsafePointer"]
+- !private ["Ps16MutableIndexable", "_Element"]
+- !private ["Ps16MutableIndexable", "bytes"]
+- ["Ps16MutableIndexable", "debugDescription"]
+- ["Ps16MutableIndexable", "description"]
+- !private ["Ps16MutableIndexable", "enumerated"]
+- !private ["Ps16MutableIndexable", "hexDescription"]
+- !private ["Ps16MutableIndexable", "hexString"]
+- !private ["Ps16MutableIndexable", "init"]
+- !private ["Ps16MutableIndexable", "memcpy"]
+- !private ["Ps16MutableIndexable", "sizeof"]
+- !private ["Ps16MutableIndexable", "withUnsafeBufferPointer"]
+- !private ["Ps16MutableIndexable", "withUnsafePointer"]
+- !private ["Ps21NilLiteralConvertible", "Array"]
+- !private ["Ps21NilLiteralConvertible", "Iterator"]
+- !private ["Ps21NilLiteralConvertible", "String"]
+- !private ["Ps21NilLiteralConvertible", "UInt8"]
+- !private ["Ps21NilLiteralConvertible", "UnsafeBufferPointer"]
+- !private ["Ps21NilLiteralConvertible", "UnsafePointer"]
+- !private ["Ps21NilLiteralConvertible", "bytes"]
+- ["Ps21NilLiteralConvertible", "debugDescription"]
+- ["Ps21NilLiteralConvertible", "description"]
+- !private ["Ps21NilLiteralConvertible", "enumerated"]
+- !private ["Ps21NilLiteralConvertible", "hexDescription"]
+- !private ["Ps21NilLiteralConvertible", "hexString"]
+- !private ["Ps21NilLiteralConvertible", "init"]
+- !private ["Ps21NilLiteralConvertible", "memcpy"]
+- !private ["Ps21NilLiteralConvertible", "pointee"]
+- !private ["Ps21NilLiteralConvertible", "sizeof"]
+- ["Ps21NilLiteralConvertible", "some"]
+- !private ["Ps21NilLiteralConvertible", "withUnsafePointer"]
+- !private ["Sq", "deinit"]
+- ["Sq", "some"]
+- !private ["Ps12OutputStream", "init"]
+- !private ["Ps17RandomAccessIndex", "Distance"]
+- !private ["Ps17RandomAccessIndex", "IntegerLiteralType"]
+- !private ["Ps17RandomAccessIndex", "Stride"]
+- !private ["Ps17RandomAccessIndex", "_DisallowMixedSignArithmetic"]
+- !private ["Ps17RandomAccessIndex", "init"]
+- !private ["Ps17RandomAccessIndex", "pointee"]
+- !private ["Ps26RangeReplaceableCollection", "Array"]
+- !private ["Ps26RangeReplaceableCollection", "Index"]
+- !private ["Ps26RangeReplaceableCollection", "Iterator"]
+- !private ["Ps26RangeReplaceableCollection", "String"]
+- !private ["Ps26RangeReplaceableCollection", "SubSequence"]
+- !private ["Ps26RangeReplaceableCollection", "UInt8"]
+- !private ["Ps26RangeReplaceableCollection", "UnsafeBufferPointer"]
+- !private ["Ps26RangeReplaceableCollection", "UnsafePointer"]
+- !private ["Ps26RangeReplaceableCollection", "_Element"]
+- !private ["Ps26RangeReplaceableCollection", "bytes"]
+- ["Ps26RangeReplaceableCollection", "debugDescription"]
+- ["Ps26RangeReplaceableCollection", "description"]
+- !private ["Ps26RangeReplaceableCollection", "enumerated"]
+- !private ["Ps26RangeReplaceableCollection", "hexDescription"]
+- !private ["Ps26RangeReplaceableCollection", "hexString"]
+- !private ["Ps26RangeReplaceableCollection", "init"]
+- !private ["Ps26RangeReplaceableCollection", "memcpy"]
+- !private ["Ps26RangeReplaceableCollection", "sizeof"]
+- !private ["Ps26RangeReplaceableCollection", "withUnsafeBufferPointer"]
+- !private ["Ps26RangeReplaceableCollection", "withUnsafePointer"]
+- !private ["Ps8Sequence", "Array"]
+- !private ["Ps8Sequence", "Element"]
+- !private ["Ps8Sequence", "Index"]
+- !private ["Ps8Sequence", "Iterator"]
+- !private ["Ps8Sequence", "String"]
+- !private ["Ps8Sequence", "SubSequence"]
+- !private ["Ps8Sequence", "UInt8"]
+- !private ["Ps8Sequence", "UnsafeBufferPointer"]
+- !private ["Ps8Sequence", "UnsafePointer"]
+- !private ["Ps8Sequence", "_Element"]
+- !private ["Ps8Sequence", "baseAddress"]
+- !private ["Ps8Sequence", "bytes"]
+- ["Ps8Sequence", "debugDescription"]
+- ["Ps8Sequence", "description"]
+- !private ["Ps8Sequence", "enumerated"]
+- !private ["Ps8Sequence", "hexDescription"]
+- !private ["Ps8Sequence", "hexString"]
+- !private ["Ps8Sequence", "init"]
+- !private ["Ps8Sequence", "memcpy"]
+- !private ["Ps8Sequence", "sizeof"]
+- !private ["Ps8Sequence", "withUnsafeBufferPointer"]
+- !private ["Ps8Sequence", "withUnsafePointer"]
+- !private ["Ps13SignedInteger", "Distance"]
+- !private ["Ps13SignedInteger", "IntegerLiteralType"]
+- !private ["Ps13SignedInteger", "Stride"]
+- !private ["Ps12SignedNumber", "Distance"]
+- !private ["Ps12SignedNumber", "IntegerLiteralType"]
+- !private ["Ps12SignedNumber", "Stride"]
+- !private ["Ps10Streamable", "init"]
+- !private ["Ps10Strideable", "Distance"]
+- !private ["Ps10Strideable", "IntegerLiteralType"]
+- !private ["Ps10Strideable", "Stride"]
+- !private ["Ps10Strideable", "_DisallowMixedSignArithmetic"]
+- !private ["Ps10Strideable", "init"]
+- !private ["Ps10Strideable", "pointee"]
+- !private ["SS", "init"]
+- !private ["Ps30StringInterpolationConvertible", "init"]
+- !private ["Ps24StringLiteralConvertible", "Array"]
+- !private ["Ps24StringLiteralConvertible", "Iterator"]
+- !private ["Ps24StringLiteralConvertible", "String"]
+- !private ["Ps24StringLiteralConvertible", "UInt8"]
+- !private ["Ps24StringLiteralConvertible", "UnsafeBufferPointer"]
+- !private ["Ps24StringLiteralConvertible", "UnsafePointer"]
+- !private ["Ps24StringLiteralConvertible", "bytes"]
+- ["Ps24StringLiteralConvertible", "debugDescription"]
+- ["Ps24StringLiteralConvertible", "description"]
+- !private ["Ps24StringLiteralConvertible", "enumerated"]
+- !private ["Ps24StringLiteralConvertible", "hexDescription"]
+- !private ["Ps24StringLiteralConvertible", "hexString"]
+- !private ["Ps24StringLiteralConvertible", "init"]
+- !private ["Ps24StringLiteralConvertible", "memcpy"]
+- !private ["Ps24StringLiteralConvertible", "sizeof"]
+- !private ["Ps24StringLiteralConvertible", "withUnsafePointer"]
+- !private ["Vs5UInt8", "Distance"]
+- !private ["Vs5UInt8", "IntegerLiteralType"]
+- !private ["Vs5UInt8", "Stride"]
+- !private ["Vs5UInt8", "_DisallowMixedSignArithmetic"]
+- ["Vs5UInt8", "deinit"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "Array"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "Iterator"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "String"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "UInt8"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "UnsafeBufferPointer"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "UnsafePointer"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "bytes"]
+- ["Ps31UnicodeScalarLiteralConvertible", "debugDescription"]
+- ["Ps31UnicodeScalarLiteralConvertible", "description"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "enumerated"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "hexDescription"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "hexString"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "init"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "memcpy"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "sizeof"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "withUnsafePointer"]
+- !private ["SR", "Iterator"]
+- !private ["SR", "baseAddress"]
+- !private ["SR", "init"]
+- !private ["Vs27UnsafeBufferPointerIterator", "Element"]
+- !private ["SP", "init"]
+- !private ["SP", "pointee"]
+- !private ["Ps15UnsignedInteger", "Distance"]
+- !private ["Ps15UnsignedInteger", "IntegerLiteralType"]
+- !private ["Ps15UnsignedInteger", "Stride"]
+- !private ["Ps15UnsignedInteger", "_DisallowMixedSignArithmetic"]
+- !private ["Ps14_ArrayProtocol", "Index"]
+- !private ["Ps14_ArrayProtocol", "Iterator"]
+- !private ["Ps14_ArrayProtocol", "SubSequence"]
+- !private ["Ps14_ArrayProtocol", "_Element"]
+- !private ["Ps14_ArrayProtocol", "init"]
+- !private ["Ps14_ArrayProtocol", "withUnsafeBufferPointer"]
+- !private ["Ps33_BuiltinBooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "Distance"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "IntegerLiteralType"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "Stride"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "_DisallowMixedSignArithmetic"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "init"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "init"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "init"]
+- !private ["Ps24_DestructorSafeContainer", "Index"]
+- !private ["Ps24_DestructorSafeContainer", "Iterator"]
+- !private ["Ps24_DestructorSafeContainer", "SubSequence"]
+- !private ["Ps24_DestructorSafeContainer", "_Element"]
+- !private ["Ps24_DestructorSafeContainer", "init"]
+- !private ["Ps24_DestructorSafeContainer", "withUnsafeBufferPointer"]
+- !private ["Ps28_DisallowMixedSignArithmetic", "Distance"]
+- !private ["Ps28_DisallowMixedSignArithmetic", "IntegerLiteralType"]
+- !private ["Ps28_DisallowMixedSignArithmetic", "Stride"]
+- !private ["Ps28_DisallowMixedSignArithmetic", "_DisallowMixedSignArithmetic"]
+- !private ["Ps14_Incrementable", "Distance"]
+- !private ["Ps14_Incrementable", "IntegerLiteralType"]
+- !private ["Ps14_Incrementable", "Stride"]
+- !private ["Ps14_Incrementable", "_DisallowMixedSignArithmetic"]
+- !private ["Ps14_Incrementable", "init"]
+- !private ["Ps14_Incrementable", "pointee"]
+- !private ["Ps8_Integer", "Distance"]
+- !private ["Ps8_Integer", "IntegerLiteralType"]
+- !private ["Ps8_Integer", "Stride"]
+- !private ["Ps8_Integer", "_DisallowMixedSignArithmetic"]
+- !private ["Ps18_IntegerArithmetic", "Distance"]
+- !private ["Ps18_IntegerArithmetic", "IntegerLiteralType"]
+- !private ["Ps18_IntegerArithmetic", "Stride"]
+- !private ["Ps18_IntegerArithmetic", "_DisallowMixedSignArithmetic"]
+- !private ["Ps8_Pointer", "init"]
+- !private ["Ps8_Pointer", "pointee"]
+- !private ["Ps22_RandomAccessAmbiguity", "Distance"]
+- !private ["Ps22_RandomAccessAmbiguity", "IntegerLiteralType"]
+- !private ["Ps22_RandomAccessAmbiguity", "Stride"]
+- !private ["Ps22_RandomAccessAmbiguity", "_DisallowMixedSignArithmetic"]
+- !private ["Ps22_RandomAccessAmbiguity", "init"]
+- !private ["Ps22_RandomAccessAmbiguity", "pointee"]
+- !private ["Ps14_SignedInteger", "Distance"]
+- !private ["Ps14_SignedInteger", "IntegerLiteralType"]
+- !private ["Ps14_SignedInteger", "Stride"]
+- !private ["Ps14_StringElement", "Distance"]
+- !private ["Ps14_StringElement", "IntegerLiteralType"]
+- !private ["Ps14_StringElement", "Stride"]
+- !private ["Ps14_StringElement", "_DisallowMixedSignArithmetic"]
+depends-nominal:
+- !private "Sa"
+- "Ps23ArrayLiteralConvertible"
+- !private "Vs10ArraySlice"
+- !private "Ps18BidirectionalIndex"
+- !private "Ps17BitwiseOperations"
+- !private "Sb"
+- !private "Ps7Boolean"
+- !private "Ps25BooleanLiteralConvertible"
+- "P4Data8ByteType"
+- !private "Ps7CVarArg"
+- "Ps10Collection"
+- !private "Ps10Comparable"
+- "Ps28CustomDebugStringConvertible"
+- !private "Ps29CustomPlaygroundQuickLookable"
+- !private "Ps17CustomReflectable"
+- "Ps23CustomStringConvertible"
+- "V2C74Data"
+- !private "P2C715DataConvertible"
+- !private "P2C717DataInitializable"
+- !private "P2C717DataRepresentable"
+- !private "Vs18EnumeratedIterator"
+- !private "Vs18EnumeratedSequence"
+- "Ps9Equatable"
+- "Ps41ExtendedGraphemeClusterLiteralConvertible"
+- !private "Ps12ForwardIndex"
+- !private "Ps8Hashable"
+- "Ps9Indexable"
+- !private "Vs16IndexingIterator"
+- !private "Si"
+- "Vs4Int8"
+- !private "Ps7Integer"
+- !private "Ps17IntegerArithmetic"
+- !private "Ps25IntegerLiteralConvertible"
+- !private "Ps16IteratorProtocol"
+- !private "Ps10MirrorPath"
+- "Ps17MutableCollection"
+- "Ps16MutableIndexable"
+- "Ps21NilLiteralConvertible"
+- "Sq"
+- !private "Ps12OutputStream"
+- !private "Ps17RandomAccessIndex"
+- "Ps26RangeReplaceableCollection"
+- "Ps8Sequence"
+- !private "Ps13SignedInteger"
+- !private "Ps12SignedNumber"
+- !private "Ps10Streamable"
+- !private "Ps10Strideable"
+- !private "SS"
+- !private "Ps30StringInterpolationConvertible"
+- "Ps24StringLiteralConvertible"
+- "Vs5UInt8"
+- "Ps31UnicodeScalarLiteralConvertible"
+- !private "SR"
+- !private "Vs27UnsafeBufferPointerIterator"
+- !private "SP"
+- !private "Ps15UnsignedInteger"
+- !private "Ps14_ArrayProtocol"
+- !private "Ps33_BuiltinBooleanLiteralConvertible"
+- !private "Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible"
+- !private "Ps33_BuiltinIntegerLiteralConvertible"
+- !private "Ps32_BuiltinStringLiteralConvertible"
+- !private "Ps37_BuiltinUTF16StringLiteralConvertible"
+- !private "Ps39_BuiltinUnicodeScalarLiteralConvertible"
+- !private "Ps24_DestructorSafeContainer"
+- !private "Ps28_DisallowMixedSignArithmetic"
+- !private "Ps14_Incrementable"
+- !private "Ps8_Integer"
+- !private "Ps18_IntegerArithmetic"
+- !private "Ps8_Pointer"
+- !private "Ps22_RandomAccessAmbiguity"
+- !private "Ps14_SignedInteger"
+- !private "Ps14_StringElement"
+depends-dynamic-lookup:
+depends-external:
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/shims/Visibility.h"
+- "/home/tanner/swift/usr/lib/swift/shims/UnicodeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStdint.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStddef.h"
+- "/home/tanner/swift/usr/lib/swift/shims/LibcShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeStubs.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RefCount.h"
+- "/home/tanner/swift/usr/lib/swift/shims/HeapObject.h"
+- "/home/tanner/swift/usr/lib/swift/shims/GlobalObjects.h"
+- "/home/tanner/swift/usr/lib/swift/shims/FoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/CoreFoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/tanner/swift/usr/lib/swift/shims/module.map"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/OperatingSystem.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+interface-hash: "fa35458f1a55cec2bfa8b2841b2087f6"

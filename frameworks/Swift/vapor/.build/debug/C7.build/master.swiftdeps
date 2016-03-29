@@ -1,0 +1,18 @@
+version: "Swift version 3.0-dev (LLVM b010debd0e, Clang 3e4d01d89b, Swift 7182c58cb2)"
+options: "48059d5167ddd29ebeafe9c8551d14cc"
+build_time: [512525436, 608329000]
+inputs:
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/AsyncStream.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/Data.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/Stream.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/StreamServer.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/AsyncStreamClient.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/Byte.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/CustomDataStore.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/Storage.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/URI.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/CaseInsensitiveString.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/Drain.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/StreamClient.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/StreamSequence.swift": [512525431, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/AsyncStreamServer.swift": [512525431, 0]

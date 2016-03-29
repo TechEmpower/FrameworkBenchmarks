@@ -1,0 +1,70 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "Abort"
+provides-nominal:
+- "O5Vapor5Abort"
+provides-member:
+- ["O5Vapor5Abort", ""]
+depends-top-level:
+- "String"
+- !private "FloatLiteralType"
+- "Response"
+- !private "IntegerLiteralType"
+- "ErrorProtocol"
+- "StringInitializable"
+- "Abort"
+depends-member:
+- ["O5Vapor5Abort", "BadRequest"]
+- ["O5Vapor5Abort", "Custom"]
+- ["O5Vapor5Abort", "InternalServerError"]
+- ["O5Vapor5Abort", "InvalidParameter"]
+- ["O5Vapor5Abort", "NotFound"]
+- ["O5Vapor5Abort", "Response"]
+- ["O5Vapor5Abort", "String"]
+- ["O5Vapor5Abort", "StringInitializable"]
+- ["O5Vapor5Abort", "_code"]
+- ["O5Vapor5Abort", "_domain"]
+- ["O5Vapor5Abort", "deinit"]
+- ["Ps9AnyObject", "Status"]
+- ["Ps9Equatable", "Status"]
+- ["Ps13ErrorProtocol", "_code"]
+- ["Ps13ErrorProtocol", "_domain"]
+- ["Ps13ErrorProtocol", ""]
+- ["C5Vapor8Response", "Status"]
+- ["P5Vapor21ResponseRepresentable", "Status"]
+depends-nominal:
+- "O5Vapor5Abort"
+- "Ps9AnyObject"
+- "Ps9Equatable"
+- "Ps13ErrorProtocol"
+- "C5Vapor8Response"
+- "P5Vapor21ResponseRepresentable"
+depends-dynamic-lookup:
+depends-external:
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/shims/Visibility.h"
+- "/home/tanner/swift/usr/lib/swift/shims/UnicodeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStdint.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStddef.h"
+- "/home/tanner/swift/usr/lib/swift/shims/LibcShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeStubs.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RefCount.h"
+- "/home/tanner/swift/usr/lib/swift/shims/HeapObject.h"
+- "/home/tanner/swift/usr/lib/swift/shims/GlobalObjects.h"
+- "/home/tanner/swift/usr/lib/swift/shims/FoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/CoreFoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/tanner/swift/usr/lib/swift/shims/module.map"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/InterchangeData.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Data.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/OperatingSystem.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/libc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/String.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Hummingbird.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Strand.swiftmodule"
+interface-hash: "cab7e0db60212e486aea50b72148267e"

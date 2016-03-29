@@ -1,0 +1,550 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "Host"
+- "BranchRouter"
+- "CompatibilityGenerator"
+provides-nominal:
+- "C5Vapor12BranchRouter"
+- "V5Vapor22CompatibilityGenerator"
+provides-member:
+- ["C5Vapor12BranchRouter", ""]
+- ["V5Vapor22CompatibilityGenerator", ""]
+depends-top-level:
+- "IteratorProtocol"
+- "String"
+- !private "<"
+- "Dictionary"
+- "CompatibilityGenerator"
+- "Request"
+- !private "UnicodeScalarType"
+- !private "FloatLiteralType"
+- "Host"
+- "RouterDriver"
+- "Branch"
+- "BranchRouter"
+- "ExtendedGraphemeClusterType"
+- !private "IntegerLiteralType"
+- !private "=="
+- !private "+="
+- !private "StringLiteralType"
+- "Route"
+- !private "??"
+depends-member:
+- !private ["Vs11AnyIterator", "Element"]
+- !private ["Ps9AnyObject", "Branch"]
+- ["Ps9AnyObject", "Handler"]
+- ["Ps9AnyObject", "Method"]
+- !private ["Ps9AnyObject", "extendBranch"]
+- !private ["Ps9AnyObject", "handle"]
+- !private ["Ps9AnyObject", "handler"]
+- !private ["Ps9AnyObject", "hostname"]
+- !private ["Ps9AnyObject", "init"]
+- !private ["Ps9AnyObject", "method"]
+- !private ["Ps9AnyObject", "path"]
+- ["Ps9AnyObject", "register"]
+- ["Ps9AnyObject", "route"]
+- !private ["Ps9AnyObject", "tree"]
+- ["Ps9AnyObject", ""]
+- !private ["Vs11AnySequence", "Iterator"]
+- !private ["Vs11AnySequence", "deinit"]
+- !private ["Sa", "Index"]
+- !private ["Sa", "Iterator"]
+- !private ["Sa", "SubSequence"]
+- !private ["Sa", "_Element"]
+- !private ["Sa", "count"]
+- !private ["Sa", "deinit"]
+- !private ["Sa", "map"]
+- !private ["Sa", "subscript"]
+- !private ["Ps23ArrayLiteralConvertible", "Index"]
+- !private ["Ps23ArrayLiteralConvertible", "Iterator"]
+- !private ["Ps23ArrayLiteralConvertible", "SubSequence"]
+- !private ["Ps23ArrayLiteralConvertible", "_Element"]
+- !private ["Ps23ArrayLiteralConvertible", "count"]
+- !private ["Ps23ArrayLiteralConvertible", "map"]
+- !private ["Ps23ArrayLiteralConvertible", "subscript"]
+- !private ["Vs10ArraySlice", "Index"]
+- !private ["Vs10ArraySlice", "Iterator"]
+- !private ["Ps18BidirectionalIndex", "Distance"]
+- !private ["Ps18BidirectionalIndex", "IntegerLiteralType"]
+- !private ["P5Vapor22BitshiftOperationsType", "Distance"]
+- !private ["P5Vapor22BitshiftOperationsType", "IntegerLiteralType"]
+- !private ["Ps17BitwiseOperations", "Distance"]
+- !private ["Ps17BitwiseOperations", "IntegerLiteralType"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["Ps7Boolean", "_getBuiltinLogicValue"]
+- !private ["Ps25BooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["C5Vapor6Branch", "extendBranch"]
+- !private ["C5Vapor6Branch", "handle"]
+- !private ["C5Vapor6Branch", "init"]
+- ["C5Vapor12BranchRouter", "Branch"]
+- ["C5Vapor12BranchRouter", "Host"]
+- ["C5Vapor12BranchRouter", "Request"]
+- ["C5Vapor12BranchRouter", "Route"]
+- ["C5Vapor12BranchRouter", "deinit"]
+- ["C5Vapor12BranchRouter", "init"]
+- ["C5Vapor12BranchRouter", "register"]
+- ["C5Vapor12BranchRouter", "route"]
+- !private ["C5Vapor12BranchRouter", "tree"]
+- !private ["P5Vapor15ByteConvertible", "Distance"]
+- !private ["P5Vapor15ByteConvertible", "IntegerLiteralType"]
+- !private ["P5Vapor11CSArrayType", "Index"]
+- !private ["P5Vapor11CSArrayType", "Iterator"]
+- !private ["P5Vapor11CSArrayType", "SubSequence"]
+- !private ["P5Vapor11CSArrayType", "_Element"]
+- !private ["P5Vapor11CSArrayType", "count"]
+- !private ["P5Vapor11CSArrayType", "map"]
+- !private ["P5Vapor11CSArrayType", "subscript"]
+- !private ["Ps7CVarArg", "Distance"]
+- !private ["Ps7CVarArg", "IntegerLiteralType"]
+- !private ["Vs9Character", "deinit"]
+- !private ["VSS13CharacterView", "Index"]
+- !private ["VSS13CharacterView", "Iterator"]
+- !private ["VSS13CharacterView", "SubSequence"]
+- !private ["VSS13CharacterView", "_Element"]
+- !private ["VSS13CharacterView", "deinit"]
+- !private ["VSS13CharacterView", "split"]
+- !private ["Ps10Collection", "Index"]
+- !private ["Ps10Collection", "Iterator"]
+- ["Ps10Collection", "Key"]
+- !private ["Ps10Collection", "SubSequence"]
+- ["Ps10Collection", "Value"]
+- !private ["Ps10Collection", "_Element"]
+- !private ["Ps10Collection", "count"]
+- !private ["Ps10Collection", "map"]
+- !private ["Ps10Collection", "split"]
+- !private ["Ps10Collection", "subscript"]
+- !private ["Ps10Comparable", "CompatibilityGenerator"]
+- !private ["Ps10Comparable", "Distance"]
+- !private ["Ps10Comparable", "IntegerLiteralType"]
+- !private ["Ps10Comparable", "String"]
+- !private ["Ps10Comparable", "characters"]
+- !private ["Ps10Comparable", "init"]
+- !private ["Ps10Comparable", "pathComponentGenerator"]
+- ["V5Vapor22CompatibilityGenerator", "Element"]
+- ["V5Vapor22CompatibilityGenerator", "T"]
+- !private ["V5Vapor22CompatibilityGenerator", "closure"]
+- ["V5Vapor22CompatibilityGenerator", "deinit"]
+- ["V5Vapor22CompatibilityGenerator", "init"]
+- ["V5Vapor22CompatibilityGenerator", "next"]
+- !private ["Ps28CustomDebugStringConvertible", "CompatibilityGenerator"]
+- !private ["Ps28CustomDebugStringConvertible", "Index"]
+- !private ["Ps28CustomDebugStringConvertible", "Iterator"]
+- ["Ps28CustomDebugStringConvertible", "Key"]
+- !private ["Ps28CustomDebugStringConvertible", "String"]
+- !private ["Ps28CustomDebugStringConvertible", "SubSequence"]
+- ["Ps28CustomDebugStringConvertible", "Value"]
+- !private ["Ps28CustomDebugStringConvertible", "_Element"]
+- !private ["Ps28CustomDebugStringConvertible", "characters"]
+- !private ["Ps28CustomDebugStringConvertible", "count"]
+- !private ["Ps28CustomDebugStringConvertible", "init"]
+- !private ["Ps28CustomDebugStringConvertible", "map"]
+- !private ["Ps28CustomDebugStringConvertible", "pathComponentGenerator"]
+- ["Ps28CustomDebugStringConvertible", "some"]
+- !private ["Ps28CustomDebugStringConvertible", "subscript"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "CompatibilityGenerator"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "Distance"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "IntegerLiteralType"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "String"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "_getBuiltinLogicValue"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "characters"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "init"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "pathComponentGenerator"]
+- !private ["Ps17CustomReflectable", "CompatibilityGenerator"]
+- !private ["Ps17CustomReflectable", "Distance"]
+- !private ["Ps17CustomReflectable", "Index"]
+- !private ["Ps17CustomReflectable", "IntegerLiteralType"]
+- !private ["Ps17CustomReflectable", "Iterator"]
+- ["Ps17CustomReflectable", "Key"]
+- !private ["Ps17CustomReflectable", "String"]
+- !private ["Ps17CustomReflectable", "SubSequence"]
+- ["Ps17CustomReflectable", "Value"]
+- !private ["Ps17CustomReflectable", "_Element"]
+- !private ["Ps17CustomReflectable", "_getBuiltinLogicValue"]
+- !private ["Ps17CustomReflectable", "characters"]
+- !private ["Ps17CustomReflectable", "count"]
+- !private ["Ps17CustomReflectable", "init"]
+- !private ["Ps17CustomReflectable", "map"]
+- !private ["Ps17CustomReflectable", "pathComponentGenerator"]
+- !private ["Ps17CustomReflectable", "subscript"]
+- !private ["Ps23CustomStringConvertible", "Distance"]
+- !private ["Ps23CustomStringConvertible", "Index"]
+- !private ["Ps23CustomStringConvertible", "IntegerLiteralType"]
+- !private ["Ps23CustomStringConvertible", "Iterator"]
+- ["Ps23CustomStringConvertible", "Key"]
+- !private ["Ps23CustomStringConvertible", "SubSequence"]
+- ["Ps23CustomStringConvertible", "Value"]
+- !private ["Ps23CustomStringConvertible", "_Element"]
+- !private ["Ps23CustomStringConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps23CustomStringConvertible", "count"]
+- !private ["Ps23CustomStringConvertible", "handler"]
+- !private ["Ps23CustomStringConvertible", "hostname"]
+- !private ["Ps23CustomStringConvertible", "map"]
+- !private ["Ps23CustomStringConvertible", "method"]
+- !private ["Ps23CustomStringConvertible", "path"]
+- !private ["Ps23CustomStringConvertible", "subscript"]
+- !private ["P2C715DataConvertible", "CompatibilityGenerator"]
+- !private ["P2C715DataConvertible", "String"]
+- !private ["P2C715DataConvertible", "characters"]
+- !private ["P2C715DataConvertible", "init"]
+- !private ["P2C715DataConvertible", "pathComponentGenerator"]
+- !private ["P2C717DataInitializable", "CompatibilityGenerator"]
+- !private ["P2C717DataInitializable", "String"]
+- !private ["P2C717DataInitializable", "characters"]
+- !private ["P2C717DataInitializable", "init"]
+- !private ["P2C717DataInitializable", "pathComponentGenerator"]
+- !private ["P2C717DataRepresentable", "CompatibilityGenerator"]
+- !private ["P2C717DataRepresentable", "String"]
+- !private ["P2C717DataRepresentable", "characters"]
+- !private ["P2C717DataRepresentable", "init"]
+- !private ["P2C717DataRepresentable", "pathComponentGenerator"]
+- ["Vs10Dictionary", "Key"]
+- ["Vs10Dictionary", "Value"]
+- !private ["Vs10Dictionary", "subscript"]
+- ["Ps28DictionaryLiteralConvertible", "Key"]
+- ["Ps28DictionaryLiteralConvertible", "Value"]
+- !private ["Ps28DictionaryLiteralConvertible", "subscript"]
+- !private ["Ps9Equatable", "CompatibilityGenerator"]
+- !private ["Ps9Equatable", "Distance"]
+- !private ["Ps9Equatable", "IntegerLiteralType"]
+- !private ["Ps9Equatable", "String"]
+- !private ["Ps9Equatable", "_getBuiltinLogicValue"]
+- !private ["Ps9Equatable", "characters"]
+- !private ["Ps9Equatable", "init"]
+- !private ["Ps9Equatable", "pathComponentGenerator"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "CompatibilityGenerator"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "String"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "characters"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "pathComponentGenerator"]
+- !private ["Ps12ForwardIndex", "Distance"]
+- !private ["Ps12ForwardIndex", "IntegerLiteralType"]
+- !private ["Ps8Hashable", "CompatibilityGenerator"]
+- !private ["Ps8Hashable", "Distance"]
+- !private ["Ps8Hashable", "IntegerLiteralType"]
+- !private ["Ps8Hashable", "String"]
+- !private ["Ps8Hashable", "_getBuiltinLogicValue"]
+- !private ["Ps8Hashable", "characters"]
+- !private ["Ps8Hashable", "init"]
+- !private ["Ps8Hashable", "pathComponentGenerator"]
+- !private ["VVSS13CharacterView5Index", "Distance"]
+- !private ["Ps9Indexable", "Index"]
+- !private ["Ps9Indexable", "Iterator"]
+- ["Ps9Indexable", "Key"]
+- !private ["Ps9Indexable", "SubSequence"]
+- ["Ps9Indexable", "Value"]
+- !private ["Ps9Indexable", "_Element"]
+- !private ["Ps9Indexable", "count"]
+- !private ["Ps9Indexable", "map"]
+- !private ["Ps9Indexable", "split"]
+- !private ["Ps9Indexable", "subscript"]
+- !private ["Vs16IndexingIterator", "Element"]
+- !private ["Si", "Distance"]
+- !private ["Si", "IntegerLiteralType"]
+- !private ["Ps7Integer", "Distance"]
+- !private ["Ps7Integer", "IntegerLiteralType"]
+- !private ["Ps17IntegerArithmetic", "Distance"]
+- !private ["Ps17IntegerArithmetic", "IntegerLiteralType"]
+- !private ["Ps25IntegerLiteralConvertible", "Distance"]
+- !private ["Ps25IntegerLiteralConvertible", "IntegerLiteralType"]
+- ["Ps16IteratorProtocol", "Element"]
+- !private ["Ps16IteratorProtocol", "closure"]
+- !private ["Ps16IteratorProtocol", "init"]
+- ["Ps16IteratorProtocol", "next"]
+- ["Ps16IteratorProtocol", ""]
+- !private ["P5Vapor17JsonRepresentable", "CompatibilityGenerator"]
+- !private ["P5Vapor17JsonRepresentable", "Distance"]
+- !private ["P5Vapor17JsonRepresentable", "IntegerLiteralType"]
+- !private ["P5Vapor17JsonRepresentable", "String"]
+- !private ["P5Vapor17JsonRepresentable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor17JsonRepresentable", "characters"]
+- !private ["P5Vapor17JsonRepresentable", "init"]
+- !private ["P5Vapor17JsonRepresentable", "pathComponentGenerator"]
+- ["OC5Vapor7Request6Method", "deinit"]
+- !private ["Ps10MirrorPath", "CompatibilityGenerator"]
+- !private ["Ps10MirrorPath", "Distance"]
+- !private ["Ps10MirrorPath", "IntegerLiteralType"]
+- !private ["Ps10MirrorPath", "String"]
+- !private ["Ps10MirrorPath", "characters"]
+- !private ["Ps10MirrorPath", "init"]
+- !private ["Ps10MirrorPath", "pathComponentGenerator"]
+- !private ["Ps17MutableCollection", "Index"]
+- !private ["Ps17MutableCollection", "Iterator"]
+- !private ["Ps17MutableCollection", "SubSequence"]
+- !private ["Ps17MutableCollection", "_Element"]
+- !private ["Ps17MutableCollection", "count"]
+- !private ["Ps17MutableCollection", "map"]
+- !private ["Ps17MutableCollection", "subscript"]
+- !private ["Ps16MutableIndexable", "Index"]
+- !private ["Ps16MutableIndexable", "Iterator"]
+- !private ["Ps16MutableIndexable", "SubSequence"]
+- !private ["Ps16MutableIndexable", "_Element"]
+- !private ["Ps16MutableIndexable", "count"]
+- !private ["Ps16MutableIndexable", "map"]
+- !private ["Ps16MutableIndexable", "subscript"]
+- ["Ps21NilLiteralConvertible", "some"]
+- !private ["P5Vapor4Node", "CompatibilityGenerator"]
+- !private ["P5Vapor4Node", "String"]
+- !private ["P5Vapor4Node", "characters"]
+- !private ["P5Vapor4Node", "init"]
+- !private ["P5Vapor4Node", "pathComponentGenerator"]
+- !private ["P5Vapor17NodeInitializable", "CompatibilityGenerator"]
+- !private ["P5Vapor17NodeInitializable", "Distance"]
+- !private ["P5Vapor17NodeInitializable", "IntegerLiteralType"]
+- !private ["P5Vapor17NodeInitializable", "String"]
+- !private ["P5Vapor17NodeInitializable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor17NodeInitializable", "characters"]
+- !private ["P5Vapor17NodeInitializable", "init"]
+- !private ["P5Vapor17NodeInitializable", "pathComponentGenerator"]
+- !private ["Sq", "deinit"]
+- ["Sq", "some"]
+- !private ["Ps12OutputStream", "CompatibilityGenerator"]
+- !private ["Ps12OutputStream", "String"]
+- !private ["Ps12OutputStream", "characters"]
+- !private ["Ps12OutputStream", "init"]
+- !private ["Ps12OutputStream", "pathComponentGenerator"]
+- !private ["Ps17RandomAccessIndex", "Distance"]
+- !private ["Ps17RandomAccessIndex", "IntegerLiteralType"]
+- !private ["Ps26RangeReplaceableCollection", "Index"]
+- !private ["Ps26RangeReplaceableCollection", "Iterator"]
+- !private ["Ps26RangeReplaceableCollection", "SubSequence"]
+- !private ["Ps26RangeReplaceableCollection", "_Element"]
+- !private ["Ps26RangeReplaceableCollection", "count"]
+- !private ["Ps26RangeReplaceableCollection", "map"]
+- !private ["Ps26RangeReplaceableCollection", "split"]
+- !private ["Ps26RangeReplaceableCollection", "subscript"]
+- ["C5Vapor7Request", "Handler"]
+- ["C5Vapor7Request", "Method"]
+- !private ["C5Vapor7Request", "hostname"]
+- !private ["C5Vapor7Request", "method"]
+- !private ["C5Vapor7Request", "path"]
+- !private ["P5Vapor21ResponseRepresentable", "CompatibilityGenerator"]
+- !private ["P5Vapor21ResponseRepresentable", "Distance"]
+- !private ["P5Vapor21ResponseRepresentable", "IntegerLiteralType"]
+- !private ["P5Vapor21ResponseRepresentable", "String"]
+- !private ["P5Vapor21ResponseRepresentable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor21ResponseRepresentable", "characters"]
+- !private ["P5Vapor21ResponseRepresentable", "init"]
+- !private ["P5Vapor21ResponseRepresentable", "pathComponentGenerator"]
+- !private ["C5Vapor5Route", "handler"]
+- !private ["C5Vapor5Route", "hostname"]
+- !private ["C5Vapor5Route", "method"]
+- !private ["C5Vapor5Route", "path"]
+- !private ["P5Vapor12RouterDriver", "Branch"]
+- ["P5Vapor12RouterDriver", "register"]
+- ["P5Vapor12RouterDriver", "route"]
+- !private ["P5Vapor12RouterDriver", "tree"]
+- ["P5Vapor12RouterDriver", ""]
+- !private ["Ps8Sequence", "Element"]
+- !private ["Ps8Sequence", "Index"]
+- !private ["Ps8Sequence", "Iterator"]
+- ["Ps8Sequence", "Key"]
+- !private ["Ps8Sequence", "SubSequence"]
+- ["Ps8Sequence", "Value"]
+- !private ["Ps8Sequence", "_Element"]
+- !private ["Ps8Sequence", "count"]
+- !private ["Ps8Sequence", "map"]
+- !private ["Ps8Sequence", "split"]
+- !private ["Ps8Sequence", "subscript"]
+- !private ["Ps13SignedInteger", "Distance"]
+- !private ["Ps13SignedInteger", "IntegerLiteralType"]
+- !private ["Ps12SignedNumber", "Distance"]
+- !private ["Ps12SignedNumber", "IntegerLiteralType"]
+- !private ["Vs5Slice", "Index"]
+- !private ["Vs5Slice", "Iterator"]
+- !private ["Vs5Slice", "SubSequence"]
+- !private ["Vs5Slice", "_Element"]
+- !private ["Ps10Streamable", "CompatibilityGenerator"]
+- !private ["Ps10Streamable", "String"]
+- !private ["Ps10Streamable", "characters"]
+- !private ["Ps10Streamable", "init"]
+- !private ["Ps10Streamable", "pathComponentGenerator"]
+- !private ["Ps10Strideable", "Distance"]
+- !private ["Ps10Strideable", "IntegerLiteralType"]
+- !private ["SS", "CompatibilityGenerator"]
+- !private ["SS", "String"]
+- !private ["SS", "characters"]
+- !private ["SS", "deinit"]
+- !private ["SS", "init"]
+- !private ["SS", "pathComponentGenerator"]
+- !private ["P5Vapor19StringInitializable", "CompatibilityGenerator"]
+- !private ["P5Vapor19StringInitializable", "Distance"]
+- !private ["P5Vapor19StringInitializable", "IntegerLiteralType"]
+- !private ["P5Vapor19StringInitializable", "String"]
+- !private ["P5Vapor19StringInitializable", "characters"]
+- !private ["P5Vapor19StringInitializable", "init"]
+- !private ["P5Vapor19StringInitializable", "pathComponentGenerator"]
+- !private ["Ps30StringInterpolationConvertible", "CompatibilityGenerator"]
+- !private ["Ps30StringInterpolationConvertible", "String"]
+- !private ["Ps30StringInterpolationConvertible", "characters"]
+- !private ["Ps30StringInterpolationConvertible", "init"]
+- !private ["Ps30StringInterpolationConvertible", "pathComponentGenerator"]
+- !private ["Ps24StringLiteralConvertible", "CompatibilityGenerator"]
+- !private ["Ps24StringLiteralConvertible", "String"]
+- !private ["Ps24StringLiteralConvertible", "characters"]
+- !private ["Ps24StringLiteralConvertible", "init"]
+- !private ["Ps24StringLiteralConvertible", "pathComponentGenerator"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "CompatibilityGenerator"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "String"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "characters"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "init"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "pathComponentGenerator"]
+- !private ["Ps14_ArrayProtocol", "Index"]
+- !private ["Ps14_ArrayProtocol", "Iterator"]
+- !private ["Ps14_ArrayProtocol", "SubSequence"]
+- !private ["Ps14_ArrayProtocol", "_Element"]
+- !private ["Ps14_ArrayProtocol", "count"]
+- !private ["Ps14_ArrayProtocol", "map"]
+- !private ["Ps14_ArrayProtocol", "subscript"]
+- !private ["Ps33_BuiltinBooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "CompatibilityGenerator"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "String"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "characters"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "pathComponentGenerator"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "Distance"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "IntegerLiteralType"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "CompatibilityGenerator"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "String"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "characters"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "init"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "pathComponentGenerator"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "CompatibilityGenerator"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "String"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "characters"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "init"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "pathComponentGenerator"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "CompatibilityGenerator"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "String"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "characters"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "init"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "pathComponentGenerator"]
+- !private ["Ps24_DestructorSafeContainer", "Index"]
+- !private ["Ps24_DestructorSafeContainer", "Iterator"]
+- !private ["Ps24_DestructorSafeContainer", "SubSequence"]
+- !private ["Ps24_DestructorSafeContainer", "_Element"]
+- !private ["Ps24_DestructorSafeContainer", "count"]
+- !private ["Ps24_DestructorSafeContainer", "map"]
+- !private ["Ps24_DestructorSafeContainer", "subscript"]
+- !private ["Ps14_Incrementable", "Distance"]
+- !private ["Ps14_Incrementable", "IntegerLiteralType"]
+- !private ["Ps8_Integer", "Distance"]
+- !private ["Ps8_Integer", "IntegerLiteralType"]
+- !private ["Ps18_IntegerArithmetic", "Distance"]
+- !private ["Ps18_IntegerArithmetic", "IntegerLiteralType"]
+- !private ["Ps22_RandomAccessAmbiguity", "Distance"]
+- !private ["Ps22_RandomAccessAmbiguity", "IntegerLiteralType"]
+- !private ["Ps14_SignedInteger", "Distance"]
+- !private ["Ps14_SignedInteger", "IntegerLiteralType"]
+depends-nominal:
+- !private "Vs11AnyIterator"
+- "Ps9AnyObject"
+- !private "Vs11AnySequence"
+- !private "Sa"
+- !private "Ps23ArrayLiteralConvertible"
+- !private "Vs10ArraySlice"
+- !private "Ps18BidirectionalIndex"
+- !private "P5Vapor22BitshiftOperationsType"
+- !private "Ps17BitwiseOperations"
+- !private "Sb"
+- !private "Ps7Boolean"
+- !private "Ps25BooleanLiteralConvertible"
+- !private "C5Vapor6Branch"
+- "C5Vapor12BranchRouter"
+- !private "P5Vapor15ByteConvertible"
+- !private "P5Vapor11CSArrayType"
+- !private "Ps7CVarArg"
+- !private "Vs9Character"
+- !private "VSS13CharacterView"
+- "Ps10Collection"
+- !private "Ps10Comparable"
+- "V5Vapor22CompatibilityGenerator"
+- "Ps28CustomDebugStringConvertible"
+- !private "Ps29CustomPlaygroundQuickLookable"
+- "Ps17CustomReflectable"
+- "Ps23CustomStringConvertible"
+- !private "P2C715DataConvertible"
+- !private "P2C717DataInitializable"
+- !private "P2C717DataRepresentable"
+- "Vs10Dictionary"
+- "Ps28DictionaryLiteralConvertible"
+- !private "Ps9Equatable"
+- !private "Ps41ExtendedGraphemeClusterLiteralConvertible"
+- !private "Ps12ForwardIndex"
+- !private "Ps8Hashable"
+- !private "VVSS13CharacterView5Index"
+- "Ps9Indexable"
+- !private "Vs16IndexingIterator"
+- !private "Si"
+- !private "Ps7Integer"
+- !private "Ps17IntegerArithmetic"
+- !private "Ps25IntegerLiteralConvertible"
+- "Ps16IteratorProtocol"
+- !private "P5Vapor17JsonRepresentable"
+- "OC5Vapor7Request6Method"
+- !private "Ps10MirrorPath"
+- !private "Ps17MutableCollection"
+- !private "Ps16MutableIndexable"
+- "Ps21NilLiteralConvertible"
+- !private "P5Vapor4Node"
+- !private "P5Vapor17NodeInitializable"
+- "Sq"
+- !private "Ps12OutputStream"
+- !private "Ps17RandomAccessIndex"
+- !private "Ps26RangeReplaceableCollection"
+- "C5Vapor7Request"
+- !private "P5Vapor21ResponseRepresentable"
+- !private "C5Vapor5Route"
+- "P5Vapor12RouterDriver"
+- "Ps8Sequence"
+- !private "Ps13SignedInteger"
+- !private "Ps12SignedNumber"
+- !private "Vs5Slice"
+- !private "Ps10Streamable"
+- !private "Ps10Strideable"
+- !private "SS"
+- !private "P5Vapor19StringInitializable"
+- !private "Ps30StringInterpolationConvertible"
+- !private "Ps24StringLiteralConvertible"
+- !private "Ps31UnicodeScalarLiteralConvertible"
+- !private "Ps14_ArrayProtocol"
+- !private "Ps33_BuiltinBooleanLiteralConvertible"
+- !private "Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible"
+- !private "Ps33_BuiltinIntegerLiteralConvertible"
+- !private "Ps32_BuiltinStringLiteralConvertible"
+- !private "Ps37_BuiltinUTF16StringLiteralConvertible"
+- !private "Ps39_BuiltinUnicodeScalarLiteralConvertible"
+- !private "Ps24_DestructorSafeContainer"
+- !private "Ps14_Incrementable"
+- !private "Ps8_Integer"
+- !private "Ps18_IntegerArithmetic"
+- !private "Ps22_RandomAccessAmbiguity"
+- !private "Ps14_SignedInteger"
+depends-dynamic-lookup:
+depends-external:
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/shims/Visibility.h"
+- "/home/tanner/swift/usr/lib/swift/shims/UnicodeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStdint.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStddef.h"
+- "/home/tanner/swift/usr/lib/swift/shims/LibcShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeStubs.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RefCount.h"
+- "/home/tanner/swift/usr/lib/swift/shims/HeapObject.h"
+- "/home/tanner/swift/usr/lib/swift/shims/GlobalObjects.h"
+- "/home/tanner/swift/usr/lib/swift/shims/FoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/CoreFoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/tanner/swift/usr/lib/swift/shims/module.map"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/InterchangeData.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Data.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/OperatingSystem.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/libc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/String.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Hummingbird.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Strand.swiftmodule"
+interface-hash: "5b0d196dd515ff59bbbda7f19f90565d"

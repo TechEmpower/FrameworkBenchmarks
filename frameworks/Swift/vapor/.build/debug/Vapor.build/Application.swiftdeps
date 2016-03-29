@@ -1,0 +1,669 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "Application"
+provides-nominal:
+- "C5Vapor11Application"
+provides-member:
+- ["C5Vapor11Application", ""]
+depends-top-level:
+- !private "ExtendedGraphemeClusterType"
+- "StringLiteralType"
+- "Middleware"
+- !private "??"
+- "Application"
+- !private "+="
+- "Bool"
+- "Provider"
+- "Jeeves"
+- !private "+"
+- !private "AbortMiddleware"
+- "Route"
+- "ServerDriver"
+- "SessionDriver"
+- "Hummingbird"
+- "Hash"
+- !private "!="
+- "String"
+- "FloatLiteralType"
+- !private "Process"
+- !private "UnicodeScalarType"
+- !private "MemorySessionDriver"
+- "Int"
+- !private "Log"
+- "ServerDriverDelegate"
+- "Request"
+- !private "SessionMiddleware"
+- !private "Array"
+- "RouterDriver"
+- "Response"
+- !private "=="
+- "Config"
+- "Environment"
+- !private "FileManager"
+- "BranchRouter"
+- "IntegerLiteralType"
+depends-member:
+- !private ["C5Vapor15AbortMiddleware", "deinit"]
+- !private ["Ps9AnyObject", "AbortMiddleware"]
+- ["Ps9AnyObject", "BranchRouter"]
+- !private ["Ps9AnyObject", "Config"]
+- !private ["Ps9AnyObject", "Environment"]
+- !private ["Ps9AnyObject", "FileManager"]
+- ["Ps9AnyObject", "Handler"]
+- !private ["Ps9AnyObject", "Hash"]
+- ["Ps9AnyObject", "Jeeves"]
+- !private ["Ps9AnyObject", "Log"]
+- !private ["Ps9AnyObject", "MemorySessionDriver"]
+- !private ["Ps9AnyObject", "Process"]
+- !private ["Ps9AnyObject", "Response"]
+- !private ["Ps9AnyObject", "SessionMiddleware"]
+- !private ["Ps9AnyObject", "bootArguments"]
+- !private ["Ps9AnyObject", "bootEnvironment"]
+- !private ["Ps9AnyObject", "bootProviders"]
+- !private ["Ps9AnyObject", "bootRoutes"]
+- !private ["Ps9AnyObject", "checkFileSystem"]
+- !private ["Ps9AnyObject", "detectEnvironmentHandler"]
+- !private ["Ps9AnyObject", "detectedEnvironment"]
+- !private ["Ps9AnyObject", "environment"]
+- !private ["Ps9AnyObject", "error"]
+- !private ["Ps9AnyObject", "fileAtPath"]
+- !private ["Ps9AnyObject", "headers"]
+- !private ["Ps9AnyObject", "info"]
+- ["Ps9AnyObject", "init"]
+- !private ["Ps9AnyObject", "ip"]
+- !private ["Ps9AnyObject", "middleware"]
+- !private ["Ps9AnyObject", "path"]
+- !private ["Ps9AnyObject", "port"]
+- !private ["Ps9AnyObject", "providers"]
+- !private ["Ps9AnyObject", "readBytesFromFile"]
+- !private ["Ps9AnyObject", "router"]
+- !private ["Ps9AnyObject", "routes"]
+- !private ["Ps9AnyObject", "server"]
+- ["Ps9AnyObject", "serverDriverDidReceiveRequest"]
+- !private ["Ps9AnyObject", "warning"]
+- !private ["Ps9AnyObject", "workDir"]
+- ["Ps9AnyObject", ""]
+- !private ["C5Vapor11Application", "AbortMiddleware"]
+- ["C5Vapor11Application", "Bool"]
+- ["C5Vapor11Application", "BranchRouter"]
+- ["C5Vapor11Application", "Config"]
+- ["C5Vapor11Application", "Environment"]
+- !private ["C5Vapor11Application", "FileManager"]
+- ["C5Vapor11Application", "Hash"]
+- ["C5Vapor11Application", "Hummingbird"]
+- ["C5Vapor11Application", "Int"]
+- ["C5Vapor11Application", "Jeeves"]
+- !private ["C5Vapor11Application", "Log"]
+- !private ["C5Vapor11Application", "MemorySessionDriver"]
+- ["C5Vapor11Application", "Middleware"]
+- !private ["C5Vapor11Application", "Process"]
+- ["C5Vapor11Application", "Provider"]
+- ["C5Vapor11Application", "Request"]
+- ["C5Vapor11Application", "Response"]
+- ["C5Vapor11Application", "Route"]
+- ["C5Vapor11Application", "RouterDriver"]
+- ["C5Vapor11Application", "ServerDriver"]
+- ["C5Vapor11Application", "SessionDriver"]
+- !private ["C5Vapor11Application", "SessionMiddleware"]
+- ["C5Vapor11Application", "String"]
+- ["C5Vapor11Application", "VERSION"]
+- ["C5Vapor11Application", "bootArguments"]
+- ["C5Vapor11Application", "bootEnvironment"]
+- ["C5Vapor11Application", "bootProviders"]
+- ["C5Vapor11Application", "bootRoutes"]
+- ["C5Vapor11Application", "checkFileSystem"]
+- ["C5Vapor11Application", "config"]
+- !private ["C5Vapor11Application", "config.storage"]
+- ["C5Vapor11Application", "deinit"]
+- ["C5Vapor11Application", "detectEnvironmentHandler"]
+- !private ["C5Vapor11Application", "detectedEnvironment"]
+- ["C5Vapor11Application", "environment"]
+- ["C5Vapor11Application", "hash"]
+- !private ["C5Vapor11Application", "hash.storage"]
+- ["C5Vapor11Application", "inEnvironment"]
+- ["C5Vapor11Application", "init"]
+- ["C5Vapor11Application", "ip"]
+- ["C5Vapor11Application", "middleware"]
+- ["C5Vapor11Application", "port"]
+- ["C5Vapor11Application", "providers"]
+- ["C5Vapor11Application", "router"]
+- ["C5Vapor11Application", "routes"]
+- ["C5Vapor11Application", "scopedHost"]
+- ["C5Vapor11Application", "scopedMiddleware"]
+- ["C5Vapor11Application", "scopedPrefix"]
+- ["C5Vapor11Application", "server"]
+- ["C5Vapor11Application", "serverDriverDidReceiveRequest"]
+- ["C5Vapor11Application", "session"]
+- !private ["C5Vapor11Application", "session.storage"]
+- ["C5Vapor11Application", "start"]
+- ["C5Vapor11Application", "workDir"]
+- !private ["Sa", "Element"]
+- !private ["Sa", "Index"]
+- !private ["Sa", "Iterator"]
+- !private ["Sa", "SubSequence"]
+- !private ["Sa", "_Element"]
+- !private ["Sa", "contains"]
+- !private ["Sa", "count"]
+- !private ["Sa", "forEach"]
+- !private ["Sa", "subscript"]
+- !private ["Ps23ArrayLiteralConvertible", "Element"]
+- !private ["Ps23ArrayLiteralConvertible", "Index"]
+- !private ["Ps23ArrayLiteralConvertible", "Iterator"]
+- !private ["Ps23ArrayLiteralConvertible", "SubSequence"]
+- !private ["Ps23ArrayLiteralConvertible", "_Element"]
+- !private ["Ps23ArrayLiteralConvertible", "contains"]
+- !private ["Ps23ArrayLiteralConvertible", "count"]
+- !private ["Ps23ArrayLiteralConvertible", "forEach"]
+- !private ["Ps23ArrayLiteralConvertible", "subscript"]
+- !private ["Vs10ArraySlice", "Index"]
+- !private ["Vs10ArraySlice", "Iterator"]
+- !private ["Ps18BidirectionalIndex", "Distance"]
+- !private ["Ps18BidirectionalIndex", "IntegerLiteralType"]
+- !private ["P5Vapor22BitshiftOperationsType", "Distance"]
+- !private ["P5Vapor22BitshiftOperationsType", "IntegerLiteralType"]
+- !private ["Ps17BitwiseOperations", "Distance"]
+- !private ["Ps17BitwiseOperations", "IntegerLiteralType"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["Sb", "deinit"]
+- !private ["Ps7Boolean", "_getBuiltinLogicValue"]
+- !private ["Ps25BooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- ["C5Vapor12BranchRouter", "deinit"]
+- ["C5Vapor12BranchRouter", "init"]
+- !private ["P5Vapor15ByteConvertible", "Distance"]
+- !private ["P5Vapor15ByteConvertible", "IntegerLiteralType"]
+- !private ["P5Vapor11CSArrayType", "Element"]
+- !private ["P5Vapor11CSArrayType", "Index"]
+- !private ["P5Vapor11CSArrayType", "Iterator"]
+- !private ["P5Vapor11CSArrayType", "SubSequence"]
+- !private ["P5Vapor11CSArrayType", "_Element"]
+- !private ["P5Vapor11CSArrayType", "contains"]
+- !private ["P5Vapor11CSArrayType", "count"]
+- !private ["P5Vapor11CSArrayType", "forEach"]
+- !private ["P5Vapor11CSArrayType", "subscript"]
+- !private ["Ps7CVarArg", "Distance"]
+- !private ["Ps7CVarArg", "IntegerLiteralType"]
+- !private ["Vs9Character", "deinit"]
+- !private ["VSS13CharacterView", "Index"]
+- !private ["VSS13CharacterView", "Iterator"]
+- !private ["VSS13CharacterView", "SubSequence"]
+- !private ["VSS13CharacterView", "_Element"]
+- !private ["VSS13CharacterView", "last"]
+- !private ["Ps10Collection", "Element"]
+- !private ["Ps10Collection", "Index"]
+- !private ["Ps10Collection", "Iterator"]
+- !private ["Ps10Collection", "SubSequence"]
+- !private ["Ps10Collection", "_Element"]
+- !private ["Ps10Collection", "contains"]
+- !private ["Ps10Collection", "count"]
+- !private ["Ps10Collection", "forEach"]
+- !private ["Ps10Collection", "last"]
+- !private ["Ps10Collection", "subscript"]
+- !private ["Ps10Comparable", "Distance"]
+- !private ["Ps10Comparable", "IntegerLiteralType"]
+- !private ["Ps10Comparable", "characters"]
+- !private ["Ps10Comparable", "init"]
+- !private ["Ps10Comparable", "int"]
+- !private ["C5Vapor6Config", "init"]
+- !private ["OC5Vapor8Response11ContentType", "None"]
+- !private ["Ps28CustomDebugStringConvertible", "Element"]
+- !private ["Ps28CustomDebugStringConvertible", "Index"]
+- !private ["Ps28CustomDebugStringConvertible", "Iterator"]
+- !private ["Ps28CustomDebugStringConvertible", "SubSequence"]
+- !private ["Ps28CustomDebugStringConvertible", "_Element"]
+- !private ["Ps28CustomDebugStringConvertible", "characters"]
+- !private ["Ps28CustomDebugStringConvertible", "contains"]
+- !private ["Ps28CustomDebugStringConvertible", "count"]
+- !private ["Ps28CustomDebugStringConvertible", "forEach"]
+- !private ["Ps28CustomDebugStringConvertible", "init"]
+- !private ["Ps28CustomDebugStringConvertible", "int"]
+- ["Ps28CustomDebugStringConvertible", "some"]
+- !private ["Ps28CustomDebugStringConvertible", "subscript"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "Distance"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "IntegerLiteralType"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "_getBuiltinLogicValue"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "characters"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "init"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "int"]
+- !private ["Ps17CustomReflectable", "Distance"]
+- !private ["Ps17CustomReflectable", "Element"]
+- !private ["Ps17CustomReflectable", "Index"]
+- !private ["Ps17CustomReflectable", "IntegerLiteralType"]
+- !private ["Ps17CustomReflectable", "Iterator"]
+- !private ["Ps17CustomReflectable", "SubSequence"]
+- !private ["Ps17CustomReflectable", "_Element"]
+- !private ["Ps17CustomReflectable", "_getBuiltinLogicValue"]
+- !private ["Ps17CustomReflectable", "characters"]
+- !private ["Ps17CustomReflectable", "contains"]
+- !private ["Ps17CustomReflectable", "count"]
+- !private ["Ps17CustomReflectable", "forEach"]
+- !private ["Ps17CustomReflectable", "init"]
+- !private ["Ps17CustomReflectable", "int"]
+- !private ["Ps17CustomReflectable", "subscript"]
+- !private ["Ps23CustomStringConvertible", "Distance"]
+- !private ["Ps23CustomStringConvertible", "Element"]
+- !private ["Ps23CustomStringConvertible", "Index"]
+- !private ["Ps23CustomStringConvertible", "IntegerLiteralType"]
+- !private ["Ps23CustomStringConvertible", "Iterator"]
+- !private ["Ps23CustomStringConvertible", "Production"]
+- !private ["Ps23CustomStringConvertible", "SubSequence"]
+- !private ["Ps23CustomStringConvertible", "_Element"]
+- !private ["Ps23CustomStringConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps23CustomStringConvertible", "contains"]
+- !private ["Ps23CustomStringConvertible", "count"]
+- !private ["Ps23CustomStringConvertible", "forEach"]
+- !private ["Ps23CustomStringConvertible", "fromString"]
+- !private ["Ps23CustomStringConvertible", "subscript"]
+- !private ["P2C715DataConvertible", "characters"]
+- !private ["P2C715DataConvertible", "init"]
+- !private ["P2C715DataConvertible", "int"]
+- !private ["P2C717DataInitializable", "characters"]
+- !private ["P2C717DataInitializable", "init"]
+- !private ["P2C717DataInitializable", "int"]
+- !private ["P2C717DataRepresentable", "characters"]
+- !private ["P2C717DataRepresentable", "init"]
+- !private ["P2C717DataRepresentable", "int"]
+- !private ["Vs10Dictionary", "subscript"]
+- !private ["Ps28DictionaryLiteralConvertible", "subscript"]
+- !private ["Sd", "deinit"]
+- !private ["O5Vapor11Environment", "Production"]
+- !private ["O5Vapor11Environment", "deinit"]
+- !private ["O5Vapor11Environment", "fromString"]
+- !private ["Ps9Equatable", "Distance"]
+- !private ["Ps9Equatable", "IntegerLiteralType"]
+- !private ["Ps9Equatable", "Production"]
+- !private ["Ps9Equatable", "_getBuiltinLogicValue"]
+- !private ["Ps9Equatable", "characters"]
+- !private ["Ps9Equatable", "fromString"]
+- !private ["Ps9Equatable", "headers"]
+- !private ["Ps9Equatable", "init"]
+- !private ["Ps9Equatable", "int"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "characters"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "int"]
+- !private ["C5Vapor11FileManager", "fileAtPath"]
+- !private ["C5Vapor11FileManager", "readBytesFromFile"]
+- !private ["Sf", "deinit"]
+- !private ["Ps12ForwardIndex", "Distance"]
+- !private ["Ps12ForwardIndex", "IntegerLiteralType"]
+- !private ["C5Vapor4Hash", "init"]
+- !private ["Ps8Hashable", "Distance"]
+- !private ["Ps8Hashable", "IntegerLiteralType"]
+- !private ["Ps8Hashable", "_getBuiltinLogicValue"]
+- !private ["Ps8Hashable", "characters"]
+- !private ["Ps8Hashable", "init"]
+- !private ["Ps8Hashable", "int"]
+- !private ["VVSS13CharacterView5Index", "Distance"]
+- !private ["Ps9Indexable", "Element"]
+- !private ["Ps9Indexable", "Index"]
+- !private ["Ps9Indexable", "Iterator"]
+- !private ["Ps9Indexable", "SubSequence"]
+- !private ["Ps9Indexable", "_Element"]
+- !private ["Ps9Indexable", "contains"]
+- !private ["Ps9Indexable", "count"]
+- !private ["Ps9Indexable", "forEach"]
+- !private ["Ps9Indexable", "last"]
+- !private ["Ps9Indexable", "subscript"]
+- !private ["Vs16IndexingIterator", "Element"]
+- !private ["Si", "Distance"]
+- !private ["Si", "IntegerLiteralType"]
+- !private ["Si", "deinit"]
+- !private ["Vs5Int16", "deinit"]
+- !private ["Vs5Int32", "deinit"]
+- !private ["Vs5Int64", "deinit"]
+- !private ["Vs4Int8", "deinit"]
+- !private ["Ps7Integer", "Distance"]
+- !private ["Ps7Integer", "IntegerLiteralType"]
+- !private ["Ps17IntegerArithmetic", "Distance"]
+- !private ["Ps17IntegerArithmetic", "IntegerLiteralType"]
+- !private ["Ps25IntegerLiteralConvertible", "Distance"]
+- !private ["Ps25IntegerLiteralConvertible", "IntegerLiteralType"]
+- !private ["Ps16IteratorProtocol", "Element"]
+- ["C5Vapor6Jeeves", "deinit"]
+- ["C5Vapor6Jeeves", "init"]
+- !private ["P5Vapor17JsonRepresentable", "Distance"]
+- !private ["P5Vapor17JsonRepresentable", "IntegerLiteralType"]
+- !private ["P5Vapor17JsonRepresentable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor17JsonRepresentable", "characters"]
+- !private ["P5Vapor17JsonRepresentable", "init"]
+- !private ["P5Vapor17JsonRepresentable", "int"]
+- !private ["C5Vapor3Log", "error"]
+- !private ["C5Vapor3Log", "info"]
+- !private ["C5Vapor3Log", "warning"]
+- !private ["C5Vapor19MemorySessionDriver", "deinit"]
+- !private ["C5Vapor19MemorySessionDriver", "init"]
+- !private ["P5Vapor10Middleware", "handle"]
+- !private ["Ps10MirrorPath", "Distance"]
+- !private ["Ps10MirrorPath", "IntegerLiteralType"]
+- !private ["Ps10MirrorPath", "characters"]
+- !private ["Ps10MirrorPath", "init"]
+- !private ["Ps10MirrorPath", "int"]
+- !private ["Ps17MutableCollection", "Element"]
+- !private ["Ps17MutableCollection", "Index"]
+- !private ["Ps17MutableCollection", "Iterator"]
+- !private ["Ps17MutableCollection", "SubSequence"]
+- !private ["Ps17MutableCollection", "_Element"]
+- !private ["Ps17MutableCollection", "contains"]
+- !private ["Ps17MutableCollection", "count"]
+- !private ["Ps17MutableCollection", "forEach"]
+- !private ["Ps17MutableCollection", "subscript"]
+- !private ["Ps16MutableIndexable", "Element"]
+- !private ["Ps16MutableIndexable", "Index"]
+- !private ["Ps16MutableIndexable", "Iterator"]
+- !private ["Ps16MutableIndexable", "SubSequence"]
+- !private ["Ps16MutableIndexable", "_Element"]
+- !private ["Ps16MutableIndexable", "contains"]
+- !private ["Ps16MutableIndexable", "count"]
+- !private ["Ps16MutableIndexable", "forEach"]
+- !private ["Ps16MutableIndexable", "subscript"]
+- ["Ps21NilLiteralConvertible", "some"]
+- !private ["P5Vapor4Node", "characters"]
+- !private ["P5Vapor4Node", "init"]
+- !private ["P5Vapor4Node", "int"]
+- !private ["P5Vapor17NodeInitializable", "Distance"]
+- !private ["P5Vapor17NodeInitializable", "IntegerLiteralType"]
+- !private ["P5Vapor17NodeInitializable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor17NodeInitializable", "characters"]
+- !private ["P5Vapor17NodeInitializable", "init"]
+- !private ["P5Vapor17NodeInitializable", "int"]
+- !private ["Sq", "deinit"]
+- ["Sq", "some"]
+- !private ["Ps12OutputStream", "characters"]
+- !private ["Ps12OutputStream", "init"]
+- !private ["Ps12OutputStream", "int"]
+- !private ["Os7Process", "valueFor"]
+- !private ["P5Vapor8Provider", "boot"]
+- !private ["Ps17RandomAccessIndex", "Distance"]
+- !private ["Ps17RandomAccessIndex", "IntegerLiteralType"]
+- !private ["Ps26RangeReplaceableCollection", "Element"]
+- !private ["Ps26RangeReplaceableCollection", "Index"]
+- !private ["Ps26RangeReplaceableCollection", "Iterator"]
+- !private ["Ps26RangeReplaceableCollection", "SubSequence"]
+- !private ["Ps26RangeReplaceableCollection", "_Element"]
+- !private ["Ps26RangeReplaceableCollection", "contains"]
+- !private ["Ps26RangeReplaceableCollection", "count"]
+- !private ["Ps26RangeReplaceableCollection", "forEach"]
+- !private ["Ps26RangeReplaceableCollection", "last"]
+- !private ["Ps26RangeReplaceableCollection", "subscript"]
+- ["C5Vapor7Request", "Handler"]
+- !private ["C5Vapor7Request", "path"]
+- !private ["C5Vapor8Response", "headers"]
+- !private ["C5Vapor8Response", "init"]
+- !private ["P5Vapor21ResponseRepresentable", "Distance"]
+- !private ["P5Vapor21ResponseRepresentable", "IntegerLiteralType"]
+- !private ["P5Vapor21ResponseRepresentable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor21ResponseRepresentable", "characters"]
+- !private ["P5Vapor21ResponseRepresentable", "headers"]
+- !private ["P5Vapor21ResponseRepresentable", "init"]
+- !private ["P5Vapor21ResponseRepresentable", "int"]
+- ["P5Vapor12RouterDriver", "init"]
+- !private ["P5Vapor12RouterDriver", "register"]
+- !private ["P5Vapor12RouterDriver", "route"]
+- !private ["Ps8Sequence", "Element"]
+- !private ["Ps8Sequence", "Index"]
+- !private ["Ps8Sequence", "Iterator"]
+- !private ["Ps8Sequence", "SubSequence"]
+- !private ["Ps8Sequence", "_Element"]
+- !private ["Ps8Sequence", "contains"]
+- !private ["Ps8Sequence", "count"]
+- !private ["Ps8Sequence", "forEach"]
+- !private ["Ps8Sequence", "last"]
+- !private ["Ps8Sequence", "subscript"]
+- !private ["P5Vapor12ServerDriver", "boot"]
+- !private ["P5Vapor12ServerDriver", "delegate"]
+- ["P5Vapor12ServerDriver", "init"]
+- !private ["P5Vapor20ServerDriverDelegate", "AbortMiddleware"]
+- ["P5Vapor20ServerDriverDelegate", "BranchRouter"]
+- !private ["P5Vapor20ServerDriverDelegate", "Config"]
+- !private ["P5Vapor20ServerDriverDelegate", "Environment"]
+- !private ["P5Vapor20ServerDriverDelegate", "FileManager"]
+- !private ["P5Vapor20ServerDriverDelegate", "Hash"]
+- ["P5Vapor20ServerDriverDelegate", "Jeeves"]
+- !private ["P5Vapor20ServerDriverDelegate", "Log"]
+- !private ["P5Vapor20ServerDriverDelegate", "MemorySessionDriver"]
+- !private ["P5Vapor20ServerDriverDelegate", "Process"]
+- !private ["P5Vapor20ServerDriverDelegate", "Response"]
+- !private ["P5Vapor20ServerDriverDelegate", "SessionMiddleware"]
+- !private ["P5Vapor20ServerDriverDelegate", "bootArguments"]
+- !private ["P5Vapor20ServerDriverDelegate", "bootEnvironment"]
+- !private ["P5Vapor20ServerDriverDelegate", "bootProviders"]
+- !private ["P5Vapor20ServerDriverDelegate", "bootRoutes"]
+- !private ["P5Vapor20ServerDriverDelegate", "checkFileSystem"]
+- !private ["P5Vapor20ServerDriverDelegate", "detectEnvironmentHandler"]
+- !private ["P5Vapor20ServerDriverDelegate", "detectedEnvironment"]
+- !private ["P5Vapor20ServerDriverDelegate", "environment"]
+- !private ["P5Vapor20ServerDriverDelegate", "ip"]
+- !private ["P5Vapor20ServerDriverDelegate", "middleware"]
+- !private ["P5Vapor20ServerDriverDelegate", "port"]
+- !private ["P5Vapor20ServerDriverDelegate", "providers"]
+- !private ["P5Vapor20ServerDriverDelegate", "router"]
+- !private ["P5Vapor20ServerDriverDelegate", "routes"]
+- !private ["P5Vapor20ServerDriverDelegate", "server"]
+- ["P5Vapor20ServerDriverDelegate", "serverDriverDidReceiveRequest"]
+- !private ["P5Vapor20ServerDriverDelegate", "workDir"]
+- ["P5Vapor20ServerDriverDelegate", ""]
+- !private ["P5Vapor13SessionDriver", "init"]
+- !private ["C5Vapor17SessionMiddleware", "deinit"]
+- !private ["Ps13SignedInteger", "Distance"]
+- !private ["Ps13SignedInteger", "IntegerLiteralType"]
+- !private ["Ps12SignedNumber", "Distance"]
+- !private ["Ps12SignedNumber", "IntegerLiteralType"]
+- !private ["Vs5Slice", "Index"]
+- !private ["Vs5Slice", "Iterator"]
+- !private ["Vs5Slice", "SubSequence"]
+- !private ["Vs5Slice", "_Element"]
+- ["C11Hummingbird6Socket", "deinit"]
+- !private ["OC5Vapor8Response6Status", "NotFound"]
+- !private ["OC5Vapor8Response6Status", "OK"]
+- !private ["Ps10Streamable", "characters"]
+- !private ["Ps10Streamable", "init"]
+- !private ["Ps10Streamable", "int"]
+- !private ["Ps10Strideable", "Distance"]
+- !private ["Ps10Strideable", "IntegerLiteralType"]
+- !private ["SS", "characters"]
+- !private ["SS", "deinit"]
+- !private ["SS", "init"]
+- !private ["SS", "int"]
+- !private ["P5Vapor19StringInitializable", "Distance"]
+- !private ["P5Vapor19StringInitializable", "IntegerLiteralType"]
+- !private ["P5Vapor19StringInitializable", "characters"]
+- !private ["P5Vapor19StringInitializable", "init"]
+- !private ["P5Vapor19StringInitializable", "int"]
+- !private ["Ps30StringInterpolationConvertible", "characters"]
+- !private ["Ps30StringInterpolationConvertible", "init"]
+- !private ["Ps30StringInterpolationConvertible", "int"]
+- !private ["Ps24StringLiteralConvertible", "characters"]
+- !private ["Ps24StringLiteralConvertible", "init"]
+- !private ["Ps24StringLiteralConvertible", "int"]
+- !private ["Su", "deinit"]
+- !private ["Vs6UInt16", "deinit"]
+- !private ["Vs6UInt32", "deinit"]
+- !private ["Vs6UInt64", "deinit"]
+- !private ["Vs5UInt8", "deinit"]
+- !private ["Sc", "deinit"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "characters"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "init"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "int"]
+- !private ["Ps14_ArrayProtocol", "Element"]
+- !private ["Ps14_ArrayProtocol", "Index"]
+- !private ["Ps14_ArrayProtocol", "Iterator"]
+- !private ["Ps14_ArrayProtocol", "SubSequence"]
+- !private ["Ps14_ArrayProtocol", "_Element"]
+- !private ["Ps14_ArrayProtocol", "contains"]
+- !private ["Ps14_ArrayProtocol", "count"]
+- !private ["Ps14_ArrayProtocol", "forEach"]
+- !private ["Ps14_ArrayProtocol", "subscript"]
+- !private ["Ps33_BuiltinBooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "characters"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "int"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "Distance"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "IntegerLiteralType"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "characters"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "init"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "int"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "characters"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "init"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "int"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "characters"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "init"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "int"]
+- !private ["Ps24_DestructorSafeContainer", "Element"]
+- !private ["Ps24_DestructorSafeContainer", "Index"]
+- !private ["Ps24_DestructorSafeContainer", "Iterator"]
+- !private ["Ps24_DestructorSafeContainer", "SubSequence"]
+- !private ["Ps24_DestructorSafeContainer", "_Element"]
+- !private ["Ps24_DestructorSafeContainer", "contains"]
+- !private ["Ps24_DestructorSafeContainer", "count"]
+- !private ["Ps24_DestructorSafeContainer", "forEach"]
+- !private ["Ps24_DestructorSafeContainer", "subscript"]
+- !private ["Ps14_Incrementable", "Distance"]
+- !private ["Ps14_Incrementable", "IntegerLiteralType"]
+- !private ["Ps8_Integer", "Distance"]
+- !private ["Ps8_Integer", "IntegerLiteralType"]
+- !private ["Ps18_IntegerArithmetic", "Distance"]
+- !private ["Ps18_IntegerArithmetic", "IntegerLiteralType"]
+- !private ["Vs26_OptionalNilComparisonType", "deinit"]
+- !private ["Ps22_RandomAccessAmbiguity", "Distance"]
+- !private ["Ps22_RandomAccessAmbiguity", "IntegerLiteralType"]
+- !private ["Ps14_SignedInteger", "Distance"]
+- !private ["Ps14_SignedInteger", "IntegerLiteralType"]
+depends-nominal:
+- !private "C5Vapor15AbortMiddleware"
+- "Ps9AnyObject"
+- "C5Vapor11Application"
+- !private "Sa"
+- !private "Ps23ArrayLiteralConvertible"
+- !private "Vs10ArraySlice"
+- !private "Ps18BidirectionalIndex"
+- !private "P5Vapor22BitshiftOperationsType"
+- !private "Ps17BitwiseOperations"
+- !private "Sb"
+- !private "Ps7Boolean"
+- !private "Ps25BooleanLiteralConvertible"
+- "C5Vapor12BranchRouter"
+- !private "P5Vapor15ByteConvertible"
+- !private "P5Vapor11CSArrayType"
+- !private "Ps7CVarArg"
+- !private "Vs9Character"
+- !private "VSS13CharacterView"
+- !private "Ps10Collection"
+- !private "Ps10Comparable"
+- !private "C5Vapor6Config"
+- !private "OC5Vapor8Response11ContentType"
+- "Ps28CustomDebugStringConvertible"
+- !private "Ps29CustomPlaygroundQuickLookable"
+- !private "Ps17CustomReflectable"
+- !private "Ps23CustomStringConvertible"
+- !private "P2C715DataConvertible"
+- !private "P2C717DataInitializable"
+- !private "P2C717DataRepresentable"
+- !private "Vs10Dictionary"
+- !private "Ps28DictionaryLiteralConvertible"
+- !private "Sd"
+- !private "O5Vapor11Environment"
+- !private "Ps9Equatable"
+- !private "Ps41ExtendedGraphemeClusterLiteralConvertible"
+- !private "C5Vapor11FileManager"
+- !private "Sf"
+- !private "Ps12ForwardIndex"
+- !private "C5Vapor4Hash"
+- !private "Ps8Hashable"
+- !private "VVSS13CharacterView5Index"
+- !private "Ps9Indexable"
+- !private "Vs16IndexingIterator"
+- !private "Si"
+- !private "Vs5Int16"
+- !private "Vs5Int32"
+- !private "Vs5Int64"
+- !private "Vs4Int8"
+- !private "Ps7Integer"
+- !private "Ps17IntegerArithmetic"
+- !private "Ps25IntegerLiteralConvertible"
+- !private "Ps16IteratorProtocol"
+- "C5Vapor6Jeeves"
+- !private "P5Vapor17JsonRepresentable"
+- !private "C5Vapor3Log"
+- !private "C5Vapor19MemorySessionDriver"
+- !private "P5Vapor10Middleware"
+- !private "Ps10MirrorPath"
+- !private "Ps17MutableCollection"
+- !private "Ps16MutableIndexable"
+- "Ps21NilLiteralConvertible"
+- !private "P5Vapor4Node"
+- !private "P5Vapor17NodeInitializable"
+- "Sq"
+- !private "Ps12OutputStream"
+- !private "Os7Process"
+- !private "P5Vapor8Provider"
+- !private "Ps17RandomAccessIndex"
+- !private "Ps26RangeReplaceableCollection"
+- "C5Vapor7Request"
+- !private "C5Vapor8Response"
+- !private "P5Vapor21ResponseRepresentable"
+- "P5Vapor12RouterDriver"
+- !private "Ps8Sequence"
+- "P5Vapor12ServerDriver"
+- "P5Vapor20ServerDriverDelegate"
+- !private "P5Vapor13SessionDriver"
+- !private "C5Vapor17SessionMiddleware"
+- !private "Ps13SignedInteger"
+- !private "Ps12SignedNumber"
+- !private "Vs5Slice"
+- "C11Hummingbird6Socket"
+- !private "OC5Vapor8Response6Status"
+- !private "Ps10Streamable"
+- !private "Ps10Strideable"
+- !private "SS"
+- !private "P5Vapor19StringInitializable"
+- !private "Ps30StringInterpolationConvertible"
+- !private "Ps24StringLiteralConvertible"
+- !private "Su"
+- !private "Vs6UInt16"
+- !private "Vs6UInt32"
+- !private "Vs6UInt64"
+- !private "Vs5UInt8"
+- !private "Sc"
+- !private "Ps31UnicodeScalarLiteralConvertible"
+- !private "Ps14_ArrayProtocol"
+- !private "Ps33_BuiltinBooleanLiteralConvertible"
+- !private "Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible"
+- !private "Ps33_BuiltinIntegerLiteralConvertible"
+- !private "Ps32_BuiltinStringLiteralConvertible"
+- !private "Ps37_BuiltinUTF16StringLiteralConvertible"
+- !private "Ps39_BuiltinUnicodeScalarLiteralConvertible"
+- !private "Ps24_DestructorSafeContainer"
+- !private "Ps14_Incrementable"
+- !private "Ps8_Integer"
+- !private "Ps18_IntegerArithmetic"
+- !private "Vs26_OptionalNilComparisonType"
+- !private "Ps22_RandomAccessAmbiguity"
+- !private "Ps14_SignedInteger"
+depends-dynamic-lookup:
+depends-external:
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/shims/Visibility.h"
+- "/home/tanner/swift/usr/lib/swift/shims/UnicodeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStdint.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStddef.h"
+- "/home/tanner/swift/usr/lib/swift/shims/LibcShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeStubs.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RefCount.h"
+- "/home/tanner/swift/usr/lib/swift/shims/HeapObject.h"
+- "/home/tanner/swift/usr/lib/swift/shims/GlobalObjects.h"
+- "/home/tanner/swift/usr/lib/swift/shims/FoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/CoreFoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/tanner/swift/usr/lib/swift/shims/module.map"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/InterchangeData.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Data.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/OperatingSystem.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/libc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/String.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Hummingbird.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Strand.swiftmodule"
+interface-hash: "2962e613ef648baca432c847f451f4f8"

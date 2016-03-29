@@ -1,0 +1,304 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "Jeeves"
+provides-nominal:
+- "C5Vapor6Jeeves"
+provides-member:
+- ["C5Vapor6Jeeves", ""]
+- ["C5Vapor8Response", ""]
+- ["C5Vapor8Response", "notFound"]
+depends-top-level:
+- "Int"
+- "Hashable"
+- "ServerDriver"
+- !private "IntegerLiteralType"
+- !private "Background"
+- "Jeeves"
+- "Socket"
+- "String"
+- !private "StringLiteralType"
+- "ThreadSafeSocketStore"
+- !private "??"
+- !private "SOMAXCONN"
+- "ServerDriverDelegate"
+- !private "Log"
+- "BooleanLiteralType"
+- "Response"
+- "Vapor"
+- !private "FloatLiteralType"
+depends-member:
+- !private ["Ps9AnyObject", "Background"]
+- !private ["Ps9AnyObject", "Int"]
+- !private ["Ps9AnyObject", "Log"]
+- !private ["Ps9AnyObject", "Response"]
+- !private ["Ps9AnyObject", "SOMAXCONN"]
+- !private ["Ps9AnyObject", "Socket"]
+- ["Ps9AnyObject", "ThreadSafeSocketStore"]
+- !private ["Ps9AnyObject", "activeSockets"]
+- ["Ps9AnyObject", "boot"]
+- ["Ps9AnyObject", "delegate"]
+- !private ["Ps9AnyObject", "error"]
+- !private ["Ps9AnyObject", "forEach"]
+- ["Ps9AnyObject", "halt"]
+- !private ["Ps9AnyObject", "handle"]
+- ["Ps9AnyObject", "init"]
+- !private ["Ps9AnyObject", "insert"]
+- !private ["Ps9AnyObject", "notFound"]
+- !private ["Ps9AnyObject", "remove"]
+- !private ["Ps9AnyObject", "streamSocket"]
+- !private ["Ps9AnyObject", "supportsKeepAlive"]
+- ["Ps9AnyObject", ""]
+- !private ["Ps18BidirectionalIndex", "init"]
+- !private ["P5Vapor22BitshiftOperationsType", "init"]
+- !private ["Ps17BitwiseOperations", "init"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["Sb", "deinit"]
+- !private ["Ps7Boolean", "_getBuiltinLogicValue"]
+- !private ["Ps25BooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["P5Vapor15ByteConvertible", "init"]
+- !private ["Ps7CVarArg", "init"]
+- !private ["Vs9Character", "deinit"]
+- !private ["Ps10Comparable", "init"]
+- !private ["Ps28CustomDebugStringConvertible", "init"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "_getBuiltinLogicValue"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "init"]
+- !private ["Ps17CustomReflectable", "_getBuiltinLogicValue"]
+- !private ["Ps17CustomReflectable", "init"]
+- !private ["Ps23CustomStringConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps23CustomStringConvertible", "init"]
+- !private ["P2C715DataConvertible", "init"]
+- !private ["P2C717DataInitializable", "init"]
+- !private ["P2C717DataRepresentable", "init"]
+- !private ["Sd", "deinit"]
+- !private ["Ps9Equatable", "Response"]
+- !private ["Ps9Equatable", "_getBuiltinLogicValue"]
+- !private ["Ps9Equatable", "accept"]
+- !private ["Ps9Equatable", "bind"]
+- !private ["Ps9Equatable", "close"]
+- !private ["Ps9Equatable", "init"]
+- !private ["Ps9Equatable", "listen"]
+- !private ["Ps9Equatable", "makeSocket"]
+- !private ["Ps9Equatable", "notFound"]
+- !private ["Ps9Equatable", "readRequest"]
+- !private ["Ps9Equatable", "write"]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["Sf", "deinit"]
+- !private ["Ps12ForwardIndex", "init"]
+- !private ["Ps8Hashable", "_getBuiltinLogicValue"]
+- !private ["Ps8Hashable", "accept"]
+- !private ["Ps8Hashable", "bind"]
+- !private ["Ps8Hashable", "close"]
+- !private ["Ps8Hashable", "init"]
+- !private ["Ps8Hashable", "listen"]
+- !private ["Ps8Hashable", "makeSocket"]
+- !private ["Ps8Hashable", "readRequest"]
+- !private ["Ps8Hashable", "write"]
+- !private ["Si", "deinit"]
+- !private ["Si", "init"]
+- !private ["Vs5Int16", "deinit"]
+- !private ["Vs5Int32", "deinit"]
+- !private ["Vs5Int64", "deinit"]
+- !private ["Vs4Int8", "deinit"]
+- !private ["Ps7Integer", "init"]
+- !private ["Ps17IntegerArithmetic", "init"]
+- !private ["Ps25IntegerLiteralConvertible", "init"]
+- !private ["C5Vapor6Jeeves", "Background"]
+- ["C5Vapor6Jeeves", "Int"]
+- !private ["C5Vapor6Jeeves", "Log"]
+- !private ["C5Vapor6Jeeves", "Response"]
+- !private ["C5Vapor6Jeeves", "SOMAXCONN"]
+- ["C5Vapor6Jeeves", "ServerDriverDelegate"]
+- ["C5Vapor6Jeeves", "Socket"]
+- ["C5Vapor6Jeeves", "String"]
+- ["C5Vapor6Jeeves", "ThreadSafeSocketStore"]
+- !private ["C5Vapor6Jeeves", "activeSockets"]
+- ["C5Vapor6Jeeves", "boot"]
+- ["C5Vapor6Jeeves", "deinit"]
+- ["C5Vapor6Jeeves", "delegate"]
+- ["C5Vapor6Jeeves", "halt"]
+- !private ["C5Vapor6Jeeves", "handle"]
+- ["C5Vapor6Jeeves", "init"]
+- !private ["C5Vapor6Jeeves", "streamSocket"]
+- !private ["P5Vapor17JsonRepresentable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor17JsonRepresentable", "init"]
+- !private ["C5Vapor3Log", "error"]
+- !private ["Ps10MirrorPath", "init"]
+- !private ["P5Vapor4Node", "init"]
+- !private ["P5Vapor17NodeInitializable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor17NodeInitializable", "init"]
+- !private ["Sq", "deinit"]
+- !private ["Ps12OutputStream", "init"]
+- !private ["Ps17RandomAccessIndex", "init"]
+- !private ["C5Vapor7Request", "supportsKeepAlive"]
+- ["C5Vapor8Response", "Response"]
+- !private ["C5Vapor8Response", "deinit"]
+- !private ["C5Vapor8Response", "init"]
+- ["C5Vapor8Response", "notFound"]
+- !private ["P5Vapor21ResponseRepresentable", "Response"]
+- !private ["P5Vapor21ResponseRepresentable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor21ResponseRepresentable", "init"]
+- !private ["P5Vapor21ResponseRepresentable", "notFound"]
+- !private ["P5Vapor12ServerDriver", "Background"]
+- !private ["P5Vapor12ServerDriver", "Int"]
+- !private ["P5Vapor12ServerDriver", "Log"]
+- !private ["P5Vapor12ServerDriver", "Response"]
+- !private ["P5Vapor12ServerDriver", "SOMAXCONN"]
+- !private ["P5Vapor12ServerDriver", "Socket"]
+- ["P5Vapor12ServerDriver", "ThreadSafeSocketStore"]
+- !private ["P5Vapor12ServerDriver", "activeSockets"]
+- ["P5Vapor12ServerDriver", "boot"]
+- ["P5Vapor12ServerDriver", "delegate"]
+- ["P5Vapor12ServerDriver", "halt"]
+- !private ["P5Vapor12ServerDriver", "handle"]
+- !private ["P5Vapor12ServerDriver", "streamSocket"]
+- ["P5Vapor12ServerDriver", ""]
+- !private ["P5Vapor20ServerDriverDelegate", "serverDriverDidReceiveRequest"]
+- !private ["Ps13SignedInteger", "init"]
+- !private ["Ps12SignedNumber", "init"]
+- !private ["P5Vapor6Socket", "accept"]
+- !private ["P5Vapor6Socket", "bind"]
+- !private ["P5Vapor6Socket", "close"]
+- !private ["P5Vapor6Socket", "listen"]
+- !private ["P5Vapor6Socket", "makeSocket"]
+- !private ["P5Vapor6Socket", "readRequest"]
+- !private ["P5Vapor6Socket", "write"]
+- !private ["P5Vapor8SocketIO", "accept"]
+- !private ["P5Vapor8SocketIO", "bind"]
+- !private ["P5Vapor8SocketIO", "close"]
+- !private ["P5Vapor8SocketIO", "listen"]
+- !private ["P5Vapor8SocketIO", "makeSocket"]
+- !private ["P5Vapor8SocketIO", "readRequest"]
+- !private ["P5Vapor8SocketIO", "write"]
+- !private ["Ps10Streamable", "init"]
+- !private ["Ps10Strideable", "init"]
+- !private ["SS", "init"]
+- !private ["P5Vapor19StringInitializable", "init"]
+- !private ["Ps30StringInterpolationConvertible", "init"]
+- !private ["Ps24StringLiteralConvertible", "init"]
+- !private ["C5Vapor21ThreadSafeSocketStore", "forEach"]
+- ["C5Vapor21ThreadSafeSocketStore", "init"]
+- !private ["C5Vapor21ThreadSafeSocketStore", "insert"]
+- !private ["C5Vapor21ThreadSafeSocketStore", "remove"]
+- !private ["Su", "deinit"]
+- !private ["Vs6UInt16", "deinit"]
+- !private ["Vs6UInt32", "deinit"]
+- !private ["Vs6UInt64", "deinit"]
+- !private ["Vs5UInt8", "deinit"]
+- !private ["Sc", "deinit"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "init"]
+- !private ["Ps33_BuiltinBooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["Ps33_BuiltinIntegerLiteralConvertible", "init"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "init"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "init"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "init"]
+- !private ["Ps14_Incrementable", "init"]
+- !private ["Ps8_Integer", "init"]
+- !private ["Ps18_IntegerArithmetic", "init"]
+- !private ["Ps22_RandomAccessAmbiguity", "init"]
+- !private ["Ps14_SignedInteger", "init"]
+depends-nominal:
+- "Ps9AnyObject"
+- !private "Ps18BidirectionalIndex"
+- !private "P5Vapor22BitshiftOperationsType"
+- !private "Ps17BitwiseOperations"
+- !private "Sb"
+- !private "Ps7Boolean"
+- !private "Ps25BooleanLiteralConvertible"
+- !private "P5Vapor15ByteConvertible"
+- !private "Ps7CVarArg"
+- !private "Vs9Character"
+- !private "Ps10Comparable"
+- !private "Ps28CustomDebugStringConvertible"
+- !private "Ps29CustomPlaygroundQuickLookable"
+- !private "Ps17CustomReflectable"
+- !private "Ps23CustomStringConvertible"
+- !private "P2C715DataConvertible"
+- !private "P2C717DataInitializable"
+- !private "P2C717DataRepresentable"
+- !private "Sd"
+- !private "Ps9Equatable"
+- !private "Ps41ExtendedGraphemeClusterLiteralConvertible"
+- !private "Sf"
+- !private "Ps12ForwardIndex"
+- !private "Ps8Hashable"
+- !private "Si"
+- !private "Vs5Int16"
+- !private "Vs5Int32"
+- !private "Vs5Int64"
+- !private "Vs4Int8"
+- !private "Ps7Integer"
+- !private "Ps17IntegerArithmetic"
+- !private "Ps25IntegerLiteralConvertible"
+- "C5Vapor6Jeeves"
+- !private "P5Vapor17JsonRepresentable"
+- !private "C5Vapor3Log"
+- !private "Ps10MirrorPath"
+- !private "P5Vapor4Node"
+- !private "P5Vapor17NodeInitializable"
+- !private "Sq"
+- !private "Ps12OutputStream"
+- !private "Ps17RandomAccessIndex"
+- !private "C5Vapor7Request"
+- "C5Vapor8Response"
+- !private "P5Vapor21ResponseRepresentable"
+- "P5Vapor12ServerDriver"
+- !private "P5Vapor20ServerDriverDelegate"
+- !private "Ps13SignedInteger"
+- !private "Ps12SignedNumber"
+- !private "P5Vapor6Socket"
+- !private "P5Vapor8SocketIO"
+- !private "Ps10Streamable"
+- !private "Ps10Strideable"
+- !private "SS"
+- !private "P5Vapor19StringInitializable"
+- !private "Ps30StringInterpolationConvertible"
+- !private "Ps24StringLiteralConvertible"
+- "C5Vapor21ThreadSafeSocketStore"
+- !private "Su"
+- !private "Vs6UInt16"
+- !private "Vs6UInt32"
+- !private "Vs6UInt64"
+- !private "Vs5UInt8"
+- !private "Sc"
+- !private "Ps31UnicodeScalarLiteralConvertible"
+- !private "Ps33_BuiltinBooleanLiteralConvertible"
+- !private "Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible"
+- !private "Ps33_BuiltinIntegerLiteralConvertible"
+- !private "Ps32_BuiltinStringLiteralConvertible"
+- !private "Ps37_BuiltinUTF16StringLiteralConvertible"
+- !private "Ps39_BuiltinUnicodeScalarLiteralConvertible"
+- !private "Ps14_Incrementable"
+- !private "Ps8_Integer"
+- !private "Ps18_IntegerArithmetic"
+- !private "Ps22_RandomAccessAmbiguity"
+- !private "Ps14_SignedInteger"
+depends-dynamic-lookup:
+depends-external:
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/shims/Visibility.h"
+- "/home/tanner/swift/usr/lib/swift/shims/UnicodeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStdint.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStddef.h"
+- "/home/tanner/swift/usr/lib/swift/shims/LibcShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeStubs.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RefCount.h"
+- "/home/tanner/swift/usr/lib/swift/shims/HeapObject.h"
+- "/home/tanner/swift/usr/lib/swift/shims/GlobalObjects.h"
+- "/home/tanner/swift/usr/lib/swift/shims/FoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/CoreFoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/tanner/swift/usr/lib/swift/shims/module.map"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/InterchangeData.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Data.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/OperatingSystem.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/libc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/String.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Hummingbird.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Strand.swiftmodule"
+interface-hash: "76c11a33c01cccdb886bc3015430d7e1"

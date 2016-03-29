@@ -1,0 +1,8 @@
+version: "Swift version 3.0-dev (LLVM b010debd0e, Clang 3e4d01d89b, Swift 7182c58cb2)"
+options: "7e8e7061e61bc98990e299e3ca8740d9"
+build_time: [512525472, 827613000]
+inputs:
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/Vapor-0.4.0/Sources/VaporDev/main.swift": [512525417, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/Vapor-0.4.0/Sources/VaporDev/Controllers/UserController.swift": [512525416, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/Vapor-0.4.0/Sources/VaporDev/Models/User.swift": [512525416, 0]
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/Vapor-0.4.0/Sources/VaporDev/Middleware/AuthMiddleware.swift": [512525416, 0]

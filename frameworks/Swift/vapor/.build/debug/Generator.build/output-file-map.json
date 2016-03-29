@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Generator.build/master.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/Vapor-0.4.0/Sources/Generator/main.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Generator.build/main.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Generator.build/main.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Generator.build/main~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Generator.build/main.swiftdeps"
+  }
+}

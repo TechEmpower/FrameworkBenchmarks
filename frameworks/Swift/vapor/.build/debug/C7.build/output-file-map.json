@@ -1,0 +1,89 @@
+{
+  "": {
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/master.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/AsyncStream.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStream.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStream.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStream~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStream.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/Data.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Data.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Data.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Data~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Data.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/Stream.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Stream.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Stream.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Stream~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Stream.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/StreamServer.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamServer.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamServer.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamServer~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamServer.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/AsyncStreamClient.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStreamClient.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStreamClient.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStreamClient~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStreamClient.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/Byte.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Byte.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Byte.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Byte~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Byte.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/CustomDataStore.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/CustomDataStore.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/CustomDataStore.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/CustomDataStore~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/CustomDataStore.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/Storage.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Storage.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Storage.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Storage~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Storage.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/URI.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/URI.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/URI.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/URI~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/URI.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/CaseInsensitiveString.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/CaseInsensitiveString.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/CaseInsensitiveString.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/CaseInsensitiveString~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/CaseInsensitiveString.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/Drain.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Drain.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Drain.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Drain~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/Drain.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/StreamClient.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamClient.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamClient.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamClient~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamClient.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/StreamSequence.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamSequence.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamSequence.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamSequence~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/StreamSequence.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/C7-0.1.11/Sources/AsyncStreamServer.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStreamServer.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStreamServer.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStreamServer~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.build/AsyncStreamServer.swiftdeps"
+  }
+}

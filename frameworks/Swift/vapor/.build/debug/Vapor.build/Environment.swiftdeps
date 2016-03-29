@@ -1,0 +1,144 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "Environment"
+- "=="
+provides-nominal:
+- "O5Vapor11Environment"
+provides-member:
+- ["O5Vapor11Environment", ""]
+depends-top-level:
+- "Equatable"
+- "String"
+- "Environment"
+- !private "~="
+- "=="
+- "CustomStringConvertible"
+- "Bool"
+- !private "StringLiteralType"
+depends-member:
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["Ps7Boolean", "_getBuiltinLogicValue"]
+- !private ["Ps25BooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps10Comparable", "lowercased"]
+- !private ["Ps28CustomDebugStringConvertible", "lowercased"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "_getBuiltinLogicValue"]
+- !private ["Ps29CustomPlaygroundQuickLookable", "lowercased"]
+- !private ["Ps17CustomReflectable", "_getBuiltinLogicValue"]
+- !private ["Ps17CustomReflectable", "lowercased"]
+- !private ["Ps23CustomStringConvertible", "Custom"]
+- !private ["Ps23CustomStringConvertible", "Development"]
+- !private ["Ps23CustomStringConvertible", "Production"]
+- !private ["Ps23CustomStringConvertible", "Test"]
+- !private ["Ps23CustomStringConvertible", "_getBuiltinLogicValue"]
+- ["Ps23CustomStringConvertible", "description"]
+- ["Ps23CustomStringConvertible", ""]
+- !private ["P2C715DataConvertible", "lowercased"]
+- !private ["P2C717DataInitializable", "lowercased"]
+- !private ["P2C717DataRepresentable", "lowercased"]
+- ["O5Vapor11Environment", "Custom"]
+- ["O5Vapor11Environment", "Development"]
+- ["O5Vapor11Environment", "Environment"]
+- ["O5Vapor11Environment", "Production"]
+- ["O5Vapor11Environment", "String"]
+- ["O5Vapor11Environment", "Test"]
+- ["O5Vapor11Environment", "deinit"]
+- ["O5Vapor11Environment", "description"]
+- ["O5Vapor11Environment", "fromString"]
+- !private ["Ps9Equatable", "Custom"]
+- !private ["Ps9Equatable", "Development"]
+- !private ["Ps9Equatable", "Production"]
+- !private ["Ps9Equatable", "Test"]
+- !private ["Ps9Equatable", "_getBuiltinLogicValue"]
+- ["Ps9Equatable", "description"]
+- !private ["Ps9Equatable", "lowercased"]
+- ["Ps9Equatable", ""]
+- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "lowercased"]
+- !private ["Ps8Hashable", "_getBuiltinLogicValue"]
+- !private ["Ps8Hashable", "lowercased"]
+- !private ["P5Vapor17JsonRepresentable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor17JsonRepresentable", "lowercased"]
+- !private ["Ps10MirrorPath", "lowercased"]
+- !private ["P5Vapor4Node", "lowercased"]
+- !private ["P5Vapor17NodeInitializable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor17NodeInitializable", "lowercased"]
+- !private ["Ps12OutputStream", "lowercased"]
+- !private ["Vs5Range", "deinit"]
+- !private ["P5Vapor21ResponseRepresentable", "_getBuiltinLogicValue"]
+- !private ["P5Vapor21ResponseRepresentable", "lowercased"]
+- !private ["Ps10Streamable", "lowercased"]
+- !private ["SS", "deinit"]
+- !private ["SS", "lowercased"]
+- !private ["P5Vapor19StringInitializable", "lowercased"]
+- !private ["Ps30StringInterpolationConvertible", "lowercased"]
+- !private ["Ps24StringLiteralConvertible", "lowercased"]
+- !private ["Ps31UnicodeScalarLiteralConvertible", "lowercased"]
+- !private ["Ps33_BuiltinBooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "lowercased"]
+- !private ["Ps32_BuiltinStringLiteralConvertible", "lowercased"]
+- !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "lowercased"]
+- !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "lowercased"]
+- !private ["Vs26_OptionalNilComparisonType", "deinit"]
+depends-nominal:
+- !private "Sb"
+- !private "Ps7Boolean"
+- !private "Ps25BooleanLiteralConvertible"
+- !private "Ps10Comparable"
+- !private "Ps28CustomDebugStringConvertible"
+- !private "Ps29CustomPlaygroundQuickLookable"
+- !private "Ps17CustomReflectable"
+- "Ps23CustomStringConvertible"
+- !private "P2C715DataConvertible"
+- !private "P2C717DataInitializable"
+- !private "P2C717DataRepresentable"
+- "O5Vapor11Environment"
+- "Ps9Equatable"
+- !private "Ps41ExtendedGraphemeClusterLiteralConvertible"
+- !private "Ps8Hashable"
+- !private "P5Vapor17JsonRepresentable"
+- !private "Ps10MirrorPath"
+- !private "P5Vapor4Node"
+- !private "P5Vapor17NodeInitializable"
+- !private "Ps12OutputStream"
+- !private "Vs5Range"
+- !private "P5Vapor21ResponseRepresentable"
+- !private "Ps10Streamable"
+- !private "SS"
+- !private "P5Vapor19StringInitializable"
+- !private "Ps30StringInterpolationConvertible"
+- !private "Ps24StringLiteralConvertible"
+- !private "Ps31UnicodeScalarLiteralConvertible"
+- !private "Ps33_BuiltinBooleanLiteralConvertible"
+- !private "Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible"
+- !private "Ps32_BuiltinStringLiteralConvertible"
+- !private "Ps37_BuiltinUTF16StringLiteralConvertible"
+- !private "Ps39_BuiltinUnicodeScalarLiteralConvertible"
+- !private "Vs26_OptionalNilComparisonType"
+depends-dynamic-lookup:
+depends-external:
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/shims/Visibility.h"
+- "/home/tanner/swift/usr/lib/swift/shims/UnicodeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStdint.h"
+- "/home/tanner/swift/usr/lib/swift/shims/SwiftStddef.h"
+- "/home/tanner/swift/usr/lib/swift/shims/LibcShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeStubs.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RuntimeShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/RefCount.h"
+- "/home/tanner/swift/usr/lib/swift/shims/HeapObject.h"
+- "/home/tanner/swift/usr/lib/swift/shims/GlobalObjects.h"
+- "/home/tanner/swift/usr/lib/swift/shims/FoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/shims/CoreFoundationShims.h"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/glibc.modulemap"
+- "/home/tanner/swift/usr/lib/swift/shims/module.map"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/InterchangeData.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Data.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/C7.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/OperatingSystem.swiftmodule"
+- "/home/tanner/swift/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/libc.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/String.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Hummingbird.swiftmodule"
+- "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/Strand.swiftmodule"
+interface-hash: "37ca926da37febf21b181aad1f771119"

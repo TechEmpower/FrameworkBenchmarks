@@ -1,0 +1,35 @@
+{
+  "": {
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/master.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/JSON-0.4.1/Source/JSONInterchangeDataParser.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONInterchangeDataParser.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONInterchangeDataParser.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONInterchangeDataParser~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONInterchangeDataParser.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/JSON-0.4.1/Source/JSONParser.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONParser.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONParser.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONParser~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONParser.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/JSON-0.4.1/Source/JSONSerializer.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONSerializer.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONSerializer.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONSerializer~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONSerializer.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/JSON-0.4.1/Source/JSONInterchangeDataSerializer.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONInterchangeDataSerializer.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONInterchangeDataSerializer.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONInterchangeDataSerializer~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSONInterchangeDataSerializer.swiftdeps"
+  },
+  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/JSON-0.4.1/Source/JSON.swift": {
+    "dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSON.d",
+    "object": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSON.swift.o",
+    "swiftmodule": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSON~partial.swiftmodule",
+    "swift-dependencies": "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/.build/debug/JSON.build/JSON.swiftdeps"
+  }
+}
