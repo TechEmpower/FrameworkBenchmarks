@@ -963,7 +963,7 @@ class Benchmarker:
     self.fwroot = setup_util.get_fwroot()
 
     # setup results and latest_results directories 
-    self.result_directory = os.path.join("results", self.name)
+    self.result_directory = os.path.join("results")
     if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
         shutil.rmtree(os.path.join(self.fwroot, "results"))
     self.latest_results_directory = self.latest_results_directory()
@@ -985,11 +985,10 @@ class Benchmarker:
         #Load json file into results object
         self.results = json.load(f)
     except IOError:
-      logging.warn("results.json for test %s not found.",self.name) 
+      logging.warn("results.json for test not found.")
     
     if self.results == None:
       self.results = dict()
-      self.results['name'] = self.name
       self.results['concurrencyLevels'] = self.concurrency_levels
       self.results['queryIntervals'] = self.query_levels
       self.results['frameworks'] = [t.name for t in self.__gather_tests]

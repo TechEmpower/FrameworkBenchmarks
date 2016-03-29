@@ -156,7 +156,6 @@ def main(argv=None):
     parser.add_argument('-m', '--mode', choices=['benchmark', 'verify'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown')
     parser.add_argument('--list-tests', action='store_true', default=False, help='lists all the known tests that can run')
     parser.add_argument('--list-test-metadata', action='store_true', default=False, help='writes all the test metadata as a JSON file in the results directory')
-    parser.add_argument('--name', default="ec2", help='The name to give this test. Results will be placed in a folder using this name.')
     parser.add_argument('--os', choices=['linux', 'windows'], default='linux', help='The operating system of the application/framework server (the one running' +
                         'this binary')
     parser.add_argument('--database-os', choices=['linux', 'windows'], default='linux', help='The operating system of the database server.')
