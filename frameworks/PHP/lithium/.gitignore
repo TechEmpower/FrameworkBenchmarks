@@ -9,3 +9,4 @@
 .idea
 vendor
 deploy/php-fpm.pid
+/app/resources/
