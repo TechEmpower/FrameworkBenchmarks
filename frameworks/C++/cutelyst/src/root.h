@@ -13,9 +13,6 @@ public:
     explicit Root(QObject *parent = 0);
     ~Root();
 
-    C_ATTR(defaultPage, :Path)
-    void defaultPage(Context *c);
-
 private:
     C_ATTR(End, :AutoArgs)
     void End(Context *c);

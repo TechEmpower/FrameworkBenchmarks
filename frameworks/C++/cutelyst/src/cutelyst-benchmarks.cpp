@@ -26,7 +26,9 @@ cutelyst_benchmarks::~cutelyst_benchmarks()
 
 bool cutelyst_benchmarks::init()
 {
-    new Root(this);
+    if (!config(QLatin1String("SendDate")).isNull()) {
+        new Root(this);
+    }
 
     new JsonTest(this);
     new SingleDatabaseQueryTest(this);
