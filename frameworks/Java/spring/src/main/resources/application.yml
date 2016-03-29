@@ -12,6 +12,8 @@ spring:
       naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
       ddl-auto: validate
     open_in_view: false
+server:
+  server-header: Undertow
 
 ---
 spring:
