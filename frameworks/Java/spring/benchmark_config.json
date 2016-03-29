@@ -17,7 +17,7 @@
       "language": "Java",
       "orm": "Full",
       "platform": "Servlet",
-      "webserver": "Tomcat",
+      "webserver": "Undertow",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "spring",
