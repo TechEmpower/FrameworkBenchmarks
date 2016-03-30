@@ -522,8 +522,7 @@ class Benchmarker:
       os.makedirs(logDir)
     except Exception:
       pass
-    with open(os.path.join(logDir, 'out.txt'), 'w') as out, \
-         open(os.path.join(logDir, 'verification.txt'), 'w') as verification:
+    with open(os.path.join(logDir, 'out.txt'), 'w') as out:
 
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         out.write("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.\n")
@@ -604,8 +603,12 @@ class Benchmarker:
         # Verify URLs
         ##########################
         logging.info("Verifying framework URLs")
-        passed_verify = test.verify_urls(verification)
-        verification.flush()
+        verificationPath = os.path.join(logDir,"verification")
+        try:
+          os.makedirs(verificationPath)
+        except OSError:
+          pass
+        passed_verify = test.verify_urls(verificationPath)
 
         ##########################
         # Benchmark this test

@@ -377,63 +377,65 @@ class FrameworkTest:
   # or not it passed
   # Returns True if all verifications succeeded
   ############################################################
-  def verify_urls(self, verification):
+  def verify_urls(self, verificationPath):
     result = True
     
     def verify_type(test_type):
-      
-      test = self.runTests[test_type]
-      test.setup_out(verification)
-      verification.write(header("VERIFYING %s" % test_type.upper()))
-      
-      base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
-      
-      try:
-        results = test.verify(base_url)
-      except ConnectionError as e:
-        results = [('fail',"Server did not respond to request", base_url)]
-        logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
-      except Exception as e:
-        results = [('fail',"""Caused Exception in TFB
-          This almost certainly means your return value is incorrect, 
-          but also that you have found a bug. Please submit an issue
-          including this message: %s\n%s""" % (e, traceback.format_exc()), 
-          base_url)]
-        logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
-        traceback.format_exc()
+      with open(os.path.join(verificationPath, (test_type + '.txt')), 'w') as verification:
+        test = self.runTests[test_type]
+        test.setup_out(verification)
+        verification.write(header("VERIFYING %s" % test_type.upper()))
 
-      test.failed = any(result == 'fail' for (result, reason, url) in results)
-      test.warned = any(result == 'warn' for (result, reason, url) in results)
-      test.passed = all(result == 'pass' for (result, reason, url) in results)
-      
-      def output_result(result, reason, url):
-        specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
-        color = Fore.GREEN
-        if result.upper() == "WARN":
-          color = Fore.YELLOW
-        elif result.upper() == "FAIL":
-          color = Fore.RED
+        base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
 
-        verification.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
-        print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
-        if reason is not None and len(reason) != 0:
-          for line in reason.splitlines():
-            verification.write("     " + line + '\n')
-            print "     " + line
-          if not test.passed:
-            verification.write("     See %s\n" % specific_rules_url)
-            print "     See %s\n" % specific_rules_url
+        try:
+          results = test.verify(base_url)
+        except ConnectionError as e:
+          results = [('fail',"Server did not respond to request", base_url)]
+          logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
+        except Exception as e:
+          results = [('fail',"""Caused Exception in TFB
+            This almost certainly means your return value is incorrect,
+            but also that you have found a bug. Please submit an issue
+            including this message: %s\n%s""" % (e, traceback.format_exc()),
+            base_url)]
+          logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
+          traceback.format_exc()
 
-      [output_result(r1,r2,url) for (r1, r2, url) in results]
+        test.failed = any(result == 'fail' for (result, reason, url) in results)
+        test.warned = any(result == 'warn' for (result, reason, url) in results)
+        test.passed = all(result == 'pass' for (result, reason, url) in results)
 
-      if test.failed:
-        self.benchmarker.report_verify_results(self, test_type, 'fail')
-      elif test.warned:
-        self.benchmarker.report_verify_results(self, test_type, 'warn')
-      elif test.passed:
-        self.benchmarker.report_verify_results(self, test_type, 'pass')
-      else:
-        raise Exception("Unknown error - test did not pass,warn,or fail")
+        def output_result(result, reason, url):
+          specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
+          color = Fore.GREEN
+          if result.upper() == "WARN":
+            color = Fore.YELLOW
+          elif result.upper() == "FAIL":
+            color = Fore.RED
+
+          verification.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
+          print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
+          if reason is not None and len(reason) != 0:
+            for line in reason.splitlines():
+              verification.write("     " + line + '\n')
+              print "     " + line
+            if not test.passed:
+              verification.write("     See %s\n" % specific_rules_url)
+              print "     See %s\n" % specific_rules_url
+
+        [output_result(r1,r2,url) for (r1, r2, url) in results]
+
+        if test.failed:
+          self.benchmarker.report_verify_results(self, test_type, 'fail')
+        elif test.warned:
+          self.benchmarker.report_verify_results(self, test_type, 'warn')
+        elif test.passed:
+          self.benchmarker.report_verify_results(self, test_type, 'pass')
+        else:
+          raise Exception("Unknown error - test did not pass,warn,or fail")
+
+        verification.flush()
 
     result = True
     for test_type in self.runTests:
