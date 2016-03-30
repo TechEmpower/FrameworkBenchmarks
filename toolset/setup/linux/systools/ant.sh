@@ -10,6 +10,6 @@ sudo apt-get -y --force-yes install ant
 
 echo "export PATH=/usr/share/ant/bin:\$PATH" > $IROOT/ant.installed
 
-ant -version
-
 source $IROOT/ant.installed
+
+ant -version
