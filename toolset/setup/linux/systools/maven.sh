@@ -11,6 +11,6 @@ sudo apt-get -y --force-yes install maven3
 
 echo "export PATH=/usr/share/maven3/bin:\$PATH" > $IROOT/maven.installed
 
-mvn -version
-
 source $IROOT/maven.installed
+
+mvn -version
