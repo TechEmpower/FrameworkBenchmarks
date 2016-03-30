@@ -617,8 +617,12 @@ class Benchmarker:
           logging.info("Benchmarking")
           out.write(header("Benchmarking %s" % test.name))
           out.flush()
-          test.benchmark(out)
-          out.flush()
+          benchmarkPath = os.path.join(logDir,"benchmark")
+          try:
+            os.makedirs(benchmarkPath)
+          except OSError:
+            pass
+          test.benchmark(benchmarkPath)
 
         ##########################
         # Stop this test

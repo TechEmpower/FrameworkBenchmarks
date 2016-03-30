@@ -453,46 +453,47 @@ class FrameworkTest:
   # Runs the benchmark for each type of test that it implements
   # JSON/DB/Query.
   ############################################################
-  def benchmark(self, out):
+  def benchmark(self, benchmarkPath):
 
-    def benchmark_type(test_type):  
-      out.write("BENCHMARKING %s ... " % test_type.upper())
+    def benchmark_type(test_type):
+      with open(os.path.join(benchmarkPath, (test_type + '.txt')), 'w') as out:
+        out.write("BENCHMARKING %s ... " % test_type.upper())
 
-      test = self.runTests[test_type]
-      test.setup_out(out)
-      output_file = self.benchmarker.output_file(self.name, test_type)
-      if not os.path.exists(output_file):
-        # Open to create the empty file
-        with open(output_file, 'w'):
-          pass
+        test = self.runTests[test_type]
+        test.setup_out(out)
+        output_file = self.benchmarker.output_file(self.name, test_type)
+        if not os.path.exists(output_file):
+          # Open to create the empty file
+          with open(output_file, 'w'):
+            pass
 
-      if not test.failed:
-        if test_type == 'plaintext': # One special case
-          remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
-        elif test_type == 'query' or test_type == 'update':
-          remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
-        else:
-          remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
-        
-        # Begin resource usage metrics collection
-        self.__begin_logging(test_type)
-        
-        # Run the benchmark 
-        with open(output_file, 'w') as raw_file:
-          p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=raw_file)
-          p.communicate(remote_script)
-          out.flush()
+        if not test.failed:
+          if test_type == 'plaintext': # One special case
+            remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
+          elif test_type == 'query' or test_type == 'update':
+            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
+          else:
+            remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
 
-        # End resource usage metrics collection
-        self.__end_logging()
+          # Begin resource usage metrics collection
+          self.__begin_logging(test_type)
 
-      results = self.__parse_test(test_type)
-      print "Benchmark results:"
-      pprint(results)
+          # Run the benchmark
+          with open(output_file, 'w') as raw_file:
+            p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=raw_file)
+            p.communicate(remote_script)
+            out.flush()
 
-      self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
-      out.write( "Complete\n" )
-      out.flush()
+          # End resource usage metrics collection
+          self.__end_logging()
+
+        results = self.__parse_test(test_type)
+        print "Benchmark results:"
+        pprint(results)
+
+        self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
+        out.write( "Complete\n" )
+        out.flush()
     
     for test_type in self.runTests:
       benchmark_type(test_type)
