@@ -10,14 +10,12 @@ eval "$(curl -sL https://gist.githubusercontent.com/kylef/5c0475ff02b7c7671d2a/r
 
 sudo apt-get install clang libicu-dev
 # printenv
-<<<<<<< HEAD
+
 swift build -c release -v -Xlinker
-.build/debug/App &
-=======
+
 # swift build -c release -v -Xlinker -v
-export LD_LIBRARY_PATH=/home/travis/build/qutheory/FrameworkBenchmarks/frameworks/Swift/vapor/.build/release
+# export LD_LIBRARY_PATH=/home/travis/build/qutheory/FrameworkBenchmarks/frameworks/Swift/vapor/.build/release
 .build/release/App &
->>>>>>> f3356432e4f275efabb4897d9d45b86fda8f2ae8
 
 
 # .build/VaporApp &
