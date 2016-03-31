@@ -10,7 +10,7 @@ eval "$(curl -sL https://gist.githubusercontent.com/kylef/5c0475ff02b7c7671d2a/r
 
 # printenv
 
-swift build -c release -v -Xlinker
+swift build -c release
 
 # swift build -c release -v -Xlinker -v
 # export LD_LIBRARY_PATH=/home/travis/build/qutheory/FrameworkBenchmarks/frameworks/Swift/vapor/.build/release
