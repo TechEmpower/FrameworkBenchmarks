@@ -1,5 +1,0 @@
-version: "Swift version 3.0-dev (LLVM b010debd0e, Clang 3e4d01d89b, Swift 7182c58cb2)"
-options: "f27c33d30cc5977e2594d9e5d9157e74"
-build_time: [512525436, 616317000]
-inputs:
-  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/OperatingSystem-0.4.2/Sources/OperatingSystem.swift": [512525427, 0]

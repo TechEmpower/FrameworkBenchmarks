@@ -1,6 +1,0 @@
-version: "Swift version 3.0-dev (LLVM b010debd0e, Clang 3e4d01d89b, Swift 7182c58cb2)"
-options: "46d9cc9d695489a1c4127713643dc351"
-build_time: [512525438, 761552000]
-inputs:
-  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/Hummingbird-1.1.2/Sources/String+Transcoding.swift": [512525433, 0]
-  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/Hummingbird-1.1.2/Sources/Socket.swift": [512525433, 0]

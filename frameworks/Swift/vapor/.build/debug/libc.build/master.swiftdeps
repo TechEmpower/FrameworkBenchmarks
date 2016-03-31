@@ -1,5 +1,0 @@
-version: "Swift version 3.0-dev (LLVM b010debd0e, Clang 3e4d01d89b, Swift 7182c58cb2)"
-options: "7c54542b3f12aa2b3f09de89dce74736"
-build_time: [512525444, 96542000]
-inputs:
-  "/home/tanner/FrameworkBenchmarks/frameworks/Swift/vapor/Packages/Vapor-0.4.0/Sources/libc/libc.swift": [512525416, 0]
