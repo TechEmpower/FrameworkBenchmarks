@@ -6,7 +6,6 @@
     "async": "1.5.0",
     "bluebird": "^2.9.27",
     "handlebars": "^3.0.3",
-    "hiredis": "^0.4.0",
     "mongodb": "2.1.2",
     "mongoose": "4.3.4",
     "mysql": "2.7.0",
@@ -14,7 +13,7 @@
     "pg": "^4.4.3",
     "pg-hstore": "^2.3.2",
     "redis": "^0.12.1",
-    "sequelize": "3.1.1"
+    "sequelize": "3.6.0"
   },
-  "main": "hello.js"
+  "main": "app.js"
 }
