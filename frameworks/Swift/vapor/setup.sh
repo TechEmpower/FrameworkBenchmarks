@@ -10,6 +10,8 @@ eval "$(curl -sL https://gist.githubusercontent.com/kylef/5c0475ff02b7c7671d2a/r
 
 # printenv
 
+sudo apt-get -y install clang libicu-dev
+
 swift build -c release
 
 # swift build -c release -v -Xlinker -v
