@@ -72,9 +72,9 @@ USP_PUTS_CHAR('[');
 
 while (true)
    {
-   (void) mc->findOne(pworld_update->id = u_get_num_random(10000));
+   (void) mc->findOne(pworld_update->id = u_get_num_random(10000-1));
 
-   (void) mc->update(pworld_update->id, "randomNumber", pworld_update->randomNumber = u_get_num_random(10000));
+   (void) mc->update(pworld_update->id, "randomNumber", pworld_update->randomNumber = u_get_num_random(10000-1));
 
 #ifdef AS_cpoll_cppsp_DO
    USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld_update->id, pworld_update->randomNumber);

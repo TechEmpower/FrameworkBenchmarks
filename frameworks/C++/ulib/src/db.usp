@@ -58,7 +58,7 @@ static void usp_end_db()
 Content-Type: application/json
 -->
 <!--#code
-pworld_db->id = u_get_num_random(10000);
+pworld_db->id = u_get_num_random(10000-1);
 
 pstmt_db->execute();
 

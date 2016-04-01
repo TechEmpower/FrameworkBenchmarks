@@ -71,7 +71,7 @@ USP_PUTS_CHAR('[');
 
 while (true)
    {
-   pworld_query->id = u_get_num_random(10000);
+   pworld_query->id = u_get_num_random(10000-1);
 
    pstmt_query->execute();
 
