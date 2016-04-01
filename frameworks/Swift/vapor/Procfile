@@ -1,1 +1,0 @@
-web: App --port=$PORT

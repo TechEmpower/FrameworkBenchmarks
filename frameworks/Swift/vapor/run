@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-set -o pipefail
-
-./build
-echo "Running..."
-.build/debug/App
