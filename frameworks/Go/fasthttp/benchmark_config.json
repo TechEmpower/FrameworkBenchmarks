@@ -46,7 +46,7 @@
       "display_name": "fasthttp-mysql-prefork",
       "notes": "",
       "versus": "go"
-    }
+    },
     "postgresql": {
       "setup_file": "setup-postgresql",
       "json_url": "/json",
