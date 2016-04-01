@@ -76,7 +76,7 @@ USP_PUTS_CHAR('[');
 
 while (true)
    {
-   (void) mc->findOne(pworld_query->id = u_get_num_random(10000));
+   (void) mc->findOne(pworld_query->id = u_get_num_random(10000-1));
 
    (void) UValue::jread(mc->vitem[0], *jquery, rnumber); // { "_id" : 8980.000000, "id" : 8980.000000, "randomNumber" : 2131.000000 }
 

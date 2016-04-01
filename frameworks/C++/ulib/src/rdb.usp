@@ -58,7 +58,7 @@ Content-Type: application/json
 <!--#code
 UStringRep* rep;
 
-(void) rc->get(u_buffer, 6+u_num2str32(u_buffer+6, pworld->id = u_get_num_random(10000)));
+(void) rc->get(u_buffer, 6+u_num2str32(u_buffer+6, pworld->id = u_get_num_random(10000-1)));
 
 rep = rc->vitem[0].rep;
 

@@ -68,7 +68,7 @@ for (i = 0; i < num_queries; ++i)
 
    u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
 
-   pbuffer += 7+u_num2str32(pbuffer+7, pworld->id = u_get_num_random(10000));
+   pbuffer += 7+u_num2str32(pbuffer+7, pworld->id = u_get_num_random(10000-1));
    }
 
 (void) rc->mget(u_buffer, pbuffer-u_buffer);
@@ -84,7 +84,7 @@ while (true)
 
    pbuffer += 7+u_num2str32(pbuffer+7, pworld->id);
   *pbuffer  = ' ';
-   pbuffer += 1+u_num2str32(pbuffer+1, pworld->randomNumber = u_get_num_random(10000));
+   pbuffer += 1+u_num2str32(pbuffer+1, pworld->randomNumber = u_get_num_random(10000-1));
 
 #ifdef AS_cpoll_cppsp_DO
    USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld->id, pworld->randomNumber);

@@ -80,11 +80,11 @@ USP_PUTS_CHAR('[');
 
 while (true)
    {
-   pworld_update->id = u_get_num_random(10000);
+   pworld_update->id = u_get_num_random(10000-1);
 
    pstmt1->execute();
 
-   pworld_update->randomNumber = u_get_num_random(10000);
+   pworld_update->randomNumber = u_get_num_random(10000-1);
 
    pstmt2->execute();
 
