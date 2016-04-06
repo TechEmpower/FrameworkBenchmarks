@@ -49,5 +49,5 @@ task capsule(type: FatCapsule) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.11'
+    gradleVersion = '2.12'
 }
