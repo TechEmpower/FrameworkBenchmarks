@@ -13,6 +13,7 @@ This is the [Parallel Universe Comsat Servlet](http://docs.paralleluniverse.co/c
 * Quasar 0.7.4 (http://docs.paralleluniverse.co/quasar)
 * Comsat 0.7.0 (http://docs.paralleluniverse.co/comsat)
 * Jetty 1.3.19-final (http://undertow.io)
+* Undertow 1.3.19-final (http://undertow.io)
 
 ## Test URLs
 

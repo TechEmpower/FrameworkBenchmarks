@@ -15,6 +15,8 @@ ext.quasarVer  = '0.7.4'
 ext.comsatVer  = '0.7.0'
 ext.capsuleVer = '1.0.1'
 
+ext.jettyVer   = '9.3.8.v20160314'
+
 [compileJava, compileTestJava]*.options*.encoding = "UTF-8"
 
 repositories {
@@ -25,6 +27,22 @@ repositories {
 
 configurations {
     quasar
+}
+
+configurations.all {
+    resolutionStrategy {
+        failOnVersionConflict()
+        force "org.eclipse.jetty:jetty-util:$jettyVer"
+        force "org.eclipse.jetty:jetty-io:$jettyVer"
+        force "org.eclipse.jetty:jetty-http:$jettyVer"
+        force "org.eclipse.jetty:jetty-server:$jettyVer"
+        force "org.eclipse.jetty:jetty-servlet:$jettyVer"
+        force "org.eclipse.jetty:jetty-webapp:$jettyVer"
+        force "org.eclipse.jetty:jetty-xml:$jettyVer"
+        force "org.eclipse.jetty.websocket:websocket-server:$jettyVer"
+        force "org.eclipse.jetty.websocket:websocket-servlet:$jettyVer"
+        force "org.eclipse.jetty.websocket:websocket-client:$jettyVer"
+    }
 }
 
 configurations.capsule.dependencies.clear()
@@ -41,10 +59,18 @@ dependencies {
 }
 
 task capsule(type: FatCapsule) {
-    applicationClass "hello.HelloWebServer"
+    applicationClass "hello.World"
 
     capsuleManifest {
         javaAgents = [configurations.quasar.iterator().next().getName()]
+
+        mode('undertow') {
+            systemProperties['serverClass'] = 'hello.UndertowServer'
+        }
+
+        mode('jetty') {
+            systemProperties['serverClass'] = 'hello.JettyServer'
+        }
     }
 }
 
