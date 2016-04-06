@@ -34,6 +34,7 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVer"
     compile "co.paralleluniverse:comsat-actors-api:$comsatVer"
     compile "co.paralleluniverse:comsat-actors-netty:$comsatVer"
+    compile "co.paralleluniverse:comsat-actors-undertow:$comsatVer"
     compile "co.paralleluniverse:comsat-test-utils:$comsatVer"
 
     capsule "co.paralleluniverse:capsule:$capsuleVer"
@@ -42,10 +43,18 @@ dependencies {
 }
 
 task capsule(type: FatCapsule) {
-    applicationClass "hello.HelloWebActor"
+    applicationClass "hello.World"
 
     capsuleManifest {
         javaAgents = [configurations.quasar.iterator().next().getName()]
+
+        mode('netty') {
+            systemProperties['serverClass'] = 'hello.NettyServer'
+        }
+
+        mode('undertow') {
+            systemProperties['serverClass'] = 'hello.UndertowServer'
+        }
     }
 }
 
