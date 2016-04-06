@@ -8,11 +8,11 @@ apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = '0.2'
+version = '0.3'
 
 ext.jacksonVer = '2.7.0'
 ext.quasarVer  = '0.7.4'
-ext.comsatVer  = '0.6.0'
+ext.comsatVer  = '0.7.0'
 ext.capsuleVer = '1.0.1'
 
 [compileJava, compileTestJava]*.options*.encoding = "UTF-8"
