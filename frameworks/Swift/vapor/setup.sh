@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# install swiftenv for managing Swift versions
-eval "$(curl -sL https://gist.githubusercontent.com/kylef/5c0475ff02b7c7671d2a/raw/02090c7ede5a637b76e6df1710e83cd0bbe7dcdf/swiftenv-install.sh)"
+# install swift
+wget https://swift.org/builds/development/ubuntu1404/swift-DEVELOPMENT-SNAPSHOT-2016-03-24-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-24-a-ubuntu14.04.tar.gz
+tar -zxvf swift-DEVELOPMENT-SNAPSHOT-2016-03-24-a-ubuntu14.04.tar.gz 
+mv swift-DEVELOPMENT-SNAPSHOT-2016-03-24-a-ubuntu14.04 swift
+export PATH=$PWD/swift/usr/bin/:"{$PATH}"
 
 # install Swift compiler dependencies
 sudo apt-get -y install clang libicu-dev
