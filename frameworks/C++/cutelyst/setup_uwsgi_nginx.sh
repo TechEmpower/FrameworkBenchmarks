@@ -10,7 +10,7 @@ mkdir cutelyst-benchmarks || true
 cd cutelyst-benchmarks
 rm -rf *
 
-QT_VERSION_MM=55
+QT_VERSION_MM=56
 export CMAKE_PREFIX_PATH=/opt/qt${QT_VERSION_MM}:${IROOT}
 
 cmake $TROOT -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$IROOT
