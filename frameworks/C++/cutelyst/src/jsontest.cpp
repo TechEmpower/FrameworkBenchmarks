@@ -10,12 +10,10 @@ JsonTest::JsonTest(QObject *parent) : Controller(parent)
 
 void JsonTest::json(Context *c)
 {
-    QJsonDocument doc;
     QJsonObject obj;
     obj.insert(QStringLiteral("message"), QStringLiteral("Hello, World!"));
-    doc.setObject(obj);
 
     Response *res = c->response();
-    res->body() = doc.toJson(QJsonDocument::Compact);
+    res->body() = QJsonDocument(obj).toJson(QJsonDocument::Compact);
     res->setContentType(QStringLiteral("application/json"));
 }
