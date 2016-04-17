@@ -47,15 +47,15 @@ bool cutelyst_benchmarks::init()
 bool cutelyst_benchmarks::postFork()
 {
     QSqlDatabase db;
-//    db = QSqlDatabase::addDatabase(QLatin1String("QPSQL"), QLatin1String("postgres"));
-//    db.setDatabaseName(QLatin1String("hello_world"));
-//    db.setUserName(QLatin1String("benchmarkdbuser"));
-//    db.setPassword(QLatin1String("benchmarkdbpass"));
-//    db.setHostName(config(QLatin1String("DatabaseHostName")).toString());
-//    if (!db.open()) {
-//        qDebug() << "Error opening db:" << db << db.lastError().databaseText();
-//        return false;
-//    }
+    db = QSqlDatabase::addDatabase(QLatin1String("QPSQL"), QLatin1String("postgres"));
+    db.setDatabaseName(QLatin1String("hello_world"));
+    db.setUserName(QLatin1String("benchmarkdbuser"));
+    db.setPassword(QLatin1String("benchmarkdbpass"));
+    db.setHostName(config(QLatin1String("DatabaseHostName")).toString());
+    if (!db.open()) {
+        qDebug() << "Error opening db:" << db << db.lastError().databaseText();
+        return false;
+    }
 
     db = QSqlDatabase::addDatabase(QLatin1String("QMYSQL"), QLatin1String("mysql"));
     db.setDatabaseName(QLatin1String("hello_world"));
