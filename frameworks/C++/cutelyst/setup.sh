@@ -1,6 +1,7 @@
 #!/bin/bash
 
 sed -i 's|DatabaseHostName=.*|DatabaseHostName='"$DBHOST"'|g' config/config.ini
+sed -i 's|SendDate=.*|SendDate=true|g' config/config.ini
 
 fw_depends cutelyst
 

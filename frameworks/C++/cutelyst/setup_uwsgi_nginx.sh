@@ -3,6 +3,7 @@
 fw_depends cutelyst nginx
 
 sed -i 's|DatabaseHostName=.*|DatabaseHostName='"$DBHOST"'|g' config/config.ini
+sed -i 's|SendDate=.*|SendDate=false|g' config/config.ini
 sed -i 's|include .*/conf/uwsgi_params;|include '"${NGINX_HOME}"'/conf/uwsgi_params;|g' nginx.conf
 
 cd $IROOT

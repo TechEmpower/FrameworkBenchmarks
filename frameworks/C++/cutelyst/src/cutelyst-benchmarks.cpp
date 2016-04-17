@@ -26,7 +26,8 @@ cutelyst_benchmarks::~cutelyst_benchmarks()
 
 bool cutelyst_benchmarks::init()
 {
-    if (!config(QLatin1String("SendDate")).isNull()) {
+    if (config(QLatin1String("SendDate")).value<bool>()) {
+        qDebug() << "Manually send date";
         new Root(this);
     }
 
