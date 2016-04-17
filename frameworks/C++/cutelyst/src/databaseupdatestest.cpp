@@ -38,7 +38,6 @@ void DatabaseUpdatesTest::updates_mysql(Context *c)
 
 void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &updateQuery)
 {
-    QJsonDocument doc;
     QJsonArray array;
 
     int queries = c->request()->queryParam(QStringLiteral("queries"), QStringLiteral("1")).toInt();
@@ -70,9 +69,8 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
         obj.insert(QStringLiteral("randomNumber"), randomNumber);
         array.append(obj);
     }
-    doc.setArray(array);
 
     Response *res = c->response();
-    res->body() = doc.toJson(QJsonDocument::Compact);
+    res->body() = QJsonDocument(array).toJson(QJsonDocument::Compact);
     res->setContentType(QStringLiteral("application/json"));
 }

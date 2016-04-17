@@ -39,13 +39,13 @@ void SingleDatabaseQueryTest::processQuery(Context *c, QSqlQuery &query)
         return;
     }
 
-    QJsonDocument doc;
     QJsonObject obj;
     obj.insert(QStringLiteral("id"), query.value(0).toInt());
     obj.insert(QStringLiteral("randomNumber"), query.value(1).toInt());
-    doc.setObject(obj);
+
+
 
     Response *res = c->response();
-    res->body() = doc.toJson(QJsonDocument::Compact);
+    res->body() = QJsonDocument(obj).toJson(QJsonDocument::Compact);
     res->setContentType(QStringLiteral("application/json"));
 }

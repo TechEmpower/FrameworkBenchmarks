@@ -33,5 +33,8 @@ void Root::End(Context *c)
     if (timer.hasExpired(1000)) {
         lastDate = setupHeader(c);
         timer.restart();
+    } else {
+        Headers &headers = c->response()->headers();
+        headers.setHeader(QStringLiteral("date"), lastDate);
     }
 }
