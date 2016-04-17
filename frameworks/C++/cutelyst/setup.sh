@@ -19,4 +19,4 @@ make clean
 make -j $MAX_THREADS
 
 export LD_LIBRARY_PATH=/opt/qt${QT_VERSION_MM}/lib:${IROOT}/lib/x86_64-linux-gnu/
-uwsgi --ini ${TROOT}/config/config.ini --cutelyst-app ${IROOT}/cutelyst-benchmarks/src/libcutelyst_benchmarks.so -p $MAX_THREADS &
+uwsgi --ini ${TROOT}/config/config.ini --cutelyst-app ${IROOT}/cutelyst-benchmarks/src/libcutelyst_benchmarks.so -p $(( $MAX_THREADS * 2 )) &
