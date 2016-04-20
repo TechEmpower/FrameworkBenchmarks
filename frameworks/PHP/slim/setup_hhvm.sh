@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php nginx hhvm
+fw_depends php nginx composer hhvm
 
 sed -i 's|localhost|'"${DBHOST}"'|g' index.php
 sed -i 's|SourceRoot = .*/FrameworkBenchmarks/php-slim|SourceRoot = '"${TROOT}"'|g' deploy/config.hdf
