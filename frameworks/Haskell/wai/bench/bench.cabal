@@ -1,4 +1,4 @@
-name:              bench-wai
+name:              bench
 version:           0.0.0
 cabal-version:     >= 1.8
 build-type:        Simple
@@ -11,12 +11,12 @@ executable         bench
 
     extensions: OverloadedStrings
 
-    build-depends: base                          >= 4.7        && < 5
-                 , aeson                         >= 0.6.1.0
+    build-depends: base
+                 , aeson
                  , http-types
-                 , network                       >= 2.4
-                 , text                          >= 1.0
-                 , wai                           >= 3.0
-                 , warp                          >= 3.0
+                 , network
+                 , text
+                 , wai
+                 , warp
                  , blaze-builder
-                 , bytestring                    >= 0.10
+                 , bytestring
