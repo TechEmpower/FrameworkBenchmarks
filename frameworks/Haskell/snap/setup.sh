@@ -2,12 +2,10 @@
 
 sed -i 's|host=".*"|host="'"${DBHOST}"'"|g' bench/cfg/db.cfg
 
-fw_depends haskell
+fw_depends stack
 
 cd bench
 
-cabal update
-cabal sandbox init
-cabal --bindir=${TROOT}/bench/dist/build/snap-bench install
+${IROOT}/stack --allow-different-user build --install-ghc
 
-dist/build/snap-bench/snap-bench +RTS -A4M -N -qg2 -I0 -G2 &
+${IROOT}/stack --allow-different-user exec snap-bench +RTS -A4M -N -qg2 -I0 -G2 &
