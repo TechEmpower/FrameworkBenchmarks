@@ -73,6 +73,24 @@
       "notes": "",
       "versus": ""
     },
+    "json_extra": {
+      "setup_file": "setup_json_extra",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "ULib",
+      "language": "C++",
+      "orm": "Micro",
+      "platform": "ULib",
+      "webserver": "ULib",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ULib",
+      "notes": "",
+      "versus": ""
+    },
     "mysql": {
       "setup_file": "setup_mysql",
       "db_url": "/db",
