@@ -32,8 +32,6 @@ static void usp_fork_update()
          U_WARNING("usp_fork_update(): we cound't connect to db");
          }
 
-		if (UOrmDriver::isPGSQL()) *psql_update << "SET synchronous_commit TO OFF";
-
       pworld_update = U_NEW(World);
 
       pstmt1->use( pworld_update->id);
