@@ -5,5 +5,5 @@ version = "0.0.1"
 
 [dependencies]
 rustc-serialize = "0.3.18"
-iron = "0.2.6"
+iron = "0.3.0"
 router = "0.1.0"
