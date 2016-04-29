@@ -23,7 +23,7 @@ import           Control.Monad.Reader          (ReaderT)
 import           Control.Monad.Trans.Resource  (InternalState)
 import           Data.Aeson                    (encode)
 import qualified Data.ByteString.Lazy          as L
-import           Data.Conduit.Pool             (Pool, createPool)
+import           Data.Pool                     (Pool, createPool)
 import           Data.Int                      (Int64)
 import           Data.IORef                    (newIORef)
 import           Data.Function                 (on)
