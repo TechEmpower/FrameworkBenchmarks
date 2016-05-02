@@ -19,12 +19,12 @@ static void usp_fork_update()
 {
    U_TRACE(5, "::usp_fork_update()")
 
-   psql_update = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
+   U_NEW(UOrmSession, psql_update, UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
 
    if (psql_update->isReady())
       {
-      pstmt1 = U_NEW(UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
-      pstmt2 = U_NEW(UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = ? WHERE id = ?")));
+      U_NEW(UOrmStatement, pstmt1, UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
+      U_NEW(UOrmStatement, pstmt2, UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = ? WHERE id = ?")));
 
       if (pstmt1 == 0 ||
           pstmt2 == 0)
@@ -32,15 +32,15 @@ static void usp_fork_update()
          U_WARNING("usp_fork_update(): we cound't connect to db");
          }
 
-      pworld_update = U_NEW(World);
+      U_NEW(World, pworld_update, World);
 
       pstmt1->use( pworld_update->id);
       pstmt1->into(pworld_update->randomNumber);
       pstmt2->use( pworld_update->randomNumber, pworld_update->id);
 
 #  ifndef AS_cpoll_cppsp_DO
-      pvalue         = U_NEW(UValue(ARRAY_VALUE));
-      pvworld_update = U_NEW(UVector<World*>(500));
+      U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
+      U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
 #  endif
       }
 }
@@ -89,7 +89,11 @@ while (true)
 #ifdef AS_cpoll_cppsp_DO
    USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld_update->id, pworld_update->randomNumber);
 #else
-   pvworld_update->push_back(U_NEW(World(*pworld_update)));
+   World* pworld;
+
+   U_NEW(World, pworld, World(*pworld_update));
+
+   pvworld_update->push_back(pworld);
 #endif
 
    if (++i == num_queries) break;
