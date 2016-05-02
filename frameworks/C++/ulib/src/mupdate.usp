@@ -17,7 +17,7 @@ static void usp_fork_mupdate()
 {
    U_TRACE(5, "::usp_fork_mupdate()")
 
-   mc = U_NEW(UMongoDBClient);
+   U_NEW(UMongoDBClient, mc, UMongoDBClient);
 
    if (mc->connect() == false)
       {
@@ -33,11 +33,11 @@ static void usp_fork_mupdate()
       return;
       }
 
-   pworld_update = U_NEW(World);
+   U_NEW(World, pworld_update, World);
 
 #ifndef AS_cpoll_cppsp_DO
-   pvalue         = U_NEW(UValue(ARRAY_VALUE));
-   pvworld_update = U_NEW(UVector<World*>(500));
+   U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
+   U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
 #endif
 }
 
@@ -79,7 +79,12 @@ while (true)
 #ifdef AS_cpoll_cppsp_DO
    USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld_update->id, pworld_update->randomNumber);
 #else
-   pvworld_update->push_back(U_NEW(World(*pworld_update)));
+
+   World* pworld;
+
+   U_NEW(World, pworld, World(*pworld_update));
+
+   pvworld_update->push_back(pworld);
 #endif
 
    if (++i == num_queries) break;

@@ -17,7 +17,7 @@ static void usp_fork_mdb()
 {
    U_TRACE(5, "::usp_fork_mdb()")
 
-   mc = U_NEW(UMongoDBClient);
+   U_NEW(UMongoDBClient, mc, UMongoDBClient);
 
    if (mc->connect() == false)
       {
@@ -33,11 +33,11 @@ static void usp_fork_mdb()
       return;
       }
 
-   pworld = U_NEW(World);
-   jquery = U_NEW(U_STRING_FROM_CONSTANT("{'randomNumber'"));
+   U_NEW(World, pworld, World);
+   U_NEW(UString, jquery, U_STRING_FROM_CONSTANT("{'randomNumber'"));
 
 #ifndef AS_cpoll_cppsp_DO
-   pvalue = U_NEW(UValue(OBJECT_VALUE));
+   U_NEW(UValue, pvalue, UValue(OBJECT_VALUE));
 #endif
 }
 

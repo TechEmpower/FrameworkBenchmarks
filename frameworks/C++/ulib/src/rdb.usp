@@ -16,7 +16,7 @@ static void usp_fork_rdb()
 {
    U_TRACE(5, "::usp_fork_rdb()")
 
-   rc = U_NEW(UREDISClient<UTCPSocket>);
+   U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
 
    if (rc->connect() == false)
       {
@@ -25,10 +25,10 @@ static void usp_fork_rdb()
       return;
       }
 
-   pworld = U_NEW(World);
+   U_NEW(World, pworld, World);
 
 #ifndef AS_cpoll_cppsp_DO
-   pvalue = U_NEW(UValue(OBJECT_VALUE));
+   U_NEW(UValue, pvalue, UValue(OBJECT_VALUE));
 #endif
 
    u__memcpy(u_buffer, "world:", U_CONSTANT_SIZE("world:"), __PRETTY_FUNCTION__);

@@ -16,7 +16,7 @@ static void usp_fork_rquery()
 {
    U_TRACE(5, "::usp_fork_rquery()")
 
-   rc = U_NEW(UREDISClient<UTCPSocket>);
+   U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
 
    if (rc->connect() == false)
       {
@@ -25,10 +25,10 @@ static void usp_fork_rquery()
       return;
       }
 
-   pvworld_query = U_NEW(UVector<World*>(500));
+   U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
 
 #ifndef AS_cpoll_cppsp_DO
-   pvalue = U_NEW(UValue(ARRAY_VALUE));
+   U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
 #endif
 }
 
@@ -65,7 +65,9 @@ USP_PUTS_CHAR('[');
 
 for (i = 0; i < num_queries; ++i)
    {
-   pvworld_query->push_back(pworld = U_NEW(World));
+   U_NEW(World, pworld, World);
+
+   pvworld_query->push_back(pworld);
 
    u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
 

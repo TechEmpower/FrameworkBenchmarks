@@ -18,24 +18,24 @@ static void usp_fork_query()
 {
    U_TRACE(5, "::usp_fork_query()")
 
-   psql_query = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
+   U_NEW(UOrmSession, psql_query, UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
 
    if (psql_query->isReady())
       {
-      pstmt_query = U_NEW(UOrmStatement(*psql_query, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
+      U_NEW(UOrmStatement, pstmt_query, UOrmStatement(*psql_query, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
 
       if (pstmt_query == 0) U_WARNING("usp_fork_query(): we cound't connect to db");
 
       if (UOrmDriver::isPGSQL()) *psql_query << "BEGIN TRANSACTION";
 
-      pworld_query = U_NEW(World);
+      U_NEW(World, pworld_query, World);
 
       pstmt_query->use( pworld_query->id);
       pstmt_query->into(pworld_query->randomNumber);
 
 #  ifndef AS_cpoll_cppsp_DO
-      pvalue        = U_NEW(UValue(ARRAY_VALUE));
-      pvworld_query = U_NEW(UVector<World*>(500));
+      U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
+      U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
 #  endif
       }
 }
@@ -78,7 +78,11 @@ while (true)
 #ifdef AS_cpoll_cppsp_DO
    USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld_query->id, pworld_query->randomNumber);
 #else
-   pvworld_query->push_back(U_NEW(World(*pworld_query)));
+   World* pworld;
+
+   U_NEW(World, pworld, World(*pworld_query));
+
+   pvworld_query->push_back(pworld);
 #endif
 
    if (++i == num_queries) break;

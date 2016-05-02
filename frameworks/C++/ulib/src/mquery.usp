@@ -18,7 +18,7 @@ static void usp_fork_mquery()
 {
    U_TRACE(5, "::usp_fork_mquery()")
 
-   mc = U_NEW(UMongoDBClient);
+   U_NEW(UMongoDBClient, mc, UMongoDBClient);
 
    if (mc->connect() == false)
       {
@@ -34,12 +34,12 @@ static void usp_fork_mquery()
       return;
       }
 
-   jquery       = U_NEW(U_STRING_FROM_CONSTANT("{'randomNumber'"));
-   pworld_query = U_NEW(World);
+   U_NEW(UString, jquery, U_STRING_FROM_CONSTANT("{'randomNumber'"));
+   U_NEW(World, pworld_query, World);
 
 #ifndef AS_cpoll_cppsp_DO
-   pvalue        = U_NEW(UValue(ARRAY_VALUE));
-   pvworld_query = U_NEW(UVector<World*>(500));
+   U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
+   U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
 #endif
 }
 
@@ -85,7 +85,11 @@ while (true)
 #else
    pworld_query->randomNumber = u_strtoul(rnumber.data(), rnumber.end());
 
-   pvworld_query->push_back(U_NEW(World(*pworld_query)));
+   World* pworld;
+
+   U_NEW(World, pworld, World(*pworld_query));
+
+   pvworld_query->push_back(pworld);
 #endif
 
    if (++i == num_queries) break;
