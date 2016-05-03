@@ -4,7 +4,10 @@ version := "0.0.1"
 
 scalaVersion := "2.11.7"
 
-resolvers += Resolver.sonatypeRepo("snapshots")
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("releases"),
+  "Twitter Maven" at "https://maven.twttr.com"
+)
 
 assemblyJarName in assembly := "finatra-benchmark.jar"
 assemblyMergeStrategy in assembly := {
