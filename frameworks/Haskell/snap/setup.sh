@@ -8,4 +8,4 @@ cd bench
 
 ${IROOT}/stack --allow-different-user build --install-ghc
 
-${IROOT}/stack --allow-different-user exec snap-bench +RTS -A4M -N -qg2 -I0 -G2 &
+${IROOT}/stack --allow-different-user exec snap-bench -- +RTS -A4M -N -qg2 -I0 -G2 &
