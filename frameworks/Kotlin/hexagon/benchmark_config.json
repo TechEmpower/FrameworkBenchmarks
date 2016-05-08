@@ -1,0 +1,31 @@
+{
+    "framework" : "hexagon",
+    "tests" : [
+        {
+            "default" : {
+                "json_url" : "/json",
+                "db_url" : "/db",
+                "query_url" : "/query?queries=",
+                "fortune_url" : "/fortune",
+                "update_url" : "/update?queries=",
+                "plaintext_url" : "/plaintext",
+
+                "port" : 5050,
+                "setup_file" : "setup.sh",
+                "approach" : "Realistic",
+                "classification" : "Micro",
+                "database" : "MongoDB",
+                "framework" : "Hexagon",
+                "language" : "Kotlin",
+                "orm" : "Raw",
+                "platform" : "Servlet",
+                "webserver" : "None",
+                "os" : "Linux",
+                "database_os" : "Linux",
+                "display_name" : "Hexagon MongoDB",
+                "notes" : "",
+                "versus" : "netty"
+            }
+        }
+    ]
+}
