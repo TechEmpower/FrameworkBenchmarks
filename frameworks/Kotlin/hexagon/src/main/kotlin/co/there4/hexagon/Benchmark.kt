@@ -16,7 +16,6 @@ import ratpack.server.BaseDir
 import co.there4.hexagon.Benchmark.Companion.DB_ROWS
 import java.lang.System.getenv
 import java.net.InetAddress
-import java.time.LocalDateTime.now
 
 /*
  * TODO Use framework ConfigManager
@@ -123,9 +122,7 @@ internal class Benchmark {
 
     private fun KContext.getQueries (): Int {
         try {
-            val parameter = request.queryParams [QUERIES_PARAM]
-            if (parameter == null)
-                return 1
+            val parameter = request.queryParams [QUERIES_PARAM] ?: return 1
 
             val queries = parameter.toInt()
             if (queries < 1)
@@ -164,7 +161,7 @@ internal class Benchmark {
                 all {
                     response.headers ["Server"] = "Ratpack/1.3"
                     response.headers ["Transfer-Encoding"] = "chunked"
-                    response.headers ["Date"] = httpDate (now())
+                    response.headers ["Date"] = httpDate (Date())
                     next()
                 }
                 get ("json") { getJson() }

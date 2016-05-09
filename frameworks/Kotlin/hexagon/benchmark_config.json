@@ -11,7 +11,7 @@
                 "plaintext_url" : "/plaintext",
 
                 "port" : 5050,
-                "setup_file" : "setup.sh",
+                "setup_file" : "setup",
                 "approach" : "Realistic",
                 "classification" : "Micro",
                 "database" : "MongoDB",
