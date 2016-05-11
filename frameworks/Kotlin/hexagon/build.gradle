@@ -17,7 +17,7 @@ version = "1.0.0"
 description = "Hexagon web framework's benchmark"
 mainClassName = "co.there4.hexagon.BenchmarkKt"
 
-defaultTasks 'clean', 'check', 'installDist'
+defaultTasks 'installDist'
 
 applicationDefaultJvmArgs = [
     '-Xms128M',

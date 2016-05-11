@@ -28,7 +28,7 @@ internal class MongoDbRepository (settings: Properties) {
 
     val database = mongoDatabase("mongodb://${getenv("DBHOST") ?: "localhost"}/$DATABASE")
     val worldRepository = idRepository(World::class, WORLD, Int::class, { it.id })
-    val fortuneRepository = idRepository(Fortune::class, FORTUNE, Int::class, { it.id })
+    val fortuneRepository = idRepository(Fortune::class, FORTUNE, Int::class, { it._id })
 
     val random = ThreadLocalRandom.current ()
 
@@ -57,7 +57,7 @@ internal class MongoDbRepository (settings: Properties) {
 }
 
 internal data class Message (val message: String = "Hello, World!")
-internal data class Fortune (val id: Int, val message: String)
+internal data class Fortune (val _id: Int, val message: String)
 internal data class World (val id: Int, val randomNumber: Int)
 
 internal class Benchmark {
@@ -102,11 +102,10 @@ internal class Benchmark {
     private fun KContext.getFortunes () {
         handle {
             val fortune = Fortune (0, "Additional fortune added at request time.")
-            val fortunes:List<Fortune> = repository.fortuneRepository.findObjects ().toList() + fortune
-            fortunes.sortedBy { it.message }
+            val fortunes = repository.fortuneRepository.findObjects ().toList() + fortune
 
             response.contentType ("text/html; charset=utf-8")
-            template ("fortunes.html", mapOf ("fortunes" to fortunes))
+            template ("fortunes.html", mapOf ("fortunes" to fortunes.sortedBy { it.message }))
         }
     }
 
