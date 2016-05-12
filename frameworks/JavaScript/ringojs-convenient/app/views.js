@@ -20,10 +20,10 @@ app.get('/db/:queries?', function(request, queries) {
    queries = parseInt(queries, 10) || 1;
    var worlds = [];
    var randId, world;
-   for (var i = 0; i < queries; i++) {
+   for (let i = 0; i < queries; i++) {
       randId = ((Math.random() * 10000) | 0) + 1;
       world = models.store.query('select World.* from World where World.id = :id', {id: randId})[0];
-      worlds.push({"id": world._id, "randomNumber" : world.randomNumber});
+      worlds.push({"id": world.id, "randomNumber" : world.randomNumber});
    }
    if (queries == 1) {
       worlds = worlds[0];
@@ -34,7 +34,7 @@ app.get('/db/:queries?', function(request, queries) {
 app.get('/fortune', function() {
    var fortunes = models.store.query('select Fortune.* from Fortune');
    fortunes.push({
-      _id: 0,
+      id: 0,
       message: 'Additional fortune added at request time.'
    });
    fortunes.sort(models.Fortune.sort);
@@ -55,7 +55,7 @@ app.get('/updates/:queries?', function(request, queries) {
    var worlds = [];
    var randId, world;
    models.store.beginTransaction();
-   for (var i = 0; i < queries; i++) {
+   for (let i = 0; i < queries; i++) {
       randId = ((Math.random() * 10000) | 0) + 1;
       world = models.store.query('select World.* from World where World.id = :id', {id: randId})[0];
       world.randomNumber = ((Math.random() * 10000) | 0) + 1;
@@ -65,7 +65,7 @@ app.get('/updates/:queries?', function(request, queries) {
          models.store.abortTransaction();
          return response.error('SQL error');
       }
-      worlds.push({"id": world._id, "randomNumber": world.randomNumber});
+      worlds.push({"id": world.id, "randomNumber": world.randomNumber});
    }
    models.store.commitTransaction();
    return response.json(worlds);
