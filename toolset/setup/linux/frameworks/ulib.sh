@@ -109,6 +109,7 @@ fi
 
 mkdir -p $ULIB_DOCUMENT_ROOT
 cp .libs/json.so .libs/plaintext.so \
+   .libs/edb.so .libs/equery.so .libs/eupdate.so \
 	.libs/db.so  .libs/query.so  .libs/update.so  .libs/fortune.so \
 	.libs/mdb.so .libs/mquery.so .libs/mupdate.so .libs/mfortune.so $ULIB_DOCUMENT_ROOT
 #  .libs/rdb.so .libs/rquery.so .libs/rupdate.so .libs/rfortune.so \
