@@ -98,7 +98,8 @@ make install
 
 # 3. Compile usp pages for benchmark (no more REDIS)
 cd ../../src/ulib/net/server/plugin/usp
-make json.la plaintext.la  db.la  query.la  update.la  fortune.la \
+make json.la plaintext.la edb.la equery.la eupdate.la \
+									db.la  query.la  update.la  fortune.la \
                           mdb.la mquery.la mupdate.la mfortune.la
 #                         rdb.la rquery.la rupdate.la rfortune.la
 
