@@ -1,0 +1,79 @@
+<!--#
+Test type 2: Single database query
+TechEmpower Web Framework Benchmarks
+-->
+<!--#declaration
+#include "world.h"
+
+static World* pworld;
+static UString* jquery;
+static char buffer[128];
+static UElasticSearchClient* es;
+
+#ifndef AS_cpoll_cppsp_DO
+static UValue* pvalue;
+#endif
+
+#define QLEN U_CONSTANT_SIZE("{\"query\":{\"match\":{\"_id\":\"")
+
+static void usp_fork_edb()
+{
+   U_TRACE(5, "::usp_fork_edb()")
+
+   U_NEW(UElasticSearchClient, es, UElasticSearchClient);
+
+   if (es->connect() == false)
+      {
+      U_WARNING("usp_fork_edb(): connection disabled or failed");
+
+      return;
+      }
+
+   U_NEW(World, pworld, World);
+   U_NEW(UString, jquery, U_STRING_FROM_CONSTANT("randomNumber"));
+
+#ifndef AS_cpoll_cppsp_DO
+   U_NEW(UValue, pvalue, UValue(OBJECT_VALUE));
+#endif
+
+   u__memcpy(buffer, "{\"query\":{\"match\":{\"_id\":\"", QLEN, __PRETTY_FUNCTION__);
+}
+
+#ifdef DEBUG
+static void usp_end_edb()
+{
+   U_TRACE(5, "::usp_end_edb()")
+
+   delete es;
+
+   if (pworld)
+      {
+      delete jquery;
+      delete pworld;
+
+#  ifndef AS_cpoll_cppsp_DO
+      delete pvalue;
+#  endif
+      }
+}
+#endif
+-->
+<!--#header
+Content-Type: application/json
+-->
+<!--#code
+UString result;
+
+(void) es->sendPOST(U_CONSTANT_TO_PARAM("/tfb/world/_search"), buffer, QLEN+u__snprintf(buffer+QLEN, 128, "%u\"}}}", pworld->id = u_get_num_random(10000-1)));
+
+(void) UValue::jfind(es->getContent(), *jquery, result);
+
+pworld->randomNumber = u_strtoul(result.data(), result.end());
+
+#ifdef AS_cpoll_cppsp_DO
+USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", pworld->id, result.rep);
+#else
+USP_JSON_stringify(*pvalue, World, *pworld);
+pvalue->clear();
+#endif
+-->
