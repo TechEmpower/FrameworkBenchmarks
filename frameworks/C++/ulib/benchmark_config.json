@@ -173,6 +173,26 @@
       "display_name": "ULib-mongodb",
       "notes": "",
       "versus": ""
+    },
+    "elasticsearch": {
+      "setup_file": "setup_elasticsearch",
+      "db_url": "/edb",
+      "query_url": "/equery?queries=",
+      "update_url": "/eupdate?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Elasticsearch",
+      "framework": "ULib",
+      "language": "C++",
+      "orm": "Micro",
+      "platform": "ULib",
+      "webserver": "ULib",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ULib-elasticsearch",
+      "notes": "",
+      "versus": ""
     }
   }]
 }
