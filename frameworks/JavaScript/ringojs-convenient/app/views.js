@@ -19,10 +19,9 @@ app.get('/json', function() {
 app.get('/db/:queries?', function(request, queries) {
    queries = parseInt(queries, 10) || 1;
    var worlds = [];
-   var randId, world;
    for (let i = 0; i < queries; i++) {
-      randId = ((Math.random() * 10000) | 0) + 1;
-      world = models.store.query('select World.* from World where World.id = :id', {id: randId})[0];
+      let randId = ((Math.random() * 10000) | 0) + 1;
+      let world = models.store.query('select * from World where id = :id', {id: randId})[0];
       worlds.push({"id": world.id, "randomNumber" : world.randomNumber});
    }
    if (queries == 1) {
@@ -53,20 +52,16 @@ app.get('/updates/:queries?', function(request, queries) {
       queries = 500;
    }
    var worlds = [];
-   var randId, world;
-   models.store.beginTransaction();
    for (let i = 0; i < queries; i++) {
-      randId = ((Math.random() * 10000) | 0) + 1;
-      world = models.store.query('select World.* from World where World.id = :id', {id: randId})[0];
+      let randId = ((Math.random() * 10000) | 0) + 1;
+      let world = models.store.query('select * from World where id = :id', {id: randId})[0];
       world.randomNumber = ((Math.random() * 10000) | 0) + 1;
       try {
          world.save();
       } catch (e) {
-         models.store.abortTransaction();
          return response.error('SQL error');
       }
       worlds.push({"id": world.id, "randomNumber": world.randomNumber});
    }
-   models.store.commitTransaction();
    return response.json(worlds);
 });

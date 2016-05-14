@@ -10,8 +10,10 @@ var connectionPool = module.singleton("connectionPool", function() {
     return Store.initConnectionPool({
         "url": "jdbc:mysql://" + dbHost + "/hello_world" + mysqlConnectionProperties,
         "driver": "com.mysql.jdbc.Driver",
-        "username": "benchmarkdbuser",
-        "password": "benchmarkdbpass"
+        "user": "benchmarkdbuser",
+        "password": "benchmarkdbpass",
+        "minimumIdle": 10,
+        "maximumPoolSize": 30
     });
 });
 var store = exports.store = new Store(connectionPool);
