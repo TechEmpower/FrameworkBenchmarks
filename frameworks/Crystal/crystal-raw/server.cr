@@ -1,17 +1,20 @@
 require "http/server"
 require "json"
 
-server = HTTP::Server.new(8080) do |request|
-  headers = HTTP::Headers{"Server": "Crystal", "Date": Time.utc_now.to_s}
-  case request.path
+server = HTTP::Server.new(8080) do |context|
+  response = context.response
+  response.headers.merge!({"Server": "Crystal", "Date": Time.utc_now.to_s})
+  case context.request.path
   when "/json"
-    headers.add("Content-Type", "application/json")
-    HTTP::Response.new 200, {message: "Hello, World!"}.to_json, headers
+    response.status_code = 200
+    response.headers["Content-Type"] = "application/json"
+    response.print({message: "Hello, World!"}.to_json)
   when "/plaintext"
-    headers.add("Content-Type", "text/plain")
-    HTTP::Response.new 200, "Hello, world!", headers
+    response.status_code = 200
+    response.headers["Content-Type"] = "text/plain"
+    response.print "Hello, World!"
   else
-    HTTP::Response.not_found
+    response.status_code = 404
   end
 end
 
