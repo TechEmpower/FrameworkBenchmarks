@@ -5,61 +5,53 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static UString* jquery;
 static UMongoDBClient* mc;
-static World* pworld_query;
 
 #ifndef AS_cpoll_cppsp_DO
-static UValue* pvalue;
+static UValue*	pvalue;
 static UVector<World*>* pvworld_query;
 #endif
 
 static void usp_fork_mquery()
 {
-   U_TRACE(5, "::usp_fork_mquery()")
+	U_TRACE(5, "::usp_fork_mquery()")
 
    U_NEW(UMongoDBClient, mc, UMongoDBClient);
 
-   if (mc->connect() == false)
-      {
-      U_WARNING("usp_fork_mquery(): connection disabled or failed");
+	if (mc->connect() == false)
+		{
+		U_WARNING("usp_fork_mquery(): connection disabled or failed");
 
-      return;
-      }
+		return;
+		}
 
-   if (mc->selectCollection("hello_world", "World") == false)
-      {
-      U_WARNING("usp_fork_mquery(): selectCollection() failed");
+	if (mc->selectCollection("hello_world", "World") == false)
+		{
+		U_WARNING("usp_fork_mquery(): selectCollection() failed");
 
-      return;
-      }
-
-   U_NEW(UString, jquery, U_STRING_FROM_CONSTANT("{'randomNumber'"));
-   U_NEW(World, pworld_query, World);
+		return;
+		}
 
 #ifndef AS_cpoll_cppsp_DO
-   U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
-   U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
+	U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
+	U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
 #endif
 }
 
 #ifdef DEBUG
 static void usp_end_mquery()
 {
-   U_TRACE(5, "::usp_end_mquery()")
+	U_TRACE(5, "::usp_end_mquery()")
 
-   delete mc;
+	delete mc;
 
-   if (jquery)
-      {
-      delete jquery;
-      delete pworld_query;
-
-#  ifndef AS_cpoll_cppsp_DO
-      delete pvalue;
-      delete pvworld_query;
-#  endif
-      }
+#ifndef AS_cpoll_cppsp_DO
+	if (pvalue)
+		{
+		delete pvalue;
+		delete pvworld_query;
+		}
+#endif
 }
 #endif
 -->
@@ -67,6 +59,7 @@ static void usp_end_mquery()
 Content-Type: application/json
 -->
 <!--#code
+uint32_t id;
 UString rnumber;
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
@@ -75,29 +68,29 @@ USP_PUTS_CHAR('[');
 #endif
 
 while (true)
-   {
-   (void) mc->findOne(pworld_query->id = u_get_num_random(10000-1));
+	{
+	(void) mc->findOne(id = u_get_num_random(10000-1));
 
-   (void) UValue::jread(mc->vitem[0], *jquery, rnumber); // { "_id" : 8980.000000, "id" : 8980.000000, "randomNumber" : 2131.000000 }
+	rnumber.clear();
+
+	(void) UValue::jfind(mc->vitem[0], U_CONSTANT_TO_PARAM("randomNumber"), rnumber);
 
 #ifdef AS_cpoll_cppsp_DO
-   USP_PRINTF("{\"id\":%u,\"randomNumber\":%v}", pworld_query->id, rnumber.rep);
+	USP_PRINTF("{\"id\":%u,\"randomNumber\":%v}", id, rnumber.rep);
 #else
-   pworld_query->randomNumber = u_strtoul(rnumber.data(), rnumber.end());
+	World* pworld;
 
-   World* pworld;
+	U_NEW(World, pworld, World(id, u_strtoul(rnumber.data(), rnumber.end())));
 
-   U_NEW(World, pworld, World(*pworld_query));
-
-   pvworld_query->push_back(pworld);
+	pvworld_query->push_back(pworld);
 #endif
 
-   if (++i == num_queries) break;
+	if (++i == num_queries) break;
 
 #ifdef AS_cpoll_cppsp_DO
-   USP_PUTS_CHAR(',');
+	USP_PUTS_CHAR(',');
 #endif
-   }
+	}
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR(']');

@@ -5,9 +5,7 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static UString* jquery;
 static char buffer[128];
-static World* pworld_query;
 static UElasticSearchClient* es;
 
 #ifndef AS_cpoll_cppsp_DO
@@ -30,15 +28,12 @@ static void usp_fork_equery()
       return;
       }
 
-   U_NEW(World, pworld_query, World);
-   U_NEW(UString, jquery, U_STRING_FROM_CONSTANT("randomNumber"));
+   u__memcpy(buffer, "{\"query\":{\"match\":{\"_id\":\"", QLEN, __PRETTY_FUNCTION__);
 
 #ifndef AS_cpoll_cppsp_DO
    U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
    U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
 #endif
-
-   u__memcpy(buffer, "{\"query\":{\"match\":{\"_id\":\"", QLEN, __PRETTY_FUNCTION__);
 }
 
 #ifdef DEBUG
@@ -48,16 +43,13 @@ static void usp_end_equery()
 
    delete es;
 
-   if (jquery)
+#ifndef AS_cpoll_cppsp_DO
+   if (pvalue)
       {
-      delete jquery;
-      delete pworld_query;
-
-#  ifndef AS_cpoll_cppsp_DO
       delete pvalue;
       delete pvworld_query;
-#  endif
       }
+#endif
 }
 #endif
 -->
@@ -65,6 +57,7 @@ static void usp_end_equery()
 Content-Type: application/json
 -->
 <!--#code
+uint32_t id;
 UString rnumber;
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
@@ -74,18 +67,18 @@ USP_PUTS_CHAR('[');
 
 while (true)
    {
-   (void) es->sendPOST(U_CONSTANT_TO_PARAM("/tfb/world/_search"), buffer, QLEN+u__snprintf(buffer+QLEN, 128, "%u\"}}}", pworld_query->id = u_get_num_random(10000-1)));
+   (void) es->sendPOST(U_CONSTANT_TO_PARAM("/tfb/world/_search"), buffer, QLEN+u__snprintf(buffer+QLEN, 128, "%u\"}}}", id = u_get_num_random(10000-1)));
 
-   (void) UValue::jfind(es->getContent(), *jquery, rnumber);
+   rnumber.clear();
+
+   (void) UValue::jfind(es->getContent(), U_CONSTANT_TO_PARAM("randomNumber"), rnumber);
 
 #ifdef AS_cpoll_cppsp_DO
-   USP_PRINTF("{\"id\":%u,\"randomNumber\":%v}", pworld_query->id, rnumber.rep);
+   USP_PRINTF("{\"id\":%u,\"randomNumber\":%v}", id, rnumber.rep);
 #else
-   pworld_query->randomNumber = u_strtoul(rnumber.data(), rnumber.end());
-
    World* pworld;
 
-   U_NEW(World, pworld, World(*pworld_query));
+   U_NEW(World, pworld, World(id, u_strtoul(rnumber.data(), rnumber.end())));
 
    pvworld_query->push_back(pworld);
 #endif
