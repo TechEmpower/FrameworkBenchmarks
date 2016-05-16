@@ -27,11 +27,9 @@ public:
 #  endif
       }
 
-   World(const World& w) : id(w.id), randomNumber(w.randomNumber)
+   World(uint32_t _id, uint32_t _randomNumber) : id(_id), randomNumber(_randomNumber)
       {
-      U_TRACE_REGISTER_OBJECT(5, World, "%p", &w)
-
-      U_MEMORY_TEST_COPY(w)
+      U_TRACE_REGISTER_OBJECT(5, World, "%u,%u", _id, _randomNumber)
       }
 
    ~World()
