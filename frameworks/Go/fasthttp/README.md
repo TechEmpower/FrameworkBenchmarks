@@ -1,10 +1,8 @@
-# [fasthttp](https://github.com/valyala/fasthttp) (GoLang) Benchmarking Test for postgresql
+# [fasthttp](https://github.com/valyala/fasthttp) (GoLang) Benchmarking Test
 
 This is the go portion of a [benchmarking test suite](https://www.techempower.com/benchmarks/) comparing a variety of web development platforms.
 
 "Fasthttp is a fast http package for Go."
-
-# This variant uses Postgres via Jack Christensen's pgx library
 
 ## Test URLs
 
