@@ -5,7 +5,7 @@ RETCODE=$(fw_exists ${IROOT}/node.installed)
   source $IROOT/node.installed
   return 0; }
 
-VERSION="0.12.2"
+VERSION="0.12.12"
 
 fw_get -O http://nodejs.org/dist/v$VERSION/node-v$VERSION-linux-x64.tar.gz
 fw_untar node-v$VERSION-linux-x64.tar.gz

@@ -129,6 +129,8 @@ namespace Revenj.Bench
 			return cms;
 		}
 
+		private static readonly Comparison<World> ASC = (l, r) => l.id - r.id;
+
 		public Stream Updates(string count)
 		{
 			int repeat;
@@ -141,6 +143,7 @@ namespace Revenj.Bench
 			Array.Copy(ctx.Worlds, result, repeat);
 			for (int i = 0; i < result.Length; i++)
 				result[i].randomNumber = Random.Next(10000) + 1;
+			Array.Sort(result, ASC);
 			ctx.Repository.Update(result);
 			var cms = ctx.Stream;
 			result.Serialize(cms);

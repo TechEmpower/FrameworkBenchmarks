@@ -51,7 +51,7 @@ Welcome to the FrameworkBenchmarks project!
 To get started, perhaps try this:
    $ cd FrameworkBenchmarks
    $ toolset/run-tests.py --install server --test go
-   $ cat results/ec2/latest/logs/go/out.txt
+   $ cat results/latest/logs/go/out.txt
 
 You can get lots of help:
    $ toolset/run-tests.py --help
@@ -71,7 +71,7 @@ usernames, or private key files, as so:
     <log for installing software needed for go test>
     <log for launching go framework>
     <log for verifying go framework meets requirements>
-    $ cat results/ec2/latest/logs/go/out.txt
+    $ cat results/latest/logs/go/out.txt
     <log with stdout from framework go>
 
 # Using Amazon-powered Virtual Machine

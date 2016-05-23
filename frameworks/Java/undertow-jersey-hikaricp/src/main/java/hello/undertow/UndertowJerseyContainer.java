@@ -102,8 +102,7 @@ public class UndertowJerseyContainer
 
     for (HeaderValues values : httpServerExchange.getRequestHeaders())
     {
-      request.getHeaders().addAll(values.getHeaderName().toString(),
-          httpServerExchange.getRequestHeaders().get(values.getHeaderName()));
+      request.headers(values.getHeaderName().toString(), values);
     }
 
     request.setEntityStream(httpServerExchange.getInputStream());

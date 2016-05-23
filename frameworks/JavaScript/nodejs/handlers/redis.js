@@ -2,7 +2,10 @@ var h = require('../helper');
 var async = require('async');
 // "If hiredis [pure C library] is installed, node_redis will use it by default.
 // Otherwise, a pure JavaScript parser will be used."
-// >> hiredis is installed for these tests
+// >> Previous versions of this project installed hiredis; however, hiredis now has
+// >> installation issues and redis is no longer tested, so the hiredis dependency was taken out.
+// >> If redis tests are re-instated, try to re-add hiredis dependency; however, if it does
+// >> not install correctly, the tests will still work with the redis default JS parser
 var redis = require('redis');
 var client = redis.createClient(6379, '127.0.0.1', {});
 
