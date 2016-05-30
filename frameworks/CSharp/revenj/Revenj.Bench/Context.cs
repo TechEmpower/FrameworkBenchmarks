@@ -13,7 +13,8 @@ namespace Revenj.Bench
 	{
 		public readonly ChunkedMemoryStream Stream;
 		public readonly TextWriter Writer;
-		public readonly IPersistableRepository<World> Repository;
+		public readonly IPersistableRepository<World> WorldRepository;
+		public readonly IQueryableRepository<Fortune> FortuneRepository;
 		public readonly IRepositoryBulkReader BulkReader;
 		public readonly Lazy<World>[] LazyWorlds = new Lazy<World>[512];
 		public readonly World[] Worlds = new World[512];
@@ -25,7 +26,8 @@ namespace Revenj.Bench
 			var dqm = service.Resolve<IDatabaseQueryManager>();
 			var factory = service.Resolve<IObjectFactory>().CreateInnerFactory();
 			factory.RegisterInterfaces(dqm.StartQuery(false));
-			Repository = factory.Resolve<IPersistableRepository<World>>();
+			WorldRepository = factory.Resolve<IPersistableRepository<World>>();
+			FortuneRepository = factory.Resolve<IQueryableRepository<Fortune>>();
 			BulkReader = factory.BulkRead(ChunkedMemoryStream.Static());
 		}
 	}
