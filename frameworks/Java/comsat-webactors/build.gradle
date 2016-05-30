@@ -12,7 +12,7 @@ version = '0.2'
 
 ext.jacksonVer = '2.7.0'
 ext.quasarVer  = '0.7.4'
-ext.comsatVer  = '0.6.0'
+ext.comsatVer  = '0.7.0'
 ext.capsuleVer = '1.0.1'
 
 [compileJava, compileTestJava]*.options*.encoding = "UTF-8"
@@ -34,6 +34,7 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVer"
     compile "co.paralleluniverse:comsat-actors-api:$comsatVer"
     compile "co.paralleluniverse:comsat-actors-netty:$comsatVer"
+    compile "co.paralleluniverse:comsat-actors-undertow:$comsatVer"
     compile "co.paralleluniverse:comsat-test-utils:$comsatVer"
 
     capsule "co.paralleluniverse:capsule:$capsuleVer"
@@ -42,13 +43,21 @@ dependencies {
 }
 
 task capsule(type: FatCapsule) {
-    applicationClass "hello.HelloWebActor"
+    applicationClass "hello.World"
 
     capsuleManifest {
         javaAgents = [configurations.quasar.iterator().next().getName()]
+
+        mode('netty') {
+            systemProperties['serverClass'] = 'hello.NettyServer'
+        }
+
+        mode('undertow') {
+            systemProperties['serverClass'] = 'hello.UndertowServer'
+        }
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.11'
+    gradleVersion = '2.12'
 }
