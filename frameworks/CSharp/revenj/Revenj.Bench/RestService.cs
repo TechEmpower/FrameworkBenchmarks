@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -17,28 +17,27 @@ namespace Revenj.Bench
 	{
 		[OperationContract]
 		[WebGet(UriTemplate = "/plaintext")]
-		[Description("Plain text response")]
 		Stream PlainText();
 
 		[OperationContract]
 		[WebGet(UriTemplate = "/json")]
-		[Description("JSON response")]
 		Stream JSON();
 
 		[OperationContract]
 		[WebGet(UriTemplate = "/db")]
-		[Description("Single database query")]
 		Stream SingleQuery();
 
 		[OperationContract]
 		[WebGet(UriTemplate = "/queries/{count}")]
-		[Description("Multiple database queries")]
 		Stream MultipleQueries(string count);
 
 		[OperationContract]
 		[WebGet(UriTemplate = "/updates/{count}")]
-		[Description("Database updates")]
 		Stream Updates(string count);
+
+		[OperationContract]
+		[WebGet(UriTemplate = "/fortunes")]
+		Stream Fortunes();
 	}
 
 	public class RestService : IRestService
@@ -95,7 +94,7 @@ namespace Revenj.Bench
 		{
 			var id = Random.Next(10000) + 1;
 			var ctx = GetContext(Services);
-			var world = ctx.Repository.Find(IDs[id]);
+			var world = ctx.WorldRepository.Find(IDs[id]);
 			return ReturnJSON(world, ctx.Stream);
 		}
 
@@ -144,11 +143,32 @@ namespace Revenj.Bench
 			for (int i = 0; i < result.Length; i++)
 				result[i].randomNumber = Random.Next(10000) + 1;
 			Array.Sort(result, ASC);
-			ctx.Repository.Update(result);
+			ctx.WorldRepository.Update(result);
 			var cms = ctx.Stream;
 			result.Serialize(cms);
 			ThreadContext.Response.ContentType = "application/json";
 			return cms;
 		}
+
+		private static readonly Comparison<KeyValuePair<int, string>> Comparison = (l, r) => string.Compare(l.Value, r.Value, StringComparison.Ordinal);
+
+		public Stream Fortunes()
+		{
+			var ctx = GetContext(Services);
+			var fortunes = ctx.FortuneRepository.Search();
+			var list = new List<KeyValuePair<int, string>>(fortunes.Length + 1);
+			foreach (var f in fortunes)
+				list.Add(new KeyValuePair<int, string>(f.id, f.message));
+			list.Add(new KeyValuePair<int, string>(0, "Additional fortune added at request time."));
+			list.Sort(Comparison);
+			var cms = ctx.Stream;
+			var writer = cms.GetWriter();
+			var template = new Fortunes(list, writer);
+			template.TransformText();
+			writer.Flush();
+			cms.Position = 0;
+			ThreadContext.Response.ContentType = "text/html; charset=UTF-8";
+			return cms;
+	}
 	}
 }
