@@ -1,6 +1,7 @@
 package hello;
 
 import com.dslplatform.json.JsonWriter;
+import dsl.FrameworkBench.World;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -14,8 +15,8 @@ public class QueriesServlet extends HttpServlet {
 		final int count = Utils.parseBoundParam(req);
 		final Context ctx = Utils.getContext();
 		final JsonWriter json = ctx.json;
-		ctx.loadWorlds(count);
-		json.serialize(ctx.worlds, count);
+		final World[] worlds = ctx.loadWorlds(count);
+		json.serialize(worlds, count);
 		json.toStream(res.getOutputStream());
 	}
 }

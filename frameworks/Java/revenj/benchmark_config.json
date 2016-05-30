@@ -8,6 +8,7 @@
       "db_url": "/revenj/db",
       "query_url": "/revenj/queries?queries=",
       "update_url": "/revenj/updates?queries=",
+      "fortune_url": "/revenj/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

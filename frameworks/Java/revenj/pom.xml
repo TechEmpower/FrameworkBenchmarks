@@ -10,23 +10,17 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<repositories>
-		<repository>
-			<id>model</id>
-			<url>file:${project.basedir}/model</url>
-		</repository>
-	</repositories>
 	<dependencies>
-		<dependency>
-			<groupId>dsl</groupId>
-			<artifactId>gen-model</artifactId>
-			<version>1.0</version>
-		</dependency>
 		<dependency>
 			<groupId>org.revenj</groupId>
 			<artifactId>revenj-core</artifactId>
-			<version>0.8.0</version>
+			<version>0.9.7</version>
 		</dependency>
+                <dependency>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-lang3</artifactId>
+                        <version>3.4</version>
+                </dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -36,6 +30,28 @@
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>com.dslplatform</groupId>
+				<artifactId>dsl-platform-maven-plugin</artifactId>
+				<version>0.8</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-code</goal>
+						</goals>
+						<configuration>
+							<target>revenj.java</target>
+							<dsl>${project.build.sourceDirectory}</dsl>
+							<namespace>dsl</namespace>
+							<compiler>${project.basedir}/../../../installs/dsl-compiler.exe</compiler>
+							<options>
+								<option>manual-json</option>
+							</options>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
