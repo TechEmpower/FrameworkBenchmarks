@@ -20,7 +20,7 @@
       "webserver": "apache2",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ffead-cpp",
+      "display_name": "ffead-cpp-apache",
       "notes": "",
       "versus": ""
     }

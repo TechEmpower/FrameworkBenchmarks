@@ -9,5 +9,5 @@ echo $FFEAD_CPP_PATH
 echo $LD_LIBRARY_PATH
 rm -f $FFEAD_CPP_PATH/*.cntrl
 rm -f $FFEAD_CPP_PATH/tmp/*.sess
-sudo /etc/init.d/apache2 start > ffead.log 2>&1
+sudo /etc/init.d/apache2 restart > ffead.log 2>&1
 
