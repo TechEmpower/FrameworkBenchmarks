@@ -3,7 +3,7 @@ package hello;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-class Utils {
+abstract class Utils {
 
 	private static final ThreadLocal<Context> threadContext = new ThreadLocal<Context>() {
 		@Override
