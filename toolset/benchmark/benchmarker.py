@@ -757,13 +757,16 @@ class Benchmarker:
   def __parse_results(self, tests):
     # Run the method to get the commmit count of each framework.
     self.__count_commits()
-   # Call the method which counts the sloc for each framework
+    # Call the method which counts the sloc for each framework
     self.__count_sloc()
 
     # Time to create parsed files
     # Aggregate JSON file
     with open(os.path.join(self.full_results_directory(), "results.json"), "w") as f:
       f.write(json.dumps(self.results, indent=2))
+
+    with open(os.path.join(self.latest_results_directory, "results.json"), "w") as latest:
+      latest.write(json.dumps(self.results, indent=2))
 
   ############################################################
   # End __parse_results
