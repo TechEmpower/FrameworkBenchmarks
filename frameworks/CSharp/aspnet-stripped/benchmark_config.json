@@ -9,16 +9,17 @@
       "approach": "Stripped",
       "classification": "Fullstack",
       "database": "None",
-      "framework": "aspnet",
+      "framework": "ASP.NET",
       "language": "C#",
+      "flavor": "Microsoft",
       "orm": "Raw",
-      "platform": "NET",
+      "platform": ".NET",
       "webserver": "IIS",
       "os": "Windows",
       "database_os": "Linux",
-      "display_name": "aspnet-stripped",
+      "display_name": "asp.net-stripped",
       "notes": "",
-      "versus": ""
+      "versus": "aspnet-stripped"
     },
     "mysql-raw": {
       "setup_file": "setup_iis",
@@ -30,16 +31,17 @@
       "approach": "Stripped",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "aspnet",
+      "framework": "ASP.NET",
       "language": "C#",
+      "flavor": "Microsoft",
       "orm": "Raw",
-      "platform": "NET",
+      "platform": ".NET",
       "webserver": "IIS",
       "os": "Windows",
       "database_os": "Linux",
-      "display_name": "aspnet-stripped-raw",
+      "display_name": "asp.net-stripped-raw",
       "notes": "",
-      "versus": ""
+      "versus": "aspnet-stripped"
     },
     "postgresql-raw": {
       "setup_file": "setup_iis",
@@ -51,16 +53,17 @@
       "approach": "Stripped",
       "classification": "Fullstack",
       "database": "Postgres",
-      "framework": "aspnet",
+      "framework": "ASP.NET",
       "language": "C#",
+      "flavor": "Microsoft",
       "orm": "Raw",
-      "platform": "NET",
+      "platform": ".NET",
       "webserver": "IIS",
       "os": "Windows",
       "database_os": "Linux",
-      "display_name": "aspnet-stripped-raw",
+      "display_name": "asp.net-stripped-raw",
       "notes": "",
-      "versus": ""
+      "versus": "asnet-stripped"
     },
     "mongodb-raw": {
       "setup_file": "setup_iis",
@@ -72,16 +75,17 @@
       "approach": "Stripped",
       "classification": "Fullstack",
       "database": "MongoDB",
-      "framework": "aspnet",
+      "framework": "ASP.NET",
       "language": "C#",
+      "flavor": "Microsoft",
       "orm": "Raw",
-      "platform": "NET",
+      "platform": ".NET",
       "webserver": "IIS",
       "os": "Windows",
       "database_os": "Linux",
-      "display_name": "aspnet-stripped-raw",
+      "display_name": "asp.net-stripped-raw",
       "notes": "",
-      "versus": ""
+      "versus": "aspnet-stripped"
     },
     "sqlserver-raw": {
       "setup_file": "setup_iis",
@@ -93,16 +97,17 @@
       "approach": "Stripped",
       "classification": "Fullstack",
       "database": "SQLServer",
-      "framework": "aspnet",
+      "framework": "ASP.NET",
       "language": "C#",
+      "flavor": "Microsoft",
       "orm": "Raw",
-      "platform": "NET",
+      "platform": ".NET",
       "webserver": "IIS",
       "os": "Windows",
       "database_os": "Windows",
-      "display_name": "aspnet-stripped-raw",
+      "display_name": "asp.net-stripped-raw",
       "notes": "",
-      "versus": ""
+      "versus": "aspnet-stripped"
     }
   }]
 }

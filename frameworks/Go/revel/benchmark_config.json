@@ -13,14 +13,15 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "revel",
+      "framework": "Revel",
       "language": "Go",
+      "flavor": "Go1",
       "orm": "Raw",
-      "platform": "Go",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "revel",
+      "display_name": "Revel",
       "notes": "",
       "versus": "go"
     }

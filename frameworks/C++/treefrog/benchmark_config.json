@@ -15,14 +15,15 @@
       "database": "MySQL",
       "framework": "treefrog",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Micro",
-      "platform": "Treefrog",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "treefrog-hybrid",
       "notes": "",
-      "versus": ""
+      "versus": "treefrog"
     },
     "thread": {
       "setup_file": "setup-thread",
@@ -38,14 +39,15 @@
       "database": "MySQL",
       "framework": "treefrog",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Micro",
-      "platform": "Treefrog",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "treefrog-thread",
       "notes": "",
-      "versus": ""
+      "versus": "treefrog"
     }
   }]
 }

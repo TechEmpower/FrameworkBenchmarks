@@ -15,14 +15,15 @@
       "database": "Redis",
       "framework": "kemal",
       "language": "Crystal",
+      "flavor": "Crystal12",
       "orm": "micro",
-      "platform": "Crystal",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kemal",
       "notes": "",
-      "versus": "ruby"
+      "versus": "crystal"
     },
     "postgres": {
       "setup_file": "setup-postgres",
@@ -38,14 +39,15 @@
       "database": "Postgres",
       "framework": "kemal",
       "language": "Crystal",
+      "flavor": "Crystal12",
       "orm": "micro",
-      "platform": "Crystal",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kemal",
       "notes": "",
-      "versus": "ruby"
+      "versus": "crystal"
     }
   }]
 }

@@ -9,14 +9,15 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "None",
-      "framework": "grizzly",
+      "framework": "Grizzly",
       "language": "Java",
+      "flavor": "Java8",
       "orm": "Raw",
       "platform": "Servlet",
-      "webserver": "Grizzly",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "grizzly",
+      "display_name": "Grizzly",
       "notes": "",
       "versus": ""
     }

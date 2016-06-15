@@ -13,14 +13,15 @@
       "database": "MySQL",
       "framework": "nancy",
       "language": "C#",
+      "flavor": "Microsoft",
       "orm": "Raw",
-      "platform": "NET",
+      "platform": ".NET",
       "webserver": "IIS",
       "os": "Windows",
       "database_os": "Linux",
       "display_name": "nancy",
       "notes": "",
-      "versus": ""
+      "versus": "nancy"
     },
     "mono": {
       "setup_file": "setup_nginx",
@@ -34,14 +35,15 @@
       "database": "MySQL",
       "framework": "nancy",
       "language": "C#",
+      "flavor": "Mono",
       "orm": "Raw",
-      "platform": "Mono",
+      "platform": ".NET",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "nancy",
       "notes": "",
-      "versus": ""
+      "versus": "nancy"
     }
 
   }]

@@ -15,14 +15,15 @@
       "database": "Postgres",
       "framework": "moonshine",
       "language": "Crystal",
+      "flavor": "Crystal12",
       "orm": "micro",
-      "platform": "Crystal",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Moonshine",
       "notes": "",
-      "versus": "ruby"
+      "versus": "crystal"
     }
   }]
 }

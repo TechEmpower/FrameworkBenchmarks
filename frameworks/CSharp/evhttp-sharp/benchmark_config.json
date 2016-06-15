@@ -11,14 +11,15 @@
       "database": "None",
       "framework": "evhttp-sharp",
       "language": "C#",
+      "flavor": "Mono",
       "orm": "Raw",
-      "platform": "Mono",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "evhttp-sharp",
       "notes": "",
-      "versus": ""
+      "versus": "evhttp-sharp"
     }
   }]
 }

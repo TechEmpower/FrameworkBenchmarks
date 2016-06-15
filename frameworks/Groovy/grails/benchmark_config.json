@@ -13,14 +13,15 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "grails",
+      "framework": "Grails",
       "language": "Groovy",
+      "flavor": "Groovy2",
       "orm": "Full",
       "platform": "Servlet",
-      "webserver": "Resin",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "grails",
+      "display_name": "Grails",
       "notes": "",
       "versus": "servlet"
     }

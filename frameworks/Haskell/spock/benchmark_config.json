@@ -13,14 +13,15 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "Postgres",
-      "framework": "spock",
+      "framework": "Spock",
       "language": "Haskell",
+      "flavor": "GHC710",
       "orm": "Raw",
       "platform": "Wai",
       "webserver": "Warp",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "spock",
+      "display_name": "Spock",
       "notes": "",
       "versus": ""
     }

@@ -9,16 +9,17 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "lwan",
+      "framework": "None",
       "language": "C",
+      "flavor": "C11",
       "orm": "Raw",
       "platform": "Lwan",
-      "webserver": "Lwan",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Lwan",
       "notes": "",
-      "versus": ""
+      "versus": "lwan"
     },
     "sqlite": {
       "setup_file": "setup",
@@ -29,16 +30,17 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "SQLite",
-      "framework": "lwan",
+      "framework": "None",
       "language": "C",
+      "flavor": "C11",
       "orm": "Raw",
       "platform": "Lwan",
-      "webserver": "Lwan",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Lwan",
       "notes": "",
-      "versus": ""
+      "versus": "lwan"
     },
     "mysql": {
       "setup_file": "setup-mysql",
@@ -49,16 +51,17 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "lwan",
+      "framework": "None",
       "language": "C",
+      "flavor": "C11",
       "orm": "Raw",
       "platform": "Lwan",
-      "webserver": "Lwan",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Lwan",
       "notes": "",
-      "versus": ""
+      "versus": "lwan"
     }
   }]
 }
