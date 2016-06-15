@@ -1,9 +1,6 @@
 package hello;
 
 import co.paralleluniverse.embedded.containers.AbstractEmbeddedServer;
-import co.paralleluniverse.fibers.Suspendable;
-import co.paralleluniverse.fibers.servlet.FiberHttpServlet;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
 import io.undertow.server.HttpHandler;
@@ -12,46 +9,14 @@ import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 import org.xnio.Options;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 /**
  * An implementation of the TechEmpower benchmark tests using Comsat servlets and the Undertow servlet container.
  */
-public final class HelloWebServer {
-    private static final class JsonServlet extends FiberHttpServlet {
-        private static final class HelloWorldData {
-            @SuppressWarnings("unused")
-            public final String message = "Hello, World!";
-        }
-
-        private static final ObjectMapper mapper = new ObjectMapper();
-
-        @Override
-        @Suspendable
-        protected final void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-            resp.setContentType("application/json");
-            resp.setHeader("Server", "comsat-servlet-undertow");
-            mapper.writeValue(resp.getOutputStream(), new HelloWorldData());
-        }
-    }
-
-    private static final class PlaintextServlet extends FiberHttpServlet {
-        private static final byte[] helloWorld = "Hello, World!".getBytes(StandardCharsets.ISO_8859_1);
-
-        @Override
-        @Suspendable
-        protected final void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-            resp.setContentType("text/plain");
-            resp.setHeader("Server", "comsat-servlet-undertow");
-            resp.getOutputStream().write(helloWorld);
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
+public final class UndertowServer implements Server {
+    @Override
+    public final void run() throws Exception {
         final DeploymentInfo deployment = Servlets.deployment().setDeploymentName("")
             .setClassLoader(ClassLoader.getSystemClassLoader())
             .setContextPath("/");
@@ -73,6 +38,9 @@ public final class HelloWebServer {
             .setIoThreads(100)
             .setWorkerThreads(100)
 
+            .setServerOption(Options.CONNECTION_HIGH_WATER, 100_000)
+            .setServerOption(Options.CONNECTION_LOW_WATER, 100_000)
+
             .setBufferSize(1024)
             .setBuffersPerRegion(100)
 
@@ -80,7 +48,8 @@ public final class HelloWebServer {
             .setSocketOption(Options.REUSE_ADDRESSES, true)
             // .setSocketOption(Options.CORK, true)
             // .setSocketOption(Options.USE_DIRECT_BUFFERS, true)
-            // .setSocketOption(Options.BACKLOG, Integer.MAX_VALUE)
+            .setSocketOption(Options.BACKLOG, 100000)
+            .setSocketOption(Options.TCP_NODELAY, true)
             // .setSocketOption(Options.RECEIVE_BUFFER, 2048)
             // .setSocketOption(Options.SEND_BUFFER, 2048)
             // .setSocketOption(Options.CONNECTION_HIGH_WATER, Integer.MAX_VALUE)
@@ -107,7 +76,7 @@ public final class HelloWebServer {
                     server.stop();
 
                     System.err.println("Server is down.");
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     throw new RuntimeException(e);
                 }
             }
