@@ -551,6 +551,7 @@ class Benchmarker:
       ##########################  
       out.write(header("Starting %s" % test.name))
       out.flush()
+      self.proc_snapshot = self.__get_processes()
       try:
         if test.requires_database():
           p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, stdout=out, stderr=out, shell=True)
@@ -696,7 +697,14 @@ class Benchmarker:
   ############################################################
   def __stop_test(self, out):
     try:
-      subprocess.check_call('sudo killall -s 9 -u %s' % self.runner_user, shell=True, stderr=out, stdout=out)
+      if self.os.lower() == 'windows':
+        current_procs = self.__get_processes()
+        new_procs = list(set(current_procs) - set(self.proc_snapshot))
+        for proc in new_procs:
+          out.write("Killing process %s" % proc)
+          subprocess.call('taskkill /pid %s /f' % proc, shell=True, stderr=out, stdout=out)
+      else:
+        subprocess.check_call('sudo killall -s 9 -u %s' % self.runner_user, shell=True, stderr=out, stdout=out)
       retcode = 0
     except Exception:
       retcode = 1
@@ -913,6 +921,21 @@ class Benchmarker:
 
   ############################################################
   # End __finish
+  ############################################################
+
+  ############################################################
+  # __get_processes
+  ############################################################
+  def __get_processes(self):
+    if self.os.lower() == 'windows':
+      proc = subprocess.Popen("wmic process get processid", stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+      stdout, stderr = proc.communicate()
+      lines = stdout.splitlines()
+      filtered = [line for line in lines if len(line) > 0]
+      del filtered[0]
+      return filtered
+  ############################################################
+  # __get_processes
   ############################################################
 
   ##########################################################################################
