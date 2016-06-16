@@ -21,6 +21,7 @@ env:
     - "TESTDIR=C/haywire"
     - "TESTDIR=C/onion"
     - "TESTDIR=CSharp/aspnet"
+    - "TESTDIR=CSharp/aspnetcore"
     ## - "TESTDIR=CSharp/aspnet-stripped"
     - "TESTDIR=CSharp/evhttp-sharp"
     ## - "TESTDIR=CSharp/HttpListener"
