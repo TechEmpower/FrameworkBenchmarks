@@ -20,7 +20,7 @@ class JsonHandler(components: {
   }
 
   def response = {
-    new HttpResponse(StatusCodes.OK, entity = HttpEntity(Response("Hello, World!").toJson.toString()).withContentType(`application/json`))
+    HttpResponse(StatusCodes.OK, entity = HttpEntity(Response("Hello, World!").toJson.toString()).withContentType(`application/json`))
   }
 }
 
