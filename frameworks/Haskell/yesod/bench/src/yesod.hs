@@ -23,7 +23,7 @@ import           Control.Monad.Reader          (ReaderT)
 import           Control.Monad.Trans.Resource  (InternalState)
 import           Data.Aeson                    (encode)
 import qualified Data.ByteString.Lazy          as L
-import           Data.Conduit.Pool             (Pool, createPool)
+import           Data.Pool                     (Pool, createPool)
 import           Data.Int                      (Int64)
 import           Data.IORef                    (newIORef)
 import           Data.Function                 (on)
@@ -108,7 +108,7 @@ getJsonR :: Handler ()
 getJsonR = sendWaiResponse
          $ responseBuilder
             status200
-            [("Content-Type", typeJson)]
+            [("Content-Type", simpleContentType typeJson)]
          $ copyByteString
          $ L.toStrict
          $ encode
@@ -168,7 +168,7 @@ getDb query = do
     sendWaiResponse
         $ responseBuilder
             status200
-            [("Content-Type", typeJson)]
+            [("Content-Type", simpleContentType typeJson)]
         $ copyByteString
         $ L.toStrict
         $ encode value
@@ -257,7 +257,7 @@ getPlaintextR :: Handler ()
 getPlaintextR = sendWaiResponse
               $ responseBuilder
                 status200
-                [("Content-Type", typePlain)]
+                [("Content-Type", simpleContentType typePlain)]
               $ copyByteString "Hello, World!"
 
 fortuneTemplate :: [(Int64, Text)] -> Builder

@@ -1,3 +1,2 @@
 ./wai/bench/
 ./wai/bench/wai.hs
-./wai/bench/bench.cabal
