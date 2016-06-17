@@ -11,12 +11,14 @@ This is the [ULib](http://stefanocasazza.github.io/ULib/) portion of a [benchmar
 * [Database test source (SQL)](src/db.usp)
 * [Database test source (REDIS)](src/rdb.usp)
 * [Database test source (MONGODB)](src/mdb.usp)
+* [Database test source (ELASTICSEARCH)](src/edb.usp)
 
 ### Variable Query Test
 
 * [Variable Query test source (SQL)](src/query.usp)
 * [Variable Query test source (REDIS)](src/rquery.usp)
 * [Variable Query test source (MONGODB)](src/mquery.usp)
+* [Variable Query test source (ELASTICSEARCH)](src/equery.usp)
 
 ### Fortune Query Test
 
@@ -29,6 +31,7 @@ This is the [ULib](http://stefanocasazza.github.io/ULib/) portion of a [benchmar
 * [Variable Query (update) test source (SQL)](src/update.usp)
 * [Variable Query (update) test source (REDIS)](src/rupdate.usp)
 * [Variable Query (update) test source (MONGODB)](src/mupdate.usp)
+* [Variable Query (update) test source (ELASTICSEARCH)](src/eupdate.usp)
 
 ### Plaintext Test
 
