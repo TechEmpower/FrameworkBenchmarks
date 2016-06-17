@@ -85,6 +85,7 @@ env:
     - "TESTDIR=Java/jawn"
     - "TESTDIR=Java/jetty-servlet"
     - "TESTDIR=Java/jetty"
+    - "TESTDIR=Java/jlhttp"
     - "TESTDIR=Java/jooby"
     - "TESTDIR=Java/netty"
     - "TESTDIR=Java/ninja-standalone"

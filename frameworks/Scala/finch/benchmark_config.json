@@ -17,7 +17,8 @@
       "webserver": "None",
       "os": "Linux",
       "display_name": "finch",
-      "notes": ""
+      "notes": "",
+      "versus": "finagle"
     }
   }]
 }
