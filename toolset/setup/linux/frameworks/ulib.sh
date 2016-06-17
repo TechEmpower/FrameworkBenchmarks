@@ -68,7 +68,7 @@ CXX=g++ # C++ compiler command
 gcc_version=`g++ -dumpversion`
 
 case "$gcc_version" in
-  3*|4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*)
+  3*|4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*|4.8*)
 	  CC='gcc-4.9'
 	 CXX='g++-4.9'
   ;;
@@ -98,7 +98,8 @@ make install
 
 # 3. Compile usp pages for benchmark (no more REDIS)
 cd ../../src/ulib/net/server/plugin/usp
-make json.la plaintext.la  db.la  query.la  update.la  fortune.la \
+make json.la plaintext.la edb.la equery.la eupdate.la \
+									db.la  query.la  update.la  fortune.la \
                           mdb.la mquery.la mupdate.la mfortune.la
 #                         rdb.la rquery.la rupdate.la rfortune.la
 
@@ -109,6 +110,7 @@ fi
 
 mkdir -p $ULIB_DOCUMENT_ROOT
 cp .libs/json.so .libs/plaintext.so \
+   .libs/edb.so .libs/equery.so .libs/eupdate.so \
 	.libs/db.so  .libs/query.so  .libs/update.so  .libs/fortune.so \
 	.libs/mdb.so .libs/mquery.so .libs/mupdate.so .libs/mfortune.so $ULIB_DOCUMENT_ROOT
 #  .libs/rdb.so .libs/rquery.so .libs/rupdate.so .libs/rfortune.so \
