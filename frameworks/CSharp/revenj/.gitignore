@@ -1,0 +1,9 @@
+*.user
+*.suo
+*.jar
+*.zip
+dsl-compiler.*
+*/bin/*
+*/obj/*
+exe/
+tmp/

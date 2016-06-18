@@ -1,11 +1,10 @@
 #!/bin/bash
 
-fw_depends haskell
+fw_depends stack
 
 cd bench
 
-cabal update
-cabal sandbox init
-cabal --bindir=${TROOT}/bench/dist/build/bench install
+${IROOT}/stack --allow-different-user setup
+${IROOT}/stack --allow-different-user build
 
-dist/build/bench/bench ${MAX_THREADS} ${DBHOST} +RTS -A32m -N${MAX_THREADS} &
+${IROOT}/stack --allow-different-user exec bench ${MAX_THREADS} ${DBHOST} +RTS -A32m -N${MAX_THREADS} &

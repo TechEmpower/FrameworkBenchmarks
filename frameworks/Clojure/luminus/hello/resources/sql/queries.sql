@@ -1,20 +1,14 @@
---name: get-world
--- Query a World record from the database
-SELECT * FROM world
-WHERE id = :id
-
---name: get-all-fortunes
+--:name get-all-fortunes :? :*
 -- select all records from the fortune table
-SELECT * FROM fortune
+SELECT * FROM "Fortune"
 
---name: update-world<!
+-- :name update-world! :! :1
 -- update an existing world record
-UPDATE world
-SET randomNumber = :randomNumber
+UPDATE "World"
+SET "randomnumber" = :randomNumber
 WHERE id = :id
 
---name: get-all-fortunes
--- query all fortune records
-SELECT id, message FROM fortune
-
-
+-- :name get-world :? :1
+-- get world by id
+SELECT * FROM "World"
+WHERE id = :id

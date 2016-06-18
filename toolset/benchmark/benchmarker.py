@@ -9,6 +9,7 @@ from utils import gather_frameworks
 from utils import verify_database_connections
 
 import os
+import shutil
 import stat
 import json
 import subprocess
@@ -521,8 +522,7 @@ class Benchmarker:
       os.makedirs(logDir)
     except Exception:
       pass
-    with open(os.path.join(logDir, 'out.txt'), 'w') as out, \
-         open(os.path.join(logDir, 'err.txt'), 'w') as err:
+    with open(os.path.join(logDir, 'out.txt'), 'w') as out:
 
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         out.write("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.\n")
@@ -553,7 +553,7 @@ class Benchmarker:
       out.flush()
       try:
         if test.requires_database():
-          p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, stdout=out, stderr=err, shell=True)
+          p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, stdout=out, stderr=out, shell=True)
           p.communicate("""
             sudo restart mysql
             sudo restart mongod
@@ -576,24 +576,23 @@ class Benchmarker:
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
-          self.__stop_test(out, err)
+          self.__stop_test(out)
           out.flush()
-          err.flush()
           time.sleep(15)
           if self.__is_port_bound(test.port):
             # We gave it our all
             self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
-            err.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
-            err.flush()
+            out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
+            out.flush()
             print "Error: Unable to recover port, cannot start test"
             return exit_with_code(1)
 
-        result = test.start(out, err)
+        result = test.start(out)
         if result != 0: 
-          self.__stop_test(out, err)
+          self.__stop_test(out)
           time.sleep(5)
-          err.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
-          err.flush()
+          out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
+          out.flush()
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
           return exit_with_code(1)
         
@@ -604,9 +603,12 @@ class Benchmarker:
         # Verify URLs
         ##########################
         logging.info("Verifying framework URLs")
-        passed_verify = test.verify_urls(out, err)
-        out.flush()
-        err.flush()
+        verificationPath = os.path.join(logDir,"verification")
+        try:
+          os.makedirs(verificationPath)
+        except OSError:
+          pass
+        passed_verify = test.verify_urls(verificationPath)
 
         ##########################
         # Benchmark this test
@@ -615,31 +617,32 @@ class Benchmarker:
           logging.info("Benchmarking")
           out.write(header("Benchmarking %s" % test.name))
           out.flush()
-          test.benchmark(out, err)
-          out.flush()
-          err.flush()
+          benchmarkPath = os.path.join(logDir,"benchmark")
+          try:
+            os.makedirs(benchmarkPath)
+          except OSError:
+            pass
+          test.benchmark(benchmarkPath)
 
         ##########################
         # Stop this test
         ##########################
         out.write(header("Stopping %s" % test.name))
         out.flush()
-        self.__stop_test(out, err)
+        self.__stop_test(out)
         out.flush()
-        err.flush()
         time.sleep(15)
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
-          self.__stop_test(out, err)
+          self.__stop_test(out)
           out.flush()
-          err.flush()
           time.sleep(15)
           if self.__is_port_bound(test.port):
             # We gave it our all
             self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-            err.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
-            err.flush()
+            out.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
+            out.flush()
             return exit_with_code(1)
 
         out.write(header("Stopped %s" % test.name))
@@ -659,30 +662,28 @@ class Benchmarker:
           return exit_with_code(1)
       except (OSError, IOError, subprocess.CalledProcessError) as e:
         self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
-        err.write(header("Subprocess Error %s" % test.name))
-        traceback.print_exc(file=err)
-        err.flush()
+        out.write(header("Subprocess Error %s" % test.name))
+        traceback.print_exc(file=out)
+        out.flush()
         try:
-          self.__stop_test(out, err)
+          self.__stop_test(out)
         except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
-          err.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
-          traceback.print_exc(file=err)
-          err.flush()
+          out.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
+          traceback.print_exc(file=out)
+          out.flush()
         out.close()
-        err.close()
         return exit_with_code(1)
       # TODO - subprocess should not catch this exception!
       # Parent process should catch it and cleanup/exit
       except (KeyboardInterrupt) as e:
-        self.__stop_test(out, err)
+        self.__stop_test(out)
         out.write(header("Cleaning up..."))
         out.flush()
         self.__finish()
         sys.exit(1)
 
       out.close()
-      err.close()
       return exit_with_code(0)
 
   ############################################################
@@ -693,9 +694,9 @@ class Benchmarker:
   # __stop_test(benchmarker)
   # Stops all running tests
   ############################################################
-  def __stop_test(self, out, err):
+  def __stop_test(self, out):
     try:
-      subprocess.check_call('sudo killall -s 9 -u %s' % self.runner_user, shell=True, stderr=err, stdout=out)
+      subprocess.check_call('sudo killall -s 9 -u %s' % self.runner_user, shell=True, stderr=out, stdout=out)
       retcode = 0
     except Exception:
       retcode = 1
@@ -962,9 +963,17 @@ class Benchmarker:
     self.fwroot = setup_util.get_fwroot()
 
     # setup results and latest_results directories 
-    self.result_directory = os.path.join("results", self.name)
+    self.result_directory = os.path.join("results")
+    if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
+        shutil.rmtree(os.path.join(self.fwroot, "results"))
     self.latest_results_directory = self.latest_results_directory()
   
+    # remove installs directories if --clean-all provided
+    self.install_root = "%s/%s" % (self.fwroot, "installs")
+    if args['clean_all']:
+        os.system("sudo rm -rf " + self.install_root)
+        os.mkdir(self.install_root)
+
     if hasattr(self, 'parse') and self.parse != None:
       self.timestamp = self.parse
     else:
@@ -976,11 +985,10 @@ class Benchmarker:
         #Load json file into results object
         self.results = json.load(f)
     except IOError:
-      logging.warn("results.json for test %s not found.",self.name) 
+      logging.warn("results.json for test not found.")
     
     if self.results == None:
       self.results = dict()
-      self.results['name'] = self.name
       self.results['concurrencyLevels'] = self.concurrency_levels
       self.results['queryIntervals'] = self.query_levels
       self.results['frameworks'] = [t.name for t in self.__gather_tests]

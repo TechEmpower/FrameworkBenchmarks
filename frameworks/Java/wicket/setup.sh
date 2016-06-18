@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java7 resin maven
+fw_depends java resin maven
 
 sed -i 's|127.0.0.1|'${DBHOST}'|g' src/main/webapp/WEB-INF/resin-web.xml
 

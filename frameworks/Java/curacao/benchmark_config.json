@@ -1,24 +1,24 @@
 {
-  "framework" : "curacao",
-  "tests" : [{
-    "default" : {
-      "setup_file" : "setup",
-      "json_url" : "/json",
-      "plaintext_url": "/plaintext",
+  "framework": "curacao",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/curacao/json",
+      "plaintext_url": "/curacao/plaintext",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Micro",
+      "classification": "Platform",
       "database": "None",
       "framework": "curacao",
       "language": "Java",
       "orm": "Raw",
       "platform": "Servlet",
-      "webserver": "None",
+      "webserver": "Resin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Curacao",
+      "display_name": "curacao",
       "notes": "",
-      "versus": "jetty"
+      "versus": "servlet"
     }
   }]
 }

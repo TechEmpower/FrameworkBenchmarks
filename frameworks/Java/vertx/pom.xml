@@ -8,7 +8,7 @@
 	<properties>
 		<!-- the main class -->
 		<main.class>vertx.WebServer</main.class>
-		<stack.version>3.1.0</stack.version>
+		<stack.version>3.2.1</stack.version>
 	</properties>
 
 	<repositories>

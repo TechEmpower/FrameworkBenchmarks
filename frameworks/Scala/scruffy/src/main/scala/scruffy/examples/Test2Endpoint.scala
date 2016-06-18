@@ -21,7 +21,7 @@ object Test2Endpoint extends HttpModule {
   //  collection.save(DBObject("_id" -> k, "id" -> k, "randomNumber" -> random.nextInt(10000).toDouble))
 
   get("db") { req =>
-    val id = ThreadLocalRandom.current.nextInt(10000)
+    val id = 1 + ThreadLocalRandom.current.nextInt(10000)
     val dbo = collection.findOne(DBObject("_id" -> id), fields)
     val randomNumber = Math.round(dbo.get("randomNumber").toString.toFloat)
     Output(id, randomNumber).json

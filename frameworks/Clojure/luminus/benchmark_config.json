@@ -3,26 +3,26 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
-      "json_url": "/json",
+      "json_url": "/io/json",
+      "plaintext_url": "/io/plaintext",
       "db_url": "/db",
       "query_url": "/queries/",
       "fortune_url": "/fortunes",
       "update_url": "/updates/",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
+      "port": 3000,
       "approach": "Realistic",
       "classification": "Platform",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "luminus",
       "language": "Clojure",
       "orm": "Raw",
-      "platform": "http-kit",
+      "platform": "Immutant",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "luminus",
       "notes": "",
-      "versus": ""
+      "versus": "servlet"
     }
   }]
 }

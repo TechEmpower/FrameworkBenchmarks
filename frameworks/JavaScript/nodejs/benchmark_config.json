@@ -87,27 +87,6 @@
       "notes": "",
       "versus": "nodejs"
     },
-    "redis": {
-      "setup_file": "setup",
-      "db_url": "/hiredis/db",
-      "query_url": "/hiredis/queries?queries=",
-      "update_url": "/hiredis/updates?queries=",
-      "fortune_url": "/hiredis/fortunes",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "Redis",
-      "framework": "nodejs",
-      "language": "JavaScript",
-      "orm": "full",
-      "platform": "nodejs",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "nodejs",
-      "notes": "",
-      "versus": "nodejs"
-    },
     "postgres": {
       "setup_file": "setup",
       "db_url": "/sequelize-pg/db",

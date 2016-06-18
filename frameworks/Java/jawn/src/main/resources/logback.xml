@@ -6,9 +6,12 @@
         </encoder>
     </appender>
 
+    <logger name="com.mchange.v2.c3p0.impl.NewProxyPreparedStatement" level="WARN" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
     
     <!-- Disables all logging -->
-    <root level="OFF">
+    <root level="off">
         <appender-ref ref="STDOUT" />
     </root>
     

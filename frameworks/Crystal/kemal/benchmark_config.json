@@ -1,0 +1,28 @@
+{
+  "framework": "kemal",
+  "tests": [{
+    "default": {
+      "setup_file": "setup-postgres",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 3000,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "kemal",
+      "language": "Crystal",
+      "orm": "micro",
+      "platform": "Crystal",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Kemal",
+      "notes": "",
+      "versus": "ruby"
+    }
+  }]
+}

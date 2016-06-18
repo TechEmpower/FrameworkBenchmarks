@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java8 sbt
+fw_depends java sbt
 
 sed -i 's|127.0.0.1|'${DBHOST}'|g' play2-java-jpa-hikaricp/conf/application.conf
 

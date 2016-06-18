@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php nginx composer
+fw_depends php7 nginx composer
 
 sed -i "s|localhost|${DBHOST}|g" dborm.php
 sed -i "s|localhost|${DBHOST}|g" dbraw.php

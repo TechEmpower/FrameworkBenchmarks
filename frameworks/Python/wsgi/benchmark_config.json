@@ -16,26 +16,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "wsgi-meinheld",
-      "notes": "",
-      "versus": "wsgi"
-    },
-    "nginx-uwsgi": {
-      "setup_file": "setup_nginxuwsgi",
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Stripped",
-      "classification": "Platform",
-      "database": "None",
-      "framework": "wsgi",
-      "language": "Python",
-      "orm": "Raw",
-      "platform": "uWSGI",
-      "webserver": "nginx",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "wsgi-nginx-uWSGI",
+      "display_name": "meinheld",
       "notes": "",
       "versus": "wsgi"
     }

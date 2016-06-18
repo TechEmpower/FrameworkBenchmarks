@@ -1,5 +1,6 @@
 /app/cache
 /app/logs
+/app/compiled-templates/
 /bin
 /vendors
 /build
@@ -7,3 +8,4 @@
 .DS_Store
 /tags
 .idea
+/deploy/php-fpm.pid

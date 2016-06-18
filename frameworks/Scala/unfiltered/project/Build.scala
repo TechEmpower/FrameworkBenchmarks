@@ -1,25 +1,25 @@
 import sbt._
 import Keys._
-import sbtassembly.Plugin._
-import AssemblyKeys._
+import sbtassembly.AssemblyPlugin._
+//import AssemblyKeys._
 
 object Bench extends Build {
   lazy val project = Project(
     "bench", 
     file("."),
     settings = Defaults.defaultSettings ++ assemblySettings ++ Seq(
-      scalaVersion := "2.10.1",
+      scalaVersion := "2.11.7",
       version := "1.0.0",
       name := "bench",
       libraryDependencies ++= Seq(
-        "net.databinder" %% "unfiltered-netty-server" % "0.6.8",
-        "net.databinder.dispatch" %% "dispatch-core" % "0.9.5",
-        "net.databinder" %% "unfiltered-json4s" % "0.6.8",
-        "net.databinder" %% "unfiltered-spec" % "0.6.8" % "test",
-        "org.clapper" %% "avsl" % "1.0.1",
-        "org.json4s" %% "json4s-jackson" % "3.2.3",
-        "com.typesafe.slick" %% "slick" % "1.0.0",
-        "mysql" % "mysql-connector-java" % "5.1.24",
+        "net.databinder" %% "unfiltered-netty-server" % "0.8.4",
+        "net.databinder.dispatch" %% "dispatch-core" % "0.11.2",
+        "net.databinder" %% "unfiltered-json4s" % "0.8.4",
+        "net.databinder" %% "unfiltered-specs2" % "0.8.4" % "test",
+        "org.clapper" %% "avsl" % "1.0.2",
+        "org.json4s" %% "json4s-jackson" % "3.3.0",
+        "com.typesafe.slick" %% "slick" % "3.1.1",
+        "mysql" % "mysql-connector-java" % "5.1.38",
         "com.jolbox" % "bonecp" % "0.7.1.RELEASE",
         "com.typesafe" % "config" % "1.0.0"
       )

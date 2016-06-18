@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <groupId>com.techempower</groupId>
+    <artifactId>beyondj</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>BeyondJ Sample Project - Parent</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <antlr.version>2.7.7</antlr.version>
+        <camel.version>2.15.2</camel.version>
+        <mysql.connector.version>5.1.38</mysql.connector.version>
+        <commons.pool.version>1.5.1</commons.pool.version>
+        <commons.lang.version>3.4</commons.lang.version>
+        <c3p0.version>0.9.1.2</c3p0.version>
+        <aspectj.version>1.6.12</aspectj.version>
+        <slf4j.version>1.7.7</slf4j.version>
+        <commons.io.version>2.4</commons.io.version>
+        <spring.data.commons.version>1.10.0.RELEASE</spring.data.commons.version>
+        <hibernate.validator.version>5.1.3.Final</hibernate.validator.version>
+        <beyondj.stripesrest.version>1.0</beyondj.stripesrest.version>
+        <stripes.version>1.6.0-BEYONDJ</stripes.version>
+        <hibernate.entitymanager.version>4.3.9.Final</hibernate.entitymanager.version>
+        <spring.data.version>1.8.0.RELEASE</spring.data.version>
+        <spring.version>4.1.2.RELEASE</spring.version>
+        <httpclient.version>4.3.6</httpclient.version>
+        <akka.version>2.3.12</akka.version>
+        <commons.fileupload.version>1.3.1</commons.fileupload.version>
+        <spring.boot.version>1.1.13-BEYONDJ</spring.boot.version>
+        <tanukisoft.version>3.2.3</tanukisoft.version>
+        <jolokia.version>1.3.1</jolokia.version>
+        <commons.codec.version>1.10</commons.codec.version>
+        <xercesImpl.version>2.11.0</xercesImpl.version>
+        <sigar.dist.version>1.6.5.132</sigar.dist.version>
+        <maven.compiler.plugin>3.0</maven.compiler.plugin>
+        <jstl.version>1.2</jstl.version>
+        <xml.apis.version>1.4.01</xml.apis.version>
+        <hazelcast.version>3.5.2</hazelcast.version>
+        <jsp.api.version>2.2</jsp.api.version>
+        <servlet.api.version>3.1.0</servlet.api.version>
+        <jetty.version>9.3.0-BEYONDJ</jetty.version>
+        <joda.time.version>2.6</joda.time.version>
+        <ecj.version>4.4</ecj.version>
+        <json.simple.version>1.1</json.simple.version>
+        <commons.codec.version>1.10</commons.codec.version>
+        <commons.compress.version>1.9</commons.compress.version>
+        <maven.dependency.plugin.version>2.2</maven.dependency.plugin.version>
+        <beyondj.platform.version>1.0-SNAPSHOT</beyondj.platform.version>
+    </properties>
+
+    <modules>
+        <module>beyondj-launcher</module>
+        <module>beyondj-service</module>
+        <module>beyondj-data</module>
+        <module>beyondj-data-loader</module>
+    </modules>
+
+      <repositories>
+        <repository>
+            <id>beyondj.com</id>
+            <url>http://beyondj.com/maven2/</url>
+        </repository>
+    </repositories>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin}</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

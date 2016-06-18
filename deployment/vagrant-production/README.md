@@ -46,7 +46,7 @@ Welcome to the FrameworkBenchmarks project!
 To get started, perhaps try this:
    $ cd FrameworkBenchmarks
    $ toolset/run-tests.py --install server --test go
-   $ cat results/ec2/latest/logs/go/out.txt
+   $ cat results/latest/logs/go/out.txt
 
 You can get lots of help:
    $ toolset/run-tests.py --help

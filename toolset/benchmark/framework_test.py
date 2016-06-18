@@ -45,10 +45,10 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -63,11 +63,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -88,10 +88,10 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -106,11 +106,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -133,10 +133,10 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
+    wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}2"
     sleep 5
 
     echo ""
@@ -151,11 +151,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
+      echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}$c\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
+      wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}$c"
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -164,9 +164,9 @@ class FrameworkTest:
 
   ############################################################
   # start(benchmarker)
-  # Start the test using it's setup file
+  # Start the test using its setup file
   ############################################################
-  def start(self, out, err):
+  def start(self, out):
 
     # Setup environment variables    
     logDir = os.path.join(self.fwroot, self.benchmarker.latest_results_directory, 'logs', self.name.lower())
@@ -188,6 +188,8 @@ class FrameworkTest:
                 max(self.benchmarker.concurrency_levels)))
 
     # Always ensure that IROOT belongs to the runner_user
+    if not os.path.exists(self.install_root):
+      os.mkdir(self.install_root)
     chown = "sudo chown -R %s:%s %s" % (self.benchmarker.runner_user,
       self.benchmarker.runner_user, os.path.join(self.fwroot, self.install_root))
     subprocess.check_call(chown, shell=True, cwd=self.fwroot, executable='/bin/bash')
@@ -375,63 +377,65 @@ class FrameworkTest:
   # or not it passed
   # Returns True if all verifications succeeded
   ############################################################
-  def verify_urls(self, out, err):
+  def verify_urls(self, verificationPath):
     result = True
     
     def verify_type(test_type):
-      
-      test = self.runTests[test_type]
-      test.setup_out_err(out, err)
-      out.write(header("VERIFYING %s" % test_type.upper()))
-      
-      base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
-      
-      try:
-        results = test.verify(base_url)
-      except ConnectionError as e:
-        results = [('fail',"Server did not respond to request")]
-        logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
-      except Exception as e:
-        results = [('fail',"""Caused Exception in TFB
-          This almost certainly means your return value is incorrect, 
-          but also that you have found a bug. Please submit an issue
-          including this message: %s\n%s""" % (e, traceback.format_exc()), 
-          base_url)]
-        logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
-        traceback.format_exc()
+      with open(os.path.join(verificationPath, (test_type + '.txt')), 'w') as verification:
+        test = self.runTests[test_type]
+        test.setup_out(verification)
+        verification.write(header("VERIFYING %s" % test_type.upper()))
 
-      test.failed = any(result == 'fail' for (result, reason, url) in results)
-      test.warned = any(result == 'warn' for (result, reason, url) in results)
-      test.passed = all(result == 'pass' for (result, reason, url) in results)
-      
-      def output_result(result, reason, url):
-        specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
-        color = Fore.GREEN
-        if result.upper() == "WARN":
-          color = Fore.YELLOW
-        elif result.upper() == "FAIL":
-          color = Fore.RED
+        base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
 
-        out.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
-        print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
-        if reason is not None and len(reason) != 0:
-          for line in reason.splitlines():
-            out.write("     " + line + '\n')
-            print "     " + line
-          if not test.passed:
-            out.write("     See %s\n" % specific_rules_url)
-            print "     See %s\n" % specific_rules_url
+        try:
+          results = test.verify(base_url)
+        except ConnectionError as e:
+          results = [('fail',"Server did not respond to request", base_url)]
+          logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
+        except Exception as e:
+          results = [('fail',"""Caused Exception in TFB
+            This almost certainly means your return value is incorrect,
+            but also that you have found a bug. Please submit an issue
+            including this message: %s\n%s""" % (e, traceback.format_exc()),
+            base_url)]
+          logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
+          traceback.format_exc()
 
-      [output_result(r1,r2,url) for (r1, r2, url) in results]
+        test.failed = any(result == 'fail' for (result, reason, url) in results)
+        test.warned = any(result == 'warn' for (result, reason, url) in results)
+        test.passed = all(result == 'pass' for (result, reason, url) in results)
 
-      if test.failed:
-        self.benchmarker.report_verify_results(self, test_type, 'fail')
-      elif test.warned:
-        self.benchmarker.report_verify_results(self, test_type, 'warn')
-      elif test.passed:
-        self.benchmarker.report_verify_results(self, test_type, 'pass')
-      else:
-        raise Exception("Unknown error - test did not pass,warn,or fail")
+        def output_result(result, reason, url):
+          specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
+          color = Fore.GREEN
+          if result.upper() == "WARN":
+            color = Fore.YELLOW
+          elif result.upper() == "FAIL":
+            color = Fore.RED
+
+          verification.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
+          print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
+          if reason is not None and len(reason) != 0:
+            for line in reason.splitlines():
+              verification.write("     " + line + '\n')
+              print "     " + line
+            if not test.passed:
+              verification.write("     See %s\n" % specific_rules_url)
+              print "     See %s\n" % specific_rules_url
+
+        [output_result(r1,r2,url) for (r1, r2, url) in results]
+
+        if test.failed:
+          self.benchmarker.report_verify_results(self, test_type, 'fail')
+        elif test.warned:
+          self.benchmarker.report_verify_results(self, test_type, 'warn')
+        elif test.passed:
+          self.benchmarker.report_verify_results(self, test_type, 'pass')
+        else:
+          raise Exception("Unknown error - test did not pass,warn,or fail")
+
+        verification.flush()
 
     result = True
     for test_type in self.runTests:
@@ -449,46 +453,47 @@ class FrameworkTest:
   # Runs the benchmark for each type of test that it implements
   # JSON/DB/Query.
   ############################################################
-  def benchmark(self, out, err):
+  def benchmark(self, benchmarkPath):
 
-    def benchmark_type(test_type):  
-      out.write("BENCHMARKING %s ... " % test_type.upper())
+    def benchmark_type(test_type):
+      with open(os.path.join(benchmarkPath, (test_type + '.txt')), 'w') as out:
+        out.write("BENCHMARKING %s ... " % test_type.upper())
 
-      test = self.runTests[test_type]
-      test.setup_out_err(out, err)
-      output_file = self.benchmarker.output_file(self.name, test_type)
-      if not os.path.exists(output_file):
-        # Open to create the empty file
-        with open(output_file, 'w'):
-          pass
+        test = self.runTests[test_type]
+        test.setup_out(out)
+        output_file = self.benchmarker.output_file(self.name, test_type)
+        if not os.path.exists(output_file):
+          # Open to create the empty file
+          with open(output_file, 'w'):
+            pass
 
-      if not test.failed:
-        if test_type == 'plaintext': # One special case
-          remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
-        elif test_type == 'query' or test_type == 'update':
-          remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
-        else:
-          remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
-        
-        # Begin resource usage metrics collection
-        self.__begin_logging(test_type)
-        
-        # Run the benchmark 
-        with open(output_file, 'w') as raw_file:
-          p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=err)
-          p.communicate(remote_script)
-          err.flush()
+        if not test.failed:
+          if test_type == 'plaintext': # One special case
+            remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
+          elif test_type == 'query' or test_type == 'update':
+            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
+          else:
+            remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
 
-        # End resource usage metrics collection
-        self.__end_logging()
+          # Begin resource usage metrics collection
+          self.__begin_logging(test_type)
 
-      results = self.__parse_test(test_type)
-      print "Benchmark results:"
-      pprint(results)
+          # Run the benchmark
+          with open(output_file, 'w') as raw_file:
+            p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=raw_file)
+            p.communicate(remote_script)
+            out.flush()
 
-      self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
-      out.write( "Complete\n" )
-      out.flush()
+          # End resource usage metrics collection
+          self.__end_logging()
+
+        results = self.__parse_test(test_type)
+        print "Benchmark results:"
+        pprint(results)
+
+        self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
+        out.write( "Complete\n" )
+        out.flush()
     
     for test_type in self.runTests:
       benchmark_type(test_type)

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists rvm.installed)
+RETCODE=$(fw_exists ${IROOT}/rvm.installed)
 [ ! "$RETCODE" == 0 ] || { \
   # Assume single-user installation
   source $IROOT/rvm.installed

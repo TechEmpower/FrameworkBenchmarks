@@ -22,10 +22,14 @@ start_link() ->
 %% Supervisor callbacks
 %% ===================================================================
 
+%% CAUTION : Assign big number to db pool will fail travis ci.
+%%           Original value was 5000, too big! Even 512 crashes! keep 256
+%%           till travis-ci environment accepts bigger size of db pool. 
+
 init([]) ->
     crypto:start(),
     application:start(emysql),
-    emysql:add_pool(test_pool, 5000,
+    emysql:add_pool(test_pool, 256,
        "benchmarkdbuser", "benchmarkdbpass", "localhost", 3306,
        "hello_world", utf8),
     emysql:prepare(db_stmt, <<"SELECT * FROM World where id = ?">>),
@@ -34,7 +38,7 @@ init([]) ->
         fancy_http,
         {elli, start_link, [ElliOpts]},
         permanent,
-        5000,
+        256,
         worker,
         [elli]},
 

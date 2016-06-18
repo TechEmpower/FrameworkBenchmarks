@@ -1,0 +1,7 @@
+.bundle
+
+# Ignore all vendor files
+/vendor/
+
+# Except the .gitkeep
+!.gitkeep

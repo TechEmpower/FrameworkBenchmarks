@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java8 sbt
+fw_depends java sbt
 
 cd play2-java
 

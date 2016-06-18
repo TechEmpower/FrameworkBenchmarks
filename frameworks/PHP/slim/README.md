@@ -19,8 +19,8 @@ The tests were run with:
 
 * [Slim 2.2.0](http://www.slimframework.com/)
 * [RedBeanPHP 3.4.2](http://redbeanphp.com/)
-* [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
-* [nginx 1.4.0](http://nginx.org/)
+* [PHP Version 7.0.1](http://www.php.net/) with FPM and APC
+* [nginx 1.9.9](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 ## Test URLs

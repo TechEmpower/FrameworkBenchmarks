@@ -1,5 +1,4 @@
 (ns hello.handler
-  (:import com.mchange.v2.c3p0.ComboPooledDataSource)
   (:use compojure.core
         ring.middleware.content-type
         ring.middleware.json
@@ -11,7 +10,8 @@
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
             [ring.util.response :as ring-resp]
-            [clojure.java.jdbc :as jdbc]))
+            [clojure.java.jdbc :as jdbc]
+            [hikari-cp.core :refer :all]))
 
 (defn sanitize-queries-param
   "Sanitizes the `queries` parameter. Clamps the value between 1 and 500.
@@ -36,31 +36,30 @@
           :delimiters "" ;; remove delimiters
           :maximum-pool-size 256}))
 
-;; MySQL database connection for java.jdbc "raw"
-;; https://github.com/clojure/java.jdbc/blob/master/doc/clojure/java/jdbc/ConnectionPooling.md
-(def db-spec-mysql-raw
-  {:classname "com.mysql.jdbc.Driver"
-   :subprotocol "mysql"
-   :subname "//127.0.0.1:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
-   :user "benchmarkdbuser"
-   :password "benchmarkdbpass"})
+;; MySQL database connection for java.jdbc "raw" using HikariCP
+(def datasource-options-hikaricp {:auto-commit        true
+                                  :read-only          false
+                                  :connection-timeout 30000
+                                  :validation-timeout 5000
+                                  :idle-timeout       600000
+                                  :max-lifetime       1800000
+                                  :minimum-idle       10
+                                  :maximum-pool-size  256
+                                  :pool-name          "db-pool"
+                                  :adapter            "mysql"
+                                  :username           "benchmarkdbuser"
+                                  :password           "benchmarkdbpass"
+                                  :database-name      "hello_world"
+                                  :server-name        "127.0.0.1"
+                                  :port-number        3306
+                                  :register-mbeans    false})
 
-(defn pool
-  [spec]
-  (let [cpds (doto (ComboPooledDataSource.)
-               (.setDriverClass (:classname spec))
-               (.setJdbcUrl (str "jdbc:" (:subprotocol spec) ":" (:subname spec)))
-               (.setUser (:user spec))
-               (.setPassword (:password spec))
-               ;; expire excess connections after 30 minutes of inactivity:
-               (.setMaxIdleTimeExcessConnections (* 30 60))
-               ;; expire connections after 3 hours of inactivity:
-               (.setMaxIdleTime (* 3 60 60)))]
-    {:datasource cpds}))
+;; Create HikariCP-pooled "raw" jdbc data source
+(def db-spec-mysql-raw-hikaricp
+  (make-datasource datasource-options-hikaricp))
 
-(def pooled-db (delay (pool db-spec-mysql-raw)))
-
-(defn db-mysql-raw [] @pooled-db)
+;; Get a HikariCP-pooled "raw" jdbc connection
+(defn db-mysql-raw [] {:datasource db-spec-mysql-raw-hikaricp})
 
 ;; Set up entity World and the database representation
 (defentity world
@@ -144,30 +143,33 @@
   "Using Korma: Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
-(let [results (run-queries queries)]
-    (for [w results]
-      (update-in w [:randomNumber (inc (rand-int 9999))]
-        (update world
-                (set-fields {:randomNumber (:randomNumber w)})
-                (where {:id [:id w]}))))
+  (let [results (map #(assoc % :randomNumber (inc (rand-int 9999))) (run-queries queries))]
+    (doseq [{:keys [id randomNumber]} results]
+      (update world
+              (set-fields {:randomNumber randomNumber})
+              (where {:id id})))
     results))
 
 (defn update-and-persist-raw
   "Using JDBC: Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
-(let [results (run-queries queries)]
-    (for [w results]
-      (update-in w [:randomNumber (inc (rand-int 9999))]
-        (jdbc/update! (db-mysql-raw) :world {:randomNumber (:randomNumber w)} ["id = ?" (:id w)])))
-    results))
+  (let [world (map #(assoc % :randomnumber (inc (rand-int 9999))) (run-queries-raw queries))]
+    (doseq [{:keys [id randomnumber]} world]
+      (jdbc/update!
+       (db-mysql-raw)
+       :world {:randomnumber randomnumber}
+       ["id = ?" id]))
+    world))
 
-(def json-serialization
+(defn json-serialization
   "Test 1: JSON serialization"
+  []
   (ring-resp/response {:message "Hello, World!"}))
 
-(def single-query-test
+(defn single-query-test
   "Test 2: Single database query"
+  []
   (ring-resp/response (first (run-queries 1))))
 
 (defn multiple-queries-test
@@ -178,8 +180,9 @@
       (run-queries)
       (ring-resp/response)))
 
-(def single-query-test-raw
+(defn single-query-test-raw
   "Test 2: Single database query (raw)"
+  []
   (-> 1
       (run-queries-raw)
       (first)
@@ -193,8 +196,9 @@
       (run-queries-raw)
       (ring-resp/response)))
 
-(def fortune-test
+(defn fortune-test
   "Test 4: Fortunes"
+  []
   (->
     (get-fortunes get-all-fortunes-korma)
     (fortunes-hiccup)
@@ -202,8 +206,9 @@
     (ring-resp/content-type "text/html")
     (ring-resp/charset "utf-8")))
 
-(def fortune-test-raw
+(defn fortune-test-raw
   "Test 4: Fortunes Raw"
+  []
   (->
     (get-fortunes get-all-fortunes-raw)
     (fortunes-hiccup)
@@ -237,19 +242,19 @@
 (defroutes app-routes
   (GET "/"                     [] "Hello, World!")
   (GET "/plaintext"            [] plaintext)
-  (GET "/json"                 [] json-serialization)
-  (GET "/db"                   [] single-query-test)
+  (GET "/json"                 [] (json-serialization))
+  (GET "/db"                   [] (single-query-test))
   (GET "/queries/:queries"     [queries] (multiple-queries-test queries))
-  (GET "/queries/"             [] (multiple-queries-test queries)) ; When param is omitted
-  (GET "/fortunes"             [] fortune-test)
+  (GET "/queries/"             [] (multiple-queries-test 1)) ; When param is omitted
+  (GET "/fortunes"             [] (fortune-test))
   (GET "/updates/:queries"     [queries] (db-updates queries))
-  (GET "/updates/"             [] (db-updates queries)) ; When param is omitted
-  (GET "/raw/db"               [] single-query-test-raw)
+  (GET "/updates/"             [] (db-updates 1)) ; When param is omitted
+  (GET "/raw/db"               [] (single-query-test-raw))
   (GET "/raw/queries/:queries" [queries] (multiple-queries-test-raw queries))
-  (GET "/raw/queries/"         [] (multiple-queries-test-raw queries)) ; When param is omitted
-  (GET "/raw/fortunes"         [] fortune-test-raw)
+  (GET "/raw/queries/"         [] (multiple-queries-test-raw 1)) ; When param is omitted
+  (GET "/raw/fortunes"         [] (fortune-test-raw))
   (GET "/raw/updates/:queries" [queries] (db-updates-raw queries))
-  (GET "/raw/updates/"         [] (db-updates-raw queries)) ; When param is omitted
+  (GET "/raw/updates/"         [] (db-updates-raw 1)) ; When param is omitted
   (route/not-found "Not Found"))
 
 (def app

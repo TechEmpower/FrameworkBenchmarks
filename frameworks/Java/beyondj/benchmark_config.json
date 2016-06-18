@@ -1,0 +1,28 @@
+{
+  "framework": "beyondj",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/beyondj-service/perf/hello",
+      "db_url": "/beyondj-service/perf/database/db",
+      "query_url": "/beyondj-service/perf/database/queries?&queries=",
+      "fortune_url": "/beyondj-service/perf/fortunes",
+      "plaintext_url": "/beyondj-service/perf/hello/plaintext",
+      "update_url": "/beyondj-service/perf/database/updates?&queries=",
+      "port": 7070,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "beyondj",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Servlet",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Beyondj",
+      "notes": "BeyondJ, the Next Generation Reactive and Modular Java Container. One Jar will rule them all!",
+      "versus": "servlet"
+    }
+  }]
+}

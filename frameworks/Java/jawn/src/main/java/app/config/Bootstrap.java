@@ -1,7 +1,7 @@
 package app.config;
 
 import net.javapla.jawn.core.ApplicationConfig;
-import net.javapla.jawn.core.spi.ApplicationBootstrap;
+import net.javapla.jawn.core.api.ApplicationBootstrap;
 import app.db.DbModule;
 
 public class Bootstrap implements ApplicationBootstrap {

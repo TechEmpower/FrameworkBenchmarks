@@ -40,6 +40,26 @@
       "display_name": "slim_hhvm",
       "notes": "",
       "versus": "php"
+    },
+    "php5": {
+      "setup_file": "setup_php5",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/dbs?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "slim",
+      "language": "PHP5",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "slim-php5",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

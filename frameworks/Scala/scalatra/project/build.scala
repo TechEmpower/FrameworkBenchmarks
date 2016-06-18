@@ -9,7 +9,7 @@ object BenchmarkBuild extends Build {
   val Organization = "hello.benchmark"
   val Name = "scalatra"
   val Version = "1.0-SNAPSHOT"
-  val ScalaVersion = "2.10.0"
+  val ScalaVersion = "2.11.7"
   val ScalatraVersion = "2.2.0"
 
   lazy val project = Project (
@@ -33,7 +33,7 @@ object BenchmarkBuild extends Build {
     )
   )
 
-  val mysql = "mysql" % "mysql-connector-java" % "5.1.23"
+  val mysql = "mysql" % "mysql-connector-java" % "5.1.38"
 
   val json4s = "org.json4s"   %% "json4s-jackson" % "3.2.4"
 }
