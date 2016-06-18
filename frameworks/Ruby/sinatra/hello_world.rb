@@ -30,7 +30,7 @@ settings.filters[:after].clear
 
 after do
   # Add mandatory HTTP headers to every response
-  response['Server'] ||= 'Puma'.freeze
+  response['Server'] ||= ENV['WEB_SERVER'].freeze
   response['Date'] ||= Time.now.to_s
 end
 
