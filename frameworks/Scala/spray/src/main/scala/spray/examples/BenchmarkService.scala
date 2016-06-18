@@ -35,21 +35,21 @@ class BenchmarkService extends Actor {
     // when a new connection comes in we register ourselves as the connection handler
     case _: Http.Connected => sender ! Http.Register(self, fastPath = fastPath)
 
-    case HttpRequest(GET, Path("/"), _, _, _) => sender ! HttpResponse(
-      entity = HttpEntity(MediaTypes.`text/html`,
-        <html>
-          <body>
-            <h1>Tiny <i>spray-can</i> benchmark server</h1>
-            <p>Defined resources:</p>
-            <ul>
-              <li><a href="/json">/json</a></li>
-              <li><a href="/plaintext">/plaintext</a></li>
-              <li><a href="/stop">/stop</a></li>
-            </ul>
-          </body>
-        </html>.toString()
-      )
-    )
+    // case HttpRequest(GET, Path("/"), _, _, _) => sender ! HttpResponse(
+    //   entity = HttpEntity(MediaTypes.`text/html`,
+    //     <html>
+    //       <body>
+    //         <h1>Tiny <i>spray-can</i> benchmark server</h1>
+    //         <p>Defined resources:</p>
+    //         <ul>
+    //           <li><a href="/json">/json</a></li>
+    //           <li><a href="/plaintext">/plaintext</a></li>
+    //           <li><a href="/stop">/stop</a></li>
+    //         </ul>
+    //       </body>
+    //     </html>.toString()
+    //   )
+    // )
 
     case _: HttpRequest => sender ! unknownResource
   }

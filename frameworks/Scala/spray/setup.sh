@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java7 scala sbt
+fw_depends java8 scala sbt
 
 sbt assembly
 
