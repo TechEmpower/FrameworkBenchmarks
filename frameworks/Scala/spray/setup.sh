@@ -1,10 +1,6 @@
 #!/bin/bash
 
-<<<<<<< HEAD
 fw_depends java8 scala sbt
-=======
-fw_depends java scala sbt
->>>>>>> upstream/master
 
 sbt assembly -batch
 
