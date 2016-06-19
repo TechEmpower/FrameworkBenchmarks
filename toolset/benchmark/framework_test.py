@@ -992,14 +992,14 @@ def validate_test(test_name, test_keys, directory):
       
       if val not in acceptable_values:
         msg = ("Invalid `%s` value specified for test \"%s\" in framework \"%s\"; suggestions:\n"
-          % (key, test_name, config['framework']))
+          % (key, test_name, test_keys['framework']))
         helpinfo = ('\n').join(["  `%s` -- %s" % (v, desc) for (v, desc) in zip(acceptable_values, descriptors)])
         fullerr = msg + helpinfo + "\n"
         raise Exception(fullerr)
     
     elif not has_predefined_acceptables and val == "":
       msg = ("Value for `%s` in test \"%s\" in framework \"%s\" was missing:\n"
-        % (key, test_name, config['framework']))
+        % (key, test_name, test_keys['framework']))
       helpinfo = "  %s -- %s" % schema[key]['help']
       fullerr = msg + helpinfo + '\n'
       raise Exception(fullerr)

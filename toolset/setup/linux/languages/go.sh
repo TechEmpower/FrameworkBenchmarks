@@ -5,7 +5,7 @@ RETCODE=$(fw_exists ${IROOT}/go.installed)
   source $IROOT/go.installed
   return 0; }
 
-VERSION=1.6
+VERSION=1.6.2
 GOROOT=$IROOT/go
 
 fw_get -O https://storage.googleapis.com/golang/go$VERSION.linux-amd64.tar.gz

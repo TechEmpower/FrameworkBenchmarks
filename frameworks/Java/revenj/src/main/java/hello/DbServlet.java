@@ -15,7 +15,7 @@ public class DbServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		res.setContentType("application/json");
 		final Context ctx = Utils.getContext();
-		final Optional<World> world = ctx.repository.find(ctx.getRandom10k(), ctx.connection);
+		final Optional<World> world = ctx.worlds.find(ctx.getRandom10k(), ctx.connection);
 		final JsonWriter writer = ctx.json;
 		world.get().serialize(writer, false);
 		writer.toStream(res.getOutputStream());

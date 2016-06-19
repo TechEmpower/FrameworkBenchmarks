@@ -66,7 +66,7 @@ site pool = route
     [ ("json",      jsonHandler)
     , ("db",        dbHandler pool)
     , ("dbs",       dbsHandler pool)
-    , ("plaintext", writeBS "Hello, World!")
+    , ("plaintext", plaintextHandler pool)
     ]
 
 jsonHandler :: Snap ()
@@ -86,6 +86,11 @@ dbsHandler pool = do
     modifyResponse (setContentType "application/json")
     qs <- getQueryParam "queries"
     runAll pool $ maybe 1 fst (qs >>= B.readInt)
+
+plaintextHandler :: Pool Connection -> Snap ()
+plaintextHandler pool = do
+    modifyResponse (setContentType "text/plain")
+    writeBS "Hello, World!"
 
 runAll :: Pool Connection -> Int -> Snap ()
 runAll pool i | i < 1 = runAll pool 1

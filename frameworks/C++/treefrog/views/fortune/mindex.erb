@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<%#include "mngfortune.h" %>
+<html>
+<head>
+<title>Fortunes</title>
+</head>
+<body>
+<table>
+<tr>
+<th>id</th>
+<th>message</th>
+</tr>
+<% tfetch(QList<MngFortune>, fortuneList); %>
+<% for (auto &i : fortuneList) { %>
+<tr>
+<td><%= i.id() %></td>
+<td><%= i.message() %></td>
+</tr>
+<% } %>
+</table>
+</body>
+</html>

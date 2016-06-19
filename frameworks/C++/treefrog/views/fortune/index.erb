@@ -11,8 +11,7 @@
 <th>message</th>
 </tr>
 <% tfetch(QList<Fortune>, fortuneList); %>
-<% for (QListIterator<Fortune> it(fortuneList); it.hasNext(); ) {
-     const Fortune &i = it.next(); %>
+<% for (auto &i : fortuneList) { %>
 <tr>
 <td><%= i.id() %></td>
 <td><%= i.message() %></td>

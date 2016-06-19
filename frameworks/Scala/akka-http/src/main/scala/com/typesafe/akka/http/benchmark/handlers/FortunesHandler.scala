@@ -35,7 +35,7 @@ class FortunesHandler(components: {
     dataStore.getFortunes.map {
       fortunes =>
         val body = engine.layout("/templates/fortunes.mustache", Map("fortunes" -> fortunes))
-        new HttpResponse(StatusCodes.OK, entity = HttpEntity(body).withContentType(`text/html`.withCharset(`UTF-8`)))
+        HttpResponse(StatusCodes.OK, entity = HttpEntity(body).withContentType(`text/html`.withCharset(`UTF-8`)))
     }
 
   }

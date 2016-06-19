@@ -7,3 +7,9 @@ GET     /json                                   App.Json
 GET     /db                                     App.Db
 GET     /fortune                                App.Fortune
 GET     /update                                 App.Update
+GET     /jet-db                                 App.JetDb
+GET     /jet-fortune                            App.JetFortune
+GET     /jet-update                             App.JetUpdate
+GET     /qbs-db                                 App.QbsDb
+GET     /qbs-fortune                            App.QbsFortune
+GET     /qbs-update                             App.QbsUpdate
