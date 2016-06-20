@@ -86,7 +86,14 @@ Write-Host "`nInstalling Windows SDK and VC++ redist...`n"
 choco install windows-sdk-10.0 -y
 choco install vcredist2015 -y
 choco install netfx-4.5.1-devpack -y
-Touch "$workdir\dotnetcore-prereqs.installed"
+
+$dotnetcore_installer_script  = "dotnet-install.ps1"
+$dotnetcore_url = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.ps1"
+$dotnetcore_local = "$workdir\$dotnetcore_installer_script"
+(New-Object System.Net.WebClient).DownloadFile($dotnetcore_url, $dotnetcore_local)
+&$dotnetcore_local
+UpdatePath "$env:Path;$env:LOCALAPPDATA\Microsoft\dotnet"
+Touch "$workdir\dotnetcore.installed"
 
 # Web Deploy 3.0
 choco install webdeploy -y
