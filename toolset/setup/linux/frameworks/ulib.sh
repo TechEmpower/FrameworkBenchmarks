@@ -68,7 +68,7 @@ CXX=g++ # C++ compiler command
 gcc_version=`g++ -dumpversion`
 
 case "$gcc_version" in
-  3*|4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*)
+  3*|4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*|4.8*)
 	  CC='gcc-4.9'
 	 CXX='g++-4.9'
   ;;

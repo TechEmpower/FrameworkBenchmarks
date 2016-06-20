@@ -18,8 +18,8 @@ static void usp_init_json()
    U_TRACE(5, "::usp_init_json()")
 
 #ifndef AS_cpoll_cppsp_DO
-   pkey   = U_NEW(U_STRING_FROM_CONSTANT("message"));
-   pvalue = U_NEW(U_STRING_FROM_CONSTANT("Hello, World!"));
+   U_NEW(UString, pkey,   U_STRING_FROM_CONSTANT("message"));
+   U_NEW(UString, pvalue, U_STRING_FROM_CONSTANT("Hello, World!"));
 #endif
 }
 
