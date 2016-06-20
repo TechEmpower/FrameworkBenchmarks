@@ -64,8 +64,6 @@ env:
     - "TESTDIR=Go/go-std-mysql"
     - "TESTDIR=Go/go-std-postgresql"
     - "TESTDIR=Go/revel"
-    - "TESTDIR=Go/revel-jet"
-    - "TESTDIR=Go/revel-qbs"
     - "TESTDIR=Go/webgo"
     - "TESTDIR=Groovy/grails"
     - "TESTDIR=Haskell/snap"
