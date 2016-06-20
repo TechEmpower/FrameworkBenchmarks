@@ -2,7 +2,7 @@
 
 fw_depends php nginx composer
 
-sed -i 's|192.168.100.102|'"${DBHOST}"'|g' web/index.php
+sed -i 's|mysql:host=[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+|'"mysql:host=${DBHOST}"'|g' web/index.php
 sed -i 's|".*/FrameworkBenchmarks/php-silex-orm|"'"${TROOT}"'|g' deploy/php-silex-orm
 sed -i 's|Directory .*/FrameworkBenchmarks/php-silex-orm|Directory '"${TROOT}"'|g' deploy/php-silex-orm
 sed -i 's|root .*/FrameworkBenchmarks/php-silex-orm|root '"${TROOT}"'|g' deploy/nginx.conf
