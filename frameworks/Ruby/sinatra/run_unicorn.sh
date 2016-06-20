@@ -8,4 +8,4 @@ rvm ruby-$MRI_VERSION do bundle install --jobs=4 --gemfile=$TROOT/Gemfile --path
 
 nginx -c $TROOT/config/nginx.conf
 
-DB_HOST=${DBHOST} rvm ruby-$MRI_VERSION do bundle exec unicorn -E production -c config/unicorn.rb &
+WEB_SERVER=Unicorn DB_HOST=${DBHOST} rvm ruby-$MRI_VERSION do bundle exec unicorn -E production -c config/unicorn.rb &
