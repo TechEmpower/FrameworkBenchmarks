@@ -2,25 +2,44 @@ package main
 
 import (
 	"encoding/json"
-	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
 	"html/template"
 	"log"
 	"math/rand"
 	"net/http"
 	"sort"
 	"strconv"
+
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 const (
 	connectionString = "localhost"
-	helloWorldString = "Hello, world!"
 	worldRowCount    = 10000
+	fortuneHTML      = `<!DOCTYPE html>
+<html>
+<head>
+<title>Fortunes</title>
+</head>
+<body>
+<table>
+<tr>
+<th>id</th>
+<th>message</th>
+</tr>
+{{range .}}
+<tr>
+<td>{{.Id}}</td>
+<td>{{.Message}}</td>
+</tr>
+{{end}}
+</table>
+</body>
+</html>`
 )
 
 var (
-	tmpl            = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
-	helloWorldBytes = []byte(helloWorldString)
+	tmpl = template.Must(template.New("fortune.html").Parse(fortuneHTML))
 
 	database *mgo.Database
 	fortunes *mgo.Collection
@@ -66,20 +85,11 @@ func main() {
 	database = session.DB("hello_world")
 	worlds = database.C("world")
 	fortunes = database.C("fortune")
-	http.HandleFunc("/json", jsonHandler)
 	http.HandleFunc("/db", dbHandler)
 	http.HandleFunc("/fortune", fortuneHandler)
 	http.HandleFunc("/queries", queriesHandler)
 	http.HandleFunc("/update", updateHandler)
-	http.HandleFunc("/plaintext", plaintextHandler)
 	http.ListenAndServe(":8080", nil)
-}
-
-// Test 1: JSON serialization
-func jsonHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Server", "go-mongodb")
-	json.NewEncoder(w).Encode(&Message{helloWorldString})
 }
 
 // Helper for random numbers
@@ -168,11 +178,4 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Server", "Go")
 	json.NewEncoder(w).Encode(&world)
-}
-
-// Test 6: Plaintext
-func plaintextHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/plain")
-	w.Header().Set("Server", "go-mongodb")
-	w.Write(helloWorldBytes)
 }
