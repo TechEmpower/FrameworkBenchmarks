@@ -3,11 +3,12 @@
 set -x
 export DEBIAN_FRONTEND=noninteractive
 
+source $FWROOT/toolset/setup/linux/bash_functions.sh
+
 RETCODE=$(fw_exists fwbm_prereqs_installed)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Prerequisites installed!"; 
-  return 0; 
-}
+  return 0; }
 
 
 # Use a more recent version of Mongo shell

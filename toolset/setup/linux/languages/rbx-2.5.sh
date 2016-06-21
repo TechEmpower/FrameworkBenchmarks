@@ -12,6 +12,9 @@ RETCODE=$(fw_exists ${IROOT}/rbx-2.5.installed)
 # update this when it changes
 RBX_VERSION=2.5.2
 
+# This version of RBX needs clang 3.4
+sudo apt-get -yq --force-yes install clang-3.4
+
 # We assume single-user installation as
 # done in our rvm.sh script and
 # in Travis-CI
