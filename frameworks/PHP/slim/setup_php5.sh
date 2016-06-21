@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php nginx
+fw_depends php nginx composer
 
 sed -i 's|localhost|'"${DBHOST}"'|g' index.php
 sed -i 's|root .*/FrameworkBenchmarks/php-slim| root '"${TROOT}"'|g' deploy/nginx.conf
