@@ -63,7 +63,7 @@ func main() {
 	e.SetRenderer(common.Template)
 	common.InitRoutes(e)
 	common.InitPostgres()
-	e.Run(fasthttp.NewFromConfig(engine.Config{
+	e.Run(fasthttp.WithConfig(engine.Config{
 		Listener: getListener(),
 	}))
 }

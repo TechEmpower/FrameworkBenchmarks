@@ -113,7 +113,7 @@ func (f FortunesByMessage) Less(i, j int) bool {
 func (h *handler) json() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		c.Response().Header().Set("Server", "Echo")
-		c.Response().Header().Set(echo.ContentType, echo.ApplicationJSON)
+		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		return json.NewEncoder(c.Response()).Encode(Message{"Hello, World!"})
 	}
 }
@@ -127,7 +127,7 @@ func (h *handler) db() echo.HandlerFunc {
 		}
 
 		c.Response().Header().Set("Server", "Echo")
-		c.Response().Header().Set(echo.ContentType, echo.ApplicationJSON)
+		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		return json.NewEncoder(c.Response()).Encode(world)
 	}
 }
@@ -144,7 +144,7 @@ func (h *handler) queries() echo.HandlerFunc {
 		}
 
 		c.Response().Header().Set("Server", "Echo")
-		c.Response().Header().Set(echo.ContentType, echo.ApplicationJSON)
+		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		return json.NewEncoder(c.Response()).Encode(worlds)
 	}
 }
@@ -207,7 +207,7 @@ func (h *handler) updates() echo.HandlerFunc {
 		// }
 
 		c.Response().Header().Set("Server", "Echo")
-		c.Response().Header().Set(echo.ContentType, echo.ApplicationJSON)
+		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		return json.NewEncoder(c.Response()).Encode(worlds)
 	}
 }
@@ -216,7 +216,7 @@ func (h *handler) updates() echo.HandlerFunc {
 func (h *handler) plaintext() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		c.Response().Header().Set("Server", "Echo")
-		c.Response().Header().Set(echo.ContentType, echo.TextPlain)
+		c.Response().Header().Set(echo.HeaderContentType, echo.MIMETextPlain)
 		_, err := c.Response().Write(helloWorld)
 		return err
 	}
