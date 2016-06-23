@@ -1,2 +1,4 @@
 bench/cabal-dev
 bench/dist
+/bench/.cabal-sandbox/
+/bench/cabal.sandbox.config

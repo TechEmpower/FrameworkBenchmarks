@@ -33,7 +33,6 @@ cd ~
 #############################
 cat << EOF | tee pipeline.lua
 init = function(args)
-  wrk.init(args)
   local r = {}
   local depth = tonumber(args[1]) or 1
   for i=1,depth do
