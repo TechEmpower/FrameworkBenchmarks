@@ -44,7 +44,7 @@ try {
                 $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
 
                 $volt->setOptions(array(
-                    "compiledPath" => APP_PATH . "/app/views/",
+                    "compiledPath" => APP_PATH . "/app/compiled-templates/",
                     "compiledExtension" => ".compiled",
                     "compiledSeparator" => '_',
                 ));
