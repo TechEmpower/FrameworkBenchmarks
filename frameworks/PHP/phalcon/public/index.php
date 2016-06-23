@@ -25,7 +25,7 @@ try {
         if (function_exists('apc_store')) {
             return new Phalcon\Mvc\Model\MetaData\Apc();
         } else {
-            return new Phalcon\Mvc\Model\MetaData\Files(array(
+            return new Phalcon\Mvc\Model\MetaData\Memory(array(
                 'metaDataDir' => APP_PATH . "/app/compiled-templates/"
             ));
         }
@@ -44,7 +44,7 @@ try {
                 $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
 
                 $volt->setOptions(array(
-                    "compiledPath" => APP_PATH . "/app/compiled-templates/",
+                    "compiledPath" => APP_PATH . "/app/views/",
                     "compiledExtension" => ".compiled",
                     "compiledSeparator" => '_',
                 ));
