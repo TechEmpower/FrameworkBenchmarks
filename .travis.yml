@@ -33,6 +33,7 @@ env:
     - "TESTDIR=C++/ulib"
     - "TESTDIR=C++/wt"
     - "TESTDIR=C++/ffead-cpp"
+    - "TESTDIR=C++/ffead-cpp-apache2"
     - "TESTDIR=C++/poco"
     - "TESTDIR=Clojure/compojure"
     - "TESTDIR=Clojure/http-kit"
