@@ -12,7 +12,7 @@ git clone --branch v2.0.6 https://github.com/ClanCats/Framework.git clancatsapp
 
 cp -r app/ clancatsapp/CCF/
 
-cp -r CCF/vendor/ clancatsapp/CCF/
+cp -r vendor/ clancatsapp/CCF/
 
 php-fpm --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
 nginx -c $TROOT/deploy/nginx.conf
