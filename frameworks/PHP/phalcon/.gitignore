@@ -1,6 +1,6 @@
 /app/cache
 /app/logs
-/app/compiled-templates/
+/app/compiled-templates/*.compiled
 /bin
 /vendors
 /build
