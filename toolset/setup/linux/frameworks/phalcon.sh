@@ -1,12 +1,11 @@
 #!/bin/bash
 
+fw_depends php
+
 RETCODE=$(fw_exists ${IROOT}/phalcon.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/phalcon.installed
   return 0; }
-
-PHP_VERSION="5.5.17"
-PHP_HOME=$IROOT/php-$PHP_VERSION
 
 fw_get -O https://github.com/phalcon/cphalcon/archive/phalcon-v1.3.2.tar.gz
 fw_untar phalcon-v1.3.2.tar.gz
