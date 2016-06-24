@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php nginx
+fw_depends php yaf nginx
 
 sed -i 's|host=localhost|host='"${DBHOST}"'|g' app/conf/application.ini
 sed -i 's|root .*/FrameworkBenchmarks/php-yaf|root '"${TROOT}"'|g' deploy/nginx.conf 

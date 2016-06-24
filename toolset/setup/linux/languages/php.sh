@@ -46,9 +46,6 @@ $PHP_HOME/bin/pecl channel-update pecl.php.net
 $PHP_HOME/bin/pecl config-set php_ini $PHP_HOME/lib/php.ini
 printf "\n" | $PHP_HOME/bin/pecl -q install -f redis
 
-# yaf.so
-# printf "\n" | $PHP_HOME/bin/pecl -q install -f yaf
-
 # phalcon.so
 #   The configure seems broken, does not respect prefix. If you 
 #   update the value of PATH then it finds the prefix from `which php`
