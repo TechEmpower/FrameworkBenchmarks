@@ -30,6 +30,11 @@ echo "Installing PHP quietly"
 make --quiet install
 cd ..
 
+# Disable yaf and phalcon, for most PHP frameworks 
+# (there is a similar line to enable the frameworks in their respective setup files)
+sed -i 's|^extension=yaf.so|;extension=yaf.so|g' $FWROOT/config/php.ini
+sed -i 's|^extension=phalcon.so|;extension=phalcon.so|g' $FWROOT/config/php.ini
+
 cp $FWROOT/config/php.ini $PHP_HOME/lib/php.ini
 cp $FWROOT/config/php-fpm.conf $PHP_HOME/lib/php-fpm.conf
 
