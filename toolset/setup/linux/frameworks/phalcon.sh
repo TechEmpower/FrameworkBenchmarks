@@ -19,11 +19,6 @@ $PHP_HOME/bin/phpize
 make --quiet
 make install
 
-echo "export PHP_HOME=${PHP_HOME}" > $IROOT/phalcon.installed
-echo -e "export PATH=\$PHP_HOME/bin:\$PHP_HOME/sbin:\$PATH" >> $IROOT/phalcon.installed
-
-echo "export PHALCON_HOME=${PHALCON_HOME}" > $IROOT/phalcon.installed
-echo -e "export PATH=\$PHALCON_HOME:\$PATH" >> $IROOT/phalcon.installed
-
+echo "" > $IROOT/phalcon.installed
 
 source $IROOT/phalcon.installed
