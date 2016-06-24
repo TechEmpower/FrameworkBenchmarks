@@ -44,7 +44,7 @@ echo PHP compilation finished, installing extensions
 $PHP_HOME/bin/pecl channel-update pecl.php.net
 # Apc.so
 $PHP_HOME/bin/pecl config-set php_ini $PHP_HOME/lib/php.ini
-printf "\n" | $PHP_HOME/bin/pecl -q install -f redis
+printf "\n" | $PHP_HOME/bin/pecl -q install -f redis-2.2.5
 
 # yaf.so
 # printf "\n" | $PHP_HOME/bin/pecl -q install -f yaf
@@ -53,17 +53,17 @@ printf "\n" | $PHP_HOME/bin/pecl -q install -f redis
 #   The configure seems broken, does not respect prefix. If you 
 #   update the value of PATH then it finds the prefix from `which php`
 
-fw_get -O https://github.com/phalcon/cphalcon/archive/phalcon-v1.3.2.tar.gz
-fw_untar phalcon-v1.3.2.tar.gz
-cd cphalcon-phalcon-v1.3.2/build/64bits 
-$PHP_HOME/bin/phpize
-# For some reason we have to point to php-config 
-# explicitly, it's not found by the prefix settings
-./configure --prefix=$PHP_HOME --exec-prefix=$PHP_HOME \
-  --with-php-config=$PHP_HOME/bin/php-config \
-  --enable-phalcon --quiet
-make --quiet
-make install
+# fw_get -O https://github.com/phalcon/cphalcon/archive/phalcon-v1.3.2.tar.gz
+# fw_untar phalcon-v1.3.2.tar.gz
+# cd cphalcon-phalcon-v1.3.2/build/64bits 
+# $PHP_HOME/bin/phpize
+# # For some reason we have to point to php-config 
+# # explicitly, it's not found by the prefix settings
+# ./configure --prefix=$PHP_HOME --exec-prefix=$PHP_HOME \
+#   --with-php-config=$PHP_HOME/bin/php-config \
+#   --enable-phalcon --quiet
+# make --quiet
+# make install
 
 # mongodb.so
 printf "\n" | $PHP_HOME/bin/pecl -q install -f mongodb
