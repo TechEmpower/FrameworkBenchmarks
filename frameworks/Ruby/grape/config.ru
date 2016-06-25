@@ -13,26 +13,34 @@ end
 module Acme
   class HelloWorld < Grape::API
     get '/json' do
+      header 'Date', Time.now.to_s
+      header 'Server', ENV['NEWRELIC_DISPATCHER']
       {message:"Hello, World!"}
     end
   end
 
   class PlainText < Grape::API
-    content_type :plain, "text/plain; charset=utf-8"
+    content_type :plain, "text/plain"
     format :plain
     get '/plaintext' do
+      header 'Date', Time.now.to_s
+      header 'Server', ENV['NEWRELIC_DISPATCHER']
       "Hello, World!"
     end
   end
 
   class DatabaseQueries < Grape::API
     get '/db' do
+      header 'Date', Time.now.to_s
+      header 'Server', ENV['NEWRELIC_DISPATCHER']
       ActiveRecord::Base.connection_pool.with_connection do
         World.find(Random.rand(10000) + 1)
       end
     end
 
     get '/query' do
+      header 'Date', Time.now.to_s
+      header 'Server', ENV['NEWRELIC_DISPATCHER']
       queries = params[:queries].to_i
       queries = 1 if queries < 1
       queries = 500 if queries > 500
@@ -45,6 +53,8 @@ module Acme
     end
 
     get '/updates' do
+      header 'Date', Time.now.to_s
+      header 'Server', ENV['NEWRELIC_DISPATCHER']
       queries = params[:queries].to_i
       queries = 1 if queries < 1
       queries = 500 if queries > 500
@@ -62,9 +72,9 @@ module Acme
   end
 
   class API < Grape::API
-    content_type :json, "application/json; charset=utf-8"
+    content_type :json, "application/json"
     format :json
-    
+
     mount ::Acme::HelloWorld
     mount ::Acme::PlainText
     mount ::Acme::DatabaseQueries
