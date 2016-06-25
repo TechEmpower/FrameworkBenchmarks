@@ -6,6 +6,11 @@ module HelloWorld
 
     enable :sessions
 
+    before do
+      response.headers['Date'] = Time.now.to_s
+      response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
+    end
+
     ##
     # Caching support.
     #
