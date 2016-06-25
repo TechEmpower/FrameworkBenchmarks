@@ -2,9 +2,9 @@ module App
   Ruby = lambda do |env| 
     content_type, body = case env['PATH_INFO']
       when '/plaintext'
-        ['text/plain; charset=utf-8', "Hello, World!"] 
+        ['text/plain', "Hello, World!"] 
       when '/json'
-        ['application/json; charset=utf-8', {:message => "Hello, World!"}.to_json]
+        ['application/json', {:message => "Hello, World!"}.to_json]
       when '/db'
         id = Random.rand(10000) + 1
         query = "SELECT * FROM World WHERE id = " + id.to_s
@@ -15,7 +15,7 @@ module App
         ensure
           client.close
         end
-        ['application/json; charset=utf-8', results.first.to_json]
+        ['application/json', results.first.to_json]
       when '/queries'
         query_string = Rack::Utils.parse_query(env['QUERY_STRING'])
         queries = query_string['queries'].to_i
@@ -31,7 +31,7 @@ module App
         ensure
           client.close
         end
-        ['application/json; charset=utf-8', results.to_json] 
+        ['application/json', results.to_json] 
       when '/updates'
         query_string = Rack::Utils.parse_query(env['QUERY_STRING'])
         queries = query_string['queries'].to_i
@@ -54,8 +54,8 @@ module App
         ensure
           client.close
         end
-        ['application/json; charset=utf-8', results.to_json] 
+        ['application/json', results.to_json] 
       end
-    [200, { 'Content-Type' => content_type }, [body]]
+    [200, { 'Content-Type' => content_type, 'Date' => Time.now.to_s, 'Server' => ENV['NEWRELIC_DISPATCHER'] }, [body]]
   end 
 end
