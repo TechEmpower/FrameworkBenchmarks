@@ -51,8 +51,8 @@ $PHP_HOME/bin/pecl channel-update pecl.php.net
 $PHP_HOME/bin/pecl config-set php_ini $PHP_HOME/lib/php.ini
 printf "\n" | $PHP_HOME/bin/pecl -q install -f redis-2.2.5
 
-# mongodb.so
-printf "\n" | $PHP_HOME/bin/pecl -q install -f mongodb
+# mongo.so
+printf "\n" | $PHP_HOME/bin/pecl -q install -f mongo
 
 # Clean up a bit
 rm -rf $IROOT/php
