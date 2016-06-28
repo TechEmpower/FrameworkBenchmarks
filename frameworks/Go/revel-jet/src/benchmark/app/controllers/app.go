@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"benchmark/app/db"
-	"github.com/robfig/revel"
 	"math/rand"
 	"runtime"
 	"sort"
+
+	"benchmark/app/db"
+	"github.com/revel/revel"
 )
 
 type MessageStruct struct {

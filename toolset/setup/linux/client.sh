@@ -21,9 +21,9 @@ sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/l
 # wrk
 ##############################
 
-git clone https://github.com/wg/wrk.git
-cd wrk
-git checkout 205a1960c8b8de5f500bb143863ae293456b7add
+curl -sL -o wrk-4.0.1.tar.gz https://github.com/wg/wrk/archive/4.0.1.tar.gz
+tar xzf wrk-4.0.1.tar.gz
+cd wrk-4.0.1
 make
 sudo cp wrk /usr/local/bin
 cd ~
@@ -33,7 +33,6 @@ cd ~
 #############################
 cat << EOF | tee pipeline.lua
 init = function(args)
-  wrk.init(args)
   local r = {}
   local depth = tonumber(args[1]) or 1
   for i=1,depth do

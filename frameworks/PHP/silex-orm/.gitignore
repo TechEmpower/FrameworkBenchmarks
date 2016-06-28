@@ -1,0 +1,10 @@
+/app/cache
+/app/logs
+/bin
+/vendor/
+/build
+/dist
+.DS_Store
+/tags
+.idea
+/deploy/php-fpm.pid

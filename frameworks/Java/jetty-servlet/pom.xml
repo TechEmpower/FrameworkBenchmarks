@@ -6,19 +6,19 @@
 
     <groupId>com.techempower</groupId>
     <artifactId>jetty-servlet-example</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
 
     <dependencies>
         <!-- Web server -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>9.1.0.v20131115</version>
+            <version>9.2.10.v20150310</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util-ajax</artifactId>
-            <version>9.1.0.v20131115</version>
+            <version>9.2.10.v20150310</version>
         </dependency>
     </dependencies>
 

@@ -123,6 +123,8 @@ public final class HelloWebServer {
         .setSocketOption(Options.BACKLOG, 10000)
         .setServerOption(UndertowOptions.ALWAYS_SET_KEEP_ALIVE, false) //don't send a keep-alive header for HTTP/1.1 requests, as it is not required
         .setServerOption(UndertowOptions.ALWAYS_SET_DATE, true)
+        .setServerOption(UndertowOptions.ENABLE_CONNECTOR_STATISTICS, false)
+        .setServerOption(UndertowOptions.RECORD_REQUEST_START_TIME, false)
         .setHandler(Handlers.header(Handlers.path()
             .addPrefixPath("/json",
                 new JsonHandler(objectMapper))

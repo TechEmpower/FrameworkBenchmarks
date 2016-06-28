@@ -40,7 +40,7 @@ type JsonController struct {
 func (this *JsonController) Get() {
 	m := MessageStruct{"Hello, World!"}
 	this.Data["json"] = &m
-	this.ServeJson()
+	this.ServeJSON()
 }
 
 type PlaintextController struct {
@@ -64,13 +64,13 @@ func (this *DBController) Get() {
 		log.Fatalf("Error read world row: %s", err.Error())
 	}
 	this.Data["json"] = &w
-	this.ServeJson()
+	this.ServeJSON()
 }
 
 func main() {
 	//don't need this set, beego default set it
 	//runtime.GOMAXPROCS(runtime.NumCPU())
-	beego.RunMode = "prod"
+	beego.BConfig.RunMode = "prod"
 	beego.Router("/json", &JsonController{})
 	beego.Router("/db", &DBController{})
 	beego.Router("/plaintext", &PlaintextController{})

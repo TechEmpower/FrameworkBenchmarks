@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# WebKit application server launch script for Unix.
+# This wrapper script is needed for the AutoReload mechanism.
+
+# You may want to use a specific Python executable:
+PYTHON=python
+
+# You may give the following Python parameters in advance,
+# followed by the parameters passed on to ThreadedAppServer:
+#   -O with optimization (.pyo instead of .pyc)
+#   -u unbuffered output (useful for debugging)
+unset PY_OPTS
+while [ "$1" = "-O" -o "$1" = "-u" ]; do
+    PY_OPTS="$PY_OPTS $1"
+    shift
+done
+
+# Make the directory where this script lives the current directory:
+cd `dirname $0`
+
+# As long as the app server returns a 3, it wants to be restarted:
+errorlevel=3
+while [ $errorlevel -eq 3 ]; do
+    $PYTHON$PY_OPTS Launch.py ThreadedAppServer $*
+    errorlevel=$?
+done

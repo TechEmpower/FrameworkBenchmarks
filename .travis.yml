@@ -1,52 +1,68 @@
+sudo: required
+dist: trusty
 language: python
-python: 
+python:
   - "2.7"
 
 env:
   matrix:
-
-    # Group tests by directory to logically break up travis-CI build. Otherwise
-    # we end up starting ~200+ different workers. Seems that ~100 is the limit
-    # before their website starts to lag heavily
+    #Group tests by directory to logically break up travis-CI build. Otherwise
+    #we end up starting ~200+ different workers. Seems that ~100 is the limit
+    #before their website starts to lag heavily
+    #Here's the bash if you need to update this. Be sure to maintain the
+    #lines that are currently commented out (these cannot run in Travis)
+    #  cd frameworks
+    #  find . -type d -depth 2 | sed 's|./|    - "TESTDIR=|' | sed 's/$/"/g'
     #
-    # Here's the bash if you need to update this. Be sure to maintain the 
-    # lines that are currently commented out (these cannot run in Travis)
-    #   cd frameworks 
-    #   find . -type d -depth 2 | sed 's|./|    - "TESTDIR=|' | sed 's/$/"/g'
     #
-    #  
+    - "TESTDIR=C/libreactor"
     - "TESTDIR=C/lwan"
     - "TESTDIR=C/duda"
     - "TESTDIR=C/haywire"
     - "TESTDIR=C/onion"
     - "TESTDIR=CSharp/aspnet"
-    # - "TESTDIR=CSharp/aspnet-stripped"
+    ## - "TESTDIR=CSharp/aspnet-stripped"
     - "TESTDIR=CSharp/evhttp-sharp"
-    # - "TESTDIR=CSharp/HttpListener"
+    ## - "TESTDIR=CSharp/HttpListener"
     - "TESTDIR=CSharp/nancy"
+    - "TESTDIR=CSharp/revenj"
     - "TESTDIR=CSharp/servicestack"
     - "TESTDIR=C++/cpoll_cppsp"
     - "TESTDIR=C++/silicon"
     - "TESTDIR=C++/treefrog"
-    - "TESTDIR=C++/ULib"
+    - "TESTDIR=C++/ulib"
     - "TESTDIR=C++/wt"
+    - "TESTDIR=C++/ffead-cpp"
+    - "TESTDIR=C++/poco"
     - "TESTDIR=Clojure/compojure"
     - "TESTDIR=Clojure/http-kit"
     - "TESTDIR=Clojure/luminus"
     - "TESTDIR=Clojure/pedestal"
-    - "TESTDIR=Dart/dart"
-    - "TESTDIR=Dart/dart-redstone"
-    - "TESTDIR=Dart/dart-start"
-    - "TESTDIR=Dart/dart-stream"
+    - "TESTDIR=Clojure/aleph"
+    - "TESTDIR=Crystal/crystal-raw"
+    - "TESTDIR=Crystal/moonshine"
+    - "TESTDIR=Crystal/kemal"
+    - "TESTDIR=D/vibed"
+    - "TESTDIR=Dart/dart-raw"
+    - "TESTDIR=Dart/redstone"
+    - "TESTDIR=Dart/start"
+    - "TESTDIR=Dart/stream"
     - "TESTDIR=Elixir/phoenix"
+    - "TESTDIR=Elixir/cowboy"
+    - "TESTDIR=Erlang/chicagoboss"
     - "TESTDIR=Erlang/cowboy"
     - "TESTDIR=Erlang/elli"
+    - "TESTDIR=Erlang/mochiweb"
+    - "TESTDIR=Erlang/misultin"
     - "TESTDIR=Go/beego"
     - "TESTDIR=Go/falcore"
+    - "TESTDIR=Go/fasthttp-mysql"
+    - "TESTDIR=Go/fasthttp-postgresql"
     - "TESTDIR=Go/gin"
-    - "TESTDIR=Go/go"
     - "TESTDIR=Go/goji"
-    - "TESTDIR=Go/go-mongodb"
+    - "TESTDIR=Go/go-std-mongodb"
+    - "TESTDIR=Go/go-std-mysql"
+    - "TESTDIR=Go/go-std-postgresql"
     - "TESTDIR=Go/revel"
     - "TESTDIR=Go/revel-jet"
     - "TESTDIR=Go/revel-qbs"
@@ -55,20 +71,31 @@ env:
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/wai"
     - "TESTDIR=Haskell/yesod"
+    - "TESTDIR=Haskell/spock"
     - "TESTDIR=Java/activeweb"
+    - "TESTDIR=Java/baratine"
+    - "TESTDIR=Java/bayou"
+    - "TESTDIR=Java/comsat-servlet"
+    - "TESTDIR=Java/comsat-webactors"
     - "TESTDIR=Java/curacao"
     - "TESTDIR=Java/dropwizard"
-    - "TESTDIR=Java/dropwizard-mongodb"
     - "TESTDIR=Java/gemini"
     - "TESTDIR=Java/grizzly-bm"
     - "TESTDIR=Java/grizzly-jersey"
+    - "TESTDIR=Java/jawn"
     - "TESTDIR=Java/jetty-servlet"
+    - "TESTDIR=Java/jetty"
+    - "TESTDIR=Java/jooby"
     - "TESTDIR=Java/netty"
     - "TESTDIR=Java/ninja-standalone"
+    - "TESTDIR=Java/officefloor"
+    - "TESTDIR=Java/permeagility"
     - "TESTDIR=Java/play1"
     - "TESTDIR=Java/play1siena"
     - "TESTDIR=Java/play2-java"
+    - "TESTDIR=Java/rapidoid"
     - "TESTDIR=Java/restexpress"
+    - "TESTDIR=Java/revenj"
     - "TESTDIR=Java/servlet"
     - "TESTDIR=Java/servlet3-cass"
     - "TESTDIR=Java/spark"
@@ -77,8 +104,12 @@ env:
     - "TESTDIR=Java/tapestry"
     - "TESTDIR=Java/undertow"
     - "TESTDIR=Java/undertow-edge"
+    - "TESTDIR=Java/undertow-jersey-c3p0"
+    - "TESTDIR=Java/undertow-jersey-hikaricp"
     - "TESTDIR=Java/vertx"
+    - "TESTDIR=Java/vertx-web"
     - "TESTDIR=Java/wicket"
+    - "TESTDIR=Java/beyondj"
     - "TESTDIR=Java/wildfly-ee7"
     - "TESTDIR=JavaScript/express"
     - "TESTDIR=JavaScript/hapi"
@@ -86,6 +117,7 @@ env:
     - "TESTDIR=JavaScript/nodejs"
     - "TESTDIR=JavaScript/ringojs"
     - "TESTDIR=JavaScript/ringojs-convenient"
+    - "TESTDIR=JavaScript/sailsjs"
     - "TESTDIR=Lua/lapis"
     - "TESTDIR=Lua/openresty"
     - "TESTDIR=Nim/jester"
@@ -100,33 +132,36 @@ env:
     - "TESTDIR=PHP/php"
     - "TESTDIR=PHP/cygnite-php-framework"
     - "TESTDIR=PHP/codeigniter"
-    - "TESTDIR=PHP/php-fatfree"
+    - "TESTDIR=PHP/clancats"
+    - "TESTDIR=PHP/fat-free"
     - "TESTDIR=PHP/fuel"
     - "TESTDIR=PHP/kohana"
-    - "TESTDIR=PHP/php-laravel"
+    - "TESTDIR=PHP/laravel"
     - "TESTDIR=PHP/limonade"
     - "TESTDIR=PHP/lithium"
-    - "TESTDIR=PHP/php-micromvc"
-    - "TESTDIR=PHP/php-phalcon"
-    - "TESTDIR=PHP/php-phalcon-micro"
-    - "TESTDIR=PHP/php-phpixie"
-    - "TESTDIR=PHP/php-pimf"
-    - "TESTDIR=PHP/php-silex"
-    - "TESTDIR=PHP/php-silex-orm"
-    - "TESTDIR=PHP/php-slim"
+    - "TESTDIR=PHP/lumen"
+    - "TESTDIR=PHP/micromvc"
+    - "TESTDIR=PHP/phalcon"
+    - "TESTDIR=PHP/phalcon-micro"
+    - "TESTDIR=PHP/phpixie"
+    - "TESTDIR=PHP/pimf"
+    - "TESTDIR=PHP/silex"
+    - "TESTDIR=PHP/silex-orm"
+    - "TESTDIR=PHP/slim"
     - "TESTDIR=PHP/symfony2"
     - "TESTDIR=PHP/symfony2-stripped"
-    - "TESTDIR=PHP/php-yaf"
-    - "TESTDIR=PHP/Yii2"
-    - "TESTDIR=PHP/php-zend-framework"
-    - "TESTDIR=PHP/php-zend-framework1"
+    - "TESTDIR=PHP/yaf"
+    - "TESTDIR=PHP/yii2"
+    - "TESTDIR=PHP/zend"
+    - "TESTDIR=PHP/zend1"
     - "TESTDIR=PHP/phreeze"
-    - "TESTDIR=Python/API-Hour"
+    - "TESTDIR=Python/asyncio"
     - "TESTDIR=Python/bottle"
     - "TESTDIR=Python/cherrypy"
     - "TESTDIR=Python/django"
     - "TESTDIR=Python/falcon"
     - "TESTDIR=Python/flask"
+    - "TESTDIR=Python/historical"
     - "TESTDIR=Python/klein"
     - "TESTDIR=Python/pyramid"
     - "TESTDIR=Python/tornado"
@@ -143,7 +178,14 @@ env:
     - "TESTDIR=Ruby/rails"
     - "TESTDIR=Ruby/rails-stripped"
     - "TESTDIR=Ruby/sinatra"
+    - "TESTDIR=Ruby/sinatra-sequel"
+    - "TESTDIR=Rust/iron"
+    - "TESTDIR=Rust/nickel"
+    - "TESTDIR=Rust/hyper"
+    - "TESTDIR=Scala/akka-http"
+    - "TESTDIR=Scala/colossus"
     - "TESTDIR=Scala/finagle"
+    - "TESTDIR=Scala/fintrospect"
     - "TESTDIR=Scala/lift-stateless"
     - "TESTDIR=Scala/plain"
     - "TESTDIR=Scala/play2-scala"
@@ -153,27 +195,40 @@ env:
     - "TESTDIR=Scala/spray-es"
     - "TESTDIR=Scala/unfiltered"
     - "TESTDIR=Scala/http4s"
+    - "TESTDIR=Scala/finch"
     - "TESTDIR=Ur/urweb"
 
 before_install:
-  # Need to install python modules before using 
-  # python
-  - pip install -r requirements.txt
+  - pip install colorama==0.3.1
+  # Version 2.3 has a nice Counter() and other features
+  # but it requires —-allow-external and -—allow-unverified
+  - pip install progressbar==2.2
+  - pip install requests
+  - echo "127.0.0.1 " `hostname` | sudo tee /etc/hosts
+  - echo "127.0.0.1 localhost" | sudo tee /etc/hosts
 
-  # Configure Travis-CI build environment for TFB
-  #   e.g. setup databases, users, etc
-  - ./toolset/run-ci.py cisetup "$TESTDIR"
+services:
+  - postgresql
+  - redis-server
 
 addons:
-  postgresql: "9.3" 
+  postgresql: "9.3"
+  apt:
+    packages:
+      - mysql-server
+      - redis-server
 
-install:
-  # Install prerequisites
-  - ./toolset/run-ci.py prereq "$TESTDIR"
-  
-  # Install software for this framework  
-  - ./toolset/run-ci.py install "$TESTDIR"
-   
-script: 
+before_script:
+  - sudo sysctl -w net.core.somaxconn=65535
+  - sudo ./config/travis_mysql_setup.sh
+  - mysql -uroot < config/create.sql
+  - sudo ./config/create-redis.sh
+
+script:
   # Pick one test in this directory and verify
   - time ./toolset/run-ci.py verify "$TESTDIR"
+
+cache:
+  directories:
+    - $HOME/.m2/repository
+    - $HOME/.cache/pip

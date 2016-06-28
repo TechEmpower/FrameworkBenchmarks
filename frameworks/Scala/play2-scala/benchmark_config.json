@@ -21,27 +21,6 @@
         "json_url": "/json",
         "plaintext_url": "/plaintext"
       }, 
-      "activate": {
-        "display_name": "play2-scala-activate", 
-        "setup_file": "setup_scala_activate", 
-        "framework": "play2", 
-        "language": "Scala", 
-        "orm": "Full", 
-        "os": "Linux", 
-        "database": "MySQL", 
-        "approach": "Realistic", 
-        "classification": "Fullstack", 
-        "platform": "Netty", 
-        "webserver": "None", 
-        "database_os": "Linux", 
-        "notes": "", 
-        "versus": "netty", 
-        "port": "9000", 
-        "db_url": "/db", 
-        "query_url": "/queries?queries=", 
-        "fortune_url": "/fortunes", 
-        "update_url": "/update?queries="
-      }, 
       "anorm-linux": {
         "display_name": "play2-scala-anorm-linux", 
         "setup_file": "setup_scala_anorm", 
@@ -61,7 +40,9 @@
         "db_url": "/db", 
         "query_url": "/queries?queries=", 
         "fortune_url": "/fortunes", 
-        "update_url": "/update?queries="
+        "update_url": "/update?queries=",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext"
       }, 
       "anorm-windows": {
         "display_name": "play2-scala-anorm-windows", 
@@ -82,7 +63,9 @@
         "db_url": "/db", 
         "query_url": "/queries?queries=", 
         "fortune_url": "/fortunes", 
-        "update_url": "/update?queries="
+        "update_url": "/update?queries=",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext"
       }, 
       "reactivemongo": {
         "display_name": "play2-scala-reactivemongo", 
@@ -99,9 +82,14 @@
         "database_os": "Linux", 
         "notes": "", 
         "versus": "netty", 
-        "port": "9000", 
+        "port": "9000",
+        "sleep":"8",
         "db_url": "/db", 
-        "query_url": "/queries?queries="
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes", 
+        "update_url": "/update?queries=",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext"
       }, 
       "slick": {
         "display_name": "play2-scala-slick", 
@@ -122,7 +110,9 @@
         "db_url": "/db", 
         "query_url": "/queries?queries=", 
         "fortune_url": "/fortunes", 
-        "update_url": "/update?queries="
+        "update_url": "/update?queries=",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext"
       }
     }
   ]

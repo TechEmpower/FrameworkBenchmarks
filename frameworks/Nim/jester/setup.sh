@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH="$IROOT/nim/bin:$IROOT/nginx/sbin:$PATH"
+fw_depends nim jester nginx
 
 nim c -d:release hello.nim
 nginx -c $TROOT/config/nginx.conf

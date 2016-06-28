@@ -1,0 +1,53 @@
+// Capsule plugin
+plugins {
+    id "us.kirchmeier.capsule" version "1.0.2"
+}
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+version = '0.2'
+
+ext.jacksonVer = '2.7.0'
+ext.quasarVer  = '0.7.4'
+ext.comsatVer  = '0.6.0'
+ext.capsuleVer = '1.0.1'
+
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
+
+repositories {
+    mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    // mavenLocal()
+}
+
+configurations {
+    quasar
+}
+
+configurations.capsule.dependencies.clear()
+
+dependencies {
+    compile "co.paralleluniverse:quasar-core:$quasarVer:jdk8"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVer"
+    compile "co.paralleluniverse:comsat-servlet:$comsatVer"
+    compile "co.paralleluniverse:comsat-test-utils:$comsatVer"
+
+    capsule "co.paralleluniverse:capsule:$capsuleVer"
+
+    quasar "co.paralleluniverse:quasar-core:$quasarVer:jdk8"
+}
+
+task capsule(type: FatCapsule) {
+    applicationClass "hello.HelloWebServer"
+
+    capsuleManifest {
+        javaAgents = [configurations.quasar.iterator().next().getName()]
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.11'
+}

@@ -1,0 +1,4 @@
+./fasthttp-postgresql/server.go
+./fasthttp-postgresql/src/
+./fasthttp-postgresql/src/templates/
+./fasthttp-postgresql/src/templates/fortune.qtpl

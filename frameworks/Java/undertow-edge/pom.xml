@@ -13,6 +13,10 @@
     <artifactId>undertow-edge</artifactId>
     <version>0.1</version>
 
+    <properties>
+        <postgres-jdbc.version>9.4.1208</postgres-jdbc.version>
+    </properties>
+
     <dependencies>
         <!-- Web server -->
         <dependency>
@@ -40,12 +44,12 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.25</version>
+            <version>5.1.38</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
 	    <artifactId>postgresql</artifactId>
-            <version>9.4-1200-jdbc41</version>
+            <version>${postgres-jdbc.version}</version>
 	</dependency>
         <dependency>
             <groupId>org.mongodb</groupId>

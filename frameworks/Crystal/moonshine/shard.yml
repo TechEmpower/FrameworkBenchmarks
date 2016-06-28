@@ -1,0 +1,15 @@
+name: "moonshine"
+version: "0.0.1"
+
+dependencies:
+  pg:
+    github: "will/crystal-pg"
+    version: ">= 0.4.3"
+  moonshine:
+    github: "dhruvrajvanshi/Moonshine"
+    branch: master
+  redis:
+    github: "stefanwille/crystal-redis"
+    version: "~> 1.2.1"
+
+license: MIT

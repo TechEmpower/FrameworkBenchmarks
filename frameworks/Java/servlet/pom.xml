@@ -14,13 +14,13 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.23</version>
+            <version>5.1.38</version>
         </dependency>
 
 	<dependency>
 	    <groupId>org.postgresql</groupId>
 	    <artifactId>postgresql</artifactId>
-	    <version>9.4-1200-jdbc41</version>
+	    <version>9.4.1208</version>
 	</dependency>
             
 

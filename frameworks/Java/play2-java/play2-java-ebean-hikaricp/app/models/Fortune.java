@@ -1,9 +1,11 @@
 package models;
 
-import play.db.ebean.Model;
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.List;
 
 @Entity
 public class Fortune extends Model {
@@ -20,7 +22,7 @@ public class Fortune extends Model {
         this.message = message;
     }
 
-    public static Finder<Long, Fortune> find = new Finder<Long, Fortune>(
-            Long.class, Fortune.class
-    );
+    public static List<Fortune> findAll() {
+        return Ebean.find(Fortune.class).findList();
+    }
 }

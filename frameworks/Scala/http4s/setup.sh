@@ -1,9 +1,7 @@
 #!/bin/bash
 
-source $IROOT/java8.installed
-export SBT_HOME=${IROOT}/sbt
+fw_depends java sbt
 
-#${SBT_HOME}/bin/sbt compile
-${SBT_HOME}/bin/sbt 'oneJar'
+sbt 'oneJar' -batch
 
-java -jar target/scala-2.11/http4s*one-jar.jar
+java -jar target/scala-2.11/http4s*one-jar.jar "${DBHOST}" &

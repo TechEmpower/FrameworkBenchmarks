@@ -7,7 +7,7 @@ This is the Scruffy portion of a [benchmarking test suite](../) comparing a vari
 The tests were run with:
 
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Scruffy 1.9.0](http://scruffy-project.github.io/)
+* [Scruffy 1.13.0](http://scruffy-project.github.io/)
 
 ## Test URLs
 

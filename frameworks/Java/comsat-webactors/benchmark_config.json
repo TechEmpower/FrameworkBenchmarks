@@ -1,0 +1,26 @@
+{
+  "framework": "comsat-webactors",
+  "tests": [
+    {
+      "default": {
+        "setup_file": "setup",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "comsat-webactors",
+        "language": "Java",
+        "orm": "Raw",
+        "platform": "Comsat Web Actors",
+        "webserver": "Undertow",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "comsat-actors-netty",
+        "notes": "Comsat Web Actors run as Netty handler",
+        "versus": ""
+      }
+    }
+  ]
+}

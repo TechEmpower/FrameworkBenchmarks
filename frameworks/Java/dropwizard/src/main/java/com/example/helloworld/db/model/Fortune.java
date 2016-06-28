@@ -1,5 +1,7 @@
 package com.example.helloworld.db.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,9 +9,10 @@ import javax.persistence.*;
 public class Fortune implements Comparable<Fortune> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @JsonProperty
+    private int id;
 
+    @JsonProperty
     @Column(name = "message", nullable = false)
     private String message;
 
@@ -20,7 +23,7 @@ public class Fortune implements Comparable<Fortune> {
         this.message = message;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

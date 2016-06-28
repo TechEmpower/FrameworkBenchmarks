@@ -1,0 +1,23 @@
+{
+  "framework": "fintrospect",
+  "tests": [{
+    "default": {
+      "orm": "Raw",
+      "database_os": "Linux",
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 9000,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "fintrospect",
+      "language": "Scala",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "display_name": "fintrospect",
+      "notes": ""
+    }
+  }]
+}

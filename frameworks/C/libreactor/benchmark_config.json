@@ -1,0 +1,23 @@
+{
+  "framework": "libreactor",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "libreactor",
+      "language": "C",
+      "orm": "Raw",
+      "platform": "libreactor",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

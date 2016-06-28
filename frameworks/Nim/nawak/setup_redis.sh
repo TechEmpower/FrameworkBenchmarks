@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export PATH="$IROOT/nim/bin:$IROOT/mongrel2/bin:$PATH"
-
 sed -i 's|host=.*)|host="'$DBHOST'")|g' model_redis.nim
+
+fw_depends nim nimble zeromq mongrel2 nawak
 
 echo "** Compiling app"
 nim c --threads:on -d:release -d:redis_model -l:-Wl,-rpath,$IROOT/zeromq-4.0.3/lib -o:nawak_redis app.nim

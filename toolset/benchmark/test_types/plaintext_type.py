@@ -1,38 +1,50 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
+from benchmark.test_types.verifications import basic_body_verification, verify_headers
+
 
 class PlaintextTestType(FrameworkTestType):
-  def __init__(self):
-    args = ['plaintext_url']
-    FrameworkTestType.__init__(self, name='plaintext', requires_db=False, accept_header=self.accept_plaintext, args=args)
 
-  def verify(self, base_url):
-    url = base_url + self.plaintext_url
-    full_response = self._curl(url)
-    body = self._curl_body(url)
+    def __init__(self):
+        kwargs = {
+            'name': 'plaintext',
+            'requires_db': False,
+            'accept_header': self.accept('plaintext'),
+            'args': ['plaintext_url']
+        }
+        FrameworkTestType.__init__(self, **kwargs)
 
-    # Empty response
-    if body is None:
-      return [('fail','No response', url)]
-    elif len(body) == 0:
-      return [('fail','Empty Response', url)]
+    def verify(self, base_url):
+        url = base_url + self.plaintext_url
+        headers, body = self.request_headers_and_body(url)
 
-    # Case insensitive
-    orig = body
-    body = body.lower()
+        _, problems = basic_body_verification(body, url, is_json_check=False)
 
-    if "hello, world!" not in body:
-      return [('fail', """Could not find 'Hello, World!' in response.""", url)]
+        if len(problems) > 0:
+            return problems
 
-    if len("hello, world!") < len(body):
-      return [('warn', """Server is returning %s more bytes than are required.
-This may negatively affect benchmark performance.""" % (len(body) - len("hello, world!")), url)]
+        # Case insensitive
+        orig = body
+        body = body.lower()
+        expected = "hello, world!"
+        extra_bytes = len(body) - len(expected)
 
-    # Ensure required response headers are present
-    if any(v.lower() not in full_response.lower() for v in ('Server','Date','Content-Type: text/plain')) \
-       or all(v.lower() not in full_response.lower() for v in ('Content-Length','Transfer-Encoding')):
-      return [('warn','Required response header missing.',url)]
+        if expected not in body:
+            return [('fail', "Could not find 'Hello, World!' in response.", url)]
 
-    return [('pass', '', url)]
+        if extra_bytes > 0:
+            problems.append(
+                ('warn',
+                 ("Server is returning %s more bytes than are required. "
+                  "This may negatively affect benchmark performance."
+                  % (extra_bytes)),
+                 url))
 
-  def get_url(self):
-    return self.plaintext_url
+        problems += verify_headers(headers, url, should_be='plaintext')
+
+        if len(problems) == 0:
+            return [('pass', '', url)]
+        else:
+            return problems
+
+    def get_url(self):
+        return self.plaintext_url

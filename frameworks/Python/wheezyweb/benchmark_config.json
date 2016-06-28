@@ -20,8 +20,8 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "wheezy.web",
-      "notes": "CPython 2.7"
+      "display_name": "wheezy.web-py2",
+      "notes": ""
     },
     "py3": {
       "setup_file": "setup_py3",
@@ -43,7 +43,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "wheezy.web-py3",
-      "notes": "CPython 3.4"
+      "notes": ""
     }
   }]
 }

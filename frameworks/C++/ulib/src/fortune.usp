@@ -1,0 +1,80 @@
+<!--#
+Test type 4: Fortunes
+TechEmpower Web Framework Benchmarks
+-->
+<!--#declaration
+#include "fortune.h"
+
+static Fortune*           pfortune;
+static Fortune*           pfortune2add;
+static UString*           pencoded;
+static UOrmSession*       psql_fortune;
+static UOrmStatement*     pstmt_fortune;
+static UVector<Fortune*>* pvfortune;
+
+static void usp_fork_fortune()
+{
+   U_TRACE(5, "::usp_fork_fortune()")
+
+   psql_fortune = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
+
+   if (psql_fortune->isReady())
+      {
+      pstmt_fortune = U_NEW(UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
+
+      if (pstmt_fortune == 0) U_WARNING("usp_fork_fortune(): we cound't connect to db");
+
+      if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
+
+      pfortune = U_NEW(Fortune);
+
+      pstmt_fortune->into(*pfortune);
+
+      pencoded     = U_NEW(UString(100U));
+      pvfortune    = U_NEW(UVector<Fortune*>);
+      pfortune2add = U_NEW(Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
+      }
+}
+
+#ifdef DEBUG
+static void usp_end_fortune()
+{
+   U_TRACE(5, "::usp_end_fortune()")
+
+   if (pstmt_fortune)
+      {
+      delete pstmt_fortune;
+
+      delete pencoded;
+      delete psql_fortune;
+      delete pvfortune;
+      delete pfortune;
+      delete pfortune2add;
+      }
+}
+#endif
+-->
+<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
+pstmt_fortune->execute();
+
+     pvfortune->push_back(U_NEW(Fortune(*pfortune2add)));
+do { pvfortune->push_back(U_NEW(Fortune(*pfortune))); } while (pstmt_fortune->nextRow());
+
+pvfortune->sort(Fortune::cmp_obj);
+
+for (uint32_t i = 0, n = pvfortune->size(); i < n; ++i)
+   {
+   Fortune* elem = (*pvfortune)[i];
+
+   UXMLEscape::encode(elem->message, *pencoded);
+
+   USP_PRINTF_ADD(
+      "<tr>"
+      "<td>%u</td>"
+      "<td>%v</td>"
+      "</tr>",
+      elem->id, pencoded->rep);
+   }
+
+pvfortune->clear();
+--></table></body></html>

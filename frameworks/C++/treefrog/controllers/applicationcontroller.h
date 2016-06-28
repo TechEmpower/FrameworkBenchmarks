@@ -14,8 +14,6 @@ public:
     ApplicationController();
     ApplicationController(const ApplicationController &other);
     virtual ~ApplicationController();
-    static QString jsonEncode(const QVariantMap &obj);
-    static QString jsonEncode(const QList<QVariantMap> &list);
 
 public slots:
     void staticInitialize();

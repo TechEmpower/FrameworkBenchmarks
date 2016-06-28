@@ -1,0 +1,9 @@
+%% -*- erlang -*-
+{application, mochiweb_bench,
+ [{description, ""},
+  {vsn, "0.1"},
+  {modules, []},
+  {registered, []},
+  {mod, {mochiweb_bench_app, []}},
+  {env, []},
+  {applications, [kernel, stdlib, erl_bench]}]}.

@@ -1,0 +1,16 @@
+./src/db.usp
+./src/rdb.usp
+./src/mdb.usp
+./src/world.h
+./src/json.usp
+./src/fortune.h
+./src/query.usp
+./src/rquery.usp
+./src/mquery.usp
+./src/update.usp
+./src/rupdate.usp
+./src/mupdate.usp
+./src/fortune.usp
+./src/rfortune.usp
+./src/mfortune.usp
+./src/plaintext.usp

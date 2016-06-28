@@ -7,9 +7,9 @@ This is the netty portion of a [benchmarking test suite](../) comparing a variet
 
 ## Versions
 
-* [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Netty 4.0.25](http://netty.io/)
-* [Jackson 2.5.0](http://wiki.fasterxml.com/JacksonHome)
+* [Java OpenJDK 1.8](http://openjdk.java.net/)
+* [Netty 4.1](http://netty.io/)
+* [Jackson 2.7](http://wiki.fasterxml.com/JacksonHome)
 
 ## References
 * https://github.com/netty/netty/tree/master/example/src/main/java/io/netty/example/http/snoop

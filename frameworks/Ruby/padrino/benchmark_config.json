@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "padrino-puma-mri",
       "notes": "",
-      "versus": "rack-puma"
+      "versus": "rack-puma-mri"
     },
     "puma-jruby": {
       "setup_file": "run_jruby_puma",
@@ -45,7 +45,7 @@
       "database_os": "Linux",
       "display_name": "padrino-jruby",
       "notes": "",
-      "versus": "rack-jruby"
+      "versus": "rack-puma-jruby"
     },
     "puma-rbx": {
       "setup_file": "run_rbx_puma",
@@ -68,7 +68,7 @@
       "database_os": "Linux",
       "display_name": "padrino-rbx",
       "notes": "",
-      "versus": "rack-rbx"
+      "versus": "rack-puma-rbx"
     },
     "torqbox-jruby": {
       "setup_file": "run_torqbox",
@@ -91,7 +91,7 @@
       "database_os": "Linux",
       "display_name": "padrino-torqbox-jruby",
       "notes": "",
-      "versus": "rack-torqbox"
+      "versus": "rack-torqbox-jruby"
     },
     "trinidad-jruby": {
       "setup_file": "run_trinidad",
@@ -114,7 +114,7 @@
       "database_os": "Linux",
       "display_name": "padrino-trinidad-jruby",
       "notes": "",
-      "versus": "rack-trinidad"
+      "versus": "rack-trinidad-jruby"
     },
     "thin": {
       "setup_file": "run_thin",

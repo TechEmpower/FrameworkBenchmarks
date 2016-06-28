@@ -10,8 +10,9 @@ defmodule Hello do
       # Start the endpoint when the application starts
       supervisor(Hello.Endpoint, []),
       # Here you could define other workers and supervisors as children
+      # Start the Ecto repository
+      worker(Hello.Repo, [])
       # worker(Hello.Worker, [arg1, arg2, arg3]),
-      # worker(Hello.Repo, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

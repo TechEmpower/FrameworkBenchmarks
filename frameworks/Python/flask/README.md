@@ -15,14 +15,9 @@ All test implementations are located within a single file
 
 Flask + Flask-SQLAlchemy
 
-### Interpreter
-
-* CPython 2.7.4
-* PyPy 2.0
-
 ### Database
 
-MySQL (MySQL-python on CPython, PyMySQL on PyPy)
+MySQL (mysqlclient on CPython, PyMySQL on PyPy)
 
 ### Server
 

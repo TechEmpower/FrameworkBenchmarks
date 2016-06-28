@@ -1,0 +1,4390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mimeMappings>
+
+    <mimeMapping extension="Name"
+                 mime-type="Template"/>
+
+    <mimeMapping extension="1d-interleaved-parityfec"
+                 mime-type="application/1d-interleaved-parityfec"/>
+
+    <mimeMapping extension="3gpdash-qoe-report+xml"
+                 mime-type="application/3gpdash-qoe-report+xml"/>
+
+    <mimeMapping extension="3gpp-ims+xml"
+                 mime-type="application/3gpp-ims+xml"/>
+
+    <mimeMapping extension="A2L"
+                 mime-type="application/A2L"/>
+
+    <mimeMapping extension="activemessage"
+                 mime-type="application/activemessage"/>
+
+    <mimeMapping extension="activemessage"
+                 mime-type="application/activemessage"/>
+
+    <mimeMapping extension="alto-costmap+json"
+                 mime-type="application/alto-costmap+json"/>
+
+    <mimeMapping extension="alto-costmapfilter+json"
+                 mime-type="application/alto-costmapfilter+json"/>
+
+    <mimeMapping extension="alto-directory+json"
+                 mime-type="application/alto-directory+json"/>
+
+    <mimeMapping extension="alto-endpointprop+json"
+                 mime-type="application/alto-endpointprop+json"/>
+
+    <mimeMapping extension="alto-endpointpropparams+json"
+                 mime-type="application/alto-endpointpropparams+json"/>
+
+
+    <mimeMapping extension="alto-endpointcost+json"
+                 mime-type="application/alto-endpointcost+json"/>
+
+    <mimeMapping extension="alto-endpointcostparams+json"
+                 mime-type="application/alto-endpointcostparams+json"/>
+
+    <mimeMapping extension="alto-error+json"
+                 mime-type="application/alto-error+json"/>
+
+    <mimeMapping extension="alto-networkmapfilter+json"
+                 mime-type="application/alto-networkmapfilter+json"/>
+
+    <mimeMapping extension="alto-networkmap+json"
+                 mime-type="application/alto-networkmap+json"/>
+
+    <mimeMapping extension="AML"
+                 mime-type="application/AML"/>
+
+    <mimeMapping extension="andrew-inset"
+                 mime-type="application/andrew-inset"/>
+
+    <mimeMapping extension="applefile"
+                 mime-type="application/applefile"/>
+
+    <mimeMapping extension="ATF"
+                 mime-type="application/ATF"/>
+
+    <mimeMapping extension="ATFX"
+                 mime-type="application/ATFX"/>
+
+    <mimeMapping extension="atom+xml"
+                 mime-type="application/atom+xml"/>
+
+    <mimeMapping extension="atomcat+xml"
+                 mime-type="application/atomcat+xml"/>
+
+    <mimeMapping extension="atomdeleted+xml"
+                 mime-type="application/atomdeleted+xml"/>
+
+    <mimeMapping extension="atomicmail"
+                 mime-type="application/atomicmail"/>
+
+    <mimeMapping extension="atomsvc+xml"
+                 mime-type="application/atomsvc+xml"/>
+
+    <mimeMapping extension="ATXML"
+                 mime-type="application/ATXML"/>
+
+    <mimeMapping extension="auth-policy+xml"
+                 mime-type="application/auth-policy+xml"/>
+
+    <mimeMapping extension="bacnet-xdd+zip"
+                 mime-type="application/bacnet-xdd+zip"/>
+
+
+    <mimeMapping extension="batch-SMTP"
+                 mime-type="application/batch-SMTP"/>
+
+    <mimeMapping extension="beep+xml"
+                 mime-type="application/beep+xml"/>
+
+    <mimeMapping extension="calendar+json"
+                 mime-type="application/calendar+json"/>
+
+    <mimeMapping extension="calendar+xml"
+                 mime-type="application/calendar+xml"/>
+
+    <mimeMapping extension="call-completion"
+                 mime-type="application/call-completion"/>
+
+    <mimeMapping extension="cals-1840"
+                 mime-type="application/cals-1840"/>
+
+    <mimeMapping extension="cbor"
+                 mime-type="application/cbor"/>
+
+    <mimeMapping extension="ccmp+xml"
+                 mime-type="application/ccmp+xml"/>
+
+    <mimeMapping extension="ccxml+xml"
+                 mime-type="application/ccxml+xml"/>
+
+    <mimeMapping extension="CDFX+XML"
+                 mime-type="application/CDFX+XML"/>
+
+
+    <mimeMapping extension="cdmi-capability"
+                 mime-type="application/cdmi-capability"/>
+
+    <mimeMapping extension="cdmi-container"
+                 mime-type="application/cdmi-container"/>
+
+    <mimeMapping extension="cdmi-domain"
+                 mime-type="application/cdmi-domain"/>
+
+    <mimeMapping extension="cdmi-object"
+                 mime-type="application/cdmi-object"/>
+
+    <mimeMapping extension="cdmi-queue"
+                 mime-type="application/cdmi-queue"/>
+
+    <mimeMapping extension="CEA"
+                 mime-type="application/CEA"/>
+
+    <mimeMapping extension="cea-2018+xml"
+                 mime-type="application/cea-2018+xml"/>
+
+    <mimeMapping extension="cellml+xml"
+                 mime-type="application/cellml+xml"/>
+
+    <mimeMapping extension="cfw"
+                 mime-type="application/cfw"/>
+
+    <mimeMapping extension="cms"
+                 mime-type="application/cms"/>
+
+    <mimeMapping extension="cnrp+xml"
+                 mime-type="application/cnrp+xml"/>
+
+    <mimeMapping extension="coap-group+json"
+                 mime-type="application/coap-group+json"/>
+
+    <mimeMapping extension="commonground"
+                 mime-type="application/commonground"/>
+
+    <mimeMapping extension="conference-info+xml"
+                 mime-type="application/conference-info+xml"/>
+
+    <mimeMapping extension="cpl+xml"
+                 mime-type="application/cpl+xml"/>
+
+    <mimeMapping extension="csrattrs"
+                 mime-type="application/csrattrs"/>
+
+    <mimeMapping extension="csta+xml"
+                 mime-type="application/csta+xml"/>
+
+    <mimeMapping extension="CSTAdata+xml"
+                 mime-type="application/CSTAdata+xml"/>
+
+    <mimeMapping extension="cybercash"
+                 mime-type="application/cybercash"/>
+
+    <mimeMapping extension="dash+xml"
+                 mime-type="application/dash+xml"/>
+
+    <mimeMapping extension="dashdelta"
+                 mime-type="application/dashdelta"/>
+
+    <mimeMapping extension="davmount+xml"
+                 mime-type="application/davmount+xml"/>
+
+    <mimeMapping extension="dca-rft"
+                 mime-type="application/dca-rft"/>
+
+    <mimeMapping extension="DCD"
+                 mime-type="application/DCD"/>
+
+    <mimeMapping extension="dec-dx"
+                 mime-type="application/dec-dx"/>
+
+    <mimeMapping extension="dialog-info+xml"
+                 mime-type="application/dialog-info+xml"/>
+
+    <mimeMapping extension="dicom"
+                 mime-type="application/dicom"/>
+
+    <mimeMapping extension="DII"
+                 mime-type="application/DII"/>
+
+    <mimeMapping extension="DIT"
+                 mime-type="application/DIT"/>
+
+    <mimeMapping extension="dns"
+                 mime-type="application/dns"/>
+
+    <mimeMapping extension="dskpp+xml"
+                 mime-type="application/dskpp+xml"/>
+
+    <mimeMapping extension="dssc+der"
+                 mime-type="application/dssc+der"/>
+
+    <mimeMapping extension="dssc+xml"
+                 mime-type="application/dssc+xml"/>
+
+    <mimeMapping extension="dvcs"
+                 mime-type="application/dvcs"/>
+
+    <mimeMapping extension="ecmascript"
+                 mime-type="application/ecmascript"/>
+
+    <mimeMapping extension="EDI-consent"
+                 mime-type="application/EDI-consent"/>
+
+    <mimeMapping extension="EDIFACT"
+                 mime-type="application/EDIFACT"/>
+
+    <mimeMapping extension="EDI-X12"
+                 mime-type="application/EDI-X12"/>
+
+    <mimeMapping extension="emma+xml"/>
+
+    <mimeMapping extension="emotionml+xml"
+                 mime-type="application/emotionml+xml"/>
+
+    <mimeMapping extension="encaprtp"
+                 mime-type="application/encaprtp"/>
+
+    <mimeMapping extension="epp+xml"
+                 mime-type="application/epp+xml"/>
+
+    <mimeMapping extension="epub+zip"
+                 mime-type="application/epub+zip"/>
+
+    <mimeMapping extension="eshop"
+                 mime-type="application/eshop"/>
+
+    <mimeMapping extension="example"
+                 mime-type="application/example"/>
+
+
+    <mimeMapping extension="exi"/>
+
+
+    <mimeMapping extension="fastinfoset"
+                 mime-type="application/fastinfoset"/>
+
+
+    <mimeMapping extension="fastsoap"
+                 mime-type="application/fastsoap"/>
+
+
+    <mimeMapping extension="fdt+xml"
+                 mime-type="application/fdt+xml"/>
+
+
+    <mimeMapping extension="fits"
+                 mime-type="application/fits"/>
+
+
+    <mimeMapping extension="font-sfnt"
+                 mime-type="application/font-sfnt"/>
+
+
+    <mimeMapping extension="font-tdpfr"
+                 mime-type="application/font-tdpfr"/>
+
+
+    <mimeMapping extension="font-woff"
+                 mime-type="application/font-woff"/>
+
+
+    <mimeMapping extension="framework-attributes+xml"
+                 mime-type="application/framework-attributes+xml"/>
+
+
+    <mimeMapping extension="gzip"
+                 mime-type="application/gzip"/>
+
+
+    <mimeMapping extension="H224"
+                 mime-type="application/H224"/>
+
+
+    <mimeMapping extension="held+xml"
+                 mime-type="application/held+xml"/>
+
+
+    <mimeMapping extension="http"
+                 mime-type="application/http"/>
+
+
+    <mimeMapping extension="hyperstudio"
+                 mime-type="application/hyperstudio"/>
+
+
+    <mimeMapping extension="ibe-key-request+xml"
+                 mime-type="application/ibe-key-request+xml"/>
+
+
+    <mimeMapping extension="ibe-pkg-reply+xml"
+                 mime-type="application/ibe-pkg-reply+xml"/>
+
+
+    <mimeMapping extension="ibe-pp-data"
+                 mime-type="application/ibe-pp-data"/>
+
+
+    <mimeMapping extension="iges"
+                 mime-type="application/iges"/>
+
+
+    <mimeMapping extension="im-iscomposing+xml"
+                 mime-type="application/im-iscomposing+xml"/>
+
+
+    <mimeMapping extension="index"
+                 mime-type="application/index"/>
+
+
+    <mimeMapping extension="index.cmd"
+                 mime-type="application/index.cmd"/>
+
+
+    <mimeMapping extension="index.obj"
+                 mime-type="application/index.obj"/>
+
+
+    <mimeMapping extension="index.response"
+                 mime-type="application/index.response"/>
+
+
+    <mimeMapping extension="index.vnd"
+                 mime-type="application/index.vnd"/>
+
+
+    <mimeMapping extension="inkml+xml"
+                 mime-type="application/inkml+xml"/>
+
+
+    <mimeMapping extension="iotp"
+                 mime-type="application/IOTP"/>
+
+
+    <mimeMapping extension="ipfix"
+                 mime-type="application/ipfix"/>
+
+
+    <mimeMapping extension="ipp"
+                 mime-type="application/ipp"/>
+
+
+    <mimeMapping extension="isup"
+                 mime-type="application/ISUP"/>
+
+
+    <mimeMapping extension="its+xml"
+                 mime-type="application/its+xml"/>
+
+
+    <mimeMapping extension="javascript"
+                 mime-type="application/javascript"/>
+
+
+    <mimeMapping extension="jose"
+                 mime-type="application/jose"/>
+
+
+    <mimeMapping extension="jose+json"
+                 mime-type="application/jose+json"/>
+
+
+    <mimeMapping extension="jrd+json"
+                 mime-type="application/jrd+json"/>
+
+
+    <mimeMapping extension="json"
+                 mime-type="application/json"/>
+
+
+    <mimeMapping extension="json-patch+json"
+                 mime-type="application/json-patch+json"/>
+
+
+    <mimeMapping extension="json-seq"
+                 mime-type="application/json-seq"/>
+
+
+    <mimeMapping extension="jwk+json"
+                 mime-type="application/jwk+json"/>
+
+
+    <mimeMapping extension="jwk-set+json"
+                 mime-type="application/jwk-set+json"/>
+
+
+    <mimeMapping extension="jwt"
+                 mime-type="application/jwt"/>
+
+
+    <mimeMapping extension="kpml-request+xml"
+                 mime-type="application/kpml-request+xml"/>
+
+
+    <mimeMapping extension="kpml-response+xml"
+                 mime-type="application/kpml-response+xml"/>
+
+
+    <mimeMapping extension="ld+json"
+                 mime-type="application/ld+json"/>
+
+
+    <mimeMapping extension="link-format"
+                 mime-type="application/link-format"/>
+
+
+    <mimeMapping extension="load-control+xml"
+                 mime-type="application/load-control+xml"/>
+
+
+    <mimeMapping extension="lost+xml"
+                 mime-type="application/lost+xml"/>
+
+
+    <mimeMapping extension="lostsync+xml"
+                 mime-type="application/lostsync+xml"/>
+
+
+    <mimeMapping extension="LXF"
+                 mime-type="application/LXF"/>
+
+
+    <mimeMapping extension="mac-binhex40"
+                 mime-type="application/mac-binhex40"/>
+
+
+    <mimeMapping extension="macwriteii"
+                 mime-type="application/macwriteii"/>
+
+
+    <mimeMapping extension="mads+xml"
+                 mime-type="application/mads+xml"/>
+
+
+    <mimeMapping extension="marc"
+                 mime-type="application/marc"/>
+
+
+    <mimeMapping extension="marcxml+xml"
+                 mime-type="application/marcxml+xml"/>
+
+
+    <mimeMapping extension="mathematica"
+                 mime-type="application/mathematica"/>
+
+
+    <mimeMapping extension="mbms-associated-procedure-description+xml"
+                 mime-type="application/mbms-associated-procedure-description+xml"/>
+
+
+    <mimeMapping extension="mbms-deregister+xml"
+                 mime-type="application/mbms-deregister+xml"/>
+
+
+    <mimeMapping extension="mbms-envelope+xml"
+                 mime-type="application/mbms-envelope+xml"/>
+
+
+    <mimeMapping extension="mbms-msk-response+xml"
+                 mime-type="application/mbms-msk-response+xml"/>
+
+
+    <mimeMapping extension="mbms-msk+xml"
+                 mime-type="application/mbms-msk+xml"/>
+
+
+    <mimeMapping extension="mbms-protection-description+xml"
+                 mime-type="application/mbms-protection-description+xml"/>
+
+
+    <mimeMapping extension="mbms-reception-report+xml"
+                 mime-type="application/mbms-reception-report+xml"/>
+
+
+    <mimeMapping extension="mbms-register-response+xml"
+                 mime-type="application/mbms-register-response+xml"/>
+
+
+    <mimeMapping extension="mbms-register+xml"
+                 mime-type="application/mbms-register+xml"/>
+
+
+    <mimeMapping extension="mbms-schedule+xml"
+                 mime-type="application/mbms-schedule+xml"/>
+
+
+    <mimeMapping extension="mbms-user-service-description+xml"
+                 mime-type="application/mbms-user-service-description+xml"/>
+
+
+    <mimeMapping extension="mbox"
+                 mime-type="application/mbox+xml"/>
+
+
+    <mimeMapping extension="media_control+xml"
+                 mime-type="application/media_control+xml"/>
+
+
+    <mimeMapping extension="media-policy-dataset+xml"
+                 mime-type="application/media-policy-dataset+xml"/>
+
+
+    <mimeMapping extension="mediaservercontrol+xml"
+                 mime-type="application/mediaservercontrol+xml"/>
+
+
+    <mimeMapping extension="merge-patch+json"
+                 mime-type="application/merge-patch+json"/>
+
+
+    <mimeMapping extension="metalink4+xml"
+                 mime-type="application/metalink4+xml"/>
+
+
+    <mimeMapping extension="mets+xml"
+                 mime-type="application/mets+xml"/>
+
+
+    <mimeMapping extension="MF4"
+                 mime-type="application/MF4"/>
+
+
+    <mimeMapping extension="mikey"
+                 mime-type="application/mikey"/>
+
+
+    <mimeMapping extension="mods+xml"
+                 mime-type="application/mods+xml"/>
+
+
+    <mimeMapping extension="moss-keys"
+                 mime-type="application/moss-keys"/>
+
+
+    <mimeMapping extension="moss-signature"
+                 mime-type="application/moss-signature"/>
+
+
+    <mimeMapping extension="mosskey-data"
+                 mime-type="application/mosskey-data"/>
+
+
+    <mimeMapping extension="mosskey-request"
+                 mime-type="application/mosskey-request"/>
+
+
+    <mimeMapping extension="mp21"
+                 mime-type="application/mp21"/>
+
+
+    <mimeMapping extension="mp4"
+                 mime-type="application/mp4"/>
+
+
+    <mimeMapping extension="mpeg4-generic"
+                 mime-type="application/mpeg4-generic"/>
+
+
+    <mimeMapping extension="mpeg4-iod"
+                 mime-type="application/mpeg4-iod"/>
+
+
+    <mimeMapping extension="mpeg4-iod-xmt"
+                 mime-type="application/mpeg4-iod-xmt"/>
+
+
+    <mimeMapping extension="mrb-consumer+xml"
+                 mime-type="application/mrb-consumer+xml"/>
+
+
+    <mimeMapping extension="mrb-publish+xml"
+                 mime-type="application/mrb-publish+xml"/>
+
+
+    <mimeMapping extension="msc-ivr+xml"
+                 mime-type="application/msc-ivr+xml"/>
+
+
+    <mimeMapping extension="msc-mixer+xml"
+                 mime-type="application/msc-mixer+xml"/>
+
+
+    <mimeMapping extension="msword"
+                 mime-type="application/msword"/>
+
+
+    <mimeMapping extension="mxf"
+                 mime-type="application/mxf"/>
+
+
+    <mimeMapping extension="nasdata"
+                 mime-type="application/nasdata"/>
+
+
+    <mimeMapping extension="news-checkgroups"
+                 mime-type="application/news-checkgroups"/>
+
+
+    <mimeMapping extension="news-groupinfo"
+                 mime-type="application/news-groupinfo"/>
+
+
+    <mimeMapping extension="news-transmission"
+                 mime-type="application/news-transmission"/>
+
+
+    <mimeMapping extension="nlsml+xml"
+                 mime-type="application/nlsml+xml"/>
+
+
+    <mimeMapping extension="nss"
+                 mime-type="application/nss"/>
+
+
+    <mimeMapping extension="ocsp-request"
+                 mime-type="application/ocsp-request"/>
+
+
+    <mimeMapping extension="ocsp-response"
+                 mime-type="application/oscp-response"/>
+
+
+    <mimeMapping extension="octet-stream"
+                 mime-type="application/octet-stream"/>
+
+
+    <mimeMapping extension="oda"
+                 mime-type="application/ODA"/>
+
+
+    <mimeMapping extension="ODX"
+                 mime-type="application/ODX"/>
+
+
+    <mimeMapping extension="oebps-package+xml"
+                 mime-type="application/oebps-package+xml"/>
+
+
+    <mimeMapping extension="ogg"
+                 mime-type="application/ogg"/>
+
+
+    <mimeMapping extension="oxps"
+                 mime-type="application/oxps"/>
+
+
+    <mimeMapping extension="p2p-overlay+xml"
+                 mime-type="application/p2p-overlay+xml"/>
+
+
+    <mimeMapping extension="parityfec"/>
+
+
+    <mimeMapping extension="patch-ops-error+xml"
+                 mime-type="application/patch-ops-error+xml"/>
+
+
+    <mimeMapping extension="pdf"
+                 mime-type="application/pdf"/>
+
+
+    <mimeMapping extension="PDX"
+                 mime-type="application/PDX"/>
+
+
+    <mimeMapping extension="pgp-encrypted"
+                 mime-type="application/pgp-encrypted"/>
+
+
+    <mimeMapping extension="pgp-keys"/>
+
+
+    <mimeMapping extension="pgp-signature"
+                 mime-type="application/pgp-signature"/>
+
+
+    <mimeMapping extension="pidf-diff+xml"
+                 mime-type="application/pidf-diff+xml"/>
+
+
+    <mimeMapping extension="pidf+xml"
+                 mime-type="application/pidf+xml"/>
+
+
+    <mimeMapping extension="pkcs10"
+                 mime-type="application/pkcs10"/>
+
+
+    <mimeMapping extension="pkcs7-mime"
+                 mime-type="application/pkcs7-mime"/>
+
+
+    <mimeMapping extension="pkcs7-signature"
+                 mime-type="application/pkcs7-signature"/>
+
+
+    <mimeMapping extension="pkcs8"
+                 mime-type="application/pkcs8"/>
+
+
+    <mimeMapping extension="pkix-attr-cert"
+                 mime-type="application/pkix-attr-cert"/>
+
+
+    <mimeMapping extension="pkix-cert"
+                 mime-type="application/pkix-cert"/>
+
+
+    <mimeMapping extension="pkix-crl"
+                 mime-type="application/pkix-crl"/>
+
+
+    <mimeMapping extension="pkix-pkipath"
+                 mime-type="application/pkix-pkipath"/>
+
+
+    <mimeMapping extension="pkixcmp"
+                 mime-type="application/pkixcmp"/>
+
+
+    <mimeMapping extension="pls+xml"
+                 mime-type="application/pls+xml"/>
+
+
+    <mimeMapping extension="poc-settings+xml"
+                 mime-type="application/poc-settings+xml"/>
+
+
+    <mimeMapping extension="postscript"
+                 mime-type="application/postscript"/>
+
+
+    <mimeMapping extension="provenance+xml"
+                 mime-type="application/provenance+xml"/>
+
+
+    <mimeMapping extension="prs.alvestrand.titrax-sheet"
+                 mime-type="application/prs.alvestrand.titrax-sheet"/>
+
+
+    <mimeMapping extension="prs.cww"
+                 mime-type="application/prs.cww"/>
+
+
+    <mimeMapping extension="prs.hpub+zip"
+                 mime-type="application/prs.hpub+zip"/>
+
+
+    <mimeMapping extension="prs.nprend"
+                 mime-type="application/prs.nprend"/>
+
+
+    <mimeMapping extension="prs.plucker"
+                 mime-type="application/prs.plucker"/>
+
+
+    <mimeMapping extension="prs.rdf-xml-crypt"
+                 mime-type="application/prs.rdf-xml-crypt"/>
+
+
+    <mimeMapping extension="prs.xsf+xml"
+                 mime-type="application/prs.xsf+xml"/>
+
+
+    <mimeMapping extension="pskc+xml"
+                 mime-type="application/pskc+xml"/>
+
+
+    <mimeMapping extension="rdf+xml"
+                 mime-type="application/rdf+xml"/>
+
+
+    <mimeMapping extension="qsig"
+                 mime-type="application/QSIG"/>
+
+
+    <mimeMapping extension="raptorfec"
+                 mime-type="application/raptorfec"/>
+
+
+    <mimeMapping extension="rdap+json"
+                 mime-type="application/rdap+json"/>
+
+
+    <mimeMapping extension="reginfo+xml"
+                 mime-type="application/reginfo+xml"/>
+
+
+    <mimeMapping extension="relax-ng-compact-syntax"
+                 mime-type="application/relax-ng-compact-syntax"/>
+
+
+    <mimeMapping extension="remote-printing"
+                 mime-type="application/remote-printing"/>
+
+
+    <mimeMapping extension="reputon+json"
+                 mime-type="application/reputon+json"/>
+
+
+    <mimeMapping extension="resource-lists-diff+xml"
+                 mime-type="application/resource-lists-diff+xml"/>
+
+
+    <mimeMapping extension="resource-lists+xml"
+                 mime-type="application/resource-lists+xml"/>
+
+
+    <mimeMapping extension="riscos"
+                 mime-type="application/riscos"/>
+
+
+    <mimeMapping extension="rlmi+xml"
+                 mime-type="application/rlmi+xml"/>
+
+
+    <mimeMapping extension="rls-services+xml"
+                 mime-type="application/rls-services+xml"/>
+
+
+    <mimeMapping extension="rpki-ghostbusters"
+                 mime-type="application/rpki-ghostbusters"/>
+
+
+    <mimeMapping extension="rpki-manifest"
+                 mime-type="application/rpki-manifest"/>
+
+
+    <mimeMapping extension="rpki-roa"
+                 mime-type="application/rpki-roa"/>
+
+
+    <mimeMapping extension="rpki-updown"
+                 mime-type="application/rpki-updown"/>
+
+
+    <mimeMapping extension="rtf"
+                 mime-type="application/rtf"/>
+
+
+    <mimeMapping extension="rtploopback"
+                 mime-type="application/rtploopback"/>
+
+
+    <mimeMapping extension="rtx"
+                 mime-type="application/rtx"/>
+
+
+    <mimeMapping extension="samlassertion+xml"
+                 mime-type="application/samlassertion+xml"/>
+
+
+    <mimeMapping extension="samlmetadata+xml"
+                 mime-type="application/samlmetadata+xml"/>
+
+
+    <mimeMapping extension="sbml+xml"
+                 mime-type="application/sbml+xml"/>
+
+
+    <mimeMapping extension="scaip+xml"
+                 mime-type="application/scaip+xml"/>
+
+
+    <mimeMapping extension="scvp-cv-request"
+                 mime-type="application/scvp-cv-request"/>
+
+
+    <mimeMapping extension="scvp-cv-response"
+                 mime-type="application/scvp-cv-response"/>
+
+
+    <mimeMapping extension="scvp-vp-request"
+                 mime-type="application/scvp-vp-request"/>
+
+
+    <mimeMapping extension="scvp-vp-response"
+                 mime-type="application/scvp-vp-response"/>
+
+
+    <mimeMapping extension="sdp"
+                 mime-type="application/sdp"/>
+
+
+    <mimeMapping extension="sep-exi"
+                 mime-type="application/sep-exi"/>
+
+
+    <mimeMapping extension="sep+xml"
+                 mime-type="application/sep+xml"/>
+
+
+    <mimeMapping extension="session-info"
+                 mime-type="application/session-info"/>
+
+
+    <mimeMapping extension="set-payment"
+                 mime-type="application/set-payment"/>
+
+
+    <mimeMapping extension="set-payment-initiation"
+                 mime-type="application/set-payment-initiation"/>
+
+
+    <mimeMapping extension="set-registration"
+                 mime-type="application/set-registration"/>
+
+
+    <mimeMapping extension="set-registration-initiation"
+                 mime-type="application/set-registration-initiation"/>
+
+
+    <mimeMapping extension="sgml"
+                 mime-type="application/SGML"/>
+
+
+    <mimeMapping extension="sgml-open-catalog"
+                 mime-type="application/sgml-open-catalog"/>
+
+
+    <mimeMapping extension="shf+xml"
+                 mime-type="application/shf+xml"/>
+
+
+    <mimeMapping extension="sieve"
+                 mime-type="application/sieve"/>
+
+
+    <mimeMapping extension="simple-filter+xml"
+                 mime-type="application/simple-filter+xml"/>
+
+
+    <mimeMapping extension="simple-message-summary"
+                 mime-type="application/simple-message-summary"/>
+
+
+    <mimeMapping extension="simpleSymbolContainer"
+                 mime-type="application/simpleSymbolContainer"/>
+
+
+    <mimeMapping extension="slate"
+                 mime-type="application/slate"/>
+
+
+    <mimeMapping extension="smil - OBSOLETED in favor of application/smil+xml"
+                 mime-type="application/smil"/>
+
+
+    <mimeMapping extension="smil+xml"
+                 mime-type="application/smil+xml"/>
+
+
+    <mimeMapping extension="smpte336m"
+                 mime-type="application/smpte336m"/>
+
+
+    <mimeMapping extension="soap+fastinfoset"
+                 mime-type="application/soap+fastinfoset"/>
+
+
+    <mimeMapping extension="soap+xml"
+                 mime-type="application/soap+xml"/>
+
+
+    <mimeMapping extension="sparql-query"/>
+
+
+    <mimeMapping extension="sparql-results+xml"/>
+
+
+    <mimeMapping extension="spirits-event+xml"
+                 mime-type="application/spirits-event+xml"/>
+
+
+    <mimeMapping extension="sql"
+                 mime-type="application/sql"/>
+
+
+    <mimeMapping extension="srgs"
+                 mime-type="application/srgs"/>
+
+
+    <mimeMapping extension="srgs+xml"
+                 mime-type="application/srgs+xml"/>
+
+
+    <mimeMapping extension="sru+xml"
+                 mime-type="application/sru+xml"/>
+
+
+    <mimeMapping extension="ssml+xml"
+                 mime-type="application/ssml+xml"/>
+
+
+    <mimeMapping extension="tamp-apex-update"
+                 mime-type="application/tamp-apex-update"/>
+
+
+    <mimeMapping extension="tamp-apex-update-confirm"
+                 mime-type="application/tamp-apex-update-confirm"/>
+
+
+    <mimeMapping extension="tamp-community-update"
+                 mime-type="application/tamp-community-update"/>
+
+
+    <mimeMapping extension="tamp-community-update-confirm"
+                 mime-type="application/tamp-community-update-confirm"/>
+
+
+    <mimeMapping extension="tamp-error"
+                 mime-type="application/tamp-error"/>
+
+
+    <mimeMapping extension="tamp-sequence-adjust"
+                 mime-type="application/tamp-sequence-adjust"/>
+
+
+    <mimeMapping extension="tamp-sequence-adjust-confirm"
+                 mime-type="application/tamp-sequence-adjust-confirm"/>
+
+
+    <mimeMapping extension="tamp-status-query"
+                 mime-type="application/tamp-status-query"/>
+
+
+    <mimeMapping extension="tamp-status-response"
+                 mime-type="application/tamp-status-response"/>
+
+
+    <mimeMapping extension="tamp-update"
+                 mime-type="application/tamp-update"/>
+
+
+    <mimeMapping extension="tamp-update-confirm"
+                 mime-type="application/tamp-update-confirm"/>
+
+
+    <mimeMapping extension="tei+xml"
+                 mime-type="application/tei+xml"/>
+
+
+    <mimeMapping extension="thraud+xml"
+                 mime-type="application/thraud+xml"/>
+
+
+    <mimeMapping extension="timestamp-query"
+                 mime-type="application/timestamp-query"/>
+
+
+    <mimeMapping extension="timestamp-reply"
+                 mime-type="application/timestamp-reply"/>
+
+
+    <mimeMapping extension="timestamped-data"
+                 mime-type="application/timestamped-data"/>
+
+
+    <mimeMapping extension="ttml+xml"
+                 mime-type="application/ttml+xml"/>
+
+
+    <mimeMapping extension="tve-trigger"
+                 mime-type="application/tve-trigger"/>
+
+
+    <mimeMapping extension="ulpfec"
+                 mime-type="application/ulpfec"/>
+
+
+    <mimeMapping extension="urc-grpsheet+xml"
+                 mime-type="application/urc-grpsheet+xml"/>
+
+
+    <mimeMapping extension="urc-ressheet+xml"
+                 mime-type="application/urc-ressheet+xml"/>
+
+
+    <mimeMapping extension="urc-targetdesc+xml"
+                 mime-type="application/urc-targetdesc+xml"/>
+
+
+    <mimeMapping extension="urc-uisocketdesc+xml"
+                 mime-type="application/urc-uisocketdesc+xml"/>
+
+
+    <mimeMapping extension="vcard+json"
+                 mime-type="application/vcard+json"/>
+
+
+    <mimeMapping extension="vcard+xml"
+                 mime-type="application/vcard+xml"/>
+
+
+    <mimeMapping extension="vemmi"
+                 mime-type="application/vemmi"/>
+
+
+    <mimeMapping extension="vnd.3gpp.bsf+xml"
+                 mime-type="application/vnd.3gpp.bsf+xml"/>
+
+
+    <mimeMapping extension="vnd.3gpp.pic-bw-large"
+                 mime-type="application/vnd.3gpp.pic-bw-large"/>
+
+
+    <mimeMapping extension="vnd.3gpp.pic-bw-small"
+                 mime-type="application/vnd.3gpp.pic-bw-small"/>
+
+
+    <mimeMapping extension="vnd.3gpp.pic-bw-var"
+                 mime-type="application/vnd.3gpp.pic-bw-var"/>
+
+
+    <mimeMapping extension="vnd.3gpp.sms"
+                 mime-type="application/vnd.3gpp.sms"/>
+
+
+    <mimeMapping extension="vnd.3gpp2.bcmcsinfo+xml"
+                 mime-type="application/vnd.3gpp2.bcmcsinfo+xml"/>
+
+
+    <mimeMapping extension="vnd.3gpp2.sms"
+                 mime-type="application/vnd.3gpp2.sms"/>
+
+
+    <mimeMapping extension="vnd.3gpp2.tcap"
+                 mime-type="application/vnd.3gpp2.tcap"/>
+
+
+    <mimeMapping extension="vnd.3M.Post-it-Notes"
+                 mime-type="application/vnd.3M.Post-it-Notes"/>
+
+
+    <mimeMapping extension="vnd.accpac.simply.aso"
+                 mime-type="application/vnd.accpac.simply.aso"/>
+
+
+    <mimeMapping extension="vnd.accpac.simply.imp"
+                 mime-type="application/vnd.accpac.simply.imp"/>
+
+
+    <mimeMapping extension="vnd.acucobol"
+                 mime-type="application/vnd-acucobol"/>
+
+
+    <mimeMapping extension="vnd.acucorp"
+                 mime-type="application/vnd.acucorp"/>
+
+
+    <mimeMapping extension="vnd.adobe.flash.movie"
+                 mime-type="application/vnd.adobe.flash-movie"/>
+
+
+    <mimeMapping extension="vnd.adobe.formscentral.fcdt"
+                 mime-type="application/vnd.adobe.formscentral.fcdt"/>
+
+
+    <mimeMapping extension="vnd.adobe.fxp"
+                 mime-type="application/vnd.adobe.fxp"/>
+
+
+    <mimeMapping extension="vnd.adobe.partial-upload"
+                 mime-type="application/vnd.adobe.partial-upload"/>
+
+
+    <mimeMapping extension="vnd.adobe.xdp+xml"
+                 mime-type="application/vnd.adobe.xdp+xml"/>
+
+
+    <mimeMapping extension="vnd.adobe.xfdf"
+                 mime-type="application/vnd.adobe.xfdf"/>
+
+
+    <mimeMapping extension="vnd.aether.imp"
+                 mime-type="application/vnd.aether.imp"/>
+
+
+    <mimeMapping extension="vnd.ah-barcode"
+                 mime-type="application/vnd.ah-barcode"/>
+
+
+    <mimeMapping extension="vnd.ahead.space"
+                 mime-type="application/vnd.ahead.space"/>
+
+
+    <mimeMapping extension="vnd.airzip.filesecure.azf"
+                 mime-type="application/vnd.airzip.filesecure.azf"/>
+
+
+    <mimeMapping extension="vnd.airzip.filesecure.azs"
+                 mime-type="application/vnd.airzip.filesecure.azs"/>
+
+
+    <mimeMapping extension="vnd.americandynamics.acc"
+                 mime-type="application/vnd.americandynamics.acc"/>
+
+
+    <mimeMapping extension="vnd.amiga.ami"
+                 mime-type="application/vnd.amiga.ami"/>
+
+
+    <mimeMapping extension="vnd.amundsen.maze+xml"
+                 mime-type="application/vnd.amundsen.maze+xml"/>
+
+
+    <mimeMapping extension="vnd.anser-web-certificate-issue-initiation"
+                 mime-type="application/vnd.anser-web-certificate-issue-initiation"/>
+
+
+    <mimeMapping extension="vnd.antix.game-component"
+                 mime-type="application/vnd.antix.game-component"/>
+
+
+    <mimeMapping extension="vnd.apache.thrift.binary"
+                 mime-type="application/vnd.apache.thrift.binary"/>
+
+
+    <mimeMapping extension="vnd.apache.thrift.compact"
+                 mime-type="application/vnd.apache.thrift.compact"/>
+
+
+    <mimeMapping extension="vnd.apache.thrift.json"
+                 mime-type="application/vnd.apache.thrift.json"/>
+
+
+    <mimeMapping extension="vnd.api+json"
+                 mime-type="application/vnd.api+json"/>
+
+
+    <mimeMapping extension="vnd.apple.mpegurl"
+                 mime-type="application/vnd.apple.mpegurl"/>
+
+
+    <mimeMapping extension="vnd.apple.installer+xml"
+                 mime-type="application/vnd.apple.installer+xml"/>
+
+
+    <mimeMapping extension="vnd.arastra.swi - OBSOLETED in favor of application/vnd.aristanetworks.swi"
+                 mime-type="application/vnd.arastra.swi"/>
+
+
+    <mimeMapping extension="vnd.aristanetworks.swi"
+                 mime-type="application/vnd.aristanetworks.swi"/>
+
+
+    <mimeMapping extension="vnd.artsquare"
+                 mime-type="application/vnd.artsquare"/>
+
+
+    <mimeMapping extension="vnd.astraea-software.iota"
+                 mime-type="application/vnd.astraea-software.iota"/>
+
+
+    <mimeMapping extension="vnd.audiograph"
+                 mime-type="application/vnd.audiograph"/>
+
+
+    <mimeMapping extension="vnd.autopackage"
+                 mime-type="application/vnd.autopackage"/>
+
+
+    <mimeMapping extension="vnd.avistar+xml"
+                 mime-type="application/vnd.avistar+xml"/>
+
+
+    <mimeMapping extension="vnd.balsamiq.bmml+xml"
+                 mime-type="application/vnd.balsamiq.bmml+xml"/>
+
+
+    <mimeMapping extension="vnd.bekitzur-stech+json"
+                 mime-type="application/vnd.bekitzur-stech+json"/>
+
+
+    <mimeMapping extension="vnd.blueice.multipass"
+                 mime-type="application/vnd.blueice.multipass"/>
+
+
+    <mimeMapping extension="vnd.bluetooth.ep.oob"
+                 mime-type="application/vnd.bluetooth.ep.oob"/>
+
+
+    <mimeMapping extension="vnd.bluetooth.le.oob"
+                 mime-type="application/vnd.bluetooth.le.oob"/>
+
+
+    <mimeMapping extension="vnd.bmi"
+                 mime-type="application/vnd.bmi"/>
+
+
+    <mimeMapping extension="vnd.businessobjects"
+                 mime-type="application/vnd.businessobjects"/>
+
+
+    <mimeMapping extension="vnd.cab-jscript"
+                 mime-type="application/vnd.cab-jscript"/>
+
+
+    <mimeMapping extension="vnd.canon-cpdl"
+                 mime-type="application/vnd.canon-cpdl"/>
+
+
+    <mimeMapping extension="vnd.canon-lips"
+                 mime-type="application/vnd.canon-lips"/>
+
+
+    <mimeMapping extension="vnd.cendio.thinlinc.clientconf"
+                 mime-type="application/vnd.cendio.thinlinc.clientconf"/>
+
+
+    <mimeMapping extension="vnd.century-systems.tcp_stream"
+                 mime-type="application/vnd.century-systems.tcp_stream"/>
+
+
+    <mimeMapping extension="vnd.chemdraw+xml"
+                 mime-type="application/vnd.chemdraw+xml"/>
+
+
+    <mimeMapping extension="vnd.chipnuts.karaoke-mmd"
+                 mime-type="application/vnd.chipnuts.karaoke-mmd"/>
+
+
+    <mimeMapping extension="vnd.cinderella"
+                 mime-type="application/vnd.cinderella"/>
+
+
+    <mimeMapping extension="vnd.cirpack.isdn-ext"
+                 mime-type="application/vnd.cirpack.isdn-ext"/>
+
+
+    <mimeMapping extension="vnd.claymore"
+                 mime-type="application/vnd.claymore"/>
+
+
+    <mimeMapping extension="vnd.cloanto.rp9"
+                 mime-type="application/vnd.cloanto.rp9"/>
+
+
+    <mimeMapping extension="vnd.clonk.c4group"
+                 mime-type="application/vnd.clonk.c4group"/>
+
+
+    <mimeMapping extension="vnd.cluetrust.cartomobile-config"
+                 mime-type="application/vnd.cluetrust.cartomobile-config"/>
+
+
+    <mimeMapping extension="vnd.cluetrust.cartomobile-config-pkg"
+                 mime-type="application/vnd.cluetrust.cartomobile-config-pkg"/>
+
+
+    <mimeMapping extension="vnd.coffeescript"
+                 mime-type="application/vnd.coffeescript"/>
+
+
+    <mimeMapping extension="vnd.collection.doc+json"
+                 mime-type="application/vnd.collection.doc+json"/>
+
+
+    <mimeMapping extension="vnd.collection+json"
+                 mime-type="application/vnd.collection+json"/>
+
+
+    <mimeMapping extension="vnd.collection.next+json"
+                 mime-type="application/vnd.collection.next+json"/>
+
+
+    <mimeMapping extension="vnd.commerce-battelle"
+                 mime-type="application/vnd.commerce-battelle"/>
+
+
+    <mimeMapping extension="vnd.commonspace"
+                 mime-type="application/vnd.commonspace"/>
+
+
+    <mimeMapping extension="vnd.cosmocaller"
+                 mime-type="application/vnd.cosmocaller"/>
+
+
+    <mimeMapping extension="vnd.contact.cmsg"
+                 mime-type="application/vnd.contact.cmsg"/>
+
+
+    <mimeMapping extension="vnd.crick.clicker"
+                 mime-type="application/vnd.crick.clicker"/>
+
+
+    <mimeMapping extension="vnd.crick.clicker.keyboard"
+                 mime-type="application/vnd.crick.clicker.keyboard"/>
+
+
+    <mimeMapping extension="vnd.crick.clicker.palette"
+                 mime-type="application/vnd.crick.clicker.palette"/>
+
+
+    <mimeMapping extension="vnd.crick.clicker.template"
+                 mime-type="application/vnd.crick.clicker.template"/>
+
+
+    <mimeMapping extension="vnd.crick.clicker.wordbank"
+                 mime-type="application/vnd.crick.clicker.wordbank"/>
+
+
+    <mimeMapping extension="vnd.criticaltools.wbs+xml"
+                 mime-type="application/vnd.criticaltools.wbs+xml"/>
+
+
+    <mimeMapping extension="vnd.ctc-posml"
+                 mime-type="application/vnd.ctc-posml"/>
+
+
+    <mimeMapping extension="vnd.ctct.ws+xml"
+                 mime-type="application/vnd.ctct.ws+xml"/>
+
+
+    <mimeMapping extension="vnd.cups-pdf"
+                 mime-type="application/vnd.cups-pdf"/>
+
+
+    <mimeMapping extension="vnd.cups-postscript"
+                 mime-type="application/vnd.cups-postscript"/>
+
+
+    <mimeMapping extension="vnd.cups-ppd"
+                 mime-type="application/vnd.cups-ppd"/>
+
+
+    <mimeMapping extension="vnd.cups-raster"
+                 mime-type="application/vnd.cups-raster"/>
+
+
+    <mimeMapping extension="vnd.cups-raw"
+                 mime-type="application/vnd.cups-raw"/>
+
+
+    <mimeMapping extension="vnd.curl"
+                 mime-type="application/vnd-curl"/>
+
+
+    <mimeMapping extension="vnd.cyan.dean.root+xml"
+                 mime-type="application/vnd.cyan.dean.root+xml"/>
+
+
+    <mimeMapping extension="vnd.cybank"
+                 mime-type="application/vnd.cybank"/>
+
+
+    <mimeMapping extension="vnd.dart"
+                 mime-type="application/vnd-dart"/>
+
+
+    <mimeMapping extension="vnd.data-vision.rdz"
+                 mime-type="application/vnd.data-vision.rdz"/>
+
+
+    <mimeMapping extension="vnd.debian.binary-package"
+                 mime-type="application/vnd.debian.binary-package"/>
+
+
+    <mimeMapping extension="vnd.dece.data"
+                 mime-type="application/vnd.dece.data"/>
+
+
+    <mimeMapping extension="vnd.dece.ttml+xml"
+                 mime-type="application/vnd.dece.ttml+xml"/>
+
+
+    <mimeMapping extension="vnd.dece.unspecified"
+                 mime-type="application/vnd.dece.unspecified"/>
+
+
+    <mimeMapping extension="vnd.dece.zip"
+                 mime-type="application/vnd.dece-zip"/>
+
+
+    <mimeMapping extension="vnd.denovo.fcselayout-link"
+                 mime-type="application/vnd.denovo.fcselayout-link"/>
+
+
+    <mimeMapping extension="vnd.desmume.movie"
+                 mime-type="application/vnd.desmume-movie"/>
+
+
+    <mimeMapping extension="vnd.dir-bi.plate-dl-nosuffix"
+                 mime-type="application/vnd.dir-bi.plate-dl-nosuffix"/>
+
+
+    <mimeMapping extension="vnd.dm.delegation+xml"
+                 mime-type="application/vnd.dm.delegation+xml"/>
+
+
+    <mimeMapping extension="vnd.dna"
+                 mime-type="application/vnd.dna"/>
+
+
+    <mimeMapping extension="vnd.document+json"
+                 mime-type="application/vnd.document+json"/>
+
+
+    <mimeMapping extension="vnd.dolby.mobile.1"
+                 mime-type="application/vnd.dolby.mobile.1"/>
+
+
+    <mimeMapping extension="vnd.dolby.mobile.2"
+                 mime-type="application/vnd.dolby.mobile.2"/>
+
+
+    <mimeMapping extension="vnd.doremir.scorecloud-binary-document"
+                 mime-type="application/vnd.doremir.scorecloud-binary-document"/>
+
+
+    <mimeMapping extension="vnd.dpgraph"
+                 mime-type="application/vnd.dpgraph"/>
+
+
+    <mimeMapping extension="vnd.dreamfactory"
+                 mime-type="application/vnd.dreamfactory"/>
+
+
+    <mimeMapping extension="vnd.dtg.local"
+                 mime-type="application/vnd.dtg.local"/>
+
+
+    <mimeMapping extension="vnd.dtg.local.flash"
+                 mime-type="application/vnd.dtg.local.flash"/>
+
+
+    <mimeMapping extension="vnd.dtg.local.html"
+                 mime-type="application/vnd.dtg.local.html"/>
+
+
+    <mimeMapping extension="vnd.dvb.ait"
+                 mime-type="application/vnd.dvb.ait"/>
+
+
+    <mimeMapping extension="vnd.dvb.dvbj"
+                 mime-type="application/vnd.dvb.dvbj"/>
+
+
+    <mimeMapping extension="vnd.dvb.esgcontainer"
+                 mime-type="application/vnd.dvb.esgcontainer"/>
+
+
+    <mimeMapping extension="vnd.dvb.ipdcdftnotifaccess"
+                 mime-type="application/vnd.dvb.ipdcdftnotifaccess"/>
+
+
+    <mimeMapping extension="vnd.dvb.ipdcesgaccess"
+                 mime-type="application/vnd.dvb.ipdcesgaccess"/>
+
+
+    <mimeMapping extension="vnd.dvb.ipdcesgaccess2"
+                 mime-type="application/vnd.dvb.ipdcesgaccess2"/>
+
+
+    <mimeMapping extension="vnd.dvb.ipdcesgpdd"
+                 mime-type="application/vnd.dvb.ipdcesgpdd"/>
+
+
+    <mimeMapping extension="vnd.dvb.ipdcroaming"
+                 mime-type="application/vnd.dvb.ipdcroaming"/>
+
+
+    <mimeMapping extension="vnd.dvb.iptv.alfec-base"
+                 mime-type="application/vnd.dvb.iptv.alfec-base"/>
+
+
+    <mimeMapping extension="vnd.dvb.iptv.alfec-enhancement"
+                 mime-type="application/vnd.dvb.iptv.alfec-enhancement"/>
+
+
+    <mimeMapping extension="vnd.dvb.notif-aggregate-root+xml"
+                 mime-type="application/vnd.dvb.notif-aggregate-root+xml"/>
+
+
+    <mimeMapping extension="vnd.dvb.notif-container+xml"
+                 mime-type="application/vnd.dvb.notif-container+xml"/>
+
+
+    <mimeMapping extension="vnd.dvb.notif-generic+xml"
+                 mime-type="application/vnd.dvb.notif-generic+xml"/>
+
+
+    <mimeMapping extension="vnd.dvb.notif-ia-msglist+xml"
+                 mime-type="application/vnd.dvb.notif-ia-msglist+xml"/>
+
+
+    <mimeMapping extension="vnd.dvb.notif-ia-registration-request+xml"
+                 mime-type="application/vnd.dvb.notif-ia-registration-request+xml"/>
+
+
+    <mimeMapping extension="vnd.dvb.notif-ia-registration-response+xml"
+                 mime-type="application/vnd.dvb.notif-ia-registration-response+xml"/>
+
+
+    <mimeMapping extension="vnd.dvb.notif-init+xml"
+                 mime-type="application/vnd.dvb.notif-init+xml"/>
+
+
+    <mimeMapping extension="vnd.dvb.pfr"
+                 mime-type="application/vnd.dvb.pfr"/>
+
+
+    <mimeMapping extension="vnd.dvb.service"
+                 mime-type="application/vnd.dvb_service"/>
+
+
+    <mimeMapping extension="vnd.dxr"
+                 mime-type="application/vnd-dxr"/>
+
+
+    <mimeMapping extension="vnd.dynageo"
+                 mime-type="application/vnd.dynageo"/>
+
+
+    <mimeMapping extension="vnd.dzr"
+                 mime-type="application/vnd.dzr"/>
+
+
+    <mimeMapping extension="vnd.easykaraoke.cdgdownload"
+                 mime-type="application/vnd.easykaraoke.cdgdownload"/>
+
+
+    <mimeMapping extension="vnd.ecdis-update"
+                 mime-type="application/vnd.ecdis-update"/>
+
+
+    <mimeMapping extension="vnd.ecowin.chart"
+                 mime-type="application/vnd.ecowin.chart"/>
+
+
+    <mimeMapping extension="vnd.ecowin.filerequest"
+                 mime-type="application/vnd.ecowin.filerequest"/>
+
+
+    <mimeMapping extension="vnd.ecowin.fileupdate"
+                 mime-type="application/vnd.ecowin.fileupdate"/>
+
+
+    <mimeMapping extension="vnd.ecowin.series"
+                 mime-type="application/vnd.ecowin.series"/>
+
+
+    <mimeMapping extension="vnd.ecowin.seriesrequest"
+                 mime-type="application/vnd.ecowin.seriesrequest"/>
+
+
+    <mimeMapping extension="vnd.ecowin.seriesupdate"
+                 mime-type="application/vnd.ecowin.seriesupdate"/>
+
+
+    <mimeMapping extension="vnd.emclient.accessrequest+xml"
+                 mime-type="application/vnd.emclient.accessrequest+xml"/>
+
+
+    <mimeMapping extension="vnd.enliven"
+                 mime-type="application/vnd.enliven"/>
+
+
+    <mimeMapping extension="vnd.enphase.envoy"
+                 mime-type="application/vnd.enphase.envoy"/>
+
+
+    <mimeMapping extension="vnd.eprints.data+xml"
+                 mime-type="application/vnd.eprints.data+xml"/>
+
+
+    <mimeMapping extension="vnd.epson.esf"
+                 mime-type="application/vnd.epson.esf"/>
+
+
+    <mimeMapping extension="vnd.epson.msf"
+                 mime-type="application/vnd.epson.msf"/>
+
+
+    <mimeMapping extension="vnd.epson.quickanime"
+                 mime-type="application/vnd.epson.quickanime"/>
+
+
+    <mimeMapping extension="vnd.epson.salt"
+                 mime-type="application/vnd.epson.salt"/>
+
+
+    <mimeMapping extension="vnd.epson.ssf"
+                 mime-type="application/vnd.epson.ssf"/>
+
+
+    <mimeMapping extension="vnd.ericsson.quickcall"
+                 mime-type="application/vnd.ericsson.quickcall"/>
+
+
+    <mimeMapping extension="vnd.eszigno3+xml"
+                 mime-type="application/vnd.eszigno3+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.aoc+xml"
+                 mime-type="application/vnd.etsi.aoc+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.asic-s+zip"
+                 mime-type="application/vnd.etsi.asic-s+zip"/>
+
+
+    <mimeMapping extension="vnd.etsi.asic-e+zip"
+                 mime-type="application/vnd.etsi.asic-e+zip"/>
+
+
+    <mimeMapping extension="vnd.etsi.cug+xml"
+                 mime-type="application/vnd.etsi.cug+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.iptvcommand+xml"
+                 mime-type="application/vnd.etsi.iptvcommand+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.iptvdiscovery+xml"
+                 mime-type="application/vnd.etsi.iptvdiscovery+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.iptvprofile+xml"
+                 mime-type="application/vnd.etsi.iptvprofile+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.iptvsad-bc+xml"
+                 mime-type="application/vnd.etsi.iptvsad-bc+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.iptvsad-cod+xml"
+                 mime-type="application/vnd.etsi.iptvsad-cod+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.iptvsad-npvr+xml"
+                 mime-type="application/vnd.etsi.iptvsad-npvr+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.iptvservice+xml"
+                 mime-type="application/vnd.etsi.iptvservice+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.iptvsync+xml"
+                 mime-type="application/vnd.etsi.iptvsync+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.iptvueprofile+xml"
+                 mime-type="application/vnd.etsi.iptvueprofile+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.mcid+xml"
+                 mime-type="application/vnd.etsi.mcid+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.mheg5"
+                 mime-type="application/vnd.etsi.mheg5"/>
+
+
+    <mimeMapping extension="vnd.etsi.overload-control-policy-dataset+xml"
+                 mime-type="application/vnd.etsi.overload-control-policy-dataset+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.pstn+xml"
+                 mime-type="application/vnd.etsi.pstn+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.sci+xml"
+                 mime-type="application/vnd.etsi.sci+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.simservs+xml"
+                 mime-type="application/vnd.etsi.simservs+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.timestamp-token"
+                 mime-type="application/vnd.etsi.timestamp-token"/>
+
+
+    <mimeMapping extension="vnd.etsi.tsl+xml"
+                 mime-type="application/vnd.etsi.tsl+xml"/>
+
+
+    <mimeMapping extension="vnd.etsi.tsl.der"
+                 mime-type="application/vnd.etsi.tsl.der"/>
+
+
+    <mimeMapping extension="vnd.eudora.data"
+                 mime-type="application/vnd.eudora.data"/>
+
+
+    <mimeMapping extension="vnd.ezpix-album"
+                 mime-type="application/vnd.ezpix-album"/>
+
+
+    <mimeMapping extension="vnd.ezpix-package"
+                 mime-type="application/vnd.ezpix-package"/>
+
+
+    <mimeMapping extension="vnd.f-secure.mobile"
+                 mime-type="application/vnd.f-secure.mobile"/>
+
+
+    <mimeMapping extension="vnd.fdf"
+                 mime-type="application/vnd-fdf"/>
+
+
+    <mimeMapping extension="vnd.fdsn.mseed"
+                 mime-type="application/vnd.fdsn.mseed"/>
+
+
+    <mimeMapping extension="vnd.fdsn.seed"
+                 mime-type="application/vnd.fdsn.seed"/>
+
+
+    <mimeMapping extension="vnd.ffsns"
+                 mime-type="application/vnd.ffsns"/>
+
+
+    <mimeMapping extension="vnd.fints"
+                 mime-type="application/vnd.fints"/>
+
+
+    <mimeMapping extension="vnd.FloGraphIt"
+                 mime-type="application/vnd.FloGraphIt"/>
+
+
+    <mimeMapping extension="vnd.fluxtime.clip"
+                 mime-type="application/vnd.fluxtime.clip"/>
+
+
+    <mimeMapping extension="vnd.font-fontforge-sfd"
+                 mime-type="application/vnd.font-fontforge-sfd"/>
+
+
+    <mimeMapping extension="vnd.framemaker"
+                 mime-type="application/vnd.framemaker"/>
+
+
+    <mimeMapping extension="vnd.frogans.fnc"
+                 mime-type="application/vnd.frogans.fnc"/>
+
+
+    <mimeMapping extension="vnd.frogans.ltf"
+                 mime-type="application/vnd.frogans.ltf"/>
+
+
+    <mimeMapping extension="vnd.fsc.weblaunch"
+                 mime-type="application/vnd.fsc.weblaunch"/>
+
+
+    <mimeMapping extension="vnd.fujitsu.oasys"
+                 mime-type="application/vnd.fujitsu.oasys"/>
+
+
+    <mimeMapping extension="vnd.fujitsu.oasys2"
+                 mime-type="application/vnd.fujitsu.oasys2"/>
+
+
+    <mimeMapping extension="vnd.fujitsu.oasys3"
+                 mime-type="application/vnd.fujitsu.oasys3"/>
+
+
+    <mimeMapping extension="vnd.fujitsu.oasysgp"
+                 mime-type="application/vnd.fujitsu.oasysgp"/>
+
+
+    <mimeMapping extension="vnd.fujitsu.oasysprs"
+                 mime-type="application/vnd.fujitsu.oasysprs"/>
+
+
+    <mimeMapping extension="vnd.fujixerox.ART4"
+                 mime-type="application/vnd.fujixerox.ART4"/>
+
+
+    <mimeMapping extension="vnd.fujixerox.ART-EX"
+                 mime-type="application/vnd.fujixerox.ART-EX"/>
+
+
+    <mimeMapping extension="vnd.fujixerox.ddd"
+                 mime-type="application/vnd.fujixerox.ddd"/>
+
+
+    <mimeMapping extension="vnd.fujixerox.docuworks"
+                 mime-type="application/vnd.fujixerox.docuworks"/>
+
+
+    <mimeMapping extension="vnd.fujixerox.docuworks.binder"
+                 mime-type="application/vnd.fujixerox.docuworks.binder"/>
+
+
+    <mimeMapping extension="vnd.fujixerox.docuworks.container"
+                 mime-type="application/vnd.fujixerox.docuworks.container"/>
+
+
+    <mimeMapping extension="vnd.fujixerox.HBPL"
+                 mime-type="application/vnd.fujixerox.HBPL"/>
+
+
+    <mimeMapping extension="vnd.fut-misnet"
+                 mime-type="application/vnd.fut-misnet"/>
+
+
+    <mimeMapping extension="vnd.fuzzysheet"
+                 mime-type="application/vnd.fuzzysheet"/>
+
+
+    <mimeMapping extension="vnd.genomatix.tuxedo"
+                 mime-type="application/vnd.genomatix.tuxedo"/>
+
+
+    <mimeMapping extension="vnd.geo+json"
+                 mime-type="application/vnd.geo+json"/>
+
+
+    <mimeMapping extension="vnd.geocube+xml - OBSOLETED by request"
+                 mime-type="application/vnd.geocube+xml"/>
+
+
+    <mimeMapping extension="vnd.geogebra.file"
+                 mime-type="application/vnd.geogebra.file"/>
+
+
+    <mimeMapping extension="vnd.geogebra.tool"
+                 mime-type="application/vnd.geogebra.tool"/>
+
+
+    <mimeMapping extension="vnd.geometry-explorer"
+                 mime-type="application/vnd.geometry-explorer"/>
+
+
+    <mimeMapping extension="vnd.geonext"
+                 mime-type="application/vnd.geonext"/>
+
+
+    <mimeMapping extension="vnd.geoplan"
+                 mime-type="application/vnd.geoplan"/>
+
+
+    <mimeMapping extension="vnd.geospace"
+                 mime-type="application/vnd.geospace"/>
+
+
+    <mimeMapping extension="vnd.gerber"
+                 mime-type="application/vnd.gerber"/>
+
+
+    <mimeMapping extension="vnd.globalplatform.card-content-mgt"
+                 mime-type="application/vnd.globalplatform.card-content-mgt"/>
+
+
+    <mimeMapping extension="vnd.globalplatform.card-content-mgt-response"
+                 mime-type="application/vnd.globalplatform.card-content-mgt-response"/>
+
+
+    <mimeMapping extension="vnd.gmx - DEPRECATED"
+                 mime-type="application/vnd.gmx"/>
+
+
+    <mimeMapping extension="vnd.google-earth.kml+xml"
+                 mime-type="application/vnd.google-earth.kml+xml"/>
+
+
+    <mimeMapping extension="vnd.google-earth.kmz"
+                 mime-type="application/vnd.google-earth.kmz"/>
+
+
+    <mimeMapping extension="vnd.gov.sk.e-form+xml"
+                 mime-type="application/vnd.gov.sk.e-form+xml"/>
+
+
+    <mimeMapping extension="vnd.gov.sk.e-form+zip"
+                 mime-type="application/vnd.gov.sk.e-form+zip"/>
+
+
+    <mimeMapping extension="vnd.grafeq"
+                 mime-type="application/vnd.grafeq"/>
+
+
+    <mimeMapping extension="vnd.gridmp"
+                 mime-type="application/vnd.gridmp"/>
+
+
+    <mimeMapping extension="vnd.groove-account"
+                 mime-type="application/vnd.groove-account"/>
+
+
+    <mimeMapping extension="vnd.groove-help"
+                 mime-type="application/vnd.groove-help"/>
+
+
+    <mimeMapping extension="vnd.groove-identity-message"
+                 mime-type="application/vnd.groove-identity-message"/>
+
+
+    <mimeMapping extension="vnd.groove-injector"
+                 mime-type="application/vnd.groove-injector"/>
+
+
+    <mimeMapping extension="vnd.groove-tool-message"
+                 mime-type="application/vnd.groove-tool-message"/>
+
+
+    <mimeMapping extension="vnd.groove-tool-template"
+                 mime-type="application/vnd.groove-tool-template"/>
+
+
+    <mimeMapping extension="vnd.groove-vcard"
+                 mime-type="application/vnd.groove-vcard"/>
+
+
+    <mimeMapping extension="vnd.hal+json"
+                 mime-type="application/vnd.hal+json"/>
+
+
+    <mimeMapping extension="vnd.hal+xml"
+                 mime-type="application/vnd.hal+xml"/>
+
+
+    <mimeMapping extension="vnd.HandHeld-Entertainment+xml"
+                 mime-type="application/vnd.HandHeld-Entertainment+xml"/>
+
+
+    <mimeMapping extension="vnd.hbci"
+                 mime-type="application/vnd.hbci"/>
+
+
+    <mimeMapping extension="vnd.hcl-bireports"
+                 mime-type="application/vnd.hcl-bireports"/>
+
+
+    <mimeMapping extension="vnd.heroku+json"
+                 mime-type="application/vnd.heroku+json"/>
+
+
+    <mimeMapping extension="vnd.hhe.lesson-player"
+                 mime-type="application/vnd.hhe.lesson-player"/>
+
+
+    <mimeMapping extension="vnd.hp-HPGL"
+                 mime-type="application/vnd.hp-HPGL"/>
+
+
+    <mimeMapping extension="vnd.hp-hpid"
+                 mime-type="application/vnd.hp-hpid"/>
+
+
+    <mimeMapping extension="vnd.hp-hps"
+                 mime-type="application/vnd.hp-hps"/>
+
+
+    <mimeMapping extension="vnd.hp-jlyt"
+                 mime-type="application/vnd.hp-jlyt"/>
+
+
+    <mimeMapping extension="vnd.hp-PCL"
+                 mime-type="application/vnd.hp-PCL"/>
+
+
+    <mimeMapping extension="vnd.hp-PCLXL"
+                 mime-type="application/vnd.hp-PCLXL"/>
+
+
+    <mimeMapping extension="vnd.httphone"
+                 mime-type="application/vnd.httphone"/>
+
+
+    <mimeMapping extension="vnd.hydrostatix.sof-data"
+                 mime-type="application/vnd.hydrostatix.sof-data"/>
+
+
+    <mimeMapping extension="vnd.hzn-3d-crossword"
+                 mime-type="application/vnd.hzn-3d-crossword"/>
+
+
+    <mimeMapping extension="vnd.ibm.afplinedata"
+                 mime-type="application/vnd.ibm.afplinedata"/>
+
+
+    <mimeMapping extension="vnd.ibm.electronic-media"
+                 mime-type="application/vnd.ibm.electronic-media"/>
+
+
+    <mimeMapping extension="vnd.ibm.MiniPay"
+                 mime-type="application/vnd.ibm.MiniPay"/>
+
+
+    <mimeMapping extension="vnd.ibm.modcap"
+                 mime-type="application/vnd.ibm.modcap"/>
+
+
+    <mimeMapping extension="vnd.ibm.rights-management"
+                 mime-type="application/vnd.ibm.rights-management"/>
+
+
+    <mimeMapping extension="vnd.ibm.secure-container"
+                 mime-type="application/vnd.ibm.secure-container"/>
+
+
+    <mimeMapping extension="vnd.iccprofile"
+                 mime-type="application/vnd.iccprofile"/>
+
+
+    <mimeMapping extension="vnd.ieee.1905"
+                 mime-type="application/vnd.ieee.1905"/>
+
+
+    <mimeMapping extension="vnd.igloader"
+                 mime-type="application/vnd.igloader"/>
+
+
+    <mimeMapping extension="vnd.immervision-ivp"
+                 mime-type="application/vnd.immervision-ivp"/>
+
+
+    <mimeMapping extension="vnd.immervision-ivu"
+                 mime-type="application/vnd.immervision-ivu"/>
+
+
+    <mimeMapping extension="vnd.ims.imsccv1p1"
+                 mime-type="application/vnd.ims.imsccv1p1"/>
+
+
+    <mimeMapping extension="vnd.ims.imsccv1p2"
+                 mime-type="application/vnd.ims.imsccv1p2"/>
+
+
+    <mimeMapping extension="vnd.ims.imsccv1p3"
+                 mime-type="application/vnd.ims.imsccv1p3"/>
+
+
+    <mimeMapping extension="vnd.ims.lis.v2.result+json"
+                 mime-type="application/vnd.ims.lis.v2.result+json"/>
+
+
+    <mimeMapping extension="vnd.ims.lti.v2.toolconsumerprofile+json"
+                 mime-type="application/vnd.ims.lti.v2.toolconsumerprofile+json"/>
+
+
+    <mimeMapping extension="vnd.ims.lti.v2.toolproxy.id+json"
+                 mime-type="application/vnd.ims.lti.v2.toolproxy.id+json"/>
+
+
+    <mimeMapping extension="vnd.ims.lti.v2.toolproxy+json"
+                 mime-type="application/vnd.ims.lti.v2.toolproxy+json"/>
+
+
+    <mimeMapping extension="vnd.ims.lti.v2.toolsettings+json"
+                 mime-type="application/vnd.ims.lti.v2.toolsettings+json"/>
+
+
+    <mimeMapping extension="vnd.ims.lti.v2.toolsettings.simple+json"
+                 mime-type="application/vnd.ims.lti.v2.toolsettings.simple+json"/>
+
+
+    <mimeMapping extension="vnd.informedcontrol.rms+xml"
+                 mime-type="application/vnd.informedcontrol.rms+xml"/>
+
+
+    <mimeMapping extension="vnd.infotech.project"
+                 mime-type="application/vnd.infotech.project"/>
+
+
+    <mimeMapping extension="vnd.infotech.project+xml"
+                 mime-type="application/vnd.infotech.project+xml"/>
+
+
+    <mimeMapping extension="vnd.informix-visionary - OBSOLETED in favor of application/vnd.visionary"
+                 mime-type="application/vnd.informix-visionary"/>
+
+
+    <mimeMapping extension="vnd.innopath.wamp.notification"
+                 mime-type="application/vnd.innopath.wamp.notification"/>
+
+
+    <mimeMapping extension="vnd.insors.igm"
+                 mime-type="application/vnd.insors.igm"/>
+
+
+    <mimeMapping extension="vnd.intercon.formnet"
+                 mime-type="application/vnd.intercon.formnet"/>
+
+
+    <mimeMapping extension="vnd.intergeo"
+                 mime-type="application/vnd.intergeo"/>
+
+
+    <mimeMapping extension="vnd.intertrust.digibox"
+                 mime-type="application/vnd.intertrust.digibox"/>
+
+
+    <mimeMapping extension="vnd.intertrust.nncp"
+                 mime-type="application/vnd.intertrust.nncp"/>
+
+
+    <mimeMapping extension="vnd.intu.qbo"
+                 mime-type="application/vnd.intu.qbo"/>
+
+
+    <mimeMapping extension="vnd.intu.qfx"
+                 mime-type="application/vnd.intu.qfx"/>
+
+
+    <mimeMapping extension="vnd.iptc.g2.catalogitem+xml"
+                 mime-type="application/vnd.iptc.g2.catalogitem+xml"/>
+
+
+    <mimeMapping extension="vnd.iptc.g2.conceptitem+xml"
+                 mime-type="application/vnd.iptc.g2.conceptitem+xml"/>
+
+
+    <mimeMapping extension="vnd.iptc.g2.knowledgeitem+xml"
+                 mime-type="application/vnd.iptc.g2.knowledgeitem+xml"/>
+
+
+    <mimeMapping extension="vnd.iptc.g2.newsitem+xml"
+                 mime-type="application/vnd.iptc.g2.newsitem+xml"/>
+
+
+    <mimeMapping extension="vnd.iptc.g2.newsmessage+xml"
+                 mime-type="application/vnd.iptc.g2.newsmessage+xml"/>
+
+
+    <mimeMapping extension="vnd.iptc.g2.packageitem+xml"
+                 mime-type="application/vnd.iptc.g2.packageitem+xml"/>
+
+
+    <mimeMapping extension="vnd.iptc.g2.planningitem+xml"
+                 mime-type="application/vnd.iptc.g2.planningitem+xml"/>
+
+
+    <mimeMapping extension="vnd.ipunplugged.rcprofile"
+                 mime-type="application/vnd.ipunplugged.rcprofile"/>
+
+
+    <mimeMapping extension="vnd.irepository.package+xml"
+                 mime-type="application/vnd.irepository.package+xml"/>
+
+
+    <mimeMapping extension="vnd.is-xpr"
+                 mime-type="application/vnd.is-xpr"/>
+
+
+    <mimeMapping extension="vnd.isac.fcs"
+                 mime-type="application/vnd.isac.fcs"/>
+
+
+    <mimeMapping extension="vnd.jam"
+                 mime-type="application/vnd.jam"/>
+
+
+    <mimeMapping extension="vnd.japannet-directory-service"
+                 mime-type="application/vnd.japannet-directory-service"/>
+
+
+    <mimeMapping extension="vnd.japannet-jpnstore-wakeup"
+                 mime-type="application/vnd.japannet-jpnstore-wakeup"/>
+
+
+    <mimeMapping extension="vnd.japannet-payment-wakeup"
+                 mime-type="application/vnd.japannet-payment-wakeup"/>
+
+
+    <mimeMapping extension="vnd.japannet-registration"
+                 mime-type="application/vnd.japannet-registration"/>
+
+
+    <mimeMapping extension="vnd.japannet-registration-wakeup"
+                 mime-type="application/vnd.japannet-registration-wakeup"/>
+
+
+    <mimeMapping extension="vnd.japannet-setstore-wakeup"
+                 mime-type="application/vnd.japannet-setstore-wakeup"/>
+
+
+    <mimeMapping extension="vnd.japannet-verification"
+                 mime-type="application/vnd.japannet-verification"/>
+
+
+    <mimeMapping extension="vnd.japannet-verification-wakeup"
+                 mime-type="application/vnd.japannet-verification-wakeup"/>
+
+
+    <mimeMapping extension="vnd.jcp.javame.midlet-rms"
+                 mime-type="application/vnd.jcp.javame.midlet-rms"/>
+
+
+    <mimeMapping extension="vnd.jisp"
+                 mime-type="application/vnd.jisp"/>
+
+
+    <mimeMapping extension="vnd.joost.joda-archive"
+                 mime-type="application/vnd.joost.joda-archive"/>
+
+
+    <mimeMapping extension="vnd.jsk.isdn-ngn"
+                 mime-type="application/vnd.jsk.isdn-ngn"/>
+
+
+    <mimeMapping extension="vnd.kahootz"
+                 mime-type="application/vnd.kahootz"/>
+
+
+    <mimeMapping extension="vnd.kde.karbon"
+                 mime-type="application/vnd.kde.karbon"/>
+
+
+    <mimeMapping extension="vnd.kde.kchart"
+                 mime-type="application/vnd.kde.kchart"/>
+
+
+    <mimeMapping extension="vnd.kde.kformula"
+                 mime-type="application/vnd.kde.kformula"/>
+
+
+    <mimeMapping extension="vnd.kde.kivio"
+                 mime-type="application/vnd.kde.kivio"/>
+
+
+    <mimeMapping extension="vnd.kde.kontour"
+                 mime-type="application/vnd.kde.kontour"/>
+
+
+    <mimeMapping extension="vnd.kde.kpresenter"
+                 mime-type="application/vnd.kde.kpresenter"/>
+
+
+    <mimeMapping extension="vnd.kde.kspread"
+                 mime-type="application/vnd.kde.kspread"/>
+
+
+    <mimeMapping extension="vnd.kde.kword"
+                 mime-type="application/vnd.kde.kword"/>
+
+
+    <mimeMapping extension="vnd.kenameaapp"
+                 mime-type="application/vnd.kenameaapp"/>
+
+
+    <mimeMapping extension="vnd.kidspiration"
+                 mime-type="application/vnd.kidspiration"/>
+
+
+    <mimeMapping extension="vnd.Kinar"
+                 mime-type="application/vnd.Kinar"/>
+
+
+    <mimeMapping extension="vnd.koan"
+                 mime-type="application/vnd.koan"/>
+
+
+    <mimeMapping extension="vnd.kodak-descriptor"
+                 mime-type="application/vnd.kodak-descriptor"/>
+
+
+    <mimeMapping extension="vnd.las.las+xml"
+                 mime-type="application/vnd.las.las+xml"/>
+
+
+    <mimeMapping extension="vnd.liberty-request+xml"
+                 mime-type="application/vnd.liberty-request+xml"/>
+
+
+    <mimeMapping extension="vnd.llamagraphics.life-balance.desktop"
+                 mime-type="application/vnd.llamagraphics.life-balance.desktop"/>
+
+
+    <mimeMapping extension="vnd.llamagraphics.life-balance.exchange+xml"
+                 mime-type="application/vnd.llamagraphics.life-balance.exchange+xml"/>
+
+
+    <mimeMapping extension="vnd.lotus-1-2-3"
+                 mime-type="application/vnd.lotus-1-2-3"/>
+
+
+    <mimeMapping extension="vnd.lotus-approach"
+                 mime-type="application/vnd.lotus-approach"/>
+
+
+    <mimeMapping extension="vnd.lotus-freelance"
+                 mime-type="application/vnd.lotus-freelance"/>
+
+
+    <mimeMapping extension="vnd.lotus-notes"
+                 mime-type="application/vnd.lotus-notes"/>
+
+
+    <mimeMapping extension="vnd.lotus-organizer"
+                 mime-type="application/vnd.lotus-organizer"/>
+
+
+    <mimeMapping extension="vnd.lotus-screencam"
+                 mime-type="application/vnd.lotus-screencam"/>
+
+
+    <mimeMapping extension="vnd.lotus-wordpro"
+                 mime-type="application/vnd.lotus-wordpro"/>
+
+
+    <mimeMapping extension="vnd.macports.portpkg"
+                 mime-type="application/vnd.macports.portpkg"/>
+
+
+    <mimeMapping extension="vnd.marlin.drm.actiontoken+xml"
+                 mime-type="application/vnd.marlin.drm.actiontoken+xml"/>
+
+
+    <mimeMapping extension="vnd.marlin.drm.conftoken+xml"
+                 mime-type="application/vnd.marlin.drm.conftoken+xml"/>
+
+
+    <mimeMapping extension="vnd.marlin.drm.license+xml"
+                 mime-type="application/vnd.marlin.drm.license+xml"/>
+
+
+    <mimeMapping extension="vnd.marlin.drm.mdcf"
+                 mime-type="application/vnd.marlin.drm.mdcf"/>
+
+
+    <mimeMapping extension="vnd.mason+json"
+                 mime-type="application/vnd.mason+json"/>
+
+
+    <mimeMapping extension="vnd.maxmind.maxmind-db"
+                 mime-type="application/vnd.maxmind.maxmind-db"/>
+
+
+    <mimeMapping extension="vnd.mcd"
+                 mime-type="application/vnd.mcd"/>
+
+
+    <mimeMapping extension="vnd.medcalcdata"
+                 mime-type="application/vnd.medcalcdata"/>
+
+
+    <mimeMapping extension="vnd.mediastation.cdkey"
+                 mime-type="application/vnd.mediastation.cdkey"/>
+
+
+    <mimeMapping extension="vnd.meridian-slingshot"
+                 mime-type="application/vnd.meridian-slingshot"/>
+
+
+    <mimeMapping extension="vnd.MFER"
+                 mime-type="application/vnd.MFER"/>
+
+
+    <mimeMapping extension="vnd.mfmp"
+                 mime-type="application/vnd.mfmp"/>
+
+
+    <mimeMapping extension="vnd.micrografx.flo"
+                 mime-type="application/vnd.micrografx.flo"/>
+
+
+    <mimeMapping extension="vnd.micrografx.igx"
+                 mime-type="application/vnd.micrografx-igx"/>
+
+
+    <mimeMapping extension="vnd.miele+json"
+                 mime-type="application/vnd.miele+json"/>
+
+
+    <mimeMapping extension="vnd.mif"
+                 mime-type="application/vnd-mif"/>
+
+
+    <mimeMapping extension="vnd.minisoft-hp3000-save"
+                 mime-type="application/vnd.minisoft-hp3000-save"/>
+
+
+    <mimeMapping extension="vnd.mitsubishi.misty-guard.trustweb"
+                 mime-type="application/vnd.mitsubishi.misty-guard.trustweb"/>
+
+
+    <mimeMapping extension="vnd.Mobius.DAF"
+                 mime-type="application/vnd.Mobius.DAF"/>
+
+
+    <mimeMapping extension="vnd.Mobius.DIS"
+                 mime-type="application/vnd.Mobius.DIS"/>
+
+
+    <mimeMapping extension="vnd.Mobius.MBK"
+                 mime-type="application/vnd.Mobius.MBK"/>
+
+
+    <mimeMapping extension="vnd.Mobius.MQY"
+                 mime-type="application/vnd.Mobius.MQY"/>
+
+
+    <mimeMapping extension="vnd.Mobius.MSL"
+                 mime-type="application/vnd.Mobius.MSL"/>
+
+
+    <mimeMapping extension="vnd.Mobius.PLC"
+                 mime-type="application/vnd.Mobius.PLC"/>
+
+
+    <mimeMapping extension="vnd.Mobius.TXF"
+                 mime-type="application/vnd.Mobius.TXF"/>
+
+
+    <mimeMapping extension="vnd.mophun.application"
+                 mime-type="application/vnd.mophun.application"/>
+
+
+    <mimeMapping extension="vnd.mophun.certificate"
+                 mime-type="application/vnd.mophun.certificate"/>
+
+
+    <mimeMapping extension="vnd.motorola.flexsuite"
+                 mime-type="application/vnd.motorola.flexsuite"/>
+
+
+    <mimeMapping extension="vnd.motorola.flexsuite.adsi"
+                 mime-type="application/vnd.motorola.flexsuite.adsi"/>
+
+
+    <mimeMapping extension="vnd.motorola.flexsuite.fis"
+                 mime-type="application/vnd.motorola.flexsuite.fis"/>
+
+
+    <mimeMapping extension="vnd.motorola.flexsuite.gotap"
+                 mime-type="application/vnd.motorola.flexsuite.gotap"/>
+
+
+    <mimeMapping extension="vnd.motorola.flexsuite.kmr"
+                 mime-type="application/vnd.motorola.flexsuite.kmr"/>
+
+
+    <mimeMapping extension="vnd.motorola.flexsuite.ttc"
+                 mime-type="application/vnd.motorola.flexsuite.ttc"/>
+
+
+    <mimeMapping extension="vnd.motorola.flexsuite.wem"
+                 mime-type="application/vnd.motorola.flexsuite.wem"/>
+
+
+    <mimeMapping extension="vnd.motorola.iprm"
+                 mime-type="application/vnd.motorola.iprm"/>
+
+
+    <mimeMapping extension="vnd.mozilla.xul+xml"
+                 mime-type="application/vnd.mozilla.xul+xml"/>
+
+
+    <mimeMapping extension="vnd.ms-artgalry"
+                 mime-type="application/vnd.ms-artgalry"/>
+
+
+    <mimeMapping extension="vnd.ms-asf"
+                 mime-type="application/vnd.ms-asf"/>
+
+
+    <mimeMapping extension="vnd.ms-cab-compressed"
+                 mime-type="application/vnd.ms-cab-compressed"/>
+
+
+    <mimeMapping extension="vnd.ms-3mfdocument"
+                 mime-type="application/vnd.ms-3mfdocument"/>
+
+
+    <mimeMapping extension="vnd.ms-excel"
+                 mime-type="application/vnd.ms-excel"/>
+
+
+    <mimeMapping extension="vnd.ms-excel.addin.macroEnabled.12"
+                 mime-type="application/vnd.ms-excel.addin.macroEnabled.12"/>
+
+
+    <mimeMapping extension="vnd.ms-excel.sheet.binary.macroEnabled.12"
+                 mime-type="application/vnd.ms-excel.sheet.binary.macroEnabled.12"/>
+
+
+    <mimeMapping extension="vnd.ms-excel.sheet.macroEnabled.12"
+                 mime-type="application/vnd.ms-excel.sheet.macroEnabled.12"/>
+
+
+    <mimeMapping extension="vnd.ms-excel.template.macroEnabled.12"
+                 mime-type="application/vnd.ms-excel.template.macroEnabled.12"/>
+
+
+    <mimeMapping extension="vnd.ms-fontobject"
+                 mime-type="application/vnd.ms-fontobject"/>
+
+
+    <mimeMapping extension="vnd.ms-htmlhelp"
+                 mime-type="application/vnd.ms-htmlhelp"/>
+
+
+    <mimeMapping extension="vnd.ms-ims"
+                 mime-type="application/vnd.ms-ims"/>
+
+
+    <mimeMapping extension="vnd.ms-lrm"
+                 mime-type="application/vnd.ms-lrm"/>
+
+
+    <mimeMapping extension="vnd.ms-office.activeX+xml"
+                 mime-type="application/vnd.ms-office.activeX+xml"/>
+
+
+    <mimeMapping extension="vnd.ms-officetheme"
+                 mime-type="application/vnd.ms-officetheme"/>
+
+
+    <mimeMapping extension="vnd.ms-playready.initiator+xml"
+                 mime-type="application/vnd.ms-playready.initiator+xml"/>
+
+
+    <mimeMapping extension="vnd.ms-powerpoint"
+                 mime-type="application/vnd.ms-powerpoint"/>
+
+
+    <mimeMapping extension="vnd.ms-powerpoint.addin.macroEnabled.12"
+                 mime-type="application/vnd.ms-powerpoint.addin.macroEnabled.12"/>
+
+
+    <mimeMapping extension="vnd.ms-powerpoint.presentation.macroEnabled.12"
+                 mime-type="application/vnd.ms-powerpoint.presentation.macroEnabled.12"/>
+
+
+    <mimeMapping extension="vnd.ms-powerpoint.slide.macroEnabled.12"
+                 mime-type="application/vnd.ms-powerpoint.slide.macroEnabled.12"/>
+
+
+    <mimeMapping extension="vnd.ms-powerpoint.slideshow.macroEnabled.12"
+                 mime-type="application/vnd.ms-powerpoint.slideshow.macroEnabled.12"/>
+
+
+    <mimeMapping extension="vnd.ms-powerpoint.template.macroEnabled.12"
+                 mime-type="application/vnd.ms-powerpoint.template.macroEnabled.12"/>
+
+
+    <mimeMapping extension="vnd.ms-project"
+                 mime-type="application/vnd.ms-project"/>
+
+
+    <mimeMapping extension="vnd.ms-tnef"
+                 mime-type="application/vnd.ms-tnef"/>
+
+
+    <mimeMapping extension="vnd.ms-windows.printerpairing"
+                 mime-type="application/vnd.ms-windows.printerpairing"/>
+
+
+    <mimeMapping extension="vnd.ms-wmdrm.lic-chlg-req"
+                 mime-type="application/vnd.ms-wmdrm.lic-chlg-req"/>
+
+
+    <mimeMapping extension="vnd.ms-wmdrm.lic-resp"
+                 mime-type="application/vnd.ms-wmdrm.lic-resp"/>
+
+
+    <mimeMapping extension="vnd.ms-wmdrm.meter-chlg-req"
+                 mime-type="application/vnd.ms-wmdrm.meter-chlg-req"/>
+
+
+    <mimeMapping extension="vnd.ms-wmdrm.meter-resp"
+                 mime-type="application/vnd.ms-wmdrm.meter-resp"/>
+
+
+    <mimeMapping extension="vnd.ms-word.document.macroEnabled.12"
+                 mime-type="application/vnd.ms-word.document.macroEnabled.12"/>
+
+
+    <mimeMapping extension="vnd.ms-word.template.macroEnabled.12"
+                 mime-type="application/vnd.ms-word.template.macroEnabled.12"/>
+
+
+    <mimeMapping extension="vnd.ms-works"
+                 mime-type="application/vnd.ms-works"/>
+
+
+    <mimeMapping extension="vnd.ms-wpl"
+                 mime-type="application/vnd.ms-wpl"/>
+
+
+    <mimeMapping extension="vnd.ms-xpsdocument"
+                 mime-type="application/vnd.ms-xpsdocument"/>
+
+
+    <mimeMapping extension="vnd.msa-disk-image"
+                 mime-type="application/vnd.msa-disk-image"/>
+
+
+    <mimeMapping extension="vnd.mseq"
+                 mime-type="application/vnd.mseq"/>
+
+
+    <mimeMapping extension="vnd.msign"
+                 mime-type="application/vnd.msign"/>
+
+
+    <mimeMapping extension="vnd.multiad.creator"
+                 mime-type="application/vnd.multiad.creator"/>
+
+
+    <mimeMapping extension="vnd.multiad.creator.cif"
+                 mime-type="application/vnd.multiad.creator.cif"/>
+
+
+    <mimeMapping extension="vnd.musician"
+                 mime-type="application/vnd.musician"/>
+
+
+    <mimeMapping extension="vnd.music-niff"
+                 mime-type="application/vnd.music-niff"/>
+
+
+    <mimeMapping extension="vnd.muvee.style"
+                 mime-type="application/vnd.muvee.style"/>
+
+
+    <mimeMapping extension="vnd.mynfc"
+                 mime-type="application/vnd.mynfc"/>
+
+
+    <mimeMapping extension="vnd.ncd.control"
+                 mime-type="application/vnd.ncd.control"/>
+
+
+    <mimeMapping extension="vnd.ncd.reference"
+                 mime-type="application/vnd.ncd.reference"/>
+
+
+    <mimeMapping extension="vnd.nervana"
+                 mime-type="application/vnd.nervana"/>
+
+
+    <mimeMapping extension="vnd.netfpx"
+                 mime-type="application/vnd.netfpx"/>
+
+
+    <mimeMapping extension="vnd.neurolanguage.nlu"
+                 mime-type="application/vnd.neurolanguage.nlu"/>
+
+
+    <mimeMapping extension="vnd.nintendo.snes.rom"
+                 mime-type="application/vnd.nintendo.snes.rom"/>
+
+
+    <mimeMapping extension="vnd.nintendo.nitro.rom"
+                 mime-type="application/vnd.nintendo.nitro.rom"/>
+
+
+    <mimeMapping extension="vnd.nitf"
+                 mime-type="application/vnd.nitf"/>
+
+
+    <mimeMapping extension="vnd.noblenet-directory"
+                 mime-type="application/vnd.noblenet-directory"/>
+
+
+    <mimeMapping extension="vnd.noblenet-sealer"
+                 mime-type="application/vnd.noblenet-sealer"/>
+
+
+    <mimeMapping extension="vnd.noblenet-web"
+                 mime-type="application/vnd.noblenet-web"/>
+
+
+    <mimeMapping extension="vnd.nokia.catalogs"
+                 mime-type="application/vnd.nokia.catalogs"/>
+
+
+    <mimeMapping extension="vnd.nokia.conml+wbxml"
+                 mime-type="application/vnd.nokia.conml+wbxml"/>
+
+
+    <mimeMapping extension="vnd.nokia.conml+xml"
+                 mime-type="application/vnd.nokia.conml+xml"/>
+
+
+    <mimeMapping extension="vnd.nokia.iptv.config+xml"
+                 mime-type="application/vnd.nokia.iptv.config+xml"/>
+
+
+    <mimeMapping extension="vnd.nokia.iSDS-radio-presets"
+                 mime-type="application/vnd.nokia.iSDS-radio-presets"/>
+
+
+    <mimeMapping extension="vnd.nokia.landmark+wbxml"
+                 mime-type="application/vnd.nokia.landmark+wbxml"/>
+
+
+    <mimeMapping extension="vnd.nokia.landmark+xml"
+                 mime-type="application/vnd.nokia.landmark+xml"/>
+
+
+    <mimeMapping extension="vnd.nokia.landmarkcollection+xml"
+                 mime-type="application/vnd.nokia.landmarkcollection+xml"/>
+
+
+    <mimeMapping extension="vnd.nokia.ncd"
+                 mime-type="application/vnd.nokia.ncd"/>
+
+
+    <mimeMapping extension="vnd.nokia.n-gage.ac+xml"
+                 mime-type="application/vnd.nokia.n-gage.ac+xml"/>
+
+
+    <mimeMapping extension="vnd.nokia.n-gage.data"
+                 mime-type="application/vnd.nokia.n-gage.data"/>
+
+
+    <mimeMapping extension="vnd.nokia.n-gage.symbian.install - OBSOLETE; no replacement given"
+                 mime-type="application/vnd.nokia.n-gage.symbian.install"/>
+
+
+    <mimeMapping extension="vnd.nokia.pcd+wbxml"
+                 mime-type="application/vnd.nokia.pcd+wbxml"/>
+
+
+    <mimeMapping extension="vnd.nokia.pcd+xml"
+                 mime-type="application/vnd.nokia.pcd+xml"/>
+
+
+    <mimeMapping extension="vnd.nokia.radio-preset"
+                 mime-type="application/vnd.nokia.radio-preset"/>
+
+
+    <mimeMapping extension="vnd.nokia.radio-presets"
+                 mime-type="application/vnd.nokia.radio-presets"/>
+
+
+    <mimeMapping extension="vnd.novadigm.EDM"
+                 mime-type="application/vnd.novadigm.EDM"/>
+
+
+    <mimeMapping extension="vnd.novadigm.EDX"
+                 mime-type="application/vnd.novadigm.EDX"/>
+
+
+    <mimeMapping extension="vnd.novadigm.EXT"
+                 mime-type="application/vnd.novadigm.EXT"/>
+
+
+    <mimeMapping extension="vnd.ntt-local.content-share"
+                 mime-type="application/vnd.ntt-local.content-share"/>
+
+
+    <mimeMapping extension="vnd.ntt-local.file-transfer"
+                 mime-type="application/vnd.ntt-local.file-transfer"/>
+
+
+    <mimeMapping extension="vnd.ntt-local.ogw_remote-access"
+                 mime-type="application/vnd.ntt-local.ogw_remote-access"/>
+
+
+    <mimeMapping extension="vnd.ntt-local.sip-ta_remote"
+                 mime-type="application/vnd.ntt-local.sip-ta_remote"/>
+
+
+    <mimeMapping extension="vnd.ntt-local.sip-ta_tcp_stream"
+                 mime-type="application/vnd.ntt-local.sip-ta_tcp_stream"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.chart"
+                 mime-type="application/vnd.oasis.opendocument.chart"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.chart-template"
+                 mime-type="application/vnd.oasis.opendocument.chart-template"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.database"
+                 mime-type="application/vnd.oasis.opendocument.database"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.formula"
+                 mime-type="application/vnd.oasis.opendocument.formula"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.formula-template"
+                 mime-type="application/vnd.oasis.opendocument.formula-template"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.graphics"
+                 mime-type="application/vnd.oasis.opendocument.graphics"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.graphics-template"
+                 mime-type="application/vnd.oasis.opendocument.graphics-template"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.image"
+                 mime-type="application/vnd.oasis.opendocument.image"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.image-template"
+                 mime-type="application/vnd.oasis.opendocument.image-template"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.presentation"
+                 mime-type="application/vnd.oasis.opendocument.presentation"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.presentation-template"
+                 mime-type="application/vnd.oasis.opendocument.presentation-template"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.spreadsheet"
+                 mime-type="application/vnd.oasis.opendocument.spreadsheet"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.spreadsheet-template"
+                 mime-type="application/vnd.oasis.opendocument.spreadsheet-template"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.text"
+                 mime-type="application/vnd.oasis.opendocument.text"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.text-master"
+                 mime-type="application/vnd.oasis.opendocument.text-master"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.text-template"
+                 mime-type="application/vnd.oasis.opendocument.text-template"/>
+
+
+    <mimeMapping extension="vnd.oasis.opendocument.text-web"
+                 mime-type="application/vnd.oasis.opendocument.text-web"/>
+
+
+    <mimeMapping extension="vnd.obn"
+                 mime-type="application/vnd.obn"/>
+
+
+    <mimeMapping extension="vnd.oftn.l10n+json"
+                 mime-type="application/vnd.oftn.l10n+json"/>
+
+
+    <mimeMapping extension="vnd.oipf.contentaccessdownload+xml"
+                 mime-type="application/vnd.oipf.contentaccessdownload+xml"/>
+
+
+    <mimeMapping extension="vnd.oipf.contentaccessstreaming+xml"
+                 mime-type="application/vnd.oipf.contentaccessstreaming+xml"/>
+
+
+    <mimeMapping extension="vnd.oipf.cspg-hexbinary"
+                 mime-type="application/vnd.oipf.cspg-hexbinary"/>
+
+
+    <mimeMapping extension="vnd.oipf.dae.svg+xml"
+                 mime-type="application/vnd.oipf.dae.svg+xml"/>
+
+
+    <mimeMapping extension="vnd.oipf.dae.xhtml+xml"
+                 mime-type="application/vnd.oipf.dae.xhtml+xml"/>
+
+
+    <mimeMapping extension="vnd.oipf.mippvcontrolmessage+xml"
+                 mime-type="application/vnd.oipf.mippvcontrolmessage+xml"/>
+
+
+    <mimeMapping extension="vnd.oipf.pae.gem"
+                 mime-type="application/vnd.oipf.pae.gem"/>
+
+
+    <mimeMapping extension="vnd.oipf.spdiscovery+xml"
+                 mime-type="application/vnd.oipf.spdiscovery+xml"/>
+
+
+    <mimeMapping extension="vnd.oipf.spdlist+xml"
+                 mime-type="application/vnd.oipf.spdlist+xml"/>
+
+
+    <mimeMapping extension="vnd.oipf.ueprofile+xml"
+                 mime-type="application/vnd.oipf.ueprofile+xml"/>
+
+
+    <mimeMapping extension="vnd.oipf.userprofile+xml"
+                 mime-type="application/vnd.oipf.userprofile+xml"/>
+
+
+    <mimeMapping extension="vnd.olpc-sugar"
+                 mime-type="application/vnd.olpc-sugar"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.associated-procedure-parameter+xml"
+                 mime-type="application/vnd.oma.bcast.associated-procedure-parameter+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.drm-trigger+xml"
+                 mime-type="application/vnd.oma.bcast.drm-trigger+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.imd+xml"
+                 mime-type="application/vnd.oma.bcast.imd+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.ltkm"
+                 mime-type="application/vnd.oma.bcast.ltkm"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.notification+xml"
+                 mime-type="application/vnd.oma.bcast.notification+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.provisioningtrigger"
+                 mime-type="application/vnd.oma.bcast.provisioningtrigger"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.sgboot"
+                 mime-type="application/vnd.oma.bcast.sgboot"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.sgdd+xml"
+                 mime-type="application/vnd.oma.bcast.sgdd+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.sgdu"
+                 mime-type="application/vnd.oma.bcast.sgdu"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.simple-symbol-container"
+                 mime-type="application/vnd.oma.bcast.simple-symbol-container"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.smartcard-trigger+xml"
+                 mime-type="application/vnd.oma.bcast.smartcard-trigger+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.sprov+xml"
+                 mime-type="application/vnd.oma.bcast.sprov+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.bcast.stkm"
+                 mime-type="application/vnd.oma.bcast.stkm"/>
+
+
+    <mimeMapping extension="vnd.oma.cab-address-book+xml"
+                 mime-type="application/vnd.oma.cab-address-book+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.cab-feature-handler+xml"
+                 mime-type="application/vnd.oma.cab-feature-handler+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.cab-pcc+xml"
+                 mime-type="application/vnd.oma.cab-pcc+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.cab-subs-invite+xml"
+                 mime-type="application/vnd.oma.cab-subs-invite+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.cab-user-prefs+xml"
+                 mime-type="application/vnd.oma.cab-user-prefs+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.dcd"
+                 mime-type="application/vnd.oma.dcd"/>
+
+
+    <mimeMapping extension="vnd.oma.dcdc"
+                 mime-type="application/vnd.oma.dcdc"/>
+
+
+    <mimeMapping extension="vnd.oma.dd2+xml"
+                 mime-type="application/vnd.oma.dd2+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.drm.risd+xml"
+                 mime-type="application/vnd.oma.drm.risd+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.group-usage-list+xml"
+                 mime-type="application/vnd.oma.group-usage-list+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.pal+xml"
+                 mime-type="application/vnd.oma.pal+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.poc.detailed-progress-report+xml"
+                 mime-type="application/vnd.oma.poc.detailed-progress-report+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.poc.final-report+xml"
+                 mime-type="application/vnd.oma.poc.final-report+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.poc.groups+xml"
+                 mime-type="application/vnd.oma.poc.groups+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.poc.invocation-descriptor+xml"
+                 mime-type="application/vnd.oma.poc.invocation-descriptor+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.poc.optimized-progress-report+xml"
+                 mime-type="application/vnd.oma.poc.optimized-progress-report+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.push"
+                 mime-type="application/vnd.oma.push"/>
+
+
+    <mimeMapping extension="vnd.oma.scidm.messages+xml"
+                 mime-type="application/vnd.oma.scidm.messages+xml"/>
+
+
+    <mimeMapping extension="vnd.oma.xcap-directory+xml"
+                 mime-type="application/vnd.oma.xcap-directory+xml"/>
+
+
+    <mimeMapping extension="vnd.omads-email+xml"
+                 mime-type="application/vnd.omads-email+xml"/>
+
+
+    <mimeMapping extension="vnd.omads-file+xml"
+                 mime-type="application/vnd.omads-file+xml"/>
+
+
+    <mimeMapping extension="vnd.omads-folder+xml"
+                 mime-type="application/vnd.omads-folder+xml"/>
+
+
+    <mimeMapping extension="vnd.omaloc-supl-init"
+                 mime-type="application/vnd.omaloc-supl-init"/>
+
+
+    <mimeMapping extension="vnd.oma-scws-config"
+                 mime-type="application/vnd.oma-scws-config"/>
+
+
+    <mimeMapping extension="vnd.oma-scws-http-request"
+                 mime-type="application/vnd.oma-scws-http-request"/>
+
+
+    <mimeMapping extension="vnd.oma-scws-http-response"
+                 mime-type="application/vnd.oma-scws-http-response"/>
+
+
+    <mimeMapping extension="vnd.openeye.oeb"
+                 mime-type="application/vnd.openeye.oeb"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.custom-properties+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.custom-properties+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.customXmlProperties+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.customXmlProperties+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.drawing+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.drawing+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.drawingml.chart+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.drawingml.chart+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.drawingml.chartshapes+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.drawingml.chartshapes+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.drawingml.diagramColors+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.drawingml.diagramColors+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.drawingml.diagramData+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.drawingml.diagramData+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.drawingml.diagramLayout+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.drawingml.diagramLayout+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.drawingml.diagramStyle+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.drawingml.diagramStyle+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.extended-properties+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.commentAuthors+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.commentAuthors+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.comments+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.comments+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.handoutMaster+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.handoutMaster+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.notesMaster+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.notesMaster+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.notesSlide+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.presentation"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.presentation"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.presProps+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.presProps+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.slide"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.slide"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.slide+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.slideLayout+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.slideMaster+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.slideshow"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.slideshow"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.slideUpdateInfo+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.slideUpdateInfo+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.tableStyles+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.tableStyles+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.tags+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.tags+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.template"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml-template"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.template.main+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.template.main+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.presentationml.viewProps+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.presentationml.viewProps+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.calcChain+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.calcChain+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.comments+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.connections+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.connections+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.dialogsheet+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.dialogsheet+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.externalLink+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.externalLink+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.pivotCacheDefinition+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.pivotCacheDefinition+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.pivotCacheRecords+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.pivotCacheRecords+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.pivotTable+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.pivotTable+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.queryTable+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.queryTable+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.revisionHeaders+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.revisionHeaders+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.revisionLog+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.revisionLog+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.sheetMetadata+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheetMetadata+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.table+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.tableSingleCells+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.tableSingleCells+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.template"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml-template"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.template.main+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.template.main+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.userNames+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.userNames+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.volatileDependencies+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.volatileDependencies+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.theme+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.theme+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.themeOverride+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.themeOverride+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.vmlDrawing"
+                 mime-type="application/vnd.openxmlformats-officedocument.vmlDrawing"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.comments+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.document"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.template"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml-template"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"
+                 mime-type="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-package.core-properties+xml"
+                 mime-type="application/vnd.openxmlformats-package.core-properties+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-package.digital-signature-xmlsignature+xml"
+                 mime-type="application/vnd.openxmlformats-package.digital-signature-xmlsignature+xml"/>
+
+
+    <mimeMapping extension="vnd.openxmlformats-package.relationships+xml"
+                 mime-type="application/vnd.openxmlformats-package.relationships+xml"/>
+
+
+    <mimeMapping extension="vnd.oracle.resource+json"
+                 mime-type="application/vnd.oracle.resource+json"/>
+
+
+    <mimeMapping extension="vnd.orange.indata"
+                 mime-type="application/vnd.orange.indata"/>
+
+
+    <mimeMapping extension="vnd.osa.netdeploy"
+                 mime-type="application/vnd.osa.netdeploy"/>
+
+
+    <mimeMapping extension="vnd.osgeo.mapguide.package"
+                 mime-type="application/vnd.osgeo.mapguide.package"/>
+
+
+    <mimeMapping extension="vnd.osgi.bundle"
+                 mime-type="application/vnd.osgi.bundle"/>
+
+
+    <mimeMapping extension="vnd.osgi.dp"
+                 mime-type="application/vnd.osgi.dp"/>
+
+
+    <mimeMapping extension="vnd.osgi.subsystem"
+                 mime-type="application/vnd.osgi.subsystem"/>
+
+
+    <mimeMapping extension="vnd.otps.ct-kip+xml"
+                 mime-type="application/vnd.otps.ct-kip+xml"/>
+
+
+    <mimeMapping extension="vnd.palm"
+                 mime-type="application/vnd.palm"/>
+
+
+    <mimeMapping extension="vnd.panoply"
+                 mime-type="application/vnd.panoply"/>
+
+
+    <mimeMapping extension="vnd.paos.xml"
+                 mime-type="application/vnd.paos+xml"/>
+
+
+    <mimeMapping extension="vnd.pawaafile"
+                 mime-type="application/vnd.pawaafile"/>
+
+
+    <mimeMapping extension="vnd.pcos"
+                 mime-type="application/vnd.pcos"/>
+
+
+    <mimeMapping extension="vnd.pg.format"
+                 mime-type="application/vnd.pg.format"/>
+
+
+    <mimeMapping extension="vnd.pg.osasli"
+                 mime-type="application/vnd.pg.osasli"/>
+
+
+    <mimeMapping extension="vnd.piaccess.application-licence"
+                 mime-type="application/vnd.piaccess.application-licence"/>
+
+
+    <mimeMapping extension="vnd.picsel"
+                 mime-type="application/vnd.picsel"/>
+
+
+    <mimeMapping extension="vnd.pmi.widget"
+                 mime-type="application/vnd.pmi.widget"/>
+
+
+    <mimeMapping extension="vnd.poc.group-advertisement+xml"
+                 mime-type="application/vnd.poc.group-advertisement+xml"/>
+
+
+    <mimeMapping extension="vnd.pocketlearn"
+                 mime-type="application/vnd.pocketlearn"/>
+
+
+    <mimeMapping extension="vnd.powerbuilder6"
+                 mime-type="application/vnd.powerbuilder6"/>
+
+
+    <mimeMapping extension="vnd.powerbuilder6-s"
+                 mime-type="application/vnd.powerbuilder6-s"/>
+
+
+    <mimeMapping extension="vnd.powerbuilder7"
+                 mime-type="application/vnd.powerbuilder7"/>
+
+
+    <mimeMapping extension="vnd.powerbuilder75"
+                 mime-type="application/vnd.powerbuilder75"/>
+
+
+    <mimeMapping extension="vnd.powerbuilder75-s"
+                 mime-type="application/vnd.powerbuilder75-s"/>
+
+
+    <mimeMapping extension="vnd.powerbuilder7-s"
+                 mime-type="application/vnd.powerbuilder7-s"/>
+
+
+    <mimeMapping extension="vnd.preminet"
+                 mime-type="application/vnd.preminet"/>
+
+
+    <mimeMapping extension="vnd.previewsystems.box"
+                 mime-type="application/vnd.previewsystems.box"/>
+
+
+    <mimeMapping extension="vnd.proteus.magazine"
+                 mime-type="application/vnd.proteus.magazine"/>
+
+
+    <mimeMapping extension="vnd.publishare-delta-tree"
+                 mime-type="application/vnd.publishare-delta-tree"/>
+
+
+    <mimeMapping extension="vnd.pvi.ptid1"
+                 mime-type="application/vnd.pvi.ptid1"/>
+
+
+    <mimeMapping extension="vnd.pwg-multiplexed"
+                 mime-type="application/vwg-multiplexed"/>
+
+
+    <mimeMapping extension="vnd.pwg-xhtml-print+xml"
+                 mime-type="application/vnd.pwg-xhtml-print+xml"/>
+
+
+    <mimeMapping extension="vnd.qualcomm.brew-app-res"
+                 mime-type="application/vnd.qualcomm.brew-app-res"/>
+
+
+    <mimeMapping extension="vnd.Quark.QuarkXPress"
+                 mime-type="application/vnd.Quark.QuarkXPress"/>
+
+
+    <mimeMapping extension="vnd.quobject-quoxdocument"
+                 mime-type="application/vnd.quobject-quoxdocument"/>
+
+
+    <mimeMapping extension="vnd.radisys.moml+xml"
+                 mime-type="application/vnd.radisys.moml+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-audit-conf+xml"
+                 mime-type="application/vnd.radisys.msml-audit-conf+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-audit-conn+xml"
+                 mime-type="application/vnd.radisys.msml-audit-conn+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-audit-dialog+xml"
+                 mime-type="application/vnd.radisys.msml-audit-dialog+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-audit-stream+xml"
+                 mime-type="application/vnd.radisys.msml-audit-stream+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-audit+xml"
+                 mime-type="application/vnd.radisys.msml-audit+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-conf+xml"
+                 mime-type="application/vnd.radisys.msml-conf+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-dialog-base+xml"
+                 mime-type="application/vnd.radisys.msml-dialog-base+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-dialog-fax-detect+xml"
+                 mime-type="application/vnd.radisys.msml-dialog-fax-detect+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-dialog-fax-sendrecv+xml"
+                 mime-type="application/vnd.radisys.msml-dialog-fax-sendrecv+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-dialog-group+xml"
+                 mime-type="application/vnd.radisys.msml-dialog-group+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-dialog-speech+xml"
+                 mime-type="application/vnd.radisys.msml-dialog-speech+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-dialog-transform+xml"
+                 mime-type="application/vnd.radisys.msml-dialog-transform+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml-dialog+xml"
+                 mime-type="application/vnd.radisys.msml-dialog+xml"/>
+
+
+    <mimeMapping extension="vnd.radisys.msml+xml"
+                 mime-type="application/vnd.radisys.msml+xml"/>
+
+
+    <mimeMapping extension="vnd.rainstor.data"
+                 mime-type="application/vnd.rainstor.data"/>
+
+
+    <mimeMapping extension="vnd.rapid"
+                 mime-type="application/vnd.rapid"/>
+
+
+    <mimeMapping extension="vnd.realvnc.bed"
+                 mime-type="application/vnd.realvnc.bed"/>
+
+
+    <mimeMapping extension="vnd.recordare.musicxml"
+                 mime-type="application/vnd.recordare.musicxml"/>
+
+
+    <mimeMapping extension="vnd.recordare.musicxml+xml"
+                 mime-type="application/vnd.recordare.musicxml+xml"/>
+
+
+    <mimeMapping extension="vnd.RenLearn.rlprint"
+                 mime-type="application/vnd.renlearn.rlprint"/>
+
+
+    <mimeMapping extension="vnd.rig.cryptonote"
+                 mime-type="application/vnd.rig.cryptonote"/>
+
+
+    <mimeMapping extension="vnd.route66.link66+xml"
+                 mime-type="application/vnd.route66.link66+xml"/>
+
+
+    <mimeMapping extension="vnd.rs-274x"
+                 mime-type="application/vnd.rs-274x"/>
+
+
+    <mimeMapping extension="vnd.ruckus.download"
+                 mime-type="application/vnd.ruckus.download"/>
+
+
+    <mimeMapping extension="vnd.s3sms"
+                 mime-type="application/vnd.s3sms"/>
+
+
+    <mimeMapping extension="vnd.sailingtracker.track"
+                 mime-type="application/vnd.sailingtracker.track"/>
+
+
+    <mimeMapping extension="vnd.sbm.cid"
+                 mime-type="application/vnd.sbm.cid"/>
+
+
+    <mimeMapping extension="vnd.sbm.mid2"
+                 mime-type="application/vnd.sbm.mid2"/>
+
+
+    <mimeMapping extension="vnd.scribus"
+                 mime-type="application/vnd.scribus"/>
+
+
+    <mimeMapping extension="vnd.sealed.3df"
+                 mime-type="application/vnd.sealed.3df"/>
+
+
+    <mimeMapping extension="vnd.sealed.csf"
+                 mime-type="application/vnd.sealed.csf"/>
+
+
+    <mimeMapping extension="vnd.sealed.doc"
+                 mime-type="application/vnd.sealed-doc"/>
+
+
+    <mimeMapping extension="vnd.sealed.eml"
+                 mime-type="application/vnd.sealed-eml"/>
+
+
+    <mimeMapping extension="vnd.sealed.mht"
+                 mime-type="application/vnd.sealed-mht"/>
+
+
+    <mimeMapping extension="vnd.sealed.net"
+                 mime-type="application/vnd.sealed.net"/>
+
+
+    <mimeMapping extension="vnd.sealed.ppt"
+                 mime-type="application/vnd.sealed-ppt"/>
+
+
+    <mimeMapping extension="vnd.sealed.tiff"
+                 mime-type="application/vnd.sealed-tiff"/>
+
+
+    <mimeMapping extension="vnd.sealed.xls"
+                 mime-type="application/vnd.sealed-xls"/>
+
+
+    <mimeMapping extension="vnd.sealedmedia.softseal.html"
+                 mime-type="application/vnd.sealedmedia.softseal-html"/>
+
+
+    <mimeMapping extension="vnd.sealedmedia.softseal.pdf"
+                 mime-type="application/vnd.sealedmedia.softseal-pdf"/>
+
+
+    <mimeMapping extension="vnd.seemail"
+                 mime-type="application/vnd.seemail"/>
+
+
+    <mimeMapping extension="vnd.sema"
+                 mime-type="application/vnd-sema"/>
+
+
+    <mimeMapping extension="vnd.semd"
+                 mime-type="application/vnd.semd"/>
+
+
+    <mimeMapping extension="vnd.semf"
+                 mime-type="application/vnd.semf"/>
+
+
+    <mimeMapping extension="vnd.shana.informed.formdata"
+                 mime-type="application/vnd.shana.informed.formdata"/>
+
+
+    <mimeMapping extension="vnd.shana.informed.formtemplate"
+                 mime-type="application/vnd.shana.informed.formtemplate"/>
+
+
+    <mimeMapping extension="vnd.shana.informed.interchange"
+                 mime-type="application/vnd.shana.informed.interchange"/>
+
+
+    <mimeMapping extension="vnd.shana.informed.package"
+                 mime-type="application/vnd.shana.informed.package"/>
+
+
+    <mimeMapping extension="vnd.SimTech-MindMapper"
+                 mime-type="application/vnd.SimTech-MindMapper"/>
+
+
+    <mimeMapping extension="vnd.siren+json"
+                 mime-type="application/vnd.siren+json"/>
+
+
+    <mimeMapping extension="vnd.smaf"
+                 mime-type="application/vnd.smaf"/>
+
+
+    <mimeMapping extension="vnd.smart.notebook"
+                 mime-type="application/vnd.smart.notebook"/>
+
+
+    <mimeMapping extension="vnd.smart.teacher"
+                 mime-type="application/vnd.smart.teacher"/>
+
+
+    <mimeMapping extension="vnd.software602.filler.form+xml"
+                 mime-type="application/vnd.software602.filler.form+xml"/>
+
+
+    <mimeMapping extension="vnd.software602.filler.form-xml-zip"
+                 mime-type="application/vnd.software602.filler.form-xml-zip"/>
+
+
+    <mimeMapping extension="vnd.solent.sdkm+xml"
+                 mime-type="application/vnd.solent.sdkm+xml"/>
+
+
+    <mimeMapping extension="vnd.spotfire.dxp"
+                 mime-type="application/vnd.spotfire.dxp"/>
+
+
+    <mimeMapping extension="vnd.spotfire.sfs"
+                 mime-type="application/vnd.spotfire.sfs"/>
+
+
+    <mimeMapping extension="vnd.sss-cod"
+                 mime-type="application/vnd.sss-cod"/>
+
+
+    <mimeMapping extension="vnd.sss-dtf"
+                 mime-type="application/vnd.sss-dtf"/>
+
+
+    <mimeMapping extension="vnd.sss-ntf"
+                 mime-type="application/vnd.sss-ntf"/>
+
+
+    <mimeMapping extension="vnd.stepmania.package"
+                 mime-type="application/vnd.stepmania.package"/>
+
+
+    <mimeMapping extension="vnd.stepmania.stepchart"
+                 mime-type="application/vnd.stepmania.stepchart"/>
+
+
+    <mimeMapping extension="vnd.street-stream"
+                 mime-type="application/vnd.street-stream"/>
+
+
+    <mimeMapping extension="vnd.sun.wadl+xml"
+                 mime-type="application/vnd.sun.wadl+xml"/>
+
+
+    <mimeMapping extension="vnd.sus-calendar"
+                 mime-type="application/vnd.sus-calendar"/>
+
+
+    <mimeMapping extension="vnd.svd"
+                 mime-type="application/vnd.svd"/>
+
+
+    <mimeMapping extension="vnd.swiftview-ics"
+                 mime-type="application/vnd.swiftview-ics"/>
+
+
+    <mimeMapping extension="vnd.syncml.dm.notification"
+                 mime-type="application/vnd.syncml.dm.notification"/>
+
+
+    <mimeMapping extension="vnd.syncml.dmddf+xml"
+                 mime-type="application/vnd.syncml.dmddf+xml"/>
+
+
+    <mimeMapping extension="vnd.syncml.dmtnds+wbxml"
+                 mime-type="application/vnd.syncml.dmtnds+wbxml"/>
+
+
+    <mimeMapping extension="vnd.syncml.dmtnds+xml"
+                 mime-type="application/vnd.syncml.dmtnds+xml"/>
+
+
+    <mimeMapping extension="vnd.syncml.dmddf+wbxml"
+                 mime-type="application/vnd.syncml.dmddf+wbxml"/>
+
+
+    <mimeMapping extension="vnd.syncml.dm+wbxml"
+                 mime-type="application/vnd.syncml.dm+wbxml"/>
+
+
+    <mimeMapping extension="vnd.syncml.dm+xml"
+                 mime-type="application/vnd.syncml.dm+xml"/>
+
+
+    <mimeMapping extension="vnd.syncml.ds.notification"
+                 mime-type="application/vnd.syncml.ds.notification"/>
+
+
+    <mimeMapping extension="vnd.syncml+xml"
+                 mime-type="application/vnd.syncml+xml"/>
+
+
+    <mimeMapping extension="vnd.tao.intent-module-archive"
+                 mime-type="application/vnd.tao.intent-module-archive"/>
+
+
+    <mimeMapping extension="vnd.tcpdump.pcap"
+                 mime-type="application/vnd.tcpdump.pcap"/>
+
+
+    <mimeMapping extension="vnd.tmd.mediaflex.api+xml"
+                 mime-type="application/vnd.tmd.mediaflex.api+xml"/>
+
+
+    <mimeMapping extension="vnd.tmobile-livetv"
+                 mime-type="application/vnd.tmobile-livetv"/>
+
+
+    <mimeMapping extension="vnd.trid.tpt"
+                 mime-type="application/vnd.trid.tpt"/>
+
+
+    <mimeMapping extension="vnd.triscape.mxs"
+                 mime-type="application/vnd.triscape.mxs"/>
+
+
+    <mimeMapping extension="vnd.trueapp"
+                 mime-type="application/vnd.trueapp"/>
+
+
+    <mimeMapping extension="vnd.truedoc"
+                 mime-type="application/vnd.truedoc"/>
+
+
+    <mimeMapping extension="vnd.ubisoft.webplayer"
+                 mime-type="application/vnd.ubisoft.webplayer"/>
+
+
+    <mimeMapping extension="vnd.ufdl"
+                 mime-type="application/vnd.ufdl"/>
+
+
+    <mimeMapping extension="vnd.uiq.theme"
+                 mime-type="application/vnd.uiq.theme"/>
+
+
+    <mimeMapping extension="vnd.umajin"
+                 mime-type="application/vnd.umajin"/>
+
+
+    <mimeMapping extension="vnd.unity"
+                 mime-type="application/vnd.unity"/>
+
+
+    <mimeMapping extension="vnd.uoml+xml"
+                 mime-type="application/vnd.uoml+xml"/>
+
+
+    <mimeMapping extension="vnd.uplanet.alert"
+                 mime-type="application/vnd.uplanet.alert"/>
+
+
+    <mimeMapping extension="vnd.uplanet.alert-wbxml"
+                 mime-type="application/vnd.uplanet.alert-wbxml"/>
+
+
+    <mimeMapping extension="vnd.uplanet.bearer-choice"
+                 mime-type="application/vnd.uplanet.bearer-choice"/>
+
+
+    <mimeMapping extension="vnd.uplanet.bearer-choice-wbxml"
+                 mime-type="application/vnd.uplanet.bearer-choice-wbxml"/>
+
+
+    <mimeMapping extension="vnd.uplanet.cacheop"
+                 mime-type="application/vnd.uplanet.cacheop"/>
+
+
+    <mimeMapping extension="vnd.uplanet.cacheop-wbxml"
+                 mime-type="application/vnd.uplanet.cacheop-wbxml"/>
+
+
+    <mimeMapping extension="vnd.uplanet.channel"
+                 mime-type="application/vnd.uplanet.channel"/>
+
+
+    <mimeMapping extension="vnd.uplanet.channel-wbxml"
+                 mime-type="application/vnd.uplanet.channel-wbxml"/>
+
+
+    <mimeMapping extension="vnd.uplanet.list"
+                 mime-type="application/vnd.uplanet.list"/>
+
+
+    <mimeMapping extension="vnd.uplanet.listcmd"
+                 mime-type="application/vnd.uplanet.listcmd"/>
+
+
+    <mimeMapping extension="vnd.uplanet.listcmd-wbxml"
+                 mime-type="application/vnd.uplanet.listcmd-wbxml"/>
+
+
+    <mimeMapping extension="vnd.uplanet.list-wbxml"
+                 mime-type="application/vnd.uplanet.list-wbxml"/>
+
+
+    <mimeMapping extension="vnd.uplanet.signal"
+                 mime-type="application/vnd.uplanet.signal"/>
+
+
+    <mimeMapping extension="vnd.valve.source.material"
+                 mime-type="application/vnd.valve.source.material"/>
+
+
+    <mimeMapping extension="vnd.vcx"
+                 mime-type="application/vnd.vcx"/>
+
+
+    <mimeMapping extension="vnd.vd-study"
+                 mime-type="application/vnd.vd-study"/>
+
+
+    <mimeMapping extension="vnd.vectorworks"
+                 mime-type="application/vnd.vectorworks"/>
+
+
+    <mimeMapping extension="vnd.verimatrix.vcas"
+                 mime-type="application/vnd.verimatrix.vcas"/>
+
+
+    <mimeMapping extension="vnd.vidsoft.vidconference"
+                 mime-type="application/vnd.vidsoft.vidconference"/>
+
+
+    <mimeMapping extension="vnd.visio"
+                 mime-type="application/vnd.visio"/>
+
+
+    <mimeMapping extension="vnd.visionary"
+                 mime-type="application/vnd.visionary"/>
+
+
+    <mimeMapping extension="vnd.vividence.scriptfile"
+                 mime-type="application/vnd.vividence.scriptfile"/>
+
+
+    <mimeMapping extension="vnd.vsf"
+                 mime-type="application/vnd.vsf"/>
+
+
+    <mimeMapping extension="vnd.wap.sic"
+                 mime-type="application/vnd.wap.sic"/>
+
+
+    <mimeMapping extension="vnd.wap.slc"
+                 mime-type="application/vnd.wap-slc"/>
+
+
+    <mimeMapping extension="vnd.wap.wbxml"
+                 mime-type="application/vnd.wap-wbxml"/>
+
+
+    <mimeMapping extension="vnd.wap.wmlc"
+                 mime-type="application/vnd-wap-wmlc"/>
+
+
+    <mimeMapping extension="vnd.wap.wmlscriptc"
+                 mime-type="application/vnd.wap.wmlscriptc"/>
+
+
+    <mimeMapping extension="vnd.webturbo"
+                 mime-type="application/vnd.webturbo"/>
+
+
+    <mimeMapping extension="vnd.wfa.p2p"
+                 mime-type="application/vnd.wfa.p2p"/>
+
+
+    <mimeMapping extension="vnd.wfa.wsc"
+                 mime-type="application/vnd.wfa.wsc"/>
+
+
+    <mimeMapping extension="vnd.windows.devicepairing"
+                 mime-type="application/vnd.windows.devicepairing"/>
+
+
+    <mimeMapping extension="vnd.wmc"
+                 mime-type="application/vnd.wmc"/>
+
+
+    <mimeMapping extension="vnd.wmf.bootstrap"
+                 mime-type="application/vnd.wmf.bootstrap"/>
+
+
+    <mimeMapping extension="vnd.wolfram.mathematica"
+                 mime-type="application/vnd.wolfram.mathematica"/>
+
+
+    <mimeMapping extension="vnd.wolfram.mathematica.package"
+                 mime-type="application/vnd.wolfram.mathematica.package"/>
+
+
+    <mimeMapping extension="vnd.wolfram.player"
+                 mime-type="application/vnd.wolfram.player"/>
+
+
+    <mimeMapping extension="vnd.wordperfect"
+                 mime-type="application/vnd.wordperfect"/>
+
+
+    <mimeMapping extension="vnd.wqd"
+                 mime-type="application/vnd.wqd"/>
+
+
+    <mimeMapping extension="vnd.wrq-hp3000-labelled"
+                 mime-type="application/vnd.wrq-hp3000-labelled"/>
+
+
+    <mimeMapping extension="vnd.wt.stf"
+                 mime-type="application/vnd.wt.stf"/>
+
+
+    <mimeMapping extension="vnd.wv.csp+xml"
+                 mime-type="application/vnd.wv.csp+xml"/>
+
+
+    <mimeMapping extension="vnd.wv.csp+wbxml"
+                 mime-type="application/vnd.wv.csp+wbxml"/>
+
+
+    <mimeMapping extension="vnd.wv.ssp+xml"
+                 mime-type="application/vnd.wv.ssp+xml"/>
+
+
+    <mimeMapping extension="vnd.xacml+json"
+                 mime-type="application/vnd.xacml+json"/>
+
+
+    <mimeMapping extension="vnd.xara"
+                 mime-type="application/vnd.xara"/>
+
+
+    <mimeMapping extension="vnd.xfdl"
+                 mime-type="application/vnd.xfdl"/>
+
+
+    <mimeMapping extension="vnd.xfdl.webform"
+                 mime-type="application/vnd.xfdl.webform"/>
+
+
+    <mimeMapping extension="vnd.xmi+xml"
+                 mime-type="application/vnd.xmi+xml"/>
+
+
+    <mimeMapping extension="vnd.xmpie.cpkg"
+                 mime-type="application/vnd.xmpie.cpkg"/>
+
+
+    <mimeMapping extension="vnd.xmpie.dpkg"
+                 mime-type="application/vnd.xmpie.dpkg"/>
+
+
+    <mimeMapping extension="vnd.xmpie.plan"
+                 mime-type="application/vnd.xmpie.plan"/>
+
+
+    <mimeMapping extension="vnd.xmpie.ppkg"
+                 mime-type="application/vnd.xmpie.ppkg"/>
+
+
+    <mimeMapping extension="vnd.xmpie.xlim"
+                 mime-type="application/vnd.xmpie.xlim"/>
+
+
+    <mimeMapping extension="vnd.yamaha.hv-dic"
+                 mime-type="application/vnd.yamaha.hv-dic"/>
+
+
+    <mimeMapping extension="vnd.yamaha.hv-script"
+                 mime-type="application/vnd.yamaha.hv-script"/>
+
+
+    <mimeMapping extension="vnd.yamaha.hv-voice"
+                 mime-type="application/vnd.yamaha.hv-voice"/>
+
+
+    <mimeMapping extension="vnd.yamaha.openscoreformat.osfpvg+xml"
+                 mime-type="application/vnd.yamaha.openscoreformat.osfpvg+xml"/>
+
+
+    <mimeMapping extension="vnd.yamaha.openscoreformat"
+                 mime-type="application/vnd.yamaha.openscoreformat"/>
+
+
+    <mimeMapping extension="vnd.yamaha.remote-setup"
+                 mime-type="application/vnd.yamaha.remote-setup"/>
+
+
+    <mimeMapping extension="vnd.yamaha.smaf-audio"
+                 mime-type="application/vnd.yamaha.smaf-audio"/>
+
+
+    <mimeMapping extension="vnd.yamaha.smaf-phrase"
+                 mime-type="application/vnd.yamaha.smaf-phrase"/>
+
+
+    <mimeMapping extension="vnd.yamaha.through-ngn"
+                 mime-type="application/vnd.yamaha.through-ngn"/>
+
+
+    <mimeMapping extension="vnd.yamaha.tunnel-udpencap"
+                 mime-type="application/vnd.yamaha.tunnel-udpencap"/>
+
+
+    <mimeMapping extension="vnd.yaoweme"
+                 mime-type="application/vnd.yaoweme"/>
+
+
+    <mimeMapping extension="vnd.yellowriver-custom-menu"
+                 mime-type="application/vnd.yellowriver-custom-menu"/>
+
+
+    <mimeMapping extension="vnd.zul"
+                 mime-type="application/vnd.zul"/>
+
+
+    <mimeMapping extension="vnd.zzazz.deck+xml"
+                 mime-type="application/vnd.zzazz.deck+xml"/>
+
+
+    <mimeMapping extension="voicexml+xml"
+                 mime-type="application/voicexml+xml"/>
+
+
+    <mimeMapping extension="vq-rtcpxr"
+                 mime-type="application/vq-rtcpxr"/>
+
+
+    <mimeMapping extension="watcherinfo+xml"
+                 mime-type="application/watcherinfo+xml"/>
+
+
+    <mimeMapping extension="whoispp-query"
+                 mime-type="application/whoispp-query"/>
+
+
+    <mimeMapping extension="whoispp-response"
+                 mime-type="application/whoispp-response"/>
+
+
+    <mimeMapping extension="widget"/>
+
+
+    <mimeMapping extension="wita"
+                 mime-type="application/wita"/>
+
+
+    <mimeMapping extension="wordperfect5.1"
+                 mime-type="application/wordperfect5.1"/>
+
+
+    <mimeMapping extension="wsdl+xml"
+                 mime-type="application/wsdl+xml"/>
+
+
+    <mimeMapping extension="wspolicy+xml"
+                 mime-type="application/wspolicy+xml"/>
+
+
+    <mimeMapping extension="x-www-form-urlencoded"
+                 mime-type="application/x-www-form-urlencoded"/>
+
+
+    <mimeMapping extension="x400-bp"
+                 mime-type="application/x400-bp"/>
+
+
+    <mimeMapping extension="xacml+xml"
+                 mime-type="application/xacml+xml"/>
+
+
+    <mimeMapping extension="xcap-att+xml"
+                 mime-type="application/xcap-att+xml"/>
+
+
+    <mimeMapping extension="xcap-caps+xml"
+                 mime-type="application/xcap-caps+xml"/>
+
+
+    <mimeMapping extension="xcap-diff+xml"
+                 mime-type="application/xcap-diff+xml"/>
+
+
+    <mimeMapping extension="xcap-el+xml"
+                 mime-type="application/xcap-el+xml"/>
+
+
+    <mimeMapping extension="xcap-error+xml"
+                 mime-type="application/xcap-error+xml"/>
+
+
+    <mimeMapping extension="xcap-ns+xml"
+                 mime-type="application/xcap-ns+xml"/>
+
+
+    <mimeMapping extension="xcon-conference-info-diff+xml"
+                 mime-type="application/xcon-conference-info-diff+xml"/>
+
+
+    <mimeMapping extension="xcon-conference-info+xml"
+                 mime-type="application/xcon-conference-info+xml"/>
+
+
+    <mimeMapping extension="xenc+xml"
+                 mime-type="application/xenc+xml"/>
+
+
+    <mimeMapping extension="xhtml-voice+xml - OBSOLETE; no replacement given"
+                 mime-type="application/xhtml-voice+xml"/>
+
+
+    <mimeMapping extension="xhtml+xml"
+                 mime-type="application/xhtml+xml"/>
+
+
+    <mimeMapping extension="xml"
+                 mime-type="application/xml"/>
+
+
+    <mimeMapping extension="xml-dtd"
+                 mime-type="application/xml-dtd"/>
+
+
+    <mimeMapping extension="xml-external-parsed-entity"
+                 mime-type="application/xml-external-parsed-entity"/>
+
+
+    <mimeMapping extension="xml-patch+xml"
+                 mime-type="application/xml-patch+xml"/>
+
+
+    <mimeMapping extension="xmpp+xml"
+                 mime-type="application/xmpp+xml"/>
+
+
+    <mimeMapping extension="xop+xml"
+                 mime-type="application/xop+xml"/>
+
+
+    <mimeMapping extension="xslt+xml"/>
+
+
+    <mimeMapping extension="xv+xml"
+                 mime-type="application/xv+xml"/>
+
+
+    <mimeMapping extension="yang"
+                 mime-type="application/yang"/>
+
+
+    <mimeMapping extension="yin+xml"
+                 mime-type="application/yin+xml"/>
+
+
+    <mimeMapping extension="zip"
+                 mime-type="application/zip"/>
+
+
+    <mimeMapping extension="zlib"
+                 mime-type="application/zlib"/>
+
+</mimeMappings>

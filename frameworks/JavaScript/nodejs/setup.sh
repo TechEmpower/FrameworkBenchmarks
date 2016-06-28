@@ -1,17 +1,12 @@
 #!/bin/bash
-sed -i 's|localhost|'"${DBHOST}"'|g' hello.js
-sed -i 's|mongodb://.*/hello_world|mongodb://'"${DBHOST}"'/hello_world|g' hello.js
 
-export NODE_ENV=production
-export NVM_HOME=${IROOT}/nvm
-# Used to avoid nvm's return 2 error.
-# Sourcing this functions if 0 is returned.
-source $NVM_HOME/nvm.sh || 0
-nvm install 0.12.2
-nvm use 0.12.2
+fw_depends nodejs
 
-# update npm before app init
-npm install -g npm
+sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/mongodb-raw.js
+sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/mongoose.js
+sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/mysql-raw.js
+sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/redis.js
+sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/sequelize.js
 
 npm install
-node hello.js &
+node app.js &

@@ -12,10 +12,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.compiler.plugin>3.1</version.compiler.plugin>
 		<version.war.plugin>2.4</version.war.plugin>
-		<version.wildfly>9.0.0.Beta2</version.wildfly>
-		<version.mysql.connector>5.1.34</version.mysql.connector>
+		<version.wildfly>10.0.0.Final</version.wildfly>
+		<version.mysql.connector>5.1.38</version.mysql.connector>
 		<version.javaee.api>7.0</version.javaee.api>
-		<version.jboss.spec.javaee.7.0>1.0.0.Final</version.jboss.spec.javaee.7.0>
+		<version.jboss.spec.javaee.7.0>1.0.3.Final</version.jboss.spec.javaee.7.0>
 	</properties>
 
 	<repositories>
@@ -76,11 +76,11 @@
 			<scope>provided</scope>
 		</dependency>
 
-                <dependency>
-                        <groupId>io.undertow</groupId>
-                        <artifactId>undertow-servlet</artifactId>
-                        <scope>provided</scope>
-                </dependency>
+		<dependency>
+			<groupId>io.undertow</groupId>
+			<artifactId>undertow-servlet</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.spec.javax.ejb</groupId>
@@ -110,8 +110,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${version.compiler.plugin}</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 					<optimize>true</optimize>
 					<debug>false</debug>
 				</configuration>

@@ -6,6 +6,8 @@
       "json_url": "/tapestry/hellojson",
       "db_url": "/tapestry/hellodb",
       "query_url": "/tapestry/hellodbs?queries=",
+      "fortune_url": "/tapestry/hellofortune",
+      "plaintext_url": "/tapestry/helloplain",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",

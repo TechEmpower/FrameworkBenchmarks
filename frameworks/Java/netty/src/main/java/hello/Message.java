@@ -2,14 +2,14 @@ package hello;
 
 public class Message {
 
-    private final String message;
+	private final String message;
 
-    public Message(String message) {
-	super();
-	this.message = message;
-    }
+	public Message(String message) {
+		super();
+		this.message = message;
+	}
 
-    public String getMessage() {
-	return message;
-    }
+	public String getMessage() {
+		return message;
+	}
 }

@@ -1,0 +1,28 @@
+{
+  "framework": "clancats",
+  "tests": [{
+	"default": {
+	  "setup_file": "setup",
+	  "plaintext_url": "/plaintext",
+	  "json_url": "/json",
+	  "db_url": "/db",
+	  "query_url": "/queries?queries=",
+	  "update_url": "/updates?queries=",
+	  "fortune_url": "/fortunes",
+	  "port": 8080,
+	  "approach": "Realistic",
+	  "classification": "Fullstack",
+	  "database": "MySQL",
+	  "framework": "clancatsframework",
+	  "language": "PHP",
+	  "orm": "Raw",
+	  "platform": "PHP-FPM",
+	  "webserver": "nginx",
+	  "os": "Linux",
+	  "database_os": "Linux",
+	  "display_name": "clancatsframework",
+	  "notes": "",
+	  "versus": "php"
+	}
+  }]
+}

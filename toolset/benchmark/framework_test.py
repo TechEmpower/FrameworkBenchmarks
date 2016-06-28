@@ -16,6 +16,7 @@ import csv
 import shlex
 import math
 from collections import OrderedDict
+from requests import ConnectionError
 from threading import Thread
 from threading import Event
 
@@ -44,10 +45,10 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -62,11 +63,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -87,10 +88,10 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -105,11 +106,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -132,10 +133,10 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
+    wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}2"
     sleep 5
 
     echo ""
@@ -150,11 +151,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
+      echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}$c\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
+      wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}$c"
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -163,25 +164,35 @@ class FrameworkTest:
 
   ############################################################
   # start(benchmarker)
-  # Start the test using it's setup file
+  # Start the test using its setup file
   ############################################################
-  def start(self, out, err):
+  def start(self, out):
 
     # Setup environment variables    
     logDir = os.path.join(self.fwroot, self.benchmarker.latest_results_directory, 'logs', self.name.lower())
+    bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
     setup_util.replace_environ(config='$FWROOT/config/benchmark_profile', 
               command='''\
-              export TROOT=%s       && \
-              export IROOT=%s       && \
-              export DBHOST=%s      && \
-              export LOGDIR=%s      && \
-              export MAX_THREADS=%s    \
+              export TROOT=%s       &&  \
+              export IROOT=%s       &&  \
+              export DBHOST=%s      &&  \
+              export LOGDIR=%s      &&  \
+              export MAX_THREADS=%s &&  \
+              export MAX_CONCURRENCY=%s \
               ''' % (
                 self.directory, 
                 self.install_root, 
                 self.database_host, 
                 logDir,
-                self.benchmarker.threads))
+                self.benchmarker.threads,
+                max(self.benchmarker.concurrency_levels)))
+
+    # Always ensure that IROOT belongs to the runner_user
+    if not os.path.exists(self.install_root):
+      os.mkdir(self.install_root)
+    chown = "sudo chown -R %s:%s %s" % (self.benchmarker.runner_user,
+      self.benchmarker.runner_user, os.path.join(self.fwroot, self.install_root))
+    subprocess.check_call(chown, shell=True, cwd=self.fwroot, executable='/bin/bash')
 
     # Run the module start inside parent of TROOT
     #  - we use the parent as a historical accident, a number of tests
@@ -213,15 +224,19 @@ class FrameworkTest:
     # See http://www.pixelbeat.org/programming/stdio_buffering/
     # See https://blogs.gnome.org/markmc/2013/06/04/async-io-and-python/
     # See http://eyalarubas.com/python-subproc-nonblock.html
-    command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -ex %s.sh' % (self.benchmarker.runner_user, self.setup_file)
+    command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -exc "source %s && source %s.sh"' % (
+      self.benchmarker.runner_user,
+      bash_functions_path, 
+      os.path.join(self.troot, self.setup_file))
     
     debug_command = '''\
-      export FWROOT=%s      && \\
-      export TROOT=%s       && \\
-      export IROOT=%s       && \\
-      export DBHOST=%s      && \\
-      export LOGDIR=%s      && \\
-      export MAX_THREADS=%s && \\
+      export FWROOT=%s          &&  \\
+      export TROOT=%s           &&  \\
+      export IROOT=%s           &&  \\
+      export DBHOST=%s          &&  \\
+      export LOGDIR=%s          &&  \\
+      export MAX_THREADS=%s     &&  \\
+      export MAX_CONCURRENCY=%s && \\
       cd %s && \\
       %s''' % (self.fwroot, 
         self.directory, 
@@ -230,6 +245,7 @@ class FrameworkTest:
         logDir,
         self.benchmarker.threads, 
         self.directory,
+        max(self.benchmarker.concurrency_levels),
         command)
     logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
 
@@ -361,60 +377,65 @@ class FrameworkTest:
   # or not it passed
   # Returns True if all verifications succeeded
   ############################################################
-  def verify_urls(self, out, err):
+  def verify_urls(self, verificationPath):
     result = True
     
     def verify_type(test_type):
-      
-      test = self.runTests[test_type]
-      test.setup_out_err(out, err)
-      out.write(header("VERIFYING %s" % test_type.upper()))
-      
-      base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
-      
-      try:
-        results = test.verify(base_url)
-      except Exception as e:
-        results = [('fail',"""Caused Exception in TFB
-          This almost certainly means your return value is incorrect, 
-          but also that you have found a bug. Please submit an issue
-          including this message: %s\n%s""" % (e, traceback.format_exc()), 
-          base_url)]
-        logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
-        traceback.format_exc()
+      with open(os.path.join(verificationPath, (test_type + '.txt')), 'w') as verification:
+        test = self.runTests[test_type]
+        test.setup_out(verification)
+        verification.write(header("VERIFYING %s" % test_type.upper()))
 
-      test.failed = any(result is 'fail' for (result, reason, url) in results)
-      test.warned = any(result is 'warn' for (result, reason, url) in results)
-      test.passed = all(result is 'pass' for (result, reason, url) in results)
-      
-      def output_result(result, reason, url):
-        specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
-        color = Fore.GREEN
-        if result.upper() == "WARN":
-          color = Fore.YELLOW
-        elif result.upper() == "FAIL":
-          color = Fore.RED
+        base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
 
-        out.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
-        print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
-        if reason is not None and len(reason) != 0:
-          for line in reason.splitlines():
-            out.write("     " + line + '\n')
-            print "     " + line
-          if not test.passed:
-            out.write("     See %s\n" % specific_rules_url)
-            print "     See %s\n" % specific_rules_url
+        try:
+          results = test.verify(base_url)
+        except ConnectionError as e:
+          results = [('fail',"Server did not respond to request", base_url)]
+          logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
+        except Exception as e:
+          results = [('fail',"""Caused Exception in TFB
+            This almost certainly means your return value is incorrect,
+            but also that you have found a bug. Please submit an issue
+            including this message: %s\n%s""" % (e, traceback.format_exc()),
+            base_url)]
+          logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
+          traceback.format_exc()
 
-      [output_result(r1,r2,url) for (r1, r2, url) in results]
+        test.failed = any(result == 'fail' for (result, reason, url) in results)
+        test.warned = any(result == 'warn' for (result, reason, url) in results)
+        test.passed = all(result == 'pass' for (result, reason, url) in results)
 
-      if test.failed:
-        self.benchmarker.report_verify_results(self, test_type, 'fail')
-      elif test.warned:
-        self.benchmarker.report_verify_results(self, test_type, 'warn')
-      elif test.passed:
-        self.benchmarker.report_verify_results(self, test_type, 'pass')
-      else:
-        raise Exception("Unknown error - test did not pass,warn,or fail")
+        def output_result(result, reason, url):
+          specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
+          color = Fore.GREEN
+          if result.upper() == "WARN":
+            color = Fore.YELLOW
+          elif result.upper() == "FAIL":
+            color = Fore.RED
+
+          verification.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
+          print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
+          if reason is not None and len(reason) != 0:
+            for line in reason.splitlines():
+              verification.write("     " + line + '\n')
+              print "     " + line
+            if not test.passed:
+              verification.write("     See %s\n" % specific_rules_url)
+              print "     See %s\n" % specific_rules_url
+
+        [output_result(r1,r2,url) for (r1, r2, url) in results]
+
+        if test.failed:
+          self.benchmarker.report_verify_results(self, test_type, 'fail')
+        elif test.warned:
+          self.benchmarker.report_verify_results(self, test_type, 'warn')
+        elif test.passed:
+          self.benchmarker.report_verify_results(self, test_type, 'pass')
+        else:
+          raise Exception("Unknown error - test did not pass,warn,or fail")
+
+        verification.flush()
 
     result = True
     for test_type in self.runTests:
@@ -432,46 +453,47 @@ class FrameworkTest:
   # Runs the benchmark for each type of test that it implements
   # JSON/DB/Query.
   ############################################################
-  def benchmark(self, out, err):
+  def benchmark(self, benchmarkPath):
 
-    def benchmark_type(test_type):  
-      out.write("BENCHMARKING %s ... " % test_type.upper())
+    def benchmark_type(test_type):
+      with open(os.path.join(benchmarkPath, (test_type + '.txt')), 'w') as out:
+        out.write("BENCHMARKING %s ... " % test_type.upper())
 
-      test = self.runTests[test_type]
-      test.setup_out_err(out, err)
-      output_file = self.benchmarker.output_file(self.name, test_type)
-      if not os.path.exists(output_file):
-        # Open to create the empty file
-        with open(output_file, 'w'):
-          pass
+        test = self.runTests[test_type]
+        test.setup_out(out)
+        output_file = self.benchmarker.output_file(self.name, test_type)
+        if not os.path.exists(output_file):
+          # Open to create the empty file
+          with open(output_file, 'w'):
+            pass
 
-      if not test.failed:
-        if test_type == 'plaintext': # One special case
-          remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
-        elif test_type == 'query' or test_type == 'update':
-          remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
-        else:
-          remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
-        
-        # Begin resource usage metrics collection
-        self.__begin_logging(test_type)
-        
-        # Run the benchmark 
-        with open(output_file, 'w') as raw_file:
-          p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=err)
-          p.communicate(remote_script)
-          err.flush()
+        if not test.failed:
+          if test_type == 'plaintext': # One special case
+            remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
+          elif test_type == 'query' or test_type == 'update':
+            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
+          else:
+            remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
 
-        # End resource usage metrics collection
-        self.__end_logging()
+          # Begin resource usage metrics collection
+          self.__begin_logging(test_type)
 
-      results = self.__parse_test(test_type)
-      print "Benchmark results:"
-      pprint(results)
+          # Run the benchmark
+          with open(output_file, 'w') as raw_file:
+            p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=raw_file)
+            p.communicate(remote_script)
+            out.flush()
 
-      self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
-      out.write( "Complete\n" )
-      out.flush()
+          # End resource usage metrics collection
+          self.__end_logging()
+
+        results = self.__parse_test(test_type)
+        print "Benchmark results:"
+        pprint(results)
+
+        self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
+        out.write( "Complete\n" )
+        out.flush()
     
     for test_type in self.runTests:
       benchmark_type(test_type)
@@ -488,6 +510,10 @@ class FrameworkTest:
       if os.path.exists(self.benchmarker.get_output_file(self.name, test_type)):
         results = self.__parse_test(test_type)
         self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
+
+  ##########################################################################################
+  # Private Methods
+  ##########################################################################################
 
   ############################################################
   # __parse_test(test_type)
@@ -594,10 +620,6 @@ class FrameworkTest:
   ############################################################
   # End benchmark
   ############################################################
-
-  ##########################################################################################
-  # Private Methods
-  ##########################################################################################
 
   ############################################################
   # __generate_concurrency_script(url, port)
@@ -839,57 +861,175 @@ class FrameworkTest:
 # End FrameworkTest
 ############################################################
 
-##########################################################################################
-# Static methods
-##########################################################################################
 
-##############################################################
-# parse_config(config, directory, benchmarker)
-# parses a config file and returns a list of FrameworkTest
-# objects based on that config file.
-##############################################################
+# Static methods
+
+def test_order(type_name):
+  """
+  This sort ordering is set up specifically to return the length
+  of the test name. There were SO many problems involved with
+  'plaintext' being run first (rather, just not last) that we
+  needed to ensure that it was run last for every framework.
+  """
+  return len(type_name)
+
+
+def validate_urls(test_name, test_keys):
+  """
+  Separated from validate_test because urls are not required anywhere. We know a url is incorrect if it is
+  empty or does not start with a "/" character. There is no validation done to ensure the url conforms to
+  the suggested url specifications, although those suggestions are presented if a url fails validation here.
+  """
+  example_urls = {
+    "json_url":      "/json",
+    "db_url":        "/mysql/db",
+    "query_url":     "/mysql/queries?queries=  or  /mysql/queries/",
+    "fortune_url":   "/mysql/fortunes",
+    "update_url":    "/mysql/updates?queries=  or  /mysql/updates/",
+    "plaintext_url": "/plaintext"
+  }
+  for test_url in ["json_url","db_url","query_url","fortune_url","update_url","plaintext_url"]:
+    key_value = test_keys.get(test_url, None)
+    if key_value != None and not key_value.startswith('/'):
+      errmsg = """`%s` field in test \"%s\" does not appear to be a valid url: \"%s\"\n
+        Example `%s` url: \"%s\"
+      """ % (test_url, test_name, key_value, test_url, example_urls[test_url])
+      raise Exception(errmsg)
+ 
+
+def validate_test(test_name, test_keys, directory):
+  """
+  Validate benchmark config values for this test based on a schema
+  """
+  # Ensure that each FrameworkTest has a framework property, inheriting from top-level if not
+  if not test_keys['framework']:
+    test_keys['framework'] = config['framework']
+
+  recommended_lang = directory.split('/')[-2]
+  windows_url = "https://github.com/TechEmpower/FrameworkBenchmarks/milestones/Windows%%20Compatibility"
+  schema = {
+    'language': {
+      'help': ('language', 'The language of the framework used, suggestion: %s' % recommended_lang)
+    },
+    'webserver': {
+      'help': ('webserver', 'Name of the webserver also referred to as the "front-end server"')
+    },
+    'classification': {
+      'allowed': [
+        ('Fullstack', '...'),
+        ('Micro', '...'),
+        ('Platform', '...')
+      ]
+    },
+    'database': {
+      'allowed': [
+        ('MySQL', 'One of the most popular databases around the web and in TFB'),
+        ('Postgres', 'An advanced SQL database with a larger feature set than MySQL'),
+        ('MongoDB', 'A popular document-store database'),
+        ('Cassandra', 'A highly performant and scalable NoSQL database'),
+        ('Elasticsearch', 'A distributed RESTful search engine that is used as a database for TFB tests'),
+        ('Redis', 'An open-sourced, BSD licensed, advanced key-value cache and store'),
+        ('SQLite', 'A network-less database, still supported for backwards compatibility'),
+        ('SQLServer', 'Microsoft\'s SQL implementation'),
+        ('None', 'No database was used for these tests, as is the case with Json Serialization and Plaintext')
+      ]
+    },
+    'approach': {
+      'allowed': [
+        ('Realistic', '...'),
+        ('Stripped', '...')
+      ]
+    },
+    'orm': {
+      'allowed': [
+        ('Full', 'Has a full suite of features like lazy loading, caching, multiple language support, sometimes pre-configured with scripts.'),
+        ('Micro', 'Has basic database driver capabilities such as establishing a connection and sending queries.'),
+        ('Raw', 'Tests that do not use an ORM will be classified as "raw" meaning they use the platform\'s raw database connectivity.')
+      ]
+    },
+    'platform': {
+      'help': ('platform', 'Name of the platform this framework runs on, e.g. Node.js, Pypy, hhvm, JRuby ...')
+    },
+    'framework': {
+      # Guranteed to be here and correct at this point
+      # key is left here to produce the set of required keys
+    },
+    'os': {
+      'allowed': [
+        ('Linux', 'Our best-supported host OS, it is recommended that you build your tests for Linux hosts'),
+        ('Windows', 'TFB is not fully-compatible on windows, contribute towards our work on compatibility: %s' % windows_url)
+      ]
+    },
+    'database_os': {
+      'allowed': [
+        ('Linux', 'Our best-supported host OS, it is recommended that you build your tests for Linux hosts'),
+        ('Windows', 'TFB is not fully-compatible on windows, contribute towards our work on compatibility: %s' % windows_url)
+      ]
+    }
+  }
+
+  # Confirm required keys are present
+  required_keys = schema.keys()
+  missing = list(set(required_keys) - set(test_keys))
+
+  if len(missing) > 0:
+    missingstr = (", ").join(map(str, missing))
+    raise Exception("benchmark_config.json for test %s is invalid, please amend by adding the following required keys: [%s]"
+      % (test_name, missingstr))
+
+  # Check the (all optional) test urls
+  validate_urls(test_name, test_keys)
+
+  # Check values of keys against schema
+  for key in required_keys:
+    val = test_keys.get(key, "").lower()
+    has_predefined_acceptables = 'allowed' in schema[key]
+
+    if has_predefined_acceptables:
+      allowed = schema[key].get('allowed', [])
+      acceptable_values, descriptors = zip(*allowed)
+      acceptable_values = [a.lower() for a in acceptable_values]
+      
+      if val not in acceptable_values:
+        msg = ("Invalid `%s` value specified for test \"%s\" in framework \"%s\"; suggestions:\n"
+          % (key, test_name, config['framework']))
+        helpinfo = ('\n').join(["  `%s` -- %s" % (v, desc) for (v, desc) in zip(acceptable_values, descriptors)])
+        fullerr = msg + helpinfo + "\n"
+        raise Exception(fullerr)
+    
+    elif not has_predefined_acceptables and val == "":
+      msg = ("Value for `%s` in test \"%s\" in framework \"%s\" was missing:\n"
+        % (key, test_name, config['framework']))
+      helpinfo = "  %s -- %s" % schema[key]['help']
+      fullerr = msg + helpinfo + '\n'
+      raise Exception(fullerr)
+
 def parse_config(config, directory, benchmarker):
+  """
+  Parses a config file into a list of FrameworkTest objects
+  """
   tests = []
 
-  # This sort ordering is set up specifically to return the length
-  # of the test name. There were SO many problems involved with
-  # 'plaintext' being run first (rather, just not last) that we
-  # needed to ensure that it was run last for every framework.
-  def testOrder(type_name):
-    return len(type_name)
-
   # The config object can specify multiple tests
-  #   Loop over them and parse each into a FrameworkTest
+  # Loop over them and parse each into a FrameworkTest
   for test in config['tests']:
 
-    names = [name for (name,keys) in test.iteritems()]
-    if "default" not in names:
+    tests_to_run = [name for (name,keys) in test.iteritems()]
+    if "default" not in tests_to_run:
       logging.warn("Framework %s does not define a default test in benchmark_config.json", config['framework'])
     
+    # Check that each test configuration is acceptable
+    # Throw exceptions if a field is missing, or how to improve the field
     for test_name, test_keys in test.iteritems():
-      # Prefix all test names with framework except 'default' test
-      if test_name == 'default': 
-        test_name = config['framework']
-      else:
-        test_name = "%s-%s" % (config['framework'], test_name)  
-
-      # Ensure FrameworkTest.framework is available
-      if not test_keys['framework']:
-        test_keys['framework'] = config['framework']
-      #if test_keys['framework'].lower() != config['framework'].lower():
-      #  print Exception("benchmark_config.json for test %s is invalid - test framework '%s' must match benchmark_config.json framework '%s'" % 
-      #    (test_name, test_keys['framework'], config['framework']))
-
-      # Confirm required keys are present
-      # TODO have a TechEmpower person confirm this list - I don't know what the website requires....
-      required = ['language','webserver','classification','database','approach','orm','framework','os','database_os']
-      if not all (key in test_keys for key in required):
-        raise Exception("benchmark_config.json for test %s is invalid - missing required keys" % test_name)      
+      # Validates the benchmark_config entry
+      validate_test(test_name, test_keys, directory)
       
       # Map test type to a parsed FrameworkTestType object
       runTests = dict()
       for type_name, type_obj in benchmarker.types.iteritems():
         try:
+          # Makes a FrameWorkTestType object using some of the keys in config
+          # e.g. JsonTestType uses "json_url"
           runTests[type_name] = type_obj.copy().parse(test_keys)
         except AttributeError as ae:
           # This is quite common - most tests don't support all types
@@ -899,15 +1039,19 @@ def parse_config(config, directory, benchmarker):
           pass
 
       # We need to sort by test_type to run
-      sortedTestKeys = sorted(runTests.keys(), key=testOrder)
+      sortedTestKeys = sorted(runTests.keys(), key=test_order)
       sortedRunTests = OrderedDict()
       for sortedTestKey in sortedTestKeys:
         sortedRunTests[sortedTestKey] = runTests[sortedTestKey]
+
+      # Prefix all test names with framework except 'default' test
+      # Done at the end so we may still refer to the primary test as `default` in benchmark config error messages
+      if test_name == 'default': 
+        test_name = config['framework']
+      else:
+        test_name = "%s-%s" % (config['framework'], test_name) 
 
       # By passing the entire set of keys, each FrameworkTest will have a member for each key
       tests.append(FrameworkTest(test_name, directory, benchmarker, sortedRunTests, test_keys))
 
   return tests
-##############################################################
-# End parse_config
-##############################################################

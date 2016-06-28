@@ -26,10 +26,7 @@ class Installer:
     for k,v in script_vars.iteritems():
       l.append("export %s=%s" % (k,v))
     script_vars_str = "\n".join(l) + "\n\n"
-
-    if imode == 'all' or imode == 'server':
-      self.__install_server_software()
-
+    
     if imode == 'all' or imode == 'database':
       print("\nINSTALL: Installing database software\n")   
       self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="../config/database_sftp_batch"), True)
@@ -57,97 +54,6 @@ class Installer:
       print("\nINSTALL: Finished installing client software\n")
   ############################################################
   # End install_software
-  ############################################################
-
-  ############################################################
-  # __install_server_software
-  ############################################################
-  def __install_server_software(self):
-    print("\nINSTALL: Installing server software (strategy=%s)\n"%self.strategy)
-    # Install global prerequisites (requires sudo)
-    bash_functions_path='$FWROOT/toolset/setup/linux/bash_functions.sh'
-    prereq_path='$FWROOT/toolset/setup/linux/prerequisites.sh'
-    self.__run_command(". %s && . %s" % (bash_functions_path, prereq_path))
-    self.__run_command("sudo chown -R %s:%s %s" % (self.benchmarker.runner_user,
-      self.benchmarker.runner_user, os.path.join(self.fwroot, self.install_dir)))
-
-    tests = gather_tests(include=self.benchmarker.test, 
-      exclude=self.benchmarker.exclude,
-      benchmarker=self.benchmarker)
-    
-    dirs = [t.directory for t in tests]
-
-    # Locate all installation files
-    install_files = glob.glob("%s/*/install.sh" % self.fwroot)
-    install_files.extend(glob.glob("%s/frameworks/*/*/install.sh" % self.fwroot))
-
-    # Run install for selected tests
-    for test_install_file in install_files:
-      test_dir = os.path.dirname(test_install_file)
-      test_rel_dir = os.path.relpath(test_dir, self.fwroot)
-      logging.debug("Considering install of %s (%s, %s)", test_install_file, test_rel_dir, test_dir)
-
-      if test_dir not in dirs:
-        continue
-
-      logging.info("Running installation for directory %s (cwd=%s)", test_dir, test_dir)
-
-      # Collect the tests in this directory
-      # local_tests = [t for t in tests if t.directory == test_dir]
-
-      # Find installation directory 
-      #   e.g. FWROOT/installs or FWROOT/installs/pertest/<test-name>
-      test_install_dir="%s/%s" % (self.fwroot, self.install_dir)
-      if self.strategy is 'pertest':
-        test_install_dir="%s/pertest/%s" % (test_install_dir, test_dir)
-      if not os.path.exists(test_install_dir):
-        os.makedirs(test_install_dir)
-      
-      # Move into the proper working directory
-      previousDir = os.getcwd()
-      os.chdir(test_dir)
-
-      # Load environment
-      setup_util.replace_environ(config='$FWROOT/config/benchmark_profile', 
-        command='export TROOT=%s && export IROOT=%s' %
-        (test_dir, test_install_dir))
-
-      # Run the install.sh script for the test as the "testrunner" user
-      # 
-      # `sudo` - Switching user requires superuser privs
-      #   -u [username] The username
-      #   -E Preserves the current environment variables
-      #   -H Forces the home var (~) to be reset to the user specified
-      #   TROOT  - Path to this test's directory 
-      #   IROOT  - Path of this test's install directory
-      # TODO export bash functions and call install.sh directly
-      command = 'sudo -u %s -E -H bash -c "source %s && source %s"' % (
-        self.benchmarker.runner_user, 
-        bash_functions_path, 
-        test_install_file)
-
-      debug_command = '''\
-        export FWROOT=%s && \\
-        export TROOT=%s && \\
-        export IROOT=%s && \\
-        cd $IROOT && \\
-        %s''' % (self.fwroot, 
-          test_dir, 
-          test_install_dir,
-          command)
-      logging.info("To run installation manually, copy/paste this:\n%s", debug_command)
-
-      # Run test installation script
-      self.__run_command(command, cwd=test_install_dir)
-
-      # Move back to previous directory
-      os.chdir(previousDir)
-
-    self.__run_command("sudo apt-get -yq autoremove");    
-
-    print("\nINSTALL: Finished installing server software\n")
-  ############################################################
-  # End __install_server_software
   ############################################################
 
   ############################################################

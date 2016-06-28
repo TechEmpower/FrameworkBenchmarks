@@ -1,8 +1,7 @@
 #!/bin/bash
 
-source $IROOT/java7.installed
-export SBT_HOME=${IROOT}/sbt
+fw_depends java sbt
 
-${SBT_HOME}/bin/sbt update compile
+sbt update compile -batch
 
-${SBT_HOME}/bin/sbt -Ddb.host=${DBHOST} run &
+sbt run &

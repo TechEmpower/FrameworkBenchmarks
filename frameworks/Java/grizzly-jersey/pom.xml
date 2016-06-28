@@ -14,13 +14,13 @@
   </prerequisites>
 
   <properties>
-    <grizzly.version>2.3.2</grizzly.version>
-    <jersey.version>1.17.1</jersey.version>
+    <grizzly.version>2.3.23</grizzly.version>
+    <jersey.version>1.19</jersey.version>
     <jersey-mustache.version>1.0.0</jersey-mustache.version>
-    <jackson.version>2.3.0</jackson.version>
-    <mustache.version>0.8.12</mustache.version>
-    <hibernate.version>4.2.1.Final</hibernate.version>
-    <mysql-connector.version>5.1.25</mysql-connector.version>
+    <jackson.version>2.7.0</jackson.version>
+    <mustache.version>0.9.1</mustache.version>
+    <hibernate.version>4.3.11.Final</hibernate.version>
+    <mysql-connector.version>5.1.38</mysql-connector.version>
   </properties>
 
   <dependencies>
@@ -49,7 +49,7 @@
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-c3p0</artifactId>
+      <artifactId>hibernate-hikaricp</artifactId>
       <version>${hibernate.version}</version>
     </dependency>
     <dependency>

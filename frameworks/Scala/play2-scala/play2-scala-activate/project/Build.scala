@@ -12,7 +12,7 @@ object ApplicationBuild extends Build {
   val activateJdbc = "net.fwbrasil" %% "activate-jdbc" % activateVersion
   val activatePlay = "net.fwbrasil" %% "activate-play" % activateVersion
 
-  val mysql = "mysql" % "mysql-connector-java" % "5.1.16"
+  val mysql = "mysql" % "mysql-connector-java" % "5.1.38"
 
   val appDependencies = Seq(
     mysql,

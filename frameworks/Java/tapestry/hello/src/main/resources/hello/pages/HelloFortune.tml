@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd">
+	<head>
+		<title>Fortunes</title>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<th>id</th>
+				<th>message</th>
+			</tr>
+			<t:loop  source="fortunes" value="currentFortune" element="tr">
+				<td>${currentFortune.id}</td>
+				<td>${currentFortune.message}</td>
+			</t:loop>
+		</table>
+	</body>
+</html>

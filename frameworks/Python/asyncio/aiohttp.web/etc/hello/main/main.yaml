@@ -1,0 +1,22 @@
+---
+engines:
+  pg:
+    host: 127.0.0.1
+    port: 5432
+    dbname: hello_world
+    user: benchmarkdbuser
+    password: benchmarkdbpass
+    minsize: 22
+    maxsize: 22
+  mysql:
+    host: 127.0.0.1
+    port: 3306
+    db: hello_world
+    user: benchmarkdbuser
+    pwd: benchmarkdbpass
+    minsize: 22
+    maxsize: 22
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    poolsize: 40

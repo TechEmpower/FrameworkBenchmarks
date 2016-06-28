@@ -1,0 +1,105 @@
+<!--#
+Test type 3: Multiple database queries
+TechEmpower Web Framework Benchmarks
+-->
+<!--#declaration
+#include "world.h"
+
+static UREDISClient_Base* rc;
+static UVector<World*>* pvworld_query;
+
+#ifndef AS_cpoll_cppsp_DO
+static UValue* pvalue;
+#endif
+
+static void usp_fork_rquery()
+{
+   U_TRACE(5, "::usp_fork_rquery()")
+
+   rc = U_NEW(UREDISClient<UTCPSocket>);
+
+   if (rc->connect() == false)
+      {
+      U_WARNING("usp_fork_rquery(): %V", rc->UClient_Base::getResponse().rep);
+
+      return;
+      }
+
+   pvworld_query = U_NEW(UVector<World*>(500));
+
+#ifndef AS_cpoll_cppsp_DO
+   pvalue = U_NEW(UValue(ARRAY_VALUE));
+#endif
+}
+
+#ifdef DEBUG
+static void usp_end_rquery()
+{
+   U_TRACE(5, "::usp_end_rquery()")
+
+   delete rc;
+
+   if (pvworld_query)
+      {
+      delete pvworld_query;
+
+#  ifndef AS_cpoll_cppsp_DO
+      delete pvalue;
+#  endif
+      }
+}
+#endif
+-->
+<!--#header
+Content-Type: application/json
+-->
+<!--#code
+World* pworld;
+UStringRep* rep;
+char* pbuffer = u_buffer;
+int i, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+
+#ifdef AS_cpoll_cppsp_DO
+USP_PUTS_CHAR('[');
+#endif
+
+for (i = 0; i < num_queries; ++i)
+   {
+   pvworld_query->push_back(pworld = U_NEW(World));
+
+   u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
+
+   pbuffer += 7+u_num2str32(pbuffer+7, pworld->id = u_get_num_random(10000));
+   }
+
+(void) rc->mget(u_buffer, pbuffer-u_buffer);
+
+i = 0;
+
+while (true)
+   {
+   pworld = pvworld_query->at(i);
+
+   rep = rc->vitem[i].rep;
+
+   pworld->randomNumber = u_strtoul(rep->data(), rep->end());
+
+#ifdef AS_cpoll_cppsp_DO
+   USP_PRINTF("{\"id\":%u,\"randomNumber\":%v}", pworld->id, rep);
+#endif
+
+   if (++i == num_queries) break;
+
+#ifdef AS_cpoll_cppsp_DO
+   USP_PUTS_CHAR(',');
+#endif
+   }
+
+#ifdef AS_cpoll_cppsp_DO
+USP_PUTS_CHAR(']');
+#else
+USP_JSON_stringify(*pvalue, UVector<World*>, *pvworld_query);
+pvalue->clear();
+#endif
+pvworld_query->clear();
+-->

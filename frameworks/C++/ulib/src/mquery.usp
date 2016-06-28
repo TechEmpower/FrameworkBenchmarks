@@ -1,0 +1,105 @@
+<!--#
+Test type 3: Multiple database queries
+TechEmpower Web Framework Benchmarks
+-->
+<!--#declaration
+#include "world.h"
+
+static UString* jquery;
+static UMongoDBClient* mc;
+static World* pworld_query;
+
+#ifndef AS_cpoll_cppsp_DO
+static UValue* pvalue;
+static UVector<World*>* pvworld_query;
+#endif
+
+static void usp_fork_mquery()
+{
+   U_TRACE(5, "::usp_fork_mquery()")
+
+   mc = U_NEW(UMongoDBClient);
+
+   if (mc->connect() == false)
+      {
+      U_WARNING("usp_fork_mquery(): connection disabled or failed");
+
+      return;
+      }
+
+   if (mc->selectCollection("hello_world", "World") == false)
+      {
+      U_WARNING("usp_fork_mquery(): selectCollection() failed");
+
+      return;
+      }
+
+   jquery       = U_NEW(U_STRING_FROM_CONSTANT("{'randomNumber'"));
+   pworld_query = U_NEW(World);
+
+#ifndef AS_cpoll_cppsp_DO
+   pvalue        = U_NEW(UValue(ARRAY_VALUE));
+   pvworld_query = U_NEW(UVector<World*>(500));
+#endif
+}
+
+#ifdef DEBUG
+static void usp_end_mquery()
+{
+   U_TRACE(5, "::usp_end_mquery()")
+
+   delete mc;
+
+   if (jquery)
+      {
+      delete jquery;
+      delete pworld_query;
+
+#  ifndef AS_cpoll_cppsp_DO
+      delete pvalue;
+      delete pvworld_query;
+#  endif
+      }
+}
+#endif
+-->
+<!--#header
+Content-Type: application/json
+-->
+<!--#code
+UString rnumber;
+int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+
+#ifdef AS_cpoll_cppsp_DO
+USP_PUTS_CHAR('[');
+#endif
+
+while (true)
+   {
+   (void) mc->findOne(pworld_query->id = u_get_num_random(10000));
+
+   (void) UValue::jread(mc->vitem[0], *jquery, rnumber); // { "_id" : 8980.000000, "id" : 8980.000000, "randomNumber" : 2131.000000 }
+
+#ifdef AS_cpoll_cppsp_DO
+   USP_PRINTF("{\"id\":%u,\"randomNumber\":%v}", pworld_query->id, rnumber.rep);
+#else
+   pworld_query->randomNumber = u_strtoul(rnumber.data(), rnumber.end());
+
+   pvworld_query->push_back(U_NEW(World(*pworld_query)));
+#endif
+
+   if (++i == num_queries) break;
+
+#ifdef AS_cpoll_cppsp_DO
+   USP_PUTS_CHAR(',');
+#endif
+   }
+
+#ifdef AS_cpoll_cppsp_DO
+USP_PUTS_CHAR(']');
+#else
+USP_JSON_stringify(*pvalue, UVector<World*>, *pvworld_query);
+pvalue->clear();
+pvworld_query->clear();
+#endif
+-->

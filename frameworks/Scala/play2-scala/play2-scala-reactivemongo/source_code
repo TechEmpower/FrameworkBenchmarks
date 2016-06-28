@@ -1,3 +1,7 @@
 ./play2-scala-reactivemongo/app/
+./play2-scala-reactivemongo/app/Filters.scala
 ./play2-scala-reactivemongo/app/controllers
 ./play2-scala-reactivemongo/app/controllers/Application.scala
+./play2-scala-reactivemongo/app/views
+./play2-scala-reactivemongo/app/views/main.scala.html
+./play2-scala-reactivemongo/app/views/fortune.scala.html

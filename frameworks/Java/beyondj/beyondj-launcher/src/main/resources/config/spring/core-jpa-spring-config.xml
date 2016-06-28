@@ -1,0 +1,81 @@
+<beans
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+        http://www.springframework.org/schema/data/jpa
+        http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:props/core-config.properties</value>
+            </list>
+        </property>
+    </bean>
+    <jpa:repositories base-package="com.lenox.repository"></jpa:repositories>
+
+ <!--   <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+-->
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+
+    <bean id="jpaVendorAdapter"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="database" value="${system.jdbc.database.platform}"/>
+        <property name="databasePlatform" value="${system.jdbc.dialect}"/>
+    </bean>
+
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
+        <property name="persistenceUnitName" value="beyondj_persistence_unit"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+        <property name="jpaDialect" ref="jpaDialect"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${system.jdbc.driver}"/>
+        <property name="url" value="${system.jdbc.url}"/>
+        <property name="username" value="${system.jdbc.username}"/>
+        <property name="password" value="${system.jdbc.password}"/>
+    </bean>
+
+    <!-- <bean id="systemDataSet" class="com.lenox.dataset.SystemDataSet"/>
+ -->
+    <bean id="roleNameParser" class="com.lenox.security.RoleNameParser">
+        <constructor-arg index="0" value="config/roles.xml"/>
+    </bean>
+
+    <bean id="featureNameParser" class="com.lenox.security.FeatureNameParser">
+        <constructor-arg index="0" value="config/features.xml"/>
+    </bean>
+
+    <bean id="protectedElementParser" class="com.lenox.security.ProtectedElementParser">
+        <constructor-arg index="0" value="config/security-policy.xml"/>
+        <constructor-arg index="1" ref="featureNameParser"/>
+        <constructor-arg index="2" ref="roleNameParser"/>
+    </bean>
+
+    <bean id="beyondJCoreSecurityManager" class="com.lenox.security.BeyondJCoreSecurityManager">
+        <property name="elementParser" ref="protectedElementParser"/>
+        <property name="featureNameParser" ref="featureNameParser"/>
+    </bean>
+
+    <bean id="emailService" class="com.lenox.custom.EmailService"/>
+
+</beans>
+
+
+
+
+

@@ -1,15 +1,7 @@
 #!/bin/bash
 
-source $IROOT/java7.installed
+fw_depends rvm jruby-1.7
 
-# We assume single-user installation as 
-# done in our rvm.sh script and 
-# in Travis-CI
-if [ "$TRAVIS" = "true" ]
-then
-	source /home/travis/.rvm/scripts/rvm
-else
-	source $HOME/.rvm/scripts/rvm
-fi
+rvm jruby-$JRUBY_VERSION do bundle install --jobs=4 --gemfile=$TROOT/Gemfile --path=vendor/bundle
 
-DB_HOST=${DBHOST} rvm jruby-1.7.13 do bundle exec puma -b tcp://0.0.0.0:8080 -e production &
+DB_HOST=${DBHOST} rvm jruby-$JRUBY_VERSION do bundle exec puma -b tcp://0.0.0.0:8080 -e production &

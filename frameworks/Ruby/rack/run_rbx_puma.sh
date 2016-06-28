@@ -1,17 +1,9 @@
 #!/bin/bash
 
-source $IROOT/java7.installed
+fw_depends rvm rbx-2.4
 
-sed -i 's|  host:.*|  host:'"${DBHOST}"'|g' config/database.yml
+sed -i 's|127.0.0.1|'${DBHOST}'|g' config/database.yml
 
-# We assume single-user installation as 
-# done in our rvm.sh script and 
-# in Travis-CI
-if [ "$TRAVIS" = "true" ]
-then
-	source /home/travis/.rvm/scripts/rvm
-else
-	source $HOME/.rvm/scripts/rvm
-fi
+rvm rbx-$RBX_VERSION do bundle install --jobs=4 --gemfile=$TROOT/Gemfile --path=vendor/bundle
 
-rvm rbx-2.2.10 do bundle exec puma -b tcp://0.0.0.0:8080 -e production &
+rvm rbx-$RBX_VERSION do bundle exec puma -b tcp://0.0.0.0:8080 -e production &

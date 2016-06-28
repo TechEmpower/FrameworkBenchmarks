@@ -1,0 +1,24 @@
+{
+  "framework": "poco",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "none",
+      "framework": "POCO",
+      "language": "C++",
+      "orm": "Raw",
+      "platform": "POCO",
+      "webserver": "poco",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "POCO",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
+

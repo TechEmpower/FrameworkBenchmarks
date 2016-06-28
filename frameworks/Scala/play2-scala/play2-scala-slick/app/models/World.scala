@@ -1,33 +1,47 @@
 package models
 
-import play.api.Play.current
-import play.api.db.slick.Config.driver.simple._
-import play.api.db.slick.DB
 import play.api.libs.json._
-import play.api.libs.functional.syntax._
 
-class Worlds(tag: Tag) extends Table[World](tag, "World") {
-  def id = column[Int]("id", O.PrimaryKey)
-  def randomNumber = column[Long]("randomNumber")
-  def * = (id, randomNumber) <> ((World.apply _).tupled, World.unapply _)
-}
-class WorldsTableQuery extends TableQuery(new Worlds(_)){
-  val byId = this.findBy(_.id)
+import scala.concurrent.Future
 
-  def findById(id: Int)(implicit session: Session): World = {
-    byId(id).first
+import javax.inject.{Singleton, Inject}
+import play.api.db.slick.DatabaseConfigProvider
+import play.api.db.slick.HasDatabaseConfigProvider
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.db.NamedDatabase
+import slick.driver.JdbcProfile
+
+@Singleton()
+class WorldDAO @Inject()(@NamedDatabase("hello_world") protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
+  import driver.api._
+
+  private val Worlds = TableQuery[WorldsTable]
+
+  def all(): Future[Seq[World]] = db.run(Worlds.result)
+
+  def insert(world: World): Future[Unit] = db.run(Worlds += world).map { _ => () }
+
+  private class WorldsTable(tag: Tag) extends Table[World](tag, Some("hello_world"), "World") {
+
+    def id = column[Int]("id", O.PrimaryKey)
+    def randomNumber = column[Long]("randomNumber")
+
+    def * = (id, randomNumber) <> (World.tupled, World.unapply)
   }
 
-  val updateQuery = Compiled{ (id: Column[Int]) => this.filter(_.id === id) }
+  def findById(id: Int): Future[World] = {
+    db.run(Worlds.filter(_.id === id).result.head)
+  }
 
-  def updateRandom(world: World)(implicit session: Session) {
-    updateQuery(world.id).update(world)
-  }  
+  def updateRandom(world: World) = {
+    db.run(Worlds.filter(_.id === world.id).map(_.randomNumber).update(world.randomNumber))
+  }
 }
+
 
 case class World(id: Int, randomNumber: Long)
 
-object World {
+object WorldJsonHelpers {
   implicit val toJson = new Writes[World] {
     def writes(w: World): JsValue = {
       Json.obj(

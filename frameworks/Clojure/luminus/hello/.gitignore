@@ -5,7 +5,8 @@
 pom.xml
 *.jar
 *.class
-.lein-deps-sum
-.lein-failures
-.lein-plugins
-.lein-env
+/.lein-*
+profiles.clj
+/.env
+.nrepl-port
+/log

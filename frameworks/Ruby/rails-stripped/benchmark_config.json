@@ -39,7 +39,7 @@
       "database_os": "Linux",
       "display_name": "rails-jruby",
       "notes": "",
-      "versus": "rack-torqbox"
+      "versus": "rack-torqbox-jruby"
     }
   }]
 }

@@ -5,5 +5,5 @@ This is the Yesod portion of a [benchmarking test suite](../) comparing a variet
 
 ## Infrastructure Software Versions
 The tests were run with:
-* GHC 7.4.1
-* Yesod 1.1.9.2
+* GHC 7.8.3
+* Yesod 1.4

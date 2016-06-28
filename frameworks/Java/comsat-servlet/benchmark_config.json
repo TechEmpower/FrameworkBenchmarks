@@ -1,0 +1,26 @@
+{
+  "framework": "comsat-servlet",
+  "tests": [
+    {
+      "default": {
+        "setup_file": "setup",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "comsat-servlet",
+        "language": "Java",
+        "orm": "Raw",
+        "platform": "Comsat Servlet",
+        "webserver": "Undertow",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "comsat-servlet-undertow",
+        "notes": "Comsat servlet on embedded Undertow",
+        "versus": ""
+      }
+    }
+  ]
+}

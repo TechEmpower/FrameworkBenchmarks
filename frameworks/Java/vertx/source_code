@@ -1,2 +1,1 @@
-./vertx/app.js
-./vertx/WebServer.java
+./vertx/src/main/java/vertx/WebServer.java

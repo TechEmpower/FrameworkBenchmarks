@@ -18,7 +18,7 @@
       "database_os": "Linux",
       "display_name": "express",
       "notes": "",
-      "versus": "node"
+      "versus": "nodejs"
     },
     "mongodb": {
       "setup_file": "setup",
@@ -38,7 +38,7 @@
       "database_os": "Linux",
       "display_name": "express",
       "notes": "",
-      "versus": "node"
+      "versus": "nodejs"
     },
     "mysql": {
       "setup_file": "setup",
@@ -59,7 +59,7 @@
       "database_os": "Linux",
       "display_name": "express",
       "notes": "",
-      "versus": "node"
+      "versus": "nodejs"
     }
   }]
 }

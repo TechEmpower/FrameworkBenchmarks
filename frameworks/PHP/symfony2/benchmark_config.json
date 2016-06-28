@@ -59,6 +59,27 @@
       "display_name": "symfony2",
       "notes": "",
       "versus": "php"
+    },
+    "hhvm": {
+      "setup_file": "setup_hhvm",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "symfony2",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "hhvm",
+      "webserver": "HPHP",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "symfony2-hhvm",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

@@ -14,11 +14,6 @@
 
 package sabina.benchmark;
 
-/**
- * TODO .
- *
- * @author jam
- */
 final class Fortune {
     final int id;
     final String message;

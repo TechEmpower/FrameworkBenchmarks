@@ -1,0 +1,111 @@
+<!--#
+Test type 5: Database updates
+TechEmpower Web Framework Benchmarks
+-->
+<!--#declaration
+#include "world.h"
+
+static World*         pworld_update;
+static UOrmSession*   psql_update;
+static UOrmStatement* pstmt1;
+static UOrmStatement* pstmt2;
+
+#ifndef AS_cpoll_cppsp_DO
+static UValue* pvalue;
+static UVector<World*>* pvworld_update;
+#endif
+
+static void usp_fork_update()
+{
+   U_TRACE(5, "::usp_fork_update()")
+
+   psql_update = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
+
+   if (psql_update->isReady())
+      {
+      pstmt1 = U_NEW(UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
+      pstmt2 = U_NEW(UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = ? WHERE id = ?")));
+
+      if (pstmt1 == 0 ||
+          pstmt2 == 0)
+         {
+         U_WARNING("usp_fork_update(): we cound't connect to db");
+         }
+
+		if (UOrmDriver::isPGSQL()) *psql_update << "SET synchronous_commit TO OFF";
+
+      pworld_update = U_NEW(World);
+
+      pstmt1->use( pworld_update->id);
+      pstmt1->into(pworld_update->randomNumber);
+      pstmt2->use( pworld_update->randomNumber, pworld_update->id);
+
+#  ifndef AS_cpoll_cppsp_DO
+      pvalue         = U_NEW(UValue(ARRAY_VALUE));
+      pvworld_update = U_NEW(UVector<World*>(500));
+#  endif
+      }
+}
+
+#ifdef DEBUG
+static void usp_end_update()
+{
+   U_TRACE(5, "::usp_end_update()")
+
+   if (pstmt1 &&
+       pstmt2)
+      {
+      delete pstmt1;
+      delete pstmt2;
+      delete psql_update;
+      delete pworld_update;
+
+#  ifndef AS_cpoll_cppsp_DO
+      delete pvalue;
+      delete pvworld_update;
+#  endif
+      }
+}
+#endif
+-->
+<!--#header
+Content-Type: application/json
+-->
+<!--#code
+int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+
+#ifdef AS_cpoll_cppsp_DO
+USP_PUTS_CHAR('[');
+#endif
+
+while (true)
+   {
+   pworld_update->id = u_get_num_random(10000);
+
+   pstmt1->execute();
+
+   pworld_update->randomNumber = u_get_num_random(10000);
+
+   pstmt2->execute();
+
+#ifdef AS_cpoll_cppsp_DO
+   USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld_update->id, pworld_update->randomNumber);
+#else
+   pvworld_update->push_back(U_NEW(World(*pworld_update)));
+#endif
+
+   if (++i == num_queries) break;
+
+#ifdef AS_cpoll_cppsp_DO
+   USP_PUTS_CHAR(',');
+#endif
+   }
+
+#ifdef AS_cpoll_cppsp_DO
+USP_PUTS_CHAR(']');
+#else
+USP_JSON_stringify(*pvalue, UVector<World*>, *pvworld_update);
+pvalue->clear();
+pvworld_update->clear();
+#endif
+-->

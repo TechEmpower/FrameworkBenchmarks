@@ -4,14 +4,15 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
-scalaVersion := "2.11.4"
+scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
   javaJdbc,
   javaJpa,
-  "mysql" % "mysql-connector-java" % "5.1.33",
-  "org.hibernate" % "hibernate-entitymanager" % "4.3.6.Final",
-  "com.edulify" %% "play-hikaricp" % "1.5.0"
+  "mysql" % "mysql-connector-java" % "5.1.38",
+  "org.hibernate" % "hibernate-entitymanager" % "5.0.1.Final"
 )
 
-resolvers += Resolver.url("Edulify Repository", url("http://edulify.github.io/modules/releases/"))(Resolver.ivyStylePatterns)
+routesGenerator := InjectedRoutesGenerator
+
+PlayKeys.externalizeResources := false

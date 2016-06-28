@@ -1,14 +1,18 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists $IROOT/nim.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+RETCODE=$(fw_exists ${IROOT}/nim.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/nim.installed
+  return 0; }
+  
+NIM_VERSION="0.11.2"
 
-test -d nim || git clone git://github.com/Araq/Nim.git nim
+fw_get -O https://github.com/nim-lang/Nim/archive/v$NIM_VERSION.tar.gz
+fw_untar v$NIM_VERSION.tar.gz
+mv Nim-$NIM_VERSION nim
 cd nim
-# post version 0.10.2 - most recent as of 2014-12-
-git checkout v0.10.2
 
-test -d csources || git clone git://github.com/nim-lang/csources.git
+git clone git://github.com/nim-lang/csources.git
 cd csources
 sh build.sh
 cd ..
@@ -18,11 +22,7 @@ bin/nim c koch
 # bootstrapping nim's compiler
 ./koch boot -d:release
 
-# nim's package manager
-test -d nimble || git clone git://github.com/nim-lang/nimble.git
-cd nimble
-git checkout v0.6
-../bin/nim c src/nimble
-mv src/nimble ../bin/
+echo "export NIM_HOME=${IROOT}/nim" > $IROOT/nim.installed
+echo -e "export PATH=\$NIM_HOME/bin:\$PATH" >> $IROOT/nim.installed
 
-touch $IROOT/nim.installed
+source $IROOT/nim.installed

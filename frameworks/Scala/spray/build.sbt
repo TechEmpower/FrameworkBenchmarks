@@ -1,10 +1,10 @@
-import spray.revolver.RevolverPlugin.Revolver
+import spray.revolver.RevolverPlugin
 
 name := "spray-benchmark"
 
 organization := "io.spray"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.11.7"
 
 version := "1.0"
 
@@ -14,13 +14,14 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "io.spray" %% "spray-json" % "1.2.4",
+  "io.spray" %% "spray-json" % "1.3.2",
   "io.spray" % "spray-can" % "1.1-20130619",
-  "com.typesafe.akka" %%  "akka-actor" % "2.1.2",
-  "com.typesafe.akka" %%  "akka-slf4j" % "2.1.2",
-  "ch.qos.logback"% "logback-classic" % "1.0.12" % "runtime"
+  "com.typesafe.akka" %%  "akka-actor" % "2.4.1",
+  "com.typesafe.akka" %%  "akka-slf4j" % "2.4.1",
+  "ch.qos.logback"% "logback-classic" % "1.0.12" % "runtime",
+  "org.scala-lang" % "scala-xml" % "2.11.0-M4"
 )
 
-Revolver.settings
+RevolverPlugin.settings
 
-sbtassembly.Plugin.assemblySettings
+sbtassembly.AssemblyPlugin.assemblySettings

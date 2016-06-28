@@ -1,55 +1,33 @@
-body {	
-    background-color: #fff;
-    color: #333;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+html,
+body {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100%;
 }
-
-#register {
-    float: left;
-    display: inline-block;
-}
-
-h1 {
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-	background-color: #E9E9E9;
-	border: 1px solid #CFCFCF;
-	border-radius: 4px;
-}
-
-.nav li {
-    float: left;
-    list-style: none;
-    padding: 5px;
-}
-
 .navbar {
-    text-align: right;
-    padding: 5px;
-    margin-bottom: 10px;
+  margin-bottom: 10px;
+}
+.navbar-brand {
+  float: none;
+}
+.navbar-nav .nav-item {
+  float: none;
+}
+.navbar-divider,
+.navbar-nav .nav-item+.nav-item,
+.navbar-nav .nav-link + .nav-link {
+  margin-left: 0;
+}
+@media (min-width: 34em) {
+  .navbar-brand {
+    float: left;
+  }
+  .navbar-nav .nav-item {
+    float: left;
+  }
+  .navbar-divider,
+  .navbar-nav .nav-item+.nav-item,
+  .navbar-nav .nav-link + .nav-link {
+    margin-left: 1rem;
+  }
 }
 
-#container {
-    height: auto;
-    margin-bottom: 10px;
-}
-
-#footer {    
-    width: 95%;
-    margin-left: 1%;
-    margin-right: 1%;
-    position:absolute;
-    bottom:0;
-    font-size: 11px;
-    font-weight: bold;
-    height: auto;    
-    text-align: center;
-    
-	padding-top: 10px;
-	
-	-webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-	background-color: #E9E9E9;
-	border: 1px solid #CFCFCF;
-	border-radius: 4px;
-}

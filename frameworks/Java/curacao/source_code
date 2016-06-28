@@ -1,5 +1,13 @@
+./curacao/src
+./curacao/src/main
+./curacao/src/main/java
 ./curacao/src/main/java/benchmark
-./curacao/src/main/java/benchmark/Bootstrap.java
 ./curacao/src/main/java/benchmark/Benchmarks.java
 ./curacao/src/main/java/benchmark/entities
 ./curacao/src/main/java/benchmark/entities/HelloWorld.java
+./curacao/src/main/resources
+./curacao/src/main/resources/application.conf
+./curacao/src/main/resources/logback.xml
+./curacao/src/main/webapp
+./curacao/src/main/webapp/WEB-INF
+./curacao/src/main/webapp/WEB-INF/web.xml

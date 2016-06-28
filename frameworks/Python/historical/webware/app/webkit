@@ -1,0 +1,171 @@
+#!/bin/sh
+#
+# WebKit application server
+# part of Webware for Python
+# www.webwareforpython.org
+#
+# /etc/init.d/webkit
+#
+# init.d script for Debian GNU/Linux
+#
+
+### START LOCAL CONFIGURATION
+
+# If you store this script in your Webware working directory
+# and create a symlink to it as /etc/init.d/webkit_appname,
+# it will try to guess your configuration parameters. You can
+# make changes either directly here or you can also override
+# the configuration in the Launch.py script.
+
+# The name of your Webware application:
+APP_NAME=`basename "$0"`
+
+# Description of your Webware application:
+DESC="Webware"
+
+# The location of the start sript:
+if [ -h "$0" ]; then
+    # Get the target file if start script is given as a link:
+    START_SCRIPT=`readlink -f "$0"`
+else
+    START_SCRIPT="$0"
+fi
+
+# The working directory or path to WebKit:
+WORK_DIR=`dirname "$START_SCRIPT"`
+# Make sure to have the absolute path:
+test -d "$WORK_DIR" || exit 0
+WORK_DIR=`cd "$WORK_DIR" 2>/dev/null && pwd`
+
+# The app server launch script:
+APP_SERVER="$WORK_DIR/AppServer"
+test -x "$APP_SERVER" || exit 0
+
+# The app server configuration:
+APP_SERVER_CONFIG="$WORK_DIR/Configs/AppServer.config"
+test -f "$APP_SERVER_CONFIG" || exit 0
+
+# The WebKit app server log file
+# (you can set this in Launch.py as well):
+#LOG_FILE="/var/log/$APP_NAME.log"
+LOG_FILE="$WORK_DIR/Logs/webkit.log"
+# Use this extension if you want to move the last log away
+# (also consider using logrotate or something similar):
+LOG_OLD=".old"
+
+# The app server process id file
+# (you can set this in Launch.py as well):
+#PID_FILE="/var/run/$APP_NAME.pid"
+PID_FILE="$WORK_DIR/webkit.pid"
+
+# The user and group to run the app server
+# (you can set this in Launch.py as well).
+# If undefined, it will be the user and group
+# running the start script (usually root).
+# You should use a low-privilege account,
+# like the work dir owner, wwwrun or nobody.
+# This will use the owner of the AppServer script:
+WEBWARE_USER=`stat -c "%U" "$APP_SERVER"`
+WEBWARE_GROUP=`stat -c "%G" "$APP_SERVER"`
+
+# Unset the following variable if you want to store the
+# pid and log files as the user running the start script
+# (usually root) or set it if you want these files to be
+# written after switching to WEBWARE_USER:WEBWARE_GROUP.
+LAUNCH_AS_WEBWARE="yes"
+
+# Additional options -u or -O to be passed on to Python:
+PYTHONOPTS=
+# Additional libraries to be included in the Python path:
+PYTHONPATH=
+export PYTHONPATH
+
+### END LOCAL CONFIGURATION
+
+set -e
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+d_start() {
+    # Keep backup of last log file:
+    if [ "$LOG_OLD" -a -f "$LOG_FILE" ]; then
+        if [ -s "$LOG_FILE" ]; then
+            mv "$LOG_FILE" "$LOG_FILE$LOG_OLD"
+        else
+            rm "$LOG_FILE"
+        fi
+    fi
+    # Prepare option to set group
+    if [ "$WEBWARE_GROUP" ]; then
+        WEBWARE_GROUP="-g $WEBWARE_GROUP"
+    fi
+    # Note that the pid file does not record the pid of the
+    # wrapper script, but the pid of the Python app server:
+    if [ "$LAUNCH_AS_WEBWARE" ]; then
+        # Prepare option to set user
+        if [ "$WEBWARE_USER" ]; then
+            WEBWARE_USER="-c $WEBWARE_USER"
+        fi
+        # Switch user first, then create pid and log files:
+        start-stop-daemon -S -b -q -p "$PID_FILE" \
+            $WEBWARE_USER $WEBWARE_GROUP -a "$APP_SERVER" \
+            -- $PYTHONOPTS -d "$WORK_DIR" -o "$LOG_FILE" \
+            -i "$PID_FILE" > /dev/null
+
+    else
+        # Prepare option to set user
+        if [ "$WEBWARE_USER" ]; then
+            WEBWARE_USER="-u $WEBWARE_USER"
+        fi
+        # Create pid and log files first, then switch user:
+        start-stop-daemon -S -q -p "$PID_FILE" -a "$APP_SERVER" \
+            -- $PYTHONOPTS -d "$WORK_DIR" -i "$PID_FILE" \
+            $WEBWARE_USER $WEBWARE_GROUP >> "$LOG_FILE" 2>&1 &
+    fi
+}
+
+d_stop() {
+    # Note that we are terminating the Python app server here;
+    # the app server wrapper script will follow automatically:
+    [ -f "$PID_FILE" ] && \
+    start-stop-daemon -K -q -p $PID_FILE \
+        $WEBWARE_USER -n python
+    rm -f "$PID_FILE"
+}
+
+d_reload() {
+    [ -f "$PID_FILE" ] && \
+    start-stop-daemon -K -q -p $PID_FILE \
+        $WEBWARE_USER -n python -s HUP
+}
+
+case "$1" in
+    start)
+        echo -n "Starting $DESC: $APP_NAME"
+        d_start
+        echo "."
+        ;;
+    stop)
+        echo -n "Stopping $DESC: $APP_NAME"
+        d_stop
+        echo "."
+        ;;
+    reload|force-reload)
+        echo -n "Reloading $DESC configuration..."
+        d_reload
+        echo "done."
+        ;;
+    restart)
+        echo -n "Restarting $DESC: $NAME"
+        d_stop
+        sleep 1
+        d_start
+        echo "."
+        ;;
+    *)
+        echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

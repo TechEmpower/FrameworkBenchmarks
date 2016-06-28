@@ -6,16 +6,18 @@ For further guidance, review the
 
 ## Infrastructure Software Versions
 
-* [python2 2.7.9](https://www.python.org/)
-* [python3 3.4.2](https://www.python.org/)
-* [pypy 2.4.0](http://pypy.org/)
-* [nginx 1.4.1](http://nginx.org/)
+* [CPython2](https://www.python.org/)
+* [CPython3](https://www.python.org/)
+* [PyPy](http://pypy.org/)
+* [nginx](http://nginx.org/)
+* [uWSGI](https://uwsgi-docs.readthedocs.org/en/latest/)
 
 ## Get Help
 
 ### Python Experts
 
 * INADA Naoki (@methane) -- Expert of Python and Python's MySQL driver.
+* Ludovic Gasc (@GMLudo) -- Expert of AsyncIO.
 
 ### [Python Community](https://www.python.org/community/)
 
@@ -33,9 +35,7 @@ This is a bit slower than CPython 2, but more simple and productive than it.
 
 ### (C)Python 2
 
-Legacy Python.
-
-It is most major interpreter for now.
+Legacy Python.  Still used for widely.
 
 ### PyPy
 
@@ -43,6 +43,7 @@ PyPy is the fastest Python implementation with JIT.
 
 There is PyPy's Python 3 implementation (PyPy3), but it is not so tuned like PyPy2.
 So we don't use it for now.
+
 
 ## WSGI Servers
 
@@ -84,6 +85,7 @@ We can't maintain matrix of frameworks (5~) * servers (3~) * DBs (3) * Interpret
 
 If you want to know about performance difference between MySQL and PostgreSQL,
 there are no need to all frameworks implement both of them.
+
 Additionally, Python is not a good language to measure performance of DBs because
 web application written in Python is slower than DBs.
 

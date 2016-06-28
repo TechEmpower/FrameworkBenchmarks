@@ -1,0 +1,28 @@
+{
+  "framework": "permeagility",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 1999,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "permeagility",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "PermeAgility",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "permeagility",
+      "notes": "PermeAgility 0.7.5",
+      "versus": ""
+    }
+  }]
+}

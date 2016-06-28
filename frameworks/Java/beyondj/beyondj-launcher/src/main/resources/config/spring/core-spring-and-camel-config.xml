@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://camel.apache.org/schema/spring
+    http://camel.apache.org/schema/spring/camel-spring.xsd
+	          http://www.springframework.org/schema/aop
+	   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	   	   http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <context:component-scan base-package="com.lenox"/>
+    <aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true"/>
+
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+
+    <bean id="configProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:props/core-config.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="config" class="com.lenox.beyond.configuration.Config">
+        <property name="props" ref="configProperties"/>
+    </bean>
+
+    <bean id="properties"
+          class="org.apache.camel.component.properties.PropertiesComponent">
+        <property name="location" value="classpath:props/core-config.properties"/>
+    </bean>
+
+    <bean id="applicationContextProvider" class="com.lenox.configuration.ApplicationContextProvider"/>
+
+    <import resource="core-jpa-spring-config.xml"/>
+
+    <!-- aspect config-->
+    <bean name="securityAspect" class="com.lenox.security.SecurityAspect"/>
+    <context:annotation-config/>
+    <aop:aspectj-autoproxy>
+        <aop:include name="securityAspect"/>
+    </aop:aspectj-autoproxy>
+
+    <bean id="systemSingletonService" class="com.lenox.beyondj.actor.system.SystemSingletonService"/>
+
+    <bean id="loggingOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
+    <bean id="loggingInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor"/>
+
+    <bean id="gatewayRulesService" class="com.beyondj.gateway.rules.GatewayRulesService"/>
+    <bean id="scalingDataService" class="com.beyondj.gateway.scaling.ScalingDataServiceImpl"/>
+
+    <camelContext id="core-camel-context"
+                  useMDCLogging="true" xmlns="http://camel.apache.org/schema/spring" trace="true" autoStartup="true">
+
+        <route id="updateGatewayRuleRoute" autoStartup="true">
+            <from uri="direct-vm://updateGatewayRules"/>
+            <setExchangePattern pattern="InOut"/>
+            <bean ref="gatewayRulesService" method="updateGatewayRules"/>
+        </route>
+        <route id="fetchGatewayRuleRoute" autoStartup="true">
+            <from uri="direct-vm://fetchGatewayRules"/>
+            <setExchangePattern pattern="InOut"/>
+            <bean ref="gatewayRulesService" method="fetchGatewayRules"/>
+        </route>
+        <route id="fetchAuthenticationDelegateRoute" autoStartup="true">
+            <from uri="direct-vm://fetchSessionDiscoveryService"/>
+            <setExchangePattern pattern="InOut"/>
+            <bean ref="sessionDiscoveryService" method="getSessionDiscoveryService"/>
+        </route>
+        <route id="fetchInstallationServiceRoute" autoStartup="true">
+            <from uri="direct-vm://fetchInstallationService"/>
+            <setExchangePattern pattern="InOut"/>
+            <bean ref="installationService" method="getApplicationLaunchService"/>
+        </route>
+        <route id="fetchActorRefRoute" autoStartup="true">
+            <from uri="direct-vm://fetchActorRefService"/>
+            <setExchangePattern pattern="InOut"/>
+            <bean ref="actorRefService" method="getActorRefService"/>
+        </route>
+
+        <route id="fetchContextMetricsRoute" autoStartup="true">
+            <from uri="direct-vm://fetchMetrics"/>
+            <setExchangePattern pattern="InOut"/>
+            <bean ref="metricMonitoringService" method="fetchMetricsFor"/>
+        </route>
+
+        <route id="registerServerForMetricsRoute" autoStartup="true">
+            <from uri="direct-vm://registerMetricsProvider"/>
+            <setExchangePattern pattern="InOnly"/>
+            <bean ref="metricMonitoringService" method="registerMetricsProvider"/>
+        </route>
+
+        <route id="provideMetricsRoute" autoStartup="true">
+            <from uri="direct-vm://provideMetrics"/>
+            <setExchangePattern pattern="InOnly"/>
+            <bean ref="metricMonitoringService" method="provide"/>
+        </route>
+    </camelContext>
+
+    <bean id="beyondjRewrite" class="com.lenox.beyondj.routes.CamelHttpUrlRewrite">
+        <constructor-arg index="0" value="${system.gateway.route.port}"/>
+    </bean>
+
+    <bean id="branding" class="com.lenox.beyondj.configuration.Branding"/>
+
+    <!-- Hazelcast delegates -->
+    <bean id="metricPublishingDelegate" class="com.lenox.beyondj.ha.metrics.HazelcastMetricPublishingDelegate">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+    <bean id="installationDelegate" class="com.lenox.beyondj.ha.install.HazelcastInstallationDelegate">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+    <bean id="serviceDiscoveryDelegate" class="com.lenox.beyondj.ha.discovery.HazelcastServiceDiscoveryDelegate">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+    <bean id="sessionDiscoveryDelegate" class="com.lenox.beyondj.ha.session.HazelcastSessionDiscoveryDelegate">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+    <bean id="dstinationDiscoveryDelegate"
+          class="com.lenox.beyondj.ha.destination.HazelcastDestinationDiscoveryDelegate">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+    <bean id="managementDelegate"
+          class="com.lenox.beyondj.ha.management.HazelcastServiceManagementDelegate">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+
+    <!-- Hazelcast request listeners -->
+    <bean id="metricPublishingListener" class="com.lenox.beyondj.ha.metrics.HazelcastMetricPublishingListener">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+
+    <bean id="installationListener" class="com.lenox.beyondj.ha.install.HazelcastInstallationRequestListener">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+
+    <bean id="sessionDiscoveryRequestListener"
+          class="com.lenox.beyondj.ha.session.HazelcastSessionDiscoveryEventListener">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+    <bean id="serviceDiscoveryRequestListener"
+          class="com.lenox.beyondj.ha.discovery.HazelcastServiceDiscoveryRequestListener">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+
+    <bean id="destinationDiscoveryRequestListener"
+          class="com.lenox.beyondj.ha.destination.HazelcastDestinationDiscoveryRequestListener">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+
+    <bean id="managementRequestListener"
+          class="com.lenox.beyondj.ha.management.HazelcastServiceManagementRequestListener">
+        <constructor-arg index="0" value="config/beyondj-hazelcast.xml"/>
+    </bean>
+
+    <!-- Hazelcast services -->
+    <bean id="sessionDiscoveryService" class="com.lenox.beyondj.ha.session.BeyondJSessionDiscoveryService"/>
+    <bean id="beyondJDiscoveryService" class="com.lenox.beyondj.services.BeyondJDiscoveryService"/>
+    <bean id="managementService" class="com.lenox.beyondj.services.BeyondJManagementService"/>
+    <bean id="installationService" class="com.lenox.beyondj.services.BeyondJInstallationService"/>
+    <bean id="actorRefService" class="com.lenox.beyondj.actor.system.ActorRefServiceImpl"/>
+    <bean id="beyondJApplicationService" class="com.techempower.beyondj.BeyondJApplicationService"/>
+    <bean id="applicationLaunchService" class="com.lenox.beyondj.services.ApplicationLaunchService" scope="singleton"/>
+
+    <bean id="velocityEngine" class="com.beyondjservlet.gateway.velocity.VelocityEngineFactoryBean">
+        <property name="resourceLoaderPath" value="templates/velocity"/>
+    </bean>
+
+    <bean id="coreMetricsService" class="com.lenox.beyondj.CoreMetricsService">
+        <property name="metricPublishingDelegate" ref="metricPublishingDelegate"/>
+        <property name="metricsEnabled" value="false"/>
+    </bean>
+
+    <bean id="metricMonitoringService" class="com.lenox.beyondj.services.BeyondJMetricMonitoringService">
+        <property name="metricPublishingDelegate" ref="metricPublishingDelegate"/>
+        <property name="metricPublishingListener" ref="metricPublishingListener"/>
+    </bean>
+
+    <bean id="deploymentRunService" class="com.lenox.service.DeploymentRunService"/>
+
+</beans>

@@ -1,0 +1,89 @@
+<!--#
+Test type 4: Fortunes
+TechEmpower Web Framework Benchmarks
+-->
+<!--#declaration
+#include "fortune.h"
+
+static UString* jquery;
+static UString* pencoded;
+static UMongoDBClient* mc;
+static Fortune* pfortune2add;
+static UVector<Fortune*>* pvfortune;
+
+static void usp_fork_mfortune()
+{
+   U_TRACE(5, "::usp_fork_mfortune()")
+
+   mc = U_NEW(UMongoDBClient);
+
+   if (mc->connect() == false)
+      {
+      U_WARNING("usp_fork_mfortune(): connection failed");
+
+      return;
+      }
+
+   if (mc->selectCollection("hello_world", "Fortune") == false)
+      {
+      U_WARNING("usp_fork_mfortune(): selectCollection() failed");
+
+      return;
+      }
+
+   jquery       = U_NEW(U_STRING_FROM_CONSTANT("{'message'"));
+   pencoded     = U_NEW(UString(100U));
+   pvfortune    = U_NEW(UVector<Fortune*>);
+   pfortune2add = U_NEW(Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
+}
+
+#ifdef DEBUG
+static void usp_end_mfortune()
+{
+   U_TRACE(5, "::usp_end_mfortune()")
+
+   delete mc;
+
+   if (jquery)
+      {
+      delete jquery;
+      delete pencoded;
+      delete pvfortune;
+      delete pfortune2add;
+      }
+}
+#endif
+-->
+<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
+uint32_t i, n;
+UString result;
+
+(void) mc->findAll();
+
+pvfortune->push_back(U_NEW(Fortune(*pfortune2add)));
+
+for (i = 0, n = mc->vitem.size(); i < n; ++i)
+   {
+   (void) UValue::jread(mc->vitem[i], *jquery, result); // { "_id" : 5.000000, "id" : 5.000000, "message" : "A computer program does what you tell it to do, not what you want it to do." }
+
+   pvfortune->push_back(U_NEW(Fortune(i+1, result)));
+   }
+
+pvfortune->sort(Fortune::cmp_obj);
+
+for (i = 0, ++n; i < n; ++i)
+   {
+   Fortune* elem = (*pvfortune)[i];
+
+   UXMLEscape::encode(elem->message, *pencoded);
+
+   USP_PRINTF_ADD(
+      "<tr>"
+      "<td>%u</td>"
+      "<td>%v</td>"
+      "</tr>",
+      elem->id, pencoded->rep);
+   }
+
+pvfortune->clear();
+--></table></body></html>

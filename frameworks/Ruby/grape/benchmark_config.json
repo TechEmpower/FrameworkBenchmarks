@@ -21,7 +21,7 @@
       "database_os": "Linux",
       "display_name": "grape-puma-mri",
       "notes": "",
-      "versus": "rack-puma"
+      "versus": "rack-puma-mri"
     }, 
     "puma-jruby": {
       "setup_file": "run_jruby_puma",
@@ -109,7 +109,7 @@
       "database_os": "Linux",
       "display_name": "grape-torqbox-jruby",
       "notes": "",
-      "versus": "rack-torqbox"
+      "versus": "rack-torqbox-jruby"
     },  
     "trinidad-jruby": {
       "setup_file": "run_trinidad",
@@ -131,7 +131,7 @@
       "database_os": "Linux",
       "display_name": "grape-trinidad-jruby",
       "notes": "",
-      "versus": "rack-trinidad"
+      "versus": "rack-trinidad-jruby"
     },  
     "unicorn": {
       "setup_file": "run_unicorn",

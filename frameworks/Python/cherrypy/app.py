@@ -1,10 +1,10 @@
+import cgi
 import os
 import sys
 from functools import partial
 from operator import attrgetter
 from random import randint
 import json
-import bleach
 
 import cherrypy
 from sqlalchemy.ext.declarative import declarative_base
@@ -59,6 +59,7 @@ class CherryPyBenchmark(object):
 
     @cherrypy.expose
     def plaintext(self):
+        cherrypy.response.headers["Content-Type"] = "text/plain"
         return "Hello, world!"
 
     @cherrypy.expose
@@ -111,7 +112,7 @@ class CherryPyBenchmark(object):
         fortunes.sort(key=attrgetter("message"))
         html = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
         for f in fortunes:
-            html += "<tr><td>" + str(f.id) + "</td><td>" + bleach.clean(f.message) + "</td></tr>"
+            html += "<tr><td>" + str(f.id) + "</td><td>" + cgi.escape(f.message) + "</td></tr>"
         html += "</table></body></html>"
         return html
 
@@ -119,11 +120,11 @@ if __name__ == "__main__":
     # Register the SQLAlchemy plugin
     from saplugin import SAEnginePlugin
     DBDRIVER = 'mysql'
-    DBHOSTNAME = os.environ.get('DBHOST', 'localhost')
-    DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % (DBDRIVER, DBHOSTNAME)
+    DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@127.0.0.1:3306/hello_world?charset=utf8' % (DBDRIVER)
     SAEnginePlugin(cherrypy.engine, DATABASE_URI).subscribe()
     
     # Register the SQLAlchemy tool
     from satool import SATool
     cherrypy.tools.db = SATool()
+    cherrypy.server.socket_host = '0.0.0.0'
     cherrypy.quickstart(CherryPyBenchmark(), '', {'/': {'tools.db.on': True}})

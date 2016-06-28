@@ -1,15 +1,14 @@
 #!/bin/bash
 
-source $IROOT/elixir.installed
+fw_depends elixir
 
-sed -i 's|db_host: "localhost",|db_host: "${DBHOST}",|g' config/config.exs
+sed -i 's|localhost|'${DBHOST}'|g' config/prod.exs
 
 rm -rf _build deps
 
+export MIX_ENV=prod
 mix local.hex --force
-mix local.rebar --force
 mix deps.get --force
+mix compile --force
 
-MIX_ENV=prod mix compile.protocols --force
-MIX_ENV=prod elixir --detached -pa _build/$MIX_ENV/consolidated -S mix phoenix.server
-
+elixir --detached -S mix phoenix.server

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-export PY2_ROOT=$IROOT/py2
-export PY2_GUNICORN=$PY2_ROOT/bin/gunicorn
+fw_depends python2
 
-$PY2_GUNICORN app:app -c gunicorn_conf.py &
+pip install --install-option="--prefix=${PY2_ROOT}" -r $TROOT/requirements.txt
+
+gunicorn app:app -c gunicorn_conf.py &

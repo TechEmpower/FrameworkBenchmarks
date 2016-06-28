@@ -1,0 +1,10 @@
+{
+  "connection_string": "mongodb://localhost:27017",
+  "db_name": "hello_world",
+
+  "host": "localhost",
+  "username": "benchmarkdbuser",
+  "password": "benchmarkdbpass",
+  "database": "hello_world",
+  "maxPoolSize": 32
+}

@@ -16,46 +16,31 @@ package sabina.benchmark;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.System.getProperty;
-import static sabina.Sabina.*;
 import static sabina.content.JsonContent.toJson;
 import static sabina.view.MustacheView.renderMustache;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import sabina.Request;
+import sabina.server.ServletApplication;
 
-import java.sql.*;
 import java.util.*;
 import java.util.Date;
-import java.util.concurrent.ThreadLocalRandom;
+import javax.servlet.annotation.WebListener;
 
-import javax.sql.DataSource;
-
-/**
- * .
- */
-final class Application {
-    private static final String SETTINGS_RESOURCE = "/server.properties";
-    private static final Properties SETTINGS = loadConfiguration ();
-
-    private static final String JDBC_URL = SETTINGS.getProperty ("mysql.uri")
-        .replace ("${db.host}", "localhost"); // TODO Move this to Gradle build
-    private static final DataSource DATA_SOURCE = createSessionFactory ();
-    private static final int DB_ROWS = 10000;
-
-    private static final boolean AUTOCOMMIT = getProperty ("sabina.benchmark.autocommit") != null;
-    private static final String SELECT_WORLD = "select * from world where id = ?";
-    private static final String UPDATE_WORLD = "update world set randomNumber = ? where id = ?";
-    private static final String SELECT_FORTUNES = "select * from fortune";
+@WebListener public final class Application extends sabina.Application {
+    static final String SETTINGS_RESOURCE = "/server.properties";
+    static final int DB_ROWS = 10000;
 
     private static final String MESSAGE = "Hello, World!";
     private static final String CONTENT_TYPE_TEXT = "text/plain";
     private static final String CONTENT_TYPE_JSON = "application/json";
     private static final String QUERIES_PARAM = "queries";
 
-    private static Properties loadConfiguration () {
+    static Repository repository = loadRepository ();
+
+    static Properties loadConfiguration () {
         try {
             Properties settings = new Properties ();
-            settings.load (Class.class.getResourceAsStream (SETTINGS_RESOURCE));
+            settings.load (Application.class.getResourceAsStream (SETTINGS_RESOURCE));
             return settings;
         }
         catch (Exception ex) {
@@ -63,22 +48,56 @@ final class Application {
         }
     }
 
-    private static DataSource createSessionFactory () {
-        try {
-            ComboPooledDataSource dataSource = new ComboPooledDataSource ();
-            dataSource.setMinPoolSize (32);
-            dataSource.setMaxPoolSize (256);
-            dataSource.setCheckoutTimeout (1800);
-            dataSource.setMaxStatements (50);
-            dataSource.setJdbcUrl (JDBC_URL);
-            return dataSource;
-        }
-        catch (Exception ex) {
-            throw new RuntimeException (ex);
+    static Repository loadRepository () {
+        switch (getProperty ("sabina.benchmark.repository", "mongodb")) {
+            case "mongodb":
+                return new MongoDbRepository (loadConfiguration ());
+            case "mysql":
+            default:
+                return new MySqlRepository (loadConfiguration ());
         }
     }
 
-    private static int getQueries (final Request request) {
+    private Object getDb (Request it) {
+        try {
+            final World[] worlds = repository.getWorlds (getQueries (it), false);
+            it.response.type (CONTENT_TYPE_JSON);
+            return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
+        }
+        catch (Exception e) {
+            e.printStackTrace ();
+            return e.getMessage ();
+        }
+    }
+
+    private Object getFortunes (Request it) {
+        try {
+            List<Fortune> fortunes = repository.getFortunes ();
+            fortunes.add (new Fortune (0, "Additional fortune added at request time."));
+            fortunes.sort ((a, b) -> a.message.compareTo (b.message));
+
+            it.response.type ("text/html; charset=utf-8");
+            return renderMustache ("fortunes.mustache", fortunes);
+        }
+        catch (Exception e) {
+            e.printStackTrace ();
+            return e.getMessage ();
+        }
+    }
+
+    private Object getUpdates (Request it) {
+        try {
+            World[] worlds = repository.getWorlds (getQueries (it), true);
+            it.response.type (CONTENT_TYPE_JSON);
+            return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
+        }
+        catch (Exception e) {
+            e.printStackTrace ();
+            return e.getMessage ();
+        }
+    }
+
+    private int getQueries (final Request request) {
         try {
             String parameter = request.queryParams (QUERIES_PARAM);
             if (parameter == null)
@@ -97,128 +116,44 @@ final class Application {
         }
     }
 
-    private static Object getJson (Request it) {
-        it.response.type (CONTENT_TYPE_JSON);
-        return toJson (new Message ());
-    }
-
-    private static Object getDb (Request it) {
-        final int queries = getQueries (it);
-        final World[] worlds = new World[queries];
-
-        try (final Connection con = DATA_SOURCE.getConnection ()) {
-            final Random random = ThreadLocalRandom.current ();
-            final PreparedStatement stmt = con.prepareStatement (SELECT_WORLD);
-
-            for (int ii = 0; ii < queries; ii++) {
-                stmt.setInt (1, random.nextInt (DB_ROWS) + 1);
-                final ResultSet rs = stmt.executeQuery ();
-                while (rs.next ())
-                    worlds[ii] = new World (rs.getInt (1), rs.getInt (2));
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace ();
-        }
-
-        it.response.type (CONTENT_TYPE_JSON);
-        return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
-    }
-
-    private static Object getFortunes (Request it) {
-        final List<Fortune> fortunes = new ArrayList<> ();
-
-        try (final Connection con = DATA_SOURCE.getConnection ()) {
-            final ResultSet rs = con.prepareStatement (SELECT_FORTUNES).executeQuery ();
-            while (rs.next ())
-                fortunes.add (new Fortune (rs.getInt (1), rs.getString (2)));
-        }
-        catch (SQLException e) {
-            e.printStackTrace ();
-        }
-
-        fortunes.add (new Fortune (0, "Additional fortune added at request time."));
-        fortunes.sort ((a, b) -> a.message.compareTo (b.message));
-
-        it.response.type ("text/html; charset=utf-8");
-        return renderMustache ("/fortunes.mustache", fortunes);
-    }
-
-    private static Object getUpdates (Request it) {
-        final int queries = getQueries (it);
-        final World[] worlds = new World[queries];
-
-        try (final Connection con = DATA_SOURCE.getConnection ()) {
-            con.setAutoCommit (AUTOCOMMIT);
-
-            final Random random = ThreadLocalRandom.current ();
-            final PreparedStatement stmtSelect = con.prepareStatement (SELECT_WORLD);
-            final PreparedStatement stmtUpdate = con.prepareStatement (UPDATE_WORLD);
-
-            for (int ii = 0; ii < queries; ii++) {
-                stmtSelect.setInt (1, random.nextInt (DB_ROWS) + 1);
-                final ResultSet rs = stmtSelect.executeQuery ();
-                while (rs.next ()) {
-                    worlds[ii] = new World (rs.getInt (1), rs.getInt (2));
-                    stmtUpdate.setInt (1, random.nextInt (DB_ROWS) + 1);
-                    stmtUpdate.setInt (2, worlds[ii].id);
-
-                    if (AUTOCOMMIT) {
-                        stmtUpdate.executeUpdate ();
-                    }
-                    else {
-                        stmtUpdate.addBatch ();
-                    }
-                }
-            }
-
-            if (!AUTOCOMMIT) {
-                int count = 0;
-                boolean retrying;
-
-                do {
-                    try {
-                        stmtUpdate.executeBatch ();
-                        retrying = false;
-                    }
-                    catch (BatchUpdateException e) {
-                        retrying = true;
-                    }
-                }
-                while (count++ < 10 && retrying);
-
-                con.commit ();
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace ();
-        }
-
-        it.response.type (CONTENT_TYPE_JSON);
-        return toJson (it.queryParams (QUERIES_PARAM) == null? worlds[0] : worlds);
-    }
-
-    private static Object getPlaintext (Request it) {
+    private Object getPlaintext (Request it) {
         it.response.type (CONTENT_TYPE_TEXT);
         return MESSAGE;
     }
 
-    private static void addCommonHeaders (Request it) {
+    private Object getJson (Request it) {
+        it.response.type (CONTENT_TYPE_JSON);
+        return toJson (new Message ());
+    }
+
+    private void addCommonHeaders (Request it) {
         it.header ("Server", "Undertow/1.1.2");
-        it.response.raw ().addDateHeader ("Date", new Date ().getTime ());
+        it.response.addDateHeader ("Date", new Date ().getTime ());
+    }
+
+    public Application () {
+        routes ();
+
+        Properties settings = loadConfiguration ();
+
+        bind (settings.getProperty ("web.host"));
+        port (parseInt (settings.getProperty ("web.port")));
+
+        start ();
     }
 
     public static void main (String[] args) {
-        get ("/json", Application::getJson);
-        get ("/db", Application::getDb);
-        get ("/query", Application::getDb);
-        get ("/fortune", Application::getFortunes);
-        get ("/update", Application::getUpdates);
-        get ("/plaintext", Application::getPlaintext);
-        after (Application::addCommonHeaders);
+        new Application ();
+    }
 
-        host (SETTINGS.getProperty ("web.host"));
-        port (SETTINGS.getProperty ("web.port"));
-        start ();
+//    @Override
+    protected void routes () {
+        get ("/json", this::getJson);
+        get ("/db", this::getDb);
+        get ("/query", this::getDb);
+        get ("/fortune", this::getFortunes);
+        get ("/update", this::getUpdates);
+        get ("/plaintext", this::getPlaintext);
+        after (this::addCommonHeaders);
     }
 }

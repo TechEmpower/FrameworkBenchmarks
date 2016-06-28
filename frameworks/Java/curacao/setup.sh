@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# load java environment variables
-source $IROOT/java7.installed
+fw_depends java resin maven
 
-${IROOT}/sbt/bin/sbt assembly
-
-java -jar dist/curacao-standalone.jar &
+mvn clean compile war:war
+rm -rf $RESIN_HOME/webapps/*
+cp target/curacao.war $RESIN_HOME/webapps
+$RESIN_HOME/bin/resinctl start

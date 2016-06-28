@@ -1,21 +1,18 @@
-import os
-import sys
-import json
 from functools import partial
 from operator import attrgetter
+import os
 from random import randint
-
-import bleach
-
-from tg import expose, TGController, AppConfig
+import sys
+import json
 
 from jinja2 import Environment, PackageLoader
-
-from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from tg import expose, TGController, AppConfig
 
 from models.Fortune import Fortune
 from models.World import World
+
 
 DBDRIVER = 'mysql'
 DBHOSTNAME = os.environ.get('DBHOST', 'localhost')
@@ -25,7 +22,7 @@ db_engine = create_engine(DATABASE_URI)
 Session = sessionmaker(bind=db_engine)
 db_session = Session()
 
-env = Environment(loader=PackageLoader("app", "templates"))
+env = Environment(loader=PackageLoader("app", "templates"), autoescape=True, auto_reload=False)
 
 def getQueryNum(queryString):
     try:
@@ -76,19 +73,22 @@ class RootController(TGController):
         worlds = [get(rp()).serialize() for _ in xrange(num_queries)]
         return json.dumps(worlds)
 
-
     @expose()
     def fortune(self):
         fortunes = db_session.query(Fortune).all()
         fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
         fortunes.sort(key=attrgetter("message"))
-        for f in fortunes:
-            f.message = bleach.clean(f.message)
         template = env.get_template("fortunes.html")
         return template.render(fortunes=fortunes)
 
 config = AppConfig(minimal=True, root_controller=RootController())
 config.renderers.append("jinja")
 
-app = config.make_wsgi_app()
+tg_app = config.make_wsgi_app()
 
+
+def app(env, start):
+    try:
+        return tg_app(env, start)
+    finally:
+        db_session.close()

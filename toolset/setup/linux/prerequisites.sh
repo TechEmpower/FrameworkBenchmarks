@@ -14,6 +14,13 @@ RETCODE=$(fw_exists fwbm_prereqs_installed)
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 
+# Add postgresql-server-dev-9.3 libs in "precise" version of Ubuntu
+if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
+  echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+  curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  sudo apt-get update
+fi
+
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
 sudo apt-get -yq update
@@ -44,12 +51,21 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   cloc dstat                        `# Collect resource usage statistics` \
   libsasl2-dev                      `# Needed by mgo for go-mongodb test` \
   llvm-dev                          `# Required for correct Ruby installation` \
-  libboost-dev                      `# Silicon relies on boost::lexical_cast.`
+  libboost-dev                      `# Silicon relies on boost::lexical_cast.` \
+  postgresql-server-dev-9.3         `# Needed by cpoll.` \
+  xdg-utils                         `# Needed by dlang.` \
+  python-pip
 
-# Install gcc-4.8 and gcc-4.9
+sudo pip install colorama==0.3.1
+# Version 2.3 has a nice Counter() and other features
+# but it requires —-allow-external and -—allow-unverified
+sudo pip install progressbar==2.2
+sudo pip install requests
+
+# Install gcc-4.8, gcc-4.9 and clang
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt-get -yq update
-sudo apt-get install -qqy gcc-4.8 g++-4.8 gcc-4.9 g++-4.9
+sudo apt-get install -qqy gcc-4.8 g++-4.8 gcc-4.9 g++-4.9 clang-3.5
 
 # Stop permanently overwriting people's files just for 
 # trying out our software!
@@ -62,6 +78,8 @@ RETCODE=$(fw_exists ~/.bash_profile.bak)
 }
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
+sudo sh -c "echo '*            hard    rtprio             99' >> /etc/security/limits.conf"
+sudo sh -c "echo '*            soft    rtprio             99' >> /etc/security/limits.conf"
 
 # Sudo in case we don't have permissions on IROOT
 sudo touch fwbm_prereqs_installed

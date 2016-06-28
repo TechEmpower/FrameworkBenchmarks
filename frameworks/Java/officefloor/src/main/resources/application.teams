@@ -1,0 +1,5 @@
+<teams>
+
+	<team source="net.officefloor.frame.impl.spi.team.ExecutorCachedTeamSource" type="javax.persistence.EntityManager" />
+
+</teams>

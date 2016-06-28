@@ -1,6 +1,6 @@
 # Pedestal Benchmarking Test
 
-This is the Pedestal portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the [Pedestal](https://github.com/pedestal/pedestal) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ## Test URLs
 ### JSON Encoding Test

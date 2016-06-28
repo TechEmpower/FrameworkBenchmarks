@@ -30,7 +30,7 @@ asort($arr);
 <th>message</th>
 </tr>
 <?php
-foreach ( $arr as $id => &$fortune ) {
+foreach ( $arr as $id => $fortune ) {
 ?>
 <tr>
 <td><?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?></td>  

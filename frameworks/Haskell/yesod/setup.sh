@@ -1,13 +1,10 @@
 #!/bin/bash
 
-export HASKELL_HOME=/opt/ghc/7.8.3
-export CABAL_HOME=/opt/cabal/1.20
-export PATH=${HASKELL_HOME}/bin:$PATH
+fw_depends stack
 
 cd bench
 
-${CABAL_HOME}/bin/cabal update
-${CABAL_HOME}/bin/cabal sandbox init
-${CABAL_HOME}/bin/cabal --bindir=${TROOT}/bench/dist/build/bench install
+${IROOT}/stack --allow-different-user setup
+${IROOT}/stack --allow-different-user build
 
-dist/build/bench/bench ${MAX_THREADS} ${DBHOST} +RTS -A32m -N${MAX_THREADS} &
+${IROOT}/stack --allow-different-user exec bench ${MAX_THREADS} ${DBHOST} +RTS -A32m -N${MAX_THREADS} &

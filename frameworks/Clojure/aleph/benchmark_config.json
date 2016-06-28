@@ -1,0 +1,24 @@
+{
+  "framework": "aleph",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "aleph",
+      "language": "Clojure",
+      "orm": "Raw",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "aleph",
+      "notes": "",
+      "versus": "netty"
+    }
+  }]
+}

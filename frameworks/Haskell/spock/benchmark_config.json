@@ -1,0 +1,28 @@
+{
+  "framework": "spock",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 3000,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "spock",
+      "language": "Haskell",
+      "orm": "Raw",
+      "platform": "Wai",
+      "webserver": "Warp",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "spock",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

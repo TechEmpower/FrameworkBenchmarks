@@ -1,0 +1,77 @@
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:props/core-config.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="systemProp" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject">
+            <!-- System.getProperties() -->
+            <bean
+                    class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+                <property name="targetClass" value="java.lang.System"/>
+                <property name="targetMethod" value="getProperties"/>
+            </bean>
+        </property>
+        <property name="targetMethod" value="putAll"/>
+        <property name="arguments">
+            <!-- The new Properties -->
+            <util:properties>
+                <prop key="derby.system.home">${system.derby.database.path}</prop>
+            </util:properties>
+        </property>
+    </bean>
+
+    <bean id="derbyServerIP"
+          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject">
+            <bean class="java.net.InetAddress"/>
+        </property>
+        <property name="targetMethod">
+            <value>getByName</value>
+        </property>
+        <property name="arguments" value="${derby.server.name}"/>
+    </bean>
+
+    <bean id="derbyServer" class="org.apache.derby.drda.NetworkServerControl"
+          destroy-method="shutdown" depends-on="systemProp">
+        <constructor-arg ref="derbyServerIP"/>
+        <constructor-arg value="${derby.server.port}"/>
+    </bean>
+
+    <bean id="printWriter" class="java.io.PrintWriter">
+        <constructor-arg>
+            <util:constant static-field="java.lang.System.out"/>
+        </constructor-arg>
+        <constructor-arg value="true"/>
+    </bean>
+
+    <bean id="startDerby"
+          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"
+          depends-on="derbyServer">
+        <property name="targetObject">
+            <ref bean="derbyServer"/>
+        </property>
+        <property name="targetMethod">
+            <value>start</value>
+        </property>
+        <property name="arguments" ref="printWriter"/>
+    </bean>
+
+</beans>
+
+
+
+
+

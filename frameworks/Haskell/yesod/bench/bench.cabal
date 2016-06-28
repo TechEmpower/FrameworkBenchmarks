@@ -18,17 +18,17 @@ executable         bench
                 EmptyDataDecls
                 CPP
 
-    build-depends: base                          >= 4.7        && < 5
-                 , yesod-core                    >= 1.4.2      && < 1.4.6
-                 , text                          >= 0.11       && < 1.3
-                 , persistent                    >= 2.1        && < 2.2
-                 , persistent-mysql              >= 2.1        && < 2.2
-                 , persistent-template           >= 2.1        && < 2.2
-                 , warp                          >= 3.0.2.2    && < 3.1
-                 , auto-update                   >= 0.1.1.4    && < 0.2
-                 , primitive                     >= 0.5
-                 , mwc-random                    >= 0.12
-                 , pool-conduit                  >= 0.1.2
+    build-depends: base
+                 , yesod-core
+                 , text
+                 , persistent
+                 , persistent-mysql
+                 , persistent-template
+                 , warp
+                 , auto-update
+                 , primitive
+                 , mwc-random
+                 , pool-conduit
                  , network
                  , mongoDB
                  , monad-logger
@@ -38,7 +38,7 @@ executable         bench
                  , aeson
                  , blaze-builder
                  , blaze-html
-                 , bytestring                    >= 0.10
+                 , bytestring
                  , resource-pool
                  , resourcet
                  , shakespeare

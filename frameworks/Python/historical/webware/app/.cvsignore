@@ -1,0 +1,6 @@
+*.pyc
+*.pyo
+address.*
+httpd.*
+appserverpid.*
+profile.pstats

@@ -1,7 +1,8 @@
 #!/bin/bash
-# load java environment variables
-source $IROOT/java7.installed
 
-sed -i 's|host: \x27.*\x27|host: \x27'"${DBHOST}"'\x27|g' app.js
+fw_depends java maven
 
-${IROOT}/vert.x-2.1.5/bin/vertx run app.js &
+mvn clean package 
+
+cd target
+java -Xms2G -Xmx2G -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true -jar vertx.benchmark-0.0.1-SNAPSHOT-fat.jar &

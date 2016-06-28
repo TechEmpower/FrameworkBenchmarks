@@ -23,27 +23,6 @@
       "display_name": "nawak-postgresql",
       "notes": "",
       "versus": ""
-    },
-    "redis": {
-      "setup_file": "setup_redis",
-      "db_url": "/db",
-      "query_url": "/queries?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
-      "port": 6767,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "Redis",
-      "framework": "nawak",
-      "language": "Nim",
-      "orm": "Raw",
-      "platform": "Nim",
-      "webserver": "mongrel2",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "nawak-redis",
-      "notes": "",
-      "versus": ""
     }
   }]
 }

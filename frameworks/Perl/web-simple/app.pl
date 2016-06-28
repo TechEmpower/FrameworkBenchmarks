@@ -12,9 +12,20 @@ sub dispatch_request {
     [ 200, [ 'Content-type' => 'application/json', ],
       [ encode_json({ message => 'Hello, World!' }) ] ];
   },
-  sub (/db + ?queries~) {
+  sub (/db) {
+    my $id = int(rand 10000) + 1;
+    my $rand;
+    $sth->execute($id);
+    $sth->bind_col(2, \$rand);
+    if ( my @row = $sth->fetch ) {
+       [ 200, [ 'Content-type' => 'application/json', ], [ encode_json({ id => $id, randomNumber => $rand })] ];
+    }
+  },
+  sub (/query + ?queries~) {
     my ($self, $queries) = @_;
-    $queries ||= 1;
+    $queries //= 1;
+    $queries = 1 if ( $queries !~ /^\d+$/ || $queries < 1 );
+    $queries = 500 if $queries > 500;
     my $rand;
     my @response;
     if ($queries == 1) {
@@ -23,7 +34,7 @@ sub dispatch_request {
         $sth->bind_col(2, \$rand);
         if ( my @row = $sth->fetch ) {
             [ 200, [ 'Content-type' => 'application/json', ], 
-              [ encode_json({ id => $id, randomNumber => $rand })] ];
+              [ encode_json([{ id => $id, randomNumber => $rand }])] ];
         }
     }
     else {

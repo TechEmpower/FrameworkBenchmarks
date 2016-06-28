@@ -13,14 +13,14 @@ clean:
 
 
 libonion_static.a: onion
-	(cd onion && mkdir -p build && cd build && cmake .. && cd src && make -j4)
+	(cd onion && mkdir -p build && cd build && cmake .. -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" && make VERBOSE=1)
 	cp onion/build/src/onion/libonion_static.a .
 
 onion:
 	git clone --depth 1 https://github.com/davidmoreno/onion.git
 
 otemplate:
-	(cd onion/build/tools/otemplate/; make)
+	(cd onion/build/tools/otemplate/)
 
 base_html.c: otemplate base.html 
 	onion/build/tools/otemplate/otemplate base.html base_html.c

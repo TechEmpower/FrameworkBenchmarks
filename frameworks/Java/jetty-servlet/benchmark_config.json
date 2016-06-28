@@ -17,7 +17,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "jetty-servlet",
-      "notes": "Jetty 9.1 with ServletContext",
+      "notes": "Jetty 9.2 with ServletContext",
       "versus": ""
     }
   }]

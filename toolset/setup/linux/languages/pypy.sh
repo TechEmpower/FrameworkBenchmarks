@@ -1,15 +1,22 @@
 #!/bin/bash
 
 RETCODE=$(fw_exists ${IROOT}/pypy.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+[ ! "$RETCODE" == 0 ] || { \
+  source $IROOT/pypy.installed
+  return 0; }
+  
+PYPY_ROOT=$IROOT/pypy
+PYPY_VERSION=5.0.1
 
-fw_get https://bitbucket.org/pypy/pypy/downloads/pypy-2.5.0-linux64.tar.bz2 -O pypy-2.5.0-linux64.tar.bz2
-fw_untar pypy-2.5.0-linux64.tar.bz2
-ln -sf pypy-2.5.0-linux64 pypy
+fw_get -o pypy-${PYPY_VERSION}-linux64.tar.bz2 https://bitbucket.org/pypy/pypy/downloads/pypy-${PYPY_VERSION}-linux64.tar.bz2
+fw_untar pypy-${PYPY_VERSION}-linux64.tar.bz2
+mv pypy-${PYPY_VERSION}-linux64 pypy
 
-if [ ! -f "get-pip.py" ]; then
-fw_get https://bootstrap.pypa.io/get-pip.py -O get-pip.py
-fi
-${IROOT}/pypy/bin/pypy get-pip.py
+$PYPY_ROOT/bin/pypy -m ensurepip
+$PYPY_ROOT/bin/pip install -U pip setuptools wheel
 
-touch ${IROOT}/pypy.installed
+echo "export PYPY_ROOT=${PYPY_ROOT}" > $IROOT/pypy.installed
+echo "export PYTHONHOME=${PYPY_ROOT}" >> $IROOT/pypy.installed
+echo -e "export PATH=${PYPY_ROOT}/bin:\$PATH" >> $IROOT/pypy.installed
+  
+source $IROOT/pypy.installed

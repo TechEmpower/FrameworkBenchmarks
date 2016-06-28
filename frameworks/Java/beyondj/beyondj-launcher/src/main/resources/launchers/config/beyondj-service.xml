@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applicationOptions>
+        <friendlyName>BeyondJ Performance Test Web App</friendlyName>
+        <deploymentType>SERVLET_CONTAINER</deploymentType>
+        <war>beyondj-service</war>
+        <requiresWar>true</requiresWar>
+        <systemGateway>false</systemGateway>
+        <warLocation>beyondj-service</warLocation>
+        <contextPath>/beyondj-service</contextPath>
+        <port>9040</port>
+        <bundleId>12dc8404-a8b7-4a79-a02d-31a715359f60</bundleId>
+        <gracefulStopTimeInMillis>3000</gracefulStopTimeInMillis>
+        <version>1.0</version>
+        <failureActionOption>REMOVE</failureActionOption>
+        <sessionTimeout>30</sessionTimeout>
+        <registerDefaultServlet>true</registerDefaultServlet>
+        <registerJspServlet>true</registerJspServlet>
+        <!--Possible values are JETTY, TOMCAT -->
+        <containerType>JETTY</containerType>
+        <printClassPath>true</printClassPath>
+        <numInstances>3</numInstances>
+        <loadBalancerDefType>ROUND_ROBIN_LOAD_BALANCER</loadBalancerDefType>
+        <enableHealthCheck>true</enableHealthCheck>
+        <healthCheckInterval>1</healthCheckInterval>
+        <healthCheckInitialDelay>1</healthCheckInitialDelay>
+        <!--Possible values: DAYS ,HOURS, MICROSECONDS ,MILLISECONDS ,MINUTES ,NANOSECONDS ,SECONDS -->
+        <healthCheckIntervalUnit>MINUTES</healthCheckIntervalUnit>
+        <healthCheckInitialDelayUnit>MINUTES</healthCheckInitialDelayUnit>
+        <deployedPostContainerStart>false</deployedPostContainerStart>
+        <enableJolokia>false</enableJolokia>
+        <enableMetrics>false</enableMetrics>
+        <metricsCollectionInterval>15000</metricsCollectionInterval>
+        <enableJmxConnector>false</enableJmxConnector>
+        <printHealthCheckNotice>false</printHealthCheckNotice>
+        <requireAllPorts>false</requireAllPorts>
+        <iconBase64>data:image/png;base64,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</iconBase64>
+</applicationOptions>

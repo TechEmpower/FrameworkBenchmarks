@@ -15,9 +15,6 @@
 package sabina.benchmark;
 
 import static org.apache.http.client.fluent.Request.Get;
-import static org.testng.AssertJUnit.*;
-import static sabina.benchmark.Application.main;
-import static sabina.Sabina.stop;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,164 +32,131 @@ import org.testng.annotations.Test;
  * <p>TODO
  * Write article about stress test with TestNG (scenarios, combine different tests in scenarios,
  * adding random pauses...)
- *
- * <p>TODO Change assert's order
  */
-public final class ApplicationTest {
-    private static final int THREADS = 16, EXECUTIONS = 32, WARM_UP = 32;
-
+@Test public final class ApplicationTest {
     private static final String ENDPOINT = "http://localhost:5050";
     private static final Gson GSON = new Gson ();
 
-    @BeforeClass public static void setup () {
-        main (null);
+    private static Application application;
+
+    @BeforeClass public void setup () throws IOException {
+        application = new Application ();
     }
 
-    @BeforeClass public void warm_up () throws IOException {
-        for (int ii = 0; ii < WARM_UP; ii++) {
-            json ();
-            plaintext ();
-            no_query_parameter ();
-            empty_query_parameter ();
-            text_query_parameter ();
-            zero_queries ();
-            one_thousand_queries ();
-            one_query ();
-            ten_queries ();
-            five_hundred_queries ();
-            fortunes ();
-            no_updates_parameter ();
-            empty_updates_parameter ();
-            text_updates_parameter ();
-            zero_updates ();
-            one_thousand_updates ();
-            one_update ();
-            ten_updates ();
-            five_hundred_updates ();
-        }
+    @AfterClass public void close () {
+        application.stop ();
     }
 
-    @AfterClass public static void close () {
-        stop ();
-    }
-
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void json () throws IOException {
         HttpResponse response = get (ENDPOINT + "/json");
         String content = getContent (response);
 
         checkResponse (response, content, "application/json");
-        assertEquals ("Hello, World!", GSON.fromJson (content, Map.class).get ("message"));
+        assert "Hello, World!".equals (GSON.fromJson (content, Map.class).get ("message"));
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void plaintext () throws IOException {
         HttpResponse response = get (ENDPOINT + "/plaintext");
         String content = getContent (response);
 
         checkResponse (response, content, "text/plain");
-        assertEquals ("Hello, World!", content);
+        assert "Hello, World!".equals (content);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void no_query_parameter () throws IOException {
         HttpResponse response = get (ENDPOINT + "/db");
         String content = getContent (response);
 
         checkResponse (response, content, "application/json");
         Map<?, ?> resultsMap = GSON.fromJson (content, Map.class);
-        assertTrue (resultsMap.containsKey ("id") && resultsMap.containsKey ("randomNumber"));
+        assert resultsMap.containsKey ("id") && resultsMap.containsKey ("randomNumber");
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void empty_query_parameter () throws IOException {
         checkDbRequest ("/query?queries", 1);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void text_query_parameter () throws IOException {
         checkDbRequest ("/query?queries=text", 1);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void zero_queries () throws IOException {
         checkDbRequest ("/query?queries=0", 1);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void one_thousand_queries () throws IOException {
         checkDbRequest ("/query?queries=1000", 500);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void one_query () throws IOException {
         checkDbRequest ("/query?queries=1", 1);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void ten_queries () throws IOException {
         checkDbRequest ("/query?queries=10", 10);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void one_hundred_queries () throws IOException {
+        checkDbRequest ("/query?queries=100", 100);
+    }
+
     public void five_hundred_queries () throws IOException {
         checkDbRequest ("/query?queries=500", 500);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void five_hundred_and_one_queries () throws IOException {
+        checkDbRequest ("/query?queries=501", 500);
+    }
+
     public void fortunes () throws IOException {
         HttpResponse response = get (ENDPOINT + "/fortune");
         String content = getContent (response);
         String contentType = response.getEntity ().getContentType ().getValue ();
 
-        assertTrue (response.getFirstHeader ("Server") != null);
-        assertTrue (response.getFirstHeader ("Date") != null);
-        assertTrue (content.contains ("&lt;script&gt;alert(&quot;This should not be displayed"));
-        assertTrue (content.contains ("フレームワークのベンチマーク"));
-        assertEquals ("text/html; charset=utf-8", contentType.toLowerCase ());
+        assert response.getFirstHeader ("Server") != null;
+        assert response.getFirstHeader ("Date") != null;
+        assert content.contains ("&lt;script&gt;alert(&quot;This should not be displayed");
+        assert content.contains ("フレームワークのベンチマーク");
+        assert "text/html; charset=utf-8".equals (contentType.toLowerCase ());
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void no_updates_parameter () throws IOException {
         HttpResponse response = get (ENDPOINT + "/update");
         String content = getContent (response);
 
         checkResponse (response, content, "application/json");
         Map<?, ?> resultsMap = GSON.fromJson (content, Map.class);
-        assertTrue (resultsMap.containsKey ("id") && resultsMap.containsKey ("randomNumber"));
+        assert resultsMap.containsKey ("id") && resultsMap.containsKey ("randomNumber");
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void empty_updates_parameter () throws IOException {
         checkDbRequest ("/update?queries", 1);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void text_updates_parameter () throws IOException {
         checkDbRequest ("/update?queries=text", 1);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void zero_updates () throws IOException {
         checkDbRequest ("/update?queries=0", 1);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void one_thousand_updates () throws IOException {
         checkDbRequest ("/update?queries=1000", 500);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void one_update () throws IOException {
         checkDbRequest ("/update?queries=1", 1);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
     public void ten_updates () throws IOException {
         checkDbRequest ("/update?queries=10", 10);
     }
 
-    @Test(threadPoolSize = THREADS, invocationCount = EXECUTIONS)
+    public void one_hundred_updates () throws IOException {
+        checkDbRequest ("/update?queries=100", 100);
+    }
+
     public void five_hundred_updates () throws IOException {
         checkDbRequest ("/update?queries=500", 500);
     }
@@ -215,19 +179,19 @@ public final class ApplicationTest {
     }
 
     private void checkResponse (HttpResponse res, String content, String contentType) {
-        assertTrue (res.getFirstHeader ("Server") != null);
-        assertTrue (res.getFirstHeader ("Date") != null);
-        assertEquals (content.length (), res.getEntity ().getContentLength ());
-        assertEquals (contentType, res.getEntity ().getContentType ().getValue ());
+        assert res.getFirstHeader ("Server") != null;
+        assert res.getFirstHeader ("Date") != null;
+        assert content.length () == res.getEntity ().getContentLength ();
+        assert res.getEntity ().getContentType ().getValue ().contains (contentType);
     }
 
     private void checkResultItems (String result, int size) {
         List<?> resultsList = GSON.fromJson (result, List.class);
-        assertEquals (size, resultsList.size ());
+        assert size == resultsList.size ();
 
         for (int ii = 0; ii < size; ii++) {
             Map<?, ?> r = (Map)resultsList.get (ii);
-            assertTrue (r.containsKey ("id") && r.containsKey ("randomNumber"));
+            assert r.containsKey ("id") && r.containsKey ("randomNumber");
         }
     }
 }

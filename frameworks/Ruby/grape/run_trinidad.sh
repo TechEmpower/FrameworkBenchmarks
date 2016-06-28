@@ -1,17 +1,9 @@
 #!/bin/bash
 
-source $IROOT/java7.installed
-
-# We assume single-user installation as 
-# done in our rvm.sh script and 
-# in Travis-CI
-if [ "$TRAVIS" = "true" ]
-then
-	source /home/travis/.rvm/scripts/rvm
-else
-	source $HOME/.rvm/scripts/rvm
-fi
+fw_depends rvm jruby-1.7
 
 sed -i 's|  host:.*|  host: '"${DBHOST}"'|g' config/database.yml
 
-rvm jruby-1.7.8 do bundle exec trinidad --config config/trinidad.yml &
+rvm jruby-$JRUBY_VERSION do bundle install --jobs=4 --gemfile=$TROOT/Gemfile --path=vendor/bundle
+
+rvm jruby-$JRUBY_VERSION do bundle exec trinidad --config config/trinidad.yml &

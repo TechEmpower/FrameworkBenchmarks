@@ -1,0 +1,18 @@
+<configuration>
+    
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%-8.8thread] %-5level %-20logger{30} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.mchange.v2.c3p0.impl.NewProxyPreparedStatement" level="WARN" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    
+    <!-- Disables all logging -->
+    <root level="off">
+        <appender-ref ref="STDOUT" />
+    </root>
+    
+</configuration>

@@ -1,0 +1,7 @@
+./spock/src/
+./spock/src/Main.hs
+./spock/src/Models/
+./spock/src/Models/Fortune.hs
+./spock/src/Models/World.hs
+./spock/src/Views/
+./spock/src/Views/Fortune.hs

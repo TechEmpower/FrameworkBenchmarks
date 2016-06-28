@@ -1,0 +1,33 @@
+{
+  "name": "sailsjs",
+  "private": true,
+  "version": "0.0.0",
+  "description": "a Sails application for TFB testing",
+  "keywords": [],
+  "dependencies": {
+    "async": "^1.2.0",
+    "bluebird": "^2.9.27",
+    "ejs": "~2.3.1",
+    "handlebars": "^3.0.3",
+    "hiredis": "^0.4.0",
+    "mysql": "^2.7.0",
+    "pg": "^4.4.0",
+    "pg-hstore": "^2.3.2",
+    "rc": "~1.0.3",
+    "redis": "^0.12.1",
+    "sails": "~0.11.0",
+    "sails-disk": "~0.10.8",
+    "sequelize": "^3.2.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "debug": "node debug app.js"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/JavaScript/sailsjs"
+  },
+  "author": "zane-techempower",
+  "license": ""
+}

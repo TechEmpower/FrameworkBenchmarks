@@ -1,0 +1,28 @@
+% Routes file.
+
+% Formats: 
+%   {"/some/route", [{controller, "Controller"}, {action, "Action"}]}.
+%   {"/some/route", [{controller, "Controller"}, {action, "Action"}, {id, "42"}]}.
+%   {"/(some|any)/route/(\\d+)", [{controller, '$1'}, {action, "Action"}, {id, '$2'}]}.
+%   {"/some/route/(?<route_id>\\d+)", [{controller, "Controller"}, {action, "Action"}, {id, '$route_id'}]}.
+%   {"/some/route", [{application, some_app}, {controller, "Controller"}, {action, "Action"}, {id, "42"}]}.
+%
+%   {404, [{controller, "Controller"}, {action, "Action"}]}.
+%   {404, [{controller, "Controller"}, {action, "Action"}, {id, "42"}]}.
+%   {404, [{application, some_app}, {controller, "Controller"}, {action, "Action"}, {id, "42"}]}.
+%
+% Note that routing across applications results in a 302 redirect.
+
+% Front page
+%{"/", [{controller, "plaintext"}, {action, "index"}]}.
+
+% 404 File Not Found handler
+% {404, [{controller, "world"}, {action, "lost"}]}.
+
+% 500 Internal Error handler (only invoked in production)
+% {500, [{controller, "world"}, {action, "calamity"}]}.
+
+{"/plaintext", [{controller, "world"}, {action, "plaintext"}]}.
+{"/json", [{controller, "world"}, {action, "json"}]}.
+{"/", [{controller, "world"}, {action, "plaintext"}]}.
+

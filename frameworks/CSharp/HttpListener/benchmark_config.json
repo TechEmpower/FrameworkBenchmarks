@@ -39,7 +39,7 @@
       "database_os": "Linux",
       "display_name": "http-listener",
       "notes": "",
-      "versus": "http-listener"
+      "versus": "httplistener"
     },
     "postgresql-raw": {
       "setup_file": "setup",
@@ -60,7 +60,7 @@
       "database_os": "Linux",
       "display_name": "http-listener",
       "notes": "",
-      "versus": "http-listener"
+      "versus": "httplistener"
     },
     "mongodb-raw": {
       "setup_file": "setup",
@@ -81,7 +81,7 @@
       "database_os": "Linux",
       "display_name": "http-listener",
       "notes": "",
-      "versus": "http-listener"
+      "versus": "httplistener"
     },
     "sqlserver-raw": {
       "setup_file": "setup",
@@ -102,7 +102,7 @@
       "database_os": "Windows",
       "display_name": "http-listener",
       "notes": "",
-      "versus": "http-listener"
+      "versus": "httplistener"
     }
   }]
 }

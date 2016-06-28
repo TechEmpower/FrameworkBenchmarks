@@ -23,12 +23,10 @@ public class Fortune {
     }
 
     public static List<Fortune> findAll() throws Throwable {
-        return JPA.withTransaction("default", true, new play.libs.F.Function0<List<Fortune>>() {
-            public List<Fortune> apply() {
-                CriteriaQuery<Fortune> criteria = JPA.em().getCriteriaBuilder().createQuery(Fortune.class);
-                criteria.select(criteria.from(Fortune.class));
-                return JPA.em().createQuery(criteria).getResultList();
-            }
+        return JPA.withTransaction("default", true, () -> {
+            CriteriaQuery<Fortune> criteria = JPA.em().getCriteriaBuilder().createQuery(Fortune.class);
+            criteria.select(criteria.from(Fortune.class));
+            return JPA.em().createQuery(criteria).getResultList();
         });
     }
 }

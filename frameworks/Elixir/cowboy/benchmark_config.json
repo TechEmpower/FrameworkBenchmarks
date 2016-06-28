@@ -1,0 +1,24 @@
+{
+    "framework": "elixir-cowboy",
+    "tests": [{
+        "default": {
+            "setup_file": "setup",
+            "json_url": "/json",
+            "plaintext_url": "/plaintext",
+            "port": 8080,
+            "approach": "Realistic",
+            "classification": "Platform",
+            "database": "None",
+            "framework": "cowboy",
+            "language": "elixir",
+            "orm": "raw",
+            "platform": "Erlang/OTP",
+            "webserver": "cowboy",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "elixir-cowboy",
+            "notes": "",
+            "versus": ""
+        }
+    }]
+}

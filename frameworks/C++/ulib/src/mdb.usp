@@ -1,0 +1,81 @@
+<!--#
+Test type 2: Single database query
+TechEmpower Web Framework Benchmarks
+-->
+<!--#declaration
+#include "world.h"
+
+static World* pworld;
+static UString* jquery;
+static UMongoDBClient* mc;
+
+#ifndef AS_cpoll_cppsp_DO
+static UValue* pvalue;
+#endif
+
+static void usp_fork_mdb()
+{
+   U_TRACE(5, "::usp_fork_mdb()")
+
+   mc = U_NEW(UMongoDBClient);
+
+   if (mc->connect() == false)
+      {
+      U_WARNING("usp_fork_mdb(): connection failed");
+
+      return;
+      }
+
+   if (mc->selectCollection("hello_world", "World") == false)
+      {
+      U_WARNING("usp_fork_mdb(): selectCollection() failed");
+
+      return;
+      }
+
+   pworld = U_NEW(World);
+   jquery = U_NEW(U_STRING_FROM_CONSTANT("{'randomNumber'"));
+
+#ifndef AS_cpoll_cppsp_DO
+   pvalue = U_NEW(UValue(OBJECT_VALUE));
+#endif
+}
+
+#ifdef DEBUG
+static void usp_end_mdb()
+{
+   U_TRACE(5, "::usp_end_mdb()")
+
+   delete mc;
+
+   if (pworld)
+      {
+      delete pworld;
+      delete jquery;
+
+#  ifndef AS_cpoll_cppsp_DO
+      delete pvalue;
+#  endif
+      }
+}
+#endif
+-->
+<!--#header
+Content-Type: application/json
+-->
+<!--#code
+UString result;
+
+(void) mc->findOne(pworld->id = u_get_num_random(10000));
+
+(void) UValue::jread(mc->vitem[0], *jquery, result); // { "_id" : 8980.000000, "id" : 8980.000000, "randomNumber" : 2131.000000 }
+
+pworld->randomNumber = u_strtoul(result.data(), result.end());
+
+#ifdef AS_cpoll_cppsp_DO
+USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", pworld->id, result.rep);
+#else
+USP_JSON_stringify(*pvalue, World, *pworld);
+pvalue->clear();
+#endif
+-->

@@ -30,12 +30,12 @@ def json(request):
   response = {
     "message": "Hello, World!"
   }
-  return HttpResponse(uj_dumps(response), mimetype="application/json")
+  return HttpResponse(uj_dumps(response), content_type="application/json")
 
 def db(request):
   r = random.randint(1, 10000)
   world = uj_dumps({'id' : r, 'randomNumber' : World.objects.get(id=r).randomnumber})
-  return HttpResponse(world, mimetype="application/json")
+  return HttpResponse(world, content_type="application/json")
 
 def dbs(request):
   queries = _get_queries(request)
@@ -56,7 +56,7 @@ def dbs(request):
   # for complicated serializations of joins and crazy query sets etc
   # test xrange vs range if the query number is gigantic
   worlds = uj_dumps([{'id' : r, 'randomNumber' : g(id=r).randomnumber} for r in [rp() for q in xrange(queries)]])
-  return HttpResponse(worlds, mimetype="application/json")
+  return HttpResponse(worlds, content_type="application/json")
 
 def fortunes(request):
   fortunes = list(Fortune.objects.all())
@@ -79,4 +79,4 @@ def update(request):
     w.save()
     worlds.append({'id' : r, 'randomNumber' : w.randomnumber})
 
-  return HttpResponse(uj_dumps(worlds), mimetype="application/json")
+  return HttpResponse(uj_dumps(worlds), content_type="application/json")
