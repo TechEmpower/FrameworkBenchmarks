@@ -35,6 +35,10 @@ cd ..
 sed -i 's|^extension=yaf.so|;extension=yaf.so|g' $FWROOT/config/php.ini
 sed -i 's|^extension=phalcon.so|;extension=phalcon.so|g' $FWROOT/config/php.ini
 
+# Enable the correct Mongo DB plugin for PHP 5
+sed -i 's|^extension=mongodb.so|;extension=mongodb.so|g' $FWROOT/config/php.ini
+sed -i 's|;extension=mongo.so|extension=mongo.so|g' $FWROOT/config/php.ini
+
 cp $FWROOT/config/php.ini $PHP_HOME/lib/php.ini
 cp $FWROOT/config/php-fpm.conf $PHP_HOME/lib/php-fpm.conf
 

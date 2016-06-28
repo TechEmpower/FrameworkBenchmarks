@@ -25,6 +25,10 @@ echo "Installing PHP quietly"
 make --quiet install
 cd ..
 
+# Enable the correct Mongo DB plugin for PHP 7
+sed -i 's|^extension=mongo.so|;extension=mongo.so|g' $FWROOT/config/php.ini
+sed -i 's|;extension=mongodb.so|extension=mongodb.so|g' $FWROOT/config/php.ini
+
 cp $FWROOT/config/php.ini $PHP_HOME/lib/php.ini
 cp $FWROOT/config/php-fpm.conf $PHP_HOME/lib/php-fpm.conf
 
