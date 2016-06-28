@@ -12,15 +12,15 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "symfony2",
-      "language": "PHP",
+      "language": "PHP5",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "PHP5-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "symfony2",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     },
     "php-templates": {
       "setup_file": "setup",
@@ -30,15 +30,15 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "symfony2",
-      "language": "PHP",
+      "language": "PHP5",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "PHP5-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "symfony2",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     },
     "raw": {
       "setup_file": "setup",
@@ -50,15 +50,15 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "symfony2",
-      "language": "PHP",
+      "language": "PHP5",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "PHP5-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "symfony2",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     },
     "hhvm": {
       "setup_file": "setup_hhvm",
@@ -71,15 +71,15 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "symfony2",
-      "language": "PHP",
+      "language": "PHP5",
       "orm": "Full",
       "platform": "hhvm",
-      "webserver": "HPHP",
+      "webserver": "hhvm",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "symfony2-hhvm",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     }
   }]
 }
