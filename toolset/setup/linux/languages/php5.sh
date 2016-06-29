@@ -1,11 +1,11 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/php.installed)
+RETCODE=$(fw_exists ${IROOT}/php5.installed)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Moving PHP config files into place"; 
   sudo cp $FWROOT/config/php.ini /usr/local/lib/php.ini
   sudo cp $FWROOT/config/php-fpm.conf /usr/local/lib/php-fpm.conf
-  source $IROOT/php.installed
+  source $IROOT/php5.installed
   return 0; }
 
 VERSION="5.5.17"
@@ -16,17 +16,17 @@ rm -rf $IROOT/php PHP_HOME cphalcon
 
 fw_get -o php-${VERSION}.tar.gz http://php.net/distributions/php-${VERSION}.tar.gz
 fw_untar php-${VERSION}.tar.gz
-mv php-${VERSION} php
-cd php
+mv php-${VERSION} php5
+cd php5
 
-echo "Configuring PHP quietly..."
+echo "Configuring PHP5 quietly..."
 ./configure --prefix=$PHP_HOME --with-pdo-mysql \
   --with-mysql --with-mcrypt --enable-intl --enable-mbstring \
   --enable-fpm --with-fpm-user=testrunner --with-fpm-group=testrunner \
   --with-openssl --with-mysqli --with-zlib --enable-opcache --quiet
-echo "Making PHP quietly..."
+echo "Making PHP5 quietly..."
 make --quiet
-echo "Installing PHP quietly"
+echo "Installing PHP5 quietly"
 make --quiet install
 cd ..
 
@@ -61,7 +61,7 @@ printf "\n" | $PHP_HOME/bin/pecl -q install -f mongo
 # Clean up a bit
 rm -rf $IROOT/php
 
-echo "export PHP_HOME=${PHP_HOME}" > $IROOT/php.installed
-echo -e "export PATH=\$PHP_HOME/bin:\$PHP_HOME/sbin:\$PATH" >> $IROOT/php.installed
+echo "export PHP_HOME=${PHP_HOME}" > $IROOT/php5.installed
+echo -e "export PATH=\$PHP_HOME/bin:\$PHP_HOME/sbin:\$PATH" >> $IROOT/php5.installed
 
-source $IROOT/php.installed
+source $IROOT/php5.installed

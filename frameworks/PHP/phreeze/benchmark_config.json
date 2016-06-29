@@ -14,15 +14,15 @@
       "classification": "Micro",
       "database": "MySQL",
       "framework": "phreeze",
-      "language": "PHP",
+      "language": "PHP5",
       "orm": "Micro",
-      "platform": "PHP-FPM",
+      "platform": "PHP5-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "phreeze",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     }
   }]
 }
