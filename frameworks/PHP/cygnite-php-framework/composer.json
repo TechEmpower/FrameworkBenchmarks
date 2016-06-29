@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "cygnite/framework": "v1.3.*"
+        "cygnite/framework": "v1.3.0"
     },
     "autoload": {
         "classmap": [
