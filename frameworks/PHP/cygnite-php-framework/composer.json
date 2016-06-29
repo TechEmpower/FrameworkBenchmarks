@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "cygnite/framework": "v1.3.0"
+        "cygnite/framework": "v1.3.1"
     },
     "autoload": {
         "classmap": [
@@ -19,7 +19,8 @@
             "apps/models",
             "apps/components" ,
             "apps/extensions"
-        ]
+        ],
+		"files": ["vendor/cygnite/framework/src/Cygnite/Helpers/Support.php"]
     },
     "config": {
         "preferred-install": "dist"
