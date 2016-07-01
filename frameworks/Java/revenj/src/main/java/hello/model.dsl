@@ -6,4 +6,8 @@ module FrameworkBench {
 		int id;
 		int randomNumber from randomnumber;
 	}
+	sql Fortune from fortune {
+	    int id;
+	    String message;
+	}
 } 

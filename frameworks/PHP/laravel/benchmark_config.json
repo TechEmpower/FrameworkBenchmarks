@@ -10,15 +10,15 @@
       "classification": "Fullstack",
       "database": "None",
       "framework": "laravel",
-      "language": "PHP",
+      "language": "PHP7",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "PHP7-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "laravel",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "raw": {
       "setup_file": "setup",
@@ -30,15 +30,15 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "laravel",
-      "language": "PHP",
+      "language": "PHP7",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "PHP7-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "laravel-raw",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "hhvm": {
       "setup_file": "setup_hhvm",
@@ -49,15 +49,15 @@
       "classification": "Fullstack",
       "database": "None",
       "framework": "laravel",
-      "language": "PHP",
+      "language": "PHP7",
       "orm": "Raw",
-      "platform": "HPHP",
+      "platform": "hhvm",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "laravel_hhvm",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "hhvm-raw": {
       "setup_file": "setup_hhvm",
@@ -69,15 +69,15 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "laravel",
-      "language": "PHP",
+      "language": "PHP7",
       "orm": "Raw",
-      "platform": "HPHP",
+      "platform": "hhvm",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "laravel_hhvm",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "php5": {
       "setup_file": "setup_php5",
@@ -88,15 +88,15 @@
       "classification": "Fullstack",
       "database": "None",
       "framework": "laravel",
-      "language": "PHP",
+      "language": "PHP5",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "PHP5-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "laravel",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     },
     "php5-raw": {
       "setup_file": "setup_php5",
@@ -110,13 +110,13 @@
       "framework": "laravel",
       "language": "PHP5",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "PHP5-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "laravel-php5-raw",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     }
   }]
 }

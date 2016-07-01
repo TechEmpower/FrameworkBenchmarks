@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php composer nginx
+fw_depends php5 composer nginx
 
 sed -i 's|database_host: .*|database_host: '"${DBHOST}"'|g' app/config/parameters.yml
 sed -i 's|root .*/FrameworkBenchmarks/php-symfony2-stripped| root '"${TROOT}"'|g' deploy/nginx.conf

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php composer nginx
+fw_depends php5 composer nginx
 
 php-fpm --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
 
