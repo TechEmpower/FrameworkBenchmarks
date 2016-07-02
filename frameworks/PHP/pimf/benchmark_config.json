@@ -10,15 +10,15 @@
       "classification": "Platform",
       "database": "MySQL",
       "framework": "pimf",
-      "language": "PHP",
+      "language": "PHP5",
       "orm": "Micro",
-      "platform": "PHP-FPM",
+      "platform": "PHP5-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "pimf",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     },
     "raw": {
       "setup_file": "setup_raw",
@@ -33,15 +33,15 @@
       "classification": "Platform",
       "database": "MySQL",
       "framework": "pimf",
-      "language": "PHP",
+      "language": "PHP5",
       "orm": "Micro",
-      "platform": "PHP-FPM",
+      "platform": "PHP5-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "pimf",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     }
   }]
 }

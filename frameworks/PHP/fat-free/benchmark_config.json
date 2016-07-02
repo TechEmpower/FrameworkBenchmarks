@@ -13,7 +13,7 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "Fat Free Framework",
-      "language": "PHP",
+      "language": "PHP7",
       "orm": "Full",
       "platform": "PHP-FPM",
       "webserver": "nginx",
@@ -21,7 +21,7 @@
       "database_os": "Linux",
       "display_name": "fat-free",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "raw": {
       "setup_file": "setup",
@@ -34,15 +34,15 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "Fat Free Framework",
-      "language": "PHP",
+      "language": "PHP7",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "PHP7-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "fat-free",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     }    
   }]
 }

@@ -2,8 +2,8 @@ package hello;
 
 import com.dslplatform.json.JsonWriter;
 import dsl.Boot;
-import dsl.FrameworkBench.World;
-import dsl.FrameworkBench.repositories.WorldRepository;
+import dsl.FrameworkBench.*;
+import dsl.FrameworkBench.repositories.*;
 import org.revenj.extensibility.Container;
 import org.revenj.patterns.*;
 
@@ -29,12 +29,13 @@ class Context {
 	}
 
 	public final JsonWriter json;
-	public final WorldRepository repository;
+	public final WorldRepository worlds;
+	public final FortuneRepository fortunes;
 	public final Connection connection;
 	private final ThreadLocalRandom random;
 	public final RepositoryBulkReader bulkReader;
-	public final World[] worlds = new World[512];
-	public final Callable[] callables = new Callable[512];
+	private final World[] buffer = new World[512];
+	private final Callable[] callables = new Callable[512];
 
 	public Context() {
 		try {
@@ -44,7 +45,8 @@ class Context {
 			ctx.registerInstance(connection);
 			this.json = new JsonWriter();
 			this.random = ThreadLocalRandom.current();
-			this.repository = ctx.resolve(WorldRepository.class);
+			this.worlds = ctx.resolve(WorldRepository.class);
+			this.fortunes = ctx.resolve(FortuneRepository.class);
 			this.bulkReader = ctx.resolve(RepositoryBulkReader.class);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -55,7 +57,8 @@ class Context {
 		return random.nextInt(10000) + 1;
 	}
 
-	public void loadWorlds(final int count) throws IOException {
+	@SuppressWarnings("unchecked")
+	public World[] loadWorlds(final int count) throws IOException {
 		bulkReader.reset();
 		for (int i = 0; i < count; i++) {
 			callables[i] = bulkReader.find(World.class, Integer.toString(getRandom10k()));
@@ -63,10 +66,11 @@ class Context {
 		bulkReader.execute();
 		try {
 			for (int i = 0; i < count; i++) {
-				worlds[i] = ((Optional<World>) callables[i].call()).get();
+				buffer[i] = ((Optional<World>) callables[i].call()).get();
 			}
 		} catch (Exception e) {
 			throw new IOException(e);
 		}
+		return buffer;
 	}
 }

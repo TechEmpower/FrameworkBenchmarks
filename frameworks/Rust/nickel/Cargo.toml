@@ -4,6 +4,6 @@ name = "nickel"
 version = "0.0.1"
 
 [dependencies]
-rustc-serialize = "0.3.18"
-nickel = "0.7.3"
+rustc-serialize = "0.3.19"
+nickel = "0.8.1"
 nickel_macros = "0.1.0"

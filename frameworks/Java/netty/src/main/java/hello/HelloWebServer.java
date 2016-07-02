@@ -9,6 +9,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.ServerChannel;
 import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -32,17 +33,22 @@ public class HelloWebServer {
 		// Configure the server.
 
 		if (Epoll.isAvailable()) {
-			doRun(new EpollEventLoopGroup(), EpollServerSocketChannel.class);
+			doRun(new EpollEventLoopGroup(), EpollServerSocketChannel.class, true);
 		} else {
-			doRun(new NioEventLoopGroup(), NioServerSocketChannel.class);
+			doRun(new NioEventLoopGroup(), NioServerSocketChannel.class, false);
 		}
 	}
 
-	private void doRun(EventLoopGroup loupGroup, Class<? extends ServerChannel> serverChannelClass) throws InterruptedException {
+	private void doRun(EventLoopGroup loupGroup, Class<? extends ServerChannel> serverChannelClass, boolean isNative) throws InterruptedException {
 		try {
 			InetSocketAddress inet = new InetSocketAddress(port);
 
 			ServerBootstrap b = new ServerBootstrap();
+
+			if (isNative) {
+				b.option(EpollChannelOption.SO_REUSEPORT, true);
+			}
+
 			b.option(ChannelOption.SO_BACKLOG, 1024);
 			b.option(ChannelOption.SO_REUSEADDR, true);
 			b.group(loupGroup).channel(serverChannelClass).childHandler(new HelloServerInitializer(loupGroup.next()));
