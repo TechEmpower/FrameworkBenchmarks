@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset=“utf-8”> vs <meta http-equiv=“Content-Type”>
     <title>Fortunes</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 
 <body>
