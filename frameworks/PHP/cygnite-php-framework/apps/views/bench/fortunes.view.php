@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head><title>Fortunes</title></head>
+<head>
+    <meta charset=“utf-8”> vs <meta http-equiv=“Content-Type”>
+    <title>Fortunes</title>
+</head>
+
 <body>
 <table>
     <tr>
