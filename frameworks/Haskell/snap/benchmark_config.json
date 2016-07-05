@@ -11,14 +11,15 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
-      "framework": "snap",
+      "framework": "Snap",
       "language": "Haskell",
+      "flavor": "GHC78",
       "orm": "Full",
       "platform": "Snap",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "snap",
+      "display_name": "Snap",
       "notes": "",
       "versus": ""
     }

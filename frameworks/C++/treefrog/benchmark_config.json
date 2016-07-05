@@ -38,14 +38,15 @@
       "database": "MySQL",
       "framework": "treefrog",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Micro",
-      "platform": "Treefrog",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "treefrog-hybrid",
       "notes": "",
-      "versus": ""
+      "versus": "treefrog"
     },
     "postgres": {
       "setup_file": "setup-postgres",
@@ -61,8 +62,9 @@
       "database": "Postgres",
       "framework": "treefrog",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Micro",
-      "platform": "Treefrog",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
@@ -91,7 +93,7 @@
       "database_os": "Linux",
       "display_name": "treefrog-mongo",
       "notes": "",
-      "versus": ""
+      "versus": "treefrog"
     }
   }]
 }

@@ -6,17 +6,18 @@
       "plaintext_url": "/plaintext",
       "port": 8000,
       "approach": "Realistic",
-      "classification": "Micro",
+      "classification": "Platform",
       "database": "None",
-      "framework": "haywire",
+      "framework": "None",
       "language": "C",
+      "flavor": "C11",
       "orm": "Raw",
       "platform": "haywire",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "notes": "",
-      "versus": ""
+      "versus": "haywire"
     }
   }]
 }

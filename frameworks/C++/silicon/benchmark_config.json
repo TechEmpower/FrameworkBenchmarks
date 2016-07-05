@@ -15,14 +15,15 @@
       "database": "MySQL",
       "framework": "silicon",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Full",
-      "platform": "Silicon",
+      "platform": "None",
       "webserver": "microhttpd",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "silicon-tpc-mysql",
       "notes": "",
-      "versus": ""
+      "versus": "silicon"
     },
     "epoll-mysql": {
       "setup_file": "setup_mhd_epoll_mysql",
@@ -38,14 +39,15 @@
       "database": "MySQL",
       "framework": "silicon",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Full",
-      "platform": "Silicon",
+      "platform": "None",
       "webserver": "microhttpd",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "silicon-epoll-mysql",
       "notes": "",
-      "versus": ""
+      "versus": "silicon"
     },
     "lwan-mysql": {
       "setup_file": "setup_lwan_mysql",
@@ -61,14 +63,15 @@
       "database": "MySQL",
       "framework": "silicon",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Full",
-      "platform": "Silicon",
+      "platform": "None",
       "webserver": "Lwan",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "silicon-lwan-mysql",
       "notes": "",
-      "versus": ""
+      "versus": "silicon"
     }
     
   }]

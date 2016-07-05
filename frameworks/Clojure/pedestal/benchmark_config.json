@@ -16,12 +16,13 @@
       "orm": "micro",
       "framework": "pedestal",
       "language": "Clojure",
-      "platform": "Servlet",
-      "webserver": "Jetty",
+      "flavor": "Java8",
+      "platform": "Undertow",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "pedestal",
-      "notes": "servlet"
+      "notes": "undertow"
     }
   }]
 }

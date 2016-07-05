@@ -15,13 +15,15 @@
      	"database": "MySQL",
      	"framework": "wt",
      	"language": "C++",
+          "flavor": "C++14",
      	"orm": "Full",
-     	"platform": "Wt",
+     	"platform": "None",
      	"webserver": "None",
      	"os": "Linux",
      	"database_os": "Linux",
      	"display_name": "wt",
-     	"notes": ""
+     	"notes": "",
+          "versus": "wt"
      },
      "postgres": {
      	"setup_file": "setup_postgres",
@@ -35,13 +37,15 @@
      	"database": "Postgres",
      	"framework": "wt",
      	"language": "C++",
+          "flavor": "C++14",
      	"orm": "Full",
-     	"platform": "Wt",
+     	"platform": "None",
      	"webserver": "None",
      	"os": "Linux",
      	"database_os": "Linux",
      	"display_name": "wt-postgres",
-     	"notes": ""
+     	"notes": "",
+          "versus": "wt"
      }
   }]
 }

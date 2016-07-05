@@ -7,18 +7,19 @@
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Micro",
+      "classification": "Platform",
       "database": "Postgres",
-      "framework": "crystal",
+      "framework": "None",
       "language": "Crystal",
+      "flavor": "Crystal12",
       "orm": "Raw",
-      "platform": "Crystal",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Crystal",
       "notes": "",
-      "versus": "ruby"
+      "versus": "crystal"
     }
   }]
 }

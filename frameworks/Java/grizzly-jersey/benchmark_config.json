@@ -11,16 +11,16 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
-      "framework": "grizzly-jersey",
+      "framework": "Grizzly",
       "language": "Java",
       "orm": "Full",
-      "platform": "Servlet",
-      "webserver": "Grizzly",
+      "platform": "JAX-RS",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "grizzly-jersey",
+      "display_name": "Grizzly",
       "notes": "",
-      "versus": "grizzly"
+      "versus": ""
     }
   }]
 }
