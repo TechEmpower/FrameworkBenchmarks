@@ -8,7 +8,7 @@ try {
     $app['db'] = function() {
 
         return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-            'dsn'       => 'host=127.0.0.1;dbname=hello_world;charset=utf8',
+            'dsn'       => 'host=localhost;dbname=hello_world;charset=utf8',
             'username'   => 'benchmarkdbuser',
             'password'   => 'benchmarkdbpass',
             'persistent' => true
