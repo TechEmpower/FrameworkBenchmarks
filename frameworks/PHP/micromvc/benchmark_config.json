@@ -11,15 +11,15 @@
       "classification": "Micro",
       "database": "MySQL",
       "framework": "micromvc",
-      "language": "PHP",
+      "language": "PHP5",
       "orm": "Raw",
-      "platform": "PHP-FPM",
+      "platform": "PHP5-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "micromvc",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     }
   }]
 }

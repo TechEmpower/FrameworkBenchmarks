@@ -15,15 +15,15 @@
         "classification" : "Platform",
         "database"       : "MySQL",
         "framework"      : "hhvm",
-        "language"       : "PHP",
+        "language"       : "PHP7",
         "orm"            : "Raw",
         "platform"       : "hhvm",
-        "webserver"      : "HPHP",
+        "webserver"      : "hhvm",
         "os"             : "Linux",
         "database_os"    : "Linux",
         "display_name"   : "hhvm",
         "notes"          : "",
-        "versus"         : "php"
+        "versus"         : "php7"
       }
     }]
 }

@@ -4,7 +4,7 @@ sed -i 's|localhost|'"${DBHOST}"'|g' index.php
 sed -i 's|root /home/ubuntu/FrameworkBenchmarks|root '"${TROOT}"'|g' deploy/nginx.conf
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
-fw_depends php nginx composer
+fw_depends php5 nginx composer
 
 rm -fr clancatsapp
 rm -fr CCF

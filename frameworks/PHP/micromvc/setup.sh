@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php nginx
+fw_depends php5 nginx
 
 sed -i 's|localhost|'"${DBHOST}"'|g' Config/Config.php
 sed -i 's|root .*/FrameworkBenchmarks/php-micromvc|root '"${TROOT}"'|g' deploy/nginx.conf

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php
+fw_depends php5
 
 RETCODE=$(fw_exists ${IROOT}/yaf.installed)
 [ ! "$RETCODE" == 0 ] || { \
