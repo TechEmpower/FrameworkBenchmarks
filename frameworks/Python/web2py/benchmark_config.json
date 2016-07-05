@@ -13,15 +13,17 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
-      "framework": "web2py",
+      "framework": "None",
       "language": "Python",
+      "flavor": "Python2",
       "orm": "Full",
       "platform": "web2Py",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "web2py",
-      "notes": "CPython 2.7"
+      "notes": "CPython 2.7",
+      "versus": ""
     } 
   }]
 }
