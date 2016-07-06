@@ -8,8 +8,9 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "onion",
+      "framework": "None",
       "language": "C",
+      "flavor": "C11",
       "orm": "Raw",
       "platform": "Onion",
       "webserver": "None",
@@ -17,7 +18,7 @@
       "database_os": "Linux",
       "display_name": "onion",
       "notes": "",
-      "versus": ""
+      "versus": "onion"
     },
     "raw": {
       "setup_file": "setup",
@@ -28,8 +29,9 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "onion",
+      "framework": "None",
       "language": "C",
+      "flavor": "C11",
       "orm": "Raw",
       "platform": "Onion",
       "webserver": "None",
@@ -37,7 +39,7 @@
       "database_os": "Linux",
       "display_name": "onion",
       "notes": "",
-      "versus": ""
+      "versus": "onion"
     }
   }]
 }

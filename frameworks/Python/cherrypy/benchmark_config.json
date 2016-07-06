@@ -15,13 +15,15 @@
       "database": "MySQL",
       "framework": "CherryPy",
       "language": "Python",
+      "flavor": "Python2",
       "orm": "Full",
       "platform": "CherryPy",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "cherrypy",
-      "notes": "CPython 2.7"
+      "display_name": "Cherrypy",
+      "notes": "CPython 2.7",
+      "versus": "cherrypy"
     },
      "py3": {
       "setup_file": "setup_py3",
@@ -37,13 +39,15 @@
       "database": "MySQL",
       "framework": "CherryPy",
       "language": "Python",
+      "flavor": "Python3",
       "orm": "Full",
       "platform": "CherryPy",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "cherrypy-py3",
-      "notes": "CPython 3.4"
+      "display_name": "Cherrypy",
+      "notes": "CPython 3.4",
+      "versus": "cherrypy"
     }
   }]
 }

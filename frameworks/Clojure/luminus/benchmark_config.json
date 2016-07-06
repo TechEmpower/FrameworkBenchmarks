@@ -11,18 +11,19 @@
       "update_url": "/updates/",
       "port": 3000,
       "approach": "Realistic",
-      "classification": "Platform",
+      "classification": "Micro",
       "database": "Postgres",
       "framework": "luminus",
       "language": "Clojure",
+      "flavor": "Java8",
       "orm": "Raw",
-      "platform": "Immutant",
+      "platform": "Undertow",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "luminus",
       "notes": "",
-      "versus": "servlet"
+      "versus": "undertow"
     }
   }]
 }

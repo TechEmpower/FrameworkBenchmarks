@@ -11,15 +11,16 @@
       "classification": "Micro",
       "database": "MySQL",
       "framework": "slim",
-      "language": "PHP7",
+      "language": "PHP",
+      "flavor": "PHP7",
       "orm": "Raw",
-      "platform": "PHP7-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "slim",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "hhvm": {
       "setup_file": "setup_hhvm",
@@ -31,15 +32,16 @@
       "classification": "Micro",
       "database": "MySQL",
       "framework": "slim",
-      "language": "PHP5",
+      "language": "PHP",
+      "flavor": "HHVM",
       "orm": "Raw",
-      "platform": "hhvm",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "slim_hhvm",
+      "display_name": "slim",
       "notes": "",
-      "versus": "php5"
+      "versus": "php"
     },
     "php5": {
       "setup_file": "setup_php5",
@@ -52,14 +54,15 @@
       "database": "MySQL",
       "framework": "slim",
       "language": "PHP5",
+      "flavor": "PHP5",
       "orm": "Raw",
-      "platform": "PHP5-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "slim-php5",
+      "display_name": "slim",
       "notes": "",
-      "versus": "php5"
+      "versus": "php-php5"
     }
   }]
 }

@@ -8,16 +8,17 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "none",
-      "framework": "POCO",
+      "framework": "None",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Raw",
       "platform": "POCO",
-      "webserver": "poco",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "POCO",
       "notes": "",
-      "versus": ""
+      "versus": "poco"
     }
   }]
 }

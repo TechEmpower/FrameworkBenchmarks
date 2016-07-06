@@ -13,8 +13,9 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "http-kit",
+      "framework": "None",
       "language": "Clojure",
+      "flavor": "Java8",
       "orm": "Micro",
       "platform": "http-kit",
       "webserver": "None",
@@ -22,7 +23,7 @@
       "database_os": "Linux",
       "display_name": "http-kit",
       "notes": "",
-      "versus": ""
+      "versus": "http-kit"
     },
     "raw": {
       "setup_file": "setup",
@@ -34,8 +35,9 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "http-kit",
+      "framework": "None",
       "language": "Clojure",
+      "flavor": "Java8",
       "orm": "Raw",
       "platform": "http-kit",
       "webserver": "None",
@@ -43,7 +45,7 @@
       "database_os": "Linux",
       "display_name": "http-kit",
       "notes": "",
-      "versus": ""
+      "versus": "http-kit"
     }
   }]
 }

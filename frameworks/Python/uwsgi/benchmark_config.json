@@ -10,6 +10,7 @@
       "database": "None",
       "framework": "wsgi",
       "language": "Python",
+      "flavor": "Python2",
       "orm": "Raw",
       "platform": "wsgi",
       "webserver": "uWSGI",
@@ -28,12 +29,13 @@
       "database": "None",
       "framework": "wsgi",
       "language": "Python",
+      "flavor": "Python2",
       "orm": "Raw",
       "platform": "wsgi",
       "webserver": "nginx-uWSGI",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "uwsgi-nginx-uWSGI",
+      "display_name": "uwsgi",
       "notes": "",
       "versus": ""
     }

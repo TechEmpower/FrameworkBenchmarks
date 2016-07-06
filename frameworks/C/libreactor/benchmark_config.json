@@ -9,15 +9,16 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "libreactor",
+      "framework": "None",
       "language": "C",
+      "flavor": "C11",
       "orm": "Raw",
       "platform": "libreactor",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "notes": "",
-      "versus": ""
+      "versus": "libreactor"
     }
   }]
 }

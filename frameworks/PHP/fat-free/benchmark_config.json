@@ -12,16 +12,17 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "Fat Free Framework",
-      "language": "PHP7",
+      "framework": "Fat Free",
+      "language": "PHP",
+      "flavor": "PHP7",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "fat-free",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "raw": {
       "setup_file": "setup",
@@ -33,16 +34,17 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "Fat Free Framework",
-      "language": "PHP7",
+      "framework": "Fat Free",
+      "language": "PHP",
+      "flavor": "PHP7",
       "orm": "Raw",
-      "platform": "PHP7-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "fat-free",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     }    
   }]
 }

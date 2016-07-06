@@ -7,18 +7,19 @@
       "plaintext_url": "/plaintext",
       "port": 16969,
       "approach": "Realistic",
-      "classification": "Micro",
+      "classification": "Platform",
       "database": "None",
       "framework": "cpoll-cppsp",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Raw",
-      "platform": "CPoll",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "cpoll-cppsp",
       "notes": "",
-      "versus": ""
+      "versus": "cpoll_cppsp"
     },
     "raw": {
       "setup_file": "setup",
@@ -32,14 +33,15 @@
       "database": "MySQL",
       "framework": "cpoll-cppsp",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Raw",
-      "platform": "CPoll",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "cpoll-cppsp-raw",
       "notes": "",
-      "versus": ""
+      "versus": "cpoll_cppsp"
     },
     "postgres-raw": {
       "setup_file": "setup",
@@ -51,14 +53,15 @@
       "database": "Postgres",
       "framework": "cpoll-cppsp",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Raw",
-      "platform": "CPoll",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "cpoll-cppsp-raw",
       "notes": "",
-      "versus": ""
+      "versus": "cpoll_cppsp"
     },
     "postgres-raw-threadpool": {
       "setup_file": "setup",
@@ -70,14 +73,15 @@
       "database": "Postgres",
       "framework": "cpoll-cppsp",
       "language": "C++",
+      "flavor": "C++14",
       "orm": "Raw",
-      "platform": "CPoll",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "cpoll-pool",
       "notes": "Threadpool",
-      "versus": ""
+      "versus": "cpoll_cppsp"
     }
   }]
 }
