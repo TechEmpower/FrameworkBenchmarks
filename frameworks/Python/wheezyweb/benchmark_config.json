@@ -21,8 +21,9 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "wheezy.web-py2",
-      "notes": ""
+      "display_name": "wheezy.web",
+      "notes": "",
+      "versus": "wheezyweb"
     },
     "py3": {
       "setup_file": "setup_py3",
@@ -44,8 +45,9 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "wheezy.web-py3",
-      "notes": ""
+      "display_name": "wheezy.web",
+      "notes": "",
+      "versus": "wheezyweb"
     }
   }]
 }

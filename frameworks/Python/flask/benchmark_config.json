@@ -21,7 +21,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Flask-Py2",
+      "display_name": "Flask",
       "notes": "CPython 2.7",
       "versus": "wsgi"
     },
@@ -43,7 +43,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Flask-raw",
+      "display_name": "Flask",
       "notes": "CPython 2.7",
       "versus": "wsgi"
     },
@@ -67,7 +67,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Flask-Py3",
+      "display_name": "Flask",
       "notes": "CPython 3.4",
       "versus": "wsgi"
     },
@@ -91,7 +91,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Flask-PyPy",
+      "display_name": "Flask",
       "notes": "PyPy 2.5",
       "versus": "wsgi"
     },
@@ -113,7 +113,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Flask-PyPy-raw",
+      "display_name": "Flask",
       "notes": "PyPy 2.5",
       "versus": "wsgi"
     },
@@ -137,7 +137,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Flask-nginx-uWSGI",
+      "display_name": "Flask",
       "notes": "CPython 2.7",
       "versus": "wsgi"
     }

@@ -21,7 +21,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "cherrypy",
+      "display_name": "Cherrypy",
       "notes": "CPython 2.7",
       "versus": "cherrypy"
     },
@@ -45,7 +45,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "cherrypy-py3",
+      "display_name": "Cherrypy",
       "notes": "CPython 3.4",
       "versus": "cherrypy"
     }

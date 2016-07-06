@@ -35,7 +35,7 @@
       "webserver": "nginx-uWSGI",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "uwsgi-nginx-uWSGI",
+      "display_name": "uwsgi",
       "notes": "",
       "versus": ""
     }

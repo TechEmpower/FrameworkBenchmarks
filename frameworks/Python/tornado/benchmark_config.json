@@ -19,7 +19,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Tornado-MongoDB-Py2",
+      "display_name": "Tornado",
       "notes": "CPython 2.7",
       "versus": ""
     },
@@ -39,7 +39,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Tornado-Postgres-Py2",
+      "display_name": "Tornado",
       "notes": "CPython 2.7",
       "versus": ""
     },
@@ -61,7 +61,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Tornado-MongoDB-Py3",
+      "display_name": "Tornado",
       "notes": "CPython 3.4",
       "versus": ""
     }

@@ -21,7 +21,7 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour+aiohttp.web+pgsql",
+      "display_name": "Asyncio",
       "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + PostgreSQL",
       "versus": "asyncio"
     },
@@ -43,7 +43,7 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour+aiohttp.web+mysql",
+      "display_name": "Asyncio",
       "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + MySQL",
       "versus": "asyncio"
     },
@@ -62,7 +62,7 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour+AsyncIO",
+      "display_name": "Asyncio",
       "notes": "Python 3 + API-Hour + AsyncIO",
       "versus": "asyncio"
     },
@@ -83,7 +83,7 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour+AsyncIO",
+      "display_name": "Asyncio",
       "notes": "Python 3 + API-Hour + AsyncIO",
       "versus": "asyncio"
     },
@@ -102,7 +102,7 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour+AsyncIO",
+      "display_name": "Asyncio",
       "notes": "Python 3 + API-Hour + AsyncIO",
       "versus": "asyncio"
     }

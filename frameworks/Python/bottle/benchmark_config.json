@@ -21,7 +21,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Bottle-Py2",
+      "display_name": "Bottle",
       "notes": "CPython 2",
       "versus": "wsgi"
     },
@@ -45,7 +45,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Bottle-Py3",
+      "display_name": "Bottle",
       "notes": "CPython 3",
       "versus": "wsgi"
     },
@@ -69,7 +69,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Bottle-PyPy",
+      "display_name": "Bottle",
       "notes": "PyPy",
       "versus": "wsgi"
     },
@@ -91,7 +91,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Bottle-raw-Py2",
+      "display_name": "Bottle",
       "notes": "CPython 2",
       "versus": "wsgi"
     },
@@ -115,7 +115,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Bottle-uWSGI",
+      "display_name": "Bottle",
       "notes": "CPython 2",
       "versus": "wsgi"
     }

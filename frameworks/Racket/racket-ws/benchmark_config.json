@@ -10,14 +10,15 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "racket-ws",
+      "framework": "None",
       "language": "Racket",
+      "flavor": "Racket5",
       "orm": "Micro",
       "platform": "Racket",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "racket-ws",
+      "display_name": "Racket-ws",
       "notes": "",
       "versus": ""
     }

@@ -17,7 +17,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Falcon-Py2",
+      "display_name": "Falcon",
       "notes": "CPython 2",
       "versus": "wsgi"
     },
@@ -37,7 +37,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Falcon-Py3",
+      "display_name": "Falcon",
       "notes": "CPython 3",
       "versus": "wsgi"
     },
@@ -57,7 +57,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Falcon-PyPy",
+      "display_name": "Falcon",
       "notes": "PyPy",
       "versus": "wsgi"
     }
