@@ -24,6 +24,7 @@
       "setup_file": "setup",
       "db_url": "/index.php/bench/db",
       "query_url": "/index.php/bench/queries/",
+      "fortune_url": "/index.php/bench/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
