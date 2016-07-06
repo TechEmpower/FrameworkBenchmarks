@@ -20,6 +20,7 @@ env:
     - "TESTDIR=C/duda"
     - "TESTDIR=C/haywire"
     - "TESTDIR=C/onion"
+    - "TESTDIR=C/h2o"
     - "TESTDIR=CSharp/aspnet"
     ## - "TESTDIR=CSharp/aspnet-stripped"
     - "TESTDIR=CSharp/evhttp-sharp"
