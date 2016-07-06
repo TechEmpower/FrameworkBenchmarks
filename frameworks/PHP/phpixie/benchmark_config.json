@@ -14,15 +14,15 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "phpixie",
-      "language": "PHP",
+      "language": "PHP7",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "PHP7-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "phpixie",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     }
   }]
 }

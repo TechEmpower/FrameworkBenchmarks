@@ -14,7 +14,7 @@ $loader = require_once __DIR__.'/../vendor/autoload.php';
 
 $app = new Silex\Application();
 
-$dbh = new PDO('mysql:host=192.168.100.102;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
+$dbh = new PDO('mysql:host=127.0.0.1;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
     PDO::ATTR_PERSISTENT => true
 ));
 
@@ -34,8 +34,7 @@ $app->register(new DoctrineOrmServiceProvider, array(
                 'path' => __DIR__.'/../src/Entity',
                 'use_simple_annotation_reader' => false,
             ),
-        ),
-        'metadata_cache' => 'redis'
+        )
     ),
 ));
 
@@ -44,17 +43,22 @@ $app->get('/json', function() {
 });
 
 $app->get('/db', function(Request $request) use ($app) {
+    $repo = $app['orm.em']->getRepository('Entity\World');
+
+    $worlds =  $repo->find(mt_rand(1, 10000));
+
+    return new JsonResponse($worlds);
+});
+
+$app->get('/queries', function(Request $request) use ($app) {
     $queries = $request->query->getInt('queries', 1);
+    $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
     // possibility for micro enhancement could be the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
     $worlds = array();
     $repo = $app['orm.em']->getRepository('Entity\World');
 
     for ($i = 0; $i < $queries; ++$i) {
         $worlds[] =  $repo->find(mt_rand(1, 10000));
-    }
-
-    if ($queries == 1) {
-        $worlds = $worlds[0];
     }
 
     return new JsonResponse($worlds);

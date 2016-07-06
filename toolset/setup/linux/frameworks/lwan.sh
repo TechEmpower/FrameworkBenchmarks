@@ -5,8 +5,7 @@ RETCODE=$(fw_exists ${IROOT}/lwan.installed)
   source $IROOT/lwan.installed
   return 0; }
 
-#REV='49607addb31879e2aa2b701317773674662315aa'
-REV='0a4af6feb3ba1a7a7d6aa122456dd78c4a29853b'
+REV='f1cd15c1a1bd15791c9f321fdc8c3ddb8d0e3799'
 LWAN_HOME=$IROOT/lwan
 
 [ ! -e $IROOT/lwan.installed -a -d $LWAN_HOME ] && rm -rf $LWAN_HOME

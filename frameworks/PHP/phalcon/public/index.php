@@ -25,7 +25,7 @@ try {
         if (function_exists('apc_store')) {
             return new Phalcon\Mvc\Model\MetaData\Apc();
         } else {
-            return new Phalcon\Mvc\Model\MetaData\Files(array(
+            return new Phalcon\Mvc\Model\MetaData\Memory(array(
                 'metaDataDir' => APP_PATH . "/app/compiled-templates/"
             ));
         }

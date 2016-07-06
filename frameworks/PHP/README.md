@@ -55,9 +55,9 @@ Ask if you are not certain.
 
 ## Install.sh and Setup.sh Files
 
-Most PHP frameworks use `fw_depends php nginx composer` in their `install.sh` file, 
-which installs PHP, Nginx, and Composer automatically. They then create a `setup.sh`
-containing these lines (comments added to clarify what's happening)
+Most PHP frameworks use `fw_depends php5 nginx composer` in their `install.sh` file, 
+which installs PHP5, Nginx, and Composer automatically. They then create a `setup.sh`
+containing these lines (comments added to clarify what's happening). `fw_depends php7` is now also available.
 
     # Explanation of variables provided by toolset:
     #   FWROOT - absolute path to framework toolset, normally 

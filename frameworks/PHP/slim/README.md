@@ -9,7 +9,7 @@ Uses the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-
 
 
 ### Data-Store/Database Mapping Test
-Uses the RedBeanPHP ORM
+Uses the PDO access layer
 
 * [DB test controller](index.php)
 
@@ -17,8 +17,7 @@ Uses the RedBeanPHP ORM
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Slim 2.2.0](http://www.slimframework.com/)
-* [RedBeanPHP 3.4.2](http://redbeanphp.com/)
+* [Slim 3.3.0](http://www.slimframework.com/)
 * [PHP Version 7.0.1](http://www.php.net/) with FPM and APC
 * [nginx 1.9.9](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)

@@ -2,6 +2,7 @@
 
 Servlet + Revenj DB API + DSL-JSON + PostgreSQL.
 It uses precompiled DSL model for POJO classes.
+It uses JSP for HTML output
 
 ### DSL model
 Data structures are defined in a DSL schema
@@ -15,6 +16,7 @@ Data structures are defined in a DSL schema
  * [DB](src/main/java/hello/DbServlet.java)
  * [Queries](src/main/java/hello/QueriesServlet.java)
  * [Updates](src/main/java/hello/UpdatesServlet.java)
+ * [Fortune](src/main/java/hello/FortunesServlet.java)
 
 ## Software Versions
 The tests were run with:
@@ -22,8 +24,8 @@ The tests were run with:
  * [Oracle Java 1.8](https://www.oracle.com/java/)
  * [Postgres 9.3](http://www.postgresql.org/)
  * [Resin 4.0](http://www.caucho.com/)
- * [DSL JSON 0.9.3](http://github.com/ngs-doo/dsl-json)
- * [Revenj.Java 0.8.0](http://github.com/ngs-doo/revenj)
+ * [DSL JSON 1.0.0](http://github.com/ngs-doo/dsl-json)
+ * [Revenj.Java 0.9.7](http://github.com/ngs-doo/revenj)
 
 ## Test URLs
 
@@ -32,3 +34,4 @@ The tests were run with:
  * DB - `http://localhost:8080/revenj/db`
  * Queries - `http://localhost:8080/revenj/queries?queries={count}`
  * Updates -  `http://localhost:8080/revenj/updates?queries={count}`
+ * Fortune -  `http://localhost:8080/revenj/fortunes`

@@ -14,7 +14,10 @@ fw_get -o composer-installer.php https://getcomposer.org/installer
 
 # Use the PHP and composer from our PHP_HOME directory and 
 # COMPOSER_HOME directories
-php composer-installer.php --install-dir=${COMPOSER_HOME}
+#
+# NOTE: if you decide to update the composer version, be sure to test ALL of the frameworks
+# that use composer, as some of them have been known to break on newer versions of composer.
+php composer-installer.php --install-dir=${COMPOSER_HOME} --version=1.0.0
 
 cd ..
 

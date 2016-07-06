@@ -1,3 +1,1 @@
-bench/cabal-dev
-/bench/.cabal-sandbox/
-/bench/cabal.sandbox.config
+/bench/.stack-work/

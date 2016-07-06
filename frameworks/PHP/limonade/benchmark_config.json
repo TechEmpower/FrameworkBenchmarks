@@ -14,13 +14,14 @@
       "classification": "Micro",
       "database": "MySQL",
       "framework": "Limonade",
-      "language": "PHP",
+      "language": "PHP7",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "PHP7-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Limonade"
+      "display_name": "Limonade",
+      "versus": "php7"
     }
   }]
 }

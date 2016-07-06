@@ -19,7 +19,8 @@
             "apps/models",
             "apps/components" ,
             "apps/extensions"
-        ]
+        ],
+		"files": ["vendor/cygnite/framework/src/Cygnite/Helpers/Support.php"]
     },
     "config": {
         "preferred-install": "dist"

@@ -28,6 +28,13 @@ public slots:
     void updates();
     void remove(const QString &pk);
 
+    // MongoDB
+    void mqueries();
+    void mqueries(const QString &num);
+    void mrandom();
+    void mupdates(const QString &num);
+    void mupdates();
+
 private:
     void renderEntry(const QVariantMap &world = QVariantMap());
     void renderEdit(const QVariantMap &world = QVariantMap());
