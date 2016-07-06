@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php5 phalcon nginx
+fw_depends php7 phalcon nginx
 
 sed -i 's|localhost|'"${DBHOST}"'|g' public/index.php
 sed -i 's|root .*/FrameworkBenchmarks/php-phalcon-micro|root '"${TROOT}"'|g' deploy/nginx.conf

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php5 phalcon nginx
+fw_depends php7 phalcon nginx
 
 sed -i 's|mongodb://localhost|mongodb://'"${DBHOST}"'|g' app/config/config.php
 sed -i 's|localhost|'"${DBHOST}"'|g' app/config/config.php
