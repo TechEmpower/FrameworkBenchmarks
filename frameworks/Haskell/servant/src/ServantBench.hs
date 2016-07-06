@@ -27,6 +27,7 @@ import qualified Hasql.Query                as Hasql
 import           Hasql.Session              (query)
 import           Lucid
 import qualified Network.Wai.Handler.Warp   as Warp
+import           Network.HTTP.Media         ((//))
 import           Servant
 import           Servant.HTML.Lucid         (HTML)
 import           System.Random.MWC          (GenIO, createSystemRandom,
@@ -38,7 +39,7 @@ type API =
   :<|> "queries" :> QueryParam "queries" Int :> Get '[JSON] [World]
   :<|> "fortune" :> Get '[HTML] (Html ())
   :<|> "updates" :> QueryParam "queries" Int :> Get '[JSON] [World]
-  :<|> "plaintext" :> Get '[PlainText] ByteString
+  :<|> "plaintext" :> Get '[Plain] ByteString
 
 api :: Proxy API
 api = Proxy
@@ -61,9 +62,6 @@ run port dbSettings = do
     halfSecond = 0.5
     settings = (30, halfSecond, dbSettings)
 
-instance MimeRender PlainText ByteString where
-  mimeRender _ = id
-  {-# INLINE mimeRender #-}
 
 data World = World { wId :: !Int32 , wRandomNumber :: !Int32 }
   deriving (Show, Generic)
@@ -87,6 +85,14 @@ intValEnc :: HasqlEnc.Params Int32
 intValEnc = HasqlEnc.value HasqlEnc.int4
 intValDec :: HasqlDec.Row Int32
 intValDec = HasqlDec.value HasqlDec.int4
+
+-- * PlainText without charset
+
+data Plain
+instance Accept Plain where contentType _ = "text" // "plain"
+instance MimeRender Plain ByteString where
+  mimeRender _ = id
+  {-# INLINE mimeRender #-}
 
 ------------------------------------------------------------------------------
 
