@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head><title>Fortunes</title></head>
+<head>
+    <title>Fortunes</title>
+</head>
+
 <body>
 <table>
     <tr>
