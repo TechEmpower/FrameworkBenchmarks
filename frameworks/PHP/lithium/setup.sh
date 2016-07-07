@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php nginx composer
+fw_depends php5 nginx composer
 
 sed -i 's|192.168.100.102|'"${DBHOST}"'|g' app/config/bootstrap/connections.php
 sed -i 's|root .*/FrameworkBenchmarks/php-lithium|root '"${TROOT}"'|g' deploy/nginx.conf

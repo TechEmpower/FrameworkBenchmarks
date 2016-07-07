@@ -244,8 +244,8 @@ class FrameworkTest:
         self.database_host,
         logDir,
         self.benchmarker.threads, 
-        self.directory,
         max(self.benchmarker.concurrency_levels),
+        self.directory,
         command)
     logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
 

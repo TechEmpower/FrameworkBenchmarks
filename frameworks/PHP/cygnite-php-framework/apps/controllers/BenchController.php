@@ -67,6 +67,7 @@ class BenchController extends AbstractBaseController
                 return -1;
             }
         });
+		header('Content-Type: text/html; charset=utf-8');
         $this->render('fortunes', array(
                 'fortunes' => $fortunes
         ));
