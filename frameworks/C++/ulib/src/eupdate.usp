@@ -5,32 +5,40 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static UMongoDBClient* mc;
+static char* pbuffer1;
+static char* pbuffer2;
+static char buffer1[128];
+static char buffer2[128];
+static UElasticSearchClient* es;
 
 #ifndef AS_cpoll_cppsp_DO
 static UValue* pvalue;
 static UVector<World*>* pvworld_update;
 #endif
 
-static void usp_fork_mupdate()
+#define ULEN U_CONSTANT_SIZE("/tfb/world/")
+#define QLEN U_CONSTANT_SIZE("{\"doc\":{\"_id\":\"")
+
+static void usp_fork_eupdate()
 {
-   U_TRACE(5, "::usp_fork_mupdate()")
+   U_TRACE(5, "::usp_fork_eupdate()")
 
-   U_NEW(UMongoDBClient, mc, UMongoDBClient);
+   U_NEW(UElasticSearchClient, es, UElasticSearchClient);
 
-   if (mc->connect() == false)
+   if (es->connect() == false)
       {
-      U_WARNING("usp_fork_mupdate(): connection disabled or failed");
+      U_WARNING("usp_fork_eupdate(): connection disabled or failed");
 
       return;
       }
 
-   if (mc->selectCollection("hello_world", "World") == false)
-      {
-      U_WARNING("usp_fork_mupdate(): selectCollection() failed");
+   u__memcpy(buffer1, "/tfb/world/", ULEN, __PRETTY_FUNCTION__);
 
-      return;
-      }
+   pbuffer1 = buffer1 + ULEN;
+
+   u__memcpy(buffer2, "{\"doc\":{\"_id\":\"", QLEN, __PRETTY_FUNCTION__);
+
+   pbuffer2 = buffer2 + QLEN;
 
 #ifndef AS_cpoll_cppsp_DO
    U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
@@ -39,11 +47,11 @@ static void usp_fork_mupdate()
 }
 
 #ifdef DEBUG
-static void usp_end_mupdate()
+static void usp_end_eupdate()
 {
-   U_TRACE(5, "::usp_end_mupdate()")
+   U_TRACE(5, "::usp_end_eupdate()")
 
-   delete mc;
+   delete es;
 
 #ifndef AS_cpoll_cppsp_DO
    if (pvalue)
@@ -59,8 +67,7 @@ static void usp_end_mupdate()
 Content-Type: application/json
 -->
 <!--#code
-uint32_t id, rnum;
-mongoc_bulk_operation_t* bulk = mc->createBulk(false);
+uint32_t len1, len2, id, rnum;
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
 #ifdef AS_cpoll_cppsp_DO
@@ -69,7 +76,10 @@ USP_PUTS_CHAR('[');
 
 while (true)
    {
-   mc->updateOneBulk(bulk, id = u_get_num_random(10000-1), "randomNumber", rnum = u_get_num_random(10000-1));
+   len1 = u__snprintf(pbuffer1, 100, "%u/_update", id = u_get_num_random(10000-1));
+   len2 = u__snprintf(pbuffer2, 100, "%u\"}}",   rnum = u_get_num_random(10000-1));
+
+   (void) es->sendPOST(buffer1, len1+ULEN, buffer2, len2+QLEN);
 
 #ifdef AS_cpoll_cppsp_DO
    USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", id, rnum);
@@ -87,8 +97,6 @@ while (true)
    USP_PUTS_CHAR(',');
 #endif
    }
-
-(void) mc->executeBulk(bulk);
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR(']');
