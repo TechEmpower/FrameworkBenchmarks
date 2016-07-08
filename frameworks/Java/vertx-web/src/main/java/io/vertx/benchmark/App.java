@@ -33,7 +33,13 @@ public class App extends AbstractVerticle {
     private final HandlebarsTemplateEngine engine;
 
     public MongoDB(Vertx vertx, JsonObject config) {
-      this.database = MongoClient.createShared(vertx, config);
+      final JsonObject mongoConfig = config.copy();
+
+      // mongo is configured without credentials
+      mongoConfig.remove("username");
+      mongoConfig.remove("password");
+
+      this.database = MongoClient.createShared(vertx, mongoConfig);
       this.engine = HandlebarsTemplateEngine.create();
     }
 
