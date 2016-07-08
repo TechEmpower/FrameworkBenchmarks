@@ -8,7 +8,7 @@ JDBC_CONFIG = "jdbc:mysql://#{host}/#{database}?user=#{username}&password=#{pass
 
 module App
   JRuby = lambda do |env|
-    test = 123
+    test = 124
     content_type, body = case env['PATH_INFO']
       when '/plaintext'
         ['text/plain', "Hello, World!"]

@@ -16,7 +16,7 @@ RVM_INSTALLER="curl -sSL https://get.rvm.io"
 #   $RVM_INSTALLER | sudo bash -s stable
 #   echo "source /usr/local/rvm/scripts/rvm" > $IROOT/rvm.installed
 # else
-  $RVM_INSTALLER | bash -s stable
+  $RVM_INSTALLER | sudo bash -s stable
   echo "source ~/.rvm/scripts/rvm" > $IROOT/rvm.installed
 # fi
 
