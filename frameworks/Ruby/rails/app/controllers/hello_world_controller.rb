@@ -1,18 +1,26 @@
 class HelloWorldController < ApplicationController
 
   def plaintext
+    response.headers['Date'] = Time.now.to_s
+    response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     render :plain => "Hello, World!"
   end
 
   def json
+    response.headers['Date'] = Time.now.to_s
+    response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     render :json => {:message => "Hello, World!"}
   end
 
   def db
+    response.headers['Date'] = Time.now.to_s
+    response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     render :json => World.find(Random.rand(10000) + 1)
   end
 
   def query
+    response.headers['Date'] = Time.now.to_s
+    response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     queries = params[:queries].to_i
     queries = 1 if queries < 1
     queries = 500 if queries > 500
@@ -24,12 +32,16 @@ class HelloWorldController < ApplicationController
   end
   
   def fortune
+    response.headers['Date'] = Time.now.to_s
+    response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     @fortunes = Fortune.all
     @fortunes << Fortune.new(:id => 0, :message => "Additional fortune added at request time.")
     @fortunes = @fortunes.sort_by { |x| x.message }
   end
 
   def update
+    response.headers['Date'] = Time.now.to_s
+    response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     queries = (params[:queries] || 1).to_i
     queries = 1 if queries < 1
     queries = 500 if queries > 500
