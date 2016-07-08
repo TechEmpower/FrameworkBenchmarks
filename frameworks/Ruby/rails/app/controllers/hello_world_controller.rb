@@ -1,28 +1,28 @@
 class HelloWorldController < ApplicationController
 
   def plaintext
-    test = 124
+    test = 125
     response.headers['Date'] = Time.now.to_s
     response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     render :plain => "Hello, World!"
   end
 
   def json
-    test = 124
+    test = 125
     response.headers['Date'] = Time.now.to_s
     response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     render :json => {:message => "Hello, World!"}
   end
 
   def db
-    test = 124
+    test = 125
     response.headers['Date'] = Time.now.to_s
     response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     render :json => World.find(Random.rand(10000) + 1)
   end
 
   def query
-    test = 124
+    test = 125
     response.headers['Date'] = Time.now.to_s
     response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     queries = params[:queries].to_i
@@ -36,7 +36,7 @@ class HelloWorldController < ApplicationController
   end
 
   def fortune
-    test = 124
+    test = 125
     response.headers['Date'] = Time.now.to_s
     response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     @fortunes = Fortune.all
@@ -45,7 +45,7 @@ class HelloWorldController < ApplicationController
   end
 
   def update
-    test = 124
+    test = 125
     response.headers['Date'] = Time.now.to_s
     response.headers['Server'] = ENV['NEWRELIC_DISPATCHER']
     queries = (params[:queries] || 1).to_i

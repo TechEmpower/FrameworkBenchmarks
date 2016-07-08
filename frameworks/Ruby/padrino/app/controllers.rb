@@ -1,19 +1,19 @@
 HelloWorld::App.controllers  do
   get '/json', :provides => [:js] do
-    test = 124
+    test = 125
     content_type 'application/json'
     {message: "Hello, World!"}.to_json
   end
 
   get '/db', :provides => [:js] do
-    test = 124
+    test = 125
     content_type 'application/json'
     id = Random.rand(10000) + 1
     World.get(id).attributes.to_json
   end
 
   get '/queries', :provides => [:js] do
-    test = 124
+    test = 125
     content_type 'application/json'
     queries = params['queries'].to_i
     queries = 1 if queries < 1
@@ -25,7 +25,7 @@ HelloWorld::App.controllers  do
   end
 
   get '/fortunes' do
-    test = 124
+    test = 125
     @fortunes = Fortune.all
     @fortunes << Fortune.new(:id => 0, :message => "Additional fortune added at request time.")
     @fortunes = @fortunes.sort_by { |x| x.message }
@@ -34,7 +34,7 @@ HelloWorld::App.controllers  do
   end
 
   get '/updates', :provides => [:js] do
-    test = 124
+    test = 125
     content_type 'application/json'
     queries = params['queries'].to_i
     queries = 1 if queries < 1
@@ -56,7 +56,7 @@ HelloWorld::App.controllers  do
   end
 
   get '/plaintext' do
-    test = 124
+    test = 125
     content_type 'text/plain'
     "Hello, World!"
   end
