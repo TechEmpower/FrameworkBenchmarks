@@ -28,6 +28,7 @@ env:
     - "TESTDIR=CSharp/revenj"
     - "TESTDIR=CSharp/servicestack"
     - "TESTDIR=C++/cpoll_cppsp"
+    - "TESTDIR=C++/cutelyst"
     - "TESTDIR=C++/silicon"
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ulib"
