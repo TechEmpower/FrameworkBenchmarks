@@ -13,6 +13,7 @@ end
 module Acme
   class HelloWorld < Grape::API
     get '/json' do
+      test = 123
       header 'Date', Time.now.to_s
       header 'Server', ENV['NEWRELIC_DISPATCHER']
       {message:"Hello, World!"}
@@ -23,6 +24,7 @@ module Acme
     content_type :plain, "text/plain"
     format :plain
     get '/plaintext' do
+      test = 123
       header 'Date', Time.now.to_s
       header 'Server', ENV['NEWRELIC_DISPATCHER']
       "Hello, World!"
@@ -31,6 +33,7 @@ module Acme
 
   class DatabaseQueries < Grape::API
     get '/db' do
+      test = 123
       header 'Date', Time.now.to_s
       header 'Server', ENV['NEWRELIC_DISPATCHER']
       ActiveRecord::Base.connection_pool.with_connection do
@@ -39,6 +42,7 @@ module Acme
     end
 
     get '/query' do
+      test = 123
       header 'Date', Time.now.to_s
       header 'Server', ENV['NEWRELIC_DISPATCHER']
       queries = params[:queries].to_i
@@ -82,5 +86,3 @@ module Acme
 end
 
 run Acme::API
-
-
