@@ -58,7 +58,7 @@ switch (ENVIRONMENT)
  * This variable must contain the name of your "system" directory.
  * Set the path if it is not in the same directory as this file.
  */
-	$system_path = 'vendor/rogeriopradoj/codeigniter/system';
+	$system_path = 'vendor/codeigniter/framework/system';
 /*
  *---------------------------------------------------------------
  * APPLICATION DIRECTORY NAME
@@ -71,6 +71,8 @@ switch (ENVIRONMENT)
  * For more info please see the user guide:
  *
  * https://codeigniter.com/user_guide/general/managing_apps.html
+ *:
+ *:
  *
  * NO TRAILING SLASH!
  */

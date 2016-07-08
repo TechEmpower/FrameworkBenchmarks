@@ -1,5 +1,5 @@
 {
     "require": {
-        "rogeriopradoj/codeigniter": "3.0.3"
+        "codeigniter/framework": "3.0.6"
     }
 }
