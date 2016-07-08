@@ -1,6 +1,5 @@
 {
     "require": {
-        "rogeriopradoj/codeigniter": "2.2.1-rc.2"
+        "rogeriopradoj/codeigniter": "3.0.3"
     }
 }
-

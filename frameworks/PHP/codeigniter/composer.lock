@@ -1,43 +1,46 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "92e99b460af6b4b46abd380a66a89f01",
+    "hash": "b4e712f0a5597492abb8d2cfb77889d9",
+    "content-hash": "e36ad4a935e2f651af46f2c475f5a3e0",
     "packages": [
         {
             "name": "rogeriopradoj/codeigniter",
-            "version": "2.2.1-rc.2",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rogeriopradoj/codeigniter-composer.git",
-                "reference": "c3b605d2e5dc3752da7e6843daed31bcf87e225f"
+                "reference": "e7f0e7aa3d48778b5ad926eda14c825f62f421eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rogeriopradoj/codeigniter-composer/zipball/c3b605d2e5dc3752da7e6843daed31bcf87e225f",
-                "reference": "c3b605d2e5dc3752da7e6843daed31bcf87e225f",
+                "url": "https://api.github.com/repos/rogeriopradoj/codeigniter-composer/zipball/e7f0e7aa3d48778b5ad926eda14c825f62f421eb",
+                "reference": "e7f0e7aa3d48778b5ad926eda14c825f62f421eb",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
-            "type": "library",
+            "require-dev": {
+                "mikey179/vfsstream": "1.1.*"
+            },
+            "type": "project",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "OSL-3.0"
+                "MIT"
             ],
-            "description": "A way to install CodeIgniter via composer",
-            "time": "2014-11-25 11:27:54"
+            "description": "The CodeIgniter framework",
+            "homepage": "http://codeigniter.com",
+            "time": "2015-10-31 17:37:24"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "rogeriopradoj/codeigniter": 5
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
