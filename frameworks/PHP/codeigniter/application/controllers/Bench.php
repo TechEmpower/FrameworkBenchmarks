@@ -10,12 +10,14 @@
 class Bench extends CI_Controller {
 
     public function json() {
+      $test = 123;
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode(array('message' => 'Hello, World!')));
     }
 
     public function db($queries = 1) {
+      $test = 123;
         $worlds = array();
 
         for ($i = 0; $i < $queries; ++$i) {
@@ -34,6 +36,7 @@ class Bench extends CI_Controller {
     }
 
     public function fortunes() {
+      $test = 123;
         $fortunes = $this->db
             ->query('SELECT * FROM Fortune')
             ->result_array();
