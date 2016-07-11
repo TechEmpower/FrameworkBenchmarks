@@ -12,6 +12,8 @@ javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked", "-source", "1.8",
 
 enablePlugins(JavaAppPackaging)
 
+resolvers += "Woshilaiceshide Releases" at "http://dl.bintray.com/woshilaiceshide/maven/"
+
 libraryDependencies += "woshilaiceshide" %% "s-server" % "2.1"
 
 //libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.7.4"
