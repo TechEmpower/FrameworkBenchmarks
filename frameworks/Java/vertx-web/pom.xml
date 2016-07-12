@@ -12,7 +12,7 @@
   <properties>
     <!-- the main class -->
     <main.verticle>io.vertx.benchmark.App</main.verticle>
-    <vertx.version>3.3.0</vertx.version>
+    <vertx.version>3.3.2</vertx.version>
   </properties>
 
   <dependencies>
