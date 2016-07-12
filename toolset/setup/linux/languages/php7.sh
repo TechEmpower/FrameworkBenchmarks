@@ -25,6 +25,11 @@ echo "Installing PHP quietly"
 make --quiet install
 cd ..
 
+# Disable yaf and phalcon, for most PHP frameworks
+# (there is a similar line to enable the frameworks in their respective setup files)
+sed -i 's|^extension=yaf.so|;extension=yaf.so|g' $FWROOT/config/php.ini
+sed -i 's|^extension=phalcon.so|;extension=phalcon.so|g' $FWROOT/config/php.ini
+
 # Enable the correct Mongo DB plugin for PHP 7
 sed -i 's|^extension=mongo.so|;extension=mongo.so|g' $FWROOT/config/php.ini
 sed -i 's|;extension=mongodb.so|extension=mongodb.so|g' $FWROOT/config/php.ini
@@ -44,8 +49,7 @@ $PHP_HOME/bin/pecl channel-update pecl.php.net
 # Apc.so
 $PHP_HOME/bin/pecl config-set php_ini $PHP_HOME/lib/php.ini
 
-#redis not available in pecl for php7 - find alternative install
-#printf "\n" | $PHP_HOME/bin/pecl -q install -f redis
+printf "\n" | $PHP_HOME/bin/pecl -q install -f redis-3.0.0
 
 #removed phalcon install - separate to toolset/setup/linux/frameworks
 

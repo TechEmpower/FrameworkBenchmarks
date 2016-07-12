@@ -11,15 +11,15 @@
       "classification": "Micro",
       "database": "MySQL",
       "framework": "silex",
-      "language": "PHP5",
+      "language": "PHP7",
       "orm": "Raw",
-      "platform": "PHP5-FPM",
+      "platform": "PHP7-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "silex",
       "notes": "",
-      "versus": "php5"
+      "versus": "php7"
     },
     "raw": {
       "setup_file": "setup_raw",
@@ -34,15 +34,15 @@
       "classification": "Micro",
       "database": "MySQL",
       "framework": "silex",
-      "language": "PHP5",
+      "language": "PHP7",
       "orm": "Raw",
-      "platform": "PHP5-FPM",
+      "platform": "PHP7-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "silex",
       "notes": "",
-      "versus": "php5"
+      "versus": "php7"
     }
   }]
 }
