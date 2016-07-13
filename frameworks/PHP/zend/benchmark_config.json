@@ -11,15 +11,15 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "Zend",
-      "language": "PHP",
+      "language": "PHP7",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "PHP7-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "zend",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     }
   }]
 }

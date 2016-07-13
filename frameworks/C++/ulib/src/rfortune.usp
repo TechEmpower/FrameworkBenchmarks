@@ -14,7 +14,7 @@ static void usp_fork_rfortune()
 {
    U_TRACE(5, "::usp_fork_rfortune()")
 
-   rc = U_NEW(UREDISClient<UTCPSocket>);
+   U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
 
    if (rc->connect() == false)
       {
@@ -23,9 +23,9 @@ static void usp_fork_rfortune()
       return;
       }
 
-   pencoded     = U_NEW(UString(100U));
-   pvfortune    = U_NEW(UVector<Fortune*>);
-   pfortune2add = U_NEW(Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
+   U_NEW(UString, pencoded, UString(100U));
+   U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
+   U_NEW(Fortune, pfortune2add, Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
 }
 
 #ifdef DEBUG
@@ -45,13 +45,21 @@ static void usp_end_rfortune()
 #endif
 -->
 <!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
+Fortune* item;
 uint32_t i, n;
+
+U_NEW(Fortune, item, Fortune(*pfortune2add));
+
+pvfortune->push_back(item);
 
 (void) rc->lrange(U_CONSTANT_TO_PARAM("fortunes 0 -1"));
 
-pvfortune->push_back(U_NEW(Fortune(*pfortune2add)));
+for (i = 0, n = rc->vitem.size(); i < n; ++i)
+   {
+   U_NEW(Fortune, item, Fortune(i+1, rc->vitem[i]));
 
-for (i = 0, n = rc->vitem.size(); i < n; ++i) pvfortune->push_back(U_NEW(Fortune(i+1, rc->vitem[i])));
+   pvfortune->push_back(item);
+   }
 
 pvfortune->sort(Fortune::cmp_obj);
 
