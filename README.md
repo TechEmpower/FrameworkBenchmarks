@@ -43,9 +43,12 @@ required.
 
         $ vagrant ssh
 
-5. Run a test.
+5. Move into the FrameworkBenchmarks directory in the vm.
 
         vagrant@TFB-all:~$ cd ~/FrameworkBenchmarks
+        
+6. Run a test.
+
         vagrant@TFB-all:~/FrameworkBenchmarks$ toolset/run-tests.py --install server --mode verify --test beego
 
 _Note: `--install server` only needs to be added the first time that a tests is run. 

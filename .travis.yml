@@ -87,7 +87,6 @@ env:
     - "TESTDIR=Java/officefloor"
     - "TESTDIR=Java/permeagility"
     - "TESTDIR=Java/play1"
-    - "TESTDIR=Java/play1siena"
     - "TESTDIR=Java/play2-java"
     - "TESTDIR=Java/rapidoid"
     - "TESTDIR=Java/restexpress"

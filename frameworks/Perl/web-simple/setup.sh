@@ -5,8 +5,14 @@ sed -i 's|server unix:.*/FrameworkBenchmarks/web-simple|server unix:'"${TROOT}"'
 
 fw_depends perl nginx
 
-cpanm --notest --no-man-page Web::Simple DBI DBD::mysql Plack Starman JSON::XS
-
+cpanm --notest --no-man-page  \
+    Web::Simple@0.031 \
+    DBI@1.636 \
+    DBD::mysql@4.033 \
+    Plack@1.0039 \
+    Starman@0.4014 \
+    JSON::XS@3.02
+    
 nginx -c $TROOT/nginx.conf
 
 plackup -E production -s Starman --workers=${MAX_THREADS} -l $TROOT/frameworks-benchmark.sock -a $TROOT/app.pl &
