@@ -28,7 +28,6 @@
       "setup_file": "setup",
       "db_url": "/postgres/db",
       "query_url": "/postgres/queries?queries=",
-      "fortune_url": "/postgres/fortunes",
       "update_url": "/postgres/updates?queries=",
       "port": 8080,
       "approach": "Realistic",

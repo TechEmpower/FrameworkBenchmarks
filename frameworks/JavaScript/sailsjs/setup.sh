@@ -9,7 +9,6 @@ sed -i 's|127.0.0.1|'"${DBHOST}"'|g' api/controllers/SequelizePostgresController
 # let us run sails directly
 npm install -g sails
 
-# reset cache & run app
-npm cache clean
+# run app
 npm install
 sails lift --port 8080 &
