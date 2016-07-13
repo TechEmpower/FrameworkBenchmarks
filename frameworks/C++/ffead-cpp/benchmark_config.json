@@ -25,7 +25,7 @@
       "versus": ""
     },
     "apache2": {
-      "setup_file": "setup",
+      "setup_file": "setup-apache2",
       "json_url": "/te-benchmark/json",
       "plaintext_url": "/te-benchmark/plaintext",
       "db_url": "/te-benchmark/db",
