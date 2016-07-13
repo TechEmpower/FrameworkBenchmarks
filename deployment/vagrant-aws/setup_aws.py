@@ -80,7 +80,7 @@ def setup_vpc():
   # run_aws("authorize-security-group-egress --group-id %s --protocol -1 --cidr 0.0.0.0/0 --port all" % groupid)
   run_aws("authorize-security-group-ingress --group-id %s --source-group %s --protocol -1 --port -1" % (groupid, groupid))
 
-  log.info("Complete."
+  log.info("Complete.")
   log.info(" Here are the environment variables you should use:")
   print "export TFB_AWS_SUBNET=%s" % pubid
   print "export TFB_AWS_SEC_GROUP=%s" % groupid
