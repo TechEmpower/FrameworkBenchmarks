@@ -3,8 +3,10 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
+      "update_url": "/update?queries=",
       "query_url": "/db-multi?queries=",
       "port": 8080,
       "approach": "Realistic",
