@@ -1,7 +1,7 @@
 #!/bin/bash
 
 fw_depends ffead-cpp
-sudo /etc/init.d/apache2 stop
+
 export FFEAD_CPP_PATH=$TROOT/ffead-cpp-2.0
 export LD_LIBRARY_PATH=$IROOT:$FFEAD_CPP_PATH/lib:$LD_LIBRARY_PATH
 echo $FFEAD_CPP_PATH
