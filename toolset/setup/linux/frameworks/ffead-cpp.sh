@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo /etc/init.d/apache2 stop
+
 RETCODE=$(fw_exists ${IROOT}/ffead-cpp.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
