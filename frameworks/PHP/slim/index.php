@@ -5,7 +5,15 @@ require_once __DIR__.'/vendor/autoload.php';
 
 $app = new \Slim\App;
 
-// Test 1: JSON serialization
+// Test 1: Plaintext
+$app->get('/plaintext', function ($request, $response) {
+    return $response
+        ->write('Hello, World!')
+        ->withHeader('Content-Type', 'text/plain')
+        ;
+});
+
+// Test 2: JSON serialization
 $app->get('/json', function ($request, $response) {
     return $response
         ->withJson(array('message' => 'Hello, World!'))
@@ -16,13 +24,13 @@ $app->get('/json', function ($request, $response) {
 $container = $app->getContainer();
 $container['db'] = function ($c) {
     $db = $c['settings']['db'];
-    $pdo = new PDO('mysql:host=localhost;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
+    $pdo = new PDO('mysql:host=127.0.0.1;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
 };
 
-// Test 2: Single database query
+// Test 3: Single database query
 $app->get('/db', function ($request, $response) {
     $sth = $this->db->prepare('SELECT * FROM World WHERE id = ?');
     $sth->execute(array(mt_rand(1, 10000)));
@@ -37,7 +45,7 @@ $app->get('/db', function ($request, $response) {
         ;
 });
 
-// Test 3: Multiple database queries
+// Test 4: Multiple database queries
 $app->get('/dbs', function ($request, $response) {
     $queries = max(1, min($request->getParam('queries'), 500));
 
@@ -49,6 +57,31 @@ $app->get('/dbs', function ($request, $response) {
         # Cast fields to int so they don't get wrapped with quotes
         $world['id'] = (int) $world['id'];
         $world['randomNumber'] = (int) $world['randomNumber'];
+        $worlds[] = $world;
+    }
+
+    return $response
+        ->withJson($worlds)
+        ->withHeader('Content-Type', 'application/json') // fixes utf-8 warning
+        ;
+});
+
+// Test 5: Updates
+$app->get('/updates', function ($request, $response) {
+    $queries = max(1, min($request->getParam('queries'), 500));
+
+    $sth = $this->db->prepare('SELECT * FROM World WHERE id = ?');
+    $worlds = array();
+    for ($i = 0; $i < $queries; ++$i) {
+        $id = mt_rand(1, 10000);
+        $random_number = mt_rand(1, 10000);
+        $sth->execute(array($id));
+        $world = $sth->fetch();
+        # Cast fields to int so they don't get wrapped with quotes
+        $world['id'] = (int) $world['id'];
+        $world['randomNumber'] = $random_number;
+        $update_query = $this->db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+        $update_query->execute(array($world['randomNumber'], $world['id']));
         $worlds[] = $world;
     }
 
