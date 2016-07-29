@@ -10,7 +10,7 @@
         <?php foreach($data['fortunes'] as $fortune){ ?>
             <tr>
                 <td><?php echo $fortune['id']; ?></td>
-                <td><?php echo filter_var($fortune['message'], FILTER_SANITIZE_SPECIAL_CHARS); ?></td>
+                <td><?php echo htmlspecialchars($fortune['message']); ?></td>
             </tr>
         <?php } ?>
     </table>

@@ -101,7 +101,7 @@ $app->get('/fortunes', function ($request, $response) {
     usort($fortunes, function($left, $right) {
         return strcmp($left['message'], $right['message']);
     });
-    return $this->view->render($response, "fortunes.phtml", ["fortunes" => $fortunes]);
+    return $this->view->render($response, "fortunes.php", ["fortunes" => $fortunes]);
 });
 
 $app->run();
