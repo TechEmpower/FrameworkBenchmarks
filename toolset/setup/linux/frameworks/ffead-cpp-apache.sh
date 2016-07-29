@@ -36,13 +36,12 @@ FFEAD_CPP_PATH '"${FFEADROOT}"'
 <VirtualHost *:8080>
         DocumentRoot '"${FFEADROOT}"'/web
         SetHandler ffead_cpp_module
-	<Directory '"${FFEADROOT}"'/web/>
-        	Options Indexes FollowSymLinks MultiViews
-        	AllowOverride None
-        	Require all granted
-        	allow from all
-	</Directory>
 </VirtualHost>
+<Directory '"${FFEADROOT}"'/web/>
+       	Options Indexes FollowSymLinks MultiViews
+       	AllowOverride None
+       	Require all granted
+</Directory>
 EOL'
 
 sudo adduser testrunner www-data
