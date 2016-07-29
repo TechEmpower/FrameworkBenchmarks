@@ -23,6 +23,29 @@
       "display_name": "vibe.d",
       "notes": "",
       "versus": "vibed"
+    },
+    "ldc": {
+      "setup_file": "setup_ldc",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "plaintext_url": "/plaintext",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MongoDB",
+      "framework": "vibed",
+      "language": "D",
+      "orm": "Micro",
+      "platform": "D",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "vibe.d-ldc",
+      "notes": "",
+      "versus": "vibed"
     }
   }]
 }
