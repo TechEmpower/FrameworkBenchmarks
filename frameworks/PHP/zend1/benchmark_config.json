@@ -7,6 +7,7 @@
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db-multi?queries=",
+      "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
