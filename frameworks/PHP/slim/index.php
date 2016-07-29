@@ -4,6 +4,15 @@ error_reporting(-1);
 require_once __DIR__.'/vendor/autoload.php';
 
 $app = new \Slim\App;
+$container = $app->getContainer();
+$container['db'] = function ($c) {
+  $db = $c['settings']['db'];
+  $pdo = new PDO('mysql:host=127.0.0.1;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+  return $pdo;
+};
+$container['view'] = new \Slim\Views\PhpRenderer("templates/");
 
 // Test 1: Plaintext
 $app->get('/plaintext', function ($request, $response) {
@@ -21,14 +30,6 @@ $app->get('/json', function ($request, $response) {
         ;
 });
 
-$container = $app->getContainer();
-$container['db'] = function ($c) {
-    $db = $c['settings']['db'];
-    $pdo = new PDO('mysql:host=127.0.0.1;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    return $pdo;
-};
 
 // Test 3: Single database query
 $app->get('/db', function ($request, $response) {
@@ -89,6 +90,18 @@ $app->get('/updates', function ($request, $response) {
         ->withJson($worlds)
         ->withHeader('Content-Type', 'application/json') // fixes utf-8 warning
         ;
+});
+
+// Test 6: Fortunes
+$app->get('/fortunes', function ($request, $response) {
+    $sth = $this->db->prepare('SELECT * FROM Fortune');
+    $sth->execute();
+    $fortunes = $sth->fetchAll();
+    array_push($fortunes, array('id'=> 0, 'message' => 'Additional fortune added at request time.'));
+    usort($fortunes, function($left, $right) {
+        return strcmp($left['message'], $right['message']);
+    });
+    return $this->view->render($response, "fortunes.phtml", ["fortunes" => $fortunes]);
 });
 
 $app->run();
