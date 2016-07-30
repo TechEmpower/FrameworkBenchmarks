@@ -8,9 +8,9 @@ sudo apt-get install -y uuid-dev unixodbc unixodbc-dev
 fw_get -o ffead-cpp-2.0.tar.gz https://github.com/sumeetchhetri/ffead-cpp/releases/download/v2.0-Draft-TLV-Fixed-TE_Benchmark/ffead-cpp-2.0-tlfixed-bin.tar.gz
 fw_untar ffead-cpp-2.0.tar.gz
 
-rm -rf ${TROOT}/ffead-cpp-2.0-bin
-cp -R ffead-cpp-2.0-bin/ ${TROOT}
-mv ${TROOT}/ffead-cpp-2.0-bin ${TROOT}/ffead-cpp-2.0
+sudo rm -rf /var/www/ffead-cpp-2.0-bin
+sudo cp -R ffead-cpp-2.0-bin/ /var/www
+sudo mv /var/www/ffead-cpp-2.0-bin /var/www/ffead-cpp-2.0
 rm -rf ffead-cpp-2.0/
 
 wget https://github.com/mongodb/mongo-c-driver/releases/download/1.1.10/mongo-c-driver-1.1.10.tar.gz
@@ -19,7 +19,7 @@ cd mongo-c-driver-1.1.10/
 ./configure --prefix=${IROOT} --libdir=${IROOT}
 make && sudo make install
 
-FFEADROOT=$TROOT/ffead-cpp-2.0
+FFEADROOT=/var/www/ffead-cpp-2.0
 ETROOT=${FFEADROOT//\//\\/}
 EIROOT=${IROOT//\//\\/}
 
@@ -34,14 +34,19 @@ LoadModule ffead_cpp_module '"${FFEADROOT}"'/mod_ffeadcpplib.so
 Listen 8080
 FFEAD_CPP_PATH '"${FFEADROOT}"'
 <VirtualHost *:8080>
-        DocumentRoot '"${FFEADROOT}"'/web
-        SetHandler ffead_cpp_module
+	DocumentRoot '"${FFEADROOT}"'/web
+	SetHandler ffead_cpp_module
+	<Directory '"${FFEADROOT}"'>
+		Options FollowSymLinks
+		AllowOverride None
+		Require all denied
+	</Directory>
+	<Directory '"${FFEADROOT}"'/web/>
+		Options -Indexes +FollowSymLinks +MultiViews
+		AllowOverride All
+		Require all granted
+	</Directory>
 </VirtualHost>
-<Directory '"${FFEADROOT}"'/web/>
-       	Options Indexes FollowSymLinks MultiViews
-       	AllowOverride None
-       	Require all granted
-</Directory>
 EOL'
 
 sudo adduser testrunner www-data
