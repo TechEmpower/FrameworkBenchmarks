@@ -19,26 +19,22 @@ internal data class Message (val message: String = "Hello, World!")
 internal data class Fortune (val _id: Int, val message: String)
 internal data class World (val id: Int, val randomNumber: Int)
 
-private val BIND = getenv("OPENSHIFT_DIY_IP") ?: setting<String>("bindAddress") ?: "localhost"
+private val BIND = setting<String>("bindAddress") ?: "localhost"
 private val BIND_ADDRESS = address(BIND)
-private val BIND_PORT = getenv("OPENSHIFT_DIY_PORT")?.toInt() ?: setting<Int>("bindPort") ?: 9090
+private val BIND_PORT = setting<Int>("bindPort") ?: 9090
 
 private val DB_ROWS = 10000
 private val CONTENT_TYPE_JSON = "application/json"
 private val QUERIES_PARAM = "queries"
 
-private val DB = getenv("OPENSHIFT_APP_NAME") ?: setting<String>("database") ?: "hello_world"
+private val DB = setting<String>("database") ?: "hello_world"
 private val WORLD: String = setting<String>("worldCollection") ?: "world"
 private val FORTUNE: String = setting<String>("fortuneCollection") ?: "fortune"
 
 private val DB_HOST = getenv("DBHOST") ?: "localhost"
-private val DB_PORT = getenv("OPENSHIFT_MONGODB_DB_PORT") ?: 27017
-private val DB_USER = getenv("OPENSHIFT_MONGODB_DB_USERNAME")
-private val DB_PASS = getenv("OPENSHIFT_MONGODB_DB_PASSWORD")
+private val DB_PORT = 27017
 
-private val database =
-    if (DB_USER == null) mongoDatabase("mongodb://$DB_HOST:$DB_PORT/$DB")
-    else mongoDatabase("mongodb://$DB_USER:$DB_PASS@$DB_HOST:$DB_PORT/$DB")
+private val database = mongoDatabase("mongodb://$DB_HOST:$DB_PORT/$DB")
 
 private val worldRepository = repository(World::class, WORLD, { it.id })
 private val fortuneRepository = repository(Fortune::class, FORTUNE, { it._id })
