@@ -26,7 +26,7 @@ def _get_queries(request):
   return queries
 
 def plaintext(request):
-    return HttpResponse("Hello, world")
+  return HttpResponse("Hello, World!")
 
 def json(request):
   response = {
