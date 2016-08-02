@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php5 nginx composer
+fw_depends php7 nginx composer
 
 sed -i 's|localhost|'"${DBHOST}"'|g' web/index.php
 sed -i 's|".*\FrameworkBenchmarks/php-silex|"'"${TROOT}"'|g' deploy/php-silex

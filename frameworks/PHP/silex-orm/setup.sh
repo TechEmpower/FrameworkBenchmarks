@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php5 nginx composer
+fw_depends php7 nginx composer
 
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' web/index.php
 sed -i 's|".*/FrameworkBenchmarks/php-silex-orm|"'"${TROOT}"'|g' deploy/php-silex-orm

@@ -47,19 +47,29 @@ try {
 
     //
     $app->map('/db', function() use ($app) {
+        header("Content-Type: application/json");
+
+        $db = $app['db'];
+        
+        $world = $db->fetchOne('SELECT * FROM world WHERE id = ' . mt_rand(1, 10000), Phalcon\Db::FETCH_ASSOC);
+
+        echo json_encode($world);
+    });
+
+
+    // queries
+    $app->map('/queries', function() use ($app) {
+        header("Content-Type: application/json");
 
         $db = $app['db'];
 
         $queries = $app->request->getQuery('queries', null, 1);
+        $queries = is_numeric($queries) ? min(max(intval($queries), 1), 500) : 1;
 
         $worlds = array();
 
         for ($i = 0; $i < $queries; ++$i) {
             $worlds[] = $db->fetchOne('SELECT * FROM world WHERE id = ' . mt_rand(1, 10000), Phalcon\Db::FETCH_ASSOC);
-        }
-
-        if ($queries == 1) {
-            $worlds = $worlds[0];
         }
 
         echo json_encode($worlds);

@@ -5,7 +5,7 @@ import vibe.web.web;
 
 import std.conv : ConvException, to;
 import std.random : uniform;
-
+import std.array;
 
 enum worldSize = 10000;
 

@@ -16,23 +16,23 @@ static void usp_fork_fortune()
 {
    U_TRACE(5, "::usp_fork_fortune()")
 
-   psql_fortune = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
+   U_NEW(UOrmSession, psql_fortune, UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
 
    if (psql_fortune->isReady())
       {
-      pstmt_fortune = U_NEW(UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
+      U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
 
       if (pstmt_fortune == 0) U_WARNING("usp_fork_fortune(): we cound't connect to db");
 
       if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
 
-      pfortune = U_NEW(Fortune);
+      U_NEW(Fortune, pfortune, Fortune);
 
       pstmt_fortune->into(*pfortune);
 
-      pencoded     = U_NEW(UString(100U));
-      pvfortune    = U_NEW(UVector<Fortune*>);
-      pfortune2add = U_NEW(Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
+      U_NEW(UString, pencoded, UString(100U));
+      U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
+      U_NEW(Fortune, pfortune2add, Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
       }
 }
 
@@ -55,10 +55,18 @@ static void usp_end_fortune()
 #endif
 -->
 <!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
+Fortune* item;
+
+U_NEW(Fortune, item, Fortune(*pfortune2add));
+pvfortune->push_back(item);
+
 pstmt_fortune->execute();
 
-     pvfortune->push_back(U_NEW(Fortune(*pfortune2add)));
-do { pvfortune->push_back(U_NEW(Fortune(*pfortune))); } while (pstmt_fortune->nextRow());
+do {
+   U_NEW(Fortune, item, Fortune(*pfortune));
+   pvfortune->push_back(item);
+   }
+while (pstmt_fortune->nextRow());
 
 pvfortune->sort(Fortune::cmp_obj);
 
