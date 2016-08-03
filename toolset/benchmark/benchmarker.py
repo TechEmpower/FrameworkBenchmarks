@@ -561,7 +561,6 @@ class Benchmarker:
             sudo service postgresql restart
             sudo service cassandra restart
             /opt/elasticsearch/elasticsearch restart
-   	    sudo /etc/init.d/apache2 stop
           """)
           time.sleep(10)
 
