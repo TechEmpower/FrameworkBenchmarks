@@ -3,6 +3,7 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
+      "plaintext_url" : "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/dbs?queries=",
@@ -25,6 +26,7 @@
     },
     "py3": {
       "setup_file": "setup_py3",
+      "plaintext_url" : "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/dbs?queries=",
@@ -47,7 +49,6 @@
     },
     "postgresql": {
       "setup_file": "setup_pg",
-      "json_url": "/json",
       "db_url": "/db",
       "query_url": "/dbs?queries=",
       "fortune_url": "/fortunes",
