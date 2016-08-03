@@ -49,8 +49,6 @@
     },
     "postgresql": {
       "setup_file": "setup_pg",
-      "plaintext_url" : "/plaintext",
-      "json_url": "/json",
       "db_url": "/db",
       "query_url": "/dbs?queries=",
       "fortune_url": "/fortunes",
