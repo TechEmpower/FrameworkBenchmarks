@@ -4,6 +4,7 @@ import hello.controller.JsonController;
 import hello.controller.MongodbController;
 import hello.controller.MysqlController;
 import hello.controller.persistence.WorldsMongodbRepository;
+import hello.controller.PlaintextController;
 
 import java.util.Properties;
 
@@ -30,6 +31,7 @@ extends Environment
 	private JsonController jsonController;
 	private MysqlController mysqlController;
 	private MongodbController mongodbController;
+        private PlaintextController plaintextController;
 
 	@Override
 	protected void fillValues(Properties p)
@@ -46,6 +48,7 @@ extends Environment
 	private void initialize(MysqlConfig mysqlSettings, MongoConfig mongo)
 	{
 		jsonController = new JsonController();
+                plaintextController = new PlaintextController();
 		mysqlController = new MysqlController(mysqlSettings.getDataSource());
         WorldsMongodbRepository worldMongodbRepository = new WorldsMongodbRepository(mongo.getClient(), mongo.getDbName());
         worldMongodbRepository.setIdentifierAdapter(new IdentiferAdapter<Long>()
@@ -93,4 +96,9 @@ extends Environment
 	{
 		return mongodbController;
 	}
+
+        public PlaintextController getPlaintextController()
+        {
+            return plaintextController;
+        }
 }
