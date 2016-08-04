@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php5 nginx composer
+fw_depends php7 nginx composer
 
 sed -i 's|localhost|'"${DBHOST}"'|g' index.php
 sed -i 's|root .*/FrameworkBenchmarks/limonade|root '"${TROOT}"'|g' deploy/nginx.conf

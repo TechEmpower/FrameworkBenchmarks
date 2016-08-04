@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php5 nginx composer
+fw_depends php7 nginx composer
 
 sed -i 's|localhost|'"${DBHOST}"'|g' assets/config/db.php
 sed -i 's|".*/FrameworkBenchmarks/php-phpixie|"'"${TROOT}"'|g' deploy/php-phpixie

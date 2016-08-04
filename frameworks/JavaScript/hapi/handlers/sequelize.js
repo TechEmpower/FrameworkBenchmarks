@@ -74,7 +74,7 @@ module.exports = {
         .header('Server', 'hapi');
     }).catch(function (err) {
       process.exit(1);
-    }); 
+    });
   },
 
   Updates: function (req, reply) {

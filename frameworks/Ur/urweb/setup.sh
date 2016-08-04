@@ -1,10 +1,11 @@
 #!/bin/bash
 
-VERSION=20160213
+VERSION=20160621
 COMPILER=${IROOT}/urweb
 
 RETCODE=$(fw_exists ${COMPILER}.installed)
 [ "$RETCODE" == 0 ] || { \
+  sudo apt-get --assume-yes install mlton
   cd $IROOT
   fw_get -O http://www.impredicative.com/ur/urweb-$VERSION.tgz
   fw_untar urweb-$VERSION.tgz

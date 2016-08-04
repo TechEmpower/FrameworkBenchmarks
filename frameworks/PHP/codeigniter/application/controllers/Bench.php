@@ -17,6 +17,7 @@ class Bench extends CI_Controller {
 
     public function db($queries = 1) {
         $worlds = array();
+        $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
 
         for ($i = 0; $i < $queries; ++$i) {
             $worlds[] = $this->db
