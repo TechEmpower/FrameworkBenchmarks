@@ -20,7 +20,7 @@
       "notes": "",
       "versus": "php7"
     },
-    "raw": {
+    "1raw": {
       "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/query?queries=",
@@ -41,7 +41,7 @@
       "notes": "",
       "versus": "php7"
     },
-    "hhvm": {
+    "2hhvm": {
       "setup_file": "setup_hhvm",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
@@ -60,10 +60,11 @@
       "notes": "",
       "versus": "php7"
     },
-    "hhvm-raw": {
+    "3hhvm-raw": {
       "setup_file": "setup_hhvm",
       "db_url": "/db",
       "query_url": "/query?queries=",
+      "update_url": "/updates?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
@@ -80,7 +81,7 @@
       "notes": "",
       "versus": "php7"
     },
-    "php5": {
+    "4php5": {
       "setup_file": "setup_php5",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
@@ -99,10 +100,11 @@
       "notes": "",
       "versus": "php5"
     },
-    "php5-raw": {
+    "5php5-raw": {
       "setup_file": "setup_php5",
       "db_url": "/db",
       "query_url": "/query?queries=",
+      "update_url": "/updates?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
