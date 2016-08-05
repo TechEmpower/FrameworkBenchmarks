@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import spark.Filter;
 import spark.Request;
@@ -21,9 +22,30 @@ public class SparkApplication implements spark.servlet.SparkApplication {
     private static final int DB_ROWS = 10000;
     private static final String MESSAGE = "Hello, World!";
     private static final String CONTENT_TYPE_TEXT = "text/plain";
-    
+
+    private int getQueries(final Request request) {
+      try {
+        String param = request.queryParams("queries");
+        if (param == null) {
+          return 1;
+        }
+
+        int queries = Integer.parseInt(param);
+        if (queries < 1) {
+          return 1;
+        }
+        if (queries > 500) {
+          return 500;
+        }
+        return queries;
+      } catch (NumberFormatException ex) {
+        return 1;
+      }
+    }
+
     @Override
     public void init() {
+
         get(new JsonTransformer("/json") {
             @Override
             protected Object handleInternal(final Request request, final Response response) {
@@ -34,36 +56,39 @@ public class SparkApplication implements spark.servlet.SparkApplication {
             @Override
             protected Object handleInternal(final Request request, final Response response) {
                 final int queries = getQueries(request);
-                
+
                 final World[] worlds = new World[queries];
                 final Session session = HibernateUtil.getSession();
                 final Random random = ThreadLocalRandom.current();
-                
+
                 for (int i = 0; i < queries; i++) {
                     worlds[i] = (World) session.byId(World.class).load(random.nextInt(DB_ROWS) + 1);
                 }
-                
+
                 return (request.queryParams("queries") == null ? worlds[0] : worlds);
             }
-            
-            private int getQueries(final Request request) {
-                try {
-                    String param = request.queryParams("queries");
-                    if (param == null) {
-                        return 1;
-                    }
-                    
-                    int queries = Integer.parseInt(param);
-                    if (queries < 1) {
-                        return 1;
-                    }
-                    if (queries > 500) {
-                        return 500;
-                    }
-                    return queries;
-                } catch (NumberFormatException ex) {
-                    return 1;
+        });
+        get(new JsonTransformer("/updates") {
+            @Override
+            protected Object handleInternal(final Request request, final Response response) {
+                final int queries = getQueries(request);
+
+                final World[] worlds = new World[queries];
+                final Session session = HibernateUtil.getSession();
+                final Random random = ThreadLocalRandom.current();
+
+                for (int i = 0; i < queries; i++) {
+                    int id = random.nextInt(DB_ROWS) + 1;
+                    int randomNumber = random.nextInt(DB_ROWS) + 1;
+                    World world = (World) session.byId(World.class).load(id);
+                    world.randomNumber = randomNumber;
+                    Transaction transaction = session.beginTransaction();
+                    session.update(world);
+                    transaction.commit();
+                    worlds[i] = world;
                 }
+
+                return worlds;
             }
         });
         get(new Route("/plaintext") {
@@ -86,7 +111,7 @@ public class SparkApplication implements spark.servlet.SparkApplication {
             }
         });
     }
-    
+
     public static void main(final String[] args) {
         System.setProperty("jndi", "false");
         new SparkApplication().init();
