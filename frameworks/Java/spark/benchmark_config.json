@@ -8,6 +8,7 @@
       "query_url": "/spark/db?queries=",
       "update_url": "/spark/updates?queries=",
       "plaintext_url": "/spark/plaintext",
+      "fortune_url": "/spark/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
