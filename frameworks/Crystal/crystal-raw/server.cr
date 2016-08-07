@@ -3,7 +3,8 @@ require "json"
 
 server = HTTP::Server.new(8080) do |context|
   response = context.response
-  response.headers.merge!({"Server": "Crystal", "Date": Time.utc_now.to_s})
+  response.headers["Server"] = "Crystal"
+  response.headers["Date"] = Time.utc_now.to_s
   case context.request.path
   when "/json"
     response.status_code = 200
