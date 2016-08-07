@@ -8,44 +8,39 @@ require "json/to_json"
 REDIS = Redis.new
 
 class CONTENT
-  UTF8 = "; charset=UTF-8"
-  JSON = "application/json"
+  UTF8  = "; charset=UTF-8"
+  JSON  = "application/json"
   PLAIN = "text/plain"
-  HTML = "text/html" + UTF8
+  HTML  = "text/html" + UTF8
 end
 
 ID_MAXIMUM = 10_000
 
-private def randomWorld
+private def random_world
   id = rand(1..ID_MAXIMUM)
-  num = REDIS.get("world:" + id.to_s)
-  { :id => id, :randomNumber => num }
+  num = REDIS.get("world:#{id}")
+  {id: id, randomNumber: num}
 end
 
-private def setWorld(world)
-  id = "world:" + world[:id].to_s
+private def set_world(world)
+  id = "world:#{world[:id]}"
   REDIS.set(id, world[:randomNumber])
   world
 end
 
 private def fortunes
-  data = [] of  Hash(Symbol, (String | Int32))
+  data = [] of NamedTuple(id: Int32, message: String)
 
   REDIS.lrange("fortunes", 0, -1).each_with_index do |e, i|
-    data.push({:id => i + 1, :message => e.to_s})
+    data.push({id: i + 1, message: e.to_s})
   end
   data
 end
 
-private def sanitizedQueryCount(request)
-  queries = request.params.query["queries"] as String
-  return 1 if queries.empty? || queries.to_i?.nil?
-  if queries.to_i > 500
-    queries = 500
-  elsif queries.to_i < 1
-    queries = 1
-  end
-  queries.to_i
+private def sanitized_query_count(request)
+  queries = request.params.query["queries"].as(String)
+  queries = queries.to_i? || 1
+  queries.clamp(1..500)
 end
 
 before_all do |env|
@@ -58,13 +53,13 @@ end
 #
 
 # Test 1: JSON Serialization
-get "/json", do |env|
+get "/json" do |env|
   env.response.content_type = CONTENT::JSON
-  { :message => "Hello, World!" }.to_json
+  {message: "Hello, World!"}.to_json
 end
 
 # Test 6: Plaintext
-get "/plaintext", do |env|
+get "/plaintext" do |env|
   env.response.content_type = CONTENT::PLAIN
   "Hello, World!"
 end
@@ -74,15 +69,15 @@ end
 #
 
 # Redis Test 2: Single database query
-get "/db", do |env|
+get "/db" do |env|
   env.response.content_type = CONTENT::JSON
-  randomWorld.to_json
+  random_world.to_json
 end
 
 # Redis Test 3: Multiple database query
-get "/queries", do |env|
-  results = (1..sanitizedQueryCount(env)).map do
-    randomWorld
+get "/queries" do |env|
+  results = (1..sanitized_query_count(env)).map do
+    random_world
   end
 
   env.response.content_type = CONTENT::JSON
@@ -90,35 +85,34 @@ get "/queries", do |env|
 end
 
 # Redis Test 4: Fortunes
-get "/fortunes", do |env|
+get "/fortunes" do |env|
   data = fortunes
 
   additional_fortune = {
-    :id => 0,
-    :message => "Additional fortune added at request time."
+    id:      0,
+    message: "Additional fortune added at request time.",
   }
   data.push(additional_fortune)
 
-  data.sort! do |a, b|
-    a[:message].to_s <=> b[:message].to_s
-  end
+  data.sort_by! { |fortune| fortune[:message] }
 
   # New builder for each request!
   html = HTML::Builder.new.build do
+    doctype
     html {
       head {
-        title { text "Fortunes" }
+        title { html "Fortunes" }
       }
       body {
         table {
           tr {
-            thead { text "id" }
-            thead { text "message" }
+            thead { html "id" }
+            thead { html "message" }
           }
           data.each { |e|
             tr {
-              td { text e[:id].to_s }
-              td { text e[:message].to_s }
+              td { html e[:id] }
+              td { text e[:message] }
             }
           }
         }
@@ -126,20 +120,19 @@ get "/fortunes", do |env|
     }
   end
 
-  # Doctype not available in builder
-  # builder only supports `thead`, tests need to see `th`
   env.response.content_type = CONTENT::HTML
-  "<!doctype html>" + html.gsub("thead", "th")
+  # builder only supports `thead`, tests need to see `th`
+  html.gsub("thead", "th")
 end
 
 # Redis Test 5: Database Updates
-get "/updates", do |env|
-  updated = (1..sanitizedQueryCount(env)).map do
-    world = randomWorld
-    world[:randomNumber] = rand(1..ID_MAXIMUM)
-    setWorld(world)
+get "/updates" do |env|
+  updated = (1..sanitized_query_count(env)).map do
+    set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})
   end
 
   env.response.content_type = CONTENT::JSON
   updated.to_json
 end
+
+Kemal.run

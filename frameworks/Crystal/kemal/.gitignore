@@ -1,5 +1,4 @@
-.deps
-.deps.lock
 libs/
 .crystal
 .shards
+!shard.lock
