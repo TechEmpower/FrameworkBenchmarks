@@ -6,4 +6,4 @@ crystal deps install
 
 crystal build --release server-redis.cr
 
-./server-redis -e production &
+KEMAL_ENV=production ./server-redis &
