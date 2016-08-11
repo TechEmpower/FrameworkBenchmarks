@@ -29,11 +29,6 @@ class BenchController extends AbstractActionController
         $this->tableGateway = $tableGateway;
     }
 
-    public function indexAction()
-    {
-      return array('message' => 'test123');
-    }
-
     public function jsonAction()
     {
         return new JsonModel(array('message' => 'Hello, World!'));
@@ -103,7 +98,5 @@ class BenchController extends AbstractActionController
       $response->getHeaders()->addHeaders(array('COntent-Type' => 'text/plain'));
       $response->setContent('Hello, World!');
       return $response;
-      // echo "Hello, World!";
-      // return;
     }
 }
