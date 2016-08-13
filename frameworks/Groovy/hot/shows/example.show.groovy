@@ -9,20 +9,9 @@ def generate = {
 	Math.max(generator.nextInt(10000),1)
 }
 
-def templateHeader = """
-<!DOCTYPE html>
-<html>
-<head><title>Fortunes</title></head>
-<body>
-<table>
-<tr><th>id</th><th>message</th></tr>
-"""
+def templateHeader = """<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"""
 
-def templateTail = """
-</table>
-</body>
-</html>
-"""
+def templateTail = """</table></body></html>"""
 
 def validateNumQueries = {
 	Integer numQueries
