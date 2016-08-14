@@ -56,7 +56,7 @@ rest.get('/queries/mongodb').then { req ->
 rest.get('/fortunes/mongodb').then {
 
 	mongo.Fortune.find().promise().then { fortunes ->
-		fortunes << [_id:0, message:'Additional fortune added at request time.']
+		fortunes << [_id:0., message:'Additional fortune added at request time.']
 	}.then { fortunes ->
 		fortunes[0].message = StringEscapeUtils.escapeHtml("<script>alert(\"${fortunes[0].message}\")</script>")
 		fortunes.sort { it.message }
