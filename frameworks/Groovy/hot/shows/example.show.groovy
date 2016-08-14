@@ -56,8 +56,8 @@ rest.get('/queries/mongodb').then { req ->
 rest.get('/fortunes/mongodb').then {
 
 	mongo.Fortune.find().promise().then { fortunes ->
+		
 		fortunes << [_id:'0.', message:'Additional fortune added at request time.']
-	}.then { fortunes ->
 		fortunes.each {
 			it._id = Float.parseFloat(it._id) as Integer
 			if (it.message.contains('<script>'))
@@ -70,7 +70,6 @@ rest.get('/fortunes/mongodb').then {
 			response += "<tr><td>${it._id}</td><td>${it.message}</td></tr>"
 		}
 		response += templateTail
-		println response
 		new hot.Response(200,['Content-Type':'text/html'], response)
 	}
 }
