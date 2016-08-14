@@ -67,6 +67,7 @@ rest.get('/fortunes/mongodb').then {
 			response += "<tr><td>${it._id}</td><td>${it.message}</td></tr>"
 		}
 		response += templateTail
+		println response
 		new hot.Response(200,['Content-Type':'text/html'], response)
 	}
 }
@@ -83,10 +84,11 @@ rest.get('/updates/mongodb').then { req ->
 		promise = promise.then { 
 			mongo.World.findOne(_id:generate()).promise()
 		}.then { world ->
-			println "Old random number ${world.randomNumber}"
+			
 			world.randomNumber = generate()
 			mongo.World.update([_id:generate()],[$set:[randomNumber:generate()]])
 		}.then { world ->
+			println world
 			results << world
 			results
 		}
