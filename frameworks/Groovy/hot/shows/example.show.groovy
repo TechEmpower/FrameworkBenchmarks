@@ -60,7 +60,7 @@ rest.get('/fortunes/mongodb').then {
 	}.then { fortunes ->
 		fortunes.each {
 			it._id = Float.parseFloat(it._id) as Integer
-			it.message = StringEscapeUtils.escapeHtml("<script>alert(\"${it.message}\")</script>")
+			it.message = StringEscapeUtils.escapeHtml(it.message})
 		}
 		fortunes.sort { it.message }
 		
