@@ -63,7 +63,7 @@ rest.get('/fortunes/mongodb').then {
 		
 		def response = templateHeader
 		fortunes.each {
-			it._id = Integer.parseInt(it._id)
+			it._id = Float.parseFloat(it._id) as Integer
 			response += "<tr><td>${it._id}</td><td>${it.message}</td></tr>"
 		}
 		response += templateTail
