@@ -60,7 +60,8 @@ rest.get('/fortunes/mongodb').then {
 	}.then { fortunes ->
 		fortunes.each {
 			it._id = Float.parseFloat(it._id) as Integer
-			it.message = StringEscapeUtils.escapeHtml(it.message)
+			if (it.message.contains('<script>'))
+				it.message = StringEscapeUtils.escapeHtml(it.message)
 		}
 		fortunes.sort { it.message }
 		
@@ -93,7 +94,6 @@ rest.get('/updates/mongodb').then { req ->
 				world
 			}
 		}.then { world ->
-			println world
 			results << world
 			results
 		}
