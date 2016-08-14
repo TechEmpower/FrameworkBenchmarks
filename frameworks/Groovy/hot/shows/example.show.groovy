@@ -58,16 +58,18 @@ rest.get('/fortunes/mongodb').then {
 	mongo.Fortune.find().promise().then { fortunes ->
 		fortunes << [_id:'0.', message:'Additional fortune added at request time.']
 	}.then { fortunes ->
-		fortunes.collect({ 
-			[_id:Float.parseFloat(it._id) as Integer, 
-			 message:StringEscapeUtils.escapeHtml(it.message)]
-		}).sort { it.message }
+		fortunes.each {
+			it._id = Float.parseFloat(it._id) as Integer
+			it.message = StringEscapeUtils.escapeHtml("<script>alert(\"${it.message}\")</script>")
+		}
+		fortunes.sort { it.message }
 		
 		def response = templateHeader
 		fortunes.each {
 			response += "<tr><td>${it._id}</td><td>${it.message}</td></tr>"
 		}
 		response += templateTail
+		println response
 		new hot.Response(200,['Content-Type':'text/html'], response)
 	}
 }
@@ -81,8 +83,9 @@ rest.get('/updates/mongodb').then { req ->
 	def results = []
 
 	(1..numQueries).each { i ->
+		def genId = generate()
+
 		promise = promise.then { 
-			def genId = generate()
 			mongo.World.findOne(_id:genId).promise()
 		}.then { world ->
 			world.randomNumber = generate()
