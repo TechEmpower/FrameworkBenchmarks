@@ -8,7 +8,7 @@ RETCODE=$(fw_exists ${IROOT}/hot.installed)
 VERSION="0.9.0-SNAPSHOT"
 HOT_HOME=$IROOT/hot-$VERSION
 
-fw_get -O https://github.com/dsolimando/Hot/releases/download/v0.9.0/hot-0.9.0-SNAPSHOT.tar.gz
+fw_get -O https://github.com/dsolimando/Hot/releases/download/0.10.0-SNAPSHOT/hot-0.10.0-SNAPSHOT.tar.gz
 fw_untar hot-$VERSION.tar.gz
 
 echo "export HOT_HOME=${HOT_HOME}" > $IROOT/hot.installed
