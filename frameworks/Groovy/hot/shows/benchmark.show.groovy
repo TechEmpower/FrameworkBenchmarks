@@ -1,7 +1,6 @@
 import org.apache.commons.lang.StringEscapeUtils
 
 def mongo = show.dbs.mongo
-//def mysql = dbs.mysql
 
 def generator = new Random ()
 
@@ -105,18 +104,3 @@ def hello = 'Hello, World!'
 rest.get('/plaintext').then {
 	new hot.Response(200,['Content-Type':'text/plain'],hello)
 }
-
-/**rest.get('/db-mysql').then {
-	mysql.World.findOne([id:mongo.ObjectId(generate())]).promise()
-}**/
-
-/**rest.get('/db-mongo-setup').then {
-
-	def deferred = show.Deferred()
-	(1..10000).each { 
-		i -> deferred.then { mongo.World.insert([_id:i, randomNumber: generate()]) }
-	}
-	deferred.resolve()
-}**/
-
-
