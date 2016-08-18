@@ -30,19 +30,19 @@ class FortuneHTMLParser(HTMLParser):
   # "DOCTYPE html", so we will surround it with "<!" and ">".
   def handle_decl(self, decl):
     # The spec says that for HTML this is case insensitive,
-    # and since we did not specify xml compliance (where 
+    # and since we did not specify xml compliance (where
     # incorrect casing would throw a syntax error), we must
     # allow all casings. We will lower for our normalization.
     self.body.append("<!{d}>".format(d=decl.lower()))
 
-  # This is called when an HTML character is parsed (i.e. 
-  # &quot;). There are a number of issues to be resolved 
+  # This is called when an HTML character is parsed (i.e.
+  # &quot;). There are a number of issues to be resolved
   # here. For instance, some tests choose to leave the
   # "+" character as-is, which should be fine as far as
   # character escaping goes, but others choose to use the
   # character reference of "&#43;", which is also fine.
   # Therefore, this method looks for all possible character
-  # references and normalizes them so that we can 
+  # references and normalizes them so that we can
   # validate the input against a single valid spec string.
   # Another example problem: "&quot;" is valid, but so is
   # "&#34;"
@@ -74,20 +74,30 @@ class FortuneHTMLParser(HTMLParser):
     # Not sure why some are escaping '/'
     if val == "47" or val == "047" or val == "x2f":
       self.body.append("/")
+    # "&#40;" is a valid escaping of "(", but
+    # it is not required, so we need to normalize for out
+    # final parse and equality check.
+    if val == "40" or val == "040" or val == "x28":
+      self.body.append("(")
+    # "&#41;" is a valid escaping of ")", but
+    # it is not required, so we need to normalize for out
+    # final parse and equality check.
+    if val == "41" or val == "041" or val == "x29":
+      self.body.append(")")
 
   def handle_entityref(self, name):
     # Again, "&mdash;" is a valid escaping of "—", but we
     # need to normalize to "—" for equality checking.
     if name == "mdash":
       self.body.append("—")
-    else:  
+    else:
       self.body.append("&{n};".format(n=name))
 
   # This is called every time a tag is opened. We append
   # each one wrapped in "<" and ">".
   def handle_starttag(self, tag, attrs):
     self.body.append("<{t}>".format(t=tag))
-    
+
     # Append a newline after the <table> and <html>
     if tag.lower() == 'table' or tag.lower() == 'html':
       self.body.append("\n")
