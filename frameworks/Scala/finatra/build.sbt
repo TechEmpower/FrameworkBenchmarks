@@ -12,10 +12,11 @@ resolvers ++= Seq(
 assemblyJarName in assembly := "finatra-benchmark.jar"
 assemblyMergeStrategy in assembly := {
   case "BUILD" => MergeStrategy.discard
+  case "META-INF/io.netty.versions.properties" => MergeStrategy.last
   case other => MergeStrategy.defaultMergeStrategy(other)
 }
 
 libraryDependencies ++= Seq(
-  "com.twitter.finatra" %% "finatra-http" % "2.1.6",
-  "org.slf4j" % "slf4j-nop" % "1.7.7"
+  "com.twitter" %% "finatra-http" % "2.2.0",
+  "org.slf4j" % "slf4j-nop" % "1.7.21"
 )
