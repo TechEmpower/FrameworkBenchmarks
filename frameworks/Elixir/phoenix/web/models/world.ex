@@ -6,11 +6,11 @@ defmodule Hello.World do
     field :randomnumber, :integer
   end
 
-  @required_fields ~w(randomnumber)
+  @required_fields ~w(randomnumber)a
   @optional_fields ~w()
 
-  def changeset(model, params \\ nil) do
+  def changeset(model, params \\ %{}) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, @required_fields)
   end
 end
