@@ -12,12 +12,12 @@
 ## app configuration made easy. Look inside private/appconfig.ini
 from gluon.contrib.appconfig import AppConfig
 ## once in production, remove reload=True to gain full speed
-myconf = AppConfig(reload=True)
+myconf = AppConfig(reload=False)
 
 DATABASE = None
 DATABASE_URI = "mysql://benchmarkdbuser:benchmarkdbpass@127.0.0.1:3306/hello_world"
 
-db = DAL(DATABASE_URI, fake_migrate_all=True)
+db = DAL(DATABASE_URI, fake_migrate_all=False, migrate_enabled=False, pool_size=8, lazy_tables=True)
 DATABASE = db
 ## store sessions and tickets there
 ##session.connect(request, response, db=db)
