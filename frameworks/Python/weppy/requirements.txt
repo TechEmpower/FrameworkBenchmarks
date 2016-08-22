@@ -1,0 +1,6 @@
+psycopg2==2.6.1
+weppy==0.7.9
+gunicorn==19.4.5
+meinheld==0.5.9
+uwsgi==2.0.12
+greenlet==0.4.9
