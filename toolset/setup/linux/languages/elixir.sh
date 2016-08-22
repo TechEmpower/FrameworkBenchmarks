@@ -8,7 +8,7 @@ RETCODE=$(fw_exists ${IROOT}/elixir.installed)
   return 0; }
 
 ELIXIR_HOME=$IROOT/elixir
-VERSION="1.2.6-1"
+VERSION="1.3.2-0"
 RELEASE="trusty"
 ARCH="amd64"
 
