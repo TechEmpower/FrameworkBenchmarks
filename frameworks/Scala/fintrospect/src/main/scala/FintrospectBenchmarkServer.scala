@@ -23,8 +23,6 @@ object FintrospectBenchmarkServer extends App {
     }
   }
 
-  case class Message(message: String)
-
   val jsonHelloWorld = {
     import io.fintrospect.formats.json.Circe.ResponseBuilder.implicits._
     Service.mk { r: Request => Ok(obj("message" -> string("Hello, World!")))
