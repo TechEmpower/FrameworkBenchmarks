@@ -14,10 +14,12 @@ import io.fintrospect.{ModuleSpec, RouteSpec}
 
 object FintrospectBenchmarkServer extends App {
 
+  private val preallocatedMsgForPlainText = "Hello, World!"
+
   val plainTextHelloWorld = {
     import io.fintrospect.formats.PlainText.ResponseBuilder.implicits._
-    Service.mk { r: Request => Ok("Hello, World!")
-      .withHeaders("Server" -> "Example", "Date" -> RFC_1123_DATE_TIME.format(now()))
+    Service.mk { r: Request =>
+      Ok(preallocatedMsgForPlainText).withHeaders("Server" -> "Example", "Date" -> RFC_1123_DATE_TIME.format(now()))
     }
   }
 
