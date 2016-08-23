@@ -15,8 +15,8 @@ com.github.retronym.SbtOneJar.oneJarSettings
 mainClass in(Compile, run) := Some("FintrospectBenchmarkServer")
 
 libraryDependencies ++= Seq(
-  "io.fintrospect" %% "fintrospect-core" % "13.5.2",
-  "io.fintrospect" %% "fintrospect-circe" % "13.5.2"
+  "io.fintrospect" %% "fintrospect-core" % "13.6.0",
+  "io.fintrospect" %% "fintrospect-circe" % "13.6.0"
 )
 
 resolvers += Resolver.sonatypeRepo("snapshots")
