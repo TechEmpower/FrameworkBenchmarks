@@ -168,6 +168,7 @@ env:
     - "TESTDIR=Python/turbogears"
     - "TESTDIR=Python/uwsgi"
     - "TESTDIR=Python/web2py"
+    - "TESTDIR=Python/weppy"
     - "TESTDIR=Python/wheezyweb"
     - "TESTDIR=Python/wsgi"
     - "TESTDIR=Racket/racket-ws"
