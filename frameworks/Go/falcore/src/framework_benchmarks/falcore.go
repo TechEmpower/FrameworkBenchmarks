@@ -2,19 +2,18 @@ package main
 
 import (
 	"database/sql"
-	"github.com/fitstar/falcore"
-	"github.com/fitstar/falcore/responder"
 	"html/template"
 	"io"
 	"log"
 	"math/rand"
 	"net/http"
-	"runtime"
 	"sort"
 	"strconv"
 	"sync"
 	"time"
 
+	"github.com/fitstar/falcore"
+	"github.com/fitstar/falcore/responder"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -34,7 +33,7 @@ type Fortune struct {
 
 const (
 	// Database
-	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
+	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?collation=utf8mb4_bin"
 	worldSelect        = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate        = "UPDATE World SET randomNumber = ? WHERE id = ?"
 	fortuneSelect      = "SELECT id, message FROM Fortune;"
@@ -96,8 +95,6 @@ func incrStat(statMap map[string]*stats, name string, dur time.Duration) {
 }
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-
 	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
@@ -181,11 +178,11 @@ var dbFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Respons
 
 // Test 3: Multiple database queries
 var queriesFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Response {
-	
+
 	if req.HttpRequest.URL.Path == "/queries" {
 
 		n := 1
-	
+
 		if nStr := req.HttpRequest.URL.Query().Get("queries"); len(nStr) > 0 {
 			n, _ = strconv.Atoi(nStr) // rvalue is 0 if nStr is non-number.
 		}

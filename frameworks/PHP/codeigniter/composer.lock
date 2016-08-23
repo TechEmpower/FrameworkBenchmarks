@@ -1,43 +1,49 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "92e99b460af6b4b46abd380a66a89f01",
+    "hash": "cb1f735c5760f769abbc696a6b129ff4",
+    "content-hash": "5d9e345faac86f61cf4288da91bf779b",
     "packages": [
         {
-            "name": "rogeriopradoj/codeigniter",
-            "version": "2.2.1-rc.2",
+            "name": "codeigniter/framework",
+            "version": "3.0.6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/rogeriopradoj/codeigniter-composer.git",
-                "reference": "c3b605d2e5dc3752da7e6843daed31bcf87e225f"
+                "url": "https://github.com/bcit-ci/CodeIgniter.git",
+                "reference": "8082544c5b4b33175790f505587e202e3ca9e488"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rogeriopradoj/codeigniter-composer/zipball/c3b605d2e5dc3752da7e6843daed31bcf87e225f",
-                "reference": "c3b605d2e5dc3752da7e6843daed31bcf87e225f",
+                "url": "https://api.github.com/repos/bcit-ci/CodeIgniter/zipball/8082544c5b4b33175790f505587e202e3ca9e488",
+                "reference": "8082544c5b4b33175790f505587e202e3ca9e488",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
-            "type": "library",
+            "require-dev": {
+                "mikey179/vfsstream": "1.1.*"
+            },
+            "suggest": {
+                "paragonie/random_compat": "Provides better randomness in PHP 5.x"
+            },
+            "type": "project",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "OSL-3.0"
+                "MIT"
             ],
-            "description": "A way to install CodeIgniter via composer",
-            "time": "2014-11-25 11:27:54"
+            "description": "The CodeIgniter framework",
+            "homepage": "https://codeigniter.com",
+            "time": "2016-03-21 16:26:30"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "rogeriopradoj/codeigniter": 5
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

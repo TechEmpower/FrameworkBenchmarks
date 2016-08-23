@@ -9,35 +9,35 @@
       "classification": "Fullstack",
       "database": "None",
       "framework": "kohana",
-      "language": "PHP5",
+      "language": "PHP7",
       "orm": "Raw",
-      "platform": "PHP5-FPM",
+      "platform": "PHP7-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "kohana",
       "notes": "",
-      "versus": "php5"
+      "versus": "php7"
     },
     "raw": {
       "setup_file": "setup",
       "db_url": "/bench/db",
-      "query_url": "/bench/db/",
+      "query_url": "/bench/queries/",
       "fortune_url": "/bench/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "kohana",
-      "language": "PHP5",
+      "language": "PHP7",
       "orm": "Raw",
-      "platform": "PHP5-FPM",
+      "platform": "PHP7-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "kohana",
       "notes": "",
-      "versus": "php5"
+      "versus": "php7"
     }
   }]
 }
