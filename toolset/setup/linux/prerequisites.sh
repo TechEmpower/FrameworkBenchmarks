@@ -68,8 +68,7 @@ sudo apt-get -yq update
 sudo apt-get install -qqy gcc-4.8 g++-4.8 gcc-4.9 g++-4.9
 
 # Install Clang, needed by silicon.
-sudo deb http://apt.llvm.org/$TFB_DISTRIB_CODENAME/ llvm-toolchain-$TFB_DISTRIB_CODENAME-3.8 main
-sudo deb-src http://apt.llvm.org/$TFB_DISTRIB_CODENAME/ llvm-toolchain-$TFB_DISTRIB_CODENAME-3.8 main
+sudo add-apt-repository -s "deb http://apt.llvm.org/`lsb_release -cs`/ llvm-toolchain-`lsb_release -cs`-3.8 main"
 wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
 sudo apt-get -yq update
 sudo apt-get install -qqy clang-3.8
