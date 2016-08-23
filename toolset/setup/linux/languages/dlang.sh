@@ -6,10 +6,17 @@ RETCODE=$(fw_exists ${IROOT}/dlang.installed)
   return 0; }
   
 DLANG=$IROOT/dlang
+DMDVER="2.071.1"
+LDCVER="1.0.0"
 
 mkdir -p $DLANG
-fw_get -O http://downloads.dlang.org/releases/2.x/2.069.2/dmd_2.069.2-0_amd64.deb
-dpkg-deb -x dmd_2.069.2-0_amd64.deb $DLANG
+fw_get -O http://downloads.dlang.org/releases/2.x/$DMDVER/dmd_$DMDVER-0_amd64.deb
+dpkg-deb -x dmd_$DMDVER-0_amd64.deb $DLANG
+
+cd $DLANG
+fw_get -O https://github.com/ldc-developers/ldc/releases/download/v$LDCVER/ldc2-$LDCVER-linux-x86_64.tar.xz
+fw_untar ldc2-$LDCVER-linux-x86_64.tar.xz
+ln -s $DLANG/ldc2-$LDCVER-linux-x86_64/bin/ldc2 $DLANG/usr/bin/ldc2
 
 # According to this file (dmd.conf) dmd will, upon execution, look for
 # a dmd.conf in 1) the current working directory [bad], 2) the directory

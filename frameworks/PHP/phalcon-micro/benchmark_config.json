@@ -5,22 +5,22 @@
       "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
       "framework": "phalcon",
-      "language": "PHP5",
+      "language": "PHP7",
       "orm": "Full",
-      "platform": "PHP5-FPM",
+      "platform": "PHP7-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "phalcon",
       "notes": "",
-      "versus": "php5"
+      "versus": "php7"
     }
   }]
 }

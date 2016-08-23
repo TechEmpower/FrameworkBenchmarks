@@ -6,4 +6,4 @@ crystal deps install
 
 crystal build --release server-postgres.cr
 
-./server-postgres -e production &
+KEMAL_ENV=production ./server-postgres &

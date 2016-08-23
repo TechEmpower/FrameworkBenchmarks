@@ -11,10 +11,19 @@ Class Controller_Bench extends Controller
 
     public function action_db()
     {
+        $query = DB::query(Database::SELECT, 'SELECT * FROM World WHERE id = :id')->bind(':id', $id);
+
+        $world = $query->param(':id', mt_rand(1, 10000))->execute()->current();
+
+        $this->response
+            ->headers(array('Content-Type' => 'application/json'))
+            ->body(json_encode($world));
+    }
+
+    public function action_queries()
+    {
         $queries = $this->request->param('queries', false);
-        $queries = $queries
-                    ? $queries
-                    : 1;
+        $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
 
         $worlds = array();
 
@@ -22,10 +31,6 @@ Class Controller_Bench extends Controller
 
         for ($i = 0; $i < $queries; $i++) {
             $worlds[] = $query->param(':id', mt_rand(1, 10000))->execute()->current();
-        }
-
-        if ($queries == 1) {
-            $worlds = $worlds[0];
         }
 
         $this->response

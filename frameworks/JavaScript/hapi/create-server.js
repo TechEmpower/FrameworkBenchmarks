@@ -1,14 +1,16 @@
 var Hapi = require('hapi');
+var Vision = require('vision');
 var server = new Hapi.Server();
 server.connection({port: 8080});
-server.views({
-  engines: {
-    hbs: require('handlebars')
-  },
-  path: __dirname + '/views',
-  compileOptions: {
-    pretty: false
-  }
+server.register(Vision, (err) => {
+    if (err) {
+        throw err;
+    }
+
+    server.views({
+        engines: { html: require('handlebars') },
+        path: __dirname + '/views/'
+    });
 });
 
 var Promise = require('bluebird');
