@@ -212,6 +212,7 @@ before_install:
 services:
   - postgresql
   - redis-server
+  - mongodb
 
 addons:
   postgresql: "9.3"
