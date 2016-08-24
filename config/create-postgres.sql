@@ -1,10 +1,10 @@
-
 DROP TABLE IF EXISTS World;
 CREATE TABLE  World (
   id integer NOT NULL,
   randomNumber integer NOT NULL default 0,
   PRIMARY KEY  (id)
 );
+GRANT SELECT, UPDATE PRIVILEGES ON World to benchmarkdbuser;
 
 INSERT INTO World (id, randomnumber)
 SELECT x.id, random() * 10000 + 1 FROM generate_series(1,10000) as x(id);
@@ -15,6 +15,7 @@ CREATE TABLE Fortune (
   message varchar(2048) NOT NULL,
   PRIMARY KEY  (id)
 );
+GRANT SELECT PRIVILEGES ON Fortune to benchmarkdbuser;
 
 INSERT INTO Fortune (id, message) VALUES (1, 'fortune: No such file or directory');
 INSERT INTO Fortune (id, message) VALUES (2, 'A computer scientist is someone who fixes things that aren''t broken.');
@@ -36,6 +37,7 @@ CREATE TABLE  "World" (
   randomNumber integer NOT NULL default 0,
   PRIMARY KEY  (id)
 );
+GRANT SELECT, UPDATE PRIVILEGES ON "World" to benchmarkdbuser;
 
 INSERT INTO "World" (id, randomnumber)
 SELECT x.id, random() * 10000 + 1 FROM generate_series(1,10000) as x(id);
@@ -46,6 +48,7 @@ CREATE TABLE "Fortune" (
   message varchar(2048) NOT NULL,
   PRIMARY KEY  (id)
 );
+GRANT SELECT PRIVILEGES ON "Fortune" to benchmarkdbuser;
 
 INSERT INTO "Fortune" (id, message) VALUES (1, 'fortune: No such file or directory');
 INSERT INTO "Fortune" (id, message) VALUES (2, 'A computer scientist is someone who fixes things that aren''t broken.');
