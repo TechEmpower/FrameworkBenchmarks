@@ -121,7 +121,7 @@ sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 sudo service postgresql start
 
 sudo -u postgres psql template1 < create-postgres-database.sql
-sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
+sudo -u postgres psql hello_world < create-postgres.sql
 rm create-postgres-database.sql create-postgres.sql
 # Last chance to make sure postgresql starts up correctly
 sudo killall -s 9 -u postgres
