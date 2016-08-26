@@ -1,0 +1,11 @@
+Run Mongo in a Docker container
+
+docker run --name mongo -p 27017:27017 -d mongo:3.3.10
+
+Populate World collection
+
+$ mongoimport --db hello_world --collection World --file ${PROJECT_ROOT}/src/test/resources/mongo_worlds
+
+Populate Fortunes collection
+
+$ mongoimport --db hello_world --collection Fortune --file ${PROJECT_ROOT}/src/test/resources/mongo_fortunes

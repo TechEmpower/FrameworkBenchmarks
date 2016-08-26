@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ro.pippo</groupId>
+  <artifactId>pippo-benchmark</artifactId>
+  <version>0.1.0</version>
+  <packaging>jar</packaging>
+  <name>Pippo Benchmark</name>
+  <description>Pippo Techempower Benchmark</description>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <repositories>
+    <repository>
+      <id>ossrh-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+  </repositories>
+
+  <properties>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <pippo.version>0.9.0-SNAPSHOT</pippo.version>
+    <java.version>1.8</java.version>
+
+    <dbcp.version>2.1.1</dbcp.version>
+    <mysql.version>5.1.6</mysql.version>
+    <postgre.version>9.4.1209</postgre.version>
+
+    <junit.version>4.12</junit.version>
+    <okhttp.version>3.4.1</okhttp.version>
+    <mongo.version>3.2.2</mongo.version>
+
+  </properties>
+
+  <dependencies>
+
+    <!-- Pippo -->
+    <dependency>
+      <groupId>ro.pippo</groupId>
+      <artifactId>pippo-core</artifactId>
+      <version>${pippo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ro.pippo</groupId>
+      <artifactId>pippo-undertow</artifactId>
+      <version>${pippo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ro.pippo</groupId>
+      <artifactId>pippo-tomcat</artifactId>
+      <version>${pippo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ro.pippo</groupId>
+      <artifactId>pippo-jetty</artifactId>
+      <version>${pippo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ro.pippo</groupId>
+      <artifactId>pippo-tjws</artifactId>
+      <version>${pippo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ro.pippo</groupId>
+      <artifactId>pippo-gson</artifactId>
+      <version>${pippo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ro.pippo</groupId>
+      <artifactId>pippo-pebble</artifactId>
+      <version>${pippo.version}</version>
+    </dependency>
+
+    <!-- Databases -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-dbcp2</artifactId>
+      <version>${dbcp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgre.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongo-java-driver</artifactId>
+      <version>${mongo.version}</version>
+    </dependency>
+
+    <!-- Testing -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>${okhttp.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <!-- Java 8 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+        <inherited>true</inherited>
+      </plugin>
+
+      <!-- Executable fat jar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+  </build>
+</project>
