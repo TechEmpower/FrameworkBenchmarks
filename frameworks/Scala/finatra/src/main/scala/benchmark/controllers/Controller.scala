@@ -4,11 +4,13 @@ import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.{Controller => HttpController}
 
 class Controller extends HttpController {
+  private[this] val helloWorldText = "Hello, World!"
+
   get("/json") { request: Request =>
-    Map("message" -> "Hello, World!")
+    Map("message" -> helloWorldText)
   }
 
   get("/plaintext") { request: Request =>
-    "Hello, World!"
+    helloWorldText
   }
 }
