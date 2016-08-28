@@ -4,7 +4,7 @@ cabal-version:     >= 1.8
 build-type:        Simple
 
 executable         bench
-    main-is:           yesod.hs
+    main-is:           Main.hs
     hs-source-dirs:    src
 
     ghc-options:       -Wall -threaded -O2 -rtsopts
@@ -19,10 +19,10 @@ executable         bench
                 CPP
 
     build-depends: base
-                 , yesod-core
+                 , yesod
                  , text
                  , persistent
-                 , persistent-mysql
+                 , persistent-postgresql
                  , persistent-template
                  , warp
                  , auto-update
@@ -30,7 +30,6 @@ executable         bench
                  , mwc-random
                  , resource-pool
                  , network
-                 , mongoDB
                  , monad-logger
                  , mtl
                  , wai
