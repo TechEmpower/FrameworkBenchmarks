@@ -53,7 +53,7 @@ import           Yesod
 
 mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
 World sql=World
-    randomNumber Int sql=randomNumber
+    randomNumber Int sql=randomnumber
 |]
 
 mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
