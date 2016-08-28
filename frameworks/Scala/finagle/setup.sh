@@ -2,6 +2,6 @@
 
 fw_depends java sbt
 
-sbt update compile -batch
+sbt 'oneJar' -batch
 
-sbt run &
+java -jar target/scala-2.11/*finagle*one-jar.jar &

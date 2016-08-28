@@ -55,7 +55,6 @@ env:
     - "TESTDIR=Erlang/cowboy"
     - "TESTDIR=Erlang/elli"
     - "TESTDIR=Erlang/mochiweb"
-    - "TESTDIR=Erlang/misultin"
     - "TESTDIR=Go/beego"
     - "TESTDIR=Go/echo"
     - "TESTDIR=Go/falcore"
@@ -140,7 +139,6 @@ env:
     - "TESTDIR=PHP/limonade"
     - "TESTDIR=PHP/lithium"
     - "TESTDIR=PHP/lumen"
-    - "TESTDIR=PHP/micromvc"
     - "TESTDIR=PHP/phalcon"
     - "TESTDIR=PHP/phalcon-micro"
     - "TESTDIR=PHP/phpixie"
@@ -212,6 +210,7 @@ before_install:
 services:
   - postgresql
   - redis-server
+  - mongodb
 
 addons:
   postgresql: "9.3"
