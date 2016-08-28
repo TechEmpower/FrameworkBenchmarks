@@ -50,20 +50,16 @@ import           System.IO.Unsafe              (unsafePerformIO)
 import qualified System.Random.MWC             as R
 import           Text.Blaze.Html.Renderer.Utf8 (renderHtmlBuilder)
 import           Yesod
-import GHC.Generics
 
 mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
 World sql=World
     randomNumber Int sql=randomNumber
-    deriving Generic Show
 |]
 
 mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
 Fortune sql=Fortune
     message Text sql=message
 |]
-
-instance ToJSON World
 
 data App = App
     { appGen      :: !(R.Gen (PrimState IO))
@@ -133,10 +129,14 @@ getDbR :: Handler Value
 getDbR = do
   app <- getYesod
   randomNumber <- liftIO $ ((R.uniformR (1, 1000) (appGen app)) :: IO Int)
-  (runPg $ get ((toSqlKey $ fromIntegral randomNumber) :: WorldId)) >>= \case
+  let wId = (toSqlKey $ fromIntegral randomNumber) :: WorldId
+  (runPg $ get wId) >>= \case
     -- TODO: Throw appropriate HTTP response
     Nothing -> error "This shouldn't be happening"
-    Just worldRow -> returnJson worldRow
+    Just worldRow -> returnJson $ object [
+      "id" .= wId
+      ,"randomnumber" .= (worldRandomNumber worldRow)
+      ]
 
 -- getMongoRawDbR :: Handler Value
 -- getMongoRawDbR = getDb rawMongoIntQuery
@@ -272,7 +272,6 @@ getDbR = do
 --         ((0, "Additional fortune added at request time.") : map stripEntity es)
 --     stripEntity e =
 --         (My.fromSqlKey (My.entityKey e), fortuneMessage . My.entityVal $ e)
-
 
 getPlaintextR :: Handler Text
 getPlaintextR = return "Hello, World!"
