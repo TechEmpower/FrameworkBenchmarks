@@ -99,7 +99,8 @@ data App = App
 mkYesod "App" [parseRoutes|
 /plaintext          PlaintextR   GET
 /db                 DbR          GET
-/queries            QueriesR     GET
+/queries/#Int       QueriesR     GET
+!/queries/#Text      DefaultQueriesR     GET
 |]
 
 fakeInternalState :: InternalState
@@ -149,17 +150,25 @@ getDbR = do
     Nothing -> error "This shouldn't be happening"
     Just worldE -> returnJson worldE
 
-getQueriesR :: Handler Value
-getQueriesR = do
-  cntText <- (lookupGetParam "id")
-  let cntInt = case cntText of
-        Nothing -> 1 
-        Just x -> case (decimal x) of
-          Left _ -> 1
-          Right (y, _) -> if y>500 then 500 else y
-  resultMaybe <- (runPg $ forM [1..cntInt] (\_ -> getRandomRow))
+getQueriesR :: Int -> Handler Value
+getQueriesR cnt = do
+  -- cntText <- (lookupGetParam "queries")
+  -- let cntInt = case cntText of
+  --       Nothing -> 1 
+  --       Just x -> case (decimal x) of
+  --         Left _ -> 1
+  --         Right (y, _) -> if y>500 then 500 else y
+  resultMaybe <- (runPg $ forM [1..sanitizedCnt] (\_ -> getRandomRow))
   let result = map fromJust resultMaybe
   returnJson result
+  where
+    sanitizedCnt
+      | cnt<1 = 1
+      | cnt>500 = 500
+      | otherwise = cnt
+
+getDefaultQueriesR :: Text -> Handler Value
+getDefaultQueriesR txt = getQueriesR 1
   
 -- getMongoRawDbR :: Handler Value
 -- getMongoRawDbR = getDb rawMongoIntQuery
