@@ -1,2 +1,2 @@
 ./yesod-postgres/bench/src/
-./yesod-postgrese/bench/src/Main.hs
+./yesod-postgres/bench/src/Main.hs
