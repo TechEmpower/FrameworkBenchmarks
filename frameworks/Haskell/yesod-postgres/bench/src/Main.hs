@@ -304,7 +304,7 @@ getPlaintextR = return "Hello, World!"
 main :: IO ()
 main = R.withSystemRandom $ \gen -> do
     [cores, host] <- getArgs
-    let connString = ("host=" ++ host ++ "port=5432 user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world") 
+    let connString = ("host=" ++ host ++ " port=5432 user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world") 
     dbPool <- runNoLoggingT $ Pg.createPostgresqlPool (C8.pack connString) 256
     app <- toWaiAppPlain App
         { appGen = gen
