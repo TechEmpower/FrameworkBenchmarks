@@ -18,7 +18,7 @@ module Main (main, resourcesApp, Widget, WorldId) where
 import           Blaze.ByteString.Builder
 import           Control.Applicative           (liftA2)
 import           Control.Concurrent            (runInUnboundThread)
-import           Control.Monad                 (replicateM)
+import           Control.Monad                 (replicateM, forM)
 import           Control.Monad.Logger          (runNoLoggingT)
 import           Control.Monad.Primitive       (PrimState)
 import           Control.Monad.Reader          (ReaderT)
@@ -50,6 +50,8 @@ import           System.IO.Unsafe              (unsafePerformIO)
 import qualified System.Random.MWC             as R
 import           Text.Blaze.Html.Renderer.Utf8 (renderHtmlBuilder)
 import           Yesod
+import           Data.Text.Read
+import Data.Maybe (fromJust)
 
 mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
 World sql=World
@@ -60,6 +62,12 @@ mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
 Fortune sql=Fortune
     message Text sql=message
 |]
+
+instance ToJSON (Entity World) where
+  toJSON (Entity wId wRow) = object [
+    "id" .= wId
+    ,"randomNumber" .= (worldRandomNumber wRow)
+    ]
 
 data App = App
     { appGen      :: !(R.Gen (PrimState IO))
@@ -90,7 +98,8 @@ data App = App
 
 mkYesod "App" [parseRoutes|
 /plaintext          PlaintextR   GET
-/db                 DbR       GET
+/db                 DbR          GET
+/queries            QueriesR     GET
 |]
 
 fakeInternalState :: InternalState
@@ -125,19 +134,33 @@ runPg dbAction = do
   app <- getYesod
   runSqlPool dbAction (appDbPool app)
 
-getDbR :: Handler Value
-getDbR = do
+getRandomRow = do
   app <- getYesod
   randomNumber <- liftIO $ ((R.uniformR (1, 1000) (appGen app)) :: IO Int)
   let wId = (toSqlKey $ fromIntegral randomNumber) :: WorldId
-  (runPg $ get wId) >>= \case
+  get wId >>= \case
+    Nothing -> return Nothing
+    Just x -> return $ Just (Entity wId x)
+
+getDbR :: Handler Value
+getDbR = do
+  (runPg getRandomRow) >>= \case
     -- TODO: Throw appropriate HTTP response
     Nothing -> error "This shouldn't be happening"
-    Just worldRow -> returnJson $ object [
-      "id" .= wId
-      ,"randomNumber" .= (worldRandomNumber worldRow)
-      ]
+    Just worldE -> returnJson worldE
 
+getQueriesR :: Handler Value
+getQueriesR = do
+  cntText <- (lookupGetParam "id")
+  let cntInt = case cntText of
+        Nothing -> 1 
+        Just x -> case (decimal x) of
+          Left _ -> 1
+          Right (y, _) -> if y>500 then 500 else y
+  resultMaybe <- (runPg $ forM [1..cntInt] (\_ -> getRandomRow))
+  let result = map fromJust resultMaybe
+  returnJson result
+  
 -- getMongoRawDbR :: Handler Value
 -- getMongoRawDbR = getDb rawMongoIntQuery
 
