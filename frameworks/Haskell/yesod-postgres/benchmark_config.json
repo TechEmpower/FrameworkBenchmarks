@@ -4,6 +4,7 @@
     "default": {
       "setup_file": "setup",
       "plaintext_url": "/plaintext",
+      "db_url": "/db",
       "port": 8000,
       "approach": "Realistic",
       "classification": "Fullstack",
