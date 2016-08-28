@@ -11,6 +11,8 @@
 {-# LANGUAGE TemplateHaskell            #-}
 {-# LANGUAGE TypeFamilies               #-}
 {-# LANGUAGE ViewPatterns               #-}
+{-# LANGUAGE LambdaCase                 #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Main (main, resourcesApp, Widget, WorldId) where
 import           Blaze.ByteString.Builder
@@ -36,6 +38,7 @@ import           Database.Persist              (Key, PersistEntity,
                                                 PersistStore, get, update,
                                                 (=.))
 import qualified Database.Persist.Postgresql    as Pg
+import Database.Persist.Sql
 import           Database.Persist.TH           (mkPersist, mpsGeneric,
                                                 persistLowerCase, sqlSettings)
 import           Network                       (PortID (PortNumber))
@@ -47,10 +50,12 @@ import           System.IO.Unsafe              (unsafePerformIO)
 import qualified System.Random.MWC             as R
 import           Text.Blaze.Html.Renderer.Utf8 (renderHtmlBuilder)
 import           Yesod
+import GHC.Generics
 
 mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
 World sql=World
     randomNumber Int sql=randomNumber
+    deriving Generic Show
 |]
 
 mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
@@ -58,9 +63,11 @@ Fortune sql=Fortune
     message Text sql=message
 |]
 
+instance ToJSON World
+
 data App = App
     { appGen      :: !(R.Gen (PrimState IO))
-    , dbPool      :: !(Pool Pg.SqlBackend)
+    , appDbPool   :: !(Pool Pg.SqlBackend)
     }
 
 -- | Not actually using the non-raw mongoDB.
@@ -87,6 +94,7 @@ data App = App
 
 mkYesod "App" [parseRoutes|
 /plaintext          PlaintextR   GET
+/db                 DbR       GET
 |]
 
 fakeInternalState :: InternalState
@@ -117,9 +125,18 @@ instance Yesod App where
 --          $ encode
 --          $ object ["message" .= ("Hello, World!" :: Text)]
 
+runPg dbAction = do
+  app <- getYesod
+  runSqlPool dbAction (appDbPool app)
 
--- getDbR :: Handler Value
--- getDbR = getDb (intQuery runMySQL My.toSqlKey)
+getDbR :: Handler Value
+getDbR = do
+  app <- getYesod
+  randomNumber <- liftIO $ ((R.uniformR (1, 1000) (appGen app)) :: IO Int)
+  (runPg $ get ((toSqlKey $ fromIntegral randomNumber) :: WorldId)) >>= \case
+    -- TODO: Throw appropriate HTTP response
+    Nothing -> error "This shouldn't be happening"
+    Just worldRow -> returnJson worldRow
 
 -- getMongoRawDbR :: Handler Value
 -- getMongoRawDbR = getDb rawMongoIntQuery
@@ -257,12 +274,14 @@ instance Yesod App where
 --         (My.fromSqlKey (My.entityKey e), fortuneMessage . My.entityVal $ e)
 
 
-getPlaintextR :: Handler ()
-getPlaintextR = sendWaiResponse
-              $ responseBuilder
-                status200
-                [("Content-Type", simpleContentType typePlain)]
-              $ copyByteString "Hello, World!"
+getPlaintextR :: Handler Text
+getPlaintextR = return "Hello, World!"
+
+-- sendWaiResponse
+--   $ responseBuilder
+--   status200
+--   [("Content-Type", simpleContentType typePlain)]
+--   $ copyByteString 
 
 -- fortuneTemplate :: [(Int64, Text)] -> Builder
 -- fortuneTemplate messages = renderHtmlBuilder $ [shamlet|
@@ -290,7 +309,7 @@ main = R.withSystemRandom $ \gen -> do
     dbPool <- runNoLoggingT $ Pg.createPostgresqlPool (C8.pack connString) 256
     app <- toWaiAppPlain App
         { appGen = gen
-        , dbPool = dbPool
+        , appDbPool = dbPool
         }
 
     runInUnboundThread $ Warp.runSettings
