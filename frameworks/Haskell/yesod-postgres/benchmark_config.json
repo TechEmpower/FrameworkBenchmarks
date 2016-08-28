@@ -1,5 +1,5 @@
 {
-  "framework": "yesod",
+  "framework": "yesod-postgres",
   "tests": [{
     "default": {
       "setup_file": "setup",
