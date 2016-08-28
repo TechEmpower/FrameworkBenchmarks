@@ -135,7 +135,7 @@ getDbR = do
     Nothing -> error "This shouldn't be happening"
     Just worldRow -> returnJson $ object [
       "id" .= wId
-      ,"randomnumber" .= (worldRandomNumber worldRow)
+      ,"randomNumber" .= (worldRandomNumber worldRow)
       ]
 
 -- getMongoRawDbR :: Handler Value
