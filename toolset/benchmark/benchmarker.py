@@ -85,7 +85,7 @@ class Benchmarker:
   ############################################################
   # End run_list_test_metadata
   ############################################################
-  
+
   ############################################################
   # parse_timestamp
   # Re-parses the raw data for a given timestamp
@@ -95,7 +95,7 @@ class Benchmarker:
 
     for test in all_tests:
       test.parse_all()
-    
+
     self.__parse_results(all_tests)
 
     self.__finish()
@@ -115,7 +115,7 @@ class Benchmarker:
     ##########################
     # Get a list of all known
     # tests that we can run.
-    ##########################    
+    ##########################
     all_tests = self.__gather_tests
 
     ##########################
@@ -138,7 +138,7 @@ class Benchmarker:
 
     ##########################
     # Parse results
-    ##########################  
+    ##########################
     if self.mode == "benchmark":
       print header("Parsing Results ...", top='=', bottom='=')
       self.__parse_results(all_tests)
@@ -194,8 +194,8 @@ class Benchmarker:
 
   ############################################################
   # get_output_file(test_name, test_type)
-  # returns the output file name for this test_name and 
-  # test_type timestamp/test_type/test_name/raw 
+  # returns the output file name for this test_name and
+  # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_output_file(self, test_name, test_type):
     return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "raw")
@@ -206,7 +206,7 @@ class Benchmarker:
   ############################################################
   # output_file(test_name, test_type)
   # returns the output file for this test_name and test_type
-  # timestamp/test_type/test_name/raw 
+  # timestamp/test_type/test_name/raw
   ############################################################
   def output_file(self, test_name, test_type):
     path = self.get_output_file(test_name, test_type)
@@ -222,8 +222,8 @@ class Benchmarker:
 
   ############################################################
   # get_stats_file(test_name, test_type)
-  # returns the stats file name for this test_name and 
-  # test_type timestamp/test_type/test_name/raw 
+  # returns the stats file name for this test_name and
+  # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_stats_file(self, test_name, test_type):
     return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "stats")
@@ -235,7 +235,7 @@ class Benchmarker:
   ############################################################
   # stats_file(test_name, test_type)
   # returns the stats file for this test_name and test_type
-  # timestamp/test_type/test_name/raw 
+  # timestamp/test_type/test_name/raw
   ############################################################
   def stats_file(self, test_name, test_type):
       path = self.get_stats_file(test_name, test_type)
@@ -247,7 +247,7 @@ class Benchmarker:
   ############################################################
   # End stats_file
   ############################################################
-  
+
 
   ############################################################
   # full_results_directory
@@ -273,14 +273,14 @@ class Benchmarker:
       os.makedirs(path)
     except OSError:
       pass
-    
+
     # Give testrunner permission to write into results directory
     # so LOGDIR param always works in setup.sh
-    # While 775 is more preferrable, we would have to ensure that 
+    # While 775 is more preferrable, we would have to ensure that
     # testrunner is in the group of the current user
     if not self.os.lower() == 'windows':
-      mode777 = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | 
-                stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | 
+      mode777 = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
+                stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
                 stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
       os.chmod(path, mode777)
     return path
@@ -333,7 +333,7 @@ class Benchmarker:
   ############################################################
   @property
   def __gather_tests(self):
-    tests = gather_tests(include=self.test, 
+    tests = gather_tests(include=self.test,
       exclude=self.exclude,
       benchmarker=self)
 
@@ -352,7 +352,7 @@ class Benchmarker:
   ############################################################
 
   ############################################################
-  # Makes any necessary changes to the server that should be 
+  # Makes any necessary changes to the server that should be
   # made before running the tests. This involves setting kernal
   # settings to allow for more connections, or more file
   # descriptiors
@@ -363,7 +363,7 @@ class Benchmarker:
     try:
       if os.name == 'nt':
         return True
-      subprocess.check_call(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu[0-9]*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
+      #subprocess.check_call(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu[0-9]*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
       subprocess.check_call("sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535".rsplit(" "))
       subprocess.check_call("sudo sysctl -w net.core.somaxconn=65535".rsplit(" "))
       subprocess.check_call("sudo -s ulimit -n 65535".rsplit(" "))
@@ -378,7 +378,7 @@ class Benchmarker:
   ############################################################
 
   ############################################################
-  # Makes any necessary changes to the database machine that 
+  # Makes any necessary changes to the database machine that
   # should be made before running the tests. Is very similar
   # to the server setup, but may also include database specific
   # changes.
@@ -410,7 +410,7 @@ class Benchmarker:
   ############################################################
 
   ############################################################
-  # Makes any necessary changes to the client machine that 
+  # Makes any necessary changes to the client machine that
   # should be made before running the tests. Is very similar
   # to the server setup, but may also include client specific
   # changes.
@@ -460,7 +460,7 @@ class Benchmarker:
       logging.debug("Executing __run_tests on Linux")
 
       # Setup a nice progressbar and ETA indicator
-      widgets = [self.mode, ': ',  progressbar.Percentage(), 
+      widgets = [self.mode, ': ',  progressbar.Percentage(),
                  ' ', progressbar.Bar(),
                  ' Rough ', progressbar.ETA()]
       pbar = progressbar.ProgressBar(widgets=widgets, maxval=len(tests)).start()
@@ -508,8 +508,8 @@ class Benchmarker:
   # are needed.
   ############################################################
   def __run_test(self, test):
-    
-    # Used to capture return values 
+
+    # Used to capture return values
     def exit_with_code(code):
       if self.os.lower() == 'windows':
         return code
@@ -527,7 +527,7 @@ class Benchmarker:
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         out.write("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.\n")
         return exit_with_code(0)
-      
+
       # If the test is in the excludes list, we skip it
       if self.exclude != None and test.name in self.exclude:
         out.write("Test {name} has been added to the excludes list. Skipping.\n".format(name=test.name))
@@ -548,7 +548,7 @@ class Benchmarker:
 
       ##########################
       # Start this test
-      ##########################  
+      ##########################
       out.write(header("Starting %s" % test.name))
       out.flush()
       try:
@@ -588,14 +588,14 @@ class Benchmarker:
             return exit_with_code(1)
 
         result = test.start(out)
-        if result != 0: 
+        if result != 0:
           self.__stop_test(out)
           time.sleep(5)
           out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           out.flush()
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
           return exit_with_code(1)
-        
+
         logging.info("Sleeping %s seconds to ensure framework is ready" % self.sleep)
         time.sleep(self.sleep)
 
@@ -779,7 +779,7 @@ class Benchmarker:
   def __count_sloc(self):
     frameworks = gather_frameworks(include=self.test,
       exclude=self.exclude, benchmarker=self)
-    
+
     jsonResult = {}
     for framework, testlist in frameworks.iteritems():
       if not os.path.exists(os.path.join(testlist[0].directory, "source_code")):
@@ -787,11 +787,11 @@ class Benchmarker:
         continue
 
       # Unfortunately the source_code files use lines like
-      # ./cpoll_cppsp/www/fortune_old instead of 
+      # ./cpoll_cppsp/www/fortune_old instead of
       # ./www/fortune_old
       # so we have to back our working dir up one level
       wd = os.path.dirname(testlist[0].directory)
-      
+
       try:
         command = "cloc --list-file=%s/source_code --yaml" % testlist[0].directory
 
@@ -831,10 +831,10 @@ class Benchmarker:
       except subprocess.CalledProcessError:
         pass
 
-    # Because git can be slow when run in large batches, this 
+    # Because git can be slow when run in large batches, this
     # calls git up to 4 times in parallel. Normal improvement is ~3-4x
     # in my trials, or ~100 seconds down to ~25
-    # This is safe to parallelize as long as each thread only 
+    # This is safe to parallelize as long as each thread only
     # accesses one key in the dictionary
     threads = []
     jsonResult = {}
@@ -890,7 +890,7 @@ class Benchmarker:
   def __finish(self):
     if not self.list_tests and not self.list_test_metadata and not self.parse:
       tests = self.__gather_tests
-      # Normally you don't have to use Fore.BLUE before each line, but 
+      # Normally you don't have to use Fore.BLUE before each line, but
       # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
       # or stream flush, so we have to ensure that the color code is printed repeatedly
       prefix = Fore.CYAN
@@ -920,14 +920,14 @@ class Benchmarker:
 
   ##########################################################################################
   # Constructor
-  ########################################################################################## 
+  ##########################################################################################
 
   ############################################################
-  # Initialize the benchmarker. The args are the arguments 
+  # Initialize the benchmarker. The args are the arguments
   # parsed via argparser.
   ############################################################
   def __init__(self, args):
-    
+
     # Map type strings to their objects
     types = dict()
     types['json'] = JsonTestType()
@@ -943,7 +943,7 @@ class Benchmarker:
     else:
         args['types'] = { args['type'] : types[args['type']] }
     del args['type']
-    
+
 
     args['max_threads'] = args['threads']
     args['max_concurrency'] = max(args['concurrency_levels'])
@@ -956,7 +956,7 @@ class Benchmarker:
 
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
-    
+
     # setup some additional variables
     if self.database_user == None: self.database_user = self.client_user
     if self.database_host == None: self.database_host = self.client_host
@@ -965,12 +965,12 @@ class Benchmarker:
     # Remember root directory
     self.fwroot = setup_util.get_fwroot()
 
-    # setup results and latest_results directories 
+    # setup results and latest_results directories
     self.result_directory = os.path.join("results")
     if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
         shutil.rmtree(os.path.join(self.fwroot, "results"))
     self.latest_results_directory = self.latest_results_directory()
-  
+
     # remove installs directories if --clean-all provided
     self.install_root = "%s/%s" % (self.fwroot, "installs")
     if args['clean_all']:
@@ -989,7 +989,7 @@ class Benchmarker:
         self.results = json.load(f)
     except IOError:
       logging.warn("results.json for test not found.")
-    
+
     if self.results == None:
       self.results = dict()
       self.results['concurrencyLevels'] = self.concurrency_levels
