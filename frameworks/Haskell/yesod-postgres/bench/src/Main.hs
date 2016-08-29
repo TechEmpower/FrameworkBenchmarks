@@ -174,11 +174,6 @@ getFortunesR = do
   fortunesFromDb <- runPg $ selectList [] []
   let fortunes = sortBy (compare `on` fortuneMessage . entityVal) $ (Entity (toSqlKey 0) Fortune{fortuneMessage="Additional fortune added at request time."}):fortunesFromDb
   defaultLayout [whamlet|
-                  $doctype 5
-                  <html>
-                    <head>
-                      <title>Fortunes 
-                    <body>
                       <table>
                         <tr>
                           <th>id
