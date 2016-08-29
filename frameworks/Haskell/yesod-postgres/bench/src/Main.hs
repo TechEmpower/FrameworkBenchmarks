@@ -106,6 +106,8 @@ mkYesod "App" [parseRoutes|
 /queries/#Int       QueriesR     GET
 !/queries/#Text      DefaultQueriesR     GET
 /fortunes           FortunesR    GET
+/updates/#Int       UpdatesR     GET
+!/updates/#Text     DefaultUpdatesR GET
 |]
 
 fakeInternalState :: InternalState
@@ -142,7 +144,7 @@ runPg dbAction = do
 
 getRandomRow = do
   app <- getYesod
-  randomNumber <- liftIO $ ((R.uniformR (1, 1000) (appGen app)) :: IO Int)
+  randomNumber <- liftIO $ ((R.uniformR (1, 10000) (appGen app)) :: IO Int)
   let wId = (toSqlKey $ fromIntegral randomNumber) :: WorldId
   get wId >>= \case
     Nothing -> return Nothing
@@ -176,15 +178,39 @@ getFortunesR = do
   defaultLayout $ do
       setTitle "Fortunes"
       [whamlet|
-                      <table>
-                        <tr>
-                          <th>id
-                          <th>message
-                        $forall fortune <- fortunes
-                          <tr>
-                            <td>#{entityKey fortune}
-                            <td>#{fortuneMessage $ entityVal fortune}
-                          |]
+              <table>
+                <tr>
+                  <th>id
+                  <th>message
+                $forall fortune <- fortunes
+                  <tr>
+                    <td>#{entityKey fortune}
+                    <td>#{fortuneMessage $ entityVal fortune}
+                    |]
+
+getUpdatesR :: Int -> Handler Value
+getUpdatesR cnt = do
+  worldRows <- runPg $ forM [1..sanitizedCount] (\_ -> fmap fromJust getRandomRow)
+  app <- getYesod
+  updatedWorldRows <- runPg $ mapM (replaceWorldRow app) worldRows
+  returnJson updatedWorldRows
+  where
+    sanitizedCount
+      | cnt<1 = 1
+      | cnt>500 = 500
+      | otherwise = cnt
+
+    replaceWorldRow app (Entity wId wRow) = do
+      randomNumber <- liftIO $ ((R.uniformR (1, 10000) (appGen app)) :: IO Int)
+      -- TODO: Should I be using replace, or update, or updateGet -- which is
+      -- idiomatic Yesod code for this operation?
+      let newRow =wRow{worldRandomNumber=randomNumber}
+      replace wId newRow
+      return (Entity wId newRow)
+
+
+getDefaultUpdatesR :: Text -> Handler Value
+getDefaultUpdatesR _ = getUpdatesR 1
 
 -- Getmongorawdbr :: Handler Value
 -- getMongoRawDbR = getDb rawMongoIntQuery
@@ -238,7 +264,7 @@ getFortunesR = do
 --             status200
 --             [("Content-Type", simpleContentType typeJson)]
 --         $ copyByteString
---         $ L.toStrict
+--         $ L.toSfortfortunestrict
 --         $ encode value
 
 
