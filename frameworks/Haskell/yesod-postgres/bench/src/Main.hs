@@ -49,6 +49,7 @@ import           System.Environment            (getArgs)
 import           System.IO.Unsafe              (unsafePerformIO)
 import qualified System.Random.MWC             as R
 import           Text.Blaze.Html.Renderer.Utf8 (renderHtmlBuilder)
+import Text.Blaze.Html
 import           Yesod
 import           Data.Text.Read
 import Data.Maybe (fromJust)
@@ -68,6 +69,9 @@ instance ToJSON (Entity World) where
     "id" .= wId
     ,"randomNumber" .= (worldRandomNumber wRow)
     ]
+
+instance ToMarkup FortuneId where
+  toMarkup = toMarkup . fromSqlKey
 
 data App = App
     { appGen      :: !(R.Gen (PrimState IO))
@@ -101,6 +105,7 @@ mkYesod "App" [parseRoutes|
 /db                 DbR          GET
 /queries/#Int       QueriesR     GET
 !/queries/#Text      DefaultQueriesR     GET
+/fortunes           FortunesR    GET
 |]
 
 fakeInternalState :: InternalState
@@ -152,12 +157,6 @@ getDbR = do
 
 getQueriesR :: Int -> Handler Value
 getQueriesR cnt = do
-  -- cntText <- (lookupGetParam "queries")
-  -- let cntInt = case cntText of
-  --       Nothing -> 1 
-  --       Just x -> case (decimal x) of
-  --         Left _ -> 1
-  --         Right (y, _) -> if y>500 then 500 else y
   resultMaybe <- (runPg $ forM [1..sanitizedCnt] (\_ -> getRandomRow))
   let result = map fromJust resultMaybe
   returnJson result
@@ -169,8 +168,28 @@ getQueriesR cnt = do
 
 getDefaultQueriesR :: Text -> Handler Value
 getDefaultQueriesR txt = getQueriesR 1
-  
--- getMongoRawDbR :: Handler Value
+
+getFortunesR :: Handler Html
+getFortunesR = do
+  fortunesFromDb <- runPg $ selectList [] []
+  let fortunes = sortBy (compare `on` fortuneMessage . entityVal) $ (Entity (toSqlKey 0) Fortune{fortuneMessage="Additional fortune added at request time."}):fortunesFromDb
+  defaultLayout [whamlet|
+                  $doctype 5
+                  <html>
+                    <head>
+                      <title>Fortunes 
+                    <body>
+                      <table>
+                        <tr>
+                          <th>id
+                          <th>message
+                        $forall fortune <- fortunes
+                          <tr>
+                            <td>#{entityKey fortune}
+                            <td>#{fortuneMessage $ entityVal fortune}
+                          |]
+
+-- Getmongorawdbr :: Handler Value
 -- getMongoRawDbR = getDb rawMongoIntQuery
 
 -- getDbsR :: Int -> Handler Value
