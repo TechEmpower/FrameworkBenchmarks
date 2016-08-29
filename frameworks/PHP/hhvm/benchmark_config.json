@@ -24,7 +24,7 @@
         "database_os"    : "Linux",
         "display_name"   : "hhvm",
         "notes"          : "",
-        "versus"         : "php"
+        "versus"         : "php7"
       }
     }]
 }

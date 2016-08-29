@@ -1,2 +1,4 @@
 .bundle
-vendor/bundle
+/vendor/
+/tmp/
+/Gemfile.lock

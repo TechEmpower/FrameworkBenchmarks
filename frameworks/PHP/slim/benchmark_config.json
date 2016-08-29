@@ -20,7 +20,7 @@
       "database_os": "Linux",
       "display_name": "slim",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "hhvm": {
       "setup_file": "setup_hhvm",
@@ -41,7 +41,7 @@
       "database_os": "Linux",
       "display_name": "slim",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     },
     "php5": {
       "setup_file": "setup_php5",

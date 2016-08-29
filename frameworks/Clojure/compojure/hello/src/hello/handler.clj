@@ -143,23 +143,24 @@
   "Using Korma: Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
-(let [results (run-queries queries)]
-    (for [w results]
-      (update-in w [:randomNumber (inc (rand-int 9999))]
-        (update world
-                (set-fields {:randomNumber (:randomNumber w)})
-                (where {:id [:id w]}))))
+  (let [results (map #(assoc % :randomNumber (inc (rand-int 9999))) (run-queries queries))]
+    (doseq [{:keys [id randomNumber]} results]
+      (update world
+              (set-fields {:randomNumber randomNumber})
+              (where {:id id})))
     results))
 
 (defn update-and-persist-raw
   "Using JDBC: Changes the :randomNumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
   [queries]
-(let [results (run-queries queries)]
-    (for [w results]
-      (update-in w [:randomNumber (inc (rand-int 9999))]
-        (jdbc/update! (db-mysql-raw) :world {:randomNumber (:randomNumber w)} ["id = ?" (:id w)])))
-    results))
+  (let [world (map #(assoc % :randomnumber (inc (rand-int 9999))) (run-queries-raw queries))]
+    (doseq [{:keys [id randomnumber]} world]
+      (jdbc/update!
+       (db-mysql-raw)
+       :world {:randomnumber randomnumber}
+       ["id = ?" id]))
+    world))
 
 (defn json-serialization
   "Test 1: JSON serialization"

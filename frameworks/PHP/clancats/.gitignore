@@ -1,6 +1,6 @@
 public/assets/packtacular/
 CCF/app/config/migrator.json
-CCF/vendor/
+vendor/
 storage/
 .DS_Store
 Thumbs.db
@@ -10,3 +10,4 @@ phpunit.xml
 phpunit.phar
 report/
 run
+clancatsapp/

@@ -3,8 +3,9 @@ package controllers
 import (
 	"database/sql"
 	"math/rand"
-	"runtime"
 	"sort"
+
+	dbm "benchmark/app/db"
 
 	"github.com/revel/modules/db/app"
 	"github.com/revel/revel"
@@ -15,12 +16,12 @@ type MessageStruct struct {
 }
 
 type World struct {
-	Id           uint16 `json:"id"`
+	Id           uint16 `json:"id" qbs:"pk"`
 	RandomNumber uint16 `json:"randomNumber"`
 }
 
 type Fortune struct {
-	Id      uint16 `json:"id"`
+	Id      uint16 `json:"id" qbs:"pk"`
 	Message string `json:"message"`
 }
 
@@ -46,9 +47,12 @@ func init() {
 	}
 	revel.OnAppStart(func() {
 		var err error
-		runtime.GOMAXPROCS(runtime.NumCPU())
 		db.Init()
 		db.Db.SetMaxIdleConns(MaxConnectionCount)
+		dbm.InitJet()
+		dbm.Jet.SetMaxIdleConns(MaxConnectionCount)
+		dbm.InitQbs(MaxConnectionCount)
+
 		if worldStatement, err = db.Db.Prepare(WorldSelect); err != nil {
 			revel.ERROR.Fatalln(err)
 		}

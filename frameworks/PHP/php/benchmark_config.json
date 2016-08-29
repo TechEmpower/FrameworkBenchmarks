@@ -21,9 +21,9 @@
       "database_os": "Linux",
       "display_name": "PHP",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
-    "raw": {
+    "raw7": {
       "setup_file": "setup",
       "db_url": "/dbraw.php",
       "query_url": "/dbraw.php?queries=",
@@ -43,7 +43,7 @@
       "database_os": "Linux",
       "display_name": "PHP-raw",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "php5": {
       "setup_file": "setup_php5",

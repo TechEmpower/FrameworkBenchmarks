@@ -1,0 +1,23 @@
+
+buildscript {
+    repositories {
+        jcenter ()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+apply from: "$gradleScripts/hexagon_service.gradle"
+
+mainClassName = "co.there4.hexagon.BenchmarkKt"
+applicationDefaultJvmArgs = [
+    '-Xms64M',
+    '-Xmx64M',
+    '-server',
+    '-XX:+UseNUMA',
+    '-XX:+UseParallelGC',
+    '-XX:+AggressiveOpts'
+]

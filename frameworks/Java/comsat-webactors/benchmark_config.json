@@ -14,12 +14,32 @@
         "language": "Java",
         "flavor": "Java8",
         "orm": "Raw",
-        "platform": "WebActors",
+        "platform": "None",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "Comsat",
         "notes": "Comsat Web Actors run as Netty handler",
+        "versus": ""
+      },
+      "undertow": {
+        "setup_file": "setup-undertow",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "Java8",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Comsat",
+        "notes": "Comsat Web Actors run as Undertow handler",
         "versus": ""
       }
     }

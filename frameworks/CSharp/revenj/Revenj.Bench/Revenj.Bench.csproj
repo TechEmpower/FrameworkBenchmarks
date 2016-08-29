@@ -75,9 +75,16 @@
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context.cs" />
+    <Compile Include="Fortunes.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Fortunes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FortuneTemplate.cs" />
     <Compile Include="RestService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -85,10 +92,17 @@
       <Link>Revenj.Http.exe.config</Link>
       <SubType>Designer</SubType>
     </None>
+    <None Include="Fortunes.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>Fortunes.cs</LastGenOutput>
+    </None>
     <None Include="model.dsl" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

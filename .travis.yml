@@ -20,7 +20,9 @@ env:
     - "TESTDIR=C/duda"
     - "TESTDIR=C/haywire"
     - "TESTDIR=C/onion"
+    - "TESTDIR=C/h2o"
     - "TESTDIR=CSharp/aspnet"
+    - "TESTDIR=CSharp/aspnetcore"
     ## - "TESTDIR=CSharp/aspnet-stripped"
     - "TESTDIR=CSharp/evhttp-sharp"
     ## - "TESTDIR=CSharp/HttpListener"
@@ -28,6 +30,7 @@ env:
     - "TESTDIR=CSharp/revenj"
     - "TESTDIR=CSharp/servicestack"
     - "TESTDIR=C++/cpoll_cppsp"
+    - "TESTDIR=C++/cutelyst"
     - "TESTDIR=C++/silicon"
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ulib"
@@ -40,7 +43,6 @@ env:
     - "TESTDIR=Clojure/pedestal"
     - "TESTDIR=Clojure/aleph"
     - "TESTDIR=Crystal/crystal-raw"
-    - "TESTDIR=Crystal/moonshine"
     - "TESTDIR=Crystal/kemal"
     - "TESTDIR=D/vibed"
     - "TESTDIR=Dart/dart-raw"
@@ -53,24 +55,20 @@ env:
     - "TESTDIR=Erlang/cowboy"
     - "TESTDIR=Erlang/elli"
     - "TESTDIR=Erlang/mochiweb"
-    - "TESTDIR=Erlang/misultin"
     - "TESTDIR=Go/beego"
+    - "TESTDIR=Go/echo"
     - "TESTDIR=Go/falcore"
-    - "TESTDIR=Go/fasthttp-mysql"
-    - "TESTDIR=Go/fasthttp-postgresql"
+    - "TESTDIR=Go/fasthttp"
     - "TESTDIR=Go/gin"
     - "TESTDIR=Go/goji"
-    - "TESTDIR=Go/go-std-mongodb"
-    - "TESTDIR=Go/go-std-mysql"
-    - "TESTDIR=Go/go-std-postgresql"
+    - "TESTDIR=Go/go-std"
     - "TESTDIR=Go/revel"
-    - "TESTDIR=Go/revel-jet"
-    - "TESTDIR=Go/revel-qbs"
     - "TESTDIR=Go/webgo"
     - "TESTDIR=Groovy/grails"
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/wai"
     - "TESTDIR=Haskell/yesod"
+    - "TESTDIR=Haskell/servant"
     - "TESTDIR=Haskell/spock"
     - "TESTDIR=Java/activeweb"
     - "TESTDIR=Java/baratine"
@@ -85,13 +83,13 @@ env:
     - "TESTDIR=Java/jawn"
     - "TESTDIR=Java/jetty-servlet"
     - "TESTDIR=Java/jetty"
+    - "TESTDIR=Java/jlhttp"
     - "TESTDIR=Java/jooby"
     - "TESTDIR=Java/netty"
     - "TESTDIR=Java/ninja-standalone"
     - "TESTDIR=Java/officefloor"
     - "TESTDIR=Java/permeagility"
     - "TESTDIR=Java/play1"
-    - "TESTDIR=Java/play1siena"
     - "TESTDIR=Java/play2-java"
     - "TESTDIR=Java/rapidoid"
     - "TESTDIR=Java/restexpress"
@@ -118,6 +116,7 @@ env:
     - "TESTDIR=JavaScript/ringojs"
     - "TESTDIR=JavaScript/ringojs-convenient"
     - "TESTDIR=JavaScript/sailsjs"
+    - "TESTDIR=Kotlin/hexagon"
     - "TESTDIR=Lua/lapis"
     - "TESTDIR=Lua/openresty"
     - "TESTDIR=Nim/jester"
@@ -140,7 +139,6 @@ env:
     - "TESTDIR=PHP/limonade"
     - "TESTDIR=PHP/lithium"
     - "TESTDIR=PHP/lumen"
-    - "TESTDIR=PHP/micromvc"
     - "TESTDIR=PHP/phalcon"
     - "TESTDIR=PHP/phalcon-micro"
     - "TESTDIR=PHP/phpixie"
@@ -185,6 +183,7 @@ env:
     - "TESTDIR=Scala/akka-http"
     - "TESTDIR=Scala/colossus"
     - "TESTDIR=Scala/finagle"
+    - "TESTDIR=Scala/finatra"
     - "TESTDIR=Scala/fintrospect"
     - "TESTDIR=Scala/lift-stateless"
     - "TESTDIR=Scala/plain"
@@ -192,6 +191,7 @@ env:
     - "TESTDIR=Scala/scalatra"
     - "TESTDIR=Scala/scruffy"
     - "TESTDIR=Scala/spray"
+    - "TESTDIR=Scala/s-server"
     - "TESTDIR=Scala/spray-es"
     - "TESTDIR=Scala/unfiltered"
     - "TESTDIR=Scala/http4s"
@@ -210,6 +210,7 @@ before_install:
 services:
   - postgresql
   - redis-server
+  - mongodb
 
 addons:
   postgresql: "9.3"
@@ -230,4 +231,5 @@ script:
 
 cache:
   directories:
-  - /home/testrunner/.m2/repository
+    - $HOME/.m2/repository
+    - $HOME/.cache/pip

@@ -10,7 +10,7 @@
       "database": "None",
       "framework": "kohana",
       "language": "PHP",
-      "flavor": "PHP5",
+      "flavor": "PHP7",
       "orm": "Raw",
       "platform": "None",
       "webserver": "nginx",
@@ -18,12 +18,12 @@
       "database_os": "Linux",
       "display_name": "kohana",
       "notes": "",
-      "versus": "php-php5"
+      "versus": "php7"
     },
     "raw": {
       "setup_file": "setup",
       "db_url": "/bench/db",
-      "query_url": "/bench/db/",
+      "query_url": "/bench/queries/",
       "fortune_url": "/bench/fortunes",
       "port": 8080,
       "approach": "Realistic",
@@ -31,7 +31,7 @@
       "database": "MySQL",
       "framework": "kohana",
       "language": "PHP",
-      "flavor": "PHP5",
+      "flavor": "PHP7",
       "orm": "Raw",
       "platform": "None",
       "webserver": "nginx",
@@ -39,7 +39,7 @@
       "database_os": "Linux",
       "display_name": "kohana",
       "notes": "",
-      "versus": "php-php5"
+      "versus": "php7"
     }
   }]
 }

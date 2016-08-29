@@ -1,2 +1,1 @@
-bench/cabal-dev
-bench/dist
+/bench/.stack-work/

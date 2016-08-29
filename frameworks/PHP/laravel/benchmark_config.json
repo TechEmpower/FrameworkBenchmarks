@@ -19,7 +19,7 @@
       "database_os": "Linux",
       "display_name": "laravel",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "raw": {
       "setup_file": "setup",
@@ -40,7 +40,7 @@
       "database_os": "Linux",
       "display_name": "laravel-raw",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "hhvm": {
       "setup_file": "setup_hhvm",
@@ -60,7 +60,7 @@
       "database_os": "Linux",
       "display_name": "laravel",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "hhvm-raw": {
       "setup_file": "setup_hhvm",
@@ -81,7 +81,7 @@
       "database_os": "Linux",
       "display_name": "laravel-raw",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "php5": {
       "setup_file": "setup_php5",
@@ -122,7 +122,7 @@
       "database_os": "Linux",
       "display_name": "laravel-raw",
       "notes": "",
-      "versus": "php"
+      "versus": "php-php5"
     }
   }]
 }

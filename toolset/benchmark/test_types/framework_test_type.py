@@ -47,7 +47,7 @@ class FrameworkTestType:
             'plaintext': 'text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7'
         }[content_type]
 
-    def setup_out_err(self, out, err):
+    def setup_out(self, out):
         '''
         Sets up file-like objects for logging. Used in 
         cases where it is hard just return the output. Any
@@ -58,7 +58,6 @@ class FrameworkTestType:
         logging like it's intended
         '''
         self.out = out
-        self.err = err
 
     def parse(self, test_keys):
         '''
@@ -80,7 +79,6 @@ class FrameworkTestType:
         and body content as a tuple
         '''
         print "Accessing URL %s:" % url
-        self.err.write("Accessing URL %s \n" % url)
         self.out.write("Accessing URL %s \n" % url)
 
         headers = {'Accept': self.accept_header}

@@ -83,7 +83,7 @@
       "database_os": "Linux",
       "display_name": "symfony2-hhvm",
       "notes": "",
-      "versus": "php"
+      "versus": "php5"
     }
   }]
 }

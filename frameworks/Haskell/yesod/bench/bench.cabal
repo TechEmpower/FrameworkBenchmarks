@@ -28,7 +28,7 @@ executable         bench
                  , auto-update
                  , primitive
                  , mwc-random
-                 , pool-conduit
+                 , resource-pool
                  , network
                  , mongoDB
                  , monad-logger

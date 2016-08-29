@@ -125,7 +125,7 @@ def verify_helloworld_object(json_object, url):
         message = json_object['message']
 
         if message != 'hello, world!':
-            return [('fail', "Expected message of 'hello, world!', got '%s'" % message)]
+            return [('fail', "Expected message of 'hello, world!', got '%s'" % message, url)]
         return problems
 
 

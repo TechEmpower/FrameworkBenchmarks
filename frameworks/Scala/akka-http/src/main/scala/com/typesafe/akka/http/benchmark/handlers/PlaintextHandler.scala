@@ -14,5 +14,5 @@ class PlaintextHandler(components: {
     }
   }
 
-  def response = new HttpResponse(StatusCodes.OK, entity = HttpEntity("Hello, World!").withContentType(`text/plain`.withCharset(`UTF-8`)))
+  def response = HttpResponse(StatusCodes.OK, entity = HttpEntity("Hello, World!").withContentType(`text/plain`.withCharset(`UTF-8`)))
 }

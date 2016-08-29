@@ -49,4 +49,13 @@
         <servlet-name>updates</servlet-name>
         <url-pattern>/updates</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>fortunes</servlet-name>
+        <servlet-class>hello.FortunesServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>fortunes</servlet-name>
+        <url-pattern>/fortunes</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -3,11 +3,12 @@
 set -x
 export DEBIAN_FRONTEND=noninteractive
 
+source $FWROOT/toolset/setup/linux/bash_functions.sh
+
 RETCODE=$(fw_exists fwbm_prereqs_installed)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Prerequisites installed!"; 
-  return 0; 
-}
+  return 0; }
 
 
 # Use a more recent version of Mongo shell
@@ -54,8 +55,7 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libboost-dev                      `# Silicon relies on boost::lexical_cast.` \
   postgresql-server-dev-9.3         `# Needed by cpoll.` \
   xdg-utils                         `# Needed by dlang.` \
-  python-pip \
-  ant
+  python-pip
 
 sudo pip install colorama==0.3.1
 # Version 2.3 has a nice Counter() and other features

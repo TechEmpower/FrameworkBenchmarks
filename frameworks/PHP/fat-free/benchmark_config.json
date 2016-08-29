@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "fat-free",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "raw": {
       "setup_file": "setup",
@@ -44,7 +44,7 @@
       "database_os": "Linux",
       "display_name": "fat-free",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     }    
   }]
 }
