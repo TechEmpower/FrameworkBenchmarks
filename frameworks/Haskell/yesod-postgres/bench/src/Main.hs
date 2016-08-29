@@ -173,7 +173,9 @@ getFortunesR :: Handler Html
 getFortunesR = do
   fortunesFromDb <- runPg $ selectList [] []
   let fortunes = sortBy (compare `on` fortuneMessage . entityVal) $ (Entity (toSqlKey 0) Fortune{fortuneMessage="Additional fortune added at request time."}):fortunesFromDb
-  defaultLayout [whamlet|
+  defaultLayout $ do
+      setTitle "Fortunes"
+      [whamlet|
                       <table>
                         <tr>
                           <th>id
