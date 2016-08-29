@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8)
 
 project(silicon)
 
-
 include_directories($ENV{IROOT}/include $ENV{MICROHTTPD_HOME}/include)
 
 link_directories($ENV{IROOT}/lib $ENV{MICROHTTPD_HOME}/lib)
