@@ -120,8 +120,7 @@ getDbR = do
 
 getQueriesR :: Int -> Handler Value
 getQueriesR cnt = do
-  resultMaybe <- (runPg $ forM [1..sanitizedCnt] (\_ -> getRandomRow))
-  let result = map fromJust resultMaybe
+  result <- (runPg $ forM [1..sanitizedCnt] (\_ -> fmap fromJust getRandomRow))
   returnJson result
   where
     sanitizedCnt
@@ -165,7 +164,7 @@ getUpdatesR cnt = do
       randomNumber <- liftIO $ ((R.uniformR (1, 10000) (appGen app)) :: IO Int)
       -- TODO: Should I be using replace, or update, or updateGet -- which is
       -- idiomatic Yesod code for this operation?
-      let newRow =wRow{worldRandomNumber=randomNumber}
+      let newRow = wRow{worldRandomNumber=randomNumber}
       replace wId newRow
       return (Entity wId newRow)
 
