@@ -101,6 +101,7 @@ data App = App
 
 
 mkYesod "App" [parseRoutes|
+/json               JsonR     GET
 /plaintext          PlaintextR   GET
 /db                 DbR          GET
 /queries/#Int       QueriesR     GET
@@ -128,15 +129,8 @@ instance Yesod App where
     maximumContentLength _ _ = Nothing
     {-# INLINE maximumContentLength #-}
 
--- getJsonR :: Handler ()
--- getJsonR = sendWaiResponse
---          $ responseBuilder
---             status200
---             [("Content-Type", simpleContentType typeJson)]
---          $ copyByteString
---          $ L.toStrict
---          $ encode
---          $ object ["message" .= ("Hello, World!" :: Text)]
+getJsonR :: Handler Value
+getJsonR = returnJson $ object ["message" .= ("Hello, World!" :: Text)]
 
 runPg dbAction = do
   app <- getYesod
