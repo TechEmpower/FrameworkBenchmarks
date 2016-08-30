@@ -83,3 +83,6 @@ nimcache
 # crystal
 .crystal
 *.out
+
+#don't ignore merge request templates
+!.github/
