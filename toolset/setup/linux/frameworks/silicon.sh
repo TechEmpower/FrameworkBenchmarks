@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends clang-3.8
+fw_depends clang-3.8 gcc-6
 
 RETCODE=$(fw_exists ${IROOT}/silicon.installed)
 [ ! "$RETCODE" == 0 ] || { \
