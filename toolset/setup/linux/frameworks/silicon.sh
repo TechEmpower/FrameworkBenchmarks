@@ -1,5 +1,7 @@
 #!/bin/bash
 
+fw_depends clang
+
 RETCODE=$(fw_exists ${IROOT}/silicon.installed)
 [ ! "$RETCODE" == 0 ] || { \
   # Load environment variables

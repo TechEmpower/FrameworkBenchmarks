@@ -63,17 +63,6 @@ sudo pip install colorama==0.3.1
 sudo pip install progressbar==2.2
 sudo pip install requests
 
-# Install gcc-4.8, gcc-4.9
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-sudo apt-get -yq update
-sudo apt-get install -qqy gcc-4.8 g++-4.8 gcc-4.9 g++-4.9
-
-# Install Clang, needed by silicon.
-sudo add-apt-repository -s "deb http://apt.llvm.org/`lsb_release -cs`/ llvm-toolchain-`lsb_release -cs`-3.8 main"
-wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
-sudo apt-get -yq update
-sudo apt-get install -qqy clang-3.8
-
 # Stop permanently overwriting people's files just for 
 # trying out our software!
 RETCODE=$(fw_exists ~/.bash_profile.bak)
