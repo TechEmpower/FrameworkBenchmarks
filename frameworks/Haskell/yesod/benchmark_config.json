@@ -1,7 +1,7 @@
 {
   "framework": "yesod",
   "tests": [{
-    "default": {
+    "mysql": {
       "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
@@ -20,7 +20,7 @@
       "webserver": "Warp",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "yesod",
+      "display_name": "yesod-mysql",
       "notes": "",
       "versus": "wai"
     },
@@ -39,7 +39,30 @@
       "webserver": "Warp",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "yesod",
+      "display_name": "yesod-mongo",
+      "notes": "",
+      "versus": "wai"
+    },
+    "postgres": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates/",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "yesod",
+      "language": "Haskell",
+      "orm": "Raw",
+      "platform": "Wai",
+      "webserver": "Warp",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "yesod-postgres",
       "notes": "",
       "versus": "wai"
     }
