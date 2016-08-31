@@ -15,7 +15,7 @@ public class QueriesServlet extends HttpServlet {
 		final int count = Utils.parseBoundParam(req);
 		final Context ctx = Utils.getContext();
 		final JsonWriter json = ctx.json;
-		final World[] worlds = ctx.loadWorlds(count);
+		final World[] worlds = ctx.loadWorldsSlow(count);
 		json.serialize(worlds, count);
 		json.toStream(res.getOutputStream());
 	}
