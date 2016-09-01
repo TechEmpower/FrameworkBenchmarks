@@ -39,7 +39,7 @@ library
 
 executable servant-exe
   main-is:             Main.hs
-  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N -O2
+  ghc-options:         -Wall -threaded -rtsopts -O2
   build-depends:       base
                      , servant-bench
                      , bytestring

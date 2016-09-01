@@ -98,7 +98,8 @@ namespace Revenj.Bench
 			return ReturnJSON(world, ctx.Stream);
 		}
 
-		private void LoadWorlds(int repeat, Context ctx)
+		/* bulk loading of worlds. use such pattern for production code */
+		private void LoadWorldsFast(int repeat, Context ctx)
 		{
 			var reader = ctx.BulkReader;
 			var lazyResult = ctx.LazyWorlds;
@@ -114,6 +115,18 @@ namespace Revenj.Bench
 				worlds[i] = lazyResult[i].Value;
 		}
 
+		/* multiple roundtrips loading of worlds. don't write such production code */
+		private void LoadWorldsSlow(int repeat, Context ctx)
+		{
+			var worlds = ctx.Worlds;
+			var repository = ctx.WorldRepository;
+			for (int i = 0; i < repeat; i++)
+			{
+				var id = Random.Next(10000) + 1;
+				worlds[i] = repository.Find(IDs[id]);
+			}
+		}
+
 		public Stream MultipleQueries(string count)
 		{
 			int repeat;
@@ -121,7 +134,7 @@ namespace Revenj.Bench
 			if (repeat < 1) repeat = 1;
 			else if (repeat > 500) repeat = 500;
 			var ctx = GetContext(Services);
-			LoadWorlds(repeat, ctx);
+			LoadWorldsSlow(repeat, ctx);
 			var cms = ctx.Stream;
 			ctx.Worlds.Serialize(cms, repeat);
 			ThreadContext.Response.ContentType = "application/json";
@@ -137,7 +150,7 @@ namespace Revenj.Bench
 			if (repeat < 1) repeat = 1;
 			else if (repeat > 500) repeat = 500;
 			var ctx = GetContext(Services);
-			LoadWorlds(repeat, ctx);
+			LoadWorldsSlow(repeat, ctx);
 			var result = new World[repeat];
 			Array.Copy(ctx.Worlds, result, repeat);
 			for (int i = 0; i < result.Length; i++)
@@ -169,6 +182,6 @@ namespace Revenj.Bench
 			cms.Position = 0;
 			ThreadContext.Response.ContentType = "text/html; charset=UTF-8";
 			return cms;
-	}
+		}
 	}
 }

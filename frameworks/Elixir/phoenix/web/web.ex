@@ -14,7 +14,11 @@ defmodule Hello.Web do
 
   def model do
     quote do
-      use Ecto.Model
+      use Ecto.Schema
+
+      import Ecto
+      import Ecto.Changeset
+      import Ecto.Query
     end
   end
 
@@ -24,7 +28,7 @@ defmodule Hello.Web do
 
       # Alias the data repository and import query/model functions
       alias Hello.Repo
-      import Ecto.Model
+      import Ecto
       import Ecto.Query
 
       # Import URL helpers from the router
@@ -40,11 +44,11 @@ defmodule Hello.Web do
       import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2,
                                         action_name: 1, controller_module: 1]
 
-      # Import URL helpers from the router
-      import Hello.Router.Helpers
 
       # Import all HTML functions (forms, tags, etc)
       use Phoenix.HTML
+
+      import Hello.Router.Helpers
     end
   end
 
@@ -60,8 +64,8 @@ defmodule Hello.Web do
       use Phoenix.Channel
       # Alias the data repository and import query/model functions
       alias Hello.Repo
-      import Ecto.Model
-      import Ecto.Query, only: [from: 2]
+      import Ecto
+      import Ecto.Query
     end
   end
 

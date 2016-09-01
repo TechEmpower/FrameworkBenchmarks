@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>org.revenj</groupId>
 			<artifactId>revenj-core</artifactId>
-			<version>0.9.7</version>
+			<version>0.9.9</version>
 		</dependency>
                 <dependency>
                         <groupId>org.apache.commons</groupId>
@@ -33,7 +33,7 @@
 			<plugin>
 				<groupId>com.dslplatform</groupId>
 				<artifactId>dsl-platform-maven-plugin</artifactId>
-				<version>0.8</version>
+				<version>0.9</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>

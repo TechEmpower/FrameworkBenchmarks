@@ -83,7 +83,7 @@ echo "Populating Postgres database"
 psql --version
 sudo useradd benchmarkdbuser -p benchmarkdbpass
 sudo -u postgres psql template1 < config/create-postgres-database.sql
-sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
+sudo -u postgres psql hello_world < config/create-postgres.sql
 sudo sed -i "s|#listen_addresses = 'localhost'|listen_addresses = '*'|g" /etc/postgresql/9.3/main/postgresql.conf
 sudo sed -i 's|max_connections = 255|max_connections = 500|g' /etc/postgresql/9.3/main/postgresql.conf
 sudo service postgresql stop
