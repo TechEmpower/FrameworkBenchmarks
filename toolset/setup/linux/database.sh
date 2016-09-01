@@ -2,24 +2,8 @@
 #
 # Configures the database server for TFB
 #
-# Note: This is not used for Travis-CI. See run-ci.py to see
-# how databases are configured for Travis.
-#
 # Note on Compatibility: TFB *only* supports Ubuntu 14.04 64bit
-# (e.g. trusty64). However, it's nice to retain 12.04 support 
-# where possible, as it's still heavily used. 
-#
-# Database setup is one core area where we can help ensure TFB 
-# works on 12.04 with minimal frustration. In some cases we  
-# manually install the DB version that's expected, instead of the 
-# 12.04 default. In other cases we can use a 12.04 specific 
-# configuration file. These patches are not intended to enable 
-# benchmarking (e.g. there are no guarantees that 
-# the databases will be tuned for performance correctly), but 
-# they do allow users on 12.04 to install and run most TFB tests. 
-# Some tests internally have 12.04 incompatibilities, we make no 
-# concentrated effort to address these cases, but PR's for specific 
-# problems are welcome
+# (e.g. trusty64).
 
 set -x
 export DEBIAN_FRONTEND=noninteractive
@@ -128,12 +112,11 @@ sudo rm create-postgres-database.sql create-postgres.sql
 
 ##############################
 # MongoDB
-#
-# Note for 12.04: Using mongodb.org ensures 2.6 is installed
+# Version: 3.2
 ##############################
 echo "Setting up MongoDB database"
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+echo 'deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse' | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
 sudo apt-get -y update
 sudo apt-get -y remove mongodb-clients
 sudo apt-get -y install mongodb-org
@@ -165,15 +148,28 @@ fi
 # Apache Cassandra
 ##############################
 echo "Setting up Apache Cassandra database"
-sudo apt-get install -qqy openjdk-7-jdk
+##sudo apt-get install -qqy openjdk-7-jdk
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install -qqy oracle-java8-installer
+echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+
+echo "deb http://www.apache.org/dist/cassandra/debian 22x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+echo "deb-src http://www.apache.org/dist/cassandra/debian 22x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+gpg --keyserver pgp.mit.edu --recv-keys F758CE318D77295D
+gpg --export --armor F758CE318D77295D | sudo apt-key add -
+gpg --keyserver pgp.mit.edu --recv-keys 2B5C1B00
+gpg --export --armor 2B5C1B00 | sudo apt-key add -
+gpg --keyserver pgp.mit.edu --recv-keys 0353B12C
+gpg --export --armor 0353B12C | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install cassandra
 
 sudo addgroup --system cassandra
 sudo adduser --system --home /ssd/cassandra --no-create-home --ingroup cassandra cassandra
 
-export CASS_V=2.0.12
-#wget -nv http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
-curl -Os http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
-sudo tar xzf apache-cassandra-$CASS_V-bin.tar.gz -C /opt
+export CASS_V=2.2
+
 sudo ln -s /opt/apache-cassandra-$CASS_V /opt/cassandra
 
 rm -rf /ssd/cassandra /ssd/log/cassandra
@@ -196,9 +192,9 @@ sudo cp -f cassandra/log4j-server.properties /opt/apache-cassandra-$CASS_V/conf
 sudo update-rc.d cassandra defaults
 sudo service cassandra restart
 
-for i in {1..15}; do
+for i in {1..30}; do
   nc -z $TFB_DBHOST 9160 && break || sleep 1;
-  echo "Waiting for Cassandra ($i/15}"
+  echo "Waiting for Cassandra ($i/30}"
 done
 nc -z $TFB_DBHOST 9160
 if [ $? -eq 0 ]; then
@@ -247,32 +243,6 @@ fi
 # Redis
 ##############################
 echo "Setting up Redis database"
-if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
-  echo "WARNING: Downgrading Redis configuration for Ubuntu 12.04"
-
-  # On 12.04, Redis 2.4 is installed. It doesn't support 
-  # some of the 2.6 options, so we have to remove or comment
-  # those
-  sed -i 's/tcp-keepalive/# tcp-keepalive/' redis.conf
-  sed -i 's/stop-writes-on-bgsave-error/# stop-writes-on-bgsave-error/' redis.conf
-  sed -i 's/rdbchecksum/# rdbchecksum/' redis.conf
-  sed -i 's/slave-read-only/# slave-read-only/' redis.conf
-  sed -i 's/repl-disable-tcp-nodelay/# repl-disable-tcp-nodelay/' redis.conf
-  sed -i 's/slave-priority/# slave-priority/' redis.conf
-  sed -i 's/auto-aof-rewrite-percentage/# auto-aof-rewrite-percentage/' redis.conf
-  sed -i 's/auto-aof-rewrite-min-size/# auto-aof-rewrite-min-size/' redis.conf
-  
-  sed -i 's/lua-time-limit/# lua-time-limit/' redis.conf
-  sed -i 's/notify-keyspace-events/# notify-keyspace-events/' redis.conf
-  sed -i 's/hash-max-ziplist-entries/# hash-max-ziplist-entries/' redis.conf
-  sed -i 's/hash-max-ziplist-value/# hash-max-ziplist-value/' redis.conf
-  sed -i 's/zset-max-ziplist-entries/# zset-max-ziplist-entries/' redis.conf
-  sed -i 's/zset-max-ziplist-value/# zset-max-ziplist-value/' redis.conf
-  sed -i 's/client-output-buffer-limit/# client-output-buffer-limit/' redis.conf
- 
-  sed -i 's/hz 10/# hz 10/' redis.conf
-  sed -i 's/aof-rewrite-incremental-fsync/# aof-rewrite-incremental-fsync/' redis.conf
-fi
 
 sudo service redis-server stop
 sudo mv redis.conf /etc/redis/redis.conf
