@@ -18,7 +18,7 @@ void MultipleDatabaseQueriesTest::query_postgres(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryForDatabase(
                 QLatin1String("SELECT id, randomNumber FROM world WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("postgres")));
+                QSqlDatabase::database(QLatin1String("postgres-") + QThread::currentThread()->objectName()));
     processQuery(c, query);
 }
 
@@ -26,7 +26,7 @@ void MultipleDatabaseQueriesTest::query_mysql(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryForDatabase(
                 QLatin1String("SELECT id, randomNumber FROM world WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("mysql")));
+                QSqlDatabase::database(QLatin1String("mysql-") + QThread::currentThread()->objectName()));
     processQuery(c, query);
 }
 
