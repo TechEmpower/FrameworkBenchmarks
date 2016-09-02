@@ -1,5 +1,5 @@
 {
-  "framework": "rapidoid",
+  "framework": "rapidoid-http-fast",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -9,16 +9,16 @@
       "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
-      "framework": "rapidoid",
+      "framework": "rapidoid-http-fast",
       "language": "Java",
       "orm": "Raw",
       "platform": "Rapidoid",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rapidoid",
+      "display_name": "rapidoid-http-fast",
       "notes": "",
-      "versus": "rapidoid"
+      "versus": ""
     }
   }]
 }
