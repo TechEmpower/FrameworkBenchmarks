@@ -31,9 +31,9 @@ void SingleDatabaseQueryTest::db_mysql(Context *c)
 
 void SingleDatabaseQueryTest::processQuery(Context *c, QSqlQuery &query)
 {
-    int id = qrand() % 9999;
+    int id = (qrand() % 10000) + 1;
 
-    query.bindValue(QStringLiteral(":id"), id + 1);
+    query.bindValue(QStringLiteral(":id"), id);
     if (!query.exec() || !query.next()) {
         c->res()->setStatus(Response::InternalServerError);
         return;

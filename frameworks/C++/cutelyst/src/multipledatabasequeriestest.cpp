@@ -42,9 +42,9 @@ void MultipleDatabaseQueriesTest::processQuery(Context *c, QSqlQuery &query)
     }
 
     for (int i = 0; i < queries; ++i) {
-        int id = qrand() % 9999;
+        int id = (qrand() % 10000) + 1;
 
-        query.bindValue(QStringLiteral(":id"), id + 1);
+        query.bindValue(QStringLiteral(":id"), id);
         if (!query.exec() || !query.next()) {
             c->res()->setStatus(Response::InternalServerError);
             return;

@@ -3,7 +3,7 @@
 fw_depends cutelyst
 
 sed -i 's|DatabaseHostName=.*|DatabaseHostName='"$DBHOST"'|g' config/config.ini
-sed -i 's|SendDate=.*|SendDate=true|g' config/config.ini
+sed -i 's|SendDate=.*|SendDate=false|g' config/config.ini
 
 cd $IROOT
 mkdir cutelyst-benchmarks || true

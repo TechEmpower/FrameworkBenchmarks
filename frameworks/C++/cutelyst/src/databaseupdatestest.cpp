@@ -48,7 +48,7 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
     }
 
     for (int i = 0; i < queries; ++i) {
-        int id = (qrand() % 9999) + 1;
+        int id = (qrand() % 10000) + 1;
 
         query.bindValue(QStringLiteral(":id"), id);
         if (!query.exec() || !query.next()) {
@@ -56,7 +56,7 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
             return;
         }
 
-        int randomNumber = (qrand() % 9999) + 1;
+        int randomNumber = (qrand() % 10000) + 1;
         updateQuery.bindValue(QStringLiteral(":id"), id);
         updateQuery.bindValue(QStringLiteral(":randomNumber"), randomNumber);
         if (!updateQuery.exec()) {
