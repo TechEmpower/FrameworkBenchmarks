@@ -1,0 +1,9 @@
+./rapidoid-high-level/src/
+./rapidoid-high-level/src/main
+./rapidoid-high-level/src/main/java
+./rapidoid-high-level/src/main/java/rapidoid
+./rapidoid-high-level/src/main/java/rapidoid/Fortune.java
+./rapidoid-high-level/src/main/java/rapidoid/Main.java
+./rapidoid-high-level/src/main/java/rapidoid/Message.java
+./rapidoid-high-level/src/main/resources
+./rapidoid-high-level/src/main/resources/fortunes.html
