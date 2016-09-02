@@ -116,7 +116,7 @@ public class SimpleHttpProtocol implements Protocol {
 
 			ctx.write(HTTP_200_OK);
 
-			ctx.write(isKeepAlive ? CONN_KEEP_ALIVE : CONN_CLOSE);
+			if (!isKeepAlive) ctx.write(CONN_CLOSE);
 
 			ctx.write(SERVER_X);
 
