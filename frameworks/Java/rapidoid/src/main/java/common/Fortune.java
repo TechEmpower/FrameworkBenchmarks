@@ -1,4 +1,4 @@
-package rapidoid;
+package common;
 
 import org.rapidoid.u.U;
 
