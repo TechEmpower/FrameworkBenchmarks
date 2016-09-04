@@ -36,7 +36,7 @@ public class Main {
 
 		On.get("/plaintext").staticPlain("Hello, world!".getBytes());
 
-		On.get("/json").managed(false).json(() -> new Message("Hello world!"));
+		On.get("/json").managed(false).json(() -> new Message("Hello, world!"));
 
 		final JdbcClient jdbc = JDBC.newApi()
 			.url("jdbc:mysql://" + dbHost + ":3306/hello_world?" + Helper.MYSQL_CONFIG)
