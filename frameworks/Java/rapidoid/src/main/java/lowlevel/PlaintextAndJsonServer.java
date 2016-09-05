@@ -17,7 +17,7 @@ public class PlaintextAndJsonServer extends AbstractHttpServer {
 	private static final byte[] HELLO_WORLD = "Hello, World!".getBytes();
 
 	public PlaintextAndJsonServer() {
-		super("X", "", "");
+		super("X", "", "", false);
 	}
 
 	@Override

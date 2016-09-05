@@ -7,6 +7,7 @@ This is the Rapidoid portion of a [benchmarking test suite](../) comparing a var
 
 ### Fortunes test - using Rapidoid's high-level API (rapidoid-quick)
 * [highlevel/Main.java](src/main/java/highlevel/Main.java)
+* [highlevel/FortunesHandler.java](src/main/java/highlevel/FortunesHandler.java)
 * [fortunes.html](src/main/resources/fortunes.html)
 
 ### Plaintext and JSON Encoding tests - using Rapidoid's low-level API (rapidoid-http-fast)
@@ -14,4 +15,4 @@ This is the Rapidoid portion of a [benchmarking test suite](../) comparing a var
 * [lowlevel/PlaintextAndJsonServer.java](src/main/java/lowlevel/PlaintextAndJsonServer.java)
 
 ## Versions
-Rapidoid 5.2.1 (http://www.rapidoid.org)
+Rapidoid 5.2.2 (http://www.rapidoid.org)
