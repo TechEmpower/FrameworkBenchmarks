@@ -19,21 +19,15 @@ case class FortunesList(items: Seq[Fortune]) extends View
 object Fortunes {
   private val toFortunes: PartialFunction[Result, Seq[Fortune]] = {
     case rs: ResultSet => rs.rows
-      .map(row =>
-        Fortune(
-          row("id").map {
-            case IntValue(l) => l
-            case _ => 0
-          }.get,
-          row("message").map {
-            case StringValue(l) => l
-            case _ => "unknown"
-          }.get)
-      )
+      .map(row => {
+        val IntValue(id) = row("id").get
+        val StringValue(message) = row("message").get
+        Fortune(id, message)
+      })
     case _ => Seq.empty
   }
 
-  val databaseService = Mysql.client
+  private val databaseService = Mysql.client
     .withCredentials("benchmarkdbuser", "benchmarkdbpass")
     .withDatabase("hello_world")
     .configured(Param(low = 0, high = 10, idleTime = fromSeconds(5 * 60), bufferSize = 0, maxWaiters = Int.MaxValue))
@@ -43,9 +37,9 @@ object Fortunes {
     .withMaxConcurrentPrepareStatements(256)
     .newClient("localhost:3306")
 
-  val statement = QueryRequest("SELECT * FROM Fortune")
+  private val statement = QueryRequest("SELECT * FROM Fortune")
 
-  val service = new RenderView(Html.ResponseBuilder, CachingClasspath()).andThen(
+  private val service = new RenderView(Html.ResponseBuilder, CachingClasspath()).andThen(
     Service.mk {
       r: Request =>
         databaseService()

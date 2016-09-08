@@ -4,10 +4,9 @@ import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status.Ok
 import io.fintrospect.RouteSpec
 import io.fintrospect.formats.json.Circe.JsonFormat.{obj, string}
+import io.fintrospect.formats.json.Circe.ResponseBuilder.implicits._
 
 object JsonHelloWorld {
-
-  import io.fintrospect.formats.json.Circe.ResponseBuilder.implicits._
 
   private val service = Service.mk { r: Request => Ok(obj("message" -> string("Hello, World!"))) }
 

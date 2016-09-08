@@ -4,9 +4,9 @@ import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status.Ok
 import com.twitter.io.Buf
 import io.fintrospect.RouteSpec
+import io.fintrospect.formats.PlainText.ResponseBuilder.implicits._
 
 object PlainTextHelloWorld {
-  import io.fintrospect.formats.PlainText.ResponseBuilder.implicits._
 
   private val preallocatedMsgForPlainText = Buf.Utf8("Hello, World!")
 
