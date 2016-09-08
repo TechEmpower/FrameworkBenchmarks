@@ -1,7 +1,7 @@
 import com.twitter.finagle.client.DefaultPool.Param
 import com.twitter.finagle.http.Method.Get
 import com.twitter.finagle.http.Request
-import com.twitter.finagle.mysql.{IntValue, QueryRequest, Result, ResultSet, StringValue}
+import com.twitter.finagle.mysql.{IntValue, Result, ResultSet, StringValue}
 import com.twitter.finagle.stats.NullStatsReceiver
 import com.twitter.finagle.tracing.NullTracer
 import com.twitter.finagle.{Mysql, Service}
@@ -27,7 +27,7 @@ object Fortunes {
     case _ => Seq.empty
   }
 
-  private val databaseService = Mysql.client
+  private val dbClient = Mysql.client
     .withCredentials("benchmarkdbuser", "benchmarkdbpass")
     .withDatabase("hello_world")
     .configured(Param(low = 0, high = 10, idleTime = fromSeconds(5 * 60), bufferSize = 0, maxWaiters = Int.MaxValue))
@@ -35,19 +35,14 @@ object Fortunes {
     .withMonitor(NullMonitor)
     .withTracer(NullTracer)
     .withMaxConcurrentPrepareStatements(256)
-    .newClient("localhost:3306")
+    .newRichClient("localhost:3306")
 
-  private val statement = QueryRequest("SELECT * FROM Fortune")
+  private val statement = dbClient.prepare("SELECT * FROM Fortune")
 
   private val service = new RenderView(Html.ResponseBuilder, CachingClasspath()).andThen(
     Service.mk {
       r: Request =>
-        databaseService()
-          .flatMap {
-            service => service(statement).map(toFortunes) ensure {
-              service.close()
-            }
-          }.map(f => {
+        statement().map(toFortunes).map(f => {
           val sortedFortunes = (Fortune(-1, "Additional fortune added at request time.") +: f).sortBy(_.message)
           FortunesList(sortedFortunes)
         })
