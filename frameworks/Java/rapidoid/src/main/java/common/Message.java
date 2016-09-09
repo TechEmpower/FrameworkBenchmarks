@@ -1,4 +1,4 @@
-package hello;
+package common;
 
 public class Message {
 
