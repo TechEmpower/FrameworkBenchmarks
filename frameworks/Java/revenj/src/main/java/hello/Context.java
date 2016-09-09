@@ -57,8 +57,9 @@ class Context {
 		return random.nextInt(10000) + 1;
 	}
 
+	/* bulk loading of worlds. use such pattern for production code */
 	@SuppressWarnings("unchecked")
-	public World[] loadWorlds(final int count) throws IOException {
+	public World[] loadWorldsFast(final int count) throws IOException {
 		bulkReader.reset();
 		for (int i = 0; i < count; i++) {
 			callables[i] = bulkReader.find(World.class, Integer.toString(getRandom10k()));
@@ -70,6 +71,15 @@ class Context {
 			}
 		} catch (Exception e) {
 			throw new IOException(e);
+		}
+		return buffer;
+	}
+
+	/* multiple roundtrips loading of worlds. don't write such production code */
+	@SuppressWarnings("unchecked")
+	public World[] loadWorldsSlow(final int count) throws IOException {
+		for (int i = 0; i < count; i++) {
+			buffer[i] = worlds.find(getRandom10k(), connection).get();
 		}
 		return buffer;
 	}

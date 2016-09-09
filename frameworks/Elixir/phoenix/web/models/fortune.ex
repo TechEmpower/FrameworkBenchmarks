@@ -6,11 +6,11 @@ defmodule Hello.Fortune do
     field :message, :string
   end
 
-  @required_fields ~w(message)
+  @required_fields ~w(message)a
   @optional_fields ~w()
 
-  def changeset(model, params \\ nil) do
+  def changeset(model, params \\ %{}) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, @required_fields)
   end
 end
