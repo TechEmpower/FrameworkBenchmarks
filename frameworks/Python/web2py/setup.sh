@@ -2,13 +2,18 @@
 
 fw_depends python2
 
-sed -i 's|127.0.0.1|'${DBHOST}'|g' app/app/models/db.py
-
 pip install --install-option="--prefix=${PY2_ROOT}" -r $TROOT/requirements.txt
 
 rm -fr web2py
-git clone --recursive --branch R-2.10.3 https://github.com/web2py/web2py.git 
-cp -r app/app/ web2py/applications/
+git clone --recursive --branch master https://github.com/web2py/web2py.git
+cd web2py
+git checkout 326335c3cd027a97b9c2b83d880b2b1f8f62321d
+cd ..
+cp -r app/standard/ web2py/applications/
+cp -r app/optimized/ web2py/applications/
+cp app/wsgi.py web2py/
 cp app/routes.py web2py/
+touch web2py/__init__.py
+python compile_apps.py
 
-python web2py/web2py.py -a '' -i 0.0.0.0 -p 8080  &
+gunicorn web2py.wsgi:application -c gunicorn_conf.py &
