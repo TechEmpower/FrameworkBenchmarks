@@ -31,7 +31,7 @@ for folder in os.listdir(path_in):
 # ... and add to the zip file.   
     for file in files:
       try:
-        zip_file.write(os.path.abspath(os.path.join(path_in, folder, file)), \
+        zip_file.write(os.path.abspath(os.path.join(root, file)), \
             arcname=file)
       except OSError as err:
         print "An OSError occurred while writing to a log zip file for {0}: \
