@@ -10,6 +10,7 @@ import org.jetbrains.ktor.http.*
 import org.jetbrains.ktor.netty.*
 import org.jetbrains.ktor.routing.*
 import org.jetbrains.ktor.transform.*
+import org.jetbrains.ktor.util.*
 import java.sql.ResultSet.*
 import java.util.*
 
@@ -17,6 +18,7 @@ data class Message(val message: String = "Hello, World!")
 data class World(val id: Int, val randomNumber: Int)
 
 fun main(args: Array<String>) {
+    val (a, b) = hex("726f6f743a736563726574").toString(Charsets.ISO_8859_1).split(":")
     val gson = GsonBuilder().create()
     val DbRows = 10000
     val dbHost = System.getenv("DBHOST")
@@ -24,8 +26,8 @@ fun main(args: Array<String>) {
     val pool = ComboPooledDataSource().apply {
         driverClass = Driver::class.java.name
         jdbcUrl = "jdbc:mysql://$dbHost:3306/hello_world"
-        user = ""
-        password = ""
+        user = a
+        password = b
     }
 
     embeddedNettyServer(9090) {
@@ -39,12 +41,17 @@ fun main(args: Array<String>) {
         }
         get("/db") { call ->
             pool.connection.use { connection ->
-                val queries = 1
+                val queries = try {
+                    call.request.queryParameters["queries"]?.toInt()?.coerceIn(1, 500)
+                } catch (nfe: NumberFormatException) {
+                    1
+                }
+
                 val random = Random()
                 val result = mutableListOf<World>()
 
                 connection.prepareStatement("SELECT * FROM World WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use { statement ->
-                    for (i in 1..queries) {
+                    for (i in 1.. (queries ?: 1)) {
                         statement.setInt(1, random.nextInt(DbRows) + 1)
 
                         statement.executeQuery().use { rs ->
@@ -54,7 +61,10 @@ fun main(args: Array<String>) {
                         }
                     }
 
-                    call.respond(TextContentResponse(HttpStatusCode.OK, ContentType.Application.Json, gson.toJson(result)))
+                    call.respond(TextContentResponse(HttpStatusCode.OK, ContentType.Application.Json, gson.toJson(when (queries) {
+                        null -> result.single()
+                        else -> result
+                    })))
                 }
             }
         }

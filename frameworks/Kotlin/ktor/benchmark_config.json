@@ -6,6 +6,7 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "db_url": "/db",
+        "query_url": "/db?queries=",
 
         "port": 9090,
         "setup_file": "setup",
