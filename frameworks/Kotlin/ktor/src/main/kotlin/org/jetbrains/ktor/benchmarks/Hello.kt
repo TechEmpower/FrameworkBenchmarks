@@ -1,17 +1,32 @@
 package org.jetbrains.ktor.benchmarks
 
 import com.google.gson.*
+import com.mchange.v2.c3p0.*
+import com.mysql.cj.jdbc.*
+import kotlinx.support.jdk7.*
 import org.jetbrains.ktor.features.*
 import org.jetbrains.ktor.features.http.*
 import org.jetbrains.ktor.http.*
 import org.jetbrains.ktor.netty.*
 import org.jetbrains.ktor.routing.*
 import org.jetbrains.ktor.transform.*
+import java.sql.ResultSet.*
+import java.util.*
 
 data class Message(val message: String = "Hello, World!")
+data class World(val id: Int, val randomNumber: Int)
 
 fun main(args: Array<String>) {
     val gson = GsonBuilder().create()
+    val DbRows = 10000
+    val dbHost = System.getenv("DBHOST")
+    Driver::class.java.newInstance()
+    val pool = ComboPooledDataSource().apply {
+        driverClass = Driver::class.java.name
+        jdbcUrl = "jdbc:mysql://$dbHost:3306/hello_world"
+        user = ""
+        password = ""
+    }
 
     embeddedNettyServer(9090) {
         application.install(DefaultHeaders)
@@ -21,6 +36,27 @@ fun main(args: Array<String>) {
         }
         get("/json") { call ->
             call.respond(TextContentResponse(HttpStatusCode.OK, ContentType.Application.Json, gson.toJson(Message())))
+        }
+        get("/db") { call ->
+            pool.connection.use { connection ->
+                val queries = 1
+                val random = Random()
+                val result = mutableListOf<World>()
+
+                connection.prepareStatement("SELECT * FROM World WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use { statement ->
+                    for (i in 1..queries) {
+                        statement.setInt(1, random.nextInt(DbRows) + 1)
+
+                        statement.executeQuery().use { rs ->
+                            while (rs.next()) {
+                                result += World(rs.getInt("id"), rs.getInt("randomNumber"))
+                            }
+                        }
+                    }
+
+                    call.respond(TextContentResponse(HttpStatusCode.OK, ContentType.Application.Json, gson.toJson(result)))
+                }
+            }
         }
     }.start(true)
 }

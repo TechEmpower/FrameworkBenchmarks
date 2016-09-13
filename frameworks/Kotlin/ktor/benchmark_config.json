@@ -5,11 +5,13 @@
       "default": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
+        "db_url": "/db",
+
         "port": 9090,
         "setup_file": "setup",
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "None",
+        "database": "MySQL",
         "framework": "ktor",
         "language": "Kotlin",
         "orm": "Raw",
