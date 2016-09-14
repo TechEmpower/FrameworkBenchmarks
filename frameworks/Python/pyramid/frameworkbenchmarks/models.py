@@ -49,7 +49,7 @@ class SQLAlchemyEncoder(json.JSONEncoder):
 
 
 class World(DatabaseBase):
-    __tablename__ = 'World'
+    __tablename__ = 'world'
 
     id = Column('id', Integer, primary_key=True)
     randomNumber = Column('randomnumber', Integer, nullable=False, server_default='0')
@@ -59,7 +59,7 @@ class World(DatabaseBase):
 
 
 class Fortune(DatabaseBase):
-    __tablename__ = 'Fortune'
+    __tablename__ = 'fortune'
 
     id = Column('id', Integer, primary_key=True)
     message = Column('message', String, nullable=False)
