@@ -1,0 +1,31 @@
+[Defaults]
+# Available Keys: 
+client_host=127.0.0.1
+client_identity_file=None
+client_user=techempower
+runner_user=testrunner
+database_host=127.0.0.1
+database_identity_file=None
+database_os=linux
+database_user=techempower
+duration=60
+exclude=None
+install=server
+install_error_action=continue
+install_strategy=unified
+install_only=False
+list_test_metadata=False
+list_tests=False
+concurrency_levels=[8, 16, 32, 64, 128, 256]
+query_levels=[1, 5,10,15,20]
+threads=8
+mode=benchmark
+os=linux
+password_prompt=False
+server_host=127.0.0.1
+sleep=60
+test=None
+type=all
+verbose=True
+clean=False
+clean_all=False
