@@ -17,6 +17,6 @@ cp -r app/optimized/ web2py/applications/
 cp app/wsgi.py web2py/
 cp app/routes.py web2py/
 touch web2py/__init__.py
-$PY2_ROOT/bin/python compile_apps.py
+python compile_apps.py
 
 gunicorn web2py.wsgi:application -c gunicorn_conf.py &
