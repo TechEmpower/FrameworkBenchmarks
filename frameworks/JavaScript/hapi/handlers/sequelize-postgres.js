@@ -16,7 +16,8 @@ var Worlds = sequelize.define('World', {
   randomnumber: { type: 'Sequelize.INTEGER' }
 }, {
   timestamps: false,
-  freezeTableName: true
+  freezeTableName: true,
+  tableName: 'world'
 });
 
 var Fortunes = sequelize.define('Fortune', {
@@ -24,7 +25,8 @@ var Fortunes = sequelize.define('Fortune', {
   message:      { type: 'Sequelize.STRING' }
 }, {
   timestamps: false,
-  freezeTableName: true
+  freezeTableName: true,
+  tableName: 'fortune'
 });
 
 var randomWorldPromise = function() {
@@ -74,7 +76,7 @@ module.exports = {
         .header('Server', 'hapi');
     }).catch(function (err) {
       process.exit(1);
-    }); 
+    });
   },
 
   Updates: function (req, reply) {
