@@ -13,7 +13,7 @@
             "language": "Java",
             "flavor": "Java8",
             "orm": "Raw",
-            "platform": "None",
+            "platform": "Bayou",
             "webserver": "None",
             "os": "Linux",
             "database_os": "Linux",

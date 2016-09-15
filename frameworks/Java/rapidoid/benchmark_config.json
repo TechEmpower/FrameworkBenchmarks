@@ -9,14 +9,15 @@
       "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
-      "framework": "rapidoid",
+      "framework": "None",
       "language": "Java",
+      "flavor": "Java8",
       "orm": "Raw",
       "platform": "Rapidoid",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rapidoid",
+      "display_name": "Rapidoid",
       "notes": "",
       "versus": "rapidoid"
     }

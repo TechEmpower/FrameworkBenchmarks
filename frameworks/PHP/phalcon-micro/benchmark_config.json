@@ -14,7 +14,7 @@
       "framework": "phalcon",
       "language": "PHP",
       "flavor": "PHP7",
-      "orm": "Full",
+      "orm": "raw",
       "platform": "None",
       "webserver": "nginx",
       "os": "Linux",

@@ -13,7 +13,7 @@
       "flavor": "Java8",
       "language": "Java",
       "orm": "Raw",
-      "platform": "None",
+      "platform": "JLHTTP",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",

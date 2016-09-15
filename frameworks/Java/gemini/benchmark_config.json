@@ -14,7 +14,7 @@
       "flavor": "Java8",
       "orm": "Micro",
       "platform": "Servlet",
-      "webserver": "None",
+      "webserver": "Resin",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Gemini",

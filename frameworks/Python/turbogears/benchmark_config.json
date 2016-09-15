@@ -15,6 +15,7 @@
       "database": "MySQL",
       "framework": "TurboGears",
       "language": "Python",
+      "flavor": "Python2",
       "orm": "Full",
       "platform": "Meinheld",
       "webserver": "None",
