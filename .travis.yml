@@ -186,7 +186,6 @@ env:
     - "TESTDIR=Scala/finatra"
     - "TESTDIR=Scala/fintrospect"
     - "TESTDIR=Scala/lift-stateless"
-    - "TESTDIR=Scala/plain"
     - "TESTDIR=Scala/play2-scala"
     - "TESTDIR=Scala/scalatra"
     - "TESTDIR=Scala/scruffy"
