@@ -1,7 +1,5 @@
-./rapidoid/src/
-./rapidoid/src/main
-./rapidoid/src/main/java
-./rapidoid/src/main/java/hello
-./rapidoid/src/main/java/hello/HelloWebServer.java
-./rapidoid/src/main/java/hello/SimpleHttpProtocol.java
-./rapidoid/src/main/java/hello/Message.java
+./rapidoid/src/main/java/common
+./rapidoid/src/main/java/common/Message.java
+./rapidoid/src/main/java/lowlevel
+./rapidoid/src/main/java/lowlevel/Main.java
+./rapidoid/src/main/java/lowlevel/PlaintextAndJsonServer.java
