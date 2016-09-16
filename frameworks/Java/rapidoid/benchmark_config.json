@@ -2,7 +2,7 @@
   "framework": "rapidoid",
   "tests": [
     {
-      "http-fast": {
+      "default": {
         "setup_file": "setup-low-level",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
