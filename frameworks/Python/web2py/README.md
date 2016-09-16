@@ -8,7 +8,7 @@ review the [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/
 Also note that there is additional information provided in
 the [Python README](../).
 
-There are two sets of web2py tests, "web2py-standard" (the default) and "web2py-optimized". The former set is implemented via standard web2py production code. The latter involves several special optimizations that would not be typical of a web2py application but could be implemented in cases were performance is critical.
+There are two sets of web2py tests, "web2py-standard" (the default) and "web2py-optimized". The former set is implemented via standard web2py production code. The latter involves several special optimizations that would not be typical of a web2py application but could be implemented in cases where performance is critical.
 
 ## Web Server and Database Client Software
 

@@ -34,8 +34,6 @@ def updates():
     update_world = db.update_world
     r10k = partial(randint, 1, 10000)
     worlds = []
-    #ids = [r10k() for _ in xrange(num_queries)]
-    #ids.sort() # To avoid deadlock
     for wid in (r10k() for _ in xrange(num_queries(current.request.vars.queries))):
         world = get_world(wid)
         newNumber = r10k()
