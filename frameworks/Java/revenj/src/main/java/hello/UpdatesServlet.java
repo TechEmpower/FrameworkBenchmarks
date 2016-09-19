@@ -18,7 +18,7 @@ public class UpdatesServlet extends HttpServlet {
 		final int count = Utils.parseBoundParam(req);
 		final Context ctx = Utils.getContext();
 		final JsonWriter json = ctx.json;
-		final World[] worlds = ctx.loadWorlds(count);
+		final World[] worlds = ctx.loadWorldsSlow(count);
 		final ArrayList<World> changed = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
 			changed.add(worlds[i].setRandomNumber(ctx.getRandom10k()));
