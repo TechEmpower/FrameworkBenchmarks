@@ -30,7 +30,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <pippo.version>0.9.0-SNAPSHOT</pippo.version>
+    <pippo.version>0.9.1</pippo.version>
     <java.version>1.8</java.version>
 
     <dbcp.version>2.1.1</dbcp.version>
