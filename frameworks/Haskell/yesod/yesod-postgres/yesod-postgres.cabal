@@ -1,9 +1,9 @@
-name:              bench
+name:              yesod-postgres
 version:           0.0.0
 cabal-version:     >= 1.8
 build-type:        Simple
 
-executable         bench
+executable         yesod-postgres
     main-is:           Main.hs
     hs-source-dirs:    src
 
