@@ -10,7 +10,7 @@ RETCODE=$(fw_exists ${IROOT}/ruby-2.2.installed)
 
 # rvm stable [typically] only provides one version of ruby-2.2
 # update this when it changes
-MRI_VERSION=2.2.1
+MRI_VERSION=2.2.2
 
 # We assume single-user installation as
 # done in our rvm.sh script and
