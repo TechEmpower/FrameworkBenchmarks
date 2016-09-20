@@ -198,7 +198,7 @@ class Benchmarker:
   # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_output_file(self, test_name, test_type):
-    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "raw")
+    return os.path.join(self.result_directory, self.timestamp, self.logs_directory, test_name, test_type, "raw")
   ############################################################
   # End get_output_file
   ############################################################
@@ -226,7 +226,7 @@ class Benchmarker:
   # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_stats_file(self, test_name, test_type):
-    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "stats")
+    return os.path.join(self.result_directory, self.timestamp, self.logs_directory, test_name, test_type, "stats")
   ############################################################
   # End get_stats_file
   ############################################################
@@ -262,28 +262,6 @@ class Benchmarker:
   ############################################################
   # End full_results_directory
   ############################################################
-
-  ############################################################
-  # Latest intermediate results dirctory
-  ############################################################
-
-  def latest_results_directory(self):
-    path = os.path.join(self.result_directory,"latest")
-    try:
-      os.makedirs(path)
-    except OSError:
-      pass
-
-    # Give testrunner permission to write into results directory
-    # so LOGDIR param always works in setup.sh
-    # While 775 is more preferrable, we would have to ensure that
-    # testrunner is in the group of the current user
-    if not self.os.lower() == 'windows':
-      mode777 = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
-                stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
-                stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
-      os.chmod(path, mode777)
-    return path
 
   ############################################################
   # report_verify_results
@@ -516,8 +494,7 @@ class Benchmarker:
       else:
         sys.exit(code)
 
-    logDir = os.path.join(self.latest_results_directory, 'logs', test.name.lower())
-
+    logDir = os.path.join(self.full_results_directory(), self.logs_directory, test.name.lower())
     try:
       os.makedirs(logDir)
     except Exception:
@@ -603,12 +580,7 @@ class Benchmarker:
         # Verify URLs
         ##########################
         logging.info("Verifying framework URLs")
-        verificationPath = os.path.join(logDir,"verification")
-        try:
-          os.makedirs(verificationPath)
-        except OSError:
-          pass
-        passed_verify = test.verify_urls(verificationPath)
+        passed_verify = test.verify_urls(logDir)
 
         ##########################
         # Benchmark this test
@@ -617,12 +589,7 @@ class Benchmarker:
           logging.info("Benchmarking")
           out.write(header("Benchmarking %s" % test.name))
           out.flush()
-          benchmarkPath = os.path.join(logDir,"benchmark")
-          try:
-            os.makedirs(benchmarkPath)
-          except OSError:
-            pass
-          test.benchmark(benchmarkPath)
+          test.benchmark(logDir)
 
         ##########################
         # Stop this test
@@ -765,9 +732,6 @@ class Benchmarker:
     with open(os.path.join(self.full_results_directory(), "results.json"), "w") as f:
       f.write(json.dumps(self.results, indent=2))
 
-    with open(os.path.join(self.latest_results_directory, "results.json"), "w") as latest:
-      latest.write(json.dumps(self.results, indent=2))
-
   ############################################################
   # End __parse_results
   ############################################################
@@ -868,7 +832,7 @@ class Benchmarker:
   def __write_intermediate_results(self,test_name,status_message):
     try:
       self.results["completed"][test_name] = status_message
-      with open(os.path.join(self.latest_results_directory, 'results.json'), 'w') as f:
+      with open(os.path.join(self.full_results_directory(), 'results.json'), 'w') as f:
         f.write(json.dumps(self.results, indent=2))
     except (IOError):
       logging.error("Error writing results.json")
@@ -879,7 +843,7 @@ class Benchmarker:
 
   def __load_results(self):
     try:
-      with open(os.path.join(self.latest_results_directory, 'results.json')) as f:
+      with open(os.path.join(self.full_results_directory(), 'results.json')) as f:
         self.results = json.load(f)
     except (ValueError, IOError):
       pass
@@ -967,9 +931,9 @@ class Benchmarker:
 
     # setup results and latest_results directories
     self.result_directory = os.path.join("results")
+    self.logs_directory = os.path.join("logs")
     if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
         shutil.rmtree(os.path.join(self.fwroot, "results"))
-    self.latest_results_directory = self.latest_results_directory()
 
     # remove installs directories if --clean-all provided
     self.install_root = "%s/%s" % (self.fwroot, "installs")
@@ -984,7 +948,7 @@ class Benchmarker:
 
     self.results = None
     try:
-      with open(os.path.join(self.latest_results_directory, 'results.json'), 'r') as f:
+      with open(os.path.join(self.full_results_directory(), 'results.json'), 'r') as f:
         #Load json file into results object
         self.results = json.load(f)
     except IOError:
