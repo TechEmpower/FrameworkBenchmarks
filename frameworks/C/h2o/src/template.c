@@ -46,7 +46,10 @@ static uintmax_t read_template(mustache_api_t *api,
                                void *userdata,
                                char *buffer,
                                uintmax_t buffer_size);
-static void template_error(mustache_api_t *api, void *userdata, uintmax_t lineno, char *error);
+static void template_error(mustache_api_t *api,
+                           void *userdata,
+                           uintmax_t lineno,
+                           const char *error);
 
 static uintmax_t prerender_section(mustache_api_t *api,
                                    void *userdata,
@@ -101,7 +104,10 @@ static uintmax_t read_template(mustache_api_t *api,
 	return fread(buffer, sizeof(*buffer), buffer_size, template_input->input);
 }
 
-static void template_error(mustache_api_t *api, void *userdata, uintmax_t lineno, char *error)
+static void template_error(mustache_api_t *api,
+                           void *userdata,
+                           uintmax_t lineno,
+                           const char *error)
 {
 	IGNORE_FUNCTION_PARAMETER(api);
 

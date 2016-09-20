@@ -28,9 +28,9 @@
 
 typedef struct {
 	list_t l;
-	PGresult *data;
 	h2o_iovec_t id;
 	h2o_iovec_t message;
+	char data[];
 } fortune_t;
 
 int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req);

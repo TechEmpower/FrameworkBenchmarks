@@ -6,19 +6,19 @@
 # how databases are configured for Travis.
 #
 # Note on Compatibility: TFB *only* supports Ubuntu 14.04 64bit
-# (e.g. trusty64). However, it's nice to retain 12.04 support 
-# where possible, as it's still heavily used. 
+# (e.g. trusty64). However, it's nice to retain 12.04 support
+# where possible, as it's still heavily used.
 #
-# Database setup is one core area where we can help ensure TFB 
-# works on 12.04 with minimal frustration. In some cases we  
-# manually install the DB version that's expected, instead of the 
-# 12.04 default. In other cases we can use a 12.04 specific 
-# configuration file. These patches are not intended to enable 
-# benchmarking (e.g. there are no guarantees that 
-# the databases will be tuned for performance correctly), but 
-# they do allow users on 12.04 to install and run most TFB tests. 
-# Some tests internally have 12.04 incompatibilities, we make no 
-# concentrated effort to address these cases, but PR's for specific 
+# Database setup is one core area where we can help ensure TFB
+# works on 12.04 with minimal frustration. In some cases we
+# manually install the DB version that's expected, instead of the
+# 12.04 default. In other cases we can use a 12.04 specific
+# configuration file. These patches are not intended to enable
+# benchmarking (e.g. there are no guarantees that
+# the databases will be tuned for performance correctly), but
+# they do allow users on 12.04 to install and run most TFB tests.
+# Some tests internally have 12.04 incompatibilities, we make no
+# concentrated effort to address these cases, but PR's for specific
 # problems are welcome
 
 set -x
@@ -95,37 +95,36 @@ rm create.sql
 
 ##############################
 # Postgres
+# Version: 9.*
 ##############################
-echo "Setting up Postgres database"
-if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
-  echo "WARNING: Force upgrading Postgres for Ubuntu 12.04"
-  sudo apt-get remove -y postgresql postgresql-9.1 postgresql-client-9.1
 
-  echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-  #wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-  curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-  sudo apt-get update
-  sudo apt-get install -y postgresql-9.3 postgresql-client-9.3
-  sudo service postgresql start
-fi
+echo "Setting up Postgres database"
+
+# This will support all 9.* versions depending on the machine
+PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`
+
 sudo service postgresql stop
+
 # Sometimes this doesn't work with postgresql
 sudo killall -s 9 -u postgres
-sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
-sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+sudo mv postgresql.conf /etc/postgresql/${PG_VERSION}/main/postgresql.conf
+sudo mv pg_hba.conf /etc/postgresql/${PG_VERSION}/main/pg_hba.conf
+
+# Make sure all the configuration files in main belong to postgres
+sudo chown -Rf postgres:postgres /etc/postgresql/${PG_VERSION}/main
 
 sudo rm -rf /ssd/postgresql
-sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
+sudo cp -R -p /var/lib/postgresql/${PG_VERSION}/main /ssd/postgresql
 sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
+
+sudo chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf
+sudo chown postgres:postgres create-postgres*
 
 sudo service postgresql start
 
 sudo -u postgres psql template1 < create-postgres-database.sql
 sudo -u postgres psql hello_world < create-postgres.sql
-rm create-postgres-database.sql create-postgres.sql
-# Last chance to make sure postgresql starts up correctly
-sudo killall -s 9 -u postgres
-sudo service postgresql restart
+sudo rm create-postgres-database.sql create-postgres.sql
 
 ##############################
 # MongoDB
@@ -251,7 +250,7 @@ echo "Setting up Redis database"
 if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
   echo "WARNING: Downgrading Redis configuration for Ubuntu 12.04"
 
-  # On 12.04, Redis 2.4 is installed. It doesn't support 
+  # On 12.04, Redis 2.4 is installed. It doesn't support
   # some of the 2.6 options, so we have to remove or comment
   # those
   sed -i 's/tcp-keepalive/# tcp-keepalive/' redis.conf
@@ -262,7 +261,7 @@ if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
   sed -i 's/slave-priority/# slave-priority/' redis.conf
   sed -i 's/auto-aof-rewrite-percentage/# auto-aof-rewrite-percentage/' redis.conf
   sed -i 's/auto-aof-rewrite-min-size/# auto-aof-rewrite-min-size/' redis.conf
-  
+
   sed -i 's/lua-time-limit/# lua-time-limit/' redis.conf
   sed -i 's/notify-keyspace-events/# notify-keyspace-events/' redis.conf
   sed -i 's/hash-max-ziplist-entries/# hash-max-ziplist-entries/' redis.conf
@@ -270,7 +269,7 @@ if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
   sed -i 's/zset-max-ziplist-entries/# zset-max-ziplist-entries/' redis.conf
   sed -i 's/zset-max-ziplist-value/# zset-max-ziplist-value/' redis.conf
   sed -i 's/client-output-buffer-limit/# client-output-buffer-limit/' redis.conf
- 
+
   sed -i 's/hz 10/# hz 10/' redis.conf
   sed -i 's/aof-rewrite-incremental-fsync/# aof-rewrite-incremental-fsync/' redis.conf
 fi

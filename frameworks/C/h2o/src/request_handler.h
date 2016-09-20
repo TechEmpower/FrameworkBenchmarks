@@ -46,6 +46,8 @@ void register_request_handlers(h2o_hostconf_t *hostconf, h2o_access_log_filehand
 void send_error(http_status_code_t status_code, const char *body, h2o_req_t *req);
 int send_json_response(yajl_gen gen, h2o_generator_t *h2o_generator, h2o_req_t *req);
 void send_service_unavailable_error(const char *body, h2o_req_t *req);
-void set_default_response_param(content_type_t content_type, h2o_req_t *req);
+void set_default_response_param(content_type_t content_type,
+                                size_t content_length,
+                                h2o_req_t *req);
 
 #endif // REQUEST_H_

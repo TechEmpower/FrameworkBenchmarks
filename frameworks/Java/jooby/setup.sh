@@ -2,6 +2,8 @@
 
 fw_depends java maven
 
+sed -i 's|localhost|'"${DBHOST}"'|g' conf/application.conf
+
 mvn clean package
 
 cd target
