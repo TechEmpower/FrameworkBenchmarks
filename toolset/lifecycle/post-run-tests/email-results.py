@@ -61,6 +61,18 @@ encoders.encode_base64(resultsZipped)
 resultsZipped.add_header('Content-Disposition', 'attachment', \
   filename='results.json.zip')
 message.attach(resultsZipped)
+
+#
+# Attach the .commit file
+#
+commitFileLocation = os.environ['TFB_REPONAME'] +   "results/.commit"
+attachment = MIMEBase('application', 'octet-stream')
+attachment.set_payload(open(commitFileLocation, "rb").read())
+encoders.encode_base64(attachment)
+attachment.add_header('Content-Disposition', 'attachment; filename=".commit"')
+message.attach(attachment)
+
+
 #
 # Send the message and close the collection
 #
