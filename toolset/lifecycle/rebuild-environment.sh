@@ -13,5 +13,9 @@ cd $TFB_REPOPARENT/$TFB_REPONAME
 #
 # save the current git commit to results/.commit
 #
+echo "Saving current git commit to results directory..."
+GIT_COMMIT=$(git rev-parse HEAD)
 mkdir -p results
-git rev-parse HEAD > results/.commit
+echo $GIT_COMMIT > results/.commit
+echo "Using commit: " $GIT_COMMIT
+
