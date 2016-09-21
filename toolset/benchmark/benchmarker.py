@@ -79,8 +79,6 @@ class Benchmarker:
     with open(os.path.join(self.full_results_directory(), "test_metadata.json"), "w") as f:
       f.write(all_tests_json)
 
-    self.__finish()
-
 
   ############################################################
   # End run_list_test_metadata
@@ -113,11 +111,14 @@ class Benchmarker:
   ############################################################
   def run(self):
     ##########################
+    # Generate metadata
+    ##########################
+    self.run_list_test_metadata()
+    ##########################
     # Get a list of all known
     # tests that we can run.
     ##########################
     all_tests = self.__gather_tests
-
     ##########################
     # Setup client/server
     ##########################
@@ -142,6 +143,7 @@ class Benchmarker:
     if self.mode == "benchmark":
       print header("Parsing Results ...", top='=', bottom='=')
       self.__parse_results(all_tests)
+
 
     self.__finish()
     return result
