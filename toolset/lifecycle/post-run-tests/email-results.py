@@ -65,7 +65,9 @@ message.attach(resultsZipped)
 #
 # Attach the .commit file
 #
-commitFileLocation = os.environ['TFB_REPONAME'] +   "/results/.commit"
+
+commitFileLocation = os.environ['TFB_REPOPARENT'] + "/" \
+    + os.environ['TFB_REPONAME'] + "/results/.commit"
 attachment = MIMEBase('application', 'octet-stream')
 attachment.set_payload(open(commitFileLocation, "rb").read())
 encoders.encode_base64(attachment)
