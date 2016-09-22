@@ -20,7 +20,7 @@ import tempfile
 # Set up the email to be sent to the mailing list
 #
 message = MIMEMultipart()
-message['From'] = os.environ['TFB_MAILINGLIST']
+message['From'] = os.environ['TFB_MAILING_FROM']
 message['To'] = os.environ['TFB_MAILINGLIST']
 message['Date'] = formatdate(localtime=True)
 message['Subject'] = subprocess.check_output(["git", "describe", "--always"])
@@ -43,7 +43,7 @@ temporaryFile.seek(0)
 #Set up the email to be sent to the mailing list
 #
 message = MIMEMultipart()
-message['From'] = os.environ['TFB_MAILINGLIST']
+message['From'] = os.environ['TFB_MAILING_FROM']
 message['To'] = os.environ['TFB_MAILINGLIST']
 message['Date'] = formatdate(localtime=True)
 message['Subject'] = subprocess.check_output(["git", "describe", "--always"])
@@ -79,6 +79,6 @@ message.attach(attachment)
 # Send the message and close the collection
 #
 smtp = smtplib.SMTP('smtp.techempower.com')
-smtp.sendmail(os.environ['TFB_MAILINGLIST'], os.environ['TFB_MAILINGLIST'], \
+smtp.sendmail(os.environ['TFB_MAILING_FROM'], os.environ['TFB_MAILINGLIST'], \
     message.as_string())
 smtp.close()
