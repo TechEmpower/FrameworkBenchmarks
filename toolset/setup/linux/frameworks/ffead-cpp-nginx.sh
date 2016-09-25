@@ -12,8 +12,7 @@ sudo make install
 sudo apt-get install build-essential
 sudo apt-get install -y uuid-dev libmyodbc odbc-postgresql
 
-#fw_get -o ffead-cpp-2.0.tar.gz https://github.com/sumeetchhetri/ffead-cpp/releases/download/2.0/ffead-cpp-2.0-te-bin.tar.gz
-fw_get -o ffead-cpp-2.0.tar.gz http://localhost:8000/ffead-cpp-2.0-te-bin.tar.gz
+fw_get -o ffead-cpp-2.0.tar.gz https://github.com/sumeetchhetri/ffead-cpp/releases/download/2.0/ffead-cpp-2.0-te-bin.tar.gz
 fw_untar ffead-cpp-2.0.tar.gz
 
 sudo rm -rf ${TROOT}/ffead-cpp-2.0
@@ -38,8 +37,7 @@ sudo cp ${TROOT}/ffead-cpp-2.0/resources/sample-odbc.ini /etc/odbc.ini
 
 sudo sed -i 's|localhost|'${DBHOST}'|g' /etc/odbc.ini
 
-#fw_get -o mongo-c-driver-1.4.0.tar.gz https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
-fw_get -o mongo-c-driver-1.4.0.tar.gz http://localhost:8000/mongo-c-driver-1.4.0.tar.gz
+fw_get -o mongo-c-driver-1.4.0.tar.gz https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
 fw_untar mongo-c-driver-1.4.0.tar.gz
 cd mongo-c-driver-1.4.0/
 ./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup
