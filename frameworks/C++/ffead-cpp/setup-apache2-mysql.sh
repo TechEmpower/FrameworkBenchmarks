@@ -9,8 +9,8 @@ echo $FFEAD_CPP_PATH
 echo $LD_LIBRARY_PATH
 sudo rm -f $FFEAD_CPP_PATH/*.cntrl
 sudo rm -f $FFEAD_CPP_PATH/tmp/*.sess
-sudo cp $FFEAD_CPP_PATH/web/te-benchmark/config/sdormmongo.xml $FFEAD_CPP_PATH/web/te-benchmark/config/sdorm.xml
+sudo cp $FFEAD_CPP_PATH/web/te-benchmark/config/sdormmysql.xml $FFEAD_CPP_PATH/web/te-benchmark/config/sdorm.xml
 sudo rm -rf $FFEAD_CPP_PATH/lib
-sudo cp -Rf $FFEAD_CPP_PATH/libmongo $FFEAD_CPP_PATH/lib
-sudo cp $FFEAD_CPP_PATH/web/te-benchmark/sql-src/TeBkWorldmongo.h $FFEAD_CPP_PATH/web/te-benchmark/include/TeBkWorld.h
+sudo cp -Rf $FFEAD_CPP_PATH/libsql $FFEAD_CPP_PATH/lib
+sudo cp $FFEAD_CPP_PATH/web/te-benchmark/sql-src/TeBkWorldsql.h $FFEAD_CPP_PATH/web/te-benchmark/include/TeBkWorld.h
 sudo /etc/init.d/apache2 restart > ffead.log 2>&1

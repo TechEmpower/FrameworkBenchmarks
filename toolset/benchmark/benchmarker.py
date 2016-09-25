@@ -125,6 +125,7 @@ class Benchmarker:
     self.__setup_server()
     self.__setup_database()
     self.__setup_client()
+    self.__setup_misc()    
 
     ## Check if wrk (and wrk-pipeline) is installed and executable, if not, raise an exception
     #if not (os.access("/usr/local/bin/wrk", os.X_OK) and os.access("/usr/local/bin/wrk-pipeline", os.X_OK)):
@@ -376,6 +377,15 @@ class Benchmarker:
   ############################################################
   # End __setup_server
   ############################################################
+
+  ############################################################
+  # Clean up any processes that run with root privileges
+  ############################################################
+  def __setup_misc(self):
+    p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
+    p.communicate("""
+      sudo /etc/init.d/apache2 stop
+    """)
 
   ############################################################
   # Makes any necessary changes to the database machine that
