@@ -44,7 +44,7 @@ do
   echo Change to benchmark root
   cd $TFB_REPOPARENT/$TFB_REPONAME
   echo Run tests
-  toolset/run-tests.py --mode verify --test gemini
+  toolset/run-tests.py --mode verify --test undertow
   # Handle any postprocessing
   export TFB_TIMESTAMP_RESULTS_DIRECTORY=$(find $TFB_REPOPARENT/$TFB_REPONAME/results -mindepth 1 -maxdepth 1 -type d -name '2*')
   echo Time stamp results directory: $TFB_TIMESTAMP_RESULTS_DIRECTORY
