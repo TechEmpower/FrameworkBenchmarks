@@ -17,14 +17,6 @@ import os
 import subprocess
 import tempfile
 #
-# Set up the email to be sent to the mailing list
-#
-message = MIMEMultipart()
-message['From'] = os.environ['TFB_MAILINGLIST']
-message['To'] = os.environ['TFB_MAILINGLIST']
-message['Date'] = formatdate(localtime=True)
-message['Subject'] = subprocess.check_output(["git", "describe", "--always"])
-#
 # Generate body of email and attach to message
 #
 body = "preview run complete. results attached"
