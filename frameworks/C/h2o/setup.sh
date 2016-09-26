@@ -25,7 +25,7 @@ run_curl()
 
 run_h2o_app()
 {
-	"$1/h2o_app" -a2 -f "$2/template/fortunes.mustache" -m2 "$3" "$4" \
+	"$1/h2o_app" -a2 -f "$2/template/fortunes.mustache" -m8 "$3" "$4" \
 		-d "host=$DBHOST dbname=hello_world user=benchmarkdbuser password=benchmarkdbpass" &
 }
 
