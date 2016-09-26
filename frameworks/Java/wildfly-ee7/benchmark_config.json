@@ -15,7 +15,7 @@
       "database": "MySQL",
       "framework": "None",
       "language": "Java",
-      "flavor": "Java8",
+      "flavor": "None",
       "orm": "Full",
       "platform": "Servlet",
       "webserver": "Wildfly",

@@ -15,7 +15,7 @@
       "database": "Postgres",
       "framework": "Revenj.JVM",
       "language": "Java",
-      "flavor": "Java8",
+      "flavor": "None",
       "orm": "Full",
       "platform": "Servlet",
       "webserver": "Resin",

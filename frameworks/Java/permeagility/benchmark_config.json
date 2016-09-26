@@ -15,7 +15,7 @@
       "database": "None",
       "framework": "None",
       "language": "Java",
-      "flavor": "Java8",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "PermeAgility",
       "webserver": "None",

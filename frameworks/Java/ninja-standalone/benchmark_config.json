@@ -15,7 +15,7 @@
       "database": "MySQL",
       "framework": "ninja",
       "language": "Java",
-      "flavor": "Java8",
+      "flavor": "None",
       "orm": "Full",
       "platform": "Jetty",
       "webserver": "None",

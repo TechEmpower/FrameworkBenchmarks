@@ -11,7 +11,7 @@
       "database": "None",
       "framework": "ChicagoBoss",
       "language": "Erlang",
-      "flavor": "Erlang18",
+      "flavor": "None",
       "orm": "raw",
       "platform": "Cowboy",
       "webserver": "None",

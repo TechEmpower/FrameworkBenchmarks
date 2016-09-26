@@ -12,7 +12,7 @@
       "database": "MySQL",
       "framework": "beego",
       "language": "Go",
-      "flavor": "Go1",
+      "flavor": "None",
       "orm": "Micro",
       "platform": "None",
       "webserver": "None",

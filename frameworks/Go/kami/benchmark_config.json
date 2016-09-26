@@ -15,7 +15,7 @@
       "database": "MySQL",
       "framework": "kami",
       "language": "Go",
-      "flavor": "Go1",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "None",
       "webserver": "None",

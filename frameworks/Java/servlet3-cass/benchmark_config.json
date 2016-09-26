@@ -31,7 +31,7 @@
       "database": "Cassandra",
       "framework": "None",
       "language": "Java",
-      "flavor": "Java8",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "Servlet",
       "webserver": "Resin",

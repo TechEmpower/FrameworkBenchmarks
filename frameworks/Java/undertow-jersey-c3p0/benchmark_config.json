@@ -14,7 +14,7 @@
       "database": "MySQL",
       "framework": "Jersey",
       "language": "Java",
-      "flavor": "Java8",
+      "flavor": "None",
       "orm": "Full",
       "platform": "JAX-RS",
       "webserver": "None",

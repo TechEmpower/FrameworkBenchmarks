@@ -11,7 +11,7 @@
       "database": "None",
       "framework": "aleph",
       "language": "Clojure",
-      "flavor": "Java8",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "Netty",
       "webserver": "None",

@@ -15,7 +15,7 @@
       "database": "MySQL",
       "framework": "gin",
       "language": "Go",
-      "flavor": "Go1",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "None",
       "webserver": "None",
