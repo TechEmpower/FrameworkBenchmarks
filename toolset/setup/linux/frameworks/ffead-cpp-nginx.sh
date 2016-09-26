@@ -1,9 +1,7 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/ffead-cpp.installed)
+RETCODE=$(fw_exists ${IROOT}/ffead-cpp-nginx.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
-
-sudo apt-get remove libodbc1 unixodbc unixodbc-dev
 
 fw_get -o unixODBC-2.3.4.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.4.tar.gz
 fw_untar unixODBC-2.3.4.tar.gz
@@ -22,10 +20,14 @@ cp -R ffead-cpp-2.0-bin/ ${TROOT}
 mv ${TROOT}/ffead-cpp-2.0-bin ${TROOT}/ffead-cpp-2.0
 rm -rf ffead-cpp-2.0/
 
-sudo chown -R testrunner:testrunner ${TROOT}/ffead-cpp-2.0
-sudo chmod -R g+rw ${TROOT}/ffead-cpp-2.0
+fw_get -o nginx-1.11.3.tar.gz http://nginx.org/download/nginx-1.11.3.tar.gz
+fw_untar nginx-1.11.3.tar.gz
+sudo rm -rf ${IROOT}/nginxfc
+cd nginx-1.11.3
+./configure --prefix=${IROOT}/nginxfc --with-ld-opt="-lstdc++ -L${TROOT}/ffead-cpp-2.0/lib -L${IROOT}" --add-module="${TROOT}/ffead-cpp-2.0/ngx_mod" --with-cc-opt="-I${IROOT}/include/libmongoc-1.0/ -I${IROOT}/include/libbson-1.0/ -I${TROOT}/ffead-cpp-2.0/include -w -fpermissive"
+make install
 
-sudo sed -i 's|localhost|'${DBHOST}'|g' ${TROOT}/ffead-cpp-2.0/web/te-benchmark/config/sdorm*
+sed -i 's|localhost|'${DBHOST}'|g' ${TROOT}/ffead-cpp-2.0/web/te-benchmark/config/sdorm*
 
 sudo rm -f /etc/odbcinst.ini
 sudo rm -f /etc/odbc.ini
@@ -41,5 +43,7 @@ cd mongo-c-driver-1.4.0/
 ./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup
 make && sudo make install
 
-touch ${IROOT}/ffead-cpp.installed
+cp ${TROOT}/ffead-cpp-2.0/ngx_mod/nginx.conf ${IROOT}/nginxfc/conf/
+sed -i 's|FFEAD_PATH|'${TROOT}/ffead-cpp-2.0'|g' ${IROOT}/nginxfc/conf/nginx.conf
 
+touch ${IROOT}/ffead-cpp-nginx.installed
