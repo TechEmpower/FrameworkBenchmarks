@@ -19,6 +19,7 @@ import tempfile
 #
 # Generate body of email and attach to message
 #
+message = MIMEMultipart()
 body = "preview run complete. results attached"
 message.attach(MIMEText(body))
 #
@@ -34,7 +35,6 @@ temporaryFile.seek(0)
 #
 #Set up the email to be sent to the mailing list
 #
-message = MIMEMultipart()
 message['From'] = os.environ['TFB_MAILING_FROM']
 message['To'] = os.environ['TFB_MAILINGLIST']
 message['Date'] = formatdate(localtime=True)
