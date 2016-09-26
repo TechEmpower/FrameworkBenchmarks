@@ -17,11 +17,6 @@ import os
 import subprocess
 import tempfile
 #
-# Generate body of email and attach to message
-#
-body = "Preview run complete - results attached."
-message.attach(MIMEText(body))
-#
 # Get results file, zip it and attach to the email
 #
 resultsFileLocation = os.environ['TFB_TIMESTAMP_RESULTS_DIRECTORY'] + "/results/latest/results.json"
@@ -38,6 +33,11 @@ message['From'] = os.environ['TFB_MAILING_FROM']
 message['To'] = os.environ['TFB_MAILINGLIST']
 message['Date'] = formatdate(localtime=True)
 message['Subject'] = subprocess.check_output(["git", "describe", "--always"])
+#
+# Generate body of email and attach to message
+#
+body = "Preview run complete - results attached."
+message.attach(MIMEText(body))
 #
 # Zip in memory and email results
 #
