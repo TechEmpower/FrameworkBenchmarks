@@ -46,7 +46,7 @@ do
   echo Run tests
   toolset/run-tests.py --mode verify --test undertow
   # Handle any postprocessing
-  TFB_TIMESTAMP_RESULTS_DIRECTORY=$(find $TFB_REPOPARENT/$TFB_REPONAME/results -mindepth 1 -maxdepth 1 -type d -name '2*')
+  export TFB_TIMESTAMP_RESULTS_DIRECTORY=$(find $TFB_REPOPARENT/$TFB_REPONAME/results -mindepth 1 -maxdepth 1 -type d -name '2*')
   echo Time stamp results directory: $TFB_TIMESTAMP_RESULTS_DIRECTORY
   echo Running post-test tasks
   for SCRIPT in $TFB_REPOPARENT/$TFB_REPONAME/toolset/lifecycle/post-run-tests/*

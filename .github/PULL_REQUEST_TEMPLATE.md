@@ -1,4 +1,3 @@
-<!--
 ....................................
 
 MAKE SURE YOU ARE OPENING A PULL 
@@ -15,4 +14,3 @@ that you would like to see in the
 next round
 
 ....................................
--->
