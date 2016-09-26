@@ -40,11 +40,6 @@ message['To'] = os.environ['TFB_MAILINGLIST']
 message['Date'] = formatdate(localtime=True)
 message['Subject'] = subprocess.check_output(["git", "describe", "--always"])
 #
-# Generate body of email and attach to message
-#
-body = "preview run complete. results attached"
-message.attach(MIMEText(body))
-#
 # Zip in memory and email results
 #
 resultsZipped = MIMEBase('application', 'zip')
