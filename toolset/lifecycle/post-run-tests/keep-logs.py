@@ -14,8 +14,8 @@ import datetime
 # should be archived.
 #
 path_in = os.path.abspath(os.path.normpath(os.path.expanduser(os.path.join( \
-    os.environ['TFB_REPOPARENT'], os.environ['TFB_REPONAME'], \
-    'results/latest/logs'))))
+    os.environ['TFB_TIMESTAMP_RESULTS_DIRECTORY'], \
+    'logs'))))
 date_time = datetime.datetime.now()
 dt_folder = date_time.strftime('%Y%m%d%H%M%S')
 path_out = os.path.abspath(os.path.join(os.environ['TFB_LOGSFOLDER'], \

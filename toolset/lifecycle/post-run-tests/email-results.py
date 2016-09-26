@@ -19,13 +19,12 @@ import tempfile
 #
 # Generate body of email and attach to message
 #
-body = "preview run complete. results attached"
+body = "Preview run complete - results attached."
 message.attach(MIMEText(body))
 #
 # Get results file, zip it and attach to the email
 #
-resultsFileLocation = os.environ['TFB_REPOPARENT'] + "/" \
-    + os.environ['TFB_REPONAME'] + "/results/latest/results.json"
+resultsFileLocation = os.environ['TFB_TIMESTAMP_RESULTS_DIRECTORY'] + "/results/latest/results.json"
 temporaryFile = tempfile.TemporaryFile(prefix='results', suffix='.zip')
 zipFile = zipfile.ZipFile(temporaryFile, 'w')
 zipFile.write(resultsFileLocation)
@@ -53,8 +52,7 @@ message.attach(resultsZipped)
 # Attach the .commit file
 #
 
-commitFileLocation = os.environ['TFB_REPOPARENT'] + "/" \
-    + os.environ['TFB_REPONAME'] + "/results/.commit"
+commitFileLocation = os.environ['TFB_TIMESTAMP_RESULTS_DIRECTORY'] + "/.commit"
 attachment = MIMEBase('application', 'octet-stream')
 attachment.set_payload(open(commitFileLocation, "rb").read())
 encoders.encode_base64(attachment)
