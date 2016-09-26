@@ -35,7 +35,7 @@ temporaryFile.seek(0)
 #Set up the email to be sent to the mailing list
 #
 message = MIMEMultipart()
-message['From'] = os.environ['TFB_MAILINGLIST']
+message['From'] = os.environ['TFB_MAILING_FROM']
 message['To'] = os.environ['TFB_MAILINGLIST']
 message['Date'] = formatdate(localtime=True)
 message['Subject'] = subprocess.check_output(["git", "describe", "--always"])
@@ -48,10 +48,24 @@ encoders.encode_base64(resultsZipped)
 resultsZipped.add_header('Content-Disposition', 'attachment', \
   filename='results.json.zip')
 message.attach(resultsZipped)
+
+#
+# Attach the .commit file
+#
+
+commitFileLocation = os.environ['TFB_REPOPARENT'] + "/" \
+    + os.environ['TFB_REPONAME'] + "/results/.commit"
+attachment = MIMEBase('application', 'octet-stream')
+attachment.set_payload(open(commitFileLocation, "rb").read())
+encoders.encode_base64(attachment)
+attachment.add_header('Content-Disposition', 'attachment; filename=".commit"')
+message.attach(attachment)
+
+
 #
 # Send the message and close the collection
 #
 smtp = smtplib.SMTP('smtp.techempower.com')
-smtp.sendmail(os.environ['TFB_MAILINGLIST'], os.environ['TFB_MAILINGLIST'], \
+smtp.sendmail(os.environ['TFB_MAILING_FROM'], os.environ['TFB_MAILINGLIST'], \
     message.as_string())
 smtp.close()
