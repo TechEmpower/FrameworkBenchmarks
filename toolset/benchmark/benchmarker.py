@@ -125,7 +125,6 @@ class Benchmarker:
     self.__setup_server()
     self.__setup_database()
     self.__setup_client()
-    self.__setup_misc()    
 
     ## Check if wrk (and wrk-pipeline) is installed and executable, if not, raise an exception
     #if not (os.access("/usr/local/bin/wrk", os.X_OK) and os.access("/usr/local/bin/wrk-pipeline", os.X_OK)):
@@ -381,7 +380,7 @@ class Benchmarker:
   ############################################################
   # Clean up any processes that run with root privileges
   ############################################################
-  def __setup_misc(self):
+  def __cleanup_leftover_processes_before_test(self):
     p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
     p.communicate("""
       sudo /etc/init.d/apache2 stop
@@ -583,6 +582,8 @@ class Benchmarker:
             ("elasticsearch", self.database_host, 9200)
           ])
           print "database connection test results:\n" + "\n".join(st[1])
+
+        self.__cleanup_leftover_processes_before_test();
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
