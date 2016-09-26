@@ -16,6 +16,9 @@ class Dal(object):
             self.db.define_table('Fortune', Field('message'))
 
     def get_world(self, wid):
+        # Setting `cacheable=True` improves performance by foregoing the creation
+        # of some non-essential attributes. It does *not* actually cache the
+        # database results (it simply produces a Rows object that *could be* cached).
         return self.db(self.db.World.id == wid).select(cacheable=True)[0].as_dict()
 
     def update_world(self, wid, randomNumber):

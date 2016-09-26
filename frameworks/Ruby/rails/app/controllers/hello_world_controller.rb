@@ -39,9 +39,10 @@ class HelloWorldController < ApplicationController
       # rows with ids 1 - 10000
       world = World.find(Random.rand(10000) + 1)
       world.randomNumber = Random.rand(10000) + 1
+      World.update(world.id, :randomNumber => world.randomNumber)
       world
     end
-    World.import worlds, :on_duplicate_key_update => [:randomNumber]
+
     render :json => worlds
   end
 end
