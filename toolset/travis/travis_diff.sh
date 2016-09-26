@@ -22,6 +22,7 @@
 #    exit 0
 #fi
 
+# Parse the benchmark_config for the names of all tests
 sudo apt-get install jq
-FW_TEST=`echo $TESTDIR | grep -oP '(?<=\/).+'`
+FW_TEST=`jq -r '.framework ' frameworks/${TESTDIR}/benchmark_config.json`
 export TESTS=`jq '.tests[0] | keys | . - ["default"] | map("'${FW_TEST}-'"+.) | ["'${FW_TEST}'"] + . | .[] | tostring ' frameworks/${TESTDIR}/benchmark_config.json | xargs echo`
