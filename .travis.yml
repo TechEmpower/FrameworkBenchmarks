@@ -190,7 +190,6 @@ env:
     - "TESTDIR=Scala/scruffy"
     - "TESTDIR=Scala/spray"
     - "TESTDIR=Scala/s-server"
-    - "TESTDIR=Scala/spray-es"
     - "TESTDIR=Scala/unfiltered"
     - "TESTDIR=Scala/http4s"
     - "TESTDIR=Scala/finch"
