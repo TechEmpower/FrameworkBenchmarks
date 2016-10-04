@@ -2,8 +2,7 @@
   "framework": "aspnetcore",
   "tests": [{
     "default": {
-      "setup_file": "setup",
-      "json_url": "/json",
+      "setup_file": "setup-plaintext",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -20,9 +19,26 @@
       "notes": "",
       "versus": ""
     },
+    "middleware-json": {
+      "setup_file": "setup-json",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "aspnetcore",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": "NET",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "aspnetcore-linux",
+      "notes": "",
+      "versus": ""
+    },
     "mvc-linux": {
-      "setup_file": "setup-mvc",
-      "json_url": "/mvc/json",
+      "setup_file": "setup-plaintext",
       "plaintext_url": "/mvc/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -39,6 +55,25 @@
       "notes": "",
       "versus": ""
     },
+    "mvc-linux-json": {
+      "setup_file": "setup-json",
+      "json_url": "/mvc/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "aspnetcore",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": "NET",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "aspnetcore-mvc-linux",
+      "notes": "",
+      "versus": ""
+    },
+
     "win": {
       "setup_file": "setup-windows",
       "json_url": "/json",

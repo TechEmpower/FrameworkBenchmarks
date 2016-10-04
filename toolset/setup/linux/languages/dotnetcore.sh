@@ -6,11 +6,11 @@ RETCODE=$(fw_exists ${IROOT}/dotnetcore.installed)
   dotnet --info
   return 0; }
 
-sudo apt-get install unzip libunwind8 -y
-fw_get -O https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.sh
-chmod +x $IROOT/dotnet-install.sh
+sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list' 
+sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
+sudo apt-get update
 
-$IROOT/dotnet-install.sh
+sudo apt-get install dotnet-dev-1.0.0-preview2-003131 -y
 echo "PATH=$HOME/.dotnet:$PATH" > $IROOT/dotnetcore.installed
 
 source $IROOT/dotnetcore.installed
