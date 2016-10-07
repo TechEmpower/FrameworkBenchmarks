@@ -170,7 +170,7 @@ def main(argv=None):
     # Misc Options
     parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
     parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
-    parser.add_argument('--clear-tmp', action='store_true' default=False, help='Clears files written to /tmp after each framework\'s tests complete.')
+    parser.add_argument('--clear-tmp', action='store_true', default=False, help='Clears files written to /tmp after each framework\'s tests complete.')
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
 
