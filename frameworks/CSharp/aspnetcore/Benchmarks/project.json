@@ -1,8 +1,15 @@
 {
   "version": "1.0.0-*",
-  "compilationOptions": {
+  "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true
+    "preserveCompilationContext": true,
+    "copyToOutput": {
+      "include": [
+        "appsettings.json",
+        "wwwroot",
+        "Views"
+      ]
+    }
   },
   "dependencies": {
     "Dapper": "1.50.0-*",
@@ -28,7 +35,7 @@
           "version": "1.0.0-*",
           "type": "platform"
         },
-        "System.Runtime.Serialization.Primitives": "4.1.0-*"
+        "System.Runtime.Serialization.Primitives": "4.1.1-*"
       }
     },
     "net451": { }
@@ -42,11 +49,13 @@
       ]
     }
   },
-  "content": [
-    "appsettings.json",
-    "wwwroot",
-    "Views"
-  ],
+  "publishOptions": {
+    "include": [
+      "appsettings.json",
+      "wwwroot",
+      "Views"
+    ]
+  },
   "runtimeOptions": {
     "configProperties": {
       "System.GC.Server": true
