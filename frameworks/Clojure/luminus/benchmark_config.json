@@ -15,7 +15,7 @@
       "database": "Postgres",
       "framework": "luminus",
       "language": "Clojure",
-      "flavor": "Java8",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "Undertow",
       "webserver": "None",

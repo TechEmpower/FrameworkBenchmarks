@@ -12,7 +12,7 @@
       "database": "MySQL",
       "framework": "None",
       "language": "Erlang",
-      "flavor": "Erlang18",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "None",
       "webserver": "None",

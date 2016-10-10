@@ -16,7 +16,7 @@
       "orm": "micro",
       "framework": "pedestal",
       "language": "Clojure",
-      "flavor": "Java8",
+      "flavor": "None",
       "platform": "Undertow",
       "webserver": "None",
       "os": "Linux",

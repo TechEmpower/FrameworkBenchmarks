@@ -11,7 +11,7 @@
       "database": "None",
       "framework": "None",
       "language": "C",
-      "flavor": "C11",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "duda",
       "webserver": "Monkey",

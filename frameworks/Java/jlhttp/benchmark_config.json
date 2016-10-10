@@ -10,7 +10,7 @@
       "classification": "Platform",
       "database": "None",
       "framework": "None",
-      "flavor": "Java8",
+      "flavor": "None",
       "language": "Java",
       "orm": "Raw",
       "platform": "JLHTTP",

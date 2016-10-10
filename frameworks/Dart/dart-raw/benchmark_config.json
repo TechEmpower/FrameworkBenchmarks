@@ -15,7 +15,7 @@
       "database": "Postgres",
       "framework": "None",
       "language": "Dart",
-      "flavor": "Dart1",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "None",
       "webserver": "None",
