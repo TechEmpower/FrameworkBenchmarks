@@ -8,6 +8,8 @@ then
 fi
 
 cd Benchmarks
+cp appsettings.postgresql.json appsettings.json
+sed -i 's|{db_server_placeholder}|'"${DBHOST}"'|g' appsettings.json
 dotnet restore
 dotnet build -c Release -f netcoreapp1.0
 

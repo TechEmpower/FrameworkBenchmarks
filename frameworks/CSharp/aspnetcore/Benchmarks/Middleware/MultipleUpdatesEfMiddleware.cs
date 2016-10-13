@@ -13,9 +13,9 @@ using Newtonsoft.Json.Serialization;
 
 namespace Benchmarks.Middleware
 {
-    public class SingleQueryEfMiddleware
+    public class MultipleUpdatesEfMiddleware
     {
-        private static readonly PathString _path = new PathString(Scenarios.GetPath(s => s.DbSingleQueryEf));
+        private static readonly PathString _path = new PathString(Scenarios.GetPath(s => s.DbMultiUpdateEf));
         private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
@@ -23,7 +23,7 @@ namespace Benchmarks.Middleware
 
         private readonly RequestDelegate _next;
 
-        public SingleQueryEfMiddleware(RequestDelegate next)
+        public MultipleUpdatesEfMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -33,8 +33,10 @@ namespace Benchmarks.Middleware
             if (httpContext.Request.Path.StartsWithSegments(_path, StringComparison.Ordinal))
             {
                 var db = httpContext.RequestServices.GetService<EfDb>();
-                var row = await db.LoadSingleQueryRow();
-                var result = JsonConvert.SerializeObject(row, _jsonSettings);
+                var count = MiddlewareHelpers.GetMultipleQueriesQueryCount(httpContext);
+                var rows = await db.LoadMultipleUpdatesRows(count);
+
+                var result = JsonConvert.SerializeObject(rows, _jsonSettings);
 
                 httpContext.Response.StatusCode = StatusCodes.Status200OK;
                 httpContext.Response.ContentType = "application/json";
@@ -49,11 +51,11 @@ namespace Benchmarks.Middleware
         }
     }
 
-    public static class SingleQueryEfMiddlewareExtensions
+    public static class MultipleUpdatesEfMiddlewareExtensions
     {
-        public static IApplicationBuilder UseSingleQueryEf(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseMultipleUpdatesEf(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<SingleQueryEfMiddleware>();
+            return builder.UseMiddleware<MultipleUpdatesEfMiddleware>();
         }
     }
 }
