@@ -4,7 +4,7 @@ organization := "woshilaiceshide"
 
 scalaVersion := "2.11.8"
 
-version := "1.0"
+version := "1.1"
 
 scalacOptions := Seq("-unchecked", "-deprecation","-optimise", "-encoding", "utf8", "-Yno-adapted-args", "-target:jvm-1.8")
 
