@@ -3,6 +3,7 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
+      "plaintext_url": "/site/plaintext",
       "json_url": "/site/json",
       "db_url": "/site/db",
       "query_url": "/site/db?queries=",
@@ -25,6 +26,7 @@
     },
     "hhvm": {
       "setup_file": "setup_hhvm",
+      "plaintext_url": "/site/plaintext",
       "json_url": "/site/json",
       "db_url": "/site/db",
       "query_url": "/site/db?queries=",

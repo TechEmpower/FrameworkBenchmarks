@@ -3,8 +3,10 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
+      "update_url": "/update?queries=",
       "query_url": "/db?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
@@ -43,6 +45,7 @@
     "raw": {
       "setup_file": "setup",
       "db_url": "/db-raw",
+      "update_url": "/update-raw?queries=",
       "query_url": "/db-raw?queries=",
       "fortune_url": "/fortunes-raw",
       "port": 8080,
@@ -62,7 +65,9 @@
     },
     "hhvm": {
       "setup_file": "setup_hhvm",
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
+      "update_url": "/update?queries=",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "fortune_url": "/fortunes",
