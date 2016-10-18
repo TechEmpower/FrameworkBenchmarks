@@ -12,7 +12,7 @@
       "language": "C++",
       "flavor": "None",
       "orm": "Raw",
-      "platform": "POCO",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
@@ -22,4 +22,3 @@
     }
   }]
 }
-

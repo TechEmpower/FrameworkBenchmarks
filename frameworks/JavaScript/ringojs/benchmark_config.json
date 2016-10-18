@@ -17,7 +17,7 @@
       "language": "JavaScript",
       "flavor": "RingoJS",
       "orm": "Raw",
-      "platform": "ringojs",
+      "platform": "Jetty",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",

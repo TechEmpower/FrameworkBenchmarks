@@ -11,7 +11,7 @@
       "framework": "jester",
       "language": "Nim",
       "orm": "Raw",
-      "platform": "Nim",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",

@@ -13,7 +13,7 @@
       "language": "Java",
       "flavor": "None",
       "orm": "Raw",
-      "platform": "Rapidoid",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
