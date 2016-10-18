@@ -25,7 +25,9 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-*",
     "Microsoft.Extensions.Configuration.CommandLine": "1.0.0-*",
-    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-*"
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-*",
+    "Npgsql": "3.1.8-*",
+    "Npgsql.EntityFrameworkCore.PostgreSQL": "1.0.2-*" 
   },
   "frameworks": {
     "netcoreapp1.0": {
