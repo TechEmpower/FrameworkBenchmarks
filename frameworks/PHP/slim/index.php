@@ -102,10 +102,12 @@ $app->get('/fortunes', function ($request, $response) {
     $sth = $this->db->prepare('SELECT * FROM Fortune');
     $sth->execute();
     $fortunes = $sth->fetchAll();
+
     array_push($fortunes, array('id'=> 0, 'message' => 'Additional fortune added at request time.'));
     usort($fortunes, function($left, $right) {
         return strcmp($left['message'], $right['message']);
     });
+
     return $this->view->render($response, "fortunes.php", ["fortunes" => $fortunes]);
 });
 
