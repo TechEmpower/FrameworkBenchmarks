@@ -7,7 +7,7 @@ $app = new \Slim\App;
 $container = $app->getContainer();
 $container['db'] = function ($c) {
   $db = $c['settings']['db'];
-  $pdo = new PDO('mysql:host=localhost;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
+  $pdo = new PDO('mysql:host=localhost;dbname=hello_world;charset=utf8', 'benchmarkdbuser', 'benchmarkdbpass');
   $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
   return $pdo;
