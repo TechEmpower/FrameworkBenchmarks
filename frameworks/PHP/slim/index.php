@@ -74,6 +74,8 @@ $app->get('/updates', function ($request, $response) {
     $queries = max(1, min($request->getParam('queries'), 500));
 
     $sth = $this->db->prepare('SELECT * FROM World WHERE id = ?');
+    $updateSth = $this->db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+
     $worlds = array();
     for ($i = 0; $i < $queries; ++$i) {
         $id = mt_rand(1, 10000);
@@ -83,8 +85,9 @@ $app->get('/updates', function ($request, $response) {
         # Cast fields to int so they don't get wrapped with quotes
         $world['id'] = (int) $world['id'];
         $world['randomNumber'] = $random_number;
-        $update_query = $this->db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
-        $update_query->execute(array($world['randomNumber'], $world['id']));
+
+        $updateSth->execute(array($world['randomNumber'], $world['id']));
+
         $worlds[] = $world;
     }
 
