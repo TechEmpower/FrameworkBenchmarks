@@ -57,7 +57,7 @@ def dbs(request):
   # by creating dicts, we don't need to user the model serializer, which is probably slow and only appropriate
   # for complicated serializations of joins and crazy query sets etc
   # test xrange vs range if the query number is gigantic
-  worlds = uj_dumps([{'id' : r, 'randomNumber' : g(id=r).randomnumber} for r in [rp() for q in xrange(queries)]])
+  worlds = uj_dumps([{'id' : r, 'randomNumber' : g(id=r).randomnumber} for r in (rp() for q in xrange(queries))])
   return HttpResponse(worlds, content_type="application/json")
 
 def fortunes(request):
@@ -75,7 +75,7 @@ def update(request):
   rp = partial(random.randint, 1, 10000)
 
   worlds = []
-  for r in [rp() for q in xrange(queries)]:
+  for r in (rp() for q in xrange(queries)):
     w = g(id=r)
     w.randomnumber=rp()
     w.save()
