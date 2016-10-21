@@ -17,8 +17,7 @@ production setup costs about TODO.
 
 ## Prerequisites
 
-* **A recent version of Vagrant**, like 1.6.3 (NOTE: `apt-get` is 
-too old, download the newest `deb` directly). See 
+* **A recent version of Vagrant**, like 1.6.3. See 
 [here](https://www.vagrantup.com/downloads.html) for downloads
 
 * **Vagrant AWS Plugin** from [here](https://github.com/mitchellh/vagrant-aws)
