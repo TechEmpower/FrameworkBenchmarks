@@ -1,7 +1,0 @@
-./sabina/src/main/java/sabina/benchmark/
-./sabina/src/main/java/sabina/benchmark/Application.java
-./sabina/src/main/java/sabina/benchmark/Message.java
-./sabina/src/main/java/sabina/benchmark/World.java
-./sabina/src/main/java/sabina/benchmark/Fortune.java
-./sabina/src/main/resources/fortunes.mustache
-./sabina/src/main/resources/server.properties

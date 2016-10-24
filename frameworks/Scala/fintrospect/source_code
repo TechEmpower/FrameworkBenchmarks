@@ -1,2 +1,5 @@
 fintrospect/src/main/scala/
+fintrospect/src/main/scala/Fortunes.scala
+fintrospect/src/main/scala/JsonHelloWorld.scala
+fintrospect/src/main/scala/PlainTextHelloWorld.scala
 fintrospect/src/main/scala/FintrospectBenchmarkServer.scala

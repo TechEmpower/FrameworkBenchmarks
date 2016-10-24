@@ -13,19 +13,26 @@
             [clojure.data.json :as json]
             [clojure.java.jdbc :as jdbc]))
 
-
-(defn json-serialization
-  "Test 1: JSON serialization"
+(defn sanitize-queries-param
+  "Sanitizes the `queries` parameter. Clamps the value between 1 and 500.
+  Invalid (string) values become 1."
   [request]
-  (bootstrap/json-response {:message "Hello, World!"}))
+  (let [queries (-> request
+                    :params
+                    :queries)
+        n (try (Integer/parseInt queries)
+               (catch Exception e 1))] ; default to 1 on parse failure
+    (cond
+      (< n 1) 1
+      (> n 500) 500
+      :else n)))
 
-
-;; MySQL connection
-(defdb mysql-db
+;; MySQL database connection
+(defdb db-mysql
   (mysql {
     :classname "com.mysql.jdbc.Driver"
     :subprotocol "mysql"
-    :subname "//127.0.0.1:3306/hello_world"
+    :subname "//127.0.0.1:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
     :user "benchmarkdbuser"
     :password "benchmarkdbpass"
     ;;OPTIONAL KEYS
@@ -37,65 +44,32 @@
 (defentity world
   (pk :id)
   (table :world)
-  (entity-fields :id :randomNumber) ;; Default fields for select
-  (database mysql-db))
+  (entity-fields :id :randomNumber) ; Default fields for select
+  (database db-mysql))
 
-
-(defn random-world
+(defn get-random-world-korma
   "Query a random World record from the database"
   []
   (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
     (select world
             (where {:id id }))))
 
-
 (defn run-queries
-  "Run query repeatedly -- Always returns an array"
+  "Run query repeatedly, return an array"
   [queries]
-  (flatten (take queries (repeatedly random-world))))
+  (flatten ; Make it a list of maps
+    (take queries ; Number of queries to run
+          (repeatedly get-random-world-korma))))
 
-
-(defn single-query-test
-  "Test 2: Single database query"
-  [request]
-  (bootstrap/json-response (first (run-queries 1))))
-
-
-(defn sanitizeQueriesParam
-  "Sanitizes the `queries` parameter. Caps the value between 1 and 500.
-  Invalid (stringy) values become 1"
-  [request]
-  (let [queries (-> request
-                    :params
-                    :queries)]
-    (if-let [n (if (= (re-find #"\A-?\d+" queries) nil)
-                   1
-                   (Integer/parseInt queries))]
-      (cond
-        (< n 1) 1
-        (> n 500) 500
-        :else n))))
-
-
-(defn multiple-query-test
-  "Test 3: Multiple database queries"
-  [request]
-  (-> request
-      (sanitizeQueriesParam)
-      (run-queries)
-      (bootstrap/json-response)))
-
-
-; Set up entity Fortune and the database representation
+;; Set up entity Fortune and the database representation
 (defentity fortune
   (pk :id)
   (table :fortune)
   (entity-fields :id :message)
-  (database mysql-db))
+  (database db-mysql))
 
-
-(defn get-all-fortunes
-  "Query all Fortune records from the database."
+(defn get-all-fortunes-korma
+  "Query all Fortune records from the database using Korma."
   []
   (select fortune
           (fields :id :message)))
@@ -107,9 +81,8 @@
   []
   (sort-by #(:message %)
     (conj
-      (get-all-fortunes)
+      (get-all-fortunes-korma)
       { :id 0 :message "Additional fortune added at request time." })))
-
 
 (defn fortunes-hiccup
   "Render the given fortunes to simple HTML using Hiccup."
@@ -128,6 +101,34 @@
         [:td (escape-html (:message x))]])
      ]]))
 
+(defn update-and-persist
+  "Using Korma: Changes the :randomNumber of a number of world entities.
+  Persists the changes to sql then returns the updated entities"
+  [queries]
+  (let [results (map #(assoc % :randomNumber (inc (rand-int 9999))) (run-queries queries))]
+    (doseq [{:keys [id randomNumber]} results]
+      (update world
+              (set-fields {:randomNumber randomNumber})
+              (where {:id id})))
+    results))
+
+(defn json-serialization
+  "Test 1: JSON serialization"
+  [request]
+  (bootstrap/json-response {:message "Hello, World!"}))
+
+(defn single-query-test
+  "Test 2: Single database query"
+  [request]
+  (bootstrap/json-response (first (run-queries 1))))
+
+(defn multiple-queries-test
+  "Test 3: Multiple database queries"
+  [request]
+  (-> request
+      (sanitize-queries-param)
+      (run-queries)
+      (bootstrap/json-response)))
 
 (defn fortune-test
   "Test 4: Fortunes"
@@ -137,28 +138,13 @@
     (fortunes-hiccup)
     (ring-resp/response)
     (ring-resp/content-type "text/html")
-    (ring-resp/charset "utf-8")))         ;; Apply charset after content type
-
-
-(defn update-and-persist
-  "Changes the :randomNumber of a number of world entities.
-  Persists the changes to sql then returns the updated entities"
-  [request]
-  (let [results (-> request
-                    (sanitizeQueriesParam)
-                    (run-queries))]
-    (for [w results]
-      (update-in w [:randomNumber (inc (rand-int 9999))]
-        (update world
-                (set-fields {:randomNumber (:randomNumber w)})
-                (where {:id [:id w]}))))
-    results))
-
+    (ring-resp/charset "utf-8")))
 
 (defn db-updates
   "Test 5: Database updates"
   [request]
   (-> request
+      (sanitize-queries-param)
       (update-and-persist)
       (bootstrap/json-response)))
 
@@ -168,15 +154,15 @@
   [request]
   (ring-resp/response "Hello, World!"))
 
-
+;; Define route handlers
 (defroutes routes
   [[
+  [  "/plaintext" {:get plaintext}]
   [  "/json"      {:get json-serialization}]
   [  "/db"        {:get single-query-test}]
-  [  "/queries"   {:get multiple-query-test}]
+  [  "/queries"   {:get multiple-queries-test}]
   [  "/fortunes"  {:get fortune-test}]
-  [  "/updates"   {:get db-updates}]
-  [  "/plaintext" {:get plaintext}]]])
+  [  "/updates"   {:get db-updates}]]])
 
 
 (def service

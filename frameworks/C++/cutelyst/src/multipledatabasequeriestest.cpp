@@ -18,7 +18,7 @@ void MultipleDatabaseQueriesTest::query_postgres(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryForDatabase(
                 QLatin1String("SELECT id, randomNumber FROM world WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("postgres")));
+                QSqlDatabase::database(QLatin1String("postgres-") + QThread::currentThread()->objectName()));
     processQuery(c, query);
 }
 
@@ -26,7 +26,7 @@ void MultipleDatabaseQueriesTest::query_mysql(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryForDatabase(
                 QLatin1String("SELECT id, randomNumber FROM world WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("mysql")));
+                QSqlDatabase::database(QLatin1String("mysql-") + QThread::currentThread()->objectName()));
     processQuery(c, query);
 }
 
@@ -42,9 +42,9 @@ void MultipleDatabaseQueriesTest::processQuery(Context *c, QSqlQuery &query)
     }
 
     for (int i = 0; i < queries; ++i) {
-        int id = qrand() % 9999;
+        int id = (qrand() % 10000) + 1;
 
-        query.bindValue(QStringLiteral(":id"), id + 1);
+        query.bindValue(QStringLiteral(":id"), id);
         if (!query.exec() || !query.next()) {
             c->res()->setStatus(Response::InternalServerError);
             return;

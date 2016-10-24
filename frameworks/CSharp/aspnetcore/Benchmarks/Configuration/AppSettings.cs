@@ -7,5 +7,6 @@ namespace Benchmarks.Configuration
     public class AppSettings
     {
         public string ConnectionString { get; set; }
+        public DatabaseServer Database { get; set; } = DatabaseServer.SqlServer;
     }
 }

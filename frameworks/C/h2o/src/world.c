@@ -54,7 +54,6 @@ typedef struct {
 typedef struct {
 	db_query_param_t param;
 	yajl_gen gen;
-	h2o_generator_t h2o_generator;
 	const char *id_pointer;
 	h2o_req_t *req;
 	uint32_t id;
@@ -70,8 +69,6 @@ typedef struct {
 	query_result_t res[];
 } multiple_query_ctx_t;
 
-static void complete_request(struct st_h2o_generator_t *self, h2o_req_t *req);
-static void cleanup_request(struct st_h2o_generator_t *self, h2o_req_t *req);
 static int do_multiple_queries(update_state_t update_state, h2o_req_t *req);
 static int initialize_single_query_context(h2o_req_t *req,
                                            on_result_t on_result,
@@ -85,26 +82,8 @@ static int on_update_write_ready(db_query_param_t *param, PGconn *db_conn);
 static int serialize_item(uint32_t id, uint32_t random_number, yajl_gen gen);
 static void serialize_items(const query_result_t *res,
                             size_t num_result,
-                            h2o_generator_t *h2o_generator,
                             yajl_gen gen,
                             h2o_req_t *req);
-
-static void cleanup_request(struct st_h2o_generator_t *self, h2o_req_t *req)
-{
-	IGNORE_FUNCTION_PARAMETER(req);
-
-	single_query_ctx_t * const query_ctx = H2O_STRUCT_FROM_MEMBER(single_query_ctx_t,
-	                                                              h2o_generator,
-	                                                              self);
-
-	yajl_gen_free(query_ctx->gen);
-}
-
-static void complete_request(struct st_h2o_generator_t *self, h2o_req_t *req)
-{
-	h2o_send(req, NULL, 0, true);
-	cleanup_request(self, req);
-}
 
 static int do_multiple_queries(update_state_t update_state, h2o_req_t *req)
 {
@@ -178,8 +157,6 @@ static int initialize_single_query_context(h2o_req_t *req,
 	query_ctx->gen = get_json_generator(&req->pool);
 
 	if (query_ctx->gen) {
-		query_ctx->h2o_generator.proceed = complete_request;
-		query_ctx->h2o_generator.stop = cleanup_request;
 		query_ctx->id_format = 1;
 		query_ctx->id_len = sizeof(query_ctx->id);
 		query_ctx->id_pointer = (const char *) &query_ctx->id;
@@ -251,7 +228,6 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 		else if (query_ctx->update_state == NO_UPDATE) {
 			serialize_items(query_ctx->res,
 			                query_ctx->num_result,
-			                &query_ctx->single.h2o_generator,
 			                query_ctx->single.gen,
 			                query_ctx->single.req);
 			return DONE;
@@ -300,7 +276,7 @@ static result_return_t on_single_query_result(db_query_param_t *param, PGresult 
 		PQclear(result);
 
 		if (!serialize_item(ntohl(query_ctx->id), random_number, query_ctx->gen) &&
-		    !send_json_response(query_ctx->gen, &query_ctx->h2o_generator, query_ctx->req))
+		    !send_json_response(query_ctx->gen, NULL, query_ctx->req))
 			return DONE;
 
 		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, query_ctx->req);
@@ -342,7 +318,6 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 
 			serialize_items(query_ctx->res,
 			                query_ctx->num_result,
-			                &query_ctx->single.h2o_generator,
 			                query_ctx->single.gen,
 			                query_ctx->single.req);
 			ret = DONE;
@@ -354,6 +329,7 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 	PQclear(result);
 	return ret;
 error:
+	yajl_gen_free(query_ctx->single.gen);
 	send_error(BAD_GATEWAY, PQresultErrorMessage(result), query_ctx->single.req);
 	PQclear(result);
 	return DONE;
@@ -440,7 +416,6 @@ error_yajl:
 
 static void serialize_items(const query_result_t *res,
                             size_t num_result,
-                            h2o_generator_t *h2o_generator,
                             yajl_gen gen,
                             h2o_req_t *req)
 {
@@ -452,9 +427,11 @@ static void serialize_items(const query_result_t *res,
 
 	CHECK_YAJL_STATUS(yajl_gen_array_close, gen);
 
-	if (send_json_response(gen, h2o_generator, req))
+	if (send_json_response(gen, NULL, req)) {
 error_yajl:
+		yajl_gen_free(gen);
 		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+	}
 }
 
 int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
