@@ -54,7 +54,7 @@
       "flavor": "PyPy",
       "orm": "Raw",
       "platform": "None",
-      "webserver": "Meinheld",
+      "webserver": "Tornado",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Falcon",
