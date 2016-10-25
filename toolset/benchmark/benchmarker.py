@@ -609,8 +609,12 @@ class Benchmarker:
         except OSError:
           pass
         passed_verify = test.verify_urls(verificationPath)
+
+        ##########################
+        # Nuke /tmp
+        ##########################
         try:
-          subprocess.check_call('sudo rm -rf /tmp/*')
+          subprocess.check_call('sudo rm -rf /tmp/*', shell=True, stderr=out, stdout=out)
         except Exception:
           out.write(header("Error: Could not empty /tmp"))
 
