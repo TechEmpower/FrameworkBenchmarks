@@ -492,7 +492,6 @@ class FrameworkTest:
         pprint(results)
 
         self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
-        subprocess.Popen('sudo rm -rf /tmp/*')
         out.write( "Complete\n" )
         out.flush()
     
