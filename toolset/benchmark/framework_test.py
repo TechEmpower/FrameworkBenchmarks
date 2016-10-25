@@ -492,8 +492,7 @@ class FrameworkTest:
         pprint(results)
 
         self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
-        rmtmp = "find /tmp -maxdepth 1 -name \"*\" -print0 | xargs -0 sudo -u %s rm" % (self.benchmarker.runner_user)
-        subprocess.Popen(rmtmp, shell=True, cwd=self.fwroot, executable='/bin/bash')
+        subprocess.Popen('sudo rm -rf /tmp/*')
         out.write( "Complete\n" )
         out.flush()
     
