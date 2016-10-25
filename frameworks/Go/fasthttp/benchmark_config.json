@@ -46,27 +46,6 @@
       "notes": "",
       "versus": "go"
     },
-    "postgresql": {
-      "setup_file": "setup-postgresql",
-      "db_url": "/db",
-      "query_url": "/queries?queries=",
-      "update_url": "/update?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "Postgres",
-      "framework": "None",
-      "language": "Go",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "None",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "FastHTTP",
-      "notes": "",
-      "versus": "go"
-    },
     "postgresql-prefork": {
       "setup_file": "setup-postgresql-prefork",
       "db_url": "/db",
