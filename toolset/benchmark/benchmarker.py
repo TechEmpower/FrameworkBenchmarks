@@ -609,6 +609,10 @@ class Benchmarker:
         except OSError:
           pass
         passed_verify = test.verify_urls(verificationPath)
+        try:
+          subprocess.check_call('sudo rm -rf /tmp/*')
+        except Exception:
+          out.write(header("Error: Could not empty /tmp"))
 
         ##########################
         # Benchmark this test
