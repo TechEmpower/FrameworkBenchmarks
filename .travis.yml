@@ -100,7 +100,6 @@ env:
     - "TESTDIR=Java/spring"
     - "TESTDIR=Java/tapestry"
     - "TESTDIR=Java/undertow"
-    - "TESTDIR=Java/undertow-edge"
     - "TESTDIR=Java/undertow-jersey-c3p0"
     - "TESTDIR=Java/undertow-jersey-hikaricp"
     - "TESTDIR=Java/vertx"

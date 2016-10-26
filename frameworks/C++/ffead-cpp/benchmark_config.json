@@ -11,7 +11,7 @@
       "update_url": "/te-benchmark/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Framework",
+      "classification": "micro",
       "database": "MongoDB",
       "framework": "ffead-cpp",
       "language": "C++",
@@ -27,4 +27,3 @@
     }
   }]
 }
-
