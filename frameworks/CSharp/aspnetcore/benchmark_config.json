@@ -57,7 +57,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-linux",
+      "display_name": "aspnetcore-middleware-raw",
       "notes": "",
       "versus": ""
     },
@@ -79,7 +79,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-linux",
+      "display_name": "aspnetcore-middleware-ef",
       "notes": "",
       "versus": ""
     },
@@ -101,7 +101,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-linux",
+      "display_name": "aspnetcore-middleware-dapper",
       "notes": "",
       "versus": ""
     },
@@ -161,7 +161,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-linux",
+      "display_name": "aspnetcore-mvc-raw",
       "notes": "",
       "versus": ""
     },
@@ -183,7 +183,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-linux",
+      "display_name": "aspnetcore-mvc-ef",
       "notes": "",
       "versus": ""
     },
@@ -205,7 +205,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-linux",
+      "display_name": "aspnetcore-mvc-dapper",
       "notes": "",
       "versus": ""
     },
