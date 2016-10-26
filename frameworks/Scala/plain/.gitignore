@@ -1,7 +1,0 @@
-/project/.*
-/project/target
-/target
-/web-apps/servlet/
-/.project
-/.classpath
-/.cache

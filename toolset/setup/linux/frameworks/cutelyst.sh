@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CUTELYST_VER=0.12.0
+CUTELYST_VER=0.13.3
 RETCODE=$(fw_exists ${IROOT}/cutelyst.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/cutelyst.installed

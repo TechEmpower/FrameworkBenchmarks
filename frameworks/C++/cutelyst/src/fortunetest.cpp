@@ -34,14 +34,14 @@ QSqlQuery FortuneTest::postgresQuery()
 {
     return CPreparedSqlQueryForDatabase(
                 QLatin1String("SELECT id, message FROM fortune"),
-                QSqlDatabase::database(QLatin1String("postgres")));
+                QSqlDatabase::database(QLatin1String("postgres-") + QThread::currentThread()->objectName()));
 }
 
 QSqlQuery FortuneTest::mysqlQuery()
 {
     return CPreparedSqlQueryForDatabase(
                 QLatin1String("SELECT id, message FROM fortune"),
-                QSqlDatabase::database(QLatin1String("mysql")));
+                QSqlDatabase::database(QLatin1String("mysql-") + QThread::currentThread()->objectName()));
 }
 
 static bool caseSensitiveLessThan(const Fortune &a1, const Fortune &a2)

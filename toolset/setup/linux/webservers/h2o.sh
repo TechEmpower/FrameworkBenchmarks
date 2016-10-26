@@ -14,7 +14,7 @@ pushd "${IROOT}"
 fw_get -O "https://github.com/h2o/h2o/archive/$ARCHIVE"
 fw_untar "$ARCHIVE"
 pushd "$BUILD_DIR"
-cmake -DCMAKE_INSTALL_PREFIX="$H2O_HOME"
+cmake -DCMAKE_INSTALL_PREFIX="$H2O_HOME" -DCMAKE_C_FLAGS="-march=native"
 make -j "$(nproc)" install
 popd
 rm -rf "$BUILD_DIR"

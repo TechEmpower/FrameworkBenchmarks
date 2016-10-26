@@ -16,4 +16,4 @@ set_target_properties(silicon_epoll_mysql PROPERTIES COMPILE_FLAGS "-DTFB_USE_EP
 target_link_libraries(silicon_epoll_mysql microhttpd mysqlclient)
 
 add_executable(silicon_lwan_mysql techempower_lwan.cc)
-target_link_libraries(silicon_lwan_mysql mysqlclient lwan-common curl z pthread dl)
+target_link_libraries(silicon_lwan_mysql mysqlclient lwan curl z pthread dl luajit-5.1)

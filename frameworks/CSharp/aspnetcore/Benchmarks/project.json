@@ -1,8 +1,15 @@
 {
   "version": "1.0.0-*",
-  "compilationOptions": {
+  "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true
+    "preserveCompilationContext": true,
+    "copyToOutput": {
+      "include": [
+        "appsettings.json",
+        "wwwroot",
+        "Views"
+      ]
+    }
   },
   "dependencies": {
     "Dapper": "1.50.0-*",
@@ -18,7 +25,9 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-*",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-*",
     "Microsoft.Extensions.Configuration.CommandLine": "1.0.0-*",
-    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-*"
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-*",
+    "Npgsql": "3.1.8-*",
+    "Npgsql.EntityFrameworkCore.PostgreSQL": "1.0.2-*" 
   },
   "frameworks": {
     "netcoreapp1.0": {
@@ -28,7 +37,7 @@
           "version": "1.0.0-*",
           "type": "platform"
         },
-        "System.Runtime.Serialization.Primitives": "4.1.0-*"
+        "System.Runtime.Serialization.Primitives": "4.1.1-*"
       }
     },
     "net451": { }
@@ -42,11 +51,13 @@
       ]
     }
   },
-  "content": [
-    "appsettings.json",
-    "wwwroot",
-    "Views"
-  ],
+  "publishOptions": {
+    "include": [
+      "appsettings.json",
+      "wwwroot",
+      "Views"
+    ]
+  },
   "runtimeOptions": {
     "configProperties": {
       "System.GC.Server": true
