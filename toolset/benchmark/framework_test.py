@@ -28,7 +28,7 @@ from datetime import datetime
 from datetime import timedelta
 
 class FrameworkTest:
-  headers_template = "-H 'Host: localhost' -H '{accept}' -H 'Connection: keep-alive'"
+  headers_template = "-H 'Host: localhost' -H 'Accept: {accept}' -H 'Connection: keep-alive'"
  
   # Used for test types that require no pipelining or query string params.
   concurrency_template = """
@@ -492,8 +492,6 @@ class FrameworkTest:
         pprint(results)
 
         self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
-        rmtmp = "find /tmp -maxdepth 1 -name \"*\" -print0 | xargs -0 sudo -u %s rm" % (self.benchmarker.runner_user)
-        subprocess.Popen(rmtmp, shell=True, cwd=self.fwroot, executable='/bin/bash')
         out.write( "Complete\n" )
         out.flush()
     
