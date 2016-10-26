@@ -28,7 +28,7 @@ from datetime import datetime
 from datetime import timedelta
 
 class FrameworkTest:
-  headers_template = "-H 'Host: localhost' -H '{accept}' -H 'Connection: keep-alive'"
+  headers_template = "-H 'Host: localhost' -H 'Accept: {accept}' -H 'Connection: keep-alive'"
  
   # Used for test types that require no pipelining or query string params.
   concurrency_template = """
