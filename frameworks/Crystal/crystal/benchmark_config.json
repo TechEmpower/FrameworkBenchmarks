@@ -11,7 +11,7 @@
       "database": "Postgres",
       "framework": "None",
       "language": "Crystal",
-      "flavor": "Crystal12",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "None",
       "webserver": "None",

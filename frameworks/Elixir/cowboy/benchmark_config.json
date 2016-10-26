@@ -11,7 +11,7 @@
             "database": "None",
             "framework": "None",
             "language": "Elixir",
-            "flavor": "Elixir1",
+            "flavor": "None",
             "orm": "raw",
             "platform": "None",
             "webserver": "None",

@@ -10,7 +10,7 @@
       "database": "None",
       "framework": "Webgo",
       "language": "Go",
-      "flavor": "Go1",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "None",
       "webserver": "None",

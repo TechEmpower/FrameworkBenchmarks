@@ -10,7 +10,7 @@
       "database": "none",
       "framework": "None",
       "language": "C++",
-      "flavor": "C++14",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "POCO",
       "webserver": "None",

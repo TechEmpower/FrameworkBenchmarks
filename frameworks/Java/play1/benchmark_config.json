@@ -12,7 +12,7 @@
       "database": "MySQL",
       "framework": "play1",
       "language": "Java",
-      "flavor": "Java8",
+      "flavor": "None",
       "orm": "Full",
       "platform": "Netty",
       "webserver": "None",

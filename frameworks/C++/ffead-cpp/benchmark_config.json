@@ -15,7 +15,7 @@
       "database": "MongoDB",
       "framework": "ffead-cpp",
       "language": "C++",
-      "flavor": "C++14",
+      "flavor": "None",
       "orm": "Full",
       "platform": "None",
       "webserver": "None",

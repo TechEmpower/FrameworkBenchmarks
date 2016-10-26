@@ -15,7 +15,7 @@
       "database": "MySQL",
       "framework": "wicket",
       "language": "Java",
-      "flavor": "Java8",
+      "flavor": "None",
       "orm": "Full",
       "platform": "Servlet",
       "webserver": "Resin",

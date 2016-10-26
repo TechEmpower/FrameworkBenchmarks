@@ -15,7 +15,7 @@
       "database": "MySQL",
       "framework": "spring",
       "language": "Java",
-      "flavor": "Java8",
+      "flavor": "None",
       "orm": "Full",
       "platform": "Servlet",
       "webserver": "Tomcat",
