@@ -7,6 +7,7 @@
 import os
 import zipfile
 import datetime
+import shutil
 # Follows closely from:
 # http://stackoverflow.com/a/34153816
 #
@@ -37,3 +38,7 @@ for folder in os.listdir(path_in):
         print "An OSError occurred while writing to a log zip file for {0}: \
             {1}".format(file, err)
   zip_file.close()
+path_results_in = os.path.abspath(os.path.normpath(os.path.expanduser(os.path.join( \
+    os.environ['TFB_REPOPARENT'], os.environ['TFB_REPONAME'], \
+    'results'))))
+shutil.copytree(path_results_in, path_out + '/results')
