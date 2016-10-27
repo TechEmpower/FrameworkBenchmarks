@@ -44,7 +44,7 @@ do
   echo Change to benchmark root
   cd $TFB_REPOPARENT/$TFB_REPONAME
   echo Run tests
-  toolset/run-tests.py
+  toolset/run-tests.py --test gemini
   # Handle any postprocessing
   echo Running post-test tasks
   for SCRIPT in $TFB_REPOPARENT/$TFB_REPONAME/toolset/lifecycle/post-run-tests/*
