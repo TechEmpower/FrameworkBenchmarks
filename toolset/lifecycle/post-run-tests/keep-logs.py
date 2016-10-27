@@ -7,6 +7,7 @@
 import os
 import zipfile
 import datetime
+import shutil
 # Follows closely from:
 # http://stackoverflow.com/a/34153816
 #
@@ -37,23 +38,7 @@ for folder in os.listdir(path_in):
         print "An OSError occurred while writing to a log zip file for {0}: \
             {1}".format(file, err)
   zip_file.close()
-path__raw_in = os.path.abspath(os.path.normpath(os.path.expanduser(os.path.join( \
+path_results_in = os.path.abspath(os.path.normpath(os.path.expanduser(os.path.join( \
     os.environ['TFB_REPOPARENT'], os.environ['TFB_REPONAME'], \
-    'results/2*'))))
-for folder in os.listdir(path_raw_in):
-  if not os.path.exists(path_out):
-    os.makedirs(path_out)
-  zip_file = zipfile.ZipFile(path_out + '/' + folder + '.zip', 'w')
-# ... walk the folder structure ...
-  for root, directories, files in os.walk(os.path.join(path_raw_in, folder), 'w', \
-        zipfile.ZIP_DEFLATED):
-# ... and add to the zip file.   
-    for file in files:
-      try:
-        zip_file.write(os.path.abspath(os.path.join(root, file)), \
-            arcname=file)
-      except OSError as err:
-        print "An OSError occurred while writing to a log zip file for {0}: \
-            {1}".format(file, err)
-  zip_file.close()
-
+    'results'))))
+shutil.copytree(path_results_in, path_out + '/results')
