@@ -11,19 +11,19 @@
       "update_url": "/te-benchmark/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Fullstack",
+      "classification": "micro",
       "database": "MongoDB",
       "framework": "ffead-cpp",
       "language": "C++",
+      "flavor": "None",
       "orm": "Full",
-      "platform": "ffead-cpp",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "ffead-cpp",
       "notes": "",
-      "versus": ""
+      "versus": "ffead-cpp"
     }
   }]
 }
-

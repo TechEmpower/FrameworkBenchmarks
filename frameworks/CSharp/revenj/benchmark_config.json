@@ -1,5 +1,5 @@
 {
-  "framework": "Revenj.NET",
+  "framework": "Revenj",
   "tests": [{
     "windows": {
       "setup_file": "setup",
@@ -11,18 +11,19 @@
       "fortune_url": "/bench/fortunes",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Platform",
+      "classification": "Fullstack",
       "database": "Postgres",
       "database_os": "Linux",
-      "framework": "Revenj.NET",
+      "framework": "Revenj",
       "language": "C#",
+      "flavor": "Microsoft",
       "orm": "Full",
-      "platform": ".NET",
-      "webserver": "Revenj.NET",
+      "platform": "None",
+      "webserver": "None",
       "os": "Windows",
-      "display_name": "Revenj.NET",
+      "display_name": "Revenj",
       "notes": "",
-      "versus": ""
+      "versus": "Revenj"
     },
     "default": {
       "setup_file": "setup",
@@ -34,18 +35,19 @@
       "fortune_url": "/bench/fortunes",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Platform",
+      "classification": "Fullstack",
       "database": "Postgres",
       "database_os": "Linux",
-      "framework": "Revenj.NET",
+      "framework": "Revenj",
       "language": "C#",
+      "flavor": "Mono",
       "orm": "Full",
-      "platform": "Mono",
-      "webserver": "Revenj.NET",
+      "platform": "None",
+      "webserver": "None",
       "os": "Linux",
-      "display_name": "Revenj.NET",
+      "display_name": "Revenj",
       "notes": "",
-      "versus": ""
+      "versus": "Revenj"
     }
   }]
 }

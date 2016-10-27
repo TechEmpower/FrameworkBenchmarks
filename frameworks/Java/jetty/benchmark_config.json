@@ -9,16 +9,17 @@
       "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
-      "framework": "servlet",
+      "framework": "None",
       "language": "Java",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "Jetty",
-      "webserver": "Jetty",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "jetty",
       "notes": "Jetty 9.3 with Handler",
-      "versus": ""
+      "versus": "servlet"
     }
   }]
 }

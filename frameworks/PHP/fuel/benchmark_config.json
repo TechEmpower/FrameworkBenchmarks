@@ -11,16 +11,17 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
-      "framework": "fuel",
-      "language": "PHP5",
+      "framework": "Fuel",
+      "language": "PHP",
+      "flavor": "PHP5",
       "orm": "Raw",
-      "platform": "PHP5-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "fuel",
       "notes": "",
-      "versus": "php5"
+      "versus": "php-php5"
     }
   }]
 }

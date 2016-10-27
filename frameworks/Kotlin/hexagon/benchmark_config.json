@@ -17,12 +17,13 @@
                 "database" : "MongoDB",
                 "framework" : "Hexagon",
                 "language" : "Kotlin",
+                "flavor" : "Java8",
                 "orm" : "Raw",
                 "platform" : "Netty",
                 "webserver" : "None",
                 "os" : "Linux",
                 "database_os" : "Linux",
-                "display_name" : "Hexagon MongoDB",
+                "display_name" : "Hexagon",
                 "notes" : "http://there4.co/hexagon",
                 "versus" : "servlet"
             }

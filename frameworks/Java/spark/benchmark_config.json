@@ -13,6 +13,7 @@
       "database": "MySQL",
       "framework": "spark",
       "language": "Java",
+      "flavor": "None",
       "orm": "Full",
       "platform": "Servlet",
       "webserver": "Resin",

@@ -10,6 +10,7 @@
       "database": "None",
       "framework": "aspnetcore",
       "language": "C#",
+      "flavor": "Mono",
       "orm": "Raw",
       "platform": "NET",
       "flavor": "CoreCLR",
