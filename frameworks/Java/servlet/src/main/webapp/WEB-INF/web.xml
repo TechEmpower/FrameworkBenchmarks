@@ -36,6 +36,12 @@
   </servlet>
   <servlet-mapping url-regexp='^/postgres$' servlet-name='postgres'/>
   <servlet>
+    <servlet-name>postgre-fortunes</servlet-name>
+    <servlet-class>hello.PostgreFortunesServlet</servlet-class>
+    <load-on-startup/>
+  </servlet>
+  <servlet-mapping url-regexp='^/postgre-fortunes$' servlet-name='postgre-fortunes'/>
+  <servlet>
     <servlet-name>postgres-update</servlet-name>
     <servlet-class>hello.PostgresUpdateServlet</servlet-class>
     <load-on-startup/>
