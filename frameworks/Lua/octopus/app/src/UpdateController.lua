@@ -10,8 +10,8 @@ local function process (db)
 	local op = db:operators()
 	
 	local num_queries = tonumber(param.queries) or 1
-	
 	num_queries = math.min(500, num_queries)
+	
 	local worlds = {}
 	for i=1, num_queries do
 		local world = db:findOne({World = {id = op.equal(math.random(1,10000))}})
@@ -21,9 +21,9 @@ local function process (db)
 	end
 	
 	if num_queries < 2 then
-		return {json = worlds[1]}
+		return worlds[1]
 	else
-		return {json = worlds}
+		return worlds
 	end
 end
 

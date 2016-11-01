@@ -1,3 +1,3 @@
 ngx.header.content_type = 'text/plain'
 
-ngx.print("Hello, world!")
+ngx.print("Hello, World!")

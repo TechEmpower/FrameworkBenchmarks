@@ -1,4 +1,4 @@
-# Octopus (Nginx + Lua(jit))  Benchmark Test
+# Octopus (Nginx + LuaJIT)  Benchmark Test
 
 The test lua app is inside [app](app) directory.
 The configuration is in [config.lua](config.lua).
