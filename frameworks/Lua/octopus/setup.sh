@@ -9,4 +9,5 @@ sed -i 's|DBHOSTNAME|'"${DBHOST}"'|g' octopus/extensions/config.lua
 
 cd octopus/bin/unix
 . ./server.sh install
-. ./server.sh restart
+. ./server.sh build
+. ./server.sh start
