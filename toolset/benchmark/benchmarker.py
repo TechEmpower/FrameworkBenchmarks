@@ -378,6 +378,15 @@ class Benchmarker:
   ############################################################
 
   ############################################################
+  # Clean up any processes that run with root privileges
+  ############################################################
+  def __cleanup_leftover_processes_before_test(self):
+    p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
+    p.communicate("""
+      sudo /etc/init.d/apache2 stop
+    """)
+
+  ############################################################
   # Makes any necessary changes to the database machine that
   # should be made before running the tests. Is very similar
   # to the server setup, but may also include database specific
@@ -573,6 +582,8 @@ class Benchmarker:
             ("elasticsearch", self.database_host, 9200)
           ])
           print "database connection test results:\n" + "\n".join(st[1])
+
+        self.__cleanup_leftover_processes_before_test();
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
