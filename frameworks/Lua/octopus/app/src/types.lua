@@ -2,7 +2,7 @@ return {
 
 	World = {
 		-- id field is implicitly defined by the ORM
-		randomnumber = "integer",
+		randomNumber = "integer",
 	},
 
 	Fortune = {

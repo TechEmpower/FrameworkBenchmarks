@@ -15,7 +15,7 @@ local function process (db)
 	local worlds = {}
 	for i=1, num_queries do
 		local world = db:findOne({World = {id = op.equal(math.random(1,10000))}})
-		world.randomnumber = math.random(1,10000)
+		world.randomNumber = math.random(1,10000)
 		db:update({World = world})
 		worlds[#worlds + 1] = world
 	end
