@@ -21,7 +21,7 @@ return {
 	
 	databaseConnection = {
 		rdbms       =   "postgres",
-		host        =   "DBHOSTNAME",
+		host        =   "127.0.0.1",
 		port        =   5432, 
 		database    =   "hello_world",
 		user        =   "benchmarkdbuser",
