@@ -8,68 +8,28 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Benchmarks.Controllers
 {
-    [Route("mvc")]
+    [Route("mvc/fortunes")]
     public class FortunesController : Controller
     {
-        private RawDb _rawDb;
-        private DapperDb _dapperDb;
-        private EfDb _efDb;
-
-        private RawDb RawDb
-        {
-            get
-            {
-                if (_rawDb == null)
-                {
-                    _rawDb = HttpContext.RequestServices.GetRequiredService<RawDb>();
-                }
-
-                return _rawDb;
-            }
-        }
-
-        private DapperDb DapperDb
-        {
-            get
-            {
-                if (_dapperDb == null)
-                {
-                    _dapperDb = HttpContext.RequestServices.GetRequiredService<DapperDb>();
-                }
-
-                return _dapperDb;
-            }
-        }
-
-        private EfDb EfDb
-        {
-            get
-            {
-                if (_efDb == null)
-                {
-                    _efDb = HttpContext.RequestServices.GetRequiredService<EfDb>();
-                }
-
-                return _efDb;
-            }
-        }
-
-        [HttpGet("fortunes/raw")]
+        [HttpGet("raw")]
         public async Task<IActionResult> Raw()
-        {
-            return View("Fortunes", await RawDb.LoadFortunesRows());
+        {   
+            var db = HttpContext.RequestServices.GetRequiredService<RawDb>();
+            return View("Fortunes", await db.LoadFortunesRows());
         }
 
-        [HttpGet("fortunes/dapper")]
+        [HttpGet("dapper")]
         public async Task<IActionResult> Dapper()
         {
-            return View("Fortunes", await DapperDb.LoadFortunesRows());
+            var db = HttpContext.RequestServices.GetRequiredService<DapperDb>();
+            return View("Fortunes", await db.LoadFortunesRows());
         }
 
-        [HttpGet("fortunes/ef")]
+        [HttpGet("ef")]
         public async Task<IActionResult> Ef()
         {
-            return View("Fortunes", await EfDb.LoadFortunesRows());
+            var db = HttpContext.RequestServices.GetRequiredService<EfDb>();
+            return View("Fortunes", await db.LoadFortunesRows());
         }
     }
 }

@@ -14,6 +14,7 @@
       "database": "MySQL",
       "framework": "tapestry",
       "language": "Java",
+      "flavor": "None",
       "orm": "Full",
       "platform": "Servlet",
       "webserver": "Resin",

@@ -622,6 +622,14 @@ class Benchmarker:
         passed_verify = test.verify_urls(verificationPath)
 
         ##########################
+        # Nuke /tmp
+        ##########################
+        try:
+          subprocess.check_call('sudo rm -rf /tmp/*', shell=True, stderr=out, stdout=out)
+        except Exception:
+          out.write(header("Error: Could not empty /tmp"))
+
+        ##########################
         # Benchmark this test
         ##########################
         if self.mode == "benchmark":
@@ -659,6 +667,20 @@ class Benchmarker:
         out.write(header("Stopped %s" % test.name))
         out.flush()
         time.sleep(5)
+
+        ##########################################################
+        # Remove contents of  /tmp folder
+        ##########################################################
+        if self.clear_tmp:
+          try:
+            filelist = [ f for f in os.listdir("/tmp") ]
+            for f in filelist:
+              try:
+                os.remove("/tmp/" + f)
+              except OSError as err:
+                print "Failed to remove " + str(f) + " from /tmp directory: " + str(err)
+          except OSError:
+            print "Failed to remove contents of /tmp directory."
 
         ##########################################################
         # Save results thus far into the latest results directory

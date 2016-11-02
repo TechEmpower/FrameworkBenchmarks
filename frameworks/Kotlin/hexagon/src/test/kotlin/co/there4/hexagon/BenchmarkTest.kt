@@ -5,19 +5,18 @@ import co.there4.hexagon.web.Client
 import org.asynchttpclient.Response
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
-import java.net.URL
 
 internal const val THREADS = 4
-internal const val TIMES = 16
+internal const val TIMES = 4
 
 @Test (threadPoolSize = THREADS, invocationCount = TIMES)
 class BenchmarkTest {
-    private val client = Client(URL("http://localhost:9090"))
+    private val client = Client("http://localhost:9090")
 
     @BeforeClass fun warmup() {
         main(arrayOf())
 
-        val warmupRounds = if (THREADS > 1) 5 else 0
+        val warmupRounds = if (THREADS > 1) 2 else 0
         (1 ..warmupRounds).forEach {
             json ()
             plaintext ()
@@ -48,7 +47,7 @@ class BenchmarkTest {
         val content = response.responseBody
 
         checkResponse (response, "application/json")
-        assert ("Hello, World!" == content.parse(Map::class)["message"])
+        assert ("Hello, World!" == content.parse(Message::class).message)
     }
 
     fun plaintext () {
@@ -61,11 +60,12 @@ class BenchmarkTest {
 
     fun no_query_parameter () {
         val response = client.get ("/db")
-        val content = response.responseBody
+        val body = response.responseBody
 
         checkResponse (response, "application/json")
-        val resultsMap = content.parse(Map::class)
-        assert (resultsMap.containsKey ("id") && resultsMap.containsKey ("randomNumber"))
+        val bodyMap = body.parse(Map::class)
+        assert(bodyMap.containsKey (World::_id.name))
+        assert(bodyMap.containsKey (World::randomNumber.name))
     }
 
     fun fortunes () {
@@ -82,11 +82,12 @@ class BenchmarkTest {
 
     fun no_updates_parameter () {
         val response = client.get ("/update")
-        val content = response.responseBody
+        val body = response.responseBody
 
         checkResponse (response, "application/json")
-        val resultsMap = content.parse(Map::class)
-        assert (resultsMap.containsKey ("id") && resultsMap.containsKey ("randomNumber"))
+        val bodyMap = body.parse(Map::class)
+        assert(bodyMap.containsKey (World::_id.name))
+        assert(bodyMap.containsKey (World::randomNumber.name))
     }
 
     fun empty_query_parameter () = checkDbRequest ("/query?queries", 1)
@@ -127,7 +128,7 @@ class BenchmarkTest {
 
         (1..size).forEach {
             val r = resultsList[it - 1] as Map<*, *>
-            assert (r.containsKey ("id") && r.containsKey ("randomNumber"))
+            assert (r.containsKey (World::_id.name) && r.containsKey (World::randomNumber.name))
         }
     }
 }

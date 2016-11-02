@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm rbx-2.4
+fw_depends rvm rbx-2.5
 
 sed -i 's|  host:.*|  host: '"${DBHOST}"'|g' config/database.yml
 

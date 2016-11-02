@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Benchmarks.Data
 {
-    public class EfDb
+    public class EfDb : IDb
     {
         private readonly IRandom _random;
         private readonly ApplicationDbContext _dbContext;
@@ -22,7 +22,6 @@ namespace Benchmarks.Data
         public Task<World> LoadSingleQueryRow()
         {
             var id = _random.Next(1, 10001);
-            
             return _dbContext.World.FirstAsync(w => w.Id == id);
         }
 
@@ -37,6 +36,31 @@ namespace Benchmarks.Data
             }
 
             return result;
+        }
+
+        public async Task<World[]> LoadMultipleUpdatesRows(int count)
+        {
+            var results = new World[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                var id = _random.Next(1, 10001);
+                var result = await _dbContext.World.AsTracking().FirstAsync(w => w.Id == id);
+
+                result.RandomNumber = _random.Next(1, 10001);
+                results[i] = result;
+                if(!_dbContext.UseBatchUpdate)
+                {
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+            
+            if(_dbContext.UseBatchUpdate)
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+
+            return results;
         }
 
         public async Task<IEnumerable<Fortune>> LoadFortunesRows()

@@ -13,14 +13,15 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "permeagility",
+      "framework": "None",
       "language": "Java",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "PermeAgility",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "permeagility",
+      "display_name": "PermeAgility",
       "notes": "PermeAgility 0.7.5",
       "versus": ""
     }

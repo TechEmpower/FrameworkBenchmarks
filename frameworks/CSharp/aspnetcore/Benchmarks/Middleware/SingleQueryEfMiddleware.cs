@@ -7,6 +7,7 @@ using Benchmarks.Configuration;
 using Benchmarks.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -21,19 +22,18 @@ namespace Benchmarks.Middleware
         };
 
         private readonly RequestDelegate _next;
-        private readonly EfDb _db;
 
-        public SingleQueryEfMiddleware(RequestDelegate next, EfDb db)
+        public SingleQueryEfMiddleware(RequestDelegate next)
         {
             _next = next;
-            _db = db;
         }
 
         public async Task Invoke(HttpContext httpContext)
         {
             if (httpContext.Request.Path.StartsWithSegments(_path, StringComparison.Ordinal))
             {
-                var row = await _db.LoadSingleQueryRow();
+                var db = httpContext.RequestServices.GetService<EfDb>();
+                var row = await db.LoadSingleQueryRow();
                 var result = JsonConvert.SerializeObject(row, _jsonSettings);
 
                 httpContext.Response.StatusCode = StatusCodes.Status200OK;
