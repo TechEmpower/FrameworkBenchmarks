@@ -26,7 +26,7 @@ db:close()
 
 if status then
 	local html = view({fortunes = res})
-	ngx.header.content_type = 'application/json; charset=utf-8'
+	ngx.header.content_type = 'text/html; charset=utf-8'
 	ngx.header.content_length = #html
 	ngx.print(html)
 else
