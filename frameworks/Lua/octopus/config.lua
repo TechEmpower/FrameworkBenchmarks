@@ -20,9 +20,9 @@ return {
 	minifyCommand = [[java -jar ../yuicompressor-2.4.8.jar %s -o %s]],
 	
 	databaseConnection = {
-		rdbms       =   "postgres",
+		rdbms       =   "mysql",
 		host        =   "127.0.0.1",
-		port        =   5432, 
+		port        =   3306, 
 		database    =   "hello_world",
 		user        =   "benchmarkdbuser",
 		password    =   "benchmarkdbpass",
