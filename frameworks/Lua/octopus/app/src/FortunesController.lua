@@ -18,7 +18,9 @@ local function process (db)
 end
 
 
-local db = database.connect()
+local status, db = pcall(database.connect)
+if not status then exit(db) end
+
 local status, res = pcall(process, db)
 db:close()
 

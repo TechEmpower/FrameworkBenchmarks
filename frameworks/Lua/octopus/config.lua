@@ -34,5 +34,6 @@ return {
 		sourceCtxPath = "",
 		requireSecurity = false,
 		sessionTimeout = 3600,
+		usePreparedStatement = false,
 	},
 }
