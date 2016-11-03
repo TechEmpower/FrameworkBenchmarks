@@ -24,10 +24,10 @@ if not status then exit(db) end
 local status, res = pcall(process, db)
 db:close()
 
-
 if status then
 	local html = view({fortunes = res})
-	ngx.header['Content-Length'] = #html
+	ngx.header.content_type = 'application/json; charset=utf-8'
+	ngx.header.content_length = #html
 	ngx.print(html)
 else
 	exit(res)
