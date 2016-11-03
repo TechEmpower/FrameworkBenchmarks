@@ -12,7 +12,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "Postgres",
+      "database": "MySQL",
       "framework": "Octopus",
       "language": "Lua",
       "orm": "Full",
