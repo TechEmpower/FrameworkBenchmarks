@@ -3,16 +3,19 @@ error_reporting(-1);
 
 require_once __DIR__.'/vendor/autoload.php';
 
-$app = new \Slim\App;
-$container = $app->getContainer();
-$container['db'] = function ($c) {
-  $db = $c['settings']['db'];
-  $pdo = new PDO('mysql:host=localhost;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
-  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-  return $pdo;
-};
-$container['view'] = new \Slim\Views\PhpRenderer("templates/");
+$app = new Slim\App(array(
+    'db' => function ($c) {
+        $pdo = new PDO('mysql:host=localhost;dbname=hello_world;charset=utf8', 'benchmarkdbuser', 'benchmarkdbpass');
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+        return $pdo;
+    },
+
+    'view' => function ($c) {
+        return new Slim\Views\PhpRenderer("templates/");
+    }
+));
 
 // Test 1: Plaintext
 $app->get('/plaintext', function ($request, $response) {
@@ -29,7 +32,6 @@ $app->get('/json', function ($request, $response) {
         ->withHeader('Content-Type', 'application/json') // fixes utf-8 warning
         ;
 });
-
 
 // Test 3: Single database query
 $app->get('/db', function ($request, $response) {
@@ -72,6 +74,8 @@ $app->get('/updates', function ($request, $response) {
     $queries = max(1, min($request->getParam('queries'), 500));
 
     $sth = $this->db->prepare('SELECT * FROM World WHERE id = ?');
+    $updateSth = $this->db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+
     $worlds = array();
     for ($i = 0; $i < $queries; ++$i) {
         $id = mt_rand(1, 10000);
@@ -81,8 +85,9 @@ $app->get('/updates', function ($request, $response) {
         # Cast fields to int so they don't get wrapped with quotes
         $world['id'] = (int) $world['id'];
         $world['randomNumber'] = $random_number;
-        $update_query = $this->db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
-        $update_query->execute(array($world['randomNumber'], $world['id']));
+
+        $updateSth->execute(array($world['randomNumber'], $world['id']));
+
         $worlds[] = $world;
     }
 
@@ -97,10 +102,12 @@ $app->get('/fortunes', function ($request, $response) {
     $sth = $this->db->prepare('SELECT * FROM Fortune');
     $sth->execute();
     $fortunes = $sth->fetchAll();
+
     array_push($fortunes, array('id'=> 0, 'message' => 'Additional fortune added at request time.'));
     usort($fortunes, function($left, $right) {
         return strcmp($left['message'], $right['message']);
     });
+
     return $this->view->render($response, "fortunes.php", ["fortunes" => $fortunes]);
 });
 
