@@ -57,7 +57,7 @@ class Benchmarker:
   ############################################################
   # Prints the metadata for all the available tests
   ############################################################
-  def run_list_test_metadata(self):
+  def run_list_test_metadata(self, run_finish=True):
     all_tests = self.__gather_tests
     all_tests_json = json.dumps(map(lambda test: {
       "name": test.name,
@@ -78,8 +78,8 @@ class Benchmarker:
 
     with open(os.path.join(self.full_results_directory(), "test_metadata.json"), "w") as f:
       f.write(all_tests_json)
-
-    self.__finish()
+    if run_finish:
+      self.__finish()
 
 
   ############################################################
@@ -115,7 +115,7 @@ class Benchmarker:
     ##########################
     # Generate metadata
     ##########################
-    self.run_list_test_metadata()
+    self.run_list_test_metadata(false)
     ##########################
     # Get a list of all known
     # tests that we can run.
