@@ -113,11 +113,14 @@ class Benchmarker:
   ############################################################
   def run(self):
     ##########################
+    # Generate metadata
+    ##########################
+    self.run_list_test_metadata()
+    ##########################
     # Get a list of all known
     # tests that we can run.
     ##########################
     all_tests = self.__gather_tests
-
     ##########################
     # Setup client/server
     ##########################

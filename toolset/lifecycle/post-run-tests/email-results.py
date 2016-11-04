@@ -16,6 +16,16 @@ import zipfile
 import os
 import subprocess
 import tempfile
+
+#
+# finds a file of the given name in the tree below path
+# http://stackoverflow.com/a/1724723
+#
+def find(name, path):
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            return os.path.join(root, name)
+
 #
 # Generate body of email and attach to message
 #
@@ -52,7 +62,6 @@ message.attach(resultsZipped)
 #
 # Attach the .commit file
 #
-
 commitFileLocation = os.environ['TFB_REPOPARENT'] + "/" \
     + os.environ['TFB_REPONAME'] + "/results/.commit"
 attachment = MIMEBase('application', 'octet-stream')
@@ -60,6 +69,18 @@ attachment.set_payload(open(commitFileLocation, "rb").read())
 encoders.encode_base64(attachment)
 attachment.add_header('Content-Disposition', 'attachment; filename=".commit"')
 message.attach(attachment)
+
+#
+# Find and attach the metadata file
+#
+metadataLocation = find("test_metadata.json", os.environ['TFB_REPOPARENT'] + "/" \
+    + os.environ['TFB_REPONAME'] + "/results")
+if metadataLocation is not None:
+  attachment = MIMEBase('application', 'octet-stream')
+  attachment.set_payload(open(metadataLocation, "rb").read())
+  encoders.encode_base64(attachment)
+  attachment.add_header('Content-Disposition', 'attachment; filename="test_metadata.json"')
+  message.attach(attachment)
 
 
 #
