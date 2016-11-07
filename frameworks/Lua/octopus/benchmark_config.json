@@ -1,5 +1,5 @@
 {
-  "framework": "Octopus",
+  "framework": "octopus",
   "tests": [{
     "default": {
       "setup_file": "setup",
