@@ -3,16 +3,15 @@ package main
 import (
 	"log"
 	"math/rand"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-
 	_ "github.com/go-sql-driver/mysql"
-	//"runtime"
 )
 
 const (
 	// Database
-	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
+	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?collation=utf8mb4_bin&interpolateParams=true"
 	worldRowCount      = 10000
 	macIdleConnection  = 30
 	maxConnectionCount = 256
@@ -68,8 +67,6 @@ func (this *DBController) Get() {
 }
 
 func main() {
-	//don't need this set, beego default set it
-	//runtime.GOMAXPROCS(runtime.NumCPU())
 	beego.BConfig.RunMode = "prod"
 	beego.Router("/json", &JsonController{})
 	beego.Router("/db", &DBController{})

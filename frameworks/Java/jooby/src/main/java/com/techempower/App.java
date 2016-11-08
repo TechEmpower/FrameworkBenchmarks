@@ -1,20 +1,20 @@
 package com.techempower;
 
-import org.jooby.Jooby;
-import org.jooby.MediaType;
-import org.jooby.Results;
-import org.jooby.Result;
-import org.jooby.json.Jackson;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Locale;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
+
+import org.jooby.Jooby;
+import org.jooby.MediaType;
+import org.jooby.Result;
+import org.jooby.Results;
 import org.jooby.jdbi.Jdbi;
+import org.jooby.json.Jackson;
 import org.skife.jdbi.v2.Handle;
-import java.util.Random;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author jooby generator
@@ -28,56 +28,44 @@ public class App extends Jooby {
   static final String H_SERVER = "Server";
   static final String SERVER = "Netty";
 
-  static final String H_DATE= "Date";
-
-  static final String helloWorld = "Hello, World!";
+  static final String H_DATE = "Date";
 
   static final int DB_ROWS = 10000;
 
+  static final String HELLO_WORLD = "Hello, World!";
+
   {
-    use(new Jackson());
+    /** json via jackson .*/
+    ObjectMapper mapper = new ObjectMapper();
+    use(new Jackson(mapper));
+
+    /** database via jdbi .*/
     use(new Jdbi());
 
-    get("*", (req, rsp) -> {
-      rsp.header(H_SERVER, SERVER)
-         .header(H_DATE, fmt.format(Instant.ofEpochMilli(System.currentTimeMillis())));
-    });
+    get("/plaintext", () -> result(HELLO_WORLD, MediaType.text))
+        .renderer("text");
 
-    /**
-     * Plain text response. Please note all these lines can be just:
-     *
-     *  get("/plaintext", () -> "Hello, World!");
-     *
-     *  This way we will get just a few extra ms.
-     */
-    byte[] plaintextBytes = helloWorld.getBytes(StandardCharsets.UTF_8);
-    Result plaintext = Results
-        .with(plaintextBytes)
-        .type(MediaType.plain);
-
-    get("/plaintext", () -> plaintext);
-
-    /**
-     * json response.
-     */
-    Map<String, Object> hash = new HashMap<>();
-    hash.put("message", helloWorld);
-    Result json = Results
-        .with(hash)
-        .type(MediaType.json);
-
-    get("/json", () -> json);
+    get("/json", () -> result(mapper.createObjectNode().put("message", HELLO_WORLD), MediaType.json))
+        .renderer("json");
 
     get("/db", req -> {
       try (Handle handle = req.require(Handle.class)) {
-        Random rnd = new Random();
-        int id = rnd.nextInt(DB_ROWS);
-        return handle.createQuery("select * from World where id = :id")
-          .bind("id", id)
-          .map((idx, rs, ctx) -> new World(rs.getInt("id"), rs.getInt("randomNumber")))
-          .first();
+        int id = ThreadLocalRandom.current().nextInt(DB_ROWS + 1);
+        return result(
+            handle.createQuery("select * from World where id = :id")
+                .bind("id", id)
+                .map((idx, rs, ctx) -> new World(rs.getInt("id"), rs.getInt("randomNumber")))
+                .first(),
+            MediaType.json);
       }
-  });
+    }).renderer("json");
+
+  }
+
+  private Result result(final Object value, final MediaType type) {
+    return Results.ok(value).type(type)
+        .header(H_SERVER, SERVER)
+        .header(H_DATE, fmt.format(Instant.ofEpochMilli(System.currentTimeMillis())));
   }
 
   public static void main(final String[] args) throws Exception {

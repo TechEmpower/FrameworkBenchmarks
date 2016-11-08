@@ -15,13 +15,14 @@
       "database": "MySQL",
       "framework": "wheezy.web",
       "language": "Python",
+      "flavor": "Python2",
       "orm": "Full",
-      "platform": "Meinheld",
-      "webserver": "None",
+      "platform": "None",
+      "webserver": "Meinheld",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "wheezy.web",
-      "notes": "CPython 2.7"
+      "notes": ""
     },
     "py3": {
       "setup_file": "setup_py3",
@@ -37,13 +38,14 @@
       "database": "MySQL",
       "framework": "wheezy.web",
       "language": "Python",
+      "flavor": "Python3",
       "orm": "Full",
-      "platform": "Meinheld",
-      "webserver": "None",
+      "platform": "None",
+      "webserver": "Meinheld",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "wheezy.web-py3",
-      "notes": "CPython 3.4"
+      "display_name": "wheezy.web",
+      "notes": ""
     }
   }]
 }

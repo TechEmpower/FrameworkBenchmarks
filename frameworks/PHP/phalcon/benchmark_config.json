@@ -3,6 +3,7 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -14,14 +15,15 @@
       "database": "MySQL",
       "framework": "phalcon",
       "language": "PHP",
-      "orm": "Full",
-      "platform": "PHP-FPM",
+      "flavor": "PHP7",
+      "orm": "raw",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "phalcon",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     },
     "mongodb": {
       "setup_file": "setup",
@@ -34,14 +36,15 @@
       "database": "MongoDB",
       "framework": "phalcon",
       "language": "PHP",
-      "orm": "Full",
-      "platform": "PHP-FPM",
+      "flavor": "PHP7",
+      "orm": "raw",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "phalcon",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     }
   }]
 }

@@ -28,6 +28,12 @@ set :database, db_config.merge(:adapter => adapter, :host => ENV['DB_HOST'])
 settings.filters[:before].clear
 settings.filters[:after].clear
 
+after do
+  # Add mandatory HTTP headers to every response
+  response['Server'] ||= ENV['WEB_SERVER'].freeze
+  response['Date'] ||= Time.now.to_s
+end
+
 class World < ActiveRecord::Base
   self.table_name = "World"
 end
@@ -41,7 +47,7 @@ get '/json' do
 end
 
 get '/plaintext' do
-  content_type 'text/plain'
+  response['Content-type'] = 'text/plain'
   'Hello, World!'
 end
 
@@ -82,9 +88,9 @@ get '/updates' do
     worlds = (1..queries).map do
       world = World.find(Random.rand(10000) + 1)
       world.randomNumber = Random.rand(10000) + 1
+      World.update(world.id, :randomNumber => world.randomNumber)
       world
     end
-    World.import worlds, :on_duplicate_key_update => [:randomNumber]
     worlds
   end
   json(worlds)

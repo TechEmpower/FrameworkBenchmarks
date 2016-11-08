@@ -1,7 +1,9 @@
 #!/bin/bash
 
 sed -i 's|HostName=.*|HostName='"$DBHOST"'|g' config/database.ini
-sed -i "s|MultiProcessingModule=.*|MultiProcessingModule=hybrid|g" config/application.ini
+sed -i 's|HostName=.*|HostName='"$DBHOST"'|g' config/mongodb.ini
+sed -i 's|DriverType=.*|DriverType=QMYSQL|g' config/database.ini
+sed -i 's|MultiProcessingModule=.*|MultiProcessingModule=hybrid|g' config/application.ini
 
 fw_depends treefrog
 
@@ -9,8 +11,7 @@ fw_depends treefrog
 qmake -r CONFIG+=release
 
 # 2. Compile applicaton
-make clean
-make -j8
+make
 
 # 3. Clean log files
 rm -f log/*.log

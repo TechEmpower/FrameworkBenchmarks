@@ -2,6 +2,8 @@
 
 fw_depends crystal
 
-crystal deps install
+shards install
 
-crystal server-postgres.cr &
+crystal build --release server-postgres.cr
+
+./server-postgres &

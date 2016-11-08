@@ -2,13 +2,15 @@
 
 RETCODE=$(fw_exists ${IROOT}/maven.installed)
 [ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/maven.installed
-  return 0; }
+source $IROOT/maven.installed
+return 0; }
 
-# TODO: Someday remove apt-get
-sudo apt-get -y install maven
-mvn -version
+sudo add-apt-repository "deb http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main"
+sudo apt-get update
+sudo apt-get -y --force-yes install maven3
 
-touch $IROOT/maven.installed
+echo "export PATH=/usr/share/maven3/bin:\$PATH" > $IROOT/maven.installed
 
 source $IROOT/maven.installed
+
+mvn -version

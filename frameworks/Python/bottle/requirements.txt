@@ -1,8 +1,8 @@
-bottle==0.12.8
-bottle-sqlalchemy==0.4.2
-SQLAlchemy==1.0.4
-gunicorn==19.3.0
-meinheld==0.5.7
-mysqlclient==1.3.6
-greenlet==0.4.7
-uwsgi
+bottle==0.12.9
+bottle-sqlalchemy==0.4.3
+SQLAlchemy==1.0.12
+gunicorn==19.4.5
+meinheld==0.5.9
+mysqlclient==1.3.7
+greenlet==0.4.9
+uwsgi==2.0.12

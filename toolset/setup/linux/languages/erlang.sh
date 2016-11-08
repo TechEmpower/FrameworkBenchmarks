@@ -5,7 +5,7 @@ RETCODE=$(fw_exists ${IROOT}/erlang.installed)
   source $IROOT/erlang.installed
   return 0; }
 
-VERSION="17.4-2"
+VERSION="18.2-2"
 RELEASE="trusty"
 ARCH="amd64"
 

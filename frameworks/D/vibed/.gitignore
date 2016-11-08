@@ -5,3 +5,4 @@ __dummy.html
 *.obj
 *.dll
 *.exe
+/fwb

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php nginx composer
+fw_depends php7 nginx composer
 
 sed -i 's|localhost|'"${DBHOST}"'|g' application/config/database.php
 sed -i 's|root .*/FrameworkBenchmarks/php-codeigniter|root '"${TROOT}"'|g' deploy/nginx.conf

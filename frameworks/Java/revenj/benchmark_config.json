@@ -1,0 +1,29 @@
+{
+  "framework": "Revenj.JVM",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/revenj/json",
+      "plaintext_url": "/revenj/plaintext",
+      "db_url": "/revenj/db",
+      "query_url": "/revenj/queries?queries=",
+      "update_url": "/revenj/updates?queries=",
+      "fortune_url": "/revenj/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "Revenj.JVM",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Full",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Revenj.JVM",
+      "notes": "",
+      "versus": "servlet"
+    }
+  }]
+}

@@ -71,7 +71,7 @@ class BenchController extends \Phalcon\Mvc\Controller
     {
         $this->view->disable();
         $this->response->setStatusCode(200, "OK");
-        $this->response->setContentType('text/plain', 'UTF-8');
+        $this->response->setContentType('text/plain');
         $this->response->setContent("Hello, World!");
         $this->response->send();
     }

@@ -4,16 +4,22 @@ defmodule Hello.PageController do
   alias Hello.Fortune
 
   def index(conn, _params) do
-    json conn, %{"TE Benchmarks\n" => "Started"}
+    conn
+    |> merge_resp_headers(%{"content-type" => "application/json"})
+    |> json(%{"TE Benchmarks\n" => "Started"})
   end
 
   # avoid namespace collision
   def _json(conn, _params) do
-    json conn, %{message: "Hello, world!"}
+    conn
+    |> merge_resp_headers(%{"content-type" => "application/json"})
+    |> json(%{message: "Hello, world!"})
   end
 
   def db(conn, _params) do
-    json conn, Repo.get(World, :random.uniform(10000))
+    conn
+    |> merge_resp_headers(%{"content-type" => "application/json"})
+    |> json(Repo.get(World, :rand.uniform(10000)))
   end
 
   def queries(conn, params) do
@@ -26,11 +32,20 @@ defmodule Hello.PageController do
     rescue
       ArgumentError -> 1
     end
-    json conn, Enum.map(1..q, fn _ -> Repo.get(World, :random.uniform(10000)) end)
+
+    conn
+    |> merge_resp_headers(%{"content-type" => "application/json"})
+    |> json(Enum.map(1..q, fn _ -> Repo.get(World, :rand.uniform(10000)) end))
   end
 
   def fortunes(conn, _params) do
-    fortunes = List.insert_at(Repo.all(Fortune), 0, %Fortune{:id => 0, :message  => "Additional fortune added at request time."})
+    additional_fortune = %Fortune{
+      id: 0,
+      message: "Additional fortune added at request time."
+    }
+
+    fortunes = [additional_fortune | Repo.all(Fortune)]
+
     render conn, "fortunes.html", fortunes: Enum.sort(fortunes, fn f1, f2 -> f1.message < f2.message end)
   end
 
@@ -44,14 +59,19 @@ defmodule Hello.PageController do
     rescue
       ArgumentError -> 1
     end
-    json conn, Enum.map(1..q, fn _ ->
-      w = Repo.get(World, :random.uniform(10000))
-      changeset = World.changeset(w, %{randomNumber: :random.uniform(10000)})
+
+    conn
+    |> merge_resp_headers(%{"content-type" => "application/json"})
+    |> json(Enum.map(1..q, fn _ ->
+      w = Repo.get(World, :rand.uniform(10000))
+      changeset = World.changeset(w, %{randomNumber: :rand.uniform(10000)})
       Repo.update(changeset)
-      w end)
+      w end))
   end
 
   def plaintext(conn, _params) do
-    text conn, "Hello, world!"
+    conn
+    |> merge_resp_headers(%{"content-type" => "text/plain"})
+    |> text("Hello, world!")
   end
 end

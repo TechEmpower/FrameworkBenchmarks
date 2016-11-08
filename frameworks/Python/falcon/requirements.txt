@@ -1,6 +1,5 @@
-gunicorn==19.3.0
-meinheld==0.5.7
-Cython==0.22
+gunicorn==19.4.5
+meinheld==0.5.9
+Cython==0.23.4
 falcon==0.3.0
-
-greenlet==0.4.7
+greenlet==0.4.9

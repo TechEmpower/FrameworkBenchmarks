@@ -95,37 +95,36 @@ rm create.sql
 
 ##############################
 # Postgres
+# Version: 9.*
 ##############################
-echo "Setting up Postgres database"
-if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
-  echo "WARNING: Force upgrading Postgres for Ubuntu 12.04"
-  sudo apt-get remove -y postgresql postgresql-9.1 postgresql-client-9.1
 
-  echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-  #wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-  curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-  sudo apt-get update
-  sudo apt-get install -y postgresql-9.3 postgresql-client-9.3
-  sudo service postgresql start
-fi
+echo "Setting up Postgres database"
+
+# This will support all 9.* versions depending on the machine
+PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`
+
 sudo service postgresql stop
+
 # Sometimes this doesn't work with postgresql
 sudo killall -s 9 -u postgres
-sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
-sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+sudo mv postgresql.conf /etc/postgresql/${PG_VERSION}/main/postgresql.conf
+sudo mv pg_hba.conf /etc/postgresql/${PG_VERSION}/main/pg_hba.conf
+
+# Make sure all the configuration files in main belong to postgres
+sudo chown -Rf postgres:postgres /etc/postgresql/${PG_VERSION}/main
 
 sudo rm -rf /ssd/postgresql
-sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
+sudo cp -R -p /var/lib/postgresql/${PG_VERSION}/main /ssd/postgresql
 sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
+
+sudo chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf
+sudo chown postgres:postgres create-postgres*
 
 sudo service postgresql start
 
 sudo -u postgres psql template1 < create-postgres-database.sql
-sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
-rm create-postgres-database.sql create-postgres.sql
-# Last chance to make sure postgresql starts up correctly
-sudo killall -s 9 -u postgres
-sudo service postgresql restart
+sudo -u postgres psql hello_world < create-postgres.sql
+sudo rm create-postgres-database.sql create-postgres.sql
 
 ##############################
 # MongoDB

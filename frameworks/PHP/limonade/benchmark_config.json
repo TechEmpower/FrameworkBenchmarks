@@ -15,12 +15,14 @@
       "database": "MySQL",
       "framework": "Limonade",
       "language": "PHP",
+      "flavor": "PHP7",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Limonade"
+      "display_name": "Limonade",
+      "versus": "php7"
     }
   }]
 }

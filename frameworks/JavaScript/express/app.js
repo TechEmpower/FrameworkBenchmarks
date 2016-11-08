@@ -107,7 +107,7 @@ if (cluster.isMaster) {
   app.get('/plaintext', function(req, res) {
     res.header('Content-Type', 'text/plain').send('Hello, World!');
   });
-  
+
   app.get('/mongoose', function(req, res) {
     var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
       , queryFunctions = [];
@@ -128,8 +128,9 @@ if (cluster.isMaster) {
     });
   });
 
-  app.get('/mysql-orm', function(req, res) {    
-    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
+  app.get('/mysql-orm', function(req, res) {
+    var queriesRaw = parseInt(req.query.queries, 10)
+      , queries = isNaN(queriesRaw) ? 1 : queriesRaw
       , queryFunctions = [];
 
     queries = Math.min(Math.max(queries, 1), 500);
@@ -140,12 +141,14 @@ if (cluster.isMaster) {
           where: {
             id: Math.floor(Math.random() * 10000) + 1}
           }
-        ).complete(callback);
+        ).then(function(world) {
+            callback(null, world);
+        });
       });
     }
 
     async.parallel(queryFunctions, function(err, results) {
-      if (!req.query.queries) {
+      if (req.query.queries == undefined) {
         results = results[0];
       }
       res.setHeader("Content-Type", "application/json");
@@ -154,7 +157,7 @@ if (cluster.isMaster) {
   });
 
   app.get('/fortune', function(req, res) {
-    Fortune.findAll().complete(function (err, fortunes) {
+    Fortune.findAll().then(function (fortunes) {
       var newFortune = {id: 0, message: "Additional fortune added at request time."};
       fortunes.push(newFortune);
       fortunes.sort(function (a, b) {
@@ -211,7 +214,9 @@ if (cluster.isMaster) {
           where: {
             id: Math.floor(Math.random() * 10000) + 1}
           }
-        ).complete(callback);
+        ).then(function(world) {
+          callback(null, world);
+        });
       });
     }
 
@@ -222,7 +227,7 @@ if (cluster.isMaster) {
         (function(i){
           updateFunctions.push(function(callback){
             worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
-            worlds[i].save().complete(callback);
+            worlds[i].save().then(callback());
           });
         })(i);
       }
@@ -230,7 +235,7 @@ if (cluster.isMaster) {
       async.parallel(updateFunctions, function(err, updates) {
         res.send(worlds);
       });
-    });  
+    });
 
   });
 

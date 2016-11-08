@@ -12,16 +12,17 @@
       "port": 1999,
       "approach": "Realistic",
       "classification": "Platform",
-      "database": "OrientDB",
-      "framework": "permeagility",
+      "database": "None",
+      "framework": "None",
       "language": "Java",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "PermeAgility",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "permeagility",
-      "notes": "PermeAgility 0.8.0",
+      "display_name": "PermeAgility",
+      "notes": "PermeAgility 0.7.5",
       "versus": ""
     }
   }]

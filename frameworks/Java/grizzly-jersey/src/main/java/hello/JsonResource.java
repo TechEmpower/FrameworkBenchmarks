@@ -16,7 +16,7 @@ import com.sun.jersey.spi.resource.Singleton;
 public class JsonResource {
   
   @GET
-  @Produces(APPLICATION_JSON + "; charset=utf-8")
+  @Produces(APPLICATION_JSON)
   public Object json() {
     Map<String, String> data = new HashMap<String, String>(1);
     data.put("message", "Hello, World!");

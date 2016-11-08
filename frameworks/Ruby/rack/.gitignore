@@ -1,2 +1,3 @@
 .bundle
-vendor/bundle
+/vendor/
+/tmp/

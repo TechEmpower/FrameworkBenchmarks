@@ -29,12 +29,13 @@ too old, download the newest `deb` directly). See
 
 ## Using Vagrant to Run Amazon-powered Virtual Machine
 
-The high level steps are 
-1) clone this project 
-2) set environment variables allowing us to log into your amazon account
-3) Run amazon setup script to create network
-4) Run `vagrant up --provider=aws` to launch into amazon
-5) Run `vagrant ssh` to log into the application server
+The high level steps are:
+
+* clone this project 
+* set environment variables allowing us to log into your amazon account
+* Run amazon setup script to create network
+* Run `vagrant up --provider=aws` to launch into amazon
+* Run `vagrant ssh` to log into the application server
 
 By default, your local git clone of this project will not by synced with the 
 remote amazon machines.
@@ -189,7 +190,7 @@ simultaneous benchmarks, so the better approach is to just increase all
 the IP addresses by 3 and run the additional benchmarks in the same VPC. 
 
 
-**I'm getting an AuthFailure but my Credientials are Correct!**:
+**I'm getting an AuthFailure but my Credentials are Correct!**:
 
 This normally means the AMI has been moved from public to private. Ubuntu's 
 Cloud image team occasionally does this. Navigate [here](http://cloud-images.ubuntu.com/trusty/current/) and find a more current AMI. 

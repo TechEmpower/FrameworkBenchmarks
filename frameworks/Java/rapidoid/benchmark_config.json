@@ -2,21 +2,22 @@
   "framework": "rapidoid",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup-low-level",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "rapidoid",
+      "framework": "None",
       "language": "Java",
+      "flavor": "None",
       "orm": "Raw",
-      "platform": "Rapidoid",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rapidoid",
+      "display_name": "Rapidoid",
       "notes": "",
       "versus": "rapidoid"
     }

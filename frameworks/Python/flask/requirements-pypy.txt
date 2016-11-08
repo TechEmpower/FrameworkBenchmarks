@@ -1,8 +1,8 @@
-Jinja2==2.7.3
-Werkzeug==0.10.4
+Jinja2==2.8
+Werkzeug==0.11.4
 flask==0.10.1
-SQLAlchemy==1.0.4
-Flask-SQLAlchemy==2.0
-PyMySQL==0.6.7
-gunicorn==19.3.0
-tornado==4.2
+SQLAlchemy==1.0.12
+Flask-SQLAlchemy==2.1
+PyMySQL==0.7.2
+gunicorn==19.4.5
+tornado==4.3
