@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.permeagility</groupId>
     <artifactId>permeagility-benchmark</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.8.0</version>
     <packaging>jar</packaging>
 
     <properties>
-        <permeagility.version>0.7.5</permeagility.version>
+        <permeagility.version>0.8.0</permeagility.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
