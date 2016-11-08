@@ -179,7 +179,12 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	memset(global_data, 0, sizeof(*global_data));
 	global_data->config = config;
 	global_data->memory_alignment = get_maximum_cache_line_size();
-	assert(global_data->memory_alignment <= DEFAULT_CACHE_LINE_SIZE);
+
+	if (global_data->memory_alignment > DEFAULT_CACHE_LINE_SIZE) {
+		ERROR("Unexpected maximum cache line size.");
+		return EXIT_FAILURE;
+	}
+
 	CHECK_ERRNO(sigemptyset, &signals);
 #ifdef NDEBUG
 	CHECK_ERRNO(sigaddset, &signals, SIGINT);
@@ -222,8 +227,12 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 
 	global_data->ctx = initialize_thread_contexts(global_data);
 
-	if (global_data->ctx)
+	if (global_data->ctx) {
+		printf("Number of processors currently online: %zu\nMaximum cache line size: %zu\n",
+		       h2o_numproc(),
+		       global_data->memory_alignment);
 		return EXIT_SUCCESS;
+	}
 
 error:
 	free_global_data(global_data);

@@ -20,6 +20,7 @@
 #include <assert.h>
 #include <h2o.h>
 #include <stdalign.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 #include <yajl/yajl_gen.h>
@@ -48,7 +49,9 @@ static int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req)
 		CHECK_YAJL_STATUS(yajl_gen_string, gen, YAJL_STRLIT(HELLO_RESPONSE));
 		CHECK_YAJL_STATUS(yajl_gen_map_close, gen);
 
-		if (!send_json_response(gen, NULL, req))
+		// The response is small enough, so that it is simpler to copy it
+		// instead of doing a delayed deallocation of the JSON generator.
+		if (!send_json_response(gen, true, req))
 			return 0;
 
 error_yajl:
@@ -169,30 +172,28 @@ void send_error(http_status_code_t status_code, const char *body, h2o_req_t *req
 	h2o_send_error_generic(req, status_code, status_code_to_string(status_code), body, 0);
 }
 
-int send_json_response(yajl_gen gen, h2o_generator_t *h2o_generator, h2o_req_t *req)
+int send_json_response(yajl_gen gen, bool free_gen, h2o_req_t *req)
 {
 	const unsigned char *buf;
-	h2o_iovec_t h2o_iovec = {.len = 0};
+	size_t len;
 	int ret = EXIT_FAILURE;
 
-	if (yajl_gen_get_buf(gen, &buf, &h2o_iovec.len) == yajl_gen_status_ok) {
-		if (h2o_generator) {
-			h2o_iovec.base = (char *) buf;
-			set_default_response_param(JSON, SIZE_MAX, req);
-			h2o_start_response(req, h2o_generator);
-			h2o_send(req, &h2o_iovec, 1, false);
-			ret = EXIT_SUCCESS;
-		}
-		else {
-			h2o_iovec.base = h2o_mem_alloc_pool(&req->pool, h2o_iovec.len);
+	if (yajl_gen_get_buf(gen, &buf, &len) == yajl_gen_status_ok) {
+		if (free_gen) {
+			char * const body = h2o_mem_alloc_pool(&req->pool, len);
 
-			if (h2o_iovec.base) {
-				memcpy(h2o_iovec.base, buf, h2o_iovec.len);
+			if (body) {
+				memcpy(body, buf, len);
 				yajl_gen_free(gen);
-				set_default_response_param(JSON, h2o_iovec.len, req);
-				h2o_send_inline(req, h2o_iovec.base, h2o_iovec.len);
+				set_default_response_param(JSON, len, req);
+				h2o_send_inline(req, body, len);
 				ret = EXIT_SUCCESS;
 			}
+		}
+		else {
+			set_default_response_param(JSON, len, req);
+			h2o_send_inline(req, (char *) buf, len);
+			ret = EXIT_SUCCESS;
 		}
 	}
 
