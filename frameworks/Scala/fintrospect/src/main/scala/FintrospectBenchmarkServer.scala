@@ -21,9 +21,8 @@ object FintrospectBenchmarkServer extends App {
   }
 
   val module = ModuleSpec(Root, SimpleJson(), addServerAndDate)
-    .withRoute(JsonHelloWorld.route)
     .withRoute(PlainTextHelloWorld.route)
-    .withRoute(Fortunes.route)
+    .withRoute(JsonHelloWorld.route)
 
   Await.ready(
     Http.server

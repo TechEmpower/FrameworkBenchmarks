@@ -3,8 +3,8 @@ import com.twitter.finagle.http.Method.Get
 import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status.Ok
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.json.Circe.JsonFormat.{obj, string}
-import io.fintrospect.formats.json.Circe.ResponseBuilder.implicits._
+import io.fintrospect.formats.Circe.JsonFormat.{obj, string}
+import io.fintrospect.formats.Circe.ResponseBuilder.implicits._
 
 object JsonHelloWorld {
 
