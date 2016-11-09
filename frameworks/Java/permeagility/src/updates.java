@@ -1,3 +1,4 @@
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import java.util.HashMap;
@@ -21,9 +22,12 @@ public final class updates extends Download {
         if (qn < 1) qn = 1;
         if (qn > 500) qn = 500;
 
+	ODatabaseDocumentTx db = con.getDb();
+
         JSONArray ja = new JSONArray();
         for (int i=0; i<qn; i++) {
             JSONObject jo = new JSONObject();
+	    db.begin();
             ODocument d = con.queryDocument("SELECT FROM World WHERE id="+Math.random()*10000+" LOCK RECORD NOCACHE");
             if (d != null) {
                 int id = (int)d.field("id", OType.INTEGER);
@@ -33,7 +37,10 @@ public final class updates extends Download {
                 jo.put("id", id);
                 jo.put("randomNumber", newRand);
                 ja.put(jo);
-            }
+		db.commit();
+            } else {
+		db.rollback();
+	    }
         }
         return ja.toString().getBytes();
     }

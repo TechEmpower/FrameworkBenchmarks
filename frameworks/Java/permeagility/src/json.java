@@ -8,7 +8,7 @@ import permeagility.web.Download;
  */
 public final class json extends Download {
 
-    @Override public String getContentType() { return "application/json; charset=utf-8;"; }
+    @Override public String getContentType() { return "application/json"; }
 
     @Override public String getContentDisposition() { return null; }
 
