@@ -32,7 +32,6 @@ public final class updates extends Download {
             if (d != null) {
                 int id = (int)d.field("id", OType.INTEGER);
                 int newRand = (int)(Math.random()*10000);
-//                con.update("UPDATE "+d.getIdentity().toString()+" SET randomNumber=" + newRand + " LOCK RECORD");
                 d.field("randomNumber",newRand).save();
                 jo.put("id", id);
                 jo.put("randomNumber", newRand);
