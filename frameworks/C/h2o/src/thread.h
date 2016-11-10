@@ -30,7 +30,7 @@
 #include "event_loop.h"
 #include "utility.h"
 
-#define DEFAULT_CACHE_LINE_SIZE 64
+#define DEFAULT_CACHE_LINE_SIZE 128
 
 typedef struct thread_context_t thread_context_t;
 
@@ -42,7 +42,7 @@ struct thread_context_t {
 	event_loop_t event_loop;
 	pthread_t thread;
 	// Align on the cache line size to prevent false sharing.
-	char padding[49];
+	char padding[89];
 };
 
 static_assert(!(sizeof(thread_context_t) % DEFAULT_CACHE_LINE_SIZE),

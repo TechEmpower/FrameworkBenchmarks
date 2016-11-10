@@ -53,7 +53,6 @@ typedef struct {
 
 typedef struct {
 	db_query_param_t param;
-	yajl_gen gen;
 	const char *id_pointer;
 	h2o_req_t *req;
 	uint32_t id;
@@ -63,16 +62,18 @@ typedef struct {
 
 typedef struct {
 	single_query_ctx_t single;
+	yajl_gen gen;
 	size_t num_query;
 	size_t num_result;
 	update_state_t update_state;
 	query_result_t res[];
 } multiple_query_ctx_t;
 
+static void cleanup_request(void *data);
 static int do_multiple_queries(update_state_t update_state, h2o_req_t *req);
-static int initialize_single_query_context(h2o_req_t *req,
-                                           on_result_t on_result,
-                                           single_query_ctx_t *query_ctx);
+static void initialize_single_query_context(h2o_req_t *req,
+                                            on_result_t on_result,
+                                            single_query_ctx_t *query_ctx);
 static void on_database_error(db_query_param_t *param, const char *error_string);
 static void on_database_timeout(db_query_param_t *param);
 static result_return_t on_multiple_query_result(db_query_param_t *param, PGresult *result);
@@ -84,6 +85,14 @@ static void serialize_items(const query_result_t *res,
                             size_t num_result,
                             yajl_gen gen,
                             h2o_req_t *req);
+
+static void cleanup_request(void *data)
+{
+	const multiple_query_ctx_t * const query_ctx = data;
+
+	if (query_ctx->gen)
+		yajl_gen_free(query_ctx->gen);
+}
 
 static int do_multiple_queries(update_state_t update_state, h2o_req_t *req)
 {
@@ -108,16 +117,13 @@ static int do_multiple_queries(update_state_t update_state, h2o_req_t *req)
 		num_query = MAX_QUERIES;
 
 	const size_t sz = offsetof(multiple_query_ctx_t, res) + num_query * sizeof(query_result_t);
-	multiple_query_ctx_t * const query_ctx = h2o_mem_alloc_pool(&req->pool, sz);
+	multiple_query_ctx_t * const query_ctx = h2o_mem_alloc_shared(&req->pool, sz, cleanup_request);
 
-	if (!query_ctx || initialize_single_query_context(req,
-	                                                  on_multiple_query_result,
-	                                                  &query_ctx->single))
-		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
-	else {
+	if (query_ctx) {
 		// MAX_ID is a relatively small number, so allocate on the stack.
 		DEFINE_BITSET(bitset, MAX_ID);
 
+		initialize_single_query_context(req, on_multiple_query_result, &query_ctx->single);
 		memset(&query_ctx->single + 1,
 		       0,
 		       offsetof(multiple_query_ctx_t, res) - sizeof(query_ctx->single));
@@ -138,43 +144,37 @@ static int do_multiple_queries(update_state_t update_state, h2o_req_t *req)
 
 		query_ctx->single.id = htonl(query_ctx->res->id);
 
-		if (execute_query(ctx, &query_ctx->single.param)) {
-			yajl_gen_free(query_ctx->single.gen);
+		if (execute_query(ctx, &query_ctx->single.param))
 			send_service_unavailable_error(DB_REQ_ERROR, req);
-		}
+		else
+			// Create a JSON generator while the query is processed.
+			query_ctx->gen = get_json_generator(&req->pool);
 	}
+	else
+		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
 
 	return 0;
 }
 
-static int initialize_single_query_context(h2o_req_t *req,
-                                           on_result_t on_result,
-                                           single_query_ctx_t *query_ctx)
+static void initialize_single_query_context(h2o_req_t *req,
+                                            on_result_t on_result,
+                                            single_query_ctx_t *query_ctx)
 {
-	int ret = EXIT_FAILURE;
-
 	memset(query_ctx, 0, sizeof(*query_ctx));
-	query_ctx->gen = get_json_generator(&req->pool);
-
-	if (query_ctx->gen) {
-		query_ctx->id_format = 1;
-		query_ctx->id_len = sizeof(query_ctx->id);
-		query_ctx->id_pointer = (const char *) &query_ctx->id;
-		query_ctx->param.command = WORLD_TABLE_NAME;
-		query_ctx->param.nParams = 1;
-		query_ctx->param.on_error = on_database_error;
-		query_ctx->param.on_result = on_result;
-		query_ctx->param.on_timeout = on_database_timeout;
-		query_ctx->param.paramFormats = &query_ctx->id_format;
-		query_ctx->param.paramLengths = &query_ctx->id_len;
-		query_ctx->param.paramValues = &query_ctx->id_pointer;
-		query_ctx->param.flags = IS_PREPARED;
-		query_ctx->param.resultFormat = 1;
-		query_ctx->req = req;
-		ret = EXIT_SUCCESS;
-	}
-
-	return ret;
+	query_ctx->id_format = 1;
+	query_ctx->id_len = sizeof(query_ctx->id);
+	query_ctx->id_pointer = (const char *) &query_ctx->id;
+	query_ctx->param.command = WORLD_TABLE_NAME;
+	query_ctx->param.nParams = 1;
+	query_ctx->param.on_error = on_database_error;
+	query_ctx->param.on_result = on_result;
+	query_ctx->param.on_timeout = on_database_timeout;
+	query_ctx->param.paramFormats = &query_ctx->id_format;
+	query_ctx->param.paramLengths = &query_ctx->id_len;
+	query_ctx->param.paramValues = &query_ctx->id_pointer;
+	query_ctx->param.flags = IS_PREPARED;
+	query_ctx->param.resultFormat = 1;
+	query_ctx->req = req;
 }
 
 static void on_database_error(db_query_param_t *param, const char *error_string)
@@ -183,7 +183,6 @@ static void on_database_error(db_query_param_t *param, const char *error_string)
 	                                                              param,
 	                                                              param);
 
-	yajl_gen_free(query_ctx->gen);
 	send_error(BAD_GATEWAY, error_string, query_ctx->req);
 }
 
@@ -193,7 +192,6 @@ static void on_database_timeout(db_query_param_t *param)
 	                                                              param,
 	                                                              param);
 
-	yajl_gen_free(query_ctx->gen);
 	send_error(GATEWAY_TIMEOUT, DB_TIMEOUT_ERROR, query_ctx->req);
 }
 
@@ -228,7 +226,7 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 		else if (query_ctx->update_state == NO_UPDATE) {
 			serialize_items(query_ctx->res,
 			                query_ctx->num_result,
-			                query_ctx->single.gen,
+			                query_ctx->gen,
 			                query_ctx->single.req);
 			return DONE;
 		}
@@ -253,7 +251,6 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 		PQclear(result);
 	}
 
-	yajl_gen_free(query_ctx->single.gen);
 	return DONE;
 }
 
@@ -275,9 +272,17 @@ static result_return_t on_single_query_result(db_query_param_t *param, PGresult 
 		random_number = ntohl(random_number);
 		PQclear(result);
 
-		if (!serialize_item(ntohl(query_ctx->id), random_number, query_ctx->gen) &&
-		    !send_json_response(query_ctx->gen, NULL, query_ctx->req))
-			return DONE;
+		const yajl_gen gen = get_json_generator(&query_ctx->req->pool);
+
+		if (gen) {
+			// The response is small enough, so that it is simpler to copy it
+			// instead of doing a delayed deallocation of the JSON generator.
+			if (!serialize_item(ntohl(query_ctx->id), random_number, gen) &&
+			    !send_json_response(gen, true, query_ctx->req))
+				return DONE;
+
+			yajl_gen_free(gen);
+		}
 
 		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, query_ctx->req);
 	}
@@ -286,7 +291,6 @@ static result_return_t on_single_query_result(db_query_param_t *param, PGresult 
 		PQclear(result);
 	}
 
-	yajl_gen_free(query_ctx->gen);
 	return DONE;
 }
 
@@ -318,7 +322,7 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 
 			serialize_items(query_ctx->res,
 			                query_ctx->num_result,
-			                query_ctx->single.gen,
+			                query_ctx->gen,
 			                query_ctx->single.req);
 			ret = DONE;
 			break;
@@ -329,7 +333,6 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 	PQclear(result);
 	return ret;
 error:
-	yajl_gen_free(query_ctx->single.gen);
 	send_error(BAD_GATEWAY, PQresultErrorMessage(result), query_ctx->single.req);
 	PQclear(result);
 	return DONE;
@@ -419,19 +422,25 @@ static void serialize_items(const query_result_t *res,
                             yajl_gen gen,
                             h2o_req_t *req)
 {
-	CHECK_YAJL_STATUS(yajl_gen_array_open, gen);
+	// In principle the JSON generator can be created here, but we do it earlier,
+	// so that it happens in parallel with the database query; we assume that the
+	// allocation will rarely fail, so that the delayed error handling is not
+	// problematic.
+	if (gen) {
+		CHECK_YAJL_STATUS(yajl_gen_array_open, gen);
 
-	for (size_t i = 0; i < num_result; i++)
-		if (serialize_item(res[i].id, res[i].random_number, gen))
-			goto error_yajl;
+		for (size_t i = 0; i < num_result; i++)
+			if (serialize_item(res[i].id, res[i].random_number, gen))
+				goto error_yajl;
 
-	CHECK_YAJL_STATUS(yajl_gen_array_close, gen);
+		CHECK_YAJL_STATUS(yajl_gen_array_close, gen);
 
-	if (send_json_response(gen, NULL, req)) {
-error_yajl:
-		yajl_gen_free(gen);
-		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+		if (!send_json_response(gen, false, req))
+			return;
 	}
+
+error_yajl:
+	send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
 }
 
 int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
@@ -450,18 +459,15 @@ int single_query(struct st_h2o_handler_t *self, h2o_req_t *req)
 	                                                      req->conn->ctx);
 	single_query_ctx_t * const query_ctx = h2o_mem_alloc_pool(&req->pool, sizeof(*query_ctx));
 
-	if (!query_ctx || initialize_single_query_context(req,
-	                                                  on_single_query_result,
-	                                                  query_ctx))
-		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
-	else {
+	if (query_ctx) {
+		initialize_single_query_context(req, on_single_query_result, query_ctx);
 		query_ctx->id = htonl(get_random_number(MAX_ID, &ctx->random_seed) + 1);
 
-		if (execute_query(ctx, &query_ctx->param)) {
-			yajl_gen_free(query_ctx->gen);
+		if (execute_query(ctx, &query_ctx->param))
 			send_service_unavailable_error(DB_REQ_ERROR, req);
-		}
 	}
+	else
+		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
 
 	return 0;
 }
