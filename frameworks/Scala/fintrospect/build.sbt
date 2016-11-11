@@ -1,6 +1,6 @@
 name := """techempower-benchmarks-fintrospect"""
 
-version := "0.0.7"
+version := "0.0.8"
 
 scalaVersion := "2.11.8"
 
@@ -15,10 +15,8 @@ com.github.retronym.SbtOneJar.oneJarSettings
 mainClass in(Compile, run) := Some("FintrospectBenchmarkServer")
 
 libraryDependencies ++= Seq(
-  "io.fintrospect" %% "fintrospect-core" % "13.10.1",
-  "io.fintrospect" %% "fintrospect-circe" % "13.10.1",
-  "io.fintrospect" %% "fintrospect-mustache" % "13.10.1",
-  "com.twitter" %% "finagle-mysql" % "6.38.0"
+  "io.fintrospect" %% "fintrospect-core" % "13.11.0",
+  "io.fintrospect" %% "fintrospect-json4s" % "13.11.0"
   )
 
 resolvers += Resolver.sonatypeRepo("snapshots")
