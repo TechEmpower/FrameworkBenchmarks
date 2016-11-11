@@ -13,14 +13,15 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "Postgres",
-      "framework": "H2O",
+      "framework": "None",
       "language": "C",
+      "flavor": "None",
       "orm": "Raw",
-      "platform": "H2O",
-      "webserver": "H2O",
+      "platform": "None",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "h2o",
+      "display_name": "H2O",
       "notes": ""
     }
   }]

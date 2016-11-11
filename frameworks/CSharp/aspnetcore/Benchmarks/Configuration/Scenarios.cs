@@ -44,6 +44,15 @@ namespace Benchmarks.Configuration
         [ScenarioPath("/queries/dapper")]
         public bool DbMultiQueryDapper { get; set; }
 
+        [ScenarioPath("/updates/raw")]
+        public bool DbMultiUpdateRaw { get; set; }
+
+        [ScenarioPath("/updates/ef")]
+        public bool DbMultiUpdateEf { get; set; }
+
+        [ScenarioPath("/updates/dapper")]
+        public bool DbMultiUpdateDapper { get; set; }
+
         [ScenarioPath("/fortunes/raw")]
         public bool DbFortunesRaw { get; set; }
 
@@ -62,23 +71,32 @@ namespace Benchmarks.Configuration
         [ScenarioPath("/mvc/view")]
         public bool MvcViews { get; set; }
 
-        //[ScenarioPath("/mvc/db/raw")]
-        //public bool MvcDbSingleQueryRaw { get; set; }
+        [ScenarioPath("/mvc/db/raw")]
+        public bool MvcDbSingleQueryRaw { get; set; }
 
-        //[ScenarioPath("/mvc/db/dapper")]
-        //public bool MvcDbSingleQueryDapper { get; set; }
+        [ScenarioPath("/mvc/db/dapper")]
+        public bool MvcDbSingleQueryDapper { get; set; }
 
-        //[ScenarioPath("/mvc/db/ef")]
-        //public bool MvcDbSingleQueryEf { get; set; }
+        [ScenarioPath("/mvc/db/ef")]
+        public bool MvcDbSingleQueryEf { get; set; }
 
-        //[ScenarioPath("/mvc/queries/raw")]
-        //public bool MvcDbMultiQueryRaw { get; set; }
+        [ScenarioPath("/mvc/queries/raw")]
+        public bool MvcDbMultiQueryRaw { get; set; }
 
-        //[ScenarioPath("/mvc/queries/dapper")]
-        //public bool MvcDbMultiQueryDapper { get; set; }
+        [ScenarioPath("/mvc/queries/dapper")]
+        public bool MvcDbMultiQueryDapper { get; set; }
 
-        //[ScenarioPath("/mvc/queries/ef")]
-        //public bool MvcDbMultiQueryEf { get; set; }
+        [ScenarioPath("/mvc/queries/ef")]
+        public bool MvcDbMultiQueryEf { get; set; }
+
+        [ScenarioPath("/mvc/updates/raw")]
+        public bool MvcDbMultiUpdateRaw { get; set; }
+
+        [ScenarioPath("/mvc/updates/dapper")]
+        public bool MvcDbMultiUpdateDapper { get; set; }
+
+        [ScenarioPath("/mvc/updates/ef")]
+        public bool MvcDbMultiUpdateEf { get; set; }
 
         [ScenarioPath("/mvc/fortunes/raw")]
         public bool MvcDbFortunesRaw { get; set; }

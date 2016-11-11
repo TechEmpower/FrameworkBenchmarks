@@ -6,13 +6,14 @@ REQUEST AGAINST THE CORRECT BRANCH
 
 ....................................
 
-master = bug fixes directly
-addressing the current preview round
+master = currently not accepting pull
+requests as we prepare for our Round 13
+final release.
 
-round-X = new features, frameworks,
-tests, and any other larger changes
-that you would like to see in the
-next round
+round-14 = new features, frameworks, 
+tests, bug fixes, and any other 
+changes that you would like to see in 
+the next round.
 
 ....................................
 -->

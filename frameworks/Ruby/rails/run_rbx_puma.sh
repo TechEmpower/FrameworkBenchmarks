@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm rbx-2.4
+fw_depends rvm rbx-2.5
 
 rvm rbx-$RBX_VERSION do bundle install --jobs=4 --gemfile=$TROOT/Gemfile --path=vendor/bundle
 

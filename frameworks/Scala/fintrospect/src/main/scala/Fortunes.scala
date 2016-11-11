@@ -30,12 +30,12 @@ object Fortunes {
   private val dbClient = Mysql.client
     .withCredentials("benchmarkdbuser", "benchmarkdbpass")
     .withDatabase("hello_world")
-    .configured(Param(low = 0, high = 10, idleTime = fromSeconds(5 * 60), bufferSize = 0, maxWaiters = Int.MaxValue))
+    .configured(Param(low = 0, high = 256, idleTime = fromSeconds(5 * 60), bufferSize = 0, maxWaiters = Int.MaxValue))
     .withStatsReceiver(NullStatsReceiver)
     .withMonitor(NullMonitor)
     .withTracer(NullTracer)
     .withMaxConcurrentPrepareStatements(256)
-    .newRichClient("localhost:3306")
+    .newRichClient(s"${System.getenv("DB_HOST")}:3306")
 
   private val statement = dbClient.prepare("SELECT * FROM Fortune")
 

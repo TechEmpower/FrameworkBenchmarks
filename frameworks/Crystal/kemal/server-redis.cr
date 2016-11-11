@@ -1,6 +1,5 @@
 require "kemal"
 require "redis"
-require "html_builder"
 
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
@@ -96,30 +95,7 @@ get "/fortunes" do |env|
 
   data.sort_by! { |fortune| fortune[:message] }
 
-  env.response.content_type = CONTENT::HTML
-  # New builder for each request!
-  HTML::Builder.new.build do
-    doctype
-    html {
-      head {
-        title { html "Fortunes" }
-      }
-      body {
-        table {
-          tr {
-            th { html "id" }
-            th { html "message" }
-          }
-          data.each { |e|
-            tr {
-              td { html e[:id] }
-              td { text e[:message] }
-            }
-          }
-        }
-      }
-    }
-  end
+  render "views/fortunes.ecr"
 end
 
 # Redis Test 5: Database Updates
@@ -132,4 +108,5 @@ get "/updates" do |env|
   updated.to_json
 end
 
+logging false
 Kemal.run

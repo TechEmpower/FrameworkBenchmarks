@@ -12,12 +12,13 @@
       "database": "MySQL",
       "framework": "racket-ws",
       "language": "Racket",
+      "flavor": "Racket6.6",
       "orm": "Micro",
-      "platform": "Racket",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "racket-ws",
+      "display_name": "Racket-ws",
       "notes": "",
       "versus": ""
     }
