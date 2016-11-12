@@ -1,36 +1,46 @@
 import java.time.ZonedDateTime._
 import java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME
 
+import com.twitter.finagle.http.Method.Get
+import com.twitter.finagle.http.Request
+import com.twitter.finagle.http.Status._
 import com.twitter.finagle.http.path.Root
-import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.stats.NullStatsReceiver
 import com.twitter.finagle.tracing.NullTracer
-import com.twitter.finagle.{Filter, Http}
-import com.twitter.util.{Await, NullMonitor}
-import io.fintrospect.ModuleSpec
-import io.fintrospect.renderers.simplejson.SimpleJson
+import com.twitter.finagle.{Http, Service}
+import com.twitter.io.Buf
+import com.twitter.util.Await
+import io.fintrospect.formats.Json4sJackson.JsonFormat._
+import io.fintrospect.{ModuleSpec, RouteSpec}
 
 object FintrospectBenchmarkServer extends App {
 
-  val addServerAndDate = Filter.mk[Request, Response, Request, Response] { (req, svc) =>
-    svc(req).map(resp => {
-      resp.headerMap("Server") = "Example"
-      resp.headerMap("Date") = RFC_1123_DATE_TIME.format(now())
-      resp
-    })
+  val preAllocatedHelloWorldText = Buf.Utf8("Hello, World!")
+
+  val plainTextHelloWorld = {
+    import io.fintrospect.formats.PlainText.ResponseBuilder.implicits._
+    Service.mk { r: Request =>
+      Ok(preAllocatedHelloWorldText)
+        .withHeaders("Server" -> "Example", "Date" -> RFC_1123_DATE_TIME.format(now()))
+    }
   }
 
-  val module = ModuleSpec(Root, SimpleJson(), addServerAndDate)
-    .withRoute(JsonHelloWorld.route)
-    .withRoute(PlainTextHelloWorld.route)
-    .withRoute(Fortunes.route)
+  val jsonHelloWorld = {
+    import io.fintrospect.formats.Json4sJackson.ResponseBuilder.implicits._
+    Service.mk { r: Request => Ok(obj("message" -> string("Hello, World!")))
+      .withHeaders("Server" -> "Example", "Date" -> RFC_1123_DATE_TIME.format(now()))
+    }
+  }
+
+  val module = ModuleSpec(Root)
+    .withRoute(RouteSpec().at(Get) / "plaintext" bindTo plainTextHelloWorld)
+    .withRoute(RouteSpec().at(Get) / "json" bindTo jsonHelloWorld)
 
   Await.ready(
     Http.server
       .withCompressionLevel(0)
       .withStatsReceiver(NullStatsReceiver)
       .withTracer(NullTracer)
-      .withMonitor(NullMonitor)
       .serve(":9000", module.toService)
   )
 }
