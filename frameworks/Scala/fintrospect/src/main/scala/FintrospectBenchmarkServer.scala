@@ -9,7 +9,7 @@ import com.twitter.finagle.stats.NullStatsReceiver
 import com.twitter.finagle.tracing.NullTracer
 import com.twitter.finagle.{Http, Service}
 import com.twitter.io.Buf
-import com.twitter.util.Await
+import com.twitter.util.{Await, NullMonitor}
 import io.fintrospect.formats.Json4sJackson.JsonFormat._
 import io.fintrospect.{ModuleSpec, RouteSpec}
 
@@ -41,6 +41,7 @@ object FintrospectBenchmarkServer extends App {
       .withCompressionLevel(0)
       .withStatsReceiver(NullStatsReceiver)
       .withTracer(NullTracer)
+      .withMonitor(NullMonitor)
       .serve(":9000", module.toService)
   )
 }
