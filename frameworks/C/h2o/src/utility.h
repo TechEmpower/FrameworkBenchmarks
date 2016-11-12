@@ -67,7 +67,11 @@ typedef struct {
 	h2o_globalconf_t h2o_config;
 } global_data_t;
 
+// Call yajl_gen_free() on the result, even though the JSON generator
+// uses a memory pool; in this way the code remains correct if the
+// underlying memory allocator is changed (e.g. for debugging purposes).
 yajl_gen get_json_generator(h2o_mem_pool_t *pool);
+
 uint32_t get_random_number(uint32_t max_rand, unsigned int *seed);
 
 #endif // UTILITY_H_
