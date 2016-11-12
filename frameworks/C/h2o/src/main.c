@@ -24,6 +24,7 @@
 #include <netdb.h>
 #include <signal.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,6 +45,7 @@
 #include "tls.h"
 #include "utility.h"
 
+#define DEFAULT_CACHE_LINE_SIZE 128
 #define DEFAULT_TCP_FASTOPEN_QUEUE_LEN 4096
 #define USAGE_MESSAGE \
 	"Usage:\n%s [-a <max connections accepted simultaneously>] [-b <bind address>] " \
@@ -63,8 +65,12 @@ static void setup_process(void);
 
 static void free_global_data(global_data_t *global_data)
 {
-	if (global_data->ctx)
-		free_thread_contexts(global_data);
+	if (global_data->global_thread_data) {
+		for (size_t i = 1; i < global_data->global_thread_data->config->thread_num; i++)
+			CHECK_ERROR(pthread_join, global_data->global_thread_data[i].thread, NULL);
+
+		free(global_data->global_thread_data);
+	}
 
 	if (global_data->file_logger)
 		global_data->file_logger->dispose(global_data->file_logger);
@@ -177,14 +183,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	sigset_t signals;
 
 	memset(global_data, 0, sizeof(*global_data));
-	global_data->config = config;
 	global_data->memory_alignment = get_maximum_cache_line_size();
-
-	if (global_data->memory_alignment > DEFAULT_CACHE_LINE_SIZE) {
-		ERROR("Unexpected maximum cache line size.");
-		return EXIT_FAILURE;
-	}
-
 	CHECK_ERRNO(sigemptyset, &signals);
 #ifdef NDEBUG
 	CHECK_ERRNO(sigaddset, &signals, SIGINT);
@@ -199,7 +198,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 		goto error;
 
 	if (config->cert && config->key)
-		initialize_openssl(global_data);
+		initialize_openssl(config, global_data);
 
 	const h2o_iovec_t host = h2o_iovec_init(H2O_STRLIT("default"));
 	h2o_hostconf_t * const hostconf = h2o_config_register_host(&global_data->h2o_config,
@@ -225,9 +224,9 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 			global_data->file_logger = h2o_access_log_register(pathconf, log_handle);
 	}
 
-	global_data->ctx = initialize_thread_contexts(global_data);
+	global_data->global_thread_data = initialize_global_thread_data(config, global_data);
 
-	if (global_data->ctx) {
+	if (global_data->global_thread_data) {
 		printf("Number of processors: %zu\nMaximum cache line size: %zu\n",
 		       h2o_numproc(),
 		       global_data->memory_alignment);
@@ -362,10 +361,17 @@ int main(int argc, char *argv[])
 		global_data_t global_data;
 
 		if (initialize_global_data(&config, &global_data) == EXIT_SUCCESS) {
+			thread_context_t ctx;
+
 			setup_process();
-			start_threads(global_data.ctx);
-			connect_to_database(global_data.ctx);
-			event_loop(global_data.ctx);
+			start_threads(global_data.global_thread_data);
+			initialize_thread_context(global_data.global_thread_data, true, &ctx);
+			connect_to_database(&ctx);
+			event_loop(&ctx);
+			// Even though this is global data, we need to close
+			// it before the associated event loop is cleaned up.
+			h2o_socket_close(global_data.signals);
+			free_thread_context(&ctx);
 			free_global_data(&global_data);
 			rc = EXIT_SUCCESS;
 		}
