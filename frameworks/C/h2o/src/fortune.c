@@ -159,12 +159,7 @@ static list_t *get_sorted_sublist(list_t *head)
 	if (head) {
 		head = head->next;
 
-		while (head && compare_fortunes(tail, head) < 0) {
-			tail = head;
-			head = head->next;
-		}
-
-		while (head && !compare_fortunes(tail, head)) {
+		while (head && compare_fortunes(tail, head) <= 0) {
 			tail = head;
 			head = head->next;
 		}
