@@ -67,7 +67,7 @@
 		<url-pattern>/postgres-update</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>postgre-fortunes</servlet-name>
+		<servlet-name>postgres-fortunes</servlet-name>
 		<servlet-class>hello.PostgreFortunesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -75,4 +75,12 @@
 		<servlet-name>postgres-fortunes</servlet-name>
 		<url-pattern>/postgres-fortunes</url-pattern>
 	</servlet-mapping>
+  <resource-env-ref>
+	<resource-env-ref-name>jdbc/hello_world</resource-env-ref-name>
+	<resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
+  </resource-env-ref>
+  <resource-env-ref>
+	<resource-env-ref-name>jdbc/postgres_hello_world</resource-env-ref-name>
+	<resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
+  </resource-env-ref>
 </web-app>
