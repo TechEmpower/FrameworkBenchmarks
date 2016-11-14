@@ -15,6 +15,7 @@
       "database": "MySQL",
       "framework": "jawn",
       "language": "Java",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "Servlet",
       "webserver": "Undertow",
