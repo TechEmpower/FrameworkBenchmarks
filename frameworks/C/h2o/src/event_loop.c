@@ -24,7 +24,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/epoll.h>
-#include <sys/syscall.h>
 
 #include "error.h"
 #include "event_loop.h"
@@ -57,7 +56,7 @@ static void accept_connection(h2o_socket_t *listener, const char *err)
 				sock->on_close.cb = on_close_connection;
 				sock->on_close.data = &ctx->event_loop.conn_num;
 				h2o_accept(&ctx->event_loop.h2o_accept_ctx, sock);
-			} while (++accepted < ctx->global_data->config->max_accept);
+			} while (++accepted < ctx->config->max_accept);
 		}
 	}
 }
@@ -96,11 +95,11 @@ static void process_messages(h2o_multithread_receiver_t *receiver, h2o_linklist_
 {
 	IGNORE_FUNCTION_PARAMETER(messages);
 
-	thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
-	                                                      event_loop.h2o_receiver,
-	                                                      receiver);
+	global_thread_data_t * const global_thread_data = H2O_STRUCT_FROM_MEMBER(global_thread_data_t,
+	                                                                         h2o_receiver,
+	                                                                         receiver);
 
-	h2o_socket_read_stop(ctx->event_loop.h2o_socket);
+	h2o_socket_read_stop(global_thread_data->ctx->event_loop.h2o_socket);
 }
 
 static void shutdown_server(h2o_socket_t *listener, const char *err)
@@ -113,23 +112,20 @@ static void shutdown_server(h2o_socket_t *listener, const char *err)
 		ctx->global_data->shutdown = true;
 		h2o_socket_read_stop(ctx->event_loop.h2o_socket);
 
-		for (size_t i = 1; i < ctx->global_data->config->thread_num; i++)
-			h2o_multithread_send_message(&ctx[i].event_loop.h2o_receiver, NULL);
+		for (size_t i = 1; i < ctx->config->thread_num; i++)
+			h2o_multithread_send_message(&ctx->global_thread_data[i].h2o_receiver, NULL);
 	}
 }
 
 void event_loop(thread_context_t *ctx)
 {
-	ctx->tid = syscall(SYS_gettid);
-	ctx->random_seed = ctx->tid;
-
 	while (!ctx->global_data->shutdown || ctx->event_loop.conn_num)
 		h2o_evloop_run(ctx->event_loop.h2o_ctx.loop);
 }
 
-void free_event_loop(event_loop_t *event_loop)
+void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_receiver)
 {
-	h2o_multithread_unregister_receiver(event_loop->h2o_ctx.queue, &event_loop->h2o_receiver);
+	h2o_multithread_unregister_receiver(event_loop->h2o_ctx.queue, h2o_receiver);
 	h2o_socket_close(event_loop->h2o_socket);
 	h2o_socket_close(event_loop->epoll_socket);
 	h2o_context_dispose(&event_loop->h2o_ctx);
@@ -137,6 +133,7 @@ void free_event_loop(event_loop_t *event_loop)
 
 void initialize_event_loop(bool is_main_thread,
                            global_data_t *global_data,
+                           h2o_multithread_receiver_t *h2o_receiver,
                            event_loop_t *loop)
 {
 	memset(loop, 0, sizeof(*loop));
@@ -165,7 +162,7 @@ void initialize_event_loop(bool is_main_thread,
 	loop->h2o_socket->data = loop;
 	h2o_socket_read_start(loop->h2o_socket, accept_connection);
 	h2o_multithread_register_receiver(loop->h2o_ctx.queue,
-	                                  &loop->h2o_receiver,
+	                                  h2o_receiver,
 	                                  process_messages);
 	// libh2o's event loop does not support write polling unless it
 	// controls sending the data as well, so do read polling on the

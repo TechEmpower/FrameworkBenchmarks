@@ -36,7 +36,7 @@
 #define TOSTRING(x) # x
 #define YAJL_STRLIT(s) (const unsigned char *) (s), sizeof(s) - 1
 
-typedef struct thread_context_t thread_context_t;
+typedef struct global_thread_data_t global_thread_data_t;
 
 typedef struct {
 	const char *bind_address;
@@ -54,12 +54,11 @@ typedef struct {
 } config_t;
 
 typedef struct {
-	const config_t *config;
-	thread_context_t *ctx;
 	h2o_logger_t *file_logger;
 	mustache_template_t *fortunes_template;
 	h2o_socket_t *signals;
 	SSL_CTX *ssl_ctx;
+	global_thread_data_t *global_thread_data;
 	size_t memory_alignment;
 	int listener_sd;
 	int signal_fd;
@@ -67,7 +66,11 @@ typedef struct {
 	h2o_globalconf_t h2o_config;
 } global_data_t;
 
+// Call yajl_gen_free() on the result, even though the JSON generator
+// uses a memory pool; in this way the code remains correct if the
+// underlying memory allocator is changed (e.g. for debugging purposes).
 yajl_gen get_json_generator(h2o_mem_pool_t *pool);
+
 uint32_t get_random_number(uint32_t max_rand, unsigned int *seed);
 
 #endif // UTILITY_H_
