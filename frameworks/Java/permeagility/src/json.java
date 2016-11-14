@@ -9,12 +9,11 @@ import permeagility.web.Download;
 public final class json extends Download {
 
     @Override public String getContentType() { return "application/json"; }
-    
+
     @Override public String getContentDisposition() { return null; }
-    
+
     @Override public byte[] getBytes(DatabaseConnection con, HashMap<String, String> parms) {
-        JSONObject jsonObject = new JSONObject().put("message", "Hello, World!");
-	return jsonObject.toString().getBytes();
+	return "{\"message\":\"Hello, World!\"}".getBytes();
     }
 
 }

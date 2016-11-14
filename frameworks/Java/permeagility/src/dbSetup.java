@@ -4,7 +4,6 @@ import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.metadata.security.ORule.ResourceGeneric;
 import com.orientechnologies.orient.core.record.impl.ODocument;
-import java.text.Collator;
 import java.util.HashMap;
 import permeagility.util.DatabaseConnection;
 import permeagility.util.Setup;
@@ -87,6 +86,7 @@ public class dbSetup extends Weblet {
             Setup.createMenuItem(con, "5-updates", "updates Test", "updates", menuGroup.getIdentity().toString().substring(1), roles);
             Setup.createMenuItem(con, "6-plaintext", "plaintext Test", "plaintext", menuGroup.getIdentity().toString().substring(1), roles);
             Server.tableUpdated("menu");
+            messages.append("complete");
         }        
         
         return head("dbSetup")+body(standardLayout(con, parms, 
