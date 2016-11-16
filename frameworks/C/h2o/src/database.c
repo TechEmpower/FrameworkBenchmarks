@@ -353,8 +353,7 @@ static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 			goto error;
 		}
 
-		const char * const conninfo =
-			ctx->global_data->config->db_host ? ctx->global_data->config->db_host : "";
+		const char * const conninfo = ctx->config->db_host ? ctx->config->db_host : "";
 
 		db_conn->conn = PQconnectStart(conninfo);
 
@@ -441,7 +440,7 @@ static void stop_database_write_polling(db_conn_t *db_conn)
 
 void connect_to_database(thread_context_t *ctx)
 {
-	for (size_t i = ctx->db_state.db_conn_num; i < ctx->global_data->config->max_db_conn_num; i++)
+	for (size_t i = ctx->db_state.db_conn_num; i < ctx->config->max_db_conn_num; i++)
 		start_database_connect(ctx, NULL);
 }
 
@@ -475,13 +474,13 @@ int execute_query(thread_context_t *ctx, db_query_param_t *param)
 		db_conn->param = param;
 		do_execute_query(db_conn);
 	}
-	else if (ctx->db_state.query_num < ctx->global_data->config->max_query_num) {
+	else if (ctx->db_state.query_num < ctx->config->max_query_num) {
 		param->l.next = NULL;
 		*ctx->db_state.queries.tail = &param->l;
 		ctx->db_state.queries.tail = &param->l.next;
 		ctx->db_state.query_num++;
 
-		if (ctx->db_state.db_conn_num < ctx->global_data->config->max_db_conn_num)
+		if (ctx->db_state.db_conn_num < ctx->config->max_db_conn_num)
 			start_database_connect(ctx, NULL);
 	}
 	else

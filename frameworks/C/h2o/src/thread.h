@@ -24,33 +24,41 @@
 #include <assert.h>
 #include <h2o.h>
 #include <pthread.h>
+#include <stdbool.h>
 #include <sys/types.h>
 
 #include "database.h"
 #include "event_loop.h"
 #include "utility.h"
 
-#define DEFAULT_CACHE_LINE_SIZE 64
-
 typedef struct thread_context_t thread_context_t;
 
-struct thread_context_t {
+typedef struct global_thread_data_t {
+	const config_t *config;
+	thread_context_t *ctx;
 	global_data_t *global_data;
+	h2o_multithread_receiver_t h2o_receiver;
+	pthread_t thread;
+} global_thread_data_t;
+
+struct thread_context_t {
+	const config_t *config;
+	global_data_t *global_data;
+	// global_thread_data contains config and global_data as well,
+	// but keep copies here to avoid some pointer chasing.
+	global_thread_data_t *global_thread_data;
 	unsigned random_seed;
 	pid_t tid;
 	db_state_t db_state;
 	event_loop_t event_loop;
-	pthread_t thread;
-	// Align on the cache line size to prevent false sharing.
-	char padding[49];
 };
 
-static_assert(!(sizeof(thread_context_t) % DEFAULT_CACHE_LINE_SIZE),
-              "The size of the thread_context_t structure must be a "
-              "multiple of the cache line size.");
-
-void free_thread_contexts(global_data_t *global_data);
-thread_context_t *initialize_thread_contexts(global_data_t *global_data);
-void start_threads(thread_context_t *ctx);
+void free_thread_context(thread_context_t *ctx);
+global_thread_data_t *initialize_global_thread_data(const config_t *config,
+                                                    global_data_t *global_data);
+void initialize_thread_context(global_thread_data_t *global_thread_data,
+                               bool is_main_thread,
+                               thread_context_t *ctx);
+void start_threads(global_thread_data_t *global_thread_data);
 
 #endif // THREAD_H_
