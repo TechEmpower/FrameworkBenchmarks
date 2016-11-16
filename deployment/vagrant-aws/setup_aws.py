@@ -101,8 +101,12 @@ def run_aws(command, prefix=True, load=True):
   log.debug("Request : %s", command)
   result = subprocess.check_output(command, shell=True)
   log.debug("Response: %s", result)
-  if load:
-    return json.loads(result)
+  if load and result != '':
+    try:
+      return json.loads(result)
+    except ValueError:
+      log.error("Could not parse result '%s' as JSON for command '%s'", result, command)
+      raise
   else:
     return result
 

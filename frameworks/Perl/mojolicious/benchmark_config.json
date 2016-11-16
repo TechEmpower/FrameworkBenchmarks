@@ -16,7 +16,7 @@
       "framework": "mojolicious",
       "language": "Perl",
       "orm": "Raw",
-      "platform": "Mojolicious",
+      "platform": "None",
       "webserver": "Hypnotoad",
       "os": "Linux",
       "database_os": "Linux",
@@ -26,4 +26,3 @@
     }
   }]
 }
-

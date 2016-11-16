@@ -88,9 +88,9 @@ get '/updates' do
     worlds = (1..queries).map do
       world = World.find(Random.rand(10000) + 1)
       world.randomNumber = Random.rand(10000) + 1
+      World.update(world.id, :randomNumber => world.randomNumber)
       world
     end
-    World.import worlds, :on_duplicate_key_update => [:randomNumber]
     worlds
   end
   json(worlds)

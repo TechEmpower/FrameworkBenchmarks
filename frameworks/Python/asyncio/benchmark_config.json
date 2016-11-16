@@ -15,13 +15,15 @@
       "database": "Postgres",
       "framework": "aiohttp.web",
       "language": "Python",
+      "flavor": "Python3",
       "orm": "Raw",
       "platform": "API-Hour",
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour+aiohttp.web+pgsql",
-      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + PostgreSQL"
+      "display_name": "Asyncio",
+      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + PostgreSQL",
+      "versus": "asyncio"
     },
     "mysql": {
       "setup_file": "aiohttp.web/setup",
@@ -35,13 +37,15 @@
       "database": "MySQL",
       "framework": "aiohttp.web",
       "language": "Python",
+      "flavor": "Python3",
       "orm": "Raw",
       "platform": "API-Hour",
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour+aiohttp.web+mysql",
-      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + MySQL"
+      "display_name": "Asyncio",
+      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp.web + MySQL",
+      "versus": "asyncio"
     },
     "json": {
       "setup_file": "yocto_http/setup",
@@ -52,13 +56,15 @@
       "database": "None",
       "framework": "AsyncIO",
       "language": "Python",
+      "flavor": "Python3",
       "orm": "Raw",
       "platform": "API-Hour",
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour+AsyncIO",
-      "notes": "Python 3 + API-Hour + AsyncIO"
+      "display_name": "Asyncio",
+      "notes": "Python 3 + API-Hour + AsyncIO",
+      "versus": "asyncio"
     },
     "dbs": {
       "setup_file": "yocto_http/setup",
@@ -71,13 +77,15 @@
       "database": "None",
       "framework": "AsyncIO",
       "language": "Python",
+      "flavor": "Python3",
       "orm": "Raw",
       "platform": "API-Hour",
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour+AsyncIO",
-      "notes": "Python 3 + API-Hour + AsyncIO"
+      "display_name": "Asyncio",
+      "notes": "Python 3 + API-Hour + AsyncIO",
+      "versus": "asyncio"
     },
     "plaintext": {
       "setup_file": "yocto_http/setup",
@@ -88,13 +96,15 @@
       "database": "None",
       "framework": "AsyncIO",
       "language": "Python",
+      "flavor": "Python3",
       "orm": "Raw",
       "platform": "API-Hour",
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "API-Hour+AsyncIO",
-      "notes": "Python 3 + API-Hour + AsyncIO"
+      "display_name": "Asyncio",
+      "notes": "Python 3 + API-Hour + AsyncIO",
+      "versus": "asyncio"
     }
   }]
 }

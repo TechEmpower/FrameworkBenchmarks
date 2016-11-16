@@ -10,11 +10,9 @@ dependencies:
     version: "0.2.3"
   kemal:
     github: "sdogruyol/kemal"
-    version: "0.14.1"
+    version: "0.16.0"
   redis:
     github: "stefanwille/crystal-redis"
-    version: "1.6.6"
-  html_builder:
-    github: "crystal-lang/html_builder"
-    version: "0.2.1"
+    version: "~> 1.6.6"
+
 license: "MIT"
