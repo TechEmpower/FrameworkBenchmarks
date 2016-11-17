@@ -131,6 +131,10 @@ fw_depends() {
       echo Installing framework: $depend in $relative_wd
       set -x
       . $FWROOT/toolset/setup/linux/frameworks/${depend}.sh
+    elif [ -f $FWROOT/toolset/setup/linux/databases/${depend}.sh ]; then
+      echo Installing database: $depend in $relative_wd
+      set -x
+      . $FWROOT/toolset/setup/linux/frameworks/${depend}.sh
     else
       echo WARN: No installer found for $depend
       # Return whence you came.
