@@ -1034,10 +1034,6 @@ class Benchmarker:
     if self.client_identity_file != None:
       self.client_ssh_string = self.client_ssh_string + " -i " + self.client_identity_file
 
-    if self.install is not None:
-      install = Installer(self, self.install_strategy)
-      install.install_software()
-
   ############################################################
   # End __init__
   ############################################################
