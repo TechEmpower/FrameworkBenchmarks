@@ -6,19 +6,19 @@
 # how databases are configured for Travis.
 #
 # Note on Compatibility: TFB *only* supports Ubuntu 14.04 64bit
-# (e.g. trusty64). However, it's nice to retain 12.04 support 
-# where possible, as it's still heavily used. 
+# (e.g. trusty64). However, it's nice to retain 12.04 support
+# where possible, as it's still heavily used.
 #
-# Database setup is one core area where we can help ensure TFB 
-# works on 12.04 with minimal frustration. In some cases we  
-# manually install the DB version that's expected, instead of the 
-# 12.04 default. In other cases we can use a 12.04 specific 
-# configuration file. These patches are not intended to enable 
-# benchmarking (e.g. there are no guarantees that 
-# the databases will be tuned for performance correctly), but 
-# they do allow users on 12.04 to install and run most TFB tests. 
-# Some tests internally have 12.04 incompatibilities, we make no 
-# concentrated effort to address these cases, but PR's for specific 
+# Database setup is one core area where we can help ensure TFB
+# works on 12.04 with minimal frustration. In some cases we
+# manually install the DB version that's expected, instead of the
+# 12.04 default. In other cases we can use a 12.04 specific
+# configuration file. These patches are not intended to enable
+# benchmarking (e.g. there are no guarantees that
+# the databases will be tuned for performance correctly), but
+# they do allow users on 12.04 to install and run most TFB tests.
+# Some tests internally have 12.04 incompatibilities, we make no
+# concentrated effort to address these cases, but PR's for specific
 # problems are welcome
 
 set -x
@@ -250,7 +250,7 @@ echo "Setting up Redis database"
 if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
   echo "WARNING: Downgrading Redis configuration for Ubuntu 12.04"
 
-  # On 12.04, Redis 2.4 is installed. It doesn't support 
+  # On 12.04, Redis 2.4 is installed. It doesn't support
   # some of the 2.6 options, so we have to remove or comment
   # those
   sed -i 's/tcp-keepalive/# tcp-keepalive/' redis.conf
@@ -261,7 +261,7 @@ if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
   sed -i 's/slave-priority/# slave-priority/' redis.conf
   sed -i 's/auto-aof-rewrite-percentage/# auto-aof-rewrite-percentage/' redis.conf
   sed -i 's/auto-aof-rewrite-min-size/# auto-aof-rewrite-min-size/' redis.conf
-  
+
   sed -i 's/lua-time-limit/# lua-time-limit/' redis.conf
   sed -i 's/notify-keyspace-events/# notify-keyspace-events/' redis.conf
   sed -i 's/hash-max-ziplist-entries/# hash-max-ziplist-entries/' redis.conf
@@ -269,7 +269,7 @@ if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
   sed -i 's/zset-max-ziplist-entries/# zset-max-ziplist-entries/' redis.conf
   sed -i 's/zset-max-ziplist-value/# zset-max-ziplist-value/' redis.conf
   sed -i 's/client-output-buffer-limit/# client-output-buffer-limit/' redis.conf
- 
+
   sed -i 's/hz 10/# hz 10/' redis.conf
   sed -i 's/aof-rewrite-incremental-fsync/# aof-rewrite-incremental-fsync/' redis.conf
 fi

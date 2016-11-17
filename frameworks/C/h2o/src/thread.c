@@ -22,9 +22,12 @@
 #include <errno.h>
 #include <h2o.h>
 #include <pthread.h>
+#include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include <h2o/serverutil.h>
 #include <sys/epoll.h>
+#include <sys/syscall.h>
 
 #include "database.h"
 #include "error.h"
@@ -35,71 +38,86 @@ static void *run_thread(void *arg);
 
 static void *run_thread(void *arg)
 {
-	connect_to_database(arg);
-	event_loop(arg);
+	thread_context_t ctx;
+
+	initialize_thread_context(arg, false, &ctx);
+	connect_to_database(&ctx);
+	event_loop(&ctx);
+	free_thread_context(&ctx);
 	pthread_exit(NULL);
 }
 
-void free_thread_contexts(global_data_t *global_data)
+void free_thread_context(thread_context_t *ctx)
 {
-	thread_context_t * const ctx = global_data->ctx;
-
-	for (size_t i = 0; i < ctx->global_data->config->thread_num; i++) {
-		if (i)
-			CHECK_ERROR(pthread_join, ctx[i].thread, NULL);
-		else
-			// Even though this is global data, we need to close
-			// it before the associated event loop is cleaned up.
-			h2o_socket_close(global_data->signals);
-
-		free_database_state(ctx[i].event_loop.h2o_ctx.loop, &ctx[i].db_state);
-		free_event_loop(&ctx[i].event_loop);
-	}
-
-	free(ctx);
+	free_database_state(ctx->event_loop.h2o_ctx.loop, &ctx->db_state);
+	free_event_loop(&ctx->event_loop, &ctx->global_thread_data->h2o_receiver);
 }
 
-thread_context_t *initialize_thread_contexts(global_data_t *global_data)
+global_thread_data_t *initialize_global_thread_data(const config_t *config,
+                                                    global_data_t *global_data)
 {
-	const size_t sz = global_data->config->thread_num * sizeof(thread_context_t);
-	thread_context_t * const ret = aligned_alloc(global_data->memory_alignment, sz);
+	const size_t sz = config->thread_num * sizeof(thread_context_t);
+	// The global thread data is modified only at program initialization and termination,
+	// and is not accessed by performance-sensitive code, so false sharing is not a concern.
+	global_thread_data_t * const ret = aligned_alloc(global_data->memory_alignment, sz);
 
 	if (ret) {
 		memset(ret, 0, sz);
 
-		for (size_t i = 0; i < global_data->config->thread_num; i++) {
+		for (size_t i = 0; i < config->thread_num; i++) {
+			ret[i].config = config;
 			ret[i].global_data = global_data;
-			initialize_event_loop(!i, global_data, &ret[i].event_loop);
-			initialize_database_state(ret[i].event_loop.h2o_ctx.loop, &ret[i].db_state);
 		}
 	}
 
 	return ret;
 }
 
-void start_threads(thread_context_t *ctx)
+void initialize_thread_context(global_thread_data_t *global_thread_data,
+                               bool is_main_thread,
+                               thread_context_t *ctx)
+{
+	memset(ctx, 0, sizeof(*ctx));
+	ctx->config = global_thread_data->config;
+	ctx->global_data = global_thread_data->global_data;
+	ctx->global_thread_data = global_thread_data;
+	ctx->tid = syscall(SYS_gettid);
+	ctx->random_seed = ctx->tid;
+	initialize_event_loop(is_main_thread,
+	                      global_thread_data->global_data,
+	                      &global_thread_data->h2o_receiver,
+	                      &ctx->event_loop);
+	initialize_database_state(ctx->event_loop.h2o_ctx.loop, &ctx->db_state);
+	global_thread_data->ctx = ctx;
+}
+
+void start_threads(global_thread_data_t *global_thread_data)
 {
 	const size_t num_cpus = h2o_numproc();
 
 	// The first thread context is used by the main thread.
-	ctx->thread = pthread_self();
+	global_thread_data->thread = pthread_self();
 
-	for (size_t i = 1; i < ctx->global_data->config->thread_num; i++)
-		CHECK_ERROR(pthread_create, &ctx[i].thread, NULL, run_thread, ctx + i);
+	for (size_t i = 1; i < global_thread_data->config->thread_num; i++)
+		CHECK_ERROR(pthread_create,
+		            &global_thread_data[i].thread,
+		            NULL,
+		            run_thread,
+		            global_thread_data + i);
 
 	// If the number of threads is not equal to the number of processors, then let the scheduler
 	// decide how to balance the load.
-	if (ctx->global_data->config->thread_num == num_cpus) {
+	if (global_thread_data->config->thread_num == num_cpus) {
 		const size_t cpusetsize = CPU_ALLOC_SIZE(num_cpus);
 		cpu_set_t * const cpuset = CPU_ALLOC(num_cpus);
 
 		if (!cpuset)
 			abort();
 
-		for (size_t i = 0; i < ctx->global_data->config->thread_num; i++) {
+		for (size_t i = 0; i < global_thread_data->config->thread_num; i++) {
 			CPU_ZERO_S(cpusetsize, cpuset);
 			CPU_SET_S(i, cpusetsize, cpuset);
-			CHECK_ERROR(pthread_setaffinity_np, ctx[i].thread, cpusetsize, cpuset);
+			CHECK_ERROR(pthread_setaffinity_np, global_thread_data[i].thread, cpusetsize, cpuset);
 		}
 
 		CPU_FREE(cpuset);

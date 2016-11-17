@@ -136,7 +136,7 @@ void cleanup_openssl(global_data_t *global_data)
 	CHECK_ERROR(pthread_mutexattr_destroy, &openssl_global_data.lock_attr);
 }
 
-void initialize_openssl(global_data_t *global_data)
+void initialize_openssl(const config_t *config, global_data_t *global_data)
 {
 	SSL_library_init();
 	SSL_load_error_strings();
@@ -160,10 +160,10 @@ void initialize_openssl(global_data_t *global_data)
 	global_data->ssl_ctx = SSL_CTX_new(TLSv1_2_server_method());
 	CHECK_OPENSSL_ERROR(SSL_CTX_use_certificate_file,
 	                    global_data->ssl_ctx,
-	                    global_data->config->cert,
+	                    config->cert,
 	                    SSL_FILETYPE_PEM);
 	CHECK_OPENSSL_ERROR(SSL_CTX_use_PrivateKey_file,
 	                    global_data->ssl_ctx,
-	                    global_data->config->key,
+	                    config->key,
 	                    SSL_FILETYPE_PEM);
 }

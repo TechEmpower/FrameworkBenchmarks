@@ -18,13 +18,23 @@ class Module
         return array(
             'router' => array(
                 'routes' => array(
+                    'plaintext' => array(
+                      'type' => 'Zend\Mvc\Router\Http\Literal',
+                      'options' => array(
+                          'route' => '/plaintext',
+                          'defaults' => array(
+                              'controller' => 'FrameworkBenchmarks\Controller\BenchController',
+                              'action' => 'plaintext',
+                          ),
+                      ),
+                    ),
                     'json' => array(
                         'type' => 'Zend\Mvc\Router\Http\Literal',
                         'options' => array(
                             'route' => '/json',
                             'defaults' => array(
-                                'controller' => 'FrameworkBenchmarks\Controller\JsonController',
-                                'action' => 'index',
+                                'controller' => 'FrameworkBenchmarks\Controller\BenchController',
+                                'action' => 'json',
                             ),
                         ),
                     ),
@@ -33,7 +43,7 @@ class Module
                         'options' => array(
                             'route' => '/db',
                             'defaults' => array(
-                                'controller' => 'FrameworkBenchmarks\Controller\DbController',
+                                'controller' => 'FrameworkBenchmarks\Controller\BenchController',
                                 'action' => 'db',
                             ),
                         ),
@@ -43,8 +53,18 @@ class Module
                         'options' => array(
                             'route' => '/db-multi',
                             'defaults' => array(
-                                'controller' => 'FrameworkBenchmarks\Controller\DbController',
+                                'controller' => 'FrameworkBenchmarks\Controller\BenchController',
                                 'action' => 'db-multi',
+                            ),
+                        ),
+                    ),
+                    'update' => array(
+                        'type' => 'Zend\Mvc\Router\Http\Literal',
+                        'options' => array(
+                            'route' => '/update',
+                            'defaults' => array(
+                                'controller' => 'FrameworkBenchmarks\Controller\BenchController',
+                                'action' => 'update',
                             ),
                         ),
                     ),
@@ -55,12 +75,9 @@ class Module
                 'dsn'    => 'mysql:dbname=hello_world;host=localhost',
             ),
             'controllers' => array(
-                'invokables' => array(
-                    'FrameworkBenchmarks\Controller\JsonController' => 'FrameworkBenchmarks\Controller\JsonController',
-                ),
                 'factories' => array(
-                    'FrameworkBenchmarks\Controller\DbController'
-                        => 'FrameworkBenchmarks\ServiceFactory\DbControllerServiceFactory'
+                    'FrameworkBenchmarks\Controller\BenchController'
+                        => 'FrameworkBenchmarks\ServiceFactory\BenchControllerServiceFactory'
                 ),
             ),
             'service_manager' => array(
