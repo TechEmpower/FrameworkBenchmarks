@@ -11,16 +11,17 @@ scp -r $FWROOT/config/cassandra $DBHOST:~/
 # install mysql on database machine
 ssh $DBHOST -t "sudo apt-get install -qqy openjdk-7-jdk
 
+sudo rm -rf /ssd/cassandra /ssd/log/cassandra
+sudo mkdir -p /ssd/cassandra /ssd/log/cassandra
+sudo chown -R cassandra:cassandra /ssd/cassandra /ssd/log/cassandra
+
 sudo addgroup --system cassandra
 sudo adduser --system --home /ssd/cassandra --no-create-home --ingroup cassandra cassandra
+
 CASS_V=2.0.12
 curl -Os http://archive.apache.org/dist/cassandra/\$CASS_V/apache-cassandra-\$CASS_V-bin.tar.gz
 sudo tar xzf apache-cassandra-\$CASS_V-bin.tar.gz -C /opt
 sudo ln -s /opt/apache-cassandra-\$CASS_V /opt/cassandra
-
-sudo rm -rf /ssd/cassandra /ssd/log/cassandra
-sudo mkdir -p /ssd/cassandra /ssd/log/cassandra
-sudo chown -R cassandra:cassandra /ssd/cassandra /ssd/log/cassandra
 
 cp cassandra/cassandra.yaml cassandra/cassandra.yaml.mod
 cat <<EOF > cassandra/cass_conf_replace.sed
