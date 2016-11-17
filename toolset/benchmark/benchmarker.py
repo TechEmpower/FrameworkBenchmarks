@@ -1,4 +1,3 @@
-from setup.linux.installer import Installer
 from setup.linux import setup_util
 
 from benchmark import framework_test
