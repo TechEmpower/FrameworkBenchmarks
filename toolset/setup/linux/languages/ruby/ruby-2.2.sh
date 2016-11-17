@@ -6,11 +6,11 @@ fw_installed ruby-2.2 && return 0
 
 # rvm stable [typically] only provides one version of ruby-2.2
 # update this when it changes
-MRI_VERSION=2.2.2
+MRI_VERSION=2.2.6
 
 rvm install $MRI_VERSION
 # Bundler is SOMETIMES missing... not sure why.
-rvm $MRI_VERSION do gem install bundler
+rvm $MRI_VERSION do gem install bundler -v 1.13.7
 
 echo "export MRI_VERSION=${MRI_VERSION}" > $IROOT/ruby-2.2.installed
 
