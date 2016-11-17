@@ -6,8 +6,10 @@ RETCODE=$(fw_exists ${IROOT}/mysql.installed)
   return 0; }
 
 # send over the required files
-scp $FWROOT/config/my.conf $DBHOST:~/
+scp $FWROOT/config/my.cnf $DBHOST:~/
 scp $FWROOT/config/usr.sbin.mysqld $DBHOST:~/
+scp $FWROOT/config/mysql $DBHOST:~/
+scp $FWROOT/config/mysql.conf $DBHOST:~/
 
 # install mysql on database machine
 ssh $DBHOST -t "
