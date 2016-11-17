@@ -6,7 +6,7 @@ RETCODE=$(fw_exists ${IROOT}/cassandra.installed)
   return 0; }
 
 # send over the required files
-scp $FWROOT/config/cassandra/cassandra.yaml $DBHOST:~/
+scp -r $FWROOT/config/cassandra $DBHOST:~/
 
 # install mysql on database machine
 ssh $DBHOST -t "sudo apt-get install -qqy openjdk-7-jdk
@@ -19,10 +19,10 @@ sudo tar xzf apache-cassandra-\$CASS_V-bin.tar.gz -C /opt
 sudo ln -s /opt/apache-cassandra-\$CASS_V /opt/cassandra
 
 sudo rm -rf /ssd/cassandra /ssd/log/cassandra
-mkdir -p /ssd/cassandra /ssd/log/cassandra
+sudo mkdir -p /ssd/cassandra /ssd/log/cassandra
 sudo chown -R cassandra:cassandra /ssd/cassandra /ssd/log/cassandra
 
-cp cassandra.yaml cassandra/cassandra.yaml.mod
+cp cassandra/cassandra.yaml cassandra/cassandra.yaml.mod
 cat <<EOF > cassandra/cass_conf_replace.sed
 s/- seeds: '\([^\"]*\)'/- seeds: '$DBHOST'/
 s/listen_address: \(.*\)/listen_address: $DBHOST/
