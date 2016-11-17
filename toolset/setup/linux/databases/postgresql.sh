@@ -21,25 +21,25 @@ scp $FWROOT/config/create-postgres.sql $DBHOST:~/
 # install postgresql on database machine
 
 # This will support all 9.* versions depending on the machine
-ssh $DBHOST -t "PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`"
 ssh $DBHOST -t "sudo service postgresql stop"
 
 # Sometimes this doesn't work with postgresql
 ssh $DBHOST -t "sudo killall -s 9 -u postgres"
-ssh $DBHOST -t "sudo mv postgresql.conf /etc/postgresql/${PG_VERSION}/main/postgresql.conf"
-ssh $DBHOST -t "sudo mv pg_hba.conf /etc/postgresql/${PG_VERSION}/main/pg_hba.conf"
 
 # Make sure all the configuration files in main belong to postgres
-ssh $DBHOST -t "sudo chown -Rf postgres:postgres /etc/postgresql/${PG_VERSION}/main"
+ssh $DBHOST -t "PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`
+sudo mv postgresql.conf /etc/postgresql/${PG_VERSION}/main/postgresql.conf
+sudo mv pg_hba.conf /etc/postgresql/${PG_VERSION}/main/pg_hba.conf
+sudo chown -Rf postgres:postgres /etc/postgresql/${PG_VERSION}/main
+sudo rm -rf /ssd/postgresql
+sudo cp -R -p /var/lib/postgresql/${PG_VERSION}/main /ssd/postgresql
+sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 
-ssh $DBHOST -t "sudo rm -rf /ssd/postgresql"
-ssh $DBHOST -t "sudo cp -R -p /var/lib/postgresql/${PG_VERSION}/main /ssd/postgresql"
-ssh $DBHOST -t "sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf"
+sudo chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf
 
-ssh $DBHOST -t "sudo chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf"
-ssh $DBHOST -t "sudo chown postgres:postgres create-postgres*"
+sudo chown postgres:postgres create-postgres*
 
-ssh $DBHOST -t "sudo service postgresql start"
+sudo service postgresql start"
 
 echo -e "ssh \$DBHOST -t 'sudo -u postgres psql template1 < create-postgres-database.sql
   sudo -u postgres psql hello_world < create-postgres.sql'" > $IROOT/postgresql.installed
