@@ -39,7 +39,7 @@ sudo chown postgres:postgres create-postgres*
 
 sudo service postgresql start"
 
-echo -e "ssh \$DBHOST -t 'sudo -u postgres psql template1 < create-postgres-database.sql
-  sudo -u postgres psql hello_world < create-postgres.sql' &> /dev/null" > $IROOT/postgresql.installed
+echo -e "ssh \$DBHOST -t 'sudo -u postgres psql -q template1 < create-postgres-database.sql
+  sudo -u postgres psql -q hello_world < create-postgres.sql'" > $IROOT/postgresql.installed
 
 source $IROOT/postgresql.installed
