@@ -28,11 +28,11 @@ ssh $DBHOST -t "sudo killall -s 9 -u postgres"
 
 # Make sure all the configuration files in main belong to postgres
 ssh $DBHOST -t "PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`
-sudo mv postgresql.conf /etc/postgresql/${PG_VERSION}/main/postgresql.conf
-sudo mv pg_hba.conf /etc/postgresql/${PG_VERSION}/main/pg_hba.conf
-sudo chown -Rf postgres:postgres /etc/postgresql/${PG_VERSION}/main
+sudo mv postgresql.conf /etc/postgresql/\${PG_VERSION}/main/postgresql.conf
+sudo mv pg_hba.conf /etc/postgresql/\${PG_VERSION}/main/pg_hba.conf
+sudo chown -Rf postgres:postgres /etc/postgresql/\${PG_VERSION}/main
 sudo rm -rf /ssd/postgresql
-sudo cp -R -p /var/lib/postgresql/${PG_VERSION}/main /ssd/postgresql
+sudo cp -R -p /var/lib/postgresql/\${PG_VERSION}/main /ssd/postgresql
 sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 
 sudo chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf
