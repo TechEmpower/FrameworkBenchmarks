@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java resin maven
+fw_depends postgresql java resin maven
 
 sed -i 's|db.ConnectString = .*/|db.ConnectString = '"$DBHOST"':5432/|g' Docroot/WEB-INF/GeminiHello.conf
 sed -i 's|root-directory=".*/FrameworkBenchmarks/frameworks/Java/gemini|root-directory="'"$TROOT"'|g' Docroot/WEB-INF/resin.xml
