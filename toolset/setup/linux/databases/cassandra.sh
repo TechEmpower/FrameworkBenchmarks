@@ -7,15 +7,18 @@ RETCODE=$(fw_exists ${IROOT}/cassandra.installed)
 
 # send over the required files
 scp $FWROOT/config/cassandra/cassandra.yaml $DBHOST:~/
-scp $FWROOT/config/create.js $DBHOST:~/
 
 # install mysql on database machine
-ssh $DBHOST -t "CASS_V=2.0.12
+ssh $DBHOST -t "sudo apt-get install -qqy openjdk-7-jdk
+
+sudo addgroup --system cassandra
+sudo adduser --system --home /ssd/cassandra --no-create-home --ingroup cassandra cassandra
+CASS_V=2.0.12
 curl -Os http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-\$CASS_V-bin.tar.gz
 sudo tar xzf apache-cassandra-\$CASS_V-bin.tar.gz -C /opt
 sudo ln -s /opt/apache-cassandra-\$CASS_V /opt/cassandra
 
-rm -rf /ssd/cassandra /ssd/log/cassandra
+sudo rm -rf /ssd/cassandra /ssd/log/cassandra
 mkdir -p /ssd/cassandra /ssd/log/cassandra
 sudo chown -R cassandra:cassandra /ssd/cassandra /ssd/log/cassandra
 
@@ -35,6 +38,6 @@ sudo cp -f cassandra/log4j-server.properties /opt/apache-cassandra-\$CASS_V/conf
 sudo update-rc.d cassandra defaults
 sudo service cassandra restart"
 
-echo -e "ssh \$DBHOST -t 'mongo < create.js'" > $IROOT/cassandra.installed
+echo -e "" > $IROOT/cassandra.installed
 
 source $IROOT/cassandra.installed
