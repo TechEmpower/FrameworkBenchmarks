@@ -5,6 +5,7 @@ namespace FrameworkBenchmarks\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\JsonModel;
+use Zend\Http\Headers;
 use Zend\Db\TableGateway\TableGateway;
 
 /**
@@ -13,7 +14,7 @@ use Zend\Db\TableGateway\TableGateway;
  * @author Marco Pivetta <ocramius@gmail.com>
  * @link   http://www.techempower.com/benchmarks
  */
-class DbController extends AbstractActionController
+class BenchController extends AbstractActionController
 {
     /**
      * @var \Zend\Db\TableGateway\TableGateway
@@ -26,6 +27,11 @@ class DbController extends AbstractActionController
     public function __construct(TableGateway $tableGateway)
     {
         $this->tableGateway = $tableGateway;
+    }
+
+    public function jsonAction()
+    {
+        return new JsonModel(array('message' => 'Hello, World!'));
     }
 
     /**
@@ -62,5 +68,35 @@ class DbController extends AbstractActionController
         }
 
         return new JsonModel($worlds);
+    }
+
+    public function updateAction()
+    {
+      $request = $this->getRequest();
+      $queries = (int) $request->getQuery('queries', 1);
+      $queries = max(1, $queries);
+      $queries = min(500, $queries);
+
+      $worlds  = array();
+
+      for ($i = 0; $i < $queries; $i += 1) {
+          $id = mt_rand(1, 10000);
+          foreach ($this->tableGateway->select(array('id' => $id)) as $found) {
+              $random_number = mt_rand(1, 10000);
+              $found->randomNumber = $random_number;
+              $this->tableGateway->update(array('randomNumber' => $random_number), array('id' => $id));
+              $worlds[] = $found;
+          }
+      }
+
+      return new JsonModel($worlds);
+    }
+
+    public function plaintextAction()
+    {
+      $response = $this->getResponse();
+      $response->getHeaders()->addHeaders(array('COntent-Type' => 'text/plain'));
+      $response->setContent('Hello, World!');
+      return $response;
     }
 }

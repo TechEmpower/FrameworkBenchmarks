@@ -156,7 +156,19 @@ if (cluster.isMaster) {
     });
   });
 
-  app.get('/fortune', function(req, res) {
+  app.get('/mongoose-fortune', function(req, res) {
+    MFortune.find({}, function(err, fortunes) {
+      var newFortune = {id: 0, message: "Additional fortune added at request time."};
+      fortunes.push(newFortune);
+      fortunes.sort(function (a, b) {
+        return (a.message < b.message) ? -1 : 1;
+      });
+
+      res.render('fortunes', {fortunes: fortunes});
+    });
+  });
+
+  app.get('/mysql-orm-fortune', function(req, res) {
     Fortune.findAll().then(function (fortunes) {
       var newFortune = {id: 0, message: "Additional fortune added at request time."};
       fortunes.push(newFortune);

@@ -59,6 +59,7 @@ static uintmax_t add_iovec(mustache_api_t *api,
                            void *userdata,
                            const char *buffer,
                            uintmax_t buffer_size);
+static void cleanup_fortunes(void *data);
 static int compare_fortunes(const list_t *x, const list_t *y);
 static void complete_fortunes(struct st_h2o_generator_t *self, h2o_req_t *req);
 static list_t *get_sorted_sublist(list_t *head);
@@ -109,6 +110,22 @@ static uintmax_t add_iovec(mustache_api_t *api,
 	return ret;
 }
 
+static void cleanup_fortunes(void *data)
+{
+	fortune_ctx_t * const fortune_ctx = data;
+	const list_t *iter = fortune_ctx->result;
+
+	if (iter)
+		do {
+			const fortune_t * const fortune = H2O_STRUCT_FROM_MEMBER(fortune_t, l, iter);
+
+			if (fortune->data)
+				PQclear(fortune->data);
+
+			iter = iter->next;
+		} while (iter);
+}
+
 static int compare_fortunes(const list_t *x, const list_t *y)
 {
 	const fortune_t * const f1 = H2O_STRUCT_FROM_MEMBER(fortune_t, l, x);
@@ -142,12 +159,7 @@ static list_t *get_sorted_sublist(list_t *head)
 	if (head) {
 		head = head->next;
 
-		while (head && compare_fortunes(tail, head) < 0) {
-			tail = head;
-			head = head->next;
-		}
-
-		while (head && !compare_fortunes(tail, head)) {
+		while (head && compare_fortunes(tail, head) <= 0) {
 			tail = head;
 			head = head->next;
 		}
@@ -209,40 +221,33 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 		ret = SUCCESS;
 
 		for (size_t i = 0; i < num_rows; i++) {
-			const char * const message_data = PQgetvalue(result, i, 1);
-			h2o_iovec_t message = h2o_htmlescape(&fortune_ctx->req->pool,
-			                                     message_data,
-			                                     PQgetlength(result, i, 1));
-			const size_t id_len = PQgetlength(result, i, 0);
-			const size_t fortune_size = offsetof(fortune_t, data) + id_len +
-			                            (message_data == message.base ? message.len : 0);
 			fortune_t * const fortune = h2o_mem_alloc_pool(&fortune_ctx->req->pool,
-			                                               fortune_size);
+			                                               sizeof(*fortune));
 
 			if (fortune) {
-				memset(fortune, 0, offsetof(fortune_t, data));
-				memcpy(fortune->data, PQgetvalue(result, i, 0), id_len);
-				fortune->id.base = fortune->data;
-				fortune->id.len = id_len;
-
-				if (message_data == message.base) {
-					message.base = fortune->data + id_len;
-					memcpy(message.base, message_data, message.len);
-				}
-
-				fortune->message = message;
+				memset(fortune, 0, sizeof(*fortune));
+				fortune->id.base = PQgetvalue(result, i, 0);
+				fortune->id.len = PQgetlength(result, i, 0);
+				fortune->message = h2o_htmlescape(&fortune_ctx->req->pool,
+				                                  PQgetvalue(result, i, 1),
+				                                  PQgetlength(result, i, 1));
 				fortune->l.next = fortune_ctx->result;
 				fortune_ctx->result = &fortune->l;
 				fortune_ctx->num_result++;
+
+				if (!i)
+					fortune->data = result;
 			}
 			else {
 				send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, fortune_ctx->req);
 				ret = DONE;
+
+				if (!i)
+					PQclear(result);
+
 				break;
 			}
 		}
-
-		PQclear(result);
 	}
 	else if (result) {
 		PQclear(result);
@@ -365,7 +370,9 @@ int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req)
 	thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
 	                                                      event_loop.h2o_ctx,
 	                                                      req->conn->ctx);
-	fortune_ctx_t * const fortune_ctx = h2o_mem_alloc_pool(&req->pool, sizeof(*fortune_ctx));
+	fortune_ctx_t * const fortune_ctx = h2o_mem_alloc_shared(&req->pool,
+	                                                         sizeof(*fortune_ctx),
+	                                                         cleanup_fortunes);
 
 	if (fortune_ctx) {
 		fortune_t * const fortune = h2o_mem_alloc_pool(&req->pool, sizeof(*fortune));
@@ -390,6 +397,8 @@ int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req)
 			if (execute_query(ctx, &fortune_ctx->param))
 				send_service_unavailable_error(DB_REQ_ERROR, req);
 		}
+		else
+			send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
 	}
 	else
 		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);

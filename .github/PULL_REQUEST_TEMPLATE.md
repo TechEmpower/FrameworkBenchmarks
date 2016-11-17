@@ -1,7 +1,7 @@
 <!--
 ....................................
 
-MAKE SURE YOU ARE OPENING A PULL 
+MAKE SURE YOU ARE OPENING A PULL
 REQUEST AGAINST THE CORRECT BRANCH
 
 ....................................
