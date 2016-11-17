@@ -6,10 +6,10 @@ RETCODE=$(fw_exists ${IROOT}/mysql.installed)
   return 0; }
 
 # send over the required files
-scp $FWROOT/config/my.cnf $DBHOST:~/
-scp $FWROOT/config/usr.sbin.mysqld $DBHOST:~/
 scp $FWROOT/config/mysql $DBHOST:~/
 scp $FWROOT/config/mysql.conf $DBHOST:~/
+scp $FWROOT/config/my.cnf $DBHOST:~/
+scp $FWROOT/config/usr.sbin.mysqld $DBHOST:~/
 
 # install mysql on database machine
 ssh $DBHOST -t "
@@ -32,7 +32,9 @@ sudo cp usr.sbin.mysqld /etc/apparmor.d/
 sudo /etc/init.d/apparmor reload
 sudo start mysql
 
-sudo mysqladmin -u root password secret"
+if ! mysql -uroot -psecret -e'quit' &> /dev/null; then
+  sudo mysqladmin -u root password secret
+fi"
 
 # Install the mysql client
 sudo apt-get install -y mysql-client
