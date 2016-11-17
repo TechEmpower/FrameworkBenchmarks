@@ -5,6 +5,12 @@ RETCODE=$(fw_exists ${IROOT}/postgresql.installed)
   source $IROOT/postgresql.installed
   return 0; }
 
+# delete any old required files
+ssh $DBHOST -t "
+  sudo rm -rf create-postgres-database.sql
+  sudo rm -rf create-postgres.sql
+"
+
 # send over the required files
 scp $FWROOT/config/postgresql.conf $DBHOST:~/
 scp $FWROOT/config/pg_hba.conf $DBHOST:~/
@@ -12,32 +18,30 @@ scp $FWROOT/config/60-postgresql-shm.conf $DBHOST:~/
 scp $FWROOT/config/create-postgres-database.sql $DBHOST:~/
 scp $FWROOT/config/create-postgres.sql $DBHOST:~/
 
-# install mysql on database machine
-ssh $DBHOST -t "
-# This will support all 9.* versions depending on the machine
-PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`
+# install postgresql on database machine
 
-sudo service postgresql stop
+# This will support all 9.* versions depending on the machine
+ssh $DBHOST -t "PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`"
+ssh $DBHOST -t "sudo service postgresql stop"
 
 # Sometimes this doesn't work with postgresql
-sudo killall -s 9 -u postgres
-sudo mv postgresql.conf /etc/postgresql/${PG_VERSION}/main/postgresql.conf
-sudo mv pg_hba.conf /etc/postgresql/${PG_VERSION}/main/pg_hba.conf
+ssh $DBHOST -t "sudo killall -s 9 -u postgres"
+ssh $DBHOST -t "sudo mv postgresql.conf /etc/postgresql/${PG_VERSION}/main/postgresql.conf"
+ssh $DBHOST -t "sudo mv pg_hba.conf /etc/postgresql/${PG_VERSION}/main/pg_hba.conf"
 
 # Make sure all the configuration files in main belong to postgres
-sudo chown -Rf postgres:postgres /etc/postgresql/${PG_VERSION}/main
+ssh $DBHOST -t "sudo chown -Rf postgres:postgres /etc/postgresql/${PG_VERSION}/main"
 
-sudo rm -rf /ssd/postgresql
-sudo cp -R -p /var/lib/postgresql/${PG_VERSION}/main /ssd/postgresql
-sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
+ssh $DBHOST -t "sudo rm -rf /ssd/postgresql"
+ssh $DBHOST -t "sudo cp -R -p /var/lib/postgresql/${PG_VERSION}/main /ssd/postgresql"
+ssh $DBHOST -t "sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf"
 
-sudo chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf
-sudo chown postgres:postgres create-postgres*
+ssh $DBHOST -t "sudo chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf"
+ssh $DBHOST -t "sudo chown postgres:postgres create-postgres*"
 
-sudo service postgresql start"
+ssh $DBHOST -t "sudo service postgresql start"
 
-echo -e "ssh \$DBHOST -t \"
-  sudo -u postgres psql template1 < create-postgres-database.sql
-  sudo -u postgres psql hello_world < create-postgres.sql\"" > $IROOT/postgresql.installed
+echo -e "ssh \$DBHOST -t 'sudo -u postgres psql template1 < create-postgres-database.sql
+  sudo -u postgres psql hello_world < create-postgres.sql'" > $IROOT/postgresql.installed
 
 source $IROOT/postgresql.installed
