@@ -51,7 +51,6 @@ sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::=
     libpq-dev \
     libreadline6-dev \
     postgresql        `# Installs 9.1 or 9.3, based on Ubuntu version` \
-    redis-server      `# Installs 2.4 or 2.6, based on Ubuntu version` \
     lsb-core          `# Ensure that lsb_release can be used`
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
@@ -209,73 +208,3 @@ if [ $? -eq 0 ]; then
 else
   >&2 echo "Cassandra did not start, skipping"
 fi
-
-##############################
-# Elasticsearch
-##############################
-echo "Setting up Elasticsearch"
-
-export ES_V=1.5.0
-#wget -nv https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$ES_V.tar.gz
-curl -Os https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$ES_V.tar.gz
-sudo tar zxf elasticsearch-$ES_V.tar.gz -C /opt
-sudo ln -s /opt/elasticsearch-$ES_V /opt/elasticsearch
-
-rm -rf /ssd/elasticsearch /ssd/log/elasticsearch
-mkdir -p /ssd/elasticsearch /ssd/log/elasticsearch
-
-sudo cp elasticsearch/elasticsearch.yml /opt/elasticsearch/config
-sudo cp elasticsearch/elasticsearch /opt/elasticsearch
-
-/opt/elasticsearch/elasticsearch restart
-
-for i in {1..15}; do
-  nc -z $TFB_DBHOST 9200 && break || sleep 1;
-  echo "Waiting for Elasticsearch ($i/15}"
-done
-nc -z $TFB_DBHOST 9200
-if [ $? -eq 0 ]; then
-  sh elasticsearch/es-create-index.sh
-  python elasticsearch/es-db-data-gen.py > elasticsearch/tfb-data.json
-  curl -sS -D - -o /dev/null -XPOST localhost:9200/tfb/world/_bulk --data-binary @elasticsearch/tfb-data.json
-  echo "Elasticsearch DB populated"
-else
-  >&2 echo "Elasticsearch did not start, skipping"
-fi
-
-##############################
-# Redis
-##############################
-echo "Setting up Redis database"
-if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
-  echo "WARNING: Downgrading Redis configuration for Ubuntu 12.04"
-
-  # On 12.04, Redis 2.4 is installed. It doesn't support
-  # some of the 2.6 options, so we have to remove or comment
-  # those
-  sed -i 's/tcp-keepalive/# tcp-keepalive/' redis.conf
-  sed -i 's/stop-writes-on-bgsave-error/# stop-writes-on-bgsave-error/' redis.conf
-  sed -i 's/rdbchecksum/# rdbchecksum/' redis.conf
-  sed -i 's/slave-read-only/# slave-read-only/' redis.conf
-  sed -i 's/repl-disable-tcp-nodelay/# repl-disable-tcp-nodelay/' redis.conf
-  sed -i 's/slave-priority/# slave-priority/' redis.conf
-  sed -i 's/auto-aof-rewrite-percentage/# auto-aof-rewrite-percentage/' redis.conf
-  sed -i 's/auto-aof-rewrite-min-size/# auto-aof-rewrite-min-size/' redis.conf
-
-  sed -i 's/lua-time-limit/# lua-time-limit/' redis.conf
-  sed -i 's/notify-keyspace-events/# notify-keyspace-events/' redis.conf
-  sed -i 's/hash-max-ziplist-entries/# hash-max-ziplist-entries/' redis.conf
-  sed -i 's/hash-max-ziplist-value/# hash-max-ziplist-value/' redis.conf
-  sed -i 's/zset-max-ziplist-entries/# zset-max-ziplist-entries/' redis.conf
-  sed -i 's/zset-max-ziplist-value/# zset-max-ziplist-value/' redis.conf
-  sed -i 's/client-output-buffer-limit/# client-output-buffer-limit/' redis.conf
-
-  sed -i 's/hz 10/# hz 10/' redis.conf
-  sed -i 's/aof-rewrite-incremental-fsync/# aof-rewrite-incremental-fsync/' redis.conf
-fi
-
-sudo service redis-server stop
-sudo mv redis.conf /etc/redis/redis.conf
-sudo service redis-server start
-bash create-redis.sh
-rm create-redis.sh
