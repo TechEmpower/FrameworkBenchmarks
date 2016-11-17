@@ -5,7 +5,8 @@ RETCODE=$(fw_exists ${IROOT}/postgresql.installed)
   source $IROOT/postgresql.installed
   return 0; }
 
-# delete any old required files
+# delete any old required files that do not belong to us as
+# scp will fail otherwise
 ssh $DBHOST -t "
   sudo rm -rf create-postgres-database.sql
   sudo rm -rf create-postgres.sql
@@ -22,9 +23,6 @@ scp $FWROOT/config/create-postgres.sql $DBHOST:~/
 
 # This will support all 9.* versions depending on the machine
 ssh $DBHOST -t "sudo service postgresql stop"
-
-# Sometimes this doesn't work with postgresql
-ssh $DBHOST -t "sudo killall -s 9 -u postgres"
 
 # Make sure all the configuration files in main belong to postgres
 ssh $DBHOST -t "PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`
