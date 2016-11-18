@@ -1,5 +1,7 @@
 #!/bin/bash
 
+fw_depends databases
+
 RETCODE=$(fw_exists ${IROOT}/mysql.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/mysql.installed

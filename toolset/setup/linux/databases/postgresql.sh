@@ -1,5 +1,7 @@
 #!/bin/bash
 
+fw_depends databases
+
 RETCODE=$(fw_exists ${IROOT}/postgresql.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/postgresql.installed
@@ -20,6 +22,8 @@ scp $FWROOT/config/create-postgres-database.sql $DBHOST:~/
 scp $FWROOT/config/create-postgres.sql $DBHOST:~/
 
 # install postgresql on database machine
+ssh $DBHOST -t 'sudo apt-get -y update
+sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql'
 
 # This will support all 9.* versions depending on the machine
 ssh $DBHOST -t "sudo service postgresql stop"
