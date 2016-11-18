@@ -65,6 +65,7 @@ env:
     - "TESTDIR=Go/revel"
     - "TESTDIR=Go/webgo"
     - "TESTDIR=Groovy/grails"
+    - "TESTDIR=Groovy/hot"
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/wai"
     - "TESTDIR=Haskell/yesod"
