@@ -42,7 +42,7 @@ env:
     - "TESTDIR=Clojure/luminus"
     - "TESTDIR=Clojure/pedestal"
     - "TESTDIR=Clojure/aleph"
-    - "TESTDIR=Crystal/crystal-raw"
+    - "TESTDIR=Crystal/crystal"
     - "TESTDIR=Crystal/kemal"
     - "TESTDIR=D/vibed"
     - "TESTDIR=Dart/dart-raw"
