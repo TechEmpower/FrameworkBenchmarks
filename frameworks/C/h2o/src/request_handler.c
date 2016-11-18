@@ -20,6 +20,8 @@
 #include <assert.h>
 #include <h2o.h>
 #include <stdalign.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <string.h>
 #include <yajl/yajl_gen.h>
 
@@ -29,56 +31,31 @@
 #include "utility.h"
 #include "world.h"
 
-typedef struct {
-	yajl_gen gen;
-	h2o_generator_t h2o_generator;
-} json_ctx_t;
+#define HELLO_RESPONSE "Hello, World!"
 
-static void cleanup_json_response(struct st_h2o_generator_t *self, h2o_req_t *req);
-static void complete_json_response(struct st_h2o_generator_t *self, h2o_req_t *req);
 static int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req);
 static int plaintext(struct st_h2o_handler_t *self, h2o_req_t *req);
 static const char *status_code_to_string(http_status_code_t status_code);
-
-static void cleanup_json_response(struct st_h2o_generator_t *self, h2o_req_t *req)
-{
-	IGNORE_FUNCTION_PARAMETER(req);
-
-	json_ctx_t * const json_ctx = H2O_STRUCT_FROM_MEMBER(json_ctx_t, h2o_generator, self);
-
-	yajl_gen_free(json_ctx->gen);
-}
-
-static void complete_json_response(struct st_h2o_generator_t *self, h2o_req_t *req)
-{
-	h2o_send(req, NULL, 0, true);
-	cleanup_json_response(self, req);
-}
 
 static int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req)
 {
 	IGNORE_FUNCTION_PARAMETER(self);
 
-	json_ctx_t * const json_ctx = h2o_mem_alloc_pool(&req->pool, sizeof(*json_ctx));
+	const yajl_gen gen = get_json_generator(&req->pool);
 
-	if (json_ctx) {
-		memset(json_ctx, 0, sizeof(*json_ctx));
-		json_ctx->gen = get_json_generator(&req->pool);
-		json_ctx->h2o_generator.proceed = complete_json_response;
-		json_ctx->h2o_generator.stop = cleanup_json_response;
+	if (gen) {
+		CHECK_YAJL_STATUS(yajl_gen_map_open, gen);
+		CHECK_YAJL_STATUS(yajl_gen_string, gen, YAJL_STRLIT("message"));
+		CHECK_YAJL_STATUS(yajl_gen_string, gen, YAJL_STRLIT(HELLO_RESPONSE));
+		CHECK_YAJL_STATUS(yajl_gen_map_close, gen);
 
-		if (json_ctx->gen) {
-			CHECK_YAJL_STATUS(yajl_gen_map_open, json_ctx->gen);
-			CHECK_YAJL_STATUS(yajl_gen_string, json_ctx->gen, YAJL_STRLIT("message"));
-			CHECK_YAJL_STATUS(yajl_gen_string, json_ctx->gen, YAJL_STRLIT("Hello, World!"));
-			CHECK_YAJL_STATUS(yajl_gen_map_close, json_ctx->gen);
-
-			if (!send_json_response(json_ctx->gen, &json_ctx->h2o_generator, req))
-				return 0;
+		// The response is small enough, so that it is simpler to copy it
+		// instead of doing a delayed deallocation of the JSON generator.
+		if (!send_json_response(gen, true, req))
+			return 0;
 
 error_yajl:
-			yajl_gen_free(json_ctx->gen);
-		}
+		yajl_gen_free(gen);
 	}
 
 	send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
@@ -88,8 +65,8 @@ error_yajl:
 static int plaintext(struct st_h2o_handler_t *self, h2o_req_t *req)
 {
 	IGNORE_FUNCTION_PARAMETER(self);
-	set_default_response_param(PLAIN, req);
-	h2o_send_inline(req, H2O_STRLIT("Hello, World!"));
+	set_default_response_param(PLAIN, sizeof(HELLO_RESPONSE) - 1, req);
+	h2o_send_inline(req, H2O_STRLIT(HELLO_RESPONSE));
 	return 0;
 }
 
@@ -195,22 +172,29 @@ void send_error(http_status_code_t status_code, const char *body, h2o_req_t *req
 	h2o_send_error_generic(req, status_code, status_code_to_string(status_code), body, 0);
 }
 
-int send_json_response(yajl_gen gen, h2o_generator_t *h2o_generator, h2o_req_t *req)
+int send_json_response(yajl_gen gen, bool free_gen, h2o_req_t *req)
 {
-	h2o_iovec_t h2o_iovec = {.len = 0};
+	const unsigned char *buf;
+	size_t len;
 	int ret = EXIT_FAILURE;
 
-	static_assert(sizeof(h2o_iovec.base) == sizeof(const unsigned char *) &&
-	              alignof(h2o_iovec.base) == alignof(const unsigned char *),
-	              "Types must be compatible.");
+	if (yajl_gen_get_buf(gen, &buf, &len) == yajl_gen_status_ok) {
+		if (free_gen) {
+			char * const body = h2o_mem_alloc_pool(&req->pool, len);
 
-	if (yajl_gen_get_buf(gen,
-	                     (const unsigned char **) &h2o_iovec.base,
-	                     &h2o_iovec.len) == yajl_gen_status_ok) {
-		set_default_response_param(JSON, req);
-		h2o_start_response(req, h2o_generator);
-		h2o_send(req, &h2o_iovec, 1, false);
-		ret = EXIT_SUCCESS;
+			if (body) {
+				memcpy(body, buf, len);
+				yajl_gen_free(gen);
+				set_default_response_param(JSON, len, req);
+				h2o_send_inline(req, body, len);
+				ret = EXIT_SUCCESS;
+			}
+		}
+		else {
+			set_default_response_param(JSON, len, req);
+			h2o_send_inline(req, (char *) buf, len);
+			ret = EXIT_SUCCESS;
+		}
 	}
 
 	return ret;
@@ -228,8 +212,9 @@ void send_service_unavailable_error(const char *body, h2o_req_t *req)
 	                   H2O_SEND_ERROR_KEEP_HEADERS);
 }
 
-void set_default_response_param(content_type_t content_type, h2o_req_t *req)
+void set_default_response_param(content_type_t content_type, size_t content_length, h2o_req_t *req)
 {
+	req->res.content_length = content_length;
 	req->res.status = OK;
 	req->res.reason = status_code_to_string(req->res.status);
 

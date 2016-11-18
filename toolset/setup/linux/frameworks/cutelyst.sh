@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CUTELYST_VER=0.12.0
+CUTELYST_VER=r1.0.0
 RETCODE=$(fw_exists ${IROOT}/cutelyst.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/cutelyst.installed
@@ -18,10 +18,10 @@ sudo apt-get install -qqy clearsilver-dev
 sudo apt-get install -qqy qt${QT_VERSION_MM}base qt${QT_VERSION_MM}script qt${QT_VERSION_MM}tools
 export CMAKE_PREFIX_PATH=/opt/qt${QT_VERSION_MM};
 
-fw_get -O https://github.com/cutelyst/cutelyst/archive/r$CUTELYST_VER.tar.gz
-fw_untar r$CUTELYST_VER.tar.gz
+fw_get -O https://github.com/cutelyst/cutelyst/archive/$CUTELYST_VER.tar.gz
+fw_untar $CUTELYST_VER.tar.gz
 
-cd cutelyst-r$CUTELYST_VER
+cd cutelyst-$CUTELYST_VER
 mkdir build && cd build
 
 cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$IROOT

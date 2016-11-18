@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Benchmarks.Data;
@@ -33,15 +35,22 @@ namespace Benchmarks.Middleware
             httpContext.Response.StatusCode = StatusCodes.Status200OK;
             httpContext.Response.ContentType = "text/html; charset=UTF-8";
 
-            await httpContext.Response.WriteAsync("<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
-
+            var sb = new StringBuilder();
+            sb.Append("<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
             foreach (var item in model)
             {
-                await httpContext.Response.WriteAsync(
-                    $"<tr><td>{htmlEncoder.Encode(item.Id.ToString())}</td><td>{htmlEncoder.Encode(item.Message)}</td></tr>");
+                sb.Append("<tr><td>");
+                sb.Append(item.Id.ToString(CultureInfo.InvariantCulture));
+                sb.Append("</td><td>");
+                sb.Append(htmlEncoder.Encode(item.Message));
+                sb.Append("</td></tr>");
             }
 
-            await httpContext.Response.WriteAsync("</table></body></html>");
+            sb.Append("</table></body></html>");
+            var response = sb.ToString();
+            // fortunes includes multibyte characters so response.Length is incorrect
+            httpContext.Response.ContentLength = Encoding.UTF8.GetByteCount(response);
+            await httpContext.Response.WriteAsync(response);
         }
     }
 }

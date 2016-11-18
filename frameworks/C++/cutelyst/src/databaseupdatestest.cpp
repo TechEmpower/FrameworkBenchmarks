@@ -18,10 +18,10 @@ void DatabaseUpdatesTest::updates_postgres(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryForDatabase(
                 QLatin1String("SELECT randomNumber FROM world WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("postgres")));
+                QSqlDatabase::database(QLatin1String("postgres-") + QThread::currentThread()->objectName()));
     QSqlQuery updateQuery = CPreparedSqlQueryForDatabase(
                 QLatin1String("UPDATE world SET randomNumber = :randomNumber WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("postgres")));
+                QSqlDatabase::database(QLatin1String("postgres-") + QThread::currentThread()->objectName()));
     processQuery(c, query, updateQuery);
 }
 
@@ -29,10 +29,10 @@ void DatabaseUpdatesTest::updates_mysql(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryForDatabase(
                 QLatin1String("SELECT randomNumber FROM world WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("mysql")));
+                QSqlDatabase::database(QLatin1String("mysql-") + QThread::currentThread()->objectName()));
     QSqlQuery updateQuery = CPreparedSqlQueryForDatabase(
                 QLatin1String("UPDATE world SET randomNumber = :randomNumber WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("mysql")));
+                QSqlDatabase::database(QLatin1String("mysql-") + QThread::currentThread()->objectName()));
     processQuery(c, query, updateQuery);
 }
 
@@ -48,7 +48,7 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
     }
 
     for (int i = 0; i < queries; ++i) {
-        int id = (qrand() % 9999) + 1;
+        int id = (qrand() % 10000) + 1;
 
         query.bindValue(QStringLiteral(":id"), id);
         if (!query.exec() || !query.next()) {
@@ -56,7 +56,7 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
             return;
         }
 
-        int randomNumber = (qrand() % 9999) + 1;
+        int randomNumber = (qrand() % 10000) + 1;
         updateQuery.bindValue(QStringLiteral(":id"), id);
         updateQuery.bindValue(QStringLiteral(":randomNumber"), randomNumber);
         if (!updateQuery.exec()) {

@@ -2,8 +2,10 @@
 
 fw_depends ulib
 
-# Travis is really broken!!
-if [ "$TRAVIS" == "true" ]; then
+# Travis is broken
+if [ "$TRAVIS" != "true" ]; then
+MAX_THREADS=$(( 3 * $MAX_THREADS / 2 ))
+else
 MAX_THREADS=$(( 2 * $MAX_THREADS ))
 fi
 

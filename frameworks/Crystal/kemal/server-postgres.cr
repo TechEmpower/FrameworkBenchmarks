@@ -1,7 +1,6 @@
 require "kemal"
 require "pg"
 require "pool/connection"
-require "html_builder"
 
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
@@ -92,40 +91,17 @@ end
 
 # Postgres Test 4: Fortunes
 get "/fortunes" do |env|
+  env.response.content_type = CONTENT::HTML
   data = fortunes
-
   additional_fortune = {
     id:      0,
     message: "Additional fortune added at request time.",
   }
   data.push(additional_fortune)
 
-  data.sort_by! {|fortune| fortune[:message] }
+  data.sort_by! { |fortune| fortune[:message] }
 
-  env.response.content_type = CONTENT::HTML
-  # New builder for each request!
-  HTML::Builder.new.build do
-    doctype
-    html {
-      head {
-        title { html "Fortunes" }
-      }
-      body {
-        table {
-          tr {
-            th { html "id" }
-            th { html "message" }
-          }
-          data.each { |e|
-            tr {
-              td { html e[:id] }
-              td { text e[:message] }
-            }
-          }
-        }
-      }
-    }
-  end
+  render "views/fortunes.ecr"
 end
 
 # Postgres Test 5: Database Updates
@@ -138,4 +114,5 @@ get "/updates" do |env|
   updated.to_json
 end
 
+logging false
 Kemal.run

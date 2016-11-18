@@ -1,1 +1,1 @@
-<!DOCTYPE html><html lang="en"><head><title>Fortunes</title></head><body><%= @inner %></body></html>
+<!DOCTYPE html><html lang="en"><head><title>Fortunes</title></head><body><%= render @view_module, @view_template, assigns %></body></html>

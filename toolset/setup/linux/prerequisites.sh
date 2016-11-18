@@ -63,11 +63,6 @@ sudo pip install colorama==0.3.1
 sudo pip install progressbar==2.2
 sudo pip install requests
 
-# Install gcc-4.8, gcc-4.9 and clang
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-sudo apt-get -yq update
-sudo apt-get install -qqy gcc-4.8 g++-4.8 gcc-4.9 g++-4.9 clang-3.5
-
 # Stop permanently overwriting people's files just for 
 # trying out our software!
 RETCODE=$(fw_exists ~/.bash_profile.bak)

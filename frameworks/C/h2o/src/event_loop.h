@@ -35,13 +35,13 @@ typedef struct {
 	int epoll_fd;
 	h2o_accept_ctx_t h2o_accept_ctx;
 	h2o_context_t h2o_ctx;
-	h2o_multithread_receiver_t h2o_receiver;
 } event_loop_t;
 
 void event_loop(thread_context_t *ctx);
-void free_event_loop(event_loop_t *event_loop);
+void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_receiver);
 void initialize_event_loop(bool is_main_thread,
                            global_data_t *global_data,
+                           h2o_multithread_receiver_t *h2o_receiver,
                            event_loop_t *loop);
 int start_write_polling(int fd,
                         void (**on_write_ready)(void *),

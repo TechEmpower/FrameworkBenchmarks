@@ -48,14 +48,14 @@ module Acme
       queries = params[:queries].to_i
       queries = 1 if queries < 1
       queries = 500 if queries > 500
-
+      
       ActiveRecord::Base.connection_pool.with_connection do
         worlds = (1..queries).map do
           world = World.find(Random.rand(10000) + 1)
           world.randomNumber = Random.rand(10000) + 1
+          World.update(world.id, :randomNumber => world.randomNumber)
           world
         end
-        World.import worlds, :on_duplicate_key_update => [:randomNumber]
         worlds
       end
     end
