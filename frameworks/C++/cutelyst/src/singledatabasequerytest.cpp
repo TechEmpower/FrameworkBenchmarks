@@ -10,7 +10,7 @@
 
 SingleDatabaseQueryTest::SingleDatabaseQueryTest(QObject *parent) : Controller(parent)
 {
-    qsrand(QDateTime::currentMSecsSinceEpoch());
+
 }
 
 void SingleDatabaseQueryTest::db_postgres(Context *c)
