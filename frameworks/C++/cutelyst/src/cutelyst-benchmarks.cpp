@@ -23,6 +23,7 @@ static QMutex mutex;
 
 cutelyst_benchmarks::cutelyst_benchmarks(QObject *parent) : Application(parent)
 {
+    qsrand(QDateTime::currentMSecsSinceEpoch());
 }
 
 cutelyst_benchmarks::~cutelyst_benchmarks()
