@@ -19,6 +19,6 @@ libraryDependencies ++= Seq(
   "io.fintrospect" %% "fintrospect-json4s" % "13.11.0",
   "io.fintrospect" %% "fintrospect-mustache" % "13.11.0",
   "com.twitter" %% "finagle-mysql" % "6.38.0"
-  )
+)
 
 resolvers += Resolver.sonatypeRepo("snapshots")

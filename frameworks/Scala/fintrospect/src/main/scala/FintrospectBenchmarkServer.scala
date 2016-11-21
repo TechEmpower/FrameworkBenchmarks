@@ -20,10 +20,13 @@ object FintrospectBenchmarkServer extends App {
     })
   }
 
+  val database = Database()
+
   val module = ModuleSpec(Root, SimpleJson(), addServerAndDate)
-    .withRoute(JsonHelloWorld.route)
-    .withRoute(PlainTextHelloWorld.route)
-    .withRoute(Fortunes.route)
+    .withRoute(JsonRoute())
+    .withRoute(PlainTextRoute())
+    .withRoute(FortunesRoute(database))
+    .withRoute(QueriesRoute(database))
 
   Await.ready(
     Http.server

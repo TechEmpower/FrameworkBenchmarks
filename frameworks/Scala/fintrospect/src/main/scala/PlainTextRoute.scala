@@ -6,11 +6,11 @@ import com.twitter.io.Buf
 import io.fintrospect.RouteSpec
 import io.fintrospect.formats.PlainText.ResponseBuilder.implicits._
 
-object PlainTextHelloWorld {
+object PlainTextRoute {
 
   private val preallocatedMsgForPlainText = Buf.Utf8("Hello, World!")
 
   private val service = Service.mk { r: Request => Ok(preallocatedMsgForPlainText) }
 
-  val route = RouteSpec().at(Get) / "plaintext" bindTo service
+  def apply() = RouteSpec().at(Get) / "plaintext" bindTo service
 }

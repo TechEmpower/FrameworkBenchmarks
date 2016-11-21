@@ -6,9 +6,9 @@ import io.fintrospect.RouteSpec
 import io.fintrospect.formats.Json4sJackson.JsonFormat.{obj, string}
 import io.fintrospect.formats.Json4sJackson.ResponseBuilder.implicits._
 
-object JsonHelloWorld {
+object JsonRoute {
 
   private val service = Service.mk { r: Request => Ok(obj("message" -> string("Hello, World!"))) }
 
-  val route = RouteSpec().at(Get) / "json" bindTo JsonHelloWorld.service
+  def apply() = RouteSpec().at(Get) / "json" bindTo service
 }
