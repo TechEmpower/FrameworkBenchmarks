@@ -38,13 +38,13 @@ object QueriesRoutes {
         .map(_.map(Ok(_)).getOrElse(NotFound()).build())
     }
 
-    val numberOfQueries = Query.required(int("queries").map(_.max(1).min(500)))
+    val numberOfQueries = Query.optional(int("queries").map(_.max(1).min(500)))
 
     val multipleRoute = RouteSpec()
       .taking(numberOfQueries)
       .at(Get) / "queries" bindTo Service.mk {
       r: Request => {
-        collect(1.to(numberOfQueries <-- r)
+        collect(1.to((numberOfQueries <-- r).getOrElse(1))
           .map(i => statement(generateRandomId).map(toJson)))
           .map(f => f.flatMap(_.toSeq))
           .flatMap(c => Ok(array(c)))

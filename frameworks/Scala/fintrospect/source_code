@@ -3,4 +3,5 @@ fintrospect/src/main/scala/Database.scala
 fintrospect/src/main/scala/FortunesRoute.scala
 fintrospect/src/main/scala/JsonRoute.scala
 fintrospect/src/main/scala/PlainTextRoute.scala
+fintrospect/src/main/scala/QueriesRoute.scala
 fintrospect/src/main/scala/FintrospectBenchmarkServer.scala
