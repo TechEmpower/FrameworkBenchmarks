@@ -27,13 +27,14 @@ object QueriesRoutes {
     case _ => None
   }
 
-  private def generateRandomId = Random.nextInt(9999) + 1
+  private def generateRandomNumber = Random.nextInt(9999) + 1
 
   def apply(database: Client) = {
-    val statement = database.prepare("SELECT id, randomNumber FROM world WHERE id = ?")
+    val getStatement = database.prepare("SELECT id, randomNumber FROM world WHERE id = ?")
+    val updateStatement = database.prepare("UPDATE world SET randomNumber = ? WHERE id = ?")
 
-    val singleRoute = RouteSpec().at(Get) / "db" bindTo Service.mk {
-      r: Request => statement(generateRandomId)
+    val queryRoute = RouteSpec().at(Get) / "db" bindTo Service.mk {
+      r: Request => getStatement(generateRandomNumber)
         .map(toJson)
         .map(_.map(Ok(_)).getOrElse(NotFound()).build())
     }
@@ -45,15 +46,32 @@ object QueriesRoutes {
       .at(Get) / "queries" bindTo Service.mk {
       r: Request => {
         collect(1.to((numberOfQueries <-- r).getOrElse(1))
-          .map(i => statement(generateRandomId).map(toJson)))
+          .map(i => getStatement(generateRandomNumber).map(toJson)))
+          .map(f => f.flatMap(_.toSeq))
+          .flatMap(c => Ok(array(c)))
+      }
+    }
+
+    val updateRoute = RouteSpec()
+      .taking(numberOfQueries)
+      .at(Get) / "update" bindTo Service.mk {
+      r: Request => {
+        collect(1.to((numberOfQueries <-- r).getOrElse(1))
+          .map(i => {
+            val id = generateRandomNumber
+            updateStatement(generateRandomNumber, id)
+              .flatMap(_ => getStatement(id))
+              .map(toJson)
+          }))
           .map(f => f.flatMap(_.toSeq))
           .flatMap(c => Ok(array(c)))
       }
     }
 
     new ServerRoutes[Request, Response] {
-      add(singleRoute)
+      add(queryRoute)
       add(multipleRoute)
+      add(updateRoute)
     }
   }
 }
