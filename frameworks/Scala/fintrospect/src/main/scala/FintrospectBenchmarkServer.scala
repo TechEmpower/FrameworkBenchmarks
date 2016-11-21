@@ -26,7 +26,7 @@ object FintrospectBenchmarkServer extends App {
     .withRoute(JsonRoute())
     .withRoute(PlainTextRoute())
     .withRoute(FortunesRoute(database))
-    .withRoute(QueriesRoute(database))
+    .withRoutes(QueriesRoutes(database))
 
   Await.ready(
     Http.server

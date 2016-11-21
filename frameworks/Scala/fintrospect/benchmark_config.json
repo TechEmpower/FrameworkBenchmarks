@@ -9,6 +9,7 @@
         "fortune_url": "/fortunes",
         "db_url": "/db",
         "json_url": "/json",
+        "queries_url": "/queries?queries=",
         "plaintext_url": "/plaintext",
         "port": 9000,
         "approach": "Realistic",

@@ -1,17 +1,21 @@
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Get
-import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status.{NotFound, Ok}
+import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.mysql.Parameter.wrap
 import com.twitter.finagle.mysql.{Client, IntValue, Result, ResultSet}
-import io.fintrospect.RouteSpec
-import io.fintrospect.formats.Json4sJackson.JsonFormat.{number, obj}
+import com.twitter.util.Future.collect
+import io.fintrospect.formats.Json4sJackson.JsonFormat.{array, number, obj}
 import io.fintrospect.formats.Json4sJackson.ResponseBuilder.implicits._
+import io.fintrospect.parameters.ParameterSpec.int
+import io.fintrospect.parameters.Query
+import io.fintrospect.{RouteSpec, ServerRoutes}
 import org.json4s.JValue
 
+import scala.language.reflectiveCalls
 import scala.util.Random
 
-object QueriesRoute {
+object QueriesRoutes {
 
   private val toJson: PartialFunction[Result, Option[JValue]] = {
     case rs: ResultSet => rs.rows.headOption
@@ -28,12 +32,28 @@ object QueriesRoute {
   def apply(database: Client) = {
     val statement = database.prepare("SELECT id, randomNumber FROM world WHERE id = ?")
 
-    val service = Service.mk {
+    val singleRoute = RouteSpec().at(Get) / "db" bindTo Service.mk {
       r: Request => statement(generateRandomId)
         .map(toJson)
         .map(_.map(Ok(_)).getOrElse(NotFound()).build())
     }
 
-    RouteSpec().at(Get) / "db" bindTo service
+    val numberOfQueries = Query.required(int("queries").map(_.max(1).min(500)))
+
+    val multipleRoute = RouteSpec()
+      .taking(numberOfQueries)
+      .at(Get) / "queries" bindTo Service.mk {
+      r: Request => {
+        collect(1.to(numberOfQueries <-- r)
+          .map(i => statement(generateRandomId).map(toJson)))
+          .map(f => f.flatMap(_.toSeq))
+          .flatMap(c => Ok(array(c)))
+      }
+    }
+
+    new ServerRoutes[Request, Response] {
+      add(singleRoute)
+      add(multipleRoute)
+    }
   }
 }
