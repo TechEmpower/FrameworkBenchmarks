@@ -15,7 +15,7 @@ import org.json4s.JValue
 import scala.language.reflectiveCalls
 import scala.util.Random
 
-object QueriesRoutes {
+object DatabaseRoutes {
 
   private val toJson: PartialFunction[Result, Option[JValue]] = {
     case rs: ResultSet => rs.rows.headOption
