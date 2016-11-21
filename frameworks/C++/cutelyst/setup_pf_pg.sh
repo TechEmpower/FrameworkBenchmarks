@@ -2,6 +2,7 @@
 
 fw_depends cutelyst
 
+sed -i 's|Driver=.*|Driver=QPSQL|g' config/config.ini
 sed -i 's|DatabaseHostName=.*|DatabaseHostName='"$DBHOST"'|g' config/config.ini
 sed -i 's|SendDate=.*|SendDate=false|g' config/config.ini
 
