@@ -4,6 +4,7 @@ import com.twitter.finagle.http.Request
 import com.twitter.finagle.http.Status.Ok
 import com.twitter.io.Buf
 import io.fintrospect.RouteSpec
+import io.fintrospect.RouteSpec.RequestValidation.none
 import io.fintrospect.formats.PlainText.ResponseBuilder.implicits._
 
 object PlainTextRoute {
@@ -12,5 +13,5 @@ object PlainTextRoute {
 
   private val service = Service.mk { r: Request => Ok(preallocatedMsgForPlainText) }
 
-  def apply() = RouteSpec().at(Get) / "plaintext" bindTo service
+  def apply() = RouteSpec(validation = none).at(Get) / "plaintext" bindTo service
 }

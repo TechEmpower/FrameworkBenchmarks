@@ -3,6 +3,7 @@ import com.twitter.finagle.http.Method.Get
 import com.twitter.finagle.http.Request
 import com.twitter.finagle.mysql.{Client, IntValue, Result, ResultSet, StringValue}
 import io.fintrospect.RouteSpec
+import io.fintrospect.RouteSpec.RequestValidation.none
 import io.fintrospect.formats.Html
 import io.fintrospect.templating.MustacheTemplates.CachingClasspath
 import io.fintrospect.templating.{RenderView, View}
@@ -36,6 +37,6 @@ object FortunesRoute {
           })
       })
 
-    RouteSpec().at(Get) / "fortunes" bindTo service
+    RouteSpec(validation = none).at(Get) / "fortunes" bindTo service
   }
 }

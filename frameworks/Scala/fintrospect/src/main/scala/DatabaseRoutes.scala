@@ -5,6 +5,8 @@ import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.mysql.Parameter.wrap
 import com.twitter.finagle.mysql.{Client, IntValue, Result, ResultSet}
 import com.twitter.util.Future.collect
+import io.fintrospect.RouteSpec.RequestValidation
+import io.fintrospect.RouteSpec.RequestValidation.none
 import io.fintrospect.formats.Json4sJackson.JsonFormat.{array, number, obj}
 import io.fintrospect.formats.Json4sJackson.ResponseBuilder.implicits._
 import io.fintrospect.parameters.ParameterSpec.int
@@ -33,7 +35,7 @@ object DatabaseRoutes {
     val getStatement = database.prepare("SELECT id, randomNumber FROM world WHERE id = ?")
     val updateStatement = database.prepare("UPDATE world SET randomNumber = ? WHERE id = ?")
 
-    val queryRoute = RouteSpec().at(Get) / "db" bindTo Service.mk {
+    val queryRoute = RouteSpec(validation = none).at(Get) / "db" bindTo Service.mk {
       r: Request => getStatement(generateRandomNumber)
         .map(toJson)
         .map(_.map(Ok(_)).getOrElse(NotFound()).build())
@@ -41,7 +43,7 @@ object DatabaseRoutes {
 
     val numberOfQueries = Query.optional(int("queries").map(_.max(1).min(500)))
 
-    val multipleRoute = RouteSpec()
+    val multipleRoute = RouteSpec(validation = none)
       .taking(numberOfQueries)
       .at(Get) / "queries" bindTo Service.mk {
       r: Request => {
@@ -52,9 +54,9 @@ object DatabaseRoutes {
       }
     }
 
-    val updateRoute = RouteSpec()
+    val updateRoute = RouteSpec(validation = none)
       .taking(numberOfQueries)
-      .at(Get) / "update" bindTo Service.mk {
+      .at(Get) / "updates" bindTo Service.mk {
       r: Request => {
         collect(1.to((numberOfQueries <-- r).getOrElse(1))
           .map(i => {
