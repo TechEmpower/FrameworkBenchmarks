@@ -1,8 +1,9 @@
 package hellowicket.plaintext;
 
-import java.nio.charset.Charset;
-
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.AbstractResource;
+
+import java.nio.charset.Charset;
 
 /**
  * A resource that implements the requirements for
@@ -18,14 +19,19 @@ public class HelloTextResource extends AbstractResource
   protected ResourceResponse newResourceResponse(Attributes attributes)
   {
     ResourceResponse response = new ResourceResponse();
-    response.setContentType(CONTENT_TYPE);
-    response.setContentLength(DATA.length);
     response.setWriteCallback(new WriteCallback() {
       public void writeData(Attributes attributes)
       {
-        attributes.getResponse().write(DATA);
+        final WebResponse webResponse = (WebResponse) attributes.getResponse();
+        webResponse.setContentType(CONTENT_TYPE);
+        webResponse.setContentLength(DATA.length);
+        webResponse.write(DATA);
       }
     });
     return response;
+  }
+
+  @Override
+  protected void setResponseHeaders(final ResourceResponse resourceResponse, final Attributes attributes) {
   }
 }
