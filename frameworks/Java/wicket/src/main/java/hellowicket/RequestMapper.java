@@ -21,7 +21,7 @@ public class RequestMapper implements IRequestMapper {
 
     @Override
     public IRequestHandler mapRequest(final Request request) {
-        final String url = request.getUrl().toString();
+        final String url = request.getUrl().getPath();
         switch (url) {
             case "json":
                 return new ResourceReferenceRequestHandler(new HelloJsonReference());
