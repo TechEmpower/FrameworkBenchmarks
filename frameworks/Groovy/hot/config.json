@@ -5,7 +5,7 @@
   "dataSources" : [ {
     "name" : "mongo",
     "engine" : "MONGODB",
-    "hostname" : "$DBHOST",
+    "hostname" : "localhost",
     "port" : 27017,
     "database" : "hello_world",
     "username" : "",
