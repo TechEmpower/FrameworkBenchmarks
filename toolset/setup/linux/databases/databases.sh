@@ -12,7 +12,9 @@ sudo mkdir -p /ssd
 sudo mkdir -p /ssd/log
 sudo chown -R $(whoami):$(whoami) /ssd
 
-sudo useradd benchmarkdbuser -p benchmarkdbpass"
+if ! id -u benchmarkdbuser &> /dev/null; then
+  sudo useradd benchmarkdbuser -p benchmarkdbpass
+fi"
 
 echo -e "" > $IROOT/databases.installed
 
