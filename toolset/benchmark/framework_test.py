@@ -870,8 +870,6 @@ class FrameworkTest:
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
     self.install_root="%s/%s" % (self.fwroot, "installs")
-    if benchmarker.install_strategy is 'pertest':
-      self.install_root="%s/pertest/%s" % (self.install_root, name)
 
     # Used in setup.sh scripts for consistency with
     # the bash environment variables
