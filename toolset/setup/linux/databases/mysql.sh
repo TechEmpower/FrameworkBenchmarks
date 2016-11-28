@@ -42,6 +42,6 @@ fi"
 # Install the mysql client
 sudo apt-get install -y mysql-client
 
-echo -e "mysql -uroot -psecret < create.sql" > $IROOT/mysql.installed
+echo -e "ssh \$DBHOST -t 'mysql -uroot -psecret < create.sql'" > $IROOT/mysql.installed
 
 source $IROOT/mysql.installed
