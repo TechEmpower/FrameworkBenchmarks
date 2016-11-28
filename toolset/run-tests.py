@@ -201,7 +201,7 @@ def main(argv=None):
       benchmarker.run_list_test_metadata()
     elif args.parse != None:
       benchmarker.parse_timestamp()
-    elif not args.install_only:
+    else:
       return benchmarker.run()
 
 if __name__ == "__main__":
