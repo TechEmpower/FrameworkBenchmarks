@@ -27,7 +27,7 @@ sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::=
 
 # This will support all 9.* versions depending on the machine
 ssh $DBHOST -t "service postgresql status &> /dev/null || sudo service postgresql stop
-service postgresql status &> /dev/null || sudo killall -s 9 -u postgres"
+sudo killall -s 9 -u postgres"
 
 # Make sure all the configuration files in main belong to postgres
 ssh $DBHOST -t "PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`
