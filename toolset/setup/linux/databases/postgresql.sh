@@ -26,22 +26,24 @@ ssh $DBHOST -t 'sudo apt-get -y update
 sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql'
 
 # This will support all 9.* versions depending on the machine
-ssh $DBHOST -t "sudo service postgresql stop"
+ssh $DBHOST -t "service postgresql status &> /dev/null || sudo service postgresql stop
+service postgresql status &> /dev/null || sudo killall -s 9 -u postgres"
 
 # Make sure all the configuration files in main belong to postgres
 ssh $DBHOST -t "PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`
 sudo mv postgresql.conf /etc/postgresql/\${PG_VERSION}/main/postgresql.conf
 sudo mv pg_hba.conf /etc/postgresql/\${PG_VERSION}/main/pg_hba.conf
+
 sudo chown -Rf postgres:postgres /etc/postgresql/\${PG_VERSION}/main
+
 sudo rm -rf /ssd/postgresql
 sudo cp -R -p /var/lib/postgresql/\${PG_VERSION}/main /ssd/postgresql
 sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 
 sudo chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf
-
 sudo chown postgres:postgres create-postgres*
 
-sudo service postgresql start"
+service postgresql status &> /dev/null || sudo service postgresql start"
 
 echo -e "ssh \$DBHOST -t 'sudo -u postgres psql -q template1 < create-postgres-database.sql
   sudo -u postgres psql -q hello_world < create-postgres.sql'" > $IROOT/postgresql.installed
