@@ -16,7 +16,7 @@ ssh $DBHOST -t "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --rec
 echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 sudo apt-get -y update
 sudo apt-get -y remove mongodb-clients
-sudo apt-get -y install mongodb-org
+sudo apt-get -y install -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' mongodb-org
 
 sudo service mongod stop
 sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
