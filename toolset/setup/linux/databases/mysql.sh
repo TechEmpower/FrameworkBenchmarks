@@ -8,6 +8,7 @@ RETCODE=$(fw_exists ${IROOT}/mysql.installed)
   return 0; }
 
 # send over the required files
+scp $FWROOT/config/create.sql $DBHOST:~/
 scp $FWROOT/config/mysql $DBHOST:~/
 scp $FWROOT/config/mysql.conf $DBHOST:~/
 scp $FWROOT/config/my.cnf $DBHOST:~/
@@ -41,6 +42,6 @@ fi"
 # Install the mysql client
 sudo apt-get install -y mysql-client
 
-echo -e "mysql -uroot -psecret -h \$DBHOST < \$FWROOT/config/create.sql" > $IROOT/mysql.installed
+echo -e "mysql -uroot -psecret < create.sql" > $IROOT/mysql.installed
 
 source $IROOT/mysql.installed
