@@ -21,19 +21,20 @@ scp $FWROOT/config/60-postgresql-shm.conf $DBHOST:~/
 scp $FWROOT/config/create-postgres-database.sql $DBHOST:~/
 scp $FWROOT/config/create-postgres.sql $DBHOST:~/
 
+ssh $DBHOST 'bash' <<EOF
 # install postgresql on database machine
-ssh $DBHOST -t 'sudo apt-get -y update
-sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql'
+sudo apt-get -y update
+sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql
 
 # This will support all 9.* versions depending on the machine
-ssh $DBHOST -t "service postgresql status &> /dev/null
+service postgresql status &> /dev/null
 if [ $? -eq 0 ]; then
   sudo service postgresql stop
 fi
-sudo killall -s 9 -u postgres"
+sudo killall -s 9 -u postgres
 
 # Make sure all the configuration files in main belong to postgres
-ssh $DBHOST -t "PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`
+PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`
 sudo mv postgresql.conf /etc/postgresql/\${PG_VERSION}/main/postgresql.conf
 sudo mv pg_hba.conf /etc/postgresql/\${PG_VERSION}/main/pg_hba.conf
 
@@ -49,7 +50,8 @@ sudo chown postgres:postgres create-postgres*
 service postgresql status &> /dev/null
 if [ $? -ne 0 ]; then
   sudo service postgresql start
-fi"
+fi
+EOF
 
 echo -e "ssh \$DBHOST -t 'sudo -u postgres psql -q template1 < create-postgres-database.sql
   sudo -u postgres psql -q hello_world < create-postgres.sql'" > $IROOT/postgresql.installed
