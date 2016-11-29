@@ -35,7 +35,8 @@ sudo cp usr.sbin.mysqld /etc/apparmor.d/
 sudo /etc/init.d/apparmor reload
 sudo start mysql
 
-if ! mysql -uroot -psecret -e'quit' &> /dev/null; then
+mysql -uroot -psecret -e'quit' &> /dev/null
+if [ $? -ne 0 ]; then
   sudo mysqladmin -u root password secret
 fi"
 
