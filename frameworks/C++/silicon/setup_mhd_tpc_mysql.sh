@@ -1,6 +1,6 @@
 #! /bin/bash
 
-fw_depends silicon microhttpd
+fw_depends libboost-dev silicon microhttpd
 
 rm -rf build
 mkdir build
