@@ -26,7 +26,7 @@ ssh $DBHOST -t 'sudo apt-get -y update
 sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql'
 
 # This will support all 9.* versions depending on the machine
-ssh $DBHOST -t "service postgresql status
+ssh $DBHOST -t "service postgresql status &> /dev/null
 if [ $? -eq 0 ]; then
   sudo service postgresql stop
 fi
@@ -46,7 +46,7 @@ sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 sudo chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf
 sudo chown postgres:postgres create-postgres*
 
-service postgresql status
+service postgresql status &> /dev/null
 if [ $? -ne 0 ]; then
   sudo service postgresql start
 fi"
