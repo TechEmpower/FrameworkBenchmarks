@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"runtime"
 	"sort"
 
 	"github.com/jackc/pgx"
@@ -29,11 +28,7 @@ func main() {
 
 	var err error
 
-	dbConns := maxConnectionCount
-	if *common.Prefork {
-		dbConns = (maxConnectionCount + runtime.NumCPU() - 1) / runtime.NumCPU()
-	}
-	if db, err = initDatabase("localhost", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, dbConns); err != nil {
+	if db, err = initDatabase("localhost", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, maxConnectionCount); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
 

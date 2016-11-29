@@ -6,13 +6,9 @@ import (
 	"log"
 	"math/rand"
 	"net"
-	"os"
-	"os/exec"
-	"runtime"
 	"sync"
 
 	"github.com/valyala/fasthttp"
-	"github.com/valyala/fasthttp/reuseport"
 
 	"templates"
 )
@@ -28,11 +24,7 @@ type World struct {
 	RandomNumber int32 `json:"randomNumber"`
 }
 
-var (
-	listenAddr = flag.String("listenAddr", ":8080", "Address to listen to")
-	Prefork    = flag.Bool("prefork", false, "use prefork")
-	child      = flag.Bool("child", false, "is child proc")
-)
+var listenAddr = flag.String("listenAddr", ":8080", "Address to listen to")
 
 func JSONHandler(ctx *fasthttp.RequestCtx) {
 	r := jsonResponsePool.Get().(*JSONResponse)
@@ -86,36 +78,7 @@ func (w WorldsByID) Swap(i, j int)      { w[i], w[j] = w[j], w[i] }
 func (w WorldsByID) Less(i, j int) bool { return w[i].Id < w[j].Id }
 
 func GetListener() net.Listener {
-	if !*Prefork {
-		runtime.GOMAXPROCS(runtime.NumCPU())
-		ln, err := net.Listen("tcp4", *listenAddr)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return ln
-	}
-
-	if !*child {
-		children := make([]*exec.Cmd, runtime.NumCPU())
-		for i := range children {
-			children[i] = exec.Command(os.Args[0], "-prefork", "-child")
-			children[i].Stdout = os.Stdout
-			children[i].Stderr = os.Stderr
-			if err := children[i].Start(); err != nil {
-				log.Fatal(err)
-			}
-		}
-		for _, ch := range children {
-			if err := ch.Wait(); err != nil {
-				log.Print(err)
-			}
-		}
-		os.Exit(0)
-		panic("unreachable")
-	}
-
-	runtime.GOMAXPROCS(1)
-	ln, err := reuseport.Listen("tcp4", *listenAddr)
+	ln, err := net.Listen("tcp4", *listenAddr)
 	if err != nil {
 		log.Fatal(err)
 	}

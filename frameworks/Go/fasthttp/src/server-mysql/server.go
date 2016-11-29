@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"flag"
 	"log"
-	"runtime"
 	"sort"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -38,12 +37,8 @@ func main() {
 		log.Fatalf("Cannot connect to db: %s", err)
 	}
 
-	dbConnCount := maxConnectionCount
-	if *common.Prefork {
-		dbConnCount = (dbConnCount + runtime.NumCPU() - 1) / runtime.NumCPU()
-	}
-	db.SetMaxIdleConns(dbConnCount)
-	db.SetMaxOpenConns(dbConnCount)
+	db.SetMaxIdleConns(maxConnectionCount)
+	db.SetMaxOpenConns(maxConnectionCount)
 
 	worldSelectStmt = mustPrepare(db, "SELECT id, randomNumber FROM World WHERE id = ?")
 	worldUpdateStmt = mustPrepare(db, "UPDATE World SET randomNumber = ? WHERE id = ?")
