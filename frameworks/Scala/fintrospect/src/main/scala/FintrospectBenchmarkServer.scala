@@ -1,4 +1,3 @@
-import java.time.ZonedDateTime._
 import java.util.TimeZone.getTimeZone
 
 import com.twitter.finagle.http.path.Root
@@ -18,7 +17,7 @@ object FintrospectBenchmarkServer extends App {
   val addServerAndDate = Filter.mk[Request, Response, Request, Response] { (req, svc) =>
     svc(req).map(resp => {
       resp.headerMap("Server") = "Example"
-      resp.headerMap("Date") = dateFormat.format(now())
+      resp.headerMap("Date") = dateFormat.format(System.currentTimeMillis())
       resp
     })
   }
