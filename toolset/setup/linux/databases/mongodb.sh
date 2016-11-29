@@ -19,7 +19,7 @@ sudo apt-get -y update
 sudo apt-get -y remove mongodb-clients
 sudo apt-get -y install -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' mongodb-org
 
-service mongod status &> /dev/null && sudo service mongod stop
+nc -zvv $DBHOST 27017 &> /dev/null && sudo service mongod stop
 sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
 sudo cp mongodb.conf /etc/mongodb.conf
 sudo mv mongodb.conf /etc/mongod.conf
@@ -27,7 +27,7 @@ sudo rm -rf /ssd/mongodb
 sudo rm -rf /ssd/log/mongodb
 sudo cp -R -p /var/lib/mongodb /ssd/
 sudo cp -R -p /var/log/mongodb /ssd/log/
-service mongod status &> /dev/null || sudo service mongod start
+nc -zvv $DBHOST 27017 &> /dev/null || sudo service mongod start
 EOF
 
 echo -e "ssh \$DBHOST 'bash' <<EOF" > $IROOT/mongodb.installed
