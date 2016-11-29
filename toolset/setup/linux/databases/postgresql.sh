@@ -27,7 +27,9 @@ sudo apt-get -y update
 sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql
 
 # This will support all 9.* versions depending on the machine
-service postgresql status &> /dev/null || sudo service postgresql stop
+service postgresql status &> /dev/null && sudo service postgresql stop
+# Because postgresql...
+sudo killall -9 -u postgres
 
 # Make sure all the configuration files in main belong to postgres
 PG_VERSION=`pg_config --version | grep -oP '\d\.\d'`
@@ -43,12 +45,12 @@ sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 sudo chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf
 sudo chown postgres:postgres create-postgres*
 
-service postgresql status &> /dev/null && sudo service postgresql start
+service postgresql status &> /dev/null || sudo service postgresql start
 EOF
 
 echo -e "ssh \$DBHOST <<EOF" > $IROOT/postgresql.installed
 echo "sudo -u postgres psql -q template1 < create-postgres-database.sql" >> $IROOT/postgresql.installed
 echo "sudo -u postgres psql -q hello_world < create-postgres.sql" >> $IROOT/postgresql.installed
-echo "EOF" > $IROOT/postgresql.installed" >> $IROOT/postgresql.installed
+echo "EOF" >> $IROOT/postgresql.installed
 
 source $IROOT/postgresql.installed

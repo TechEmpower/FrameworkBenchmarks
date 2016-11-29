@@ -15,7 +15,7 @@ scp $FWROOT/config/my.cnf $DBHOST:~/
 scp $FWROOT/config/usr.sbin.mysqld $DBHOST:~/
 
 # install mysql on database machine
-ssh $DBHOST -t "
+ssh $DBHOST 'bash' <<EOF
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server
 
 sudo stop mysql
@@ -38,11 +38,14 @@ sudo start mysql
 mysql -uroot -psecret -e'quit' &> /dev/null
 if [ $? -ne 0 ]; then
   sudo mysqladmin -u root password secret
-fi"
+fi
+EOF
 
 # Install the mysql client
 sudo apt-get install -y mysql-client
 
-echo -e "ssh \$DBHOST -t 'mysql -uroot -psecret < create.sql'" > $IROOT/mysql.installed
+echo -e "ssh \$DBHOST 'bash' <<EOF" > $IROOT/mysql.installed
+echo -e "mysql -uroot -psecret < create.sql" >> $IROOT/mysql.installed
+echo -e "EOF" >> $IROOT/mysql.installed
 
 source $IROOT/mysql.installed
