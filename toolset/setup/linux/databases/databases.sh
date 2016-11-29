@@ -13,7 +13,7 @@ sudo mkdir -p /ssd/log
 sudo chown -R $(whoami):$(whoami) /ssd
 
 id -u benchmarkdbuser &> /dev/null
-if [ $? -eq 0 ]; then
+if [ $? -ne 0 ]; then
   sudo useradd benchmarkdbuser -p benchmarkdbpass
 fi"
 
