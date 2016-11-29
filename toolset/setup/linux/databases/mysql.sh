@@ -35,10 +35,7 @@ sudo cp usr.sbin.mysqld /etc/apparmor.d/
 sudo /etc/init.d/apparmor reload
 sudo start mysql
 
-mysql -uroot -psecret -e'quit' &> /dev/null
-if [ $? -ne 0 ]; then
-  sudo mysqladmin -u root password secret
-fi
+mysql -uroot -psecret -e'quit' &> /dev/null || sudo mysqladmin -u root password secret
 EOF
 
 # Install the mysql client
