@@ -22,9 +22,6 @@ cp -R ffead-cpp-2.0-bin/ ${TROOT}
 mv ${TROOT}/ffead-cpp-2.0-bin ${TROOT}/ffead-cpp-2.0
 rm -rf ffead-cpp-2.0/
 
-sudo chown -R testrunner:testrunner ${TROOT}/ffead-cpp-2.0
-sudo chmod -R g+rw ${TROOT}/ffead-cpp-2.0
-
 sudo sed -i 's|localhost|'${DBHOST}'|g' ${TROOT}/ffead-cpp-2.0/web/te-benchmark/config/sdorm*
 
 sudo rm -f /etc/odbcinst.ini

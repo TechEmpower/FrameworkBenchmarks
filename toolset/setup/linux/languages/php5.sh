@@ -22,8 +22,8 @@ cd php5
 echo "Configuring PHP5 quietly..."
 ./configure --prefix=$PHP_HOME --with-pdo-mysql \
   --with-mysql --with-mcrypt --enable-intl --enable-mbstring \
-  --enable-fpm --with-fpm-user=testrunner --with-fpm-group=testrunner \
-  --with-openssl --with-mysqli --with-zlib --enable-opcache --quiet
+  --enable-fpm --with-openssl --with-mysqli --with-zlib \
+  --enable-opcache --quiet
 echo "Making PHP5 quietly..."
 make --quiet
 echo "Installing PHP5 quietly"
