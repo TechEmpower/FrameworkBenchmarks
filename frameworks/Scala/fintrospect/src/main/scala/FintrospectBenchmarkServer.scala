@@ -7,12 +7,15 @@ import com.twitter.finagle.tracing.NullTracer
 import com.twitter.finagle.{Filter, Http}
 import com.twitter.util.{Await, NullMonitor}
 import io.fintrospect.ModuleSpec
+import io.fintrospect.configuration.Host
 import io.fintrospect.renderers.simplejson.SimpleJson
 import org.apache.commons.lang.time.FastDateFormat.getInstance
 
+import scala.util.Properties
+
 object FintrospectBenchmarkServer extends App {
 
-  private val dateFormat = getInstance("EEE, dd MMM yyyy HH:mm:ss 'GMT'", getTimeZone("GMT"))
+  val dateFormat = getInstance("EEE, dd MMM yyyy HH:mm:ss 'GMT'", getTimeZone("GMT"))
 
   val addServerAndDate = Filter.mk[Request, Response, Request, Response] { (req, svc) =>
     svc(req).map(resp => {
@@ -22,7 +25,8 @@ object FintrospectBenchmarkServer extends App {
     })
   }
 
-  val database = Database()
+  val dbHost = Properties.envOrNone("DBHOST").map(Host(_)).getOrElse(Host.localhost)
+  val database = Database(dbHost)
 
   val module = ModuleSpec(Root, SimpleJson(), addServerAndDate)
     .withRoute(JsonRoute())
