@@ -238,11 +238,12 @@ class FrameworkTest:
       out.flush()
 
     # Start the setup.sh command
-    p = subprocess.Popen(command, cwd=self.directory,
-          shell=True, stdout=subprocess.PIPE,
+    p = subprocess.Popen(command,
+          cwd=self.directory,
+          stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT,
-          creationFlags=subprocess.CREATE_NEW_PROCESS_GROUP)
-    pgid = os.getpgid(p.pid)
+          start_new_session=True)
+    sid = os.getsid(p.pid)
     nbsr = setup_util.NonBlockingStreamReader(p.stdout,
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
 
@@ -339,7 +340,7 @@ class FrameworkTest:
     logging.info("Executed %s.sh, returning %s", self.setup_file, retcode)
     os.chdir(previousDir)
 
-    return retcode, pgid
+    return retcode, sid
   ############################################################
   # End start
   ############################################################
