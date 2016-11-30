@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sed -i 's|localhost|'"${DBHOST}"'|g' index.php
+sed -i 's|localhost|'"${DBHOST}"'|g' .env
 sed -i 's|root .*/FrameworkBenchmarks/lumen|root '"${TROOT}"'|g' deploy/nginx.conf
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 

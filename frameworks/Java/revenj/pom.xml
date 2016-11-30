@@ -6,7 +6,7 @@
 	<artifactId>revenj</artifactId>
 	<name>Revenj.JVM</name>
 	<packaging>war</packaging>
-	<version>1.0.0</version>
+	<version>1.0.2</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -14,13 +14,13 @@
 		<dependency>
 			<groupId>org.revenj</groupId>
 			<artifactId>revenj-core</artifactId>
-			<version>0.9.7</version>
+			<version>1.0.2</version>
 		</dependency>
-                <dependency>
-                        <groupId>org.apache.commons</groupId>
-                        <artifactId>commons-lang3</artifactId>
-                        <version>3.4</version>
-                </dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -33,7 +33,7 @@
 			<plugin>
 				<groupId>com.dslplatform</groupId>
 				<artifactId>dsl-platform-maven-plugin</artifactId>
-				<version>0.8</version>
+				<version>1.0.1</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>

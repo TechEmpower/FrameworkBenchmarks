@@ -52,10 +52,8 @@ public class HelloWebServer {
 			b.option(ChannelOption.SO_BACKLOG, 1024);
 			b.option(ChannelOption.SO_REUSEADDR, true);
 			b.group(loupGroup).channel(serverChannelClass).childHandler(new HelloServerInitializer(loupGroup.next()));
-			b.option(ChannelOption.MAX_MESSAGES_PER_READ, Integer.MAX_VALUE);
 			b.childOption(ChannelOption.ALLOCATOR, new PooledByteBufAllocator(true));
 			b.childOption(ChannelOption.SO_REUSEADDR, true);
-			b.childOption(ChannelOption.MAX_MESSAGES_PER_READ, Integer.MAX_VALUE);
 
 			Channel ch = b.bind(inet).sync().channel();
 

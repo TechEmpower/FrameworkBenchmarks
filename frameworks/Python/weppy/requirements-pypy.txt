@@ -1,0 +1,4 @@
+pg8000==1.10.6
+weppy==0.8.4
+gunicorn==19.4.5
+tornado==4.3

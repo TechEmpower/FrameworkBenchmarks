@@ -35,7 +35,7 @@ public class JerseyWebServer
     final int dbPort = Integer.parseInt(cmd.getOptionValue("dbport", "3306"));
 
     ResourceConfig config = new ResourceConfig(DbResource.class,
-        FortunesResource.class, JsonResource.class,
+        FortunesResource.class, JsonResource.class, PlaintextResource.class,
         JsonMessageBodyWriter.class, ServerResponseFilter.class, RequestExceptionMapper.class);
 
     config.setProperties(new HashMap<String, Object>()

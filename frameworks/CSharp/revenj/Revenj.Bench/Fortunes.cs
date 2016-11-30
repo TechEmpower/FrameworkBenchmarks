@@ -12,7 +12,7 @@ namespace Revenj.Bench
     using System;
     
     
-    #line 1 "C:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
+    #line 1 "D:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "10.0.0.0")]
     public partial class Fortunes : FortunesBase
     {
@@ -23,7 +23,7 @@ namespace Revenj.Bench
             this.Write("\n<!DOCTYPE html>\n<html>\n<head><title>Fortunes</title></head>\n<body><table><tr><th" +
                     ">id</th><th>message</th></tr>\n");
             
-            #line 1 "C:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
+            #line 1 "D:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
  for (var i=0; i<fortunes.Count;i++) {
 	var f = fortunes[i]; 
             
@@ -31,21 +31,21 @@ namespace Revenj.Bench
             #line hidden
             this.Write("\n<tr><td>");
             
-            #line 1 "C:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
- Write(f.Key.ToString()); 
+            #line 1 "D:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
+ Show(f.Key); 
             
             #line default
             #line hidden
             this.Write("</td><td>");
             
-            #line 1 "C:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
- Write(System.Web.HttpUtility.HtmlEncode(f.Value)); 
+            #line 1 "D:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
+ Show(f.Value); 
             
             #line default
             #line hidden
             this.Write("</td></tr>\n");
             
-            #line 1 "C:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
+            #line 1 "D:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
  } 
             
             #line default
@@ -54,7 +54,7 @@ namespace Revenj.Bench
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 1 "C:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
+        #line 1 "D:\Projects\FrameworkBenchmarks\frameworks\CSharp\revenj\Revenj.Bench\Fortunes.tt"
 
 private global::System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<int, string>> _fortunesField;
 

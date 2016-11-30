@@ -1,5 +1,7 @@
 #!/bin/bash
 
+fw_depends gcc-4.9
+
 RETCODE=$(fw_exists ${IROOT}/libreactor.installed)
 [ ! "$RETCODE" == 0 ] || { \
   # Load environment variables

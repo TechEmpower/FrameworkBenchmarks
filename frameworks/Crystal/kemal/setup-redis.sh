@@ -2,8 +2,8 @@
 
 fw_depends crystal
 
-crystal deps install
+shards install
 
 crystal build --release server-redis.cr
 
-./server-redis -e production &
+./server-redis &

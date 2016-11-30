@@ -11,6 +11,7 @@
       "database": "None",
       "framework": "netty",
       "language": "Java",
+      "flavor": "None",
       "orm": "Raw",
       "platform": "Netty",
       "webserver": "None",

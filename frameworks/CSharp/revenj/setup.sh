@@ -6,10 +6,10 @@ echo "Cleaning up..."
 rm -rf $TROOT/exe $TROOT/tmp $TROOT/dsl-clc.jar $TROOT/http-server.zip
 
 echo "Download DSL compiler client"
-wget -O $TROOT/dsl-clc.jar https://github.com/ngs-doo/dsl-compiler-client/releases/download/1.7.0/dsl-clc.jar
+wget -O $TROOT/dsl-clc.jar https://github.com/ngs-doo/dsl-compiler-client/releases/download/1.8.2/dsl-clc.jar
 
-echo "Download Revenj.NET HTTP server 1.3.1"
-wget -O $TROOT/http-server.zip https://github.com/ngs-doo/revenj/releases/download/1.3.1/http-server.zip
+echo "Download Revenj.NET HTTP server 1.4.1"
+wget -O $TROOT/http-server.zip https://github.com/ngs-doo/revenj/releases/download/1.4.1/http-server.zip
 
 echo "Unzipping HTTP server"
 unzip $TROOT/http-server.zip -d $TROOT/exe

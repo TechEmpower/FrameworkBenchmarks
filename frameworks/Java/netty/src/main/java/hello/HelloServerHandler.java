@@ -59,8 +59,8 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<HttpRequest>
 	private static final CharSequence PLAINTEXT_CLHEADER_VALUE = new AsciiString(String.valueOf(STATIC_PLAINTEXT_LEN));
 	private static final CharSequence JSON_CLHEADER_VALUE = new AsciiString(String.valueOf(jsonLen()));
 
-	private static final CharSequence TYPE_PLAIN = new AsciiString("text/plain; charset=UTF-8");
-	private static final CharSequence TYPE_JSON = new AsciiString("application/json; charset=UTF-8");
+	private static final CharSequence TYPE_PLAIN = new AsciiString("text/plain");
+	private static final CharSequence TYPE_JSON = new AsciiString("application/json");
 	private static final CharSequence SERVER_NAME = new AsciiString("Netty");
 	private static final CharSequence CONTENT_TYPE_ENTITY = HttpHeaderNames.CONTENT_TYPE;
 	private static final CharSequence DATE_ENTITY = HttpHeaderNames.DATE;

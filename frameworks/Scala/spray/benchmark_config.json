@@ -12,7 +12,7 @@
       "framework": "spray",
       "language": "Scala",
       "orm": "Raw",
-      "platform": "Spray",
+      "platform": "Akka",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
