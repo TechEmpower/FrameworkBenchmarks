@@ -77,7 +77,7 @@ try {
     $di->set('mongo', function() use ($config) {
         $mongodbConfig = $config->mongodb;
 
-        $mongo = new MongoDB\Client($mongodbConfig->url);
+        $mongo = new \Phalcon\Db\Adapter\MongoDB\Client($mongodbConfig->url);
         return $mongo->selectDatabase($mongodbConfig->db);
     });
 
