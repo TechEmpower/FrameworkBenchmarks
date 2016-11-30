@@ -3,6 +3,7 @@
 RETCODE=$(fw_exists ${IROOT}/py3.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/py3.installed
+  hash -r
   return 0; }
   
 PY3_ROOT=$IROOT/py3
@@ -24,3 +25,4 @@ echo -e "export PYTHONHOME=\$PY3_ROOT" >> $IROOT/py3.installed
 echo -e "export PATH=\$PY3_ROOT/bin:\$PATH" >> $IROOT/py3.installed
 
 source $IROOT/py3.installed
+hash -r
