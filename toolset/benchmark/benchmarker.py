@@ -694,7 +694,7 @@ class Benchmarker:
   ############################################################
   def __stop_test(self, sid, out):
     try:
-      subprocess.check_call('sudo pkill -9 -s %s' % sid, shell=True, stderr=out, stdout=out)
+      subprocess.check_call('sudo kill -9 -%s' % sid, shell=True, stderr=out, stdout=out)
       retcode = 0
     except Exception:
       retcode = 1
