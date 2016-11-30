@@ -242,8 +242,10 @@ class FrameworkTest:
           cwd=self.directory,
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT,
-          start_new_session=True)
+          preexec_fn=os.setsid)
+    logging.info("PID: %s" % p.pid)
     sid = os.getsid(p.pid)
+    logging.info("SID: %s" % os.getsid(p.pid))
     nbsr = setup_util.NonBlockingStreamReader(p.stdout,
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
 
