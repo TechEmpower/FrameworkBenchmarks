@@ -566,21 +566,16 @@ class Benchmarker:
         self.__cleanup_leftover_processes_before_test();
 
         if self.__is_port_bound(test.port):
-          # This can happen sometimes - let's try again
-          self.__stop_test(out)
+          # We gave it our all
+          self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
+          out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
           out.flush()
-          time.sleep(15)
-          if self.__is_port_bound(test.port):
-            # We gave it our all
-            self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
-            out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
-            out.flush()
-            print "Error: Unable to recover port, cannot start test"
-            return exit_with_code(1)
+          print "Error: Unable to recover port, cannot start test"
+          return exit_with_code(1)
 
-        result = test.start(out)
+        result, pgid = test.start(out)
         if result != 0:
-          self.__stop_test(out)
+          self.__stop_test(pgid, out)
           time.sleep(5)
           out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           out.flush()
@@ -618,13 +613,13 @@ class Benchmarker:
         ##########################
         out.write(header("Stopping %s" % test.name))
         out.flush()
-        self.__stop_test(out)
+        self.__stop_test(pgid, out)
         out.flush()
         time.sleep(15)
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
-          self.__stop_test(out)
+          self.__stop_test(pgid, out)
           out.flush()
           time.sleep(15)
           if self.__is_port_bound(test.port):
@@ -669,7 +664,7 @@ class Benchmarker:
         traceback.print_exc(file=out)
         out.flush()
         try:
-          self.__stop_test(out)
+          self.__stop_test(pgid, out)
         except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
           out.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
@@ -680,7 +675,7 @@ class Benchmarker:
       # TODO - subprocess should not catch this exception!
       # Parent process should catch it and cleanup/exit
       except (KeyboardInterrupt) as e:
-        self.__stop_test(out)
+        self.__stop_test(pgid, out)
         out.write(header("Cleaning up..."))
         out.flush()
         self.__finish()
@@ -697,9 +692,9 @@ class Benchmarker:
   # __stop_test(benchmarker)
   # Stops all running tests
   ############################################################
-  def __stop_test(self, out):
+  def __stop_test(self, pgid, out):
     try:
-      subprocess.check_call('sudo kill -9 -%s' % os.getgid(), shell=True, stderr=out, stdout=out)
+      subprocess.check_call('sudo kill -9 -%s' % pgid, shell=True, stderr=out, stdout=out)
       retcode = 0
     except Exception:
       retcode = 1
