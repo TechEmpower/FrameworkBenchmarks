@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends xdg-utils dlang dub
+fw_depends dlang dub
 
 # Clean any files from last run
 rm -f fwb

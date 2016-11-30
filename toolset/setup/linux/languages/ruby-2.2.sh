@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm
+fw_depends llvm-dev rvm
 
 RETCODE=$(fw_exists ${IROOT}/ruby-2.2.installed)
 [ ! "$RETCODE" == 0 ] || { \

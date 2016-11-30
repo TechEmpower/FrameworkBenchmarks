@@ -131,8 +131,8 @@ fw_depends() {
       set -x
       . $FWROOT/toolset/setup/linux/frameworks/${depend}.sh
     else
-      echo WARN: No installer found for $depend, installing with 'apt-get'
-      sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -s ${depend}
+      echo WARN: No installer found for $depend, attempting to install with 'apt-get'...
+      sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes ${depend}
       # Return whence you came.
       popd
       continue
