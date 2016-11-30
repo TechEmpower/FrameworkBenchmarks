@@ -201,31 +201,7 @@ class FrameworkTest:
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", self.directory)
 
-    # Run the start script for the test as the "testrunner" user
-    #
-    # `sudo` - Switching user requires superuser privs
-    #   -u [username] The username
-    #   -E Preserves the current environment variables
-    #   -H Forces the home var (~) to be reset to the user specified
-    # `stdbuf` - Disable buffering, send output to python ASAP
-    #   -o0 zero-sized buffer for stdout
-    #   -e0 zero-sized buffer for stderr
-    # `bash` - Run the setup.sh script using bash
-    #   -e Force bash to exit on first error
-    #   -x Turn on bash tracing e.g. print commands before running
-    #
-    # Most servers do not output to stdout/stderr while serving
-    # requests so there is no performance hit from disabling
-    # output buffering. This disabling is necessary to
-    # a) allow TFB to show output in real time and b) avoid loosing
-    # output in the buffer when the testrunner processes are forcibly
-    # killed
-    #
-    # See http://www.pixelbeat.org/programming/stdio_buffering/
-    # See https://blogs.gnome.org/markmc/2013/06/04/async-io-and-python/
-    # See http://eyalarubas.com/python-subproc-nonblock.html
-    command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -exc "source %s && source %s.sh"' % (
-      self.benchmarker.runner_user,
+    command = 'source %s && source %s.sh' % (
       bash_functions_path,
       os.path.join(self.troot, self.setup_file))
 

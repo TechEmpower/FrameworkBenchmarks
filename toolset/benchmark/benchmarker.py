@@ -699,7 +699,7 @@ class Benchmarker:
   ############################################################
   def __stop_test(self, out):
     try:
-      subprocess.check_call('sudo killall -s 9 -u %s' % self.runner_user, shell=True, stderr=out, stdout=out)
+      subprocess.check_call('sudo kill -9 -%s' % os.getgid(), shell=True, stderr=out, stdout=out)
       retcode = 0
     except Exception:
       retcode = 1
