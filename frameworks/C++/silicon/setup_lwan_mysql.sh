@@ -1,6 +1,6 @@
 #! /bin/bash
  
-fw_depends libboost-dev silicon lwan
+fw_depends silicon lwan
 
 rm -rf build
 mkdir build
