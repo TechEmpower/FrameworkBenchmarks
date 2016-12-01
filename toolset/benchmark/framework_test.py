@@ -190,8 +190,13 @@ class FrameworkTest:
     # Always ensure that IROOT exists
     if not os.path.exists(self.install_root):
       os.mkdir(self.install_root)
-      subprocess.check_call(['gcc', '-std=c99', '-oTFBReaper', 
-        os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')])
+
+    if not os.path.exists(os.path.join(self.install_root,"TFBReaper")):
+      subprocess.check_call(['gcc', 
+        '-std=c99', 
+        '-o%s/TFBReaper' % self.install_root, 
+        os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')  ],
+        stderr=out, stdout=out)
 
     # Run the module start inside parent of TROOT
     #  - we use the parent as a historical accident, a number of tests

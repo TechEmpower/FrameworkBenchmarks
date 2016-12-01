@@ -694,7 +694,8 @@ class Benchmarker:
   ############################################################
   def __stop_test(self, ppid, out):
     try:
-      subprocess.check_call('pkill -P %s' % ppid, shell=True, stderr=out, stdout=out)
+      subprocess.check_call(['pkill', '-9', '-P', str(ppid)], stderr=out, stdout=out)
+      subprocess.check_call(['kill', '-9', str(ppid)], stderr=out, stdout=out)
       retcode = 0
     except Exception:
       retcode = 1
