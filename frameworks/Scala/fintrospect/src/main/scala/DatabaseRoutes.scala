@@ -43,7 +43,7 @@ object DatabaseRoutes {
 
     val numberOfQueries = Query.optional(int("queries").map(_.max(1).min(500)))
 
-    val multipleRoute = RouteSpec(validation = none)
+    val multipleRoute = RouteSpec()
       .taking(numberOfQueries)
       .at(Get) / "queries" bindTo Service.mk {
       r: Request => {
@@ -54,7 +54,7 @@ object DatabaseRoutes {
       }
     }
 
-    val updateRoute = RouteSpec(validation = none)
+    val updateRoute = RouteSpec()
       .taking(numberOfQueries)
       .at(Get) / "updates" bindTo Service.mk {
       r: Request => {
