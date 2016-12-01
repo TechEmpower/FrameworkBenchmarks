@@ -52,10 +52,6 @@ int main(int argc, char *argv[])
   int status;
   wait(&status);
 
-  // We still need to wait forever in order to properly clean
-  // existing processes started by us.
-  for(;;){}
-
   return ret;
 }
 
