@@ -198,7 +198,8 @@ class FrameworkTest:
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", self.directory)
 
-    command = 'bash -exc "source %s && source %s.sh"' % (
+    command = '%s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\""' % (
+      self.install_root,
       bash_functions_path,
       os.path.join(self.troot, self.setup_file))
 
@@ -244,7 +245,7 @@ class FrameworkTest:
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT,
           preexec_fn=os.setsid)
-    sid = os.getsid(p.pid)
+    pid = p.pid
     nbsr = setup_util.NonBlockingStreamReader(p.stdout,
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
 
@@ -341,7 +342,7 @@ class FrameworkTest:
     logging.info("Executed %s.sh, returning %s", self.setup_file, retcode)
     os.chdir(previousDir)
 
-    return retcode, sid
+    return retcode, pid
   ############################################################
   # End start
   ############################################################

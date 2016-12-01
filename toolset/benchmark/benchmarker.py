@@ -573,9 +573,9 @@ class Benchmarker:
           print "Error: Unable to recover port, cannot start test"
           return exit_with_code(1)
 
-        result, sid = test.start(out)
+        result, ppid = test.start(out)
         if result != 0:
-          self.__stop_test(sid, out)
+          self.__stop_test(ppid, out)
           time.sleep(5)
           out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           out.flush()
@@ -613,13 +613,13 @@ class Benchmarker:
         ##########################
         out.write(header("Stopping %s" % test.name))
         out.flush()
-        self.__stop_test(sid, out)
+        self.__stop_test(ppid, out)
         out.flush()
         time.sleep(15)
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
-          self.__stop_test(sid, out)
+          self.__stop_test(ppid, out)
           out.flush()
           time.sleep(15)
           if self.__is_port_bound(test.port):
@@ -664,7 +664,7 @@ class Benchmarker:
         traceback.print_exc(file=out)
         out.flush()
         try:
-          self.__stop_test(sid, out)
+          self.__stop_test(ppid, out)
         except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
           out.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
@@ -675,7 +675,7 @@ class Benchmarker:
       # TODO - subprocess should not catch this exception!
       # Parent process should catch it and cleanup/exit
       except (KeyboardInterrupt) as e:
-        self.__stop_test(sid, out)
+        self.__stop_test(ppid, out)
         out.write(header("Cleaning up..."))
         out.flush()
         self.__finish()
@@ -692,9 +692,9 @@ class Benchmarker:
   # __stop_test(benchmarker)
   # Stops all running tests
   ############################################################
-  def __stop_test(self, sid, out):
+  def __stop_test(self, ppid, out):
     try:
-      subprocess.check_call('sudo kill -9 -%s' % sid, shell=True, stderr=out, stdout=out)
+      subprocess.check_call('pkill -P %s' % ppid, shell=True, stderr=out, stdout=out)
       retcode = 0
     except Exception:
       retcode = 1

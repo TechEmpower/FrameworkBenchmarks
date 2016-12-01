@@ -10,6 +10,8 @@ RETCODE=$(fw_exists fwbm_prereqs_installed)
   echo "Prerequisites installed!"; 
   return 0; }
 
+# Create TFBReaper application
+gcc -std=c99 -oTFBReaper $FWROOT/toolset/setup/linux/TFBReaper.c
 
 # Use a more recent version of Mongo shell
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
