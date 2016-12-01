@@ -41,11 +41,20 @@ int main(int argc, char *argv[])
   // See: http://man7.org/linux/man-pages/man2/prctl.2.html
   prctl(PR_SET_CHILD_SUBREAPER,1);
 
+  // This invokes whatever was passed as arguments to TFBReaper
+  // on the system. This program is merely a pass-through to
+  // a shell with the subreaper stuff enabled.
   int ret = system(result);
   free(result);
 
+  // This tells the application to wait until all the child 
+  // processes have completed.
   int status;
   wait(&status);
+
+  // We still need to wait forever in order to properly clean
+  // existing processes started by us.
+  for(;;){}
 
   return ret;
 }
