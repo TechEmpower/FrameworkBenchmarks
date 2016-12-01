@@ -198,7 +198,7 @@ class FrameworkTest:
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", self.directory)
 
-    command = '%s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\""' % (
+    command = 'bash -exc "source %s && source %s.sh"' % (
       self.install_root,
       bash_functions_path,
       os.path.join(self.troot, self.setup_file))
@@ -212,7 +212,7 @@ class FrameworkTest:
       export MAX_THREADS=%s     &&  \\
       export MAX_CONCURRENCY=%s && \\
       cd %s && \\
-      %s''' % (self.fwroot,
+      %s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\"''' % (self.fwroot,
         self.directory,
         self.install_root,
         self.database_host,
@@ -220,7 +220,9 @@ class FrameworkTest:
         self.benchmarker.threads,
         max(self.benchmarker.concurrency_levels),
         self.directory,
-        command)
+        self.install_root,
+        bash_functions_path,
+        os.path.join(self.troot, self.setup_file))
     logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
 
 
@@ -240,11 +242,9 @@ class FrameworkTest:
 
     # Start the setup.sh command
     p = subprocess.Popen(command,
-          shell=True,
           cwd=self.directory,
           stdout=subprocess.PIPE,
-          stderr=subprocess.STDOUT,
-          preexec_fn=os.setsid)
+          stderr=subprocess.STDOUT)
     pid = p.pid
     nbsr = setup_util.NonBlockingStreamReader(p.stdout,
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
