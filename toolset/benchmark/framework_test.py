@@ -199,7 +199,6 @@ class FrameworkTest:
     logging.info("Running setup module start (cwd=%s)", self.directory)
 
     command = 'bash -exc "source %s && source %s.sh"' % (
-      self.install_root,
       bash_functions_path,
       os.path.join(self.troot, self.setup_file))
 
@@ -241,7 +240,7 @@ class FrameworkTest:
       out.flush()
 
     # Start the setup.sh command
-    p = subprocess.Popen(command,
+    p = subprocess.Popen(["%s/TFBReaper" % self.install_root,command],
           cwd=self.directory,
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
