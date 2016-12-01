@@ -16,7 +16,12 @@
 		<dependency>
 			<groupId>org.rapidoid</groupId>
 			<artifactId>rapidoid-quick</artifactId>
-			<version>5.2.2</version>
+			<version>5.2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.4.1211</version>
 		</dependency>
 	</dependencies>
 
@@ -38,6 +43,7 @@
 
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.6</version>
 				<configuration>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
