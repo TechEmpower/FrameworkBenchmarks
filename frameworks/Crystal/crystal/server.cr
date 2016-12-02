@@ -1,7 +1,7 @@
 require "http/server"
 require "json"
 
-server = HTTP::Server.new(8080) do |context|
+server = HTTP::Server.new("0.0.0.0", 8080) do |context|
   response = context.response
   response.headers["Server"] = "Crystal"
   response.headers["Date"] = Time.utc_now.to_s
