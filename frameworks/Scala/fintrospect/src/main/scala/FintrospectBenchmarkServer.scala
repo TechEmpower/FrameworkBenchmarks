@@ -15,7 +15,7 @@ import scala.util.Properties
 
 object FintrospectBenchmarkServer extends App {
 
-  val dateFormat = getInstance("EEE, dd MMM yyyy HH:mm:ss 'GMT'", getTimeZone("GMT"))
+  val dateFormat = getInstance("EEE, d MMM yyyy HH:mm:ss 'GMT'", getTimeZone("GMT"))
 
   val addServerAndDate = Filter.mk[Request, Response, Request, Response] { (req, svc) =>
     svc(req).map(resp => {
@@ -28,7 +28,7 @@ object FintrospectBenchmarkServer extends App {
   val dbHost = Properties.envOrNone("DBHOST").map(Host(_)).getOrElse(Host.localhost)
   val database = Database(dbHost)
 
-  val module = ModuleSpec(Root, SimpleJson(), addServerAndDate)
+  val module = ModuleSpec(Root, SimpleJson())
     .withRoute(JsonRoute())
     .withRoute(PlainTextRoute())
     .withRoute(FortunesRoute(database))
@@ -40,6 +40,6 @@ object FintrospectBenchmarkServer extends App {
       .withStatsReceiver(NullStatsReceiver)
       .withTracer(NullTracer)
       .withMonitor(NullMonitor)
-      .serve(":9000", module.toService)
+      .serve(":9000", addServerAndDate.andThen(module.toService))
   )
 }

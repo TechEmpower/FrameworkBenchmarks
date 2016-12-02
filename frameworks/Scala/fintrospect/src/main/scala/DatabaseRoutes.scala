@@ -10,12 +10,12 @@ import io.fintrospect.RouteSpec.RequestValidation.none
 import io.fintrospect.formats.Json4sJackson.JsonFormat.{array, number, obj}
 import io.fintrospect.formats.Json4sJackson.ResponseBuilder.implicits._
 import io.fintrospect.parameters.ParameterSpec.int
-import io.fintrospect.parameters.Query
+import io.fintrospect.parameters.{ParameterSpec, Query}
 import io.fintrospect.{RouteSpec, ServerRoutes}
 import org.json4s.JValue
 
 import scala.language.reflectiveCalls
-import scala.util.Random
+import scala.util.{Random, Try}
 
 object DatabaseRoutes {
 
@@ -41,7 +41,9 @@ object DatabaseRoutes {
         .map(_.map(Ok(_)).getOrElse(NotFound()).build())
     }
 
-    val numberOfQueries = Query.optional(int("queries").map(_.max(1).min(500)))
+    val numberOfQueries = Query.optional(ParameterSpec.string("queries").map {
+      i => Try(i.toInt).getOrElse(1).max(1).min(500)
+    })
 
     val multipleRoute = RouteSpec()
       .taking(numberOfQueries)
