@@ -1,40 +1,38 @@
-import java.time.ZonedDateTime._
-import java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME
+import java.util.TimeZone.getTimeZone
 
-import com.twitter.finagle.http.Method.Get
-import com.twitter.finagle.http.Request
-import com.twitter.finagle.http.Status._
 import com.twitter.finagle.http.path.Root
+import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.stats.NullStatsReceiver
 import com.twitter.finagle.tracing.NullTracer
-import com.twitter.finagle.{Http, Service}
-import com.twitter.io.Buf
+import com.twitter.finagle.{Filter, Http}
 import com.twitter.util.{Await, NullMonitor}
-import io.fintrospect.formats.Json4sJackson.JsonFormat._
-import io.fintrospect.{ModuleSpec, RouteSpec}
+import io.fintrospect.ModuleSpec
+import io.fintrospect.configuration.Host
+import io.fintrospect.renderers.simplejson.SimpleJson
+import org.apache.commons.lang.time.FastDateFormat.getInstance
+
+import scala.util.Properties
 
 object FintrospectBenchmarkServer extends App {
 
-  val preAllocatedHelloWorldText = Buf.Utf8("Hello, World!")
+  val dateFormat = getInstance("EEE, dd MMM yyyy HH:mm:ss 'GMT'", getTimeZone("GMT"))
 
-  val plainTextHelloWorld = {
-    import io.fintrospect.formats.PlainText.ResponseBuilder.implicits._
-    Service.mk { r: Request =>
-      Ok(preAllocatedHelloWorldText)
-        .withHeaders("Server" -> "Example", "Date" -> RFC_1123_DATE_TIME.format(now()))
-    }
+  val addServerAndDate = Filter.mk[Request, Response, Request, Response] { (req, svc) =>
+    svc(req).map(resp => {
+      resp.headerMap("Server") = "Example"
+      resp.headerMap("Date") = dateFormat.format(System.currentTimeMillis())
+      resp
+    })
   }
 
-  val jsonHelloWorld = {
-    import io.fintrospect.formats.Json4sJackson.ResponseBuilder.implicits._
-    Service.mk { r: Request => Ok(obj("message" -> string("Hello, World!")))
-      .withHeaders("Server" -> "Example", "Date" -> RFC_1123_DATE_TIME.format(now()))
-    }
-  }
+  val dbHost = Properties.envOrNone("DBHOST").map(Host(_)).getOrElse(Host.localhost)
+  val database = Database(dbHost)
 
-  val module = ModuleSpec(Root)
-    .withRoute(RouteSpec().at(Get) / "plaintext" bindTo plainTextHelloWorld)
-    .withRoute(RouteSpec().at(Get) / "json" bindTo jsonHelloWorld)
+  val module = ModuleSpec(Root, SimpleJson(), addServerAndDate)
+    .withRoute(JsonRoute())
+    .withRoute(PlainTextRoute())
+    .withRoute(FortunesRoute(database))
+    .withRoutes(DatabaseRoutes(database))
 
   Await.ready(
     Http.server
