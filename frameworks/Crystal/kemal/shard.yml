@@ -10,7 +10,7 @@ dependencies:
     version: "0.2.3"
   kemal:
     github: "sdogruyol/kemal"
-    version: "0.16.0"
+    version: "0.17.2"
   redis:
     github: "stefanwille/crystal-redis"
     version: "~> 1.6.6"
