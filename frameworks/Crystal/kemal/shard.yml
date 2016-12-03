@@ -9,7 +9,7 @@ dependencies:
     github: "ysbaddaden/pool"
     version: "0.2.3"
   kemal:
-    github: "sdogruyol/kemal"
+    github: "kemalcr/kemal"
     version: "0.17.2"
   redis:
     github: "stefanwille/crystal-redis"
