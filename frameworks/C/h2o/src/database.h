@@ -27,7 +27,6 @@
 
 #include "list.h"
 
-#define COPY_HEADER "PGCOPY\n\377\r\n\0\0\0\0\0\0\0\0\0"
 #define DB_REQ_ERROR "too many concurrent database requests\n"
 #define DB_TIMEOUT_ERROR "database timeout\n"
 #define FORTUNE_TABLE_NAME "Fortune"
