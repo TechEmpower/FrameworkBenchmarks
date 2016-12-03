@@ -1,13 +1,22 @@
 import sbt._
 import Keys._
+import sbtassembly._
 import sbtassembly.AssemblyPlugin._
-//import AssemblyKeys._
+import sbtassembly.AssemblyKeys._
 
 object Bench extends Build {
+
+  val projectAssemblySettings = (assemblySettings: Seq[Setting[_]]) ++ Seq(
+    assemblyMergeStrategy in assembly := {
+      case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+      case x => MergeStrategy.first
+    }
+  )
+  
   lazy val project = Project(
     "bench", 
     file("."),
-    settings = Defaults.defaultSettings ++ assemblySettings ++ Seq(
+    settings = Defaults.defaultSettings ++ projectAssemblySettings ++ Seq(
       scalaVersion := "2.11.7",
       version := "1.0.0",
       name := "bench",
