@@ -11,4 +11,4 @@ npm install -g sails
 
 # reset cache & run app
 npm install
-sails lift --port 8080 &
+NODE_ENV=production node app --port 8080 &
