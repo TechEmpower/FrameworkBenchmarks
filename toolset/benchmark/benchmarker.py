@@ -693,13 +693,13 @@ class Benchmarker:
   # Stops all running tests
   ############################################################
   def __stop_test(self, ppid, out):
-    try:
-      subprocess.check_call(['pkill', '-P', str(ppid)], stderr=out, stdout=out)
-      retcode = 0
-    except Exception:
-      retcode = 1
+    # Find the PID of the daemon (and remove trailing newline)
+    pid = subprocess.check_output(['pgrep','TFBReaper']).strip()
+    # Kill the children
+    subprocess.call(['pkill', '-P', pid], stderr=out, stdout=out)
+    # Kill the parent
+    subprocess.call(['kill', pid], stderr=out, stdout=out)
 
-    return retcode
   ############################################################
   # End __stop_test
   ############################################################

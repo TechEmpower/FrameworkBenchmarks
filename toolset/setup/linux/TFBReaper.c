@@ -10,6 +10,20 @@
 
 int main(int argc, char *argv[])
 {
+  pid_t process_id = 0;
+  pid_t sid = 0;
+  // Create child process
+  process_id = fork();
+  // PARENT PROCESS. Need to kill it.
+  if (process_id > 0)
+  {
+    // Parent returns success in exit status
+    exit(0);
+  }
+
+  // Here we are as the child with no parent.
+
+  // Gather the command line arguments for the pass-through.
   int count = argc - 1;
   int *sizes = malloc(sizeof(int) * count);
   int total_size = 0;
@@ -47,10 +61,9 @@ int main(int argc, char *argv[])
   int ret = system(result);
   free(result);
 
-  // This tells the application to wait until all the child 
-  // processes have completed.
-  int status;
-  wait(&status);
+  // We need to wait forever; the suite will clean this child
+  // process up later.
+  for(;;){}
 
   return ret;
 }
