@@ -573,9 +573,9 @@ class Benchmarker:
           print "Error: Unable to recover port, cannot start test"
           return exit_with_code(1)
 
-        result, ppid = test.start(out)
+        result = test.start(out)
         if result != 0:
-          self.__stop_test(ppid, out)
+          self.__stop_test(out)
           time.sleep(5)
           out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           out.flush()
@@ -613,13 +613,13 @@ class Benchmarker:
         ##########################
         out.write(header("Stopping %s" % test.name))
         out.flush()
-        self.__stop_test(ppid, out)
+        self.__stop_test(out)
         out.flush()
         time.sleep(15)
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
-          self.__stop_test(ppid, out)
+          self.__stop_test(out)
           out.flush()
           time.sleep(15)
           if self.__is_port_bound(test.port):
@@ -664,7 +664,7 @@ class Benchmarker:
         traceback.print_exc(file=out)
         out.flush()
         try:
-          self.__stop_test(ppid, out)
+          self.__stop_test(out)
         except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
           out.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
@@ -675,7 +675,7 @@ class Benchmarker:
       # TODO - subprocess should not catch this exception!
       # Parent process should catch it and cleanup/exit
       except (KeyboardInterrupt) as e:
-        self.__stop_test(ppid, out)
+        self.__stop_test(out)
         out.write(header("Cleaning up..."))
         out.flush()
         self.__finish()
@@ -692,7 +692,7 @@ class Benchmarker:
   # __stop_test(benchmarker)
   # Stops all running tests
   ############################################################
-  def __stop_test(self, ppid, out):
+  def __stop_test(self, out):
     # Find the PID of the daemon (and remove trailing newline)
     pid = subprocess.check_output(['pgrep','TFBReaper']).strip()
     # Kill the children

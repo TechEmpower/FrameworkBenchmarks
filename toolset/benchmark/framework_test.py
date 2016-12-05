@@ -251,7 +251,6 @@ class FrameworkTest:
           cwd=self.directory,
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
-    pid = p.pid
     nbsr = setup_util.NonBlockingStreamReader(p.stdout,
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
 
@@ -348,7 +347,7 @@ class FrameworkTest:
     logging.info("Executed %s.sh, returning %s", self.setup_file, retcode)
     os.chdir(previousDir)
 
-    return retcode, pid
+    return retcode
   ############################################################
   # End start
   ############################################################
