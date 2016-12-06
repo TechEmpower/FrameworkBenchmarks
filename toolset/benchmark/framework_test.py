@@ -347,7 +347,7 @@ class FrameworkTest:
     logging.info("Executed %s.sh, returning %s", self.setup_file, retcode)
     os.chdir(previousDir)
 
-    return retcode
+    return retcode, p
   ############################################################
   # End start
   ############################################################

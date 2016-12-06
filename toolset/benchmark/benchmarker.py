@@ -546,7 +546,6 @@ class Benchmarker:
           p.communicate("""
             sudo restart mysql
             sudo restart mongod
-            sudo service redis-server restart
             sudo service postgresql restart
             sudo service cassandra restart
             /opt/elasticsearch/elasticsearch restart
@@ -556,7 +555,6 @@ class Benchmarker:
           st = verify_database_connections([
             ("mysql", self.database_host, 3306),
             ("mongodb", self.database_host, 27017),
-            ("redis", self.database_host, 6379),
             ("postgresql", self.database_host, 5432),
             ("cassandra", self.database_host, 9160),
             ("elasticsearch", self.database_host, 9200)
@@ -573,9 +571,9 @@ class Benchmarker:
           print "Error: Unable to recover port, cannot start test"
           return exit_with_code(1)
 
-        result = test.start(out)
+        result, process = test.start(out)
         if result != 0:
-          self.__stop_test(out)
+          self.__stop_test(out, process)
           time.sleep(5)
           out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           out.flush()
@@ -613,13 +611,13 @@ class Benchmarker:
         ##########################
         out.write(header("Stopping %s" % test.name))
         out.flush()
-        self.__stop_test(out)
+        self.__stop_test(out, process)
         out.flush()
         time.sleep(15)
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
-          self.__stop_test(out)
+          self.__stop_test(out, process)
           out.flush()
           time.sleep(15)
           if self.__is_port_bound(test.port):
@@ -664,7 +662,7 @@ class Benchmarker:
         traceback.print_exc(file=out)
         out.flush()
         try:
-          self.__stop_test(out)
+          self.__stop_test(out, process)
         except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
           out.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
@@ -675,7 +673,7 @@ class Benchmarker:
       # TODO - subprocess should not catch this exception!
       # Parent process should catch it and cleanup/exit
       except (KeyboardInterrupt) as e:
-        self.__stop_test(out)
+        self.__stop_test(out, process)
         out.write(header("Cleaning up..."))
         out.flush()
         self.__finish()
@@ -692,13 +690,12 @@ class Benchmarker:
   # __stop_test(benchmarker)
   # Stops all running tests
   ############################################################
-  def __stop_test(self, out):
-    # Find the PID of the daemon (and remove trailing newline)
-    pid = subprocess.check_output(['pgrep','TFBReaper']).strip()
-    # Kill the children
-    subprocess.call(['pkill', '-P', pid], stderr=out, stdout=out)
-    # Kill the parent
-    subprocess.call(['kill', pid], stderr=out, stdout=out)
+  def __stop_test(self, out, process):
+    if process is not None:
+      # Kill the children
+      subprocess.call(['pkill', '-P', process.pid], stderr=out, stdout=out)
+      # Kill the parent 
+      process.terminate()
 
   ############################################################
   # End __stop_test

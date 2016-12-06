@@ -1,28 +1,13 @@
+#define _DEFAULT_SOURCE
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/prctl.h>
 #include <sys/syscall.h>
-#include <asm/unistd.h>
 #include <string.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 
 int main(int argc, char *argv[])
 {
-  pid_t process_id = 0;
-  pid_t sid = 0;
-  // Create child process
-  process_id = fork();
-  // PARENT PROCESS. Need to kill it.
-  if (process_id > 0)
-  {
-    // Parent returns success in exit status
-    exit(0);
-  }
-
-  // Here we are as the child with no parent.
-
   // Gather the command line arguments for the pass-through.
   int count = argc - 1;
   int *sizes = malloc(sizeof(int) * count);
@@ -55,13 +40,19 @@ int main(int argc, char *argv[])
   // See: http://man7.org/linux/man-pages/man2/prctl.2.html
   prctl(PR_SET_CHILD_SUBREAPER,1);
 
+  // Sets the process group id to that of the process id of
+  // this process. All child processes should inherit this
+  // group id unless setpgrp is called directly (which some
+  // will do).
+  setpgrp();
+
   // This invokes whatever was passed as arguments to TFBReaper
   // on the system. This program is merely a pass-through to
   // a shell with the subreaper stuff enabled.
   int ret = system(result);
   free(result);
 
-  // We need to wait forever; the suite will clean this child
+  // We need to wait forever; the suite will clean this 
   // process up later.
   for(;;){}
 

@@ -1,5 +1,5 @@
 {
-  "framework": "Revenj",
+  "framework": "revenj",
   "tests": [{
     "windows": {
       "setup_file": "setup",
