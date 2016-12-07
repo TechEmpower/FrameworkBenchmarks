@@ -706,18 +706,18 @@ class Benchmarker:
   # Recursively finds all child processes for the given PID.
   ############################################################
   def __find_child_processes(self, pid):
-  toRet = []
-  try:
-    pids = subprocess.check_output(['pgrep','-P',str(pid)]).split()
-    toRet.extend(pids)
-    for aPid in pids:
-      toRet.extend(self.__find_child_processes(aPid))
-  except:
-    # pgrep will return a non-zero status code if there are no
-    # processes who have a PPID of PID.
-    pass
+    toRet = []
+    try:
+      pids = subprocess.check_output(['pgrep','-P',str(pid)]).split()
+      toRet.extend(pids)
+      for aPid in pids:
+        toRet.extend(self.__find_child_processes(aPid))
+    except:
+      # pgrep will return a non-zero status code if there are no
+      # processes who have a PPID of PID.
+      pass
 
-  return toRet
+    return toRet
   ############################################################
   # End __find_child_processes
   ############################################################
