@@ -44,7 +44,6 @@ int main(int argc, char *argv[])
   // on the system. This program is merely a pass-through to
   // a shell with the subreaper stuff enabled.
   int ret = system(result);
-  free(result);
 
   // We need to wait forever; the suite will clean this 
   // process up later.
