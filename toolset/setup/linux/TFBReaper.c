@@ -40,12 +40,6 @@ int main(int argc, char *argv[])
   // See: http://man7.org/linux/man-pages/man2/prctl.2.html
   prctl(PR_SET_CHILD_SUBREAPER,1);
 
-  // Sets the process group id to that of the process id of
-  // this process. All child processes should inherit this
-  // group id unless setpgrp is called directly (which some
-  // will do).
-  setpgrp();
-
   // This invokes whatever was passed as arguments to TFBReaper
   // on the system. This program is merely a pass-through to
   // a shell with the subreaper stuff enabled.

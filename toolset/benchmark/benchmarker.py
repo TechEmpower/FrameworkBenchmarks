@@ -692,13 +692,34 @@ class Benchmarker:
   ############################################################
   def __stop_test(self, out, process):
     if process is not None:
-      # Kill the children
-      subprocess.call(['pkill', '-P', process.pid], stderr=out, stdout=out)
-      # Kill the parent 
+      pids = self.__find_child_processes(process.pid)
+      if pids is not None:
+        kill = ['kill','-9'] + pids
+        subprocess.call(kill, stderr=out, stdout=out)
       process.terminate()
-
   ############################################################
   # End __stop_test
+  ############################################################
+
+  ############################################################
+  # __find_child_processes
+  # Recursively finds all child processes for the given PID.
+  ############################################################
+  def __find_child_processes(self, pid):
+  toRet = []
+  try:
+    pids = subprocess.check_output(['pgrep','-P',str(pid)]).split()
+    toRet.extend(pids)
+    for aPid in pids:
+      toRet.extend(self.__find_child_processes(aPid))
+  except:
+    # pgrep will return a non-zero status code if there are no
+    # processes who have a PPID of PID.
+    pass
+
+  return toRet
+  ############################################################
+  # End __find_child_processes
   ############################################################
 
   def is_port_bound(self, port):
