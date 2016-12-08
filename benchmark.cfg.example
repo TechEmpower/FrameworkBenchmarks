@@ -21,7 +21,6 @@ query_levels=[1, 5,10,15,20]
 threads=8
 mode=benchmark
 os=linux
-password_prompt=False
 server_host=127.0.0.1
 sleep=60
 test=None
