@@ -47,8 +47,11 @@ int main(int argc, char *argv[])
 
   // We need to wait forever; the suite will clean this 
   // process up later.
-  for(;;){}
+  if (ret == 0) {
+    for(;;) { }
+  }
 
+  // If the scripts failed, we should return that code.
   return ret;
 }
 

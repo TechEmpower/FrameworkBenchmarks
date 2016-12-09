@@ -613,13 +613,11 @@ class Benchmarker:
         out.flush()
         self.__stop_test(out, process)
         out.flush()
-        time.sleep(15)
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
           self.__stop_test(out, process)
           out.flush()
-          time.sleep(15)
           if self.__is_port_bound(test.port):
             # We gave it our all
             self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
@@ -629,7 +627,6 @@ class Benchmarker:
 
         out.write(header("Stopped %s" % test.name))
         out.flush()
-        time.sleep(5)
 
         ##########################################################
         # Remove contents of  /tmp folder
@@ -691,11 +688,20 @@ class Benchmarker:
   # Stops all running tests
   ############################################################
   def __stop_test(self, out, process):
-    if process is not None:
+    if process is not None and process.poll() is None:
       pids = self.__find_child_processes(process.pid)
       if pids is not None:
-        kill = ['kill','-9'] + pids
+        kill = ['kill'] + pids
         subprocess.call(kill, stderr=out, stdout=out)
+      # Normal SIGTERM exits can take some time
+      time.sleep(5)
+      # Okay, if there are any more PIDs, kill them harder
+      pids = self.__find_child_processes(process.pid)
+      if pids is not None:
+        kill = ['kill', '-9'] + pids
+        subprocess.call(kill, stderr=out, stdout=out)
+      # Again, sometimes defunct procs need a moment
+      time.sleep(5)
       process.terminate()
   ############################################################
   # End __stop_test
