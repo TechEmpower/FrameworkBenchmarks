@@ -689,19 +689,21 @@ class Benchmarker:
   ############################################################
   def __stop_test(self, out, process):
     if process is not None and process.poll() is None:
+      # Stop the ancestry PIDs so they don't fork anymore.
       pids = self.__find_child_processes(process.pid)
       if pids is not None:
-        kill = ['kill'] + pids
-        subprocess.call(kill, stderr=out, stdout=out)
-      # Normal SIGTERM exits can take some time
-      time.sleep(5)
-      # Okay, if there are any more PIDs, kill them harder
+        stop = ['kill', '-STOP'] + pids
+        subprocess.call(stop, stderr=out, stdout=out)
+      # Kill the ancestry PIDs.
       pids = self.__find_child_processes(process.pid)
       if pids is not None:
-        kill = ['kill', '-9'] + pids
+        term = ['kill', '-TERM'] + pids
+        subprocess.call(term, stderr=out, stdout=out)
+      # Okay, if there are any more PIDs, kill them harder.
+      pids = self.__find_child_processes(process.pid)
+      if pids is not None:
+        kill = ['kill', '-KILL'] + pids
         subprocess.call(kill, stderr=out, stdout=out)
-      # Again, sometimes defunct procs need a moment
-      time.sleep(5)
       process.terminate()
   ############################################################
   # End __stop_test
