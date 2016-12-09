@@ -574,6 +574,7 @@ class Benchmarker:
         result, process = test.start(out)
         if result != 0:
           self.__stop_test(out, process)
+          time.sleep(5)
           out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           out.flush()
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
@@ -612,11 +613,13 @@ class Benchmarker:
         out.flush()
         self.__stop_test(out, process)
         out.flush()
+        time.sleep(5)
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
           self.__stop_test(out, process)
           out.flush()
+          time.sleep(5)
           if self.__is_port_bound(test.port):
             # We gave it our all
             self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
@@ -688,17 +691,16 @@ class Benchmarker:
   ############################################################
   def __stop_test(self, out, process):
     if process is not None and process.poll() is None:
-      # Stop the ancestry PIDs so they don't fork anymore.
+      # Stop 
       pids = self.__find_child_processes(process.pid)
       if pids is not None:
         stop = ['kill', '-STOP'] + pids
         subprocess.call(stop, stderr=out, stdout=out)
-      # Kill the ancestry PIDs.
       pids = self.__find_child_processes(process.pid)
       if pids is not None:
         term = ['kill', '-TERM'] + pids
         subprocess.call(term, stderr=out, stdout=out)
-      # Okay, if there are any more PIDs, kill them harder.
+      # Okay, if there are any more PIDs, kill them harder
       pids = self.__find_child_processes(process.pid)
       if pids is not None:
         kill = ['kill', '-KILL'] + pids
