@@ -574,7 +574,6 @@ class Benchmarker:
         result, process = test.start(out)
         if result != 0:
           self.__stop_test(out, process)
-          time.sleep(5)
           out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           out.flush()
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
