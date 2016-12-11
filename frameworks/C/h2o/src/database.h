@@ -22,10 +22,12 @@
 #define DATABASE_H_
 
 #include <h2o.h>
+#include <inttypes.h>
 #include <stdint.h>
 #include <postgresql/libpq-fe.h>
 
 #include "list.h"
+#include "utility.h"
 
 #define DB_REQ_ERROR "too many concurrent database requests\n"
 #define DB_TIMEOUT_ERROR "database timeout\n"
@@ -35,13 +37,15 @@
 #define IS_SINGLE_ROW 2
 #define MAX_ID 10000
 #define MESSAGE_FIELD_NAME "message"
+#define UPDATE_QUERY_NAME "Update"
 #define WORLD_TABLE_NAME "World"
 
 #define UPDATE_QUERY \
-	"CREATE TEMP TABLE input(LIKE World INCLUDING ALL) ON COMMIT DROP;" \
-	"COPY input FROM STDIN WITH (FORMAT binary);" \
-	"UPDATE World SET randomNumber = input.randomNumber FROM input " \
-	"WHERE World." ID_FIELD_NAME " = input." ID_FIELD_NAME ";"
+	"EXECUTE \"" WORLD_TABLE_NAME "\"(%" PRIu32 ");" \
+	"EXECUTE \"" UPDATE_QUERY_NAME "\"(%" PRIu32 ", %" PRIu32 ");"
+
+#define MAX_UPDATE_QUERY_LEN \
+	(sizeof(UPDATE_QUERY) + 3 * (sizeof(MKSTR(MAX_ID)) - 1) - 3 * sizeof(PRIu32))
 
 typedef enum {
 	SUCCESS,
