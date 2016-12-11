@@ -210,12 +210,12 @@ services:
   - postgresql
   - redis-server
   - mongodb
+  - mysql
 
 addons:
   postgresql: "9.3"
   apt:
     packages:
-      - mysql-server
       - redis-server
 
 before_script:
