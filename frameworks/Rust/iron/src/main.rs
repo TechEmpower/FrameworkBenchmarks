@@ -40,7 +40,7 @@ struct FortuneRow {
 fn main() {
     let r2d2_config = r2d2::Config::default();
     let pg_conn_manager = PostgresConnectionManager::new(
-        "postgres://benchmarkdbuser:benchmarkdbpassword@localhost/hello_world",
+        "postgres://benchmarkdbuser:benchmarkdbpass@localhost/hello_world",
         TlsMode::None).unwrap();
     let pool = r2d2::Pool::new(r2d2_config, pg_conn_manager).unwrap();
     let template = mustache::compile_str("<!DOCTYPE html>
