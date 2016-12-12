@@ -48,7 +48,12 @@ int main(int argc, char *argv[])
   // We need to wait forever; the suite will clean this 
   // process up later.
   if (ret == 0) {
-    for(;;) { }
+    for(;;) { 
+      // Pause to keep us from spiking CPU; whenever a signal
+      // occurs (except SIGTERM etc which will kill this process)
+      // just iterate and pause again.
+      pause(); 
+    }
   }
 
   // If the scripts failed, we should return that code.
