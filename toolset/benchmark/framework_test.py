@@ -194,6 +194,21 @@ class FrameworkTest:
       self.benchmarker.runner_user, os.path.join(self.fwroot, self.install_root))
     subprocess.check_call(chown, shell=True, cwd=self.fwroot, executable='/bin/bash')
 
+    # Check that the client is setup
+    if not os.path.exists(os.path.join(self.install_root, 'client.installed')):
+      print("\nINSTALL: Installing client software\n")    
+      # TODO: hax; should dynamically know where this file is
+      with open (self.fwroot + "/toolset/setup/linux/client.sh", "r") as myfile:
+        remote_script=myfile.read()
+        print("\nINSTALL: %s" % self.benchmarker.client_ssh_string)
+        p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
+        p.communicate(remote_script)
+        returncode = p.returncode
+        if returncode != 0:
+          self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
+      print("\nINSTALL: Finished installing client software\n")
+      subprocess.check_call('touch client.installed', shell=True, cwd=self.install_root, executable='/bin/bash')
+
     # Run the module start inside parent of TROOT
     #  - we use the parent as a historical accident, a number of tests
     # refer to their TROOT maually still

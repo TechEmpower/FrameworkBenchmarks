@@ -139,13 +139,6 @@ def main(argv=None):
     
     
     # Install options
-    parser.add_argument('--install', choices=['client', 'database', 'server', 'all'], default=None,
-                        help='Runs installation script(s) before continuing on to execute the tests.')
-    parser.add_argument('--install-error-action', choices=['abort', 'continue'], default='continue', help='action to take in case of error during installation')
-    parser.add_argument('--install-strategy', choices=['unified', 'pertest'], default='unified', 
-        help='''Affects : With unified, all server software is installed into a single directory. 
-        With pertest each test gets its own installs directory, but installation takes longer''')
-    parser.add_argument('--install-only', action='store_true', default=False, help='Do not run benchmark or verification, just install and exit')
     parser.add_argument('--clean', action='store_true', default=False, help='Removes the results directory')
     parser.add_argument('--clean-all', action='store_true', dest='clean_all', default=False, help='Removes the results and installs directories')
 
