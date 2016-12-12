@@ -102,6 +102,7 @@ static uintmax_t add_iovec(mustache_api_t *api,
 	}
 
 	if (ret) {
+		memset(iovec_list->iov + iovec_list->iovcnt, 0, sizeof(*iovec_list->iov));
 		iovec_list->iov[iovec_list->iovcnt].base = (char *) buffer;
 		iovec_list->iov[iovec_list->iovcnt++].len = buffer_size;
 		fortune_ctx->content_length += buffer_size;
@@ -263,7 +264,7 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 		const size_t iovcnt = MIN(MAX_IOVEC, fortune_ctx->num_result * 5 + 2);
 		const size_t sz = offsetof(iovec_list_t, iov) + iovcnt * sizeof(h2o_iovec_t);
 		char _Alignas(iovec_list_t) mem[sz];
-		iovec_list_t * const iovec_list = (iovec_list_t *) mem;
+		iovec_list_t * const restrict iovec_list = (iovec_list_t *) mem;
 
 		memset(iovec_list, 0, offsetof(iovec_list_t, iov));
 		iovec_list->max_iovcnt = iovcnt;
