@@ -13,4 +13,4 @@ fw_get -O http://beyondj.com/beyondj-launcher-1.0-SNAPSHOT.jar
 cd ../../
 
 echo "Launching BeyondJ from location:$PWD"
-java -jar beyondj-launcher/deploy/beyondj-launcher-1.0-SNAPSHOT.jar system.platform.dbserver=${DBHOST} numInstances=10 &
+java -jar beyondj-launcher/deploy/beyondj-launcher-1.0-SNAPSHOT.jar system.platform.dbserver=${DBHOST} numInstances=10

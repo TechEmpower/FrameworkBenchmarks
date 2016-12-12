@@ -32,4 +32,4 @@ echo "Copying the configuration template"
 cat $TROOT/Revenj.Http.exe.config | sed 's|\(ConnectionString.*server=\)localhost|\1'"${DBHOST}"'|' > $TROOT/exe/Revenj.Http.exe.config
 
 echo "Running the Revenj instance"
-mono $TROOT/exe/Revenj.Http.exe &
+mono $TROOT/exe/Revenj.Http.exe
