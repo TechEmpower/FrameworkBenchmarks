@@ -4,16 +4,16 @@
 The tests were run with:
 
 * [Java Oracle 1.8.0_25](http://www.oracle.com/technetwork/java/javase)
-* [fintrospect 13.5.2](https://github.com/daviddenton/fintrospect)
-* [finagle 6.36.0](https://github.com/twitter/finagle)
+* [fintrospect 13.13.0](https://github.com/daviddenton/fintrospect)
 
 ## Test URLs
 
-### JSON Encoding Test
-http://localhost:9000/json
-
-### Plaintext Test
-http://localhost:9000/plaintext
+- JSON Encoding: http://localhost:9000/json
+- Plaintext: http://localhost:9000/plaintext
+- Fortunes: http://localhost:9000/fortunes
+- Single Query: http://localhost:9000/db
+- Multi Query: http://localhost:9000/queries?queries=1
+- Update Query: http://localhost:9000/updates?queries=1
 
 ## How to run
 sbt 'oneJar'

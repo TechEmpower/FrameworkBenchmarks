@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.ServiceModel.Web;
 using System.Text;
 using System.Threading;
 using FrameworkBench;
@@ -10,8 +9,8 @@ using Revenj.DatabasePersistence;
 using Revenj.DomainPatterns;
 using Revenj.Extensibility;
 using Revenj.Http;
-using Revenj.Utility;
 using Revenj.Serialization;
+using Revenj.Utility;
 
 namespace Revenj.Bench
 {
@@ -34,20 +33,20 @@ namespace Revenj.Bench
 			this.Context = new ThreadLocal<Context>(() => new Context(factory, queryManager));
 		}
 
-		[WebGet(UriTemplate = "/plaintext")]
+		[Route(HTTP.GET, "/plaintext", false)]
 		public Stream PlainText(IResponseContext response)
 		{
 			response.ContentType = "text/plain";
 			return HelloWorld;
 		}
 
-		[WebGet(UriTemplate = "/json")]
+		[Route(HTTP.GET, "/json", false)]
 		public Message JSON()
 		{
 			return new Message { message = "Hello, World!" };
 		}
 
-		[WebGet(UriTemplate = "/db")]
+		[Route(HTTP.GET, "/db")]
 		public World SingleQuery()
 		{
 			var ctx = Context.Value;
@@ -56,7 +55,7 @@ namespace Revenj.Bench
 		}
 
 		//while IList<World> would work, it would fall back to IEnumerable<IJsonObject> which would create garbage
-		[WebGet(UriTemplate = "/queries/{count}")]
+		[Route(HTTP.GET, "/queries/{count}")]
 		public IList<IJsonObject> MultipleQueries(string count, IResponseContext response)
 		{
 			int repeat;
@@ -70,7 +69,7 @@ namespace Revenj.Bench
 
 		private static readonly Comparison<World> ASC = (l, r) => l.id - r.id;
 
-		[WebGet(UriTemplate = "/updates/{count}")]
+		[Route(HTTP.GET, "/updates/{count}")]
 		public World[] Updates(string count)
 		{
 			int repeat;
@@ -89,7 +88,7 @@ namespace Revenj.Bench
 
 		private static readonly Comparison<KeyValuePair<int, string>> Comparison = (l, r) => string.Compare(l.Value, r.Value, StringComparison.Ordinal);
 
-		[WebGet(UriTemplate = "/fortunes")]
+		[Route(HTTP.GET, "/fortunes")]
 		public Fortunes Fortunes()
 		{
 			var ctx = Context.Value;

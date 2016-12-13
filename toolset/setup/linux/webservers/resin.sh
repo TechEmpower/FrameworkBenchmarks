@@ -7,7 +7,7 @@ RETCODE=$(fw_exists ${IROOT}/resin.installed)
   source $IROOT/resin.installed
   return 0; }
 
-RVER=4.0.41
+RVER=4.0.48
 RESIN=resin-$RVER
 RESIN_HOME=$IROOT/$RESIN
 
