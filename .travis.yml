@@ -42,7 +42,7 @@ env:
     - "TESTDIR=Clojure/luminus"
     - "TESTDIR=Clojure/pedestal"
     - "TESTDIR=Clojure/aleph"
-    - "TESTDIR=Crystal/crystal-raw"
+    - "TESTDIR=Crystal/crystal"
     - "TESTDIR=Crystal/kemal"
     - "TESTDIR=D/vibed"
     - "TESTDIR=Dart/dart-raw"
@@ -65,6 +65,7 @@ env:
     - "TESTDIR=Go/revel"
     - "TESTDIR=Go/webgo"
     - "TESTDIR=Groovy/grails"
+    - "TESTDIR=Groovy/hot"
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/wai"
     - "TESTDIR=Haskell/yesod"
@@ -209,12 +210,12 @@ services:
   - postgresql
   - redis-server
   - mongodb
+  - mysql
 
 addons:
   postgresql: "9.3"
   apt:
     packages:
-      - mysql-server
       - redis-server
 
 before_script:

@@ -136,9 +136,6 @@ because some gitignore files in this repo contain `*.lock` to avoid Ruby's lock 
 If you are prompted for input during the `run-tests.py` script above, then you
 need to generate your lock file manually so that you may answer the input 
 queries as they are shown. Use these steps
-
-    # Switch to the user that runs tests
-    sudo su testrunner
     
     # Define the environment variables you need (modify as needed)
     export IROOT=/home/you/FrameworkBenchmarks/installs

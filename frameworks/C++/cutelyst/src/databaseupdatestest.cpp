@@ -2,12 +2,12 @@
 
 #include <Cutelyst/Plugins/Utils/Sql>
 
-#include <QtSql/QSqlQuery>
+#include <QSqlQuery>
 
-#include <QtCore/QThread>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonObject>
-#include <QtCore/QJsonArray>
+#include <QThread>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 DatabaseUpdatesTest::DatabaseUpdatesTest(QObject *parent) : Controller(parent)
 {

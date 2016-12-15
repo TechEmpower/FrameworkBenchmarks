@@ -1,34 +1,51 @@
 ﻿using System;
-using System.IO;
 using FrameworkBench;
 using Revenj.DatabasePersistence;
-using Revenj.DatabasePersistence.Postgres;
 using Revenj.DomainPatterns;
 using Revenj.Extensibility;
-using Revenj.Utility;
 
 namespace Revenj.Bench
 {
 	internal class Context
 	{
-		public readonly ChunkedMemoryStream Stream;
-		public readonly TextWriter Writer;
 		public readonly IPersistableRepository<World> WorldRepository;
 		public readonly IQueryableRepository<Fortune> FortuneRepository;
-		public readonly IRepositoryBulkReader BulkReader;
-		public readonly Lazy<World>[] LazyWorlds = new Lazy<World>[512];
+		public readonly Random Random = new Random(0);
 		public readonly World[] Worlds = new World[512];
+		//private readonly IRepositoryBulkReader BulkReader;
+		//private readonly Lazy<World>[] LazyWorlds = new Lazy<World>[512];
 
-		public Context(IServiceProvider service)
+		public Context(IObjectFactory factory, IDatabaseQueryManager manager)
 		{
-			Stream = ChunkedMemoryStream.Static();
-			Writer = Stream.GetWriter();
-			var dqm = service.Resolve<IDatabaseQueryManager>();
-			var factory = service.Resolve<IObjectFactory>().CreateInnerFactory();
-			factory.RegisterInterfaces(dqm.StartQuery(false));
-			WorldRepository = factory.Resolve<IPersistableRepository<World>>();
-			FortuneRepository = factory.Resolve<IQueryableRepository<Fortune>>();
-			BulkReader = factory.BulkRead(ChunkedMemoryStream.Static());
+			var scope = factory.CreateScope(null);
+			scope.RegisterInterfaces(manager.StartQuery(false));
+			WorldRepository = scope.Resolve<IPersistableRepository<World>>();
+			FortuneRepository = scope.Resolve<IQueryableRepository<Fortune>>();
+			//BulkReader = scope.BulkRead(ChunkedMemoryStream.Static());
+		}
+
+		/* bulk loading of worlds. use such pattern for production code */
+		/*public void LoadWorldsFast(int repeat, World[] worlds)
+		{
+			BulkReader.Reset(true);
+			for (int i = 0; i < repeat; i++)
+			{
+				var id = Random.Next(10000) + 1;
+				LazyWorlds[i] = BulkReader.Find<World>(id.ToString());
+			}
+			BulkReader.Execute();
+			for (int i = 0; i < repeat; i++)
+				worlds[i] = LazyWorlds[i].Value;
+		}*/
+
+		/* multiple roundtrips loading of worlds. don't write such production code */
+		public void LoadWorldsSlow(int repeat, World[] worlds)
+		{
+			for (int i = 0; i < repeat; i++)
+			{
+				var id = Random.Next(10000) + 1;
+				worlds[i] = WorldRepository.Find(id);
+			}
 		}
 	}
 }

@@ -26,8 +26,8 @@ QString setupHeader(Context *c)
 
 void Root::End(Context *c)
 {
-    static QString lastDate = setupHeader(c);
-    static QElapsedTimer timer = timerSetup(c);
+    static thread_local QString lastDate = setupHeader(c);
+    static thread_local QElapsedTimer timer = timerSetup(c);
     if (timer.hasExpired(1000)) {
         lastDate = setupHeader(c);
         timer.restart();

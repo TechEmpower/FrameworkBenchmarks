@@ -1,7 +1,7 @@
 #include "jsontest.h"
 
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonObject>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 JsonTest::JsonTest(QObject *parent) : Controller(parent)
 {

@@ -52,8 +52,8 @@ class Fortune(Model):
         return {'id': row.id, 'message': row.message}
 
 
-app.config.db.adapter = 'postgres3:psycopg2' \
-    if not _is_pypy else 'postgres3:pg8000'
+app.config.db.adapter = 'postgres:psycopg2' \
+    if not _is_pypy else 'postgres:pg8000'
 app.config.db.host = DBHOSTNAME
 app.config.db.user = 'benchmarkdbuser'
 app.config.db.password = 'benchmarkdbpass'

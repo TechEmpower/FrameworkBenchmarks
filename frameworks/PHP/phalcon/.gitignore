@@ -2,6 +2,7 @@
 /app/logs
 /app/compiled-templates/*.compiled
 /bin
+/vendor
 /vendors
 /build
 /dist

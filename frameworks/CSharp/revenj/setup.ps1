@@ -39,11 +39,11 @@ if ($action -eq 'start') {
 
 	echo "Download DSL compiler client"
 	$client = new-object System.Net.WebClient
-	$client.DownloadFile( "https://github.com/ngs-doo/dsl-compiler-client/releases/download/1.7.0/dsl-clc.jar", $dslclc )
+	$client.DownloadFile( "https://github.com/ngs-doo/dsl-compiler-client/releases/download/1.8.2/dsl-clc.jar", $dslclc )
 
 	echo "Download Revenj HTTP server"
 	$client = new-object System.Net.WebClient
-	$client.DownloadFile( "https://github.com/ngs-doo/revenj/releases/download/1.3.1/http-server.zip", $httpZip )
+	$client.DownloadFile( "https://github.com/ngs-doo/revenj/releases/download/1.4.1/http-server.zip", $httpZip )
 
 	echo "Unzipping HTTP server"
 	[System.IO.Compression.ZipFile]::ExtractToDirectory($httpZip, $exe)

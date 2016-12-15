@@ -545,7 +545,6 @@ class Benchmarker:
           p.communicate("""
             sudo restart mysql
             sudo restart mongod
-            sudo service redis-server restart
             sudo service postgresql restart
             sudo service cassandra restart
             /opt/elasticsearch/elasticsearch restart
@@ -555,7 +554,6 @@ class Benchmarker:
           st = verify_database_connections([
             ("mysql", self.database_host, 3306),
             ("mongodb", self.database_host, 27017),
-            ("redis", self.database_host, 6379),
             ("postgresql", self.database_host, 5432),
             ("cassandra", self.database_host, 9160),
             ("elasticsearch", self.database_host, 9200)
@@ -565,21 +563,16 @@ class Benchmarker:
         self.__cleanup_leftover_processes_before_test();
 
         if self.__is_port_bound(test.port):
-          # This can happen sometimes - let's try again
-          self.__stop_test(out)
+          # We gave it our all
+          self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
+          out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
           out.flush()
-          time.sleep(15)
-          if self.__is_port_bound(test.port):
-            # We gave it our all
-            self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
-            out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
-            out.flush()
-            print "Error: Unable to recover port, cannot start test"
-            return exit_with_code(1)
+          print "Error: Unable to recover port, cannot start test"
+          return exit_with_code(1)
 
-        result = test.start(out)
+        result, process = test.start(out)
         if result != 0:
-          self.__stop_test(out)
+          self.__stop_test(out, process)
           time.sleep(5)
           out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           out.flush()
@@ -617,15 +610,15 @@ class Benchmarker:
         ##########################
         out.write(header("Stopping %s" % test.name))
         out.flush()
-        self.__stop_test(out)
+        self.__stop_test(out, process)
         out.flush()
-        time.sleep(15)
+        time.sleep(5)
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
-          self.__stop_test(out)
+          self.__stop_test(out, process)
           out.flush()
-          time.sleep(15)
+          time.sleep(5)
           if self.__is_port_bound(test.port):
             # We gave it our all
             self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
@@ -635,7 +628,6 @@ class Benchmarker:
 
         out.write(header("Stopped %s" % test.name))
         out.flush()
-        time.sleep(5)
 
         ##########################################################
         # Remove contents of  /tmp folder
@@ -668,7 +660,7 @@ class Benchmarker:
         traceback.print_exc(file=out)
         out.flush()
         try:
-          self.__stop_test(out)
+          self.__stop_test(out, process)
         except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
           out.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
@@ -679,7 +671,7 @@ class Benchmarker:
       # TODO - subprocess should not catch this exception!
       # Parent process should catch it and cleanup/exit
       except (KeyboardInterrupt) as e:
-        self.__stop_test(out)
+        self.__stop_test(out, process)
         out.write(header("Cleaning up..."))
         out.flush()
         self.__finish()
@@ -696,16 +688,46 @@ class Benchmarker:
   # __stop_test(benchmarker)
   # Stops all running tests
   ############################################################
-  def __stop_test(self, out):
-    try:
-      subprocess.check_call('sudo killall -s 9 -u %s' % self.runner_user, shell=True, stderr=out, stdout=out)
-      retcode = 0
-    except Exception:
-      retcode = 1
-
-    return retcode
+  def __stop_test(self, out, process):
+    if process is not None and process.poll() is None:
+      # Stop 
+      pids = self.__find_child_processes(process.pid)
+      if pids is not None:
+        stop = ['kill', '-STOP'] + pids
+        subprocess.call(stop, stderr=out, stdout=out)
+      pids = self.__find_child_processes(process.pid)
+      if pids is not None:
+        term = ['kill', '-TERM'] + pids
+        subprocess.call(term, stderr=out, stdout=out)
+      # Okay, if there are any more PIDs, kill them harder
+      pids = self.__find_child_processes(process.pid)
+      if pids is not None:
+        kill = ['kill', '-KILL'] + pids
+        subprocess.call(kill, stderr=out, stdout=out)
+      process.terminate()
   ############################################################
   # End __stop_test
+  ############################################################
+
+  ############################################################
+  # __find_child_processes
+  # Recursively finds all child processes for the given PID.
+  ############################################################
+  def __find_child_processes(self, pid):
+    toRet = []
+    try:
+      pids = subprocess.check_output(['pgrep','-P',str(pid)]).split()
+      toRet.extend(pids)
+      for aPid in pids:
+        toRet.extend(self.__find_child_processes(aPid))
+    except:
+      # pgrep will return a non-zero status code if there are no
+      # processes who have a PPID of PID.
+      pass
+
+    return toRet
+  ############################################################
+  # End __find_child_processes
   ############################################################
 
   def is_port_bound(self, port):

@@ -1,36 +1,39 @@
 package hellowicket;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.apache.wicket.request.resource.AbstractResource;
-import org.apache.wicket.util.collections.MiniMap;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.resource.AbstractResource;
+
+import java.io.IOException;
 
 public class HelloJsonResponse extends AbstractResource
 {
   private static final long serialVersionUID = 1L;
 
-  private static final String CONTENT_TYPE = "application/json";
-  private static final ObjectMapper mapper = new ObjectMapper();
+  private static final String HELLO_WORLD = "Hello, World!";
+  public static final String APPLICATION_JSON = "application/json";
+  public static final ObjectMapper MAPPER = new ObjectMapper();
+
+  static  {
+    MAPPER.registerModule(new AfterburnerModule());
+  }
 
   protected ResourceResponse newResourceResponse(Attributes attributes)
   {
     final ResourceResponse response = new ResourceResponse();
-    response.setContentLength(27);
-    response.setContentType(CONTENT_TYPE);
     response.setWriteCallback(new WriteCallback()
     {
       public void writeData(Attributes attributes)
       {
-        Map<String, String> data = new MiniMap<>(1);
-        data.put("message", "Hello, World!");
-
         try
         {
-            String json = HelloJsonResponse.mapper.writeValueAsString(data);
-            attributes.getResponse().write(json);
+          final WebResponse webResponse = (WebResponse) attributes.getResponse();
+          webResponse.setContentLength(27);
+          webResponse.setContentType(APPLICATION_JSON);
+          JsonMessage message = new JsonMessage(HELLO_WORLD);
+          byte[] json = MAPPER.writeValueAsBytes(message);
+          webResponse.write(json);
         }
         catch (IOException ex)
         {
@@ -39,5 +42,10 @@ public class HelloJsonResponse extends AbstractResource
       }
     });
     return response;
+  }
+
+  @Override
+  protected void setResponseHeaders(final ResourceResponse resourceResponse, final Attributes attributes) {
+
   }
 }

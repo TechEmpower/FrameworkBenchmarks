@@ -47,7 +47,7 @@
       "setup_file": "setup",
       "db_url": "/servlet/postgres",
       "query_url": "/servlet/postgres?queries=",
-      "fortune_url": "/servlet/postgre-fortunes",
+      "fortune_url": "/servlet/postgres-fortunes",
       "update_url": "/servlet/postgres-update?queries=",
       "port": 8080,
       "approach": "Realistic",
