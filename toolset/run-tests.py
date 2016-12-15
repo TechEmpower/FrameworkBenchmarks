@@ -133,9 +133,7 @@ def main(argv=None):
     parser.add_argument('--database-user', default=databaUser,
                         help='The username to use for SSH to the database instance.  If not provided, defaults to the value of --client-user.')
     parser.add_argument('--database-identity-file', default=dbIdenFile, dest='database_identity_file',
-                        help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
-    parser.add_argument('-p', dest='password_prompt', action='store_true', help='Prompt for password')
-    
+                        help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.') 
     
     # Install options
     parser.add_argument('--clean', action='store_true', default=False, help='Removes the results directory')
