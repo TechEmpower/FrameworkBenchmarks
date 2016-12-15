@@ -198,6 +198,21 @@ class FrameworkTest:
         os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')  ],
         stderr=out, stdout=out)
 
+    # Check that the client is setup
+    if not os.path.exists(os.path.join(self.install_root, 'client.installed')):
+      print("\nINSTALL: Installing client software\n")    
+      # TODO: hax; should dynamically know where this file is
+      with open (self.fwroot + "/toolset/setup/linux/client.sh", "r") as myfile:
+        remote_script=myfile.read()
+        print("\nINSTALL: %s" % self.benchmarker.client_ssh_string)
+        p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
+        p.communicate(remote_script)
+        returncode = p.returncode
+        if returncode != 0:
+          self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
+      print("\nINSTALL: Finished installing client software\n")
+      subprocess.check_call('touch client.installed', shell=True, cwd=self.install_root, executable='/bin/bash')
+
     # Run the module start inside parent of TROOT
     #  - we use the parent as a historical accident, a number of tests
     # refer to their TROOT maually still
@@ -838,8 +853,6 @@ class FrameworkTest:
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
     self.install_root="%s/%s" % (self.fwroot, "installs")
-    if benchmarker.install_strategy is 'pertest':
-      self.install_root="%s/pertest/%s" % (self.install_root, name)
 
     # Used in setup.sh scripts for consistency with
     # the bash environment variables

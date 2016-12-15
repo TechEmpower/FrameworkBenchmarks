@@ -1,4 +1,3 @@
-from setup.linux.installer import Installer
 from setup.linux import setup_util
 
 from benchmark import framework_test
@@ -1055,10 +1054,6 @@ class Benchmarker:
       self.database_ssh_string = self.database_ssh_string + " -i " + self.database_identity_file
     if self.client_identity_file != None:
       self.client_ssh_string = self.client_ssh_string + " -i " + self.client_identity_file
-
-    if self.install is not None:
-      install = Installer(self, self.install_strategy)
-      install.install_software()
 
   ############################################################
   # End __init__
