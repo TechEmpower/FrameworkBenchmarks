@@ -106,12 +106,10 @@ def provider_virtualbox(config, role, ip_address='172.16.0.16')
     # The VirtualBox file system for shared folders (vboxfs)
     # does not support posix's chown/chmod - these can only 
     # be set at mount time, and they are uniform for the entire
-    # shared directory. We require chown, because we have the 
-    # testrunner user account, so this is a problem. To mitigate
-    # the effects, we set the folders and files to 777 permissions. 
-    # Even though we cannot chown them to testrunner, with 777 and 
-    # owner vagrant *most* of the software works ok. Occasional 
-    # issues are still possible. 
+    # shared directory. To mitigate the effects, we set the 
+    # folders and files to 777 permissions. 
+    # With 777 and wner vagrant *most* of the software works ok. 
+    # Occasional issues are still possible. 
     #
     # See mitchellh/vagrant#4997
     # See http://superuser.com/a/640028/136050

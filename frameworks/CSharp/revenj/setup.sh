@@ -33,4 +33,3 @@ cat $TROOT/Revenj.Http.exe.config | sed 's|\(ConnectionString.*server=\)localhos
 
 echo "Running the Revenj instance"
 mono $TROOT/exe/Revenj.Http.exe
-sleep 5
