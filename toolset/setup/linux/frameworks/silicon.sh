@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends clang-3.8 gcc-4.9
+fw_depends libboost-dev clang-3.8 gcc-4.9
 
 RETCODE=$(fw_exists ${IROOT}/silicon.installed)
 [ ! "$RETCODE" == 0 ] || { \
