@@ -38,9 +38,13 @@ struct FortuneRow {
 }
 
 fn main() {
+    let dbhost = match option_env!("DBHOST") {
+        Some(it) => it,
+        _ => "localhost"
+    };
     let r2d2_config = r2d2::Config::default();
     let pg_conn_manager = PostgresConnectionManager::new(
-        "postgres://benchmarkdbuser:benchmarkdbpass@localhost/hello_world",
+        format!("postgres://benchmarkdbuser:benchmarkdbpass@{dbhost}/hello_world", dbhost=dbhost),
         TlsMode::None).unwrap();
     let pool = r2d2::Pool::new(r2d2_config, pg_conn_manager).unwrap();
     let template = mustache::compile_str("<!DOCTYPE html>
@@ -147,7 +151,7 @@ fn fortune_handler(req: &mut Request) -> IronResult<Response> {
         id: 0,
         message: "Additional fortune added at request time.".to_string()
     });
-    rows.sort_by(|a,b| a.message.cmp(&b.message));
+    rows.sort_by(|it, next| it.message.cmp(&next.message));
     let mut res = vec![];
     template.render(&mut res, &rows).unwrap();
     Ok(
@@ -184,6 +188,8 @@ fn updates_handler(req: &mut Request) -> IronResult<Response> {
     };
     let conn = pool.get().unwrap();
     let trans = conn.transaction().unwrap();
+    // Sorting guarantees no deadlocks between multiple concurrent threads
+    dbres.sort_by_key(|it| it.id );
     let mut res: Vec<DatabaseRow> = Vec::with_capacity(param);
     for row in dbres {
         let num = between.ind_sample(&mut rng);
@@ -217,7 +223,7 @@ fn random_row(conn: r2d2::PooledConnection<PostgresConnectionManager>) -> Databa
 
 fn get_param<'a>(querystring: &'a str, param: &'a str) -> Option<&'a str> {
     let n = querystring.split("&").find(
-        |&x| !(x.find(param).is_none())
+        |&it| !(it.find(param).is_none())
     ); 
     match n {
         Some(n) => n.split("=").nth(1),
