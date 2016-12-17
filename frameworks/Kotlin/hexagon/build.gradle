@@ -1,0 +1,35 @@
+
+buildscript {
+    repositories {
+        jcenter ()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+apply from: "$gradleScripts/hexagon.gradle"
+apply from: "$gradleScripts/service.gradle"
+apply plugin: 'war'
+
+mainClassName = "co.there4.hexagon.BenchmarkKt"
+applicationDefaultJvmArgs = [
+    '-Xms512M',
+    '-Xmx512M',
+    '-server',
+    '-XX:+UseNUMA',
+    '-XX:+UseParallelGC',
+    '-XX:+AggressiveOpts'
+]
+
+clean {
+    delete "systems/load_test.jtl", "systems/jmeter.log"
+}
+
+war {
+    archiveName = "ROOT.war"
+}
+
+installDist.dependsOn 'war'

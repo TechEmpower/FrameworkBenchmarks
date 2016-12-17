@@ -1,0 +1,21 @@
+<!--
+ | Logback configuration for tests
+ !-->
+<configuration>
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <Pattern>
+%d{HH:mm:ss.SSS} %highlight(%-5p) %magenta([%-15.15thread]) %-30logger{30} %cyan(%X{jvmId}) | %m%n
+      </Pattern>
+    </encoder>
+  </appender>
+
+  <root>
+    <level value="off" />
+    <appender-ref ref="console" />
+  </root>
+
+  <logger name="co.there4.hexagon">
+    <level value="off" />
+  </logger>
+</configuration>
