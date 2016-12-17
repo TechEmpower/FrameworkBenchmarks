@@ -30,7 +30,7 @@
             }
         },
         {
-            "resin_mysql" : {
+            "resin" : {
                 "json_url" : "/json",
                 "db_url" : "/db",
                 "query_url" : "/query?queries=",
@@ -42,7 +42,7 @@
 
                 "approach" : "Realistic",
                 "classification" : "Micro",
-                "database" : "MySQL",
+                "database" : "MongoDB",
                 "framework" : "Hexagon",
                 "language" : "Kotlin",
                 "orm" : "Raw",
@@ -50,10 +50,10 @@
                 "webserver" : "None",
                 "os" : "Linux",
                 "database_os" : "Linux",
-                "display_name" : "Hexagon MySQL",
+                "display_name" : "Hexagon Resin",
                 "notes" : "http://there4.co/hexagon",
 
-                "setup_file" : "setup_resin_mysql",
+                "setup_file" : "setup_resin",
                 "versus" : "servlet"
             }
         }
