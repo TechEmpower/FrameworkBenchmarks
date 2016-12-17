@@ -17,7 +17,7 @@ apply plugin: 'war'
 mainClassName = "co.there4.hexagon.BenchmarkKt"
 applicationDefaultJvmArgs = [
     '-Xms512M',
-    '-Xmx512M',
+    '-Xmx1024M',
     '-server',
     '-XX:+UseNUMA',
     '-XX:+UseParallelGC',

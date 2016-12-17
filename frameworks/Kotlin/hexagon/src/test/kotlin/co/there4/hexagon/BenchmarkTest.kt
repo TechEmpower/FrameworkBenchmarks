@@ -33,7 +33,6 @@ class BenchmarkTest {
             one_hundred_queries()
             five_hundred_queries()
             fortunes()
-            fortune_page()
             no_updates_parameter()
             empty_updates_parameter()
             text_updates_parameter()
@@ -63,7 +62,6 @@ class BenchmarkTest {
     }
 
     fun fortunes() = fortunesCheck("/fortunes")
-    fun fortune_page() = fortunesCheck("/fortunes_page")
 
     fun no_query_parameter() {
         val response = client.get("/db")

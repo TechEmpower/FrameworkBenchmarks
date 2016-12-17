@@ -38,7 +38,7 @@
                 "update_url" : "/update?queries=",
                 "plaintext_url" : "/plaintext",
 
-                "port" : 9090,
+                "port" : 8080,
 
                 "approach" : "Realistic",
                 "classification" : "Micro",

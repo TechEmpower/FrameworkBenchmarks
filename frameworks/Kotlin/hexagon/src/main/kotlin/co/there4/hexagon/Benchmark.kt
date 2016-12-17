@@ -87,35 +87,6 @@ fun benchmarkRoutes(srv: Router = server) {
 }
 
 fun main(args: Array<String>) {
-    initialize()
     benchmarkRoutes()
-
-    crud(worldRepository)
-    crud(fortuneRepository)
-
-    get("/fortunes_page") {
-        page {
-            html {
-                head {
-                    title { +"Fortunes" }
-                }
-                body {
-                    table {
-                        tr {
-                            th { +"id" }
-                            th { +"message" }
-                        }
-                        listFortunes().forEach {
-                            tr {
-                                td { +it._id }
-                                td { +it.message }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     run()
 }
