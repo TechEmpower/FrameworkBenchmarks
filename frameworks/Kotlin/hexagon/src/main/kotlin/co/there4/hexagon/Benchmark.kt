@@ -15,7 +15,7 @@ import javax.servlet.annotation.WebListener
 // DATA CLASSES
 internal data class Message(val message: String = "Hello, World!")
 internal data class Fortune(val _id: Int, val message: String)
-internal data class World(val _id: Int, val id: Int, val randomNumber: Int = rnd())
+internal data class World(val _id: Int, val id: Int = _id, val randomNumber: Int = rnd())
 
 // CONSTANTS
 private val CONTENT_TYPE_JSON = "application/json"
