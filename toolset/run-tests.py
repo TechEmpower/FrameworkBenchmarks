@@ -126,7 +126,6 @@ def main(argv=None):
     parser.add_argument('-s', '--server-host', default=serverHost, help='The application server.')
     parser.add_argument('-c', '--client-host', default=clientHost, help='The client / load generation server.')
     parser.add_argument('-u', '--client-user', default=clientUser, help='The username to use for SSH to the client instance.')
-    parser.add_argument('-r', '--runner-user', default=runnerUser, help='The user to run each test as.')
     parser.add_argument('-i', '--client-identity-file', dest='client_identity_file', default=clientIden,
                         help='The key to use for SSH to the client instance.')
     parser.add_argument('-d', '--database-host', default=databaHost,
@@ -134,18 +133,9 @@ def main(argv=None):
     parser.add_argument('--database-user', default=databaUser,
                         help='The username to use for SSH to the database instance.  If not provided, defaults to the value of --client-user.')
     parser.add_argument('--database-identity-file', default=dbIdenFile, dest='database_identity_file',
-                        help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
-    parser.add_argument('-p', dest='password_prompt', action='store_true', help='Prompt for password')
-    
+                        help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.') 
     
     # Install options
-    parser.add_argument('--install', choices=['client', 'database', 'server', 'all'], default=None,
-                        help='Runs installation script(s) before continuing on to execute the tests.')
-    parser.add_argument('--install-error-action', choices=['abort', 'continue'], default='continue', help='action to take in case of error during installation')
-    parser.add_argument('--install-strategy', choices=['unified', 'pertest'], default='unified', 
-        help='''Affects : With unified, all server software is installed into a single directory. 
-        With pertest each test gets its own installs directory, but installation takes longer''')
-    parser.add_argument('--install-only', action='store_true', default=False, help='Do not run benchmark or verification, just install and exit')
     parser.add_argument('--clean', action='store_true', default=False, help='Removes the results directory')
     parser.add_argument('--clean-all', action='store_true', dest='clean_all', default=False, help='Removes the results and installs directories')
 
@@ -176,16 +166,10 @@ def main(argv=None):
 
     # Verify and massage options
     if args.client_user is None:
-      print 'Usernames (e.g. --client-user, --runner-user, and --database-user) are required!'
+      print 'Usernames (e.g. --client-user, and --database-user) are required!'
       print 'The system will SSH into the client and the database for the install stage'
       print 'Aborting'
-      exit(1)
-
-    if args.runner_user is None:
-      print 'Usernames (e.g. --client-user, --runner-user, and --database-user) are required!'
-      print 'The system will run each test as the runner-user'
-      print 'Aborting'
-      exit(1)        
+      exit(1)    
 
     if args.database_user is None:
       args.database_user = args.client_user
@@ -208,7 +192,7 @@ def main(argv=None):
       benchmarker.run_list_test_metadata()
     elif args.parse != None:
       benchmarker.parse_timestamp()
-    elif not args.install_only:
+    else:
       return benchmarker.run()
 
 if __name__ == "__main__":

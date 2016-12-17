@@ -21,6 +21,7 @@ sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/l
 # wrk
 ##############################
 
+rm -rf wrk-4.0.1.tar.gz wrk-4.0.1
 curl -sL -o wrk-4.0.1.tar.gz https://github.com/wg/wrk/archive/4.0.1.tar.gz
 tar xzf wrk-4.0.1.tar.gz
 cd wrk-4.0.1
@@ -31,6 +32,7 @@ cd ~
 #############################
 # pipeline.lua
 #############################
+rm -rf pipeline.lua
 cat << EOF | tee pipeline.lua
 init = function(args)
   local r = {}

@@ -8,18 +8,18 @@ class MongobenchController extends BenchController
 
     protected function getRandomWorld()
     {
-        return WorldsCollection::findFirst(array(array('_id' => mt_rand(1, 10000))));
+        return MongoWorldsCollection::findFirst(array(array('_id' => mt_rand(1, 10000))));
     }
 
     protected function getFortunesArray()
     {
-        return FortunesCollection::find();
+        return MongoFortunesCollection::find();
     }
 
     protected function buildFortune()
     {
         $fortune = parent::buildFortune();
-        $newFortune = new FortunesCollection();
+        $newFortune = new MongoFortunesCollection();
         $newFortune->_id = $fortune['id'];
         $newFortune->message = $fortune['message'];
         return $newFortune;

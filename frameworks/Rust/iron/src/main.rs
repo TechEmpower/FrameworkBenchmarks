@@ -1,36 +1,232 @@
 extern crate iron;
-extern crate router;
+extern crate persistent;
+#[macro_use] extern crate router;
+extern crate serde;
+extern crate serde_json;
+extern crate hyper;
+extern crate rand;
+extern crate r2d2;
+extern crate postgres;
+extern crate r2d2_postgres;
+extern crate mustache;
 extern crate rustc_serialize;
 
-use iron::{Iron, Request, Response, IronResult};
+use iron::prelude::*;
 use iron::status;
-use router::Router;
-use rustc_serialize::json;
-use iron::mime::Mime;
-use iron::headers::Server;
 use iron::modifiers::Header;
+use iron::typemap::Key;
+use hyper::header::{Server, ContentType};
+use rand::distributions::{Range, IndependentSample};
+use r2d2_postgres::{PostgresConnectionManager, TlsMode};
+use persistent::{Read};
+use r2d2::Pool;
 
-#[derive(RustcDecodable, RustcEncodable)]
-struct Message {
-    message: String,
+include!(concat!(env!("OUT_DIR"),"/main_types.rs"));
+
+pub type PostgresPool = Pool<PostgresConnectionManager>;
+
+struct DbPool;
+impl Key for DbPool { type Value = PostgresPool; }
+
+struct FortuneTemplate;
+impl Key for FortuneTemplate { type Value = mustache::Template; }
+
+#[derive(RustcEncodable)]
+struct FortuneRow {
+    id: i32,
+    message: String
 }
 
 fn main() {
-    let mut router = Router::new();
-    router.get("/json", json_handler);
-    router.get("/plaintext", plaintext_handler);
-
-    Iron::new(router).http("0.0.0.0:8080").unwrap();
+    let dbhost = match option_env!("DBHOST") {
+        Some(it) => it,
+        _ => "localhost"
+    };
+    let r2d2_config = r2d2::Config::default();
+    let pg_conn_manager = PostgresConnectionManager::new(
+        format!("postgres://benchmarkdbuser:benchmarkdbpass@{dbhost}/hello_world", dbhost=dbhost),
+        TlsMode::None).unwrap();
+    let pool = r2d2::Pool::new(r2d2_config, pg_conn_manager).unwrap();
+    let template = mustache::compile_str("<!DOCTYPE html>
+    <html> <head><title>Fortunes</title></head>
+    <body> <table> 
+    <tr><th>id</th><th>message</th></tr> 
+    {{#.}} <tr><td>{{id}}</td><td>{{message}}</td></tr> 
+    {{/.}} 
+    </table> </body> </html>").unwrap();
+    let app = router!(
+            json: get "/json" => json_handler,
+            single_db_query: get "/db" => single_db_query_handler,
+            plaintext: get "/plaintext" => plaintext_handler,
+            queries: get "/queries" => queries_handler,
+            fortune: get "/fortune" => fortune_handler,
+            updates: get "/updates" => updates_handler
+        );
+    let mut middleware = Chain::new(app);
+    middleware.link(Read::<DbPool>::both(pool));
+    middleware.link(Read::<FortuneTemplate>::both(template));
+    println!("Starting server...");
+    Iron::new(middleware).http("0.0.0.0:8080").unwrap();
 }
 
 fn json_handler(_: &mut Request) -> IronResult<Response> {
-    let message: Message = Message { message: "Hello, World!".to_string() };
-    let mime: Mime = "application/json".parse().unwrap();
-    let server = Header(Server(String::from("Iron")));
-    Ok(Response::with((status::Ok, json::encode(&message).unwrap(), mime, server)))
+    let message: Message = Message { 
+        message: "Hello, World!".to_owned() 
+    };
+    let content_type = Header(ContentType::json());
+    let server = Header(Server("Iron".to_owned()));
+    Ok(Response::with(
+        (status::Ok,
+        serde_json::to_string(&message).unwrap(),
+        content_type,
+        server
+        )))
 }
 
 fn plaintext_handler(_: &mut Request) -> IronResult<Response> {
-    let server = Header(Server(String::from("Iron")));
-    Ok(Response::with((status::Ok, "Hello, World!", server)))
+    let server = Header(Server("Iron".to_owned()));
+    Ok(Response::with((
+        status::Ok, 
+        "Hello, World!", 
+        server)))
+}
+
+fn single_db_query_handler(req: &mut Request) -> IronResult<Response> {
+    let content_type = Header(ContentType::json());
+    let server = Header(Server("Iron".to_owned()));
+    let pool = req.get::<Read<DbPool>>().unwrap();
+    let conn = pool.get().unwrap();
+    let row = random_row(conn);
+    Ok(Response::with((
+        status::Ok,
+        serde_json::to_string(&row).unwrap(),
+        server,
+        content_type
+        )))
+}
+
+fn queries_handler(req: &mut Request) -> IronResult<Response> {
+    let content_type = Header(ContentType::json());
+    let server = Header(Server("Iron".to_owned()));
+    let pool = req.get::<Read<DbPool>>().unwrap();
+    let query = req.url.query().unwrap();
+    let param = match get_param(query, "queries") {
+        Some(n) => match n.parse::<usize>() {
+            Ok(m) => match m {
+                e @ 1...500 => e,
+                e if e > 500 => 500,
+                _ => 1
+            },
+            _ => 1
+        },
+        _ => 1
+    };
+    let mut res: Vec<DatabaseRow> = Vec::with_capacity(param);
+    for _ in 0..param {
+        let conn = pool.get().unwrap();
+        res.push(random_row(conn))
+    };
+    Ok(
+        Response::with((
+            status::Ok, 
+            serde_json::to_string(&res).unwrap(),
+            server,
+            content_type
+    )))
+}
+
+fn fortune_handler(req: &mut Request) -> IronResult<Response> {
+    let content_type = Header(ContentType::html());
+    let server = Header(Server("Iron".to_owned()));
+    let template = req.get::<Read<FortuneTemplate>>().unwrap();
+    let pool = req.get::<Read<DbPool>>().unwrap();
+    let conn = pool.get().unwrap();
+    let query_res = &conn.query("SELECT id, message FROM Fortune",&[]).unwrap();
+    let query_res_iter = query_res.iter();
+    let mut rows: Vec<FortuneRow> = query_res_iter.map(|row| FortuneRow {
+        id: row.get(0),
+        message: row.get(1)
+    }).collect();
+    rows.push(FortuneRow {
+        id: 0,
+        message: "Additional fortune added at request time.".to_string()
+    });
+    rows.sort_by(|it, next| it.message.cmp(&next.message));
+    let mut res = vec![];
+    template.render(&mut res, &rows).unwrap();
+    Ok(
+        Response::with((
+            status::Ok,
+            res,
+            server,
+            content_type
+    )))
+}
+
+fn updates_handler(req: &mut Request) -> IronResult<Response> {
+    let mut rng = rand::thread_rng();
+    let between = Range::new(1,10000);
+    let content_type = Header(ContentType::json());
+    let server = Header(Server("Iron".to_owned()));
+    let pool = req.get::<Read<DbPool>>().unwrap();
+    let query = req.url.query().unwrap();
+    let param = match get_param(query, "queries") {
+        Some(n) => match n.parse::<usize>() {
+            Ok(m) => match m {
+                e @ 1...500 => e,
+                e if e > 500 => 500,
+                _ => 1
+            },
+            _ => 1
+        },
+        _ => 1
+    };
+    let mut dbres: Vec<DatabaseRow> = Vec::with_capacity(param);
+    for _ in 0..param {
+        let conn = pool.get().unwrap();
+        dbres.push(random_row(conn))
+    };
+    let conn = pool.get().unwrap();
+    let trans = conn.transaction().unwrap();
+    // Sorting guarantees no deadlocks between multiple concurrent threads
+    dbres.sort_by_key(|it| it.id );
+    let mut res: Vec<DatabaseRow> = Vec::with_capacity(param);
+    for row in dbres {
+        let num = between.ind_sample(&mut rng);
+        trans.execute("UPDATE World SET randomnumber = $1 WHERE id = $2", &[&num, &row.id]).unwrap();
+        res.push(DatabaseRow {
+            id: row.id,
+            randomNumber: num 
+        })
+    }
+    trans.commit().unwrap();
+    Ok(
+        Response::with((
+            status::Ok,
+            serde_json::to_string(&res).unwrap(),
+            server,
+            content_type
+    )))
+}
+
+fn random_row(conn: r2d2::PooledConnection<PostgresConnectionManager>) -> DatabaseRow {
+    let mut rng = rand::thread_rng();
+    let between = Range::new(1,10000);
+    let num = between.ind_sample(&mut rng);
+    let rows = &conn.query("SELECT id, randomnumber FROM World WHERE id = $1",&[&num]).unwrap();
+    let row = rows.get(0);
+    DatabaseRow {
+        id: row.get(0),
+        randomNumber: row.get(1)
+    }
+}
+
+fn get_param<'a>(querystring: &'a str, param: &'a str) -> Option<&'a str> {
+    let n = querystring.split("&").find(
+        |&it| !(it.find(param).is_none())
+    ); 
+    match n {
+        Some(n) => n.split("=").nth(1),
+        _ => n
+    }
 }

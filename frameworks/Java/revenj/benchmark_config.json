@@ -1,5 +1,5 @@
 {
-  "framework": "Revenj.JVM",
+  "framework": "revenj",
   "tests": [{
     "default": {
       "setup_file": "setup",

@@ -187,12 +187,31 @@ class FrameworkTest:
                 self.benchmarker.threads,
                 max(self.benchmarker.concurrency_levels)))
 
-    # Always ensure that IROOT belongs to the runner_user
+    # Always ensure that IROOT exists
     if not os.path.exists(self.install_root):
       os.mkdir(self.install_root)
-    chown = "sudo chown -R %s:%s %s" % (self.benchmarker.runner_user,
-      self.benchmarker.runner_user, os.path.join(self.fwroot, self.install_root))
-    subprocess.check_call(chown, shell=True, cwd=self.fwroot, executable='/bin/bash')
+
+    if not os.path.exists(os.path.join(self.install_root,"TFBReaper")):
+      subprocess.check_call(['gcc', 
+        '-std=c99', 
+        '-o%s/TFBReaper' % self.install_root, 
+        os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')  ],
+        stderr=out, stdout=out)
+
+    # Check that the client is setup
+    if not os.path.exists(os.path.join(self.install_root, 'client.installed')):
+      print("\nINSTALL: Installing client software\n")    
+      # TODO: hax; should dynamically know where this file is
+      with open (self.fwroot + "/toolset/setup/linux/client.sh", "r") as myfile:
+        remote_script=myfile.read()
+        print("\nINSTALL: %s" % self.benchmarker.client_ssh_string)
+        p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
+        p.communicate(remote_script)
+        returncode = p.returncode
+        if returncode != 0:
+          self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
+      print("\nINSTALL: Finished installing client software\n")
+      subprocess.check_call('touch client.installed', shell=True, cwd=self.install_root, executable='/bin/bash')
 
     # Run the module start inside parent of TROOT
     #  - we use the parent as a historical accident, a number of tests
@@ -201,31 +220,7 @@ class FrameworkTest:
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", self.directory)
 
-    # Run the start script for the test as the "testrunner" user
-    #
-    # `sudo` - Switching user requires superuser privs
-    #   -u [username] The username
-    #   -E Preserves the current environment variables
-    #   -H Forces the home var (~) to be reset to the user specified
-    # `stdbuf` - Disable buffering, send output to python ASAP
-    #   -o0 zero-sized buffer for stdout
-    #   -e0 zero-sized buffer for stderr
-    # `bash` - Run the setup.sh script using bash
-    #   -e Force bash to exit on first error
-    #   -x Turn on bash tracing e.g. print commands before running
-    #
-    # Most servers do not output to stdout/stderr while serving
-    # requests so there is no performance hit from disabling
-    # output buffering. This disabling is necessary to
-    # a) allow TFB to show output in real time and b) avoid loosing
-    # output in the buffer when the testrunner processes are forcibly
-    # killed
-    #
-    # See http://www.pixelbeat.org/programming/stdio_buffering/
-    # See https://blogs.gnome.org/markmc/2013/06/04/async-io-and-python/
-    # See http://eyalarubas.com/python-subproc-nonblock.html
-    command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -exc "source %s && source %s.sh"' % (
-      self.benchmarker.runner_user,
+    command = 'bash -exc "source %s && source %s.sh"' % (
       bash_functions_path,
       os.path.join(self.troot, self.setup_file))
 
@@ -238,7 +233,7 @@ class FrameworkTest:
       export MAX_THREADS=%s     &&  \\
       export MAX_CONCURRENCY=%s && \\
       cd %s && \\
-      %s''' % (self.fwroot,
+      %s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\"''' % (self.fwroot,
         self.directory,
         self.install_root,
         self.database_host,
@@ -246,7 +241,9 @@ class FrameworkTest:
         self.benchmarker.threads,
         max(self.benchmarker.concurrency_levels),
         self.directory,
-        command)
+        self.install_root,
+        bash_functions_path,
+        os.path.join(self.troot, self.setup_file))
     logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
 
 
@@ -265,8 +262,9 @@ class FrameworkTest:
       out.flush()
 
     # Start the setup.sh command
-    p = subprocess.Popen(command, cwd=self.directory,
-          shell=True, stdout=subprocess.PIPE,
+    p = subprocess.Popen(["%s/TFBReaper" % self.install_root,command],
+          cwd=self.directory,
+          stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
     nbsr = setup_util.NonBlockingStreamReader(p.stdout,
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
@@ -364,7 +362,7 @@ class FrameworkTest:
     logging.info("Executed %s.sh, returning %s", self.setup_file, retcode)
     os.chdir(previousDir)
 
-    return retcode
+    return retcode, p
   ############################################################
   # End start
   ############################################################
@@ -855,8 +853,6 @@ class FrameworkTest:
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
     self.install_root="%s/%s" % (self.fwroot, "installs")
-    if benchmarker.install_strategy is 'pertest':
-      self.install_root="%s/pertest/%s" % (self.install_root, name)
 
     # Used in setup.sh scripts for consistency with
     # the bash environment variables
