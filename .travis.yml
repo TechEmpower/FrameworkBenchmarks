@@ -193,10 +193,9 @@ env:
     - "TESTDIR=Ur/urweb"
 
 before_script:
-  # Git Diffing script to see if the current test in the matrix needs to be run
-  # If it does, it will set the $TESTS env variable, otherwise it will
-  # exit and continue to the next job in the matrix.
-  - source ./toolset/travis/travis_diff.sh
+  # This won't actually run the tests but exit early if the tests don't need to be run. Otherwise
+  # it will save the command in an Environment Variable TRAVIS_TEST_COMMAND to be run after the rest of the setup.
+  - ./toolset/run-ci.py verify "$TESTDIR"
 
   # travis_clean.sh takes care of some services that are baked into the travis
   # build. Using language: generic gets us an ubuntu build with fewer services,
@@ -211,8 +210,8 @@ before_script:
   - ./toolset/run-tests.py --install client --install-only
 
 script:
-  - echo "Running the following tests - $TESTS"
-  - time ./toolset/run-tests.py --mode verify --test $TESTS
+  # Runs the tests gathered from ./toolset/run-ci.py
+  - $TRAVIS_TEST_COMMAND
 
 cache:
   directories:
