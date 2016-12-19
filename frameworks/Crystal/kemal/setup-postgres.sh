@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends crystal
+fw_depends postgres crystal
 
 shards install
 
