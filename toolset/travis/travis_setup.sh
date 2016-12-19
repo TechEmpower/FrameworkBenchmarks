@@ -35,27 +35,6 @@ echo "database_host=127.0.0.1"                         >> benchmark.cfg
 echo "server_host=127.0.0.1"                           >> benchmark.cfg
 echo "client_user=travis"                              >> benchmark.cfg
 echo "database_user=travis"                            >> benchmark.cfg
-echo "runner_user=testrunner"                          >> benchmark.cfg
+echo "runner_user=travis"                              >> benchmark.cfg
 
-# Create the new testrunner user
-sudo useradd testrunner
-# Give him a home dir
-sudo mkdir /home/testrunner
-# Make testrunner the owner of his home dir
-sudo chown testrunner:testrunner /home/testrunner
-# Add the testrunner user to every group that the travis user is in
-sudo sed -i 's|:travis|:travis,testrunner,benchmarkdbuser|g' /etc/group
-# Maybe unneeded - add the travis user to the testrunner group
-sudo sed -i 's|testrunner:x:\(.*\):|testrunner:x:\1:travis|g' /etc/group
-# Need to add testrunner to the sudoers group AND default him to a sudoers
-# because the travis user isn't in the sudo group - he's a sudoer.
-echo "testrunner ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 echo "travis ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
-
-# Set the default shell for testrunner to /bin/bash
-sudo sed -i 's|/home/testrunner:/bin/sh|/home/testrunner:/bin/bash|g' /etc/passwd
-
-ls -la /home/travis/.ssh
-cat /home/travis/.ssh/config
-sudo cat /etc/hosts
-sudo cat /home/travis/.ssh/authorized_keys
