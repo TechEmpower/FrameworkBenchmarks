@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends apache wt
+fw_depends postgres apache wt
 
 sed -i 's|INSERT_DB_HOST_HERE|'"${DBHOST}"'|g' benchmark.cpp
 
