@@ -2,7 +2,7 @@
   "framework": "stream",
   "tests": [{
     "default": {
-      "setup_file": "setup_postgres",
+      "setup_file": "setup_postgresql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",

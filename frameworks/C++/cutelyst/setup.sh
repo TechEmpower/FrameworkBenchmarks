@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql postgres cutelyst
+fw_depends mysql postgresql cutelyst
 
 sed -i 's|DatabaseHostName=.*|DatabaseHostName='"$DBHOST"'|g' config/config.ini
 sed -i 's|SendDate=.*|SendDate=false|g' config/config.ini

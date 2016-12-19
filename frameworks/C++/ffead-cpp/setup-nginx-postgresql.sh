@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends postgres ffead-cpp-nginx
+fw_depends postgresql ffead-cpp-nginx
 
 export FFEAD_CPP_PATH=$TROOT/ffead-cpp-2.0
 export LD_LIBRARY_PATH=$IROOT:$FFEAD_CPP_PATH/lib:$LD_LIBRARY_PATH

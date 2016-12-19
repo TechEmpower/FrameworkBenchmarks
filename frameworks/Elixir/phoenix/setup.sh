@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends postgres elixir
+fw_depends postgresql elixir
 
 sed -i 's|localhost|'${DBHOST}'|g' config/prod.exs
 

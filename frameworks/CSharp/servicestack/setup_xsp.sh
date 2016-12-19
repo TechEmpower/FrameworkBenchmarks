@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql postgres mongodb nginx mono
+fw_depends mysql postgresql mongodb nginx mono
 
 sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
 # extra cleaning

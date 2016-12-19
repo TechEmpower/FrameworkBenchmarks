@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends postgres stack
+fw_depends postgresql stack
 
 ${IROOT}/stack --allow-different-user setup
 ${IROOT}/stack --allow-different-user build

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends postgres java resin leiningen
+fw_depends postgresql java resin leiningen
 
 # Update db host in the source file
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' hello/env/prod/resources/config.edn

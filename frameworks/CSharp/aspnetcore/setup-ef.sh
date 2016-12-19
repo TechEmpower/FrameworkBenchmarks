@@ -1,5 +1,5 @@
 #!/bin/bash
 
-fw_depends postgres
+fw_depends postgresql
 
 source run-linux.sh ef $(($(nproc)/2))

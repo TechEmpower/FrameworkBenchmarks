@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql postgres cutelyst nginx
+fw_depends mysql postgresql cutelyst nginx
 
 sed -i 's|DatabaseHostName=.*|DatabaseHostName='"$DBHOST"'|g' config/config_socket.ini
 sed -i 's|SendDate=.*|SendDate=false|g' config/config_socket.ini
