@@ -22,7 +22,7 @@
       "versus": "servlet"
     },
     "raw": {
-      "setup_file": "setup",
+      "setup_file": "setup_mysql",
       "db_url": "/servlet/db",
       "query_url": "/servlet/db?queries=",
       "fortune_url": "/servlet/fortunes",
@@ -44,7 +44,7 @@
       "versus": "servlet"
     },
     "postgres-raw": {
-      "setup_file": "setup",
+      "setup_file": "setup_postgresql",
       "db_url": "/servlet/postgres",
       "query_url": "/servlet/postgres?queries=",
       "fortune_url": "/servlet/postgres-fortunes",

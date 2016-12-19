@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java maven
+fw_depends postgresql java maven
 
 mvn clean compile assembly:single
 

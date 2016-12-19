@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java leiningen
+fw_depends mysql java leiningen
 
 sed -i 's|127.0.0.1:3306|'${DBHOST}':3306|g' src/pedestal/service.clj
 

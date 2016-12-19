@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends go
+fw_depends mysql go
 
 go get github.com/labstack/echo/...
 go get github.com/lib/pq

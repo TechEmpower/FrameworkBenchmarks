@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java resin maven
+fw_depends mysql java resin maven
 
 sed -i 's|localhost|'${DBHOST}'|g' src/main/java/hellowicket/WicketApplication.java
 

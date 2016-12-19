@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends h2o mustache-c yajl
+fw_depends postgresql h2o mustache-c yajl
 
 H2O_APP_HOME="${IROOT}/h2o_app"
 BUILD_DIR="${H2O_APP_HOME}_build"

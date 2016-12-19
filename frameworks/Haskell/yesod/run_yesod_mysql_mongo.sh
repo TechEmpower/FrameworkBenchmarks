@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends stack
+fw_depends mysql mongodb stack
 
 cd yesod-mysql-mongo
 
