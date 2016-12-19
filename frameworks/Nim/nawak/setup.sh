@@ -2,7 +2,7 @@
 
 sed -i 's|host=127.0.0.1 port=5432|host='"${DBHOST}"' port=5432|g' model_postgre.nim
 
-fw_depends nim nimble zeromq mongrel2 nawak
+fw_depends postgresql nim nimble zeromq mongrel2 nawak
 
 echo "** Compiling app"
 nim c --threads:on -d:release -d:postgre_model -l:-Wl,-rpath,$IROOT/zeromq-4.0.3/lib -o:nawak_postgre app.nim

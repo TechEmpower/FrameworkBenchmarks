@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends python2 nginx
+fw_depends postgresql python2 nginx
 
 sed -i 's|include .*/conf/uwsgi_params;|include '"${NGINX_HOME}"'/conf/uwsgi_params;|g' nginx.conf
 

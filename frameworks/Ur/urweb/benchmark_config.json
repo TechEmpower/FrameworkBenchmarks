@@ -19,7 +19,7 @@
       "database_os": "Linux"
     },
     "postgres": {
-      "setup_file": "setup",
+      "setup_file": "setup-postgresql",
       "db_url": "/db",
       "query_url": "/queries/",
       "fortune_url": "/fortunes",

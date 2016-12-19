@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends python3
+fw_depends mysql python3
 
 sed -i 's|127.0.0.1|'${DBHOST}'|g' app.py
 

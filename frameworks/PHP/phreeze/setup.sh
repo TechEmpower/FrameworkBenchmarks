@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php5 nginx composer
+fw_depends mysql php5 nginx composer
 
 sed -i 's|localhost:3306|'"${DBHOST}"':3306|g' index.php
 sed -i 's|.*/FrameworkBenchmarks/phreeze|"'"${TROOT}"'|g' deploy/phreeze

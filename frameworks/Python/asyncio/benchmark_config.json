@@ -2,7 +2,7 @@
   "framework": "asyncio",
   "tests": [{
     "default": {
-      "setup_file": "aiohttp.web/setup",
+      "setup_file": "aiohttp.web/setup-postgresql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -26,7 +26,7 @@
       "versus": "asyncio"
     },
     "mysql": {
-      "setup_file": "aiohttp.web/setup",
+      "setup_file": "aiohttp.web/setup-mysql",
       "db_url": "/db_mysql",
       "query_url": "/queries_mysql?queries=",
       "fortune_url": "/fortunes_mysql",

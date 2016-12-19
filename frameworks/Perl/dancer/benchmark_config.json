@@ -20,7 +20,7 @@
       "versus": ""
     },
     "raw": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,

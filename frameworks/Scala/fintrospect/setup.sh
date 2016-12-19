@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java sbt
+fw_depends mysql java sbt
 
 sbt clean
 

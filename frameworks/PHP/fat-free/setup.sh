@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php7 nginx
+fw_depends mysql php7 nginx
 
 sed -i 's|localhost|'"${DBHOST}"'|g' index.php
 sed -i 's|root .*/FrameworkBenchmarks/fat-free|root '"${TROOT}"'|g' deploy/nginx.conf

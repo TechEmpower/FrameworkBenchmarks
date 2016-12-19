@@ -22,7 +22,7 @@
       "versus": "nodejs"
     },
     "mongodb": {
-      "setup_file": "setup",
+      "setup_file": "setup-mongodb",
       "db_url": "/mongoose/db",
       "query_url": "/mongoose/queries?queries=",
       "fortune_url": "/mongoose/fortunes",
@@ -44,7 +44,7 @@
       "versus": "nodejs"
     },
     "mysql": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "db_url": "/sequelize/db",
       "query_url": "/sequelize/queries?queries=",
       "fortune_url": "/sequelize/fortunes",
@@ -66,7 +66,7 @@
       "versus": "nodejs"
     },
     "postgres": {
-      "setup_file": "setup",
+      "setup_file": "setup-postgresql",
       "db_url": "/sequelize-pg/db",
       "query_url": "/sequelize-pg/queries?queries=",
       "fortune_url": "/sequelize-pg/fortunes",

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php5 nginx composer
+fw_depends mysql php5 nginx composer
 
 sed -i 's|localhost|'"${DBHOST}"'|g' fuel/app/config/production/db.php
 sed -i 's|root .*/FrameworkBenchmarks/php-fuel|root '"${TROOT}"'|g' deploy/nginx.conf
