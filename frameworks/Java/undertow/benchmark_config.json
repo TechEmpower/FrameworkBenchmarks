@@ -23,7 +23,7 @@
       "versus": ""
     },
     "mysql" : {
-      "setup_file": "setup",
+      "setup_file": "setup_mysql",
       "db_url": "/db/mysql",
       "query_url": "/queries/mysql?queries=",
       "fortune_url": "/fortunes/mysql",
@@ -45,7 +45,7 @@
       "versus": ""
     },
     "postgresql" : {
-      "setup_file": "setup",
+      "setup_file": "setup_postgresql",
       "db_url": "/db/postgresql",
       "query_url": "/queries/postgresql?queries=",
       "fortune_url": "/fortunes/postgresql",
@@ -67,7 +67,7 @@
       "versus": ""
     },
     "mongodb" : {
-      "setup_file": "setup",
+      "setup_file": "setup_mongodb",
       "db_url": "/db/mongodb",
       "query_url": "/queries/mongodb?queries=",
       "fortune_url": "/fortunes/mongodb",

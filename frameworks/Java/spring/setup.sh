@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java maven
+fw_depends mysql java maven
 
 mvn clean package
 cd target

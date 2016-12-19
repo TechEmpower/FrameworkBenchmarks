@@ -48,7 +48,7 @@
       "versus": ""
     },
     "postgres": {
-      "setup_file": "setup_postgres",
+      "setup_file": "setup_postgresql",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "fortune_url": "/fortunes",
