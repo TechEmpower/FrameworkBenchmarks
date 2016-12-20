@@ -2,13 +2,6 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-#TODO: REMOVE THIS
-printenv
-cat /etc/environment
-cat ~/.bashrc
-cat ~/.bash_profile
-cat ~/.profile
-
 # Set up a new PATH variable
 export PATH=/home/travis/bin:/home/travis/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
