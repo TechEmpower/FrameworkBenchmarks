@@ -27,6 +27,7 @@ sudo rm -rf /ssd/mongodb
 sudo rm -rf /ssd/log/mongodb
 sudo cp -R -p /var/lib/mongodb /ssd/
 sudo cp -R -p /var/log/mongodb /ssd/log/
+sudo chmod -R +o-x /ssd
 nc -zvv $DBHOST 27017 &> /dev/null || sudo service mongod start
 EOF
 
