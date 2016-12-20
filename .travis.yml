@@ -202,7 +202,7 @@ before_script:
   # travis_setup.sh runs all the same commands you would run if you were setting up
   # a development environment via:
   # http://frameworkbenchmarks.readthedocs.io/en/latest/Development/Installation-Guide/
-  - ./toolset/travis/travis_setup.sh
+  - source ./toolset/travis/travis_setup.sh
   - ./toolset/run-tests.py --install client --install-only
 
   # This won't actually run the tests but exit early if the tests don't need to be run. Otherwise
