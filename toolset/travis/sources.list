@@ -60,7 +60,7 @@ deb-src http://security.ubuntu.com/ubuntu trusty-security multiverse
 ## developers who want to ship their latest software.
 # deb http://extras.ubuntu.com/ubuntu trusty main
 # deb-src http://extras.ubuntu.com/ubuntu trusty main
-deb http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main
+# deb http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main
 # deb-src http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main
 # deb-src http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main
 # deb-src http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main

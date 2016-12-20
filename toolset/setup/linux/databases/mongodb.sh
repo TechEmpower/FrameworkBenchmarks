@@ -14,7 +14,7 @@ scp $FWROOT/config/create.js $DBHOST:~/
 # install mysql on database machine
 ssh $DBHOST 'bash' <<EOF
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
 sudo apt-get -y update
 sudo apt-get -y remove mongodb-clients
 sudo apt-get -y install -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' mongodb-org
