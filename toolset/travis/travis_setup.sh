@@ -35,6 +35,4 @@ echo "client_user=travis"                              >> benchmark.cfg
 echo "database_user=travis"                            >> benchmark.cfg
 echo "runner_user=travis"                              >> benchmark.cfg
 
-mv benchmark.cfg /home/travis/FrameworkBenchmarks
-
 echo "travis ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
