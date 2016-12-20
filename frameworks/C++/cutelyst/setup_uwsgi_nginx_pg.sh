@@ -2,7 +2,7 @@
 
 fw_depends cutelyst nginx
 
-sed -i 's|Driver=.*|Driver=|g' config/config_socket.ini
+sed -i 's|Driver=.*|Driver=QPSQL|g' config/config.ini
 sed -i 's|DatabaseHostName=.*|DatabaseHostName='"$DBHOST"'|g' config/config_socket.ini
 sed -i 's|SendDate=.*|SendDate=false|g' config/config_socket.ini
 sed -i 's|include .*/conf/uwsgi_params;|include '"${NGINX_HOME}"'/conf/uwsgi_params;|g' nginx.conf
