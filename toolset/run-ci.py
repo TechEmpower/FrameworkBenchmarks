@@ -15,9 +15,6 @@ from benchmark import framework_test
 from benchmark.utils import gather_tests
 from benchmark.utils import header
 
-# Cross-platform colored text
-from colorama import Fore, Back, Style
-
 # Needed for various imports
 sys.path.append('.')
 sys.path.append('toolset/setup/linux')
