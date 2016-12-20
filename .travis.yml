@@ -206,7 +206,7 @@ before_script:
   # ./toolset/run-tests.py --install client --install-only
 
   # This won't actually run the tests but exit early if the tests don't need to be run. Otherwise
-  # it will save the command in an Environment Variable TRAVIS_TEST_COMMAND to be run after the rest of the setup.
+  # it will save the command in an Environment Variable TRAVIS_TESTS to be run after the rest of the setup.
   - ./toolset/run-ci.py verify "$TESTDIR"
 
 script:

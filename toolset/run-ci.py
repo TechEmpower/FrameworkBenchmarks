@@ -294,7 +294,22 @@ class CIRunnner:
 
     names = ' '.join(self.names)
     # Assume mode is verify
-    os.environ["TRAVIS_TESTS"] = "%s" % names
+    # os.environ["TRAVIS_TESTS"] = "%s" % names
+
+    # Run the command
+    log.info("Running mode %s with commmand %s", self.mode, command)
+    try:
+        p = subprocess.Popen(command, shell=True)
+        p.wait()
+        return p.returncode
+    except subprocess.CalledProcessError:
+        log.critical("Subprocess Error")
+        print traceback.format_exc()
+        return 1
+    except Exception as err:
+        log.critical("Exception from running+wait on subprocess")
+        log.error(err.child_traceback)
+        return 1
 
 if __name__ == "__main__":
   args = sys.argv[1:]
