@@ -1,3 +1,4 @@
+import com.fasterxml.jackson.databind.JsonNode
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Get
 import com.twitter.finagle.http.Status.{NotFound, Ok}
@@ -5,21 +6,17 @@ import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.mysql.Parameter.wrap
 import com.twitter.finagle.mysql.{Client, IntValue, Result, ResultSet}
 import com.twitter.util.Future.collect
-import io.fintrospect.RouteSpec.RequestValidation
-import io.fintrospect.RouteSpec.RequestValidation.none
-import io.fintrospect.formats.Json4sJackson.JsonFormat.{array, number, obj}
-import io.fintrospect.formats.Json4sJackson.ResponseBuilder.implicits._
-import io.fintrospect.parameters.ParameterSpec.int
+import io.fintrospect.formats.Jackson.JsonFormat.{array, number, obj}
+import io.fintrospect.formats.Jackson.ResponseBuilder.implicits._
 import io.fintrospect.parameters.{ParameterSpec, Query}
 import io.fintrospect.{RouteSpec, ServerRoutes}
-import org.json4s.JValue
 
 import scala.language.reflectiveCalls
 import scala.util.{Random, Try}
 
 object DatabaseRoutes {
 
-  private val toJson: PartialFunction[Result, Option[JValue]] = {
+  private val toJson: PartialFunction[Result, Option[JsonNode]] = {
     case rs: ResultSet => rs.rows.headOption
       .map(row => {
         val IntValue(id) = row("id").get
@@ -35,8 +32,8 @@ object DatabaseRoutes {
     val getStatement = database.prepare("SELECT id, randomNumber FROM world WHERE id = ?")
     val updateStatement = database.prepare("UPDATE world SET randomNumber = ? WHERE id = ?")
 
-    val queryRoute = RouteSpec(validation = none).at(Get) / "db" bindTo Service.mk {
-      r: Request => getStatement(generateRandomNumber)
+    val queryRoute = RouteSpec().at(Get) / "db" bindTo Service.mk {
+      _: Request => getStatement(generateRandomNumber)
         .map(toJson)
         .map(_.map(Ok(_)).getOrElse(NotFound()).build())
     }
