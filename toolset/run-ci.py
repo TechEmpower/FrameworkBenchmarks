@@ -294,7 +294,7 @@ class CIRunnner:
 
     names = ' '.join(self.names)
     # Assume mode is verify
-    os.environ["TRAVIS_TEST_COMMAND"] = "toolset/run-tests.py --mode verify --test %s" % names
+    os.environ["TRAVIS_TESTS"] = "%s" % names
 
 if __name__ == "__main__":
   args = sys.argv[1:]
