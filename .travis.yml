@@ -193,10 +193,6 @@ env:
     - "TESTDIR=Ur/urweb"
 
 before_script:
-  # This won't actually run the tests but exit early if the tests don't need to be run. Otherwise
-  # it will save the command in an Environment Variable TRAVIS_TEST_COMMAND to be run after the rest of the setup.
-  - ./toolset/run-ci.py verify "$TESTDIR"
-
   # travis_clean.sh takes care of some services that are baked into the travis
   # build. Using language: generic gets us an ubuntu build with fewer services,
   # but includes database installs, ruby and rvm installs, and others that interfere
@@ -208,6 +204,10 @@ before_script:
   # http://frameworkbenchmarks.readthedocs.io/en/latest/Development/Installation-Guide/
   - ./toolset/travis/travis_setup.sh
   - ./toolset/run-tests.py --install client --install-only
+
+  # This won't actually run the tests but exit early if the tests don't need to be run. Otherwise
+  # it will save the command in an Environment Variable TRAVIS_TEST_COMMAND to be run after the rest of the setup.
+  - ./toolset/run-ci.py verify "$TESTDIR"
 
 script:
   # Runs the tests gathered from ./toolset/run-ci.py
