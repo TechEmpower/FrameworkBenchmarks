@@ -21,8 +21,6 @@ internal data class World(val _id: Int, val id: Int = _id, val randomNumber: Int
 private val CONTENT_TYPE_JSON = "application/json"
 private val QUERIES_PARAM = "queries"
 
-private val fortune = Fortune(0, "Additional fortune added at request time.")
-
 // UTILITIES
 internal fun rnd() = ThreadLocalRandom.current().nextInt(DB_ROWS) + 1
 
@@ -38,7 +36,9 @@ private fun Exchange.getDb() {
     ok(if (hasQueryCount()) worlds[0].toJson() else worlds.toJson(), CONTENT_TYPE_JSON)
 }
 
-private fun listFortunes() = (findFortunes() + fortune).sortedBy { it.message }
+private fun listFortunes() =
+    (findFortunes() + Fortune(0, "Additional fortune added at request time."))
+        .sortedBy { it.message }
 
 // HANDLERS
 private fun Exchange.getUpdates() {
