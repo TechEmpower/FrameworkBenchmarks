@@ -2,7 +2,7 @@
   "framework": "stream",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup_postgresql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -26,7 +26,7 @@
       "versus": "dart"
     },
     "mongodb-raw": {
-      "setup_file": "setup",
+      "setup_file": "setup_mongodb",
       "db_url": "/db-mongo",
       "query_url": "/queries-mongo?queries=",
       "fortune_url": "/fortunes-mongo",

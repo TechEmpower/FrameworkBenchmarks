@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends dlang dub
+fw_depends mongodb dlang dub
 
 # Clean any files from last run
 rm -f fwb

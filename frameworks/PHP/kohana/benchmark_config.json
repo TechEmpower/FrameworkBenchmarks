@@ -21,7 +21,7 @@
       "versus": "php7"
     },
     "raw": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "db_url": "/bench/db",
       "query_url": "/bench/queries/",
       "fortune_url": "/bench/fortunes",

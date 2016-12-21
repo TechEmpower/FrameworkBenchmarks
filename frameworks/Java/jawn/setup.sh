@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java
+fw_depends mysql java
 
 ./gradlew clean
 

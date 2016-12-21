@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java resin maven mono dsl_platform
+fw_depends postgresql java resin maven mono dsl_platform
 
 source $IROOT/java.installed
 

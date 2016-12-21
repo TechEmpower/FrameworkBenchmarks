@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm nginx libhiredis-dev
+fw_depends mysql rvm nginx libhiredis-dev
 
 # We assume single-user installation as 
 # done in our rvm.sh script and 

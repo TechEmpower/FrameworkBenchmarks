@@ -22,7 +22,7 @@
       "versus": "php7"
     },
     "raw": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "db_url": "/db",
       "query_url": "/query?queries=",
       "fortune_url": "/fortunes",
