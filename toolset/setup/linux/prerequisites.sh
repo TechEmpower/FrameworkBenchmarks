@@ -42,8 +42,8 @@ sudo pip install colorama==0.3.1
 sudo pip install progressbar==2.2
 sudo pip install requests
 
-# Stop permanently overwriting people's files just for 
-# trying out our software!
+# Stop permanently overwriting people's files just
+# for trying out our software!
 RETCODE=$(fw_exists ~/.bash_profile.bak)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Backing up your original ~/.bash_profile, ~/.profile, ~/.bashrc"
