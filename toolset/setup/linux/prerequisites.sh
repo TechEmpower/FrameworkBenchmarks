@@ -9,17 +9,6 @@ RETCODE=$(fw_exists fwbm_prereqs_installed)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Prerequisites installed!"; 
   return 0; }
-  
-# Use a more recent version of Mongo shell
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
-
-# Add postgresql-server-dev-9.3 libs in "precise" version of Ubuntu
-if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
-  echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-  curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-  sudo apt-get update
-fi
 
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
@@ -34,8 +23,6 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libpcre3 libpcre3-dev libpcrecpp0 `# Regular expression support` \
   libssl-dev libcurl4-openssl-dev   `# SSL libraries` \
   libmysqlclient-dev \
-  mongodb-org-shell \
-  libsqlite3-dev sqlite3            `# Database libraries` \
   zlib1g-dev python-software-properties \
   libreadline6-dev \
   libbz2-dev \
