@@ -44,7 +44,7 @@
       "versus": "servlet"
     },
     "postgres": {
-      "setup_file": "start_postgres",
+      "setup_file": "start_postgresql",
       "db_url": "/db",
       "query_url": "/query?queries=",
       "fortune_url": "/fortunes",

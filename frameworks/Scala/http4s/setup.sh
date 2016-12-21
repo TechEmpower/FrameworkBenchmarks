@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java sbt
+fw_depends postgresql java sbt
 
 sbt 'oneJar' -batch
 

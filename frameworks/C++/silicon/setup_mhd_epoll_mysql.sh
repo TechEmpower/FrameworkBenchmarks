@@ -1,6 +1,6 @@
 #! /bin/bash
 
-fw_depends silicon microhttpd
+fw_depends mysql silicon microhttpd
 
 rm -rf build
 mkdir build

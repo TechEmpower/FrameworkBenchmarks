@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends perl
+fw_depends postgresql perl
 
 carton install --cpanfile ${TROOT}/cpanfile
 

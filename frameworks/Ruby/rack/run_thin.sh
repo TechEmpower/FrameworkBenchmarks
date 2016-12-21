@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm ruby-2.2
+fw_depends mysql rvm ruby-2.2
 
 sed -i 's|127.0.0.1|'${DBHOST}'|g' config/database.yml
 

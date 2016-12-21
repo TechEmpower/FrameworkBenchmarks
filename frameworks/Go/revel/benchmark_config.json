@@ -22,7 +22,7 @@
       "versus": "go"
     },
     "raw": {
-      "setup_file": "setup",
+      "setup_file": "setup_mysql",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "fortune_url": "/fortune",
@@ -44,7 +44,7 @@
       "versus": "go"
     },
     "jet": {
-      "setup_file": "setup",
+      "setup_file": "setup_mysql",
       "db_url": "/jet-db",
       "query_url": "/jet-db?queries=",
       "fortune_url": "/jet-fortune",
@@ -66,7 +66,7 @@
       "versus": "go"
     },
     "qbs": {
-      "setup_file": "setup",
+      "setup_file": "setup_mysql",
       "db_url": "/qbs-db",
       "query_url": "/qbs-db?queries=",
       "fortune_url": "/qbs-fortune",

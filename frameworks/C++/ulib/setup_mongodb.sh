@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends ulib
+fw_depends mongodb ulib
 
 # Travis is broken
 if [ "$TRAVIS" != "true" ]; then

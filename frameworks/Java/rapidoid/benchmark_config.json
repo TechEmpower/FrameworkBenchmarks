@@ -40,7 +40,7 @@
         "versus": ""
       },
       "postgres": {
-        "setup_file": "setup-postgres",
+        "setup_file": "setup-postgresql",
         "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",

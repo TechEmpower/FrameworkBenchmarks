@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java maven
+fw_depends mysql java maven
 
 sed -i 's|localhost|'"${DBHOST}"'|g' conf/application.conf
 

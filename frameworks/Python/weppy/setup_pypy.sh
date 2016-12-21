@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends pypy
+fw_depends postgresql pypy
 
 pip install --install-option="--prefix=${PYPY_ROOT}" -r $TROOT/requirements-pypy.txt
 

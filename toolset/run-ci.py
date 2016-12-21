@@ -15,9 +15,6 @@ from benchmark import framework_test
 from benchmark.utils import gather_tests
 from benchmark.utils import header
 
-# Cross-platform colored text
-from colorama import Fore, Back, Style
-
 # Needed for various imports
 sys.path.append('.')
 sys.path.append('toolset/setup/linux')
@@ -295,37 +292,25 @@ class CIRunnner:
       log.info("I found no changes to `%s` or `toolset/`, aborting verification", self.directory)
       return 0
 
-    # Do full setup now that we've verified that there's work to do
-    try:
-      p = subprocess.Popen("config/travis_setup.sh", shell=True)
-      p.wait()
-    except subprocess.CalledProcessError:
-      log.critical("Subprocess Error")
-      print trackback.format_exc()
-      return 1
-    except Exception as err:
-      log.critical("Exception from running and waiting on subprocess to set up Travis environment")
-      log.error(err.child_traceback)
-      return 1
-
     names = ' '.join(self.names)
     # Assume mode is verify
+    # os.environ["TRAVIS_TESTS"] = "%s" % names
     command = "toolset/run-tests.py --mode verify --test %s" % names
-    
+
     # Run the command
     log.info("Running mode %s with commmand %s", self.mode, command)
     try:
-      p = subprocess.Popen(command, shell=True)
-      p.wait()
-      return p.returncode  
+        p = subprocess.Popen(command, shell=True)
+        p.wait()
+        return p.returncode
     except subprocess.CalledProcessError:
-      log.critical("Subprocess Error")
-      print traceback.format_exc()
-      return 1
+        log.critical("Subprocess Error")
+        print traceback.format_exc()
+        return 1
     except Exception as err:
-      log.critical("Exception from running+wait on subprocess")
-      log.error(err.child_traceback)
-      return 1
+        log.critical("Exception from running+wait on subprocess")
+        log.error(err.child_traceback)
+        return 1
 
 if __name__ == "__main__":
   args = sys.argv[1:]
