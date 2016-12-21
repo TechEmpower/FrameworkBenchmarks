@@ -2,7 +2,7 @@
   "framework": "nodejs",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/mysql/db",
