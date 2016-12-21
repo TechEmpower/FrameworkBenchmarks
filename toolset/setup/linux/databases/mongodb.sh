@@ -11,13 +11,15 @@ RETCODE=$(fw_exists ${IROOT}/mongodb.installed)
 scp $FWROOT/config/mongodb.conf $DBHOST:~/
 scp $FWROOT/config/create.js $DBHOST:~/
 
-# install mysql on database machine
+# install mongo on database machine
 ssh $DBHOST 'bash' <<EOF
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+echo "Setting up MongoDB database"
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+echo 'deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse' | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
 sudo apt-get -y update
 sudo apt-get -y remove mongodb-clients
-sudo apt-get -y install -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' mongodb-org
+sudo apt-get -y install mongodb-org
+
 sudo service mongod stop
 sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
 sudo cp mongodb.conf /etc/mongodb.conf
@@ -26,12 +28,19 @@ sudo rm -rf /ssd/mongodb
 sudo rm -rf /ssd/log/mongodb
 sudo cp -R -p /var/lib/mongodb /ssd/
 sudo cp -R -p /var/log/mongodb /ssd/log/
-sudo chmod -R +o-x /ssd
 sudo service mongod start
+
 for i in {1..15}; do
-  nc -z $DBHOST 27017 && break || sleep 1;
+  nc -z localhost 27017 && break || sleep 1;
   echo "Waiting for MongoDB ($i/15}"
 done
+nc -z localhost 27017
+if [ $? -eq 0 ]; then
+  mongo < create.js
+  mongod --version
+else
+  >&2 echo "MongoDB did not start, skipping"
+fi
 EOF
 
 echo -e "ssh \$DBHOST 'bash' <<EOF" > $IROOT/mongodb.installed
