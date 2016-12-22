@@ -121,7 +121,7 @@ fw_depends() {
       . $installation_file
     else
       echo WARN: No installer found for $depend, attempting to install with 'apt-get'...
-      sudo apt-get install -o Dpkg::Options::="--force-confold --force-confdef" --force-yes ${depend}
+      sudo apt-get install -o Dpkg::Options::="--force-confold" Dpkg::Options::="--force-confdef" --force-yes ${depend}
       # Return whence you came.
       popd
       continue
