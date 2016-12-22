@@ -114,7 +114,7 @@ fw_depends() {
     # Note: A shebang is just a comment when you source a script, 
     #       so if you need to modify the default options use  
     #       `set -e` instead of `#!/bin/bash -e`
-    installation_file = $( find ${FWROOT}/toolset/setup/linux -name ${depend}.sh )
+    installation_file=$( find ${FWROOT}/toolset/setup/linux -name ${depend}.sh )
     if [[ -n $installation_file ]]; then
       echo Installing dependency: $depend from $installation_file
       set -x
