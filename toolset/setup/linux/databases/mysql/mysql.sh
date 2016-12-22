@@ -8,11 +8,11 @@ RETCODE=$(fw_exists ${IROOT}/mysql.installed)
   return 0; }
 
 # send over the required files
-scp $FWROOT/toolset/setup/linux/setup/databases/mysql/create.sql $DBHOST:~/
-scp $FWROOT/toolset/setup/linux/setup/databases/mysql/mysql $DBHOST:~/
-scp $FWROOT/toolset/setup/linux/setup/databases/mysql/mysql.conf $DBHOST:~/
-scp $FWROOT/toolset/setup/linux/setup/databases/mysql/my.cnf $DBHOST:~/
-scp $FWROOT/toolset/setup/linux/setup/databases/mysql/usr.sbin.mysqld $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/mysql/create.sql $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/mysql/mysql $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/mysql/mysql.conf $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/mysql/my.cnf $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/mysql/usr.sbin.mysqld $DBHOST:~/
 
 # install mysql on database machine
 ssh $DBHOST 'bash' <<EOF
