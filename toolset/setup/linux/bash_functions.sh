@@ -114,26 +114,11 @@ fw_depends() {
     # Note: A shebang is just a comment when you source a script, 
     #       so if you need to modify the default options use  
     #       `set -e` instead of `#!/bin/bash -e`
-    if [ -f $FWROOT/toolset/setup/linux/systools/${depend}.sh ]; then
-      echo Installing system tool: $depend in $relative_wd
+    installation_file = $( find ${FWROOT}/toolset/setup/linux -name ${depend}.sh )
+    if [[ -n $installation_file ]]; then
+      echo Installing dependency: $depend from $installation_file
       set -x
-      . $FWROOT/toolset/setup/linux/systools/${depend}.sh
-    elif [ -f $FWROOT/toolset/setup/linux/languages/${depend}.sh ]; then
-      echo Installing language: $depend in $relative_wd
-      set -x
-      . $FWROOT/toolset/setup/linux/languages/${depend}.sh
-    elif [ -f $FWROOT/toolset/setup/linux/webservers/${depend}.sh ]; then
-      echo Installing webserver: $depend in $relative_wd
-      set -x
-      . $FWROOT/toolset/setup/linux/webservers/${depend}.sh
-    elif [ -f $FWROOT/toolset/setup/linux/frameworks/${depend}.sh ]; then
-      echo Installing framework: $depend in $relative_wd
-      set -x
-      . $FWROOT/toolset/setup/linux/frameworks/${depend}.sh
-    elif [ -f $FWROOT/toolset/setup/linux/databases/${depend}.sh ]; then
-      echo Installing database: $depend in $relative_wd
-      set -x
-      . $FWROOT/toolset/setup/linux/databases/${depend}.sh
+      . $installation_file
     else
       echo WARN: No installer found for $depend, attempting to install with 'apt-get'...
       sudo apt-get install -o Dpkg::Options::="--force-confold --force-confdef" --force-yes ${depend}
