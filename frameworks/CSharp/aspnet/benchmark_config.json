@@ -272,7 +272,7 @@
       "versus": "aspnet-mono"
     },
     "mono-mysql-raw": {
-      "setup_file": "setup_nginx",
+      "setup_file": "setup_mysql",
       "json_url": "/json/default",
       "plaintext_url": "/plaintext",
       "db_url": "/ado/mysql",
@@ -296,7 +296,7 @@
       "versus": "aspnet"
     },
     "mono-postgresql-raw": {
-      "setup_file": "setup_nginx",
+      "setup_file": "setup_postgresql",
       "db_url": "/ado/postgresql",
       "query_url": "/ado/postgresql?queries=",
       "fortune_url": "/ado/postgresql/fortunes",
@@ -318,7 +318,7 @@
       "versus": "aspnet"
     },
     "mono-mongodb-raw": {
-      "setup_file": "setup_nginx",
+      "setup_file": "setup_mongodb",
       "db_url": "/mongodb",
       "query_url": "/mongodb?queries=",
       "fortune_url": "/mongodb/fortunes",
@@ -340,7 +340,7 @@
       "versus": "aspnet"
     },
     "mono-mysql-entityframework": {
-      "setup_file": "setup_nginx",
+      "setup_file": "setup_mysql",
       "db_url": "/entityframework/mysql",
       "query_url": "/entityframework/mysql?queries=",
       "fortune_url": "/entityframework/mysql/fortunes",
@@ -362,7 +362,7 @@
       "versus": "aspnet"
     },
     "mono-postgresql-entityframework": {
-      "setup_file": "setup_nginx",
+      "setup_file": "setup_postgresql",
       "db_url": "/entityframework/postgresql",
       "query_url": "/entityframework/postgresql?queries=",
       "fortune_url": "/entityframework/postgresql/fortunes",

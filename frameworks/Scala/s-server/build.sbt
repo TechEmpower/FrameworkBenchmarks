@@ -14,7 +14,7 @@ enablePlugins(JavaAppPackaging)
 
 resolvers += "Woshilaiceshide Releases" at "http://dl.bintray.com/woshilaiceshide/maven/"
 
-libraryDependencies += "woshilaiceshide" %% "s-server" % "2.1"
+libraryDependencies += "woshilaiceshide" %% "s-server" % "2.2"
 
 //libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % "2.7.4"
 

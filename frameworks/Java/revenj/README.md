@@ -24,8 +24,8 @@ The tests were run with:
  * [Oracle Java 1.8](https://www.oracle.com/java/)
  * [Postgres 9.3](http://www.postgresql.org/)
  * [Resin 4.0](http://www.caucho.com/)
- * [DSL JSON 1.0.0](http://github.com/ngs-doo/dsl-json)
- * [Revenj.Java 0.9.7](http://github.com/ngs-doo/revenj)
+ * [DSL JSON 1.2.0](http://github.com/ngs-doo/dsl-json)
+ * [Revenj.Java 1.0.2](http://github.com/ngs-doo/revenj)
 
 ## Test URLs
 

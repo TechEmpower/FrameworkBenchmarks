@@ -20,7 +20,7 @@
       "versus": "servlet"
     },
     "raw": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "db_url": "/scalatra/db",
       "query_url": "/scalatra/db?queries=",
       "port": 8080,

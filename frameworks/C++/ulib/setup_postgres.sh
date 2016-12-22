@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends ulib
+fw_depends postgresql ulib
 
 MAX_THREADS=$(( 2 * $MAX_THREADS ))
 

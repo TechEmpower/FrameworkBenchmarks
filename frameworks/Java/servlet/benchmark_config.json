@@ -22,10 +22,10 @@
       "versus": "servlet"
     },
     "raw": {
-      "setup_file": "setup",
+      "setup_file": "setup_mysql",
       "db_url": "/servlet/db",
       "query_url": "/servlet/db?queries=",
-      "fortune_url": "/servlet//fortunes",
+      "fortune_url": "/servlet/fortunes",
       "update_url": "/servlet/update?queries=",
       "port": 8080,
       "approach": "Realistic",
@@ -44,9 +44,10 @@
       "versus": "servlet"
     },
     "postgres-raw": {
-      "setup_file": "setup",
+      "setup_file": "setup_postgresql",
       "db_url": "/servlet/postgres",
       "query_url": "/servlet/postgres?queries=",
+      "fortune_url": "/servlet/postgres-fortunes",
       "update_url": "/servlet/postgres-update?queries=",
       "port": 8080,
       "approach": "Realistic",

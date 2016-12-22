@@ -1,5 +1,6 @@
 {
     "require": {
-        "slim/slim": "3.3.0"
+        "slim/slim": "3.3.0",
+        "slim/php-view": "2.1.0" 
     }
 }

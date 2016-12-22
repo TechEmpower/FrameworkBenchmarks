@@ -1,5 +1,7 @@
 #!/bin/bash
 
+fw_depends libjemalloc-dev libluajit-5.1-dev
+
 RETCODE=$(fw_exists ${IROOT}/lwan.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/lwan.installed

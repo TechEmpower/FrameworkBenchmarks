@@ -1,10 +1,12 @@
 #!/bin/bash
 
+fw_depends xdg-utils
+
 RETCODE=$(fw_exists ${IROOT}/dlang.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/dlang.installed
-  return 0; }
-  
+  return 0; }  
+
 DLANG=$IROOT/dlang
 DMDVER="2.071.1"
 LDCVER="1.0.0"

@@ -15,21 +15,9 @@ RBX_VERSION=2.5.2
 # This version of RBX needs clang 3.4
 sudo apt-get -yq --force-yes install clang-3.4
 
-# We assume single-user installation as
-# done in our rvm.sh script and
-# in Travis-CI
-if [ "$TRAVIS" = "true" ]
-then
-  # Rubinus cannot find libc during configure unless
-  # you specify bash as the shell.
-  SHELL="/bin/bash" rvmsudo rvm install rbx-$RBX_VERSION
-  # Bundler is SOMETIMES missing... not sure why.
-  SHELL="/bin/bash" rvmsudo rvm rbx-$RBX_VERSION do gem install bundler
-else
-  SHELL="/bin/bash" rvm install rbx-$RBX_VERSION
-  # Bundler is SOMETIMES missing... not sure why.
-  SHELL="/bin/bash" rvm rbx-$RBX_VERSION do gem install bundler
-fi
+SHELL="/bin/bash" rvm install rbx-$RBX_VERSION
+# Bundler is SOMETIMES missing... not sure why.
+SHELL="/bin/bash" rvm rbx-$RBX_VERSION do gem install bundler
 
 echo "export LC_ALL=en_US.UTF-8" > $IROOT/rbx-2.5.installed
 echo "export LANG=en_US.UTF-8" >> $IROOT/rbx-2.5.installed

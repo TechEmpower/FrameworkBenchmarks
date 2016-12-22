@@ -33,9 +33,9 @@ class Context {
 	public final FortuneRepository fortunes;
 	public final Connection connection;
 	private final ThreadLocalRandom random;
-	public final RepositoryBulkReader bulkReader;
+	//public final RepositoryBulkReader bulkReader;
 	private final World[] buffer = new World[512];
-	private final Callable[] callables = new Callable[512];
+	//private final Callable[] callables = new Callable[512];
 
 	public Context() {
 		try {
@@ -47,7 +47,7 @@ class Context {
 			this.random = ThreadLocalRandom.current();
 			this.worlds = ctx.resolve(WorldRepository.class);
 			this.fortunes = ctx.resolve(FortuneRepository.class);
-			this.bulkReader = ctx.resolve(RepositoryBulkReader.class);
+			//this.bulkReader = ctx.resolve(RepositoryBulkReader.class);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -58,7 +58,7 @@ class Context {
 	}
 
 	/* bulk loading of worlds. use such pattern for production code */
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	public World[] loadWorldsFast(final int count) throws IOException {
 		bulkReader.reset();
 		for (int i = 0; i < count; i++) {
@@ -73,7 +73,7 @@ class Context {
 			throw new IOException(e);
 		}
 		return buffer;
-	}
+	}*/
 
 	/* multiple roundtrips loading of worlds. don't write such production code */
 	@SuppressWarnings("unchecked")

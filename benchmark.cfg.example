@@ -3,7 +3,6 @@
 client_host=127.0.0.1
 client_identity_file=None
 client_user=techempower
-runner_user=testrunner
 database_host=127.0.0.1
 database_identity_file=None
 database_os=linux
@@ -21,7 +20,6 @@ query_levels=[1, 5,10,15,20]
 threads=8
 mode=benchmark
 os=linux
-password_prompt=False
 server_host=127.0.0.1
 sleep=60
 test=None

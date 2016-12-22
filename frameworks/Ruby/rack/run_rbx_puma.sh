@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm rbx-2.5
+fw_depends mysql rvm rbx-2.5
 
 sed -i 's|127.0.0.1|'${DBHOST}'|g' config/database.yml
 

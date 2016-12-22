@@ -5,8 +5,8 @@
 
 using namespace Cutelyst;
 
-typedef QPair<int, QString> Fortune;
-typedef QList<Fortune> FortuneList;
+typedef std::pair<int, QString> Fortune;
+typedef std::vector<Fortune> FortuneList;
 
 class QSqlQuery;
 class FortuneTest : public Controller
@@ -23,8 +23,6 @@ public:
     void fortunes_raw_mysql(Context *c);
 
 private:
-    inline QSqlQuery postgresQuery();
-    inline QSqlQuery mysqlQuery();
     inline FortuneList processQuery(Context *c, QSqlQuery &query);
     inline void renderRaw(Context *c, const FortuneList &fortunes);
 };

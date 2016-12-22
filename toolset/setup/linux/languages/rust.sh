@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RUST_VERSION="1.9.0"
+RUST_VERSION="1.13.0"
 
 RETCODE=$(fw_exists $IROOT/rust.installed)
 [ ! "$RETCODE" == 0 ] || { \

@@ -11,7 +11,7 @@
             "plaintext_url": "/plaintext",
             "port": 8080,
             "approach": "Realistic",
-            "classification": "Micro",
+            "classification": "Fullstack",
             "database": "Postgres",
             "framework": "Phoenix",
             "language": "Elixir",
@@ -23,7 +23,7 @@
             "database_os": "Linux",
             "display_name": "Phoenix",
             "notes": "",
-            "versus": ""
+            "versus": "Cowboy"
         }
     }]
 }

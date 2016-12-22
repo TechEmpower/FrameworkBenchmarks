@@ -1,44 +1,86 @@
-<web-app>
-  <servlet>
-    <servlet-name>json</servlet-name>
-    <servlet-class>hello.JsonServlet</servlet-class>
-    <load-on-startup/>
-  </servlet>
-  <servlet-mapping url-regexp='^/json$' servlet-name='json'/>
-  <servlet>
-    <servlet-name>plaintext</servlet-name>
-    <servlet-class>hello.PlaintextServlet</servlet-class>
-    <load-on-startup/>
-  </servlet>
-  <servlet-mapping url-regexp='^/plaintext$' servlet-name='plaintext'/>
-  <servlet>
-    <servlet-name>db</servlet-name>
-    <servlet-class>hello.DbPoolServlet</servlet-class>
-    <load-on-startup/>
-  </servlet>
-  <servlet-mapping url-regexp='^/db$' servlet-name='db'/>
-  <servlet>
-    <servlet-name>fortunes</servlet-name>
-    <servlet-class>hello.FortunesServlet</servlet-class>
-    <load-on-startup/>
-  </servlet>
-  <servlet-mapping url-regexp='^/fortunes$' servlet-name='fortunes'/>
-  <servlet>
-    <servlet-name>update</servlet-name>
-    <servlet-class>hello.UpdateServlet</servlet-class>
-    <load-on-startup/>
-  </servlet>
-  <servlet-mapping url-regexp='^/update$' servlet-name='update'/>
-  <servlet>
-    <servlet-name>postgres</servlet-name>
-    <servlet-class>hello.PostgresServlet</servlet-class>
-    <load-on-startup/>
-  </servlet>
-  <servlet-mapping url-regexp='^/postgres$' servlet-name='postgres'/>
-  <servlet>
-    <servlet-name>postgres-update</servlet-name>
-    <servlet-class>hello.PostgresUpdateServlet</servlet-class>
-    <load-on-startup/>
-  </servlet>
-  <servlet-mapping url-regexp='^/postgres-update$' servlet-name='postgres-update'/>
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	version="2.4">
+	<servlet>
+		<servlet-name>json</servlet-name>
+		<servlet-class>hello.JsonServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>json</servlet-name>
+		<url-pattern>/json</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>plaintext</servlet-name>
+		<servlet-class>hello.PlaintextServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>plaintext</servlet-name>
+		<url-pattern>/plaintext</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>db</servlet-name>
+		<servlet-class>hello.DbPoolServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>db</servlet-name>
+		<url-pattern>/db</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>fortunes</servlet-name>
+		<servlet-class>hello.FortunesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>fortunes</servlet-name>
+		<url-pattern>/fortunes</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>update</servlet-name>
+		<servlet-class>hello.UpdateServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>update</servlet-name>
+		<url-pattern>/update</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>postgres</servlet-name>
+		<servlet-class>hello.PostgresServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>postgres</servlet-name>
+		<url-pattern>/postgres</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>postgres-update</servlet-name>
+		<servlet-class>hello.PostgresUpdateServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>postgres-update</servlet-name>
+		<url-pattern>/postgres-update</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>postgres-fortunes</servlet-name>
+		<servlet-class>hello.PostgreFortunesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>postgres-fortunes</servlet-name>
+		<url-pattern>/postgres-fortunes</url-pattern>
+	</servlet-mapping>
+  <resource-env-ref>
+	<resource-env-ref-name>jdbc/hello_world</resource-env-ref-name>
+	<resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
+  </resource-env-ref>
+  <resource-env-ref>
+	<resource-env-ref-name>jdbc/postgres_hello_world</resource-env-ref-name>
+	<resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
+  </resource-env-ref>
 </web-app>

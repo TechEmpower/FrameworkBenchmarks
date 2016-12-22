@@ -84,7 +84,6 @@ fw_traperror () {
 # Jester, etc. Users should be know this 
 # fairly well (e.g. you can't use Yaf without PHP)
 fw_depends() {
-
   # Turn on errtrace (-E), so that our ERR
   # trap is passed on to any subshells
   set -E
@@ -131,8 +130,13 @@ fw_depends() {
       echo Installing framework: $depend in $relative_wd
       set -x
       . $FWROOT/toolset/setup/linux/frameworks/${depend}.sh
+    elif [ -f $FWROOT/toolset/setup/linux/databases/${depend}.sh ]; then
+      echo Installing database: $depend in $relative_wd
+      set -x
+      . $FWROOT/toolset/setup/linux/databases/${depend}.sh
     else
-      echo WARN: No installer found for $depend
+      echo WARN: No installer found for $depend, attempting to install with 'apt-get'...
+      sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes ${depend}
       # Return whence you came.
       popd
       continue

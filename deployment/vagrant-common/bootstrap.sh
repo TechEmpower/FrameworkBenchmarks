@@ -59,7 +59,6 @@ if [ ! -e "~/.firstboot" ]; then
   echo "export TFB_DATABASE_HOST=$DATABA_IP" >> ~/.bash_profile
   echo "export TFB_CLIENT_USER=$USER" >> ~/.bash_profile
   echo "export TFB_DATABASE_USER=$USER" >> ~/.bash_profile
-  echo "export TFB_RUNNER_USER=testrunner" >> ~/.bash_profile
   echo "export FWROOT=$HOME/FrameworkBenchmarks" >> ~/.bash_profile 
   source ~/.bash_profile
 
@@ -74,12 +73,6 @@ if [ ! -e "~/.firstboot" ]; then
   echo $DATABA_IP TFB-database | sudo tee --append /etc/hosts
   echo $CLIENT_IP TFB-client   | sudo tee --append /etc/hosts
   echo $SERVER_IP TFB-server   | sudo tee --append /etc/hosts
-
-  # Add user to run tests
-  sudo adduser --disabled-password --gecos "" testrunner
-  # WARN: testrunner will NOT have sudo access by round 11
-  #       please begin migrating scripts to not rely on sudo.
-  sudo bash -c "echo 'testrunner ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-tfb-testrunner"
 
   # Update hostname to reflect our current role
   if [ "$ROLE" != "all" ]; then
@@ -111,8 +104,7 @@ if [ ! -e "~/.firstboot" ]; then
 
     # vboxfs does not support chown or chmod, which we need. 
     # We therefore bind-mount a normal linux directory so we can
-    # use these operations. This enables us to 
-    # use `chown -R testrunner:testrunner $FWROOT/installs` later
+    # use these operations.
     #echo "Mounting over your installs folder"
     #mkdir -p /tmp/TFB_installs
     #mkdir -p /FrameworkBenchmarks/installs
@@ -125,25 +117,11 @@ if [ ! -e "~/.firstboot" ]; then
     source ~/FrameworkBenchmarks/toolset/setup/linux/prerequisites.sh
   #fi
 
-  # Everyone gets SSH access to localhost
-  echo "Setting up SSH access to localhost"
-  ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa
-  cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-  sudo -u testrunner mkdir -p /home/testrunner/.ssh
-  sudo -u testrunner ssh-keygen -t rsa -N '' -f /home/testrunner/.ssh/id_rsa
-  sudo -u testrunner bash -c "cat /home/testrunner/.ssh/id_rsa.pub >> /home/testrunner/.ssh/authorized_keys"
-  sudo -u testrunner bash -c "cat /home/vagrant/.ssh/authorized_keys >> /home/testrunner/.ssh/authorized_keys"
-  chmod 600 ~/.ssh/authorized_keys
-  sudo -u testrunner chmod 600 /home/testrunner/.ssh/authorized_keys
-  
-  export RUNNER=testrunner
-  export ME=$(id -u -n)
-  sudo chown $RUNNER:$RUNNER /home/$RUNNER
-  sudo sed -i 's|:'"$ME"'|:'"$ME"','"$RUNNER"'|g' /etc/group
-  sudo sed -i 's|'"$ME"':x:\(.*\):|'"$ME"':x:\1:'"$RUNNER"'|g' /etc/group
-  sudo sed -i 's|'"$RUNNER"':x:\(.*\):|'"$RUNNER"':x:\1:'"$ME"'|g' /etc/group
-  echo "$RUNNER ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
-  sudo sed -i 's|/home/'"$RUNNER"':.*|/home/'"$RUNNER"':/bin/bash|g' /etc/passwd
+ # Everyone gets SSH access to localhost
+ echo "Setting up SSH access to localhost"
+ ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa
+ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+ chmod 600 ~/.ssh/authorized_keys
 
   # Enable remote SSH access if we are running production environment
   # Note : this is always copied from the local working copy using a
@@ -165,11 +143,6 @@ if [ ! -e "~/.firstboot" ]; then
     # Ensure keys have proper permissions
     chmod 600 ~/.ssh/client ~/.ssh/database
   fi
-
-  # Setup 
-  echo "Installing $ROLE software"
-  cd $FWROOT
-  toolset/run-tests.py --verbose --install $ROLE --install-only --test ''
 
   # Setup a nice welcome message for our guest
   echo "Setting up welcome message"

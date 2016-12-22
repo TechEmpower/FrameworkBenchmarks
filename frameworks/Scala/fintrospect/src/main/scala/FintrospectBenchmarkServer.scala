@@ -1,5 +1,4 @@
-import java.time.ZonedDateTime._
-import java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME
+import java.util.TimeZone.getTimeZone
 
 import com.twitter.finagle.http.path.Root
 import com.twitter.finagle.http.{Request, Response}
@@ -7,22 +6,33 @@ import com.twitter.finagle.stats.NullStatsReceiver
 import com.twitter.finagle.tracing.NullTracer
 import com.twitter.finagle.{Filter, Http}
 import com.twitter.util.{Await, NullMonitor}
-import io.fintrospect.ModuleSpec
+import io.fintrospect.RouteModule
+import io.fintrospect.configuration.Host
 import io.fintrospect.renderers.simplejson.SimpleJson
+import org.apache.commons.lang.time.FastDateFormat.getInstance
+
+import scala.util.Properties
 
 object FintrospectBenchmarkServer extends App {
+
+  val dateFormat = getInstance("EEE, d MMM yyyy HH:mm:ss 'GMT'", getTimeZone("GMT"))
 
   val addServerAndDate = Filter.mk[Request, Response, Request, Response] { (req, svc) =>
     svc(req).map(resp => {
       resp.headerMap("Server") = "Example"
-      resp.headerMap("Date") = RFC_1123_DATE_TIME.format(now())
+      resp.headerMap("Date") = dateFormat.format(System.currentTimeMillis())
       resp
     })
   }
 
-  val module = ModuleSpec(Root, SimpleJson(), addServerAndDate)
-    .withRoute(PlainTextHelloWorld.route)
-    .withRoute(JsonHelloWorld.route)
+  val dbHost = Properties.envOrNone("DBHOST").map(Host(_)).getOrElse(Host.localhost)
+  val database = Database(dbHost)
+
+  val module = RouteModule(Root, SimpleJson())
+    .withRoute(JsonRoute())
+    .withRoute(PlainTextRoute())
+    .withRoute(FortunesRoute(database))
+    .withRoutes(DatabaseRoutes(database))
 
   Await.ready(
     Http.server
@@ -30,6 +40,6 @@ object FintrospectBenchmarkServer extends App {
       .withStatsReceiver(NullStatsReceiver)
       .withTracer(NullTracer)
       .withMonitor(NullMonitor)
-      .serve(":9000", module.toService)
+      .serve(":9000", addServerAndDate.andThen(module.toService))
   )
 }

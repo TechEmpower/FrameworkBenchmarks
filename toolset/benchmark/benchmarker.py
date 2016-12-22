@@ -1,4 +1,3 @@
-from setup.linux.installer import Installer
 from setup.linux import setup_util
 
 from benchmark import framework_test
@@ -81,7 +80,6 @@ class Benchmarker:
     if run_finish:
       self.__finish()
 
-
   ############################################################
   # End run_list_test_metadata
   ############################################################
@@ -146,6 +144,7 @@ class Benchmarker:
       print header("Parsing Results ...", top='=', bottom='=')
       self.__parse_results(all_tests)
 
+
     self.__finish()
     return result
 
@@ -201,7 +200,7 @@ class Benchmarker:
   # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_output_file(self, test_name, test_type):
-    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "raw")
+    return os.path.join(self.result_directory, self.timestamp, self.logs_directory, test_name, test_type, "raw")
   ############################################################
   # End get_output_file
   ############################################################
@@ -229,7 +228,7 @@ class Benchmarker:
   # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_stats_file(self, test_name, test_type):
-    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "stats")
+    return os.path.join(self.result_directory, self.timestamp, self.logs_directory, test_name, test_type, "stats")
   ############################################################
   # End get_stats_file
   ############################################################
@@ -265,28 +264,6 @@ class Benchmarker:
   ############################################################
   # End full_results_directory
   ############################################################
-
-  ############################################################
-  # Latest intermediate results dirctory
-  ############################################################
-
-  def latest_results_directory(self):
-    path = os.path.join(self.result_directory,"latest")
-    try:
-      os.makedirs(path)
-    except OSError:
-      pass
-
-    # Give testrunner permission to write into results directory
-    # so LOGDIR param always works in setup.sh
-    # While 775 is more preferrable, we would have to ensure that
-    # testrunner is in the group of the current user
-    if not self.os.lower() == 'windows':
-      mode777 = (stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
-                stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
-                stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
-      os.chmod(path, mode777)
-    return path
 
   ############################################################
   # report_verify_results
@@ -379,6 +356,15 @@ class Benchmarker:
   ############################################################
   # End __setup_server
   ############################################################
+
+  ############################################################
+  # Clean up any processes that run with root privileges
+  ############################################################
+  def __cleanup_leftover_processes_before_test(self):
+    p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
+    p.communicate("""
+      sudo /etc/init.d/apache2 stop
+    """)
 
   ############################################################
   # Makes any necessary changes to the database machine that
@@ -519,8 +505,7 @@ class Benchmarker:
       else:
         sys.exit(code)
 
-    logDir = os.path.join(self.latest_results_directory, 'logs', test.name.lower())
-
+    logDir = os.path.join(self.full_results_directory(), self.logs_directory, test.name.lower())
     try:
       os.makedirs(logDir)
     except Exception:
@@ -560,7 +545,6 @@ class Benchmarker:
           p.communicate("""
             sudo restart mysql
             sudo restart mongod
-            sudo service redis-server restart
             sudo service postgresql restart
             sudo service cassandra restart
             /opt/elasticsearch/elasticsearch restart
@@ -570,29 +554,25 @@ class Benchmarker:
           st = verify_database_connections([
             ("mysql", self.database_host, 3306),
             ("mongodb", self.database_host, 27017),
-            ("redis", self.database_host, 6379),
             ("postgresql", self.database_host, 5432),
             ("cassandra", self.database_host, 9160),
             ("elasticsearch", self.database_host, 9200)
           ])
           print "database connection test results:\n" + "\n".join(st[1])
 
-        if self.__is_port_bound(test.port):
-          # This can happen sometimes - let's try again
-          self.__stop_test(out)
-          out.flush()
-          time.sleep(15)
-          if self.__is_port_bound(test.port):
-            # We gave it our all
-            self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
-            out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
-            out.flush()
-            print "Error: Unable to recover port, cannot start test"
-            return exit_with_code(1)
+        self.__cleanup_leftover_processes_before_test();
 
-        result = test.start(out)
+        if self.__is_port_bound(test.port):
+          # We gave it our all
+          self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
+          out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
+          out.flush()
+          print "Error: Unable to recover port, cannot start test"
+          return exit_with_code(1)
+
+        result, process = test.start(out)
         if result != 0:
-          self.__stop_test(out)
+          self.__stop_test(out, process)
           time.sleep(5)
           out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           out.flush()
@@ -606,12 +586,7 @@ class Benchmarker:
         # Verify URLs
         ##########################
         logging.info("Verifying framework URLs")
-        verificationPath = os.path.join(logDir,"verification")
-        try:
-          os.makedirs(verificationPath)
-        except OSError:
-          pass
-        passed_verify = test.verify_urls(verificationPath)
+        passed_verify = test.verify_urls(logDir)
 
         ##########################
         # Nuke /tmp
@@ -628,27 +603,22 @@ class Benchmarker:
           logging.info("Benchmarking")
           out.write(header("Benchmarking %s" % test.name))
           out.flush()
-          benchmarkPath = os.path.join(logDir,"benchmark")
-          try:
-            os.makedirs(benchmarkPath)
-          except OSError:
-            pass
-          test.benchmark(benchmarkPath)
+          test.benchmark(logDir)
 
         ##########################
         # Stop this test
         ##########################
         out.write(header("Stopping %s" % test.name))
         out.flush()
-        self.__stop_test(out)
+        self.__stop_test(out, process)
         out.flush()
-        time.sleep(15)
+        time.sleep(5)
 
         if self.__is_port_bound(test.port):
           # This can happen sometimes - let's try again
-          self.__stop_test(out)
+          self.__stop_test(out, process)
           out.flush()
-          time.sleep(15)
+          time.sleep(5)
           if self.__is_port_bound(test.port):
             # We gave it our all
             self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
@@ -658,7 +628,6 @@ class Benchmarker:
 
         out.write(header("Stopped %s" % test.name))
         out.flush()
-        time.sleep(5)
 
         ##########################################################
         # Remove contents of  /tmp folder
@@ -691,7 +660,7 @@ class Benchmarker:
         traceback.print_exc(file=out)
         out.flush()
         try:
-          self.__stop_test(out)
+          self.__stop_test(out, process)
         except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
           out.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
@@ -702,7 +671,7 @@ class Benchmarker:
       # TODO - subprocess should not catch this exception!
       # Parent process should catch it and cleanup/exit
       except (KeyboardInterrupt) as e:
-        self.__stop_test(out)
+        self.__stop_test(out, process)
         out.write(header("Cleaning up..."))
         out.flush()
         self.__finish()
@@ -719,16 +688,46 @@ class Benchmarker:
   # __stop_test(benchmarker)
   # Stops all running tests
   ############################################################
-  def __stop_test(self, out):
-    try:
-      subprocess.check_call('sudo killall -s 9 -u %s' % self.runner_user, shell=True, stderr=out, stdout=out)
-      retcode = 0
-    except Exception:
-      retcode = 1
-
-    return retcode
+  def __stop_test(self, out, process):
+    if process is not None and process.poll() is None:
+      # Stop 
+      pids = self.__find_child_processes(process.pid)
+      if pids is not None:
+        stop = ['kill', '-STOP'] + pids
+        subprocess.call(stop, stderr=out, stdout=out)
+      pids = self.__find_child_processes(process.pid)
+      if pids is not None:
+        term = ['kill', '-TERM'] + pids
+        subprocess.call(term, stderr=out, stdout=out)
+      # Okay, if there are any more PIDs, kill them harder
+      pids = self.__find_child_processes(process.pid)
+      if pids is not None:
+        kill = ['kill', '-KILL'] + pids
+        subprocess.call(kill, stderr=out, stdout=out)
+      process.terminate()
   ############################################################
   # End __stop_test
+  ############################################################
+
+  ############################################################
+  # __find_child_processes
+  # Recursively finds all child processes for the given PID.
+  ############################################################
+  def __find_child_processes(self, pid):
+    toRet = []
+    try:
+      pids = subprocess.check_output(['pgrep','-P',str(pid)]).split()
+      toRet.extend(pids)
+      for aPid in pids:
+        toRet.extend(self.__find_child_processes(aPid))
+    except:
+      # pgrep will return a non-zero status code if there are no
+      # processes who have a PPID of PID.
+      pass
+
+    return toRet
+  ############################################################
+  # End __find_child_processes
   ############################################################
 
   def is_port_bound(self, port):
@@ -789,9 +788,6 @@ class Benchmarker:
     # Aggregate JSON file
     with open(os.path.join(self.full_results_directory(), "results.json"), "w") as f:
       f.write(json.dumps(self.results, indent=2))
-
-    with open(os.path.join(self.latest_results_directory, "results.json"), "w") as latest:
-      latest.write(json.dumps(self.results, indent=2))
 
   ############################################################
   # End __parse_results
@@ -893,7 +889,7 @@ class Benchmarker:
   def __write_intermediate_results(self,test_name,status_message):
     try:
       self.results["completed"][test_name] = status_message
-      with open(os.path.join(self.latest_results_directory, 'results.json'), 'w') as f:
+      with open(os.path.join(self.full_results_directory(), 'results.json'), 'w') as f:
         f.write(json.dumps(self.results, indent=2))
     except (IOError):
       logging.error("Error writing results.json")
@@ -904,7 +900,7 @@ class Benchmarker:
 
   def __load_results(self):
     try:
-      with open(os.path.join(self.latest_results_directory, 'results.json')) as f:
+      with open(os.path.join(self.full_results_directory(), 'results.json')) as f:
         self.results = json.load(f)
     except (ValueError, IOError):
       pass
@@ -992,9 +988,9 @@ class Benchmarker:
 
     # setup results and latest_results directories
     self.result_directory = os.path.join("results")
+    self.logs_directory = os.path.join("logs")
     if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
         shutil.rmtree(os.path.join(self.fwroot, "results"))
-    self.latest_results_directory = self.latest_results_directory()
 
     # remove installs directories if --clean-all provided
     self.install_root = "%s/%s" % (self.fwroot, "installs")
@@ -1009,7 +1005,7 @@ class Benchmarker:
 
     self.results = None
     try:
-      with open(os.path.join(self.latest_results_directory, 'results.json'), 'r') as f:
+      with open(os.path.join(self.full_results_directory(), 'results.json'), 'r') as f:
         #Load json file into results object
         self.results = json.load(f)
     except IOError:
@@ -1058,10 +1054,6 @@ class Benchmarker:
       self.database_ssh_string = self.database_ssh_string + " -i " + self.database_identity_file
     if self.client_identity_file != None:
       self.client_ssh_string = self.client_ssh_string + " -i " + self.client_identity_file
-
-    if self.install is not None:
-      install = Installer(self, self.install_strategy)
-      install.install_software()
 
   ############################################################
   # End __init__

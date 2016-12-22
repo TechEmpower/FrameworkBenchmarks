@@ -1,65 +1,55 @@
 package co.there4.hexagon
 
-import co.there4.hexagon.repository.*
+import co.there4.hexagon.rest.crud
+import co.there4.hexagon.serialization.convertToMap
 import co.there4.hexagon.serialization.serialize
-import co.there4.hexagon.settings.SettingsManager.setting
 import co.there4.hexagon.web.*
+import co.there4.hexagon.web.servlet.ServletServer
+import kotlinx.html.*
 
-import java.lang.System.getenv
 import java.net.InetAddress.getByName as address
 import java.time.LocalDateTime.now
 import java.util.concurrent.ThreadLocalRandom
+import javax.servlet.annotation.WebListener
 
-import kotlin.reflect.KProperty1
-
+// DATA CLASSES
 internal data class Message(val message: String = "Hello, World!")
 internal data class Fortune(val _id: Int, val message: String)
-internal data class World(val _id: Int, val id: Int, val randomNumber: Int)
+internal data class World(val _id: Int, val id: Int = _id, val randomNumber: Int = rnd())
 
-private val DB_ROWS = 10000
+// CONSTANTS
 private val CONTENT_TYPE_JSON = "application/json"
 private val QUERIES_PARAM = "queries"
 
-private val DB_HOST = getenv("DBHOST") ?: "localhost"
-private val DB = setting<String>("database") ?: "hello_world"
-private val WORLD: String = setting<String>("worldCollection") ?: "world"
-private val FORTUNE: String = setting<String>("fortuneCollection") ?: "fortune"
+// UTILITIES
+internal fun rnd() = ThreadLocalRandom.current().nextInt(DB_ROWS) + 1
 
-private val database = mongoDatabase("mongodb://$DB_HOST/$DB")
-private val worldRepository = repository(WORLD, World::_id)
-private val fortuneRepository = repository(FORTUNE, Fortune::_id)
-
-private inline fun <reified T : Any> repository(name: String, key: KProperty1<T, Int>) =
-    MongoIdRepository(T::class, mongoCollection(name, database), key)
-
-private fun rnd() = ThreadLocalRandom.current().nextInt(DB_ROWS) + 1
+private fun World.strip(): Map<*, *> = this.convertToMap().filterKeys { it != "_id" }
+private fun World.toJson(): String = this.strip().serialize()
+private fun List<World>.toJson(): String = this.map(World::strip).serialize()
 
 private fun Exchange.hasQueryCount() = request[QUERIES_PARAM] == null
 
 private fun Exchange.getDb() {
-    val worlds = (1..getQueries()).map { worldRepository.find(rnd()) }.filterNotNull()
+    val worlds = (1..getQueries()).map { findWorld() }.filterNotNull()
 
-    response.contentType = CONTENT_TYPE_JSON
-    ok(if (hasQueryCount()) worlds[0].serialize() else worlds.serialize())
+    ok(if (hasQueryCount()) worlds[0].toJson() else worlds.toJson(), CONTENT_TYPE_JSON)
 }
 
-private fun Exchange.getFortunes() {
-    val fortune = Fortune(0, "Additional fortune added at request time.")
-    val fortunes = fortuneRepository.findObjects().toList() + fortune
+private fun listFortunes() =
+    (findFortunes() + Fortune(0, "Additional fortune added at request time."))
+        .sortedBy { it.message }
 
-    template("fortunes.html", mapOf("fortunes" to fortunes.sortedBy { it.message }))
-}
-
+// HANDLERS
 private fun Exchange.getUpdates() {
     val worlds = (1..getQueries()).map {
         val id = rnd()
-        val newWorld = World(id, id, rnd())
-        worldRepository.replaceObject(newWorld)
+        val newWorld = World(id, id)
+        replaceWorld(newWorld)
         newWorld
     }
 
-    response.contentType = CONTENT_TYPE_JSON
-    ok(if (hasQueryCount()) worlds[0].serialize() else worlds.serialize())
+    ok(if (hasQueryCount()) worlds[0].toJson() else worlds.toJson(), CONTENT_TYPE_JSON)
 }
 
 private fun Exchange.getQueries() =
@@ -75,29 +65,28 @@ private fun Exchange.getQueries() =
         1
     }
 
-private fun Exchange.getPlaintext() {
-    response.contentType = "text/plain"
-    ok("Hello, World!")
-}
-
-private fun Exchange.getJson() {
-    response.contentType = CONTENT_TYPE_JSON
-    ok(Message().serialize())
-}
-
-fun main(args: Array<String>) {
-    before {
+fun benchmarkRoutes(srv: Router = server) {
+    srv.before {
         response.addHeader("Server", "Servlet/3.1")
         response.addHeader("Transfer-Encoding", "chunked")
         response.addHeader("Date", httpDate(now()))
     }
 
-    get("/json") { getJson() }
-    get("/db") { getDb() }
-    get("/query") { getDb() }
-    get("/fortune") { getFortunes() }
-    get("/update") { getUpdates() }
-    get("/plaintext") { getPlaintext() }
+    srv.get("/plaintext") { ok("Hello, World!", "text/plain") }
+    srv.get("/json") { ok(Message().serialize(), CONTENT_TYPE_JSON) }
+    srv.get("/fortunes") { template("fortunes.html", "fortunes" to listFortunes()) }
+    srv.get("/db") { getDb() }
+    srv.get("/query") { getDb() }
+    srv.get("/update") { getUpdates() }
+}
 
+@WebListener class Web : ServletServer () {
+    override fun init() {
+        benchmarkRoutes(this)
+    }
+}
+
+fun main(args: Array<String>) {
+    benchmarkRoutes()
     run()
 }

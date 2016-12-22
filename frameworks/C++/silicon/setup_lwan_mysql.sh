@@ -1,6 +1,6 @@
 #! /bin/bash
-
-fw_depends silicon lwan
+ 
+fw_depends mysql silicon lwan
 
 rm -rf build
 mkdir build
