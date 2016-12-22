@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 # If you are running a large number of installs back to back 
 # (e.g. for FwBm development), then setting this variable 
 # will cause apt-get and wget to use your proxy server. If 
@@ -121,7 +123,7 @@ fw_depends() {
       . $installation_file
     else
       echo WARN: No installer found for $depend, attempting to install with 'apt-get'...
-      sudo apt-get install -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" --force-yes ${depend}
+      sudo apt-get install -qqy -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" ${depend}
       # Return whence you came.
       popd
       continue
