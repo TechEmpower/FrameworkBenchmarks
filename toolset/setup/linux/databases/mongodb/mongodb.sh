@@ -8,8 +8,8 @@ RETCODE=$(fw_exists ${IROOT}/mongodb.installed)
   return 0; }
 
 # send over the required files
-scp $FWROOT/config/mongodb.conf $DBHOST:~/
-scp $FWROOT/config/create.js $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/mongodb/mongodb.conf $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/mongodb/create.js $DBHOST:~/
 
 # install mongo on database machine
 ssh $DBHOST 'bash' <<EOF

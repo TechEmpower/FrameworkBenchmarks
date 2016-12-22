@@ -15,11 +15,11 @@ ssh $DBHOST 'bash' <<EOF
 EOF
 
 # send over the required files
-scp $FWROOT/config/postgresql.conf $DBHOST:~/
-scp $FWROOT/config/pg_hba.conf $DBHOST:~/
-scp $FWROOT/config/60-postgresql-shm.conf $DBHOST:~/
-scp $FWROOT/config/create-postgres-database.sql $DBHOST:~/
-scp $FWROOT/config/create-postgres.sql $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/postgresql/postgresql.conf $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/postgresql/pg_hba.conf $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/postgresql/60-postgresql-shm.conf $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/postgresql/create-postgres-database.sql $DBHOST:~/
+scp $FWROOT/toolset/setup/linux/databases/postgresql/create-postgres.sql $DBHOST:~/
 
 ssh $DBHOST 'bash' <<EOF
 # install postgresql on database machine

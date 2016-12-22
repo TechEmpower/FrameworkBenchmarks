@@ -27,15 +27,15 @@ cd ..
 
 # Disable yaf and phalcon, for most PHP frameworks
 # (there is a similar line to enable the frameworks in their respective setup files)
-sed -i 's|^extension=yaf.so|;extension=yaf.so|g' $FWROOT/config/php.ini
-sed -i 's|^extension=phalcon.so|;extension=phalcon.so|g' $FWROOT/config/php.ini
+sed -i 's|^extension=yaf.so|;extension=yaf.so|g' $FWROOT/toolset/setup/languages/php/php.ini
+sed -i 's|^extension=phalcon.so|;extension=phalcon.so|g' $FWROOT/toolset/setup/languages/php/php.ini
 
 # Enable the correct Mongo DB plugin for PHP 7
-sed -i 's|^extension=mongo.so|;extension=mongo.so|g' $FWROOT/config/php.ini
-sed -i 's|;extension=mongodb.so|extension=mongodb.so|g' $FWROOT/config/php.ini
+sed -i 's|^extension=mongo.so|;extension=mongo.so|g' $FWROOT/toolset/setup/languages/php/php.ini
+sed -i 's|;extension=mongodb.so|extension=mongodb.so|g' $FWROOT/toolset/setup/languages/php/php.ini
 
-cp $FWROOT/config/php.ini $PHP_HOME/lib/php.ini
-cp $FWROOT/config/php-fpm.conf $PHP_HOME/lib/php-fpm.conf
+cp $FWROOT/toolset/setup/languages/php/php.ini $PHP_HOME/lib/php.ini
+cp $FWROOT/toolset/setup/languages/php/php-fpm.conf $PHP_HOME/lib/php-fpm.conf
 
 # =======================
 #

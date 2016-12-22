@@ -66,7 +66,7 @@ def main(argv=None):
     fwroot = setup_util.get_fwroot()
     if not fwroot: 
         fwroot = os.getcwd()
-    setup_util.replace_environ(config='config/benchmark_profile', root=fwroot)
+    setup_util.replace_environ(config='toolset/setup/linux/config/benchmark_profile', root=fwroot)
     print "FWROOT is %s"%setup_util.get_fwroot()
 
     conf_parser = argparse.ArgumentParser(

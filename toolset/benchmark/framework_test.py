@@ -171,7 +171,7 @@ class FrameworkTest:
     # Setup environment variables
     logDir = os.path.join(self.fwroot, self.benchmarker.full_results_directory(), 'logs', self.name.lower())
     bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
-    setup_util.replace_environ(config='$FWROOT/config/benchmark_profile',
+    setup_util.replace_environ(config='$FWROOT/toolset/setup/linux/config/benchmark_profile',
               command='''\
               export TROOT=%s       &&  \
               export IROOT=%s       &&  \
