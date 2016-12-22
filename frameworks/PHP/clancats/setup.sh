@@ -14,5 +14,5 @@ cp -r app/ clancatsapp/CCF/
 
 cp -r vendor/ clancatsapp/CCF/
 
-php-fpm --fpm-config $FWROOT/toolset/setup/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
+php-fpm --fpm-config $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
 nginx -c $TROOT/deploy/nginx.conf

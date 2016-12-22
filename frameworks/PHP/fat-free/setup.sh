@@ -16,5 +16,5 @@ pushd "$F3DIR" > /dev/null
 git checkout -q "069ccd84afd2461c7ebb67f660c142f97577e661" # v3.5.2-dev
 popd > /dev/null
 
-php-fpm --fpm-config $FWROOT/toolset/setup/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
+php-fpm --fpm-config $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
 nginx -c $TROOT/deploy/nginx.conf

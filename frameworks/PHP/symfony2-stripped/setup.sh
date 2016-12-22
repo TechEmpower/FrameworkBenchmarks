@@ -9,5 +9,5 @@ sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 php app/console cache:clear --env=prod --no-debug --no-warmup
 php app/console cache:warmup --env=prod --no-debug
 
-php-fpm --fpm-config $FWROOT/toolset/setup/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
+php-fpm --fpm-config $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
 nginx -c $TROOT/deploy/nginx.conf

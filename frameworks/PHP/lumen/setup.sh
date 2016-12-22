@@ -12,5 +12,5 @@ rm vendor/laravel/lumen-framework/src/Application.php
 cp modifiedVendorFiles/Application.php vendor/laravel/lumen-framework/src/
 touch vendor/laravel/lumen-framework/storage/logs/lumen.log
 
-php-fpm --fpm-config $FWROOT/toolset/setup/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
+php-fpm --fpm-config $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
 nginx -c $TROOT/deploy/nginx.conf
