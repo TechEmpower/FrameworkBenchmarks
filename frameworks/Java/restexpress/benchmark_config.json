@@ -22,7 +22,7 @@
       "versus": "netty"
     },
     "mysql-raw": {
-      "setup_file": "setup",
+      "setup_file": "setup_mysql",
       "db_url": "/restexpress/mysql",
       "query_url": "/restexpress/mysql?queries=",
       "port": 8080,
@@ -42,7 +42,7 @@
       "versus": "netty"
     },
     "mongodb": {
-      "setup_file": "setup",
+      "setup_file": "setup_mongodb",
       "db_url": "/restexpress/mongodb",
       "query_url": "/restexpress/mongodb?queries=",
       "port": 8080,

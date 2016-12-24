@@ -2,7 +2,7 @@
   "framework": "phalcon",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -26,7 +26,7 @@
       "versus": "php7"
     },
     "mongodb": {
-      "setup_file": "setup",
+      "setup_file": "setup-mongodb",
       "db_url": "/mongodb/db",
       "query_url": "/mongodb/queries?queries=",
       "fortune_url": "/mongodb/fortunes",

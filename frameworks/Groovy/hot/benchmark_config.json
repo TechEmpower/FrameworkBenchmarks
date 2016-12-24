@@ -21,7 +21,7 @@
       "versus": ""
     },
     "mongodb" : {
-      "setup_file": "setup",
+      "setup_file": "setup_mongodb",
       "db_url": "/rest/db/mongodb",
       "query_url": "/rest/queries/mongodb?queries=",
       "fortune_url": "/rest/fortunes/mongodb",

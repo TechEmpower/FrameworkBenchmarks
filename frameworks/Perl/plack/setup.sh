@@ -3,7 +3,7 @@
 sed -i 's|localhost|'"${DBHOST}"'|g' app.psgi
 sed -i 's|server unix:.*/FrameworkBenchmarks/plack|server unix:'"${TROOT}"'|g' nginx.conf
 
-fw_depends perl nginx
+fw_depends mysql perl nginx
 
 cpanm --notest --no-man-page \
     JSON::XS@3.01 \

@@ -2,7 +2,7 @@
 
 sed -i 's|host: .*|host: '"${DBHOST}"'|g' postgresql.yaml
 
-fw_depends dart
+fw_depends postgresql dart
 
 pub upgrade
 

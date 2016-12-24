@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java maven
+fw_depends mysql java maven
 
 sed -i 's|url: jdbc:mysql://.*/hello_world|url: jdbc:mysql://'"${DBHOST}"':3306/hello_world|g' hello-world-mysql.yml
 

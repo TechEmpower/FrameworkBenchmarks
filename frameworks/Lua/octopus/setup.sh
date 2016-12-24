@@ -1,5 +1,6 @@
 #!/bin/bash
 
+fw_depends mysql
 
 rm -rf octopus
 git clone https://github.com/cyberz-eu/octopus.git

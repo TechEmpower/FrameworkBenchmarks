@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends nodejs
+fw_depends mongodb nodejs
 
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/mongodb-raw.js
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/mongoose.js

@@ -2,7 +2,7 @@
   "framework": "nodejs",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/mysql/db",
@@ -26,11 +26,10 @@
       "versus": "nodejs"
     },
     "mongodb": {
-      "setup_file": "setup",
+      "setup_file": "setup-mongodb",
       "db_url": "/mongoose/db",
       "query_url": "/mongoose/queries?queries=",
       "update_url": "/mongoose/updates?queries=",
-      "fortune_url": "/mongoose/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -48,7 +47,7 @@
       "versus": "nodejs"
     },
     "mongodb-raw": {
-      "setup_file": "setup",
+      "setup_file": "setup-mongodb",
       "db_url": "/mongodb/db",
       "query_url": "/mongodb/queries?queries=",
       "update_url": "/mongodb/updates?queries=",
@@ -70,7 +69,7 @@
       "versus": "nodejs"
     },
     "mysql": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "db_url": "/sequelize/db",
       "query_url": "/sequelize/queries?queries=",
       "update_url": "/sequelize/updates?queries=",
@@ -92,7 +91,7 @@
       "versus": "nodejs"
     },
     "postgres": {
-      "setup_file": "setup",
+      "setup_file": "setup-postgresql",
       "db_url": "/sequelize-pg/db",
       "query_url": "/sequelize-pg/queries?queries=",
       "update_url": "/sequelize-pg/updates?queries=",
