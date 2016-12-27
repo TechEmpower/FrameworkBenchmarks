@@ -26,9 +26,7 @@
 
                 "setup_file" : "setup",
                 "versus" : "servlet"
-            }
-        },
-        {
+            },
             "resin" : {
                 "json_url" : "/json",
                 "db_url" : "/db",
@@ -46,7 +44,7 @@
                 "language" : "Kotlin",
                 "orm" : "Raw",
                 "platform" : "Servlet",
-                "webserver" : "None",
+                "webserver" : "Resin",
                 "os" : "Linux",
                 "database_os" : "Linux",
                 "display_name" : "Hexagon Resin",
