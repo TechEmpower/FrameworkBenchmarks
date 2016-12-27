@@ -1,3 +1,8 @@
+/**
+ * Currently commenting out redis caching as there is no 
+ * working implementation for the benchmark suite.
+ */
+
 var Hapi = require('hapi');
 var Vision = require('vision');
 var server = new Hapi.Server();
