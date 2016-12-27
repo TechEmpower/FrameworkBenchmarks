@@ -259,6 +259,9 @@ if (Configure::read('debug') >= 1) {
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
 $prefix = 'myapp_';
 
+// NOTE: There is currently no implementation of redis so commenting out this configuration for now. This
+// *may* have also been in violation of the rules of some of the database tests.
+
 /**
  * Configure the cache used for general framework caching.  Path information,
  * object listings, and translation cache files are stored with this configuration.
