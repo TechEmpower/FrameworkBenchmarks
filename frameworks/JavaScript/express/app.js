@@ -27,6 +27,14 @@ var WorldSchema = new mongoose.Schema({
   }),
   MWorld = conn.model('World', WorldSchema);
 
+var FortuneSchema = new mongoose.Schema({
+    id          : Number,
+    message     : String
+  }, {
+    collection: 'fortune'
+  }),
+  MFortune = conn.model('Fortune', FortuneSchema);
+
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
   host: 'localhost',
   dialect: 'mysql',
