@@ -163,7 +163,7 @@ when running:
 ### Debugging PHP Frameworks
 
 The first stop for HTTP 500 errors is to enable stack traces. 
-Update `config/php-fpm.conf` to include `php_flag[display_errors] = on`. 
+Update `toolset/setup/linux/languages/php/php-fpm.conf` to include `php_flag[display_errors] = on`. 
 If you don't use php-fpm, update the `config/php.ini`
 
 ## Get Help
