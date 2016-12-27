@@ -26,7 +26,7 @@
       "db_url": "/mongoose",
       "query_url": "/mongoose?queries=",
       "update_url": "/mongoose-update?queries=",
-      "fortune_url": "/mysql-orm-fortune",
+      "fortune_url": "/mongoose-fortune",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
