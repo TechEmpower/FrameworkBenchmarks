@@ -92,7 +92,6 @@ env:
     - "TESTDIR=Java/restexpress"
     - "TESTDIR=Java/revenj"
     - "TESTDIR=Java/servlet"
-    - "TESTDIR=Java/servlet3-cass"
     - "TESTDIR=Java/spark"
     - "TESTDIR=Java/spring"
     - "TESTDIR=Java/tapestry"
