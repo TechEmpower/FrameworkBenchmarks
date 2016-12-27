@@ -136,7 +136,6 @@ env:
     - "TESTDIR=PHP/phalcon"
     - "TESTDIR=PHP/phalcon-micro"
     - "TESTDIR=PHP/phpixie"
-    - "TESTDIR=PHP/pimf"
     - "TESTDIR=PHP/silex"
     - "TESTDIR=PHP/silex-orm"
     - "TESTDIR=PHP/slim"
