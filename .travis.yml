@@ -90,7 +90,7 @@ env:
     - "TESTDIR=Java/play2-java"
     - "TESTDIR=Java/rapidoid"
     - "TESTDIR=Java/restexpress"
-    - "TESTDIR=Java/revenj"
+    - "TESTDIR=Java/revenj-jvm"
     - "TESTDIR=Java/servlet"
     - "TESTDIR=Java/spark"
     - "TESTDIR=Java/spring"
