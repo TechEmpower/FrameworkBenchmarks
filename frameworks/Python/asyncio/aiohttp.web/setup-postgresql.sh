@@ -2,4 +2,4 @@
 
 fw_depends postgresql
 
-source ./setup.sh
+source $TROOT/aiohttp.web/setup.sh

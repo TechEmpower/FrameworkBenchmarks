@@ -2,4 +2,4 @@
 
 fw_depends mysql
 
-source ./setup.sh
+source $TROOT/aiohttp.web/setup.sh
