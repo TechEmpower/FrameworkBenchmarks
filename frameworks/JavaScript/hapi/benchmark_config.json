@@ -2,27 +2,9 @@
   "framework": "hapi",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup-mongodb",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "None",
-      "framework": "hapi",
-      "language": "JavaScript",
-      "flavor": "NodeJS",
-      "orm": "Raw",
-      "platform": "None",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "hapi",
-      "notes": "",
-      "versus": "nodejs"
-    },
-    "mongodb": {
-      "setup_file": "setup-mongodb",
       "db_url": "/mongoose/db",
       "query_url": "/mongoose/queries?queries=",
       "fortune_url": "/mongoose/fortunes",

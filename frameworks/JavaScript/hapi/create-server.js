@@ -1,3 +1,8 @@
+/**
+ * Currently commenting out redis caching as there is no 
+ * working implementation for the benchmark suite.
+ */
+
 var Hapi = require('hapi');
 var Vision = require('vision');
 var server = new Hapi.Server();
@@ -17,19 +22,19 @@ var Promise = require('bluebird');
 var MongooseHandler;
 var SequelizeHandler;
 var SequelizePgHandler;
-var RedisHandler;
+// var RedisHandler;
 
 // Slight start-up improvement loading handlers in parallel
 Promise.join(
   require('./handlers/mongoose'),
   require('./handlers/sequelize'),
   require('./handlers/sequelize-postgres'),
-  require('./handlers/redis'),
-  function (mongo, mysql, pg, redis) {
+  // require('./handlers/redis'),
+  function (mongo, mysql, pg) {
     MongooseHandler = mongo;
     SequelizeHandler = mysql;
     SequelizePgHandler = pg;
-    RedisHandler = redis;
+    // RedisHandler = redis;
   })
   .catch(function (err) {
     console.log('There was a problem setting up the handlers');
@@ -55,10 +60,10 @@ Route('/sequelize-pg/queries', SequelizePgHandler.MultipleQueries);
 Route('/sequelize-pg/fortunes', SequelizePgHandler.Fortunes);
 Route('/sequelize-pg/updates', SequelizePgHandler.Updates);
 
-Route('/hiredis/db', RedisHandler.SingleQuery);
-Route('/hiredis/queries', RedisHandler.MultipleQueries);
-Route('/hiredis/fortunes', RedisHandler.Fortunes);
-Route('/hiredis/updates', RedisHandler.Updates);
+// Route('/hiredis/db', RedisHandler.SingleQuery);
+// Route('/hiredis/queries', RedisHandler.MultipleQueries);
+// Route('/hiredis/fortunes', RedisHandler.Fortunes);
+// Route('/hiredis/updates', RedisHandler.Updates);
 
 
 function JsonSerialization(req, reply) {
