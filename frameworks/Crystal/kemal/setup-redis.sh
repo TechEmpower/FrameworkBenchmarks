@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This redis implementation works but there is currently no redis installation
+# for the benchmark suite
+
 fw_depends crystal
 
 shards install
