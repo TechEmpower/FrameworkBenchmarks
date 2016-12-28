@@ -2,7 +2,7 @@
   "framework": "revel",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup_mysql",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
