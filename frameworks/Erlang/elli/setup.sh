@@ -2,7 +2,7 @@
 
 sed -i 's|"benchmarkdbpass", ".*", 3306|"benchmarkdbpass", "'"${DBHOST}"'", 3306|g' src/elli_bench_sup.erl
 
-fw_depends erlang
+fw_depends erlang mysql
 
 rm -rf deps/* ebin/*
 rebar get-deps
