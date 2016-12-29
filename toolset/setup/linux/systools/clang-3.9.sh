@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 RETCODE=$(fw_exists ${IROOT}/clang-3.9.installed)
 [ ! "$RETCODE" == 0 ] || { \
   source $IROOT/clang-3.9.installed
