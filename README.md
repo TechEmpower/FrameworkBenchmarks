@@ -40,7 +40,7 @@ required.
         
 6. Run a test.
 
-        vagrant@TFB-all:~/FrameworkBenchmarks$ toolset/run-tests.py --mode verify --test beego
+        vagrant@TFB-all:~/FrameworkBenchmarks$ ./toolset/run-tests.py --mode verify --test beego
 
 _Note: In order to run the same test again the results (located at FrameworkBenchmarks/results) directory needs to be removed prior to running the test again. This directory is automatically added when tests are run. You can do this automatically by adding the `--clean` option to the test command. `--clean-all` will remove the `results` and `installs` directories._
 
