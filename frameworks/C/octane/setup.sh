@@ -2,4 +2,4 @@
 
 fw_depends octane
 
-./build/techempower_benchmarks
+./build/hello_world
