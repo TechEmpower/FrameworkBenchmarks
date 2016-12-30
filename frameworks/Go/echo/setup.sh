@@ -1,10 +1,9 @@
 #!/bin/bash
 
-fw_depends mysql go
+fw_depends postgresql go
 
-go get github.com/labstack/echo/...
+go get github.com/labstack/echo
 go get github.com/lib/pq
-go get github.com/valyala/tcplisten
-go install standard fasthttp
+go install standard
 
-fasthttp &
+standard &

@@ -4,7 +4,6 @@ import (
 	"common"
 
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/engine/standard"
 )
 
 func main() {
@@ -12,5 +11,5 @@ func main() {
 	e.SetRenderer(common.Template)
 	common.InitRoutes(e)
 	common.InitPostgres()
-	e.Run(standard.New(":8080"))
+	e.Start(":8080")
 }
