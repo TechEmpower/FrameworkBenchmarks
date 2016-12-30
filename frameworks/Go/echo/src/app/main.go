@@ -1,4 +1,4 @@
-package common
+package main
 
 import (
 	"database/sql"
@@ -135,7 +135,7 @@ func (h *handler) db() echo.HandlerFunc {
 // Test 3: Multiple database queries
 func (h *handler) queries() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		n := getQueryCount(c.P(0))
+		n := getQueryCount(c.QueryParam("n"))
 		worlds := make([]World, n)
 		for i := 0; i < n; i++ {
 			if err := fetchRandomWorld(&worlds[i]); err != nil {
@@ -173,7 +173,7 @@ func (h *handler) fortunes() echo.HandlerFunc {
 // Test 5: Database updates
 func (h *handler) updates() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		n := getQueryCount(c.P(0))
+		n := getQueryCount(c.QueryParam("n"))
 		worlds := make([]World, n)
 		for i := 0; i < n; i++ {
 			// Fetch and modify
@@ -256,12 +256,12 @@ func fetchFortunes(rows *sql.Rows) (Fortunes, error) {
 
 func InitRoutes(e *echo.Echo) {
 	h := new(handler)
-	e.Get("/json", h.json())
-	e.Get("/db", h.db())
-	e.Get("/queries/*", h.queries())
-	e.Get("/fortunes", h.fortunes())
-	e.Get("/updates/*", h.updates())
-	e.Get("/plaintext", h.plaintext())
+	e.GET("/json", h.json())
+	e.GET("/db", h.db())
+	e.GET("/queries", h.queries())
+	e.GET("/fortunes", h.fortunes())
+	e.GET("/updates", h.updates())
+	e.GET("/plaintext", h.plaintext())
 }
 
 func InitPostgres() {
@@ -290,4 +290,12 @@ func InitPostgres() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func main() {
+	e := echo.New()
+	e.Renderer = Template
+	InitRoutes(e)
+	InitPostgres()
+	e.Start(":8080")
 }
