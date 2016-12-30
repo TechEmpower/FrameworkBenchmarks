@@ -52,7 +52,6 @@ env:
     - "TESTDIR=Erlang/elli"
     - "TESTDIR=Erlang/mochiweb"
     - "TESTDIR=Go/beego"
-    - "TESTDIR=Go/echo"
     - "TESTDIR=Go/falcore"
     - "TESTDIR=Go/fasthttp"
     - "TESTDIR=Go/gin"
