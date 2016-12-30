@@ -1,4 +1,4 @@
-package common
+package main
 
 import (
 	"database/sql"
@@ -258,9 +258,9 @@ func InitRoutes(e *echo.Echo) {
 	h := new(handler)
 	e.GET("/json", h.json())
 	e.GET("/db", h.db())
-	e.GET("/queries/:queries", h.queries())
+	e.GET("/queries", h.queries())
 	e.GET("/fortunes", h.fortunes())
-	e.GET("/updates/:queries", h.updates())
+	e.GET("/updates", h.updates())
 	e.GET("/plaintext", h.plaintext())
 }
 
@@ -290,4 +290,12 @@ func InitPostgres() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func main() {
+	e := echo.New()
+	e.Renderer = Template
+	InitRoutes(e)
+	InitPostgres()
+	e.Start(":8080")
 }

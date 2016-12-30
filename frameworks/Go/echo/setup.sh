@@ -4,6 +4,6 @@ fw_depends postgresql go
 
 go get github.com/labstack/echo
 go get github.com/lib/pq
-go install standard
+go install app
 
-standard &
+app &
