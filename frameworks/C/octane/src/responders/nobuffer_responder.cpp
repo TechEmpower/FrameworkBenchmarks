@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <uv.h>
-#include "nobuffer_responder.h"
-#include "../write_batch.h"
+#include "nobuffer_responder.hpp"
+#include "../write_batch.hpp"
 
 void create_response_nobuffer(write_batch* batch) {
     batch->buffers[batch->number_of_used_buffers].base = "HTTP/1.1 200 OK\r\n";
@@ -35,7 +35,7 @@ void create_response_nobuffer(write_batch* batch) {
 
 void stream_on_read_nobuffer(connection* conn, size_t requests, uv_stream_t* stream, ssize_t nread, const uv_buf_t* buf) {
     uv_write_t *write_req = create_write_with_batch(requests * 7);
-    write_batch* batch = write_req->data;
+    write_batch* batch = (write_batch*)write_req->data;
 
     for (int i=0; i<requests; i++) {
         create_response_nobuffer(batch);

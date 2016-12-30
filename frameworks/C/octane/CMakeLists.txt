@@ -2,12 +2,14 @@ cmake_minimum_required(VERSION 2.6)
 include(CMakeToolsHelpers OPTIONAL)
 include("common.cmake")
 
+set (CMAKE_CXX_STANDARD 14)
+
 # ----------------------------------------
 # Benchmark service
 # ----------------------------------------
+project(techempower_benchmarks C CXX)
+
 file(GLOB_RECURSE TECHEMPOWER_BENCHMARKS_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib/octane/lib/sds/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib/octane/lib/sds/*.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
@@ -16,7 +18,7 @@ file(GLOB_RECURSE TECHEMPOWER_BENCHMARKS_SOURCES
 list(SORT TECHEMPOWER_BENCHMARKS_SOURCES)
 create_source_group("Source Files" "${CMAKE_CURRENT_SOURCE_DIR}/src" ${TECHEMPOWER_BENCHMARKS_SOURCES})
 include_directories(${CMAKE_SOURCE_DIR}/lib/octane/lib/libuv/include)
-include_directories(${CMAKE_SOURCE_DIR}/lib/octane/lib/sds)
+include_directories(${CMAKE_SOURCE_DIR}/lib/octane/lib/rapidjson/include)
 include_directories(${CMAKE_SOURCE_DIR}/lib/octane/include)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
@@ -32,5 +34,5 @@ target_link_libraries (techempower_benchmarks
     ${CMAKE_THREAD_LIBS_INIT})
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    target_link_libraries (hello_world rt)
+    target_link_libraries (techempower_benchmarks rt)
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")

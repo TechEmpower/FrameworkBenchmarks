@@ -1,15 +1,23 @@
 #pragma once
 
 #include <stdbool.h>
+#include "octane.h"
+
+typedef enum {
+    ROUTE_UNKNOWN,
+    ROUTE_PLAINTEXT,
+    ROUTE_JSON
+} route_path;
 
 typedef struct
 {
     uv_tcp_t stream;
-    enum {OPEN, CLOSING, CLOSED} state;
+    enum connection_state state;
+    route_path path;
     void* data;
     bool keep_alive;
-    int bytes_remaining;
-    int request_length;
+    size_t bytes_remaining;
+    size_t request_length;
 } connection;
 
 typedef enum {
@@ -21,5 +29,3 @@ typedef enum {
 
 connection* create_connection();
 void free_connection(connection* conn);
-
-char* current_time;

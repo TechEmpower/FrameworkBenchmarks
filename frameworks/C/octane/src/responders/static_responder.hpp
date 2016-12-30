@@ -1,8 +1,8 @@
 #pragma once
 
 #include <uv.h>
-#include "../connection.h"
-#include "../write_batch.h"
+#include "../connection.hpp"
+#include "../write_batch.hpp"
 
 #define RESPONSE \
     "HTTP/1.1 200 OK\r\n" \
