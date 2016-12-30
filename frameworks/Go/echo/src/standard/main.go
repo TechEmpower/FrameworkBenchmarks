@@ -8,7 +8,7 @@ import (
 
 func main() {
 	e := echo.New()
-	e.SetRenderer(common.Template)
+	e.Renderer = common.Template
 	common.InitRoutes(e)
 	common.InitPostgres()
 	e.Start(":8080")
