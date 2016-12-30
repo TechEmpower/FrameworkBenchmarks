@@ -11,7 +11,7 @@ OCTANE_HOME=$IROOT/octane
 git clone https://github.com/simongui/octane.git
 cd $OCTANE_HOME
 # December 21st, 2016
-git checkout bb34185aeb8a7b973e44d4f5ab87702989114895
+git checkout 31932722e9a797308a37793b078c756616a46e11
 make
 
 echo "export OCTANE_HOME=${OCTANE_HOME}" >> $IROOT/octane.installed
