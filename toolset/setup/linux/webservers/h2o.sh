@@ -6,7 +6,7 @@ RETCODE=$(fw_exists "${IROOT}/h2o.installed")
   return 0; }
 
 H2O_HOME="${IROOT}/h2o"
-VERSION="2.1.0-beta3"
+VERSION="2.1.0-beta4"
 ARCHIVE="v${VERSION}.tar.gz"
 BUILD_DIR="h2o-${VERSION}"
 
