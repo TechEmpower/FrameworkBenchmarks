@@ -2,4 +2,4 @@
 
 fw_depends octane
 
-./build/hello_world
+hello_world
