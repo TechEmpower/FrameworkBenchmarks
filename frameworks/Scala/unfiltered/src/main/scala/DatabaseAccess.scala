@@ -2,7 +2,7 @@ package bench
 
 import scala.collection.immutable.Map
 import scala.util.Try
-import scala.slick.driver.SQLServerDriver.simple._
+import slick.driver.MySQLDriver.api._
 import java.util.Map.Entry
 import com.typesafe.config._
 import com.jolbox.bonecp.{ BoneCP, BoneCPConfig, BoneCPDataSource }
