@@ -42,6 +42,7 @@ php-kohana/application/logs/
 php-fuel/fuel/app/logs/
 results/
 benchmark.cfg
+current_benchmark.txt
 
 # Mac filesystem dust
 .DS_Store
