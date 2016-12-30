@@ -1,5 +1,9 @@
 # ASP.NET MVC on Windows and Mono
 
+## Note
+
+Some tests have been removed from the `benchmark_config.json`. The code still exists in src. If you'd like to attempt to reimplement these tests, you can look to this [benchmark_config](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/frameworks/CSharp/aspnet/benchmark_config.json)
+
 ## Tests
 
 * JSON serialization
