@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends libboost-dev clang-3.8 gcc-4.9
+fw_depends libboost-dev clang-3.9 gcc-4.9
 
 RETCODE=$(fw_exists ${IROOT}/silicon.installed)
 [ ! "$RETCODE" == 0 ] || { \
@@ -12,9 +12,9 @@ SILICON=$IROOT/silicon
 
 git clone https://github.com/matt-42/silicon.git
 cd silicon;
-# May 18th, 2016
-git checkout 73dac7f3c8dcd4f9c53713456e8b73165006e968
-CC=clang-3.8 CXX=clang++-3.8 ./install.sh $IROOT
+# December 28th, 2016
+git checkout 1fed7cead9490e3054af730ac9bf04ae4cf5009d
+CC=clang-3.9 CXX=clang++-3.9 ./install.sh $IROOT
 
 echo "" > $IROOT/silicon.installed
 

@@ -67,3 +67,7 @@ future contirbutors._
 
 _If you stumble upon some helpful links or discussions, add them 
 for easy reference for future contributors._
+
+## Note about this ServiceStack test
+
+Only the default ngnix test for linux remains in the benchmark_config as it is the only one that has consistently appeared in final round results. The xsp tests and nginx database tests are not currently working, though the supporting files remain. Pull requests to fix these implementations are welcome!

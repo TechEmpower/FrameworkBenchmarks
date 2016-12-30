@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <h2o.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -120,7 +121,7 @@ static void shutdown_server(h2o_socket_t *listener, const char *err)
 void event_loop(thread_context_t *ctx)
 {
 	while (!ctx->global_data->shutdown || ctx->event_loop.conn_num)
-		h2o_evloop_run(ctx->event_loop.h2o_ctx.loop);
+		h2o_evloop_run(ctx->event_loop.h2o_ctx.loop, INT32_MAX);
 }
 
 void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_receiver)

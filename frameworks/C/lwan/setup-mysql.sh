@@ -6,7 +6,7 @@ export MYSQL_PASS=benchmarkdbpass
 export MYSQL_HOST=$DBHOST
 export MYSQL_DB=hello_world
 
-fw_depends lwan
+fw_depends mysql lwan
 
 cd $LWAN_ROOT/techempower
 $LWAN_BUILD/techempower/techempower &

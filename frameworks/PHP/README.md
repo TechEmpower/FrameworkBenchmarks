@@ -76,7 +76,7 @@ containing these lines (comments added to clarify what's happening). `fw_depends
     #   - php-fpm configuration is located in the config folder found in the 
     #     root of this project
     #   - We tell PHP-FPM to place it's PID file into the deploy folder
-    $PHP_FPM --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
+    $PHP_FPM --fpm-config $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
     # Turn on nginx using the configuration file found in this framework's deploy
     # folder
     $NGINX_HOME/sbin/nginx -c $TROOT/deploy/nginx.conf
@@ -163,7 +163,7 @@ when running:
 ### Debugging PHP Frameworks
 
 The first stop for HTTP 500 errors is to enable stack traces. 
-Update `config/php-fpm.conf` to include `php_flag[display_errors] = on`. 
+Update `toolset/setup/linux/languages/php/php-fpm.conf` to include `php_flag[display_errors] = on`. 
 If you don't use php-fpm, update the `config/php.ini`
 
 ## Get Help

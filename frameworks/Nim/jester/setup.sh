@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends nim jester nginx
+fw_depends mysql nim jester nginx
 
 nim c -d:release hello.nim
 nginx -c $TROOT/config/nginx.conf

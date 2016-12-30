@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends stack
+fw_depends postgresql stack
 
 sed -i 's|PG.connectHost     = "localhost"|PG.connectHost     = "'"${DBHOST}"'"|g' src/Main.hs
 

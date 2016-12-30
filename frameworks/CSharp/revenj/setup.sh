@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java mono dsl_platform
+fw_depends postgresql java mono dsl_platform
 
 echo "Cleaning up..."
 rm -rf $TROOT/exe $TROOT/tmp $TROOT/dsl-clc.jar $TROOT/http-server.zip

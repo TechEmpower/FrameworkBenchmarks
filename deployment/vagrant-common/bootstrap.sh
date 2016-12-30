@@ -117,6 +117,12 @@ if [ ! -e "~/.firstboot" ]; then
     source ~/FrameworkBenchmarks/toolset/setup/linux/prerequisites.sh
   #fi
 
+ # Everyone gets SSH access to localhost
+ echo "Setting up SSH access to localhost"
+ ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa
+ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+ chmod 600 ~/.ssh/authorized_keys
+
   # Enable remote SSH access if we are running production environment
   # Note : this is always copied from the local working copy using a
   #        file provisioner. While they exist in the git clone we just 
@@ -137,11 +143,6 @@ if [ ! -e "~/.firstboot" ]; then
     # Ensure keys have proper permissions
     chmod 600 ~/.ssh/client ~/.ssh/database
   fi
-
-  # Setup 
-  echo "Installing $ROLE software"
-  cd $FWROOT
-  toolset/run-tests.py --verbose --install $ROLE --install-only --test ''
 
   # Setup a nice welcome message for our guest
   echo "Setting up welcome message"

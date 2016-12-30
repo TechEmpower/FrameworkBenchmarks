@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm ruby-2.0 nginx
+fw_depends mysql rvm ruby-2.0 nginx
 
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' config/nginx.conf
 
