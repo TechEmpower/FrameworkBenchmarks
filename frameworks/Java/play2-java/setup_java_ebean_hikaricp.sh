@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_dependsmysql java sbt
+fw_depends mysql java sbt
 
 sed -i 's|127.0.0.1|'${DBHOST}'|g' play2-java-ebean-hikaricp/conf/application.conf
 
