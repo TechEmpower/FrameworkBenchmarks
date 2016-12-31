@@ -85,6 +85,9 @@ if [ ! -e "~/.firstboot" ]; then
     cat /etc/hosts
   fi
 
+  # Add the user to the root group
+  sudo usermod -a -G root $USER
+
   # Workaround mitchellh/vagrant#289
   echo "grub-pc grub-pc/install_devices multiselect     /dev/sda" | sudo debconf-set-selections
 
