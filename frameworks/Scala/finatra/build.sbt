@@ -17,6 +17,6 @@ assemblyMergeStrategy in assembly := {
 }
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "finatra-http" % "2.3.0",
+  "com.twitter" %% "finatra-http" % "2.7.0",
   "org.slf4j" % "slf4j-nop" % "1.7.21"
 )
