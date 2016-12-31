@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends apache ffead-cpp-apache
+fw_depends apache mongodb ffead-cpp-apache
 
 export FFEAD_CPP_PATH=/var/www/ffead-cpp-2.0
 export LD_LIBRARY_PATH=$IROOT:$FFEAD_CPP_PATH/lib:$LD_LIBRARY_PATH

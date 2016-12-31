@@ -20,6 +20,12 @@ cp -R ffead-cpp-2.0-bin/ ${TROOT}
 mv ${TROOT}/ffead-cpp-2.0-bin ${TROOT}/ffead-cpp-2.0
 rm -rf ffead-cpp-2.0/
 
+fw_get -o mongo-c-driver-1.4.0.tar.gz https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
+fw_untar mongo-c-driver-1.4.0.tar.gz
+cd mongo-c-driver-1.4.0/
+./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup
+make && sudo make install
+
 fw_get -o nginx-1.11.3.tar.gz http://nginx.org/download/nginx-1.11.3.tar.gz
 fw_untar nginx-1.11.3.tar.gz
 sudo rm -rf ${IROOT}/nginxfc
@@ -36,12 +42,6 @@ sudo cp ${TROOT}/ffead-cpp-2.0/resources/sample-odbcinst.ini /etc/odbcinst.ini
 sudo cp ${TROOT}/ffead-cpp-2.0/resources/sample-odbc.ini /etc/odbc.ini
 
 sudo sed -i 's|localhost|'${DBHOST}'|g' /etc/odbc.ini
-
-fw_get -o mongo-c-driver-1.4.0.tar.gz https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
-fw_untar mongo-c-driver-1.4.0.tar.gz
-cd mongo-c-driver-1.4.0/
-./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup
-make && sudo make install
 
 cp ${TROOT}/ffead-cpp-2.0/ngx_mod/nginx.conf ${IROOT}/nginxfc/conf/
 sed -i 's|FFEAD_PATH|'${TROOT}/ffead-cpp-2.0'|g' ${IROOT}/nginxfc/conf/nginx.conf
