@@ -39,5 +39,4 @@ echo "travis ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 
 # Add travis user to the root group
 sudo usermod -a -G root travis
-exec sudo su -l travis
 
