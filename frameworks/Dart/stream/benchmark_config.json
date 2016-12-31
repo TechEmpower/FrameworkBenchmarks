@@ -1,6 +1,7 @@
 {
   "framework": "stream",
   "tests": [{
+     "default": {
       "setup_file": "setup_mongodb",
       "db_url": "/db-mongo",
       "query_url": "/queries-mongo?queries=",
