@@ -12,7 +12,7 @@
 The tests are run with:
 
 * [Java Oracle 1.8.0_25](http://www.oracle.com/technetwork/java/javase)
-* [finatra 2.3.0](https://github.com/twitter/finatra/tree/finatra-2.3.0)
+* [finatra 2.7.0](https://github.com/twitter/finatra/tree/finatra-2.7.0)
 
 ## Test URLs
 ### JSON Encoding Test
