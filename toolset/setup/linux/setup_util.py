@@ -68,7 +68,7 @@ def replace_text(file, to_replace, replacement):
 # Queries the shell for the value of FWROOT
 def get_fwroot():
 
-    if os.environ['FWROOT']:
+    if os.getenv('FWROOT'):
         return os.environ['FWROOT']
     else:
         return os.getcwd()
