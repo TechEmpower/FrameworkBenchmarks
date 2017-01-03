@@ -70,7 +70,6 @@
       "setup_file": "setup_hhvm",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
-      "update_url": "/update?queries=",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "fortune_url": "/fortunes",
