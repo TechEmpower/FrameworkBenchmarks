@@ -5,7 +5,7 @@ fw_depends postgresql h2o mustache-c yajl
 H2O_APP_HOME="${IROOT}/h2o_app"
 BUILD_DIR="${H2O_APP_HOME}_build"
 H2O_APP_PROFILE_PORT="54321"
-H2O_APP_PROFILE_URL="http://127.0.0.1:$H2O_APP_PROFILE_PORT"
+H2O_APP_PROFILE_URL="http://TFB-database:$H2O_APP_PROFILE_PORT"
 
 # A hacky way to detect whether we are running in the physical hardware or the cloud environment.
 if [[ $(nproc) -gt 16 ]]; then
