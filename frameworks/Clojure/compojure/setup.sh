@@ -2,8 +2,6 @@
 
 fw_depends mysql java resin leiningen
 
-sed -i 's|127.0.0.1|'"${DBHOST}"'|g' hello/src/hello/handler.clj
-
 cd hello
 lein clean
 lein ring uberwar
