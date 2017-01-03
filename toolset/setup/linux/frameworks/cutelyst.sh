@@ -7,7 +7,7 @@ RETCODE=$(fw_exists ${IROOT}/cutelyst.installed)
   return 0; }
 
 QT_VERSION_MM=56
-QT_VERSION_FULL=561-trusty
+QT_VERSION_FULL=562-trusty
 
 sudo apt-add-repository --yes ppa:george-edison55/cmake-3.x
 sudo apt-add-repository --yes ppa:beineri/opt-qt$QT_VERSION_FULL
