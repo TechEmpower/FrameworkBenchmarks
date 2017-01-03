@@ -45,7 +45,7 @@ export LD_LIBRARY_PATH=/opt/qt${QT_VERSION_MM}/lib:${IROOT}/lib/x86_64-linux-gnu
 if [ -n "${UWSGI}" ]; then
   uwsgi --ini ${IROOT}/config.ini --cutelyst-app ${IROOT}/cutelyst-benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $MAX_THREADS &
 else
-  ${IROOT}/bin/cutelyst-wsgi --ini ${IROOT}/config.ini --http-socket :8080 -a ${IROOT}/cutelyst-benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $MAX_THREADS &
+  ${IROOT}/bin/cutelyst-wsgi --ini ${IROOT}/config.ini -a ${IROOT}/cutelyst-benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $MAX_THREADS &
 fi
 
 # configure Nginx
