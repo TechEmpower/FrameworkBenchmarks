@@ -1,6 +1,6 @@
 #include "cutelyst-benchmarks.h"
 
-#include <Cutelyst/Plugins/StaticSimple/staticsimple.h>
+#include <Cutelyst/Plugins/Utils/Sql>
 
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
@@ -56,7 +56,7 @@ bool cutelyst_benchmarks::postFork()
     const auto driver = config(QLatin1String("Driver")).toString();
     if (driver == QLatin1String("QPSQL")) {
         QSqlDatabase db;
-        db = QSqlDatabase::addDatabase(driver, QLatin1String("postgres-") + QThread::currentThread()->objectName());
+        db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(QStringLiteral("postgres")));
         db.setDatabaseName(QLatin1String("hello_world"));
         db.setUserName(QLatin1String("benchmarkdbuser"));
         db.setPassword(QLatin1String("benchmarkdbpass"));
@@ -69,7 +69,7 @@ bool cutelyst_benchmarks::postFork()
         QMutexLocker locker(&mutex); // MySQL driver is not thread-safe
 
         QSqlDatabase db;
-        db = QSqlDatabase::addDatabase(driver, QLatin1String("mysql-") + QThread::currentThread()->objectName());
+        db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(QStringLiteral("mysql")));
         db.setDatabaseName(QLatin1String("hello_world"));
         db.setUserName(QLatin1String("benchmarkdbuser"));
         db.setPassword(QLatin1String("benchmarkdbpass"));
