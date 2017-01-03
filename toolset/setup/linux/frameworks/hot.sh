@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/hot.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/hot.installed
-  return 0; }
+fw_installed hot && return 0
 
 VERSION="0.9.2-SNAPSHOT"
 HOT_HOME=$IROOT/hot-$VERSION

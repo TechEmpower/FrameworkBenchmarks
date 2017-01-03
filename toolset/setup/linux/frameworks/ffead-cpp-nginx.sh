@@ -1,7 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/ffead-cpp-nginx.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+fw_installed ffead-cpp-nginx && return 0
 
 fw_get -o unixODBC-2.3.4.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.4.tar.gz
 fw_untar unixODBC-2.3.4.tar.gz

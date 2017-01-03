@@ -2,10 +2,7 @@
 
 fw_depends lua
 
-RETCODE=$(fw_exists ${IROOT}/luarocks.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/luarocks.installed
-  return 0; }
+fw_installed luarocks && return 0
 
 LUAROCKS_VERSION="2.2.1"
 LUAROCKS=$IROOT/luarocks-$LUAROCKS_VERSION

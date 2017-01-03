@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/crystal.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/crystal.installed
-  return 0; }
+fw_installed crystal && return 0
 
 # install crystal
 

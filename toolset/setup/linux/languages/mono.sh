@@ -1,10 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists $IROOT/mono.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  # Load environment variables
-  source $IROOT/mono.installed
-  return 0; }
+fw_installed mono && return 0
   
 # Add source for prepackaged binaries
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF

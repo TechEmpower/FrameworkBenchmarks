@@ -2,11 +2,7 @@
 
 fw_depends rvm java
 
-RETCODE=$(fw_exists ${IROOT}/jruby-9k.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  # Load environment variables
-  source $IROOT/jruby-9k.installed
-  return 0; }
+fw_installed jruby-9k && return 0
 
 # rvm stable [typically] only provides one version of jruby-9.0
 # update this when it changes

@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/sbt.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/sbt.installed
-  return 0; }
+fw_installed sbt && return 0
   
 VERSION="0.13.9"
 

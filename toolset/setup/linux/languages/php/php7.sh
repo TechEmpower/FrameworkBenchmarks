@@ -1,10 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/php7.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  echo "Moving PHP config files into place";
-  source $IROOT/php7.installed
-  return 0; }
+fw_installed php7 && return 0
 
 VERSION="7.0.1"
 PHP_HOME=$IROOT/php-$VERSION

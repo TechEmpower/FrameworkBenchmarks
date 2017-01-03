@@ -1,10 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/dotnetcore.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/dotnetcore.installed
-  dotnet --info
-  return 0; }
+fw_installed dotnetcore && return 0
 
 sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list' 
 sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893

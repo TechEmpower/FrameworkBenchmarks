@@ -1,10 +1,8 @@
 #!/bin/bash
 
+fw_installed treefrog && return 0
+
 TFVER=treefrog-1.12.0
-RETCODE=$(fw_exists ${IROOT}/treefrog.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/treefrog.installed
-  return 0; }
 
 sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
 sudo apt-get update -qq

@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/zeromq.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/zeromq.installed
-  return 0; }
+fw_installed zeromq && return 0
 
 ZMQ_VERSION="4.0.3"
 

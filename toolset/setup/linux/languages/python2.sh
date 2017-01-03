@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/py2.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/py2.installed
-  return 0; }
+fw_installed py2 && return 0
 
 PY2_ROOT=$IROOT/py2
 PY2_VERSION=2.7.11

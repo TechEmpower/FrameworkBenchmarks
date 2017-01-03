@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/erlang.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/erlang.installed
-  return 0; }
+fw_installed erlang && return 0
 
 VERSION="18.2-2"
 RELEASE="trusty"

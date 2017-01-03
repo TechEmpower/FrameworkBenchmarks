@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/go.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/go.installed
-  return 0; }
+fw_installed go && return 0
 
 VERSION=1.7
 GOROOT=$IROOT/go

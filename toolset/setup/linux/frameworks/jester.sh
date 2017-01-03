@@ -2,10 +2,7 @@
 
 fw_depends nim nimble
 
-RETCODE=$(fw_exists ${IROOT}/jester.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/jester.installed
-  return 0; }
+fw_installed jester && return 0
 
 JESTER=$IROOT/jester
 

@@ -2,10 +2,7 @@
 
 fw_depends java
 
-RETCODE=$(fw_exists ${IROOT}/resin.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/resin.installed
-  return 0; }
+fw_installed resin && return 0
 
 RVER=4.0.48
 RESIN=resin-$RVER

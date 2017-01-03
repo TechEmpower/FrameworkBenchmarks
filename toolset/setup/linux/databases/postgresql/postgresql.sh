@@ -2,10 +2,7 @@
 
 fw_depends databases
 
-RETCODE=$(fw_exists ${IROOT}/postgresql.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/postgresql.installed
-  return 0; }
+fw_installed postgresql && return 0
 
 # delete any old required files that do not belong to us as
 # scp will fail otherwise

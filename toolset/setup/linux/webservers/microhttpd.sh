@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/microhttpd.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/microhttpd.installed
-  return 0; }
+fw_installed microhttpd && return 0
 
 VERSION=0.9.39
 MICROHTTPD=$IROOT/libmicrohttpd
