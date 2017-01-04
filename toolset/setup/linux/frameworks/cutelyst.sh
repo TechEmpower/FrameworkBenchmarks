@@ -2,7 +2,7 @@
 
 fw_installed cutelyst && return 0
 
-CUTELYST_VER=r1.0.0
+CUTELYST_VER=r1.2.0
 QT_VERSION_MM=56
 QT_VERSION_FULL=562-trusty
 
