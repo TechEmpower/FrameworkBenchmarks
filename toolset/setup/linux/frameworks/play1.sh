@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/play1.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/play1.installed
-  return 0; }
+fw_installed play1 && return 0
 
 VERSION="1.2.5"
 PLAY1_HOME=$IROOT/play-$VERSION

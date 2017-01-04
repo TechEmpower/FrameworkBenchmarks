@@ -2,10 +2,7 @@
 
 fw_depends php7
 
-RETCODE=$(fw_exists ${IROOT}/phalcon.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/phalcon.installed
-  return 0; }
+fw_installed phalcon && return 0
 
 # Enable the PHP phalcon extension
 sed -i 's|;extension=phalcon.so|extension=phalcon.so|g' $PHP_HOME/lib/php.ini

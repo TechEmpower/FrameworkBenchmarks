@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/duda.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/duda.installed
-  return 0; }
+fw_installed duda && return 0
 
 git clone https://github.com/monkey/dudac.git
 

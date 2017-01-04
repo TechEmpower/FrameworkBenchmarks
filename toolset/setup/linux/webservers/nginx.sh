@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/nginx.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/nginx.installed
-  return 0; }
+fw_installed nginx && return 0
 
 NGINX_HOME=$IROOT/nginx
 

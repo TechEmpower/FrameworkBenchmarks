@@ -2,10 +2,7 @@
 
 fw_depends lua
 
-RETCODE=$(fw_exists ${IROOT}/openresty.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/openresty.installed
-  return 0; }
+fw_installed openresty && return 0
 
 OPENRESTY_VERSION="1.11.2.1"
 OPENRESTY=$IROOT/openresty

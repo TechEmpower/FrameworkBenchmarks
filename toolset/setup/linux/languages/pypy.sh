@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/pypy.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/pypy.installed
-  return 0; }
+fw_installed pypy && return 0
   
 PYPY_ROOT=$IROOT/pypy
 PYPY_VERSION=5.0.1

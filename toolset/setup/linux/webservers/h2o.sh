@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists "${IROOT}/h2o.installed")
-[ ! "$RETCODE" == 0 ] || { \
-  source "${IROOT}/h2o.installed"
-  return 0; }
+fw_installed h2o && return 0
 
 H2O_HOME="${IROOT}/h2o"
 VERSION="2.1.0-beta4"

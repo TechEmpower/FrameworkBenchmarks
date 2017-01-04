@@ -2,10 +2,7 @@
 
 fw_depends databases
 
-RETCODE=$(fw_exists ${IROOT}/mongodb.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/mongodb.installed
-  return 0; }
+fw_installed mongodb && return 0
 
 # send over the required files
 scp $FWROOT/toolset/setup/linux/databases/mongodb/mongodb.conf $DBHOST:~/

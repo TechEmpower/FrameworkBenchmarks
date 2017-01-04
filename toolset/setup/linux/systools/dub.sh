@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/dub.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/dub.installed
-  return 0; }
+fw_installed dub && return 0
 
 mkdir dub
 cd dub

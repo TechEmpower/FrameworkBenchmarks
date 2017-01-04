@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists "${IROOT}/yajl.installed")
-[ ! "$RETCODE" == 0 ] || { \
-  source "${IROOT}/yajl.installed"
-  return 0; }
+fw_installed yajl && return 0
 
 VERSION="2.1.0"
 ARCHIVE="${VERSION}.tar.gz"

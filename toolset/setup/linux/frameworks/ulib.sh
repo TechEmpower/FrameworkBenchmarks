@@ -2,10 +2,7 @@
 
 fw_depends gcc-4.9
 
-RETCODE=$(fw_exists ${IROOT}/ulib.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/ulib.installed
-  return 0; }
+fw_installed ulib && return 0
 
 ULIB_VERSION=1.4.2
 ULIB_ROOT=$IROOT/ULib

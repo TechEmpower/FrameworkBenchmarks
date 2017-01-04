@@ -163,3 +163,15 @@ fw_exists() {
     echo 1
   fi 
 }
+
+# Checks to see if an installation exists and sources the install
+# file if it does
+fw_installed() {
+  if [ -f "$IROOT/$1.installed" ]; then
+    source "$IROOT/$1.installed"
+    return 0
+  else
+    return 1
+  fi     
+}
+

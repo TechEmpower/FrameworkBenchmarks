@@ -2,11 +2,7 @@
 
 fw_depends llvm-dev rvm
 
-RETCODE=$(fw_exists ${IROOT}/ruby-2.2.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  # Load environment variables
-  source $IROOT/ruby-2.2.installed
-  return 0; }
+fw_installed ruby-2.2 && return 0
 
 # rvm stable [typically] only provides one version of ruby-2.2
 # update this when it changes

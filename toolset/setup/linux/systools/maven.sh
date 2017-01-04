@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/maven.installed)
-[ ! "$RETCODE" == 0 ] || { \
-source $IROOT/maven.installed
-return 0; }
+fw_installed maven && return 0
 
 sudo add-apt-repository "deb http://ppa.launchpad.net/natecarlson/maven3/ubuntu precise main"
 sudo apt-get update

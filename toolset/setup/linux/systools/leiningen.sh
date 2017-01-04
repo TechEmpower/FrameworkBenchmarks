@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/lein.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/lein.installed
-  return 0; }
+fw_installed lein && return 0
 
 mkdir -p lein/bin
 fw_get -o leinbin https://raw.github.com/technomancy/leiningen/stable/bin/lein

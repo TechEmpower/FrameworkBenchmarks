@@ -2,15 +2,11 @@
 
 fw_depends rvm java
 
-RETCODE=$(fw_exists ${IROOT}/jruby-${JRUBY_VERSION}.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  # Load environment variables
-  source $IROOT/jruby-$JRUBY_VERSION.installed
-  return 0; }
-
 # rvm stable [typically] only provides one version of jruby-1.7
 # update this when it changes
 JRUBY_VERSION="1.7.9"
+
+fw_installed jruby-$JRUBY_VERSION && return 0
 
 rvm install jruby-$JRUBY_VERSION
 # Bundler is SOMETIMES missing... not sure why.
