@@ -3,6 +3,7 @@ import argparse
 import ConfigParser
 import sys
 import os
+import platform
 import multiprocessing
 import itertools
 import copy
@@ -65,6 +66,9 @@ def main(argv=None):
     # Update environment for shell scripts
     os.environ['FWROOT'] = setup_util.get_fwroot()
     os.environ['IROOT'] = os.environ['FWROOT'] + '/installs'
+    # 'Ubuntu', '14.04', 'trusty' respectively
+    os.environ['TFB_DISTRIB_ID'], os.environ['TFB_DISTRIB_RELEASE'], os.environ['TFB_DISTRIB_CODENAME'] = platform.linux_distribution()
+
     print "FWROOT is %s"%os.environ['FWROOT']
 
     conf_parser = argparse.ArgumentParser(
