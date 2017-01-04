@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/dart-sdk.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/dart-sdk.installed
-  return 0; }
+fw_installed dart-sdk && return 0
 
 DART_HOME=$IROOT/dart-sdk
 

@@ -2,11 +2,7 @@
 
 fw_depends libboost-dev clang-3.9 gcc-4.9
 
-RETCODE=$(fw_exists ${IROOT}/silicon.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  # Load environment variables
-  source $IROOT/silicon.installed
-  return 0; }
+fw_installed silicon && return 0
 
 SILICON=$IROOT/silicon
 

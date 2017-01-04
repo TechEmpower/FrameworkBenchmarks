@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/stack.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/stack.installed
-  return 0; }
+fw_installed stack && return 0
 
 fw_get -o $IROOT/stack.tar.gz https://www.stackage.org/stack/linux-x86_64
 tar xzf $IROOT/stack.tar.gz

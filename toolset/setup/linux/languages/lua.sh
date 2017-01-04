@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/lua.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/lua.installed
-  return 0; }
+fw_installed lua && return 0
 
 LUA_VERSION="5.1"
 LUA_MICRO="5"

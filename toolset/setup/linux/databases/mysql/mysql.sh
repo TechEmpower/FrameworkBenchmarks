@@ -2,10 +2,7 @@
 
 fw_depends databases
 
-RETCODE=$(fw_exists ${IROOT}/mysql.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/mysql.installed
-  return 0; }
+fw_installed mysql && return 0
 
 # send over the required files
 scp $FWROOT/toolset/setup/linux/databases/mysql/create.sql $DBHOST:~/

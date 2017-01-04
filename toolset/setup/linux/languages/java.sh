@@ -1,10 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists java.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  # Load environment variables
-  source $IROOT/java.installed
-  return 0; }
+fw_installed java && return 0
 
 # TODO: Someday get away from apt-get
 sudo add-apt-repository -y ppa:webupd8team/java

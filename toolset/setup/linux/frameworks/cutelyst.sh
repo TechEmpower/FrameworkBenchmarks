@@ -1,11 +1,8 @@
 #!/bin/bash
 
-CUTELYST_VER=r1.2.0
-RETCODE=$(fw_exists ${IROOT}/cutelyst.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/cutelyst.installed
-  return 0; }
+fw_installed cutelyst && return 0
 
+CUTELYST_VER=r1.0.0
 QT_VERSION_MM=56
 QT_VERSION_FULL=562-trusty
 

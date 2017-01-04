@@ -2,10 +2,7 @@
 
 fw_depends zeromq
 
-RETCODE=$(fw_exists ${IROOT}/mongrel2.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/mongrel2.installed
-  return 0; }
+fw_installed mongrel2 && return 0
 
 MONGREL2=$IROOT/mongrel2
 MONGREL2_VERSION="v1.8.1"

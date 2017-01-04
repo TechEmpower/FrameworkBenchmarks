@@ -1,10 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/octane.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  # Load environment variables
-  source $IROOT/octane.installed
-  return 0; }
+fw_installed octane && return 0
 
 OCTANE_HOME=$IROOT/octane
 

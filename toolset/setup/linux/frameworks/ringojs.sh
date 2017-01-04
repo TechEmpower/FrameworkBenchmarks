@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/ringojs.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/ringojs.installed
-  return 0; }
+fw_installed ringojs && return 0
 
 VERSION="0.11"
 RINGOJS=$IROOT/ringojs_$VERSION

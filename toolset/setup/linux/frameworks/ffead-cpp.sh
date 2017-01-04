@@ -1,7 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/ffead-cpp.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+fw_installed ffead-cpp && return 0
 
 sudo apt-get remove -y libodbc1 unixodbc unixodbc-dev
 

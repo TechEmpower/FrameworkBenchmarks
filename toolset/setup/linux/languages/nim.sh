@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/nim.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/nim.installed
-  return 0; }
+fw_installed nim && return 0
 
 NIM_VERSION="0.11.2"
 NIM_CSOURCES="6bf2282"

@@ -2,10 +2,7 @@
 
 fw_depends play1
 
-RETCODE=$(fw_exists ${IROOT}/siena.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/siena.installed
-  return 0; }
+fw_installed siena && return 0
 
 VERSION="2.0.6"
 SIENNA=$IROOT/siena-$VERSION

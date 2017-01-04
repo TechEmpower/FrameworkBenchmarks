@@ -2,10 +2,7 @@
 
 fw_depends erlang
 
-RETCODE=$(fw_exists ${IROOT}/elixir.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/elixir.installed
-  return 0; }
+fw_installed elixir && return 0
 
 ELIXIR_HOME=$IROOT/elixir
 VERSION="1.3.3-1"
