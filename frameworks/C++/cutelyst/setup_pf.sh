@@ -1,8 +1,8 @@
 #!/bin/bash
 
 DRIVER=
-UWSGI=1
-NGINX=1
+UWSGI=
+NGINX=
 PROCESS_OR_THREAD=-p
 
 source ${TROOT}/config.sh
