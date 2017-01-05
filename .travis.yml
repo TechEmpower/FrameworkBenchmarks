@@ -173,6 +173,7 @@ env:
     - "TESTDIR=Rust/iron"
     - "TESTDIR=Rust/nickel"
     - "TESTDIR=Rust/hyper"
+    - "TESTDIR=Rust/tokio-minihttp"
     - "TESTDIR=Scala/akka-http"
     - "TESTDIR=Scala/colossus"
     - "TESTDIR=Scala/finagle"
