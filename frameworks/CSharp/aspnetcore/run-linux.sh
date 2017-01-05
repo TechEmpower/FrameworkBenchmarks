@@ -1,5 +1,5 @@
 #!/bin/bash
-fw_depends mono dotnetcore
+fw_depends dotnetcore
 
 threadCount=$2
 if [ "$threadCount" -lt "1" ]
