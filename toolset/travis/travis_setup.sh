@@ -25,4 +25,4 @@ echo "runner_user=travis"                              >> benchmark.cfg
 
 echo "travis ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 
-source /home/travis/FrameworkBenchmarks/toolset/setup/linux/prerequisites.sh
+source ./toolset/setup/linux/prerequisites.sh
