@@ -1,10 +1,9 @@
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Get
 import com.twitter.finagle.http.Request
-import com.twitter.finagle.http.Status.Ok
 import com.twitter.io.Buf
 import io.fintrospect.RouteSpec
-import io.fintrospect.formats.PlainText.ResponseBuilder.implicits._
+import io.fintrospect.formats.PlainText.ResponseBuilder._
 
 object PlainTextRoute {
 
