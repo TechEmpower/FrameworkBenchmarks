@@ -36,3 +36,8 @@ echo "database_user=travis"                            >> benchmark.cfg
 echo "runner_user=travis"                              >> benchmark.cfg
 
 echo "travis ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
+
+echo 127.0.0.1 TFB-database | sudo tee --append /etc/hosts
+echo 127.0.0.1 TFB-client   | sudo tee --append /etc/hosts
+echo 127.0.0.1 TFB-server   | sudo tee --append /etc/hosts
+

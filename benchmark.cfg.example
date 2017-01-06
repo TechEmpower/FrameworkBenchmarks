@@ -1,9 +1,9 @@
 [Defaults]
 # Available Keys: 
-client_host=127.0.0.1
+client_host=TFB-client
 client_identity_file=None
 client_user=techempower
-database_host=127.0.0.1
+database_host=TFB-database
 database_identity_file=None
 database_os=linux
 database_user=techempower
@@ -20,7 +20,7 @@ query_levels=[1, 5,10,15,20]
 threads=8
 mode=benchmark
 os=linux
-server_host=127.0.0.1
+server_host=TFB-server
 sleep=60
 test=None
 type=all

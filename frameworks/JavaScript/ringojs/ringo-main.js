@@ -3,8 +3,8 @@ var mustache = require('ringo/mustache');
 
 // DO NOT TOUCH THE FOLLOWING LINE.
 // THIS VARIABLE IS REGEX REPLACED BY setup.py
-var dbHost = 'localhost';
-var mongodbUri = 'mongodb://localhost/hello_world';
+var dbHost = 'TFB-database';
+var mongodbUri = 'mongodb://TFB-database/hello_world';
 
 var sortFortunes = function(a, b) {
  return (a.message < b.message) ? -1 : (a.message > b.message) ? 1 : 0;
