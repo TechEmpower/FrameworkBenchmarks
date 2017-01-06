@@ -171,21 +171,13 @@ class FrameworkTest:
     # Setup environment variables
     logDir = os.path.join(self.fwroot, self.benchmarker.full_results_directory(), 'logs', self.name.lower())
     bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
-    setup_util.replace_environ(config='$FWROOT/toolset/setup/linux/config/benchmark_profile',
-              command='''\
-              export TROOT=%s       &&  \
-              export IROOT=%s       &&  \
-              export DBHOST=%s      &&  \
-              export LOGDIR=%s      &&  \
-              export MAX_THREADS=%s &&  \
-              export MAX_CONCURRENCY=%s \
-              ''' % (
-                self.directory,
-                self.install_root,
-                self.database_host,
-                logDir,
-                self.benchmarker.threads,
-                max(self.benchmarker.concurrency_levels)))
+
+    os.environ['TROOT'] = self.directory
+    os.environ['IROOT'] = self.install_root
+    os.environ['DBHOST'] = self.database_host
+    os.environ['LOGDIR'] = logDir
+    os.environ['MAX_THREADS'] = str(self.benchmarker.threads)
+    os.environ['MAX_CONCURRENCY'] = str(max(self.benchmarker.concurrency_levels))
 
     # Always ensure that IROOT exists
     if not os.path.exists(self.install_root):
