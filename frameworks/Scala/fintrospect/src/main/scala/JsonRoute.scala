@@ -1,10 +1,9 @@
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Get
 import com.twitter.finagle.http.Request
-import com.twitter.finagle.http.Status.Ok
 import io.fintrospect.RouteSpec
 import io.fintrospect.formats.Jackson.JsonFormat.{encodeToBuf, obj, string}
-import io.fintrospect.formats.Jackson.ResponseBuilder.implicits._
+import io.fintrospect.formats.Jackson.ResponseBuilder._
 
 object JsonRoute {
 
