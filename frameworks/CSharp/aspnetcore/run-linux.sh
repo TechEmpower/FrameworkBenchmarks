@@ -13,4 +13,4 @@ sed -i 's|{db_server_placeholder}|'"${DBHOST}"'|g' appsettings.json
 dotnet restore
 dotnet build -c Release -f netcoreapp1.0
 
-dotnet run -c Release server.urls=http://*:8080 scenarios=$1 server=kestrel threadCount=$threadCount NonInteractive=true &
+dotnet bin/Release/netcoreapp1.0/Benchmarks.dll server.urls=http://*:8080 scenarios=$1 server=kestrel threadCount=$threadCount NonInteractive=true &
