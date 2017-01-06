@@ -56,6 +56,11 @@ sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/l
 sudo sh -c "echo '*            hard    rtprio             99' >> /etc/security/limits.conf"
 sudo sh -c "echo '*            soft    rtprio             99' >> /etc/security/limits.conf"
 
+# Create a tfb command alias for running the toolset
+# For now, this still ensures you have to be in the framework root to run it
+alias tfb="./toolset/run-tests.py"
+echo 'alias tfb="./toolset/run-tests.py"' >> ~/.bashrc
+
 # Sudo in case we don't have permissions on IROOT
 sudo touch fwbm_prereqs_installed
 
