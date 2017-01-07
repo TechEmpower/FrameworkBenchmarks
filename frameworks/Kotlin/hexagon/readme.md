@@ -4,52 +4,37 @@
 This is the Hexagon portion of a [benchmarking test suite](../) comparing a variety of web
 development platforms. The test utilizes Hexagon routes, serialization and database access.
 
-
-## Local setup
-
-    tar -Jxvf db.txz && \
-    mongorestore dump/ && \
-    rm -rf dump
-
-
 ## Tests
 
-* [Hexagon application](/src/main/java/co/there4/hexagon/Benchmark.kt)
-
+* [Hexagon Web](/src/main/java/co/there4/hexagon/Benchmark.kt)
+* [Hexagon Storage](/src/main/java/co/there4/hexagon/BenchmarkStorage.kt)
 
 ## Infrastructure Software Versions
 
-* [Hexagon 0.3.2](http://there4.co/hexagon)
-
+* [Hexagon 0.10.x](http://there4.co/hexagon)
 
 ## Test URLs
 
-* JSON Encoding Test: http://localhost:5050/json
-* Data-Store/Database Mapping Test: http://localhost:5050/db?queries=5 
-* Plain Text Test: http://localhost:5050/plaintext 
-* Fortunes: http://localhost:5050/fortune 
-* Database updates: http://localhost:5050/update
+### Jetty
 
-## Run on OpenShift
+* JSON Encoding Test: http://localhost:9090/json
+* Data-Store/Database Mapping Test: http://localhost:9090/db?queries=5 
+* Plain Text Test: http://localhost:9090/plaintext 
+* Fortunes: http://localhost:9090/fortunes
+* Database updates: http://localhost:9090/update
+* Database queries: http://localhost:9090/query
 
-https://blog.openshift.com/run-gradle-builds-on-openshift/
+### Resin
 
-
-## Copy to TFB
-
-    rm -f db.txz
+* JSON Encoding Test: http://localhost:8080/json
+* Data-Store/Database Mapping Test: http://localhost:8080/db?queries=5 
+* Plain Text Test: http://localhost:8080/plaintext 
+* Fortunes: http://localhost:8080/fortunes
+* Database updates: http://localhost:8080/update
+* Database queries: http://localhost:8080/query
     
 ## Run inside vagrant
 
+    cd ~/FrameworkBenchmarks
+    rm -rf results
     toolset/run-tests.py --install server --mode verify --test hexagon
-    
-## Clear
-    
-
-## TODO
-
-* Remove `benchmark_config` optional parameters. Check:
-  //frameworkbenchmarks.readthedocs.io/en/latest/Codebase/Framework-Files/#benchmark-config-file
-
-* Document common commands to test the framework inside Vagrant's development machine
-

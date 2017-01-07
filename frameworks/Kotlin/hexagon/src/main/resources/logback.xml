@@ -1,5 +1,5 @@
 <!--
- | Logback configuration for tests
+ | Logback configuration
  !-->
 <configuration>
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -14,8 +14,4 @@
     <level value="off" />
     <appender-ref ref="console" />
   </root>
-
-  <logger name="co.there4.hexagon">
-    <level value="off" />
-  </logger>
 </configuration>

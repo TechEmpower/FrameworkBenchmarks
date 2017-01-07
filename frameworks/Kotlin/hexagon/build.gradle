@@ -10,26 +10,34 @@ buildscript {
     }
 }
 
-apply from: "$gradleScripts/hexagon.gradle"
+apply from: "$gradleScripts/kotlin.gradle"
 apply from: "$gradleScripts/service.gradle"
 apply plugin: 'war'
 
 mainClassName = "co.there4.hexagon.BenchmarkKt"
 applicationDefaultJvmArgs = [
-    '-Xms512M',
-    '-Xmx1024M',
-    '-server',
+    '-Xms64M',
+    '-Xmx2G',
     '-XX:+UseNUMA',
     '-XX:+UseParallelGC',
     '-XX:+AggressiveOpts'
 ]
 
-clean {
-    delete "systems/load_test.jtl", "systems/jmeter.log"
-}
-
 war {
     archiveName = "ROOT.war"
 }
 
-installDist.dependsOn 'war'
+install.dependsOn 'war'
+
+dependencies {
+    compile ("co.there4:hexagon:$hexagonVersion")
+    compile ("com.mitchellbosecke:pebble:$pebbleVersion")
+
+    // providedCompile excludes the dependency only in the WAR, not in the distribution
+    providedCompile ("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
+
+    compile ('com.zaxxer:HikariCP:2.5.1')
+    compile ('mysql:mysql-connector-java:6.0.5')
+
+    testCompile ("co.there4:hexagon:$hexagonVersion:test")
+}

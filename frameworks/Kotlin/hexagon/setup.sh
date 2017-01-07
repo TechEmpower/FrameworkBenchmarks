@@ -4,4 +4,4 @@ fw_depends mongodb java
 
 gradle/wrapper
 
-nohup build/hexagon/bin/hexagon &
+nohup build/install/hexagon/bin/hexagon &
