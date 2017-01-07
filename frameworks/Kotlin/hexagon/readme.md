@@ -33,8 +33,37 @@ development platforms. The test utilizes Hexagon routes, serialization and datab
 * Database updates: http://localhost:8080/update
 * Database queries: http://localhost:8080/query
     
+#### Resin configuration
+
+    "resin" : { 
+      "json_url" : "/json",
+      "db_url" : "/db",
+      "query_url" : "/query?queries=",
+      "fortune_url" : "/fortunes",
+      "update_url" : "/update?queries=",
+      "plaintext_url" : "/plaintext",
+ 
+      "port" : 8080,
+ 
+      "approach" : "Realistic",
+      "classification" : "Micro",
+      "database" : "MongoDB",
+      "framework" : "Hexagon",
+      "language" : "Kotlin",
+      "orm" : "Raw",
+      "platform" : "Servlet",
+      "webserver" : "Resin",
+      "os" : "Linux",
+      "database_os" : "Linux",
+      "display_name" : "Hexagon Resin MongoDB",
+      "notes" : "http://there4.co/hexagon",
+ 
+      "setup_file" : "setup_resin",
+      "versus" : "servlet"
+    }                                   
+
 ## Run inside vagrant
 
-    cd ~/FrameworkBenchmarks
-    rm -rf results
-    toolset/run-tests.py --install server --mode verify --test hexagon
+    rm -rf ~/FrameworkBenchmarks/results
+    ~/FrameworkBenchmarks/toolset/run-tests.py --mode verify --test hexagon
+    ~/FrameworkBenchmarks/toolset/run-tests.py --mode verify --test hexagon-resin

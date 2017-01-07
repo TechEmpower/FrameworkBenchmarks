@@ -14,8 +14,8 @@ import kotlin.test.assertFailsWith
 internal const val THREADS = 4
 internal const val TIMES = 4
 
-class BenchmarkMySqlTest : BenchmarkTest("mysql")
-class BenchmarkMongoDbTest : BenchmarkTest("mongodb")
+//class BenchmarkMySqlTest : BenchmarkTest("mysql")
+//class BenchmarkMongoDbTest : BenchmarkTest("mongodb")
 
 @Test(threadPoolSize = THREADS, invocationCount = TIMES)
 abstract class BenchmarkTest(val databaseEngine: String) {
