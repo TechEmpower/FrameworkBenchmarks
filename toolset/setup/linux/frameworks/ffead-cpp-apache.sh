@@ -7,6 +7,7 @@ fw_untar unixODBC-2.3.4.tar.gz
 cd unixODBC-2.3.4
 ./configure --enable-stats=no --enable-gui=no --enable-drivers=no --enable-iconv --with-iconv-char-enc=UTF8 --with-iconv-ucode-enc=UTF16LE --libdir=/usr/lib/x86_64-linux-gnu --prefix=/usr --sysconfdir=/etc
 sudo make install
+cd -
 
 sudo apt-get install -y build-essential
 sudo apt-get install -y uuid-dev libmyodbc odbc-postgresql
@@ -34,6 +35,7 @@ fw_untar mongo-c-driver-1.4.0.tar.gz
 cd mongo-c-driver-1.4.0/
 ./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup
 make && sudo make install
+cd -
 
 FFEADROOT=/var/www/ffead-cpp-2.0
 ETROOT=${FFEADROOT//\//\\/}

@@ -7,6 +7,7 @@ fw_untar unixODBC-2.3.4.tar.gz
 cd unixODBC-2.3.4
 ./configure --enable-stats=no --enable-gui=no --enable-drivers=no --enable-iconv --with-iconv-char-enc=UTF8 --with-iconv-ucode-enc=UTF16LE --libdir=/usr/lib/x86_64-linux-gnu --prefix=/usr --sysconfdir=/etc
 sudo make install
+cd -
 
 sudo apt-get install -y build-essential
 sudo apt-get install -y uuid-dev libmyodbc odbc-postgresql
@@ -24,6 +25,7 @@ fw_untar mongo-c-driver-1.4.0.tar.gz
 cd mongo-c-driver-1.4.0/
 ./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup
 make && sudo make install
+cd -
 
 fw_get -o nginx-1.11.3.tar.gz http://nginx.org/download/nginx-1.11.3.tar.gz
 fw_untar nginx-1.11.3.tar.gz
@@ -31,6 +33,7 @@ sudo rm -rf ${IROOT}/nginxfc
 cd nginx-1.11.3
 ./configure --prefix=${IROOT}/nginxfc --with-ld-opt="-lstdc++ -L${TROOT}/ffead-cpp-2.0/lib -L${IROOT}" --add-module="${TROOT}/ffead-cpp-2.0/ngx_mod" --with-cc-opt="-I${IROOT}/include/libmongoc-1.0/ -I${IROOT}/include/libbson-1.0/ -I${TROOT}/ffead-cpp-2.0/include -w -fpermissive"
 make install
+cd -
 
 sed -i 's|localhost|'${DBHOST}'|g' ${TROOT}/ffead-cpp-2.0/web/te-benchmark/config/sdorm*
 
