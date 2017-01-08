@@ -1,11 +1,9 @@
 package co.there4.hexagon
 
-import co.there4.hexagon.rest.crud
 import co.there4.hexagon.serialization.convertToMap
 import co.there4.hexagon.serialization.serialize
 import co.there4.hexagon.web.*
 import co.there4.hexagon.web.servlet.ServletServer
-import kotlinx.html.*
 
 import java.net.InetAddress.getByName as address
 import java.time.LocalDateTime.now
@@ -24,32 +22,14 @@ private val QUERIES_PARAM = "queries"
 // UTILITIES
 internal fun rnd() = ThreadLocalRandom.current().nextInt(DB_ROWS) + 1
 
-private fun World.strip(): Map<*, *> = this.convertToMap().filterKeys { it != "_id" }
-private fun World.toJson(): String = this.strip().serialize()
-private fun List<World>.toJson(): String = this.map(World::strip).serialize()
+private fun Exchange.returnWorlds(worlds: List<World>) {
+    fun World.strip(): Map<*, *> = this.convertToMap().filterKeys { it != "_id" }
 
-private fun Exchange.hasQueryCount() = request[QUERIES_PARAM] == null
+    val result =
+        if (request[QUERIES_PARAM] == null) worlds[0].strip().serialize()
+        else worlds.map(World::strip).serialize()
 
-private fun Exchange.getDb() {
-    val worlds = (1..getQueries()).map { findWorld() }.filterNotNull()
-
-    ok(if (hasQueryCount()) worlds[0].toJson() else worlds.toJson(), CONTENT_TYPE_JSON)
-}
-
-private fun listFortunes() =
-    (findFortunes() + Fortune(0, "Additional fortune added at request time."))
-        .sortedBy { it.message }
-
-// HANDLERS
-private fun Exchange.getUpdates() {
-    val worlds = (1..getQueries()).map {
-        val id = rnd()
-        val newWorld = World(id, id)
-        replaceWorld(newWorld)
-        newWorld
-    }
-
-    ok(if (hasQueryCount()) worlds[0].toJson() else worlds.toJson(), CONTENT_TYPE_JSON)
+    ok(result, CONTENT_TYPE_JSON)
 }
 
 private fun Exchange.getQueries() =
@@ -65,7 +45,13 @@ private fun Exchange.getQueries() =
         1
     }
 
-fun benchmarkRoutes(srv: Router = server) {
+// HANDLERS
+private fun Exchange.listFortunes(store: Repository) {
+    val fortunes = store.findFortunes() + Fortune(0, "Additional fortune added at request time.")
+    template("fortunes.html", "fortunes" to fortunes.sortedBy { it.message })
+}
+
+private fun benchmarkRoutes(store: Repository, srv: Router = server) {
     srv.before {
         response.addHeader("Server", "Servlet/3.1")
         response.addHeader("Transfer-Encoding", "chunked")
@@ -74,19 +60,20 @@ fun benchmarkRoutes(srv: Router = server) {
 
     srv.get("/plaintext") { ok("Hello, World!", "text/plain") }
     srv.get("/json") { ok(Message().serialize(), CONTENT_TYPE_JSON) }
-    srv.get("/fortunes") { template("fortunes.html", "fortunes" to listFortunes()) }
-    srv.get("/db") { getDb() }
-    srv.get("/query") { getDb() }
-    srv.get("/update") { getUpdates() }
+    srv.get("/fortunes") { listFortunes(store) }
+    srv.get("/db") { returnWorlds(store.findWorlds(getQueries())) }
+    srv.get("/query") { returnWorlds(store.findWorlds(getQueries())) }
+    srv.get("/update") { returnWorlds(store.replaceWorlds(getQueries())) }
 }
 
 @WebListener class Web : ServletServer () {
     override fun init() {
-        benchmarkRoutes(this)
+        benchmarkRoutes(createStore("mongodb"), this)
     }
 }
 
 fun main(args: Array<String>) {
-    benchmarkRoutes()
+    val store = createStore(if (args.isEmpty()) "mongodb" else args[0])
+    benchmarkRoutes(store)
     run()
 }

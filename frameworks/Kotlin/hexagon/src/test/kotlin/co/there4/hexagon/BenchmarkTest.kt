@@ -2,22 +2,28 @@ package co.there4.hexagon
 
 import co.there4.hexagon.serialization.parse
 import co.there4.hexagon.web.Client
+import co.there4.hexagon.web.HttpMethod.GET
+import co.there4.hexagon.web.reset
 import co.there4.hexagon.web.server
+import co.there4.hexagon.web.stop
 import org.asynchttpclient.Response
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
+import kotlin.test.assertFailsWith
 
 internal const val THREADS = 4
 internal const val TIMES = 4
 
+//class BenchmarkMongoDbTest : BenchmarkTest("mongodb")
+
 @Test(threadPoolSize = THREADS, invocationCount = TIMES)
-class BenchmarkTest {
+abstract class BenchmarkTest(val databaseEngine: String) {
     private val client by lazy { Client("http://localhost:${server.runtimePort}") }
 
     @BeforeClass fun warmup() {
-        initialize()
-
-        main(arrayOf())
+        stop()
+        reset()
+        main(arrayOf(databaseEngine))
 
         val warmupRounds = if (THREADS > 1) 2 else 0
         (1..warmupRounds).forEach {
@@ -45,6 +51,29 @@ class BenchmarkTest {
         }
     }
 
+    fun store() {
+        assertFailsWith<IllegalStateException> {
+            createStore("invalid")
+        }
+    }
+
+    fun web() {
+        val web = Web()
+        web.init()
+
+        val webRoutes = web.routes.map { it.key.method to it.key.path.path }
+        val benchmarkRoutes = listOf(
+            GET to "/plaintext",
+            GET to "/json",
+            GET to "/fortunes",
+            GET to "/db",
+            GET to "/query",
+            GET to "/update"
+        )
+
+        assert(webRoutes.containsAll(benchmarkRoutes))
+    }
+
     fun json() {
         val response = client.get("/json")
         val content = response.responseBody
@@ -61,7 +90,15 @@ class BenchmarkTest {
         assert("Hello, World!" == content)
     }
 
-    fun fortunes() = fortunesCheck("/fortunes")
+    fun fortunes() {
+        val response = client.get("/fortunes")
+        val content = response.responseBody
+
+        checkResponse(response, "text/html;charset=utf-8")
+        assert(content.contains("<td>&lt;script&gt;alert(&quot;This should not be "))
+        assert(content.contains(" displayed in a browser alert box.&quot;);&lt;/script&gt;</td>"))
+        assert(content.contains("<td>フレームワークのベンチマーク</td>"))
+    }
 
     fun no_query_parameter() {
         val response = client.get("/db")
@@ -116,15 +153,6 @@ class BenchmarkTest {
             assert(!r.containsKey(World::_id.name))
             assert((r[World::id.name] as Int) in 1..10000)
         }
-    }
-
-    private fun fortunesCheck(url: String) {
-        val response = client.get(url)
-        val content = response.responseBody
-
-        checkResponse(response, "text/html;charset=utf-8")
-        assert(content.contains("<td>&lt;script&gt;alert(&quot;This should not be displayed in a browser alert box.&quot;);&lt;/script&gt;</td>"))
-        assert(content.contains("<td>フレームワークのベンチマーク</td>"))
     }
 
     private fun checkResponse(res: Response, contentType: String) {
