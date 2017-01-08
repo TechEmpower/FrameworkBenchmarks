@@ -19,7 +19,6 @@ private val FORTUNE: String = setting<String>("fortuneCollection") ?: "fortune"
 
 internal fun createStore(engine: String): Repository = when (engine) {
     "mongodb" -> MongoDbRepository()
-    "mysql" -> MySqlRepository()
     else -> error("Unsupported database")
 }
 
