@@ -38,7 +38,7 @@ if [ ! -f "${IROOT}/ffead-cpp-nginx-server.installed" ]; then
 	fw_untar nginx-1.11.3.tar.gz
 	sudo rm -rf ${IROOT}/nginxfc
 	cd nginx-1.11.3
-	./configure --prefix=${IROOT}/nginxfc --with-ld-opt="-lstdc++ -L${IROOT}/ffead-cpp-2.0/lib -L${IROOT}" --add-module="${IROOT}/ffead-cpp-2.0/ngx_mod" --with-cc-opt="-I${IROOT}/include/libmongoc-1.0/ -I${IROOT}/include/libbson-1.0/ -I${IROOT}/ffead-cpp-2.0/include -w -fpermissive"
+	./configure --prefix=${IROOT}/nginxfc --with-ld-opt="-lstdc++ -L${IROOT}/ffead-cpp-2.0/lib -L${IROOT}" --add-module="${IROOT}/ffead-cpp-2.0/ngx_mod" --with-cc-opt="-I${IROOT}/include/ -I${IROOT}/include/libmongoc-1.0/ -I${IROOT}/include/libbson-1.0/ -I${IROOT}/ffead-cpp-2.0/include -w -fpermissive"
 	make install
 	cd -
 	touch ${IROOT}/ffead-cpp-nginx-server.installed
