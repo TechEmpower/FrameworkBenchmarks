@@ -2,7 +2,7 @@
   "framework": "hapi",
   "tests": [{
     "default": {
-      "setup_file": "setup-mongodb",
+      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/mongoose/db",
@@ -26,7 +26,7 @@
       "versus": "nodejs"
     },
     "mysql": {
-      "setup_file": "setup-mysql",
+      "setup_file": "setup",
       "db_url": "/sequelize/db",
       "query_url": "/sequelize/queries?queries=",
       "fortune_url": "/sequelize/fortunes",
@@ -48,7 +48,7 @@
       "versus": "nodejs"
     },
     "postgres": {
-      "setup_file": "setup-postgresql",
+      "setup_file": "setup",
       "db_url": "/sequelize-pg/db",
       "query_url": "/sequelize-pg/queries?queries=",
       "fortune_url": "/sequelize-pg/fortunes",

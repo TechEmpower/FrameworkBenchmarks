@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DRIVER=
+DRIVER=QPSQL
 UWSGI=
 NGINX=
 PROCESS_OR_THREAD=-t

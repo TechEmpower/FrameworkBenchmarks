@@ -2,7 +2,7 @@
 
 fw_installed cutelyst && return 0
 
-CUTELYST_VER=r1.0.0
+CUTELYST_VER=r1.2.0
 QT_VERSION_MM=56
 QT_VERSION_FULL=562-trusty
 
@@ -25,6 +25,5 @@ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$IROOT
 
 make -j $MAX_THREADS && sudo make install
 
-echo "" > $IROOT/cutelyst.installed
+echo "QT_VERSION_MM=${QT_VERSION_MM}" > $IROOT/cutelyst.installed
 
-source $IROOT/cutelyst.installed

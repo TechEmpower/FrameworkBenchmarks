@@ -13,18 +13,18 @@ FortuneTest::FortuneTest(QObject *parent) : Controller(parent)
 
 void FortuneTest::fortunes_raw_postgres(Context *c)
 {
-    QSqlQuery query = CPreparedSqlQueryForDatabase(
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QLatin1String("SELECT id, message FROM fortune"),
-                QSqlDatabase::database(QLatin1String("postgres-") + QThread::currentThread()->objectName()));
+                QStringLiteral("postgres"));
     auto fortunes = processQuery(c, query);
     renderRaw(c, fortunes);
 }
 
 void FortuneTest::fortunes_raw_mysql(Context *c)
 {
-    QSqlQuery query = CPreparedSqlQueryForDatabase(
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QLatin1String("SELECT id, message FROM fortune"),
-                QSqlDatabase::database(QLatin1String("mysql-") + QThread::currentThread()->objectName()));
+                QStringLiteral("mysql"));
     auto fortunes = processQuery(c, query);
     renderRaw(c, fortunes);
 }

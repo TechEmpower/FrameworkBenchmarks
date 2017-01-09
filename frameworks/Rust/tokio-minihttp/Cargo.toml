@@ -1,0 +1,13 @@
+[package]
+name = "tokio-minihttp"
+version = "0.1.0"
+authors = ["Gökberk Yaltıraklı <webdosusb@gmail.com>"]
+
+[dependencies]
+futures = "0.1"
+httparse = "1.1"
+serde_json = "0.8"
+num_cpus = "1.0"
+tokio-proto = { git = "https://github.com/tokio-rs/tokio-proto", revision = "e42b3bfb" }
+tokio-service = { git = "https://github.com/tokio-rs/tokio-service", revision = "0c904c40" }
+tokio-minihttp = { git = "https://github.com/tokio-rs/tokio-minihttp", revision = "6ac81b31" }

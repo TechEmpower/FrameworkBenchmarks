@@ -1,13 +1,12 @@
 import com.fasterxml.jackson.databind.JsonNode
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.Method.Get
-import com.twitter.finagle.http.Status.{NotFound, Ok}
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.mysql.Parameter.wrap
 import com.twitter.finagle.mysql.{Client, IntValue, Result, ResultSet}
 import com.twitter.util.Future.collect
 import io.fintrospect.formats.Jackson.JsonFormat.{array, number, obj}
-import io.fintrospect.formats.Jackson.ResponseBuilder.implicits._
+import io.fintrospect.formats.Jackson.ResponseBuilder._
 import io.fintrospect.parameters.{ParameterSpec, Query}
 import io.fintrospect.{RouteSpec, ServerRoutes}
 
@@ -35,7 +34,7 @@ object DatabaseRoutes {
     val queryRoute = RouteSpec().at(Get) / "db" bindTo Service.mk {
       _: Request => getStatement(generateRandomNumber)
         .map(toJson)
-        .map(_.map(Ok(_)).getOrElse(NotFound()).build())
+        .map(_.map(Ok(_)).getOrElse(NotFound("")).build())
     }
 
     val numberOfQueries = Query.optional(ParameterSpec.string("queries").map {

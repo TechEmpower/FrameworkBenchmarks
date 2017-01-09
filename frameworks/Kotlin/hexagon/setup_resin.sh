@@ -4,5 +4,6 @@ fw_depends mongodb java resin
 
 gradle/wrapper
 
-cp -f build/libs/ROOT.war $RESIN_HOME/webapps
+rm -rf $RESIN_HOME/webapps/*
+cp build/libs/ROOT.war $RESIN_HOME/webapps
 resinctl start

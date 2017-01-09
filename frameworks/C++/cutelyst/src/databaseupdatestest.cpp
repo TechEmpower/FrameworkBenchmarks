@@ -16,23 +16,23 @@ DatabaseUpdatesTest::DatabaseUpdatesTest(QObject *parent) : Controller(parent)
 
 void DatabaseUpdatesTest::updates_postgres(Context *c)
 {
-    QSqlQuery query = CPreparedSqlQueryForDatabase(
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QLatin1String("SELECT randomNumber FROM world WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("postgres-") + QThread::currentThread()->objectName()));
-    QSqlQuery updateQuery = CPreparedSqlQueryForDatabase(
+                QStringLiteral("postgres"));
+    QSqlQuery updateQuery = CPreparedSqlQueryThreadForDB(
                 QLatin1String("UPDATE world SET randomNumber = :randomNumber WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("postgres-") + QThread::currentThread()->objectName()));
+                QStringLiteral("postgres"));
     processQuery(c, query, updateQuery);
 }
 
 void DatabaseUpdatesTest::updates_mysql(Context *c)
 {
-    QSqlQuery query = CPreparedSqlQueryForDatabase(
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QLatin1String("SELECT randomNumber FROM world WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("mysql-") + QThread::currentThread()->objectName()));
-    QSqlQuery updateQuery = CPreparedSqlQueryForDatabase(
+                QStringLiteral("mysql"));
+    QSqlQuery updateQuery = CPreparedSqlQueryThreadForDB(
                 QLatin1String("UPDATE world SET randomNumber = :randomNumber WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("mysql-") + QThread::currentThread()->objectName()));
+                QStringLiteral("mysql"));
     processQuery(c, query, updateQuery);
 }
 

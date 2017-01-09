@@ -1,11 +1,10 @@
 #!/bin/bash
 
-fw_depends mongodb nodejs
+fw_depends mongodb mysql postgresql nodejs
 
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/mongodb-raw.js
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/mongoose.js
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/mysql-raw.js
-sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/redis.js
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/sequelize.js
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' handlers/sequelize-postgres.js
 
