@@ -987,7 +987,7 @@ class Benchmarker:
     self.fwroot = setup_util.get_fwroot()
 
     # setup current_benchmark.txt location
-    self.current_benchmark = os.path.join(self.fwroot, "tmp/current_benchmark.txt")
+    self.current_benchmark = "/tmp/current_benchmark.txt"
 
     # setup results and latest_results directories
     self.result_directory = os.path.join(self.fwroot, "results")
