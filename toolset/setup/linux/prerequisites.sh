@@ -45,6 +45,8 @@ sudo sh -c "echo '*            soft    rtprio             99' >> /etc/security/l
 # For now, this still ensures you have to be in the framework root to run it
 sudo tee /etc/profile.d/tfb.sh <<EOF
 #!/bin/bash
-alias tfb="$(pwd)/toolset/run-tests.py"
+tfb() {
+  $(pwd)/toolset/run-tests.py "\$@"
+}
 EOF
 source /etc/profile.d/tfb.sh
