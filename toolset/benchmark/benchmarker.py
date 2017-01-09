@@ -991,7 +991,7 @@ class Benchmarker:
 
     # setup results and latest_results directories
     self.result_directory = os.path.join(self.fwroot, "results")
-    self.logs_directory = os.path.join(self.fwroot, "logs")
+    self.logs_directory = os.path.join(self.result_directory, "logs")
     if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
         shutil.rmtree(os.path.join(self.fwroot, "results"))
 
