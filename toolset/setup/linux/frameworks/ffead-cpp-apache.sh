@@ -2,15 +2,12 @@
 
 fw_installed ffead-cpp-apache && return 0
 
-if [ ! -f "${IROOT}/ffead-cpp-unixodbc.installed" ]; then
-        fw_get -o unixODBC-2.3.4.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.4.tar.gz
-        fw_untar unixODBC-2.3.4.tar.gz
-        cd unixODBC-2.3.4
-        ./configure --enable-stats=no --enable-gui=no --enable-drivers=no --enable-iconv --with-iconv-char-enc=UTF8 --with-iconv-ucode-enc=UTF16LE --libdir=${IROOT} --prefix=${IROOT} --sysconfdir=${IROOT}
-        sudo make install
-        cd -
-        touch ${IROOT}/ffead-cpp-unixodbc.installed
-fi
+fw_get -o unixODBC-2.3.4.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.4.tar.gz
+fw_untar unixODBC-2.3.4.tar.gz
+cd unixODBC-2.3.4
+./configure --enable-stats=no --enable-gui=no --enable-drivers=no --enable-iconv --with-iconv-char-enc=UTF8 --with-iconv-ucode-enc=UTF16LE --libdir=${IROOT} --prefix=${IROOT} --sysconfdir=${IROOT}
+sudo make install
+cd -
 
 sudo apt-get install -y build-essential
 sudo apt-get install -y uuid-dev libmyodbc odbc-postgresql
@@ -29,23 +26,20 @@ sudo sed -i 's|localhost|'${DBHOST}'|g' /var/www/ffead-cpp-2.0/web/te-benchmark/
 sudo sed -i 's|localhost|'${DBHOST}'|g' /var/www/ffead-cpp-2.0/web/te-benchmark/config/sdormmysql.xml
 sudo sed -i 's|localhost|'${DBHOST}'|g' /var/www/ffead-cpp-2.0/web/te-benchmark/config/sdormpostgresql.xml
 
-sudo rm -f /etc/odbcinst.ini
-sudo rm -f /etc/odbc.ini
+rm -f ${IROOT}/odbcinst.ini
+rm -f ${IROOT}/odbc.ini
 
-sudo cp /var/www/ffead-cpp-2.0/resources/sample-odbcinst.ini /etc/odbcinst.ini
-sudo cp /var/www/ffead-cpp-2.0/resources/sample-odbc.ini /etc/odbc.ini
+cp ${IROOT}/ffead-cpp-2.0/resources/sample-odbcinst.ini ${IROOT}/odbcinst.ini
+cp ${IROOT}/ffead-cpp-2.0/resources/sample-odbc.ini ${IROOT}/odbc.ini
 
-sudo sed -i 's|localhost|'${DBHOST}'|g' /etc/odbc.ini
+sudo sed -i 's|localhost|'${DBHOST}'|g' ${IROOT}/odbc.ini
 
-if [ ! -f "${IROOT}/ffead-cpp-mongocdriver.installed" ]; then
-        fw_get -o mongo-c-driver-1.4.0.tar.gz https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
-        fw_untar mongo-c-driver-1.4.0.tar.gz
-        cd mongo-c-driver-1.4.0/
-        ./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup
-        make && sudo make install
-        cd -
-        touch ${IROOT}/ffead-cpp-mongocdriver.installed
-fi
+fw_get -o mongo-c-driver-1.4.0.tar.gz https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
+fw_untar mongo-c-driver-1.4.0.tar.gz
+cd mongo-c-driver-1.4.0/
+./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup
+make && sudo make install
+cd -
 
 FFEADROOT=/var/www/ffead-cpp-2.0
 ETROOT=${FFEADROOT//\//\\/}

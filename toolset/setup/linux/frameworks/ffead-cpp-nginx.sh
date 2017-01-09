@@ -2,15 +2,12 @@
 
 fw_installed ffead-cpp-nginx && return 0
 
-if [ ! -f "${IROOT}/ffead-cpp-unixodbc.installed" ]; then
-        fw_get -o unixODBC-2.3.4.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.4.tar.gz
-        fw_untar unixODBC-2.3.4.tar.gz
-        cd unixODBC-2.3.4
-        ./configure --enable-stats=no --enable-gui=no --enable-drivers=no --enable-iconv --with-iconv-char-enc=UTF8 --with-iconv-ucode-enc=UTF16LE --libdir=${IROOT} --prefix=${IROOT} --sysconfdir=${IROOT}
-        sudo make install
-        cd -
-        touch ${IROOT}/ffead-cpp-unixodbc.installed
-fi
+fw_get -o unixODBC-2.3.4.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.4.tar.gz
+fw_untar unixODBC-2.3.4.tar.gz
+cd unixODBC-2.3.4
+./configure --enable-stats=no --enable-gui=no --enable-drivers=no --enable-iconv --with-iconv-char-enc=UTF8 --with-iconv-ucode-enc=UTF16LE --libdir=${IROOT} --prefix=${IROOT} --sysconfdir=${IROOT}
+sudo make install
+cd -
 
 sudo apt-get install -y build-essential
 sudo apt-get install -y uuid-dev libmyodbc odbc-postgresql
@@ -23,39 +20,33 @@ sudo rm -rf ${IROOT}/ffead-cpp-2.0
 mv ${IROOT}/ffead-cpp-2.0-bin ${IROOT}/ffead-cpp-2.0
 #rm -rf ffead-cpp-2.0/
 
-if [ ! -f "${IROOT}/ffead-cpp-mongocdriver.installed" ]; then
-        fw_get -o mongo-c-driver-1.4.0.tar.gz https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
-        fw_untar mongo-c-driver-1.4.0.tar.gz
-        cd mongo-c-driver-1.4.0/
-        ./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup
-        make && sudo make install
-        cd -
-        touch ${IROOT}/ffead-cpp-mongocdriver.installed
-fi
+fw_get -o mongo-c-driver-1.4.0.tar.gz https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
+fw_untar mongo-c-driver-1.4.0.tar.gz
+cd mongo-c-driver-1.4.0/
+./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup
+make && sudo make install
+cd -
 
-if [ ! -f "${IROOT}/ffead-cpp-nginx-server.installed" ]; then
-	fw_get -o nginx-1.11.3.tar.gz http://nginx.org/download/nginx-1.11.3.tar.gz
-	fw_untar nginx-1.11.3.tar.gz
-	sudo rm -rf ${IROOT}/nginxfc
-	cd nginx-1.11.3
-	./configure --prefix=${IROOT}/nginxfc --with-ld-opt="-lstdc++ -L${IROOT}/ffead-cpp-2.0/lib -L${IROOT}" --add-module="${IROOT}/ffead-cpp-2.0/ngx_mod" --with-cc-opt="-I${IROOT}/include/ -I${IROOT}/include/libmongoc-1.0/ -I${IROOT}/include/libbson-1.0/ -I${IROOT}/ffead-cpp-2.0/include -w -fpermissive"
-	make install
-	cd -
-	touch ${IROOT}/ffead-cpp-nginx-server.installed
-fi
+fw_get -o nginx-1.11.3.tar.gz http://nginx.org/download/nginx-1.11.3.tar.gz
+fw_untar nginx-1.11.3.tar.gz
+sudo rm -rf ${IROOT}/nginxfc
+cd nginx-1.11.3
+./configure --prefix=${IROOT}/nginxfc --with-ld-opt="-lstdc++ -L${IROOT}/ffead-cpp-2.0/lib -L${IROOT}" --add-module="${IROOT}/ffead-cpp-2.0/ngx_mod" --with-cc-opt="-I${IROOT}/include/ -I${IROOT}/include/libmongoc-1.0/ -I${IROOT}/include/libbson-1.0/ -I${IROOT}/ffead-cpp-2.0/include -w -fpermissive"
+make install
+cd -
 
 sed -i 's|localhost|'${DBHOST}'|g' ${IROOT}/ffead-cpp-2.0/web/te-benchmark/config/sdorm.xml
 sed -i 's|localhost|'${DBHOST}'|g' ${IROOT}/ffead-cpp-2.0/web/te-benchmark/config/sdormmongo.xml
 sed -i 's|localhost|'${DBHOST}'|g' ${IROOT}/ffead-cpp-2.0/web/te-benchmark/config/sdormmysql.xml
 sed -i 's|localhost|'${DBHOST}'|g' ${IROOT}/ffead-cpp-2.0/web/te-benchmark/config/sdormpostgresql.xml
 
-sudo rm -f /etc/odbcinst.ini
-sudo rm -f /etc/odbc.ini
+rm -f ${IROOT}/odbcinst.ini
+rm -f ${IROOT}/odbc.ini
 
-sudo cp ${IROOT}/ffead-cpp-2.0/resources/sample-odbcinst.ini /etc/odbcinst.ini
-sudo cp ${IROOT}/ffead-cpp-2.0/resources/sample-odbc.ini /etc/odbc.ini
+cp ${IROOT}/ffead-cpp-2.0/resources/sample-odbcinst.ini ${IROOT}/odbcinst.ini
+cp ${IROOT}/ffead-cpp-2.0/resources/sample-odbc.ini ${IROOT}/odbc.ini
 
-sudo sed -i 's|localhost|'${DBHOST}'|g' /etc/odbc.ini
+sudo sed -i 's|localhost|'${DBHOST}'|g' ${IROOT}/odbc.ini
 
 cp ${IROOT}/ffead-cpp-2.0/ngx_mod/nginx.conf ${IROOT}/nginxfc/conf/
 sed -i 's|FFEAD_PATH|'${IROOT}/ffead-cpp-2.0'|g' ${IROOT}/nginxfc/conf/nginx.conf
