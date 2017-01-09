@@ -3,8 +3,6 @@
 set -x
 export DEBIAN_FRONTEND=noninteractive
 
-source ./toolset/setup/linux/bash_functions.sh
-
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
 sudo apt-get -yq update
