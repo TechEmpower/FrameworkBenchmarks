@@ -255,7 +255,7 @@ class Benchmarker:
   # full_results_directory
   ############################################################
   def full_results_directory(self):
-    path = os.path.join(self.result_directory, self.timestamp)
+    path = os.path.join(self.fwroot, self.result_directory, self.timestamp)
     try:
       os.makedirs(path)
     except OSError:
@@ -987,8 +987,8 @@ class Benchmarker:
     self.fwroot = setup_util.get_fwroot()
 
     # setup results and latest_results directories
-    self.result_directory = os.path.join("results")
-    self.logs_directory = os.path.join("logs")
+    self.result_directory = os.path.join(self.fwroot, "results")
+    self.logs_directory = os.path.join(self.fwroot, "logs")
     if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
         shutil.rmtree(os.path.join(self.fwroot, "results"))
 
