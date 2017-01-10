@@ -22,9 +22,10 @@ $MATRIX
 
 before_script:
   - source ./toolset/travis/travis_clean.sh
+  - source ./toolset/travis/travis_setup.sh
 
 script:
-  - tfb --mode verify --test "\$TEST"
+  - ./toolset/run-tests.py --mode verify --test "\$TEST"
   
 cache:
   directories:
