@@ -12,7 +12,7 @@ cp $FFEAD_CPP_PATH/web/te-benchmark/config/sdormpostgresql.xml $FFEAD_CPP_PATH/w
 rm -rf $FFEAD_CPP_PATH/lib
 cp -Rf $FFEAD_CPP_PATH/libsql $FFEAD_CPP_PATH/lib
 cp $FFEAD_CPP_PATH/web/te-benchmark/sql-src/TeBkWorldsql.h $FFEAD_CPP_PATH/web/te-benchmark/include/TeBkWorld.h
-chown -R www-data:www-data $FFEAD_CPP_PATH
+#chown -R www-data:www-data $FFEAD_CPP_PATH
 export ODBCINI=$IROOT/odbc.ini
 export ODBCSYSINI=$IROOT
 ${IROOT}/httpd/bin/apachectl start > ffead.log 2>&1
