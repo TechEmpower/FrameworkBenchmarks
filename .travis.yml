@@ -188,6 +188,8 @@ env:
     - "TESTDIR=Ur/urweb"
 
 before_script:
+  - ./toolset/travis/travis_diff.py
+
   # travis_clean.sh takes care of some services that are baked into the travis
   # build. Using language: generic gets us an ubuntu build with fewer services,
   # but includes database installs, ruby and rvm installs, and others that interfere
