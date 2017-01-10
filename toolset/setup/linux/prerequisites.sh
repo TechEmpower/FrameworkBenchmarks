@@ -3,13 +3,6 @@
 set -x
 export DEBIAN_FRONTEND=noninteractive
 
-source $FWROOT/toolset/setup/linux/bash_functions.sh
-
-RETCODE=$(fw_exists fwbm_prereqs_installed)
-[ ! "$RETCODE" == 0 ] || { \
-  echo "Prerequisites installed!"; 
-  return 0; }
-
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
 sudo apt-get -yq update
@@ -42,22 +35,16 @@ sudo pip install colorama==0.3.1
 sudo pip install progressbar==2.2
 sudo pip install requests
 
-# Stop permanently overwriting people's files just
-# for trying out our software!
-RETCODE=$(fw_exists ~/.bash_profile.bak)
-[ ! "$RETCODE" == 0 ] || { \
-  echo "Backing up your original ~/.bash_profile, ~/.profile, ~/.bashrc"
-  mv ~/.bash_profile ~/.bash_profile.bak || true
-  mv ~/.profile ~/.profile.bak || true
-  mv ~/.bashrc ~/.bashrc.bak || true
-}
-
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 sudo sh -c "echo '*            hard    rtprio             99' >> /etc/security/limits.conf"
 sudo sh -c "echo '*            soft    rtprio             99' >> /etc/security/limits.conf"
 
-# Sudo in case we don't have permissions on IROOT
-sudo touch fwbm_prereqs_installed
-
-# Ensure everyone can see the file
-sudo chmod 775 fwbm_prereqs_installed
+# Create a tfb command alias for running the toolset
+# For now, this still ensures you have to be in the framework root to run it
+sudo tee /etc/profile.d/tfb.sh <<EOF
+#!/bin/bash
+tfb() {
+  $(pwd)/toolset/run-tests.py "\$@"
+}
+EOF
+source /etc/profile.d/tfb.sh

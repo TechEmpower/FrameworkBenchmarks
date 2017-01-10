@@ -2,18 +2,6 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-sudo apt-get update
-sudo apt-get install python-dev
-sudo pip install pyopenssl --upgrade
-sudo pip install ndg-httpsclient --upgrade
-sudo pip install pyasn1 --upgrade
-sudo pip install colorama
-# Version 2.3 has a nice Counter() and other features
-# but it requires —-allow-external and -—allow-unverified
-sudo pip install progressbar
-echo "127.0.0.1 " `hostname` | sudo tee /etc/hosts
-echo "127.0.0.1 localhost" | sudo tee /etc/hosts
-
 # Turn on command tracing
 set -x
 
@@ -41,3 +29,4 @@ echo 127.0.0.1 TFB-database | sudo tee --append /etc/hosts
 echo 127.0.0.1 TFB-client   | sudo tee --append /etc/hosts
 echo 127.0.0.1 TFB-server   | sudo tee --append /etc/hosts
 
+source ./toolset/setup/linux/prerequisites.sh

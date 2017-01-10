@@ -255,7 +255,7 @@ class Benchmarker:
   # full_results_directory
   ############################################################
   def full_results_directory(self):
-    path = os.path.join(self.result_directory, self.timestamp)
+    path = os.path.join(self.fwroot, self.result_directory, self.timestamp)
     try:
       os.makedirs(path)
     except OSError:
@@ -319,8 +319,8 @@ class Benchmarker:
 
     # If the tests have been interrupted somehow, then we want to resume them where we left
     # off, rather than starting from the beginning
-    if os.path.isfile('current_benchmark.txt'):
-        with open('current_benchmark.txt', 'r') as interrupted_benchmark:
+    if os.path.isfile(self.current_benchmark):
+        with open(self.current_benchmark, 'r') as interrupted_benchmark:
             interrupt_bench = interrupted_benchmark.read().strip()
             for index, atest in enumerate(tests):
                 if atest.name == interrupt_bench:
@@ -441,7 +441,7 @@ class Benchmarker:
     if self.os.lower() == 'windows':
       logging.debug("Executing __run_tests on Windows")
       for test in tests:
-        with open('current_benchmark.txt', 'w') as benchmark_resume_file:
+        with open(self.current_benchmark, 'w') as benchmark_resume_file:
           benchmark_resume_file.write(test.name)
         if self.__run_test(test) != 0:
           error_happened = True
@@ -461,7 +461,7 @@ class Benchmarker:
         pbar_test = pbar_test + 1
         if __name__ == 'benchmark.benchmarker':
           print header("Running Test: %s" % test.name)
-          with open('current_benchmark.txt', 'w') as benchmark_resume_file:
+          with open(self.current_benchmark, 'w') as benchmark_resume_file:
             benchmark_resume_file.write(test.name)
           test_process = Process(target=self.__run_test, name="Test Runner (%s)" % test.name, args=(test,))
           test_process.start()
@@ -475,8 +475,8 @@ class Benchmarker:
           if test_process.exitcode != 0:
             error_happened = True
       pbar.finish()
-    if os.path.isfile('current_benchmark.txt'):
-      os.remove('current_benchmark.txt')
+    if os.path.isfile(self.current_benchmark):
+      os.remove(self.current_benchmark)
     logging.debug("End __run_tests.")
 
     if error_happened:
@@ -986,9 +986,12 @@ class Benchmarker:
     # Remember root directory
     self.fwroot = setup_util.get_fwroot()
 
+    # setup current_benchmark.txt location
+    self.current_benchmark = "/tmp/current_benchmark.txt"
+
     # setup results and latest_results directories
-    self.result_directory = os.path.join("results")
-    self.logs_directory = os.path.join("logs")
+    self.result_directory = os.path.join(self.fwroot, "results")
+    self.logs_directory = os.path.join(self.result_directory, "logs")
     if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
         shutil.rmtree(os.path.join(self.fwroot, "results"))
 
