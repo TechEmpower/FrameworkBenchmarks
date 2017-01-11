@@ -19,11 +19,13 @@ cd -
 sudo apt-get install -y build-essential
 sudo apt-get install -y uuid-dev libmyodbc odbc-postgresql
 
-fw_get -o ffead-cpp-2.0.tar.gz https://github.com/sumeetchhetri/ffead-cpp/releases/download/2.0/ffead-cpp-2.0-te-bin.tar.gz
-fw_untar ffead-cpp-2.0.tar.gz
+if [ ! -d "${IROOT}/ffead-cpp-2.0" ]; then
+	fw_get -o ffead-cpp-2.0.tar.gz https://github.com/sumeetchhetri/ffead-cpp/releases/download/2.0/ffead-cpp-2.0-te-bin.tar.gz
+	fw_untar ffead-cpp-2.0.tar.gz
 
-rm -rf ffead-cpp-2.0
-cp -rf ffead-cpp-2.0-bin ${IROOT}/ffead-cpp-2.0
+	rm -rf ffead-cpp-2.0
+	cp -rf ffead-cpp-2.0-bin ${IROOT}/ffead-cpp-2.0
+fi
 
 fw_get -o httpd-2.4.25.tar.gz http://www-us.apache.org/dist//httpd/httpd-2.4.25.tar.gz
 fw_get -o apr-1.5.2.tar.gz http://www-us.apache.org/dist//apr/apr-1.5.2.tar.gz
@@ -56,7 +58,7 @@ cp ${IROOT}/ffead-cpp-2.0/resources/sample-odbc.ini ${IROOT}/odbc.ini
 
 sed -i 's|localhost|'${DBHOST}'|g' ${IROOT}/odbc.ini
 
-mv ${IROOT}/ffead-cpp-2.0 ${IROOT}/httpd/htdocs/
+cp -rf ${IROOT}/ffead-cpp-2.0 ${IROOT}/httpd/htdocs/
 
 FFEADROOT=${IROOT}/httpd/htdocs/ffead-cpp-2.0
 ETROOT=${FFEADROOT//\//\\/}

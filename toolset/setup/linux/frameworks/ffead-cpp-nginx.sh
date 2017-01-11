@@ -12,13 +12,15 @@ cd -
 sudo apt-get install -y build-essential
 sudo apt-get install -y uuid-dev libmyodbc odbc-postgresql
 
-fw_get -o ffead-cpp-2.0.tar.gz https://github.com/sumeetchhetri/ffead-cpp/releases/download/2.0/ffead-cpp-2.0-te-bin.tar.gz
-fw_untar ffead-cpp-2.0.tar.gz
+if [ ! -d "${IROOT}/ffead-cpp-2.0" ]; then
+	fw_get -o ffead-cpp-2.0.tar.gz https://github.com/sumeetchhetri/ffead-cpp/releases/download/2.0/ffead-cpp-2.0-te-bin.tar.gz
+	fw_untar ffead-cpp-2.0.tar.gz
 
-rm -rf ${IROOT}/ffead-cpp-2.0
-#cp -R ffead-cpp-2.0-bin/ ${IROOT}
-mv ${IROOT}/ffead-cpp-2.0-bin ${IROOT}/ffead-cpp-2.0
-#rm -rf ffead-cpp-2.0/
+	rm -rf ${IROOT}/ffead-cpp-2.0
+	#cp -R ffead-cpp-2.0-bin/ ${IROOT}
+	mv ${IROOT}/ffead-cpp-2.0-bin ${IROOT}/ffead-cpp-2.0
+	#rm -rf ffead-cpp-2.0/
+fi
 
 fw_get -o mongo-c-driver-1.4.0.tar.gz https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
 fw_untar mongo-c-driver-1.4.0.tar.gz

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends postgresql apache ffead-cpp-apache
+fw_depends postgresql ffead-cpp-apache
 
 export FFEAD_CPP_PATH=${IROOT}/httpd/htdocs/ffead-cpp-2.0
 export LD_LIBRARY_PATH=$IROOT:$FFEAD_CPP_PATH/lib:$LD_LIBRARY_PATH
