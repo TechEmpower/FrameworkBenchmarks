@@ -343,14 +343,16 @@ class Benchmarker:
     try:
       if os.name == 'nt':
         return True
-      #subprocess.check_call(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu[0-9]*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
-      subprocess.check_call("sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w net.core.somaxconn=65535".rsplit(" "))
-      subprocess.check_call("sudo -s ulimit -n 65535".rsplit(" "))
-      subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
-      subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_recycle=1".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w kernel.shmmax=134217728".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w kernel.shmall=2097152".rsplit(" "))
+      subprocess.call(['sudo', 'sysctl', '-w', 'net.ipv4.tcp_max_syn_backlog=65535'])
+      subprocess.call(['sudo', 'sysctl', '-w', 'net.core.somaxconn=65535'])
+      subprocess.call(['sudo', '-s', 'ulimit', '-n', '65535'])
+      subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_reuse=1'])
+      subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_recycle=1'])
+      subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmmax=134217728'])
+      subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmall=2097152'])
+
+      with open(os.path.join(self.full_results_directory(), 'sysctl.txt'), 'w') as f:
+        f.write(subprocess.checkout_output(['sysctl','-a']))
     except subprocess.CalledProcessError:
       return False
   ############################################################
