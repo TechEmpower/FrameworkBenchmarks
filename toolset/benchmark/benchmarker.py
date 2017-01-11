@@ -200,7 +200,7 @@ class Benchmarker:
   # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_output_file(self, test_name, test_type):
-    return os.path.join(self.result_directory, self.timestamp, self.logs_directory, test_name, test_type, "raw")
+    return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "raw")
   ############################################################
   # End get_output_file
   ############################################################
@@ -228,7 +228,7 @@ class Benchmarker:
   # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_stats_file(self, test_name, test_type):
-    return os.path.join(self.result_directory, self.timestamp, self.logs_directory, test_name, test_type, "stats")
+    return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "stats")
   ############################################################
   # End get_stats_file
   ############################################################
@@ -507,7 +507,7 @@ class Benchmarker:
       else:
         sys.exit(code)
 
-    logDir = os.path.join(self.full_results_directory(), self.logs_directory, test.name.lower())
+    logDir = os.path.join(self.full_results_directory(), test.name.lower())
     try:
       os.makedirs(logDir)
     except Exception:
@@ -998,7 +998,6 @@ class Benchmarker:
 
     # setup results and latest_results directories
     self.result_directory = os.path.join(self.fwroot, "results")
-    self.logs_directory = os.path.join(self.full_results_directory(), "logs")
     if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
         shutil.rmtree(os.path.join(self.fwroot, "results"))
 
