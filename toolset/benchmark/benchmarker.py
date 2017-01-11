@@ -352,7 +352,7 @@ class Benchmarker:
       subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmall=2097152'])
 
       with open(os.path.join(self.full_results_directory(), 'sysctl.txt'), 'w') as f:
-        f.write(subprocess.checkout_output(['sysctl','-a']))
+        f.write(subprocess.check_output(['sudo','sysctl','-a']))
     except subprocess.CalledProcessError:
       return False
   ############################################################
@@ -991,9 +991,14 @@ class Benchmarker:
     # setup current_benchmark.txt location
     self.current_benchmark = "/tmp/current_benchmark.txt"
 
+    if hasattr(self, 'parse') and self.parse != None:
+      self.timestamp = self.parse
+    else:
+      self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
+
     # setup results and latest_results directories
     self.result_directory = os.path.join(self.fwroot, "results")
-    self.logs_directory = os.path.join(self.result_directory, "logs")
+    self.logs_directory = os.path.join(self.full_results_directory(), "logs")
     if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
         shutil.rmtree(os.path.join(self.fwroot, "results"))
 
@@ -1002,11 +1007,6 @@ class Benchmarker:
     if args['clean_all']:
         os.system("sudo rm -rf " + self.install_root)
         os.mkdir(self.install_root)
-
-    if hasattr(self, 'parse') and self.parse != None:
-      self.timestamp = self.parse
-    else:
-      self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
 
     self.results = None
     try:
