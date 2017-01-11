@@ -200,7 +200,7 @@ class Benchmarker:
   # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_output_file(self, test_name, test_type):
-    return os.path.join(self.result_directory, self.timestamp, self.logs_directory, test_name, test_type, "raw")
+    return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "raw")
   ############################################################
   # End get_output_file
   ############################################################
@@ -228,7 +228,7 @@ class Benchmarker:
   # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_stats_file(self, test_name, test_type):
-    return os.path.join(self.result_directory, self.timestamp, self.logs_directory, test_name, test_type, "stats")
+    return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "stats")
   ############################################################
   # End get_stats_file
   ############################################################
@@ -343,14 +343,16 @@ class Benchmarker:
     try:
       if os.name == 'nt':
         return True
-      #subprocess.check_call(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu[0-9]*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
-      subprocess.check_call("sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w net.core.somaxconn=65535".rsplit(" "))
-      subprocess.check_call("sudo -s ulimit -n 65535".rsplit(" "))
-      subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
-      subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_recycle=1".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w kernel.shmmax=134217728".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w kernel.shmall=2097152".rsplit(" "))
+      subprocess.call(['sudo', 'sysctl', '-w', 'net.ipv4.tcp_max_syn_backlog=65535'])
+      subprocess.call(['sudo', 'sysctl', '-w', 'net.core.somaxconn=65535'])
+      subprocess.call(['sudo', '-s', 'ulimit', '-n', '65535'])
+      subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_reuse=1'])
+      subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_recycle=1'])
+      subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmmax=134217728'])
+      subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmall=2097152'])
+
+      with open(os.path.join(self.full_results_directory(), 'sysctl.txt'), 'w') as f:
+        f.write(subprocess.check_output(['sudo','sysctl','-a']))
     except subprocess.CalledProcessError:
       return False
   ############################################################
@@ -505,7 +507,7 @@ class Benchmarker:
       else:
         sys.exit(code)
 
-    logDir = os.path.join(self.full_results_directory(), self.logs_directory, test.name.lower())
+    logDir = os.path.join(self.full_results_directory(), test.name.lower())
     try:
       os.makedirs(logDir)
     except Exception:
@@ -989,9 +991,13 @@ class Benchmarker:
     # setup current_benchmark.txt location
     self.current_benchmark = "/tmp/current_benchmark.txt"
 
+    if hasattr(self, 'parse') and self.parse != None:
+      self.timestamp = self.parse
+    else:
+      self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
+
     # setup results and latest_results directories
     self.result_directory = os.path.join(self.fwroot, "results")
-    self.logs_directory = os.path.join(self.result_directory, "logs")
     if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
         shutil.rmtree(os.path.join(self.fwroot, "results"))
 
@@ -1000,11 +1006,6 @@ class Benchmarker:
     if args['clean_all']:
         os.system("sudo rm -rf " + self.install_root)
         os.mkdir(self.install_root)
-
-    if hasattr(self, 'parse') and self.parse != None:
-      self.timestamp = self.parse
-    else:
-      self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
 
     self.results = None
     try:
