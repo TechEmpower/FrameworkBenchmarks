@@ -25,7 +25,7 @@ before_script:
   - source ./toolset/travis/travis_setup.sh
 
 script:
-  - ./toolset/run-tests.py --mode verify --test "\$TEST"
+  - tfb --mode verify --test "\$TEST"
   
 cache:
   directories:
