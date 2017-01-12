@@ -21,7 +21,7 @@
       "webserver": "Tornado",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Tornado-Py2-Mongo",
+      "display_name": "Tornado",
       "notes": "CPython 2.7",
       "versus": "tornado"
     },
@@ -45,7 +45,7 @@
       "webserver": "Tornado",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Tornado-Pypy-Mongo",
+      "display_name": "Tornado",
       "notes": "Pypy",
       "versus": "tornado"
     },
@@ -67,7 +67,7 @@
       "webserver": "Tornado",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Tornado-Py2-Pg",
+      "display_name": "Tornado",
       "notes": "CPython 2.7",
       "versus": "tornado"
     },
@@ -91,7 +91,7 @@
       "webserver": "Tornado",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Tornado-Py3-Mongo",
+      "display_name": "Tornado",
       "notes": "CPython 3.4",
       "versus": "tornado"
     }
