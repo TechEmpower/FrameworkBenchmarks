@@ -1,0 +1,7 @@
+#!/bin/bash
+
+fw_depends mongodb pypy
+
+pip install --install-option="--prefix=${PYPY_ROOT}" -r $TROOT/requirements.txt
+
+python server_py2.py --port=8080 --mongo=$DBHOST --logging=error &
