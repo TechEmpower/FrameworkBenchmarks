@@ -14,13 +14,16 @@ class BaseHandler(tornado.web.RequestHandler):
 class PlainHandler(BaseHandler):
 
     def set_default_headers(self):
-        self.set_header("Content-Type", 'text/plain')
+        self.set_header("Content-Type", "text/plain")
 
+class HtmlHandler(BaseHandler):
+    def set_default_headers(self):
+        self.set_header("Content-Type", "text/html")
 
 class JsonHandler(BaseHandler):
 
     def set_default_headers(self):
-        self.set_header("Content-Type", "application/json; charset=UTF-8")
+        self.set_header("Content-Type", "application/json")
 
 
 class PlaintextHelloWorldHandler(PlainHandler):

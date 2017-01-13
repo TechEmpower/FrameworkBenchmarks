@@ -8,7 +8,7 @@ import tornado.httpserver
 
 from random import randint
 from tornado.options import options
-from commons import JsonHandler, JsonHelloWorldHandler, PlaintextHelloWorldHandler
+from commons import JsonHandler, JsonHelloWorldHandler, PlaintextHelloWorldHandler, HtmlHandler
 from tornado.ioloop import IOLoop
 
 IOLoop.configure('tornado.platform.asyncio.AsyncIOLoop')
@@ -78,7 +78,7 @@ class UpdateHandler(JsonHandler):
         self.finish(json.dumps(worlds))
 
 
-class FortuneHandler(JsonHandler):
+class FortuneHandler(HtmlHandler):
     async def get(self):
         fortunes = []
 

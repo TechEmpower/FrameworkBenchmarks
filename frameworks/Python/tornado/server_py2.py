@@ -9,7 +9,7 @@ import tornado.httpserver
 from random import randint
 from tornado import gen
 from tornado.options import options
-from commons import JsonHandler, JsonHelloWorldHandler, PlaintextHelloWorldHandler, BaseHandler
+from commons import JsonHandler, JsonHelloWorldHandler, PlaintextHelloWorldHandler, HtmlHandler
 
 
 options.define('port', default=8888, type=int, help="Server port")
@@ -79,7 +79,7 @@ class UpdateHandler(JsonHandler):
         self.finish(json.dumps(worlds))
 
 
-class FortuneHandler(BaseHandler):
+class FortuneHandler(HtmlHandler):
     @gen.coroutine
     def get(self):
         fortunes = []
