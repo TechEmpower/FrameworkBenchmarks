@@ -5,6 +5,8 @@ import sys
 import os
 import platform
 import multiprocessing
+import itertools
+import copy
 from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
 from setup.linux import setup_util
@@ -76,16 +78,17 @@ def main(argv=None):
         help='Optional configuration file to provide argument defaults. All config options can be overridden using the command line.')
     args, remaining_argv = conf_parser.parse_known_args()
 
+    defaults = {}
     try:
-        if not os.path.exists(args.conf_file) and not os.path.exists('benchmark.cfg'):
-            print("No config file found. Falling back to benchmark.cfg.example defaults.")
-            args.conf_file = 'benchmark.cfg.example'
-        with open (args.conf_file):
+        if not os.path.exists(os.path.join(os.environ['FWROOT'], args.conf_file)) and not os.path.exists(os.path.join(os.environ['FWROOT'] + 'benchmark.cfg')):
+            print("No config file found. Aborting!")
+            exit(1)
+        with open (os.path.join(os.environ['FWROOT'], args.conf_file)):
             config = ConfigParser.SafeConfigParser()
-            config.read([os.getcwd() + '/' + args.conf_file])
-            defaults = dict(config.items("Defaults"))
+            config.read([os.path.join(os.environ['FWROOT'], args.conf_file)])
+            defaults.update(dict(config.items("Defaults")))
             # Convert strings into proper python types
-            for k,v in defaults.iteritems():
+            for k, v in defaults.iteritems():
                 try:
                     defaults[k] = literal_eval(v)
                 except Exception:
@@ -99,18 +102,18 @@ def main(argv=None):
     ##########################################################
 
     # Verify and massage options
-    if defaults.client_user or defaults.client_host is None:
+    if defaults['client_user'] is None or defaults['client_host'] is None:
         print("client_user and client_host are required!")
         print("Please check your configuration file.")
         print("Aborting!")
         exit(1)
 
-    if defaults.database_user is None:
-        defaults.database_user = defaults.client_user
-    if defaults.database_host is None:
-        defaults.database_host = defaults.client_host
-    if defaults.server_host is None:
-        defaults.server_host = defaults.client_host
+    if defaults['database_user'] is None:
+        defaults['database_user'] = defaults['client_user']
+    if defaults['database_host'] is None:
+        defaults['database_host'] = defaults['client_host']
+    if defaults['server_host'] is None:
+        defaults['server_host'] = defaults['client_host']
 
     maxThreads = 8
     try:
@@ -137,13 +140,11 @@ def main(argv=None):
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
+    parser.add_argument('--test-dir', nargs='+', dest='test_dir', help='name of framework directory containing all tests to run')
     parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
     parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
     parser.add_argument('-m', '--mode', choices=['benchmark', 'verify'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown')
     parser.add_argument('--list-tests', action='store_true', default=False, help='lists all the known tests that can run')
-    parser.add_argument('--os', choices=['linux', 'windows'], default='linux', help='The operating system of the application/framework server (the one running' +
-                                                                                    'this binary')
-    parser.add_argument('--database-os', choices=['linux', 'windows'], default='linux', help='The operating system of the database server.')
 
     # Benchmark options
     parser.add_argument('--concurrency-levels', default=[8, 16, 32, 64, 128, 256], help='Runs wrk benchmarker with different concurrency value (type int-sequence)', action=StoreSeqAction)
