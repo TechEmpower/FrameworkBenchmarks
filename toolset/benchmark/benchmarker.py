@@ -111,7 +111,7 @@ class Benchmarker:
         ##########################
         # Generate metadata
         ##########################
-        self.run_list_test_metadata(False)
+        self.run_list_test_metadata()
         ##########################
         # Get a list of all known
         # tests that we can run.
