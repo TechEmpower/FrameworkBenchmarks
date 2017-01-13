@@ -9,7 +9,7 @@ import tornado.httpserver
 from random import randint
 from tornado import gen
 from tornado.options import options
-from commons import JsonHandler, JsonHelloWorldHandler, PlaintextHelloWorldHandler, BaseHandler, fortunes_sort
+from commons import JsonHandler, JsonHelloWorldHandler, PlaintextHelloWorldHandler, BaseHandler
 
 
 options.define('port', default=8888, type=int, help="Server port")
@@ -88,7 +88,7 @@ class FortuneHandler(BaseHandler):
         while (yield cursor.fetch_next):
             fortunes.append(cursor.next_object())
         fortunes.append({self.ID: 0, 'message': 'Additional fortune added at request time.'})
-        fortunes.sort(fortunes_sort)
+        fortunes.sort(key=lambda f: f['message'])
         self.render('fortunes.html', fortunes=fortunes)
 
 

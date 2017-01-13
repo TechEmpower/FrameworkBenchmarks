@@ -2,10 +2,6 @@ import json
 import tornado.web
 
 
-def fortunes_sort(o1, o2):
-    return o1['message'] < o2['message']
-
-
 class BaseHandler(tornado.web.RequestHandler):
     RANDOM_NUMBER = "randomNumber"
     ID = "id"
