@@ -19,7 +19,7 @@ impl Service for Techempower {
     type Error = std::io::Error;
     type Future = future::Ok<Response, std::io::Error>;
 
-    fn call(&mut self, req: Request) -> Self::Future {
+    fn call(&self, req: Request) -> Self::Future {
         let mut resp = Response::new();
 
         // Bare-bones router
