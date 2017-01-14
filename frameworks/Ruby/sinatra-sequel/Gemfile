@@ -1,9 +1,19 @@
 source 'https://rubygems.org'
 
-gem 'jdbc-mysql', '~> 5.1.38', :platform => 'jruby', :require => 'jdbc/mysql'
-gem 'json', '~> 1.8.3', :require => 'json/ext'
-gem 'mysql2', '~> 0.4.0', :platform => 'ruby'
-gem 'puma', '~> 2.15.3'
-gem 'sequel', '~> 4.28'
-gem 'sinatra', '~> 1.4.6', :require => 'sinatra/base'
-gem 'slim', '~> 3.0.6'
+gem 'json', '~> 2.0'
+gem 'puma', '~> 3.6', :require=>false
+gem 'sequel', '~> 4.40'
+gem 'sinatra', '>= 2.0.0.beta2', '< 3.0', :require=>'sinatra/base'
+gem 'slim', '~> 3.0'
+gem 'sysrandom', '~> 1.0', :require=>'sysrandom/securerandom'
+
+group :mysql do
+  gem 'jdbc-mysql', '~> 5.1', :platforms=>:jruby, :require=>'jdbc/mysql'
+  gem 'mysql2', '~> 0.4', :platforms=>[:ruby, :mswin]
+end
+
+group :postgresql do
+  gem 'jdbc-postgres', '~> 9.4', :platforms=>:jruby, :require=>'jdbc/postgres'
+  gem 'pg', '~> 0.19', :platforms=>[:ruby, :mswin]
+  gem 'sequel_pg', '~> 1.6', :platforms=>:ruby, :require=>false
+end
