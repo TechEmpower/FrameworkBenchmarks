@@ -200,7 +200,7 @@ class Benchmarker:
   # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_output_file(self, test_name, test_type):
-    return os.path.join(self.result_directory, self.timestamp, self.logs_directory, test_name, test_type, "raw")
+    return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "raw")
   ############################################################
   # End get_output_file
   ############################################################
@@ -228,7 +228,7 @@ class Benchmarker:
   # test_type timestamp/test_type/test_name/raw
   ############################################################
   def get_stats_file(self, test_name, test_type):
-    return os.path.join(self.result_directory, self.timestamp, self.logs_directory, test_name, test_type, "stats")
+    return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "stats")
   ############################################################
   # End get_stats_file
   ############################################################
@@ -255,7 +255,7 @@ class Benchmarker:
   # full_results_directory
   ############################################################
   def full_results_directory(self):
-    path = os.path.join(self.result_directory, self.timestamp)
+    path = os.path.join(self.fwroot, self.result_directory, self.timestamp)
     try:
       os.makedirs(path)
     except OSError:
@@ -319,8 +319,8 @@ class Benchmarker:
 
     # If the tests have been interrupted somehow, then we want to resume them where we left
     # off, rather than starting from the beginning
-    if os.path.isfile('current_benchmark.txt'):
-        with open('current_benchmark.txt', 'r') as interrupted_benchmark:
+    if os.path.isfile(self.current_benchmark):
+        with open(self.current_benchmark, 'r') as interrupted_benchmark:
             interrupt_bench = interrupted_benchmark.read().strip()
             for index, atest in enumerate(tests):
                 if atest.name == interrupt_bench:
@@ -343,14 +343,16 @@ class Benchmarker:
     try:
       if os.name == 'nt':
         return True
-      #subprocess.check_call(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu[0-9]*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
-      subprocess.check_call("sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w net.core.somaxconn=65535".rsplit(" "))
-      subprocess.check_call("sudo -s ulimit -n 65535".rsplit(" "))
-      subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
-      subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_recycle=1".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w kernel.shmmax=134217728".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w kernel.shmall=2097152".rsplit(" "))
+      subprocess.call(['sudo', 'sysctl', '-w', 'net.ipv4.tcp_max_syn_backlog=65535'])
+      subprocess.call(['sudo', 'sysctl', '-w', 'net.core.somaxconn=65535'])
+      subprocess.call(['sudo', '-s', 'ulimit', '-n', '65535'])
+      subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_reuse=1'])
+      subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_recycle=1'])
+      subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmmax=134217728'])
+      subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmall=2097152'])
+
+      with open(os.path.join(self.full_results_directory(), 'sysctl.txt'), 'w') as f:
+        f.write(subprocess.check_output(['sudo','sysctl','-a']))
     except subprocess.CalledProcessError:
       return False
   ############################################################
@@ -441,7 +443,7 @@ class Benchmarker:
     if self.os.lower() == 'windows':
       logging.debug("Executing __run_tests on Windows")
       for test in tests:
-        with open('current_benchmark.txt', 'w') as benchmark_resume_file:
+        with open(self.current_benchmark, 'w') as benchmark_resume_file:
           benchmark_resume_file.write(test.name)
         if self.__run_test(test) != 0:
           error_happened = True
@@ -461,7 +463,7 @@ class Benchmarker:
         pbar_test = pbar_test + 1
         if __name__ == 'benchmark.benchmarker':
           print header("Running Test: %s" % test.name)
-          with open('current_benchmark.txt', 'w') as benchmark_resume_file:
+          with open(self.current_benchmark, 'w') as benchmark_resume_file:
             benchmark_resume_file.write(test.name)
           test_process = Process(target=self.__run_test, name="Test Runner (%s)" % test.name, args=(test,))
           test_process.start()
@@ -475,8 +477,8 @@ class Benchmarker:
           if test_process.exitcode != 0:
             error_happened = True
       pbar.finish()
-    if os.path.isfile('current_benchmark.txt'):
-      os.remove('current_benchmark.txt')
+    if os.path.isfile(self.current_benchmark):
+      os.remove(self.current_benchmark)
     logging.debug("End __run_tests.")
 
     if error_happened:
@@ -505,7 +507,7 @@ class Benchmarker:
       else:
         sys.exit(code)
 
-    logDir = os.path.join(self.full_results_directory(), self.logs_directory, test.name.lower())
+    logDir = os.path.join(self.full_results_directory(), test.name.lower())
     try:
       os.makedirs(logDir)
     except Exception:
@@ -986,9 +988,16 @@ class Benchmarker:
     # Remember root directory
     self.fwroot = setup_util.get_fwroot()
 
+    # setup current_benchmark.txt location
+    self.current_benchmark = "/tmp/current_benchmark.txt"
+
+    if hasattr(self, 'parse') and self.parse != None:
+      self.timestamp = self.parse
+    else:
+      self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
+
     # setup results and latest_results directories
-    self.result_directory = os.path.join("results")
-    self.logs_directory = os.path.join("logs")
+    self.result_directory = os.path.join(self.fwroot, "results")
     if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
         shutil.rmtree(os.path.join(self.fwroot, "results"))
 
@@ -997,11 +1006,6 @@ class Benchmarker:
     if args['clean_all']:
         os.system("sudo rm -rf " + self.install_root)
         os.mkdir(self.install_root)
-
-    if hasattr(self, 'parse') and self.parse != None:
-      self.timestamp = self.parse
-    else:
-      self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
 
     self.results = None
     try:

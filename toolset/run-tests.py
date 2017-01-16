@@ -143,6 +143,7 @@ def main(argv=None):
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
+    parser.add_argument('--test-dir', nargs='+', dest='test_dir', help='name of framework directory containing all tests to run')
     parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
     parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
     parser.add_argument('-m', '--mode', choices=['benchmark', 'verify'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown')

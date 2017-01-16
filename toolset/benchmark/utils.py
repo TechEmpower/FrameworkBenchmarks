@@ -60,10 +60,18 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
     benchmarker = Benchmarker(defaults)
 
   
-  # Search in both old and new directories
-  fwroot = setup_util.get_fwroot() 
-  config_files = glob.glob("%s/*/benchmark_config.json" % fwroot) 
-  config_files.extend(glob.glob("%s/frameworks/*/*/benchmark_config.json" % fwroot))
+  # Search for configuration files
+  fwroot = setup_util.get_fwroot()
+  config_files = []
+  if benchmarker.test_dir:
+    for test_dir in benchmarker.test_dir:
+        dir_config_files = glob.glob("{!s}/frameworks/{!s}/benchmark_config.json".format(fwroot, test_dir))
+        if len(dir_config_files):
+            config_files.extend(dir_config_files)
+        else:
+            raise Exception("Unable to locate tests in test-dir: {!s}".format(test_dir))
+  else:
+    config_files.extend(glob.glob("{!s}/frameworks/*/*/benchmark_config.json".format(fwroot)))
   
   tests = []
   for config_file_name in config_files:

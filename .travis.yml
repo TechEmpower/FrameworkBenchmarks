@@ -188,23 +188,29 @@ env:
     - "TESTDIR=Ur/urweb"
 
 before_script:
+
+  # Runs travis_diff, printing the output to the terminal, and searches for travis-diff-continue
+  # to determine if the suite should be installed and the current $TESTDIR test should run.
+  - export CONTINUE_TEST=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -q "travis-diff-continue" && echo 1`
   # travis_clean.sh takes care of some services that are baked into the travis
   # build. Using language: generic gets us an ubuntu build with fewer services,
   # but includes database installs, ruby and rvm installs, and others that interfere
   # with running the suite in a clean ubuntu install.
-  - source ./toolset/travis/travis_clean.sh
+  - if [ $CONTINUE_TEST ]; then source ./toolset/travis/travis_clean.sh; else echo 'Skipping travis_clean.sh'; fi
 
   # travis_setup.sh runs all the same commands you would run if you were setting up
   # a development environment via:
   # http://frameworkbenchmarks.readthedocs.io/en/latest/Development/Installation-Guide/
-  - source ./toolset/travis/travis_setup.sh
+  - if [ $CONTINUE_TEST ]; then source ./toolset/travis/travis_setup.sh; else echo 'Skipping travis_setup.sh'; fi
 
 script:
+
   # run-ci.py runs the diffing to see if travis needs to test this framework. Ideally/eventually,
   # we'd like to try and do the diffing before travis_clean & setup.
   # This will run the tests exactly as you would in your own vm:
   # ./toolset/run-tests.py --mode verify --test (all the valid tests for this framework)
-  - ./toolset/run-ci.py verify "$TESTDIR"
+  - if [ $CONTINUE_TEST ]; then tfb --mode verify --test-dir "$TESTDIR"; else echo 'Skipping test verification.'; fi
+  # - tfb --mode verify --test
 
 cache:
   directories:
