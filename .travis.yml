@@ -175,6 +175,7 @@ env:
     - "TESTDIR=Rust/hyper"
     - "TESTDIR=Rust/tokio-minihttp"
     - "TESTDIR=Scala/akka-http"
+    - "TESTDIR=Scala/blaze"
     - "TESTDIR=Scala/colossus"
     - "TESTDIR=Scala/finagle"
     - "TESTDIR=Scala/finatra"
