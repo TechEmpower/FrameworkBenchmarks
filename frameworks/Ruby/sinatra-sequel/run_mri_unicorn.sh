@@ -8,4 +8,4 @@ rvm use ruby-$MRI_VERSION
 
 . $(dirname $0)/config/bundle_install.sh
 
-bundle exec puma -C config/mri_puma.rb -b tcp://0.0.0.0:8080 -e production &
+bundle exec unicorn -c config/mri_unicorn.rb -o 0.0.0.0 -p 8080 -E production &
