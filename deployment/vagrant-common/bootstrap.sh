@@ -46,29 +46,7 @@ GH_BRANCH=${TFB_AWS_REPO_BRANCH:-master}
 # A shell provisioner is called multiple times
 if [ ! -e "~/.firstboot" ]; then
 
-  # Setup some nice TFB defaults
-  if [ "$ROLE" == "all" ]; then
-    echo "export TFB_CLIENT_IDENTITY_FILE=$HOME/.ssh/id_rsa" >> ~/.bash_profile
-    echo "export TFB_DATABASE_IDENTITY_FILE=$HOME/.ssh/id_rsa" >> ~/.bash_profile
-  else
-    echo "export TFB_CLIENT_IDENTITY_FILE=$HOME/.ssh/client" >> ~/.bash_profile
-    echo "export TFB_DATABASE_IDENTITY_FILE=$HOME/.ssh/database" >> ~/.bash_profile
-  fi
-  echo "export TFB_SERVER_HOST=$SERVER_IP" >> ~/.bash_profile
-  echo "export TFB_CLIENT_HOST=$CLIENT_IP" >> ~/.bash_profile
-  echo "export TFB_DATABASE_HOST=$DATABA_IP" >> ~/.bash_profile
-  echo "export TFB_CLIENT_USER=$USER" >> ~/.bash_profile
-  echo "export TFB_DATABASE_USER=$USER" >> ~/.bash_profile
-  echo "export FWROOT=$HOME/FrameworkBenchmarks" >> ~/.bash_profile 
-  source ~/.bash_profile
-
-  # Ensure their host-local benchmark.cfg is not picked up on the remote host
-  if [ -e "~/FrameworkBenchmarks/benchmark.cfg" ]; then
-    echo "You have a benchmark.cfg file that will interfere with Vagrant, moving to benchmark.cfg.bak"
-    mv ~/FrameworkBenchmarks/benchmark.cfg ~/FrameworkBenchmarks/benchmark.cfg.bak
-  fi
-
-  # Setup hosts 
+  # Setup hosts
   echo "Setting up convenience hosts entries"
   echo $DATABA_IP TFB-database | sudo tee --append /etc/hosts
   echo $CLIENT_IP TFB-client   | sudo tee --append /etc/hosts
@@ -81,9 +59,12 @@ if [ ! -e "~/.firstboot" ]; then
     myhost=TFB-${ROLE}
     echo $myhost | sudo tee --append /etc/hostname
     sudo hostname $myhost
-    echo Updated /etc/hosts file to be: 
+    echo Updated /etc/hosts file to be:
     cat /etc/hosts
   fi
+
+  # Update the benchmark.cfg for vagrant
+  sed -i s/techempower/vagrant/g ~/FrameworkBenchmarks/benchmark.cfg
 
   # Workaround mitchellh/vagrant#289
   echo "grub-pc grub-pc/install_devices multiselect     /dev/sda" | sudo debconf-set-selections
@@ -102,7 +83,7 @@ if [ ! -e "~/.firstboot" ]; then
     #echo "Removing your current results folder to avoid interference"
     #rm -rf $FWROOT/installs $FWROOT/results
 
-    # vboxfs does not support chown or chmod, which we need. 
+    # vboxfs does not support chown or chmod, which we need.
     # We therefore bind-mount a normal linux directory so we can
     # use these operations.
     #echo "Mounting over your installs folder"
@@ -125,7 +106,7 @@ if [ ! -e "~/.firstboot" ]; then
 
   # Enable remote SSH access if we are running production environment
   # Note : this is always copied from the local working copy using a
-  #        file provisioner. While they exist in the git clone we just 
+  #        file provisioner. While they exist in the git clone we just
   #        created (so we could use those), we want to let the user
   #        have the option of replacing the keys in their working copy
   #        and ensuring that only they can ssh into the machines
