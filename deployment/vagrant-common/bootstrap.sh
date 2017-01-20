@@ -63,9 +63,6 @@ if [ ! -e "~/.firstboot" ]; then
     cat /etc/hosts
   fi
 
-  # Update the benchmark.cfg for vagrant
-  sed -i s/techempower/vagrant/g ~/FrameworkBenchmarks/benchmark.cfg
-
   # Workaround mitchellh/vagrant#289
   echo "grub-pc grub-pc/install_devices multiselect     /dev/sda" | sudo debconf-set-selections
 
@@ -95,6 +92,9 @@ if [ ! -e "~/.firstboot" ]; then
     echo "Cloning project from $GH_REPO $GH_BRANCH"
     git config --global core.autocrlf input
     git clone -b ${GH_BRANCH} https://github.com/${GH_REPO}.git $FWROOT
+    cd ~/FrameworkBenchmarks
+    # Update the benchmark.cfg for vagrant
+    sed -i s/techempower/vagrant/g ~/FrameworkBenchmarks/benchmark.cfg
     source ~/FrameworkBenchmarks/toolset/setup/linux/prerequisites.sh
   #fi
 
