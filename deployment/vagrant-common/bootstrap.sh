@@ -89,6 +89,8 @@ if [ ! -e "~/.firstboot" ]; then
     #sudo mount -o bind /tmp/TFB_installs $FWROOT/installs
   #else
     # If there is no synced folder, clone the project
+    export FWROOT="/home/vagrant/FrameworkBenchmarks"
+    echo FWROOT="/home/vagrant/FrameworkBenchmarks" >> ~/.bashrc
     echo "Cloning project from $GH_REPO $GH_BRANCH"
     git config --global core.autocrlf input
     git clone -b ${GH_BRANCH} https://github.com/${GH_REPO}.git $FWROOT
