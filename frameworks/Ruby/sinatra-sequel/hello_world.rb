@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'bundler'
 require 'time'
 
 MAX_PK = 10_000
@@ -16,6 +17,19 @@ def connect(dbtype)
     :postgresql=>{ :jruby=>'jdbc:postgresql', :mri=>'postgres' }
   }
 
+  opts = {}
+
+  # Determine threading/thread pool size and timeout
+  if defined?(JRUBY_VERSION)
+    opts[:max_connections] = Integer(ENV.fetch('MAX_CONCURRENCY'))
+    opts[:pool_timeout] = 10
+  elsif defined?(Puma)
+    opts[:max_connections] = Puma.cli_config.options.fetch(:max_threads)
+    opts[:pool_timeout] = 10
+  else
+    Sequel.single_threaded = true
+  end
+
   Sequel.connect \
     '%<adapter>s://%<host>s/%<database>s?user=%<user>s&password=%<password>s' % {
       :adapter=>adapters.fetch(dbtype).fetch(defined?(JRUBY_VERSION) ? :jruby : :mri),
@@ -23,12 +37,13 @@ def connect(dbtype)
       :database=>'hello_world',
       :user=>'benchmarkdbuser',
       :password=>'benchmarkdbpass'
-    },
-    :max_connections=>Puma.cli_config.options.fetch(:max_threads),
-    :pool_timeout=>10
+    }, opts
 end
 
-DB = connect ENV.fetch('DBTYPE').to_sym
+DB = connect(ENV.fetch('DBTYPE').to_sym).tap do |db|
+  db.extension(:freeze_datasets)
+  db.freeze
+end
 
 # Define ORM models
 class World < Sequel::Model(:World)
@@ -57,6 +72,18 @@ class HelloWorld < Sinatra::Base
 
     # Only add the charset parameter to specific content types per the requirements
     set :add_charset, [mime_type(:html)]
+
+    set :server_string,
+      if defined?(PhusionPassenger)
+        [
+          PhusionPassenger::SharedConstants::SERVER_TOKEN_NAME,
+          PhusionPassenger::VERSION_STRING
+        ].join('/').freeze
+      elsif defined?(Puma)
+        Puma::Const::PUMA_SERVER_STRING
+      elsif defined?(Unicorn)
+        Unicorn::HttpParser::DEFAULTS['SERVER_SOFTWARE']
+      end
   end
 
   helpers do
@@ -84,10 +111,12 @@ class HelloWorld < Sinatra::Base
   end
 
   after do
-    # Add mandatory HTTP headers to every response
-    response['Server'] ||= Puma::Const::PUMA_SERVER_STRING
-    response['Date'] ||= Time.now.httpdate
+    response['Date'] = Time.now.httpdate
   end
+
+  after do
+    response['Server'] = settings.server_string
+  end if server_string
 
   # Test type 1: JSON serialization
   get '/json' do
@@ -96,15 +125,14 @@ class HelloWorld < Sinatra::Base
 
   # Test type 2: Single database query
   get '/db' do
-    json World[rand1].values
+    json World.with_pk(rand1).values
   end
 
   # Test type 3: Multiple database queries
   get '/queries' do
     # Benchmark requirements explicitly forbid a WHERE..IN here, so be good
-    worlds = randn(bounded_queries).map! { |id| World[id] }
-
-    json worlds.map!(&:values)
+    json randn(bounded_queries)
+      .map! { |id| World.with_pk(id).values }
   end
 
   # Test type 4: Fortunes
@@ -124,15 +152,13 @@ class HelloWorld < Sinatra::Base
     # Benchmark requirements explicitly forbid a WHERE..IN here, transactions
     # are optional, batch updates are allowed (but each transaction can only
     # read and write a single record?), so... be good
-    worlds = randn(bounded_queries).map! do |id|
+    json(randn(bounded_queries).map! do |id|
       DB.transaction do
-        world = World.for_update[id]
-        world.update :randomnumber=>rand1
-        world
+        world = World.for_update.with_pk(id)
+        world.update(:randomnumber=>rand1)
+        world.values
       end
-    end
-
-    json worlds.map!(&:values)
+    end)
   end
 
   # Test type 6: Plaintext

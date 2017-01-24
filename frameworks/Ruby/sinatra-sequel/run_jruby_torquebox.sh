@@ -1,6 +1,6 @@
 #!/bin/bash
 
-THREAD_FACTOR=1
+THREAD_FACTOR=2
 
 . $(dirname $0)/config/common_run.sh
 
@@ -10,4 +10,4 @@ rvm use jruby-$JRUBY_VERSION
 
 . $(dirname $0)/config/bundle_install.sh
 
-bundle exec puma -t $MAX_CONCURRENCY:$MAX_CONCURRENCY -b tcp://0.0.0.0:8080 -e production &
+bundle exec torquebox run --io-threads $MAX_CONCURRENCY --worker-threads $MAX_CONCURRENCY -b 0.0.0.0 -p 8080 -e production &

@@ -16,8 +16,12 @@ The tests will be run with:
 * [JRuby 9.1](http://jruby.org)
 * [Rubinius 3](https://rubinius.com)\*
 * [Puma 3.6](http://puma.io)
+* [Passenger 5.1](https://www.phusionpassenger.com)
+* [Unicorn 5.2](https://bogomips.org/unicorn/)
+* [TorqueBox 4.0](http://torquebox.org)
 * [Sinatra 2.0](http://www.sinatrarb.com)
-* [Sequel 4.40](http://sequel.jeremyevans.net)
+* [Sequel 4.43](http://sequel.jeremyevans.net)
+* [Slim 3.0](http://slim-lang.com)
 * [MySQL 5.5](https://www.mysql.com)
 * [Postgres 9.3](https://www.postgresql.org)
 
