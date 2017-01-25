@@ -1,6 +1,7 @@
 package blaze.techempower.benchmark
 
 import java.net.InetSocketAddress
+import java.nio.charset.StandardCharsets.UTF_8
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
@@ -15,7 +16,8 @@ object Main {
   private val mapper: ObjectMapper = new ObjectMapper().registerModule(DefaultScalaModule)
 
   private val plaintextResult = Future.successful {
-    RouteAction.Ok("Hello, World!", Seq("server" -> "blaze"))
+    val hs = Seq("server" -> "blaze", "content-type" -> "text/plain")
+    RouteAction.Ok("Hello, World!".getBytes(UTF_8), hs)
   }
 
   private def notFound(path: String) = Future.successful {
