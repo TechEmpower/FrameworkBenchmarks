@@ -1,0 +1,22 @@
+source 'https://rubygems.org'
+
+gem 'json', '~> 2.0'
+gem 'passenger', '~> 5.1', :platforms=>[:ruby, :mswin], :require=>false
+gem 'puma', '~> 3.6', :require=>false
+gem 'sequel', '~> 4.40',
+  :git=>'https://github.com/jeremyevans/sequel.git', :branch=>'master'
+gem 'rack', '~> 2.0'
+gem 'sysrandom', '~> 1.0', :require=>'sysrandom/securerandom'
+gem 'torquebox-web', '>= 4.0.0.beta3', '< 5', :platforms=>:jruby, :require=>false
+gem 'unicorn', '~> 5.2', :platforms=>[:ruby, :mswin], :require=>false
+
+group :mysql do
+  gem 'jdbc-mysql', '~> 5.1', :platforms=>:jruby, :require=>'jdbc/mysql'
+  gem 'mysql2', '~> 0.4', :platforms=>[:ruby, :mswin]
+end
+
+group :postgresql do
+  gem 'jdbc-postgres', '~> 9.4', :platforms=>:jruby, :require=>'jdbc/postgres'
+  gem 'pg', '~> 0.19', :platforms=>[:ruby, :mswin]
+  gem 'sequel_pg', '~> 1.6', :platforms=>:ruby, :require=>false
+end

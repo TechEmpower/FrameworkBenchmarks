@@ -166,6 +166,7 @@ env:
     - "TESTDIR=Ruby/ngx_mruby"
     - "TESTDIR=Ruby/padrino"
     - "TESTDIR=Ruby/rack"
+    - "TESTDIR=Ruby/rack-sequel"
     - "TESTDIR=Ruby/rails"
     - "TESTDIR=Ruby/rails-stripped"
     - "TESTDIR=Ruby/sinatra"

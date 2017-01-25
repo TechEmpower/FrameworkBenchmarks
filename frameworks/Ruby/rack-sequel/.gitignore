@@ -1,0 +1,4 @@
+.bundle
+vendor/bundle
+passenger.*
+Gemfile.lock
