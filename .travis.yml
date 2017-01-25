@@ -169,6 +169,7 @@ env:
     - "TESTDIR=Ruby/rack-sequel"
     - "TESTDIR=Ruby/rails"
     - "TESTDIR=Ruby/rails-stripped"
+    - "TESTDIR=Ruby/roda-sequel"
     - "TESTDIR=Ruby/sinatra"
     - "TESTDIR=Ruby/sinatra-sequel"
     - "TESTDIR=Rust/iron"
