@@ -2,6 +2,11 @@
 
 This is the [Pedestal](https://github.com/pedestal/pedestal) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
+## Quick testing/benching
+
+You can use the `run.sh` and `perfit.sh` scripts to get a rough idea how
+changes will impact a final benchmark.
+
 ## Test URLs
 ### JSON Encoding Test
 `http://localhost:8080/json`
@@ -20,3 +25,4 @@ This is the [Pedestal](https://github.com/pedestal/pedestal) portion of a [bench
 
 ### Plaintext
 `http://localhost:8080/plaintext`
+
