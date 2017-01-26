@@ -17,12 +17,12 @@
       "framework": "pedestal",
       "language": "Clojure",
       "flavor": "None",
-      "platform": "Undertow",
+      "platform": "Jetty",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "pedestal",
-      "notes": "undertow"
+      "notes": "jetty"
     }
   }]
 }
