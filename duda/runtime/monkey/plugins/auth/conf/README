@@ -1,0 +1,21 @@
+== Monkey Auth ==
+
+This plugin protect your web content adding basic authentication
+over virtual hosts and locations associated.
+
+== Setup ==
+
+1) Make sure you have enabled the plugin in:
+
+     #SYSCONFDIR#/plugins.load
+
+2) Edit your virtualhost file located at:
+
+     #SYSCONFDIR#/sites/yourvhost.conf
+
+   and add the following section at bottom:
+
+     [AUTH]
+         Location /
+         Title    "Let's protect our content :)"
+         Users    #SYSCONFDIR#/monkey.users

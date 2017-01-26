@@ -1,0 +1,177 @@
+Proxy reverse plugin
+==========
+
+This module proxies requests from Monkey HTTPd server to backend servers.
+By using the plugin you are able easily to make a load balancing system of web servers.
+
+Features
+========== 
+* Supports Load Balancing ( Naive, First-Alive, Lockless Round Robin, Locking Round Robin, Least Connections, Weighted Round Robin )
+* Supports High Availability.
+* Supports plugin usage statistics.
+* Supports persistent connections.
+* Handle multiple locations, served by multiple severs by using different load balancing methods.
+
+Configuration Options
+==========
+
+Each proxy configuration must be in PROXY_ENTRY and must have Match that consists of regular expression:
+	[PROXY_ENTRY]
+		Match REGEX_EXPRESSION
+		Match REGEX_EXPRESSION
+
+one PROXY_ENTRY may consists of many Matches
+	
+	
+[PROXY_DEFAULTS] consists of default values for each [PROXY_ENTRY]
+	
+Load Balancer Options:
+
+	LoadBalancer Naive,FirstAlive,RoundRobin,SourceHash,LockingRoundRobin,LeastConnections,RoundRobin
+
+High Availability Options:
+	
+	AttemptsCount int
+	OfflineTimeOut int
+	
+Status Options must be in [PROXY_DEFAULTS]:
+
+	StatisticsURL /url_for_statistics
+
+==================
+More information: http://nikolanikov.wordpress.com/2013/08/14/monkey-proxy-reverse-plugin-preview/
+
+
+
+
+================== Copy of the detailed explanation
+
+
+
+
+
+
+Proxy Reverse plugin in details:
+
+The Proxy Reverse plugin is using Monkey HTTPd API and principals, which means that is non-blocking as possible with less memory consumption in mind.
+
+Initial load of the plugin:
+
+	During the initial load, the proxy plugin loads the configuration file and creates the plugin configuration structures ( config.h ),
+	initiates load balancing structures and hooks to the Stage 30 of Monkey HTTPd.
+
+Request life cycle: monkey
+
+	1. After the http request is send to the server, Monkey’s internal parser is parsing the request
+
+	2. When the request is parsed, is passed to the Proxy Reverse Plugin checks.
+
+	3. The plugin is checking Match rules of the Proxy Entries in the configuration file.
+
+	4. After the matching proxy is found, the request information and the configuration structure for the matching entry is passed to the load balancer. 
+	The Load Balancer is returning host and port for the server that must process the request. 
+	If the connection with the slave server can not be established,	the Load Balancer is asked for new host until it returns that no more slave servers are available.
+
+	5. When the connection to the slave server is established, the proxy starts listening for events.
+	When an event arrives, the proxy handles it – on read events, the pending data is read and stored in buffers;
+	on write events the data stored in the corresponding buffer is written;
+	on close and error events, appropriate actions are taken to free the allocated resources and terminate the connection with the slave server.
+
+Proxy Reverse example configuration:
+
+	I will try to explain the configuration settings by simple use case with two proxy configurations.
+	One for static content ( Images, CSS, HTML ) and one proxy entry for the dynamic content (PHP for example).
+
+
+
+	Current configuration file:
+
+	##
+	## Proxy-Reverse configuration.
+	##
+	## This is example Proxy-Reverse configuration.
+	## Currently is in proposed (not final) state
+	##
+
+	[PROXY_DEFAULTS]
+	LoadBalance First-Alive
+
+	[PROXY_ENTRY]
+	ServerList Host4:80 Host5:8080
+	Match /*.php
+
+	[PROXY_ENTRY]
+	ServerList Host1:80 Host2:80 Host3:80
+	LoadBalance Round-Robin
+	Match /*.jpg
+	Match /*.png
+	Match /*.css
+	Match /*.js
+	Match /*.html
+
+	The configuration file consists of PROXY_DEFAULTS and PROXY_ENTRY. PROXY_DEFAULTS contains default values that are copied to each entry if doesn’t have a value.
+ 
+	In our example, the first (dynamic) entry is going to use First-Alive load balancing algorithm.
+
+	In the current example, if the request contains .php request will be forwarded to Host4 and Host5 that are going to use First-Alive Load Balancing method for serving the response.
+
+	If the request is for static content (.jpg, .js .css …) the request will be forwarded to Host1,Host2,Host3 by using Round-Robin load balancing algorithm.
+
+Load Balancing methods description:
+
+Currently the proxy plugin supports several load balancing methods.
+
+Naive
+
+	Simple, non-fair load balancer with almost no overhead.
+	Connects to the first alive server, starting from server.
+	For example as a load balancing number might be considered the socket id or sport.
+	This way first connection will be forwarded to the first server.
+	If the connection is still open when, second connection will be forwarded to the next server.
+	If the connection is closed, next one will be forwarded to the first server again.
+
+First-Alive
+
+	Simple, non-fair load balancer with almost no overhead.
+	Connects to the first alive server, starting from 0.
+
+Lockless Round Robin
+
+	Simple load balancer with almost no overhead. Race conditions are possible under heavy load, but they will just lead to unfair sharing of the load.
+	Each consecutive call connects to the next available server. Race conditions may occur since no locking is performed.
+
+Locking Round Robin
+
+	Simple load balancer. Race conditions are prevented with mutexes. This adds significant overhead under heavy load.
+	Each consecutive call connects to the next available server. Race conditions are prevented at the expense of performance.
+
+Least connections
+
+	Ensures equal load in most use cases. All servers are traversed to find the one with least connections.
+	Connects to the server with the least number of connections. Ensures equal load in most use cases but adds significant overhead.
+
+Weighted Round Robin
+
+WRR can be done by entering the same server several times in the Round Robin balancer section.
+	Example:
+	[PROXY_ENTRY]
+	ServerList 127.0.0.1:80 127.0.0.1:81 127.0.0.1:80 127.0.0.1:82 127.0.0.1:80 127.0.0.1:81
+	LoadBalancer RoundRobin
+	Match ^/.*
+	This can be read as:
+	127.0.0.1:80 weight=3
+	127.0.0.1:82 weight=1
+	127.0.0.1:81 weight=2
+
+High-Availability:
+
+	The high availability option is used for faster choice of available server when some of the slave servers become offline.
+	If  the High-Availability option is disabled (by default is enabled), every request will be forwarded to the slave server that is returned from the load balancer.
+	If some of the slave servers is offline, after the timeout is reached for the connect function, we are picking the next one.
+	The problem here is that the timeout for the connect takes really long time, there is no point everytime to try connecting to a server that we know from the previous request that is offline.
+	To handle this, I’m saving the connection states to the slave servers, so when the proxy receive connection,
+	it will know whether the proxy server is on or off, without waiting for connection timeout, it will pick next slave server.
+	Because there are different use-cases I made 2 options for configuring the High-Availability.
+
+	OfflineTimeOut -> Seconds to wait for the next check of the server. This means that this slave server won’t be used for the configured time.
+	AttemptsCount -> How many attempts to be made, before assuming that the server is offline. After we assume that the server is offline we are trying again after OfflineTimeOut.

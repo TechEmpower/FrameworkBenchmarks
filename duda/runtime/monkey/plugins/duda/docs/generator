@@ -1,0 +1,561 @@
+#!/usr/bin/env python
+
+#  Duda Document Generator
+#  -----------------------
+#  Copyright (C) 2012-2013, Eduardo Silva P. <edsiper@gmail.com>
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Library General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+import os
+
+CSS     = "    <link rel='stylesheet' type='text/css' href='assets/css/bootstrap.css' />\n"
+CSS    += "    <link rel='stylesheet' type='text/css' href='assets/css/bootstrap-responsive.css' />\n"
+CSS    += "    <link rel='stylesheet' type='text/css' href='assets/css/prettify.css' />\n"
+JS      = "    <script type='text/javascript' src='assets/js/bootstrap.js'></script>\n"
+JS     += "    <script type='text/javascript' src='assets/js/prettify.js'></script>\n"
+GA      = """<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-41677523-1', 'duda.io');
+  ga('send', 'pageview');
+
+</script>"""
+
+HEADER  = "<HTML>\n  <HEAD>\n[TITLE]\n%s  \n%s</HEAD>\n<BODY onload=\"prettyPrint()\">\n" % (CSS, GA)
+HEADER += (""
+"<div class=\"navbar navbar-inner\">"
+"  <div class=\"navbar-inner\">"
+"    <div class=\"container\">"
+"      <a class=\"btn btn-navbar\" data-toggle=\"collapse\" data-target=\".nav-collapse\">"
+"        <span class=\"icon-bar\"></span>"
+"        <span class=\"icon-bar\"></span>"
+"        <span class=\"icon-bar\"></span>"
+"      </a>"
+""
+"      <div class=\"row-fluid\">"
+"          <div class=\"span8\">"
+"           <a href=\"http://duda.io/api/\" class=\"brand\" style=\"color:#eae8d2\">"
+"                Duda I/O: API Documentation"
+"           </a>"
+"          <div class=\"nav-collapse collapse\">"
+"          </div>"
+"        </div>"
+"      </div>"
+"    </div>"
+"  </div>"
+"</div>")
+
+HEADER += "    <div class='container'><div class='row-fluid'><div class='span10'>\n"
+FOOTER  = "    </div></div>%s</BODY></HTML>\n" % (JS)
+
+# Left menu stuff
+L_MENU_HEADER  = "<div class='span2'><div class=\"well\" style=\"padding: 8px 0;\">\n\
+                    <!-- Left menu -->\n\
+                    <ul class='nav nav-list'>\n"
+L_MENU_FOOTER  = "</ul></div></div>"
+
+class DudaMethod:
+    F_NAME   = 0
+    F_DESC   = 1
+    F_DECL   = 2
+    F_PARAM  = 3
+    F_RETURN = 4
+
+    def __init__(self):
+        self.params    = []
+        self.name      = ''
+        self.desc      = ''
+        self.decl      = ''
+        self.mreturn   = ''
+        self.prototype = ''
+
+    def set_active(self, field):
+        self.active = field
+
+    def set(self, info):
+        if self.active == self.F_NAME:
+            self.name += info
+        elif self.active == self.F_DESC:
+            self.desc += info
+        elif self.active == self.F_DECL:
+            self.decl += info
+        elif self.active == self.F_PARAM:
+            self.params[-1]['desc'] += info
+        elif self.active == self.F_RETURN:
+            self.mreturn += info
+
+    def set_param(self, name, desc):
+        self.params.append({'name': name, 'desc': desc})
+
+
+class DudaObject:
+    COMM_START    = '/*'
+    COMM_END      = ' */'
+    COMM_LINE     = ' * '
+    COMM_CONT     = ' *\n'
+    OBJ_NAME      = ' * @OBJ_NAME:'
+    OBJ_MENU      = ' * @OBJ_MENU:'
+    OBJ_DESC      = ' * @OBJ_DESC:'
+    OBJ_COMM      = ' * @OBJ_COMM:'
+    PKG_HEADER    = ' * @PKG_HEADER:'
+    PKG_INIT      = ' * @PKG_INIT:'
+    METHOD_NAME   = ' * @METHOD_NAME:'
+    METHOD_PROTO  = ' * @METHOD_PROTO:'
+    METHOD_DESC   = ' * @METHOD_DESC:'
+    METHOD_PARAM  = ' * @METHOD_PARAM:'
+    METHOD_RETURN = ' * @METHOD_RETURN:'
+    LAST_METHOD   = 'unknown method'
+
+    def __init__(self):
+        self.name = ''
+        self.desc = ''
+        self.menu = ''
+        self.comm = ''
+        self.pkg_header = ''
+        self.pkg_init = ''
+        self.methods = []
+        self.method = None
+
+    def real_name(self):
+        return self.name
+
+    def go(self, content):
+        context = False
+        buf = None
+        last = None
+
+        for line in content:
+            line = line.replace('||*', '/*')
+            line = line.replace('*||', '*/')
+
+            if line.startswith(self.COMM_START):
+                context = True
+            elif line.startswith(self.COMM_END):
+                context = False
+                last = None
+
+            # @OBJ_NAME
+            elif line.startswith(self.OBJ_NAME):
+                arr = line.split(self.OBJ_NAME)
+                self.name = arr[1].strip()
+                last = self.OBJ_NAME
+
+            # @OBJ_MENU
+            elif line.startswith(self.OBJ_MENU):
+                arr = line.split(self.OBJ_MENU)
+                self.menu = arr[1].strip()
+                last = self.OBJ_MENU
+
+            # @OBJ_DESC
+            elif line.startswith(self.OBJ_DESC):
+                arr = line.split(self.OBJ_DESC)
+                self.desc = arr[1].strip() + '\n'
+                last = self.OBJ_DESC
+
+            # @OBJ_COMM
+            elif line.startswith(self.OBJ_COMM):
+                arr = line.split(self.OBJ_COMM)
+                self.comm = arr[1].strip() + '\n'
+                last = self.OBJ_COMM
+
+            # @PKG_HEADER
+            elif line.startswith(self.PKG_HEADER):
+                arr = line.split(self.PKG_HEADER)
+                self.pkg_header = arr[1].strip() + '\n'
+                last = self.PKG_HEADER
+
+            # @PKG_INIT
+            elif line.startswith(self.PKG_INIT):
+                arr = line.split(self.PKG_INIT)
+                self.pkg_init = arr[1].strip() + '\n'
+                last = self.PKG_INIT
+
+            # Line belonging to a previous declaration
+            elif (line.startswith(self.COMM_CONT) or \
+                    (line.startswith(self.COMM_LINE) and line[len(self.COMM_LINE)] != '@')) \
+                    and last is not None:
+
+                row = line[3:].rstrip() + '\n'
+
+                if last == self.LAST_METHOD:
+                    self.method.set(row)
+                elif last == self.METHOD_PARAM:
+                    self.method.params[-1]['desc'] += row
+                elif last == self.METHOD_PROTO:
+                    self.method.prototype += '\n' + row
+                elif last == self.METHOD_RETURN:
+                    self.method.mreturn += row
+                elif last == self.OBJ_DESC:
+                    self.desc += row
+                elif last == self.OBJ_COMM:
+                    self.comm += row
+                elif last == self.PKG_HEADER:
+                    self.pkg_header += row
+                elif last == self.PKG_INIT:
+                    self.pkg_init += row
+
+            # @METHOD_NAME
+            elif line.startswith(self.METHOD_NAME):
+                row = line.split(self.METHOD_NAME)[1].strip()
+                self.method = DudaMethod()
+                self.method.set_active(self.method.F_NAME)
+                self.method.set(row)
+                self.methods.append(self.method)
+
+                last = self.LAST_METHOD
+
+            # @METHOD_PROTO
+            elif line.startswith(self.METHOD_PROTO):
+                row = line.split(self.METHOD_PROTO)[1].strip()
+                self.method.prototype = row
+                last = self.METHOD_PROTO
+
+            # @METHOD_DESC
+            elif line.startswith(self.METHOD_DESC):
+                row = line.split(self.METHOD_DESC)[1].strip() + '\n'
+                self.method.set_active(self.method.F_DESC)
+                self.method.set(row)
+
+            # @METHOD_PARAM
+            elif line.startswith(self.METHOD_PARAM):
+                row = line.split(self.METHOD_PARAM)[1].strip()
+                p_name = row[0:row.find(' ')].strip()
+                p_desc = row[row.find(' '):].strip() + '\n'
+
+                self.method.set_active(self.method.F_PARAM)
+                self.method.set_param(p_name, p_desc)
+                last = self.METHOD_PARAM
+                last_pname = p_name
+                last_pdesc = p_desc
+
+            # @METHOD_RETURN
+            elif line.startswith(self.METHOD_RETURN):
+                row = line.split(self.METHOD_RETURN)[1].strip() + '\n'
+                self.method.set_active(self.method.F_RETURN)
+                self.method.set(row)
+                last = self.METHOD_RETURN
+
+            # End of comments
+            elif line.startswith(self.COMM_END):
+                last = None
+
+            # Function prototype
+            elif context is False \
+                    and self.method \
+                    and len(self.method.prototype) <= 0 \
+                    and line.find('duda_' + self.name + '_') > 0 \
+                    and line.find('(') > 0 \
+                    and last != self.METHOD_PROTO:
+
+                prefix = ' duda_' + self.name + '_'
+                self.method.prototype = line.replace(prefix, ' ')
+
+                if self.method.prototype.strip()[-1] != ')':
+                    last = self.METHOD_PROTO
+
+            elif last == self.METHOD_PROTO and self.method.prototype.strip()[-1] != ')':
+                offset = len(' duda_' + self.name)
+                row = line[offset:]
+                self.method.prototype += row
+
+                if self.method.prototype.strip()[-1] == ')':
+                    last = None
+
+        if len(self.menu) == 0:
+            self.menu = self.name
+
+    def info(self):
+        print '** Object Name: %s' % (self.name)
+        print '** Description: %s' % (self.desc)
+
+
+
+# A package is an object implemented through a shared library and for hence
+# it can be composed by multiple source files, we define an index.doc per
+# package to list which files must be analized when generating the
+# documentation.
+class DudaPackage(DudaObject):
+    def __init__(self, name, path):
+        DudaObject.__init__(self)
+
+        self.name = name
+        self.pkg_path = path
+        self.read()
+
+    def read(self):
+        # open the package documentation index
+        index = self.pkg_path + '/index.doc'
+        f = open(index)
+        rows = f.readlines()
+        f.close()
+
+        # For listed file, merge each line in the
+        # content array
+        content = []
+        for entry in rows:
+            source = entry.split()[0]
+            e = open(self.pkg_path + '/' + source)
+            lines = e.readlines()
+            e.close()
+
+            content.extend(lines)
+
+        self.go(content)
+
+class DudaIntro(DudaObject):
+    INTRO_MENU = '@INTRO_MENU: '
+
+    def __init__(self, name, path):
+        DudaObject.__init__(self)
+        self.name = name
+        self.real_name = name[:-5]
+        self.path = path
+        self.content = ""
+        self.parse_static()
+
+    def parse_static(self):
+        f = open(self.path)
+        lines = f.readlines()
+        f.close()
+
+        for l in lines:
+            if l.startswith(self.INTRO_MENU):
+                title = l[len(self.INTRO_MENU):]
+                self.real_name = title.title().strip()
+            else:
+                self.content += l
+
+    def flush(self):
+        return self.content
+
+f = open('index.doc')
+files = f.readlines()
+f.close()
+
+intro    = []
+objects  = []
+packages = []
+
+for source in files:
+    p = os.path.abspath("../%s" % source.strip())
+    pkg_index = p + '/index.doc'
+    name = source.split()[0].split('/')[-1]
+
+    # Check if the source is a package
+    #print p, source
+    if os.path.exists(p) and source.startswith('docs/intro/'):
+        i = DudaIntro(name, p)
+        intro.append(i)
+    elif os.path.isdir(p) and source.startswith('packages/') and \
+            os.path.isfile(pkg_index):
+        pkg = DudaPackage(name, p)
+        packages.append(pkg)
+    else:
+        try:
+            f = open(p)
+        except:
+            continue
+
+        d = DudaObject()
+        content = f.readlines()
+        f.close()
+
+        d.go(content)
+        objects.append(d)
+
+# Start generating HTML content
+print "  DOC   Duda API Intro   : %i" % len(intro)
+print "  DOC   Duda API Objects : %i" % len(objects)
+print "  DOC   Duda API Packages: %i" % len(packages)
+
+# Compose Menu
+menu  = L_MENU_HEADER
+
+menu += '  <li class="nav-header">Documentation</li>\n'
+for entry in intro:
+    menu += '    <li><a href="%s">%s</a></li>\n' % (entry.name.lower(), entry.real_name)
+
+menu += '  <li class="nav-header">Core Objects</li>\n'
+for obj in objects:
+    menu += '    <li><a href="%s.html">%s</a></li>\n' % (obj.name.lower(), obj.menu)
+
+menu += '  <li class="nav-header">Packages</li>\n'
+for pkg in packages:
+    menu += '  <li><a href="packages/%s.html">%s</a></li>\n' % (pkg.name.lower(), pkg.menu)
+
+menu += L_MENU_FOOTER
+
+class WriteObject:
+    subdir = False
+    static = False
+
+    def __init__(self, obj, path='html/'):
+        if os.path.exists(path) is False:
+            os.makedirs(path)
+
+        target = path + obj.name.lower()
+        if not target.endswith('.html'):
+            target += '.html'
+        else:
+            self.static = True
+
+        if len(path.split('/')) > 2:
+            self.subdir = True
+
+        if self.subdir:
+            header = HEADER.replace('assets/', '../assets/')
+        else:
+            header = HEADER
+
+        if self.subdir:
+            title = "<title>Duda Framework API: %s package object</title>" % (obj.menu)
+        elif self.static is False:
+            title = "<title>Duda Framework API: %s object</title>" % (obj.menu)
+        else:
+
+            title = "<title>Duda Framework API: %s</title>" % (obj.real_name.title())
+
+        header = header.replace("[TITLE]", title)
+
+        f = open(target, 'w')
+        f.write(header)
+
+        # Compose the proper menu for the active object
+        if self.subdir:
+            obj_menu = menu.replace('<li><a href="packages/%s.html">' % (obj.name), \
+                                    '<li class="active"><a href="packages/%s.html">' % (obj.name))
+        elif self.static is False:
+            obj_menu = menu.replace('<li><a href="%s.html">' % (obj.name), \
+                                    '<li class="active"><a href="%s.html">' % (obj.name))
+        else:
+            obj_menu = menu.replace('<li><a href="%s">' % (obj.name), \
+                                    '<li class="active"><a href="%s">' % (obj.name))
+
+        #print obj.name, obj_menu
+
+        if self.subdir:
+            obj_menu = obj_menu.replace('a href="', 'a href="../')
+
+        f.write('  ' + obj_menu)
+        f.write('  <div class="span10">')
+
+        # If we are processing a static content just stop here
+        if self.static is True:
+            data = obj.flush()
+            f.write(data)
+            f.write(FOOTER)
+            f.close()
+            return
+
+        if self.subdir:
+            f.write('  <h1>%s package object</h1>\n' % (obj.menu))
+        else:
+            f.write('  <h1>%s object</h1>\n' % (obj.menu))
+
+        desc = obj.desc.replace('\n\n', '<br><br>')
+
+        f.write('  <p>%s</p>\n' % (desc))
+
+        if len(obj.comm) > 1:
+            comm = obj.comm.replace('\n\n', '<br><br>')
+            f.write('  <p><strong>Comments</strong>: %s</p>\n' % (comm))
+
+        if (len(obj.pkg_header) > 0):
+            f.write('  <p><strong>Initialization</strong></p>')
+            f.write('  <p>In order to make use of %s package, two simple steps are required: the ' \
+                    'first one is to include the package header file on top of your code, then '   \
+                    'perform an explicit package inside duda_main() function.' % (obj.name))
+            f.write('<p>Example:</p>')
+            f.write('<pre class="prettyprint lang-c">')
+            f.write('/* Include package header */\n%s\n' % (obj.pkg_header))
+            f.write('int duda_main()\n{\n    ...\n    %s' %(obj.pkg_init))
+            f.write('    ...\n    return 0;\n}')
+            f.write('</pre>')
+            f.write('<p>Once the package is loaded, you can use any methods from your callbacks ' \
+                    'in the following way:</pre>')
+            f.write('<pre class="prettyprint lang-c">%s->method(...)</pre>' % obj.name.lower())
+        else:
+            f.write('  <p><strong>Usage</strong>')
+            f.write('     <pre class="prettyprint lang-c">%s->method(...);</pre></p>' % (obj.name.lower()))
+        f.write('  <div class="page-header"></div>')
+        f.write('  <h2>Methods</h2>\n')
+
+        # Generate a sorted shortcut menu
+        shortcut = []
+        for m in obj.methods:
+            shortcut.append(m.name)
+        shortcut.sort()
+
+        f.write('  <div class="row-fluid">\n')
+        i = 0
+        total = 0
+        for entry in shortcut:
+            if i == 0:
+                f.write('    <div class="span3">\n    <ul>\n')
+
+            f.write('        <li><a href="#s_%s">%s</a></li>\n' % (entry, entry))
+
+            i += 1
+            total += 1
+            if i >= 4:
+                f.write('    </ul>\n   </div>\n')
+                i = 0
+
+        if (total % 4) != 0:
+            f.write('    </ul>\n   </div>\n')
+
+        f.write('  </div>\n')
+
+        obj.methods.sort(key=lambda x: x.name, reverse=False)
+        for m in obj.methods:
+            f.write('  <div class=\"page-header\"><h3 id="s_%s">%s()</h3>\n' % (m.name, m.name))
+            f.write('  <p>%s</p>\n' % m.desc.strip())
+            f.write('  <p><strong>Prototype</strong><pre class=\"prettyprint lang-c\">%s;</pre>' % m.prototype.strip())
+            f.write('  <strong>Parameters</strong>')
+            if len(m.params) > 0:
+                f.write('  <dl class=\"dl-horizontal\">')
+                for p in m.params:
+                    param_desc = p['desc'].replace('\n\n', '<br><br>')
+                    f.write('<dt>' + p['name'] + '</dt><dd>' + param_desc + '</dd>')
+
+                f.write('  </dl>')
+            else:
+                f.write('  None<p></p>')
+
+            f.write('  <strong>Return:</strong> %s' % m.mreturn)
+            f.write('  </div>')
+
+        f.write('  </div>') # close span8
+
+        if self.subdir:
+            footer = FOOTER.replace('assets/', '../assets/')
+        else:
+            footer = FOOTER
+
+        f.write(footer)
+        f.close()
+
+# Generate Pages
+for entry in intro:
+    WriteObject(entry)
+
+for obj in objects:
+    WriteObject(obj)
+
+for pkg in packages:
+    WriteObject(pkg, 'html/packages/')

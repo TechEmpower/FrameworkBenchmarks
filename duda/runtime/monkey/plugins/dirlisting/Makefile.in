@@ -1,0 +1,14 @@
+all: monkey-dirlisting.so
+include ../Make.common
+
+CC	= @echo "  CC   $(_PATH)/$@"; $CC
+CC_QUIET= @echo -n; $CC
+CFLAGS	= $CFLAGS
+LDFLAGS = $LDFLAGS
+DEFS    = $DEFS
+DIRLISTING_OBJECTS = dirlisting.o
+
+-include $(DIRLISTING_OBJECTS:.o=.d)
+
+monkey-dirlisting.so: $(DIRLISTING_OBJECTS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DEFS) -shared -o $@ $^ -lc

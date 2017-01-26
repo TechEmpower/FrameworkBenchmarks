@@ -1,0 +1,48 @@
+Duda Client Manager
+===================
+DudaC is a command line interface for the Duda I/O web services framework 'Duda',
+it aims to to manage Duda web services in a easy manner.
+
+Install
+=======
+
+1) Install ``dudac`` in you home:
+
+   $ python setup.py install --user
+
+2) Add ``$HOME/.local/bin`` to your ``$PATH`` adding the following line to
+   your ``.bashrc``:
+
+   export PATH="$HOME/.local/bin:$PATH"
+
+3) Open a new terminal or source ``.bashrc`` and you'll have available the
+   ``dudac`` command.
+
+Usage
+=====
+1) Get the development environment:
+
+   # dudac -s
+
+2) Launch your web service:
+
+   # dudac -w PATH_TO_WEBSERVICE_SOURCE_CODE
+
+3) Hit your web server
+
+   # firefox http://localhost:2001
+
+Examples
+========
+If you want to see some Duda web services examples clone the following
+repository:
+
+    git clone https://github.com/monkey/duda-examples.git
+
+Then you can do something like:
+
+   # dudac -w /path/to/duda-examples/001_hello_world
+
+Author
+======
+Eduardo Silva <edsiper@gmail.com>

@@ -1,0 +1,4 @@
+export DUDAC_STAGE_PATH=`pwd`/runtime/
+cd dudac/
+./dudac -w ../webservice -p 2001
+

@@ -1,0 +1,7 @@
+NAME    = ws
+CC      = gcc
+CFLAGS  = -g -Wall -O2
+LDFLAGS =
+DEFS    =
+INCDIR  =
+OBJECTS = main.o

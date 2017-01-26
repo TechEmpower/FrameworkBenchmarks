@@ -1,0 +1,14 @@
+all: monkey-logger.so
+include ../Make.common
+
+CC	= @echo "  CC   $(_PATH)/$@"; $CC
+CC_QUIET= @echo -n; $CC
+CFLAGS	= $CFLAGS
+LDFLAGS = $LDFLAGS
+DEFS    = $DEFS
+LOGGER_OBJECTS = pointers.o logger.o
+
+-include $(LOGGER_OBJECTS:.o=.d)
+
+monkey-logger.so: $(LOGGER_OBJECTS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DEFS) -shared -o $@ $^ -lc

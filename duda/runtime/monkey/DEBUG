@@ -1,0 +1,6 @@
+Monkey DEBUG macros
+-------------------
+DEBUG_IOV	 : debug calls and errors associated when iov.c is used
+DEBUG_THEME	 : debug default theme loaded
+DEBUG_HEADERS_OUT: debug headers sent to client
+

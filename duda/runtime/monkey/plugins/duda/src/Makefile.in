@@ -1,0 +1,30 @@
+_PATH   = $(patsubst $(monkey_root)/%, %, $(CURDIR))
+CC      = @echo "  CC   $(_PATH)/$@"; $CC
+CC_QUIET= @echo -n; $CC
+CFLAGS	= $CFLAGS
+LDFLAGS = $LDFLAGS
+DEFS    = $DEFS
+INCDIR  = ../../../src/include
+
+OBJECTS = duda.o duda_gc.o duda_mem.o duda_conf.o duda_api.o duda_event.o \
+	duda_body_buffer.o duda_sendfile.o duda_debug.o duda_global.o \
+        duda_map.o duda_package.o duda_param.o duda_session.o duda_cookie.o \
+	duda_request.o duda_response.o duda_queue.o duda_console.o duda_log.o \
+	duda_qs.o duda_worker.o duda_stats.o duda_fconf.o duda_data.o \
+	duda_xtime.o duda_utils.o
+
+all: ../monkey-duda.so
+
+-include $(OBJECTS:.o=.d)
+
+../monkey-duda.so: $(OBJECTS)
+	@(for d in $(DIRS); do $(MAKE) -C $$d ; done)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DEFS) -shared -o $@ $^ -lc
+
+.c.o:
+	$(CC) $(CFLAGS) $(DEFS) -I$(INCDIR) -fPIC -c $<
+	$(CC_QUIET) -MM -MP $(CFLAGS) $(DEFS) -I$(INCDIR) $*.c -o $*.d > /dev/null &2>&1
+
+clean:
+	@(for d in $(DIRS); do $(MAKE) -C $$d clean; done)
+	rm -rf *.o *~ *.*so* *.d

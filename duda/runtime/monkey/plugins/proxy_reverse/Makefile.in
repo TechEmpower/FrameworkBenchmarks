@@ -1,0 +1,14 @@
+all: monkey-proxy_reverse.so
+include ../Make.common
+
+CC	= @echo "  CC   $(_PATH)/$@"; $CC
+CC_QUIET= @echo -n; $CC
+CFLAGS	= $CFLAGS
+LDFLAGS = $LDFLAGS
+DEFS    = $DEFS
+OBJECTS = dictionary.o string.o config.o proxy.o balancer.o
+
+-include $(OBJECTS:.o=.d)
+
+monkey-proxy_reverse.so: $(OBJECTS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DEFS) -shared -o $@ $^ -lc

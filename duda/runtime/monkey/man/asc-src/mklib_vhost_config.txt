@@ -1,0 +1,50 @@
+mklib_vhost_config(3)
+=====================
+
+NAME
+----
+mklib_vhost_config - configure a new virtual host
+
+SYNOPSIS
+--------
+*#include <libmonkey.h>*
+
+*int mklib_vhost_config(mklib_ctx 'ctx', char *'name', ...);*
+
+DESCRIPTION
+-----------
+*mklib_vhost_config*() is a NULL-terminated call creating a new virtual host
+with the supplied options.
+
+The 'name' argument is a unique identifier, not used for anything else.
+
+VALID OPTIONS
+-------------
+*MKV_SERVERNAME*::
+	The next argument is a char *, pointing to a space-delimited list of
+	server names. Example: "example.com www.example.com"
+
+*MKV_DOCUMENT*::
+	The next argument is a char *, a string containing the absolute path
+	to the document root.
+
+EXAMPLE
+-------
+[verse]
+int retval = mklib_vhost_config(ctx, "example", MKV_SERVERNAME, "example.com",
+                                MKV_DOCUMENTROOT, "/var/www/example", NULL);
+
+RETURN VALUE
+------------
+On success, returns MKLIB_TRUE. On failure MKLIB_FALSE is returned.
+
+SEE ALSO
+--------
+*mklib_config*(3), *mklib_init*(3), *mklib_start*(3), *mklib_stop*(3), 
+*mklib_callback_set*(3), *mklib_vhost_list*(3), *mklib_scheduler_worker_info*(3),
+*mklib_mimetype_add*(3)
+
+RESOURCES
+---------
+See http://monkey-project.com
+

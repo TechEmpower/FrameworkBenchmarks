@@ -1,0 +1,139 @@
+commit 56ff395015f03af2e532c3229538099e61ccc69b
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Tue Sep 25 11:35:36 2012 -0600
+
+    Do not reprint version when -v argument is used
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit f44524973519ae9a604c9b0641226242a635596f
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Tue Sep 18 15:36:40 2012 -0600
+
+    Check compiler warning and print to STDOUT
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit 6965d056e9409f8a2af9509d0f717c17e0bb0eed
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Tue Sep 18 14:45:59 2012 -0600
+
+    Fix reset environment for Duda git
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit a8748ede3a4e2f9accecfdb48639a65b4e68ae74
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Mon Sep 17 23:11:15 2012 -0600
+
+    Update README with examples details
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit 60927352cc2ca93bc17196298815ec8370bb4641
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Sun Sep 16 09:32:44 2012 -0600
+
+    DudaC v0.4
+    
+     - Enable only logger and liana plugins
+     - If the webservice contains an 'html' directory, enable the
+       DocumentRoot key under WEB_SERVICE section
+     - Colorize some outputs
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit 9dd6758af465214ec4c5a03c6e7e95bb09dfd3cd
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Sat Jun 2 12:34:57 2012 -0600
+
+    New stage directory
+    
+    DudaC now support to clone Monkey and Duda sources from GIT. That
+    info is stored into ~/.dudac/ , as Duda lives in a different repository
+    we need a new place to merge both parts. A new directory named 'stage'
+    has been added under ~/.dudac/stage. Inside it when a build is requested,
+    DudaC will generate a 'git archive' from both sources and do the merge.
+    
+    Then all configuration and build process is done in the stage version.
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit 9aae526887969c4b29b58e3b97068d7b2c1974c4
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Fri Jun 1 11:03:51 2012 -0600
+
+    First work to support separated DudaC repository
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit 7fdb55ab7e3e37012e4d1fbb02f67599f6ae1269
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Wed May 2 20:33:54 2012 -0600
+
+    DudaC v0.2
+    
+     - New flag -f to avoid compile Monkey sources everytime that the
+       web service runs
+     - Flags -s and -g can be used together with -w
+     - Web services now can support a 'config.dudac' file, this one
+       specify the requirements for the web service in terms of Monkey
+       GIT head, GIT URL and SSH URL.
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit 2fbc2d47c672801028712701441bd36a99fec62f
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Tue May 1 14:58:02 2012 -0600
+
+    Fix pull command
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit c934286aec7a7bf569485d215b5b08476b7ed4e2
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Sun Apr 22 10:50:04 2012 -0600
+
+    Use new Duda headers path
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit ca557aa8831befb7021d816fe4e50c05632b6ad4
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Wed Mar 14 11:22:47 2012 -0600
+
+    dudac: add -p parameter to specify TCP port
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit a06a7ea70b323f88529a45a586cb36d949f2404a
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Tue Mar 13 00:37:22 2012 -0600
+
+    dudac: update banner
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit 81a35be0e8f238f2e05cba01af7fe293065c8b87
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Tue Mar 13 00:32:12 2012 -0600
+
+    dudac: safe directory
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit 11a15b9213ff49b871284276c747892016cd7731
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Tue Mar 13 00:16:32 2012 -0600
+
+    DudaC: Update README
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>
+
+commit ab49953106909e13f2156f416d8c4480a96a7461
+Author: Eduardo Silva <edsiper@gmail.com>
+Date:   Tue Mar 13 00:14:37 2012 -0600
+
+    DudaC: Initial import
+    
+    Signed-off-by: Eduardo Silva <edsiper@gmail.com>

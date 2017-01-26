@@ -1,0 +1,14 @@
+all: monkey-mandril.so
+include ../Make.common
+
+CC	= @echo "  CC   $(_PATH)/$@"; $CC
+CC_QUIET= @echo -n; $CC
+CFLAGS	= $CFLAGS
+LDFLAGS = $LDFLAGS
+DEFS    = $DEFS
+MANDRIL_OBJECTS = mandril.o
+
+-include $(MANDRIL_OBJECTS:.o=.d)
+
+monkey-mandril.so: $(MANDRIL_OBJECTS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DEFS) -shared -o $@ $^ -lc

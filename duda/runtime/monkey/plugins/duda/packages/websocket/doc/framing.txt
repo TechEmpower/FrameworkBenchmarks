@@ -1,0 +1,30 @@
+5.2.  Base Framing Protocol
+
+   This wire format for the data transfer part is described by the ABNF
+   [RFC5234] given in detail in this section.  (Note that, unlike in
+   other sections of this document, the ABNF in this section is
+   operating on groups of bits.  The length of each group of bits is
+   indicated in a comment.  When encoded on the wire, the most
+   significant bit is the leftmost in the ABNF).  A high-level overview
+   of the framing is given in the following figure.  In a case of
+   conflict between the figure below and the ABNF specified later in
+   this section, the figure is authoritative.
+
+      0                   1                   2                   3
+      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+     +-+-+-+-+-------+-+-------------+-------------------------------+
+     |F|R|R|R| opcode|M| Payload len |    Extended payload length    |
+     |I|S|S|S|  (4)  |A|     (7)     |             (16/64)           |
+     |N|V|V|V|       |S|             |   (if payload len==126/127)   |
+     | |1|2|3|       |K|             |                               |
+     +-+-+-+-+-------+-+-------------+ - - - - - - - - - - - - - - - +
+     |     Extended payload length continued, if payload len == 127  |
+     + - - - - - - - - - - - - - - - +-------------------------------+
+     |                               |Masking-key, if MASK set to 1  |
+     +-------------------------------+-------------------------------+
+     | Masking-key (continued)       |          Payload Data         |
+     +-------------------------------- - - - - - - - - - - - - - - - +
+     :                     Payload Data continued ...                :
+     + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+     |                     Payload Data continued ...                |
+     +---------------------------------------------------------------+

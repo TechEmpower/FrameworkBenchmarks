@@ -1,0 +1,8 @@
+# Binaries
+debian/tmp/usr/sbin/mk_passwd
+
+# Plugins setup
+debian/tmp/etc/monkey/plugins/auth/*
+
+# Plugins / Libraries
+debian/tmp/usr/lib/monkey/monkey-auth.so

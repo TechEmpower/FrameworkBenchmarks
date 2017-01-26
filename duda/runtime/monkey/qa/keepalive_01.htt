@@ -1,0 +1,56 @@
+###############################################################################
+# DESCRIPTION
+#	HTTP/1.1 Request requesting Keep-Alive, we expect the server keeps the 
+#	keep-alive open and send proper header responses for that.
+#
+# AUTHOR
+#	Eduardo Silva	<edsiper@gmail.com>
+#
+# DATE
+#	February 26 2011
+#
+# COMMENTS
+#	Do not Expect 'Connection: Close'
+#       Do     Expect 'Connection: Keep-Alive'
+#       Do     Expect 'Keep-Alive: timeout=15, max=20'
+###############################################################################
+
+
+INCLUDE __CONFIG
+INCLUDE __MACROS
+
+CLIENT
+_REQ $HOST $PORT
+__GET / $HTTPVER
+__Host: $HOST
+__Connection: Keep-Alive
+__
+_EXPECT . "HTTP/1.1 200 OK"
+_EXPECT . "!Connection: Closed"
+_EXPECT . "Keep-Alive: timeout=5, max=1000"
+_EXPECT . "Connection: Keep-Alive"
+_WAIT
+
+_REQ $HOST $PORT
+__GET / $HTTPVER
+__Host: $HOST
+__Connection: Keep-Alive
+__
+_EXPECT . "HTTP/1.1 200 OK"
+_EXPECT . "!Connection: Closed"
+_EXPECT . "Keep-Alive: timeout=5, max=999"
+_EXPECT . "Connection: Keep-Alive"
+_WAIT
+
+_REQ $HOST $PORT
+__GET / $HTTPVER
+__Host: $HOST
+__Connection: Keep-Alive
+__
+_EXPECT . "HTTP/1.1 200 OK"
+_EXPECT . "!Connection: Closed"
+_EXPECT . "Keep-Alive: timeout=5, max=998"
+_EXPECT . "Connection: Keep-Alive"
+_WAIT
+
+END

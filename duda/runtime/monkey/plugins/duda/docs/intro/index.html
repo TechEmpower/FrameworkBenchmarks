@@ -1,0 +1,38 @@
+@INTRO_MENU: Introduction
+
+<h1>Duda I/O API</h1>
+<p>
+  Duda is a framework to create fast and solid web services on top
+  of <a href="http://monkey-project.com">Monkey</a> HTTP stack. All the interfaces
+  are available in C language in a pseudo-object format.
+</p>
+<p>
+  All API calls or methods are grouped inside different <em>objects</em>, by default
+  the objects are already initialized by the Duda core, no instance creation is required.
+</p>
+
+<h3>Core objects and packages</h3>
+<p>
+  When developing a Web Application or Web Service with Duda, you will find two types
+  of objects, those who are built-in into the core and the external objects called
+  <em>Packages</em>.
+</p>
+<p>
+  The <em>Core Objects</em> expose interfaces for common routines such as parse
+  requests, compose responses, manage cookies or sessions, read configuration files, etc.
+  But in most of cases this is not enough and due to the implementation requirement will
+  be required to connect to some database, work under a sub-protocol such as WebSockets
+  or just some helpers to use JSON. This is when <em>Packages</em> join into the game.
+</p>
+<p>
+  A <em>Package</em> is an <em>Object</em> that is <strong>not</strong> known or
+  initializated by Duda. It's an external component that can be used by the
+  Web Application on-demand and it requires some special handling which includes
+  to load the <em>Package</em> header file and the explicit call to
+  <em>duda_load_package(...)</em> inside <em>duda_main()</em> to instance the
+  object into the application.
+</p>
+<p>
+  Each <em>Package</em> documented here explains it owns requirements to be loaded
+  successfully.
+</p>

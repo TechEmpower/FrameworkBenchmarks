@@ -1,0 +1,1223 @@
+#!/bin/bash
+#
+#  Monkey HTTP Daemon
+#  ------------------
+#  Copyright (C) 2001-2014, Eduardo Silva P. <edsiper@gmail.com>
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Library General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+__MONKEY__="1"
+__MONKEY_MINOR__="4"
+__MONKEY_PATCHLEVEL__="0"
+__MONKEY_GIT__="release"
+
+VERSION="1.4.0"
+SONAME="libmonkey.so.$__MONKEY__.$__MONKEY_MINOR__"
+SYSNAME=`uname -s`
+SYSINFO=`uname -sr`
+INCDIR="src/include/"
+
+BOLD="\033[1m"
+END_COLOR="\033[0m"
+GREEN="\033[0;32m"
+YELLOW="\033[1;33m"
+RED="\033[0;31m"
+BLUE="\033[0;34m"
+
+# Bash colors
+txtblk='\e[0;30m' # Black - Regular
+txtred='\e[0;31m' # Red
+txtgrn='\e[0;32m' # Green
+txtylw='\e[0;33m' # Yellow
+txtblu='\e[0;34m' # Blue
+txtpur='\e[0;35m' # Purple
+txtcyn='\e[0;36m' # Cyan
+txtwht='\e[0;37m' # White
+bldblk='\e[1;30m' # Black - Bold
+bldred='\e[1;31m' # Red
+bldgrn='\e[1;32m' # Green
+bldylw='\e[1;33m' # Yellow
+bldblu='\e[1;34m' # Blue
+bldpur='\e[1;35m' # Purple
+bldcyn='\e[1;36m' # Cyan
+bldwht='\e[1;37m' # White
+unkblk='\e[4;30m' # Black - Underline
+undred='\e[4;31m' # Red
+undgrn='\e[4;32m' # Green
+undylw='\e[4;33m' # Yellow
+undblu='\e[4;34m' # Blue
+undpur='\e[4;35m' # Purple
+undcyn='\e[4;36m' # Cyan
+undwht='\e[4;37m' # White
+bakblk='\e[40m'   # Black - Background
+bakred='\e[41m'   # Red
+bakgrn='\e[42m'   # Green
+bakylw='\e[43m'   # Yellow
+bakblu='\e[44m'   # Blue
+bakpur='\e[45m'   # Purple
+bakcyn='\e[46m'   # Cyan
+bakwht='\e[47m'   # White
+txtrst='\e[0m'    # Text Reset
+
+# Create configuration files under 'conf/'
+make_conf()
+{
+	cat $INCDIR/config.path lang/$lang/mconf lang/$lang/sites/default > makeconf.sh
+	sed -i "s/#PORT#/$default_port/g" makeconf.sh
+	sed -i "s/#USER#/$default_user/g" makeconf.sh
+	chmod 755 makeconf.sh
+	./makeconf.sh
+	rm makeconf.sh
+	rm $INCDIR/config.path
+}
+
+local_dirs()
+{
+	bin="bin"
+	logs="logs"
+	sites="conf/sites"
+
+	if [ ! -d $bin ]; then
+		mkdir $bin
+	fi
+
+	if [ ! -d $logs ]; then
+		mkdir $logs
+	fi
+
+	if [ ! -d $sites ]; then
+		mkdir $sites
+	fi
+
+}
+
+# Main function
+main()
+{
+	local_dirs
+	dir=0
+	actual_path=`pwd`
+
+	if [ "$prefix" != "$actual_path" ]; then
+		dir=1
+	fi
+
+	if [ "$bindir" != "$actual_path/bin" ]; then
+		dir=1
+	fi
+
+	if [ "$sysconfdir" != "$actual_path/conf" ]; then
+		dir=1
+	fi
+
+	if [ "$datadir" != "$actual_path/htdocs" ]; then
+		dir=1
+	fi
+
+	if [ "$logdir" != "$actual_path/logs" ]; then
+		dir=1
+	fi
+
+	if [ "$mandir" != "$actual_path/man" ]; then
+		dir=1
+	fi
+
+	echo
+	echo -e "\033[1m=== Checking dependencies ===\033[0m"
+
+	# Check for accept4()
+	if [ $only_accept4 -eq 1 ]; then
+		check_generic "accept4() function" "sys/socket.h" "accept4(0, 0, 0, 0)" ""
+		if [ $result = -1 ]; then
+			exit 1
+		fi
+	elif [ $only_accept -eq 1 ]; then
+		echo -n "+ Using generic accept()............ "
+		echo -en $GREEN$BOLD"Yes"$END_COLOR"\n"
+		DEFS="$DEFS -DACCEPT_GENERIC"
+	else
+		check_generic "accept4() function" "sys/socket.h" "accept4(0, 0, 0, 0)" ""
+		if [ $result -ne 0 ]; then
+			DEFS="$DEFS -DACCEPT_GENERIC"
+		fi
+	fi
+
+	if [ $platform == "generic" ]; then
+		check_generic "pthread headers" "pthread.h" "pthread_t self = pthread_self()" "-lpthread"
+	fi
+
+	if test -z $no_backtrace ; then
+		check_generic "backtrace support" "execinfo.h" ""
+		if [ $result -ne 0 ]; then
+			no_backtrace=1
+		fi
+	fi
+
+	if test $linux_trace ; then
+                check_generic "Linux Trace Toolkit (UST)" "lttng/tracepoint.h"
+                if [ $result -ne 0 ]; then
+                        echo
+                        echo -n "Error: Linux Trace Toolkit (lttng) is not available "
+                        echo    "in your system"
+                        echo
+                        exit 1
+                fi
+        fi
+
+	echo
+	echo -e "\033[1m=== Plugins included ===\033[0m"
+	find plugins/ -name Makefile -exec rm {} \;
+
+	create_makefile_plugins $plugdir $prefix $bindir $mandir \
+		$sysconfdir $datadir $logdir $sysconfdir $datadir \
+		$logdir $mandir $enabled_plugins $disabled_plugins
+
+	echo
+	echo -e "\033[1m=== Creating Makefiles and scripts ===\033[0m"
+
+	echo "+ Creating conf/monkey.conf"
+	create_conf prefix
+	make_conf  $lang $default_port $default_user
+
+	echo "+ Creating src/Makefile"
+	create_makefile2 mod_libs mod_obj make_script platform \
+                         malloc_libc malloc_jemalloc
+
+	echo "+ Creating src/include/mk_info.h"
+	create_info sysconfdir \
+                    SYSNAME __MONKEY__ __MONKEY_MINOR__ __MONKEY_PATCHLEVEL__ \
+                    cmd uname
+
+	echo "+ Creating bin/banana script"
+	create_banana_script bindir logdir default_port
+
+	echo -e "+ Creating Makefile"
+	if [ "$dir" = 0 ]; then
+		create_makefile1 bindir malloc_jemalloc
+	else
+		create_makefile1_install prefix bindir mandir sysconfdir \
+                datadir logdir malloc_jemalloc
+	fi
+
+        # if the memory allocator is jemalloc, lets start configuring the dependency
+        if [ $malloc_jemalloc -eq 1 ]; then
+                echo
+                echo -e "\033[1m=== Configuring Memory Allocator ===\033[0m"
+                cd deps/jemalloc
+                ./configure $JEMALLOC_OPTS \
+                            --with-jemalloc-prefix=je_ \
+                            --enable-cc-silence \
+                            CFLAGS="-std=gnu99 -Wall -pipe -g3 -O3 -funroll-loops " \
+                            LDFLAGS="" > jemalloc.config 2>&1
+                if [ $? -eq 0 ]; then
+                      echo "+ Jemalloc configured"
+                else
+                      cat jemalloc.config
+                      echo
+                      echo "check more details with: $ cat deps/jemalloc/config.log"
+                      exit 1
+                fi
+                cd ../../
+        fi
+
+	echo
+	echo -e "\033[1m=== Monkey Configuration ===\033[0m"
+	echo -e "Platform\t= $platform"
+	echo -e "Compiler\t= $CC"
+	echo -e "CFLAGS\t\t= $CFLAGS"
+	echo -e "LDFLAGS\t\t= $LDFLAGS"
+
+	if [ "$DEFS" != "" ]; then
+		echo -e "DEFS\t\t= $DEFS"
+	fi
+
+	echo
+
+	echo -en "Shared library\t= "
+	[ -n "$sharedlib" ] && echo "enabled" || echo "disabled"
+
+	echo -en "Relaxed plugins\t= "
+	[ -n "$relaxed_plugins" ] && echo "enabled" || echo "disabled"
+
+	echo
+	echo -e "Prefix\t\t= $prefix"
+	echo -e "Bindir\t\t= $bindir"
+	echo -e "Libdir\t\t= $libdir"
+	echo -e "Incdir\t\t= $incdir"
+	echo -e "Sysconfdir\t= $sysconfdir"
+	echo -e "Datadir\t\t= $datadir"
+	echo -e "Mandir\t\t= $mandir"
+	echo -e "Logdir\t\t= $logdir"
+
+	if [ "$plugdir" != "" ]; then
+		echo -e "Plugdir\t\t= $plugdir"
+	fi
+
+	echo
+	echo "--"
+	echo -en "$GREEN Monkey $END_COLOR configuration is$YELLOW done!$END_COLOR, to build type 'make"
+	if [ "$dir" = 1 ]; then
+		echo -n " && make install' "
+	else
+		echo "' "
+	fi
+	echo -n "Have fun! ;)"
+	echo
+
+	echo "#ifndef MK_ENV_H" > src/include/mk_env.h
+	echo "#define MK_ENV_H" >> src/include/mk_env.h
+	echo "#define CC \"${CC}\"" >> src/include/mk_env.h
+	echo "#endif" >> src/include/mk_env.h
+}
+
+# Test if compiling a file with a given feature will work.
+# $1: Description of the feature
+# $2: List of needed #includes, separated by spaces
+# $3: A function call, e.g. "printf("Hello, world\n")
+# $4: A list of libraries, e.g. "-lrt -lpthread"
+check_generic() {
+	printf "+ Checking for %s ... " "$1"
+	echo -n "" > check.c
+	for inc in $2; do
+		printf "#include <%s>\n" "$inc" >> check.c
+	done
+	printf "int main(int argc, char *argv) { %s; return 0; }\n" "$3" >> check.c
+	$CC -D_GNU_SOURCE -Wimplicit -Werror $4 check.c &> configure.log
+	if [ $? -ne 0 ]; then
+		result=-1
+		echo -en $RED$BOLD"No"$END_COLOR"\n"
+	else
+		result=0
+		echo -en $GREEN$BOLD"Yes"$END_COLOR"\n"
+	fi
+	rm -f check.c configure.log a.out
+}
+
+# Create Makefile
+create_makefile1()
+{
+        if [ $malloc_jemalloc -eq 1 ]; then
+                $deps="deps/jemalloc"
+        else
+                $deps=""
+        fi
+
+	cat > Makefile << EOF
+# Monkey HTTP Daemon: Makefile
+# ============================
+
+all:
+	@\$(MAKE) -s -C $deps src all
+	@\$(MAKE) -s -C plugins all
+	@echo "done"
+
+plugins:
+	@\$(MAKE) -s -C plugins all
+
+monkeyversion:
+	@echo $VERSION
+
+help:
+	@echo "Make help:"
+	@echo "  plugins       - Build webserver's plugins"
+	@echo "  monkeyversion - Output the webserver's version"
+	@echo "  clean         - Remove generated binary files"
+	@echo "  distclean     - Clean plus configuration and Make files"
+	@echo " "
+	@echo "Execute 'make' to build the webserver."
+
+clean:
+	@(cd src; \$(MAKE) clean)
+	@(cd plugins; \$(MAKE) clean)
+distclean:
+	@(cd src; \$(MAKE) distclean)
+EOF
+}
+
+# This function check if the plugin must be compiled/installed
+# or not based in the following rules:
+#
+#  #1 -> --enable-plugins
+#  #2 -> --disable-plugins
+#  #3 -> Plugin spec: MANDATORY, OPTIONAL, DISABLED & EXPERIMENTAL
+#
+#  return values: 0 = No
+#                 1 = Yes
+skip_plugin() {
+#echo "skip_plugin($entry) '$enabled_plugins'  '$disabled_plugins'"
+
+	en_wildcard=0
+	if [ "$enabled_plugins" == '*' ]; then
+		en_wildcard=1
+	fi
+
+	di_wildcard=0
+	if [ "$disabled_plugins" == '*' ]; then
+		di_wildcard=1
+	fi
+
+	IFS=","
+	set -- $enabled_plugins
+	en_array=$@
+	set -- $disabled_plugins
+	di_array=$@
+
+	unset IFS
+
+	enabled=0
+	disabled=0
+
+	for e in $en_array;
+	do
+		if [ "$entry" == "$e" ]; then
+			enabled=1
+			break
+		fi
+	done
+
+	for d in $di_array;
+	do
+		if [ "$entry" == "$d" ]; then
+			disabled=1
+			break
+		fi
+	done
+
+
+	path="plugins/$entry"
+	if ! test -d $path; then
+		return 1
+	fi
+
+	# does it contains a proper Makefile.in ?
+	if test ! -e $path/Makefile.in ; then
+		return 1
+	fi
+
+	# Check enable wildcard */
+	if [ $en_wildcard -eq 1 ] && [ $disabled -eq 0 ]; then
+		return 0
+	fi
+
+	# Check disable wildcard */
+	if [ $di_wildcard -eq 1 ] && [ $enabled -eq 0 ]; then
+		return 1
+	fi
+
+	# disabled and not enforced
+	if [ $disabled -eq 1 ] && [ $enabled -eq 0 ]; then
+		return 1
+	fi
+
+	if [ $disabled -eq 0 ] && [ $enabled -eq 1 ]; then
+		return 0
+	fi
+
+	# Disabled by spec and not enforced
+	if test -e $path/DISABLED && [ $enabled -eq 0 ] ; then
+		return 1
+	fi
+
+	# Experimental and not enforced
+	if test -e $path/EXPERIMENTAL && [ $enabled -eq 1 ]; then
+		return 1
+	fi
+
+	# Optional plugin and not disabled
+	if test -e $path/OPTIONAL && [ $disabled -eq 0 ]; then
+		return 0
+	fi
+
+	# Mandatory plugin and not disabled
+	if test -e $path/MANDATORY && [ $disabled -eq 0 ]; then
+		return 0
+	fi
+
+	# Return True by default
+	return 1
+}
+
+create_makefile1_install()
+{
+        # memory allocator
+        if [ $malloc_jemalloc -eq 1 ]; then
+                all_deps="$all_deps jemalloc"
+        else
+                deps=""
+        fi
+
+	# remove old data
+	rm -rf plugins.conf plugins.list
+        touch plugins.conf
+	for e in conf/plugins/*
+	do
+		entry=`echo $e | awk -F "/" '{print $3}'`
+		skip_plugin $entry $enabled_plugins $disabled_plugins
+		if [ $? == 1 ]; then
+			continue
+		fi
+		echo -e "\tcp -r conf/plugins/$entry \${SYSCONFDIR}/plugins/" >> plugins.conf
+	done
+
+	plgconf=`cat plugins.conf`
+	for e in plugins/*
+	do
+		entry=`echo $e | awk -F "/" '{print $2}'`
+		skip_plugin $entry $enabled_plugins $disabled_plugins
+		if [ $? == 1 ]; then
+			continue
+		fi
+		echo -e "\tinstall -m 644 plugins/$entry/*.so \${PLUGINDIR}/" >> plugins.list
+	done
+
+	plglist=`cat plugins.list`
+
+	if [ -n "$sharedlib" ]; then
+		incinstall="	install -m 644 src/include/public/libmonkey.h \$(INCDIR)"
+	fi
+
+	cat > Makefile <<EOF
+# Monkey HTTP Daemon: Makefile
+# ============================
+export monkey_root=\$(CURDIR)
+PREFIX=\$(DESTDIR)${prefix}
+BINDIR=\$(DESTDIR)${bindir}
+LIBDIR=\$(DESTDIR)${libdir}
+INCDIR=\$(DESTDIR)${incdir}
+MANDIR=\$(DESTDIR)${mandir}
+SYSCONFDIR=\$(DESTDIR)${sysconfdir}
+DATADIR=\$(DESTDIR)${datadir}
+LOGDIR=\$(DESTDIR)${logdir}
+PLUGINDIR=\$(DESTDIR)${plugdir}
+VERSION=$VERSION
+
+all: monkey.pc $all_deps
+	@\$(MAKE) -s -C src all
+	@\$(MAKE) -s -C plugins all
+	@echo "  DONE"
+
+jemalloc:
+	@echo "  CC    jemalloc [all]"
+	@\$(MAKE) -s -C deps/jemalloc
+
+clean:
+	@(cd src; \$(MAKE) clean)
+	@(cd plugins; \$(MAKE) clean)
+	@rm -f monkey.pc
+
+distclean:
+	@(cd src; \$(MAKE) distclean)
+
+install:
+	\$(MAKE) -C src all
+	install -d \$(BINDIR)
+	install -d \$(LIBDIR)/pkgconfig
+	install -d \$(INCDIR)
+	install -d \$(MANDIR)/man1
+	install -d \$(MANDIR)/man3
+	install -d \$(SYSCONFDIR)
+	install -d \${SYSCONFDIR}/sites
+	install -d \${SYSCONFDIR}/plugins
+	install -d \${DATADIR}
+	install -d \${DATADIR}/imgs
+	install -d \${DATADIR}/php
+	install -d \${DATADIR}/docs
+	install -d \${LOGDIR}
+	install -d \${PLUGINDIR}
+	install -m 755 bin/* \$(BINDIR)
+	install -m 644 ./conf/*.* \$(SYSCONFDIR)
+	install -m 644 src/include/*.h \$(INCDIR)
+$plgconf
+$plglist
+	install -m 644 ./conf/sites/* \${SYSCONFDIR}/sites
+	install -m 644 ./man/*.1 \$(MANDIR)/man1
+	install -m 644 ./man/*.3 \$(MANDIR)/man3
+$incinstall
+	-install -m 644 src/$SONAME \$(LIBDIR)
+	-install -m 644 monkey.pc \$(LIBDIR)/pkgconfig
+	-ln -sf $SONAME \$(LIBDIR)/libmonkey.so
+
+	install -m 644 ./htdocs/index.html \$(DATADIR)
+	install -m 644 ./htdocs/404.html \$(DATADIR)
+	install -m 644 ./htdocs/favicon.ico \$(DATADIR)
+	install -d \$(DATADIR)/imgs
+	install -m 644 ./htdocs/imgs/monkey_logo.png \$(DATADIR)/imgs
+	install -m 644 ./htdocs/imgs/info_pic.jpg \$(DATADIR)/imgs
+	install -d \$(DATADIR)/css
+	install -m 644 ./htdocs/css/bootstrap.min.css \$(DATADIR)/css
+	@echo
+	@echo  " Running Monkey :"
+	@echo  " ----------------"
+	@echo
+	@echo  "  # $bindir/monkey"
+	@echo
+	@echo  "  For more help use '-h' option"
+	@echo
+
+monkey.pc:
+	@sed -e "s@PREFIX@$prefix@" -e "s@LIBDIR@$libdir@" -e "s@INCDIR@$incdir@" \
+		-e "s@VERSION@$VERSION@" monkey.pc.in > monkey.pc
+
+EOF
+}
+
+# Create monkey/src/Makefile
+create_makefile2()
+{
+	if [ $platform == "generic" ]; then
+		libs="$libs -pthread"
+	elif [ $platform == "android" ]; then
+		libs="$libs "
+	fi
+
+	if [ -n "$sharedlib" ]; then
+		alltarget="../bin/monkey lib"
+	else
+		alltarget="../bin/monkey"
+	fi
+
+        if [ $malloc_jemalloc -eq 1 ]; then
+                extra="../deps/jemalloc/lib/libjemalloc.a"
+                libs="$libs -lm"
+        fi
+
+	cat > src/Makefile<<EOF
+_PATH   = \$(patsubst \$(monkey_root)/%, %, \$(CURDIR))
+CC      = @echo "  CC   \$(_PATH)/\$@"; $CC
+CC_QUIET= @echo -n; $CC
+CFLAGS  = $CFLAGS
+DEFS    += $DEFS
+LIBDEFS = -DSHAREDLIB -fPIC \$(DEFS)
+INCDIR  = ./include
+LDFLAGS = $LDFLAGS
+DESTDIR = ../bin/monkey
+LIBS    = -ldl $libs
+OBJ     = monkey.o mk_method.o mk_mimetype.o mk_vhost.o mk_request.o \\
+          mk_header.o mk_config.o mk_signals.o \\
+          mk_user.o mk_utils.o mk_epoll.o mk_scheduler.o \\
+          mk_string.o mk_memory.o mk_connection.o mk_iov.o mk_http.o \\
+          mk_file.o mk_socket.o mk_clock.o mk_cache.o \\
+          mk_server.o mk_rbtree.o mk_plugin.o mk_lib.o
+
+LIBOBJ  = \$(OBJ:.o=.lo)
+
+.PHONY: clean distclean lib
+
+all: $alltarget
+
+lib: $SONAME
+
+-include \$(OBJ:.o=.d)
+
+../bin/monkey: \$(OBJ)
+	\$(CC_QUIET) \$(CFLAGS) \$(DEFS) \$(LDFLAGS) -o \$@ \$(OBJ) $mod_obj $extra \$(LIBS)
+
+$SONAME: \$(LIBOBJ)
+	\$(CC_QUIET) \$(CFLAGS) \$(LIBDEFS) \$(LDFLAGS) -Wl,-soname,$SONAME -shared -o \$@ \$(LIBOBJ) $mod_obj \$(LIBS)
+
+\$(LIBOBJ): \$(OBJ)
+
+clean:
+	rm -rf *.[od] $SONAME *.lo
+	rm -rf ../bin/monkey
+
+distclean:
+	rm -rf *.o ../bin/* Makefile \\
+	../Makefile ../conf/monkey.conf \\
+	../conf/sites/* include/mk_info.h ../logs/*
+	find ../plugins -name Makefile -exec rm {} \;
+
+.c.o:
+	\$(CC) -c \$(CFLAGS) \$(DEFS) -I\$(INCDIR) \$<
+	\$(CC_QUIET) -MM -MP \$(CFLAGS) \$(DEFS) -I\$(INCDIR) \$*.c -o \$*.d > /dev/null &2>&1
+
+%.lo : %.c
+	\$(CC) -c -o \$@ \$(CFLAGS) \$(LIBDEFS) -I\$(INCDIR) \$<
+
+EOF
+}
+
+create_makefile_plugins()
+{
+	dir=`pwd`
+	makefile="plugins/Makefile"
+	plugins_load="conf/plugins.load"
+	echo -n > $plugins_load
+	echo "# Monkey Plugins Loader" >> $plugins_load
+	echo "# =====================" >> $plugins_load
+	echo "# Monkey plugins are extended functionalities for Monkey," >> $plugins_load
+	echo "# the main directive to load a plugin is LoadPlugin plus" >> $plugins_load
+	echo "# the absolute path for the desired plugin." >> $plugins_load
+	echo "#" >> $plugins_load
+	echo "# Please check the following list of available plugins:" >> $plugins_load
+	echo "" >> $plugins_load
+	echo "[PLUGINS]" >> $plugins_load
+	echo "" >> $plugins_load
+
+	if [ $platform == "android" ]; then
+		if test -z $disabled_plugins; then
+			disabled_plugins="cheetah,palm,logger,cgi"
+		fi
+	fi
+
+	for plugin_dir in plugins/*;
+	do
+		# Skip non-directories
+		if ! test -d "$plugin_dir" ; then
+			continue
+		fi
+
+		# Get plugin name and check if we should skip it
+		entry=`echo $plugin_dir | awk -F "/" '{print $2}'`
+		skip_plugin $entry $enabled_plugins $disabled_plugins
+		disabled=$?
+
+		if [ $disabled == 1 ]; then
+			continue
+		fi
+
+		comment="    "
+		for i in $entry; do name=`echo -n "${i:0:1}" | tr "[:lower:]" "[:upper:]"`;
+			echo -e "+ ${name}${i:1}";
+		done
+
+		# Create Makefile
+		MAKE_ALL="${MAKE_ALL}\t@(cd $entry && \$(MAKE) && cd ..)\n"
+		MAKE_CLEAN="${MAKE_CLEAN}\t@(cd $entry && \$(MAKE) clean && cd ..)\n"
+
+
+		for d in `find $plugin_dir -xtype d`
+		do
+			if [ -f "${d}/Makefile.in" ];
+			then
+				sed -e "s|\$CC|$CC|" -e "s|\$CFLAGS|$CFLAGS|" -e "s|\$LDFLAGS|$LDFLAGS|" -e "s|\$DEFS|$DEFS|" $d/Makefile.in > $d/Makefile
+			fi
+		done
+
+		# Add details to plugins.load using ABOUT file
+		if test -e $plugin_dir/ABOUT ; then
+			cat $plugin_dir/ABOUT | sed -e 's/^/    # /' >> $plugins_load
+			echo "    #" >> $plugins_load
+		else
+			echo "    #" >> $plugins_load
+		fi
+
+		if ! test -e $plugin_dir/MANDATORY ; then
+			comment="    # "
+		fi
+
+		if [ "$plugdir" != "" ]; then
+			echo "${comment}Load $plugdir/monkey-$entry.so" >> $plugins_load
+		else
+			echo "${comment}Load $dir/$plugin_dir/monkey-$entry.so" >> $plugins_load
+		fi
+
+		echo "" >> $plugins_load
+
+		# Copy specific plugin configuration files
+		if test -e $plugin_dir/conf ; then
+			target="conf/$plugin_dir/"
+			mkdir -p $target
+			cp -r $plugin_dir/conf/* $target/
+
+		   # Replace configuration variables:
+			find $target/* -xtype f -exec sed -i "s,#PREFIX#,$prefix," {} ';'
+			find $target/* -xtype f -exec sed -i "s,#BINDIR#,$bindir," {} ';'
+			find $target/* -xtype f -exec sed -i "s,#LIBDIR#,$libdir," {} ';'
+			find $target/* -xtype f -exec sed -i "s,#MANDIR#,$mandir," {} ';'
+			find $target/* -xtype f -exec sed -i "s,#SYSCONFDIR#,$sysconfdir," {} ';'
+			find $target/* -xtype f -exec sed -i "s,#DATADIR#,$datadir," {} ';'
+			find $target/* -xtype f -exec sed -i "s,#LOGDIR#,$logdir," {} ';'
+			find $target/* -xtype f -exec sed -i "s,#PLUGDIR#,$plugdir," {} ';'
+		fi
+
+		# Distribute binary scripts provided by plugins
+		if test -e $plugin_dir/bin ; then
+			cp -r $plugin_dir/bin/* bin/
+		fi
+	done
+
+	echo "all:" > $makefile
+	echo -e $MAKE_ALL >> $makefile
+	echo "" >> $makefile
+	echo "clean:" >> $makefile
+	echo -e $MAKE_CLEAN >> $makefile
+
+# Add 'install' option to Makefile if plugdir was specified
+	if [ "$plugdir" != "" ]; then
+		echo -e "\ninstall:" >> $makefile
+		echo -e "\tinstall -d $plugdir" >> $makefile
+
+		for plugin_dir in plugins/*;
+		do
+		# Get plugin name and check if we should skip it
+			entry=`echo $plugin_dir | awk -F "/" '{print $2}'`
+			skip_plugin $entry $enabled_plugins $disabled_plugins
+			disabled=$?
+			if [ $disabled == 1 ]; then
+				continue
+			fi
+
+			echo -e "\tinstall -m 644 $dir/$plugin_dir/monkey-$entry.so $plugdir/" >> $makefile
+		done
+	fi
+}
+
+# Creando include/mk_info.h
+create_info()
+{
+	cat > $INCDIR/mk_info.h <<EOF
+#ifndef MK_INFO_H
+#define MK_INFO_H
+
+#define OS "$SYSNAME"
+
+#define __MONKEY__            $__MONKEY__
+#define __MONKEY_MINOR__      $__MONKEY_MINOR__
+#define __MONKEY_PATCHLEVEL__ $__MONKEY_PATCHLEVEL__
+
+#define MONKEY_VERSION (__MONKEY__ * 10000 \\
+                        __MONKEY_MINOR__ * 100 \\
+                        __MONKEY_PATCHLEVEL__)
+#define VERSION          "$__MONKEY__.$__MONKEY_MINOR__.$__MONKEY_PATCHLEVEL__"
+#define MK_BUILD_CMD     "$cmd"
+#define MK_BUILD_UNAME   "$uname"
+#define MONKEY_PATH_CONF "$sysconfdir"
+#define PLUGDIR "$plugdir"
+
+#endif
+EOF
+
+	sed -i -e "s@#define MONKEY__.*@#define MONKEY__            $__MONKEY__@" \
+	    -e "s@#define MONKEY_MINOR__.*@#define MONKEY_MINOR__      $__MONKEY_MINOR__@" \
+	    -e "s@#define MONKEY_PATCHLEVEL__.*@#define MONKEY_PATCHLEVEL__ $__MONKEY_PATCHLEVEL__@" \
+	    $INCDIR/public/libmonkey.h
+}
+
+create_conf()
+{
+	cat > $INCDIR/config.path <<EOF
+#!/bin/sh
+prefix=$prefix
+bindir=$bindir
+libdir=$libdir
+incdir=$incdir
+sysconfdir=$sysconfdir
+datadir=$datadir
+logdir=$logdir
+EOF
+}
+
+create_banana_script()
+{
+	cat > bin/banana << EOF
+#!/bin/sh
+#
+# Monkey HTTP Daemon - Banana Script
+# -----------------------------------
+# This script allow you to control monkey. Written by Eduardo Silva
+# ----------------------------
+# Date		: 2002/09/01.
+# ----------------------------
+#
+# Use: ./banana OPTION
+#
+# Options available to banana:
+#
+#    start   -> start monkey
+#    restart -> restart monkey
+#    stop    -> stop monkey if this is running
+#    status  -> check if monkey is running
+#    help    -> what do u think ?
+
+CONFDIR="$sysconfdir"
+BINMONKEY="$bindir/monkey"
+
+PORT=\$(sed -n '/^[ \t]*Port/s/^.* //p' "\$CONFDIR/monkey.conf")
+PIDFILE=\$(sed -n '/^[ \t]*PidFile/s/^.* //p' "\$CONFDIR/monkey.conf")."\$PORT"
+
+for arg in \$*; do
+	case "\$arg" in
+		-*=*) optarg=\`echo "\$arg" | sed 's/[-_a-zA-Z0-9]*=//'\` ;;
+		   *) optarg= ;;
+	esac
+
+	if  ! test -f \$PIDFILE ; then
+		STATUS="no"
+	else
+		PIDMONKEY=\`cat \$PIDFILE\`
+		if ! kill -0 \$PIDMONKEY 2>/dev/null; then
+			STATUS="no"
+		else
+			STATUS="yes"
+		fi
+	fi
+
+	case "\$arg" in
+		start)
+			if [ "\$STATUS" = "yes"  ] ; then
+				echo "Monkey is running... (PID=\$PIDMONKEY)"
+				exit 1
+			fi
+			if ! test -x \$BINMONKEY ; then
+				echo "Error: I can't run binary file"
+				exit 1
+			else
+				if \$BINMONKEY -D  2>/dev/null ; then
+					echo "Running Monkey -> OK"
+					exit 0
+				fi
+			fi
+		;;
+		stop)
+			if  [ "\$STATUS" = "no" ]; then
+				echo "Monkey is not running."
+				exit 1
+			fi
+			kill -9 \$PIDMONKEY
+			rm -rf \$PIDFILE > /dev/null
+			echo "Monkey stopped (\$PIDMONKEY)"
+			exit 0
+			;;
+		restart)
+			if  [ "\$STATUS" = "yes" ]; then
+				if ! kill \$PIDMONKEY  > /dev/null ; then
+					killall -9 monkey
+				else
+					echo -n "Stopping Monkey... "
+				fi
+			else
+				echo -n "Monkey is not running... "
+			fi
+			if ! test -x \$BINMONKEY ; then
+				echo "Error: I can't run binary file"
+				exit 1
+			else
+				\$BINMONKEY -D > /dev/null
+				echo "Restarting -> OK"
+				exit 0
+			fi
+			;;
+		status)
+				if  [ "\$STATUS" = "yes" ]; then
+				echo "Monkey is running... (PID=\$PIDMONKEY)"
+			else
+				echo "Monkey is not running... "
+				fi
+			exit 0
+			;;
+		*)
+			echo "Use : banana [start|stop|restart|status|help]"
+			exit 1
+		;;
+	esac
+done
+echo "Use : banana [start|stop|restart|status|help]"
+
+exit 0
+EOF
+	chmod 755 bin/banana
+}
+
+#---------------------------#
+# End Functions
+#---------------------------#
+
+
+#---------------------------#
+# Starting configure
+#---------------------------#
+aux=`pwd`
+
+prefix="$aux"
+bindir="$aux/bin"
+libdir="$aux/lib"
+incdir=""
+mandir="$aux/man"
+sysconfdir="$aux/conf"
+datadir="$aux/htdocs"
+logdir="$aux/logs"
+plugdir=""
+platform="generic"
+
+# Generic default values for monkey.conf
+default_port="2001"
+default_user="nobody"
+
+# accept type
+only_accept=0
+only_accept4=0
+
+# memory allocator
+malloc_libc=0
+malloc_jemalloc=1
+
+for arg in $*; do
+
+	case "$arg" in
+		-*=*)
+			optarg=`echo "$arg" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+		*)
+			optarg= ;;
+	esac
+
+	case "$arg" in
+		--prefix*)
+			prefix=$optarg
+			bindir="$optarg/bin"
+			libdir="$optarg/lib"
+			incdir="$optarg/include"
+			mandir="$optarg/man"
+			sysconfdir="$optarg/conf"
+			datadir="$optarg/htdocs"
+			logdir="$optarg/logs"
+			plugdir="$optarg/plugins"
+			;;
+		--bindir*)
+			bindir=$optarg
+			;;
+		--mandir*)
+			mandir=$optarg
+			;;
+		--sysconfdir*)
+			sysconfdir=$optarg
+			;;
+		--datadir*)
+			datadir=$optarg
+			;;
+		--libdir*)
+			libdir=$optarg
+			;;
+		--incdir*)
+			incdir=$optarg
+			;;
+		--logdir*)
+			logdir=$optarg
+			;;
+		--plugdir*)
+			plugdir=$optarg
+			;;
+		--debug*)
+			debug=1
+			;;
+		--trace*)
+			trace=1
+			;;
+		--no-backtrace*)
+			no_backtrace=1
+			;;
+                --linux-trace*)
+                        linux_trace=1
+                        ;;
+                --malloc-libc*)
+                        malloc_libc=1
+                        malloc_jemalloc=0
+                        ;;
+		--uclib-mode*)
+			uclib_mode=1
+			;;
+		--musl-mode*)
+			musl_mode=1
+			;;
+		--enable-shared*)
+			sharedlib=1
+			;;
+		--enable-relaxed-plugins*)
+			relaxed_plugins=1
+			;;
+		--enable-plugins*)
+			enabled_plugins=$optarg
+			;;
+		--disable-plugins*)
+			disabled_plugins=$optarg
+			;;
+		--only-accept)
+			only_accept=1
+			;;
+		--only-accept4)
+			only_accept4=1
+			;;
+		--safe-free*)
+			safe_free=1
+			;;
+		--platform*)
+			platform=$optarg
+			;;
+		--default-port*)
+			default_port=$optarg
+			;;
+		--default-user*)
+			default_user=$optarg
+			;;
+		--version*)
+			echo -e $bldgrn"Monkey HTTP Daemon v$VERSION" $txtrst
+			echo "Copyright 2001-2013 - Monkey Development Team"
+			echo "http://monkey-project.com"
+                        echo
+			echo -e $txtylw"Written by Eduardo Silva P. <edsiper@gmail.com>" $txtrst
+			echo
+			exit 1
+			;;
+		*)
+			echo "Usage: ./configure [OPTION]... [VAR=VALUE]..."
+			echo
+			echo -e $bldwht"Optional Commands:" $txtrst
+			echo "  --help        Display this help and exit"
+			echo "  --version     Display version information and exit"
+			echo
+			echo -e $bldwht"Compiler and debug Features:"  $txtrst
+			echo "  --debug                 Compile Monkey with debugging symbols"
+			echo "  --trace                 Enable trace messages (don't use in production)"
+			echo "  --no-backtrace          Disable backtrace feature"
+			echo "  --linux-trace           Enable Linux Trace Toolkit"
+			echo "  --musl-mode             Enable musl compatibility mode"
+			echo "  --uclib-mode            Enable uClib compatibility mode"
+                        echo "  --malloc-libc           Use system default memory allocator (default is jemalloc)"
+			echo "  --platform=PLATFORM     Target platform: 'generic' or 'android' (default: generic)"
+			echo
+			echo -e $bldwht"Shared library options:" $txtrst
+			echo "  --enable-shared         Build Monkey as a shared library in addition to a stand-alone server"
+			echo "  --enable-relaxed-plugins Allow the application to make the library load arbitrary plugins."
+			echo "                          WARNING security risk, do not enable in distro packages!"
+			echo
+			echo -e $bldwht"Installation Directories:" $txtrst
+			echo "  --prefix=PREFIX         Root prefix directory"
+			echo "  --bindir=BINDIR         Binary files (executables)"
+			echo "  --libdir=LIBDIR         Libraries"
+			echo "  --incdir=INCDIR         Header install path"
+			echo "  --sysconfdir=SYSCONFDIR Configuration files"
+			echo "  --datadir=DATADIR       Specific Monkey data files"
+			echo "  --mandir=MANDIR         Manpages - documentation"
+			echo "  --logdir=LOGDIR         Log files"
+			echo "  --plugdir=PLUGDIR       Plugins directory path"
+			echo "  --enable-plugins=a,b    Enable the listed plugins"
+			echo "  --disable-plugins=a,b   Disable the listed plugins"
+			echo "  --only-accept           Use only accept(2)"
+			echo "  --only-accept4          Use only accept4(2) (default and preferred)"
+			echo "  --safe-free             Force Monkey to free resources before exit"
+			echo
+			echo -e $bldwht"Override Server Configuration:" $txtrst
+			echo "  --default-port=PORT     Override default TCP port (default: 2001)"
+			echo "  --default-user=USER     Override default web user (default: nobody)"
+			echo
+			exit 1
+			;;
+	esac
+done
+
+echo -en $RED"********************************************\n"
+echo -en $GREEN$BOLD"        Monkey HTTP Daemon v$VERSION        \n"
+echo -en $RED"*"$YELLOW"           monkey-project.com             "$RED"*\n"
+echo -en "*"$BLUE" ---------------------------------------- "$RED"*\n"
+echo -en "*"$YELLOW"  We need beta testers, developers and    "$RED"*\n"
+echo -en "*"$YELLOW" translators!, if you want to contribute  "$RED"*\n"
+echo -en "*"$YELLOW" to this wonderful project, contact us !  "$RED"*\n"
+echo -en "*"$YELLOW"                                          "$RED"*\n"
+echo -en "*"$YELLOW"        irc.freenode.net #monkey          "$RED"*\n"
+echo -en "*"$YELLOW"                                          "$RED"*\n"
+echo -en "*"$YELLOW"        Thanks for using Monkey!!!        "$RED"*\n"
+echo -en "*"$YELLOW"                                          "$RED"*\n"
+echo -en "********************************************"$END_COLOR"\n"
+echo -en "System   : "$YELLOW"$SYSINFO"$END_COLOR
+
+lang="en"
+
+
+# Configure environment
+if test -z "$CC" ; then
+	gcc_path=`which gcc`
+	if test -x "$gcc_path" ; then
+		CC="gcc"
+	else
+		echo
+		echo
+		echo "I'm a Monkey not a compiler! how do you suppose to compile me ? Install a compiler!"
+		exit 1
+	fi
+fi
+
+# STRIP support have been removed, just keep this
+# variable for future changes or changes.
+if test -z "$STRIP" ; then
+	STRIP="strip"
+fi
+
+[ -n "$relaxed_plugins" ] && DEFS="$DEFS -DRELAXED_PLUGINS"
+
+CFLAGS_GEN=" -std=gnu99 -Wall -Wextra"
+if test -z "$debug" ; then
+	CFLAGS="$CFLAGS $CFLAGS_GEN -fvisibility=hidden"
+
+	# Only set -O2 if the user didn't include an -O level
+	echo "$CFLAGS" | grep -q -e -O || CFLAGS="$CFLAGS -O2"
+else
+	DEFS="-DDEBUG -DSAFE_FREE"
+	CFLAGS="$CFLAGS $CFLAGS_GEN -g -rdynamic"
+fi
+
+if [ $only_accept -eq 1 ] && [ $only_accept4 -eq 1 ] ; then
+	echo -e "\nError: you cannot use --only-accept and --only-accept4 at same time\n"
+	exit 1
+fi
+
+if test -n "$safe_free" ; then
+	if test -z "$debug" ; then
+		DEFS="$DEFS -DSAFE_FREE"
+	fi
+fi
+
+if [ $trace ] ; then
+	DEFS="$DEFS -DTRACE"
+fi
+
+if [ $uclib_mode ]; then
+	DEFS="$DEFS -DUCLIB_MODE"
+fi
+
+if [ $musl_mode ]; then
+	DEFS="$DEFS -DMUSL_MODE"
+fi
+
+if [ $no_backtrace ]; then
+	DEFS="$DEFS -DNO_BACKTRACE"
+fi
+
+if [ $linux_trace ]; then
+        libs="$libs -llttng-ust -lurcu-bp"
+	DEFS="$DEFS -DLINUX_TRACE"
+fi
+
+if [ $malloc_libc -eq 1 ]; then
+        DEFS="$DEFS -DMALLOC_LIBC"
+else
+        DEFS="$DEFS -DMALLOC_JEMALLOC"
+fi
+
+if [ $platform != "generic" ] && [ $platform != "android" ]; then
+	echo -e "\nError: invalid platform $platform\n"
+	exit 1
+fi
+
+# Build variables
+cmd=$@
+uname=`uname -a`
+
+# Starting main function
+main prefix lang bindir mandir  sysconfdir datadir \
+     logdir plugdir platform only_accept only_accept4 \
+     SYSNAME VERSION enabled_plugins disabled_plugins \
+     no_backtrace linux_trace malloc_libc malloc_jemalloc cmd uname
+
+exit 0

@@ -1,0 +1,14 @@
+all: monkey-cheetah.so
+include ../Make.common
+
+CC	= @echo "  CC   $(_PATH)/$@"; $CC
+CC_QUIET= @echo -n; $CC
+CFLAGS	= $CFLAGS
+LDFLAGS = $LDFLAGS
+DEFS    = $DEFS
+CHEETAH_OBJECTS = cheetah.o loop.o cmd.o cutils.o
+
+-include $(CHEETAH_OBJECTS:.o=.d)
+
+monkey-cheetah.so: $(CHEETAH_OBJECTS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DEFS) -shared -o $@ $^ -lc

@@ -1,0 +1,73 @@
+'\" t
+.\"     Title: mklib_vhost_config
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 05/20/2013
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "MKLIB_VHOST_CONFIG" "3" "05/20/2013" "\ \&" "\ \&"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+mklib_vhost_config \- configure a new virtual host
+.SH "SYNOPSIS"
+.sp
+\fB#include <libmonkey\&.h>\fR
+.sp
+\fBint mklib_vhost_config(mklib_ctx \fR\fB\fIctx\fR\fR\fB, char *\fR\fB\fIname\fR\fR\fB, \&...);\fR
+.SH "DESCRIPTION"
+.sp
+\fBmklib_vhost_config\fR() is a NULL\-terminated call creating a new virtual host with the supplied options\&.
+.sp
+The \fIname\fR argument is a unique identifier, not used for anything else\&.
+.SH "VALID OPTIONS"
+.PP
+\fBMKV_SERVERNAME\fR
+.RS 4
+The next argument is a char *, pointing to a space\-delimited list of server names\&. Example: "example\&.com www\&.example\&.com"
+.RE
+.PP
+\fBMKV_DOCUMENT\fR
+.RS 4
+The next argument is a char *, a string containing the absolute path to the document root\&.
+.RE
+.SH "EXAMPLE"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+int retval = mklib_vhost_config(ctx, "example", MKV_SERVERNAME, "example\&.com",
+                                MKV_DOCUMENTROOT, "/var/www/example", NULL);
+.fi
+.if n \{\
+.RE
+.\}
+.SH "RETURN VALUE"
+.sp
+On success, returns \fIMKLIB_TRUE\fR\&. On failure \fIMKLIB_FALSE\fR is returned\&.
+.SH "SEE ALSO"
+.sp
+\fBmklib_config\fR(3), \fBmklib_init\fR(3), \fBmklib_start\fR(3), \fBmklib_stop\fR(3), \fBmklib_callback_set\fR(3), \fBmklib_vhost_list\fR(3), \fBmklib_scheduler_worker_info\fR(3), \fBmklib_mimetype_add\fR(3)
+.SH "RESOURCES"
+.sp
+See http://monkey\-project\&.com

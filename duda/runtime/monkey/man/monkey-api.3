@@ -1,0 +1,80 @@
+.TH Monkey 1 "Jun 25, 2011"
+.\" Please update the above date whenever this man page is modified.
+.SH NAME
+monkey-api \- Monkey HTTP Daemon C API Interface
+.SH SYNOPSIS
+.nf
+.B #include <MKPlugin.h>
+.sp
+.BI "int api->header_send(int " socket ", struct client_session *" cs ", struct session_request *" sr ");
+.BI "mk_pointer api->header_get(struct headers_toc * " toc ", const char *" key_name ", int " key_len ");
+.BI "int api->header_add(struct session_request *" sr ", const char *" row ", int " row_len ");
+.BI "void api->header_set_http_status (struct session_request *" sr ", int " status ");
+.sp
+.BI "int api->http_request_end(int " socket ");
+.sp
+
+.BI "void *api->mem_alloc(size_t " size ");
+.BI "void *api->mem_alloc_z(size_t " size ");
+.BI "void *api->mem_free(void *" ptr ");
+.sp
+
+.BI "void api->pointer_set(mk_pointer *" p ", char *" data ");
+.BI "void api->pointer_print(mk_pointer " p ");
+.BI "char *api->pointer_to_buf(mk_pointer " p ");
+.sp
+
+.BI "int api->str_itop(int " n ", mk_pointer *" p ");
+.BI "int api->str_search(const char *" haystack ", const char *" needle ", int " sensitive ");
+.BI "int api->str_search_n(const char *" haystack ", const char *" needle ", int " sensitive ", int " len ");
+.BI "char *api->str_build(char **" prt ", unsigned long *" len ", const char *" format ", ...);
+.BI "char *api->str_dup(const char *" s ");"
+.sp
+
+.SH DESCRIPTION
+\fBmonkey\fP is a very small, fast and scalable web server for Linux.
+This  manual  page  only  lists  the  command  line  arguments.  For further and more detailed information regarding the program configuration see the Monkey manual, found at http://monkey-project.com/documentation . 
+
+.SH OPTIONS
+This command will launch the Monkey webserver. It accepts the
+following options:
+.TP 8
+.B \-h, --help
+Prints a brief help message and Perform a sanity check on the configuration file. The server will not run.
+
+.TP 8
+.B \-v, --version
+Prints Monkey's version and exit
+.TP 8
+.B \-D, --daemon
+Launches the server as a daemon (background process). The default behaviour is to
+stay attached to the controlling terminal.
+.TP 8
+.B \-c, --configdir directory
+Specifies the configuration files directory
+
+.SH SIGNALS
+The following signals are supported by Monkey:
+.TP 8
+\fBSIGTERM\fR, Exits
+.TP 8
+\fBSIGINT\fR,  Exits
+.TP 8
+\fBSIGHUP\fR,  Exits
+.TP 8
+\fBSIGBUS\fR,  Print invalid address
+.TP 8
+\fBSIGSEGV\fR, Print invalid address
+
+.SH BUGS
+.SS Bug reports
+In general, send bug reports to the bug report mailing list at <monkey@lists.monkey-project.com>. You are requested to use a descriptive subject for your email message, perhaps parts of the error message.
+
+.SH "SEE ALSO"
+Monkey can be run either with this command or
+\&\fIbanana\fR\|(1).
+
+.SH AUTHOR
+Eduardo Silva <edsiper@gmail.com> and the rest of the Monkey Project team.
+.PP
+This manpage is maintained by the Monkey HTTP Daemon Project team.

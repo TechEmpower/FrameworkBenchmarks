@@ -1,0 +1,11 @@
+Duda DocumenRoot (DDR)
+======================
+The purpose of this directory is to store relevant data files used
+by the built-in API packages for web page rendering.
+
+This path is specified in duda.conf under '[DUDA] > DocumentRoot'.
+
+At the moment only Twitter-Bootstrap is included (v3.0.3)
+
+
+

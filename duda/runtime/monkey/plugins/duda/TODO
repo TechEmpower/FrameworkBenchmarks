@@ -1,0 +1,13 @@
+TODO
+----
+Duda  : Add Sessions support
+Duda  : Add Cookies support
+Duda  : debug mode, print web services URI map into specific page
+Duda  : create an exception object to handle exception messages
+
+
+DONE
+----
+- SQLite: sqlite->query(db, handle, query, ...) ; auto format and auto allocate memory if required
+- Implement events queue (body_write() ; sendfile() ; body_write();)
+- Check FIXME comments
