@@ -21,7 +21,7 @@ return {
 	
 	databaseConnection = {
 		rdbms       =   "mysql",
-		host        =   "DBHOSTNAME",
+		host        =   os.getenv("DBHOST"),
 		port        =   3306, 
 		database    =   "hello_world",
 		user        =   "benchmarkdbuser",
