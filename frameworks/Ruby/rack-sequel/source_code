@@ -1,1 +1,3 @@
+./rack-sequel/config.ru
+./rack-sequel/boot.rb
 ./rack-sequel/hello_world.rb
