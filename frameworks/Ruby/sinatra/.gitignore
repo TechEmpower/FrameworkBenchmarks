@@ -1,3 +1,4 @@
 .bundle
-/vendor/
-/tmp/
+vendor/bundle
+passenger.*
+Gemfile.lock
