@@ -1,1 +1,3 @@
+./sinatra-sequel/config.ru
+./sinatra-sequel/boot.rb
 ./sinatra-sequel/hello_world.rb

@@ -13,15 +13,7 @@ echo "NoHostAuthenticationForLocalhost yes" | tee -a /home/travis/.ssh/config
 chmod 600 ~/.ssh/config
 
 # Set up the benchmark.cfg for travis user
-echo "[Defaults]"                                       > benchmark.cfg
-echo "client_identity_file=/home/travis/.ssh/id_rsa"   >> benchmark.cfg
-echo "database_identity_file=/home/travis/.ssh/id_rsa" >> benchmark.cfg
-echo "client_host=127.0.0.1"                           >> benchmark.cfg
-echo "database_host=127.0.0.1"                         >> benchmark.cfg
-echo "server_host=127.0.0.1"                           >> benchmark.cfg
-echo "client_user=travis"                              >> benchmark.cfg
-echo "database_user=travis"                            >> benchmark.cfg
-echo "runner_user=travis"                              >> benchmark.cfg
+sed -i s/techempower/travis/g ./benchmark.cfg
 
 echo "travis ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 

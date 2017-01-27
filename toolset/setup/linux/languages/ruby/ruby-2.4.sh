@@ -9,8 +9,8 @@ fw_installed ruby-2.4 && return 0
 MRI_VERSION=2.4.0
 
 rvm install $MRI_VERSION
-# Bundler is SOMETIMES missing... not sure why.
-rvm $MRI_VERSION do gem install bundler -v 1.13.7
+
+rvm $MRI_VERSION do gem install bundler -v 1.14.3
 
 echo "export MRI_VERSION=${MRI_VERSION}" > $IROOT/ruby-2.4.installed
 
