@@ -1,5 +1,3 @@
-import java.util.Date
-
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.twitter.finagle.{Service, SimpleFilter, Http}
@@ -34,8 +32,8 @@ object Main extends App {
   val serverAndDate: SimpleFilter[Request, Response] = new SimpleFilter[Request, Response] {
 
     private[this] val addServerAndDate: Response => Response = { rep =>
-        rep.server = "Finagle"
-        rep.date = new Date()
+        rep.headerMap.set("Server", "Finagle")
+        rep.headerMap.set("Date", currentTime())
 
         rep
     }

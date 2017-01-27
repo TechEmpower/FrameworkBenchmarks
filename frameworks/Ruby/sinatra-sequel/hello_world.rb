@@ -1,44 +1,4 @@
 # frozen_string_literal: true
-require 'time'
-
-MAX_PK = 10_000
-QUERIES_MIN = 1
-QUERIES_MAX = 500
-SEQUEL_NO_ASSOCIATIONS = true
-
-Bundler.require(:default) # Load core modules
-
-def connect(dbtype)
-  Bundler.require(dbtype) # Load database-specific modules
-
-  adapters = {
-    :mysql=>{ :jruby=>'jdbc:mysql', :mri=>'mysql2' },
-    :postgresql=>{ :jruby=>'jdbc:postgresql', :mri=>'postgres' }
-  }
-
-  Sequel.connect \
-    '%<adapter>s://%<host>s/%<database>s?user=%<user>s&password=%<password>s' % {
-      :adapter=>adapters.fetch(dbtype).fetch(defined?(JRUBY_VERSION) ? :jruby : :mri),
-      :host=>ENV.fetch('DBHOST', '127.0.0.1'),
-      :database=>'hello_world',
-      :user=>'benchmarkdbuser',
-      :password=>'benchmarkdbpass'
-    },
-    :max_connections=>Puma.cli_config.options.fetch(:max_threads),
-    :pool_timeout=>10
-end
-
-DB = connect ENV.fetch('DBTYPE').to_sym
-
-# Define ORM models
-class World < Sequel::Model(:World)
-  def_column_alias(:randomnumber, :randomNumber) if DB.database_type == :mysql
-end
-
-class Fortune < Sequel::Model(:Fortune)
-  # Allow setting id to zero (0) per benchmark requirements
-  unrestrict_primary_key
-end
 
 # Configure Slim templating engine
 Slim::Engine.set_options \
@@ -84,10 +44,12 @@ class HelloWorld < Sinatra::Base
   end
 
   after do
-    # Add mandatory HTTP headers to every response
-    response['Server'] ||= Puma::Const::PUMA_SERVER_STRING
-    response['Date'] ||= Time.now.httpdate
+    response['Date'] = Time.now.httpdate
   end
+
+  after do
+    response['Server'] = SERVER_STRING
+  end if SERVER_STRING
 
   # Test type 1: JSON serialization
   get '/json' do
@@ -96,15 +58,14 @@ class HelloWorld < Sinatra::Base
 
   # Test type 2: Single database query
   get '/db' do
-    json World[rand1].values
+    json World.with_pk(rand1).values
   end
 
   # Test type 3: Multiple database queries
   get '/queries' do
     # Benchmark requirements explicitly forbid a WHERE..IN here, so be good
-    worlds = randn(bounded_queries).map! { |id| World[id] }
-
-    json worlds.map!(&:values)
+    json randn(bounded_queries)
+      .map! { |id| World.with_pk(id).values }
   end
 
   # Test type 4: Fortunes
@@ -124,15 +85,13 @@ class HelloWorld < Sinatra::Base
     # Benchmark requirements explicitly forbid a WHERE..IN here, transactions
     # are optional, batch updates are allowed (but each transaction can only
     # read and write a single record?), so... be good
-    worlds = randn(bounded_queries).map! do |id|
+    json(randn(bounded_queries).map! do |id|
       DB.transaction do
-        world = World.for_update[id]
-        world.update :randomnumber=>rand1
-        world
+        world = World.for_update.with_pk(id)
+        world.update(:randomnumber=>rand1)
+        world.values
       end
-    end
-
-    json worlds.map!(&:values)
+    end)
   end
 
   # Test type 6: Plaintext

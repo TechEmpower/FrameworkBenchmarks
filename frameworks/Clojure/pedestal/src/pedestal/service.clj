@@ -5,7 +5,7 @@
         hiccup.core
         hiccup.util
         hiccup.page)
-  (:require [io.pedestal.http :as bootstrap]
+  (:require [io.pedestal.http :as http]
             [io.pedestal.http.route :as route]
             [io.pedestal.http.body-params :as body-params]
             [io.pedestal.http.route.definition :refer [defroutes]]
@@ -115,12 +115,12 @@
 (defn json-serialization
   "Test 1: JSON serialization"
   [request]
-  (bootstrap/json-response {:message "Hello, World!"}))
+  (http/json-response {:message "Hello, World!"}))
 
 (defn single-query-test
   "Test 2: Single database query"
   [request]
-  (bootstrap/json-response (first (run-queries 1))))
+  (http/json-response (first (run-queries 1))))
 
 (defn multiple-queries-test
   "Test 3: Multiple database queries"
@@ -128,7 +128,7 @@
   (-> request
       (sanitize-queries-param)
       (run-queries)
-      (bootstrap/json-response)))
+      (http/json-response)))
 
 (defn fortune-test
   "Test 4: Fortunes"
@@ -146,7 +146,7 @@
   (-> request
       (sanitize-queries-param)
       (update-and-persist)
-      (bootstrap/json-response)))
+      (http/json-response)))
 
 
 (defn plaintext
@@ -168,7 +168,7 @@
 (def service
   "How the server will look, not the code to start it up"
   { :env :prod
-    ::bootstrap/routes routes
-    ::bootstrap/resource-path "/public"
-    ::bootstrap/type :jetty
-    ::bootstrap/port 8080})
+    ::http/routes routes
+    ::http/resource-path "/public"
+    ::http/type :jetty
+    ::http/port 8080})

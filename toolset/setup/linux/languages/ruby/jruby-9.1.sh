@@ -9,8 +9,8 @@ fw_installed jruby-9.1 && return 0
 JRUBY_VERSION="9.1.7.0"
 
 rvm install jruby-$JRUBY_VERSION
-# Use a specific version of Bundler to work around thread concurrency issues.
-rvm jruby-$JRUBY_VERSION do gem install bundler -v 1.13.7
+
+rvm jruby-$JRUBY_VERSION do gem install bundler -v 1.14.3
 
 echo "export JRUBY_VERSION=${JRUBY_VERSION}" > $IROOT/jruby-9.1.installed
 
