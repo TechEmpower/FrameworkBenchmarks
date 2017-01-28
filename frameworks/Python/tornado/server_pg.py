@@ -15,7 +15,7 @@ from commons import JsonHandler, JsonHelloWorldHandler, PlaintextHelloWorldHandl
 tornado.options.define('port', default=8888, type=int, help="Server port")
 tornado.options.define('postgres', default=None,
                        type=str, help="PostgreSQL host")
-tornado.options.define('backlog', defualt=8192, type=int,
+tornado.options.define('backlog', default=8192, type=int,
                        help="Server backlog")
 
 
