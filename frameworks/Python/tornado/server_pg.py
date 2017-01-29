@@ -73,5 +73,5 @@ if __name__ == "__main__":
     ioloop = tornado.ioloop.IOLoop.instance()
     dsn = "user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world host=%s" % options.postgres
     db = momoko.Pool(dsn, size=100, max_size=200)
-    ioloop.run_sync(application.db.connect)
+    ioloop.run_sync(db.connect)
     ioloop.start()
