@@ -1,5 +1,5 @@
 {
-  "framework": "flask",
+  "framework": "aiohttp",
   "tests": [{
     "default": {
       "setup_file": "setup",

@@ -15,6 +15,18 @@ def json_response(data):
     return Response(body=body.encode(), content_type='application/json')
 
 
+def get_num_queries(request):
+    try:
+        num_queries = int(request.GET.get('queries', 1))
+    except ValueError:
+        return 1
+    if num_queries < 1:
+        return 1
+    if num_queries > 500:
+        return 500
+    return num_queries
+
+
 async def json(request):
     """
     Test 1
@@ -48,11 +60,7 @@ async def multiple_database_queries_orm(request):
     """
     Test 3 ORM
     """
-    num_queries = int(request.GET.get('queries', 1))
-    if num_queries < 1:
-        num_queries = 1
-    elif num_queries > 500:
-        num_queries = 500
+    num_queries = get_num_queries(request)
 
     ids = [randint(1, 10000) for _ in range(num_queries)]
     ids.sort()
@@ -70,11 +78,7 @@ async def multiple_database_queries_raw(request):
     """
     Test 3 RAW
     """
-    num_queries = int(request.GET.get('queries', 1))
-    if num_queries < 1:
-        num_queries = 1
-    elif num_queries > 500:
-        num_queries = 500
+    num_queries = get_num_queries(request)
 
     ids = [randint(1, 10000) for _ in range(num_queries)]
     ids.sort()
@@ -119,11 +123,7 @@ async def updates(request):
     """
     Test 5 ORM
     """
-    num_queries = int(request.GET.get('queries', 1))
-    if num_queries < 1:
-        num_queries = 1
-    elif num_queries > 500:
-        num_queries = 500
+    num_queries = get_num_queries(request)
     result = []
 
     ids = [randint(1, 10000) for _ in range(num_queries)]
@@ -150,11 +150,7 @@ async def updates_raw(request):
     """
     Test 5 RAW
     """
-    num_queries = int(request.GET.get('queries', 1))
-    if num_queries < 1:
-        num_queries = 1
-    elif num_queries > 500:
-        num_queries = 500
+    num_queries = get_num_queries(request)
 
     ids = [randint(1, 10000) for _ in range(num_queries)]
     ids.sort()
