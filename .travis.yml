@@ -146,6 +146,7 @@ env:
     - "TESTDIR=PHP/zend"
     - "TESTDIR=PHP/zend1"
     - "TESTDIR=PHP/phreeze"
+    - "TESTDIR=Python/aiohttp"
     - "TESTDIR=Python/asyncio"
     - "TESTDIR=Python/bottle"
     - "TESTDIR=Python/cherrypy"

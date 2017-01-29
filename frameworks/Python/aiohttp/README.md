@@ -29,40 +29,48 @@ gunicorn+uvloop on CPython
 
 ### Test 1: JSON Encoding 
 
-http://localhost:8080/json
+    http://localhost:8080/json
 
 ### Test 2: Single Row Query
 
 With ORM:
+
     http://localhost:8080/db
 
 Without ORM (raw):
+
     http://localhost:8080/raw/db
 
 ### Test 3: Multi Row Query 
 
 With ORM:
+
     http://localhost:8080/queries?queries=20
 
 Without ORM (raw):
+
     http://localhost:8080/raw/queries?queries=20
 
 ### Test 4: Fortunes (Template rendering)
 
 With ORM:
+
     http://localhost:8080/fortunes
 
 Without ORM (raw):
+
     http://localhost:8080/raw/fortunes
 
 ### Test 5: Update Query
 
 With ORM:
+
     http://localhost:8080/updates?queries=20
 
 Without ORM (raw):
+
     http://localhost:8080/raw/updates?queries=20
 
 ### Test6: Plaintext
 
-http://localhost:8080/plaintext
+    http://localhost:8080/plaintext
