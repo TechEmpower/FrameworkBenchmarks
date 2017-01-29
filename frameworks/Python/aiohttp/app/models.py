@@ -7,7 +7,7 @@ Base = declarative_base()
 class World(Base):
     __tablename__ = 'world'
     id = Column(Integer, primary_key=True)
-    randomNumber = Column(Integer)
+    randomnumber = Column(Integer)
 
 sa_worlds = World.__table__
 

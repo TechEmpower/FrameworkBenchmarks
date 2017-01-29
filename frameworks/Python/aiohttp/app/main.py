@@ -8,7 +8,13 @@ from aiohttp import web
 from aiopg.sa import create_engine
 from sqlalchemy.engine.url import URL
 
-from .views import json, plaintext
+from .views import (
+    json,
+    single_database_query_orm,
+    multiple_database_queries_orm,
+    plaintext,
+)
+
 
 
 THIS_DIR = Path(__file__).parent
@@ -20,26 +26,28 @@ def pg_dsn() -> str:
     """
     return str(URL(
         database='hello_world',
-        password='benchmarkdbpass',
-        host=os.environ.get('DBHOST', ''),
+        password=os.getenv('PGPASS', 'benchmarkdbpass'),
+        host=os.getenv('DBHOST', 'localhost'),
         port='5432',
-        username='benchmarkdbuser',
+        username=os.getenv('PGUSER', 'benchmarkdbuser'),
         drivername='postgres',
     ))
 
 
 async def startup(app: web.Application):
-    app['pg_engine'] = await create_engine(pg_dsn(), loop=app.loop)
+    app['aiopg_engine'] = await create_engine(pg_dsn(), loop=app.loop)
 
 
 async def cleanup(app: web.Application):
-    app['pg_engine'].close()
-    await app['pg_engine'].wait_closed()
+    app['aiopg_engine'].close()
+    await app['aiopg_engine'].wait_closed()
 
 
 def setup_routes(app):
     app.router.add_get('/json', json)
     app.router.add_get('/plaintext', plaintext)
+    app.router.add_get('/db', single_database_query_orm)
+    app.router.add_get('/queries', multiple_database_queries_orm)
 
 
 def create_app(loop):
@@ -48,8 +56,8 @@ def create_app(loop):
     jinja2_loader = jinja2.FileSystemLoader(str(THIS_DIR / 'templates'))
     aiohttp_jinja2.setup(app, loader=jinja2_loader)
 
-    # app.on_startup.append(startup)
-    # app.on_cleanup.append(cleanup)
+    app.on_startup.append(startup)
+    app.on_cleanup.append(cleanup)
 
     setup_routes(app)
     return app
