@@ -84,6 +84,13 @@ unit are put into four groups:
 * [Fortune](src/main/java/com/techempower/act/mongo/domain/Fortune.java)
 * [World](src/main/java/com/techempower/act/mongo/domain/World.java)
 
+##### SQL Common 
+
+The common base classes for mysql and pgsql classes
+
+* [Fortune](src/main/java/com/techempower/act/sql/domain/Fortune.java)
+* [World](src/main/java/com/techempower/act/sql/domain/World.java)
+
 ##### MySQL
 
 * [Fortune](src/main/java/com/techempower/act/mysql/domain/Fortune.java)
@@ -105,6 +112,14 @@ unit are put into four groups:
 
 * [Fortune controller](src/main/java/com/techempower/act/mongo/controller/FortuneController.java) - for `/mongo/fortunes` endpoint
 * [World controller](src/main/java/com/techempower/act/mongo/controller/WorldController.java) - for `/mongo/db`, `/mongo/queries` and `/mongo/updates` endpoint
+
+##### SQL Common
+
+The common base classes for mysql and pgsql classes
+
+* [Fortune controller](src/main/java/com/techempower/act/sql/controller/FortuneController.java) 
+* [World controller](src/main/java/com/techempower/act/sql/controller/WorldController.java) 
+
 
 ##### MySQL
 
