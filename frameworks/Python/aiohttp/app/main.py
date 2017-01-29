@@ -12,10 +12,10 @@ from .views import (
     json,
     single_database_query_orm,
     multiple_database_queries_orm,
+    fortunes,
+    updates,
     plaintext,
 )
-
-
 
 THIS_DIR = Path(__file__).parent
 
@@ -35,7 +35,7 @@ def pg_dsn() -> str:
 
 
 async def startup(app: web.Application):
-    app['aiopg_engine'] = await create_engine(pg_dsn(), loop=app.loop)
+    app['aiopg_engine'] = await create_engine(pg_dsn(), minsize=80, maxsize=100, loop=app.loop)
 
 
 async def cleanup(app: web.Application):
@@ -45,9 +45,11 @@ async def cleanup(app: web.Application):
 
 def setup_routes(app):
     app.router.add_get('/json', json)
-    app.router.add_get('/plaintext', plaintext)
     app.router.add_get('/db', single_database_query_orm)
     app.router.add_get('/queries', multiple_database_queries_orm)
+    app.router.add_get('/fortunes', fortunes)
+    app.router.add_get('/updates', updates)
+    app.router.add_get('/plaintext', plaintext)
 
 
 def create_app(loop):
