@@ -26,10 +26,10 @@
     },
     "pg-raw": {
       "setup_file": "setup",
-      "db_url": "/db-raw",
-      "query_url": "/queries-raw?queries=",
-      "fortune_url": "/fortunes-raw",
-      "update_url": "/updates-raw?queries=",
+      "db_url": "/raw/db",
+      "query_url": "/raw/queries?queries=",
+      "fortune_url": "/raw/fortunes",
+      "update_url": "/raw/updates?queries=",
       "port": 8000,
       "approach": "Realistic",
       "classification": "Micro",
@@ -43,7 +43,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "aiohttp-pg-raw",
-      "notes": "uses asyncpg for database access"
+      "notes": "uses asyncpg for database access",
+      "versus": "default"
     }
   }]
 }

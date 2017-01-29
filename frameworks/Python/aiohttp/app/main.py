@@ -2,10 +2,10 @@ import os
 from pathlib import Path
 
 import aiohttp_jinja2
+import aiopg.sa
+import asyncpg
 import jinja2
 from aiohttp import web
-
-from aiopg.sa import create_engine
 from sqlalchemy.engine.url import URL
 
 from .views import (
@@ -15,6 +15,11 @@ from .views import (
     fortunes,
     updates,
     plaintext,
+
+    single_database_query_raw,
+    multiple_database_queries_raw,
+    fortunes_raw,
+    updates_raw,
 )
 
 THIS_DIR = Path(__file__).parent
@@ -35,12 +40,17 @@ def pg_dsn() -> str:
 
 
 async def startup(app: web.Application):
-    app['aiopg_engine'] = await create_engine(pg_dsn(), minsize=80, maxsize=100, loop=app.loop)
+    dsn = pg_dsn()
+    app.update(
+        aiopg_engine=await aiopg.sa.create_engine(dsn=dsn, minsize=10, maxsize=20, loop=app.loop),
+        asyncpg_pool=await asyncpg.create_pool(dsn=dsn, min_size=10, max_size=20, loop=app.loop),
+    )
 
 
 async def cleanup(app: web.Application):
     app['aiopg_engine'].close()
     await app['aiopg_engine'].wait_closed()
+    await app['asyncpg_pool'].close()
 
 
 def setup_routes(app):
@@ -50,6 +60,11 @@ def setup_routes(app):
     app.router.add_get('/fortunes', fortunes)
     app.router.add_get('/updates', updates)
     app.router.add_get('/plaintext', plaintext)
+
+    app.router.add_get('/raw/db', single_database_query_raw)
+    app.router.add_get('/raw/queries', multiple_database_queries_raw)
+    app.router.add_get('/raw/fortunes', fortunes_raw)
+    app.router.add_get('/raw/updates', updates_raw)
 
 
 def create_app(loop):

@@ -1,11 +1,10 @@
 import multiprocessing
 import os
 
-_is_travis = os.environ.get('TRAVIS') == 'true'
-
-workers = multiprocessing.cpu_count() * 3
-if _is_travis:
+if os.environ.get('TRAVIS') == 'true':
     workers = 2
+else:
+    workers = multiprocessing.cpu_count()
 
 bind = '0.0.0.0:8000'
 keepalive = 120
