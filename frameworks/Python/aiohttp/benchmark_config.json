@@ -1,0 +1,49 @@
+{
+  "framework": "flask",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/dbs",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "aiohttp",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Full",
+      "platform": "asyncio",
+      "webserver": "gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "aiohttp",
+      "notes": "uses aiopg with sqlalchemy for database access"
+    },
+    "pg-raw": {
+      "setup_file": "setup",
+      "db_url": "/dbsraw",
+      "query_url": "/dbraw?queries=",
+      "fortune_url": "/fortunesraw",
+      "update_url": "/raw-updates?queries=",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "aiohttp",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Raw",
+      "platform": "asyncio",
+      "webserver": "gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "aiohttp-pg-raw",
+      "notes": "uses asyncpg for database access"
+    }
+  }]
+}
