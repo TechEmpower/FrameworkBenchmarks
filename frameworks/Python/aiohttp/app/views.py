@@ -81,9 +81,12 @@ async def multiple_database_queries_raw(request):
 
     result = []
     async with request.app['asyncpg_pool'].acquire() as conn:
+        stmt = await conn.prepare('SELECT randomnumber FROM world WHERE id = $1')
         for id_ in ids:
-            r = await conn.fetchval('SELECT randomnumber FROM world WHERE id = $1', id_)
-            result.append({'id': id_, 'randomNumber': r})
+            result.append({
+                'id': id_,
+                'randomNumber': await stmt.fetchval(id_),
+            })
     return json_response(result)
 
 
@@ -159,9 +162,13 @@ async def updates_raw(request):
     result = []
     updates = []
     async with request.app['asyncpg_pool'].acquire() as conn:
+        stmt = await conn.prepare('SELECT randomnumber FROM world WHERE id = $1')
+
         for id_ in ids:
-            r = await conn.fetchval('SELECT randomnumber FROM world WHERE id = $1', id_)
-            result.append({'id': id_, 'randomNumber': r})
+            result.append({
+                'id': id_,
+                'randomNumber': await stmt.fetchval(id_)
+            })
 
             updates.append((randint(1, 10000), id_))
         await conn.executemany('UPDATE world SET randomnumber=$1 WHERE id=$2', updates)
