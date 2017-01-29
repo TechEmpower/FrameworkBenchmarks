@@ -129,7 +129,7 @@ async def updates(request):
     async with request.app['aiopg_engine'].acquire() as conn:
         for id_ in ids:
             cur = await conn.execute(
-                select([sa_worlds.c.id, sa_worlds.c.randomnumber])
+                select([sa_worlds.c.randomnumber])
                 .where(sa_worlds.c.id == id_)
             )
             r = await cur.first()
@@ -138,7 +138,7 @@ async def updates(request):
                 .where(sa_worlds.c.id == id_)
                 .values(randomnumber=randint(1, 10000))
             )
-            result.append({'id': r.id, 'randomNumber': r.randomnumber})
+            result.append({'id': id_, 'randomNumber': r.randomnumber})
 
     return json_response(result)
 
@@ -152,18 +152,19 @@ async def updates_raw(request):
         num_queries = 1
     elif num_queries > 500:
         num_queries = 500
-    result = []
 
     ids = [randint(1, 10000) for _ in range(num_queries)]
     ids.sort()
 
+    result = []
+    updates = []
     async with request.app['asyncpg_pool'].acquire() as conn:
         for id_ in ids:
             r = await conn.fetchval('SELECT randomnumber FROM world WHERE id = $1', id_)
-            result.append({'id': r.id, 'randomNumber': r})
+            result.append({'id': id_, 'randomNumber': r})
 
-            new_rn = randint(1, 10000)
-            await conn.fetchval('UPDATE world SET randomnumber=$1 WHERE id=$2', (new_rn, id_))
+            updates.append((randint(1, 10000), id_))
+        await conn.executemany('UPDATE world SET randomnumber=$1 WHERE id=$2', updates)
 
     return json_response(result)
 
