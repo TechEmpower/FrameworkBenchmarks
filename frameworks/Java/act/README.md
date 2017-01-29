@@ -145,7 +145,7 @@ The tests were run with:
 ## Local Test Result
 
 |            Test            | Throughput |  Latency  | Timeout |
-| -------------------------- | ---------- | --------- | ------- |
+| -------------------------- | ---------: | --------: | ------: |
 | json                       |  340625.81 |    7.42ms |         |
 | single query - mongo       |   42852.18 |   25.83ms |         |
 | single query - mysql       |   23783.32 |   46.66ms |         |
