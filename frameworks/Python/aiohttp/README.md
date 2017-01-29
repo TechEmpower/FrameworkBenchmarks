@@ -27,22 +27,42 @@ gunicorn+uvloop on CPython
 
 ## Test URLs
 
-### JSON Encoding 
+### Test 1: JSON Encoding 
 
-http://localhost:8000/json
+http://localhost:8080/json
 
-### Single Row Random Query
-
-With ORM:
-    http://localhost:8000/dbs
-
-Without ORM (raw):
-    http://localhost:8000/dbsraw
-
-### Variable Row Query Test 
+### Test 2: Single Row Query
 
 With ORM:
-    http://localhost:8000/db?queries=2
+    http://localhost:8080/db
 
 Without ORM (raw):
-    http://localhost:8000/dbraw?queries=2
+    http://localhost:8080/raw/db
+
+### Test 3: Multi Row Query 
+
+With ORM:
+    http://localhost:8080/queries?queries=20
+
+Without ORM (raw):
+    http://localhost:8080/raw/queries?queries=20
+
+### Test 4: Fortunes (Template rendering)
+
+With ORM:
+    http://localhost:8080/fortunes
+
+Without ORM (raw):
+    http://localhost:8080/raw/fortunes
+
+### Test 5: Update Query
+
+With ORM:
+    http://localhost:8080/updates?queries=20
+
+Without ORM (raw):
+    http://localhost:8080/raw/updates?queries=20
+
+### Test6: Plaintext
+
+http://localhost:8080/plaintext
