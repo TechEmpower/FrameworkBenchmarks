@@ -10,7 +10,7 @@ unzip *.zip
 APP_ENTRY=com.techempower.act.AppEntry
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-BASE=$DIR
+BASE=$DIR/target/dist
 CP=$BASE/classes:$BASE/lib/*
 echo CLASSPATH: $CP
 echo
