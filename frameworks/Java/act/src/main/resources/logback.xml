@@ -15,7 +15,7 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="metric.act" level="OFF">
+    <logger name="metric" level="OFF">
         <appender-ref ref="METRIC_FILE" />
     </logger>
 
