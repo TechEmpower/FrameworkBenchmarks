@@ -66,7 +66,7 @@
       "versus": "undertow"
     },
     "mongodb": {
-      "setup_file": "setup-mongodb",
+      "setup_file": "setup-mongo",
       "db_url": "/mongo/db",
       "query_url": "/mongo/queries?queries=",
       "fortune_url": "/mongo/fortunes",
