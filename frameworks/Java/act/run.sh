@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mvn clean package
+mvn -U clean package
 cd target/dist
 unzip *.zip
 ./start

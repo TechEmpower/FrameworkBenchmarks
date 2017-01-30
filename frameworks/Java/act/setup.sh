@@ -2,7 +2,7 @@
 
 fw_depends mysql postgresql mongodb java maven
 
-mvn clean package
+mvn -U clean package
 cd target/dist
 unzip *.zip
 
