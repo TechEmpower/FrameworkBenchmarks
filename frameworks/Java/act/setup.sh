@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql postgresql mongodb java maven
+fw_depends java maven
 
 mvn clean package
 cd target/dist
@@ -11,7 +11,11 @@ APP_ENTRY=com.techempower.act.AppEntry
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 BASE=$DIR/target/dist
+if [[ $DIR == *"dist" ]]; then
+  BASE=$DIR
+fi
 CP=$BASE/classes:$BASE/lib/*
+echo
 echo CLASSPATH: $CP
 echo
 
