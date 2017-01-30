@@ -35,7 +35,7 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 	}
 
 	@GetAction("queries")
-	public final void multipleQueries(Integer queries) {
+	public final void multipleQueries(String queries) {
 		int q = regulateQueries(queries);
 
 		List<IWorld> retVal = new ArrayList<>();
@@ -46,7 +46,7 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 	}
 
 	@GetAction("updates")
-	public final void updateQueries(Integer queries) {
+	public final void updateQueries(String queries) {
 		int q = regulateQueries(queries);
 		List<IWorld> retVal = new ArrayList<>();
 		for (int i = 0; i < q; ++i) {
@@ -61,14 +61,19 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 
 	protected abstract MODEL_TYPE findAndModifyOne();
 
-	protected final int regulateQueries(Integer param) {
+	private int regulateQueries(String param) {
 		if (null == param) {
 			return 1;
 		}
-		if (param < 1) {
+		try {
+			int val = Integer.parseInt(param);
+			if (val < 1) {
+				return 1;
+			}
+			return val > 500 ? 500 : val;
+		} catch (NumberFormatException e) {
 			return 1;
 		}
-		return param > 500 ? 500 : param;
 	}
 
 	protected final int randomWorldNumber() {
