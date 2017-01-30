@@ -5,22 +5,17 @@ import org.osgl.mvc.annotation.GetAction;
 import org.osgl.mvc.annotation.SessionFree;
 
 import javax.inject.Singleton;
+import java.io.File;
 
 @Singleton
 final class HelloController extends Controller.Util {
 
     private static final String HELLO_WORLD = "Hello, World!";
 
-	@GetAction("/json")
+    @GetAction("/json")
     @SessionFree
     public void json() throws Exception {
-        json(new Message("Hello, World!"));
-    }
-
-    @GetAction("/plaintext")
-    @SessionFree
-    public void plaintext() {
-        text(HELLO_WORLD);
+        json(new Message(HELLO_WORLD));
     }
 
     public static final class Message {
