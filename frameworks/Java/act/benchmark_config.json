@@ -22,7 +22,7 @@
       "versus": "undertow"
     },
     "pgsql": {
-      "setup_file": "setup-postgresql",
+      "setup_file": "setup",
       "db_url": "/pgsql/db",
       "query_url": "/pgsql/queries?queries=",
       "fortune_url": "/pgsql/fortunes",
@@ -44,7 +44,7 @@
       "versus": "undertow"
     },
     "mysql": {
-      "setup_file": "setup-mysql",
+      "setup_file": "setup",
       "db_url": "/mysql/db",
       "query_url": "/mysql/queries?queries=",
       "fortune_url": "/mysql/fortunes",
@@ -66,7 +66,7 @@
       "versus": "undertow"
     },
     "mongodb": {
-      "setup_file": "setup-mongo",
+      "setup_file": "setup",
       "db_url": "/mongo/db",
       "query_url": "/mongo/queries?queries=",
       "fortune_url": "/mongo/fortunes",
