@@ -136,14 +136,42 @@ class FrameworkTestType:
         exist in the database. This is used for verifying that entries in the
         database have actually changed during an Update verification test.
         '''
-        # Try to fetch all of the World objects from the database and return them as JSON
+        database_name = ""
+        results_json = {}
         try:
-            db = MySQLdb.connect(os.environ.get("DBHOST"), "benchmarkdbuser", "benchmarkdbpass", "hello_world")
-            cursor = db.cursor()
-            cursor.execute("SELECT * FROM World")
-            results = cursor.fetchall()
-            return json.loads(json.dumps(dict(results)))
-        # If there is an error while fetching the World objects, just return an empty JSON object
-        except:
-            return {}
+            database_name = self.database.lower()
+        except AttributeError:
+            pass
+        
+        if database_name == "mysql":
+            try:
+                db = MySQLdb.connect(os.environ.get("DBHOST"), "benchmarkdbuser", "benchmarkdbpass", "hello_world")
+                cursor = db.cursor()
+                cursor.execute("SELECT * FROM World")
+                results = cursor.fetchall()
+                results_json = json.loads(json.dumps(dict(results)))
+                db.close()
+            except:
+                pass
+        elif database_name == "postgres":
+            try:
+                db = psycopg2.connect(host=os.environ.get("DBHOST"),
+                                      port="5432", 
+                                      user="benchmarkdbuser", 
+                                      password="benchmarkdbpass",
+                                      database="hello_world")
+                cursor = db.cursor()
+                cursor.execute("SELECT * FROM World")
+                results = cursor.fetchall()
+                results_json = json.loads(json.dumps(dict(results)))
+                db.close()
+            except:
+                pass
+        elif database_name == "mongodb":
+            try:
+                print "mongo"
+            except:
+                pass
+
+        return results_json
 

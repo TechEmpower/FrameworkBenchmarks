@@ -35,6 +35,7 @@ sudo pip install colorama==0.3.1
 sudo pip install progressbar==2.2
 sudo pip install requests
 sudo pip install MySQLdb
+sudo pip install psycopg2
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 sudo sh -c "echo '*            hard    rtprio             99' >> /etc/security/limits.conf"

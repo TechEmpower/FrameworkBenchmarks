@@ -9,7 +9,7 @@ class UpdateTestType(FrameworkTestType):
             'name': 'update',
             'accept_header': self.accept('json'),
             'requires_db': True,
-            'args': ['update_url']
+            'args': ['update_url', 'database']
         }
         FrameworkTestType.__init__(self, **kwargs)
 
