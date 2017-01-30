@@ -34,6 +34,7 @@ sudo pip install colorama==0.3.1
 # but it requires —-allow-external and -—allow-unverified
 sudo pip install progressbar==2.2
 sudo pip install requests
+sudo pip install MySQLdb
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 sudo sh -c "echo '*            hard    rtprio             99' >> /etc/security/limits.conf"

@@ -1,8 +1,11 @@
 import copy
 import sys
+import os
+import json
 import subprocess
 from subprocess import PIPE
 import requests
+import MySQLdb
 
 # Requests is built ontop of urllib3,
 # here we prevent general request logging
@@ -125,3 +128,22 @@ class FrameworkTestType:
         Use before calling parse
         '''
         return copy.copy(self)
+
+
+    def get_current_world_table(self):
+        '''
+        Return a JSON object containing all 10,000 World items as they currently 
+        exist in the database. This is used for verifying that entries in the
+        database have actually changed during an Update verification test.
+        '''
+        # Try to fetch all of the World objects from the database and return them as JSON
+        try:
+            db = MySQLdb.connect(os.environ.get("DBHOST"), "benchmarkdbuser", "benchmarkdbpass", "hello_world")
+            cursor = db.cursor()
+            cursor.execute("SELECT * FROM World")
+            results = cursor.fetchall()
+            return json.loads(json.dumps(dict(results)))
+        # If there is an error while fetching the World objects, just return an empty JSON object
+        except:
+            return {}
+

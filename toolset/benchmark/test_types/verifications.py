@@ -1,5 +1,6 @@
 import json
 import re
+import math
 
 
 def basic_body_verification(body, url, is_json_check=True):
@@ -246,10 +247,49 @@ def verify_randomnumber_list(expected_len, headers, body, url, max_infraction='f
 
     return problems
 
-
-def verify_query_cases(self, cases, url):
+def verify_updates(body, old_worlds, url):
     '''
-    The the /updates and /queries tests accept a `queries` parameter
+    Validates that the /updates requests actually updated values in the database and didn't
+    just return a JSON list of the correct number of World items.
+
+    body        the body of the request, containing the updated items
+    old_worlds  a JSON object containing the state of the Worlds table before the /updates request
+    url         the URL for the test, which is passed back with any error messages
+
+    If no items were updated, this validation test returns a "fail." 
+    
+    If only some items were updated, this test returns a "warn". This is to account for the unlikely, 
+    but possible situation where an entry in the World table is updated to the same value it was 
+    previously set as.
+    '''
+    failed_updates = 0
+    problems = []
+    new_worlds = json.loads(body)
+    total_updates = len(new_worlds)
+    try:
+        for world in new_worlds:
+            new_val = world['randomNumber']
+            old_val =old_worlds[str(world['id'])]
+            if new_val == old_val:
+                failed_updates += 1
+    except:
+        pass
+
+    if failed_updates == total_updates:
+        problems.append(
+            ("fail", "No items were updated in the database.", url))
+    elif failed_updates > 0:
+        problems.append(
+            ("warn",
+            "%s out of the expected %s items were not updated in the database." % (
+                failed_updates, total_updates),
+            url))
+    
+    return problems
+
+def verify_query_cases(self, cases, url, check_updates=False):
+    '''
+    The /updates and /queries tests accept a `queries` parameter
     that is expected to be between 1-500.
     This method execises a framework with different `queries` parameter values
     then verifies that the framework responds appropriately.
@@ -274,6 +314,8 @@ def verify_query_cases(self, cases, url):
     MAX = 500
     MIN = 1
 
+    world_db_before = self.get_current_world_table()
+
     for q, max_infraction in cases:
         case_url = url + q
         headers, body = self.request_headers_and_body(case_url)
@@ -291,6 +333,9 @@ def verify_query_cases(self, cases, url):
             problems += verify_randomnumber_list(
                 expected_len, headers, body, case_url, max_infraction)
             problems += verify_headers(headers, case_url)
+            # only check update changes if we are doing an Update verification
+            if check_updates:
+                problems += verify_updates(body, world_db_before, case_url)
 
         except ValueError:
             warning = (
@@ -316,5 +361,8 @@ def verify_query_cases(self, cases, url):
                 problems += verify_randomnumber_list(
                     expected_len, headers, body, case_url, max_infraction)
                 problems += verify_headers(headers, case_url)
+                # only check update changes if we are doing an Update verification
+                if check_updates:
+                    problems += verify_updates(body, world_db_before, case_url)
 
     return problems
