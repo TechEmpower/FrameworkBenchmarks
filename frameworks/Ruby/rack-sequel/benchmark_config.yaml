@@ -34,6 +34,7 @@ tests:
       platform: JRuby
       display_name: rack-sequel-puma-jruby
       versus: rack-puma-jruby
+      disabled: true
     postgres-puma-jruby:
       <<: *default
       setup_file: run_jruby_puma
@@ -41,6 +42,7 @@ tests:
       platform: JRuby
       display_name: rack-sequel-postgres-puma-jruby
       versus: ~
+      disabled: true
     passenger-mri:
       <<: *default
       setup_file: run_mri_passenger
