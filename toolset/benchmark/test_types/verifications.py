@@ -258,9 +258,9 @@ def verify_updates(body, old_worlds, url):
 
     If no items were updated, this validation test returns a "fail." 
     
-    If only some items were updated, this test returns a "warn". This is to account for the unlikely, 
-    but possible situation where an entry in the World table is updated to the same value it was 
-    previously set as.
+    If only some items were updated (within a 5% margin of error), this test returns a "warn". 
+    This is to account for the unlikely, but possible situation where an entry in the World 
+    table is updated to the same value it was previously set as.
     '''
     failed_updates = 0
     problems = []
@@ -278,7 +278,7 @@ def verify_updates(body, old_worlds, url):
     if failed_updates == total_updates:
         problems.append(
             ("fail", "No items were updated in the database.", url))
-    elif failed_updates > 0:
+    elif failed_updates > math.ceil(0.05 * total_updates):
         problems.append(
             ("warn",
             "%s out of the expected %s items were not updated in the database." % (
@@ -314,7 +314,10 @@ def verify_query_cases(self, cases, url, check_updates=False):
     MAX = 500
     MIN = 1
 
-    world_db_before = self.get_current_world_table()
+    # Only load in the World table if we are doing an Update verification
+    world_db_before = {}
+    if check_updates:
+        world_db_before = self.get_current_world_table()
 
     for q, max_infraction in cases:
         case_url = url + q
@@ -333,7 +336,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
             problems += verify_randomnumber_list(
                 expected_len, headers, body, case_url, max_infraction)
             problems += verify_headers(headers, case_url)
-            # only check update changes if we are doing an Update verification
+            # Only check update changes if we are doing an Update verification
             if check_updates:
                 problems += verify_updates(body, world_db_before, case_url)
 
@@ -361,7 +364,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
                 problems += verify_randomnumber_list(
                     expected_len, headers, body, case_url, max_infraction)
                 problems += verify_headers(headers, case_url)
-                # only check update changes if we are doing an Update verification
+                # Only check update changes if we are doing an Update verification
                 if check_updates:
                     problems += verify_updates(body, world_db_before, case_url)
 
