@@ -174,11 +174,12 @@ class FrameworkTestType:
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
-                connection = pymongo.MongoClient()
+                connection = pymongo.MongoClient(host=os.environ.get("DBHOST"))
                 db = connection.hello_world
                 for world in db.world.find():
                     worlds_json[str(int(world["id"]))] = int(world["randomNumber"])
                 results_json = worlds_json
+                connection.close()
             except Exception as e:
                 print "ERROR: Unable to load current MongoDB World table."
                 print e
