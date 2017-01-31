@@ -6,6 +6,7 @@ import subprocess
 from subprocess import PIPE
 import requests
 import MySQLdb
+import psycopg2
 
 # Requests is built ontop of urllib3,
 # here we prevent general request logging
@@ -151,7 +152,9 @@ class FrameworkTestType:
                 results = cursor.fetchall()
                 results_json = json.loads(json.dumps(dict(results)))
                 db.close()
-            except:
+            except Exception as e:
+                print "ERROR: Unable to load current MySQL database."
+                print e
                 pass
         elif database_name == "postgres":
             try:
@@ -165,7 +168,9 @@ class FrameworkTestType:
                 results = cursor.fetchall()
                 results_json = json.loads(json.dumps(dict(results)))
                 db.close()
-            except:
+            except Exception as e:
+                print "ERROR: Unable to load current Postgres database."
+                print e
                 pass
         elif database_name == "mongodb":
             try:

@@ -264,15 +264,16 @@ def verify_updates(body, old_worlds, url):
     '''
     failed_updates = 0
     problems = []
-    new_worlds = json.loads(body)
+    new_worlds = json.loads(body.lower())
     total_updates = len(new_worlds)
     try:
         for world in new_worlds:
-            new_val = world['randomNumber']
+            new_val = world['randomnumber']
             old_val =old_worlds[str(world['id'])]
             if new_val == old_val:
                 failed_updates += 1
-    except:
+    except Exception as e:
+        print e
         pass
 
     if failed_updates == total_updates:
