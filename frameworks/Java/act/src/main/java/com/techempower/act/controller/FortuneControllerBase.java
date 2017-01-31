@@ -26,7 +26,7 @@ public abstract class FortuneControllerBase<MODEL_TYPE extends IFortune,
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
 
-        render("fortunes", fortunes);
+        template("fortunes", fortunes);
     }
 
 }

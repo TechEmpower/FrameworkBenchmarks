@@ -1,6 +1,7 @@
 package com.techempower.act.controller;
 
 import act.controller.Controller;
+import act.handler.NonBlock;
 import org.osgl.mvc.annotation.GetAction;
 import org.osgl.mvc.annotation.SessionFree;
 
@@ -14,6 +15,7 @@ final class HelloController extends Controller.Util {
 
     @GetAction("/json")
     @SessionFree
+    @NonBlock
     public void json() throws Exception {
         json(new Message(HELLO_WORLD));
     }
