@@ -34,7 +34,7 @@ sudo pip install colorama==0.3.1
 # but it requires —-allow-external and -—allow-unverified
 sudo pip install progressbar==2.2
 sudo pip install requests
-sudo pip install MySQLdb
+sudo pip install MySQL-python
 sudo pip install psycopg2
 sudo pip install pymongo
 
