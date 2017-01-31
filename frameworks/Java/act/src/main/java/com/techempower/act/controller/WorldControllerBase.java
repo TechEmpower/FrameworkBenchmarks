@@ -38,7 +38,7 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 	public final void multipleQueries(String queries) {
 		int q = regulateQueries(queries);
 
-		List<IWorld> retVal = new ArrayList<>();
+		List<MODEL_TYPE> retVal = new ArrayList<>();
 		for (int i = 0; i < q; ++i) {
 			retVal.add(findOne());
 		}
@@ -48,7 +48,7 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 	@GetAction("updates")
 	public final void updateQueries(String queries) {
 		int q = regulateQueries(queries);
-		List<IWorld> retVal = new ArrayList<>();
+		List<MODEL_TYPE> retVal = new ArrayList<>();
 		for (int i = 0; i < q; ++i) {
 			retVal.add(findAndModifyOne());
 		}

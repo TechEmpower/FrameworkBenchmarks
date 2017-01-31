@@ -18,7 +18,8 @@ public abstract class SqlWorldControllerBase<
 	protected MODEL_TYPE findAndModifyOne() {
 		MODEL_TYPE model = findOne();
 		model.setRandomNumber(randomWorldNumber());
-		worldDao.save(model);
+		worldDao.ebean().update(model);
 		return model;
 	}
+
 }
