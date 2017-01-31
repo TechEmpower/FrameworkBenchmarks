@@ -6,7 +6,6 @@ import org.osgl.mvc.annotation.GetAction;
 import org.osgl.mvc.annotation.SessionFree;
 
 import javax.inject.Singleton;
-import java.io.File;
 
 @Singleton
 final class HelloController extends Controller.Util {

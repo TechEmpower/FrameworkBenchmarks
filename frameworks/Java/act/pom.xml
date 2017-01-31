@@ -21,8 +21,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <act.version>0.4.0-SNAPSHOT</act.version>
-        <act-morphia.version>0.4.1-SNAPSHOT</act-morphia.version>
-        <act-ebean.version>0.3.1-SNAPSHOT</act-ebean.version>
+        <act-morphia.version>0.5.0-SNAPSHOT</act-morphia.version>
+        <act-ebean.version>0.4.0-SNAPSHOT</act-ebean.version>
         <mysql.version>5.1.38</mysql.version>
         <postgres-jdbc.version>9.4.1208</postgres-jdbc.version>
         <app.entry>com.techempower.act.AppEntry</app.entry>
