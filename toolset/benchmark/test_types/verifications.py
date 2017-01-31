@@ -274,7 +274,6 @@ def verify_updates(body, old_worlds, url):
                 failed_updates += 1
     except Exception as e:
         print e
-        pass
 
     if failed_updates == total_updates:
         problems.append(

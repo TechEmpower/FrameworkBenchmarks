@@ -7,6 +7,7 @@ from subprocess import PIPE
 import requests
 import MySQLdb
 import psycopg2
+import pymongo
 
 # Requests is built ontop of urllib3,
 # here we prevent general request logging
@@ -153,9 +154,8 @@ class FrameworkTestType:
                 results_json = json.loads(json.dumps(dict(results)))
                 db.close()
             except Exception as e:
-                print "ERROR: Unable to load current MySQL database."
+                print "ERROR: Unable to load current MySQL World table."
                 print e
-                pass
         elif database_name == "postgres":
             try:
                 db = psycopg2.connect(host=os.environ.get("DBHOST"),
@@ -169,14 +169,19 @@ class FrameworkTestType:
                 results_json = json.loads(json.dumps(dict(results)))
                 db.close()
             except Exception as e:
-                print "ERROR: Unable to load current Postgres database."
+                print "ERROR: Unable to load current Postgres World table."
                 print e
-                pass
         elif database_name == "mongodb":
             try:
-                print "mongo"
-            except:
-                pass
+                worlds_json = {}
+                connection = pymongo.MongoClient()
+                db = connection.hello_world
+                for world in db.world.find():
+                    worlds_json[str(int(world["id"]))] = int(world["randomNumber"])
+                results_json = worlds_json
+            except Exception as e:
+                print "ERROR: Unable to load current MongoDB World table."
+                print e
 
         return results_json
 
