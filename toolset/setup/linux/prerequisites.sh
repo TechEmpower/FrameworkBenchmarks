@@ -27,7 +27,8 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libjson0-dev libmcrypt-dev libicu-dev gettext \
   libpq-dev mlton \
   cloc dstat                        `# Collect resource usage statistics` \
-  python-pip
+  python-pip \
+  python-dev
 
 sudo pip install colorama==0.3.1
 # Version 2.3 has a nice Counter() and other features
