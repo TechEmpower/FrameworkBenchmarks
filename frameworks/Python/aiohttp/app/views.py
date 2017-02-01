@@ -136,15 +136,15 @@ async def updates(request):
                 .where(sa_worlds.c.id == id_)
             )
             r = await cur.first()
+            r = dict(r)
+            r['randomnumber'] = randint(1, 10000)
             await conn.execute(
                 sa_worlds.update()
                 .where(sa_worlds.c.id == id_)
-                .values(randomnumber=randint(1, 10000))
+                .values(randomnumber=r['randomnumber'])
             )
-            result.append({'id': id_, 'randomNumber': r.randomnumber})
-
+            result.append({'id': id_, 'randomNumber': r['randomnumber']})
     return json_response(result)
-
 
 async def updates_raw(request):
     """
@@ -159,14 +159,14 @@ async def updates_raw(request):
     updates = []
     async with request.app['asyncpg_pool'].acquire() as conn:
         stmt = await conn.prepare('SELECT randomnumber FROM world WHERE id = $1')
-
         for id_ in ids:
-            result.append({
+            r = {
                 'id': id_,
                 'randomNumber': await stmt.fetchval(id_)
-            })
-
-            updates.append((randint(1, 10000), id_))
+            }
+            r['randomNumber'] = randint(1, 10000)
+            result.append(r)
+            updates.append((r['randomNumber'], id_))
         await conn.executemany('UPDATE world SET randomnumber=$1 WHERE id=$2', updates)
 
     return json_response(result)
