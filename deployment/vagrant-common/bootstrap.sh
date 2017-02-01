@@ -97,6 +97,7 @@ if [ ! -e "~/.firstboot" ]; then
     cd ~/FrameworkBenchmarks
     # Update the benchmark.cfg for vagrant
     sed -i s/techempower/vagrant/g ~/FrameworkBenchmarks/benchmark.cfg
+    git update-index --assume-unchanged benchmark.cfg
     source ~/FrameworkBenchmarks/toolset/setup/linux/prerequisites.sh
   #fi
 
