@@ -247,14 +247,13 @@ def verify_randomnumber_list(expected_len, headers, body, url, max_infraction='f
 
     return problems
 
-def verify_updates(body, old_worlds, url):
+def verify_updates(old_worlds, new_worlds, updates_expected, url):
     '''
     Validates that the /updates requests actually updated values in the database and didn't
     just return a JSON list of the correct number of World items.
-
-    body        the body of the request, containing the updated items
-    old_worlds  a JSON object containing the state of the Worlds table before the /updates request
-    url         the URL for the test, which is passed back with any error messages
+sz
+    old_worlds  a JSON object containing the state of the Worlds table BEFORE the /updates requests
+    new_worlds  a JSON object containing the state of the Worlds table AFTER the /updates requests
 
     If no items were updated, this validation test returns a "fail." 
     
@@ -262,27 +261,28 @@ def verify_updates(body, old_worlds, url):
     This is to account for the unlikely, but possible situation where an entry in the World 
     table is updated to the same value it was previously set as.
     '''
-    failed_updates = 0
+    successful_updates = 0
     problems = []
-    new_worlds = json.loads(body.lower())
-    total_updates = len(new_worlds)
-    try:
-        for world in new_worlds:
-            new_val = world['randomnumber']
-            old_val =old_worlds[str(world['id'])]
-            if new_val == old_val:
-                failed_updates += 1
-    except Exception as e:
-        print e
+    for i in range(1, 10001):
+        try:
+            entry_id = str(i)
+            if old_worlds[entry_id] != new_worlds[entry_id]:
+                successful_updates += 1
+        except Exception as e:
+            print e
 
-    if failed_updates == total_updates:
+
+    if successful_updates == 0:
         problems.append(
             ("fail", "No items were updated in the database.", url))
-    elif failed_updates > math.ceil(0.05 * total_updates):
+    elif successful_updates <= (updates_expected * 0.95):
+        problems.append(
+            ("fail", "Only %s items were updated in the database out of roughly %s expected." % (successful_updates, updates_expected), url))
+    elif successful_updates <= (updates_expected * 0.99):
         problems.append(
             ("warn",
-            "%s out of the expected %s items were not updated in the database." % (
-                failed_updates, total_updates),
+            "There may have been an error updating the database. Only %s items were updated in the database out of the roughly %s expected." % (
+                successful_updates, updates_expected),
             url))
     
     return problems
@@ -336,9 +336,14 @@ def verify_query_cases(self, cases, url, check_updates=False):
             problems += verify_randomnumber_list(
                 expected_len, headers, body, case_url, max_infraction)
             problems += verify_headers(headers, case_url)
-            # Only check update changes if we are doing an Update verification
-            if check_updates:
-                problems += verify_updates(body, world_db_before, case_url)
+
+            # Only check update changes if we are doing an Update verification and if we're testing
+            # the highest number of queries, to ensure that we don't accidentally FAIL for a query 
+            # that only updates 1 item and happens to set its randomNumber to the same value it 
+            # previously held
+            if check_updates and queries >= MAX:
+                world_db_after = self.get_current_world_table()
+                problems += verify_updates(world_db_before, world_db_after, MAX, case_url)
 
         except ValueError:
             warning = (
@@ -364,8 +369,5 @@ def verify_query_cases(self, cases, url, check_updates=False):
                 problems += verify_randomnumber_list(
                     expected_len, headers, body, case_url, max_infraction)
                 problems += verify_headers(headers, case_url)
-                # Only check update changes if we are doing an Update verification
-                if check_updates:
-                    problems += verify_updates(body, world_db_before, case_url)
 
     return problems
