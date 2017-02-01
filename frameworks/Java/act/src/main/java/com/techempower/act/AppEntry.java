@@ -6,6 +6,7 @@ import act.Version;
 import act.boot.app.RunApp;
 import act.job.OnAppStart;
 import com.alibaba.fastjson.JSON;
+import org.osgl.http.H;
 
 public class AppEntry {
 
@@ -28,7 +29,9 @@ public class AppEntry {
 
 	@OnAppStart
 	public void routing() {
-		Act.get("/json", context -> context.resp().writeContent(JSON.toJSONString(new Message(HELLO_WORLD))));
+		Act.get("/json", context -> context.resp()
+				.contentType(H.Format.JSON.contentType())
+				.writeContent(JSON.toJSONString(new Message(HELLO_WORLD))));
 	}
 
 	public static void main(String[] args) throws Exception {
