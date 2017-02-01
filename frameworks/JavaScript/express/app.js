@@ -8,7 +8,7 @@ var cluster = require('cluster')
   , express = require('express')
   , Sequelize = require('sequelize')
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://localhost/hello_world')
+  , conn = mongoose.connect('mongodb://TFB-database/hello_world')
   , async = require('async');
 
 // Middleware
@@ -36,7 +36,7 @@ var FortuneSchema = new mongoose.Schema({
   MFortune = conn.model('Fortune', FortuneSchema);
 
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: 'localhost',
+  host: 'TFB-database',
   dialect: 'mysql',
   logging: false
 });
@@ -189,10 +189,8 @@ if (cluster.isMaster) {
   });
 
   app.get('/mongoose-update', function(req, res) {
-    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
-      , selectFunctions = [];
-
-    queries = Math.min(queries, 500);
+    var selectFunctions = [],
+        queries = Math.min(parseInt(req.query.queries) || 1, 500);
 
     for (var i = 1; i <= queries; i++ ) {
       selectFunctions.push(function(callback) {
@@ -223,11 +221,10 @@ if (cluster.isMaster) {
   });
 
   app.get('/mysql-orm-update', function(req, res) {
-    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
-      , selectFunctions = [];
+    var selectFunctions = [],
+        queries = Math.min(parseInt(req.query.queries) || 1, 500);
 
-    queries = Math.max(Math.min(queries, 500), 1);
-
+    console.log('QUERIES IS: ' + queries);
     for (var i = 1; i <= queries; i++ ) {
       selectFunctions.push(function(callback) {
         World.findOne({
