@@ -89,7 +89,7 @@ class FrameworkTestType:
         self.out.write(str(headers))
         self.out.write(body)
         b = 40
-        print "  Response (trimmed to %d bytes): \"%s\"" % (b, body.strip()[:b])
+        print "  Response (NOT TRIMMED): \"%s\"" % (body.strip())
         return headers, body
 
     def verify(self, base_url):
