@@ -23,7 +23,7 @@ static void usp_fork_mfortune()
 		return;
 		}
 
-	if (mc->selectCollection("hello_world", "Fortune") == false)
+	if (mc->selectCollection("hello_world", "fortune") == false)
 		{
 		U_WARNING("usp_fork_mfortune(): selectCollection() failed");
 
