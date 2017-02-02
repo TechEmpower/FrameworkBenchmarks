@@ -3,11 +3,11 @@
 fw_depends mongodb ulib
 
 # Travis is broken
-# if [ "$TRAVIS" != "true" ]; then
-# MAX_THREADS=$(( 3 * $MAX_THREADS / 2 ))
-# else
-# MAX_THREADS=$(( 2 * $MAX_THREADS ))
-# fi
+if [ "$TRAVIS" != "true" ]; then
+MAX_THREADS=$(( 3 * $MAX_THREADS / 2 ))
+else
+MAX_THREADS=$(( 2 * $MAX_THREADS ))
+fi
 
 # 1. Change ULib Server (userver_tcp) configuration
 sed -i "s|TCP_LINGER_SET .*|TCP_LINGER_SET 0|g"									  $IROOT/ULib/benchmark.cfg
