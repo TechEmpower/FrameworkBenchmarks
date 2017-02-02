@@ -25,7 +25,7 @@ static void usp_fork_mupdate()
       return;
       }
 
-   if (mc->selectCollection("hello_world", "World") == false)
+   if (mc->selectCollection("hello_world", "world") == false)
       {
       U_WARNING("usp_fork_mupdate(): selectCollection() failed");
 
