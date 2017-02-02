@@ -8,7 +8,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
 @DB("mongo")
-@Entity(noClassnameStored = true)
+@Entity(value = "fortune", noClassnameStored = true)
 public final class Fortune implements IFortune, SimpleBean {
 
     @Id
