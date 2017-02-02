@@ -1,2 +1,2 @@
 tornado==4.4.2
-Momoko==2.2.3
+Momoko==2.2.4

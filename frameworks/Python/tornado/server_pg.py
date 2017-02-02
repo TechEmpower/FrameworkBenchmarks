@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import json
 from random import randint
-
 import momoko
 import tornado.ioloop
 import tornado.web
@@ -26,7 +25,7 @@ class SingleQueryHandler(JsonHandler):
     def get(self):
 
         random_id = randint(1, 10000)
-        cursor = yield db.execute(self.sql, (random_id,))
+        cursor = yield db.execute(self.SQL, (random_id,))
         row = cursor.fetchone()
         response = json.dumps({self.ID: row[0], self.RANDOM_NUMBER: row[1]})
         self.finish(response)
