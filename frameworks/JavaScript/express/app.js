@@ -8,7 +8,7 @@ var cluster = require('cluster')
   , express = require('express')
   , Sequelize = require('sequelize')
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://localhost/hello_world')
+  , conn = mongoose.connect('mongodb://TFB-database/hello_world')
   , async = require('async');
 
 // Middleware
@@ -25,7 +25,7 @@ var WorldSchema = new mongoose.Schema({
   }, {
     collection: 'world'
   }),
-  MWorld = conn.model('World', WorldSchema);
+  MWorld = conn.model('world', WorldSchema);
 
 var FortuneSchema = new mongoose.Schema({
     id          : Number,
@@ -33,10 +33,10 @@ var FortuneSchema = new mongoose.Schema({
   }, {
     collection: 'fortune'
   }),
-  MFortune = conn.model('Fortune', FortuneSchema);
+  MFortune = conn.model('fortune', FortuneSchema);
 
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: 'localhost',
+  host: 'TFB-database',
   dialect: 'mysql',
   logging: false
 });
