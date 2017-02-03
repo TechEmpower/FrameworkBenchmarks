@@ -4,6 +4,7 @@ import act.controller.Controller;
 import act.db.morphia.MorphiaQuery;
 import com.techempower.act.controller.WorldControllerBase;
 import com.techempower.act.mongo.domain.World;
+import org.osgl.mvc.result.NotFound;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,6 +20,11 @@ public final class WorldController extends WorldControllerBase<World, MorphiaQue
 
 	@Override
 	protected World findAndModifyOne() {
-		return worldDao.ds().findAndModify(worldDao.q("_id", randomWorldNumber()), worldDao.updates().set("randomNumber", randomWorldNumber()));
+		int id = randomWorldNumber();
+		World world = worldDao.findById(id);
+		notFoundIfNull(world);
+		world.setRandomNumber(randomWorldNumber());
+		worldDao.save(world);
+		return world;
 	}
 }
