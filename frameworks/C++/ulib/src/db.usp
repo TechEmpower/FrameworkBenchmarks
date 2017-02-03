@@ -31,7 +31,7 @@ static void usp_fork_db()
       pstmt_db->into(pworld_db->randomNumber);
 
 #  ifndef AS_cpoll_cppsp_DO
-      U_NEW(UValue, pvalue, UValue(OBJECT_VALUE));
+      U_NEW(UValue, pvalue, UValue);
 #  endif
       }
 }
