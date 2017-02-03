@@ -96,6 +96,7 @@ if [ ! -e "~/.firstboot" ]; then
     git clone -b ${GH_BRANCH} https://github.com/${GH_REPO}.git $FWROOT
     cd ~/FrameworkBenchmarks
     # Update the benchmark.cfg for vagrant
+    cp ~/FrameworkBenchmarks/benchmark.cfg.example ~/FrameworkBenchmarks/benchmark.cfg
     sed -i s/techempower/vagrant/g ~/FrameworkBenchmarks/benchmark.cfg
     source ~/FrameworkBenchmarks/toolset/setup/linux/prerequisites.sh
   #fi
