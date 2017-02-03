@@ -173,10 +173,11 @@ def raw_updates():
         worlds = []
         rp = partial(randint, 1, 10000)
         for i in xrange(num_queries):
-            world = connection.execute("SELECT * FROM World WHERE id=%s", (rp(),)).fetchone()
+            world_id = rp()
+            world = connection.execute("SELECT randomnumber FROM World WHERE id=%s", (world_id,)).fetchone()
+            worlds.append({'id': world_id, 'randomNumber': world['randomnumber']})
             randomNumber = rp()
-            worlds.append({'id': world['id'], 'randomNumber': randomNumber})
-            connection.execute("UPDATE World SET randomNumber=%s WHERE id=%s", (randomNumber, world['id']))
+            connection.execute("UPDATE World SET randomNumber=%s WHERE id=%s", (randomNumber, world_id))
         return json_response(worlds)
     finally:
         connection.close()
