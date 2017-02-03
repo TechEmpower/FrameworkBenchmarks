@@ -13,6 +13,7 @@ echo "NoHostAuthenticationForLocalhost yes" | tee -a /home/travis/.ssh/config
 chmod 600 ~/.ssh/config
 
 # Set up the benchmark.cfg for travis user
+cp ./benchmark.cfg.example ./benchmark.cfg
 sed -i s/techempower/travis/g ./benchmark.cfg
 
 echo "travis ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers

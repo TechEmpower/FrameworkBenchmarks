@@ -34,7 +34,7 @@ static void usp_fork_query()
       pstmt_query->into(pworld_query->randomNumber);
 
 #  ifndef AS_cpoll_cppsp_DO
-      U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
+      U_NEW(UValue, pvalue, UValue);
       U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
 #  endif
       }
