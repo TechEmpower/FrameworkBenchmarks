@@ -224,7 +224,6 @@ if (cluster.isMaster) {
     var selectFunctions = [],
         queries = Math.min(parseInt(req.query.queries) || 1, 500);
 
-    console.log('QUERIES IS: ' + queries);
     for (var i = 1; i <= queries; i++ ) {
       selectFunctions.push(function(callback) {
         World.findOne({
