@@ -18,7 +18,7 @@ static void usp_fork_mupdate()
 
    U_NEW(UMongoDBClient, mc, UMongoDBClient);
 
-   if (mc->connect() == false)
+   if (mc->connect(0,0) == false)
       {
       U_WARNING("usp_fork_mupdate(): connection disabled or failed");
 
@@ -33,7 +33,7 @@ static void usp_fork_mupdate()
       }
 
 #ifndef AS_cpoll_cppsp_DO
-   U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
+   U_NEW(UValue, pvalue, UValue);
    U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
 #endif
 }
@@ -60,7 +60,7 @@ Content-Type: application/json
 -->
 <!--#code
 uint32_t id, rnum;
-mongoc_bulk_operation_t* bulk = mc->createBulk(false);
+//mongoc_bulk_operation_t* bulk = mc->createBulk(false);
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
 #ifdef AS_cpoll_cppsp_DO
@@ -69,17 +69,21 @@ USP_PUTS_CHAR('[');
 
 while (true)
    {
-   mc->updateOneBulk(bulk, id = u_get_num_random(10000-1), "randomNumber", rnum = u_get_num_random(10000-1));
+// mc->updateOneBulk(bulk, id = u_get_num_random(10000-1), "randomNumber", rnum = u_get_num_random(10000-1));
 
-#ifdef AS_cpoll_cppsp_DO
-   USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", id, rnum);
-#else
-   World* pworld;
+   if (mc->findOne(id = u_get_num_random(10000-1)) &&
+       mc->update( id, "randomNumber", rnum = u_get_num_random(10000-1)))
+      {
+#  ifdef AS_cpoll_cppsp_DO
+      USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", id, rnum);
+#  else
+      World* pworld;
 
-   U_NEW(World, pworld, World(id, rnum));
+      U_NEW(World, pworld, World(id, rnum));
 
-   pvworld_update->push_back(pworld);
-#endif
+      pvworld_update->push_back(pworld);
+#  endif
+      }
 
    if (++i == num_queries) break;
 
@@ -88,7 +92,7 @@ while (true)
 #endif
    }
 
-(void) mc->executeBulk(bulk);
+// (void) mc->executeBulk(bulk);
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR(']');

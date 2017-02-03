@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends llvm-dev rvm
+fw_depends llvm-dev libjemalloc-dev rvm
 
 fw_installed ruby-2.4 && return 0
 
@@ -8,7 +8,7 @@ fw_installed ruby-2.4 && return 0
 # update this when it changes
 MRI_VERSION=2.4.0
 
-rvm install $MRI_VERSION
+rvm install $MRI_VERSION -C --with-jemalloc
 
 rvm $MRI_VERSION do gem install bundler -v 1.14.3
 
