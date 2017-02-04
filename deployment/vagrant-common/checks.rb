@@ -43,7 +43,28 @@ def check_provider_needs(provider)
     check_aws_needs
   elsif provider == :"virtualbox"
     check_vb_needs
+  elsif provider == :"digital_ocean"
+    check_digitalocean_needs
   end
+end
+
+def check_digitalocean_needs()
+  # Check required variables
+  if !ENV['TFB_DO_TOKEN']
+    abort 'If you want to use the Digital Ocean provider, you must provide these variables: 
+    TFB_DO_TOKEN    : Your Digital Ocean Personal Access Token'
+  end
+
+  # Print warning
+    warning = "\033[33m\
+WARNING: FrameworkBenchmarks is disabling folder sync between your
+local working copy and Digital Ocean - the ~/FrameworkBenchmarks
+directory in your droplet will be a git clone of TechEmpower/FrameworkBenchmarks. 
+You can re-enable folder sync using 
+    $ TFB_FORCE_SYNC=true vagrant up --provider=digital_ocean
+but be aware that you will need to upload ~2GB to Digital Ocean before you can use
+the droplet.\033[0m"
+  puts warning
 end
 
 def check_aws_needs()

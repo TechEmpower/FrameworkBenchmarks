@@ -92,8 +92,8 @@ virtualbox provider is used.
 | <sup>1</sup>`TFB_AWS_KEY_NAME`   | `<key_name>`        |  The name of the key pair you are using 
 | <sup>1</sup>`TFB_AWS_KEY_PATH`   | `<path_to_keyfile>` |  Path to the *.pem file for the keypair you are using 
 | `TFB_FORCE_SYNC`                 | `true,false`        | Tells vagrant to rsync your local git clone with the remote amazon instance. Note: This requires an initial multi-GB upload 
-| `TFB_AWS_REPO_SLUG`              | default is `TechEmpower/FrameworkBenchmarks`  | If `TFB_FORCE_SYNC` is false, this defines the repository that will be checked out from Github on the Amazon instances
-| `TFB_AWS_REPO_BRANCH`            | default is `master`  | If `TFB_FORCE_SYNC` is false, this defines the repository branch that will be checked out from Github on the Amazon instances
+| `TFB_REPO_SLUG`              | default is `TechEmpower/FrameworkBenchmarks`  | If `TFB_FORCE_SYNC` is false, this defines the repository that will be checked out from Github on the Amazon instances
+| `TFB_REPO_BRANCH`            | default is `master`  | If `TFB_FORCE_SYNC` is false, this defines the repository branch that will be checked out from Github on the Amazon instances
 | `TFB_AWS_EC2_TYPE`               | `m1.small,c1.xlarge,etc` | The instance type used. Requires [previous generation instance](http://aws.amazon.com/ec2/previous-generation/) names because vagrant-aws does not yet support the new names
 | <sup>2</sup>`TFB_AWS_SUBNET`     | `<subnet_id>` (e.g. `subnet-2737230f`) | Which subnet instances should be launched into. The python setup script can generate this value for you
 | <sup>2</sup>`TFB_AWS_SEC_GROUP`  | `<security_group_id>` (e.g. `sg-871240e2`) | The default security group instances use
