@@ -21,7 +21,7 @@ class SingleQueryHandler(JsonHandler):
 
     @gen.coroutine
     def get(self):
-        world = yield db.World.find_one(randint(1, 10000))
+        world = yield db.world.find_one(randint(1, 10000))
         world = {self.ID: int(world['_id']),
                  self.RANDOM_NUMBER: int(world[self.RANDOM_NUMBER])
                  }
@@ -43,7 +43,7 @@ class MultipleQueriesHandler(JsonHandler):
             elif queries > 500:
                 queries = 500
 
-        worlds = yield [db.World.find_one(randint(1, 10000)) for _ in xrange(queries)]
+        worlds = yield [db.world.find_one(randint(1, 10000)) for _ in xrange(queries)]
 
         worlds = [{self.ID: int(world['_id']),
                    self.RANDOM_NUMBER: int(world[self.RANDOM_NUMBER])}
@@ -68,10 +68,10 @@ class UpdateHandler(JsonHandler):
         worlds = []
         updates = []
         for _ in xrange(queries):
-            world = yield db.World.find_one(randint(1, 10000))
+            world = yield db.world.find_one(randint(1, 10000))
             new_value = randint(1, 10000)
 
-            updates.append(db.World.update_one({'_id': world['_id']}, {"$set": {self.RANDOM_NUMBER: new_value}}))
+            updates.append(db.world.update_one({'_id': world['_id']}, {"$set": {self.RANDOM_NUMBER: new_value}}))
             worlds.append({self.ID: world['_id'],
                    self.RANDOM_NUMBER: world[self.RANDOM_NUMBER]})
 
@@ -83,7 +83,7 @@ class FortuneHandler(HtmlHandler):
     @gen.coroutine
     def get(self):
         fortunes = []
-        cursor = db.Fortune.find()
+        cursor = db.fortune.find()
 
         while (yield cursor.fetch_next):
             fortunes.append(cursor.next_object())

@@ -22,7 +22,7 @@ options.define('backlog', default=8192, type=int, help="Server backlog")
 class SingleQueryHandler(JsonHandler):
 
     async def get(self):
-        world = await db.World.find_one(randint(1, 10000))
+        world = await db.dorld.find_one(randint(1, 10000))
         world = {self.ID: int(world['_id']),
                  self.RANDOM_NUMBER: int(world[self.RANDOM_NUMBER])
                  }
@@ -44,7 +44,7 @@ class MultipleQueriesHandler(JsonHandler):
                 queries = 500
 
         worlds = []
-        for future in [db.World.find_one(randint(1, 10000)) for _ in range(queries)]:
+        for future in [db.dorld.find_one(randint(1, 10000)) for _ in range(queries)]:
             world = await future
 
             worlds.append({self.ID: int(world['_id']),
@@ -66,12 +66,12 @@ class UpdateHandler(JsonHandler):
                 queries = 500
 
         worlds = []
-        futures = [db.World.find_one(randint(1, 10000)) for _ in range(queries)]
+        futures = [db.dorld.find_one(randint(1, 10000)) for _ in range(queries)]
 
         for world in futures:
             world = await world
             new_value = randint(1, 10000)
-            await db.World.update_one({'_id': world['_id']}, {"$set": {self.RANDOM_NUMBER: new_value}})
+            await db.dorld.update_one({'_id': world['_id']}, {"$set": {self.RANDOM_NUMBER: new_value}})
 
             worlds.append({self.ID: int(world['_id']),
                     self.RANDOM_NUMBER: world[self.RANDOM_NUMBER]})
@@ -82,7 +82,7 @@ class FortuneHandler(HtmlHandler):
     async def get(self):
         fortunes = []
 
-        async for fortune in db.Fortune.find():
+        async for fortune in db.fortune.find():
             fortunes.append(fortune)
         fortunes.append({self.ID: 0, 'message': 'Additional fortune added at request time.'})
 
