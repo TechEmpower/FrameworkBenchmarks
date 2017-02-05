@@ -2,7 +2,7 @@ var {Store, Cache} = require('ringo-sqlstore');
 
 // DO NOT TOUCH THE FOLLOWING LINE.
 // THIS VARIABLE IS REGEX REPLACED BY setup.py
-var dbHost = '172.16.98.98';
+var dbHost = 'TFB-database';
 
 // create and configure store
 var connectionPool = module.singleton("connectionPool", function() {
