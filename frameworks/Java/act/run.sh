@@ -1,6 +1,10 @@
 #!/bin/bash
 
-mvn clean package
-cd target/dist
-unzip *.zip
+if [ ! -f target/dist/start ]; then
+    mvn clean package
+    cd target/dist
+    unzip *.zip
+else
+    cd target/dist
+fi
 ./start

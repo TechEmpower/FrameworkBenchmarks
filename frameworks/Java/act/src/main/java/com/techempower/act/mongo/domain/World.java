@@ -29,5 +29,9 @@ public final class World implements IWorld {
         return randomNumber;
     }
 
+    public void setRandomNumber(Integer randomNumber) {
+        this.randomNumber = randomNumber;
+    }
+
     public static class Dao extends MorphiaDaoBase<Integer, World> {}
 }
