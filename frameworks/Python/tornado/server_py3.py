@@ -44,7 +44,7 @@ class MultipleQueriesHandler(JsonHandler):
                 queries = 500
 
         worlds = []
-        for future in [db.dorld.find_one(randint(1, 10000)) for _ in range(queries)]:
+        for future in [db.world.find_one(randint(1, 10000)) for _ in range(queries)]:
             world = await future
 
             worlds.append({self.ID: int(world['_id']),
