@@ -21,7 +21,7 @@ return {
 	
 	databaseConnection = {
 		rdbms       =   "mysql",
-		host        =   os.getenv("DBHOST"),
+		host        =   "TFB-database",
 		port        =   3306, 
 		database    =   "hello_world",
 		user        =   "benchmarkdbuser",
