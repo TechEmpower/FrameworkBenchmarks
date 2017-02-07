@@ -177,8 +177,11 @@ class FrameworkTestType:
                 connection = pymongo.MongoClient(host=os.environ.get("DBHOST"))
                 db = connection.hello_world
                 for world in db.world.find():
-                    if "id" in world and "randomNumber" in world:
-                        worlds_json[str(int(world["id"]))] = int(world["randomNumber"])
+                    if "randomNumber" in world:
+                        if "id" in world:
+                            worlds_json[str(int(world["id"]))] = int(world["randomNumber"])
+                        elif "_id" in world:
+                            worlds_json[str(int(world["_id"]))] = int(world["randomNumber"])
                 results_json = worlds_json
                 connection.close()
             except Exception as e:
