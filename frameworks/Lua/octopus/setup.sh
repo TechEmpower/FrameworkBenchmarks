@@ -11,8 +11,7 @@ cd ..
 
 # The following line is a hacky way to get this framework working.
 # zlib fix needs to happen within the framework owner's repo
-
-sed -i 's|zlib_version=1\.2\.10|zlib_version=1.2.11|g' octopus/bin/unix/server.sh
+sed -i 's|zlib_url=http://zlib.net/zlib-$zlib_version.tar.gz|https://github.com/madler/zlib/archive/v$zlib_version.tar.gz|g' octopus/bin/unix/server.sh
 
 cp -avr app octopus/extensions
 cp -vf config.lua octopus/extensions
