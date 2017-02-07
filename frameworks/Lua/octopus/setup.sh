@@ -13,7 +13,7 @@ cd ..
 # Ideally, TFB-database would be enough in config.lua to get this working and the
 # zlib fix needs to happen within the framework owner's repo
 DB_HOST=$(grep -Pio '.+(?= TFB-database)' /etc/hosts)
-sed -i s/TFB-database/${DB_HOST}/g config.lua
+sed -i 's/TFB-database/'${DB_HOST}'/g' config.lua
 sed -i 's|zlib_version=1\.2\.10|zlib_version=1.2.11|g' octopus/bin/unix/server.sh
 
 cp -avr app octopus/extensions
