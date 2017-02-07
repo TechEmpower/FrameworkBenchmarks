@@ -42,7 +42,7 @@ final class UpdatesMongoHandler implements HttpHandler {
       // we could technically avoid doing either of those things and still
       // produce the correct output and side effects.
       //
-      DBObject object = database.getCollection("World").findOne(key);
+      DBObject object = database.getCollection("world").findOne(key);
       
       @SuppressWarnings("unused")
       // Per test requirement the old value must be read
@@ -50,7 +50,7 @@ final class UpdatesMongoHandler implements HttpHandler {
       
       int newRandomNumber = Helper.randomWorld();
       object.put("randomNumber", newRandomNumber);
-      database.getCollection("World").update(key, object);
+      database.getCollection("world").update(key, object);
       worlds[i] = new World(id, newRandomNumber);
     }
     exchange.getResponseHeaders().put(

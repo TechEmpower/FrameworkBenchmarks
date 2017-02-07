@@ -25,7 +25,7 @@ var WorldSchema = new mongoose.Schema({
   }, {
     collection: 'world'
   }),
-  MWorld = conn.model('World', WorldSchema);
+  MWorld = conn.model('world', WorldSchema);
 
 var FortuneSchema = new mongoose.Schema({
     id          : Number,
@@ -33,7 +33,7 @@ var FortuneSchema = new mongoose.Schema({
   }, {
     collection: 'fortune'
   }),
-  MFortune = conn.model('Fortune', FortuneSchema);
+  MFortune = conn.model('fortune', FortuneSchema);
 
 var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
   host: 'TFB-database',
