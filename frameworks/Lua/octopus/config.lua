@@ -21,7 +21,7 @@ return {
 	
 	databaseConnection = {
 		rdbms       =   "mysql",
-		host        =   "TFB-database",
+		host        =   "DBHOSTNAME",
 		port        =   3306, 
 		database    =   "hello_world",
 		user        =   "benchmarkdbuser",
