@@ -6,41 +6,42 @@ TechEmpower Web Framework Benchmarks
 #include "world.h"
 
 static char buffer[128];
+static char* ptr = buffer+6;
 static UREDISClient_Base* rc;
 
 #ifndef AS_cpoll_cppsp_DO
-static UValue*	pvalue;
+static UValue* pvalue;
 #endif
 
 static void usp_fork_rdb()
 {
-	U_TRACE(5, "::usp_fork_rdb()")
+   U_TRACE(5, "::usp_fork_rdb()")
 
-	U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
+   U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
 
-	if (rc->connect() == false)
-		{
-		U_WARNING("usp_fork_rdb(): %V", rc->UClient_Base::getResponse().rep);
+   if (rc->connect() == false)
+      {
+      U_WARNING("usp_fork_rdb(): %V", rc->UClient_Base::getResponse().rep);
 
-		return;
-		}
+      return;
+      }
 
-	u__memcpy(buffer, "world:", U_CONSTANT_SIZE("world:"), __PRETTY_FUNCTION__);
+   U_MEMCPY(buffer, "world:", U_CONSTANT_SIZE("world:"));
 
 #ifndef AS_cpoll_cppsp_DO
-	U_NEW(UValue, pvalue, UValue(OBJECT_VALUE));
+   U_NEW(UValue, pvalue, UValue);
 #endif
 }
 
 #ifdef DEBUG
 static void usp_end_rdb()
 {
-	U_TRACE(5, "::usp_end_rdb()")
+   U_TRACE(5, "::usp_end_rdb()")
 
-	delete rc;
+   delete rc;
 
 #ifndef AS_cpoll_cppsp_DO
-	if (pvalue) delete pvalue;
+   if (pvalue) delete pvalue;
 #endif
 }
 #endif
@@ -51,13 +52,12 @@ Content-Type: application/json
 <!--#code
 uint32_t id;
 
-(void) rc->get(buffer, 6+u_num2str32(buffer+6, id = u_get_num_random(10000-1)));
+(void) rc->get(buffer, 6+u_num2str32(id = u_get_num_random(10000-1), ptr)-ptr);
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", id, rc->vitem[0].rep);
 #else
-UStringRep* rep = rc->vitem[0].rep;
-World world(id, u_strtoul(rep->data(), rep->end()));
+World world(id, rc->vitem[0].strtoul());
 USP_JSON_stringify(*pvalue, World, world);
 pvalue->clear();
 #endif

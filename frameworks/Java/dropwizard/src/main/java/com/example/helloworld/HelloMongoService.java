@@ -40,10 +40,10 @@ public class HelloMongoService extends Application<HelloMongoConfiguration> {
         final DB db = mongoClient.getDB(config.getMongo().getDb());
         final ObjectMapper mongoJackMapper = MongoJackModule.configure(Jackson.newObjectMapper());
         final JacksonDBCollection<World, Integer> worlds =
-                JacksonDBCollection.wrap(db.getCollection("World"), World.class, Integer.class, mongoJackMapper);
+                JacksonDBCollection.wrap(db.getCollection("world"), World.class, Integer.class, mongoJackMapper);
 
         final JacksonDBCollection<Fortune, Integer> fortunes =
-                JacksonDBCollection.wrap(db.getCollection("Fortune"), Fortune.class, Integer.class, mongoJackMapper);
+                JacksonDBCollection.wrap(db.getCollection("fortune"), Fortune.class, Integer.class, mongoJackMapper);
 
         environment.jersey().register(new WorldResource(new WorldMongoImpl(worlds))); // Test types 2, 3 & 5: Single database query, Multiple database queries & Database updates
         environment.jersey().register(new FortuneResource(new FortuneMongoImpl(fortunes))); // Test type 4: Fortunes

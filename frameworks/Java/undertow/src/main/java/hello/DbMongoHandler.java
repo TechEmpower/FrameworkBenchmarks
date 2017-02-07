@@ -41,7 +41,7 @@ final class DbMongoHandler implements HttpHandler {
     
     World[] worlds = new World[queries];
     for (int i = 0; i < queries; i++) {
-      DBObject object = database.getCollection("World").findOne(
+      DBObject object = database.getCollection("world").findOne(
           new BasicDBObject("_id", Helper.randomWorld()));
       worlds[i] = new World(
           //
