@@ -275,10 +275,10 @@ sz
     if successful_updates == 0:
         problems.append(
             ("fail", "No items were updated in the database.", url))
-    elif successful_updates <= (updates_expected * 0.95):
+    elif successful_updates <= (updates_expected * 0.90):
         problems.append(
             ("fail", "Only %s items were updated in the database out of roughly %s expected." % (successful_updates, updates_expected), url))
-    elif successful_updates <= (updates_expected * 0.99):
+    elif successful_updates <= (updates_expected * 0.95):
         problems.append(
             ("warn",
             "There may have been an error updating the database. Only %s items were updated in the database out of the roughly %s expected." % (
