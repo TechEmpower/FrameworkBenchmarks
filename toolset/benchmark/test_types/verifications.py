@@ -266,8 +266,9 @@ sz
     for i in range(1, 10001):
         try:
             entry_id = str(i)
-            if old_worlds[entry_id] != new_worlds[entry_id]:
-                successful_updates += 1
+            if entry_id in old_worlds and entry_id  in new_worlds:
+                if old_worlds[entry_id] != new_worlds[entry_id]:
+                    successful_updates += 1
         except Exception as e:
             print e
 
