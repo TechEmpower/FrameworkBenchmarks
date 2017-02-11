@@ -1,5 +1,6 @@
 package com.networknt.techempower.handler;
 
+import com.dslplatform.json.DslJson;
 import com.dslplatform.json.JsonWriter;
 import com.dslplatform.json.MapConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,8 +20,8 @@ import java.util.Objects;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 public class JsonGetHandler implements HttpHandler {
-    private final ObjectMapper objectMapper = Config.getInstance().getMapper();
-    private JsonWriter writer = new JsonWriter();
+    private DslJson<Object> dsl = new DslJson<>();
+    private JsonWriter writer = dsl.newWriter(25000);
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {

@@ -1,5 +1,6 @@
 package com.networknt.techempower.handler;
 
+import com.dslplatform.json.DslJson;
 import com.dslplatform.json.JsonWriter;
 import com.dslplatform.json.MapConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +16,8 @@ import java.util.Map;
  */
 public class JsonTest {
     private static ObjectMapper mapper = Config.getInstance().getMapper();
-    private static JsonWriter writer = new JsonWriter();
+    private DslJson<Object> dsl = new DslJson<>();
+    private JsonWriter writer = dsl.newWriter(25000);
 
     @Test
     public void testJson() throws Exception {
