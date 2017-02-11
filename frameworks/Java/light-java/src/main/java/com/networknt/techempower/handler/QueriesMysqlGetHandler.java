@@ -1,5 +1,6 @@
 package com.networknt.techempower.handler;
 
+import com.dslplatform.json.DslJson;
 import com.dslplatform.json.JsonWriter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.config.Config;
@@ -27,7 +28,8 @@ import javax.sql.DataSource;
 
 public class QueriesMysqlGetHandler implements HttpHandler {
     private final DataSource ds = MysqlStartupHookProvider.ds;
-    private JsonWriter writer = new JsonWriter();
+    private DslJson<Object> dsl = new DslJson<>();
+    private JsonWriter writer = dsl.newWriter(25000);
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
