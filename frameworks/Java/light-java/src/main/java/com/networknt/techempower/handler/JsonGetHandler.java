@@ -37,6 +37,6 @@ public class JsonGetHandler implements HttpHandler {
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         writer.reset();
         MapConverter.serialize(Collections.singletonMap("message", "Hello, World!"), writer);
-        exchange.getResponseSender().send(ByteBuffer.wrap(writer.getByteBuffer()));
+        exchange.getResponseSender().send(ByteBuffer.wrap(writer.toByteArray()));
     }
 }

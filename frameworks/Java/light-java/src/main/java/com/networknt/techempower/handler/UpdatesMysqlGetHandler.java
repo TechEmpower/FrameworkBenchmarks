@@ -71,6 +71,6 @@ public class UpdatesMysqlGetHandler implements HttpHandler {
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         writer.reset();
         writer.serialize(worlds, queries);
-        exchange.getResponseSender().send(ByteBuffer.wrap(writer.getByteBuffer()));
+        exchange.getResponseSender().send(ByteBuffer.wrap(writer.toByteArray()));
     }
 }
