@@ -15,7 +15,6 @@ public class PostgresStartupHookProvider implements StartupHookProvider {
     @Override
     public void onStartup() {
         initDataSource();
-        System.out.println("PostgresStartupHookProvider ds = " + ds);
     }
 
     static void initDataSource() {

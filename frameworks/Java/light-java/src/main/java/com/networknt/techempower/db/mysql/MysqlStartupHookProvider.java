@@ -15,8 +15,6 @@ public class MysqlStartupHookProvider implements StartupHookProvider {
     @Override
     public void onStartup() {
         initDataSource();
-        System.out.println("MysqlStartupHookProvider ds = " + ds);
-
     }
 
     static void initDataSource() {
