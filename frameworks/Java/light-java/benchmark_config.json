@@ -65,28 +65,6 @@
       "display_name": "light-java",
       "notes": "",
       "versus": ""
-    },
-    "mongodb" : {
-      "setup_file": "setup_mongodb",
-      "db_url": "/db/mongodb",
-      "query_url": "/queries/mongodb?queries=",
-      "fortune_url": "/fortunes/mongodb",
-      "update_url": "/updates/mongodb?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "MongoDB",
-      "framework": "None",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "Light-Java",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "light-java",
-      "notes": "",
-      "versus": ""
     }
   }]
 }

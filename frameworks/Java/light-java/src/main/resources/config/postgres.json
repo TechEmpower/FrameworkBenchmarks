@@ -1,0 +1,7 @@
+{
+  "description": "postgresql connection",
+  "jdbcUrl": "jdbc:postgresql://localhost:5432/hello_world",
+  "username": "postgres",
+  "password": "my-secret-pw",
+  "maximumPoolSize": 100
+}
