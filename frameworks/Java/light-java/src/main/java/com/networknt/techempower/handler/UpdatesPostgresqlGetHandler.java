@@ -49,11 +49,12 @@ public class UpdatesPostgresqlGetHandler implements HttpHandler {
                                     ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
 
                                 query.setInt(1, Helper.randomWorld());
-                                ResultSet resultSet = query.executeQuery();
-                                resultSet.next();
-                                world = new World(
-                                        resultSet.getInt("id"),
-                                        resultSet.getInt("randomNumber"));
+                                try (ResultSet resultSet = query.executeQuery()) {
+                                    resultSet.next();
+                                    world = new World(
+                                            resultSet.getInt("id"),
+                                            resultSet.getInt("randomNumber"));
+                                }
                             }
                             world.randomNumber = Helper.randomWorld();
                             update.setInt(1, world.randomNumber);

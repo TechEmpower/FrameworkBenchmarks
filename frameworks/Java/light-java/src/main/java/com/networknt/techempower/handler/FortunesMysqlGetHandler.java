@@ -37,7 +37,7 @@ public class FortunesMysqlGetHandler implements HttpHandler {
                      ResultSet.TYPE_FORWARD_ONLY,
                      ResultSet.CONCUR_READ_ONLY);
              ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
+                while (resultSet.next()) {
                 fortunes.add(new Fortune(
                         resultSet.getInt("id"),
                         resultSet.getString("message")));

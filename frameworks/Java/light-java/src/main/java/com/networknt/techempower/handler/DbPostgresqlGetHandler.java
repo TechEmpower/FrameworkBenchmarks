@@ -35,9 +35,10 @@ public class DbPostgresqlGetHandler implements HttpHandler {
                     "SELECT * FROM world WHERE id = ?",
                     ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
                 statement.setInt(1, Helper.randomWorld());
-                ResultSet resultSet = statement.executeQuery();
-                resultSet.next();
-                exchange.getResponseSender().send("{\"id\":" + resultSet.getInt("id") + ",\"randomNumber\":" + resultSet.getInt("randomNumber") + "}");
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    exchange.getResponseSender().send("{\"id\":" + resultSet.getInt("id") + ",\"randomNumber\":" + resultSet.getInt("randomNumber") + "}");
+                }
             }
         }
 

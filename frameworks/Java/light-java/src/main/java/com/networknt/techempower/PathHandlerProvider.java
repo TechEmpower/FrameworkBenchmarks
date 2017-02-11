@@ -12,7 +12,6 @@ public class PathHandlerProvider implements HandlerProvider {
     @Override
     public HttpHandler getHandler() {
         return Handlers.routing()
-            .add(Methods.GET, "/cache", new CacheGetHandler())
             .add(Methods.GET, "/db/mysql", new DbMysqlGetHandler())
             .add(Methods.GET, "/db/postgresql", new DbPostgresqlGetHandler())
             .add(Methods.GET, "/fortunes/mysql", new FortunesMysqlGetHandler())

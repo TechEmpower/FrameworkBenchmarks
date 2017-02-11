@@ -52,11 +52,12 @@ public class QueriesPostgresqlGetHandler implements HttpHandler {
                                 ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
 
                             statement.setInt(1, Helper.randomWorld());
-                            ResultSet resultSet = statement.executeQuery();
-                            resultSet.next();
-                            return new World(
-                                    resultSet.getInt("id"),
-                                    resultSet.getInt("randomNumber"));
+                            try (ResultSet resultSet = statement.executeQuery()) {
+                                resultSet.next();
+                                return new World(
+                                        resultSet.getInt("id"),
+                                        resultSet.getInt("randomNumber"));
+                            }
                         }
                     }
                 }));
