@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Fortune")
+@Table(name = "fortune")
 public class Fortune implements Comparable<Fortune> {
 
     @Id

@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/hhvm.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/hhvm.installed
-  return 0; }
+fw_installed hhvm && return 0
 
 # TODO: Someday move away from apt-get
 fw_get http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -

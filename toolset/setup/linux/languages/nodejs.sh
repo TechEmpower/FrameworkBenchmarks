@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/node.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/node.installed
-  return 0; }
+fw_installed node && return 0
 
 VERSION="6.3.0"
 

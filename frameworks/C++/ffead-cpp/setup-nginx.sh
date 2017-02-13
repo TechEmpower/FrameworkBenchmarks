@@ -1,8 +1,8 @@
 #!/bin/bash
 
-fw_depends ffead-cpp-nginx
+fw_depends mongodb ffead-cpp-nginx
 
-export FFEAD_CPP_PATH=$TROOT/ffead-cpp-2.0
+export FFEAD_CPP_PATH=$IROOT/ffead-cpp-2.0
 export LD_LIBRARY_PATH=$IROOT:$FFEAD_CPP_PATH/lib:$LD_LIBRARY_PATH
 echo $FFEAD_CPP_PATH
 echo $LD_LIBRARY_PATH

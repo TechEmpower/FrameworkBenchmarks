@@ -46,40 +46,11 @@ GH_BRANCH=${TFB_AWS_REPO_BRANCH:-master}
 # A shell provisioner is called multiple times
 if [ ! -e "~/.firstboot" ]; then
 
-  # Setup some nice TFB defaults
-  if [ "$ROLE" == "all" ]; then
-    echo "export TFB_CLIENT_IDENTITY_FILE=$HOME/.ssh/id_rsa" >> ~/.bash_profile
-    echo "export TFB_DATABASE_IDENTITY_FILE=$HOME/.ssh/id_rsa" >> ~/.bash_profile
-  else
-    echo "export TFB_CLIENT_IDENTITY_FILE=$HOME/.ssh/client" >> ~/.bash_profile
-    echo "export TFB_DATABASE_IDENTITY_FILE=$HOME/.ssh/database" >> ~/.bash_profile
-  fi
-  echo "export TFB_SERVER_HOST=$SERVER_IP" >> ~/.bash_profile
-  echo "export TFB_CLIENT_HOST=$CLIENT_IP" >> ~/.bash_profile
-  echo "export TFB_DATABASE_HOST=$DATABA_IP" >> ~/.bash_profile
-  echo "export TFB_CLIENT_USER=$USER" >> ~/.bash_profile
-  echo "export TFB_DATABASE_USER=$USER" >> ~/.bash_profile
-  echo "export TFB_RUNNER_USER=testrunner" >> ~/.bash_profile
-  echo "export FWROOT=$HOME/FrameworkBenchmarks" >> ~/.bash_profile 
-  source ~/.bash_profile
-
-  # Ensure their host-local benchmark.cfg is not picked up on the remote host
-  if [ -e "~/FrameworkBenchmarks/benchmark.cfg" ]; then
-    echo "You have a benchmark.cfg file that will interfere with Vagrant, moving to benchmark.cfg.bak"
-    mv ~/FrameworkBenchmarks/benchmark.cfg ~/FrameworkBenchmarks/benchmark.cfg.bak
-  fi
-
-  # Setup hosts 
+  # Setup hosts
   echo "Setting up convenience hosts entries"
   echo $DATABA_IP TFB-database | sudo tee --append /etc/hosts
   echo $CLIENT_IP TFB-client   | sudo tee --append /etc/hosts
   echo $SERVER_IP TFB-server   | sudo tee --append /etc/hosts
-
-  # Add user to run tests
-  sudo adduser --disabled-password --gecos "" testrunner
-  # WARN: testrunner will NOT have sudo access by round 11
-  #       please begin migrating scripts to not rely on sudo.
-  sudo bash -c "echo 'testrunner ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-tfb-testrunner"
 
   # Update hostname to reflect our current role
   if [ "$ROLE" != "all" ]; then
@@ -88,7 +59,7 @@ if [ ! -e "~/.firstboot" ]; then
     myhost=TFB-${ROLE}
     echo $myhost | sudo tee --append /etc/hostname
     sudo hostname $myhost
-    echo Updated /etc/hosts file to be: 
+    echo Updated /etc/hosts file to be:
     cat /etc/hosts
   fi
 
@@ -109,45 +80,36 @@ if [ ! -e "~/.firstboot" ]; then
     #echo "Removing your current results folder to avoid interference"
     #rm -rf $FWROOT/installs $FWROOT/results
 
-    # vboxfs does not support chown or chmod, which we need. 
+    # vboxfs does not support chown or chmod, which we need.
     # We therefore bind-mount a normal linux directory so we can
-    # use these operations. This enables us to 
-    # use `chown -R testrunner:testrunner $FWROOT/installs` later
+    # use these operations.
     #echo "Mounting over your installs folder"
     #mkdir -p /tmp/TFB_installs
     #mkdir -p /FrameworkBenchmarks/installs
     #sudo mount -o bind /tmp/TFB_installs $FWROOT/installs
   #else
     # If there is no synced folder, clone the project
+    export FWROOT="/home/vagrant/FrameworkBenchmarks"
+    echo `export FWROOT="/home/vagrant/FrameworkBenchmarks"` >> ~/.bashrc
     echo "Cloning project from $GH_REPO $GH_BRANCH"
     git config --global core.autocrlf input
     git clone -b ${GH_BRANCH} https://github.com/${GH_REPO}.git $FWROOT
+    cd ~/FrameworkBenchmarks
+    # Update the benchmark.cfg for vagrant
+    cp ~/FrameworkBenchmarks/benchmark.cfg.example ~/FrameworkBenchmarks/benchmark.cfg
+    sed -i s/techempower/vagrant/g ~/FrameworkBenchmarks/benchmark.cfg
     source ~/FrameworkBenchmarks/toolset/setup/linux/prerequisites.sh
   #fi
 
-  # Everyone gets SSH access to localhost
-  echo "Setting up SSH access to localhost"
-  ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa
-  cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-  sudo -u testrunner mkdir -p /home/testrunner/.ssh
-  sudo -u testrunner ssh-keygen -t rsa -N '' -f /home/testrunner/.ssh/id_rsa
-  sudo -u testrunner bash -c "cat /home/testrunner/.ssh/id_rsa.pub >> /home/testrunner/.ssh/authorized_keys"
-  sudo -u testrunner bash -c "cat /home/vagrant/.ssh/authorized_keys >> /home/testrunner/.ssh/authorized_keys"
-  chmod 600 ~/.ssh/authorized_keys
-  sudo -u testrunner chmod 600 /home/testrunner/.ssh/authorized_keys
-  
-  export RUNNER=testrunner
-  export ME=$(id -u -n)
-  sudo chown $RUNNER:$RUNNER /home/$RUNNER
-  sudo sed -i 's|:'"$ME"'|:'"$ME"','"$RUNNER"'|g' /etc/group
-  sudo sed -i 's|'"$ME"':x:\(.*\):|'"$ME"':x:\1:'"$RUNNER"'|g' /etc/group
-  sudo sed -i 's|'"$RUNNER"':x:\(.*\):|'"$RUNNER"':x:\1:'"$ME"'|g' /etc/group
-  echo "$RUNNER ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
-  sudo sed -i 's|/home/'"$RUNNER"':.*|/home/'"$RUNNER"':/bin/bash|g' /etc/passwd
+ # Everyone gets SSH access to localhost
+ echo "Setting up SSH access to localhost"
+ ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa
+ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+ chmod 600 ~/.ssh/authorized_keys
 
   # Enable remote SSH access if we are running production environment
   # Note : this is always copied from the local working copy using a
-  #        file provisioner. While they exist in the git clone we just 
+  #        file provisioner. While they exist in the git clone we just
   #        created (so we could use those), we want to let the user
   #        have the option of replacing the keys in their working copy
   #        and ensuring that only they can ssh into the machines
@@ -165,11 +127,6 @@ if [ ! -e "~/.firstboot" ]; then
     # Ensure keys have proper permissions
     chmod 600 ~/.ssh/client ~/.ssh/database
   fi
-
-  # Setup 
-  echo "Installing $ROLE software"
-  cd $FWROOT
-  toolset/run-tests.py --verbose --install $ROLE --install-only --test ''
 
   # Setup a nice welcome message for our guest
   echo "Setting up welcome message"

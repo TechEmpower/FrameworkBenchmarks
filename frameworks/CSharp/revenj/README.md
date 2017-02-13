@@ -26,6 +26,6 @@ Data structures are defined in a DSL schema
 The tests were run with:
 
  * [Mono 4.2](http://www.mono-project.com/)
- * [.NET 4.0](https://www.microsoft.com/net)
+ * [.NET 4.5](https://www.microsoft.com/net)
  * [Postgres 9.3](http://www.postgresql.org/)
- * [Revenj.NET 1.3.1](http://github.com/ngs-doo/revenj)
+ * [Revenj.NET 1.4.1](http://github.com/ngs-doo/revenj)

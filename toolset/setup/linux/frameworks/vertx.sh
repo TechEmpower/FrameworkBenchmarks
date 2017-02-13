@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/vertx.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/vertx.installed
-  return 0; }
+fw_installed vertx && return 0
 
 VERSION="2.1.5"
 FREEMAKER_VERSION="2.3.22"

@@ -2,12 +2,12 @@
 
 #include <Cutelyst/Plugins/Utils/Sql>
 
-#include <QtSql/QSqlQuery>
+#include <QSqlQuery>
 
-#include <QtCore/QThread>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonObject>
-#include <QtCore/QJsonArray>
+#include <QThread>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 MultipleDatabaseQueriesTest::MultipleDatabaseQueriesTest(QObject *parent) : Controller(parent)
 {
@@ -16,17 +16,17 @@ MultipleDatabaseQueriesTest::MultipleDatabaseQueriesTest(QObject *parent) : Cont
 
 void MultipleDatabaseQueriesTest::query_postgres(Context *c)
 {
-    QSqlQuery query = CPreparedSqlQueryForDatabase(
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QLatin1String("SELECT id, randomNumber FROM world WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("postgres-") + QThread::currentThread()->objectName()));
+                QStringLiteral("postgres"));
     processQuery(c, query);
 }
 
 void MultipleDatabaseQueriesTest::query_mysql(Context *c)
 {
-    QSqlQuery query = CPreparedSqlQueryForDatabase(
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QLatin1String("SELECT id, randomNumber FROM world WHERE id = :id"),
-                QSqlDatabase::database(QLatin1String("mysql-") + QThread::currentThread()->objectName()));
+                QStringLiteral("mysql"));
     processQuery(c, query);
 }
 

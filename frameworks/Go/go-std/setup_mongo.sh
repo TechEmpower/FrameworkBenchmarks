@@ -2,7 +2,7 @@
 
 sed -i 's|connectionString = "localhost"|connectionString = "'"${DBHOST}"'"|g' hello_mongo.go
 
-fw_depends go
+fw_depends mongodb go libsasl2-dev 
 
 go get gopkg.in/mgo.v2
 

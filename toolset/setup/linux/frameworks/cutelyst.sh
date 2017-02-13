@@ -1,13 +1,10 @@
 #!/bin/bash
 
-CUTELYST_VER=r1.0.0
-RETCODE=$(fw_exists ${IROOT}/cutelyst.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/cutelyst.installed
-  return 0; }
+fw_installed cutelyst && return 0
 
+CUTELYST_VER=r1.3.0
 QT_VERSION_MM=56
-QT_VERSION_FULL=561-trusty
+QT_VERSION_FULL=562-trusty
 
 sudo apt-add-repository --yes ppa:george-edison55/cmake-3.x
 sudo apt-add-repository --yes ppa:beineri/opt-qt$QT_VERSION_FULL
@@ -28,6 +25,5 @@ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$IROOT
 
 make -j $MAX_THREADS && sudo make install
 
-echo "" > $IROOT/cutelyst.installed
+echo "QT_VERSION_MM=${QT_VERSION_MM}" > $IROOT/cutelyst.installed
 
-source $IROOT/cutelyst.installed

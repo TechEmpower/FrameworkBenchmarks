@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/composer.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/composer.installed
-  return 0; }
+fw_installed composer && return 0
 
 COMPOSER_HOME=$IROOT/php-composer
 

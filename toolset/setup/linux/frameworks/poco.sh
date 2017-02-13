@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/poco.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/poco.installed
-  return 0; }
+fw_installed poco && return 0
 
 VERSION=1.6.1
 POCO_HOME=$IROOT/poco_$VERSION

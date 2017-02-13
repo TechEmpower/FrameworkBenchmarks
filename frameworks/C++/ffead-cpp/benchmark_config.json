@@ -7,16 +7,16 @@
       "plaintext_url": "/te-benchmark/plaintext",
       "db_url": "/te-benchmark/db",
       "query_url": "/te-benchmark/queries?queries=",
-      "fortune_url": "/te-benchmark/fortunes",
       "update_url": "/te-benchmark/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "mongodb",
+      "classification": "micro",
+      "database": "MongoDB",
       "framework": "ffead-cpp",
       "language": "C++",
+      "flavor": "None",
       "orm": "Full",
-      "platform": "ffead-cpp",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
@@ -76,7 +76,6 @@
       "plaintext_url": "/te-benchmark/plaintext",
       "db_url": "/te-benchmark/db",
       "query_url": "/te-benchmark/queries?queries=",
-      "fortune_url": "/te-benchmark/fortunes",
       "update_url": "/te-benchmark/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
@@ -145,7 +144,6 @@
       "plaintext_url": "/te-benchmark/plaintext",
       "db_url": "/te-benchmark/db",
       "query_url": "/te-benchmark/queries?queries=",
-      "fortune_url": "/te-benchmark/fortunes",
       "update_url": "/te-benchmark/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
@@ -206,7 +204,7 @@
       "database_os": "Linux",
       "display_name": "ffead-cpp-nginx-postgresql",
       "notes": "",
-      "versus": ""
+      "versus": "ffead-cpp"
     }
   }]
 }

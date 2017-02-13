@@ -1,11 +1,8 @@
 #!/bin/bash
 
-RUST_VERSION="1.9.0"
+RUST_VERSION="1.13.0"
 
-RETCODE=$(fw_exists $IROOT/rust.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/rust.installed;
-  return 0; }
+fw_installed rust && return 0
 
 fw_get -O https://static.rust-lang.org/dist/rust-${RUST_VERSION}-x86_64-unknown-linux-gnu.tar.gz
 fw_untar rust-${RUST_VERSION}-x86_64-unknown-linux-gnu.tar.gz

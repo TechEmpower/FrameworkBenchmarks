@@ -11,18 +11,19 @@
             "plaintext_url": "/plaintext",
             "port": 8080,
             "approach": "Realistic",
-            "classification": "Micro",
+            "classification": "Fullstack",
             "database": "Postgres",
             "framework": "Phoenix",
-            "language": "elixir",
+            "language": "Elixir",
+            "flavor": "None",
             "orm": "full",
-            "platform": "Erlang/OTP",
-            "webserver": "cowboy",
+            "platform": "Cowboy",
+            "webserver": "None",
             "os": "Linux",
             "database_os": "Linux",
             "display_name": "Phoenix",
             "notes": "",
-            "versus": ""
+            "versus": "Cowboy"
         }
     }]
 }

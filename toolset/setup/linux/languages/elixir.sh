@@ -2,15 +2,12 @@
 
 fw_depends erlang
 
-RETCODE=$(fw_exists ${IROOT}/elixir.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/elixir.installed
-  return 0; }
+fw_installed elixir && return 0
 
 ELIXIR_HOME=$IROOT/elixir
-VERSION="1.3.2-1"
+VERSION="1.3.3-1"
 RELEASE="trusty"
-ARCH="amd64"
+ARCH="all"
 
 fw_get -O http://packages.erlang-solutions.com/debian/pool/elixir_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb
 dpkg -x elixir_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb $IROOT/elixir

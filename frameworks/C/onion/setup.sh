@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends onion
+fw_depends mysql onion
 
 sed -i 's|127.0.0.1|'${DBHOST}'|g' hello.c
 

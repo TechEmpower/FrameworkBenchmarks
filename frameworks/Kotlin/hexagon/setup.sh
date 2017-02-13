@@ -1,6 +1,7 @@
 #!/bin/bash
 
-fw_depends java
+fw_depends mongodb java
 
-./gradlew
-nohup build/hexagon/bin/hexagon &
+gradle/wrapper
+
+nohup build/install/hexagon/bin/hexagon &

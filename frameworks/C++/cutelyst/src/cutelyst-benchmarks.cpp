@@ -1,6 +1,6 @@
 #include "cutelyst-benchmarks.h"
 
-#include <Cutelyst/Plugins/StaticSimple/staticsimple.h>
+#include <Cutelyst/Plugins/Utils/Sql>
 
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
@@ -23,6 +23,7 @@ static QMutex mutex;
 
 cutelyst_benchmarks::cutelyst_benchmarks(QObject *parent) : Application(parent)
 {
+    qsrand(QDateTime::currentMSecsSinceEpoch());
 }
 
 cutelyst_benchmarks::~cutelyst_benchmarks()
@@ -51,27 +52,32 @@ bool cutelyst_benchmarks::init()
 
 bool cutelyst_benchmarks::postFork()
 {
-    QMutexLocker locker(&mutex);
 
-    QSqlDatabase db;
-    db = QSqlDatabase::addDatabase(QLatin1String("QPSQL"), QLatin1String("postgres-") + QThread::currentThread()->objectName());
-    db.setDatabaseName(QLatin1String("hello_world"));
-    db.setUserName(QLatin1String("benchmarkdbuser"));
-    db.setPassword(QLatin1String("benchmarkdbpass"));
-    db.setHostName(config(QLatin1String("DatabaseHostName")).toString());
-    if (!db.open()) {
-        qDebug() << "Error opening PostgreSQL db:" << db << db.connectionName() << db.lastError().databaseText();
-        return false;
-    }
+    const auto driver = config(QLatin1String("Driver")).toString();
+    if (driver == QLatin1String("QPSQL")) {
+        QSqlDatabase db;
+        db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(QStringLiteral("postgres")));
+        db.setDatabaseName(QLatin1String("hello_world"));
+        db.setUserName(QLatin1String("benchmarkdbuser"));
+        db.setPassword(QLatin1String("benchmarkdbpass"));
+        db.setHostName(config(QLatin1String("DatabaseHostName")).toString());
+        if (!db.open()) {
+            qDebug() << "Error opening PostgreSQL db:" << db << db.connectionName() << db.lastError().databaseText();
+            return false;
+        }
+    } else if (driver == QLatin1String("QMYSQL")) {
+        QMutexLocker locker(&mutex); // MySQL driver is not thread-safe
 
-    db = QSqlDatabase::addDatabase(QLatin1String("QMYSQL"), QLatin1String("mysql-") + QThread::currentThread()->objectName());
-    db.setDatabaseName(QLatin1String("hello_world"));
-    db.setUserName(QLatin1String("benchmarkdbuser"));
-    db.setPassword(QLatin1String("benchmarkdbpass"));
-    db.setHostName(config(QLatin1String("DatabaseHostName")).toString());
-    if (!db.open()) {
-        qDebug() << "Error opening MySQL db:" << db << db.connectionName() << db.lastError().databaseText();
-        return false;
+        QSqlDatabase db;
+        db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(QStringLiteral("mysql")));
+        db.setDatabaseName(QLatin1String("hello_world"));
+        db.setUserName(QLatin1String("benchmarkdbuser"));
+        db.setPassword(QLatin1String("benchmarkdbpass"));
+        db.setHostName(config(QLatin1String("DatabaseHostName")).toString());
+        if (!db.open()) {
+            qDebug() << "Error opening MySQL db:" << db << db.connectionName() << db.lastError().databaseText();
+            return false;
+        }
     }
 
     qDebug() << "Connections" << QCoreApplication::applicationPid() << QThread::currentThread() << QSqlDatabase::connectionNames();

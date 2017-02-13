@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends python2 apache
+fw_depends mysql python2 apache
 
 pip install --install-option="--prefix=${PY2_ROOT}" -r $TROOT/webware/requirements.txt
 

@@ -2,7 +2,7 @@
 
 sed -i 's|host=".*"|host="'"${DBHOST}"'"|g' bench/cfg/db.cfg
 
-fw_depends stack
+fw_depends mysql stack
 
 cd bench
 

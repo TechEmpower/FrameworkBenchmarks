@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists "${IROOT}/mustache-c.installed")
-[ ! "$RETCODE" == 0 ] || { \
-  source "${IROOT}/mustache-c.installed"
-  return 0; }
+fw_installed mustache-c && return 0
 
 MUSTACHE_C_HOME="${IROOT}/mustache-c"
 BUILD_DIR="${MUSTACHE_C_HOME}_build"

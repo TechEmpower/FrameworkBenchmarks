@@ -10,14 +10,31 @@ buildscript {
     }
 }
 
-apply from: "$gradleScripts/hexagon_service.gradle"
+apply from: "$gradleScripts/kotlin.gradle"
+apply from: "$gradleScripts/service.gradle"
+apply plugin: 'war'
 
 mainClassName = "co.there4.hexagon.BenchmarkKt"
 applicationDefaultJvmArgs = [
     '-Xms64M',
-    '-Xmx64M',
-    '-server',
+    '-Xmx2G',
     '-XX:+UseNUMA',
     '-XX:+UseParallelGC',
     '-XX:+AggressiveOpts'
 ]
+
+war {
+    archiveName = "ROOT.war"
+}
+
+install.dependsOn 'war'
+
+dependencies {
+    compile ("co.there4:hexagon:$hexagonVersion")
+    compile ("com.mitchellbosecke:pebble:$pebbleVersion")
+
+    // providedCompile excludes the dependency only in the WAR, not in the distribution
+    providedCompile ("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
+
+    testCompile ("co.there4:hexagon:$hexagonVersion:test")
+}

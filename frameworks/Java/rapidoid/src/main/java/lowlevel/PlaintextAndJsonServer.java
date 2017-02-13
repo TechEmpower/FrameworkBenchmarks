@@ -2,12 +2,11 @@ package lowlevel;
 
 import common.Message;
 import org.rapidoid.buffer.Buf;
-import org.rapidoid.data.BufRange;
-import org.rapidoid.data.BufRanges;
 import org.rapidoid.http.AbstractHttpServer;
 import org.rapidoid.http.HttpStatus;
 import org.rapidoid.http.MediaType;
 import org.rapidoid.net.abstracts.Channel;
+import org.rapidoid.net.impl.RapidoidHelper;
 
 public class PlaintextAndJsonServer extends AbstractHttpServer {
 
@@ -22,15 +21,14 @@ public class PlaintextAndJsonServer extends AbstractHttpServer {
 	}
 
 	@Override
-	protected HttpStatus handle(Channel ctx, Buf buf, BufRange verb, BufRange uri, BufRange path, BufRange query,
-	                            BufRange protocol, BufRanges headers, boolean isGet, boolean isKeepAlive, BufRange body) {
+	protected HttpStatus handle(Channel ctx, Buf buf, RapidoidHelper data) {
 
-		if (isGet) {
-			if (matches(buf, path, URI_PLAINTEXT)) {
-				return ok(ctx, isKeepAlive, HELLO_WORLD, MediaType.TEXT_PLAIN);
+		if (data.isGet.value) {
+			if (matches(buf, data.path, URI_PLAINTEXT)) {
+				return ok(ctx, data.isKeepAlive.value, HELLO_WORLD, MediaType.TEXT_PLAIN);
 
-			} else if (matches(buf, path, URI_JSON)) {
-				return serializeToJson(ctx, isKeepAlive, new Message("Hello, World!"));
+			} else if (matches(buf, data.path, URI_JSON)) {
+				return serializeToJson(ctx, data.isKeepAlive.value, new Message("Hello, World!"));
 			}
 		}
 

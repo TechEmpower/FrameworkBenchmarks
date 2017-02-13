@@ -1,5 +1,8 @@
 # Dart Start Framework Benchmarking Test
 
+## Note:
+The PostgreSQL tests are no longer working. The implementation is still in the framework folder but has been removed from the `benchmark_config.json` file.
+
 This test adds [Start](https://github.com/lvivski/start), a Sinatra inspired web development framework for Dart, to the [benchmarking test suite](../). The test is based on the Dart Benchmarking Test.
 
 ## Versions

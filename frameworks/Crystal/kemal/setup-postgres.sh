@@ -1,9 +1,9 @@
 #!/bin/bash
 
-fw_depends crystal
+fw_depends postgresql crystal
 
-crystal deps install
+shards install
 
 crystal build --release server-postgres.cr
 
-KEMAL_ENV=production ./server-postgres &
+./server-postgres &

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-fw_depends ffead-cpp
+fw_depends mysql ffead-cpp
 
-export FFEAD_CPP_PATH=$TROOT/ffead-cpp-2.0
+export FFEAD_CPP_PATH=$IROOT/ffead-cpp-2.0
 export LD_LIBRARY_PATH=$IROOT:$FFEAD_CPP_PATH/lib:$LD_LIBRARY_PATH
 echo $FFEAD_CPP_PATH
 echo $LD_LIBRARY_PATH
@@ -12,5 +12,7 @@ cp $FFEAD_CPP_PATH/web/te-benchmark/config/sdormmysql.xml $FFEAD_CPP_PATH/web/te
 rm -rf $FFEAD_CPP_PATH/lib
 cp -Rf $FFEAD_CPP_PATH/libsql $FFEAD_CPP_PATH/lib
 cp $FFEAD_CPP_PATH/web/te-benchmark/sql-src/TeBkWorldsql.h $FFEAD_CPP_PATH/web/te-benchmark/include/TeBkWorld.h
-$TROOT/ffead-cpp-2.0/CHS $FFEAD_CPP_PATH > ffead.log 2>&1
+export ODBCINI=$IROOT/odbc.ini
+export ODBCSYSINI=$IROOT
+$IROOT/ffead-cpp-2.0/CHS $FFEAD_CPP_PATH > ffead.log 2>&1
 

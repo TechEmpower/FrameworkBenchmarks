@@ -1,12 +1,9 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/py3.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/py3.installed
-  return 0; }
+fw_installed py3 && return 0
   
 PY3_ROOT=$IROOT/py3
-PY3_VERSION=3.5.1
+PY3_VERSION=3.6.0
 
 fw_get -O http://www.python.org/ftp/python/${PY3_VERSION}/Python-${PY3_VERSION}.tar.xz
 fw_untar Python-${PY3_VERSION}.tar.xz

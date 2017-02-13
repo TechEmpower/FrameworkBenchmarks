@@ -1,8 +1,8 @@
 {
-  "framework": "php-phalcon",
+  "framework": "phalcon",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -14,9 +14,10 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "phalcon",
-      "language": "PHP7",
-      "orm": "Full",
-      "platform": "PHP7-FPM",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "raw",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
@@ -25,7 +26,7 @@
       "versus": "php7"
     },
     "mongodb": {
-      "setup_file": "setup",
+      "setup_file": "setup-mongodb",
       "db_url": "/mongodb/db",
       "query_url": "/mongodb/queries?queries=",
       "fortune_url": "/mongodb/fortunes",
@@ -34,9 +35,10 @@
       "classification": "Fullstack",
       "database": "MongoDB",
       "framework": "phalcon",
-      "language": "PHP7",
-      "orm": "Full",
-      "platform": "PHP7-FPM",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "raw",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",

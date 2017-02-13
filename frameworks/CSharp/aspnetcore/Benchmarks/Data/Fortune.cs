@@ -3,13 +3,17 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Benchmarks.Data
 {
+    [Table("fortune")]
     public class Fortune : IComparable<Fortune>, IComparable
     {
+        [Column("id")]
         public int Id { get; set; }
 
+        [Column("message")]
         [StringLength(2048)]
         public string Message { get; set; }
         

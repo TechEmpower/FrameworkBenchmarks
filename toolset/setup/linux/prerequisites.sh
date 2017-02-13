@@ -3,25 +3,6 @@
 set -x
 export DEBIAN_FRONTEND=noninteractive
 
-source $FWROOT/toolset/setup/linux/bash_functions.sh
-
-RETCODE=$(fw_exists fwbm_prereqs_installed)
-[ ! "$RETCODE" == 0 ] || { \
-  echo "Prerequisites installed!"; 
-  return 0; }
-
-
-# Use a more recent version of Mongo shell
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
-
-# Add postgresql-server-dev-9.3 libs in "precise" version of Ubuntu
-if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
-  echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
-  curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-  sudo apt-get update
-fi
-
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
 sudo apt-get -yq update
@@ -35,8 +16,6 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libpcre3 libpcre3-dev libpcrecpp0 `# Regular expression support` \
   libssl-dev libcurl4-openssl-dev   `# SSL libraries` \
   libmysqlclient-dev \
-  mongodb-org-shell \
-  libsqlite3-dev sqlite3            `# Database libraries` \
   zlib1g-dev python-software-properties \
   libreadline6-dev \
   libbz2-dev \
@@ -47,14 +26,7 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev \
   libjson0-dev libmcrypt-dev libicu-dev gettext \
   libpq-dev mlton \
-  libjemalloc-dev libluajit-5.1-dev `# Needed by lwan at least` \
-  libhiredis-dev                    `# Redis client - Needed by ngx_mruby at least` \
   cloc dstat                        `# Collect resource usage statistics` \
-  libsasl2-dev                      `# Needed by mgo for go-mongodb test` \
-  llvm-dev                          `# Required for correct Ruby installation` \
-  libboost-dev                      `# Silicon relies on boost::lexical_cast.` \
-  postgresql-server-dev-9.3         `# Needed by cpoll.` \
-  xdg-utils                         `# Needed by dlang.` \
   python-pip
 
 sudo pip install colorama==0.3.1
@@ -63,22 +35,16 @@ sudo pip install colorama==0.3.1
 sudo pip install progressbar==2.2
 sudo pip install requests
 
-# Stop permanently overwriting people's files just for 
-# trying out our software!
-RETCODE=$(fw_exists ~/.bash_profile.bak)
-[ ! "$RETCODE" == 0 ] || { \
-  echo "Backing up your original ~/.bash_profile, ~/.profile, ~/.bashrc"
-  mv ~/.bash_profile ~/.bash_profile.bak || true
-  mv ~/.profile ~/.profile.bak || true
-  mv ~/.bashrc ~/.bashrc.bak || true
-}
-
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 sudo sh -c "echo '*            hard    rtprio             99' >> /etc/security/limits.conf"
 sudo sh -c "echo '*            soft    rtprio             99' >> /etc/security/limits.conf"
 
-# Sudo in case we don't have permissions on IROOT
-sudo touch fwbm_prereqs_installed
-
-# Ensure everyone can see the file
-sudo chmod 775 fwbm_prereqs_installed
+# Create a tfb command alias for running the toolset
+# For now, this still ensures you have to be in the framework root to run it
+sudo tee /etc/profile.d/tfb.sh <<EOF
+#!/bin/bash
+tfb() {
+  $(pwd)/toolset/run-tests.py "\$@"
+}
+EOF
+source /etc/profile.d/tfb.sh

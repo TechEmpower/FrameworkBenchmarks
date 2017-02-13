@@ -7,7 +7,7 @@
 <body><table><tr><th>id</th><th>message</th></tr>
 <# for (var i=0; i<fortunes.Count;i++) {
 	var f = fortunes[i]; #>
-<tr><td><# Write(f.Key.ToString()); #></td><td><# Write(System.Web.HttpUtility.HtmlEncode(f.Value)); #></td></tr>
+<tr><td><# Show(f.Key); #></td><td><# Show(f.Value); #></td></tr>
 <# } #>
 </table>
 </body>

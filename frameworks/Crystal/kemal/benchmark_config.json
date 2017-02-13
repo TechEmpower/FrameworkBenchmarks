@@ -15,37 +15,15 @@
       "database": "Postgres",
       "framework": "kemal",
       "language": "Crystal",
+      "flavor": "None",
       "orm": "micro",
-      "platform": "Crystal",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kemal (PostgreSQL)",
       "notes": "",
-      "versus": "ruby"
-    },
-    "redis": {
-      "setup_file": "setup-redis",
-      "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/queries?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
-      "plaintext_url": "/plaintext",
-      "port": 3000,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "Redis",
-      "framework": "kemal",
-      "language": "Crystal",
-      "orm": "micro",
-      "platform": "Crystal",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "Kemal (Redis)",
-      "notes": "",
-      "versus": "ruby"
+      "versus": "crystal"
     }
   }]
 }

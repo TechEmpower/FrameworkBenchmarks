@@ -1,5 +1,7 @@
 #!/bin/bash
 
+fw_depends urweb mysql
+
 export URWEB_HOME=${IROOT}/urweb
 export LD_LIBRARY_PATH=${URWEB_HOME}/lib
 

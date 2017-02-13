@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <groupId>com.techempower</groupId>
+    <artifactId>actframework</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>ActFramework sample project</name>
+    <packaging>jar</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <act.version>0.4.0-SNAPSHOT</act.version>
+        <act-morphia.version>0.5.0-SNAPSHOT</act-morphia.version>
+        <act-ebean.version>0.4.0-SNAPSHOT</act-ebean.version>
+        <mysql.version>5.1.38</mysql.version>
+        <postgres-jdbc.version>9.4.1208</postgres-jdbc.version>
+        <app.entry>com.techempower.act.AppEntry</app.entry>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.actframework</groupId>
+            <artifactId>act</artifactId>
+            <version>${act.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.actframework</groupId>
+            <artifactId>act-morphia</artifactId>
+            <version>${act-morphia.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.actframework</groupId>
+            <artifactId>act-ebean</artifactId>
+            <version>${act-ebean.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgres-jdbc.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>act</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.5</version>
+                <executions>
+                    <execution>
+                        <id>create-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>src/assembly/pkg.xml</descriptor>
+                            </descriptors>
+                            <outputDirectory>${project.build.directory}/dist/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.3</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.1.2</version>
+                    <configuration>
+                        <includePom>true</includePom>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.2.1</version>
+                    <configuration>
+                        <executable>java</executable>
+                        <arguments>
+                            <argument>-Xms512m</argument>
+                            <argument>-Xmx512m</argument>
+                            <argument>-classpath</argument>
+                            <classpath/>
+                            <argument>${app.entry}</argument>
+                        </arguments>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

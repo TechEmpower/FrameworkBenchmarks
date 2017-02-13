@@ -2,7 +2,7 @@
     "framework": "cutelyst",
     "tests": [{
             "default": {
-                "setup_file": "setup",
+                "setup_file": "setup_pf",
                 "json_url": "/json",
                 "plaintext_url": "/plaintext",
                 "port": 8080,
@@ -21,7 +21,7 @@
                 "versus": ""
             },
             "postgres-raw": {
-                "setup_file": "setup",
+                "setup_file": "setup_pf_pg",
                 "db_url": "/db_postgres",
                 "query_url": "/query_postgres?queries=",
                 "update_url": "/updates_postgres?queries=",
@@ -42,7 +42,7 @@
                 "versus": ""
             },
             "mysql-raw": {
-                "setup_file": "setup",
+                "setup_file": "setup_pf_my",
                 "db_url": "/db_mysql",
                 "query_url": "/query_mysql?queries=",
                 "update_url": "/updates_mysql?queries=",
@@ -82,7 +82,7 @@
                 "versus": ""
             },
             "thread-postgres-raw": {
-                "setup_file": "setup_thread",
+                "setup_file": "setup_thread_pg",
                 "db_url": "/db_postgres",
                 "query_url": "/query_postgres?queries=",
                 "update_url": "/updates_postgres?queries=",
@@ -103,7 +103,7 @@
                 "versus": ""
             },
             "thread-mysql-raw": {
-                "setup_file": "setup_thread",
+                "setup_file": "setup_thread_my",
                 "db_url": "/db_mysql",
                 "query_url": "/query_mysql?queries=",
                 "update_url": "/updates_mysql?queries=",
@@ -143,7 +143,7 @@
                 "versus": ""
             },
             "nginx-postgres-raw": {
-                "setup_file": "setup_uwsgi_nginx",
+                "setup_file": "setup_uwsgi_nginx_pg",
                 "db_url": "/db_postgres",
                 "query_url": "/query_postgres?queries=",
                 "update_url": "/updates_postgres?queries=",
@@ -164,7 +164,7 @@
                 "versus": ""
             },
             "nginx-mysql-raw": {
-                "setup_file": "setup_uwsgi_nginx",
+                "setup_file": "setup_uwsgi_nginx_my",
                 "db_url": "/db_mysql",
                 "query_url": "/query_mysql?queries=",
                 "update_url": "/updates_mysql?queries=",
