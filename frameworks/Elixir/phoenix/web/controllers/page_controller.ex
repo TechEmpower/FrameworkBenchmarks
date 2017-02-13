@@ -58,10 +58,12 @@ defmodule Hello.PageController do
 
     conn
     |> json(Enum.map(1..q, fn _ ->
-      w = Repo.get(World, :rand.uniform(10000))
-      changeset = World.changeset(w, %{randomNumber: :rand.uniform(10000)})
+      id = :rand.uniform(10000)
+      num = :rand.uniform(10000)
+      w = Repo.get(World, id)
+      changeset = World.changeset(w, %{randomnumber: num})
       Repo.update(changeset)
-      w
+      %{id: id, randomnumber: num}
     end))
   end
 

@@ -32,6 +32,8 @@ static void usp_fork_update()
          U_WARNING("usp_fork_update(): we cound't connect to db");
          }
 
+      if (UOrmDriver::isPGSQL()) *psql_update << "SET synchronous_commit TO OFF";
+
       U_NEW(World, pworld_update, World);
 
       pstmt1->use( pworld_update->id);
@@ -39,7 +41,7 @@ static void usp_fork_update()
       pstmt2->use( pworld_update->randomNumber, pworld_update->id);
 
 #  ifndef AS_cpoll_cppsp_DO
-      U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
+      U_NEW(UValue, pvalue, UValue);
       U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
 #  endif
       }

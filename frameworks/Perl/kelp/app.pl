@@ -10,8 +10,8 @@ module 'JSON::XS';
 
 my $mongo   = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
 my $mdb     = $mongo->get_database('hello_world');
-my $world   = $mdb->get_collection('World');
-my $fortune = $mdb->get_collection('Fortune');
+my $world   = $mdb->get_collection('world');
+my $fortune = $mdb->get_collection('fortune');
 
 my $dbh = DBI->connect(
     "dbi:mysql:database=hello_world;host=localhost;port=3306",
