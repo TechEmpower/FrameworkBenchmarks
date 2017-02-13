@@ -8,7 +8,6 @@ import com.twitter.finagle.{Filter, Http}
 import com.twitter.util.{Await, NullMonitor}
 import io.fintrospect.RouteModule
 import io.fintrospect.configuration.Host
-import io.fintrospect.renderers.simplejson.SimpleJson
 import org.apache.commons.lang.time.FastDateFormat.getInstance
 
 import scala.util.Properties
@@ -28,7 +27,7 @@ object FintrospectBenchmarkServer extends App {
   val dbHost = Properties.envOrNone("DBHOST").map(Host(_)).getOrElse(Host.localhost)
   val database = Database(dbHost)
 
-  val module = RouteModule(Root, SimpleJson())
+  val module = RouteModule(Root)
     .withRoute(JsonRoute())
     .withRoute(PlainTextRoute())
     .withRoute(FortunesRoute(database))
