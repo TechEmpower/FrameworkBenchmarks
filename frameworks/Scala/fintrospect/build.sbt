@@ -17,8 +17,8 @@ com.github.retronym.SbtOneJar.oneJarSettings
 mainClass in(Compile, run) := Some("FintrospectBenchmarkServer")
 
 libraryDependencies ++= Seq(
-  "io.fintrospect" %% "fintrospect-core" % "14.1.0",
-  "io.fintrospect" %% "fintrospect-jackson" % "14.1.0",
-  "io.fintrospect" %% "fintrospect-mustache" % "14.1.0",
-  "com.twitter" %% "finagle-mysql" % "6.41.0"
+  "io.fintrospect" %% "fintrospect-core" % "14.12.2",
+  "io.fintrospect" %% "fintrospect-jackson" % "14.12.2",
+  "io.fintrospect" %% "fintrospect-mustache" % "14.12.2",
+  "com.twitter" %% "finagle-mysql" % "6.42.0"
 )
