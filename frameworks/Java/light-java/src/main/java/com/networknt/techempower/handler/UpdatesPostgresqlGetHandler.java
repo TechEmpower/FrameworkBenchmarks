@@ -4,6 +4,7 @@ import com.dslplatform.json.DslJson;
 import com.dslplatform.json.JsonWriter;
 import com.networknt.techempower.Helper;
 import com.networknt.techempower.db.mysql.MysqlStartupHookProvider;
+import com.networknt.techempower.db.postgres.PostgresStartupHookProvider;
 import com.networknt.techempower.model.World;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -25,7 +26,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import javax.sql.DataSource;
 
 public class UpdatesPostgresqlGetHandler implements HttpHandler {
-    private final DataSource ds = MysqlStartupHookProvider.ds;
+    private final DataSource ds = PostgresStartupHookProvider.ds;
     private DslJson<Object> dsl = new DslJson<>();
     private JsonWriter writer = dsl.newWriter(25000);
 
