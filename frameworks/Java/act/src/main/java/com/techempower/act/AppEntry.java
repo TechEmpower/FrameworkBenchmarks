@@ -8,6 +8,7 @@ import act.job.OnAppStart;
 import com.alibaba.fastjson.JSON;
 import org.osgl.http.H;
 
+@SuppressWarnings("unused")
 public class AppEntry {
 
 	private static final String HELLO_WORLD = "Hello, World!";
