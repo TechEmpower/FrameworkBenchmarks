@@ -31,11 +31,40 @@ if [ ! -e "~/.firstboot" ]; then
   export FWROOT="/home/vagrant/FrameworkBenchmarks"
   echo `export FWROOT="/home/vagrant/FrameworkBenchmarks"` >> ~/.bashrc
 
+  sudo chown vagrant:vagrant ~/FrameworkBenchmarks
   cd ~/FrameworkBenchmarks
 
   # Set up the benchmark.cfg for vagrant user
-  cp ./benchmark.cfg.example ./benchmark.cfg
-  sed -i s/techempower/vagrant/g benchmark.cfg
+cat <<EOF > benchmark.cfg
+[Defaults]
+# Available Keys:
+os=linux
+server_host=TFB-server
+client_host=TFB-client
+client_identity_file=/home/vagrant/.ssh/id_rsa
+client_user=vagrant
+database_host=TFB-database
+database_identity_file=/home/vagrant/.ssh/id_rsa
+database_os=linux
+database_user=vagrant
+duration=60
+exclude=None
+install=server
+install_error_action=continue
+install_strategy=unified
+install_only=False
+list_tests=False
+concurrency_levels=[8, 16, 32, 64, 128, 256]
+query_levels=[1, 5,10,15,20]
+threads=8
+mode=benchmark
+sleep=60
+test=None
+type=all
+verbose=True
+clean=False
+clean_all=False
+EOF
 
   source ./toolset/setup/linux/prerequisites.sh
 
@@ -43,5 +72,20 @@ if [ ! -e "~/.firstboot" ]; then
   echo "Setting up welcome message"
   sudo rm -f /etc/update-motd.d/51-cloudguest
   sudo rm -f /etc/update-motd.d/98-cloudguest
-  sudo mv ~/.custom_motd.sh /etc/update-motd.d/55-tfbwelcome
+
+  sudo cat <<EOF > /etc/update-motd.d/55-tfbwelcom
+Welcome to the FrameworkBenchmarks project!
+
+  To get started, perhaps try this:
+    $ cd FrameworkBenchmarks
+
+  You can get lots of help:
+    $ tfb --help
+
+  You can run a test like:
+    $ tfb --mode verify --test gemini
+
+  This Vagrant environment is already setup and ready to go.
+EOF
+
 fi

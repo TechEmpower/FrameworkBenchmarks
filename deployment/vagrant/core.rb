@@ -1,5 +1,5 @@
 
-def provision_bootstrap(config, role)
+def provision_bootstrap(config)
 
   # TODO this will break if the environment contains the ' delimiter, 
   # so at some point we need to escape the ' character here and unescape
@@ -10,19 +10,12 @@ def provision_bootstrap(config, role)
   end
 end
 
-def provider_virtualbox(config, role, ip_address='172.16.0.16')
+def provider_virtualbox(config, ip_address='172.16.0.16')
   config.vm.network "private_network", ip: ip_address
   
   config.vm.provider :virtualbox do |vb, override|
-    override.vm.hostname = "TFB-#{role}"
-
-    # Valid values are 32 and 64
-    arch = ENV.fetch('TFB_VB_ARCH','64')
-
-    # Value values are precise, trusty, etc
-    code = ENV.fetch('TFB_VB_CODE','trusty')
-    
-    override.vm.box = "ubuntu/" + code + arch
+    override.vm.hostname = "TFB-all"
+    override.vm.box = "ubuntu/trusty64"
     
     if ENV.fetch('TFB_SHOW_VM', false)
       vb.gui = true
@@ -46,10 +39,9 @@ def provider_virtualbox(config, role, ip_address='172.16.0.16')
     #
     # See mitchellh/vagrant#4997
     # See http://superuser.com/a/640028/136050
-    override.vm.synced_folder "../..", "/home/vagrant/FrameworkBenchmarks"
+    override.vm.synced_folder "../../toolset", "/home/vagrant/FrameworkBenchmarks/toolset"
+    override.vm.synced_folder "../../frameworks", "/home/vagrant/FrameworkBenchmarks/frameworks"
 
-    if role.eql? "all" or role.eql? "app"
-      override.vm.network :forwarded_port, guest: 8080, host: 28080
-    end
+    override.vm.network :forwarded_port, guest: 8080, host: 28080
   end
 end

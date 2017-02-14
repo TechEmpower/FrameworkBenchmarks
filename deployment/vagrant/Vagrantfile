@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
       file.destination = "~/.custom_motd.sh"
   end
 
-  provision_bootstrap(config, 'all')
-  provider_virtualbox(config, 'all')
+  provision_bootstrap(config)
+  provider_virtualbox(config)
 
 end
