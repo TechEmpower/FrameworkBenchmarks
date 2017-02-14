@@ -1,14 +1,14 @@
-var h = require('../helper');
-var Promise = require('bluebird');
+const h = require('../helper');
+const Promise = require('bluebird');
 
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: '127.0.0.1',
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
+  host: 'TFB-database',
   dialect: 'mysql',
   logging: false
 });
 
-var Worlds = sequelize.define('World', {
+const Worlds = sequelize.define('World', {
   id:           { type: 'Sequelize.INTEGER' },
   randomNumber: { type: 'Sequelize.INTEGER' }
 }, {
@@ -16,7 +16,7 @@ var Worlds = sequelize.define('World', {
   freezeTableName: true
 });
 
-var Fortunes = sequelize.define('Fortune', {
+const Fortunes = sequelize.define('Fortune', {
   id:      { type: 'Sequelize.INTEGER' },
   message: { type: 'Sequelize.STRING' }
 }, {
@@ -24,42 +24,42 @@ var Fortunes = sequelize.define('Fortune', {
   freezeTableName: true
 });
 
-var randomWorldPromise = function() {
+const randomWorldPromise = () => {
   return Worlds.findOne({
     where: { id: h.randomTfbNumber() }
-  }).then(function (results) {
+  }).then((results) => {
     return results;
-  }).catch(function (err) {
+  }).catch((err) => {
     process.exit(1);
   });
 }
 
 module.exports = {
 
-  SingleQuery: function (req, res) {
-    randomWorldPromise().then(function (world) {
+  SingleQuery: (req, res) => {
+    randomWorldPromise().then((world) => {
       h.addTfbHeaders(res, 'json');
       res.end(JSON.stringify(world));
     });
   },
 
-  MultipleQueries: function (queries, req, res) {
-    var worldPromises = [];
+  MultipleQueries: (queries, req, res) => {
+    const worldPromises = [];
 
-    for (var i = 0; i < queries; i++) {
+    for (let i = 0; i < queries; i++) {
       worldPromises.push(randomWorldPromise());
     } 
 
-    Promise.all(worldPromises).then(function (worlds) {
+    Promise.all(worldPromises).then((worlds) => {
       h.addTfbHeaders(res, 'json');
       res.end(JSON.stringify(worlds));
     });
   },
 
-  Fortunes: function (req, res) {
-    Fortunes.findAll().then(function (fortunes) {
+  Fortunes: (req, res) => {
+    Fortunes.findAll().then((fortunes) => {
       fortunes.push(h.ADDITIONAL_FORTUNE);
-      fortunes.sort(function (a, b) {
+      fortunes.sort((a, b) => {
         return a.message.localeCompare(b.message);
       });
 
@@ -67,20 +67,20 @@ module.exports = {
       res.end(h.fortunesTemplate({
         fortunes: fortunes
       }));
-    }).catch(function (err) {
+    }).catch((err) => {
       console.log(err.stack);
       process.exit(1);
     });
   },
 
-  Updates: function (queries, req, res) {
-    var worldPromises = [];
+  Updates: (queries, req, res) => {
+    const worldPromises = [];
 
-    for (var i = 0; i < queries; i++) {
+    for (let i = 0; i < queries; i++) {
       worldPromises.push(randomWorldPromise());
     }
 
-    var worldUpdate = function(world) {
+    const worldUpdate = (world) => {
       world.randomNumber = h.randomTfbNumber();
 
       return Worlds.update({
@@ -88,19 +88,17 @@ module.exports = {
       },
       {
         where: { id: world.id }
-      }).then(function (results) {
+      }).then((results) => {
         return world;
-      }).catch(function (err) {
+      }).catch((err) => {
         process.exit(1);
       });
     }
 
-    Promise.all(worldPromises).then(function (worlds) {
-      var updates = worlds.map(function (e) {
-        return worldUpdate(e);
-      });
+    Promise.all(worldPromises).then((worlds) => {
+      const updates = worlds.map((e) => worldUpdate(e));
 
-      Promise.all(updates).then(function (updated) {
+      Promise.all(updates).then((updated) => {
         h.addTfbHeaders(res, 'json');
         res.end(JSON.stringify(updated));
       });

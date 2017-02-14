@@ -22,6 +22,8 @@ from .views import (
     updates_raw,
 )
 
+CONNECTION_ORM = os.getenv('CONNECTION', 'ORM').upper() == 'ORM'
+
 THIS_DIR = Path(__file__).parent
 
 
@@ -41,30 +43,34 @@ def pg_dsn() -> str:
 
 async def startup(app: web.Application):
     dsn = pg_dsn()
-    app.update(
-        aiopg_engine=await aiopg.sa.create_engine(dsn=dsn, minsize=10, maxsize=20, loop=app.loop),
-        asyncpg_pool=await asyncpg.create_pool(dsn=dsn, min_size=10, max_size=20, loop=app.loop),
-    )
+    min_size, max_size = 50, 100
+    if CONNECTION_ORM:
+        app['pg'] = await aiopg.sa.create_engine(dsn=dsn, minsize=min_size, maxsize=max_size, loop=app.loop)
+    else:
+        app['pg'] = await asyncpg.create_pool(dsn=dsn, min_size=min_size, max_size=max_size, loop=app.loop)
 
 
 async def cleanup(app: web.Application):
-    app['aiopg_engine'].close()
-    await app['aiopg_engine'].wait_closed()
-    await app['asyncpg_pool'].close()
+    if CONNECTION_ORM:
+        app['pg'].close()
+        await app['pg'].wait_closed()
+    else:
+        await app['pg'].close()
 
 
 def setup_routes(app):
-    app.router.add_get('/json', json)
-    app.router.add_get('/db', single_database_query_orm)
-    app.router.add_get('/queries', multiple_database_queries_orm)
-    app.router.add_get('/fortunes', fortunes)
-    app.router.add_get('/updates', updates)
-    app.router.add_get('/plaintext', plaintext)
-
-    app.router.add_get('/raw/db', single_database_query_raw)
-    app.router.add_get('/raw/queries', multiple_database_queries_raw)
-    app.router.add_get('/raw/fortunes', fortunes_raw)
-    app.router.add_get('/raw/updates', updates_raw)
+    if CONNECTION_ORM:
+        app.router.add_get('/json', json)
+        app.router.add_get('/db', single_database_query_orm)
+        app.router.add_get('/queries/{queries:.*}', multiple_database_queries_orm)
+        app.router.add_get('/fortunes', fortunes)
+        app.router.add_get('/updates/{queries:.*}', updates)
+        app.router.add_get('/plaintext', plaintext)
+    else:
+        app.router.add_get('/db', single_database_query_raw)
+        app.router.add_get('/queries/{queries:.*}', multiple_database_queries_raw)
+        app.router.add_get('/fortunes', fortunes_raw)
+        app.router.add_get('/updates/{queries:.*}', updates_raw)
 
 
 def create_app(loop):

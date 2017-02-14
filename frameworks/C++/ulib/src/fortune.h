@@ -30,7 +30,7 @@ public:
 
    Fortune(uint32_t _id, const UString& _message) : id(_id), message(_message)
       {
-      U_TRACE_REGISTER_OBJECT(5, Fortune, "%u,%.*S", _id, U_STRING_TO_TRACE(_message))
+      U_TRACE_REGISTER_OBJECT(5, Fortune, "%u,%V", _id, _message.rep)
       }
 
    Fortune(const Fortune& f) : id(f.id), message((void*)U_STRING_TO_PARAM(f.message))
@@ -53,7 +53,20 @@ public:
       {
       U_TRACE(5, "Fortune::cmp_obj(%p,%p)", a, b)
 
+#  ifdef U_STDCPP_ENABLE
+      /**
+       * The comparison function must follow a strict-weak-ordering
+       *
+       * 1) For all x, it is not the case that x < x (irreflexivity)
+       * 2) For all x, y, if x < y then it is not the case that y < x (asymmetry)
+       * 3) For all x, y, and z, if x < y and y < z then x < z (transitivity)
+       * 4) For all x, y, and z, if x is incomparable with y, and y is incomparable with z, then x is incomparable with z (transitivity of incomparability)
+       */
+
+      return (((const Fortune*)a)->message.compare(((const Fortune*)b)->message) < 0);
+#  else
       return (*(const Fortune**)a)->message.compare((*(const Fortune**)b)->message);
+#  endif
       }
 
 #ifdef DEBUG
@@ -74,7 +87,7 @@ public:
 #endif
 
 private:
-   Fortune& operator=(const Fortune&) { return *this; }
+   U_DISALLOW_ASSIGN(Fortune)
 };
 
 // ORM TEMPLATE SPECIALIZATIONS

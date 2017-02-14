@@ -36,7 +36,7 @@ final class FortunesMongoHandler implements HttpHandler {
       return;
     }
     List<Fortune> fortunes = new ArrayList<>();
-    DBCursor cursor = database.getCollection("Fortune").find();
+    DBCursor cursor = database.getCollection("fortune").find();
     while (cursor.hasNext()) {
       DBObject object = cursor.next();
       fortunes.add(new Fortune(

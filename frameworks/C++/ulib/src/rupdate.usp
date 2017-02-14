@@ -5,49 +5,49 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static char buffer[128];
+static char buffer[8192];
 static UREDISClient_Base* rc;
 static UVector<World*>* pvworld;
 
 #ifndef AS_cpoll_cppsp_DO
-static UValue*	pvalue;
+static UValue* pvalue;
 #endif
 
 static void usp_fork_rupdate()
 {
-	U_TRACE(5, "::usp_fork_rupdate()")
+   U_TRACE(5, "::usp_fork_rupdate()")
 
-	U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
+   U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
 
-	if (rc->connect() == false)
-		{
-		U_WARNING("usp_fork_rupdate(): %V", rc->UClient_Base::getResponse().rep);
+   if (rc->connect() == false)
+      {
+      U_WARNING("usp_fork_rupdate(): %V", rc->UClient_Base::getResponse().rep);
 
-		return;
-		}
+      return;
+      }
 
-	U_NEW(UVector<World*>, pvworld, UVector<World*>(500));
+   U_NEW(UVector<World*>, pvworld, UVector<World*>(500));
 
 #ifndef AS_cpoll_cppsp_DO
-	U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
+   U_NEW(UValue, pvalue, UValue);
 #endif
 }
 
 #ifdef DEBUG
 static void usp_end_rupdate()
 {
-	U_TRACE(5, "::usp_end_rupdate()")
+   U_TRACE(5, "::usp_end_rupdate()")
 
-	delete rc;
+   delete rc;
 
-	if (pvworld)
-		{
-		delete pvworld;
+   if (pvworld)
+      {
+      delete pvworld;
 
-#	ifndef AS_cpoll_cppsp_DO
-		delete pvalue;
-#	endif
-		}
+#  ifndef AS_cpoll_cppsp_DO
+      delete pvalue;
+#  endif
+      }
 }
 #endif
 -->
@@ -64,15 +64,15 @@ USP_PUTS_CHAR('[');
 #endif
 
 for (i = 0; i < num_queries; ++i)
-	{
-	U_NEW(World, pworld, World);
+   {
+   U_NEW(World, pworld, World);
 
-	pvworld->push_back(pworld);
+   pvworld->push_back(pworld);
 
-	u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
+   u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
 
-	pbuffer += 7+u_num2str32(pbuffer+7, pworld->id = u_get_num_random(10000-1));
-	}
+   pbuffer = u_num2str32(pworld->id = u_get_num_random(10000-1), pbuffer+7);
+   }
 
 (void) rc->mget(buffer, pbuffer-buffer);
 
@@ -81,24 +81,24 @@ pbuffer = buffer;
 
 while (true)
    {
-	pworld = pvworld->at(i);
+   pworld = pvworld->at(i);
 
-	u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
+   u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
 
-	pbuffer += 7+u_num2str32(pbuffer+7, pworld->id);
-  *pbuffer  = ' ';
-	pbuffer += 1+u_num2str32(pbuffer+1, pworld->randomNumber = u_get_num_random(10000-1));
+   pbuffer = u_num2str32(pworld->id, pbuffer+7);
+  *pbuffer = ' ';
+   pbuffer = u_num2str32(pworld->randomNumber = u_get_num_random(10000-1), pbuffer+1);
 
 #ifdef AS_cpoll_cppsp_DO
-	USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld->id, pworld->randomNumber);
+   USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld->id, pworld->randomNumber);
 #endif
 
    if (++i == num_queries) break;
 
 #ifdef AS_cpoll_cppsp_DO
-	USP_PUTS_CHAR(',');
+   USP_PUTS_CHAR(',');
 #endif
-	}
+   }
 
 (void) rc->mset(buffer, pbuffer-buffer);
 
