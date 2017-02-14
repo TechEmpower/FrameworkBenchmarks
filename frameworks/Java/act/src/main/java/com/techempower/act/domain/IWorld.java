@@ -8,4 +8,5 @@ import act.util.SimpleBean;
 public interface IWorld extends SimpleBean {
     Integer getId();
     Integer getRandomNumber();
+    void setRandomNumber(Integer randomNumber);
 }

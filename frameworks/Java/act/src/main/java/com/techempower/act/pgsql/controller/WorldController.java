@@ -12,6 +12,6 @@ import javax.inject.Singleton;
 public class WorldController extends SqlWorldControllerBase<World, World.Dao> {
     @Inject
     public WorldController(World.Dao worldDao) {
-        super(worldDao);
+        super(worldDao, false);
     }
 }
