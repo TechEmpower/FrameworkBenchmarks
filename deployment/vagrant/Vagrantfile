@@ -1,0 +1,16 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require_relative 'core'
+
+Vagrant.configure("2") do |config|
+
+  config.vm.provision :file do |file|
+      file.source = "custom_motd.sh"
+      file.destination = "~/.custom_motd.sh"
+  end
+
+  provision_bootstrap(config)
+  provider_virtualbox(config)
+
+end
