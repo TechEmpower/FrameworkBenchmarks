@@ -63,26 +63,11 @@ can ignore any flags about users, hosts, or identity files
 ## Using VirtualBox Development Environment
 
 After using `vagrant ssh`, you will find the project at `~/FrameworkBenchmarks`. 
-You can use `run-tests.py` without specifying any information about hosts, 
+You can use `tfb` without specifying any information about hosts, 
 usernames, or private key files, as so: 
 
     $ cd ~/FrameworkBenchmarks
-    $ toolset/run-tests.py --mode verify --install server --test go
-    <log for installing software needed for go test>
-    <log for launching go framework>
-    <log for verifying go framework meets requirements>
-    $ cat results/latest/logs/go/out.txt
-    <log with stdout from framework go>
-
-# Using Amazon-powered Virtual Machine
-
-Please read the document [here]
-
-The high level steps are similar, run `vagrant up --provider=aws` followed 
-by `vagrant ssh`. The main differences are 1) you need to provide a 
-number of environment variables to let vagrant log into your AWS account, 
-and 2) your git working copy will not be synced with the remote virtual 
-machine (by default). 
+    $ tfb --mode verify --test gemini
 
 ### FAQs
 
