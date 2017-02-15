@@ -73,7 +73,7 @@ EOF
   sudo rm -f /etc/update-motd.d/51-cloudguest
   sudo rm -f /etc/update-motd.d/98-cloudguest
 
-  sudo cat <<EOF > /etc/update-motd.d/55-tfbwelcom
+  sudo cat <<EOF > motd
 Welcome to the FrameworkBenchmarks project!
 
   To get started, perhaps try this:
@@ -87,5 +87,7 @@ Welcome to the FrameworkBenchmarks project!
 
   This Vagrant environment is already setup and ready to go.
 EOF
+
+  sudo mv motd /etc/
 
 fi
