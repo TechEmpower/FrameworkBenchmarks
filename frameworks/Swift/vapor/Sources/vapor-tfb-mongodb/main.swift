@@ -1,3 +1,4 @@
+import Foundation
 import Vapor
 import JSON
 import HTTP
@@ -41,9 +42,17 @@ drop.get("queries") { req in
 }
 
 // Test type 4: Fortunes
+private let posixLocale = Locale(identifier: "en_US_POSIX")
 drop.get("fortunes") { _ in
-  let fortunes = try Fortune.all().flatMap { try $0.makeJSONNode() }
-  return try drop.view.make("fortune", ["fortunes": Node(fortunes)])
+  var fortunes = try Fortune.all()
+  let additional = Fortune(id: 0, message: "Additional fortune added at request time.")
+  fortunes.insert(additional, at: 0)
+  fortunes.sort(by: { lhs, rhs -> Bool in
+    return lhs.message.compare(rhs.message, locale: posixLocale) == .orderedAscending
+  })
+  
+  let nodes = try fortunes.map { try $0.makeJSONNode() }
+  return try drop.view.make("fortune", ["fortunes": Node(nodes)])
 }
 
 // Test type 5: Database updates
