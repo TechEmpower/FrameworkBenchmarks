@@ -48,6 +48,12 @@
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
 
+    <!-- handlebars -->
+    <dependency>
+      <groupId>org.jooby</groupId>
+      <artifactId>jooby-hbs</artifactId>
+    </dependency>
+
     <!-- Server -->
     <dependency>
       <groupId>org.jooby</groupId>
