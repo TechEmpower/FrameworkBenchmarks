@@ -1,20 +1,22 @@
 package com.techempower;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
-import java.util.concurrent.ThreadLocalRandom;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooby.Jooby;
 import org.jooby.MediaType;
 import org.jooby.Result;
 import org.jooby.Results;
+import org.jooby.hbs.Hbs;
 import org.jooby.jdbi.Jdbi;
 import org.jooby.json.Jackson;
 import org.skife.jdbi.v2.Handle;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author jooby generator
@@ -42,6 +44,9 @@ public class App extends Jooby {
     /** database via jdbi .*/
     use(new Jdbi());
 
+    /** templates via handlebars .*/
+    use(new Hbs());
+
     get("/plaintext", () -> result(HELLO_WORLD, MediaType.text))
         .renderer("text");
 
@@ -60,6 +65,16 @@ public class App extends Jooby {
       }
     }).renderer("json");
 
+    get("/fortunes", req -> {
+      try (Handle handle = req.require(Handle.class)) {
+        List<Fortune> fortunes = handle.createQuery("select * from fortune")
+                .map((idx,rs,ctx) -> new Fortune(rs.getInt("id"), rs.getString("message")))
+                .list();
+        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+        Collections.sort(fortunes);
+        return result(Results.html("fortunes").put("fortunes", fortunes), MediaType.html);
+      }
+    }).renderer("html");
   }
 
   private Result result(final Object value, final MediaType type) {
@@ -69,7 +84,7 @@ public class App extends Jooby {
   }
 
   public static void main(final String[] args) throws Exception {
-    new App().start(args);
+    run(App::new, args);
   }
 
 }
