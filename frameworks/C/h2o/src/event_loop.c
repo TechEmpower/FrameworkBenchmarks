@@ -39,7 +39,9 @@ static void shutdown_server(h2o_socket_t *listener, const char *err);
 
 static void accept_connection(h2o_socket_t *listener, const char *err)
 {
-	if (!err) {
+	if (err)
+		ERROR(err);
+	else {
 		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
 		                                                      event_loop,
 		                                                      listener->data);
@@ -64,7 +66,9 @@ static void accept_connection(h2o_socket_t *listener, const char *err)
 
 static void do_epoll_wait(h2o_socket_t *epoll_sock, const char *err)
 {
-	if (!err) {
+	if (err)
+		ERROR(err);
+	else {
 		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
 		                                                      event_loop,
 		                                                      epoll_sock->data);
@@ -105,7 +109,9 @@ static void process_messages(h2o_multithread_receiver_t *receiver, h2o_linklist_
 
 static void shutdown_server(h2o_socket_t *listener, const char *err)
 {
-	if (!err) {
+	if (err)
+		ERROR(err);
+	else {
 		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
 		                                                      event_loop,
 		                                                      listener->data);
@@ -194,7 +200,16 @@ int start_write_polling(int fd,
 	memset(&event, 0, sizeof(event));
 	event.data.ptr = on_write_ready;
 	event.events = EPOLLET | EPOLLONESHOT | EPOLLOUT | EPOLLRDHUP;
-	return epoll_ctl(event_loop->epoll_fd, rearm ? EPOLL_CTL_MOD : EPOLL_CTL_ADD, fd, &event);
+
+	const int ret = epoll_ctl(event_loop->epoll_fd,
+	                          rearm ? EPOLL_CTL_MOD : EPOLL_CTL_ADD,
+	                          fd,
+	                          &event);
+
+	if (ret)
+		STANDARD_ERROR("epoll_ctl");
+
+	return ret;
 }
 
 void stop_write_polling(int fd, event_loop_t *event_loop)

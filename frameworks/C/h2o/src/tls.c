@@ -112,7 +112,10 @@ static void locking_function(int mode, int n, const char *file, int line)
 	static_assert(!offsetof(struct CRYPTO_dynlock_value, mutex),
 	              "The mutex must be the first field in struct CRYPTO_dynlock_value.");
 
-	dyn_lock_function(mode, (struct CRYPTO_dynlock_value *) (openssl_global_data.lock + n), file, line);
+	dyn_lock_function(mode,
+	                  (struct CRYPTO_dynlock_value *) (openssl_global_data.lock + n),
+	                  file,
+	                  line);
 }
 
 void cleanup_openssl(global_data_t *global_data)

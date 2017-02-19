@@ -93,7 +93,7 @@ static int get_listener_socket(const config_t *config)
 	char port[16];
 
 	if ((size_t) snprintf(port, sizeof(port), "%u", (unsigned) config->port) >= sizeof(port)) {
-		print_error(__FILE__, __LINE__, "snprintf", "Truncated output.");
+		LIBRARY_ERROR("snprintf", "Truncated output.");
 		return ret;
 	}
 
@@ -102,7 +102,7 @@ static int get_listener_socket(const config_t *config)
 	const int error_code = getaddrinfo(config->bind_address, port, &hints, &res);
 
 	if (error_code) {
-		print_error(__FILE__, __LINE__, "getaddrinfo", gai_strerror(error_code));
+		LIBRARY_ERROR("getaddrinfo", gai_strerror(error_code));
 		return ret;
 	}
 
@@ -114,7 +114,7 @@ static int get_listener_socket(const config_t *config)
 		                     iter->ai_protocol);
 
 		if (s == -1) {
-			LIBRARY_ERROR("socket");
+			STANDARD_ERROR("socket");
 			continue;
 		}
 
@@ -166,7 +166,7 @@ static size_t get_maximum_cache_line_size(void)
 
 		if (rc < 0) {
 			if (errno)
-				LIBRARY_ERROR("sysconf");
+				STANDARD_ERROR("sysconf");
 		}
 		else if ((size_t) rc > ret)
 			ret = rc;
