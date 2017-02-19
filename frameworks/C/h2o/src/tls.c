@@ -18,12 +18,14 @@
 */
 
 #include <assert.h>
+#include <h2o.h>
 #include <pthread.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <openssl/conf.h>
 #include <openssl/crypto.h>
 #include <openssl/err.h>
+#include <openssl/opensslv.h>
 #include <openssl/ssl.h>
 
 #include "error.h"
@@ -161,6 +163,11 @@ void initialize_openssl(const config_t *config, global_data_t *global_data)
 	CRYPTO_set_dynlock_destroy_callback(dyn_destroy_function);
 	CRYPTO_set_dynlock_lock_callback(dyn_lock_function);
 	global_data->ssl_ctx = SSL_CTX_new(TLSv1_2_server_method());
+#if OPENSSL_VERSION_NUMBER >= 0x1000200fL
+	SSL_CTX_set_ecdh_auto(global_data->ssl_ctx, 1);
+	h2o_ssl_register_alpn_protocols(global_data->ssl_ctx, h2o_http2_alpn_protocols);
+#endif
+	SSL_CTX_set_cipher_list(global_data->ssl_ctx, "DEFAULT:!3DES:!RC4");
 	CHECK_OPENSSL_ERROR(SSL_CTX_use_certificate_file,
 	                    global_data->ssl_ctx,
 	                    config->cert,
