@@ -30,6 +30,7 @@ typedef struct thread_context_t thread_context_t;
 
 typedef struct {
 	h2o_socket_t *epoll_socket;
+	h2o_socket_t *h2o_https_socket;
 	h2o_socket_t *h2o_socket;
 	size_t conn_num;
 	int epoll_fd;

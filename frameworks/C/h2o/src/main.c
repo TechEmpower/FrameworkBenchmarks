@@ -25,6 +25,7 @@
 #include <signal.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,10 +54,10 @@
 	"[-k <private key file>] [-l <log path>] " \
 	"[-m <max database connections per thread>] [-p <port>] " \
 	"[-q <max enqueued database queries per thread>] [-r <root directory>] " \
-	"[-t <thread number>]\n"
+	"[-s <HTTPS port>] [-t <thread number>]\n"
 
 static void free_global_data(global_data_t *global_data);
-static int get_listener_socket(const config_t *config);
+static int get_listener_socket(const char *bind_address, uint16_t port);
 static size_t get_maximum_cache_line_size(void);
 static int initialize_global_data(const config_t *config, global_data_t *global_data);
 static int parse_options(int argc, char *argv[], config_t *config);
@@ -87,19 +88,19 @@ static void free_global_data(global_data_t *global_data)
 		cleanup_openssl(global_data);
 }
 
-static int get_listener_socket(const config_t *config)
+static int get_listener_socket(const char *bind_address, uint16_t port)
 {
 	int ret = -1;
-	char port[16];
+	char buf[16];
 
-	if ((size_t) snprintf(port, sizeof(port), "%u", (unsigned) config->port) >= sizeof(port)) {
+	if ((size_t) snprintf(buf, sizeof(buf), "%" PRIu16, port) >= sizeof(buf)) {
 		LIBRARY_ERROR("snprintf", "Truncated output.");
 		return ret;
 	}
 
 	struct addrinfo *res = NULL;
 	struct addrinfo hints = {.ai_socktype = SOCK_STREAM, .ai_flags = AI_PASSIVE};
-	const int error_code = getaddrinfo(config->bind_address, port, &hints, &res);
+	const int error_code = getaddrinfo(bind_address, buf, &hints, &res);
 
 	if (error_code) {
 		LIBRARY_ERROR("getaddrinfo", gai_strerror(error_code));
@@ -192,13 +193,20 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	CHECK_ERRNO_RETURN(global_data->signal_fd, signalfd, -1, &signals, SFD_NONBLOCK | SFD_CLOEXEC);
 	global_data->fortunes_template = get_fortunes_template(config->template_path);
 	h2o_config_init(&global_data->h2o_config);
-	global_data->listener_sd = get_listener_socket(config);
+	global_data->listener_sd = get_listener_socket(config->bind_address, config->port);
 
 	if (global_data->listener_sd == -1)
 		goto error;
 
-	if (config->cert && config->key)
+	if (config->cert && config->key) {
+		global_data->https_listener_sd = get_listener_socket(config->bind_address,
+		                                                     config->https_port);
+
+		if (global_data->https_listener_sd == -1)
+			goto error;
+
 		initialize_openssl(config, global_data);
+	}
 
 	const h2o_iovec_t host = h2o_iovec_init(H2O_STRLIT("default"));
 	h2o_hostconf_t * const hostconf = h2o_config_register_host(&global_data->h2o_config,
@@ -244,7 +252,7 @@ static int parse_options(int argc, char *argv[], config_t *config)
 	opterr = 0;
 
 	while (1) {
-		const int opt = getopt(argc, argv, "?a:b:c:d:f:k:l:m:p:q:r:t:");
+		const int opt = getopt(argc, argv, "?a:b:c:d:f:k:l:m:p:q:r:s:t:");
 
 		if (opt == -1)
 			break;
@@ -298,6 +306,9 @@ static int parse_options(int argc, char *argv[], config_t *config)
 			case 'r':
 				config->root = optarg;
 				break;
+			case 's':
+				PARSE_NUMBER(config->https_port);
+				break;
 			case 't':
 				PARSE_NUMBER(config->thread_num);
 				break;
@@ -329,6 +340,9 @@ static void set_default_options(config_t *config)
 
 	if (!config->thread_num)
 		config->thread_num = h2o_numproc();
+
+	if (!config->https_port)
+		config->https_port = 4443;
 }
 
 static void setup_process(void)

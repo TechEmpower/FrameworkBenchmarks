@@ -50,6 +50,7 @@ typedef struct {
 	size_t max_db_conn_num;
 	size_t max_query_num;
 	size_t thread_num;
+	uint16_t https_port;
 	uint16_t port;
 } config_t;
 
@@ -60,6 +61,7 @@ typedef struct {
 	SSL_CTX *ssl_ctx;
 	global_thread_data_t *global_thread_data;
 	size_t memory_alignment;
+	int https_listener_sd;
 	int listener_sd;
 	int signal_fd;
 	bool shutdown;
