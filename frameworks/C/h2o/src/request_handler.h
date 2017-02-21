@@ -25,6 +25,8 @@
 #include <stdbool.h>
 #include <yajl/yajl_gen.h>
 
+#define REQ_ERROR "request error\n"
+
 typedef enum {
 	HTML,
 	JSON,

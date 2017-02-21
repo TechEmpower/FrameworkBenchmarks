@@ -30,7 +30,8 @@
 void print_error(const char *file,
                  unsigned line,
                  const char *function,
-                 const char *error_string, ...)
+                 const char *error_string,
+                 ...)
 {
 	char * const file_name = strdup(file);
 
