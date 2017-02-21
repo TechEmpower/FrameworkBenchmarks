@@ -1,14 +1,10 @@
-var {Store, Cache} = require('ringo-sqlstore');
-
-// DO NOT TOUCH THE FOLLOWING LINE.
-// THIS VARIABLE IS REGEX REPLACED BY setup.py
-var dbHost = 'TFB-database';
+const { Store, Cache } = require('ringo-sqlstore');
 
 // create and configure store
-var connectionPool = module.singleton("connectionPool", function() {
-    var mysqlConnectionProperties = "?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useServerPrepStmts&enableQueryTimeouts=false&useUnbufferedIO=false&useReadAheadInput=false&maintainTimeStats=false&cacheRSMetadata=true";
+const connectionPool = module.singleton("connectionPool", function () {
+    const mysqlConnectionProperties = "?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useServerPrepStmts&enableQueryTimeouts=false&useUnbufferedIO=false&useReadAheadInput=false&maintainTimeStats=false&cacheRSMetadata=true";
     return Store.initConnectionPool({
-        "url": "jdbc:mysql://" + dbHost + "/hello_world" + mysqlConnectionProperties,
+        "url": "jdbc:mysql://TFB-database/hello_world" + mysqlConnectionProperties,
         "driver": "com.mysql.jdbc.Driver",
         "username": "benchmarkdbuser",
         "password": "benchmarkdbpass",
@@ -16,11 +12,7 @@ var connectionPool = module.singleton("connectionPool", function() {
         "maximumPoolSize": 30
     });
 });
-var store = exports.store = new Store(connectionPool);
-var queryCache = module.singleton("queryCache", function() {
-    return new Cache(10000);
-});
-store.setQueryCache(queryCache);
+const store = exports.store = new Store(connectionPool);
 
 // define entities in DB
 exports.World = store.defineEntity('World', {
@@ -33,7 +25,7 @@ exports.World = store.defineEntity('World', {
 	}
 });
 
-var Fortune = exports.Fortune = store.defineEntity('Fortune', {
+const Fortune = exports.Fortune = store.defineEntity('Fortune', {
 	table: 'Fortune',
 	properties: {
 		message: 'string'
@@ -41,5 +33,5 @@ var Fortune = exports.Fortune = store.defineEntity('Fortune', {
 });
 
 Fortune.sort = function(a, b) {
- return (a.message < b.message) ? -1 : (a.message > b.message) ? 1 : 0;
+  return (a.message < b.message) ? -1 : (a.message > b.message) ? 1 : 0;
 };
