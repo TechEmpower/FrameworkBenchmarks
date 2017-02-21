@@ -13,7 +13,8 @@ const Worlds = sequelize.define('World', {
   randomnumber: { type: 'Sequelize.INTEGER' }
 }, {
   timestamps: false,
-  freezeTableName: true
+  freezeTableName: true,
+  tableName: 'world'
 });
 
 const Fortunes = sequelize.define('Fortune', {
@@ -21,7 +22,8 @@ const Fortunes = sequelize.define('Fortune', {
   message: { type: 'Sequelize.STRING' }
 }, {
   timestamps: false,
-  freezeTableName: true
+  freezeTableName: true,
+  tableName: 'fortune'
 });
 
 const randomWorldPromise = () => {
@@ -46,7 +48,7 @@ module.exports = {
 
     for (let i = 0; i < queries; i++) {
       worldPromises.push(randomWorldPromise());
-    } 
+    }
 
     Promise.all(worldPromises).then((worlds) => {
       h.addTfbHeaders(res, 'json');
