@@ -63,8 +63,6 @@ typedef struct {
 	SSL_CTX *ssl_ctx;
 	global_thread_data_t *global_thread_data;
 	size_t memory_alignment;
-	int https_listener_sd;
-	int listener_sd;
 	int signal_fd;
 	bool shutdown;
 	h2o_globalconf_t h2o_config;
