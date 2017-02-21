@@ -29,6 +29,7 @@
 #include "list.h"
 #include "utility.h"
 
+#define DB_ERROR "database error\n"
 #define DB_REQ_ERROR "too many concurrent database requests\n"
 #define DB_TIMEOUT_ERROR "database timeout\n"
 #define FORTUNE_TABLE_NAME "Fortune"
