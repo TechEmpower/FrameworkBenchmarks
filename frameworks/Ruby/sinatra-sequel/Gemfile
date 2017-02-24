@@ -3,8 +3,7 @@ source 'https://rubygems.org'
 gem 'json', '~> 2.0'
 gem 'passenger', '~> 5.1', :platforms=>[:ruby, :mswin], :require=>false
 gem 'puma', '~> 3.6', :require=>false
-gem 'sequel', '~> 4.40',
-  :git=>'https://github.com/jeremyevans/sequel.git', :branch=>'master'
+gem 'sequel', '~> 4.43'
 gem 'sinatra', '>= 2.0.0.beta2', '< 3.0', :require=>'sinatra/base',
   :git=>'https://github.com/sinatra/sinatra.git', :branch=>'master'
 gem 'slim', '~> 3.0'

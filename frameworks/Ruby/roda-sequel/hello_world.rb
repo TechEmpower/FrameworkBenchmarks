@@ -25,23 +25,27 @@ class HelloWorld < Roda
     (1..MAX_PK).to_a.shuffle!.take(n)
   end
 
+  def set_date
+    response['Date'] = Time.now.httpdate
+  end
+
   # Test type 1: JSON serialization
   static_get '/json' do
-    response['Date'] = Time.now.httpdate
+    set_date
 
     { :message=>'Hello, World!' }
   end
 
   # Test type 2: Single database query
   static_get '/db' do
-    response['Date'] = Time.now.httpdate
+    set_date
 
     World.with_pk(rand1).values
   end
 
   # Test type 3: Multiple database queries
   static_get '/queries' do
-    response['Date'] = Time.now.httpdate
+    set_date
 
     # Benchmark requirements explicitly forbid a WHERE..IN here, so be good
     randn(bounded_queries)
@@ -50,7 +54,7 @@ class HelloWorld < Roda
 
   # Test type 4: Fortunes
   static_get '/fortunes' do
-    response['Date'] = Time.now.httpdate
+    set_date
 
     @fortunes = Fortune.all
     @fortunes << Fortune.new(
@@ -64,7 +68,7 @@ class HelloWorld < Roda
 
   # Test type 5: Database updates
   static_get '/updates' do
-    response['Date'] = Time.now.httpdate
+    set_date
 
     # Benchmark requirements explicitly forbid a WHERE..IN here, transactions
     # are optional, batch updates are allowed (but each transaction can only
@@ -80,8 +84,9 @@ class HelloWorld < Roda
 
   # Test type 6: Plaintext
   static_get '/plaintext' do
+    set_date
+
     response['Content-Type'] = 'text/plain'
-    response['Date'] = Time.now.httpdate
 
     'Hello, World!'
   end
