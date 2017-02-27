@@ -13,6 +13,10 @@ const connectionPool = module.singleton("connectionPool", function () {
     });
 });
 const store = exports.store = new Store(connectionPool);
+const queryCache = module.singleton("queryCache", function() {
+  return new Cache(10000);
+});
+store.setQueryCache(queryCache);
 
 // define entities in DB
 exports.World = store.defineEntity('World', {
