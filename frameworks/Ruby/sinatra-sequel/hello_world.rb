@@ -36,11 +36,6 @@ class HelloWorld < Sinatra::Base
     def rand1
       Random.rand(MAX_PK).succ
     end
-
-    # Return an array of `n' unique random numbers between 1 and MAX_PK
-    def randn(n)
-      (1..MAX_PK).to_a.shuffle!.take(n)
-    end
   end
 
   after do
@@ -63,9 +58,7 @@ class HelloWorld < Sinatra::Base
 
   # Test type 3: Multiple database queries
   get '/queries' do
-    # Benchmark requirements explicitly forbid a WHERE..IN here, so be good
-    json randn(bounded_queries)
-      .map! { |id| World.with_pk(id).values }
+    json Array.new(bounded_queries) { World.with_pk(rand1).values }
   end
 
   # Test type 4: Fortunes
@@ -82,16 +75,13 @@ class HelloWorld < Sinatra::Base
 
   # Test type 5: Database updates
   get '/updates' do
-    # Benchmark requirements explicitly forbid a WHERE..IN here, transactions
-    # are optional, batch updates are allowed (but each transaction can only
-    # read and write a single record?), so... be good
-    json(randn(bounded_queries).map! do |id|
-      DB.transaction do
-        world = World.for_update.with_pk(id)
-        world.update(:randomnumber=>rand1)
-        world.values
-      end
-    end)
+    worlds = Array.new(bounded_queries) do
+      world = World.with_pk(rand1)
+      world.update(:randomnumber=>rand1)
+      world.values
+    end
+
+    json worlds
   end
 
   # Test type 6: Plaintext
