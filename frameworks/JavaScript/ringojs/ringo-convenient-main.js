@@ -1,6 +1,6 @@
-var {Application} = require("stick");
+const { Application } = require("stick");
 
-var app = exports.app = Application();
+const app = exports.app = Application();
 app.configure("mount");
 app.mount("/", require("./app/views"));
 

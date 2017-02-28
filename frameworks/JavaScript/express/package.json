@@ -3,14 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "express": "4.14.0",
-    "body-parser": "1.15.2",
-    "method-override": "2.3.6",
+    "express": "4.14.1",
+    "body-parser": "1.16.1",
+    "method-override": "2.3.7",
     "errorhandler": "1.4.3",
-    "async": "1.5.2",
+    "async": "2.1.5",
     "jade": "1.11.0",
-    "sequelize": "3.6.0",
-    "mysql": "2.11.1",
-    "mongoose": "4.5.3"
+    "sequelize": "3.30.0",
+    "mysql": "2.13.0",
+    "mongoose": "4.8.4"
   }
 }

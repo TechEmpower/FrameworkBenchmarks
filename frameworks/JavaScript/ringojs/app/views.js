@@ -1,24 +1,24 @@
-var {Application} = require("stick");
-var fs = require('fs');
-var response = require('ringo/jsgi/response');
-var models = require('./models');
+const {Application} = require("stick");
+const fs = require('fs');
+const response = require('ringo/jsgi/response');
+const models = require('./models');
 
-var {Template} = require('reinhardt/template');
-var fortuneTemplate = module.singleton('fortuneTemplate', function() {
+const { Template } = require('reinhardt/template');
+const fortuneTemplate = module.singleton('fortuneTemplate', function() {
    return new Template(fs.read(module.resolve('../templates/fortunes.reinhardt')));
 });
 
-var app = exports.app = Application();
+const app = exports.app = Application();
 app.configure("params", "route");
 
 app.get('/json', function() {
-   var helloObject = {message: "Hello, World!"};
+   const helloObject = {message: "Hello, World!"};
    return response.json(helloObject);
 });
 
 app.get('/db/:queries?', function(request, queries) {
    queries = parseInt(queries, 10) || 1;
-   var worlds = [];
+   let worlds = [];
    for (let i = 0; i < queries; i++) {
       let randId = ((Math.random() * 10000) | 0) + 1;
       let world = models.store.query('select * from World where id = :id', {id: randId})[0];
@@ -31,7 +31,7 @@ app.get('/db/:queries?', function(request, queries) {
 });
 
 app.get('/fortune', function() {
-   var fortunes = models.store.query('select Fortune.* from Fortune');
+   const fortunes = models.store.query('select Fortune.* from Fortune');
    fortunes.push({
       id: 0,
       message: 'Additional fortune added at request time.'
@@ -51,7 +51,7 @@ app.get('/updates/:queries?', function(request, queries) {
    } else if (queries > 500) {
       queries = 500;
    }
-   var worlds = [];
+   const worlds = [];
    for (let i = 0; i < queries; i++) {
       let randId = ((Math.random() * 10000) | 0) + 1;
       let world = models.store.query('select * from World where id = :id', {id: randId})[0];

@@ -1,101 +1,76 @@
 // Connects to MongoDB using the mongoose driver
 // Handles related routes
 
-var h = require('../helper');
-var Promise = require('bluebird');
+const Promise = require('bluebird');
+const h = require('../helper');
 // Can treat mongoose library as one that supports Promises
 // these methods will then have "-Async" appended to them.
-var Mongoose = Promise.promisifyAll(require('mongoose'));
-var connection = Mongoose.connect('mongodb://127.0.0.1/hello_world');
+const Mongoose = Promise.promisifyAll(require('mongoose'));
+const connection = Mongoose.connect('mongodb://TFB-database/hello_world');
 
-var WorldSchema = new Mongoose.Schema({
+const WorldSchema = new Mongoose.Schema({
     id :          Number,
     randomNumber: Number
   }, {
     collection: 'world'
   });
-var FortuneSchema = new Mongoose.Schema({
+const FortuneSchema = new Mongoose.Schema({
     id:      Number,
     message: String
   }, {
     collection: 'fortune'
   });
 
-var Worlds = connection.model('World', WorldSchema);
-var Fortunes = connection.model('Fortune', FortuneSchema);
+const Worlds = connection.model('World', WorldSchema);
+const Fortunes = connection.model('Fortune', FortuneSchema);
 
-function randomWorldPromise() {
-  var id = h.randomTfbNumber();
-  var promise = Worlds
-    .findOneAsync({
-      id: id
-    })
-    .then(function (world) {
-      return world;
-    })
-    .catch(function (err) {
-      process.exit(1);
-    });
-  return promise;
-}
+const randomWorldPromise = () =>
+  Worlds.findOneAsync({ id: h.randomTfbNumber() })
+    .then((world) => world)
+    .catch((err) => process.exit(1));
 
-function promiseAllFortunes() {
-  var promise = Fortunes
-    .findAsync({})
-    .then(function (fortunes) {
-      return fortunes;
-    })
-    .catch(function (err) {
-      process.exit(1);
-    });
-  return promise;
-}
 
-function updateWorld(world) {
-  var promise = Worlds
-    .updateAsync({
-      id: world.randomNumber
-    }, {
-      randomNumber: world.randomNumber
-    })
-    .then(function (result) {
-      return world;
-    })
-    .catch(function (err) {
-      process.exit(1);
-    });
-  return promise;
-}
+const promiseAllFortunes = () =>
+  Fortunes.findAsync({})
+    .then((fortunes) => fortunes)
+    .catch((err) => process.exit(1));
+
+const updateWorld = (world) =>
+  Worlds
+    .updateAsync(
+      { id: world.randomNumber },
+      { randomNumber: world.randomNumber }
+    )
+    .then((result) => world)
+    .catch((err) => process.exit(1));
 
 module.exports = {
 
-  SingleQuery: function(req, reply) {
+  SingleQuery: (req, reply) => {
     randomWorldPromise()
-      .then(function (world) {
+      .then((world) => {
         reply(world)
           .header('Server', 'hapi');
       });
   },
 
-  MultipleQueries: function(req, reply) {
-    var queries = h.getQueries(req);
-    var worldPromises = h.fillArray(randomWorldPromise(), queries);
+  MultipleQueries: (req, reply) => {
+    const queries = h.getQueries(req);
+    const worldPromises = h.fillArray(randomWorldPromise(), queries);
 
     Promise
       .all(worldPromises)
-      .then(function (worlds) {
+      .then((worlds) => {
         reply(worlds)
           .header('Server', 'hapi');
       });
   },
 
-  Fortunes: function(req, reply) {
+  Fortunes: (req, reply) => {
     promiseAllFortunes()
-      .then(function (fortunes) {
+      .then((fortunes) => {
         fortunes.push(h.ADDITIONAL_FORTUNE);
-        fortunes.sort(function (a, b) {
-          return a.message.localeCompare(b.message);
-        });
+        fortunes.sort((a, b) => a.message.localeCompare(b.message));
       
         reply.view('fortunes', {
           fortunes: fortunes
@@ -105,21 +80,21 @@ module.exports = {
       });
   },
 
-  Updates: function(req, reply) {
-    var queries = h.getQueries(req);
-    var worldPromises = [];
+  Updates: (req, reply) => {
+    const queries = h.getQueries(req);
+    const worldPromises = [];
 
-    for (var i = 0; i < queries; i++) {
+    for (let i = 0; i < queries; i++) {
       worldPromises.push(randomWorldPromise());
     }
 
     Promise
       .all(worldPromises)
-      .map(function (world) {
+      .map((world) => {
         world.randomNumber = h.randomTfbNumber();
         return updateWorld(world);
       })
-      .then(function (worlds) {
+      .then((worlds) => {
         reply(worlds)
           .header('Server', 'hapi');
       });
