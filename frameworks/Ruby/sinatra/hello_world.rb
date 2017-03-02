@@ -31,11 +31,6 @@ class HelloWorld < Sinatra::Base
     def rand1
       Random.rand(MAX_PK).succ
     end
-
-    # Return an array of `n' unique random numbers between 1 and MAX_PK
-    def randn(n)
-      (1..MAX_PK).to_a.shuffle!.take(n)
-    end
   end
 
   after do
@@ -54,20 +49,19 @@ class HelloWorld < Sinatra::Base
   # Test type 2: Single database query
   get '/db' do
     world = ActiveRecord::Base.connection_pool.with_connection do
-      World.find(rand1)
+      World.find(rand1).attributes
     end
 
-    json world.attributes
+    json world
   end
 
   # Test type 3: Multiple database queries
   get '/queries' do
     worlds = ActiveRecord::Base.connection_pool.with_connection do
-      # Benchmark requirements explicitly forbid a WHERE..IN here, so be good
-      randn(bounded_queries).map! { |id| World.find(id) }
+      Array.new(bounded_queries) { World.find(rand1).attributes }
     end
 
-    json worlds.map!(&:attributes)
+    json worlds
   end
 
   # Test type 4: Fortunes
@@ -87,19 +81,14 @@ class HelloWorld < Sinatra::Base
   # Test type 5: Database updates
   get '/updates' do
     worlds = ActiveRecord::Base.connection_pool.with_connection do |conn|
-      # Benchmark requirements explicitly forbid a WHERE..IN here, transactions
-      # are optional, batch updates are allowed (but each transaction can only
-      # read and write a single record?), so... be good
-      randn(bounded_queries).map! do |id|
-        conn.transaction do
-          world = World.lock.find(id)
-          world.update(:randomnumber=>rand1)
-          world
-        end
+      Array.new(bounded_queries) do
+        world = World.find(rand1)
+        world.update(:randomnumber=>rand1)
+        world.attributes
       end
     end
 
-    json worlds.map!(&:attributes)
+    json worlds
   end
 
   # Test type 6: Plaintext

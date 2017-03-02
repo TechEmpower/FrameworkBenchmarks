@@ -20,19 +20,12 @@ class HelloWorld
     Random.rand(MAX_PK).succ
   end
 
-  # Return an array of `n' unique random numbers between 1 and MAX_PK
-  def randn(n)
-    (1..MAX_PK).to_a.shuffle!.take(n)
-  end
-
   def db
     World.with_pk(rand1).values
   end
 
   def queries(env)
-    # Benchmark requirements explicitly forbid a WHERE..IN here, so be good
-    randn(bounded_queries(env))
-      .map! { |id| World.with_pk(id).values }
+    Array.new(bounded_queries(env)) { World.with_pk(rand1).values }
   end
 
   def fortunes
@@ -76,19 +69,14 @@ class HelloWorld
     HTML
   end
 
-  WORLD_BY_ID_FOR_UPDATE = World.naked.for_update.where(:id=>:$id).prepare(:first, :world_by_id_for_update)
+  WORLD_BY_ID = World.naked.where(:id=>:$id).prepare(:first, :world_by_id)
   WORLD_UPDATE = World.where(:id=>:$id).prepare(:update, :world_update, :randomnumber=>:$randomnumber)
 
   def updates(env)
-    # Benchmark requirements explicitly forbid a WHERE..IN here, transactions
-    # are optional, batch updates are allowed (but each transaction can only
-    # read and write a single record?), so... be good
-    randn(bounded_queries(env)).map! do |id|
-      DB.transaction do
-        world = WORLD_BY_ID_FOR_UPDATE.(:id=>id)
-        WORLD_UPDATE.(:id=>id, :randomnumber=>(world[:randomnumber] = rand1))
-        world
-      end
+    Array.new(bounded_queries(env)) do
+      world = WORLD_BY_ID.(:id=>rand1)
+      WORLD_UPDATE.(:id=>world[:id], :randomnumber=>(world[:randomnumber] = rand1))
+      world
     end
   end
 
