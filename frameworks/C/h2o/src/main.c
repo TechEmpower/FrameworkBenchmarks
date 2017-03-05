@@ -67,7 +67,7 @@ static void setup_process(void);
 static void free_global_data(global_data_t *global_data)
 {
 	if (global_data->global_thread_data) {
-		for (size_t i = 1; i < global_data->global_thread_data->config->thread_num; i++)
+		for (size_t i = global_data->global_thread_data->config->thread_num - 1; i > 0; i--)
 			CHECK_ERROR(pthread_join, global_data->global_thread_data[i].thread, NULL);
 
 		free(global_data->global_thread_data);

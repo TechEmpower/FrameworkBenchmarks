@@ -31,6 +31,8 @@
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(*(a)))
 // mainly used to silence compiler warnings about unused function parameters
 #define IGNORE_FUNCTION_PARAMETER(p) ((void) (p))
+// Do not use the following MAX and MIN macros with parameters that have side effects.
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 #define MKSTR(x) TOSTRING(x)
 #define TOSTRING(x) # x

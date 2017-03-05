@@ -32,6 +32,8 @@
 #include "thread.h"
 #include "utility.h"
 
+#define MAX_EPOLL_EVENTS 64
+
 static void accept_connection(h2o_socket_t *listener, const char *err);
 static void accept_http_connection(h2o_socket_t *listener, const char *err);
 static void do_epoll_wait(h2o_socket_t *epoll_sock, const char *err);
@@ -53,7 +55,7 @@ static void accept_connection(h2o_socket_t *listener, const char *err)
 		                                                      listener->data);
 
 		if (!ctx->global_data->shutdown) {
-			size_t accepted = 0;
+			size_t accepted = ctx->config->max_accept;
 
 			do {
 				h2o_socket_t * const sock = h2o_evloop_socket_accept(listener);
@@ -65,7 +67,7 @@ static void accept_connection(h2o_socket_t *listener, const char *err)
 				sock->on_close.cb = on_close_connection;
 				sock->on_close.data = &ctx->event_loop.conn_num;
 				h2o_accept(&ctx->event_loop.h2o_accept_ctx, sock);
-			} while (++accepted < ctx->config->max_accept);
+			} while (--accepted > 0);
 		}
 	}
 }
@@ -91,20 +93,21 @@ static void do_epoll_wait(h2o_socket_t *epoll_sock, const char *err)
 		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
 		                                                      event_loop,
 		                                                      epoll_sock->data);
-		const size_t num_event = ctx->db_state.db_conn_num - ctx->db_state.free_db_conn_num;
 		int ready;
-		struct epoll_event event[num_event];
+		struct epoll_event event[MAX_EPOLL_EVENTS];
 
 		do
-			ready = epoll_wait(ctx->event_loop.epoll_fd, event, num_event, 0);
+			ready = epoll_wait(ctx->event_loop.epoll_fd, event, MAX_EPOLL_EVENTS, 0);
 		while (ready < 0 && errno == EINTR);
 
 		if (ready > 0)
-			for (size_t i = 0; i < (size_t) ready; i++) {
-				void (** const on_write_ready)(void *) = event[i].data.ptr;
+			do {
+				void (** const on_write_ready)(void *) = event[--ready].data.ptr;
 
 				(*on_write_ready)(on_write_ready);
-			}
+			} while (ready > 0);
+		else if (ready < 0)
+			STANDARD_ERROR("epoll_wait");
 	}
 }
 
@@ -138,7 +141,7 @@ static void shutdown_server(h2o_socket_t *listener, const char *err)
 		ctx->global_data->shutdown = true;
 		h2o_socket_read_stop(ctx->event_loop.h2o_socket);
 
-		for (size_t i = 1; i < ctx->config->thread_num; i++)
+		for (size_t i = ctx->config->thread_num - 1; i > 0; i--)
 			h2o_multithread_send_message(&ctx->global_thread_data[i].h2o_receiver, NULL);
 	}
 }
