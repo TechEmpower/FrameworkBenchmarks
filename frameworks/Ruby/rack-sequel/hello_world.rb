@@ -25,7 +25,9 @@ class HelloWorld
   end
 
   def queries(env)
-    Array.new(bounded_queries(env)) { World.with_pk(rand1).values }
+    Array.new(bounded_queries(env)) do
+      World.with_pk(rand1).values
+    end
   end
 
   def fortunes

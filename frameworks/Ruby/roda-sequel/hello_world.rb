@@ -37,7 +37,9 @@ class HelloWorld < Roda
 
   # Test type 3: Multiple database queries
   static_get '/queries' do
-    Array.new(bounded_queries) { World.with_pk(rand1).values }
+    Array.new(bounded_queries) do
+      World.with_pk(rand1).values
+    end
   end
 
   # Test type 4: Fortunes
