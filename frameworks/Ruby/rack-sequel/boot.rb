@@ -67,3 +67,4 @@ class Fortune < Sequel::Model(:Fortune)
   unrestrict_primary_key
 end
 
+Sequel::Model.freeze
