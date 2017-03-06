@@ -57,7 +57,7 @@ class HelloWorld
     fortunes.each do |fortune|
       html += <<~"HTML"
       <tr>
-        <td>#{Rack::Utils.escape_html(fortune.id)}</td>
+        <td>#{fortune.id}</td>
         <td>#{Rack::Utils.escape_html(fortune.message)}</td>
       </tr>
       HTML
