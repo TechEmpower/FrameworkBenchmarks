@@ -17,7 +17,7 @@ class HelloWorld
 
   # Return a random number between 1 and MAX_PK
   def rand1
-    Random.rand(MAX_PK).succ
+    Sysrandom.random_number(MAX_PK).succ
   end
 
   def db
