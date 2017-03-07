@@ -18,7 +18,7 @@ class HelloWorld < Roda
 
   # Return a random number between 1 and MAX_PK
   def rand1
-    Random.rand(MAX_PK).succ
+    Sysrandom.random_number(MAX_PK).succ
   end
 
   after do
@@ -37,7 +37,9 @@ class HelloWorld < Roda
 
   # Test type 3: Multiple database queries
   static_get '/queries' do
-    Array.new(bounded_queries) { World.with_pk(rand1).values }
+    Array.new(bounded_queries) do
+      World.with_pk(rand1).values
+    end
   end
 
   # Test type 4: Fortunes

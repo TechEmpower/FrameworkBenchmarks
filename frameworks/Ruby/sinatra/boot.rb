@@ -6,6 +6,18 @@ MAX_PK = 10_000
 QUERIES_MIN = 1
 QUERIES_MAX = 500
 
+SERVER_STRING =
+  if defined?(PhusionPassenger)
+    [
+      PhusionPassenger::SharedConstants::SERVER_TOKEN_NAME,
+      PhusionPassenger::VERSION_STRING
+    ].join('/').freeze
+  elsif defined?(Puma)
+    Puma::Const::PUMA_SERVER_STRING
+  elsif defined?(Unicorn)
+    Unicorn::HttpParser::DEFAULTS['SERVER_SOFTWARE']
+  end
+
 Bundler.require(:default) # Load core modules
 
 def connect(dbtype)
@@ -50,15 +62,3 @@ class Fortune < ActiveRecord::Base
 end
 
 ActiveRecord::Base.clear_active_connections!
-
-SERVER_STRING =
-  if defined?(PhusionPassenger)
-    [
-      PhusionPassenger::SharedConstants::SERVER_TOKEN_NAME,
-      PhusionPassenger::VERSION_STRING
-    ].join('/').freeze
-  elsif defined?(Puma)
-    Puma::Const::PUMA_SERVER_STRING
-  elsif defined?(Unicorn)
-    Unicorn::HttpParser::DEFAULTS['SERVER_SOFTWARE']
-  end

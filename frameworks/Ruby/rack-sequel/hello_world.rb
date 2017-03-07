@@ -17,7 +17,7 @@ class HelloWorld
 
   # Return a random number between 1 and MAX_PK
   def rand1
-    Random.rand(MAX_PK).succ
+    Sysrandom.random_number(MAX_PK).succ
   end
 
   def db
@@ -25,7 +25,9 @@ class HelloWorld
   end
 
   def queries(env)
-    Array.new(bounded_queries(env)) { World.with_pk(rand1).values }
+    Array.new(bounded_queries(env)) do
+      World.with_pk(rand1).values
+    end
   end
 
   def fortunes
@@ -55,7 +57,7 @@ class HelloWorld
     fortunes.each do |fortune|
       html += <<~"HTML"
       <tr>
-        <td>#{Rack::Utils.escape_html(fortune.id)}</td>
+        <td>#{fortune.id}</td>
         <td>#{Rack::Utils.escape_html(fortune.message)}</td>
       </tr>
       HTML

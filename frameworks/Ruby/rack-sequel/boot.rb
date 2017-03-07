@@ -7,6 +7,18 @@ QUERIES_MIN = 1
 QUERIES_MAX = 500
 SEQUEL_NO_ASSOCIATIONS = true
 
+SERVER_STRING =
+  if defined?(PhusionPassenger)
+    [
+      PhusionPassenger::SharedConstants::SERVER_TOKEN_NAME,
+      PhusionPassenger::VERSION_STRING
+    ].join('/').freeze
+  elsif defined?(Puma)
+    Puma::Const::PUMA_SERVER_STRING
+  elsif defined?(Unicorn)
+    Unicorn::HttpParser::DEFAULTS['SERVER_SOFTWARE']
+  end
+
 Bundler.require(:default) # Load core modules
 
 def connect(dbtype)
@@ -55,14 +67,4 @@ class Fortune < Sequel::Model(:Fortune)
   unrestrict_primary_key
 end
 
-SERVER_STRING =
-  if defined?(PhusionPassenger)
-    [
-      PhusionPassenger::SharedConstants::SERVER_TOKEN_NAME,
-      PhusionPassenger::VERSION_STRING
-    ].join('/').freeze
-  elsif defined?(Puma)
-    Puma::Const::PUMA_SERVER_STRING
-  elsif defined?(Unicorn)
-    Unicorn::HttpParser::DEFAULTS['SERVER_SOFTWARE']
-  end
+Sequel::Model.freeze

@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 # Configure Slim templating engine
-Slim::Engine.set_options \
-  :format=>:html,
-  :sort_attrs=>false
+Slim::Engine.set_options :format=>:html, :sort_attrs=>false
 
 # Our Rack application to be executed by rackup
 class HelloWorld < Sinatra::Base
@@ -34,7 +32,7 @@ class HelloWorld < Sinatra::Base
 
     # Return a random number between 1 and MAX_PK
     def rand1
-      Random.rand(MAX_PK).succ
+      Sysrandom.random_number(MAX_PK).succ
     end
   end
 
@@ -58,7 +56,11 @@ class HelloWorld < Sinatra::Base
 
   # Test type 3: Multiple database queries
   get '/queries' do
-    json Array.new(bounded_queries) { World.with_pk(rand1).values }
+    worlds = Array.new(bounded_queries) do
+      World.with_pk(rand1).values
+    end
+
+    json worlds
   end
 
   # Test type 4: Fortunes
