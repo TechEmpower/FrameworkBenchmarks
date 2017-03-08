@@ -8,6 +8,7 @@ from utils import gather_frameworks
 from utils import verify_database_connections
 
 import os
+import uuid
 import shutil
 import stat
 import json
@@ -143,6 +144,7 @@ class Benchmarker:
             self.__parse_results(all_tests)
 
 
+        self.__set_completion_time()
         self.__finish()
         return result
 
@@ -883,20 +885,20 @@ class Benchmarker:
     # End __count_commits
     ############################################################
 
-    ############################################################
-    # __write_intermediate_results
-    ############################################################
     def __write_intermediate_results(self,test_name,status_message):
+        self.results["completed"][test_name] = status_message
+        self.__write_results()
+
+    def __write_results(self):
         try:
-            self.results["completed"][test_name] = status_message
             with open(os.path.join(self.full_results_directory(), 'results.json'), 'w') as f:
                 f.write(json.dumps(self.results, indent=2))
         except (IOError):
             logging.error("Error writing results.json")
 
-    ############################################################
-    # End __write_intermediate_results
-    ############################################################
+    def __set_completion_time(self):
+        self.results['completionTime'] = int(round(time.time() * 1000))
+        self.__write_results()
 
     def __load_results(self):
         try:
@@ -1015,6 +1017,10 @@ class Benchmarker:
 
         if self.results == None:
             self.results = dict()
+            self.results['uuid'] = str(uuid.uuid4())
+            self.results['name'] = datetime.now().strftime(self.results_name)
+            self.results['environmentDescription'] = self.results_environment
+            self.results['completionTime'] = None
             self.results['concurrencyLevels'] = self.concurrency_levels
             self.results['queryIntervals'] = self.query_levels
             self.results['frameworks'] = [t.name for t in self.__gather_tests]
