@@ -965,8 +965,6 @@ class Benchmarker:
             args['types'] = { args['type'] : types[args['type']] }
         del args['type']
 
-
-        args['max_threads'] = args['threads']
         args['max_concurrency'] = max(args['concurrency_levels'])
 
         self.__dict__.update(args)

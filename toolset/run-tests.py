@@ -115,12 +115,6 @@ def main(argv=None):
     if defaults['server_host'] is None:
         defaults['server_host'] = defaults['client_host']
 
-    defaults['threads'] = 8
-    try:
-        defaults['threads'] = multiprocessing.cpu_count() * 2
-    except Exception:
-        pass
-
     ##########################################################
     # Set up argument parser
     ##########################################################
