@@ -51,7 +51,7 @@ public abstract class SqlWorldControllerBase<
                 MODEL_TYPE world = findAndModifyOne();
                 retVal.add(world);
             }
-            worldDao.save(retVal, tx);
+            worldDao.save(tx, retVal);
             tx.commit();
         } catch (PersistenceException e) {
             tx.rollback();
