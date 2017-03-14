@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import argparse
 import ConfigParser
+import socket
 import sys
+import time
 import os
 import platform
 import multiprocessing
@@ -154,6 +156,8 @@ def main(argv=None):
     parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
 
     # Misc Options
+    parser.add_argument('--results-name', help='Gives a name to this set of results, formatted as a date', default='(unspecified, datetime = %Y-%m-%d %H:%M:%S)')
+    parser.add_argument('--results-environment', help='Describes the environment in which these results were gathered', default='(unspecified, hostname = %s)' % socket.gethostname())
     parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
     parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
     parser.add_argument('--clear-tmp', action='store_true', default=False, help='Clears files written to /tmp after each framework\'s tests complete.')
