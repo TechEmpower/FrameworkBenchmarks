@@ -12,6 +12,7 @@ import uuid
 import shutil
 import stat
 import json
+import requests
 import subprocess
 import traceback
 import time
@@ -653,6 +654,12 @@ class Benchmarker:
                 out.flush()
                 self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
 
+                ##########################################################
+                # Upload the results thus far to another server (optional)
+                ##########################################################
+
+                self.__upload_results()
+
                 if self.mode == "verify" and not passed_verify:
                     print "Failed verify!"
                     return exit_with_code(1)
@@ -899,6 +906,13 @@ class Benchmarker:
     def __set_completion_time(self):
         self.results['completionTime'] = int(round(time.time() * 1000))
         self.__write_results()
+
+    def __upload_results(self):
+        if self.results_upload_uri != None:
+            try:
+                requests.post(self.results_upload_uri, headers={ 'Content-Type': 'application/json' }, data=json.dumps(self.results, indent=2))
+            except (Exception):
+                logging.error("Error uploading results.json")
 
     def __load_results(self):
         try:
