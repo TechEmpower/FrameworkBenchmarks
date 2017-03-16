@@ -680,7 +680,7 @@ class FrameworkTest:
                                       --rpc --rpcd --output {output_file}".format(output_file=output_file)
     cmd = shlex.split(dstat_string)
     dev_null = open(os.devnull, "w")
-    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null)
+    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null, stderr=subprocess.STDOUT)
 
   ##############################################################
   # Begin __end_logging

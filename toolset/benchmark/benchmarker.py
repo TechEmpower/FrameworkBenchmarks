@@ -24,6 +24,8 @@ import threading
 import textwrap
 from pprint import pprint
 
+from contextlib import contextmanager
+
 from multiprocessing import Process
 
 from datetime import datetime
@@ -122,9 +124,10 @@ class Benchmarker:
         # Setup client/server
         ##########################
         print header("Preparing Server, Database, and Client ...", top='=', bottom='=')
-        self.__setup_server()
-        self.__setup_database()
-        self.__setup_client()
+        with self.quiet_out.enable():
+            self.__setup_server()
+            self.__setup_database()
+            self.__setup_client()
 
         ## Check if wrk (and wrk-pipeline) is installed and executable, if not, raise an exception
         #if not (os.access("/usr/local/bin/wrk", os.X_OK) and os.access("/usr/local/bin/wrk-pipeline", os.X_OK)):
@@ -343,13 +346,13 @@ class Benchmarker:
         try:
             if os.name == 'nt':
                 return True
-            subprocess.call(['sudo', 'sysctl', '-w', 'net.ipv4.tcp_max_syn_backlog=65535'])
-            subprocess.call(['sudo', 'sysctl', '-w', 'net.core.somaxconn=65535'])
-            subprocess.call(['sudo', '-s', 'ulimit', '-n', '65535'])
-            subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_reuse=1'])
-            subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_recycle=1'])
-            subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmmax=134217728'])
-            subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmall=2097152'])
+            subprocess.call(['sudo', 'sysctl', '-w', 'net.ipv4.tcp_max_syn_backlog=65535'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            subprocess.call(['sudo', 'sysctl', '-w', 'net.core.somaxconn=65535'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            subprocess.call(['sudo', '-s', 'ulimit', '-n', '65535'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_reuse=1'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_recycle=1'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmmax=134217728'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmall=2097152'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
 
             with open(os.path.join(self.full_results_directory(), 'sysctl.txt'), 'w') as f:
                 f.write(subprocess.check_output(['sudo','sysctl','-a']))
@@ -363,7 +366,7 @@ class Benchmarker:
     # Clean up any processes that run with root privileges
     ############################################################
     def __cleanup_leftover_processes_before_test(self):
-        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
+        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=self.quiet_out, stderr=subprocess.STDOUT)
         p.communicate("""
       sudo /etc/init.d/apache2 stop
     """)
@@ -375,7 +378,7 @@ class Benchmarker:
     # changes.
     ############################################################
     def __setup_database(self):
-        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
+        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=self.quiet_out, stderr=subprocess.STDOUT)
         p.communicate("""
       sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
       sudo sysctl -w net.core.somaxconn=65535
@@ -407,7 +410,7 @@ class Benchmarker:
     # changes.
     ############################################################
     def __setup_client(self):
-        p = subprocess.Popen(self.client_ssh_string, stdin=subprocess.PIPE, shell=True)
+        p = subprocess.Popen(self.client_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=self.quiet_out, stderr=subprocess.STDOUT)
         p.communicate("""
       sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
       sudo sysctl -w net.core.somaxconn=65535
@@ -445,8 +448,9 @@ class Benchmarker:
             for test in tests:
                 with open(self.current_benchmark, 'w') as benchmark_resume_file:
                     benchmark_resume_file.write(test.name)
-                if self.__run_test(test) != 0:
-                    error_happened = True
+                with self.quiet_out.enable():
+                    if self.__run_test(test) != 0:
+                        error_happened = True
         else:
             logging.debug("Executing __run_tests on Linux")
 
@@ -465,9 +469,10 @@ class Benchmarker:
                     print header("Running Test: %s" % test.name)
                     with open(self.current_benchmark, 'w') as benchmark_resume_file:
                         benchmark_resume_file.write(test.name)
-                    test_process = Process(target=self.__run_test, name="Test Runner (%s)" % test.name, args=(test,))
-                    test_process.start()
-                    test_process.join(self.run_test_timeout_seconds)
+                    with self.quiet_out.enable():
+                        test_process = Process(target=self.__run_test, name="Test Runner (%s)" % test.name, args=(test,))
+                        test_process.start()
+                        test_process.join(self.run_test_timeout_seconds)
                     self.__load_results()  # Load intermediate result from child process
                     if(test_process.is_alive()):
                         logging.debug("Child process for {name} is still alive. Terminating.".format(name=test.name))
@@ -974,11 +979,13 @@ class Benchmarker:
         self.__dict__.update(args)
         # pprint(self.__dict__)
 
+        self.quiet_out = QuietOutputStream(self.quiet)
+
         self.start_time = time.time()
         self.run_test_timeout_seconds = 7200
 
         # setup logging
-        logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+        logging.basicConfig(stream=self.quiet_out, level=logging.INFO)
 
         # setup some additional variables
         if self.database_user == None: self.database_user = self.client_user
@@ -1066,3 +1073,33 @@ class Benchmarker:
             ############################################################
             # End __init__
             ############################################################
+
+
+class QuietOutputStream:
+
+    def __init__(self, is_quiet):
+        self.is_quiet = is_quiet
+        self.null_out = open(os.devnull, 'w')
+
+    def fileno(self):
+        with self.enable():
+            return sys.stdout.fileno()
+
+    def write(self, message):
+        with self.enable():
+            sys.stdout.write(message)
+
+    @contextmanager
+    def enable(self):
+        if self.is_quiet:
+            old_out = sys.stdout
+            old_err = sys.stderr
+            try:
+                sys.stdout = self.null_out
+                sys.stderr = self.null_out
+                yield
+            finally:
+                sys.stdout = old_out
+                sys.stderr = old_err
+        else:
+            yield
