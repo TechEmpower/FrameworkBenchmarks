@@ -4,11 +4,12 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
+      "query_url": "/queries?queries=",
       "db_url": "/db",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Micro",
+      "classification": "Fullstack",
       "database": "MySQL",
       "framework": "beego",
       "language": "Go",
@@ -18,7 +19,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "beego",
+      "display_name": "beego-mysql-orm",
       "notes": "",
       "versus": "go"
     }

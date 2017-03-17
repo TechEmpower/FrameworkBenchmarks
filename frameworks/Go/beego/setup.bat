@@ -1,2 +1,3 @@
 set GOPATH=C:\FrameworkBenchmarks\beego
-go run src\hello\hello.go
+cd src\hello
+go run main.go
