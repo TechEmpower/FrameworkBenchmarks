@@ -54,6 +54,7 @@ end
 
 DB = connect(ENV.fetch('DBTYPE').to_sym).tap do |db|
   db.extension(:freeze_datasets)
+  db.optimize_model_load if db.respond_to?(:optimize_model_load)
   db.freeze
 end
 
