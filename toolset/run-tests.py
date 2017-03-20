@@ -158,6 +158,7 @@ def main(argv=None):
     # Misc Options
     parser.add_argument('--results-name', help='Gives a name to this set of results, formatted as a date', default='(unspecified, datetime = %Y-%m-%d %H:%M:%S)')
     parser.add_argument('--results-environment', help='Describes the environment in which these results were gathered', default='(unspecified, hostname = %s)' % socket.gethostname())
+    parser.add_argument('--results-upload-uri', default=None, help='A URI where the in-progress results.json file will be POSTed periodically')
     parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
     parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
     parser.add_argument('--quiet', action='store_true', default=False, help='Only print a limited set of messages to stdout, keep the bulk of messages in log files only')
