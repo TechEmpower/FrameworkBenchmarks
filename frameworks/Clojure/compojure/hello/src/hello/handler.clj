@@ -50,7 +50,7 @@
                                   :username           "benchmarkdbuser"
                                   :password           "benchmarkdbpass"
                                   :database-name      "hello_world"
-                                  :server-name        "127.0.0.1"
+                                  :server-name        "TFB-database"
                                   :port-number        3306
                                   :register-mbeans    false})
 
