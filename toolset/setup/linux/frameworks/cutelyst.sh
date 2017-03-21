@@ -32,7 +32,7 @@ mkdir build && cd build
 
 cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$IROOT -DUSE_JEMALLOC=on
 
-make -j $MAX_THREADS && sudo make install
+make -j $MAX_THREADS && make install
 
 echo "QT_VERSION_MM=${QT_VERSION_MM}" > $IROOT/cutelyst.installed
 
