@@ -23,14 +23,10 @@ public class WorldMongoImpl implements WorldDAO {
 
     @Override
     public World findAndModify(int worldId, int newRandomNumber) {
-        return worldCollection.findAndModify(
-                DBQuery.is("_id", worldId),
-                DBProjection.include("_id", "randomNumber"),
-                null,
-                false,
-                DBUpdate.set("randomNumber", newRandomNumber),
-                true,
-                false);
+        World theOne = findById(worldId);
+        theOne.setRandomNumber(newRandomNumber);
+        worldCollection.updateById(theOne.getWorldId(), DBUpdate.set("randomNumber", theOne.getRandomNumber());
+        return theOne;
 
     }
 
