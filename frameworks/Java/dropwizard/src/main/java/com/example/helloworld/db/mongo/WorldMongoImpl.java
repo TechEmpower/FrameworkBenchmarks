@@ -25,7 +25,7 @@ public class WorldMongoImpl implements WorldDAO {
     public World findAndModify(int worldId, int newRandomNumber) {
         World theOne = findById(worldId);
         theOne.setRandomNumber(newRandomNumber);
-        worldCollection.updateById(theOne.getWorldId(), DBUpdate.set("randomNumber", theOne.getRandomNumber());
+        worldCollection.updateById(theOne.getWorldId(), DBUpdate.set("randomNumber", theOne.getRandomNumber()));
         return theOne;
 
     }
