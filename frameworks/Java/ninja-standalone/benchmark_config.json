@@ -15,14 +15,15 @@
       "database": "MySQL",
       "framework": "ninja",
       "language": "Java",
+      "flavor": "None",
       "orm": "Full",
       "platform": "Jetty",
-      "webserver": "Jetty",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ninja-standalone",
+      "display_name": "Ninja",
       "notes": "",
-      "versus": ""
+      "versus": "jetty"
     }
   }]
 }

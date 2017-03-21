@@ -2,10 +2,7 @@
 
 fw_depends nim
 
-RETCODE=$(fw_exists ${IROOT}/nimble.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/nimble.installed
-  return 0; }
+fw_installed nimble && return 0
   
 NIMBLE_VERSION="0.6.2"
 

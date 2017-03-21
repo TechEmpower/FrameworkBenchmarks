@@ -1,0 +1,14 @@
+{
+  "name" : "techempower",
+  "version" : "0.1",
+  "devMode" : false,
+  "dataSources" : [ {
+    "name" : "mongo",
+    "engine" : "MONGODB",
+    "hostname" : "localhost",
+    "port" : 27017,
+    "database" : "hello_world",
+    "username" : "",
+    "password" : ""
+  } ]
+}

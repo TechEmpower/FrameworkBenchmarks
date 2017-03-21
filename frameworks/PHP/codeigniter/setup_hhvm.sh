@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends php5 nginx composer hhvm
+fw_depends mysql php7 nginx composer hhvm
 
 sed -i 's|localhost|'"${DBHOST}"'|g' application/config/database.php
 sed -i 's|SourceRoot = .*/FrameworkBenchmarks/codeigniter|SourceRoot = '"${TROOT}"'|g' deploy/config.hdf

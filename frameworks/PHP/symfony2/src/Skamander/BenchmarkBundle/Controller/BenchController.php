@@ -11,6 +11,11 @@ use Skamander\BenchmarkBundle\Entity\Fortune;
 class BenchController extends Controller
 {
 
+    public function plaintextAction()
+    {
+      return new Response("Hello, World!", 200, array('Content-Type' => 'text/plain'));
+    }
+
     public function jsonAction()
     {
         return new JsonResponse(array('message' => 'Hello, World!'));
@@ -49,12 +54,52 @@ class BenchController extends Controller
         for($i = 0; $i < $queries; ++$i) {
             $worlds[] =  $conn->fetchAssoc('SELECT * FROM World WHERE id = ?', array(mt_rand(1, 10000)));
         }
-        
+
         if ($queries == 1) {
             $worlds = $worlds[0];
         }
 
         return new JsonResponse($worlds);
+    }
+
+    public function updateAction(Request $request)
+    {
+      $queries = $request->query->getInt('queries', 1);
+      $queries = min(500, max(1, $queries));
+
+      $worlds = array();
+      $em = $this->getDoctrine()->getManager();
+      $repo = $this->getDoctrine()
+          ->getRepository('SkamanderBenchmarkBundle:World');
+
+      for ($i = 0; $i < $queries; ++$i) {
+        $world = $repo->find(mt_rand(1, 10000));
+        $random_number = mt_rand(1, 10000);
+        $world->setRandomNumber($random_number);
+        $em->persist($world);
+        $worlds[] =  $world;
+      }
+
+      $em->flush();
+      return new JsonResponse($worlds);
+    }
+
+    public function updateRawAction(Request $request)
+    {
+      $queries = $request->query->getInt('queries', 1);
+      $queries = min(500, max(1, $queries));
+
+      $worlds = array();
+      $conn = $this->get('database_connection');
+
+      for($i = 0; $i < $queries; ++$i) {
+          $id = mt_rand(1, 10000);
+          $random_number = mt_rand(1, 10000);
+          $conn->executeUpdate('UPDATE World SET randomNumber=? WHERE id=?', array($random_number, $id));
+          $worlds[] =  array('id' => $id, 'randomNumber' => $random_number);
+      }
+
+      return new JsonResponse($worlds);
     }
 
     public function fortunesAction()

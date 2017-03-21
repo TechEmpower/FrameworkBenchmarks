@@ -1,3 +1,0 @@
-tornado==4.3
-motor==0.6.2
-Momoko==2.2.3

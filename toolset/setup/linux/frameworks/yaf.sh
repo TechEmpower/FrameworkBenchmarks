@@ -2,10 +2,7 @@
 
 fw_depends php5
 
-RETCODE=$(fw_exists ${IROOT}/yaf.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/yaf.installed
-  return 0; }
+fw_installed yaf && return 0
 
 # Enable the PHP yaf extension
 sed -i 's|;extension=yaf.so|extension=yaf.so|g' $PHP_HOME/lib/php.ini

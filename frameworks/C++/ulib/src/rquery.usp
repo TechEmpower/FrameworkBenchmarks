@@ -5,6 +5,7 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
+static char buffer[8192];
 static UREDISClient_Base* rc;
 static UVector<World*>* pvworld_query;
 
@@ -16,7 +17,7 @@ static void usp_fork_rquery()
 {
    U_TRACE(5, "::usp_fork_rquery()")
 
-   rc = U_NEW(UREDISClient<UTCPSocket>);
+   U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
 
    if (rc->connect() == false)
       {
@@ -25,10 +26,10 @@ static void usp_fork_rquery()
       return;
       }
 
-   pvworld_query = U_NEW(UVector<World*>(500));
+   U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
 
 #ifndef AS_cpoll_cppsp_DO
-   pvalue = U_NEW(UValue(ARRAY_VALUE));
+   U_NEW(UValue, pvalue, UValue);
 #endif
 }
 
@@ -56,7 +57,7 @@ Content-Type: application/json
 <!--#code
 World* pworld;
 UStringRep* rep;
-char* pbuffer = u_buffer;
+char* pbuffer = buffer;
 int i, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
 #ifdef AS_cpoll_cppsp_DO
@@ -65,14 +66,16 @@ USP_PUTS_CHAR('[');
 
 for (i = 0; i < num_queries; ++i)
    {
-   pvworld_query->push_back(pworld = U_NEW(World));
+   U_NEW(World, pworld, World);
+
+   pvworld_query->push_back(pworld);
 
    u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
 
-   pbuffer += 7+u_num2str32(pbuffer+7, pworld->id = u_get_num_random(10000));
+   pbuffer = u_num2str32(pworld->id = u_get_num_random(10000-1), pbuffer+7);
    }
 
-(void) rc->mget(u_buffer, pbuffer-u_buffer);
+(void) rc->mget(buffer, pbuffer-buffer);
 
 i = 0;
 
@@ -82,7 +85,7 @@ while (true)
 
    rep = rc->vitem[i].rep;
 
-   pworld->randomNumber = u_strtoul(rep->data(), rep->end());
+   pworld->randomNumber = rep->strtoul();
 
 #ifdef AS_cpoll_cppsp_DO
    USP_PRINTF("{\"id\":%u,\"randomNumber\":%v}", pworld->id, rep);

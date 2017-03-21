@@ -163,8 +163,8 @@ class PgTests {
 @Encode()
 class MongoTests {
   
-  static const worldCollection = "World";
-  static const fortuneCollection = "Fortune";
+  static const worldCollection = "world";
+  static const fortuneCollection = "fortune";
   
   MongoDb get mongoDb => app.request.attributes["dbConn"];
   

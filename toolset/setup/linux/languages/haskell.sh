@@ -1,9 +1,6 @@
 #!/bin/bash 
 
-RETCODE=$(fw_exists ${IROOT}/haskell.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/haskell.installed
-  return 0; }
+fw_installed haskell && return 0
 
 CABAL_HOME=/opt/cabal/1.20
 HASKELL_HOME=/opt/ghc/7.8.3

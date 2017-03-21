@@ -17,7 +17,7 @@ object BenchmarkService {
     def encode(json: JValue)  = new HttpBody(compact(render(json)).getBytes("UTF-8"), Some(jsonHeader))
   }
 
-  val json : JValue     = ("message" -> "Hello, World!")
+  def json: JValue      = ("message" -> "Hello, World!")
   val plaintext         = HttpBody("Hello, World!")
   val serverHeader      = HttpHeader("Server", "Colossus")
 

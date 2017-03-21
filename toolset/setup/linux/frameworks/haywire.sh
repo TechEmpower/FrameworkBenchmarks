@@ -1,10 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/haywire.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  # Load environment variables
-  source $IROOT/haywire.installed
-  return 0; }
+fw_installed haywire && return 0
 
 HAYWIRE_HOME=$IROOT/Haywire
  

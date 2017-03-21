@@ -3,23 +3,9 @@
   "tests": [{
     "default": {
       "display_name": "urweb",
-      "setup_file": "setup",
+      "setup_file": "setup-postgresql",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "None",
-      "framework": "urweb",
-      "language": "Ur",
-      "orm": "Micro",
-      "platform": "Ur/Web",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux"
-    },
-    "postgres": {
-      "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/queries/",
       "fortune_url": "/fortunes",

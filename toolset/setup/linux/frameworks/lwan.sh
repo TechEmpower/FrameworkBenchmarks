@@ -1,11 +1,10 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/lwan.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/lwan.installed
-  return 0; }
+fw_depends libjemalloc-dev libluajit-5.1-dev
 
-REV='f1cd15c1a1bd15791c9f321fdc8c3ddb8d0e3799'
+fw_installed lwan && return 0
+
+REV='ff549b46548fefb2a1dd2a4c6a22c345fcfb3eeb'
 LWAN_HOME=$IROOT/lwan
 
 [ ! -e $IROOT/lwan.installed -a -d $LWAN_HOME ] && rm -rf $LWAN_HOME

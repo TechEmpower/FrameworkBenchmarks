@@ -1,10 +1,8 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/libreactor.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  # Load environment variables
-  source $IROOT/libreactor.installed
-  return 0; }
+fw_depends gcc-4.9
+
+fw_installed libreactor && return 0
 
 LIBREACTOR_HOME=$IROOT/libreactor_techempower
 

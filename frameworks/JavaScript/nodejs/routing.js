@@ -1,18 +1,16 @@
 // Intialized database connections, one for each db config
 // * Mongoose is a popular Node/MongoDB driver
 // * Sequelize is a popular Node/SQL driver
-// * Node's redis package uses the C bindings of the hiredis library
-var MongodbRawHandler = require('./handlers/mongodb-raw');
-var MySQLRawHandler = require('./handlers/mysql-raw');
-var MongooseHandler = require('./handlers/mongoose');
-var SequelizeHandler = require('./handlers/sequelize');
-var HiredisHandler = require('./handlers/redis');
-var SequelizePgHandler = require('./handlers/sequelize-postgres');
+const MongodbRawHandler = require('./handlers/mongodb-raw');
+const MySQLRawHandler = require('./handlers/mysql-raw');
+const MongooseHandler = require('./handlers/mongoose');
+const SequelizeHandler = require('./handlers/sequelize');
+const SequelizePgHandler = require('./handlers/sequelize-postgres');
 
-var h = require('./helper');
+const h = require('./helper');
 
-module.exports.BasicHandler = (function() {
-  var self = {}
+module.exports.BasicHandler = ((() => {
+  const self = {};
 
   self.routes = {
     '/json':               h.responses.jsonSerialization,
@@ -30,26 +28,19 @@ module.exports.BasicHandler = (function() {
     '/mysql/db':           MySQLRawHandler.SingleQuery,
     '/mysql/fortunes':     MySQLRawHandler.Fortunes,
 
-    '/hiredis/db':         HiredisHandler.SingleQuery,
-    '/hiredis/fortunes':   HiredisHandler.Fortunes,
-
     '/sequelize-pg/db':       SequelizePgHandler.SingleQuery,
     '/sequelize-pg/fortunes': SequelizePgHandler.Fortunes
-  }
+  };
 
-  self.has = function(path) {
-    return self.routes[path];
-  }
+  self.has = (path) => self.routes[path];
 
-  self.handle = function(path, req, res) {
-    return self.routes[path](req, res);
-  }
+  self.handle = (path, req, res) => self.routes[path](req, res);
 
   return self;
-}());
+})());
 
-module.exports.QueryHandler = (function () {
-  var self = {}
+module.exports.QueryHandler = ((() => {
+  const self = {};
 
   self.routes = {
     '/mongoose/queries':  MongooseHandler.MultipleQueries,
@@ -64,21 +55,15 @@ module.exports.QueryHandler = (function () {
     '/mysql/queries':     MySQLRawHandler.MultipleQueries,
     '/mysql/updates':     MySQLRawHandler.Updates,
 
-    '/hiredis/queries':   HiredisHandler.MultipleQueries,
-    '/hiredis/updates':   HiredisHandler.Updates,
-
     '/sequelize-pg/queries': SequelizePgHandler.MultipleQueries,
     '/sequelize-pg/updates': SequelizePgHandler.Updates
-  }
+  };
 
-  self.has = function(path) {
-    return self.routes[path];
-  }
+  self.has = (path) => self.routes[path];
 
-  self.handle = function(path, queries, req, res) {
-    return self.routes[path](queries, req, res);
-  }
+  self.handle = (path, queries, req, res) =>
+    self.routes[path](queries, req, res);
 
   return self;
-}());
+})());
 

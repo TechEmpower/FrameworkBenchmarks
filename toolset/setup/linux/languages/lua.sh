@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/lua.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/lua.installed
-  return 0; }
+fw_installed lua && return 0
 
 LUA_VERSION="5.1"
 LUA_MICRO="5"
@@ -30,5 +27,7 @@ echo -e "export PATH=\$LUA_HOME/bin:\$PATH" >> $IROOT/lua.installed
 # TODO: This feels very hackish
 echo -e 'export LUA_PATH="./?.lua;./?.lc;$LUA_HOME/share/lua/5.1/?/init.lua;$LUA_HOME/share/lua/5.1/?.lua;$LUA_HOME/lib/lua/5.1/?/init.lua;$LUA_HOME/lib/lua/5.1/?.lua"' >> $IROOT/lua.installed
 echo -e 'export LUA_CPATH="./?.lua;./?.lc;$LUA_HOME/share/lua/5.1/?/init.so;$LUA_HOME/share/lua/5.1/?.so;$LUA_HOME/lib/lua/5.1/?/init.so;$LUA_HOME/lib/lua/5.1/?.so"' >> $IROOT/lua.installed
+# This helps the fact that Lua/nginx cannot resolve hostnames from /etc/hosts
+echo -e "export DBHOST=`getent hosts TFB-database | awk '{ print $1 }'`" >> $IROOT/lua.installed
 
 source $IROOT/lua.installed

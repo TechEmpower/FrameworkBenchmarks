@@ -1,11 +1,8 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/go.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/go.installed
-  return 0; }
+fw_installed go && return 0
 
-VERSION=1.6.2
+VERSION=1.8
 GOROOT=$IROOT/go
 
 fw_get -O https://storage.googleapis.com/golang/go$VERSION.linux-amd64.tar.gz

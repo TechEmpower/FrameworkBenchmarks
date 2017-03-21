@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/grails.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/grails.installed
-  return 0; }
+fw_installed grails && return 0
 
 VERSION="2.4.4"
 GRAILS_HOME=$IROOT/grails-$VERSION

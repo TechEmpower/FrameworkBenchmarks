@@ -1,101 +1,76 @@
-var sql = require('sql-ringojs-client');
-var mustache = require('ringo/mustache');
-
-// DO NOT TOUCH THE FOLLOWING LINE.
-// THIS VARIABLE IS REGEX REPLACED BY setup.py
-var dbHost = 'localhost';
-var mongodbUri = 'mongodb://localhost/hello_world';
-
-var sortFortunes = function(a, b) {
- return (a.message < b.message) ? -1 : (a.message > b.message) ? 1 : 0;
-};
-
-var fortuneTemplate = require('fs').read(module.resolve('./templates/fortune.mustache'));
+const sql = require('sql-ringojs-client');
+const fs = require('fs');
 
 exports.app = function(req) {
-   var path = req.pathInfo;
+   const path = req.pathInfo;
+   let connection, body;
+
    if (path === '/json') {
-      var helloObject = {message: "Hello, World!"};
+      const helloObject = { message: "Hello, World!" };
       // JSON Response Test
       return {
          status: 200,
-         headers: {"Content-Type": "application/json; charset=UTF-8"},
+         headers: { "Content-Type": "application/json" },
          body: [JSON.stringify(helloObject)]
       }
-   } else if (path === '/db') {
-      var queryCount = req.env.servletRequest.getParameter('queries');
-      try {
-         var connection = datasource.getConnection();
-         if (queryCount === null) {
-            var randId = ((Math.random() * 10000) | 0) + 1
-            var world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
-            return {
-               status: 200,
-               headers: {"Content-Type": "application/json; charset=UTF-8"},
-               body: [JSON.stringify(world)]
-            }
-         } else {
-            queryCount = parseInt(queryCount, 10);
-            var body = [];
-            var randId, world;
-            for (var i = 0; i < queryCount; i++) {
-               randId = ((Math.random() * 10000) | 0) + 1;
-               world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
-               body.push(world);
-            }
-            return {
-               status: 200,
-               headers: {"Content-Type": "application/json; charset=UTF-8"},
-               body: [JSON.stringify(body)]
-            }
-         }
-      } catch (e) {
-         connection.close();
-         connection = null;
-      } finally {
-         if (connection !== null) {
-            connection.close();
-         }
-      }
-   } else if (path === '/fortune') {
-      try {
-         var connection = datasource.getConnection();
-         var fortunes = sql.query(connection, 'select * from Fortune');
-         fortunes.push({
-            id: 0,
-            message: 'Additional fortune added at request time.'
-         });
-         fortunes.sort(sortFortunes);
+   }
+
+   if (path === '/db') {
+     let queryCount = req.env.servletRequest.getParameter('queries');
+     try {
+       connection = datasource.getConnection();
+       let randId, world;
+       if (queryCount === null) {
+         randId = ((Math.random() * 10000) | 0) + 1;
+         world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
          return {
-            status: 200,
-            headers: {"Content-Type": "text/html; charset=UTF-8"},
-            body: [mustache.to_html(fortuneTemplate, {fortunes: fortunes})]
+           status: 200,
+           headers: { "Content-Type": "application/json" },
+           body: [JSON.stringify(world)]
          }
-      } catch (e) {
+       } else {
+         queryCount = parseInt(queryCount, 10);
+         body = [];
+         for (let i = 0; i < queryCount; i++) {
+           randId = ((Math.random() * 10000) | 0) + 1;
+           world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
+           body.push(world);
+         }
+         return {
+           status: 200,
+           headers: {"Content-Type": "application/json"},
+           body: [JSON.stringify(body)]
+         }
+       }
+     } catch (e) {
+       connection.close();
+       connection = null;
+     } finally {
+       if (connection !== null) {
          connection.close();
-         connection = null;
-      } finally {
-         if (connection !== null) {
-            connection.close();
-         }
-      }
-   } else if (path === '/plaintext') {
+       }
+     }
+   }
+
+   if (path === '/plaintext') {
       return {
         status: 200,
         headers: {"Content-Type": 'text/plain'},
         body: ['Hello, World!']
       };
-   } else if (path === '/updates') {
-      var queryCount = parseInt(req.env.servletRequest.getParameter('queries'), 10);
+   }
+
+   if (path === '/updates') {
+      let queryCount = parseInt(req.env.servletRequest.getParameter('queries'), 10);
       if (isNaN(queryCount) || queryCount < 1) {
          queryCount = 1;
       } else if (queryCount > 500) {
          queryCount = 500;
       }
       try {
-         var connection = datasource.getConnection();
-         var body = [];
-         for (var i = 0; i < queryCount; i++) {
+         connection = datasource.getConnection();
+         body = [];
+         for (let i = 0; i < queryCount; i++) {
             let randId = ((Math.random() * 10000) | 0) + 1;
             world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
             world.randomNumber = ((Math.random() * 10000) | 0) + 1;
@@ -119,9 +94,9 @@ exports.app = function(req) {
 };
 
 
-var datasource = module.singleton('pooling-datasource', function() {
-  var mysqlConnectionProperties = "?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useServerPrepStmts&enableQueryTimeouts=false&useUnbufferedIO=false&useReadAheadInput=false&maintainTimeStats=false&cacheRSMetadata=true";
-  return sql.connect("jdbc:mysql://" + dbHost + "/hello_world" + mysqlConnectionProperties, 'benchmarkdbuser', 'benchmarkdbpass');
+const datasource = module.singleton('pooling-datasource', function() {
+  const mysqlConnectionProperties = "?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useServerPrepStmts&enableQueryTimeouts=false&useUnbufferedIO=false&useReadAheadInput=false&maintainTimeStats=false&cacheRSMetadata=true";
+  return sql.connect("jdbc:mysql://TFB-database/hello_world" + mysqlConnectionProperties, 'benchmarkdbuser', 'benchmarkdbpass');
 });
 
 if (require.main == module) {

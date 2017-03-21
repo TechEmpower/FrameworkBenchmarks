@@ -14,7 +14,7 @@
       "framework": "ngx_mruby",
       "language": "Ruby",
       "orm": "Raw",
-      "platform": "ngx_mruby",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",

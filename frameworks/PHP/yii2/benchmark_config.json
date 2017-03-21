@@ -3,6 +3,7 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
+      "plaintext_url": "/site/plaintext",
       "json_url": "/site/json",
       "db_url": "/site/db",
       "query_url": "/site/db?queries=",
@@ -13,18 +14,20 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "yii2",
-      "language": "PHP5",
+      "language": "PHP",
+      "flavor": "PHP5",
       "orm": "Full",
-      "platform": "PHP5-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "yii2",
       "notes": "",
-      "versus": "php5"
+      "versus": "php-php5"
     },
     "hhvm": {
       "setup_file": "setup_hhvm",
+      "plaintext_url": "/site/plaintext",
       "json_url": "/site/json",
       "db_url": "/site/db",
       "query_url": "/site/db?queries=",
@@ -35,13 +38,14 @@
       "classification": "Fullstack",
       "database": "MySQL",
       "framework": "yii2",
-      "language": "PHP5",
+      "language": "PHP",
+      "flavor": "HHVM",
       "orm": "Full",
-      "platform": "PHP5-FPM",
-      "webserver": "hhvm",
+      "platform": "None",
+      "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "yii2-hhvm",
+      "display_name": "yii2",
       "notes": "",
       "versus": "php5"
     }

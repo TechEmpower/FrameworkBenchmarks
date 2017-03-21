@@ -15,14 +15,15 @@
       "database": "Postgres",
       "framework": "kemal",
       "language": "Crystal",
+      "flavor": "None",
       "orm": "micro",
-      "platform": "Crystal",
+      "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Kemal",
+      "display_name": "Kemal (PostgreSQL)",
       "notes": "",
-      "versus": "ruby"
+      "versus": "crystal"
     }
   }]
 }

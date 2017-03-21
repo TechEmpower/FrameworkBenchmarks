@@ -1,3 +1,7 @@
+_plaintext:
+    pattern:  /plaintext
+    defaults: { _controller: SkamanderBenchmarkBundle:Bench:plaintext }
+
 _json:
     pattern:  /json
     defaults: { _controller: SkamanderBenchmarkBundle:Bench:json }
@@ -9,6 +13,14 @@ _db:
 _dbRaw:
     pattern:  /db-raw
     defaults: { _controller: SkamanderBenchmarkBundle:Bench:dbRaw }
+
+_update:
+    pattern:  /update
+    defaults: { _controller: SkamanderBenchmarkBundle:Bench:update }
+
+_updateRaw:
+    pattern:  /update-raw
+    defaults: { _controller: SkamanderBenchmarkBundle:Bench:updateRaw }
 
 _fortunes:
     pattern:  /fortunes

@@ -2,19 +2,18 @@ package main
 
 import (
 	"database/sql"
-	"github.com/fitstar/falcore"
-	"github.com/fitstar/falcore/responder"
 	"html/template"
 	"io"
 	"log"
 	"math/rand"
 	"net/http"
-	"runtime"
 	"sort"
 	"strconv"
 	"sync"
 	"time"
 
+	"github.com/fitstar/falcore"
+	"github.com/fitstar/falcore/responder"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -34,7 +33,7 @@ type Fortune struct {
 
 const (
 	// Database
-	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
+	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?collation=utf8mb4_bin"
 	worldSelect        = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate        = "UPDATE World SET randomNumber = ? WHERE id = ?"
 	fortuneSelect      = "SELECT id, message FROM Fortune;"
@@ -96,8 +95,6 @@ func incrStat(statMap map[string]*stats, name string, dur time.Duration) {
 }
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-
 	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
@@ -151,14 +148,10 @@ var requiredHeaders = falcore.NewResponseFilter(func(req *falcore.Request, res *
 	res.Header.Set("Date", time.Now().Format(time.RFC1123))
 })
 
-var applicationJson = http.Header{"Content-Type": []string{"application/json"}}
-var textPlain = http.Header{"Content-Type": []string{"text/plain"}}
-var textHtml = http.Header{"Content-Type": []string{"text/html"}}
-
 // Test 1: JSON serialization
 var jsonFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Response {
 	if req.HttpRequest.URL.Path == "/json" {
-		resp, _ := responder.JSONResponse(req.HttpRequest, 200, applicationJson, &Message{helloWorldString})
+		resp, _ := responder.JSONResponse(req.HttpRequest, 200, nil, &Message{helloWorldString})
 		return resp
 	}
 	return nil
@@ -173,7 +166,7 @@ var dbFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Respons
 			log.Fatalf("Error scanning world row: %s", err.Error())
 		}
 
-		resp, _ := responder.JSONResponse(req.HttpRequest, 200, applicationJson, &world)
+		resp, _ := responder.JSONResponse(req.HttpRequest, 200, nil, &world)
 		return resp
 	}
 	return nil
@@ -181,11 +174,11 @@ var dbFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Respons
 
 // Test 3: Multiple database queries
 var queriesFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Response {
-	
+
 	if req.HttpRequest.URL.Path == "/queries" {
 
 		n := 1
-	
+
 		if nStr := req.HttpRequest.URL.Query().Get("queries"); len(nStr) > 0 {
 			n, _ = strconv.Atoi(nStr) // rvalue is 0 if nStr is non-number.
 		}
@@ -207,7 +200,7 @@ var queriesFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Re
 				log.Fatalf("Error scanning world row: %s", err.Error())
 			}
 		}
-		resp, _ := responder.JSONResponse(req.HttpRequest, 200, applicationJson, &world)
+		resp, _ := responder.JSONResponse(req.HttpRequest, 200, nil, &world)
 		return resp
 	}
 	return nil
@@ -239,6 +232,7 @@ var fortuneFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Re
 			pipeWriter.Close()
 		}()
 
+		textHtml := http.Header{"Content-Type": []string{"text/html"}}
 		return falcore.SimpleResponse(req.HttpRequest, 200, textHtml, -1, pipeReader)
 	}
 	return nil
@@ -257,7 +251,7 @@ var updateFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Res
 			worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
 			world.RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
 			updateStatement.Exec(world.RandomNumber, world.Id)
-			resp, _ := responder.JSONResponse(req.HttpRequest, 200, applicationJson, &world)
+			resp, _ := responder.JSONResponse(req.HttpRequest, 200, nil, &world)
 			return resp
 		} else {
 			world := make([]World, n)
@@ -270,7 +264,7 @@ var updateFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Res
 					log.Fatalf("Error updating world row: %s", err.Error())
 				}
 			}
-			resp, _ := responder.JSONResponse(req.HttpRequest, 200, applicationJson, world)
+			resp, _ := responder.JSONResponse(req.HttpRequest, 200, nil, world)
 			return resp
 		}
 
@@ -281,6 +275,7 @@ var updateFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Res
 // Test 6: Plaintext
 var plaintextFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Response {
 	if req.HttpRequest.URL.Path == "/plaintext" {
+		textPlain := http.Header{"Content-Type": []string{"text/plain"}}
 		return falcore.ByteResponse(req.HttpRequest, 200, textPlain, helloWorldBytes)
 	}
 	return nil

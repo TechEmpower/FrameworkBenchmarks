@@ -24,6 +24,9 @@ public class Main
 		server.uri("/restexpress/json", config.getJsonController())
 			.action("helloWorld", HttpMethod.GET);
 
+                server.uri("/restexpress/plaintext", config.getPlaintextController())
+                        .action("helloWorld", HttpMethod.GET);
+
 		server.uri("/restexpress/mysql", config.getMysqlController())
 			.method(HttpMethod.GET);
 

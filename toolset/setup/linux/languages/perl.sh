@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/perl.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/perl.installed
-  return 0; }
+fw_installed perl && return 0
 
 VERSION="5.18"
 PERL=$IROOT/perl-$VERSION

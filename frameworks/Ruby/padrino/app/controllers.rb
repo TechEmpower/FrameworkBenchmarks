@@ -32,17 +32,13 @@ HelloWorld::App.controllers  do
     queries = 500 if queries > 500
 
     worlds = (1..queries).map do
+      # get a random row from the database, which we know has 10000
+      # rows with ids 1 - 10000
       world = World.get(Random.rand(10000) + 1)
       world.update(:randomNumber => Random.rand(10000) + 1)
       world.attributes
     end
 
-    #mass update
-    values = worlds.map { |h| ['(', h[:id], ',' , h[:randomNumber], ')', ','] }.flatten[0..-2].join
-    sql = "INSERT INTO `World` (`id`,`randomNumber`) VALUES #{values} ON DUPLICATE KEY UPDATE `World`.`randomNumber` = VALUES(`randomNumber`)"
-    adapter = DataMapper.repository(:default).adapter
-    adapter.execute(sql)
-    
     worlds.to_json
   end
 
@@ -52,3 +48,4 @@ HelloWorld::App.controllers  do
   end
 
 end
+

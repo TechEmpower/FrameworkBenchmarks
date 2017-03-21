@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/wt.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/wt.installed
-  return 0; }
+fw_installed wt && return 0
 
 BOOST_ROOT=/usr/local
 BOOST_INC=${BOOST_ROOT}/include

@@ -5,6 +5,7 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
+static char buffer[8192];
 static UREDISClient_Base* rc;
 static UVector<World*>* pvworld;
 
@@ -16,7 +17,7 @@ static void usp_fork_rupdate()
 {
    U_TRACE(5, "::usp_fork_rupdate()")
 
-   rc = U_NEW(UREDISClient<UTCPSocket>);
+   U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
 
    if (rc->connect() == false)
       {
@@ -25,10 +26,10 @@ static void usp_fork_rupdate()
       return;
       }
 
-   pvworld = U_NEW(UVector<World*>(500));
+   U_NEW(UVector<World*>, pvworld, UVector<World*>(500));
 
 #ifndef AS_cpoll_cppsp_DO
-   pvalue = U_NEW(UValue(ARRAY_VALUE));
+   U_NEW(UValue, pvalue, UValue);
 #endif
 }
 
@@ -55,7 +56,7 @@ Content-Type: application/json
 -->
 <!--#code
 World* pworld;
-char* pbuffer = u_buffer;
+char* pbuffer = buffer;
 int i, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
 #ifdef AS_cpoll_cppsp_DO
@@ -64,17 +65,19 @@ USP_PUTS_CHAR('[');
 
 for (i = 0; i < num_queries; ++i)
    {
-   pvworld->push_back(pworld = U_NEW(World));
+   U_NEW(World, pworld, World);
+
+   pvworld->push_back(pworld);
 
    u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
 
-   pbuffer += 7+u_num2str32(pbuffer+7, pworld->id = u_get_num_random(10000));
+   pbuffer = u_num2str32(pworld->id = u_get_num_random(10000-1), pbuffer+7);
    }
 
-(void) rc->mget(u_buffer, pbuffer-u_buffer);
+(void) rc->mget(buffer, pbuffer-buffer);
 
 i = 0;
-pbuffer = u_buffer;
+pbuffer = buffer;
 
 while (true)
    {
@@ -82,9 +85,9 @@ while (true)
 
    u_put_unalignedp64(pbuffer, U_MULTICHAR_CONSTANT64(' ','w','o','r','l','d',':','\0'));
 
-   pbuffer += 7+u_num2str32(pbuffer+7, pworld->id);
-  *pbuffer  = ' ';
-   pbuffer += 1+u_num2str32(pbuffer+1, pworld->randomNumber = u_get_num_random(10000));
+   pbuffer = u_num2str32(pworld->id, pbuffer+7);
+  *pbuffer = ' ';
+   pbuffer = u_num2str32(pworld->randomNumber = u_get_num_random(10000-1), pbuffer+1);
 
 #ifdef AS_cpoll_cppsp_DO
    USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld->id, pworld->randomNumber);
@@ -97,7 +100,7 @@ while (true)
 #endif
    }
 
-(void) rc->mset(u_buffer, pbuffer-u_buffer);
+(void) rc->mset(buffer, pbuffer-buffer);
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR(']');

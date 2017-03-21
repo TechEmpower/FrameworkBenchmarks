@@ -4,7 +4,7 @@ sed -i 's|localhost|'"${DBHOST}"'|g' app.pl
 sed -i 's|user .*;|user '"$(id -u -n)"';|g' nginx.conf
 sed -i 's|server unix.*frameworks-benchmark.sock;|server unix:'"${TROOT}"'/frameworks-benchmark.sock;|g' nginx.conf
 
-fw_depends perl nginx
+fw_depends perl nginx mysql mongodb
 
 cpanm --notest --no-man-page \
     Kelp@0.9071 \

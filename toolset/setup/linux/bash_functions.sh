@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 # If you are running a large number of installs back to back 
 # (e.g. for FwBm development), then setting this variable 
 # will cause apt-get and wget to use your proxy server. If 
@@ -84,7 +86,6 @@ fw_traperror () {
 # Jester, etc. Users should be know this 
 # fairly well (e.g. you can't use Yaf without PHP)
 fw_depends() {
-
   # Turn on errtrace (-E), so that our ERR
   # trap is passed on to any subshells
   set -E
@@ -101,38 +102,20 @@ fw_depends() {
     wd=$(pwd)
     relative_wd=\$FWROOT${wd#$FWROOT}
 
-    # Check that the prerequisites have been loaded
-    RETCODE=$(fw_exists ${IROOT}/prerequisites.installed)
-    [ "$RETCODE" == 0 ] || { \
-      # Load environment variables
-      echo Installing prerequisites
-      source $FWROOT/toolset/setup/linux/prerequisites.sh
-      touch $IROOT/prerequisites.installed; }
-
     # Find and run the installer.sh file for this dependency
     # Turn on some bash options before sourcing: 
     #   - (x) errtrace : Print commands before they are run
     # Note: A shebang is just a comment when you source a script, 
     #       so if you need to modify the default options use  
     #       `set -e` instead of `#!/bin/bash -e`
-    if [ -f $FWROOT/toolset/setup/linux/systools/${depend}.sh ]; then
-      echo Installing system tool: $depend in $relative_wd
+    installation_file=$( find ${FWROOT}/toolset/setup/linux -name ${depend}.sh )
+    if [[ -n $installation_file ]]; then
+      echo Installing dependency: $depend from $installation_file
       set -x
-      . $FWROOT/toolset/setup/linux/systools/${depend}.sh
-    elif [ -f $FWROOT/toolset/setup/linux/languages/${depend}.sh ]; then
-      echo Installing language: $depend in $relative_wd
-      set -x
-      . $FWROOT/toolset/setup/linux/languages/${depend}.sh
-    elif [ -f $FWROOT/toolset/setup/linux/webservers/${depend}.sh ]; then
-      echo Installing webserver: $depend in $relative_wd
-      set -x
-      . $FWROOT/toolset/setup/linux/webservers/${depend}.sh
-    elif [ -f $FWROOT/toolset/setup/linux/frameworks/${depend}.sh ]; then
-      echo Installing framework: $depend in $relative_wd
-      set -x
-      . $FWROOT/toolset/setup/linux/frameworks/${depend}.sh
+      . $installation_file
     else
-      echo WARN: No installer found for $depend
+      echo WARN: No installer found for $depend, attempting to install with 'apt-get'...
+      sudo apt-get install -qqy -o Dpkg::Options::="--force-confold" -o Dpkg::Options::="--force-confdef" ${depend}
       # Return whence you came.
       popd
       continue
@@ -172,3 +155,15 @@ fw_exists() {
     echo 1
   fi 
 }
+
+# Checks to see if an installation exists and sources the install
+# file if it does
+fw_installed() {
+  if [ -f "$IROOT/$1.installed" ]; then
+    source "$IROOT/$1.installed"
+    return 0
+  else
+    return 1
+  fi     
+}
+

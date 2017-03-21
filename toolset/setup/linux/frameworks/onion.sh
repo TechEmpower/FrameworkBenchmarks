@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/onion.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/onion.installed
-  return 0; }
+fw_installed onion && return 0
 
 git clone https://github.com/davidmoreno/onion.git
 cd $IROOT/onion

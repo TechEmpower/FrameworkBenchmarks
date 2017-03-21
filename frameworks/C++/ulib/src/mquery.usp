@@ -5,9 +5,7 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static UString* jquery;
 static UMongoDBClient* mc;
-static World* pworld_query;
 
 #ifndef AS_cpoll_cppsp_DO
 static UValue* pvalue;
@@ -18,28 +16,25 @@ static void usp_fork_mquery()
 {
    U_TRACE(5, "::usp_fork_mquery()")
 
-   mc = U_NEW(UMongoDBClient);
+   U_NEW(UMongoDBClient, mc, UMongoDBClient);
 
-   if (mc->connect() == false)
+   if (mc->connect(0,0) == false)
       {
       U_WARNING("usp_fork_mquery(): connection disabled or failed");
 
       return;
       }
 
-   if (mc->selectCollection("hello_world", "World") == false)
+   if (mc->selectCollection("hello_world", "world") == false)
       {
       U_WARNING("usp_fork_mquery(): selectCollection() failed");
 
       return;
       }
 
-   jquery       = U_NEW(U_STRING_FROM_CONSTANT("{'randomNumber'"));
-   pworld_query = U_NEW(World);
-
 #ifndef AS_cpoll_cppsp_DO
-   pvalue        = U_NEW(UValue(ARRAY_VALUE));
-   pvworld_query = U_NEW(UVector<World*>(500));
+   U_NEW(UValue, pvalue, UValue);
+   U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
 #endif
 }
 
@@ -50,16 +45,13 @@ static void usp_end_mquery()
 
    delete mc;
 
-   if (jquery)
+#ifndef AS_cpoll_cppsp_DO
+   if (pvalue)
       {
-      delete jquery;
-      delete pworld_query;
-
-#  ifndef AS_cpoll_cppsp_DO
       delete pvalue;
       delete pvworld_query;
-#  endif
       }
+#endif
 }
 #endif
 -->
@@ -67,6 +59,7 @@ static void usp_end_mquery()
 Content-Type: application/json
 -->
 <!--#code
+uint32_t id;
 UString rnumber;
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
@@ -76,16 +69,20 @@ USP_PUTS_CHAR('[');
 
 while (true)
    {
-   (void) mc->findOne(pworld_query->id = u_get_num_random(10000));
+   (void) mc->findOne(id = u_get_num_random(10000-1));
 
-   (void) UValue::jread(mc->vitem[0], *jquery, rnumber); // { "_id" : 8980.000000, "id" : 8980.000000, "randomNumber" : 2131.000000 }
+   rnumber.clear();
+
+   (void) U_JFIND(mc->vitem[0], "randomNumber", rnumber);
 
 #ifdef AS_cpoll_cppsp_DO
-   USP_PRINTF("{\"id\":%u,\"randomNumber\":%v}", pworld_query->id, rnumber.rep);
+   USP_PRINTF("{\"id\":%u,\"randomNumber\":%v}", id, rnumber.rep);
 #else
-   pworld_query->randomNumber = u_strtoul(rnumber.data(), rnumber.end());
+   World* pworld;
 
-   pvworld_query->push_back(U_NEW(World(*pworld_query)));
+   U_NEW(World, pworld, World(id, rnumber.strtoul()));
+
+   pvworld_query->push_back(pworld);
 #endif
 
    if (++i == num_queries) break;

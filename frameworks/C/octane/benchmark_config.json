@@ -1,0 +1,23 @@
+{
+  "framework": "octane",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "plaintext_url": "/",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "C",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "notes": "",
+      "versus": "octane"
+    }
+  }]
+}

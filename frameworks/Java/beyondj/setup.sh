@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java
+fw_depends mysql java
 
 WORKING_DIR=beyondj-launcher/deploy
 
@@ -14,4 +14,3 @@ cd ../../
 
 echo "Launching BeyondJ from location:$PWD"
 java -jar beyondj-launcher/deploy/beyondj-launcher-1.0-SNAPSHOT.jar system.platform.dbserver=${DBHOST} numInstances=10
-

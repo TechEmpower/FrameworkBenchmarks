@@ -5,13 +5,13 @@
 
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
-$pdo = new PDO('mysql:host=localhost;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
+$pdo = new PDO('mysql:host=TFB-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
     PDO::ATTR_PERSISTENT => true
 ));
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
-if (TRUE === isset($_GET['queries'])) {
+if (isset($_GET['queries']) && $_GET['queries'] > 0) {
   $query_count = $_GET['queries'];
 }
 

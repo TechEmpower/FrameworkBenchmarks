@@ -1,10 +1,18 @@
 #!/bin/bash
 
-sed -i 's|tcp(.*:3306)|tcp('"${DBHOST}"':3306)|g' server.go
+fw_depends postgresql go
 
-fw_depends go
+set -x
 
-go get github.com/go-sql-driver/mysql
-go get github.com/labstack/echo
+# Install glide into GOPATH
+mkdir -p bin
+curl https://glide.sh/get | sh
+glide -v
 
-go run server.go &
+pushd src
+glide install
+popd
+
+go install app
+
+app &
