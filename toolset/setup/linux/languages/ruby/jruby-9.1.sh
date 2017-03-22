@@ -6,7 +6,7 @@ fw_installed jruby-9.1 && return 0
 
 # rvm stable [typically] only provides one version of jruby-9.0
 # update this when it changes
-JRUBY_VERSION="9.1.7.0"
+JRUBY_VERSION="9.1.8.0"
 
 rvm install jruby-$JRUBY_VERSION
 
