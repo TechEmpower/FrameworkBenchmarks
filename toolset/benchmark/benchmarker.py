@@ -149,6 +149,7 @@ class Benchmarker:
 
 
         self.__set_completion_time()
+        self.__upload_results()
         self.__finish()
         return result
 
