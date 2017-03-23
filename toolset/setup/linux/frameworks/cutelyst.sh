@@ -2,7 +2,7 @@
 
 fw_installed cutelyst && return 0
 
-CUTELYST_VER=r1.4.0
+CUTELYST_VER=1.5.0
 QT_VERSION_MM=56
 QT_VERSION_FULL=562-trusty
 
@@ -24,15 +24,15 @@ qt${QT_VERSION_MM}tools
 
 export CMAKE_PREFIX_PATH=/opt/qt${QT_VERSION_MM};
 
-fw_get -O https://github.com/cutelyst/cutelyst/archive/$CUTELYST_VER.tar.gz
-fw_untar $CUTELYST_VER.tar.gz
+fw_get -O https://github.com/cutelyst/cutelyst/archive/v$CUTELYST_VER.tar.gz
+fw_untar v$CUTELYST_VER.tar.gz
 
 cd cutelyst-$CUTELYST_VER
 mkdir build && cd build
 
 cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$IROOT -DUSE_JEMALLOC=on
 
-make -j $MAX_THREADS && sudo make install
+make -j $MAX_THREADS && make install
 
 echo "QT_VERSION_MM=${QT_VERSION_MM}" > $IROOT/cutelyst.installed
 

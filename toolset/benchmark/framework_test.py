@@ -5,6 +5,7 @@ from benchmark.test_types import *
 import importlib
 import os
 import subprocess
+import socket
 import time
 import re
 from pprint import pprint
@@ -174,7 +175,7 @@ class FrameworkTest:
 
     os.environ['TROOT'] = self.directory
     os.environ['IROOT'] = self.install_root
-    os.environ['DBHOST'] = self.database_host
+    os.environ['DBHOST'] = socket.gethostbyname(self.database_host)
     os.environ['LOGDIR'] = logDir
     os.environ['MAX_THREADS'] = str(self.benchmarker.threads)
     os.environ['MAX_CONCURRENCY'] = str(max(self.benchmarker.concurrency_levels))
@@ -228,7 +229,7 @@ class FrameworkTest:
       %s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\"''' % (self.fwroot,
         self.directory,
         self.install_root,
-        self.database_host,
+        socket.gethostbyname(self.database_host),
         logDir,
         self.benchmarker.threads,
         max(self.benchmarker.concurrency_levels),
@@ -680,7 +681,7 @@ class FrameworkTest:
                                       --rpc --rpcd --output {output_file}".format(output_file=output_file)
     cmd = shlex.split(dstat_string)
     dev_null = open(os.devnull, "w")
-    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null)
+    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null, stderr=subprocess.STDOUT)
 
   ##############################################################
   # Begin __end_logging
