@@ -473,6 +473,11 @@ int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
 	                                                      req->conn->ctx);
 
 	const size_t num_query = get_query_number(req);
+
+	// MAX_QUERIES is a relatively small number, so assume no overflow in the following
+	// arithmetic operations.
+	assert(num_query <= MAX_QUERIES);
+
 	size_t base_size = offsetof(multiple_query_ctx_t, res) + num_query * sizeof(query_result_t);
 
 	base_size = ((base_size + _Alignof(query_param_t) - 1) / _Alignof(query_param_t));
@@ -578,6 +583,11 @@ int updates(struct st_h2o_handler_t *self, h2o_req_t *req)
 	                                                      req->conn->ctx);
 
 	const size_t num_query = get_query_number(req);
+
+	// MAX_QUERIES is a relatively small number, so assume no overflow in the following
+	// arithmetic operations.
+	assert(num_query <= MAX_QUERIES);
+
 	size_t base_size = offsetof(update_ctx_t, res) + num_query * sizeof(query_result_t);
 
 	base_size = ((base_size + _Alignof(update_param_t) - 1) / _Alignof(update_param_t));
