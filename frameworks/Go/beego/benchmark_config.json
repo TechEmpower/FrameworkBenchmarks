@@ -19,7 +19,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "beego-mysql-orm",
+      "display_name": "beego",
       "notes": "",
       "versus": "go"
     }
