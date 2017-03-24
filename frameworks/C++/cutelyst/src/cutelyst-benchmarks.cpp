@@ -32,7 +32,7 @@ cutelyst_benchmarks::~cutelyst_benchmarks()
 
 bool cutelyst_benchmarks::init()
 {
-    if (config(QLatin1String("SendDate")).value<bool>()) {
+    if (config(QStringLiteral("SendDate")).value<bool>()) {
         qDebug() << "Manually send date";
         new Root(this);
     }
@@ -44,36 +44,36 @@ bool cutelyst_benchmarks::init()
     new FortuneTest(this);
     new PlaintextTest(this);
 
-    defaultHeaders().setServer(QLatin1String("Cutelyst"));
-    defaultHeaders().removeHeader(QLatin1String("X-Cutelyst"));
+    if (defaultHeaders().server().isEmpty()) {
+        defaultHeaders().setServer(QStringLiteral("Cutelyst"));
+    }
+    defaultHeaders().removeHeader(QStringLiteral("X-Cutelyst"));
 
     return true;
 }
 
 bool cutelyst_benchmarks::postFork()
 {
+    QMutexLocker locker(&mutex); // QSqlDatabase::addDatabase is not thread-safe
 
-    const auto driver = config(QLatin1String("Driver")).toString();
+    QSqlDatabase db;
+    const auto driver = config(QStringLiteral("Driver")).toString();
     if (driver == QLatin1String("QPSQL")) {
-        QSqlDatabase db;
         db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(QStringLiteral("postgres")));
-        db.setDatabaseName(QLatin1String("hello_world"));
-        db.setUserName(QLatin1String("benchmarkdbuser"));
-        db.setPassword(QLatin1String("benchmarkdbpass"));
-        db.setHostName(config(QLatin1String("DatabaseHostName")).toString());
+        db.setDatabaseName(QStringLiteral("hello_world"));
+        db.setUserName(QStringLiteral("benchmarkdbuser"));
+        db.setPassword(QStringLiteral("benchmarkdbpass"));
+        db.setHostName(config(QStringLiteral("DatabaseHostName")).toString());
         if (!db.open()) {
             qDebug() << "Error opening PostgreSQL db:" << db << db.connectionName() << db.lastError().databaseText();
             return false;
         }
     } else if (driver == QLatin1String("QMYSQL")) {
-        QMutexLocker locker(&mutex); // MySQL driver is not thread-safe
-
-        QSqlDatabase db;
         db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(QStringLiteral("mysql")));
-        db.setDatabaseName(QLatin1String("hello_world"));
-        db.setUserName(QLatin1String("benchmarkdbuser"));
-        db.setPassword(QLatin1String("benchmarkdbpass"));
-        db.setHostName(config(QLatin1String("DatabaseHostName")).toString());
+        db.setDatabaseName(QStringLiteral("hello_world"));
+        db.setUserName(QStringLiteral("benchmarkdbuser"));
+        db.setPassword(QStringLiteral("benchmarkdbpass"));
+        db.setHostName(config(QStringLiteral("DatabaseHostName")).toString());
         if (!db.open()) {
             qDebug() << "Error opening MySQL db:" << db << db.connectionName() << db.lastError().databaseText();
             return false;

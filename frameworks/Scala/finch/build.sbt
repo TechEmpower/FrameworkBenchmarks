@@ -7,7 +7,6 @@ scalaVersion := "2.11.8"
 com.github.retronym.SbtOneJar.oneJarSettings
 
 libraryDependencies ++= Seq(
-  "com.github.finagle" %% "finch-core" % "0.12.0",
-  "com.github.finagle" %% "finch-circe" % "0.12.0",
-  "io.circe" %% "circe-generic" % "0.7.0"
+  "com.github.finagle" %% "finch-core" % "0.13.0",
+  "com.github.finagle" %% "finch-circe" % "0.13.0"
 )

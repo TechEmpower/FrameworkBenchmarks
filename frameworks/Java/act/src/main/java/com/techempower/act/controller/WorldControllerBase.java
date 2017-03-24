@@ -3,9 +3,13 @@ package com.techempower.act.controller;
 import act.app.conf.AutoConfig;
 import act.controller.Controller;
 import act.db.Dao;
+import com.avaje.ebean.Transaction;
+import com.avaje.ebean.annotation.Transactional;
 import com.techempower.act.domain.IWorld;
+import com.techempower.act.mongo.domain.World;
 import org.osgl.$;
 import org.osgl.mvc.annotation.GetAction;
+import org.osgl.util.C;
 import org.osgl.util.Const;
 
 import java.util.ArrayList;
@@ -48,18 +52,29 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 	@GetAction("updates")
 	public final void updateQueries(String queries) {
 		int q = regulateQueries(queries);
-		List<MODEL_TYPE> retVal = new ArrayList<>();
+		List<MODEL_TYPE> retVal = doUpdate(q);
+		json(retVal);
+	}
+
+	protected List<MODEL_TYPE> doUpdate(int q) {
+		List<MODEL_TYPE> retVal = C.newList();
 		for (int i = 0; i < q; ++i) {
 			retVal.add(findAndModifyOne());
 		}
-		json(retVal);
+		worldDao.save(retVal);
+		return retVal;
 	}
 
 	protected final MODEL_TYPE findOne() {
 		return worldDao.findById(randomWorldNumber());
 	}
 
-	protected abstract MODEL_TYPE findAndModifyOne();
+	protected final MODEL_TYPE findAndModifyOne() {
+		MODEL_TYPE world = findOne();
+		notFoundIfNull(world);
+		world.setRandomNumber(randomWorldNumber());
+		return world;
+	}
 
 	private int regulateQueries(String param) {
 		if (null == param) {

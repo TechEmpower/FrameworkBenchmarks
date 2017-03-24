@@ -65,12 +65,31 @@ static const struct {
 	const char *query;
 } prepared_statement[] = {
 	{FORTUNE_TABLE_NAME, "SELECT * FROM " FORTUNE_TABLE_NAME ";"},
-	{WORLD_TABLE_NAME,
-	 "SELECT * FROM " WORLD_TABLE_NAME " WHERE " ID_FIELD_NAME " = $1::integer;"},
+	{WORLD_TABLE_NAME, "SELECT * FROM " WORLD_TABLE_NAME " WHERE " ID_FIELD_NAME " = $1::integer;"},
 	{UPDATE_QUERY_NAME,
 	 "UPDATE " WORLD_TABLE_NAME " SET randomNumber = $2::integer "
 	 "WHERE " ID_FIELD_NAME " = $1::integer;"},
 };
+
+static int do_database_write(db_conn_t *db_conn)
+{
+	assert(db_conn->param);
+
+	int ret = db_conn->param->on_write_ready(db_conn->param, db_conn->conn);
+
+	if (!ret)
+		db_conn->flags &= ~IS_WRITING;
+	else if (ret < 0) {
+		ERROR(PQerrorMessage(db_conn->conn));
+		on_database_error(db_conn, DB_ERROR);
+	}
+	else if (start_database_write_polling(db_conn))
+		on_database_error(db_conn, DB_ERROR);
+	else
+		ret = 0;
+
+	return ret;
+}
 
 static void do_execute_query(db_conn_t *db_conn)
 {
@@ -95,8 +114,10 @@ static void do_execute_query(db_conn_t *db_conn)
 		h2o_socket_read_start(db_conn->sock, on_database_read_ready);
 		on_database_write_ready(&db_conn->on_write_ready);
 	}
-	else
-		on_database_error(db_conn, PQerrorMessage(db_conn->conn));
+	else {
+		ERROR(PQerrorMessage(db_conn->conn));
+		on_database_error(db_conn, DB_ERROR);
+	}
 }
 
 static void error_notification(thread_context_t *ctx, bool timeout, const char *error_string)
@@ -140,6 +161,7 @@ static void on_database_connect_timeout(h2o_timeout_entry_t *entry)
 {
 	db_conn_t * const db_conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, h2o_timeout_entry, entry);
 
+	ERROR(DB_TIMEOUT_ERROR);
 	on_database_connect_error(db_conn, true, DB_TIMEOUT_ERROR);
 }
 
@@ -167,12 +189,14 @@ static void on_database_read_ready(h2o_socket_t *db_sock, const char *err)
 {
 	db_conn_t * const db_conn = db_sock->data;
 
-	if (!err) {
+	if (err)
+		ERROR(err);
+	else {
 		if (PQconsumeInput(db_conn->conn)) {
 			const int send_status = PQflush(db_conn->conn);
 
 			if (send_status > 0 && start_database_write_polling(db_conn)) {
-				on_database_error(db_conn, EPOLL_ERR_MSG);
+				on_database_error(db_conn, DB_ERROR);
 				return;
 			}
 
@@ -196,8 +220,12 @@ static void on_database_read_ready(h2o_socket_t *db_sock, const char *err)
 							default:
 								break;
 						}
-					else if (result)
+					else if (result) {
+						if (PQresultStatus(result) != PGRES_COMMAND_OK)
+							LIBRARY_ERROR("PQresultStatus", PQresultErrorMessage(result));
+
 						PQclear(result);
+					}
 
 					if (!result) {
 						assert(!db_conn->param);
@@ -212,15 +240,17 @@ static void on_database_read_ready(h2o_socket_t *db_sock, const char *err)
 			}
 		}
 
-		err = PQerrorMessage(db_conn->conn);
+		ERROR(PQerrorMessage(db_conn->conn));
 	}
 
-	on_database_error(db_conn, err);
+	on_database_error(db_conn, DB_ERROR);
 }
 
 static void on_database_timeout(h2o_timeout_entry_t *entry)
 {
 	db_conn_t * const db_conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, h2o_timeout_entry, entry);
+
+	ERROR(DB_TIMEOUT_ERROR);
 
 	if (db_conn->param) {
 		db_conn->param->on_timeout(db_conn->param);
@@ -241,10 +271,12 @@ static void on_database_write_ready(void *data)
 			if (db_conn->flags & IS_WRITING && db_conn->param)
 				do_database_write(db_conn);
 		}
-		else if (send_status < 0)
-			on_database_error(db_conn, PQerrorMessage(db_conn->conn));
+		else if (send_status < 0) {
+			LIBRARY_ERROR("PQflush", PQerrorMessage(db_conn->conn));
+			on_database_error(db_conn, DB_ERROR);
+		}
 		else if (send_status > 0 && start_database_write_polling(db_conn))
-			on_database_error(db_conn, EPOLL_ERR_MSG);
+			on_database_error(db_conn, DB_ERROR);
 	}
 	else
 		poll_database_connection(db_conn->sock, NULL);
@@ -254,22 +286,22 @@ static void poll_database_connection(h2o_socket_t *db_sock, const char *err)
 {
 	db_conn_t * const db_conn = db_sock->data;
 
-	if (!err) {
+	if (err)
+		ERROR(err);
+	else {
 		const PostgresPollingStatusType status = db_conn->flags & IS_RESETTING ?
 		                                         PQresetPoll(db_conn->conn) :
 		                                         PQconnectPoll(db_conn->conn);
 
 		switch (status) {
 			case PGRES_POLLING_WRITING:
-				if (start_database_write_polling(db_conn)) {
-					err = EPOLL_ERR_MSG;
+				if (start_database_write_polling(db_conn))
 					break;
-				}
 
 				return;
 			case PGRES_POLLING_OK:
 				if (PQsetnonblocking(db_conn->conn, 1)) {
-					err = PQerrorMessage(db_conn->conn);
+					LIBRARY_ERROR("PQsetnonblocking", PQerrorMessage(db_conn->conn));
 					break;
 				}
 
@@ -280,11 +312,11 @@ static void poll_database_connection(h2o_socket_t *db_sock, const char *err)
 			case PGRES_POLLING_READING:
 				return;
 			default:
-				err = PQerrorMessage(db_conn->conn);
+				ERROR(PQerrorMessage(db_conn->conn));
 		}
 	}
 
-	on_database_connect_error(db_conn, false, err);
+	on_database_connect_error(db_conn, false, DB_ERROR);
 }
 
 static void process_query(db_conn_t *db_conn)
@@ -303,8 +335,10 @@ static void process_query(db_conn_t *db_conn)
 			h2o_socket_read_start(db_conn->sock, on_database_read_ready);
 			on_database_write_ready(&db_conn->on_write_ready);
 		}
-		else
-			on_database_connect_error(db_conn, false, PQerrorMessage(db_conn->conn));
+		else {
+			LIBRARY_ERROR("PQsendPrepare", PQerrorMessage(db_conn->conn));
+			on_database_connect_error(db_conn, false, DB_ERROR);
+		}
 	}
 	else if (db_conn->ctx->db_state.query_num) {
 		db_conn->ctx->db_state.query_num--;
@@ -329,9 +363,6 @@ static void process_query(db_conn_t *db_conn)
 
 static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 {
-	char buf[128] = "";
-	const char *error_string = buf;
-
 	if (db_conn) {
 		db_conn->prep_stmt_idx = 0;
 		db_conn->flags = IS_RESETTING;
@@ -341,8 +372,7 @@ static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 		h2o_socket_close(db_conn->sock);
 
 		if (!PQresetStart(db_conn->conn)) {
-			strncpy(buf, PQerrorMessage(db_conn->conn), sizeof(buf));
-			buf[sizeof(buf) - 1] = '\0';
+			LIBRARY_ERROR("PQresetStart", PQerrorMessage(db_conn->conn));
 			goto error_dup;
 		}
 	}
@@ -351,7 +381,7 @@ static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 		db_conn = calloc(1, sizeof(*db_conn));
 
 		if (!db_conn) {
-			error_string = MEM_ALLOC_ERR_MSG;
+			STANDARD_ERROR("calloc");
 			goto error;
 		}
 
@@ -360,13 +390,13 @@ static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 		db_conn->conn = PQconnectStart(conninfo);
 
 		if (!db_conn->conn) {
-			error_string = MEM_ALLOC_ERR_MSG;
+			errno = ENOMEM;
+			STANDARD_ERROR("PQconnectStart");
 			goto error_connect;
 		}
 
 		if (PQstatus(db_conn->conn) == CONNECTION_BAD) {
-			strncpy(buf, PQerrorMessage(db_conn->conn), sizeof(buf));
-			buf[sizeof(buf) - 1] = '\0';
+			LIBRARY_ERROR("PQstatus", PQerrorMessage(db_conn->conn));
 			goto error_dup;
 		}
 	}
@@ -374,18 +404,14 @@ static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 	const int sd = dup(PQsocket(db_conn->conn));
 
 	if (sd < 0) {
-		if (strerror_r(errno, buf, sizeof(buf)))
-			*buf = '\0';
-
+		STANDARD_ERROR("dup");
 		goto error_dup;
 	}
 
 	const int flags = fcntl(sd, F_GETFD);
 
 	if (flags < 0 || fcntl(sd, F_SETFD, flags | FD_CLOEXEC)) {
-		if (strerror_r(errno, buf, sizeof(buf)))
-			*buf = '\0';
-
+		STANDARD_ERROR("fcntl");
 		goto error_dup;
 	}
 
@@ -408,10 +434,10 @@ static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 		h2o_socket_read_stop(db_conn->sock);
 		h2o_timeout_unlink(&db_conn->h2o_timeout_entry);
 		h2o_socket_close(db_conn->sock);
-		error_string = "socket write polling failure";
 	}
 	else {
-		error_string = "could not allocate H2O socket";
+		errno = ENOMEM;
+		STANDARD_ERROR("h2o_evloop_socket_create");
 		close(sd);
 	}
 
@@ -420,7 +446,7 @@ error_dup:
 error_connect:
 	free(db_conn);
 error:
-	error_notification(ctx, false, error_string);
+	error_notification(ctx, false, DB_ERROR);
 }
 
 static int start_database_write_polling(db_conn_t *db_conn)
@@ -442,26 +468,8 @@ static void stop_database_write_polling(db_conn_t *db_conn)
 
 void connect_to_database(thread_context_t *ctx)
 {
-	for (size_t i = ctx->db_state.db_conn_num; i < ctx->config->max_db_conn_num; i++)
+	for (size_t i = ctx->config->max_db_conn_num - ctx->db_state.db_conn_num; i > 0; i--)
 		start_database_connect(ctx, NULL);
-}
-
-static int do_database_write(db_conn_t *db_conn)
-{
-	assert(db_conn->param);
-
-	int ret = db_conn->param->on_write_ready(db_conn->param, db_conn->conn);
-
-	if (!ret)
-		db_conn->flags &= ~IS_WRITING;
-	else if (ret < 0)
-		on_database_error(db_conn, PQerrorMessage(db_conn->conn));
-	else if (start_database_write_polling(db_conn))
-		on_database_error(db_conn, EPOLL_ERR_MSG);
-	else
-		ret = 0;
-
-	return ret;
 }
 
 int execute_query(thread_context_t *ctx, db_query_param_t *param)

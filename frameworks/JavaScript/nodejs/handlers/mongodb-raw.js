@@ -20,13 +20,13 @@ const mongodbRandomWorld = (callback) => {
     world._id = undefined; // remove _id from query response
     callback(err, world);
   });
-}
+};
 
 const mongodbGetAllFortunes = (callback) => {
   collections.Fortune.find().toArray((err, fortunes) => {
     callback(err, fortunes);
   })
-}
+};
 
 const mongodbDriverUpdateQuery = (callback) => {
   collections.World.findOne({id: h.randomTfbNumber()}, (err, world) => {
@@ -35,7 +35,7 @@ const mongodbDriverUpdateQuery = (callback) => {
       callback(err, { id: world.id, randomnumber: world.randomnumber } );
     });
   });
-}
+};
 
 
 module.exports = {

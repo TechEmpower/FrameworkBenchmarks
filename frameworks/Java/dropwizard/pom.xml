@@ -12,7 +12,7 @@
 
         <dropwizard.version>1.0.3</dropwizard.version>
         <mysql-connector-java.version>5.1.38</mysql-connector-java.version>
-        <mongojack.version>2.3.0</mongojack.version>
+        <mongojack.version>2.6.1</mongojack.version>
         <postgres-jdbc.version>9.4.1208</postgres-jdbc.version>
 
         <main.class>com.example.helloworld.HelloWorldService</main.class>

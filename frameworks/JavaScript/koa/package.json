@@ -6,10 +6,10 @@
   "private": true,
   "dependencies": {
     "co-monk": "1.0.0",
-    "koa": "1.2.0",
-    "koa-bodyparser": "2.0.0",
-    "koa-handlebars": "0.5.7",
-    "koa-mongo": "0.5.0",
+    "koa": "1.2.5",
+    "koa-bodyparser": "2.3.0",
+    "koa-handlebars": "1.0.0",
+    "koa-mongo": "0.7.0",
     "koa-override": "1.0.0",
     "koa-route": "2.4.2",
     "monk": "3.0.6"

@@ -19,21 +19,19 @@ const queries = {
       " WHERE id = ", rows[0]['id']
     ].join('');
   }
-}
+};
 
-const mysqlRandomWorld = (callback) => {
+const mysqlRandomWorld = (callback) =>
   connection.query(queries.RANDOM_WORLD, (err, rows, fields) => {
     callback(err, rows[0]);
   });
-}
 
-const mysqlGetAllFortunes = (callback) => {
+const mysqlGetAllFortunes = (callback) =>
   connection.query(queries.ALL_FORTUNES, (err, rows, fields) => {
     callback(err, rows);
-  })
-}
+  });
 
-const mysqlUpdateQuery = (callback) => {
+const mysqlUpdateQuery = (callback) =>
   connection.query(queries.RANDOM_WORLD, (err, rows, fields) => {
     if (err) { return process.exit(1); }
 
@@ -44,7 +42,6 @@ const mysqlUpdateQuery = (callback) => {
       callback(err, rows[0]);
     });
   });
-}
 
 module.exports = {
 
@@ -73,9 +70,7 @@ module.exports = {
       if (err) { return process.exit(1); }
 
       fortunes.push(h.ADDITIONAL_FORTUNE);
-      fortunes.sort((a, b) => {
-        return a.message.localeCompare(b.message);
-      })
+      fortunes.sort((a, b) => a.message.localeCompare(b.message));
       h.addTfbHeaders(res, 'html');
       res.end(h.fortunesTemplate({
         fortunes: fortunes
@@ -94,4 +89,4 @@ module.exports = {
     });
   } 
 
-}
+};

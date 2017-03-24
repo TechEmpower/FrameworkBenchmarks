@@ -83,6 +83,7 @@ env:
     - "TESTDIR=Java/jetty"
     - "TESTDIR=Java/jlhttp"
     - "TESTDIR=Java/jooby"
+    - "TESTDIR=Java/light-java"
     - "TESTDIR=Java/netty"
     - "TESTDIR=Java/ninja-standalone"
     - "TESTDIR=Java/officefloor"
@@ -190,6 +191,7 @@ env:
     - "TESTDIR=Scala/s-server"
     - "TESTDIR=Scala/http4s"
     - "TESTDIR=Scala/finch"
+    - "TESTDIR=Swift/vapor"
     - "TESTDIR=Ur/urweb"
 
 before_script:

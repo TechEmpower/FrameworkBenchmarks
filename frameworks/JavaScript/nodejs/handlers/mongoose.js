@@ -1,7 +1,7 @@
 const h = require('../helper');
 const async = require('async');
 const Mongoose = require('mongoose');
-const connection = Mongoose.connect('mongodb://TFB-database/hello_world')
+const connection = Mongoose.connect('mongodb://TFB-database/hello_world');
 
 // Mongoose Setup
 const WorldSchema = new Mongoose.Schema({
@@ -24,12 +24,12 @@ const mongooseRandomWorld = (callback) => {
   Worlds.findOne({
     id: h.randomTfbNumber()
   }).exec(callback);
-}
+};
 
 const mongooseGetAllFortunes = (callback) => {
   Fortunes.find({})
     .exec(callback);
-}
+};
 
 module.exports = {
 
@@ -43,7 +43,7 @@ module.exports = {
   },
 
   MultipleQueries: (queries, req, res) => {
-    const queryFunctions = h.fillArray(mongooseRandomWorld, queries)
+    const queryFunctions = h.fillArray(mongooseRandomWorld, queries);
 
     async.parallel(queryFunctions, (err, results) => {
       if (err) { return process.exit(1); }

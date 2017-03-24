@@ -25,9 +25,6 @@
 #include <stdarg.h>
 #include <yajl/yajl_gen.h>
 
-#define EPOLL_ERR_MSG "epoll_ctl() failure\n"
-#define MEM_ALLOC_ERR_MSG "memory allocation failure\n"
-
 #define CHECK_ERRNO(function, ...) \
 	do { \
 		const int error_code = (function)(__VA_ARGS__); \
@@ -71,12 +68,14 @@
 	} while(0)
 
 #define ERROR(...) print_error(__FILE__, __LINE__, __func__, __VA_ARGS__)
-#define LIBRARY_ERROR(function) print_library_error(__FILE__, __LINE__, (function), errno)
+#define LIBRARY_ERROR(function, ...) print_error(__FILE__, __LINE__, (function), __VA_ARGS__)
+#define STANDARD_ERROR(function) print_library_error(__FILE__, __LINE__, (function), errno)
 
 void print_error(const char *file,
                  unsigned line,
                  const char *function,
-                 const char *error_string, ...);
+                 const char *error_string,
+                 ...);
 void print_library_error(const char *file,
                          unsigned line,
                          const char *function,

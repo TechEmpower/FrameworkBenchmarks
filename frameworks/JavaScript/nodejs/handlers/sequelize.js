@@ -1,5 +1,4 @@
 const h = require('../helper');
-const Promise = require('bluebird');
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
@@ -9,7 +8,10 @@ const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpa
 });
 
 const Worlds = sequelize.define('World', {
-  id:           { type: 'Sequelize.INTEGER' },
+  id: {
+    type: 'Sequelize.INTEGER',
+    primaryKey: true
+  },
   randomNumber: { type: 'Sequelize.INTEGER' }
 }, {
   timestamps: false,
@@ -17,7 +19,10 @@ const Worlds = sequelize.define('World', {
 });
 
 const Fortunes = sequelize.define('Fortune', {
-  id:      { type: 'Sequelize.INTEGER' },
+  id: {
+    type: 'Sequelize.INTEGER',
+    primaryKey: true
+  },
   message: { type: 'Sequelize.STRING' }
 }, {
   timestamps: false,
@@ -32,7 +37,7 @@ const randomWorldPromise = () => {
   }).catch((err) => {
     process.exit(1);
   });
-}
+};
 
 module.exports = {
 
@@ -93,7 +98,7 @@ module.exports = {
       }).catch((err) => {
         process.exit(1);
       });
-    }
+    };
 
     Promise.all(worldPromises).then((worlds) => {
       const updates = worlds.map((e) => worldUpdate(e));
@@ -105,4 +110,4 @@ module.exports = {
     });
   }
 
-}
+};

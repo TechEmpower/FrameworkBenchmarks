@@ -18,13 +18,4 @@ public final class WorldController extends WorldControllerBase<World, MorphiaQue
 		super(worldDao);
 	}
 
-	@Override
-	protected World findAndModifyOne() {
-		int id = randomWorldNumber();
-		World world = worldDao.findById(id);
-		notFoundIfNull(world);
-		world.setRandomNumber(randomWorldNumber());
-		worldDao.save(world);
-		return world;
-	}
 }

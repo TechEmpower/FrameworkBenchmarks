@@ -31,6 +31,8 @@
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(*(a)))
 // mainly used to silence compiler warnings about unused function parameters
 #define IGNORE_FUNCTION_PARAMETER(p) ((void) (p))
+// Do not use the following MAX and MIN macros with parameters that have side effects.
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 #define MKSTR(x) TOSTRING(x)
 #define TOSTRING(x) # x
@@ -50,6 +52,7 @@ typedef struct {
 	size_t max_db_conn_num;
 	size_t max_query_num;
 	size_t thread_num;
+	uint16_t https_port;
 	uint16_t port;
 } config_t;
 
@@ -60,7 +63,6 @@ typedef struct {
 	SSL_CTX *ssl_ctx;
 	global_thread_data_t *global_thread_data;
 	size_t memory_alignment;
-	int listener_sd;
 	int signal_fd;
 	bool shutdown;
 	h2o_globalconf_t h2o_config;
