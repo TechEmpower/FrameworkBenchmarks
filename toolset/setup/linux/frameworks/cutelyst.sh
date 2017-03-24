@@ -34,7 +34,11 @@ fw_untar v$CUTELYST_VER.tar.gz
 cd cutelyst-$CUTELYST_VER
 mkdir build && cd build
 
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CROOT -DUSE_JEMALLOC=on
+cmake .. \
+-DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_INSTALL_PREFIX=$CROOT \
+-DUWSGI_PLUGINS_DIR=${CROOT}/lib/uwsgi/plugins \
+-DUSE_JEMALLOC=on
 
 make -j $MAX_THREADS && sudo make install
 
