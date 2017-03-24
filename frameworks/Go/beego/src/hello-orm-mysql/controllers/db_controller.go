@@ -4,7 +4,7 @@ import (
 	"log"
 	"math/rand"
 
-	"hello/models"
+	"hello-orm-mysql/models"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -22,6 +22,6 @@ func (c *DBController) Get() {
 	if err != nil {
 		log.Fatalf("Error read world row: %s", err.Error())
 	}
-	c.Data["json"] = &w
+	c.Data[json] = &w
 	c.ServeJSON()
 }

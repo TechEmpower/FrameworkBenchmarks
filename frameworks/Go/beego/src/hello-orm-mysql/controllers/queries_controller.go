@@ -1,13 +1,13 @@
 package controllers
 
-import "hello/models"
+import "hello-orm-mysql/models"
 
 type QueriesController struct {
 	Base
 }
 
 func (c *QueriesController) Get() {
-	queries, _ := c.GetInt("queries")
-	c.Data["json"] = models.GetQueriesWorld(queries)
+	n := c.getQueriesParam()
+	c.Data[json] = models.GetQueriesWorld(n)
 	c.ServeJSON()
 }

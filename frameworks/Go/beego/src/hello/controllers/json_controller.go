@@ -7,7 +7,6 @@ type JsonController struct {
 }
 
 func (c *JsonController) Get() {
-	m := models.Message{Message: "Hello, World!"}
-	c.Data["json"] = &m
+	c.Data[json] = &models.Message{Message: helloWorldString}
 	c.ServeJSON()
 }

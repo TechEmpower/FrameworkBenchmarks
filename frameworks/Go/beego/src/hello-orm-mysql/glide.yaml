@@ -1,4 +1,4 @@
-package: beego/src/hello
+package: beego/src/hello-orm-mysql
 import:
 - package: github.com/astaxie/beego
   version: ^1.8.0
