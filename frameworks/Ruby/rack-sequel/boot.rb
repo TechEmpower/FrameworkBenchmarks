@@ -43,7 +43,7 @@ def connect(dbtype)
   end
 
   Sequel.connect \
-    '%<adapter>s://%<host>s/%<database>s?user=%<user>s&password=%<password>s' % {
+    '%{adapter}://%{host}/%{database}?user=%{user}&password=%{password}' % {
       :adapter=>adapters.fetch(dbtype).fetch(defined?(JRUBY_VERSION) ? :jruby : :mri),
       :host=>ENV.fetch('DBHOST', '127.0.0.1'),
       :database=>'hello_world',
