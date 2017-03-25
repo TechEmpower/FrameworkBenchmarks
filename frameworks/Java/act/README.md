@@ -136,9 +136,9 @@ The common base classes for mysql and pgsql classes
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [ActFramework 1.0.2](http://actframework.org/)
-* [act-ebean plugin 1.0.1](https://github.com/actframework/act-ebean)
-* [act-morphia plugin 1.0.1](https://github.com/actframework/act-morphia)
+* [ActFramework 1.0.4](http://actframework.org/)
+* [act-ebean plugin 1.0.3](https://github.com/actframework/act-ebean)
+* [act-morphia plugin 1.0.2](https://github.com/actframework/act-morphia)
 * [Undertow 1.4.8.Final](http://undertow.io/)
 
 ## Local Test Result
