@@ -8,4 +8,4 @@ go get -u github.com/revel/cmd/revel
 go get -u github.com/coocood/qbs
 go get -u github.com/eaigner/jet
 
-bin/revel run benchmark prod &
+bin/revel run benchmark prod
