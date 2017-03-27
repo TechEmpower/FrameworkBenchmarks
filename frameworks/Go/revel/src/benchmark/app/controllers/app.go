@@ -70,7 +70,7 @@ type App struct {
 }
 
 func (c App) Json() revel.Result {
-	return c.RenderJson(MessageStruct{"Hello, World!"})
+	return c.RenderJSON(MessageStruct{"Hello, World!"})
 }
 
 func (c App) Plaintext() revel.Result {
@@ -85,7 +85,7 @@ func (c App) Db(queries int) revel.Result {
 		if err != nil {
 			revel.ERROR.Fatalf("Error scanning world row: %v", err)
 		}
-		return c.RenderJson(w)
+		return c.RenderJSON(w)
 	}
 
 	ww := make([]World, queries)
@@ -96,7 +96,7 @@ func (c App) Db(queries int) revel.Result {
 			revel.ERROR.Fatalf("Error scanning world row: %v", err)
 		}
 	}
-	return c.RenderJson(ww)
+	return c.RenderJSON(ww)
 }
 
 func (c App) Update(queries int) revel.Result {
@@ -112,7 +112,7 @@ func (c App) Update(queries int) revel.Result {
 		if err != nil {
 			revel.ERROR.Fatalf("Error updating row: %v", err)
 		}
-		return c.RenderJson(&w)
+		return c.RenderJSON(&w)
 	}
 
 	ww := make([]World, queries)
@@ -125,7 +125,7 @@ func (c App) Update(queries int) revel.Result {
 		ww[i].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
 		updateStatement.Exec(ww[i].RandomNumber, ww[i].Id)
 	}
-	return c.RenderJson(ww)
+	return c.RenderJSON(ww)
 }
 
 func (c App) Fortune() revel.Result {

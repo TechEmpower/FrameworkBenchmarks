@@ -19,7 +19,7 @@ func (c App) QbsDb(queries int) revel.Result {
 		if err != nil {
 			revel.ERROR.Fatalf("Error scanning world row: %v", err)
 		}
-		return c.RenderJson(w)
+		return c.RenderJSON(w)
 	}
 
 	ww := make([]World, queries)
@@ -29,7 +29,7 @@ func (c App) QbsDb(queries int) revel.Result {
 			revel.ERROR.Fatalf("Error scanning world row: %v", err)
 		}
 	}
-	return c.RenderJson(ww)
+	return c.RenderJSON(ww)
 }
 
 func (c App) QbsUpdate(queries int) revel.Result {
@@ -46,7 +46,7 @@ func (c App) QbsUpdate(queries int) revel.Result {
 		if _, err := qbs.Save(&w); err != nil {
 			revel.ERROR.Fatalf("Error updating world row: %v", err)
 		}
-		return c.RenderJson(&w)
+		return c.RenderJSON(&w)
 	}
 
 	ww := make([]World, queries)
@@ -60,7 +60,7 @@ func (c App) QbsUpdate(queries int) revel.Result {
 			revel.ERROR.Fatalf("Error scanning world row: %v", err)
 		}
 	}
-	return c.RenderJson(ww)
+	return c.RenderJSON(ww)
 }
 
 func (c App) QbsFortune() revel.Result {
@@ -72,6 +72,6 @@ func (c App) QbsFortune() revel.Result {
 	fortunes = append(fortunes,
 		&Fortune{Message: "Additional fortune added at request time."})
 	sort.Sort(ByMessage{fortunes})
-	c.RenderArgs["fortunes"] = fortunes
+	c.ViewArgs["fortunes"] = fortunes
 	return c.RenderTemplate("App/Fortune.html")
 }
