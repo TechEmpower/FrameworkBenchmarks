@@ -1042,6 +1042,7 @@ class Benchmarker:
             self.results['uuid'] = str(uuid.uuid4())
             self.results['name'] = datetime.now().strftime(self.results_name)
             self.results['environmentDescription'] = self.results_environment
+            self.results['startTime'] = int(round(time.time() * 1000))
             self.results['completionTime'] = None
             self.results['concurrencyLevels'] = self.concurrency_levels
             self.results['queryIntervals'] = self.query_levels
