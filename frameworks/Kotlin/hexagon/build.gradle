@@ -33,8 +33,11 @@ dependencies {
     compile ("co.there4:hexagon:$hexagonVersion")
     compile ("com.mitchellbosecke:pebble:$pebbleVersion")
 
+    compileOnly ("org.mongodb:mongodb-driver:$mongodbVersion")
+
     // providedCompile excludes the dependency only in the WAR, not in the distribution
     providedCompile ("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
 
+    testCompile ("org.testng:testng:$testngVersion")
     testCompile ("co.there4:hexagon:$hexagonVersion:test")
 }
