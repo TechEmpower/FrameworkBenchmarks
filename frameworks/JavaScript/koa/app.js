@@ -1,31 +1,30 @@
-var cluster = require('cluster')
-  , numCPUs = require('os').cpus().length;
+const cluster = require('cluster'),
+  numCPUs = require('os').cpus().length;
 
 // Koa Deps
-var koa = require('koa')
-  , route = require('koa-route')
-  , handlebars = require('koa-handlebars')
-  , bodyParser = require('koa-bodyparser')
-  , override = require('koa-override');
+const koa = require('koa'),
+  route = require('koa-route'),
+  handlebars = require('koa-handlebars'),
+  bodyParser = require('koa-bodyparser'),
+  override = require('koa-override');
 
 // Monk MongoDB Driver Deps
-var monk = require('monk')
-  , wrap = require('co-monk')
-  , db = monk('mongodb://localhost/hello_world')
-  , worlds = wrap(db.get('world'))
-  , fortunes = wrap(db.get('fortune'));
+const monk = require('monk'),
+  wrap = require('co-monk'),
+  db = monk('mongodb://TFB-database/hello_world'),
+  worlds = wrap(db.get('world')),
+  fortunes = wrap(db.get('fortune'));
 
 if (cluster.isMaster) {
   // Fork workers.
-  for (var i = 0; i < numCPUs; i++) {
+  for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
 
-  cluster.on('exit', function(worker, code, signal) {
-    console.log('worker ' + worker.process.pid + ' died');
-  });
+  cluster.on('exit', (worker, code, signal) =>
+    console.log('worker ' + worker.process.pid + ' died'));
 } else {
-  var app = module.exports = koa();
+  const app = module.exports = koa();
   app.use(bodyParser());
   app.use(override());
   app.use(handlebars({
@@ -42,25 +41,23 @@ if (cluster.isMaster) {
   app.use(route.get('/plaintext', textHandler));
 
   // Helpers
-  function getRandomNumber() {
-    return Math.floor(Math.random()*10000) + 1;
-  };
+  const getRandomNumber = () => ~~(Math.random()*10000) + 1;
 
-  function validateParam(param) {
-    var numOfQueries = isNaN(param) ? 1 : param;
+  const validateParam = (param) => {
+    let numOfQueries = isNaN(param) ? 1 : param;
     if (numOfQueries > 500) {
       numOfQueries = 500;
     } else if (numOfQueries < 1) {
       numOfQueries = 1;
     }
     return numOfQueries;
-  }
+  };
 
   // Query Helpers
   function *worldUpdateQuery() {
-    var randomId = getRandomNumber();
-    var randomNumber = getRandomNumber();
-    var result = yield worlds.update(
+    const randomId = getRandomNumber();
+    const randomNumber = getRandomNumber();
+    const result = yield worlds.update(
       {id: randomId}, 
       {$set: {randomNumber: randomNumber}}
     );
@@ -93,9 +90,9 @@ if (cluster.isMaster) {
 
   function *queriesHandler() {
     this.set('Server', 'Koa');
-    var numOfQueries = validateParam(this.query.queries);
-    var queries = [];
-    for (var i = 0; i < numOfQueries; i++) {
+    let numOfQueries = validateParam(this.query.queries);
+    const queries = [];
+    for (let i = 0; i < numOfQueries; i++) {
       queries.push(worldQuery);
     }
     this.body = yield queries;
@@ -103,22 +100,20 @@ if (cluster.isMaster) {
 
   function *fortuneHandler() {
     this.set('Server', 'Koa');
-    var fortunes = yield fortunesQuery;
+    const fortunes = yield fortunesQuery;
     fortunes.push({
       id: 0,
       message: 'Additional fortune added at request time.'
     });
-    fortunes.sort(function(a, b) {
-      return a.message < b.message ? -1 : 1;
-    });
+    fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
     yield this.render("fortunes", {fortunes: fortunes});
   }
 
   function *updateHandler() {
     this.set('Server', 'Koa');
-    var numOfUpdates = validateParam(this.query.queries);
-    var queries = [];
-    for (var i = 0; i < numOfUpdates; i++) {
+    const numOfUpdates = validateParam(this.query.queries);
+    const queries = [];
+    for (let i = 0; i < numOfUpdates; i++) {
       queries.push(worldUpdateQuery);
     }
     this.body = yield queries;

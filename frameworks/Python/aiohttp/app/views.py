@@ -17,7 +17,7 @@ def json_response(data):
 
 def get_num_queries(request):
     try:
-        num_queries = int(request.GET.get('queries', 1))
+        num_queries = int(request.match_info.get('queries', 1))
     except ValueError:
         return 1
     if num_queries < 1:
@@ -39,7 +39,7 @@ async def single_database_query_orm(request):
     Test 2 ORM
     """
     id_ = randint(1, 10000)
-    async with request.app['aiopg_engine'].acquire() as conn:
+    async with request.app['pg'].acquire() as conn:
         cur = await conn.execute(select([sa_worlds.c.randomnumber]).where(sa_worlds.c.id == id_))
         r = await cur.first()
     return json_response({'id': id_, 'randomNumber': r[0]})
@@ -51,7 +51,7 @@ async def single_database_query_raw(request):
     """
     id_ = randint(1, 10000)
 
-    async with request.app['asyncpg_pool'].acquire() as conn:
+    async with request.app['pg'].acquire() as conn:
         r = await conn.fetchval('SELECT randomnumber FROM world WHERE id = $1', id_)
     return json_response({'id': id_, 'randomNumber': r})
 
@@ -66,7 +66,7 @@ async def multiple_database_queries_orm(request):
     ids.sort()
 
     result = []
-    async with request.app['aiopg_engine'].acquire() as conn:
+    async with request.app['pg'].acquire() as conn:
         for id_ in ids:
             cur = await conn.execute(select([sa_worlds.c.randomnumber]).where(sa_worlds.c.id == id_))
             r = await cur.first()
@@ -84,7 +84,7 @@ async def multiple_database_queries_raw(request):
     ids.sort()
 
     result = []
-    async with request.app['asyncpg_pool'].acquire() as conn:
+    async with request.app['pg'].acquire() as conn:
         stmt = await conn.prepare('SELECT randomnumber FROM world WHERE id = $1')
         for id_ in ids:
             result.append({
@@ -99,7 +99,7 @@ async def fortunes(request):
     """
     Test 4 ORM
     """
-    async with request.app['aiopg_engine'].acquire() as conn:
+    async with request.app['pg'].acquire() as conn:
         cur = await conn.execute(select([sa_fortunes.c.id, sa_fortunes.c.message]))
         fortunes = list(await cur.fetchall())
     fortunes.append(Fortune(id=0, message='Additional fortune added at request time.'))
@@ -112,7 +112,7 @@ async def fortunes_raw(request):
     """
     Test 4 RAW
     """
-    async with request.app['asyncpg_pool'].acquire() as conn:
+    async with request.app['pg'].acquire() as conn:
         fortunes = await conn.fetch('SELECT * FROM Fortune')
     fortunes.append(dict(id=0, message='Additional fortune added at request time.'))
     fortunes.sort(key=itemgetter('message'))
@@ -129,22 +129,22 @@ async def updates(request):
     ids = [randint(1, 10000) for _ in range(num_queries)]
     ids.sort()
 
-    async with request.app['aiopg_engine'].acquire() as conn:
+    async with request.app['pg'].acquire() as conn:
         for id_ in ids:
             cur = await conn.execute(
                 select([sa_worlds.c.randomnumber])
                 .where(sa_worlds.c.id == id_)
             )
-            r = await cur.first()
+            # the result of this is a dict with the previous random number `randomnumber` which we don't actually use
+            await cur.first()
+            rand_new = randint(1, 10000)
             await conn.execute(
                 sa_worlds.update()
                 .where(sa_worlds.c.id == id_)
-                .values(randomnumber=randint(1, 10000))
+                .values(randomnumber=rand_new)
             )
-            result.append({'id': id_, 'randomNumber': r.randomnumber})
-
+            result.append({'id': id_, 'randomNumber': rand_new})
     return json_response(result)
-
 
 async def updates_raw(request):
     """
@@ -157,16 +157,14 @@ async def updates_raw(request):
 
     result = []
     updates = []
-    async with request.app['asyncpg_pool'].acquire() as conn:
+    async with request.app['pg'].acquire() as conn:
         stmt = await conn.prepare('SELECT randomnumber FROM world WHERE id = $1')
-
         for id_ in ids:
-            result.append({
-                'id': id_,
-                'randomNumber': await stmt.fetchval(id_)
-            })
-
-            updates.append((randint(1, 10000), id_))
+            # the result of this is the int previous random number which we don't actually use
+            await stmt.fetchval(id_)
+            rand_new = randint(1, 10000)
+            result.append({'id': id_, 'randomNumber': rand_new})
+            updates.append((rand_new, id_))
         await conn.executemany('UPDATE world SET randomnumber=$1 WHERE id=$2', updates)
 
     return json_response(result)

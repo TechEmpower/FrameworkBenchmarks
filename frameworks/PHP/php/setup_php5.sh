@@ -2,11 +2,6 @@
 
 fw_depends mysql php5 nginx composer
 
-sed -i "s|localhost|${DBHOST}|g" dborm.php
-sed -i "s|localhost|${DBHOST}|g" dbraw.php
-sed -i "s|localhost|${DBHOST}|g" updateraw.php
-sed -i "s|localhost|${DBHOST}|g" fortune.php
-
 sed -i "s|TEST_ROOT|${TROOT}|g" deploy/php
 sed -i "s|TEST_ROOT|${TROOT}|g" deploy/nginx.conf
 

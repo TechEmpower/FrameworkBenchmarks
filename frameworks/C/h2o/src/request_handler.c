@@ -58,7 +58,7 @@ error_yajl:
 		yajl_gen_free(gen);
 	}
 
-	send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 	return 0;
 }
 

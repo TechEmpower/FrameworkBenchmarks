@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 #include <sys/syscall.h>
 
@@ -30,15 +31,26 @@
 void print_error(const char *file,
                  unsigned line,
                  const char *function,
-                 const char *error_string, ...)
+                 const char *error_string,
+                 ...)
 {
 	char * const file_name = strdup(file);
+	const long tid = syscall(SYS_gettid);
+	struct timespec t = {.tv_sec = 0};
 
 	if (file_name)
 		file = basename(file_name);
 
+	clock_gettime(CLOCK_REALTIME, &t);
 	flockfile(stderr);
-	fprintf(stderr, "[%d] %s: %u: %s(): ", (int) syscall(SYS_gettid), file, line, function);
+	fprintf(stderr,
+	        "%010lld.%09ld [%ld] %s: %u: %s(): ",
+	        (long long) t.tv_sec,
+	        t.tv_nsec,
+	        tid,
+	        file,
+	        line,
+	        function);
 
 	va_list arg;
 

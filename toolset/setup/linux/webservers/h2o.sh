@@ -3,7 +3,7 @@
 fw_installed h2o && return 0
 
 H2O_HOME="${IROOT}/h2o"
-VERSION="2.1.0-beta4"
+VERSION="2.1.0"
 ARCHIVE="v${VERSION}.tar.gz"
 BUILD_DIR="h2o-${VERSION}"
 

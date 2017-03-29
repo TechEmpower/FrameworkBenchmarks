@@ -37,6 +37,15 @@ typedef uint_fast32_t bitset_base_t;
 	assert(s); \
 	bitset_base_t (b)[((s) - 1) / (sizeof(bitset_base_t) * CHAR_BIT) + 1] = {[0] = 0}
 
+static inline bool bitset_isset(size_t i, bitset_base_t *b, size_t num)
+{
+	assert(i < num);
+
+	IGNORE_FUNCTION_PARAMETER(num);
+
+	return (b[i / (sizeof(*b) * CHAR_BIT)] >> (i % (sizeof(*b) * CHAR_BIT))) & (bitset_base_t) 1;
+}
+
 static inline void bitset_set(size_t i, bitset_base_t *b, size_t num)
 {
 	assert(i < num);
@@ -46,15 +55,6 @@ static inline void bitset_set(size_t i, bitset_base_t *b, size_t num)
 	const bitset_base_t mask = ((bitset_base_t) 1) << (i % (sizeof(*b) * CHAR_BIT));
 
 	b[i / (sizeof(*b) * CHAR_BIT)] |= mask;
-}
-
-static inline bool bitset_isset(size_t i, bitset_base_t *b, size_t num)
-{
-	assert(i < num);
-
-	IGNORE_FUNCTION_PARAMETER(num);
-
-	return (b[i / (sizeof(*b) * CHAR_BIT)] >> (i % (sizeof(*b) * CHAR_BIT))) & (bitset_base_t) 1;
 }
 
 #endif // BITSET_H_

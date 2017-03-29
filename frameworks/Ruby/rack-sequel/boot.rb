@@ -7,6 +7,18 @@ QUERIES_MIN = 1
 QUERIES_MAX = 500
 SEQUEL_NO_ASSOCIATIONS = true
 
+SERVER_STRING =
+  if defined?(PhusionPassenger)
+    [
+      PhusionPassenger::SharedConstants::SERVER_TOKEN_NAME,
+      PhusionPassenger::VERSION_STRING
+    ].join('/').freeze
+  elsif defined?(Puma)
+    Puma::Const::PUMA_SERVER_STRING
+  elsif defined?(Unicorn)
+    Unicorn::HttpParser::DEFAULTS['SERVER_SOFTWARE']
+  end
+
 Bundler.require(:default) # Load core modules
 
 def connect(dbtype)
@@ -31,7 +43,7 @@ def connect(dbtype)
   end
 
   Sequel.connect \
-    '%<adapter>s://%<host>s/%<database>s?user=%<user>s&password=%<password>s' % {
+    '%{adapter}://%{host}/%{database}?user=%{user}&password=%{password}' % {
       :adapter=>adapters.fetch(dbtype).fetch(defined?(JRUBY_VERSION) ? :jruby : :mri),
       :host=>ENV.fetch('DBHOST', '127.0.0.1'),
       :database=>'hello_world',
@@ -42,6 +54,7 @@ end
 
 DB = connect(ENV.fetch('DBTYPE').to_sym).tap do |db|
   db.extension(:freeze_datasets)
+  db.optimize_model_load if db.respond_to?(:optimize_model_load)
   db.freeze
 end
 
@@ -55,14 +68,4 @@ class Fortune < Sequel::Model(:Fortune)
   unrestrict_primary_key
 end
 
-SERVER_STRING =
-  if defined?(PhusionPassenger)
-    [
-      PhusionPassenger::SharedConstants::SERVER_TOKEN_NAME,
-      PhusionPassenger::VERSION_STRING
-    ].join('/').freeze
-  elsif defined?(Puma)
-    Puma::Const::PUMA_SERVER_STRING
-  elsif defined?(Unicorn)
-    Unicorn::HttpParser::DEFAULTS['SERVER_SOFTWARE']
-  end
+Sequel::Model.freeze

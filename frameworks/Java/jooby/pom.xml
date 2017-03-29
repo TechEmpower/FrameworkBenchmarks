@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.jooby</groupId>
     <artifactId>jooby-project</artifactId>
-    <version>0.16.0</version>
+    <version>1.0.3</version>
   </parent>
 
   <artifactId>jooby</artifactId>
@@ -17,7 +17,7 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>0.16.0</jooby.version>
+    <jooby.version>1.0.3</jooby.version>
 
     <!-- Startup class -->
     <application.class>com.techempower.App</application.class>
@@ -46,6 +46,12 @@
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+
+    <!-- handlebars -->
+    <dependency>
+      <groupId>org.jooby</groupId>
+      <artifactId>jooby-hbs</artifactId>
     </dependency>
 
     <!-- Server -->

@@ -172,9 +172,7 @@ static void initialize_ids(size_t num_query, query_result_t *res, unsigned int *
 
 static void on_multiple_query_error(db_query_param_t *param, const char *error_string)
 {
-	const query_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(query_param_t,
-	                                                                 param,
-	                                                                 param);
+	const query_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(query_param_t, param, param);
 	multiple_query_ctx_t * const query_ctx = query_param->ctx;
 
 	if (query_ctx->gen) {
@@ -189,9 +187,7 @@ static void on_multiple_query_error(db_query_param_t *param, const char *error_s
 
 static result_return_t on_multiple_query_result(db_query_param_t *param, PGresult *result)
 {
-	query_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(query_param_t,
-	                                                           param,
-	                                                           param);
+	query_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(query_param_t, param, param);
 	multiple_query_ctx_t * const query_ctx = query_param->ctx;
 
 	if (query_ctx->gen && PQresultStatus(result) == PGRES_TUPLES_OK) {
@@ -221,15 +217,16 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 			send_service_unavailable_error(DB_REQ_ERROR, query_ctx->req);
 		}
 		else if (query_ctx->num_result == query_ctx->num_query)
-			serialize_items(query_ctx->res,
-			                query_ctx->num_result,
-			                query_ctx->gen,
-			                query_ctx->req);
+			serialize_items(query_ctx->res, query_ctx->num_result, query_ctx->gen, query_ctx->req);
 
 		h2o_mem_release_shared(query_ctx);
 	}
-	else
-		on_multiple_query_error(param, PQresultErrorMessage(result));
+	else {
+		if (query_ctx->gen)
+			LIBRARY_ERROR("PQresultStatus", PQresultErrorMessage(result));
+
+		on_multiple_query_error(param, DB_ERROR);
+	}
 
 	PQclear(result);
 	return DONE;
@@ -237,9 +234,7 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 
 static void on_multiple_query_timeout(db_query_param_t *param)
 {
-	const query_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(query_param_t,
-	                                                                 param,
-	                                                                 param);
+	const query_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(query_param_t, param, param);
 	multiple_query_ctx_t * const query_ctx = query_param->ctx;
 
 	if (query_ctx->gen) {
@@ -254,18 +249,14 @@ static void on_multiple_query_timeout(db_query_param_t *param)
 
 static void on_single_query_error(db_query_param_t *param, const char *error_string)
 {
-	single_query_ctx_t * const query_ctx = H2O_STRUCT_FROM_MEMBER(single_query_ctx_t,
-	                                                              param,
-	                                                              param);
+	single_query_ctx_t * const query_ctx = H2O_STRUCT_FROM_MEMBER(single_query_ctx_t, param, param);
 
 	send_error(BAD_GATEWAY, error_string, query_ctx->req);
 }
 
 static result_return_t on_single_query_result(db_query_param_t *param, PGresult *result)
 {
-	single_query_ctx_t * const query_ctx = H2O_STRUCT_FROM_MEMBER(single_query_ctx_t,
-	                                                              param,
-	                                                              param);
+	single_query_ctx_t * const query_ctx = H2O_STRUCT_FROM_MEMBER(single_query_ctx_t, param, param);
 
 	if (PQresultStatus(result) == PGRES_TUPLES_OK) {
 		uint32_t random_number;
@@ -291,10 +282,11 @@ static result_return_t on_single_query_result(db_query_param_t *param, PGresult 
 			yajl_gen_free(gen);
 		}
 
-		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, query_ctx->req);
+		send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
 	}
 	else {
-		send_error(BAD_GATEWAY, PQresultErrorMessage(result), query_ctx->req);
+		LIBRARY_ERROR("PQresultStatus", PQresultErrorMessage(result));
+		send_error(BAD_GATEWAY, DB_ERROR, query_ctx->req);
 		PQclear(result);
 	}
 
@@ -303,18 +295,14 @@ static result_return_t on_single_query_result(db_query_param_t *param, PGresult 
 
 static void on_single_query_timeout(db_query_param_t *param)
 {
-	single_query_ctx_t * const query_ctx = H2O_STRUCT_FROM_MEMBER(single_query_ctx_t,
-	                                                              param,
-	                                                              param);
+	single_query_ctx_t * const query_ctx = H2O_STRUCT_FROM_MEMBER(single_query_ctx_t, param, param);
 
 	send_error(GATEWAY_TIMEOUT, DB_TIMEOUT_ERROR, query_ctx->req);
 }
 
 static void on_update_error(db_query_param_t *param, const char *error_string)
 {
-	const update_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(update_param_t,
-	                                                                  param,
-	                                                                  param);
+	const update_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(update_param_t, param, param);
 	update_ctx_t * const update_ctx = query_param->ctx;
 
 	if (update_ctx->gen) {
@@ -329,9 +317,7 @@ static void on_update_error(db_query_param_t *param, const char *error_string)
 
 static result_return_t on_update_result(db_query_param_t *param, PGresult *result)
 {
-	update_param_t * const update_param = H2O_STRUCT_FROM_MEMBER(update_param_t,
-	                                                             param,
-	                                                             param);
+	update_param_t * const update_param = H2O_STRUCT_FROM_MEMBER(update_param_t, param, param);
 	update_ctx_t * const update_ctx = update_param->ctx;
 	result_return_t ret = DONE;
 
@@ -342,17 +328,14 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 					H2O_STRUCT_FROM_MEMBER(thread_context_t,
 					                       event_loop.h2o_ctx,
 					                       update_ctx->req->conn->ctx);
-				const size_t num_query_remaining =
-					update_ctx->num_query - update_ctx->num_result;
+				const size_t num_query_remaining = update_ctx->num_query - update_ctx->num_result;
 
 				update_ctx->num_query_in_progress--;
 
 				if (update_ctx->num_query_in_progress < num_query_remaining) {
-					const size_t idx = update_ctx->num_result +
-					                   update_ctx->num_query_in_progress;
+					const size_t idx = update_ctx->num_result + update_ctx->num_query_in_progress;
 
-					update_param->random_number =
-						get_random_number(MAX_ID, &ctx->random_seed) + 1;
+					update_param->random_number = get_random_number(MAX_ID, &ctx->random_seed) + 1;
 					update_param->update = false;
 					snprintf(update_param->command,
 					         MAX_UPDATE_QUERY_LEN,
@@ -369,8 +352,7 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 
 					yajl_gen_free(update_ctx->gen);
 					update_ctx->gen = NULL;
-					send_service_unavailable_error(DB_REQ_ERROR,
-					                               update_ctx->req);
+					send_service_unavailable_error(DB_REQ_ERROR, update_ctx->req);
 				}
 				else if (update_ctx->num_result == update_ctx->num_query)
 					serialize_items(update_ctx->res,
@@ -380,19 +362,22 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 
 				h2o_mem_release_shared(update_ctx);
 			}
-			else
-				on_update_error(param, PQresultErrorMessage(result));
+			else {
+				LIBRARY_ERROR("PQresultStatus", PQresultErrorMessage(result));
+				on_update_error(param, DB_ERROR);
+			}
 		}
 		else if (PQresultStatus(result) == PGRES_TUPLES_OK) {
 			process_result(result, update_ctx->res + update_ctx->num_result);
-			update_ctx->res[update_ctx->num_result].random_number =
-				update_param->random_number;
+			update_ctx->res[update_ctx->num_result].random_number = update_param->random_number;
 			update_ctx->num_result++;
 			update_param->update = true;
 			ret = SUCCESS;
 		}
-		else
-			on_update_error(param, PQresultErrorMessage(result));
+		else {
+			LIBRARY_ERROR("PQresultStatus", PQresultErrorMessage(result));
+			on_update_error(param, DB_ERROR);
+		}
 	}
 	else {
 		update_ctx->num_query_in_progress--;
@@ -405,9 +390,7 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 
 static void on_update_timeout(db_query_param_t *param)
 {
-	const update_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(update_param_t,
-	                                                                  param,
-	                                                                  param);
+	const update_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(update_param_t, param, param);
 	update_ctx_t * const update_ctx = query_param->ctx;
 
 	if (update_ctx->gen) {
@@ -478,7 +461,7 @@ static void serialize_items(const query_result_t *res,
 		return;
 
 error_yajl:
-	send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 }
 
 int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
@@ -490,6 +473,11 @@ int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
 	                                                      req->conn->ctx);
 
 	const size_t num_query = get_query_number(req);
+
+	// MAX_QUERIES is a relatively small number, so assume no overflow in the following
+	// arithmetic operations.
+	assert(num_query <= MAX_QUERIES);
+
 	size_t base_size = offsetof(multiple_query_ctx_t, res) + num_query * sizeof(query_result_t);
 
 	base_size = ((base_size + _Alignof(query_param_t) - 1) / _Alignof(query_param_t));
@@ -517,19 +505,15 @@ int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
 			query_ctx->query_param[i].id = htonl(query_ctx->res[i].id);
 			query_ctx->query_param[i].id_format = 1;
 			query_ctx->query_param[i].id_len = sizeof(query_ctx->query_param[i].id);
-			query_ctx->query_param[i].id_pointer =
-				(const char *) &query_ctx->query_param[i].id;
+			query_ctx->query_param[i].id_pointer = (const char *) &query_ctx->query_param[i].id;
 			query_ctx->query_param[i].param.command = WORLD_TABLE_NAME;
 			query_ctx->query_param[i].param.nParams = 1;
 			query_ctx->query_param[i].param.on_error = on_multiple_query_error;
 			query_ctx->query_param[i].param.on_result = on_multiple_query_result;
 			query_ctx->query_param[i].param.on_timeout = on_multiple_query_timeout;
-			query_ctx->query_param[i].param.paramFormats =
-				&query_ctx->query_param[i].id_format;
-			query_ctx->query_param[i].param.paramLengths =
-				&query_ctx->query_param[i].id_len;
-			query_ctx->query_param[i].param.paramValues =
-				&query_ctx->query_param[i].id_pointer;
+			query_ctx->query_param[i].param.paramFormats = &query_ctx->query_param[i].id_format;
+			query_ctx->query_param[i].param.paramLengths = &query_ctx->query_param[i].id_len;
+			query_ctx->query_param[i].param.paramValues = &query_ctx->query_param[i].id_pointer;
 			query_ctx->query_param[i].param.flags = IS_PREPARED;
 			query_ctx->query_param[i].param.resultFormat = 1;
 
@@ -546,10 +530,10 @@ int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
 		query_ctx->gen = get_json_generator(&req->pool);
 
 		if (!query_ctx->gen)
-			send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 	}
 	else
-		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+		send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 
 	return 0;
 }
@@ -585,7 +569,7 @@ int single_query(struct st_h2o_handler_t *self, h2o_req_t *req)
 			send_service_unavailable_error(DB_REQ_ERROR, req);
 	}
 	else
-		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+		send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 
 	return 0;
 }
@@ -599,6 +583,11 @@ int updates(struct st_h2o_handler_t *self, h2o_req_t *req)
 	                                                      req->conn->ctx);
 
 	const size_t num_query = get_query_number(req);
+
+	// MAX_QUERIES is a relatively small number, so assume no overflow in the following
+	// arithmetic operations.
+	assert(num_query <= MAX_QUERIES);
+
 	size_t base_size = offsetof(update_ctx_t, res) + num_query * sizeof(query_result_t);
 
 	base_size = ((base_size + _Alignof(update_param_t) - 1) / _Alignof(update_param_t));
@@ -623,8 +612,7 @@ int updates(struct st_h2o_handler_t *self, h2o_req_t *req)
 			update_ctx->update_param[i].command = command;
 			command += MAX_UPDATE_QUERY_LEN;
 			update_ctx->update_param[i].ctx = update_ctx;
-			update_ctx->update_param[i].param.command =
-				update_ctx->update_param[i].command;
+			update_ctx->update_param[i].param.command = update_ctx->update_param[i].command;
 			update_ctx->update_param[i].param.on_error = on_update_error;
 			update_ctx->update_param[i].param.on_result = on_update_result;
 			update_ctx->update_param[i].param.on_timeout = on_update_timeout;
@@ -651,10 +639,10 @@ int updates(struct st_h2o_handler_t *self, h2o_req_t *req)
 		update_ctx->gen = get_json_generator(&req->pool);
 
 		if (!update_ctx->gen)
-			send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 	}
 	else
-		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+		send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 
 	return 0;
 }
