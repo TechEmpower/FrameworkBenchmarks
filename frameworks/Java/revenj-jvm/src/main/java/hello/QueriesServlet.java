@@ -14,7 +14,7 @@ public class QueriesServlet extends HttpServlet {
 		res.setContentType("application/json");
 		final int count = Utils.parseBoundParam(req);
 		final Context ctx = Utils.getContext();
-		final JsonWriter json = ctx.json;
+		final JsonWriter json = Utils.getJson();
 		final World[] worlds = ctx.loadWorldsSlow(count);
 		json.serialize(worlds, count);
 		json.toStream(res.getOutputStream());
