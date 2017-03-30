@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'bundler'
+require 'bundler/setup'
 require 'time'
 
 MAX_PK = 10_000
@@ -33,10 +33,10 @@ def connect(dbtype)
 
   # Determine threading/thread pool size and timeout
   if defined?(JRUBY_VERSION)
-    opts[:max_connections] = Integer(ENV.fetch('MAX_CONCURRENCY'))
+    opts[:max_connections] = (2 * Math.log(Integer(ENV.fetch('MAX_CONCURRENCY')))).floor
     opts[:pool_timeout] = 10
-  elsif defined?(Puma)
-    opts[:max_connections] = Puma.cli_config.options.fetch(:max_threads)
+  elsif defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
+    opts[:max_connections] = (2 * Math.log(threads)).floor
     opts[:pool_timeout] = 10
   else
     Sequel.single_threaded = true
@@ -54,8 +54,7 @@ end
 
 DB = connect(ENV.fetch('DBTYPE').to_sym).tap do |db|
   db.extension(:freeze_datasets)
-  db.optimize_model_load if db.respond_to?(:optimize_model_load)
-  db.freeze
+  db.optimize_model_load = true if db.respond_to?(:optimize_model_load=)
 end
 
 # Define ORM models
@@ -68,4 +67,5 @@ class Fortune < Sequel::Model(:Fortune)
   unrestrict_primary_key
 end
 
-Sequel::Model.freeze
+[World, Fortune].each(&:freeze)
+DB.freeze
