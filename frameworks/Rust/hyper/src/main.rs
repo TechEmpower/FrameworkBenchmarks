@@ -5,15 +5,14 @@ extern crate pretty_env_logger;
 extern crate log;
 extern crate net2;
 extern crate tokio_core;
+extern crate tokio_proto;
 extern crate num_cpus;
 
 use hyper::{Get, StatusCode};
-use hyper::header::{ContentLength, ContentType};
-use hyper::server::{Server, Service, Request, Response};
+use hyper::header::{self, ContentLength, ContentType};
+use hyper::server::{Http, Service, Request, Response};
 
-use net2::TcpBuilder;
-use net2::unix::UnixTcpBuilderExt;
-use tokio_core::net::TcpListener;
+use tokio_proto::TcpServer;
 
 static HELLOWORLD: &'static [u8] = b"Hello, world!";
 
@@ -33,8 +32,9 @@ impl Service for TechEmpower {
                 Response::new()
                     .with_header(ContentLength(HELLOWORLD.len() as u64))
                     .with_header(ContentType(Mime(TopLevel::Text, SubLevel::Plain, vec![(Attr::Charset, Value::Utf8)])))
+                    .with_header(header::Server("hyper/async".to_string()))
                     .with_body(HELLOWORLD)
-	    },
+            },
             _ => {
                 Response::new()
                     .with_status(StatusCode::NotFound)
@@ -47,24 +47,13 @@ impl Service for TechEmpower {
 fn main() {
     use std::net::SocketAddr;
     pretty_env_logger::init().unwrap();
-    let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
-    let mut threads = vec![];
-    for i in 0..num_cpus::get_physical() {
-        use std::thread;
-        let i = i;
-        let handle = thread::spawn(move|| {
-            let (listening, server) = Server::standalone(|tokio| {
-		    let listener = TcpBuilder::new_v4()?.reuse_port(true)?.bind(addr)?.listen(10000)?;
-		    let addr = try!(listener.local_addr());
-		    let listener = try!(TcpListener::from_listener(listener, &addr, tokio));
-		    Server::new(listener.incoming(), addr).handle(|| Ok(TechEmpower), tokio)
-	    }).unwrap();
-            println!("Listening {} on http://{}", i, listening);
-            server.run();
-        });
-        threads.push(handle);
-    }
-    for t in threads {
-        t.join().unwrap();
-    }
+
+    let addr: SocketAddr = "0.0.0.0:8080".parse().unwrap();
+    let mut srv = TcpServer::new(Http::new(), addr);
+    println!("Listening on http://{} using {} threads", addr, num_cpus::get());
+
+    srv.threads(num_cpus::get());
+    srv.serve(move || {
+        Ok(TechEmpower)
+    })
 }

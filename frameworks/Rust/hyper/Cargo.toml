@@ -9,8 +9,9 @@ futures = "0.1"
 pretty_env_logger = "0.1"
 log = "0.3.6"
 tokio-core = "0.1"
+tokio-proto = "0.1"
 num_cpus = "1.2"
 
 [dependencies.hyper]
 git = "https://github.com/hyperium/hyper/"
-rev = "39a53fcd3364634125dafcf4d7a1d191241a7ff0"
+rev = "43cf9aefe8f9147a0f08aa0f9d609d275549fd7c"
