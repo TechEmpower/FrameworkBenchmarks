@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends gcc-4.9
+fw_depends gcc-6
 
 fw_installed libreactor && return 0
 
@@ -8,9 +8,9 @@ LIBREACTOR_HOME=$IROOT/libreactor_techempower
 
 git clone https://github.com/fredrikwidlund/libreactor_techempower
 cd $LIBREACTOR_HOME
-export CC=gcc-4.9
-export RANLIB=gcc-ranlib-4.9
-export AR=gcc-ar-4.9
+export CC=gcc-6
+export RANLIB=gcc-ranlib-6
+export AR=gcc-ar-6
 ./autogen.sh
 ./configure
 make
