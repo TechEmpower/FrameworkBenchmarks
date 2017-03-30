@@ -3,13 +3,9 @@ package com.techempower.act.controller;
 import act.app.conf.AutoConfig;
 import act.controller.Controller;
 import act.db.Dao;
-import com.avaje.ebean.Transaction;
-import com.avaje.ebean.annotation.Transactional;
 import com.techempower.act.domain.IWorld;
-import com.techempower.act.mongo.domain.World;
 import org.osgl.$;
 import org.osgl.mvc.annotation.GetAction;
-import org.osgl.util.C;
 import org.osgl.util.Const;
 
 import java.util.ArrayList;
@@ -57,7 +53,7 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 	}
 
 	protected List<MODEL_TYPE> doUpdate(int q) {
-		List<MODEL_TYPE> retVal = C.newList();
+		List<MODEL_TYPE> retVal = new ArrayList<>();
 		for (int i = 0; i < q; ++i) {
 			retVal.add(findAndModifyOne());
 		}
