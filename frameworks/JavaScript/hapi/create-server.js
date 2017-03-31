@@ -7,7 +7,7 @@ const Hapi = require('hapi');
 const Vision = require('vision');
 const server = new Hapi.Server();
 
-server.connection({port: 8080});
+server.connection({port: 8080, host: '0.0.0.0'});
 server.register(Vision, (err) => {
     if (err) {
         throw err;
