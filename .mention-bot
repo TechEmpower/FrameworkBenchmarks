@@ -10,7 +10,7 @@
     }
   ],
   "fileBlacklist": [],
-  "userBlacklist": [],
+  "userBlacklist": [hamiltont],
   "userBlacklistForPR": [],
   "actions": ["opened"],
   "skipAlreadyAssignedPR": false,
