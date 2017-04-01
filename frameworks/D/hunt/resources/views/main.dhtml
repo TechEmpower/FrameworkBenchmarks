@@ -1,0 +1,9 @@
+<html>
+    <body>
+        {{ render!"header.dhtml" }}
+        <div class="content">
+            {{ yield }}
+        </div>
+        {{ render!"footer.dhtml" }}
+    </body>
+<html>
