@@ -1,2 +1,0 @@
-here is body html {{ var.username }}
-{{ var.footer }}

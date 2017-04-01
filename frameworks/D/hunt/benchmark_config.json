@@ -1,0 +1,50 @@
+{
+  "framework": "hunt",
+  "tests": [{
+    "default": {
+      "setup_file": "setup-mysql",
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "hunt",
+      "language": "D",
+      "flavor": "DLang2",
+      "orm": "raw",
+      "platform": "None",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hunt",
+      "notes": "",
+      "versus": "hunt"
+    },
+    "mongodb": {
+      "setup_file": "setup-mongodb",
+      "db_url": "/mongodb/db",
+      "query_url": "/mongodb/queries?queries=",
+      "fortune_url": "/mongodb/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MongoDB",
+      "framework": "hunt",
+      "language": "D",
+      "flavor": "DLang2",
+      "orm": "raw",
+      "platform": "None",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hunt",
+      "notes": "",
+      "versus": "hunt"
+    }
+  }]
+}

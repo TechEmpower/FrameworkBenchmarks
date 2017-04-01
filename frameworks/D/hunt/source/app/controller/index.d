@@ -21,23 +21,17 @@ class IndexController : Controller
     {
     }
 	Response res(){return request.createResponse();}
-    @Action
-    void show()
-	{ 
-		auto response = this.request.createResponse();
-        response.html("hello world<br/>")
-        //.setHeader("content-type","text/html;charset=UTF-8")
-        .setCookie("name", "value", 10000)
-        .setCookie("name1", "value", 10000, "/path")
-        .setCookie("name2", "value", 10000);
-    }
-
 	@Action void json()
 	{
 		import std.json;
 		JSONValue js = JSONValue([
-			"message" : "Hello,worldld!"		
+			"message" : "Hello, World!"		
 		]);
 		res.json(js);
+	}
+
+	@Action void plaintext()
+	{
+		res.html("Hello, World!");
 	}
 }
