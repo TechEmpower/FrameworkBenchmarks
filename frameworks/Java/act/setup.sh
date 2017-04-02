@@ -19,6 +19,6 @@ echo
 echo CLASSPATH: $CP
 echo
 
-JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Dawt.useSystemAAFontSettings=on -server -Xms512m -Xmx2g"
+JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -server -Xms2g -Xmx4g"
 
 java -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=prod -Dmongo.host=${DBHOST} -Dmysql.host=${DBHOST} -Dpgsql.host=${DBHOST} -cp "$CP" $APP_ENTRY &
