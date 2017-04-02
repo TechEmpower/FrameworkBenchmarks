@@ -1,0 +1,21 @@
+{
+  "framework": "apistar",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "framework": "API Star",
+      "language": "Python",
+      "flavor": "Python3",
+      "platform": "None",
+      "webserver": "Meinheld",
+      "os": "Linux",
+      "display_name": "API Star",
+      "notes": ""
+    }
+  }]
+}
