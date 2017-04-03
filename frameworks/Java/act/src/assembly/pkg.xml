@@ -52,7 +52,7 @@ under the License.
       <directory>${project.basedir}/src/main/bin</directory>
       <outputDirectory></outputDirectory>
       <includes>
-        <include>start*</include>
+        <include>*</include>
       </includes>
       <filtered>true</filtered>
     </fileSet>
