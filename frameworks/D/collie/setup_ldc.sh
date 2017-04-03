@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends dlang dub
+fw_depends dlang
 
 # Clean any files from last run
 rm -f collieHttp
