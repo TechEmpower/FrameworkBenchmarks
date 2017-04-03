@@ -19,4 +19,4 @@ echo
 
 JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Xms1G -Xmx1G -Xss320k -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts"
 
-java -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=local -Dmongo.host=localhost -Dmysql.host=localhost -Dpgsql.host=localhost -cp "$CP" $APP_ENTRY
+java -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=local -Dxio.worker_threads.max=256 -Dmongo.host=localhost -Dmysql.host=localhost -Dpgsql.host=localhost -cp "$CP" $APP_ENTRY
