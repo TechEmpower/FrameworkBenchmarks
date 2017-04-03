@@ -41,6 +41,7 @@ env:
     - "TESTDIR=Crystal/crystal"
     - "TESTDIR=Crystal/kemal"
     - "TESTDIR=D/vibed"
+    - "TESTDIR=D/collie"
     - "TESTDIR=Dart/dart-raw"
     - "TESTDIR=Dart/redstone"
     - "TESTDIR=Dart/start"
