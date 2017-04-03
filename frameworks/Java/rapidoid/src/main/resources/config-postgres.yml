@@ -1,0 +1,8 @@
+jdbc:
+  username: benchmarkdbuser
+  password: benchmarkdbpass
+  workers: 256
+
+hikari:
+  maximumPoolSize: 256
+  minimumIdle: 256
