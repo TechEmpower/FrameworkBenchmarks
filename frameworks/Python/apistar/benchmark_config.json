@@ -14,6 +14,9 @@
       "platform": "None",
       "webserver": "Meinheld",
       "os": "Linux",
+      "orm": "None",
+      "database_os": "None",
+      "database": "None",
       "display_name": "API Star",
       "notes": ""
     }
