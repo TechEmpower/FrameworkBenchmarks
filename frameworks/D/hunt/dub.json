@@ -8,6 +8,6 @@
 	],
 	"mainSourceFile": "./source/bootstrap.d",
 	"dependencies": {
-		"hunt": "0.6.0-beta2"
+		"hunt": "0.6.2"
 	},
 }
