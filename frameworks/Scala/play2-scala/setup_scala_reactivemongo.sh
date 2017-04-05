@@ -3,7 +3,6 @@
 fw_depends mongodb java sbt
 
 cd play2-scala-reactivemongo
-sed -i 's|jdbc:mysql://.*:3306|jdbc:mysql://'"${DBHOST}"':3306|g' ${TROOT}/play2-scala-reactivemongo/conf/application.conf
 
 rm -rf ${TROOT}/play2-scala-reactivemongo/target/universal/stage/RUNNING_PID
 

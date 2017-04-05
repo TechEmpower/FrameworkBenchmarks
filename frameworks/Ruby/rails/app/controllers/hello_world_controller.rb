@@ -37,8 +37,8 @@ class HelloWorldController < ApplicationController
     worlds = (1..queries).map do
       # get a random row from the database, which we know has 10000
       # rows with ids 1 - 10000
-      world = World.select(:randomNumber).find(Random.rand(10000) + 1)
-      world.update_attribute(:randomNumber => Random.rand(10000) + 1)
+      world = World.select(:id, :randomNumber).find(Random.rand(10000) + 1)
+      world.update_attribute(:randomNumber, Random.rand(10000) + 1)
       world
     end
 

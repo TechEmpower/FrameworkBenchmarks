@@ -676,7 +676,7 @@ class FrameworkTest:
   ############################################################
   def __begin_logging(self, test_type):
     output_file = "{file_name}".format(file_name=self.benchmarker.get_stats_file(self.name, test_type))
-    dstat_string = "dstat -afilmprsT --aio --fs --ipc --lock --raw --socket --tcp \
+    dstat_string = "dstat -Tafilmprs --aio --fs --ipc --lock --raw --socket --tcp \
                                       --raw --socket --tcp --udp --unix --vm --disk-util \
                                       --rpc --rpcd --output {output_file}".format(output_file=output_file)
     cmd = shlex.split(dstat_string)
