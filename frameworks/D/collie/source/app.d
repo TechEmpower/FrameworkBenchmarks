@@ -44,10 +44,15 @@ void main()
     HTTPServerOptions option = new HTTPServerOptions();
     option.handlerFactories.insertBack(&newHandler);
     option.threads = totalCPUs;
-    HTTPServerOptions.IPConfig ipconfig ;
-    ipconfig.address = new InternetAddress("0.0.0.0", 8080);
-
     HttpServer server = new HttpServer(option);
+
+    HTTPServerOptions.IPConfig ipconfig ;
+    ipconfig.address = new InternetAddress("0.0.0.0", 8085);
+
+    HTTPServerOptions.IPConfig ipconfig2 ;
+    ipconfig2.address = new Internet6Address("0::0", 8085);
+   
     server.addBind(ipconfig);
+    server.addBind(ipconfig2);
     server.start();
 }
