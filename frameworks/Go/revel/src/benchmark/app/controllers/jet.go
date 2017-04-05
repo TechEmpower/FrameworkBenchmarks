@@ -16,7 +16,7 @@ func (c App) JetDb(queries int) revel.Result {
 		if err != nil {
 			revel.ERROR.Fatalf("Db/WorldSelect error: %v", err)
 		}
-		return c.RenderJson(w)
+		return c.RenderJSON(w)
 	}
 
 	ww := make([]World, queries)
@@ -26,7 +26,7 @@ func (c App) JetDb(queries int) revel.Result {
 			revel.ERROR.Fatalf("Db/WorldSelect2 error: %v", err)
 		}
 	}
-	return c.RenderJson(ww)
+	return c.RenderJSON(ww)
 }
 
 func (c App) JetUpdate(queries int) revel.Result {
@@ -40,7 +40,7 @@ func (c App) JetUpdate(queries int) revel.Result {
 		if err = db.Jet.Query(WorldUpdate, w.RandomNumber, w.Id).Run(); err != nil {
 			revel.ERROR.Fatalf("Update/WorldUpdate error: %v", err)
 		}
-		return c.RenderJson(&w)
+		return c.RenderJSON(&w)
 	}
 
 	ww := make([]World, queries)
@@ -54,7 +54,7 @@ func (c App) JetUpdate(queries int) revel.Result {
 			revel.ERROR.Fatalf("Update/WorldUpdate2 error: %v", err)
 		}
 	}
-	return c.RenderJson(ww)
+	return c.RenderJSON(ww)
 }
 
 func (c App) JetFortune() revel.Result {
@@ -65,6 +65,6 @@ func (c App) JetFortune() revel.Result {
 	}
 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
 	sort.Sort(ByMessage{fortunes})
-	c.RenderArgs["fortunes"] = fortunes
+	c.ViewArgs["fortunes"] = fortunes
 	return c.RenderTemplate("App/Fortune.html")
 }

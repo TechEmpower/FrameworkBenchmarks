@@ -1,10 +1,10 @@
 #!/bin/bash
 
-sed -i 's|tcp(.*:3306)|tcp('"${DBHOST}"':3306)|g' src/hello/hello.go
+fw_depends go
 
-fw_depends mysql go
+curl https://glide.sh/get | sh
+glide -v
 
-go get github.com/astaxie/beego
-go get github.com/go-sql-driver/mysql
-
-go run src/hello/hello.go &
+cd src/hello
+glide install
+go run main.go &

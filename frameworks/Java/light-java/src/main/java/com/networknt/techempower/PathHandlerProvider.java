@@ -11,17 +11,17 @@ import com.networknt.techempower.handler.*;
 public class PathHandlerProvider implements HandlerProvider {
     @Override
     public HttpHandler getHandler() {
-        return Handlers.routing()
-            .add(Methods.GET, "/db/mysql", new DbMysqlGetHandler())
-            .add(Methods.GET, "/db/postgresql", new DbPostgresqlGetHandler())
-            .add(Methods.GET, "/fortunes/mysql", new FortunesMysqlGetHandler())
-            .add(Methods.GET, "/fortunes/postgresql", new FortunesPostgresqlGetHandler())
-            .add(Methods.GET, "/json", new JsonGetHandler())
-            .add(Methods.GET, "/plaintext", new PlaintextGetHandler())
-            .add(Methods.GET, "/queries/mysql", new QueriesMysqlGetHandler())
-            .add(Methods.GET, "/queries/postgresql", new QueriesPostgresqlGetHandler())
-            .add(Methods.GET, "/updates/mysql", new UpdatesMysqlGetHandler())
-            .add(Methods.GET, "/updates/postgresql", new UpdatesPostgresqlGetHandler())
+        return Handlers.path()
+            .addPrefixPath("/db/mysql", new DbMysqlGetHandler())
+            .addPrefixPath("/db/postgresql", new DbPostgresqlGetHandler())
+            .addPrefixPath("/fortunes/mysql", new FortunesMysqlGetHandler())
+            .addPrefixPath("/fortunes/postgresql", new FortunesPostgresqlGetHandler())
+            .addPrefixPath("/json", new JsonGetHandler())
+            .addPrefixPath("/plaintext", new PlaintextGetHandler())
+            .addPrefixPath("/queries/mysql", new QueriesMysqlGetHandler())
+            .addPrefixPath("/queries/postgresql", new QueriesPostgresqlGetHandler())
+            .addPrefixPath("/updates/mysql", new UpdatesMysqlGetHandler())
+            .addPrefixPath("/updates/postgresql", new UpdatesPostgresqlGetHandler())
         ;
     }
 }

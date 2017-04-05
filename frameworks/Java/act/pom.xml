@@ -7,18 +7,19 @@
 
     <groupId>com.techempower</groupId>
     <artifactId>actframework</artifactId>
-    <version>1.0.0</version>
-    <name>ActFramework sample project</name>
+    <version>1.0.4</version>
+    <name>ActFramework Test</name>
     <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <act.version>1.0.2</act.version>
-        <act-morphia.version>1.0.1</act-morphia.version>
-        <act-ebean.version>1.0.1</act-ebean.version>
-        <mysql.version>5.1.38</mysql.version>
-        <postgres-jdbc.version>9.4.1208</postgres-jdbc.version>
+        <act.version>1.0.7</act.version>
+        <act-morphia.version>1.0.3</act-morphia.version>
+        <act-ebean.version>1.1.0</act-ebean.version>
+        <mysql.version>6.0.6</mysql.version>
+        <postgres-jdbc.version>42.0.0</postgres-jdbc.version>
+        <HikariCP.version>2.6.1</HikariCP.version>
         <app.entry>com.techempower.act.AppEntry</app.entry>
     </properties>
 
@@ -52,6 +53,11 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgres-jdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${HikariCP.version}</version>
         </dependency>
     </dependencies>
 

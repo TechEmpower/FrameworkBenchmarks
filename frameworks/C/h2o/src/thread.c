@@ -98,7 +98,7 @@ void start_threads(global_thread_data_t *global_thread_data)
 	// The first thread context is used by the main thread.
 	global_thread_data->thread = pthread_self();
 
-	for (size_t i = 1; i < global_thread_data->config->thread_num; i++)
+	for (size_t i = global_thread_data->config->thread_num - 1; i > 0; i--)
 		CHECK_ERROR(pthread_create,
 		            &global_thread_data[i].thread,
 		            NULL,

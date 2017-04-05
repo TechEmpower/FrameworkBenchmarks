@@ -17,16 +17,21 @@ class HelloWorld
 
   # Return a random number between 1 and MAX_PK
   def rand1
-    Sysrandom.random_number(MAX_PK).succ
+    rand(MAX_PK).succ
   end
 
+  WORLD_BY_ID = World.naked.where(:id=>:$id).prepare(:first, :world_by_id)
+  WORLD_UPDATE = World.where(:id=>:$id).prepare(:update, :world_update, :randomnumber=>:$randomnumber)
+
   def db
-    World.with_pk(rand1).values
+    WORLD_BY_ID.(:id=>rand1)
   end
 
   def queries(env)
-    Array.new(bounded_queries(env)) do
-      World.with_pk(rand1).values
+    DB.synchronize do
+      Array.new(bounded_queries(env)) do
+        WORLD_BY_ID.(:id=>rand1)
+      end
     end
   end
 
@@ -71,14 +76,13 @@ class HelloWorld
     HTML
   end
 
-  WORLD_BY_ID = World.naked.where(:id=>:$id).prepare(:first, :world_by_id)
-  WORLD_UPDATE = World.where(:id=>:$id).prepare(:update, :world_update, :randomnumber=>:$randomnumber)
-
   def updates(env)
-    Array.new(bounded_queries(env)) do
-      world = WORLD_BY_ID.(:id=>rand1)
-      WORLD_UPDATE.(:id=>world[:id], :randomnumber=>(world[:randomnumber] = rand1))
-      world
+    DB.synchronize do
+      Array.new(bounded_queries(env)) do
+        world = WORLD_BY_ID.(:id=>rand1)
+        WORLD_UPDATE.(:id=>world[:id], :randomnumber=>(world[:randomnumber] = rand1))
+        world
+      end
     end
   end
 
@@ -105,11 +109,13 @@ class HelloWorld
         ['text/plain', 'Hello, World!']
       end
 
-    return 200,
+    [
+      200,
       DEFAULT_HEADERS.merge(
         'Content-Type'=>content_type,
         'Date'=>Time.now.httpdate
       ),
       body
+    ]
   end
 end

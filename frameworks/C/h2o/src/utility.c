@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <h2o.h>
+#include <limits.h>
 #include <stdalign.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -26,6 +27,8 @@
 #include <yajl/yajl_gen.h>
 
 #include "utility.h"
+
+#define HEADER_SIZE (MAX(sizeof(intmax_t), sizeof(void(*)(void))))
 
 static void mem_pool_free(void *ctx, void *ptr);
 static void *mem_pool_malloc(void *ctx, size_t sz);
@@ -40,12 +43,18 @@ static void mem_pool_free(void *ctx, void *ptr)
 
 static void *mem_pool_malloc(void *ctx, size_t sz)
 {
-	size_t * const p = h2o_mem_alloc_pool(ctx, sz + sizeof(*p));
-	void * const ret = p + 1;
+	void *ret = NULL;
 
-	*p = sz;
-	// check alignment
-	assert(!(((uintptr_t) ret) & (alignof(void *) - 1)));
+	if (SIZE_MAX - sz >= HEADER_SIZE) {
+		size_t * const p = h2o_mem_alloc_pool(ctx, sz + HEADER_SIZE);
+
+		*p = sz;
+		ret = (char *) p + HEADER_SIZE;
+		// check alignment
+		assert(!(((uintptr_t) ret) & (alignof(intmax_t) - 1)));
+		assert(!(((uintptr_t) ret) & (alignof(void(*)(void)) - 1)));
+	}
+
 	return ret;
 }
 
@@ -54,11 +63,13 @@ static void *mem_pool_realloc(void *ctx, void *ptr, size_t sz)
 	void *ret;
 
 	if (ptr) {
-		const size_t old_sz = ((const size_t *) ptr)[-1];
+		const size_t old_sz = *(const size_t *)((const char *) ptr - HEADER_SIZE);
 
 		if (sz > old_sz) {
 			ret = mem_pool_malloc(ctx, sz);
-			memcpy(ret, ptr, old_sz);
+
+			if (ret)
+				memcpy(ret, ptr, old_sz);
 		}
 		else
 			ret = ptr;
@@ -81,6 +92,8 @@ yajl_gen get_json_generator(h2o_mem_pool_t *pool)
 
 uint32_t get_random_number(uint32_t max_rand, unsigned int *seed)
 {
+	assert(max_rand <= (uint32_t) RAND_MAX);
+
 	// In general, RAND_MAX + 1 is not a multiple of max_rand,
 	// so rand_r() % max_rand would be biased.
 	const unsigned bucket_size = (RAND_MAX + 1U) / max_rand;
