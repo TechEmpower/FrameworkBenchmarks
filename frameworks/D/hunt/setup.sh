@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#fw_depends mongodb dlang
+
 # Clean any files from last run
 rm -f website
 rm -rf .dub
