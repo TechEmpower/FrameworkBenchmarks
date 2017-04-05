@@ -32,6 +32,10 @@ public class World implements IWorld, SimpleBean {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Integer getRandomNumber() {
         return randomNumber;
     }
