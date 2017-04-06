@@ -35,6 +35,7 @@ final class PostHandler : BaseHandler
 		build.status(200,HTTPMessage.statusText(200));
 		build.setBody(cast(ubyte[])"Hello, World!");
 		build.header(HTTPHeaderCode.CONTENT_TYPE,"text/plain");
+		build.header(HTTPHeaderCode.DATE, printDate);
 		build.sendWithEOM();
 	}
 	
@@ -47,6 +48,7 @@ final class PostHandler : BaseHandler
 		build.status(200,HTTPMessage.statusText(200));
 		build.setBody(cast(ubyte[])(js.toString));
 		build.header(HTTPHeaderCode.CONTENT_TYPE,"application/json");
+		build.header(HTTPHeaderCode.DATE, printDate);
 		build.sendWithEOM();
 	}
 	
@@ -56,6 +58,7 @@ final class PostHandler : BaseHandler
 		build.status(200,HTTPMessage.statusText(200));
 		build.setBody(cast(ubyte[])"Hello, World!");
 		build.header(HTTPHeaderCode.CONTENT_TYPE,"text/plain");
+		build.header(HTTPHeaderCode.DATE, printDate);
 		build.sendWithEOM();
 	}
 }
