@@ -1,0 +1,4 @@
+language : d
+
+d:
+    - dmd
