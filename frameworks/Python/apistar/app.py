@@ -7,7 +7,7 @@ def json_view() -> wsgi.WSGIResponse:
     return wsgi.WSGIResponse(
         '200 OK',
         [
-            ('Content-Type', 'application/json')
+            ('Content-Type', 'application/json'),
             ('Content-Length', str(len(content)))
         ],
         [content]
