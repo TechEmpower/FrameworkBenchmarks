@@ -15,7 +15,7 @@
       "webserver": "Meinheld",
       "os": "Linux",
       "orm": "Raw",
-      "database_os": "None",
+      "database_os": "Linux",
       "database": "None",
       "display_name": "API Star",
       "notes": ""

@@ -3,19 +3,26 @@ import ujson as json
 
 
 def json_view() -> wsgi.WSGIResponse:
-    content = json.dumps({'message': 'Welcome to API Star!'}).encode('utf-8')
+    content = json.dumps({'message': 'Hello, world!'}).encode('utf-8')
     return wsgi.WSGIResponse(
         '200 OK',
-        [('Content-Type', 'application/json')],
+        [
+            ('Content-Type', 'application/json')
+            ('Content-Length', str(len(content)))
+        ],
         [content]
     )
 
 
 def plaintext_view() -> wsgi.WSGIResponse:
+    content = b'Hello, world!'
     return wsgi.WSGIResponse(
         '200 OK',
-        [('Content-Type', 'text/plain')],
-        [b'Hello, World!']
+        [
+            ('Content-Type', 'text/plain'),
+            ('Content-Length', str(len(content)))
+        ],
+        [content]
     )
 
 
