@@ -2,7 +2,7 @@
 
 fw_installed cutelyst && return 0
 
-CUTELYST_VER=1.5.0
+CUTELYST_VER=1.6.0-beta3
 QT_VERSION_MM=56
 QT_VERSION_FULL=562-trusty
 CROOT=${IROOT}/cutelyst
