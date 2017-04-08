@@ -117,26 +117,19 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 
 	worlds := make([]common.World, n)
 	for i := 0; i < n; i++ {
+		txn, err := db.Begin()
 		w := &worlds[i]
+		if err != nil {
+			log.Fatalf("Error starting transaction: %s", err)
+		}
 		fetchRandomWorld(w)
 		w.RandomNumber = int32(common.RandomWorldNum())
-	}
-
-	// sorting is required for insert deadlock prevention.
-	sort.Sort(common.WorldsByID(worlds))
-	txn, err := db.Begin()
-	if err != nil {
-		log.Fatalf("Error starting transaction: %s", err)
-	}
-	stmt := txn.Stmt(worldUpdateStmt)
-	for i := 0; i < n; i++ {
-		w := &worlds[i]
-		if _, err := stmt.Exec(w.RandomNumber, w.Id); err != nil {
+		if _, err = txn.Exec("worldUpdateStmt", w.RandomNumber, w.Id); err != nil {
 			log.Fatalf("Error updating world row %d: %s", i, err)
 		}
-	}
-	if err = txn.Commit(); err != nil {
-		log.Fatalf("Error when commiting world rows: %s", err)
+		if err = txn.Commit(); err != nil {
+			log.Fatalf("Error when commiting world rows: %s", err)
+		}
 	}
 
 	common.JSONMarshal(ctx, worlds)
