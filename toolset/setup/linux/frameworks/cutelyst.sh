@@ -14,6 +14,7 @@ sudo apt-get update -qq
 sudo apt-get install -qqy \
 cmake \
 uwsgi \
+pkg-config \
 uuid-dev \
 libcap-dev \
 libzmq3-dev \
