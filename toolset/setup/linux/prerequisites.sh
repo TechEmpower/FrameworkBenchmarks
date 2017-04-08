@@ -27,6 +27,7 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libjson0-dev libmcrypt-dev libicu-dev gettext \
   libpq-dev mlton \
   cloc dstat                        `# Collect resource usage statistics` \
+  python-dev \
   python-pip
 
 sudo pip install colorama==0.3.1
