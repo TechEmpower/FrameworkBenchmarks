@@ -2,7 +2,7 @@
 
 fw_installed cutelyst && return 0
 
-CUTELYST_VER=1.6.0-beta3
+CUTELYST_VER=1.6.0-beta4
 QT_VERSION_MM=56
 QT_VERSION_FULL=562-trusty
 CROOT=${IROOT}/cutelyst
@@ -14,7 +14,6 @@ sudo apt-get update -qq
 sudo apt-get install -qqy \
 cmake \
 uwsgi \
-pkg-config \
 uuid-dev \
 libcap-dev \
 libzmq3-dev \
