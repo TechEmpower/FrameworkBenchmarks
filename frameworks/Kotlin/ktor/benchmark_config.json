@@ -17,7 +17,7 @@
         "framework": "ktor",
         "language": "Kotlin",
         "orm": "Raw",
-        "platform": "Jetty",
+        "platform": "Netty",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
