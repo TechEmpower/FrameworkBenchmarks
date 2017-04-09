@@ -13,10 +13,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.0.3</kotlin.version>
+        <kotlin.version>1.1.1</kotlin.version>
         <junit.version>4.12</junit.version>
 
-        <ktor.version>0.2.2</ktor.version>
+        <ktor.version>0.3.1</ktor.version>
         <app.main.class>org.jetbrains.ktor.benchmarks.HelloKt</app.main.class>
     </properties>
 
@@ -76,6 +76,11 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <args>
+                                <arg>-Xcoroutines=enable</arg>
+                            </args>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>test-compile</id>
