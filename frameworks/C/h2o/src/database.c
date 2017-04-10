@@ -66,9 +66,6 @@ static const struct {
 } prepared_statement[] = {
 	{FORTUNE_TABLE_NAME, "SELECT * FROM " FORTUNE_TABLE_NAME ";"},
 	{WORLD_TABLE_NAME, "SELECT * FROM " WORLD_TABLE_NAME " WHERE " ID_FIELD_NAME " = $1::integer;"},
-	{UPDATE_QUERY_NAME,
-	 "UPDATE " WORLD_TABLE_NAME " SET randomNumber = $2::integer "
-	 "WHERE " ID_FIELD_NAME " = $1::integer;"},
 };
 
 static int do_database_write(db_conn_t *db_conn)
