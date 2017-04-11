@@ -57,7 +57,10 @@ module.exports = {
     mongooseGetAllFortunes((err, fortunes) => {
       if (err) { return process.exit(1); }
 
-      fortunes.push(h.ADDITIONAL_FORTUNE);
+      fortunes.push({
+        id: 0,
+        message: 'Additional fortune added at request time.'
+      });
       fortunes.sort((a, b) => {
         return a.message.localeCompare(b.message);
       });
