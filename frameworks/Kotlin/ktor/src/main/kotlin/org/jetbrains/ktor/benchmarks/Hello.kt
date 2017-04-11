@@ -2,7 +2,7 @@ package org.jetbrains.ktor.benchmarks
 
 import com.google.gson.*
 import com.mchange.v2.c3p0.*
-import com.mysql.cj.jdbc.*
+import com.mysql.jdbc.*
 import org.jetbrains.ktor.application.*
 import org.jetbrains.ktor.content.*
 import org.jetbrains.ktor.features.*
@@ -11,10 +11,8 @@ import org.jetbrains.ktor.http.*
 import org.jetbrains.ktor.netty.*
 import org.jetbrains.ktor.routing.*
 import org.jetbrains.ktor.util.*
-import java.sql.ResultSet.CONCUR_READ_ONLY
-import java.sql.ResultSet.TYPE_FORWARD_ONLY
-import java.util.*
-import java.util.concurrent.ThreadLocalRandom
+import java.sql.ResultSet.*
+import java.util.concurrent.*
 
 data class Message(val message: String = "Hello, World!")
 data class World(val id: Int, var randomNumber: Int)
