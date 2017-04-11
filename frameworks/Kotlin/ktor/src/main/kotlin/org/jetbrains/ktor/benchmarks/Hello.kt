@@ -14,6 +14,7 @@ import org.jetbrains.ktor.util.*
 import java.sql.ResultSet.CONCUR_READ_ONLY
 import java.sql.ResultSet.TYPE_FORWARD_ONLY
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 
 data class Message(val message: String = "Hello, World!")
 data class World(val id: Int, var randomNumber: Int)
@@ -42,8 +43,8 @@ fun main(args: Array<String>) {
             }
             get("/db") { call ->
                 pool.connection.use { connection ->
+                    val random = ThreadLocalRandom.current()
                     val queries = call.queries()
-                    val random = Random()
                     val result = mutableListOf<World>()
 
                     connection.prepareStatement("SELECT * FROM World WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use { statement ->
@@ -67,7 +68,7 @@ fun main(args: Array<String>) {
             get("/updates") {
                 pool.connection.use { connection ->
                     val queries = call.queries()
-                    val random = Random()
+                    val random = ThreadLocalRandom.current()
                     val result = mutableListOf<World>()
 
                     connection.prepareStatement("SELECT * FROM World WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use { statement ->
