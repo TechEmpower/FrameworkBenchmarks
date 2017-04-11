@@ -1,8 +1,8 @@
 package org.jetbrains.ktor.benchmarks
 
 import com.google.gson.*
-import com.mchange.v2.c3p0.*
 import com.mysql.jdbc.*
+import com.zaxxer.hikari.*
 import org.jetbrains.ktor.application.*
 import org.jetbrains.ktor.content.*
 import org.jetbrains.ktor.features.*
@@ -13,6 +13,8 @@ import org.jetbrains.ktor.routing.*
 import org.jetbrains.ktor.util.*
 import java.sql.ResultSet.*
 import java.util.concurrent.*
+import javax.sql.*
+
 
 data class Message(val message: String = "Hello, World!")
 data class World(val id: Int, var randomNumber: Int)
@@ -23,12 +25,7 @@ fun main(args: Array<String>) {
     val DbRows = 10000
     val dbHost = System.getenv("DBHOST")
     Driver::class.java.newInstance()
-    val pool = ComboPooledDataSource().apply {
-        driverClass = Driver::class.java.name
-        jdbcUrl = "jdbc:mysql://$dbHost:3306/hello_world"
-        user = a
-        password = b
-    }
+    val pool = hikari(dbHost, a, b)
 
     embeddedServer(Netty, 9090) {
         install(DefaultHeaders)
@@ -109,3 +106,15 @@ fun ApplicationCall.queries() = try {
     1
 }
 
+private fun hikari(dbHost: String, a: String, b: String): DataSource {
+    val config = HikariConfig()
+    config.jdbcUrl = "jdbc:mysql://$dbHost:3306/hello_world"
+    config.username = a
+    config.password = b
+    config.addDataSourceProperty("cachePrepStmts", "true")
+    config.addDataSourceProperty("prepStmtCacheSize", "250")
+    config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
+    config.driverClassName = Driver::class.java.name
+
+    return HikariDataSource(config)
+}

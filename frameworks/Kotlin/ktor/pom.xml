@@ -49,9 +49,9 @@
             <version>2.7</version>
         </dependency>
         <dependency>
-            <groupId>com.mchange</groupId>
-            <artifactId>c3p0</artifactId>
-            <version>0.9.5.2</version>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.6.1</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
