@@ -61,7 +61,10 @@ module.exports = {
 
   Fortunes: (req, res) => {
     Fortunes.findAll().then((fortunes) => {
-      fortunes.push(h.ADDITIONAL_FORTUNE);
+      fortunes.push({
+        id: 0,
+        message: 'Additional fortune added at request time.'
+      });
       fortunes.sort((a, b) => a.message.localeCompare(b.message));
 
       h.addTfbHeaders(res, 'html');
