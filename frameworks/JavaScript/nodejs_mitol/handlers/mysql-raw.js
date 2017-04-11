@@ -69,7 +69,10 @@ module.exports = {
     mysqlGetAllFortunes((err, fortunes) => {
       if (err) { return process.exit(1); }
 
-      fortunes.push(h.ADDITIONAL_FORTUNE);
+      fortunes.push({
+        id: 0,
+        message: 'Additional fortune added at request time.'
+      });
       fortunes.sort((a, b) => a.message.localeCompare(b.message));
       h.addTfbHeaders(res, 'html');
       res.end(h.fortunesTemplate({
