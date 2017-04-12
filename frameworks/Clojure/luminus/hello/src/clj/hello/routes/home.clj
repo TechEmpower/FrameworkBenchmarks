@@ -24,10 +24,7 @@
 (defn single-query-test
   "Test 2: Single database query"
   []
-  (-> 1
-      db/run-queries
-      first
-      encode-json-response))
+  (encode-json-response (db/run-query)))
 
 (defn multiple-query-test
   "Test 3: Multiple database query"
@@ -61,8 +58,8 @@
 (defroutes default-routes
   (GET "/"                 []        "Hello, World!")
   (GET "/db"               []        (single-query-test))
-  (GET "/queries/"         []        (multiple-query-test 1))
-  (GET "/queries/:queries" [queries] (multiple-query-test queries))
   (GET "/fortunes"         []        (fortunes))
-  (GET "/updates/"         []        (db-update 1))
+  (GET "/queries/"         []        (multiple-query-test "1"))
+  (GET "/queries/:queries" [queries] (multiple-query-test queries))
+  (GET "/updates/"         []        (db-update "1"))
   (GET "/updates/:queries" [queries] (db-update queries)))

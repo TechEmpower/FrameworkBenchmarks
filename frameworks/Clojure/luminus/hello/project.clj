@@ -1,33 +1,34 @@
 (defproject hello "0.1.0-SNAPSHOT"
 
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "TechEmpower Luminus benchmark"
+  :url "https://github.com/TechEmpower/FrameworkBenchmarks"
 
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [selmer "1.0.2"]
-                 [markdown-clj "0.9.86"]
-                 [ring-middleware-format "0.7.0"]
-                 [metosin/ring-http-response "0.6.5"]
-                 [bouncer "1.0.0"]
+  :dependencies [[org.clojure/clojure "1.9.0-alpha15"]
+                 [cheshire "5.7.0"]
+                 [selmer "1.10.7"]
+                 [markdown-clj "0.9.98"]
+                 [metosin/muuntaja "0.2.1"]
+                 [metosin/ring-http-response "0.8.2"]
+                 [bouncer "1.0.1"]
                  [org.webjars/bootstrap "4.0.0-alpha.2"]
-                 [org.webjars/font-awesome "4.5.0"]
-                 [org.webjars.bower/tether "1.1.1"]
-                 [org.webjars/jquery "2.2.1"]
+                 [org.webjars/font-awesome "4.7.0"]
+                 [org.webjars.bower/tether "1.4.0"]
+                 [org.webjars/jquery "3.2.0"]
                  [org.clojure/tools.logging "0.3.1"]
                  [com.taoensso/tower "3.0.2"]
-                 [compojure "1.5.0"]
+                 [compojure "1.5.2"]
                  [ring-webjars "0.1.1"]
-                 [ring/ring-defaults "0.2.0"]
-                 [mount "0.1.10"]
-                 [cprop "0.1.6"]
-                 [org.clojure/tools.cli "0.3.3"]
+                 [ring/ring-defaults "0.2.3"]
+                 [mount "0.1.11"]
+                 [cprop "0.1.10"]
+                 [org.clojure/tools.cli "0.3.5"]
                  [luminus-nrepl "0.1.4"]
                  [org.webjars/webjars-locator-jboss-vfs "0.1.0"]
-                 [luminus-immutant "0.1.9"]
-                 [luminus-migrations "0.1.0"]
-                 [conman "0.4.5"]
-                 [org.postgresql/postgresql "9.4-1206-jdbc4"]
-                 [luminus-log4j "0.1.3"]]
+                 [luminus-immutant "0.2.3"]
+                 [luminus-migrations "0.3.0"]
+                 [conman "0.6.3"]
+                 [org.postgresql/postgresql "9.4.1212"]
+                 [luminus-log4j "0.1.5"]]
 
   :min-lein-version "2.0.0"
 
@@ -49,11 +50,11 @@
              :resource-paths ["env/prod/resources"]}
    :dev           [:project/dev :profiles/dev]
    :test          [:project/test :profiles/test]
-   :project/dev  {:dependencies [[prone "1.0.2"]
+   :project/dev  {:dependencies [[prone "1.1.4"]
                                  [ring/ring-mock "0.3.0"]
-                                 [ring/ring-devel "1.4.0"]
-                                 [pjstadig/humane-test-output "0.7.1"]
-                                 [mvxcvi/puget "1.0.0"]]
+                                 [ring/ring-devel "1.5.1"]
+                                 [pjstadig/humane-test-output "0.8.1"]
+                                 [mvxcvi/puget "1.0.1"]]
 
 
                   :source-paths ["env/dev/clj" "test/clj"]
