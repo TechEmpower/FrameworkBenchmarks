@@ -19,7 +19,11 @@ should have an `install.sh` that contains at least
 
     fw_depends java
 
-This installs the Oracle Java 8 JDK.
+This installs the Oracle Java 8 JDK. It also provides a shell variable `JAVA_OPTS_TFB` with tweaked default parameters for the JVM. Sample use:
+
+    #!/bin/bash
+
+    java -server $JAVA_OPTS_TFB
 
 ## Get Help
 

@@ -14,6 +14,7 @@ echo UWSGI=${UWSGI}
 echo NGINX=${NGINX}
 echo QT_VERSION_MM=${QT_VERSION_MM}
 echo CUTELYST_EVENT_LOOP_EPOLL=${CUTELYST_EVENT_LOOP_EPOLL}
+echo BALANCER=${BALANCER}
 
 if [ "${DRIVER}" == "QMYSQL" ]; then
   fw_depends mysql
@@ -48,7 +49,7 @@ export LD_LIBRARY_PATH=/opt/qt${QT_VERSION_MM}/lib:${CROOT}/lib/x86_64-linux-gnu
 if [ -n "${UWSGI}" ]; then
   uwsgi --ini ${CROOT}/config.ini --plugin ${CROOT}/lib/uwsgi/plugins/cutelyst_plugin.so --cutelyst-app ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $MAX_THREADS &
 else
-  ${CROOT}/bin/cutelyst-wsgi --ini ${CROOT}/config.ini -a ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $MAX_THREADS --socket-timeout 0 &
+  ${CROOT}/bin/cutelyst-wsgi --ini ${CROOT}/config.ini -a ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $MAX_THREADS --socket-timeout 0 ${BALANCER} &
 fi
 
 # configure Nginx
