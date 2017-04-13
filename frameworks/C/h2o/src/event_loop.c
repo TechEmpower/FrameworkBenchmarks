@@ -263,7 +263,11 @@ void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_r
 	h2o_multithread_unregister_receiver(event_loop->h2o_ctx.queue, h2o_receiver);
 	h2o_socket_close(event_loop->h2o_socket);
 	h2o_socket_close(event_loop->epoll_socket);
+
+	h2o_loop_t * const loop = event_loop->h2o_ctx.loop;
+
 	h2o_context_dispose(&event_loop->h2o_ctx);
+	h2o_evloop_destroy(loop);
 }
 
 void initialize_event_loop(bool is_main_thread,
