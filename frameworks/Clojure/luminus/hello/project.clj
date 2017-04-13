@@ -43,7 +43,7 @@
             [migratus-lein "0.2.6"]]
   :profiles
   {:uberjar {:omit-source true
-
+             :jvm-opts ["-D\"clojure.compiler.direct-linking=true\""]
              :aot :all
              :uberjar-name "hello.jar"
              :source-paths ["env/prod/clj"]
