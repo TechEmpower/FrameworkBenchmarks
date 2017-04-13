@@ -18,7 +18,7 @@ class HelloWorld < Roda
 
   # Return a random number between 1 and MAX_PK
   def rand1
-    Sysrandom.random_number(MAX_PK).succ
+    rand(MAX_PK).succ
   end
 
   after do
@@ -37,9 +37,14 @@ class HelloWorld < Roda
 
   # Test type 3: Multiple database queries
   static_get '/queries' do
-    Array.new(bounded_queries) do
-      World.with_pk(rand1).values
-    end
+    worlds =
+      DB.synchronize do
+        Array.new(bounded_queries) do
+          World.with_pk(rand1)
+        end
+      end
+
+    worlds.map!(&:values)
   end
 
   # Test type 4: Fortunes
@@ -56,11 +61,16 @@ class HelloWorld < Roda
 
   # Test type 5: Database updates
   static_get '/updates' do
-    Array.new(bounded_queries) do
-      world = World.with_pk(rand1)
-      world.update(:randomnumber=>rand1)
-      world.values
-    end
+    worlds =
+      DB.synchronize do
+        Array.new(bounded_queries) do
+          world = World.with_pk(rand1)
+          world.update(:randomnumber=>rand1)
+          world
+        end
+      end
+
+    worlds.map!(&:values)
   end
 
   # Test type 6: Plaintext

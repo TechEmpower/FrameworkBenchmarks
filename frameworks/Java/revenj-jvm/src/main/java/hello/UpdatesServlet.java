@@ -17,13 +17,13 @@ public class UpdatesServlet extends HttpServlet {
 		res.setContentType("application/json");
 		final int count = Utils.parseBoundParam(req);
 		final Context ctx = Utils.getContext();
-		final JsonWriter json = ctx.json;
+		final JsonWriter json = Utils.getJson();
 		final World[] worlds = ctx.loadWorldsSlow(count);
 		final ArrayList<World> changed = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
 			changed.add(worlds[i].setRandomNumber(ctx.getRandom10k()));
 		}
-		Collections.sort(changed, ASC);
+		changed.sort(ASC);
 		ctx.worlds.update(changed);
 		json.serialize(worlds, count);
 		json.toStream(res.getOutputStream());

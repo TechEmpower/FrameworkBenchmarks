@@ -16,7 +16,7 @@ public class FortunesServlet extends HttpServlet {
 		final Context ctx = Utils.getContext();
 		final List<Fortune> fortunes = ctx.fortunes.search();
 		fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-		Collections.sort(fortunes, COMPARATOR);
+		fortunes.sort(COMPARATOR);
 		req.setCharacterEncoding("UTF-8");
 		req.setAttribute("fortunes", fortunes);
 		req.getRequestDispatcher("/WEB-INF/jsp/fortunes.jsp").forward(req, res);
