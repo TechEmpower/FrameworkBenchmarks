@@ -63,7 +63,7 @@ module.exports = {
 
   Fortunes: (req, res) => {
     Fortunes.findAll().then((fortunes) => {
-      fortunes.push(h.ADDITIONAL_FORTUNE);
+      fortunes.push(h.additionalFortune());
       fortunes.sort((a, b) => {
         return a.message.localeCompare(b.message);
       });

@@ -26,9 +26,9 @@ This is the [Jooby](http://jooby.org) portion of a [benchmarking test suite](../
 
 ## Versions
 
-* [Jooby 0.11.x](http://jooby.org)
-* [Undertow 1.2.x](http://undertow.io)
-* [Jackson 2.6.x](http://wiki.fasterxml.com/JacksonHome)
+* [Jooby 1.1.0](http://jooby.org)
+* [Undertow 1.4.x](http://undertow.io)
+* [Jackson 2.8.x](http://wiki.fasterxml.com/JacksonHome)
 
 ## Test URLs
 

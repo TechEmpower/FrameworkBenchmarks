@@ -16,8 +16,8 @@ For further guidance, review the
 
 ### Python Experts
 
-* INADA Naoki (@methane) -- Expert of Python and Python's MySQL driver.
-* Ludovic Gasc (@GMLudo) -- Expert of AsyncIO.
+* INADA Naoki (@methane) -- CPython core developer and expert of Python's MySQL driver.
+* Ludovic Gasc (@GMLudo) -- AsyncIO and aiohttp user.
 
 ### [Python Community](https://www.python.org/community/)
 

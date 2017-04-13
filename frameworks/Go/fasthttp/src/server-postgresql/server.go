@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"runtime"
 	"sort"
 
 	"github.com/jackc/pgx"
@@ -12,8 +13,6 @@ import (
 	"common"
 	"templates"
 )
-
-const maxConnectionCount = 40
 
 var (
 	worldSelectStmt   *pgx.PreparedStatement
@@ -27,7 +26,7 @@ func main() {
 	flag.Parse()
 
 	var err error
-
+	maxConnectionCount := runtime.NumCPU() * 2
 	if db, err = initDatabase("localhost", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, maxConnectionCount); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}

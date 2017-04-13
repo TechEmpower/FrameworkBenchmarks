@@ -266,7 +266,7 @@
   [service-map server-opts]
   (let [handler (::handler service-map)
         {:keys [host port join?]
-         :or {host "127.0.0.1"
+         :or {host "0.0.0.0"
               port 8080
               join? false}} server-opts
         addr (InetSocketAddress. ^String host ^int port)

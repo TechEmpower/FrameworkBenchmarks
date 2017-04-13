@@ -36,7 +36,7 @@ public class AppEntry {
 	}
 
 	public static void main(String[] args) throws Exception {
-		RunApp.start("Act Test", Version.appVersion(), AppEntry.class);
+		RunApp.start("ACT Benchmark", Version.appVersion(), AppEntry.class);
 	}
 
 }

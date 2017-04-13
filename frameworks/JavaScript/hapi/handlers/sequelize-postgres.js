@@ -57,7 +57,7 @@ module.exports = {
 
   Fortunes: (req, reply) => {
     Fortunes.findAll().then((fortunes) => {
-      fortunes.push(h.ADDITIONAL_FORTUNE);
+      fortunes.push(h.additionalFortune());
       fortunes.sort((a, b) => a.message.localeCompare(b.message));
 
       reply.view('fortunes', { fortunes: fortunes })
