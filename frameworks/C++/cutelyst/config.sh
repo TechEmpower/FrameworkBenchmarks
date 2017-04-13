@@ -28,7 +28,7 @@ cd ${IROOT}/cutelyst-benchmarks
 # build
 export CMAKE_PREFIX_PATH=/opt/qt${QT_VERSION_MM}:${IROOT}
 cmake $TROOT -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$IROOT
-make -j $MAX_THREADS
+make -j $CPU_COUNT
 
 if [ -n "${UWSGI}" ]; then
   cp -v ${TROOT}/config/config_socket.ini ${IROOT}/config.ini
@@ -45,9 +45,9 @@ sed -i "s|SendDate=.*|SendDate=${SEND_DATE}|g" ${IROOT}/config.ini
 export LD_LIBRARY_PATH=/opt/qt${QT_VERSION_MM}/lib:${IROOT}/lib/x86_64-linux-gnu/
 
 if [ -n "${UWSGI}" ]; then
-  uwsgi --ini ${IROOT}/config.ini --cutelyst-app ${IROOT}/cutelyst-benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $MAX_THREADS &
+  uwsgi --ini ${IROOT}/config.ini --cutelyst-app ${IROOT}/cutelyst-benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $CPU_COUNT &
 else
-  ${IROOT}/bin/cutelyst-wsgi --ini ${IROOT}/config.ini -a ${IROOT}/cutelyst-benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $MAX_THREADS --socket-timeout 0 &
+  ${IROOT}/bin/cutelyst-wsgi --ini ${IROOT}/config.ini -a ${IROOT}/cutelyst-benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $CPU_COUNT --socket-timeout 0 &
 fi
 
 # configure Nginx

@@ -66,6 +66,8 @@ def main(argv=None):
     os.environ['IROOT'] = os.environ['FWROOT'] + '/installs'
     # 'Ubuntu', '14.04', 'trusty' respectively
     os.environ['TFB_DISTRIB_ID'], os.environ['TFB_DISTRIB_RELEASE'], os.environ['TFB_DISTRIB_CODENAME'] = platform.linux_distribution()
+    # App server cpu count
+    os.environ['CPU_COUNT'] = multiprocessing.cpu_count()
 
     print("FWROOT is {!s}.".format(os.environ['FWROOT']))
 
