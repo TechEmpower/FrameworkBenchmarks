@@ -6,4 +6,4 @@
   {registered, []},
   {mod, {mochiweb_bench_app, []}},
   {env, []},
-  {applications, [kernel, stdlib, erl_bench]}]}.
+  {applications, [kernel, stdlib, crypto, emysql]}]}.

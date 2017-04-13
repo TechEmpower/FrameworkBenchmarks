@@ -66,9 +66,6 @@ static const struct {
 } prepared_statement[] = {
 	{FORTUNE_TABLE_NAME, "SELECT * FROM " FORTUNE_TABLE_NAME ";"},
 	{WORLD_TABLE_NAME, "SELECT * FROM " WORLD_TABLE_NAME " WHERE " ID_FIELD_NAME " = $1::integer;"},
-	{UPDATE_QUERY_NAME,
-	 "UPDATE " WORLD_TABLE_NAME " SET randomNumber = $2::integer "
-	 "WHERE " ID_FIELD_NAME " = $1::integer;"},
 };
 
 static int do_database_write(db_conn_t *db_conn)
@@ -161,6 +158,7 @@ static void on_database_connect_timeout(h2o_timeout_entry_t *entry)
 {
 	db_conn_t * const db_conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, h2o_timeout_entry, entry);
 
+	ERROR(DB_TIMEOUT_ERROR);
 	on_database_connect_error(db_conn, true, DB_TIMEOUT_ERROR);
 }
 
@@ -248,6 +246,8 @@ static void on_database_read_ready(h2o_socket_t *db_sock, const char *err)
 static void on_database_timeout(h2o_timeout_entry_t *entry)
 {
 	db_conn_t * const db_conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, h2o_timeout_entry, entry);
+
+	ERROR(DB_TIMEOUT_ERROR);
 
 	if (db_conn->param) {
 		db_conn->param->on_timeout(db_conn->param);
@@ -465,7 +465,7 @@ static void stop_database_write_polling(db_conn_t *db_conn)
 
 void connect_to_database(thread_context_t *ctx)
 {
-	for (size_t i = ctx->db_state.db_conn_num; i < ctx->config->max_db_conn_num; i++)
+	for (size_t i = ctx->config->max_db_conn_num - ctx->db_state.db_conn_num; i > 0; i--)
 		start_database_connect(ctx, NULL);
 }
 

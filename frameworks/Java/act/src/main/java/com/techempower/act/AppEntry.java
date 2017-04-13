@@ -30,13 +30,13 @@ public class AppEntry {
 
 	@OnAppStart
 	public void routing() {
-		Act.get("/json", context -> context.resp()
+		Act.getNonblock("/json", context -> context.resp()
 				.contentType(H.Format.JSON.contentType())
 				.writeContent(JSON.toJSONString(new Message(HELLO_WORLD))));
 	}
 
 	public static void main(String[] args) throws Exception {
-		RunApp.start("Act Test", Version.appVersion(), AppEntry.class);
+		RunApp.start("ACT Benchmark", Version.appVersion(), AppEntry.class);
 	}
 
 }

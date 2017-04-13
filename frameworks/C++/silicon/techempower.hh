@@ -41,7 +41,6 @@ std::string escape_html_entities(std::string& data)
 
 auto techempower_api = http_api(
 
-
   GET / _plaintext = [] () { return response(_content_type = string_ref("text/plain"),
                                        _body = string_ref("Hello, World!")); },
 

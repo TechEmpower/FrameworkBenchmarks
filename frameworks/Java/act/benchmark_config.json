@@ -39,7 +39,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actframework-pgsql",
+      "display_name": "act-ebean-pgsql",
       "notes": "",
       "versus": "undertow"
     },
@@ -61,7 +61,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actframework-mysql",
+      "display_name": "act-ebean-mysql",
       "notes": "",
       "versus": "undertow"
     },
@@ -83,7 +83,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actframework-mongo",
+      "display_name": "act-morphia",
       "notes": "",
       "versus": "undertow"
     }

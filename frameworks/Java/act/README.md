@@ -2,7 +2,7 @@
 
 This is the ActFramework portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-This is using [ActFramework](http://actframework.org) to build an application.
+This is using [ActFramework R1.0.2](http://actframework.org) to build an application.
 
 ## How to run this app locally
 
@@ -136,30 +136,29 @@ The common base classes for mysql and pgsql classes
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [ActFramework 0.4.0-SNAPSHOT](http://actframework.org/)
-* [act-ebean plugin 0.4.0-SNAPSHOT](https://github.com/actframework/act-ebean)
-* [act-morphia plugin 0.5.0-SNAPSHOT](https://github.com/actframework/act-morphia)
+* [ActFramework 1.0.4](http://actframework.org/)
+* [act-ebean plugin 1.0.3](https://github.com/actframework/act-ebean)
+* [act-morphia plugin 1.0.2](https://github.com/actframework/act-morphia)
 * [Undertow 1.4.8.Final](http://undertow.io/)
-
 
 ## Local Test Result
 
 |            Test            | Throughput |  Latency  | Timeout/Error |
 | -------------------------- | ---------: | --------: | ------: |
-| json                       |  828527.50 |    4.43ms |         |
-| single query - mongo       |   44575.49 |   15.12ms |         |
-| single query - mysql       |   25300.02 |   55.57ms |         |
-| single query - pgsql       |   36930.28 |   48.51ms |         |
-| 20 queries - mongo         |    2655.75 |  107.18ms |         |
-| 20 queries - mysql         |    1225.00 |       n/a |     768 |
-| 20 queries - pgsql         |    2010.60 |  386.54ms |      22 |
-| fortunes - mongo           |   22417.17 |   48.37ms |         |
-| fortunes - mysql           |   22326.85 |   47.14ms |         |
-| fortunes - pgsql           |   24216.44 |   85.19ms |         |
-| 20 updates - mongo         |    1220.98 |  205.33ms |         |
-| 20 updates - mysql         |    1302.06 |  193.56ms |      74 |
-| 20 updates - pgsql         |     936.34 |  266.81ms |         |
-| plaintext                  | 1361223.78 |    2.36ms |         |
+| json                       | 1026530.41 |    3.31ms |         |
+| single query - mongo       |   42185.82 |   17.04ms |         |
+| single query - mysql       |   24258.46 |   29.21ms |         |
+| single query - pgsql       |   32745.68 |   24.48ms |         |
+| 20 queries - mongo         |    2584.76 |   98.92ms |         |
+| 20 queries - mysql         |    1317.33 |  191.92ms |         |
+| 20 queries - pgsql         |    1966.24 |  128.47ms |         |
+| fortunes - mongo           |   23637.79 |   31.12ms |         |
+| fortunes - mysql           |   20958.60 |   37.76ms |         |
+| fortunes - pgsql           |   23081.28 |   34.31ms |         |
+| 20 updates - mongo         |    1239.06 |  202.40ms |         |
+| 20 updates - mysql         |    1319.04 |  189.94ms |      71 |
+| 20 updates - pgsql         |     803.26 |  312.14ms |         |
+| plaintext                  | 1376490.27 |    2.49ms |         |
 
 
 ### Local Test Logs
@@ -167,155 +166,153 @@ The tests were run with:
 #### JSON Serialization
 
 ```
-luog@luog-Satellite-P50-A:~/p/greenlaw110/webframework-benchmark$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /json 16
+luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /json 16
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.43ms    4.34ms 202.38ms   90.32%
-    Req/Sec   209.33k    59.03k  389.44k    62.25%
+    Latency     3.11ms    2.90ms 207.19ms   89.55%
+    Req/Sec   258.94k    53.37k  465.94k    69.25%
   Latency Distribution
-     50%    3.70ms
-     75%    6.09ms
-     90%    8.69ms
-     99%   15.91ms
-  8359840 requests in 10.09s, 1.34GB read
-Requests/sec: 828527.50
-Transfer/sec:    135.91MB
+     50%    2.70ms
+     75%    4.18ms
+     90%    5.82ms
+     99%   10.55ms
+  10310688 requests in 10.04s, 1.65GB read
+Requests/sec: 1026530.41
+Transfer/sec:    168.38MB
 ```
 
 #### Plain text
 
 ```
-luog@luog-Satellite-P50-A:~/p/greenlaw110/webframework-benchmark$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /plaintext 16
+luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /plaintext 16
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.36ms    2.08ms  39.37ms   85.72%
-    Req/Sec   344.48k    82.82k  691.36k    66.25%
+    Latency     2.49ms    2.55ms  34.96ms   89.71%
+    Req/Sec   346.49k    84.82k  647.92k    68.50%
   Latency Distribution
-     50%    1.89ms
-     75%    3.16ms
-     90%    4.58ms
-     99%   10.10ms
-  13751216 requests in 10.10s, 1.95GB read
-Requests/sec: 1361223.78
-Transfer/sec:    197.32MB
+     50%    1.80ms
+     75%    3.08ms
+     90%    5.12ms
+     99%   13.25ms
+  13840896 requests in 10.06s, 1.96GB read
+Requests/sec: 1376490.27
+Transfer/sec:    199.53MB
 ```
 
 #### Single Query - MongoDB
 
 ```
-luog@luog-Satellite-P50-A:~/p/greenlaw110/webframework-benchmark$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mongo/db 16
+luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mongo/db 4
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    15.12ms   30.09ms 126.68ms    0.00%
-    Req/Sec    11.23k   657.00    13.74k    67.75%
+    Latency    17.04ms    6.47ms  58.42ms   63.53%
+    Req/Sec    10.64k   546.37    15.19k    78.75%
   Latency Distribution
-     50%    0.00us
-     75%    0.00us
-     90%    0.00us
-     99%    0.00us
-  447408 requests in 10.04s, 75.00MB read
-Requests/sec:  44575.49
-Transfer/sec:      7.47MB
+     50%   16.73ms
+     75%   22.25ms
+     90%   25.04ms
+     99%   33.17ms
+  425144 requests in 10.08s, 71.27MB read
+Requests/sec:  42185.82
+Transfer/sec:      7.07MB
 ```
 
 #### Single query - MySQL
 
 ```
-luog@luog-Satellite-P50-A:~/p/greenlaw110/webframework-benchmark$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mysql/db 16
+luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mysql/db 4
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    55.57ms   50.98ms 326.24ms    5.78%
-    Req/Sec     6.39k     1.07k   10.34k    78.09%
+    Latency    29.21ms   10.81ms 121.06ms   59.54%
+    Req/Sec     6.12k   280.08     8.77k    80.25%
   Latency Distribution
-     50%    0.00us
-     75%    0.00us
-     90%    0.00us
-     99%    0.00us
-  253872 requests in 10.03s, 42.56MB read
-Requests/sec:  25300.02
-Transfer/sec:      4.24MB
+     50%   29.02ms
+     75%   38.33ms
+     90%   43.44ms
+     99%   51.34ms
+  243744 requests in 10.05s, 40.86MB read
+Requests/sec:  24258.46
+Transfer/sec:      4.07MB
 ```
 
 #### Single query - Postgres
 
 ```
-luog@luog-Satellite-P50-A:~/p/greenlaw110/webframework-benchmark$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /pgsql/db 16
+luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /pgsql/db 4
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    48.51ms   32.12ms 335.31ms   28.60%
-    Req/Sec     9.33k     0.93k   12.61k    89.67%
+    Latency    24.48ms   13.59ms 140.15ms   72.81%
+    Req/Sec     8.25k   742.58    10.67k    83.00%
   Latency Distribution
-     50%  109.70ms
-     75%    0.00us
-     90%    0.00us
-     99%    0.00us
-  370144 requests in 10.02s, 62.05MB read
-Requests/sec:  36930.28
-Transfer/sec:      6.19MB
+     50%   21.86ms
+     75%   29.66ms
+     90%   44.31ms
+     99%   69.61ms
+  329380 requests in 10.06s, 55.21MB read
+Requests/sec:  32745.68
+Transfer/sec:      5.49MB
 ```
 
 #### 20 queries - Mongo
 
 ```
-luog@luog-Satellite-P50-A:~/p/greenlaw110/webframework-benchmark$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mongo/queries?queries=20 16
+luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mongo/queries?queries=20 1
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   107.18ms  361.87ms   1.52s     0.00%
-    Req/Sec     2.07k     2.81k    8.96k    82.14%
+    Latency    98.92ms   33.48ms 367.17ms   79.73%
+    Req/Sec   651.20     43.98     0.92k    75.50%
   Latency Distribution
-     50%    0.00us
-     75%    0.00us
-     90%    0.00us
-     99%    0.00us
-  26720 requests in 10.06s, 19.94MB read
-Requests/sec:   2655.75
-Transfer/sec:      1.98MB
+     50%   93.50ms
+     75%  107.41ms
+     90%  137.61ms
+     99%  222.72ms
+  25978 requests in 10.05s, 19.39MB read
+Requests/sec:   2584.76
+Transfer/sec:      1.93MB
 ```
 
 #### 20 queries - MySQL
 
 ```
-luog@luog-Satellite-P50-A:~/p/greenlaw110/webframework-benchmark$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mysql/queries?queries=20 16
+luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mysql/queries?queries=20 1
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     1.76k     1.97k    5.82k    78.69%
+    Latency   191.92ms   16.38ms 254.96ms   89.13%
+    Req/Sec   331.99    140.32   646.00     66.33%
   Latency Distribution
-     50%    0.00us
-     75%    0.00us
-     90%    0.00us
-     99%    0.00us
-  12288 requests in 10.03s, 9.17MB read
-  Socket errors: connect 0, read 0, write 0, timeout 768
-Requests/sec:   1225.00
-Transfer/sec:      0.91MB
+     50%  192.68ms
+     75%  199.43ms
+     90%  206.16ms
+     99%  219.29ms
+  13225 requests in 10.04s, 9.87MB read
+Requests/sec:   1317.33
+Transfer/sec:      0.98MB
 ```
 
 #### 20 queries - Postgres
  
 ```
-luog@luog-Satellite-P50-A:~/p/greenlaw110/webframework-benchmark$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /pgsql/queries?queries=20 16
+luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /pgsql/queries?queries=20 1
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   386.54ms  624.21ms   2.00s     0.00%
-    Req/Sec     1.10k     1.14k    4.36k    82.18%
+    Latency   128.47ms   25.97ms 288.45ms   65.68%
+    Req/Sec   496.92     40.72   828.00     78.30%
   Latency Distribution
-     50%    0.00us
-     75%    0.00us
-     90%    0.00us
-     99%    0.00us
-  20208 requests in 10.05s, 15.08MB read
-  Socket errors: connect 0, read 0, write 0, timeout 22
-Requests/sec:   2010.60
-Transfer/sec:      1.50MB
+     50%  123.88ms
+     75%  143.43ms
+     90%  163.07ms
+     99%  201.05ms
+  19854 requests in 10.10s, 14.82MB read
+Requests/sec:   1966.24
+Transfer/sec:      1.47MB
 ```
 
 #### 20 updates - Mongo
@@ -325,16 +322,16 @@ luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/ac
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   205.33ms   42.06ms 472.29ms   76.46%
-    Req/Sec   309.55     47.83   686.00     81.61%
+    Latency   202.40ms   41.73ms 497.85ms   78.06%
+    Req/Sec   314.17     57.45   646.00     82.66%
   Latency Distribution
-     50%  201.73ms
-     75%  221.40ms
-     90%  255.50ms
-     99%  343.78ms
-  12313 requests in 10.08s, 9.19MB read
-Requests/sec:   1220.98
-Transfer/sec:      0.91MB
+     50%  198.61ms
+     75%  218.83ms
+     90%  252.33ms
+     99%  336.21ms
+  12469 requests in 10.06s, 9.31MB read
+Requests/sec:   1239.06
+Transfer/sec:      0.92MB
 ```
 
 #### 20 updates - MySQL
@@ -344,17 +341,17 @@ luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/ac
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   193.56ms   17.08ms 334.64ms   78.85%
-    Req/Sec   328.96     59.55   515.00     75.44%
+    Latency   189.94ms   19.91ms 320.25ms   78.53%
+    Req/Sec   332.16     72.08   600.00     75.69%
   Latency Distribution
-     50%  191.78ms
-     75%  201.61ms
-     90%  212.96ms
-     99%  243.63ms
-  13095 requests in 10.06s, 9.73MB read
-  Non-2xx or 3xx responses: 74
-Requests/sec:   1302.06
-Transfer/sec:      0.97MB
+     50%  187.81ms
+     75%  199.80ms
+     90%  213.79ms
+     99%  243.72ms
+  13237 requests in 10.04s, 9.84MB read
+  Non-2xx or 3xx responses: 71
+Requests/sec:   1319.04
+Transfer/sec:      0.98MB
 ```
 
 #### 20 updates - Postgresql
@@ -364,71 +361,71 @@ luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/ac
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   266.81ms   22.08ms 439.39ms   90.78%
-    Req/Sec   238.35    165.58   575.00     54.19%
+    Latency   312.14ms   47.72ms 415.26ms   75.75%
+    Req/Sec   214.47    161.95   610.00     59.04%
   Latency Distribution
-     50%  268.69ms
-     75%  274.15ms
-     90%  280.21ms
-     99%  303.10ms
-  9397 requests in 10.04s, 7.01MB read
-Requests/sec:    936.34
-Transfer/sec:    715.55KB
+     50%  321.52ms
+     75%  347.91ms
+     90%  366.58ms
+     99%  396.16ms
+  8061 requests in 10.04s, 6.02MB read
+Requests/sec:    803.26
+Transfer/sec:    613.87KB
 ```
 
 #### Fortunes - Mongo
 
 ```
-luog@luog-Satellite-P50-A:~/p/greenlaw110/webframework-benchmark$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mongo/fortunes 16
+luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mongo/fortunes 4
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    48.37ms   62.79ms 283.94ms    0.00%
-    Req/Sec     5.66k     1.15k   10.08k    77.02%
+    Latency    31.12ms   14.03ms 183.18ms   72.31%
+    Req/Sec     5.97k   478.08     8.68k    71.75%
   Latency Distribution
-     50%    0.00us
-     75%    0.00us
-     90%    0.00us
-     99%    0.00us
-  224908 requests in 10.03s, 313.15MB read
-Requests/sec:  22417.17
-Transfer/sec:     31.21MB
+     50%   29.62ms
+     75%   39.61ms
+     90%   46.90ms
+     99%   76.91ms
+  238284 requests in 10.08s, 331.78MB read
+Requests/sec:  23637.79
+Transfer/sec:     32.91MB
 ```
 
 #### Fortunes - MySQL
 
 ```
-luog@luog-Satellite-P50-A:~/p/greenlaw110/webframework-benchmark$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mysql/fortunes 16
+luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /mysql/fortunes 4
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    47.14ms   62.73ms 291.87ms    0.00%
-    Req/Sec     5.64k     1.34k    9.76k    73.43%
+    Latency    37.76ms   21.11ms 220.85ms   78.62%
+    Req/Sec     5.28k   365.21     6.75k    71.50%
   Latency Distribution
-     50%    0.00us
-     75%    0.00us
-     90%    0.00us
-     99%    0.00us
-  224776 requests in 10.07s, 312.97MB read
-Requests/sec:  22326.85
-Transfer/sec:     31.09MB
+     50%   33.95ms
+     75%   45.70ms
+     90%   62.66ms
+     99%  116.81ms
+  210548 requests in 10.05s, 293.16MB read
+Requests/sec:  20958.60
+Transfer/sec:     29.18MB
 ```
 
 #### Fortunes - Postgresql
 
 ```
-luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /pgsql/fortunes 16
+luog@luog-Satellite-P50-A:~/p/greenlaw110/FrameworkBenchmarks/frameworks/Java/act$ wrk -t4 -c256 -d10s http://localhost:8080 -s pipeline.lua --latency -- /pgsql/fortunes 4
 Running 10s test @ http://localhost:8080
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    85.19ms   40.72ms 378.41ms   50.28%
-    Req/Sec     6.26k     1.75k   13.66k    86.67%
+    Latency    34.31ms   18.68ms 179.08ms   71.53%
+    Req/Sec     5.83k   385.75    10.12k    80.50%
   Latency Distribution
-     50%  123.14ms
-     75%  169.66ms
-     90%    0.00us
-     99%    0.00us
-  242972 requests in 10.03s, 338.31MB read
-Requests/sec:  24216.44
-Transfer/sec:     33.72MB
+     50%   31.53ms
+     75%   41.27ms
+     90%   61.99ms
+     99%   96.27ms
+  232596 requests in 10.08s, 323.86MB read
+Requests/sec:  23081.28
+Transfer/sec:     32.14MB
 ```

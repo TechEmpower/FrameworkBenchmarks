@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 public class JsonGetHandler implements HttpHandler {
     private DslJson<Object> dsl = new DslJson<>();
-    private JsonWriter writer = dsl.newWriter(25000);
+    private JsonWriter writer = dsl.newWriter(1024);
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {

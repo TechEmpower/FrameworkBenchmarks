@@ -7,6 +7,7 @@
 import os
 import zipfile
 import datetime
+import requests
 import shutil
 # Follows closely from:
 # http://stackoverflow.com/a/34153816
@@ -25,10 +26,18 @@ path_out = os.path.abspath(os.path.join(os.environ['TFB_LOGSFOLDER'], \
 if not os.path.exists(path_out):
   os.makedirs(path_out)
 
-zip_file = zipfile.ZipFile(path_out + '/results.zip', 'w', zipfile.ZIP_DEFLATED)
+zip_path = path_out + '/results.zip'
+
+zip_file = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
 
 for root, dirs, files in os.walk(path_in):
   for file in files:
     zip_file.write(os.path.join(root, file))
 
 zip_file.close()
+
+results_upload_uri = os.environ['TFB_UPLOADURI']
+
+if results_upload_uri != None:
+    with open(zip_path, 'rb') as file_to_upload:
+        requests.post(results_upload_uri, headers={ 'Content-Type': 'application/zip' }, data=file_to_upload)

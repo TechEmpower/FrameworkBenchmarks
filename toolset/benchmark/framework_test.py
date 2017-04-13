@@ -5,6 +5,7 @@ from benchmark.test_types import *
 import importlib
 import os
 import subprocess
+import socket
 import time
 import re
 from pprint import pprint
@@ -176,7 +177,7 @@ class FrameworkTest:
 
     os.environ['TROOT'] = self.directory
     os.environ['IROOT'] = self.install_root
-    os.environ['DBHOST'] = self.database_host
+    os.environ['DBHOST'] = socket.gethostbyname(self.database_host)
     os.environ['LOGDIR'] = logDir
     os.environ['MAX_CONCURRENCY'] = str(max(self.benchmarker.concurrency_levels))
 
@@ -228,7 +229,7 @@ class FrameworkTest:
       %s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\"''' % (self.fwroot,
         self.directory,
         self.install_root,
-        self.database_host,
+        socket.gethostbyname(self.database_host),
         logDir,
         max(self.benchmarker.concurrency_levels),
         self.directory,
@@ -674,12 +675,12 @@ class FrameworkTest:
   ############################################################
   def __begin_logging(self, test_type):
     output_file = "{file_name}".format(file_name=self.benchmarker.get_stats_file(self.name, test_type))
-    dstat_string = "dstat -afilmprsT --aio --fs --ipc --lock --raw --socket --tcp \
+    dstat_string = "dstat -Tafilmprs --aio --fs --ipc --lock --raw --socket --tcp \
                                       --raw --socket --tcp --udp --unix --vm --disk-util \
                                       --rpc --rpcd --output {output_file}".format(output_file=output_file)
     cmd = shlex.split(dstat_string)
     dev_null = open(os.devnull, "w")
-    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null)
+    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null, stderr=subprocess.STDOUT)
 
   ##############################################################
   # Begin __end_logging

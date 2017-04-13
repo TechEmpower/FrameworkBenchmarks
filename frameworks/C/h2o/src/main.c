@@ -17,26 +17,19 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <assert.h>
 #include <errno.h>
 #include <h2o.h>
 #include <mustache.h>
-#include <netdb.h>
+#include <pthread.h>
 #include <signal.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <h2o/serverutil.h>
-#include <netinet/tcp.h>
 #include <sys/resource.h>
 #include <sys/signalfd.h>
-#include <sys/socket.h>
 #include <sys/time.h>
-#include <sys/types.h>
 
 #include "error.h"
 #include "event_loop.h"
@@ -47,7 +40,6 @@
 #include "utility.h"
 
 #define DEFAULT_CACHE_LINE_SIZE 128
-#define DEFAULT_TCP_FASTOPEN_QUEUE_LEN 4096
 #define USAGE_MESSAGE \
 	"Usage:\n%s [-a <max connections accepted simultaneously>] [-b <bind address>] " \
 	"[-c <certificate file>] [-d <database connection string>] [-f fortunes template file path] " \
@@ -57,7 +49,6 @@
 	"[-s <HTTPS port>] [-t <thread number>]\n"
 
 static void free_global_data(global_data_t *global_data);
-static int get_listener_socket(const char *bind_address, uint16_t port);
 static size_t get_maximum_cache_line_size(void);
 static int initialize_global_data(const config_t *config, global_data_t *global_data);
 static int parse_options(int argc, char *argv[], config_t *config);
@@ -67,7 +58,7 @@ static void setup_process(void);
 static void free_global_data(global_data_t *global_data)
 {
 	if (global_data->global_thread_data) {
-		for (size_t i = 1; i < global_data->global_thread_data->config->thread_num; i++)
+		for (size_t i = global_data->global_thread_data->config->thread_num - 1; i > 0; i--)
 			CHECK_ERROR(pthread_join, global_data->global_thread_data[i].thread, NULL);
 
 		free(global_data->global_thread_data);
@@ -86,70 +77,6 @@ static void free_global_data(global_data_t *global_data)
 
 	if (global_data->ssl_ctx)
 		cleanup_openssl(global_data);
-}
-
-static int get_listener_socket(const char *bind_address, uint16_t port)
-{
-	int ret = -1;
-	char buf[16];
-
-	if ((size_t) snprintf(buf, sizeof(buf), "%" PRIu16, port) >= sizeof(buf)) {
-		LIBRARY_ERROR("snprintf", "Truncated output.");
-		return ret;
-	}
-
-	struct addrinfo *res = NULL;
-	struct addrinfo hints = {.ai_socktype = SOCK_STREAM, .ai_flags = AI_PASSIVE};
-	const int error_code = getaddrinfo(bind_address, buf, &hints, &res);
-
-	if (error_code) {
-		LIBRARY_ERROR("getaddrinfo", gai_strerror(error_code));
-		return ret;
-	}
-
-	struct addrinfo *iter = res;
-
-	for (; iter; iter = iter->ai_next) {
-		const int s = socket(iter->ai_family,
-		                     iter->ai_socktype | SOCK_NONBLOCK | SOCK_CLOEXEC,
-		                     iter->ai_protocol);
-
-		if (s == -1) {
-			STANDARD_ERROR("socket");
-			continue;
-		}
-
-#define LOCAL_CHECK_ERRNO(function, ...) \
-	do { \
-		const int error_code = (function)(__VA_ARGS__); \
-		\
-		if (error_code) { \
-			print_library_error(__FILE__, __LINE__, #function, errno); \
-			goto error; \
-		} \
-	} while(0)
-
-		int option = 1;
-
-		LOCAL_CHECK_ERRNO(setsockopt, s, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
-		LOCAL_CHECK_ERRNO(setsockopt, s, IPPROTO_TCP, TCP_QUICKACK, &option, sizeof(option));
-		option = H2O_DEFAULT_HANDSHAKE_TIMEOUT_IN_SECS;
-		LOCAL_CHECK_ERRNO(setsockopt, s, IPPROTO_TCP, TCP_DEFER_ACCEPT, &option, sizeof(option));
-		option = DEFAULT_TCP_FASTOPEN_QUEUE_LEN;
-		LOCAL_CHECK_ERRNO(setsockopt, s, IPPROTO_TCP, TCP_FASTOPEN, &option, sizeof(option));
-		LOCAL_CHECK_ERRNO(bind, s, iter->ai_addr, iter->ai_addrlen);
-		LOCAL_CHECK_ERRNO(listen, s, INT_MAX);
-		ret = s;
-		break;
-
-#undef LOCAL_CHECK_ERRNO
-
-error:
-		close(s);
-	}
-
-	freeaddrinfo(res);
-	return ret;
 }
 
 static size_t get_maximum_cache_line_size(void)
@@ -193,20 +120,9 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	CHECK_ERRNO_RETURN(global_data->signal_fd, signalfd, -1, &signals, SFD_NONBLOCK | SFD_CLOEXEC);
 	global_data->fortunes_template = get_fortunes_template(config->template_path);
 	h2o_config_init(&global_data->h2o_config);
-	global_data->listener_sd = get_listener_socket(config->bind_address, config->port);
 
-	if (global_data->listener_sd == -1)
-		goto error;
-
-	if (config->cert && config->key) {
-		global_data->https_listener_sd = get_listener_socket(config->bind_address,
-		                                                     config->https_port);
-
-		if (global_data->https_listener_sd == -1)
-			goto error;
-
+	if (config->cert && config->key)
 		initialize_openssl(config, global_data);
-	}
 
 	const h2o_iovec_t host = h2o_iovec_init(H2O_STRLIT("default"));
 	h2o_hostconf_t * const hostconf = h2o_config_register_host(&global_data->h2o_config,
@@ -215,7 +131,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	h2o_access_log_filehandle_t *log_handle = NULL;
 
 	if (config->log) {
-		log_handle = h2o_access_log_open_handle(config->log, NULL);
+		log_handle = h2o_access_log_open_handle(config->log, NULL, H2O_LOGCONF_ESCAPE_APACHE);
 
 		if (!log_handle)
 			goto error;

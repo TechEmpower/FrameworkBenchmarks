@@ -24,7 +24,7 @@ required.
 
 2. Move into the vagrant-development directory.
 
-        $ cd FrameworkBenchmarks/deployment/vagrant-development
+        $ cd FrameworkBenchmarks/deployment/vagrant
 
 3. Turn on the VM (takes at least 20 minutes).
 

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'bundler'
+require 'bundler/setup'
 require 'time'
 
 MAX_PK = 10_000
@@ -33,15 +33,15 @@ def connect(dbtype)
 
   # Determine threading/thread pool size and timeout
   if defined?(JRUBY_VERSION)
-    opts[:pool] = Integer(ENV.fetch('MAX_CONCURRENCY'))
-    opts[:check_timeout] = 10
-  elsif defined?(Puma)
-    opts[:pool] = Puma.cli_config.options.fetch(:max_threads)
-    opts[:check_timeout] = 10
+    opts[:pool] = (2 * Math.log(Integer(ENV.fetch('MAX_CONCURRENCY')))).floor
+    opts[:checkout_timeout] = 10
+  elsif defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
+    opts[:pool] = (2 * Math.log(threads)).floor
+    opts[:checkout_timeout] = 10
   else
     # TODO: ActiveRecord doesn't have a single-threaded mode?
     opts[:pool] = 1
-    opts[:check_timeout] = 0
+    opts[:checkout_timeout] = 0
   end
 
   ActiveRecord::Base.establish_connection(opts)
@@ -54,7 +54,7 @@ class World < ActiveRecord::Base
   self.table_name = name
 
   alias_attribute(:randomnumber, :randomNumber) \
-    if ActiveRecord::Base.connection.adapter_name.downcase.start_with?('mysql')
+    if connection.adapter_name.downcase.start_with?('mysql')
 end
 
 class Fortune < ActiveRecord::Base

@@ -25,3 +25,6 @@ type=all
 verbose=True
 clean=False
 clean_all=False
+#results_name=My Benchmarking Run %%Y-%%m-%%d %%H:%%M:%%S
+#results_environment=My Server Environment
+#results_upload_uri=https://example.com/uploads
