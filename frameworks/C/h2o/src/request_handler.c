@@ -205,6 +205,7 @@ void send_service_unavailable_error(const char *body, h2o_req_t *req)
 	h2o_add_header(&req->pool,
 	               &req->res.headers,
 	               H2O_TOKEN_RETRY_AFTER,
+	               NULL,
 	               H2O_STRLIT(MKSTR(H2O_DEFAULT_HTTP1_REQ_TIMEOUT_IN_SECS)));
 	h2o_send_error_503(req,
 	                   status_code_to_string(SERVICE_UNAVAILABLE),
@@ -223,18 +224,21 @@ void set_default_response_param(content_type_t content_type, size_t content_leng
 			h2o_add_header(&req->pool,
 			               &req->res.headers,
 			               H2O_TOKEN_CONTENT_TYPE,
+			               NULL,
 			               H2O_STRLIT("application/json"));
 			break;
 		case PLAIN:
 			h2o_add_header(&req->pool,
 			               &req->res.headers,
 			               H2O_TOKEN_CONTENT_TYPE,
+			               NULL,
 			               H2O_STRLIT("text/plain"));
 			break;
 		default:
 			h2o_add_header(&req->pool,
 			               &req->res.headers,
 			               H2O_TOKEN_CONTENT_TYPE,
+			               NULL,
 			               H2O_STRLIT("text/html; charset=utf-8"));
 	}
 }

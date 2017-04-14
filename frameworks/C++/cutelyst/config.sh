@@ -14,6 +14,7 @@ echo UWSGI=${UWSGI}
 echo NGINX=${NGINX}
 echo QT_VERSION_MM=${QT_VERSION_MM}
 echo CUTELYST_EVENT_LOOP_EPOLL=${CUTELYST_EVENT_LOOP_EPOLL}
+echo BALANCER=${BALANCER}
 
 if [ "${DRIVER}" == "QMYSQL" ]; then
   fw_depends mysql
@@ -29,7 +30,7 @@ cd ${CROOT}/benchmarks
 # build
 export CMAKE_PREFIX_PATH=/opt/qt${QT_VERSION_MM}:${CROOT}
 cmake $TROOT -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CROOT
-make -j $MAX_THREADS
+make -j $CPU_COUNT
 
 if [ -n "${UWSGI}" ]; then
   cp -v ${TROOT}/config/config_socket.ini ${CROOT}/config.ini
@@ -46,9 +47,9 @@ sed -i "s|SendDate=.*|SendDate=${SEND_DATE}|g" ${CROOT}/config.ini
 export LD_LIBRARY_PATH=/opt/qt${QT_VERSION_MM}/lib:${CROOT}/lib/x86_64-linux-gnu/
 
 if [ -n "${UWSGI}" ]; then
-  uwsgi --ini ${CROOT}/config.ini --plugin ${CROOT}/lib/uwsgi/plugins/cutelyst_plugin.so --cutelyst-app ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $MAX_THREADS &
+  uwsgi --ini ${CROOT}/config.ini --plugin ${CROOT}/lib/uwsgi/plugins/cutelyst_plugin.so --cutelyst-app ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $CPU_COUNT &
 else
-  ${CROOT}/bin/cutelyst-wsgi --ini ${CROOT}/config.ini -a ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $MAX_THREADS --socket-timeout 0 &
+  ${CROOT}/bin/cutelyst-wsgi --ini ${CROOT}/config.ini -a ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so ${PROCESS_OR_THREAD} $CPU_COUNT --socket-timeout 0 ${BALANCER} &
 fi
 
 # configure Nginx
@@ -58,4 +59,3 @@ if [ -n "${NGINX}" ]; then
   sed -i "s|include .*/conf/uwsgi_params;|include ${NGINX_HOME}/conf/uwsgi_params;|g" ${CROOT}/nginx.conf
   nginx -c ${CROOT}/nginx.conf
 fi
-

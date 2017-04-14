@@ -10,4 +10,4 @@ fi
 
 ${IROOT}/stack --allow-different-user build --install-ghc
 
-${IROOT}/stack --allow-different-user exec spock-exe -- +RTS -A32m -N${MAX_THREADS} &
+${IROOT}/stack --allow-different-user exec spock-exe -- +RTS -A32m -N${CPU_COUNT} &

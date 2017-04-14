@@ -100,7 +100,7 @@ module.exports = {
   Fortunes: function(req, res) {
     redisGetAllFortunes()
       .then(function (fortunes) {
-        fortunes.push(h.ADDITIONAL_FORTUNE)
+        fortunes.push(h.additionalFortune())
         fortunes.sort(function (a, b) {
           return a.message.localeCompare(b.message)
         })

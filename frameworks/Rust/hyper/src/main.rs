@@ -50,7 +50,7 @@ impl Service for TechEmpower {
             }
             _ => Response::new().with_status(NotFound),
         };
-        future::ok(response.with_header(Server("Hyper".to_string())))
+        future::ok(response.with_header(Server::new("Hyper")))
     }
 }
 

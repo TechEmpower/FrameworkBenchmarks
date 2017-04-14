@@ -21,9 +21,9 @@ module.exports = {
     return queries;
   },
 
-  ADDITIONAL_FORTUNE: {
+  additionalFortune: () => ({
     id: 0,
     message: 'Additional fortune added at request time.'
-  }
+  })
 
 };

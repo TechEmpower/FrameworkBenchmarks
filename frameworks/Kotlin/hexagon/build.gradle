@@ -27,7 +27,7 @@ war {
     archiveName = "ROOT.war"
 }
 
-install.dependsOn 'war'
+installDist.dependsOn 'war'
 
 dependencies {
     compile ("co.there4:hexagon:$hexagonVersion")
