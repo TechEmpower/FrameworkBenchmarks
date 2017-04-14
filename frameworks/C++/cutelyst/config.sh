@@ -30,7 +30,7 @@ cd ${CROOT}/benchmarks
 # build
 export CMAKE_PREFIX_PATH=/opt/qt${QT_VERSION_MM}:${CROOT}
 cmake $TROOT -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CROOT
-make -j $MAX_THREADS
+make -j $CPU_COUNT
 
 if [ -n "${UWSGI}" ]; then
   cp -v ${TROOT}/config/config_socket.ini ${CROOT}/config.ini
@@ -52,7 +52,7 @@ if [ -n "${UWSGI}" ]; then
   --plugin ${CROOT}/lib/uwsgi/plugins/cutelyst_plugin.so \
   --cutelyst-app ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so \
   ${PROCESS_OR_THREAD} \
-  ${MAX_THREADS} \
+  ${CPU_COUNT} \
   ${CPU_AFFINITY} \
   --reuse-port \
   &
@@ -61,7 +61,7 @@ else
   --ini ${CROOT}/config.ini \
   -a ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so \
   ${PROCESS_OR_THREAD} \
-  ${MAX_THREADS} \
+  ${CPU_COUNT} \
   ${CPU_AFFINITY} \
   --socket-timeout 0 \
   --reuse-port \
@@ -75,4 +75,3 @@ if [ -n "${NGINX}" ]; then
   sed -i "s|include .*/conf/uwsgi_params;|include ${NGINX_HOME}/conf/uwsgi_params;|g" ${CROOT}/nginx.conf
   nginx -c ${CROOT}/nginx.conf
 fi
-

@@ -11,7 +11,7 @@ const connection = mysql.createConnection({
 connection.connect();
 
 const queries = {
-  RANDOM_WORLD: "SELECT * FROM world WHERE id = " + h.randomTfbNumber(),
+  GET_RANDOM_WORLD: () => "SELECT * FROM world WHERE id = " + h.randomTfbNumber(),
   ALL_FORTUNES: "SELECT * FROM fortune",
   UPDATE_WORLD: (rows) => {
     return [
@@ -22,7 +22,7 @@ const queries = {
 };
 
 const mysqlRandomWorld = (callback) =>
-  connection.query(queries.RANDOM_WORLD, (err, rows, fields) => {
+  connection.query(queries.GET_RANDOM_WORLD(), (err, rows, fields) => {
     callback(err, rows[0]);
   });
 
@@ -32,7 +32,7 @@ const mysqlGetAllFortunes = (callback) =>
   });
 
 const mysqlUpdateQuery = (callback) =>
-  connection.query(queries.RANDOM_WORLD, (err, rows, fields) => {
+  connection.query(queries.GET_RANDOM_WORLD(), (err, rows, fields) => {
     if (err) { return process.exit(1); }
 
     rows[0].randomNumber = h.randomTfbNumber();
