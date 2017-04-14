@@ -52,7 +52,7 @@
     <!-- Server -->
     <dependency>
       <groupId>org.jooby</groupId>
-      <artifactId>jooby-undertow</artifactId>
+      <artifactId>jooby-netty</artifactId>
     </dependency>
 
     <!-- logging -->

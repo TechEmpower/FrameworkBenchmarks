@@ -15,13 +15,13 @@
       "language": "Java",
       "flavor": "None",
       "orm": "Raw",
-      "platform": "Undertow",
+      "platform": "Netty",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Jooby",
       "notes": "",
-      "versus": "undertow"
+      "versus": "netty"
     }
   }]
 }
