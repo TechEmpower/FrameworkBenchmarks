@@ -15,4 +15,4 @@ mime = "0.2"
 
 [dependencies.hyper]
 git = "https://github.com/hyperium/hyper/"
-rev = "43cf9aefe8f9147a0f08aa0f9d609d275549fd7c"
+rev = "030393d09987ef0fa1866d74b4bb1ab1e46905a3"

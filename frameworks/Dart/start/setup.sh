@@ -11,9 +11,9 @@ pub upgrade
 # start dart servers
 #
 current=9001
-end=$(($current+$MAX_THREADS))
+end=$(($current+$CPU_COUNT))
 while [ $current -lt $end ]; do
-  dart server.dart -a 127.0.0.1 -p $current -d ${MAX_THREADS} &
+  dart server.dart -a 127.0.0.1 -p $current -d ${CPU_COUNT} &
   let current=current+1
 done
 
@@ -21,7 +21,7 @@ done
 #
 # create nginx configuration
 #
-conf+="worker_processes ${MAX_THREADS};\n"
+conf+="worker_processes ${CPU_COUNT};\n"
 conf+="error_log /dev/null error;\n"
 conf+="events {\n"
 conf+="\tworker_connections 1024;\n"
@@ -33,12 +33,12 @@ conf+="\tdefault_type application/octet-stream;\n"
 conf+="\tsendfile on;\n"
 conf+="\tupstream dart_cluster {\n"
 current=9001
-end=$(($current+$MAX_THREADS))
+end=$(($current+$CPU_COUNT))
 while [ $current -lt $end ]; do
   conf+="\t\tserver 127.0.0.1:${current};\n"
   let current=current+1
 done
-conf+="\t\tkeepalive ${MAX_THREADS};\n"
+conf+="\t\tkeepalive ${CPU_COUNT};\n"
 conf+="\t}\n"
 conf+="\tserver {\n"
 conf+="\t\tlisten 8080;\n"

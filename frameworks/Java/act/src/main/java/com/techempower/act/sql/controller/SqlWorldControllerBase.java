@@ -1,10 +1,10 @@
 package com.techempower.act.sql.controller;
 
-import act.db.ebean.EbeanDao;
-import act.db.ebean.EbeanQuery;
-import com.avaje.ebean.Transaction;
+import act.db.ebean2.EbeanDao;
+import act.db.ebean2.EbeanQuery;
 import com.techempower.act.controller.WorldControllerBase;
 import com.techempower.act.sql.domain.World;
+import io.ebean.Transaction;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
