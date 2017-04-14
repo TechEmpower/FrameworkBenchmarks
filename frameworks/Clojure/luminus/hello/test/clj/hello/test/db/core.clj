@@ -12,7 +12,7 @@
     (mount/start
       #'hello.config/env
       #'hello.db.core/*db*)
-    (migrations/migrate ["migrate"] (env :database-url))
+    (migrations/migrate ["migrate"] (select-keys env [:database-url]))
     (f)))
 
 (deftest test-users
