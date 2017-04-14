@@ -6,14 +6,17 @@ H2O_APP_HOME="${IROOT}/h2o_app"
 BUILD_DIR="${H2O_APP_HOME}_build"
 H2O_APP_PROFILE_PORT="54321"
 H2O_APP_PROFILE_URL="http://127.0.0.1:$H2O_APP_PROFILE_PORT"
+NUM_PROC=$(nproc)
 
 # A hacky way to detect whether we are running in the physical hardware or the cloud environment.
-if [[ $(nproc) -gt 16 ]]; then
+if [[ "$NUM_PROC" -gt 16 ]]; then
+	CLOUD_ENVIRONMENT=false
 	# In the physical hardware environment the application server has more CPU cores than the
 	# database server, so we need to reduce the maximum number of database connections per
 	# thread accordingly.
-	DB_CONN=2
+	DB_CONN=4
 else
+	CLOUD_ENVIRONMENT=true
 	DB_CONN=8
 fi
 
@@ -35,13 +38,13 @@ run_curl()
 
 run_h2o_app()
 {
-	"$1/h2o_app" -f "$2/template/fortunes.mustache" -m "$DB_CONN" "$3" "$4" \
+	taskset -c "$1" "$2/h2o_app" -f "$3/template/fortunes.mustache" -m "$DB_CONN" "$4" "$5" \
 		-d "host=TFB-database dbname=hello_world user=benchmarkdbuser password=benchmarkdbpass" &
 }
 
 generate_profile_data()
 {
-	run_h2o_app . "${TROOT}" -p$H2O_APP_PROFILE_PORT -t1
+	run_h2o_app 0 . "${TROOT}" -p$H2O_APP_PROFILE_PORT -t1
 	local -r H2O_APP_PROFILE_PID=$!
 	while ! curl ${H2O_APP_PROFILE_URL} > /dev/null 2>&1; do sleep 1; done
 	run_curl json
@@ -65,4 +68,11 @@ make -j "$(nproc)" install
 popd
 rm -rf "$BUILD_DIR"
 echo "Maximum database connections per thread: $DB_CONN"
-run_h2o_app "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app"
+
+if "$CLOUD_ENVIRONMENT"; then
+	run_h2o_app "0-$((NUM_PROC - 1))" "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app"
+else
+	for ((i = 0; i < 16; i++)); do
+		run_h2o_app "$i" "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app" -t1
+	done
+fi
