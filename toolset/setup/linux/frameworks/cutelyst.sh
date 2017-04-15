@@ -40,7 +40,7 @@ cmake .. \
 -DUWSGI_PLUGINS_DIR=${CROOT}/lib/uwsgi/plugins \
 -DUSE_JEMALLOC=on
 
-make -j $MAX_THREADS && make install
+make -j $CPU_COUNT && make install
 
 echo "QT_VERSION_MM=${QT_VERSION_MM}" > $IROOT/cutelyst.installed
 
