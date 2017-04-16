@@ -8,6 +8,11 @@ language: generic
 python:
   - "2.7"
 
+branches:
+  only:
+    - master
+    - /^round-.*$/
+
 env:
   matrix:
     - "TESTDIR=C/libreactor"
