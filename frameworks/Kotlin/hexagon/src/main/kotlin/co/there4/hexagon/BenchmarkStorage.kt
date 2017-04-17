@@ -73,7 +73,8 @@ internal class MySqlRepository : Repository {
         val config = HikariConfig()
         config.jdbcUrl = "jdbc:mysql://$DB_HOST/$DB?useSSL=false&rewriteBatchedStatements=true"
         config.maximumPoolSize = 256
-        config.username = "root"
+        config.username = "benchmarkdbuser"
+        config.password = "benchmarkdbpass"
         DATA_SOURCE = HikariDataSource(config)
     }
 
