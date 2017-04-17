@@ -4,9 +4,9 @@ fw_depends ulib
 
 # Travis is broken
 if [ "$TRAVIS" != "true" ]; then
-MAX_THREADS=$(( 3 * $MAX_THREADS ))
+MAX_THREADS=$(( 3 * $CPU_COUNT ))
 else
-MAX_THREADS=$(( 2 * $MAX_THREADS ))
+MAX_THREADS=$(( 2 * $CPU_COUNT ))
 fi
 
 # 1. Change ULib Server (userver_tcp) configuration

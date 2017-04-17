@@ -47,6 +47,9 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
         queries = 500;
     }
 
+    QVariantList ids, randomNumbers;
+    ids.reserve(queries);
+    randomNumbers.reserve(queries);
     for (int i = 0; i < queries; ++i) {
         int id = (qrand() % 10000) + 1;
 
@@ -57,17 +60,20 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
         }
 
         int randomNumber = (qrand() % 10000) + 1;
-        updateQuery.bindValue(QStringLiteral(":id"), id);
-        updateQuery.bindValue(QStringLiteral(":randomNumber"), randomNumber);
-        if (!updateQuery.exec()) {
-            c->res()->setStatus(Response::InternalServerError);
-            return;
-        }
+        ids.append(id);
+        randomNumbers.append(randomNumber);
 
         QJsonObject obj;
-        obj.insert(QStringLiteral("id"), query.value(0).toInt());
+        obj.insert(QStringLiteral("id"), id);
         obj.insert(QStringLiteral("randomNumber"), randomNumber);
         array.append(obj);
+    }
+
+    updateQuery.bindValue(QStringLiteral(":id"), ids);
+    updateQuery.bindValue(QStringLiteral(":randomNumber"), randomNumbers);
+    if (!updateQuery.execBatch()) {
+        c->res()->setStatus(Response::InternalServerError);
+        return;
     }
 
     c->response()->setJsonBody(QJsonDocument(array));
