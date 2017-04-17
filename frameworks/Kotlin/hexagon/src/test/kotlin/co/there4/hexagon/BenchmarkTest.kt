@@ -17,7 +17,7 @@ internal const val TIMES = 4
 class BenchmarkMongoDbTest : BenchmarkTest("mongodb")
 class BenchmarkMySqlTest : BenchmarkTest("mysql")
 
-@Test(threadPoolSize = THREADS, invocationCount = TIMES)
+//@Test(threadPoolSize = THREADS, invocationCount = TIMES)
 abstract class BenchmarkTest(val databaseEngine: String) {
     private val client by lazy { Client("http://localhost:${server.runtimePort}") }
 
@@ -92,8 +92,6 @@ abstract class BenchmarkTest(val databaseEngine: String) {
     }
 
     fun fortunes() {
-        if (System.getenv("DBHOST") != null) return
-
         val response = client.get("/fortunes")
         val content = response.responseBody
 
@@ -104,8 +102,6 @@ abstract class BenchmarkTest(val databaseEngine: String) {
     }
 
     fun no_query_parameter() {
-        if (System.getenv("DBHOST") != null) return
-
         val response = client.get("/db")
         val body = response.responseBody
 
@@ -116,8 +112,6 @@ abstract class BenchmarkTest(val databaseEngine: String) {
     }
 
     fun no_updates_parameter() {
-        if (System.getenv("DBHOST") != null) return
-
         val response = client.get("/update")
         val body = response.responseBody
 
@@ -146,8 +140,6 @@ abstract class BenchmarkTest(val databaseEngine: String) {
     fun five_hundred_updates() = checkDbRequest("/update?queries=500", 500)
 
     private fun checkDbRequest(path: String, itemsCount: Int) {
-        if (System.getenv("DBHOST") != null) return
-
         val response = client.get(path)
         val content = response.responseBody
 
