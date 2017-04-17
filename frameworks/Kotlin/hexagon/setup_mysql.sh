@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mongodb java
+fw_depends mysql java
 
 gradle/wrapper
 
