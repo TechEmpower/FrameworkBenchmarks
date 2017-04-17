@@ -71,7 +71,24 @@ internal class MySqlRepository : Repository {
 
     init {
         val config = HikariConfig()
-        config.jdbcUrl = "jdbc:mysql://$DB_HOST/$DB?useSSL=false&rewriteBatchedStatements=true"
+        config.jdbcUrl = "jdbc:mysql://$DB_HOST/$DB?" +
+            "useSSL=false&" +
+            "rewriteBatchedStatements=true&" +
+            "jdbcCompliantTruncation=false&" +
+            "elideSetAutoCommits=true&" +
+            "useLocalSessionState=true&" +
+            "cachePrepStmts=true&" +
+            "cacheCallableStmts=true&" +
+            "alwaysSendSetIsolation=false&" +
+            "prepStmtCacheSize=4096&" +
+            "cacheServerConfiguration=true&" +
+            "prepStmtCacheSqlLimit=2048&" +
+            "traceProtocol=false&" +
+            "useUnbufferedInput=false&" +
+            "useReadAheadInput=false&" +
+            "maintainTimeStats=false&" +
+            "useServerPrepStmts=true&" +
+            "cacheRSMetadata=true"
         config.maximumPoolSize = 256
         config.username = "benchmarkdbuser"
         config.password = "benchmarkdbpass"
