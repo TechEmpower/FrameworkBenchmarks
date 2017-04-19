@@ -57,7 +57,7 @@ module.exports = {
     mongooseGetAllFortunes((err, fortunes) => {
       if (err) { return process.exit(1); }
 
-      fortunes.push(h.ADDITIONAL_FORTUNE);
+      fortunes.push(h.additionalFortune());
       fortunes.sort((a, b) => {
         return a.message.localeCompare(b.message);
       });

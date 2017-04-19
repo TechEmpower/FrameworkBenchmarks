@@ -69,7 +69,7 @@ module.exports = {
   Fortunes: (req, reply) => {
     promiseAllFortunes()
       .then((fortunes) => {
-        fortunes.push(h.ADDITIONAL_FORTUNE);
+        fortunes.push(h.additionalFortune());
         fortunes.sort((a, b) => a.message.localeCompare(b.message));
       
         reply.view('fortunes', {
