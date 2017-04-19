@@ -136,7 +136,7 @@
       "notes": "",
       "versus": "nodejs"
     },
-    "mongodb": {
+    "mongodb-mitol": {
       "setup_file": "setup-mitol",
       "db_url": "/mongoose/db",
       "query_url": "/mongoose/queries?queries=",
@@ -157,7 +157,7 @@
       "notes": "",
       "versus": "nodejs"
     },
-    "mongodb-raw": {
+    "mongodb-raw-mitol": {
       "setup_file": "setup-mitol",
       "db_url": "/mongodb/db",
       "query_url": "/mongodb/queries?queries=",
@@ -179,7 +179,7 @@
       "notes": "",
       "versus": "nodejs"
     },
-    "mysql": {
+    "mysql-mitol": {
       "setup_file": "setup-mitol",
       "db_url": "/sequelize/db",
       "query_url": "/sequelize/queries?queries=",
@@ -201,7 +201,7 @@
       "notes": "",
       "versus": "nodejs"
     },
-    "postgres": {
+    "postgres-mitol": {
       "setup_file": "setup-mitol",
       "db_url": "/sequelize-pg/db",
       "query_url": "/sequelize-pg/queries?queries=",
