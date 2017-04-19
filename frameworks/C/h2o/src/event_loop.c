@@ -108,7 +108,7 @@ static void do_epoll_wait(h2o_socket_t *epoll_sock, const char *err)
 		struct epoll_event event[MAX_EPOLL_EVENTS];
 
 		do
-			ready = epoll_wait(ctx->event_loop.epoll_fd, event, MAX_EPOLL_EVENTS, 0);
+			ready = epoll_wait(ctx->event_loop.epoll_fd, event, ARRAY_SIZE(event), 0);
 		while (ready < 0 && errno == EINTR);
 
 		if (ready > 0)
@@ -141,9 +141,7 @@ static int get_listener_socket(const char *bind_address, uint16_t port)
 		return ret;
 	}
 
-	struct addrinfo *iter = res;
-
-	for (; iter; iter = iter->ai_next) {
+	for (const struct addrinfo *iter = res; iter; iter = iter->ai_next) {
 		const int s = socket(iter->ai_family,
 		                     iter->ai_socktype | SOCK_NONBLOCK | SOCK_CLOEXEC,
 		                     iter->ai_protocol);
@@ -263,7 +261,11 @@ void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_r
 	h2o_multithread_unregister_receiver(event_loop->h2o_ctx.queue, h2o_receiver);
 	h2o_socket_close(event_loop->h2o_socket);
 	h2o_socket_close(event_loop->epoll_socket);
+
+	h2o_loop_t * const loop = event_loop->h2o_ctx.loop;
+
 	h2o_context_dispose(&event_loop->h2o_ctx);
+	h2o_evloop_destroy(loop);
 }
 
 void initialize_event_loop(bool is_main_thread,

@@ -61,8 +61,7 @@ public class PostgresUpdateServlet extends HttpServlet {
 		try (Connection conn = source.getConnection()) {
 			try (PreparedStatement statement = conn.prepareStatement(DB_QUERY,
 					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-					PreparedStatement statement2 = conn.prepareStatement(UPDATE_QUERY,
-							ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
+					PreparedStatement statement2 = conn.prepareStatement(UPDATE_QUERY)) {
 				// Run the query the number of times requested.
 				for (int i = 0; i < count; i++) {
 					final int id = random.nextInt(DB_ROWS) + 1;
@@ -77,13 +76,17 @@ public class PostgresUpdateServlet extends HttpServlet {
 							statement2.setInt(1, worlds[i].getRandomNumber());
 							statement2.setInt(2, id);
 
-							// Add update statement to batch update
-							statement2.addBatch();
+							// Execute the update statement
+							statement2.execute();
+
+							/* 
+							*  Applying batch updates will lead to transaction deadlocks.
+							*  This could not be apparent on local testing but will be
+							*  visible on higher concurrencies in the TFB test  environment.
+							*/
 						}
 					}
 				}
-				// Execute batch update
-				statement2.executeBatch();
 			}
 		} catch (SQLException sqlex) {
 			System.err.println("SQL Exception: " + sqlex);

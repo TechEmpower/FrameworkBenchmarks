@@ -11,7 +11,7 @@
         </encoder>
     </appender>
 
-    <logger name="act" level="INFO" additivity="false">
+    <logger name="act" level="OFF" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 

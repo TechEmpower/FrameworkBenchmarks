@@ -93,33 +93,40 @@ void initialize_thread_context(global_thread_data_t *global_thread_data,
 
 void start_threads(global_thread_data_t *global_thread_data)
 {
+	pthread_attr_t attr;
 	const size_t num_cpus = h2o_numproc();
+	const size_t cpusetsize = CPU_ALLOC_SIZE(num_cpus);
+	cpu_set_t * const cpuset = CPU_ALLOC(num_cpus);
 
+	if (!cpuset)
+		abort();
+
+	CHECK_ERROR(pthread_attr_init, &attr);
 	// The first thread context is used by the main thread.
 	global_thread_data->thread = pthread_self();
-
-	for (size_t i = global_thread_data->config->thread_num - 1; i > 0; i--)
-		CHECK_ERROR(pthread_create,
-		            &global_thread_data[i].thread,
-		            NULL,
-		            run_thread,
-		            global_thread_data + i);
 
 	// If the number of threads is not equal to the number of processors, then let the scheduler
 	// decide how to balance the load.
 	if (global_thread_data->config->thread_num == num_cpus) {
-		const size_t cpusetsize = CPU_ALLOC_SIZE(num_cpus);
-		cpu_set_t * const cpuset = CPU_ALLOC(num_cpus);
+		CPU_ZERO_S(cpusetsize, cpuset);
+		CPU_SET_S(0, cpusetsize, cpuset);
+		CHECK_ERROR(pthread_setaffinity_np, global_thread_data->thread, cpusetsize, cpuset);
+	}
 
-		if (!cpuset)
-			abort();
-
-		for (size_t i = 0; i < global_thread_data->config->thread_num; i++) {
+	for (size_t i = global_thread_data->config->thread_num - 1; i > 0; i--) {
+		if (global_thread_data->config->thread_num == num_cpus) {
 			CPU_ZERO_S(cpusetsize, cpuset);
 			CPU_SET_S(i, cpusetsize, cpuset);
-			CHECK_ERROR(pthread_setaffinity_np, global_thread_data[i].thread, cpusetsize, cpuset);
+			CHECK_ERROR(pthread_attr_setaffinity_np, &attr, cpusetsize, cpuset);
 		}
 
-		CPU_FREE(cpuset);
+		CHECK_ERROR(pthread_create,
+		            &global_thread_data[i].thread,
+		            &attr,
+		            run_thread,
+		            global_thread_data + i);
 	}
+
+	pthread_attr_destroy(&attr);
+	CPU_FREE(cpuset);
 }

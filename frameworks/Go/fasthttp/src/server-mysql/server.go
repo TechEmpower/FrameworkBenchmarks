@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 	"log"
+	"runtime"
 	"sort"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -13,10 +14,7 @@ import (
 	"templates"
 )
 
-const (
-	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
-	maxConnectionCount = 40
-)
+const connectionString = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
 
 var (
 	worldSelectStmt   *sql.Stmt
@@ -37,6 +35,7 @@ func main() {
 		log.Fatalf("Cannot connect to db: %s", err)
 	}
 
+	maxConnectionCount := runtime.NumCPU() * 2
 	db.SetMaxIdleConns(maxConnectionCount)
 	db.SetMaxOpenConns(maxConnectionCount)
 

@@ -4,8 +4,10 @@ import act.app.conf.AutoConfig;
 import act.controller.Controller;
 import act.db.Dao;
 import com.techempower.act.domain.IWorld;
+import io.ebean.annotation.Transactional;
 import org.osgl.$;
 import org.osgl.mvc.annotation.GetAction;
+import org.osgl.mvc.result.Result;
 import org.osgl.util.Const;
 
 import java.util.ArrayList;
@@ -35,14 +37,15 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 	}
 
 	@GetAction("queries")
-	public final void multipleQueries(String queries) {
+    @Transactional(readOnly = true)
+	public final Result multipleQueries(String queries) {
 		int q = regulateQueries(queries);
 
-		List<MODEL_TYPE> retVal = new ArrayList<>();
+		IWorld[] worlds = new IWorld[q];
 		for (int i = 0; i < q; ++i) {
-			retVal.add(findOne());
+			worlds[i] = findOne();
 		}
-		json(retVal);
+		return json(worlds);
 	}
 
 	@GetAction("updates")
@@ -52,8 +55,9 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 		json(retVal);
 	}
 
+	@Transactional
 	protected List<MODEL_TYPE> doUpdate(int q) {
-		List<MODEL_TYPE> retVal = new ArrayList<>();
+		List<MODEL_TYPE> retVal = new ArrayList<>(q);
 		for (int i = 0; i < q; ++i) {
 			retVal.add(findAndModifyOne());
 		}

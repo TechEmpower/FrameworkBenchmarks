@@ -17,7 +17,7 @@ xbuild ${LIBEVENTHOST_HOME}/LibeventHost.csproj /p:Configuration=Release
 
 # nginx
 port_start=9001
-port_end=$((${port_start}+${MAX_THREADS}))
+port_end=$((${port_start}+${CPU_COUNT}))
 conf="upstream mono {\n"
 for port in $(seq ${port_start} ${port_end} ); do
   conf+="\tserver 127.0.0.1:${port};\n"
@@ -25,7 +25,7 @@ done
 conf+="}"
 
 echo -e $conf > ${TROOT}/nginx.upstream.conf
-${NGINX_HOME}/sbin/nginx -c ${TROOT}/nginx.conf.libevent -g "worker_processes '"${MAX_THREADS}"';"
+${NGINX_HOME}/sbin/nginx -c ${TROOT}/nginx.conf.libevent -g "worker_processes '"${CPU_COUNT}"';"
 
 # Start fastcgi for each thread
 # To debug, use --printlog --verbose --loglevels=All
