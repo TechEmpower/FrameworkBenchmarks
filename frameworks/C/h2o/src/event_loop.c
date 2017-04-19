@@ -108,7 +108,7 @@ static void do_epoll_wait(h2o_socket_t *epoll_sock, const char *err)
 		struct epoll_event event[MAX_EPOLL_EVENTS];
 
 		do
-			ready = epoll_wait(ctx->event_loop.epoll_fd, event, MAX_EPOLL_EVENTS, 0);
+			ready = epoll_wait(ctx->event_loop.epoll_fd, event, ARRAY_SIZE(event), 0);
 		while (ready < 0 && errno == EINTR);
 
 		if (ready > 0)
@@ -141,9 +141,7 @@ static int get_listener_socket(const char *bind_address, uint16_t port)
 		return ret;
 	}
 
-	struct addrinfo *iter = res;
-
-	for (; iter; iter = iter->ai_next) {
+	for (const struct addrinfo *iter = res; iter; iter = iter->ai_next) {
 		const int s = socket(iter->ai_family,
 		                     iter->ai_socktype | SOCK_NONBLOCK | SOCK_CLOEXEC,
 		                     iter->ai_protocol);

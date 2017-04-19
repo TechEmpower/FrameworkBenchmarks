@@ -220,7 +220,7 @@ static void do_updates(multiple_query_ctx_t *query_ctx)
 	                 query_ctx->res->id,
 	                 query_ctx->res->random_number);
 
-	if (c < 0 || (size_t) c >= sz)
+	if ((size_t) c >= sz)
 		goto error;
 
 	iter += c;
@@ -234,7 +234,7 @@ static void do_updates(multiple_query_ctx_t *query_ctx)
 		             query_ctx->res[i].id,
 		             query_ctx->res[i].random_number);
 
-		if (c < 0 || (size_t) c >= sz)
+		if ((size_t) c >= sz)
 			goto error;
 
 		iter += c;
@@ -243,7 +243,7 @@ static void do_updates(multiple_query_ctx_t *query_ctx)
 
 	c = snprintf(iter, sz, UPDATE_QUERY_END);
 
-	if (c < 0 || (size_t) c >= sz)
+	if ((size_t) c >= sz)
 		goto error;
 
 	if (execute_query(ctx, &query_ctx->query_param->param))
@@ -255,6 +255,7 @@ static void do_updates(multiple_query_ctx_t *query_ctx)
 
 	return;
 error:
+	LIBRARY_ERROR("snprintf", "Truncated output.");
 	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
 }
 
