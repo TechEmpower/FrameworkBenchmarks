@@ -11,6 +11,7 @@ python:
 env:
   matrix:
     - "TESTDIR=C/libreactor"
+    - "TESTDIR=C/libevent"
     - "TESTDIR=C/lwan"
     - "TESTDIR=C/duda"
     - "TESTDIR=C/haywire"
