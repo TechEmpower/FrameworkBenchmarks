@@ -1,5 +1,7 @@
 #!/bin/bash
 
+fw_depends dlang dub
+
 # Clean any files from last run
 rm -f website
 rm -rf .dub
