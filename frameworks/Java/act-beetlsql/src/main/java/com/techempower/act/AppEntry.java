@@ -39,4 +39,5 @@ public class AppEntry {
 		RunApp.start("ACT Benchmark", Version.appVersion(), AppEntry.class);
 	}
 
+
 }

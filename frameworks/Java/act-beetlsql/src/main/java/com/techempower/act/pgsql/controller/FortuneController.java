@@ -18,7 +18,7 @@ public class FortuneController {
         List<IFortune> fortunes = (List)fortuneDao.all();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
-        template("fortunes", fortunes);
+        template("fortunes.mustache", fortunes);
     }
 
 }

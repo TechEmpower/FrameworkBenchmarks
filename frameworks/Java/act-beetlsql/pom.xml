@@ -14,11 +14,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <act.version>1.1.0-SNAPSHOT</act.version>
-        <act-beetlsql.version>1.0.0-SNAPSHOT</act-beetlsql.version>
+        <act.version>1.1.2</act.version>
+        <act-beetlsql.version>1.0.1-SNAPSHOT</act-beetlsql.version>
         <mysql.version>6.0.6</mysql.version>
         <postgres-jdbc.version>42.0.0</postgres-jdbc.version>
         <HikariCP.version>2.6.1</HikariCP.version>
+        <act-mustache.version>1.0.0</act-mustache.version>
         <app.entry>com.techempower.act.AppEntry</app.entry>
     </properties>
 
@@ -52,6 +53,11 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>${HikariCP.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.actframework</groupId>
+            <artifactId>act-mustache</artifactId>
+            <version>${act-mustache.version}</version>
         </dependency>
     </dependencies>
 
