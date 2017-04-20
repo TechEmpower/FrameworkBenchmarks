@@ -20,7 +20,7 @@ data class Message(val message: String = "Hello, World!")
 data class World(val id: Int, var randomNumber: Int)
 
 fun main(args: Array<String>) {
-    val (a, b) = hex("726f6f743a736563726574").toString(Charsets.ISO_8859_1).split(":")
+    val (a, b) = hex("62656e63686d61726b6462757365723a62656e63686d61726b646270617373").toString(Charsets.ISO_8859_1).split(":")
     val gson = GsonBuilder().create()
     val DbRows = 10000
     val dbHost = System.getenv("DBHOST")
