@@ -15,11 +15,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <act.version>1.1.2</act.version>
-        <act-beetlsql.version>1.0.1-SNAPSHOT</act-beetlsql.version>
+        <act-beetlsql.version>1.1.0</act-beetlsql.version>
         <mysql.version>6.0.6</mysql.version>
         <postgres-jdbc.version>42.0.0</postgres-jdbc.version>
         <HikariCP.version>2.6.1</HikariCP.version>
         <act-mustache.version>1.0.0</act-mustache.version>
+        <osgl-tool.version>1.0.3</osgl-tool.version>
         <app.entry>com.techempower.act.AppEntry</app.entry>
     </properties>
 
@@ -58,6 +59,11 @@
             <groupId>org.actframework</groupId>
             <artifactId>act-mustache</artifactId>
             <version>${act-mustache.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.osgl</groupId>
+            <artifactId>osgl-tool</artifactId>
+            <version>${osgl-tool.version}</version>
         </dependency>
     </dependencies>
 

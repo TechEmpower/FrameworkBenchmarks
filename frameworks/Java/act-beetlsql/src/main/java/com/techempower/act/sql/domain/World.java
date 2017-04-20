@@ -5,6 +5,8 @@ import act.data.annotation.Data;
 import act.util.SimpleBean;
 import com.techempower.act.domain.IWorld;
 import org.beetl.sql.core.annotatoin.AutoID;
+import org.beetl.sql.core.annotatoin.Sql;
+import org.beetl.sql.core.mapper.BaseMapper;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -42,6 +44,11 @@ public class World implements IWorld, SimpleBean {
 
     public void setRandomNumber(Integer randomNumber) {
         this.randomNumber = randomNumber;
+    }
+
+    public interface WorldDao<WORLD_MODEL> extends BaseMapper<WORLD_MODEL> {
+        @Sql("update world set randomNumber = ? where id = ?")
+        void update(int randomNumber, int id);
     }
 
 }

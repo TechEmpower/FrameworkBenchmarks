@@ -2,7 +2,6 @@ package com.techempower.act.mysql.domain;
 
 
 import act.db.DB;
-import org.beetl.sql.core.mapper.BaseMapper;
 
 import javax.persistence.Entity;
 
@@ -14,5 +13,6 @@ public class World extends com.techempower.act.sql.domain.World {
         super(id, randomNumber);
     }
 
-    public static interface Dao extends BaseMapper<World> {}
+    public interface Dao extends WorldDao<World> {
+    }
 }

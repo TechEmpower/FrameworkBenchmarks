@@ -15,4 +15,4 @@ classes
 deploy
 **/.act*
 git.log
-
+*.pid

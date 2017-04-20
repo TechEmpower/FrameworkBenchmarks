@@ -2,14 +2,14 @@ package com.techempower.act.sql.controller;
 
 import com.techempower.act.controller.WorldControllerBase;
 import com.techempower.act.domain.IWorld;
-import org.beetl.sql.core.mapper.BaseMapper;
+import com.techempower.act.sql.domain.World;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SqlWorldControllerBase<
         MODEL_TYPE extends IWorld,
-        DAO_TYPE extends BaseMapper<MODEL_TYPE>>
+        DAO_TYPE extends World.WorldDao<MODEL_TYPE>>
         extends WorldControllerBase<MODEL_TYPE, DAO_TYPE> {
 
     private boolean batchUpdate;
@@ -25,7 +25,7 @@ public abstract class SqlWorldControllerBase<
         List<MODEL_TYPE> retVal = new ArrayList<>();
         for (int i = 0; i < q; ++i) {
             MODEL_TYPE world = findAndModifyOne();
-            worldDao().updateById(world);
+            worldDao().update(world.getRandomNumber(), world.getId());
             retVal.add(world);
         }
         return retVal;
