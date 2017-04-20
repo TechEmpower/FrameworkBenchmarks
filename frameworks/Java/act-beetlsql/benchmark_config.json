@@ -19,7 +19,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-ebean-pgsql",
+      "display_name": "act-beetlsql-pgsql",
       "notes": "",
       "versus": "undertow"
     },
@@ -41,7 +41,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-ebean-mysql",
+      "display_name": "act-beetlsql-mysql",
       "notes": "",
       "versus": "undertow"
     }
