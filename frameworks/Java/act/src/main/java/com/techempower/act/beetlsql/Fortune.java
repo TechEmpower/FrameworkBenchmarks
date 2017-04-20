@@ -1,13 +1,12 @@
-package com.techempower.act.pgsql.domain;
+package com.techempower.act.beetlsql;
 
 
 import act.db.DB;
-import act.db.ebean2.EbeanDao;
 import org.beetl.sql.core.mapper.BaseMapper;
 
 import javax.persistence.Entity;
 
-@DB("pgsql")
+@DB("beetl")
 @Entity
 public class Fortune extends com.techempower.act.sql.domain.Fortune {
 
@@ -15,6 +14,7 @@ public class Fortune extends com.techempower.act.sql.domain.Fortune {
         super(id, message);
     }
 
-    public static class Dao extends EbeanDao<Integer, Fortune> {}
+    public interface Mapper extends BaseMapper<Fortune> {
+    }
 
 }
