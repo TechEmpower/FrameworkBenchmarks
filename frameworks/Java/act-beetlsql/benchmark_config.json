@@ -1,12 +1,12 @@
 {
-  "framework": "actframework",
+  "framework": "act-beetlsql",
   "tests": [{
-    "pgsql": {
+    "default": {
       "setup_file": "setup",
-      "db_url": "/pgsql/db",
-      "query_url": "/pgsql/queries?queries=",
-      "fortune_url": "/pgsql/fortunes",
-      "update_url": "/pgsql/updates?queries=",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -20,28 +20,6 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "act-beetlsql-pgsql",
-      "notes": "",
-      "versus": "undertow"
-    },
-    "mysql": {
-      "setup_file": "setup",
-      "db_url": "/mysql/db",
-      "query_url": "/mysql/queries?queries=",
-      "fortune_url": "/mysql/fortunes",
-      "update_url": "/mysql/updates?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "MySQL",
-      "framework": "actframework",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Full",
-      "platform": "Undertow",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "act-beetlsql-mysql",
       "notes": "",
       "versus": "undertow"
     }

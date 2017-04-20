@@ -1,15 +1,15 @@
-package com.techempower.act.sql.domain;
+package com.techempower.act.domain;
 
-import act.data.annotation.Data;
+
 import act.util.SimpleBean;
-import com.techempower.act.domain.IFortune;
+import org.beetl.sql.core.mapper.BaseMapper;
+import org.jetbrains.annotations.NotNull;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
 
-@Data
-@MappedSuperclass
-public class Fortune implements IFortune, SimpleBean {
+@Entity
+public class Fortune implements SimpleBean, Comparable<Fortune> {
 
     @Id
     private Integer id;
@@ -37,4 +37,10 @@ public class Fortune implements IFortune, SimpleBean {
         this.message = message;
     }
 
+    @Override
+    public int compareTo(@NotNull Fortune o) {
+        return getMessage().compareTo(o.getMessage());
+    }
+
+    public interface Dao extends BaseMapper<Fortune> {}
 }

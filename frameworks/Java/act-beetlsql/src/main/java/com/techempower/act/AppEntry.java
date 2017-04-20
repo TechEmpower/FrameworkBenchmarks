@@ -2,11 +2,6 @@ package com.techempower.act;
 
 
 import act.Act;
-import act.Version;
-import act.boot.app.RunApp;
-import act.job.OnAppStart;
-import com.alibaba.fastjson.JSON;
-import org.osgl.http.H;
 
 @SuppressWarnings("unused")
 public class AppEntry {
@@ -27,16 +22,8 @@ public class AppEntry {
 
 	}
 
-
-	@OnAppStart
-	public void routing() {
-		Act.getNonblock("/json", context -> context.resp()
-				.contentType(H.Format.JSON.contentType())
-				.writeContent(JSON.toJSONString(new Message(HELLO_WORLD))));
-	}
-
 	public static void main(String[] args) throws Exception {
-		RunApp.start("ACT Benchmark", Version.appVersion(), AppEntry.class);
+		Act.start("ACT-BEETL Benchmark");
 	}
 
 

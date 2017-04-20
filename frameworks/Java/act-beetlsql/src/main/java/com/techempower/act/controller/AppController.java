@@ -2,21 +2,21 @@ package com.techempower.act.controller;
 
 import act.app.conf.AutoConfig;
 import act.controller.Controller;
-import com.avaje.ebean.annotation.Transactional;
-import com.techempower.act.domain.IWorld;
-import org.beetl.sql.core.mapper.BaseMapper;
+import com.techempower.act.domain.Fortune;
+import com.techempower.act.domain.World;
 import org.osgl.$;
 import org.osgl.mvc.annotation.GetAction;
 import org.osgl.mvc.result.Result;
 import org.osgl.util.Const;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @AutoConfig
-public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
-		DAO_TYPE extends BaseMapper<MODEL_TYPE>> extends Controller.Util {
+public class AppController extends Controller.Util {
 
 	/**
      * This constant will get populated with the value set in
@@ -24,7 +24,12 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 	 */
 	public static final Const<Integer> WORLD_MAX_ROW = $.constant();
 
-	protected abstract DAO_TYPE worldDao();
+	@Inject
+	private World.Dao worldDao;
+
+	@Inject
+	private Fortune.Dao fortuneDao;
+
 
 	@GetAction("db")
 	public final void singleQuery() {
@@ -35,7 +40,7 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 	public final Result multipleQueries(String queries) {
 		int q = regulateQueries(queries);
 
-		IWorld[] worlds = new IWorld[q];
+		World[] worlds = new World[q];
 		for (int i = 0; i < q; ++i) {
 			worlds[i] = findOne();
 		}
@@ -45,28 +50,35 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 	@GetAction("updates")
 	public final void updateQueries(String queries) {
 		int q = regulateQueries(queries);
-		List<MODEL_TYPE> retVal = doUpdate(q);
+		List<World> retVal = doUpdate(q);
 		json(retVal);
 	}
 
-	@Transactional
-	protected List<MODEL_TYPE> doUpdate(int q) {
-		List<MODEL_TYPE> retVal = new ArrayList<>(q);
+	@GetAction("fortunes")
+	public void fortunes(Fortune.Dao fortuneDao) {
+		List<Fortune> fortunes = fortuneDao.all();
+		fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+		Collections.sort(fortunes);
+		template("fortunes.mustache", fortunes);
+	}
+
+	protected List<World> doUpdate(int q) {
+		List<World> retVal = new ArrayList<>(q);
 		for (int i = 0; i < q; ++i) {
 			retVal.add(findAndModifyOne());
 		}
-		worldDao().insertBatch(retVal);
 		return retVal;
 	}
 
-	protected final MODEL_TYPE findOne() {
-		return worldDao().single(randomWorldNumber());
+	private World findOne() {
+		return worldDao.single(randomWorldNumber());
 	}
 
-	protected final MODEL_TYPE findAndModifyOne() {
-		MODEL_TYPE world = findOne();
+	private World findAndModifyOne() {
+		World world = findOne();
 		notFoundIfNull(world);
 		world.setRandomNumber(randomWorldNumber());
+		worldDao.updateById(world);
 		return world;
 	}
 
