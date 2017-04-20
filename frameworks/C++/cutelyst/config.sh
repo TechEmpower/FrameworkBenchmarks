@@ -14,6 +14,8 @@ echo UWSGI=${UWSGI}
 echo NGINX=${NGINX}
 echo QT_VERSION_MM=${QT_VERSION_MM}
 echo CUTELYST_EVENT_LOOP_EPOLL=${CUTELYST_EVENT_LOOP_EPOLL}
+echo C_PROCESSES=${C_PROCESSES}
+echo C_THREADS=${C_THREADS}
 echo CPU_AFFINITY=${CPU_AFFINITY}
 
 if [ "${DRIVER}" == "QMYSQL" ]; then
@@ -51,18 +53,18 @@ if [ -n "${UWSGI}" ]; then
   --ini ${CROOT}/config.ini \
   --plugin ${CROOT}/lib/uwsgi/plugins/cutelyst_plugin.so \
   --cutelyst-app ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so \
-  ${PROCESS_OR_THREAD} \
-  ${CPU_COUNT} \
-  ${CPU_AFFINITY} \
+  --processes=${C_PROCESSES} \
+  --threads=${C_THREADS} \
+  --cpu-affinity=${CPU_AFFINITY} \
   --reuse-port \
   &
 else
   ${CROOT}/bin/cutelyst-wsgi \
   --ini ${CROOT}/config.ini \
   -a ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so \
-  ${PROCESS_OR_THREAD} \
-  ${CPU_COUNT} \
-  ${CPU_AFFINITY} \
+  --processes=${C_PROCESSES} \
+  --threads=${C_THREADS} \
+  --cpu-affinity=${CPU_AFFINITY} \
   --socket-timeout 0 \
   --reuse-port \
   &
