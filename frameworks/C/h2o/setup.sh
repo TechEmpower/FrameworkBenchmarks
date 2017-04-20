@@ -4,12 +4,10 @@ fw_depends postgresql h2o mustache-c yajl
 
 H2O_APP_HOME="${IROOT}/h2o_app"
 BUILD_DIR="${H2O_APP_HOME}_build"
-# Use 2 database connections for each logical CPU core the database server has.
-DB_CONN=2
 H2O_APP_PROFILE_PORT=54321
 H2O_APP_PROFILE_URL="http://127.0.0.1:$H2O_APP_PROFILE_PORT"
 NUM_PROC=$(nproc)
-PHYSICAL_ENVIRONMENT_THREADS=16
+PHYSICAL_ENVIRONMENT_THREADS=30
 
 # A hacky way to detect whether we are running in the physical hardware or the cloud environment.
 if [[ "$NUM_PROC" -gt 16 ]]; then
@@ -20,6 +18,7 @@ if [[ "$NUM_PROC" -gt 16 ]]; then
 	DB_CONN=4
 else
 	CLOUD_ENVIRONMENT=true
+	DB_CONN=16
 fi
 
 build_h2o_app()
