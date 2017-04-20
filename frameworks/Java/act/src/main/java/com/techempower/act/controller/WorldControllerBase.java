@@ -76,7 +76,7 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 		return world;
 	}
 
-	private int regulateQueries(String param) {
+	public static int regulateQueries(String param) {
 		if (null == param) {
 			return 1;
 		}
@@ -91,7 +91,7 @@ public abstract class WorldControllerBase<MODEL_TYPE extends IWorld,
 		}
 	}
 
-	protected final int randomWorldNumber() {
+	public static int randomWorldNumber() {
 		return ThreadLocalRandom.current().nextInt(WORLD_MAX_ROW.get()) + 1;
 	}
 
