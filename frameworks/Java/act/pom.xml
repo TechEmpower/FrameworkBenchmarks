@@ -16,6 +16,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <act.version>1.1.2</act.version>
         <act-morphia.version>1.1.0</act-morphia.version>
+        <act-sql-common.version>1.0.3</act-sql-common.version>
         <act-ebean2.version>1.0.4</act-ebean2.version>
         <mysql.version>5.1.41</mysql.version>
         <postgres-jdbc.version>9.4.1212</postgres-jdbc.version>
@@ -76,6 +77,21 @@
             <groupId>com.ibeetl</groupId>
             <artifactId>beetlsql</artifactId>
             <version>${beetlsql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.actframework</groupId>
+            <artifactId>act-sql-common</artifactId>
+            <version>${act-sql-common.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.avaje.ebean</groupId>
+                    <artifactId>ebean</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.avaje.ebean</groupId>
+                    <artifactId>ebean-agent</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
