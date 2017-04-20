@@ -4,7 +4,7 @@ import os
 if os.environ.get('TRAVIS') == 'true':
     workers = 2
 else:
-    workers = multiprocessing.cpu_count()
+    workers = multiprocessing.cpu_count() * 3
 
 bind = '0.0.0.0:8080'
 keepalive = 120

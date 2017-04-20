@@ -46,8 +46,9 @@ async def startup(app: web.Application):
     dsn = pg_dsn()
     # number of gunicorn workers = multiprocessing.cpu_count() as per gunicorn_conf.py
     # max_connections = 2000 as per toolset/setup/linux/databases/postgresql/postgresql.conf:64
-    # give 10% leeway
-    max_size = min(1800 / multiprocessing.cpu_count(), 160)
+    # give 100 connection leeway
+    gunicorn_worker_count = multiprocessing.cpu_count() * 3
+    max_size = min(1900 / gunicorn_worker_count, 160)
     max_size = max(int(max_size), 1)
     min_size = max(int(max_size / 2), 1)
     print(f'connection pool: min size: {min_size}, max size: {max_size}, orm: {CONNECTION_ORM}')
