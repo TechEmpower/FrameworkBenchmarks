@@ -1,16 +1,16 @@
 version: 1.0
 shards:
-  html_builder:
-    github: crystal-lang/html_builder
-    version: 0.2.1
-
   kemal:
     github: sdogruyol/kemal
-    version: 0.16.0
+    version: 0.17.2
 
   kilt:
     github: jeromegn/kilt
     version: 0.3.3
+
+  multipart:
+    github: RX14/multipart.cr
+    version: 0.1.1
 
   pg:
     github: will/crystal-pg
@@ -22,9 +22,9 @@ shards:
 
   radix:
     github: luislavena/radix
-    version: 0.3.1
+    version: 0.3.5
 
   redis:
     github: stefanwille/crystal-redis
-    version: 1.6.6
+    version: 1.6.7
 
