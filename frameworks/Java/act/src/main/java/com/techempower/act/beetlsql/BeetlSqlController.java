@@ -1,11 +1,8 @@
 package com.techempower.act.beetlsql;
 
-import act.app.conf.AutoConfig;
 import act.controller.Controller;
-import org.osgl.$;
 import org.osgl.mvc.annotation.GetAction;
 import org.osgl.mvc.result.Result;
-import org.osgl.util.Const;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,64 +15,57 @@ import static com.techempower.act.controller.WorldControllerBase.regulateQueries
  * Testing for Act on BeetlSQL
  */
 @Controller("beetlsql")
-@AutoConfig
 @SuppressWarnings("unused")
 public class BeetlSqlController extends Controller.Util {
 
-    /**
-     * This constant will get populated with the value set in
-     * `app.world.max_row` configuration item
-     */
-    public static final Const<Integer> WORLD_MAX_ROW = $.constant();
-
     @GetAction("db")
-    public final void singleQuery(World.Mapper worldDao) {
-        json(findOne(worldDao));
+    public final void singleQuery(World.Mapper worldMapper) {
+        json(findOne(worldMapper));
     }
 
     @GetAction("queries")
-    public final Result multipleQueries(String queries, World.Mapper worldDao) {
+    public final Result multipleQueries(String queries, World.Mapper worldMapper) {
         int q = regulateQueries(queries);
 
         World[] worlds = new World[q];
         for (int i = 0; i < q; ++i) {
-            worlds[i] = findOne(worldDao);
+            worlds[i] = findOne(worldMapper);
         }
         return json(worlds);
     }
 
     @GetAction("updates")
-    public final void updateQueries(String queries, World.Mapper worldDao) {
+    public final void updateQueries(String queries, World.Mapper worldMapper) {
         int q = regulateQueries(queries);
-        List<World> retVal = doUpdate(q, worldDao);
+        List<World> retVal = doUpdate(q, worldMapper);
         json(retVal);
     }
 
     @GetAction("fortunes")
-    public void fortunes(Fortune.Mapper fortuneDao) {
-        List<Fortune> fortunes = fortuneDao.all();
+    public void fortunes(Fortune.Mapper fortuneMapper) {
+        List<Fortune> fortunes = fortuneMapper.all();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
         template("fortunes.mustache", fortunes);
     }
 
-    protected List<World> doUpdate(int q, World.Mapper worldDao) {
+    protected List<World> doUpdate(int q, World.Mapper worldMapper) {
         List<World> retVal = new ArrayList<>(q);
         for (int i = 0; i < q; ++i) {
-            retVal.add(findAndModifyOne(worldDao));
+            retVal.add(findAndModifyOne(worldMapper));
         }
         return retVal;
     }
 
-    private World findOne(World.Mapper worldDao) {
-        return worldDao.single(randomWorldNumber());
+    private World findOne(World.Mapper worldMapper) {
+        return worldMapper.single(randomWorldNumber());
     }
 
-    private World findAndModifyOne(World.Mapper worldDao) {
-        World world = findOne(worldDao);
+    private World findAndModifyOne(World.Mapper worldMapper) {
+        World world = findOne(worldMapper);
         notFoundIfNull(world);
         world.setRandomNumber(randomWorldNumber());
-        worldDao.updateById(world);
+        worldMapper.updateById(world);
         return world;
     }
 
