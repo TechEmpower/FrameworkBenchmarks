@@ -26,7 +26,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <h2o/serverutil.h>
-#include <sys/epoll.h>
 #include <sys/syscall.h>
 
 #include "database.h"
