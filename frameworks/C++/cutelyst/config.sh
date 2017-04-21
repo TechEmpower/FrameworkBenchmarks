@@ -60,7 +60,7 @@ if [ -n "${UWSGI}" ]; then
   &
 else
   ${CROOT}/bin/cutelyst-wsgi \
-  --ini ${CROOT}/config.ini \
+  --ini ${CROOT}/config.ini:uwsgi \
   -a ${CROOT}/benchmarks/src/libcutelyst_benchmarks.so \
   --processes=${C_PROCESSES} \
   --threads=${C_THREADS} \
