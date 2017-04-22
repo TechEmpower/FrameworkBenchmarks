@@ -131,7 +131,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	h2o_access_log_filehandle_t *log_handle = NULL;
 
 	if (config->log) {
-		log_handle = h2o_access_log_open_handle(config->log, NULL);
+		log_handle = h2o_access_log_open_handle(config->log, NULL, H2O_LOGCONF_ESCAPE_APACHE);
 
 		if (!log_handle)
 			goto error;

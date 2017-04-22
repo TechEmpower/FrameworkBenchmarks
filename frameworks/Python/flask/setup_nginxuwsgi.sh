@@ -8,4 +8,4 @@ pip install --install-option="--prefix=${PY2_ROOT}" -r $TROOT/requirements.txt
 
 nginx -c $TROOT/nginx.conf
 
-uwsgi --ini $TROOT/uwsgi.ini --processes $MAX_THREADS --wsgi app:app &
+uwsgi --ini $TROOT/uwsgi.ini --processes $CPU_COUNT --wsgi app:app &

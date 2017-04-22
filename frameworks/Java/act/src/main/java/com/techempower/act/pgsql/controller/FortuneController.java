@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 
 @Controller("pgsql")
 @Singleton
-public class FortuneController extends com.techempower.act.controller.FortuneControllerBase<Fortune,act.db.ebean.EbeanQuery<Fortune>,Fortune.Dao> {
+public class FortuneController extends com.techempower.act.controller.FortuneControllerBase<Fortune,act.db.ebean2.EbeanQuery<Fortune>,Fortune.Dao> {
     @Inject
     public FortuneController(Fortune.Dao worldDao) {
         super(worldDao);

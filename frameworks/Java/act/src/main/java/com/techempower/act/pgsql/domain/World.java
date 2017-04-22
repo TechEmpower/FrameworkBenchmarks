@@ -2,7 +2,7 @@ package com.techempower.act.pgsql.domain;
 
 
 import act.db.DB;
-import act.db.ebean.EbeanDao;
+import act.db.ebean2.EbeanDao;
 
 import javax.persistence.Entity;
 

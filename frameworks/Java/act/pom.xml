@@ -7,18 +7,18 @@
 
     <groupId>com.techempower</groupId>
     <artifactId>actframework</artifactId>
-    <version>1.0.4</version>
+    <version>1.1.0</version>
     <name>ActFramework Test</name>
     <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <act.version>1.0.7</act.version>
-        <act-morphia.version>1.0.3</act-morphia.version>
-        <act-ebean.version>1.1.0</act-ebean.version>
-        <mysql.version>6.0.6</mysql.version>
-        <postgres-jdbc.version>42.0.0</postgres-jdbc.version>
+        <act.version>1.1.1</act.version>
+        <act-morphia.version>1.1.0</act-morphia.version>
+        <act-ebean2.version>1.0.3</act-ebean2.version>
+        <mysql.version>5.1.41</mysql.version>
+        <postgres-jdbc.version>9.4.1212</postgres-jdbc.version>
         <HikariCP.version>2.6.1</HikariCP.version>
         <app.entry>com.techempower.act.AppEntry</app.entry>
     </properties>
@@ -41,8 +41,8 @@
         </dependency>
         <dependency>
             <groupId>org.actframework</groupId>
-            <artifactId>act-ebean</artifactId>
-            <version>${act-ebean.version}</version>
+            <artifactId>act-ebean2</artifactId>
+            <version>${act-ebean2.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

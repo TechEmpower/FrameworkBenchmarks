@@ -4,10 +4,10 @@ const GREETING = "Hello, World!";
 
 const self = module.exports = {
 
-  ADDITIONAL_FORTUNE: {
+  additionalFortune: () => ({
     id: 0,
     message: 'Additional fortune added at request time.'
-  },
+  }),
 
   fortunesTemplate: Handlebars.compile([
     "<!DOCTYPE html>",
