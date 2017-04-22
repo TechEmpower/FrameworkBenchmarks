@@ -25,6 +25,8 @@
 #include <stdbool.h>
 #include <yajl/yajl_gen.h>
 
+#include "utility.h"
+
 #define REQ_ERROR "request error\n"
 
 typedef enum {
@@ -47,7 +49,7 @@ const char *get_query_param(const char *query,
                             size_t param_len);
 void register_request_handlers(h2o_hostconf_t *hostconf, h2o_access_log_filehandle_t *log_handle);
 void send_error(http_status_code_t status_code, const char *body, h2o_req_t *req);
-int send_json_response(yajl_gen gen, bool free_gen, h2o_req_t *req);
+int send_json_response(json_generator_t *gen, bool free_gen, h2o_req_t *req);
 void send_service_unavailable_error(const char *body, h2o_req_t *req);
 void set_default_response_param(content_type_t content_type,
                                 size_t content_length,

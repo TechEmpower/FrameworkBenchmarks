@@ -32,6 +32,7 @@
 #include "error.h"
 #include "event_loop.h"
 #include "thread.h"
+#include "utility.h"
 
 static void *run_thread(void *arg);
 
@@ -50,6 +51,16 @@ void free_thread_context(thread_context_t *ctx)
 {
 	free_database_state(ctx->event_loop.h2o_ctx.loop, &ctx->db_state);
 	free_event_loop(&ctx->event_loop, &ctx->global_thread_data->h2o_receiver);
+
+	if (ctx->json_generator)
+		do {
+			json_generator_t * const gen = H2O_STRUCT_FROM_MEMBER(json_generator_t,
+			                                                      l,
+			                                                      ctx->json_generator);
+
+			ctx->json_generator = gen->l.next;
+			free_json_generator(gen, NULL, NULL, 0);
+		} while (ctx->json_generator);
 }
 
 global_thread_data_t *initialize_global_thread_data(const config_t *config,

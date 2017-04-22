@@ -71,7 +71,7 @@ rm -rf "$BUILD_DIR"
 echo "Maximum database connections per thread: $DB_CONN"
 
 if "$CLOUD_ENVIRONMENT"; then
-	run_h2o_app "0-$((NUM_PROC - 1))" "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app"
+	run_h2o_app 0 "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app"
 else
 	for ((i = 0; i < PHYSICAL_ENVIRONMENT_THREADS; i++)); do
 		run_h2o_app "$i" "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app" -t1
