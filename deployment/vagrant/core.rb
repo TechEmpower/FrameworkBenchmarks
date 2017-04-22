@@ -41,6 +41,7 @@ def provider_virtualbox(config, ip_address='172.16.0.16')
     # See http://superuser.com/a/640028/136050
     override.vm.synced_folder "../../toolset", "/home/vagrant/FrameworkBenchmarks/toolset"
     override.vm.synced_folder "../../frameworks", "/home/vagrant/FrameworkBenchmarks/frameworks"
+    override.vm.synced_folder "../../results", "/home/vagrant/FrameworkBenchmarks/results"
 
     override.vm.network :forwarded_port, guest: 8080, host: 28080
   end
