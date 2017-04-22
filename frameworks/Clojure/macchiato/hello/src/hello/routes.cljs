@@ -7,18 +7,6 @@
   (:require-macros
     [hiccups.core :refer [html]]))
 
-#_(defn home [req res raise]
-    (-> (html
-          [:html
-           [:head [:link {:rel "stylesheet" :href "/css/site.css"}]]
-           [:body
-            [:h2 "Hello World!"]
-            [:p
-             "Your user-agent is: "
-             (str (get-in req [:headers "user-agent"]))]]])
-        (r/ok)
-        (r/content-type "text/html")
-        (res)))
 
 (defn not-found [req res raise]
   (-> (html
@@ -50,17 +38,50 @@
          (res))
     raise))
 
+(defn fortunes-test [req res raise]
+  (db/get-fortunes
+    #(-> (html
+           [:html
+            [:body
+             (into
+               [:table
+                [:tr [:th "id"] [:th "message"]]]
+               (for [message %]
+                 [:tr [:td (:id message)] [:td (:message message)]]))]])
+         (r/ok)
+         (r/content-type "text/html")
+         (res))
+    raise))
+
+(defn queries-test [req res raise]
+  (db/run-queries
+    (or (-> req :route-params :queries) 1)
+    #(-> (js/JSON.stringify %)
+         (r/ok)
+         (r/content-type "text/plain")
+         (res))
+    raise))
+
+(defn update-test [req res raise]
+  (db/update-and-persist
+    (or (-> req :route-params :queries) 1)
+    #(-> (js/JSON.stringify %)
+         (r/ok)
+         (r/content-type "text/plain")
+         (res))
+    raise))
+
 (def routes
-  ["/" {""         {:get (fn [_ res _] (res (r/ok "Hello, World!")))}
-        "plain"    {:get plaintext}
-        "json"     {:get json-serialization}
-        "db"       {:get single-query-test}
-        "fortunes" {:get single-query-test}
+  ["/" {""          {:get (fn [_ res _] (res (r/ok "Hello, World!")))}
+        "plaintext" {:get plaintext}
+        "json"      {:get json-serialization}
+        "db"        {:get single-query-test}
+        "fortunes"  {:get fortunes-test}
         "queries"
-                   {"/"         {:get single-query-test}
-                    "/:queries" {:get single-query-test}}
-        "upddates" {"/"         {:get single-query-test}
-                    "/:queries" {:get single-query-test}}}])
+                    {"/"            {:get single-query-test}
+                     ["/" :queries] {:get queries-test}}
+        "updates"   {"/"            {:get update-test}
+                     ["/" :queries] {:get update-test}}}])
 
 (defn router [req res raise]
   (if-let [{:keys [handler route-params]} (bidi/match-route* routes (:uri req) req)]

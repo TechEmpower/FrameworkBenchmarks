@@ -15,7 +15,8 @@
             [macchiato/lein-npm "0.6.3"]
             [lein-figwheel "0.5.9"]
             [lein-cljsbuild "1.1.4"]]
-  :npm {:dependencies [[sequelize "3.30.4"]
+  :npm {:dependencies [[pg "6.1.5"]
+                       [sequelize "3.30.4"]
                        [source-map-support "0.4.6"]]
         :write-package-json true}
   :source-paths ["src" "target/classes"]
