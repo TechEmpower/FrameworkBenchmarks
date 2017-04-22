@@ -21,7 +21,7 @@
       "notes": "",
       "versus": "undertow"
     },
-    "pgsql": {
+    "ebean-pg": {
       "setup_file": "setup",
       "db_url": "/pgsql/db",
       "query_url": "/pgsql/queries?queries=",
@@ -43,7 +43,7 @@
       "notes": "",
       "versus": "undertow"
     },
-    "mysql": {
+    "ebean-my": {
       "setup_file": "setup",
       "db_url": "/mysql/db",
       "query_url": "/mysql/queries?queries=",
@@ -65,7 +65,7 @@
       "notes": "",
       "versus": "undertow"
     },
-    "mongodb": {
+    "morphia-mo": {
       "setup_file": "setup",
       "db_url": "/mongo/db",
       "query_url": "/mongo/queries?queries=",
@@ -87,7 +87,7 @@
       "notes": "",
       "versus": "undertow"
     },
-    "beetlsql": {
+    "beetlsql-pg": {
       "setup_file": "setup",
       "db_url": "/beetlsql/db",
       "query_url": "/beetlsql/queries?queries=",
@@ -109,7 +109,7 @@
       "notes": "",
       "versus": "undertow"
     },
-    "jdbc": {
+    "jdbc-pg": {
       "setup_file": "setup",
       "db_url": "/jdbc/db",
       "query_url": "/jdbc/queries?queries=",
