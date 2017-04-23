@@ -13,8 +13,8 @@
   :jvm-opts ^:replace ["-Xmx1g" "-server"]
   :plugins [[lein-doo "0.1.7"]
             [macchiato/lein-npm "0.6.3"]
-            [lein-figwheel "0.5.9"]
-            [lein-cljsbuild "1.1.4"]]
+            [lein-figwheel "0.5.10"]
+            [lein-cljsbuild "1.1.5"]]
   :npm {:dependencies [[pg "6.1.5"]
                        [sequelize "3.30.4"]
                        [source-map-support "0.4.6"]]
@@ -66,6 +66,7 @@
       {:source-paths ["env/prod" "src"]
        :compiler     {:main          hello.app
                       :output-to     "target/release/hello.js"
+                      :output-dir    "target/release"
                       :target        :nodejs
                       :optimizations :none
                       :pretty-print  false}}}}}}
