@@ -28,6 +28,7 @@
 #include "error.h"
 #include "fortune.h"
 #include "request_handler.h"
+#include "thread.h"
 #include "utility.h"
 #include "world.h"
 
@@ -41,13 +42,17 @@ static int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req)
 {
 	IGNORE_FUNCTION_PARAMETER(self);
 
-	const yajl_gen gen = get_json_generator(&req->pool);
+	thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
+	                                                      event_loop.h2o_ctx,
+	                                                      req->conn->ctx);
+	json_generator_t * const gen = get_json_generator(&ctx->json_generator,
+	                                                  &ctx->json_generator_num);
 
 	if (gen) {
-		CHECK_YAJL_STATUS(yajl_gen_map_open, gen);
-		CHECK_YAJL_STATUS(yajl_gen_string, gen, YAJL_STRLIT("message"));
-		CHECK_YAJL_STATUS(yajl_gen_string, gen, YAJL_STRLIT(HELLO_RESPONSE));
-		CHECK_YAJL_STATUS(yajl_gen_map_close, gen);
+		CHECK_YAJL_STATUS(yajl_gen_map_open, gen->gen);
+		CHECK_YAJL_STATUS(yajl_gen_string, gen->gen, YAJL_STRLIT("message"));
+		CHECK_YAJL_STATUS(yajl_gen_string, gen->gen, YAJL_STRLIT(HELLO_RESPONSE));
+		CHECK_YAJL_STATUS(yajl_gen_map_close, gen->gen);
 
 		// The response is small enough, so that it is simpler to copy it
 		// instead of doing a delayed deallocation of the JSON generator.
@@ -55,7 +60,8 @@ static int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req)
 			return 0;
 
 error_yajl:
-		yajl_gen_free(gen);
+		// If there is a problem with the generator, don't reuse it.
+		free_json_generator(gen, NULL, NULL, 0);
 	}
 
 	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
@@ -178,20 +184,27 @@ void send_error(http_status_code_t status_code, const char *body, h2o_req_t *req
 	h2o_send_error_generic(req, status_code, status_code_to_string(status_code), body, 0);
 }
 
-int send_json_response(yajl_gen gen, bool free_gen, h2o_req_t *req)
+int send_json_response(json_generator_t *gen, bool free_gen, h2o_req_t *req)
 {
 	const unsigned char *buf;
 	size_t len;
 	int ret = EXIT_FAILURE;
 
-	if (yajl_gen_get_buf(gen, &buf, &len) == yajl_gen_status_ok) {
+	if (yajl_gen_get_buf(gen->gen, &buf, &len) == yajl_gen_status_ok) {
 		set_default_response_param(JSON, len, req);
 		ret = EXIT_SUCCESS;
 
 		if (free_gen) {
+			thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
+			                                                      event_loop.h2o_ctx,
+			                                                      req->conn->ctx);
+
 			// h2o_send_inline() makes a copy of its input.
 			h2o_send_inline(req, (char *) buf, len);
-			yajl_gen_free(gen);
+			free_json_generator(gen,
+			                    &ctx->json_generator,
+			                    &ctx->json_generator_num,
+			                    ctx->config->max_json_generator);
 		}
 		else {
 			h2o_generator_t generator;
