@@ -67,7 +67,7 @@
        :compiler     {:main          hello.app
                       :output-to     "target/release/hello.js"
                       :target        :nodejs
-                      :optimizations :simple
+                      :optimizations :none
                       :pretty-print  false}}}}}}
   :aliases
   {"build" ["do"

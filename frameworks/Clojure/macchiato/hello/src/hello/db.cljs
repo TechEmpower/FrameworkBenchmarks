@@ -38,20 +38,20 @@
   (-> @fortunes
       (.findAll #js {:raw true})
       (.then #(handler (js->clj % :keywordize-keys true)))
-      (.catch #(error-handler %))))
+      (.catch error-handler)))
 
 (defn world [id handler error-handler]
   (-> @worlds
       (.findOne (clj->js {:where {:id id} :raw true}))
       (.then handler)
-      (.catch #(error-handler %))))
+      (.catch error-handler)))
 
 (defn update-world! [world handler error-handler]
   (-> @worlds
       (.update (clj->js {:randomnumber (:randomnumber world)})
                (clj->js {:where {:id (:id world)} :raw true}))
       (.then #(when handler (handler (js->clj world))))
-      (.catch #(error-handler %))))
+      (.catch error-handler)))
 
 (defn get-query-count
   "Parse provided string value of query count, clamping values to between 1 and 500."
