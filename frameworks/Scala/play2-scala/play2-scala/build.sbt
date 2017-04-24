@@ -1,6 +1,6 @@
 name := "play2-scala"
 
-version := "1.0-SNAPSHOT"
+version := "2.5.14"
 
 scalaVersion := "2.11.8"
 
