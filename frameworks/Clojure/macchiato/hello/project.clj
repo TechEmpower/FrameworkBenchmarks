@@ -66,9 +66,10 @@
       {:source-paths ["env/prod" "src"]
        :compiler     {:main          hello.app
                       :output-to     "target/release/hello.js"
-                      :output-dir    "target/release"
+                      :language-in   :ecmascript5
+                      ;:output-dir    "target/release"
                       :target        :nodejs
-                      :optimizations :none
+                      :optimizations :simple ;:none
                       :pretty-print  false}}}}}}
   :aliases
   {"build" ["do"
