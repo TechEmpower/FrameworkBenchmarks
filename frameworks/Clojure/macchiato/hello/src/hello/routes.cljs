@@ -51,11 +51,10 @@
     #(-> (html
            [:html
             [:body
-             (into
-               [:table
-                [:tr [:th "id"] [:th "message"]]]
-               (for [message %]
-                 [:tr [:td (:id message)] [:td (-> message :message escape-html)]]))]])
+             [:table
+              [:tr [:th "id"] [:th "message"]]
+              (for [message %]
+                [:tr [:td (:id message)] [:td (-> message :message escape-html)]])]]])
          (r/ok)
          (r/content-type "text/html")
          (res))
