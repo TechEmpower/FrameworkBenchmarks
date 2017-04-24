@@ -10,9 +10,12 @@
            "hello_world"
            "benchmarkdbuser"
            "benchmarkdbpass"
-           #js {:host    "localhost",
-                :dialect "postgres",
-                :logging false}))
+           #js {:host    "localhost"
+                :dialect "postgres"
+                :logging false
+                :pool #js {:max 64
+                           :min 1
+                           :idle 1000}}))
 
 (defstate worlds
   :start (.define @db
