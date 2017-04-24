@@ -904,7 +904,7 @@ def validate_test(test_name, test_keys, directory):
     test_keys['framework'] = config['framework']
 
   recommended_lang = directory.split('/')[-2]
-  windows_url = "https://github.com/TechEmpower/FrameworkBenchmarks/milestones/Windows%%20Compatibility"
+  windows_url = "https://github.com/TechEmpower/FrameworkBenchmarks/issues/1038"
   schema = {
     'language': {
       'help': ('language', 'The language of the framework used, suggestion: %s' % recommended_lang)
