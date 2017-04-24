@@ -10,7 +10,7 @@
     }
   ],
   "fileBlacklist": [],
-  "userBlacklist": ["hamiltont"],
+  "userBlacklist": ["hamiltont", "MalcolmEvershed"],
   "userBlacklistForPR": [],
   "actions": ["opened"],
   "skipAlreadyAssignedPR": false,
