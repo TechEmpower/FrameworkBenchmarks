@@ -85,7 +85,7 @@
         "db"        {:get single-query-test}
         "fortunes"  {:get fortunes-test}
         "queries"
-                    {"/"            {:get single-query-test}
+                    {"/"            {:get queries-test}
                      ["/" :queries] {:get queries-test}}
         "updates"   {"/"            {:get update-test}
                      ["/" :queries] {:get update-test}}}])
