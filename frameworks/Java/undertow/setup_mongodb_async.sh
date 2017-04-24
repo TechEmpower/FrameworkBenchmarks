@@ -2,6 +2,6 @@
 
 fw_depends mongodb
 
-export UNDERTOW_ARGS="MONGODB"
+export UNDERTOW_ARGS="MONGODB_ASYNC"
 
 source ./setup.sh
