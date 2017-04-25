@@ -24,8 +24,7 @@ fi
 build_h2o_app()
 {
 	cmake -DCMAKE_INSTALL_PREFIX="$H2O_APP_HOME" -DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_LIBRARY_PATH="${H2O_HOME}/lib;${MUSTACHE_C_HOME}/lib;${YAJL_HOME}/lib" \
-		-DCMAKE_INCLUDE_PATH="${H2O_HOME}/include;${MUSTACHE_C_HOME}/include;${YAJL_HOME}/include" \
+		-DCMAKE_PREFIX_PATH="${H2O_HOME};${MUSTACHE_C_HOME};${YAJL_HOME}" \
 		-DCMAKE_C_FLAGS="-march=native $1" "$TROOT"
 	make -j "$(nproc)"
 }
