@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends postgresql nodejs
+fw_depends postgresql nodej java leiningen
 
 # Update db host in the source file
 sed -i 's|localhost|'"${DBHOST}"'|g' hello/src/hello/db.cljs
