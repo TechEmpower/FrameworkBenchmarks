@@ -41,6 +41,7 @@ fi
 EOF
 
 echo -e "ssh \$DBHOST 'bash' <<EOF" > $IROOT/mongodb.installed
+echo -e "sudo service mongod start || echo 'mongod service already started'" >> $IROOT/mongodb.installed
 echo -e "mongo < create.js" >> $IROOT/mongodb.installed
 echo -e "EOF" >> $IROOT/mongodb.installed
 
