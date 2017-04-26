@@ -1,9 +1,9 @@
 (ns hello.middleware
   (:require
-    [macchiato.middleware.defaults :as defaults]))
+    [macchiato.util.response :as r]))
 
 (defn wrap-defaults [handler]
-  handler
-  #_(defaults/wrap-defaults handler defaults/site-defaults))
+  (fn [req res raise]
+    (handler req #(res (assoc-in % [:headers "Server"] "macchiato")) raise)))
 
 

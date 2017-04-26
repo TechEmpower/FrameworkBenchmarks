@@ -105,3 +105,4 @@
     (fn [results]
       (handler (clj->js (mapv (partial set-random-number! error-handler) (js->clj results)))))
     error-handler))
+

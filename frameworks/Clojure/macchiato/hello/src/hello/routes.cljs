@@ -50,13 +50,14 @@
   (db/get-fortunes
     #(-> (html
            [:html
+            [:head [:title "Fortunes"]]
             [:body
              [:table
               [:tr [:th "id"] [:th "message"]]
               (for [message %]
                 [:tr [:td (:id message)] [:td (-> message :message escape-html)]])]]])
          (r/ok)
-         (r/content-type "text/html")
+         (r/content-type "text/html;charset=utf-8")
          (res))
     raise))
 
