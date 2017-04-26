@@ -1,4 +1,3 @@
-
 def provision_bootstrap(config)
 
   # TODO this will break if the environment contains the ' delimiter, 
@@ -39,8 +38,10 @@ def provider_virtualbox(config, ip_address='172.16.0.16')
     #
     # See mitchellh/vagrant#4997
     # See http://superuser.com/a/640028/136050
+
     override.vm.synced_folder "../../toolset", "/home/vagrant/FrameworkBenchmarks/toolset"
     override.vm.synced_folder "../../frameworks", "/home/vagrant/FrameworkBenchmarks/frameworks"
+    override.vm.synced_folder "../../results", "/home/vagrant/FrameworkBenchmarks/results", create: true
 
     override.vm.network :forwarded_port, guest: 8080, host: 28080
   end

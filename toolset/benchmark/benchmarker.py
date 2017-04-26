@@ -1019,7 +1019,7 @@ class Benchmarker:
         # setup results and latest_results directories
         self.result_directory = os.path.join(self.fwroot, "results")
         if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
-            shutil.rmtree(os.path.join(self.fwroot, "results"))
+            os.system("sudo rm -rf " + self.result_directory + "/*")
 
         # remove installs directories if --clean-all provided
         self.install_root = "%s/%s" % (self.fwroot, "installs")
