@@ -180,6 +180,8 @@ public final class HelloWebServer {
       MongoClientOptions.Builder options = MongoClientOptions.builder();
       options.minConnectionsPerHost(connections);
       options.connectionsPerHost(connections);
+      options.threadsAllowedToBlockForConnectionMultiplier(
+          (int) Math.ceil((double) MAX_DB_REQUEST_CONCURRENCY / connections));
       MongoClient client = new MongoClient(host, options.build());
       return client.getDatabase(databaseName);
     }
