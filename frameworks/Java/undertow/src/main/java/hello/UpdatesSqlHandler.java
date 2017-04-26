@@ -47,9 +47,8 @@ final class UpdatesSqlHandler implements HttpHandler {
           world.randomNumber = randomWorld();
           statement.setInt(1, world.randomNumber);
           statement.setInt(2, world.id);
-          statement.addBatch();
+          statement.executeUpdate();
         }
-        statement.executeBatch();
       }
     }
     sendJson(exchange, worlds);
