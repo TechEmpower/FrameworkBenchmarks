@@ -5,7 +5,14 @@
 
 const Hapi = require('hapi');
 const Vision = require('vision');
-const server = new Hapi.Server();
+
+const options = {
+  connections: {
+    compression: false
+  }
+};
+
+const server = new Hapi.Server(options);
 
 server.connection({port: 8080, host: '0.0.0.0'});
 server.register(Vision, (err) => {
