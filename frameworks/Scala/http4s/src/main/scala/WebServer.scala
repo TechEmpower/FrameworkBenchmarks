@@ -8,7 +8,7 @@ import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.twirl._
 import headers._
 
-import doobie.contrib.hikari.hikaritransactor._
+import doobie.hikari.hikaritransactor._
 import doobie.imports._
 
 import io.circe._
@@ -129,7 +129,7 @@ object WebServer extends TaskApp {
   // HTTP service definition
   def service(xa: Transactor[Task]) = HttpService {
     case GET -> Root / "json" =>
-      Ok(Json.obj("message" -> Json.string("Hello, World!")))
+      Ok(Json.obj("message" -> Json.fromString("Hello, World!")))
 
     case GET -> Root / "db" =>
       Ok(selectRandomWorld(xa))

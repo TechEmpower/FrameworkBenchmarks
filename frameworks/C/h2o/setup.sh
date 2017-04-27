@@ -4,12 +4,10 @@ fw_depends postgresql h2o mustache-c yajl
 
 H2O_APP_HOME="${IROOT}/h2o_app"
 BUILD_DIR="${H2O_APP_HOME}_build"
-# Use 2 database connections for each logical CPU core the database server has.
-DB_CONN=2
 H2O_APP_PROFILE_PORT=54321
 H2O_APP_PROFILE_URL="http://127.0.0.1:$H2O_APP_PROFILE_PORT"
 NUM_PROC=$(nproc)
-PHYSICAL_ENVIRONMENT_THREADS=16
+PHYSICAL_ENVIRONMENT_THREADS=30
 
 # A hacky way to detect whether we are running in the physical hardware or the cloud environment.
 if [[ "$NUM_PROC" -gt 16 ]]; then
@@ -20,13 +18,13 @@ if [[ "$NUM_PROC" -gt 16 ]]; then
 	DB_CONN=4
 else
 	CLOUD_ENVIRONMENT=true
+	DB_CONN=16
 fi
 
 build_h2o_app()
 {
 	cmake -DCMAKE_INSTALL_PREFIX="$H2O_APP_HOME" -DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_LIBRARY_PATH="${H2O_HOME}/lib;${MUSTACHE_C_HOME}/lib;${YAJL_HOME}/lib" \
-		-DCMAKE_INCLUDE_PATH="${H2O_HOME}/include;${MUSTACHE_C_HOME}/include;${YAJL_HOME}/include" \
+		-DCMAKE_PREFIX_PATH="${H2O_HOME};${MUSTACHE_C_HOME};${YAJL_HOME}" \
 		-DCMAKE_C_FLAGS="-march=native $1" "$TROOT"
 	make -j "$(nproc)"
 }
@@ -72,7 +70,7 @@ rm -rf "$BUILD_DIR"
 echo "Maximum database connections per thread: $DB_CONN"
 
 if "$CLOUD_ENVIRONMENT"; then
-	run_h2o_app "0-$((NUM_PROC - 1))" "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app"
+	run_h2o_app 0 "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app"
 else
 	for ((i = 0; i < PHYSICAL_ENVIRONMENT_THREADS; i++)); do
 		run_h2o_app "$i" "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app" -t1

@@ -25,7 +25,7 @@ public abstract class FortuneControllerBase<MODEL_TYPE extends IFortune,
         List<IFortune> fortunes = (List)fortuneDao.findAllAsList();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
-        template("fortunes", fortunes);
+        template("fortunes.mustache", fortunes);
     }
 
 }

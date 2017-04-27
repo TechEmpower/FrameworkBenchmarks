@@ -68,7 +68,7 @@ typedef struct {
 } single_query_ctx_t;
 
 struct multiple_query_ctx_t {
-	yajl_gen gen; // also an error flag
+	json_generator_t *gen; // also an error flag
 	h2o_req_t *req;
 	query_param_t *query_param;
 	size_t num_query;
@@ -95,15 +95,23 @@ static void process_result(PGresult *result, query_result_t *out);
 static int serialize_item(uint32_t id, uint32_t random_number, yajl_gen gen);
 static void serialize_items(const query_result_t *res,
                             size_t num_result,
-                            yajl_gen gen,
+                            json_generator_t **gen,
                             h2o_req_t *req);
 
 static void cleanup_multiple_query(void *data)
 {
 	const multiple_query_ctx_t * const query_ctx = data;
 
-	if (query_ctx->gen)
-		yajl_gen_free(query_ctx->gen);
+	if (query_ctx->gen) {
+		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
+		                                                      event_loop.h2o_ctx,
+		                                                      query_ctx->req->conn->ctx);
+
+		free_json_generator(query_ctx->gen,
+		                    &ctx->json_generator,
+		                    &ctx->json_generator_num,
+		                    ctx->config->max_json_generator);
+	}
 }
 
 static int compare_items(const void *x, const void *y)
@@ -184,7 +192,7 @@ static int do_multiple_queries(bool do_update, h2o_req_t *req)
 		}
 
 		// Create a JSON generator while the queries are processed.
-		query_ctx->gen = get_json_generator(&req->pool);
+		query_ctx->gen = get_json_generator(&ctx->json_generator, &ctx->json_generator_num);
 
 		if (!query_ctx->gen)
 			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
@@ -305,7 +313,14 @@ static void on_multiple_query_error(db_query_param_t *param, const char *error_s
 	multiple_query_ctx_t * const query_ctx = query_param->ctx;
 
 	if (query_ctx->gen) {
-		yajl_gen_free(query_ctx->gen);
+		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
+		                                                      event_loop.h2o_ctx,
+		                                                      query_ctx->req->conn->ctx);
+
+		free_json_generator(query_ctx->gen,
+		                    &ctx->json_generator,
+		                    &ctx->json_generator_num,
+		                    ctx->config->max_json_generator);
 		query_ctx->gen = NULL;
 		send_error(BAD_GATEWAY, error_string, query_ctx->req);
 	}
@@ -341,7 +356,10 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 				return DONE;
 			}
 
-			yajl_gen_free(query_ctx->gen);
+			free_json_generator(query_ctx->gen,
+			                    &ctx->json_generator,
+			                    &ctx->json_generator_num,
+			                    ctx->config->max_json_generator);
 			query_ctx->gen = NULL;
 			send_service_unavailable_error(DB_REQ_ERROR, query_ctx->req);
 		}
@@ -349,7 +367,10 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 			if (query_ctx->do_update)
 				do_updates(query_ctx);
 			else
-				serialize_items(query_ctx->res, query_ctx->num_result, query_ctx->gen, query_ctx->req);
+				serialize_items(query_ctx->res,
+				                query_ctx->num_result,
+				                &query_ctx->gen,
+				                query_ctx->req);
 		}
 
 		h2o_mem_release_shared(query_ctx);
@@ -371,7 +392,14 @@ static void on_multiple_query_timeout(db_query_param_t *param)
 	multiple_query_ctx_t * const query_ctx = query_param->ctx;
 
 	if (query_ctx->gen) {
-		yajl_gen_free(query_ctx->gen);
+		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
+		                                                      event_loop.h2o_ctx,
+		                                                      query_ctx->req->conn->ctx);
+
+		free_json_generator(query_ctx->gen,
+		                    &ctx->json_generator,
+		                    &ctx->json_generator_num,
+		                    ctx->config->max_json_generator);
 		query_ctx->gen = NULL;
 		send_error(GATEWAY_TIMEOUT, DB_TIMEOUT_ERROR, query_ctx->req);
 	}
@@ -403,16 +431,21 @@ static result_return_t on_single_query_result(db_query_param_t *param, PGresult 
 		random_number = ntohl(random_number);
 		PQclear(result);
 
-		const yajl_gen gen = get_json_generator(&query_ctx->req->pool);
+		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
+		                                                      event_loop.h2o_ctx,
+		                                                      query_ctx->req->conn->ctx);
+		json_generator_t * const gen = get_json_generator(&ctx->json_generator,
+		                                                  &ctx->json_generator_num);
 
 		if (gen) {
 			// The response is small enough, so that it is simpler to copy it
 			// instead of doing a delayed deallocation of the JSON generator.
-			if (!serialize_item(ntohl(query_ctx->id), random_number, gen) &&
+			if (!serialize_item(ntohl(query_ctx->id), random_number, gen->gen) &&
 			    !send_json_response(gen, true, query_ctx->req))
 				return DONE;
 
-			yajl_gen_free(gen);
+			// If there is a problem with the generator, don't reuse it.
+			free_json_generator(gen, NULL, NULL, 0);
 		}
 
 		send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
@@ -440,7 +473,7 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 
 	if (PQresultStatus(result) == PGRES_COMMAND_OK) {
 		query_ctx->num_query_in_progress--;
-		serialize_items(query_ctx->res, query_ctx->num_result, query_ctx->gen, query_ctx->req);
+		serialize_items(query_ctx->res, query_ctx->num_result, &query_ctx->gen, query_ctx->req);
 		h2o_mem_release_shared(query_ctx);
 	}
 	else {
@@ -495,21 +528,24 @@ error_yajl:
 
 static void serialize_items(const query_result_t *res,
                             size_t num_result,
-                            yajl_gen gen,
+                            json_generator_t **gen,
                             h2o_req_t *req)
 {
-	CHECK_YAJL_STATUS(yajl_gen_array_open, gen);
+	CHECK_YAJL_STATUS(yajl_gen_array_open, (*gen)->gen);
 
 	for (size_t i = 0; i < num_result; i++)
-		if (serialize_item(res[i].id, res[i].random_number, gen))
+		if (serialize_item(res[i].id, res[i].random_number, (*gen)->gen))
 			goto error_yajl;
 
-	CHECK_YAJL_STATUS(yajl_gen_array_close, gen);
+	CHECK_YAJL_STATUS(yajl_gen_array_close, (*gen)->gen);
 
-	if (!send_json_response(gen, false, req))
+	if (!send_json_response(*gen, false, req))
 		return;
 
 error_yajl:
+	// If there is a problem with the generator, don't reuse it.
+	free_json_generator(*gen, NULL, NULL, 0);
+	*gen = NULL;
 	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 }
 
