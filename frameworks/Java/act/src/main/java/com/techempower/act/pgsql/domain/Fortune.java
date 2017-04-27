@@ -3,6 +3,7 @@ package com.techempower.act.pgsql.domain;
 
 import act.db.DB;
 import act.db.ebean2.EbeanDao;
+import org.beetl.sql.core.mapper.BaseMapper;
 
 import javax.persistence.Entity;
 
@@ -15,4 +16,5 @@ public class Fortune extends com.techempower.act.sql.domain.Fortune {
     }
 
     public static class Dao extends EbeanDao<Integer, Fortune> {}
+
 }

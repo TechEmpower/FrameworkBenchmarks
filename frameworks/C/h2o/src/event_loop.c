@@ -32,7 +32,6 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <openssl/ssl.h>
-#include <sys/epoll.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 
@@ -42,11 +41,9 @@
 #include "utility.h"
 
 #define DEFAULT_TCP_FASTOPEN_QUEUE_LEN 4096
-#define MAX_EPOLL_EVENTS 64
 
 static void accept_connection(h2o_socket_t *listener, const char *err);
 static void accept_http_connection(h2o_socket_t *listener, const char *err);
-static void do_epoll_wait(h2o_socket_t *epoll_sock, const char *err);
 static int get_listener_socket(const char *bind_address, uint16_t port);
 static void on_close_connection(void *data);
 static void process_messages(h2o_multithread_receiver_t *receiver, h2o_linklist_t *messages);
@@ -94,32 +91,6 @@ static void accept_http_connection(h2o_socket_t *listener, const char *err)
 	ctx->event_loop.h2o_accept_ctx.ssl_ctx = NULL;
 	accept_connection(listener, err);
 	ctx->event_loop.h2o_accept_ctx.ssl_ctx = ssl_ctx;
-}
-
-static void do_epoll_wait(h2o_socket_t *epoll_sock, const char *err)
-{
-	if (err)
-		ERROR(err);
-	else {
-		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
-		                                                      event_loop,
-		                                                      epoll_sock->data);
-		int ready;
-		struct epoll_event event[MAX_EPOLL_EVENTS];
-
-		do
-			ready = epoll_wait(ctx->event_loop.epoll_fd, event, ARRAY_SIZE(event), 0);
-		while (ready < 0 && errno == EINTR);
-
-		if (ready > 0)
-			do {
-				void (** const on_write_ready)(void *) = event[--ready].data.ptr;
-
-				(*on_write_ready)(on_write_ready);
-			} while (ready > 0);
-		else if (ready < 0)
-			STANDARD_ERROR("epoll_wait");
-	}
 }
 
 static int get_listener_socket(const char *bind_address, uint16_t port)
@@ -260,7 +231,6 @@ void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_r
 
 	h2o_multithread_unregister_receiver(event_loop->h2o_ctx.queue, h2o_receiver);
 	h2o_socket_close(event_loop->h2o_socket);
-	h2o_socket_close(event_loop->epoll_socket);
 
 	h2o_loop_t * const loop = event_loop->h2o_ctx.loop;
 
@@ -293,15 +263,6 @@ void initialize_event_loop(bool is_main_thread,
 	h2o_multithread_register_receiver(loop->h2o_ctx.queue,
 	                                  h2o_receiver,
 	                                  process_messages);
-	// libh2o's event loop does not support write polling unless it
-	// controls sending the data as well, so do read polling on the
-	// epoll file descriptor as a work-around.
-	CHECK_ERRNO_RETURN(loop->epoll_fd, epoll_create1, EPOLL_CLOEXEC);
-	loop->epoll_socket = h2o_evloop_socket_create(loop->h2o_ctx.loop,
-	                                              loop->epoll_fd,
-	                                              H2O_SOCKET_FLAG_DONT_READ);
-	loop->epoll_socket->data = loop;
-	h2o_socket_read_start(loop->epoll_socket, do_epoll_wait);
 
 	if (is_main_thread) {
 		global_data->signals = h2o_evloop_socket_create(loop->h2o_ctx.loop,
@@ -310,31 +271,4 @@ void initialize_event_loop(bool is_main_thread,
 		global_data->signals->data = loop;
 		h2o_socket_read_start(global_data->signals, shutdown_server);
 	}
-}
-
-int start_write_polling(int fd,
-                        void (**on_write_ready)(void *),
-                        bool rearm,
-                        event_loop_t *event_loop)
-{
-	struct epoll_event event;
-
-	memset(&event, 0, sizeof(event));
-	event.data.ptr = on_write_ready;
-	event.events = EPOLLET | EPOLLONESHOT | EPOLLOUT | EPOLLRDHUP;
-
-	const int ret = epoll_ctl(event_loop->epoll_fd,
-	                          rearm ? EPOLL_CTL_MOD : EPOLL_CTL_ADD,
-	                          fd,
-	                          &event);
-
-	if (ret)
-		STANDARD_ERROR("epoll_ctl");
-
-	return ret;
-}
-
-void stop_write_polling(int fd, event_loop_t *event_loop)
-{
-	epoll_ctl(event_loop->epoll_fd, EPOLL_CTL_DEL, fd, NULL);
 }

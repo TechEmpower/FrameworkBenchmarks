@@ -12,6 +12,5 @@ sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y oracle-
 JAVA_HOME=/usr/lib/jvm/java-8-oracle
 echo "export JAVA_HOME=${JAVA_HOME}" > $IROOT/java.installed
 echo -e "export PATH=\$JAVA_HOME/bin:\$PATH" >> $IROOT/java.installed
-echo 'export JAVA_OPTS_TFB="-Xms1G -Xmx1G -Xss320k -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts"' >> $IROOT/java.installed
 
 source $IROOT/java.installed

@@ -10,6 +10,10 @@ The logic for the test cases live in these.
 * [MongoDB raw](handlers/mongodb-raw.js)
 * [Mongoose (MySQL)](handlers/mongoose.js)
 
+### Alternative server Test
+This test suite also contains tests using an alternative http server. [Mitol](https://github.com/Helidium/Mitol) is a NodeJS addon written in C++.
+The server is currently in Alpha state, but aims to be a drop-in replacement for high performance demands.
+
 ## Infrastructure Software Versions
 The tests were run with:
 * [Node.js v7.5.0](http://nodejs.org/)
@@ -25,4 +29,4 @@ See the [Benchmark config](benchmark_config.json) file for a list of the tested 
 
 `/json` and `/plaintext` are implemented
 
-The four db-required tests, Single Query, Multiple Query, Fortunes, and Updates have been implemented for each of the 5 database approaches that this test covers
+The four db-required tests, Single Query, Multiple Query, Fortunes, and Updates have been implemented for each of the 5 database approaches that this test covers.
