@@ -2,11 +2,12 @@
 
 fw_installed nginx && return 0
 
+VERSION="1.12.0"
 NGINX_HOME=$IROOT/nginx
 
-fw_get -O http://nginx.org/download/nginx-1.9.9.tar.gz
-fw_untar nginx-1.9.9.tar.gz
-cd nginx-1.9.9
+fw_get -O http://nginx.org/download/nginx-${VERSION}.tar.gz
+fw_untar nginx-${VERSION}.tar.gz
+cd nginx-${VERSION}
 
 # There is no --quiet flag that I could find...
 echo "Configuring nginx..."
