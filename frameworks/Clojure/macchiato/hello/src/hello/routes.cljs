@@ -48,14 +48,16 @@
 
 (defn fortunes-test [req res raise]
   (db/get-fortunes
-    #(-> (html
-           [:html
-            [:head [:title "Fortunes"]]
-            [:body
-             [:table
-              [:tr [:th "id"] [:th "message"]]
-              (for [message %]
-                [:tr [:td (:id message)] [:td (-> message :message escape-html)]])]]])
+    #(-> (str
+           "<!doctype html>"
+           (html
+             [:html
+              [:head [:title "Fortunes"]]
+              [:body
+               [:table
+                [:tr [:th "id"] [:th "message"]]
+                (for [message %]
+                  [:tr [:td (:id message)] [:td (-> message :message escape-html)]])]]]))
          (r/ok)
          (r/content-type "text/html;charset=utf-8")
          (res))
@@ -66,7 +68,7 @@
     (or (-> req :route-params :queries) 1)
     #(-> (js/JSON.stringify %)
          (r/ok)
-         (r/content-type "text/plain")
+         (r/content-type "application/json")
          (res))
     raise))
 
@@ -75,7 +77,7 @@
     (or (-> req :route-params :queries) 1)
     #(-> (js/JSON.stringify %)
          (r/ok)
-         (r/content-type "text/plain")
+         (r/content-type "application/json")
          (res))
     raise))
 
