@@ -17,7 +17,7 @@ Use [Hibernate](https://tapestry.apache.org/using-tapestry-with-hibernate.html) 
 ## Versions
 
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Tapestry 5.4.2](http://tapestry.apache.org)
+* [Tapestry 5.4.3](http://tapestry.apache.org)
 * [Hibernate 3.6.3](http://www.hibernate.org/)
 * [MySQL 5.5.29](http://dev.mysql.com/)
 * [Maven 2.2.1](https://maven.apache.org/)
