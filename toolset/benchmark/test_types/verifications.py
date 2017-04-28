@@ -1,5 +1,6 @@
 import json
 import re
+import math
 
 
 def basic_body_verification(body, url, is_json_check=True):
@@ -246,10 +247,50 @@ def verify_randomnumber_list(expected_len, headers, body, url, max_infraction='f
 
     return problems
 
-
-def verify_query_cases(self, cases, url):
+def verify_updates(old_worlds, new_worlds, updates_expected, url):
     '''
-    The the /updates and /queries tests accept a `queries` parameter
+    Validates that the /updates requests actually updated values in the database and didn't
+    just return a JSON list of the correct number of World items.
+sz
+    old_worlds  a JSON object containing the state of the Worlds table BEFORE the /updates requests
+    new_worlds  a JSON object containing the state of the Worlds table AFTER the /updates requests
+
+    If no items were updated, this validation test returns a "fail." 
+    
+    If only some items were updated (within a 5% margin of error), this test returns a "warn". 
+    This is to account for the unlikely, but possible situation where an entry in the World 
+    table is updated to the same value it was previously set as.
+    '''
+    successful_updates = 0
+    problems = []
+    for i in range(1, 10001):
+        try:
+            entry_id = str(i)
+            if entry_id in old_worlds and entry_id  in new_worlds:
+                if old_worlds[entry_id] != new_worlds[entry_id]:
+                    successful_updates += 1
+        except Exception as e:
+            print e
+
+
+    if successful_updates == 0:
+        problems.append(
+            ("fail", "No items were updated in the database.", url))
+    elif successful_updates <= (updates_expected * 0.90):
+        problems.append(
+            ("fail", "Only %s items were updated in the database out of roughly %s expected." % (successful_updates, updates_expected), url))
+    elif successful_updates <= (updates_expected * 0.95):
+        problems.append(
+            ("warn",
+            "There may have been an error updating the database. Only %s items were updated in the database out of the roughly %s expected." % (
+                successful_updates, updates_expected),
+            url))
+    
+    return problems
+
+def verify_query_cases(self, cases, url, check_updates=False):
+    '''
+    The /updates and /queries tests accept a `queries` parameter
     that is expected to be between 1-500.
     This method execises a framework with different `queries` parameter values
     then verifies that the framework responds appropriately.
@@ -274,6 +315,11 @@ def verify_query_cases(self, cases, url):
     MAX = 500
     MIN = 1
 
+    # Only load in the World table if we are doing an Update verification
+    world_db_before = {}
+    if check_updates:
+        world_db_before = self.get_current_world_table()
+
     for q, max_infraction in cases:
         case_url = url + q
         headers, body = self.request_headers_and_body(case_url)
@@ -291,6 +337,14 @@ def verify_query_cases(self, cases, url):
             problems += verify_randomnumber_list(
                 expected_len, headers, body, case_url, max_infraction)
             problems += verify_headers(headers, case_url)
+
+            # Only check update changes if we are doing an Update verification and if we're testing
+            # the highest number of queries, to ensure that we don't accidentally FAIL for a query 
+            # that only updates 1 item and happens to set its randomNumber to the same value it 
+            # previously held
+            if check_updates and queries >= MAX:
+                world_db_after = self.get_current_world_table()
+                problems += verify_updates(world_db_before, world_db_after, MAX, case_url)
 
         except ValueError:
             warning = (

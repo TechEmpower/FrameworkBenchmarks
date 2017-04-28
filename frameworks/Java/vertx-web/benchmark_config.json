@@ -52,7 +52,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "Postgres",
+      "database": "MySQL",
       "framework": "vertx-web",
       "language": "Java",
       "flavor": "None",

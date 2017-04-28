@@ -27,13 +27,17 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libjson0-dev libmcrypt-dev libicu-dev gettext \
   libpq-dev mlton \
   cloc dstat                        `# Collect resource usage statistics` \
-  python-pip
+  python-pip \
+  python-dev
 
 sudo pip install colorama==0.3.1
 # Version 2.3 has a nice Counter() and other features
 # but it requires —-allow-external and -—allow-unverified
 sudo pip install progressbar==2.2
 sudo pip install requests
+sudo pip install MySQL-python
+sudo pip install psycopg2
+sudo pip install pymongo
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 sudo sh -c "echo '*            hard    rtprio             99' >> /etc/security/limits.conf"
