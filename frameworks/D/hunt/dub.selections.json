@@ -1,0 +1,17 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"collie": "0.9.7",
+		"ddbc": "0.3.2",
+		"derelict-pq": "2.0.3",
+		"derelict-util": "2.0.6",
+		"entity": "0.1.1",
+		"hunt": "0.6.2",
+		"libasync": "0.7.9",
+		"libevent": "2.0.2+2.0.16",
+		"memutils": "0.4.9",
+		"mysql-native": "1.0.0",
+		"openssl": "1.1.5+1.0.1g",
+		"vibe-d": "0.7.30"
+	}
+}
