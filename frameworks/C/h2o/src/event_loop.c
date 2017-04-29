@@ -175,6 +175,9 @@ static void process_messages(h2o_multithread_receiver_t *receiver, h2o_linklist_
 	                                                                         h2o_receiver,
 	                                                                         receiver);
 
+	if (global_thread_data->ctx->event_loop.h2o_https_socket)
+		h2o_socket_read_stop(global_thread_data->ctx->event_loop.h2o_https_socket);
+
 	h2o_socket_read_stop(global_thread_data->ctx->event_loop.h2o_socket);
 }
 
@@ -189,6 +192,9 @@ static void shutdown_server(h2o_socket_t *listener, const char *err)
 
 		ctx->global_data->shutdown = true;
 		h2o_socket_read_stop(ctx->event_loop.h2o_socket);
+
+		if (ctx->event_loop.h2o_https_socket)
+			h2o_socket_read_stop(ctx->event_loop.h2o_https_socket);
 
 		for (size_t i = ctx->config->thread_num - 1; i > 0; i--)
 			h2o_multithread_send_message(&ctx->global_thread_data[i].h2o_receiver, NULL);

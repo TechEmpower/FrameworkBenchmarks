@@ -68,13 +68,14 @@ typedef struct {
 } single_query_ctx_t;
 
 struct multiple_query_ctx_t {
-	json_generator_t *gen; // also an error flag
+	json_generator_t *gen;
 	h2o_req_t *req;
 	query_param_t *query_param;
 	size_t num_query;
 	size_t num_query_in_progress;
 	size_t num_result;
 	bool do_update;
+	bool error;
 	query_result_t res[];
 };
 
@@ -184,18 +185,13 @@ static int do_multiple_queries(bool do_update, h2o_req_t *req)
 
 			if (execute_query(ctx, &query_ctx->query_param[i].param)) {
 				query_ctx->num_query_in_progress = i;
+				query_ctx->error = true;
 				send_service_unavailable_error(DB_REQ_ERROR, req);
 				return 0;
 			}
 
 			h2o_mem_addref_shared(query_ctx);
 		}
-
-		// Create a JSON generator while the queries are processed.
-		query_ctx->gen = get_json_generator(&ctx->json_generator, &ctx->json_generator_num);
-
-		if (!query_ctx->gen)
-			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 	}
 	else
 		send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
@@ -312,16 +308,8 @@ static void on_multiple_query_error(db_query_param_t *param, const char *error_s
 	const query_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(query_param_t, param, param);
 	multiple_query_ctx_t * const query_ctx = query_param->ctx;
 
-	if (query_ctx->gen) {
-		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
-		                                                      event_loop.h2o_ctx,
-		                                                      query_ctx->req->conn->ctx);
-
-		free_json_generator(query_ctx->gen,
-		                    &ctx->json_generator,
-		                    &ctx->json_generator_num,
-		                    ctx->config->max_json_generator);
-		query_ctx->gen = NULL;
+	if (!query_ctx->error) {
+		query_ctx->error = true;
 		send_error(BAD_GATEWAY, error_string, query_ctx->req);
 	}
 
@@ -334,7 +322,7 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 	query_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(query_param_t, param, param);
 	multiple_query_ctx_t * const query_ctx = query_param->ctx;
 
-	if (query_ctx->gen && PQresultStatus(result) == PGRES_TUPLES_OK) {
+	if (!query_ctx->error && PQresultStatus(result) == PGRES_TUPLES_OK) {
 		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
 		                                                      event_loop.h2o_ctx,
 		                                                      query_ctx->req->conn->ctx);
@@ -356,27 +344,29 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 				return DONE;
 			}
 
-			free_json_generator(query_ctx->gen,
-			                    &ctx->json_generator,
-			                    &ctx->json_generator_num,
-			                    ctx->config->max_json_generator);
-			query_ctx->gen = NULL;
+			query_ctx->error = true;
 			send_service_unavailable_error(DB_REQ_ERROR, query_ctx->req);
 		}
 		else if (query_ctx->num_result == query_ctx->num_query) {
 			if (query_ctx->do_update)
 				do_updates(query_ctx);
-			else
-				serialize_items(query_ctx->res,
-				                query_ctx->num_result,
-				                &query_ctx->gen,
-				                query_ctx->req);
+			else {
+				query_ctx->gen = get_json_generator(&ctx->json_generator, &ctx->json_generator_num);
+
+				if (query_ctx->gen)
+					serialize_items(query_ctx->res,
+					                query_ctx->num_result,
+					                &query_ctx->gen,
+					                query_ctx->req);
+				else
+					send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
+			}
 		}
 
 		h2o_mem_release_shared(query_ctx);
 	}
 	else {
-		if (query_ctx->gen)
+		if (!query_ctx->error)
 			LIBRARY_ERROR("PQresultStatus", PQresultErrorMessage(result));
 
 		on_multiple_query_error(param, DB_ERROR);
@@ -391,16 +381,8 @@ static void on_multiple_query_timeout(db_query_param_t *param)
 	const query_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(query_param_t, param, param);
 	multiple_query_ctx_t * const query_ctx = query_param->ctx;
 
-	if (query_ctx->gen) {
-		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
-		                                                      event_loop.h2o_ctx,
-		                                                      query_ctx->req->conn->ctx);
-
-		free_json_generator(query_ctx->gen,
-		                    &ctx->json_generator,
-		                    &ctx->json_generator_num,
-		                    ctx->config->max_json_generator);
-		query_ctx->gen = NULL;
+	if (!query_ctx->error) {
+		query_ctx->error = true;
 		send_error(GATEWAY_TIMEOUT, DB_TIMEOUT_ERROR, query_ctx->req);
 	}
 
@@ -472,8 +454,18 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 	multiple_query_ctx_t * const query_ctx = query_param->ctx;
 
 	if (PQresultStatus(result) == PGRES_COMMAND_OK) {
+		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
+		                                                      event_loop.h2o_ctx,
+		                                                      query_ctx->req->conn->ctx);
+
 		query_ctx->num_query_in_progress--;
-		serialize_items(query_ctx->res, query_ctx->num_result, &query_ctx->gen, query_ctx->req);
+		query_ctx->gen = get_json_generator(&ctx->json_generator, &ctx->json_generator_num);
+
+		if (query_ctx->gen)
+			serialize_items(query_ctx->res, query_ctx->num_result, &query_ctx->gen, query_ctx->req);
+		else
+			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
+
 		h2o_mem_release_shared(query_ctx);
 	}
 	else {
