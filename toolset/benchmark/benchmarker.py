@@ -549,27 +549,7 @@ class Benchmarker:
             out.write(header("Starting %s" % test.name))
             out.flush()
             try:
-                if test.requires_database():
-                    p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, stdout=out, stderr=out, shell=True)
-                    p.communicate("""
-            sudo restart mysql
-            sudo restart mongod
-            sudo service postgresql restart
-            sudo service cassandra restart
-            /opt/elasticsearch/elasticsearch restart
-          """)
-                    time.sleep(10)
-
-                    st = verify_database_connections([
-                        ("mysql", self.database_host, 3306),
-                        ("mongodb", self.database_host, 27017),
-                        ("postgresql", self.database_host, 5432),
-                        ("cassandra", self.database_host, 9160),
-                        ("elasticsearch", self.database_host, 9200)
-                    ])
-                    print "database connection test results:\n" + "\n".join(st[1])
-
-                self.__cleanup_leftover_processes_before_test();
+                self.__cleanup_leftover_processes_before_test()
 
                 if self.__is_port_bound(test.port):
                     # We gave it our all
@@ -1019,7 +999,7 @@ class Benchmarker:
         # setup results and latest_results directories
         self.result_directory = os.path.join(self.fwroot, "results")
         if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
-            shutil.rmtree(os.path.join(self.fwroot, "results"))
+            os.system("sudo rm -rf " + self.result_directory + "/*")
 
         # remove installs directories if --clean-all provided
         self.install_root = "%s/%s" % (self.fwroot, "installs")

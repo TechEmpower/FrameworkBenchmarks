@@ -9,6 +9,8 @@ Server {
   Type = fastcgi
   SourceRoot = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/php-slim
   DefaultDocument = index.php
+  GzipCompressionLevel = 0
+  EnableKeepAlive = true
 }
 
 # Disable logging completely
