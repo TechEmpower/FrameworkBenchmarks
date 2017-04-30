@@ -166,7 +166,6 @@ public final class HelloWebServer {
       config.setJdbcUrl(jdbcUrl);
       config.setUsername(username);
       config.setPassword(password);
-      config.setMinimumIdle(connections);
       config.setMaximumPoolSize(connections);
       return new HikariDataSource(config);
     }
@@ -178,7 +177,6 @@ public final class HelloWebServer {
                                           String databaseName,
                                           int connections) {
       MongoClientOptions.Builder options = MongoClientOptions.builder();
-      options.minConnectionsPerHost(connections);
       options.connectionsPerHost(connections);
       options.threadsAllowedToBlockForConnectionMultiplier(
           (int) Math.ceil((double) MAX_DB_REQUEST_CONCURRENCY / connections));
@@ -203,7 +201,6 @@ public final class HelloWebServer {
       ConnectionPoolSettings connectionPoolSettings =
           ConnectionPoolSettings
               .builder()
-              .minSize(connections)
               .maxSize(connections)
               .maxWaitQueueSize(
                   MAX_DB_REQUEST_CONCURRENCY * MAX_DB_QUERIES_PER_REQUEST)
