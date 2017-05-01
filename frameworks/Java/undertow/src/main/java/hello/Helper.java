@@ -10,15 +10,8 @@ import io.undertow.server.HttpServerExchange;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import org.bson.Document;
 
 /**
@@ -142,37 +135,5 @@ final class Helper {
   // or Double.  This code is compatible with both.
   private static int mongoGetInt(Document document, String key) {
     return ((Number) document.get(key)).intValue();
-  }
-
-  /**
-   * Transforms a stream of futures ({@code Stream<CompletableFuture<T>>}) into
-   * a single future ({@code CompletableFuture<List<T>>}) containing all the
-   * values of the input futures.
-   */
-  static <T> Collector<
-      CompletableFuture<? extends T>,
-      ?,
-      CompletableFuture<List<T>>>
-  toCompletableFuture() {
-    return Collectors.collectingAndThen(
-        Collectors.toList(),
-        Helper::futureValuesOf);
-  }
-
-  private static <T> CompletableFuture<List<T>> futureValuesOf(
-      Collection<CompletableFuture<? extends T>> futures) {
-    CompletableFuture<?>[] futuresArray =
-        futures.toArray(new CompletableFuture<?>[0]);
-    CompletableFuture<Void> allComplete = CompletableFuture.allOf(futuresArray);
-    return allComplete.thenApply(
-        nil -> {
-          List<T> values = new ArrayList<>(futuresArray.length);
-          for (CompletableFuture<?> future : futuresArray) {
-            @SuppressWarnings("unchecked")
-            T value = (T) future.join();
-            values.add(value);
-          }
-          return Collections.unmodifiableList(values);
-        });
   }
 }
