@@ -1,7 +1,7 @@
 TARGET = view
 TEMPLATE = lib
 CONFIG += shared x86_64 c++11
-QT += network xml
+QT += network xml qml
 QT -= gui
 DEFINES += TF_DLL
 INCLUDEPATH += ../../helpers ../../models

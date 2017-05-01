@@ -1,6 +1,7 @@
 <?php
 
 define('APP_PATH', realpath('..'));
+require APP_PATH . "/vendor/autoload.php";
 
 try {
 
@@ -25,7 +26,7 @@ try {
         if (function_exists('apc_store')) {
             return new Phalcon\Mvc\Model\MetaData\Apc();
         } else {
-            return new Phalcon\Mvc\Model\MetaData\Files(array(
+            return new Phalcon\Mvc\Model\MetaData\Memory(array(
                 'metaDataDir' => APP_PATH . "/app/compiled-templates/"
             ));
         }
@@ -75,11 +76,11 @@ try {
     // Setting up the mongodb connection
     $di->set('mongo', function() use ($config) {
         $mongodbConfig = $config->mongodb;
-        
-        $mongo = new \MongoClient($mongodbConfig->url);
-        return $mongo->{$mongodbConfig->db};
+
+        $mongo = new \Phalcon\Db\Adapter\MongoDB\Client($mongodbConfig->url);
+        return $mongo->selectDatabase($mongodbConfig->db);
     });
-    
+
     //Registering the collectionManager service
     $di->set('collectionManager', function() {
         // Setting a default EventsManager

@@ -5,7 +5,8 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static World* pworld;
+static char buffer[128];
+static char* ptr = buffer+6;
 static UREDISClient_Base* rc;
 
 #ifndef AS_cpoll_cppsp_DO
@@ -16,7 +17,7 @@ static void usp_fork_rdb()
 {
    U_TRACE(5, "::usp_fork_rdb()")
 
-   rc = U_NEW(UREDISClient<UTCPSocket>);
+   U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
 
    if (rc->connect() == false)
       {
@@ -25,13 +26,11 @@ static void usp_fork_rdb()
       return;
       }
 
-   pworld = U_NEW(World);
+   U_MEMCPY(buffer, "world:", U_CONSTANT_SIZE("world:"));
 
 #ifndef AS_cpoll_cppsp_DO
-   pvalue = U_NEW(UValue(OBJECT_VALUE));
+   U_NEW(UValue, pvalue, UValue);
 #endif
-
-   u__memcpy(u_buffer, "world:", U_CONSTANT_SIZE("world:"), __PRETTY_FUNCTION__);
 }
 
 #ifdef DEBUG
@@ -41,14 +40,9 @@ static void usp_end_rdb()
 
    delete rc;
 
-   if (pworld)
-      {
-      delete pworld;
-
-#  ifndef AS_cpoll_cppsp_DO
-      delete pvalue;
-#  endif
-      }
+#ifndef AS_cpoll_cppsp_DO
+   if (pvalue) delete pvalue;
+#endif
 }
 #endif
 -->
@@ -56,18 +50,15 @@ static void usp_end_rdb()
 Content-Type: application/json
 -->
 <!--#code
-UStringRep* rep;
+uint32_t id;
 
-(void) rc->get(u_buffer, 6+u_num2str32(u_buffer+6, pworld->id = u_get_num_random(10000)));
-
-rep = rc->vitem[0].rep;
-
-pworld->randomNumber = u_strtoul(rep->data(), rep->end());
+(void) rc->get(buffer, 6+u_num2str32(id = u_get_num_random(10000-1), ptr)-ptr);
 
 #ifdef AS_cpoll_cppsp_DO
-USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", pworld->id, rep);
+USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", id, rc->vitem[0].rep);
 #else
-USP_JSON_stringify(*pvalue, World, *pworld);
+World world(id, rc->vitem[0].strtoul());
+USP_JSON_stringify(*pvalue, World, world);
 pvalue->clear();
 #endif
 -->

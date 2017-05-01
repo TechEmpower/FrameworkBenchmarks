@@ -6,5 +6,7 @@ pom.xml
 *.jar
 *.class
 /.lein-*
+profiles.clj
 /.env
-*.log
+.nrepl-port
+/log

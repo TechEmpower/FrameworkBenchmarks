@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.request.http.WebResponse;
 
 /**
  * A page that loads all fortune cookies. This mimics the Servlet example
@@ -22,16 +23,17 @@ import org.apache.wicket.markup.html.list.ListView;
  */
 public class FortunePage extends WebPage {
 	private static final long serialVersionUID = 1L;
+	private static final String TEXT_HTML = "text/html;charset=utf-8";
 
 	public FortunePage() throws Exception {
-		List<Fortune> fortunes = new ArrayList<>(10000);
+		List<Fortune> fortunes = new ArrayList<>();
 
 		DataSource dataSource = WicketApplication.get().getDataSource();
 		try ( //
 				Connection connection = dataSource.getConnection();
 				PreparedStatement statement = connection.prepareStatement("SELECT id, message FROM Fortune",
 						ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-				ResultSet resultSet = statement.executeQuery();) {
+				ResultSet resultSet = statement.executeQuery()) {
 
 			while (resultSet.next()) {
 				fortunes.add(new Fortune(resultSet.getInt("id"), resultSet.getString("message")));
@@ -53,5 +55,14 @@ public class FortunePage extends WebPage {
 			}
 		};
 		add(listView);
+	}
+
+	@Override
+	protected void configureResponse(final WebResponse response) {
+		response.setContentType(TEXT_HTML);
+	}
+
+	@Override
+	protected void renderXmlDecl() {
 	}
 }

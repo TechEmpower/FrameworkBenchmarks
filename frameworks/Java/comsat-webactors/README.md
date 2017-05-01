@@ -10,8 +10,9 @@ This is the [Parallel Universe Comsat Web Actors](http://docs.paralleluniverse.c
 
 * Jackson JSON 2.7.0 (https://github.com/FasterXML/jackson)
 * Quasar 0.7.4 (http://docs.paralleluniverse.co/quasar)
-* Comsat 0.6.0-SNAPSHOT (http://docs.paralleluniverse.co/comsat)
-* Netty 4.0.33.Final (http://undertow.io)
+* Comsat 0.7.0 (http://docs.paralleluniverse.co/comsat)
+* Netty 4.0.36.Final (http://netty.io/)
+* Undertow 1.3.19 Final (http://undertow.io)
 
 ## Test URLs
 

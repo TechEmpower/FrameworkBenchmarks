@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/cppsp.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/cppsp.installed
-  return 0; }
+fw_installed cppsp && return 0
 
 VERSION=0.2.3
 CPPSP_HOME=$IROOT/cppsp_$VERSION

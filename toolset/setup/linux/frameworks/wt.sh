@@ -1,9 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/wt.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/wt.installed
-  return 0; }
+fw_installed wt && return 0
 
 BOOST_ROOT=/usr/local
 BOOST_INC=${BOOST_ROOT}/include
@@ -37,10 +34,11 @@ elif [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
     sudo apt-get -y install libboost1.48-all-dev
 fi
 
-fw_get -O http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz
-fw_untar wt-3.3.3.tar.gz
+fw_get -O https://github.com/emweb/wt/archive/3.3.6.tar.gz
+mv 3.3.6.tar.gz wt-3.3.6.tar.gz
+fw_untar wt-3.3.6.tar.gz
 
-cd wt-3.3.3
+cd wt-3.3.6
 mkdir -p build
 cd build
 cmake .. -DWT_CPP_11_MODE=-std=c++0x -DCMAKE_BUILD_TYPE=Release \

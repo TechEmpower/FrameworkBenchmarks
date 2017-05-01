@@ -3,39 +3,48 @@
  * Module dependencies.
  */
 
-var cluster = require('cluster')
-  , numCPUs = require('os').cpus().length
-  , express = require('express')
-  , Sequelize = require('sequelize')
-  , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://localhost/hello_world')
-  , async = require('async');
+const cluster = require('cluster'),
+  numCPUs = require('os').cpus().length,
+  express = require('express'),
+  Sequelize = require('sequelize'),
+  mongoose = require('mongoose'),
+  conn = mongoose.connect('mongodb://TFB-database/hello_world'),
+  async = require('async');
 
 // Middleware
-var bodyParser = require('body-parser')
-  , methodOverride = require('method-override')
-  , errorHandler = require('errorhandler');
+const bodyParser = require('body-parser'),
+  methodOverride = require('method-override'),
+  errorHandler = require('errorhandler');
 
-var Schema = mongoose.Schema
-  , ObjectId = Schema.ObjectId;
+const Schema = mongoose.Schema,
+  ObjectId = Schema.ObjectId;
 
-var WorldSchema = new mongoose.Schema({
+const WorldSchema = new mongoose.Schema({
     id          : Number,
     randomNumber: Number
   }, {
     collection: 'world'
   }),
-  MWorld = conn.model('World', WorldSchema);
+  MWorld = conn.model('world', WorldSchema);
 
-var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: 'localhost',
+const FortuneSchema = new mongoose.Schema({
+    id          : Number,
+    message     : String
+  }, {
+    collection: 'fortune'
+  }),
+  MFortune = conn.model('fortune', FortuneSchema);
+
+const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
+  host: 'TFB-database',
   dialect: 'mysql',
   logging: false
 });
 
-var World = sequelize.define('World', {
+const World = sequelize.define('World', {
   id: {
-    type: 'Sequelize.INTEGER'
+    type: 'Sequelize.INTEGER',
+    primaryKey: true
   },
   randomNumber: {
     type: 'Sequelize.INTEGER'
@@ -44,9 +53,10 @@ var World = sequelize.define('World', {
   timestamps: false,
   freezeTableName: true
 });
-var Fortune = sequelize.define('Fortune', {
+const Fortune = sequelize.define('Fortune', {
   id: {
-    type: 'Sequelize.INTEGER'
+    type: 'Sequelize.INTEGER',
+    primaryKey: true
   },
   message: {
     type: 'Sequelize.STRING'
@@ -58,30 +68,29 @@ var Fortune = sequelize.define('Fortune', {
 
 if (cluster.isMaster) {
   // Fork workers.
-  for (var i = 0; i < numCPUs; i++) {
+  for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
 
-  cluster.on('exit', function(worker, code, signal) {
-    console.log('worker ' + worker.pid + ' died');
-  });
+  cluster.on('exit', (worker, code, signal) =>
+    console.log('worker ' + worker.pid + ' died'));
 } else {
-  var app = module.exports = express();
+  const app = module.exports = express();
 
   // Configuration
   // https://github.com/expressjs/method-override#custom-logic
-  app.use(bodyParser.urlencoded({extended: true}));
-  app.use(methodOverride(function(req, res){
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(methodOverride((req, res) => {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
       // look in urlencoded POST bodies and delete it
-      var method = req.body._method
-      delete req.body._method
-      return method
+      const method = req.body._method;
+      delete req.body._method;
+      return method;
     }
   }));
 
   // Set headers for all routes
-  app.use(function(req, res, next) {
+  app.use((req, res, next) => {
     res.setHeader("Server", "Express");
     return next();
   });
@@ -90,7 +99,7 @@ if (cluster.isMaster) {
   app.set('views', __dirname + '/views');
 
   // Check Node env.
-  var env = process.env.NODE_ENV || 'development';
+  const env = process.env.NODE_ENV || 'development';
   if ('development' == env) {
     app.use(errorHandler({ dumpExceptions: true, showStack: true }));
   }
@@ -99,53 +108,46 @@ if (cluster.isMaster) {
   }
 
   // Routes
+  app.get('/json', (req, res) => res.send({ message: 'Hello, World!' }));
 
-  app.get('/json', function(req, res) {
-    res.send({ message: 'Hello, World!' });
-  });
+  app.get('/plaintext', (req, res) =>
+    res.header('Content-Type', 'text/plain').send('Hello, World!'));
 
-  app.get('/plaintext', function(req, res) {
-    res.header('Content-Type', 'text/plain').send('Hello, World!');
-  });
-  
-  app.get('/mongoose', function(req, res) {
-    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
-      , queryFunctions = [];
+  app.get('/mongoose', (req, res) => {
+    let queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10);
+    const queryFunctions = [];
 
     queries = Math.min(Math.max(queries, 1), 500);
 
-    for (var i = 1; i <= queries; i++ ) {
-      queryFunctions.push(function(callback) {
-        MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) }).exec(callback);
-      });
+    for (let i = 1; i <= queries; i++ ) {
+      queryFunctions.push((callback) =>
+        MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) })
+          .exec(callback));
     }
 
-    async.parallel(queryFunctions, function(err, results) {
-      if (!req.query.queries) {
-        results = results[0];
-      }
-      res.send(results);
-    });
+    async.parallel(queryFunctions, (err, results) =>
+      res.send(!req.query.queries ? results[0] : results));
   });
 
-  app.get('/mysql-orm', function(req, res) {    
-    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
-      , queryFunctions = [];
+  app.get('/mysql-orm', (req, res) => {
+    let queriesRaw = parseInt(req.query.queries, 10),
+      queries = isNaN(queriesRaw) ? 1 : queriesRaw;
+    const queryFunctions = [];
 
     queries = Math.min(Math.max(queries, 1), 500);
 
-    for (var i = 1; i <= queries; i++ ) {
-      queryFunctions.push(function(callback) {
+    for (let i = 1; i <= queries; i++ ) {
+      queryFunctions.push((callback) => {
         World.findOne({
           where: {
             id: Math.floor(Math.random() * 10000) + 1}
           }
-        ).complete(callback);
+        ).then((world) => callback(null, world));
       });
     }
 
-    async.parallel(queryFunctions, function(err, results) {
-      if (!req.query.queries) {
+    async.parallel(queryFunctions, (err, results) => {
+      if (req.query.queries == undefined) {
         results = results[0];
       }
       res.setHeader("Content-Type", "application/json");
@@ -153,36 +155,42 @@ if (cluster.isMaster) {
     });
   });
 
-  app.get('/fortune', function(req, res) {
-    Fortune.findAll().complete(function (err, fortunes) {
-      var newFortune = {id: 0, message: "Additional fortune added at request time."};
+  app.get('/mongoose-fortune', (req, res) => {
+    MFortune.find({}, (err, fortunes) => {
+      const newFortune = {id: 0, message: "Additional fortune added at request time."};
       fortunes.push(newFortune);
-      fortunes.sort(function (a, b) {
-        return (a.message < b.message) ? -1 : 1;
-      });
+      fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
       res.render('fortunes', {fortunes: fortunes});
     });
   });
 
-  app.get('/mongoose-update', function(req, res) {
-    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
-      , selectFunctions = [];
+  app.get('/mysql-orm-fortune', (req, res) => {
+    Fortune.findAll().then((fortunes) => {
+      const newFortune = {id: 0, message: "Additional fortune added at request time."};
+      fortunes.push(newFortune);
+      fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
-    queries = Math.min(queries, 500);
+      res.render('fortunes', {fortunes: fortunes});
+    });
+  });
 
-    for (var i = 1; i <= queries; i++ ) {
-      selectFunctions.push(function(callback) {
-        MWorld.findOne({ id: Math.floor(Math.random() * 10000) + 1 }).exec(callback);
-      });
+  app.get('/mongoose-update', (req, res) => {
+    const selectFunctions = [],
+        queries = Math.min(parseInt(req.query.queries) || 1, 500);
+
+    for (let i = 1; i <= queries; i++ ) {
+      selectFunctions.push((callback) =>
+        MWorld.findOne({ id: Math.floor(Math.random() * 10000) + 1 })
+          .exec(callback));
     }
 
-    async.parallel(selectFunctions, function(err, worlds) {
-      var updateFunctions = [];
+    async.parallel(selectFunctions, (err, worlds) => {
+      const updateFunctions = [];
 
-      for (var i = 0; i < queries; i++) {
-        (function(i){
-          updateFunctions.push(function(callback){
+      for (let i = 0; i < queries; i++) {
+        ((i) => {
+          updateFunctions.push((callback) => {
             worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
             MWorld.update({
               id: worlds[i]
@@ -193,44 +201,38 @@ if (cluster.isMaster) {
         })(i);
       }
 
-      async.parallel(updateFunctions, function(err, updates) {
-        res.send(worlds);
-      });
+      async.parallel(updateFunctions, (err, updates) => res.send(worlds));
     });
   });
 
-  app.get('/mysql-orm-update', function(req, res) {
-    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
-      , selectFunctions = [];
+  app.get('/mysql-orm-update', (req, res) => {
+    const selectFunctions = [],
+        queries = Math.min(parseInt(req.query.queries) || 1, 500);
 
-    queries = Math.max(Math.min(queries, 500), 1);
-
-    for (var i = 1; i <= queries; i++ ) {
-      selectFunctions.push(function(callback) {
+    for (let i = 1; i <= queries; i++ ) {
+      selectFunctions.push((callback) => {
         World.findOne({
           where: {
             id: Math.floor(Math.random() * 10000) + 1}
           }
-        ).complete(callback);
+        ).then((world) => callback(null, world));
       });
     }
 
-    async.parallel(selectFunctions, function(err, worlds) {
-      var updateFunctions = [];
+    async.parallel(selectFunctions, (err, worlds) => {
+      const updateFunctions = [];
 
-      for (var i = 0; i < queries; i++) {
-        (function(i){
-          updateFunctions.push(function(callback){
+      for (let i = 0; i < queries; i++) {
+        ((i) => {
+          updateFunctions.push((callback) => {
             worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
-            worlds[i].save().complete(callback);
+            worlds[i].save().then(callback());
           });
         })(i);
       }
 
-      async.parallel(updateFunctions, function(err, updates) {
-        res.send(worlds);
-      });
-    });  
+      async.parallel(updateFunctions, (err, updates) => res.send(worlds));
+    });
 
   });
 

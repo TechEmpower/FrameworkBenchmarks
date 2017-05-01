@@ -16,14 +16,15 @@
         "database"       : "MySQL",
         "framework"      : "hhvm",
         "language"       : "PHP",
+        "flavor"         : "HHVM",
         "orm"            : "Raw",
-        "platform"       : "hhvm",
-        "webserver"      : "HPHP",
+        "platform"       : "None",
+        "webserver"      : "nginx",
         "os"             : "Linux",
         "database_os"    : "Linux",
         "display_name"   : "hhvm",
         "notes"          : "",
-        "versus"         : "php"
+        "versus"         : "php7"
       }
     }]
 }

@@ -1,0 +1,14 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Web" #>
+<#@ parameter type="System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<int, string>>" name="fortunes" #>
+<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body><table><tr><th>id</th><th>message</th></tr>
+<# for (var i=0; i<fortunes.Count;i++) {
+	var f = fortunes[i]; #>
+<tr><td><# Show(f.Key); #></td><td><# Show(f.Value); #></td></tr>
+<# } #>
+</table>
+</body>
+</html>

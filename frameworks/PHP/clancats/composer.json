@@ -7,19 +7,5 @@
 	"require": {
 		"clancats/core": "2.0.*"
 	},
-	"config": {
-		"vendor-dir": "CCF/vendor"
-	},
-	"scripts": {
-		"post-install-cmd": [
-			"php cli phpunit::build"
-		],
-		"post-update-cmd": [
-			"php cli phpunit::build"
-		],
-		"post-create-project-cmd": [
-			"php cli doctor::security_key"
-		]
-	},
 	"minimum-stability": "stable"
 }

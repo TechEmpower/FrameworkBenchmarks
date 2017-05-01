@@ -1,16 +1,11 @@
 package hellowicket;
 
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.RequestCycleSettings;
 
-import com.zaxxer.hikari.HikariDataSource;
-
-import hellowicket.dbupdates.HelloDbUpdatesReference;
-import hellowicket.fortune.FortunePage;
-import hellowicket.plaintext.HelloTextReference;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 /**
  * Application object for your web application..
@@ -32,14 +27,6 @@ public class WicketApplication extends WebApplication
 
 		db = newDataSource();
 
-		// mount the resources under test
-		mountResource("/json", new HelloJsonReference());
-		mountResource("/db", new HelloDbReference());
-		mountResource("/updates", new HelloDbUpdatesReference());
-		mountResource("/plaintext", new HelloTextReference());
-
-		mountPage("/fortunes", FortunePage.class);
-
 		// disable response caching to be more close to other
 		// test applications' behavior
 		RequestCycleSettings requestCycleSettings = getRequestCycleSettings();
@@ -47,6 +34,8 @@ public class WicketApplication extends WebApplication
 
 		// set UTF-8 for /fortunes test
 		requestCycleSettings.setResponseRequestEncoding("UTF-8");
+
+		setRootRequestMapper(new RequestMapper());
 	}
 
 	@Override
@@ -78,8 +67,6 @@ public class WicketApplication extends WebApplication
 		DataSource dataSource;
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");
-
 			if (useResinDataSource())
 			{
 				InitialContext jndiContext = new InitialContext();
@@ -92,7 +79,7 @@ public class WicketApplication extends WebApplication
 				HikariDataSource ds = new HikariDataSource();
 
 				// use faster DataSource impl
-				ds.setJdbcUrl("jdbc:mysql://localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true");
+				ds.setJdbcUrl("jdbc:mysql://localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts=true&cacheRSMetadata=true&useSSL=false");
 				ds.setDriverClassName("com.mysql.jdbc.Driver");
 				ds.setUsername("benchmarkdbuser");
 				ds.setPassword("benchmarkdbpass");

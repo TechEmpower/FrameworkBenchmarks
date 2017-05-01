@@ -9,6 +9,8 @@ Server {
   Type = fastcgi
   SourceRoot = /tmp/FrameworkBenchmarks/hhvm
   DefaultDocument = index.php
+  GzipCompressionLevel = 0
+  EnableKeepAlive = true
 }
 
 # Enable debug logging

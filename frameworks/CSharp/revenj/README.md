@@ -2,6 +2,7 @@
 
 Revenj HTTP server + DB API + JSON API + PostgreSQL.
 It uses precompiled DSL model for POCO classes.
+It uses T4 Templates for HTML output
 
 ## DSL model
 Data structures are defined in a DSL schema
@@ -19,11 +20,12 @@ Data structures are defined in a DSL schema
  * DB - `http://localhost:8080/bench/db`
  * Queries - `http://localhost:8080/bench/queries/{count}`
  * Updates -  `http://localhost:8080/bench/updates/{count}`
+ * Fortune -  `http://localhost:8080/bench/fortunes`
 
 ## Software Versions
 The tests were run with:
 
  * [Mono 4.2](http://www.mono-project.com/)
- * [.NET 4.0](https://www.microsoft.com/net)
+ * [.NET 4.5](https://www.microsoft.com/net)
  * [Postgres 9.3](http://www.postgresql.org/)
- * [Revenj.NET 1.2.1](http://github.com/ngs-doo/revenj)
+ * [Revenj.NET 1.4.1](http://github.com/ngs-doo/revenj)

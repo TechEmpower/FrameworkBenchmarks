@@ -55,9 +55,9 @@ Ask if you are not certain.
 
 ## Install.sh and Setup.sh Files
 
-Most PHP frameworks use `fw_depends php nginx composer` in their `install.sh` file, 
-which installs PHP, Nginx, and Composer automatically. They then create a `setup.sh`
-containing these lines (comments added to clarify what's happening)
+Most PHP frameworks use `fw_depends php5 nginx composer` in their `install.sh` file, 
+which installs PHP5, Nginx, and Composer automatically. They then create a `setup.sh`
+containing these lines (comments added to clarify what's happening). `fw_depends php7` is now also available.
 
     # Explanation of variables provided by toolset:
     #   FWROOT - absolute path to framework toolset, normally 
@@ -76,7 +76,7 @@ containing these lines (comments added to clarify what's happening)
     #   - php-fpm configuration is located in the config folder found in the 
     #     root of this project
     #   - We tell PHP-FPM to place it's PID file into the deploy folder
-    $PHP_FPM --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
+    $PHP_FPM --fpm-config $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
     # Turn on nginx using the configuration file found in this framework's deploy
     # folder
     $NGINX_HOME/sbin/nginx -c $TROOT/deploy/nginx.conf
@@ -136,9 +136,6 @@ because some gitignore files in this repo contain `*.lock` to avoid Ruby's lock 
 If you are prompted for input during the `run-tests.py` script above, then you
 need to generate your lock file manually so that you may answer the input 
 queries as they are shown. Use these steps
-
-    # Switch to the user that runs tests
-    sudo su testrunner
     
     # Define the environment variables you need (modify as needed)
     export IROOT=/home/you/FrameworkBenchmarks/installs
@@ -166,7 +163,7 @@ when running:
 ### Debugging PHP Frameworks
 
 The first stop for HTTP 500 errors is to enable stack traces. 
-Update `config/php-fpm.conf` to include `php_flag[display_errors] = on`. 
+Update `toolset/setup/linux/languages/php/php-fpm.conf` to include `php_flag[display_errors] = on`. 
 If you don't use php-fpm, update the `config/php.ini`
 
 ## Get Help

@@ -1,7 +1,9 @@
 #!/bin/bash
 
-fw_depends java sbt
+fw_depends mysql java sbt
+
+sbt clean
 
 sbt 'oneJar' -batch
 
-java -jar target/scala-2.11/*fintrospect*one-jar.jar &
+java -Dcom.twitter.finagle.toggle.flag.overrides=com.twitter.http.UseNetty4=1.0 -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts -XX:+AlwaysPreTouch -jar target/scala-2.12/*fintrospect*one-jar.jar &

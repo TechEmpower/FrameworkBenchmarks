@@ -1,7 +1,7 @@
 #!/bin/bash
 
-fw_depends rust
+fw_depends postgresql rust
 
 cargo clean
 cargo build --release
-cargo run --release &
+./target/release/hello &

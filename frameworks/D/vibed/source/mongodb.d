@@ -5,7 +5,7 @@ import vibe.web.web;
 
 import std.conv : ConvException, to;
 import std.random : uniform;
-
+import std.array;
 
 enum worldSize = 10000;
 
@@ -17,7 +17,6 @@ shared static this()
 	router.rebuild();
 
 	auto settings = new HTTPServerSettings;
-	settings.bindAddresses = ["0.0.0.0"];
 	settings.options |= HTTPServerOption.distribute;
 	settings.port = 8080;
 	listenHTTP(settings, router);
@@ -31,8 +30,8 @@ static this()
 {
 	import std.process : environment;
 	auto db = connectMongoDB(environment["DBHOST"]);
-	_worldCollection = db.getCollection("hello_world.World");
-	_fortuneCollection = db.getCollection("hello_world.Fortune");
+	_worldCollection = db.getCollection("hello_world.world");
+	_fortuneCollection = db.getCollection("hello_world.fortune");
 }
 
 class WebInterface {

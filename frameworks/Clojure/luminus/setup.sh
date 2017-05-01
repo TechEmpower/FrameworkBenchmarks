@@ -1,9 +1,9 @@
 #!/bin/bash
 
-fw_depends java resin leiningen
+fw_depends postgresql java resin leiningen
 
 # Update db host in the source file
-sed -i 's|:jdbc-url   "jdbc:postgresql://.*/hello_world|:jdbc-url   "jdbc:postgresql://'"${DBHOST}"':5432/hello_world|g' hello/src/hello/db/core.clj
+sed -i 's|127.0.0.1|'"${DBHOST}"'|g' hello/env/prod/resources/config.edn
 
 cd hello
 lein clean

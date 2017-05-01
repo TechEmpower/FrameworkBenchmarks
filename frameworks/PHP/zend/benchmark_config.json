@@ -3,8 +3,10 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
+      "update_url": "/update?queries=",
       "query_url": "/db-multi?queries=",
       "port": 8080,
       "approach": "Realistic",
@@ -12,14 +14,15 @@
       "database": "MySQL",
       "framework": "Zend",
       "language": "PHP",
+      "flavor": "PHP7",
       "orm": "Full",
-      "platform": "PHP-FPM",
+      "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "zend",
       "notes": "",
-      "versus": "php"
+      "versus": "php7"
     }
   }]
 }

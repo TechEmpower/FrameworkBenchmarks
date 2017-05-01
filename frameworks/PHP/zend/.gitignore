@@ -5,3 +5,5 @@
 /tags
 .idea
 composer.lock
+/data
+/deploy/php-fpm.pid

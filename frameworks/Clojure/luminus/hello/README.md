@@ -1,5 +1,7 @@
 # hello
 
+generated using Luminus version "2.9.10.13"
+
 FIXME
 
 ## Prerequisites

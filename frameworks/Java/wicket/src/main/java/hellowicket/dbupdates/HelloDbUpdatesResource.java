@@ -1,16 +1,15 @@
 package hellowicket.dbupdates;
 
+import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.resource.AbstractResource;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.sql.DataSource;
-
-import org.apache.wicket.request.resource.AbstractResource;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import hellowicket.HelloJsonResponse;
 import hellowicket.WicketApplication;
 import hellowicket.World;
 
@@ -23,8 +22,6 @@ public class HelloDbUpdatesResource extends AbstractResource
   private static final long serialVersionUID = 1L;
 
   private static final int DB_ROWS = 10000;
-
-  private static final ObjectMapper mapper = new ObjectMapper();
 
   protected ResourceResponse newResourceResponse(Attributes attributes)
   {
@@ -40,7 +37,6 @@ public class HelloDbUpdatesResource extends AbstractResource
     final int queries = _queries;
 
     final ResourceResponse response = new ResourceResponse();
-    response.setContentType("application/json");
 
     response.setWriteCallback(new WriteCallback() {
       public void writeData(Attributes attributes)
@@ -78,8 +74,11 @@ public class HelloDbUpdatesResource extends AbstractResource
             }
           }
 
-          String data = HelloDbUpdatesResource.mapper.writeValueAsString(worlds);
-          attributes.getResponse().write(data);
+          byte[] data = HelloJsonResponse.MAPPER.writeValueAsBytes(worlds);
+          final WebResponse webResponse = (WebResponse) attributes.getResponse();
+          webResponse.setContentLength(data.length);
+          webResponse.setContentType(HelloJsonResponse.APPLICATION_JSON);
+          webResponse.write(data);
         }
         catch (Exception ex)
         {
@@ -88,5 +87,9 @@ public class HelloDbUpdatesResource extends AbstractResource
       }
     });
     return response;
+  }
+
+  @Override
+  protected void setResponseHeaders(final ResourceResponse resourceResponse, final Attributes attributes) {
   }
 }

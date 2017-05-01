@@ -5,6 +5,7 @@ from benchmark.test_types import *
 import importlib
 import os
 import subprocess
+import socket
 import time
 import re
 from pprint import pprint
@@ -28,11 +29,12 @@ from datetime import datetime
 from datetime import timedelta
 
 class FrameworkTest:
-  headers_template = "-H 'Host: localhost' -H '{accept}' -H 'Connection: keep-alive'"
- 
+  headers_template = "-H 'Host: localhost' -H 'Accept: {accept}' -H 'Connection: keep-alive'"
+
   # Used for test types that require no pipelining or query string params.
   concurrency_template = """
-    
+
+    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)*4
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
@@ -41,14 +43,14 @@ class FrameworkTest:
     echo ""
     {wrk} {headers} --latency -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
     sleep 5
-    
+
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -63,11 +65,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>$max_threads?$max_threads:$c)) \"http://{server_host}:{port}{url}\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>$max_threads?$max_threads:$c))" http://{server_host}:{port}{url}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -75,7 +77,8 @@ class FrameworkTest:
   """
   # Used for test types that require pipelining.
   pipeline_template = """
-    
+
+    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)*4
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
@@ -84,14 +87,14 @@ class FrameworkTest:
     echo ""
     {wrk} {headers} --latency -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
     sleep 5
-    
+
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -106,21 +109,21 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>$max_threads?$max_threads:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} --latency -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>$max_threads?$max_threads:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
     done
   """
-  # Used for test types that require a database - 
+  # Used for test types that require a database -
   # These tests run at a static concurrency level and vary the size of
   # the query sent with each request
   query_template = """
-    
+    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)*4
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
@@ -129,14 +132,14 @@ class FrameworkTest:
     echo ""
     wrk {headers} --latency -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}2"
     sleep 5
-    
+
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
+    wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads "http://{server_host}:{port}{url}2"
     sleep 5
 
     echo ""
@@ -151,11 +154,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
+      echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads \"http://{server_host}:{port}{url}$c\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
+      wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads "http://{server_host}:{port}{url}$c"
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -164,35 +167,45 @@ class FrameworkTest:
 
   ############################################################
   # start(benchmarker)
-  # Start the test using it's setup file
+  # Start the test using its setup file
   ############################################################
-  def start(self, out, err):
+  def start(self, out):
 
-    # Setup environment variables    
-    logDir = os.path.join(self.fwroot, self.benchmarker.latest_results_directory, 'logs', self.name.lower())
+    # Setup environment variables
+    logDir = os.path.join(self.fwroot, self.benchmarker.full_results_directory(), 'logs', self.name.lower())
     bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
-    setup_util.replace_environ(config='$FWROOT/config/benchmark_profile', 
-              command='''\
-              export TROOT=%s       &&  \
-              export IROOT=%s       &&  \
-              export DBHOST=%s      &&  \
-              export LOGDIR=%s      &&  \
-              export MAX_THREADS=%s &&  \
-              export MAX_CONCURRENCY=%s \
-              ''' % (
-                self.directory, 
-                self.install_root, 
-                self.database_host, 
-                logDir,
-                self.benchmarker.threads,
-                max(self.benchmarker.concurrency_levels)))
 
-    # Always ensure that IROOT belongs to the runner_user
+    os.environ['TROOT'] = self.directory
+    os.environ['IROOT'] = self.install_root
+    os.environ['DBHOST'] = socket.gethostbyname(self.database_host)
+    os.environ['LOGDIR'] = logDir
+    os.environ['MAX_CONCURRENCY'] = str(max(self.benchmarker.concurrency_levels))
+
+    # Always ensure that IROOT exists
     if not os.path.exists(self.install_root):
       os.mkdir(self.install_root)
-    chown = "sudo chown -R %s:%s %s" % (self.benchmarker.runner_user,
-      self.benchmarker.runner_user, os.path.join(self.fwroot, self.install_root))
-    subprocess.check_call(chown, shell=True, cwd=self.fwroot, executable='/bin/bash')
+
+    if not os.path.exists(os.path.join(self.install_root,"TFBReaper")):
+      subprocess.check_call(['gcc', 
+        '-std=c99', 
+        '-o%s/TFBReaper' % self.install_root, 
+        os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')  ],
+        stderr=out, stdout=out)
+
+    # Check that the client is setup
+    if not os.path.exists(os.path.join(self.install_root, 'client.installed')):
+      print("\nINSTALL: Installing client software\n")    
+      # TODO: hax; should dynamically know where this file is
+      with open (self.fwroot + "/toolset/setup/linux/client.sh", "r") as myfile:
+        remote_script=myfile.read()
+        print("\nINSTALL: %s" % self.benchmarker.client_ssh_string)
+        p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
+        p.communicate(remote_script)
+        returncode = p.returncode
+        if returncode != 0:
+          self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
+      print("\nINSTALL: Finished installing client software\n")
+      subprocess.check_call('touch client.installed', shell=True, cwd=self.install_root, executable='/bin/bash')
 
     # Run the module start inside parent of TROOT
     #  - we use the parent as a historical accident, a number of tests
@@ -200,60 +213,36 @@ class FrameworkTest:
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", self.directory)
-      
-    # Run the start script for the test as the "testrunner" user
-    # 
-    # `sudo` - Switching user requires superuser privs
-    #   -u [username] The username
-    #   -E Preserves the current environment variables
-    #   -H Forces the home var (~) to be reset to the user specified
-    # `stdbuf` - Disable buffering, send output to python ASAP
-    #   -o0 zero-sized buffer for stdout
-    #   -e0 zero-sized buffer for stderr
-    # `bash` - Run the setup.sh script using bash
-    #   -e Force bash to exit on first error
-    #   -x Turn on bash tracing e.g. print commands before running
-    #
-    # Most servers do not output to stdout/stderr while serving 
-    # requests so there is no performance hit from disabling 
-    # output buffering. This disabling is necessary to 
-    # a) allow TFB to show output in real time and b) avoid loosing 
-    # output in the buffer when the testrunner processes are forcibly 
-    # killed
-    # 
-    # See http://www.pixelbeat.org/programming/stdio_buffering/
-    # See https://blogs.gnome.org/markmc/2013/06/04/async-io-and-python/
-    # See http://eyalarubas.com/python-subproc-nonblock.html
-    command = 'sudo -u %s -E -H stdbuf -o0 -e0 bash -exc "source %s && source %s.sh"' % (
-      self.benchmarker.runner_user,
-      bash_functions_path, 
+
+    command = 'bash -exc "source %s && source %s.sh"' % (
+      bash_functions_path,
       os.path.join(self.troot, self.setup_file))
-    
+
     debug_command = '''\
       export FWROOT=%s          &&  \\
       export TROOT=%s           &&  \\
       export IROOT=%s           &&  \\
       export DBHOST=%s          &&  \\
       export LOGDIR=%s          &&  \\
-      export MAX_THREADS=%s     &&  \\
       export MAX_CONCURRENCY=%s && \\
       cd %s && \\
-      %s''' % (self.fwroot, 
-        self.directory, 
-        self.install_root, 
-        self.database_host,
-        logDir,
-        self.benchmarker.threads, 
+      %s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\"''' % (self.fwroot,
         self.directory,
+        self.install_root,
+        socket.gethostbyname(self.database_host),
+        logDir,
         max(self.benchmarker.concurrency_levels),
-        command)
+        self.directory,
+        self.install_root,
+        bash_functions_path,
+        os.path.join(self.troot, self.setup_file))
     logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
 
 
     def tee_output(prefix, line):
       # Needs to be one atomic write
-      # Explicitly use UTF-8 as it's the most common framework output 
-      # TODO improve encoding handling 
+      # Explicitly use UTF-8 as it's the most common framework output
+      # TODO improve encoding handling
       line = prefix.encode('utf-8') + line
 
       # Log to current terminal
@@ -265,10 +254,11 @@ class FrameworkTest:
       out.flush()
 
     # Start the setup.sh command
-    p = subprocess.Popen(command, cwd=self.directory, 
-          shell=True, stdout=subprocess.PIPE, 
+    p = subprocess.Popen(["%s/TFBReaper" % self.install_root,command],
+          cwd=self.directory,
+          stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
-    nbsr = setup_util.NonBlockingStreamReader(p.stdout, 
+    nbsr = setup_util.NonBlockingStreamReader(p.stdout,
       "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
 
     # Set a limit on total execution time of setup.sh
@@ -278,30 +268,30 @@ class FrameworkTest:
     # Need to print to stdout once every 10 minutes or Travis-CI will abort
     travis_timeout = datetime.now() + timedelta(minutes = 5)
 
-    # Flush output until setup.sh work is finished. This is 
+    # Flush output until setup.sh work is finished. This is
     # either a) when setup.sh exits b) when the port is bound
-    # c) when we run out of time. Note that 'finished' doesn't 
-    # guarantee setup.sh process is dead - the OS may choose to make 
+    # c) when we run out of time. Note that 'finished' doesn't
+    # guarantee setup.sh process is dead - the OS may choose to make
     # setup.sh a zombie process if it still has living children
     #
-    # Note: child processes forked (using &) will remain alive 
-    # after setup.sh has exited. The will have inherited the 
-    # stdout/stderr descriptors and will be directing their 
-    # output to the pipes. 
+    # Note: child processes forked (using &) will remain alive
+    # after setup.sh has exited. The will have inherited the
+    # stdout/stderr descriptors and will be directing their
+    # output to the pipes.
     #
     prefix = "Setup %s: " % self.name
     while (p.poll() is None
       and not self.benchmarker.is_port_bound(self.port)
       and not time_remaining.total_seconds() < 0):
-      
-      # The conditions above are slow to check, so 
+
+      # The conditions above are slow to check, so
       # we will delay output substantially if we only
-      # print one line per condition check. 
-      # Adding a tight loop here mitigates the effect, 
-      # ensuring that most of the output directly from 
+      # print one line per condition check.
+      # Adding a tight loop here mitigates the effect,
+      # ensuring that most of the output directly from
       # setup.sh is sent to tee_output before the outer
       # loop exits and prints things like "setup.sh exited"
-      # 
+      #
       for i in xrange(10):
         try:
           line = nbsr.readline(0.05)
@@ -323,12 +313,12 @@ class FrameworkTest:
         travis_timeout = datetime.now() + timedelta(minutes = 5)
 
     # Did we time out?
-    if time_remaining.total_seconds() < 0: 
+    if time_remaining.total_seconds() < 0:
       tee_output(prefix, "%s.sh timed out!! Aborting...\n" % self.setup_file)
       p.kill()
       return 1
 
-    # What's our return code? 
+    # What's our return code?
     # If setup.sh has terminated, use that code
     # Otherwise, detect if the port was bound
     tee_output(prefix, "Status: Poll: %s, Port %s bound: %s, Time Left: %s\n" % (
@@ -339,11 +329,11 @@ class FrameworkTest:
     elif self.benchmarker.is_port_bound(self.port):
       tee_output(prefix, "Bound port detected on %s\n" % self.port)
 
-    # Before we return control to the benchmarker, spin up a 
-    # thread to keep an eye on the pipes in case the running 
+    # Before we return control to the benchmarker, spin up a
+    # thread to keep an eye on the pipes in case the running
     # framework uses stdout/stderr. Once all processes accessing
-    # the subprocess.PIPEs are dead, this thread will terminate. 
-    # Use a different prefix to indicate this is the framework 
+    # the subprocess.PIPEs are dead, this thread will terminate.
+    # Use a different prefix to indicate this is the framework
     # speaking
     prefix = "Server %s: " % self.name
     def watch_child_pipes(nbsr, prefix):
@@ -364,83 +354,90 @@ class FrameworkTest:
     logging.info("Executed %s.sh, returning %s", self.setup_file, retcode)
     os.chdir(previousDir)
 
-    return retcode
+    return retcode, p
   ############################################################
   # End start
   ############################################################
 
   ############################################################
   # verify_urls
-  # Verifys each of the URLs for this test. THis will sinply 
-  # curl the URL and check for it's return status. 
+  # Verifys each of the URLs for this test. THis will sinply
+  # curl the URL and check for it's return status.
   # For each url, a flag will be set on this object for whether
   # or not it passed
   # Returns True if all verifications succeeded
   ############################################################
-  def verify_urls(self, out, err):
+  def verify_urls(self, logPath):
     result = True
-    
+
     def verify_type(test_type):
-      
-      test = self.runTests[test_type]
-      test.setup_out_err(out, err)
-      out.write(header("VERIFYING %s" % test_type.upper()))
-      
-      base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
-      
+      verificationPath = os.path.join(logPath, test_type)
       try:
-        results = test.verify(base_url)
-      except ConnectionError as e:
-        results = [('fail',"Server did not respond to request", base_url)]
-        logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
-      except Exception as e:
-        results = [('fail',"""Caused Exception in TFB
-          This almost certainly means your return value is incorrect, 
-          but also that you have found a bug. Please submit an issue
-          including this message: %s\n%s""" % (e, traceback.format_exc()), 
-          base_url)]
-        logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
-        traceback.format_exc()
+        os.makedirs(verificationPath)
+      except OSError:
+        pass
+      with open(os.path.join(verificationPath, 'verification.txt'), 'w') as verification:
+        test = self.runTests[test_type]
+        test.setup_out(verification)
+        verification.write(header("VERIFYING %s" % test_type.upper()))
 
-      test.failed = any(result == 'fail' for (result, reason, url) in results)
-      test.warned = any(result == 'warn' for (result, reason, url) in results)
-      test.passed = all(result == 'pass' for (result, reason, url) in results)
-      
-      def output_result(result, reason, url):
-        specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
-        color = Fore.GREEN
-        if result.upper() == "WARN":
-          color = Fore.YELLOW
-        elif result.upper() == "FAIL":
-          color = Fore.RED
+        base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
 
-        out.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
-        print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
-        if reason is not None and len(reason) != 0:
-          for line in reason.splitlines():
-            out.write("     " + line + '\n')
-            print "     " + line
-          if not test.passed:
-            out.write("     See %s\n" % specific_rules_url)
-            print "     See %s\n" % specific_rules_url
+        try:
+          results = test.verify(base_url)
+        except ConnectionError as e:
+          results = [('fail',"Server did not respond to request", base_url)]
+          logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
+        except Exception as e:
+          results = [('fail',"""Caused Exception in TFB
+            This almost certainly means your return value is incorrect,
+            but also that you have found a bug. Please submit an issue
+            including this message: %s\n%s""" % (e, traceback.format_exc()),
+            base_url)]
+          logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
+          traceback.format_exc()
 
-      [output_result(r1,r2,url) for (r1, r2, url) in results]
+        test.failed = any(result == 'fail' for (result, reason, url) in results)
+        test.warned = any(result == 'warn' for (result, reason, url) in results)
+        test.passed = all(result == 'pass' for (result, reason, url) in results)
 
-      if test.failed:
-        self.benchmarker.report_verify_results(self, test_type, 'fail')
-      elif test.warned:
-        self.benchmarker.report_verify_results(self, test_type, 'warn')
-      elif test.passed:
-        self.benchmarker.report_verify_results(self, test_type, 'pass')
-      else:
-        raise Exception("Unknown error - test did not pass,warn,or fail")
+        def output_result(result, reason, url):
+          specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
+          color = Fore.GREEN
+          if result.upper() == "WARN":
+            color = Fore.YELLOW
+          elif result.upper() == "FAIL":
+            color = Fore.RED
+
+          verification.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
+          print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
+          if reason is not None and len(reason) != 0:
+            for line in reason.splitlines():
+              verification.write("     " + line + '\n')
+              print "     " + line
+            if not test.passed:
+              verification.write("     See %s\n" % specific_rules_url)
+              print "     See %s\n" % specific_rules_url
+
+        [output_result(r1,r2,url) for (r1, r2, url) in results]
+
+        if test.failed:
+          self.benchmarker.report_verify_results(self, test_type, 'fail')
+        elif test.warned:
+          self.benchmarker.report_verify_results(self, test_type, 'warn')
+        elif test.passed:
+          self.benchmarker.report_verify_results(self, test_type, 'pass')
+        else:
+          raise Exception("Unknown error - test did not pass,warn,or fail")
+
+        verification.flush()
 
     result = True
     for test_type in self.runTests:
       verify_type(test_type)
       if self.runTests[test_type].failed:
         result = False
-    
+
     return result
   ############################################################
   # End verify_urls
@@ -451,53 +448,59 @@ class FrameworkTest:
   # Runs the benchmark for each type of test that it implements
   # JSON/DB/Query.
   ############################################################
-  def benchmark(self, out, err):
+  def benchmark(self, logPath):
 
-    def benchmark_type(test_type):  
-      out.write("BENCHMARKING %s ... " % test_type.upper())
+    def benchmark_type(test_type):
+      benchmarkPath = os.path.join(logPath, test_type)
+      try:
+        os.makedirs(benchmarkPath)
+      except OSError:
+        pass
+      with open(os.path.join(benchmarkPath, 'benchmark.txt'), 'w') as out:
+        out.write("BENCHMARKING %s ... " % test_type.upper())
 
-      test = self.runTests[test_type]
-      test.setup_out_err(out, err)
-      output_file = self.benchmarker.output_file(self.name, test_type)
-      if not os.path.exists(output_file):
-        # Open to create the empty file
-        with open(output_file, 'w'):
-          pass
+        test = self.runTests[test_type]
+        test.setup_out(out)
+        output_file = self.benchmarker.output_file(self.name, test_type)
+        if not os.path.exists(output_file):
+          # Open to create the empty file
+          with open(output_file, 'w'):
+            pass
 
-      if not test.failed:
-        if test_type == 'plaintext': # One special case
-          remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
-        elif test_type == 'query' or test_type == 'update':
-          remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
-        else:
-          remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
-        
-        # Begin resource usage metrics collection
-        self.__begin_logging(test_type)
-        
-        # Run the benchmark 
-        with open(output_file, 'w') as raw_file:
-          p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=err)
-          p.communicate(remote_script)
-          err.flush()
+        if not test.failed:
+          if test_type == 'plaintext': # One special case
+            remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
+          elif test_type == 'query' or test_type == 'update':
+            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
+          else:
+            remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
 
-        # End resource usage metrics collection
-        self.__end_logging()
+          # Begin resource usage metrics collection
+          self.__begin_logging(test_type)
 
-      results = self.__parse_test(test_type)
-      print "Benchmark results:"
-      pprint(results)
+          # Run the benchmark
+          with open(output_file, 'w') as raw_file:
+            p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=raw_file)
+            p.communicate(remote_script)
+            out.flush()
 
-      self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
-      out.write( "Complete\n" )
-      out.flush()
-    
+          # End resource usage metrics collection
+          self.__end_logging()
+
+        results = self.__parse_test(test_type)
+        print "Benchmark results:"
+        pprint(results)
+
+        self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
+        out.write( "Complete\n" )
+        out.flush()
+
     for test_type in self.runTests:
       benchmark_type(test_type)
   ############################################################
   # End benchmark
   ############################################################
-  
+
   ############################################################
   # parse_all
   # Method meant to be run for a given timestamp
@@ -520,7 +523,7 @@ class FrameworkTest:
       results = dict()
       results['results'] = []
       stats = []
-      
+
       if os.path.exists(self.benchmarker.get_output_file(self.name, test_type)):
         with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
           is_warmup = True
@@ -543,7 +546,7 @@ class FrameworkTest:
               #if "Requests/sec:" in line:
               #  m = re.search("Requests/sec:\s+([0-9]+)", line)
               #  rawData['reportedResults'] = m.group(1)
-                
+
               # search for weighttp data such as succeeded and failed.
               if "Latency" in line:
                 m = re.findall("([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
@@ -552,7 +555,7 @@ class FrameworkTest:
                   rawData['latencyStdev'] = m[1]
                   rawData['latencyMax'] = m[2]
               #    rawData['latencyStdevPercent'] = m[3]
-              
+
               #if "Req/Sec" in line:
               #  m = re.findall("([0-9]+\.*[0-9]*[k|%]*)", line)
               #  if len(m) == 4:
@@ -560,10 +563,10 @@ class FrameworkTest:
               #    rawData['requestsStdev'] = m[1]
               #    rawData['requestsMax'] = m[2]
               #    rawData['requestsStdevPercent'] = m[3]
-                
+
               #if "requests in" in line:
               #  m = re.search("requests in ([0-9]+\.*[0-9]*[ms|s|m|h]+)", line)
-              #  if m != None: 
+              #  if m != None:
               #    # parse out the raw time, which may be in minutes or seconds
               #    raw_time = m.group(1)
               #    if "ms" in raw_time:
@@ -574,12 +577,12 @@ class FrameworkTest:
               #      rawData['total_time'] = float(raw_time[:len(raw_time)-1]) * 60.0
               #    elif "h" in raw_time:
               #      rawData['total_time'] = float(raw_time[:len(raw_time)-1]) * 3600.0
-             
+
               if "requests in" in line:
                 m = re.search("([0-9]+) requests in", line)
-                if m != None: 
+                if m != None:
                   rawData['totalRequests'] = int(m.group(1))
-              
+
               if "Socket errors" in line:
                 if "connect" in line:
                   m = re.search("connect ([0-9]+)", line)
@@ -593,10 +596,10 @@ class FrameworkTest:
                 if "timeout" in line:
                   m = re.search("timeout ([0-9]+)", line)
                   rawData['timeout'] = int(m.group(1))
-              
+
               if "Non-2xx" in line:
                 m = re.search("Non-2xx or 3xx responses: ([0-9]+)", line)
-                if m != None: 
+                if m != None:
                   rawData['5xx'] = int(m.group(1))
               if "STARTTIME" in line:
                 m = re.search("[0-9]+", line)
@@ -627,9 +630,9 @@ class FrameworkTest:
   ############################################################
   def __generate_concurrency_script(self, url, port, accept_header, wrk_command="wrk"):
     headers = self.headers_template.format(accept=accept_header)
-    return self.concurrency_template.format(max_concurrency=max(self.benchmarker.concurrency_levels), 
-      max_threads=self.benchmarker.threads, name=self.name, duration=self.benchmarker.duration, 
-      levels=" ".join("{}".format(item) for item in self.benchmarker.concurrency_levels), 
+    return self.concurrency_template.format(max_concurrency=max(self.benchmarker.concurrency_levels),
+      name=self.name, duration=self.benchmarker.duration,
+      levels=" ".join("{}".format(item) for item in self.benchmarker.concurrency_levels),
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command)
 
   ############################################################
@@ -639,9 +642,9 @@ class FrameworkTest:
   ############################################################
   def __generate_pipeline_script(self, url, port, accept_header, wrk_command="wrk"):
     headers = self.headers_template.format(accept=accept_header)
-    return self.pipeline_template.format(max_concurrency=16384, 
-      max_threads=self.benchmarker.threads, name=self.name, duration=self.benchmarker.duration, 
-      levels=" ".join("{}".format(item) for item in [256,1024,4096,16384]), 
+    return self.pipeline_template.format(max_concurrency=16384,
+      name=self.name, duration=self.benchmarker.duration,
+      levels=" ".join("{}".format(item) for item in [256,1024,4096,16384]),
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command,
       pipeline=16)
 
@@ -653,9 +656,9 @@ class FrameworkTest:
   ############################################################
   def __generate_query_script(self, url, port, accept_header):
     headers = self.headers_template.format(accept=accept_header)
-    return self.query_template.format(max_concurrency=max(self.benchmarker.concurrency_levels), 
-      max_threads=self.benchmarker.threads, name=self.name, duration=self.benchmarker.duration, 
-      levels=" ".join("{}".format(item) for item in self.benchmarker.query_levels), 
+    return self.query_template.format(max_concurrency=max(self.benchmarker.concurrency_levels),
+      name=self.name, duration=self.benchmarker.duration,
+      levels=" ".join("{}".format(item) for item in self.benchmarker.query_levels),
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers)
 
   ############################################################
@@ -672,16 +675,16 @@ class FrameworkTest:
   ############################################################
   def __begin_logging(self, test_type):
     output_file = "{file_name}".format(file_name=self.benchmarker.get_stats_file(self.name, test_type))
-    dstat_string = "dstat -afilmprsT --aio --fs --ipc --lock --raw --socket --tcp \
+    dstat_string = "dstat -Tafilmprs --aio --fs --ipc --lock --raw --socket --tcp \
                                       --raw --socket --tcp --udp --unix --vm --disk-util \
                                       --rpc --rpcd --output {output_file}".format(output_file=output_file)
     cmd = shlex.split(dstat_string)
     dev_null = open(os.devnull, "w")
-    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null)
+    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null, stderr=subprocess.STDOUT)
 
   ##############################################################
   # Begin __end_logging
-  # Stops the logger thread and blocks until shutdown is complete. 
+  # Stops the logger thread and blocks until shutdown is complete.
   ##############################################################
   def __end_logging(self):
     self.subprocess_handle.terminate()
@@ -732,7 +735,7 @@ class FrameworkTest:
   ##############################################################
 
   def __getattr__(self, name):
-    """For backwards compatibility, we used to pass benchmarker 
+    """For backwards compatibility, we used to pass benchmarker
     as the argument to the setup.sh files"""
     try:
       x = getattr(self.benchmarker, name)
@@ -754,13 +757,13 @@ class FrameworkTest:
   # More may be added in the future. If they are, please update
   # the above list.
   # Note: raw_stats is directly from the __parse_stats method.
-  # Recall that this consists of a dictionary of timestamps, 
+  # Recall that this consists of a dictionary of timestamps,
   # each of which contain a dictionary of stat categories which
   # contain a dictionary of stats
   ##############################################################
   def __calculate_average_stats(self, raw_stats):
     raw_stat_collection = dict()
-    
+
     for timestamp, time_dict in raw_stats.items():
       for main_header, sub_headers in time_dict.items():
         item_to_append = None
@@ -814,10 +817,10 @@ class FrameworkTest:
   # End __calculate_average_stats
   #########################################################################################
 
-          
+
   ##########################################################################################
   # Constructor
-  ##########################################################################################  
+  ##########################################################################################
   def __init__(self, name, directory, benchmarker, runTests, args):
     self.name = name
     self.directory = directory
@@ -837,15 +840,13 @@ class FrameworkTest:
     self.display_name = ""
     self.notes = ""
     self.versus = ""
-    
+
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
-    
-    self.install_root="%s/%s" % (self.fwroot, "installs")
-    if benchmarker.install_strategy is 'pertest':
-      self.install_root="%s/pertest/%s" % (self.install_root, name)
 
-    # Used in setup.sh scripts for consistency with 
+    self.install_root="%s/%s" % (self.fwroot, "installs")
+
+    # Used in setup.sh scripts for consistency with
     # the bash environment variables
     self.troot = self.directory
     self.iroot = self.install_root
@@ -892,7 +893,7 @@ def validate_urls(test_name, test_keys):
         Example `%s` url: \"%s\"
       """ % (test_url, test_name, key_value, test_url, example_urls[test_url])
       raise Exception(errmsg)
- 
+
 
 def validate_test(test_name, test_keys, directory):
   """
@@ -903,7 +904,7 @@ def validate_test(test_name, test_keys, directory):
     test_keys['framework'] = config['framework']
 
   recommended_lang = directory.split('/')[-2]
-  windows_url = "https://github.com/TechEmpower/FrameworkBenchmarks/milestones/Windows%%20Compatibility"
+  windows_url = "https://github.com/TechEmpower/FrameworkBenchmarks/issues/1038"
   schema = {
     'language': {
       'help': ('language', 'The language of the framework used, suggestion: %s' % recommended_lang)
@@ -986,17 +987,17 @@ def validate_test(test_name, test_keys, directory):
       allowed = schema[key].get('allowed', [])
       acceptable_values, descriptors = zip(*allowed)
       acceptable_values = [a.lower() for a in acceptable_values]
-      
+
       if val not in acceptable_values:
         msg = ("Invalid `%s` value specified for test \"%s\" in framework \"%s\"; suggestions:\n"
-          % (key, test_name, config['framework']))
+          % (key, test_name, test_keys['framework']))
         helpinfo = ('\n').join(["  `%s` -- %s" % (v, desc) for (v, desc) in zip(acceptable_values, descriptors)])
         fullerr = msg + helpinfo + "\n"
         raise Exception(fullerr)
-    
+
     elif not has_predefined_acceptables and val == "":
       msg = ("Value for `%s` in test \"%s\" in framework \"%s\" was missing:\n"
-        % (key, test_name, config['framework']))
+        % (key, test_name, test_keys['framework']))
       helpinfo = "  %s -- %s" % schema[key]['help']
       fullerr = msg + helpinfo + '\n'
       raise Exception(fullerr)
@@ -1014,13 +1015,13 @@ def parse_config(config, directory, benchmarker):
     tests_to_run = [name for (name,keys) in test.iteritems()]
     if "default" not in tests_to_run:
       logging.warn("Framework %s does not define a default test in benchmark_config.json", config['framework'])
-    
+
     # Check that each test configuration is acceptable
     # Throw exceptions if a field is missing, or how to improve the field
     for test_name, test_keys in test.iteritems():
       # Validates the benchmark_config entry
       validate_test(test_name, test_keys, directory)
-      
+
       # Map test type to a parsed FrameworkTestType object
       runTests = dict()
       for type_name, type_obj in benchmarker.types.iteritems():
@@ -1030,7 +1031,7 @@ def parse_config(config, directory, benchmarker):
           runTests[type_name] = type_obj.copy().parse(test_keys)
         except AttributeError as ae:
           # This is quite common - most tests don't support all types
-          # Quitely log it and move on (debug logging is on in travis and this causes 
+          # Quitely log it and move on (debug logging is on in travis and this causes
           # ~1500 lines of debug, so I'm totally ignoring it for now
           # logging.debug("Missing arguments for test type %s for framework test %s", type_name, test_name)
           pass
@@ -1043,10 +1044,10 @@ def parse_config(config, directory, benchmarker):
 
       # Prefix all test names with framework except 'default' test
       # Done at the end so we may still refer to the primary test as `default` in benchmark config error messages
-      if test_name == 'default': 
+      if test_name == 'default':
         test_name = config['framework']
       else:
-        test_name = "%s-%s" % (config['framework'], test_name) 
+        test_name = "%s-%s" % (config['framework'], test_name)
 
       # By passing the entire set of keys, each FrameworkTest will have a member for each key
       tests.append(FrameworkTest(test_name, directory, benchmarker, sortedRunTests, test_keys))

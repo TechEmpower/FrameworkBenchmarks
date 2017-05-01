@@ -42,13 +42,10 @@ module App
         results = begin
           results = (1..queries).map do
             id = Random.rand(10000) + 1
+            num = Random.rand(10000) + 1
+            client.query("UPDATE World SET randomNumber = " + num.to_s + " WHERE id = " + id.to_s)
             client.query("SELECT * FROM World WHERE id = " + id.to_s).first
           end
-
-          #mass update
-          values = results.map { |h| ['(', h['id'], ',' ,Random.rand(10000) + 1, ')', ','] }.flatten[0..-2].join
-          sql = "INSERT INTO `World` (`id`,`randomNumber`) VALUES #{values} ON DUPLICATE KEY UPDATE `World`.`randomNumber` = VALUES(`randomNumber`)"
-          client.query(sql)
 
           results
         ensure

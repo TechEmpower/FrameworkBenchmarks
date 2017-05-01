@@ -1,32 +1,30 @@
 [Defaults]
-# Available Keys: 
-client_host=127.0.0.1
-client_identity_file=None
+# Available Keys:
+os=linux
+server_host=TFB-server
+client_host=TFB-client
+client_identity_file=/home/techempower/.ssh/id_rsa
 client_user=techempower
-runner_user=testrunner
-database_host=127.0.0.1
-database_identity_file=None
+database_host=TFB-database
+database_identity_file=/home/techempower/.ssh/id_rsa
 database_os=linux
 database_user=techempower
-duration=60
+duration=15
 exclude=None
 install=server
 install_error_action=continue
 install_strategy=unified
 install_only=False
-list_test_metadata=False
 list_tests=False
 concurrency_levels=[8, 16, 32, 64, 128, 256]
 query_levels=[1, 5,10,15,20]
-threads=8
 mode=benchmark
-name=ec2
-os=linux
-password_prompt=False
-server_host=127.0.0.1
 sleep=60
 test=None
 type=all
 verbose=True
 clean=False
 clean_all=False
+#results_name=My Benchmarking Run %%Y-%%m-%%d %%H:%%M:%%S
+#results_environment=My Server Environment
+#results_upload_uri=https://example.com/uploads

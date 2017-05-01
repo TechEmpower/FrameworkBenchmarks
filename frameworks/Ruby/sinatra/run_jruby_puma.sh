@@ -1,7 +1,13 @@
 #!/bin/bash
 
-fw_depends rvm jruby-1.7
+THREAD_FACTOR=1
 
-rvm jruby-$JRUBY_VERSION do bundle install --jobs=4 --gemfile=$TROOT/Gemfile --path=vendor/bundle
+. $(dirname $0)/config/common_run.sh
 
-DB_HOST=${DBHOST} rvm jruby-$JRUBY_VERSION do bundle exec puma -C config/puma.rb &
+fw_depends $DBTYPE rvm jruby-9.1
+
+rvm use jruby-$JRUBY_VERSION
+
+. $(dirname $0)/config/bundle_install.sh
+
+bundle exec puma -t $MAX_CONCURRENCY:$MAX_CONCURRENCY -b tcp://0.0.0.0:8080 -e production &

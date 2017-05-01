@@ -1,8 +1,6 @@
 #!/bin/bash
 
-sed -i 's|#define BENCHMARK_DB_HOST ".*"|#define BENCHMARK_DB_HOST "'"$DBHOST"'"|g' www/connectioninfo.H
-
-fw_depends cppsp
+fw_depends postgresql-server-dev-9.3 cppsp
 
 make clean
 make

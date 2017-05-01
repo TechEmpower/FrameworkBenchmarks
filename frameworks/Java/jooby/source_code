@@ -6,3 +6,5 @@
 ./jooby/src/main/java
 ./jooby/src/main/java/com/techempower
 ./jooby/src/main/java/com/techempower/App.java
+./jooby/src/main/java/com/techempower/AbstractFortune.java
+./jooby/src/main/java/com/techempower/AbstractWorld.java

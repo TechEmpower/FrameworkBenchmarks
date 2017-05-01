@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends nginx xsp mono
+fw_depends mysql nginx mono
 
 sed -i 's|localhost|'"${DBHOST}"'|g' src/Web.config
 sed -i 's|include /usr/local/nginx/conf/fastcgi_params;|include '"${NGINX_HOME}"'/conf/fastcgi_params;|g' nginx.conf
@@ -12,7 +12,7 @@ xbuild src/NancyBenchmark.csproj /p:Configuration=Release
 
 # nginx
 port_start=9001
-port_end=$((${port_start}+${MAX_THREADS}))
+port_end=$((${port_start}+${CPU_COUNT}))
 conf="upstream mono {\n"
 for port in $(seq ${port_start} $port_end); do
   conf+="\tserver 127.0.0.1:${port};\n"
@@ -27,7 +27,7 @@ echo "include $IROOT/nginx/conf/fastcgi_params;" > $TROOT/nginx.osenv.conf
 
 
 echo -e $conf > $TROOT/nginx.upstream.conf
-${NGINX_HOME}/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes '"${MAX_THREADS}"';"
+${NGINX_HOME}/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes '"${CPU_COUNT}"';"
 
 # Start fastcgi for each thread
 # To debug, use --printlog --verbose --loglevels=All

@@ -1,4 +1,4 @@
-#define BENCHMARK_DB_HOST "localhost"
+#define BENCHMARK_DB_HOST "TFB-database"
 #define MYSQL_MAX_CONNECTIONS 3000
 
 #include <stdexcept>

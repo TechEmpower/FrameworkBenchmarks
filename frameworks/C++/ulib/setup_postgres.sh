@@ -1,8 +1,8 @@
 #!/bin/bash
 
-fw_depends ulib
+fw_depends postgresql ulib
 
-MAX_THREADS=$(( 2 * $MAX_THREADS ))
+MAX_THREADS=$(( 2 * $CPU_COUNT ))
 
 # 1. Change ULib Server (userver_tcp) configuration
 sed -i "s|TCP_LINGER_SET .*|TCP_LINGER_SET -2|g"								  $IROOT/ULib/benchmark.cfg

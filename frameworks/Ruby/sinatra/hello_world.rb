@@ -1,91 +1,104 @@
-require 'active_record'
-Bundler.require :default
+# frozen_string_literal: true
 
-set :logging, false
-ActiveRecord::Base.logger = nil
-set :activerecord_logger, nil
-set :static, false
-set :template_engine, :slim
-Slim::Engine.set_default_options format: :html5, sort_attrs: false
+# Our Rack application to be executed by rackup
+class HelloWorld < Sinatra::Base
+  configure do
+    # Static file serving is ostensibly disabled in modular mode but Sinatra
+    # still calls an expensive Proc on every request...
+    disable :static
 
-# Specify the encoder - otherwise, sinatra/json inefficiently
-# attempts to load one of several on each request
-set :json_encoder => :to_json
+    # XSS, CSRF, IP spoofing, etc. protection are not explicitly required
+    disable :protection
 
-# Don't prefix JSON results with { "world": {...} }
-ActiveRecord::Base.include_root_in_json = false
-
-db_config = { :database => 'hello_world', :username => 'benchmarkdbuser', :password => 'benchmarkdbpass', :pool => 256, :timeout => 5000 }
-adapter = RUBY_PLATFORM == 'java' ? 'jdbcmysql' : 'mysql2'
-set :database, db_config.merge(:adapter => adapter, :host => ENV['DB_HOST'])
-
-# The sinatra-activerecord gem registers before and after filters that
-# call expensive synchronized ActiveRecord methods on every request to
-# verify every connection in the pool, even for routes that don't use
-# the database. Clear those filters and handle connection management
-# ourselves, which is what applications seeking high throughput with
-# ActiveRecord need to do anyway.
-settings.filters[:before].clear
-settings.filters[:after].clear
-
-class World < ActiveRecord::Base
-  self.table_name = "World"
-end
-
-class Fortune < ActiveRecord::Base
-  self.table_name = "Fortune"
-end
-
-get '/json' do
-  json :message => 'Hello, World!'
-end
-
-get '/plaintext' do
-  content_type 'text/plain'
-  'Hello, World!'
-end
-
-get '/db' do
-  worlds = ActiveRecord::Base.connection_pool.with_connection do
-    World.find(Random.rand(10000) + 1)
+    # Only add the charset parameter to specific content types per the requirements
+    set :add_charset, [mime_type(:html)]
   end
-  json(worlds)
-end
 
-get '/queries' do
-  queries = (params[:queries] || 1).to_i
-  queries = 1 if queries < 1
-  queries = 500 if queries > 500
+  helpers do
+    def bounded_queries
+      queries = params[:queries].to_i
+      return QUERIES_MIN if queries < QUERIES_MIN
+      return QUERIES_MAX if queries > QUERIES_MAX
+      queries
+    end
 
-  worlds = ActiveRecord::Base.connection_pool.with_connection do
-    (1..queries).map do
-      World.find(Random.rand(10000) + 1)
+    def json(data)
+      content_type :json
+      JSON.fast_generate(data)
+    end
+
+    # Return a random number between 1 and MAX_PK
+    def rand1
+      rand(MAX_PK).succ
     end
   end
-  json(worlds)
-end
 
-get '/fortunes' do
-  @fortunes = Fortune.all
-  @fortunes << Fortune.new(:id => 0, :message => "Additional fortune added at request time.")
-  @fortunes = @fortunes.sort_by { |x| x.message }
-
-  slim :fortunes
-end
-
-get '/updates' do
-  queries = (params[:queries] || 1).to_i
-  queries = 1 if queries < 1
-  queries = 500 if queries > 500
-
-  worlds = ActiveRecord::Base.connection_pool.with_connection do
-    worlds = (1..queries).map do
-      world = World.find(Random.rand(10000) + 1)
-      world.randomNumber = Random.rand(10000) + 1
-      world
-    end
-    World.import worlds, :on_duplicate_key_update => [:randomNumber]
-    worlds
+  after do
+    response['Date'] = Time.now.httpdate
   end
-  json(worlds)
+
+  after do
+    response['Server'] = SERVER_STRING
+  end if SERVER_STRING
+
+  # Test type 1: JSON serialization
+  get '/json' do
+     json :message=>'Hello, World!'
+  end
+
+  # Test type 2: Single database query
+  get '/db' do
+    world =
+      ActiveRecord::Base.connection_pool.with_connection do
+        World.find(rand1).attributes
+      end
+
+    json world
+  end
+
+  # Test type 3: Multiple database queries
+  get '/queries' do
+    worlds =
+      ActiveRecord::Base.connection_pool.with_connection do
+        Array.new(bounded_queries) do
+          World.find(rand1)
+        end
+      end
+
+    json worlds.map!(&:attributes)
+  end
+
+  # Test type 4: Fortunes
+  get '/fortunes' do
+    @fortunes = ActiveRecord::Base.connection_pool.with_connection do
+      Fortune.all
+    end.to_a
+    @fortunes << Fortune.new(
+      :id=>0,
+      :message=>'Additional fortune added at request time.'
+    )
+    @fortunes.sort_by!(&:message)
+
+    erb :fortunes, :layout=>true
+  end
+
+  # Test type 5: Database updates
+  get '/updates' do
+    worlds =
+      ActiveRecord::Base.connection_pool.with_connection do
+        Array.new(bounded_queries) do
+          world = World.find(rand1)
+          world.update(:randomnumber=>rand1)
+          world
+        end
+      end
+
+    json worlds.map!(&:attributes)
+  end
+
+  # Test type 6: Plaintext
+  get '/plaintext' do
+    content_type :text
+    'Hello, World!'
+  end
 end

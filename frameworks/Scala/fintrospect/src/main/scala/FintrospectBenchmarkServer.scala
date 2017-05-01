@@ -1,47 +1,44 @@
-import java.time.ZonedDateTime._
-import java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME
+import java.util.TimeZone.getTimeZone
 
-import com.twitter.finagle.http.Method.Get
-import com.twitter.finagle.http.Request
-import com.twitter.finagle.http.Status._
 import com.twitter.finagle.http.path.Root
+import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.stats.NullStatsReceiver
 import com.twitter.finagle.tracing.NullTracer
-import com.twitter.finagle.{Http, Service}
-import com.twitter.util.Await
-import io.circe._
-import io.circe.generic.auto._
-import io.circe.parser._
-import io.circe.syntax._
-import io.fintrospect.formats.json.Circe.ResponseBuilder._
-import io.fintrospect.formats.json.Circe.JsonFormat._
-import io.fintrospect.formats.json.Circe.ResponseBuilder._
-import io.fintrospect.{ModuleSpec, RouteSpec}
+import com.twitter.finagle.{Filter, Http}
+import com.twitter.util.{Await, NullMonitor}
+import io.fintrospect.RouteModule
+import io.fintrospect.configuration.Host
+import org.apache.commons.lang.time.FastDateFormat.getInstance
+
+import scala.util.Properties
 
 object FintrospectBenchmarkServer extends App {
 
-  val plainTextHelloWorld = {
-    import io.fintrospect.formats.PlainText.ResponseBuilder._
-    Service.mk { r: Request => Ok("Hello, World!")
-      .withHeaders("Server" -> "Example", "Date" -> RFC_1123_DATE_TIME.format(now()))
-    }
+  val dateFormat = getInstance("EEE, d MMM yyyy HH:mm:ss 'GMT'", getTimeZone("GMT"))
+
+  val addServerAndDate = Filter.mk[Request, Response, Request, Response] { (req, svc) =>
+    svc(req).map(resp => {
+      resp.headerMap("Server") = "Example"
+      resp.headerMap("Date") = dateFormat.format(System.currentTimeMillis())
+      resp
+    })
   }
 
-  case class Message(message: String)
+  val dbHost = Properties.envOrNone("DBHOST").map(Host(_)).getOrElse(Host.localhost)
+  val database = Database(dbHost)
 
-  val jsonHelloWorld = Service.mk { r: Request => Ok(encode(Message("Hello, World!")))
-    .withHeaders("Server" -> "Example", "Date" -> RFC_1123_DATE_TIME.format(now()))
-  }
-
-  val module = ModuleSpec(Root)
-    .withRoute(RouteSpec().at(Get) / "plaintext" bindTo plainTextHelloWorld)
-    .withRoute(RouteSpec().at(Get) / "json" bindTo jsonHelloWorld)
+  val module = RouteModule(Root)
+    .withRoute(JsonRoute())
+    .withRoute(PlainTextRoute())
+    .withRoute(FortunesRoute(database))
+    .withRoutes(DatabaseRoutes(database))
 
   Await.ready(
     Http.server
       .withCompressionLevel(0)
       .withStatsReceiver(NullStatsReceiver)
       .withTracer(NullTracer)
-      .serve(":9000", module.toService)
+      .withMonitor(NullMonitor)
+      .serve(":9000", addServerAndDate.andThen(module.toService))
   )
 }

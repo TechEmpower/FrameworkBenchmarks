@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Revenj.Bench</RootNamespace>
     <AssemblyName>Revenj.Bench</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,43 +31,24 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Revenj.Api.Interface">
+    <Reference Include="Revenj.Api.Interface" >
       <HintPath>..\exe\Revenj.Api.Interface.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="Revenj.DatabasePersistence.Interface">
-      <HintPath>..\exe\Revenj.DatabasePersistence.Interface.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Revenj.Core" >
+      <HintPath>..\exe\Revenj.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Revenj.DatabasePersistence.Postgres">
-      <HintPath>..\exe\Revenj.DatabasePersistence.Postgres.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Revenj.Core.Interface" >
+      <HintPath>..\exe\Revenj.Core.Interface.dll</HintPath>
     </Reference>
-    <Reference Include="Revenj.DomainPatterns.Interface">
-      <HintPath>..\exe\Revenj.DomainPatterns.Interface.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Revenj.Http">
+      <HintPath>..\exe\Revenj.Http.exe</HintPath>
+      <ExecutableExtension>.exe</ExecutableExtension>
     </Reference>
-    <Reference Include="Revenj.Extensibility.Interface">
-      <HintPath>..\exe\Revenj.Extensibility.Interface.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Revenj.Processing">
+    <Reference Include="Revenj.Processing" >
       <HintPath>..\exe\Revenj.Processing.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Revenj.Serialization">
-      <HintPath>..\exe\Revenj.Serialization.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Revenj.Serialization.Interface">
-      <HintPath>..\exe\Revenj.Serialization.Interface.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Revenj.Utility">
-      <HintPath>..\exe\Revenj.Utility.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="ServerModel">
       <HintPath>..\exe\ServerModel.dll</HintPath>
@@ -75,9 +58,16 @@
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context.cs" />
+    <Compile Include="Fortunes.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Fortunes.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FortuneTemplate.cs" />
     <Compile Include="RestService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -85,10 +75,17 @@
       <Link>Revenj.Http.exe.config</Link>
       <SubType>Designer</SubType>
     </None>
+    <None Include="Fortunes.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>Fortunes.cs</LastGenOutput>
+    </None>
     <None Include="model.dsl" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

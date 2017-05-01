@@ -1,0 +1,27 @@
+<!--
+ | Logback configuration
+ !-->
+<configuration>
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <Pattern>%d{HH:mm:ss.SSS} %highlight(%-5p) %magenta([%-18.18t]) %-30c{30} | %m%n</Pattern>
+    </encoder>
+  </appender>
+
+  <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>log/%d{yyyy-MM-dd}.log</FileNamePattern>
+      <MaxHistory>5</MaxHistory>
+    </rollingPolicy>
+    <encoder>
+      <Pattern>%d{HH:mm:ss.SSS} %-5p [%-15.15thread] %-30logger{30} %X{jvmId} | %m%n</Pattern>
+    </encoder>
+  </appender>
+
+  <root level="off">
+    <appender-ref ref="console" />
+    <appender-ref ref="file" />
+  </root>
+
+  <logger name="co.there4.hexagon" level="off" />
+</configuration>

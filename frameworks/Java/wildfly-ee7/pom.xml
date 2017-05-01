@@ -10,10 +10,10 @@
 	<properties>
 		<database.host>localhost</database.host>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.compiler.plugin>3.1</version.compiler.plugin>
-		<version.war.plugin>2.4</version.war.plugin>
-		<version.wildfly>10.0.0.Final</version.wildfly>
-		<version.mysql.connector>5.1.38</version.mysql.connector>
+		<version.compiler.plugin>3.5.1</version.compiler.plugin>
+		<version.war.plugin>2.6</version.war.plugin>
+		<version.wildfly>10.1.0.Final</version.wildfly>
+		<version.mysql.connector>5.1.39</version.mysql.connector>
 		<version.javaee.api>7.0</version.javaee.api>
 		<version.jboss.spec.javaee.7.0>1.0.3.Final</version.jboss.spec.javaee.7.0>
 	</properties>

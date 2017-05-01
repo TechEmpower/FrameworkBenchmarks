@@ -1,11 +1,11 @@
 # [Django](https://www.djangoproject.com/) Benchmarking Test
 
-This is the Django portion of a [benchmarking tests suite](../../) 
+This is the Django portion of a [benchmarking tests suite](../../)
 comparing a variety of web development platforms.
 
-The information below is specific to Django. For further guidance, 
-review the [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
-Also note that there is additional information provided in 
+The information below is specific to Django. For further guidance,
+review the [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
+Also note that there is additional information provided in
 the [Python README](../).
 
 ## Test Paths & Sources
@@ -15,7 +15,7 @@ the [Python README](../).
 * [Multiple Database Queries](hello/world/views.py): "/dbs?queries=#"*, [World Model](hello/world/models.py)
 * [Fortunes](hello/world/views.py): "/fortunes", [Fortune Model](hello/world/models.py)
 * [Database Updates](hello/world/views.py): "/update?queries=#"*, [World Model](hello/world/models.py)
-* _Plaintext: N/A_
+* [Plaintext](hello/world/views.py): "/plaintext" 
 
 *Replace # with an actual number.
 

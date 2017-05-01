@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends nginx php7 hhvm
+fw_depends mysql nginx php7 hhvm
 
 sed -i 's|host=localhost;|host='"${DBHOST}"';|g' once.php.inc
 sed -i 's|SourceRoot = .*/FrameworkBenchmarks/hhvm|SourceRoot = '"${TROOT}"'|g' deploy/config.hdf

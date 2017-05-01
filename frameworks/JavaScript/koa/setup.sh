@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends nodejs
+fw_depends mongodb nodejs
 
 sed -i 's|mongodb://.*/hello_world|mongodb://'"${DBHOST}"'/hello_world|g' app.js
 

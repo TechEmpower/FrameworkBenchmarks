@@ -2,20 +2,17 @@
 
 fw_depends lua
 
-RETCODE=$(fw_exists ${IROOT}/openresty.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/openresty.installed
-  return 0; }
+fw_installed openresty && return 0
 
-OPENRESTY_VERSION="1.7.10.1"
+OPENRESTY_VERSION="1.11.2.1"
 OPENRESTY=$IROOT/openresty
 OPENRESTY_HOME=$OPENRESTY-$OPENRESTY_VERSION
 
-fw_get -O http://openresty.org/download/ngx_openresty-$OPENRESTY_VERSION.tar.gz
-fw_untar ngx_openresty-$OPENRESTY_VERSION.tar.gz
+fw_get -O http://openresty.org/download/openresty-$OPENRESTY_VERSION.tar.gz
+fw_untar openresty-$OPENRESTY_VERSION.tar.gz
 
-cd ngx_openresty-$OPENRESTY_VERSION
-./configure --with-luajit-xcflags=-DLUAJIT_NUMMODE=2 --with-http_postgres_module --prefix=$OPENRESTY_HOME -j4
+cd openresty-$OPENRESTY_VERSION
+./configure --with-http_postgres_module --prefix=$OPENRESTY_HOME --with-luajit-xcflags="-DLUAJIT_NUMMODE=2 -O3" --with-cc-opt="-O3" -j4
 make -j4 --quiet
 make --quiet install
 

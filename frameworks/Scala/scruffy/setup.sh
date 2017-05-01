@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java sbt
+fw_depends mongodb java sbt
 
 sed -i 's|127.0.0.1|'${DBHOST}'|g' src/main/scala/scruffy/examples/Test2Endpoint.scala
 

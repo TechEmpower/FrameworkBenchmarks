@@ -1,8 +1,8 @@
 #!/bin/bash
 
-fw_depends php composer nginx
+fw_depends mysql php5 composer nginx
 
-php-fpm --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
+php-fpm --fpm-config $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
 
 sed -i "s|'host' => '.*'|'host' => '${DBHOST}'|g" app/Config/database.php
 sed -i 's|REDISSERVER|'${DBHOST}'|g' app/Config/core.php
