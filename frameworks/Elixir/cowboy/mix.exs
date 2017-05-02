@@ -3,9 +3,9 @@ defmodule Hello.Mixfile do
 
   def project do
     [app: :hello,
-     version: "0.0.1",
-     elixir: "~> 1.0",
-     deps: deps]
+     version: "0.1.0",
+     elixir: "~> 1.4",
+     deps: deps()]
   end
 
   def application do

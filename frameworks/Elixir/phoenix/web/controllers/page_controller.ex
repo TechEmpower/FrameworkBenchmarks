@@ -5,17 +5,20 @@ defmodule Hello.PageController do
 
   def index(conn, _params) do
     conn
+    |> put_resp_content_type("application/json", nil)
     |> json(%{"TE Benchmarks\n" => "Started"})
   end
 
   # avoid namespace collision
   def _json(conn, _params) do
     conn
+    |> put_resp_content_type("application/json", nil)
     |> json(%{message: "Hello, world!"})
   end
 
   def db(conn, _params) do
     conn
+    |> put_resp_content_type("application/json", nil)
     |> json(Repo.get(World, :rand.uniform(10000)))
   end
 
@@ -31,6 +34,7 @@ defmodule Hello.PageController do
     end
 
     conn
+    |> put_resp_content_type("application/json", nil)
     |> json(Enum.map(1..q, fn _ -> Repo.get(World, :rand.uniform(10000)) end))
   end
 
@@ -57,6 +61,7 @@ defmodule Hello.PageController do
     end
 
     conn
+    |> put_resp_content_type("application/json", nil)
     |> json(Enum.map(1..q, fn _ ->
       id = :rand.uniform(10000)
       num = :rand.uniform(10000)
@@ -69,6 +74,7 @@ defmodule Hello.PageController do
 
   def plaintext(conn, _params) do
     conn
+    |> put_resp_content_type("text/plain", nil)
     |> text("Hello, world!")
   end
 end
