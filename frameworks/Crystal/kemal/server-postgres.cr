@@ -1,6 +1,8 @@
 require "kemal"
 require "pg"
 
+logging false
+
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
 
@@ -108,5 +110,4 @@ get "/updates" do |env|
   updated.to_json
 end
 
-logging false
 Kemal.run { |cfg| cfg.server.bind(reuse_port: true) }
