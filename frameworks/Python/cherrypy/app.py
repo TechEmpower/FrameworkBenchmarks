@@ -127,4 +127,4 @@ if __name__ == "__main__":
     from satool import SATool
     cherrypy.tools.db = SATool()
     cherrypy.server.socket_host = '0.0.0.0'
-    cherrypy.quickstart(CherryPyBenchmark(), '', {'/': {'tools.db.on': True}})
+    cherrypy.quickstart(CherryPyBenchmark(), '', {'/': {'tools.db.on': True, 'log.screen': False, 'log.access_file': ''}})
