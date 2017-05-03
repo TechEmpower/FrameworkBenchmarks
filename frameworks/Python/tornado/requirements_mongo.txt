@@ -1,2 +1,2 @@
-tornado==4.4.2
+tornado==4.5.1
 motor==1.1
