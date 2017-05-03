@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql rvm ruby-2.1
+fw_depends mysql rvm ruby-2.4
 
 rvm ruby-$MRI_VERSION do bundle install --jobs=4 --gemfile=$TROOT/Gemfile --path=vendor/bundle
 

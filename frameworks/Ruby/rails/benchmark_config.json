@@ -25,7 +25,7 @@
       "versus": "rack-puma-mri"
     },
     "thin": {
-      "setup_file": "run_thin",
+      "setup_file": "run_mri_thin",
       "json_url": "/hello_world/json",
       "db_url": "/hello_world/db",
       "query_url": "/hello_world/query?queries=",
@@ -43,12 +43,12 @@
       "webserver": "Thin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-thin",
+      "display_name": "rails-thin-mri",
       "notes": "",
-      "versus": "rack-thin"
+      "versus": "rack-thin-mri"
     },
     "unicorn": {
-      "setup_file": "run_unicorn",
+      "setup_file": "run_mri_unicorn",
       "json_url": "/hello_world/json",
       "db_url": "/hello_world/db",
       "query_url": "/hello_world/query?queries=",
@@ -66,9 +66,9 @@
       "webserver": "Unicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-unicorn",
+      "display_name": "rails-unicorn-mri",
       "notes": "",
-      "versus": "rack-unicorn"
+      "versus": "rack-unicorn-mri"
     }
   }]
 }
