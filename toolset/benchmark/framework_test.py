@@ -34,7 +34,7 @@ class FrameworkTest:
   # Used for test types that require no pipelining or query string params.
   concurrency_template = """
 
-    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)*4
+    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
@@ -78,7 +78,7 @@ class FrameworkTest:
   # Used for test types that require pipelining.
   pipeline_template = """
 
-    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)*4
+    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
@@ -123,7 +123,7 @@ class FrameworkTest:
   # These tests run at a static concurrency level and vary the size of
   # the query sent with each request
   query_template = """
-    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)*4
+    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
