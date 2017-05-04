@@ -1,5 +1,5 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved. 
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Benchmarks.Configuration;
 using Dapper;
 using Microsoft.Extensions.Options;
+using Npgsql;
 
 namespace Benchmarks.Data
 {
@@ -21,6 +22,15 @@ namespace Benchmarks.Data
 
         public DapperDb(IRandom random, DbProviderFactory dbProviderFactory, IOptions<AppSettings> appSettings)
         {
+            if (appSettings.Value.Database == DatabaseServer.PostgreSql)
+            {
+                var builder = new NpgsqlConnectionStringBuilder(appSettings.Value.ConnectionString);
+                if (builder.MaxAutoPrepare < 20)
+                {
+                    throw new Exception($"{nameof(builder.MaxAutoPrepare)} must be at least 20 in the PostgreSQL connection string");
+                }
+            }
+
             _random = random;
             _dbProviderFactory = dbProviderFactory;
             _connectionString = appSettings.Value.ConnectionString;
