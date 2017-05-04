@@ -4,11 +4,13 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
+      "db_url": "/db/postgres",
+      "fortune_url": "/fortunes/postgres",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "None",
+      "database": "Postgres",
       "framework": "Proteus",
       "language": "Java",
       "flavor": "None",
@@ -22,7 +24,7 @@
       "versus": ""
     },
     "mysql" : {
-      "setup_file": "setup-mysql",
+      "setup_file": "setup",
       "db_url": "/db/mysql",
       "fortune_url": "/fortunes/mysql",
       "port": 8080,
@@ -38,26 +40,6 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "proteus-mysql",
-      "notes": "",
-      "versus": ""
-    },
-    "postgresql" : {
-      "setup_file": "setup-postgresql",
-      "db_url": "/db/postgres",
-      "fortune_url": "/fortunes/postgres",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "Postgres",
-      "framework": "Proteus",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "Undertow",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "proteus-postgres",
       "notes": "",
       "versus": ""
     }
