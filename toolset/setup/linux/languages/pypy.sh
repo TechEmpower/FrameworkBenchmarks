@@ -3,11 +3,11 @@
 fw_installed pypy && return 0
   
 PYPY_ROOT=$IROOT/pypy
-PYPY_VERSION=5.0.1
+PYPY_VERSION=5.7.1
 
-fw_get -o pypy-${PYPY_VERSION}-linux64.tar.bz2 https://bitbucket.org/pypy/pypy/downloads/pypy-${PYPY_VERSION}-linux64.tar.bz2
-fw_untar pypy-${PYPY_VERSION}-linux64.tar.bz2
-mv pypy-${PYPY_VERSION}-linux64 pypy
+fw_get -o pypy2-v${PYPY_VERSION}-linux64.tar.bz2 https://bitbucket.org/pypy/pypy/downloads/pypy2-v${PYPY_VERSION}-linux64.tar.bz2
+fw_untar pypy2-v${PYPY_VERSION}-linux64.tar.bz2
+mv pypy2-v${PYPY_VERSION}-linux64 pypy
 
 $PYPY_ROOT/bin/pypy -m ensurepip
 $PYPY_ROOT/bin/pip install -U pip setuptools wheel
