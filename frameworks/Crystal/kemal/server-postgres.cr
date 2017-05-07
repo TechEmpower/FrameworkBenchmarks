@@ -1,13 +1,11 @@
 require "kemal"
+require "db"
 require "pg"
-require "pool/connection"
 
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
 
-DB = ConnectionPool.new(capacity: 25, timeout: 0.01) do
-  PG.connect("postgres://benchmarkdbuser:benchmarkdbpass@#{ENV["DBHOST"]? || "127.0.0.1"}/hello_world")
-end
+CONN = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@#{ENV["DBHOST"]? || "127.0.0.1"}/hello_world?initial_pool_size=2")
 
 class CONTENT
   UTF8  = "; charset=UTF-8"
@@ -20,24 +18,27 @@ ID_MAXIMUM = 10_000
 
 private def random_world
   id = rand(1..ID_MAXIMUM)
-  conn = DB.checkout
-  result = conn.exec({Int32, Int32}, "SELECT id, randomNumber FROM world WHERE id = $1", [id]).rows.first
-  DB.checkin(conn)
-  {id: result[0], randomNumber: result[1]}
+  result = { id: nil, randomNumber: nil}
+  CONN.query("SELECT id, randomNumber FROM world WHERE id = $1", id) do |rs|
+    rs.each do
+      result = { id: rs.read(Int32), randomNumber: rs.read(Int32)}
+    end
+  end
+  result
 end
 
 private def set_world(world)
-  conn = DB.checkout
-  result = conn.exec("UPDATE world set randomNumber = $1 where id = $2", [world[:randomNumber], world[:id]])
-  DB.checkin(conn)
+  CONN.exec("UPDATE world set randomNumber = $1 where id = $2", world[:randomNumber], world[:id])
   world
 end
 
 private def fortunes
   data = [] of NamedTuple(id: Int32, message: String)
 
-  DB.connection.exec({Int32, String}, "select id, message from Fortune").rows.each do |row|
-    data.push({id: row[0], message: row[1]})
+  CONN.query("select id, message from Fortune") do |rs|
+    rs.each do
+      data.push({id: rs.read(Int32), message: rs.read(String)})
+    end
   end
   data
 end
