@@ -1,14 +1,17 @@
 class HelloWorldController < ApplicationController
 
   def plaintext
+    response.headers['Content-Type'] = "text/plain"
     render :plain => "Hello, World!"
   end
 
   def json
+    response.headers['Content-Type'] = "application/json"
     render :json => {:message => "Hello, World!"}
   end
 
   def db
+    response.headers['Content-Type'] = "application/json"
     render :json => World.find(Random.rand(10000) + 1)
   end
 
@@ -20,11 +23,12 @@ class HelloWorldController < ApplicationController
     results = (1..queries).map do
       World.find(Random.rand(10000) + 1)
     end
+    response.headers['Content-Type'] = "application/json"
     render :json => results
   end
-  
+
   def fortune
-    @fortunes = Fortune.all
+    @fortunes = Fortune.all.to_a
     @fortunes << Fortune.new(:id => 0, :message => "Additional fortune added at request time.")
     @fortunes = @fortunes.sort_by { |x| x.message }
   end
@@ -41,7 +45,7 @@ class HelloWorldController < ApplicationController
       world.update_attribute(:randomNumber, Random.rand(10000) + 1)
       world
     end
-
+    response.headers['Content-Type'] = "application/json"
     render :json => worlds
   end
 end
