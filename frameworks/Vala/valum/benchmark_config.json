@@ -12,7 +12,7 @@
       "framework": "Valum",
       "language": "Vala",
       "orm": "Raw",
-      "platform": "VSGI",
+      "platform": "GLib",
       "webserver": "Soup",
       "os": "Linux",
       "database_os": "Linux",
