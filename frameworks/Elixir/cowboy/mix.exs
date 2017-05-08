@@ -10,7 +10,7 @@ defmodule Hello.Mixfile do
 
   def application do
     [mod: {Hello, []},
-     applications: [:cowboy, :ranch, :poison]]
+     applications: [:cowboy, :poison]]
   end
 
   defp deps do
