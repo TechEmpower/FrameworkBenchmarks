@@ -167,6 +167,7 @@ env:
     - "TESTDIR=Python/wheezyweb"
     - "TESTDIR=Python/wsgi"
     - "TESTDIR=Ruby/grape"
+    - "TESTDIR=Ruby/hanami"
     - "TESTDIR=Ruby/ngx_mruby"
     - "TESTDIR=Ruby/padrino"
     - "TESTDIR=Ruby/rack"
