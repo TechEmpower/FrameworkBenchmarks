@@ -1,5 +1,6 @@
 Bundler.require :default
 require 'erb'
+require 'yaml'
 
 $: << "."
 
