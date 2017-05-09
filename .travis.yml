@@ -196,6 +196,7 @@ env:
     - "TESTDIR=Scala/finch"
     - "TESTDIR=Swift/vapor"
     - "TESTDIR=Ur/urweb"
+    - "TESTDIR=Vala/valum"
 
 before_script:
 
