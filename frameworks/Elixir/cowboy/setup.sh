@@ -2,12 +2,12 @@
 
 fw_depends elixir
 
-rm -rf _build deps rel
+rm -rf _build deps
 
-MIX_ENV=prod
-export MIX_ENV
+export MIX_ENV=prod
 mix local.hex --force
-mix deps.get --force
+mix local.rebar --force
+mix deps.get --force --only prod
 mix compile --force
 
 elixir --detached --no-halt -S mix
