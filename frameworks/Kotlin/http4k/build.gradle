@@ -24,6 +24,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
+    compile "org.apache.commons:commons-lang3:3.5"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.http4k:http4k-core:$http4k_version"
     compile "org.http4k:http4k-contract:$http4k_version"
