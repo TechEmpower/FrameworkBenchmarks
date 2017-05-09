@@ -10,11 +10,12 @@ defmodule Hello.Mixfile do
 
   def application do
     [mod: {Hello, []},
-     applications: [:cowboy, :poison]]
+     applications: [:cowboy, :poison, :ranch]]
   end
 
   defp deps do
     [{:cowboy, "~> 1.0"},
-     {:poison, "~> 1.4.0"}]
+     {:poison, "~> 1.4.0"},
+     {:ranch, "~> 1.3.2"}]
   end
 end
