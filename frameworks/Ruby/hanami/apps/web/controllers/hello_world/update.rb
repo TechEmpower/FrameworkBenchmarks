@@ -9,8 +9,8 @@ module Web::Controllers::HelloWorld
 
       repository = WorldRepository.new
       worlds = (1..queries).map do
-        world = repository.find_random_entity#.select(:id, :randomNumber)
-        world.update_attribute(:randomNumber, Random.rand(10000) + 1)
+        world = repository.find_random_entity
+        world = repository.update(world.id, randomNumber: Random.rand(10000) + 1)
         world.to_h
       end
       status 200, worlds.to_json

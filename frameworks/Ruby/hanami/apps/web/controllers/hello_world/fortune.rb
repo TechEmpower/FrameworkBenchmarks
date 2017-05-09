@@ -4,9 +4,9 @@ module Web::Controllers::HelloWorld
     expose :fortunes
 
     def call(params)
-      self.format = :html
+      self.headers.merge!({ 'Content-Type' => 'text/html; charset=utf-8' })
       @fortunes = FortuneRepository.new.all
-      @fortunes << Fortune.new(:id => 0, :message => "Additional fortune added at request time.")
+      @fortunes << ::Fortune.new(id: 0, message: "Additional fortune added at request time.")
       @fortunes = @fortunes.sort_by { |x| x.message }
     end
   end
