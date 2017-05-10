@@ -6,7 +6,7 @@ shards install
 
 crystal build --release server-postgres.cr
 
-for i in {1..$(nproc --all)}; do
+for i in $(seq 1 $(nproc --all)); do
   ./server-postgres &
 done
 
