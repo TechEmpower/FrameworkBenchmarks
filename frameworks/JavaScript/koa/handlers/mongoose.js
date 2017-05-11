@@ -56,7 +56,7 @@ module.exports = {
   },
 
   MultipleQueries: (ctx, next) => {
-    const queries = h.getQueries(req);
+    const queries = h.getQueries(ctx);
     const worldPromises = h.fillArray(randomWorldPromise(), queries);
 
     return Promise
@@ -82,7 +82,7 @@ module.exports = {
   },
 
   Updates: (ctx, next) => {
-    const queries = h.getQueries(req);
+    const queries = h.getQueries(ctx);
     const worldPromises = [];
 
     for (let i = 0; i < queries; i++) {

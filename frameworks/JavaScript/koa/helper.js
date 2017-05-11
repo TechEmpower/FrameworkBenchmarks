@@ -15,8 +15,8 @@ module.exports = {
     return filled;
   },
 
-  getQueries: (req) => {
-    let queries = ~~(req.query.queries) || 1;
+  getQueries: (ctx) => {
+    let queries = ~~(ctx.query.queries) || 1;
     queries = Math.min(Math.max(queries, 1), 500);
     return queries;
   },
