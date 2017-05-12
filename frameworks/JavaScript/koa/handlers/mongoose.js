@@ -76,8 +76,7 @@ module.exports = {
       
         ctx.type = 'text/html';
         ctx.set('Server', 'Koa');
-        ctx.render('fortunes', { fortunes });
-        return next();
+        return ctx.render('fortunes', { fortunes: fortunes });
       });
   },
 

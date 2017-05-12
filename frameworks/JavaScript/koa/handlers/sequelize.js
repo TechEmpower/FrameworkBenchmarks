@@ -70,8 +70,7 @@ module.exports = {
       
       ctx.set('Server', 'Koa');
       ctx.type = 'text/html';
-      ctx.render('fortunes', { fortunes });
-      return next();
+      return ctx.render('fortunes', { fortunes });
     }).catch((err) => process.exit(1));
   },
 
