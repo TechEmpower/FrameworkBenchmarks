@@ -14,5 +14,5 @@ class PlaintextHandler(components: {
     }
   }
 
-  def response = HttpResponse(StatusCodes.OK, entity = HttpEntity("Hello, World!"))
+  def response = "Hello, World!"
 }
