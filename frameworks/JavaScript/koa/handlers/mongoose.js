@@ -1,11 +1,11 @@
 // Connects to MongoDB using the mongoose driver
 // Handles related routes
 
-const bluebird = require('bluebird');
+const Promise = require('bluebird');
 const h = require('../helper');
 // Can treat mongoose library as one that supports Promises
 // these methods will then have "-Async" appended to them.
-const Mongoose = bluebird.promisifyAll(require('mongoose'));
+const Mongoose = Promise.promisifyAll(require('mongoose'));
 const connection = Mongoose.connect('mongodb://TFB-database/hello_world');
 
 const WorldSchema = new Mongoose.Schema({

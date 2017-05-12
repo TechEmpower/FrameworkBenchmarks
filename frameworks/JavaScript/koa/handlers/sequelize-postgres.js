@@ -1,6 +1,6 @@
 // Connects to Postgres using the sequelize driver
 // Handles related routes
-
+const Promise = require('bluebird');
 const h = require('../helper');
 const Sequelize = require('sequelize');
 
