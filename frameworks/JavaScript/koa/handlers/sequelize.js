@@ -41,7 +41,7 @@ const randomWorldPromise = () =>
 module.exports = {
 
   SingleQuery: (ctx, next) => {
-    randomWorldPromise().then((world) => {
+    return randomWorldPromise().then((world) => {
       ctx.set('Server', 'Koa');
       ctx.body = world;
       return next();
