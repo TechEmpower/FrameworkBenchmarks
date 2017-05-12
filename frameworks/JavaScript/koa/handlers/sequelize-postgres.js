@@ -54,7 +54,7 @@ module.exports = {
       worldPromises.push(randomWorldPromise());
     }
 
-    Promise.all(worldPromises)
+    return Promise.all(worldPromises)
       .then((worlds) => {
         ctx.set('Server', 'Koa');
         ctx.body = worlds;
@@ -63,7 +63,7 @@ module.exports = {
   },
 
   Fortunes: (ctx, next) => {
-    Fortunes.findAll().then((fortunes) => {
+    return Fortunes.findAll().then((fortunes) => {
       fortunes.push(h.additionalFortune());
       fortunes.sort((a, b) => a.message.localeCompare(b.message));
 
@@ -93,7 +93,7 @@ module.exports = {
         .catch((err) => process.exit(1));
     };
 
-    Promise
+    return Promise
       .all(worldPromises)
       .map((world) => worldUpdate(world))
       .then((updated) => {
