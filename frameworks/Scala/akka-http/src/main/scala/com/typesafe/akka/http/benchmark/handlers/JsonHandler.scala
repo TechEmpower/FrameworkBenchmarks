@@ -5,22 +5,19 @@ import akka.http.scaladsl.model.HttpCharsets._
 import akka.http.scaladsl.model.MediaTypes._
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
-import spray.json.{DefaultJsonProtocol, RootJsonFormat}
+import spray.json.{ DefaultJsonProtocol, RootJsonFormat }
 
-
-class JsonHandler(components: {
-
-}) {
-
+trait JsonHandler {
   import JsonHandler.Protocols._
 
-  def endpoint = get {
-    path("json") {
-      complete(response)
-    }
-  }
+  val response = Response("Hello, World!")
 
-  def response = Response("Hello, World!")
+  def jsonEndpoint =
+    get {
+      path("json") {
+        complete(response)
+      }
+    }
 }
 
 object JsonHandler {

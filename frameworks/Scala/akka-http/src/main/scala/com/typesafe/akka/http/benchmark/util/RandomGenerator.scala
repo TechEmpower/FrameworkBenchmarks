@@ -1,10 +1,7 @@
 package com.typesafe.akka.http.benchmark.util
 
-class RandomGenerator(components: {
+import java.util.concurrent.ThreadLocalRandom
 
-}) {
-
-  def next: Int = {
-    (Math.random() * 10000 + 1).toInt
-  }
+trait RandomGenerator {
+  def nextRandomInt: Int = ThreadLocalRandom.current().nextInt() * 10000 + 1
 }

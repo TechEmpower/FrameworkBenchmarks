@@ -1,18 +1,12 @@
 package com.typesafe.akka.http.benchmark.handlers
 
-import akka.http.scaladsl.model.HttpCharsets._
-import akka.http.scaladsl.model.MediaTypes._
-import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 
-class PlaintextHandler(components: {
-
-}) {
-  def endpoint = get {
-    path("plaintext") {
-      complete(response)
+trait PlaintextHandler {
+  def plainTextEndpoint =
+    get {
+      path("plaintext") {
+        complete("Hello, World!")
+      }
     }
-  }
-
-  def response = "Hello, World!"
 }
