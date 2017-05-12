@@ -48,7 +48,7 @@
 $active_group = 'default';
 $query_builder = TRUE;
 
-$db['default']['hostname'] = 'localhost';
+$db['default']['hostname'] = 'TFB-database';
 $db['default']['username'] = 'benchmarkdbuser';
 $db['default']['password'] = 'benchmarkdbpass';
 $db['default']['database'] = 'hello_world';

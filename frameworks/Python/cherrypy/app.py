@@ -120,7 +120,7 @@ if __name__ == "__main__":
     # Register the SQLAlchemy plugin
     from saplugin import SAEnginePlugin
     DBDRIVER = 'mysql'
-    DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@127.0.0.1:3306/hello_world?charset=utf8' % (DBDRIVER)
+    DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@TFB-database:3306/hello_world?charset=utf8' % (DBDRIVER)
     SAEnginePlugin(cherrypy.engine, DATABASE_URI).subscribe()
     
     # Register the SQLAlchemy tool
