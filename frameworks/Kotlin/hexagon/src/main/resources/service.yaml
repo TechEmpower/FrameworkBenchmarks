@@ -2,8 +2,9 @@
 bindPort : 9090
 bindAddress : 0.0.0.0
 
-ignoreResources : true
-
 database : hello_world
 worldCollection : world
 fortuneCollection : fortune
+
+database_username : benchmarkdbuser
+database_password : benchmarkdbpass

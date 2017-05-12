@@ -33,6 +33,7 @@ dependencies {
     compile ("org.mongodb:mongodb-driver:$mongodbVersion")
     compile ("com.zaxxer:HikariCP:$hikariVersion")
     compile ("mysql:mysql-connector-java:$mysqlConnectorVersion")
+    compile ("org.postgresql:postgresql:$postgresqlVersion")
 
     // providedCompile excludes the dependency only in the WAR, not in the distribution
     providedCompile ("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }

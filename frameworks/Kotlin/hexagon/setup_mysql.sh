@@ -2,6 +2,6 @@
 
 fw_depends mysql java
 
-gradle/wrapper
+gradle/wrapper -x test
 
 nohup build/install/hexagon/bin/hexagon mysql &

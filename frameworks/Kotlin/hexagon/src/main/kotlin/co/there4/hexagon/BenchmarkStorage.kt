@@ -18,18 +18,55 @@ import java.util.concurrent.Executors
 import javax.sql.DataSource
 import kotlin.reflect.KProperty1
 
-internal val DB_ROWS = 10000
+internal const val DB_ROWS = 10000
 
 private val DB_HOST = getenv("DBHOST") ?: "localhost"
 private val DB = setting<String>("database") ?: "hello_world"
 private val WORLD: String = setting<String>("worldCollection") ?: "world"
 private val FORTUNE: String = setting<String>("fortuneCollection") ?: "fortune"
 
-private val executor: ExecutorService = Executors.newFixedThreadPool(8)
+private val mysqlUrl = "jdbc:mysql://$DB_HOST/$DB?" +
+    "useSSL=false&" +
+    "rewriteBatchedStatements=true&" +
+    "jdbcCompliantTruncation=false&" +
+    "elideSetAutoCommits=true&" +
+    "useLocalSessionState=true&" +
+    "cachePrepStmts=true&" +
+    "cacheCallableStmts=true&" +
+    "alwaysSendSetIsolation=false&" +
+    "prepStmtCacheSize=4096&" +
+    "cacheServerConfiguration=true&" +
+    "prepStmtCacheSqlLimit=2048&" +
+    "traceProtocol=false&" +
+    "useUnbufferedInput=false&" +
+    "useReadAheadInput=false&" +
+    "maintainTimeStats=false&" +
+    "useServerPrepStmts=true&" +
+    "cacheRSMetadata=true"
+
+private val postgresqlUrl = "jdbc:postgresql://$DB_HOST/$DB?" +
+    "jdbcCompliantTruncation=false&" +
+    "elideSetAutoCommits=true&" +
+    "useLocalSessionState=true&" +
+    "cachePrepStmts=true&" +
+    "cacheCallableStmts=true&" +
+    "alwaysSendSetIsolation=false&" +
+    "prepStmtCacheSize=4096&" +
+    "cacheServerConfiguration=true&" +
+    "prepStmtCacheSqlLimit=2048&" +
+    "traceProtocol=false&" +
+    "useUnbufferedInput=false&" +
+    "useReadAheadInput=false&" +
+    "maintainTimeStats=false&" +
+    "useServerPrepStmts=true&" +
+    "cacheRSMetadata=true"
+
+private val executor: ExecutorService = Executors.newFixedThreadPool(16)
 
 internal fun createStore(engine: String): Repository = when (engine) {
     "mongodb" -> MongoDbRepository()
-    "mysql" -> MySqlRepository()
+    "mysql" -> SqlRepository(mysqlUrl)
+    "postgresql" -> SqlRepository(postgresqlUrl)
     else -> error("Unsupported database")
 }
 
@@ -54,15 +91,16 @@ internal class MongoDbRepository : Repository {
     override fun findWorlds(queries: Int) =
         (1..queries).map { worldRepository.find(rnd()) }.filterNotNull()
 
-    override fun replaceWorlds(queries: Int) = (1..queries).map {
-        val id = rnd()
-        val newWorld = worldRepository.find(id)?.copy(randomNumber = rnd()) ?: err
-        executor.execute { worldRepository.replaceObject(newWorld) }
-        newWorld
-    }
+    override fun replaceWorlds(queries: Int) = (1..queries)
+        .map { worldRepository.find(rnd())?.copy(randomNumber = rnd()) ?: err }
+        .toList()
+        .map {
+            executor.execute { worldRepository.replaceObjects(it, bulk = true) }
+            it
+        }
 }
 
-internal class MySqlRepository : Repository {
+internal class SqlRepository(jdbcUrl: String) : Repository {
     private val SELECT_WORLD = "select * from world where id = ?"
     private val UPDATE_WORLD = "update world set randomNumber = ? where id = ?"
     private val SELECT_FORTUNES = "select * from fortune"
@@ -71,25 +109,8 @@ internal class MySqlRepository : Repository {
 
     init {
         val config = HikariConfig()
-        config.jdbcUrl = "jdbc:mysql://$DB_HOST/$DB?" +
-            "useSSL=false&" +
-            "rewriteBatchedStatements=true&" +
-            "jdbcCompliantTruncation=false&" +
-            "elideSetAutoCommits=true&" +
-            "useLocalSessionState=true&" +
-            "cachePrepStmts=true&" +
-            "cacheCallableStmts=true&" +
-            "alwaysSendSetIsolation=false&" +
-            "prepStmtCacheSize=4096&" +
-            "cacheServerConfiguration=true&" +
-            "prepStmtCacheSqlLimit=2048&" +
-            "traceProtocol=false&" +
-            "useUnbufferedInput=false&" +
-            "useReadAheadInput=false&" +
-            "maintainTimeStats=false&" +
-            "useServerPrepStmts=true&" +
-            "cacheRSMetadata=true"
-        config.maximumPoolSize = 256
+        config.jdbcUrl = jdbcUrl
+        config.maximumPoolSize = 64
         config.username = "benchmarkdbuser"
         config.password = "benchmarkdbpass"
         DATA_SOURCE = HikariDataSource(config)
@@ -132,6 +153,7 @@ internal class MySqlRepository : Repository {
 
         KConnection(DATA_SOURCE.connection).use { con: Connection ->
             val stmtSelect = con.prepareStatement(SELECT_WORLD, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)
+//            val stmtUpdate = con.prepareStatement(UPDATE_WORLD)
 
             for (ii in 0..queries - 1) {
                 stmtSelect.setInt(1, rnd())
@@ -140,10 +162,29 @@ internal class MySqlRepository : Repository {
 
                 val world = World(rs.getInt(1), rs.getInt(2)).copy(randomNumber = rnd())
                 worlds += world
+
+//                stmtUpdate.setInt(1, world.randomNumber)
+//                stmtUpdate.setInt(2, world.id)
+//                stmtUpdate.addBatch()
+//
+//                if (ii % 50 == 0)
+//                    stmtUpdate.executeBatch()
             }
+
+//            stmtUpdate.executeBatch()
         }
 
-        executor.execute {
+//        //            KConnection(DATA_SOURCE.connection).use { con: Connection ->
+//                val stmtUpdate = con.prepareStatement(UPDATE_WORLD)
+//
+//                for ((_, id, randomNumber) in worlds) {
+//                    stmtUpdate.setInt(1, randomNumber)
+//                    stmtUpdate.setInt(2, id)
+//                    stmtUpdate.addBatch()
+//                }
+//
+//                stmtUpdate.executeBatch()
+//            }executor.execute {
             KConnection(DATA_SOURCE.connection).use { con: Connection ->
                 val stmtUpdate = con.prepareStatement(UPDATE_WORLD)
 
@@ -155,7 +196,7 @@ internal class MySqlRepository : Repository {
 
                 stmtUpdate.executeBatch()
             }
-        }
+//        }
 
         return worlds
     }
