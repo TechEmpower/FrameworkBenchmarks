@@ -50,6 +50,7 @@ module.exports = {
     return randomWorldPromise()
       .then((world) => {
         ctx.set('Server', 'Koa');
+        ctx.type = 'application/json';
         ctx.body = world;
         return next();
       });
@@ -63,6 +64,7 @@ module.exports = {
       .all(worldPromises)
       .then((worlds) => {
         ctx.set('Server', 'Koa');
+        ctx.type = 'application/json';
         ctx.body = worlds;
         return next()
       });
@@ -96,6 +98,7 @@ module.exports = {
       })
       .then((worlds) => {
         ctx.set('Server', 'Koa');
+        ctx.type = 'application/json';
         ctx.body = worlds;
         return next();
       });

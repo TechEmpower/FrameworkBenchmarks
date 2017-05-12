@@ -19,6 +19,7 @@ app.use(hbs.middleware({
 
 function JsonSerialization(ctx, next) {
   ctx.set('Server', 'Koa');
+  ctx.type = 'application/json';
   ctx.body = { message: 'Hello, World!' };
   return next();
 }

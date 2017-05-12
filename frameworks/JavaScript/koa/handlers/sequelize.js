@@ -43,6 +43,7 @@ module.exports = {
   SingleQuery: (ctx, next) => {
     return randomWorldPromise().then((world) => {
       ctx.set('Server', 'Koa');
+      ctx.type = 'application/json';
       ctx.body = world;
       return next();
     })
@@ -58,6 +59,7 @@ module.exports = {
 
     return Promise.all(worldPromises).then((worlds) => {
       ctx.set('Server', 'Koa');
+      ctx.type = 'application/json';
       ctx.body = worlds;
       return next();
     });
@@ -98,6 +100,7 @@ module.exports = {
       .map((world) => worldUpdate(world))
       .then((updated) => {
         ctx.set('Server', 'Koa');
+        ctx.type = 'application/json';
         ctx.body = updated;
         return next();
       })
