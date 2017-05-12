@@ -10,7 +10,11 @@ Vagrant.configure("2") do |config|
       file.destination = "~/.custom_motd.sh"
   end
 
+  config.vm.network "private_network", ip: "172.16.0.16"
+  config.vm.network :forwarded_port, guest: 8080, host: 28080
+
   provision_bootstrap(config)
   provider_virtualbox(config)
+  provider_libvirt(config)
 
 end

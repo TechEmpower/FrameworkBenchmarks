@@ -40,6 +40,7 @@ sudo apt-get install -y mysql-client
 
 echo -e "ssh \$DBHOST 'bash' <<EOF" > $IROOT/mysql.installed
 echo -e "sudo start mysql || echo 'mysql service already started'" >> $IROOT/mysql.installed
+echo -e "mysqladmin -uroot -psecret flush-hosts" >> $IROOT/mysql.installed
 echo -e "mysql -uroot -psecret < create.sql" >> $IROOT/mysql.installed
 echo -e "EOF" >> $IROOT/mysql.installed
 
