@@ -1,5 +1,6 @@
 package com.typesafe.akka.http.benchmark.handlers
 
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.HttpCharsets._
 import akka.http.scaladsl.model.MediaTypes._
 import akka.http.scaladsl.model._
@@ -19,14 +20,12 @@ class JsonHandler(components: {
     }
   }
 
-  def response = {
-    HttpResponse(StatusCodes.OK, entity = HttpEntity(Response("Hello, World!").toJson.toString()).withContentType(`application/json`))
-  }
+  def response = Response("Hello, World!")
 }
 
 object JsonHandler {
 
-  object Protocols extends DefaultJsonProtocol {
+  object Protocols extends DefaultJsonProtocol with SprayJsonSupport {
 
     case class Response(message: String)
 
