@@ -6,11 +6,11 @@ import java.util.concurrent.Executors
 
 import akka.actor.ActorSystem
 import com.typesafe.akka.http.benchmark.Infrastructure
-import com.typesafe.akka.http.benchmark.entity.{Fortune, World}
+import com.typesafe.akka.http.benchmark.entity.{ Fortune, World }
 import com.typesafe.config.Config
 import com.zaxxer.hikari._
 
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.{ ExecutionContext, Future, Promise }
 
 trait MySqlDataStore extends DataStore { _: Infrastructure =>
   lazy val config = appConfig.getConfig("akka.http.benchmark.mysql")

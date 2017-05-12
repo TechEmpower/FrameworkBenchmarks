@@ -11,19 +11,7 @@ import org.fusesource.scalate.TemplateEngine
 
 import scala.concurrent.ExecutionContext
 
-class App extends
-  Infrastructure with
-  RandomGenerator with
-  MySqlDataStore with
-  PlaintextHandler with
-  JsonHandler with
-  DbHandler with
-  QueriesHandler with
-  FortunesHandler with
-  UpdatesHandler with
-  RequestMapping with
-  BenchmarkBootstrap with
-  Templating {
+class App extends Infrastructure with RandomGenerator with MySqlDataStore with PlaintextHandler with JsonHandler with DbHandler with QueriesHandler with FortunesHandler with UpdatesHandler with RequestMapping with BenchmarkBootstrap with Templating {
   lazy val templateEngine = new TemplateEngine()
 
   lazy val system: ActorSystem = ActorSystem("akka-http-benchmark")

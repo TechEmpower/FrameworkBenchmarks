@@ -2,16 +2,16 @@ package com.typesafe.akka.http.benchmark.handlers
 
 import akka.http.scaladsl.model.HttpCharsets._
 import akka.http.scaladsl.model.MediaTypes._
-import akka.http.scaladsl.model.{HttpEntity, HttpResponse, StatusCodes}
+import akka.http.scaladsl.model.{ HttpEntity, HttpResponse, StatusCodes }
 import akka.http.scaladsl.server.Directives._
 import com.typesafe.akka.http.benchmark.Infrastructure
 import com.typesafe.akka.http.benchmark.datastore.DataStore
 import com.typesafe.akka.http.benchmark.entity.World
 import com.typesafe.akka.http.benchmark.util.RandomGenerator
-import spray.json.{DefaultJsonProtocol, RootJsonFormat}
+import spray.json.{ DefaultJsonProtocol, RootJsonFormat }
 
 import scala.concurrent.ExecutionContext
-import scala.util.{Failure, Success}
+import scala.util.{ Failure, Success }
 
 trait DbHandler { _: Infrastructure with DataStore with RandomGenerator =>
   import DbHandler.Protocols._
@@ -20,7 +20,7 @@ trait DbHandler { _: Infrastructure with DataStore with RandomGenerator =>
     path("db") {
       onComplete(response) {
         case Success(record) => complete(record)
-        case Failure(t) => failWith(t)
+        case Failure(t)      => failWith(t)
       }
     }
   }

@@ -11,14 +11,14 @@ import com.typesafe.akka.http.benchmark.datastore.DataStore
 import org.fusesource.scalate.TemplateEngine
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
+import scala.util.{ Failure, Success }
 
 trait FortunesHandler { _: Infrastructure with DataStore with Templating =>
   def fortunesEndpoint = get {
     path("fortunes") {
       onComplete(response) {
         case Success(record) => complete(record)
-        case Failure(t) => failWith(t)
+        case Failure(t)      => failWith(t)
       }
     }
   }

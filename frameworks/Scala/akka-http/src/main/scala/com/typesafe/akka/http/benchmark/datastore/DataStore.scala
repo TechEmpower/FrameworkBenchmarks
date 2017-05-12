@@ -1,6 +1,6 @@
 package com.typesafe.akka.http.benchmark.datastore
 
-import com.typesafe.akka.http.benchmark.entity.{Fortune, World}
+import com.typesafe.akka.http.benchmark.entity.{ Fortune, World }
 
 import scala.concurrent.Future
 
