@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sed -i 's|"benchmarkdbpass", ".*", 3306|"benchmarkdbpass", "'"${DBHOST}"'", 3306|g' src/hello_world_app.erl
-
 fw_depends mysql erlang
 
 rm -rf deps/* ebin/*
