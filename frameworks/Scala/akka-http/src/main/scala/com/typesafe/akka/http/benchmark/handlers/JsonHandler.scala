@@ -1,33 +1,27 @@
 package com.typesafe.akka.http.benchmark.handlers
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.model.HttpCharsets._
-import akka.http.scaladsl.model.MediaTypes._
-import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
-import spray.json.{ DefaultJsonProtocol, RootJsonFormat }
+import spray.json.DefaultJsonProtocol
+import spray.json.RootJsonFormat
 
 trait JsonHandler {
-  import JsonHandler.Protocols._
+  import JsonHandler._
+  import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
-  val response = Response("Hello, World!")
+  lazy val jsonResponse = JsonResponse("Hello, World!") // domain object
 
   def jsonEndpoint =
     get {
       path("json") {
-        complete(response)
+        complete(jsonResponse)
       }
     }
 }
 
 object JsonHandler {
-
-  object Protocols extends DefaultJsonProtocol with SprayJsonSupport {
-
-    case class Response(message: String)
-
-    implicit val responseFormat: RootJsonFormat[Response] = jsonFormat1(Response.apply)
-
+  case class JsonResponse(message: String)
+  object JsonResponse {
+    import DefaultJsonProtocol._
+    implicit val responseFormat: RootJsonFormat[JsonResponse] = jsonFormat1(JsonResponse.apply)
   }
-
 }
