@@ -4,8 +4,13 @@ import akka.http.scaladsl.server.Directives._
 import spray.json.DefaultJsonProtocol
 import spray.json.RootJsonFormat
 
+case class JsonResponse(message: String)
+object JsonResponse {
+  import DefaultJsonProtocol._
+  implicit val responseFormat: RootJsonFormat[JsonResponse] = jsonFormat1(JsonResponse.apply)
+}
+
 trait JsonHandler {
-  import JsonHandler._
   import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
   lazy val jsonResponse = JsonResponse("Hello, World!") // domain object
@@ -16,12 +21,4 @@ trait JsonHandler {
         complete(jsonResponse)
       }
     }
-}
-
-object JsonHandler {
-  case class JsonResponse(message: String)
-  object JsonResponse {
-    import DefaultJsonProtocol._
-    implicit val responseFormat: RootJsonFormat[JsonResponse] = jsonFormat1(JsonResponse.apply)
-  }
 }

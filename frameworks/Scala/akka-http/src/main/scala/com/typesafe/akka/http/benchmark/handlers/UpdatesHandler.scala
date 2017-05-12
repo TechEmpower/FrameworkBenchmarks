@@ -1,70 +1,35 @@
 package com.typesafe.akka.http.benchmark.handlers
 
-import akka.actor.ActorSystem
-import akka.http.scaladsl.model.HttpCharsets._
-import akka.http.scaladsl.model.MediaTypes._
-import akka.http.scaladsl.model.{ HttpEntity, HttpResponse, StatusCodes }
 import akka.http.scaladsl.server.Directives._
 import com.typesafe.akka.http.benchmark.Infrastructure
 import com.typesafe.akka.http.benchmark.datastore.DataStore
 import com.typesafe.akka.http.benchmark.entity.World
 import com.typesafe.akka.http.benchmark.util.RandomGenerator
-import spray.json.{ DefaultJsonProtocol, RootJsonFormat }
 
 import scala.concurrent.Future
-import scala.util.control.Exception._
-import scala.util.{ Failure, Success }
+import scala.util.Try
 
 trait UpdatesHandler { _: Infrastructure with DataStore with RandomGenerator =>
-  import UpdatesHandler.Protocols._
+  import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+  import spray.json.DefaultJsonProtocol._
 
-  def updatesEndpoint = get {
-    path("updates") {
-      parameter('queries.?) { queries =>
-        onComplete(response(queries)) {
-          case Success(worlds) => complete(worlds)
-          case Failure(t)      => failWith(t)
+  def updatesEndpoint =
+    get {
+      path("updates") {
+        parameter('queries.?) { numQueries =>
+          val realNumQueries = Try(numQueries.getOrElse("1").toInt).getOrElse(1).min(500).max(1)
+
+          def mutateOne(id: Int): Future[World] =
+            for {
+              world <- requireWorldById(id)
+              newWorld = world.copy(randomNumber = nextRandomInt)
+              wasUpdated <- updateWorld(newWorld)
+            } yield newWorld // ignore `wasUpdated`
+
+          complete {
+            Future.traverse(Seq.fill(realNumQueries)(nextRandomInt))(mutateOne)
+          }
         }
       }
     }
-  }
-
-  private val catcher = catching(classOf[NumberFormatException]).withApply(t => 1)
-
-  private def response(queries: Option[String]): Future[HttpResponse] = {
-    val range = queries.map(i => catcher {
-      i.toInt
-    }).getOrElse(1).min(500).max(1)
-    Future.sequence {
-      (0 until range).toList.map {
-        _ => nextRandomInt
-      }.map {
-        id => findOne(id)
-      }
-    }.map {
-      worlds => worlds.map(_.copy(randomNumber = nextRandomInt))
-    }.flatMap {
-      worlds => Future.sequence(worlds.map(world => updateOne(world.id, world.randomNumber).map(_ => world)))
-    }.map {
-      worlds => HttpResponse(StatusCodes.OK, entity = HttpEntity(worlds.map(_.toResponse).toJson.toString()).withContentType(`application/json`))
-    }
-  }
-}
-
-object UpdatesHandler {
-
-  object Protocols extends DefaultJsonProtocol {
-
-    case class Response(id: Int, randomNumber: Int)
-
-    implicit val responseFormat: RootJsonFormat[Response] = jsonFormat2(Response.apply)
-
-    implicit val responseListFormat: RootJsonFormat[List[Response]] = listFormat[Response]
-
-    implicit class ToResponse(record: World) {
-      def toResponse = Response(record.id, record.randomNumber)
-    }
-
-  }
-
 }
