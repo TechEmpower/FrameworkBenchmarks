@@ -7,4 +7,4 @@ sed -i 's|0.0.0.0:3306|'${DBHOST}':3306|g' src/main/resources/application.conf
 
 sbt 'assembly' -batch
 
-java -server -jar target/scala-2.11/akka-http-benchmark.jar &
+java -server -jar target/scala-2.12/akka-http-benchmark.jar &
