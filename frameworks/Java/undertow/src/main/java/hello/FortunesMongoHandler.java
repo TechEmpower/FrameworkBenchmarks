@@ -1,55 +1,34 @@
 package hello;
 
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-import com.mongodb.DB;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import static hello.Helper.sendHtml;
+
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
-
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-
-import static hello.HelloWebServer.HTML_UTF8;
+import org.bson.Document;
 
 /**
  * Handles the fortunes test using MongoDB.
  */
 final class FortunesMongoHandler implements HttpHandler {
-  private final MustacheFactory mustacheFactory;
-  private final DB database;
+  private final MongoCollection<Document> fortuneCollection;
 
-  FortunesMongoHandler(MustacheFactory mustacheFactory, DB database) {
-    this.mustacheFactory = Objects.requireNonNull(mustacheFactory);
-    this.database = Objects.requireNonNull(database);
+  FortunesMongoHandler(MongoDatabase db) {
+    fortuneCollection = db.getCollection("fortune");
   }
 
   @Override
-  public void handleRequest(HttpServerExchange exchange) throws Exception {
-    if (exchange.isInIoThread()) {
-      exchange.dispatch(this);
-      return;
-    }
-    List<Fortune> fortunes = new ArrayList<>();
-    DBCursor cursor = database.getCollection("fortune").find();
-    while (cursor.hasNext()) {
-      DBObject object = cursor.next();
-      fortunes.add(new Fortune(
-          ((Number) object.get("_id")).intValue(),
-          (String) object.get("message")));
-    }
+  public void handleRequest(HttpServerExchange exchange) {
+    List<Fortune> fortunes =
+        fortuneCollection
+            .find()
+            .map(Helper::mongoDocumentToFortune)
+            .into(new ArrayList<>());
     fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-    Collections.sort(fortunes);
-    Mustache mustache = mustacheFactory.compile("hello/fortunes.mustache");
-    StringWriter writer = new StringWriter();
-    mustache.execute(writer, fortunes);
-    exchange.getResponseHeaders().put(
-        Headers.CONTENT_TYPE, HTML_UTF8);
-    exchange.getResponseSender().send(writer.toString());
+    fortunes.sort(null);
+    sendHtml(exchange, fortunes, "hello/fortunes.mustache");
   }
 }

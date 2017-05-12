@@ -23,7 +23,7 @@ def meminfo(arg)
 end
 
 def auto_tune
-  avail_mem = meminfo('MemAvailable') * 0.8 - MAX_THREADS * 1_024
+  avail_mem = meminfo('MemFree') * 0.8 - MAX_THREADS * 1_024
 
   workers = [
     [(1.0 * avail_mem / KB_PER_WORKER).floor, MIN_WORKERS].max,

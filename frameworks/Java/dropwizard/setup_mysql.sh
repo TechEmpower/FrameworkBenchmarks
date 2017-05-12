@@ -6,4 +6,4 @@ sed -i 's|url: jdbc:mysql://.*/hello_world|url: jdbc:mysql://'"${DBHOST}"':3306/
 
 mvn -P mysql clean package
 
-java -server $JAVA_OPTS_TFB -jar target/hello-world-0.0.1-SNAPSHOT.jar server hello-world-mysql.yml &
+java -jar target/hello-world-0.0.1-SNAPSHOT.jar server hello-world-mysql.yml &

@@ -201,3 +201,102 @@ internal class SqlRepository(jdbcUrl: String) : Repository {
         return worlds
     }
 }
+
+internal class MySqlRepository : Repository {
+    private val SELECT_WORLD = "select * from world where id = ?"
+    private val UPDATE_WORLD = "update world set randomNumber = ? where id = ?"
+    private val SELECT_FORTUNES = "select * from fortune"
+
+    private val DATA_SOURCE: DataSource
+
+    init {
+        val config = HikariConfig()
+        config.jdbcUrl = "jdbc:mysql://$DB_HOST/$DB?" +
+            "useSSL=false&" +
+            "rewriteBatchedStatements=true&" +
+            "jdbcCompliantTruncation=false&" +
+            "elideSetAutoCommits=true&" +
+            "useLocalSessionState=true&" +
+            "cachePrepStmts=true&" +
+            "cacheCallableStmts=true&" +
+            "alwaysSendSetIsolation=false&" +
+            "prepStmtCacheSize=4096&" +
+            "cacheServerConfiguration=true&" +
+            "prepStmtCacheSqlLimit=2048&" +
+            "traceProtocol=false&" +
+            "useUnbufferedInput=false&" +
+            "useReadAheadInput=false&" +
+            "maintainTimeStats=false&" +
+            "useServerPrepStmts=true&" +
+            "cacheRSMetadata=true"
+        config.maximumPoolSize = 256
+        config.username = "benchmarkdbuser"
+        config.password = "benchmarkdbpass"
+        DATA_SOURCE = HikariDataSource(config)
+    }
+
+    override fun findFortunes(): List<Fortune> {
+        var fortunes = listOf<Fortune>()
+
+        val connection = KConnection(DATA_SOURCE.connection ?: err)
+        connection.use { con: Connection ->
+            val rs = con.prepareStatement(SELECT_FORTUNES).executeQuery()
+            while (rs.next())
+                fortunes += Fortune(rs.getInt(1), rs.getString(2))
+        }
+
+        return fortunes
+    }
+
+    class KConnection(conn: Connection) : Connection by conn, Closeable
+
+    override fun findWorlds(queries: Int): List<World> {
+        var worlds: List<World> = listOf()
+
+        KConnection(DATA_SOURCE.connection).use { con: Connection ->
+            val stmtSelect = con.prepareStatement(SELECT_WORLD)
+
+            for (ii in 0..queries - 1) {
+                stmtSelect.setInt(1, rnd())
+                val rs = stmtSelect.executeQuery()
+                rs.next()
+                worlds += World(rs.getInt(1), rs.getInt(2))
+            }
+        }
+
+        return worlds
+    }
+
+    override fun replaceWorlds(queries: Int): List<World> {
+        var worlds: List<World> = listOf()
+
+        KConnection(DATA_SOURCE.connection).use { con: Connection ->
+            val stmtSelect = con.prepareStatement(SELECT_WORLD, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)
+
+            for (ii in 0..queries - 1) {
+                stmtSelect.setInt(1, rnd())
+                val rs = stmtSelect.executeQuery()
+                rs.next()
+
+                val world = World(rs.getInt(1), rs.getInt(2)).copy(randomNumber = rnd())
+                worlds += world
+            }
+        }
+
+        executor.execute {
+            KConnection(DATA_SOURCE.connection).use { con: Connection ->
+                val stmtUpdate = con.prepareStatement(UPDATE_WORLD)
+
+                for ((_, id, randomNumber) in worlds) {
+                    stmtUpdate.setInt(1, randomNumber)
+                    stmtUpdate.setInt(2, id)
+                    stmtUpdate.addBatch()
+                }
+
+                stmtUpdate.executeBatch()
+            }
+        }
+
+        return worlds
+    }
+}

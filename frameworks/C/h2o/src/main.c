@@ -43,7 +43,7 @@
 #define USAGE_MESSAGE \
 	"Usage:\n%s [-a <max connections accepted simultaneously>] [-b <bind address>] " \
 	"[-c <certificate file>] [-d <database connection string>] [-f fortunes template file path] " \
-	"[-k <private key file>] [-l <log path>] " \
+	"[-j <max reused JSON generators>] [-k <private key file>] [-l <log path>] " \
 	"[-m <max database connections per thread>] [-p <port>] " \
 	"[-q <max enqueued database queries per thread>] [-r <root directory>] " \
 	"[-s <HTTPS port>] [-t <thread number>]\n"
@@ -165,10 +165,12 @@ error:
 static int parse_options(int argc, char *argv[], config_t *config)
 {
 	memset(config, 0, sizeof(*config));
+	// Need to set the default value here because 0 is a valid input value.
+	config->max_json_generator = 32;
 	opterr = 0;
 
 	while (1) {
-		const int opt = getopt(argc, argv, "?a:b:c:d:f:k:l:m:p:q:r:s:t:");
+		const int opt = getopt(argc, argv, "?a:b:c:d:f:j:k:l:m:p:q:r:s:t:");
 
 		if (opt == -1)
 			break;
@@ -203,6 +205,9 @@ static int parse_options(int argc, char *argv[], config_t *config)
 				break;
 			case 'f':
 				config->template_path = optarg;
+				break;
+			case 'j':
+				PARSE_NUMBER(config->max_json_generator);
 				break;
 			case 'k':
 				config->key = optarg;

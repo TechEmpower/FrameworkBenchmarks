@@ -29,4 +29,11 @@ public class Fortune implements IFortune, SimpleBean {
         return this.message;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

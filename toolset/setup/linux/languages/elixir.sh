@@ -5,7 +5,7 @@ fw_depends erlang
 fw_installed elixir && return 0
 
 ELIXIR_HOME=$IROOT/elixir
-VERSION="1.3.3-1"
+VERSION="1.4.1-1"
 RELEASE="trusty"
 ARCH="all"
 

@@ -10,10 +10,7 @@ python:
 
 env:
   matrix:
-    - "TESTDIR=C/libreactor"
-    - "TESTDIR=C/lwan"
     - "TESTDIR=C/duda"
-    - "TESTDIR=C/haywire"
     - "TESTDIR=C/onion"
     - "TESTDIR=C/h2o"
     - "TESTDIR=C/octane"
@@ -31,16 +28,18 @@ env:
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ulib"
     - "TESTDIR=C++/wt"
-    - "TESTDIR=C++/ffead-cpp"
     - "TESTDIR=C++/poco"
+    - "TESTDIR=C++/luna"
     - "TESTDIR=Clojure/compojure"
     - "TESTDIR=Clojure/http-kit"
     - "TESTDIR=Clojure/luminus"
+    - "TESTDIR=Clojure/macchiato"
     - "TESTDIR=Clojure/pedestal"
     - "TESTDIR=Clojure/aleph"
     - "TESTDIR=Crystal/crystal"
     - "TESTDIR=Crystal/kemal"
     - "TESTDIR=D/vibed"
+    - "TESTDIR=D/hunt"
     - "TESTDIR=D/collie"
     - "TESTDIR=Dart/dart-raw"
     - "TESTDIR=Dart/redstone"
@@ -91,6 +90,7 @@ env:
     - "TESTDIR=Java/permeagility"
     - "TESTDIR=Java/play1"
     - "TESTDIR=Java/play2-java"
+    - "TESTDIR=Java/proteus"
     - "TESTDIR=Java/rapidoid"
     - "TESTDIR=Java/restexpress"
     - "TESTDIR=Java/revenj-jvm"
@@ -168,6 +168,7 @@ env:
     - "TESTDIR=Python/wheezyweb"
     - "TESTDIR=Python/wsgi"
     - "TESTDIR=Ruby/grape"
+    - "TESTDIR=Ruby/hanami"
     - "TESTDIR=Ruby/ngx_mruby"
     - "TESTDIR=Ruby/padrino"
     - "TESTDIR=Ruby/rack"
@@ -196,6 +197,7 @@ env:
     - "TESTDIR=Scala/finch"
     - "TESTDIR=Swift/vapor"
     - "TESTDIR=Ur/urweb"
+    - "TESTDIR=Vala/valum"
 
 before_script:
 

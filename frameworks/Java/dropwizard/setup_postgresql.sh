@@ -6,4 +6,4 @@ sed -i 's|url: jdbc:postgresql://.*/hello_world|url: jdbc:postgresql://'"${DBHOS
 
 mvn -P postgres clean package
 
-java -server $JAVA_OPTS_TFB -jar target/hello-world-0.0.1-SNAPSHOT.jar server hello-world-postgres.yml &
+java -jar target/hello-world-0.0.1-SNAPSHOT.jar server hello-world-postgres.yml &

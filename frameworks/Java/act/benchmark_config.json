@@ -21,7 +21,7 @@
       "notes": "",
       "versus": "undertow"
     },
-    "pgsql": {
+    "ebean-pg": {
       "setup_file": "setup",
       "db_url": "/pgsql/db",
       "query_url": "/pgsql/queries?queries=",
@@ -43,7 +43,7 @@
       "notes": "",
       "versus": "undertow"
     },
-    "mysql": {
+    "ebean-my": {
       "setup_file": "setup",
       "db_url": "/mysql/db",
       "query_url": "/mysql/queries?queries=",
@@ -65,7 +65,7 @@
       "notes": "",
       "versus": "undertow"
     },
-    "mongodb": {
+    "morphia-mo": {
       "setup_file": "setup",
       "db_url": "/mongo/db",
       "query_url": "/mongo/queries?queries=",
@@ -86,6 +86,51 @@
       "display_name": "act-morphia",
       "notes": "",
       "versus": "undertow"
+    },
+    "beetlsql-pg": {
+      "setup_file": "setup",
+      "db_url": "/beetlsql/db",
+      "query_url": "/beetlsql/queries?queries=",
+      "fortune_url": "/beetlsql/fortunes",
+      "update_url": "/beetlsql/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "actframework",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Full",
+      "platform": "Undertow",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "act-beetlsql-pgsql",
+      "notes": "",
+      "versus": "undertow"
+    },
+    "jdbc-pg": {
+      "setup_file": "setup",
+      "db_url": "/jdbc/db",
+      "query_url": "/jdbc/queries?queries=",
+      "fortune_url": "/jdbc/fortunes",
+      "update_url": "/jdbc/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "actframework",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Undertow",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "act-jdbc-pgsql",
+      "notes": "",
+      "versus": "undertow"
     }
+
   }]
 }

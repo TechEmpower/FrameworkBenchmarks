@@ -1,0 +1,29 @@
+{
+  "framework": "macchiato",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates/",
+      "port": 3000,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "macchiato",
+      "language": "ClojureScript",
+      "flavor": "Macchiato",
+      "orm": "Raw",
+      "platform": "nodejs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "macchiato",
+      "notes": "",
+      "versus": "nodejs"
+    }
+  }]
+}
