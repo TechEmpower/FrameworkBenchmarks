@@ -38,6 +38,7 @@ env:
     - "TESTDIR=Clojure/aleph"
     - "TESTDIR=Crystal/crystal"
     - "TESTDIR=Crystal/kemal"
+    - "TESTDIR=Crystal/kemalyst"
     - "TESTDIR=D/vibed"
     - "TESTDIR=D/hunt"
     - "TESTDIR=D/collie"
