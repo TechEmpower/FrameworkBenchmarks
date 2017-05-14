@@ -1,0 +1,8 @@
+/doc/
+/libs/
+/lib/
+/.crystal/
+/.shards/
+.env
+
+

@@ -1,0 +1,48 @@
+version: '2'
+
+services:
+  web:
+    build: .
+    image: kemalyst
+    command: 'kgen watch'
+    working_dir: /app/user
+    environment:
+      DATABASE_URL: postgres://admin:password@db:5432/kemalyst_development
+      SMTP_URL: mail:1025
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+      - mail
+    volumes:
+      - '.:/app/user'
+
+  migrate:
+    build: .
+    image: kemalyst
+    command: bash -c 'while ! nc -q 1 db 5432 </dev/null; do sleep 1; done && kgen migrate up'
+    working_dir: /app/user
+    environment:
+      DATABASE_URL: postgres://admin:password@db:5432/kemalyst_development
+    volumes:
+      - '.:/app/user'
+    depends_on:
+      - db
+
+  mail:
+    image: drujensen/mailcatcher:latest
+    ports:
+      - '1025:1025'
+      - '1080:1080'
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: kemalyst_development
+    volumes:
+      - 'db:/var/lib/postgres/data'
+
+volumes:
+  db:
