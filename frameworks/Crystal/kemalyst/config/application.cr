@@ -8,12 +8,9 @@ Kemalyst::Application.config do |config|
   # Configure reuse_port option
   config.reuse_port = true
 
-  # Disabled logging handler
+  # Disable unused middleware
   config.handlers = [] of HTTP::Handler
   config.handlers << Kemalyst::Handler::Error.instance
-  config.handlers << Kemalyst::Handler::Static.instance
-  config.handlers << Kemalyst::Handler::Session.instance
-  config.handlers << Kemalyst::Handler::Flash.instance
   config.handlers << Kemalyst::Handler::Params.instance
   config.handlers << Kemalyst::Handler::Router.instance
 end

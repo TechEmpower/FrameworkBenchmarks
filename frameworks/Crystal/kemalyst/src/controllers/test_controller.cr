@@ -12,23 +12,26 @@ class TestController < Kemalyst::Controller
   end
 
   action json do
-    json({message: "Hello, World!"}.to_json)
+    results = {message: "Hello, World!"}
+    json results.to_json
   end
 
   action db do
+    results = {} of Symbol => Int32
     if world = World.find rand(1..10_000)
-      json({id: world.id, randomNumber: world.randomNumber}.to_json)
+      results = {id: world.id, randomNumber: world.randomNumber}
     end
+    json results.to_json
   end
 
   action queries do
     queries = params["queries"].as(String)
     queries = queries.to_i? || 1
-    queries.clamp(1..500)
+    queries = queries.clamp(1..500)
 
     results = (1..queries).map do
       if world = World.find rand(1..10_000)
-        {id: world.id, randomNumber: world.randomNumber}.to_json
+        {id: world.id, randomNumber: world.randomNumber}
       end
     end
 
@@ -38,14 +41,14 @@ class TestController < Kemalyst::Controller
   action updates do
     queries = params["queries"].as(String)
     queries = queries.to_i? || 1
-    queries.clamp(1..500)
+    queries = queries.clamp(1..500)
 
     updated = (1..queries).map do
       world = World.find rand(1..10_000)
       if world
         world.randomNumber = rand(1..10_000)
         world.save
-        {id: world.id, randomNumber: world.randomNumber}.to_json
+        {id: world.id, randomNumber: world.randomNumber}
       end
     end
 
@@ -53,8 +56,12 @@ class TestController < Kemalyst::Controller
   end
 
   action fortunes do
+    fortune = Fortune.new
+    fortune.id = 0
+    fortune.message = "Additional fortune added at request time."
+
     fortunes = Fortune.all
-    fortunes << Fortune.new({id: 0, message: "Additional fortune added at request time."}.to_h)
+    fortunes << fortune
     fortunes.sort_by! { |fortune| fortune.not_nil!.message.not_nil! }
 
     html render("fortune/index.slang", "main.slang")
