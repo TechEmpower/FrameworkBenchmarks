@@ -22,12 +22,12 @@ trait UpdatesHandler { _: Infrastructure with DataStore with RandomGenerator =>
           def mutateOne(id: Int): Future[World] =
             for {
               world <- requireWorldById(id)
-              newWorld = world.copy(randomNumber = nextRandomInt)
+              newWorld = world.copy(randomNumber = nextRandomIntBetween1And10000)
               wasUpdated <- updateWorld(newWorld)
             } yield newWorld // ignore `wasUpdated`
 
           complete {
-            Future.traverse(Seq.fill(realNumQueries)(nextRandomInt))(mutateOne)
+            Future.traverse(Seq.fill(realNumQueries)(nextRandomIntBetween1And10000))(mutateOne)
           }
         }
       }

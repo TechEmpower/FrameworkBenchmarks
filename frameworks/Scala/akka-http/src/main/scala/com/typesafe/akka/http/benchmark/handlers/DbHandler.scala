@@ -11,7 +11,7 @@ trait DbHandler { _: Infrastructure with DataStore with RandomGenerator =>
   def dbEndpoint =
     get {
       path("db") {
-        val id = nextRandomInt
+        val id = nextRandomIntBetween1And10000
         complete(requireWorldById(id))
       }
     }

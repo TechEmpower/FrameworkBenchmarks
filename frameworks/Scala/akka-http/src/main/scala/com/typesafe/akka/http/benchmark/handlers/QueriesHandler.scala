@@ -23,7 +23,7 @@ trait QueriesHandler {
 
           val realNumQueries = Try(numQueries.getOrElse("1").toInt).getOrElse(1).min(500).max(1)
           complete {
-            Future.traverse(Seq.fill(realNumQueries)(nextRandomInt))(requireWorldById)
+            Future.traverse(Seq.fill(realNumQueries)(nextRandomIntBetween1And10000))(requireWorldById)
           }
         }
       }
