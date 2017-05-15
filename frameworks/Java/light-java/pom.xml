@@ -36,9 +36,9 @@
         <version.httpclient>4.5.2</version.httpclient>
         <version.httpasyncclient>4.1.2</version.httpasyncclient>
         <version.swagger>1.5.10</version.swagger>
-        <version.hikaricp>2.5.1</version.hikaricp>
+        <version.hikaricp>2.6.1</version.hikaricp>
         <version.mysql>5.1.41</version.mysql>
-        <version.postgres>9.4.1211</version.postgres>
+        <version.postgres>42.1.1</version.postgres>
     </properties>
 
     <dependencies>
