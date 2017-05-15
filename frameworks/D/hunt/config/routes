@@ -1,0 +1,13 @@
+#
+# [GET,POST,PUT...]    path    controller.method
+#
+
+*	/json	index.json
+*	/db	index.db
+*	/queries	index.queries
+*	/fortunes	index.fortunes
+*	/update	index.update
+*	/plaintext	index.plaintext
+*	/mongodb/db	index.mongodbDb
+*	/mongodb/queries	index.mongodbQueries
+*	/mongodb/fortunes	index.mongodbFortunes

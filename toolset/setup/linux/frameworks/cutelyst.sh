@@ -2,7 +2,7 @@
 
 fw_installed cutelyst && return 0
 
-CUTELYST_VER=1.6.0-beta4
+CUTELYST_VER=1.6.0-beta7
 QT_VERSION_MM=56
 QT_VERSION_FULL=562-trusty
 CROOT=${IROOT}/cutelyst
@@ -40,7 +40,7 @@ cmake .. \
 -DUWSGI_PLUGINS_DIR=${CROOT}/lib/uwsgi/plugins \
 -DUSE_JEMALLOC=on
 
-make -j $MAX_THREADS && sudo make install
+make -j $CPU_COUNT && make install
 
 echo "QT_VERSION_MM=${QT_VERSION_MM}" > $IROOT/cutelyst.installed
 

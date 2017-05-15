@@ -109,4 +109,4 @@ get "/updates" do |env|
 end
 
 logging false
-Kemal.run
+Kemal.run { |cfg| cfg.server.bind(reuse_port: true) }

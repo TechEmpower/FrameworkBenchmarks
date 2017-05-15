@@ -1,18 +1,15 @@
 
-buildscript {
-    repositories {
-        jcenter ()
-    }
-
-    dependencies {
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    }
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.1.1'
 }
 
 apply from: "$gradleScripts/kotlin.gradle"
 apply from: "$gradleScripts/service.gradle"
+apply from: "$gradleScripts/deploy.gradle"
+
 apply plugin: 'war'
+
+defaultTasks 'systemd'
 
 mainClassName = "co.there4.hexagon.BenchmarkKt"
 applicationDefaultJvmArgs = [
@@ -31,13 +28,19 @@ installDist.dependsOn 'war'
 
 dependencies {
     compile ("co.there4:hexagon:$hexagonVersion")
-    compile ("com.mitchellbosecke:pebble:$pebbleVersion")
 
+    compile ("com.mitchellbosecke:pebble:$pebbleVersion")
     compile ("org.mongodb:mongodb-driver:$mongodbVersion")
+    compile ("com.zaxxer:HikariCP:$hikariVersion")
+    compile ("mysql:mysql-connector-java:$mysqlConnectorVersion")
 
     // providedCompile excludes the dependency only in the WAR, not in the distribution
     providedCompile ("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
 
     testCompile ("org.testng:testng:$testngVersion")
     testCompile ("co.there4:hexagon:$hexagonVersion:test")
+}
+
+test {
+    useTestNG ()
 }

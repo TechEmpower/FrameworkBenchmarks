@@ -2,7 +2,7 @@
 
 This is the ActFramework portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-This is using [ActFramework R1.0.2](http://actframework.org) to build an application.
+This is using [ActFramework R1.1.2](http://actframework.org) to build an application.
 
 ## How to run this app locally
 
@@ -16,7 +16,7 @@ unzip *.zip
 ./start
 ```
 
-Or simply run `run.sh`
+Or simply run `./run.sh`
     
 
 ## Application Endpoints
@@ -30,24 +30,32 @@ Or simply run `run.sh`
 * `mongo`: http://localhost:8080/mongo/db
 * `mysql`: http://localhost:8080/mysql/db
 * `pgsql`: http://localhost:8080/pgsql/db
+* `beetlsql-pgsql`: http://localhost:8080/beetsql/db
+* `jdbc-pgsql`: http://localhost:8080/beetsql/db
 
 ### Multiple queries
 
 * `mongo`: http://localhost:8080/mongo/queries?quries=20
 * `mysql`: http://localhost:8080/mysql/queries?quries=20
 * `pgsql`: http://localhost:8080/pgsql/queries?quries=20
+* `beetlsql-pgsql`: http://localhost:8080/beetsql/queries?quries=20
+* `jdbc-pgsql`: http://localhost:8080/beetsql/queries?quries=20
 
 ### Fortunes
 
 * `mongo`: http://localhost:8080/mongo/fortunes
 * `mysql`: http://localhost:8080/mysql/fortunes
 * `pgsql`: http://localhost:8080/pgsql/fortunes
+* `beetlsql-pgsql`: http://localhost:8080/beetsql/db
+* `jdbc-pgsql`: http://localhost:8080/beetsql/db
 
 ### DB updates
 
 * `mongo`: http://localhost:8080/mongo/updates?quries=20
 * `mysql`: http://localhost:8080/mysql/updates?quries=20
 * `pgsql`: http://localhost:8080/pgsql/updates?quries=20
+* `beetlsql-pgsql`: http://localhost:8080/beetsql/updates?quries=20
+* `jdbc-pgsql`: http://localhost:8080/beetsql/updates?quries=20
 
 ### Plain text
 
@@ -132,16 +140,19 @@ The common base classes for mysql and pgsql classes
 * [World controller](src/main/java/com/techempower/act/pgsql/controller/WorldController.java) - for `/pgsql/db`, `/pgsql/queries` and `/pgsql/updates` endpoint
 
 
-
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [ActFramework 1.0.4](http://actframework.org/)
-* [act-ebean plugin 1.0.3](https://github.com/actframework/act-ebean)
-* [act-morphia plugin 1.0.2](https://github.com/actframework/act-morphia)
+* [ActFramework 1.1.2](http://actframework.org/)
+* [act-ebean2 plugin 1.04](https://github.com/actframework/act-ebean2)
+* [act-morphia plugin 1.1.0](https://github.com/actframework/act-morphia)
+* [act-beetlsql plugin 1.1.0](https://github.com/actframework/act-beetlsql)
+* [act-mustache plugin 1.0.0](https://github.com/actframework/act-mustache)
 * [Undertow 1.4.8.Final](http://undertow.io/)
 
 ## Local Test Result
+
+**Note** the data below is outdated
 
 |            Test            | Throughput |  Latency  | Timeout/Error |
 | -------------------------- | ---------: | --------: | ------: |

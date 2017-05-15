@@ -1,0 +1,25 @@
+{
+  "framework": "hunt",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "hunt",
+      "language": "D",
+      "flavor": "DLang2",
+      "orm": "raw",
+      "platform": "None",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hunt",
+      "notes": "",
+      "versus": "hunt"
+    }
+  }]
+}

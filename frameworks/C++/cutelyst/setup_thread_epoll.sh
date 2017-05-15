@@ -3,8 +3,9 @@
 DRIVER=
 UWSGI=
 NGINX=
-PROCESS_OR_THREAD=-t
-BALANCER=--experimental-thread-balancer
+C_PROCESSES=1
+C_THREADS=${CPU_COUNT}
+CPU_AFFINITY=1
 export CUTELYST_EVENT_LOOP_EPOLL=1
 
 source ${TROOT}/config.sh
