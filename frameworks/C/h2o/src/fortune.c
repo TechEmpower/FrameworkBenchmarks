@@ -142,15 +142,18 @@ static int compare_fortunes(const list_t *x, const list_t *y)
 
 static void complete_fortunes(struct st_h2o_generator_t *self, h2o_req_t *req)
 {
-	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t,
-	                                                           generator,
-	                                                           self);
+	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t, generator, self);
 	iovec_list_t * const iovec_list = H2O_STRUCT_FROM_MEMBER(iovec_list_t,
 	                                                         l,
 	                                                         fortune_ctx->iovec_list);
 
 	fortune_ctx->iovec_list = iovec_list->l.next;
-	h2o_send(req, iovec_list->iov, iovec_list->iovcnt, !fortune_ctx->iovec_list);
+
+	const h2o_send_state_t state = fortune_ctx->iovec_list ?
+	                               H2O_SEND_STATE_IN_PROGRESS :
+	                               H2O_SEND_STATE_FINAL;
+
+	h2o_send(req, iovec_list->iov, iovec_list->iovcnt, state);
 }
 
 static list_t *get_sorted_sublist(list_t *head)
@@ -201,18 +204,14 @@ static list_t *merge_lists(list_t *head1, list_t *head2)
 
 static void on_fortune_error(db_query_param_t *param, const char *error_string)
 {
-	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t,
-	                                                           param,
-	                                                           param);
+	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t, param, param);
 
 	send_error(BAD_GATEWAY, error_string, fortune_ctx->req);
 }
 
 static result_return_t on_fortune_result(db_query_param_t *param, PGresult *result)
 {
-	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t,
-	                                                           param,
-	                                                           param);
+	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t, param, param);
 	int ret = DONE;
 	const ExecStatusType status = PQresultStatus(result);
 
@@ -240,7 +239,7 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 					fortune->data = result;
 			}
 			else {
-				send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, fortune_ctx->req);
+				send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, fortune_ctx->req);
 				ret = DONE;
 
 				if (!i)
@@ -251,8 +250,9 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 		}
 	}
 	else if (result) {
+		LIBRARY_ERROR("PQresultStatus", PQresultErrorMessage(result));
+		send_error(BAD_GATEWAY, DB_ERROR, fortune_ctx->req);
 		PQclear(result);
-		send_error(BAD_GATEWAY, PQresultErrorMessage(result), fortune_ctx->req);
 	}
 	else {
 		mustache_api_t api = {.sectget = on_fortune_section,
@@ -275,13 +275,15 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 			fortune_ctx->iovec_list = iovec_list->l.next;
 			set_default_response_param(HTML, fortune_ctx->content_length, fortune_ctx->req);
 			h2o_start_response(fortune_ctx->req, &fortune_ctx->generator);
-			h2o_send(fortune_ctx->req,
-			         iovec_list->iov,
-			         iovec_list->iovcnt,
-			         !fortune_ctx->iovec_list);
+
+			const h2o_send_state_t state = fortune_ctx->iovec_list ?
+			                               H2O_SEND_STATE_IN_PROGRESS :
+			                               H2O_SEND_STATE_FINAL;
+
+			h2o_send(fortune_ctx->req, iovec_list->iov, iovec_list->iovcnt, state);
 		}
 		else
-			send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, fortune_ctx->req);
+			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, fortune_ctx->req);
 	}
 
 	return ret;
@@ -315,9 +317,7 @@ static uintmax_t on_fortune_section(mustache_api_t *api,
 
 static void on_fortune_timeout(db_query_param_t *param)
 {
-	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t,
-	                                                           param,
-	                                                           param);
+	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t, param, param);
 
 	send_error(GATEWAY_TIMEOUT, DB_TIMEOUT_ERROR, fortune_ctx->req);
 }
@@ -399,10 +399,10 @@ int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req)
 				send_service_unavailable_error(DB_REQ_ERROR, req);
 		}
 		else
-			send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 	}
 	else
-		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+		send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 
 	return 0;
 }

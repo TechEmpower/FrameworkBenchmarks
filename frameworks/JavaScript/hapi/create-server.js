@@ -3,10 +3,18 @@
  * working implementation for the benchmark suite.
  */
 
-var Hapi = require('hapi');
-var Vision = require('vision');
-var server = new Hapi.Server();
-server.connection({port: 8080});
+const Hapi = require('hapi');
+const Vision = require('vision');
+
+const options = {
+  connections: {
+    compression: false
+  }
+};
+
+const server = new Hapi.Server(options);
+
+server.connection({port: 8080, host: '0.0.0.0'});
 server.register(Vision, (err) => {
     if (err) {
         throw err;
@@ -18,25 +26,23 @@ server.register(Vision, (err) => {
     });
 });
 
-var Promise = require('bluebird');
-var MongooseHandler;
-var SequelizeHandler;
-var SequelizePgHandler;
+const MongooseHandler = require('./handlers/mongoose');
+const SequelizeHandler = require('./handlers/sequelize');
+const SequelizePgHandler = require('./handlers/sequelize-postgres');
 
-// Slight start-up improvement loading handlers in parallel
-Promise.join(
-  require('./handlers/mongoose'),
-  require('./handlers/sequelize'),
-  require('./handlers/sequelize-postgres'),
-  function (mongo, mysql, pg) {
-    MongooseHandler = mongo;
-    SequelizeHandler = mysql;
-    SequelizePgHandler = pg;
-  })
-  .catch(function (err) {
-    console.log('There was a problem setting up the handlers');
-    process.exit(1);
-  });
+// Makes routing simpler as tfb routes are all GET's
+// We also don't use the nifty route features that Hapi has
+// to offer such as attaching a validator
+const Route = (path, handler) =>
+  server.route({ method: 'GET', path, handler });
+
+const JsonSerialization = (req, reply) =>
+  reply({ message: 'Hello, World!' }).header('Server', 'hapi');
+
+const Plaintext = (req, reply) =>
+  reply('Hello, World!')
+    .header('Server', 'hapi')
+    .header('Content-Type', 'text/plain');
 
 
 Route('/json', JsonSerialization);
@@ -57,26 +63,6 @@ Route('/sequelize-pg/queries', SequelizePgHandler.MultipleQueries);
 Route('/sequelize-pg/fortunes', SequelizePgHandler.Fortunes);
 Route('/sequelize-pg/updates', SequelizePgHandler.Updates);
 
-
-function JsonSerialization(req, reply) {
-  reply({ message: 'Hello, World!' })
-    .header('Server', 'hapi');
-}
-
-function Plaintext(req, reply) {
-  reply('Hello, World!')
-    .header('Server', 'hapi')
-    .header('Content-Type', 'text/plain');
-}
-
-// Makes routing simpler as tfb routes are all GET's
-// We also don't use the nifty route features that Hapi has
-// to offer such as attaching a validator
-function Route(path, handler) {
-  server.route({ method: 'GET', path: path, handler: handler})
-}
-
-server.start(function (err) {
+server.start((err) =>
   console.log('Hapi worker started and listening on ' + server.info.uri + " "
-    + new Date().toISOString(" "));
-});
+    + new Date().toISOString(" ")));

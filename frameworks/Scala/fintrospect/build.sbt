@@ -1,8 +1,8 @@
 name := """techempower-benchmarks-fintrospect"""
 
-version := "0.1.0"
+version := "0.3.0"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.1"
 
 scalacOptions += "-deprecation"
 
@@ -17,8 +17,8 @@ com.github.retronym.SbtOneJar.oneJarSettings
 mainClass in(Compile, run) := Some("FintrospectBenchmarkServer")
 
 libraryDependencies ++= Seq(
-  "io.fintrospect" %% "fintrospect-core" % "14.0.0",
-  "io.fintrospect" %% "fintrospect-jackson" % "14.0.0",
-  "io.fintrospect" %% "fintrospect-mustache" % "14.0.0",
-  "com.twitter" %% "finagle-mysql" % "6.41.0"
+  "io.fintrospect" %% "fintrospect-core" % "14.15.0",
+  "io.fintrospect" %% "fintrospect-jackson" % "14.15.0",
+  "io.fintrospect" %% "fintrospect-mustache" % "14.15.0",
+  "com.twitter" %% "finagle-mysql" % "6.43.0"
 )

@@ -1,20 +1,31 @@
-# Ruby [Sinatra](http://www.sinatrarb.com/) Benchmarking Test
+# Ruby [Sinatra](http://www.sinatrarb.com)-[Sequel](http://sequel.jeremyevans.net) Benchmarking Test
 
-The information below contains information specific to Sinatra.
-For further guidance, review the
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
-Also note the additional information provided in the [Ruby README](../).
+The information below contains information specific to the Sequel rewrite of
+the Sinatra benchmarking test. For further guidance, review the
+[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).  Also
+note the additional information provided in the [Ruby README](../).
 
 This is the Ruby Sinatra portion of a [benchmarking test suite](../../)
 comparing a variety of web platforms.
 
 ## Infrastructure Software Versions
-The tests were run with:
-* [Ruby 2.2.3](http://www.ruby-lang.org/)
-* [Sinatra 1.4.6](http://www.sinatrarb.com/)
-* [Puma 2.15.3](http://puma.io/)
-* [MySQL 5.5.29](https://dev.mysql.com/)
-* [Sequel 4.28.0](http://sequel.jeremyevans.net/documentation.html)
+
+The tests will be run with:
+
+* [Ruby 2.4](http://www.ruby-lang.org)
+* [JRuby 9.1](http://jruby.org)
+* [Rubinius 3](https://rubinius.com)\*
+* [Puma 3.6](http://puma.io)
+* [Passenger 5.1](https://www.phusionpassenger.com)
+* [Unicorn 5.2](https://bogomips.org/unicorn/)
+* [TorqueBox 4.0](http://torquebox.org)
+* [Sinatra 2.0](http://www.sinatrarb.com)
+* [Sequel 4.43](http://sequel.jeremyevans.net)
+* [Slim 3.0](http://slim-lang.com)
+* [MySQL 5.5](https://www.mysql.com)
+* [Postgres 9.3](https://www.postgresql.org)
+
+\* - Tests are developed but currently disabled due to compatibility issues.
 
 ## Paths & Source for Tests
 

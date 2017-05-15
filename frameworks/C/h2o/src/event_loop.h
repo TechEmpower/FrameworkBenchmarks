@@ -29,10 +29,9 @@
 typedef struct thread_context_t thread_context_t;
 
 typedef struct {
-	h2o_socket_t *epoll_socket;
+	h2o_socket_t *h2o_https_socket;
 	h2o_socket_t *h2o_socket;
 	size_t conn_num;
-	int epoll_fd;
 	h2o_accept_ctx_t h2o_accept_ctx;
 	h2o_context_t h2o_ctx;
 } event_loop_t;
@@ -43,10 +42,5 @@ void initialize_event_loop(bool is_main_thread,
                            global_data_t *global_data,
                            h2o_multithread_receiver_t *h2o_receiver,
                            event_loop_t *loop);
-int start_write_polling(int fd,
-                        void (**on_write_ready)(void *),
-                        bool rearm,
-                        event_loop_t *event_loop);
-void stop_write_polling(int fd, event_loop_t *event_loop);
 
 #endif // EVENT_LOOP_H_

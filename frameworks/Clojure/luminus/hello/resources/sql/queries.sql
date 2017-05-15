@@ -5,7 +5,7 @@ SELECT * FROM "Fortune"
 -- :name update-world! :! :1
 -- update an existing world record
 UPDATE "World"
-SET "randomnumber" = :randomNumber
+SET "randomnumber" = :randomnumber
 WHERE id = :id
 
 -- :name get-world :? :1

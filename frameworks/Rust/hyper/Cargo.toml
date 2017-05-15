@@ -1,7 +1,18 @@
 [package]
 name = "hello"
-version = "0.1.0"
-authors = ["Steve Klabnik <steve@steveklabnik.com>"]
+version = "0.3.0"
+authors = ["Steve Klabnik <steve@steveklabnik.com>", "Alexander Polyakov <plhk@sdf.org>"]
 
 [dependencies]
-hyper="0.9.6"
+futures = "0.1"
+tokio-proto = "0.1"
+tokio-service = "0.1"
+num_cpus = "1.2"
+serde = "0.9"
+serde_json = "0.9"
+serde_derive = "0.9"
+mime = "0.2"
+
+[dependencies.hyper]
+git = "https://github.com/hyperium/hyper/"
+rev = "030393d09987ef0fa1866d74b4bb1ab1e46905a3"

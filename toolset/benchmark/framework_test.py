@@ -5,6 +5,7 @@ from benchmark.test_types import *
 import importlib
 import os
 import subprocess
+import socket
 import time
 import re
 from pprint import pprint
@@ -33,6 +34,7 @@ class FrameworkTest:
   # Used for test types that require no pipelining or query string params.
   concurrency_template = """
 
+    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
@@ -45,10 +47,10 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -63,11 +65,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>$max_threads?$max_threads:$c)) \"http://{server_host}:{port}{url}\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>$max_threads?$max_threads:$c))" http://{server_host}:{port}{url}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -76,6 +78,7 @@ class FrameworkTest:
   # Used for test types that require pipelining.
   pipeline_template = """
 
+    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
@@ -88,10 +91,10 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads "http://{server_host}:{port}{url}"
     sleep 5
 
     echo ""
@@ -106,11 +109,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
+      echo " {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t $(($c>$max_threads?$max_threads:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
+      {wrk} {headers} --latency -d {duration} -c $c --timeout 8 -t "$(($c>$max_threads?$max_threads:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -120,7 +123,7 @@ class FrameworkTest:
   # These tests run at a static concurrency level and vary the size of
   # the query sent with each request
   query_template = """
-
+    let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
@@ -133,10 +136,10 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}2"
+    wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads "http://{server_host}:{port}{url}2"
     sleep 5
 
     echo ""
@@ -151,11 +154,11 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} \"http://{server_host}:{port}{url}$c\""
+      echo " wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads \"http://{server_host}:{port}{url}$c\""
       echo "---------------------------------------------------------"
       echo ""
       STARTTIME=$(date +"%s")
-      wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t {max_threads} "http://{server_host}:{port}{url}$c"
+      wrk {headers} --latency -d {duration} -c {max_concurrency} --timeout 8 -t $max_threads "http://{server_host}:{port}{url}$c"
       echo "STARTTIME $STARTTIME"
       echo "ENDTIME $(date +"%s")"
       sleep 2
@@ -174,9 +177,8 @@ class FrameworkTest:
 
     os.environ['TROOT'] = self.directory
     os.environ['IROOT'] = self.install_root
-    os.environ['DBHOST'] = self.database_host
+    os.environ['DBHOST'] = socket.gethostbyname(self.database_host)
     os.environ['LOGDIR'] = logDir
-    os.environ['MAX_THREADS'] = str(self.benchmarker.threads)
     os.environ['MAX_CONCURRENCY'] = str(max(self.benchmarker.concurrency_levels))
 
     # Always ensure that IROOT exists
@@ -222,15 +224,13 @@ class FrameworkTest:
       export IROOT=%s           &&  \\
       export DBHOST=%s          &&  \\
       export LOGDIR=%s          &&  \\
-      export MAX_THREADS=%s     &&  \\
       export MAX_CONCURRENCY=%s && \\
       cd %s && \\
       %s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\"''' % (self.fwroot,
         self.directory,
         self.install_root,
-        self.database_host,
+        socket.gethostbyname(self.database_host),
         logDir,
-        self.benchmarker.threads,
         max(self.benchmarker.concurrency_levels),
         self.directory,
         self.install_root,
@@ -631,7 +631,7 @@ class FrameworkTest:
   def __generate_concurrency_script(self, url, port, accept_header, wrk_command="wrk"):
     headers = self.headers_template.format(accept=accept_header)
     return self.concurrency_template.format(max_concurrency=max(self.benchmarker.concurrency_levels),
-      max_threads=self.benchmarker.threads, name=self.name, duration=self.benchmarker.duration,
+      name=self.name, duration=self.benchmarker.duration,
       levels=" ".join("{}".format(item) for item in self.benchmarker.concurrency_levels),
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command)
 
@@ -643,7 +643,7 @@ class FrameworkTest:
   def __generate_pipeline_script(self, url, port, accept_header, wrk_command="wrk"):
     headers = self.headers_template.format(accept=accept_header)
     return self.pipeline_template.format(max_concurrency=16384,
-      max_threads=self.benchmarker.threads, name=self.name, duration=self.benchmarker.duration,
+      name=self.name, duration=self.benchmarker.duration,
       levels=" ".join("{}".format(item) for item in [256,1024,4096,16384]),
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command,
       pipeline=16)
@@ -657,7 +657,7 @@ class FrameworkTest:
   def __generate_query_script(self, url, port, accept_header):
     headers = self.headers_template.format(accept=accept_header)
     return self.query_template.format(max_concurrency=max(self.benchmarker.concurrency_levels),
-      max_threads=self.benchmarker.threads, name=self.name, duration=self.benchmarker.duration,
+      name=self.name, duration=self.benchmarker.duration,
       levels=" ".join("{}".format(item) for item in self.benchmarker.query_levels),
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers)
 
@@ -675,12 +675,12 @@ class FrameworkTest:
   ############################################################
   def __begin_logging(self, test_type):
     output_file = "{file_name}".format(file_name=self.benchmarker.get_stats_file(self.name, test_type))
-    dstat_string = "dstat -afilmprsT --aio --fs --ipc --lock --raw --socket --tcp \
+    dstat_string = "dstat -Tafilmprs --aio --fs --ipc --lock --raw --socket --tcp \
                                       --raw --socket --tcp --udp --unix --vm --disk-util \
                                       --rpc --rpcd --output {output_file}".format(output_file=output_file)
     cmd = shlex.split(dstat_string)
     dev_null = open(os.devnull, "w")
-    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null)
+    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null, stderr=subprocess.STDOUT)
 
   ##############################################################
   # Begin __end_logging
@@ -904,7 +904,7 @@ def validate_test(test_name, test_keys, directory):
     test_keys['framework'] = config['framework']
 
   recommended_lang = directory.split('/')[-2]
-  windows_url = "https://github.com/TechEmpower/FrameworkBenchmarks/milestones/Windows%%20Compatibility"
+  windows_url = "https://github.com/TechEmpower/FrameworkBenchmarks/issues/1038"
   schema = {
     'language': {
       'help': ('language', 'The language of the framework used, suggestion: %s' % recommended_lang)

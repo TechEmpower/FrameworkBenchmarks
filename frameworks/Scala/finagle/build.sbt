@@ -1,12 +1,12 @@
 name := "finagle"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.11"
 
-version := "1.0.2"
+version := "6.44.0"
 
 com.github.retronym.SbtOneJar.oneJarSettings
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "finagle-http" % "6.36.0",
+  "com.twitter" %% "finagle-http" % "6.44.0",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.5.3"
 )

@@ -47,6 +47,6 @@ public class AppModule
         configuration.add(SymbolConstants.SUPPORTED_LOCALES, "en");
         configuration.add(SymbolConstants.OMIT_GENERATOR_META, true);
         configuration.add(SymbolConstants.INCLUDE_CORE_STACK, false);
-        
+        configuration.add(SymbolConstants.GZIP_COMPRESSION_ENABLED, false); 
     }
 }

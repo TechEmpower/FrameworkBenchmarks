@@ -200,7 +200,7 @@ intQuery db toKey i = do
 
 rawMongoIntQuery :: Mongo.Val v => v -> Handler Value
 rawMongoIntQuery i = do
-    Just x <- runMongoDB $ Mongo.findOne (Mongo.select ["id" =: i] "World")
+    Just x <- runMongoDB $ Mongo.findOne (Mongo.select ["id" =: i] "world")
     return $ documentToJson x
 
 intUpdate :: (Functor m, Monad m, MonadIO m

@@ -1,3 +1,7 @@
+# To maintain consistency across servers and fix a problem with the jdbc per
+# http://stackoverflow.com/questions/37719818/the-server-time-zone-value-aest-is-unrecognized-or-represents-more-than-one-ti
+SET GLOBAL time_zone = '+00:00';
+
 # modified from SO answer http://stackoverflow.com/questions/5125096/for-loop-in-mysql
 DROP DATABASE IF EXISTS hello_world;
 CREATE DATABASE hello_world;

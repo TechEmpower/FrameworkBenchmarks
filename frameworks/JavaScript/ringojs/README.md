@@ -14,7 +14,7 @@ This is the Ringojs portion of a [benchmarking test suite](../) comparing a vari
 
 The tests were run with:
 
-* [RingoJs v0.9](http://ringojs.org/)
+* [RingoJs v1.1](http://ringojs.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 ## Test URLs

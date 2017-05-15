@@ -1,0 +1,82 @@
+---
+framework: rack-sequel
+tests:
+  - default: &default
+      setup_file: run_mri_puma
+      json_url: /json
+      db_url: /db
+      query_url: /queries?queries=
+      fortune_url: /fortunes
+      update_url: /updates?queries=
+      plaintext_url: /plaintext
+      port: 8080
+      approach: Stripped
+      classification: Micro
+      database: MySQL
+      framework: rack-sequel
+      language: Ruby
+      orm: Micro
+      platform: Rack
+      webserver: Puma
+      os: Linux
+      database_os: Linux
+      display_name: rack-sequel-puma-mri
+      versus: rack-puma-mri
+      notes: ""
+    postgres:
+      <<: *default
+      database: Postgres
+      display_name: rack-sequel-postgres-puma-mri
+      versus: ~
+    puma-jruby:
+      <<: *default
+      setup_file: run_jruby_puma
+      display_name: rack-sequel-puma-jruby
+      versus: rack-puma-jruby
+      disabled: true
+    postgres-puma-jruby:
+      <<: *default
+      setup_file: run_jruby_puma
+      database: Postgres
+      display_name: rack-sequel-postgres-puma-jruby
+      versus: ~
+      disabled: true
+    passenger-mri:
+      <<: *default
+      setup_file: run_mri_passenger
+      webserver: Passenger
+      display_name: rack-sequel-passenger-mri
+      versus: ~
+    postgres-passenger-mri:
+      <<: *default
+      setup_file: run_mri_passenger
+      database: Postgres
+      webserver: Passenger
+      display_name: rack-sequel-postgres-passenger-mri
+      versus: ~
+    unicorn-mri:
+      <<: *default
+      setup_file: run_mri_unicorn
+      webserver: Unicorn
+      display_name: rack-sequel-unicorn-mri
+      versus: rack-unicorn
+    postgres-unicorn-mri:
+      <<: *default
+      setup_file: run_mri_unicorn
+      database: Postgres
+      webserver: Unicorn
+      display_name: rack-sequel-postgres-unicorn-mri
+      versus: ~
+    torquebox-jruby:
+      <<: *default
+      setup_file: run_jruby_torquebox
+      webserver: TorqueBox
+      display_name: rack-sequel-torquebox-jruby
+      versus: rack-torqbox-jruby
+    postgres-torquebox-jruby:
+      <<: *default
+      setup_file: run_jruby_torquebox
+      database: Postgres
+      webserver: TorqueBox
+      display_name: rack-sequel-postgres-torquebox-jruby
+      versus: ~

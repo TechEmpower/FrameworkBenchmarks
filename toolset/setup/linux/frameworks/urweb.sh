@@ -10,9 +10,9 @@ RETCODE=$(fw_exists ${COMPILER}.installed)
   fw_get -O http://www.impredicative.com/ur/urweb-$VERSION.tgz
   fw_untar urweb-$VERSION.tgz
   cd urweb-$VERSION
-  sudo ./configure --prefix=$IROOT/urweb
-  sudo make
-  sudo make install
+  ./configure --prefix=$IROOT/urweb
+  make
+  make install
 
   echo "export URWEB_HOME=${COMPILER}" > $COMPILER.installed
   echo "export LD_LIBRARY_PATH=${COMPILER}/lib" >> $COMPILER.installed

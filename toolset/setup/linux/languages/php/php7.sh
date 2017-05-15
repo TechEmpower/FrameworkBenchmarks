@@ -2,7 +2,7 @@
 
 fw_installed php7 && return 0
 
-VERSION="7.0.1"
+VERSION="7.1.4"
 PHP_HOME=$IROOT/php-$VERSION
 
 fw_get -o php-${VERSION}.tar.gz http://php.net/distributions/php-${VERSION}.tar.gz
@@ -45,7 +45,7 @@ $PHP_HOME/bin/pecl channel-update pecl.php.net
 # Apc.so
 $PHP_HOME/bin/pecl config-set php_ini $PHP_HOME/lib/php.ini
 
-printf "\n" | $PHP_HOME/bin/pecl -q install -f redis-3.0.0
+#printf "\n" | $PHP_HOME/bin/pecl -q install -f redis-3.0.0
 
 #removed phalcon install - separate to toolset/setup/linux/frameworks
 

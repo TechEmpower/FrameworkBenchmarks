@@ -10,10 +10,7 @@ python:
 
 env:
   matrix:
-    - "TESTDIR=C/libreactor"
-    - "TESTDIR=C/lwan"
     - "TESTDIR=C/duda"
-    - "TESTDIR=C/haywire"
     - "TESTDIR=C/onion"
     - "TESTDIR=C/h2o"
     - "TESTDIR=C/octane"
@@ -31,16 +28,19 @@ env:
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ulib"
     - "TESTDIR=C++/wt"
-    - "TESTDIR=C++/ffead-cpp"
     - "TESTDIR=C++/poco"
+    - "TESTDIR=C++/luna"
     - "TESTDIR=Clojure/compojure"
     - "TESTDIR=Clojure/http-kit"
     - "TESTDIR=Clojure/luminus"
+    - "TESTDIR=Clojure/macchiato"
     - "TESTDIR=Clojure/pedestal"
     - "TESTDIR=Clojure/aleph"
     - "TESTDIR=Crystal/crystal"
     - "TESTDIR=Crystal/kemal"
     - "TESTDIR=D/vibed"
+    - "TESTDIR=D/hunt"
+    - "TESTDIR=D/collie"
     - "TESTDIR=Dart/dart-raw"
     - "TESTDIR=Dart/redstone"
     - "TESTDIR=Dart/start"
@@ -67,6 +67,7 @@ env:
     - "TESTDIR=Haskell/yesod"
     - "TESTDIR=Haskell/servant"
     - "TESTDIR=Haskell/spock"
+    - "TESTDIR=Java/act"
     - "TESTDIR=Java/activeweb"
     - "TESTDIR=Java/baratine"
     - "TESTDIR=Java/bayou"
@@ -82,12 +83,14 @@ env:
     - "TESTDIR=Java/jetty"
     - "TESTDIR=Java/jlhttp"
     - "TESTDIR=Java/jooby"
+    - "TESTDIR=Java/light-java"
     - "TESTDIR=Java/netty"
     - "TESTDIR=Java/ninja-standalone"
     - "TESTDIR=Java/officefloor"
     - "TESTDIR=Java/permeagility"
     - "TESTDIR=Java/play1"
     - "TESTDIR=Java/play2-java"
+    - "TESTDIR=Java/proteus"
     - "TESTDIR=Java/rapidoid"
     - "TESTDIR=Java/restexpress"
     - "TESTDIR=Java/revenj-jvm"
@@ -108,9 +111,9 @@ env:
     - "TESTDIR=JavaScript/koa"
     - "TESTDIR=JavaScript/nodejs"
     - "TESTDIR=JavaScript/ringojs"
-    - "TESTDIR=JavaScript/ringojs-convenient"
     - "TESTDIR=JavaScript/sailsjs"
     - "TESTDIR=Kotlin/hexagon"
+    - "TESTDIR=Kotlin/ktor"
     - "TESTDIR=Lua/lapis"
     - "TESTDIR=Lua/octopus"
     - "TESTDIR=Lua/openresty"
@@ -146,7 +149,9 @@ env:
     - "TESTDIR=PHP/zend"
     - "TESTDIR=PHP/zend1"
     - "TESTDIR=PHP/phreeze"
-    - "TESTDIR=Python/asyncio"
+    - "TESTDIR=Python/aiohttp"
+    - "TESTDIR=Python/apistar"
+    - "TESTDIR=Python/api_hour"
     - "TESTDIR=Python/bottle"
     - "TESTDIR=Python/cherrypy"
     - "TESTDIR=Python/django"
@@ -163,18 +168,23 @@ env:
     - "TESTDIR=Python/wheezyweb"
     - "TESTDIR=Python/wsgi"
     - "TESTDIR=Ruby/grape"
+    - "TESTDIR=Ruby/hanami"
     - "TESTDIR=Ruby/ngx_mruby"
     - "TESTDIR=Ruby/padrino"
     - "TESTDIR=Ruby/rack"
+    - "TESTDIR=Ruby/rack-sequel"
     - "TESTDIR=Ruby/rails"
     - "TESTDIR=Ruby/rails-stripped"
+    - "TESTDIR=Ruby/roda-sequel"
     - "TESTDIR=Ruby/sinatra"
     - "TESTDIR=Ruby/sinatra-sequel"
     - "TESTDIR=Rust/iron"
     - "TESTDIR=Rust/nickel"
     - "TESTDIR=Rust/hyper"
     - "TESTDIR=Rust/tokio-minihttp"
+    - "TESTDIR=Rust/rouille"
     - "TESTDIR=Scala/akka-http"
+    - "TESTDIR=Scala/blaze"
     - "TESTDIR=Scala/colossus"
     - "TESTDIR=Scala/finagle"
     - "TESTDIR=Scala/finatra"
@@ -185,26 +195,34 @@ env:
     - "TESTDIR=Scala/s-server"
     - "TESTDIR=Scala/http4s"
     - "TESTDIR=Scala/finch"
+    - "TESTDIR=Swift/vapor"
     - "TESTDIR=Ur/urweb"
+    - "TESTDIR=Vala/valum"
 
 before_script:
+
+  # Runs travis_diff, printing the output to the terminal, and searches for travis-diff-continue
+  # to determine if the suite should be installed and the current $TESTDIR test should run.
+  - export CONTINUE_TEST=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -q "travis-diff-continue" && echo 1`
   # travis_clean.sh takes care of some services that are baked into the travis
   # build. Using language: generic gets us an ubuntu build with fewer services,
   # but includes database installs, ruby and rvm installs, and others that interfere
   # with running the suite in a clean ubuntu install.
-  - source ./toolset/travis/travis_clean.sh
+  - if [ $CONTINUE_TEST ]; then source ./toolset/travis/travis_clean.sh; else echo 'Skipping travis_clean.sh'; fi
 
   # travis_setup.sh runs all the same commands you would run if you were setting up
   # a development environment via:
   # http://frameworkbenchmarks.readthedocs.io/en/latest/Development/Installation-Guide/
-  - source ./toolset/travis/travis_setup.sh
+  - if [ $CONTINUE_TEST ]; then source ./toolset/travis/travis_setup.sh; else echo 'Skipping travis_setup.sh'; fi
 
 script:
+
   # run-ci.py runs the diffing to see if travis needs to test this framework. Ideally/eventually,
   # we'd like to try and do the diffing before travis_clean & setup.
   # This will run the tests exactly as you would in your own vm:
   # ./toolset/run-tests.py --mode verify --test (all the valid tests for this framework)
-  - ./toolset/run-ci.py verify "$TESTDIR"
+  - if [ $CONTINUE_TEST ]; then tfb --mode verify --test-dir "$TESTDIR"; else echo 'Skipping test verification.'; fi
+  # - tfb --mode verify --test
 
 cache:
   directories:
