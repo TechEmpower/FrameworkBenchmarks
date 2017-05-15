@@ -1,7 +1,7 @@
 require "../models/*"
 
 class TestController < Kemalyst::Controller
-  action headers do |context|
+  def call(context)
     context.response.headers["Server"] = "Kemalyst"
     context.response.headers["Date"] = Time.now.to_s
     call_next(context)
