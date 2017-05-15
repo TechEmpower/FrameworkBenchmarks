@@ -43,6 +43,25 @@
       "notes": "",
       "versus": "undertow"
     },
+    "ebean-pg-rythm": {
+      "setup_file": "setup",
+      "fortune_url": "/pgsql/forythm",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "actframework",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Full",
+      "platform": "Undertow",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "act-ebean-pgsql-rythm",
+      "notes": "",
+      "versus": "undertow"
+    },
     "ebean-my": {
       "setup_file": "setup",
       "db_url": "/mysql/db",
