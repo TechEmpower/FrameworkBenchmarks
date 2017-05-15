@@ -15,4 +15,4 @@ cpanm --notest --no-man-page  \
     
 nginx -c $TROOT/nginx.conf
 
-plackup -E production -s Starman --workers=${MAX_THREADS} -l $TROOT/frameworks-benchmark.sock -a $TROOT/app.pl &
+plackup -E production -s Starman --workers=${CPU_COUNT} -l $TROOT/frameworks-benchmark.sock -a $TROOT/app.pl &

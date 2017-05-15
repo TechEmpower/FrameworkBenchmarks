@@ -40,8 +40,7 @@ Content-Type: application/json
 -->
 <!--#code
 #ifndef AS_cpoll_cppsp_DO
-UValue json(*pkey, *pvalue);
-USP_JSON_PUTS(json);
+UValue::stringify(*UClientImage_Base::wbuffer, UValue(*pkey, *pvalue));
 #else
 json_object* hello = json_object_new_object();
 json_object_object_add(hello, "message", json_object_new_string("Hello, World!"));

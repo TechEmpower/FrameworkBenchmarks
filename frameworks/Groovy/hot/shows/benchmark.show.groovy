@@ -30,7 +30,7 @@ rest.get("/json").then {
 }
 
 rest.get('/db/mongodb').then {
-	mongo.World.findOne([_id:generate()]).promise()
+	mongo.world.findOne([_id:generate()]).promise()
 }
 
 rest.get('/queries/mongodb').then { req ->
@@ -42,7 +42,7 @@ rest.get('/queries/mongodb').then { req ->
 
 	(1..numQueries).each { i ->
 		promise = promise.then { 
-			mongo.World.findOne(_id:generate()).promise()
+			mongo.world.findOne(_id:generate()).promise()
 		}.then { world ->
 			results << world
 			results
@@ -54,7 +54,7 @@ rest.get('/queries/mongodb').then { req ->
 
 rest.get('/fortunes/mongodb').then {
 
-	mongo.Fortune.find().promise().then { fortunes ->
+	mongo.fortune.find().promise().then { fortunes ->
 		
 		fortunes << [_id:'0.', message:'Additional fortune added at request time.']
 		fortunes.each {
@@ -85,10 +85,10 @@ rest.get('/updates/mongodb').then { req ->
 		def genId = generate()
 
 		promise = promise.then { 
-			mongo.World.findOne(_id:genId).promise()
+			mongo.world.findOne(_id:genId).promise()
 		}.then { world ->
 			world.randomNumber = generate()
-			mongo.World.update([_id:genId],[$set:[randomNumber:world.randomNumber]]).then {
+			mongo.world.update([_id:genId],[$set:[randomNumber:world.randomNumber]]).then {
 				world
 			}
 		}.then { world ->

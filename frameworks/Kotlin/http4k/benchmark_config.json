@@ -1,0 +1,47 @@
+{
+  "framework": "http4k",
+  "tests": [
+    {
+      "default": {
+        "orm": "Raw",
+        "database_os": "Linux",
+        "setup_file": "setup_jetty",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 9000,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "http4k",
+        "language": "Kotlin",
+        "platform": "Servlet",
+        "webserver": "None",
+        "os": "Linux",
+        "display_name": "http4k-jetty",
+        "notes": "",
+        "versus": "servlet"
+      }
+    },
+    {
+      "default": {
+        "orm": "Raw",
+        "database_os": "Linux",
+        "setup_file": "setup_netty",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 9000,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "http4k",
+        "language": "Kotlin",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "display_name": "http4k-netty",
+        "notes": "",
+        "versus": "netty"
+      }
+    }
+  ]
+}

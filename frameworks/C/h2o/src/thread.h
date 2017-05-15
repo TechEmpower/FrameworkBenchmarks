@@ -47,6 +47,8 @@ struct thread_context_t {
 	// global_thread_data contains config and global_data as well,
 	// but keep copies here to avoid some pointer chasing.
 	global_thread_data_t *global_thread_data;
+	list_t *json_generator;
+	size_t json_generator_num;
 	unsigned random_seed;
 	pid_t tid;
 	db_state_t db_state;

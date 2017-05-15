@@ -138,7 +138,7 @@ mustache_template_t *get_fortunes_template(const char *path)
 		fclose(template_input.input);
 	}
 	else
-		LIBRARY_ERROR("fopen");
+		STANDARD_ERROR("fopen");
 
 	return ret;
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql
+fw_depends mysql lua
 
 rm -rf octopus
 git clone https://github.com/cyberz-eu/octopus.git
@@ -9,8 +9,13 @@ cd octopus
 git checkout 0c4fc42198fed3a299c78d4b910188113d478bc5
 cd ..
 
+# The following line is a hacky way to get this framework working.
+# zlib fix needs to happen within the framework owner's repo
+sed -i 's|zlib_url=http://zlib.net/zlib-$zlib_version.tar.gz|zlib_url=https://github.com/madler/zlib/archive/v$zlib_version.tar.gz|g' octopus/bin/unix/server.sh
+
 cp -avr app octopus/extensions
 cp -vf config.lua octopus/extensions
+
 sed -i 's|DBHOSTNAME|'"${DBHOST}"'|g' octopus/extensions/config.lua
 
 cd octopus/bin/unix

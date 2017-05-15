@@ -32,16 +32,16 @@ static void usp_fork_eupdate()
       return;
       }
 
-   u__memcpy(buffer1, "/tfb/world/", ULEN, __PRETTY_FUNCTION__);
+   U_MEMCPY(buffer1, "/tfb/world/", ULEN);
 
    pbuffer1 = buffer1 + ULEN;
 
-   u__memcpy(buffer2, "{\"doc\":{\"_id\":\"", QLEN, __PRETTY_FUNCTION__);
+   U_MEMCPY(buffer2, "{\"doc\":{\"_id\":\"", QLEN);
 
    pbuffer2 = buffer2 + QLEN;
 
 #ifndef AS_cpoll_cppsp_DO
-   U_NEW(UValue, pvalue, UValue(ARRAY_VALUE));
+   U_NEW(UValue, pvalue, UValue);
    U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
 #endif
 }
@@ -76,8 +76,8 @@ USP_PUTS_CHAR('[');
 
 while (true)
    {
-   len1 = u__snprintf(pbuffer1, 100, "%u/_update", id = u_get_num_random(10000-1));
-   len2 = u__snprintf(pbuffer2, 100, "%u\"}}",   rnum = u_get_num_random(10000-1));
+   len1 = u__snprintf(pbuffer1, 100, U_CONSTANT_TO_PARAM("%u/_update"), id = u_get_num_random(10000-1));
+   len2 = u__snprintf(pbuffer2, 100, U_CONSTANT_TO_PARAM("%u\"}}"),   rnum = u_get_num_random(10000-1));
 
    (void) es->sendPOST(buffer1, len1+ULEN, buffer2, len2+QLEN);
 

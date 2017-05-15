@@ -8,7 +8,7 @@ header("Content-type: application/json");
 
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
-// $pdo = new PDO('mysql:host=localhost;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
+// $pdo = new PDO('mysql:host=TFB-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
 
 # inclue the ActiveRecord library
 require_once 'vendor/php-activerecord/php-activerecord/ActiveRecord.php';
@@ -17,12 +17,12 @@ ActiveRecord\Config::initialize(function($cfg)
 {
   $cfg->set_model_directory('models');
   $cfg->set_connections(array('development' =>
-    'mysql://benchmarkdbuser:benchmarkdbpass@localhost/hello_world'));
+    'mysql://benchmarkdbuser:benchmarkdbpass@TFB-database/hello_world'));
 });
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
-if (!empty($_GET)) {
+if (isset($_GET['queries']) && $_GET['queries'] > 0) {
   $query_count = $_GET["queries"];
 }
 

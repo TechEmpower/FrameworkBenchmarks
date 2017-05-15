@@ -7,6 +7,7 @@
 import os
 import zipfile
 import datetime
+import requests
 import shutil
 # Follows closely from:
 # http://stackoverflow.com/a/34153816
@@ -16,29 +17,27 @@ import shutil
 #
 path_in = os.path.abspath(os.path.normpath(os.path.expanduser(os.path.join( \
     os.environ['TFB_REPOPARENT'], os.environ['TFB_REPONAME'], \
-    'results/latest/logs'))))
+    'results'))))
 date_time = datetime.datetime.now()
 dt_folder = date_time.strftime('%Y%m%d%H%M%S')
 path_out = os.path.abspath(os.path.join(os.environ['TFB_LOGSFOLDER'], \
     dt_folder))
-# Step through each folder in the TFB log folder...
-for folder in os.listdir(path_in):
-  if not os.path.exists(path_out):
-    os.makedirs(path_out)
-  zip_file = zipfile.ZipFile(path_out + '/' + folder + '.zip', 'w')
-# ... walk the folder structure ...
-  for root, directories, files in os.walk(os.path.join(path_in, folder), 'w', \
-        zipfile.ZIP_DEFLATED):
-# ... and add to the zip file.   
-    for file in files:
-      try:
-        zip_file.write(os.path.abspath(os.path.join(root, file)), \
-            arcname=file)
-      except OSError as err:
-        print "An OSError occurred while writing to a log zip file for {0}: \
-            {1}".format(file, err)
-  zip_file.close()
-path_results_in = os.path.abspath(os.path.normpath(os.path.expanduser(os.path.join( \
-    os.environ['TFB_REPOPARENT'], os.environ['TFB_REPONAME'], \
-    'results'))))
-shutil.copytree(path_results_in, path_out + '/results')
+
+if not os.path.exists(path_out):
+  os.makedirs(path_out)
+
+zip_path = path_out + '/results.zip'
+
+zip_file = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
+
+for root, dirs, files in os.walk(path_in):
+  for file in files:
+    zip_file.write(os.path.join(root, file))
+
+zip_file.close()
+
+results_upload_uri = os.environ['TFB_UPLOADURI']
+
+if results_upload_uri != None:
+    with open(zip_path, 'rb') as file_to_upload:
+        requests.post(results_upload_uri, headers={ 'Content-Type': 'application/zip' }, data=file_to_upload)

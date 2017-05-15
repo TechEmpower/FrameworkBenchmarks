@@ -1,8 +1,4 @@
-import java.time.format.DateTimeFormatter
-import java.time.{Instant, ZoneOffset}
-
 import com.twitter.io.Buf
-import com.twitter.finagle.http.Response
 import com.twitter.finagle.Http
 import com.twitter.finagle.stats.NullStatsReceiver
 import com.twitter.finagle.tracing.NullTracer
@@ -14,27 +10,20 @@ import io.finch.circe._
 
 object Main extends App {
 
-  val timeFormatter: DateTimeFormatter = 
-    DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC)
-
   val helloWorld: Buf = Buf.Utf8("Hello, World!")
 
   val json: Endpoint[Json] = get("json") {
     Ok(Json.obj("message" -> Json.fromString("Hello, World!")))
       .withHeader("Server" -> "Finch")
-      .withHeader("Date" -> timeFormatter.format(Instant.now()))
   }
 
-  // Downgrade a text/plain endpoint to `Endpoint[Response]` as per
-  // https://github.com/finagle/finch/blob/master/docs/cookbook.md#serving-multiple-content-types
-  val plaintext: Endpoint[Response] = get("plaintext") {
-    val rep = Response()
-    rep.content = helloWorld
-    rep.contentType = "text/plain"
-    rep.headerMap.set("Server", "Finch")
-    rep.headerMap.set("Date", timeFormatter.format(Instant.now()))
-
-    Ok(rep)
+  // We need to downgrade to Buf and override Content-Type header manually
+  // to serve non-JSON payload out of the JSON service. This workaround
+  // shouldn't be needed in Finch 1.0.
+  val plaintext: Endpoint[Buf] = get("plaintext") {
+    Ok(helloWorld)
+      .withHeader("Server" -> "Finch")
+      .withHeader("Content-Type" -> "text/plain")
   }
 
   Await.ready(Http.server

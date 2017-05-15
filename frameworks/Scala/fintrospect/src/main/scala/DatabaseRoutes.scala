@@ -37,9 +37,9 @@ object DatabaseRoutes {
         .map(_.map(Ok(_)).getOrElse(NotFound("")).build())
     }
 
-    val numberOfQueries = Query.optional(ParameterSpec.string("queries").map {
+    val numberOfQueries = Query.optional(ParameterSpec.string().map {
       i => Try(i.toInt).getOrElse(1).max(1).min(500)
-    })
+    }, "queries")
 
     val multipleRoute = RouteSpec()
       .taking(numberOfQueries)

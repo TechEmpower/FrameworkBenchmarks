@@ -16,7 +16,7 @@ public class DbServlet extends HttpServlet {
 		res.setContentType("application/json");
 		final Context ctx = Utils.getContext();
 		final Optional<World> world = ctx.worlds.find(ctx.getRandom10k(), ctx.connection);
-		final JsonWriter writer = ctx.json;
+		final JsonWriter writer = Utils.getJson();
 		world.get().serialize(writer, false);
 		writer.toStream(res.getOutputStream());
 	}

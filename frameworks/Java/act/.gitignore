@@ -1,0 +1,19 @@
+*.class
+.classpath
+.project
+.settings
+.vscode
+# Package Files #
+*.jar
+*.war
+*.ear
+*.pid
+lib
+target
+.idea
+classes
+*.iml
+deploy
+**/.act*
+git.log
+

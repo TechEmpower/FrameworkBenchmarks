@@ -9,40 +9,40 @@ static char buffer[128];
 static UElasticSearchClient* es;
 
 #ifndef AS_cpoll_cppsp_DO
-static UValue*	pvalue;
+static UValue* pvalue;
 #endif
 
 #define QLEN U_CONSTANT_SIZE("{\"query\":{\"match\":{\"_id\":\"")
 
 static void usp_fork_edb()
 {
-	U_TRACE(5, "::usp_fork_edb()")
+   U_TRACE(5, "::usp_fork_edb()")
 
-	U_NEW(UElasticSearchClient, es, UElasticSearchClient);
+   U_NEW(UElasticSearchClient, es, UElasticSearchClient);
 
-	if (es->connect() == false)
-		{
-		U_WARNING("usp_fork_edb(): connection disabled or failed");
+   if (es->connect() == false)
+      {
+      U_WARNING("usp_fork_edb(): connection disabled or failed");
 
-		return;
-		}
+      return;
+      }
 
-	u__memcpy(buffer,	"{\"query\":{\"match\":{\"_id\":\"", QLEN, __PRETTY_FUNCTION__);
+   U_MEMCPY(buffer,  "{\"query\":{\"match\":{\"_id\":\"", QLEN);
 
 #ifndef AS_cpoll_cppsp_DO
-	U_NEW(UValue, pvalue, UValue(OBJECT_VALUE));
+   U_NEW(UValue, pvalue, UValue);
 #endif
 }
 
 #ifdef DEBUG
 static void usp_end_edb()
 {
-	U_TRACE(5, "::usp_end_edb()")
+   U_TRACE(5, "::usp_end_edb()")
 
-	delete es;
+   delete es;
 
 #ifndef AS_cpoll_cppsp_DO
-	if (pvalue) delete pvalue;
+   if (pvalue) delete pvalue;
 #endif
 }
 #endif
@@ -54,14 +54,14 @@ Content-Type: application/json
 uint32_t id;
 UString result;
 
-(void) es->sendPOST(U_CONSTANT_TO_PARAM("/tfb/world/_search"), buffer, u__snprintf(buffer+QLEN, 128, "%u\"}}}", id = u_get_num_random(10000-1))+QLEN);
+(void) es->sendPOST(U_CONSTANT_TO_PARAM("/tfb/world/_search"), buffer, u__snprintf(buffer+QLEN, 128, U_CONSTANT_TO_PARAM("%u\"}}}"), id = u_get_num_random(10000-1))+QLEN);
 
-(void) UValue::jfind(es->getContent(), U_CONSTANT_TO_PARAM("randomNumber"), result);
+(void) U_JFIND(es->getContent(), "randomNumber", result);
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", id, result.rep);
 #else
-World world(id, u_strtoul(result.data(), result.end()));
+World world(id, result.strtoul());
 USP_JSON_stringify(*pvalue, World, world);
 pvalue->clear();
 #endif
