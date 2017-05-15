@@ -19,9 +19,9 @@ public class JsonGetHandler implements HttpHandler {
         exchange.getResponseSender().send(ByteBuffer.wrap(writer.toByteArray()));
     }
 
-    class Message implements JsonObject {
+    static class Message implements JsonObject {
         public String message = "Hello, World!";
-
+        @Override
         public void serialize(JsonWriter writer, boolean minimal) {
             writer.writeAscii("{\"message\":");
             StringConverter.serialize(message, writer);
