@@ -25,7 +25,7 @@ public class JsonGetHandler implements HttpHandler {
         public void serialize(JsonWriter writer, boolean minimal) {
             writer.writeAscii("{\"message\":");
             StringConverter.serialize(message, writer);
-            writer.writeAscii("}");
+            writer.writeByte(com.dslplatform.json.JsonWriter.OBJECT_END);
         }
     }
 }

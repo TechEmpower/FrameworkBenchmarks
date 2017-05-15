@@ -3,21 +3,17 @@ package com.networknt.techempower.handler;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.networknt.techempower.db.mysql.MysqlStartupHookProvider;
 import com.networknt.techempower.db.postgres.PostgresStartupHookProvider;
 import com.networknt.techempower.model.Fortune;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
-import io.undertow.util.HttpString;
 
 import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
-
-import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.sql.DataSource;
 

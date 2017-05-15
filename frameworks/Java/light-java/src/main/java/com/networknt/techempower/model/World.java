@@ -25,8 +25,7 @@ public final class World implements JsonObject {
 
     @Override
     public void serialize(JsonWriter writer, boolean minimal) {
-        writer.writeByte(com.dslplatform.json.JsonWriter.OBJECT_START);
-        writer.writeAscii("\"id\":");
+        writer.writeAscii("{\"id\":");
         NumberConverter.serialize(this.id, writer);
         writer.writeAscii(",\"randomNumber\":");
         NumberConverter.serialize(this.randomNumber, writer);
