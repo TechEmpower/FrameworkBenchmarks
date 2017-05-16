@@ -13,7 +13,7 @@ object JsonResponse {
 trait JsonHandler {
   import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
-  lazy val jsonResponse = JsonResponse("Hello, World!") // domain object
+  def jsonResponse = JsonResponse("Hello, World!") // domain object
 
   def jsonEndpoint =
     get {
