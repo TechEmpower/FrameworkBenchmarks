@@ -18,6 +18,6 @@ trait PlaintextHandler {
   }
   def plainTextEndpoint =
     (get & path("plaintext")) {
-        complete(plainTextResponse)
+      complete(plainTextResponse)
     }
 }
