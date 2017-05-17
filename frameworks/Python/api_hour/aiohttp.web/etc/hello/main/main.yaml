@@ -16,3 +16,7 @@ engines:
     pwd: benchmarkdbpass
     minsize: 22
     maxsize: 22
+#redis:
+#    host: TFB-database
+#    port: 6379
+#    poolsize: 40
