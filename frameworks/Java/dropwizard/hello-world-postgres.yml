@@ -29,7 +29,7 @@ database:
   password: benchmarkdbpass
 
   # the JDBC URL
-  url: jdbc:postgresql://127.0.0.1:5432/hello_world
+  url: jdbc:postgresql://TFB-database:5432/hello_world
 
   # any properties specific to your JDBC driver:
   properties:
