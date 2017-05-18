@@ -258,10 +258,10 @@ def verify_query_cases(self, cases, url):
 
     cases = [
         ('2',   'fail'),
-        ('0',   'warn'),
-        ('foo', 'warn'),
+        ('0',   'fail'),
+        ('foo', 'fail'),
         ('501', 'warn'),
-        ('',    'warn')
+        ('',    'fail')
     ]
 
     The reason for using 'warn' is generally for a case that will be allowed in the

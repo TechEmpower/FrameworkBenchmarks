@@ -34,10 +34,10 @@ class QueryTestType(FrameworkTestType):
         url = base_url + self.query_url
         cases = [
             ('2',   'fail'),
-            ('0',   'warn'),
-            ('foo', 'warn'),
+            ('0',   'fail'),
+            ('foo', 'fail'),
             ('501', 'warn'),
-            ('',    'warn')
+            ('',    'fail')
         ]
 
         problems = verify_query_cases(self, cases, url)
