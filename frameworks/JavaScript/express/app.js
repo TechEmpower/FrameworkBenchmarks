@@ -114,7 +114,8 @@ if (cluster.isMaster) {
     res.header('Content-Type', 'text/plain').send('Hello, World!'));
 
   app.get('/mongoose', (req, res) => {
-    let queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10);
+    let queriesRaw = parseInt(req.query.queries, 10),
+      queries = isNaN(queriesRaw) ? 1 : queriesRaw;
     const queryFunctions = [];
 
     queries = Math.min(Math.max(queries, 1), 500);

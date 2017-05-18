@@ -55,5 +55,6 @@ queries(Req) ->
     case {is_number(Queries), Queries > 500} of
         {true, true} -> 500;
         {false, _}   -> 1;
+        _ when Queries < 1 -> 1;
         _ -> Queries
     end.
