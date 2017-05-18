@@ -11,9 +11,9 @@
     "koa-bodyparser": "4.2.0",
     "koa-hbs": "1.0.0-alpha.1",
     "koa-router": "7.1.1",
-    "mongoose": "4.9.8",
+    "mongoose": "4.9.10",
     "mysql": "2.13.0",
-    "pg": "6.1.5",
+    "pg": "6.2.2",
     "pg-hstore": "2.3.2",
     "sequelize": "3.30.4"
   }
