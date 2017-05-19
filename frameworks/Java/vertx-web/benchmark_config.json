@@ -86,6 +86,28 @@
       "display_name": "vertx-webs",
       "notes": "",
       "versus": ""
+    },
+    "database-postgres": {
+      "setup_file": "setup_postgresql",
+      "db_url": "/dbpsql/db",
+      "query_url": "/dbpsql/queries?queries=",
+      "fortune_url": "/dbpsql/fortunes",
+      "update_url": "/dbpsql/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "vertx-web",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "vertx",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "vertx-webs",
+      "notes": "",
+      "versus": ""
     }
   }]
 }
