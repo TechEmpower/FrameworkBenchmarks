@@ -16,7 +16,7 @@ static void usp_fork_mfortune()
 
    U_NEW(UMongoDBClient, mc, UMongoDBClient);
 
-   if (mc->connect(0,0) == false)
+   if (mc->connect(U_NULLPTR, 0) == false)
       {
       U_WARNING("usp_fork_mfortune(): connection failed");
 

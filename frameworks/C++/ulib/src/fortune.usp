@@ -18,11 +18,18 @@ static void usp_fork_fortune()
 
    U_NEW(UOrmSession, psql_fortune, UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
 
+   U_INTERNAL_DUMP("psql_fortune = %p", psql_fortune)
+
    if (psql_fortune->isReady())
       {
       U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
 
-      if (pstmt_fortune == 0) U_WARNING("usp_fork_fortune(): we cound't connect to db");
+      if (pstmt_fortune == U_NULLPTR)
+         {
+         U_WARNING("usp_fork_fortune(): we cound't connect to db");
+
+         return;
+         }
 
       if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
 
@@ -41,14 +48,16 @@ static void usp_end_fortune()
 {
    U_TRACE(5, "::usp_end_fortune()")
 
+   U_INTERNAL_DUMP("psql_fortune = %p", psql_fortune)
+
+   delete psql_fortune;
+
    if (pstmt_fortune)
       {
       delete pstmt_fortune;
-
-      delete pencoded;
-      delete psql_fortune;
-      delete pvfortune;
       delete pfortune;
+      delete pencoded;
+      delete pvfortune;
       delete pfortune2add;
       }
 }
