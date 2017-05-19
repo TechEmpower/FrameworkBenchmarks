@@ -39,9 +39,6 @@ namespace Benchmarks.Data
         
         async Task<World> ReadSingleRow(DbConnection connection, DbCommand cmd)
         {
-            // Prepared statements improve PostgreSQL performance by 10-15%
-            cmd.Prepare();
-
             using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow))
             {
                 await rdr.ReadAsync();
@@ -63,6 +60,10 @@ namespace Benchmarks.Data
             id.DbType = DbType.Int32;
             id.Value = _random.Next(1, 10001);
             cmd.Parameters.Add(id);
+
+            // Prepared statements improve PostgreSQL performance by 10-15%
+            // Especially if you only call them once, instead of on every execution :)
+            cmd.Prepare();
 
             return cmd;
         }
