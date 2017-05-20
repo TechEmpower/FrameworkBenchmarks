@@ -46,6 +46,18 @@
       <version>${vertx.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.github.susom</groupId>
+      <artifactId>database</artifactId>
+      <version>2.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.1.1</version>
+    </dependency>
+
   </dependencies>
 
   <build>
