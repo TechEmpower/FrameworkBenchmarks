@@ -7,7 +7,7 @@ import com.twitter.finagle.mysql.{Client, IntValue, Result, ResultSet}
 import com.twitter.util.Future.collect
 import io.fintrospect.formats.Jackson.JsonFormat.{array, number, obj}
 import io.fintrospect.formats.Jackson.ResponseBuilder._
-import io.fintrospect.parameters.{ParameterSpec, Query}
+import io.fintrospect.parameters.{ParameterSpec, Query, StringValidations}
 import io.fintrospect.{RouteSpec, ServerRoutes}
 
 import scala.language.reflectiveCalls
@@ -37,7 +37,7 @@ object DatabaseRoutes {
         .map(_.map(Ok(_)).getOrElse(NotFound("")).build())
     }
 
-    val numberOfQueries = Query.optional(ParameterSpec.string().map {
+    val numberOfQueries = Query.optional(ParameterSpec.string(StringValidations.EmptyIsValid).map {
       i => Try(i.toInt).getOrElse(1).max(1).min(500)
     }, "queries")
 

@@ -45,6 +45,7 @@ class BenchController extends Controller
     public function dbRawAction(Request $request)
     {
         $queries = $request->query->getInt('queries', 1);
+        $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
 
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
         $worlds = array();
