@@ -2,7 +2,7 @@
     "framework": "hexagon",
     "tests": [
         {
-            "jetty_mongodb": {
+            "default": {
                 "json_url": "/json",
                 "db_url": "/db",
                 "query_url": "/query?queries=",
