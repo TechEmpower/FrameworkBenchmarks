@@ -47,11 +47,17 @@ static int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req)
 	                                                      req->conn->ctx);
 	json_generator_t * const gen = get_json_generator(&ctx->json_generator,
 	                                                  &ctx->json_generator_num);
+	const struct {
+		const char *message;
+	} object = {HELLO_RESPONSE};
 
 	if (gen) {
 		CHECK_YAJL_STATUS(yajl_gen_map_open, gen->gen);
 		CHECK_YAJL_STATUS(yajl_gen_string, gen->gen, YAJL_STRLIT("message"));
-		CHECK_YAJL_STATUS(yajl_gen_string, gen->gen, YAJL_STRLIT(HELLO_RESPONSE));
+		CHECK_YAJL_STATUS(yajl_gen_string,
+		                  gen->gen,
+		                  (const unsigned char *) object.message,
+		                  strlen(object.message));
 		CHECK_YAJL_STATUS(yajl_gen_map_close, gen->gen);
 
 		// The response is small enough, so that it is simpler to copy it

@@ -18,7 +18,7 @@ from sqlalchemy.types import String, Integer, Unicode
 if sys.version_info[0] == 3:
     xrange = range
 
-DATABASE_URI = 'mysql://benchmarkdbuser:benchmarkdbpass@127.0.0.1:3306/hello_world?charset=utf8'
+DATABASE_URI = 'mysql://benchmarkdbuser:benchmarkdbpass@TFB-database:3306/hello_world?charset=utf8'
 
 Base = declarative_base()
 db_engine = create_engine(DATABASE_URI)

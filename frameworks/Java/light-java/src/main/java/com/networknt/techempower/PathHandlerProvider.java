@@ -12,16 +12,16 @@ public class PathHandlerProvider implements HandlerProvider {
     @Override
     public HttpHandler getHandler() {
         return Handlers.path()
-            .addPrefixPath("/db/mysql", new DbMysqlGetHandler())
-            .addPrefixPath("/db/postgresql", new DbPostgresqlGetHandler())
-            .addPrefixPath("/fortunes/mysql", new FortunesMysqlGetHandler())
-            .addPrefixPath("/fortunes/postgresql", new FortunesPostgresqlGetHandler())
-            .addPrefixPath("/json", new JsonGetHandler())
-            .addPrefixPath("/plaintext", new PlaintextGetHandler())
-            .addPrefixPath("/queries/mysql", new QueriesMysqlGetHandler())
-            .addPrefixPath("/queries/postgresql", new QueriesPostgresqlGetHandler())
-            .addPrefixPath("/updates/mysql", new UpdatesMysqlGetHandler())
-            .addPrefixPath("/updates/postgresql", new UpdatesPostgresqlGetHandler())
+            //.addExactPath("/db/mysql", new DbMysqlGetHandler())
+            .addExactPath("/plaintext", new PlaintextGetHandler())
+            .addExactPath("/json", new JsonGetHandler())
+            .addExactPath("/db", new DbPostgresqlGetHandler())
+            //.addExactPath("/fortunes/mysql", new FortunesMysqlGetHandler())
+            .addExactPath("/fortunes", new FortunesPostgresqlGetHandler())
+            //.addExactPath("/queries/mysql", new QueriesMysqlGetHandler())
+            .addExactPath("/queries", new QueriesPostgresqlGetHandler())
+            //.addExactPath("/updates/mysql", new UpdatesMysqlGetHandler())
+            .addExactPath("/updates", new UpdatesPostgresqlGetHandler())
         ;
     }
 }

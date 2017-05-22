@@ -18,6 +18,7 @@
 */
 
 #include <assert.h>
+#include <ctype.h>
 #include <h2o.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -408,8 +409,11 @@ static result_return_t on_single_query_result(db_query_param_t *param, PGresult 
 		assert(PQntuples(result) == 1);
 		assert(PQgetlength(result, 0, 1) == sizeof(random_number));
 
+		const void * const r = PQgetvalue(result, 0, 1);
+
+		assert(r);
 		// Use memcpy() in case the result is not aligned.
-		memcpy(&random_number, PQgetvalue(result, 0, 1), sizeof(random_number));
+		memcpy(&random_number, r, sizeof(random_number));
 		random_number = ntohl(random_number);
 		PQclear(result);
 
@@ -484,25 +488,35 @@ static void process_result(PGresult *result, query_result_t *out)
 
 	const char * const id = PQgetvalue(result, 0, 0);
 	const char * const random_number = PQgetvalue(result, 0, 1);
+	const size_t id_len = PQgetlength(result, 0, 0);
+	const size_t random_number_len = PQgetlength(result, 0, 1);
+
+	assert(id && id_len && random_number && random_number_len);
 
 	if (PQfformat(result, 0)) {
-		assert(PQgetlength(result, 0, 0) == sizeof(out->id));
+		assert(id_len == sizeof(out->id));
 		// Use memcpy() in case the result is not aligned; the reason we are
 		// copying over the id is because the results may arrive in any order.
 		memcpy(&out->id, id, sizeof(out->id));
 		out->id = ntohl(out->id);
 	}
-	else
+	else {
+		assert(isdigit(*id));
 		out->id = atoi(id);
+	}
+
+	assert(out->id <= MAX_ID);
 
 	if (PQfformat(result, 1)) {
-		assert(PQgetlength(result, 0, 1) == sizeof(out->random_number));
+		assert(random_number_len == sizeof(out->random_number));
 		// Use memcpy() in case the result is not aligned.
 		memcpy(&out->random_number, random_number, sizeof(out->random_number));
 		out->random_number = ntohl(out->random_number);
 	}
-	else
+	else {
+		assert(isdigit(*random_number));
 		out->random_number = atoi(random_number);
+	}
 }
 
 static int serialize_item(uint32_t id, uint32_t random_number, yajl_gen gen)
