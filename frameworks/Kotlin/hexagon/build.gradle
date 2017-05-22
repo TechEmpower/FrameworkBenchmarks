@@ -22,7 +22,7 @@ war {
 installDist.dependsOn 'war'
 
 dependencies {
-    compile ("co.there4:hexagon:$hexagonVersion")
+    compile ("co.there4.hexagon:core:$hexagonVersion")
 
     compile ("ch.qos.logback:logback-classic:$logbackVersion")
     compile ("com.mitchellbosecke:pebble:$pebbleVersion")
