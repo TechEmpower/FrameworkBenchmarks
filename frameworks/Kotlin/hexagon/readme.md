@@ -11,7 +11,7 @@ development platforms. The test utilizes Hexagon routes, serialization and datab
 
 ## Infrastructure Software Versions
 
-* [Hexagon 0.10.x](http://there4.co/hexagon)
+* [Hexagon 0.12.x](http://there4.co/hexagon)
 
 ## Test URLs
 
@@ -32,35 +32,6 @@ development platforms. The test utilizes Hexagon routes, serialization and datab
 * Fortunes: http://localhost:8080/fortunes
 * Database updates: http://localhost:8080/update
 * Database queries: http://localhost:8080/query
-    
-#### Resin configuration
-
-    "resin" : { 
-      "json_url" : "/json",
-      "db_url" : "/db",
-      "query_url" : "/query?queries=",
-      "fortune_url" : "/fortunes",
-      "update_url" : "/update?queries=",
-      "plaintext_url" : "/plaintext",
- 
-      "port" : 8080,
- 
-      "approach" : "Realistic",
-      "classification" : "Micro",
-      "database" : "MongoDB",
-      "framework" : "Hexagon",
-      "language" : "Kotlin",
-      "orm" : "Raw",
-      "platform" : "Servlet",
-      "webserver" : "Resin",
-      "os" : "Linux",
-      "database_os" : "Linux",
-      "display_name" : "Hexagon Resin MongoDB",
-      "notes" : "http://there4.co/hexagon",
- 
-      "setup_file" : "setup_resin",
-      "versus" : "servlet"
-    }                                   
 
 ## Run inside vagrant
 
