@@ -1,9 +1,12 @@
 
+serviceName : Hexagon Benchmark
+
 bindPort : 9090
 bindAddress : 0.0.0.0
-
-ignoreResources : true
 
 database : hello_world
 worldCollection : world
 fortuneCollection : fortune
+
+databaseUsername : benchmarkdbuser
+databasePassword : benchmarkdbpass

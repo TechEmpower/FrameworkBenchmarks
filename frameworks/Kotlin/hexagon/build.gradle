@@ -1,23 +1,18 @@
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.1.1'
+    id 'org.jetbrains.kotlin.jvm' version '1.1.2-2'
 }
 
 apply from: "$gradleScripts/kotlin.gradle"
 apply from: "$gradleScripts/service.gradle"
-apply from: "$gradleScripts/deploy.gradle"
 
 apply plugin: 'war'
 
-defaultTasks 'systemd'
+defaultTasks 'installDist'
 
 mainClassName = "co.there4.hexagon.BenchmarkKt"
 applicationDefaultJvmArgs = [
-    '-Xms64M',
-    '-Xmx2G',
-    '-XX:+UseNUMA',
-    '-XX:+UseParallelGC',
-    '-XX:+AggressiveOpts'
+    '-Xms64M', '-Xmx2G', '-XX:+UseNUMA', '-XX:+UseParallelGC', '-XX:+AggressiveOpts'
 ]
 
 war {
@@ -27,18 +22,18 @@ war {
 installDist.dependsOn 'war'
 
 dependencies {
-    compile ("co.there4:hexagon:$hexagonVersion")
+    compile ("co.there4.hexagon:core:$hexagonVersion")
 
+    compile ("ch.qos.logback:logback-classic:$logbackVersion")
     compile ("com.mitchellbosecke:pebble:$pebbleVersion")
     compile ("org.mongodb:mongodb-driver:$mongodbVersion")
     compile ("com.zaxxer:HikariCP:$hikariVersion")
-    compile ("mysql:mysql-connector-java:$mysqlConnectorVersion")
+    compile ("org.postgresql:postgresql:$postgresqlVersion")
 
     // providedCompile excludes the dependency only in the WAR, not in the distribution
     providedCompile ("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
 
     testCompile ("org.testng:testng:$testngVersion")
-    testCompile ("co.there4:hexagon:$hexagonVersion:test")
 }
 
 test {

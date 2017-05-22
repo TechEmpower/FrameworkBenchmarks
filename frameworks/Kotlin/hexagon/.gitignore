@@ -2,4 +2,5 @@
 build/
 log/
 .gradle/
+*~
 
