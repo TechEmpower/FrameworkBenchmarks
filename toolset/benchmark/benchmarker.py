@@ -202,10 +202,10 @@ class Benchmarker:
     ############################################################
     # get_output_file(test_name, test_type)
     # returns the output file name for this test_name and
-    # test_type timestamp/test_type/test_name/raw
+    # test_type timestamp/test_type/test_name/raw.txt
     ############################################################
     def get_output_file(self, test_name, test_type):
-        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "raw")
+        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "raw.txt")
     ############################################################
     # End get_output_file
     ############################################################
@@ -213,7 +213,7 @@ class Benchmarker:
     ############################################################
     # output_file(test_name, test_type)
     # returns the output file for this test_name and test_type
-    # timestamp/test_type/test_name/raw
+    # timestamp/test_type/test_name/raw.txt
     ############################################################
     def output_file(self, test_name, test_type):
         path = self.get_output_file(test_name, test_type)
@@ -230,10 +230,10 @@ class Benchmarker:
     ############################################################
     # get_stats_file(test_name, test_type)
     # returns the stats file name for this test_name and
-    # test_type timestamp/test_type/test_name/raw
+    # test_type timestamp/test_type/test_name/stats.txt
     ############################################################
     def get_stats_file(self, test_name, test_type):
-        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "stats")
+        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "stats.txt")
     ############################################################
     # End get_stats_file
     ############################################################
@@ -242,7 +242,7 @@ class Benchmarker:
     ############################################################
     # stats_file(test_name, test_type)
     # returns the stats file for this test_name and test_type
-    # timestamp/test_type/test_name/raw
+    # timestamp/test_type/test_name/stats.txt
     ############################################################
     def stats_file(self, test_name, test_type):
         path = self.get_stats_file(test_name, test_type)
