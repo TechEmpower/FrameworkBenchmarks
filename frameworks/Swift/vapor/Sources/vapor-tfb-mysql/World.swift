@@ -1,4 +1,5 @@
 import Vapor
+import FluentProvider
 
 final class World: Model {
   
