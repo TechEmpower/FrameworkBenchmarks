@@ -1,6 +1,6 @@
-require "kemalyst-model/adapter/pg"
+require "granite_orm/adapter/pg"
 
-class World < Kemalyst::Model
+class World < Granite::ORM
   adapter pg
   table_name world
   primary id : Int32
