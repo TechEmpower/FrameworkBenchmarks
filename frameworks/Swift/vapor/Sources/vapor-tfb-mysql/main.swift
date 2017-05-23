@@ -2,17 +2,30 @@ import Foundation
 import Vapor
 import JSON
 import HTTP
-import VaporMySQL
+import MySQLProvider
 
 import TfbCommon
 
-let drop = Droplet()
-try drop.addProvider(VaporMySQL.Provider.self)
+final class MyContext: Context {
+}
 
+let myContext = MyContext()
+
+extension Context {
+    var isMyContext: Bool {
+        return self is MyContext
+    }
+}
+
+let config = try Config()
+try config.addProvider(MySQLProvider.Provider.self)
 // All test types require `Server` and `Date` HTTP response headers.
 // Vapor has standard middleware that adds `Date` header.
 // We use custom middleware that adds `Server` header.
-drop.middleware.append(ServerMiddleware())
+
+config.addConfigurable(middleware: ServerMiddleware(), name: "server-middleware")
+
+let drop = try Droplet(config)
 
 // Normally we would add preparation for Fluent Models.
 //   `drop.preparations.append(World.self)` etc.
@@ -52,7 +65,7 @@ drop.get("fortunes") { _ in
     return lhs.message.compare(rhs.message, locale: posixLocale) == .orderedAscending
   })
   
-  let nodes = try fortunes.map { try $0.makeNode() }
+  let nodes = try fortunes.map { try $0.makeNode(context: myContext) }
   return try drop.view.make("fortune", ["fortunes": Node(nodes)])
 }
 
@@ -72,9 +85,8 @@ drop.get("updates") { req in
 }
 
 // Test type 6: Plaintext
-let helloWorldBuffer = "Hello, World!".utf8.array
 drop.get("plaintext") { req in
-  return Response(headers: ["Content-Type": "text/plain; charset=utf-8"], body: helloWorldBuffer)
+  return "Hello, World!"
 }
 
-drop.run()
+try drop.run()
