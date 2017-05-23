@@ -2,4 +2,4 @@
 
 fw_depends octane
 
-hello_world 8000 40 &
+techempower_benchmarks &
