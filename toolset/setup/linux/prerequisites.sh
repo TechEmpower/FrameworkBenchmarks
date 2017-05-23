@@ -36,7 +36,18 @@ sudo pip install colorama==0.3.1
 sudo pip install progressbar==2.2
 sudo pip install requests
 
-sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
+# Get the ulimit from the benchmark config
+if [ -f benchmark.cfg ]; then
+  FILE=benchmark.cfg
+else
+  FILE=benchmark.cfg.example
+fi
+
+ULIMIT=$(grep '^ulimit=' $FILE | grep -Po '[0-9]+')
+
+if [ ! $ULIMIT ]; then ULIMIT=200000; fi;
+
+sudo sh -c "echo '*               -    nofile          ${ULIMIT}' >> /etc/security/limits.conf"
 sudo sh -c "echo '*            hard    rtprio             99' >> /etc/security/limits.conf"
 sudo sh -c "echo '*            soft    rtprio             99' >> /etc/security/limits.conf"
 
