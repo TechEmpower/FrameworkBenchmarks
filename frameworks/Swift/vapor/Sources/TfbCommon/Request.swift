@@ -1,3 +1,4 @@
+import Foundation
 import Vapor
 import HTTP
 
@@ -12,10 +13,10 @@ public let validQueriesRange: ClosedRange<Int> = 1...500
 /// - Parameter request: HTTP request
 /// - Returns: queries
 public func queriesParam(for request: Request) -> Int {
-  let queriesParam = request.query?["queries"]?.int ?? 1
-  return clamp(queriesParam, to: validQueriesRange)
+    let queriesParam = request.query?["queries"]?.int ?? 1
+    return clamp(queriesParam, to: validQueriesRange)
 }
 
 func clamp(_ value: Int, to: ClosedRange<Int>) -> Int {
-  return max(to.lowerBound, min(to.upperBound, value))
+    return max(to.lowerBound, min(to.upperBound, value))
 }
