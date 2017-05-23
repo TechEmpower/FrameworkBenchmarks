@@ -18,9 +18,9 @@ get '/json' => sub {
 
 get '/db' => sub {
     my $queries = params->{queries} || 1;
-    if ( $queries + 0 != $queries) {
-        $queries = 1;
-    }
+    $queries = 1 if ( $queries !~ /^\d+$/ || $queries < 1 );
+    $queries = 500 if $queries > 500;
+    
     my @response;
     for ( 1 .. $queries ) {
         my $id = int rand 10000 + 1;
