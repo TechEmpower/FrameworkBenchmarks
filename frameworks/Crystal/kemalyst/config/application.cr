@@ -12,8 +12,8 @@ Kemalyst::Application.config do |config|
 
   # Disable unused middleware
   config.handlers = [] of HTTP::Handler
-  config.handlers << Kemalyst::Handler::Error.instance
-  config.handlers << Kemalyst::Handler::Params.instance
-  config.handlers << Kemalyst::Handler::Router.instance
+  config.handlers << Crack::Handler::Error.instance
+  config.handlers << Crack::Handler::Params.instance
   config.handlers << TestController.instance
+  config.handlers << Kemalyst::Handler::Router.instance
 end

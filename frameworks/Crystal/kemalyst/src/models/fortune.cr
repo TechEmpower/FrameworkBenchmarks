@@ -1,6 +1,6 @@
-require "kemalyst-model/adapter/pg"
+require "granite_orm/adapter/pg"
 
-class Fortune < Kemalyst::Model
+class Fortune < Granite::ORM
   adapter pg
   table_name fortune
   primary id : Int32

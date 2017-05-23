@@ -10,15 +10,15 @@ dependencies:
   kemalyst:
     github: kemalyst/kemalyst
     version: ~> 0.8.0
-  
-  kemalyst-model:
-    github: kemalyst/kemalyst-model
+
+  granite_orm:
+    github: kemalyst/granite-orm
     version: ~> 0.6.0
 
   kemalyst-spec:
     github: kemalyst/kemalyst-spec
     version: ~> 0.1.0
-    
+
 
   pg:
     github: will/crystal-pg
