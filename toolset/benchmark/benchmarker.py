@@ -618,15 +618,15 @@ class Benchmarker:
                     out.flush()
                     time.sleep(5)
                     if self.__is_port_bound(test.port):
-                        leftovers = "  PID  PPID COMMAND\n"
+                        leftovers = "  PID  PPID COMMAND" + os.linesep
                         for line in subprocess.check_output(['ps -o pid,ppid,comm -u $(whoami)'], shell=True).splitlines():
                             if line not in startedPIDs:
-                                leftovers += line + "\n"
+                                leftovers += line + os.linesep
 
-                        started = "  PID  PPID COMMAND\n"
+                        started = "  PID  PPID COMMAND" + os.linesep
                         for line in startedPIDs.splitlines():
                             if line not in normalPIDs:
-                                started += line + "\n"
+                                started += line + os.linesep
 
                         # We gave it our all
                         self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
