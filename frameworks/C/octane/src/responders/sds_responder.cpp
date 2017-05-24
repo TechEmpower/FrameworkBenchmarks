@@ -32,10 +32,9 @@ void create_json_response_sds(write_batch* batch) {
     sds response_buffer = sdsnew("HTTP/1.1 200 OK\r\n");
     response_buffer = sdscat(response_buffer, "Server: octane\r\n");
     response_buffer = sdscat(response_buffer, "Content-Type: application/json\r\n");
-    response_buffer = sdscat(response_buffer, "Content-Length: 28\r\n");
+    response_buffer = sdscatprintf(response_buffer, "Content-Length: %d\r\n", s.GetSize());
     response_buffer = sdscatprintf(response_buffer, "Date: %s\r\n", current_time);
     response_buffer = sdscat(response_buffer, s.GetString());
-    //response_buffer = sdscat(response_buffer, "\n");
 
     batch->buffers[batch->number_of_used_buffers].base = response_buffer;
     batch->buffers[batch->number_of_used_buffers].len = sdslen(response_buffer);
