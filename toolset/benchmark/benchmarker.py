@@ -550,6 +550,10 @@ class Benchmarker:
             out.flush()
             try:
                 self.__cleanup_leftover_processes_before_test()
+                ##########################
+                # Capturing PIDs before
+                ##########################
+                normalPIDs = subprocess.check_output(['ps -o pid,ppid,comm -u $(whoami)'], shell=True)
 
                 if self.__is_port_bound(test.port):
                     # We gave it our all
@@ -570,6 +574,11 @@ class Benchmarker:
 
                 logging.info("Sleeping %s seconds to ensure framework is ready" % self.sleep)
                 time.sleep(self.sleep)
+
+                ##########################
+                # Capturing PIDs started
+                ##########################
+                startedPIDs = subprocess.check_output(['ps -o pid,ppid,comm -u $(whoami)'], shell=True)
 
                 ##########################
                 # Verify URLs
@@ -609,9 +618,23 @@ class Benchmarker:
                     out.flush()
                     time.sleep(5)
                     if self.__is_port_bound(test.port):
+                        leftovers = "  PID  PPID COMMAND\n"
+                        for line in subprocess.check_output(['ps -o pid,ppid,comm -u $(whoami)'], shell=True).splitlines():
+                            if line not in startedPIDs:
+                                leftovers += line + "\n"
+
+                        started = "  PID  PPID COMMAND\n"
+                        for line in startedPIDs.splitlines():
+                            if line not in normalPIDs:
+                                started += line + "\n"
+
                         # We gave it our all
                         self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-                        out.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
+                        out.write(header("Error: Port %s was not released by stop - %s" % (test.port, test.name)))
+                        out.write(header("Processes Started"))
+                        out.write(started)
+                        out.write(header("Processes Not Killed"))
+                        out.write(leftovers)
                         out.flush()
                         return exit_with_code(1)
 
