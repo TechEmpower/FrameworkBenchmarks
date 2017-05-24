@@ -384,7 +384,20 @@ class FrameworkTest:
         base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
 
         try:
+          # Verifies headers from the server. This check is made from the
+          # App Server using Pythons requests module. Will do a second check from
+          # the client to make sure the server isn't only accepting connections
+          # from localhost on a multi-machine setup.
           results = test.verify(base_url)
+
+          # Now verify that the url is reachable from the client machine, unless
+          # we're already failing
+          if not any(result == 'fail' for (result, reason, url) in results):
+            p = subprocess.call(["ssh", "TFB-client", "curl -sSf %s" % base_url + test.get_url()], shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if p is not 0:
+              results = [('fail', "Server did not respond to request from client machine.", base_url)]
+              logging.warning("""This error usually means your server is only accepting
+                requests from localhost.""")
         except ConnectionError as e:
           results = [('fail',"Server did not respond to request", base_url)]
           logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
