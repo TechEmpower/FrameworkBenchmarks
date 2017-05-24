@@ -27,12 +27,12 @@ do
   # Start by tearing down the environment.
   # Hold on to the benchmark.cfg it it exists
   echo Tearing down and rebuilding the environment
-  cp $TFB_REPOPARENT/$TFB_REPONAME/benchmark.cfg $TFB_REPOPARENT/bencmark.cfg 2>/dev/null
+  cp $TFB_REPOPARENT/$TFB_REPONAME/benchmark.cfg $TFB_REPOPARENT/benchmark.cfg 2>/dev/null
   rm -rf $TFB_REPOPARENT/$TFB_REPONAME
   cd $TFB_REPOPARENT
   git clone -b $TFB_REPOBRANCH $TFB_REPOURI $TFB_REPOPARENT/$TFB_REPONAME
   # Replace the benchmark.cfg
-  cp $TFB_REPOPARENT/benchmark.cfg $TFB_REPOPARENT/$TFB_REPONAME/bencmark.cfg 2>/dev/null
+  cp $TFB_REPOPARENT/benchmark.cfg $TFB_REPOPARENT/$TFB_REPONAME/benchmark.cfg 2>/dev/null
 
   echo Running continuous tasks
   $TFB_REPOPARENT/$TFB_REPONAME/toolset/continuous/tasks/run-tasks.sh
