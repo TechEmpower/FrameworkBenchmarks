@@ -121,7 +121,7 @@ def main(argv=None):
     if defaults['ulimit'] is None:
         defaults['ulimit'] = 200000
 
-    os.environ['ULIMIT'] = defaults['ulimit']
+    os.environ['ULIMIT'] = str(defaults['ulimit'])
 
     ##########################################################
     # Set up argument parser
