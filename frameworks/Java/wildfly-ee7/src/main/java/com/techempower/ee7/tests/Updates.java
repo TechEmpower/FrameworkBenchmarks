@@ -6,7 +6,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
-import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -29,7 +28,6 @@ public class Updates {
     @Inject
     private EntityManager em;
 
-    @Transactional
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<World> update(@QueryParam("queries") final String queries) {
