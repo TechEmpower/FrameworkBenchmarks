@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     uv_timer_init(listener->loop, &timer);
     uv_timer_start(&timer, timer_callback, 0, 500);
 
-    begin_listening(listener, "0.0.0.0", 8000, false, 4, 128, NULL, NULL, NULL, on_request);
+    begin_listening(listener, "0.0.0.0", 8000, false, 40, 128, NULL, NULL, NULL, on_request);
 
     printf("Listening...\n");
 }
