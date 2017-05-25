@@ -1,0 +1,5 @@
+*.user
+*.suo
+*/bin/*
+*/obj/*
+*/packages/*

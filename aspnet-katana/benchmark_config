@@ -1,0 +1,25 @@
+{
+  "framework": "aspnet-katana",
+  "tests": [{
+    "systemweb": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "sort": 245
+    },
+    "owinhost-httplistener": {
+      "setup_file": "setup_owinhost",
+      "os": "nt",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "sort": 246
+    }
+  }]
+}
