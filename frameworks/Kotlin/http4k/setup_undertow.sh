@@ -2,7 +2,6 @@
 
 fw_depends mysql java
 
-gradle wrapper
+./gradlew clean build undertow
 
-gradle clean build undertow
 java -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts -XX:+AlwaysPreTouch -jar build/libs/http4k-standalone.jar &
