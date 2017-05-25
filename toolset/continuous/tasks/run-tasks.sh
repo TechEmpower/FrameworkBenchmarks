@@ -7,17 +7,17 @@
 #  Tasks before the run  #
 ##########################
 
-$TFB_REPOPARENT/$TFB_REPONAME/continuous/tasks/record-git-commit.sh
+$TFB_REPOPARENT/$TFB_REPONAME/toolset/continuous/tasks/record-git-commit.sh
 
 
 ##########################
 #   Run the benchmarks   #
 ##########################
 
-$TFB_REPOPARENT/$TFB_REPONAME/continuous/tasks/run-benchmarks.sh
+$TFB_REPOPARENT/$TFB_REPONAME/toolset/continuous/tasks/run-benchmarks.sh
 
 ##########################
 #  Tasks after the run   #
 ##########################
 
-$TFB_REPOPARENT/$TFB_REPONAME/continuous/tasks/keep-logs.py
+$TFB_REPOPARENT/$TFB_REPONAME/toolset/continuous/tasks/keep-logs.py
