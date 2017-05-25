@@ -64,6 +64,7 @@ type=all
 verbose=True
 clean=False
 clean_all=False
+ulimit=200000
 EOF
 
   source ./toolset/setup/linux/prerequisites.sh
