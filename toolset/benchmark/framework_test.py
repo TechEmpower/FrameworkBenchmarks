@@ -483,8 +483,10 @@ class FrameworkTest:
         if not test.failed:
           if test_type == 'plaintext': # One special case
             remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
-          elif test_type == 'query' or test_type == 'update' or test_type == 'cached_query':
-            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
+          elif test_type == 'query' or test_type == 'update':
+            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header, self.benchmarker.query_levels)
+          elif test_type == 'cached_query':
+            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header, self.benchmarker.cached_query_levels)
           else:
             remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
 
@@ -667,11 +669,11 @@ class FrameworkTest:
   # be run on the client to benchmark a single test. This
   # specifically works for the variable query tests (Query)
   ############################################################
-  def __generate_query_script(self, url, port, accept_header):
+  def __generate_query_script(self, url, port, accept_header, query_levels):
     headers = self.headers_template.format(accept=accept_header)
     return self.query_template.format(max_concurrency=max(self.benchmarker.concurrency_levels),
       name=self.name, duration=self.benchmarker.duration,
-      levels=" ".join("{}".format(item) for item in self.benchmarker.query_levels),
+      levels=" ".join("{}".format(item) for item in query_levels),
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers)
 
   ############################################################

@@ -1047,6 +1047,7 @@ class Benchmarker:
             self.results['completionTime'] = None
             self.results['concurrencyLevels'] = self.concurrency_levels
             self.results['queryIntervals'] = self.query_levels
+            self.results['cachedQueryIntervals'] = self.cached_query_levels
             self.results['frameworks'] = [t.name for t in self.__gather_tests]
             self.results['duration'] = self.duration
             self.results['rawData'] = dict()
