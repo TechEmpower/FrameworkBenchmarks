@@ -483,7 +483,7 @@ class FrameworkTest:
         if not test.failed:
           if test_type == 'plaintext': # One special case
             remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
-          elif test_type == 'query' or test_type == 'update':
+          elif test_type == 'query' or test_type == 'update' or test_type == 'cached_query':
             remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
           else:
             remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
@@ -892,14 +892,16 @@ def validate_urls(test_name, test_keys):
   the suggested url specifications, although those suggestions are presented if a url fails validation here.
   """
   example_urls = {
-    "json_url":      "/json",
-    "db_url":        "/mysql/db",
-    "query_url":     "/mysql/queries?queries=  or  /mysql/queries/",
-    "fortune_url":   "/mysql/fortunes",
-    "update_url":    "/mysql/updates?queries=  or  /mysql/updates/",
-    "plaintext_url": "/plaintext"
+    "json_url":         "/json",
+    "db_url":           "/mysql/db",
+    "query_url":        "/mysql/queries?queries=  or  /mysql/queries/",
+    "fortune_url":      "/mysql/fortunes",
+    "update_url":       "/mysql/updates?queries=  or  /mysql/updates/",
+    "plaintext_url":    "/plaintext",
+    "cached_query_url": "/mysql/cached_queries?queries=  or /mysql/cached_queries"
   }
-  for test_url in ["json_url","db_url","query_url","fortune_url","update_url","plaintext_url"]:
+
+  for test_url in ["json_url","db_url","query_url","fortune_url","update_url","plaintext_url","cached_query_url"]:
     key_value = test_keys.get(test_url, None)
     if key_value != None and not key_value.startswith('/'):
       errmsg = """`%s` field in test \"%s\" does not appear to be a valid url: \"%s\"\n

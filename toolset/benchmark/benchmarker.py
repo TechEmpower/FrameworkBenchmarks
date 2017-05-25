@@ -951,7 +951,7 @@ class Benchmarker:
                             color = Fore.YELLOW
                         else:
                             color = Fore.RED
-                        print prefix + "|       " + test_type.ljust(11) + ' : ' + color + result.upper()
+                        print prefix + "|       " + test_type.ljust(13) + ' : ' + color + result.upper()
                 else:
                     print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
             print prefix + header('', top='', bottom='=') + Style.RESET_ALL
@@ -981,6 +981,7 @@ class Benchmarker:
         types['fortune'] = FortuneTestType()
         types['update'] = UpdateTestType()
         types['plaintext'] = PlaintextTestType()
+        types['cached_query'] = CachedQueryTestType()
 
         # Turn type into a map instead of a string
         if args['type'] == 'all':
@@ -1055,6 +1056,7 @@ class Benchmarker:
             self.results['rawData']['fortune'] = dict()
             self.results['rawData']['update'] = dict()
             self.results['rawData']['plaintext'] = dict()
+            self.results['rawData']['cached_query'] = dict()
             self.results['completed'] = dict()
             self.results['succeeded'] = dict()
             self.results['succeeded']['json'] = []
@@ -1063,6 +1065,7 @@ class Benchmarker:
             self.results['succeeded']['fortune'] = []
             self.results['succeeded']['update'] = []
             self.results['succeeded']['plaintext'] = []
+            self.results['succeeded']['cached_query'] = []
             self.results['failed'] = dict()
             self.results['failed']['json'] = []
             self.results['failed']['db'] = []
@@ -1070,6 +1073,7 @@ class Benchmarker:
             self.results['failed']['fortune'] = []
             self.results['failed']['update'] = []
             self.results['failed']['plaintext'] = []
+            self.results['failed']['cached_query'] = []
             self.results['verify'] = dict()
         else:
             #for x in self.__gather_tests():
