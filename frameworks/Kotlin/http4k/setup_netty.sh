@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql java
+fw_depends postgresql java
 
 ./gradlew clean build netty
 

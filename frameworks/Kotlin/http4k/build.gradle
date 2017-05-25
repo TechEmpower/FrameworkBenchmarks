@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = "1.1.2"
+    ext.kotlin_version = "1.1.2-4"
     ext.http4k_version = "1.23.0"
     repositories {
         mavenCentral()
@@ -24,14 +24,15 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
-    compile "org.apache.commons:commons-lang3:3.5"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.http4k:http4k-core:$http4k_version"
-    compile "org.http4k:http4k-contract:$http4k_version"
     compile "org.http4k:http4k-format-jackson:$http4k_version"
     compile "org.http4k:http4k-server-jetty:$http4k_version"
     compile "org.http4k:http4k-server-netty:$http4k_version"
     compile "org.http4k:http4k-server-undertow:$http4k_version"
+    compile "org.http4k:http4k-template-handlebars:$http4k_version"
+    compile "org.apache.commons:commons-lang3:3.5"
+    compile "com.zaxxer:HikariCP:2.6.1"
 }
 
 task jetty(type: OneJar) {
