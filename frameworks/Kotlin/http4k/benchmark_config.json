@@ -2,7 +2,7 @@
   "framework": "http4k",
   "tests": [
     {
-      "default": {
+      "jetty": {
         "orm": "Raw",
         "database_os": "Linux",
         "setup_file": "setup_jetty",
