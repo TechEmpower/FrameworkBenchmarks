@@ -23,7 +23,7 @@
       }
     },
     {
-      "default": {
+      "netty": {
         "orm": "Raw",
         "database_os": "Linux",
         "setup_file": "setup_netty",
@@ -44,7 +44,7 @@
       }
     },
     {
-      "default": {
+      "undertow": {
         "orm": "Raw",
         "database_os": "Linux",
         "setup_file": "setup_undertow",
