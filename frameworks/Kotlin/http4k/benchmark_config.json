@@ -14,7 +14,7 @@
         "database": "None",
         "framework": "http4k",
         "language": "Kotlin",
-        "platform": "Servlet",
+        "platform": "http4k",
         "webserver": "None",
         "os": "Linux",
         "display_name": "http4k-jetty",
@@ -35,12 +35,33 @@
         "database": "None",
         "framework": "http4k",
         "language": "Kotlin",
-        "platform": "Netty",
+        "platform": "http4k",
         "webserver": "None",
         "os": "Linux",
         "display_name": "http4k-netty",
         "notes": "",
         "versus": "netty"
+      }
+    },
+    {
+      "default": {
+        "orm": "Raw",
+        "database_os": "Linux",
+        "setup_file": "setup_undertow",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 9000,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "http4k",
+        "language": "Kotlin",
+        "platform": "http4k",
+        "webserver": "None",
+        "os": "Linux",
+        "display_name": "http4k-undertow",
+        "notes": "",
+        "versus": "undertow"
       }
     }
   ]
