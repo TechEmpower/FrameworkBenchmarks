@@ -189,7 +189,7 @@ class FrameworkTest:
       subprocess.check_call(['gcc', 
         '-std=c99', 
         '-o%s/TFBReaper' % self.install_root, 
-        os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')  ],
+        os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')],
         stderr=out, stdout=out)
 
     # Check that the client is setup

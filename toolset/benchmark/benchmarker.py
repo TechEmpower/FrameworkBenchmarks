@@ -484,6 +484,7 @@ class Benchmarker:
                     if test_process.exitcode != 0:
                         error_happened = True
             pbar.finish()
+
         if os.path.isfile(self.current_benchmark):
             os.remove(self.current_benchmark)
         logging.debug("End __run_tests.")
@@ -560,8 +561,9 @@ class Benchmarker:
                     return exit_with_code(1)
 
                 result, process = test.start(out)
+                self.__process = process
                 if result != 0:
-                    self.__stop_test(out, process)
+                    self.__process.terminate()
                     time.sleep(5)
                     out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
                     out.flush()
@@ -599,13 +601,13 @@ class Benchmarker:
                 ##########################
                 out.write(header("Stopping %s" % test.name))
                 out.flush()
-                self.__stop_test(out, process)
+                self.__process.terminate()
                 out.flush()
                 time.sleep(5)
 
                 if self.__is_port_bound(test.port):
                     # This can happen sometimes - let's try again
-                    self.__stop_test(out, process)
+                    self.__process.terminate()
                     out.flush()
                     time.sleep(5)
                     if self.__is_port_bound(test.port):
@@ -649,80 +651,22 @@ class Benchmarker:
                 if self.mode == "verify" and not passed_verify:
                     print "Failed verify!"
                     return exit_with_code(1)
+            except KeyboardInterrupt:
+                if self.__process is not None:
+                    self.__process.terminate()
             except (OSError, IOError, subprocess.CalledProcessError) as e:
                 self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
                 out.write(header("Subprocess Error %s" % test.name))
                 traceback.print_exc(file=out)
                 out.flush()
-                try:
-                    self.__stop_test(out, process)
-                except (subprocess.CalledProcessError) as e:
-                    self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
-                    out.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
-                    traceback.print_exc(file=out)
-                    out.flush()
                 out.close()
                 return exit_with_code(1)
-            # TODO - subprocess should not catch this exception!
-            # Parent process should catch it and cleanup/exit
-            except (KeyboardInterrupt) as e:
-                self.__stop_test(out, process)
-                out.write(header("Cleaning up..."))
-                out.flush()
-                self.__finish()
-                sys.exit(1)
 
             out.close()
             return exit_with_code(0)
 
     ############################################################
     # End __run_tests
-    ############################################################
-
-    ############################################################
-    # __stop_test(benchmarker)
-    # Stops all running tests
-    ############################################################
-    def __stop_test(self, out, process):
-        if process is not None and process.poll() is None:
-            # Stop
-            pids = self.__find_child_processes(process.pid)
-            if pids is not None:
-                stop = ['kill', '-STOP'] + pids
-                subprocess.call(stop, stderr=out, stdout=out)
-            pids = self.__find_child_processes(process.pid)
-            if pids is not None:
-                term = ['kill', '-TERM'] + pids
-                subprocess.call(term, stderr=out, stdout=out)
-            # Okay, if there are any more PIDs, kill them harder
-            pids = self.__find_child_processes(process.pid)
-            if pids is not None:
-                kill = ['kill', '-KILL'] + pids
-                subprocess.call(kill, stderr=out, stdout=out)
-            process.terminate()
-    ############################################################
-    # End __stop_test
-    ############################################################
-
-    ############################################################
-    # __find_child_processes
-    # Recursively finds all child processes for the given PID.
-    ############################################################
-    def __find_child_processes(self, pid):
-        toRet = []
-        try:
-            pids = subprocess.check_output(['pgrep','-P',str(pid)]).split()
-            toRet.extend(pids)
-            for aPid in pids:
-                toRet.extend(self.__find_child_processes(aPid))
-        except:
-            # pgrep will return a non-zero status code if there are no
-            # processes who have a PPID of PID.
-            pass
-
-        return toRet
-    ############################################################
-    # End __find_child_processes
     ############################################################
 
     def is_port_bound(self, port):
@@ -1064,9 +1008,11 @@ class Benchmarker:
         if self.client_identity_file != None:
             self.client_ssh_string = self.client_ssh_string + " -i " + self.client_identity_file
 
-            ############################################################
-            # End __init__
-            ############################################################
+        self.__process = None
+
+    ############################################################
+    # End __init__
+    ############################################################
 
 
 class QuietOutputStream:
