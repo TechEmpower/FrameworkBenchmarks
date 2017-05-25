@@ -1,0 +1,25 @@
+﻿@model IEnumerable<AspNetAsyncBenchmark.Models.Fortune>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Fortunes</title>
+</head>
+<body>
+
+	<table>
+		<tr>
+			<th>id</th>
+			<th>message</th>
+		</tr>
+		@foreach (var fortune in Model)
+		{
+			<tr>
+				<td>@fortune.Id</td>
+				<td>@fortune.Message</td>
+			</tr>
+		}
+	</table>
+</body>
+</html>
