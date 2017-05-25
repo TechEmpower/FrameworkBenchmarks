@@ -1,6 +1,6 @@
 buildscript {
     ext.kotlin_version = "1.1.2"
-    ext.http4k_version = "0.20.0"
+    ext.http4k_version = "1.22.2"
     repositories {
         mavenCentral()
         jcenter()
@@ -31,6 +31,7 @@ dependencies {
     compile "org.http4k:http4k-format-jackson:$http4k_version"
     compile "org.http4k:http4k-server-jetty:$http4k_version"
     compile "org.http4k:http4k-server-netty:$http4k_version"
+    compile "org.http4k:http4k-server-undertow:$http4k_version"
 }
 
 task jetty(type: OneJar) {
@@ -39,4 +40,7 @@ task jetty(type: OneJar) {
 
 task netty(type: OneJar) {
     mainClass = 'Http4kNettyServerKt'
+}
+task undertow(type: OneJar) {
+    mainClass = 'Http4kUndertowServerKt'
 }
