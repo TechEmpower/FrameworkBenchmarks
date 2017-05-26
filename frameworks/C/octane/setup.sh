@@ -2,4 +2,4 @@
 
 fw_depends octane
 
-hello_world 8000 40 &
+LD_PRELOAD="$OCTANE_HOME/lib/lockless_allocator/libllalloc.so.1.3" techempower_benchmarks &
