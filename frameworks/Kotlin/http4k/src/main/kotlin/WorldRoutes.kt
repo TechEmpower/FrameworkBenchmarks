@@ -28,7 +28,7 @@ object WorldRoutes {
     private val numberOfQueries = Query
         .map {
             try {
-                max(min(it.toInt(), 1), 500)
+                min(max(it.toInt(), 1), 500)
             } catch (e: Exception) {
                 1
             }
