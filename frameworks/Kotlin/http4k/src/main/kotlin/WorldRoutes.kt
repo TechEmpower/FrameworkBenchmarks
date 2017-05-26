@@ -1,15 +1,20 @@
+
 import com.fasterxml.jackson.databind.JsonNode
+import org.http4k.core.Body
 import org.http4k.core.Method.GET
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
+import org.http4k.core.with
 import org.http4k.format.Jackson.array
-import org.http4k.format.Jackson.compact
+import org.http4k.format.Jackson.json
 import org.http4k.format.Jackson.number
 import org.http4k.format.Jackson.obj
 import org.http4k.lens.Query
 import org.http4k.routing.Route
 import org.http4k.routing.by
+import java.lang.Math.max
+import java.lang.Math.min
 import java.sql.Connection
 import java.sql.ResultSet.CONCUR_READ_ONLY
 import java.sql.ResultSet.TYPE_FORWARD_ONLY
@@ -18,28 +23,37 @@ import java.util.*
 
 object WorldRoutes {
 
-    private fun queryRoute(database: Database): Route = GET to "db" by {
-        database.withConnection {
-            findWorld(it, randomWorld())
-        }?.let { Response(OK).body(compact(it)) } ?: Response(NOT_FOUND)
-    }
+    private val jsonBody = Body.json().toLens()
 
     private val numberOfQueries = Query
         .map {
             try {
-                it.toInt()
+                max(min(it.toInt(), 1), 500)
             } catch (e: Exception) {
                 1
             }
         }
         .defaulted("queries", 1)
 
+    operator fun invoke(database: Database): List<Route> =
+        listOf(
+            queryRoute(database),
+            multipleRoute(database),
+            updateRoute(database)
+        )
+
+    private fun queryRoute(database: Database): Route = GET to "db" by {
+        database.withConnection {
+            findWorld(it, randomWorld())
+        }?.let { Response(OK).with(jsonBody of it) } ?: Response(NOT_FOUND)
+    }
+
     private fun multipleRoute(database: Database): Route = GET to "queries" by {
         val worlds = database.withConnection {
             con ->
             (1..numberOfQueries(it)).mapNotNull { findWorld(con, randomWorld()) }
         }
-        Response(OK).body(compact(array(worlds)))
+        Response(OK).with(jsonBody of array(worlds))
     }
 
     private fun updateRoute(database: Database): Route = GET to "updates" by {
@@ -51,7 +65,7 @@ object WorldRoutes {
                 findWorld(con, id)
             }
         }
-        Response(OK).body(compact(array(worlds)))
+        Response(OK).with(jsonBody of array(worlds))
     }
 
     private fun findWorld(it: Connection, id: Int): JsonNode? {
@@ -70,11 +84,4 @@ object WorldRoutes {
     }
 
     private fun randomWorld() = Random().nextInt(9999) + 1
-
-    operator fun invoke(database: Database): List<Route> =
-        listOf(
-            queryRoute(database),
-            multipleRoute(database),
-            updateRoute(database)
-        )
 }
