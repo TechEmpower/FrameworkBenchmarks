@@ -37,7 +37,7 @@ object WorldRoutes {
     private fun multipleRoute(database: Database): Route = GET to "queries" by {
         val worlds = database.withConnection {
             con ->
-            (0..numberOfQueries(it)).mapNotNull { findWorld(con, randomWorld()) }
+            (1..numberOfQueries(it)).mapNotNull { findWorld(con, randomWorld()) }
         }
         Response(OK).body(compact(array(worlds)))
     }
@@ -45,7 +45,7 @@ object WorldRoutes {
     private fun updateRoute(database: Database): Route = GET to "updates" by {
         val worlds = database.withConnection {
             con ->
-            (0..numberOfQueries(it)).mapNotNull {
+            (1..numberOfQueries(it)).mapNotNull {
                 val id = randomWorld()
                 updateWorld(con, id)
                 findWorld(con, id)
