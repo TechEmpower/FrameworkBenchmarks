@@ -1,0 +1,30 @@
+{
+    "//": "The underlying database technology to use.",
+    "//": "memory: SQLite in-memory DB.",
+    "//": "sqlite: Persisted SQLite DB (configure with sqlite.json)",
+    "//": "Other drivers are available through Vapor providers",
+    "//": "https://github.com/search?q=topic:vapor-provider+topic:database",
+    "driver": "memory",
+    
+    "//": "Naming convention to use for creating foreign id keys,",
+    "//": "e.g., `user_id`",
+    "//": "`camelCase` option is also available.",
+    "keyNamingConvention": "snake_case",
+    
+    "//": "Name of the table Fluent uses to track migrations",
+    "migrationEntityName": "fluent",
+    
+    "//": "Character used to join pivot tables, e.g., `user_pet`",
+    "pivotNameConnector": "_",
+    
+    "//": "If true, foreign keys will automatically be added",
+    "//": "to any `builder.foreignId(...)` calls.",
+    "autoForeignKeys": true,
+    
+    "//": "Key to specify page number for paginated responses",
+    "//": "e.g., `?page=2` ",
+    "defaultPageKey": "page",
+    
+    "//": "Default page size if not otherwise specified on models",
+    "defaultPageSize": 10
+}
