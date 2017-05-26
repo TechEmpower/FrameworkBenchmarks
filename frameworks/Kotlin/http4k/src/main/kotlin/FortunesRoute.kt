@@ -24,6 +24,8 @@ object FortunesRoute {
                 Fortune(it.getInt(1), it.getString(2))
             }
         }
+            .plus(Fortune(0, "Additional fortune added at request time."))
+            .sortedBy { it.message }
         Response(OK).with(viewBody of FortunesList(items))
     }
 }
