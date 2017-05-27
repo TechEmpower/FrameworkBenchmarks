@@ -54,6 +54,7 @@ module.exports.QueryHandler = ((() => {
 
     '/mysql/queries':     MySQLRawHandler.MultipleQueries,
     '/mysql/updates':     MySQLRawHandler.Updates,
+    '/mysql/cached' :     MySQLRawHandler.CachedQueries,
 
     '/sequelize-pg/queries': SequelizePgHandler.MultipleQueries,
     '/sequelize-pg/updates': SequelizePgHandler.Updates

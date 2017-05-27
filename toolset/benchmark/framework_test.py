@@ -484,7 +484,9 @@ class FrameworkTest:
           if test_type == 'plaintext': # One special case
             remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
           elif test_type == 'query' or test_type == 'update':
-            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
+            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header, self.benchmarker.query_levels)
+          elif test_type == 'cached_query':
+            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header, self.benchmarker.cached_query_levels)
           else:
             remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
 
@@ -667,11 +669,11 @@ class FrameworkTest:
   # be run on the client to benchmark a single test. This
   # specifically works for the variable query tests (Query)
   ############################################################
-  def __generate_query_script(self, url, port, accept_header):
+  def __generate_query_script(self, url, port, accept_header, query_levels):
     headers = self.headers_template.format(accept=accept_header)
     return self.query_template.format(max_concurrency=max(self.benchmarker.concurrency_levels),
       name=self.name, duration=self.benchmarker.duration,
-      levels=" ".join("{}".format(item) for item in self.benchmarker.query_levels),
+      levels=" ".join("{}".format(item) for item in query_levels),
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers)
 
   ############################################################
@@ -892,14 +894,16 @@ def validate_urls(test_name, test_keys):
   the suggested url specifications, although those suggestions are presented if a url fails validation here.
   """
   example_urls = {
-    "json_url":      "/json",
-    "db_url":        "/mysql/db",
-    "query_url":     "/mysql/queries?queries=  or  /mysql/queries/",
-    "fortune_url":   "/mysql/fortunes",
-    "update_url":    "/mysql/updates?queries=  or  /mysql/updates/",
-    "plaintext_url": "/plaintext"
+    "json_url":         "/json",
+    "db_url":           "/mysql/db",
+    "query_url":        "/mysql/queries?queries=  or  /mysql/queries/",
+    "fortune_url":      "/mysql/fortunes",
+    "update_url":       "/mysql/updates?queries=  or  /mysql/updates/",
+    "plaintext_url":    "/plaintext",
+    "cached_query_url": "/mysql/cached_queries?queries=  or /mysql/cached_queries"
   }
-  for test_url in ["json_url","db_url","query_url","fortune_url","update_url","plaintext_url"]:
+
+  for test_url in ["json_url","db_url","query_url","fortune_url","update_url","plaintext_url","cached_query_url"]:
     key_value = test_keys.get(test_url, None)
     if key_value != None and not key_value.startswith('/'):
       errmsg = """`%s` field in test \"%s\" does not appear to be a valid url: \"%s\"\n

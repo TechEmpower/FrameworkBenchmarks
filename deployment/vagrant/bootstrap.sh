@@ -56,6 +56,7 @@ install_only=False
 list_tests=False
 concurrency_levels=[8, 16, 32, 64, 128, 256]
 query_levels=[1, 5,10,15,20]
+cached_query_levels=[1,10,20,50,100]
 threads=8
 mode=benchmark
 sleep=60
