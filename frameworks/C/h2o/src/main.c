@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <h2o/cache.h>
 #include <h2o/serverutil.h>
 #include <sys/resource.h>
 #include <sys/signalfd.h>
@@ -40,15 +41,18 @@
 #include "utility.h"
 
 #define DEFAULT_CACHE_LINE_SIZE 128
+#define MS_IN_S 1000
 #define USAGE_MESSAGE \
 	"Usage:\n%s [-a <max connections accepted simultaneously>] [-b <bind address>] " \
-	"[-c <certificate file>] [-d <database connection string>] [-f fortunes template file path] " \
+	"[-c <certificate file>] [-d <database connection string>] " \
+	"[-e <World cache duration in seconds>] [-f fortunes template file path] " \
 	"[-j <max reused JSON generators>] [-k <private key file>] [-l <log path>] " \
 	"[-m <max database connections per thread>] [-p <port>] " \
 	"[-q <max enqueued database queries per thread>] [-r <root directory>] " \
-	"[-s <HTTPS port>] [-t <thread number>]\n"
+	"[-s <HTTPS port>] [-t <thread number>] [-w <World cache capacity in bytes>]\n"
 
 static void free_global_data(global_data_t *global_data);
+static void free_world_cache_entry(h2o_iovec_t value);
 static size_t get_maximum_cache_line_size(void);
 static int initialize_global_data(const config_t *config, global_data_t *global_data);
 static int parse_options(int argc, char *argv[], config_t *config);
@@ -73,10 +77,18 @@ static void free_global_data(global_data_t *global_data)
 		mustache_free(&api, global_data->fortunes_template);
 	}
 
+	if (global_data->world_cache)
+		h2o_cache_destroy(global_data->world_cache);
+
 	h2o_config_dispose(&global_data->h2o_config);
 
 	if (global_data->ssl_ctx)
 		cleanup_openssl(global_data);
+}
+
+static void free_world_cache_entry(h2o_iovec_t value)
+{
+	free(value.base);
 }
 
 static size_t get_maximum_cache_line_size(void)
@@ -120,6 +132,13 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	CHECK_ERRNO_RETURN(global_data->signal_fd, signalfd, -1, &signals, SFD_NONBLOCK | SFD_CLOEXEC);
 	global_data->fortunes_template = get_fortunes_template(config->template_path);
 	h2o_config_init(&global_data->h2o_config);
+	global_data->world_cache = h2o_cache_create(H2O_CACHE_FLAG_MULTITHREADED,
+	                                            config->world_cache_capacity,
+	                                            config->world_cache_duration,
+	                                            free_world_cache_entry);
+
+	if (!global_data->world_cache)
+		goto error;
 
 	if (config->cert && config->key)
 		initialize_openssl(config, global_data);
@@ -170,7 +189,7 @@ static int parse_options(int argc, char *argv[], config_t *config)
 	opterr = 0;
 
 	while (1) {
-		const int opt = getopt(argc, argv, "?a:b:c:d:f:j:k:l:m:p:q:r:s:t:");
+		const int opt = getopt(argc, argv, "?a:b:c:d:e:f:j:k:l:m:p:q:r:s:t:w:");
 
 		if (opt == -1)
 			break;
@@ -203,6 +222,10 @@ static int parse_options(int argc, char *argv[], config_t *config)
 			case 'd':
 				config->db_host = optarg;
 				break;
+			case 'e':
+				PARSE_NUMBER(config->world_cache_duration);
+				config->world_cache_duration *= MS_IN_S;
+				break;
 			case 'f':
 				config->template_path = optarg;
 				break;
@@ -233,6 +256,9 @@ static int parse_options(int argc, char *argv[], config_t *config)
 			case 't':
 				PARSE_NUMBER(config->thread_num);
 				break;
+			case 'w':
+				PARSE_NUMBER(config->world_cache_capacity);
+				break;
 			default:
 				fprintf(stderr, USAGE_MESSAGE, *argv);
 				return EXIT_FAILURE;
@@ -247,6 +273,9 @@ static int parse_options(int argc, char *argv[], config_t *config)
 
 static void set_default_options(config_t *config)
 {
+	if (!config->world_cache_duration)
+		config->world_cache_duration = 3600000;
+
 	if (!config->max_accept)
 		config->max_accept = 10;
 
@@ -261,6 +290,9 @@ static void set_default_options(config_t *config)
 
 	if (!config->thread_num)
 		config->thread_num = h2o_numproc();
+
+	if (!config->world_cache_capacity)
+		config->world_cache_capacity = 131072;
 
 	if (!config->https_port)
 		config->https_port = 4443;
