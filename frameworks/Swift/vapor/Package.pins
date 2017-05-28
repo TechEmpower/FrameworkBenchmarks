@@ -8,40 +8,28 @@
       "version": "1.0.0"
     },
     {
-      "package": "BSON",
-      "reason": null,
-      "repositoryURL": "https://github.com/OpenKitten/BSON.git",
-      "version": "5.0.5"
-    },
-    {
       "package": "Bits",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/bits.git",
       "version": "1.0.0"
     },
     {
-      "package": "CMySQL",
+      "package": "BSON",
       "reason": null,
-      "repositoryURL": "https://github.com/vapor/cmysql.git",
-      "version": "2.0.1"
-    },
-    {
-      "package": "CPostgreSQL",
-      "reason": null,
-      "repositoryURL": "https://github.com/vapor-community/cpostgresql.git",
-      "version": "2.0.0"
-    },
-    {
-      "package": "CTLS",
-      "reason": null,
-      "repositoryURL": "https://github.com/vapor/ctls.git",
-      "version": "1.0.0"
+      "repositoryURL": "https://github.com/OpenKitten/BSON.git",
+      "version": "5.0.5"
     },
     {
       "package": "Cheetah",
       "reason": null,
       "repositoryURL": "https://github.com/OpenKitten/Cheetah.git",
       "version": "1.0.1"
+    },
+    {
+      "package": "CMySQL",
+      "reason": null,
+      "repositoryURL": "https://github.com/vapor/cmysql.git",
+      "version": "2.0.1"
     },
     {
       "package": "Console",
@@ -56,6 +44,12 @@
       "version": "2.0.2"
     },
     {
+      "package": "CPostgreSQL",
+      "reason": null,
+      "repositoryURL": "https://github.com/vapor-community/cpostgresql.git",
+      "version": "2.0.0"
+    },
+    {
       "package": "Crypto",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/crypto.git",
@@ -66,6 +60,12 @@
       "reason": null,
       "repositoryURL": "https://github.com/krzyzanowskim/CryptoSwift.git",
       "version": "0.6.9"
+    },
+    {
+      "package": "CTLS",
+      "reason": null,
+      "repositoryURL": "https://github.com/vapor/ctls.git",
+      "version": "1.0.0"
     },
     {
       "package": "Debugging",
@@ -102,6 +102,12 @@
       "reason": null,
       "repositoryURL": "https://github.com/OpenKitten/KittenCore.git",
       "version": "0.2.3"
+    },
+    {
+      "package": "KittenCTLS",
+      "reason": null,
+      "repositoryURL": "https://github.com/OpenKitten/KittenCTLS.git",
+      "version": "1.0.0"
     },
     {
       "package": "MongoDriver",
@@ -182,12 +188,6 @@
       "version": "2.0.0"
     },
     {
-      "package": "SQLite",
-      "reason": null,
-      "repositoryURL": "https://github.com/vapor/sqlite.git",
-      "version": "2.0.0"
-    },
-    {
       "package": "Schrodinger",
       "reason": null,
       "repositoryURL": "https://github.com/OpenKitten/Schrodinger.git",
@@ -198,6 +198,12 @@
       "reason": null,
       "repositoryURL": "https://github.com/vapor/sockets.git",
       "version": "2.0.1"
+    },
+    {
+      "package": "SQLite",
+      "reason": null,
+      "repositoryURL": "https://github.com/vapor/sqlite.git",
+      "version": "2.0.0"
     },
     {
       "package": "TLS",
