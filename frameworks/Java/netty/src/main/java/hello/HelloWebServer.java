@@ -49,7 +49,7 @@ public class HelloWebServer {
 				b.option(EpollChannelOption.SO_REUSEPORT, true);
 			}
 
-			b.option(ChannelOption.SO_BACKLOG, 1024);
+			b.option(ChannelOption.SO_BACKLOG, 8192);
 			b.option(ChannelOption.SO_REUSEADDR, true);
 			b.group(loupGroup).channel(serverChannelClass).childHandler(new HelloServerInitializer(loupGroup.next()));
 			b.childOption(ChannelOption.ALLOCATOR, new PooledByteBufAllocator(true));

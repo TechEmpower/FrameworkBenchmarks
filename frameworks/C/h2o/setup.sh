@@ -6,16 +6,15 @@ H2O_APP_HOME="${IROOT}/h2o_app"
 BUILD_DIR="${H2O_APP_HOME}_build"
 H2O_APP_PROFILE_PORT=54321
 H2O_APP_PROFILE_URL="http://127.0.0.1:$H2O_APP_PROFILE_PORT"
-NUM_PROC=$(nproc)
-PHYSICAL_ENVIRONMENT_THREADS=30
+PHYSICAL_ENVIRONMENT_THREADS=8
 
 # A hacky way to detect whether we are running in the physical hardware or the cloud environment.
-if [[ "$NUM_PROC" -gt 16 ]]; then
+if [[ "$CPU_COUNT" -gt 16 ]]; then
 	CLOUD_ENVIRONMENT=false
 	# In the physical hardware environment the number of threads used by the application is not
 	# the same as the number of logical CPU cores that the database server has, so we need to
 	# adjust the maximum number of database connections per thread accordingly.
-	DB_CONN=4
+	DB_CONN=15
 else
 	CLOUD_ENVIRONMENT=true
 	DB_CONN=16
@@ -24,9 +23,9 @@ fi
 build_h2o_app()
 {
 	cmake -DCMAKE_INSTALL_PREFIX="$H2O_APP_HOME" -DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_PREFIX_PATH="${H2O_HOME};${MUSTACHE_C_HOME};${YAJL_HOME}" \
-		-DCMAKE_C_FLAGS="-march=native $1" "$TROOT"
-	make -j "$(nproc)"
+	      -DCMAKE_PREFIX_PATH="${H2O_HOME};${MUSTACHE_C_HOME};${YAJL_HOME}" \
+	      -DCMAKE_C_FLAGS="-march=native $1" "$TROOT"
+	make -j "$CPU_COUNT"
 }
 
 run_curl()
@@ -53,6 +52,7 @@ generate_profile_data()
 	run_curl fortunes
 	run_curl updates?queries=20
 	run_curl plaintext
+	run_curl cached-worlds?queries=20
 	kill -s SIGTERM $H2O_APP_PROFILE_PID
 	wait $H2O_APP_PROFILE_PID
 }
@@ -64,7 +64,7 @@ generate_profile_data
 make clean
 rm -f CMakeCache.txt
 build_h2o_app "-fprofile-use"
-make -j "$(nproc)" install
+make -j "$CPU_COUNT" install
 popd
 rm -rf "$BUILD_DIR"
 echo "Maximum database connections per thread: $DB_CONN"

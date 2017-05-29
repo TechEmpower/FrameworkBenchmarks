@@ -1,58 +1,52 @@
 {
-    "framework" : "hexagon",
-    "tests" : [
+    "framework": "hexagon",
+    "tests": [
         {
-            "default" : {
-                "json_url" : "/json",
-                "db_url" : "/db",
-                "query_url" : "/query?queries=",
-                "fortune_url" : "/fortunes",
-                "update_url" : "/update?queries=",
-                "plaintext_url" : "/plaintext",
-
-                "port" : 9090,
-
-                "approach" : "Realistic",
-                "classification" : "Micro",
-                "database" : "MongoDB",
-                "framework" : "Hexagon",
-                "language" : "Kotlin",
-                "orm" : "Raw",
-                "platform" : "Servlet",
-                "webserver" : "None",
-                "os" : "Linux",
-                "database_os" : "Linux",
-                "display_name" : "Hexagon Jetty MongoDB",
-                "notes" : "http://there4.co/hexagon",
-
-                "setup_file" : "setup",
-                "versus" : "servlet"
+            "default": {
+                "json_url": "/json",
+                "db_url": "/db",
+                "query_url": "/query?queries=",
+                "fortune_url": "/fortunes",
+                "update_url": "/update?queries=",
+                "plaintext_url": "/plaintext",
+                "port": 9090,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "mongodb",
+                "framework": "Hexagon",
+                "language": "Kotlin",
+                "orm": "Raw",
+                "platform": "Servlet",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hexagon Jetty MongoDB",
+                "notes": "http://there4.co/hexagon",
+                "setup_file": "setup_jetty_mongodb",
+                "versus": "servlet"
             },
-            "mysql" : {
-                "json_url" : "/json",
-                "db_url" : "/db",
-                "query_url" : "/query?queries=",
-                "fortune_url" : "/fortunes",
-                "update_url" : "/update?queries=",
-                "plaintext_url" : "/plaintext",
-
-                "port" : 9090,
-
-                "approach" : "Realistic",
-                "classification" : "Micro",
-                "database" : "MySQL",
-                "framework" : "Hexagon",
-                "language" : "Kotlin",
-                "orm" : "Raw",
-                "platform" : "Servlet",
-                "webserver" : "None",
-                "os" : "Linux",
-                "database_os" : "Linux",
-                "display_name" : "Hexagon Jetty MySQL",
-                "notes" : "http://there4.co/hexagon",
-
-                "setup_file" : "setup_mysql",
-                "versus" : "servlet"
+            "jetty_postgresql": {
+                "json_url": "/json",
+                "db_url": "/db",
+                "query_url": "/query?queries=",
+                "fortune_url": "/fortunes",
+                "update_url": "/update?queries=",
+                "plaintext_url": "/plaintext",
+                "port": 9090,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "postgres",
+                "framework": "Hexagon",
+                "language": "Kotlin",
+                "orm": "Raw",
+                "platform": "Servlet",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hexagon Jetty PostgreSQL",
+                "notes": "http://there4.co/hexagon",
+                "setup_file": "setup_jetty_postgresql",
+                "versus": "servlet"
             }
         }
     ]

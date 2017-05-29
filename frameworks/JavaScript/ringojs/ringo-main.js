@@ -20,7 +20,7 @@ exports.app = function(req) {
      try {
        connection = datasource.getConnection();
        let randId, world;
-       if (queryCount === null) {
+       if (!queryCount || isNaN(queryCount) || queryCount < 1) {
          randId = ((Math.random() * 10000) | 0) + 1;
          world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
          return {

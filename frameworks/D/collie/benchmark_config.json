@@ -1,5 +1,5 @@
 {
-  "framework": "Collie",
+  "framework": "collie",
   "tests": [{
     "default": {
       "setup_file": "setup",

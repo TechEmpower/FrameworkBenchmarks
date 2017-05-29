@@ -18,6 +18,7 @@
 */
 
 #include <assert.h>
+#include <ctype.h>
 #include <h2o.h>
 #include <postgresql/libpq-fe.h>
 #include <stddef.h>
@@ -225,12 +226,20 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 			                                               sizeof(*fortune));
 
 			if (fortune) {
+				assert(PQnfields(result) == 2);
+
+				char * const id = PQgetvalue(result, i, 0);
+				char * const message = PQgetvalue(result, i, 1);
+				const size_t id_len = PQgetlength(result, i, 0);
+				const size_t message_len = PQgetlength(result, i, 1);
+
+				assert(id && id_len && isdigit(*id) && message);
 				memset(fortune, 0, sizeof(*fortune));
-				fortune->id.base = PQgetvalue(result, i, 0);
-				fortune->id.len = PQgetlength(result, i, 0);
+				fortune->id.base = id;
+				fortune->id.len = id_len;
 				fortune->message = h2o_htmlescape(&fortune_ctx->req->pool,
-				                                  PQgetvalue(result, i, 1),
-				                                  PQgetlength(result, i, 1));
+				                                  message,
+				                                  message_len);
 				fortune->l.next = fortune_ctx->result;
 				fortune_ctx->result = &fortune->l;
 				fortune_ctx->num_result++;

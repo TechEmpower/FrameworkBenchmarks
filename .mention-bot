@@ -9,7 +9,7 @@
       "skipTeamPrs": false
     }
   ],
-  "fileBlacklist": [],
+  "fileBlacklist": [".travis.yml"],
   "userBlacklist": ["hamiltont", "MalcolmEvershed"],
   "userBlacklistForPR": [],
   "actions": ["opened"],

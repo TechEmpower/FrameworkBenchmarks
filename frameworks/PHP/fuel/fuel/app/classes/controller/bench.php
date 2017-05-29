@@ -12,6 +12,8 @@ class Controller_Bench extends Controller
     public function action_db()
     {
         $queries = Input::get('queries', 1);
+        $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
+
         $worlds = array();
 
         for($i = 0; $i < $queries; ++$i) {

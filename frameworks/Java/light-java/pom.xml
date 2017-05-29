@@ -36,9 +36,9 @@
         <version.httpclient>4.5.2</version.httpclient>
         <version.httpasyncclient>4.1.2</version.httpasyncclient>
         <version.swagger>1.5.10</version.swagger>
-        <version.hikaricp>2.5.1</version.hikaricp>
+        <version.hikaricp>2.6.1</version.hikaricp>
         <version.mysql>5.1.41</version.mysql>
-        <version.postgres>9.4.1211</version.postgres>
+        <version.postgres>42.1.1</version.postgres>
     </properties>
 
     <dependencies>
@@ -59,21 +59,6 @@
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
-            <artifactId>client</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>audit</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>info</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
             <artifactId>status</artifactId>
             <version>${version.light-java}</version>
         </dependency>
@@ -84,62 +69,12 @@
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
-            <artifactId>body</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>mask</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>metrics</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
             <artifactId>handler</artifactId>
             <version>${version.light-java}</version>
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
-            <artifactId>sanitizer</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>traceability</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>correlation</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
             <artifactId>service</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-       <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>registry</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>balance</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>cluster</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>consul</artifactId>
             <version>${version.light-java}</version>
         </dependency>
         <dependency>
@@ -149,43 +84,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>swagger-meta</artifactId>
-            <version>${version.light-java-rest}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>swagger-security</artifactId>
-            <version>${version.light-java-rest}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
-            <artifactId>swagger-validator</artifactId>
-            <version>${version.light-java-rest}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${version.jackson}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${version.jackson}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>${version.jsonpath}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.minidev</groupId>
-                    <artifactId>json-smart</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${version.logback}</version>
@@ -194,16 +92,6 @@
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
             <version>${version.undertow}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>${version.swagger}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${version.httpclient}</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>

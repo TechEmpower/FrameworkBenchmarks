@@ -47,11 +47,17 @@ static int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req)
 	                                                      req->conn->ctx);
 	json_generator_t * const gen = get_json_generator(&ctx->json_generator,
 	                                                  &ctx->json_generator_num);
+	const struct {
+		const char *message;
+	} object = {HELLO_RESPONSE};
 
 	if (gen) {
 		CHECK_YAJL_STATUS(yajl_gen_map_open, gen->gen);
 		CHECK_YAJL_STATUS(yajl_gen_string, gen->gen, YAJL_STRLIT("message"));
-		CHECK_YAJL_STATUS(yajl_gen_string, gen->gen, YAJL_STRLIT(HELLO_RESPONSE));
+		CHECK_YAJL_STATUS(yajl_gen_string,
+		                  gen->gen,
+		                  (const unsigned char *) object.message,
+		                  strlen(object.message));
 		CHECK_YAJL_STATUS(yajl_gen_map_close, gen->gen);
 
 		// The response is small enough, so that it is simpler to copy it
@@ -174,6 +180,13 @@ void register_request_handlers(h2o_hostconf_t *hostconf, h2o_access_log_filehand
 	pathconf = h2o_config_register_path(hostconf, "/plaintext", 0);
 	handler = h2o_create_handler(pathconf, sizeof(*handler));
 	handler->on_req = plaintext;
+
+	if (log_handle)
+		h2o_access_log_register(pathconf, log_handle);
+
+	pathconf = h2o_config_register_path(hostconf, "/cached-worlds", 0);
+	handler = h2o_create_handler(pathconf, sizeof(*handler));
+	handler->on_req = cached_queries;
 
 	if (log_handle)
 		h2o_access_log_register(pathconf, log_handle);

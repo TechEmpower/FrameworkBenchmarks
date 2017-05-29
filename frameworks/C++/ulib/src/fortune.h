@@ -69,6 +69,42 @@ public:
 #  endif
       }
 
+   // JSON
+
+   void toJSON(UString& json)
+      {
+      U_TRACE(0, "Fortune::toJSON(%V)", json.rep)
+
+      json.toJSON(U_JSON_METHOD_HANDLER(id,      unsigned int));
+      json.toJSON(U_JSON_METHOD_HANDLER(message, UString));
+      }
+
+   void fromJSON(UValue& json)
+      {
+      U_TRACE(0, "Fortune::fromJSON(%p)", &json)
+
+      json.fromJSON(U_JSON_METHOD_HANDLER(id,      unsigned int));
+      json.fromJSON(U_JSON_METHOD_HANDLER(message, UString));
+      }
+
+   // ORM
+
+   void bindParam(UOrmStatement* stmt)
+      {
+      U_TRACE(0, "Fortune::bindParam(%p)", stmt)
+
+      stmt->bindParam(U_ORM_TYPE_HANDLER(id,      unsigned int));
+      stmt->bindParam(U_ORM_TYPE_HANDLER(message, UString));
+      }
+
+   void bindResult(UOrmStatement* stmt)
+      {
+      U_TRACE(0, "Fortune::bindResult(%p)", stmt)
+
+      stmt->bindResult(U_ORM_TYPE_HANDLER(id,      unsigned int));
+      stmt->bindResult(U_ORM_TYPE_HANDLER(message, UString));
+      }
+
 #ifdef DEBUG
    const char* dump(bool breset) const
       {
@@ -82,58 +118,11 @@ public:
          return UObjectIO::buffer_output;
          }
 
-      return 0;
+      return U_NULLPTR;
       }
 #endif
 
 private:
    U_DISALLOW_ASSIGN(Fortune)
 };
-
-// ORM TEMPLATE SPECIALIZATIONS
-
-template <> class U_EXPORT UOrmTypeHandler<Fortune> : public UOrmTypeHandler_Base {
-public:
-   explicit UOrmTypeHandler(Fortune& val) : UOrmTypeHandler_Base(&val) {}
-
-   void bindParam(UOrmStatement* stmt) const
-      {
-      U_TRACE(0, "UOrmTypeHandler<Fortune>::bindParam(%p)", stmt)
-
-      stmt->bindParam(U_ORM_TYPE_HANDLER(Fortune, id,      unsigned int));
-      stmt->bindParam(U_ORM_TYPE_HANDLER(Fortune, message, UString));
-      }
-
-   void bindResult(UOrmStatement* stmt)
-      {
-      U_TRACE(0, "UOrmTypeHandler<Fortune>::bindResult(%p)", stmt)
-
-      stmt->bindResult(U_ORM_TYPE_HANDLER(Fortune, id,      unsigned int));
-      stmt->bindResult(U_ORM_TYPE_HANDLER(Fortune, message, UString));
-      }
-};
-
-// JSON TEMPLATE SPECIALIZATIONS
-
-template <> class U_EXPORT UJsonTypeHandler<Fortune> : public UJsonTypeHandler_Base {
-public:
-   explicit UJsonTypeHandler(Fortune& val) : UJsonTypeHandler_Base(&val) {}
-
-   void toJSON(UValue& json)
-      {
-      U_TRACE(0, "UJsonTypeHandler<Fortune>::toJSON(%p)", &json)
-
-      json.toJSON(U_JSON_TYPE_HANDLER(Fortune, id,      unsigned int));
-      json.toJSON(U_JSON_TYPE_HANDLER(Fortune, message, UString));
-      }
-
-   void fromJSON(UValue& json)
-      {
-      U_TRACE(0, "UJsonTypeHandler<Fortune>::fromJSON(%p)", &json)
-
-      json.fromJSON(U_JSON_TYPE_HANDLER(Fortune, id,      unsigned int));
-      json.fromJSON(U_JSON_TYPE_HANDLER(Fortune, message, UString));
-      }
-};
-
 #endif
