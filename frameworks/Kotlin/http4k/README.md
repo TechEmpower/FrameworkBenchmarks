@@ -11,6 +11,11 @@ The tests were run with:
 - JSON Encoding: http://localhost:9000/json
 - Plaintext: http://localhost:9000/plaintext
 
+## Supported backends
+- Jetty
+- Netty
+- Undertow
+
 ## How to run
 ```bash
 ./gradlew clean build jetty

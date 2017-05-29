@@ -9,10 +9,6 @@ static char buffer[8192];
 static UREDISClient_Base* rc;
 static UVector<World*>* pvworld;
 
-#ifndef AS_cpoll_cppsp_DO
-static UValue* pvalue;
-#endif
-
 static void usp_fork_rupdate()
 {
    U_TRACE(5, "::usp_fork_rupdate()")
@@ -27,10 +23,6 @@ static void usp_fork_rupdate()
       }
 
    U_NEW(UVector<World*>, pvworld, UVector<World*>(500));
-
-#ifndef AS_cpoll_cppsp_DO
-   U_NEW(UValue, pvalue, UValue);
-#endif
 }
 
 #ifdef DEBUG
@@ -40,14 +32,7 @@ static void usp_end_rupdate()
 
    delete rc;
 
-   if (pvworld)
-      {
-      delete pvworld;
-
-#  ifndef AS_cpoll_cppsp_DO
-      delete pvalue;
-#  endif
-      }
+   if (pvworld) delete pvworld;
 }
 #endif
 -->
@@ -105,8 +90,7 @@ while (true)
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR(']');
 #else
-USP_JSON_stringify(*pvalue, UVector<World*>, *pvworld);
-pvalue->clear();
+USP_OBJ_JSON_stringify(*pvworld);
 #endif
 pvworld->clear();
 -->

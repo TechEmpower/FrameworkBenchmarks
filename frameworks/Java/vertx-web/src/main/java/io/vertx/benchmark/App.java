@@ -50,7 +50,7 @@ public class App extends AbstractVerticle {
     }
 
     public final void dbHandler(final RoutingContext ctx) {
-      database.findOne("world", new JsonObject().put("id", Helper.randomWorld()), FIELDS, findOne -> {
+      database.findOne("world", new JsonObject().put("_id", Helper.randomWorld()), FIELDS, findOne -> {
         if (findOne.failed()) {
           ctx.fail(findOne.cause());
           return;
@@ -84,7 +84,7 @@ public class App extends AbstractVerticle {
 
             final Handler<Integer> self = this;
 
-            database.findOne("world", new JsonObject().put("id", Helper.randomWorld()), FIELDS, findOne -> {
+            database.findOne("world", new JsonObject().put("_id", Helper.randomWorld()), FIELDS, findOne -> {
               if (findOne.failed()) {
                 ctx.fail(findOne.cause());
                 return;
@@ -152,7 +152,7 @@ public class App extends AbstractVerticle {
 
             final int id = Helper.randomWorld();
 
-            final JsonObject query = new JsonObject().put("id", id);
+            final JsonObject query = new JsonObject().put("_id", id);
 
             database.findOne("world", query, FIELDS, findOne -> {
               if (findOne.failed()) {
