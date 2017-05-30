@@ -85,7 +85,7 @@ Content-Type: application/json
 [{"id":6851,"randomNumber":7598},{"id":3968,"randomNumber":7325},{"id":8159,"randomNumber":348},{"id":9560,"randomNumber":7333},{"id":9938,"randomNumber":9080},{"id":1598,"randomNumber":1623},{"id":3280,"randomNumber":8707},{"id":4521,"randomNumber":6063},{"id":8173,"randomNumber":3690},{"id":3648,"randomNumber":8803}]
 ```
 
-[/cached_worlds?count=10](http://www.techempower.com/benchmarks/#section=cached_worlds)
+[/cached_worlds?queries=10](http://www.techempower.com/benchmarks/#section=caching)
 -------------------
 ```
 HTTP/1.1 200 OK
