@@ -1,14 +1,13 @@
 {
-  "server": "engine",
-  "client": "engine",
-  "console": "terminal",
-  "log": "console",
-  "hash": "crypto",
-  "cipher": "crypto",
-  "middleware": {
-    "server": [
-      "date"
-    ],
-    "client": []
-  }
+    "server": "engine",
+    "client": "engine",
+    "console": "terminal",
+    "log": "console",
+    "hash": "crypto",
+    "cipher": "crypto",
+    "middleware": [
+        "date",
+        "server",
+        "content-header"
+    ]
 }

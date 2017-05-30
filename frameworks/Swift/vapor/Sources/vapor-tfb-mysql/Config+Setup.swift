@@ -1,4 +1,5 @@
 import FluentProvider
+import TfbCommon
 
 extension Config {
     public func setup() throws {
@@ -8,6 +9,9 @@ extension Config {
 
         try setupProviders()
         try setupPreparations()
+        
+        self.addConfigurable(middleware: ServerMiddleware(), name: "server")
+        self.addConfigurable(middleware: ContentMiddleware(), name: "content-header")
     }
     
     /// Configure providers
