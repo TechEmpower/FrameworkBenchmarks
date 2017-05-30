@@ -1,0 +1,8 @@
+./src/db.usp
+./src/world.h
+./src/json.usp
+./src/fortune.h
+./src/queries.usp
+./src/updates.usp
+./src/fortunes.usp
+./src/plaintext.usp

@@ -1,0 +1,81 @@
+<!--#
+Test 1: JSON serialization
+
+This test exercises the framework fundamentals including keep-alive support, request routing, request header
+parsing, object instantiation, JSON serialization, response header generation, and request count throughput.
+
+Requirements
+
+1.  For each request, an object mapping the key message to Hello, World! must be instantiated.
+
+2.  The recommended URI is /json.
+
+3.  A JSON serializer must be used to convert the object to JSON.
+
+4.  The response text must be {"message":"Hello, World!"}, but white-space variations are acceptable.
+
+5.  The response content length should be approximately 28 bytes.
+
+6.  The response content type must be set to application/json.
+
+7.  The response headers must include either Content-Length or Transfer-Encoding.
+
+8.  The response headers must include Server and Date.
+
+9.  gzip compression is not permitted.
+
+10. Server support for HTTP Keep-Alive is strongly encouraged but not required.
+
+11. If HTTP Keep-Alive is enabled, no maximum Keep-Alive timeout is specified by this test.
+
+12. The request handler will be exercised at concurrency levels ranging from 8 to 256.
+
+13. The request handler will be exercised using GET requests.
+
+Example request:
+
+GET /json HTTP/1.1
+Host: server
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00
+Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Connection: keep-alive
+
+Example response:
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=UTF-8
+Content-Length: 28
+Server: Example
+Date: Wed, 17 Apr 2013 12:00:00 GMT
+{"message":"Hello, World!"}
+-->
+<!--#declaration
+static UString* pkey;
+static UString* pvalue;
+
+static void usp_init()
+{
+   U_TRACE(5, "::usp_init()")
+
+   pkey   = U_NEW(U_STRING_FROM_CONSTANT("message"));
+   pvalue = U_NEW(U_STRING_FROM_CONSTANT("Hello, World!"));
+}
+
+static void usp_end()
+{
+   U_TRACE(5, "::usp_end()")
+
+   delete pkey;
+   delete pvalue;
+}
+-->
+<!--#header
+Content-Type: application/json; charset=UTF-8
+-->
+<!--#code
+UValue json(*pkey, *pvalue);
+
+USP_JSON_PUTS(json);
+-->
