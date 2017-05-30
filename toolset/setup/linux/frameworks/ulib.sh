@@ -101,17 +101,17 @@ fi
 
 # Compile usp pages (no more REDIS)
 cd ../../src/ulib/net/server/plugin/usp
-make json.la plaintext.la db.la query.la update.la fortune.la \
+make json.la plaintext.la db.la query.la update.la fortune.la cached_worlds.la \
 	  mdb.la mquery.la mupdate.la mfortune.la
 #    rdb.la rquery.la rupdate.la rfortune.la
 
 # Check that compilation worked
-if [ ! -e .libs/db.so ]; then
+if [ ! -e .libs/cached_worlds.so ]; then
 	exit 1
 fi
 
 cp .libs/json.so .libs/plaintext.so \
-	.libs/db.so   .libs/query.so  .libs/update.so  .libs/fortune.so \
+	.libs/db.so   .libs/query.so  .libs/update.so  .libs/fortune.so .libs/cached_worlds.so \
 	.libs/mdb.so  .libs/mquery.so .libs/mupdate.so .libs/mfortune.so $ULIB_DOCUMENT_ROOT
 #	.libs/rdb.so  .libs/rquery.so .libs/rupdate.so .libs/rfortune.so \
 
