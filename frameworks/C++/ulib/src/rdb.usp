@@ -9,10 +9,6 @@ static char buffer[128];
 static char* ptr = buffer+6;
 static UREDISClient_Base* rc;
 
-#ifndef AS_cpoll_cppsp_DO
-static UValue* pvalue;
-#endif
-
 static void usp_fork_rdb()
 {
    U_TRACE(5, "::usp_fork_rdb()")
@@ -27,10 +23,6 @@ static void usp_fork_rdb()
       }
 
    U_MEMCPY(buffer, "world:", U_CONSTANT_SIZE("world:"));
-
-#ifndef AS_cpoll_cppsp_DO
-   U_NEW(UValue, pvalue, UValue);
-#endif
 }
 
 #ifdef DEBUG
@@ -39,10 +31,6 @@ static void usp_end_rdb()
    U_TRACE(5, "::usp_end_rdb()")
 
    delete rc;
-
-#ifndef AS_cpoll_cppsp_DO
-   if (pvalue) delete pvalue;
-#endif
 }
 #endif
 -->
@@ -58,7 +46,6 @@ uint32_t id;
 USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", id, rc->vitem[0].rep);
 #else
 World world(id, rc->vitem[0].strtoul());
-USP_JSON_stringify(*pvalue, World, world);
-pvalue->clear();
+USP_OBJ_JSON_stringify(world);
 #endif
 -->
