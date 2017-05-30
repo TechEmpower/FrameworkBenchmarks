@@ -30,9 +30,9 @@ const mongodbGetAllFortunes = (callback) => {
 
 const mongodbDriverUpdateQuery = (callback) => {
   collections.World.findOne({id: h.randomTfbNumber()}, (err, world) => {
-    world.randomnumber = h.randomTfbNumber();
+    world.randomNumber = h.randomTfbNumber();
     collections.World.update({id: world.id}, world, (err, updated) => { 
-      callback(err, { id: world.id, randomnumber: world.randomnumber } );
+      callback(err, { id: world.id, randomNumber: world.randomNumber } );
     });
   });
 };

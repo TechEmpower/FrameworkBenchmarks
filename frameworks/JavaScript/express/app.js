@@ -194,7 +194,7 @@ if (cluster.isMaster) {
           updateFunctions.push((callback) => {
             worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
             MWorld.update({
-              id: worlds[i]
+              id: worlds[i].id
             }, {
               randomNumber: worlds[i].randomNumber
             }, callback);
