@@ -6,7 +6,7 @@ gem 'hanami-model', '~> 1.0'
 
 gem 'mysql2'
 
-gem 'rom-sql', git: 'https://github.com/rom-rb/rom-sql'
+gem 'rom-sql'
 
 group :production do
   gem 'puma'
