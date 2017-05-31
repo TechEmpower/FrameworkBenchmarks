@@ -8,6 +8,7 @@ import org.jetbrains.ktor.content.*
 import org.jetbrains.ktor.features.*
 import org.jetbrains.ktor.host.*
 import org.jetbrains.ktor.http.*
+import org.jetbrains.ktor.logging.*
 import org.jetbrains.ktor.netty.*
 import org.jetbrains.ktor.routing.*
 import org.jetbrains.ktor.util.*
@@ -28,6 +29,7 @@ fun main(args: Array<String>) {
     val pool = hikari(dbHost, a, b)
 
     embeddedServer(Netty, 9090) {
+        install(SamplingCallLogging)
         install(DefaultHeaders)
         routing {
             get("/plaintext") { call ->
