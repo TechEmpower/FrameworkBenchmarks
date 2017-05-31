@@ -85,27 +85,31 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		try {
-			if (msg instanceof HttpRequest) {
+		if (msg instanceof HttpRequest) {
+			try {
 				HttpRequest request = (HttpRequest) msg;
-
-				String uri = request.uri();
-				switch (uri) {
-					case "/plaintext":
-						writePlainResponse(ctx, PLAINTEXT_CONTENT_BUFFER.duplicate());
-						return;
-					case "/json":
-						byte[] json = MAPPER.writeValueAsBytes(newMsg());
-						writeJsonResponse(ctx, Unpooled.wrappedBuffer(json));
-						return;
-				}
+				process(ctx, request);
+			} finally {
+				ReferenceCountUtil.release(msg);
 			}
-
-			FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
-			ctx.write(response).addListener(ChannelFutureListener.CLOSE);
-		} finally {
-			ReferenceCountUtil.release(msg);
+		} else {
+			ctx.fireChannelRead(msg);
 		}
+	}
+
+	private void process(ChannelHandlerContext ctx, HttpRequest request) throws Exception {
+		String uri = request.uri();
+		switch (uri) {
+			case "/plaintext":
+				writePlainResponse(ctx, PLAINTEXT_CONTENT_BUFFER.duplicate());
+				return;
+			case "/json":
+				byte[] json = MAPPER.writeValueAsBytes(newMsg());
+				writeJsonResponse(ctx, Unpooled.wrappedBuffer(json));
+				return;
+		}
+		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
+		ctx.write(response).addListener(ChannelFutureListener.CLOSE);
 	}
 
 	private void writePlainResponse(ChannelHandlerContext ctx, ByteBuf buf) {
