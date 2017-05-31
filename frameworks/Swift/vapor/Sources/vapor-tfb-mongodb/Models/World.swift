@@ -2,9 +2,11 @@ import Vapor
 import FluentProvider
 
 final class World: Model {
+    static let entity = "world"
+    
     let storage = Storage()
 
-    /// The content of the post
+    /// The content of the world
     var mongoId: Node?
     var id: Node?
     var randomNumber: Int32
@@ -26,7 +28,7 @@ final class World: Model {
         randomNumber  = try row.get("randomNumber")
     }
 
-    // Serializes the Post to the database
+    // Serializes the World to the database
     func makeRow() throws -> Row {
         var row = Row()
 
@@ -58,12 +60,6 @@ extension World: Preparation {
 }
 
 // MARK: JSON
-
-// How the model converts from / to JSON.
-// For example when:
-//     - Creating a new Post (POST /posts)
-//     - Fetching a post (GET /posts, GET /posts/:id)
-//
 extension World: JSONConvertible {
     convenience init(json: JSON) throws {
         try self.init(
@@ -84,6 +80,4 @@ extension World: JSONConvertible {
 
 // MARK: HTTP
 
-// This allows Post models to be returned
-// directly in route closures
 extension World: ResponseRepresentable { }

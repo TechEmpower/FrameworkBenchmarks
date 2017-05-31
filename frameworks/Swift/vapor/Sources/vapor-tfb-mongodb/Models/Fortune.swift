@@ -2,7 +2,6 @@ import Vapor
 import FluentProvider
 
 final class Fortune: Model {
-
     static let entity = "fortune"
 
     var storage: Storage = Storage()
@@ -26,7 +25,7 @@ final class Fortune: Model {
         message = try node.get("message")
     }
 
-    /// Initializes the Post from the
+    /// Initializes the Fortune from the
     /// database row
     init(row: Row) throws {
         mongoId = try row.get("id")
@@ -34,7 +33,7 @@ final class Fortune: Model {
         message  = try row.get("message")
     }
 
-    // Serializes the Post to the database
+    // Serializes the Fortune to the database
     func makeRow() throws -> Row {
         var row = Row()
 

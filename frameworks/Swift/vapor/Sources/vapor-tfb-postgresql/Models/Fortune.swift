@@ -2,7 +2,6 @@ import Vapor
 import FluentProvider
 
 final class Fortune: Model {
-
     static let entity = "fortune"
 
     var storage: Storage = Storage()

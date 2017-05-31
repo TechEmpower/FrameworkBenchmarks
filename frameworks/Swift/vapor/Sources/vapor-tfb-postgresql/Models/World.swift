@@ -2,6 +2,8 @@ import Vapor
 import FluentProvider
 
 final class World: Model {
+    static let entity = "world"
+    
     let storage = Storage()
 
     /// The content of the post
