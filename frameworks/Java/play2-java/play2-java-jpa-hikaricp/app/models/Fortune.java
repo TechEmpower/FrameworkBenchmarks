@@ -22,7 +22,7 @@ public class Fortune {
         this.message = message;
     }
 
-    public static List<Fortune> findAll() throws Throwable {
+    public static List<Fortune> findAll() {
         return JPA.withTransaction("default", true, () -> {
             CriteriaQuery<Fortune> criteria = JPA.em().getCriteriaBuilder().createQuery(Fortune.class);
             criteria.select(criteria.from(Fortune.class));
