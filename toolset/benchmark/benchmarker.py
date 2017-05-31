@@ -579,7 +579,7 @@ class Benchmarker:
                 ##########################
                 # Capturing PIDs started
                 ##########################
-                startedPIDs = subprocess.check_output(['ps -o pid,ppid,comm -u $(whoami)'], shell=True)
+                startedPIDs = subprocess.check_output(['ps -aux'], shell=True)
 
                 ##########################
                 # Verify URLs
@@ -620,7 +620,7 @@ class Benchmarker:
                     time.sleep(5)
                     if self.__is_port_bound(test.port):
                         leftovers = "  PID  PPID COMMAND" + os.linesep
-                        for line in subprocess.check_output(['ps -o pid,ppid,comm -u $(whoami)'], shell=True).splitlines():
+                        for line in subprocess.check_output(['ps -aux'], shell=True).splitlines():
                             if line not in startedPIDs:
                                 leftovers += line + os.linesep
 
