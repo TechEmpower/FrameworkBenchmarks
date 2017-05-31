@@ -7,7 +7,7 @@ final class World: Model {
     let storage = Storage()
 
     /// The content of the post
-    var id: Node?
+    var id: Node
     var randomNumber: Int32
 
     /// Creates a new World
@@ -42,15 +42,10 @@ extension World: Preparation {
     /// Prepares a table/collection in the database
     /// for storing Posts
     static func prepare(_ database: Database) throws {
-        try database.create(self) { builder in
-            builder.id()
-            builder.int("randomNumber")
-        }
     }
 
     /// Undoes what was done in `prepare`
     static func revert(_ database: Database) throws {
-        try database.delete(self)
     }
 }
 

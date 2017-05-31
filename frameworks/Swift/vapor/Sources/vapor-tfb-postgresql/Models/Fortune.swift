@@ -5,7 +5,7 @@ final class Fortune: Model {
     static let entity = "fortune"
 
     var storage: Storage = Storage()
-    var id: Node?
+    var id: Node
     var message: String
 
     static var idKey = "_id"
@@ -49,7 +49,7 @@ final class Fortune: Model {
 
     func makeJSONNode() throws -> Node {
         return try Node(node: [
-            "id": id?.int ?? 0,
+            "id": id.int!,
             "message": message
             ])
     }
@@ -68,14 +68,9 @@ extension Fortune: Preparation {
     /// Prepares a table/collection in the database
     /// for storing Fortunes
     static func prepare(_ database: Database) throws {
-        try database.create(self) { builder in
-            builder.id()
-            builder.string("message")
-        }
     }
 
     /// Undoes what was done in `prepare`
     static func revert(_ database: Database) throws {
-        try database.delete(self)
     }
 }

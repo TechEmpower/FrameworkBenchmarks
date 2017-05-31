@@ -12,7 +12,7 @@
     "keyNamingConvention": "snake_case",
     
     "//": "Name of the table Fluent uses to track migrations",
-    "migrationEntityName": "fluent",
+    "migrationEntityName": null,
     
     "//": "Character used to join pivot tables, e.g., `user_pet`",
     "pivotNameConnector": "_",

@@ -37,8 +37,8 @@ final class Fortune: Model {
     func makeRow() throws -> Row {
         var row = Row()
 
-        try row.set("id", mongoId)
-        try row.set("_id", id)
+        try row.set("id", mongoId!)
+        try row.set("_id", id!)
         try row.set("message", message)
 
         return row
@@ -46,15 +46,15 @@ final class Fortune: Model {
 
     func makeNode(context: Context) throws -> Node {
         return try Node(node: [
-            "id": mongoId,
-            "_id": id,
+            "id": mongoId!,
+            "_id": id!,
             "message": message
             ])
     }
 
     func makeJSONNode() throws -> Node {
         return try Node(node: [
-            "id": id?.int ?? 0,
+            "id": id!.int!,
             "message": message
             ])
     }
@@ -73,14 +73,10 @@ extension Fortune: Preparation {
     /// Prepares a table/collection in the database
     /// for storing Fortunes
     static func prepare(_ database: Database) throws {
-        try database.create(self) { builder in
-            builder.id()
-            builder.string("message")
-        }
+
     }
 
     /// Undoes what was done in `prepare`
     static func revert(_ database: Database) throws {
-        try database.delete(self)
     }
 }

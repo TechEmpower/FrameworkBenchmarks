@@ -69,14 +69,10 @@ extension Fortune: Preparation {
     /// Prepares a table/collection in the database
     /// for storing Fortunes
     static func prepare(_ database: Database) throws {
-        try database.create(self) { builder in
-            builder.id()
-            builder.string("message")
-        }
+
     }
 
     /// Undoes what was done in `prepare`
     static func revert(_ database: Database) throws {
-        try database.delete(self)
     }
 }

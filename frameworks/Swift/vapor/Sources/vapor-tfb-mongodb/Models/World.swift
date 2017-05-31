@@ -46,16 +46,10 @@ extension World: Preparation {
     /// Prepares a table/collection in the database
     /// for storing Worlds
     static func prepare(_ database: Database) throws {
-        try database.create(self) { builder in
-            builder.id()
-            builder.string("_id")
-            builder.int("randomNumber")
-        }
     }
 
     /// Undoes what was done in `prepare`
     static func revert(_ database: Database) throws {
-        try database.delete(self)
     }
 }
 
