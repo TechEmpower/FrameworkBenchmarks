@@ -5,10 +5,8 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static UCache*        cache;
-static World*         pworld_query;
-static UOrmSession*   psql_query;
-static UOrmStatement* pstmt_query;
+static UCache* cache;
+static World* pworld_query;
 
 #ifndef AS_cpoll_cppsp_DO
 static UVector<World*>* pvworld_query;
@@ -18,47 +16,37 @@ static void usp_init_cached_worlds()
 {
    U_TRACE(5, "::usp_init_cached_worlds()")
 
-   U_NEW(UOrmSession, psql_query, UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
+   UOrmSession sql_query(U_CONSTANT_TO_PARAM("hello_world"));
 
-   if (psql_query->isReady())
+   if (sql_query.isReady() == false)
       {
-      U_NEW(UOrmStatement, pstmt_query, UOrmStatement(*psql_query, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
+      U_WARNING("usp_init_cached_worlds(): we cound't connect to db");
 
-      if (pstmt_query == U_NULLPTR)
-         {
-         U_WARNING("usp_init_cached_worlds(): we cound't connect to db");
-
-         return;
-         }
-
-      if (UOrmDriver::isPGSQL()) *psql_query << "BEGIN TRANSACTION";
-
-      U_NEW(World, pworld_query, World);
-
-      pstmt_query->use( pworld_query->id);
-      pstmt_query->into(pworld_query->randomNumber);
-
-      // creat and fill the cache
-
-      U_NEW(UCache, cache, UCache);
-
-      (void) cache->open(U_STRING_FROM_CONSTANT("/tmp/ULib_cached_worlds.cache"), 10000 * 64, U_NULLPTR, true);
-
-      for (uint32_t i = 1; i < 10000-1; ++i)
-         {
-         pworld_query->id = i;
-
-         pstmt_query->execute();
-
-         cache->add(pworld_query->id, pworld_query->randomNumber);
-         }
-
-      delete pstmt_query;
-
-#  ifndef AS_cpoll_cppsp_DO
-      U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
-#  endif
+      return;
       }
+
+   U_NEW(World, pworld_query, World);
+
+   UOrmStatement stmt_query(sql_query, U_CONSTANT_TO_PARAM("SELECT * FROM World"));
+
+   stmt_query.into(*pworld_query);
+
+   stmt_query.execute();
+
+   // creat and fill the cache
+
+   U_NEW(UCache, cache, UCache);
+
+   (void) cache->open(U_STRING_FROM_CONSTANT("/tmp/ULib_cached_worlds.cache"), 10000 * 64, U_NULLPTR, true);
+
+   do {
+      cache->add(pworld_query->id, pworld_query->randomNumber);
+      }
+   while (stmt_query.nextRow());
+
+#ifndef AS_cpoll_cppsp_DO
+   U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
+#endif
 }
 
 #ifdef DEBUG
@@ -66,9 +54,7 @@ static void usp_end_cached_worlds()
 {
    U_TRACE(5, "::usp_end_cached_worlds()")
 
-   delete psql_query;
-
-   if (pstmt_query)
+   if (cache)
       {
       delete cache;
       delete pworld_query;

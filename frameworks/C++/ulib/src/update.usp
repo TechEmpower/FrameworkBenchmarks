@@ -20,31 +20,27 @@ static void usp_fork_update()
 
    U_NEW(UOrmSession, psql_update, UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
 
-   if (psql_update->isReady())
+   if (psql_update->isReady() == false)
       {
-      U_NEW(UOrmStatement, pstmt1, UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
-      U_NEW(UOrmStatement, pstmt2, UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = ? WHERE id = ?")));
+      U_WARNING("usp_fork_update(): we cound't connect to db");
 
-      if (pstmt1 == U_NULLPTR ||
-          pstmt2 == U_NULLPTR)
-         {
-         U_WARNING("usp_fork_update(): we cound't connect to db");
-
-         return;
-         }
-
-      if (UOrmDriver::isPGSQL()) *psql_update << "SET synchronous_commit TO OFF";
-
-      U_NEW(World, pworld_update, World);
-
-      pstmt1->use( pworld_update->id);
-      pstmt1->into(pworld_update->randomNumber);
-      pstmt2->use( pworld_update->randomNumber, pworld_update->id);
-
-#  ifndef AS_cpoll_cppsp_DO
-      U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
-#  endif
+      return;
       }
+
+   U_NEW(UOrmStatement, pstmt1, UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
+   U_NEW(UOrmStatement, pstmt2, UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = ? WHERE id = ?")));
+
+   if (UOrmDriver::isPGSQL()) *psql_update << "SET synchronous_commit TO OFF";
+
+   U_NEW(World, pworld_update, World);
+
+   pstmt1->use( pworld_update->id);
+   pstmt1->into(pworld_update->randomNumber);
+   pstmt2->use( pworld_update->randomNumber, pworld_update->id);
+
+#ifndef AS_cpoll_cppsp_DO
+   U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
+#endif
 }
 
 #ifdef DEBUG
