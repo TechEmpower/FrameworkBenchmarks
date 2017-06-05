@@ -1,6 +1,7 @@
-/app/cache
-/app/logs
-/bin
+/var/cache
+/var/logs
+/var/sessions
+!/bin
 /vendors
 /vendor
 /build
