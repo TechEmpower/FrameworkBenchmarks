@@ -556,6 +556,9 @@ class Benchmarker:
                 normalPIDs = subprocess.check_output(['ps -o pid,ppid,comm -u $(whoami)'], shell=True)
 
                 if self.__is_port_bound(test.port):
+                    time.sleep(60)
+
+                if self.__is_port_bound(test.port):
                     # We gave it our all
                     self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
                     out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
