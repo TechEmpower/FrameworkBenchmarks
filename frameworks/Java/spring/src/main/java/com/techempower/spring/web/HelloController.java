@@ -7,14 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 final class HelloController {
 
     private static final String HELLO_WORLD = "Hello, World!";
+    private static final Message MESSAGE = new Message(HELLO_WORLD);
 
-	@RequestMapping(value = "/json", produces = "application/json")
-    Message json() {
-        return new Message("Hello, World!");
+    @RequestMapping(value = "/json", produces = "application/json")
+    public Message json() {
+        return MESSAGE;
     }
 
     @RequestMapping(value = "/plaintext", produces = "text/plain")
-    String plaintext() {
+    public String plaintext() {
         return HELLO_WORLD;
     }
 
