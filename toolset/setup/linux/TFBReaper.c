@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <sys/prctl.h>
 #include <string.h>
 
@@ -73,6 +74,7 @@ void reap(int signum)
     while(curr != NULL)
     {
       kill(atoi(curr->str), SIGKILL);
+      waitpid(atoi(curr->str), NULL, 0);
       curr = curr->next;
     }
   }
