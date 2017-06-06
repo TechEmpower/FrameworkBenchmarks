@@ -654,30 +654,37 @@ class Benchmarker:
     # End __run_tests
     ############################################################
 
+    ############################################################
+    # __stop_test
+    # Attempts to stop the running test.
+    ############################################################
     def __stop_test(self, test, out):
+        # self.__process may not be set if the user hit ctrl+c prior to the test
+        # starting properly.
         if self.__process is not None:
             out.write(header("Stopping %s" % test.name))
             out.flush()
+            # Ask TFBReaper to nicely terminate itself
             self.__process.terminate()
             slept = 0
             returnCode = None
+            # Check once a second to see if TFBReaper has exited
             while(slept < 30 and returnCode is None):
                 time.sleep(1)
                 slept += 1
                 returnCode = self.__process.poll()
             
+            # If TFBReaper has not exited at this point, we have a problem
             if returnCode is None:
-                leftovers = ""
-                for line in subprocess.check_output(['ps -aux'], shell=True).splitlines():
-                    leftovers += line + os.linesep
-
-                # We gave it our all
                 self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
                 out.write(header("Error: Port %s was not released by stop - %s" % (test.port, test.name)))
                 out.write(header("Running Processes"))
-                out.write(leftovers)
+                out.write(subprocess.check_output(['ps -aux'], shell=True))
                 out.flush()
                 return exit_with_code(1)
+    ############################################################
+    # End __stop_test
+    ############################################################
 
     def is_port_bound(self, port):
         return self.__is_port_bound(port)
