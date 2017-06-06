@@ -11,5 +11,5 @@ import org.http4k.routing.by
 object JsonRoute {
     private val jsonBody = Body.json().toLens()
 
-    operator fun invoke() = GET to "/json" by { Response(OK).with(jsonBody of obj("message" to string("Hello, World!"))) }
+    operator fun invoke() = "/json" to GET by { Response(OK).with(jsonBody of obj("message" to string("Hello, World!"))) }
 }

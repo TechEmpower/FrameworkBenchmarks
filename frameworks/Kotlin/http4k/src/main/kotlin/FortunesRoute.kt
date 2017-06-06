@@ -18,7 +18,7 @@ object FortunesRoute {
 
     private val viewBody = Body.view(HandlebarsTemplates().CachingClasspath(), TEXT_HTML)
 
-    operator fun invoke(database: Database): Route = GET to "fortunes" by {
+    operator fun invoke(database: Database): Route = "/fortunes" to GET by {
         val items = database.withConnection {
             it.prepareStatement("select * from fortune").executeQuery().toList {
                 Fortune(it.getInt(1), it.getString(2))
