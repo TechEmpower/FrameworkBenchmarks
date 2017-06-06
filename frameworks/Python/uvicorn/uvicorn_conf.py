@@ -10,4 +10,4 @@ if _is_travis:
 bind = "0.0.0.0:8080"
 keepalive = 120
 errorlog = '-'
-pidfile = 'uvicorn.pid'
+pidfile = '/tmp/uvicorn.pid'
