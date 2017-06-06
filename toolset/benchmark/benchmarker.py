@@ -613,34 +613,33 @@ class Benchmarker:
                 out.write(header("Stopping %s" % test.name))
                 out.flush()
                 self.__process.terminate()
-                out.flush()
-                time.sleep(5)
+                slept = 0
+                returnCode = None
+                while(slept < 30 and returnCode is None):
+                    time.sleep(1)
+                    slept += 1
+                    returnCode = self.__process.poll()
+                
+                if returnCode is None:
+                    leftovers = "  PID  PPID COMMAND" + os.linesep
+                    for line in subprocess.check_output(['ps -aux'], shell=True).splitlines():
+                        if line not in startedPIDs:
+                            leftovers += line + os.linesep
 
-                if self.__is_port_bound(test.port):
-                    # This can happen sometimes - let's try again
-                    self.__process.terminate()
+                    started = "  PID  PPID COMMAND" + os.linesep
+                    for line in startedPIDs.splitlines():
+                        if line not in normalPIDs:
+                            started += line + os.linesep
+
+                    # We gave it our all
+                    self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
+                    out.write(header("Error: Port %s was not released by stop - %s" % (test.port, test.name)))
+                    out.write(header("Processes Started"))
+                    out.write(started)
+                    out.write(header("Processes Not Killed"))
+                    out.write(leftovers)
                     out.flush()
-                    time.sleep(5)
-                    if self.__is_port_bound(test.port):
-                        leftovers = "  PID  PPID COMMAND" + os.linesep
-                        for line in subprocess.check_output(['ps -aux'], shell=True).splitlines():
-                            if line not in startedPIDs:
-                                leftovers += line + os.linesep
-
-                        started = "  PID  PPID COMMAND" + os.linesep
-                        for line in startedPIDs.splitlines():
-                            if line not in normalPIDs:
-                                started += line + os.linesep
-
-                        # We gave it our all
-                        self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-                        out.write(header("Error: Port %s was not released by stop - %s" % (test.port, test.name)))
-                        out.write(header("Processes Started"))
-                        out.write(started)
-                        out.write(header("Processes Not Killed"))
-                        out.write(leftovers)
-                        out.flush()
-                        return exit_with_code(1)
+                    return exit_with_code(1)
 
                 out.write(header("Stopped %s" % test.name))
                 out.flush()
