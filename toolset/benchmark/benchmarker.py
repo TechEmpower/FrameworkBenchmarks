@@ -621,12 +621,12 @@ class Benchmarker:
                     returnCode = self.__process.poll()
                 
                 if returnCode is None:
-                    leftovers = "  PID  PPID COMMAND" + os.linesep
+                    leftovers = ""
                     for line in subprocess.check_output(['ps -aux'], shell=True).splitlines():
                         if line not in startedPIDs:
                             leftovers += line + os.linesep
 
-                    started = "  PID  PPID COMMAND" + os.linesep
+                    started = ""
                     for line in startedPIDs.splitlines():
                         if line not in normalPIDs:
                             started += line + os.linesep
