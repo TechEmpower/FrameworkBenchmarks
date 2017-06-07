@@ -6,7 +6,7 @@ def json_endpoint(message):
     response = {
         'status': 200,
         'headers': [
-            [b'content-type', b'application/javascript'],
+            [b'content-type', b'application/json'],
         ],
         'content': content
     }
