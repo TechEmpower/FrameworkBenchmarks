@@ -89,7 +89,7 @@
       "package": "FluentProvider",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/fluent-provider.git",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "package": "JSON",
