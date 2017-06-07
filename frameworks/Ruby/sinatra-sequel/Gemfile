@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'json', '~> 2.0'
 gem 'passenger', '~> 5.1', :platforms=>[:ruby, :mswin], :require=>false
-gem 'puma', '~> 3.6', :require=>false
+gem 'puma', '~> 3.9.1', :require=>false
 gem 'sequel', '~> 4.44'
 gem 'sinatra', '>= 2.0.0.rc1', '< 3.0', :require=>'sinatra/base'
 gem 'slim', '~> 3.0'
