@@ -15,8 +15,9 @@ ssh $DBHOST 'bash' <<EOF
 sudo cp mysql.list /etc/apt/sources.list.d/
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8C718D3B5072E1F5
 sudo apt-get update
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password secret'
-sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password secret'
+sudo debconf-set-selections <<< "mysql-community-server mysql-community-server/data-dir select 'Y'"
+sudo debconf-set-selections <<< "mysql-community-server mysql-community-server/root-pass password secret"
+sudo debconf-set-selections <<< "mysql-community-server mysql-community-server/re-root-pass password secret"
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server
 
 sudo service mysql stop
@@ -31,8 +32,6 @@ sudo cp -R -p /var/log/mysql /ssd/log
 sudo cp usr.sbin.mysqld /etc/apparmor.d/
 sudo /etc/init.d/apparmor reload
 sudo service mysql start
-
-mysql -u root -psecret -e "use mysql; UPDATE user SET authentication_string=PASSWORD('secret') WHERE User='root'; flush privileges;"
 EOF
 
 echo -e "ssh \$DBHOST 'bash' <<EOF" > $IROOT/mysql.installed
