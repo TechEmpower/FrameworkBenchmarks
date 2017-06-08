@@ -30,7 +30,7 @@ class HelloWorldController < ApplicationController
   def fortune
     @fortunes = Fortune.all.to_a
     @fortunes << Fortune.new(:id => 0, :message => "Additional fortune added at request time.")
-    @fortunes = @fortunes.sort_by { |x| x.message }
+    @fortunes.sort_by!(&:message)
   end
 
   def update
