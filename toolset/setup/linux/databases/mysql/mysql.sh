@@ -13,6 +13,7 @@ scp $FWROOT/toolset/setup/linux/databases/mysql/mysql.list $DBHOST:~/
 # install mysql on database machine
 ssh $DBHOST 'bash' <<EOF
 sudo cp mysql.list /etc/apt/sources.list.d/
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8C718D3B5072E1F5
 sudo apt-get update
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password secret'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password secret'
