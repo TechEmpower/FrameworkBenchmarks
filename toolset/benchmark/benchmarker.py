@@ -369,7 +369,11 @@ class Benchmarker:
     def __cleanup_leftover_processes_before_test(self):
         p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=self.quiet_out, stderr=subprocess.STDOUT)
         p.communicate("""
-      sudo /etc/init.d/apache2 stop
+      sudo service mysql stop
+      sudo service mongod stop
+      sudo kill -9 $(pgrep postgres)
+      sudo kill -9 $(pgrep mysql)
+      sudo kill -9 $(pgrep mongo)
     """)
 
     ############################################################
