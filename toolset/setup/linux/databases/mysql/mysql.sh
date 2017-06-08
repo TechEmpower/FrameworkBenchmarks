@@ -30,7 +30,7 @@ sudo cp -R -p /var/lib/mysql /ssd/
 sudo cp -R -p /var/log/mysql /ssd/log
 sudo cp usr.sbin.mysqld /etc/apparmor.d/
 sudo /etc/init.d/apparmor reload
-sudo start mysql
+sudo service mysql start
 EOF
 
 echo -e "ssh \$DBHOST 'bash' <<EOF" > $IROOT/mysql.installed
