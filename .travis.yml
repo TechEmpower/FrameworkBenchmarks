@@ -163,6 +163,7 @@ env:
     - "TESTDIR=Python/pyramid"
     - "TESTDIR=Python/tornado"
     - "TESTDIR=Python/turbogears"
+    - "TESTDIR=Python/uvicorn"
     - "TESTDIR=Python/uwsgi"
     - "TESTDIR=Python/web2py"
     - "TESTDIR=Python/weppy"
