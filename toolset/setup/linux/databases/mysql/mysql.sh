@@ -31,6 +31,8 @@ sudo cp -R -p /var/log/mysql /ssd/log
 sudo cp usr.sbin.mysqld /etc/apparmor.d/
 sudo /etc/init.d/apparmor reload
 sudo service mysql start
+
+mysql -u root -password -e "use mysql; UPDATE user SET authentication_string=PASSWORD('secret') WHERE User='root'; flush privileges;"
 EOF
 
 echo -e "ssh \$DBHOST 'bash' <<EOF" > $IROOT/mysql.installed
