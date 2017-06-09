@@ -5,7 +5,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
 import org.http4k.routing.Route
-import org.http4k.routing.by
+import org.http4k.routing.bind
 import org.http4k.template.HandlebarsTemplates
 import org.http4k.template.ViewModel
 import org.http4k.template.view
@@ -18,7 +18,7 @@ object FortunesRoute {
 
     private val viewBody = Body.view(HandlebarsTemplates().CachingClasspath(), TEXT_HTML)
 
-    operator fun invoke(database: Database): Route = "/fortunes" to GET by {
+    operator fun invoke(database: Database): Route = "/fortunes" to GET bind {
         val items = database.withConnection {
             it.prepareStatement("select * from fortune").executeQuery().toList {
                 Fortune(it.getInt(1), it.getString(2))

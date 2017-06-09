@@ -6,10 +6,10 @@ import org.http4k.core.with
 import org.http4k.format.Jackson.json
 import org.http4k.format.Jackson.obj
 import org.http4k.format.Jackson.string
-import org.http4k.routing.by
+import org.http4k.routing.bind
 
 object JsonRoute {
     private val jsonBody = Body.json().toLens()
 
-    operator fun invoke() = "/json" to GET by { Response(OK).with(jsonBody of obj("message" to string("Hello, World!"))) }
+    operator fun invoke() = "/json" to GET bind { Response(OK).with(jsonBody of obj("message" to string("Hello, World!"))) }
 }
