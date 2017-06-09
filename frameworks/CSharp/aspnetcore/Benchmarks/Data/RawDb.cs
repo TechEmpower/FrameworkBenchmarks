@@ -123,7 +123,7 @@ namespace Benchmarks.Data
 
                         var random = updateCmd.CreateParameter();
                         random.ParameterName = BatchUpdateString.Strings[i].Random;
-                        id.DbType = DbType.Int32;
+                        random.DbType = DbType.Int32;
                         updateCmd.Parameters.Add(random);
 
                         var randomNumber = _random.Next(1, 10001);
