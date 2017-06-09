@@ -52,6 +52,7 @@ generate_profile_data()
 	run_curl fortunes
 	run_curl updates?queries=20
 	run_curl plaintext
+	run_curl cached-worlds?queries=20
 	kill -s SIGTERM $H2O_APP_PROFILE_PID
 	wait $H2O_APP_PROFILE_PID
 }

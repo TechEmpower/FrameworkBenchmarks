@@ -1,10 +1,9 @@
 package controllers;
 
-import akka.dispatch.ExecutionContexts;
+import com.google.inject.name.Named;
 import models.Fortune;
 import models.World;
 import play.Play;
-import play.core.NamedThreadFactory;
 import play.libs.F;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -19,33 +18,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 
 @With(Headers.class)
 public class Application extends Controller {
 
     private static final int TEST_DATABASE_ROWS = 10000;
 
-    private static final int partitionCount = Play.application().configuration().getInt("db.default.partitionCount");
-    private static final int maxConnections =
-            partitionCount * Play.application().configuration().getInt("db.default.maxConnectionsPerPartition");
-    private static final int minConnections =
-            partitionCount * Play.application().configuration().getInt("db.default.minConnectionsPerPartition");
-
-    private static final ThreadPoolExecutor tpe = new ThreadPoolExecutor(minConnections, maxConnections,
-            0L, TimeUnit.MILLISECONDS,
-            new LinkedBlockingQueue<>(),
-            new NamedThreadFactory("dbEc"));
-    private static final ExecutionContext dbEc = ExecutionContexts.fromExecutorService(tpe);
+    @Inject @Named("dbEc") private ExecutionContext dbEc;
 
     // If the thread-pool used by the database grows too large then our server
     // is probably struggling, and we should start dropping requests. Set
     // the max size of our queue something above the number of concurrent
     // connections that we need to handle.
     public static class IsDbAvailable implements Predicate {
+        @Inject @Named("dbTpe") private ThreadPoolExecutor tpe;
         @Override
         public boolean condition() {
             return tpe.getQueue().size() <= 1024;

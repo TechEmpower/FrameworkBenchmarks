@@ -183,6 +183,13 @@ void register_request_handlers(h2o_hostconf_t *hostconf, h2o_access_log_filehand
 
 	if (log_handle)
 		h2o_access_log_register(pathconf, log_handle);
+
+	pathconf = h2o_config_register_path(hostconf, "/cached-worlds", 0);
+	handler = h2o_create_handler(pathconf, sizeof(*handler));
+	handler->on_req = cached_queries;
+
+	if (log_handle)
+		h2o_access_log_register(pathconf, log_handle);
 }
 
 void send_error(http_status_code_t status_code, const char *body, h2o_req_t *req)
