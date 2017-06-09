@@ -9,7 +9,6 @@ using Benchmarks.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Options;
-using Npgsql;
 
 namespace Benchmarks.Data
 {
@@ -21,15 +20,6 @@ namespace Benchmarks.Data
 
         public EfDb(IRandom random, ApplicationDbContext dbContext, IOptions<AppSettings> appSettings)
         {
-            if (appSettings.Value.Database == DatabaseServer.PostgreSql)
-            {
-                var builder = new NpgsqlConnectionStringBuilder(appSettings.Value.ConnectionString);
-                if (builder.MaxAutoPrepare < 20)
-                {
-                    throw new Exception($"{nameof(builder.MaxAutoPrepare)} must be at least 20 in the PostgreSQL connection string");
-                }
-            }
-
             _random = random;
             _dbContext = dbContext;
             _useBatchUpdate = appSettings.Value.Database != DatabaseServer.PostgreSql;
