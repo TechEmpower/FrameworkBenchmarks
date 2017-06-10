@@ -8,28 +8,40 @@
       "version": "1.0.0"
     },
     {
-      "package": "Bits",
-      "reason": null,
-      "repositoryURL": "https://github.com/vapor/bits.git",
-      "version": "1.0.0"
-    },
-    {
       "package": "BSON",
       "reason": null,
       "repositoryURL": "https://github.com/OpenKitten/BSON.git",
       "version": "5.0.5"
     },
     {
-      "package": "Cheetah",
+      "package": "Bits",
       "reason": null,
-      "repositoryURL": "https://github.com/OpenKitten/Cheetah.git",
-      "version": "1.0.1"
+      "repositoryURL": "https://github.com/vapor/bits.git",
+      "version": "1.0.0"
     },
     {
       "package": "CMySQL",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/cmysql.git",
-      "version": "2.0.1"
+      "version": "2.0.2"
+    },
+    {
+      "package": "CPostgreSQL",
+      "reason": null,
+      "repositoryURL": "https://github.com/vapor-community/cpostgresql.git",
+      "version": "2.0.0"
+    },
+    {
+      "package": "CTLS",
+      "reason": null,
+      "repositoryURL": "https://github.com/vapor/ctls.git",
+      "version": "1.0.0"
+    },
+    {
+      "package": "Cheetah",
+      "reason": null,
+      "repositoryURL": "https://github.com/OpenKitten/Cheetah.git",
+      "version": "1.0.1"
     },
     {
       "package": "Console",
@@ -44,12 +56,6 @@
       "version": "2.0.2"
     },
     {
-      "package": "CPostgreSQL",
-      "reason": null,
-      "repositoryURL": "https://github.com/vapor-community/cpostgresql.git",
-      "version": "2.0.0"
-    },
-    {
       "package": "Crypto",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/crypto.git",
@@ -62,12 +68,6 @@
       "version": "0.6.9"
     },
     {
-      "package": "CTLS",
-      "reason": null,
-      "repositoryURL": "https://github.com/vapor/ctls.git",
-      "version": "1.0.0"
-    },
-    {
       "package": "Debugging",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/debugging.git",
@@ -77,19 +77,19 @@
       "package": "Engine",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/engine.git",
-      "version": "2.0.3"
+      "version": "2.0.4"
     },
     {
       "package": "Fluent",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/fluent.git",
-      "version": "2.0.2"
+      "version": "2.0.4"
     },
     {
       "package": "FluentProvider",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/fluent-provider.git",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "package": "JSON",
@@ -104,9 +104,15 @@
       "version": "0.2.3"
     },
     {
-      "package": "KittenCTLS",
+      "package": "Leaf",
       "reason": null,
-      "repositoryURL": "https://github.com/OpenKitten/KittenCTLS.git",
+      "repositoryURL": "https://github.com/vapor/leaf.git",
+      "version": "2.0.1"
+    },
+    {
+      "package": "LeafProvider",
+      "reason": null,
+      "repositoryURL": "https://github.com/vapor/leaf-provider.git",
       "version": "1.0.0"
     },
     {
@@ -119,7 +125,7 @@
       "package": "MongoKitten",
       "reason": null,
       "repositoryURL": "https://github.com/OpenKitten/MongoKitten.git",
-      "version": "4.0.7"
+      "version": "4.0.9"
     },
     {
       "package": "MongoProvider",
@@ -137,7 +143,7 @@
       "package": "MySQL",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/mysql.git",
-      "version": "2.0.0"
+      "version": "2.0.1"
     },
     {
       "package": "MySQLDriver",
@@ -155,7 +161,7 @@
       "package": "Node",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/node.git",
-      "version": "2.0.1"
+      "version": "2.0.3"
     },
     {
       "package": "PostgreSQL",
@@ -188,6 +194,12 @@
       "version": "2.0.0"
     },
     {
+      "package": "SQLite",
+      "reason": null,
+      "repositoryURL": "https://github.com/vapor/sqlite.git",
+      "version": "2.0.0"
+    },
+    {
       "package": "Schrodinger",
       "reason": null,
       "repositoryURL": "https://github.com/OpenKitten/Schrodinger.git",
@@ -200,22 +212,16 @@
       "version": "2.0.1"
     },
     {
-      "package": "SQLite",
-      "reason": null,
-      "repositoryURL": "https://github.com/vapor/sqlite.git",
-      "version": "2.0.0"
-    },
-    {
       "package": "TLS",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/tls.git",
-      "version": "2.0.1"
+      "version": "2.0.4"
     },
     {
       "package": "Vapor",
       "reason": null,
       "repositoryURL": "https://github.com/vapor/vapor.git",
-      "version": "2.0.3"
+      "version": "2.0.8"
     }
   ],
   "version": 1

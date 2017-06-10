@@ -1,5 +1,6 @@
 import MySQLProvider
 import TfbCommon
+import LeafProvider
 
 extension Config {
     public func setup() throws {
@@ -17,6 +18,7 @@ extension Config {
     /// Configure providers
     private func setupProviders() throws {
         try addProvider(MySQLProvider.Provider.self)
+        try addProvider(LeafProvider.Provider.self)
     }
     
     /// Add all models that should have their

@@ -9,5 +9,6 @@
         "date",
         "server",
         "content-header"
-    ]
+    ],
+    "view": "leaf",
 }
