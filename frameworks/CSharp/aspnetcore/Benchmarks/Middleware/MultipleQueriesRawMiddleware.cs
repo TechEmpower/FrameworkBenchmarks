@@ -1,5 +1,5 @@
-// Copyright (c) .NET Foundation. All rights reserved. 
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Threading.Tasks;
@@ -7,6 +7,7 @@ using Benchmarks.Configuration;
 using Benchmarks.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -21,12 +22,10 @@ namespace Benchmarks.Middleware
         };
 
         private readonly RequestDelegate _next;
-        private readonly RawDb _db;
 
-        public MultipleQueriesRawMiddleware(RequestDelegate next, RawDb db)
+        public MultipleQueriesRawMiddleware(RequestDelegate next)
         {
             _next = next;
-            _db = db;
         }
 
         public async Task Invoke(HttpContext httpContext)
@@ -34,7 +33,9 @@ namespace Benchmarks.Middleware
             if (httpContext.Request.Path.StartsWithSegments(_path, StringComparison.Ordinal))
             {
                 var count = MiddlewareHelpers.GetMultipleQueriesQueryCount(httpContext);
-                var rows = await _db.LoadMultipleQueriesRows(count);
+
+                var db = httpContext.RequestServices.GetService<RawDb>();
+                var rows = await db.LoadMultipleQueriesRows(count);
 
                 var result = JsonConvert.SerializeObject(rows, _jsonSettings);
 

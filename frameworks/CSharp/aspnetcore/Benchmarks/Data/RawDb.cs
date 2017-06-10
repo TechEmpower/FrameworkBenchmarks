@@ -1,5 +1,5 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved. 
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace Benchmarks.Data
         private readonly IRandom _random;
         private readonly DbProviderFactory _dbProviderFactory;
         private readonly string _connectionString;
-        
+
         public RawDb(IRandom random, DbProviderFactory dbProviderFactory, IOptions<AppSettings> appSettings)
         {
             _random = random;
@@ -38,7 +38,7 @@ namespace Benchmarks.Data
                 }
             }
         }
-        
+
         async Task<World> ReadSingleRow(DbConnection connection, DbCommand cmd)
         {
             using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow))
@@ -94,7 +94,7 @@ namespace Benchmarks.Data
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {
             var results = new World[count];
-           
+
             var updateCommand = new StringBuilder(count);
 
             using (var db = _dbProviderFactory.CreateConnection())
@@ -111,7 +111,7 @@ namespace Benchmarks.Data
                         queryCmd.Parameters["@Id"].Value = _random.Next(1, 10001);
                     }
 
-                    // postgres has problems with deadlocks when these aren't sorted
+                    // Postgres has problems with deadlocks when these aren't sorted
                     Array.Sort<World>(results, (a, b) => a.Id.CompareTo(b.Id));
 
                     for(int i = 0; i < count; i++)
@@ -123,7 +123,7 @@ namespace Benchmarks.Data
 
                         var random = updateCmd.CreateParameter();
                         random.ParameterName = BatchUpdateString.Strings[i].Random;
-                        id.DbType = DbType.Int32;
+                        random.DbType = DbType.Int32;
                         updateCmd.Parameters.Add(random);
 
                         var randomNumber = _random.Next(1, 10001);
@@ -135,6 +135,7 @@ namespace Benchmarks.Data
                     }
 
                     updateCmd.CommandText = updateCommand.ToString();
+                    updateCmd.Prepare();
                     await updateCmd.ExecuteNonQueryAsync();
                 }
             }
