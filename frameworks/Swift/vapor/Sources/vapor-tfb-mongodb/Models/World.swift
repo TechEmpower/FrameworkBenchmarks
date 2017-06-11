@@ -33,7 +33,7 @@ final class World: Model {
         var row = Row()
 
         try row.set("id", mongoId)
-        try row.set("_id", id)
+//        try row.set("_id", id)
         try row.set("randomNumber", randomNumber)
 
         return row
@@ -65,7 +65,7 @@ extension World: JSONConvertible {
 
     func makeJSON() throws -> JSON {
         var json = JSON()
-        try json.set("_id", id)
+//        try json.set("_id", id)
         try json.set("id", mongoId)
         try json.set("randomNumber", randomNumber)
         return json
