@@ -22,7 +22,7 @@ final class World: Model {
     /// database row
     init(row: Row) throws {
         id = try row.get("id")
-        randomNumber  = try row.get("randomNumber")
+        randomNumber  = try row.get("randomnumber")
     }
 
     // Serializes the Post to the database
@@ -30,7 +30,7 @@ final class World: Model {
         var row = Row()
 
         try row.set("id", id)
-        try row.set("randomNumber", randomNumber)
+        try row.set("randomnumber", randomNumber)
 
         return row
     }
@@ -51,23 +51,18 @@ extension World: Preparation {
 
 // MARK: JSON
 
-// How the model converts from / to JSON.
-// For example when:
-//     - Creating a new Post (POST /posts)
-//     - Fetching a post (GET /posts, GET /posts/:id)
-//
 extension World: JSONConvertible {
     convenience init(json: JSON) throws {
         try self.init(
             id: json.get("id"),
-            randomNumber: json.get("randomNumber")
+            randomNumber: json.get("randomnumber")
         )
     }
 
     func makeJSON() throws -> JSON {
         var json = JSON()
         try json.set("id", id)
-        try json.set("randomNumber", randomNumber)
+        try json.set("randomnumber", randomNumber)
         return json
     }
 }

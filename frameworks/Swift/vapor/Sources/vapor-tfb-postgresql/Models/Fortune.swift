@@ -8,8 +8,6 @@ final class Fortune: Model {
     var id: Node
     var message: String
 
-    static var idKey = "_id"
-
     // For internal Vapor use
     var exists: Bool = false
 
@@ -49,7 +47,7 @@ final class Fortune: Model {
 
     func makeJSONNode() throws -> Node {
         return try Node(node: [
-            "id": id.int!,
+            "id": id,
             "message": message
             ])
     }
