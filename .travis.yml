@@ -52,6 +52,7 @@ env:
     - "TESTDIR=Erlang/cowboy"
     - "TESTDIR=Erlang/elli"
     - "TESTDIR=Erlang/mochiweb"
+    - "TESTDIR=Go/aah"
     - "TESTDIR=Go/beego"
     - "TESTDIR=Go/echo"
     - "TESTDIR=Go/falcore"
