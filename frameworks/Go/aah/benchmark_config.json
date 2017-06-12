@@ -1,5 +1,5 @@
 {
-  "framework": "aahframework",
+  "framework": "aah",
   "tests": [{
     "default": {
       "setup_file": "setup",
