@@ -27,6 +27,7 @@ object Main extends App {
   }
 
   Await.ready(Http.server
+    .configured(Http.Netty3Impl)
     .withCompressionLevel(0)
     .withStatsReceiver(NullStatsReceiver)
     .withTracer(NullTracer)
