@@ -68,6 +68,25 @@ public class HelloHandler
     
     return json(worlds);
   }
+
+  /**
+   * Return a list of World objects as JSON, selected randomly from the World
+   * table.  Assume the table has 10,000 rows.
+   */
+  @PathSegment("cached_query")
+  public boolean multipleCachedQueries()
+  {
+    final Random random = ThreadLocalRandom.current();
+    final int queries = query().getInt("queries", 1, 1, 500);
+    final CachedWorld[] worlds = new CachedWorld[queries];
+
+    for (int i = 0; i < queries; i++)
+    {
+      worlds[i] = store.get(CachedWorld.class, random.nextInt(DB_ROWS) + 1);
+    }
+
+    return json(worlds);
+  }
   
   /**
    * Fetch the full list of Fortunes from the database, sort them by the
