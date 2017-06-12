@@ -1,7 +1,5 @@
 package hello.home.handler;
 
-import hello.home.entity.*;
-
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -10,11 +8,13 @@ import com.techempower.gemini.*;
 import com.techempower.gemini.path.*;
 import com.techempower.gemini.path.annotation.*;
 
+import hello.home.entity.*;
+
 /**
  * Handles the various framework benchmark request types.
  */
 public class HelloHandler
-    extends  MethodPathHandler<Context>
+    extends  MethodSegmentHandler<Context>
 {
 
   private static final int DB_ROWS = 10000;
