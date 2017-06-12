@@ -11,8 +11,8 @@ sudo apt-add-repository --yes ppa:george-edison55/cmake-3.x
 sudo apt-get update -qq
 sudo apt-get install -qqy cmake
 
-SWIFT_SNAPSHOT="swift-3.0.2-RELEASE"
-SWIFT_SNAPSHOT_LOWERCASE="swift-3.0.2-release"
+SWIFT_SNAPSHOT="swift-3.1.1-RELEASE"
+SWIFT_SNAPSHOT_LOWERCASE="swift-3.1.1-release"
 UBUNTU_VERSION="ubuntu14.04"
 UBUNTU_VERSION_NO_DOTS="ubuntu1404"
 

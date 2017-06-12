@@ -1,0 +1,12 @@
+{
+    "//": "The $PORT:8080 call tells the json file to see if there",
+    "//": "is any value at the 'PORT' environment variable.",
+    "//": "If there is no value there, it will fallback to '8080'",
+    "port": "$PORT:8080",
+    
+    "host": "0.0.0.0",
+    
+    "//": "It's very rare that a server manages its own TLS.",
+    "//": "More commonly, vapor is served behind a proxy like nginx.",
+    "securityLayer": "none"
+}
