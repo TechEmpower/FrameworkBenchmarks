@@ -30,15 +30,20 @@ public class HelloHandler
     this.store = app.getStore();
   }
   
+  @PathDefault
+  public boolean test()
+  {
+    return false;
+  }
+  
   /**
    * Return "hello world" as a JSON-encoded message.
    */
   @PathSegment("json")
-  @PathDefault
   public boolean helloworld()
   {
     final Map<String,String> resp = new HashMap<>(1);
-    resp.put("message", "Hello, World!");
+    resp.put(GeminiConstants.GEMINI_MESSAGE, "Hello, World!");
     
     return json(resp);
   }
