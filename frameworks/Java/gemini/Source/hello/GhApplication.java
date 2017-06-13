@@ -64,6 +64,7 @@ public class GhApplication
   {
     return LegacyJavaScriptWriter.custom()
         .addVisitorFactory(World.class, World.VISITOR_FACTORY)
+        .addVisitorFactory(CachedWorld.class, CachedWorld.VISITOR_FACTORY)
         .build();
   }
 
