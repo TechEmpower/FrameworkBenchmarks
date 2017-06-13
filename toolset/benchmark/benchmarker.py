@@ -582,8 +582,13 @@ class Benchmarker:
                 ##########################
                 # Verify URLs
                 ##########################
-                logging.info("Verifying framework URLs")
-                passed_verify = test.verify_urls(logDir)
+                if self.mode == "debug":
+                    logging.info("Entering debug mode. Server has started. CTRL-c to stop.")
+                    while True:
+                        time.sleep(1)
+                else:
+                    logging.info("Verifying framework URLs")
+                    passed_verify = test.verify_urls(logDir)
 
                 ##########################
                 # Nuke /tmp
