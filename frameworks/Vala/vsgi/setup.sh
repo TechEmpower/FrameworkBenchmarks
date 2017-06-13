@@ -6,4 +6,4 @@ rm -rf build
 meson --buildtype=release build
 ninja -C build
 
-build/app --forks=$(nproc --ignore 1) &
+build/app --forks=$(nproc --ignore=1) &
