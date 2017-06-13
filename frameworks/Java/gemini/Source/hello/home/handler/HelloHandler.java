@@ -37,7 +37,10 @@ public class HelloHandler
   @PathDefault
   public boolean helloworld()
   {
-    return message("Hello, World!");
+    final Map<String,String> resp = new HashMap<>(1);
+    resp.put("message", "Hello, World!");
+    
+    return json(resp);
   }
 
   /**
