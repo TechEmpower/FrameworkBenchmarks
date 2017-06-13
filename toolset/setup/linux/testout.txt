@@ -1,0 +1,1147 @@
+test.os.lower() = linux  test.database_os.lower() = linux
+self.results['frameworks'] != None: True
+test.name: nodejs
+self.results['completed']: {}
+================================================================================
+  Beginning nodejs
+[REPEATED: 1]: --------------------------------------------------------------------------------
+  Starting nodejs
+--------------------------------------------------------------------------------
+Setup nodejs: + source /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/bash_functions.sh
+Setup nodejs: ++ export DEBIAN_FRONTEND=noninteractive
+Setup nodejs: ++ DEBIAN_FRONTEND=noninteractive
+Setup nodejs: ++ FW_dep_error=0
+Setup nodejs: ++ FW_any_errors=0
+Setup nodejs: + source /home/vagrant/FrameworkBenchmarks/frameworks/JavaScript/nodejs/setup.sh
+Setup nodejs: ++ fw_depends mongodb mysql postgresql nodejs
+Setup nodejs: ++ set -E
+Setup nodejs: ++ for depend in '"$@"'
+Setup nodejs: +++ echo mongodb
+Setup nodejs: +++ awk '{print tolower($0)}'
+Setup nodejs: ++ depend=mongodb
+Setup nodejs: ++ echo Searching for mongodb
+Setup nodejs: Searching for mongodb
+Setup nodejs: ++ trap 'fw_traperror $depend $? $LINENO "$BASH_COMMAND" $(printf ":%s" ${FUNCNAME[@]}) $(printf ":%s" ${BASH_SOURCE[@]}) $(printf ":%s" ${BASH_LINENO[@]})' ERR
+Setup nodejs: ++ retcode=0
+Setup nodejs: ++ pushd /home/vagrant/FrameworkBenchmarks/installs
+Setup nodejs: ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: +++ pwd
+Setup nodejs: ++ wd=/home/vagrant/FrameworkBenchmarks/installs
+Setup nodejs: ++ relative_wd='$FWROOT/installs'
+Setup nodejs: +++ find /home/vagrant/FrameworkBenchmarks/toolset/setup/linux -name mongodb.sh
+Setup nodejs: ++ installation_file=/home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/mongodb/mongodb.sh
+Setup nodejs: ++ [[ -n /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/mongodb/mongodb.sh ]]
+Setup nodejs: ++ echo Installing dependency: mongodb from /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/mongodb/mongodb.sh
+Setup nodejs: Installing dependency: mongodb from /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/mongodb/mongodb.sh
+Setup nodejs: ++ set -x
+Setup nodejs: ++ . /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/mongodb/mongodb.sh
+Setup nodejs: +++ fw_depends databases
+Setup nodejs: +++ set -E
+Setup nodejs: +++ for depend in '"$@"'
+Setup nodejs: ++++ echo databases
+Setup nodejs: ++++ awk '{print tolower($0)}'
+Setup nodejs: +++ depend=databases
+Setup nodejs: +++ echo Searching for databases
+Setup nodejs: Searching for databases
+Setup nodejs: +++ trap 'fw_traperror $depend $? $LINENO "$BASH_COMMAND" $(printf ":%s" ${FUNCNAME[@]}) $(printf ":%s" ${BASH_SOURCE[@]}) $(printf ":%s" ${BASH_LINENO[@]})' ERR
+Setup nodejs: +++ retcode=0
+Setup nodejs: +++ pushd /home/vagrant/FrameworkBenchmarks/installs
+Setup nodejs: ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: ++++ pwd
+Setup nodejs: +++ wd=/home/vagrant/FrameworkBenchmarks/installs
+Setup nodejs: +++ relative_wd='$FWROOT/installs'
+Setup nodejs: ++++ find /home/vagrant/FrameworkBenchmarks/toolset/setup/linux -name databases.sh
+Setup nodejs: +++ installation_file=/home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: +++ [[ -n /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh ]]
+Setup nodejs: +++ echo Installing dependency: databases from /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: Installing dependency: databases from /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: +++ set -x
+Setup nodejs: +++ . /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: +++++ fw_exists /home/vagrant/FrameworkBenchmarks/installs/databases.installed
+Setup nodejs: +++++ '[' -f /home/vagrant/FrameworkBenchmarks/installs/databases.installed ']'
+Setup nodejs: +++++ '[' -d /home/vagrant/FrameworkBenchmarks/installs/databases.installed ']'
+Setup nodejs: +++++ echo 1
+Setup nodejs: ++++ RETCODE=1
+Setup nodejs: ++++ '[' '!' 1 == 0 ']'
+Setup nodejs: ++++ ssh 127.0.0.1 bash
+[REPEATED: 1]: Setup nodejs: +++++ whoami
+Setup nodejs: Hit http://security.ubuntu.com trusty-security InRelease
+Setup nodejs: Ign http://archive.ubuntu.com trusty InRelease
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/main Sources
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/universe Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates InRelease
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/main amd64 Packages
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/universe amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports InRelease
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/main Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty Release.gpg
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/universe Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/main Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/restricted Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/universe Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/multiverse Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/main amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/restricted amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/universe amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/multiverse amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/main Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/multiverse Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/restricted Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/universe Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/main Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/restricted Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/universe Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/multiverse Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/main amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/restricted amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/universe amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/multiverse amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/main Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/multiverse Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/restricted Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/universe Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty Release
+Setup nodejs: Hit http://archive.ubuntu.com trusty/main Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/restricted Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/universe Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/multiverse Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/main amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/restricted amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/universe amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/multiverse amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/main Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty/multiverse Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty/restricted Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty/universe Translation-en
+Setup nodejs: Ign http://archive.ubuntu.com trusty/main Translation-en_US
+Setup nodejs: Ign http://archive.ubuntu.com trusty/multiverse Translation-en_US
+Setup nodejs: Ign http://archive.ubuntu.com trusty/restricted Translation-en_US
+Setup nodejs: Ign http://archive.ubuntu.com trusty/universe Translation-en_US
+[REPEATED: 1]: Setup nodejs: Reading package lists...
+Setup nodejs: Building dependency tree...
+Setup nodejs: Reading state information...
+Setup nodejs: build-essential is already the newest version.
+Setup nodejs: libreadline6-dev is already the newest version.
+Setup nodejs: libev-dev is already the newest version.
+Setup nodejs: libpq-dev is already the newest version.
+Setup nodejs: The following packages were automatically installed and are no longer required:
+Setup nodejs:   acl at-spi2-core colord dconf-gsettings-backend dconf-service libasound2
+Setup nodejs:   libasound2-data libatk-bridge2.0-0 libatspi2.0-0 libcairo-gobject2
+Setup nodejs:   libcanberra-gtk3-0 libcanberra-gtk3-module libcanberra0 libcolord1
+Setup nodejs:   libcolorhug1 libdconf1 libexif12 libgd3 libgphoto2-6 libgphoto2-l10n
+Setup nodejs:   libgphoto2-port10 libgtk-3-0 libgtk-3-bin libgtk-3-common libgudev-1.0-0
+Setup nodejs:   libgusb2 libieee1284-3 liblcms2-2 libnotify-bin libnotify4 libogg0 libsane
+Setup nodejs:   libsane-common libv4l-0 libv4lconvert0 libvorbis0a libvorbisfile3 libvpx1
+Setup nodejs:   libwayland-client0 libwayland-cursor0 libxfont1 libxkbcommon0 libxkbfile1
+Setup nodejs:   notification-daemon sound-theme-freedesktop x11-xkb-utils xfonts-base
+Setup nodejs:   xfonts-encodings xfonts-utils xserver-common xserver-xorg-core
+Setup nodejs: Use 'apt-get autoremove' to remove them.
+Setup nodejs: The following extra packages will be installed:
+Setup nodejs:   alien cups-bsd cups-client cups-common debhelper debugedit dh-apparmor
+Setup nodejs:   heirloom-mailx intltool-debian lib32z1 libc-dev-bin libc6 libc6-dev
+Setup nodejs:   libc6-i386 libcups2 libcupsfilters1 libcupsimage2
+Setup nodejs:   libfile-copy-recursive-perl libldb1 liblua5.2-0 libmail-sendmail-perl
+Setup nodejs:   libnspr4 libnss3 libnss3-nssdb librpm3 librpmbuild3 librpmio3 librpmsign1
+Setup nodejs:   libsmbclient libsys-hostname-long-perl libtalloc2 libtevent0 libwbclient0
+Setup nodejs:   lsb-invalid-mta lsb-security pax po-debconf python-ldb python-samba
+Setup nodejs:   python-talloc python-tdb rpm rpm-common rpm2cpio samba-common
+Setup nodejs:   samba-common-bin samba-libs smbclient update-inetd
+Setup nodejs: Suggested packages:
+Setup nodejs:   lsb-rpm lintian cups xpp dh-make rpm-i18n apparmor-easyprof exim4
+Setup nodejs:   mail-transport-agent glibc-doc lsb libmail-box-perl elfutils heimdal-clients
+Setup nodejs:   cifs-utils
+Setup nodejs: The following NEW packages will be installed:
+Setup nodejs:   alien cups-bsd cups-client cups-common debhelper debugedit dh-apparmor
+Setup nodejs:   heirloom-mailx intltool-debian lib32z1 libc6-i386 libcupsfilters1
+Setup nodejs:   libcupsimage2 libfile-copy-recursive-perl libldb1 liblua5.2-0
+Setup nodejs:   libmail-sendmail-perl libnspr4 libnss3 libnss3-nssdb librpm3 librpmbuild3
+Setup nodejs:   librpmio3 librpmsign1 libsmbclient libsys-hostname-long-perl libtalloc2
+Setup nodejs:   libtevent0 libwbclient0 lsb-core lsb-invalid-mta lsb-security pax po-debconf
+Setup nodejs:   python-ldb python-samba python-talloc python-tdb rpm rpm-common rpm2cpio
+Setup nodejs:   samba-common samba-common-bin samba-libs smbclient update-inetd
+Setup nodejs: The following packages will be upgraded:
+Setup nodejs:   libc-dev-bin libc6 libc6-dev libcups2
+Setup nodejs: 4 upgraded, 46 newly installed, 0 to remove and 100 not upgraded.
+Setup nodejs: Need to get 20.1 MB of archives.
+Setup nodejs: After this operation, 58.5 MB of additional disk space will be used.
+Setup nodejs: Get:1 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libc6-dev amd64 2.19-0ubuntu6.11 [1,912 kB]
+Setup nodejs: Get:2 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libc-dev-bin amd64 2.19-0ubuntu6.11 [69.0 kB]
+Setup nodejs: Get:3 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libc6 amd64 2.19-0ubuntu6.11 [4,734 kB]
+Setup nodejs: Get:4 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libcups2 amd64 1.7.2-0ubuntu1.8 [179 kB]
+Setup nodejs: Get:5 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libcupsfilters1 amd64 1.0.52-0ubuntu1.7 [73.8 kB]
+Setup nodejs: Get:6 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libcupsimage2 amd64 1.7.2-0ubuntu1.8 [15.4 kB]
+Setup nodejs: Get:7 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libtalloc2 amd64 2.1.5-0ubuntu0.14.04.1 [28.6 kB]
+Setup nodejs: Get:8 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libtevent0 amd64 0.9.28-0ubuntu0.14.04.1 [26.2 kB]
+Setup nodejs: Get:9 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libldb1 amd64 1:1.1.24-0ubuntu0.14.04.1 [107 kB]
+Setup nodejs: Get:10 http://archive.ubuntu.com/ubuntu/ trusty/main liblua5.2-0 amd64 5.2.3-1 [80.5 kB]
+Setup nodejs: Get:11 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libnspr4 amd64 2:4.13.1-0ubuntu0.14.04.1 [110 kB]
+Setup nodejs: Get:12 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libnss3-nssdb all 2:3.28.4-0ubuntu0.14.04.1 [10.6 kB]
+Setup nodejs: Get:13 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libnss3 amd64 2:3.28.4-0ubuntu0.14.04.1 [1,120 kB]
+Setup nodejs: Get:14 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libwbclient0 amd64 2:4.3.11+dfsg-0ubuntu0.14.04.8 [30.4 kB]
+Setup nodejs: Get:15 http://archive.ubuntu.com/ubuntu/ trusty-updates/main python-ldb amd64 1:1.1.24-0ubuntu0.14.04.1 [29.2 kB]
+Setup nodejs: Get:16 http://archive.ubuntu.com/ubuntu/ trusty-updates/main python-talloc amd64 2.1.5-0ubuntu0.14.04.1 [7,628 B]
+Setup nodejs: Get:17 http://archive.ubuntu.com/ubuntu/ trusty-updates/main samba-common all 2:4.3.11+dfsg-0ubuntu0.14.04.8 [83.5 kB]
+Setup nodejs: Get:18 http://archive.ubuntu.com/ubuntu/ trusty-updates/main samba-libs amd64 2:4.3.11+dfsg-0ubuntu0.14.04.8 [5,134 kB]
+Setup nodejs: Get:19 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libsmbclient amd64 2:4.3.11+dfsg-0ubuntu0.14.04.8 [53.0 kB]
+Setup nodejs: Get:20 http://archive.ubuntu.com/ubuntu/ trusty-updates/main smbclient amd64 2:4.3.11+dfsg-0ubuntu0.14.04.8 [313 kB]
+Setup nodejs: Get:21 http://archive.ubuntu.com/ubuntu/ trusty/main intltool-debian all 0.35.0+20060710.1 [31.6 kB]
+Setup nodejs: Get:22 http://archive.ubuntu.com/ubuntu/ trusty/main po-debconf all 1.0.16+nmu2ubuntu1 [210 kB]
+Setup nodejs: Get:23 http://archive.ubuntu.com/ubuntu/ trusty-updates/main dh-apparmor all 2.10.95-0ubuntu2.6~14.04.1 [13.0 kB]
+Setup nodejs: Get:24 http://archive.ubuntu.com/ubuntu/ trusty/main debhelper all 9.20131227ubuntu1 [604 kB]
+Setup nodejs: Get:25 http://archive.ubuntu.com/ubuntu/ trusty-updates/main librpmio3 amd64 4.11.1-3ubuntu0.1 [68.6 kB]
+Setup nodejs: Get:26 http://archive.ubuntu.com/ubuntu/ trusty-updates/main librpm3 amd64 4.11.1-3ubuntu0.1 [153 kB]
+Setup nodejs: Get:27 http://archive.ubuntu.com/ubuntu/ trusty-updates/main librpmbuild3 amd64 4.11.1-3ubuntu0.1 [56.3 kB]
+Setup nodejs: Get:28 http://archive.ubuntu.com/ubuntu/ trusty-updates/main librpmsign1 amd64 4.11.1-3ubuntu0.1 [7,890 B]
+Setup nodejs: Get:29 http://archive.ubuntu.com/ubuntu/ trusty-updates/main rpm-common amd64 4.11.1-3ubuntu0.1 [21.5 kB]
+Setup nodejs: Get:30 http://archive.ubuntu.com/ubuntu/ trusty-updates/main rpm2cpio amd64 4.11.1-3ubuntu0.1 [5,142 B]
+Setup nodejs: Get:31 http://archive.ubuntu.com/ubuntu/ trusty-updates/main debugedit amd64 4.11.1-3ubuntu0.1 [15.6 kB]
+Setup nodejs: Get:32 http://archive.ubuntu.com/ubuntu/ trusty-updates/main rpm amd64 4.11.1-3ubuntu0.1 [114 kB]
+Setup nodejs: Get:33 http://archive.ubuntu.com/ubuntu/ trusty/main alien all 8.90 [54.1 kB]
+Setup nodejs: Get:34 http://archive.ubuntu.com/ubuntu/ trusty-updates/main cups-common all 1.7.2-0ubuntu1.8 [160 kB]
+Setup nodejs: Get:35 http://archive.ubuntu.com/ubuntu/ trusty-updates/main cups-client amd64 1.7.2-0ubuntu1.8 [196 kB]
+Setup nodejs: Get:36 http://archive.ubuntu.com/ubuntu/ trusty-updates/universe heirloom-mailx amd64 12.5-2+deb7u1build0.14.04.1 [219 kB]
+Setup nodejs: Get:37 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libc6-i386 amd64 2.19-0ubuntu6.11 [2,209 kB]
+Setup nodejs: Get:38 http://archive.ubuntu.com/ubuntu/ trusty/main lib32z1 amd64 1:1.2.8.dfsg-1ubuntu1 [57.5 kB]
+Setup nodejs: Get:39 http://archive.ubuntu.com/ubuntu/ trusty/main libfile-copy-recursive-perl all 0.38-1 [20.6 kB]
+Setup nodejs: Get:40 http://archive.ubuntu.com/ubuntu/ trusty/main libsys-hostname-long-perl all 1.4-3 [11.3 kB]
+Setup nodejs: Get:41 http://archive.ubuntu.com/ubuntu/ trusty/main libmail-sendmail-perl all 0.79.16-1 [26.5 kB]
+Setup nodejs: Get:42 http://archive.ubuntu.com/ubuntu/ trusty/main pax amd64 1:20120606-2+deb7u1 [85.7 kB]
+Setup nodejs: Get:43 http://archive.ubuntu.com/ubuntu/ trusty-updates/main python-tdb amd64 1.3.8-0ubuntu0.14.04.1 [10.8 kB]
+Setup nodejs: Get:44 http://archive.ubuntu.com/ubuntu/ trusty-updates/main python-samba amd64 2:4.3.11+dfsg-0ubuntu0.14.04.8 [1,067 kB]
+Setup nodejs: Get:45 http://archive.ubuntu.com/ubuntu/ trusty-updates/main samba-common-bin amd64 2:4.3.11+dfsg-0ubuntu0.14.04.8 [509 kB]
+Setup nodejs: Get:46 http://archive.ubuntu.com/ubuntu/ trusty/main update-inetd all 4.43 [19.2 kB]
+Setup nodejs: Get:47 http://archive.ubuntu.com/ubuntu/ trusty-updates/main cups-bsd amd64 1.7.2-0ubuntu1.8 [26.6 kB]
+Setup nodejs: Get:48 http://archive.ubuntu.com/ubuntu/ trusty-updates/main lsb-invalid-mta all 4.1+Debian11ubuntu6.2 [5,320 B]
+Setup nodejs: Get:49 http://archive.ubuntu.com/ubuntu/ trusty-updates/main lsb-security amd64 4.1+Debian11ubuntu6.2 [4,964 B]
+Setup nodejs: Get:50 http://archive.ubuntu.com/ubuntu/ trusty-updates/main lsb-core amd64 4.1+Debian11ubuntu6.2 [26.3 kB]
+Setup nodejs: debconf: unable to initialize frontend: Dialog
+Setup nodejs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+Setup nodejs: debconf: falling back to frontend: Readline
+Setup nodejs: debconf: unable to initialize frontend: Readline
+Setup nodejs: debconf: (This frontend requires a controlling tty.)
+Setup nodejs: debconf: falling back to frontend: Teletype
+Setup nodejs: dpkg-preconfigure: unable to re-open stdin:
+Setup nodejs: Fetched 20.1 MB in 2min 32s (132 kB/s)
+Setup nodejs: (Reading database ... 74528 files and directories currently installed.)
+Setup nodejs: Preparing to unpack .../libc6-dev_2.19-0ubuntu6.11_amd64.deb ...
+Setup nodejs: Unpacking libc6-dev:amd64 (2.19-0ubuntu6.11) over (2.19-0ubuntu6.9) ...
+Setup nodejs: Preparing to unpack .../libc-dev-bin_2.19-0ubuntu6.11_amd64.deb ...
+Setup nodejs: Unpacking libc-dev-bin (2.19-0ubuntu6.11) over (2.19-0ubuntu6.9) ...
+Setup nodejs: Preparing to unpack .../libc6_2.19-0ubuntu6.11_amd64.deb ...
+Setup nodejs: debconf: unable to initialize frontend: Dialog
+Setup nodejs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+Setup nodejs: debconf: falling back to frontend: Readline
+Setup nodejs: debconf: unable to initialize frontend: Readline
+Setup nodejs: debconf: (This frontend requires a controlling tty.)
+Setup nodejs: debconf: falling back to frontend: Teletype
+Setup nodejs: Unpacking libc6:amd64 (2.19-0ubuntu6.11) over (2.19-0ubuntu6.9) ...
+Setup nodejs: Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+Setup nodejs: Setting up libc6:amd64 (2.19-0ubuntu6.11) ...
+Setup nodejs: debconf: unable to initialize frontend: Dialog
+Setup nodejs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+Setup nodejs: debconf: falling back to frontend: Readline
+Setup nodejs: debconf: unable to initialize frontend: Readline
+Setup nodejs: debconf: (This frontend requires a controlling tty.)
+Setup nodejs: debconf: falling back to frontend: Teletype
+Setup nodejs: Processing triggers for libc-bin (2.19-0ubuntu6.9) ...
+Setup nodejs: (Reading database ... 74528 files and directories currently installed.)
+Setup nodejs: Preparing to unpack .../libcups2_1.7.2-0ubuntu1.8_amd64.deb ...
+Setup nodejs: Unpacking libcups2:amd64 (1.7.2-0ubuntu1.8) over (1.7.2-0ubuntu1.7) ...
+Setup nodejs: Selecting previously unselected package libcupsfilters1:amd64.
+Setup nodejs: Preparing to unpack .../libcupsfilters1_1.0.52-0ubuntu1.7_amd64.deb ...
+Setup nodejs: Unpacking libcupsfilters1:amd64 (1.0.52-0ubuntu1.7) ...
+Setup nodejs: Selecting previously unselected package libcupsimage2:amd64.
+Setup nodejs: Preparing to unpack .../libcupsimage2_1.7.2-0ubuntu1.8_amd64.deb ...
+Setup nodejs: Unpacking libcupsimage2:amd64 (1.7.2-0ubuntu1.8) ...
+Setup nodejs: Selecting previously unselected package libtalloc2:amd64.
+Setup nodejs: Preparing to unpack .../libtalloc2_2.1.5-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking libtalloc2:amd64 (2.1.5-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package libtevent0:amd64.
+Setup nodejs: Preparing to unpack .../libtevent0_0.9.28-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking libtevent0:amd64 (0.9.28-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package libldb1:amd64.
+Setup nodejs: Preparing to unpack .../libldb1_1%3a1.1.24-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking libldb1:amd64 (1:1.1.24-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package liblua5.2-0:amd64.
+Setup nodejs: Preparing to unpack .../liblua5.2-0_5.2.3-1_amd64.deb ...
+Setup nodejs: Unpacking liblua5.2-0:amd64 (5.2.3-1) ...
+Setup nodejs: Selecting previously unselected package libnspr4:amd64.
+Setup nodejs: Preparing to unpack .../libnspr4_2%3a4.13.1-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking libnspr4:amd64 (2:4.13.1-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package libnss3-nssdb.
+Setup nodejs: Preparing to unpack .../libnss3-nssdb_2%3a3.28.4-0ubuntu0.14.04.1_all.deb ...
+Setup nodejs: Unpacking libnss3-nssdb (2:3.28.4-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package libnss3:amd64.
+Setup nodejs: Preparing to unpack .../libnss3_2%3a3.28.4-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking libnss3:amd64 (2:3.28.4-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package libwbclient0:amd64.
+Setup nodejs: Preparing to unpack .../libwbclient0_2%3a4.3.11+dfsg-0ubuntu0.14.04.8_amd64.deb ...
+Setup nodejs: Unpacking libwbclient0:amd64 (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Selecting previously unselected package python-ldb.
+Setup nodejs: Preparing to unpack .../python-ldb_1%3a1.1.24-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking python-ldb (1:1.1.24-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package python-talloc.
+Setup nodejs: Preparing to unpack .../python-talloc_2.1.5-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking python-talloc (2.1.5-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package samba-common.
+Setup nodejs: Preparing to unpack .../samba-common_2%3a4.3.11+dfsg-0ubuntu0.14.04.8_all.deb ...
+Setup nodejs: Unpacking samba-common (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Selecting previously unselected package samba-libs:amd64.
+Setup nodejs: Preparing to unpack .../samba-libs_2%3a4.3.11+dfsg-0ubuntu0.14.04.8_amd64.deb ...
+Setup nodejs: Unpacking samba-libs:amd64 (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Selecting previously unselected package libsmbclient:amd64.
+Setup nodejs: Preparing to unpack .../libsmbclient_2%3a4.3.11+dfsg-0ubuntu0.14.04.8_amd64.deb ...
+Setup nodejs: Unpacking libsmbclient:amd64 (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Selecting previously unselected package smbclient.
+Setup nodejs: Preparing to unpack .../smbclient_2%3a4.3.11+dfsg-0ubuntu0.14.04.8_amd64.deb ...
+Setup nodejs: Unpacking smbclient (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Selecting previously unselected package intltool-debian.
+Setup nodejs: Preparing to unpack .../intltool-debian_0.35.0+20060710.1_all.deb ...
+Setup nodejs: Unpacking intltool-debian (0.35.0+20060710.1) ...
+Setup nodejs: Selecting previously unselected package po-debconf.
+Setup nodejs: Preparing to unpack .../po-debconf_1.0.16+nmu2ubuntu1_all.deb ...
+Setup nodejs: Unpacking po-debconf (1.0.16+nmu2ubuntu1) ...
+Setup nodejs: Selecting previously unselected package dh-apparmor.
+Setup nodejs: Preparing to unpack .../dh-apparmor_2.10.95-0ubuntu2.6~14.04.1_all.deb ...
+Setup nodejs: Unpacking dh-apparmor (2.10.95-0ubuntu2.6~14.04.1) ...
+Setup nodejs: Selecting previously unselected package debhelper.
+Setup nodejs: Preparing to unpack .../debhelper_9.20131227ubuntu1_all.deb ...
+Setup nodejs: Unpacking debhelper (9.20131227ubuntu1) ...
+Setup nodejs: Selecting previously unselected package librpmio3.
+Setup nodejs: Preparing to unpack .../librpmio3_4.11.1-3ubuntu0.1_amd64.deb ...
+Setup nodejs: Unpacking librpmio3 (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Selecting previously unselected package librpm3.
+Setup nodejs: Preparing to unpack .../librpm3_4.11.1-3ubuntu0.1_amd64.deb ...
+Setup nodejs: Unpacking librpm3 (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Selecting previously unselected package librpmbuild3.
+Setup nodejs: Preparing to unpack .../librpmbuild3_4.11.1-3ubuntu0.1_amd64.deb ...
+Setup nodejs: Unpacking librpmbuild3 (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Selecting previously unselected package librpmsign1.
+Setup nodejs: Preparing to unpack .../librpmsign1_4.11.1-3ubuntu0.1_amd64.deb ...
+Setup nodejs: Unpacking librpmsign1 (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Selecting previously unselected package rpm-common.
+Setup nodejs: Preparing to unpack .../rpm-common_4.11.1-3ubuntu0.1_amd64.deb ...
+Setup nodejs: Unpacking rpm-common (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Selecting previously unselected package rpm2cpio.
+Setup nodejs: Preparing to unpack .../rpm2cpio_4.11.1-3ubuntu0.1_amd64.deb ...
+Setup nodejs: Unpacking rpm2cpio (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Selecting previously unselected package debugedit.
+Setup nodejs: Preparing to unpack .../debugedit_4.11.1-3ubuntu0.1_amd64.deb ...
+Setup nodejs: Unpacking debugedit (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Selecting previously unselected package rpm.
+Setup nodejs: Preparing to unpack .../rpm_4.11.1-3ubuntu0.1_amd64.deb ...
+Setup nodejs: Unpacking rpm (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Selecting previously unselected package alien.
+Setup nodejs: Preparing to unpack .../archives/alien_8.90_all.deb ...
+Setup nodejs: Unpacking alien (8.90) ...
+Setup nodejs: Selecting previously unselected package cups-common.
+Setup nodejs: Preparing to unpack .../cups-common_1.7.2-0ubuntu1.8_all.deb ...
+Setup nodejs: Unpacking cups-common (1.7.2-0ubuntu1.8) ...
+Setup nodejs: Selecting previously unselected package cups-client.
+Setup nodejs: Preparing to unpack .../cups-client_1.7.2-0ubuntu1.8_amd64.deb ...
+Setup nodejs: Unpacking cups-client (1.7.2-0ubuntu1.8) ...
+Setup nodejs: Selecting previously unselected package heirloom-mailx.
+Setup nodejs: Preparing to unpack .../heirloom-mailx_12.5-2+deb7u1build0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking heirloom-mailx (12.5-2+deb7u1build0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package libc6-i386.
+Setup nodejs: Preparing to unpack .../libc6-i386_2.19-0ubuntu6.11_amd64.deb ...
+Setup nodejs: Unpacking libc6-i386 (2.19-0ubuntu6.11) ...
+Setup nodejs: Selecting previously unselected package lib32z1.
+Setup nodejs: Preparing to unpack .../lib32z1_1%3a1.2.8.dfsg-1ubuntu1_amd64.deb ...
+Setup nodejs: Unpacking lib32z1 (1:1.2.8.dfsg-1ubuntu1) ...
+Setup nodejs: Selecting previously unselected package libfile-copy-recursive-perl.
+Setup nodejs: Preparing to unpack .../libfile-copy-recursive-perl_0.38-1_all.deb ...
+Setup nodejs: Unpacking libfile-copy-recursive-perl (0.38-1) ...
+Setup nodejs: Selecting previously unselected package libsys-hostname-long-perl.
+Setup nodejs: Preparing to unpack .../libsys-hostname-long-perl_1.4-3_all.deb ...
+Setup nodejs: Unpacking libsys-hostname-long-perl (1.4-3) ...
+Setup nodejs: Selecting previously unselected package libmail-sendmail-perl.
+Setup nodejs: Preparing to unpack .../libmail-sendmail-perl_0.79.16-1_all.deb ...
+Setup nodejs: Unpacking libmail-sendmail-perl (0.79.16-1) ...
+Setup nodejs: Selecting previously unselected package pax.
+Setup nodejs: Preparing to unpack .../pax_1%3a20120606-2+deb7u1_amd64.deb ...
+Setup nodejs: Unpacking pax (1:20120606-2+deb7u1) ...
+Setup nodejs: Selecting previously unselected package python-tdb.
+Setup nodejs: Preparing to unpack .../python-tdb_1.3.8-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking python-tdb (1.3.8-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package python-samba.
+Setup nodejs: Preparing to unpack .../python-samba_2%3a4.3.11+dfsg-0ubuntu0.14.04.8_amd64.deb ...
+Setup nodejs: Unpacking python-samba (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Selecting previously unselected package samba-common-bin.
+Setup nodejs: Preparing to unpack .../samba-common-bin_2%3a4.3.11+dfsg-0ubuntu0.14.04.8_amd64.deb ...
+Setup nodejs: Unpacking samba-common-bin (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Selecting previously unselected package update-inetd.
+Setup nodejs: Preparing to unpack .../update-inetd_4.43_all.deb ...
+Setup nodejs: Unpacking update-inetd (4.43) ...
+Setup nodejs: Selecting previously unselected package cups-bsd.
+Setup nodejs: Preparing to unpack .../cups-bsd_1.7.2-0ubuntu1.8_amd64.deb ...
+Setup nodejs: Unpacking cups-bsd (1.7.2-0ubuntu1.8) ...
+Setup nodejs: Selecting previously unselected package lsb-invalid-mta.
+Setup nodejs: Preparing to unpack .../lsb-invalid-mta_4.1+Debian11ubuntu6.2_all.deb ...
+Setup nodejs: Unpacking lsb-invalid-mta (4.1+Debian11ubuntu6.2) ...
+Setup nodejs: Selecting previously unselected package lsb-security.
+Setup nodejs: Preparing to unpack .../lsb-security_4.1+Debian11ubuntu6.2_amd64.deb ...
+Setup nodejs: Unpacking lsb-security (4.1+Debian11ubuntu6.2) ...
+Setup nodejs: Selecting previously unselected package lsb-core.
+Setup nodejs: Preparing to unpack .../lsb-core_4.1+Debian11ubuntu6.2_amd64.deb ...
+Setup nodejs: Unpacking lsb-core (4.1+Debian11ubuntu6.2) ...
+Setup nodejs: Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+Setup nodejs: Setting up libc-dev-bin (2.19-0ubuntu6.11) ...
+Setup nodejs: Setting up libc6-dev:amd64 (2.19-0ubuntu6.11) ...
+Setup nodejs: Setting up libcups2:amd64 (1.7.2-0ubuntu1.8) ...
+Setup nodejs: Setting up libcupsfilters1:amd64 (1.0.52-0ubuntu1.7) ...
+Setup nodejs: Setting up libcupsimage2:amd64 (1.7.2-0ubuntu1.8) ...
+Setup nodejs: Setting up libtalloc2:amd64 (2.1.5-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up libtevent0:amd64 (0.9.28-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up libldb1:amd64 (1:1.1.24-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up liblua5.2-0:amd64 (5.2.3-1) ...
+Setup nodejs: Setting up libnspr4:amd64 (2:4.13.1-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up libwbclient0:amd64 (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Setting up python-ldb (1:1.1.24-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up python-talloc (2.1.5-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up samba-common (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: debconf: unable to initialize frontend: Dialog
+Setup nodejs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+Setup nodejs: debconf: falling back to frontend: Readline
+Setup nodejs: debconf: unable to initialize frontend: Readline
+Setup nodejs: debconf: (This frontend requires a controlling tty.)
+Setup nodejs: debconf: falling back to frontend: Teletype
+Setup nodejs:
+Setup nodejs: Creating config file /etc/samba/smb.conf with new version
+Setup nodejs: Setting up samba-libs:amd64 (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Setting up libsmbclient:amd64 (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Setting up smbclient (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Setting up intltool-debian (0.35.0+20060710.1) ...
+Setup nodejs: Setting up po-debconf (1.0.16+nmu2ubuntu1) ...
+Setup nodejs: Setting up dh-apparmor (2.10.95-0ubuntu2.6~14.04.1) ...
+Setup nodejs: Setting up debhelper (9.20131227ubuntu1) ...
+Setup nodejs: Setting up cups-common (1.7.2-0ubuntu1.8) ...
+Setup nodejs: Setting up cups-client (1.7.2-0ubuntu1.8) ...
+Setup nodejs: Adding group `lpadmin' (GID 115) ...
+Setup nodejs: Done.
+Setup nodejs: Setting up heirloom-mailx (12.5-2+deb7u1build0.14.04.1) ...
+Setup nodejs: update-alternatives: using /usr/bin/heirloom-mailx to provide /usr/bin/mailx (mailx) in auto mode
+Setup nodejs: Setting up libc6-i386 (2.19-0ubuntu6.11) ...
+Setup nodejs: Setting up lib32z1 (1:1.2.8.dfsg-1ubuntu1) ...
+Setup nodejs: Setting up libfile-copy-recursive-perl (0.38-1) ...
+Setup nodejs: Setting up libsys-hostname-long-perl (1.4-3) ...
+Setup nodejs: Setting up libmail-sendmail-perl (0.79.16-1) ...
+Setup nodejs: Setting up pax (1:20120606-2+deb7u1) ...
+Setup nodejs: Setting up python-tdb (1.3.8-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up python-samba (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Setting up samba-common-bin (2:4.3.11+dfsg-0ubuntu0.14.04.8) ...
+Setup nodejs: Setting up update-inetd (4.43) ...
+Setup nodejs: debconf: unable to initialize frontend: Dialog
+Setup nodejs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+Setup nodejs: debconf: falling back to frontend: Readline
+Setup nodejs: debconf: unable to initialize frontend: Readline
+Setup nodejs: debconf: (This frontend requires a controlling tty.)
+Setup nodejs: debconf: falling back to frontend: Teletype
+Setup nodejs: Setting up cups-bsd (1.7.2-0ubuntu1.8) ...
+Setup nodejs: debconf: unable to initialize frontend: Dialog
+Setup nodejs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+Setup nodejs: debconf: falling back to frontend: Readline
+Setup nodejs: debconf: unable to initialize frontend: Readline
+Setup nodejs: debconf: (This frontend requires a controlling tty.)
+Setup nodejs: debconf: falling back to frontend: Teletype
+Setup nodejs: Setting up lsb-invalid-mta (4.1+Debian11ubuntu6.2) ...
+Setup nodejs: Setting up libnss3-nssdb (2:3.28.4-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up libnss3:amd64 (2:3.28.4-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up librpmio3 (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Setting up librpm3 (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Setting up librpmbuild3 (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Setting up librpmsign1 (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Setting up rpm-common (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Setting up rpm2cpio (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Setting up debugedit (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Setting up rpm (4.11.1-3ubuntu0.1) ...
+Setup nodejs: Setting up alien (8.90) ...
+Setup nodejs: Setting up lsb-security (4.1+Debian11ubuntu6.2) ...
+Setup nodejs: Setting up lsb-core (4.1+Debian11ubuntu6.2) ...
+Setup nodejs: debconf: unable to initialize frontend: Dialog
+Setup nodejs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+Setup nodejs: debconf: falling back to frontend: Readline
+Setup nodejs: debconf: unable to initialize frontend: Readline
+Setup nodejs: debconf: (This frontend requires a controlling tty.)
+Setup nodejs: debconf: falling back to frontend: Teletype
+Setup nodejs: Processing triggers for libc-bin (2.19-0ubuntu6.9) ...
+Setup nodejs: ++++ echo -e ''
+Setup nodejs: ++++ source /home/vagrant/FrameworkBenchmarks/installs/databases.installed
+Setup nodejs: +++ set +x
+Setup nodejs: ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: databases is installed!
+Setup nodejs: Setting up MongoDB database
+Setup nodejs: Executing: gpg --ignore-time-conflict --no-options --no-default-keyring --homedir /tmp/tmp.TUZ1XW1QHz --no-auto-check-trustdb --trust-model always --keyring /etc/apt/trusted.gpg --primary-keyring /etc/apt/trusted.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+Setup nodejs: gpg: requesting key EA312927 from hkp server keyserver.ubuntu.com
+Setup nodejs: gpg: key EA312927: public key "MongoDB 3.2 Release Signing Key <packaging@mongodb.com>" imported
+Setup nodejs: gpg: Total number processed: 1
+Setup nodejs: gpg:               imported: 1  (RSA: 1)
+Setup nodejs: deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse
+Setup nodejs: Ign http://repo.mongodb.org trusty/mongodb-org/3.2 InRelease
+Setup nodejs: Hit http://security.ubuntu.com trusty-security InRelease
+Setup nodejs: Get:1 http://repo.mongodb.org trusty/mongodb-org/3.2 Release.gpg [801 B]
+Setup nodejs: Get:2 http://repo.mongodb.org trusty/mongodb-org/3.2 Release [3,462 B]
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/main Sources
+Setup nodejs: Ign http://archive.ubuntu.com trusty InRelease
+Setup nodejs: Get:3 http://repo.mongodb.org trusty/mongodb-org/3.2/multiverse amd64 Packages [10.1 kB]
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/universe Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates InRelease
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/main amd64 Packages
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/universe amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports InRelease
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/main Translation-en
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/universe Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty Release.gpg
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/main Sources
+Setup nodejs: Ign http://repo.mongodb.org trusty/mongodb-org/3.2/multiverse Translation-en_US
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/restricted Sources
+Setup nodejs: Ign http://repo.mongodb.org trusty/mongodb-org/3.2/multiverse Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/universe Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/multiverse Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/main amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/restricted amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/universe amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/multiverse amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/main Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/multiverse Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/restricted Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-updates/universe Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/main Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/restricted Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/universe Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/multiverse Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/main amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/restricted amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/universe amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/multiverse amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/main Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/multiverse Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/restricted Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/universe Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty Release
+Setup nodejs: Hit http://archive.ubuntu.com trusty/main Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/restricted Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/universe Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/multiverse Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/main amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/restricted amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/universe amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/multiverse amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/main Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty/multiverse Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty/restricted Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty/universe Translation-en
+Setup nodejs: Ign http://archive.ubuntu.com trusty/main Translation-en_US
+Setup nodejs: Ign http://archive.ubuntu.com trusty/multiverse Translation-en_US
+Setup nodejs: Ign http://archive.ubuntu.com trusty/restricted Translation-en_US
+Setup nodejs: Ign http://archive.ubuntu.com trusty/universe Translation-en_US
+Setup nodejs: Fetched 14.4 kB in 9s (1,501 B/s)
+[REPEATED: 1]: Setup nodejs: Reading package lists...
+Setup nodejs: Building dependency tree...
+Setup nodejs: Reading state information...
+Setup nodejs: Package 'mongodb-clients' is not installed, so not removed
+Setup nodejs: The following packages were automatically installed and are no longer required:
+Setup nodejs:   acl at-spi2-core colord dconf-gsettings-backend dconf-service libasound2
+Setup nodejs:   libasound2-data libatk-bridge2.0-0 libatspi2.0-0 libcairo-gobject2
+Setup nodejs:   libcanberra-gtk3-0 libcanberra-gtk3-module libcanberra0 libcolord1
+Setup nodejs:   libcolorhug1 libdconf1 libexif12 libgd3 libgphoto2-6 libgphoto2-l10n
+Setup nodejs:   libgphoto2-port10 libgtk-3-0 libgtk-3-bin libgtk-3-common libgudev-1.0-0
+Setup nodejs:   libgusb2 libieee1284-3 liblcms2-2 libnotify-bin libnotify4 libogg0 libsane
+Setup nodejs:   libsane-common libv4l-0 libv4lconvert0 libvorbis0a libvorbisfile3 libvpx1
+Setup nodejs:   libwayland-client0 libwayland-cursor0 libxfont1 libxkbcommon0 libxkbfile1
+Setup nodejs:   notification-daemon sound-theme-freedesktop x11-xkb-utils xfonts-base
+Setup nodejs:   xfonts-encodings xfonts-utils xserver-common xserver-xorg-core
+Setup nodejs: Use 'apt-get autoremove' to remove them.
+Setup nodejs: 0 upgraded, 0 newly installed, 0 to remove and 100 not upgraded.
+Setup nodejs: Reading package lists...
+Setup nodejs: Building dependency tree...
+Setup nodejs: Reading state information...
+Setup nodejs: The following packages were automatically installed and are no longer required:
+Setup nodejs:   acl at-spi2-core colord dconf-gsettings-backend dconf-service libasound2
+Setup nodejs:   libasound2-data libatk-bridge2.0-0 libatspi2.0-0 libcairo-gobject2
+Setup nodejs:   libcanberra-gtk3-0 libcanberra-gtk3-module libcanberra0 libcolord1
+Setup nodejs:   libcolorhug1 libdconf1 libexif12 libgd3 libgphoto2-6 libgphoto2-l10n
+Setup nodejs:   libgphoto2-port10 libgtk-3-0 libgtk-3-bin libgtk-3-common libgudev-1.0-0
+Setup nodejs:   libgusb2 libieee1284-3 liblcms2-2 libnotify-bin libnotify4 libogg0 libsane
+Setup nodejs:   libsane-common libv4l-0 libv4lconvert0 libvorbis0a libvorbisfile3 libvpx1
+Setup nodejs:   libwayland-client0 libwayland-cursor0 libxfont1 libxkbcommon0 libxkbfile1
+Setup nodejs:   notification-daemon sound-theme-freedesktop x11-xkb-utils xfonts-base
+Setup nodejs:   xfonts-encodings xfonts-utils xserver-common xserver-xorg-core
+Setup nodejs: Use 'apt-get autoremove' to remove them.
+Setup nodejs: The following extra packages will be installed:
+Setup nodejs:   mongodb-org-mongos mongodb-org-server mongodb-org-shell mongodb-org-tools
+Setup nodejs: The following NEW packages will be installed:
+Setup nodejs:   mongodb-org mongodb-org-mongos mongodb-org-server mongodb-org-shell
+Setup nodejs:   mongodb-org-tools
+Setup nodejs: 0 upgraded, 5 newly installed, 0 to remove and 100 not upgraded.
+Setup nodejs: Need to get 50.7 MB of archives.
+Setup nodejs: After this operation, 211 MB of additional disk space will be used.
+Setup nodejs: Get:1 http://repo.mongodb.org/apt/ubuntu/ trusty/mongodb-org/3.2/multiverse mongodb-org-shell amd64 3.2.13 [5,266 kB]
+Setup nodejs: Get:2 http://repo.mongodb.org/apt/ubuntu/ trusty/mongodb-org/3.2/multiverse mongodb-org-server amd64 3.2.13 [9,647 kB]
+Setup nodejs: Get:3 http://repo.mongodb.org/apt/ubuntu/ trusty/mongodb-org/3.2/multiverse mongodb-org-mongos amd64 3.2.13 [4,370 kB]
+Setup nodejs: Get:4 http://repo.mongodb.org/apt/ubuntu/ trusty/mongodb-org/3.2/multiverse mongodb-org-tools amd64 3.2.13 [31.4 MB]
+Setup nodejs: Get:5 http://repo.mongodb.org/apt/ubuntu/ trusty/mongodb-org/3.2/multiverse mongodb-org amd64 3.2.13 [3,558 B]
+Setup nodejs: debconf: unable to initialize frontend: Dialog
+Setup nodejs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+Setup nodejs: debconf: falling back to frontend: Readline
+Setup nodejs: debconf: unable to initialize frontend: Readline
+Setup nodejs: debconf: (This frontend requires a controlling tty.)
+Setup nodejs: debconf: falling back to frontend: Teletype
+Setup nodejs: dpkg-preconfigure: unable to re-open stdin:
+Setup nodejs: Fetched 50.7 MB in 15min 24s (54.9 kB/s)
+Setup nodejs: Selecting previously unselected package mongodb-org-shell.
+Setup nodejs: (Reading database ... 76312 files and directories currently installed.)
+Setup nodejs: Preparing to unpack .../mongodb-org-shell_3.2.13_amd64.deb ...
+Setup nodejs: Unpacking mongodb-org-shell (3.2.13) ...
+Setup nodejs: Selecting previously unselected package mongodb-org-server.
+Setup nodejs: Preparing to unpack .../mongodb-org-server_3.2.13_amd64.deb ...
+Setup nodejs: Unpacking mongodb-org-server (3.2.13) ...
+Setup nodejs: Selecting previously unselected package mongodb-org-mongos.
+Setup nodejs: Preparing to unpack .../mongodb-org-mongos_3.2.13_amd64.deb ...
+Setup nodejs: Unpacking mongodb-org-mongos (3.2.13) ...
+Setup nodejs: Selecting previously unselected package mongodb-org-tools.
+Setup nodejs: Preparing to unpack .../mongodb-org-tools_3.2.13_amd64.deb ...
+Setup nodejs: Unpacking mongodb-org-tools (3.2.13) ...
+Setup nodejs: Selecting previously unselected package mongodb-org.
+Setup nodejs: Preparing to unpack .../mongodb-org_3.2.13_amd64.deb ...
+Setup nodejs: Unpacking mongodb-org (3.2.13) ...
+Setup nodejs: Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+Setup nodejs: Processing triggers for ureadahead (0.100.0-16) ...
+Setup nodejs: Setting up mongodb-org-shell (3.2.13) ...
+Setup nodejs: Setting up mongodb-org-server (3.2.13) ...
+Setup nodejs: Adding system user `mongodb' (UID 109) ...
+Setup nodejs: Adding new user `mongodb' (UID 109) with group `nogroup' ...
+Setup nodejs: Not creating home directory `/home/mongodb'.
+Setup nodejs: Adding group `mongodb' (GID 116) ...
+Setup nodejs: Done.
+Setup nodejs: Adding user `mongodb' to group `mongodb' ...
+Setup nodejs: Adding user mongodb to group mongodb
+Setup nodejs: Done.
+Setup nodejs: mongod start/running, process 25679
+Setup nodejs: Setting up mongodb-org-mongos (3.2.13) ...
+Setup nodejs: Setting up mongodb-org-tools (3.2.13) ...
+Setup nodejs: Processing triggers for ureadahead (0.100.0-16) ...
+Setup nodejs: Setting up mongodb-org (3.2.13) ...
+Setup nodejs: mongod stop/waiting
+Setup nodejs: mv: cannot stat ‘/etc/mongodb.conf’: No such file or directory
+Setup nodejs: mongod start/running, process 25741
+Setup nodejs: Waiting for MongoDB (/15}
+Setup nodejs: MongoDB shell version: 3.2.13
+Setup nodejs: connecting to: test
+Setup nodejs: switched to db hello_world
+Setup nodejs: false
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 10000 })
+Setup nodejs: {
+Setup nodejs: 	"createdCollectionAutomatically" : false,
+Setup nodejs: 	"numIndexesBefore" : 1,
+Setup nodejs: 	"numIndexesAfter" : 1,
+Setup nodejs: 	"note" : "all indexes already exist",
+Setup nodejs: 	"ok" : 1
+Setup nodejs: }
+Setup nodejs: false
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 1 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 2 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 3 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 4 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 5 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 6 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 7 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 8 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 9 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 10 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 11 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 12 })
+Setup nodejs: {
+Setup nodejs: 	"createdCollectionAutomatically" : false,
+Setup nodejs: 	"numIndexesBefore" : 1,
+Setup nodejs: 	"numIndexesAfter" : 1,
+Setup nodejs: 	"note" : "all indexes already exist",
+Setup nodejs: 	"ok" : 1
+Setup nodejs: }
+Setup nodejs: bye
+Setup nodejs: db version v3.2.13
+Setup nodejs: git version: 23899209cad60aaafe114f6aea6cb83025ff51bc
+Setup nodejs: OpenSSL version: OpenSSL 1.0.1f 6 Jan 2014
+Setup nodejs: allocator: tcmalloc
+Setup nodejs: modules: none
+Setup nodejs: build environment:
+Setup nodejs:     distmod: ubuntu1404
+Setup nodejs:     distarch: x86_64
+Setup nodejs:     target_arch: x86_64
+Setup nodejs: start: Job is already running: mongod
+Setup nodejs: mongod service already started
+Setup nodejs: MongoDB shell version: 3.2.13
+Setup nodejs: connecting to: test
+Setup nodejs: switched to db hello_world
+Setup nodejs: true
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 10000 })
+Setup nodejs: {
+Setup nodejs: 	"createdCollectionAutomatically" : false,
+Setup nodejs: 	"numIndexesBefore" : 1,
+Setup nodejs: 	"numIndexesAfter" : 1,
+Setup nodejs: 	"note" : "all indexes already exist",
+Setup nodejs: 	"ok" : 1
+Setup nodejs: }
+Setup nodejs: true
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 1 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 2 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 3 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 4 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 5 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 6 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 7 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 8 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 9 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 10 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 11 })
+Setup nodejs: WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 12 })
+Setup nodejs: {
+Setup nodejs: 	"createdCollectionAutomatically" : false,
+Setup nodejs: 	"numIndexesBefore" : 1,
+Setup nodejs: 	"numIndexesAfter" : 1,
+Setup nodejs: 	"note" : "all indexes already exist",
+Setup nodejs: 	"ok" : 1
+Setup nodejs: }
+Setup nodejs: bye
+Setup nodejs: ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: databases is installed!
+Setup nodejs: Searching for mysql
+Setup nodejs: ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: Installing dependency: mysql from /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/mysql/mysql.sh
+Setup nodejs: ++ . /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/mysql/mysql.sh
+Setup nodejs: +++ fw_depends databases
+Setup nodejs: +++ set -E
+Setup nodejs: +++ for depend in '"$@"'
+Setup nodejs: ++++ echo databases
+Setup nodejs: ++++ awk '{print tolower($0)}'
+Setup nodejs: +++ depend=databases
+Setup nodejs: +++ echo Searching for databases
+Setup nodejs: Searching for databases
+Setup nodejs: +++ trap 'fw_traperror $depend $? $LINENO "$BASH_COMMAND" $(printf ":%s" ${FUNCNAME[@]}) $(printf ":%s" ${BASH_SOURCE[@]}) $(printf ":%s" ${BASH_LINENO[@]})' ERR
+Setup nodejs: +++ retcode=0
+Setup nodejs: +++ pushd /home/vagrant/FrameworkBenchmarks/installs
+Setup nodejs: ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: ++++ pwd
+Setup nodejs: +++ wd=/home/vagrant/FrameworkBenchmarks/installs
+Setup nodejs: +++ relative_wd='$FWROOT/installs'
+Setup nodejs: ++++ find /home/vagrant/FrameworkBenchmarks/toolset/setup/linux -name databases.sh
+Setup nodejs: +++ installation_file=/home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: +++ [[ -n /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh ]]
+Setup nodejs: +++ echo Installing dependency: databases from /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: Installing dependency: databases from /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: +++ set -x
+Setup nodejs: +++ . /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: +++++ fw_exists /home/vagrant/FrameworkBenchmarks/installs/databases.installed
+Setup nodejs: +++++ '[' -f /home/vagrant/FrameworkBenchmarks/installs/databases.installed ']'
+Setup nodejs: +++++ echo 0
+Setup nodejs: ++++ RETCODE=0
+Setup nodejs: ++++ '[' '!' 0 == 0 ']'
+Setup nodejs: ++++ source /home/vagrant/FrameworkBenchmarks/installs/databases.installed
+Setup nodejs: ++++ return 0
+Setup nodejs: +++ set +x
+Setup nodejs: ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: databases is installed!
+Setup nodejs: Reading package lists...
+Setup nodejs: Building dependency tree...
+Setup nodejs: Reading state information...
+Setup nodejs: The following packages were automatically installed and are no longer required:
+Setup nodejs:   acl at-spi2-core colord dconf-gsettings-backend dconf-service libasound2
+Setup nodejs:   libasound2-data libatk-bridge2.0-0 libatspi2.0-0 libcairo-gobject2
+Setup nodejs:   libcanberra-gtk3-0 libcanberra-gtk3-module libcanberra0 libcolord1
+Setup nodejs:   libcolorhug1 libdconf1 libexif12 libgd3 libgphoto2-6 libgphoto2-l10n
+Setup nodejs:   libgphoto2-port10 libgtk-3-0 libgtk-3-bin libgtk-3-common libgudev-1.0-0
+Setup nodejs:   libgusb2 libieee1284-3 liblcms2-2 libnotify-bin libnotify4 libogg0 libsane
+Setup nodejs:   libsane-common libv4l-0 libv4lconvert0 libvorbis0a libvorbisfile3 libvpx1
+Setup nodejs:   libwayland-client0 libwayland-cursor0 libxfont1 libxkbcommon0 libxkbfile1
+Setup nodejs:   notification-daemon sound-theme-freedesktop x11-xkb-utils xfonts-base
+Setup nodejs:   xfonts-encodings xfonts-utils xserver-common xserver-xorg-core
+Setup nodejs: Use 'apt-get autoremove' to remove them.
+Setup nodejs: The following extra packages will be installed:
+Setup nodejs:   libaio1 libdbd-mysql-perl libdbi-perl libhtml-template-perl
+Setup nodejs:   libterm-readkey-perl mysql-client-5.5 mysql-client-core-5.5 mysql-server-5.5
+Setup nodejs:   mysql-server-core-5.5
+Setup nodejs: Suggested packages:
+Setup nodejs:   libclone-perl libmldbm-perl libnet-daemon-perl libplrpc-perl
+Setup nodejs:   libsql-statement-perl libipc-sharedcache-perl tinyca
+Setup nodejs: The following NEW packages will be installed:
+Setup nodejs:   libaio1 libdbd-mysql-perl libdbi-perl libhtml-template-perl
+Setup nodejs:   libterm-readkey-perl mysql-client-5.5 mysql-client-core-5.5 mysql-server
+Setup nodejs:   mysql-server-5.5 mysql-server-core-5.5
+Setup nodejs: 0 upgraded, 10 newly installed, 0 to remove and 100 not upgraded.
+Setup nodejs: Need to get 9,104 kB of archives.
+Setup nodejs: After this operation, 93.6 MB of additional disk space will be used.
+Setup nodejs: Get:1 http://archive.ubuntu.com/ubuntu/ trusty/main libaio1 amd64 0.3.109-4 [6,364 B]
+Setup nodejs: Get:2 http://archive.ubuntu.com/ubuntu/ trusty/main libdbi-perl amd64 1.630-1 [879 kB]
+Setup nodejs: Get:3 http://archive.ubuntu.com/ubuntu/ trusty-updates/main libdbd-mysql-perl amd64 4.025-1ubuntu0.1 [87.6 kB]
+Setup nodejs: Get:4 http://archive.ubuntu.com/ubuntu/ trusty/main libterm-readkey-perl amd64 2.31-1 [27.4 kB]
+Setup nodejs: Get:5 http://archive.ubuntu.com/ubuntu/ trusty-updates/main mysql-client-core-5.5 amd64 5.5.55-0ubuntu0.14.04.1 [707 kB]
+Setup nodejs: Get:6 http://archive.ubuntu.com/ubuntu/ trusty-updates/main mysql-client-5.5 amd64 5.5.55-0ubuntu0.14.04.1 [1,586 kB]
+Setup nodejs: Get:7 http://archive.ubuntu.com/ubuntu/ trusty-updates/main mysql-server-core-5.5 amd64 5.5.55-0ubuntu0.14.04.1 [3,737 kB]
+Setup nodejs: Get:8 http://archive.ubuntu.com/ubuntu/ trusty-updates/main mysql-server-5.5 amd64 5.5.55-0ubuntu0.14.04.1 [1,996 kB]
+Setup nodejs: Get:9 http://archive.ubuntu.com/ubuntu/ trusty/main libhtml-template-perl all 2.95-1 [65.5 kB]
+Setup nodejs: Get:10 http://archive.ubuntu.com/ubuntu/ trusty-updates/main mysql-server all 5.5.55-0ubuntu0.14.04.1 [11.3 kB]
+Setup nodejs: Preconfiguring packages ...
+Setup nodejs: Fetched 9,104 kB in 25s (356 kB/s)
+Setup nodejs: Selecting previously unselected package libaio1:amd64.
+Setup nodejs: (Reading database ... 76364 files and directories currently installed.)
+Setup nodejs: Preparing to unpack .../libaio1_0.3.109-4_amd64.deb ...
+Setup nodejs: Unpacking libaio1:amd64 (0.3.109-4) ...
+Setup nodejs: Selecting previously unselected package libdbi-perl.
+Setup nodejs: Preparing to unpack .../libdbi-perl_1.630-1_amd64.deb ...
+Setup nodejs: Unpacking libdbi-perl (1.630-1) ...
+Setup nodejs: Selecting previously unselected package libdbd-mysql-perl.
+Setup nodejs: Preparing to unpack .../libdbd-mysql-perl_4.025-1ubuntu0.1_amd64.deb ...
+Setup nodejs: Unpacking libdbd-mysql-perl (4.025-1ubuntu0.1) ...
+Setup nodejs: Selecting previously unselected package libterm-readkey-perl.
+Setup nodejs: Preparing to unpack .../libterm-readkey-perl_2.31-1_amd64.deb ...
+Setup nodejs: Unpacking libterm-readkey-perl (2.31-1) ...
+Setup nodejs: Selecting previously unselected package mysql-client-core-5.5.
+Setup nodejs: Preparing to unpack .../mysql-client-core-5.5_5.5.55-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking mysql-client-core-5.5 (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package mysql-client-5.5.
+Setup nodejs: Preparing to unpack .../mysql-client-5.5_5.5.55-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking mysql-client-5.5 (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package mysql-server-core-5.5.
+Setup nodejs: Preparing to unpack .../mysql-server-core-5.5_5.5.55-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking mysql-server-core-5.5 (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package mysql-server-5.5.
+Setup nodejs: Preparing to unpack .../mysql-server-5.5_5.5.55-0ubuntu0.14.04.1_amd64.deb ...
+Setup nodejs: Unpacking mysql-server-5.5 (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: Selecting previously unselected package libhtml-template-perl.
+Setup nodejs: Preparing to unpack .../libhtml-template-perl_2.95-1_all.deb ...
+Setup nodejs: Unpacking libhtml-template-perl (2.95-1) ...
+Setup nodejs: Selecting previously unselected package mysql-server.
+Setup nodejs: Preparing to unpack .../mysql-server_5.5.55-0ubuntu0.14.04.1_all.deb ...
+Setup nodejs: Unpacking mysql-server (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+Setup nodejs: Processing triggers for ureadahead (0.100.0-16) ...
+Setup nodejs: Setting up libaio1:amd64 (0.3.109-4) ...
+Setup nodejs: Setting up libdbi-perl (1.630-1) ...
+Setup nodejs: Setting up libdbd-mysql-perl (4.025-1ubuntu0.1) ...
+Setup nodejs: Setting up libterm-readkey-perl (2.31-1) ...
+Setup nodejs: Setting up mysql-client-core-5.5 (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up mysql-client-5.5 (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up mysql-server-core-5.5 (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up mysql-server-5.5 (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: mysql start/running, process 29317
+Setup nodejs: Setting up libhtml-template-perl (2.95-1) ...
+Setup nodejs: Processing triggers for ureadahead (0.100.0-16) ...
+Setup nodejs: Setting up mysql-server (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: Processing triggers for libc-bin (2.19-0ubuntu6.9) ...
+Setup nodejs: mysql stop/waiting
+Setup nodejs:  * Reloading AppArmor profiles
+Setup nodejs: Skipping profile in /etc/apparmor.d/disable: usr.sbin.rsyslogd
+Setup nodejs:    ...done.
+Setup nodejs: mysql start/running, process 29570
+Setup nodejs: Reading package lists...
+Setup nodejs: Building dependency tree...
+Setup nodejs: Reading state information...
+Setup nodejs: The following packages were automatically installed and are no longer required:
+Setup nodejs:   acl at-spi2-core colord dconf-gsettings-backend dconf-service libasound2
+Setup nodejs:   libasound2-data libatk-bridge2.0-0 libatspi2.0-0 libcairo-gobject2
+Setup nodejs:   libcanberra-gtk3-0 libcanberra-gtk3-module libcanberra0 libcolord1
+Setup nodejs:   libcolorhug1 libdconf1 libexif12 libgd3 libgphoto2-6 libgphoto2-l10n
+Setup nodejs:   libgphoto2-port10 libgtk-3-0 libgtk-3-bin libgtk-3-common libgudev-1.0-0
+Setup nodejs:   libgusb2 libieee1284-3 liblcms2-2 libnotify-bin libnotify4 libogg0 libsane
+Setup nodejs:   libsane-common libv4l-0 libv4lconvert0 libvorbis0a libvorbisfile3 libvpx1
+Setup nodejs:   libwayland-client0 libwayland-cursor0 libxfont1 libxkbcommon0 libxkbfile1
+Setup nodejs:   notification-daemon sound-theme-freedesktop x11-xkb-utils xfonts-base
+Setup nodejs:   xfonts-encodings xfonts-utils xserver-common xserver-xorg-core
+Setup nodejs: Use 'apt-get autoremove' to remove them.
+Setup nodejs: The following NEW packages will be installed:
+Setup nodejs:   mysql-client
+Setup nodejs: 0 upgraded, 1 newly installed, 0 to remove and 100 not upgraded.
+Setup nodejs: Need to get 11.2 kB of archives.
+Setup nodejs: After this operation, 135 kB of additional disk space will be used.
+Setup nodejs: Get:1 http://archive.ubuntu.com/ubuntu/ trusty-updates/main mysql-client all 5.5.55-0ubuntu0.14.04.1 [11.2 kB]
+Setup nodejs: Fetched 11.2 kB in 0s (32.1 kB/s)
+Setup nodejs: Selecting previously unselected package mysql-client.
+Setup nodejs: (Reading database ... 76812 files and directories currently installed.)
+Setup nodejs: Preparing to unpack .../mysql-client_5.5.55-0ubuntu0.14.04.1_all.deb ...
+Setup nodejs: Unpacking mysql-client (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: Setting up mysql-client (5.5.55-0ubuntu0.14.04.1) ...
+Setup nodejs: start: Job is already running: mysql
+Setup nodejs: mysql service already started
+Setup nodejs: ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: databases is installed!
+Setup nodejs: Searching for postgresql
+Setup nodejs: ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: Installing dependency: postgresql from /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/postgresql/postgresql.sh
+Setup nodejs: ++ . /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/postgresql/postgresql.sh
+Setup nodejs: +++ fw_depends databases
+Setup nodejs: +++ set -E
+Setup nodejs: +++ for depend in '"$@"'
+Setup nodejs: ++++ echo databases
+Setup nodejs: ++++ awk '{print tolower($0)}'
+Setup nodejs: +++ depend=databases
+Setup nodejs: +++ echo Searching for databases
+Setup nodejs: Searching for databases
+Setup nodejs: +++ trap 'fw_traperror $depend $? $LINENO "$BASH_COMMAND" $(printf ":%s" ${FUNCNAME[@]}) $(printf ":%s" ${BASH_SOURCE[@]}) $(printf ":%s" ${BASH_LINENO[@]})' ERR
+Setup nodejs: +++ retcode=0
+Setup nodejs: +++ pushd /home/vagrant/FrameworkBenchmarks/installs
+Setup nodejs: ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: ++++ pwd
+Setup nodejs: +++ wd=/home/vagrant/FrameworkBenchmarks/installs
+Setup nodejs: +++ relative_wd='$FWROOT/installs'
+Setup nodejs: ++++ find /home/vagrant/FrameworkBenchmarks/toolset/setup/linux -name databases.sh
+Setup nodejs: +++ installation_file=/home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: +++ [[ -n /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh ]]
+Setup nodejs: +++ echo Installing dependency: databases from /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: Installing dependency: databases from /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: +++ set -x
+Setup nodejs: +++ . /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/databases/databases.sh
+Setup nodejs: +++++ fw_exists /home/vagrant/FrameworkBenchmarks/installs/databases.installed
+Setup nodejs: +++++ '[' -f /home/vagrant/FrameworkBenchmarks/installs/databases.installed ']'
+Setup nodejs: +++++ echo 0
+Setup nodejs: ++++ RETCODE=0
+Setup nodejs: ++++ '[' '!' 0 == 0 ']'
+Setup nodejs: ++++ source /home/vagrant/FrameworkBenchmarks/installs/databases.installed
+Setup nodejs: ++++ return 0
+Setup nodejs: +++ set +x
+Setup nodejs: ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: databases is installed!
+Setup nodejs: Ign http://repo.mongodb.org trusty/mongodb-org/3.2 InRelease
+Setup nodejs: Hit http://repo.mongodb.org trusty/mongodb-org/3.2 Release.gpg
+Setup nodejs: Ign http://archive.ubuntu.com trusty InRelease
+Setup nodejs: Hit http://repo.mongodb.org trusty/mongodb-org/3.2 Release
+Setup nodejs: Get:1 http://security.ubuntu.com trusty-security InRelease [65.9 kB]
+Setup nodejs: Hit http://repo.mongodb.org trusty/mongodb-org/3.2/multiverse amd64 Packages
+Setup nodejs: Get:2 http://archive.ubuntu.com trusty-updates InRelease [65.9 kB]
+Setup nodejs: Get:3 http://security.ubuntu.com trusty-security/main Sources [132 kB]
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports InRelease
+Setup nodejs: Hit http://archive.ubuntu.com trusty Release.gpg
+Setup nodejs: Ign http://repo.mongodb.org trusty/mongodb-org/3.2/multiverse Translation-en_US
+Setup nodejs: Ign http://repo.mongodb.org trusty/mongodb-org/3.2/multiverse Translation-en
+Setup nodejs: Get:4 http://archive.ubuntu.com trusty-updates/main Sources [399 kB]
+Setup nodejs: Get:5 http://security.ubuntu.com trusty-security/universe Sources [55.1 kB]
+Setup nodejs: Get:6 http://security.ubuntu.com trusty-security/main amd64 Packages [620 kB]
+Setup nodejs: Get:7 http://archive.ubuntu.com trusty-updates/restricted Sources [6,331 B]
+Setup nodejs: Get:8 http://archive.ubuntu.com trusty-updates/universe Sources [180 kB]
+Setup nodejs: Get:9 http://security.ubuntu.com trusty-security/universe amd64 Packages [164 kB]
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/main Translation-en
+Setup nodejs: Hit http://security.ubuntu.com trusty-security/universe Translation-en
+Setup nodejs: Get:10 http://archive.ubuntu.com trusty-updates/multiverse Sources [7,764 B]
+Setup nodejs: Get:11 http://archive.ubuntu.com trusty-updates/main amd64 Packages [987 kB]
+Setup nodejs: Get:12 http://archive.ubuntu.com trusty-updates/restricted amd64 Packages [17.1 kB]
+Setup nodejs: Get:13 http://archive.ubuntu.com trusty-updates/universe amd64 Packages [410 kB]
+Setup nodejs: Get:14 http://archive.ubuntu.com trusty-updates/multiverse amd64 Packages [14.3 kB]
+Setup nodejs: Get:15 http://archive.ubuntu.com trusty-updates/main Translation-en [487 kB]
+Setup nodejs: Get:16 http://archive.ubuntu.com trusty-updates/multiverse Translation-en [7,430 B]
+Setup nodejs: Get:17 http://archive.ubuntu.com trusty-updates/restricted Translation-en [3,978 B]
+Setup nodejs: Get:18 http://archive.ubuntu.com trusty-updates/universe Translation-en [218 kB]
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/main Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/restricted Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/universe Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/multiverse Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/main amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/restricted amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/universe amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/multiverse amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/main Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/multiverse Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/restricted Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty-backports/universe Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty Release
+Setup nodejs: Hit http://archive.ubuntu.com trusty/main Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/restricted Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/universe Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/multiverse Sources
+Setup nodejs: Hit http://archive.ubuntu.com trusty/main amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/restricted amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/universe amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/multiverse amd64 Packages
+Setup nodejs: Hit http://archive.ubuntu.com trusty/main Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty/multiverse Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty/restricted Translation-en
+Setup nodejs: Hit http://archive.ubuntu.com trusty/universe Translation-en
+Setup nodejs: Ign http://archive.ubuntu.com trusty/main Translation-en_US
+Setup nodejs: Ign http://archive.ubuntu.com trusty/multiverse Translation-en_US
+Setup nodejs: Ign http://archive.ubuntu.com trusty/restricted Translation-en_US
+Setup nodejs: Ign http://archive.ubuntu.com trusty/universe Translation-en_US
+Setup nodejs: Fetched 3,840 kB in 18s (210 kB/s)
+[REPEATED: 1]: Setup nodejs: Reading package lists...
+Setup nodejs: Building dependency tree...
+Setup nodejs: Reading state information...
+Setup nodejs: The following packages were automatically installed and are no longer required:
+Setup nodejs:   acl at-spi2-core colord dconf-gsettings-backend dconf-service libasound2
+Setup nodejs:   libasound2-data libatk-bridge2.0-0 libatspi2.0-0 libcairo-gobject2
+Setup nodejs:   libcanberra-gtk3-0 libcanberra-gtk3-module libcanberra0 libcolord1
+Setup nodejs:   libcolorhug1 libdconf1 libexif12 libgd3 libgphoto2-6 libgphoto2-l10n
+Setup nodejs:   libgphoto2-port10 libgtk-3-0 libgtk-3-bin libgtk-3-common libgudev-1.0-0
+Setup nodejs:   libgusb2 libieee1284-3 liblcms2-2 libnotify-bin libnotify4 libogg0 libsane
+Setup nodejs:   libsane-common libv4l-0 libv4lconvert0 libvorbis0a libvorbisfile3 libvpx1
+Setup nodejs:   libwayland-client0 libwayland-cursor0 libxfont1 libxkbcommon0 libxkbfile1
+Setup nodejs:   notification-daemon sound-theme-freedesktop x11-xkb-utils xfonts-base
+Setup nodejs:   xfonts-encodings xfonts-utils xserver-common xserver-xorg-core
+Setup nodejs: Use 'apt-get autoremove' to remove them.
+Setup nodejs: The following extra packages will be installed:
+Setup nodejs:   postgresql-9.3 postgresql-client-9.3 postgresql-client-common
+Setup nodejs:   postgresql-common ssl-cert
+Setup nodejs: Suggested packages:
+Setup nodejs:   oidentd ident-server locales-all postgresql-doc-9.3 openssl-blacklist
+Setup nodejs: The following NEW packages will be installed:
+Setup nodejs:   postgresql postgresql-9.3 postgresql-client-9.3 postgresql-client-common
+Setup nodejs:   postgresql-common ssl-cert
+Setup nodejs: 0 upgraded, 6 newly installed, 0 to remove and 100 not upgraded.
+Setup nodejs: Need to get 3,631 kB of archives.
+Setup nodejs: After this operation, 15.3 MB of additional disk space will be used.
+Setup nodejs: Get:1 http://archive.ubuntu.com/ubuntu/ trusty-updates/main postgresql-client-common all 154ubuntu1 [25.4 kB]
+Setup nodejs: Get:2 http://archive.ubuntu.com/ubuntu/ trusty-updates/main postgresql-client-9.3 amd64 9.3.17-0ubuntu0.14.04 [788 kB]
+Setup nodejs: Get:3 http://archive.ubuntu.com/ubuntu/ trusty/main ssl-cert all 1.0.33 [16.6 kB]
+Setup nodejs: Get:4 http://archive.ubuntu.com/ubuntu/ trusty-updates/main postgresql-common all 154ubuntu1 [103 kB]
+Setup nodejs: Get:5 http://archive.ubuntu.com/ubuntu/ trusty-updates/main postgresql-9.3 amd64 9.3.17-0ubuntu0.14.04 [2,693 kB]
+Setup nodejs: Get:6 http://archive.ubuntu.com/ubuntu/ trusty-updates/main postgresql all 9.3+154ubuntu1 [5,038 B]
+Setup nodejs: debconf: unable to initialize frontend: Dialog
+Setup nodejs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+Setup nodejs: debconf: falling back to frontend: Readline
+Setup nodejs: debconf: unable to initialize frontend: Readline
+Setup nodejs: debconf: (This frontend requires a controlling tty.)
+Setup nodejs: debconf: falling back to frontend: Teletype
+Setup nodejs: dpkg-preconfigure: unable to re-open stdin:
+Setup nodejs: Fetched 3,631 kB in 10s (336 kB/s)
+Setup nodejs: Selecting previously unselected package postgresql-client-common.
+Setup nodejs: (Reading database ... 76816 files and directories currently installed.)
+Setup nodejs: Preparing to unpack .../postgresql-client-common_154ubuntu1_all.deb ...
+Setup nodejs: Unpacking postgresql-client-common (154ubuntu1) ...
+Setup nodejs: Selecting previously unselected package postgresql-client-9.3.
+Setup nodejs: Preparing to unpack .../postgresql-client-9.3_9.3.17-0ubuntu0.14.04_amd64.deb ...
+Setup nodejs: Unpacking postgresql-client-9.3 (9.3.17-0ubuntu0.14.04) ...
+Setup nodejs: Selecting previously unselected package ssl-cert.
+Setup nodejs: Preparing to unpack .../ssl-cert_1.0.33_all.deb ...
+Setup nodejs: Unpacking ssl-cert (1.0.33) ...
+Setup nodejs: Selecting previously unselected package postgresql-common.
+Setup nodejs: Preparing to unpack .../postgresql-common_154ubuntu1_all.deb ...
+Setup nodejs: Adding 'diversion of /usr/bin/pg_config to /usr/bin/pg_config.libpq-dev by postgresql-common'
+Setup nodejs: Unpacking postgresql-common (154ubuntu1) ...
+Setup nodejs: Selecting previously unselected package postgresql-9.3.
+Setup nodejs: Preparing to unpack .../postgresql-9.3_9.3.17-0ubuntu0.14.04_amd64.deb ...
+Setup nodejs: Unpacking postgresql-9.3 (9.3.17-0ubuntu0.14.04) ...
+Setup nodejs: Selecting previously unselected package postgresql.
+Setup nodejs: Preparing to unpack .../postgresql_9.3+154ubuntu1_all.deb ...
+Setup nodejs: Unpacking postgresql (9.3+154ubuntu1) ...
+Setup nodejs: Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
+Setup nodejs: Processing triggers for ureadahead (0.100.0-16) ...
+Setup nodejs: Setting up postgresql-client-common (154ubuntu1) ...
+Setup nodejs: Setting up postgresql-client-9.3 (9.3.17-0ubuntu0.14.04) ...
+Setup nodejs: update-alternatives: using /usr/share/postgresql/9.3/man/man1/psql.1.gz to provide /usr/share/man/man1/psql.1.gz (psql.1.gz) in auto mode
+Setup nodejs: Setting up ssl-cert (1.0.33) ...
+Setup nodejs: debconf: unable to initialize frontend: Dialog
+Setup nodejs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+Setup nodejs: debconf: falling back to frontend: Readline
+Setup nodejs: debconf: unable to initialize frontend: Readline
+Setup nodejs: debconf: (This frontend requires a controlling tty.)
+Setup nodejs: debconf: falling back to frontend: Teletype
+Setup nodejs: Setting up postgresql-common (154ubuntu1) ...
+Setup nodejs: debconf: unable to initialize frontend: Dialog
+Setup nodejs: debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+Setup nodejs: debconf: falling back to frontend: Readline
+Setup nodejs: debconf: unable to initialize frontend: Readline
+Setup nodejs: debconf: (This frontend requires a controlling tty.)
+Setup nodejs: debconf: falling back to frontend: Teletype
+Setup nodejs: Adding user postgres to group ssl-cert
+Setup nodejs:
+Setup nodejs: Creating config file /etc/logrotate.d/postgresql-common with new version
+Setup nodejs: Building PostgreSQL dictionaries from installed myspell/hunspell packages...
+Setup nodejs: Removing obsolete dictionary files:
+Setup nodejs:  * No PostgreSQL clusters exist; see "man pg_createcluster"
+Setup nodejs: Processing triggers for ureadahead (0.100.0-16) ...
+Setup nodejs: Setting up postgresql-9.3 (9.3.17-0ubuntu0.14.04) ...
+Setup nodejs: Creating new cluster 9.3/main ...
+Setup nodejs:   config /etc/postgresql/9.3/main
+Setup nodejs:   data   /var/lib/postgresql/9.3/main
+Setup nodejs:   locale en_US.UTF-8
+Setup nodejs:   port   5432
+Setup nodejs: update-alternatives: using /usr/share/postgresql/9.3/man/man1/postmaster.1.gz to provide /usr/share/man/man1/postmaster.1.gz (postmaster.1.gz) in auto mode
+Setup nodejs:  * Starting PostgreSQL 9.3 database server
+Setup nodejs:    ...done.
+Setup nodejs: Setting up postgresql (9.3+154ubuntu1) ...
+Setup nodejs:  * Stopping PostgreSQL 9.3 database server
+Setup nodejs:    ...done.
+Setup nodejs: Pseudo-terminal will not be allocated because stdin is not a terminal.
+Setup nodejs: Welcome to Ubuntu 14.04.5 LTS (GNU/Linux 3.13.0-96-generic x86_64)
+Setup nodejs:
+Setup nodejs:  * Documentation:  https://help.ubuntu.com/
+Setup nodejs:
+Setup nodejs:   System information as of Thu Jun  8 18:14:11 UTC 2017
+Setup nodejs:
+Setup nodejs:   System load:  0.39              Processes:           96
+Setup nodejs:   Usage of /:   7.2% of 39.34GB   Users logged in:     1
+Setup nodejs:   Memory usage: 11%               IP address for eth0: 10.0.2.15
+Setup nodejs:   Swap usage:   0%                IP address for eth1: 172.16.0.16
+Setup nodejs:
+Setup nodejs:   Graph this data and manage this system at:
+Setup nodejs:     https://landscape.canonical.com/
+Setup nodejs:
+Setup nodejs: New release '16.04.2 LTS' available.
+Setup nodejs: Run 'do-release-upgrade' to upgrade to it.
+[REPEATED: 1]: Setup nodejs:
+Setup nodejs: *** System restart required ***
+Setup nodejs: Welcome to the FrameworkBenchmarks project!
+Setup nodejs:
+Setup nodejs:   To get started, perhaps try this:
+Setup nodejs:     $ cd FrameworkBenchmarks
+Setup nodejs:
+Setup nodejs:   You can get lots of help:
+Setup nodejs:     $ tfb --help
+Setup nodejs:
+Setup nodejs:   You can run a test like:
+Setup nodejs:     $ tfb --mode verify --test gemini
+Setup nodejs:
+Setup nodejs:   This Vagrant environment is already setup and ready to go.
+Setup nodejs:  * Starting PostgreSQL 9.3 database server
+Setup nodejs:    ...done.
+Setup nodejs: NOTICE:  database "hello_world" does not exist, skipping
+Setup nodejs: NOTICE:  table "world" does not exist, skipping
+Setup nodejs: NOTICE:  table "fortune" does not exist, skipping
+Setup nodejs: NOTICE:  table "World" does not exist, skipping
+Setup nodejs: NOTICE:  table "Fortune" does not exist, skipping
+Setup nodejs: ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: databases is installed!
+Setup nodejs: Searching for nodejs
+Setup nodejs: ~/FrameworkBenchmarks/installs ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: Installing dependency: nodejs from /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/webservers/nodejs.sh
+Setup nodejs: ++ . /home/vagrant/FrameworkBenchmarks/toolset/setup/linux/webservers/nodejs.sh
+Setup nodejs: +++ fw_installed node
+Setup nodejs: +++ '[' -f /home/vagrant/FrameworkBenchmarks/installs/node.installed ']'
+Setup nodejs: +++ return 1
+Setup nodejs: +++ VERSION=8.0.0
+Setup nodejs: +++ fw_get -O http://nodejs.org/dist/v8.0.0/node-v8.0.0-linux-x64.tar.gz
+Setup nodejs: +++ curl -sL -O http://nodejs.org/dist/v8.0.0/node-v8.0.0-linux-x64.tar.gz
+Setup nodejs: +++ :
+Setup nodejs: +++ sleep 30
+Setup nodejs: +++ kill 32254
+Setup nodejs: +++ trap 'kill $!' SIGTERM
+Setup nodejs: +++ fw_untar node-v8.0.0-linux-x64.tar.gz
+Setup nodejs: +++ echo 'Running '\''tar xf node-v8.0.0-linux-x64.tar.gz'\''...please wait'
+Setup nodejs: Running 'tar xf node-v8.0.0-linux-x64.tar.gz'...please wait
+Setup nodejs: +++ tar xf node-v8.0.0-linux-x64.tar.gz
+Setup nodejs: +++ echo 'Removing compressed tar file'
+Setup nodejs: Removing compressed tar file
+Setup nodejs: +++ rm -f node-v8.0.0-linux-x64.tar.gz
+Setup nodejs: +++ NODE_HOME=/home/vagrant/FrameworkBenchmarks/installs/node-v8.0.0-linux-x64
+Setup nodejs: +++ echo 'export NODE_ENV=production'
+Setup nodejs: +++ echo 'export NODE_HOME=/home/vagrant/FrameworkBenchmarks/installs/node-v8.0.0-linux-x64'
+Setup nodejs: +++ echo -e 'export PATH=$NODE_HOME/bin:$PATH'
+Setup nodejs: +++ source /home/vagrant/FrameworkBenchmarks/installs/node.installed
+Setup nodejs: ++++ export NODE_ENV=production
+Setup nodejs: ++++ NODE_ENV=production
+Setup nodejs: ++++ export NODE_HOME=/home/vagrant/FrameworkBenchmarks/installs/node-v8.0.0-linux-x64
+Setup nodejs: ++++ NODE_HOME=/home/vagrant/FrameworkBenchmarks/installs/node-v8.0.0-linux-x64
+Setup nodejs: ++++ export PATH=/home/vagrant/FrameworkBenchmarks/installs/node-v8.0.0-linux-x64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+Setup nodejs: ++++ PATH=/home/vagrant/FrameworkBenchmarks/installs/node-v8.0.0-linux-x64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+Setup nodejs: ++ set +x
+Setup nodejs: ~/FrameworkBenchmarks/frameworks/JavaScript/nodejs
+Setup nodejs: nodejs is installed!
+Setup nodejs: up to date in 1.925s
+[REPEATED: 1]: Setup nodejs: NodeJS worker listening on port 8080
+Setup nodejs: Status: Poll: None, Port 8080 bound: True, Time Left: 1:24:06.552157
+Setup nodejs: Bound port detected on 8080
+--------------------------------------------------------------------------------
+  Stopping nodejs
+--------------------------------------------------------------------------------
+Server nodejs: Framework processes have terminated
+--------------------------------------------------------------------------------
+  Stopped nodejs
+[REPEATED: 1]: --------------------------------------------------------------------------------
+  Saving results through nodejs
+--------------------------------------------------------------------------------
