@@ -17,7 +17,7 @@
       "os": "Linux",
       "orm": "Raw",
       "database_os": "Linux",
-      "database": "None",
+      "database": "Postgres",
       "display_name": "uvicorn",
       "notes": ""
     }
