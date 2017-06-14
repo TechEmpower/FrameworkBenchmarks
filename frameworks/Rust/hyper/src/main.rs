@@ -6,14 +6,13 @@ extern crate hyper;
 extern crate serde_derive;
 extern crate serde_json;
 extern crate num_cpus;
-#[macro_use]
 extern crate mime;
 
 use tokio_proto::TcpServer;
 use futures::future;
 use hyper::Method::Get;
 use hyper::header::{ContentLength, ContentType, Server};
-use hyper::status::StatusCode::NotFound;
+use hyper::StatusCode::NotFound;
 use hyper::server::{Http, Service, Request, Response};
 use std::net::SocketAddr;
 
@@ -37,7 +36,7 @@ impl Service for TechEmpower {
             (&Get, "/plaintext") => {
                 Response::new()
                     .with_header(ContentLength(HELLOWORLD.len() as u64))
-                    .with_header(ContentType(mime!(Text / Plain)))
+                    .with_header(ContentType(mime::TEXT_PLAIN))
                     .with_body(HELLOWORLD)
             }
             (&Get, "/json") => {
@@ -45,7 +44,7 @@ impl Service for TechEmpower {
                 let rep_body = serde_json::to_vec(&rep).unwrap();
                 Response::new()
                     .with_header(ContentLength(rep_body.len() as u64))
-                    .with_header(ContentType(mime!(Application / Json)))
+                    .with_header(ContentType(mime::APPLICATION_JSON))
                     .with_body(rep_body)
             }
             _ => Response::new().with_status(NotFound),
