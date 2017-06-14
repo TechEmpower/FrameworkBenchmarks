@@ -1,0 +1,5 @@
+package: benchmark
+import:
+- package: aahframework.org/aah.v0
+  version: ^v0.6
+- package: github.com/go-sql-driver/mysql

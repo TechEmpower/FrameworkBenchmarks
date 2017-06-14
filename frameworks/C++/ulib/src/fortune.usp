@@ -20,27 +20,24 @@ static void usp_fork_fortune()
 
    U_INTERNAL_DUMP("psql_fortune = %p", psql_fortune)
 
-   if (psql_fortune->isReady())
+   if (psql_fortune->isReady() == false)
       {
-      U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
+      U_WARNING("usp_fork_fortune(): we cound't connect to db");
 
-      if (pstmt_fortune == U_NULLPTR)
-         {
-         U_WARNING("usp_fork_fortune(): we cound't connect to db");
-
-         return;
-         }
-
-      if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
-
-      U_NEW(Fortune, pfortune, Fortune);
-
-      pstmt_fortune->into(*pfortune);
-
-      U_NEW(UString, pencoded, UString(100U));
-      U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
-      U_NEW(Fortune, pfortune2add, Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
+      return;
       }
+
+   U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
+
+   if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
+
+   U_NEW(Fortune, pfortune, Fortune);
+
+   pstmt_fortune->into(*pfortune);
+
+   U_NEW(UString, pencoded, UString(100U));
+   U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
+   U_NEW(Fortune, pfortune2add, Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
 }
 
 #ifdef DEBUG

@@ -15,7 +15,7 @@ The tests will be run with:
 * [Ruby 2.4](http://www.ruby-lang.org)
 * [JRuby 9.1](http://jruby.org)
 * [Rubinius 3](https://rubinius.com)\*
-* [Puma 3.6](http://puma.io)
+* [Puma 3.9](http://puma.io)
 * [Passenger 5.1](https://www.phusionpassenger.com)
 * [Unicorn 5.2](https://bogomips.org/unicorn/)
 * [TorqueBox 4.0](http://torquebox.org)
