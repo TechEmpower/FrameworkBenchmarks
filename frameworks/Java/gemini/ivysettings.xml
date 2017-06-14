@@ -1,0 +1,11 @@
+<ivysettings>
+    <settings defaultResolver='nexus'/>
+    <resolvers>
+        <chain name="nexus">
+            <ibiblio name='clojars' 
+                     m2compatible='true' 
+                     root='http://clojars.org/repo/' />
+            <ibiblio name='central' m2compatible='true'/>
+        </chain>
+    </resolvers>
+</ivysettings>
