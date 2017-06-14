@@ -12,8 +12,7 @@ async def setup():
         user='benchmarkdbuser',
         password='benchmarkdbpass',
         database='hello_world',
-        host=os.environ.get('DBHOST', 'localhost'),
-        port=3306
+        host=os.environ.get('DBHOST', 'localhost')
     )
 
 
