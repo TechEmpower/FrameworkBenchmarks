@@ -8,6 +8,10 @@ const cluster = require('cluster'),
   express = require('express'),
   async = require('async');
 
+const bodyParser = require('body-parser'),
+  methodOverride = require('method-override'),
+  errorHandler = require('errorhandler');
+
 if (cluster.isMaster) {
   // Fork workers.
   for (let i = 0; i < numCPUs; i++) {
