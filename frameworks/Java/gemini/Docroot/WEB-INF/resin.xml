@@ -14,7 +14,7 @@
     </server>
 
     <host>
-      <web-app id="/" root-directory="/home/knewman/FrameworkBenchmarks/frameworks/Java/gemini/Docroot" />
+      <web-app id="/" root-directory="C:/Development/FrameworkBenchmarks/frameworks/Java/gemini/Docroot" />
     </host>
 
   </cluster>
