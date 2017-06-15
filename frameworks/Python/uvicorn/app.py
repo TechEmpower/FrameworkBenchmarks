@@ -9,10 +9,11 @@ from operator import itemgetter
 async def setup():
     global pool
     pool = await asyncpg.create_pool(
-        user='benchmarkdbuser',
-        password='benchmarkdbpass',
+        user=os.getenv('PGUSER', 'benchmarkdbuser'),
+        password=os.getenv('PGPASS', 'benchmarkdbpass'),
         database='hello_world',
-        host=os.environ.get('DBHOST', 'localhost')
+        host=os.getenv('DBHOST', 'localhost'),
+        port=5432
     )
 
 
