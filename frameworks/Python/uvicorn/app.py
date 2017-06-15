@@ -44,7 +44,7 @@ async def json_endpoint(message, channels):
 async def fortunes_endpoint(message, channels):
     connection = await pool.acquire()
     try:
-        fortunes = await connection.fetch('SELECT * FROM fortune')
+        fortunes = await connection.fetch('SELECT * FROM Fortune')
         fortunes.append(additional)
         fortunes.sort(key=key)
         content = template.render(fortunes=fortunes).encode('utf-8')
