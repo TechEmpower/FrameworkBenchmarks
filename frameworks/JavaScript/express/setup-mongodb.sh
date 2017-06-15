@@ -1,5 +1,8 @@
 #!/bin/bash
 
-fw_depends mongodb
+fw_depends nodejs mongodb
 
-source ./setup.sh
+# install dependencies
+npm install
+# run app
+NODE_ENV=production node mongodb-app &
