@@ -35,10 +35,7 @@ loop.run_until_complete(setup())
 
 def get_query_count(query_string):
     # helper to deal with the querystring passed in
-    print("== get_query_count")
-    print(query_string)
     queries = parse.parse_qs(query_string).get(b'queries', [None])[0]
-    print(queries)
     if queries:
         try:
             query_count = int(queries)
