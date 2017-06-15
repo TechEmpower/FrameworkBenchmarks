@@ -18,7 +18,7 @@ async def setup():
 
 
 pool = None
-additional = [0, 'Additional fortune added at request time']
+additional = [0, 'Additional fortune added at request time.']
 key = itemgetter(1)
 template = None
 path = os.path.join('templates', 'fortune.html')
