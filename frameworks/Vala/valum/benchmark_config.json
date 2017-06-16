@@ -1,0 +1,23 @@
+{
+  "framework": "valum",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 3003,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "Valum",
+      "language": "Vala",
+      "orm": "Raw",
+      "platform": "GLib",
+      "webserver": "Soup",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Valum",
+      "versus": "vsgi"
+    }
+  }]
+}

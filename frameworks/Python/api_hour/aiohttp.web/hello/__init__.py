@@ -27,16 +27,16 @@ class Container(api_hour.Container):
         # routes
         self.servers['http'].router.add_route('GET', '/json', endpoints.world.json)
         self.servers['http'].router.add_route('GET', '/db', endpoints.world.db)
-        self.servers['http'].router.add_route('GET', '/db_redis', endpoints.world.db_redis)
+        # self.servers['http'].router.add_route('GET', '/db_redis', endpoints.world.db_redis)
         self.servers['http'].router.add_route('GET', '/db_mysql', endpoints.world.db_mysql)
         self.servers['http'].router.add_route('GET', '/queries', endpoints.world.queries)
-        self.servers['http'].router.add_route('GET', '/queries_redis', endpoints.world.queries_redis)
+        # self.servers['http'].router.add_route('GET', '/queries_redis', endpoints.world.queries_redis)
         self.servers['http'].router.add_route('GET', '/queries_mysql', endpoints.world.queries_mysql)
         self.servers['http'].router.add_route('GET', '/fortunes', endpoints.world.fortunes)
-        self.servers['http'].router.add_route('GET', '/fortunes_redis', endpoints.world.fortunes_redis)
+        # self.servers['http'].router.add_route('GET', '/fortunes_redis', endpoints.world.fortunes_redis)
         self.servers['http'].router.add_route('GET', '/fortunes_mysql', endpoints.world.fortunes_mysql)
         self.servers['http'].router.add_route('GET', '/updates', endpoints.world.updates)
-        self.servers['http'].router.add_route('GET', '/updates_redis', endpoints.world.updates_redis)
+        # self.servers['http'].router.add_route('GET', '/updates_redis', endpoints.world.updates_redis)
         self.servers['http'].router.add_route('GET', '/updates_mysql', endpoints.world.updates_mysql)
         self.servers['http'].router.add_route('GET', '/plaintext', endpoints.world.plaintext)
 
@@ -74,11 +74,11 @@ class Container(api_hour.Container):
                 use_unicode=True,
                 loop=self.loop))
         yield from asyncio.wait([self.engines['pg']], return_when=asyncio.ALL_COMPLETED)
-        self.engines['redis'] = yield from asyncio_redis.Pool.create(host=self.config['engines']['redis']['host'],
-                                                                     port=self.config['engines']['redis']['port'],
-                                                                     poolsize=self.config['engines']['redis']['poolsize'],
-                                                                     loop=self.loop,
-                                                                     protocol_class=HiRedisProtocol)
+        # self.engines['redis'] = yield from asyncio_redis.Pool.create(host=self.config['engines']['redis']['host'],
+        #                                                              port=self.config['engines']['redis']['port'],
+        #                                                              poolsize=self.config['engines']['redis']['poolsize'],
+        #                                                              loop=self.loop,
+        #                                                              protocol_class=HiRedisProtocol)
 
         LOG.info('All engines ready !')
 

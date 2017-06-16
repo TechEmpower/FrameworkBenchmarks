@@ -43,9 +43,11 @@
       (.then #(handler (js->clj % :keywordize-keys true)))
       (.catch error-handler)))
 
+(defn world-promise [id]
+  (.findOne @worlds (clj->js {:where {:id id} :raw true})))
+
 (defn world [id handler error-handler]
-  (-> @worlds
-      (.findOne (clj->js {:where {:id id} :raw true}))
+  (-> (world-promise id)
       (.then handler)
       (.catch error-handler)))
 
@@ -73,7 +75,7 @@
   "Run the specified number of queries, return the results"
   [queries handler error-handler]
   (-> (get-query-count queries)
-      (repeatedly #(world (unchecked-inc (rand-int 10000)) identity error-handler))
+      (repeatedly #(world-promise (unchecked-inc (rand-int 10000))))
       (js/Promise.all)
       (.then handler)
       (.catch error-handler)))

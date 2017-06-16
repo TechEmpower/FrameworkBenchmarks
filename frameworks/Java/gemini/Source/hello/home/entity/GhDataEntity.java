@@ -18,16 +18,16 @@ public abstract class GhDataEntity
   /**
    * The identity for this object.
    */
-  private int id;
+  private long id;
 
   @Override
-  public int getId()
+  public long getId()
   {
     return this.id;
   }
 
   @Override
-  public void setId(int newIdentity)
+  public void setId(long newIdentity)
   {
     this.id = newIdentity;
   }

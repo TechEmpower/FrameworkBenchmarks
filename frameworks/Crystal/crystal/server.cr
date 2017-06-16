@@ -9,7 +9,7 @@ server = HTTP::Server.new("0.0.0.0", 8080) do |context|
   when "/json"
     response.status_code = 200
     response.headers["Content-Type"] = "application/json"
-    response.print({message: "Hello, World!"}.to_json)
+    {message: "Hello, World!"}.to_json(response)
   when "/plaintext"
     response.status_code = 200
     response.headers["Content-Type"] = "text/plain"
@@ -19,4 +19,4 @@ server = HTTP::Server.new("0.0.0.0", 8080) do |context|
   end
 end
 
-server.listen
+server.listen(reuse_port: true)

@@ -2,8 +2,6 @@
 
 fw_depends java sbt
 
-sed -i 's|127.0.0.1|'${DBHOST}'|g' play2-java-jpa-bonecp/conf/application.conf
-
 cd play2-java-jpa-bonecp
 
 rm -rf target/universal/stage/RUNNING_PID

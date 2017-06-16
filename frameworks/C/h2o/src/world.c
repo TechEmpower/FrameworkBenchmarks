@@ -18,6 +18,7 @@
 */
 
 #include <assert.h>
+#include <ctype.h>
 #include <h2o.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -25,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
+#include <h2o/cache.h>
 #include <postgresql/libpq-fe.h>
 #include <yajl/yajl_gen.h>
 
@@ -76,13 +78,18 @@ struct multiple_query_ctx_t {
 	size_t num_result;
 	bool do_update;
 	bool error;
+	bool use_cache;
 	query_result_t res[];
 };
 
 static void cleanup_multiple_query(void *data);
 static int compare_items(const void *x, const void *y);
-static int do_multiple_queries(bool do_update, h2o_req_t *req);
+static void complete_multiple_query(multiple_query_ctx_t *query_ctx);
+static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req);
 static void do_updates(multiple_query_ctx_t *query_ctx);
+static void fetch_from_cache(uint64_t now,
+                             h2o_cache_t *world_cache,
+                             multiple_query_ctx_t *query_ctx);
 static size_t get_query_number(h2o_req_t *req);
 static void initialize_ids(size_t num_query, query_result_t *res, unsigned int *seed);
 static void on_multiple_query_error(db_query_param_t *param, const char *error_string);
@@ -123,7 +130,30 @@ static int compare_items(const void *x, const void *y)
 	return r1->id < r2->id ? -1 : r1->id > r2->id;
 }
 
-static int do_multiple_queries(bool do_update, h2o_req_t *req)
+static void complete_multiple_query(multiple_query_ctx_t *query_ctx)
+{
+	assert(query_ctx->num_result == query_ctx->num_query);
+
+	if (query_ctx->do_update)
+		do_updates(query_ctx);
+	else {
+		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
+		                                                      event_loop.h2o_ctx,
+		                                                      query_ctx->req->conn->ctx);
+
+		query_ctx->gen = get_json_generator(&ctx->json_generator, &ctx->json_generator_num);
+
+		if (query_ctx->gen)
+			serialize_items(query_ctx->res,
+			                query_ctx->num_result,
+			                &query_ctx->gen,
+			                query_ctx->req);
+		else
+			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
+	}
+}
+
+static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 {
 	thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
 	                                                      event_loop.h2o_ctx,
@@ -158,17 +188,31 @@ static int do_multiple_queries(bool do_update, h2o_req_t *req)
 	if (query_ctx) {
 		memset(query_ctx, 0, sz);
 		query_ctx->num_query = num_query;
-		query_ctx->num_query_in_progress = num_query_in_progress;
 		query_ctx->req = req;
 		query_ctx->do_update = do_update;
+		query_ctx->use_cache = use_cache;
 		query_ctx->query_param = (query_param_t *) ((char *) query_ctx + base_size);
 		initialize_ids(num_query, query_ctx->res, &ctx->random_seed);
+
+		if (use_cache) {
+			fetch_from_cache(h2o_now(ctx->event_loop.h2o_ctx.loop),
+			                 ctx->global_data->world_cache,
+			                 query_ctx);
+
+			if (query_ctx->num_result == query_ctx->num_query) {
+				complete_multiple_query(query_ctx);
+				return 0;
+			}
+		}
+
+		query_ctx->num_query_in_progress = MIN(num_query_in_progress,
+		                                       query_ctx->num_query - query_ctx->num_result);
 
 		for (size_t i = 0; i < query_ctx->num_query_in_progress; i++) {
 			query_ctx->query_param[i].ctx = query_ctx;
 			// We need a copy of id because the original may be overwritten
 			// by a completed query.
-			query_ctx->query_param[i].id = htonl(query_ctx->res[i].id);
+			query_ctx->query_param[i].id = htonl(query_ctx->res[query_ctx->num_result + i].id);
 			query_ctx->query_param[i].id_format = 1;
 			query_ctx->query_param[i].id_len = sizeof(query_ctx->query_param[i].id);
 			query_ctx->query_param[i].id_pointer = (const char *) &query_ctx->query_param[i].id;
@@ -263,6 +307,27 @@ error:
 	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
 }
 
+static void fetch_from_cache(uint64_t now,
+                             h2o_cache_t *world_cache,
+                             multiple_query_ctx_t *query_ctx)
+{
+	h2o_iovec_t key = {.len = sizeof(query_ctx->res->id)};
+
+	for (size_t i = 0; i < query_ctx->num_query; i++) {
+		key.base = (char *) &query_ctx->res[i].id;
+
+		h2o_cache_ref_t * const r = h2o_cache_fetch(world_cache, now, key, 0);
+
+		if (r) {
+			query_ctx->res[i].id = query_ctx->res[query_ctx->num_result].id;
+			memcpy(query_ctx->res + query_ctx->num_result++,
+			       r->value.base,
+			       sizeof(*query_ctx->res));
+			h2o_cache_release(world_cache, r);
+		}
+	}
+}
+
 static size_t get_query_number(h2o_req_t *req)
 {
 	int num_query = 0;
@@ -328,6 +393,23 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 		                                                      query_ctx->req->conn->ctx);
 
 		process_result(result, query_ctx->res + query_ctx->num_result);
+
+		if (query_ctx->use_cache) {
+			query_result_t * const r = malloc(sizeof(*r));
+
+			if (r) {
+				const h2o_iovec_t key = {.base = (char *) &r->id, .len = sizeof(r->id)};
+				const h2o_iovec_t value = {.base = (char *) r, .len = sizeof(*r)};
+
+				*r = query_ctx->res[query_ctx->num_result];
+				h2o_cache_set(ctx->global_data->world_cache,
+				              h2o_now(ctx->event_loop.h2o_ctx.loop),
+				              key,
+				              0,
+				              value);
+			}
+		}
+
 		query_ctx->num_query_in_progress--;
 		query_ctx->num_result++;
 
@@ -347,21 +429,8 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 			query_ctx->error = true;
 			send_service_unavailable_error(DB_REQ_ERROR, query_ctx->req);
 		}
-		else if (query_ctx->num_result == query_ctx->num_query) {
-			if (query_ctx->do_update)
-				do_updates(query_ctx);
-			else {
-				query_ctx->gen = get_json_generator(&ctx->json_generator, &ctx->json_generator_num);
-
-				if (query_ctx->gen)
-					serialize_items(query_ctx->res,
-					                query_ctx->num_result,
-					                &query_ctx->gen,
-					                query_ctx->req);
-				else
-					send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
-			}
-		}
+		else if (query_ctx->num_result == query_ctx->num_query)
+			complete_multiple_query(query_ctx);
 
 		h2o_mem_release_shared(query_ctx);
 	}
@@ -408,8 +477,11 @@ static result_return_t on_single_query_result(db_query_param_t *param, PGresult 
 		assert(PQntuples(result) == 1);
 		assert(PQgetlength(result, 0, 1) == sizeof(random_number));
 
+		const void * const r = PQgetvalue(result, 0, 1);
+
+		assert(r);
 		// Use memcpy() in case the result is not aligned.
-		memcpy(&random_number, PQgetvalue(result, 0, 1), sizeof(random_number));
+		memcpy(&random_number, r, sizeof(random_number));
 		random_number = ntohl(random_number);
 		PQclear(result);
 
@@ -485,6 +557,8 @@ static void process_result(PGresult *result, query_result_t *out)
 	const char * const id = PQgetvalue(result, 0, 0);
 	const char * const random_number = PQgetvalue(result, 0, 1);
 
+	assert(id && PQgetlength(result, 0, 0) && random_number && PQgetlength(result, 0, 1));
+
 	if (PQfformat(result, 0)) {
 		assert(PQgetlength(result, 0, 0) == sizeof(out->id));
 		// Use memcpy() in case the result is not aligned; the reason we are
@@ -492,8 +566,12 @@ static void process_result(PGresult *result, query_result_t *out)
 		memcpy(&out->id, id, sizeof(out->id));
 		out->id = ntohl(out->id);
 	}
-	else
+	else {
+		assert(isdigit(*id));
 		out->id = atoi(id);
+	}
+
+	assert(out->id <= MAX_ID);
 
 	if (PQfformat(result, 1)) {
 		assert(PQgetlength(result, 0, 1) == sizeof(out->random_number));
@@ -501,8 +579,10 @@ static void process_result(PGresult *result, query_result_t *out)
 		memcpy(&out->random_number, random_number, sizeof(out->random_number));
 		out->random_number = ntohl(out->random_number);
 	}
-	else
+	else {
+		assert(isdigit(*random_number));
 		out->random_number = atoi(random_number);
+	}
 }
 
 static int serialize_item(uint32_t id, uint32_t random_number, yajl_gen gen)
@@ -541,10 +621,16 @@ error_yajl:
 	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 }
 
+int cached_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
+{
+	IGNORE_FUNCTION_PARAMETER(self);
+	return do_multiple_queries(false, true, req);
+}
+
 int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
 {
 	IGNORE_FUNCTION_PARAMETER(self);
-	return do_multiple_queries(false, req);
+	return do_multiple_queries(false, false, req);
 }
 
 int single_query(struct st_h2o_handler_t *self, h2o_req_t *req)
@@ -586,5 +672,5 @@ int single_query(struct st_h2o_handler_t *self, h2o_req_t *req)
 int updates(struct st_h2o_handler_t *self, h2o_req_t *req)
 {
 	IGNORE_FUNCTION_PARAMETER(self);
-	return do_multiple_queries(true, req);
+	return do_multiple_queries(true, false, req);
 }

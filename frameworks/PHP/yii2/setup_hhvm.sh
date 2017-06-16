@@ -2,7 +2,6 @@
 
 fw_depends mysql php5 nginx composer hhvm
 
-sed -i 's|localhost|'"${DBHOST}"'|g' app/index.php
 sed -i 's|SourceRoot = .*/FrameworkBenchmarks/Yii2|SourceRoot = '"${TROOT}"'|g' deploy/config.hdf
 sed -i 's|Path = .*/.hhvm.hhbc|Path = '"${TROOT}"'/.hhvm.bbhc|g' deploy/config.hdf
 sed -i 's|PidFile = .*/hhvm.pid|PidFile = '"${TROOT}"'/hhvm.pid|g' deploy/config.hdf

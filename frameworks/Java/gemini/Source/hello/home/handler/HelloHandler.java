@@ -1,7 +1,5 @@
 package hello.home.handler;
 
-import hello.home.entity.*;
-
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -10,11 +8,13 @@ import com.techempower.gemini.*;
 import com.techempower.gemini.path.*;
 import com.techempower.gemini.path.annotation.*;
 
+import hello.home.entity.*;
+
 /**
  * Handles the various framework benchmark request types.
  */
 public class HelloHandler
-    extends  MethodPathHandler<Context>
+    extends  MethodSegmentHandler<Context>
 {
 
   private static final int DB_ROWS = 10000;
@@ -30,14 +30,22 @@ public class HelloHandler
     this.store = app.getStore();
   }
   
+  @PathDefault
+  public boolean test()
+  {
+    return false;
+  }
+  
   /**
    * Return "hello world" as a JSON-encoded message.
    */
   @PathSegment("json")
-  @PathDefault
   public boolean helloworld()
   {
-    return message("Hello, World!");
+    final Map<String,String> resp = new HashMap<>(1);
+    resp.put(GeminiConstants.GEMINI_MESSAGE, "Hello, World!");
+    
+    return json(resp);
   }
 
   /**
@@ -66,6 +74,25 @@ public class HelloHandler
       worlds[i] = store.get(World.class, random.nextInt(DB_ROWS) + 1);
     }
     
+    return json(worlds);
+  }
+
+  /**
+   * Return a list of World objects as JSON, selected randomly from the World
+   * table.  Assume the table has 10,000 rows.
+   */
+  @PathSegment("cached_query")
+  public boolean multipleCachedQueries()
+  {
+    final Random random = ThreadLocalRandom.current();
+    final int queries = query().getInt("queries", 1, 1, 500);
+    final CachedWorld[] worlds = new CachedWorld[queries];
+
+    for (int i = 0; i < queries; i++)
+    {
+      worlds[i] = store.get(CachedWorld.class, random.nextInt(DB_ROWS) + 1);
+    }
+
     return json(worlds);
   }
   

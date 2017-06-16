@@ -42,7 +42,7 @@ public class QueriesPostgresqlGetHandler implements HttpHandler {
         int queries = Helper.getQueries(exchange);
 
         List<CompletableFuture<World>> worlds = IntStream.range(0, queries)
-                .mapToObj(i -> CompletableFuture.supplyAsync(() -> Helper.selectWorld(ds), Helper.EXECUTOR))
+                .mapToObj(i -> CompletableFuture.supplyAsync(() -> Helper.selectWorld(ds), Helper.executor))
                 .collect(Collectors.toList());
 
         CompletableFuture<List<World>> allDone = Helper.sequence(worlds);

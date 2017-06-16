@@ -1,14 +1,14 @@
 {
-  "server": "engine",
-  "client": "engine",
-  "console": "terminal",
-  "log": "console",
-  "hash": "crypto",
-  "cipher": "crypto",
-  "middleware": {
-    "server": [
-      "date"
+    "server": "engine",
+    "client": "engine",
+    "console": "terminal",
+    "log": "console",
+    "hash": "crypto",
+    "cipher": "crypto",
+    "middleware": [
+        "date",
+        "server",
+        "content-header"
     ],
-    "client": []
-  }
+    "view": "leaf",
 }

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sed -i 's|"benchmarkdbpass", ".*", 3306|"benchmarkdbpass", "'"${DBHOST}"'", 3306|g' boss.config
-
 fw_depends erlang
 
 rm -rf deps/* ebin/*

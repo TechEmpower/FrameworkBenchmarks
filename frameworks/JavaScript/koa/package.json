@@ -5,13 +5,16 @@
   "main": "app.js",
   "private": true,
   "dependencies": {
-    "co-monk": "1.0.0",
-    "koa": "1.2.5",
-    "koa-bodyparser": "2.3.0",
-    "koa-handlebars": "1.0.0",
-    "koa-mongo": "0.7.0",
-    "koa-override": "1.0.0",
-    "koa-route": "2.4.2",
-    "monk": "3.0.6"
+    "bluebird": "3.5.0",
+    "handlebars": "4.0.8",
+    "koa": "2.2.0",
+    "koa-bodyparser": "4.2.0",
+    "koa-hbs": "1.0.0-alpha.1",
+    "koa-router": "7.1.1",
+    "mongoose": "4.9.10",
+    "mysql": "2.13.0",
+    "pg": "6.2.2",
+    "pg-hstore": "2.3.2",
+    "sequelize": "3.30.4"
   }
 }
