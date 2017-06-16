@@ -68,15 +68,15 @@ class UpdateHandler(JsonHandler):
 
         worlds = yield [db.world.find_one(randint(1, 10000)) for _ in xrange(queries)]
         updates = []
+        out = []
 
         for world in worlds:
             new_value = randint(1, 10000)
-            world[self.RANDOM_NUMBER] = new_value
-
             updates.append(UpdateOne({'_id': world['_id']}, {"$set": {self.RANDOM_NUMBER: new_value}}))
+            out.append({self.ID: world["_id"], self.RANDOM_NUMBER: new_value})
 
         yield db.world.bulk_write(updates, ordered=False)
-        self.finish(json.dumps(worlds))
+        self.finish(json.dumps(out))
 
 
 class FortuneHandler(HtmlHandler):
@@ -102,7 +102,7 @@ application = tornado.web.Application([
 ],
     template_path="templates"
 )
-
+application.ui_modules = {}
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()
