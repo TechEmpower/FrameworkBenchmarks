@@ -30,6 +30,11 @@ public class WebServer extends AbstractVerticle implements Handler<HttpServerReq
 
 	private static final CharSequence TEXT_MESSAGE = new AsciiString("message");
 	private static final byte[] HELLO_WORLD = "Hello, world!".getBytes();
+
+	private static final String JSON_HELLO_WORLD = Json.encode(Collections.singletonMap(TEXT_MESSAGE, "Hello, world!"));
+	private static final Buffer JSON_HELLO_WORLD_BUFFER = Buffer.buffer(JSON_HELLO_WORLD);
+	private static final CharSequence JSON_HELLO_WORLD_CONTENT_LENGTH = new AsciiString(String.valueOf(JSON_HELLO_WORLD.length()));
+	
 	private static final Buffer HELLO_WORLD_BUFFER = Buffer.buffer(HELLO_WORLD);
 	private static final CharSequence HELLO_WORLD_CONTENT_LENGTH = new AsciiString(String.valueOf(HELLO_WORLD.length));
 
@@ -78,13 +83,12 @@ public class WebServer extends AbstractVerticle implements Handler<HttpServerReq
 	private void handlePlainText(HttpServerRequest request) {
 		request.response()
 		.putHeader(CONTENT_TYPE , RESPONSE_TYPE_PLAIN).putHeader(SERVER, VERTX)
-		.putHeader(DATE, dateString).putHeader(CONTENT_TYPE, HELLO_WORLD_CONTENT_LENGTH).end(HELLO_WORLD_BUFFER);
+		.putHeader(DATE, dateString).putHeader(CONTENT_LENGTH, HELLO_WORLD_CONTENT_LENGTH).end(HELLO_WORLD_BUFFER);
 	}
 
 	private void handleJson(HttpServerRequest request) {
-		Buffer buff = Buffer.buffer(Json.encode(Collections.singletonMap(TEXT_MESSAGE, HELLO_WORLD)));
 		request.response().putHeader(CONTENT_TYPE, RESPONSE_TYPE_JSON).putHeader(SERVER,  VERTX)
-		.putHeader(DATE, dateString).end(buff);
+		.putHeader(DATE, dateString).putHeader(CONTENT_LENGTH, JSON_HELLO_WORLD_CONTENT_LENGTH).end(JSON_HELLO_WORLD_BUFFER);
 	}
 	
 	public static void main(String[] args) {
