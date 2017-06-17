@@ -25,6 +25,7 @@ import com.google.inject.Singleton;
 import com.jsoniter.output.JsonStream;
 
 import io.sinistral.models.Fortune;
+import io.sinistral.models.Message;
 import io.sinistral.models.World;
 import io.sinistral.services.MySqlService;
 import io.sinistral.services.PostgresService;
@@ -48,7 +49,6 @@ import io.undertow.server.HttpServerExchange;
 public class Benchmarks
 {
 	private static final String HTML_UTF8_TYPE = io.sinistral.proteus.server.MediaType.TEXT_HTML_UTF8.toString();
-	private static final String PLAINTEXT_UTF8_TYPE = io.sinistral.proteus.server.MediaType.TEXT_PLAIN_UTF8.toString();
 	private static final String PLAINTEXT_TYPE = io.sinistral.proteus.server.MediaType.TEXT_PLAIN.toString();
 	
 	@Inject 
@@ -202,6 +202,6 @@ public class Benchmarks
 	@ApiOperation(value = "Json serialization endpoint",   httpMethod = "GET" )
 	public void json(HttpServerExchange exchange)
 	{ 
-		response( JsonStream.serializeToBytes(ImmutableMap.of("message", "Hello, World!")) ).applicationJson().send(exchange);
+		response( JsonStream.serializeToBytes( new Message("hello, world!") ) ).applicationJson().send(exchange);
 	}
 }
