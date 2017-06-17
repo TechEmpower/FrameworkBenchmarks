@@ -40,6 +40,6 @@ object FintrospectBenchmarkServer extends App {
       .withStatsReceiver(NullStatsReceiver)
       .withTracer(NullTracer)
       .withMonitor(NullMonitor)
-      .serve(":9000", ResponseFilters.CatchAll().andThen(addServerAndDate).andThen(module.toService)))
+      .serve(":9000", ResponseFilters.CatchAll().andThen(addServerAndDate).andThen(module.toService))
   )
 }
