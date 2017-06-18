@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.jooby</groupId>
     <artifactId>jooby-project</artifactId>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
   </parent>
 
   <artifactId>jooby</artifactId>
@@ -17,29 +17,24 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>1.0.3</jooby.version>
+    <jooby.version>1.1.0</jooby.version>
+    <rocker.touchFile>/dev/null</rocker.touchFile>
 
     <!-- Startup class -->
     <application.class>com.techempower.App</application.class>
   </properties>
 
   <dependencies>
-    <!-- Jooby -->
-    <dependency>
-      <groupId>org.jooby</groupId>
-      <artifactId>jooby</artifactId>
-    </dependency>
-
     <!-- jackson -->
     <dependency>
       <groupId>org.jooby</groupId>
       <artifactId>jooby-jackson</artifactId>
     </dependency>
 
-    <!-- jdbi -->
+    <!-- requery -->
     <dependency>
       <groupId>org.jooby</groupId>
-      <artifactId>jooby-jdbi</artifactId>
+      <artifactId>jooby-requery</artifactId>
     </dependency>
 
     <!-- mySQL -->
@@ -48,10 +43,10 @@
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
 
-    <!-- handlebars -->
+    <!-- rocker -->
     <dependency>
       <groupId>org.jooby</groupId>
-      <artifactId>jooby-hbs</artifactId>
+      <artifactId>jooby-rocker</artifactId>
     </dependency>
 
     <!-- Server -->
@@ -103,6 +98,37 @@
         <artifactId>maven-shade-plugin</artifactId>
       </plugin>
     </plugins>
+    <!-- rocker m2e -->
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>com.fizzed</groupId>
+                    <artifactId>rocker-maven-plugin</artifactId>
+                    <versionRange>[${rocker.version},)</versionRange>
+                    <goals>
+                      <goal>generate</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute>
+                      <runOnIncremental>true</runOnIncremental>
+                    </execute>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
 </project>

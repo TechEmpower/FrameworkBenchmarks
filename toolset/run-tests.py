@@ -68,6 +68,8 @@ def main(argv=None):
     os.environ['IROOT'] = os.environ['FWROOT'] + '/installs'
     # 'Ubuntu', '14.04', 'trusty' respectively
     os.environ['TFB_DISTRIB_ID'], os.environ['TFB_DISTRIB_RELEASE'], os.environ['TFB_DISTRIB_CODENAME'] = platform.linux_distribution()
+    # App server cpu count
+    os.environ['CPU_COUNT'] = str(multiprocessing.cpu_count())
 
     print("FWROOT is {!s}.".format(os.environ['FWROOT']))
 
@@ -116,12 +118,10 @@ def main(argv=None):
         defaults['database_host'] = defaults['client_host']
     if defaults['server_host'] is None:
         defaults['server_host'] = defaults['client_host']
+    if defaults['ulimit'] is None:
+        defaults['ulimit'] = 200000
 
-    maxThreads = 8
-    try:
-        maxThreads = multiprocessing.cpu_count()
-    except Exception:
-        pass
+    os.environ['ULIMIT'] = str(defaults['ulimit'])
 
     ##########################################################
     # Set up argument parser
@@ -144,14 +144,11 @@ def main(argv=None):
     parser.add_argument('--test', nargs='+', help='names of tests to run')
     parser.add_argument('--test-dir', nargs='+', dest='test_dir', help='name of framework directory containing all tests to run')
     parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
-    parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
-    parser.add_argument('-m', '--mode', choices=['benchmark', 'verify'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown')
+    parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'cached_query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
+    parser.add_argument('-m', '--mode', choices=['benchmark', 'verify', 'debug'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown. debug mode will skip verification and leave the server running.')
     parser.add_argument('--list-tests', action='store_true', default=False, help='lists all the known tests that can run')
 
     # Benchmark options
-    parser.add_argument('--concurrency-levels', default=[8, 16, 32, 64, 128, 256], help='Runs wrk benchmarker with different concurrency value (type int-sequence)', action=StoreSeqAction)
-    parser.add_argument('--query-levels', default=[1, 5,10,15,20], help='Database queries requested per HTTP connection, used during query test (type int-sequence)', action=StoreSeqAction)
-    parser.add_argument('--threads', default=maxThreads, help='Run wrk benchmarker with this many threads. This should probably be the number of cores for your client system', type=int)
     parser.add_argument('--duration', default=15, help='Time in seconds that each test should run for.')
     parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
 

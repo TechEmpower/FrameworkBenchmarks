@@ -7,12 +7,17 @@ const connection = mysql.createConnection({
   password : 'benchmarkdbpass',
   database : 'hello_world'
 });
+const NodeCache = require( "node-cache" );
+const myCache = new NodeCache( { stdTTL: 0, checkperiod: 0 } );
+
+let cachePopulated = false;
 
 connection.connect();
 
 const queries = {
-  RANDOM_WORLD: "SELECT * FROM world WHERE id = " + h.randomTfbNumber(),
+  GET_RANDOM_WORLD: () => "SELECT * FROM world WHERE id = " + h.randomTfbNumber(),
   ALL_FORTUNES: "SELECT * FROM fortune",
+  ALL_WORLDS: "SELECT * FROM world",
   UPDATE_WORLD: (rows) => {
     return [
       "UPDATE world SET randomNumber = ", rows[0].randomNumber,
@@ -21,8 +26,18 @@ const queries = {
   }
 };
 
+const populateCache = (callback) => {
+  if (cachePopulated) return callback();
+  connection.query(queries.ALL_WORLDS, (err, rows) => {
+    rows.forEach(r =>
+      myCache.set(r.id, { id: r.id, randomNumber: r.randomNumber }));
+    cachePopulated = true;
+    callback();
+  });
+};
+
 const mysqlRandomWorld = (callback) =>
-  connection.query(queries.RANDOM_WORLD, (err, rows, fields) => {
+  connection.query(queries.GET_RANDOM_WORLD(), (err, rows, fields) => {
     callback(err, rows[0]);
   });
 
@@ -32,7 +47,7 @@ const mysqlGetAllFortunes = (callback) =>
   });
 
 const mysqlUpdateQuery = (callback) =>
-  connection.query(queries.RANDOM_WORLD, (err, rows, fields) => {
+  connection.query(queries.GET_RANDOM_WORLD(), (err, rows, fields) => {
     if (err) { return process.exit(1); }
 
     rows[0].randomNumber = h.randomTfbNumber();
@@ -65,11 +80,24 @@ module.exports = {
     });
   },
 
+  CachedQueries: (queries, req, res) => {
+    populateCache(() => {
+      let worlds = [];
+      for (let i = 0; i < queries; i++) {
+        const key = h.randomTfbNumber() + '';
+        worlds.push(myCache.get(key));
+      }
+
+      h.addTfbHeaders(res, 'json');
+      res.end(JSON.stringify(worlds));
+    });
+  },
+
   Fortunes: (req, res) => {
     mysqlGetAllFortunes((err, fortunes) => {
       if (err) { return process.exit(1); }
 
-      fortunes.push(h.ADDITIONAL_FORTUNE);
+      fortunes.push(h.additionalFortune());
       fortunes.sort((a, b) => a.message.localeCompare(b.message));
       h.addTfbHeaders(res, 'html');
       res.end(h.fortunesTemplate({
@@ -87,6 +115,6 @@ module.exports = {
       h.addTfbHeaders(res, 'json');
       res.end(JSON.stringify(results));
     });
-  } 
+  }
 
 };

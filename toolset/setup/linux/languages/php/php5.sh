@@ -8,7 +8,7 @@ RETCODE=$(fw_exists ${IROOT}/php5.installed)
   source $IROOT/php5.installed
   return 0; }
 
-VERSION="5.5.17"
+VERSION="5.6.30"
 PHP_HOME=$IROOT/php-$VERSION
 
 # Precaution, unlikely to happen.

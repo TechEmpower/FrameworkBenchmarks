@@ -116,12 +116,15 @@ def verify_helloworld_object(json_object, url):
     if 'message' not in json_object:
         return [('fail', "Missing required key 'message'", url)]
     else:
-        if len(json_object) > 1:
+        json_len = len(json_object)
+        if json_len > 1:
             additional = (', ').join(
                 [k for k in json_object.keys() if k != 'message'])
             problems.append(
                 ('warn', "Too many JSON key/value pairs, consider removing: %s" % additional, url))
-
+        if json_len > 27:
+            problems.append(
+                'warn', "%s additional response byte(s) found. Consider removing unnecessary whitespace." % (json_len - 26))
         message = json_object['message']
 
         if message != 'hello, world!':
@@ -258,10 +261,10 @@ def verify_query_cases(self, cases, url):
 
     cases = [
         ('2',   'fail'),
-        ('0',   'warn'),
-        ('foo', 'warn'),
+        ('0',   'fail'),
+        ('foo', 'fail'),
         ('501', 'warn'),
-        ('',    'warn')
+        ('',    'fail')
     ]
 
     The reason for using 'warn' is generally for a case that will be allowed in the

@@ -35,10 +35,6 @@ public class MongoClientFactory {
     }
 
     public MongoClient build() {
-        try {
-            return new MongoClient(host, port);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
+        return new MongoClient(host, port);
     }
 }

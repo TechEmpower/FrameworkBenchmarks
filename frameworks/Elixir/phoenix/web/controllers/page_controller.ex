@@ -5,18 +5,21 @@ defmodule Hello.PageController do
 
   def index(conn, _params) do
     conn
-    |> json(%{"TE Benchmarks\n" => "Started"})
+    |> put_resp_content_type("application/json", nil)
+    |> send_resp(200, Poison.encode!(%{"TE Benchmarks\n" => "Started"}))
   end
 
   # avoid namespace collision
   def _json(conn, _params) do
     conn
-    |> json(%{message: "Hello, world!"})
+    |> put_resp_content_type("application/json", nil)
+    |> send_resp(200, Poison.encode!(%{message: "Hello, world!"}))
   end
 
   def db(conn, _params) do
     conn
-    |> json(Repo.get(World, :rand.uniform(10000)))
+    |> put_resp_content_type("application/json", nil)
+    |> send_resp(200, Poison.encode!(Repo.get(World, :rand.uniform(10000))))
   end
 
   def queries(conn, params) do
@@ -31,7 +34,8 @@ defmodule Hello.PageController do
     end
 
     conn
-    |> json(Enum.map(1..q, fn _ -> Repo.get(World, :rand.uniform(10000)) end))
+    |> put_resp_content_type("application/json", nil)
+    |> send_resp(200, Poison.encode!(Enum.map(1..q, fn _ -> Repo.get(World, :rand.uniform(10000)) end)))
   end
 
   def fortunes(conn, _params) do
@@ -57,18 +61,20 @@ defmodule Hello.PageController do
     end
 
     conn
-    |> json(Enum.map(1..q, fn _ ->
+    |> put_resp_content_type("application/json", nil)
+    |> send_resp(200, Poison.encode!(Enum.map(1..q, fn _ ->
       id = :rand.uniform(10000)
       num = :rand.uniform(10000)
       w = Repo.get(World, id)
       changeset = World.changeset(w, %{randomnumber: num})
       Repo.update(changeset)
       %{id: id, randomnumber: num}
-    end))
+    end)))
   end
 
   def plaintext(conn, _params) do
     conn
-    |> text("Hello, world!")
+    |> put_resp_content_type("text/plain", nil)
+    |> send_resp(200, "Hello, world!")
   end
 end

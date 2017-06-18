@@ -1,7 +1,7 @@
 package hello.home.entity;
 
 import com.techempower.data.annotation.*;
-import com.techempower.js.*;
+import com.techempower.js.legacy.*;
 
 /**
  * Simple World entity.

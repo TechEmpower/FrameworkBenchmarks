@@ -1,5 +1,5 @@
-// Copyright (c) .NET Foundation. All rights reserved. 
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.IO;
@@ -14,14 +14,13 @@ namespace Benchmarks.Middleware
 {
     public class JsonMiddleware
     {
-        private static readonly Task _done = Task.FromResult(0);
         private static readonly PathString _path = new PathString(Scenarios.GetPath(s => s.Json));
         private static readonly JsonSerializer _json = new JsonSerializer();
         private static readonly UTF8Encoding _encoding = new UTF8Encoding(false);
         private const int _bufferSize = 27;
 
         private readonly RequestDelegate _next;
-        
+
         public JsonMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -40,13 +39,13 @@ namespace Benchmarks.Middleware
                     _json.Serialize(sw, new { message = "Hello, World!" });
                 }
 
-                return _done;
+                return Task.CompletedTask;
             }
 
             return _next(httpContext);
         }
     }
-    
+
     public static class JsonMiddlewareExtensions
     {
         public static IApplicationBuilder UseJson(this IApplicationBuilder builder)

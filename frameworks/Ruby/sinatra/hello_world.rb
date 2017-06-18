@@ -29,7 +29,7 @@ class HelloWorld < Sinatra::Base
 
     # Return a random number between 1 and MAX_PK
     def rand1
-      Sysrandom.random_number(MAX_PK).succ
+      rand(MAX_PK).succ
     end
   end
 
@@ -48,27 +48,31 @@ class HelloWorld < Sinatra::Base
 
   # Test type 2: Single database query
   get '/db' do
-    world = ActiveRecord::Base.connection_pool.with_connection do
-      World.find(rand1).attributes
-    end
+    world =
+      ActiveRecord::Base.connection_pool.with_connection do
+        World.find(rand1).attributes
+      end
 
     json world
   end
 
   # Test type 3: Multiple database queries
   get '/queries' do
-    worlds = ActiveRecord::Base.connection_pool.with_connection do
-      Array.new(bounded_queries) { World.find(rand1).attributes }
-    end
+    worlds =
+      ActiveRecord::Base.connection_pool.with_connection do
+        Array.new(bounded_queries) do
+          World.find(rand1)
+        end
+      end
 
-    json worlds
+    json worlds.map!(&:attributes)
   end
 
   # Test type 4: Fortunes
   get '/fortunes' do
     @fortunes = ActiveRecord::Base.connection_pool.with_connection do
-      Fortune.all.to_a
-    end
+      Fortune.all
+    end.to_a
     @fortunes << Fortune.new(
       :id=>0,
       :message=>'Additional fortune added at request time.'
@@ -80,15 +84,16 @@ class HelloWorld < Sinatra::Base
 
   # Test type 5: Database updates
   get '/updates' do
-    worlds = ActiveRecord::Base.connection_pool.with_connection do |conn|
-      Array.new(bounded_queries) do
-        world = World.find(rand1)
-        world.update(:randomnumber=>rand1)
-        world.attributes
+    worlds =
+      ActiveRecord::Base.connection_pool.with_connection do
+        Array.new(bounded_queries) do
+          world = World.find(rand1)
+          world.update(:randomnumber=>rand1)
+          world
+        end
       end
-    end
 
-    json worlds
+    json worlds.map!(&:attributes)
   end
 
   # Test type 6: Plaintext

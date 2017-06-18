@@ -58,7 +58,7 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-pf-mysql",
+                "display_name": "cutelyst-pf-my",
                 "notes": "",
                 "versus": ""
             },
@@ -77,7 +77,7 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-thread",
+                "display_name": "cutelyst-thr",
                 "notes": "",
                 "versus": ""
             },
@@ -98,7 +98,7 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-thread-pg-raw",
+                "display_name": "cutelyst-thr-pg-raw",
                 "notes": "",
                 "versus": ""
             },
@@ -119,7 +119,7 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-thread-mysql-raw",
+                "display_name": "cutelyst-thr-my-raw",
                 "notes": "",
                 "versus": ""
             },
@@ -180,7 +180,7 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-pf-mysql-epoll",
+                "display_name": "cutelyst-pf-my-epoll",
                 "notes": "",
                 "versus": ""
             },
@@ -199,7 +199,7 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-thread-epoll",
+                "display_name": "cutelyst-thr-epoll",
                 "notes": "",
                 "versus": ""
             },
@@ -220,7 +220,7 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-thread-pg-epoll",
+                "display_name": "cutelyst-thr-pg-epoll",
                 "notes": "",
                 "versus": ""
             },
@@ -241,7 +241,47 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-thread-mysql-epoll",
+                "display_name": "cutelyst-thr-my-epoll",
+                "notes": "",
+                "versus": ""
+            },
+            "thread-epoll-half": {
+                "setup_file": "setup_thread_epoll_half",
+                "json_url": "/json",
+                "plaintext_url": "/plaintext",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Fullstack",
+                "database": "None",
+                "framework": "cutelyst",
+                "language": "C++",
+                "orm": "Raw",
+                "platform": "Qt",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "cutelyst-thr-epoll-half",
+                "notes": "",
+                "versus": ""
+            },
+            "thread-postgres-epoll-half": {
+                "setup_file": "setup_thread_pg_epoll_half",
+                "db_url": "/db_postgres",
+                "query_url": "/query_postgres?queries=",
+                "update_url": "/updates_postgres?queries=",
+                "fortune_url": "/fortunes_raw_postgres",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Platform",
+                "database": "Postgres",
+                "framework": "cutelyst",
+                "language": "C++",
+                "orm": "Raw",
+                "platform": "Qt",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "cutelyst-thr-pg-epoll-half",
                 "notes": "",
                 "versus": ""
             },
@@ -260,7 +300,7 @@
                 "webserver": "nginx",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-uwsgi-nginx",
+                "display_name": "cutelyst-uwsgi-ngx",
                 "notes": "",
                 "versus": ""
             },
@@ -281,7 +321,7 @@
                 "webserver": "nginx",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-uwsgi-nginx-pg-raw",
+                "display_name": "cutelyst-uwsgi-ngx-pg-raw",
                 "notes": "",
                 "versus": ""
             },
@@ -302,7 +342,7 @@
                 "webserver": "nginx",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-uwsgi-nginx-mysql-raw",
+                "display_name": "cutelyst-uwsgi-ngx-my-raw",
                 "notes": "",
                 "versus": ""
             }

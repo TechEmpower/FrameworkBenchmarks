@@ -10,7 +10,7 @@
       "classification": "Micro",
       "database": "None",
       "framework": "rouille",
-      "language": "rust",
+      "language": "Rust",
       "orm": "raw",
       "platform": "Rust",
       "webserver": "rouille",

@@ -1,4 +1,3 @@
-
 def provision_bootstrap(config)
 
   # TODO this will break if the environment contains the ' delimiter, 
@@ -10,13 +9,29 @@ def provision_bootstrap(config)
   end
 end
 
-def provider_virtualbox(config, ip_address='172.16.0.16')
-  config.vm.network "private_network", ip: ip_address
-  
+def provider_libvirt(config)
+  config.vm.provider :libvirt do |virt, override|
+    override.vm.hostname = "TFB-all"
+    override.vm.box = "RX14/trusty64"
+
+    unless ENV.fetch('TFB_SHOW_VM', false)
+      virt.graphics_type = "none"
+    end
+
+    virt.memory = ENV.fetch('TFB_KVM_MEM', 3022)
+    virt.cpus = ENV.fetch('TFB_KVM_CPU', 2)
+
+    override.vm.synced_folder "../../toolset", "/home/vagrant/FrameworkBenchmarks/toolset", type: "nfs"
+    override.vm.synced_folder "../../frameworks", "/home/vagrant/FrameworkBenchmarks/frameworks", type: "nfs"
+    override.vm.synced_folder "../../results", "/home/vagrant/FrameworkBenchmarks/results", type: "nfs", create: true
+  end
+end
+
+def provider_virtualbox(config)
   config.vm.provider :virtualbox do |vb, override|
     override.vm.hostname = "TFB-all"
     override.vm.box = "ubuntu/trusty64"
-    
+
     if ENV.fetch('TFB_SHOW_VM', false)
       vb.gui = true
     end
@@ -39,9 +54,9 @@ def provider_virtualbox(config, ip_address='172.16.0.16')
     #
     # See mitchellh/vagrant#4997
     # See http://superuser.com/a/640028/136050
+
     override.vm.synced_folder "../../toolset", "/home/vagrant/FrameworkBenchmarks/toolset"
     override.vm.synced_folder "../../frameworks", "/home/vagrant/FrameworkBenchmarks/frameworks"
-
-    override.vm.network :forwarded_port, guest: 8080, host: 28080
+    override.vm.synced_folder "../../results", "/home/vagrant/FrameworkBenchmarks/results", create: true
   end
 end

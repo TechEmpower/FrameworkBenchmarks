@@ -1,0 +1,38 @@
+name: kemalyst
+version: 0.1.0
+
+authors:
+  - your_name <your_email>
+
+license: MIT
+
+dependencies:
+  kemalyst:
+    github: kemalyst/kemalyst
+    version: ~> 0.8.0
+
+  granite_orm:
+    github: kemalyst/granite-orm
+    version: ~> 0.6.0
+
+  kemalyst-spec:
+    github: kemalyst/kemalyst-spec
+    version: ~> 0.1.0
+
+
+  pg:
+    github: will/crystal-pg
+
+
+#  mysql:
+#    github: crystal-lang/crystal-mysql
+#  pg:
+#    github: will/crystal-pg
+#  sqlite3:
+#    github: crystal-lang/crystal-sqlite3
+
+development_dependencies:
+  expect:
+    github: dukex/expect.cr
+  mocks:
+    github: waterlink/mocks.cr

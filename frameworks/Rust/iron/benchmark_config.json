@@ -14,7 +14,7 @@
       "classification": "Micro",
       "database": "Postgres",
       "framework": "iron",
-      "language": "rust",
+      "language": "Rust",
       "orm": "raw",
       "platform": "Rust",
       "webserver": "hyper",

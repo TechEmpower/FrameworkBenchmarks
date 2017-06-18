@@ -2,8 +2,6 @@
 
 fw_depends nginx mono
 
-sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
-
 # extra cleaning
 rm -rf src/bin src/obj
 rm -rf /tmp/nuget
@@ -14,7 +12,7 @@ xbuild src/Benchmarks.build.proj /t:Build
 # one fastcgi instance for each thread
 # load balanced by nginx
 port_start=9001
-port_end=$(($port_start+$MAX_THREADS))
+port_end=$(($port_start+$CPU_COUNT))
 
 # nginx
 conf="upstream mono {\n"
@@ -24,7 +22,7 @@ done
 conf+="}"
 echo -e $conf > $TROOT/nginx.upstream.conf
 
-nginx -c $TROOT/nginx.conf -g "worker_processes ${MAX_THREADS};"
+nginx -c $TROOT/nginx.conf -g "worker_processes ${CPU_COUNT};"
 
 # To debug, use --printlog --verbose --loglevels=All
 for port in $(seq $port_start $port_end); do

@@ -8,14 +8,12 @@ imports:
 framework:
     router:
         strict_requirements: null
-    # validation:
-    #    cache: apc
 
-doctrine:
-    orm:
-        # metadata_cache_driver: redis
-        # result_cache_driver: apc
-        # query_cache_driver: redis
+#doctrine:
+#    orm:
+#        metadata_cache_driver: apc
+#        result_cache_driver: apc
+#        query_cache_driver: apc
 
 monolog:
     handlers:
@@ -25,5 +23,5 @@ monolog:
             handler:      nested
         nested:
             type:  stream
-            path:  %kernel.logs_dir%/%kernel.environment%.log
+            path:  '%kernel.logs_dir%/%kernel.environment%.log'
             level: debug

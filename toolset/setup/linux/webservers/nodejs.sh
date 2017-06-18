@@ -2,7 +2,7 @@
 
 fw_installed node && return 0
 
-VERSION="7.5.0"
+VERSION="8.1.0"
 
 fw_get -O http://nodejs.org/dist/v$VERSION/node-v$VERSION-linux-x64.tar.gz
 fw_untar node-v$VERSION-linux-x64.tar.gz

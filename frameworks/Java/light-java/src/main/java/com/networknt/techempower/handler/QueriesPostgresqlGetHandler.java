@@ -17,11 +17,10 @@ import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Future;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -30,7 +29,7 @@ import javax.sql.DataSource;
 public class QueriesPostgresqlGetHandler implements HttpHandler {
     private final DataSource ds = PostgresStartupHookProvider.ds;
     private DslJson<Object> dsl = new DslJson<>();
-    private JsonWriter writer = dsl.newWriter(25000);
+    private JsonWriter writer = dsl.newWriter(1024);
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
@@ -38,46 +37,18 @@ public class QueriesPostgresqlGetHandler implements HttpHandler {
             exchange.dispatch(this);
             return;
         }
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
 
         int queries = Helper.getQueries(exchange);
 
-        World[] worlds = new World[queries];
-        try (final Connection connection = ds.getConnection()) {
-            Map<Integer, Future<World>> futureWorlds = new ConcurrentHashMap<>();
-            for (int i = 0; i < queries; i++) {
-                futureWorlds.put(i, Helper.EXECUTOR.submit(new Callable<World>(){
-                    @Override
-                    public World call() throws Exception {
-                        try (PreparedStatement statement = connection.prepareStatement(
-                                "SELECT * FROM world WHERE id = ?",
-                                ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
+        List<CompletableFuture<World>> worlds = IntStream.range(0, queries)
+                .mapToObj(i -> CompletableFuture.supplyAsync(() -> Helper.selectWorld(ds), Helper.executor))
+                .collect(Collectors.toList());
 
-                            statement.setInt(1, Helper.randomWorld());
-                            try (ResultSet resultSet = statement.executeQuery()) {
-                                resultSet.next();
-                                return new World(
-                                        resultSet.getInt("id"),
-                                        resultSet.getInt("randomNumber"));
-                            }
-                        }
-                    }
-                }));
-            }
-
-            for (int i = 0; i < queries; i++) {
-                worlds[i] = futureWorlds.get(i).get();
-            }
-        }
-
-        /*
-        // 2137
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-        exchange.getResponseSender().send(mapper.writeValueAsString(worlds));
-        */
-
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+        CompletableFuture<List<World>> allDone = Helper.sequence(worlds);
         writer.reset();
-        writer.serialize(worlds, queries);
+        writer.serialize(allDone.get());
         exchange.getResponseSender().send(ByteBuffer.wrap(writer.toByteArray()));
     }
+
 }

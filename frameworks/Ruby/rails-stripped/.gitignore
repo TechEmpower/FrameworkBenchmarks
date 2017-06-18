@@ -5,3 +5,5 @@
 
 # Except the .gitkeep
 !.gitkeep
+
+Gemfile.lock

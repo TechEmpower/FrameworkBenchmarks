@@ -18,6 +18,7 @@
 */
 
 #include <assert.h>
+#include <ctype.h>
 #include <h2o.h>
 #include <postgresql/libpq-fe.h>
 #include <stddef.h>
@@ -148,7 +149,12 @@ static void complete_fortunes(struct st_h2o_generator_t *self, h2o_req_t *req)
 	                                                         fortune_ctx->iovec_list);
 
 	fortune_ctx->iovec_list = iovec_list->l.next;
-	h2o_send(req, iovec_list->iov, iovec_list->iovcnt, !fortune_ctx->iovec_list);
+
+	const h2o_send_state_t state = fortune_ctx->iovec_list ?
+	                               H2O_SEND_STATE_IN_PROGRESS :
+	                               H2O_SEND_STATE_FINAL;
+
+	h2o_send(req, iovec_list->iov, iovec_list->iovcnt, state);
 }
 
 static list_t *get_sorted_sublist(list_t *head)
@@ -220,12 +226,20 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 			                                               sizeof(*fortune));
 
 			if (fortune) {
+				assert(PQnfields(result) == 2);
+
+				char * const id = PQgetvalue(result, i, 0);
+				char * const message = PQgetvalue(result, i, 1);
+				const size_t id_len = PQgetlength(result, i, 0);
+				const size_t message_len = PQgetlength(result, i, 1);
+
+				assert(id && id_len && isdigit(*id) && message);
 				memset(fortune, 0, sizeof(*fortune));
-				fortune->id.base = PQgetvalue(result, i, 0);
-				fortune->id.len = PQgetlength(result, i, 0);
+				fortune->id.base = id;
+				fortune->id.len = id_len;
 				fortune->message = h2o_htmlescape(&fortune_ctx->req->pool,
-				                                  PQgetvalue(result, i, 1),
-				                                  PQgetlength(result, i, 1));
+				                                  message,
+				                                  message_len);
 				fortune->l.next = fortune_ctx->result;
 				fortune_ctx->result = &fortune->l;
 				fortune_ctx->num_result++;
@@ -270,10 +284,12 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 			fortune_ctx->iovec_list = iovec_list->l.next;
 			set_default_response_param(HTML, fortune_ctx->content_length, fortune_ctx->req);
 			h2o_start_response(fortune_ctx->req, &fortune_ctx->generator);
-			h2o_send(fortune_ctx->req,
-			         iovec_list->iov,
-			         iovec_list->iovcnt,
-			         !fortune_ctx->iovec_list);
+
+			const h2o_send_state_t state = fortune_ctx->iovec_list ?
+			                               H2O_SEND_STATE_IN_PROGRESS :
+			                               H2O_SEND_STATE_FINAL;
+
+			h2o_send(fortune_ctx->req, iovec_list->iov, iovec_list->iovcnt, state);
 		}
 		else
 			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, fortune_ctx->req);

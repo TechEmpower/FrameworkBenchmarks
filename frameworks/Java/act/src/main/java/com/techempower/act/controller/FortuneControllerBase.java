@@ -14,7 +14,7 @@ public abstract class FortuneControllerBase<MODEL_TYPE extends IFortune,
         QUERY_TYPE extends Dao.Query<MODEL_TYPE, QUERY_TYPE>,
         DAO_TYPE extends Dao<Integer, MODEL_TYPE, QUERY_TYPE>> extends Controller.Util  {
 
-    private DAO_TYPE fortuneDao;
+    protected DAO_TYPE fortuneDao;
 
     public FortuneControllerBase(DAO_TYPE fortuneDao) {
         this.fortuneDao = $.notNull(fortuneDao);
@@ -25,8 +25,7 @@ public abstract class FortuneControllerBase<MODEL_TYPE extends IFortune,
         List<IFortune> fortunes = (List)fortuneDao.findAllAsList();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
-
-        template("fortunes", fortunes);
+        template("fortunes.mustache", fortunes);
     }
 
 }

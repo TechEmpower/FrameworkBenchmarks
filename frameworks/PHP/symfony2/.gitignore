@@ -1,6 +1,7 @@
-/app/cache
-/app/logs
-/bin
+/var/cache
+/var/logs
+/var/sessions
+!/bin
 /vendors
 /vendor
 /build
@@ -10,3 +11,4 @@
 .idea
 app/bootstrap.php.cache
 /deploy/php-fpm.pid
+/.buildpath

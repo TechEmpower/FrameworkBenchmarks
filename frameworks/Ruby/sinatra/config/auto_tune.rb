@@ -8,7 +8,7 @@ require 'etc'
 KB_PER_WORKER = 96 * 1_024 # average of peak PSS of single-threaded processes (watch smem -k)
 MIN_WORKERS = 2
 MAX_WORKERS_PER_VCPU = 1.25 # virtual/logical
-MIN_THREADS_PER_WORKER = 4
+MIN_THREADS_PER_WORKER = 1
 MAX_THREADS = Integer(ENV['MAX_CONCURRENCY'] || 256)
 
 def meminfo(arg)
@@ -23,7 +23,7 @@ def meminfo(arg)
 end
 
 def auto_tune
-  avail_mem = meminfo('MemAvailable') * 0.8 - MAX_THREADS * 1_024
+  avail_mem = meminfo('MemFree') * 0.8 - MAX_THREADS * 1_024
 
   workers = [
     [(1.0 * avail_mem / KB_PER_WORKER).floor, MIN_WORKERS].max,

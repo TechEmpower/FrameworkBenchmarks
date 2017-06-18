@@ -1,5 +1,11 @@
 package io.vertx.benchmark;
 
+import com.github.susom.database.Config;
+import com.github.susom.database.ConfigFrom;
+import com.github.susom.database.DatabaseProviderVertx;
+import com.github.susom.database.DatabaseProviderVertx.Builder;
+import com.github.susom.database.Sql;
+import com.github.susom.database.SqlInsert;
 import io.vertx.benchmark.model.Fortune;
 import io.vertx.benchmark.model.Message;
 import io.vertx.benchmark.model.World;
@@ -44,7 +50,7 @@ public class App extends AbstractVerticle {
     }
 
     public final void dbHandler(final RoutingContext ctx) {
-      database.findOne("world", new JsonObject().put("id", Helper.randomWorld()), FIELDS, findOne -> {
+      database.findOne("world", new JsonObject().put("_id", Helper.randomWorld()), FIELDS, findOne -> {
         if (findOne.failed()) {
           ctx.fail(findOne.cause());
           return;
@@ -78,7 +84,7 @@ public class App extends AbstractVerticle {
 
             final Handler<Integer> self = this;
 
-            database.findOne("world", new JsonObject().put("id", Helper.randomWorld()), FIELDS, findOne -> {
+            database.findOne("world", new JsonObject().put("_id", Helper.randomWorld()), FIELDS, findOne -> {
               if (findOne.failed()) {
                 ctx.fail(findOne.cause());
                 return;
@@ -146,7 +152,7 @@ public class App extends AbstractVerticle {
 
             final int id = Helper.randomWorld();
 
-            final JsonObject query = new JsonObject().put("id", id);
+            final JsonObject query = new JsonObject().put("_id", id);
 
             database.findOne("world", query, FIELDS, findOne -> {
               if (findOne.failed()) {
@@ -452,6 +458,148 @@ public class App extends AbstractVerticle {
     }
   }
 
+  /**
+   * Implementation using com.github.susom:database library and standard JDBC driver.
+   */
+  private final class DatabaseSql {
+    private final Builder dbBuilder;
+
+    // In order to use a template we first need to create an engine
+    private final HandlebarsTemplateEngine engine;
+
+    DatabaseSql(Vertx vertx, JsonObject jsonConfig) {
+      Config config = ConfigFrom.firstOf().custom(jsonConfig::getString)
+          .rename("username", "database.user")
+          .rename("password", "database.password")
+          .rename("maxPoolSize", "database.pool.size")
+          .value("database.url", "jdbc:postgresql://" + jsonConfig.getString("host") + "/" + jsonConfig.getString("database"))
+          .get();
+      dbBuilder = DatabaseProviderVertx.pooledBuilder(vertx, config);
+      engine = HandlebarsTemplateEngine.create();
+    }
+
+    void dbHandler(final RoutingContext ctx) {
+      dbBuilder.transactAsync(dbs ->
+        dbs.get().toSelect("SELECT id, randomnumber from WORLD where id = ?")
+            .argInteger(Helper.randomWorld())
+            .queryFirstOrNull(row -> new World(row.getIntegerOrZero(), row.getIntegerOrZero()).encode())
+      , call -> {
+        if (call.succeeded()) {
+          if (call.result() == null) {
+            ctx.fail(404);
+          } else {
+            ctx.response()
+                .putHeader(HttpHeaders.SERVER, SERVER)
+                .putHeader(HttpHeaders.DATE, date)
+                .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                .end(call.result());
+          }
+        } else {
+          ctx.fail(call.cause());
+        }
+      });
+    }
+
+    void queriesHandler(final RoutingContext ctx) {
+      int queries = Helper.getQueries(ctx.request());
+
+      dbBuilder.transactAsync(dbs -> {
+        JsonArray worlds = new JsonArray();
+        for (int i = 1; i <= queries; i++) {
+          dbs.get()
+              .toSelect("SELECT id, randomnumber from WORLD where id = ?")
+              .argInteger(Helper.randomWorld())
+              .queryFirstOrNull(row -> worlds.add(new World(row.getIntegerOrZero(), row.getIntegerOrZero())));
+        }
+        return worlds.encode();
+      }, call -> {
+        if (call.succeeded()) {
+          if (call.result() == null) {
+            ctx.fail(404);
+          } else {
+            ctx.response()
+                .putHeader(HttpHeaders.SERVER, SERVER)
+                .putHeader(HttpHeaders.DATE, date)
+                .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                .end(call.result());
+          }
+        } else {
+          ctx.fail(call.cause());
+        }
+      });
+    }
+
+    final void fortunesHandler(final RoutingContext ctx) {
+      dbBuilder.transactAsync(dbs -> {
+        List<Fortune> fortunes = dbs.get()
+            .toSelect("SELECT id, message from FORTUNE")
+            .queryMany(row -> new Fortune(row.getIntegerOrZero(), row.getStringOrEmpty()));
+        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+        Collections.sort(fortunes);
+        return fortunes;
+      }, call -> {
+        if (call.succeeded()) {
+          if (call.result() == null || call.result().isEmpty()) {
+            ctx.fail(404);
+          } else {
+            ctx.put("fortunes", call.result());
+            engine.render(ctx, "templates/fortunes.hbs", res -> {
+              if (res.succeeded()) {
+                ctx.response()
+                    .putHeader(HttpHeaders.SERVER, SERVER)
+                    .putHeader(HttpHeaders.DATE, date)
+                    .putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=UTF-8")
+                    .end(res.result());
+              } else {
+                ctx.fail(res.cause());
+              }
+            });
+          }
+        } else {
+          ctx.fail(call.cause());
+        }
+      });
+    }
+
+    void updateHandler(final RoutingContext ctx) {
+      int queries = Helper.getQueries(ctx.request());
+
+      dbBuilder.transactAsync(dbs -> {
+        JsonArray worlds = new JsonArray();
+        // Haven't implemented batching yet on toUpdate(), so hijack toInsert() as work-around
+        SqlInsert batchUpdate = dbs.get().toInsert("UPDATE WORLD SET randomnumber = ? WHERE id = ?");
+        for (int i = 1; i <= queries; i++) {
+          World oldWorld = dbs.get()
+              .toSelect("SELECT id, randomnumber from WORLD where id = ?")
+              .argInteger(Helper.randomWorld())
+              .queryFirstOrNull(row -> new World(row.getIntegerOrZero(), row.getIntegerOrZero()));
+          if (oldWorld == null) {
+            return null;
+          }
+          World newWorld = new World(oldWorld.getId(), Helper.randomWorld());
+          worlds.add(newWorld);
+          batchUpdate.argInteger(newWorld.getRandomNumber()).argInteger(newWorld.getId()).batch();
+        }
+        batchUpdate.insertBatchUnchecked();
+        return worlds.encode();
+      }, call -> {
+        if (call.succeeded()) {
+          if (call.result() == null) {
+            ctx.fail(404);
+          } else {
+            ctx.response()
+                .putHeader(HttpHeaders.SERVER, SERVER)
+                .putHeader(HttpHeaders.DATE, date)
+                .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                .end(call.result());
+          }
+        } else {
+          ctx.fail(call.cause());
+        }
+      });
+    }
+  }
+
   private static final String SERVER = "vertx-web";
   private String date;
 
@@ -464,6 +612,7 @@ public class App extends AbstractVerticle {
     final MongoDB mongoDB = new MongoDB(vertx, config());
     final AsyncSQL psql = new AsyncSQL(vertx, AsyncSQL.POSTGRES, config());
     final AsyncSQL mysql = new AsyncSQL(vertx, AsyncSQL.MYSQL, config());
+    final DatabaseSql dbpsql = new DatabaseSql(vertx, config());
 
     /**
      * This test exercises the framework fundamentals including keep-alive support, request routing, request header
@@ -484,6 +633,7 @@ public class App extends AbstractVerticle {
     app.get("/mongo/db").handler(mongoDB::dbHandler);
     app.get("/psql/db").handler(psql::dbHandler);
     app.get("/mysql/db").handler(mysql::dbHandler);
+    app.get("/dbpsql/db").handler(dbpsql::dbHandler);
 
     /**
      * This test is a variation of Test #2 and also uses the World table. Multiple rows are fetched to more dramatically
@@ -493,6 +643,7 @@ public class App extends AbstractVerticle {
     app.get("/mongo/queries").handler(mongoDB::queriesHandler);
     app.get("/psql/queries").handler(psql::queriesHandler);
     app.get("/mysql/queries").handler(mysql::queriesHandler);
+    app.get("/dbpsql/queries").handler(dbpsql::queriesHandler);
 
     /**
      * This test exercises the ORM, database connectivity, dynamic-size collections, sorting, server-side templates,
@@ -501,6 +652,7 @@ public class App extends AbstractVerticle {
     app.get("/mongo/fortunes").handler(mongoDB::fortunesHandler);
     app.get("/psql/fortunes").handler(psql::fortunesHandler);
     app.get("/mysql/fortunes").handler(mysql::fortunesHandler);
+    app.get("/dbpsql/fortunes").handler(dbpsql::fortunesHandler);
 
     /**
      * This test is a variation of Test #3 that exercises the ORM's persistence of objects and the database driver's
@@ -510,6 +662,7 @@ public class App extends AbstractVerticle {
     app.route("/mongo/update").handler(mongoDB::updateHandler);
     app.route("/psql/update").handler(psql::updateHandler);
     app.route("/mysql/update").handler(mysql::updateHandler);
+    app.route("/dbpsql/update").handler(dbpsql::updateHandler);
 
     /**
      * This test is an exercise of the request-routing fundamentals only, designed to demonstrate the capacity of

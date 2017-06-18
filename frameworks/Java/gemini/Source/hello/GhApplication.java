@@ -1,14 +1,14 @@
 package hello;
 
-import hello.home.entity.*;
-import hello.home.handler.*;
-
 import com.techempower.*;
 import com.techempower.gemini.*;
 import com.techempower.gemini.exceptionhandler.*;
 import com.techempower.gemini.path.*;
-import com.techempower.gemini.pyxis.*;
 import com.techempower.js.*;
+import com.techempower.js.legacy.*;
+
+import hello.home.entity.*;
+import hello.home.handler.*;
 
 /**
  * GeminiHello Application.  As a subclass of GeminiApplication, this
@@ -21,7 +21,7 @@ import com.techempower.js.*;
  * @author mhixson
  */
 public class GhApplication
-     extends GeminiApplication
+     extends ResinGeminiApplication
 {
   //
   // Static variables.
@@ -62,8 +62,9 @@ public class GhApplication
   @Override
   protected JavaScriptWriter constructJavaScriptWriter()
   {
-    return JavaScriptWriter.custom()
+    return LegacyJavaScriptWriter.custom()
         .addVisitorFactory(World.class, World.VISITOR_FACTORY)
+        .addVisitorFactory(CachedWorld.class, CachedWorld.VISITOR_FACTORY)
         .build();
   }
 

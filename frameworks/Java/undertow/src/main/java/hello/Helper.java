@@ -1,53 +1,25 @@
 package hello;
 
-import io.undertow.server.HttpServerExchange;
-import org.apache.commons.dbcp.ConnectionFactory;
-import org.apache.commons.dbcp.DriverManagerConnectionFactory;
-import org.apache.commons.dbcp.PoolableConnectionFactory;
-import org.apache.commons.dbcp.PoolingDataSource;
-import org.apache.commons.pool.impl.GenericObjectPool;
+import static io.undertow.util.Headers.CONTENT_TYPE;
 
-import javax.sql.DataSource;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import io.undertow.server.HttpServerExchange;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.ByteBuffer;
 import java.util.Deque;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import org.bson.Document;
 
 /**
- * Provides utility methods for the benchmark tests.
+ * Provides utility methods for the application.
  */
 final class Helper {
   private Helper() {
     throw new AssertionError();
-  }
-
-  /**
-   * Constructs a new SQL data source with the given parameters.  Connections
-   * to this data source are pooled.
-   *
-   * @param uri the URI for database connections
-   * @param user the username for the database
-   * @param password the password for the database
-   * @return a new SQL data source
-   */
-  static DataSource newDataSource(String uri,
-                                  String user,
-                                  String password) {
-    GenericObjectPool connectionPool = new GenericObjectPool();
-    connectionPool.setMaxActive(256);
-    connectionPool.setMaxIdle(256);
-    ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
-        uri, user, password);
-    //
-    // This constructor modifies the connection pool, setting its connection
-    // factory to this.  (So despite how it may appear, all of the objects
-    // declared in this method are incorporated into the returned result.)
-    //
-    new PoolableConnectionFactory(
-        connectionFactory, connectionPool, null, null, false, true);
-    return new PoolingDataSource(connectionPool);
   }
 
   /**
@@ -66,12 +38,13 @@ final class Helper {
     if (textValue == null) {
       return 1;
     }
+    int parsedValue;
     try {
-      int parsedValue = Integer.parseInt(textValue);
-      return Math.min(500, Math.max(1, parsedValue));
+      parsedValue = Integer.parseInt(textValue);
     } catch (NumberFormatException e) {
       return 1;
     }
+    return Math.min(500, Math.max(1, parsedValue));
   }
 
   /**
@@ -84,13 +57,83 @@ final class Helper {
     return 1 + ThreadLocalRandom.current().nextInt(10000);
   }
 
-  private static final int cpuCount = Runtime.getRuntime().availableProcessors();
+  /**
+   * Ends the HTTP exchange by encoding the given value as JSON and writing
+   * that JSON to the response.
+   *
+   * @param exchange the current HTTP exchange
+   * @param value the value to be encoded as JSON
+   * @throws IllegalArgumentException if the value cannot be encoded as JSON
+   */
+  static void sendJson(HttpServerExchange exchange, Object value) {
+    byte[] jsonBytes;
+    try {
+      jsonBytes = objectMapper.writeValueAsBytes(value);
+    } catch (IOException e) {
+      throw new IllegalArgumentException(e);
+    }
+    ByteBuffer jsonBuffer = ByteBuffer.wrap(jsonBytes);
+    exchange.getResponseHeaders().put(CONTENT_TYPE, "application/json");
+    exchange.getResponseSender().send(jsonBuffer);
+  }
 
-  // todo: parameterize multipliers
-  public static ExecutorService EXECUTOR =
-    new ThreadPoolExecutor(
-      cpuCount * 2, cpuCount * 25, 200, TimeUnit.MILLISECONDS,
-      new LinkedBlockingQueue<Runnable>(cpuCount * 100),
-      new ThreadPoolExecutor.CallerRunsPolicy());
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
+  /**
+   * Ends the HTTP exchange by supplying the given value to a Mustache template
+   * and writing the HTML output of the template to the response.
+   *
+   * @param exchange the current HTTP exchange
+   * @param value the value to be supplied to the Mustache template
+   * @param templatePath the path to the Mustache template
+   */
+  static void sendHtml(HttpServerExchange exchange,
+                       Object value,
+                       String templatePath) {
+    Mustache mustache = mustacheFactory.compile(templatePath);
+    StringWriter writer = new StringWriter();
+    mustache.execute(writer, value);
+    String html = writer.toString();
+    exchange.getResponseHeaders().put(CONTENT_TYPE, "text/html;charset=utf-8");
+    exchange.getResponseSender().send(html);
+  }
+
+  private static final MustacheFactory mustacheFactory =
+      new DefaultMustacheFactory();
+
+  /**
+   * Ends the HTTP exchange with an exception.
+   *
+   * @param exchange the current HTTP exchange
+   * @param exception the exception that was thrown
+   */
+  static void sendException(HttpServerExchange exchange, Throwable exception) {
+    exchange.setStatusCode(500);
+    exchange.endExchange();
+    exception.printStackTrace();
+  }
+
+  /**
+   * Reads a {@link World} from its persisted {@link Document} representation.
+   */
+  static World mongoDocumentToWorld(Document document) {
+    int id = mongoGetInt(document, "_id");
+    int randomNumber = mongoGetInt(document, "randomNumber");
+    return new World(id, randomNumber);
+  }
+
+  /**
+   * Reads a {@link Fortune} from its persisted {@link Document} representation.
+   */
+  static Fortune mongoDocumentToFortune(Document document) {
+    int id = mongoGetInt(document, "_id");
+    String message = document.getString("message");
+    return new Fortune(id, message);
+  }
+
+  // We don't know ahead of time whether these values are instances of Integer
+  // or Double.  This code is compatible with both.
+  private static int mongoGetInt(Document document, String key) {
+    return ((Number) document.get(key)).intValue();
+  }
 }

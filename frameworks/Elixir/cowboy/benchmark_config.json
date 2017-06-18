@@ -13,7 +13,7 @@
             "language": "Elixir",
             "flavor": "None",
             "orm": "raw",
-            "platform": "None",
+            "platform": "Cowboy",
             "webserver": "None",
             "os": "Linux",
             "database_os": "Linux",

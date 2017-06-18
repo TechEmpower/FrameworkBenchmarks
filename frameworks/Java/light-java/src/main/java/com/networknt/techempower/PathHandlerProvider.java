@@ -11,17 +11,17 @@ import com.networknt.techempower.handler.*;
 public class PathHandlerProvider implements HandlerProvider {
     @Override
     public HttpHandler getHandler() {
-        return Handlers.routing()
-            .add(Methods.GET, "/db/mysql", new DbMysqlGetHandler())
-            .add(Methods.GET, "/db/postgresql", new DbPostgresqlGetHandler())
-            .add(Methods.GET, "/fortunes/mysql", new FortunesMysqlGetHandler())
-            .add(Methods.GET, "/fortunes/postgresql", new FortunesPostgresqlGetHandler())
-            .add(Methods.GET, "/json", new JsonGetHandler())
-            .add(Methods.GET, "/plaintext", new PlaintextGetHandler())
-            .add(Methods.GET, "/queries/mysql", new QueriesMysqlGetHandler())
-            .add(Methods.GET, "/queries/postgresql", new QueriesPostgresqlGetHandler())
-            .add(Methods.GET, "/updates/mysql", new UpdatesMysqlGetHandler())
-            .add(Methods.GET, "/updates/postgresql", new UpdatesPostgresqlGetHandler())
+        return Handlers.path()
+            //.addExactPath("/db/mysql", new DbMysqlGetHandler())
+            .addExactPath("/plaintext", new PlaintextGetHandler())
+            .addExactPath("/json", new JsonGetHandler())
+            .addExactPath("/db", new DbPostgresqlGetHandler())
+            //.addExactPath("/fortunes/mysql", new FortunesMysqlGetHandler())
+            .addExactPath("/fortunes", new FortunesPostgresqlGetHandler())
+            //.addExactPath("/queries/mysql", new QueriesMysqlGetHandler())
+            .addExactPath("/queries", new QueriesPostgresqlGetHandler())
+            //.addExactPath("/updates/mysql", new UpdatesMysqlGetHandler())
+            .addExactPath("/updates", new UpdatesPostgresqlGetHandler())
         ;
     }
 }
