@@ -14,8 +14,6 @@ import io.vertx.core.logging.LoggerFactory;
 
 import java.util.Collections;
 
-import com.sun.corba.se.impl.ior.ByteBuffer;
-
 import static io.vertx.core.http.HttpHeaders.*;
 
 public class WebServer extends AbstractVerticle implements Handler<HttpServerRequest> {
@@ -28,15 +26,11 @@ public class WebServer extends AbstractVerticle implements Handler<HttpServerReq
 	private static final CharSequence RESPONSE_TYPE_PLAIN = new AsciiString("text/plain");
 	private static final CharSequence RESPONSE_TYPE_JSON = new AsciiString("application/json");
 
-	private static final CharSequence TEXT_MESSAGE = new AsciiString("message");
-	private static final byte[] HELLO_WORLD = "Hello, world!".getBytes();
+	private static final String MESSAGE = "message";
+	private static final String HELLO_WORLD = "Hello, world!";
 
-	private static final String JSON_HELLO_WORLD = Json.encode(Collections.singletonMap(TEXT_MESSAGE, "Hello, world!"));
-	private static final Buffer JSON_HELLO_WORLD_BUFFER = Buffer.buffer(JSON_HELLO_WORLD);
-	private static final CharSequence JSON_HELLO_WORLD_CONTENT_LENGTH = new AsciiString(String.valueOf(JSON_HELLO_WORLD.length()));
-	
 	private static final Buffer HELLO_WORLD_BUFFER = Buffer.buffer(HELLO_WORLD);
-	private static final CharSequence HELLO_WORLD_CONTENT_LENGTH = new AsciiString(String.valueOf(HELLO_WORLD.length));
+	private static final CharSequence HELLO_WORLD_CONTENT_LENGTH = new AsciiString(String.valueOf(HELLO_WORLD.length()));
 
 	private static final CharSequence VERTX = new AsciiString("vertx".toCharArray());
 
@@ -87,8 +81,9 @@ public class WebServer extends AbstractVerticle implements Handler<HttpServerReq
 	}
 
 	private void handleJson(HttpServerRequest request) {
+	  Buffer buff = Buffer.buffer(Json.encode(Collections.singletonMap(MESSAGE, HELLO_WORLD)));
 		request.response().putHeader(CONTENT_TYPE, RESPONSE_TYPE_JSON).putHeader(SERVER,  VERTX)
-		.putHeader(DATE, dateString).putHeader(CONTENT_LENGTH, JSON_HELLO_WORLD_CONTENT_LENGTH).end(JSON_HELLO_WORLD_BUFFER);
+		.putHeader(DATE, dateString).end(buff);
 	}
 	
 	public static void main(String[] args) {
