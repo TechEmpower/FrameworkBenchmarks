@@ -2,7 +2,7 @@
 
 sed -i 's|localhost|'"${DBHOST}"'|g' src/main/conf/config.json
 
-#fw_depends java maven
+fw_depends java maven
 
 mvn clean package
 
