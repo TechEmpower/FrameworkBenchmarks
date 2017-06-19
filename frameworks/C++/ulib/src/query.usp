@@ -28,7 +28,7 @@ static void usp_fork_query()
 
    U_NEW(UOrmStatement, pstmt_query, UOrmStatement(*psql_query, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
 
-   if (UOrmDriver::isPGSQL()) *psql_query << "BEGIN TRANSACTION";
+// if (UOrmDriver::isPGSQL()) *psql_query << "BEGIN TRANSACTION";
 
    U_NEW(World, pworld_query, World);
 

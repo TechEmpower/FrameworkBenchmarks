@@ -29,7 +29,7 @@ static void usp_fork_fortune()
 
    U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
 
-   if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
+// if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
 
    U_NEW(Fortune, pfortune, Fortune);
 
@@ -70,6 +70,7 @@ pstmt_fortune->execute();
 
 do {
    U_NEW(Fortune, item, Fortune(*pfortune));
+
    pvfortune->push_back(item);
    }
 while (pstmt_fortune->nextRow());

@@ -4,7 +4,7 @@ fw_depends mysql ulib
 
 # Travis is broken
 if [ "$TRAVIS" != "true" ]; then
-MAX_THREADS=$(( 3 * $CPU_COUNT / 2 ))
+MAX_THREADS=$CPU_COUNT
 else
 MAX_THREADS=$(( 2 * $CPU_COUNT ))
 fi

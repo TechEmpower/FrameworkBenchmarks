@@ -5,14 +5,11 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static World*         pworld_update;
-static UOrmSession*   psql_update;
-static UOrmStatement* pstmt1;
-static UOrmStatement* pstmt2;
-
-#ifndef AS_cpoll_cppsp_DO
+static World*           pworld_update;
+static UString*         pquery;
+static UOrmSession*     psql_update;
+static UOrmStatement*   pstmt;
 static UVector<World*>* pvworld_update;
-#endif
 
 static void usp_fork_update()
 {
@@ -27,20 +24,18 @@ static void usp_fork_update()
       return;
       }
 
-   U_NEW(UOrmStatement, pstmt1, UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
-   U_NEW(UOrmStatement, pstmt2, UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = ? WHERE id = ?")));
+   U_NEW(UOrmStatement, pstmt, UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
 
-   if (UOrmDriver::isPGSQL()) *psql_update << "SET synchronous_commit TO OFF";
+// if (UOrmDriver::isPGSQL()) *psql_update << "SET synchronous_commit TO OFF";
 
    U_NEW(World, pworld_update, World);
 
-   pstmt1->use( pworld_update->id);
-   pstmt1->into(pworld_update->randomNumber);
-   pstmt2->use( pworld_update->randomNumber, pworld_update->id);
+   pstmt->use( pworld_update->id);
+   pstmt->into(pworld_update->randomNumber);
 
-#ifndef AS_cpoll_cppsp_DO
+   U_NEW(UString, pquery, UString(U_CAPACITY));
+
    U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
-#endif
 }
 
 #ifdef DEBUG
@@ -50,16 +45,12 @@ static void usp_end_update()
 
    delete psql_update;
 
-   if (pstmt1 &&
-       pstmt2)
+   if (pstmt)
       {
-      delete pstmt1;
-      delete pstmt2;
+      delete pstmt;
+      delete pquery;
       delete pworld_update;
-
-#  ifndef AS_cpoll_cppsp_DO
       delete pvworld_update;
-#  endif
       }
 }
 #endif
@@ -68,30 +59,56 @@ static void usp_end_update()
 Content-Type: application/json
 -->
 <!--#code
+char* ptr;
+World* pworld;
+char* query = pquery->data();
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
-#ifdef AS_cpoll_cppsp_DO
-USP_PUTS_CHAR('[');
-#endif
+(void) memcpy(query,          "UPDATE World SET randomNumber = v.randomNumber FROM (VALUES",
+              U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES"));
+ptr = query + U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES");
 
 while (true)
    {
    pworld_update->id = u_get_num_random(10000-1);
 
-   pstmt1->execute();
+   pstmt->execute();
 
    pworld_update->randomNumber = u_get_num_random(10000-1);
-
-   pstmt2->execute();
-
-#ifdef AS_cpoll_cppsp_DO
-   USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld_update->id, pworld_update->randomNumber);
-#else
-   World* pworld;
 
    U_NEW(World, pworld, World(*pworld_update));
 
    pvworld_update->push_back(pworld);
+
+   if (++i == num_queries) break;
+   }
+
+pvworld_update->sort();
+
+#ifdef AS_cpoll_cppsp_DO
+USP_PUTS_CHAR('[');
+#endif
+
+i = 0;
+
+while (true)
+   {
+   pworld = pvworld_update->at(i);
+
+   *ptr++ = '(';
+
+   ptr = u_num2str32(pworld->id, ptr);
+
+   u_put_unalignedp16(ptr, U_MULTICHAR_CONSTANT16(',',' '));
+                      ptr += 2;
+
+   ptr = u_num2str32(pworld->randomNumber, ptr);
+
+   u_put_unalignedp16(ptr, U_MULTICHAR_CONSTANT16(')',','));
+                      ptr += 2;
+
+#ifdef AS_cpoll_cppsp_DO
+   USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld->id, pworld->randomNumber);
 #endif
 
    if (++i == num_queries) break;
@@ -103,8 +120,12 @@ while (true)
 
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR(']');
-#else
-USP_OBJ_JSON_stringify(*pvworld_update);
-pvworld_update->clear();
 #endif
+
+(void) memcpy(ptr-1,                 ") AS v (id, randomNumber) WHERE World.id = v.id;",
+                     U_CONSTANT_SIZE(") AS v (id, randomNumber) WHERE World.id = v.id;")+1);
+
+*psql_update << query;
+
+pvworld_update->clear();
 -->
