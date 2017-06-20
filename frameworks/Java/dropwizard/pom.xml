@@ -109,6 +109,8 @@
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
+					<optimize>true</optimize>
+                                        <debug>false</debug>
 				</configuration>
 			</plugin>
 			<plugin>
