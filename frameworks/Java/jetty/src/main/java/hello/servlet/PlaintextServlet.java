@@ -1,31 +1,28 @@
-package hello;
+package hello.servlet;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.activation.MimeType;
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jetty.util.ajax.JSON;
+import org.eclipse.jetty.http.MimeTypes;
 
-
-
-public class JsonServlet extends GenericServlet
+public class PlaintextServlet extends GenericServlet
 {
-    private JSON json = new JSON();
-    
+    byte[] helloWorld = "Hello, World!".getBytes(StandardCharsets.ISO_8859_1);
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException
     {
         HttpServletResponse response= (HttpServletResponse)res;
-        response.setContentType("application/json");
-        Map<String,String> map = Collections.singletonMap("message","Hello, World!");
-        
-        json.append(response.getWriter(),map);
+        response.setContentType(MimeTypes.Type.TEXT_PLAIN.asString());
+        response.getOutputStream().write(helloWorld);
     }
-
 }
