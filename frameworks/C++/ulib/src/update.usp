@@ -5,9 +5,11 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
+static bool             bpgsql;
 static World*           pworld_update;
 static UOrmSession*     psql_update;
 static UOrmStatement*   pstmt;
+static UOrmStatement*   pstmt1;
 static UVector<World*>* pvworld_update;
 
 static void usp_fork_update()
@@ -23,16 +25,21 @@ static void usp_fork_update()
       return;
       }
 
+   U_NEW(World,           pworld_update,  World);
+   U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
+
    U_NEW(UOrmStatement, pstmt, UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
-
-// if (UOrmDriver::isPGSQL()) *psql_update << "SET synchronous_commit TO OFF";
-
-   U_NEW(World, pworld_update, World);
 
    pstmt->use( pworld_update->id);
    pstmt->into(pworld_update->randomNumber);
 
-   U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
+   if ((bpgsql = UOrmDriver::isPGSQL()) == false)
+      {
+      U_NEW(UOrmStatement, pstmt1, UOrmStatement(*psql_update, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = ? WHERE id = ?")));
+
+      pstmt1->use(pworld_update->randomNumber, pworld_update->id);
+      }
+// else *psql_update << "SET synchronous_commit TO OFF";
 }
 
 #ifdef DEBUG
@@ -47,6 +54,8 @@ static void usp_end_update()
       delete pstmt;
       delete pworld_update;
       delete pvworld_update;
+
+      if (bpgsql == false) delete pstmt1;
       }
 }
 #endif
@@ -60,9 +69,12 @@ World* pworld;
 char query[8192];
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
-(void) memcpy(query,          "UPDATE World SET randomNumber = v.randomNumber FROM (VALUES",
-              U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES"));
-ptr = query + U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES");
+if (bpgsql)
+   {
+   (void) memcpy(query,          "UPDATE World SET randomNumber = v.randomNumber FROM (VALUES",
+                 U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES"));
+   ptr = query + U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES");
+   }
 
 while (true)
    {
@@ -72,6 +84,8 @@ while (true)
 
    pworld_update->randomNumber = u_get_num_random(10000-1);
 
+   if (bpgsql == false) pstmt1->execute();
+
    U_NEW(World, pworld, World(*pworld_update));
 
    pvworld_update->push_back(pworld);
@@ -79,28 +93,31 @@ while (true)
    if (++i == num_queries) break;
    }
 
-pvworld_update->sort(World::cmp_obj);
-
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR('[');
 #endif
+
+if (bpgsql) pvworld_update->sort(World::cmp_obj);
 
 i = 0;
 
 while (true)
    {
-   pworld = pvworld_update->at(i);
+   if (bpgsql)
+      {
+      pworld = pvworld_update->at(i);
 
-   *ptr++ = '(';
+      *ptr++ = '(';
 
-   ptr = u_num2str32(pworld->id, ptr);
+      ptr = u_num2str32(pworld->id, ptr);
 
-   *ptr++ = ',';
+      *ptr++ = ',';
 
-   ptr = u_num2str32(pworld->randomNumber, ptr);
+      ptr = u_num2str32(pworld->randomNumber, ptr);
 
-   u_put_unalignedp16(ptr, U_MULTICHAR_CONSTANT16(')',','));
-                      ptr += 2;
+      u_put_unalignedp16(ptr, U_MULTICHAR_CONSTANT16(')',','));
+                         ptr += 2;
+      }
 
 #ifdef AS_cpoll_cppsp_DO
    USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld->id, pworld->randomNumber);
@@ -121,8 +138,11 @@ USP_OBJ_JSON_stringify(*pvworld_update);
 
 pvworld_update->clear();
 
-(void) memcpy(ptr-1,                 ") AS v (id,randomNumber) WHERE World.id = v.id;",
-                     U_CONSTANT_SIZE(") AS v (id,randomNumber) WHERE World.id = v.id;")+1);
+if (bpgsql)
+   {
+   (void) memcpy(ptr-1,                 ") AS v (id,randomNumber) WHERE World.id = v.id;",
+                        U_CONSTANT_SIZE(") AS v (id,randomNumber) WHERE World.id = v.id;")+1);
 
-if (psql_update->query(query, ptr + U_CONSTANT_SIZE(") AS v (id,randomNumber) WHERE World.id = v.id;") - query) == false) UHTTP::setInternalError(); 
+   if (psql_update->query(query, ptr + U_CONSTANT_SIZE(") AS v (id,randomNumber) WHERE World.id = v.id;") - query) == false) UHTTP::setInternalError(); 
+   }
 -->
