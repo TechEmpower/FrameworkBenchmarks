@@ -202,10 +202,10 @@ class Benchmarker:
     ############################################################
     # get_output_file(test_name, test_type)
     # returns the output file name for this test_name and
-    # test_type timestamp/test_type/test_name/raw
+    # test_type timestamp/test_type/test_name/raw.txt
     ############################################################
     def get_output_file(self, test_name, test_type):
-        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "raw")
+        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "raw.txt")
     ############################################################
     # End get_output_file
     ############################################################
@@ -213,7 +213,7 @@ class Benchmarker:
     ############################################################
     # output_file(test_name, test_type)
     # returns the output file for this test_name and test_type
-    # timestamp/test_type/test_name/raw
+    # timestamp/test_type/test_name/raw.txt
     ############################################################
     def output_file(self, test_name, test_type):
         path = self.get_output_file(test_name, test_type)
@@ -230,10 +230,10 @@ class Benchmarker:
     ############################################################
     # get_stats_file(test_name, test_type)
     # returns the stats file name for this test_name and
-    # test_type timestamp/test_type/test_name/raw
+    # test_type timestamp/test_type/test_name/stats.txt
     ############################################################
     def get_stats_file(self, test_name, test_type):
-        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "stats")
+        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "stats.txt")
     ############################################################
     # End get_stats_file
     ############################################################
@@ -242,7 +242,7 @@ class Benchmarker:
     ############################################################
     # stats_file(test_name, test_type)
     # returns the stats file for this test_name and test_type
-    # timestamp/test_type/test_name/raw
+    # timestamp/test_type/test_name/stats.txt
     ############################################################
     def stats_file(self, test_name, test_type):
         path = self.get_stats_file(test_name, test_type)
@@ -350,7 +350,6 @@ class Benchmarker:
                 return True
             subprocess.call(['sudo', 'sysctl', '-w', 'net.ipv4.tcp_max_syn_backlog=65535'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
             subprocess.call(['sudo', 'sysctl', '-w', 'net.core.somaxconn=65535'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
-            subprocess.call(['sudo', '-s', 'ulimit', '-n', '65535'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
             subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_reuse=1'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
             subprocess.call(['sudo', 'sysctl', 'net.ipv4.tcp_tw_recycle=1'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
             subprocess.call(['sudo', 'sysctl', '-w', 'kernel.shmmax=134217728'], stdout=self.quiet_out, stderr=subprocess.STDOUT)
@@ -370,7 +369,11 @@ class Benchmarker:
     def __cleanup_leftover_processes_before_test(self):
         p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=self.quiet_out, stderr=subprocess.STDOUT)
         p.communicate("""
-      sudo /etc/init.d/apache2 stop
+      sudo service mysql stop
+      sudo service mongod stop
+      sudo kill -9 $(pgrep postgres)
+      sudo kill -9 $(pgrep mysql)
+      sudo kill -9 $(pgrep mongo)
     """)
 
     ############################################################
@@ -484,6 +487,7 @@ class Benchmarker:
                     if test_process.exitcode != 0:
                         error_happened = True
             pbar.finish()
+
         if os.path.isfile(self.current_benchmark):
             os.remove(self.current_benchmark)
         logging.debug("End __run_tests.")
@@ -552,6 +556,9 @@ class Benchmarker:
                 self.__cleanup_leftover_processes_before_test()
 
                 if self.__is_port_bound(test.port):
+                    time.sleep(60)
+
+                if self.__is_port_bound(test.port):
                     # We gave it our all
                     self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
                     out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
@@ -560,8 +567,9 @@ class Benchmarker:
                     return exit_with_code(1)
 
                 result, process = test.start(out)
+                self.__process = process
                 if result != 0:
-                    self.__stop_test(out, process)
+                    self.__process.terminate()
                     time.sleep(5)
                     out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
                     out.flush()
@@ -574,8 +582,13 @@ class Benchmarker:
                 ##########################
                 # Verify URLs
                 ##########################
-                logging.info("Verifying framework URLs")
-                passed_verify = test.verify_urls(logDir)
+                if self.mode == "debug":
+                    logging.info("Entering debug mode. Server has started. CTRL-c to stop.")
+                    while True:
+                        time.sleep(1)
+                else:
+                    logging.info("Verifying framework URLs")
+                    passed_verify = test.verify_urls(logDir)
 
                 ##########################
                 # Nuke /tmp
@@ -597,23 +610,7 @@ class Benchmarker:
                 ##########################
                 # Stop this test
                 ##########################
-                out.write(header("Stopping %s" % test.name))
-                out.flush()
-                self.__stop_test(out, process)
-                out.flush()
-                time.sleep(5)
-
-                if self.__is_port_bound(test.port):
-                    # This can happen sometimes - let's try again
-                    self.__stop_test(out, process)
-                    out.flush()
-                    time.sleep(5)
-                    if self.__is_port_bound(test.port):
-                        # We gave it our all
-                        self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-                        out.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
-                        out.flush()
-                        return exit_with_code(1)
+                self.__stop_test(test, out)
 
                 out.write(header("Stopped %s" % test.name))
                 out.flush()
@@ -649,28 +646,15 @@ class Benchmarker:
                 if self.mode == "verify" and not passed_verify:
                     print "Failed verify!"
                     return exit_with_code(1)
+            except KeyboardInterrupt:
+                self.__stop_test(test, out)
             except (OSError, IOError, subprocess.CalledProcessError) as e:
                 self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
                 out.write(header("Subprocess Error %s" % test.name))
                 traceback.print_exc(file=out)
                 out.flush()
-                try:
-                    self.__stop_test(out, process)
-                except (subprocess.CalledProcessError) as e:
-                    self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
-                    out.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
-                    traceback.print_exc(file=out)
-                    out.flush()
                 out.close()
                 return exit_with_code(1)
-            # TODO - subprocess should not catch this exception!
-            # Parent process should catch it and cleanup/exit
-            except (KeyboardInterrupt) as e:
-                self.__stop_test(out, process)
-                out.write(header("Cleaning up..."))
-                out.flush()
-                self.__finish()
-                sys.exit(1)
 
             out.close()
             return exit_with_code(0)
@@ -680,49 +664,35 @@ class Benchmarker:
     ############################################################
 
     ############################################################
-    # __stop_test(benchmarker)
-    # Stops all running tests
+    # __stop_test
+    # Attempts to stop the running test.
     ############################################################
-    def __stop_test(self, out, process):
-        if process is not None and process.poll() is None:
-            # Stop
-            pids = self.__find_child_processes(process.pid)
-            if pids is not None:
-                stop = ['kill', '-STOP'] + pids
-                subprocess.call(stop, stderr=out, stdout=out)
-            pids = self.__find_child_processes(process.pid)
-            if pids is not None:
-                term = ['kill', '-TERM'] + pids
-                subprocess.call(term, stderr=out, stdout=out)
-            # Okay, if there are any more PIDs, kill them harder
-            pids = self.__find_child_processes(process.pid)
-            if pids is not None:
-                kill = ['kill', '-KILL'] + pids
-                subprocess.call(kill, stderr=out, stdout=out)
-            process.terminate()
+    def __stop_test(self, test, out):
+        # self.__process may not be set if the user hit ctrl+c prior to the test
+        # starting properly.
+        if self.__process is not None:
+            out.write(header("Stopping %s" % test.name))
+            out.flush()
+            # Ask TFBReaper to nicely terminate itself
+            self.__process.terminate()
+            slept = 0
+            returnCode = None
+            # Check once a second to see if TFBReaper has exited
+            while(slept < 30 and returnCode is None):
+                time.sleep(1)
+                slept += 1
+                returnCode = self.__process.poll()
+            
+            # If TFBReaper has not exited at this point, we have a problem
+            if returnCode is None:
+                self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
+                out.write(header("Error: Port %s was not released by stop - %s" % (test.port, test.name)))
+                out.write(header("Running Processes"))
+                out.write(subprocess.check_output(['ps -aux'], shell=True))
+                out.flush()
+                return exit_with_code(1)
     ############################################################
     # End __stop_test
-    ############################################################
-
-    ############################################################
-    # __find_child_processes
-    # Recursively finds all child processes for the given PID.
-    ############################################################
-    def __find_child_processes(self, pid):
-        toRet = []
-        try:
-            pids = subprocess.check_output(['pgrep','-P',str(pid)]).split()
-            toRet.extend(pids)
-            for aPid in pids:
-                toRet.extend(self.__find_child_processes(aPid))
-        except:
-            # pgrep will return a non-zero status code if there are no
-            # processes who have a PPID of PID.
-            pass
-
-        return toRet
-    ############################################################
-    # End __find_child_processes
     ############################################################
 
     def is_port_bound(self, port):
@@ -929,7 +899,7 @@ class Benchmarker:
                             color = Fore.YELLOW
                         else:
                             color = Fore.RED
-                        print prefix + "|       " + test_type.ljust(11) + ' : ' + color + result.upper()
+                        print prefix + "|       " + test_type.ljust(13) + ' : ' + color + result.upper()
                 else:
                     print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
             print prefix + header('', top='', bottom='=') + Style.RESET_ALL
@@ -959,6 +929,7 @@ class Benchmarker:
         types['fortune'] = FortuneTestType()
         types['update'] = UpdateTestType()
         types['plaintext'] = PlaintextTestType()
+        types['cached_query'] = CachedQueryTestType()
 
         # Turn type into a map instead of a string
         if args['type'] == 'all':
@@ -1024,6 +995,7 @@ class Benchmarker:
             self.results['completionTime'] = None
             self.results['concurrencyLevels'] = self.concurrency_levels
             self.results['queryIntervals'] = self.query_levels
+            self.results['cachedQueryIntervals'] = self.cached_query_levels
             self.results['frameworks'] = [t.name for t in self.__gather_tests]
             self.results['duration'] = self.duration
             self.results['rawData'] = dict()
@@ -1033,6 +1005,7 @@ class Benchmarker:
             self.results['rawData']['fortune'] = dict()
             self.results['rawData']['update'] = dict()
             self.results['rawData']['plaintext'] = dict()
+            self.results['rawData']['cached_query'] = dict()
             self.results['completed'] = dict()
             self.results['succeeded'] = dict()
             self.results['succeeded']['json'] = []
@@ -1041,6 +1014,7 @@ class Benchmarker:
             self.results['succeeded']['fortune'] = []
             self.results['succeeded']['update'] = []
             self.results['succeeded']['plaintext'] = []
+            self.results['succeeded']['cached_query'] = []
             self.results['failed'] = dict()
             self.results['failed']['json'] = []
             self.results['failed']['db'] = []
@@ -1048,6 +1022,7 @@ class Benchmarker:
             self.results['failed']['fortune'] = []
             self.results['failed']['update'] = []
             self.results['failed']['plaintext'] = []
+            self.results['failed']['cached_query'] = []
             self.results['verify'] = dict()
         else:
             #for x in self.__gather_tests():
@@ -1064,9 +1039,11 @@ class Benchmarker:
         if self.client_identity_file != None:
             self.client_ssh_string = self.client_ssh_string + " -i " + self.client_identity_file
 
-            ############################################################
-            # End __init__
-            ############################################################
+        self.__process = None
+
+    ############################################################
+    # End __init__
+    ############################################################
 
 
 class QuietOutputStream:

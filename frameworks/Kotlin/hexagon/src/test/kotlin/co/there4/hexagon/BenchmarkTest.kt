@@ -1,30 +1,25 @@
 package co.there4.hexagon
 
 import co.there4.hexagon.serialization.parse
-import co.there4.hexagon.web.Client
-import co.there4.hexagon.web.HttpMethod.GET
-import co.there4.hexagon.web.reset
-import co.there4.hexagon.web.server
-import co.there4.hexagon.web.stop
+import co.there4.hexagon.client.Client
+import co.there4.hexagon.server.HttpMethod.GET
 import org.asynchttpclient.Response
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 import kotlin.test.assertFailsWith
 
 internal const val THREADS = 4
-internal const val TIMES = 4
+internal const val TIMES = 2
 
-class BenchmarkMongoDbTest : BenchmarkTest("mongodb")
-class BenchmarkMySqlTest : BenchmarkTest("mysql")
+//class BenchmarkMongoDbTest : BenchmarkTest("mongodb")
+//class BenchmarkPostgreSqlTest : BenchmarkTest("postgresql")
 
 //@Test(threadPoolSize = THREADS, invocationCount = TIMES)
 abstract class BenchmarkTest(val databaseEngine: String) {
-    private val client by lazy { Client("http://localhost:${server.runtimePort}") }
+    private val client by lazy { Client("http://localhost:${server?.runtimePort}") }
 
     @BeforeClass fun warmup() {
-        stop()
-        reset()
-        main(arrayOf(databaseEngine))
+        main(databaseEngine)
 
         val warmupRounds = if (THREADS > 1) 2 else 0
         (1..warmupRounds).forEach {
@@ -60,9 +55,10 @@ abstract class BenchmarkTest(val databaseEngine: String) {
 
     fun web() {
         val web = Web()
-        web.init()
 
-        val webRoutes = web.routes.map { it.key.method to it.key.path.path }
+        val webRoutes = web.serverRouter.requestHandlers
+            .map { it.route.method.first() to it.route.path.path }
+
         val benchmarkRoutes = listOf(
             GET to "/plaintext",
             GET to "/json",

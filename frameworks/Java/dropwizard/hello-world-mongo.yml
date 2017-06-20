@@ -19,6 +19,6 @@ logging:
   appenders: []
 
 mongo:
-  host: 127.0.0.1
+  host: TFB-database
   port: 27017
   db: hello_world

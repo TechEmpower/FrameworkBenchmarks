@@ -1,11 +1,11 @@
 # Grape Micro-Framework
 
-The information below contains information specific to Grape. 
-For further guidance, review the 
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
+The information below contains information specific to Grape.
+For further guidance, review the
+[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
 Also note the additional information provided in the [Ruby README](../).
 
-This is the Ruby Grape portion of a [benchmarking test suite](../../) 
+This is the Ruby Grape portion of a [benchmarking test suite](../../)
 comparing a variety of web servers along with JRuby/MRI.
 
 ## Infrastructure Software Versions
@@ -18,7 +18,7 @@ The tests were run with:
 * [Rack 1.5.2](http://rack.github.com/)
 * [Unicorn 4.8.3](http://unicorn.bogomips.org/)
 * [TorqBox 0.1.7](http://torquebox.org/torqbox/)
-* [Puma 2.9.0](http://puma.io/)
+* [Puma 3.9](http://puma.io/)
 * [Thin 1.6.2](http://code.macournoyer.com/thin/)
 
 ## Paths & Source for Tests

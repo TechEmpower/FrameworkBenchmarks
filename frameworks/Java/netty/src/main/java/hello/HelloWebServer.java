@@ -3,7 +3,6 @@ package hello;
 import java.net.InetSocketAddress;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -49,10 +48,9 @@ public class HelloWebServer {
 				b.option(EpollChannelOption.SO_REUSEPORT, true);
 			}
 
-			b.option(ChannelOption.SO_BACKLOG, 1024);
+			b.option(ChannelOption.SO_BACKLOG, 8192);
 			b.option(ChannelOption.SO_REUSEADDR, true);
 			b.group(loupGroup).channel(serverChannelClass).childHandler(new HelloServerInitializer(loupGroup.next()));
-			b.childOption(ChannelOption.ALLOCATOR, new PooledByteBufAllocator(true));
 			b.childOption(ChannelOption.SO_REUSEADDR, true);
 
 			Channel ch = b.bind(inet).sync().channel();

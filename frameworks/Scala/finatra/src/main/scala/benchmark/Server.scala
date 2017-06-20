@@ -16,6 +16,7 @@ class Server extends HttpServer {
 
   override protected def configureHttpServer(server: Http.Server): Http.Server = {
     server
+      .configured(Http.Netty3Impl)
       .withCompressionLevel(0)
       .withStatsReceiver(NullStatsReceiver)
       .withTracer(NullTracer)

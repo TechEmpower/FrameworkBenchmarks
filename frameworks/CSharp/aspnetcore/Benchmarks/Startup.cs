@@ -11,10 +11,9 @@ using Benchmarks.Data;
 using Benchmarks.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.PlatformAbstractions;
 using Npgsql;
 
 namespace Benchmarks
@@ -25,7 +24,7 @@ namespace Benchmarks
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
-                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
+                .SetBasePath(hostingEnv.ContentRootPath)
                 .AddCommandLine(Program.Args)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{hostingEnv.EnvironmentName}.json", optional: true)
@@ -51,23 +50,24 @@ namespace Benchmarks
             // Common DB services
             services.AddSingleton<IRandom, DefaultRandom>();
             services.AddSingleton<ApplicationDbSeeder>();
-            services.AddEntityFrameworkSqlServer()
-                .AddDbContext<ApplicationDbContext>();
-            
-            if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
-            {
-                services.AddSingleton<DbProviderFactory>((provider) => {
-                    var settings = provider.GetRequiredService<IOptions<AppSettings>>().Value;
+            services.AddEntityFrameworkSqlServer();
 
-                    if (settings.Database == DatabaseServer.PostgreSql)
-                    {
-                        return NpgsqlFactory.Instance;
-                    }
-                    else
-                    {
-                        return SqlClientFactory.Instance;
-                    }
-                });
+            var appSettings = Configuration.Get<AppSettings>();
+            if (appSettings.Database == DatabaseServer.PostgreSql)
+            {
+                services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(appSettings.ConnectionString));
+                if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
+                {
+                    services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
+                }
+            }
+            else
+            {
+                services.AddDbContextPool<ApplicationDbContext>(options => options.UseSqlServer(appSettings.ConnectionString));
+                if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
+                {
+                    services.AddSingleton<DbProviderFactory>(SqlClientFactory.Instance);
+                }
             }
 
             if (Scenarios.Any("Ef"))
@@ -99,7 +99,6 @@ namespace Benchmarks
             {
                 var mvcBuilder = services
                     .AddMvcCore()
-                    //.AddApplicationPart(typeof(Startup).GetTypeInfo().Assembly)
                     .AddControllersAsServices();
 
                 if (Scenarios.MvcJson || Scenarios.Any("MvcDbSingle") || Scenarios.Any("MvcDbMulti"))
@@ -116,7 +115,7 @@ namespace Benchmarks
             }
         }
 
-        public void Configure(IApplicationBuilder app, ApplicationDbSeeder dbSeeder, ApplicationDbContext dbContext)
+        public void Configure(IApplicationBuilder app, ApplicationDbSeeder dbSeeder)
         {
             if (Scenarios.Plaintext)
             {
@@ -194,8 +193,6 @@ namespace Benchmarks
 
             if (Scenarios.Any("Db"))
             {
-                dbContext.Database.EnsureCreated();
-
                 if (!dbSeeder.Seed())
                 {
                     Environment.Exit(1);

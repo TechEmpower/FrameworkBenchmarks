@@ -12,18 +12,19 @@ init(_Transport, Req, []) ->
 
 handle(Req, State) ->
         random:seed(erlang:now()),
-        {JSON, Req2} = case cowboy_req:qs_val(<<"queries">>, Req) of
-    {undefined, Req1} ->
-      {result_packet, _, _, [[ID, Rand]], _} = emysql:execute(test_pool, db_stmt, [random:uniform(10000)]),
-      {[{[{<<"id">>, ID}, {<<"randomNumber">>, Rand}]}], Req1};
-    {N, Req1} ->
-      I = list_to_integer(binary_to_list(N)),
-      Res = [ {[{<<"id">>, ID}, {<<"randomNumber">>, Rand}]} || 
+    {N, Req1} = cowboy_req:qs_val(<<"queries">>, Req, <<"1">>),
+
+      I = try binary_to_integer(N) of
+            X when X > 500 -> 500;
+            X when X < 1 -> 1;
+            X -> X
+          catch error:badarg -> 1 end,
+
+      JSON = [ {[{<<"id">>, ID}, {<<"randomNumber">>, Rand}]} ||
               {result_packet, _, _, [[ID, Rand]], _} <- [emysql:execute(test_pool, db_stmt, [random:uniform(10000)]) || _ <- lists:seq(1, I) ]],
-      {Res, Req1}
-    end,
-  {ok, Req3} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"application/json">>}], jiffy:encode(JSON), Req2),
-  {ok, Req3, State}.
+
+  {ok, Req2} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"application/json">>}], jiffy:encode(JSON), Req1),
+  {ok, Req2, State}.
 
 terminate(_Reason, _Req, _State) ->
   ok.

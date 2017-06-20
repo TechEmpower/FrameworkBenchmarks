@@ -1,35 +1,31 @@
 _plaintext:
-    pattern:  /plaintext
-    defaults: { _controller: SkamanderBenchmarkBundle:Bench:plaintext }
+    path:  /plaintext
+    defaults: { _controller: "SkamanderBenchmarkBundle:Bench:plaintext" }
 
 _json:
-    pattern:  /json
-    defaults: { _controller: SkamanderBenchmarkBundle:Bench:json }
+    path:  /json
+    defaults: { _controller: "SkamanderBenchmarkBundle:Bench:json" }
 
 _db:
-    pattern:  /db
-    defaults: { _controller: SkamanderBenchmarkBundle:Bench:db }
+    path:  /db
+    defaults: { _controller: "SkamanderBenchmarkBundle:Bench:db" }
 
 _dbRaw:
-    pattern:  /db-raw
-    defaults: { _controller: SkamanderBenchmarkBundle:Bench:dbRaw }
+    path:  /db-raw
+    defaults: { _controller: "SkamanderBenchmarkBundle:Bench:dbRaw" }
 
 _update:
-    pattern:  /update
-    defaults: { _controller: SkamanderBenchmarkBundle:Bench:update }
+    path:  /update
+    defaults: { _controller: "SkamanderBenchmarkBundle:Bench:update" }
 
 _updateRaw:
-    pattern:  /update-raw
-    defaults: { _controller: SkamanderBenchmarkBundle:Bench:updateRaw }
+    path:  /update-raw
+    defaults: { _controller: "SkamanderBenchmarkBundle:Bench:updateRaw" }
 
 _fortunes:
-    pattern:  /fortunes
-    defaults: { _controller: SkamanderBenchmarkBundle:Bench:fortunes }
-
-_fortunesPhp:
-    pattern:  /fortunes-php
-    defaults: { _controller: SkamanderBenchmarkBundle:Bench:fortunesPhp }
+    path:  /fortunes
+    defaults: { _controller: "SkamanderBenchmarkBundle:Bench:fortunes" }
 
 _fortunesRaw:
-    pattern:  /fortunes-raw
-    defaults: { _controller: SkamanderBenchmarkBundle:Bench:fortunesRaw }
+    path:  /fortunes-raw
+    defaults: { _controller: "SkamanderBenchmarkBundle:Bench:fortunesRaw" }

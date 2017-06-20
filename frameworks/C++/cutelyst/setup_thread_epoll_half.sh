@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DRIVER=
+UWSGI=
+NGINX=
+C_PROCESSES=1
+C_THREADS=$(( (${CPU_COUNT}+1) / 2 ))
+CPU_AFFINITY=2
+export CUTELYST_EVENT_LOOP_EPOLL=1
+
+source ${TROOT}/config.sh

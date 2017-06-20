@@ -1,5 +1,6 @@
 package vertx;
 
+import io.netty.util.AsciiString;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Handler;
@@ -13,6 +14,8 @@ import io.vertx.core.logging.LoggerFactory;
 
 import java.util.Collections;
 
+import static io.vertx.core.http.HttpHeaders.*;
+
 public class WebServer extends AbstractVerticle implements Handler<HttpServerRequest> {
 
 	static Logger logger = LoggerFactory.getLogger(WebServer.class.getName());
@@ -20,20 +23,18 @@ public class WebServer extends AbstractVerticle implements Handler<HttpServerReq
 	private static final String PATH_PLAINTEXT = "/plaintext";
 	private static final String PATH_JSON = "/json";
 
-	private static final String RESPONSE_TYPE_PLAIN = "text/plain";
-	private static final String RESPONSE_TYPE_JSON = "application/json";
+	private static final CharSequence RESPONSE_TYPE_PLAIN = new AsciiString("text/plain");
+	private static final CharSequence RESPONSE_TYPE_JSON = new AsciiString("application/json");
 
-	private static final String TEXT_MESSAGE = "message";
+	private static final String MESSAGE = "message";
 	private static final String HELLO_WORLD = "Hello, world!";
+
 	private static final Buffer HELLO_WORLD_BUFFER = Buffer.buffer(HELLO_WORLD);
+	private static final CharSequence HELLO_WORLD_CONTENT_LENGTH = new AsciiString(String.valueOf(HELLO_WORLD.length()));
 
-	private static final String HEADER_SERVER = "SERVER";
-	private static final String HEADER_DATE = "DATE";
-	private static final String HEADER_CONTENT = "content-type";
+	private static final CharSequence VERTX = new AsciiString("vertx".toCharArray());
 
-	private static final String SERVER = "vertx";
-
-	private String dateString;
+	private CharSequence dateString;
 
 	private HttpServer server;
 
@@ -46,7 +47,7 @@ public class WebServer extends AbstractVerticle implements Handler<HttpServerReq
 
 		server.requestHandler(WebServer.this).listen(port);
 
-		dateString = java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(java.time.ZonedDateTime.now());
+		dateString = new AsciiString(java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(java.time.ZonedDateTime.now()).getBytes());
 
 		vertx.setPeriodic(1000, handler -> {
 			dateString = java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(java.time.ZonedDateTime.now());
@@ -75,14 +76,14 @@ public class WebServer extends AbstractVerticle implements Handler<HttpServerReq
 
 	private void handlePlainText(HttpServerRequest request) {
 		request.response()
-		.putHeader(HEADER_CONTENT, RESPONSE_TYPE_PLAIN).putHeader(HEADER_SERVER,  SERVER)
-		.putHeader(HEADER_DATE, dateString).end(HELLO_WORLD_BUFFER);
+		.putHeader(CONTENT_TYPE , RESPONSE_TYPE_PLAIN).putHeader(SERVER, VERTX)
+		.putHeader(DATE, dateString).putHeader(CONTENT_LENGTH, HELLO_WORLD_CONTENT_LENGTH).end(HELLO_WORLD_BUFFER);
 	}
 
 	private void handleJson(HttpServerRequest request) {
-		Buffer buff = Buffer.buffer(Json.encode(Collections.singletonMap(TEXT_MESSAGE, HELLO_WORLD)));
-		request.response().putHeader(HEADER_CONTENT, RESPONSE_TYPE_JSON).putHeader(HEADER_SERVER,  SERVER)
-		.putHeader(HEADER_DATE, dateString).end(buff);
+	  Buffer buff = Buffer.buffer(Json.encode(Collections.singletonMap(MESSAGE, HELLO_WORLD)));
+		request.response().putHeader(CONTENT_TYPE, RESPONSE_TYPE_JSON).putHeader(SERVER,  VERTX)
+		.putHeader(DATE, dateString).end(buff);
 	}
 	
 	public static void main(String[] args) {

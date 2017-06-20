@@ -58,13 +58,16 @@ public final class Helper {
 
     private static final int cpuCount = Runtime.getRuntime().availableProcessors();
 
-    // todo: parameterize multipliers
-    public static ExecutorService EXECUTOR =
-            new ThreadPoolExecutor(
-                    cpuCount * 2, cpuCount * 25, 200, TimeUnit.MILLISECONDS,
-                    new LinkedBlockingQueue<Runnable>(cpuCount * 100),
-                    new ThreadPoolExecutor.CallerRunsPolicy());
-
+    public static final Executor executor =
+            Executors.newFixedThreadPool(2000,
+                    new ThreadFactory() {
+                        @Override
+                        public Thread newThread(Runnable r) {
+                            Thread t = new Thread(r);
+                            t.setDaemon(true);
+                            return t;
+                        }
+                    });
 
     public static World selectWorld(DataSource ds) {
         try (final Connection connection = ds.getConnection()) {

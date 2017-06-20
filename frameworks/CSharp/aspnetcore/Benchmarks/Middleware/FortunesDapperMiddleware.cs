@@ -1,5 +1,5 @@
-// Copyright (c) .NET Foundation. All rights reserved. 
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Text.Encodings.Web;
@@ -8,6 +8,7 @@ using Benchmarks.Configuration;
 using Benchmarks.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Benchmarks.Middleware
 {
@@ -16,13 +17,11 @@ namespace Benchmarks.Middleware
         private static readonly PathString _path = new PathString(Scenarios.GetPath(s => s.DbFortunesDapper));
 
         private readonly RequestDelegate _next;
-        private readonly DapperDb _db;
         private readonly HtmlEncoder _htmlEncoder;
 
-        public FortunesDapperMiddleware(RequestDelegate next, DapperDb db, HtmlEncoder htmlEncoder)
+        public FortunesDapperMiddleware(RequestDelegate next, HtmlEncoder htmlEncoder)
         {
             _next = next;
-            _db = db;
             _htmlEncoder = htmlEncoder;
         }
 
@@ -30,7 +29,8 @@ namespace Benchmarks.Middleware
         {
             if (httpContext.Request.Path.StartsWithSegments(_path, StringComparison.Ordinal))
             {
-                var rows = await _db.LoadFortunesRows();
+                var db = httpContext.RequestServices.GetService<DapperDb>();
+                var rows = await db.LoadFortunesRows();
 
                 await MiddlewareHelpers.RenderFortunesHtml(rows, httpContext, _htmlEncoder);
 
@@ -40,7 +40,7 @@ namespace Benchmarks.Middleware
             await _next(httpContext);
         }
     }
-    
+
     public static class FortunesDapperMiddlewareExtensions
     {
         public static IApplicationBuilder UseFortunesDapper(this IApplicationBuilder builder)

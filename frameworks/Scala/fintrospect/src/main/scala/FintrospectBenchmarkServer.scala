@@ -8,6 +8,7 @@ import com.twitter.finagle.{Filter, Http}
 import com.twitter.util.{Await, NullMonitor}
 import io.fintrospect.RouteModule
 import io.fintrospect.configuration.Host
+import io.fintrospect.filters.ResponseFilters
 import org.apache.commons.lang.time.FastDateFormat.getInstance
 
 import scala.util.Properties
@@ -39,6 +40,6 @@ object FintrospectBenchmarkServer extends App {
       .withStatsReceiver(NullStatsReceiver)
       .withTracer(NullTracer)
       .withMonitor(NullMonitor)
-      .serve(":9000", addServerAndDate.andThen(module.toService))
+      .serve(":9000", ResponseFilters.CatchAll().andThen(addServerAndDate).andThen(module.toService))
   )
 }

@@ -115,18 +115,18 @@ void start_threads(global_thread_data_t *global_thread_data)
 	// The first thread context is used by the main thread.
 	global_thread_data->thread = pthread_self();
 
-	// If the number of threads is not equal to the number of processors, then let the scheduler
-	// decide how to balance the load.
-	if (global_thread_data->config->thread_num == num_cpus) {
+	// If the number of threads is not a multiple of the number of processors, then
+	// let the scheduler decide how to balance the load.
+	if (global_thread_data->config->thread_num % num_cpus == 0) {
 		CPU_ZERO_S(cpusetsize, cpuset);
 		CPU_SET_S(0, cpusetsize, cpuset);
 		CHECK_ERROR(pthread_setaffinity_np, global_thread_data->thread, cpusetsize, cpuset);
 	}
 
 	for (size_t i = global_thread_data->config->thread_num - 1; i > 0; i--) {
-		if (global_thread_data->config->thread_num == num_cpus) {
+		if (global_thread_data->config->thread_num % num_cpus == 0) {
 			CPU_ZERO_S(cpusetsize, cpuset);
-			CPU_SET_S(i, cpusetsize, cpuset);
+			CPU_SET_S(i % num_cpus, cpusetsize, cpuset);
 			CHECK_ERROR(pthread_attr_setaffinity_np, &attr, cpusetsize, cpuset);
 		}
 
