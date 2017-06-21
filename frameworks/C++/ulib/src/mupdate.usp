@@ -63,10 +63,10 @@ uint32_t id, rnum;
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
 #ifdef AS_cpoll_cppsp_DO
-UClientImage_Base::wbuffer->setBuffer(36U * 500U);
+UClientImage_Base::wbuffer->setBuffer(36U * num_queries);
 
-char* s = UClientImage_Base::wbuffer->data();
-char* p = start;
+char* s   = UClientImage_Base::wbuffer->data();
+char* ptr = s;
 
 *ptr++ = '[';
 #endif

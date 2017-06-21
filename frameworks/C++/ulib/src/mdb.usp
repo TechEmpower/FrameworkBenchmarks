@@ -54,8 +54,8 @@ UString result;
 (void) U_JFIND(mc->vitem[0], "randomNumber", result);
 
 #ifdef AS_cpoll_cppsp_DO
-char* s = UClientImage_Base::wbuffer->data();
-char* p = start;
+char* s     = UClientImage_Base::wbuffer->data();
+char* ptr   = s;
 uint32_t sz = result.size();
 
 u_put_unalignedp32(ptr,   U_MULTICHAR_CONSTANT32('{','"','i','d'));
