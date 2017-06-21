@@ -1,4 +1,4 @@
-require "../src/controllers/test_controller"
+require "../src/middleware/custom_headers"
 
 Kemalyst::Application.config do |config|
   # Set the binding host ip address.  Defaults to "0.0.0.0"
@@ -12,8 +12,8 @@ Kemalyst::Application.config do |config|
 
   # Disable unused middleware
   config.handlers = [] of HTTP::Handler
-  config.handlers << Crack::Handler::Error.instance
-  config.handlers << Crack::Handler::Params.instance
-  config.handlers << TestController.instance
+  config.handlers << Kemalyst::Handler::Error.instance
+  config.handlers << Kemalyst::Handler::Params.instance
+  config.handlers << Middleware::CustomHeaders.instance
   config.handlers << Kemalyst::Handler::Router.instance
 end
