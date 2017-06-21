@@ -5,6 +5,7 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
+static bson_t* query;  
 static UMongoDBClient* mc;
 
 #ifndef AS_cpoll_cppsp_DO
@@ -31,6 +32,8 @@ static void usp_fork_mupdate()
       return;
       }
 
+   query = (bson_t*) U_SYSCALL_NO_PARAM(bson_new);  
+
 #ifndef AS_cpoll_cppsp_DO
    U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
 #endif
@@ -42,6 +45,8 @@ static void usp_end_mupdate()
    U_TRACE(5, "::usp_end_mupdate()")
 
    delete mc;
+
+   if (query) U_SYSCALL_VOID(bson_destroy, "%p", query);
 
 #ifndef AS_cpoll_cppsp_DO
    if (pvworld_update) delete pvworld_update;
@@ -58,18 +63,33 @@ uint32_t id, rnum;
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
 #ifdef AS_cpoll_cppsp_DO
-USP_PUTS_CHAR('[');
+UClientImage_Base::wbuffer->setBuffer(36U * 500U);
+
+char* s = UClientImage_Base::wbuffer->data();
+char* p = start;
+
+*ptr++ = '[';
 #endif
 
 while (true)
    {
 // mc->updateOneBulk(bulk, id = u_get_num_random(10000-1), "randomNumber", rnum = u_get_num_random(10000-1));
 
-   if (mc->findOne(id = u_get_num_random(10000-1)) &&
+   if (mc->findOne(id = u_get_num_random(10000-1), query) &&
        mc->update( id, "randomNumber", rnum = u_get_num_random(10000-1)))
       {
 #  ifdef AS_cpoll_cppsp_DO
-      USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", id, rnum);
+      u_put_unalignedp32(ptr,   U_MULTICHAR_CONSTANT32('{','"','i','d'));
+      u_put_unalignedp16(ptr+4, U_MULTICHAR_CONSTANT16('"',':'));
+
+      ptr = u_num2str32(id, ptr+6);
+
+      u_put_unalignedp64(ptr,   U_MULTICHAR_CONSTANT64(',','"','r','a','n','d','o','m'));
+      u_put_unalignedp64(ptr+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'));
+
+      ptr = u_num2str32(rnum, ptr+16);
+
+      *ptr++ = '}';
 #  else
       World* pworld;
 
@@ -82,14 +102,16 @@ while (true)
    if (++i == num_queries) break;
 
 #ifdef AS_cpoll_cppsp_DO
-   USP_PUTS_CHAR(',');
+   *ptr++ = ',';
 #endif
    }
 
 // (void) mc->executeBulk(bulk);
 
 #ifdef AS_cpoll_cppsp_DO
-USP_PUTS_CHAR(']');
+*ptr = ']';
+
+UClientImage_Base::wbuffer->size_adjust(ptr - s);
 #else
 USP_OBJ_JSON_stringify(*pvworld_update);
 pvworld_update->clear();

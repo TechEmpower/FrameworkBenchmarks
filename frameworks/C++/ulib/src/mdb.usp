@@ -5,6 +5,7 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
+static bson_t* query;  
 static UMongoDBClient* mc;
 
 static void usp_fork_mdb()
@@ -26,6 +27,8 @@ static void usp_fork_mdb()
 
       return;
       }
+
+   query = (bson_t*) U_SYSCALL_NO_PARAM(bson_new);  
 }
 
 #ifdef DEBUG
@@ -34,6 +37,8 @@ static void usp_end_mdb()
    U_TRACE(5, "::usp_end_mdb()")
 
    delete mc;
+
+   if (query) U_SYSCALL_VOID(bson_destroy, "%p", query);
 }
 #endif
 -->
@@ -44,12 +49,30 @@ Content-Type: application/json
 uint32_t id;
 UString result;
 
-(void) mc->findOne(id = u_get_num_random(10000-1));
+(void) mc->findOne(id = u_get_num_random(10000-1), query);
 
 (void) U_JFIND(mc->vitem[0], "randomNumber", result);
 
 #ifdef AS_cpoll_cppsp_DO
-USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", id, result.rep);
+char* s = UClientImage_Base::wbuffer->data();
+char* p = start;
+uint32_t sz = result.size();
+
+u_put_unalignedp32(ptr,   U_MULTICHAR_CONSTANT32('{','"','i','d'));
+u_put_unalignedp16(ptr+4, U_MULTICHAR_CONSTANT16('"',':'));
+
+ptr = u_num2str32(id, ptr+6);
+
+u_put_unalignedp64(ptr,   U_MULTICHAR_CONSTANT64(',','"','r','a','n','d','o','m'));
+u_put_unalignedp64(ptr+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'));
+                   ptr += 16;
+
+(void) memcpy(ptr, result.data(), sz);
+              ptr +=              sz;
+
+*ptr = '}';
+
+UClientImage_Base::wbuffer->size_adjust(ptr - s);
 #else
 World world(id, result.strtoul());
 USP_OBJ_JSON_stringify(world);
