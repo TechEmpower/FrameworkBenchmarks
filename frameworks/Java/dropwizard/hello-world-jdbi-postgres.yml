@@ -7,7 +7,7 @@ server:
     useServerHeader: true
     # There is no proxy in front of the server
     useForwardedHeaders: false
-  # Test requirements forbid gzip compression of the replies
+  # Test requirements forgid gzip compression of the replies
   gzip:
     enabled: false
   requestLog:
@@ -32,7 +32,6 @@ database:
   # any properties specific to your JDBC driver:
   properties:
     charSet: UTF-8
-    hibernate.dialect: org.hibernate.dialect.PostgreSQL9Dialect
 
   # the maximum amount of time to wait on an empty pool before throwing an exception
   maxWaitForConnection: 1s
