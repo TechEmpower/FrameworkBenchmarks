@@ -63,10 +63,10 @@ UString rnumber;
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
 #ifdef AS_cpoll_cppsp_DO
-UClientImage_Base::wbuffer->setBuffer(36U * num_queries);
+(void) UClientImage_Base::wbuffer->reserve(36U * num_queries);
 
 char* s   = UClientImage_Base::wbuffer->data();
-char* ptr = s;
+char* ptr = UClientImage_Base::wbuffer->pend();
 
 *ptr++ = '[';
 #endif
@@ -74,8 +74,6 @@ char* ptr = s;
 while (true)
    {
    (void) mc->findOne(id = u_get_num_random(10000-1), query);
-
-   rnumber.clear();
 
    (void) U_JFIND(mc->vitem[0], "randomNumber", rnumber);
 
@@ -103,6 +101,8 @@ while (true)
    pvworld_query->push_back(pworld);
 #endif
 
+   rnumber.clear();
+
    if (++i == num_queries) break;
 
 #ifdef AS_cpoll_cppsp_DO
@@ -111,7 +111,7 @@ while (true)
    }
 
 #ifdef AS_cpoll_cppsp_DO
-*ptr = ']';
+*ptr++ = ']';
 
 UClientImage_Base::wbuffer->size_adjust(ptr - s);
 #else
