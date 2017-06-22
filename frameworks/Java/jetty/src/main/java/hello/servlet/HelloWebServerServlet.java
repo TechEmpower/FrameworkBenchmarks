@@ -1,4 +1,4 @@
-package hello;
+package hello.servlet;
 
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -11,7 +11,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
  * An implementation of the TechEmpower benchmark tests using the Jetty web
  * server.  
  */
-public final class HelloWebServer 
+public final class HelloWebServerServlet 
 {
 
     public static void main(String[] args) throws Exception
