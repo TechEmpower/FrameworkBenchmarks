@@ -54,7 +54,7 @@ end
 # Test 1: JSON Serialization
 get "/json" do |env|
   env.response.content_type = CONTENT::JSON
-  {message: "Hello, World!"}.to_json
+  {message: "Hello, World!"}.to_json(env.response)
 end
 
 # Test 6: Plaintext
@@ -70,7 +70,7 @@ end
 # Redis Test 2: Single database query
 get "/db" do |env|
   env.response.content_type = CONTENT::JSON
-  random_world.to_json
+  random_world.to_json(env.response)
 end
 
 # Redis Test 3: Multiple database query
@@ -80,7 +80,7 @@ get "/queries" do |env|
   end
 
   env.response.content_type = CONTENT::JSON
-  results.to_json
+  results.to_json(env.response)
 end
 
 # Redis Test 4: Fortunes
@@ -105,7 +105,7 @@ get "/updates" do |env|
   end
 
   env.response.content_type = CONTENT::JSON
-  updated.to_json
+  updated.to_json(env.response)
 end
 
 logging false
