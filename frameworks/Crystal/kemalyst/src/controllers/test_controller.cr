@@ -67,7 +67,7 @@ module TestController
 
       fortunes = Fortune.all
       fortunes << fortune
-      fortunes.sort_by! { |fortune| fortune.not_nil!.message.not_nil! }
+      fortunes.sort_by! { |fortune| fortune.message.not_nil! }
 
       html render("fortune/index.slang", "main.slang")
     end

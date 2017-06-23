@@ -11,8 +11,8 @@ dependencies:
     github: kemalyst/kemalyst
     version: ~> 0.9.0
 
-  granite_orm:
-    github: kemalyst/granite-orm
+  kemalyst-model:
+    github: kemalyst/kemalyst-model
     version: ~> 0.6.0
 
   kemalyst-spec:
