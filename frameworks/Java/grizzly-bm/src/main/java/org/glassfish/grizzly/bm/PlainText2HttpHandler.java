@@ -15,7 +15,7 @@ import org.glassfish.grizzly.utils.Charsets;
  */
 public class PlainText2HttpHandler extends HttpHandler {
     private static final ContentType CONTENT_TYPE =
-            ContentType.newContentType("text/plain", "utf-8").prepare();
+            ContentType.newContentType("text/plain").prepare();
     private static final byte[] HELLO_WORLD_BYTES = "Hello, World!".getBytes(Charsets.UTF8_CHARSET);
             
     @Override
