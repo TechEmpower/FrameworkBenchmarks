@@ -160,6 +160,7 @@ env:
     - "TESTDIR=Python/flask"
     - "TESTDIR=Python/historical"
     - "TESTDIR=Python/klein"
+    - "TESTDIR=Python/morepath"
     - "TESTDIR=Python/pyramid"
     - "TESTDIR=Python/tornado"
     - "TESTDIR=Python/turbogears"
