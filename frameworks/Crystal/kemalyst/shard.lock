@@ -10,7 +10,7 @@ shards:
 
   kemalyst:
     github: kemalyst/kemalyst
-    version: 0.9.1
+    version: 0.10.0
 
   kemalyst-model:
     github: kemalyst/kemalyst-model
@@ -39,6 +39,10 @@ shards:
   pool:
     github: ysbaddaden/pool
     version: 0.2.3
+
+  quartz-mailer:
+    github: amber-crystal/quartz-mailer
+    commit: 9361ae75f178cb62585aa1b6047a2269f553d2d5
 
   radix:
     github: luislavena/radix
