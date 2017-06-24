@@ -1,6 +1,8 @@
 #!/bin/bash
 
-fw_depends crystal
+fw_depends postgresql crystal
+
+shards install
 
 crystal build --release server.cr -o server.out
 
