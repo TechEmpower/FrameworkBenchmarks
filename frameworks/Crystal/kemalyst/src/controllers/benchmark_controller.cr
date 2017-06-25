@@ -58,7 +58,7 @@ class BenchmarkController < Kemalyst::Controller
     fortunes << fortune
     fortunes.sort_by! { |fortune| fortune.message.not_nil! }
 
-    render("fortune/index.slang", "main.slang")
+    html render("fortune/index.slang", "main.slang")
   end
 end
 
