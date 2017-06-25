@@ -1,5 +1,5 @@
-// Copyright (c) .NET Foundation. All rights reserved. 
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Threading.Tasks;
@@ -32,8 +32,9 @@ namespace Benchmarks.Middleware
         {
             if (httpContext.Request.Path.StartsWithSegments(_path, StringComparison.Ordinal))
             {
-                var db = httpContext.RequestServices.GetService<EfDb>();
                 var count = MiddlewareHelpers.GetMultipleQueriesQueryCount(httpContext);
+
+                var db = httpContext.RequestServices.GetService<EfDb>();
                 var rows = await db.LoadMultipleQueriesRows(count);
 
                 var result = JsonConvert.SerializeObject(rows, _jsonSettings);

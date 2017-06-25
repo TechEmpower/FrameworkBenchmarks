@@ -1,9 +1,14 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved. 
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Benchmarks.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Options;
 
 namespace Benchmarks.Data
 {
@@ -11,51 +16,64 @@ namespace Benchmarks.Data
     {
         private readonly IRandom _random;
         private readonly ApplicationDbContext _dbContext;
+        private readonly bool _useBatchUpdate;
 
-        public EfDb(IRandom random, ApplicationDbContext dbContext)
+        public EfDb(IRandom random, ApplicationDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _random = random;
             _dbContext = dbContext;
-            _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            _useBatchUpdate = appSettings.Value.Database != DatabaseServer.PostgreSql;
         }
+
+        private static readonly Func<ApplicationDbContext, int, Task<World>> _firstWorldQuery
+            = EF.CompileAsyncQuery((ApplicationDbContext context, int id)
+                => context.World.First(w => w.Id == id));
 
         public Task<World> LoadSingleQueryRow()
         {
             var id = _random.Next(1, 10001);
-            return _dbContext.World.FirstAsync(w => w.Id == id);
+
+            return _firstWorldQuery(_dbContext, id);
         }
 
         public async Task<World[]> LoadMultipleQueriesRows(int count)
         {
             var result = new World[count];
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 var id = _random.Next(1, 10001);
-                result[i] = await _dbContext.World.FirstAsync(w => w.Id == id);
+
+                result[i] = await _firstWorldQuery(_dbContext, id);
             }
 
             return result;
         }
 
+        private static readonly Func<ApplicationDbContext, int, Task<World>> _firstWorldTrackedQuery
+            = EF.CompileAsyncQuery((ApplicationDbContext context, int id)
+                => context.World.AsTracking().First(w => w.Id == id));
+
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {
             var results = new World[count];
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 var id = _random.Next(1, 10001);
-                var result = await _dbContext.World.AsTracking().FirstAsync(w => w.Id == id);
+                var result = await _firstWorldTrackedQuery(_dbContext, id);
 
-                result.RandomNumber = _random.Next(1, 10001);
+                _dbContext.Entry(result).Property("RandomNumber").CurrentValue = _random.Next(1, 10001);
+
                 results[i] = result;
-                if(!_dbContext.UseBatchUpdate)
+
+                if (!_useBatchUpdate)
                 {
                     await _dbContext.SaveChangesAsync();
                 }
             }
-            
-            if(_dbContext.UseBatchUpdate)
+
+            if (_useBatchUpdate)
             {
                 await _dbContext.SaveChangesAsync();
             }
@@ -63,9 +81,12 @@ namespace Benchmarks.Data
             return results;
         }
 
+        private static readonly Func<ApplicationDbContext, AsyncEnumerable<Fortune>> _fortunesQuery
+            = EF.CompileAsyncQuery((ApplicationDbContext context) => context.Fortune);
+
         public async Task<IEnumerable<Fortune>> LoadFortunesRows()
         {
-            var result = await _dbContext.Fortune.ToListAsync();
+            var result = await _fortunesQuery(_dbContext).ToListAsync();
 
             result.Add(new Fortune { Message = "Additional fortune added at request time." });
             result.Sort();

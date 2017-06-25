@@ -9,6 +9,17 @@ const fortuneTemplate = module.singleton('fortuneTemplate', function() {
 });
 
 const app = exports.app = Application();
+
+const formatQueries = function(queries) {
+  queries = parseInt(queries, 10) || 1;
+  if (isNaN(queries) || queries < 1) {
+    queries = 1;
+  } else if (queries > 500) {
+    queries = 500;
+  }
+  return queries;
+};
+
 app.configure("params", "route");
 
 app.get('/json', function() {
@@ -17,7 +28,7 @@ app.get('/json', function() {
 });
 
 app.get('/db/:queries?', function(request, queries) {
-   queries = parseInt(queries, 10) || 1;
+   queries = formatQueries(queries);
    let worlds = [];
    for (let i = 0; i < queries; i++) {
       let randId = ((Math.random() * 10000) | 0) + 1;
@@ -45,12 +56,7 @@ app.get('/plaintext', function() {
 });
 
 app.get('/updates/:queries?', function(request, queries) {
-   queries = parseInt(queries, 10) || 1;
-   if (isNaN(queries) || queries < 1) {
-      queries = 1;
-   } else if (queries > 500) {
-      queries = 500;
-   }
+   queries = formatQueries(queries);
    const worlds = [];
    for (let i = 0; i < queries; i++) {
       let randId = ((Math.random() * 10000) | 0) + 1;

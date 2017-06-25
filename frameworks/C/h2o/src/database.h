@@ -81,6 +81,8 @@ struct db_query_param_t {
 
 typedef struct {
 	list_t *db_conn;
+	// We use a FIFO queue instead of a simpler stack, otherwise the earlier queries may wait
+	// an unbounded amount of time to be executed.
 	queue_t queries;
 	size_t db_conn_num;
 	size_t free_db_conn_num;

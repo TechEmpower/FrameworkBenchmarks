@@ -9,9 +9,9 @@ framework dependencies directly onto your computer.
 
 We provide a [Vagrant](https://www.vagrantup.com) script to automatically 
 setup a virtual machine as a development server. Currently, you can use 
-either [VirtualBox](https://www.virtualbox.org/) or [Amazon EC2](http://aws.amazon.com/ec2/)
+either [VirtualBox](https://www.virtualbox.org/) or [LibVirt](https://libvirt.org)
 to run this development environment. This page details how to use 
-VirtualBox, please read [here](blah) for information on using Amazon.
+VirtualBox.
 
 Feel free to submit a PR to help us support more providers, such as 
 [Rackspace](http://www.rackspace.com/) or [VMware](http://www.vmware.com/). 
@@ -41,7 +41,7 @@ Details:
 
 ```bash
 # Go into the right directory
-$ cd FrameworkBenchmarks/toolset/deployment/vagrant
+$ cd FrameworkBenchmarks/deployment/vagrant
 # Setup the VM with all initial software (takes 15-20 minutes)
 $ vagrant up
 # SSH into the machine (you get a nice welcome message)

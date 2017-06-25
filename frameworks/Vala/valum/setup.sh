@@ -1,8 +1,6 @@
 #!/bin/bash
 
-fw_depends meson vala valum
-
-sudo apt-get install -y libjson-glib-dev
+fw_depends meson vala valum libjson-glib-dev
 
 rm -rf build
 meson --buildtype=release build

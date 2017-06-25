@@ -2,4 +2,4 @@
 
 fw_depends postgresql
 
-source run-linux.sh dapper $(($(nproc)/2))
+source run-linux.sh 'DbSingleQueryDapper,DbMultiQueryDapper,DbMultiUpdateDapper,DbFortunesDapper' $(($(nproc)/2))

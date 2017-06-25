@@ -1,8 +1,5 @@
 #!/bin/bash
 
-sed -i 's|host: .*|host: '"${DBHOST}"'|g' postgresql.yaml
-sed -i 's|host: .*|host: '"${DBHOST}"'|g' mongodb.yaml
-
 fw_depends dart nginx
 
 pub upgrade

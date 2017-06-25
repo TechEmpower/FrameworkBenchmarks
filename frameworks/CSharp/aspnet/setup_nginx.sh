@@ -2,8 +2,6 @@
 
 fw_depends nginx mono
 
-sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
-
 # extra cleaning
 rm -rf src/bin src/obj
 rm -rf /tmp/nuget

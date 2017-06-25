@@ -1,0 +1,10 @@
+{{ define "title" -}}<title>Fortunes</title>{{- end }}
+
+{{ define "body" -}}
+<table>
+<tr><th>id</th><th>message</th></tr>
+{{- range .Fortunes }}
+<tr><td>{{ .ID }}</td><td>{{ .Message }}</td></tr>
+{{- end }}
+</table>
+{{- end }}

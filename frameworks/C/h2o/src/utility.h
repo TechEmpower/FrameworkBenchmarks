@@ -23,6 +23,7 @@
 
 #include <h2o.h>
 #include <stdint.h>
+#include <h2o/cache.h>
 #include <openssl/ssl.h>
 #include <stdbool.h>
 #include <yajl/yajl_gen.h>
@@ -50,11 +51,13 @@ typedef struct {
 	const char *log;
 	const char *root;
 	const char *template_path;
+	uint64_t world_cache_duration;
 	size_t max_accept;
 	size_t max_db_conn_num;
 	size_t max_json_generator;
 	size_t max_query_num;
 	size_t thread_num;
+	size_t world_cache_capacity;
 	uint16_t https_port;
 	uint16_t port;
 } config_t;
@@ -65,6 +68,7 @@ typedef struct {
 	h2o_socket_t *signals;
 	SSL_CTX *ssl_ctx;
 	global_thread_data_t *global_thread_data;
+	h2o_cache_t *world_cache;
 	size_t memory_alignment;
 	int signal_fd;
 	bool shutdown;

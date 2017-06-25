@@ -1,11 +1,11 @@
 # [Ruby on Rails](http://rubyonrails.org/) Benchmarking Test
 
-The information below contains information specific to Ruby on Rails. 
-For further guidance, review the 
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
+The information below contains information specific to Ruby on Rails.
+For further guidance, review the
+[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
 Also note the additional information provided in the [Ruby README](../).
 
-This is the Ruby on Rails portion of a [benchmarking test suite](../../) 
+This is the Ruby on Rails portion of a [benchmarking test suite](../../)
 comparing a variety of web platforms.
 
 ## Infrastructure Software Versions
@@ -18,7 +18,7 @@ The tests were run with:
 * [Rails 4.1.4](http://rubyonrails.org/)
 * [Unicorn 4.8.3](http://unicorn.bogomips.org/)
 * [TorqBox 0.1.7](http://torquebox.org/torqbox/)
-* [Puma 2.9.0](http://puma.io/)
+* [Puma 3.9](http://puma.io/)
 * [Thin 1.6.2](http://code.macournoyer.com/thin/)
 * [MySQL 5.5](https://dev.mysql.com/)
 

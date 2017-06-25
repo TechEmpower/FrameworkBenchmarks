@@ -8,7 +8,6 @@ TechEmpower Web Framework Benchmarks
 static UMongoDBClient* mc;
 
 #ifndef AS_cpoll_cppsp_DO
-static UValue* pvalue;
 static UVector<World*>* pvworld_query;
 #endif
 
@@ -18,7 +17,7 @@ static void usp_fork_mquery()
 
    U_NEW(UMongoDBClient, mc, UMongoDBClient);
 
-   if (mc->connect(0,0) == false)
+   if (mc->connect(U_NULLPTR, 0) == false)
       {
       U_WARNING("usp_fork_mquery(): connection disabled or failed");
 
@@ -33,7 +32,6 @@ static void usp_fork_mquery()
       }
 
 #ifndef AS_cpoll_cppsp_DO
-   U_NEW(UValue, pvalue, UValue);
    U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
 #endif
 }
@@ -46,11 +44,7 @@ static void usp_end_mquery()
    delete mc;
 
 #ifndef AS_cpoll_cppsp_DO
-   if (pvalue)
-      {
-      delete pvalue;
-      delete pvworld_query;
-      }
+   if (pvworld_query) delete pvworld_query;
 #endif
 }
 #endif
@@ -95,8 +89,7 @@ while (true)
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR(']');
 #else
-USP_JSON_stringify(*pvalue, UVector<World*>, *pvworld_query);
-pvalue->clear();
+USP_OBJ_JSON_stringify(*pvworld_query);
 pvworld_query->clear();
 #endif
 -->
