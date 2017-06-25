@@ -32,12 +32,8 @@ server = HTTP::Server.new("0.0.0.0", 8080) do |context|
 
     JSON.build(response) do |json|
       json.array do
-        (1..sanitized_query_count(request)).each do
-          world = random_world          
-          json.object do
-            json.field "id", world[:id]
-            json.field "randomNumber", world[:randomNumber]
-          end
+        1.upto(sanitized_query_count(request)) do
+          random_world.to_json(json)
         end
       end
     end
@@ -61,12 +57,9 @@ server = HTTP::Server.new("0.0.0.0", 8080) do |context|
 
     JSON.build(response) do |json|
       json.array do
-        (1..sanitized_query_count(request)).each do
+        1.upto(sanitized_query_count(request)) do
           world = set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})          
-          json.object do
-            json.field "id", world[:id]
-            json.field "randomNumber", world[:randomNumber]
-          end
+          world.to_json(json)
         end
       end
     end
