@@ -11,11 +11,11 @@
         </encoder>
     </appender>
 
-    <logger name="act" level="INFO" additivity="false">
+    <logger name="act" level="OFF" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="act.Act" level="INFO" additivity="false">
+    <logger name="act.Act" level="OFF" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
@@ -40,7 +40,7 @@
     </logger>
 
     <!-- By default, the level of the root level is set to DEBUG -->
-    <root level="INFO">
+    <root level="OFF">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>
