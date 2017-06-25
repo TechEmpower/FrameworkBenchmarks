@@ -4,7 +4,7 @@ fw_depends java
 
 fw_installed resin && return 0
 
-RVER=4.0.48
+RVER=4.0.53
 RESIN=resin-$RVER
 RESIN_HOME=$IROOT/$RESIN
 
