@@ -12,7 +12,7 @@ server = HTTP::Server.new("0.0.0.0", 8080) do |context|
 
   response.headers["Server"] = "Crystal"
   response.headers["Date"] = Time.utc_now.to_s
-
+  
   case request.path
   when "/json"
     response.status_code = 200
@@ -30,11 +30,17 @@ server = HTTP::Server.new("0.0.0.0", 8080) do |context|
     response.status_code = 200
     response.headers["Content-Type"] = "application/json"
 
-    results = (1..sanitized_query_count(request)).map do
-      random_world
+    JSON.build(response) do |json|
+      json.array do
+        (1..sanitized_query_count(request)).each do
+          world = random_world          
+          json.object do
+            json.field "id", world[:id]
+            json.field "randomNumber", world[:randomNumber]
+          end
+        end
+      end
     end
-
-    results.to_json(response)
   when "/fortunes"
     response.status_code = 200
     response.headers["Content-Type"] = "text/html; charset=UTF-8"
@@ -46,18 +52,24 @@ server = HTTP::Server.new("0.0.0.0", 8080) do |context|
     }
 
     data.push(additional_fortune)
-    data.sort_by! { |fortune| fortune[:message] }
+    data.sort! { |f1, f2| f1[:message] <=> f2[:message] }
 
     ECR.embed "views/fortunes.ecr", response
   when "/updates"
     response.status_code = 200
     response.headers["Content-Type"] = "application/json"
-    
-    updated = (1..sanitized_query_count(request)).map do
-      set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})
-    end
 
-    updated.to_json(response)
+    JSON.build(response) do |json|
+      json.array do
+        (1..sanitized_query_count(request)).each do
+          world = set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})          
+          json.object do
+            json.field "id", world[:id]
+            json.field "randomNumber", world[:randomNumber]
+          end
+        end
+      end
+    end
   else
     response.status_code = 404
   end
