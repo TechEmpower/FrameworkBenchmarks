@@ -9,11 +9,11 @@ unzip ffead-cpp-src.zip
 mv ffead-cpp-master ffead-cpp-src
 cd ffead-cpp-src/
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
+rm -rf web/te-benchmark
+cp -rf ${TROOT}/te-benchmark web/
 ./autogen.sh
 ./configure --enable-apachemod=yes --enable-mod_sdormmongo=yes --enable-mod_sdormsql=yes CPPFLAGS="$CPPFLAGS -I${IROOT}/include/libmongoc-1.0 -I${IROOT}/include/libbson-1.0 -I${IROOT}/include/" LDFLAGS="$LDFLAGS -L${IROOT}"
 make install
-rm -rf web/*
-cp -rf ${TROOT}/te-benchmark web/
 rm -rf ${IROOT}/ffead-cpp-2.0
 cp -rf ffead-cpp-2.0-bin ${IROOT}/ffead-cpp-2.0
 
