@@ -12,7 +12,8 @@ chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 ./autogen.sh
 ./configure --enable-apachemod=yes --enable-mod_sdormmongo=yes --enable-mod_sdormsql=yes CPPFLAGS="$CPPFLAGS -I${IROOT}/include/libmongoc-1.0 -I${IROOT}/include/libbson-1.0 -I${IROOT}/include/" LDFLAGS="$LDFLAGS -L${IROOT}"
 make install
-rm -rf web/default web/oauthApp web/flexApp web/markers
+rm -rf web/*
+cp -rf ${TROOT}/te-benchmark web/
 rm -rf ${IROOT}/ffead-cpp-2.0
 cp -rf ffead-cpp-2.0-bin ${IROOT}/ffead-cpp-2.0
 
