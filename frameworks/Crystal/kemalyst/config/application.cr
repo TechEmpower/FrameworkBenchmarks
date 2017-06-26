@@ -11,7 +11,7 @@ Kemalyst::Application.config do |config|
   config.reuse_port = true
 
   # Disable unused middleware
-  config.handlers = [] of HTTP::Handler
+  config.handlers.clear
   config.handlers << Kemalyst::Handler::Error.instance
   config.handlers << Kemalyst::Handler::Params.instance
   config.handlers << Middleware::CustomHeaders.instance
