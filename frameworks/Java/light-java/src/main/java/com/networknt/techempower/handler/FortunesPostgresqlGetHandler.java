@@ -23,10 +23,6 @@ public class FortunesPostgresqlGetHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
-        if (exchange.isInIoThread()) {
-            exchange.dispatch(this);
-            return;
-        }
         List<Fortune> fortunes = new ArrayList<>();
         try (Connection connection = ds.getConnection();
              PreparedStatement statement = connection.prepareStatement(
