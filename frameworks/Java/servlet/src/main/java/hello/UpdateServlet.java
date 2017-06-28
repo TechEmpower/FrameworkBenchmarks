@@ -24,6 +24,7 @@ public class UpdateServlet extends HttpServlet {
 	private static final String DB_QUERY = "SELECT * FROM World WHERE id = ?";
 	private static final String UPDATE_QUERY = "UPDATE World SET randomNumber = ? WHERE id = ?";
 	private static final int DB_ROWS = 10000;
+	private static final int LIMIT = DB_ROWS + 1;
 
 	// Database connection pool.
 	@Resource(name = "jdbc/hello_world")
@@ -32,29 +33,9 @@ public class UpdateServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
 			IOException {
-		// Set content type to JSON
-		res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_JSON);
-
 		// Reference the data source.
 		final DataSource source = mysqlDataSource;
-
-		// Get the count of queries to run.
-		int count = 1;
-		try {
-			count = Integer.parseInt(req.getParameter("queries"));
-
-			// Bounds check.
-			if (count > 500) {
-				count = 500;
-			}
-			if (count < 1) {
-				count = 1;
-			}
-		} catch (NumberFormatException nfexc) {
-			// Do nothing.
-		}
-
-		// Fetch some rows from the database.
+		final int count = Common.normalise(req.getParameter("queries"));
 		final World[] worlds = new World[count];
 		final Random random = ThreadLocalRandom.current();
 
@@ -65,7 +46,7 @@ public class UpdateServlet extends HttpServlet {
 							ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
 				// Run the query the number of times requested.
 				for (int i = 0; i < count; i++) {
-					final int id = random.nextInt(DB_ROWS) + 1;
+					final int id = random.nextInt(LIMIT);
 					statement.setInt(1, id);
 
 					try (ResultSet results = statement.executeQuery()) {
@@ -73,7 +54,7 @@ public class UpdateServlet extends HttpServlet {
 							worlds[i] = new World(id, results.getInt("randomNumber"));
 
 							// Update row
-							worlds[i].setRandomNumber(random.nextInt(DB_ROWS) + 1);
+							worlds[i].setRandomNumber(random.nextInt(LIMIT));
 							statement2.setInt(1, worlds[i].getRandomNumber());
 							statement2.setInt(2, id);
 
@@ -86,14 +67,11 @@ public class UpdateServlet extends HttpServlet {
 				statement2.executeBatch();
 			}
 		} catch (SQLException sqlex) {
-			System.err.println("SQL Exception: " + sqlex);
+			throw new ServletException(sqlex);
 		}
-
+		// Set content type to JSON
+		res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_JSON);
 		// Write JSON encoded message to the response.
-		try {
-			Common.MAPPER.writeValue(res.getOutputStream(), worlds);
-		} catch (IOException ioe) {
-			// do nothing
-		}
+		Common.MAPPER.writeValue(res.getOutputStream(), worlds);
 	}
 }
