@@ -14,4 +14,19 @@ public class Common {
 
 	// Jackson encoder, reused for each response.
 	protected static final ObjectMapper MAPPER = new ObjectMapper();
+
+	public static int normalise(String param) {
+		int count = 1;
+		try {
+			count = Integer.parseInt(param);
+			// Bounds check.
+			if (count > 500) {
+				count = 500;
+			} else if (count < 1) {
+				count = 1;
+			}
+		} catch (NumberFormatException nfexc) {
+		}
+		return count;
+	}
 }
