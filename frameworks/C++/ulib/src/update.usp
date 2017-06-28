@@ -69,6 +69,8 @@ World* pworld;
 char query[8192];
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
+(void) UClientImage_Base::wbuffer->reserve(36U * num_queries);
+
 if (bpgsql)
    {
    (void) memcpy(query,          "UPDATE World SET randomNumber = v.randomNumber FROM (VALUES",
@@ -94,9 +96,6 @@ while (true)
    }
 
 #ifdef AS_cpoll_cppsp_DO
-(void) UClientImage_Base::wbuffer->reserve(36U * num_queries);
-
-char* s = UClientImage_Base::wbuffer->data();
 char* p = UClientImage_Base::wbuffer->pend();
 
 *p++ = '[';
@@ -148,7 +147,7 @@ while (true)
 #ifdef AS_cpoll_cppsp_DO
 *p++ = ']';
 
-UClientImage_Base::wbuffer->size_adjust(p - s);
+UClientImage_Base::wbuffer->size_adjust(p);
 #else
 USP_OBJ_JSON_stringify(*pvworld_update);
 #endif

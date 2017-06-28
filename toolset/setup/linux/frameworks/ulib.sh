@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends gcc-4.9
+fw_depends gcc-6
 
 fw_installed ulib && return 0
 
@@ -25,20 +25,10 @@ sudo apt-get install -y postgresql-server-dev-all
   sudo apt-get install -y libcap2-bin
 #fi
 
-# Check for the compiler support (We want at least g++ 4.8)
-CC=gcc  # C   compiler command
-CXX=g++ # C++ compiler command
-
-gcc_version=`g++ -dumpversion`
-
-case "$gcc_version" in
-  3*|4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*|4.8*)
-	  CC='gcc-4.9'
-	 CXX='g++-4.9'
-  ;;
-esac
-
-export CC CXX
+export CC=gcc-6
+export CXX=g++-6
+export AR=gcc-ar-6
+export RANLIB=gcc-ranlib-6
 
 # We need to install mongo-c-driver (we don't have a ubuntu package)
 RETCODE=$(fw_exists ${IROOT}/mongo-c-driver.installed)

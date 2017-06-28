@@ -55,7 +55,6 @@ static void usp_end_mfortune()
 Fortune* item;
 UString result;
 uint32_t i, n, sz;
-char* s   = UClientImage_Base::wbuffer->data();
 char* ptr = UClientImage_Base::wbuffer->pend();
 
 U_NEW(Fortune, item, Fortune(*pfortune2add));
@@ -102,7 +101,7 @@ for (i = 0, ++n; i < n; ++i)
                       ptr += 10;
    }
 
-UClientImage_Base::wbuffer->size_adjust(ptr - s);
+UClientImage_Base::wbuffer->size_adjust(ptr);
 
 pvfortune->clear();
 --></table></body></html>
