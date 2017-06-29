@@ -25,4 +25,4 @@ sleep 10
 
 cd ${IROOT}
 
-touch ${IROOT}/ffead-cpp-emb-mongo.installed
+echo -e "export PATH=${FFEAD_CPP_PATH}:\$PATH" > $IROOT/ffead-cpp-emb-mongo.installed

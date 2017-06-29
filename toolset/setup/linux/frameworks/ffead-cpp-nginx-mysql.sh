@@ -25,4 +25,4 @@ sleep 10
 
 cd ${IROOT}
 
-touch ${IROOT}/ffead-cpp-nginx-mysql.installed
+echo -e "export PATH=${IROOT}/nginxfc/sbin:\$PATH" > $IROOT/ffead-cpp-nginx-mysql.installed

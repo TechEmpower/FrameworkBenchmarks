@@ -25,4 +25,4 @@ sleep 10
 
 cd ${IROOT}
 
-touch ${IROOT}/ffead-cpp-apache-mysql.installed
+echo -e "export PATH=${IROOT}/httpd/bin:\$PATH" > $IROOT/ffead-cpp-apache-mysql.installed

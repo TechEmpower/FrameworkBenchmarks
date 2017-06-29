@@ -2,8 +2,8 @@
 
 fw_depends ffead-cpp-emb-mongo
 
-chmod 755 $IROOT/ffead-cpp-2.0/*.sh
+chmod 755 $FFEAD_CPP_PATH/*.sh
 rm -f $FFEAD_CPP_PATH/*.cntrl
 rm -f $FFEAD_CPP_PATH/tmp/*.sess
-cd $IROOT/ffead-cpp-2.0
+cd $FFEAD_CPP_PATH
 ./server.sh

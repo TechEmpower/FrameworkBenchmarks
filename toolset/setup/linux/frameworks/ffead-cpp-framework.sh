@@ -43,4 +43,4 @@ cp resources/sample-odbc.ini ${IROOT}/odbc.ini
 
 cd ${IROOT}
 
-touch ${IROOT}/ffead-cpp-framework.installed
+echo -e "export FFEAD_CPP_PATH=${IROOT}/ffead-cpp-2.0" > $IROOT/ffead-cpp-framework.installed
