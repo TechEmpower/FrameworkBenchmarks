@@ -19,32 +19,25 @@ import org.cache2k.Cache2kBuilder;
 @SuppressWarnings("serial")
 public class Cache2kPostgresServlet extends HttpServlet {
 	// Database details.
-	private static final String DB_QUERY = "SELECT * FROM world";
 	private static final int DB_ROWS = 10000;
 	private static final int LIMIT = DB_ROWS + 1;
 	
 	// Database connection pool.
-	@Resource(name = "jdbc/postgres_hello_world")
-	private DataSource postgresDataSource;
+	@Resource(name = "jdbc/hello_world")
+	private DataSource dataSource;
 	private Cache<Integer, CachedWorld> cache;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 
-		// Fetch all rows from the database.
-		final Map<Integer, CachedWorld> worlds = new HashMap<Integer, CachedWorld>();
-		try (Connection conn = postgresDataSource.getConnection();
-				PreparedStatement statement = conn.prepareStatement(DB_QUERY,
-						ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-				ResultSet results = statement.executeQuery()) {
-			while (results.next()) {
-				CachedWorld some =  new CachedWorld(results.getInt("id"), results.getInt("randomNumber"));
-				worlds.put(new Integer(some.getId()), some);
-			}
-		} catch (SQLException sqlex) {
-			throw new ServletException(sqlex);
+		Map<Integer, CachedWorld> worlds;
+		try {
+			worlds = Common.loadAll(dataSource.getConnection());
+		} catch (SQLException e) {
+			throw new ServletException(e);
 		}
+		
 		// Build the cache
 		cache = new Cache2kBuilder<Integer, CachedWorld>() {}
 		    .name("cachedWorld")
@@ -60,7 +53,8 @@ public class Cache2kPostgresServlet extends HttpServlet {
 		final int count = Common.normalise(req.getParameter("queries"));
 		final Random random = ThreadLocalRandom.current();
 
-		List<Integer> keys = new ArrayList<Integer>();
+		//TODO prevent duplicate numbers to be added
+		List<Integer> keys = new ArrayList<Integer>(count);
 		for (int i = 0; i < count; i++) {
 			keys.add(new Integer(random.nextInt(LIMIT)));
 		}

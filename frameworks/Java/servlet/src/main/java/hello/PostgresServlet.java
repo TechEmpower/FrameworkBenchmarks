@@ -21,7 +21,7 @@ public class PostgresServlet extends HttpServlet {
 	private static final int LIMIT = DB_ROWS + 1;
 
 	// Database connection pool.
-	@Resource(name = "jdbc/postgres_hello_world")
+	@Resource(name = "jdbc/hello_world")
 	private DataSource postgresDataSource;
 
 	@Override
