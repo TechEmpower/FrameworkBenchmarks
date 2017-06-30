@@ -3,7 +3,7 @@
 	<database jndi-name='jdbc/hello_world'>
 		<driver>
 			<type>org.postgresql.Driver</type>
-			<url>jdbc:postgresql://TFB-server:5432/hello_world</url>
+			<url>jdbc:postgresql://TFB-database:5432/hello_world</url>
 			<user>benchmarkdbuser</user>
 			<password>benchmarkdbpass</password>
 		</driver>
