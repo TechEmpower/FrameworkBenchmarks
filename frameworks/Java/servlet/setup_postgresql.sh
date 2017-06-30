@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends postgresql
+fw_depends java resin maven postgresql
 
 mvn clean install -P postgresql
 rm -rf $RESIN_HOME/webapps/*
