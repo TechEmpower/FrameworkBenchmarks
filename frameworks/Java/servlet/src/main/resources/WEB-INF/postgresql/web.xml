@@ -5,12 +5,12 @@
 	version="2.4">
 	<servlet>
 		<servlet-name>postgres</servlet-name>
-		<servlet-class>hello.PostgresServlet</servlet-class>
+		<servlet-class>hello.DbPoolServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>postgres</servlet-name>
-		<url-pattern>/postgres</url-pattern>
+		<url-pattern>/db</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>postgres-update</servlet-name>
@@ -19,16 +19,16 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>postgres-update</servlet-name>
-		<url-pattern>/postgres-update</url-pattern>
+		<url-pattern>/update</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>postgres-fortunes</servlet-name>
-		<servlet-class>hello.PostgreFortunesServlet</servlet-class>
+		<servlet-class>hello.FortunesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>postgres-fortunes</servlet-name>
-		<url-pattern>/postgres-fortunes</url-pattern>
+		<url-pattern>/fortunes</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>postgresql-cache2k</servlet-name>

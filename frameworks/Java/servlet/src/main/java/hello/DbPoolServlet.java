@@ -1,14 +1,19 @@
 package hello;
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
-import javax.annotation.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.sql.*;
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 /**
  * Database connectivity (with a Servlet-container managed pool) test.
@@ -22,17 +27,17 @@ public class DbPoolServlet extends HttpServlet {
 
 	// Database connection pool.
 	@Resource(name = "jdbc/hello_world")
-	private DataSource mysqlDataSource;
+	private DataSource dataSource;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
 			IOException {
 		// Reference the data source.
-		final DataSource source = mysqlDataSource;
+		final DataSource source = dataSource;
 		final int count = Common.normalise(req.getParameter("queries"));
 		final World[] worlds = new World[count];
 		final Random random = ThreadLocalRandom.current();
-		
+
 		// Fetch some rows from the database.
 		try (Connection conn = source.getConnection()) {
 			try (PreparedStatement statement = conn.prepareStatement(DB_QUERY,

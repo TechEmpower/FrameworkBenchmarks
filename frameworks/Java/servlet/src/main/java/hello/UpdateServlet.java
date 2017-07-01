@@ -20,6 +20,7 @@ import javax.sql.DataSource;
  */
 @SuppressWarnings("serial")
 public class UpdateServlet extends HttpServlet {
+	private static final String PARAMETER_QUERIES = "queries";
 	// Database details.
 	private static final String DB_QUERY = "SELECT * FROM World WHERE id = ?";
 	private static final String UPDATE_QUERY = "UPDATE World SET randomNumber = ? WHERE id = ?";
@@ -35,32 +36,31 @@ public class UpdateServlet extends HttpServlet {
 			IOException {
 		// Reference the data source.
 		final DataSource source = mysqlDataSource;
-		final int count = Common.normalise(req.getParameter("queries"));
+		final int count = Common.normalise(req.getParameter(PARAMETER_QUERIES));
 		final World[] worlds = new World[count];
 		final Random random = ThreadLocalRandom.current();
 
-		try (Connection conn = source.getConnection()) {
-			try (PreparedStatement statement = conn.prepareStatement(DB_QUERY,
-					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-					PreparedStatement statement2 = conn.prepareStatement(UPDATE_QUERY,
-							ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
-				// Run the query the number of times requested.
-				for (int i = 0; i < count; i++) {
-					final int id = random.nextInt(LIMIT);
-					statement.setInt(1, id);
+		try (Connection conn = source.getConnection();
+				PreparedStatement statement = conn.prepareStatement(DB_QUERY,
+						ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+				PreparedStatement statement2 = conn.prepareStatement(UPDATE_QUERY,
+						ResultSet.TYPE_FORWARD_ONLY)) {
+			// Run the query the number of times requested.
+			for (int i = 0; i < count; i++) {
+				final int id = random.nextInt(LIMIT);
+				statement.setInt(1, id);
 
-					try (ResultSet results = statement.executeQuery()) {
-						if (results.next()) {
-							worlds[i] = new World(id, results.getInt("randomNumber"));
+				try (ResultSet results = statement.executeQuery()) {
+					if (results.next()) {
+						worlds[i] = new World(id, results.getInt("randomNumber"));
 
-							// Update row
-							worlds[i].setRandomNumber(random.nextInt(LIMIT));
-							statement2.setInt(1, worlds[i].getRandomNumber());
-							statement2.setInt(2, id);
+						// Update row
+						worlds[i].setRandomNumber(random.nextInt(LIMIT));
+						statement2.setInt(1, worlds[i].getRandomNumber());
+						statement2.setInt(2, id);
 
-							// Add update statement to batch update
-							statement2.addBatch();
-						}
+						// Add update statement to batch update
+						statement2.addBatch();
 					}
 				}
 				// Execute batch update

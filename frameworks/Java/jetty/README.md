@@ -4,14 +4,14 @@ This is the Jetty portion of a [benchmarking test suite](../) comparing a variet
 
 ## Handler
 
-### JSON Encoding Test
+These implementations use the Jetty's custom handler interface.
 * [Plaintext test source](src/main/java/hello/handler/PlainTextHandler.java)
 * [JSON test source](src/main/java/hello/handler/JsonHandler.java)
 
 ## Servlet
 
-### JSON Encoding Test
-* [Plaintext test source](src/main/java/hello/handler/PlaintextServlet.java)
+These implementation are using the standart servlet API.
+* [Plaintext test source](src/main/java/hello/servlet/PlaintextServlet.java)
 * [JSON test source](src/main/java/hello/servlet/JsonServlet.java)
 
 ## Versions
