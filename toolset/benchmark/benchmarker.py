@@ -369,7 +369,11 @@ class Benchmarker:
     def __cleanup_leftover_processes_before_test(self):
         p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=self.quiet_out, stderr=subprocess.STDOUT)
         p.communicate("""
-      sudo /etc/init.d/apache2 stop
+      sudo service mysql stop
+      sudo service mongod stop
+      sudo kill -9 $(pgrep postgres)
+      sudo kill -9 $(pgrep mysql)
+      sudo kill -9 $(pgrep mongo)
     """)
 
     ############################################################
@@ -550,10 +554,9 @@ class Benchmarker:
             out.flush()
             try:
                 self.__cleanup_leftover_processes_before_test()
-                ##########################
-                # Capturing PIDs before
-                ##########################
-                normalPIDs = subprocess.check_output(['ps -o pid,ppid,comm -u $(whoami)'], shell=True)
+
+                if self.__is_port_bound(test.port):
+                    time.sleep(60)
 
                 if self.__is_port_bound(test.port):
                     # We gave it our all
@@ -577,15 +580,15 @@ class Benchmarker:
                 time.sleep(self.sleep)
 
                 ##########################
-                # Capturing PIDs started
-                ##########################
-                startedPIDs = subprocess.check_output(['ps -o pid,ppid,comm -u $(whoami)'], shell=True)
-
-                ##########################
                 # Verify URLs
                 ##########################
-                logging.info("Verifying framework URLs")
-                passed_verify = test.verify_urls(logDir)
+                if self.mode == "debug":
+                    logging.info("Entering debug mode. Server has started. CTRL-c to stop.")
+                    while True:
+                        time.sleep(1)
+                else:
+                    logging.info("Verifying framework URLs")
+                    passed_verify = test.verify_urls(logDir)
 
                 ##########################
                 # Nuke /tmp
@@ -607,37 +610,7 @@ class Benchmarker:
                 ##########################
                 # Stop this test
                 ##########################
-                out.write(header("Stopping %s" % test.name))
-                out.flush()
-                self.__process.terminate()
-                out.flush()
-                time.sleep(5)
-
-                if self.__is_port_bound(test.port):
-                    # This can happen sometimes - let's try again
-                    self.__process.terminate()
-                    out.flush()
-                    time.sleep(5)
-                    if self.__is_port_bound(test.port):
-                        leftovers = "  PID  PPID COMMAND" + os.linesep
-                        for line in subprocess.check_output(['ps -o pid,ppid,comm -u $(whoami)'], shell=True).splitlines():
-                            if line not in startedPIDs:
-                                leftovers += line + os.linesep
-
-                        started = "  PID  PPID COMMAND" + os.linesep
-                        for line in startedPIDs.splitlines():
-                            if line not in normalPIDs:
-                                started += line + os.linesep
-
-                        # We gave it our all
-                        self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-                        out.write(header("Error: Port %s was not released by stop - %s" % (test.port, test.name)))
-                        out.write(header("Processes Started"))
-                        out.write(started)
-                        out.write(header("Processes Not Killed"))
-                        out.write(leftovers)
-                        out.flush()
-                        return exit_with_code(1)
+                self.__stop_test(test, out)
 
                 out.write(header("Stopped %s" % test.name))
                 out.flush()
@@ -674,8 +647,7 @@ class Benchmarker:
                     print "Failed verify!"
                     return exit_with_code(1)
             except KeyboardInterrupt:
-                if self.__process is not None:
-                    self.__process.terminate()
+                self.__stop_test(test, out)
             except (OSError, IOError, subprocess.CalledProcessError) as e:
                 self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
                 out.write(header("Subprocess Error %s" % test.name))
@@ -689,6 +661,38 @@ class Benchmarker:
 
     ############################################################
     # End __run_tests
+    ############################################################
+
+    ############################################################
+    # __stop_test
+    # Attempts to stop the running test.
+    ############################################################
+    def __stop_test(self, test, out):
+        # self.__process may not be set if the user hit ctrl+c prior to the test
+        # starting properly.
+        if self.__process is not None:
+            out.write(header("Stopping %s" % test.name))
+            out.flush()
+            # Ask TFBReaper to nicely terminate itself
+            self.__process.terminate()
+            slept = 0
+            returnCode = None
+            # Check once a second to see if TFBReaper has exited
+            while(slept < 30 and returnCode is None):
+                time.sleep(1)
+                slept += 1
+                returnCode = self.__process.poll()
+            
+            # If TFBReaper has not exited at this point, we have a problem
+            if returnCode is None:
+                self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
+                out.write(header("Error: Port %s was not released by stop - %s" % (test.port, test.name)))
+                out.write(header("Running Processes"))
+                out.write(subprocess.check_output(['ps -aux'], shell=True))
+                out.flush()
+                return exit_with_code(1)
+    ############################################################
+    # End __stop_test
     ############################################################
 
     def is_port_bound(self, port):

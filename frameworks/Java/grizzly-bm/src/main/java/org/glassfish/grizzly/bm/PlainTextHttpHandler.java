@@ -12,7 +12,7 @@ import org.glassfish.grizzly.http.util.Header;
  */
 public class PlainTextHttpHandler extends HttpHandler {
     private static final ContentType CONTENT_TYPE =
-            ContentType.newContentType("text/plain", "utf-8").prepare();
+            ContentType.newContentType("text/plain").prepare();
 
     @Override
     public void service(final Request request, final Response response)

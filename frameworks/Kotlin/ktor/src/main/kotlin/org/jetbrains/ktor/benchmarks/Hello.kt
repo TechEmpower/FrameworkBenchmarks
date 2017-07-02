@@ -3,6 +3,7 @@ package org.jetbrains.ktor.benchmarks
 import com.google.gson.*
 import com.mysql.jdbc.*
 import com.zaxxer.hikari.*
+import kotlinx.coroutines.experimental.*
 import org.jetbrains.ktor.application.*
 import org.jetbrains.ktor.content.*
 import org.jetbrains.ktor.features.*
@@ -11,8 +12,10 @@ import org.jetbrains.ktor.http.*
 import org.jetbrains.ktor.netty.*
 import org.jetbrains.ktor.routing.*
 import org.jetbrains.ktor.util.*
-import java.sql.ResultSet.*
+import java.sql.ResultSet.CONCUR_READ_ONLY
+import java.sql.ResultSet.TYPE_FORWARD_ONLY
 import java.util.concurrent.*
+import java.util.concurrent.atomic.*
 import javax.sql.*
 
 
@@ -27,7 +30,17 @@ fun main(args: Array<String>) {
     Driver::class.java.newInstance()
     val pool = hikari(dbHost, a, b)
 
+    val counter = AtomicInteger()
+    val databaseExecutor = Executors.newFixedThreadPool(256) { r ->
+        Thread(r, "db-${counter.incrementAndGet()}-thread")
+    }
+    val databaseDispatcher = databaseExecutor.asCoroutineDispatcher()
+
     embeddedServer(Netty, 9090) {
+        install(SamplingCallLogging) {
+            samplingFactor = 50000L
+        }
+
         install(DefaultHeaders)
         routing {
             get("/plaintext") { call ->
@@ -37,64 +50,72 @@ fun main(args: Array<String>) {
                 call.respond(TextContent(gson.toJson(Message()), ContentType.Application.Json, HttpStatusCode.OK))
             }
             get("/db") { call ->
-                pool.connection.use { connection ->
-                    val random = ThreadLocalRandom.current()
-                    val queries = call.queries()
-                    val result = mutableListOf<World>()
+                val response = run(databaseDispatcher) {
+                    pool.connection.use { connection ->
+                        val random = ThreadLocalRandom.current()
+                        val queries = call.queries()
+                        val result = mutableListOf<World>()
 
-                    connection.prepareStatement("SELECT * FROM World WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use { statement ->
-                        for (i in 1..(queries ?: 1)) {
-                            statement.setInt(1, random.nextInt(DbRows) + 1)
+                        connection.prepareStatement("SELECT * FROM World WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use { statement ->
+                            for (i in 1..(queries ?: 1)) {
+                                statement.setInt(1, random.nextInt(DbRows) + 1)
 
-                            statement.executeQuery().use { rs ->
-                                while (rs.next()) {
-                                    result += World(rs.getInt("id"), rs.getInt("randomNumber"))
+                                statement.executeQuery().use { rs ->
+                                    while (rs.next()) {
+                                        result += World(rs.getInt("id"), rs.getInt("randomNumber"))
+                                    }
                                 }
                             }
-                        }
 
-                        call.respond(TextContent(gson.toJson(when (queries) {
-                            null -> result.single()
-                            else -> result
-                        }), ContentType.Application.Json, HttpStatusCode.OK))
+                            TextContent(gson.toJson(when (queries) {
+                                null -> result.single()
+                                else -> result
+                            }), ContentType.Application.Json, HttpStatusCode.OK)
+                        }
                     }
                 }
+
+                call.respond(response)
             }
             get("/updates") {
-                pool.connection.use { connection ->
-                    val queries = call.queries()
-                    val random = ThreadLocalRandom.current()
-                    val result = mutableListOf<World>()
+                val t = run(databaseDispatcher) {
+                    pool.connection.use { connection ->
+                        val queries = call.queries()
+                        val random = ThreadLocalRandom.current()
+                        val result = mutableListOf<World>()
 
-                    connection.prepareStatement("SELECT * FROM World WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use { statement ->
-                        for (i in 1..(queries ?: 1)) {
-                            statement.setInt(1, random.nextInt(DbRows) + 1)
+                        connection.prepareStatement("SELECT * FROM World WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use { statement ->
+                            for (i in 1..(queries ?: 1)) {
+                                statement.setInt(1, random.nextInt(DbRows) + 1)
 
-                            statement.executeQuery().use { rs ->
-                                while (rs.next()) {
-                                    result += World(rs.getInt("id"), rs.getInt("randomNumber"))
+                                statement.executeQuery().use { rs ->
+                                    while (rs.next()) {
+                                        result += World(rs.getInt("id"), rs.getInt("randomNumber"))
+                                    }
                                 }
+                            }
+
+                        }
+
+                        result.forEach { it.randomNumber = random.nextInt(DbRows) + 1 }
+
+                        connection.prepareStatement("UPDATE World SET randomNumber = ? WHERE id = ?").use { updateStatement ->
+                            for ((id, randomNumber) in result) {
+                                updateStatement.setInt(1, randomNumber)
+                                updateStatement.setInt(2, id)
+
+                                updateStatement.executeUpdate()
                             }
                         }
 
+                        TextContent(gson.toJson(when (queries) {
+                            null -> result.single()
+                            else -> result
+                        }), ContentType.Application.Json, HttpStatusCode.OK)
                     }
-
-                    result.forEach { it.randomNumber = random.nextInt(DbRows) + 1 }
-
-                    connection.prepareStatement("UPDATE World SET randomNumber = ? WHERE id = ?").use { updateStatement ->
-                        for ((id, randomNumber) in result) {
-                            updateStatement.setInt(1, randomNumber)
-                            updateStatement.setInt(2, id)
-
-                            updateStatement.executeUpdate()
-                        }
-                    }
-
-                    call.respond(TextContent(gson.toJson(when (queries) {
-                        null -> result.single()
-                        else -> result
-                    }), ContentType.Application.Json, HttpStatusCode.OK))
                 }
+
+                call.respond(t)
             }
         }
     }.start(true)
@@ -115,6 +136,7 @@ private fun hikari(dbHost: String, a: String, b: String): DataSource {
     config.addDataSourceProperty("prepStmtCacheSize", "250")
     config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
     config.driverClassName = Driver::class.java.name
+    config.connectionTimeout = 10000
 
     return HikariDataSource(config)
 }

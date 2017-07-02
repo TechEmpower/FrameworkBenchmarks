@@ -6,7 +6,7 @@ H2O_APP_HOME="${IROOT}/h2o_app"
 BUILD_DIR="${H2O_APP_HOME}_build"
 H2O_APP_PROFILE_PORT=54321
 H2O_APP_PROFILE_URL="http://127.0.0.1:$H2O_APP_PROFILE_PORT"
-PHYSICAL_ENVIRONMENT_THREADS=8
+PHYSICAL_ENVIRONMENT_THREADS=40
 
 # A hacky way to detect whether we are running in the physical hardware or the cloud environment.
 if [[ "$CPU_COUNT" -gt 16 ]]; then
@@ -14,7 +14,7 @@ if [[ "$CPU_COUNT" -gt 16 ]]; then
 	# In the physical hardware environment the number of threads used by the application is not
 	# the same as the number of logical CPU cores that the database server has, so we need to
 	# adjust the maximum number of database connections per thread accordingly.
-	DB_CONN=15
+	DB_CONN=3
 else
 	CLOUD_ENVIRONMENT=true
 	DB_CONN=16

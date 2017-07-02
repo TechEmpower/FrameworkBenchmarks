@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'erubi', '~> 1.4'
 gem 'json', '~> 2.0'
 gem 'passenger', '~> 5.1', :platforms=>[:ruby, :mswin], :require=>false
-gem 'puma', '~> 3.6', :require=>false
+gem 'puma', '~> 3.9.1', :require=>false
 gem 'sequel', '~> 4.44'
 gem 'roda', '~> 2.24'
 gem 'tilt', '~> 2.0', :require=>'tilt/erb'

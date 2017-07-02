@@ -5,18 +5,18 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
+import play.libs.Json;
 import utils.Headers;
 
 @With(Headers.class)
 public class Application extends Controller {
 
-    //http://stackoverflow.com/questions/3907929/should-i-make-jacksons-objectmapper-as-static-final
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    public static class Message {
+        public final String message = "Hello, World!";
+    }
 
     public Result json() {
-        final ObjectNode result = OBJECT_MAPPER.createObjectNode();
-        result.put("message", "Hello, World!");
-        return ok(result);
+        return ok(Json.toJson(new Message()));
     }
 
     public Result plainText() {
