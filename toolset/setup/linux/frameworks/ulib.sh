@@ -41,10 +41,16 @@ if [ "$RETCODE" != 0 ]; then
   touch ${IROOT}/mongo-c-driver.installed
 fi
 
-# 1. Download ULib
 cd $IROOT
-fw_get -o ULib-${ULIB_VERSION}.tar.gz https://github.com/stefanocasazza/ULib/archive/v${ULIB_VERSION}.tar.gz 
-fw_untar  ULib-${ULIB_VERSION}.tar.gz
+
+if [ -e ../results/ULib-${ULIB_VERSION}.tar.gz ]; then
+	mv ../results/ULib-${ULIB_VERSION}.tar.gz .
+else
+	# 1. Download ULib
+	fw_get -o ULib-${ULIB_VERSION}.tar.gz https://github.com/stefanocasazza/ULib/archive/v${ULIB_VERSION}.tar.gz 
+fi
+
+fw_untar ULib-${ULIB_VERSION}.tar.gz
 
 # 2. Compile application (userver_tcp)
 cd ULib-$ULIB_VERSION

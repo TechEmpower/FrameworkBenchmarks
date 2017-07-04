@@ -47,8 +47,6 @@ static void usp_end_update()
 {
    U_TRACE(5, "::usp_end_update()")
 
-   delete psql_update;
-
    if (pstmt)
       {
       delete pstmt;
@@ -57,6 +55,8 @@ static void usp_end_update()
 
       if (bpgsql == false) delete pstmt1;
       }
+
+   delete psql_update;
 }
 #endif
 -->

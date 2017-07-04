@@ -45,8 +45,6 @@ static void usp_end_query()
 {
    U_TRACE(5, "::usp_end_query()")
 
-   delete psql_query;
-
    if (pstmt_query)
       {
       delete pstmt_query;
@@ -56,6 +54,8 @@ static void usp_end_query()
       delete pvworld_query;
 #  endif
       }
+
+   delete psql_query;
 }
 #endif
 -->
