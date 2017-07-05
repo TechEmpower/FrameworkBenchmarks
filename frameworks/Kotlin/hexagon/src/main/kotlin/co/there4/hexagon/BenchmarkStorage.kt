@@ -87,9 +87,9 @@ private class SqlStore(jdbcUrl: String) : Store {
     init {
         val config = HikariConfig()
         config.jdbcUrl = jdbcUrl
-        config.maximumPoolSize = 32 // TODO Extract to settings
-        config.username = "benchmarkdbuser"
-        config.password = "benchmarkdbpass"
+        config.maximumPoolSize =  settings["maximumPoolSize"] as? Int ?: 32
+        config.username = settings["databaseUsername"] as? String ?: "benchmarkdbuser"
+        config.password = settings["databasePassword"] as? String ?:  "benchmarkdbpass"
         DATA_SOURCE = HikariDataSource(config)
     }
 

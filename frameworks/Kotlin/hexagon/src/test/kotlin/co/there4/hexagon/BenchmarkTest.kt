@@ -6,20 +6,22 @@ import co.there4.hexagon.server.HttpMethod.GET
 import org.asynchttpclient.Response
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
+import java.lang.System.setProperty
 import kotlin.test.assertFailsWith
 
 internal const val THREADS = 4
 internal const val TIMES = 2
 
-//class BenchmarkMongoDbTest : BenchmarkTest("mongodb")
-//class BenchmarkPostgreSqlTest : BenchmarkTest("postgresql")
+class BenchmarkMongoDbTest : BenchmarkTest("mongodb")
+class BenchmarkPostgreSqlTest : BenchmarkTest("postgresql")
 
-//@Test(threadPoolSize = THREADS, invocationCount = TIMES)
+@Test(threadPoolSize = THREADS, invocationCount = TIMES)
 abstract class BenchmarkTest(val databaseEngine: String) {
     private val client by lazy { Client("http://localhost:${server?.runtimePort}") }
 
     @BeforeClass fun warmup() {
-        main(databaseEngine)
+        setProperty("DBSTORE", databaseEngine)
+        main()
 
         val warmupRounds = if (THREADS > 1) 2 else 0
         (1..warmupRounds).forEach {
