@@ -3,7 +3,7 @@
 
 fw_depends java mongodb
 
-gradle/wrapper -x test
+./gradlew -x test
 export DBSTORE='mongodb'
 
 rm -rf $RESIN_HOME/webapps/*

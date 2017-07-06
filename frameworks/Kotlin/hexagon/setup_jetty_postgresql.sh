@@ -3,6 +3,6 @@
 
 fw_depends java postgresql
 
-gradle/wrapper -x test
+./gradlew -x test
 export DBSTORE='postgresql'
 nohup build/install/hexagon/bin/hexagon &

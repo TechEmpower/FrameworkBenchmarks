@@ -3,7 +3,7 @@
 
 fw_depends java postgresql
 
-gradle/wrapper -x test
+./gradlew -x test
 export DBSTORE='postgresql'
 
 rm -rf $RESIN_HOME/webapps/*
