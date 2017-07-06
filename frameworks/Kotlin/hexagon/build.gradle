@@ -21,6 +21,12 @@ war {
 
 installDist.dependsOn 'war'
 
+repositories {
+    jcenter ()
+    mavenCentral ()
+    maven { url  "http://dl.bintray.com/jamming/maven" }
+}
+
 dependencies {
     compile ("co.there4.hexagon:server_jetty:$hexagonVersion")
     compile ("co.there4.hexagon:templates_pebble:$hexagonVersion")
