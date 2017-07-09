@@ -11,7 +11,7 @@ development platforms. The test utilizes Hexagon routes, serialization and datab
 
 ## Infrastructure Software Versions
 
-* [Hexagon 0.12.x](http://there4.co/hexagon)
+* [Hexagon 0.16.x](http://there4.co/hexagon)
 
 ## Test URLs
 
