@@ -54,7 +54,6 @@ UString result;
 (void) U_JFIND(mc->vitem[0], "randomNumber", result);
 
 #ifdef AS_cpoll_cppsp_DO
-char* s     = UClientImage_Base::wbuffer->data();
 char* ptr   = UClientImage_Base::wbuffer->pend();
 uint32_t sz = result.size();
 
@@ -72,7 +71,7 @@ u_put_unalignedp64(ptr+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'
 
 *ptr++ = '}';
 
-UClientImage_Base::wbuffer->size_adjust(ptr - s);
+UClientImage_Base::wbuffer->size_adjust(ptr);
 #else
 World world(id, result.strtoul());
 USP_OBJ_JSON_stringify(world);

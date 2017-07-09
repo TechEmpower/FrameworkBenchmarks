@@ -47,8 +47,6 @@ static void usp_end_update()
 {
    U_TRACE(5, "::usp_end_update()")
 
-   delete psql_update;
-
    if (pstmt)
       {
       delete pstmt;
@@ -57,6 +55,8 @@ static void usp_end_update()
 
       if (bpgsql == false) delete pstmt1;
       }
+
+   delete psql_update;
 }
 #endif
 -->
@@ -68,6 +68,8 @@ char* ptr;
 World* pworld;
 char query[8192];
 int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+
+(void) UClientImage_Base::wbuffer->reserve(36U * num_queries);
 
 if (bpgsql)
    {
@@ -94,9 +96,6 @@ while (true)
    }
 
 #ifdef AS_cpoll_cppsp_DO
-(void) UClientImage_Base::wbuffer->reserve(36U * num_queries);
-
-char* s = UClientImage_Base::wbuffer->data();
 char* p = UClientImage_Base::wbuffer->pend();
 
 *p++ = '[';
@@ -148,7 +147,7 @@ while (true)
 #ifdef AS_cpoll_cppsp_DO
 *p++ = ']';
 
-UClientImage_Base::wbuffer->size_adjust(p - s);
+UClientImage_Base::wbuffer->size_adjust(p);
 #else
 USP_OBJ_JSON_stringify(*pvworld_update);
 #endif

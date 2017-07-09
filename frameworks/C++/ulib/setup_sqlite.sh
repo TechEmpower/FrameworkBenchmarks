@@ -17,7 +17,7 @@ sed -i "s|CLIENT_FOR_PARALLELIZATION .*|CLIENT_FOR_PARALLELIZATION 100|g" $IROOT
 
 # 2. Start ULib Server (userver_tcp)
 export ORM_DRIVER="sqlite"
-export UMEMPOOL="750,0,123,251,305,53,-6,-26,52"
+export UMEMPOOL="581,0,0,59,16409,-7,-20,-23,31"
 export ORM_OPTION="host=${DBHOST} user=benchmarkdbuser password=benchmarkdbpass character-set=utf8 dbname=${IROOT}/ULib/db/%.*s"
 
 # Never use setcap inside of TRAVIS 
