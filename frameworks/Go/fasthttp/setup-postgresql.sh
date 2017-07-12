@@ -4,11 +4,15 @@ sed -i 's|localhost|'"${DBHOST}"'|g' src/server-postgresql/server.go
 
 fw_depends postgresql go
 
-GOPATH=`pwd` go get -u github.com/jackc/pgx
-GOPATH=`pwd` go get -u github.com/valyala/fasthttp/...
-GOPATH=`pwd` go get -u github.com/valyala/quicktemplate/qtc
+GOPATH=`pwd`
+
+rm -rf ./pkg/*
+go get -d -u github.com/jackc/pgx
+go get -d -u github.com/valyala/fasthttp/...
+go get -u github.com/valyala/quicktemplate/qtc
 
 rm -f ./server-postgresql
-GOPATH=`pwd` go generate templates
-GOPATH=`pwd` go build server-postgresql
+go generate templates
+go build -gcflags='-l=4' server-postgresql
+
 ./server-postgresql &
