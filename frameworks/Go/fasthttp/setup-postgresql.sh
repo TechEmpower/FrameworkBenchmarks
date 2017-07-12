@@ -9,7 +9,7 @@ GOPATH=`pwd`
 rm -rf ./pkg/*
 go get -d -u github.com/jackc/pgx
 go get -d -u github.com/valyala/fasthttp/...
-go get -d -u github.com/valyala/quicktemplate/qtc
+go get -u github.com/valyala/quicktemplate/qtc
 
 rm -f ./server-postgresql
 go generate templates
