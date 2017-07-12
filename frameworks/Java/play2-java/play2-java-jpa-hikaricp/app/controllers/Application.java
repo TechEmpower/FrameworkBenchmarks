@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 public class Application extends Controller {
 
     private static final int TEST_DATABASE_ROWS = 10000;
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private static final int partitionCount = Play.application().configuration().getInt("db.default.partitionCount");
     private static final int maxConnections =
@@ -41,10 +40,12 @@ public class Application extends Controller {
             new NamedThreadFactory("dbEc"));
     private static final ExecutionContext dbEc = ExecutionContexts.fromExecutorService(tpe);
 
+    public static class Message {
+        public final String message = "Hello, World!";
+    }
+
     public Result json() {
-        final ObjectNode result = OBJECT_MAPPER.createObjectNode();
-        result.put("message", "Hello World!");
-        return ok(result);
+        return ok(Json.toJson(new Message()));
     }
 
     // If the thread-pool used by the database grows too large then our server

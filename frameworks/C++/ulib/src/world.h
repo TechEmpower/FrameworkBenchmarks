@@ -32,6 +32,13 @@ public:
       U_TRACE_REGISTER_OBJECT(5, World, "%u,%u", _id, _randomNumber)
       }
 
+   World(const World& w) : id(w.id), randomNumber(w.randomNumber)
+      {
+      U_TRACE_REGISTER_OBJECT(5, World, "%p", &w)
+
+      U_MEMORY_TEST_COPY(w)
+      }
+
    ~World()
       {
       U_TRACE_UNREGISTER_OBJECT(5, World)
@@ -71,6 +78,30 @@ public:
 
       stmt->bindResult(U_ORM_TYPE_HANDLER(id,           unsigned int));
       stmt->bindResult(U_ORM_TYPE_HANDLER(randomNumber, unsigned int));
+      }
+
+   // SERVICE
+
+   bool operator<(const World& other) const { return cmp_obj(&id, &other.id); }
+
+   static int cmp_obj(const void* a, const void* b)
+      {
+      U_TRACE(5, "World::cmp_obj(%p,%p)", a, b)
+
+#  ifdef U_STDCPP_ENABLE
+      /**
+       * The comparison function must follow a strict-weak-ordering
+       *
+       * 1) For all x, it is not the case that x < x (irreflexivity)
+       * 2) For all x, y, if x < y then it is not the case that y < x (asymmetry)
+       * 3) For all x, y, and z, if x < y and y < z then x < z (transitivity)
+       * 4) For all x, y, and z, if x is incomparable with y, and y is incomparable with z, then x is incomparable with z (transitivity of incomparability)
+       */
+
+      return (((const World*)a)->id < (((const World*)b)->id));
+#  else
+      return (*(const World**)a)->id < ((*(const World**)b)->id);
+#  endif
       }
 
 #ifdef DEBUG

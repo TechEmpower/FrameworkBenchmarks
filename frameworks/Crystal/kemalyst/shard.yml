@@ -9,10 +9,10 @@ license: MIT
 dependencies:
   kemalyst:
     github: kemalyst/kemalyst
-    version: ~> 0.8.0
+    version: ~> 0.10.0
 
-  granite_orm:
-    github: kemalyst/granite-orm
+  kemalyst-model:
+    github: kemalyst/kemalyst-model
     version: ~> 0.6.0
 
   kemalyst-spec:

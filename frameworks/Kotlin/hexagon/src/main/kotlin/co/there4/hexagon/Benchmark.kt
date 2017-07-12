@@ -2,15 +2,21 @@ package co.there4.hexagon
 
 import co.there4.hexagon.serialization.convertToMap
 import co.there4.hexagon.serialization.serialize
-import co.there4.hexagon.server.*
-import co.there4.hexagon.server.engine.servlet.JettyServletEngine
-import co.there4.hexagon.server.engine.servlet.ServletServer
+import co.there4.hexagon.server.Call
+import co.there4.hexagon.server.Router
+import co.there4.hexagon.server.Server
+import co.there4.hexagon.server.jetty.JettyServletEngine
+import co.there4.hexagon.server.router
+import co.there4.hexagon.server.servlet.ServletServer
 import co.there4.hexagon.settings.SettingsManager.settings
-import java.lang.System.getenv
+import co.there4.hexagon.templates.pebble.PebbleEngine
 
-import java.net.InetAddress.getByName as address
+import java.lang.System.getProperty
+import java.lang.System.getenv
+import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 import javax.servlet.annotation.WebListener
+import java.net.InetAddress.getByName as address
 
 // DATA CLASSES
 internal data class Message(val message: String)
@@ -21,8 +27,6 @@ internal data class World(val _id: Int, val id: Int, val randomNumber: Int)
 private const val TEXT_MESSAGE: String = "Hello, World!"
 private const val CONTENT_TYPE_JSON = "application/json"
 private const val QUERIES_PARAM = "queries"
-
-internal var server: Server? = null
 
 // UTILITIES
 internal fun randomWorld() = ThreadLocalRandom.current().nextInt(WORLD_ROWS) + 1
@@ -45,8 +49,9 @@ private fun Call.getWorldsCount() = (request[QUERIES_PARAM]?.toIntOrNull() ?: 1)
 // HANDLERS
 private fun Call.listFortunes(store: Store) {
     val fortunes = store.findAllFortunes() + Fortune(0, "Additional fortune added at request time.")
+    val locale = Locale.getDefault()
     response.contentType = "text/html; charset=utf-8"
-    template("fortunes.html", "fortunes" to fortunes.sortedBy { it.message })
+    template(PebbleEngine, "fortunes.html", locale, "fortunes" to fortunes.sortedBy { it.message })
 }
 
 private fun Call.getWorlds(store: Store) {
@@ -57,7 +62,10 @@ private fun Call.updateWorlds(store: Store) {
     returnWorlds(store.replaceWorlds(getWorldsCount()))
 }
 
-private fun router(store: Store): Router = router {
+// CONTROLLER
+private fun router(): Router = router {
+    val store = createStore(getProperty("DBSTORE") ?: getenv("DBSTORE") ?: "mongodb")
+
     before {
         response.addHeader("Server", "Servlet/3.1")
         response.addHeader("Transfer-Encoding", "chunked")
@@ -73,11 +81,11 @@ private fun router(store: Store): Router = router {
 }
 
 @WebListener class Web : ServletServer () {
-    override fun createRouter() = router (createStore(getenv("DBSTORE") ?: "mongodb"))
+    override fun createRouter() = router()
 }
 
+internal var server: Server? = null
+
 fun main(vararg args: String) {
-    val store = createStore(if (args.isEmpty()) getenv("DBSTORE") ?: "mongodb" else args[0])
-    server = Server(JettyServletEngine(), settings, router(store))
-    server?.run()
+    server = Server(JettyServletEngine(), settings, router()).apply { run() }
 }
