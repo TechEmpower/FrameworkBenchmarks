@@ -1,8 +1,7 @@
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.twitter.finagle.{Service, SimpleFilter, Http}
-import com.twitter.finagle.stats.NullStatsReceiver
-import com.twitter.finagle.tracing.NullTracer
+import com.twitter.finagle.stack.nilStack
 import com.twitter.finagle.http.{Request, Response, HttpMuxer}
 import com.twitter.util.{Await, Future}
 import com.twitter.io.Buf
@@ -46,8 +45,7 @@ object Main extends App {
   Await.ready(Http.server
     .configured(Http.Netty3Impl)
     .withCompressionLevel(0)
-    .withStatsReceiver(NullStatsReceiver)
-    .withTracer(NullTracer)
+    .withStack(nilStack)
     .serve(":8080", serverAndDate.andThen(muxer))
   )
 }
