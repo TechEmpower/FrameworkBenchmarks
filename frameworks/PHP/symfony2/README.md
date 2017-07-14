@@ -1,11 +1,11 @@
 # Symfony Benchmarking Test
 
-The information below contains information specific to Symfony2. 
+The information below contains information specific to Symfony. 
 For further guidance, review the 
 [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
 Also note the additional information provided in the [PHP README](../).
 
-This is the Symfony 3 PHP portion of a [benchmarking test suite](../../) comparing a variety of web development platforms.
+This is the Symfony PHP portion of a [benchmarking test suite](../../) comparing a variety of web development platforms.
 
 ## Infrastructure Software Versions
 
@@ -22,9 +22,9 @@ The tests were run with:
 : "/json" _Note: Uses the PHP standard 
 [JSON encoder](http://www.php.net/manual/en/function.json-encode.php)._
 * [Single Database Query](src/Skamander/BenchmarkBundle/Controller/BenchController.php) ([Model](src/Skamander/BenchmarkBundle/Entity/World.php))
-: "/db" _Note: Uses the Symfony 2/Doctrine 2 Entity functionality._
+: "/db" _Note: Uses the Symfony /Doctrine Entity functionality._
 * [Multiple Database Queries](src/Skamander/BenchmarkBundle/Controller/BenchController.php) ([Model](src/Skamander/BenchmarkBundle/Entity/World.php))
-: "/db?queries=" _Note: Uses the Symfony 3/Doctrine 2 Entity functionality._
+: "/db?queries=" _Note: Uses the Symfony /Doctrine Entity functionality._
 * [Fortunes Template Test](src/Skamander/BenchmarkBundle/Controller/BenchController.php)
 : "/fortunes" _Note: Uses Symfony's template engine 'Twig'_
 
