@@ -10,6 +10,7 @@
   "targetType": "executable",
   "sourcePaths": [],
   "subConfigurations": {"vibe-d": "vibe-core"},
+  "versions": ["VibeManualMemoryManagement"],
   "configurations": [
   	{
   		"name": "mongodb",
