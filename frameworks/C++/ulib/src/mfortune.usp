@@ -53,8 +53,9 @@ static void usp_end_mfortune()
 -->
 <!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
 Fortune* item;
-uint32_t i, n;
 UString result;
+uint32_t i, n, sz;
+char* ptr = UClientImage_Base::wbuffer->pend();
 
 U_NEW(Fortune, item, Fortune(*pfortune2add));
 
@@ -64,11 +65,11 @@ pvfortune->push_back(item);
 
 for (i = 0, n = mc->vitem.size(); i < n; ++i)
    {
-   result.clear();
-
    (void) U_JFIND(mc->vitem[i], "message", result);
 
    U_NEW(Fortune, item, Fortune(i+1, result));
+
+   result.clear();
 
    pvfortune->push_back(item);
    }
@@ -81,13 +82,26 @@ for (i = 0, ++n; i < n; ++i)
 
    UXMLEscape::encode(elem->message, *pencoded);
 
-   USP_PRINTF_ADD(
-      "<tr>"
-      "<td>%u</td>"
-      "<td>%v</td>"
-      "</tr>",
-      elem->id, pencoded->rep);
+   sz = pencoded->size();
+
+   u_put_unalignedp64(ptr, U_MULTICHAR_CONSTANT64('<','t','r','>','<','t','d','>'));
+
+   ptr = u_num2str32(elem->id, ptr+8);
+
+   u_put_unalignedp64(ptr, U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','t','d'));
+                      ptr += 8;
+
+   *ptr++ = '>';
+
+   (void) memcpy(ptr, pencoded->data(), sz);
+                 ptr +=                 sz;
+
+   u_put_unalignedp64(ptr,   U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','/','t'));
+   u_put_unalignedp16(ptr+8, U_MULTICHAR_CONSTANT16('r','>'));
+                      ptr += 10;
    }
+
+UClientImage_Base::wbuffer->size_adjust(ptr);
 
 pvfortune->clear();
 --></table></body></html>

@@ -12,7 +12,7 @@ platforms :ruby do
   gem 'thin', '1.7.0'
 end
 
-gem 'puma', '3.8.2'
+gem 'puma', '~> 3.9.1'
 
 gem 'activerecord', '5.1.0', :require => 'active_record'
 gem 'activerecord-import', "~> 0.18.1"

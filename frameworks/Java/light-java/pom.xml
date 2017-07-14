@@ -54,11 +54,6 @@
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
-            <artifactId>security</artifactId>
-            <version>${version.light-java}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.networknt</groupId>
             <artifactId>status</artifactId>
             <version>${version.light-java}</version>
         </dependency>

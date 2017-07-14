@@ -1,79 +1,25 @@
-import Foundation
-import Vapor
-import JSON
-import HTTP
-import VaporPostgreSQL
+/// We have isolated all of our App's logic into
+/// the App module because it makes our app
+/// more testable.
+///
+/// In general, the executable portion of our App
+/// shouldn't include much more code than is presented
+/// here.
+///
+/// We simply initialize our Droplet, optionally
+/// passing in values if necessary
+/// Then, we pass it to our App's setup function
+/// this should setup all the routes and special
+/// features of our app
+///
+/// .run() runs the Droplet's commands, 
+/// if no command is given, it will default to "serve"
+var config = try Config()
 
-import TfbCommon
+try config.set("fluent.driver", "postgresql")
+try config.setup()
 
-let drop = Droplet()
-try drop.addProvider(VaporPostgreSQL.Provider.self)
+let drop = try Droplet(config)
 
-// All test types require `Server` and `Date` HTTP response headers.
-// Vapor has standard middleware that adds `Date` header.
-// We use custom middleware that adds `Server` header.
-drop.middleware.append(ServerMiddleware())
-
-// Normally we would add preparation for Fluent Models.
-//   `drop.preparations.append(World.self)` etc.
-// During preparation Fluent creates `fluent` table to track migrations.
-// But TFB environment does not grant user rights to create tables.
-// So we just configure our Models with correct database.
-World.database = drop.database
-Fortune.database = drop.database
-
-// Test type 1: JSON serialization
-drop.get("json") { req in
-  return try JSON(node: Message("Hello, World!"))
-}
-
-// Test type 2: Single database query
-drop.get("db") { _ in
-  let worldId = WorldMeta.randomId()
-  return try World.find(worldId)?.makeJSON() ?? JSON(node: .null)
-}
-
-// Test type 3: Multiple database queries
-drop.get("queries") { req in
-  let queries = queriesParam(for: req)
-  let ids = (1...queries).map({ _ in WorldMeta.randomId() })
-  let worlds = try ids.flatMap { try World.find($0)?.makeJSON() }
-  return JSON(worlds)
-}
-
-// Test type 4: Fortunes
-private let posixLocale = Locale(identifier: "en_US_POSIX")
-drop.get("fortunes") { _ in
-  var fortunes = try Fortune.all()
-  let additional = Fortune(id: 0, message: "Additional fortune added at request time.")
-  fortunes.insert(additional, at: 0)
-  fortunes.sort(by: { lhs, rhs -> Bool in
-    return lhs.message.compare(rhs.message, locale: posixLocale) == .orderedAscending
-  })
-  
-  let nodes = try fortunes.map { try $0.makeNode() }
-  return try drop.view.make("fortune", ["fortunes": Node(nodes)])
-}
-
-// Test type 5: Database updates
-drop.get("updates") { req in
-  let queries = queriesParam(for: req)
-  let ids = (1...queries).map({ _ in WorldMeta.randomId() })
-  var worlds = try ids.flatMap { try World.find($0) }
-  worlds.forEach { $0.randomNumber = WorldMeta.randomRandomNumber() }
-  worlds = try worlds.flatMap { world in
-    var modifiedWorld = world
-    try modifiedWorld.save()
-    return modifiedWorld
-  }
-  let updatedWorlds = try worlds.flatMap { try $0.makeJSON() }
-  return JSON(updatedWorlds)
-}
-
-// Test type 6: Plaintext
-let helloWorldBuffer = "Hello, World!".utf8.array
-drop.get("plaintext") { req in
-  return Response(headers: ["Content-Type": "text/plain; charset=utf-8"], body: helloWorldBuffer)
-}
-
-drop.run()
+try drop.setup()
+try drop.run()

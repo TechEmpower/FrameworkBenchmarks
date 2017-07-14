@@ -21,7 +21,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Kemalyst (MVC, Slang, PostgreSQL)",
+      "display_name": "Kemalyst (MVC, Postgres)",
       "notes": "",
       "versus": "kemal"
     }

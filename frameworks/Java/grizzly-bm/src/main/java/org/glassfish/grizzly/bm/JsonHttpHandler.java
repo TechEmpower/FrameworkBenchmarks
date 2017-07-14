@@ -15,7 +15,7 @@ public class JsonHttpHandler extends HttpHandler {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     
     private static final ContentType CONTENT_TYPE =
-            ContentType.newContentType("application/json", "utf-8").prepare();
+            ContentType.newContentType("application/json").prepare();
     
     // Response message class.
     public static class HelloMessage {

@@ -2,7 +2,7 @@
   "framework": "express",
   "tests": [{
     "default": {
-      "setup_file": "setup-mongodb",
+      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,

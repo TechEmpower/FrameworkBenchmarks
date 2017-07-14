@@ -2,12 +2,12 @@ import java.util.TimeZone.getTimeZone
 
 import com.twitter.finagle.http.path.Root
 import com.twitter.finagle.http.{Request, Response}
-import com.twitter.finagle.stats.NullStatsReceiver
-import com.twitter.finagle.tracing.NullTracer
+import com.twitter.finagle.stack.nilStack
 import com.twitter.finagle.{Filter, Http}
-import com.twitter.util.{Await, NullMonitor}
+import com.twitter.util.Await
 import io.fintrospect.RouteModule
 import io.fintrospect.configuration.Host
+import io.fintrospect.filters.ResponseFilters
 import org.apache.commons.lang.time.FastDateFormat.getInstance
 
 import scala.util.Properties
@@ -36,9 +36,7 @@ object FintrospectBenchmarkServer extends App {
   Await.ready(
     Http.server
       .withCompressionLevel(0)
-      .withStatsReceiver(NullStatsReceiver)
-      .withTracer(NullTracer)
-      .withMonitor(NullMonitor)
-      .serve(":9000", addServerAndDate.andThen(module.toService))
+      .withStack(nilStack)
+      .serve(":9000", ResponseFilters.CatchAll().andThen(addServerAndDate).andThen(module.toService))
   )
 }
