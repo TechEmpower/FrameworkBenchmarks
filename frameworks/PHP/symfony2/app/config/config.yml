@@ -1,6 +1,6 @@
 imports:
     - { resource: parameters.yml }
-    - { resource: security.yml }
+    #- { resource: security.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -59,10 +59,3 @@ doctrine:
         #naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
 
-# Swiftmailer Configuration
-#swiftmailer:
-#    transport: '%mailer_transport%'
-#    host: '%mailer_host%'
-#    username: '%mailer_user%'
-#    password: '%mailer_password%'
-#    spool: { type: memory }

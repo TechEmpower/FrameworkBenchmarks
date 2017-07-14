@@ -71,13 +71,12 @@ class BenchController extends Controller
       $em = $this->getDoctrine()->getManager();
       $repo = $this->getDoctrine()
           ->getRepository('SkamanderBenchmarkBundle:World');
-
+          
       for ($i = 0; $i < $queries; ++$i) {
         $world = $repo->find(mt_rand(1, 10000));
         $random_number = mt_rand(1, 10000);
         $world->setRandomNumber($random_number);
-        $em->persist($world);
-        $worlds[] =  $world;
+        $worlds[] = $world;
       }
 
       $em->flush();
@@ -96,7 +95,7 @@ class BenchController extends Controller
           $id = mt_rand(1, 10000);
           $random_number = mt_rand(1, 10000);
           $conn->executeUpdate('UPDATE World SET randomNumber=? WHERE id=?', array($random_number, $id));
-          $worlds[] =  array('id' => $id, 'randomNumber' => $random_number);
+          $worlds[] = array('id' => $id, 'randomNumber' => $random_number);
       }
 
       return new JsonResponse($worlds);
