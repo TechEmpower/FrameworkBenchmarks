@@ -71,7 +71,7 @@ class BenchController extends Controller
       $em = $this->getDoctrine()->getManager();
       $repo = $this->getDoctrine()
           ->getRepository('SkamanderBenchmarkBundle:World');
-
+          
       for ($i = 0; $i < $queries; ++$i) {
         $world = $repo->find(mt_rand(1, 10000));
         $random_number = mt_rand(1, 10000);
