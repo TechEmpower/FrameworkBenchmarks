@@ -1,3 +1,4 @@
+import vibe.core.core;
 import vibe.db.mongo.mongo;
 import vibe.http.router;
 import vibe.http.server;
@@ -10,31 +11,38 @@ import std.array;
 enum worldSize = 10000;
 
 
-shared static this()
+void main()
+{
+	runWorkerTaskDist(&runServer);
+	runApplication();
+}
+
+void runServer()
 {
 	auto router = new URLRouter;
 	router.registerWebInterface(new WebInterface);
 	router.rebuild();
 
 	auto settings = new HTTPServerSettings;
-	settings.options |= HTTPServerOption.distribute;
+	settings.options |= HTTPServerOption.reusePort;
 	settings.port = 8080;
 	listenHTTP(settings, router);
 }
 
-MongoCollection _worldCollection;
-MongoCollection _fortuneCollection;
-
-// sets up the MongoDB connection pools for each thread
-static this()
-{
-	import std.process : environment;
-	auto db = connectMongoDB(environment["DBHOST"]);
-	_worldCollection = db.getCollection("hello_world.world");
-	_fortuneCollection = db.getCollection("hello_world.fortune");
-}
-
 class WebInterface {
+	private {
+		MongoCollection _worldCollection;
+		MongoCollection _fortuneCollection;
+	}
+
+	this()
+	{
+		import std.process : environment;
+		auto db = connectMongoDB(environment.get("DBHOST", "127.0.0.1"));
+		_worldCollection = db.getCollection("hello_world.world");
+		_fortuneCollection = db.getCollection("hello_world.fortune");
+	}
+
 	// GET /
 	void get()
 	{
