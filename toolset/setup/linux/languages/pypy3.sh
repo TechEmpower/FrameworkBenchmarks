@@ -1,12 +1,9 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ${IROOT}/pypy3.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  source $IROOT/pypy3.installed
-  return 0; }
+fw_installed pypy3 && return 0
   
 PYPY3_ROOT=$IROOT/pypy3
-PYPY3_VERSION=5.5.0-alpha
+PYPY3_VERSION=5.8.0
 
 fw_get -o pypy3-v${PYPY_VERSION}-linux64.tar.bz2 https://bitbucket.org/pypy/pypy/downloads/pypy3-v${PYPY_VERSION}-linux64.tar.bz2
 fw_untar pypy3-v${PYPY_VERSION}-linux64.tar.bz2
