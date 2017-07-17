@@ -2,4 +2,4 @@
 
 fw_depends postgresql
 
-source run-linux.sh ef $(($(nproc)/2))
+source run-linux.sh 'DbSingleQueryEf,DbMultiQueryEf,DbMultiUpdateEf,DbFortunesEf' $(($(nproc)/2))

@@ -2,7 +2,7 @@
 
 fw_depends postgresql ulib
 
-MAX_THREADS=$(( 2 * $MAX_THREADS ))
+MAX_THREADS=$(( 2 * $CPU_COUNT ))
 
 # 1. Change ULib Server (userver_tcp) configuration
 sed -i "s|TCP_LINGER_SET .*|TCP_LINGER_SET -2|g"								  $IROOT/ULib/benchmark.cfg
@@ -12,7 +12,7 @@ sed -i "s|CLIENT_FOR_PARALLELIZATION .*|CLIENT_FOR_PARALLELIZATION 100|g" $IROOT
 
 # 2. Start ULib Server (userver_tcp)
 export ORM_DRIVER="pgsql"
-export UMEMPOOL="545,0,0,41,275,-14,-13,-25,41"
+export UMEMPOOL="581,0,0,59,16409,-7,-20,-23,31"
 export ORM_OPTION="host=${DBHOST} user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world client_encoding=UTF8"
 
 # Never use setcap inside of TRAVIS 

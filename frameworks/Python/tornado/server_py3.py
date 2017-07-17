@@ -100,7 +100,7 @@ application = tornado.web.Application([
 ],
     template_path="templates"
 )
-
+application.ui_modules = {}
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()
@@ -109,5 +109,5 @@ if __name__ == "__main__":
     server.start(0)
 
     ioloop = tornado.ioloop.IOLoop.instance()
-    db = motor.MotorClient(options.mongo).hello_world
+    db = motor.MotorClient(options.mongo, maxPoolSize=500).hello_world
     ioloop.start()

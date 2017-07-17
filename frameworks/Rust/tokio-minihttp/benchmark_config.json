@@ -12,7 +12,7 @@
       "classification": "Micro",
       "database": "Postgres",
       "framework": "tokio-minihttp",
-      "language": "rust",
+      "language": "Rust",
       "orm": "raw",
       "platform": "Rust",
       "webserver": "tokio-minihttp",

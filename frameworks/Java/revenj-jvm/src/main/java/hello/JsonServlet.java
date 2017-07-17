@@ -13,7 +13,7 @@ public class JsonServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		res.setContentType("application/json");
 		final Message msg = new Message("Hello, World!");
-		final JsonWriter writer = Utils.getContext().json;
+		final JsonWriter writer = Utils.getJson();
 		msg.serialize(writer, false);
 		writer.toStream(res.getOutputStream());
 	}

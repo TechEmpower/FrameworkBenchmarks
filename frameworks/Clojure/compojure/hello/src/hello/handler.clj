@@ -29,7 +29,7 @@
   (mysql {
           :classname "com.mysql.jdbc.Driver"
           :subprotocol "mysql"
-          :subname "//TFB-database:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
+          :subname "//TFB-database:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true&useSSL=false"
           :user "benchmarkdbuser"
           :password "benchmarkdbpass"
           ;;OPTIONAL KEYS
@@ -50,7 +50,7 @@
                                   :username           "benchmarkdbuser"
                                   :password           "benchmarkdbpass"
                                   :database-name      "hello_world"
-                                  :server-name        "127.0.0.1"
+                                  :server-name        "TFB-database"
                                   :port-number        3306
                                   :register-mbeans    false})
 

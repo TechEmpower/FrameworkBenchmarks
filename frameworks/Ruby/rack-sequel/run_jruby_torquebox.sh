@@ -10,4 +10,4 @@ rvm use jruby-$JRUBY_VERSION
 
 . $(dirname $0)/config/bundle_install.sh
 
-bundle exec torquebox run --io-threads $MAX_CONCURRENCY --worker-threads $MAX_CONCURRENCY -b 0.0.0.0 -p 8080 -e production &
+bundle exec torquebox run --io-threads $(( MAX_CONCURRENCY / 2 )) --worker-threads $MAX_CONCURRENCY -b 0.0.0.0 -p 8080 -e production &

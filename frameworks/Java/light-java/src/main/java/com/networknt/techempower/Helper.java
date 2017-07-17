@@ -1,10 +1,17 @@
 package com.networknt.techempower;
 
 import com.google.common.net.MediaType;
+import com.networknt.techempower.model.World;
 import io.undertow.server.HttpServerExchange;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Deque;
+import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
  * Provides utility methods for the benchmark tests.
@@ -48,14 +55,5 @@ public final class Helper {
     public static int randomWorld() {
         return 1 + ThreadLocalRandom.current().nextInt(10000);
     }
-
-    private static final int cpuCount = Runtime.getRuntime().availableProcessors();
-
-    // todo: parameterize multipliers
-    public static ExecutorService EXECUTOR =
-            new ThreadPoolExecutor(
-                    cpuCount * 2, cpuCount * 25, 200, TimeUnit.MILLISECONDS,
-                    new LinkedBlockingQueue<Runnable>(cpuCount * 100),
-                    new ThreadPoolExecutor.CallerRunsPolicy());
 
 }

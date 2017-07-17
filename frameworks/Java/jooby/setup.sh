@@ -1,10 +1,8 @@
 #!/bin/bash
 
-fw_depends mysql java maven
-
-sed -i 's|localhost|'"${DBHOST}"'|g' conf/application.conf
+fw_depends postgresql java maven
 
 mvn clean package
 
 cd target
-java -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts -jar jooby-1.0.jar &
+java -server -Xms512m -Xmx2g -jar jooby-1.0.jar &

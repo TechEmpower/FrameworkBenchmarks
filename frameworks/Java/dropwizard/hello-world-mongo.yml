@@ -5,7 +5,11 @@ server:
     type: http
     port: 9090
     useServerHeader: true
-
+    # There is no proxy in front of the server
+    useForwardedHeaders: false
+  # Test requirements forbid gzip compression of the replies
+  gzip:
+    enabled: false
   requestLog:
     appenders: []
 
@@ -13,6 +17,6 @@ logging:
   appenders: []
 
 mongo:
-  host: 127.0.0.1
+  host: TFB-database
   port: 27017
   db: hello_world

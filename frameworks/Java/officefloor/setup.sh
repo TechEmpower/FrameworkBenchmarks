@@ -10,7 +10,6 @@ fw_depends mysql java maven
 echo "Creating configuration for OfficeFloor environment ..."
 mkdir -p ./production
 cp ./raw/datasource.properties ./production 
-sed -i 's|DATABASE_HOST|'"${DBHOST}"'|g' ./production/datasource.properties
 echo "Configuration created"
 
 # Compile application

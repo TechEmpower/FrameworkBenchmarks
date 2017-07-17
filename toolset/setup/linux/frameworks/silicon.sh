@@ -8,8 +8,7 @@ SILICON=$IROOT/silicon
 
 git clone https://github.com/matt-42/silicon.git
 cd silicon;
-# December 28th, 2016
-git checkout 1fed7cead9490e3054af730ac9bf04ae4cf5009d
+git checkout ecaf04887c9dbbf0f457afab1f487268f6aeffab
 CC=clang-3.9 CXX=clang++-3.9 ./install.sh $IROOT
 
 echo "" > $IROOT/silicon.installed

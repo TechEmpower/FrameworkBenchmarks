@@ -25,6 +25,10 @@ public class World implements IWorld {
         this.randomNumber = randomNumber;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

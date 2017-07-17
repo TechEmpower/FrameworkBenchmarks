@@ -8,7 +8,7 @@ This includes tests for plaintext and json serialization.
 
 **Language**
 
-* C# 6.0
+* C# 7.0
 
 **Platforms**
 
@@ -16,8 +16,8 @@ This includes tests for plaintext and json serialization.
 
 **Web Servers**
 
-* [Kestrel](https://github.com/aspnet/kestrelHttpServer)
-* WebListener
+* [Kestrel](https://github.com/aspnet/KestrelHttpServer)
+* [HttpSys](https://github.com/aspnet/HttpSysServer)
 
 **Web Stack**
 

@@ -40,15 +40,15 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "servlet",
-      "notes": "",
-      "versus": "servlet"
+      "notes": ""
     },
     "postgres-raw": {
       "setup_file": "setup_postgresql",
-      "db_url": "/servlet/postgres",
-      "query_url": "/servlet/postgres?queries=",
-      "fortune_url": "/servlet/postgres-fortunes",
-      "update_url": "/servlet/postgres-update?queries=",
+      "db_url": "/servlet/db",
+      "query_url": "/servlet/db?queries=",
+      "cached_query_url": "/servlet/cached-worlds?queries=",
+      "fortune_url": "/servlet/fortunes",
+      "update_url": "/servlet/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -63,7 +63,7 @@
       "database_os": "Linux",
       "display_name": "servlet",
       "notes": "",
-      "versus": "servlet"
+      "versus": "servlet-raw"
     }
   }]
 }

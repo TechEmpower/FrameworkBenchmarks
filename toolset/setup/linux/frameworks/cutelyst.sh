@@ -2,9 +2,10 @@
 
 fw_installed cutelyst && return 0
 
-CUTELYST_VER=r1.4.0
-QT_VERSION_MM=56
-QT_VERSION_FULL=562-trusty
+CUTELYST_VER=1.7.0
+QT_VERSION_MM=59
+QT_VERSION_FULL=59-trusty
+CROOT=${IROOT}/cutelyst
 
 sudo apt-add-repository --yes ppa:george-edison55/cmake-3.x
 sudo apt-add-repository --yes ppa:beineri/opt-qt$QT_VERSION_FULL
@@ -24,15 +25,22 @@ qt${QT_VERSION_MM}tools
 
 export CMAKE_PREFIX_PATH=/opt/qt${QT_VERSION_MM};
 
-fw_get -O https://github.com/cutelyst/cutelyst/archive/$CUTELYST_VER.tar.gz
-fw_untar $CUTELYST_VER.tar.gz
+mkdir -p ${CROOT} || true
+cd ${CROOT}
+
+fw_get -O https://github.com/cutelyst/cutelyst/archive/v$CUTELYST_VER.tar.gz
+fw_untar v$CUTELYST_VER.tar.gz
 
 cd cutelyst-$CUTELYST_VER
 mkdir build && cd build
 
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$IROOT -DUSE_JEMALLOC=on
+cmake .. \
+-DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_INSTALL_PREFIX=$CROOT \
+-DUWSGI_PLUGINS_DIR=${CROOT}/lib/uwsgi/plugins \
+-DUSE_JEMALLOC=on
 
-make -j $MAX_THREADS && sudo make install
+make -j $CPU_COUNT && make install
 
 echo "QT_VERSION_MM=${QT_VERSION_MM}" > $IROOT/cutelyst.installed
 

@@ -1,5 +1,5 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved. 
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace Benchmarks.Data
         private readonly IRandom _random;
         private readonly DbProviderFactory _dbProviderFactory;
         private readonly string _connectionString;
-        
+
         public RawDb(IRandom random, DbProviderFactory dbProviderFactory, IOptions<AppSettings> appSettings)
         {
             _random = random;
@@ -28,20 +28,19 @@ namespace Benchmarks.Data
         public async Task<World> LoadSingleQueryRow()
         {
             using (var db = _dbProviderFactory.CreateConnection())
-            using (var cmd = CreateReadCommand(db))
             {
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();
 
-                return await ReadSingleRow(db, cmd);
+                using (var cmd = CreateReadCommand(db))
+                {
+                    return await ReadSingleRow(db, cmd);
+                }
             }
         }
-        
+
         async Task<World> ReadSingleRow(DbConnection connection, DbCommand cmd)
         {
-            // Prepared statements improve PostgreSQL performance by 10-15%
-            cmd.Prepare();
-
             using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow))
             {
                 await rdr.ReadAsync();
@@ -64,6 +63,10 @@ namespace Benchmarks.Data
             id.Value = _random.Next(1, 10001);
             cmd.Parameters.Add(id);
 
+            // Prepared statements improve PostgreSQL performance by 10-15%
+            // Especially if you only call them once, instead of on every execution :)
+            cmd.Prepare();
+
             return cmd;
         }
 
@@ -72,14 +75,16 @@ namespace Benchmarks.Data
             var result = new World[count];
 
             using (var db = _dbProviderFactory.CreateConnection())
-            using (var cmd = CreateReadCommand(db))
             {
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();
-                for (int i = 0; i < count; i++)
+                using (var cmd = CreateReadCommand(db))
                 {
-                    result[i] = await ReadSingleRow(db, cmd);
-                    cmd.Parameters["@Id"].Value = _random.Next(1, 10001);
+                    for (int i = 0; i < count; i++)
+                    {
+                        result[i] = await ReadSingleRow(db, cmd);
+                        cmd.Parameters["@Id"].Value = _random.Next(1, 10001);
+                    }
                 }
             }
 
@@ -89,47 +94,50 @@ namespace Benchmarks.Data
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {
             var results = new World[count];
-           
+
             var updateCommand = new StringBuilder(count);
 
             using (var db = _dbProviderFactory.CreateConnection())
-            using (var updateCmd = db.CreateCommand())
-            using (var queryCmd = CreateReadCommand(db))
             {
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();
 
-                for (int i = 0; i < count; i++)
+                using (var updateCmd = db.CreateCommand())
+                using (var queryCmd = CreateReadCommand(db))
                 {
-                    results[i] = await ReadSingleRow(db, queryCmd);
-                    queryCmd.Parameters["@Id"].Value = _random.Next(1, 10001);
+                    for (int i = 0; i < count; i++)
+                    {
+                        results[i] = await ReadSingleRow(db, queryCmd);
+                        queryCmd.Parameters["@Id"].Value = _random.Next(1, 10001);
+                    }
+
+                    // Postgres has problems with deadlocks when these aren't sorted
+                    Array.Sort<World>(results, (a, b) => a.Id.CompareTo(b.Id));
+
+                    for(int i = 0; i < count; i++)
+                    {
+                        var id = updateCmd.CreateParameter();
+                        id.ParameterName = BatchUpdateString.Strings[i].Id;
+                        id.DbType = DbType.Int32;
+                        updateCmd.Parameters.Add(id);
+
+                        var random = updateCmd.CreateParameter();
+                        random.ParameterName = BatchUpdateString.Strings[i].Random;
+                        random.DbType = DbType.Int32;
+                        updateCmd.Parameters.Add(random);
+
+                        var randomNumber = _random.Next(1, 10001);
+                        id.Value = results[i].Id;
+                        random.Value = randomNumber;
+                        results[i].RandomNumber = randomNumber;
+
+                        updateCommand.Append(BatchUpdateString.Strings[i].UpdateQuery);
+                    }
+
+                    updateCmd.CommandText = updateCommand.ToString();
+                    updateCmd.Prepare();
+                    await updateCmd.ExecuteNonQueryAsync();
                 }
-
-                // postgres has problems with deadlocks when these aren't sorted
-                Array.Sort<World>(results, (a, b) => a.Id.CompareTo(b.Id));
-
-                for(int i = 0; i < count; i++)
-                {
-                    var id = updateCmd.CreateParameter();
-                    id.ParameterName = BatchUpdateString.Strings[i].Id;
-                    id.DbType = DbType.Int32;
-                    updateCmd.Parameters.Add(id);
-
-                    var random = updateCmd.CreateParameter();
-                    random.ParameterName = BatchUpdateString.Strings[i].Random;
-                    id.DbType = DbType.Int32;
-                    updateCmd.Parameters.Add(random);
-
-                    var randomNumber = _random.Next(1, 10001);
-                    id.Value = results[i].Id;
-                    random.Value = randomNumber;
-                    results[i].RandomNumber = randomNumber;
-
-                    updateCommand.Append(BatchUpdateString.Strings[i].UpdateQuery);
-                }
-
-                updateCmd.CommandText = updateCommand.ToString();
-                await updateCmd.ExecuteNonQueryAsync();
             }
 
             return results;

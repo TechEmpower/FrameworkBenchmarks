@@ -1,7 +1,8 @@
 import com.twitter.io.Buf
 import com.twitter.finagle.Http
-import com.twitter.finagle.stats.NullStatsReceiver
-import com.twitter.finagle.tracing.NullTracer
+import com.twitter.finagle.http.{Request, Response}
+import com.twitter.finagle.Service
+import com.twitter.finagle.stack.nilStack
 import com.twitter.util.Await
 
 import io.circe.Json
@@ -14,22 +15,22 @@ object Main extends App {
 
   val json: Endpoint[Json] = get("json") {
     Ok(Json.obj("message" -> Json.fromString("Hello, World!")))
-      .withHeader("Server" -> "Finch")
   }
 
-  // We need to downgrade to Buf and override Content-Type header manually
-  // to serve non-JSON payload out of the JSON service. This workaround
-  // shouldn't be needed in Finch 1.0.
   val plaintext: Endpoint[Buf] = get("plaintext") {
     Ok(helloWorld)
-      .withHeader("Server" -> "Finch")
-      .withHeader("Content-Type" -> "text/plain")
   }
 
+  val service: Service[Request, Response] =
+    Bootstrap.configure(includeDateHeader = true, includeServerHeader = true)
+      .serve[Application.Json](json)
+      .serve[Text.Plain](plaintext)
+      .toService
+
   Await.ready(Http.server
+    .configured(Http.Netty3Impl)
     .withCompressionLevel(0)
-    .withStatsReceiver(NullStatsReceiver)
-    .withTracer(NullTracer)
-    .serve(":9000", (json :+: plaintext).toServiceAs[Application.Json])
+    .withStack(nilStack)
+    .serve(":9000", service)
   )
 }

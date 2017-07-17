@@ -1,13 +1,106 @@
 #define _DEFAULT_SOURCE
 
+#include <signal.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <sys/prctl.h>
-#include <sys/syscall.h>
 #include <string.h>
+
+typedef struct Node Node;
+
+/**
+ * Simple linked-list struct.
+ */
+struct Node
+{
+  char *str; 
+  Node *next; 
+};
+
+/**
+ * References to the head and tail of the linked-list.
+ */
+Node *head = NULL;
+Node *tail = NULL;
+
+/**
+ * Reap will recursively find all processes with this process
+ * as an ancestor, and kill them.
+ */
+void reap(int signum)
+{
+  int pid = getpid();
+
+  FILE *fp;
+  char buf[256];
+
+  char command[256];
+  sprintf(command, "findChilds() { for child in $(ps --ppid $1 ho pid); do echo $child; findChilds $child; done } && findChilds %d", pid);
+
+  int count;
+
+  do
+  {
+    count = 0;
+    char *pids[256];
+    fp = popen(command, "r");
+    while(fgets(buf, sizeof(buf), fp) != 0)
+    {
+      Node *newNode = malloc(sizeof(Node));
+      newNode->str = malloc(strlen(buf)+1);
+      strcpy(newNode->str, buf);
+      newNode->next = NULL;
+
+      if(tail == NULL)
+      {
+        tail = newNode;
+        head = newNode;
+      }
+      else
+      {
+        if(head->next == NULL)
+        {
+          head->next = newNode;
+        }
+        tail->next = newNode;
+        tail = newNode;
+      }
+      count ++;
+    }
+
+    Node *curr = head;
+    while(curr != NULL)
+    {
+      kill(atoi(curr->str), SIGKILL);
+      waitpid(atoi(curr->str), NULL, 0);
+      curr = curr->next;
+    }
+  }
+  // This may seem magical, but that command from above always results in two
+  // additionally PIDs: one for `ps` and one for `sh`. Therefore, all of the
+  // lineage of this TFBReaper have been successfully killed once there are
+  // only two PIDs counted in the loop.
+  // This loop is necessary for edge cases where there is a master->slave 
+  // lineage and TFBReaper kills a slave first, which is observed and fixed
+  // by the master by spawning a NEW slave in the original's place, and then
+  // killing the master (thus orphaning the newly spawned slave, but that PID
+  // is not in our master list).
+  while(count > 2);
+
+  exit(0);
+}
 
 int main(int argc, char *argv[])
 {
+  // Interrupt SIGTERM and SIGINT and pass to our handler.
+  struct sigaction action;
+  memset(&action, 0, sizeof(action));
+  action.sa_handler = reap;
+  sigaction(SIGTERM, &action, NULL);
+  sigaction(SIGINT, &action, NULL);
+
   // Gather the command line arguments for the pass-through.
   int count = argc - 1;
   int *sizes = malloc(sizeof(int) * count);

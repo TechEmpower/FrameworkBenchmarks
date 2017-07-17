@@ -20,6 +20,10 @@ This is the [ULib](http://stefanocasazza.github.io/ULib/) portion of a [benchmar
 * [Variable Query test source (MONGODB)](src/mquery.usp)
 * [Variable Query test source (ELASTICSEARCH)](src/equery.usp)
 
+### Variable Query (caching) Test
+
+* [Variable Query caching test source (SQL)](src/cached_worlds.usp)
+
 ### Fortune Query Test
 
 * [Fortune Query test source (SQL)](src/fortune.usp)
@@ -70,6 +74,18 @@ Content-Type: application/json
 ```
 
 [/query?queries=10](http://www.techempower.com/benchmarks/#section=query)
+-------------------
+```
+HTTP/1.1 200 OK
+Date: Thu, 03 Jul 2014 10:14:51 GMT
+Server: ULib 
+Content-Length: 320
+Content-Type: application/json
+
+[{"id":6851,"randomNumber":7598},{"id":3968,"randomNumber":7325},{"id":8159,"randomNumber":348},{"id":9560,"randomNumber":7333},{"id":9938,"randomNumber":9080},{"id":1598,"randomNumber":1623},{"id":3280,"randomNumber":8707},{"id":4521,"randomNumber":6063},{"id":8173,"randomNumber":3690},{"id":3648,"randomNumber":8803}]
+```
+
+[/cached_worlds?queries=10](http://www.techempower.com/benchmarks/#section=caching)
 -------------------
 ```
 HTTP/1.1 200 OK

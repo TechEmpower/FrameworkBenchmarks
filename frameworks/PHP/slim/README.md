@@ -18,9 +18,9 @@ Uses the PDO access layer
 The tests were run with:
 
 * [Slim 3.3.0](http://www.slimframework.com/)
-* [PHP Version 7.0.1](http://www.php.net/) with FPM and APC
+* [PHP Version 7.1.4](http://www.php.net/) with FPM and OPcache
 * [nginx 1.9.9](http://nginx.org/)
-* [MySQL 5.5.29](https://dev.mysql.com/)
+* [MySQL 5.5.54](https://dev.mysql.com/)
 
 ## Test URLs
 ### JSON Encoding Test

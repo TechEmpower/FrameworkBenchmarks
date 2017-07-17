@@ -11,6 +11,6 @@ cd Benchmarks
 cp appsettings.postgresql.json appsettings.json
 sed -i 's|{db_server_placeholder}|'"${DBHOST}"'|g' appsettings.json
 dotnet restore
-dotnet build -c Release
+dotnet publish --configuration Release --output bin/Release/publish
 
-dotnet bin/Release/netcoreapp1.1/Benchmarks.dll server.urls=http://*:8080 scenarios=$1 server=kestrel threadCount=$threadCount NonInteractive=true &
+dotnet bin/Release/publish/Benchmarks.dll server.urls=http://*:8080 scenarios=$1 server=kestrel threadCount=$threadCount NonInteractive=true &

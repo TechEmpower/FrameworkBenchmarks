@@ -13,7 +13,7 @@ namespace Benchmarks.Controllers
     {
         [HttpGet("raw")]
         public async Task<IActionResult> Raw()
-        {   
+        {
             var db = HttpContext.RequestServices.GetRequiredService<RawDb>();
             return View("Fortunes", await db.LoadFortunesRows());
         }

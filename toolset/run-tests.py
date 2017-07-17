@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import argparse
 import ConfigParser
+import socket
 import sys
+import time
 import os
 import platform
 import multiprocessing
@@ -66,6 +68,8 @@ def main(argv=None):
     os.environ['IROOT'] = os.environ['FWROOT'] + '/installs'
     # 'Ubuntu', '14.04', 'trusty' respectively
     os.environ['TFB_DISTRIB_ID'], os.environ['TFB_DISTRIB_RELEASE'], os.environ['TFB_DISTRIB_CODENAME'] = platform.linux_distribution()
+    # App server cpu count
+    os.environ['CPU_COUNT'] = str(multiprocessing.cpu_count())
 
     print("FWROOT is {!s}.".format(os.environ['FWROOT']))
 
@@ -114,12 +118,10 @@ def main(argv=None):
         defaults['database_host'] = defaults['client_host']
     if defaults['server_host'] is None:
         defaults['server_host'] = defaults['client_host']
+    if defaults['ulimit'] is None:
+        defaults['ulimit'] = 200000
 
-    maxThreads = 8
-    try:
-        maxThreads = multiprocessing.cpu_count()
-    except Exception:
-        pass
+    os.environ['ULIMIT'] = str(defaults['ulimit'])
 
     ##########################################################
     # Set up argument parser
@@ -142,20 +144,21 @@ def main(argv=None):
     parser.add_argument('--test', nargs='+', help='names of tests to run')
     parser.add_argument('--test-dir', nargs='+', dest='test_dir', help='name of framework directory containing all tests to run')
     parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
-    parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
-    parser.add_argument('-m', '--mode', choices=['benchmark', 'verify'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown')
+    parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'cached_query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
+    parser.add_argument('-m', '--mode', choices=['benchmark', 'verify', 'debug'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown. debug mode will skip verification and leave the server running.')
     parser.add_argument('--list-tests', action='store_true', default=False, help='lists all the known tests that can run')
 
     # Benchmark options
-    parser.add_argument('--concurrency-levels', default=[8, 16, 32, 64, 128, 256], help='Runs wrk benchmarker with different concurrency value (type int-sequence)', action=StoreSeqAction)
-    parser.add_argument('--query-levels', default=[1, 5,10,15,20], help='Database queries requested per HTTP connection, used during query test (type int-sequence)', action=StoreSeqAction)
-    parser.add_argument('--threads', default=maxThreads, help='Run wrk benchmarker with this many threads. This should probably be the number of cores for your client system', type=int)
     parser.add_argument('--duration', default=15, help='Time in seconds that each test should run for.')
     parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
 
     # Misc Options
+    parser.add_argument('--results-name', help='Gives a name to this set of results, formatted as a date', default='(unspecified, datetime = %Y-%m-%d %H:%M:%S)')
+    parser.add_argument('--results-environment', help='Describes the environment in which these results were gathered', default='(unspecified, hostname = %s)' % socket.gethostname())
+    parser.add_argument('--results-upload-uri', default=None, help='A URI where the in-progress results.json file will be POSTed periodically')
     parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
     parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
+    parser.add_argument('--quiet', action='store_true', default=False, help='Only print a limited set of messages to stdout, keep the bulk of messages in log files only')
     parser.add_argument('--clear-tmp', action='store_true', default=False, help='Clears files written to /tmp after each framework\'s tests complete.')
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)

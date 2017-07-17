@@ -4,9 +4,9 @@
     "default": {
       "setup_file": "run_mri_puma",
       "json_url": "/json",
-      "db_url": "/db", 
-      "query_url": "/queries?queries=", 
-      "update_url": "/updates?queries=", 
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Stripped",
@@ -23,11 +23,11 @@
       "notes": ""
     },
     "thin": {
-      "setup_file": "run_thin",
+      "setup_file": "run_mri_thin",
       "json_url": "/json",
-      "db_url": "/db", 
-      "query_url": "/queries?queries=", 
-      "update_url": "/updates?queries=", 
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Stripped",
@@ -40,15 +40,15 @@
       "webserver": "Thin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rack-thin",
+      "display_name": "rack-thin-mri",
       "notes": ""
     },
     "unicorn": {
-      "setup_file": "run_unicorn",
+      "setup_file": "run_mri_unicorn",
       "json_url": "/json",
-      "db_url": "/db", 
-      "query_url": "/queries?queries=", 
-      "update_url": "/updates?queries=", 
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Stripped",
@@ -61,7 +61,7 @@
       "webserver": "Unicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rack-unicorn",
+      "display_name": "rack-unicorn-mri",
       "notes": ""
     }
   }]

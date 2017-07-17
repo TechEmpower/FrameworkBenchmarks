@@ -1,4 +1,4 @@
-<%@ page import="dsl.FrameworkBench.*,java.util.*,org.apache.commons.lang3.*" session="false" %>
+<%@ page import="dsl.FrameworkBench.*,java.util.*,org.apache.commons.lang3.*" session="false" pageEncoding="UTF-8" %>
 <% List<Fortune> fortunes = (List)request.getAttribute("fortunes"); %>
 <!DOCTYPE html>
 <html>

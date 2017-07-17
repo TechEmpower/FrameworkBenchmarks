@@ -41,11 +41,10 @@ sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 
 sudo chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf
 sudo chown postgres:postgres create-postgres*
-
-service postgresql status &> /dev/null || sudo service postgresql start
 EOF
 
 echo -e "ssh \$DBHOST <<EOF" > $IROOT/postgresql.installed
+echo "service postgresql status &> /dev/null || sudo service postgresql start" >> $IROOT/postgresql.installed
 echo "sudo -u postgres psql -q template1 < create-postgres-database.sql" >> $IROOT/postgresql.installed
 echo "sudo -u postgres psql -q hello_world < create-postgres.sql" >> $IROOT/postgresql.installed
 echo "EOF" >> $IROOT/postgresql.installed

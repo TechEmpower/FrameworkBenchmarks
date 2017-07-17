@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime;
 using System.Threading;
 using Benchmarks.Configuration;
@@ -26,6 +27,7 @@ namespace Benchmarks
             Console.WriteLine("-----------------------");
 
             Console.WriteLine($"Current directory: {Directory.GetCurrentDirectory()}");
+            Console.WriteLine($"WebHostBuilder loading from: {typeof(WebHostBuilder).GetTypeInfo().Assembly.Location}");
 
             var config = new ConfigurationBuilder()
                 .AddCommandLine(args)
@@ -43,22 +45,22 @@ namespace Benchmarks
                     .AddSingleton(new ConsoleArgs(args))
                     .AddSingleton<IScenariosConfiguration, ConsoleHostScenariosConfiguration>()
                     .AddSingleton<Scenarios>()
-                );
+                )
+                .UseDefaultServiceProvider(
+                    (context, options) => options.ValidateScopes = context.HostingEnvironment.IsDevelopment());
 
             if (String.Equals(Server, "Kestrel", StringComparison.OrdinalIgnoreCase))
             {
                 var threads = GetThreadCount(config);
-                webHostBuilder = webHostBuilder.UseKestrel((options) =>
+                webHostBuilder = webHostBuilder.UseKestrel();
+                if (threads > 0)
                 {
-                    if (threads > 0)
-                    {
-                        options.ThreadCount = threads;
-                    }
-                });
+                    webHostBuilder = webHostBuilder.UseLibuv(options => options.ThreadCount = threads);
+                }
             }
-            else if (String.Equals(Server, "WebListener", StringComparison.OrdinalIgnoreCase))
+            else if (String.Equals(Server, "HttpSys", StringComparison.OrdinalIgnoreCase))
             {
-                webHostBuilder = webHostBuilder.UseWebListener();
+                webHostBuilder = webHostBuilder.UseHttpSys();
             }
             else
             {
@@ -113,9 +115,11 @@ namespace Benchmarks
                         Console.WriteLine($"Gen 0: {GC.CollectionCount(0)}, Gen 1: {GC.CollectionCount(1)}, Gen 2: {GC.CollectionCount(2)}");
                     }
                 }
-            });
+            })
+            {
+                IsBackground = true
+            };
 
-            interactiveThread.IsBackground = true;
             interactiveThread.Start();
 
             started.WaitOne();

@@ -2,7 +2,7 @@ package hello;
 
 import javax.servlet.annotation.*;
 
-import com.techempower.gemini.*;
+import com.techempower.gemini.transport.*;
 
 /**
  * Main Servlet to be used by the GeminiHello application.  Upon

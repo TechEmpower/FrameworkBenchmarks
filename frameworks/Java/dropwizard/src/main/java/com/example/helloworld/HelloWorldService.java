@@ -34,7 +34,7 @@ public class HelloWorldService extends Application<HelloWorldConfiguration> {
     @Override
     public void initialize(Bootstrap<HelloWorldConfiguration> bootstrap) {
         bootstrap.addBundle(hibernate);
-        bootstrap.addBundle(new ViewBundle());
+        bootstrap.addBundle(new ViewBundle<>());
     }
 
     @Override

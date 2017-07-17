@@ -4,10 +4,10 @@ const GREETING = "Hello, World!";
 
 const self = module.exports = {
 
-  ADDITIONAL_FORTUNE: {
+  additionalFortune: () => ({
     id: 0,
     message: 'Additional fortune added at request time.'
-  },
+  }),
 
   fortunesTemplate: Handlebars.compile([
     "<!DOCTYPE html>",
@@ -41,16 +41,15 @@ const self = module.exports = {
   },
 
   addTfbHeaders: (res, headerType) => {
-    const headers = { 'Server': 'Node' };
     const headerTypes = {
       plain: 'text/plain',
       json:  'application/json',
       html:  'text/html; charset=UTF-8'
     };
-    headers['Content-Type'] = headerTypes[headerType];
-
-    res.writeHead(200, headers);
-  },
+    
+    res.setHeader('Server', 'Node');
+    res.setHeader('Content-Type', headerTypes[headerType]);
+},
 
   responses: {
 

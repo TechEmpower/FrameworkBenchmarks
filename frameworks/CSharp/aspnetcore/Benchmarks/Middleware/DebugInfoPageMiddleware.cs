@@ -1,6 +1,7 @@
-// Copyright (c) .NET Foundation. All rights reserved. 
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
@@ -10,7 +11,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Benchmarks.Middleware
 {
@@ -23,6 +23,8 @@ namespace Benchmarks.Middleware
 #else
         private static readonly string _configurationName = "";
 #endif
+
+        private static readonly string _targetFrameworkName = AppContext.TargetFrameworkName;
 
         private readonly IHostingEnvironment _hostingEnv;
         private readonly RequestDelegate _next;
@@ -40,13 +42,14 @@ namespace Benchmarks.Middleware
         public async Task Invoke(HttpContext httpContext)
         {
             httpContext.Response.ContentType = "text/html";
+            httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
 
             await httpContext.Response.WriteAsync("<!DOCTYPE html><html><head><style>body{font-family:\"Segoe UI\",Arial,Helvetica,Sans-serif};h1,h2,h3{font-family:\"Segoe UI Light\"}</style></head><body>");
             await httpContext.Response.WriteAsync("<h1>ASP.NET Core Benchmarks</h1>");
             await httpContext.Response.WriteAsync("<h2>Configuration Information</h2>");
             await httpContext.Response.WriteAsync("<ul>");
             await httpContext.Response.WriteAsync($"<li>Environment: {_hostingEnv.EnvironmentName}</li>");
-            await httpContext.Response.WriteAsync($"<li>Framework: {PlatformServices.Default.Application.RuntimeFramework.FullName}</li>");
+            await httpContext.Response.WriteAsync($"<li>Framework: {_targetFrameworkName}</li>");
             await httpContext.Response.WriteAsync($"<li>Server GC enabled: {GCSettings.IsServerGC}</li>");
             await httpContext.Response.WriteAsync($"<li>Configuration: {_configurationName}</li>");
             await httpContext.Response.WriteAsync($"<li>Server: {Program.Server}</li>");

@@ -16,65 +16,60 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.sql.DataSource;
 
+import static com.networknt.techempower.Helper.randomWorld;
+
 public class UpdatesPostgresqlGetHandler implements HttpHandler {
     private final DataSource ds = PostgresStartupHookProvider.ds;
     private DslJson<Object> dsl = new DslJson<>();
-    private JsonWriter writer = dsl.newWriter(25000);
+    private JsonWriter writer = dsl.newWriter(1024);
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
-        if (exchange.isInIoThread()) {
-            exchange.dispatch(this);
-            return;
-        }
         int queries = Helper.getQueries(exchange);
-        World[] worlds = new World[queries];
-        try (final Connection connection = ds.getConnection()) {
-            Map<Integer, Future<World>> futureWorlds = new ConcurrentHashMap<>();
-            for (int i = 0; i < queries; i++) {
-                futureWorlds.put(i, Helper.EXECUTOR.submit(new Callable<World>() {
-                    @Override
-                    public World call() throws Exception {
-                        World world;
-                        try (PreparedStatement update = connection.prepareStatement(
-                                "UPDATE world SET randomNumber = ? WHERE id= ?")) {
-                            try (PreparedStatement query = connection.prepareStatement(
-                                    "SELECT * FROM world WHERE id = ?",
-                                    ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
 
-                                query.setInt(1, Helper.randomWorld());
-                                try (ResultSet resultSet = query.executeQuery()) {
-                                    resultSet.next();
-                                    world = new World(
-                                            resultSet.getInt("id"),
-                                            resultSet.getInt("randomNumber"));
-                                }
-                            }
-                            world.randomNumber = Helper.randomWorld();
-                            update.setInt(1, world.randomNumber);
-                            update.setInt(2, world.id);
-                            update.executeUpdate();
-                            return world;
-                        }
+        World[] worlds = new World[queries];
+        try (Connection connection = ds.getConnection()) {
+            try (PreparedStatement statement =
+                         connection.prepareStatement(
+                                 "SELECT * FROM World WHERE id = ?")) {
+                for (int i = 0; i < worlds.length; i++) {
+                    statement.setInt(1, randomWorld());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        resultSet.next();
+                        int id = resultSet.getInt("id");
+                        int randomNumber = resultSet.getInt("randomNumber");
+                        worlds[i] = new World(id, randomNumber);
                     }
-                }));
+                }
             }
-            for (int i = 0; i < queries; i++) {
-                worlds[i] = futureWorlds.get(i).get();
+            try (PreparedStatement statement =
+                         connection.prepareStatement(
+                                 "UPDATE World SET randomNumber = ? WHERE id = ?")) {
+                for (World world : worlds) {
+                    world.randomNumber = randomWorld();
+                    statement.setInt(1, world.randomNumber);
+                    statement.setInt(2, world.id);
+                    statement.executeUpdate();
+                }
             }
         }
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
+
         writer.reset();
-        writer.serialize(worlds, queries);
+        writer.serialize(worlds);
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(ByteBuffer.wrap(writer.toByteArray()));
     }
 }

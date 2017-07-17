@@ -2,78 +2,90 @@ package co.there4.hexagon
 
 import co.there4.hexagon.serialization.convertToMap
 import co.there4.hexagon.serialization.serialize
-import co.there4.hexagon.web.*
-import co.there4.hexagon.web.servlet.ServletServer
+import co.there4.hexagon.server.Call
+import co.there4.hexagon.server.Router
+import co.there4.hexagon.server.Server
+import co.there4.hexagon.server.jetty.JettyServletEngine
+import co.there4.hexagon.server.router
+import co.there4.hexagon.server.servlet.ServletServer
+import co.there4.hexagon.settings.SettingsManager.settings
+import co.there4.hexagon.templates.pebble.PebbleEngine
 
-import java.net.InetAddress.getByName as address
-import java.time.LocalDateTime.now
+import java.lang.System.getProperty
+import java.lang.System.getenv
+import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 import javax.servlet.annotation.WebListener
+import java.net.InetAddress.getByName as address
 
 // DATA CLASSES
-internal data class Message(val message: String = "Hello, World!")
+internal data class Message(val message: String)
 internal data class Fortune(val _id: Int, val message: String)
-internal data class World(val _id: Int, val id: Int = _id, val randomNumber: Int = rnd())
+internal data class World(val _id: Int, val id: Int, val randomNumber: Int)
 
 // CONSTANTS
-private val CONTENT_TYPE_JSON = "application/json"
-private val QUERIES_PARAM = "queries"
+private const val TEXT_MESSAGE: String = "Hello, World!"
+private const val CONTENT_TYPE_JSON = "application/json"
+private const val QUERIES_PARAM = "queries"
 
 // UTILITIES
-internal fun rnd() = ThreadLocalRandom.current().nextInt(DB_ROWS) + 1
+internal fun randomWorld() = ThreadLocalRandom.current().nextInt(WORLD_ROWS) + 1
 
-private fun Exchange.returnWorlds(worlds: List<World>) {
-    fun World.strip(): Map<*, *> = this.convertToMap().filterKeys { it != "_id" }
-
-    val result =
-        if (request[QUERIES_PARAM] == null) worlds[0].strip().serialize()
-        else worlds.map(World::strip).serialize()
+private fun Call.returnWorlds(worldsList: List<World>) {
+    val worlds = worldsList.map { it.convertToMap() - "_id" }
+    val result = if (worlds.size == 1) worlds.first().serialize() else worlds.serialize()
 
     ok(result, CONTENT_TYPE_JSON)
 }
 
-private fun Exchange.getQueries() =
-    try {
-        val queries = request[QUERIES_PARAM]?.toInt() ?: 1
-        when {
-            queries < 1 -> 1
-            queries > 500 -> 500
-            else -> queries
-        }
+private fun Call.getWorldsCount() = (request[QUERIES_PARAM]?.toIntOrNull() ?: 1).let {
+    when {
+        it < 1 -> 1
+        it > 500 -> 500
+        else -> it
     }
-    catch (ex: NumberFormatException) {
-        1
-    }
-
-// HANDLERS
-private fun Exchange.listFortunes(store: Repository) {
-    val fortunes = store.findFortunes() + Fortune(0, "Additional fortune added at request time.")
-    template("fortunes.html", "fortunes" to fortunes.sortedBy { it.message })
 }
 
-private fun benchmarkRoutes(store: Repository, srv: Router = server) {
-    srv.before {
+// HANDLERS
+private fun Call.listFortunes(store: Store) {
+    val fortunes = store.findAllFortunes() + Fortune(0, "Additional fortune added at request time.")
+    val locale = Locale.getDefault()
+    response.contentType = "text/html; charset=utf-8"
+    template(PebbleEngine, "fortunes.html", locale, "fortunes" to fortunes.sortedBy { it.message })
+}
+
+private fun Call.getWorlds(store: Store) {
+    returnWorlds(store.findWorlds(getWorldsCount()))
+}
+
+private fun Call.updateWorlds(store: Store) {
+    returnWorlds(store.replaceWorlds(getWorldsCount()))
+}
+
+// CONTROLLER
+private fun router(): Router = router {
+    val store = createStore(getProperty("DBSTORE") ?: getenv("DBSTORE") ?: "mongodb")
+
+    before {
         response.addHeader("Server", "Servlet/3.1")
         response.addHeader("Transfer-Encoding", "chunked")
-        response.addHeader("Date", httpDate(now()))
+        response.addHeader("Date", httpDate())
     }
 
-    srv.get("/plaintext") { ok("Hello, World!", "text/plain") }
-    srv.get("/json") { ok(Message().serialize(), CONTENT_TYPE_JSON) }
-    srv.get("/fortunes") { listFortunes(store) }
-    srv.get("/db") { returnWorlds(store.findWorlds(getQueries())) }
-    srv.get("/query") { returnWorlds(store.findWorlds(getQueries())) }
-    srv.get("/update") { returnWorlds(store.replaceWorlds(getQueries())) }
+    get("/plaintext") { ok(TEXT_MESSAGE, "text/plain") }
+    get("/json") { ok(Message(TEXT_MESSAGE).serialize(), CONTENT_TYPE_JSON) }
+    get("/fortunes") { listFortunes(store) }
+    get("/db") { getWorlds(store) }
+    get("/query") { getWorlds(store) }
+    get("/update") { updateWorlds(store) }
 }
 
 @WebListener class Web : ServletServer () {
-    override fun init() {
-        benchmarkRoutes(createStore("mongodb"), this)
-    }
+    override fun createRouter() = router()
 }
 
-fun main(args: Array<String>) {
-    val store = createStore(if (args.isEmpty()) "mongodb" else args[0])
-    benchmarkRoutes(store)
-    run()
+internal var server: Server? = null
+
+fun main(vararg args: String) {
+    server = Server(JettyServletEngine(), settings, router()).apply { run() }
 }
