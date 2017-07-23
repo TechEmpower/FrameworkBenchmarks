@@ -1,13 +1,13 @@
-require "../models/*"
+class BenchmarkController < Amber::Controller::Base
+  LAYOUT = "main.ecr"
 
-class BenchmarkController < Kemalyst::Controller
   def plaintext
-    text "Hello, World!"
+    "Hello, World!"
   end
 
   def json
     results = {message: "Hello, World!"}
-    json results.to_json
+    results.to_json
   end
 
   def db
@@ -15,7 +15,7 @@ class BenchmarkController < Kemalyst::Controller
     if world = World.find rand(1..10_000)
       results = {id: world.id, randomNumber: world.randomNumber}
     end
-    json results.to_json
+    results.to_json
   end
 
   def queries
@@ -29,7 +29,7 @@ class BenchmarkController < Kemalyst::Controller
       end
     end
 
-    json results.to_json
+    results.to_json
   end
 
   def updates
@@ -46,19 +46,18 @@ class BenchmarkController < Kemalyst::Controller
       end
     end
 
-    json results.to_json
+    results.to_json
   end
 
   def fortunes
     fortune = Fortune.new
-    fortune.id = 0
+    fortune.id = 0_i64
     fortune.message = "Additional fortune added at request time."
 
     fortunes = Fortune.all
     fortunes << fortune
     fortunes.sort_by! { |fortune| fortune.message.not_nil! }
 
-    html render("fortune/index.slang", "main.slang")
+    render("fortune/index.ecr")
   end
 end
-

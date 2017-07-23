@@ -1,5 +1,5 @@
 {
-  "framework": "kemalyst",
+  "framework": "amber",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -13,7 +13,7 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "Postgres",
-      "framework": "Kemalyst",
+      "framework": "Amber",
       "language": "Crystal",
       "flavor": "None",
       "orm": "Full",
@@ -21,7 +21,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Kemalyst (MVC, Postgres)",
+      "display_name": "Amber (MVC, Postgres)",
       "notes": "",
       "versus": "kemal"
     }
