@@ -63,7 +63,7 @@ class BenchmarkController < Amber::Controller::Base
   def fortunes
     response.content_type = "text/html"    
     fortune = Fortune.new
-    fortune.id = 0_i64
+    fortune.id = 0
     fortune.message = "Additional fortune added at request time."
 
     fortunes = Fortune.all
