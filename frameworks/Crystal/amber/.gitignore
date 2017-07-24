@@ -7,3 +7,4 @@
 /db/
 .env
 amber
+!shard.lock

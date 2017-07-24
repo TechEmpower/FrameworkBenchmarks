@@ -1,5 +1,9 @@
 class BenchmarkController < Amber::Controller::Base
-  LAYOUT = "main.ecr"
+  LAYOUT     = "main.ecr"
+  HTML_UTF8  = "text/html; charset=UTF-8"
+  JSON       = "application/json"
+  TEXT_PLAIN = "text/plain"
+  ID_MAXIMUM = 10_000
 
   def initialize(@context)
     super(@context)
@@ -8,33 +12,33 @@ class BenchmarkController < Amber::Controller::Base
   end
 
   def plaintext
-    response.content_type = "text/plain"
+    response.content_type = TEXT_PLAIN
     "Hello, World!"
   end
 
   def json
-    response.content_type = "application/json"
+    response.content_type = JSON
     results = {message: "Hello, World!"}
     results.to_json
   end
 
   def db
-    response.content_type = "application/json"
+    response.content_type = JSON
     results = {} of Symbol => Int32
-    if world = World.find rand(1..10_000)
+    if world = World.find rand(1..ID_MAXIMUM)
       results = {id: world.id, randomNumber: world.randomNumber}
     end
     results.to_json
   end
 
   def queries
-    response.content_type = "application/json"
-    queries = params["queries"]?
-    queries = queries ? queries.to_i? || 1 : 1
+    response.content_type = JSON
+    queries = params["queries"]
+    queries = queries.to_i? || 1
     queries = queries.clamp(1..500)
 
     results = (1..queries).map do
-      if world = World.find rand(1..10_000)
+      if world = World.find rand(1..ID_MAXIMUM)
         {id: world.id, randomNumber: world.randomNumber}
       end
     end
@@ -43,14 +47,14 @@ class BenchmarkController < Amber::Controller::Base
   end
 
   def updates
-    response.content_type = "application/json"
-    queries = params["queries"]?
-    queries = queries ? queries.to_i? || 1 : 1
+    response.content_type = JSON
+    queries = params["queries"]
+    queries = queries.to_i? || 1
     queries = queries.clamp(1..500)
 
     results = (1..queries).map do
-      if world = World.find rand(1..10_000)
-        world.randomNumber = rand(1..10_000)
+      if world = World.find rand(1..ID_MAXIMUM)
+        world.randomNumber = rand(1..ID_MAXIMUM)
         world.save
         {id: world.id, randomNumber: world.randomNumber}
       end
@@ -60,7 +64,7 @@ class BenchmarkController < Amber::Controller::Base
   end
 
   def fortunes
-    response.content_type = "text/html"    
+    response.content_type = HTML_UTF8
     fortune = Fortune.new
     fortune.id = 0
     fortune.message = "Additional fortune added at request time."
