@@ -51,7 +51,6 @@ class BenchmarkController < Amber::Controller::Base
     results = (1..queries).map do
       if world = World.find rand(1..10_000)
         world.randomNumber = rand(1..10_000)
-        pp world
         world.save
         {id: world.id, randomNumber: world.randomNumber}
       end
