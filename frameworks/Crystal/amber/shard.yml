@@ -11,20 +11,9 @@ dependencies:
     github: Amber-Crystal/amber 
     version: ~> 0.1.4
 
-  quartz-mailer:
-    github: amber-crystal/quartz-mailer
-    branch: master
-  
   granite_orm:
-    github: kemalyst/granite-orm
-    version: ~> 0.6.0
+    github: Amber-Crystal/granite-orm
+    version: ~> 0.6.2
 
   pg:
     github: will/crystal-pg
-
-#  mysql:
-#    github: crystal-lang/crystal-mysql
-#  pg:
-#    github: will/crystal-pg
-#  sqlite3:
-#    github: crystal-lang/crystal-sqlite3

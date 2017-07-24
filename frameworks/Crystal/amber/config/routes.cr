@@ -1,8 +1,4 @@
 Amber::Server.instance.config do |app|
-  pipeline :web do
-    plug Amber::Pipe::Logger.new
-  end
-
   routes :web do
     get "/plaintext", BenchmarkController, :plaintext
     get "/json", BenchmarkController, :json
