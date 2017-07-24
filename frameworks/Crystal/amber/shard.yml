@@ -1,0 +1,19 @@
+name: amber
+version: 0.1.0
+
+authors:
+  - Amber <contact@ambercr.io>
+
+license: MIT
+
+dependencies:
+  amber:
+    github: Amber-Crystal/amber 
+    version: ~> 0.1.4
+
+  granite_orm:
+    github: Amber-Crystal/granite-orm
+    version: ~> 0.6.2
+
+  pg:
+    github: will/crystal-pg

@@ -1,6 +1,9 @@
 /doc/
-/libs/
 /lib/
 /.crystal/
 /.shards/
+/.vscode/
+/spec/
+/db/
 .env
+amber

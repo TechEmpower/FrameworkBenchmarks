@@ -2,12 +2,12 @@
 
 fw_depends postgresql crystal
 
-shards install
+shards install --production
 
-crystal build --release src/kemalyst.cr
+crystal build --release --no-debug src/amber.cr
 
 for i in $(seq 1 $((2 * $(nproc --all)))); do
-  ./kemalyst &
+  ./amber &
 done
 
 wait
