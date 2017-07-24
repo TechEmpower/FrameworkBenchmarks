@@ -1,3 +1,2 @@
-# Configured for local development for now
 pg:
-  database: postgres://postgres:mysecretpassword@0.0.0.0/hello_world
+  database: postgres://benchmarkdbuser:benchmarkdbpass@TFB-database/hello_world
