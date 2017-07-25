@@ -6,7 +6,7 @@ shards install
 
 crystal build --release src/kemalyst.cr
 
-for i in $(seq 1 $((2 * $(nproc --all)))); do
+for i in $(seq 1 $(nproc --all)); do
   ./kemalyst &
 done
 
