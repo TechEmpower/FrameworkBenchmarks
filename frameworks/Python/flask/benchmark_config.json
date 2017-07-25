@@ -71,8 +71,8 @@
       "notes": "CPython 3.4",
       "versus": "wsgi"
     },
-    "pypy": {
-      "setup_file": "setup_pypy",
+    "pypy2": {
+      "setup_file": "setup_pypy2",
       "json_url": "/json",
       "db_url": "/dbs",
       "query_url": "/db?queries=",
@@ -85,18 +85,18 @@
       "database": "MySQL",
       "framework": "flask",
       "language": "Python",
-      "flavor": "PyPy",
+      "flavor": "PyPy2",
       "orm": "Full",
       "platform": "None",
       "webserver": "Tornado",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Flask",
-      "notes": "PyPy 2.5",
+      "notes": "PyPy2",
       "versus": "wsgi"
     },
-    "pypy-mysql-raw": {
-      "setup_file": "setup_pypy",
+    "pypy2-mysql-raw": {
+      "setup_file": "setup_pypy2",
       "db_url": "/dbsraw",
       "query_url": "/dbraw?queries=",
       "fortune_url": "/fortunesraw",
@@ -107,14 +107,14 @@
       "database": "MySQL",
       "framework": "flask",
       "language": "Python",
-      "flavor": "PyPy",
+      "flavor": "PyPy2",
       "orm": "Raw",
       "platform": "Tornado",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Flask-raw",
-      "notes": "PyPy 2.5",
+      "notes": "PyPy2",
       "versus": "wsgi"
     },
     "nginx-uwsgi": {
