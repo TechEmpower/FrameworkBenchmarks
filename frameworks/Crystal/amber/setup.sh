@@ -2,9 +2,9 @@
 
 fw_depends postgresql crystal
 
-shards install --production
+shards install
 
-crystal build --release --no-debug src/amber.cr
+crystal build --release src/amber.cr
 
 for i in $(seq 1 $(nproc --all)); do
   ./amber &

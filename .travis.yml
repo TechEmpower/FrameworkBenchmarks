@@ -120,6 +120,7 @@ env:
     - "TESTDIR=Lua/octopus"
     - "TESTDIR=Lua/openresty"
     - "TESTDIR=Nim/jester"
+    - "TESTDIR=OCaml/mirageos"
     - "TESTDIR=Perl/dancer"
     - "TESTDIR=Perl/kelp"
     - "TESTDIR=Perl/mojolicious"
