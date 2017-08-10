@@ -13,7 +13,7 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   curl wget unzip                   `# Common tools` \
   software-properties-common        `# Needed for add-apt-repository` \
   git-core mercurial                `# Version control systems` \
-  libpcre3 libpcre3-dev libpcrecpp0 `# Regular expression support` \
+  libpcre3 libpcre3-dev libpcrecpp0v5 `# Regular expression support` \
   libssl-dev libcurl4-openssl-dev   `# SSL libraries` \
   libmysqlclient-dev \
   zlib1g-dev python-software-properties \
@@ -23,7 +23,7 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libxslt-dev libgdbm-dev ncurses-dev  \
   libffi-dev htop libtool bison libevent-dev \
   libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 \
-  liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev \
+  liborc-0.4-0 libwxbase3.0-0v5 libwxgtk3.0-0v5 libgnutls-dev \
   libjson0-dev libmcrypt-dev libicu-dev gettext \
   libpq-dev mlton \
   cloc dstat                        `# Collect resource usage statistics` \

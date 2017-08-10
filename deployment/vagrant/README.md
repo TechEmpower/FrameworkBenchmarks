@@ -18,7 +18,7 @@ Feel free to submit a PR to help us support more providers, such as
 
 ## Prerequisites
 
-* **A recent version of Vagrant**, like 1.6.3 (NOTE: `apt-get` is 
+* **A recent version of Vagrant**, at least 1.9.4 (NOTE: `apt-get` is 
 too old, download the newest `deb` directly). See 
 [here](https://www.vagrantup.com/downloads.html) for downloads
 

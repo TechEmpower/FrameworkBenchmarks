@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+Vagrant.require_version ">= 1.9.4"  # fixes 'mesg: ttyname failed: Inappropriate ioctl for device'
+
 require_relative 'core'
 
 Vagrant.configure("2") do |config|
