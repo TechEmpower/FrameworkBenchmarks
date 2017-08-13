@@ -12,7 +12,7 @@ end
 def provider_libvirt(config)
   config.vm.provider :libvirt do |virt, override|
     override.vm.hostname = "TFB-all"
-    override.vm.box = "RX14/trusty64"
+    override.vm.box = "bento/ubuntu-16.04"
 
     unless ENV.fetch('TFB_SHOW_VM', false)
       virt.graphics_type = "none"
@@ -30,7 +30,7 @@ end
 def provider_virtualbox(config)
   config.vm.provider :virtualbox do |vb, override|
     override.vm.hostname = "TFB-all"
-    override.vm.box = "ubuntu/trusty64"
+    override.vm.box = "bento/ubuntu-16.04"
 
     if ENV.fetch('TFB_SHOW_VM', false)
       vb.gui = true

@@ -15,7 +15,7 @@ If you find yourself in a directory or file that you're not sure what the purpos
 ## Quick Start Guide
 
 Get started developing quickly by utilizing vagrant with TFB. [Git](http://git-scm.com), 
-[Virtualbox](https://www.virtualbox.org/) and [vagrant](https://www.vagrantup.com/) are 
+[Virtualbox](https://www.virtualbox.org/) and [vagrant 1.9.4+](https://www.vagrantup.com/) are 
 required.
 
 1. Clone TFB.
