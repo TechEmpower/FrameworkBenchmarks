@@ -8,7 +8,7 @@ expr $UBUNTU_VER
 
 echo "Installing Dependencies"
 sudo apt-get update
-sudo apt-get install -yqq m4
+sudo apt-get install -yqq m4 qemu-system-x86
 
 echo "Installing OPAM (takes >10min)"
 if (( $UBUNTU_VER >= 16 )); then  # Travis Ubuntu 14.04 support
@@ -30,11 +30,19 @@ eval `opam config env`
 echo "Installing MirageOS $MIRAGE_VER"
 opam install -y mirage=$MIRAGE_VER
 
-echo "Installing cohttp dependencies"
-opam install -y cohttp lwt js_of_ocaml cohttp-lwt-unix
-
 echo "Building MirageOS HTTP Server"
-ocamlbuild -pkg cohttp-lwt-unix server_example.native
+mirage configure -t virtio --dhcp false
+make depend
+make
+
+sudo ip tuntap add tap0 mode tap
+sudo ip addr add 10.0.0.1/24 dev tap0
+sudo ip link set dev tap0 up
 
 echo "Booting MirageOS Conduit HTTP Server"
-./server_example.native
+# The qemu command below is the output of '$ solo5-run-virtio -n tap0 ./conduit_server.virtio' with the addition of '-daemonize' so as to detach the qemu process (& detach will not work)
+qemu-system-x86_64 -daemonize -cpu Westmere -m 128 -nodefaults -no-acpi -display none -device virtio-net,netdev=n0 -netdev tap,id=n0,ifname=tap0,script=no,downscript=no -device isa-debug-exit -kernel conduit_server.virtio
+
+# FIXME
+# * Need to change TFB-Server to 10.0.0.2 in /etc/hosts, hostfwd doesn't seem to work with qemu tap network config
+# *
