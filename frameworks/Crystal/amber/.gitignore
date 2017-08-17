@@ -1,0 +1,10 @@
+/doc/
+/lib/
+/.crystal/
+/.shards/
+/.vscode/
+/spec/
+/db/
+.env
+amber
+!shard.lock

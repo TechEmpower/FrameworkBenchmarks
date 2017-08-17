@@ -963,7 +963,7 @@ def validate_test(test_name, test_keys, directory):
       ]
     },
     'platform': {
-      'help': ('platform', 'Name of the platform this framework runs on, e.g. Node.js, Pypy, hhvm, JRuby ...')
+      'help': ('platform', 'Name of the platform this framework runs on, e.g. Node.js, PyPy, hhvm, JRuby ...')
     },
     'framework': {
       # Guranteed to be here and correct at this point

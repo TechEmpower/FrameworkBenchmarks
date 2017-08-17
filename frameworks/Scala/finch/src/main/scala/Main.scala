@@ -2,8 +2,7 @@ import com.twitter.io.Buf
 import com.twitter.finagle.Http
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.Service
-import com.twitter.finagle.stats.NullStatsReceiver
-import com.twitter.finagle.tracing.NullTracer
+import com.twitter.finagle.stack.nilStack
 import com.twitter.util.Await
 
 import io.circe.Json
@@ -31,8 +30,7 @@ object Main extends App {
   Await.ready(Http.server
     .configured(Http.Netty3Impl)
     .withCompressionLevel(0)
-    .withStatsReceiver(NullStatsReceiver)
-    .withTracer(NullTracer)
+    .withStack(nilStack)
     .serve(":9000", service)
   )
 }

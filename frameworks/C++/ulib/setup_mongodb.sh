@@ -17,7 +17,7 @@ sed -i "s|CLIENT_FOR_PARALLELIZATION .*|CLIENT_FOR_PARALLELIZATION 100|g" $IROOT
 
 # 2. Start ULib Server (userver_tcp)
 export MONGODB_HOST=$DBHOST
-export UMEMPOOL="1057,0,0,49,274,-14,-15,-24,40"
+export UMEMPOOL="96,0,0,47,16401,-14,-20,-18,26"
 
 # Never use setcap inside of TRAVIS 
 [ "$TRAVIS" != "true" ] || { \
