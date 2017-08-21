@@ -11,7 +11,6 @@ python:
 env:
   matrix:
     - "TESTDIR=Kotlin/hexagon"
-    - "TESTDIR=Kotlin/ktor"
 
 before_script:
 
