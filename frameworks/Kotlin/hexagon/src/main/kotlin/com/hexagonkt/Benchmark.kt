@@ -1,18 +1,17 @@
-package co.there4.hexagon
+package com.hexagonkt
 
-import co.there4.hexagon.serialization.convertToMap
-import co.there4.hexagon.serialization.serialize
-import co.there4.hexagon.server.Call
-import co.there4.hexagon.server.Router
-import co.there4.hexagon.server.Server
-import co.there4.hexagon.server.jetty.JettyServletEngine
-import co.there4.hexagon.server.router
-import co.there4.hexagon.server.servlet.ServletServer
-import co.there4.hexagon.settings.SettingsManager.settings
-import co.there4.hexagon.templates.pebble.PebbleEngine
+import com.hexagonkt.helpers.systemSetting
+import com.hexagonkt.serialization.convertToMap
+import com.hexagonkt.serialization.serialize
+import com.hexagonkt.server.*
+import com.hexagonkt.server.jetty.JettyServletEngine
+import com.hexagonkt.server.servlet.ServletServer
+import com.hexagonkt.server.undertow.UndertowEngine
+import com.hexagonkt.settings.SettingsManager.settings
+import com.hexagonkt.templates.pebble.PebbleEngine
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory.getLogger
 
-import java.lang.System.getProperty
-import java.lang.System.getenv
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 import javax.servlet.annotation.WebListener
@@ -27,6 +26,8 @@ internal data class World(val _id: Int, val id: Int, val randomNumber: Int)
 private const val TEXT_MESSAGE: String = "Hello, World!"
 private const val CONTENT_TYPE_JSON = "application/json"
 private const val QUERIES_PARAM = "queries"
+
+private val LOGGER: Logger = getLogger("BENCHMARK_LOGGER")
 
 // UTILITIES
 internal fun randomWorld() = ThreadLocalRandom.current().nextInt(WORLD_ROWS) + 1
@@ -50,7 +51,7 @@ private fun Call.getWorldsCount() = (request[QUERIES_PARAM]?.toIntOrNull() ?: 1)
 private fun Call.listFortunes(store: Store) {
     val fortunes = store.findAllFortunes() + Fortune(0, "Additional fortune added at request time.")
     val locale = Locale.getDefault()
-    response.contentType = "text/html; charset=utf-8"
+    response.contentType = "text/html;charset=utf-8"
     template(PebbleEngine, "fortunes.html", locale, "fortunes" to fortunes.sortedBy { it.message })
 }
 
@@ -64,7 +65,7 @@ private fun Call.updateWorlds(store: Store) {
 
 // CONTROLLER
 private fun router(): Router = router {
-    val store = createStore(getProperty("DBSTORE") ?: getenv("DBSTORE") ?: "mongodb")
+    val store = benchmarkStore ?: error("Invalid Store")
 
     before {
         response.addHeader("Server", "Servlet/3.1")
@@ -81,11 +82,34 @@ private fun router(): Router = router {
 }
 
 @WebListener class Web : ServletServer () {
+    init {
+        if (benchmarkStore == null)
+            benchmarkStore = createStore(systemSetting("DBSTORE", "mongodb"))
+    }
+
     override fun createRouter() = router()
 }
 
-internal var server: Server? = null
+internal var benchmarkStore: Store? = null
+internal var benchmarkServer: Server? = null
+
+internal fun createEngine(engine: String): ServerEngine = when (engine) {
+    "jetty" -> JettyServletEngine()
+    "undertow" -> UndertowEngine()
+    else -> error("Unsupported server engine")
+}
 
 fun main(vararg args: String) {
-    server = Server(JettyServletEngine(), settings, router()).apply { run() }
+    val engine = createEngine(systemSetting("WEBENGINE", "jetty"))
+    benchmarkStore = createStore(systemSetting("DBSTORE", "mongodb"))
+
+    LOGGER.info("""
+            Benchmark set up:
+                - Engine: {}
+                - Store: {}
+        """.trimIndent(),
+        engine.javaClass.name,
+        benchmarkStore?.javaClass?.name)
+
+    benchmarkServer = Server(engine, settings, router()).apply { run() }
 }
