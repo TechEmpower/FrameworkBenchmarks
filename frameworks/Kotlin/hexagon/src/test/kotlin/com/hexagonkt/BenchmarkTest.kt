@@ -2,6 +2,7 @@ package com.hexagonkt
 
 import com.hexagonkt.serialization.parse
 import com.hexagonkt.client.Client
+import com.hexagonkt.serialization.parseList
 import com.hexagonkt.server.HttpMethod.GET
 import org.asynchttpclient.Response
 import org.testng.annotations.AfterClass
@@ -20,6 +21,7 @@ class BenchmarkUndertowMongoDbTest : BenchmarkTest("undertow", "mongodb")
 class BenchmarkUndertowPostgreSqlTest : BenchmarkTest("undertow", "postgresql")
 
 @Test(threadPoolSize = THREADS, invocationCount = TIMES)
+@Suppress("MemberVisibilityCanPrivate")
 abstract class BenchmarkTest(private val webEngine: String, private val databaseEngine: String) {
     private val client by lazy { Client("http://localhost:${benchmarkServer?.runtimePort}") }
 
@@ -28,6 +30,7 @@ abstract class BenchmarkTest(private val webEngine: String, private val database
         setProperty("WEBENGINE", webEngine)
         main()
 
+        @Suppress("ConstantConditionIf")
         val warmupRounds = if (THREADS > 1) 2 else 0
         (1..warmupRounds).forEach {
             json()
@@ -124,7 +127,7 @@ abstract class BenchmarkTest(private val webEngine: String, private val database
         val body = response.responseBody
 
         checkResponse(response, "application/json")
-        val bodyMap = body.parse(Map::class)
+        val bodyMap = body.parseList(Map::class).first()
         assert(bodyMap.containsKey(World::id.name))
         assert(bodyMap.containsKey(World::randomNumber.name))
     }
