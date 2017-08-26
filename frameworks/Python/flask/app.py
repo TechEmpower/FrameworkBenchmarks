@@ -25,6 +25,7 @@ DBHOST = os.environ.get('DBHOST', 'localhost')
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = DBDRIVER + '://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % DBHOST
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 db = SQLAlchemy(app)
 dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], connect_args={'autocommit': True}, pool_reset_on_return=None)
@@ -35,7 +36,7 @@ bakery = baked.bakery()
 # models
 
 class World(db.Model):
-    __tablename__ = "World"
+    __tablename__ = "world"
     id = db.Column(db.Integer, primary_key=True)
     randomNumber = db.Column(db.Integer)
 
@@ -55,7 +56,7 @@ class World(db.Model):
 
 
 class Fortune(db.Model):
-    __tablename__ = "Fortune"
+    __tablename__ = "fortune"
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String)
 
@@ -105,7 +106,7 @@ def get_random_world_raw():
     worlds = []
     for i in xrange(num_queries):
         wid = randint(1, 10000)
-        result = connection.execute("SELECT * FROM World WHERE id = " + str(wid)).fetchone()
+        result = connection.execute("SELECT * FROM world WHERE id = " + str(wid)).fetchone()
         worlds.append({'id': result[0], 'randomNumber': result[1]})
     connection.close()
     return json_response(worlds)
@@ -115,7 +116,7 @@ def get_random_world_raw():
 def get_random_world_single_raw():
     connection = dbraw_engine.connect()
     wid = randint(1, 10000)
-    result = connection.execute("SELECT * FROM World WHERE id = " + str(wid)).fetchone()
+    result = connection.execute("SELECT * FROM world WHERE id = " + str(wid)).fetchone()
     worlds = {'id': result[0], 'randomNumber': result[1]}
     connection.close()
     return json_response(worlds)
@@ -129,7 +130,7 @@ def get_fortunes():
 
 @app.route("/fortunesraw")
 def get_forutens_raw():
-    res = dbraw_engine.execute("SELECT * FROM Fortune")
+    res = dbraw_engine.execute("SELECT * FROM fortune")
     fortunes = res.fetchall()
     res.close()
     fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
@@ -173,7 +174,7 @@ def raw_updates():
         worlds = []
         rp = partial(randint, 1, 10000)
         for i in xrange(num_queries):
-            world = connection.execute("SELECT * FROM World WHERE id=%s", (rp(),)).fetchone()
+            world = connection.execute("SELECT * FROM world WHERE id=%s", (rp(),)).fetchone()
             randomNumber = rp()
             worlds.append({'id': world['id'], 'randomNumber': randomNumber})
             connection.execute("UPDATE World SET randomNumber=%s WHERE id=%s", (randomNumber, world['id']))

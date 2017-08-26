@@ -1,8 +1,5 @@
 #!/bin/bash
 
-sed -i 's|localhost|'"${DBHOST}"'|g' src/main/webapp/WEB-INF/resin-web.xml
-sed -i 's|localhost|'"${DBHOST}"'|g' src/main/java/app/config/DbConfig.java
-
 fw_depends mysql java resin maven
 
 mvn clean package

@@ -26,6 +26,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.sql.DataSource;
 
+import static com.networknt.techempower.Helper.randomWorld;
+
 public class QueriesPostgresqlGetHandler implements HttpHandler {
     private final DataSource ds = PostgresStartupHookProvider.ds;
     private DslJson<Object> dsl = new DslJson<>();
@@ -33,22 +35,27 @@ public class QueriesPostgresqlGetHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
-        if (exchange.isInIoThread()) {
-            exchange.dispatch(this);
-            return;
-        }
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-
         int queries = Helper.getQueries(exchange);
 
-        List<CompletableFuture<World>> worlds = IntStream.range(0, queries)
-                .mapToObj(i -> CompletableFuture.supplyAsync(() -> Helper.selectWorld(ds), Helper.EXECUTOR))
-                .collect(Collectors.toList());
+        World[] worlds = new World[queries];
+        try (Connection connection = ds.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement("SELECT * FROM World WHERE id = ?")) {
+            for (int i = 0; i < worlds.length; i++) {
+                statement.setInt(1, randomWorld());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    int id = resultSet.getInt("id");
+                    int randomNumber = resultSet.getInt("randomNumber");
+                    worlds[i] = new World(id, randomNumber);
+                }
+            }
+        }
 
-        CompletableFuture<List<World>> allDone = Helper.sequence(worlds);
         writer.reset();
-        writer.serialize(allDone.get());
+        writer.serialize(worlds);
+
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(ByteBuffer.wrap(writer.toByteArray()));
     }
-
 }

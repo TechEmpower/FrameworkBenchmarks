@@ -29,7 +29,7 @@ from datetime import datetime
 from datetime import timedelta
 
 class FrameworkTest:
-  headers_template = "-H 'Host: localhost' -H 'Accept: {accept}' -H 'Connection: keep-alive'"
+  headers_template = "-H 'Host: TFB-server' -H 'Accept: {accept}' -H 'Connection: keep-alive'"
 
   # Used for test types that require no pipelining or query string params.
   concurrency_template = """
@@ -189,7 +189,7 @@ class FrameworkTest:
       subprocess.check_call(['gcc', 
         '-std=c99', 
         '-o%s/TFBReaper' % self.install_root, 
-        os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')  ],
+        os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')],
         stderr=out, stdout=out)
 
     # Check that the client is setup
@@ -384,7 +384,20 @@ class FrameworkTest:
         base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
 
         try:
+          # Verifies headers from the server. This check is made from the
+          # App Server using Pythons requests module. Will do a second check from
+          # the client to make sure the server isn't only accepting connections
+          # from localhost on a multi-machine setup.
           results = test.verify(base_url)
+
+          # Now verify that the url is reachable from the client machine, unless
+          # we're already failing
+          if not any(result == 'fail' for (result, reason, url) in results):
+            p = subprocess.call(["ssh", "TFB-client", "curl -sSf %s" % base_url + test.get_url()], shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if p is not 0:
+              results = [('fail', "Server did not respond to request from client machine.", base_url)]
+              logging.warning("""This error usually means your server is only accepting
+                requests from localhost.""")
         except ConnectionError as e:
           results = [('fail',"Server did not respond to request", base_url)]
           logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
@@ -471,7 +484,9 @@ class FrameworkTest:
           if test_type == 'plaintext': # One special case
             remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
           elif test_type == 'query' or test_type == 'update':
-            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
+            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header, self.benchmarker.query_levels)
+          elif test_type == 'cached_query':
+            remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header, self.benchmarker.cached_query_levels)
           else:
             remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
 
@@ -654,11 +669,11 @@ class FrameworkTest:
   # be run on the client to benchmark a single test. This
   # specifically works for the variable query tests (Query)
   ############################################################
-  def __generate_query_script(self, url, port, accept_header):
+  def __generate_query_script(self, url, port, accept_header, query_levels):
     headers = self.headers_template.format(accept=accept_header)
     return self.query_template.format(max_concurrency=max(self.benchmarker.concurrency_levels),
       name=self.name, duration=self.benchmarker.duration,
-      levels=" ".join("{}".format(item) for item in self.benchmarker.query_levels),
+      levels=" ".join("{}".format(item) for item in query_levels),
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers)
 
   ############################################################
@@ -879,14 +894,16 @@ def validate_urls(test_name, test_keys):
   the suggested url specifications, although those suggestions are presented if a url fails validation here.
   """
   example_urls = {
-    "json_url":      "/json",
-    "db_url":        "/mysql/db",
-    "query_url":     "/mysql/queries?queries=  or  /mysql/queries/",
-    "fortune_url":   "/mysql/fortunes",
-    "update_url":    "/mysql/updates?queries=  or  /mysql/updates/",
-    "plaintext_url": "/plaintext"
+    "json_url":         "/json",
+    "db_url":           "/mysql/db",
+    "query_url":        "/mysql/queries?queries=  or  /mysql/queries/",
+    "fortune_url":      "/mysql/fortunes",
+    "update_url":       "/mysql/updates?queries=  or  /mysql/updates/",
+    "plaintext_url":    "/plaintext",
+    "cached_query_url": "/mysql/cached_queries?queries=  or /mysql/cached_queries"
   }
-  for test_url in ["json_url","db_url","query_url","fortune_url","update_url","plaintext_url"]:
+
+  for test_url in ["json_url","db_url","query_url","fortune_url","update_url","plaintext_url","cached_query_url"]:
     key_value = test_keys.get(test_url, None)
     if key_value != None and not key_value.startswith('/'):
       errmsg = """`%s` field in test \"%s\" does not appear to be a valid url: \"%s\"\n
@@ -946,7 +963,7 @@ def validate_test(test_name, test_keys, directory):
       ]
     },
     'platform': {
-      'help': ('platform', 'Name of the platform this framework runs on, e.g. Node.js, Pypy, hhvm, JRuby ...')
+      'help': ('platform', 'Name of the platform this framework runs on, e.g. Node.js, PyPy, hhvm, JRuby ...')
     },
     'framework': {
       # Guranteed to be here and correct at this point

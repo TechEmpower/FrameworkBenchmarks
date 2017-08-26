@@ -20,7 +20,7 @@ start(_Type, _Args) ->
         crypto:start(),
         application:start(emysql),
         emysql:add_pool(test_pool, 256,
-          "benchmarkdbuser", "benchmarkdbpass", "localhost", 3306,
+          "benchmarkdbuser", "benchmarkdbpass", "TFB-database", 3306,
           "hello_world", utf8),
 	emysql:prepare(db_stmt, <<"SELECT * FROM World where id = ?">>),
 	Dispatch = cowboy_router:compile([

@@ -21,6 +21,11 @@ public class World {
 
     public World() {
     }
+    
+    public World(int id, int randomNumber) {
+    	this.id = id;
+    	this.randomNumber = randomNumber;
+    }
 
     public int getId() {
         return id;

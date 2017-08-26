@@ -3,7 +3,7 @@
   "tests": [{
     "default": {
       "setup_file": "start",
-      "json_url": "/",
+      "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -25,6 +25,7 @@
       "setup_file": "start",
       "db_url": "/db",
       "query_url": "/query?queries=",
+      "cached_query_url": "/cached_query?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
@@ -47,6 +48,7 @@
       "setup_file": "start_postgresql",
       "db_url": "/db",
       "query_url": "/query?queries=",
+      "cached_query_url": "/cached_query?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,

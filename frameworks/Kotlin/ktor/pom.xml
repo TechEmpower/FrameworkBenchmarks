@@ -13,11 +13,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.1.1</kotlin.version>
+        <kotlin.version>1.1.2-5</kotlin.version>
         <junit.version>4.12</junit.version>
 
-        <ktor.version>0.3.1</ktor.version>
-        <app.main.class>org.jetbrains.ktor.benchmarks.HelloKt</app.main.class>
+        <ktor.version>0.3.3</ktor.version>
     </properties>
 
     <dependencies>
@@ -44,6 +43,11 @@
             <version>${ktor.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.jetbrains.ktor</groupId>
+            <artifactId>ktor-jetty</artifactId>
+            <version>${ktor.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.7</version>
@@ -57,6 +61,11 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.41</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.1</version>
         </dependency>
     </dependencies>
 
@@ -94,27 +103,58 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.0.0</version>
+
+                <executions>
+                    <execution>
+                        <id>netty</id>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>single</goal>
                         </goals>
+
+                        <phase>package</phase>
+
                         <configuration>
-                            <minimizeJar>false</minimizeJar>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <Main-Class>${app.main.class}</Main-Class>
-                                        <X-Compile-Source-JDK>1.8</X-Compile-Source-JDK>
-                                        <X-Compile-Target-JDK>1.8</X-Compile-Target-JDK>
-                                    </manifestEntries>
-                                </transformer>
-                            </transformers>
+                            <descriptors>
+                                <descriptor>src/main/assembly/netty-bundle.xml</descriptor>
+                            </descriptors>
+                            <archive>
+                                <manifest>
+                                    <mainClass>org.jetbrains.ktor.netty.DevelopmentHost</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jetty</id>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+
+                        <phase>package</phase>
+
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/jetty-bundle.xml</descriptor>
+                            </descriptors>
+                            <archive>
+                                <manifest>
+                                    <mainClass>org.jetbrains.ktor.jetty.DevelopmentHost</mainClass>
+                                </manifest>
+                            </archive>
                         </configuration>
                     </execution>
                 </executions>

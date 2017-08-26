@@ -7,11 +7,9 @@ server:
     useServerHeader: true
     # There is no proxy in front of the server
     useForwardedHeaders: false
-
   # Test requirements forbid gzip compression of the replies
   gzip:
     enabled: false
-
   requestLog:
     appenders: []
 
@@ -29,7 +27,7 @@ database:
   password: benchmarkdbpass
 
   # the JDBC URL
-  url: jdbc:mysql://127.0.0.1:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true
+  url: jdbc:mysql://TFB-database:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true&useSSL=false
 
   # any properties specific to your JDBC driver:
   properties:
@@ -39,6 +37,9 @@ database:
   # the maximum amount of time to wait on an empty pool before throwing an exception
   maxWaitForConnection: 1s
 
+  # the initial number of connections
+  initialSize: 8
+
   # the minimum number of connections to keep open
   minSize: 8
 
@@ -47,3 +48,9 @@ database:
 
   # whether or not idle connections should be validated
   checkConnectionWhileIdle: false
+
+  # disable comments in SQL queries
+  autoCommentsEnabled: false
+
+  # disable autocommit in the JDBC driver
+  autoCommitByDefault: false

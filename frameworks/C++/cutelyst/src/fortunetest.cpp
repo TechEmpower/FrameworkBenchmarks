@@ -29,11 +29,6 @@ void FortuneTest::fortunes_raw_mysql(Context *c)
     renderRaw(c, fortunes);
 }
 
-static bool caseSensitiveLessThan(const Fortune &a1, const Fortune &a2)
-{
-    return a1.second < a2.second;
-}
-
 FortuneList FortuneTest::processQuery(Context *c, QSqlQuery &query)
 {
     FortuneList fortunes;
@@ -48,7 +43,9 @@ FortuneList FortuneTest::processQuery(Context *c, QSqlQuery &query)
     }
     fortunes.push_back({0, QStringLiteral("Additional fortune added at request time.")});
 
-    qSort(fortunes.begin(), fortunes.end(), caseSensitiveLessThan);
+    std::sort(fortunes.begin(), fortunes.end(), [] (const Fortune &a1, const Fortune &a2) {
+        return a1.second < a2.second;
+    });
 
     return fortunes;
 }

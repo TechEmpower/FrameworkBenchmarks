@@ -118,6 +118,10 @@ def main(argv=None):
         defaults['database_host'] = defaults['client_host']
     if defaults['server_host'] is None:
         defaults['server_host'] = defaults['client_host']
+    if defaults['ulimit'] is None:
+        defaults['ulimit'] = 200000
+
+    os.environ['ULIMIT'] = str(defaults['ulimit'])
 
     ##########################################################
     # Set up argument parser
@@ -140,8 +144,8 @@ def main(argv=None):
     parser.add_argument('--test', nargs='+', help='names of tests to run')
     parser.add_argument('--test-dir', nargs='+', dest='test_dir', help='name of framework directory containing all tests to run')
     parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
-    parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
-    parser.add_argument('-m', '--mode', choices=['benchmark', 'verify'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown')
+    parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'cached_query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
+    parser.add_argument('-m', '--mode', choices=['benchmark', 'verify', 'debug'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown. debug mode will skip verification and leave the server running.')
     parser.add_argument('--list-tests', action='store_true', default=False, help='lists all the known tests that can run')
 
     # Benchmark options

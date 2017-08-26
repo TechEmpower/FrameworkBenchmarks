@@ -137,30 +137,29 @@
     </dependency>
   </dependencies>
   <properties>
-    <version.hikaricp>2.5.1</version.hikaricp>
+    <version.hikaricp>2.6.1</version.hikaricp>
     <version.httpasyncclient>4.1.2</version.httpasyncclient>
-    <version.jsonpath>2.2.0</version.jsonpath>
     <version.commons.codec>1.10</version.commons.codec>
-    <version.metrics>3.1.2</version.metrics>
+    <version.jsonpath>2.2.0</version.jsonpath>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.encoder>1.2</version.encoder>
     <version.httpclient>4.5.2</version.httpclient>
-    <version.undertow>1.4.10.Final</version.undertow>
+    <version.undertow>1.2.5.Final</version.undertow>
     <version.jose4j>0.5.2</version.jose4j>
     <version.commons-lang>2.6</version.commons-lang>
     <java.version>1.8</java.version>
     <version.jackson>2.8.2</version.jackson>
-    <version.light-java>1.2.3</version.light-java>
+    <version.light-java>1.2.5</version.light-java>
     <version.swagger>1.5.10</version.swagger>
     <version.mockito>2.1.0-beta.124</version.mockito>
     <version.slf4j>1.7.22</version.slf4j>
     <version.commons.io>2.5</version.commons.io>
     <version.logback>1.1.9</version.logback>
     <version.junit>4.12</version.junit>
-    <version.postgres>9.4.1211</version.postgres>
+    <version.postgres>42.1.1</version.postgres>
     <version.antlr4>4.5.3</version.antlr4>
     <version.mysql>5.1.41</version.mysql>
-    <version.light-java-rest>1.2.3</version.light-java-rest>
+    <version.light-java-rest>1.2.5</version.light-java-rest>
   </properties>
 </project>
 

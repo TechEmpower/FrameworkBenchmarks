@@ -3,40 +3,52 @@ package org.jetbrains.ktor.benchmarks
 import com.google.gson.*
 import com.mysql.jdbc.*
 import com.zaxxer.hikari.*
+import kotlinx.coroutines.experimental.*
 import org.jetbrains.ktor.application.*
 import org.jetbrains.ktor.content.*
 import org.jetbrains.ktor.features.*
-import org.jetbrains.ktor.host.*
 import org.jetbrains.ktor.http.*
-import org.jetbrains.ktor.netty.*
 import org.jetbrains.ktor.routing.*
 import org.jetbrains.ktor.util.*
 import java.sql.ResultSet.*
 import java.util.concurrent.*
+import java.util.concurrent.atomic.*
 import javax.sql.*
 
 
 data class Message(val message: String = "Hello, World!")
 data class World(val id: Int, var randomNumber: Int)
 
-fun main(args: Array<String>) {
+fun Application.main() {
     val (a, b) = hex("62656e63686d61726b6462757365723a62656e63686d61726b646270617373").toString(Charsets.ISO_8859_1).split(":")
     val gson = GsonBuilder().create()
     val DbRows = 10000
-    val dbHost = System.getenv("DBHOST")
     Driver::class.java.newInstance()
-    val pool = hikari(dbHost, a, b)
+    val pool by lazy {
+        val dbHost = System.getenv("DBHOST") ?: error("DBHOST environment variable is not set")
+        hikari(dbHost, a, b)
+    }
 
-    embeddedServer(Netty, 9090) {
-        install(DefaultHeaders)
-        routing {
-            get("/plaintext") { call ->
-                call.respond(TextContent("Hello, World!", ContentType.Text.Plain, HttpStatusCode.OK))
-            }
-            get("/json") { call ->
-                call.respond(TextContent(gson.toJson(Message()), ContentType.Application.Json, HttpStatusCode.OK))
-            }
-            get("/db") { call ->
+    val counter = AtomicInteger()
+    val databaseExecutor = Executors.newFixedThreadPool(256) { r ->
+        Thread(r, "db-${counter.incrementAndGet()}-thread")
+    }
+    val databaseDispatcher = databaseExecutor.asCoroutineDispatcher()
+
+    install(SamplingCallLogging) {
+        samplingFactor = 50000L
+    }
+
+    install(DefaultHeaders)
+    routing {
+        get("/plaintext") { call ->
+            call.respond(TextContent("Hello, World!", ContentType.Text.Plain, HttpStatusCode.OK))
+        }
+        get("/json") { call ->
+            call.respond(TextContent(gson.toJson(Message()), ContentType.Application.Json, HttpStatusCode.OK))
+        }
+        get("/db") { call ->
+            val response = run(databaseDispatcher) {
                 pool.connection.use { connection ->
                     val random = ThreadLocalRandom.current()
                     val queries = call.queries()
@@ -53,14 +65,18 @@ fun main(args: Array<String>) {
                             }
                         }
 
-                        call.respond(TextContent(gson.toJson(when (queries) {
+                        TextContent(gson.toJson(when (queries) {
                             null -> result.single()
                             else -> result
-                        }), ContentType.Application.Json, HttpStatusCode.OK))
+                        }), ContentType.Application.Json, HttpStatusCode.OK)
                     }
                 }
             }
-            get("/updates") {
+
+            call.respond(response)
+        }
+        get("/updates") {
+            val t = run(databaseDispatcher) {
                 pool.connection.use { connection ->
                     val queries = call.queries()
                     val random = ThreadLocalRandom.current()
@@ -90,14 +106,16 @@ fun main(args: Array<String>) {
                         }
                     }
 
-                    call.respond(TextContent(gson.toJson(when (queries) {
+                    TextContent(gson.toJson(when (queries) {
                         null -> result.single()
                         else -> result
-                    }), ContentType.Application.Json, HttpStatusCode.OK))
+                    }), ContentType.Application.Json, HttpStatusCode.OK)
                 }
             }
+
+            call.respond(t)
         }
-    }.start(true)
+    }
 }
 
 fun ApplicationCall.queries() = try {
@@ -108,13 +126,15 @@ fun ApplicationCall.queries() = try {
 
 private fun hikari(dbHost: String, a: String, b: String): DataSource {
     val config = HikariConfig()
-    config.jdbcUrl = "jdbc:mysql://$dbHost:3306/hello_world"
+    config.jdbcUrl = "jdbc:mysql://$dbHost:3306/hello_world?useSSL=false"
     config.username = a
     config.password = b
     config.addDataSourceProperty("cachePrepStmts", "true")
     config.addDataSourceProperty("prepStmtCacheSize", "250")
     config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
     config.driverClassName = Driver::class.java.name
+    config.connectionTimeout = 10000
+    config.maximumPoolSize = 100
 
     return HikariDataSource(config)
 }

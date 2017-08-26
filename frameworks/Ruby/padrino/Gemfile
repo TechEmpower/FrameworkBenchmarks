@@ -12,7 +12,7 @@ platforms :ruby do
   gem "thin", '1.6.2'
 end
 
-gem 'puma', '2.9.0'
+gem 'puma', "~> 3.9.1"
 gem 'json', '1.8.1'
 
 gem 'slim', '2.0.3'

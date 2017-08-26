@@ -29,6 +29,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.sql.DataSource;
 
+import static com.networknt.techempower.Helper.randomWorld;
+
 public class UpdatesPostgresqlGetHandler implements HttpHandler {
     private final DataSource ds = PostgresStartupHookProvider.ds;
     private DslJson<Object> dsl = new DslJson<>();
@@ -36,19 +38,38 @@ public class UpdatesPostgresqlGetHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
-        if (exchange.isInIoThread()) {
-            exchange.dispatch(this);
-            return;
-        }
         int queries = Helper.getQueries(exchange);
 
-        List<CompletableFuture<World>> worlds = IntStream.range(0, queries)
-                .mapToObj(i -> CompletableFuture.supplyAsync(() -> Helper.updateWorld(ds), Helper.EXECUTOR))
-                .collect(Collectors.toList());
+        World[] worlds = new World[queries];
+        try (Connection connection = ds.getConnection()) {
+            try (PreparedStatement statement =
+                         connection.prepareStatement(
+                                 "SELECT * FROM World WHERE id = ?")) {
+                for (int i = 0; i < worlds.length; i++) {
+                    statement.setInt(1, randomWorld());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        resultSet.next();
+                        int id = resultSet.getInt("id");
+                        int randomNumber = resultSet.getInt("randomNumber");
+                        worlds[i] = new World(id, randomNumber);
+                    }
+                }
+            }
+            try (PreparedStatement statement =
+                         connection.prepareStatement(
+                                 "UPDATE World SET randomNumber = ? WHERE id = ?")) {
+                for (World world : worlds) {
+                    world.randomNumber = randomWorld();
+                    statement.setInt(1, world.randomNumber);
+                    statement.setInt(2, world.id);
+                    statement.executeUpdate();
+                }
+            }
+        }
 
-        CompletableFuture<List<World>> allDone = Helper.sequence(worlds);
         writer.reset();
-        writer.serialize(allDone.get());
+        writer.serialize(worlds);
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(ByteBuffer.wrap(writer.toByteArray()));
     }
 }

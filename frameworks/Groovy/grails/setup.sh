@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sed -i 's|jdbc:mysql://.*:3306|jdbc:mysql://'"${DBHOST}"':3306|g' hello/grails-app/conf/DataSource.groovy
-
 fw_depends mysql java grails resin 
 
 cd hello

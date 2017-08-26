@@ -2,6 +2,7 @@
 
 import json
 import motor
+from pymongo.operations import UpdateOne
 import tornado.ioloop
 import tornado.web
 import tornado.httpserver
@@ -65,18 +66,17 @@ class UpdateHandler(JsonHandler):
             elif queries > 500:
                 queries = 500
 
-        worlds = []
+        worlds = yield [db.world.find_one(randint(1, 10000)) for _ in xrange(queries)]
         updates = []
-        for _ in xrange(queries):
-            world = yield db.world.find_one(randint(1, 10000))
+        out = []
+
+        for world in worlds:
             new_value = randint(1, 10000)
+            updates.append(UpdateOne({'_id': world['_id']}, {"$set": {self.RANDOM_NUMBER: new_value}}))
+            out.append({self.ID: world["_id"], self.RANDOM_NUMBER: new_value})
 
-            updates.append(db.world.update_one({'_id': world['_id']}, {"$set": {self.RANDOM_NUMBER: new_value}}))
-            worlds.append({self.ID: world['_id'],
-                   self.RANDOM_NUMBER: world[self.RANDOM_NUMBER]})
-
-        yield updates
-        self.finish(json.dumps(worlds))
+        yield db.world.bulk_write(updates, ordered=False)
+        self.finish(json.dumps(out))
 
 
 class FortuneHandler(HtmlHandler):
@@ -102,7 +102,7 @@ application = tornado.web.Application([
 ],
     template_path="templates"
 )
-
+application.ui_modules = {}
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()
@@ -111,5 +111,5 @@ if __name__ == "__main__":
     server.start(0)
 
     ioloop = tornado.ioloop.IOLoop.instance()
-    db = motor.MotorClient(options.mongo).hello_world
+    db = motor.MotorClient(options.mongo, maxPoolSize=500).hello_world
     ioloop.start()

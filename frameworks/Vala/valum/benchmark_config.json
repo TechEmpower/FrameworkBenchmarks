@@ -16,7 +16,8 @@
       "webserver": "Soup",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Valum"
+      "display_name": "Valum",
+      "versus": "vsgi"
     }
   }]
 }

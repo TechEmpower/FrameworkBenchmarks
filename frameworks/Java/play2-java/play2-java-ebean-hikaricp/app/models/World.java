@@ -1,7 +1,7 @@
 package models;
 
 import com.avaje.ebean.Ebean;
-import play.db.ebean.Model;
+import com.avaje.ebean.Model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +21,7 @@ public class World extends Model {
         return Ebean.find(World.class, id);
     }
 
-    public static List<World> save(final List<World> worlds) throws Throwable {
+    public static List<World> save(final List<World> worlds) {
         worlds.forEach(Ebean::update);
 
         return worlds;

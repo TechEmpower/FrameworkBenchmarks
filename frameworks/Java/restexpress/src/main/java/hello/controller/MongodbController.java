@@ -24,24 +24,26 @@ public class MongodbController
 
 	public Object read(Request request, Response response)
 	{
-		// Get the count of queries to run.
-		int count = 1;
-		String value = request.getHeader("queries");
+    // Get the count of queries to run.
+    int count = 1;
+    try
+    {
+      count = Integer.parseInt(request.getHeader("queries"));
 
-		if (value != null)
-		{
-			count = Integer.parseInt(value);
-		}
-
-		// Bounds check.
-		if (count > 500)
-		{
-			count = 500;
-		}
-		else if (count < 1)
-		{
-			count = 1;
-		}
+      // Bounds check.
+      if (count > 500)
+      {
+        count = 500;
+      }
+      if (count < 1)
+      {
+        count = 1;
+      }
+    }
+    catch(NumberFormatException nfexc)
+    {
+      // do nothing
+    }
 
 		// Fetch some rows from the database.
 		final World[] worlds = new World[count];

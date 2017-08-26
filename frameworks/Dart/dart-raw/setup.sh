@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sed -i 's|host: .*|host: '"${DBHOST}"'|g' postgresql.yaml
-
 fw_depends postgresql dart
 
 pub upgrade

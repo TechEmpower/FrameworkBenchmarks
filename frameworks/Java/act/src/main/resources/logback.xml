@@ -15,8 +15,28 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
+    <logger name="act.Act" level="OFF" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!--<logger name="act.route" level="OFF" additivity="false">-->
+        <!--<appender-ref ref="STDOUT" />-->
+    <!--</logger>-->
+
+    <!--<logger name="act.event" level="OFF" additivity="false">-->
+        <!--<appender-ref ref="STDOUT" />-->
+    <!--</logger>-->
+
+    <!--<logger name="act.job" level="OFF" additivity="false">-->
+        <!--<appender-ref ref="STDOUT" />-->
+    <!--</logger>-->
+
+    <!--<logger name="act.db" level="OFF" additivity="false">-->
+        <!--<appender-ref ref="STDOUT" />-->
+    <!--</logger>-->
+
     <logger name="metric" level="OFF">
-        <appender-ref ref="METRIC_FILE" />
+        <appender-ref ref="STDOUT" />
     </logger>
 
     <!-- By default, the level of the root level is set to DEBUG -->
