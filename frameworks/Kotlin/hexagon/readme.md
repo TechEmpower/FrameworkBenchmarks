@@ -6,8 +6,8 @@ development platforms. The test utilizes Hexagon routes, serialization and datab
 
 ## Tests
 
-* [Hexagon Web](src/main/java/com/hexagonkt/Benchmark.kt)
-* [Hexagon Storage](src/main/java/com/hexagonkt/BenchmarkStorage.kt)
+* [Hexagon Web](src/main/kotlin/com/hexagonkt/Benchmark.kt)
+* [Hexagon Storage](src/main/kotlin/com/hexagonkt/BenchmarkStorage.kt)
 
 ## Infrastructure Software Versions
 
