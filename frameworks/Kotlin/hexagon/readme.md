@@ -6,8 +6,8 @@ development platforms. The test utilizes Hexagon routes, serialization and datab
 
 ## Tests
 
-* [Hexagon Web](/src/main/java/com/hexagonkt/Benchmark.kt)
-* [Hexagon Storage](/src/main/java/com/hexagonkt/BenchmarkStorage.kt)
+* [Hexagon Web](src/main/java/com/hexagonkt/Benchmark.kt)
+* [Hexagon Storage](src/main/java/com/hexagonkt/BenchmarkStorage.kt)
 
 ## Infrastructure Software Versions
 
@@ -15,7 +15,7 @@ development platforms. The test utilizes Hexagon routes, serialization and datab
 
 ## Test URLs
 
-### Jetty
+### Jetty & Undertow
 
 * JSON Encoding Test: http://localhost:9090/json
 * Data-Store/Database Mapping Test: http://localhost:9090/db?queries=5 
