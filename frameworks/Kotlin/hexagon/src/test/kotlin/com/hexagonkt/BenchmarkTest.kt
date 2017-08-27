@@ -1,9 +1,11 @@
-package co.there4.hexagon
+package com.hexagonkt
 
-import co.there4.hexagon.serialization.parse
-import co.there4.hexagon.client.Client
-import co.there4.hexagon.server.HttpMethod.GET
+import com.hexagonkt.serialization.parse
+import com.hexagonkt.client.Client
+import com.hexagonkt.serialization.parseList
+import com.hexagonkt.server.HttpMethod.GET
 import org.asynchttpclient.Response
+import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 import java.lang.System.setProperty
@@ -12,17 +14,23 @@ import kotlin.test.assertFailsWith
 internal const val THREADS = 4
 internal const val TIMES = 2
 
-class BenchmarkMongoDbTest : BenchmarkTest("mongodb")
-class BenchmarkPostgreSqlTest : BenchmarkTest("postgresql")
+class BenchmarkJettyMongoDbTest : BenchmarkTest("jetty", "mongodb")
+class BenchmarkJettyPostgreSqlTest : BenchmarkTest("jetty", "postgresql")
+
+class BenchmarkUndertowMongoDbTest : BenchmarkTest("undertow", "mongodb")
+class BenchmarkUndertowPostgreSqlTest : BenchmarkTest("undertow", "postgresql")
 
 @Test(threadPoolSize = THREADS, invocationCount = TIMES)
-abstract class BenchmarkTest(val databaseEngine: String) {
-    private val client by lazy { Client("http://localhost:${server?.runtimePort}") }
+@Suppress("MemberVisibilityCanPrivate")
+abstract class BenchmarkTest(private val webEngine: String, private val databaseEngine: String) {
+    private val client by lazy { Client("http://localhost:${benchmarkServer?.runtimePort}") }
 
     @BeforeClass fun warmup() {
         setProperty("DBSTORE", databaseEngine)
+        setProperty("WEBENGINE", webEngine)
         main()
 
+        @Suppress("ConstantConditionIf")
         val warmupRounds = if (THREADS > 1) 2 else 0
         (1..warmupRounds).forEach {
             json()
@@ -49,6 +57,11 @@ abstract class BenchmarkTest(val databaseEngine: String) {
         }
     }
 
+    @AfterClass fun cooldown() {
+        benchmarkStore?.close()
+        benchmarkServer?.stop()
+    }
+
     fun store() {
         assertFailsWith<IllegalStateException> {
             createStore("invalid")
@@ -59,7 +72,7 @@ abstract class BenchmarkTest(val databaseEngine: String) {
         val web = Web()
 
         val webRoutes = web.serverRouter.requestHandlers
-            .map { it.route.method.first() to it.route.path.path }
+            .map { it.route.methods.first() to it.route.path.path }
 
         val benchmarkRoutes = listOf(
             GET to "/plaintext",
@@ -114,7 +127,7 @@ abstract class BenchmarkTest(val databaseEngine: String) {
         val body = response.responseBody
 
         checkResponse(response, "application/json")
-        val bodyMap = body.parse(Map::class)
+        val bodyMap = body.parseList(Map::class).first()
         assert(bodyMap.containsKey(World::id.name))
         assert(bodyMap.containsKey(World::randomNumber.name))
     }
