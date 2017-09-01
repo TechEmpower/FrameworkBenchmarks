@@ -34,20 +34,13 @@ object WorldRoutes {
         }
         .defaulted("queries", 1)
 
-    operator fun invoke(database: Database) =
-        listOf(
-            queryRoute(database),
-            multipleRoute(database),
-            updateRoute(database)
-        )
-
-    private fun queryRoute(database: Database) = "/db" bind GET to {
+    fun queryRoute(database: Database) = "/db" bind GET to {
         database.withConnection {
             findWorld(it, randomWorld())
         }?.let { Response(OK).with(jsonBody of it) } ?: Response(NOT_FOUND)
     }
 
-    private fun multipleRoute(database: Database) = "/queries" bind GET to {
+    fun multipleRoute(database: Database) = "/queries" bind GET to {
         val worlds = database.withConnection {
             con ->
             (1..numberOfQueries(it)).mapNotNull { findWorld(con, randomWorld()) }
@@ -55,7 +48,7 @@ object WorldRoutes {
         Response(OK).with(jsonBody of array(worlds))
     }
 
-    private fun updateRoute(database: Database) = "/updates" bind GET to {
+    fun updateRoute(database: Database) = "/updates" bind GET to {
         val worlds = database.withConnection {
             con ->
             (1..numberOfQueries(it)).mapNotNull {

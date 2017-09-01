@@ -4,7 +4,7 @@
 The tests were run with:
 
 * [Java Oracle 1.8.0_25](http://www.oracle.com/technetwork/java/javase)
-* [http4k](https://github.com/http4k/http4k)
+* [http4k](https://http4k.org)
 
 ## Test URLs
 
