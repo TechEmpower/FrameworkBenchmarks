@@ -1,3 +1,4 @@
+
 import com.fasterxml.jackson.databind.JsonNode
 import org.http4k.core.Body
 import org.http4k.core.Method.GET
@@ -10,7 +11,6 @@ import org.http4k.format.Jackson.json
 import org.http4k.format.Jackson.number
 import org.http4k.format.Jackson.obj
 import org.http4k.lens.Query
-import org.http4k.routing.Route
 import org.http4k.routing.bind
 import java.lang.Math.max
 import java.lang.Math.min
@@ -34,20 +34,20 @@ object WorldRoutes {
         }
         .defaulted("queries", 1)
 
-    operator fun invoke(database: Database): List<Route> =
+    operator fun invoke(database: Database) =
         listOf(
             queryRoute(database),
             multipleRoute(database),
             updateRoute(database)
         )
 
-    private fun queryRoute(database: Database): Route = "/db" to GET bind {
+    private fun queryRoute(database: Database) = "/db" bind GET to {
         database.withConnection {
             findWorld(it, randomWorld())
         }?.let { Response(OK).with(jsonBody of it) } ?: Response(NOT_FOUND)
     }
 
-    private fun multipleRoute(database: Database): Route = "/queries" to GET bind {
+    private fun multipleRoute(database: Database) = "/queries" bind GET to {
         val worlds = database.withConnection {
             con ->
             (1..numberOfQueries(it)).mapNotNull { findWorld(con, randomWorld()) }
@@ -55,7 +55,7 @@ object WorldRoutes {
         Response(OK).with(jsonBody of array(worlds))
     }
 
-    private fun updateRoute(database: Database): Route = "/updates" to GET bind {
+    private fun updateRoute(database: Database) = "/updates" bind GET to {
         val worlds = database.withConnection {
             con ->
             (1..numberOfQueries(it)).mapNotNull {
