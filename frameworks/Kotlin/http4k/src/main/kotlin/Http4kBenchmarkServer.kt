@@ -20,16 +20,14 @@ object Http4kBenchmarkServer {
         }
     }
 
-    private val database = Database(System.getenv("DBHOST") ?: "localhost")
-
     fun start(config: ServerConfig) = headers.then(
         routes(
             JsonRoute(),
-            PlainTextRoute(),
-            FortunesRoute(database),
-            WorldRoutes.queryRoute(database),
-            WorldRoutes.updateRoute(database),
-            WorldRoutes.multipleRoute(database)
+            PlainTextRoute()
+//            FortunesRoute(database),
+//            WorldRoutes.queryRoute(database),
+//            WorldRoutes.updateRoute(database),
+//            WorldRoutes.multipleRoute(database)
         )
     ).asServer(config).start().block()
 }
