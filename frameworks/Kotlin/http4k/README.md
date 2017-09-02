@@ -13,8 +13,6 @@ The tests were run with:
 
 ## Supported backends
 - Jetty
-- Netty
-- Undertow
 
 ## How to run
 ```bash
