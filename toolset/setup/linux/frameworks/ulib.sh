@@ -14,9 +14,7 @@ ULIB_DOCUMENT_ROOT=$ULIB_ROOT/ULIB_DOCUMENT_ROOT
 mkdir -p $ULIB_ROOT
 mkdir -p $ULIB_DOCUMENT_ROOT
 
-# AVOID "fatal error: postgres_fe.h: No such file or directory"
-# TODO: This should already be installed and unnecessary.
-sudo apt-get install -y postgresql-server-dev-all
+#sudo apt-get install -y libpq-dev
 
 # make use of FIFO scheduling policy possible (we must avoid use of test because bash signal trapping)
 #type setcap >/dev/null 2>/dev/null
