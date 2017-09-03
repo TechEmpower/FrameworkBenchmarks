@@ -1,10 +1,10 @@
-hash: 322922467fa2cf2ae2dfa45bd7dfb390bf00ee2fdb7f232c04cbf53d7bd7f8b5
-updated: 2017-08-09T06:27:21.826159574Z
+hash: b59c0b33b5d6504b9f21d3f99163f8c8a21e4b450399cf7ea730920d982c1756
+updated: 2017-09-03T00:28:05.557966684Z
 imports:
 - name: aahframework.org/aah.v0
-  version: 34d34a895dc0cc09d3b6d710fa722fe79e92e1a5
+  version: 12414997d4457838756dcb53e2e3b6a184d4950f
 - name: aahframework.org/ahttp.v0
-  version: 4c09a9ece15039bb76afa671efbec5c5e1ec8e38
+  version: f9b651b8092ec7477d4349bce07eb95c482306c8
 - name: aahframework.org/aruntime.v0
   version: 3368d72836c245d93409bcf73e2eb5e74cf02767
 - name: aahframework.org/config.v0
@@ -16,25 +16,27 @@ imports:
   subpackages:
   - token
 - name: aahframework.org/i18n.v0
-  version: 6089355055bb15109f7f3aefb8efd2a955115d6d
+  version: 8558a9d1e89af246eda371c0b0e66e83b12dbded
 - name: aahframework.org/log.v0
   version: a6c07023e1cb69de3f987f2bd90be33446b5ba0e
 - name: aahframework.org/router.v0
-  version: 60c3034496445dc75f3a8e7f0301693001d85f8a
+  version: 14ed79c8c87d3e368633b67ba37010f2d3d6c12a
 - name: aahframework.org/security.v0
-  version: a964d7247c8014b2d17b2e1ca67431fae8b30bdf
+  version: 308ebec6eab3744c83df77637c30adff959dc782
   subpackages:
   - acrypto
   - authc
   - authz
   - scheme
   - session
+- name: aahframework.org/valpar.v0
+  version: b66ffe09843404678baecd85d7d0401ea7d9e8f3
 - name: aahframework.org/view.v0
-  version: 0f7a62c88fd728aa1b32f8a6016c6ded50b273a1
+  version: 38179594120f15376a4d8305ccc87645f5a88637
 - name: github.com/go-sql-driver/mysql
-  version: a0583e0143b1624142adab07e0e97fe106d99561
+  version: 26471af196a17ee75a22e6481b5a5897fb16b081
 - name: golang.org/x/crypto
-  version: b176d7def5d71bdd214203491f89843ed217f420
+  version: 81e90905daefcd6fd217b62423c0908922eadb30
   subpackages:
   - acme
   - acme/autocert

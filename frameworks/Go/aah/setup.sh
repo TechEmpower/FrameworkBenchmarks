@@ -6,11 +6,11 @@ set -x
 
 mkdir -p bin
 
-# Install aah v0.7 CLI tool (installing specific tag version)
+# Install aah CLI tool (installing specific tag version)
 mkdir -p src/aahframework.org
 git clone https://github.com/go-aah/tools.git src/aahframework.org/tools.v0
 cd src/aahframework.org/tools.v0
-git checkout tags/v0.7.1 -b v0.7.1
+git checkout tags/v0.8 -b v0.8
 cd -
 go get aahframework.org/tools.v0/aah/...
 go install aahframework.org/tools.v0/aah

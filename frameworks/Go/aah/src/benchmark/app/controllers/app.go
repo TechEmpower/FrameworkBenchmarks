@@ -96,8 +96,7 @@ func (a *AppController) handleResult(worlds *[]models.World, err error) {
 // TFB request has incorrect Host header i.e. `Host: TFB-Server`
 // Correct Host header is `Host: TFB-server:8080`
 func onRequestEvent(e *aah.Event) {
-	ctx := e.Data.(*aah.Context)
-	ctx.Req.Host = "TFB-Server:8080"
+	e.Data.(*aah.Context).Req.Host = "TFB-Server:8080"
 }
 
 func init() {
