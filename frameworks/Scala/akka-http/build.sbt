@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
   "mysql" % "mysql-connector-java" % "5.1.38",
   "com.zaxxer" % "HikariCP" % "2.7.0",
   "org.scalatra.scalate" %% "scalate-core" % "1.8.0",
-  "org.scalatest" %% "scalatest" % "3.0.3" % "test"
+  "org.scalatest" %% "scalatest" % "3.0.4" % "test"
 )
 
 assemblyJarName in assembly := "akka-http-benchmark.jar"
