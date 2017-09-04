@@ -15,7 +15,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % akkaHttpV,
   "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpV,
   "com.typesafe.akka" %% "akka-stream" % akkaV,
-  "mysql" % "mysql-connector-java" % "5.1.38",
+  "mysql" % "mysql-connector-java" % "5.1.44",
   "com.zaxxer" % "HikariCP" % "2.7.0",
   "org.scalatra.scalate" %% "scalate-core" % "1.8.0",
   "org.scalatest" %% "scalatest" % "3.0.4" % "test"
