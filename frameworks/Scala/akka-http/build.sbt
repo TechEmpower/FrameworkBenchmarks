@@ -1,5 +1,5 @@
-val akkaV = "2.5.1"
-val akkaHttpV = "10.0.6"
+val akkaV = "2.5.4"
+val akkaHttpV = "10.0.10"
 
 organization := "com.typesafe.akka"
 
