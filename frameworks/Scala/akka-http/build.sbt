@@ -1,3 +1,5 @@
+enablePlugins(JavaAppPackaging)
+
 val akkaV = "2.5.1"
 val akkaHttpV = "10.0.6"
 
@@ -21,6 +23,4 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.3" % "test"
 )
 
-assemblyJarName in assembly := "akka-http-benchmark.jar"
-
-mainClass in assembly := Some("com.typesafe.akka.http.benchmark.Main")
+mainClass in Compile := Some("com.typesafe.akka.http.benchmark.Main")
