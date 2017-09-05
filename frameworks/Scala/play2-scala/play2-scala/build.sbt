@@ -2,7 +2,7 @@ name := "play2-scala"
 
 version := "2.6.3"
 
-scalaVersion := "2.11.11"
+scalaVersion := "2.12.3"
 
 val root =
   (project in file(".")).
