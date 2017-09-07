@@ -14,10 +14,10 @@ ULIB_DOCUMENT_ROOT=$ULIB_ROOT/ULIB_DOCUMENT_ROOT
 mkdir -p $ULIB_ROOT
 mkdir -p $ULIB_DOCUMENT_ROOT
 
-if [ "$TRAVIS" = "true" ]; then
+#if [ "$TRAVIS" = "true" ]; then
 # AVOID "fatal error: postgres_fe.h: No such file or directory"
 sudo apt-get install -y postgresql-server-dev-all
-fi
+#fi
 
 # make use of FIFO scheduling policy possible (we must avoid use of test because bash signal trapping)
 #type setcap >/dev/null 2>/dev/null

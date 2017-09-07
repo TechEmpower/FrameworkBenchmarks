@@ -56,7 +56,21 @@ pworld_db->id = u_get_num_random(10000-1);
 pstmt_db->execute();
 
 #ifdef AS_cpoll_cppsp_DO
-USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%u}", pworld_db->id, pworld_db->randomNumber);
+char* ptr = UClientImage_Base::wbuffer->pend();
+
+u_put_unalignedp32(ptr,   U_MULTICHAR_CONSTANT32('{','"','i','d'));
+u_put_unalignedp16(ptr+4, U_MULTICHAR_CONSTANT16('"',':'));
+
+ptr = u_num2str32(pworld_db->id, ptr+6);
+
+u_put_unalignedp64(ptr,   U_MULTICHAR_CONSTANT64(',','"','r','a','n','d','o','m'));
+u_put_unalignedp64(ptr+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'));
+
+ptr = u_num2str32(pworld_db->randomNumber, ptr+16);
+
+*ptr++ = '}';
+
+UClientImage_Base::wbuffer->size_adjust(ptr);
 #else
 USP_OBJ_JSON_stringify(*pworld_db);
 #endif
