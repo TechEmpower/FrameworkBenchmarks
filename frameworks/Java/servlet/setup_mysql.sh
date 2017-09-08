@@ -1,5 +1,8 @@
 #!/bin/bash
 
-fw_depends mysql
+fw_depends java resin maven mysql
 
-source ./setup.sh
+mvn clean compile war:war -P mysql
+rm -rf $RESIN_HOME/webapps/*
+cp target/servlet.war $RESIN_HOME/webapps/
+resinctl start

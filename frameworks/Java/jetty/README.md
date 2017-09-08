@@ -1,15 +1,25 @@
 # Jetty-9 Benchmarking Test
 
-This is the Jetty Handler portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the Jetty portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-### JSON Encoding Test
-* [JSON test source](src/main/java/hello/HelloWebServer.java)
+## Handler
+
+These implementations use the Jetty's custom handler interface.
+* [Plaintext test source](src/main/java/hello/handler/PlainTextHandler.java)
+* [JSON test source](src/main/java/hello/handler/JsonHandler.java)
+
+## Servlet
+
+These implementation are using the standart servlet API.
+* [Plaintext test source](src/main/java/hello/servlet/PlaintextServlet.java)
+* [JSON test source](src/main/java/hello/servlet/JsonServlet.java)
 
 ## Versions
-Jetty-9.3.0.RC0 (http://eclipse.org/jetty)
+9.4.6.v20170531 (http://eclipse.org/jetty)
 
 ## Test URLs
 
-### JSON Encoding Test
+All implementations use the same URLs.
 
-    http://localhost:8080
+ * Plaintext - `http://localhost:8080/plaintext`
+ * JSON - `http://localhost:8080/json`

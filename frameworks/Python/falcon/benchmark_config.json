@@ -41,8 +41,8 @@
       "notes": "CPython 3",
       "versus": "wsgi"
     },
-    "pypy": {
-      "setup_file": "setup_pypy",
+    "pypy2": {
+      "setup_file": "setup_pypy2",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -51,14 +51,14 @@
       "database": "None",
       "framework": "Falcon",
       "language": "Python",
-      "flavor": "PyPy",
+      "flavor": "PyPy2",
       "orm": "Raw",
       "platform": "None",
       "webserver": "Tornado",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Falcon",
-      "notes": "PyPy",
+      "notes": "PyPy2",
       "versus": "wsgi"
     }
   }]

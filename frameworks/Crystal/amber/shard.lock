@@ -1,0 +1,37 @@
+version: 1.0
+shards:
+  amber:
+    github: Amber-Crystal/amber
+    version: 0.1.4
+
+  db:
+    github: crystal-lang/crystal-db
+    version: 0.4.2
+
+  granite_orm:
+    github: Amber-Crystal/granite-orm
+    version: 0.6.3
+
+  kemalyst-validators:
+    github: kemalyst/kemalyst-validators
+    version: 0.2.0
+
+  kilt:
+    github: jeromegn/kilt
+    version: 0.3.3
+
+  pg:
+    github: will/crystal-pg
+    version: 0.13.3
+
+  radix:
+    github: luislavena/radix
+    commit: 211418416adba540b594af2260e1b5d0c8877c9e
+
+  redis:
+    github: stefanwille/crystal-redis
+    version: 1.8.0
+
+  slang:
+    github: jeromegn/slang
+    commit: b817c89c7e5ae39562710c0d6c7f42cee685e14f

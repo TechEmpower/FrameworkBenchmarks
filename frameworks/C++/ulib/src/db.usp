@@ -35,13 +35,13 @@ static void usp_end_db()
 {
    U_TRACE(5, "::usp_end_db()")
 
-   delete psql_db;
-
    if (pstmt_db)
       {
       delete  pstmt_db;
       delete pworld_db;
       }
+
+   delete psql_db;
 }
 #endif
 -->

@@ -45,6 +45,8 @@ UStringRep* rep;
 char* pbuffer = buffer;
 int i, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
+(void) UClientImage_Base::wbuffer->reserve(36U * num_queries);
+
 #ifdef AS_cpoll_cppsp_DO
 USP_PUTS_CHAR('[');
 #endif

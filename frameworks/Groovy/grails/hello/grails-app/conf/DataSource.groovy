@@ -4,7 +4,7 @@ import org.springframework.core.io.support.ResourceArrayPropertyEditor
 dataSource {
     pooled = true
     dbCreate = "update"
-    url = "jdbc:mysql://localhost:3306/hello_world"
+    url = "jdbc:mysql://TFB-database:3306/hello_world"
     driverClassName = "com.mysql.jdbc.Driver"
     dialect = org.hibernate.dialect.MySQL5InnoDBDialect
     username = "benchmarkdbuser"
