@@ -24,8 +24,8 @@ fw_get -o ${SAVE_AS}.gz $URL
 gunzip ${SAVE_AS}.gz
 chmod 755 ${SAVE_AS}
 
-mv ${SAVE_AS} crystal-${VERSION}/bin/shards
+mv ${SAVE_AS} crystal-${VERSION}-3/bin/shards
 
-echo -e "export PATH=${IROOT}/crystal-${VERSION}/bin/:\$PATH" > $IROOT/crystal.installed
+echo -e "export PATH=${IROOT}/crystal-${VERSION}-3/bin/:\$PATH" > $IROOT/crystal.installed
 
 source $IROOT/crystal.installed
