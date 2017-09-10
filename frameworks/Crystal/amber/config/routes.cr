@@ -1,4 +1,4 @@
-Amber::Server.instance.config do |app|
+Amber::Server.configure do |app|
   routes :web do
     get "/plaintext", BenchmarkController, :plaintext
     get "/json", BenchmarkController, :json
