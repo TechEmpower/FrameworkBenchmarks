@@ -4,7 +4,7 @@ fw_installed crystal && return 0
 
 # install crystal
 
-VERSION="0.22.0"
+VERSION="0.23.1"
 
 SAVE_AS=crystal-$VERSION-1-linux-x86_64.tar.gz
 URL=https://github.com/crystal-lang/crystal/releases/download/$VERSION/crystal-$VERSION-1-linux-x86_64.tar.gz
