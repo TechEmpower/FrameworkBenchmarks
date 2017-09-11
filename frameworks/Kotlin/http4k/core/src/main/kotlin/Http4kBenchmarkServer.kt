@@ -9,24 +9,25 @@ import java.util.TimeZone.getTimeZone
 object Http4kBenchmarkServer {
     private val dateFormat = getInstance("EEE, d MMM yyyy HH:mm:ss 'GMT'", getTimeZone("GMT"))
 
-    private val headers = Filter {
-        next ->
+    private val headers = Filter { next ->
         {
             next(it).let {
                 it
-                    .header("Server", "Example")
+                    .header("Server", "http4k")
                     .header("Date", dateFormat.format(System.currentTimeMillis()))
                     .header("Content-Length", it.body.payload.remaining().toString())
             }
         }
     }
 
-    private val database = Database(System.getenv("DBHOST") ?: "localhost")
-
-    val routes = listOf(PlainTextRoute(),
-        JsonRoute(),
-        FortunesRoute(database)
-    ).plus(WorldRoutes(database))
-
-    fun start(config: ServerConfig) = headers.then(routes(*routes.toTypedArray())).asServer(config).start().block()
+    fun start(config: ServerConfig) = headers.then(
+        routes(
+            JsonRoute(),
+            PlainTextRoute()
+//            FortunesRoute(database),
+//            WorldRoutes.queryRoute(database),
+//            WorldRoutes.updateRoute(database),
+//            WorldRoutes.multipleRoute(database)
+        )
+    ).asServer(config).start().block()
 }
