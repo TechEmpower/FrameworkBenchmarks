@@ -19,6 +19,5 @@ public class FortunesController extends Controller {
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes, (f1, f2) -> f1.message.compareTo(f2.message));
         view("fortunes", fortunes);
-        render().layout("../index");
     }
 }

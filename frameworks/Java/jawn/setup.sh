@@ -1,7 +1,7 @@
 #!/bin/bash
 
-fw_depends mysql java
+fw_depends postgresql java
 
 ./gradlew clean
 
-./gradlew --refresh-dependencies run -Pargs=production
+./gradlew --no-daemon --refresh-dependencies run -Pargs=8080,production
