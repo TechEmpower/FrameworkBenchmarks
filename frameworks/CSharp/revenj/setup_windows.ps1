@@ -43,7 +43,7 @@ if ($action -eq 'start') {
 
 	echo "Download Revenj HTTP server"
 	$client = new-object System.Net.WebClient
-	$client.DownloadFile( "https://github.com/ngs-doo/revenj/releases/download/1.4.1/http-server.zip", $httpZip )
+	$client.DownloadFile( "https://github.com/ngs-doo/revenj/releases/download/1.4.2/http-server.zip", $httpZip )
 
 	echo "Unzipping HTTP server"
 	[System.IO.Compression.ZipFile]::ExtractToDirectory($httpZip, $exe)
