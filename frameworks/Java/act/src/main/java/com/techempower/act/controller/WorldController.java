@@ -108,7 +108,7 @@ public class WorldController {
     }
 
     private static int regulateQueries(String param) {
-        if (null == param) {
+        if (null == param || "".equals(param)) {
             return 1;
         }
         try {

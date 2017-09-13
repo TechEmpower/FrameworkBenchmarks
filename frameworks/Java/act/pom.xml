@@ -54,7 +54,7 @@
     <license-maven-plugin.version>1.13</license-maven-plugin.version>
     <markdown-doclet.version>1.4</markdown-doclet.version>
 
-    <act.version>1.4.12-SNAPSHOT</act.version>
+    <act.version>1.4.12</act.version>
     <act-ebean2.version>1.1.4</act-ebean2.version>
     <act-mustache.version>1.2.0</act-mustache.version>
     <act-morphia.version>1.2.1</act-morphia.version>
