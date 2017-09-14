@@ -1,0 +1,9 @@
+dependencies {
+    compile project(":core")
+    compile "org.http4k:http4k-server-netty:$http4k_version"
+}
+
+task uber(type: OneJar) {
+    mainClass = "Http4kNettyServerKt"
+    archiveName = 'http4k-netty-benchmark.jar'
+}
