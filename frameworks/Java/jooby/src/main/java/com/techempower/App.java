@@ -54,9 +54,6 @@ public class App extends Jooby {
 
   static final String HELLO_WORLD = "Hello, World!";
 
-  static final ByteBuffer HELLO_WORLD_BUFFER = ByteBuffer
-      .wrap(HELLO_WORLD.getBytes(StandardCharsets.UTF_8));
-
   public static class Message {
     public final String message = HELLO_WORLD;
   }
@@ -70,23 +67,22 @@ public class App extends Jooby {
 
     /** JSON: */
     ObjectMapper mapper = new ObjectMapper();
-    use(new Jackson(mapper));
 
     /** Database: */
     use(new Jdbc());
 
     get("/plaintext", (req, rsp) -> {
-      rsp.send(result(HELLO_WORLD_BUFFER, plain));
-    }).renderer("byteBuffer");
+      rsp.send(result(HELLO_WORLD, plain));
+    }).renderer("text");
 
     get("/json", (req, rsp) -> {
-      rsp.send(result(new Message(), json));
-    }).renderer("json");
+      rsp.send(result(mapper.writeValueAsString(new Message()), json));
+    }).renderer("text");
 
     /** Single query: */
     get("/db", (req, rsp) -> {
-      rsp.send(result(findOne(rndId()), json));
-    }).renderer("json");
+      rsp.send(result(mapper.writeValueAsString(findOne(rndId())), json));
+    }).renderer("text");
 
     /** Multiple queries: */
     get("/queries", (req, rsp) -> {
@@ -97,14 +93,14 @@ public class App extends Jooby {
       try (Connection conn = ds.getConnection()) {
         for (int i = 0; i < count; i++) {
           int id = rndId(rnd);
-          try (final PreparedStatement query = conn.prepareStatement(SELECT_WORLD)) {
+          try (final PreparedStatement query = conn.prepareStatement(SELECT_WORLD, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
             result.add(findOne(query, id));
           }
         }
       }
 
-      rsp.send(result(result, json));
-    }).renderer("json");
+      rsp.send(result(mapper.writeValueAsString(result), json));
+    }).renderer("text");
 
     /** Updates: */
     get("/updates", (req, rsp) -> {
@@ -116,7 +112,7 @@ public class App extends Jooby {
         for (int i = 0; i < count; i++) {
           int id = rndId(rnd);
           int newRandomNumber = rndId(rnd);
-          try (final PreparedStatement query = conn.prepareStatement(SELECT_WORLD);
+          try (final PreparedStatement query = conn.prepareStatement(SELECT_WORLD, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
               final PreparedStatement update = conn.prepareStatement(UPDATE_WORLD)) {
             // find
             World world = findOne(query, id);
@@ -131,14 +127,14 @@ public class App extends Jooby {
         }
       }
 
-      rsp.send(result(result, json));
-    }).renderer("json");
+      rsp.send(result(mapper.writeValueAsString(result), json));
+    }).renderer("text");
 
     /** Fortunes: */
     get("/fortunes", (req, rsp) -> {
       List<Fortune> fortunes = new ArrayList<>();
       try (Connection connection = ds.getConnection()) {
-        try (PreparedStatement stt = connection.prepareStatement("select * from fortune")) {
+        try (PreparedStatement stt = connection.prepareStatement("select * from fortune", ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
           try (ResultSet rs = stt.executeQuery()) {
             while (rs.next()) {
               fortunes.add(new Fortune(rs.getInt("id"), rs.getString("message")));
@@ -158,7 +154,7 @@ public class App extends Jooby {
 
   private World findOne(int id) throws SQLException {
     try (Connection conn = ds.getConnection()) {
-      try (PreparedStatement query = conn.prepareStatement(SELECT_WORLD)) {
+      try (PreparedStatement query = conn.prepareStatement(SELECT_WORLD, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
         return findOne(query, id);
       }
     }
