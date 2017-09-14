@@ -17,20 +17,20 @@ http://localhost:8080/json
 http://localhost:8080/mongo/db
 http://localhost:8080/mongo/queries?queries=5
 
-http://localhost:8080/jdbc/db
-http://localhost:8080/jdbc/queries?queries=5
+http://localhost:8080/psql/db
+http://localhost:8080/psql/queries?queries=5
 
 ### Data-Store/Database Update Test
 
 http://localhost:8080/mongo/update?queries=5
 
-http://localhost:8080/jdbc/update?queries=5
+http://localhost:8080/psql/update?queries=5
 
 ### Template rendering Test
 
 http://localhost:8080/mongo/fortunes
 
-http://localhost:8080/jdbc/fortunes
+http://localhost:8080/psql/fortunes
 
 ## Generating Load
 It's best to generate load from a completely separate machine from the server if you can, to avoid resource contention
