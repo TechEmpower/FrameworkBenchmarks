@@ -2,7 +2,7 @@
 
 fw_depends postgresql java maven
 
-mvn -U -Ppgsql clean package
+mvn -Ppgsql clean package
 cd target/dist
 unzip *.zip
 

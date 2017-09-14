@@ -2,7 +2,7 @@
 
 fw_depends mysql java maven
 
-mvn -U -Pmysql clean package
+mvn -Pmysql clean package
 cd target/dist
 unzip *.zip
 
