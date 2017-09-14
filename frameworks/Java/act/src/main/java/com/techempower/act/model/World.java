@@ -31,7 +31,7 @@ import javax.persistence.Id;
 
 @Entity(name = "world")
 @org.mongodb.morphia.annotations.Entity(value = "world", noClassnameStored = true)
-@Env.RequireProfile(value = AppEntry.PROFILE_HELLOWORLD, except = true)
+@Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
 public class World implements SimpleBean {
 
     @Id

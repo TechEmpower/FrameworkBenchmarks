@@ -29,7 +29,7 @@ import javax.persistence.Id;
 
 @Entity(name = "fortune")
 @org.mongodb.morphia.annotations.Entity(value = "fortune", noClassnameStored = true)
-@Env.RequireProfile(value = AppEntry.PROFILE_HELLOWORLD, except = true)
+@Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
 public final class Fortune implements SimpleBean, Comparable<Fortune> {
 
     @Id

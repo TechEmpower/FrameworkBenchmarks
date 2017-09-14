@@ -28,7 +28,7 @@ import com.techempower.act.AppEntry;
 import org.osgl.http.H;
 
 @SuppressWarnings("unused")
-@Env.RequireProfile(value = AppEntry.PROFILE_HELLOWORLD)
+@Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT)
 public class HelloWorldController {
 
     private static final String HELLO_WORLD = "Hello, World!";

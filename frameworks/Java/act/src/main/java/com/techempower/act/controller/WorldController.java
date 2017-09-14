@@ -42,7 +42,8 @@ import javax.inject.Inject;
 
 @AutoConfig
 @SuppressWarnings("unused")
-@Env.RequireProfile(value = AppEntry.PROFILE_HELLOWORLD, except = true)
+@Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
+@ResponseContentType(H.MediaType.JSON)
 public class WorldController {
 
     /**
@@ -51,19 +52,17 @@ public class WorldController {
      */
     private static final Const<Integer> WORLD_MAX_ROW = $.constant();
 
-    @Inject
     @Global
+    @Inject
     private Dao<Integer, World, ?> dao;
 
 
     @GetAction("db")
-    @ResponseContentType(H.MediaType.JSON)
-    public World singleQuery() {
-        return findOne();
+    public World findOne() {
+        return dao.findById(randomWorldNumber());
     }
 
     @GetAction("queries")
-    @ResponseContentType(H.MediaType.JSON)
     @Transactional(readOnly = true)
     public final World[] multipleQueries(String queries) {
         int q = regulateQueries(queries);
@@ -76,14 +75,13 @@ public class WorldController {
     }
 
     @GetAction("updates")
-    @ResponseContentType(H.MediaType.JSON)
     public final List<World> updateQueries(String queries) {
         int q = regulateQueries(queries);
         return doUpdate(q);
     }
 
     @Transactional
-    protected List<World> doUpdate(int q) {
+    private List<World> doUpdate(int q) {
         List<World> retVal = new ArrayList<>(q);
         for (int i = 0; i < q; ++i) {
             retVal.add(findAndModifyOne());
@@ -92,11 +90,7 @@ public class WorldController {
         return retVal;
     }
 
-    private World findOne() {
-        return dao.findById(randomWorldNumber());
-    }
-
-    protected final World findAndModifyOne() {
+    private World findAndModifyOne() {
         World world = findOne();
         notFoundIfNull(world);
         world.randomNumber = randomWorldNumber();

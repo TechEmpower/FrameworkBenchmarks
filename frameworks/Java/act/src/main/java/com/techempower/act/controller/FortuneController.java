@@ -34,11 +34,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 @SuppressWarnings("unused")
-@Env.RequireProfile(value = AppEntry.PROFILE_HELLOWORLD, except = true)
+@Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
 public class FortuneController {
 
-    @Inject
     @Global
+    @Inject
     private Dao<Integer, Fortune, ?> dao;
 
     @GetAction("fortunes")
