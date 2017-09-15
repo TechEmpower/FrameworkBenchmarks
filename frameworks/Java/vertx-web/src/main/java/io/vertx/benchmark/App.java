@@ -443,14 +443,14 @@ public class App extends AbstractVerticle {
       int queries = Helper.getQueries(ctx.request());
 
       dbBuilder.transactAsync(dbs -> {
-        JsonArray worlds = new JsonArray();
+        List<World> worlds = new ArrayList<>();
         for (int i = 1; i <= queries; i++) {
           dbs.get()
               .toSelect("SELECT id, randomnumber from WORLD where id = ?")
               .argInteger(randomWorld())
               .queryFirstOrNull(row -> worlds.add(new World(row.getIntegerOrZero(), row.getIntegerOrZero())));
         }
-        return worlds.encode();
+        return worlds;
       }, call -> {
         if (call.succeeded()) {
           if (call.result() == null) {
@@ -460,7 +460,7 @@ public class App extends AbstractVerticle {
                 .putHeader(HttpHeaders.SERVER, SERVER)
                 .putHeader(HttpHeaders.DATE, date)
                 .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                .end(call.result());
+                .end(Json.encodeToBuffer(call.result()));
           }
         } else {
           ctx.fail(call.cause());
@@ -504,7 +504,7 @@ public class App extends AbstractVerticle {
       int queries = Helper.getQueries(ctx.request());
 
       dbBuilder.transactAsync(dbs -> {
-        JsonArray worlds = new JsonArray();
+        List<World> worlds = new ArrayList<>();
         // Haven't implemented batching yet on toUpdate(), so hijack toInsert() as work-around
         SqlInsert batchUpdate = dbs.get().toInsert("UPDATE WORLD SET randomnumber = ? WHERE id = ?");
         for (int i = 1; i <= queries; i++) {
@@ -520,7 +520,7 @@ public class App extends AbstractVerticle {
           batchUpdate.argInteger(newWorld.getRandomNumber()).argInteger(newWorld.getId()).batch();
         }
         batchUpdate.insertBatchUnchecked();
-        return worlds.encode();
+        return worlds;
       }, call -> {
         if (call.succeeded()) {
           if (call.result() == null) {
@@ -530,7 +530,7 @@ public class App extends AbstractVerticle {
                 .putHeader(HttpHeaders.SERVER, SERVER)
                 .putHeader(HttpHeaders.DATE, date)
                 .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                .end(call.result());
+                .end(Json.encodeToBuffer(call.result()));
           }
         } else {
           ctx.fail(call.cause());
