@@ -49,7 +49,7 @@
 										<execute />
 									</action>
 								</pluginExecution>
-								<!-- <pluginExecution>
+								 <pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>com.fizzed</groupId>
 										<artifactId>rocker-maven-plugin</artifactId>
@@ -63,7 +63,7 @@
 											<runOnIncremental>true</runOnIncremental>
 										</execute>
 									</action>
-								</pluginExecution> -->
+								</pluginExecution> 
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -137,7 +137,6 @@
 					<executable>java</executable>
 					<arguments>
 						<argument>-Dlogback.configurationFile=${project.build.directory}/conf/logback.xml</argument>
-						<argument>-Xbootclasspath/p:lib/alpn-boot-8.1.11.v20170118.jar</argument>
 						<argument>-Xms1g</argument>
 						<argument>-Xmx2g</argument>
 						<argument>-XX:+AggressiveOpts</argument>
@@ -153,6 +152,7 @@
 
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
@@ -182,6 +182,48 @@
 					</archive>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+					<!-- 	<id>static-codegen</id>
+						<phase>compile</phase> -->
+						<goals>
+							<goal>exec</goal>
+						</goals>
+			<!-- 			<configuration>
+					    <executable>java</executable>
+					    <workingDirectory>${project.build.sourceDirectory}</workingDirectory>
+					    <arguments>
+						<argument>-classpath</argument>
+						<classpath/>
+						<argument>com.jsoniter.static_codegen.StaticCodegen</argument>
+						<argument>io.sinistral.models.CodegenConfig</argument>
+					    </arguments>
+					</configuration> -->
+					</execution>
+				</executions>
+				<configuration>
+					<executable>java</executable>
+					<arguments>
+						<argument>-Dlogback.configurationFile=${project.build.directory}/conf/logback.xml</argument>
+						<argument>-Xms1g</argument>
+						<argument>-Xmx2g</argument>
+						<argument>-XX:+AggressiveOpts</argument>
+						<argument>-XX:-UseBiasedLocking</argument>
+						<argument>-XX:+UseStringDeduplication</argument>
+						<argument>-classpath</argument>
+						<!-- automatically creates the classpath using all project dependencies, 
+							also adding the project build directory -->
+						<classpath />
+						<argument>io.sinistral.ExampleApplication</argument>
+
+					</arguments>
+
+				</configuration>
+			</plugin>
 		  <!-- 	<plugin>
 				<groupId>com.fizzed</groupId>
 				<artifactId>rocker-maven-plugin</artifactId>
@@ -209,16 +251,11 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.mortbay.jetty.alpn</groupId>
-			<artifactId>alpn-boot</artifactId>
-			<version>8.1.11.v20170118</version>
-			<scope>runtime</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>io.sinistral</groupId>
 			<artifactId>proteus-core</artifactId>
-			<version>0.1.2-SNAPSHOT</version>
+			<version>0.1.7.2-SNAPSHOT</version>
 			
 		</dependency>
 			<dependency>
@@ -232,7 +269,12 @@
 			<version>0.18.0</version>
 			<scope>provided</scope>
 		</dependency>
-		 
+		 <dependency>
+      <groupId>com.github.spullara.mustache.java</groupId>
+      <artifactId>compiler</artifactId>
+      <version>0.9.4</version>
+    </dependency>
+
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
@@ -243,11 +285,11 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.41</version>
 		</dependency>
-		<dependency>
+	  	<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.4.1212</version>
-		</dependency>
+		</dependency>  
 	</dependencies>
 	<properties>
 		<rocker.version>0.18.0</rocker.version>

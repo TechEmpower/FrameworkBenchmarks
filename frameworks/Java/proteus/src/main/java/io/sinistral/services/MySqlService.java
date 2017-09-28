@@ -41,50 +41,11 @@ public class MySqlService   extends BaseService
 	@Named("mysql.hikaricp.password")
 	protected String password;
 	
-	@Inject
-	@Named("mysql.hikaricp.dataSourceClassName")
-	protected String dataSourceClassName;
-	
-	@Inject
-	@Named("mysql.hikaricp.ds.databaseName")
-	protected String databaseName;
-	
-	@Inject
-	@Named("mysql.hikaricp.ds.serverName")
-	protected String serverName;
-	
-	@Inject
-	@Named("mysql.hikaricp.ds.portNumber")
-	protected Integer portNumber;
 	
 	@Inject
 	@Named("mysql.hikaricp.maximumPoolSize")
 	protected Integer maximumPoolSize;
-	
-	@Inject
-	@Named("mysql.hikaricp.minimumIdle")
-	protected Integer minimumIdle;
-	
-	@Inject
-	@Named("mysql.hikaricp.ds.useServerPrepStmts")
-	protected Boolean useServerPrepStmts;
-	
-	@Inject
-	@Named("mysql.hikaricp.ds.cachePrepStmts")
-	protected Boolean cachePrepStmts;
-	
-	@Inject
-	@Named("mysql.hikaricp.ds.cacheCallableStmts")
-	protected Boolean useCacheCallableStmts;
-	
-	@Inject
-	@Named("mysql.hikaricp.ds.prepStmtCacheSize")
-	protected Integer prepStmtCacheSize;
-	
-	@Inject
-	@Named("mysql.hikaricp.ds.prepStmtCacheSqlLimit")
-	protected Integer prepStmtCacheSqlLimit;
-	
+	 
 	
 	protected HikariDataSource ds;
 	
@@ -105,22 +66,13 @@ public class MySqlService   extends BaseService
 	{
 		super.startUp();
  		
-		HikariConfig config = new HikariConfig();
-		 
-		config.setJdbcUrl(jdbcUrl);
-		config.setUsername(username);
-		config.setPassword(password); 
-		config.setMinimumIdle(minimumIdle);
-		config.setMaximumPoolSize(maximumPoolSize);
-		config.addDataSourceProperty("databaseName", databaseName);
-		config.addDataSourceProperty("useSSL",false);
-		config.addDataSourceProperty("UseServerPrepStmts", useServerPrepStmts);
-		config.addDataSourceProperty("CachePrepStmts", cachePrepStmts);
-		config.addDataSourceProperty("CacheCallableStmts", useCacheCallableStmts);
-		config.addDataSourceProperty("PrepStmtCacheSize", prepStmtCacheSize);
-		config.addDataSourceProperty("PrepStmtCacheSqlLimit", prepStmtCacheSqlLimit);
+ 		this.ds = new HikariDataSource();
 
-		this.ds = new HikariDataSource(config);
+		this.ds.setJdbcUrl(jdbcUrl);
+		this.ds.setUsername(username);
+		this.ds.setPassword(password);  
+		this.ds.setMaximumPoolSize(maximumPoolSize);
+ 
 		
 		log.info( this.getClass().getSimpleName() + " started with ds: " + ds);  
 	}
