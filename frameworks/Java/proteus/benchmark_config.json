@@ -22,26 +22,6 @@
       "display_name": "proteus",
       "notes": "",
       "versus": ""
-    },
-    "mysql" : {
-      "setup_file": "setup",
-      "db_url": "/db/mysql",
-      "fortune_url": "/fortunes/mysql",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "MySQL",
-      "framework": "Proteus",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "Undertow",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "proteus-mysql",
-      "notes": "",
-      "versus": ""
     }
   }]
 }
