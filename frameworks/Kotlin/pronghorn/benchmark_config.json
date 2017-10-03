@@ -1,0 +1,25 @@
+{
+  "framework": "pronghorn",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "Kotlin",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Pronghorn",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Pronghorn",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+} 
