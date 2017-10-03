@@ -1,5 +1,5 @@
 #!/bin/bash
 
-fw_depends mysql
+fw_depends postgresql
 
 source ./setup.sh

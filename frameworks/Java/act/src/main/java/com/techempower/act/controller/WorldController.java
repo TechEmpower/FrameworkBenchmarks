@@ -81,7 +81,7 @@ public class WorldController {
     }
 
     @Transactional
-    public List<World> doUpdate(int q) {
+    private List<World> doUpdate(int q) {
         List<World> retVal = new ArrayList<>(q);
         for (int i = 0; i < q; ++i) {
             retVal.add(findAndModifyOne());
