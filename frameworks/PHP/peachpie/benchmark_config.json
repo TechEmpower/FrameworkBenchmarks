@@ -1,0 +1,23 @@
+{
+  "framework": "peachpie",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "plaintext_url": "/plaintext.php",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Peachpie",
+      "notes": ""
+    }
+  }]
+}
