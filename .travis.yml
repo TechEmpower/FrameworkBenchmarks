@@ -139,6 +139,7 @@ env:
     - "TESTDIR=PHP/limonade"
     - "TESTDIR=PHP/lithium"
     - "TESTDIR=PHP/lumen"
+    - "TESTDIR=PHP/peachpie"
     - "TESTDIR=PHP/phalcon"
     - "TESTDIR=PHP/phalcon-micro"
     - "TESTDIR=PHP/phpixie"
