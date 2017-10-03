@@ -23,10 +23,7 @@ import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.SetHeaderHandler;
 import io.undertow.util.Headers;
 
-/**
- * Hello world!
- *
- */
+
 public class ExampleApplication extends ProteusApplication
 {
  
