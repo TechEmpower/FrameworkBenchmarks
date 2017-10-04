@@ -1,5 +1,5 @@
 {
     "require": {
-        "codeigniter/framework": "3.0.6"
+        "codeigniter/framework": "3.1.6"
     }
 }
