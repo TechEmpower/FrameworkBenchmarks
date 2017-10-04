@@ -38,7 +38,7 @@ namespace MyWebsite.Server
         {
             app.UseSession();
 
-            app.UsePhp(new PhpRequestOptions(scriptAssemblyName: "MyWebsite"));
+            app.UsePhp(new PhpRequestOptions(scriptAssemblyName: "Website"));
             app.UseDefaultFiles();
             app.UseStaticFiles();
         }
