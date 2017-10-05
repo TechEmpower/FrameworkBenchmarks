@@ -9,8 +9,7 @@ mysql_select_db('hello_world', $link);
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
-$is_multi = isset($_GET['queries']);
-if ($is_multi) {
+if (isset($_GET['queries'])) {
   $query_count = (int)$_GET['queries'];
   if ($query_count > 500) {
     $query_count = 500;
@@ -22,14 +21,21 @@ if ($is_multi) {
 // Create an array with the response string.
 $arr = array();
 $id = mt_rand(1, 10000);
+$randomNumber = mt_rand(1, 1000);
 
 // For each query, store the result set values in the response array
 while (0 < $query_count--) {
   $result = mysql_query("SELECT randomNumber FROM World WHERE id = $id", $link);
-
+  
   // Store result in array.
-  $arr[] = array('id' => $id, 'randomNumber' => mysql_result($result, 0));
+  $world = array('id' => $id, 'randomNumber' => mysql_result($result, 0));
+  $world['randomNumber'] = $randomNumber;
+
+  mysql_query("UPDATE World SET randomNumber = $randomNumber WHERE id = $id", $link);
+  
+  $arr[] = $world;
   $id = mt_rand(1, 10000);
+  $randomNumber = mt_rand(1, 10000);
 }
 
 // Set content type
@@ -37,10 +43,5 @@ header("Content-type: application/json");
 
 // Use the PHP standard JSON encoder.
 // http://www.php.net/manual/en/function.json-encode.php
-if ($is_multi) {
-  echo json_encode($arr);
-} else {
-  echo json_encode($arr[0]);
-}
-
+echo json_encode($arr);
 ?>
