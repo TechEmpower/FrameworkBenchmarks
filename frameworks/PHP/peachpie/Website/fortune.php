@@ -3,24 +3,28 @@
 // Database Test
 //
 
-// Database connection (TODO: When it works, use PDO instead)
-$link = mysql_connect('TFB-database', 'benchmarkdbuser', 'benchmarkdbpass');
-mysql_select_db('hello_world', $link);
-  
-// Store result in array.
-$result = mysql_query('SELECT id, message FROM Fortune', $link);
-$arr = array();
-while ($row = mysql_fetch_array($result)) {
-  $arr[$row['id']] = $row['message'];
+function fortune() {
+  // Database connection (TODO: When it works, use PDO instead)
+  $link = mysql_connect('TFB-database', 'benchmarkdbuser', 'benchmarkdbpass');
+  mysql_select_db('hello_world', $link);
+    
+  // Store result in array.
+  $result = mysql_query('SELECT id, message FROM Fortune', $link);
+  $arr = array();
+  while ($row = mysql_fetch_array($result)) {
+    $arr[$row['id']] = $row['message'];
+  }
+
+  $arr[0] = 'Additional fortune added at request time.';
+
+  asort($arr);
+  return $arr;
 }
-
-$arr[0] = 'Additional fortune added at request time.';
-
-asort($arr);
 
 // Set content type
 header("Content-type: text/html; charset=utf-8");
 
+$arr = fortune();
 ?>
 <!DOCTYPE html>
 <html>
