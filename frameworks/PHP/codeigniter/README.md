@@ -17,7 +17,7 @@ Uses the db abstraction class from Codeigniter
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Codeigniter Version 2.1.3](http://ellislab.com/codeigniter)
+* [Codeigniter Version 3.1.6](https://codeigniter.com/)
 * [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
 * [nginx 1.4.0](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
