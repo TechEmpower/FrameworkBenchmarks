@@ -4,4 +4,4 @@ fw_depends mysql dotnetcore
 sudo apt-get install -y dotnet-dev-1.0.4
 
 dotnet restore
-dotnet run -p Server
+dotnet run -p Server -c Runtime
