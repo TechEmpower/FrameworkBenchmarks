@@ -19,6 +19,9 @@ static void usp_fork_rupdate()
       {
       U_WARNING("usp_fork_rupdate(): %V", rc->UClient_Base::getResponse().rep);
 
+      delete rc;
+             rc = U_NULLPTR;
+
       return;
       }
 
@@ -30,9 +33,11 @@ static void usp_end_rupdate()
 {
    U_TRACE(5, "::usp_end_rupdate()")
 
-   delete rc;
-
-   if (pvworld) delete pvworld;
+   if (pvworld)
+      {
+      delete rc;
+      delete pvworld;
+      }
 }
 #endif
 -->
