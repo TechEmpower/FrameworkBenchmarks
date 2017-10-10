@@ -5,12 +5,11 @@ import javax.inject.{Singleton, Inject}
 import play.api.mvc._
 import play.api.libs.json.Json
 import models._
-import scala.concurrent.Future
-
-import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.{Future, ExecutionContext}
 
 @Singleton()
-class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO) extends Controller {
+class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
+  extends BaseController {
 
   // Slick code
 

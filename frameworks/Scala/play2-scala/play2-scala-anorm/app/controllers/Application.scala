@@ -7,12 +7,11 @@ import play.api.libs.json.Json
 import java.util.concurrent._
 import models.{WorldDAO, FortunesDAO, World, Fortune}
 import utils.DbOperation
-import scala.concurrent.Future
-
-import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.{Future, ExecutionContext}
 
 @Singleton()
-class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, dbOperation: DbOperation)  extends Controller {
+class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, dbOperation: DbOperation, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
+  extends BaseController {
 
   // Anorm code
 

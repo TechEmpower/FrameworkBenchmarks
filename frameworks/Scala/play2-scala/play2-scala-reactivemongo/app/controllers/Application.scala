@@ -4,22 +4,24 @@ import java.util.concurrent.ThreadLocalRandom
 import javax.inject.{Singleton, Inject}
 
 import play.api.libs.json.{JsObject, Json, JsValue}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import reactivemongo.api.ReadPreference
 
 import scala.concurrent.Future
 
-import play.api.mvc.{ Action, Controller }
+import play.api.mvc.{ Action, BaseController, ControllerComponents, PlayBodyParsers }
 
 import play.modules.reactivemongo.{
 MongoController, ReactiveMongoApi, ReactiveMongoComponents
 }
 import play.modules.reactivemongo.json._
-import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.play.json.collection.JSONCollection
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi)
-  extends Controller with MongoController with ReactiveMongoComponents {
+class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
+  extends BaseController with MongoController with ReactiveMongoComponents {
+
+  override lazy val parse: PlayBodyParsers = parse
 
   private def worldCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("world")
   private def fortuneCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("fortune")

@@ -2,8 +2,8 @@ import javax.inject.{Singleton, Inject}
 
 import play.api.http.HttpFilters
 import play.api.mvc.{RequestHeader, EssentialAction, EssentialFilter}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.mvc.Http
+import scala.concurrent.ExecutionContext
 
 @Singleton()
 class Filters @Inject() (headerFilter: HeaderFilter) extends HttpFilters {
@@ -12,7 +12,7 @@ class Filters @Inject() (headerFilter: HeaderFilter) extends HttpFilters {
 }
 
 @Singleton
-class HeaderFilter extends EssentialFilter {
+class HeaderFilter @Inject() (implicit ec: ExecutionContext) extends EssentialFilter {
   def apply(next: EssentialAction) = new EssentialAction {
     def apply(request: RequestHeader) = {
       next(request).map(result =>
