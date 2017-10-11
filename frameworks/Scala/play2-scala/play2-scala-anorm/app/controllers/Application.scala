@@ -47,7 +47,7 @@ class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, dbOpe
   }
 
   val plaintext = Action {
-    Ok("Hello, World!").as("text/plain")
+    Ok("Hello, World!").withHeaders(defaultHeader).as("text/plain")
   }
 
   // Common code between Scala database code
