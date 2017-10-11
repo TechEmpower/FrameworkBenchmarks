@@ -1,30 +1,23 @@
 package controllers
 
 import java.util.concurrent.ThreadLocalRandom
-import javax.inject.{Singleton, Inject}
+import scala.concurrent.{Future, ExecutionContext}
 
 import play.api.libs.json.{JsObject, Json, JsValue}
-import reactivemongo.api.ReadPreference
-
-import scala.concurrent.Future
-
-import play.api.mvc.{ Action, BaseController, ControllerComponents, PlayBodyParsers }
+import play.api.mvc._
 import play.mvc.Http
 
+import reactivemongo.api.ReadPreference
+import reactivemongo.play.json.collection.JSONCollection
 import play.modules.reactivemongo.{
-MongoController, ReactiveMongoApi, ReactiveMongoComponents
+  ReactiveMongoApi, ReactiveMongoComponents, MongoController
 }
 import play.modules.reactivemongo.json._
-import reactivemongo.play.json.collection.JSONCollection
-import scala.concurrent.ExecutionContext
 
-@Singleton
-class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
-  extends BaseController with MongoController with ReactiveMongoComponents {
+class Application (val controllerComponents: ControllerComponents, reactiveMongoApi: ReactiveMongoApi)(implicit ec: ExecutionContext)
+  extends BaseController {
 
   val defaultHeader = Http.HeaderNames.SERVER -> "Play Framework"
-
-  override lazy val parse: PlayBodyParsers = parse
 
   private def worldCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("world")
   private def fortuneCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("fortune")
