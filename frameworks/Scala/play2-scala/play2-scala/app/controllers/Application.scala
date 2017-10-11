@@ -19,7 +19,7 @@ extends AbstractController(cc) {
   }
 
   val plaintext = Action {
-    Ok("Hello, World!").withHeaders(defaultHeader)
+    Ok("Hello, World!").withHeaders(defaultHeader).as("text/plain")
   }
 }
 

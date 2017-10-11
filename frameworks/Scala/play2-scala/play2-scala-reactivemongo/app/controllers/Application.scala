@@ -9,6 +9,7 @@ import reactivemongo.api.ReadPreference
 import scala.concurrent.Future
 
 import play.api.mvc.{ Action, BaseController, ControllerComponents, PlayBodyParsers }
+import play.mvc.Http
 
 import play.modules.reactivemongo.{
 MongoController, ReactiveMongoApi, ReactiveMongoComponents
@@ -20,6 +21,8 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
   extends BaseController with MongoController with ReactiveMongoComponents {
+
+  val defaultHeader = Http.HeaderNames.SERVER -> "Play Framework"
 
   override lazy val parse: PlayBodyParsers = parse
 
@@ -69,22 +72,15 @@ class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, val control
     ThreadLocalRandom.current().nextInt(TestDatabaseRows) + 1
   }
 
-  // Test seems picky about headers.  Doesn't like character set being there for JSON.  Always wants Server header set.
-  // There is a Filter which adds the Server header for all types.  Below I set Content-Type as needed to get rid of
-  // warnings.
-
-  // Easy ones
   case class HelloWorld(message: String)
 
   def getJsonMessage = Action {
     val helloWorld = HelloWorld(message = "Hello, World!")
-    Ok(Json.toJson(helloWorld)(Json.writes[HelloWorld])).withHeaders(CONTENT_TYPE -> "application/json")
+    Ok(Json.toJson(helloWorld)(Json.writes[HelloWorld])).withHeaders(defaultHeader)
   }
 
   val plaintext = Action {
-    // default headers are correct according to docs: charset included.
-    // BUT the test harness has a WARN state and says we don't need it.
-    Ok("Hello, World!").withHeaders(CONTENT_TYPE -> "text/plain")
+    Ok("Hello, World!").withHeaders(defaultHeader).as("text/plain")
   }
 
   // Semi-Common code between Scala database code
@@ -93,14 +89,14 @@ class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, val control
 
   def doDb = Action.async {
     getRandomWorld.map { worlds =>
-      Ok(Json.toJson(worlds.head)).withHeaders(CONTENT_TYPE -> "application/json")
+      Ok(Json.toJson(worlds.head)).withHeaders(defaultHeader)
     }
   }
 
   def queries(countString: String) = Action.async {
     val n = parseCount(countString)
     getRandomWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds)).withHeaders(CONTENT_TYPE -> "application/json")
+      Ok(Json.toJson(worlds)).withHeaders(defaultHeader)
     }
   }
 
@@ -114,14 +110,14 @@ class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, val control
 
       val sorted = appendedFortunes.sortBy(byMessage(_))
 
-      Ok(views.html.fortune(sorted)).withHeaders(CONTENT_TYPE -> "text/html")
+      Ok(views.html.fortune(sorted)).withHeaders(defaultHeader).as(HTML)
     }
   }
 
   def update(queries: String) = Action.async {
     val n = parseCount(queries)
     updateWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds)).withHeaders(CONTENT_TYPE -> "application/json")
+      Ok(Json.toJson(worlds)).withHeaders(defaultHeader)
     }
   }
 
