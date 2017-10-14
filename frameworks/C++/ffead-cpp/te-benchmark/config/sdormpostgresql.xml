@@ -8,7 +8,7 @@
 					<password>benchmarkdbpass</password>
 				</node>
 			</nodes>
-			<pool-size>5</pool-size>
+			<pool-size>30</pool-size>
 			<name>PostgreSQL-DSN</name>
 			<type>sql</type>
 			<dialect>PostgresDialect</dialect>
