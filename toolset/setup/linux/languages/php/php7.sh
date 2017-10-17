@@ -2,7 +2,7 @@
 
 fw_installed php7 && return 0
 
-VERSION="7.1.4"
+VERSION="7.1.10"
 PHP_HOME=$IROOT/php-$VERSION
 
 fw_get -o php-${VERSION}.tar.gz http://php.net/distributions/php-${VERSION}.tar.gz
