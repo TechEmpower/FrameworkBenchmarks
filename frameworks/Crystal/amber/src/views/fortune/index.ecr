@@ -3,7 +3,7 @@
   <th>id</th>
   <th>message</th>
   </tr>
-  <% data.each do |fortune| %>
+  <% fortunes.each do |fortune| %>
     <tr>
     <td><%= fortune.id %></td>
     <td><%= HTML.escape(fortune.message.to_s) %></td>
