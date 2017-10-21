@@ -11,8 +11,6 @@ crystal build --release --no-debug server-redis.cr
 
 export GC_MARKERS=1
 
-export GC_NPROCS=1
-
 for i in $(seq 1 $(nproc --all)); do
   ./server-redis &
 done
