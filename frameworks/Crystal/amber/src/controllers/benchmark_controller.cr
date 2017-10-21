@@ -70,7 +70,7 @@ class BenchmarkController < Amber::Controller::Base
 
     fortunes = Fortune.all
     fortunes << fortune
-    fortunes.sort_by! { |fortune| fortune.message || "" }
+    fortunes.sort_by! { |fortune| fortune.message.to_s }
 
     render("fortune/index.ecr")
   end
