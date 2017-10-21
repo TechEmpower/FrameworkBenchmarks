@@ -18,8 +18,7 @@ class BenchmarkController < Amber::Controller::Base
 
   def json
     response.content_type = JSON
-    results = {message: "Hello, World!"}
-    results.to_json
+    {message: "Hello, World!"}.to_json
   end
 
   def db
