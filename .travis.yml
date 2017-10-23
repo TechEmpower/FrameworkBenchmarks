@@ -162,6 +162,7 @@ env:
     - "TESTDIR=Python/falcon"
     - "TESTDIR=Python/flask"
     - "TESTDIR=Python/historical"
+    - "TESTDIR=Python/japronto"
     - "TESTDIR=Python/klein"
     - "TESTDIR=Python/morepath"
     - "TESTDIR=Python/pyramid"
