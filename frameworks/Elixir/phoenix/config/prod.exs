@@ -2,8 +2,11 @@ use Mix.Config
 
 config :hello, Hello.Endpoint,
   url: [host: "0.0.0.0"],
-  http: [port: 8080, protocol_options: [max_keepalive: 5_000_000]],
+  http: [port: 8080, protocol_options: [max_keepalive: :infinity], backlog: 8096],
   cache_static_lookup: false,
+  check_origin: false,
+  debug_errors: false,
+  code_reloader: false,
   server: true
 
 config :hello, Hello.Repo,
@@ -12,7 +15,7 @@ config :hello, Hello.Repo,
   password: "benchmarkdbpass",
   database: "hello_world",
   hostname: "127.0.0.1",
-  pool_size: 20
+  pool_size: 256
 
 # ## SSL Support
 #

@@ -10,4 +10,4 @@ mix local.rebar --force
 mix deps.get --force --only prod
 mix compile --force
 
-elixir --detached --no-halt -S mix
+elixir --erl "+K true +sbwt very_long +swt very_low" --detached --no-halt -S mix

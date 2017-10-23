@@ -6,5 +6,5 @@
   "username": "benchmarkdbuser",
   "password": "benchmarkdbpass",
   "database": "hello_world",
-  "maxPoolSize": 32
+  "maxPoolSize": 64
 }

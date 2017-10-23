@@ -407,7 +407,7 @@ static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 
 	if (flags < 0 || fcntl(sd, F_SETFD, flags | FD_CLOEXEC)) {
 		STANDARD_ERROR("fcntl");
-		goto error_dup;
+		goto error_fcntl;
 	}
 
 	db_conn->sock = h2o_evloop_socket_create(ctx->event_loop.h2o_ctx.loop,
@@ -425,12 +425,11 @@ static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 		h2o_socket_notify_write(db_conn->sock, on_database_write_ready);
 		return;
 	}
-	else {
-		errno = ENOMEM;
-		STANDARD_ERROR("h2o_evloop_socket_create");
-		close(sd);
-	}
 
+	errno = ENOMEM;
+	STANDARD_ERROR("h2o_evloop_socket_create");
+error_fcntl:
+	close(sd);
 error_dup:
 	PQfinish(db_conn->conn);
 error_connect:

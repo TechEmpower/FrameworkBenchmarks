@@ -22,6 +22,6 @@ object Formatting extends AutoPlugin {
       .setPreference(AlignParameters, true)
       .setPreference(AlignSingleLineCaseStatements, true)
       .setPreference(DanglingCloseParenthesis, Preserve)
-      .setPreference(DoubleIndentClassDeclaration, true)
+      .setPreference(DoubleIndentConstructorArguments, true)
       .setPreference(SpacesAroundMultiImports, true)
 }

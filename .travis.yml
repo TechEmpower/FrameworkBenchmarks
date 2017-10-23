@@ -4,6 +4,7 @@
 
 sudo: required
 dist: trusty
+group: deprecated-2017Q2
 language: generic
 python:
   - "2.7"
@@ -22,6 +23,7 @@ env:
     - "TESTDIR=CSharp/nancy"
     - "TESTDIR=CSharp/revenj"
     - "TESTDIR=CSharp/servicestack"
+    - "TESTDIR=C++/ffead-cpp"
     - "TESTDIR=C++/cpoll_cppsp"
     - "TESTDIR=C++/cutelyst"
     - "TESTDIR=C++/silicon"
@@ -36,9 +38,9 @@ env:
     - "TESTDIR=Clojure/macchiato"
     - "TESTDIR=Clojure/pedestal"
     - "TESTDIR=Clojure/aleph"
+    - "TESTDIR=Crystal/amber"
     - "TESTDIR=Crystal/crystal"
     - "TESTDIR=Crystal/kemal"
-    - "TESTDIR=Crystal/kemalyst"
     - "TESTDIR=D/vibed"
     - "TESTDIR=D/hunt"
     - "TESTDIR=D/collie"
@@ -115,6 +117,7 @@ env:
     - "TESTDIR=JavaScript/sailsjs"
     - "TESTDIR=Kotlin/hexagon"
     - "TESTDIR=Kotlin/ktor"
+    - "TESTDIR=Kotlin/pronghorn"
     - "TESTDIR=Lua/lapis"
     - "TESTDIR=Lua/octopus"
     - "TESTDIR=Lua/openresty"
@@ -159,6 +162,7 @@ env:
     - "TESTDIR=Python/falcon"
     - "TESTDIR=Python/flask"
     - "TESTDIR=Python/historical"
+    - "TESTDIR=Python/japronto"
     - "TESTDIR=Python/klein"
     - "TESTDIR=Python/morepath"
     - "TESTDIR=Python/pyramid"

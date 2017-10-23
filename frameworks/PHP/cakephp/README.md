@@ -18,10 +18,10 @@ Uses the CakePHP Model functionality.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Cake Version 2.3.0](http://cakephp.org/)
-* [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
-* [nginx 1.4.0](http://nginx.org/)
-* [MySQL 5.5.29](https://dev.mysql.com/)
+* [Cake Version 2.10.3](https://cakephp.org/)
+* [PHP Version 5.6.30](http://www.php.net/) with FPM and APC
+* [nginx 1.12.0](http://nginx.org/)
+* [MySQL 5.7.19](https://dev.mysql.com/)
 
 Cake Debug mode is set to 0 in [core.php](app/Config/core.php), as
 appropriate for a production deployment.

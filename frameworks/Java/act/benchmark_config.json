@@ -1,8 +1,8 @@
 {
   "framework": "actframework",
   "tests": [{
-      "default": {
-      "setup_file": "setup",
+      "json_plaintext": {
+      "setup_file": "setup-json-plaintext",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -21,12 +21,12 @@
       "notes": "",
       "versus": "undertow"
     },
-    "ebean-pg": {
-      "setup_file": "setup",
-      "db_url": "/pgsql/db",
-      "query_url": "/pgsql/queries?queries=",
-      "fortune_url": "/pgsql/fortunes",
-      "update_url": "/pgsql/updates?queries=",
+    "ebean-pgsql": {
+      "setup_file": "setup-ebean-pgsql",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -43,31 +43,12 @@
       "notes": "",
       "versus": "undertow"
     },
-    "ebean-pg-rythm": {
-      "setup_file": "setup",
-      "fortune_url": "/pgsql/forythm",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "Postgres",
-      "framework": "actframework",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Full",
-      "platform": "Undertow",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "act-ebean-pgsql-rythm",
-      "notes": "",
-      "versus": "undertow"
-    },
-    "ebean-my": {
-      "setup_file": "setup",
-      "db_url": "/mysql/db",
-      "query_url": "/mysql/queries?queries=",
-      "fortune_url": "/mysql/fortunes",
-      "update_url": "/mysql/updates?queries=",
+    "ebean-mysql": {
+      "setup_file": "setup-ebean-mysql",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -84,12 +65,12 @@
       "notes": "",
       "versus": "undertow"
     },
-    "morphia-mo": {
-      "setup_file": "setup",
-      "db_url": "/mongo/db",
-      "query_url": "/mongo/queries?queries=",
-      "fortune_url": "/mongo/fortunes",
-      "update_url": "/mongo/updates?queries=",
+    "morphia-mongo": {
+      "setup_file": "setup-morphia-mongo",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -105,29 +86,6 @@
       "display_name": "act-morphia",
       "notes": "",
       "versus": "undertow"
-    },
-    "jdbc-pg": {
-      "setup_file": "setup",
-      "db_url": "/jdbc/db",
-      "query_url": "/jdbc/queries?queries=",
-      "fortune_url": "/jdbc/fortunes",
-      "update_url": "/jdbc/updates?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "Postgres",
-      "framework": "actframework",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "Undertow",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "act-jdbc-pgsql",
-      "notes": "",
-      "versus": "undertow"
     }
-
   }]
 }

@@ -1,0 +1,82 @@
+version: 1.0
+shards:
+  amber:
+    github: Amber-Crystal/amber
+    version: 0.2.5
+
+  callback:
+    github: mosop/callback
+    version: 0.5.1
+
+  cli:
+    github: mosop/cli
+    version: 0.5.2
+
+  db:
+    github: crystal-lang/crystal-db
+    version: 0.4.2
+
+  granite_orm:
+    github: Amber-Crystal/granite-orm
+    version: 0.7.1
+
+  icr:
+    github: TechMagister/crystal-icr
+    commit: b28bb938cc9e9e439424217c074a9168d253ba4b
+
+  kilt:
+    github: jeromegn/kilt
+    version: 0.3.3
+
+  micrate:
+    github: juanedi/micrate
+    version: 0.3.0
+
+  mysql:
+    github: crystal-lang/crystal-mysql
+    version: 0.3.2
+
+  optarg:
+    github: mosop/optarg
+    version: 0.4.4
+
+  pg:
+    github: will/crystal-pg
+    version: 0.13.3
+
+  radix:
+    github: luislavena/radix
+    commit: 211418416adba540b594af2260e1b5d0c8877c9e
+
+  redis:
+    github: stefanwille/crystal-redis
+    version: 1.8.0
+
+  sentry:
+    github: TechMagister/sentry
+    commit: a78129ec1e66aa24c91b93199ea187e4793c8d58
+
+  shell-table:
+    github: jwaldrip/shell-table.cr
+    version: 0.9.1
+
+  slang:
+    github: jeromegn/slang
+    commit: b817c89c7e5ae39562710c0d6c7f42cee685e14f
+
+  spinner:
+    github: elorest/spinner
+    version: 0.1.1
+
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+    version: 0.8.2
+
+  string_inflection:
+    github: mosop/string_inflection
+    version: 0.2.1
+
+  teeplate:
+    github: mosop/teeplate
+    version: 0.4.5
+
