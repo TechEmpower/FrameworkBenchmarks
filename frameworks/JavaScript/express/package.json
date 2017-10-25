@@ -8,7 +8,7 @@
     "method-override": "2.3.10",
     "errorhandler": "1.5.0",
     "async": "2.5.0",
-    "jade": "1.11.0",
+    "pug": "2.0.0-rc.4",
     "sequelize": "3.30.0",
     "mysql": "2.15.0",
     "mongoose": "4.12.4"
