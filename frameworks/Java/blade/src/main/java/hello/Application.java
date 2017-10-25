@@ -45,7 +45,7 @@ public class Application {
                     response.json(worlds);
                 })
                 .get("/plaintext", (request, response) -> response.body(Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_HELLO_TEXT)).duplicate()))
-                .listen(8080).start(Application.class, args);
+                .start(Application.class, args);
     }
 
 }
