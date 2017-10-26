@@ -19,8 +19,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Application {
 
     private static final int    DB_ROWS           = 308;
-    private static final byte[] STATIC_HELLO_TEXT = "Hello, World!".getBytes(CharsetUtil.UTF_8);
-
+    private static final String STATIC_HELLO_TEXT = "Hello, World!";
+    
     private static int getQueries(Optional<Integer> queryCount) {
         int count = queryCount.orElse(1);
         count = count < 1 ? 1 : count;
@@ -44,7 +44,7 @@ public class Application {
                     }
                     response.json(worlds);
                 })
-                .get("/plaintext", (request, response) -> response.body(Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_HELLO_TEXT)).duplicate()))
+                .get("/plaintext", (request, response) -> response.text(STATIC_HELLO_TEXT))
                 .start(Application.class, args);
     }
 
