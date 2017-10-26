@@ -19,6 +19,9 @@ static void usp_fork_rdb()
       {
       U_WARNING("usp_fork_rdb(): %V", rc->UClient_Base::getResponse().rep);
 
+      delete rc;
+             rc = U_NULLPTR;
+
       return;
       }
 
@@ -30,7 +33,7 @@ static void usp_end_rdb()
 {
    U_TRACE(5, "::usp_end_rdb()")
 
-   delete rc;
+   if (rc) delete rc;
 }
 #endif
 -->

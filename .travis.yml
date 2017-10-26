@@ -4,6 +4,7 @@
 
 sudo: required
 dist: trusty
+group: deprecated-2017Q2
 language: generic
 python:
   - "2.7"
@@ -161,6 +162,7 @@ env:
     - "TESTDIR=Python/falcon"
     - "TESTDIR=Python/flask"
     - "TESTDIR=Python/historical"
+    - "TESTDIR=Python/japronto"
     - "TESTDIR=Python/klein"
     - "TESTDIR=Python/morepath"
     - "TESTDIR=Python/pyramid"

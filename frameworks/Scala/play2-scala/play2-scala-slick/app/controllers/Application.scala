@@ -3,16 +3,16 @@ package controllers
 import java.util.concurrent._
 import javax.inject.{Singleton, Inject}
 import play.api.mvc._
+import play.mvc.Http
 import play.api.libs.json.Json
 import models._
-import scala.concurrent.Future
-
-import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.{Future, ExecutionContext}
 
 @Singleton()
-class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO) extends Controller {
+class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
+  extends BaseController {
 
-  // Slick code
+  val defaultHeader = Http.HeaderNames.SERVER -> "Play Framework"
 
   def getRandomWorlds(n: Int): Future[Seq[World]] = {
     val worlds: Seq[Future[World]] = for (_ <- 1 to n) yield {
@@ -39,22 +39,15 @@ class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO) exten
     ThreadLocalRandom.current().nextInt(TestDatabaseRows) + 1
   }
 
-  // Test seems picky about headers.  Doesn't like character set being there for JSON.  Always wants Server header set.
-  // There is a Filter which adds the Server header for all types.  Below I set Content-Type as needed to get rid of
-  // warnings.
-
-  // Easy ones
   case class HelloWorld(message: String)
 
   def getJsonMessage = Action {
     val helloWorld = HelloWorld(message = "Hello, World!")
-    Ok(Json.toJson(helloWorld)(Json.writes[HelloWorld])).withHeaders(CONTENT_TYPE -> "application/json")
+    Ok(Json.toJson(helloWorld)(Json.writes[HelloWorld])).withHeaders(defaultHeader)
   }
 
   val plaintext = Action {
-    // default headers are correct according to docs: charset included.
-    // BUT the test harness has a WARN state and says we don't need it.
-    Ok("Hello, World!").withHeaders(CONTENT_TYPE -> "text/plain")
+    Ok("Hello, World!").withHeaders(defaultHeader).as("text/plain")
   }
 
   // Common code between Scala database code
@@ -65,28 +58,28 @@ class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO) exten
 
   def db = Action.async {
     getRandomWorlds(1).map { worlds =>
-      Ok(Json.toJson(worlds.head)).withHeaders(CONTENT_TYPE -> "application/json")
+      Ok(Json.toJson(worlds.head)).withHeaders(defaultHeader)
     }
   }
 
   def queries(countString: String) = Action.async {
     val n = parseCount(countString)
     getRandomWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds)).withHeaders(CONTENT_TYPE -> "application/json")
+      Ok(Json.toJson(worlds)).withHeaders(defaultHeader)
     }
   }
 
   def fortunes() = Action.async {
     getFortunes.map { dbFortunes =>
       val appendedFortunes =  Fortune(0, "Additional fortune added at request time.") :: dbFortunes.to[List]
-      Ok(views.html.fortune(appendedFortunes)).withHeaders(CONTENT_TYPE -> "text/html")
+      Ok(views.html.fortune(appendedFortunes)).withHeaders(defaultHeader).as(HTML)
     }
   }
 
   def update(queries: String) = Action.async {
     val n = parseCount(queries)
     updateWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds)).withHeaders(CONTENT_TYPE -> "application/json")
+      Ok(Json.toJson(worlds)).withHeaders(defaultHeader)
     }
   }
 
