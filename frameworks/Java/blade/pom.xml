@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.bladejava</groupId>
             <artifactId>blade-mvc</artifactId>
-            <version>2.0.4-B3</version>
+            <version>2.0.4-R1</version>
         </dependency>
 
         <dependency>
