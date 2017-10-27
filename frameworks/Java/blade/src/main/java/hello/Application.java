@@ -1,9 +1,12 @@
 package hello;
 
 import com.blade.Blade;
+import com.blade.server.netty.HttpConst;
 import hello.model.Message;
 import hello.model.World;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.util.AsciiString;
 import io.netty.util.CharsetUtil;
 
 import java.util.Optional;
@@ -18,8 +21,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Application {
 
-    private static final int    DB_ROWS           = 308;
-    private static final byte[] STATIC_HELLO_TEXT = "Hello, World!".getBytes(CharsetUtil.UTF_8);
+    private static final int          DB_ROWS                  = 308;
+    private static final byte[]       STATIC_PLAINTEXT         = "Hello, World!".getBytes(CharsetUtil.UTF_8);
+    private static final ByteBuf      PLAINTEXT_CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_PLAINTEXT));
+    private static final CharSequence PLAINTEXT_CLHEADER_VALUE = AsciiString.cached(String.valueOf(STATIC_PLAINTEXT.length));
 
     private static int getQueries(Optional<Integer> queryCount) {
         int count = queryCount.orElse(1);
@@ -31,12 +36,12 @@ public class Application {
     public static void main(String[] args) {
         Blade.me()
                 .get("/json", (request, response) -> {
-                    response.contentType("application/json");
+                    response.contentType(HttpConst.getContentType("application/json"));
                     response.json(new Message());
                 })
                 .get("/db", (request, response) -> {
                     final Random random = ThreadLocalRandom.current();
-                    response.contentType("application/json");
+                    response.contentType(HttpConst.getContentType("application/json"));
                     response.json(new World().find(random.nextInt(DB_ROWS) + 1));
                 })
                 .get("/queries", (request, response) -> {
@@ -46,13 +51,15 @@ public class Application {
                     for (int i = 0; i < queries; i++) {
                         worlds[i] = new World().find(random.nextInt(DB_ROWS) + 1);
                     }
-                    response.contentType("application/json");
+                    response.contentType(HttpConst.getContentType("application/json"));
                     response.json(worlds);
                 })
                 .get("/plaintext", (request, response) -> {
-                    response.contentType("text/plain");
-                    response.body(Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_HELLO_TEXT)).duplicate());
+                    response.contentType(HttpConst.getContentType("text/plain"));
+                    response.header(HttpConst.CONTENT_LENGTH, PLAINTEXT_CLHEADER_VALUE);
+                    response.body(PLAINTEXT_CONTENT_BUFFER.duplicate());
                 })
+                .disableSession()
                 .start(Application.class, args);
     }
 
