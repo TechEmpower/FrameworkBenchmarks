@@ -19,7 +19,7 @@ This is using [ActFramework R1.4.12](http://actframework.org) to build an applic
 | ---- | ----------: |
 | db | 15726.85 |
 | multiple queies (20) | 1634.25 |
-| updates (20) | 112.40 |
+| updates (20) | 1004.02 |
 | fortunes | 13340.19 |
 
 ### Postgresql
@@ -28,7 +28,7 @@ This is using [ActFramework R1.4.12](http://actframework.org) to build an applic
 | ---- | ---------: |
 | db | 19178.11 |
 | multiple queies (20) | 2108/46 |
-| updates (20) | 110.91 |
+| updates (20) | 1446.89 |
 | fortunes | 17008.39 |
 
 
