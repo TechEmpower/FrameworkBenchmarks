@@ -75,6 +75,7 @@ env:
     - "TESTDIR=Java/activeweb"
     - "TESTDIR=Java/baratine"
     - "TESTDIR=Java/bayou"
+    - "TESTDIR=Java/blade"
     - "TESTDIR=Java/comsat-servlet"
     - "TESTDIR=Java/comsat-webactors"
     - "TESTDIR=Java/curacao"
