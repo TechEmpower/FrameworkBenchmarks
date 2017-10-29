@@ -4,7 +4,7 @@
 //
 
 function fortune() {
-  // Database connection (TODO: When it works, use PDO instead)
+  // Database connection // TODO: use PDO once implemented
   $link = mysql_connect('TFB-database', 'benchmarkdbuser', 'benchmarkdbpass');
   mysql_select_db('hello_world', $link);
     
@@ -24,7 +24,6 @@ function fortune() {
 // Set content type
 header("Content-type: text/html; charset=utf-8");
 
-$arr = fortune();
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,7 +37,7 @@ $arr = fortune();
 <th>message</th>
 </tr>
 <?php
-foreach ( $arr as $id => $fortune ) {
+foreach ( fortune() as $id => $fortune ) {
 ?>
 <tr>
 <td><?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?></td>  
