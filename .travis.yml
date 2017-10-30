@@ -92,6 +92,7 @@ env:
     - "TESTDIR=Java/jlhttp"
     - "TESTDIR=Java/jooby"
     - "TESTDIR=Java/light-java"
+    - "TESTDIR=Java/minijax"
     - "TESTDIR=Java/netty"
     - "TESTDIR=Java/ninja-standalone"
     - "TESTDIR=Java/officefloor"
