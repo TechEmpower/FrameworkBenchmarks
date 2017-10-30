@@ -55,7 +55,9 @@ impl Service for TechEmpower {
 
 fn main() {
     let addr: SocketAddr = "0.0.0.0:8080".parse().unwrap();
-    let mut srv = TcpServer::new(Http::new(), addr);
+    let mut http = Http::new();
+    http.pipeline(true);
+    let mut srv = TcpServer::new(http, addr);
     println!("Listening on http://{} using {} threads",
              addr,
              num_cpus::get());
