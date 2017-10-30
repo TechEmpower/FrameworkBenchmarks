@@ -268,7 +268,7 @@ $prefix = 'cakephp2_';
  */
 //Cache::config('_cake_core_', array(
 //	'engine' => $engine,
-//	'server' => '127.0.0.1',
+//	'server' => 'REDISSERVER',
 //	'prefix' => $prefix . 'cake_core_',
 //	'path' => CACHE . 'persistent' . DS,
 //	'serialize' => ($engine === 'File'),
@@ -281,7 +281,7 @@ $prefix = 'cakephp2_';
  */
 //Cache::config('_cake_model_', array(
 //	'engine' => $engine,
-//	'server' => '127.0.0.1',
+//	'server' => 'REDISSERVER',
 //	'prefix' => $prefix . 'cake_model_',
 //	'path' => CACHE . 'models' . DS,
 //	'serialize' => ($engine === 'File'),
