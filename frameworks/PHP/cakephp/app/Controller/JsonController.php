@@ -15,4 +15,3 @@ class JsonController extends AppController {
     $this->set('_serialize', array('message'));
   }
 }
-?>

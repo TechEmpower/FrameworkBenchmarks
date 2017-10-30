@@ -49,7 +49,7 @@ class WorldController extends AppController {
     if ($should_return_array == False) {
       $this->set('worlds', $arr[0]);
     } else {
-      $this->set('worlds', $arr);  
+      $this->set('worlds', $arr);
     }
 
     // Use the CakePHP JSON View
@@ -58,5 +58,3 @@ class WorldController extends AppController {
   }
 
 }
-?>
-

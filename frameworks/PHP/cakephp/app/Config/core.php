@@ -32,7 +32,7 @@
  * In production mode, flash messages redirect after a time interval.
  * In development mode, you need to click the flash message to continue.
  */
-	Configure::write('debug', 0);
+	Configure::write('debug', 2);
 
 /**
  * Configure the Error handler used to handle errors for your application.  By default
@@ -118,7 +118,7 @@ Configure::write('App.baseUrl', env('SCRIPT_NAME'));
  * Turn off all caching application-wide.
  *
  */
-	//Configure::write('Cache.disable', true);
+	Configure::write('Cache.disable', true);
 
 /**
  * Enable cache checking.
@@ -257,7 +257,7 @@ if (Configure::read('debug') >= 1) {
 }
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
-$prefix = 'myapp_';
+$prefix = 'cakephp2_';
 
 // NOTE: There is currently no implementation of redis so commenting out this configuration for now. This
 // *may* have also been in violation of the rules of some of the database tests.
@@ -268,7 +268,7 @@ $prefix = 'myapp_';
  */
 //Cache::config('_cake_core_', array(
 //	'engine' => $engine,
-//	'server' => 'REDISSERVER',
+//	'server' => '127.0.0.1',
 //	'prefix' => $prefix . 'cake_core_',
 //	'path' => CACHE . 'persistent' . DS,
 //	'serialize' => ($engine === 'File'),
@@ -281,7 +281,7 @@ $prefix = 'myapp_';
  */
 //Cache::config('_cake_model_', array(
 //	'engine' => $engine,
-//	'server' => 'REDISSERVER',
+//	'server' => '127.0.0.1',
 //	'prefix' => $prefix . 'cake_model_',
 //	'path' => CACHE . 'models' . DS,
 //	'serialize' => ($engine === 'File'),

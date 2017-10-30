@@ -62,18 +62,18 @@ class DATABASE_CONFIG {
 	public $default = array(
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
-		'host' => 'localhost',
+		'host' => '127.0.0.1',
 		'login' => 'benchmarkdbuser',
 		'password' => 'benchmarkdbpass',
 		'database' => 'hello_world',
 		'prefix' => '',
-		'encoding' => 'utf8',
+		'encoding' => 'latin1',
 	);
 
 	public $test = array(
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
-		'host' => 'localhost',
+		'host' => '127.0.0.1',
 		'login' => 'benchmarkdbuser',
 		'password' => 'benchmarkdbpass',
 		'database' => 'hello_world',
