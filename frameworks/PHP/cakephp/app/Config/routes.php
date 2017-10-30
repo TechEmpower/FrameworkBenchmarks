@@ -29,6 +29,7 @@
 
 	Router::connect('/db', ['controller' => 'World', 'action' => 'query']);
 	Router::connect('/queries', ['controller' => 'World', 'action' => 'index']);
+	Router::connect('/updates', ['controller' => 'World', 'action' => 'updates']);
 
 /**
  * Load all plugin routes.  See the CakePlugin documentation on
