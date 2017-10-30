@@ -67,7 +67,7 @@ class DATABASE_CONFIG {
 		'password' => 'benchmarkdbpass',
 		'database' => 'hello_world',
 		'prefix' => '',
-		'encoding' => 'latin1',
+		'encoding' => 'utf8',
 	);
 
 	public $test = array(
