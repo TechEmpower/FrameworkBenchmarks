@@ -55,6 +55,6 @@ If you find any errors or areas for improvement within the docs, feel free to ei
 
 ## Contributing
 
-The community has consistently helped in making these tests better, and we welcome any and all changes. Reviewing our contribution practices and guidelines will help to keep us all on the same page. The [contribution guide](http://frameworkbenchmarks.readthedocs.org/en/latest/Development/Contributing-Guide/) can be found in the [TFB documentation](http://frameworkbenchmarks.readthedocs.org/).
+The community has consistently helped in making these tests better, and we welcome any and all changes. Reviewing our contribution practices and guidelines will help to keep us all on the same page. The [contribution guide](https://frameworkbenchmarks.readthedocs.org/en/latest/Development/Contributing-Guide/) can be found in the [TFB documentation](https://frameworkbenchmarks.readthedocs.org/).
 
 Join in the conversation at our [Google Group](https://groups.google.com/forum/?fromgroups=#!forum/framework-benchmarks), or chat with us on [Freenode](https://webchat.freenode.net/) at `#techempower-fwbm`. 
