@@ -16,11 +16,11 @@ class DbOperation @Inject() (@NamedDatabase("hello_world") protected val db: Dat
 
   private val maxDbOperations = configuration.underlying.getInt("max-db-ops")
 
-  private val partitionCount = configuration.getInt("db.hello_world.partitionCount").getOrElse(2)
+  private val partitionCount = configuration.getOptional[Int]("db.hello_world.partitionCount").getOrElse(2)
   private val maxConnections =
-    partitionCount * configuration.getInt("db.hello_world.maxConnectionsPerPartition").getOrElse(5)
+    partitionCount * configuration.getOptional[Int]("db.hello_world.maxConnectionsPerPartition").getOrElse(5)
   private val minConnections =
-    partitionCount * configuration.getInt("db.hello_world.minConnectionsPerPartition").getOrElse(5)
+    partitionCount * configuration.getOptional[Int]("db.hello_world.minConnectionsPerPartition").getOrElse(5)
 
   private val tpe = new ThreadPoolExecutor(minConnections, maxConnections,
     0L, TimeUnit.MILLISECONDS,

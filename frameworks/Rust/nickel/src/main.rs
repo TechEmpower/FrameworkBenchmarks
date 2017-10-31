@@ -1,11 +1,12 @@
 #[macro_use]
 extern crate nickel;
-extern crate rustc_serialize;
+extern crate serde;
+extern crate serde_json;
+#[macro_use] extern crate serde_derive;
 
 use nickel::{Nickel, HttpRouter, MediaType};
-use rustc_serialize::json;
 
-#[derive(RustcDecodable, RustcEncodable)]
+#[derive(Serialize, Deserialize)]
 struct Message {
     message: String,
 }
@@ -20,7 +21,7 @@ fn main() {
         let message: Message = Message{
             message: "Hello, World!".to_string(),
         };
-        json::encode(&message).unwrap()
+        serde_json::to_string(&message).unwrap()
     });
 
     router.get("/plaintext",
@@ -30,5 +31,5 @@ fn main() {
     });
 
     server.utilize(router);
-    server.listen("0.0.0.0:8080");
+    server.listen("0.0.0.0:8080").unwrap();
 }

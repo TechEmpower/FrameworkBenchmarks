@@ -10,16 +10,17 @@ import play.mvc.Http
 class Application @Inject() (cc: ControllerComponents)
 extends AbstractController(cc) {
 
-  implicit val helloWorldWrites = Json.writes[HelloWorld]
+  implicit final val helloWorldWrites = Json.writes[HelloWorld]
+
+  val defaultHeader = Http.HeaderNames.SERVER -> "Play Framework"
 
   def getJsonMessage = Action {
-    val helloWorld = HelloWorld(message = "Hello, World!")
-    Ok(Json.toJson(helloWorld)).withHeaders(Http.HeaderNames.SERVER -> "Play Framework")
+    Ok( Json.toJson(HelloWorld()) ).withHeaders(defaultHeader)
   }
 
   val plaintext = Action {
-    Ok("Hello, World!").withHeaders(Http.HeaderNames.SERVER -> "Play Framework")
+    Ok("Hello, World!").withHeaders(defaultHeader).as("text/plain")
   }
 }
 
-case class HelloWorld(message: String)
+case class HelloWorld(message: String = "Hello, World!")
