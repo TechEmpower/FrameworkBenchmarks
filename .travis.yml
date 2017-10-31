@@ -4,6 +4,7 @@
 
 sudo: required
 dist: trusty
+group: deprecated-2017Q2
 language: generic
 python:
   - "2.7"
@@ -74,6 +75,7 @@ env:
     - "TESTDIR=Java/activeweb"
     - "TESTDIR=Java/baratine"
     - "TESTDIR=Java/bayou"
+    - "TESTDIR=Java/blade"
     - "TESTDIR=Java/comsat-servlet"
     - "TESTDIR=Java/comsat-webactors"
     - "TESTDIR=Java/curacao"
@@ -161,6 +163,7 @@ env:
     - "TESTDIR=Python/falcon"
     - "TESTDIR=Python/flask"
     - "TESTDIR=Python/historical"
+    - "TESTDIR=Python/japronto"
     - "TESTDIR=Python/klein"
     - "TESTDIR=Python/morepath"
     - "TESTDIR=Python/pyramid"

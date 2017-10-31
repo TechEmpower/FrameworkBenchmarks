@@ -63,7 +63,7 @@ if (cluster.isMaster) {
     return next();
   });
 
-  app.set('view engine', 'jade');
+  app.set('view engine', 'pug');
   app.set('views', __dirname + '/views');
 
   // Check Node env.
@@ -99,7 +99,7 @@ if (cluster.isMaster) {
       fortunes.push(newFortune);
       fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
-      res.render('fortunes', {fortunes: fortunes});
+      res.render('fortunes/index', {fortunes: fortunes});
     });
   });
 

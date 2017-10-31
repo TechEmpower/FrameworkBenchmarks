@@ -29,7 +29,7 @@ from datetime import datetime
 from datetime import timedelta
 
 class FrameworkTest:
-  headers_template = "-H 'Host: TFB-server' -H 'Accept: {accept}' -H 'Connection: keep-alive'"
+  headers_template = "-H 'Host: {server_host}' -H 'Accept: {accept}' -H 'Connection: keep-alive'"
 
   # Used for test types that require no pipelining or query string params.
   concurrency_template = """
@@ -644,7 +644,7 @@ class FrameworkTest:
   # and DB)
   ############################################################
   def __generate_concurrency_script(self, url, port, accept_header, wrk_command="wrk"):
-    headers = self.headers_template.format(accept=accept_header)
+    headers = self.headers_template.format(server_host=self.benchmarker.server_host, accept=accept_header)
     return self.concurrency_template.format(max_concurrency=max(self.benchmarker.concurrency_levels),
       name=self.name, duration=self.benchmarker.duration,
       levels=" ".join("{}".format(item) for item in self.benchmarker.concurrency_levels),
@@ -656,7 +656,7 @@ class FrameworkTest:
   # be run on the client to benchmark a single pipeline test.
   ############################################################
   def __generate_pipeline_script(self, url, port, accept_header, wrk_command="wrk"):
-    headers = self.headers_template.format(accept=accept_header)
+    headers = self.headers_template.format(server_host=self.benchmarker.server_host, accept=accept_header)
     return self.pipeline_template.format(max_concurrency=16384,
       name=self.name, duration=self.benchmarker.duration,
       levels=" ".join("{}".format(item) for item in [256,1024,4096,16384]),
@@ -670,7 +670,7 @@ class FrameworkTest:
   # specifically works for the variable query tests (Query)
   ############################################################
   def __generate_query_script(self, url, port, accept_header, query_levels):
-    headers = self.headers_template.format(accept=accept_header)
+    headers = self.headers_template.format(server_host=self.benchmarker.server_host, accept=accept_header)
     return self.query_template.format(max_concurrency=max(self.benchmarker.concurrency_levels),
       name=self.name, duration=self.benchmarker.duration,
       levels=" ".join("{}".format(item) for item in query_levels),
