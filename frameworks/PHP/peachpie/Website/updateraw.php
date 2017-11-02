@@ -39,6 +39,8 @@ function updateraw() {
     $randomNumber = mt_rand(1, 10000);
   }
 
+  mysql_close($link);
+
   // Set content type
   header("Content-type: application/json");
 

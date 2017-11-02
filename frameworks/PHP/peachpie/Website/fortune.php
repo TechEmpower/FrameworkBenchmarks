@@ -15,6 +15,8 @@ function fortune() {
     $arr[$row['id']] = $row['message'];
   }
 
+  mysql_close($link);
+
   $arr[0] = 'Additional fortune added at request time.';
 
   asort($arr);
