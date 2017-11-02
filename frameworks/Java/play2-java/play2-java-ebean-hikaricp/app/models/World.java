@@ -1,7 +1,7 @@
 package models;
 
 import com.avaje.ebean.Ebean;
-import com.avaje.ebean.Model;
+import io.ebean.Model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +11,8 @@ import java.util.List;
 @Entity
 public class World extends Model {
 
+    public static final Finder<Long, World> find = new Finder<>(World.class);
+
     @Id
     public Long id;
 
@@ -18,7 +20,7 @@ public class World extends Model {
     public Long randomNumber;
 
     public static World find(Long id) {
-        return Ebean.find(World.class, id);
+        return World.find(id);
     }
 
     public static List<World> save(final List<World> worlds) {
