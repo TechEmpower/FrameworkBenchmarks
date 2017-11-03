@@ -16,11 +16,11 @@ public class World {
     @Column(name = "randomNumber")
     public Long randomNumber;
 
-    public static World findById(final Long id) throws Throwable {
+    public static World findById(final Long id) {
         return JPA.withTransaction("default", true, () -> JPA.em().find(World.class, id));
     }
 
-    public static List<World> save(final List<World> worlds) throws Throwable {
+    public static List<World> save(final List<World> worlds) {
         for (final World world : worlds) {
             JPA.withTransaction("default", false, () -> JPA.em().merge(world));
         }
