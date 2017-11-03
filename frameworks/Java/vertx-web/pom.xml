@@ -7,7 +7,7 @@
 
   <groupId>io.vertx</groupId>
   <artifactId>vertx-web-benchmark</artifactId>
-  <version>3.5.0.Beta1</version>
+  <version>3.5.0</version>
 
   <properties>
     <!-- the main class -->
