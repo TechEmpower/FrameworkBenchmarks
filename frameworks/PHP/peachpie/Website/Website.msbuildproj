@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="Peachpie.Compiler.Tools" Version="0.8.0-*" />
-    <PackageReference Include="Peachpie.NET.Sdk" Version="0.8.0-*" PrivateAssets="Build" />
+    <DotNetCliToolReference Include="Peachpie.Compiler.Tools" Version="0.8.0-CI00448" />
+    <PackageReference Include="Peachpie.NET.Sdk" Version="0.8.0-CI00448" PrivateAssets="Build" />
   </ItemGroup>
   
 </Project>

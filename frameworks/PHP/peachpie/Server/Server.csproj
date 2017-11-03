@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.2" />
-    <PackageReference Include="Peachpie.NETCore.Web" Version="0.8.0-*" />
+    <PackageReference Include="Peachpie.NETCore.Web" Version="0.8.0-CI00448" />
   </ItemGroup>
 
   <ItemGroup>
