@@ -22,7 +22,7 @@
   <groupId>com.techempower</groupId>
   <artifactId>actframework</artifactId>
   <packaging>jar</packaging>
-  <version>1.4.3</version>
+  <version>1.4.13</version>
 
   <name>TEB ActFramework Project</name>
   <description>TEB benchmark project with ActFramework</description>
@@ -54,7 +54,7 @@
     <license-maven-plugin.version>1.13</license-maven-plugin.version>
     <markdown-doclet.version>1.4</markdown-doclet.version>
 
-    <act.version>1.4.13-SNAPSHOT</act.version>
+    <act.version>1.4.13</act.version>
     <act-ebean2.version>1.1.4</act-ebean2.version>
     <act-mustache.version>1.2.1</act-mustache.version>
     <act-morphia.version>1.2.1</act-morphia.version>
