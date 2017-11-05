@@ -50,7 +50,7 @@ required.
 ## Official Documentation
 
 Our official documentation can be found at 
-[frameworkbenchmarks.readthedocs.org](http://frameworkbenchmarks.readthedocs.org/). 
+[frameworkbenchmarks.readthedocs.org](https://frameworkbenchmarks.readthedocs.org/). 
 If you find any errors or areas for improvement within the docs, feel free to either submit a [pull request](https://github.com/TechEmpower/TFB-Documentation/pulls) or [issue](https://github.com/TechEmpower/TFB-Documentation/issues) at the [documentation repository](https://github.com/TechEmpower/TFB-Documentation).
 
 ## Contributing

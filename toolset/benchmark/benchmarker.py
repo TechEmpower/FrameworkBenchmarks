@@ -629,6 +629,12 @@ class Benchmarker:
                     except OSError:
                         print "Failed to remove contents of /tmp directory."
 
+    
+                ##########################################################
+                # Remove apt sources to avoid pkg errors and collisions
+                ##########################################################
+                os.system("sudo rm -rf /etc/apt/sources.list.d/*")
+
                 ##########################################################
                 # Save results thus far into the latest results directory
                 ##########################################################
