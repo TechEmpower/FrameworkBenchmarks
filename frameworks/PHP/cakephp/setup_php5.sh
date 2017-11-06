@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql php7 composer nginx
+fw_depends mysql php5 composer nginx
 
 sed -i "s|'host' => '.*'|'host' => '${DBHOST}'|g" app/Config/database.php
 sed -i 's|REDISSERVER|'${DBHOST}'|g' app/Config/core.php
