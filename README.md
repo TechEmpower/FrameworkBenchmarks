@@ -52,7 +52,7 @@ Our official documentation can be found at
 [frameworkbenchmarks.readthedocs.org](https://frameworkbenchmarks.readthedocs.org/). 
 If you find any errors or areas for improvement within the docs, feel free to either submit a [pull request](https://github.com/TechEmpower/TFB-Documentation/pulls) or [issue](https://github.com/TechEmpower/TFB-Documentation/issues) at the [documentation repository](https://github.com/TechEmpower/TFB-Documentation).
 
-If you have a `results.json` file that you would like to visualize, you can [do that here](https://www.techempower.com/benchmarks/#section=test).
+If you have a `results.json` file that you would like to visualize, you can [do that here](https://www.techempower.com/benchmarks/#section=test)(these will be visualized using the metadata from the last known round; if you are adding a new test, it will not visualize anything).
 
 ## Contributing
 
