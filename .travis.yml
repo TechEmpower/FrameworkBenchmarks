@@ -151,7 +151,6 @@ env:
     - "TESTDIR=PHP/silex-orm"
     - "TESTDIR=PHP/slim"
     - "TESTDIR=PHP/symfony2"
-    - "TESTDIR=PHP/symfony2-stripped"
     - "TESTDIR=PHP/yaf"
     - "TESTDIR=PHP/yii2"
     - "TESTDIR=PHP/zend"
