@@ -9,7 +9,7 @@ import java.util.Random;
  * @author jbauer
  *
  */
-public class Fortune implements Comparable<Fortune> {
+public final class Fortune implements Comparable<Fortune> {
 
 	public static final String[] TMP_MESSAGES = new String[]{
 			"A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1",
@@ -31,42 +31,17 @@ public class Fortune implements Comparable<Fortune> {
 	}
 	
 	
-	public int id;
-	public String message;
+	  public final int id;
+	  public final String message;
 
-	public Fortune() {
-	}
+ 
 
 	public Fortune(int id, String message) {
 		this.id = id;
 		this.message = message;
 	}
-
-	public int getId() {
-		return id;
-	}
-
-	public Fortune setId(int id) {
-		this.id = id;
-		return this;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public Fortune setMessage(String message) {
-		this.message = message;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return "Fortune{" +
-			"id=" + id +
-			", message='" + message + '\'' +
-			'}';
-	}
+ 
+ 
 
 	public int compareTo(Fortune o) {
 		return this.message.compareTo(o.message);

@@ -1,10 +1,8 @@
 #!/bin/bash
 
-fw_depends postgresql mysql java maven
-
-sed -i 's|mysql://.*:3306|mysql://'"${DBHOST}"':3306|g' conf/application.conf
-sed -i 's|postgresql://.*:5432|postgresql://'"${DBHOST}"':5432|g' conf/application.conf
+fw_depends postgresql java maven
+ 
 
 mvn -U clean package
 cd target
-java -Dlogback.configurationFile="conf/logback.xml" -server  -Xms1g -Xmx2g -XX:+UseG1GC -XX:+AggressiveOpts -XX:-UseBiasedLocking -XX:+UseStringDeduplication -classpath "./proteus-techempower-1.0.0.jar:lib/*" io.sinistral.ExampleApplication &
+java -Dlogback.configurationFile="conf/logback.xml" -Dconfig.file="conf/application.conf" -server  -Xms1g -Xmx2g -classpath "./proteus-techempower-1.0.0.jar:lib/*" io.sinistral.ExampleApplication 
