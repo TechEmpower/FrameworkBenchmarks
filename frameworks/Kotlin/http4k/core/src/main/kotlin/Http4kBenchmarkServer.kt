@@ -12,10 +12,10 @@ object Http4kBenchmarkServer {
     private val headers = Filter { next ->
         {
             next(it).let {
-                it
-                    .header("Server", "http4k")
-                    .header("Date", dateFormat.format(System.currentTimeMillis()))
-                    .header("Content-Length", it.body.payload.remaining().toString())
+                it.headers(listOf(
+                    "Server" to "http4k",
+                    "Date" to dateFormat.format(System.currentTimeMillis()),
+                    "Content-Length" to it.body.length.toString()))
             }
         }
     }
