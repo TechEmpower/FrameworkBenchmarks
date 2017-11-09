@@ -14,7 +14,7 @@ config :hello, Hello.Repo,
   username: "benchmarkdbuser",
   password: "benchmarkdbpass",
   database: "hello_world",
-  hostname: "127.0.0.1",
+  hostname: "TFB-database",
   pool_size: 256
 
 # ## SSL Support
