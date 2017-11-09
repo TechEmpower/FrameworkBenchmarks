@@ -4,10 +4,6 @@ shards:
     github: amberframework/amber
     version: 0.3.0
 
-  amber_spec:
-    github: amberframework/amber-spec
-    version: 0.1.1
-
   callback:
     github: mosop/callback
     version: 0.5.1
@@ -18,19 +14,15 @@ shards:
 
   db:
     github: crystal-lang/crystal-db
-    version: 0.4.2
+    version: 0.4.3
 
   granite_orm:
     github: amberframework/granite-orm
-    version: 0.7.4
+    version: 0.7.6
 
   icr:
     github: TechMagister/crystal-icr
     commit: b28bb938cc9e9e439424217c074a9168d253ba4b
-
-  jasper_helpers:
-    github: amberframework/jasper-helpers
-    version: 0.1.5
 
   kilt:
     github: jeromegn/kilt
@@ -42,7 +34,7 @@ shards:
 
   mysql:
     github: crystal-lang/crystal-mysql
-    version: 0.3.2
+    version: 0.3.3
 
   optarg:
     github: mosop/optarg
@@ -51,10 +43,6 @@ shards:
   pg:
     github: will/crystal-pg
     version: 0.13.4
-
-  quartz_mailer:
-    github: amberframework/quartz-mailer
-    version: 0.2.0
 
   radix:
     github: luislavena/radix
@@ -76,17 +64,13 @@ shards:
     github: jeromegn/slang
     commit: b817c89c7e5ae39562710c0d6c7f42cee685e14f
 
-  smtp:
-    github: raydf/smtp.cr
-    commit: 36854c38435ce104914cb6f44e08c23d8defd143
-
   spinner:
     github: askn/spinner
     version: 0.1.1
 
   sqlite3:
     github: crystal-lang/crystal-sqlite3
-    version: 0.8.2
+    version: 0.8.3
 
   string_inflection:
     github: mosop/string_inflection
