@@ -41,6 +41,7 @@ env:
     - "TESTDIR=Clojure/macchiato"
     - "TESTDIR=Clojure/pedestal"
     - "TESTDIR=Clojure/aleph"
+    - "TESTDIR=Clojure/reitit"
     - "TESTDIR=Crystal/amber"
     - "TESTDIR=Crystal/crystal"
     - "TESTDIR=Crystal/kemal"
