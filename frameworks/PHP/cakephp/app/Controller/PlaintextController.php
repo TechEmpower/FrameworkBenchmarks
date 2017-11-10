@@ -6,8 +6,10 @@ class PlaintextController extends AppController {
 
 	public function index() {
 		$this->autoRender = false;
-		header("Content-type: text/plain");
-		echo 'Hello, World!';
+		$this->response->type('text');
+		$this->response->body('Hello, World!');
+
+		return $this->response;
 
 		/*
 		 * Because this test is focused on routing we don't involve the view.

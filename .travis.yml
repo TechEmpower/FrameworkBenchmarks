@@ -8,6 +8,8 @@ group: deprecated-2017Q2
 language: generic
 python:
   - "2.7"
+services:
+  - docker
 
 env:
   matrix:
@@ -26,6 +28,7 @@ env:
     - "TESTDIR=C++/ffead-cpp"
     - "TESTDIR=C++/cpoll_cppsp"
     - "TESTDIR=C++/cutelyst"
+    - "TESTDIR=C++/includeos-mana"
     - "TESTDIR=C++/silicon"
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ulib"
@@ -38,6 +41,7 @@ env:
     - "TESTDIR=Clojure/macchiato"
     - "TESTDIR=Clojure/pedestal"
     - "TESTDIR=Clojure/aleph"
+    - "TESTDIR=Clojure/reitit"
     - "TESTDIR=Crystal/amber"
     - "TESTDIR=Crystal/crystal"
     - "TESTDIR=Crystal/kemal"
@@ -148,7 +152,6 @@ env:
     - "TESTDIR=PHP/silex-orm"
     - "TESTDIR=PHP/slim"
     - "TESTDIR=PHP/symfony2"
-    - "TESTDIR=PHP/symfony2-stripped"
     - "TESTDIR=PHP/yaf"
     - "TESTDIR=PHP/yii2"
     - "TESTDIR=PHP/zend"

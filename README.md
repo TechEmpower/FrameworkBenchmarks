@@ -1,4 +1,3 @@
-<img width="855" alt="hacktoberfestlogo" src="https://user-images.githubusercontent.com/8431037/31578588-003de9d8-b0d9-11e7-8b67-5a39e7f30485.png">
 
 # Welcome to [TechEmpower Framework Benchmarks (TFB)](http://www.techempower.com/benchmarks/) 
 [![Build Status](https://travis-ci.org/TechEmpower/FrameworkBenchmarks.svg?branch=master)](https://travis-ci.org/TechEmpower/FrameworkBenchmarks) 
@@ -6,19 +5,19 @@
 [![Issue Stats](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks/badge/issue?style=flat)](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks)
 [![Issue Stats](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks/badge/pr?style=flat)](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks)
 
-If you're new to the project (especially if you're contributing for [Hacktoberfest](https://hacktoberfest.digitalocean.com/)), welcome! Please feel free to ask questions [here](https://github.com/TechEmpower/FrameworkBenchmarks/issues/2978).
+If you're new to the project, welcome! Please feel free to ask questions [here](https://github.com/TechEmpower/FrameworkBenchmarks/issues/2978). We encourage new frameworks and contributors to ask questions. We're here to help!
 
 This project provides representative performance measures across a wide field of web application frameworks. With much help from the community, coverage is quite broad and we are happy to broaden it further with contributions. The project presently includes frameworks on many languages including `Go`, `Python`, `Java`, `Ruby`, `PHP`, `C#`, `Clojure`, `Groovy`, `Dart`, `JavaScript`, `Erlang`, `Haskell`, `Scala`, `Perl`, `Lua`, `C`, and others.  The current tests exercise plaintext responses, JSON seralization, database reads and writes via the object-relational mapper (ORM), collections, sorting, server-side templates, and XSS counter-measures. Future tests will exercise other components and greater computation.
 
 [Read more and see the results of our tests on Amazon EC2 and physical hardware](http://www.techempower.com/benchmarks/). 
 For descriptions of the test types that we run, see the 
-[test requirements section](http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/).
+[test requirements section](https://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/).
 
 If you find yourself in a directory or file that you're not sure what the purpose is, checkout our [file structure](http://frameworkbenchmarks.readthedocs.org/en/latest/Codebase/#file-structure) in our documenation, which will briefly explain the use of relevant directories and files.
 
 ## Quick Start Guide
 
-Get started developing quickly by utilizing vagrant with TFB. [Git](http://git-scm.com), 
+Get started developing quickly by utilizing vagrant with TFB. [Git](https://git-scm.com), 
 [Virtualbox](https://www.virtualbox.org/) and [vagrant](https://www.vagrantup.com/) are 
 required.
 
@@ -52,6 +51,8 @@ required.
 Our official documentation can be found at 
 [frameworkbenchmarks.readthedocs.org](https://frameworkbenchmarks.readthedocs.org/). 
 If you find any errors or areas for improvement within the docs, feel free to either submit a [pull request](https://github.com/TechEmpower/TFB-Documentation/pulls) or [issue](https://github.com/TechEmpower/TFB-Documentation/issues) at the [documentation repository](https://github.com/TechEmpower/TFB-Documentation).
+
+If you have a `results.json` file that you would like to visualize, you can [do that here](https://www.techempower.com/benchmarks/#section=test)(these will be visualized using the metadata from the last known round; if you are adding a new test, it will not visualize anything).
 
 ## Contributing
 
