@@ -20,6 +20,9 @@ static void usp_fork_rfortune()
       {
       U_WARNING("usp_fork_rfortune(): %V", rc->UClient_Base::getResponse().rep);
 
+      delete rc;
+             rc = U_NULLPTR;
+
       return;
       }
 
@@ -33,10 +36,9 @@ static void usp_end_rfortune()
 {
    U_TRACE(5, "::usp_end_rfortune()")
 
-   delete rc;
-
    if (pencoded)
       {
+      delete rc;
       delete pencoded;
       delete pvfortune;
       delete pfortune2add;

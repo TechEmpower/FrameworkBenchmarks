@@ -20,10 +20,13 @@ static void usp_fork_edb()
       {
       U_WARNING("usp_fork_edb(): connection disabled or failed");
 
+      delete es;
+             es = U_NULLPTR;
+
       return;
       }
 
-   U_MEMCPY(buffer,  "{\"query\":{\"match\":{\"_id\":\"", QLEN);
+   U_MEMCPY(buffer, "{\"query\":{\"match\":{\"_id\":\"", QLEN);
 }
 
 #ifdef DEBUG
@@ -31,7 +34,7 @@ static void usp_end_edb()
 {
    U_TRACE(5, "::usp_end_edb()")
 
-   delete es;
+   if (es) delete es;
 }
 #endif
 -->

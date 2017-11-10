@@ -1,0 +1,5 @@
+rootProject.name = 'http4k-benchmark'
+include 'core'
+include 'jetty'
+include 'netty'
+include 'undertow'

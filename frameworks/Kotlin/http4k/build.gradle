@@ -1,6 +1,7 @@
 buildscript {
-    ext.kotlin_version = "1.1.2-4"
-    ext.http4k_version = "2.2.1"
+    ext.kotlin_version = "1.1.50"
+    ext.http4k_version = "2.37.0"
+
     repositories {
         mavenCentral()
         jcenter()
@@ -12,37 +13,38 @@ buildscript {
     }
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+    id 'net.saliman.cobertura' version '2.4.0'
+    id 'com.github.kt3k.coveralls' version '2.8.1'
 }
 
-apply plugin: "kotlin"
-apply plugin: 'gradle-one-jar'
+allprojects {
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    apply plugin: "kotlin"
+    apply plugin: 'gradle-one-jar'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
+    group = 'org.http4k'
+
+    compileTestKotlin {
+        kotlinOptions {
+            languageVersion = "1.1"
+        }
+    }
+}
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "org.http4k:http4k-core:$http4k_version"
-    compile "org.http4k:http4k-format-jackson:$http4k_version"
-    compile "org.http4k:http4k-server-jetty:$http4k_version"
-    compile "org.http4k:http4k-server-netty:$http4k_version"
-    compile "org.http4k:http4k-server-undertow:$http4k_version"
-    compile "org.http4k:http4k-template-handlebars:$http4k_version"
-    compile "org.apache.commons:commons-lang3:3.5"
-    compile "com.zaxxer:HikariCP:2.6.1"
-    compile "org.postgresql:postgresql:42.0.0"
-}
-
-task jetty(type: OneJar) {
-    mainClass = 'Http4kJettyServerKt'
-}
-
-task netty(type: OneJar) {
-    mainClass = 'Http4kNettyServerKt'
-}
-task undertow(type: OneJar) {
-    mainClass = 'Http4kUndertowServerKt'
+    compile project(":core")
+    compile project(":jetty")
+    compile project(":netty")
+    compile project(":undertow")
 }

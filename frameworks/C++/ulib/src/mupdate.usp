@@ -22,12 +22,18 @@ static void usp_fork_mupdate()
       {
       U_WARNING("usp_fork_mupdate(): connection disabled or failed");
 
+      delete mc;
+             mc = U_NULLPTR;
+
       return;
       }
 
    if (mc->selectCollection("hello_world", "world") == false)
       {
       U_WARNING("usp_fork_mupdate(): selectCollection() failed");
+
+      delete mc;
+             mc = U_NULLPTR;
 
       return;
       }
@@ -44,13 +50,16 @@ static void usp_end_mupdate()
 {
    U_TRACE(5, "::usp_end_mupdate()")
 
-   delete mc;
+   if (query)
+      {
+      delete mc;
 
-   if (query) U_SYSCALL_VOID(bson_destroy, "%p", query);
+      U_SYSCALL_VOID(bson_destroy, "%p", query);
 
-#ifndef AS_cpoll_cppsp_DO
-   if (pvworld_update) delete pvworld_update;
-#endif
+#  ifndef AS_cpoll_cppsp_DO
+      delete pvworld_update;
+#  endif
+      }
 }
 #endif
 -->

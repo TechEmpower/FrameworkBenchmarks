@@ -1,0 +1,7 @@
+# disable line endings normalisation
+* -text
+
+# ensure Linux/Win specific files retain native line endings
+*.sh text eol=lf
+*.py text eol=lf
+*.ps1 text eol=crlf
