@@ -34,11 +34,11 @@ elif [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
     sudo apt-get -y install libboost1.48-all-dev
 fi
 
-fw_get -O https://github.com/emweb/wt/archive/3.3.6.tar.gz
-mv 3.3.6.tar.gz wt-3.3.6.tar.gz
-fw_untar wt-3.3.6.tar.gz
+fw_get -O https://github.com/emweb/wt/archive/3.3.8.tar.gz
+mv 3.3.8.tar.gz wt-3.3.8.tar.gz
+fw_untar wt-3.3.8.tar.gz
 
-cd wt-3.3.6
+cd wt-3.3.8
 mkdir -p build
 cd build
 cmake .. -DWT_CPP_11_MODE=-std=c++0x -DCMAKE_BUILD_TYPE=Release \
