@@ -17,8 +17,6 @@ import play.modules.reactivemongo.json._
 class Application (val controllerComponents: ControllerComponents, reactiveMongoApi: ReactiveMongoApi)(implicit ec: ExecutionContext)
   extends BaseController {
 
-  val defaultHeader = Http.HeaderNames.SERVER -> "Play Framework"
-
   private def worldCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("world")
   private def fortuneCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("fortune")
   private val projection = Json.obj("_id" -> 0)
@@ -65,31 +63,20 @@ class Application (val controllerComponents: ControllerComponents, reactiveMongo
     ThreadLocalRandom.current().nextInt(TestDatabaseRows) + 1
   }
 
-  case class HelloWorld(message: String)
-
-  def getJsonMessage = Action {
-    val helloWorld = HelloWorld(message = "Hello, World!")
-    Ok(Json.toJson(helloWorld)(Json.writes[HelloWorld])).withHeaders(defaultHeader)
-  }
-
-  val plaintext = Action {
-    Ok("Hello, World!").withHeaders(defaultHeader).as("text/plain")
-  }
-
   // Semi-Common code between Scala database code
 
   protected val TestDatabaseRows = 10000
 
-  def doDb = Action.async {
+  def db = Action.async {
     getRandomWorld.map { worlds =>
-      Ok(Json.toJson(worlds.head)).withHeaders(defaultHeader)
+      Ok(Json.toJson(worlds.head))
     }
   }
 
   def queries(countString: String) = Action.async {
     val n = parseCount(countString)
     getRandomWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds)).withHeaders(defaultHeader)
+      Ok(Json.toJson(worlds))
     }
   }
 
@@ -103,14 +90,14 @@ class Application (val controllerComponents: ControllerComponents, reactiveMongo
 
       val sorted = appendedFortunes.sortBy(byMessage(_))
 
-      Ok(views.html.fortune(sorted)).withHeaders(defaultHeader).as(HTML)
+      Ok(views.html.fortune(sorted))
     }
   }
 
   def update(queries: String) = Action.async {
     val n = parseCount(queries)
     updateWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds)).withHeaders(defaultHeader)
+      Ok(Json.toJson(worlds))
     }
   }
 
