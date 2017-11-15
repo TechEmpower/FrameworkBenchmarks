@@ -1,4 +1,3 @@
-import controllers.AssetsComponents
 import play.api.{controllers => _, _}
 import router.Routes
 import routing.Router
@@ -12,13 +11,11 @@ class AppLoader extends ApplicationLoader {
 }
 
 class AppComponents(context: Context)
-  extends ReactiveMongoApiFromContext(context)
-  with AssetsComponents {
+  extends ReactiveMongoApiFromContext(context) {
 
   override lazy val router: Router = new Routes(
     httpErrorHandler,
-    wire[controllers.Application],
-    wire[controllers.Assets]
+    wire[controllers.Application]
   )
 
   lazy val httpFilters = Seq.empty

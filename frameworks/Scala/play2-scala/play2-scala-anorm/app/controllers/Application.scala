@@ -14,8 +14,6 @@ import scala.concurrent.{Future, ExecutionContext}
 class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, dbOperation: DbOperation, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
   extends BaseController {
 
-  val defaultHeader = Http.HeaderNames.SERVER -> "Play Framework"
-
   def getRandomWorlds(n: Int): Future[Seq[World]] = dbOperation.asyncDbOp { implicit connection =>
     for (_ <- 1 to n) yield {
       worldDAO.findById(getNextRandom)
@@ -39,16 +37,6 @@ class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, dbOpe
     ThreadLocalRandom.current().nextInt(TestDatabaseRows) + 1
   }
 
-  case class HelloWorld(message: String)
-
-  def getJsonMessage = Action {
-    val helloWorld = HelloWorld(message = "Hello, World!")
-    Ok(Json.toJson(helloWorld)(Json.writes[HelloWorld])).withHeaders(defaultHeader)
-  }
-
-  val plaintext = Action {
-    Ok("Hello, World!").withHeaders(defaultHeader).as("text/plain")
-  }
 
   // Common code between Scala database code
 
@@ -58,28 +46,28 @@ class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, dbOpe
 
   def db = Action.async {
     getRandomWorlds(1).map { worlds =>
-      Ok(Json.toJson(worlds.head)).withHeaders(defaultHeader)
+      Ok(Json.toJson(worlds.head))
     }
   }
 
   def queries(countString: String) = Action.async {
     val n = parseCount(countString)
     getRandomWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds)).withHeaders(defaultHeader)
+      Ok(Json.toJson(worlds))
     }
   }
 
   def fortunes() = Action.async {
     getFortunes.map { dbFortunes =>
       val appendedFortunes =  Fortune(0, "Additional fortune added at request time.") :: dbFortunes.to[List]
-      Ok(views.html.fortune(appendedFortunes)).withHeaders(defaultHeader).as(HTML)
+      Ok(views.html.fortune(appendedFortunes))
     }
   }
 
   def update(queries: String) = Action.async {
     val n = parseCount(queries)
     updateWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds)).withHeaders(defaultHeader)
+      Ok(Json.toJson(worlds))
     }
   }
 

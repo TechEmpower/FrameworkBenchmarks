@@ -7,12 +7,11 @@ import anorm.SqlParser._
 import java.sql.Connection
 import play.api.db.Database
 import play.api.libs.json._
-import play.db.NamedDatabase
 
 case class World(id: Long, randomNumber: Long)
 
 @Singleton()
-class WorldDAO @Inject()(@NamedDatabase("hello_world") protected val db: Database) {
+class WorldDAO @Inject()(protected val db: Database) {
   /**
    * Parse a World from a ResultSet
    */
