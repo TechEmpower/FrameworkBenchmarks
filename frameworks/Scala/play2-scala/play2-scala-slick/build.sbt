@@ -2,7 +2,7 @@ name := "play2-scala-slick"
 
 version := "1.0-SNAPSHOT"
 
-scalaVersion := "2.12.3"
+scalaVersion := "2.12.4"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 

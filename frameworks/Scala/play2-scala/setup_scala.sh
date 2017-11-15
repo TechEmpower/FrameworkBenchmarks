@@ -4,7 +4,7 @@ fw_depends java sbt
 
 cd play2-scala
 
-# Clear old running app.
+
 rm -rf ${TROOT}/play2-scala/target/universal/stage/RUNNING_PID
 
 # Stage application.
