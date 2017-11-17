@@ -1,0 +1,10 @@
+[package]
+name = "zap"
+version = "0.1.0"
+authors = ["Daniel Oltmanns <daniel.oltmanns@outlook.de>"]
+
+[dependencies]
+zap = "0.0.4"
+serde = "*"
+serde_json = "*"
+serde_derive = "*"

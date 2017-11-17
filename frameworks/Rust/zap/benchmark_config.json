@@ -1,0 +1,24 @@
+{
+  "framework": "zap",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Raw",
+      "database": "None",
+      "framework": "nickel",
+      "language": "Rust",
+      "orm": "raw",
+      "platform": "Rust",
+      "webserver": "zap",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "zap",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
