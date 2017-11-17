@@ -9,7 +9,7 @@
       "approach": "Realistic",
       "classification": "Raw",
       "database": "None",
-      "framework": "nickel",
+      "framework": "zap",
       "language": "Rust",
       "orm": "raw",
       "platform": "Rust",
