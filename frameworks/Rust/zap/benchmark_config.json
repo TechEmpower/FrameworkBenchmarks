@@ -7,7 +7,7 @@
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Raw",
+      "classification": "Micro",
       "database": "None",
       "framework": "zap",
       "language": "Rust",
