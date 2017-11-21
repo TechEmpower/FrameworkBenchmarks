@@ -22,6 +22,9 @@ static void usp_fork_update()
       {
       U_WARNING("usp_fork_update(): we cound't connect to db");
 
+      delete psql_update;
+             psql_update = U_NULLPTR;
+
       return;
       }
 
@@ -54,9 +57,9 @@ static void usp_end_update()
       delete pvworld_update;
 
       if (bpgsql == false) delete pstmt1;
-      }
 
-   delete psql_update;
+      delete psql_update;
+      }
 }
 #endif
 -->

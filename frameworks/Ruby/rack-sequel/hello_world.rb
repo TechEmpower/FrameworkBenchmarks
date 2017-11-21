@@ -4,7 +4,9 @@
 class HelloWorld
   DEFAULT_HEADERS = {}.tap do |h|
     h['Server'] = SERVER_STRING if SERVER_STRING
-  end.freeze
+
+    h.freeze
+  end
 
   def bounded_queries(env)
     params = Rack::Utils.parse_query(env['QUERY_STRING'])
@@ -43,7 +45,7 @@ class HelloWorld
     )
     fortunes.sort_by!(&:message)
 
-    html = <<~'HTML'
+    html = String.new(<<~'HTML')
       <!DOCTYPE html>
       <html>
       <head>
@@ -60,7 +62,7 @@ class HelloWorld
     HTML
 
     fortunes.each do |fortune|
-      html += <<~"HTML"
+      html << <<~"HTML"
       <tr>
         <td>#{fortune.id}</td>
         <td>#{Rack::Utils.escape_html(fortune.message)}</td>
@@ -68,7 +70,7 @@ class HelloWorld
       HTML
     end
 
-    html += <<~'HTML'
+    html << <<~'HTML'
       </table>
 
       </body>

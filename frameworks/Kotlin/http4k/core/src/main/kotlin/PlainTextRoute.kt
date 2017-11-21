@@ -13,5 +13,5 @@ object PlainTextRoute {
 
     private val plainTextBody = Body.binary(TEXT_PLAIN).toLens()
 
-    operator fun invoke() = "/plaintext" bind GET to { Response(OK).with(plainTextBody of preAllocatedHelloWorldText) }
+    operator fun invoke() = "/plaintext" bind GET to { Response(OK).with(plainTextBody of Body(preAllocatedHelloWorldText)) }
 }

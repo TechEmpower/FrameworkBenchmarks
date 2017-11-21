@@ -1,6 +1,6 @@
 # Swift frameworks
 
-The information below contains information specific to Python. For further guidance, review the [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/)
+The information below contains information specific to Python. For further guidance, review the [documentation](https://frameworkbenchmarks.readthedocs.org/en/latest/)
 
 ## Infrastructure Software Versions
 

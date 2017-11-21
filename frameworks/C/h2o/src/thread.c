@@ -41,6 +41,8 @@ static void *run_thread(void *arg)
 	thread_context_t ctx;
 
 	initialize_thread_context(arg, false, &ctx);
+	// This is just an optimization, so that the application does not try to
+	// establish database connections in the middle of servicing requests.
 	connect_to_database(&ctx);
 	event_loop(&ctx);
 	free_thread_context(&ctx);

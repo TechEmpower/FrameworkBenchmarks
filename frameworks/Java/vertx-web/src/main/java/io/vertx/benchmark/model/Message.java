@@ -1,16 +1,14 @@
 package io.vertx.benchmark.model;
 
-import io.vertx.core.json.JsonObject;
+public class Message {
 
-public class Message extends JsonObject {
-
-  private static final String MESSAGE = "message";
+  private final String message;
 
   public Message(String message) {
-    put(MESSAGE, message);
+    this.message = message;
   }
 
   public String getMessage() {
-    return getString(MESSAGE);
+    return message;
   }
 }

@@ -1,8 +1,8 @@
 require "amber"
 
-require "./controllers/**"
 require "./models/**"
-require "./views/**"
+require "./controllers/**"
+
 require "../config/*"
 
 Amber::Server.instance.run

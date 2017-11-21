@@ -5,7 +5,7 @@ authors = ["Steve Klabnik <steve@steveklabnik.com>", "Alexander Polyakov <plhk@s
 
 [dependencies]
 futures = "0.1"
-hyper = "0.11"
+hyper = "0.11.6"
 tokio-proto = "0.1"
 tokio-service = "0.1"
 num_cpus = "1.2"

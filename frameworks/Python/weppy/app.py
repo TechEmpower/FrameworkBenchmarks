@@ -17,7 +17,7 @@ app = App(__name__)
 
 class World(Model):
     tablename = "world"
-    randomnumber = Field('int')
+    randomnumber = Field.int()
 
     @rowmethod('serialize')
     def _serialize(self, row):
@@ -26,7 +26,7 @@ class World(Model):
 
 class Fortune(Model):
     tablename = "fortune"
-    message = Field()
+    message = Field.string()
 
     @rowmethod('serialize')
     def _serialize(self, row):

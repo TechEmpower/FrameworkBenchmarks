@@ -14,7 +14,7 @@
       "classification": "Micro",
       "database": "Postgres",
       "framework": "macchiato",
-      "language": "ClojureScript",
+      "language": "Clojure",
       "flavor": "Macchiato",
       "orm": "Raw",
       "platform": "nodejs",

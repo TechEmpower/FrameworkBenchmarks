@@ -13,7 +13,7 @@ $go_installer_file        = "go1.2.windows-amd64.msi"
 $jre_installer_file       = "jre-7u25-windows-x64.exe"
 $jdk_installer_file       = "jdk-7u45-windows-x64.exe"
 $jdk_master_hash          = "943527ed9111cbb746d4ab2bb2c31cd6" 
-# http://www.oracle.com/technetwork/java/javase/downloads/java-se-binaries-checksum-1956892.html
+# https://www.oracle.com/technetwork/java/javase/downloads/java-se-binaries-checksum-1956892.html
 $resin_version            = "resin-4.0.36"
 $resin_installer_file     = "$resin_version.zip"
 $ant_version              = "apache-ant-1.9.2"
