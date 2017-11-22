@@ -1,7 +1,7 @@
 {
   "framework": "actframework",
   "tests": [{
-      "json_plaintext": {
+      "default": {
       "setup_file": "setup-json-plaintext",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
