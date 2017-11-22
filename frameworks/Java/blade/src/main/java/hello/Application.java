@@ -26,8 +26,16 @@ public class Application {
     private static final ByteBuf      PLAINTEXT_CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_PLAINTEXT));
     private static final CharSequence PLAINTEXT_CLHEADER_VALUE = AsciiString.cached(String.valueOf(STATIC_PLAINTEXT.length));
 
-    private static int getQueries(Optional<Integer> queryCount) {
-        int count = queryCount.orElse(1);
+    private static int getQueries(Optional<String> queryCount) {
+        if (!queryCount.isPresent()) {
+            return 1;
+        }
+        int count;
+        try {
+            count = Integer.parseInt(queryCount.get());
+        } catch (NumberFormatException ignored) {
+            return 1;
+        }
         count = count < 1 ? 1 : count;
         count = count > 500 ? 500 : count;
         return count;
@@ -45,7 +53,7 @@ public class Application {
                     response.json(new World().find(random.nextInt(DB_ROWS) + 1));
                 })
                 .get("/queries", (request, response) -> {
-                    int           queries = getQueries(request.queryInt("queries"));
+                    int           queries = getQueries(request.query("queries"));
                     final World[] worlds  = new World[queries];
                     final Random  random  = ThreadLocalRandom.current();
                     for (int i = 0; i < queries; i++) {
