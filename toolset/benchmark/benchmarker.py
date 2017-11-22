@@ -931,6 +931,8 @@ class Benchmarker:
         del args['type']
 
         args['max_concurrency'] = max(args['concurrency_levels'])
+        if 'pipeline_concurrency_levels' not in args:
+            args['pipeline_concurrency_levels'] = [256,1024,4096,16384]
 
         self.__dict__.update(args)
         # pprint(self.__dict__)
@@ -986,6 +988,7 @@ class Benchmarker:
             self.results['startTime'] = int(round(time.time() * 1000))
             self.results['completionTime'] = None
             self.results['concurrencyLevels'] = self.concurrency_levels
+            self.results['pipelineConcurrencyLevels'] = self.pipeline_concurrency_levels
             self.results['queryIntervals'] = self.query_levels
             self.results['cachedQueryIntervals'] = self.cached_query_levels
             self.results['frameworks'] = [t.name for t in self.__gather_tests]

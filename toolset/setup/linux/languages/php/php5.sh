@@ -5,6 +5,8 @@ RETCODE=$(fw_exists ${IROOT}/php5.installed)
   echo "Moving PHP config files into place"; 
   sudo cp $FWROOT/toolset/setup/linux/languages/php/php.ini /usr/local/lib/php.ini
   sudo cp $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf /usr/local/lib/php-fpm.conf
+  rm -rf /tmp/php_sessions
+  /bin/bash $IROOT/php5/ext/session/mod_files.sh /tmp/php_sessions 3 5
   source $IROOT/php5.installed
   return 0; }
 
@@ -14,6 +16,7 @@ PHP_HOME=$IROOT/php-$VERSION
 # Precaution, unlikely to happen.
 rm -rf $IROOT/php PHP_HOME cphalcon
 
+rm -rf $IROOT/php5
 fw_get -o php-${VERSION}.tar.gz http://php.net/distributions/php-${VERSION}.tar.gz
 fw_untar php-${VERSION}.tar.gz
 mv php-${VERSION} php5
@@ -41,6 +44,8 @@ sed -i 's|;extension=mongo.so|extension=mongo.so|g' $FWROOT/toolset/setup/linux/
 
 cp $FWROOT/toolset/setup/linux/languages/php/php.ini $PHP_HOME/lib/php.ini
 cp $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf $PHP_HOME/lib/php-fpm.conf
+rm -rf /tmp/php_sessions
+/bin/bash $IROOT/php5/ext/session/mod_files.sh /tmp/php_sessions 3 5
 
 # =======================
 #
@@ -57,9 +62,6 @@ printf "\n" | $PHP_HOME/bin/pecl -q install -f redis-2.2.5
 
 # mongo.so
 printf "\n" | $PHP_HOME/bin/pecl -q install -f mongo
-
-# Clean up a bit
-rm -rf $IROOT/php
 
 echo "export PHP_HOME=${PHP_HOME}" > $IROOT/php5.installed
 echo -e "export PATH=\$PHP_HOME/bin:\$PHP_HOME/sbin:\$PATH" >> $IROOT/php5.installed

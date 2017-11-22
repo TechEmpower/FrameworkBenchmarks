@@ -657,9 +657,9 @@ class FrameworkTest:
   ############################################################
   def __generate_pipeline_script(self, url, port, accept_header, wrk_command="wrk"):
     headers = self.headers_template.format(server_host=self.benchmarker.server_host, accept=accept_header)
-    return self.pipeline_template.format(max_concurrency=16384,
+    return self.pipeline_template.format(max_concurrency=max(self.benchmarker.pipeline_concurrency_levels),
       name=self.name, duration=self.benchmarker.duration,
-      levels=" ".join("{}".format(item) for item in [256,1024,4096,16384]),
+      levels=" ".join("{}".format(item) for item in self.benchmarker.pipeline_concurrency_levels),
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command,
       pipeline=16)
 
