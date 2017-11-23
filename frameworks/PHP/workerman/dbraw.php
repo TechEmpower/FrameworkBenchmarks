@@ -1,8 +1,12 @@
 <?php
 function dbraw($pdo) {
-  $query_count = intval($_GET['queries']);
-  if ($query_count < 0) $query_count = 1;
-  if ($query_count > 500) $query_count = 500;
+  if (isset($_GET['queries'])) {
+    $query_count = intval($_GET['queries']);
+    if ($query_count < 1) $query_count = 1;
+    if ($query_count > 500) $query_count = 500;
+  } else {
+    $query_count = 1;
+  }
 
   $arr = [];
   $id = mt_rand(1, 10000);
