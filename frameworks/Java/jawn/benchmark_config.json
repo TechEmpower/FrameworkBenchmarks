@@ -12,7 +12,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "jawn",
       "language": "Java",
       "flavor": "None",
