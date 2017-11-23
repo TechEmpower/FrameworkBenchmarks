@@ -4,6 +4,7 @@ function updateraw($pdo) {
   if (isset($_GET['queries']) && $_GET['queries'] > 0) {
     $query_count = $_GET['queries'];
   }
+  if ($query_count > 500) $query_count=500;
 
   $arr = [];
   $id = mt_rand(1, 10000);
