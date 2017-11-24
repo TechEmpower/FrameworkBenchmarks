@@ -5,42 +5,34 @@ NGINX is removed in this test, and substituted by [Workerman, An asynchronous ev
 
 https://github.com/walkor/Workerman
 
-### Important
-When editing this framework, be sure to force add the files changed. Most files were added to .gitignore, as the framework touches some of them during testing.
-
-### JSON Encoding Test
-Use the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-encode.php)
-
-* [JSON test source](server.php)
-
-### Data-Store/Database Mapping Test
-
-* [Database test source Raw](dbraw.php)
+Database config
+HOST: DBHOST (from ENV) , or 127.0.0.1 if DBHOST is not available
+User : benchmarkdbuser
+Password : benchmarkdbpass
+DBNAME : hello_world
 
 ## Infrastructure Software Versions
 The tests were run with:
-
-* [PHP Version 7.1.9](http://www.php.net/)
+* [PHP 7](http://www.php.net/)
 * [MySQL 5.5.54](https://dev.mysql.com/)
 
-## Test URLs
-### JSON Encoding Test
+Pre-test:
+* [Composer](https://getcomposer.org/)
 
+### JSON Encoding Test
+Using the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-encode.php)
+
+## Test URLs
+
+### JSON Encoding Test
 http://localhost:8080/json.php
 
-
 ### Data-Store/Database Mapping Test
-
-Raw:
 http://localhost:8080/dbraw.php
-
-ORM:
-http://localhost:8080/dborm.php
+http://localhost:8080/updateraw.php
 
 ### Variable Query Test
-
-Raw:
 http://localhost:8080/dbraw.php?queries=5
 
-ORM:
-http://localhost:8080/dborm.php?queries=5
+### Fortune Test
+http://localhost:8080/fortune.php
