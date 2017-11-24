@@ -5,6 +5,8 @@ NGINX is removed in this test, and substituted by [Workerman, An asynchronous ev
 
 https://github.com/walkor/Workerman
 
+This test doesn't use the standard PHP (fw_require) because it needs PCNTL / Process Control extension. Adding PCNTL in the PHP compilation (--enable-pcntl) will fail other PHP framework test.
+
 ```
 Database config
 HOST: DBHOST (from ENV) , or 127.0.0.1 if DBHOST is not available
