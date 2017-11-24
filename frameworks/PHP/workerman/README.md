@@ -5,11 +5,16 @@ NGINX is removed in this test, and substituted by [Workerman, An asynchronous ev
 
 https://github.com/walkor/Workerman
 
+```
 Database config
 HOST: DBHOST (from ENV) , or 127.0.0.1 if DBHOST is not available
 User : benchmarkdbuser
 Password : benchmarkdbpass
 DBNAME : hello_world
+```
+MySQL Connection is using PHP PDO::Persistent Connection.
+
+The number of threads count in PHP is (number of cores)*2.
 
 ## Infrastructure Software Versions
 The tests were run with:
@@ -29,6 +34,7 @@ http://localhost:8080/json.php
 
 ### Data-Store/Database Mapping Test
 http://localhost:8080/dbraw.php
+
 http://localhost:8080/updateraw.php
 
 ### Variable Query Test
