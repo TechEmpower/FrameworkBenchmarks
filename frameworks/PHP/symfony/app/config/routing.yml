@@ -25,7 +25,3 @@ _updateRaw:
 _fortunes:
     path:  /fortunes
     defaults: { _controller: "SkamanderBenchmarkBundle:Bench:fortunes" }
-
-_fortunesRaw:
-    path:  /fortunes-raw
-    defaults: { _controller: "SkamanderBenchmarkBundle:Bench:fortunesRaw" }
