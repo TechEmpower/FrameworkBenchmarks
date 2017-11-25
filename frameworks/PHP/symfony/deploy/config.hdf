@@ -1,13 +1,13 @@
 # main configuration file
 
 # Application PID File
-PidFile = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2/hhvm.pid
+PidFile = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony/hhvm.pid
 
 # Server settings
 Server {
   Port = 9001
   Type = fastcgi
-  SourceRoot = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2
+  SourceRoot = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony
   DefaultDocument = index.php
   GzipCompressionLevel = 0
   EnableKeepAlive = true
@@ -18,7 +18,7 @@ Log {
   UseLogFile = false
   UseSyslog = false
   Level = Error
-  #File = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2/error.log
+  #File = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony/error.log
 }
 
 # Enable jit for production mode
@@ -30,7 +30,7 @@ Eval {
 # Repo file
 Repo {
   Central {
-    Path = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony2/.hhvm.bbhc
+    Path = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/symfony/.hhvm.bbhc
   }
 }
 
