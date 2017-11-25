@@ -47,8 +47,8 @@
       "notes": "CPython 3.4",
       "versus": "wsgi"
     },
-    "pypy": {
-      "setup_file": "setup_pypy",
+    "pypy2": {
+      "setup_file": "setup_pypy2",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -61,13 +61,14 @@
       "database": "Postgres",
       "framework": "weppy",
       "language": "Python",
+      "flavor": "PyPy2",
       "orm": "Full",
       "platform": "Tornado",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "weppy-PyPy",
-      "notes": "PyPy 2.5",
+      "display_name": "weppy-PyPy2",
+      "notes": "PyPy2",
       "versus": "wsgi"
     },
     "nginx-uwsgi": {

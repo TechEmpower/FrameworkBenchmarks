@@ -24,6 +24,9 @@ static void usp_fork_equery()
       {
       U_WARNING("usp_fork_equery(): connection disabled or failed");
 
+      delete es;
+             es = U_NULLPTR;
+
       return;
       }
 
@@ -39,11 +42,14 @@ static void usp_end_equery()
 {
    U_TRACE(5, "::usp_end_equery()")
 
-   delete es;
+   if (es)
+      {
+      delete es;
 
-#ifndef AS_cpoll_cppsp_DO
-   if (pvworld_query) delete pvworld_query;
-#endif
+#  ifndef AS_cpoll_cppsp_DO
+      delete pvworld_query;
+#  endif
+      }
 }
 #endif
 -->
