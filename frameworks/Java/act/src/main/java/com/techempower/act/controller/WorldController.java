@@ -52,6 +52,8 @@ public class WorldController {
      */
     private static final Const<Integer> WORLD_MAX_ROW = $.constant();
 
+    private static boolean BATCH_SAVE = true;
+
     @Global
     @Inject
     private Dao<Integer, World, ?> dao;
@@ -80,13 +82,14 @@ public class WorldController {
         return doUpdate(q);
     }
 
-    @Transactional
     private List<World> doUpdate(int q) {
         List<World> retVal = new ArrayList<>(q);
         for (int i = 0; i < q; ++i) {
             retVal.add(findAndModifyOne());
         }
-        dao.save(retVal);
+        if (BATCH_SAVE) {
+            dao.save(retVal);
+        }
         return retVal;
     }
 
@@ -94,6 +97,9 @@ public class WorldController {
         World world = findOne();
         notFoundIfNull(world);
         world.randomNumber = randomWorldNumber();
+        if (!BATCH_SAVE) {
+            dao.save(world);
+        }
         return world;
     }
 

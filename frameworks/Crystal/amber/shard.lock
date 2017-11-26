@@ -2,15 +2,15 @@ version: 1.0
 shards:
   amber:
     github: amberframework/amber
-    version: 0.3.0
+    version: 0.3.6
 
   callback:
     github: mosop/callback
-    version: 0.5.1
+    version: 0.6.3
 
   cli:
     github: mosop/cli
-    version: 0.5.2
+    version: 0.6.10
 
   db:
     github: crystal-lang/crystal-db
@@ -18,15 +18,11 @@ shards:
 
   granite_orm:
     github: amberframework/granite-orm
-    version: 0.7.6
-
-  icr:
-    github: TechMagister/crystal-icr
-    commit: b28bb938cc9e9e439424217c074a9168d253ba4b
+    version: 0.7.8
 
   kilt:
     github: jeromegn/kilt
-    version: 0.3.3
+    version: 0.4.0
 
   micrate:
     github: juanedi/micrate
@@ -38,7 +34,7 @@ shards:
 
   optarg:
     github: mosop/optarg
-    version: 0.4.4
+    version: 0.5.8
 
   pg:
     github: will/crystal-pg
@@ -46,15 +42,15 @@ shards:
 
   radix:
     github: luislavena/radix
-    commit: 905bd9e14b9996c793ac95e1e77d2809f7f79568
+    version: 0.3.8
 
   redis:
     github: stefanwille/crystal-redis
-    version: 1.8.0
+    version: 1.9.0
 
   sentry:
-    github: TechMagister/sentry
-    commit: a78129ec1e66aa24c91b93199ea187e4793c8d58
+    github: samueleaton/sentry
+    version: 0.1.1
 
   shell-table:
     github: jwaldrip/shell-table.cr
@@ -62,7 +58,7 @@ shards:
 
   slang:
     github: jeromegn/slang
-    commit: b817c89c7e5ae39562710c0d6c7f42cee685e14f
+    version: 1.7.0
 
   spinner:
     github: askn/spinner

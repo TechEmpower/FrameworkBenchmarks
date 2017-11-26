@@ -21,7 +21,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Amber (MVC, Postgres)",
+      "display_name": "Amber (MVC, PSQL)",
       "notes": "",
       "versus": "kemal"
     }
