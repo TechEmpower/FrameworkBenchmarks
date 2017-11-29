@@ -7,6 +7,7 @@ rm -rf _build deps
 export MIX_ENV=prod
 mix local.hex --force
 mix local.rebar --force
+mix release.init
 mix deps.get --force --only prod
 mix compile --force
 mix release
