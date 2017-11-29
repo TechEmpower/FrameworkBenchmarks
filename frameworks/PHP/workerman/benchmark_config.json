@@ -1,5 +1,5 @@
 {
-  "framework": "php",
+  "framework": "workerman",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -21,7 +21,7 @@
       "webserver": "workerman",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "PHP-workerman",
+      "display_name": "workerman",
       "notes": "",
       "versus": "php7"
     }
