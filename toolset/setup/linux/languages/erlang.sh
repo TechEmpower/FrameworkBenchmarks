@@ -6,7 +6,7 @@ VERSION="20.1-1"
 RELEASE="trusty"
 ARCH="amd64"
 
-fw_get -O http://packages.erlang-solutions.com/site/esl/esl-erlang/FLAVOUR_2_esl/esl-erlang_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb
+fw_get -O http://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_2_esl/esl-erlang_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb
 dpkg -x esl-erlang_${VERSION}~ubuntu~${RELEASE}_${ARCH}.deb $IROOT/erlang
 $IROOT/erlang/usr/lib/erlang/Install -minimal $IROOT/erlang/usr/lib/erlang
 
