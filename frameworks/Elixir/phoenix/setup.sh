@@ -9,5 +9,6 @@ mix local.hex --force
 mix local.rebar --force
 mix deps.get --force --only prod
 mix compile --force
-
-elixir --erl "+K true +sbwt very_long +swt very_low" --detached -S mix phoenix.server
+mix release
+ERL_AFLAGS="+K true +sbwt very_long +swt very_low" _build/prod/rel/hello/bin/hello foreground
+#elixir --erl "+K true +sbwt very_long +swt very_low" --detached -S mix phoenix.server
