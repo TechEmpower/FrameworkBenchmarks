@@ -2,6 +2,6 @@
 
 fw_depends mysql java maven
 
-./mvnw clean package -DskipTests=true
+./mvnw clean package
 nohup java -jar target/tech-empower-framework-benchmark-1.0-SNAPSHOT-jetty-bundle.jar &
 
