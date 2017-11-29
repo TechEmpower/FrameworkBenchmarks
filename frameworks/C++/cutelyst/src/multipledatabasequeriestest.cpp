@@ -4,7 +4,6 @@
 
 #include <QSqlQuery>
 
-#include <QThread>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -45,15 +44,15 @@ void MultipleDatabaseQueriesTest::processQuery(Context *c, QSqlQuery &query)
         int id = (qrand() % 10000) + 1;
 
         query.bindValue(QStringLiteral(":id"), id);
-        if (!query.exec() || !query.next()) {
+        if (Q_UNLIKELY(!query.exec() || !query.next())) {
             c->res()->setStatus(Response::InternalServerError);
             return;
         }
 
-        QJsonObject obj;
-        obj.insert(QStringLiteral("id"), query.value(0).toInt());
-        obj.insert(QStringLiteral("randomNumber"), query.value(1).toInt());
-        array.append(obj);
+        array.append(QJsonObject{
+                         {QStringLiteral("id"), query.value(0).toInt()},
+                         {QStringLiteral("randomNumber"), query.value(1).toInt()}
+                     });
     }
 
     c->response()->setJsonBody(QJsonDocument(array));

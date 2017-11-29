@@ -4,8 +4,6 @@
 
 #include <QSqlQuery>
 
-#include <QThread>
-
 FortuneTest::FortuneTest(QObject *parent) : Controller(parent)
 {
 
@@ -33,7 +31,7 @@ FortuneList FortuneTest::processQuery(Context *c, QSqlQuery &query)
 {
     FortuneList fortunes;
 
-    if (!query.exec()) {
+    if (Q_UNLIKELY(!query.exec())) {
         c->res()->setStatus(Response::InternalServerError);
         return fortunes;
     }
