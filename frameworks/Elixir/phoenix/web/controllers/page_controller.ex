@@ -4,10 +4,9 @@ defmodule Hello.PageController do
   alias Hello.Fortune
 
   def index(conn, _params) do
-    json %{"TE Benchmarks\n" => "Started"}
-    #conn
-    #|> put_resp_content_type("application/json", nil)
-    #|> send_resp(200, Poison.encode!(%{"TE Benchmarks\n" => "Started"}))
+    conn
+    |> put_resp_content_type("application/json", nil)
+    |> send_resp(200, Poison.encode!(%{"TE Benchmarks\n" => "Started"}))
   end
 
   # avoid namespace collision
@@ -44,7 +43,9 @@ defmodule Hello.PageController do
       id: 0,
       message: "Additional fortune added at request time."
     }
+
     fortunes = [additional_fortune | Repo.all(Fortune)]
+
     render conn, "fortunes.html", fortunes: Enum.sort(fortunes, fn f1, f2 -> f1.message < f2.message end)
   end
 
