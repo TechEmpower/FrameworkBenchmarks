@@ -3,18 +3,8 @@
 {% block title "Fortunes" %}
 
 {% block content %}
-    <table>
-        <tr>
-            <th>id</th>
-            <th>message</th>
-        </tr>
-
-        {% for fortune in fortunes %}
-            <tr>
-                <td>{{ fortune.id }}</td>
-                <td>{{ fortune.message }}</td>
-            </tr>
-        {% endfor %}
-
-    </table>
+<table>
+<tr><th>id</th><th>message</th></tr>
+{% for fortune in fortunes %}<tr><td>{{ fortune.id }}</td><td>{{ fortune.message }}</td></tr>{% endfor %}
+</table>
 {% endblock %}

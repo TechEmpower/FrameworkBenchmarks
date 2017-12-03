@@ -6,6 +6,7 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    container.dumper.inline_class_loader: true
 
 framework:
     #esi: ~

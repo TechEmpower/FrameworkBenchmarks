@@ -1,5 +1,5 @@
 {
-  "framework": "symfony2",
+  "framework": "symfony",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -13,7 +13,7 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "symfony2",
+      "framework": "symfony",
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "Full",
@@ -21,7 +21,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "symfony2",
+      "display_name": "symfony",
       "notes": "",
       "versus": "php-php5"
     },
@@ -35,7 +35,7 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "symfony2",
+      "framework": "symfony",
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "Raw",
@@ -43,7 +43,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "symfony2",
+      "display_name": "symfony",
       "notes": "",
       "versus": "php-php5"
     },
@@ -58,7 +58,7 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "symfony2",
+      "framework": "symfony",
       "language": "PHP",
       "flavor": "HHVM",
       "orm": "Full",
@@ -66,7 +66,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "symfony2-hhvm",
+      "display_name": "symfony-hhvm",
       "notes": "",
       "versus": "php5"
     }
