@@ -4,6 +4,7 @@
                  [clj-tuple "0.2.2"]
                  [org.clojure/tools.cli "0.3.3"]
                  [aleph "0.4.1-beta2"]
+                 [javax.xml.bind/jaxb-api "2.2.12"]
                  [cheshire "5.5.0"]]
   :main hello.handler
   :aot :all)
