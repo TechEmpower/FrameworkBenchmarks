@@ -1,11 +1,5 @@
 package controllers;
 
-import dao.WorldDao;
-import model.World;
-
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
 import ninja.Result;
 import ninja.Results;
 
@@ -20,16 +14,14 @@ public class SetupController {
     SetupDao setupDao;
 
     public Result setupData() {
-        
+
         setupDao.deleteAllData();
-        
+
         setupDao.generateWorldsForTest();
         setupDao.generateFortunesForTest();
-        
+
         return Results.text().render("setup done");
-        
+
     }
-    
-   
 
 }
