@@ -1,8 +1,8 @@
 # Welcome to Amber
 
-This is the [Amber](https://www.ambercr.io) test of the Framework Benchmarks.
+This is the [Amber](https://amberframework.org) test of the Framework Benchmarks.
 
-[![Amber logo](https://i.imgur.com/NEodgHV.png)](https://www.ambercr.io)
+[![Amber logo](https://i.imgur.com/NEodgHV.png)](https://amberframework.org)
 
 **Amber** is a web application framework written in [Crystal](http://www.crystal-lang.org) inspired by Kemal, Rails, Phoenix and other popular application frameworks.
 
