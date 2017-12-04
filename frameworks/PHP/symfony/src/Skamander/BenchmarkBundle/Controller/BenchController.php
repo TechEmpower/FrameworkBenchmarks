@@ -24,7 +24,7 @@ class BenchController extends Controller
     public function dbAction(Request $request)
     {
         $queries = $request->query->getInt('queries', 1);
-        $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
+        $queries = min(max($queries, 1), 500);
 
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
         $worlds = array();
@@ -45,7 +45,7 @@ class BenchController extends Controller
     public function dbRawAction(Request $request)
     {
         $queries = $request->query->getInt('queries', 1);
-        $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
+        $queries = min(max($queries, 1), 500);
 
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
         $worlds = array();
@@ -55,7 +55,7 @@ class BenchController extends Controller
             $worlds[] =  $conn->fetchAssoc('SELECT * FROM World WHERE id = ?', array(mt_rand(1, 10000)));
         }
 
-        if ($queries == 1) {
+        if ($queries == 1 && !$request->query->has('queries')) {
             $worlds = $worlds[0];
         }
 

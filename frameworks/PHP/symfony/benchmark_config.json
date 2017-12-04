@@ -30,7 +30,6 @@
       "db_url": "/db-raw",
       "update_url": "/update-raw?queries=",
       "query_url": "/db-raw?queries=",
-      "fortune_url": "/fortunes-raw",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
