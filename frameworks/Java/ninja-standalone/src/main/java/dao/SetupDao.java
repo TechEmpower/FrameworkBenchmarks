@@ -8,8 +8,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
-import java.util.List;
-import javax.persistence.Query;
 import model.World;
 
 /**

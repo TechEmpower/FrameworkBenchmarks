@@ -15,7 +15,7 @@
             <useTransitiveDependencies>true</useTransitiveDependencies>
 
             <excludes>
-                <exclude>*:ktor-netty</exclude>
+                <exclude>*:ktor-server-netty</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>
