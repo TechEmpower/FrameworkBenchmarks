@@ -2,9 +2,9 @@
 
 fw_installed sbt && return 0
   
-VERSION="0.13.9"
+VERSION="1.0.4"
 
-fw_get -o sbt-$VERSION.zip http://dl.bintray.com/sbt/native-packages/sbt/$VERSION/sbt-$VERSION.zip
+fw_get -o sbt-$VERSION.zip https://github.com/sbt/sbt/releases/download/v$VERSION/sbt-$VERSION.zip
 fw_unzip sbt-$VERSION.zip
 
 echo -e "export PATH=${IROOT}/sbt/bin:\$PATH" > $IROOT/sbt.installed

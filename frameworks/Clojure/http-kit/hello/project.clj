@@ -6,6 +6,7 @@
                  [ring/ring-json "0.4.0"]
                  [org.clojure/tools.cli "0.2.1"]
                  [http-kit "2.1.19"]
+                 [javax.xml.bind/jaxb-api "2.2.12"]
                  [korma "0.4.2"]
                  [log4j "1.2.15" :exclusions [javax.mail/mail javax.jms/jms com.sun.jdmk/jmxtools com.sun.jmx/jmxri]]
                  ; [ch.qos.logback/logback-classic "1.1.2" :exclusions [org.slf4j/slf4j-api]]
