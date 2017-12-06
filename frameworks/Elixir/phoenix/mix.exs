@@ -31,6 +31,7 @@ defmodule Hello.Mixfile do
      {:postgrex, ">= 0.0.0"},
      {:cowboy, "~> 1.0"},
      {:phoenix_html, "~> 2.10"},
-     {:phoenix_live_reload, "~> 1.1", only: :dev}]
+     {:phoenix_live_reload, "~> 1.1", only: :dev},
+     {:distillery, "~> 1.5", runtime: false}]
   end
 end
