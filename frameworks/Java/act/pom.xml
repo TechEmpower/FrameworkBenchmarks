@@ -22,7 +22,7 @@
   <groupId>com.techempower</groupId>
   <artifactId>actframework</artifactId>
   <packaging>jar</packaging>
-  <version>1.5.1</version>
+  <version>1.5.2</version>
 
   <name>TEB ActFramework Project</name>
   <description>TEB benchmark project with ActFramework</description>
@@ -54,7 +54,7 @@
     <license-maven-plugin.version>1.13</license-maven-plugin.version>
     <markdown-doclet.version>1.4</markdown-doclet.version>
 
-    <act.version>1.5.1</act.version>
+    <act.version>1.5.3</act.version>
     <act-ebean2.version>1.1.5</act-ebean2.version>
     <act-mustache.version>1.2.1</act-mustache.version>
     <act-morphia.version>1.2.2</act-morphia.version>
@@ -63,7 +63,7 @@
     <osgl-ut.version>1.0.0-BETA-6</osgl-ut.version>
     <postgres-jdbc.version>42.1.4</postgres-jdbc.version>
     <morphia.version>1.3.2</morphia.version>
-    <ebean.version>11.5.1</ebean.version>
+    <ebean.version>11.6.1</ebean.version>
 
     <app.entry>com.techempower.act.AppEntry</app.entry>
   </properties>
@@ -217,6 +217,19 @@
       <groupId>org.mongodb.morphia</groupId>
       <artifactId>morphia</artifactId>
       <version>${morphia.version}</version>
+    </dependency>
+
+    <!-- The javax.xml.bind classes are required by this application, and they
+         are included by default in Java 8 but not in Java 9.  We could include
+         them in Java 9 by adding "add-modules java.xml.bind" to the command
+         line arguments, but those arguments are not supported in Java 8 (and it
+         fails on unsupported arguments rather than ignoring them). -->
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <!-- Version 2.2.12 is compatible with both Java 8 and Java 9, while
+           version 2.3.0 is not compatible with Java 8. -->
+      <version>2.2.12</version>
     </dependency>
 
   </dependencies>

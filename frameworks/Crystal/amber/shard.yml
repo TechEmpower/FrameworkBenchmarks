@@ -8,10 +8,9 @@ license: MIT
 
 dependencies:
   amber:
-    github: amberframework/amber 
+    github: amberframework/amber
+    version: "0.3.6" 
 
   granite_orm:
     github: amberframework/granite-orm
-
-  pg:
-    github: will/crystal-pg
+    version: "0.7.8"

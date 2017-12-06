@@ -7,6 +7,7 @@
                  [hiccups "0.3.0"]
                  [macchiato/core "0.1.6"]
                  [macchiato/env "0.0.5"]
+                 [javax.xml.bind/jaxb-api "2.2.12"]
                  [mount "0.1.11"]
                  [org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.518"]]

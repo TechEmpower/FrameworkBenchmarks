@@ -30,4 +30,4 @@
       (println banner)
       (System/exit 0))
 
-    (web/run app {:host "localhost" :port port})))
+    (web/run app {:host "0.0.0.0" :port port})))

@@ -3,30 +3,27 @@ package org.jetbrains.ktor.benchmarks
 import com.google.gson.*
 import com.mysql.jdbc.*
 import com.zaxxer.hikari.*
-import kotlinx.coroutines.experimental.*
-import org.jetbrains.ktor.application.*
-import org.jetbrains.ktor.content.*
-import org.jetbrains.ktor.features.*
-import org.jetbrains.ktor.http.*
-import org.jetbrains.ktor.routing.*
-import org.jetbrains.ktor.util.*
-import java.sql.ResultSet.*
+import io.ktor.application.*
+import io.ktor.content.*
+import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.response.respond
+import io.ktor.response.respondText
+import io.ktor.routing.*
 import java.util.concurrent.*
 import java.util.concurrent.atomic.*
 import javax.sql.*
-
+import kotlinx.coroutines.experimental.*
 
 data class Message(val message: String = "Hello, World!")
 data class World(val id: Int, var randomNumber: Int)
 
 fun Application.main() {
-    val (a, b) = hex("62656e63686d61726b6462757365723a62656e63686d61726b646270617373").toString(Charsets.ISO_8859_1).split(":")
     val gson = GsonBuilder().create()
     val DbRows = 10000
     Driver::class.java.newInstance()
     val pool by lazy {
-        val dbHost = System.getenv("DBHOST") ?: error("DBHOST environment variable is not set")
-        hikari(dbHost, a, b)
+        hikari()
     }
 
     val counter = AtomicInteger()
@@ -35,26 +32,26 @@ fun Application.main() {
     }
     val databaseDispatcher = databaseExecutor.asCoroutineDispatcher()
 
-    install(SamplingCallLogging) {
-        samplingFactor = 50000L
-    }
-
     install(DefaultHeaders)
+
     routing {
-        get("/plaintext") { call ->
-            call.respond(TextContent("Hello, World!", ContentType.Text.Plain, HttpStatusCode.OK))
+
+        get("/plaintext") {
+            call.respondText("Hello, World!", ContentType.Text.Plain)
         }
-        get("/json") { call ->
-            call.respond(TextContent(gson.toJson(Message()), ContentType.Application.Json, HttpStatusCode.OK))
+
+        get("/json") {
+            call.respondText(gson.toJson(Message()), ContentType.Application.Json)
         }
-        get("/db") { call ->
+
+        get("/db") {
             val response = run(databaseDispatcher) {
                 pool.connection.use { connection ->
                     val random = ThreadLocalRandom.current()
                     val queries = call.queries()
                     val result = mutableListOf<World>()
 
-                    connection.prepareStatement("SELECT * FROM World WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use { statement ->
+                    connection.prepareStatement("SELECT * FROM World WHERE id = ?").use { statement ->
                         for (i in 1..(queries ?: 1)) {
                             statement.setInt(1, random.nextInt(DbRows) + 1)
 
@@ -75,6 +72,7 @@ fun Application.main() {
 
             call.respond(response)
         }
+
         get("/updates") {
             val t = run(databaseDispatcher) {
                 pool.connection.use { connection ->
@@ -82,7 +80,7 @@ fun Application.main() {
                     val random = ThreadLocalRandom.current()
                     val result = mutableListOf<World>()
 
-                    connection.prepareStatement("SELECT * FROM World WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use { statement ->
+                    connection.prepareStatement("SELECT * FROM World WHERE id = ?").use { statement ->
                         for (i in 1..(queries ?: 1)) {
                             statement.setInt(1, random.nextInt(DbRows) + 1)
 
@@ -124,17 +122,16 @@ fun ApplicationCall.queries() = try {
     1
 }
 
-private fun hikari(dbHost: String, a: String, b: String): DataSource {
+private fun hikari(): DataSource {
     val config = HikariConfig()
-    config.jdbcUrl = "jdbc:mysql://$dbHost:3306/hello_world?useSSL=false"
-    config.username = a
-    config.password = b
+    config.jdbcUrl = "jdbc:mysql://TFB-database:3306/hello_world?useSSL=false"
+    config.username = "benchmarkdbuser"
+    config.password = "benchmarkdbpass"
     config.addDataSourceProperty("cachePrepStmts", "true")
     config.addDataSourceProperty("prepStmtCacheSize", "250")
     config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
     config.driverClassName = Driver::class.java.name
     config.connectionTimeout = 10000
     config.maximumPoolSize = 100
-
     return HikariDataSource(config)
 }

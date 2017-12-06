@@ -21,7 +21,7 @@ public class HelloPlaintextControllerTest extends NinjaDocTester {
         assertThat(response.payload, CoreMatchers.is("Hello, World!"));
         assertThat(
             response.headers.get("Content-Type"), 
-            is("text/plain; charset=UTF-8"));
+            is("text/plain;charset=utf-8"));
         
    
     }

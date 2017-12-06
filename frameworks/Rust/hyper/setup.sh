@@ -3,5 +3,5 @@
 fw_depends postgresql rust
 
 cargo clean
-cargo build --release
+RUSTFLAGS="-C target-cpu=native" cargo build --release
 ./target/release/hello &
