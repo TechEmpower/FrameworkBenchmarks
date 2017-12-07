@@ -152,7 +152,7 @@ env:
     - "TESTDIR=PHP/silex"
     - "TESTDIR=PHP/silex-orm"
     - "TESTDIR=PHP/slim"
-    - "TESTDIR=PHP/symfony2"
+    - "TESTDIR=PHP/symfony"
     - "TESTDIR=PHP/workerman"
     - "TESTDIR=PHP/yaf"
     - "TESTDIR=PHP/yii2"
