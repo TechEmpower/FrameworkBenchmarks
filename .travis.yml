@@ -171,6 +171,7 @@ env:
     - "TESTDIR=Python/klein"
     - "TESTDIR=Python/morepath"
     - "TESTDIR=Python/pyramid"
+    - "TESTDIR=Python/sanic"
     - "TESTDIR=Python/tornado"
     - "TESTDIR=Python/turbogears"
     - "TESTDIR=Python/uvicorn"
