@@ -10,7 +10,7 @@
 
 (defn app []
   (mount/start)
-  (let [host (or (:host @env) "127.0.0.1")
+  (let [host (or (:host @env) "0.0.0.0")
         port (or (some-> @env :port js/parseInt) 3000)]
     (http/start
       {:handler    (wrap-defaults router)

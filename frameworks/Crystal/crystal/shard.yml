@@ -6,4 +6,9 @@ dependencies:
     github: "will/crystal-pg"
     version: "0.13.3"
 
+  radix:
+    github: luislavena/radix
+    version: 0.3.8
+
+
 license: "MIT"

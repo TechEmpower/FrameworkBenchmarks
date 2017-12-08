@@ -9,7 +9,7 @@
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
-      "port": 3000,
+      "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "Postgres",

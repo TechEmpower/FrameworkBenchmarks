@@ -2,9 +2,9 @@
 
 fw_installed cutelyst && return 0
 
-CUTELYST_VER=1.7.0
+CUTELYST_VER=1.9.0
 QT_VERSION_MM=59
-QT_VERSION_FULL=59-trusty
+QT_VERSION_FULL=591-trusty
 CROOT=${IROOT}/cutelyst
 
 sudo apt-add-repository --yes ppa:george-edison55/cmake-3.x

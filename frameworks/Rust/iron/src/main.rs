@@ -3,6 +3,7 @@ extern crate persistent;
 #[macro_use] extern crate router;
 extern crate serde;
 extern crate serde_json;
+#[macro_use] extern crate serde_derive;
 extern crate hyper;
 extern crate rand;
 extern crate r2d2;
@@ -21,7 +22,17 @@ use r2d2_postgres::{PostgresConnectionManager, TlsMode};
 use persistent::{Read};
 use r2d2::Pool;
 
-include!(concat!(env!("OUT_DIR"),"/main_types.rs"));
+#[derive(Serialize, Deserialize)]
+struct Message {
+    message: String,
+}
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize)]
+struct DatabaseRow {
+    id: i32,
+    randomNumber: i32
+}
 
 pub type PostgresPool = Pool<PostgresConnectionManager>;
 

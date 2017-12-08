@@ -55,6 +55,7 @@ install_strategy=unified
 install_only=False
 list_tests=False
 concurrency_levels=[8, 16, 32, 64, 128, 256]
+pipeline_concurrency_levels=[256,1024,4096,16384]
 query_levels=[1, 5,10,15,20]
 cached_query_levels=[1,10,20,50,100]
 threads=8

@@ -6,11 +6,14 @@ import com.sun.jersey.api.core.ResourceConfig;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
+import org.glassfish.grizzly.Grizzly;
+import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 
 public class JerseyWebServer {
@@ -42,6 +45,13 @@ public class JerseyWebServer {
     rc.setPropertiesAndFeatures(properties());
     rc.getContainerResponseFilters().add(new ServerHeaderFilter());
     HttpServer server = GrizzlyServerFactory.createHttpServer(baseUri, rc);
+
+    // There will be *a lot* of broken connections during the plaintext test.
+    // That's not a good thing, but what would make matters even worse would be
+    // to log the full stack trace of an IOException for each broken connection.
+    // That's what Grizzly does by default, and it logs those messages at the
+    // WARNING level, so setting the threshold to SEVERE hides those messages.
+    Grizzly.logger(HttpHandler.class).setLevel(Level.SEVERE);
 
     try {
         server.start();

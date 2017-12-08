@@ -1,0 +1,78 @@
+version: 1.0
+shards:
+  amber:
+    github: amberframework/amber
+    version: 0.3.6
+
+  callback:
+    github: mosop/callback
+    version: 0.6.3
+
+  cli:
+    github: mosop/cli
+    version: 0.6.10
+
+  db:
+    github: crystal-lang/crystal-db
+    version: 0.4.3
+
+  granite_orm:
+    github: amberframework/granite-orm
+    version: 0.7.8
+
+  kilt:
+    github: jeromegn/kilt
+    version: 0.4.0
+
+  micrate:
+    github: juanedi/micrate
+    version: 0.3.0
+
+  mysql:
+    github: crystal-lang/crystal-mysql
+    version: 0.3.3
+
+  optarg:
+    github: mosop/optarg
+    version: 0.5.8
+
+  pg:
+    github: will/crystal-pg
+    version: 0.13.4
+
+  radix:
+    github: luislavena/radix
+    version: 0.3.8
+
+  redis:
+    github: stefanwille/crystal-redis
+    version: 1.9.0
+
+  sentry:
+    github: samueleaton/sentry
+    version: 0.1.1
+
+  shell-table:
+    github: jwaldrip/shell-table.cr
+    version: 0.9.2
+
+  slang:
+    github: jeromegn/slang
+    version: 1.7.0
+
+  spinner:
+    github: askn/spinner
+    version: 0.1.1
+
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+    version: 0.8.3
+
+  string_inflection:
+    github: mosop/string_inflection
+    version: 0.2.1
+
+  teeplate:
+    github: mosop/teeplate
+    version: 0.4.5
+

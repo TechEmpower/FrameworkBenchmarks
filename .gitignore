@@ -7,9 +7,9 @@ node_modules/
 .lein-deps-sum
 
 # eclipse
-.classpath
-.project
-.settings
+**/.classpath
+**/.project
+**/.settings
 
 # maven
 target/

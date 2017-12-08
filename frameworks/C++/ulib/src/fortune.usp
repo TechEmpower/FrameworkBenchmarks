@@ -22,6 +22,9 @@ static void usp_fork_fortune()
       {
       U_WARNING("usp_fork_fortune(): we cound't connect to db");
 
+      delete psql_fortune;
+             psql_fortune = U_NULLPTR;
+
       return;
       }
 
@@ -50,9 +53,8 @@ static void usp_end_fortune()
       delete pencoded;
       delete pvfortune;
       delete pfortune2add;
+      delete psql_fortune;
       }
-
-   delete psql_fortune;
 }
 #endif
 -->

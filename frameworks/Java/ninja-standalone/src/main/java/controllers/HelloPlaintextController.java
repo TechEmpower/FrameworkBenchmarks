@@ -7,7 +7,9 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class HelloPlaintextController {
+
     public Result index() {
-	return Results.text().renderRaw("Hello, World!");
+        return Results.text().render("Hello, World!");
     }
+
 }

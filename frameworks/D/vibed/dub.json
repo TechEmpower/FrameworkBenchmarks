@@ -4,13 +4,13 @@
   "copyright": "Copyright © 2015, jin",
   "authors": ["jin", "Sönke Ludwig"],
   "dependencies": {
-    "vibe-d": "~>0.8.0-beta",
-    "vibe-core": "~>1.0.0-beta"
+    "vibe-d": "~>0.8.0",
+    "vibe-core": "~>1.0.0"
   },
-  "versions": ["VibeDefaultMain"],
   "targetType": "executable",
   "sourcePaths": [],
   "subConfigurations": {"vibe-d": "vibe-core"},
+  "versions": ["VibeManualMemoryManagement"],
   "configurations": [
   	{
   		"name": "mongodb",

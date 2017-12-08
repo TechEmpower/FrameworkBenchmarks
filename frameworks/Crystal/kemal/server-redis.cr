@@ -108,5 +108,9 @@ get "/updates" do |env|
   updated.to_json
 end
 
-logging false
+Kemal.config do |cfg|
+  cfg.serve_static = false
+  cfg.logging = false
+end
+
 Kemal.run { |cfg| cfg.server.bind(reuse_port: true) }

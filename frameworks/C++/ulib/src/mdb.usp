@@ -18,12 +18,18 @@ static void usp_fork_mdb()
       {
       U_WARNING("usp_fork_mdb(): connection failed");
 
+      delete mc;
+             mc = U_NULLPTR;
+
       return;
       }
 
    if (mc->selectCollection("hello_world", "world") == false)
       {
       U_WARNING("usp_fork_mdb(): selectCollection() failed");
+
+      delete mc;
+             mc = U_NULLPTR;
 
       return;
       }
@@ -36,9 +42,12 @@ static void usp_end_mdb()
 {
    U_TRACE(5, "::usp_end_mdb()")
 
-   delete mc;
+   if (query)
+      {
+      delete mc;
 
-   if (query) U_SYSCALL_VOID(bson_destroy, "%p", query);
+      U_SYSCALL_VOID(bson_destroy, "%p", query);
+      }
 }
 #endif
 -->
