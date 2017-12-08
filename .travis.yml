@@ -187,7 +187,6 @@ env:
     - "TESTDIR=Ruby/rack"
     - "TESTDIR=Ruby/rack-sequel"
     - "TESTDIR=Ruby/rails"
-    - "TESTDIR=Ruby/rails-stripped"
     - "TESTDIR=Ruby/roda-sequel"
     - "TESTDIR=Ruby/sinatra"
     - "TESTDIR=Ruby/sinatra-sequel"
