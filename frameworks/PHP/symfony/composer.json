@@ -2,16 +2,15 @@
 	"type" : "project",
 	"license" : "proprietary",
 	"require" : {
-		"php": "^7.0.8",
-		"doctrine/doctrine-bundle": "^1.6",
-		"doctrine/orm": "^2.5",
-		"symfony/console": "^3.4",
-		"symfony/flex": "^1.0",
-		"symfony/framework-bundle": "^3.4",
-		"symfony/lts": "^3",
-		"symfony/twig-bundle": "^3.4",
-		"symfony/yaml": "^3.4",
-		"twig/twig": "^1.0||^2.0"
+		"php" : "^7.1.3",
+		"doctrine/doctrine-bundle" : "^1.6",
+		"doctrine/orm" : "^2.5",
+		"symfony/console" : "^4.0",
+		"symfony/flex" : "^1.0",
+		"symfony/framework-bundle" : "^4.0",
+		"symfony/twig-bundle" : "^4.0",
+		"symfony/yaml" : "^4.0",
+		"twig/twig" : "^1.0||^2.0"
 	},
 	"require-dev" : {
 		"symfony/dotenv" : "^3.4"

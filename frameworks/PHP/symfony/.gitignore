@@ -12,3 +12,10 @@
 app/bootstrap.php.cache
 /deploy/php-fpm.pid
 /.buildpath
+
+###> symfony/framework-bundle ###
+.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###

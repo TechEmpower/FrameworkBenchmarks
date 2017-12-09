@@ -79,9 +79,9 @@ class BenchController extends Controller
         $world->setRandomNumber($randomNumber);
         $worlds[] = $world;
       }
-      
+
       $em->flush();
-      
+
       return new JsonResponse($worlds);
     }
 
