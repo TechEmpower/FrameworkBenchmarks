@@ -5,7 +5,7 @@ fw_depends mongodb java sbt
 cd play2-scala-reactivemongo
 
 
-rm -rf ${TROOT}/play2-scala-reactivemongo/target/universal/stage/RUNNING_PID
+rm -rf target/ project/target/ project/project/
 
 # Stage application.
 sbt stage

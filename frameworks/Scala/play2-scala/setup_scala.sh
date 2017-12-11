@@ -5,7 +5,7 @@ fw_depends java sbt
 cd play2-scala
 
 
-rm -rf ${TROOT}/play2-scala/target/universal/stage/RUNNING_PID
+rm -rf target/ project/target/ project/project/
 
 # Stage application.
 sbt stage
