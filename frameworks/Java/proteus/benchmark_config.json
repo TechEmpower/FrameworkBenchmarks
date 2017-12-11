@@ -4,8 +4,8 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
-      "db_url": "/db/postgres",
-      "fortune_url": "/fortunes/postgres",
+      "db_url": "/db",
+      "fortune_url": "/fortunes",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
