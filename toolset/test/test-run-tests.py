@@ -22,6 +22,8 @@ tests = ["1", "1,", "0.23",                       # Single numbers
         "1:2:10", "1:2", "10:-2:0",               # Sequences
         "1,2:1:5"                                 # Complex
 ]
+
+#use the data in array and put in test variable  
 for test in tests:
   try:
     t = "--foo %s" % test
