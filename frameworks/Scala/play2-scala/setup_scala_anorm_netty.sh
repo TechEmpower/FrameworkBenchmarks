@@ -11,4 +11,4 @@ rm -rf target/ project/target/ project/project/
 sbt stage
 
 # Execute Start script in background.
-${TROOT}/play2-scala-anorm/target/universal/stage/bin/play2-scala-anorm -Dplay.server.provider=play.core.server.AkkaHttpServerProvider &
+${TROOT}/play2-scala-anorm/target/universal/stage/bin/play2-scala-anorm -Dplay.server.provider=play.core.server.NettyServerProvider &
