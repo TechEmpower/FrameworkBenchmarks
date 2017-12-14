@@ -11,7 +11,6 @@ php composer-setup.php
 php -r "unlink('composer-setup.php');"
 
 export APP_ENV=prod
-export DATABASE_URL=mysql://benchmarkdbuser:benchmarkdbpass@tfbdata:3306/hello_world
 
 php composer.phar install --no-dev --no-interaction --no-progress --optimize-autoloader --classmap-authoritative
 
