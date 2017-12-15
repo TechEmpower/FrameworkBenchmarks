@@ -235,48 +235,6 @@ public class Benchmarks
 		  
 	}
 	
-//	@GET
-//	@Path("/fortunes/mustache")
-//	@Blocking
-//	@Produces(MediaType.TEXT_HTML)
-//	@ApiOperation(value = "Fortunes postgres endpoint",   httpMethod = "GET"  )
-//	public void fortunesMustache(HttpServerExchange exchange) throws Exception
-//	{ 
-//			List<Fortune> fortunes = new ArrayList<>();
-//		  
-//			try (final Connection connection = postgresService.getConnection())
-//			{
-//				try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Fortune"))
-//				{
-//	
-//					try (ResultSet resultSet = statement.executeQuery())
-//					{
-//						while (resultSet.next())
-//						{
-//							int id = resultSet.getInt("id");
-//							String msg = resultSet.getString("message");
-//	
-//							fortunes.add(new Fortune(id, msg));
-//						}
-//					}
-//				}
-//			}
-//			
-//	        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-//	        
-//	        fortunes.sort(null);
-//	        
-//	        Mustache mustache = mustacheFactory.compile(FORTUNES_TEMPLATE);
-//	        StringWriter writer = new StringWriter();
-//	        mustache.execute(writer, fortunes); 
-//	        
-//	        exchange.getResponseHeaders().put(
-//	                Headers.CONTENT_TYPE, "text/html");
-//	        exchange.getResponseSender().send(writer.toString());  
-//	}
-	
-
-	
 	@GET
 	@Path("/fortunes")
 	@Blocking
