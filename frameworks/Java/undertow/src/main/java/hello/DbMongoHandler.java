@@ -1,6 +1,6 @@
 package hello;
 
-import static hello.Helper.randomWorld;
+import static hello.Helper.randomWorldNumber;
 import static hello.Helper.sendJson;
 
 import com.mongodb.client.MongoCollection;
@@ -24,7 +24,7 @@ final class DbMongoHandler implements HttpHandler {
   public void handleRequest(HttpServerExchange exchange) {
     World world =
         worldCollection
-            .find(Filters.eq(randomWorld()))
+            .find(Filters.eq(randomWorldNumber()))
             .map(Helper::mongoDocumentToWorld)
             .first();
     sendJson(exchange, world);

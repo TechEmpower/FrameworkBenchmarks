@@ -2,7 +2,7 @@ name := "play2-scala-anorm"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala, PlayNettyServer)
 
 scalaVersion := "2.12.4"
 
