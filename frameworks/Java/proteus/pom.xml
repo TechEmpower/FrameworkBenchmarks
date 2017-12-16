@@ -215,7 +215,7 @@
 		<dependency>
 			<groupId>io.sinistral</groupId>
 			<artifactId>proteus-core</artifactId>
-			<version>0.1.7.2-SNAPSHOT</version>
+			<version>0.1.7.4-SNAPSHOT</version>
 			
 		</dependency>
 			<dependency>
