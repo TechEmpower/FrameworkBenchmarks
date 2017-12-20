@@ -6,17 +6,19 @@ import com.zaxxer.hikari.*
 import io.ktor.application.*
 import io.ktor.content.*
 import io.ktor.features.*
+import io.ktor.html.*
 import io.ktor.http.*
-import io.ktor.response.respond
-import io.ktor.response.respondText
+import io.ktor.response.*
 import io.ktor.routing.*
+import kotlinx.coroutines.experimental.*
+import kotlinx.html.*
 import java.util.concurrent.*
 import java.util.concurrent.atomic.*
 import javax.sql.*
-import kotlinx.coroutines.experimental.*
 
 data class Message(val message: String = "Hello, World!")
 data class World(val id: Int, var randomNumber: Int)
+data class Fortune(val id: Int, var message: String)
 
 fun Application.main() {
     val gson = GsonBuilder().create()
@@ -34,14 +36,17 @@ fun Application.main() {
 
     install(DefaultHeaders)
 
+    val okContent = TextContent("Hello, World!", ContentType.Text.Plain, HttpStatusCode.OK).also { it.contentLength() }
+
     routing {
 
         get("/plaintext") {
-            call.respondText("Hello, World!", ContentType.Text.Plain)
+            call.respond(okContent)
         }
 
         get("/json") {
-            call.respondText(gson.toJson(Message()), ContentType.Application.Json)
+            val content =  TextContent(gson.toJson(Message()), ContentType.Application.Json, HttpStatusCode.OK)
+            call.respond(content)
         }
 
         get("/db") {
@@ -73,6 +78,41 @@ fun Application.main() {
             call.respond(response)
         }
 
+        get("/fortunes") {
+            val result = mutableListOf<Fortune>()
+            run(databaseDispatcher) {
+                pool.connection.use { connection ->
+                    connection.prepareStatement("select id, message from fortune").use { statement ->
+                        statement.executeQuery().use { rs ->
+                            while (rs.next()) {
+                                result += Fortune(rs.getInt(1), rs.getString(2))
+                            }
+                        }
+                    }
+                }
+            }
+            result.add(Fortune(0, "Additional fortune added at request time."))
+            result.sortBy { it.message }
+            call.respondHtml {
+                head { title { +"Fortunes" } }
+                body {
+                    table {
+                        tr {
+                            th { +"id" }
+                            th { +"message" }
+                        }
+                        for (fortune in result) {
+                            tr {
+                                td { +fortune.id.toString() }
+                                td { +fortune.message }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
         get("/updates") {
             val t = run(databaseDispatcher) {
                 pool.connection.use { connection ->
@@ -80,13 +120,13 @@ fun Application.main() {
                     val random = ThreadLocalRandom.current()
                     val result = mutableListOf<World>()
 
-                    connection.prepareStatement("SELECT * FROM World WHERE id = ?").use { statement ->
+                    connection.prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?").use { statement ->
                         for (i in 1..(queries ?: 1)) {
                             statement.setInt(1, random.nextInt(DbRows) + 1)
 
                             statement.executeQuery().use { rs ->
                                 while (rs.next()) {
-                                    result += World(rs.getInt("id"), rs.getInt("randomNumber"))
+                                    result += World(rs.getInt(1), rs.getInt(2))
                                 }
                             }
                         }
