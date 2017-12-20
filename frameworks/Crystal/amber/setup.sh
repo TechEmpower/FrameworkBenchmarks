@@ -4,7 +4,7 @@ fw_depends postgresql crystal
 
 shards install
 
-crystal build --release --no-debug src/amber.cr
+crystal build --release src/amber.cr
 
 export GC_MARKERS=1
 
