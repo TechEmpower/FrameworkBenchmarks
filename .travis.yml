@@ -195,6 +195,7 @@ env:
     - "TESTDIR=Rust/hyper"
     - "TESTDIR=Rust/tokio-minihttp"
     - "TESTDIR=Rust/rouille"
+    - "TESTDIR=Rust/actix"
     - "TESTDIR=Scala/akka-http"
     - "TESTDIR=Scala/blaze"
     - "TESTDIR=Scala/colossus"
