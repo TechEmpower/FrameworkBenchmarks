@@ -16,7 +16,7 @@
       "framework": "actix",
       "language": "Rust",
       "orm": "Full",
-      "platform": "Rust",
+      "platform": "None",
       "webserver": "actix-web",
       "os": "Linux",
       "database_os": "Linux",
