@@ -195,7 +195,7 @@ fn main() {
             .resource("/fortune", |r| r.route().a(fortune))
             .resource("/updates", |r| r.route().a(updates)))
         .backlog(8192)
-        .bind("127.0.0.1:8080").unwrap()
+        .bind("0.0.0.0:8080").unwrap()
         .start();
 
     println!("Started http server: 127.0.0.1:8080");
