@@ -2,7 +2,7 @@
 
 fw_installed go && return 0
 
-VERSION=1.8
+VERSION=1.9
 GOROOT=$IROOT/go
 
 fw_get -O https://storage.googleapis.com/golang/go$VERSION.linux-amd64.tar.gz

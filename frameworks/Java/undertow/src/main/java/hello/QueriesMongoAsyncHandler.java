@@ -1,7 +1,7 @@
 package hello;
 
 import static hello.Helper.getQueries;
-import static hello.Helper.randomWorld;
+import static hello.Helper.randomWorldNumber;
 import static hello.Helper.sendException;
 import static hello.Helper.sendJson;
 
@@ -37,7 +37,7 @@ final class QueriesMongoAsyncHandler implements HttpHandler {
   }
 
   private CompletableFuture<World[]> nWorlds(int n) {
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     CompletableFuture<World>[] futures = new CompletableFuture[n];
     for (int i = 0; i < futures.length; i++) {
       futures[i] = oneWorld();
@@ -55,7 +55,7 @@ final class QueriesMongoAsyncHandler implements HttpHandler {
   private CompletableFuture<World> oneWorld() {
     CompletableFuture<World> future = new CompletableFuture<>();
     worldCollection
-        .find(Filters.eq(randomWorld()))
+        .find(Filters.eq(randomWorldNumber()))
         .map(Helper::mongoDocumentToWorld)
         .first(
             (world, exception) -> {

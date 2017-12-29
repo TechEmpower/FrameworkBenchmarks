@@ -12,15 +12,15 @@ import com.google.inject.Singleton;
 public class WorldDao {
 
     @Inject
-    Provider<EntityManager> entitiyManagerProvider;
+    Provider<EntityManager> entityManagerProvider;
 
     public World get(int id) {
-        EntityManager entityManager = entitiyManagerProvider.get();
+        EntityManager entityManager = entityManagerProvider.get();
         return entityManager.find(World.class, id);
     }
 
     public void put(World world) {
-        EntityManager entityManager = entitiyManagerProvider.get();
+        EntityManager entityManager = entityManagerProvider.get();
         entityManager.persist(world);
     }
 }

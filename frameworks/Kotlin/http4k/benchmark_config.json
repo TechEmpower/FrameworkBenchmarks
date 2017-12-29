@@ -27,31 +27,6 @@
       }
     },
     {
-      "netty": {
-        "setup_file": "setup_netty",
-        "orm": "Raw",
-        "database_os": "Linux",
-        "db_url": "/db",
-        "fortune_url": "/fortunes",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
-        "database": "postgres",
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
-        "port": 9000,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "framework": "http4k",
-        "language": "Kotlin",
-        "platform": "netty",
-        "webserver": "None",
-        "os": "Linux",
-        "display_name": "http4k-netty",
-        "notes": "",
-        "versus": "netty"
-      }
-    },
-    {
       "undertow": {
         "setup_file": "setup_undertow",
         "orm": "Raw",

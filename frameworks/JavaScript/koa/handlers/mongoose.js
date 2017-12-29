@@ -6,7 +6,10 @@ const h = require('../helper');
 // Can treat mongoose library as one that supports Promises
 // these methods will then have "-Async" appended to them.
 const Mongoose = Promise.promisifyAll(require('mongoose'));
-const connection = Mongoose.connect('mongodb://TFB-database/hello_world');
+const connection = Mongoose.connect(
+  'mongodb://TFB-database/hello_world',
+  { useMongoClient: true }
+);
 
 const WorldSchema = new Mongoose.Schema({
     id :          Number,

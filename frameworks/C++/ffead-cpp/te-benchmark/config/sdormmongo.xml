@@ -8,7 +8,7 @@
 					<databaseName>hello_world</databaseName>
 				</node>
 			</nodes>
-			<pool-size>5</pool-size>
+			<pool-size>30</pool-size>
 			<name>MongoDB-DSN</name>
 			<type>mongo</type>
 		</config>

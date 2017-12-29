@@ -20,12 +20,18 @@ static void usp_fork_mfortune()
       {
       U_WARNING("usp_fork_mfortune(): connection failed");
 
+      delete mc;
+             mc = U_NULLPTR;
+
       return;
       }
 
    if (mc->selectCollection("hello_world", "fortune") == false)
       {
       U_WARNING("usp_fork_mfortune(): selectCollection() failed");
+
+      delete mc;
+             mc = U_NULLPTR;
 
       return;
       }
@@ -40,10 +46,9 @@ static void usp_end_mfortune()
 {
    U_TRACE(5, "::usp_end_mfortune()")
 
-   delete mc;
-
    if (pencoded)
       {
+      delete mc;
       delete pencoded;
       delete pvfortune;
       delete pfortune2add;

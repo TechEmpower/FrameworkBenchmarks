@@ -53,7 +53,7 @@ final class Helper {
    *
    * @return a random world number
    */
-  static int randomWorld() {
+  static int randomWorldNumber() {
     return 1 + ThreadLocalRandom.current().nextInt(10000);
   }
 

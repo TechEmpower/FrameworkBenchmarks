@@ -7,7 +7,9 @@ const cluster = require('cluster'),
   numCPUs = require('os').cpus().length,
   express = require('express'),
   mongoose = require('mongoose'),
-  conn = mongoose.connect('mongodb://TFB-database/hello_world'),
+  conn = mongoose.connect('mongodb://TFB-database/hello_world', {
+    useMongoClient: true
+  }),
   async = require('async');
 
 // Middleware
@@ -63,7 +65,7 @@ if (cluster.isMaster) {
     return next();
   });
 
-  app.set('view engine', 'jade');
+  app.set('view engine', 'pug');
   app.set('views', __dirname + '/views');
 
   // Check Node env.
@@ -99,7 +101,7 @@ if (cluster.isMaster) {
       fortunes.push(newFortune);
       fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
-      res.render('fortunes', {fortunes: fortunes});
+      res.render('fortunes/index', {fortunes: fortunes});
     });
   });
 

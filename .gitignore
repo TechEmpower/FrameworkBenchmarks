@@ -2,14 +2,15 @@
 installs
 *.log
 node_modules/
+.travis.bak
 
 # Added for pedestal framework test
 .lein-deps-sum
 
 # eclipse
-.classpath
-.project
-.settings
+**/.classpath
+**/.project
+**/.settings
 
 # maven
 target/

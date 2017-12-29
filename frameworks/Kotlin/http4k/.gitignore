@@ -1,3 +1,5 @@
+.gradle
+build/
 target/
 project/target
 bin/

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RUST_VERSION="1.19.0"
+RUST_VERSION="1.22.1"
 
 fw_installed rust && return 0
 

@@ -1,11 +1,13 @@
 package hellowicket;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.RequestCycleSettings;
-
+import hellowicket.dbupdates.HelloDbUpdatesReference;
+import hellowicket.fortune.FortunePage;
+import hellowicket.plaintext.HelloTextReference;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.settings.RequestCycleSettings;
 
 /**
  * Application object for your web application..
@@ -35,7 +37,11 @@ public class WicketApplication extends WebApplication
 		// set UTF-8 for /fortunes test
 		requestCycleSettings.setResponseRequestEncoding("UTF-8");
 
-		setRootRequestMapper(new RequestMapper());
+		mountResource("json", new HelloJsonReference());
+		mountResource("db", new HelloDbReference());
+		mountResource("updates", new HelloDbUpdatesReference());
+		mountResource("plaintext", new HelloTextReference());
+		mountPage("fortunes", FortunePage.class);
 	}
 
 	@Override

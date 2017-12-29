@@ -19,4 +19,4 @@ echo "OfficeFloor test application built"
 
 # Run application
 echo "Starting OfficeFloor application"
-mvn -DincludeGWT=false -DenvDir=production net.officefloor.maven:woof-maven-plugin:run
+mvn -e -X -DincludeGWT=false -DenvDir=production net.officefloor.maven:woof-maven-plugin:run

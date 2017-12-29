@@ -2,10 +2,10 @@
 
 fw_installed play1 && return 0
 
-VERSION="1.2.5"
+VERSION="1.5.0"
 PLAY1_HOME=$IROOT/play-$VERSION
 
-fw_get -O http://downloads.typesafe.com/releases/play-$VERSION.zip
+fw_get -O https://downloads.typesafe.com/play/$VERSION/play-$VERSION.zip
 fw_unzip play-$VERSION.zip
 
 echo "export PLAY1_HOME=${PLAY1_HOME}" > $IROOT/play1.installed

@@ -2,7 +2,7 @@
 
 fw_installed maven && return 0
 
-MAVEN_VERSION=3.5.0
+MAVEN_VERSION=3.5.2
 TEMP_DIRECTORY="$(mktemp -d)"
 
 # Ask Apache about the preferred mirror for our connection using JSON response. Source: https://stackoverflow.com/a/39670213
