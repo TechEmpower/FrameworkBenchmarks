@@ -53,6 +53,9 @@ benchmark.cfg
 # netbeans
 /nbproject
 
+# Visual Studio Code
+.vscode
+
 # vim
 .*.sw[a-p]
 
