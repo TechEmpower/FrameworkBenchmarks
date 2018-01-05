@@ -2,7 +2,7 @@
 
 fw_depends mysql php7 nginx
 
-sed -i 's|localhost|'"${DBHOST}"'|g' deploy/nginx.conf
+sed -i 's|db_host|'"${DBHOST}"'|g' deploy/nginx.conf
 sed -i 's|root .*/FrameworkBenchmarks/frameworks/PHP/php-symfony|root '"${TROOT}"'|g' deploy/nginx.conf
 sed -i 's|/home/vagrant/FrameworkBenchmarks/installs/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
