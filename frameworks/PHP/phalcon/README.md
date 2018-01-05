@@ -23,9 +23,9 @@ Uses Phalcons template engine 'Volt'
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Phalcon 3.1.2](http://phalconphp.com/)
-* [PHP Version 7.1.4](http://www.php.net/) with FPM, OPcache and Phalcon extension
-* [nginx 1.9.9](http://nginx.org/)
+* [Phalcon 3.2.4](http://phalconphp.com/)
+* [PHP Version 7.2.1](http://www.php.net/) with FPM, OPcache and Phalcon extension
+* [nginx 1.12.0](http://nginx.org/)
 * [MySQL 5.5.54](https://dev.mysql.com/)
 * [MongoDB 2.4.8](https://mongodb.org/)
 
