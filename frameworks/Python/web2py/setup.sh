@@ -10,7 +10,7 @@ cd web2py
 # The following commit is checked out in order to take advantage of several
 # bug fixes that were made after the latest stable release. This can be changed
 # in future rounds once a new stable release has been made.
-git checkout 44362aa42948dca08ddf1b2f86ac03c69b0d48e4
+git checkout 623f3b99477eb97ffadb20d6f7cb3da398253c9c
 cd ..
 cp -r app/standard/ web2py/applications/
 cp -r app/optimized/ web2py/applications/
