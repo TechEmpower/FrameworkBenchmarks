@@ -38,7 +38,7 @@
         <version.swagger>1.5.10</version.swagger>
         <version.hikaricp>2.6.1</version.hikaricp>
         <version.mysql>5.1.41</version.mysql>
-        <version.postgres>42.1.1</version.postgres>
+        <version.postgres>42.1.4</version.postgres>
     </properties>
 
     <dependencies>
