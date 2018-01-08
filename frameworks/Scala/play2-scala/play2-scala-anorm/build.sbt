@@ -11,5 +11,5 @@ libraryDependencies ++= Seq(
   guice,
   jdbc,
   "com.typesafe.play" %% "anorm" % "2.5.3",
-  "mysql" % "mysql-connector-java" % "5.1.44"
+  "mysql" % "mysql-connector-java" % "5.1.45"
 )
