@@ -23,7 +23,7 @@ Uses Laravels template engine 'blade'
 The tests were run with:
 
 * [Laravel Version 4.2](http://laravel.com/)
-* [PHP Version 7.2.1](http://www.php.net/) with FPM and OPcache
+* [PHP Version 7.2.1](http://www.php.net/) No PHP7 until upgrade the framework version
 * [nginx 1.12.0](http://nginx.org/)
 * [MySQL 5.7.20](https://dev.mysql.com/)
 

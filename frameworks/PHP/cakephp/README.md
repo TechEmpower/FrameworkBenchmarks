@@ -20,7 +20,7 @@ The tests were run with:
 
 * [Cake Version 2.10.4](https://cakephp.org/)
 * [PHP Version 5.6.32](http://www.php.net/) with FPM and APC
-* [PHP Version 7.2.1](http://www.php.net/) with FPM and Opcache
+* [PHP Version 7.2.1](http://www.php.net/) No PHP7 until upgrade the framework version
 * [nginx 1.12.0](http://nginx.org/)
 * [MySQL 5.7.20](https://dev.mysql.com/)
 
