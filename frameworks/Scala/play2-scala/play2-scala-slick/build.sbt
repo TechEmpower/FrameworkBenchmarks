@@ -9,6 +9,6 @@ scalaVersion := "2.12.4"
 libraryDependencies ++= Seq(
   guice,
   "com.typesafe.play" %% "play-slick" % "3.0.3",
-  "mysql" % "mysql-connector-java" % "5.1.44",
+  "mysql" % "mysql-connector-java" % "5.1.45",
   filters
 )
