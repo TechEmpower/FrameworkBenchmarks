@@ -1,0 +1,21 @@
+<% c++ #include "data.h" %>
+<% skin my_skin %>
+<% view message uses data_holder %>
+<% template render() %>
+<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body>
+<table>
+<tr><th>id</th><th>message</th></tr>
+<% foreach fortune_item in fortunes %>
+    <% item %>
+    <tr><td><%= fortune_item.id %></td><td><%= fortune_item.message %></td></tr>
+    <% end %>
+<% end %>
+</table>
+</body>
+</html>
+<% end template %>
+<% end view %>
+<% end skin %>
