@@ -12,6 +12,7 @@ import copy
 from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
 from setup.linux import setup_util
+from setup.scaffolding import Scaffolding
 from ast import literal_eval
 
 # Enable cross-platform colored output
@@ -139,6 +140,7 @@ def main(argv=None):
     # Install options
     parser.add_argument('--clean', action='store_true', default=False, help='Removes the results directory')
     parser.add_argument('--clean-all', action='store_true', dest='clean_all', default=False, help='Removes the results and installs directories')
+    parser.add_argument('--init', action='store_true', default=False, help='Initialize a new framework test')
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
@@ -161,6 +163,10 @@ def main(argv=None):
     parser.add_argument('--quiet', action='store_true', default=False, help='Only print a limited set of messages to stdout, keep the bulk of messages in log files only')
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
+
+    if args.init:
+        Scaffolding()
+        return 0
 
     benchmarker = Benchmarker(vars(args))
 
