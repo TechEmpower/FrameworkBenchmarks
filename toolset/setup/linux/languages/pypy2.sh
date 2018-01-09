@@ -12,7 +12,7 @@ mv pypy2-v${PYPY2_VERSION}-linux64 pypy2
 $PYPY2_ROOT/bin/pypy -m ensurepip
 $PYPY2_ROOT/bin/pip install -U pip setuptools wheel
 
-echo "export PYPY_ROOT=${PYPY2_ROOT}" > $IROOT/pypy2.installed
+echo "export PYPY2_ROOT=${PYPY2_ROOT}" > $IROOT/pypy2.installed
 echo "export PYTHONHOME=${PYPY2_ROOT}" >> $IROOT/pypy2.installed
 echo -e "export PATH=${PYPY2_ROOT}/bin:\$PATH" >> $IROOT/pypy2.installed
   

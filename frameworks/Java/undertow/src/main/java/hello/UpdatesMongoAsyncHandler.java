@@ -1,7 +1,7 @@
 package hello;
 
 import static hello.Helper.getQueries;
-import static hello.Helper.randomWorld;
+import static hello.Helper.randomWorldNumber;
 import static hello.Helper.sendException;
 import static hello.Helper.sendJson;
 
@@ -47,7 +47,7 @@ final class UpdatesMongoAsyncHandler implements HttpHandler {
         worlds -> {
           List<WriteModel<Document>> writes = new ArrayList<>(worlds.length);
           for (World world : worlds) {
-            world.randomNumber = randomWorld();
+            world.randomNumber = randomWorldNumber();
             Bson filter = Filters.eq(world.id);
             Bson update = Updates.set("randomNumber", world.randomNumber);
             writes.add(new UpdateOneModel<>(filter, update));
@@ -67,7 +67,7 @@ final class UpdatesMongoAsyncHandler implements HttpHandler {
   }
 
   private CompletableFuture<World[]> nWorlds(int n) {
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     CompletableFuture<World>[] futures = new CompletableFuture[n];
     for (int i = 0; i < futures.length; i++) {
       futures[i] = oneWorld();
@@ -85,7 +85,7 @@ final class UpdatesMongoAsyncHandler implements HttpHandler {
   private CompletableFuture<World> oneWorld() {
     CompletableFuture<World> future = new CompletableFuture<>();
     worldCollection
-        .find(Filters.eq(randomWorld()))
+        .find(Filters.eq(randomWorldNumber()))
         .map(Helper::mongoDocumentToWorld)
         .first(
             (world, exception) -> {

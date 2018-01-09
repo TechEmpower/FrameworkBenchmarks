@@ -6,7 +6,12 @@ package io.sinistral.controllers;
 import static io.undertow.util.Headers.CONTENT_TYPE;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.StringWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.fizzed.rocker.runtime.StringBuilderOutput;
 import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -61,14 +67,19 @@ public class Benchmarks
 	private static final String HTML_UTF8_TYPE = io.sinistral.proteus.server.MediaType.TEXT_HTML_UTF8.toString(); 
 	private static final ByteBuffer MESSAGE_BUFFER;
     private static final String MESSAGE = "Hello, World!";
-    
+    private static final String FORTUNES_TEMPLATE = Benchmarks.class.getResource("/templates/Fortunes.mustache").getFile();
+ 
 	private static final ObjectMapper DEFAULT_MAPPER = new ObjectMapper();
  
+	private final MustacheFactory mustacheFactory = new DefaultMustacheFactory();
      
 
  
     static {
+    	    	
+
     	MESSAGE_BUFFER = ByteBuffer.allocateDirect(MESSAGE.length());
+    	
     	try {
     		MESSAGE_BUFFER.put(MESSAGE.getBytes("US-ASCII"));
      } catch (Exception e) {
@@ -113,7 +124,7 @@ public class Benchmarks
 	
 	
 	@GET
-	@Path("/db/postgres")
+	@Path("/db")
 	@Blocking
 	@ApiOperation(value = "World postgres db endpoint",   httpMethod = "GET" , response = World.class)
 	public void dbPostgres(HttpServerExchange exchange)
@@ -145,7 +156,8 @@ public class Benchmarks
 		  
  		 
 	}
-	
+
+
 	
 	@GET
 	@Path("/db/mysql")
@@ -222,10 +234,9 @@ public class Benchmarks
 	        exchange.getResponseSender().send(render);  
 		  
 	}
-
 	
 	@GET
-	@Path("/fortunes/postgres")
+	@Path("/fortunes")
 	@Blocking
 	@Produces(MediaType.TEXT_HTML)
 	@ApiOperation(value = "Fortunes postgres endpoint",   httpMethod = "GET"  )
