@@ -6,6 +6,7 @@ This is the Java Servlet portion of a [benchmarking test suite](../) comparing a
 
 * [Plaintext test source](src/main/java/hello/PlaintextServlet.java)
 * [JSON test source](src/main/java/hello/JsonServlet.java)
+* [JSON test source with Jackson Afterburner module](src/main/java/hello/JsonAfterburnerServlet.java)
 
 ### `MySQL` implementation
 
@@ -36,9 +37,13 @@ Please confirm the versions data with the latest install scripts of TFB project.
 
 ## Test URLs
 
-### Default maven profile
+### Default Maven profile
 
  * Plaintext - `http://localhost:8080/servlet/plaintext`
+ * JSON - `http://localhost:8080/servlet/json`
+
+### `afterburner` Maven profile
+
  * JSON - `http://localhost:8080/servlet/json`
 
 ### `mysql` and `postgresql` Maven profiles

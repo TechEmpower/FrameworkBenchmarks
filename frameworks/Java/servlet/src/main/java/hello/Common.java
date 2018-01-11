@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 /**
  * Some common functionality and constants used by the Servlet tests.
@@ -21,8 +22,15 @@ public class Common {
 
 	// Jackson encoder, reused for each response.
 	protected static final ObjectMapper MAPPER = new ObjectMapper();
-	
+	// Jackson encoder with AfterBurner module
+	protected static final ObjectMapper AF_MAPPER = new ObjectMapper().registerModule(new AfterburnerModule());
+
 	private static final String DB_QUERY = "SELECT * FROM world";
+
+	// Response message class.
+	public static class HelloMessage {
+		public final String message = "Hello, World!";
+	}
 	
 	public static int normalise(String param) {
 		int count = 1;
