@@ -17,6 +17,18 @@
 # in the existing scripts.
 
 
+# Three HOST entries are provided to this script:
+#
+#   TFB-database = The IP address of the database 
+#   TFB-client   = The IP address of the client making the HTTP requests
+#   TFB-server   = The IP address of this machine servicing HTTP requests
+#
+# This is the preferred way of resolving these IP addresses. However, some applications
+# do not support internal name resolution and will bypass the system's HOST file and
+# attempt to resolve externally (which will fail). In those cases, use the $DBHOST
+# environment variable described below.
+
+
 # Very often, you will need variables to be set up in order to run your application
 # implementation. The suite provides several variables to this shell script to be used
 # for just this reason.

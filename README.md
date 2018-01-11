@@ -45,6 +45,14 @@ required.
 
         vagrant@TFB-all:~/FrameworkBenchmarks$ tfb --mode verify --test beego
 
+## Add a New Test
+
+Once you open an SSH connection to your vagrant box, start the initialization wizard.
+
+        vagrant@TFB-all:~/FrameworkBenchmarks$ tfb --init
+
+This will walk you through the entire process of creating a new test to include in the suite.
+
 
 ## Official Documentation
 

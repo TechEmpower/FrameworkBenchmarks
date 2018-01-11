@@ -2,35 +2,36 @@ import sys
 import os
 import subprocess
 from shutil import copytree
+from setup_util import replace_text
 
 class Scaffolding:
   def __init__(self):
-    print """
+    print("""
 -------------------------------------------------------------------------------
     This wizard is intended to help build the scaffolding required for a new 
     test to be benchmarked.
 
     From here, you will be prompted for values related to the test you
     wish to add.
--------------------------------------------------------------------------------"""
+-------------------------------------------------------------------------------""")
 
-    # try:
-    self.__gather_display_name()
-    self.__gather_language()
-    self.__gather_approach()
-    self.__gather_classification()
-    self.__gather_orm()
-    self.__gather_webserver()
-    self.__gather_versus()
+    try:
+      self.__gather_display_name()
+      self.__gather_language()
+      self.__gather_approach()
+      self.__gather_classification()
+      self.__gather_orm()
+      self.__gather_webserver()
+      self.__gather_versus()
 
-    self.__confirm_values()
-    # except:
-      # print ""
+      self.__confirm_values()
+    except:
+      print("")
 
   def __gather_display_name(self):
-    print """
+    print("""
   The name of your test as you wish it to be displayed on the results page.
-    """
+    """)
     self.__prompt_display_name()
     while not self.display_name:
       self.__prompt_display_name()
@@ -40,11 +41,11 @@ class Scaffolding:
     self.display_name = raw_input("Name: ").strip()
 
   def __gather_language(self):
-    print """
+    print("""
   The language in which your test implementation is written.
 
   Example: Java, Go, PHP
-    """
+    """)
     self.language = None
     while not self.language:
       self.__prompt_language()
@@ -54,7 +55,7 @@ class Scaffolding:
     return self.language
 
   def __gather_approach(self):
-    print """
+    print("""
   The approach of your test implementation.
 
   Realistic: Uses the framework with most out-of-the-box functionality enabled.
@@ -64,7 +65,11 @@ class Scaffolding:
              unnecessary for the particulars of the benchmark exercise. This
              might illuminate the marginal improvement available in fine-
              tunning a framework to your application's use-case.
-    """
+
+  Note: If you are unsure, then your approach is probably Realistic. The
+        Stripped approach is seldom used and will not have results displayed
+        by default on the results website.
+    """)
     valid = self.__prompt_approach()
     while not valid:
       valid = self.__prompt_approach()
@@ -74,7 +79,7 @@ class Scaffolding:
     return self.approach == 'Realistic' or self.approach == 'Stripped'
 
   def __gather_classification(self):
-    print """
+    print("""
   The classification of your test implementation.
 
   Fullstack: Robust framework expected to provide high-level functionality for
@@ -87,7 +92,7 @@ class Scaffolding:
              example, server-composed views.
   Platform:  Barebones infrastructure for servicing HTTP requests, but does 
              not include a framework at all.
-    """
+    """)
     valid = self.__prompt_classification()
     while not valid:
       valid = self.__prompt_classification()
@@ -105,7 +110,7 @@ class Scaffolding:
            self.classification == 'Platform'
 
   def __gather_platform(self):
-    print """
+    print("""
   The platform of your test implementation.
 
   The platform is the low-level software or API used to host web applications 
@@ -113,14 +118,14 @@ class Scaffolding:
   fundamentals.
 
   Not all frameworks have a platform.
-    """
+    """)
     self.__prompt_platform()
     
   def __prompt_platform(self):
     self.platform = raw_input("Platform (optional): ").strip()
 
   def __gather_orm(self):
-    print """
+    print("""
   How you would classify the ORM (object relational mapper) of your test?
 
   Full:  A feature-rich ORM which provides functionality for interacting with a
@@ -129,7 +134,7 @@ class Scaffolding:
          for many trivial operations (querying, updating), but not more robust
          cases (for example, gathering relations).
   Raw:   No ORM; raw database access.
-    """
+    """)
     valid = self.__prompt_orm()
     while not valid:
       valid = self.__prompt_orm()
@@ -141,35 +146,35 @@ class Scaffolding:
            self.orm == 'Raw'
 
   def __gather_webserver(self):
-    print """
+    print("""
   Name of the front-end web-server sitting in front of your test implementation.
 
   Your test implementation may not use a web-server and may act as its own; you
   can leave this blank in this case.
 
   Example: nginx
-    """
+    """)
     self.__prompt_webserver()
 
   def __prompt_webserver(self):
     self.webserver = raw_input("Webserver (optional): ").strip()
 
   def __gather_versus(self):
-    print """
+    print("""
   The name of another test (elsewhere in this project) that is a subset of this 
   framework.
   This allows for the generation of the framework efficiency chart in the 
   results web site.
   For example, Compojure is compared to "servlet" since Compojure is built on the 
   Servlet platform.
-    """
+    """)
     self.__prompt_versus()
 
   def __prompt_versus(self):
     self.versus = raw_input("Versus (optional): ").strip()
 
   def __confirm_values(self):
-    print """
+    print("""
     Name: %s
     Language: %s
     Approach: %s
@@ -189,7 +194,7 @@ class Scaffolding:
            self.platform,
            self.orm, 
            self.webserver, 
-           self.versus)
+           self.versus))
 
     valid = self.__prompt_confirmation()
     while not valid:
@@ -198,7 +203,7 @@ class Scaffolding:
     if self.confirmation == 'y':
       self.__build_scaffolding()
     else:
-      print 'Aborting'
+      print('Aborting')
 
   def __prompt_confirmation(self):
     self.confirmation = raw_input("Initialize [y/n]: ")
@@ -214,7 +219,7 @@ class Scaffolding:
     self.test_dir = os.path.join(self.language_dir, self.name)
 
     if os.path.exists(self.test_dir):
-      print "Test '%s' already exists; aborting." % self.name
+      print("Test '%s' already exists; aborting." % self.name)
       return False
 
     return True
@@ -224,13 +229,14 @@ class Scaffolding:
     copytree(self.scaffold_dir, self.test_dir)
 
   def __edit_scaffold_files(self):
-    subprocess.check_output("sed -i 's|$NAME|%s|g' %s" % (self.name, os.path.join(self.test_dir,"*")), shell=True)
-    subprocess.check_output("sed -i 's|$DISPLAY_NAME|%s|g' %s" % (self.display_name, os.path.join(self.test_dir,"*")), shell=True)
-    subprocess.check_output("sed -i 's|$APPROACH|%s|g' %s" % (self.approach, os.path.join(self.test_dir,"*")), shell=True)
-    subprocess.check_output("sed -i 's|$CLASSIFICATION|%s|g' %s" % (self.classification, os.path.join(self.test_dir,"*")), shell=True)
-    subprocess.check_output("sed -i 's|$FRAMEWORK|%s|g' %s" % (self.framework, os.path.join(self.test_dir,"*")), shell=True)
-    subprocess.check_output("sed -i 's|$LANGUAGE|%s|g' %s" % (self.language, os.path.join(self.test_dir,"*")), shell=True)
-    subprocess.check_output("sed -i 's|$ORM|%s|g' %s" % (self.orm, os.path.join(self.test_dir,"*")), shell=True)
-    subprocess.check_output("sed -i 's|$PLATFORM|%s|g' %s" % (self.platform, os.path.join(self.test_dir,"*")), shell=True)
-    subprocess.check_output("sed -i 's|$WEBSERVER|%s|g' %s" % (self.webserver, os.path.join(self.test_dir,"*")), shell=True)
-    subprocess.check_output("sed -i 's|$VERSUS|%s|g' %s" % (self.versus, os.path.join(self.test_dir,"*")), shell=True)
+    for file in os.listdir(os.path.join(self.test_dir)):
+      replace_text(os.path.join(self.test_dir, file), "\$NAME", self.name)
+      replace_text(os.path.join(self.test_dir, file), "\$DISPLAY_NAME", self.display_name)
+      replace_text(os.path.join(self.test_dir, file), "\$APPROACH", self.approach)
+      replace_text(os.path.join(self.test_dir, file), "\$CLASSIFICATION", self.classification)
+      replace_text(os.path.join(self.test_dir, file), "\$FRAMEWORK", self.framework)
+      replace_text(os.path.join(self.test_dir, file), "\$LANGUAGE", self.language)
+      replace_text(os.path.join(self.test_dir, file), "\$ORM", self.orm)
+      replace_text(os.path.join(self.test_dir, file), "\$PLATFORM", self.platform)
+      replace_text(os.path.join(self.test_dir, file), "\$WEBSERVER", self.webserver)
+      replace_text(os.path.join(self.test_dir, file), "\$VERSUS", self.versus)

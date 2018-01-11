@@ -10,10 +10,10 @@
 * [UPDATE](Relative/Path/To/Your/Source/File)
 * [FORTUNES](Relative/Path/To/Your/Source/File)
 
-## Infrastructure Software Versions
+## Important Libraries
 The tests were run with:
-* [Software 1.8](https://www.example1.com/)
-* [Example 4.0.55](http://www.example2.com/)
+* [Software](https://www.example1.com/)
+* [Example](http://www.example2.com/)
 
 ## Test URLs
 ### JSON
