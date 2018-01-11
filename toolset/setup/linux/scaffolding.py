@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import sys
 import os
 import subprocess
@@ -23,8 +25,8 @@ class Scaffolding:
       self.__gather_orm()
       self.__gather_webserver()
       self.__gather_versus()
-
       self.__confirm_values()
+      self.__print_success()
     except:
       print("")
 
@@ -58,13 +60,13 @@ class Scaffolding:
     print("""
   The approach of your test implementation.
 
-  Realistic: Uses the framework with most out-of-the-box functionality enabled.
-             We consider this realistic because most applications built with 
-             the framework will leave these features enabled.
-  Stripped:  Removes or outright avoids implementing features that are
-             unnecessary for the particulars of the benchmark exercise. This
-             might illuminate the marginal improvement available in fine-
-             tunning a framework to your application's use-case.
+  1) Realistic: Uses the framework with most out-of-the-box functionality 
+                enabled. We consider this realistic because most applications 
+                built with the framework will leave these features enabled.
+  2) Stripped:  Removes or outright avoids implementing features that are
+                unnecessary for the particulars of the benchmark exercise. This
+                might illuminate the marginal improvement available in fine-
+                tunning a framework to your application's use-case.
 
   Note: If you are unsure, then your approach is probably Realistic. The
         Stripped approach is seldom used and will not have results displayed
@@ -75,23 +77,28 @@ class Scaffolding:
       valid = self.__prompt_approach()
 
   def __prompt_approach(self):
-    self.approach = raw_input("Approach [Realistic/Stripped]: ").strip()
+    self.approach = raw_input("Approach [1/2]: ").strip()
+    if self.approach == '1':
+      self.approach = 'Realistic'
+    if self.approach == '2':
+      self.approach = 'Stripped'
     return self.approach == 'Realistic' or self.approach == 'Stripped'
 
   def __gather_classification(self):
     print("""
   The classification of your test implementation.
 
-  Fullstack: Robust framework expected to provide high-level functionality for
-             serving as a web application; for example, ability to compose 
-             views, provide functions for responding with several data types 
-             (json, html, etc), connecting to a database, form processing, etc.
-  Micro:     Simple framework expected to provide enough middleware to build a
-             robust web application such as request routing and some simple 
-             plumbing, but may not include built-in functionality such as, for 
-             example, server-composed views.
-  Platform:  Barebones infrastructure for servicing HTTP requests, but does 
-             not include a framework at all.
+  1) Fullstack: Robust framework expected to provide high-level functionality 
+                for serving as a web application; for example, ability to 
+                compose views, provide functions for responding with several 
+                data types (json, html, etc), connecting to a database, form 
+                processing, etc.
+  2) Micro:     Simple framework expected to provide enough middleware to build
+                a robust web application such as request routing and some 
+                simple plumbing, but may not include built-in functionality 
+                such as, for example, server-composed views.
+  3) Platform:  Barebones infrastructure for servicing HTTP requests, but does
+                not include a framework at all.
     """)
     valid = self.__prompt_classification()
     while not valid:
@@ -104,7 +111,13 @@ class Scaffolding:
       self.__gather_platform()
 
   def __prompt_classification(self):
-    self.classification = raw_input("Classification [Fullstack/Micro/Platform]: ").strip()
+    self.classification = raw_input("Classification [1/2/3]: ").strip()
+    if self.classification == '1':
+      self.classification = 'Fullstack'
+    if self.classification == '2':
+      self.classification = 'Micro'
+    if self.classification == '3':
+      self.classification = 'Platform'
     return self.classification == 'Fullstack' or \
            self.classification == 'Micro' or \
            self.classification == 'Platform'
@@ -128,26 +141,33 @@ class Scaffolding:
     print("""
   How you would classify the ORM (object relational mapper) of your test?
 
-  Full:  A feature-rich ORM which provides functionality for interacting with a
-         database without writing a query in all but the most edge cases.
-  Micro: An ORM which provides functionality for interacting with a database
-         for many trivial operations (querying, updating), but not more robust
-         cases (for example, gathering relations).
-  Raw:   No ORM; raw database access.
+  1) Full:  A feature-rich ORM which provides functionality for interacting 
+            with a database without writing a query in all but the most edge 
+            cases.
+  2) Micro: An ORM which provides functionality for interacting with a database
+            for many trivial operations (querying, updating), but not more 
+            robust cases (for example, gathering relations).
+  3) Raw:   No ORM; raw database access.
     """)
     valid = self.__prompt_orm()
     while not valid:
       valid = self.__prompt_orm()
 
   def __prompt_orm(self):
-    self.orm = raw_input("ORM [Full/Micro/Raw]: ").strip()
+    self.orm = raw_input("ORM [1/2/3]: ").strip()
+    if self.orm == '1':
+      self.orm = 'Full'
+    if self.orm == '2':
+      self.orm = 'Micro'
+    if self.orm == '3':
+      self.orm = 'Raw'
     return self.orm == 'Full' or \
            self.orm == 'Micro' or \
            self.orm == 'Raw'
 
   def __gather_webserver(self):
     print("""
-  Name of the front-end web-server sitting in front of your test implementation.
+  Name of the front-end webserver sitting in front of your test implementation.
 
   Your test implementation may not use a web-server and may act as its own; you
   can leave this blank in this case.
@@ -161,12 +181,12 @@ class Scaffolding:
 
   def __gather_versus(self):
     print("""
-  The name of another test (elsewhere in this project) that is a subset of this 
+  The name of another test (elsewhere in this project) that is a subset of this
   framework.
   This allows for the generation of the framework efficiency chart in the 
   results web site.
-  For example, Compojure is compared to "servlet" since Compojure is built on the 
-  Servlet platform.
+  For example, Compojure is compared to "servlet" since Compojure is built on 
+  the Servlet platform.
     """)
     self.__prompt_versus()
 
@@ -240,3 +260,25 @@ class Scaffolding:
       replace_text(os.path.join(self.test_dir, file), "\$PLATFORM", self.platform)
       replace_text(os.path.join(self.test_dir, file), "\$WEBSERVER", self.webserver)
       replace_text(os.path.join(self.test_dir, file), "\$VERSUS", self.versus)
+
+  def __print_success(self):
+    print("""
+-------------------------------------------------------------------------------
+  Success!
+
+  Your new test structure has been built to the sepcifications of the suite.
+  Here is a brief run-down of what has been built:
+
+    frameworks
+        └─── %s
+              └─── %s
+                    ├─── .gitignore
+                    ├─── benchmark_config.json
+                    ├─── README.md
+                    ├─── setup.sh
+                    └─── source_code
+
+  The next step is to read through your README.md and follow the instructions
+  provided therein.
+-------------------------------------------------------------------------------"""
+    % (self.language, self.name))
