@@ -101,6 +101,8 @@ class Scaffolding:
 
       if self.confirm_new_lang == 'n':
         self.language = None
+      else:
+        self.language = self.language.title()
 
     return self.language
 
@@ -191,6 +193,8 @@ class Scaffolding:
     
   def __prompt_platform(self):
     self.platform = raw_input("Platform (optional): ").strip()
+    if self.platform == '':
+      self.platform = 'None'
 
   def __gather_orm(self):
     print("""
@@ -233,6 +237,8 @@ class Scaffolding:
 
   def __prompt_webserver(self):
     self.webserver = raw_input("Webserver (optional): ").strip()
+    if self.webserver == '':
+      self.webserver = 'None'
 
   def __gather_versus(self):
     print("""
@@ -249,6 +255,8 @@ class Scaffolding:
 
   def __prompt_versus(self):
     self.versus = raw_input("Versus (optional): ").strip()
+    if self.versus == '':
+      self.versus = 'None'
 
   def __confirm_values(self):
     print("""
@@ -333,6 +341,7 @@ class Scaffolding:
                     ├─── benchmark_config.json
                     ├─── README.md
                     ├─── setup.sh
+                    ├─── setup_mysql.sh
                     └─── source_code
 
   The next step is to read through your README.md and follow the instructions

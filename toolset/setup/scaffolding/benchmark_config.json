@@ -26,7 +26,7 @@
         "setup_file": "setup_mysql",
         "db_url": "/db",
         "query_url": "/query?queries=",
-        "cached_query_url": "cached_query?queries=",
+        "cached_query_url": "/cached_query?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/update?queries=",
         "port": 8080,
