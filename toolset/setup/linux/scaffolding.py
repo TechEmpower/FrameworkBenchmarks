@@ -2,9 +2,12 @@
 
 import sys
 import os
-import subprocess
+import imp
 from shutil import copytree
 from setup_util import replace_text
+
+imp.load_source("utils", "toolset/benchmark/utils.py")
+from utils import gather_frameworks, gather_langauges
 
 class Scaffolding:
   def __init__(self):
@@ -17,22 +20,24 @@ class Scaffolding:
     wish to add.
 -------------------------------------------------------------------------------""")
 
-    try:
-      self.__gather_display_name()
-      self.__gather_language()
-      self.__gather_approach()
-      self.__gather_classification()
-      self.__gather_orm()
-      self.__gather_webserver()
-      self.__gather_versus()
-      self.__confirm_values()
-      self.__print_success()
-    except:
-      print("")
+    # try:
+    self.__gather_display_name()
+    self.__gather_language()
+    self.__gather_approach()
+    self.__gather_classification()
+    self.__gather_orm()
+    self.__gather_webserver()
+    self.__gather_versus()
+    self.__confirm_values()
+    self.__print_success()
+    # except:
+    #   print("")
 
   def __gather_display_name(self):
     print("""
   The name of your test as you wish it to be displayed on the results page.
+
+  Example: Gemini, Gin, Express
     """)
     self.__prompt_display_name()
     while not self.display_name:
@@ -41,6 +46,18 @@ class Scaffolding:
 
   def __prompt_display_name(self):
     self.display_name = raw_input("Name: ").strip()
+
+    found = False
+    for framework in gather_frameworks():
+      if framework.lower() == self.display_name.lower():
+        found = True
+
+    if found:
+      print("""
+  It appears that there is already a '%s' framework in the test suite. You will
+  have to pick a different name.
+      """ % self.display_name)
+      self.display_name = None
 
   def __gather_language(self):
     print("""
@@ -54,7 +71,42 @@ class Scaffolding:
 
   def __prompt_language(self):
     self.language = raw_input("Language: ").strip()
+
+    known_languages = gather_langauges()
+    language = None
+    for lang in known_languages:
+      if lang.lower() == self.language.lower():
+        language = lang
+
+    if not language:
+      similar = []
+      for lang in known_languages:
+        if lang.lower()[:1] == self.language.lower()[:1]:
+          similar.append(lang)
+      similar = ', '.join(similar)
+
+      print("""
+  That language is not currently in our list of known languages.
+  
+  Here is a list of similar languages present in our benchmark suite that you
+  may have meant:
+
+  %s
+      
+  Did you mean to add the new language, '%s', to the benchmark suite?
+      """ % (similar, self.language))
+      valid = self.__prompt_confirm_new_language(known_languages)
+      while not valid:
+        valid = self.__prompt_confirm_new_language(known_languages)
+
+      if self.confirm_new_lang == 'n':
+        self.language = None
+
     return self.language
+
+  def __prompt_confirm_new_language(self, known_languages):
+    self.confirm_new_lang = raw_input("Create New Language '%s' (y/n): " % self.language).strip().lower()
+    return self.confirm_new_lang == 'y' or self.confirm_new_lang == 'n'
 
   def __gather_approach(self):
     print("""
@@ -66,7 +118,7 @@ class Scaffolding:
   2) Stripped:  Removes or outright avoids implementing features that are
                 unnecessary for the particulars of the benchmark exercise. This
                 might illuminate the marginal improvement available in fine-
-                tunning a framework to your application's use-case.
+                tuning a framework to your application's use-case.
 
   Note: If you are unsure, then your approach is probably Realistic. The
         Stripped approach is seldom used and will not have results displayed
@@ -130,7 +182,10 @@ class Scaffolding:
   for the framework; the platform provides an implementation of the HTTP
   fundamentals.
 
-  Not all frameworks have a platform.
+  Not all frameworks have a platform and if your programming language provides
+  much of that by which we define a platform, leave black.
+
+  Example: Servlet, Wai, .NET
     """)
     self.__prompt_platform()
     
@@ -172,7 +227,7 @@ class Scaffolding:
   Your test implementation may not use a web-server and may act as its own; you
   can leave this blank in this case.
 
-  Example: nginx
+  Example: nginx, Meinheld, httplight
     """)
     self.__prompt_webserver()
 
@@ -187,6 +242,8 @@ class Scaffolding:
   results web site.
   For example, Compojure is compared to "servlet" since Compojure is built on 
   the Servlet platform.
+
+  Example: Servlet, Wai, Undertow
     """)
     self.__prompt_versus()
 
@@ -226,7 +283,7 @@ class Scaffolding:
       print('Aborting')
 
   def __prompt_confirmation(self):
-    self.confirmation = raw_input("Initialize [y/n]: ")
+    self.confirmation = raw_input("Initialize [y/n]: ").strip().lower()
     return self.confirmation == 'y' or self.confirmation == 'n'
 
   def __build_scaffolding(self):
