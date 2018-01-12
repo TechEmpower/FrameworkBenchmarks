@@ -20,18 +20,18 @@ class Scaffolding:
     wish to add.
 -------------------------------------------------------------------------------""")
 
-    # try:
-    self.__gather_display_name()
-    self.__gather_language()
-    self.__gather_approach()
-    self.__gather_classification()
-    self.__gather_orm()
-    self.__gather_webserver()
-    self.__gather_versus()
-    self.__confirm_values()
-    self.__print_success()
-    # except:
-    #   print("")
+    try:
+      self.__gather_display_name()
+      self.__gather_language()
+      self.__gather_approach()
+      self.__gather_classification()
+      self.__gather_orm()
+      self.__gather_webserver()
+      self.__gather_versus()
+      self.__confirm_values()
+      self.__print_success()
+    except:
+      print("")
 
   def __gather_display_name(self):
     print("""

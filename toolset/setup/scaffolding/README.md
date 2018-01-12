@@ -38,7 +38,11 @@ This will run the suite in `verify` mode for your test. This means that no bench
 
 Once you are able to successfully run your test through our suite in this way **and** your test passes our validation, you may move on to the next step.
 
-7. Fix this `README.md` and open a pull request
+7. Add your test to `.travis.yml`
+
+Edit `.travis.yml` to ensure that Travis-CI will automatically run our verification tests against your new test. This file is kept in alphabetical order, so find where `TESTDIR=$LANGUAGE/$NAME` should be inserted under `env > matrix` and put it there.
+
+8. Fix this `README.md` and open a pull request
 
 Starting on line 55 is your actual `README.md` that will sit with your test implementation. Update all the dummy values to their correct values so that when people visit your test in our Github repository, they will be greated with information on how your test implementation works and where to look for useful source code.
 
