@@ -12,7 +12,7 @@ import copy
 from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
 from setup.linux import setup_util
-from setup.linux.scaffolding import Scaffolding
+from scaffolding import Scaffolding
 from ast import literal_eval
 
 # Enable cross-platform colored output

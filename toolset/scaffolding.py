@@ -4,10 +4,8 @@ import sys
 import os
 import imp
 from shutil import copytree
-from setup_util import replace_text
-
-imp.load_source("utils", "toolset/benchmark/utils.py")
-from utils import gather_frameworks, gather_langauges
+from setup.linux.setup_util import replace_text
+from benchmark.utils import gather_frameworks, gather_langauges
 
 class Scaffolding:
   def __init__(self):
