@@ -47,9 +47,9 @@ required.
 
 ## Add a New Test
 
-Once you open an SSH connection to your vagrant box, start the initialization wizard.
+Once you open an SSH connection to your vagrant box, start the new test initialization wizard.
 
-        vagrant@TFB-all:~/FrameworkBenchmarks$ tfb --init
+        vagrant@TFB-all:~/FrameworkBenchmarks$ tfb --new
 
 This will walk you through the entire process of creating a new test to include in the suite.
 

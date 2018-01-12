@@ -140,7 +140,7 @@ def main(argv=None):
     # Install options
     parser.add_argument('--clean', action='store_true', default=False, help='Removes the results directory')
     parser.add_argument('--clean-all', action='store_true', dest='clean_all', default=False, help='Removes the results and installs directories')
-    parser.add_argument('--init', action='store_true', default=False, help='Initialize a new framework test')
+    parser.add_argument('--new', action='store_true', default=False, help='Initialize a new framework test')
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
@@ -164,7 +164,7 @@ def main(argv=None):
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
 
-    if args.init:
+    if args.new:
         Scaffolding()
         return 0
 
