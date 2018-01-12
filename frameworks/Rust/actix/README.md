@@ -1,4 +1,4 @@
-# [Actix](https://github.com/actix/actix-web) Benchmark Test
+# [Actix](https://github.com/actix/actix-web) web framework
 
 ## Description
 
