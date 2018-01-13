@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
  * JSON Encoding Test
  */
 @SuppressWarnings("serial")
-public class JsonServlet extends HttpServlet {
+public class JsonAfterburnerServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
 			IOException {
@@ -19,6 +19,6 @@ public class JsonServlet extends HttpServlet {
 		res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_JSON);
 
 		// Write JSON encoded message to the response.
-		Common.MAPPER.writeValue(res.getOutputStream(), new Common.HelloMessage());
+		Common.AF_MAPPER.writeValue(res.getOutputStream(), new Common.HelloMessage());
 	}
 }
