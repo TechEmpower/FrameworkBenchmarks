@@ -2,7 +2,7 @@
 
 This is the ActFramework portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-This is using [ActFramework R1.5.1](http://actframework.org) to build an application.
+This is using [ActFramework R1.6.4](http://actframework.org) to build an application.
 
 ## Local benchmark result
 
@@ -10,33 +10,33 @@ This is using [ActFramework R1.5.1](http://actframework.org) to build an applica
 
 | Test | Throughput |
 | ---- | ---------: |
-| plaintext | 671911.83  |
-| json | 167184.71 |
+| plaintext | 1188983.73  |
+| json | 254222.40 |
 
 ### MySQL
 
 | Test | Throughput |
 | ---- | ----------: |
-| db | 15726.85 |
-| multiple queies (20) | 1634.25 |
-| updates (20) | 112.40 |
-| fortunes | 13340.19 |
+| db | 18160.19 |
+| multiple queries (20) | 1918.49 |
+| updates (20) | 568.46 |
+| fortunes | 18848.39 |
 
 ### Postgresql
 
 | Test | Throughput |
 | ---- | ---------: |
-| db | 19178.11 |
-| multiple queies (20) | 2108/46 |
-| updates (20) | 110.91 |
-| fortunes | 17008.39 |
+| db | 32303.52 |
+| multiple queries (20) | 3268.78 |
+| updates (20) | 865 |
+| fortunes | 27560 |
 
 
 ### Mongodb
 
 | Test | Throughput |
 | ---- | ---------: |
-| db | 19156.71 |
-| multiple queies (20) | 1821.24 |
-| updates (20) | 849.83 |
-| fortunes | 17603.13 |
+| db | 33595.57 |
+| multiple queries (20) | 2197.53 |
+| updates (20) | 1039.60 |
+| fortunes | 24301.25 |
