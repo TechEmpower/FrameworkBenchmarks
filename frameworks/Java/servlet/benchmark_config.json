@@ -40,6 +40,25 @@
       "notes": "Jackson with Afterburner module",
       "versus": "servlet"
     },
+    "cjs": {
+      "setup_file": "setup_cjs",
+      "json_url": "/servlet/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "servlet",
+      "notes": "Jackson with custom serialization",
+      "versus": "servlet"
+    },
     "raw": {
       "setup_file": "setup_mysql",
       "db_url": "/servlet/db",
