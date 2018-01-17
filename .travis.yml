@@ -8,8 +8,6 @@ group: deprecated-2017Q2
 language: generic
 python:
   - "2.7"
-services:
-  - docker
 
 env:
   matrix:
@@ -29,7 +27,6 @@ env:
     - "TESTDIR=C++/ffead-cpp"
     - "TESTDIR=C++/cpoll_cppsp"
     - "TESTDIR=C++/cutelyst"
-    - "TESTDIR=C++/includeos-mana"
     - "TESTDIR=C++/silicon"
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ulib"
