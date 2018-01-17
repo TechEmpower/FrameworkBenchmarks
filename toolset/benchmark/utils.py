@@ -6,6 +6,21 @@ import socket
 
 from ast import literal_eval
 
+def gather_langauges():
+    '''
+    Gathers all the known languages in the suite via the folder names
+    beneath FWROOT.
+    '''
+    # Avoid setting up a circular import
+    from setup.linux import setup_util
+
+    lang_dir = os.path.join(setup_util.get_fwroot(), "frameworks")
+    langs = []
+    for dir in glob.glob(os.path.join(lang_dir, "*")):
+        langs.append(dir.replace(lang_dir,"")[1:])
+    return langs
+
+
 def gather_tests(include = [], exclude=[], benchmarker=None):
     '''
     Given test names as strings, returns a list of FrameworkTest objects.
@@ -41,7 +56,6 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
 
     # Setup default Benchmarker using example configuration
     if benchmarker is None:
-        print "Creating Benchmarker from benchmark.cfg"
         default_config = setup_util.get_fwroot() + "/benchmark.cfg"
         config = ConfigParser.SafeConfigParser()
         config.readfp(open(default_config))
@@ -56,6 +70,10 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
 
         # Ensure we only run the __init__ method of Benchmarker
         defaults['install'] = None
+        defaults['results_name'] = "(unspecified, datetime = %Y-%m-%d %H:%M:%S)"
+        defaults['results_environment'] = "My Server Environment"
+        defaults['test_dir'] = None
+        defaults['quiet'] = True
 
         benchmarker = Benchmarker(defaults)
 

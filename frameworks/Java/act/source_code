@@ -19,8 +19,8 @@
 ./act/src/main/java/com/techempower/act/model/World.java
 ./act/src/main/java/com/techempower/act/model/Fortune.java
 ./act/src/main/resources
-./act/src/main/resources/mustache
-./act/src/main/resources/mustache/fortunes.html
+./act/src/main/resources/rythm
+./act/src/main/resources/rythm/fortunes.html
 ./act/src/main/resources/conf
 ./act/src/main/resources/conf/app.properties
 ./act/src/main/resources/conf/pgsql

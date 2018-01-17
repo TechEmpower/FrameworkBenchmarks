@@ -9,7 +9,7 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "none",
-      "framework": "Dropwizard",
+      "framework": "dropwizard",
       "language": "Java",
       "flavor": "None",
       "orm": "Full",

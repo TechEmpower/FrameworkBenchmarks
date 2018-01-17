@@ -53,7 +53,7 @@ fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Err
                         .header(header::SERVER, "Actix")
                         .json(row)?),
                 Err(_) =>
-                    Ok(httpcodes::HTTPInternalServerError.response()),
+                    Ok(httpcodes::HTTPInternalServerError.into()),
             }
         })
         .responder()
@@ -135,7 +135,7 @@ fn updates(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
                            .content_encoding(headers::ContentEncoding::Identity)
                            .body(body)?)
                     } else {
-                        Ok(httpcodes::HTTPInternalServerError.response())
+                        Ok(httpcodes::HTTPInternalServerError.into())
                     }
                 })
         })
@@ -163,7 +163,7 @@ fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
                        .content_type("text/html; charset=utf-8")
                        .body(res)?)
                 },
-                Err(_) => Ok(httpcodes::HTTPInternalServerError.response())
+                Err(_) => Ok(httpcodes::HTTPInternalServerError.into())
             }
         })
         .responder()

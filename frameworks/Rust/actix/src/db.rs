@@ -29,18 +29,17 @@ impl ResponseType for RandomWorld {
 }
 
 impl Handler<RandomWorld> for DbExecutor {
-    fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Response<Self, RandomWorld>
-    {
+    type Result = MessageResult<RandomWorld>;
+
+    fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Self::Result {
         use schema::World::dsl::*;
 
         let random_id = rand::thread_rng().gen_range(1, 10_000);
-        match World.filter(id.eq(random_id)).load::<models::World>(&self.0)
-        {
+        match World.filter(id.eq(random_id)).load::<models::World>(&self.0) {
             Ok(mut items) =>
-                Self::reply(items.pop().unwrap()),
+                Ok(items.pop().unwrap()),
             Err(_) =>
-                Self::reply_error(
-                    io::Error::new(io::ErrorKind::Other, "Database error")),
+                Err(io::Error::new(io::ErrorKind::Other, "Database error")),
         }
     }
 }
@@ -53,8 +52,9 @@ impl ResponseType for UpdateWorld {
 }
 
 impl Handler<UpdateWorld> for DbExecutor {
-    fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Response<Self, UpdateWorld>
-    {
+    type Result = io::Result<()>;
+
+    fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> io::Result<()> {
         use schema::World::dsl::*;
 
         for world in msg.0 {
@@ -63,7 +63,7 @@ impl Handler<UpdateWorld> for DbExecutor {
                 .set(randomnumber.eq(world.randomnumber))
                 .execute(&self.0);
         }
-        Self::empty()
+        Ok(())
     }
 }
 
@@ -75,8 +75,9 @@ impl ResponseType for TellFortune {
 }
 
 impl Handler<TellFortune> for DbExecutor {
-    fn handle(&mut self, _: TellFortune, _: &mut Self::Context) -> Response<Self, TellFortune>
-    {
+    type Result = io::Result<Vec<models::Fortune>>;
+
+    fn handle(&mut self, _: TellFortune, _: &mut Self::Context) -> Self::Result {
         use schema::Fortune::dsl::*;
 
         match Fortune.load::<models::Fortune>(&self.0) {
@@ -85,11 +86,10 @@ impl Handler<TellFortune> for DbExecutor {
                     id: 0,
                     message: "Additional fortune added at request time.".to_string()});
                 items.sort_by(|it, next| it.message.cmp(&next.message));
-                Self::reply(items)
+                Ok(items)
             }
             Err(_) =>
-                Self::reply_error(
-                    io::Error::new(io::ErrorKind::Other, "Databse error"))
+                Err(io::Error::new(io::ErrorKind::Other, "Databse error"))
         }
     }
 }
