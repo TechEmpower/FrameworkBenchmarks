@@ -5,6 +5,8 @@ require_relative 'core'
 
 Vagrant.configure("2") do |config|
 
+  ENV['LC_ALL']="en_US.UTF-8"
+
   config.vm.provision :file do |file|
       file.source = "custom_motd.sh"
       file.destination = "~/.custom_motd.sh"
