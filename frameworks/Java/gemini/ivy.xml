@@ -20,5 +20,7 @@
         <dependency org="kryonet" name="kryonet-all" rev="2.21" />
         <dependency org="org.reflections" name="reflections" rev="0.9.10" />
         <dependency org="javassist" name="javassist" rev="3.12.1.GA" />
+        <dependency org="com.techempower" name="gemini-public" rev="2.18.1" />
+        <dependency org="com.techempower" name="gemini-resin-public" rev="2.18.1" />
     </dependencies>
 </ivy-module>
