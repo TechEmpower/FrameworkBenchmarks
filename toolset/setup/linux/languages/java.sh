@@ -3,13 +3,15 @@
 fw_installed java && return 0
 
 # TODO: Someday get away from apt-get
-sudo add-apt-repository -y ppa:webupd8team/java
+sudo add-apt-repository -y ppa:openjdk-r/ppa
 sudo apt-get update
-echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y oracle-java8-installer
+sudo apt-get install openjdk-8-jdk
+
+# https://bugs.launchpad.net/ubuntu/+source/ca-certificates-java/+bug/1396760
+sudo /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 # Setup environment variables
-JAVA_HOME=/usr/lib/jvm/java-8-oracle
+JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 echo "export JAVA_HOME=${JAVA_HOME}" > $IROOT/java.installed
 echo -e "export PATH=\$JAVA_HOME/bin:\$PATH" >> $IROOT/java.installed
 
