@@ -16,13 +16,13 @@
                      m2compatible='true'
                      usepoms='true'
                      pattern='[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]' 
-                     root='https://maven.techempower.com:8081/nexus/content/repositories/snapshots/' />
+                     root='https://maven.techempower.com/nexus/content/repositories/snapshots/' />
             <ibiblio name='nexus-releases' 
                      m2compatible='true' 
-                     root='https://maven.techempower.com:8081/nexus/content/repositories/releases/' />
+                     root='https://maven.techempower.com/nexus/content/repositories/releases/' />
             <ibiblio name='nexus-thirdparty' 
                      m2compatible='true' 
-                     root='https://maven.techempower.com:8081/nexus/content/repositories/thirdparty/' />
+                     root='https://maven.techempower.com/nexus/content/repositories/thirdparty/' />
             <ibiblio name='central' m2compatible='true'/>
         </chain>
     </resolvers>
