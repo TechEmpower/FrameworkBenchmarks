@@ -4,15 +4,7 @@
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/mail.jar"/>
 	<classpathentry kind="src" path="Source"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/mysql-connector-java-5.1.23-bin.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/trove4j-3.0.3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Resin"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/guava-16.0.1.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/jsr305-2.0.0.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/mustache-compiler-0.8.13.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/postgresql-9.4.1208.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-2.18.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-resin-2.18.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/reflectasm.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/reflections.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/java-image-scaling.jar"/>
@@ -20,13 +12,7 @@
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/kryonet-all.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/asm.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/compiler.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/dbdeploy-ant.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/filters.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/freemarker.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-admin.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-form.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-resin.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/guava.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/im4java.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/jackson-annotations.jar"/>
@@ -44,5 +30,27 @@
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/mysql-connector-java.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/objenesis.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/trove4j.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-public-javadoc.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-public-sources.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-public.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-resin-public-javadoc.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-resin-public-sources.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-resin-public.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/jackson-annotations-javadoc.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/jackson-annotations-sources.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/jackson-core-javadoc.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/jackson-core-sources.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/jackson-databind-javadoc.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/jackson-databind-sources.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/javassist-javadoc.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/javassist-sources.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/javax.mail-api-javadoc.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/javax.mail-api-sources.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/jsr250-api.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/postgresql-javadoc.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/postgresql-sources.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/postgresql.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/resin-javaee16.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/resin.jar"/>
 	<classpathentry kind="output" path="Docroot/WEB-INF/classes"/>
 </classpath>
