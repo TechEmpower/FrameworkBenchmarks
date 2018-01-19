@@ -17,6 +17,7 @@ class PlainHandler(BaseHandler):
         self.set_header("Content-Type", "text/plain")
 
 class HtmlHandler(BaseHandler):
+
     def set_default_headers(self):
         self.set_header("Content-Type", "text/html; charset=UTF-8")
 
@@ -34,8 +35,8 @@ class PlaintextHelloWorldHandler(PlainHandler):
 
 
 class JsonHelloWorldHandler(JsonHandler):
-    HELLO_WORLD = {"message": "Hello, World!"}
 
     def get(self):
-        obj = json.dumps(self.HELLO_WORLD)
+        HELLO_WORLD = {"message": "Hello, World!"}
+        obj = json.dumps(HELLO_WORLD)
         self.finish(obj)
