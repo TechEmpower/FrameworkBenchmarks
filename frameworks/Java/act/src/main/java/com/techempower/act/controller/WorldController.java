@@ -33,6 +33,7 @@ import org.osgl.$;
 import org.osgl.http.H;
 import org.osgl.mvc.annotation.GetAction;
 import org.osgl.mvc.annotation.ResponseContentType;
+import org.osgl.mvc.annotation.SessionFree;
 import org.osgl.util.Const;
 
 import java.util.ArrayList;
@@ -60,12 +61,14 @@ public class WorldController {
 
 
     @GetAction("db")
+    @SessionFree
     public World findOne() {
         return dao.findById(randomWorldNumber());
     }
 
     @GetAction("queries")
     @Transactional(readOnly = true)
+    @SessionFree
     public final World[] multipleQueries(String queries) {
         int q = regulateQueries(queries);
 
@@ -77,6 +80,7 @@ public class WorldController {
     }
 
     @GetAction("updates")
+    @SessionFree
     public final List<World> updateQueries(String queries) {
         int q = regulateQueries(queries);
         return doUpdate(q);
