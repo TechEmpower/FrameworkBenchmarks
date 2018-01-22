@@ -4,7 +4,14 @@
 cd $TROOT
 
 if ! [ -d facil_app ] ; then
-	bash <(curl -s https://raw.githubusercontent.com/boazsegev/facil.io/master/scripts/new/app) facil_app
+	mkdir facil_app
+	cd facil_app
+	curl -s -o facil.io.tar.gz -LJO https://api.github.com/repos/boazsegev/facil.io/tarball/v.0.6.0.beta
+	tar --strip-components=1 -xzf facil.io.tar.gz
+	if [ $? -ne 0 ]; then echo "Couldn't extract tar."; exit 1; fi
+	rm facil.io.tar.gz
+	./scripts/new/cleanup
+	cd ..
 fi
 
 # recompile test
