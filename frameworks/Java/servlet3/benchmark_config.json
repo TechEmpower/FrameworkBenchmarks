@@ -1,0 +1,24 @@
+{
+  "framework": "servlet3",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/servlet3-cass/json",
+      "plaintext_url": "/servlet3-cass/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "servlet3",
+      "notes": "",
+      "versus": "servlet3"
+    }
+  }]
+}
