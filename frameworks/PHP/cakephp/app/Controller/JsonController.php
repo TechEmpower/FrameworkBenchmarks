@@ -13,6 +13,6 @@ class JsonController extends AppController {
     // http://book.cakephp.org/2.0/en/views/json-and-xml-views.html
     $this->set('message', "Hello, World!");
     $this->set('_serialize', array('message'));
+  	$this->RequestHandler->renderAs($this, 'json');
   }
 }
-?>

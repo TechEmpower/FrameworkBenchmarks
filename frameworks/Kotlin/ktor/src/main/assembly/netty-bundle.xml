@@ -14,7 +14,7 @@
             <scope>runtime</scope>
 
             <excludes>
-                <exclude>*:ktor-jetty:*</exclude>
+                <exclude>*:ktor-server-jetty:*</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>

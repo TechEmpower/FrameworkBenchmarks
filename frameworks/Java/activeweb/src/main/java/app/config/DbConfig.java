@@ -38,7 +38,8 @@ public class DbConfig extends AbstractDBConfig {
                 "&useReadAheadInput=false" +
                 "&maintainTimeStats=false" +
                 "&useServerPrepStmts" +
-                "&cacheRSMetadata=true";
+                "&cacheRSMetadata=true" +
+                "&useSSL=false";
 
         environment("development").jndi("java:comp/env/jdbc/hello_world");
 

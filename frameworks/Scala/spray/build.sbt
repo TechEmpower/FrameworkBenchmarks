@@ -2,7 +2,7 @@ name := "spray-benchmark"
 
 organization := "io.spray"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.12"
 
 version := "1.0"
 

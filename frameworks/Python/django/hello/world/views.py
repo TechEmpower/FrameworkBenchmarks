@@ -1,15 +1,14 @@
-# Create your views here.
-
-from django.template import Context, loader
-from django.http import HttpResponse
-from django.core import serializers
-from world.models import World, Fortune
-from django.shortcuts import render
-from ujson import dumps as uj_dumps
 import random
 import sys
 from operator import attrgetter
 from functools import partial
+from ujson import dumps as uj_dumps
+
+from django.http import HttpResponse
+from django.shortcuts import render
+
+from world.models import World, Fortune
+
 
 if sys.version_info[0] == 3:
   xrange = range

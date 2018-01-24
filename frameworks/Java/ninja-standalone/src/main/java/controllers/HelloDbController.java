@@ -10,7 +10,6 @@ import ninja.Results;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.persist.Transactional;
 import ninja.jpa.UnitOfWork;
 import ninja.params.Param;
 
@@ -45,7 +44,7 @@ public class HelloDbController {
         return Results.json().render(worlds);
     }
 
-    @Transactional
+    @UnitOfWork
     public Result update(@Param("queries") Integer queries) {
         if (queries == null || queries < 1) {
             queries = 1;

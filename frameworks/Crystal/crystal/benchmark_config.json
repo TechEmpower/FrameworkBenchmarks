@@ -1,5 +1,5 @@
 {
-  "framework": "crystal-raw",
+  "framework": "crystal",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -24,7 +24,30 @@
       "display_name": "Crystal",
       "notes": "",
       "versus": "crystal"
+    },
+    "radix": {
+      "setup_file": "setup_radix",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "None",
+      "language": "Crystal",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Crystal-radix",
+      "notes": "",
+      "versus": "crystal"
     }
   }]
 }
-

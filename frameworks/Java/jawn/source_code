@@ -7,7 +7,6 @@
 ./jawn/src/main/java/app/controllers/FortunesController.java
 ./jawn/src/main/java/app/db
 ./jawn/src/main/java/app/db/DbManager.java
-./jawn/src/main/java/app/db/DbModule.java
 ./jawn/src/main/java/app/models
 ./jawn/src/main/java/app/models/Fortune.java
 ./jawn/src/main/java/app/models/Message.java

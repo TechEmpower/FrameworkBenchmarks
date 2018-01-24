@@ -18,8 +18,7 @@ class BenchmarkController < Amber::Controller::Base
 
   def json
     response.content_type = JSON
-    results = {message: "Hello, World!"}
-    results.to_json
+    {message: "Hello, World!"}.to_json
   end
 
   def db
@@ -71,7 +70,7 @@ class BenchmarkController < Amber::Controller::Base
 
     fortunes = Fortune.all
     fortunes << fortune
-    fortunes.sort_by! { |fortune| fortune.message || "" }
+    fortunes.sort_by! { |fortune| fortune.message.to_s }
 
     render("fortune/index.ecr")
   end

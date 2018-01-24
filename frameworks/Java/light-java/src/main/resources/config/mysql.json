@@ -8,5 +8,6 @@
   "cachePrepStmts": true,
   "cacheCallableStmts": true,
   "prepStmtCacheSize": 4096,
-  "prepStmtCacheSqlLimit": 2048
+  "prepStmtCacheSqlLimit": 2048,
+  "useSSL": false
 }

@@ -1,6 +1,6 @@
 {
     "require": {
-        "cakephp/cakephp": "2.10.3"
+        "cakephp/cakephp": "^2.10"
     },
     "config": {
         "vendor-dir": "app/Vendor"

@@ -8,13 +8,17 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<jdk.version>1.8</jdk.version>
-        <dropwizard.version>1.1.1</dropwizard.version>
-        <mysql-connector-java.version>5.1.38</mysql-connector-java.version>
-        <mongojack.version>2.7.0</mongojack.version>
-        <postgres-jdbc.version>42.1.1</postgres-jdbc.version>
-	<main.class>com.example.helloworld.HelloWorldService</main.class>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jdk.version>1.8</jdk.version>
+		<dropwizard.version>1.2.2</dropwizard.version>
+		<jaxb-api.version>2.2.12</jaxb-api.version>
+		<mysql-connector-java.version>5.1.45</mysql-connector-java.version>
+		<mongojack.version>2.8.0</mongojack.version>
+		<postgres-jdbc.version>42.1.4</postgres-jdbc.version>
+		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+		<maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
+		<maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
+		<main.class>com.example.helloworld.HelloWorldService</main.class>
 	</properties>
 
 	<profiles>
@@ -98,6 +102,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>${jaxb-api.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -105,18 +114,18 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>${maven-compiler-plugin.version}</version>
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
 					<optimize>true</optimize>
-                                        <debug>false</debug>
+					<debug>false</debug>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>${maven-jar-plugin.version}</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -128,7 +137,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>1.6</version>
+				<version>${maven-shade-plugin.version}</version>
 				<configuration>
 					<createDependencyReducedPom>true</createDependencyReducedPom>
 					<filters>

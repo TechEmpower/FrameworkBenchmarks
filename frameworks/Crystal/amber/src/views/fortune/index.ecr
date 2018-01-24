@@ -6,7 +6,7 @@
   <% fortunes.each do |fortune| %>
     <tr>
     <td><%= fortune.id %></td>
-    <td><%= HTML.escape(fortune.message || "") %></td>
+    <td><%= HTML.escape(fortune.message.to_s) %></td>
     </tr>
   <% end %>
 </table>

@@ -6,7 +6,7 @@ class HelloWorld < Roda
   plugin :default_headers, 'Server'=>SERVER_STRING if SERVER_STRING
   plugin :hooks
   plugin :json
-  plugin :render, :escape=>:erubi, :layout_opts=>{ :cache_key=>'default_layout' }
+  plugin :render, :escape=>true, :layout_opts=>{ :cache_key=>'default_layout' }
   plugin :static_routing
 
   def bounded_queries

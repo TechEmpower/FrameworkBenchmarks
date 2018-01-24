@@ -1,7 +1,7 @@
 package hello;
 
 import static hello.Helper.getQueries;
-import static hello.Helper.randomWorld;
+import static hello.Helper.randomWorldNumber;
 import static hello.Helper.sendJson;
 
 import com.mongodb.client.MongoCollection;
@@ -28,7 +28,7 @@ final class QueriesMongoHandler implements HttpHandler {
     for (int i = 0; i < worlds.length; i++) {
       worlds[i] =
           worldCollection
-              .find(Filters.eq(randomWorld()))
+              .find(Filters.eq(randomWorldNumber()))
               .map(Helper::mongoDocumentToWorld)
               .first();
     }

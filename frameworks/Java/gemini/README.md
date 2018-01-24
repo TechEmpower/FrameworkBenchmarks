@@ -14,8 +14,8 @@ This is the Gemini portion of a [benchmarking test suite](../) comparing a varie
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Resin 4.0.34](http://www.caucho.com/)
+* [Oracle Java 1.8](https://www.oracle.com/java/)
+* [Resin 4.0.55](http://www.caucho.com/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 ## Test URLs

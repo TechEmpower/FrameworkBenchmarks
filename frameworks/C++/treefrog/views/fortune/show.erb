@@ -11,7 +11,7 @@
 <p style="color: green"><%=$ notice %></p>
 
 <h1>Showing Fortune</h1>
-<dt>ID</dt><dd><%= fortune.id() %></dd><br />
+<dt>ID</dt><dd><%= (ulong)fortune.id() %></dd><br />
 <dt>Message</dt><dd><%= fortune.message() %></dd><br />
 
 <%== linkTo("Edit", urla("edit", fortune.id())) %> |
