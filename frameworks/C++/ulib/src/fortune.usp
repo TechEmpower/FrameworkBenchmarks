@@ -18,18 +18,19 @@ static void usp_fork_fortune()
 
    U_NEW(UOrmSession, psql_fortune, UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
 
-   U_INTERNAL_DUMP("psql_fortune = %p", psql_fortune)
-
    if (psql_fortune->isReady() == false)
       {
       U_WARNING("usp_fork_fortune(): we cound't connect to db");
+
+      delete psql_fortune;
+             psql_fortune = U_NULLPTR;
 
       return;
       }
 
    U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
 
-   if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
+// if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
 
    U_NEW(Fortune, pfortune, Fortune);
 
@@ -45,10 +46,6 @@ static void usp_end_fortune()
 {
    U_TRACE(5, "::usp_end_fortune()")
 
-   U_INTERNAL_DUMP("psql_fortune = %p", psql_fortune)
-
-   delete psql_fortune;
-
    if (pstmt_fortune)
       {
       delete pstmt_fortune;
@@ -56,20 +53,25 @@ static void usp_end_fortune()
       delete pencoded;
       delete pvfortune;
       delete pfortune2add;
+      delete psql_fortune;
       }
 }
 #endif
 -->
 <!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
+uint32_t sz;
 Fortune* item;
+char* ptr = UClientImage_Base::wbuffer->pend();
 
 U_NEW(Fortune, item, Fortune(*pfortune2add));
+
 pvfortune->push_back(item);
 
 pstmt_fortune->execute();
 
 do {
    U_NEW(Fortune, item, Fortune(*pfortune));
+
    pvfortune->push_back(item);
    }
 while (pstmt_fortune->nextRow());
@@ -82,13 +84,26 @@ for (uint32_t i = 0, n = pvfortune->size(); i < n; ++i)
 
    UXMLEscape::encode(elem->message, *pencoded);
 
-   USP_PRINTF_ADD(
-      "<tr>"
-      "<td>%u</td>"
-      "<td>%v</td>"
-      "</tr>",
-      elem->id, pencoded->rep);
+   sz = pencoded->size();
+
+   u_put_unalignedp64(ptr, U_MULTICHAR_CONSTANT64('<','t','r','>','<','t','d','>'));
+
+   ptr = u_num2str32(elem->id, ptr+8);
+
+   u_put_unalignedp64(ptr, U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','t','d'));
+                      ptr += 8;
+
+   *ptr++ = '>';
+
+   (void) memcpy(ptr, pencoded->data(), sz);
+                 ptr +=                 sz;
+
+   u_put_unalignedp64(ptr,   U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','/','t'));
+   u_put_unalignedp16(ptr+8, U_MULTICHAR_CONSTANT16('r','>'));
+                      ptr += 10;
    }
+
+UClientImage_Base::wbuffer->size_adjust(ptr);
 
 pvfortune->clear();
 --></table></body></html>

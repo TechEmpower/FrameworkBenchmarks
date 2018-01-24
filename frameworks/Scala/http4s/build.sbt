@@ -25,7 +25,7 @@ libraryDependencies ++= Seq(
 	"org.tpolecat" %% "doobie-core" % doobieVersion,
 	"org.tpolecat" %% "doobie-hikari" % doobieVersion,
 	"com.zaxxer" %  "HikariCP" % "2.6.1",
-	"org.postgresql" % "postgresql" % "9.4.1212",
+	"org.postgresql" % "postgresql" % "42.1.4",
 	"ch.qos.logback" % "logback-classic" % "1.2.2"
 )
 

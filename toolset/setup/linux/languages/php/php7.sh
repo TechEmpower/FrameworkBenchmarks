@@ -1,10 +1,19 @@
 #!/bin/bash
 
-fw_installed php7 && return 0
+RETCODE=$(fw_exists ${IROOT}/php7.installed)
+[ ! "$RETCODE" == 0 ] || { \
+  echo "Moving PHP config files into place";
+  sudo cp $FWROOT/toolset/setup/linux/languages/php/php.ini /usr/local/lib/php.ini
+  sudo cp $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf /usr/local/lib/php-fpm.conf
+  rm -rf /tmp/php_sessions
+  /bin/bash $IROOT/php7/ext/session/mod_files.sh /tmp/php_sessions 3 5
+  source $IROOT/php7.installed
+  return 0; }
 
-VERSION="7.1.4"
+VERSION="7.2.1"
 PHP_HOME=$IROOT/php-$VERSION
 
+rm -rf $IROOT/php7
 fw_get -o php-${VERSION}.tar.gz http://php.net/distributions/php-${VERSION}.tar.gz
 fw_untar php-${VERSION}.tar.gz
 mv php-${VERSION} php7
@@ -12,7 +21,7 @@ cd php7
 
 echo "Configuring PHP quietly..."
 ./configure --prefix=$PHP_HOME --with-pdo-mysql \
-  --with-mcrypt --enable-intl --enable-mbstring \
+  --enable-intl --enable-mbstring \
   --enable-fpm --with-openssl --with-mysqli \
   --with-zlib --enable-opcache --quiet
 echo "Making PHP quietly..."
@@ -32,6 +41,8 @@ sed -i 's|;extension=mongodb.so|extension=mongodb.so|g' $FWROOT/toolset/setup/li
 
 cp $FWROOT/toolset/setup/linux/languages/php/php.ini $PHP_HOME/lib/php.ini
 cp $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf $PHP_HOME/lib/php-fpm.conf
+rm -rf /tmp/php_sessions
+/bin/bash $IROOT/php7/ext/session/mod_files.sh /tmp/php_sessions 3 5
 
 # =======================
 #
@@ -54,9 +65,6 @@ $PHP_HOME/bin/pecl config-set php_ini $PHP_HOME/lib/php.ini
 
 # mongodb.so - mongo.so deprecated in php7 use mongodb.so
 printf "\n" | $PHP_HOME/bin/pecl -q install -f mongodb
-
-# Clean up a bit
-rm -rf $IROOT/php7
 
 echo "export PHP_HOME=${PHP_HOME}" > $IROOT/php7.installed
 echo -e "export PATH=\$PHP_HOME/bin:\$PHP_HOME/sbin:\$PATH" >> $IROOT/php7.installed

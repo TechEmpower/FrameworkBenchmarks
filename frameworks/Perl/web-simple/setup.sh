@@ -1,17 +1,16 @@
 #!/bin/bash
 
-sed -i 's|localhost|'"${DBHOST}"'|g' app.pl
 sed -i 's|server unix:.*/FrameworkBenchmarks/web-simple|server unix:'"${TROOT}"'|g' nginx.conf
 
 fw_depends perl nginx
 
 cpanm --notest --no-man-page  \
-    Web::Simple@0.031 \
-    DBI@1.636 \
-    DBD::mysql@4.033 \
-    Plack@1.0039 \
+    Web::Simple@0.033 \
+    DBI@1.637 \
+    DBD::mysql@4.043 \
+    Plack@1.0044 \
     Starman@0.4014 \
-    JSON::XS@3.02
+    JSON::XS@3.04
     
 nginx -c $TROOT/nginx.conf
 

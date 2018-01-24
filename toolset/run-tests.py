@@ -12,6 +12,7 @@ import copy
 from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
 from setup.linux import setup_util
+from scaffolding import Scaffolding
 from ast import literal_eval
 
 # Enable cross-platform colored output
@@ -139,13 +140,14 @@ def main(argv=None):
     # Install options
     parser.add_argument('--clean', action='store_true', default=False, help='Removes the results directory')
     parser.add_argument('--clean-all', action='store_true', dest='clean_all', default=False, help='Removes the results and installs directories')
+    parser.add_argument('--new', action='store_true', default=False, help='Initialize a new framework test')
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
     parser.add_argument('--test-dir', nargs='+', dest='test_dir', help='name of framework directory containing all tests to run')
     parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
     parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'cached_query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
-    parser.add_argument('-m', '--mode', choices=['benchmark', 'verify'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown')
+    parser.add_argument('-m', '--mode', choices=['benchmark', 'verify', 'debug'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown. debug mode will skip verification and leave the server running.')
     parser.add_argument('--list-tests', action='store_true', default=False, help='lists all the known tests that can run')
 
     # Benchmark options
@@ -159,9 +161,12 @@ def main(argv=None):
     parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
     parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
     parser.add_argument('--quiet', action='store_true', default=False, help='Only print a limited set of messages to stdout, keep the bulk of messages in log files only')
-    parser.add_argument('--clear-tmp', action='store_true', default=False, help='Clears files written to /tmp after each framework\'s tests complete.')
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
+
+    if args.new:
+        Scaffolding()
+        return 0
 
     benchmarker = Benchmarker(vars(args))
 

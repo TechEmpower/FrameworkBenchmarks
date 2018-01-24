@@ -1,7 +1,7 @@
 package hello;
 
 import static hello.Helper.getQueries;
-import static hello.Helper.randomWorld;
+import static hello.Helper.randomWorldNumber;
 import static hello.Helper.sendJson;
 
 import com.mongodb.client.MongoCollection;
@@ -34,13 +34,13 @@ final class UpdatesMongoHandler implements HttpHandler {
     for (int i = 0; i < worlds.length; i++) {
       worlds[i] =
           worldCollection
-              .find(Filters.eq(randomWorld()))
+              .find(Filters.eq(randomWorldNumber()))
               .map(Helper::mongoDocumentToWorld)
               .first();
     }
     List<WriteModel<Document>> writes = new ArrayList<>(worlds.length);
     for (World world : worlds) {
-      world.randomNumber = randomWorld();
+      world.randomNumber = randomWorldNumber();
       Bson filter = Filters.eq(world.id);
       Bson update = Updates.set("randomNumber", world.randomNumber);
       writes.add(new UpdateOneModel<>(filter, update));

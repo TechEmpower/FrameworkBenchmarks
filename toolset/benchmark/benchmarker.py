@@ -582,16 +582,13 @@ class Benchmarker:
                 ##########################
                 # Verify URLs
                 ##########################
-                logging.info("Verifying framework URLs")
-                passed_verify = test.verify_urls(logDir)
-
-                ##########################
-                # Nuke /tmp
-                ##########################
-                try:
-                    subprocess.check_call('sudo rm -rf /tmp/*', shell=True, stderr=out, stdout=out)
-                except Exception:
-                    out.write(header("Error: Could not empty /tmp"))
+                if self.mode == "debug":
+                    logging.info("Entering debug mode. Server has started. CTRL-c to stop.")
+                    while True:
+                        time.sleep(1)
+                else:
+                    logging.info("Verifying framework URLs")
+                    passed_verify = test.verify_urls(logDir)
 
                 ##########################
                 # Benchmark this test
@@ -613,16 +610,16 @@ class Benchmarker:
                 ##########################################################
                 # Remove contents of  /tmp folder
                 ##########################################################
-                if self.clear_tmp:
-                    try:
-                        filelist = [ f for f in os.listdir("/tmp") ]
-                        for f in filelist:
-                            try:
-                                os.remove("/tmp/" + f)
-                            except OSError as err:
-                                print "Failed to remove " + str(f) + " from /tmp directory: " + str(err)
-                    except OSError:
-                        print "Failed to remove contents of /tmp directory."
+                try:
+                    subprocess.check_call('sudo rm -rf /tmp/*', shell=True, stderr=out, stdout=out)
+                except Exception:
+                    out.write(header("Error: Could not empty /tmp"))
+
+    
+                ##########################################################
+                # Remove apt sources to avoid pkg errors and collisions
+                ##########################################################
+                os.system("sudo rm -rf /etc/apt/sources.list.d/*")
 
                 ##########################################################
                 # Save results thus far into the latest results directory
@@ -934,6 +931,8 @@ class Benchmarker:
         del args['type']
 
         args['max_concurrency'] = max(args['concurrency_levels'])
+        if 'pipeline_concurrency_levels' not in args:
+            args['pipeline_concurrency_levels'] = [256,1024,4096,16384]
 
         self.__dict__.update(args)
         # pprint(self.__dict__)
@@ -989,6 +988,7 @@ class Benchmarker:
             self.results['startTime'] = int(round(time.time() * 1000))
             self.results['completionTime'] = None
             self.results['concurrencyLevels'] = self.concurrency_levels
+            self.results['pipelineConcurrencyLevels'] = self.pipeline_concurrency_levels
             self.results['queryIntervals'] = self.query_levels
             self.results['cachedQueryIntervals'] = self.cached_query_levels
             self.results['frameworks'] = [t.name for t in self.__gather_tests]

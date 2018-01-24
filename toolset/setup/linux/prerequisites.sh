@@ -28,11 +28,11 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   libpq-dev mlton \
   cloc dstat                        `# Collect resource usage statistics` \
   python-dev \
-  python-pip re2c
+  python-pip re2c libnuma-dev
 
 sudo pip install colorama==0.3.1
 # Version 2.3 has a nice Counter() and other features
-# but it requires —-allow-external and -—allow-unverified
+# but it requires --allow-external and --allow-unverified
 sudo pip install progressbar==2.2
 sudo pip install requests
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends gcc-4.9
+fw_depends gcc-6
 
 fw_installed ulib && return 0
 
@@ -14,9 +14,10 @@ ULIB_DOCUMENT_ROOT=$ULIB_ROOT/ULIB_DOCUMENT_ROOT
 mkdir -p $ULIB_ROOT
 mkdir -p $ULIB_DOCUMENT_ROOT
 
+#if [ "$TRAVIS" = "true" ]; then
 # AVOID "fatal error: postgres_fe.h: No such file or directory"
-# TODO: This should already be installed and unnecessary.
 sudo apt-get install -y postgresql-server-dev-all
+#fi
 
 # make use of FIFO scheduling policy possible (we must avoid use of test because bash signal trapping)
 #type setcap >/dev/null 2>/dev/null
@@ -25,20 +26,10 @@ sudo apt-get install -y postgresql-server-dev-all
   sudo apt-get install -y libcap2-bin
 #fi
 
-# Check for the compiler support (We want at least g++ 4.8)
-CC=gcc  # C   compiler command
-CXX=g++ # C++ compiler command
-
-gcc_version=`g++ -dumpversion`
-
-case "$gcc_version" in
-  3*|4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*|4.8*)
-	  CC='gcc-4.9'
-	 CXX='g++-4.9'
-  ;;
-esac
-
-export CC CXX
+export CC=gcc-6
+export CXX=g++-6
+export AR=gcc-ar-6
+export RANLIB=gcc-ranlib-6
 
 # We need to install mongo-c-driver (we don't have a ubuntu package)
 RETCODE=$(fw_exists ${IROOT}/mongo-c-driver.installed)
@@ -51,10 +42,16 @@ if [ "$RETCODE" != 0 ]; then
   touch ${IROOT}/mongo-c-driver.installed
 fi
 
-# 1. Download ULib
 cd $IROOT
-fw_get -o ULib-${ULIB_VERSION}.tar.gz https://github.com/stefanocasazza/ULib/archive/v${ULIB_VERSION}.tar.gz 
-fw_untar  ULib-${ULIB_VERSION}.tar.gz
+
+if [ -e ../results/ULib-${ULIB_VERSION}.tar.gz ]; then
+	mv ../results/ULib-${ULIB_VERSION}.tar.gz .
+else
+	# 1. Download ULib
+	fw_get -o ULib-${ULIB_VERSION}.tar.gz https://github.com/stefanocasazza/ULib/archive/v${ULIB_VERSION}.tar.gz 
+fi
+
+fw_untar ULib-${ULIB_VERSION}.tar.gz
 
 # 2. Compile application (userver_tcp)
 cd ULib-$ULIB_VERSION

@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.jooby</groupId>
     <artifactId>jooby-project</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.1</version>
   </parent>
 
   <artifactId>jooby</artifactId>
@@ -17,7 +17,8 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>1.1.0</jooby.version>
+    <jooby.version>1.2.1</jooby.version>
+    <postgresql.version>42.1.4</postgresql.version>
     <rocker.touchFile>/dev/null</rocker.touchFile>
 
     <!-- Startup class -->
@@ -31,16 +32,23 @@
       <artifactId>jooby-jackson</artifactId>
     </dependency>
 
-    <!-- requery -->
+    <!-- jdbc -->
     <dependency>
       <groupId>org.jooby</groupId>
-      <artifactId>jooby-requery</artifactId>
+      <artifactId>jooby-jdbc</artifactId>
     </dependency>
 
     <!-- mySQL -->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+
+    <!-- postgresql -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql.version}</version>
     </dependency>
 
     <!-- rocker -->

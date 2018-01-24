@@ -5,14 +5,11 @@ authors = ["Steve Klabnik <steve@steveklabnik.com>", "Alexander Polyakov <plhk@s
 
 [dependencies]
 futures = "0.1"
+hyper = "0.11.6"
 tokio-proto = "0.1"
 tokio-service = "0.1"
 num_cpus = "1.2"
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
-mime = "0.2"
-
-[dependencies.hyper]
-git = "https://github.com/hyperium/hyper/"
-rev = "acd62cda446e4c647716a2d595342360dc24a080"
+mime = "0.3"

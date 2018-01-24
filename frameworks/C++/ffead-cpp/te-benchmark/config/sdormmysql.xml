@@ -1,0 +1,17 @@
+<sdorm>
+	<data-source>
+		<config>
+			<nodes>
+				<node>
+					<dsn>MySQL-DSN</dsn>
+					<username>benchmarkdbuser</username>
+					<password>benchmarkdbpass</password>
+				</node>
+			</nodes>
+			<pool-size>30</pool-size>
+			<name>MySQL-DSN</name>
+			<type>sql</type>
+			<dialect>MySQLMyISAMDialect</dialect>
+		</config>
+	</data-source>
+</sdorm>

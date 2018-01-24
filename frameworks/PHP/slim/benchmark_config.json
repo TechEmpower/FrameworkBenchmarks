@@ -62,7 +62,7 @@
       "classification": "Micro",
       "database": "MySQL",
       "framework": "slim",
-      "language": "PHP5",
+      "language": "PHP",
       "flavor": "PHP5",
       "orm": "Raw",
       "platform": "None",

@@ -44,10 +44,7 @@ public class PostgresService   extends BaseService
 	@Inject
 	@Named("postgres.hikaricp.maximumPoolSize")
 	protected Integer maximumPoolSize;
-	
-	@Inject
-	@Named("postgres.hikaricp.minimumIdle")
-	protected Integer minimumIdle;
+	 
 	
 	@Inject
 	@Named("postgres.hikaricp.description")
@@ -71,18 +68,14 @@ public class PostgresService   extends BaseService
 	protected void startUp() throws Exception
 	{
 		super.startUp();
- 		
-		HikariConfig config = new HikariConfig();
+ 		 
 		
-		
-		config.setJdbcUrl(jdbcUrl);
-		config.setUsername(username);
-		config.setPassword(password); 
-		config.setMinimumIdle(minimumIdle);
-		config.setMaximumPoolSize(maximumPoolSize);
-
-		this.ds = new HikariDataSource(config);
-		
+		this.ds = new HikariDataSource();
+ 		this.ds.setJdbcUrl(jdbcUrl);
+		this.ds.setUsername(username);
+		this.ds.setPassword(password);  
+		this.ds.setMaximumPoolSize(maximumPoolSize); 
+ 
 		log.info( this.getClass().getSimpleName() + " started with ds: " + ds); 
 	}
 	

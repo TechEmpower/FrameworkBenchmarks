@@ -1,0 +1,16 @@
+name: amber
+version: 0.1.0
+
+authors:
+  - Amber <amberframework.org>
+
+license: MIT
+
+dependencies:
+  amber:
+    github: amberframework/amber
+    version: "0.3.6" 
+
+  granite_orm:
+    github: amberframework/granite-orm
+    version: "0.7.8"

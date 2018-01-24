@@ -7,7 +7,6 @@ fw_installed mysql && return 0
 # send over the required files
 scp $FWROOT/toolset/setup/linux/databases/mysql/create.sql $DBHOST:~/
 scp $FWROOT/toolset/setup/linux/databases/mysql/my.cnf $DBHOST:~/
-scp $FWROOT/toolset/setup/linux/databases/mysql/usr.sbin.mysqld $DBHOST:~/
 scp $FWROOT/toolset/setup/linux/databases/mysql/mysql.list $DBHOST:~/
 
 # install mysql on database machine
@@ -29,8 +28,6 @@ sudo rm -rf /ssd/mysql
 sudo rm -rf /ssd/log/mysql
 sudo cp -R -p /var/lib/mysql /ssd/
 sudo cp -R -p /var/log/mysql /ssd/log
-sudo cp usr.sbin.mysqld /etc/apparmor.d/
-sudo /etc/init.d/apparmor reload
 sudo service mysql start
 EOF
 

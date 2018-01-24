@@ -7,7 +7,7 @@
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Java Oracle 1.8.0_121](http://www.oracle.com/technetwork/java/javase)
+* [Java Oracle 1.8](http://www.oracle.com/technetwork/java/javase)
 * [http4s 0.15.9a](http://http4s.org/)
 * [blaze 0.12.4](https://github.com/http4s/blaze/)
 

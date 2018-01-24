@@ -18,25 +18,31 @@ Uses the CakePHP Model functionality.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Cake Version 2.3.0](http://cakephp.org/)
-* [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
-* [nginx 1.4.0](http://nginx.org/)
-* [MySQL 5.5.29](https://dev.mysql.com/)
+* [Cake Version 2.10.4](https://cakephp.org/)
+* [PHP Version 5.6.32](http://www.php.net/) with FPM and APC
+* [PHP Version 7.2.1](http://www.php.net/) No PHP7 until upgrade the framework version
+* [nginx 1.12.0](http://nginx.org/)
+* [MySQL 5.7.20](https://dev.mysql.com/)
 
 Cake Debug mode is set to 0 in [core.php](app/Config/core.php), as
 appropriate for a production deployment.
 
-To support the Cake JsonView, we also made a [routes configuration change](app/Config/routes.php).
+To support the Cake JsonView and use the recommended URLs, 
+we also made a [routes configuration change](app/Config/routes.php).
 
 ## Test URLs
 ### JSON Encoding Test
 
-http://localhost/index.php/json.json
+http://localhost/index.php/json
 
 ### Data-Store/Database Mapping Test
 
-http://localhost/index.php/world.json
+http://localhost/index.php/db
 
 ### Variable Query Test
     
-http://localhost/index.php/world.json?queries=2
+http://localhost/index.php/queries?queries=2
+
+### Variable Update Test
+
+http://localhost/index.php/updates?queries=2

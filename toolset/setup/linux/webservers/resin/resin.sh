@@ -4,11 +4,9 @@ fw_depends java
 
 fw_installed resin && return 0
 
-RVER=4.0.48
+RVER=4.0.55
 RESIN=resin-$RVER
 RESIN_HOME=$IROOT/$RESIN
-
-sudo cp -r $JAVA_HOME/include $JAVA_HOME/jre/bin/
 
 fw_get -O http://www.caucho.com/download/resin-$RVER.tar.gz
 fw_untar resin-$RVER.tar.gz

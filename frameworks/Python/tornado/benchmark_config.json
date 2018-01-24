@@ -25,8 +25,8 @@
       "notes": "",
       "versus": "tornado"
     },
-    "pypy": {
-      "setup_file": "setup_pypy",
+    "pypy2": {
+      "setup_file": "setup_pypy2",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -39,7 +39,7 @@
       "database": "MongoDB",
       "framework": "None",
       "language": "Python",
-      "flavor": "Pypy",
+      "flavor": "PyPy2",
       "orm": "Raw",
       "platform": "None",
       "webserver": "Tornado",
