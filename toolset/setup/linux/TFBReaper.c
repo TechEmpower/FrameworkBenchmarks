@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <ctype.h>
 #include <sys/wait.h>
 #include <sys/prctl.h>
 #include <string.h>
@@ -25,6 +26,41 @@ struct Node
 Node *head = NULL;
 Node *tail = NULL;
 
+// Stores the trimmed input string into the given output buffer, which must be
+// large enough to store the result.  If it is too small, the output is
+// truncated.
+size_t trimwhitespace(char *out, size_t len, const char *str)
+{
+  if(len == 0)
+    return 0;
+
+  const char *end;
+  size_t out_size;
+
+  // Trim leading space
+  while(isspace((unsigned char)*str)) str++;
+
+  if(*str == 0)  // All spaces?
+  {
+    *out = 0;
+    return 1;
+  }
+
+  // Trim trailing space
+  end = str + strlen(str) - 1;
+  while(end > str && isspace((unsigned char)*end)) end--;
+  end++;
+
+  // Set output size to minimum of trimmed string length and buffer size minus 1
+  out_size = (end - str) < len-1 ? (end - str) : len-1;
+
+  // Copy trimmed string and add null terminator
+  memcpy(out, str, out_size);
+  out[out_size] = 0;
+
+  return out_size;
+}
+
 /**
  * Reap will recursively find all processes with this process
  * as an ancestor, and kill them.
@@ -37,20 +73,23 @@ void reap(int signum)
   char buf[256];
 
   char command[256];
-  sprintf(command, "findChilds() { for child in $(ps --ppid $1 ho pid); do echo $child; findChilds $child; done } && findChilds %d", pid);
+  sprintf(command, "findChilds() { for child in $(ps --ppid $1 ho pid); do ps --no-headers -o pid,ppid,command $child; findChilds $child; done } && findChilds %d", pid);
 
   int count;
 
   do
   {
     count = 0;
-    char *pids[256];
     fp = popen(command, "r");
     while(fgets(buf, sizeof(buf), fp) != 0)
     {
+      char trimmed[256];
+      trimwhitespace(trimmed, 256, buf);
+      char *childPid = strtok(trimmed," ");
+      printf("%s\n", buf);
       Node *newNode = malloc(sizeof(Node));
-      newNode->str = malloc(strlen(buf)+1);
-      strcpy(newNode->str, buf);
+      newNode->str = malloc(strlen(childPid)+1);
+      strcpy(newNode->str, childPid);
       newNode->next = NULL;
 
       if(tail == NULL)
@@ -77,17 +116,19 @@ void reap(int signum)
       waitpid(atoi(curr->str), NULL, 0);
       curr = curr->next;
     }
+
+    printf("Number of pids: %i\n", count);
   }
-  // This may seem magical, but that command from above always results in two
-  // additionally PIDs: one for `ps` and one for `sh`. Therefore, all of the
-  // lineage of this TFBReaper have been successfully killed once there are
-  // only two PIDs counted in the loop.
+  // This may seem magical, but that command from above always results in one
+  // additional PID: one for `sh` executing fildChilds. Therefore, all of the
+  // lineage of this TFBReaper have been successfully killed once there is
+  // only one PID counted in the loop.
   // This loop is necessary for edge cases where there is a master->slave 
   // lineage and TFBReaper kills a slave first, which is observed and fixed
   // by the master by spawning a NEW slave in the original's place, and then
   // killing the master (thus orphaning the newly spawned slave, but that PID
   // is not in our master list).
-  while(count > 2);
+  while(count > 1);
 
   exit(0);
 }
