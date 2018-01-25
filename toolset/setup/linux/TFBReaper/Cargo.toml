@@ -8,3 +8,5 @@ authors = [ "Mike Smith <msmith@techempower.com>" ]
 
 prctl = "1.0.0"
 nix = "0.8.1"
+libc = "0.2"
+procinfo = "0.4.2"
