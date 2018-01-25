@@ -1,0 +1,10 @@
+[package]
+
+name = "tfb_reaper"
+version = "0.0.1"
+authors = [ "Mike Smith <msmith@techempower.com>" ]
+
+[dependencies]
+
+prctl = "1.0.0"
+nix = "0.8.1"
