@@ -7,7 +7,7 @@ class Database(private val dataSource: javax.sql.DataSource) {
 
     companion object {
         operator fun invoke(host: String): Database {
-            val postgresqlUrl = "jdbc:postgresql://$host/hello_world?" +
+            val postgresqlUrl = "jdbc:postgresql://$host:5432/hello_world?" +
                 "jdbcCompliantTruncation=false&" +
                 "elideSetAutoCommits=true&" +
                 "useLocalSessionState=true&" +
@@ -26,7 +26,7 @@ class Database(private val dataSource: javax.sql.DataSource) {
 
             val config = HikariConfig()
             config.jdbcUrl = postgresqlUrl
-            config.maximumPoolSize = 256
+            config.maximumPoolSize = 64
             config.username = "benchmarkdbuser"
             config.password = "benchmarkdbpass"
             return Database(HikariDataSource(config))
@@ -41,10 +41,8 @@ class Database(private val dataSource: javax.sql.DataSource) {
         }
 }
 
-fun <T> ResultSet.toList(fn: (ResultSet) -> T): List<T> {
-    val t = mutableListOf<T>()
-    while (this.next()) {
-        t.add(fn(this))
+fun <T> ResultSet.toList(fn: (ResultSet) -> T): List<T> = mutableListOf<T>().apply {
+    while (next()) {
+        add(fn(this@toList))
     }
-    return t
 }

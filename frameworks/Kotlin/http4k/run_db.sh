@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
-cp ../../../config/create.sql .
-
+docker rm -fv $(docker ps -aq)
+rm -rf sql
+mkdir -p sql
+cp -r ./../../../toolset/setup/linux/databases/postgresql/create-postgres.sql ./sql/
 docker build -t dbi .
 
-rm create.sql
+docker run  -p 5432:5432 --name db -d dbi
 
-docker run --name db -d \
-  -e MYSQL_ROOT_PASSWORD=123 \
-  -p 3306:3306 dbi
+function identity {
+	docker ps -a| grep $1 | awk '{print $1}'  | grep -v 'CONTAINER'
+}
+
+export name=`identity dbi`
+docker logs -f ${name}
