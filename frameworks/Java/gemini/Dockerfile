@@ -1,7 +1,5 @@
-FROM ubuntu:14.04
+FROM tfb/base:latest
 
-RUN apt-get update
-RUN apt-get install -qqy software-properties-common
 RUN add-apt-repository -y ppa:openjdk-r/ppa
 RUN apt-get update
 RUN apt-get install -qqy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
@@ -25,4 +23,4 @@ RUN cd /gemini; mkdir -p Docroot/WEB-INF/classes; ant resolve; ant compile
 
 EXPOSE 8080
 
-CMD resinctl -conf /gemini/Docroot/WEB-INF/resin.xml console
+CMD ["resinctl", "-conf", "/gemini/Docroot/WEB-INF/resin.xml", "console"]
