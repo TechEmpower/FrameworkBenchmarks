@@ -23,7 +23,7 @@ cmake -DCMAKE_INSTALL_PREFIX=${CPPDBROOT} ..
 
 make
 #make test
-sudo make install
+make install
 #make clean
 
 
