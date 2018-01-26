@@ -9,10 +9,8 @@ ADD build.xml /gemini/
 ADD ivy.xml /gemini/
 ADD ivysettings.xml /gemini/
 
-RUN ls -al $JAVA_HOME/jre/lib/security
+RUN cd /gemini; mkdir -p Docroot/WEB-INF/classes; mkdir -p Docroot/WEB-INF/lib; ant resolve; ant compile
 
-#RUN cd /gemini; mkdir -p Docroot/WEB-INF/classes; mkdir -p Docroot/WEB-INF/lib; ant resolve; ant compile
+EXPOSE 8080
 
-#EXPOSE 8080
-
-#CMD ["resinctl", "-conf", "/gemini/Docroot/WEB-INF/resin.xml", "console"]
+CMD ["resinctl", "-conf", "/gemini/Docroot/WEB-INF/resin.xml", "console"]
