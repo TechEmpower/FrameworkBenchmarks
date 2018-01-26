@@ -78,7 +78,7 @@ class FrameworkTestType:
         Downloads a URL and returns the HTTP response headers
         and body content as a tuple
         '''
-        print "Accessing URL %s:" % url
+        print("Accessing URL {!s}:".format(url))
         self.out.write("Accessing URL %s \n" % url)
 
         headers = {'Accept': self.accept_header}
@@ -89,7 +89,7 @@ class FrameworkTestType:
         self.out.write(str(headers))
         self.out.write(body)
         b = 40
-        print "  Response (trimmed to %d bytes): \"%s\"" % (b, body.strip()[:b])
+        print("  Response (trimmed to {:d} bytes): \"{!s}\"".format(b, body.strip()[:b]))
         return headers, body
 
     def verify(self, base_url):
