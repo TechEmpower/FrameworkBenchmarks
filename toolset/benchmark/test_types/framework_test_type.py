@@ -1,8 +1,13 @@
 import copy
 import sys
+import os
+import json
 import subprocess
 from subprocess import PIPE
 import requests
+import MySQLdb
+import psycopg2
+import pymongo
 
 # Requests is built ontop of urllib3,
 # here we prevent general request logging
@@ -125,3 +130,61 @@ class FrameworkTestType:
         Use before calling parse
         '''
         return copy.copy(self)
+
+    def get_current_world_table(self):
+        '''
+        Return a JSON object containing all 10,000 World items as they currently
+        exist in the database. This is used for verifying that entries in the
+        database have actually changed during an Update verification test.
+        '''
+        database_name = ""
+        results_json = {}
+        try:
+            database_name = self.database.lower()
+        except AttributeError:
+            pass
+
+        if database_name == "mysql":
+            try:
+                db = MySQLdb.connect(os.environ.get("DBHOST"), "benchmarkdbuser", "benchmarkdbpass", "hello_world")
+                cursor = db.cursor()
+                cursor.execute("SELECT * FROM World")
+                results = cursor.fetchall()
+                results_json = json.loads(json.dumps(dict(results)))
+                db.close()
+            except Exception as e:
+                print "ERROR: Unable to load current MySQL World table."
+                print e
+        elif database_name == "postgres":
+            try:
+                db = psycopg2.connect(host=os.environ.get("DBHOST"),
+                                      port="5432",
+                                      user="benchmarkdbuser",
+                                      password="benchmarkdbpass",
+                                      database="hello_world")
+                cursor = db.cursor()
+                cursor.execute("SELECT * FROM World")
+                results = cursor.fetchall()
+                results_json = json.loads(json.dumps(dict(results)))
+                db.close()
+            except Exception as e:
+                print "ERROR: Unable to load current Postgres World table."
+                print e
+        elif database_name == "mongodb":
+            try:
+                worlds_json = {}
+                connection = pymongo.MongoClient(host=os.environ.get("DBHOST"))
+                db = connection.hello_world
+                for world in db.world.find():
+                    if "randomNumber" in world:
+                        if "id" in world:
+                            worlds_json[str(int(world["id"]))] = int(world["randomNumber"])
+                        elif "_id" in world:
+                            worlds_json[str(int(world["_id"]))] = int(world["randomNumber"])
+                results_json = worlds_json
+                connection.close()
+            except Exception as e:
+                print "ERROR: Unable to load current MongoDB World table."
+                print e
+
+        return results_json
