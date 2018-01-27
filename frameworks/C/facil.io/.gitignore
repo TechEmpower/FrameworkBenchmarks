@@ -1,0 +1,5 @@
+# Add any files that are created at build/run-time
+#
+# Example: *.class, *.pyc, bin/
+
+facil_app/

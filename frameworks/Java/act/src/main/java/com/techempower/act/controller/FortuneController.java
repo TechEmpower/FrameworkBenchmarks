@@ -29,6 +29,7 @@ import act.view.NoImplicitTemplateVariable;
 import com.techempower.act.AppEntry;
 import com.techempower.act.model.Fortune;
 import org.osgl.mvc.annotation.GetAction;
+import org.osgl.mvc.annotation.SessionFree;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +45,7 @@ public class FortuneController {
 
     @GetAction("fortunes")
     @NoImplicitTemplateVariable
+    @SessionFree
     public void fortunes() {
         List<Fortune> fortunes = dao.findAllAsList();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
