@@ -8,12 +8,11 @@ group: deprecated-2017Q2
 language: generic
 python:
   - "2.7"
-services:
-  - docker
 
 env:
   matrix:
     - "TESTDIR=C/duda"
+    - "TESTDIR=C/facil.io"
     - "TESTDIR=C/onion"
     - "TESTDIR=C/h2o"
     - "TESTDIR=C/octane"
@@ -29,7 +28,6 @@ env:
     - "TESTDIR=C++/ffead-cpp"
     - "TESTDIR=C++/cpoll_cppsp"
     - "TESTDIR=C++/cutelyst"
-    - "TESTDIR=C++/includeos-mana"
     - "TESTDIR=C++/silicon"
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ulib"
@@ -96,7 +94,6 @@ env:
     - "TESTDIR=Java/minijax"
     - "TESTDIR=Java/netty"
     - "TESTDIR=Java/ninja-standalone"
-    - "TESTDIR=Java/officefloor"
     - "TESTDIR=Java/play1"
     - "TESTDIR=Java/play2-java"
     - "TESTDIR=Java/proteus"
@@ -145,6 +142,7 @@ env:
     - "TESTDIR=PHP/limonade"
     - "TESTDIR=PHP/lithium"
     - "TESTDIR=PHP/lumen"
+    - "TESTDIR=PHP/peachpie"
     - "TESTDIR=PHP/phalcon"
     - "TESTDIR=PHP/phalcon-micro"
     - "TESTDIR=PHP/phpixie"

@@ -2,7 +2,7 @@
   "framework": "servlet",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup-resin-gcc-6",
       "json_url": "/servlet/json",
       "plaintext_url": "/servlet/plaintext",
       "port": 8080,
