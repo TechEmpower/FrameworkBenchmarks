@@ -24,6 +24,7 @@ import static act.controller.Controller.Util.notFoundIfNull;
 
 import act.app.conf.AutoConfig;
 import act.db.Dao;
+import act.db.jpa.NoTransaction;
 import act.sys.Env;
 import act.util.Global;
 import com.techempower.act.AppEntry;
@@ -53,7 +54,7 @@ public class WorldController {
      */
     private static final Const<Integer> WORLD_MAX_ROW = $.constant();
 
-    private static boolean BATCH_SAVE = true;
+    private static boolean BATCH_SAVE = false;
 
     @Global
     @Inject
@@ -62,6 +63,7 @@ public class WorldController {
 
     @GetAction("db")
     @SessionFree
+    @NoTransaction
     public World findOne() {
         return dao.findById(randomWorldNumber());
     }
@@ -69,6 +71,7 @@ public class WorldController {
     @GetAction("queries")
     @Transactional(readOnly = true)
     @SessionFree
+    @NoTransaction
     public final World[] multipleQueries(String queries) {
         int q = regulateQueries(queries);
 
@@ -77,6 +80,16 @@ public class WorldController {
             worlds[i] = findOne();
         }
         return worlds;
+    }
+
+    @GetAction("count")
+    public long count(int max) {
+        return dao.countBy("randomNumber <", max);
+    }
+
+    @GetAction("bymin")
+    public Iterable<World> byMin(int min) {
+        return dao.q("randomNumber >", min).orderBy("randomNumber").fetch();
     }
 
     @GetAction("updates")
