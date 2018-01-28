@@ -13,4 +13,3 @@ function identity {
 }
 
 export name=`identity dbi`
-docker logs -f ${name}
