@@ -13,4 +13,4 @@ docker/
 tools/
 sbt
 sql/
-results/
+results*
