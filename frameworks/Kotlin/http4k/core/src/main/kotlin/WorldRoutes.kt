@@ -1,3 +1,4 @@
+
 import com.fasterxml.jackson.databind.JsonNode
 import org.http4k.core.Body
 import org.http4k.core.Method.GET
@@ -14,8 +15,6 @@ import org.http4k.routing.bind
 import java.lang.Math.max
 import java.lang.Math.min
 import java.sql.Connection
-import java.sql.ResultSet.CONCUR_READ_ONLY
-import java.sql.ResultSet.TYPE_FORWARD_ONLY
 import java.util.Random
 
 
@@ -58,19 +57,17 @@ object WorldRoutes {
     }
 
     private fun Connection.findWorld(id: Int): JsonNode? =
-        prepareStatement("SELECT * FROM world WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use {
-            it.setInt(1, id)
-            it.executeQuery().toList {
-                obj("id" to number(it.getInt("id")), "randomNumber" to number(it.getInt("randomNumber")))
+        withStatement("SELECT * FROM world WHERE id = ?") {
+            setInt(1, id)
+            executeQuery().toList {
+                obj("id" to number(getInt("id")), "randomNumber" to number(getInt("randomNumber")))
             }.firstOrNull()
         }
 
-    private fun Connection.updateWorld(id: Int) {
-        prepareStatement("UPDATE world SET randomNumber = ? WHERE id = ?").use {
-            it.setInt(1, randomWorld())
-            it.setInt(2, id)
-            it.executeUpdate()
-        }
+    private fun Connection.updateWorld(id: Int) = withStatement("UPDATE world SET randomNumber = ? WHERE id = ?") {
+        setInt(1, randomWorld())
+        setInt(2, id)
+        executeUpdate()
     }
 
     private fun randomWorld() = Random().nextInt(9999) + 1

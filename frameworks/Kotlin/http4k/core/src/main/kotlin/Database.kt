@@ -1,6 +1,7 @@
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import java.sql.Connection
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 
 class Database(private val dataSource: javax.sql.DataSource) {
@@ -34,9 +35,13 @@ class Database(private val dataSource: javax.sql.DataSource) {
     }
 
     fun <T> withConnection(fn: Connection.() -> T): T = dataSource.connection.use(fn)
+
+    fun <T> withStatement(stmt: String, fn: PreparedStatement.() -> T): T = withConnection { withStatement(stmt, fn) }
 }
 
-fun <T> ResultSet.toList(fn: (ResultSet) -> T): List<T> =
+fun <T> Connection.withStatement(stmt: String, fn: PreparedStatement.() -> T): T = prepareStatement(stmt, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY).use(fn)
+
+fun <T> ResultSet.toList(fn: ResultSet.() -> T): List<T> =
     use {
         mutableListOf<T>().apply {
             while (next()) {
