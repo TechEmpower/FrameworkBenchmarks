@@ -16,7 +16,7 @@ java -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts -XX:+AlwaysPreT
 sleep 10
 
 function abTest {
-    ab -q -n 5000 -c 10 http://localhost:9000/$1 | grep "Requests per second" | awk '{ print $4 }'
+    ab -n 5000 -c 10 http://localhost:9000/$1 | grep "Requests per second" | awk '{ print $4 }'
 }
 
 echo `abTest "json"`, \
