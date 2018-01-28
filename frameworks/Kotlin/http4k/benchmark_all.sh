@@ -1,14 +1,15 @@
 #!/bin/bash
 
-dkill
-./run_db.sh
-
-sleep 10
+rm -rf results
 
 ./benchmark_server.sh sunhttp
+sleep 10
 ./benchmark_server.sh apache
+sleep 10
 ./benchmark_server.sh jetty
+sleep 10
 ./benchmark_server.sh netty
+sleep 10
 ./benchmark_server.sh undertow
 
-dkill
+cat results/*.csv
