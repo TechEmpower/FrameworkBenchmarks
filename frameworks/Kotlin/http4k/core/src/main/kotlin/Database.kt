@@ -39,7 +39,7 @@ class Database(private val dataSource: javax.sql.DataSource) {
     fun <T> withStatement(stmt: String, fn: PreparedStatement.() -> T): T = withConnection { withStatement(stmt, fn) }
 }
 
-fun <T> Connection.withStatement(stmt: String, fn: PreparedStatement.() -> T): T = prepareStatement(stmt, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY).use(fn)
+fun <T> Connection.withStatement(stmt: String, fn: PreparedStatement.() -> T): T = prepareStatement(stmt).use(fn)
 
 fun <T> ResultSet.toList(fn: ResultSet.() -> T): List<T> =
     use {
