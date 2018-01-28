@@ -33,16 +33,14 @@ class Database(private val dataSource: javax.sql.DataSource) {
         }
     }
 
-    fun <T> withConnection(fn: (Connection) -> T): T =
-        try {
-            fn(dataSource.connection)
-        } finally {
-            dataSource.connection.close()
-        }
+    fun <T> withConnection(fn: Connection.() -> T): T = dataSource.connection.use(fn)
 }
 
-fun <T> ResultSet.toList(fn: (ResultSet) -> T): List<T> = mutableListOf<T>().apply {
-    while (next()) {
-        add(fn(this@toList))
+fun <T> ResultSet.toList(fn: (ResultSet) -> T): List<T> =
+    use {
+        mutableListOf<T>().apply {
+            while (next()) {
+                add(fn(this@toList))
+            }
+        }
     }
-}

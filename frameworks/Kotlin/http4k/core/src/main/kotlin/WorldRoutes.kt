@@ -1,4 +1,3 @@
-
 import com.fasterxml.jackson.databind.JsonNode
 import org.http4k.core.Body
 import org.http4k.core.Method.GET
@@ -17,7 +16,7 @@ import java.lang.Math.min
 import java.sql.Connection
 import java.sql.ResultSet.CONCUR_READ_ONLY
 import java.sql.ResultSet.TYPE_FORWARD_ONLY
-import java.util.*
+import java.util.Random
 
 
 object WorldRoutes {
@@ -36,43 +35,42 @@ object WorldRoutes {
 
     fun queryRoute(database: Database) = "/db" bind GET to {
         database.withConnection {
-            findWorld(it, randomWorld())
+            findWorld(randomWorld())
         }?.let { Response(OK).with(jsonBody of it) } ?: Response(NOT_FOUND)
     }
 
     fun multipleRoute(database: Database) = "/queries" bind GET to {
         val worlds = database.withConnection {
-            con ->
-            (1..numberOfQueries(it)).mapNotNull { findWorld(con, randomWorld()) }
+            (1..numberOfQueries(it)).mapNotNull { findWorld(randomWorld()) }
         }
         Response(OK).with(jsonBody of array(worlds))
     }
 
     fun updateRoute(database: Database) = "/updates" bind GET to {
         val worlds = database.withConnection {
-            con ->
             (1..numberOfQueries(it)).mapNotNull {
                 val id = randomWorld()
-                updateWorld(con, id)
-                findWorld(con, id)
+                updateWorld(id)
+                findWorld(id)
             }
         }
         Response(OK).with(jsonBody of array(worlds))
     }
 
-    private fun findWorld(it: Connection, id: Int): JsonNode? {
-        val stmtSelect = it.prepareStatement("select * from world where id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)
-        stmtSelect.setInt(1, id)
-        return stmtSelect.executeQuery().toList {
-            obj("id" to number(it.getInt("id")), "randomNumber" to number(it.getInt("randomNumber")))
-        }.firstOrNull()
-    }
+    private fun Connection.findWorld(id: Int): JsonNode? =
+        prepareStatement("SELECT * FROM world WHERE id = ?", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY).use {
+            it.setInt(1, id)
+            it.executeQuery().toList {
+                obj("id" to number(it.getInt("id")), "randomNumber" to number(it.getInt("randomNumber")))
+            }.firstOrNull()
+        }
 
-    private fun updateWorld(it: Connection, id: Int) {
-        val stmtSelect = it.prepareStatement("update world set randomNumber = ? where id = ?")
-        stmtSelect.setInt(1, randomWorld())
-        stmtSelect.setInt(2, id)
-        stmtSelect.executeUpdate()
+    private fun Connection.updateWorld(id: Int) {
+        prepareStatement("UPDATE world SET randomNumber = ? WHERE id = ?").use {
+            it.setInt(1, randomWorld())
+            it.setInt(2, id)
+            it.executeUpdate()
+        }
     }
 
     private fun randomWorld() = Random().nextInt(9999) + 1

@@ -19,8 +19,10 @@ object FortunesRoute {
 
     operator fun invoke(database: Database) = "/fortunes" bind GET to {
         val items = database.withConnection {
-            it.prepareStatement("select * from fortune").executeQuery().toList {
-                Fortune(it.getInt(1), it.getString(2))
+            prepareStatement("select * from fortune").use {
+                it.executeQuery().toList {
+                    Fortune(it.getInt(1), it.getString(2))
+                }
             }
         }
             .plus(Fortune(0, "Additional fortune added at request time."))
