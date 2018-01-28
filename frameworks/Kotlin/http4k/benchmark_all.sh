@@ -13,7 +13,7 @@ sleep 10
 ./benchmark_server.sh undertow
 
 cd results
-echo "json,plaintext,fortunes,queries,updates" > results
+echo "name,json,plaintext,fortunes,queries,updates,db" > results
 for filename in *.csv; do
     echo ${filename},`cat ${filename}` >> results
 done
