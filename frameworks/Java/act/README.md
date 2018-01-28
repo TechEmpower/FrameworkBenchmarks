@@ -75,3 +75,39 @@ This is using [ActFramework R1.6.4](http://actframework.org) to build an applica
 | multiple queries (20) | 2197.53 |
 | updates (20) | 1039.60 |
 | fortunes | 24301.25 |
+
+## SQL database test results comparing
+
+### DB
+
+| Technology | MySQL | Postgresql |
+| ---------- | ----: | ---------: |
+| Ebean | 18160.19 | 32303.52 |
+| JPA/Hibernate | 39588.35 | 41079.85 |
+| JPA/EclipseLink | 98415.07 | 103347.02 |
+
+### Multiple Queries
+
+| Technology | MySQL | Postgresql |
+| ---------- | ----: | ---------: |
+| Ebean | 1918.49 | 3268.78 |
+| JPA/Hibernate | 2518.09 | 3030.14 |
+| JPA/EclipseLink | 44483.81 | 49868.77  |
+
+
+### Updates
+
+| Technology | MySQL | Postgresql |
+| ---------- | ----: | ---------: |
+| Ebean | 568.46 | 865 |
+| JPA/Hibernate | 929.35 | 21.59 |
+| JPA/EclipseLink | 2213.31 | 4167.03 |
+
+### Fortunes
+
+| Technology | MySQL | Postgresql |
+| ---------- | ----: | ---------: |
+| Ebean | 18848.39 | 27560 |
+| JPA/Hibernate | 33314.78 | 32490.22 |
+| JPA/EclipseLink | 37590.55 | 34565.04 |
+
