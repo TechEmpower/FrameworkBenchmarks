@@ -670,7 +670,7 @@ class Benchmarker:
             slept = 0
             returnCode = None
             # Check once a second to see if TFBReaper has exited
-            while(slept < 30 and returnCode is None):
+            while(slept < 300 and returnCode is None):
                 time.sleep(1)
                 slept += 1
                 returnCode = self.__process.poll()
