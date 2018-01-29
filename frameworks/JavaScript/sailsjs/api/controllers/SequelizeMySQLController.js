@@ -23,7 +23,7 @@ var sequelize = new Sequelize(
   })
 
 
-var Worlds = sequelize.define('World', {
+var Worlds = sequelize.define('world', {
   id: {
       type: Sequelize.INTEGER,
       primaryKey: true
