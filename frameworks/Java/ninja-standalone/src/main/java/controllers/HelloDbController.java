@@ -70,7 +70,7 @@ public class HelloDbController {
     }
 
     @Transactional
-    private void updateWorld(World world) {
+    public void updateWorld(World world) {
         worldDao.put(world);
     }
 
