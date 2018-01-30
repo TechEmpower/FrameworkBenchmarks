@@ -7,7 +7,7 @@ const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpa
   logging: false
 });
 
-const Worlds = sequelize.define('World', {
+const Worlds = sequelize.define('world', {
   id: {
     type: 'Sequelize.INTEGER',
     primaryKey: true
@@ -51,7 +51,7 @@ module.exports = {
 
     for (let i = 0; i < queries; i++) {
       worldPromises.push(randomWorldPromise());
-    } 
+    }
 
     Promise.all(worldPromises).then((worlds) => {
       h.addTfbHeaders(res, 'json');
@@ -74,19 +74,22 @@ module.exports = {
   Updates: (queries, req, res) => {
     const worldPromises = [];
 
+    console.log('queries: ', queries);
     for (let i = 0; i < queries; i++) {
       worldPromises.push(randomWorldPromise());
     }
 
     const worldUpdate = (world) => {
-      world.randomNumber = h.randomTfbNumber();
+      world.randomnumber = h.randomTfbNumber();
+
+      console.log('RANDOM NUMBER: ', world.randomnumber);
 
       return Worlds.update({
-        randomNumber: world.randomNumber
-      },
-      {
-        where: { id: world.id }
-      }).then((results) => {
+          randomnumber: world.randomnumber
+        },
+        {
+          where: { id: world.id }
+        }).then((results) => {
         return world;
       }).catch((err) => process.exit(1));
     };
