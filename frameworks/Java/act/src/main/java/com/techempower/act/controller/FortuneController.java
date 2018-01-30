@@ -23,10 +23,8 @@ package com.techempower.act.controller;
 import static act.controller.Controller.Util.renderTemplate;
 
 import act.db.Dao;
-import act.db.jpa.NoTransaction;
 import act.sys.Env;
 import act.util.Global;
-import act.util.JsonView;
 import act.view.NoImplicitTemplateVariable;
 import com.techempower.act.AppEntry;
 import com.techempower.act.model.Fortune;
@@ -48,20 +46,11 @@ public class FortuneController {
     @GetAction("fortunes")
     @NoImplicitTemplateVariable
     @SessionFree
-    @NoTransaction
     public void fortunes() {
         List<Fortune> fortunes = dao.findAllAsList();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
         renderTemplate("fortunes", fortunes);
-    }
-
-    @GetAction("f2")
-    @SessionFree
-    @NoTransaction
-    @JsonView
-    public Object fortunes2() {
-        return dao.findAll();
     }
 
 }

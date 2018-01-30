@@ -24,12 +24,11 @@ import static act.controller.Controller.Util.notFoundIfNull;
 
 import act.app.conf.AutoConfig;
 import act.db.Dao;
-import act.db.jpa.NoTransaction;
+import act.db.sql.tx.Transactional;
 import act.sys.Env;
 import act.util.Global;
 import com.techempower.act.AppEntry;
 import com.techempower.act.model.World;
-import io.ebean.annotation.Transactional;
 import org.osgl.$;
 import org.osgl.http.H;
 import org.osgl.mvc.annotation.GetAction;
@@ -54,7 +53,11 @@ public class WorldController {
      */
     private static final Const<Integer> WORLD_MAX_ROW = $.constant();
 
-    private static boolean BATCH_SAVE = false;
+    /**
+     * This constant will get populated with the value set in
+     * `app.world.batch_save` configuration item
+     */
+    private static final Const<Boolean> WORLD_BATCH_SAVE = $.constant(false);
 
     @Global
     @Inject
@@ -63,15 +66,12 @@ public class WorldController {
 
     @GetAction("db")
     @SessionFree
-    @NoTransaction
     public World findOne() {
         return dao.findById(randomWorldNumber());
     }
 
     @GetAction("queries")
-    @Transactional(readOnly = true)
     @SessionFree
-    @NoTransaction
     public final World[] multipleQueries(String queries) {
         int q = regulateQueries(queries);
 
@@ -80,16 +80,6 @@ public class WorldController {
             worlds[i] = findOne();
         }
         return worlds;
-    }
-
-    @GetAction("count")
-    public long count(int max) {
-        return dao.countBy("randomNumber <", max);
-    }
-
-    @GetAction("bymin")
-    public Iterable<World> byMin(int min) {
-        return dao.q("randomNumber >", min).orderBy("randomNumber").fetch();
     }
 
     @GetAction("updates")
@@ -101,20 +91,22 @@ public class WorldController {
 
     private List<World> doUpdate(int q) {
         List<World> retVal = new ArrayList<>(q);
+        boolean batchSave = WORLD_BATCH_SAVE.get();
         for (int i = 0; i < q; ++i) {
-            retVal.add(findAndModifyOne());
+            retVal.add(findAndModifyOne(!batchSave));
         }
-        if (BATCH_SAVE) {
+        if (WORLD_BATCH_SAVE.get()) {
             dao.save(retVal);
         }
         return retVal;
     }
 
-    private World findAndModifyOne() {
+    @Transactional
+    private World findAndModifyOne(boolean save) {
         World world = findOne();
         notFoundIfNull(world);
         world.randomNumber = randomWorldNumber();
-        if (!BATCH_SAVE) {
+        if (save) {
             dao.save(world);
         }
         return world;

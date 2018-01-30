@@ -2,7 +2,7 @@
 
 This is the ActFramework portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-This is using [ActFramework R1.6.4](http://actframework.org) to build an application.
+This is using [ActFramework 1.7.0-teb-SNAPSHOT](http://actframework.org) to build an application.
 
 ## Local benchmark result
 
