@@ -40,7 +40,7 @@ import           Yesod
 import Data.Maybe (fromJust)
 
 mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
-World sql=World
+World sql=world
     randomNumber Int sql=randomnumber
 |]
 
