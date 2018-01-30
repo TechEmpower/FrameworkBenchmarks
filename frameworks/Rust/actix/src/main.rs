@@ -30,10 +30,13 @@ fn json(_: HttpRequest<State>) -> Result<HttpResponse> {
     let message = models::Message {
         message: "Hello, World!"
     };
+    let body = serde_json::to_string(&message)?;
+
     Ok(httpcodes::HTTPOk
        .build()
        .header(header::SERVER, "Actix")
-       .json(message)?)
+       .content_type("application/json")
+       .body(body)?)
 }
 
 fn plaintext(_: HttpRequest<State>) -> Result<HttpResponse> {
@@ -48,10 +51,13 @@ fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Err
         .from_err()
         .and_then(|res| {
             match res {
-                Ok(row) => Ok(
-                    httpcodes::HTTPOk.build()
-                        .header(header::SERVER, "Actix")
-                        .json(row)?),
+                Ok(row) => {
+                    let body = serde_json::to_string(&row).unwrap();
+                    Ok(httpcodes::HTTPOk.build()
+                       .header(header::SERVER, "Actix")
+                       .content_type("application/json")
+                       .body(body)?)
+                },
                 Err(_) =>
                     Ok(httpcodes::HTTPInternalServerError.into()),
             }
@@ -81,12 +87,14 @@ fn queries(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
                 Err(e) => Err(e)
             }
         )
-        .and_then(|res|
+        .and_then(|res| {
+            let body = serde_json::to_string(&res).unwrap();
             Ok(httpcodes::HTTPOk.build()
                .header(header::SERVER, "Actix")
+               .content_type("application/json")
                .content_encoding(headers::ContentEncoding::Identity)
-               .json(res)?)
-        )
+               .body(body)?)
+        })
         .responder()
 }
 
@@ -159,8 +167,8 @@ fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
 
                     Ok(httpcodes::HTTPOk.build()
                        .header(header::SERVER, "Actix")
-                       .content_encoding(headers::ContentEncoding::Identity)
                        .content_type("text/html; charset=utf-8")
+                       .content_encoding(headers::ContentEncoding::Identity)
                        .body(res)?)
                 },
                 Err(_) => Ok(httpcodes::HTTPInternalServerError.into())
@@ -169,11 +177,8 @@ fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
         .responder()
 }
 
-use std::env;
 fn main() {
     let sys = System::new("techempower");
-    env::set_var("RUST_BACKTRACE", "1");
-
     let dbhost = match option_env!("DBHOST") {
         Some(it) => it,
         _ => "127.0.0.1"
