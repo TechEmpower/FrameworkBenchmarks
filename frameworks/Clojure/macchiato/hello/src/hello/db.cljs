@@ -19,23 +19,23 @@
 
 (defstate worlds
   :start (.define @db
-                  "World"
+                  "world"
                   #js{:id           #js {:type       "Sequelize.INTEGER"
                                          :primaryKey true}
                       :randomnumber {:type "Sequelize.INTEGER"}}
                   #js {:timestamps      false
                        :freezeTableName true
-                       :tableName       "World"}))
+                       :tableName       "world"}))
 
 (defstate fortunes
   :start (.define @db
-                  "Fortune"
+                  "fortune"
                   #js {:id      #js {:type       "Sequelize.INTEGER"
                                      :primaryKey true}
                        :message {:type "Sequelize.STRING"}}
                   #js {:timestamps      false
                        :freezeTableName true
-                       :tableName       "Fortune"}))
+                       :tableName       "fortune"}))
 
 (defn all-fortunes [handler error-handler]
   (-> @fortunes
