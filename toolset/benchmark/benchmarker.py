@@ -677,10 +677,11 @@ class Benchmarker:
             
             # If TFBReaper has not exited at this point, we have a problem
             if returnCode is None:
-                self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-                out.write(header("Error: Port %s was not released by stop - %s" % (test.port, test.name)))
-                out.write(header("Running Processes"))
-                out.write(subprocess.check_output(['ps -aux'], shell=True))
+                if self.__is_port_bound(test.port):
+                    self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
+                    out.write(header("Error: Port %s was not released by stop - %s" % (test.port, test.name)))
+                out.write(header("TFBReaper did not exit; running processes"))
+                out.write(subprocess.check_output(['ps -axo pid,ppid,command'], shell=True))
                 out.flush()
                 return exit_with_code(1)
     ############################################################
