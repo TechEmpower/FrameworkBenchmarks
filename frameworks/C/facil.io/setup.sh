@@ -23,6 +23,6 @@ make -j build
 
 # run test
 cd tmp
-./demo -b TFB-server -p 8080 -db "TFB-database" -w -1 -t 1 &
+./demo -b 0.0.0.0 -p 8080 -db "TFB-database" -w -1 -t 1 &
 # step out
 cd ../..
