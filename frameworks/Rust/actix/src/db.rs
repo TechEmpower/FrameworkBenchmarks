@@ -57,7 +57,7 @@ impl Handler<UpdateWorld> for DbExecutor {
     fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> io::Result<()> {
         use schema::World::dsl::*;
 
-        for world in msg.0 {
+        for world in &msg.0 {
             let _ = diesel::update(World)
                 .filter(id.eq(world.id))
                 .set(randomnumber.eq(world.randomnumber))
