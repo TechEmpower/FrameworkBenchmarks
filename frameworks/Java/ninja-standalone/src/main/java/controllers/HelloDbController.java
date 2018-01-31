@@ -10,6 +10,7 @@ import ninja.Results;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.persist.Transactional;
 import ninja.jpa.UnitOfWork;
 import ninja.params.Param;
 
@@ -62,10 +63,15 @@ public class HelloDbController {
         // now update stuff:
         for (World world : worlds) {
             world.randomNumber = ThreadLocalRandom.current().nextInt(DB_ROWS) + 1;
-            worldDao.put(world);
+            this.updateWorld(world);
         }
 
         return Results.json().render(worlds);
+    }
+
+    @Transactional
+    public void updateWorld(World world) {
+        worldDao.put(world);
     }
 
     private World getRandomWorld() {
