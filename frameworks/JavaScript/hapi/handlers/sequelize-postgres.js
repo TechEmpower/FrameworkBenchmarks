@@ -11,7 +11,7 @@ const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpa
   logging: false
 });
 
-const Worlds = sequelize.define('World', {
+const Worlds = sequelize.define('world', {
   id: {
     type: 'Sequelize.INTEGER',
     primaryKey: true
