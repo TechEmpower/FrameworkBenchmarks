@@ -10,8 +10,6 @@ export GC_MARKERS=1
 
 export AMBER_ENV=production
 
-export DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@TFB-database:5432/hello_world
-
 for i in $(seq 1 $(nproc --all)); do
   ./amber &
 done

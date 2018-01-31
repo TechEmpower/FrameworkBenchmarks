@@ -1,8 +1,8 @@
 require "amber"
 
+require "./initializers/*"
 require "../src/models/*"
 require "../src/controllers/*"
-
 
 Amber::Server.configure do |settings|
   # Use your environment variables settings here.
@@ -11,17 +11,6 @@ Amber::Server.configure do |settings|
   # used by the framework.
   #
   settings.name = "amber"
-  #
-  #
-  # Colorize Logging: specifies whether or not to use ANSI color codes
-  # when logging information, display the time and/or to display the severity level.
-  # Defaults to true.
-  #
-  # Log Level defines the verbosity of the Amber logger. This option defaults to
-  # debug for all environments. The available log levels are: debug, info, warn,
-  # error, fatal, and unknown.
-  settings.logging.colorize = false
-  settings.logging.severity = "error"
   #
   #
   # Host: is the application server host address or ip address. Useful for when
@@ -51,4 +40,20 @@ Amber::Server.configure do |settings|
   # PORT: This is the port that you're application will run on. Examples would be (80, 443, 3000, 8080)
   #
   settings.port = 8080
+  #
+  #
+  # Database URL: This is the database connection string or data file url.
+  # The connection string contains the information to establish a connection to the
+  # database or the data file. Defaults to the database provider you chose at
+  # at app generation.
+  #
+  settings.database_url = "postgres://benchmarkdbuser:benchmarkdbpass@TFB-database:5432/hello_world"
+  #
+  #
+  # Log: Is the logger that will be used for Amber and it defaults to ::Logger.new(STDOUT).
+  # You can supply a custom logger.
+  #
+  settings.logger = nil
+  #
+  #
 end
