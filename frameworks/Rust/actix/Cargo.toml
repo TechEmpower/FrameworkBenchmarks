@@ -1,6 +1,6 @@
 [package]
 name = "actix"
-version = "0.1.0"
+version = "0.1.1"
 build = "build.rs"
 
 [dependencies]
@@ -13,8 +13,8 @@ num_cpus = "1.0"
 futures = "0.1"
 http = "0.1"
 actix = "^0.4.3"
-actix-web = "0.3"
-diesel = { version = "1.0.0-beta1", features = ["postgres"] }
+actix-web = "=0.3.1"
+diesel = { version = "1.1", features = ["postgres"] }
 
 [build-dependencies]
 askama = "0.5"
