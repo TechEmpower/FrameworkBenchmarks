@@ -10,6 +10,10 @@ The purpose of Amber is not to create yet another framework, but to take advanta
 
 Amber Crystal borrows concepts that already have been battle tested, successful, and embrace new concepts through team and community collaboration and analysis, that aligns with Crystal philosophies.
 
+## Settings
+
+To edit production settings use `amber encrypt`. [See encrypt command guide](https://github.com/amberframework/online-docs/blob/master/getting-started/cli/encrypt.md#encrypt-command)
+
 ## Contributors
 
 - Dru Jensen [drujensen](https://github.com/drujensen) 
