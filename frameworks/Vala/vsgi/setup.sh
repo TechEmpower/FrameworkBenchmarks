@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends meson vala valum libjson-glib-dev
+fw_depends meson ninja vala valum libjson-glib-dev
 
 rm -rf build
 meson --buildtype=release build

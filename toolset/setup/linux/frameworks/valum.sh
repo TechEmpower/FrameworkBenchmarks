@@ -1,12 +1,10 @@
 #!/bin/bash
 
-VALUM_VERSION="0.3.12"
+VALUM_VERSION="0.3.15"
 
-fw_depends meson ninja vala
+fw_depends meson ninja vala libsoup2.4-dev
 
 fw_installed valum && return 0
-
-sudo apt-get install -y libglib2.0-dev libsoup2.4-dev
 
 fw_get -O https://github.com/valum-framework/valum/archive/v${VALUM_VERSION}.tar.gz
 fw_untar v${VALUM_VERSION}.tar.gz
