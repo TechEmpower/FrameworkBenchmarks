@@ -51,12 +51,4 @@ Amber::Server.configure do |settings|
   # PORT: This is the port that you're application will run on. Examples would be (80, 443, 3000, 8080)
   #
   settings.port = 8080
-  #
-  #
-  # Database URL: This is the database connection string or data file url.
-  # The connection string contains the information to establish a connection to the
-  # database or the data file. Defaults to the database provider you chose at
-  # at app generation.
-  #
-  settings.database_url = "postgres://benchmarkdbuser:benchmarkdbpass@TFB-database/hello_world"
 end
