@@ -1,13 +1,13 @@
-name: "crystal"
-version: "0.0.1"
+name: crystal
+version: 0.0.1
 
-license: "MIT"
+license: MIT
 
 dependencies:
   pg:
-    github: "will/crystal-pg"
-    version: "0.14.1"
+    github: will/crystal-pg
+    version: 0.14.1
 
   radix:
     github: luislavena/radix
-    version: "0.3.8"
+    version: 0.3.8
