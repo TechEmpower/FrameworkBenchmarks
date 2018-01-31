@@ -1,10 +1,11 @@
 #!/bin/bash
 
-fw_depends java maven
+fw_depends postgresql java maven
 
-mvn clean package
+mvn -Phibernate_pgsql clean package
 cd target/dist
 unzip *.zip
+
 
 APP_ENTRY=com.techempower.act.AppEntry
 
@@ -20,4 +21,4 @@ echo
 
 JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Xms1G -Xmx1G -Xss320k -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts"
 
-java -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=json_plaintext -Dxio.worker_threads.max=256 -cp "$CP" $APP_ENTRY 
+java -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=hibernate_pgsql_rythm -Dxio.worker_threads.max=256 -Dpgsql.host=${DBHOST} -cp "$CP" $APP_ENTRY 
