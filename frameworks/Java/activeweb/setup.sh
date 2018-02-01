@@ -7,4 +7,4 @@ mvn clean package -DskipTests
 
 rm -rf $RESIN_HOME/webapps/*
 cp target/activeweb.war $RESIN_HOME/webapps/
-resinctl start
+resinctl console
