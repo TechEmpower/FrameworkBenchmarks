@@ -25,7 +25,6 @@ public class PostgresUpdateServlet extends HttpServlet {
 	private static final String DB_QUERY = "SELECT * FROM World WHERE id = ?";
 	private static final String UPDATE_QUERY = "UPDATE World SET randomNumber = ? WHERE id = ?";
 	private static final int DB_ROWS = 10000;
-	private static final int LIMIT = DB_ROWS + 1;
 
 	// Database connection pool.
 	@Resource(name = "jdbc/hello_world")
@@ -46,7 +45,7 @@ public class PostgresUpdateServlet extends HttpServlet {
 				PreparedStatement statement2 = conn.prepareStatement(UPDATE_QUERY)) {
 			// Run the query the number of times requested.
 			for (int i = 0; i < count; i++) {
-				final int id = random.nextInt(LIMIT);
+				final int id = random.nextInt(DB_ROWS) + 1;
 				statement.setInt(1, id);
 
 				try (ResultSet results = statement.executeQuery()) {
@@ -54,7 +53,7 @@ public class PostgresUpdateServlet extends HttpServlet {
 						worlds[i] = new World(id, results.getInt("randomNumber"));
 
 						// Update row
-						worlds[i].setRandomNumber(random.nextInt(LIMIT));
+						worlds[i].setRandomNumber(random.nextInt(DB_ROWS) + 1);
 						statement2.setInt(1, worlds[i].getRandomNumber());
 						statement2.setInt(2, id);
 
