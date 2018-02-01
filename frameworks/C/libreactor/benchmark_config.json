@@ -14,7 +14,7 @@
         "language": "C",
         "flavor": "None",
         "orm": "Raw",
-        "platform": "libreactor",
+        "platform": "None",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
