@@ -45,7 +45,7 @@ Amber::Server.configure do |settings|
   # Log: Is the logger that will be used for Amber and it defaults to ::Logger.new(STDOUT).
   # You can supply a custom logger.
   #
-  settings.logger = nil
+  settings.logger = Amber::Environment::Logger.new(nil)
   #
   #
 end
