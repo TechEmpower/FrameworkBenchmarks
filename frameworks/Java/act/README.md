@@ -53,19 +53,19 @@ This is using [ActFramework 1.7.0-teb-SNAPSHOT](http://actframework.org) to buil
 
 | Test | Throughput |
 | ---- | ----------: |
-| db | 98415.07 |
-| multiple queries (20) | 44483.81 |
-| updates (20) | 2213.31 |
-| fortunes | 37590.55 |
+| db | 20134.12 |
+| multiple queries (20) | 1187.38 |
+| updates (20) | 560.91 |
+| fortunes | 20334.32 |
 
 ### Postgresql- JPA/EclipseLink
 
 | Test | Throughput |
 | ---- | ---------: |
-| db | 103347.02 |
-| multiple queries (20) | 49868.77 |
-| updates (20) | 4167.03 |
-| fortunes | 34565.04 |
+| db | 31906.95 |
+| multiple queries (20) | 1935 |
+| updates (20) | 650.98 |
+| fortunes | 19764.26 |
 
 ### Mongodb
 
