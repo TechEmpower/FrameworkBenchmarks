@@ -42,14 +42,6 @@ Amber::Server.configure do |settings|
   settings.port = 8080
   #
   #
-  # Database URL: This is the database connection string or data file url.
-  # The connection string contains the information to establish a connection to the
-  # database or the data file. Defaults to the database provider you chose at
-  # at app generation.
-  #
-  settings.database_url = "postgres://benchmarkdbuser:benchmarkdbpass@TFB-database:5432/hello_world"
-  #
-  #
   # Log: Is the logger that will be used for Amber and it defaults to ::Logger.new(STDOUT).
   # You can supply a custom logger.
   #
