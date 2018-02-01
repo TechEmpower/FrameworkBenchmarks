@@ -6,6 +6,10 @@ authors:
 
 license: MIT
 
+targets:
+  amber:
+    main: src/amber.cr
+
 dependencies:
   amber:
     github: amberframework/amber
