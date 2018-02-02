@@ -1,0 +1,8 @@
+Flask
+Flask-SQLAlchemy
+gunicorn
+
+PyMySQL ; implementation_name == "pypy"
+tornado ; implementation_name == "pypy"
+
+meinheld ; implementation_name == "cpython"
