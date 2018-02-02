@@ -138,7 +138,7 @@ class FrameworkTestType:
         database have actually changed during an Update verification test.
         '''
         database_name = ""
-        results_json = {}
+        results_json = []
         try:
             database_name = self.database.lower()
         except AttributeError:
@@ -150,11 +150,11 @@ class FrameworkTestType:
                 cursor = db.cursor()
                 cursor.execute("SELECT * FROM World")
                 results = cursor.fetchall()
-                results_json = json.loads(json.dumps(dict(results)))
+                results_json.append(json.loads(json.dumps(dict(results))))
                 db.close()
             except Exception as e:
-                print "ERROR: Unable to load current MySQL World table."
-                print e
+                print("ERROR: Unable to load current MySQL World table.")
+                print(e)
         elif database_name == "postgres":
             try:
                 db = psycopg2.connect(host=os.environ.get("DBHOST"),
@@ -165,11 +165,15 @@ class FrameworkTestType:
                 cursor = db.cursor()
                 cursor.execute("SELECT * FROM World")
                 results = cursor.fetchall()
-                results_json = json.loads(json.dumps(dict(results)))
+                results_json.append(json.loads(json.dumps(dict(results))))
+                cursor = db.cursor()
+                cursor.execute("SELECT * FROM world")
+                results = cursor.fetchall()
+                results_json.append(json.loads(json.dumps(dict(results))))
                 db.close()
             except Exception as e:
-                print "ERROR: Unable to load current Postgres World table."
-                print e
+                print("ERROR: Unable to load current Postgres World table.")
+                print(e)
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
@@ -181,10 +185,12 @@ class FrameworkTestType:
                             worlds_json[str(int(world["id"]))] = int(world["randomNumber"])
                         elif "_id" in world:
                             worlds_json[str(int(world["_id"]))] = int(world["randomNumber"])
-                results_json = worlds_json
+                results_json.append(worlds_json)
                 connection.close()
             except Exception as e:
-                print "ERROR: Unable to load current MongoDB World table."
-                print e
+                print("ERROR: Unable to load current MongoDB World table.")
+                print(e)
+        else:
+            raise ValueError("Database: {!s} does not exist".format(database_name))
 
         return results_json

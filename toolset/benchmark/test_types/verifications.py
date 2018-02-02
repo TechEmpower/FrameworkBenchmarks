@@ -264,15 +264,19 @@ sz
     '''
     successful_updates = 0
     problems = []
-    for i in range(1, 10001):
-        try:
-            entry_id = str(i)
-            if entry_id in old_worlds and entry_id  in new_worlds:
-                if old_worlds[entry_id] != new_worlds[entry_id]:
-                    successful_updates += 1
-        except Exception as e:
-            print e
 
+    n = 0
+    while n < len(old_worlds) and successful_updates == 0:
+        print(old_worlds[n]['1'])
+        for i in range(1, 10001):
+            try:
+                entry_id = str(i)
+                if entry_id in old_worlds[n] and entry_id  in new_worlds[n]:
+                    if old_worlds[n][entry_id] != new_worlds[n][entry_id]:
+                        successful_updates += 1
+            except Exception as e:
+                print e
+        n += 1
 
     if successful_updates == 0:
         problems.append(
