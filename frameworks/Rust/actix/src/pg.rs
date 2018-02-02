@@ -4,30 +4,41 @@ extern crate http;
 extern crate rand;
 extern crate num_cpus;
 extern crate futures;
+extern crate postgres;
 extern crate serde;
 extern crate serde_json;
 #[macro_use] extern crate serde_derive;
-#[macro_use] extern crate diesel;
 #[macro_use] extern crate askama;
 
-use std::cmp;
+use std::{io, cmp};
 use actix_web::*;
 use actix::prelude::*;
 use askama::Template;
 use http::header;
+use postgres::{Connection, TlsMode};
+use rand::{thread_rng, Rng, ThreadRng};
 use rand::distributions::{Range, IndependentSample};
 use futures::{Future, Stream, stream};
 
-mod db;
-mod schema;
-mod models;
+#[derive(Serialize)]
+pub struct World {
+    pub id: i32,
+    pub randomnumber: i32,
+}
+
+#[derive(Serialize)]
+pub struct Fortune {
+    pub id: i32,
+    pub message: String,
+}
+
 
 struct State {
-    db: SyncAddress<db::DbExecutor>
+    db: SyncAddress<PgConnection>
 }
 
 fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
-    req.state().db.call_fut(db::RandomWorld)
+    req.state().db.call_fut(RandomWorld)
         .from_err()
         .and_then(|res| {
             match res {
@@ -38,8 +49,7 @@ fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Err
                        .content_type("application/json")
                        .body(body)?)
                 },
-                Err(_) =>
-                    Ok(httpcodes::HTTPInternalServerError.into()),
+                Err(_) => Ok(httpcodes::HTTPInternalServerError.into()),
             }
         })
         .responder()
@@ -55,17 +65,17 @@ fn queries(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
     let q = cmp::min(500, cmp::max(1, q));
 
     // run sql queries
-    let stream = (0..q).map(|_| req.state().db.call_fut(db::RandomWorld));
+    let stream = (0..q).map(|_| req.state().db.call_fut(RandomWorld));
     stream::futures_unordered(stream)
         .from_err()
         .fold(Vec::with_capacity(q), |mut list, val|
-            match val {
-                Ok(val) => {
-                    list.push(val);
-                    Ok(list)
-                },
-                Err(e) => Err(e)
-            }
+              match val {
+                  Ok(val) => {
+                      list.push(val);
+                      Ok(list)
+                  },
+                  Err(e) => Err(e)
+              }
         )
         .and_then(|res| {
             let body = serde_json::to_string(&res).unwrap();
@@ -90,7 +100,7 @@ fn updates(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
     // get rundom world objects
     let mut stream = Vec::with_capacity(q);
     for _ in 0..q {
-        stream.push(req.state().db.call_fut(db::RandomWorld));
+        stream.push(req.state().db.call_fut(RandomWorld));
     }
     stream::futures_unordered(stream)
         .from_err()
@@ -113,7 +123,7 @@ fn updates(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
             let body = serde_json::to_string(&worlds).unwrap();
 
             // persist to db
-            req.state().db.call_fut(db::UpdateWorld(worlds))
+            req.state().db.call_fut(UpdateWorld(worlds))
                 .from_err()
                 .and_then(move |res| {
                     if res.is_ok() {
@@ -133,11 +143,11 @@ fn updates(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
 #[derive(Template)]
 #[template(path = "fortune.html")]
 struct FortuneTemplate<'a> {
-    items: &'a Vec<models::Fortune>,
+    items: &'a Vec<Fortune>,
 }
 
 fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
-    req.state().db.call_fut(db::TellFortune)
+    req.state().db.call_fut(TellFortune)
         .from_err()
         .and_then(|res| {
             match res {
@@ -157,6 +167,103 @@ fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
         .responder()
 }
 
+/// Postgres interface
+struct PgConnection {
+    conn: Connection,
+    rng: ThreadRng,
+}
+
+//unsafe impl Send for PgConnection {}
+//unsafe impl Sync for PgConnection {}
+
+impl Actor for PgConnection {
+    type Context = SyncContext<Self>;
+}
+
+impl PgConnection {
+    pub fn new(db_url: &str) -> PgConnection {
+        let conn = Connection::connect(db_url, TlsMode::None)
+            .expect(&format!("Error connecting to {}", db_url));
+        PgConnection{
+            conn: conn,
+            rng: thread_rng(),
+        }
+    }
+}
+
+unsafe impl Send for PgConnection {}
+
+
+pub struct RandomWorld;
+
+impl ResponseType for RandomWorld {
+    type Item = World;
+    type Error = io::Error;
+}
+
+impl Handler<RandomWorld> for PgConnection {
+    type Result = MessageResult<RandomWorld>;
+
+    fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Self::Result {
+        let random_world = self.conn.prepare_cached(
+            "SELECT id, randomnumber FROM World WHERE id=$1").unwrap();
+
+        let random_id = self.rng.gen_range::<i32>(1, 10_000);
+        for row in &random_world.query(&[&random_id]).unwrap() {
+            return Ok(World {id: row.get(0), randomnumber: row.get(1)})
+        }
+
+        Err(io::Error::new(io::ErrorKind::Other, format!("Database error")))
+    }
+}
+
+pub struct UpdateWorld(pub Vec<World>);
+
+impl ResponseType for UpdateWorld {
+    type Item = ();
+    type Error = ();
+}
+
+impl Handler<UpdateWorld> for PgConnection {
+    type Result = ();
+
+    fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) {
+        let update_world = self.conn.prepare_cached(
+            "UPDATE World SET randomnumber=$1 WHERE id=$2").unwrap();
+
+        for world in &msg.0 {
+            let _ = update_world.execute(&[&world.randomnumber, &world.id]);
+        }
+    }
+}
+
+pub struct TellFortune;
+
+impl ResponseType for TellFortune {
+    type Item = Vec<Fortune>;
+    type Error = io::Error;
+}
+
+impl Handler<TellFortune> for PgConnection {
+    type Result = io::Result<Vec<Fortune>>;
+
+    fn handle(&mut self, _: TellFortune, _: &mut Self::Context) -> Self::Result {
+        let fortune = self.conn.prepare_cached("SELECT id, message FROM Fortune").unwrap();
+
+        let mut items = Vec::with_capacity(13);
+        items.push(
+            Fortune{id: 0,
+                    message: "Additional fortune added at request time.".to_string()});
+
+        for row in &fortune.query(&[])? {
+            items.push(Fortune{id: row.get(0), message: row.get(1)});
+        }
+        items.sort_by(|it, next| it.message.cmp(&next.message));
+        Ok(items)
+    }
+}
+
+
 fn main() {
     let sys = System::new("techempower");
     let dbhost = match option_env!("DBHOST") {
@@ -168,7 +275,7 @@ fn main() {
 
     // Start db executor actors
     let addr = SyncArbiter::start(
-        num_cpus::get() * 3, move || db::DbExecutor::new(&db_url));
+        num_cpus::get() * 3, move || PgConnection::new(&db_url));
 
     // start http server
     HttpServer::new(
