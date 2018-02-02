@@ -2,7 +2,7 @@ version: 1.0
 shards:
   amber:
     github: amberframework/amber
-    version: 0.6.4
+    version: 0.6.5
 
   callback:
     github: mosop/callback
@@ -18,7 +18,7 @@ shards:
 
   granite_orm:
     github: amberframework/granite-orm
-    version: 0.8.2
+    version: 0.8.4
 
   kilt:
     github: jeromegn/kilt
@@ -54,7 +54,7 @@ shards:
 
   slang:
     github: jeromegn/slang
-    commit: 777e2fc3e63daf5cfe9bd4475257905903b78542
+    version: 1.7.1
 
   spinner:
     github: askn/spinner
