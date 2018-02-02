@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -60,8 +59,8 @@ public class Cache2kPostgresServlet extends HttpServlet {
 			IOException {
 		final int count = Common.normalise(req.getParameter("queries"));
 		final int start = ThreadLocalRandom.current().nextInt(DB_ROWS);
-		Set<Integer> keys = IntStream.range(start, start + count)
-				.mapToObj(i -> randomNumbers.get(i)).collect(Collectors.toSet());
+		List<Integer> keys = IntStream.range(start, start + count)
+				.mapToObj(i -> randomNumbers.get(i)).collect(Collectors.toList());
 
 		// Set content type to JSON
 		res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_JSON);
