@@ -4,8 +4,8 @@ for (var i = 1; i <= 10000; i++) {
   db.world.save( { _id: i, id: i, randomNumber: (Math.floor(Math.random() * 10000) + 1) })
 }
 
-// http://docs.mongodb.org/manual/applications/optimization/
-db.world.ensureIndex({_id: 1})
+db.world.createIndex({_id: 1})
+db.world.createIndex({id: 1})
 
 db.fortune.drop()
 
@@ -22,4 +22,4 @@ db.fortune.save( {_id: 10, id: 10, message: 'Computers make very fast, very accu
 db.fortune.save( {_id: 11, id: 11, message: '<script>alert("This should not be displayed in a browser alert box.");</script>'} );
 db.fortune.save( {_id: 12, id: 12, message: 'フレームワークのベンチマーク'} );
 
-db.fortune.ensureIndex({_id: 1})
+db.fortune.createIndex({_id: 1})
