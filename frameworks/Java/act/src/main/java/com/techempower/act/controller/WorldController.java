@@ -44,7 +44,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import javax.inject.Inject;
 
 @AutoConfig
-@SuppressWarnings("unused")
 @Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
 @ResponseContentType(H.MediaType.JSON)
 public class WorldController {
@@ -126,10 +125,7 @@ public class WorldController {
         }
         try {
             int val = Integer.parseInt(param);
-            if (val < 1) {
-                return 1;
-            }
-            return val > 500 ? 500 : val;
+            return val < 1 ? 1 : val > 500 ? 500 : val;
         } catch (NumberFormatException e) {
             return 1;
         }
