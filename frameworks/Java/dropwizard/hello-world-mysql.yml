@@ -34,6 +34,9 @@ database:
   properties:
     charSet: UTF-8
     hibernate.dialect: org.hibernate.dialect.MySQLDialect
+    # enable batch updates in Hibernate
+    hibernate.jdbc.batch_size: 30
+    hibernate.jdbc.batch_versioned_data: true
 
   # the maximum amount of time to wait on an empty pool before throwing an exception
   maxWaitForConnection: 1s
