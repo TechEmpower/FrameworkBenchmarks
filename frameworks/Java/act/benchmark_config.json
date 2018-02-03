@@ -60,7 +60,7 @@
       "database_os": "Linux",
       "display_name": "act-ebean-pgsql",
       "notes": "",
-      "versus": "actframework-ebean-pgsql"
+      "versus": "undertow-postgresql"
     },
     "ebean-mysql": {
       "setup_file": "setup-ebean-mysql",
@@ -101,7 +101,7 @@
       "database_os": "Linux",
       "display_name": "act-ebean-mysql",
       "notes": "",
-      "versus": "actframework-ebean-mysql"
+      "versus": "undertow-mysql"
     },
     "hibernate-pgsql": {
       "setup_file": "setup-hibernate-pgsql",
@@ -142,7 +142,7 @@
       "database_os": "Linux",
       "display_name": "act-hibernate-pgsql",
       "notes": "",
-      "versus": "actframework-hibernate-pgsql"
+      "versus": "undertow-postgresql"
     },
     "hibernate-mysql": {
       "setup_file": "setup-hibernate-mysql",
@@ -183,7 +183,7 @@
       "database_os": "Linux",
       "display_name": "act-hibernate-mysql",
       "notes": "",
-      "versus": "actframework-hibernate-mysql"
+      "versus": "undertow-mysql"
     },
     "eclipselink-pgsql": {
       "setup_file": "setup-eclipselink-pgsql",
@@ -224,7 +224,7 @@
       "database_os": "Linux",
       "display_name": "act-eclipselink-pgsql",
       "notes": "",
-      "versus": "actframework-eclipselink-pgsql"
+      "versus": "undertow-postgresql"
     },
     "eclipselink-mysql": {
       "setup_file": "setup-eclipselink-mysql",
@@ -265,7 +265,7 @@
       "database_os": "Linux",
       "display_name": "act-eclipselink-mysql",
       "notes": "",
-      "versus": "actframework-eclipselink-mysql"
+      "versus": "undertow-mysql"
     },
     "morphia-mongo": {
       "setup_file": "setup-morphia-mongo",
@@ -306,7 +306,7 @@
       "database_os": "Linux",
       "display_name": "act-morphia",
       "notes": "",
-      "versus": "actframework-morphia-mongo"
+      "versus": "undertow-mongodb"
     }
   }]
 }
