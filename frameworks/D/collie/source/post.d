@@ -3,11 +3,11 @@
 
 import collie.codec.http;
 import collie.codec.http.server;
-import collie.utils.vector;
 import request;
 import std.json;
 import std.typecons;
 import std.exception;
+import kiss.container.Vector;
 
 final class PostHandler : BaseHandler
 {

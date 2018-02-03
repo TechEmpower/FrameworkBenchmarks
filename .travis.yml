@@ -16,6 +16,7 @@ env:
     - "TESTDIR=C/onion"
     - "TESTDIR=C/h2o"
     - "TESTDIR=C/octane"
+    - "TESTDIR=C/libreactor"
     - "TESTDIR=CSharp/aspnet"
     - "TESTDIR=CSharp/aspnetcore"
     ## - "TESTDIR=CSharp/aspnet-stripped"

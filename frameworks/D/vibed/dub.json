@@ -8,7 +8,8 @@
   ],
   "dependencies": {
     "vibe-d": "0.8.2",
-    "vibe-core": "1.3.0"
+    "vibe-core": "1.3.0",
+    "mir-random": "0.3.2"
   },
   "targetType": "executable",
   "sourcePaths": [],
