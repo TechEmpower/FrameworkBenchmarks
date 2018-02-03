@@ -7,4 +7,4 @@ fw_depends mysql java resin maven
 mvn clean package -Ddb-host=${DBHOST}
 rm -rf $RESIN_HOME/webapps/*
 cp target/spark.war $RESIN_HOME/webapps/spark.war
-resinctl start
+resinctl console

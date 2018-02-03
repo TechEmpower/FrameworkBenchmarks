@@ -7,6 +7,8 @@ rm -f website
 rm -rf .dub
 rm -f dub.selections.json
 
+dub upgrade --verbose
+
 dub build -f -b release -v
 
 ./website
