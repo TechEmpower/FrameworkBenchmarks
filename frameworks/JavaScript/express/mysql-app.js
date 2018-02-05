@@ -9,8 +9,7 @@ const cluster = require('cluster'),
   Sequelize = require('sequelize');
 
 // Middleware
-const bodyParser = require('body-parser'),
-  errorHandler = require('errorhandler');
+const bodyParser = require('body-parser');
 
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
   host: 'TFB-database',

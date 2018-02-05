@@ -12,8 +12,7 @@ const cluster = require('cluster'),
   });
 
 // Middleware
-const bodyParser = require('body-parser'),
-  errorHandler = require('errorhandler');
+const bodyParser = require('body-parser');
 
 const Schema = mongoose.Schema,
   ObjectId = Schema.ObjectId;

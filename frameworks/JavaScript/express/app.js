@@ -7,8 +7,7 @@ const cluster = require('cluster'),
   numCPUs = require('os').cpus().length,
   express = require('express');
 
-const bodyParser = require('body-parser'),
-  errorHandler = require('errorhandler');
+const bodyParser = require('body-parser');
 
 if (cluster.isMaster) {
   // Fork workers.
@@ -22,7 +21,6 @@ if (cluster.isMaster) {
   const app = module.exports = express();
 
   // Configuration
-  // https://github.com/expressjs/method-override#custom-logic
   app.use(bodyParser.urlencoded({ extended: true }));
 
   // Set headers for all routes
