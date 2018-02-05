@@ -10,6 +10,6 @@ if _is_travis:
 bind = ['0.0.0.0:8080', '0.0.0.0:8081', '0.0.0.0:8082']
 keepalive = 120
 errorlog = '-'
-pidfile = 'api_hour.pid'
+pidfile = '/tmp/api_hour.pid'
 pythonpath = 'hello'
 backlog = 10240000

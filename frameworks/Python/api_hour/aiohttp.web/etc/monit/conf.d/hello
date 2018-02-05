@@ -1,5 +1,0 @@
-check process cache_updater with pidfile /run/lock/hello_0
-	group hello
-	start program = "/etc/init.d/hello start"
-	stop program = "/etc/init.d/hello stop"
-	if 5 restarts within 5 cycles then timeout
