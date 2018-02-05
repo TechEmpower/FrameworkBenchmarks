@@ -1,4 +1,4 @@
-# Servlet3 API benchmarking test
+# Servlet 3.1 API benchmarking test
 
 Framework permutation based on the following technology stack
 

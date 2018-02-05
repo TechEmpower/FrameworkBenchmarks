@@ -12,22 +12,26 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Web Framework Benchmarks
- * Test type 1: JSON serialization
+ * Web Framework Benchmarks Test type 1: JSON serialization
  *
  * @author marko asplund
  */
 @WebServlet("/json")
 public class JsonSerializationServlet extends HttpServlet {
-  private static final Logger LOGGER = LoggerFactory.getLogger(JsonSerializationServlet.class);
-  private static final ObjectMapper mapper = new ObjectMapper();
-  private static final String MEDIATYPE_APPLICATION_JSON = "application/json";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3978936327184297455L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(JsonSerializationServlet.class);
+	private static final ObjectMapper mapper = new ObjectMapper();
+	private static final String MEDIATYPE_APPLICATION_JSON = "application/json";
 
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    LOGGER.debug("doGet");
-    resp.setContentType(MEDIATYPE_APPLICATION_JSON);
-    mapper.writeValue(resp.getOutputStream(), new HelloMessage());
-  }
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+			IOException {
+		LOGGER.debug("doGet");
+		resp.setContentType(MEDIATYPE_APPLICATION_JSON);
+		mapper.writeValue(resp.getOutputStream(), new HelloMessage());
+	}
 
 }
