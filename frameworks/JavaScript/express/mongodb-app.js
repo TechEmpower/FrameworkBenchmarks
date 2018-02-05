@@ -9,12 +9,10 @@ const cluster = require('cluster'),
   mongoose = require('mongoose'),
   conn = mongoose.connect('mongodb://TFB-database/hello_world', {
     useMongoClient: true
-  }),
-  async = require('async');
+  });
 
 // Middleware
 const bodyParser = require('body-parser'),
-  methodOverride = require('method-override'),
   errorHandler = require('errorhandler');
 
 const Schema = mongoose.Schema,
@@ -48,16 +46,7 @@ if (cluster.isMaster) {
   const app = module.exports = express();
 
   // Configuration
-  // https://github.com/expressjs/method-override#custom-logic
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(methodOverride((req, res) => {
-    if (req.body && typeof req.body === 'object' && '_method' in req.body) {
-      // look in urlencoded POST bodies and delete it
-      const method = req.body._method;
-      delete req.body._method;
-      return method;
-    }
-  }));
 
   // Set headers for all routes
   app.use((req, res, next) => {
@@ -68,31 +57,16 @@ if (cluster.isMaster) {
   app.set('view engine', 'pug');
   app.set('views', __dirname + '/views');
 
-  // Check Node env.
-  const env = process.env.NODE_ENV || 'development';
-  if ('development' == env) {
-    app.use(errorHandler({ dumpExceptions: true, showStack: true }));
-  }
-  if ('production' == env) {
-    app.use(errorHandler());
-  }
-
   // Routes
-  app.get('/mongoose', (req, res) => {
-    let queriesRaw = parseInt(req.query.queries, 10),
-      queries = isNaN(queriesRaw) ? 1 : queriesRaw;
-    const queryFunctions = [];
+  app.get('/mongoose', async (req, res) => {
+    const queries = Math.min(parseInt(req.query.queries) || 1, 500),
+      results = [];
 
-    queries = Math.min(Math.max(queries, 1), 500);
-
-    for (let i = 1; i <= queries; i++ ) {
-      queryFunctions.push((callback) =>
-        MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) })
-          .exec(callback));
+    for (let i = 1; i <= queries; i++) {
+      results.push(await MWorld.findOne({id: (Math.floor(Math.random() * 10000) + 1)}));
     }
 
-    async.parallel(queryFunctions, (err, results) =>
-      res.send(!req.query.queries ? results[0] : results));
+    res.send(queries > 1 ? results : results[0]);
   });
 
   app.get('/mongoose-fortune', (req, res) => {
@@ -105,34 +79,23 @@ if (cluster.isMaster) {
     });
   });
 
-  app.get('/mongoose-update', (req, res) => {
-    const selectFunctions = [],
-        queries = Math.min(parseInt(req.query.queries) || 1, 500);
+  app.get('/mongoose-update', async (req, res) => {
+    const results = [],
+      queries = Math.min(parseInt(req.query.queries) || 1, 500);
 
     for (let i = 1; i <= queries; i++ ) {
-      selectFunctions.push((callback) =>
-        MWorld.findOne({ id: Math.floor(Math.random() * 10000) + 1 })
-          .exec(callback));
+      const world = await MWorld.findOne({id: (Math.floor(Math.random() * 10000) + 1)});
+      world.randomNumber = ~~(Math.random() * 10000) + 1;
+      await MWorld.update({
+        id: world.id
+      }, {
+        randomNumber: world.randomNumber
+      });
+
+      results.push(world);
     }
 
-    async.parallel(selectFunctions, (err, worlds) => {
-      const updateFunctions = [];
-
-      for (let i = 0; i < queries; i++) {
-        ((i) => {
-          updateFunctions.push((callback) => {
-            worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
-            MWorld.update({
-              id: worlds[i].id
-            }, {
-              randomNumber: worlds[i].randomNumber
-            }, callback);
-          });
-        })(i);
-      }
-
-      async.parallel(updateFunctions, (err, updates) => res.send(worlds));
-    });
+    res.send(results);
   });
 
   app.listen(8080);
