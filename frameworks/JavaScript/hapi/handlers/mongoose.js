@@ -1,11 +1,8 @@
 // Connects to MongoDB using the mongoose driver
 // Handles related routes
 
-const Promise = require('bluebird');
 const h = require('../helper');
-// Can treat mongoose library as one that supports Promises
-// these methods will then have "-Async" appended to them.
-const Mongoose = Promise.promisifyAll(require('mongoose'));
+const Mongoose = require('mongoose');
 const connection = Mongoose.connect(
   'mongodb://TFB-database/hello_world',
   { useMongoClient: true }
@@ -27,80 +24,54 @@ const FortuneSchema = new Mongoose.Schema({
 const Worlds = connection.model('World', WorldSchema);
 const Fortunes = connection.model('Fortune', FortuneSchema);
 
-const randomWorldPromise = () =>
-  Worlds.findOneAsync({ id: h.randomTfbNumber() })
-    .then((world) => world)
-    .catch((err) => process.exit(1));
+const randomWorld = async () =>
+  await Worlds.findOne({ id: h.randomTfbNumber() });
 
-
-const promiseAllFortunes = () =>
-  Fortunes.findAsync({})
-    .then((fortunes) => fortunes)
-    .catch((err) => process.exit(1));
-
-const updateWorld = (world) =>
-  Worlds
-    .updateAsync(
+const updateWorld = async (world) =>
+  await Worlds.update(
       { id: world.randomNumber },
       { randomNumber: world.randomNumber }
-    )
-    .then((result) => world)
-    .catch((err) => process.exit(1));
+    );
 
 module.exports = {
 
-  SingleQuery: (req, reply) => {
-    randomWorldPromise()
-      .then((world) => {
-        reply(world)
-          .header('Server', 'hapi');
-      });
+  SingleQuery: async (req, reply) => {
+    reply(await randomWorld()).header('Server', 'hapi');
   },
 
-  MultipleQueries: (req, reply) => {
+  MultipleQueries: async (req, reply) => {
     const queries = h.getQueries(req);
-    const worldPromises = h.fillArray(randomWorldPromise(), queries);
+    const results = h.fillArray(await randomWorld(), queries);
 
-    Promise
-      .all(worldPromises)
-      .then((worlds) => {
-        reply(worlds)
-          .header('Server', 'hapi');
-      });
+    reply(results).header('Server', 'hapi');
   },
 
-  Fortunes: (req, reply) => {
-    promiseAllFortunes()
-      .then((fortunes) => {
-        fortunes.push(h.additionalFortune());
-        fortunes.sort((a, b) => a.message.localeCompare(b.message));
-      
-        reply.view('fortunes', {
-          fortunes: fortunes
-        })
-          .header('Content-Type', 'text/html')
-          .header('Server', 'hapi');
-      });
+  Fortunes: async (req, reply) => {
+    const fortunes = await Fortunes.find({});
+    fortunes.push(h.additionalFortune());
+    fortunes.sort((a, b) => a.message.localeCompare(b.message));
+
+    reply.view('fortunes', {
+      fortunes: fortunes
+    })
+      .header('Content-Type', 'text/html')
+      .header('Server', 'hapi');
   },
 
-  Updates: (req, reply) => {
+  Updates: async (req, reply) => {
     const queries = h.getQueries(req);
-    const worldPromises = [];
+    const results = [];
 
     for (let i = 0; i < queries; i++) {
-      worldPromises.push(randomWorldPromise());
+      const world = await randomWorld();
+      world.randomNumber = h.randomTfbNumber();
+      await updateWorld(world);
+      results.push(world);
     }
 
-    Promise
-      .all(worldPromises)
-      .map((world) => {
-        world.randomNumber = h.randomTfbNumber();
-        return updateWorld(world);
-      })
-      .then((worlds) => {
-        reply(worlds)
-          .header('Server', 'hapi');
-      });
+    reply(results)
+      .header('Content-Type', 'application/json')
+      .header('Server', 'hapi');
   }
 
 };
