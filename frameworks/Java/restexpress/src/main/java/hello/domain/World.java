@@ -4,7 +4,6 @@ import org.bson.types.ObjectId;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Id;
-import com.github.jmkgreen.morphia.annotations.Indexed;
 import com.strategicgains.repoexpress.domain.Identifiable;
 
 @Entity(value="world", noClassnameStored=true)
@@ -13,8 +12,7 @@ implements Identifiable
 {
 	@Id
 	private ObjectId oid;
-	
-	@Indexed(unique=true)
+
 	private Long id;
 	private int randomNumber;
 
