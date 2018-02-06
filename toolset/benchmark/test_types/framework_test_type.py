@@ -163,11 +163,11 @@ class FrameworkTestType:
                                       password="benchmarkdbpass",
                                       database="hello_world")
                 cursor = db.cursor()
-                cursor.execute("SELECT * FROM World")
+                cursor.execute("SELECT * FROM \"World\"")
                 results = cursor.fetchall()
                 results_json.append(json.loads(json.dumps(dict(results))))
                 cursor = db.cursor()
-                cursor.execute("SELECT * FROM world")
+                cursor.execute("SELECT * FROM \"world\"")
                 results = cursor.fetchall()
                 results_json.append(json.loads(json.dumps(dict(results))))
                 db.close()
