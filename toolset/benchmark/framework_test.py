@@ -198,7 +198,7 @@ class FrameworkTest:
       # TODO: hax; should dynamically know where this file is
       with open (self.fwroot + "/toolset/setup/linux/client.sh", "r") as myfile:
         remote_script=myfile.read()
-        print("\nINSTALL: %s" % self.benchmarker.client_ssh_string)
+        print("\nINSTALL: {!s}".format(self.benchmarker.client_ssh_string))
         p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
         p.communicate(remote_script)
         returncode = p.returncode
@@ -423,14 +423,14 @@ class FrameworkTest:
             color = Fore.RED
 
           verification.write(("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url))
-          print ("   " + color + "%s" + Style.RESET_ALL + " for %s\n") % (result.upper(), url)
+          print("   {!s}{!s}{!s} for {!s}\n".format(color, result.upper(), Style.RESET_ALL, url))
           if reason is not None and len(reason) != 0:
             for line in reason.splitlines():
               verification.write("     " + line + '\n')
-              print "     " + line
+              print("     " + line)
             if not test.passed:
               verification.write("     See %s\n" % specific_rules_url)
-              print "     See %s\n" % specific_rules_url
+              print("     See {!s}\n".format(specific_rules_url))
 
         [output_result(r1,r2,url) for (r1, r2, url) in results]
 
@@ -503,7 +503,7 @@ class FrameworkTest:
           self.__end_logging()
 
         results = self.__parse_test(test_type)
-        print "Benchmark results:"
+        print("Benchmark results:")
         pprint(results)
 
         self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
@@ -755,8 +755,8 @@ class FrameworkTest:
     try:
       x = getattr(self.benchmarker, name)
     except AttributeError:
-      print "AttributeError: %s not a member of FrameworkTest or Benchmarker" % name
-      print "This is probably a bug"
+      print("AttributeError: {!s} not a member of FrameworkTest or Benchmarker".format(name))
+      print("This is probably a bug")
       raise
     return x
 

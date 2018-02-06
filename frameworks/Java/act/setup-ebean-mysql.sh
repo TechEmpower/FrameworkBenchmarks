@@ -2,7 +2,7 @@
 
 fw_depends mysql java maven
 
-mvn -Pmysql clean package
+mvn -Pebean_mysql clean package
 cd target/dist
 unzip *.zip
 
@@ -21,4 +21,4 @@ echo
 
 JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Xms1G -Xmx1G -Xss320k -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts"
 
-java -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=mysql -Dxio.worker_threads.max=256 -Dmysql.host=${DBHOST} -cp "$CP" $APP_ENTRY &
+java -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=ebean_mysql -Dxio.worker_threads.max=256 -Dmysql.host=${DBHOST} -cp "$CP" $APP_ENTRY 

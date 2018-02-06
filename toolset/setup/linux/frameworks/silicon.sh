@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends libboost-dev clang-3.9 gcc-4.9
+fw_depends libboost-dev clang-3.9 gcc-6
 
 fw_installed silicon && return 0
 

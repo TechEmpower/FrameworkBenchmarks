@@ -24,11 +24,13 @@ import static act.controller.Controller.Util.notFoundIfNull;
 
 import act.app.conf.AutoConfig;
 import act.db.Dao;
+import act.db.sql.tx.Transactional;
 import act.sys.Env;
+import act.util.FastJsonFeature;
 import act.util.Global;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.techempower.act.AppEntry;
 import com.techempower.act.model.World;
-import io.ebean.annotation.Transactional;
 import org.osgl.$;
 import org.osgl.http.H;
 import org.osgl.mvc.annotation.GetAction;
@@ -42,7 +44,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import javax.inject.Inject;
 
 @AutoConfig
-@SuppressWarnings("unused")
 @Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
 @ResponseContentType(H.MediaType.JSON)
 public class WorldController {
@@ -53,7 +54,11 @@ public class WorldController {
      */
     private static final Const<Integer> WORLD_MAX_ROW = $.constant();
 
-    private static boolean BATCH_SAVE = true;
+    /**
+     * This constant will get populated with the value set in
+     * `app.world.batch_save` configuration item
+     */
+    private static final Const<Boolean> WORLD_BATCH_SAVE = $.constant(false);
 
     @Global
     @Inject
@@ -67,8 +72,8 @@ public class WorldController {
     }
 
     @GetAction("queries")
-    @Transactional(readOnly = true)
     @SessionFree
+    @FastJsonFeature(SerializerFeature.DisableCircularReferenceDetect)
     public final World[] multipleQueries(String queries) {
         int q = regulateQueries(queries);
 
@@ -81,6 +86,7 @@ public class WorldController {
 
     @GetAction("updates")
     @SessionFree
+    @FastJsonFeature(SerializerFeature.DisableCircularReferenceDetect)
     public final List<World> updateQueries(String queries) {
         int q = regulateQueries(queries);
         return doUpdate(q);
@@ -88,20 +94,22 @@ public class WorldController {
 
     private List<World> doUpdate(int q) {
         List<World> retVal = new ArrayList<>(q);
+        boolean batchSave = WORLD_BATCH_SAVE.get();
         for (int i = 0; i < q; ++i) {
-            retVal.add(findAndModifyOne());
+            retVal.add(findAndModifyOne(!batchSave));
         }
-        if (BATCH_SAVE) {
+        if (WORLD_BATCH_SAVE.get()) {
             dao.save(retVal);
         }
         return retVal;
     }
 
-    private World findAndModifyOne() {
+    @Transactional
+    private World findAndModifyOne(boolean save) {
         World world = findOne();
         notFoundIfNull(world);
         world.randomNumber = randomWorldNumber();
-        if (!BATCH_SAVE) {
+        if (save) {
             dao.save(world);
         }
         return world;
@@ -117,10 +125,7 @@ public class WorldController {
         }
         try {
             int val = Integer.parseInt(param);
-            if (val < 1) {
-                return 1;
-            }
-            return val > 500 ? 500 : val;
+            return val < 1 ? 1 : val > 500 ? 500 : val;
         } catch (NumberFormatException e) {
             return 1;
         }

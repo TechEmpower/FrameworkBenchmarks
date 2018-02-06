@@ -6,7 +6,7 @@ fw_depends mongodb dlang
 rm -f fwb
 rm -rf .dub
 
-dub upgrade
+dub upgrade --verbose
 
 dub build -b release --combined
 

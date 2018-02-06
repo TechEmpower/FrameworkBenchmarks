@@ -26,32 +26,18 @@ struct State {
     db: SyncAddress<db::DbExecutor>
 }
 
-fn json(_: HttpRequest<State>) -> Result<HttpResponse> {
-    let message = models::Message {
-        message: "Hello, World!"
-    };
-    Ok(httpcodes::HTTPOk
-       .build()
-       .header(header::SERVER, "Actix")
-       .json(message)?)
-}
-
-fn plaintext(_: HttpRequest<State>) -> Result<HttpResponse> {
-    Ok(httpcodes::HTTPOk.build()
-       .header(header::SERVER, "Actix")
-       .content_type("text/plain")
-       .body("Hello, World!")?)
-}
-
 fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
     req.state().db.call_fut(db::RandomWorld)
         .from_err()
         .and_then(|res| {
             match res {
-                Ok(row) => Ok(
-                    httpcodes::HTTPOk.build()
-                        .header(header::SERVER, "Actix")
-                        .json(row)?),
+                Ok(row) => {
+                    let body = serde_json::to_string(&row).unwrap();
+                    Ok(httpcodes::HTTPOk.build()
+                       .header(header::SERVER, "Actix")
+                       .content_type("application/json")
+                       .body(body)?)
+                },
                 Err(_) =>
                     Ok(httpcodes::HTTPInternalServerError.into()),
             }
@@ -81,12 +67,14 @@ fn queries(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
                 Err(e) => Err(e)
             }
         )
-        .and_then(|res|
+        .and_then(|res| {
+            let body = serde_json::to_string(&res).unwrap();
             Ok(httpcodes::HTTPOk.build()
                .header(header::SERVER, "Actix")
+               .content_type("application/json")
                .content_encoding(headers::ContentEncoding::Identity)
-               .json(res)?)
-        )
+               .body(body)?)
+        })
         .responder()
 }
 
@@ -159,8 +147,8 @@ fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
 
                     Ok(httpcodes::HTTPOk.build()
                        .header(header::SERVER, "Actix")
-                       .content_encoding(headers::ContentEncoding::Identity)
                        .content_type("text/html; charset=utf-8")
+                       .content_encoding(headers::ContentEncoding::Identity)
                        .body(res)?)
                 },
                 Err(_) => Ok(httpcodes::HTTPInternalServerError.into())
@@ -169,11 +157,8 @@ fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
         .responder()
 }
 
-use std::env;
 fn main() {
     let sys = System::new("techempower");
-    env::set_var("RUST_BACKTRACE", "1");
-
     let dbhost = match option_env!("DBHOST") {
         Some(it) => it,
         _ => "127.0.0.1"
@@ -188,8 +173,6 @@ fn main() {
     // start http server
     HttpServer::new(
         move || Application::with_state(State{db: addr.clone()})
-            .resource("/json", |r| r.f(json))
-            .resource("/plaintext", |r| r.f(plaintext))
             .resource("/db", |r| r.route().a(world_row))
             .resource("/queries", |r| r.route().a(queries))
             .resource("/fortune", |r| r.route().a(fortune))

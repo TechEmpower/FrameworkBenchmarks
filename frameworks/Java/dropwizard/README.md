@@ -37,6 +37,8 @@ Each implementation has its own set of `.yml` configuration file and shell scrip
 
 ### (MySQL or PostgreSQL) and Hibernate
 
+The `Updates` test is using JDBC batch updates and manual transaction handling.
+
  * [DB, Queries and Updates](src/main/java/com/example/helloworld/db/hibernate/WorldHibernateImpl.java)
  * [Fortune](src/main/java/com/example/helloworld/db/hibernate/FortuneHibernateImpl.java)
 
