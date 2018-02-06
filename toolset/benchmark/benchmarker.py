@@ -50,7 +50,7 @@ class Benchmarker:
         all_tests = self.__gather_tests
 
         for test in all_tests:
-            print test.name
+            print(test.name)
 
         self.__finish()
     ############################################################
@@ -124,7 +124,7 @@ class Benchmarker:
         ##########################
         # Setup client/server
         ##########################
-        print header("Preparing Server, Database, and Client ...", top='=', bottom='=')
+        print(header("Preparing Server, Database, and Client ...", top='=', bottom='='))
         with self.quiet_out.enable():
             self.__setup_server()
             self.__setup_database()
@@ -137,14 +137,14 @@ class Benchmarker:
         ##########################
         # Run tests
         ##########################
-        print header("Running Tests...", top='=', bottom='=')
+        print(header("Running Tests...", top='=', bottom='='))
         result = self.__run_tests(all_tests)
 
         ##########################
         # Parse results
         ##########################
         if self.mode == "benchmark":
-            print header("Parsing Results ...", top='=', bottom='=')
+            print(header("Parsing Results ...", top='=', bottom='='))
             self.__parse_results(all_tests)
 
 
@@ -471,7 +471,7 @@ class Benchmarker:
                 pbar.update(pbar_test)
                 pbar_test = pbar_test + 1
                 if __name__ == 'benchmark.benchmarker':
-                    print header("Running Test: %s" % test.name)
+                    print(header("Running Test: %s" % test.name))
                     with open(self.current_benchmark, 'w') as benchmark_resume_file:
                         benchmark_resume_file.write(test.name)
                     with self.quiet_out.enable():
@@ -540,7 +540,7 @@ class Benchmarker:
             out.write("self.results['completed']: {completed}\n".format(completed=str(self.results['completed'])))
             if self.results['frameworks'] != None and test.name in self.results['completed']:
                 out.write('Framework {name} found in latest saved data. Skipping.\n'.format(name=str(test.name)))
-                print 'WARNING: Test {test} exists in the results directory; this must be removed before running a new test.\n'.format(test=str(test.name))
+                print('WARNING: Test {test} exists in the results directory; this must be removed before running a new test.\n'.format(test=str(test.name)))
                 return exit_with_code(1)
             out.flush()
 
@@ -563,7 +563,7 @@ class Benchmarker:
                     self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
                     out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
                     out.flush()
-                    print "Error: Unable to recover port, cannot start test"
+                    print("Error: Unable to recover port, cannot start test")
                     return exit_with_code(1)
 
                 result, process = test.start(out)
@@ -636,7 +636,7 @@ class Benchmarker:
                 self.__upload_results()
 
                 if self.mode == "verify" and not passed_verify:
-                    print "Failed verify!"
+                    print("Failed verify!")
                     return exit_with_code(1)
             except KeyboardInterrupt:
                 self.__stop_test(test, out)
@@ -880,9 +880,9 @@ class Benchmarker:
             # or stream flush, so we have to ensure that the color code is printed repeatedly
             prefix = Fore.CYAN
             for line in header("Verification Summary", top='=', bottom='').split('\n'):
-                print prefix + line
+                print(prefix + line)
             for test in tests:
-                print prefix + "| Test: %s" % test.name
+                print(prefix + "| Test: {!s}".format(test.name))
                 if test.name in self.results['verify'].keys():
                     for test_type, result in self.results['verify'][test.name].iteritems():
                         if result.upper() == "PASS":
@@ -891,13 +891,13 @@ class Benchmarker:
                             color = Fore.YELLOW
                         else:
                             color = Fore.RED
-                        print prefix + "|       " + test_type.ljust(13) + ' : ' + color + result.upper()
+                        print(prefix + "|       " + test_type.ljust(13) + ' : ' + color + result.upper())
                 else:
-                    print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
-            print prefix + header('', top='', bottom='=') + Style.RESET_ALL
+                    print(prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)")
+            print(prefix + header('', top='', bottom='=') + Style.RESET_ALL)
 
-        print "Time to complete: " + str(int(time.time() - self.start_time)) + " seconds"
-        print "Results are saved in " + os.path.join(self.result_directory, self.timestamp)
+        print("Time to complete: " + str(int(time.time() - self.start_time)) + " seconds")
+        print("Results are saved in " + os.path.join(self.result_directory, self.timestamp))
 
     ############################################################
     # End __finish
