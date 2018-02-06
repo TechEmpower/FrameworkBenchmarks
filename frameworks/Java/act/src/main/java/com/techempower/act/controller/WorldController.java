@@ -26,7 +26,9 @@ import act.app.conf.AutoConfig;
 import act.db.Dao;
 import act.db.sql.tx.Transactional;
 import act.sys.Env;
+import act.util.FastJsonFeature;
 import act.util.Global;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.techempower.act.AppEntry;
 import com.techempower.act.model.World;
 import org.osgl.$;
@@ -42,7 +44,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import javax.inject.Inject;
 
 @AutoConfig
-@SuppressWarnings("unused")
 @Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
 @ResponseContentType(H.MediaType.JSON)
 public class WorldController {
@@ -72,6 +73,7 @@ public class WorldController {
 
     @GetAction("queries")
     @SessionFree
+    @FastJsonFeature(SerializerFeature.DisableCircularReferenceDetect)
     public final World[] multipleQueries(String queries) {
         int q = regulateQueries(queries);
 
@@ -84,6 +86,7 @@ public class WorldController {
 
     @GetAction("updates")
     @SessionFree
+    @FastJsonFeature(SerializerFeature.DisableCircularReferenceDetect)
     public final List<World> updateQueries(String queries) {
         int q = regulateQueries(queries);
         return doUpdate(q);
@@ -122,10 +125,7 @@ public class WorldController {
         }
         try {
             int val = Integer.parseInt(param);
-            if (val < 1) {
-                return 1;
-            }
-            return val > 500 ? 500 : val;
+            return val < 1 ? 1 : val > 500 ? 500 : val;
         } catch (NumberFormatException e) {
             return 1;
         }

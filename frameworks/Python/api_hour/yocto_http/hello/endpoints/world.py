@@ -4,7 +4,6 @@ import ujson
 
 from ..services import queries_number
 from ..services.world import get_random_record, get_random_records, update_random_records, get_fortunes
-from ..services import redis
 
 LOG = logging.getLogger(__name__)
 

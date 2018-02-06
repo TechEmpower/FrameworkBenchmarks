@@ -26,6 +26,12 @@ final class Routes: RouteCollection {
             return try World.find(worldId)?.makeJSON() ?? JSON(node: .null)
         }
 
+        // FIXME: The multi-query and updates endpoints are currently omitted
+        //        from benchmark_config.json because they take too long and
+        //        timeout with queries=500, which is one of the verification
+        //        steps.  Something here is taking far too long... probably
+        //        World.find(id).
+
         // Test type 3: Multiple database queries
         builder.get("queries") { req in
             let queries = queriesParam(for: req)

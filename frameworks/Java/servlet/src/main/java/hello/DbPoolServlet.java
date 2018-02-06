@@ -23,7 +23,6 @@ public class DbPoolServlet extends HttpServlet {
 	// Database details.
 	private static final String DB_QUERY = "SELECT * FROM World WHERE id = ?";
 	private static final int DB_ROWS = 10000;
-	private static final int LIMIT = DB_ROWS + 1;
 
 	// Database connection pool.
 	@Resource(name = "jdbc/hello_world")
@@ -44,7 +43,7 @@ public class DbPoolServlet extends HttpServlet {
 					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
 				// Run the query the number of times requested.
 				for (int i = 0; i < count; i++) {
-					final int id = random.nextInt(LIMIT);
+					final int id = random.nextInt(DB_ROWS) + 1;
 					statement.setInt(1, id);
 
 					try (ResultSet results = statement.executeQuery()) {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends swift3
+fw_depends swift
 
 fw_installed cmysql && return 0
 

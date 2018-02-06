@@ -20,7 +20,6 @@ import org.cache2k.Cache2kBuilder;
 public class Cache2kPostgresServlet extends HttpServlet {
 	// Database details.
 	private static final int DB_ROWS = 10000;
-	private static final int LIMIT = DB_ROWS + 1;
 	
 	// Database connection pool.
 	@Resource(name = "jdbc/hello_world")
@@ -56,7 +55,7 @@ public class Cache2kPostgresServlet extends HttpServlet {
 		//TODO prevent duplicate numbers to be added
 		List<Integer> keys = new ArrayList<Integer>(count);
 		for (int i = 0; i < count; i++) {
-			keys.add(new Integer(random.nextInt(LIMIT)));
+			keys.add(new Integer(random.nextInt(DB_ROWS) + 1));
 		}
 		
 		// Set content type to JSON

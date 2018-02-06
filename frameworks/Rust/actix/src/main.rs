@@ -26,26 +26,6 @@ struct State {
     db: SyncAddress<db::DbExecutor>
 }
 
-fn json(_: HttpRequest<State>) -> Result<HttpResponse> {
-    let message = models::Message {
-        message: "Hello, World!"
-    };
-    let body = serde_json::to_string(&message)?;
-
-    Ok(httpcodes::HTTPOk
-       .build()
-       .header(header::SERVER, "Actix")
-       .content_type("application/json")
-       .body(body)?)
-}
-
-fn plaintext(_: HttpRequest<State>) -> Result<HttpResponse> {
-    Ok(httpcodes::HTTPOk.build()
-       .header(header::SERVER, "Actix")
-       .content_type("text/plain")
-       .body("Hello, World!")?)
-}
-
 fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
     req.state().db.call_fut(db::RandomWorld)
         .from_err()
@@ -193,8 +173,6 @@ fn main() {
     // start http server
     HttpServer::new(
         move || Application::with_state(State{db: addr.clone()})
-            .resource("/json", |r| r.f(json))
-            .resource("/plaintext", |r| r.f(plaintext))
             .resource("/db", |r| r.route().a(world_row))
             .resource("/queries", |r| r.route().a(queries))
             .resource("/fortune", |r| r.route().a(fortune))
