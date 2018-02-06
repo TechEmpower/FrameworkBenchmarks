@@ -13,7 +13,7 @@ mkdir facil_app
 cd facil_app
 
 # Download and unpack
-curl -s -o facil.io.tar.gz -LJO https://api.github.com/repos/boazsegev/facil.io/tarball/v.0.6.0.beta.2
+curl -s -o facil.io.tar.gz -LJO https://api.github.com/repos/boazsegev/facil.io/tarball/v.0.6.0.beta.3
 tar --strip-components=1 -xzf facil.io.tar.gz
 if [ $? -ne 0 ]; then echo "Couldn't extract tar."; exit 1; fi
 rm facil.io.tar.gz
