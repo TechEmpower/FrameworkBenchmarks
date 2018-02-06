@@ -869,6 +869,12 @@ class Benchmarker:
         except (ValueError, IOError):
             pass
 
+    def __get_git_commit_id(self):
+        return subprocess.check_output('git rev-parse HEAD', shell=True).strip()
+
+    def __get_git_repository_url(self):
+        return subprocess.check_output('git config --get remote.origin.url', shell=True).strip()
+
     ############################################################
     # __finish
     ############################################################
@@ -985,6 +991,9 @@ class Benchmarker:
             self.results['uuid'] = str(uuid.uuid4())
             self.results['name'] = datetime.now().strftime(self.results_name)
             self.results['environmentDescription'] = self.results_environment
+            self.results['git'] = dict()
+            self.results['git']['commitId'] = self.__get_git_commit_id()
+            self.results['git']['repositoryUrl'] = self.__get_git_repository_url()
             self.results['startTime'] = int(round(time.time() * 1000))
             self.results['completionTime'] = None
             self.results['concurrencyLevels'] = self.concurrency_levels
