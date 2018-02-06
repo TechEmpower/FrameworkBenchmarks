@@ -173,70 +173,70 @@ class FrameworkTest:
 
     # Setup environment variables
     logDir = os.path.join(self.fwroot, self.benchmarker.full_results_directory(), 'logs', self.name.lower())
-    bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
+    # bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
 
-    os.environ['TROOT'] = self.directory
-    os.environ['IROOT'] = self.install_root
-    os.environ['DBHOST'] = socket.gethostbyname(self.database_host)
-    os.environ['LOGDIR'] = logDir
-    os.environ['MAX_CONCURRENCY'] = str(max(self.benchmarker.concurrency_levels))
+    # os.environ['TROOT'] = self.directory
+    # os.environ['IROOT'] = self.install_root
+    # os.environ['DBHOST'] = socket.gethostbyname(self.database_host)
+    # os.environ['LOGDIR'] = logDir
+    # os.environ['MAX_CONCURRENCY'] = str(max(self.benchmarker.concurrency_levels))
 
     # Always ensure that IROOT exists
-    if not os.path.exists(self.install_root):
-      os.mkdir(self.install_root)
+    # if not os.path.exists(self.install_root):
+    #   os.mkdir(self.install_root)
 
-    if not os.path.exists(os.path.join(self.install_root,"TFBReaper")):
-      subprocess.check_call(['gcc', 
-        '-std=c99', 
-        '-o%s/TFBReaper' % self.install_root, 
-        os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')],
-        stderr=out, stdout=out)
+    # if not os.path.exists(os.path.join(self.install_root,"TFBReaper")):
+    #   subprocess.check_call(['gcc', 
+    #     '-std=c99', 
+    #     '-o%s/TFBReaper' % self.install_root, 
+    #     os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')],
+    #     stderr=out, stdout=out)
 
     # Check that the client is setup
-    if not os.path.exists(os.path.join(self.install_root, 'client.installed')):
-      print("\nINSTALL: Installing client software\n")    
-      # TODO: hax; should dynamically know where this file is
-      with open (self.fwroot + "/toolset/setup/linux/client.sh", "r") as myfile:
-        remote_script=myfile.read()
-        print("\nINSTALL: {!s}".format(self.benchmarker.client_ssh_string))
-        p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
-        p.communicate(remote_script)
-        returncode = p.returncode
-        if returncode != 0:
-          self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
-      print("\nINSTALL: Finished installing client software\n")
-      subprocess.check_call('touch client.installed', shell=True, cwd=self.install_root, executable='/bin/bash')
+    # if not os.path.exists(os.path.join(self.install_root, 'client.installed')):
+    #   print("\nINSTALL: Installing client software\n")    
+    #   # TODO: hax; should dynamically know where this file is
+    #   with open (self.fwroot + "/toolset/setup/linux/client.sh", "r") as myfile:
+    #     remote_script=myfile.read()
+    #     print("\nINSTALL: {!s}".format(self.benchmarker.client_ssh_string))
+    #     p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
+    #     p.communicate(remote_script)
+    #     returncode = p.returncode
+    #     if returncode != 0:
+    #       self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
+    #   print("\nINSTALL: Finished installing client software\n")
+    #   subprocess.check_call('touch client.installed', shell=True, cwd=self.install_root, executable='/bin/bash')
 
     # Run the module start inside parent of TROOT
     #  - we use the parent as a historical accident, a number of tests
     # refer to their TROOT maually still
-    previousDir = os.getcwd()
-    os.chdir(os.path.dirname(self.troot))
-    logging.info("Running setup module start (cwd=%s)", self.directory)
+    # previousDir = os.getcwd()
+    # os.chdir(os.path.dirname(self.troot))
+    # logging.info("Running setup module start (cwd=%s)", self.directory)
 
-    command = 'bash -exc "source %s && source %s.sh"' % (
-      bash_functions_path,
-      os.path.join(self.troot, self.setup_file))
+    # command = 'bash -exc "source %s && source %s.sh"' % (
+    #   bash_functions_path,
+    #   os.path.join(self.troot, self.setup_file))
 
-    debug_command = '''\
-      export FWROOT=%s          &&  \\
-      export TROOT=%s           &&  \\
-      export IROOT=%s           &&  \\
-      export DBHOST=%s          &&  \\
-      export LOGDIR=%s          &&  \\
-      export MAX_CONCURRENCY=%s && \\
-      cd %s && \\
-      %s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\"''' % (self.fwroot,
-        self.directory,
-        self.install_root,
-        socket.gethostbyname(self.database_host),
-        logDir,
-        max(self.benchmarker.concurrency_levels),
-        self.directory,
-        self.install_root,
-        bash_functions_path,
-        os.path.join(self.troot, self.setup_file))
-    logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
+    # debug_command = '''\
+    #   export FWROOT=%s          &&  \\
+    #   export TROOT=%s           &&  \\
+    #   export IROOT=%s           &&  \\
+    #   export DBHOST=%s          &&  \\
+    #   export LOGDIR=%s          &&  \\
+    #   export MAX_CONCURRENCY=%s && \\
+    #   cd %s && \\
+    #   %s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\"''' % (self.fwroot,
+    #     self.directory,
+    #     self.install_root,
+    #     socket.gethostbyname(self.database_host),
+    #     logDir,
+    #     max(self.benchmarker.concurrency_levels),
+    #     self.directory,
+    #     self.install_root,
+    #     bash_functions_path,
+    #     os.path.join(self.troot, self.setup_file))
+    # logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
 
 
     def tee_output(prefix, line):
@@ -254,8 +254,11 @@ class FrameworkTest:
       out.flush()
 
     # Start the setup.sh command
-    p = subprocess.Popen(["%s/TFBReaper" % self.install_root,command],
-          cwd=self.directory,
+    # p = subprocess.Popen(["%s/TFBReaper" % self.install_root,command],
+    #       cwd=self.directory,
+    #       stdout=subprocess.PIPE,
+    #       stderr=subprocess.STDOUT)
+    p = subprocess.Popen(["docker", "run", "--rm", "-p", "%s:%s" % (self.port, self.port), "--network=host", self.name],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
     nbsr = setup_util.NonBlockingStreamReader(p.stdout,
@@ -351,8 +354,8 @@ class FrameworkTest:
     watch_thread.daemon = True
     watch_thread.start()
 
-    logging.info("Executed %s.sh, returning %s", self.setup_file, retcode)
-    os.chdir(previousDir)
+    # logging.info("Executed %s.sh, returning %s", self.setup_file, retcode)
+    # os.chdir(previousDir)
 
     return retcode, p
   ############################################################

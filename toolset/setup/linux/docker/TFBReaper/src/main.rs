@@ -13,7 +13,7 @@ use nix::sys::signal;
 use libc::pause;
 
 /**
- * Recussively finds all descendant PIDs of the given PID.
+ * Recurssively finds all descendant PIDs of the given PID.
  */
 fn find_descendants(pid: i32) -> Vec<i32> {
   let mut pids: Vec<i32> = vec![];

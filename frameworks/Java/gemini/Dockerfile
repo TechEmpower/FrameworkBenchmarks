@@ -1,4 +1,4 @@
-FROM tfb/resin:latest
+FROM resin:latest
 
 RUN apt-get install -qqy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     ant
