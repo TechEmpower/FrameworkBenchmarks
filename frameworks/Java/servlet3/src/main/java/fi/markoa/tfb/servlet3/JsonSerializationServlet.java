@@ -1,6 +1,7 @@
 package fi.markoa.tfb.servlet3;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 /**
@@ -16,12 +18,9 @@ import java.io.IOException;
  *
  * @author marko asplund
  */
+@SuppressWarnings("serial")
 @WebServlet("/json")
 public class JsonSerializationServlet extends HttpServlet {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3978936327184297455L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(JsonSerializationServlet.class);
 	private static final ObjectMapper mapper = new ObjectMapper();
 	private static final String MEDIATYPE_APPLICATION_JSON = "application/json";
