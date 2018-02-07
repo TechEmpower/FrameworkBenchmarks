@@ -15,8 +15,7 @@ use actix_web::*;
 use actix::prelude::*;
 use askama::Template;
 use http::header;
-use rand::distributions::{Range, IndependentSample};
-use futures::{Future, Stream, stream};
+use futures::Future;
 
 mod db;
 mod schema;
@@ -48,32 +47,26 @@ fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Err
 fn queries(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
     // get queries parameter
     let q = if let Some(q) = req.query().get("q") {
-        q.parse::<usize>().ok().unwrap_or(1)
+        q.parse::<u16>().ok().unwrap_or(1)
     } else {
         1
     };
     let q = cmp::min(500, cmp::max(1, q));
 
     // run sql queries
-    let stream = (0..q).map(|_| req.state().db.call_fut(db::RandomWorld));
-    stream::futures_unordered(stream)
+    req.state().db.call_fut(db::RandomWorlds(q))
         .from_err()
-        .fold(Vec::with_capacity(q), |mut list, val|
-            match val {
-                Ok(val) => {
-                    list.push(val);
-                    Ok(list)
-                },
-                Err(e) => Err(e)
-            }
-        )
         .and_then(|res| {
-            let body = serde_json::to_string(&res).unwrap();
-            Ok(httpcodes::HTTPOk.build()
-               .header(header::SERVER, "Actix")
-               .content_type("application/json")
-               .content_encoding(headers::ContentEncoding::Identity)
-               .body(body)?)
+            if let Ok(worlds) = res {
+                let body = serde_json::to_string(&worlds).unwrap();
+                Ok(httpcodes::HTTPOk.build()
+                   .header(header::SERVER, "Actix")
+                   .content_type("application/json")
+                   .content_encoding(headers::ContentEncoding::Identity)
+                   .body(body)?)
+            } else {
+                Ok(httpcodes::HTTPInternalServerError.into())
+            }
         })
         .responder()
 }
@@ -87,45 +80,20 @@ fn updates(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
     };
     let q = cmp::min(500, cmp::max(1, q));
 
-    // get rundom world objects
-    let mut stream = Vec::with_capacity(q);
-    for _ in 0..q {
-        stream.push(req.state().db.call_fut(db::RandomWorld));
-    }
-    stream::futures_unordered(stream)
+    // update worlds
+    req.state().db.call_fut(db::UpdateWorld(q))
         .from_err()
-        .fold(Vec::with_capacity(q), |mut list, val|
-              match val {
-                  Ok(val) => {
-                      list.push(val);
-                      Ok(list)
-                  },
-                  Err(e) => Err(e)
-              }
-        )
-        .and_then(move |mut worlds| {
-            // update worlds
-            let mut rng = rand::thread_rng();
-            let between = Range::new(1, 10_000);
-            for world in &mut worlds {
-                world.randomnumber = between.ind_sample(&mut rng);
+        .and_then(move |res| {
+            if let Ok(worlds) = res {
+                let body = serde_json::to_string(&worlds).unwrap();
+                Ok(httpcodes::HTTPOk.build()
+                   .header(header::SERVER, "Actix")
+                   .content_type("application/json")
+                   .content_encoding(headers::ContentEncoding::Identity)
+                   .body(body)?)
+            } else {
+                Ok(httpcodes::HTTPInternalServerError.into())
             }
-            let body = serde_json::to_string(&worlds).unwrap();
-
-            // persist to db
-            req.state().db.call_fut(db::UpdateWorld(worlds))
-                .from_err()
-                .and_then(move |res| {
-                    if res.is_ok() {
-                        Ok(httpcodes::HTTPOk.build()
-                           .header(header::SERVER, "Actix")
-                           .content_type("application/json")
-                           .content_encoding(headers::ContentEncoding::Identity)
-                           .body(body)?)
-                    } else {
-                        Ok(httpcodes::HTTPInternalServerError.into())
-                    }
-                })
         })
         .responder()
 }
