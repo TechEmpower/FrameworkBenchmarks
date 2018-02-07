@@ -30,10 +30,10 @@ public class PlaintextServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
 			IOException {
-		AsyncContext async = req.startAsync();
+		final AsyncContext async = req.startAsync();
+		final ServletOutputStream out = resp.getOutputStream();
 		LOGGER.debug("plaintext async");
 		resp.setContentType(MEDIATYPE_TEXT_PLAIN);
-		ServletOutputStream out = resp.getOutputStream();
 
 		out.setWriteListener(new WriteListener() {
 			@Override
