@@ -8,9 +8,8 @@
 	<name>servlet3</name>
 
 	<properties>
-		<sourceEncoding>UTF-8</sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-
 		<slf4j.version>1.7.10</slf4j.version>
 	</properties>
 
@@ -24,16 +23,17 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.2</version>
 				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<encoding>${sourceEncoding}</encoding>
+					<source>${java-version}</source>
+					<target>${java-version}</target>
+					<optimize>true</optimize>
+					<debug>false</debug>
 				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
+				<version>3.1.0</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
