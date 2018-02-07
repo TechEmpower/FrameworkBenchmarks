@@ -269,7 +269,7 @@ class FrameworkTest:
       p = subprocess.Popen(["docker", "build", "-f", docker_file, "-t", dependency, docker_dir],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
-      nbsr = setup_util.NonBlockingStreamReader(p.stdout,"")
+      nbsr = setup_util.NonBlockingStreamReader(p.stdout)
       while (p.poll() is None):
         for i in xrange(10):
           try:
@@ -281,7 +281,7 @@ class FrameworkTest:
       p = subprocess.Popen(["docker", "build", "-f", test_docker_file, "-t", self.name, self.directory],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
-      nbsr = setup_util.NonBlockingStreamReader(p.stdout,"")
+      nbsr = setup_util.NonBlockingStreamReader(p.stdout)
       while (p.poll() is None):
         for i in xrange(10):
           try:
@@ -299,7 +299,7 @@ class FrameworkTest:
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
     nbsr = setup_util.NonBlockingStreamReader(p.stdout,
-      "%s: framework processes have terminated" % (self.name, self.setup_file))
+      "%s: framework processes have terminated" % self.name)
 
     # Set a limit on total execution time of setup.sh
     timeout = datetime.now() + timedelta(minutes = 105)
@@ -308,17 +308,10 @@ class FrameworkTest:
     # Need to print to stdout once every 10 minutes or Travis-CI will abort
     travis_timeout = datetime.now() + timedelta(minutes = 5)
 
-    # Flush output until setup.sh work is finished. This is
-    # either a) when setup.sh exits b) when the port is bound
-    # c) when we run out of time. Note that 'finished' doesn't
-    # guarantee setup.sh process is dead - the OS may choose to make
-    # setup.sh a zombie process if it still has living children
-    #
-    # Note: child processes forked (using &) will remain alive
-    # after setup.sh has exited. The will have inherited the
-    # stdout/stderr descriptors and will be directing their
-    # output to the pipes.
-    #
+    # Flush output until docker run work is finished. This is
+    # either a) when docker run exits b) when the port is bound
+    # c) when we run out of time. 
+    prefix = "Server %s: " % self.name
     while (p.poll() is None
       and not self.benchmarker.is_port_bound(self.port)
       and not time_remaining.total_seconds() < 0):
@@ -328,9 +321,8 @@ class FrameworkTest:
       # print one line per condition check.
       # Adding a tight loop here mitigates the effect,
       # ensuring that most of the output directly from
-      # setup.sh is sent to tee_output before the outer
-      # loop exits and prints things like "setup.sh exited"
-      #
+      # docker is sent to tee_output before the outer
+      # loop exits and prints things like "docker exited"
       for i in xrange(10):
         try:
           line = nbsr.readline(0.05)
@@ -340,7 +332,7 @@ class FrameworkTest:
             # Reset Travis-CI timer
             travis_timeout = datetime.now() + timedelta(minutes = 5)
         except setup_util.EndOfStream:
-          tee_output(prefix, "Setup has terminated\n")
+          tee_output(prefix, "Docker has terminated\n")
           break
       time_remaining = timeout - datetime.now()
 
@@ -353,18 +345,18 @@ class FrameworkTest:
 
     # Did we time out?
     if time_remaining.total_seconds() < 0:
-      tee_output(prefix, "%s.sh timed out!! Aborting...\n" % self.setup_file)
+      tee_output(prefix, "Docker run has timed out!! Aborting...\n" % self.setup_file)
       p.kill()
       return 1
 
     # What's our return code?
-    # If setup.sh has terminated, use that code
+    # If docker run has terminated, use that code
     # Otherwise, detect if the port was bound
     tee_output(prefix, "Status: Poll: %s, Port %s bound: %s, Time Left: %s\n" % (
       p.poll(), self.port, self.benchmarker.is_port_bound(self.port), time_remaining))
     retcode = (p.poll() if p.poll() is not None else 0 if self.benchmarker.is_port_bound(self.port) else 1)
     if p.poll() is not None:
-      tee_output(prefix, "%s.sh process exited naturally with %s\n" % (self.setup_file, p.poll()))
+      tee_output(prefix, "Docker run process exited naturally with %s\n" % (self.setup_file, p.poll()))
     elif self.benchmarker.is_port_bound(self.port):
       tee_output(prefix, "Bound port detected on %s\n" % self.port)
 
@@ -374,7 +366,6 @@ class FrameworkTest:
     # the subprocess.PIPEs are dead, this thread will terminate.
     # Use a different prefix to indicate this is the framework
     # speaking
-    prefix = "Server %s: " % self.name
     def watch_child_pipes(nbsr, prefix):
       while True:
         try:
@@ -390,10 +381,7 @@ class FrameworkTest:
     watch_thread.daemon = True
     watch_thread.start()
 
-    # logging.info("Executed %s.sh, returning %s", self.setup_file, retcode)
-    # os.chdir(previousDir)
-
-    return retcode, p
+    return retcode
   ############################################################
   # End start
   ############################################################

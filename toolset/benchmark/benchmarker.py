@@ -558,15 +558,14 @@ class Benchmarker:
                     print("Error: Unable to recover port, cannot start test")
                     return sys.exit(1)
 
-                result, process = test.start(out)
-                # self.__process = process
-                # if result != 0:
-                #     self.__process.terminate()
-                #     time.sleep(5)
-                #     out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
-                #     out.flush()
-                #     self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
-                #     return sys.exit(1)
+                result = test.start(out)
+                if result != 0:
+                    self.__stop_test(test, out)
+                    time.sleep(5)
+                    out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
+                    out.flush()
+                    self.__write_intermediate_results(test.name,"ERROR: Problem starting")
+                    return sys.exit(1)
 
                 logging.info("Sleeping %s seconds to ensure framework is ready" % self.sleep)
                 time.sleep(self.sleep)
