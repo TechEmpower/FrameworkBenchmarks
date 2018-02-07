@@ -22,6 +22,7 @@ from threading import Thread
 from threading import Event
 
 from utils import header
+from utils import gather_docker_dependencies
 
 # Cross-platform colored text
 from colorama import Fore, Back, Style
@@ -253,16 +254,52 @@ class FrameworkTest:
       out.write(line)
       out.flush()
 
-    # Start the setup.sh command
-    # p = subprocess.Popen(["%s/TFBReaper" % self.install_root,command],
-    #       cwd=self.directory,
-    #       stdout=subprocess.PIPE,
-    #       stderr=subprocess.STDOUT)
+    prefix = "Setup %s: " % self.name
+
+    ##########################
+    # Build the Docker images
+    ##########################
+    test_docker_file = os.path.join(self.directory, self.setup_file)
+    deps = list(reversed(gather_docker_dependencies( test_docker_file )))
+
+    docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup", "linux", "docker")
+
+    for dependency in deps:
+      docker_file = os.path.join(docker_dir, dependency + ".dockerfile")
+      p = subprocess.Popen(["docker", "build", "-f", docker_file, "-t", dependency, docker_dir],
+          stdout=subprocess.PIPE,
+          stderr=subprocess.STDOUT)
+      nbsr = setup_util.NonBlockingStreamReader(p.stdout,"")
+      while (p.poll() is None):
+        for i in xrange(10):
+          try:
+            line = nbsr.readline(0.05)
+            if line:
+              tee_output(prefix, line)
+          except setup_util.EndOfStream:
+            break
+      p = subprocess.Popen(["docker", "build", "-f", test_docker_file, "-t", self.name, self.directory],
+          stdout=subprocess.PIPE,
+          stderr=subprocess.STDOUT)
+      nbsr = setup_util.NonBlockingStreamReader(p.stdout,"")
+      while (p.poll() is None):
+        for i in xrange(10):
+          try:
+            line = nbsr.readline(0.05)
+            if line:
+              tee_output(prefix, line)
+          except setup_util.EndOfStream:
+            break
+        
+
+    ##########################
+    # Run the Docker container
+    ##########################
     p = subprocess.Popen(["docker", "run", "--rm", "-p", "%s:%s" % (self.port, self.port), "--network=host", self.name],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
     nbsr = setup_util.NonBlockingStreamReader(p.stdout,
-      "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
+      "%s: framework processes have terminated" % (self.name, self.setup_file))
 
     # Set a limit on total execution time of setup.sh
     timeout = datetime.now() + timedelta(minutes = 105)
@@ -282,7 +319,6 @@ class FrameworkTest:
     # stdout/stderr descriptors and will be directing their
     # output to the pipes.
     #
-    prefix = "Setup %s: " % self.name
     while (p.poll() is None
       and not self.benchmarker.is_port_bound(self.port)
       and not time_remaining.total_seconds() < 0):

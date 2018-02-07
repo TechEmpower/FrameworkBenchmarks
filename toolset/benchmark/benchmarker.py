@@ -6,7 +6,6 @@ from utils import header
 from utils import gather_tests
 from utils import gather_frameworks
 from utils import verify_database_connections
-from utils import gather_docker_dependencies
 
 import os
 import uuid
@@ -539,26 +538,6 @@ class Benchmarker:
 
             out.write(header("Beginning %s" % test.name, top='='))
             out.flush()
-
-            ##########################
-            # Build the Docker images
-            ##########################
-            out.write(header("Building Docker Images..."))
-            out.write(header("Building Docker image(s) for %s" % test.name))
-            out.flush()
-            test_docker_file = os.path.join(test.directory, "Dockerfile")
-            deps = list(reversed(gather_docker_dependencies( test_docker_file )))
-
-            docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup", "linux", "docker")
-
-            for dependency in deps:
-                docker_file = os.path.join(docker_dir, dependency + ".dockerfile")
-                subprocess.check_call(["docker", "build", "-f", docker_file, "-t", dependency, docker_dir],
-                    stdout=out,
-                    stderr=out)
-            subprocess.check_call(["docker", "build", "-f", test_docker_file, "-t", test.name, test.directory],
-                    stdout=out,
-                    stderr=out)
 
             ##########################
             # Start this test
