@@ -14,7 +14,7 @@
 	</properties>
 
 	<build>
-		<finalName>servlet3-cass</finalName>
+		<finalName>servlet3</finalName>
 
 		<plugins>
 
