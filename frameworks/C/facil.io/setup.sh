@@ -26,7 +26,7 @@ rm -r facil_app/src
 mkdir facil_app/src
 cp bench_app.c facil_app/src
 cd facil_app
-make -j build
+FACIL_CPU_CORES_LIMIT=7 make -j build
 
 # run test
 cd tmp
