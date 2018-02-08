@@ -40,6 +40,12 @@ sudo make install
 popd
 popd
 
+# Configure default server.xml
+pushd "${IROOT}/${TOMCAT_FILENAME}/conf/"
+mv server.xml server.xml.orig
+cat $FWROOT/toolset/setup/linux/webservers/tomcat/server.xml > server.xml
+popd
+
 # Configure Tomcat to use compiled native adapter
 echo -e "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/apr/lib:/usr/local/ssl/lib\n
 export LD_LIBRARY_PATH" > ${IROOT}/${TOMCAT_FILENAME}/bin/setenv.sh
