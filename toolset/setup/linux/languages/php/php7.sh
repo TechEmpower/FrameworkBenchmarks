@@ -20,12 +20,14 @@ mv php-${VERSION} php7
 cd php7
 
 echo "Configuring PHP quietly..."
-./configure --prefix=$PHP_HOME --with-pdo-mysql \
-  --enable-intl --enable-mbstring \
-  --enable-fpm --with-openssl --with-mysqli \
-  --with-zlib --enable-opcache --quiet
+./configure --prefix=$PHP_HOME          --disable-debug \
+            --with-zlib                 --with-pdo-mysql=mysqlnd \
+            --enable-intl               --enable-mbstring \
+            --enable-fpm                --with-openssl \
+            --with-mysqli=mysqlnd       --enable-huge-code-pages \
+            --quiet
 echo "Making PHP quietly..."
-make --quiet
+make -j2 --quiet
 echo "Installing PHP quietly"
 make --quiet install
 cd ..
