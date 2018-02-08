@@ -17,8 +17,7 @@ use askama::Template;
 use http::header;
 use postgres::{Connection, TlsMode};
 use rand::{thread_rng, Rng, ThreadRng};
-use rand::distributions::{Range, IndependentSample};
-use futures::{Future, Stream, stream};
+use futures::Future;
 
 #[derive(Serialize)]
 pub struct World {
@@ -58,32 +57,26 @@ fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Err
 fn queries(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
     // get queries parameter
     let q = if let Some(q) = req.query().get("q") {
-        q.parse::<usize>().ok().unwrap_or(1)
+        q.parse::<u16>().ok().unwrap_or(1)
     } else {
         1
     };
     let q = cmp::min(500, cmp::max(1, q));
 
     // run sql queries
-    let stream = (0..q).map(|_| req.state().db.call_fut(RandomWorld));
-    stream::futures_unordered(stream)
+    req.state().db.call_fut(RandomWorlds(q))
         .from_err()
-        .fold(Vec::with_capacity(q), |mut list, val|
-              match val {
-                  Ok(val) => {
-                      list.push(val);
-                      Ok(list)
-                  },
-                  Err(e) => Err(e)
-              }
-        )
         .and_then(|res| {
-            let body = serde_json::to_string(&res).unwrap();
-            Ok(httpcodes::HTTPOk.build()
-               .header(header::SERVER, "Actix")
-               .content_type("application/json")
-               .content_encoding(headers::ContentEncoding::Identity)
-               .body(body)?)
+            if let Ok(worlds) = res {
+                let body = serde_json::to_string(&worlds).unwrap();
+                Ok(httpcodes::HTTPOk.build()
+                   .header(header::SERVER, "Actix")
+                   .content_type("application/json")
+                   .content_encoding(headers::ContentEncoding::Identity)
+                   .body(body)?)
+            } else {
+                Ok(httpcodes::HTTPInternalServerError.into())
+            }
         })
         .responder()
 }
@@ -91,51 +84,26 @@ fn queries(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
 fn updates(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
     // get queries parameter
     let q = if let Some(q) = req.query().get("q") {
-        q.parse::<usize>().ok().unwrap_or(1)
+        q.parse::<u16>().ok().unwrap_or(1)
     } else {
         1
     };
     let q = cmp::min(500, cmp::max(1, q));
 
-    // get rundom world objects
-    let mut stream = Vec::with_capacity(q);
-    for _ in 0..q {
-        stream.push(req.state().db.call_fut(RandomWorld));
-    }
-    stream::futures_unordered(stream)
+    // update db
+    req.state().db.call_fut(UpdateWorld(q))
         .from_err()
-        .fold(Vec::with_capacity(q), |mut list, val|
-              match val {
-                  Ok(val) => {
-                      list.push(val);
-                      Ok(list)
-                  },
-                  Err(e) => Err(e)
-              }
-        )
-        .and_then(move |mut worlds| {
-            // update worlds
-            let mut rng = rand::thread_rng();
-            let between = Range::new(1, 10_000);
-            for world in &mut worlds {
-                world.randomnumber = between.ind_sample(&mut rng);
+        .and_then(move |res| {
+            if let Ok(worlds) = res {
+                let body = serde_json::to_string(&worlds).unwrap();
+                Ok(httpcodes::HTTPOk.build()
+                   .header(header::SERVER, "Actix")
+                   .content_type("application/json")
+                   .content_encoding(headers::ContentEncoding::Identity)
+                   .body(body)?)
+            } else {
+                Ok(httpcodes::HTTPInternalServerError.into())
             }
-            let body = serde_json::to_string(&worlds).unwrap();
-
-            // persist to db
-            req.state().db.call_fut(UpdateWorld(worlds))
-                .from_err()
-                .and_then(move |res| {
-                    if res.is_ok() {
-                        Ok(httpcodes::HTTPOk.build()
-                           .header(header::SERVER, "Actix")
-                           .content_type("application/json")
-                           .content_encoding(headers::ContentEncoding::Identity)
-                           .body(body)?)
-                    } else {
-                        Ok(httpcodes::HTTPInternalServerError.into())
-                    }
-                })
         })
         .responder()
 }
@@ -172,9 +140,6 @@ struct PgConnection {
     conn: Connection,
     rng: ThreadRng,
 }
-
-//unsafe impl Send for PgConnection {}
-//unsafe impl Sync for PgConnection {}
 
 impl Actor for PgConnection {
     type Context = SyncContext<Self>;
@@ -217,23 +182,60 @@ impl Handler<RandomWorld> for PgConnection {
     }
 }
 
-pub struct UpdateWorld(pub Vec<World>);
+pub struct RandomWorlds(pub u16);
+
+impl ResponseType for RandomWorlds {
+    type Item = Vec<World>;
+    type Error = io::Error;
+}
+
+impl Handler<RandomWorlds> for PgConnection {
+    type Result = MessageResult<RandomWorlds>;
+
+    fn handle(&mut self, msg: RandomWorlds, _: &mut Self::Context) -> Self::Result {
+        let random_world = self.conn.prepare_cached(
+            "SELECT id, randomnumber FROM World WHERE id=$1").unwrap();
+
+        let mut worlds = Vec::with_capacity(msg.0 as usize);
+        for _ in 0..msg.0 {
+            let w_id: i32 = self.rng.gen_range(1, 10_000);
+            for row in &random_world.query(&[&w_id]).unwrap() {
+                worlds.push(World {id: row.get(0), randomnumber: row.get(1)});
+                break
+            }
+        }
+        Ok(worlds)
+    }
+}
+
+pub struct UpdateWorld(pub u16);
 
 impl ResponseType for UpdateWorld {
-    type Item = ();
-    type Error = ();
+    type Item = Vec<World>;
+    type Error = io::Error;
 }
 
 impl Handler<UpdateWorld> for PgConnection {
-    type Result = ();
+    type Result = MessageResult<UpdateWorld>;
 
-    fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) {
+    fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> MessageResult<UpdateWorld> {
+        let get_world = self.conn.prepare_cached(
+            "SELECT id FROM World WHERE id=$1").unwrap();
         let update_world = self.conn.prepare_cached(
             "UPDATE World SET randomnumber=$1 WHERE id=$2").unwrap();
 
-        for world in &msg.0 {
-            let _ = update_world.execute(&[&world.randomnumber, &world.id]);
+        let mut worlds = Vec::with_capacity(msg.0 as usize);
+        for _ in 0..msg.0 {
+            let random_id = self.rng.gen_range::<i32>(1, 10_000);
+            for row in &get_world.query(&[&random_id]).unwrap() {
+                let w_id: i32 = row.get(0);
+                let new_num: i32 = self.rng.gen_range(1, 10_000);
+                let _ = update_world.execute(&[&new_num, &w_id]);
+                worlds.push(World{id: w_id, randomnumber: new_num});
+                break
+            }
         }
+        Ok(worlds)
     }
 }
 

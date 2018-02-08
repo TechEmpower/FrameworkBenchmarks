@@ -10,7 +10,7 @@ RETCODE=$(fw_exists ${IROOT}/php5.installed)
   source $IROOT/php5.installed
   return 0; }
 
-VERSION="5.6.32"
+VERSION="5.6.33"
 PHP_HOME=$IROOT/php-$VERSION
 
 # Precaution, unlikely to happen.
@@ -23,12 +23,12 @@ mv php-${VERSION} php5
 cd php5
 
 echo "Configuring PHP5 quietly..."
-./configure --prefix=$PHP_HOME --with-pdo-mysql \
+./configure --prefix=$PHP_HOME --disable-debug --with-pdo-mysql \
   --with-mysql --with-mcrypt --enable-intl --enable-mbstring \
   --enable-fpm --with-openssl --with-mysqli --with-zlib \
   --enable-opcache --quiet
 echo "Making PHP5 quietly..."
-make --quiet
+make -j2 --quiet
 echo "Installing PHP5 quietly"
 make --quiet install
 cd ..

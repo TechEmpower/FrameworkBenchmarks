@@ -991,9 +991,13 @@ class Benchmarker:
             self.results['uuid'] = str(uuid.uuid4())
             self.results['name'] = datetime.now().strftime(self.results_name)
             self.results['environmentDescription'] = self.results_environment
-            self.results['git'] = dict()
-            self.results['git']['commitId'] = self.__get_git_commit_id()
-            self.results['git']['repositoryUrl'] = self.__get_git_repository_url()
+            try:
+                self.results['git'] = dict()
+                self.results['git']['commitId'] = self.__get_git_commit_id()
+                self.results['git']['repositoryUrl'] = self.__get_git_repository_url()
+            except Exception as e:
+                logging.debug('Could not read local git repository, which is fine. The error was: %s', e)
+                self.results['git'] = None
             self.results['startTime'] = int(round(time.time() * 1000))
             self.results['completionTime'] = None
             self.results['concurrencyLevels'] = self.concurrency_levels
