@@ -1,0 +1,35 @@
+#!/bin/bash
+
+fw_depends java
+
+fw_installed tomcat && return 0
+
+TOMCAT_VERSION=9.0.4
+TEMP_DIRECTORY="$(mktemp -d)"
+
+# Ask Apache about the preferred mirror for our connection using JSON response. Source: https://stackoverflow.com/a/39670213
+APACHE_MIRROR="$(wget -qO - http://www.apache.org/dyn/closer.lua?as_json=1 | grep -P '"preferred": "' | cut -d \" -f4)"
+TOMCAT_FILENAME=apache-tomcat-${TOMCAT_VERSION}
+TOMCAT_URL=${APACHE_MIRROR}tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/${TOMCAT_FILENAME}.tar.gz
+
+TOMCAT_SIGNATURE=https://www.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc
+
+APACHE_KEYS=https://www.apache.org/dist/tomcat/tomcat-9/KEYS
+
+# Download the files at temporal storage
+wget -P ${TEMP_DIRECTORY} ${APACHE_KEYS}
+wget -P ${TEMP_DIRECTORY} ${TOMCAT_SIGNATURE}
+wget -P ${TEMP_DIRECTORY} ${TOMCAT_URL} 
+
+# It's highly unlikely Apache to change the filename of the GPG keys file
+gpg --import ${TEMP_DIRECTORY}/KEYS
+
+# Verify the downloaded file using the signature file
+gpg --verify ${TEMP_DIRECTORY}/${TOMCAT_FILENAME}.tar.gz.asc ${TEMP_DIRECTORY}/${TOMCAT_FILENAME}.tar.gz
+
+tar -xzf ${TEMP_DIRECTORY}/${TOMCAT_FILENAME}.tar.gz -C $IROOT
+
+echo "export CATALINA_HOME=$IROOT/$TOMCAT_FILENAME" > $IROOT/tomcat.installed
+echo -e "export PATH=\$IROOT/$TOMCAT_FILENAME/bin:\$PATH" >> $IROOT/tomcat.installed
+
+source $IROOT/tomcat.installed

@@ -49,7 +49,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
-			<scope>provided</scope>
+			<!--Resin can't find javax.servlet.WriteListener <scope>provided</scope> -->
 		</dependency>
 
 		<dependency>

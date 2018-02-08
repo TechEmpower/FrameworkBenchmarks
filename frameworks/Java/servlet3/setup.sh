@@ -1,8 +1,8 @@
 #!/bin/bash
 
-fw_depends java resin maven
+fw_depends java tomcat maven
 
 mvn clean compile war:war
-rm -rf $RESIN_HOME/webapps/*
-cp target/servlet3.war $RESIN_HOME/webapps
-resinctl console
+rm -rf $CATALINA_HOME/webapps/*
+cp target/servlet3.war $CATALINA_HOME/webapps
+$CATALINA_HOME/bin/startup.sh
