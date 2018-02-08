@@ -1,5 +1,5 @@
 gunicorn==19.4.5
 meinheld==0.6.1
-Cython==0.23.4
+Cython==0.27.3
 falcon==0.3.0
 greenlet==0.4.9
