@@ -191,6 +191,7 @@ env:
     - "TESTDIR=Ruby/sinatra"
     - "TESTDIR=Ruby/sinatra-sequel"
     - "TESTDIR=Rust/iron"
+    - "TESTDIR=Rust/fanta"
     - "TESTDIR=Rust/nickel"
     - "TESTDIR=Rust/hyper"
     - "TESTDIR=Rust/tokio-minihttp"
