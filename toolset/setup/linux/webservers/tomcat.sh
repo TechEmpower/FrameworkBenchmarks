@@ -29,6 +29,17 @@ gpg --verify ${TEMP_DIRECTORY}/${TOMCAT_FILENAME}.tar.gz.asc ${TEMP_DIRECTORY}/$
 
 tar -xzf ${TEMP_DIRECTORY}/${TOMCAT_FILENAME}.tar.gz -C $IROOT
 
+# Build Tomcat Native adapter - Apache APR
+pushd "${IROOT}/${TOMCAT_FILENAME}/bin"
+mkdir -p tomcat-native
+tar -xzf tomcat-native.tar.gz -C tomcat-native --strip-components=1
+pushd "tomcat-native/native"
+./configure --with-apr=/usr/local/apr --with-ssl=/usr/local/ssl
+make
+sudo make install
+popd
+popd
+
 echo "export CATALINA_HOME=$IROOT/$TOMCAT_FILENAME" > $IROOT/tomcat.installed
 echo -e "export PATH=\$IROOT/$TOMCAT_FILENAME/bin:\$PATH" >> $IROOT/tomcat.installed
 
