@@ -40,6 +40,10 @@ sudo make install
 popd
 popd
 
+# Configure Tomcat to use compiled native adapter
+echo -e "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/apr/lib:/usr/local/ssl/lib\n
+export LD_LIBRARY_PATH" > ${IROOT}/${TOMCAT_FILENAME}/bin/setenv.sh
+
 echo "export CATALINA_HOME=$IROOT/$TOMCAT_FILENAME" > $IROOT/tomcat.installed
 echo -e "export PATH=\$IROOT/$TOMCAT_FILENAME/bin:\$PATH" >> $IROOT/tomcat.installed
 
