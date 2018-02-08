@@ -42,8 +42,8 @@
   <properties>
     <java.version>1.8</java.version>
     <HikariCP.version>2.7.3</HikariCP.version>
-    <mysql.version>5.1.44</mysql.version>
-    <postgres-jdbc.version>42.1.4</postgres-jdbc.version>
+    <mysql.version>5.1.45</mysql.version>
+    <postgres-jdbc.version>42.2.1</postgres-jdbc.version>
     <morphia.version>1.3.2</morphia.version>
     <ebean.version>11.9.1</ebean.version>
     <act-sql-common.version>1.3.0-teb-SNAPSHOT</act-sql-common.version>
