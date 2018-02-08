@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java
+fw_depends java openssl apache-apr
 
 fw_installed tomcat && return 0
 
