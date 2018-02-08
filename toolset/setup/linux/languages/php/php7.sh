@@ -10,7 +10,7 @@ RETCODE=$(fw_exists ${IROOT}/php7.installed)
   source $IROOT/php7.installed
   return 0; }
 
-VERSION="7.1.4"
+VERSION="7.2.1"
 PHP_HOME=$IROOT/php-$VERSION
 
 rm -rf $IROOT/php7
@@ -21,7 +21,7 @@ cd php7
 
 echo "Configuring PHP quietly..."
 ./configure --prefix=$PHP_HOME --with-pdo-mysql \
-  --with-mcrypt --enable-intl --enable-mbstring \
+  --enable-intl --enable-mbstring \
   --enable-fpm --with-openssl --with-mysqli \
   --with-zlib --enable-opcache --quiet
 echo "Making PHP quietly..."

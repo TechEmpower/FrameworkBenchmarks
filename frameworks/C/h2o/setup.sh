@@ -70,12 +70,12 @@ rm -rf "$BUILD_DIR"
 echo "Maximum database connections per thread: $DB_CONN"
 
 if "$USE_PROCESSES"; then
-	echo "Running $NUM_WORKERS h2o_app processes..."
+	echo "h2o_app processes: $NUM_WORKERS"
 
 	for ((i = 0; i < NUM_WORKERS; i++)); do
 		run_h2o_app "$i" "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app" -t1
 	done
 else
-	echo "Running h2o_app multithreaded..."
+	echo "Running h2o_app multithreaded."
 	run_h2o_app 0 "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app"
 fi

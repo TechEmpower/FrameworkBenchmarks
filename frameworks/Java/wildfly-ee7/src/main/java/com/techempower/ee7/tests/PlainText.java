@@ -14,4 +14,18 @@ public class PlainText {
   public String get() {
     return MESSAGE;
   }
+
+  @GET
+  @Path("hi")
+  public String get2() {
+    return "Hello WildFly!";
+  }
+
+
+  @GET
+  @Path("/bye")
+  public String get3() {
+    return "Bye WildFly!";
+  }
+  
 }

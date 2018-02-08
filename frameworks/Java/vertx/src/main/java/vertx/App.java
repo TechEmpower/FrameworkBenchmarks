@@ -1,16 +1,8 @@
 package vertx;
 
-import com.julienviet.pgclient.PgBatch;
-import com.julienviet.pgclient.PgClient;
-import com.julienviet.pgclient.PgClientOptions;
-import com.julienviet.pgclient.PgConnection;
-import com.julienviet.pgclient.PgConnectionPool;
-import com.julienviet.pgclient.PgPoolOptions;
-import com.julienviet.pgclient.PgPreparedStatement;
-import com.julienviet.pgclient.PoolingMode;
+import com.julienviet.pgclient.*;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
@@ -93,7 +85,6 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private HttpServer server;
 
   private PgClient client;
-  private PgConnectionPool pool;
 
   @Override
   public void start() throws Exception {
@@ -105,15 +96,15 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     vertx.setPeriodic(1000, handler -> {
       dateString = HttpHeaders.createOptimized(java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(java.time.ZonedDateTime.now()));
     });
-    PgClientOptions options = new PgClientOptions();
+    PgPoolOptions options = new PgPoolOptions();
     options.setDatabase(config.getString("database"));
     options.setHost(config.getString("host"));
     options.setPort(config.getInteger("port", 5432));
     options.setUsername(config.getString("username"));
     options.setPassword(config.getString("password"));
     options.setCachePreparedStatements(true);
-    client = PgClient.create(vertx, options);
-    pool = client.createPool(new PgPoolOptions().setMode(PoolingMode.STATEMENT));
+    options.setMaxSize(1);
+    client = PgClient.pool(vertx, options);
   }
 
   @Override
@@ -181,28 +172,15 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   }
 
   private void handleDb(HttpServerRequest req) {
-    pool.getConnection(res -> {
-      if (res.succeeded()) {
-        handleDb(req, res.result());
-      } else {
-        logger.error(res.cause());
-        req.response().setStatusCode(500).end(res.cause().getMessage());
-      }
-    });
-  }
-
-  private void handleDb(HttpServerRequest req, PgConnection conn) {
-    PgPreparedStatement worldSelect = conn.prepare(SELECT_WORLD);
     HttpServerResponse resp = req.response();
-    worldSelect.query(randomWorld()).execute(res -> {
-      conn.close();
+    client.preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), res -> {
       if (res.succeeded()) {
-        List<JsonArray> resultSet = res.result().getResults();
-        if (resultSet.isEmpty()) {
+        PgIterator<Row> resultSet = res.result().iterator();
+        if (!resultSet.hasNext()) {
           resp.setStatusCode(404).end();
           return;
         }
-        JsonArray row = resultSet.get(0);
+        Tuple row = resultSet.next();
         resp
             .putHeader(HttpHeaders.SERVER, SERVER)
             .putHeader(HttpHeaders.DATE, dateString)
@@ -221,37 +199,23 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     JsonArray worlds = new JsonArray();
 
     private void handle(HttpServerRequest req) {
-      pool.getConnection(res -> {
-        if (res.succeeded()) {
-          handle(req, res.result());
-        } else {
-          logger.error(res.cause());
-          req.response().setStatusCode(500).end(res.cause().getMessage());
-        }
-      });
-    }
-
-    void handle(HttpServerRequest req, PgConnection conn) {
-      PgPreparedStatement worldSelect = conn.prepare(SELECT_WORLD);
       HttpServerResponse resp = req.response();
       final int queries = getQueries(req);
       for (int i = 0; i < queries; i++) {
-        worldSelect.query(randomWorld()).execute(ar -> {
+        client.preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), ar -> {
           if (!failed) {
             if (ar.failed()) {
-              conn.close();
               failed = true;
               resp.setStatusCode(500).end(ar.cause().getMessage());
               return;
             }
 
             // we need a final reference
-            final JsonArray row = ar.result().getResults().get(0);
+            final Tuple row = ar.result().iterator().next();
             worlds.add(new JsonObject().put("id", "" + row.getInteger(0)).put("randomNumber", "" + row.getInteger(1)));
 
             // stop condition
             if (worlds.size() == queries) {
-              conn.close();
               resp
                   .putHeader(HttpHeaders.SERVER, SERVER)
                   .putHeader(HttpHeaders.DATE, dateString)
@@ -262,7 +226,6 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
         });
       }
     }
-
   }
 
   class Update {
@@ -279,52 +242,37 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     }
 
     private void handle() {
-      pool.getConnection(res -> {
-        if (res.succeeded()) {
-          handle(res.result());
-        } else {
-          logger.error(res.cause());
-          req.response().setStatusCode(500).end(res.cause().getMessage());
-        }
-      });
-    }
-
-    private void handle(PgConnection conn) {
-      PgPreparedStatement worldSelect = conn.prepare(SELECT_WORLD);
       for (int i = 0; i < worlds.length; i++) {
         int id = randomWorld();
         int index = i;
-        worldSelect.query(id).execute(ar2 -> {
+        client.preparedQuery(SELECT_WORLD, Tuple.of(id), ar -> {
           if (!failed) {
-            if (ar2.failed()) {
+            if (ar.failed()) {
               failed = true;
-              conn.close();
-              sendError(ar2.cause());
+              sendError(ar.cause());
               return;
             }
-            worlds[index] = new World(ar2.result().getResults().get(0).getInteger(0), randomWorld());
+            worlds[index] = new World(ar.result().iterator().next().getInteger(0), randomWorld());
             if (++queryCount == worlds.length) {
-              handleUpdates(conn);
+              handleUpdates();
             }
           }
         });
       }
     }
 
-    void handleUpdates(PgConnection conn) {
+    void handleUpdates() {
       Arrays.sort(worlds);
-      PgPreparedStatement worldUpdate = conn.prepare(UPDATE_WORLD);
-      PgBatch batch = worldUpdate.batch();
-      JsonArray json = new JsonArray();
+      List<Tuple> batch = new ArrayList<>();
       for (World world : worlds) {
-        batch.add(world.getRandomNumber(), world.getId());
+        batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
       }
-      batch.execute(ar3 -> {
-        conn.close();
-        if (ar3.failed()) {
-          sendError(ar3.cause());
+      client.preparedBatch(UPDATE_WORLD, batch, ar -> {
+        if (ar.failed()) {
+          sendError(ar.cause());
           return;
         }
+        JsonArray json = new JsonArray();
         for (World world : worlds) {
           json.add(new JsonObject().put("id", "" + world.getId()).put("randomNumber", "" + world.getRandomNumber()));
         }
@@ -343,30 +291,17 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   }
 
   private void handleFortunes(HttpServerRequest req) {
-    pool.getConnection(res -> {
-      if (res.succeeded()) {
-        PgConnection conn = res.result();
-        handleFortunes(req, conn);
-      } else {
-        logger.error(res.cause());
-        req.response().setStatusCode(500).end(res.cause().getMessage());
-      }
-    });
-  }
-
-  private void handleFortunes(HttpServerRequest req, PgConnection conn) {
-    PgPreparedStatement fortuneSelect = conn.prepare(SELECT_FORTUNE);
-    fortuneSelect.query().execute(ar -> {
-      conn.close();
+    client.preparedQuery(SELECT_FORTUNE, ar -> {
       HttpServerResponse response = req.response();
       if (ar.succeeded()) {
         List<Fortune> fortunes = new ArrayList<>();
-        List<JsonArray> resultSet = ar.result().getResults();
-        if (resultSet == null || resultSet.size() == 0) {
+        PgIterator<Row> resultSet = ar.result().iterator();
+        if (!resultSet.hasNext()) {
           response.setStatusCode(404).end("No results");
           return;
         }
-        for (JsonArray row : resultSet) {
+        while (resultSet.hasNext()) {
+          Tuple row = resultSet.next();
           fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
         }
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));

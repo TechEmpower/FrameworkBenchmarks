@@ -19,8 +19,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.julienviet</groupId>
-			<artifactId>vertx-pg-client</artifactId>
-			<version>0.3.0</version>
+			<artifactId>reactive-pg-client</artifactId>
+			<version>0.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fizzed</groupId>

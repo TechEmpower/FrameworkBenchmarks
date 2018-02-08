@@ -3,7 +3,7 @@
 sed -i 's|mongodb://.*/hello_world|mongodb://'"${DBHOST}"'/hello_world|g' config/dev/environment.properties
 sed -i 's|mysql://.*:3306|mysql://'"${DBHOST}"':3306|g' config/dev/environment.properties
 
-fw_depends java maven
+fw_depends java maven mysql mongodb
 
 mvn clean package
 mvn assembly:single

@@ -1,3 +1,8 @@
+# Ktor
+
+Ktor is a framework for building servers and clients in connected systems using Kotlin programming language.
+More information is available at [ktor.io](http://ktor.io). 
+
 # Setup
 
 * Java 8

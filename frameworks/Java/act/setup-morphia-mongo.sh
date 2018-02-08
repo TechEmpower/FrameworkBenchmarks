@@ -21,4 +21,6 @@ echo
 
 JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Xms1G -Xmx1G -Xss320k -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts"
 
-java -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=mongo -Dxio.worker_threads.max=256 -Dmongo.host=${DBHOST} -cp "$CP" $APP_ENTRY &
+#java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=mongo -Dxio.worker_threads.max=256 -Dmongo.host=${DBHOST} -cp "$CP" $APP_ENTRY
+
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=mongo -Dxio.worker_threads.max=256 -Dmongo.host=${DBHOST} -cp "$CP" $APP_ENTRY
