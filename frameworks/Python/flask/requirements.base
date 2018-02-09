@@ -5,4 +5,6 @@ gunicorn
 PyMySQL ; platform_python_implementation == "PyPy"
 tornado ; platform_python_implementation == "PyPy"
 
-meinheld ; implementation_name == "cpython"
+meinheld    ; platform_python_implementation == "CPython"
+mysqlclient ; platform_python_implementation == "CPython"
+uWSGI       ; platform_python_implementation == "CPython"
