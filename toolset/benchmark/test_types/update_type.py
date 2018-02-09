@@ -9,7 +9,7 @@ class UpdateTestType(FrameworkTestType):
             'name': 'update',
             'accept_header': self.accept('json'),
             'requires_db': True,
-            'args': ['update_url']
+            'args': ['update_url', 'database']
         }
         FrameworkTestType.__init__(self, **kwargs)
 
@@ -32,7 +32,7 @@ class UpdateTestType(FrameworkTestType):
             ('501', 'warn'),
             ('',    'fail')
         ]
-        problems = verify_query_cases(self, cases, url)
+        problems = verify_query_cases(self, cases, url, True)
 
         if len(problems) == 0:
             return [('pass', '', url + case) for (case, _) in cases]
