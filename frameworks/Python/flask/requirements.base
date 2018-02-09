@@ -2,7 +2,7 @@ Flask
 Flask-SQLAlchemy
 gunicorn
 
-PyMySQL ; implementation_name == "pypy"
-tornado ; implementation_name == "pypy"
+PyMySQL ; platform_python_implementation == "PyPy"
+tornado ; platform_python_implementation == "PyPy"
 
 meinheld ; implementation_name == "cpython"
