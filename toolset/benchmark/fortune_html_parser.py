@@ -6,7 +6,7 @@ from difflib import unified_diff
 class FortuneHTMLParser(HTMLParser):
   body = []
 
-  valid = '''<!doctype html><html>
+  valid_fortune = '''<!doctype html><html>
 <head><title>Fortunes</title></head>
 <body><table>
 <tr><th>id</th><th>message</th></tr>
@@ -147,16 +147,18 @@ class FortuneHTMLParser(HTMLParser):
   # and checked for equality against our spec.
   def isValidFortune(self, out):
     body = ''.join(self.body)
-    same = self.valid == body
+    same = self.valid_fortune == body
     diff_lines = []
     if not same:
-      out.write("Oh no! I compared %s\n\n\nto.....%s" % (self.valid, body))
-      out.write("Fortune invalid. Diff following:\n")
+      output = "Oh no! I compared {!s}\n\n\nto.....{!s}\n".format(self.valid_fortune, body)
+      output += "Fortune invalid. Diff following:\n"
       headers_left = 3
-      for line in unified_diff(self.valid.split('\n'), body.split('\n'), fromfile='Valid', tofile='Response', n=0):
+      for line in unified_diff(self.valid_fortune.split('\n'), body.split('\n'), fromfile='Valid', tofile='Response', n=0):
         diff_lines.append(line)
-        out.write(line)
+        output += line
         headers_left -= 1
         if headers_left <= 0:
-          out.write('\n')
+          output += "\n"
+      print(output)
+      out.write(output)
     return (same, diff_lines)
