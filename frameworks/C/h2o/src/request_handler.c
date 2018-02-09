@@ -47,7 +47,9 @@ static int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req)
 	                                                      req->conn->ctx);
 	json_generator_t * const gen = get_json_generator(&ctx->json_generator,
 	                                                  &ctx->json_generator_num);
-	const struct {
+	// volatile is used to ensure that the object is instantiated every time
+	// the function is called.
+	const volatile struct {
 		const char *message;
 	} object = {HELLO_RESPONSE};
 
