@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql java resin maven
+fw_depends mysql java8 resin-java8 maven
 
 cd hello
 mvn clean compile war:war

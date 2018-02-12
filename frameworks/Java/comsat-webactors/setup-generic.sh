@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-fw_depends java
+fw_depends java8
 
 $TROOT/gradlew clean capsule
 
