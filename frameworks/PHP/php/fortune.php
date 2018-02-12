@@ -29,14 +29,12 @@ asort($arr);
 <th>id</th>
 <th>message</th>
 </tr>
-<?php
-foreach ( $arr as $id => $fortune ) {
-?>
+<?php foreach ( $arr as $id => $fortune ) : ?>
 <tr>
-<td><?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?></td>  
-<td><?php echo htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8'); ?></td>
+<td><?php echo $id ?></td>  
+<td><?php echo htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8') ?></td>
 </tr>
-<?php } ?>
+<?php endforeach ?>
 </table>
 </body>
 </html>
