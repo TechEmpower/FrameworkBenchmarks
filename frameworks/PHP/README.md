@@ -9,7 +9,7 @@ For further guidance, review the
 ### PHP Versions
 
 [PHP 7.2.2](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/php/php7.sh),
-[PHP 5.6.33](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/php/php5.sh) and [HHVM 3.21](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/hhvm.sh).
+[PHP 5.6.33](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/php/php5.sh) and [HHVM 3.24](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/hhvm.sh).
 
 ## Adding New PHP-based Frameworks
 
