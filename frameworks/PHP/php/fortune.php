@@ -18,23 +18,7 @@ $arr[0] = 'Additional fortune added at request time.';
 
 asort($arr);
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-<title>Fortunes</title>
-</head>
-<body>
-<table>
-<tr>
-<th>id</th>
-<th>message</th>
-</tr>
+<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>
 <?php foreach ( $arr as $id => $fortune ) : ?>
-<tr>
-<td><?php echo $id ?></td>  
-<td><?php echo htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8') ?></td>
-</tr>
-<?php endforeach ?>
-</table>
-</body>
-</html>
+<tr><td><?php echo $id ?></td><td><?php echo htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8') ?></td></tr>
+<?php endforeach ?></table></body></html>
