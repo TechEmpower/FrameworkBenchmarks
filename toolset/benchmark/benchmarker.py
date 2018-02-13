@@ -945,6 +945,7 @@ class Benchmarker:
         if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
             os.system("sudo rm -rf " + self.result_directory + "/*")
 
+        # TODO: remove this as installs goes away with docker implementation
         # remove installs directories if --clean-all provided
         self.install_root = "%s/%s" % (self.fwroot, "installs")
         if args['clean_all']:

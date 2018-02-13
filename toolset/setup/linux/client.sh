@@ -1,8 +1,5 @@
 #!/bin/bash
 
-export DB_HOST={database_host}
-
-set -x
 export DEBIAN_FRONTEND=noninteractive
 
 ##############################
@@ -15,6 +12,7 @@ sudo apt-get -y update
 sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     build-essential git libev-dev libpq-dev libreadline6-dev
 
+# TODO: this is likely going away with docker implementation (docker provides a ulimit cli arg)
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
 ##############################
@@ -47,3 +45,5 @@ request = function()
   return req
 end
 EOF
+
+echo "Successfully installed software on client machine!"

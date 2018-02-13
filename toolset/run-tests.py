@@ -13,6 +13,7 @@ from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
 from setup.linux import setup_util
 from scaffolding import Scaffolding
+from initializer import initialize
 from ast import literal_eval
 
 # Enable cross-platform colored output
@@ -71,8 +72,6 @@ def main(argv=None):
     os.environ['TFB_DISTRIB_ID'], os.environ['TFB_DISTRIB_RELEASE'], os.environ['TFB_DISTRIB_CODENAME'] = platform.linux_distribution()
     # App server cpu count
     os.environ['CPU_COUNT'] = str(multiprocessing.cpu_count())
-
-    print("FWROOT is {!s}.".format(os.environ['FWROOT']))
 
     conf_parser = argparse.ArgumentParser(
         description=__doc__,
@@ -138,9 +137,20 @@ def main(argv=None):
         ''')
 
     # Install options
+    parser.add_argument('--init', action='store_true', default=False, help='Initializes the benchmark environment')
+
+    # Suite options
     parser.add_argument('--clean', action='store_true', default=False, help='Removes the results directory')
-    parser.add_argument('--clean-all', action='store_true', dest='clean_all', default=False, help='Removes the results and installs directories')
     parser.add_argument('--new', action='store_true', default=False, help='Initialize a new framework test')
+    parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
+    parser.add_argument('--quiet', action='store_true', default=False, help='Only print a limited set of messages to stdout, keep the bulk of messages in log files only')
+    parser.add_argument('--results-name', help='Gives a name to this set of results, formatted as a date', default='(unspecified, datetime = %Y-%m-%d %H:%M:%S)')
+    parser.add_argument('--results-environment', help='Describes the environment in which these results were gathered', default='(unspecified, hostname = %s)' % socket.gethostname())
+    parser.add_argument('--results-upload-uri', default=None, help='A URI where the in-progress results.json file will be POSTed periodically')
+    parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
+
+    # TODO: remove this; install dir goes away with docker
+    parser.add_argument('--clean-all', action='store_true', dest='clean_all', default=False, help='Removes the results and installs directories')
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
@@ -154,18 +164,15 @@ def main(argv=None):
     parser.add_argument('--duration', default=15, help='Time in seconds that each test should run for.')
     parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
 
-    # Misc Options
-    parser.add_argument('--results-name', help='Gives a name to this set of results, formatted as a date', default='(unspecified, datetime = %Y-%m-%d %H:%M:%S)')
-    parser.add_argument('--results-environment', help='Describes the environment in which these results were gathered', default='(unspecified, hostname = %s)' % socket.gethostname())
-    parser.add_argument('--results-upload-uri', default=None, help='A URI where the in-progress results.json file will be POSTed periodically')
-    parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
-    parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
-    parser.add_argument('--quiet', action='store_true', default=False, help='Only print a limited set of messages to stdout, keep the bulk of messages in log files only')
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
 
     if args.new:
-        Scaffolding()
+        Scaffolding().scaffold()
+        return 0
+
+    if args.init:
+        initialize(args)
         return 0
 
     benchmarker = Benchmarker(vars(args))
