@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql java maven
+fw_depends mysql java8 maven
 
 mvn -Phibernate_mysql clean package
 cd target/dist

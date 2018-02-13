@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mongodb java maven
+fw_depends mongodb java8 maven
 
 mvn -U -Pmongo clean package
 cd target/dist

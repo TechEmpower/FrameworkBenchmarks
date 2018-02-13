@@ -101,19 +101,6 @@
       <version>${morphia.version}</version>
     </dependency>
 
-    <!-- The javax.xml.bind classes are required by this application, and they
-         are included by default in Java 8 but not in Java 9.  We could include
-         them in Java 9 by adding "add-modules java.xml.bind" to the command
-         line arguments, but those arguments are not supported in Java 8 (and it
-         fails on unsupported arguments rather than ignoring them). -->
-    <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-      <!-- Version 2.2.12 is compatible with both Java 8 and Java 9, while
-           version 2.3.0 is not compatible with Java 8. -->
-      <version>2.2.12</version>
-    </dependency>
-
   </dependencies>
 
   <profiles>
