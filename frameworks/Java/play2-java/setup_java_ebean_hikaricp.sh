@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql java sbt
+fw_depends mysql java8 sbt
 
 cd play2-java-ebean-hikaricp
 

@@ -1,14 +1,14 @@
 #!/bin/bash
 
-fw_depends java
+fw_depends java8
 
-fw_installed resin && return 0
+fw_installed resin-java8 && return 0
 
 RESIN_VERSION=4.0.55
-RESIN_HOME=$IROOT/resin/resin-$RESIN_VERSION
+RESIN_HOME=$IROOT/resin-java8/resin-$RESIN_VERSION
 
-mkdir resin
-cd resin
+mkdir resin-java8
+cd resin-java8
 fw_get -O http://www.caucho.com/download/resin-$RESIN_VERSION.tar.gz
 fw_untar resin-$RESIN_VERSION.tar.gz
 cd resin-$RESIN_VERSION
@@ -22,7 +22,7 @@ cat $FWROOT/toolset/setup/linux/webservers/resin/resin.properties > conf/resin.p
 mv conf/resin.xml conf/resin.xml.orig
 cat $FWROOT/toolset/setup/linux/webservers/resin/resin.xml > conf/resin.xml
 
-echo "export RESIN_HOME=${RESIN_HOME}" > $IROOT/resin.installed
-echo -e "export PATH=\$RESIN_HOME/bin:\$PATH" >> $IROOT/resin.installed
+echo "export RESIN_HOME=${RESIN_HOME}" > $IROOT/resin-java8.installed
+echo -e "export PATH=\$RESIN_HOME/bin:\$PATH" >> $IROOT/resin-java8.installed
 
-source $IROOT/resin.installed
+source $IROOT/resin-java8.installed

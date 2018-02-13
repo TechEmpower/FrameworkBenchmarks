@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends postgresql mysql java maven
+fw_depends postgresql mysql java8 maven
  
 
 mvn -U clean package

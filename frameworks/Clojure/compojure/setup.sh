@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql java resin leiningen
+fw_depends mysql java8 resin-java8 leiningen
 
 cd hello
 lein clean
