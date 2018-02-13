@@ -2,8 +2,6 @@
 
 fw_depends postgresql java8 resin-java8 maven mono dsl_platform
 
-source $IROOT/java.installed
-
 echo "Changing the database"
 cat $TROOT/web.xml | sed 's/localhost/'$DBHOST'/g' > $TROOT/src/main/webapp/WEB-INF/web.xml
 	

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql leiningen java
+fw_depends mysql leiningen java8
 
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' hello/src/hello/handler.clj
 
