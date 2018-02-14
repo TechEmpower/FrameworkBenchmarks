@@ -36,7 +36,7 @@ for ($i = 0; $i < $query_count; $i++) {
   // Store result in array.
   $arr[] = $world->to_array();
 }
-if ($_GET["queries"] === 1) {
+if ($query_count === 1) {
   $arr = $arr[0];
 }
 // Use the PHP standard JSON encoder.
