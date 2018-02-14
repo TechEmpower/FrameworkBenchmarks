@@ -673,16 +673,17 @@ class Benchmarker:
         docker_ids = subprocess.check_output(["docker", "ps", "-q"]).splitlines()
         for docker_id in docker_ids:
             # This check is in case the database and server machines are the same
-            if docker_id and database_container_id and docker_id not in database_container_id:
-                subprocess.check_output(["docker", "kill", docker_id])
-                slept = 0
-                while(slept < 300 and docker_id is ''):
-                    time.sleep(1)
-                    slept += 1
-                    docker_id = subprocess.check_output(["docker", "ps", "-q"]).strip()
-                # We still need to sleep a bit before removing the image
-                time.sleep(5)
-                subprocess.check_output(["docker", "image", "rm", test.name])
+            if docker_id:
+                if not database_container_id or docker_id not in database_container_id:
+                    subprocess.check_output(["docker", "kill", docker_id])
+                    slept = 0
+                    while(slept < 300 and docker_id is ''):
+                        time.sleep(1)
+                        slept += 1
+                        docker_id = subprocess.check_output(["docker", "ps", "-q"]).strip()
+                    # We still need to sleep a bit before removing the image
+                    time.sleep(5)
+                    subprocess.check_output(["docker", "image", "rm", test.name])
     ############################################################
     # End __stop_test
     ############################################################
