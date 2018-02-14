@@ -3,7 +3,7 @@
   "tests": [
     {
       "default": {
-        "setup_file": "Dockerfile",
+        "setup_file": "gemini.dockerfile",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -23,7 +23,7 @@
         "versus": "servlet"
       },
       "mysql": {
-        "setup_file": "start",
+        "setup_file": "gemini-mysql.dockerfile",
         "db_url": "/db",
         "query_url": "/query?queries=",
         "cached_query_url": "/cached_query?queries=",

@@ -544,6 +544,7 @@ class Benchmarker:
             ##########################
             out.write(header("Starting %s" % test.name))
             out.flush()
+            database_container_id = None
             try:
                 # self.__cleanup_leftover_processes_before_test()
 
@@ -557,6 +558,14 @@ class Benchmarker:
                     out.flush()
                     print("Error: Unable to recover port, cannot start test")
                     return sys.exit(1)
+
+                ##########################
+                # Start database container
+                ##########################
+                if test.database != "None":
+                    # TODO: this needs to be an SSH to the database machine
+                    database_container_id = subprocess.check_output(
+                        ["docker", "run", "-d", "--rm", "-p", "3306:3006", "--network=host", "mysql"]).strip()
 
                 result = test.start(out)
                 if result != 0:
@@ -593,7 +602,9 @@ class Benchmarker:
                 ##########################
                 # Stop this test
                 ##########################
-                self.__stop_test(test, out)
+                self.__stop_test(database_container_id, test, out)
+                if test.database != "None":
+                    self.__stop_database(database_container_id, out)
 
                 out.write(header("Stopped %s" % test.name))
                 out.flush()
@@ -630,7 +641,9 @@ class Benchmarker:
                     print("Failed verify!")
                     return sys.exit(1)
             except KeyboardInterrupt:
-                self.__stop_test(test, out)
+                self.__stop_test(database_container_id, test, out)
+                if test.database is not None:
+                    self.__stop_database(database_container_id, out)
             except (OSError, IOError, subprocess.CalledProcessError) as e:
                 self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
                 out.write(header("Subprocess Error %s" % test.name))
@@ -646,22 +659,30 @@ class Benchmarker:
     # End __run_tests
     ############################################################
 
+    def __stop_database(self, database_container_id, out):
+        # TODO: this needs to be an SSH to the database machine
+        if database_container_id:
+            subprocess.check_call(["docker", "stop", database_container_id],
+                stdout=out, stderr=out)
+
     ############################################################
     # __stop_test
     # Attempts to stop the running test.
     ############################################################
-    def __stop_test(self, test, out):
-        docker_id = subprocess.check_output(["docker", "ps", "-q"]).strip()
-        if docker_id:
-            subprocess.check_output(["docker", "kill", docker_id])
-            slept = 0
-            while(slept < 300 and docker_id is ''):
-                time.sleep(1)
-                slept += 1
-                docker_id = subprocess.check_output(["docker", "ps", "-q"]).strip()
-            # We still need to sleep a bit before removing the image
-            time.sleep(5)
-            subprocess.check_output(["docker", "image", "rm", test.name])
+    def __stop_test(self, database_container_id, test, out):
+        docker_ids = subprocess.check_output(["docker", "ps", "-q"]).splitlines()
+        for docker_id in docker_ids:
+            # This check is in case the database and server machines are the same
+            if docker_id and database_container_id and docker_id not in database_container_id:
+                subprocess.check_output(["docker", "kill", docker_id])
+                slept = 0
+                while(slept < 300 and docker_id is ''):
+                    time.sleep(1)
+                    slept += 1
+                    docker_id = subprocess.check_output(["docker", "ps", "-q"]).strip()
+                # We still need to sleep a bit before removing the image
+                time.sleep(5)
+                subprocess.check_output(["docker", "image", "rm", test.name])
     ############################################################
     # End __stop_test
     ############################################################

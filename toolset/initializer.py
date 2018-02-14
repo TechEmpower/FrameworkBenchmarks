@@ -22,8 +22,8 @@ def initialize(args):
     return __print_failure()
   
   # set up client machine
-  # if not __init_client(fwroot, cluser, clhost, cliden, args.quiet) and not args.quiet:
-  #   return __print_failure()
+  if not __init_client(fwroot, cluser, clhost, cliden, args.quiet) and not args.quiet:
+    return __print_failure()
 
 
   # set up database software
@@ -33,7 +33,6 @@ def initialize(args):
     # set up database docker images
     if not __build_database_docker_images(fwroot, dbuser, dbhost, dbiden, args.quiet) and not args.quiet:
       return __print_failure()
-
 
 def __print_failure():
   print("""
@@ -54,8 +53,14 @@ def __print_failure():
 
 def __ssh_string(user, host, identity_file):
   return ["ssh", "-T", "-o", "StrictHostKeyChecking=no", "%s@%s" % (user, host), "-i", identity_file]
-  
 
+def __scp_string(user, host, identity_file, files):
+  scpstr = ["scp", "-i", identity_file]
+  for file in files:
+    scpstr.append(file)
+  scpstr.append("%s@%s:~/" % (user, host))
+  return scpstr
+  
 def __check_connection(user, host, identity_file, app_host):
   ''' 
   Checks that the given user and host are accessible via ssh with the given
@@ -73,7 +78,6 @@ def __check_connection(user, host, identity_file, app_host):
   except Exception as e:
     client_conn = False
   return client_conn
-
 
 def __init_client(fwroot, user, host, identity_file, quiet):
   '''
@@ -100,7 +104,7 @@ def __init_database(fwroot, user, host, identity_file, quiet):
   '''
   if not quiet:
     print("INSTALL: Installing database software")
-  with open (os.path.join(fwroot, "toolset", "setup", "linux", "database.sh"), "r") as myfile:
+  with open(os.path.join(fwroot, "toolset", "setup", "linux", "database.sh"), "r") as myfile:
     remote_script=myfile.read()
     if quiet:
       p = subprocess.Popen(__ssh_string(user, host, identity_file), 
@@ -113,8 +117,28 @@ def __init_database(fwroot, user, host, identity_file, quiet):
 
 def __build_database_docker_images(fwroot, user, host, identity_file, quiet):
   '''
+  Transfers all the files required by each database to the database machine and
+  builds the docker image for each on the database machine.
   '''
   if not quiet:
     print("INSTALL: Building database docker images")
 
-  return True
+  returncode = 0
+  databases_path = os.path.join(fwroot, "toolset", "setup", "linux", "docker", "databases")
+  for database in os.listdir(databases_path):
+    dbpath = os.path.join(databases_path, database)
+    dbfiles = ""
+    for dbfile in os.listdir(dbpath):
+      dbfiles += "%s " % os.path.join(dbpath,dbfile)
+    p = subprocess.Popen(__scp_string(user, host, identity_file, dbfiles.split()),
+      stdin=subprocess.PIPE)
+    p.communicate()
+    returncode += p.returncode
+
+    if p.returncode == 0:
+      p = subprocess.Popen(__ssh_string(user, host, identity_file),
+        stdin=subprocess.PIPE)
+      p.communicate("docker build -f ~/%s.dockerfile -t %s ~/" % (database, database))
+      returncode += p.returncode
+
+  return returncode == 0
