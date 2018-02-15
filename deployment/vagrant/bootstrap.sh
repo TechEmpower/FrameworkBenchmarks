@@ -93,4 +93,7 @@ EOF
 
   sudo mv motd /etc/
 
+  echo "Setting up client and database machines"
+  tfb --init --quiet
+
 fi
