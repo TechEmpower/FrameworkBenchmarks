@@ -23,3 +23,5 @@ echo 127.0.0.1 TFB-client   | sudo tee --append /etc/hosts
 echo 127.0.0.1 TFB-server   | sudo tee --append /etc/hosts
 
 source ./toolset/setup/linux/prerequisites.sh
+
+tfb --init --quiet
