@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 
-@SuppressWarnings("unused")
 @Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
 public class FortuneController {
 

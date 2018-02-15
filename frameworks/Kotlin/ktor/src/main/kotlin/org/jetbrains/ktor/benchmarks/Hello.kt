@@ -36,10 +36,9 @@ fun Application.main() {
 
     install(DefaultHeaders)
 
-    val okContent = TextContent("Hello, World!", ContentType.Text.Plain, HttpStatusCode.OK).also { it.contentLength() }
+    val okContent = TextContent("Hello, World!", ContentType.Text.Plain, HttpStatusCode.OK).also { it.contentLength }
 
     routing {
-
         get("/plaintext") {
             call.respond(okContent)
         }
@@ -50,7 +49,7 @@ fun Application.main() {
         }
 
         get("/db") {
-            val response = run(databaseDispatcher) {
+            val response = withContext(databaseDispatcher) {
                 pool.connection.use { connection ->
                     val random = ThreadLocalRandom.current()
                     val queries = call.queries()
@@ -80,7 +79,7 @@ fun Application.main() {
 
         get("/fortunes") {
             val result = mutableListOf<Fortune>()
-            run(databaseDispatcher) {
+            withContext(databaseDispatcher) {
                 pool.connection.use { connection ->
                     connection.prepareStatement("select id, message from fortune").use { statement ->
                         statement.executeQuery().use { rs ->
@@ -114,7 +113,7 @@ fun Application.main() {
         }
 
         get("/updates") {
-            val t = run(databaseDispatcher) {
+            val t = withContext(databaseDispatcher) {
                 pool.connection.use { connection ->
                     val queries = call.queries()
                     val random = ThreadLocalRandom.current()

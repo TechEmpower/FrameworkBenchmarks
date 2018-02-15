@@ -3,7 +3,7 @@
 fw_installed py2 && return 0
 
 PY2_ROOT=$IROOT/py2
-PY2_VERSION=2.7.11
+PY2_VERSION=2.7.14
 
 fw_get -O http://www.python.org/ftp/python/${PY2_VERSION}/Python-${PY2_VERSION}.tar.xz
 fw_untar Python-${PY2_VERSION}.tar.xz

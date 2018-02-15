@@ -5,8 +5,8 @@ fw_depends xdg-utils
 fw_installed dlang && return 0
 
 DLANG=$IROOT/dlang
-DMDVER="2.077.0"
-LDCVER="1.5.0"
+DMDVER="2.078.1"
+LDCVER="1.7.0"
 
 mkdir -p $DLANG
 fw_get -O http://downloads.dlang.org/releases/2.x/$DMDVER/dmd_$DMDVER-0_amd64.deb

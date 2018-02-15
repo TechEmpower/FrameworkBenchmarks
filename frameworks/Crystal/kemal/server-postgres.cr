@@ -4,7 +4,7 @@ require "pg"
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
 
-APPDB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@#{ENV["DBHOST"]? || "127.0.0.1"}/hello_world")
+APPDB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@#{ENV["DBHOST"]? || "127.0.0.1"}:5432/hello_world")
 
 class CONTENT
   UTF8  = "; charset=UTF-8"
@@ -113,4 +113,4 @@ Kemal.config do |cfg|
   cfg.logging = false
 end
 
-Kemal.run { |cfg| cfg.server.bind(reuse_port: true) }
+Kemal.run { |cfg| cfg.server.not_nil!.bind(reuse_port: true) }

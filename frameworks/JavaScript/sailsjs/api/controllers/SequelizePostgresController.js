@@ -23,12 +23,15 @@ var sequelize = new Sequelize(
   })
 
 
-var Worlds = sequelize.define('World', {
+var Worlds = sequelize.define('world', {
   id: {
        type: Sequelize.INTEGER,
        primaryKey: true
   },
-  randomnumber: Sequelize.INTEGER
+  randomNumber: {
+       type: Sequelize.INTEGER,
+       field: 'randomnumber'
+  }
 },
 {
   // prevents sequelize from assuming the table is called 'Worlds'
@@ -66,6 +69,7 @@ var randomWorldPromise = function() {
 }
 
 var updateWorld = function(world) {
+  world.randomNumber = h.randomTfbNumber()
   var promise = Worlds
     .update(
       { randomNumber: world.randomNumber },

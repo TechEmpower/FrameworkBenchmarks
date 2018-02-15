@@ -33,7 +33,7 @@ if [ -n "${NGINX}" ]; then
     #sed -i 's|\(.*\)--address--\(.*\)|\1"ip": "127.0.0.1" , "port" : 8081\2|g' config.js
 else
     sed -i 's|\(.*\)--api--\(.*\)|\1'"http"'\2|g' config.js
-    sed -i 's|\(.*\)--address--\(.*\)|\1"port": 8080\2|g' config.js
+    sed -i 's|\(.*\)--address--\(.*\)|\1"ip": "0.0.0.0", "port": 8080\2|g' config.js
 fi
 
 

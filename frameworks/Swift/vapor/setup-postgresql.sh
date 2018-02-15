@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends swift3 ctls cmysql mongodb mysql postgresql
+fw_depends swift ctls cmysql postgresql
 
 swift build -Xswiftc -DNOJSON -c release
 

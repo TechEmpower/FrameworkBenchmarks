@@ -1,6 +1,5 @@
 (ns hello.handler
-  (:require [clojure.tools.cli :as cli]
-            [immutant.web :as web]
+  (:require [immutant.web :as web]
             [reitit.ring :as ring]
             [jsonista.core :as j])
   (:gen-class))
@@ -8,26 +7,17 @@
 (defn json-handler [_]
   {:status 200
    :headers {"Content-Type" "application/json"}
-   :body (j/write-value-as-string {:message "Hello, World!"})})
+   :body (j/write-value-as-bytes {:message "Hello, World!"})})
 
 (def app
-  (some-fn
-    (ring/ring-handler
-      (ring/router
-        [["/json" json-handler]]))
-    (constantly {:status 404})))
+  (ring/ring-handler
+    (ring/router ["/json" json-handler])
+    (ring/create-default-handler)))
 
-(defn -main [& args]
-
-  (let [[{:keys [help port]} _ banner]
-        (cli/cli args
-                 ["-p" "--port" "Server port"
-                  :default 8080
-                  :parse-fn #(Integer/parseInt %)]
-                 ["-h" "--[no-]help"])]
-
-    (when help
-      (println banner)
-      (System/exit 0))
-
-    (web/run app {:host "0.0.0.0" :port port})))
+(defn -main [& _]
+  (web/run
+    app
+    {:port 8080
+     :host "0.0.0.0"
+     :dispatch? false
+     :server {:always-set-keep-alive false}}))

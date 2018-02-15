@@ -45,7 +45,7 @@ auto techempower_api = http_api(
                                        _body = string_ref("Hello, World!")); },
 
   GET / _json = [] () { return response(_content_type = string_ref("application/json"),
-                                  _body = D(_message = string_ref("Hello, World!"))); },
+                                  _body = D(_message = "Hello, World!")); },
                         
   GET / _db = [] (rn_orm& orm) {
     random_number r;

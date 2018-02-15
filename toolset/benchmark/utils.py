@@ -99,7 +99,7 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
                 config = json.load(config_file)
             except ValueError:
                 # User-friendly errors
-                print("Error loading '%s'." % config_file_name)
+                print("Error loading '{!s}'.".format(config_file_name))
                 raise
 
         # Find all tests in the config file

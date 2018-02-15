@@ -1,9 +1,9 @@
 (defproject hello "reitit"
   :description "Immutant, Reitit, Jsonista"
-  :dependencies [[org.clojure/clojure "1.9.0-RC1"]
-                 [org.clojure/tools.cli "0.3.5"]
-                 [org.immutant/web "2.1.9"]
-                 [metosin/jsonista "0.1.0-20171106.055332-4"]
-                 [metosin/reitit "0.1.0-20171101.170818-9"]]
+  :dependencies [[org.clojure/clojure "1.9.0"]
+                 [ikitommi/immutant-web "3.0.0-alpha1"]
+                 [metosin/jsonista "0.1.1"]
+                 [metosin/reitit "0.1.0-20180124.072356-20"]]
+  :jvm-opts ^:replace ["-Dclojure.compiler.direct-linking=true"]
   :main hello.handler
   :aot :all)

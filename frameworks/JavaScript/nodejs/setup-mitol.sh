@@ -2,7 +2,7 @@
 
 fw_depends mongodb mysql postgresql nodejs
 
-npm install
+npm install --no-bin-links
 
 # Mitol installation
 mkdir -p node_modules/mns & mkdir -p tmp

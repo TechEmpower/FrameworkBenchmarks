@@ -2,5 +2,5 @@
 
 fw_depends mongodb postgresql mysql nodejs
 
-npm install
+npm install --no-bin-links
 node app &

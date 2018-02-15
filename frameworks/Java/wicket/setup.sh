@@ -7,4 +7,4 @@ sed -i 's|localhost|'${DBHOST}'|g' src/main/java/hellowicket/WicketApplication.j
 mvn clean compile war:war
 rm -rf $RESIN_HOME/webapps/*
 cp target/hellowicket-*.war $RESIN_HOME/webapps/wicket.war
-resinctl start
+resinctl console

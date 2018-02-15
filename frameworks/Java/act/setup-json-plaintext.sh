@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java maven
+fw_depends java8 maven
 
 mvn clean package
 cd target/dist
@@ -20,4 +20,4 @@ echo
 
 JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom -Xms1G -Xmx1G -Xss320k -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts"
 
-java -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=json_plaintext -Dxio.worker_threads.max=256 -cp "$CP" $APP_ENTRY &
+java -server $JAVA_OPTS -Dapp.mode=prod -Dapp.nodeGroup=$GROUP -Dprofile=json_plaintext -Dxio.worker_threads.max=256 -cp "$CP" $APP_ENTRY 

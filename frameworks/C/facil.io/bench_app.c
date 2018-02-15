@@ -96,7 +96,7 @@ static void on_request_json(http_s *h) {
   http_set_header(h, HTTP_HEADER_CONTENT_TYPE, http_mimetype_find("json", 4));
   FIOBJ json;
   /* create a new Hash to be serialized for every request */
-  FIOBJ hash = fiobj_hash_new();
+  FIOBJ hash = fiobj_hash_new2(1);
   fiobj_hash_set(hash, JSON_KEY, fiobj_dup(JSON_VALUE));
   json = fiobj_obj2json(hash, 0);
   fiobj_free(hash);

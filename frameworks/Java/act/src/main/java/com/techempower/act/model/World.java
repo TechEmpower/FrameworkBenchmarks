@@ -24,12 +24,10 @@ import act.sys.Env;
 import act.util.SimpleBean;
 import com.techempower.act.AppEntry;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity(name = "world")
+@Table(name = "world")
 @org.mongodb.morphia.annotations.Entity(value = "world", noClassnameStored = true)
 @Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
 public class World implements SimpleBean {

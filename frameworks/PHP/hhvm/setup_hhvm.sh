@@ -2,7 +2,6 @@
 
 fw_depends mysql nginx php7 hhvm
 
-sed -i 's|host=localhost;|host='"${DBHOST}"';|g' once.php.inc
 sed -i 's|SourceRoot = .*/FrameworkBenchmarks/hhvm|SourceRoot = '"${TROOT}"'|g' deploy/config.hdf
 sed -i 's|Path = .*/.hhvm.hhbc|Path = '"${TROOT}"'/.hhvm.bbhc|g' deploy/config.hdf
 sed -i 's|PidFile = .*/hhvm.pid|PidFile = '"${TROOT}"'/hhvm.pid|g' deploy/config.hdf

@@ -4,10 +4,10 @@
 	"copyright": "Copyright © 2016, huntframework.com",
 	"targetType": "executable",
 	"stringImportPaths": [
-		"./resources/views",
+		"./resources/views"
 	],
 	"mainSourceFile": "./source/bootstrap.d",
 	"dependencies": {
-		"hunt": "0.6.2"
-	},
+		"hunt": "0.10.4"
+	}
 }
