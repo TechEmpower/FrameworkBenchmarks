@@ -409,6 +409,15 @@ class Benchmarker:
     ############################################################
 
     ############################################################
+    ############################################################
+    def __setup_database_container(self, database, port):
+        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        (out,err) = p.communicate("docker run -d --rm -p %s:%s --network=host %s" % (port,port,database))
+        return out.splitlines()[len(out.splitlines()) - 1]
+    ############################################################
+    ############################################################
+
+    ############################################################
     # Makes any necessary changes to the client machine that
     # should be made before running the tests. Is very similar
     # to the server setup, but may also include client specific
@@ -563,10 +572,15 @@ class Benchmarker:
                 # Start database container
                 ##########################
                 if test.database != "None":
-                    # TODO: this needs to be an SSH to the database machine
-                    database_container_id = subprocess.check_output(
-                        ["docker", "run", "-d", "--rm", "-p", "3306:3006", "--network=host", "mysql"]).strip()
+                    # TODO: this is horrible... how should we really do it?
+                    ports = {
+                        "mysql": 3306
+                    }
+                    database_container_id = self.__setup_database_container(test.database.lower(), ports[test.database.lower()])
 
+                ##########################
+                # Start webapp
+                ##########################
                 result = test.start(out)
                 if result != 0:
                     self.__stop_test(test, out)
@@ -659,15 +673,18 @@ class Benchmarker:
     # End __run_tests
     ############################################################
 
+    ############################################################
+    # __stop_database
+    # Attempts to stop the running database container.
+    ############################################################
     def __stop_database(self, database_container_id, out):
-        # TODO: this needs to be an SSH to the database machine
         if database_container_id:
-            subprocess.check_call(["docker", "stop", database_container_id],
-                stdout=out, stderr=out)
+            p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            p.communicate("docker stop %s" % database_container_id)
 
     ############################################################
     # __stop_test
-    # Attempts to stop the running test.
+    # Attempts to stop the running test container.
     ############################################################
     def __stop_test(self, database_container_id, test, out):
         docker_ids = subprocess.check_output(["docker", "ps", "-q"]).splitlines()
@@ -682,8 +699,8 @@ class Benchmarker:
                         slept += 1
                         docker_id = subprocess.check_output(["docker", "ps", "-q"]).strip()
                     # We still need to sleep a bit before removing the image
-                    time.sleep(5)
-                    subprocess.check_output(["docker", "image", "rm", test.name])
+                    # time.sleep(5)
+                    # subprocess.check_output(["docker", "image", "rm", test.name])
     ############################################################
     # End __stop_test
     ############################################################

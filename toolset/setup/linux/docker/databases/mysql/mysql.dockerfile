@@ -1,4 +1,7 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
+
+RUN apt-get update
+RUN apt-get install -qqy locales
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8  
