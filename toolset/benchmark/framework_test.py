@@ -278,6 +278,9 @@ class FrameworkTest:
               tee_output(prefix, line)
           except setup_util.EndOfStream:
             break
+      if p.returncode != 0:
+        tee_output(prefix, "Docker build failed; terminating\n")
+        return 1
       p = subprocess.Popen(["docker", "build", "-f", test_docker_file, "-t", "tfb-test-%s" % self.name, self.directory],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
@@ -290,6 +293,9 @@ class FrameworkTest:
               tee_output(prefix, line)
           except setup_util.EndOfStream:
             break
+      if p.returncode != 0:
+        tee_output(prefix, "Docker build failed; terminating\n")
+        return 1
         
 
     ##########################
