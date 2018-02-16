@@ -45,7 +45,6 @@ RUN service postgresql start && \
     psql < create-postgres-database.sql && \
     psql -q hello_world < create-postgres.sql
 
-EXPOSE 5432
 ENV PATH $PATH:/usr/lib/postgresql/$PG_VERSION/bin
 ENV PGDATA=/var/lib/postgresql/data 
 
