@@ -567,7 +567,6 @@ class Benchmarker:
                     out.flush()
                     print("Error: Unable to recover port, cannot start test")
                     return sys.exit(1)
-<<<<<<< HEAD
 
                 ##########################
                 # Start database container
@@ -580,20 +579,6 @@ class Benchmarker:
                     database_container_id = self.__setup_database_container(test.database.lower(), ports[test.database.lower()])
 
                 ##########################
-=======
-
-                ##########################
-                # Start database container
-                ##########################
-                if test.database != "None":
-                    # TODO: this is horrible... how should we really do it?
-                    ports = {
-                        "mysql": 3306
-                    }
-                    database_container_id = self.__setup_database_container(test.database.lower(), ports[test.database.lower()])
-
-                ##########################
->>>>>>> upstream/docker
                 # Start webapp
                 ##########################
                 result = test.start(out)
