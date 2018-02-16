@@ -22,6 +22,7 @@ from threading import Thread
 from threading import Event
 
 from utils import header
+from utils import gather_docker_dependencies
 
 # Cross-platform colored text
 from colorama import Fore, Back, Style
@@ -173,70 +174,70 @@ class FrameworkTest:
 
     # Setup environment variables
     logDir = os.path.join(self.fwroot, self.benchmarker.full_results_directory(), 'logs', self.name.lower())
-    bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
+    # bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
 
-    os.environ['TROOT'] = self.directory
-    os.environ['IROOT'] = self.install_root
-    os.environ['DBHOST'] = socket.gethostbyname(self.database_host)
-    os.environ['LOGDIR'] = logDir
-    os.environ['MAX_CONCURRENCY'] = str(max(self.benchmarker.concurrency_levels))
+    # os.environ['TROOT'] = self.directory
+    # os.environ['IROOT'] = self.install_root
+    # os.environ['DBHOST'] = socket.gethostbyname(self.database_host)
+    # os.environ['LOGDIR'] = logDir
+    # os.environ['MAX_CONCURRENCY'] = str(max(self.benchmarker.concurrency_levels))
 
     # Always ensure that IROOT exists
-    if not os.path.exists(self.install_root):
-      os.mkdir(self.install_root)
+    # if not os.path.exists(self.install_root):
+    #   os.mkdir(self.install_root)
 
-    if not os.path.exists(os.path.join(self.install_root,"TFBReaper")):
-      subprocess.check_call(['gcc', 
-        '-std=c99', 
-        '-o%s/TFBReaper' % self.install_root, 
-        os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')],
-        stderr=out, stdout=out)
+    # if not os.path.exists(os.path.join(self.install_root,"TFBReaper")):
+    #   subprocess.check_call(['gcc', 
+    #     '-std=c99', 
+    #     '-o%s/TFBReaper' % self.install_root, 
+    #     os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')],
+    #     stderr=out, stdout=out)
 
     # Check that the client is setup
-    if not os.path.exists(os.path.join(self.install_root, 'client.installed')):
-      print("\nINSTALL: Installing client software\n")    
-      # TODO: hax; should dynamically know where this file is
-      with open (self.fwroot + "/toolset/setup/linux/client.sh", "r") as myfile:
-        remote_script=myfile.read()
-        print("\nINSTALL: {!s}".format(self.benchmarker.client_ssh_string))
-        p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
-        p.communicate(remote_script)
-        returncode = p.returncode
-        if returncode != 0:
-          self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
-      print("\nINSTALL: Finished installing client software\n")
-      subprocess.check_call('touch client.installed', shell=True, cwd=self.install_root, executable='/bin/bash')
+    # if not os.path.exists(os.path.join(self.install_root, 'client.installed')):
+    #   print("\nINSTALL: Installing client software\n")    
+    #   # TODO: hax; should dynamically know where this file is
+    #   with open (self.fwroot + "/toolset/setup/linux/client.sh", "r") as myfile:
+    #     remote_script=myfile.read()
+    #     print("\nINSTALL: {!s}".format(self.benchmarker.client_ssh_string))
+    #     p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
+    #     p.communicate(remote_script)
+    #     returncode = p.returncode
+    #     if returncode != 0:
+    #       self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
+    #   print("\nINSTALL: Finished installing client software\n")
+    #   subprocess.check_call('touch client.installed', shell=True, cwd=self.install_root, executable='/bin/bash')
 
     # Run the module start inside parent of TROOT
     #  - we use the parent as a historical accident, a number of tests
     # refer to their TROOT maually still
-    previousDir = os.getcwd()
-    os.chdir(os.path.dirname(self.troot))
-    logging.info("Running setup module start (cwd=%s)", self.directory)
+    # previousDir = os.getcwd()
+    # os.chdir(os.path.dirname(self.troot))
+    # logging.info("Running setup module start (cwd=%s)", self.directory)
 
-    command = 'bash -exc "source %s && source %s.sh"' % (
-      bash_functions_path,
-      os.path.join(self.troot, self.setup_file))
+    # command = 'bash -exc "source %s && source %s.sh"' % (
+    #   bash_functions_path,
+    #   os.path.join(self.troot, self.setup_file))
 
-    debug_command = '''\
-      export FWROOT=%s          &&  \\
-      export TROOT=%s           &&  \\
-      export IROOT=%s           &&  \\
-      export DBHOST=%s          &&  \\
-      export LOGDIR=%s          &&  \\
-      export MAX_CONCURRENCY=%s && \\
-      cd %s && \\
-      %s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\"''' % (self.fwroot,
-        self.directory,
-        self.install_root,
-        socket.gethostbyname(self.database_host),
-        logDir,
-        max(self.benchmarker.concurrency_levels),
-        self.directory,
-        self.install_root,
-        bash_functions_path,
-        os.path.join(self.troot, self.setup_file))
-    logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
+    # debug_command = '''\
+    #   export FWROOT=%s          &&  \\
+    #   export TROOT=%s           &&  \\
+    #   export IROOT=%s           &&  \\
+    #   export DBHOST=%s          &&  \\
+    #   export LOGDIR=%s          &&  \\
+    #   export MAX_CONCURRENCY=%s && \\
+    #   cd %s && \\
+    #   %s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\"''' % (self.fwroot,
+    #     self.directory,
+    #     self.install_root,
+    #     socket.gethostbyname(self.database_host),
+    #     logDir,
+    #     max(self.benchmarker.concurrency_levels),
+    #     self.directory,
+    #     self.install_root,
+    #     bash_functions_path,
+    #     os.path.join(self.troot, self.setup_file))
+    # logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
 
 
     def tee_output(prefix, line):
@@ -253,13 +254,52 @@ class FrameworkTest:
       out.write(line)
       out.flush()
 
-    # Start the setup.sh command
-    p = subprocess.Popen(["%s/TFBReaper" % self.install_root,command],
-          cwd=self.directory,
+    prefix = "Setup %s: " % self.name
+
+    ##########################
+    # Build the Docker images
+    ##########################
+    test_docker_file = os.path.join(self.directory, self.setup_file)
+    deps = list(reversed(gather_docker_dependencies( test_docker_file )))
+
+    docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup", "linux", "docker")
+
+    for dependency in deps:
+      docker_file = os.path.join(docker_dir, dependency + ".dockerfile")
+      p = subprocess.Popen(["docker", "build", "-f", docker_file, "-t", dependency, docker_dir],
+          stdout=subprocess.PIPE,
+          stderr=subprocess.STDOUT)
+      nbsr = setup_util.NonBlockingStreamReader(p.stdout)
+      while (p.poll() is None):
+        for i in xrange(10):
+          try:
+            line = nbsr.readline(0.05)
+            if line:
+              tee_output(prefix, line)
+          except setup_util.EndOfStream:
+            break
+      p = subprocess.Popen(["docker", "build", "-f", test_docker_file, "-t", self.name, self.directory],
+          stdout=subprocess.PIPE,
+          stderr=subprocess.STDOUT)
+      nbsr = setup_util.NonBlockingStreamReader(p.stdout)
+      while (p.poll() is None):
+        for i in xrange(10):
+          try:
+            line = nbsr.readline(0.05)
+            if line:
+              tee_output(prefix, line)
+          except setup_util.EndOfStream:
+            break
+        
+
+    ##########################
+    # Run the Docker container
+    ##########################
+    p = subprocess.Popen(["docker", "run", "--rm", "-p", "%s:%s" % (self.port, self.port), "--network=host", self.name],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
     nbsr = setup_util.NonBlockingStreamReader(p.stdout,
-      "%s: %s.sh and framework processes have terminated" % (self.name, self.setup_file))
+      "%s: framework processes have terminated" % self.name)
 
     # Set a limit on total execution time of setup.sh
     timeout = datetime.now() + timedelta(minutes = 105)
@@ -268,18 +308,10 @@ class FrameworkTest:
     # Need to print to stdout once every 10 minutes or Travis-CI will abort
     travis_timeout = datetime.now() + timedelta(minutes = 5)
 
-    # Flush output until setup.sh work is finished. This is
-    # either a) when setup.sh exits b) when the port is bound
-    # c) when we run out of time. Note that 'finished' doesn't
-    # guarantee setup.sh process is dead - the OS may choose to make
-    # setup.sh a zombie process if it still has living children
-    #
-    # Note: child processes forked (using &) will remain alive
-    # after setup.sh has exited. The will have inherited the
-    # stdout/stderr descriptors and will be directing their
-    # output to the pipes.
-    #
-    prefix = "Setup %s: " % self.name
+    # Flush output until docker run work is finished. This is
+    # either a) when docker run exits b) when the port is bound
+    # c) when we run out of time. 
+    prefix = "Server %s: " % self.name
     while (p.poll() is None
       and not self.benchmarker.is_port_bound(self.port)
       and not time_remaining.total_seconds() < 0):
@@ -289,9 +321,8 @@ class FrameworkTest:
       # print one line per condition check.
       # Adding a tight loop here mitigates the effect,
       # ensuring that most of the output directly from
-      # setup.sh is sent to tee_output before the outer
-      # loop exits and prints things like "setup.sh exited"
-      #
+      # docker is sent to tee_output before the outer
+      # loop exits and prints things like "docker exited"
       for i in xrange(10):
         try:
           line = nbsr.readline(0.05)
@@ -301,7 +332,7 @@ class FrameworkTest:
             # Reset Travis-CI timer
             travis_timeout = datetime.now() + timedelta(minutes = 5)
         except setup_util.EndOfStream:
-          tee_output(prefix, "Setup has terminated\n")
+          tee_output(prefix, "Docker has terminated\n")
           break
       time_remaining = timeout - datetime.now()
 
@@ -314,18 +345,18 @@ class FrameworkTest:
 
     # Did we time out?
     if time_remaining.total_seconds() < 0:
-      tee_output(prefix, "%s.sh timed out!! Aborting...\n" % self.setup_file)
+      tee_output(prefix, "Docker run has timed out!! Aborting...\n" % self.setup_file)
       p.kill()
       return 1
 
     # What's our return code?
-    # If setup.sh has terminated, use that code
+    # If docker run has terminated, use that code
     # Otherwise, detect if the port was bound
     tee_output(prefix, "Status: Poll: %s, Port %s bound: %s, Time Left: %s\n" % (
       p.poll(), self.port, self.benchmarker.is_port_bound(self.port), time_remaining))
     retcode = (p.poll() if p.poll() is not None else 0 if self.benchmarker.is_port_bound(self.port) else 1)
     if p.poll() is not None:
-      tee_output(prefix, "%s.sh process exited naturally with %s\n" % (self.setup_file, p.poll()))
+      tee_output(prefix, "Docker run process exited naturally with %s\n" % (self.setup_file, p.poll()))
     elif self.benchmarker.is_port_bound(self.port):
       tee_output(prefix, "Bound port detected on %s\n" % self.port)
 
@@ -335,7 +366,6 @@ class FrameworkTest:
     # the subprocess.PIPEs are dead, this thread will terminate.
     # Use a different prefix to indicate this is the framework
     # speaking
-    prefix = "Server %s: " % self.name
     def watch_child_pipes(nbsr, prefix):
       while True:
         try:
@@ -351,10 +381,7 @@ class FrameworkTest:
     watch_thread.daemon = True
     watch_thread.start()
 
-    logging.info("Executed %s.sh, returning %s", self.setup_file, retcode)
-    os.chdir(previousDir)
-
-    return retcode, p
+    return retcode
   ############################################################
   # End start
   ############################################################

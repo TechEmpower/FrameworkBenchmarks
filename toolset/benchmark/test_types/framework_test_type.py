@@ -146,7 +146,7 @@ class FrameworkTestType:
 
         if database_name == "mysql":
             try:
-                db = MySQLdb.connect(os.environ.get("DBHOST"), "benchmarkdbuser", "benchmarkdbpass", "hello_world")
+                db = MySQLdb.connect("TFB-database", "benchmarkdbuser", "benchmarkdbpass", "hello_world")
                 cursor = db.cursor()
                 cursor.execute("SELECT * FROM World")
                 results = cursor.fetchall()
@@ -157,7 +157,7 @@ class FrameworkTestType:
                 print(e)
         elif database_name == "postgres":
             try:
-                db = psycopg2.connect(host=os.environ.get("DBHOST"),
+                db = psycopg2.connect(host="TFB-database",
                                       port="5432",
                                       user="benchmarkdbuser",
                                       password="benchmarkdbpass",
@@ -177,7 +177,7 @@ class FrameworkTestType:
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
-                connection = pymongo.MongoClient(host=os.environ.get("DBHOST"))
+                connection = pymongo.MongoClient(host="TFB-database")
                 db = connection.hello_world
                 for world in db.world.find():
                     if "randomNumber" in world:

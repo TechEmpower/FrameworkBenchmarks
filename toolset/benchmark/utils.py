@@ -6,6 +6,31 @@ import socket
 
 from ast import literal_eval
 
+def gather_docker_dependencies(docker_file):
+    '''
+    Gathers all the known docker dependencies for the given docker image.
+    '''
+    # Avoid setting up a circular import
+    from setup.linux import setup_util
+    deps = []
+
+    if os.path.exists(docker_file):
+        with open(docker_file) as fp:
+            line = fp.readline()
+            if line:
+                tokens = line.strip().split(' ')
+                if tokens[0] == "FROM":
+                    # This is magic that our base image points to
+                    if tokens[1] != "ubuntu:16.04":
+                        depTokens = tokens[1].strip().split(':')
+                        deps.append(depTokens[0])
+                        dep_docker_file = os.path.join(setup_util.get_fwroot(), 
+                            "toolset", "setup", "linux", "docker", depTokens[0] + ".dockerfile")
+                        deps.extend(gather_docker_dependencies(dep_docker_file))
+
+    return deps
+
+
 def gather_langauges():
     '''
     Gathers all the known languages in the suite via the folder names
@@ -19,7 +44,6 @@ def gather_langauges():
     for dir in glob.glob(os.path.join(lang_dir, "*")):
         langs.append(dir.replace(lang_dir,"")[1:])
     return langs
-
 
 def gather_tests(include = [], exclude=[], benchmarker=None):
     '''

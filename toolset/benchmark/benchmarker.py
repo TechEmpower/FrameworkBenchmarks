@@ -409,6 +409,15 @@ class Benchmarker:
     ############################################################
 
     ############################################################
+    ############################################################
+    def __setup_database_container(self, database, port):
+        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        (out,err) = p.communicate("docker run -d --rm -p %s:%s --network=host %s" % (port,port,database))
+        return out.splitlines()[len(out.splitlines()) - 1]
+    ############################################################
+    ############################################################
+
+    ############################################################
     # Makes any necessary changes to the client machine that
     # should be made before running the tests. Is very similar
     # to the server setup, but may also include client specific
@@ -510,14 +519,6 @@ class Benchmarker:
     # are needed.
     ############################################################
     def __run_test(self, test):
-
-        # Used to capture return values
-        def exit_with_code(code):
-            if self.os.lower() == 'windows':
-                return code
-            else:
-                sys.exit(code)
-
         logDir = os.path.join(self.full_results_directory(), test.name.lower())
         try:
             os.makedirs(logDir)
@@ -527,12 +528,12 @@ class Benchmarker:
 
             if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
                 out.write("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.\n")
-                return exit_with_code(0)
+                return sys.exit(0)
 
             # If the test is in the excludes list, we skip it
             if self.exclude != None and test.name in self.exclude:
                 out.write("Test {name} has been added to the excludes list. Skipping.\n".format(name=test.name))
-                return exit_with_code(0)
+                return sys.exit(0)
 
             out.write("test.os.lower() = {os}  test.database_os.lower() = {dbos}\n".format(os=test.os.lower(),dbos=test.database_os.lower()))
             out.write("self.results['frameworks'] != None: {val}\n".format(val=str(self.results['frameworks'] != None)))
@@ -541,7 +542,7 @@ class Benchmarker:
             if self.results['frameworks'] != None and test.name in self.results['completed']:
                 out.write('Framework {name} found in latest saved data. Skipping.\n'.format(name=str(test.name)))
                 print('WARNING: Test {test} exists in the results directory; this must be removed before running a new test.\n'.format(test=str(test.name)))
-                return exit_with_code(1)
+                return sys.exit(1)
             out.flush()
 
             out.write(header("Beginning %s" % test.name, top='='))
@@ -552,8 +553,9 @@ class Benchmarker:
             ##########################
             out.write(header("Starting %s" % test.name))
             out.flush()
+            database_container_id = None
             try:
-                self.__cleanup_leftover_processes_before_test()
+                # self.__cleanup_leftover_processes_before_test()
 
                 if self.__is_port_bound(test.port):
                     time.sleep(60)
@@ -564,17 +566,29 @@ class Benchmarker:
                     out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
                     out.flush()
                     print("Error: Unable to recover port, cannot start test")
-                    return exit_with_code(1)
+                    return sys.exit(1)
 
-                result, process = test.start(out)
-                self.__process = process
+                ##########################
+                # Start database container
+                ##########################
+                if test.database != "None":
+                    # TODO: this is horrible... how should we really do it?
+                    ports = {
+                        "mysql": 3306
+                    }
+                    database_container_id = self.__setup_database_container(test.database.lower(), ports[test.database.lower()])
+
+                ##########################
+                # Start webapp
+                ##########################
+                result = test.start(out)
                 if result != 0:
-                    self.__process.terminate()
+                    self.__stop_test(test, out)
                     time.sleep(5)
                     out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
                     out.flush()
-                    self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
-                    return exit_with_code(1)
+                    self.__write_intermediate_results(test.name,"ERROR: Problem starting")
+                    return sys.exit(1)
 
                 logging.info("Sleeping %s seconds to ensure framework is ready" % self.sleep)
                 time.sleep(self.sleep)
@@ -602,7 +616,9 @@ class Benchmarker:
                 ##########################
                 # Stop this test
                 ##########################
-                self.__stop_test(test, out)
+                self.__stop_test(database_container_id, test, out)
+                if test.database != "None":
+                    self.__stop_database(database_container_id, out)
 
                 out.write(header("Stopped %s" % test.name))
                 out.flush()
@@ -637,52 +653,54 @@ class Benchmarker:
 
                 if self.mode == "verify" and not passed_verify:
                     print("Failed verify!")
-                    return exit_with_code(1)
+                    return sys.exit(1)
             except KeyboardInterrupt:
-                self.__stop_test(test, out)
+                self.__stop_test(database_container_id, test, out)
+                if test.database is not None:
+                    self.__stop_database(database_container_id, out)
             except (OSError, IOError, subprocess.CalledProcessError) as e:
                 self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
                 out.write(header("Subprocess Error %s" % test.name))
                 traceback.print_exc(file=out)
                 out.flush()
                 out.close()
-                return exit_with_code(1)
+                return sys.exit(1)
 
             out.close()
-            return exit_with_code(0)
+            return sys.exit(0)
 
     ############################################################
     # End __run_tests
     ############################################################
 
     ############################################################
-    # __stop_test
-    # Attempts to stop the running test.
+    # __stop_database
+    # Attempts to stop the running database container.
     ############################################################
-    def __stop_test(self, test, out):
-        # self.__process may not be set if the user hit ctrl+c prior to the test
-        # starting properly.
-        if self.__process is not None:
-            out.write(header("Stopping %s" % test.name))
-            out.flush()
-            # Ask TFBReaper to nicely terminate itself
-            self.__process.terminate()
-            slept = 0
-            returnCode = None
-            # Check once a second to see if TFBReaper has exited
-            while(slept < 300 and returnCode is None):
-                time.sleep(1)
-                slept += 1
-                returnCode = self.__process.poll()
-            
-            # If TFBReaper has not exited at this point, we have a problem
-            if returnCode is None:
-                self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-                out.write(header("Error: Port %s was not released by stop - %s" % (test.port, test.name)))
-                out.write(header("Running Processes"))
-                out.write(subprocess.check_output(['ps -aux'], shell=True))
-                out.flush()
-                return exit_with_code(1)
+    def __stop_database(self, database_container_id, out):
+        if database_container_id:
+            p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            p.communicate("docker stop %s" % database_container_id)
+
+    ############################################################
+    # __stop_test
+    # Attempts to stop the running test container.
+    ############################################################
+    def __stop_test(self, database_container_id, test, out):
+        docker_ids = subprocess.check_output(["docker", "ps", "-q"]).splitlines()
+        for docker_id in docker_ids:
+            # This check is in case the database and server machines are the same
+            if docker_id:
+                if not database_container_id or docker_id not in database_container_id:
+                    subprocess.check_output(["docker", "kill", docker_id])
+                    slept = 0
+                    while(slept < 300 and docker_id is ''):
+                        time.sleep(1)
+                        slept += 1
+                        docker_id = subprocess.check_output(["docker", "ps", "-q"]).strip()
+                    # We still need to sleep a bit before removing the image
+                    # time.sleep(5)
+                    # subprocess.check_output(["docker", "image", "rm", test.name])
     ############################################################
     # End __stop_test
     ############################################################
@@ -972,6 +990,7 @@ class Benchmarker:
         if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
             os.system("sudo rm -rf " + self.result_directory + "/*")
 
+        # TODO: remove this as installs goes away with docker implementation
         # remove installs directories if --clean-all provided
         self.install_root = "%s/%s" % (self.fwroot, "installs")
         if args['clean_all']:
