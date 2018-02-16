@@ -3,11 +3,9 @@
 SET GLOBAL time_zone = '+00:00';
 
 # modified from SO answer http://stackoverflow.com/questions/5125096/for-loop-in-mysql
-DROP DATABASE IF EXISTS hello_world;
 CREATE DATABASE hello_world;
 USE hello_world;
 
-DROP TABLE IF EXISTS world;
 CREATE TABLE  world (
   id int(10) unsigned NOT NULL auto_increment,
   randomNumber int NOT NULL default 0,
@@ -16,8 +14,6 @@ CREATE TABLE  world (
 ENGINE=INNODB;
 GRANT SELECT, UPDATE ON hello_world.world TO 'benchmarkdbuser'@'%' IDENTIFIED BY 'benchmarkdbpass';
 GRANT SELECT, UPDATE ON hello_world.world TO 'benchmarkdbuser'@'localhost' IDENTIFIED BY 'benchmarkdbpass';
-
-DROP PROCEDURE IF EXISTS load_data;
 
 DELIMITER #
 CREATE PROCEDURE load_data()
@@ -39,7 +35,6 @@ DELIMITER ;
 
 CALL load_data();
 
-DROP TABLE IF EXISTS fortune;
 CREATE TABLE  fortune (
   id int(10) unsigned NOT NULL auto_increment,
   message varchar(2048) CHARACTER SET 'utf8' NOT NULL,

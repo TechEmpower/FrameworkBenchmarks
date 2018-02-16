@@ -33,8 +33,9 @@ RUN cp -R -p /var/log/mysql /ssd/log
 # do not see running processes from prior RUN calls; therefor, each command here
 # that relies on the mysql server running will explicitly start the server and
 # perform the work required.
-RUN service mysql start && mysqladmin -uroot -psecret flush-hosts
-RUN service mysql start && mysql -uroot -psecret < create.sql
+RUN service mysql start && \
+    mysqladmin -uroot -psecret flush-hosts && \
+    mysql -uroot -psecret < create.sql
 
 EXPOSE 3306
 
