@@ -25,7 +25,7 @@ num_cpus = "1.0"
 futures = "0.1"
 http = "0.1"
 actix = "^0.4.3"
-actix-web = "=0.3.1"
+actix-web = "0.3"
 diesel = { version = "1.1", features = ["postgres"] }
 postgres = "0.15"
 

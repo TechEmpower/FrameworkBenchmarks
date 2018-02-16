@@ -28,53 +28,53 @@ This is using [ActFramework 1.7.0-teb-SNAPSHOT](http://actframework.org) to buil
 | ---- | ---------: |
 | db | 32303.52 |
 | multiple queries (20) | 3268.78 |
-| updates (20) | 865 |
+| updates (20) | 162.43 |
 | fortunes | 27560 |
 
 ### MySQL - JPA/Hibernate
 
 | Test | Throughput |
 | ---- | ----------: |
-| db | 39588.35 |
-| multiple queries (20) | 2518.09 |
-| updates (20) | 929.35 |
-| fortunes | 33314.78 |
+| db | 18545.35 |
+| multiple queries (20) | 1082.51 |
+| updates (20) | 1070.53 |
+| fortunes | 18487.09 |
 
 ### Postgresql- JPA/Hibernate
 
 | Test | Throughput |
 | ---- | ---------: |
-| db | 41079.85 |
-| multiple queries (20) | 3030.14 |
-| updates (20) | 21.59 |
-| fortunes | 32490.22 |
+| db | 30873.39 |
+| multiple queries (20) | 1879.24 |
+| updates (20) | 220.74 |
+| fortunes | 20104.87 |
 
 ### MySQL - JPA/EclipseLink
 
 | Test | Throughput |
 | ---- | ----------: |
-| db | 20134.12 |
-| multiple queries (20) | 1187.38 |
-| updates (20) | 560.91 |
-| fortunes | 20334.32 |
+| db | 20312.97 |
+| multiple queries (20) | 1164.44 |
+| updates (20) | 932.74 |
+| fortunes | 19784.83 |
 
 ### Postgresql- JPA/EclipseLink
 
 | Test | Throughput |
 | ---- | ---------: |
-| db | 31906.95 |
-| multiple queries (20) | 1935 |
-| updates (20) | 650.98 |
-| fortunes | 19764.26 |
+| db | 30476.38 |
+| multiple queries (20) | 1887.21 |
+| updates (20) | 1420.72 |
+| fortunes | 20863.74 |
 
 ### Mongodb
 
 | Test | Throughput |
 | ---- | ---------: |
-| db | 33595.57 |
-| multiple queries (20) | 2197.53 |
+| db | 29527.92 |
+| multiple queries (20) | 1935.13 |
 | updates (20) | 1039.60 |
-| fortunes | 24301.25 |
+| fortunes | 18174.70 |
 
 ## SQL database test results comparing
 

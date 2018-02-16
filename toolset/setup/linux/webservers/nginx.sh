@@ -2,7 +2,7 @@
 
 fw_installed nginx && return 0
 
-VERSION="1.12.0"
+VERSION="1.12.2"
 NGINX_HOME=$IROOT/nginx
 
 fw_get -O http://nginx.org/download/nginx-${VERSION}.tar.gz

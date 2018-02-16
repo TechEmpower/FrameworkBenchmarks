@@ -567,6 +567,7 @@ class Benchmarker:
                     out.flush()
                     print("Error: Unable to recover port, cannot start test")
                     return sys.exit(1)
+<<<<<<< HEAD
 
                 ##########################
                 # Start database container
@@ -579,6 +580,20 @@ class Benchmarker:
                     database_container_id = self.__setup_database_container(test.database.lower(), ports[test.database.lower()])
 
                 ##########################
+=======
+
+                ##########################
+                # Start database container
+                ##########################
+                if test.database != "None":
+                    # TODO: this is horrible... how should we really do it?
+                    ports = {
+                        "mysql": 3306
+                    }
+                    database_container_id = self.__setup_database_container(test.database.lower(), ports[test.database.lower()])
+
+                ##########################
+>>>>>>> upstream/docker
                 # Start webapp
                 ##########################
                 result = test.start(out)
@@ -887,6 +902,12 @@ class Benchmarker:
         except (ValueError, IOError):
             pass
 
+    def __get_git_commit_id(self):
+        return subprocess.check_output('git rev-parse HEAD', shell=True).strip()
+
+    def __get_git_repository_url(self):
+        return subprocess.check_output('git config --get remote.origin.url', shell=True).strip()
+
     ############################################################
     # __finish
     ############################################################
@@ -1004,6 +1025,13 @@ class Benchmarker:
             self.results['uuid'] = str(uuid.uuid4())
             self.results['name'] = datetime.now().strftime(self.results_name)
             self.results['environmentDescription'] = self.results_environment
+            try:
+                self.results['git'] = dict()
+                self.results['git']['commitId'] = self.__get_git_commit_id()
+                self.results['git']['repositoryUrl'] = self.__get_git_repository_url()
+            except Exception as e:
+                logging.debug('Could not read local git repository, which is fine. The error was: %s', e)
+                self.results['git'] = None
             self.results['startTime'] = int(round(time.time() * 1000))
             self.results['completionTime'] = None
             self.results['concurrencyLevels'] = self.concurrency_levels

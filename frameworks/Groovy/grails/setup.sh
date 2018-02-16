@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql java grails resin 
+fw_depends mysql java8 grails resin-java8
 
 cd hello
 grails -Dgrails.work.dir=${IROOT}/.grails -non-interactive -plain-output refresh-dependencies

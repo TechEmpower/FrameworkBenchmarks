@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql java ringojs
+fw_depends mysql java8 ringojs
 
 rm -rf $RINGOJS_HOME/packages/*
 ringo-admin install oberhamsi/sql-ringojs-client

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends postgresql java maven
+fw_depends postgresql java8 maven
 
 mvn -Peclipselink_pgsql clean package
 cd target/dist
