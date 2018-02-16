@@ -46,7 +46,7 @@
         "versus": "servlet"
       },
       "postgres": {
-        "setup_file": "start_postgresql",
+        "setup_file": "gemini-postgres.dockerfile",
         "db_url": "/db",
         "query_url": "/query?queries=",
         "cached_query_url": "/cached_query?queries=",

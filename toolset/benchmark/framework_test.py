@@ -278,7 +278,7 @@ class FrameworkTest:
               tee_output(prefix, line)
           except setup_util.EndOfStream:
             break
-      p = subprocess.Popen(["docker", "build", "-f", test_docker_file, "-t", self.name, self.directory],
+      p = subprocess.Popen(["docker", "build", "-f", test_docker_file, "-t", "tfb-test-%s" % self.name, self.directory],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
       nbsr = setup_util.NonBlockingStreamReader(p.stdout)
@@ -295,7 +295,7 @@ class FrameworkTest:
     ##########################
     # Run the Docker container
     ##########################
-    p = subprocess.Popen(["docker", "run", "--rm", "-p", "%s:%s" % (self.port, self.port), "--network=host", self.name],
+    p = subprocess.Popen(["docker", "run", "--rm", "-p", "%s:%s" % (self.port, self.port), "--network=host", "tfb-test-%s" % self.name],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
     nbsr = setup_util.NonBlockingStreamReader(p.stdout,
@@ -356,7 +356,7 @@ class FrameworkTest:
       p.poll(), self.port, self.benchmarker.is_port_bound(self.port), time_remaining))
     retcode = (p.poll() if p.poll() is not None else 0 if self.benchmarker.is_port_bound(self.port) else 1)
     if p.poll() is not None:
-      tee_output(prefix, "Docker run process exited naturally with %s\n" % (self.setup_file, p.poll()))
+      tee_output(prefix, "Docker run process exited naturally with %s\n" % p.poll())
     elif self.benchmarker.is_port_bound(self.port):
       tee_output(prefix, "Bound port detected on %s\n" % self.port)
 
