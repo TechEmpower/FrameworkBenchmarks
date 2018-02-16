@@ -13,6 +13,4 @@ RUN cd /gemini/Docroot/WEB-INF; mv gemini-postgres.conf GeminiHello.conf;
 
 RUN cd /gemini; mkdir -p Docroot/WEB-INF/classes; mkdir -p Docroot/WEB-INF/lib; ant resolve; ant compile
 
-EXPOSE 8080
-
 CMD ["resinctl", "-conf", "/gemini/Docroot/WEB-INF/resin.xml", "console"]

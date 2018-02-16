@@ -37,6 +37,4 @@ RUN service mysql start && \
     mysqladmin -uroot -psecret flush-hosts && \
     mysql -uroot -psecret < create.sql
 
-EXPOSE 3306
-
 CMD ["mysqld"]
