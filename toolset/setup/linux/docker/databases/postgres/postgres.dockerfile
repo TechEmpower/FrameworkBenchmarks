@@ -13,7 +13,6 @@ ADD pg_hba.conf pg_hba.conf
 ADD 60-postgresql-shm.conf 60-postgresql-shm.conf
 ADD create-postgres-database.sql create-postgres-database.sql
 ADD create-postgres.sql create-postgres.sql
-ADD wait.sh wait.sh
 
 # install postgresql on database machine
 RUN apt-get -y update
