@@ -12,8 +12,8 @@ sed -i "s|INSTALL_ROOT|${IROOT}|g" deploy/nginx.conf
 
 [[ ! -e vendor/Kumbia ]] || rm -rf vendor/Kumbia
 
-git clone -b 1.0 --single-branch https://github.com/KumbiaPHP/KumbiaPHP.git vendor/Kumbia
-git clone -b dev --single-branch https://github.com/KumbiaPHP/ActiveRecord.git vendor/Kumbia/ActiveRecord
+git clone -b v1.0.0-rc.2 --single-branch --depth 1 https://github.com/KumbiaPHP/KumbiaPHP.git vendor/Kumbia
+git clone -b v0.4.0 --single-branch --depth 1 https://github.com/KumbiaPHP/ActiveRecord.git vendor/Kumbia/ActiveRecord
 
 php-fpm --fpm-config $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf -g /tmp/php-fpm.pid
 nginx -c $TROOT/deploy/nginx.conf
