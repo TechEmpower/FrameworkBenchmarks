@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql php7 nginx composer
+fw_depends mysql php7 nginx
 
 sed -i 's|localhost|'"${DBHOST}"'|g' bench/app/config/databases.php
 sed -i "s|APP_ROOT|${TROOT}/bench/app/|g" bench/public/index.php
