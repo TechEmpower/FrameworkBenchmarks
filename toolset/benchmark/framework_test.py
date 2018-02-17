@@ -265,8 +265,10 @@ class FrameworkTest:
     docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup", "linux", "docker")
 
     for dependency in deps:
-      docker_file = os.path.join(docker_dir, dependency + ".dockerfile")
-      p = subprocess.Popen(["docker", "build", "-f", docker_file, "-t", dependency, docker_dir],
+      docker_file = os.path.join(self.directory, dependency + ".dockerfile")
+      if not os.path.exists(docker_file):
+        docker_file = os.path.join(docker_dir, dependency + ".dockerfile")
+      p = subprocess.Popen(["docker", "build", "-f", docker_file, "-t", dependency, os.path.dirname(docker_file)],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
       nbsr = setup_util.NonBlockingStreamReader(p.stdout)
