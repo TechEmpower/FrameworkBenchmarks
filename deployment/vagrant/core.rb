@@ -11,7 +11,6 @@ end
 
 def provider_libvirt(config)
   config.vm.provider :libvirt do |virt, override|
-    virt.name = "TechEmpower Framework Benchmarks"
     override.vm.hostname = "TFB-all"
     override.vm.box = "RX14/trusty64"
 
@@ -30,7 +29,6 @@ end
 
 def provider_virtualbox(config)
   config.vm.provider :virtualbox do |vb, override|
-    vb.name = "TechEmpower Framework Benchmarks"
     override.vm.hostname = "TFB-all"
     override.vm.box = "ubuntu/trusty64"
 

@@ -18,7 +18,7 @@ const Worlds = sequelize.define('world', {
   freezeTableName: true
 });
 
-const Fortunes = sequelize.define('Fortune', {
+const Fortunes = sequelize.define('fortune', {
   id: {
     type: 'Sequelize.INTEGER',
     primaryKey: true
@@ -81,8 +81,6 @@ module.exports = {
 
     const worldUpdate = (world) => {
       world.randomnumber = h.randomTfbNumber();
-
-      console.log('RANDOM NUMBER: ', world.randomnumber);
 
       return Worlds.update({
           randomnumber: world.randomnumber
