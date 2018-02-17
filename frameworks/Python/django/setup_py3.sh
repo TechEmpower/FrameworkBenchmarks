@@ -2,6 +2,8 @@
 
 fw_depends mysql python3
 
-pip3 install --install-option="--prefix=${PY3_ROOT}" -r $TROOT/requirements_py3.txt
+/usr/bin/python3.6 -m venv $TROOT/venv/ --clear
 
-gunicorn --pid=gunicorn.pid hello.wsgi:application -c gunicorn_conf.py --env DJANGO_DB=mysql &
+$TROOT/venv/bin/pip install -r $TROOT/requirements_py3.txt
+
+$TROOT/venv/bin/gunicorn --pid=gunicorn.pid hello.wsgi:application -c gunicorn_conf.py --env DJANGO_DB=mysql &
