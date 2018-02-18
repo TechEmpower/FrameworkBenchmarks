@@ -2,7 +2,6 @@
   "framework": "koa",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db",
@@ -26,7 +25,6 @@
       "versus": "nodejs"
     },
     "mysql": {
-      "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -48,7 +46,6 @@
       "versus": "nodejs"
     },
     "postgres": {
-      "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
