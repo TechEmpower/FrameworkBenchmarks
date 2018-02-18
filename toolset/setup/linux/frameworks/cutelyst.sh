@@ -38,6 +38,7 @@ cmake .. \
 -DCMAKE_BUILD_TYPE=Release \
 -DCMAKE_INSTALL_PREFIX=$CROOT \
 -DUWSGI_PLUGINS_DIR=${CROOT}/lib/uwsgi/plugins \
+-DPLUGIN_UWSGI=on \
 -DUSE_JEMALLOC=on
 
 make -j $CPU_COUNT && make install
