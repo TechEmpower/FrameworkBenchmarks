@@ -114,7 +114,7 @@ env:
     # - "TESTDIR=Java/wildfly-ee7"
      - "TESTDIR=JavaScript/express"
      - "TESTDIR=JavaScript/hapi"
-    # - "TESTDIR=JavaScript/koa"
+     - "TESTDIR=JavaScript/koa"
      - "TESTDIR=JavaScript/nodejs"
     # - "TESTDIR=JavaScript/ringojs"
     # - "TESTDIR=JavaScript/sailsjs"
