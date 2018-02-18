@@ -10,6 +10,6 @@ RUN apt-get -y install mongodb-org
 RUN mkdir -p /data/db
 RUN chmod 777 /data/db
 
-RUN mongod --fork --logpath /var/log/mongodb.log --bind_ip_all && sleep 10 && mongo < create.js
+RUN mongod --fork --logpath /var/log/mongodb.log --bind_ip_all && sleep 10 && mongo < create.js && sleep 10
 
 CMD ["mongod", "--bind_ip_all"]
