@@ -40,7 +40,7 @@ var Worlds = sequelize.define('world', {
 })
 
 
-var Fortunes = sequelize.define('Fortune', {
+var Fortunes = sequelize.define('fortune', {
   id: {
        type: Sequelize.INTEGER,
        primaryKey: true
