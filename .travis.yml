@@ -14,7 +14,7 @@ env:
      - "TESTDIR=C/duda"
      - "TESTDIR=C/facil.io"
     # - "TESTDIR=C/h2o"
-    # - "TESTDIR=C/libreactor"
+     - "TESTDIR=C/libreactor"
     # - "TESTDIR=C/octane"
      - "TESTDIR=C/onion"
     # - "TESTDIR=CSharp/aspnet"

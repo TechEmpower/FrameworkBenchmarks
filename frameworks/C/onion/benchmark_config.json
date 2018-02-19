@@ -9,7 +9,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
-      "database": "None",
+      "database": "MySQL",
       "framework": "None",
       "language": "C",
       "flavor": "None",

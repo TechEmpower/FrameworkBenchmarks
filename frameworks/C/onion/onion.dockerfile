@@ -2,6 +2,8 @@ FROM tfb:latest
 
 COPY ./ ./
 
+RUN apt install -yqq cmake libmysqlclient-dev libjson0-dev libgnutls-dev libgcrypt-dev
+
 ENV ONION_LOG noinfo
 
 # Latest commit on master as of July 10 2014
@@ -13,8 +15,10 @@ RUN git clone https://github.com/davidmoreno/onion.git && \
     mkdir -p build && \
     cd build && \
     cmake .. && \
-    make && \
-    make clean && \
     make
 
-CMD ["./onion/build/hello"]
+RUN make clean && \
+    rm -f onion/build/CMakeCache.txt && \
+    make
+
+CMD ["./hello"]
