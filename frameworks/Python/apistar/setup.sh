@@ -2,6 +2,8 @@
 
 fw_depends python3
 
-pip3 install --install-option="--prefix=${PY3_ROOT}" -r $TROOT/requirements.txt
+/usr/bin/python3.6 -m venv $TROOT/venv/ --clear
 
-gunicorn app:app.wsgi -c gunicorn_conf.py &
+$TROOT/venv/bin/pip install -r $TROOT/requirements.txt
+
+$TROOT/venv/bin/gunicorn app:app.wsgi -c gunicorn_conf.py &
