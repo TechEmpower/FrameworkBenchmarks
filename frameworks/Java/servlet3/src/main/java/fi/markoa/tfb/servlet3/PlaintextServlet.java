@@ -38,7 +38,7 @@ public class PlaintextServlet extends HttpServlet {
 		out.setWriteListener(new WriteListener() {
 			@Override
 			public void onWritePossible() throws IOException {
-				byte[] buffer = new byte[4096];
+				byte[] buffer = new byte[32];
 				ByteArrayInputStream is = new ByteArrayInputStream(CONTENT);
 
 				while (out.isReady()) {
