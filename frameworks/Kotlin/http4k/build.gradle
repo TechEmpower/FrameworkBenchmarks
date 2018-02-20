@@ -44,7 +44,9 @@ allprojects {
 
 dependencies {
     compile project(":core")
+    compile project(":apache")
     compile project(":jetty")
     compile project(":netty")
+    compile project(":sunhttp")
     compile project(":undertow")
 }
