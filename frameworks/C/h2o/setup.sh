@@ -2,7 +2,8 @@
 
 fw_depends postgresql h2o mustache-c yajl
 
-H2O_APP_HOME="${IROOT}/h2o_app"
+TROOT="/"
+H2O_APP_HOME="h2o_app"
 BUILD_DIR="${H2O_APP_HOME}_build"
 H2O_APP_PROFILE_PORT=54321
 H2O_APP_PROFILE_URL="http://127.0.0.1:$H2O_APP_PROFILE_PORT"
