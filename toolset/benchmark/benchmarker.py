@@ -411,23 +411,26 @@ class Benchmarker:
     ############################################################
     ############################################################
     def __setup_database_container(self, database, port):
-        def __scp_string(files):
-            scpstr = ["scp", "-i", self.database_identity_file]
-            for file in files:
-                scpstr.append(file)
-            scpstr.append("%s@%s:~/" % (self.database_user, self.database_host))
-            return scpstr
+        dbid = subprocess.check_output(["docker", "images", "-q", database]).strip()
 
-        dbpath = os.path.join(self.fwroot, "toolset", "setup", "linux", "docker", "databases", database)
-        dbfiles = ""
-        for dbfile in os.listdir(dbpath):
-            dbfiles += "%s " % os.path.join(dbpath,dbfile)
-        p = subprocess.Popen(__scp_string(dbfiles.split()), stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
-        p.communicate()
-        p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
-        p.communicate("docker build -f ~/%s.dockerfile -t %s ~/" % (database, database))
-        if p.returncode != 0:
-            return None
+        if dbid == "":
+            def __scp_string(files):
+                scpstr = ["scp", "-i", self.database_identity_file]
+                for file in files:
+                    scpstr.append(file)
+                scpstr.append("%s@%s:~/" % (self.database_user, self.database_host))
+                return scpstr
+
+            dbpath = os.path.join(self.fwroot, "toolset", "setup", "linux", "docker", "databases", database)
+            dbfiles = ""
+            for dbfile in os.listdir(dbpath):
+                dbfiles += "%s " % os.path.join(dbpath,dbfile)
+            p = subprocess.Popen(__scp_string(dbfiles.split()), stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            p.communicate()
+            p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            p.communicate("docker build -f ~/%s.dockerfile -t %s ~/" % (database, database))
+            if p.returncode != 0:
+                return None
 
         p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         (out,err) = p.communicate("docker run -d --rm -p %s:%s --network=host %s" % (port,port,database))
