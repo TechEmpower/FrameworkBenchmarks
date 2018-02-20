@@ -422,11 +422,12 @@ class Benchmarker:
         dbfiles = ""
         for dbfile in os.listdir(dbpath):
             dbfiles += "%s " % os.path.join(dbpath,dbfile)
-        p = subprocess.Popen(__scp_string(dbfiles.split()),
-        stdin=subprocess.PIPE)
+        p = subprocess.Popen(__scp_string(dbfiles.split()), stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
         p.communicate()
-        p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE)
+        p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
         p.communicate("docker build -f ~/%s.dockerfile -t %s ~/" % (database, database))
+        if p.returncode != 0:
+            return None
 
         p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         (out,err) = p.communicate("docker run -d --rm -p %s:%s --network=host %s" % (port,port,database))
@@ -595,6 +596,11 @@ class Benchmarker:
                         "postgres": 5432
                     }
                     database_container_id = self.__setup_database_container(test.database.lower(), ports[test.database.lower()])
+                    if not database_container_id:
+                        out.write("ERROR: Problem building/running database container")
+                        out.flush()
+                        self.__write_intermediate_results(test.name,"ERROR: Problem starting")
+                        return sys.exit(1)
 
                 ##########################
                 # Start webapp
