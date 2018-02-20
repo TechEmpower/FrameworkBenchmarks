@@ -216,7 +216,7 @@ public final class HelloWebServer {
       return client.getDatabase(databaseName);
     }
 
-    private static final int MAX_DB_REQUEST_CONCURRENCY = 256;
+    private static final int MAX_DB_REQUEST_CONCURRENCY = 512;
     private static final int MAX_DB_QUERIES_PER_REQUEST = 20;
   }
 }
