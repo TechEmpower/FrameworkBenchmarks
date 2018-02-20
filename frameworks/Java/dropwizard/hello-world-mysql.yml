@@ -1,6 +1,5 @@
 server:
   type: simple
-  maxQueuedRequests: 8192 
   applicationContextPath: /
   connector:
     type: http
