@@ -422,7 +422,7 @@ class Benchmarker:
 
         p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         (out,err) = p.communicate("docker images  -q %s" % database)
-        dbid = 0
+        dbid = ''
         if len(out.splitlines()) > 0:
             dbid = out.splitlines()[len(out.splitlines()) - 1]
 
