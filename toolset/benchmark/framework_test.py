@@ -23,6 +23,7 @@ from threading import Event
 
 from utils import header
 from utils import gather_docker_dependencies
+from utils import find_docker_file
 
 # Cross-platform colored text
 from colorama import Fore, Back, Style
@@ -174,71 +175,6 @@ class FrameworkTest:
 
     # Setup environment variables
     logDir = os.path.join(self.fwroot, self.benchmarker.full_results_directory(), 'logs', self.name.lower())
-    # bash_functions_path= os.path.join(self.fwroot, 'toolset/setup/linux/bash_functions.sh')
-
-    # os.environ['TROOT'] = self.directory
-    # os.environ['IROOT'] = self.install_root
-    # os.environ['DBHOST'] = socket.gethostbyname(self.database_host)
-    # os.environ['LOGDIR'] = logDir
-    # os.environ['MAX_CONCURRENCY'] = str(max(self.benchmarker.concurrency_levels))
-
-    # Always ensure that IROOT exists
-    # if not os.path.exists(self.install_root):
-    #   os.mkdir(self.install_root)
-
-    # if not os.path.exists(os.path.join(self.install_root,"TFBReaper")):
-    #   subprocess.check_call(['gcc', 
-    #     '-std=c99', 
-    #     '-o%s/TFBReaper' % self.install_root, 
-    #     os.path.join(self.fwroot,'toolset/setup/linux/TFBReaper.c')],
-    #     stderr=out, stdout=out)
-
-    # Check that the client is setup
-    # if not os.path.exists(os.path.join(self.install_root, 'client.installed')):
-    #   print("\nINSTALL: Installing client software\n")    
-    #   # TODO: hax; should dynamically know where this file is
-    #   with open (self.fwroot + "/toolset/setup/linux/client.sh", "r") as myfile:
-    #     remote_script=myfile.read()
-    #     print("\nINSTALL: {!s}".format(self.benchmarker.client_ssh_string))
-    #     p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
-    #     p.communicate(remote_script)
-    #     returncode = p.returncode
-    #     if returncode != 0:
-    #       self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
-    #   print("\nINSTALL: Finished installing client software\n")
-    #   subprocess.check_call('touch client.installed', shell=True, cwd=self.install_root, executable='/bin/bash')
-
-    # Run the module start inside parent of TROOT
-    #  - we use the parent as a historical accident, a number of tests
-    # refer to their TROOT maually still
-    # previousDir = os.getcwd()
-    # os.chdir(os.path.dirname(self.troot))
-    # logging.info("Running setup module start (cwd=%s)", self.directory)
-
-    # command = 'bash -exc "source %s && source %s.sh"' % (
-    #   bash_functions_path,
-    #   os.path.join(self.troot, self.setup_file))
-
-    # debug_command = '''\
-    #   export FWROOT=%s          &&  \\
-    #   export TROOT=%s           &&  \\
-    #   export IROOT=%s           &&  \\
-    #   export DBHOST=%s          &&  \\
-    #   export LOGDIR=%s          &&  \\
-    #   export MAX_CONCURRENCY=%s && \\
-    #   cd %s && \\
-    #   %s/TFBReaper "bash -exc \\\"source %s && source %s.sh\\\"''' % (self.fwroot,
-    #     self.directory,
-    #     self.install_root,
-    #     socket.gethostbyname(self.database_host),
-    #     logDir,
-    #     max(self.benchmarker.concurrency_levels),
-    #     self.directory,
-    #     self.install_root,
-    #     bash_functions_path,
-    #     os.path.join(self.troot, self.setup_file))
-    # logging.info("To run %s manually, copy/paste this:\n%s", self.name, debug_command)
-
 
     def tee_output(prefix, line):
       # Needs to be one atomic write
@@ -249,7 +185,6 @@ class FrameworkTest:
       # Log to current terminal
       sys.stdout.write(line)
       sys.stdout.flush()
-      # logging.error("".join([prefix, line]))
 
       out.write(line)
       out.flush()
@@ -266,8 +201,11 @@ class FrameworkTest:
 
     for dependency in deps:
       docker_file = os.path.join(self.directory, dependency + ".dockerfile")
-      if not os.path.exists(docker_file):
-        docker_file = os.path.join(docker_dir, dependency + ".dockerfile")
+      if not docker_file or not os.path.exists(docker_file):
+        docker_file = find_docker_file(docker_dir, dependency + ".dockerfile")
+      if not docker_file:
+        tee_output(prefix, "Docker build failed; %s could not be found; terminating\n" % (dependency + ".dockerfile"))
+        return 1
       p = subprocess.Popen(["docker", "build", "-f", docker_file, "-t", dependency, os.path.dirname(docker_file)],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
@@ -280,18 +218,24 @@ class FrameworkTest:
               tee_output(prefix, line)
           except setup_util.EndOfStream:
             break
-      p = subprocess.Popen(["docker", "build", "-f", test_docker_file, "-t", "tfb-test-%s" % self.name, self.directory],
-          stdout=subprocess.PIPE,
-          stderr=subprocess.STDOUT)
-      nbsr = setup_util.NonBlockingStreamReader(p.stdout)
-      while (p.poll() is None):
-        for i in xrange(10):
-          try:
-            line = nbsr.readline(0.05)
-            if line:
-              tee_output(prefix, line)
-          except setup_util.EndOfStream:
-            break
+      if p.returncode != 0:
+        tee_output(prefix, "Docker build failed; terminating\n")
+        return 1
+    p = subprocess.Popen(["docker", "build", "-f", test_docker_file, "-t", "tfb-test-%s" % self.name, self.directory],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT)
+    nbsr = setup_util.NonBlockingStreamReader(p.stdout)
+    while (p.poll() is None):
+      for i in xrange(10):
+        try:
+          line = nbsr.readline(0.05)
+          if line:
+            tee_output(prefix, line)
+        except setup_util.EndOfStream:
+          break
+    if p.returncode != 0:
+      tee_output(prefix, "Docker build failed; terminating\n")
+      return 1
         
 
     ##########################
