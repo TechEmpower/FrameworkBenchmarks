@@ -13,7 +13,7 @@ env:
   matrix:
      - "TESTDIR=C/duda"
      - "TESTDIR=C/facil.io"
-    # - "TESTDIR=C/h2o"
+     - "TESTDIR=C/h2o"
      - "TESTDIR=C/libreactor"
      - "TESTDIR=C/octane"
      - "TESTDIR=C/onion"
