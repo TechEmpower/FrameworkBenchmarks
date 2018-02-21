@@ -1,7 +1,7 @@
 <?php
 //Conexión a Mysql
 return ['default' => [
-            'dsn' => 'mysql:host=localhost;dbname=hello_world',
+            'dsn' => 'mysql:host=TFB-database;dbname=hello_world',
             'username' => 'benchmarkdbuser',
             'password' => 'benchmarkdbpass',
             'params' => [

@@ -2,7 +2,6 @@
 
 fw_depends mysql php7 nginx
 
-sed -i 's|localhost|'"${DBHOST}"'|g' bench/app/config/databases.php
 sed -i "s|APP_ROOT|${TROOT}/bench/app/|g" bench/public/index.php
 sed -i "s|CORE_ROOT|${TROOT}/vendor/Kumbia/core/|g" bench/public/index.php
 sed -i "s|TEST_ROOT|${TROOT}/bench/public/|g" deploy/php
