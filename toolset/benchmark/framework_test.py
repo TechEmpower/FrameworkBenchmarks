@@ -210,7 +210,7 @@ class FrameworkTest:
       if not docker_file or not os.path.exists(docker_file):
         docker_file = __find(docker_dir, dependency + ".dockerfile")
       if not docker_file:
-        tee_output(prefix, "Docker build failed; terminating\n")
+        tee_output(prefix, "Docker build failed; %s could not be found; terminating\n" % (dependency + ".dockerfile"))
         return 1
       p = subprocess.Popen(["docker", "build", "-f", docker_file, "-t", dependency, os.path.dirname(docker_file)],
           stdout=subprocess.PIPE,
