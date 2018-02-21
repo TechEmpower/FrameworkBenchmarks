@@ -4,7 +4,7 @@ COPY ./ ./
 
 RUN ls
 
-RUN apt install -yqq cmake automake libuv1-dev libpq-dev libnuma-dev checkinstall autoconf pkg-config libtool python-sphinx libcunit1-dev nettle-dev libyaml-dev
+RUN apt install -yqq cmake automake libpq-dev libnuma-dev checkinstall autoconf pkg-config libtool python-sphinx libcunit1-dev nettle-dev libyaml-dev
 
 ### Install mustache-c
 
@@ -31,17 +31,6 @@ RUN wget https://github.com/lloyd/yajl/archive/${YAJL_ARCHIVE} && \
 
 ENV YAJL_HOME=/yajl
 ENV LD_LIBRARY_PATH=/yajl/lib:${LD_LIBRARY_PATH}
-
-### Install wslay
-
-RUN git clone https://github.com/tatsuhiro-t/wslay.git && \
-    cd wslay && \
-    autoreconf -i && \
-    automake && \
-    autoconf && \
-    ./configure && \
-    make && \
-    make install
 
 ### Install h2o
 
