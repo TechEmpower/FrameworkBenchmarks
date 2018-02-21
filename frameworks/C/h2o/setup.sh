@@ -1,11 +1,12 @@
 #!/bin/bash
 
-TROOT="/root"
-H2O_APP_HOME="/root/h2o_app"
+ls
+
+H2O_APP_HOME="/h2o_app"
 BUILD_DIR="${H2O_APP_HOME}_build"
 H2O_APP_PROFILE_PORT=54321
 H2O_APP_PROFILE_URL="http://127.0.0.1:$H2O_APP_PROFILE_PORT"
-NUM_WORKERS="$CPU_COUNT"
+NUM_WORKERS=$(nproc)
 
 # A hacky way to detect whether we are running in the physical hardware or the cloud environment.
 if [[ "$CPU_COUNT" -gt 16 ]]; then
@@ -22,9 +23,11 @@ fi
 build_h2o_app()
 {
 	cmake -DCMAKE_INSTALL_PREFIX="$H2O_APP_HOME" -DCMAKE_BUILD_TYPE=Release \
-	      -DCMAKE_PREFIX_PATH="/root/h2o;/root/mustache-c;/root/yajl" \
-	      -DCMAKE_C_FLAGS="-march=native $1" "$TROOT"
-	make -j "$CPU_COUNT"
+	      -DCMAKE_PREFIX_PATH="/h2o;/mustache-c;/yajl" \
+	      -DCMAKE_C_FLAGS="-march=native"
+	echo "after cmake"
+	make -j $NUM_WORKERS
+	echo "after make"
 }
 
 run_curl()
@@ -36,13 +39,13 @@ run_curl()
 
 run_h2o_app()
 {
-	taskset -c "$1" "$2/h2o_app" -a20 -f "$3/template/fortunes.mustache" -m "$DB_CONN" "$4" "$5" \
+	taskset -c "$1" "$2" -a20 -f "$3/template/fortunes.mustache" -m "$DB_CONN" "$4" "$5" \
 		-d "host=TFB-database dbname=hello_world user=benchmarkdbuser password=benchmarkdbpass" &
 }
 
 generate_profile_data()
 {
-	run_h2o_app 0 . "${TROOT}" -p$H2O_APP_PROFILE_PORT -t1
+	run_h2o_app 0 . "${H2O_APP_HOME}" -p$H2O_APP_PROFILE_PORT -t1
 	local -r H2O_APP_PROFILE_PID=$!
 	while ! curl ${H2O_APP_PROFILE_URL} > /dev/null 2>&1; do sleep 1; done
 	run_curl json
@@ -56,15 +59,12 @@ generate_profile_data()
 	wait $H2O_APP_PROFILE_PID
 }
 
-install -d "$BUILD_DIR"
-pushd "$BUILD_DIR"
 build_h2o_app "-fprofile-generate"
 generate_profile_data
 make clean
 rm -f CMakeCache.txt
 build_h2o_app "-fprofile-use"
 make -j "$CPU_COUNT" install
-popd
 rm -rf "$BUILD_DIR"
 echo "Maximum database connections per thread: $DB_CONN"
 
