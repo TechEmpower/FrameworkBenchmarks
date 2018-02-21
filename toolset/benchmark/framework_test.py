@@ -16,6 +16,7 @@ import logging
 import csv
 import shlex
 import math
+import fnmatch
 from collections import OrderedDict
 from requests import ConnectionError
 from threading import Thread
@@ -188,6 +189,12 @@ class FrameworkTest:
       out.write(line)
       out.flush()
 
+    def __find(path, pattern):
+      for root, dirs, files in os.walk(path):
+        for name in files:
+          if fnmatch.fnmatch(name, pattern):
+            return os.path.join(root, name)
+
     prefix = "Setup %s: " % self.name
 
     ##########################
@@ -200,8 +207,11 @@ class FrameworkTest:
 
     for dependency in deps:
       docker_file = os.path.join(self.directory, dependency + ".dockerfile")
-      if not os.path.exists(docker_file):
-        docker_file = os.path.join(docker_dir, dependency + ".dockerfile")
+      if not docker_file or not os.path.exists(docker_file):
+        docker_file = __find(docker_dir, dependency + ".dockerfile")
+      if not docker_file:
+        tee_output(prefix, "Docker build failed; terminating\n")
+        return 1
       p = subprocess.Popen(["docker", "build", "-f", docker_file, "-t", dependency, os.path.dirname(docker_file)],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
