@@ -2,7 +2,7 @@ FROM ruby-2.4:latest
 
 COPY ./ ./
 
-RUN apt install -yqq cmake automake
+RUN apt install -yqq cmake automake libuv1-dev checkinstall autoconf pkg-config libtool python-sphinx libcunit1-dev nettle-dev libyaml-dev
 
 ### Install mustache-c
 
@@ -14,19 +14,30 @@ RUN git clone https://github.com/x86-64/mustache-c.git && \
 
 ENV LD_LIBRARY_PATH=/root/mustache-c/lib:${LD_LIBRARY_PATH}
 
-### Install yaji
+### Install yajl
 
-ENV YAJI_VERSION="2.1.0"
-ENV YAJI_ARCHIVE="${YAJI_VERSION}.tar.gz"
-ENV YAJI_BUILD_DIR="yajl-${YAJI_VERSION}"
+ENV YAJL_VERSION="2.1.0"
+ENV YAJL_ARCHIVE="${YAJL_VERSION}.tar.gz"
+ENV YAJL_BUILD_DIR="yajl-${YAJL_VERSION}"
 
-RUN wget https://github.com/lloyd/yajl/archive/${YAJI_ARCHIVE} && \
-    tar xvf ${YAJI_ARCHIVE} && \
-    cd ${YAJI_BUILD_DIR} && \
+RUN wget https://github.com/lloyd/yajl/archive/${YAJL_ARCHIVE} && \
+    tar xvf ${YAJL_ARCHIVE} && \
+    cd ${YAJL_BUILD_DIR} && \
     ./configure -p /root/yajl && \
     make -j "$(nproc)" install
 
 ENV LD_LIBRARY_PATH=/root/yajl/lib:${LD_LIBRARY_PATH}
+
+### Install wslay
+
+RUN git clone https://github.com/tatsuhiro-t/wslay.git && \
+    cd wslay && \
+    autoreconf -i && \
+    automake && \
+    autoconf && \
+    ./configure && \
+    make && \
+    make install
 
 ### Install h2o
 

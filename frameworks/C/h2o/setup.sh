@@ -1,9 +1,7 @@
 #!/bin/bash
 
-fw_depends postgresql h2o mustache-c yajl
-
-TROOT="/"
-H2O_APP_HOME="h2o_app"
+TROOT="/root"
+H2O_APP_HOME="/root/h2o_app"
 BUILD_DIR="${H2O_APP_HOME}_build"
 H2O_APP_PROFILE_PORT=54321
 H2O_APP_PROFILE_URL="http://127.0.0.1:$H2O_APP_PROFILE_PORT"
@@ -24,7 +22,7 @@ fi
 build_h2o_app()
 {
 	cmake -DCMAKE_INSTALL_PREFIX="$H2O_APP_HOME" -DCMAKE_BUILD_TYPE=Release \
-	      -DCMAKE_PREFIX_PATH="${H2O_HOME};${MUSTACHE_C_HOME};${YAJL_HOME}" \
+	      -DCMAKE_PREFIX_PATH="/root/h2o;/root/mustache-c;/root/yajl" \
 	      -DCMAKE_C_FLAGS="-march=native $1" "$TROOT"
 	make -j "$CPU_COUNT"
 }
