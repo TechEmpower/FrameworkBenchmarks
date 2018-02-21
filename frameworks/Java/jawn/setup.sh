@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends postgresql java
+fw_depends postgresql java8
 
 ./gradlew clean
 

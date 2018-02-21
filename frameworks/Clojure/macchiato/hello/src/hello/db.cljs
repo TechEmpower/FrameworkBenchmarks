@@ -51,13 +51,6 @@
       (.then handler)
       (.catch error-handler)))
 
-(defn update-world! [world handler error-handler]
-  (-> @worlds
-      (.update (clj->js {:randomnumber (:randomnumber world)})
-               (clj->js {:where {:id (:id world)} :raw true}))
-      (.then #(when handler (handler (js->clj world))))
-      (.catch error-handler)))
-
 (defn get-query-count
   "Parse provided string value of query count, clamping values to between 1 and 500."
   [queries]
@@ -91,13 +84,6 @@
           (conj result {:id 0 :message "Additional fortune added at request time."}))))
     error-handler))
 
-(defn set-random-number!
-  "set a new randomNumber, persist, and return the record"
-  [error-handler world]
-  (let [w (assoc world :randomnumber (unchecked-inc (rand-int 9999)))]
-    (update-world! w nil error-handler)
-    w))
-
 (defn update-and-persist
   "Changes the :randomnumber of a number of world entities.
   Persists the changes to sql then returns the updated entities"
@@ -105,6 +91,16 @@
   (run-queries
     queries
     (fn [results]
-      (handler (clj->js (mapv (partial set-random-number! error-handler) (js->clj results)))))
+      (-> (js/Promise.all
+            (map
+              (fn [world]
+                (let [id (:id world) randomnumber (unchecked-inc (rand-int 10000))]
+                  (-> @worlds
+                      (.update (clj->js {:randomnumber randomnumber})
+                               (clj->js {:where {:id id} :raw true}))
+                      (.then (fn [result] (clj->js { :id id :randomnumber randomnumber })))
+                      (.catch error-handler))))
+              (js->clj results :keywordize-keys true)))
+          (.then handler)
+          (.catch error-handler)))
     error-handler))
-

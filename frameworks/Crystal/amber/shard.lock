@@ -2,7 +2,7 @@ version: 1.0
 shards:
   amber:
     github: amberframework/amber
-    version: 0.6.5
+    version: 0.6.7
 
   callback:
     github: mosop/callback

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends java leiningen
+fw_depends java8 leiningen
 
 cd hello
 lein clean

@@ -15,7 +15,7 @@
 class TeBkWorld {
 	#pragma @Id dbf="id"
 	int id;
-	#pragma @Column dbf="randomNumber"
+	#pragma @Column dbf="randomnumber"
 	int randomNumber;
 public:
 	virtual ~TeBkWorld();

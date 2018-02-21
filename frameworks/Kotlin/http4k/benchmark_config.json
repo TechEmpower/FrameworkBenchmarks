@@ -24,9 +24,7 @@
         "display_name": "http4k-jetty",
         "notes": "",
         "versus": "servlet"
-      }
-    },
-    {
+      },
       "undertow": {
         "setup_file": "setup_undertow",
         "orm": "Raw",

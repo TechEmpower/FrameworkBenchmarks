@@ -15,7 +15,7 @@ const Worlds = sequelize.define('world', {
     type: 'Sequelize.INTEGER',
     primaryKey: true
   },
-  randomnumber: { type: 'Sequelize.INTEGER' }
+  randomNumber: { type: 'Sequelize.INTEGER', field: 'randomnumber' }
 }, {
   timestamps: false,
   freezeTableName: true

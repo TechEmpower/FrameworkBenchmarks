@@ -6,11 +6,10 @@ For further guidance, review the
 
 ## Infrastructre Software Versions
 
-### PHP Version
+### PHP Versions
 
-[Currently this toolset runs PHP 5.5.17](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/php.sh). At the moment all PHP-based frameworks use the 
-same PHP version, but we are open to receiving a pull request
-that enables supporting multiple versions. 
+[PHP 7.2.2](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/php/php7.sh),
+[PHP 5.6.33](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/php/php5.sh) and [HHVM 3.21](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/hhvm.sh).
 
 ## Adding New PHP-based Frameworks
 
