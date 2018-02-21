@@ -409,11 +409,18 @@ class Benchmarker:
     ############################################################
 
     ############################################################
+    # Sets up a container for the given database and port, and
+    # starts said docker container.
     ############################################################
     def __setup_database_container(self, database, port):
-        dbid = subprocess.check_output(["docker", "images", "-q", database]).strip()
+        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        (out,err) = p.communicate("docker images  -q %s" % database)
+        dbid = out.splitlines()[len(out.splitlines()) - 1]
 
-        if dbid == "":
+        # TODO: this feels a bit jank, but we get something like
+        # fe12ca519b47 if it exists and something from the MOTD
+        # otherwise.
+        if len(dbid) != 12:
             def __scp_string(files):
                 scpstr = ["scp", "-i", self.database_identity_file]
                 for file in files:
@@ -436,6 +443,7 @@ class Benchmarker:
         (out,err) = p.communicate("docker run -d --rm -p %s:%s --network=host %s" % (port,port,database))
         return out.splitlines()[len(out.splitlines()) - 1]
     ############################################################
+    # End __setup_database_container
     ############################################################
 
     ############################################################
