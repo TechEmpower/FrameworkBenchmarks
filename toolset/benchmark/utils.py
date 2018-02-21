@@ -3,8 +3,15 @@ import os
 import glob
 import json
 import socket
+import fnmatch
 
 from ast import literal_eval
+
+def find_docker_file(path, pattern):
+    for root, dirs, files in os.walk(path):
+        for name in files:
+            if fnmatch.fnmatch(name, pattern):
+                return os.path.join(root, name)
 
 def gather_docker_dependencies(docker_file):
     '''
@@ -13,6 +20,8 @@ def gather_docker_dependencies(docker_file):
     # Avoid setting up a circular import
     from setup.linux import setup_util
     deps = []
+
+    docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup", "linux", "docker")
 
     if os.path.exists(docker_file):
         with open(docker_file) as fp:
@@ -26,8 +35,9 @@ def gather_docker_dependencies(docker_file):
                         deps.append(depTokens[0])
                         dep_docker_file = os.path.join(os.path.dirname(docker_file), depTokens[0] + ".dockerfile")
                         if not os.path.exists(dep_docker_file):
-                            dep_docker_file = os.path.join(setup_util.get_fwroot(),
-                                "toolset", "setup", "linux", "docker", depTokens[0] + ".dockerfile")
+                            # dep_docker_file = os.path.join(setup_util.get_fwroot(),
+                            #     "toolset", "setup", "linux", "docker", depTokens[0] + ".dockerfile")
+                            dep_docker_file = find_docker_file(docker_dir, depTokens[0] + ".dockerfile")
                         deps.extend(gather_docker_dependencies(dep_docker_file))
 
     return deps

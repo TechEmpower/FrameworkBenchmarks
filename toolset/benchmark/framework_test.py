@@ -16,7 +16,6 @@ import logging
 import csv
 import shlex
 import math
-import fnmatch
 from collections import OrderedDict
 from requests import ConnectionError
 from threading import Thread
@@ -24,6 +23,7 @@ from threading import Event
 
 from utils import header
 from utils import gather_docker_dependencies
+from utils import find_docker_file
 
 # Cross-platform colored text
 from colorama import Fore, Back, Style
@@ -189,12 +189,6 @@ class FrameworkTest:
       out.write(line)
       out.flush()
 
-    def __find(path, pattern):
-      for root, dirs, files in os.walk(path):
-        for name in files:
-          if fnmatch.fnmatch(name, pattern):
-            return os.path.join(root, name)
-
     prefix = "Setup %s: " % self.name
 
     ##########################
@@ -208,7 +202,7 @@ class FrameworkTest:
     for dependency in deps:
       docker_file = os.path.join(self.directory, dependency + ".dockerfile")
       if not docker_file or not os.path.exists(docker_file):
-        docker_file = __find(docker_dir, dependency + ".dockerfile")
+        docker_file = find_docker_file(docker_dir, dependency + ".dockerfile")
       if not docker_file:
         tee_output(prefix, "Docker build failed; %s could not be found; terminating\n" % (dependency + ".dockerfile"))
         return 1
