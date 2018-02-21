@@ -23,6 +23,7 @@ from threading import Event
 
 from utils import header
 from utils import gather_docker_dependencies
+from utils import find_docker_file
 
 # Cross-platform colored text
 from colorama import Fore, Back, Style
@@ -200,8 +201,11 @@ class FrameworkTest:
 
     for dependency in deps:
       docker_file = os.path.join(self.directory, dependency + ".dockerfile")
-      if not os.path.exists(docker_file):
-        docker_file = os.path.join(docker_dir, dependency + ".dockerfile")
+      if not docker_file or not os.path.exists(docker_file):
+        docker_file = find_docker_file(docker_dir, dependency + ".dockerfile")
+      if not docker_file:
+        tee_output(prefix, "Docker build failed; %s could not be found; terminating\n" % (dependency + ".dockerfile"))
+        return 1
       p = subprocess.Popen(["docker", "build", "-f", docker_file, "-t", dependency, os.path.dirname(docker_file)],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
