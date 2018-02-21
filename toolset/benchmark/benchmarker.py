@@ -413,14 +413,20 @@ class Benchmarker:
     # starts said docker container.
     ############################################################
     def __setup_database_container(self, database, port):
+        def __is_hex(s):
+            try:
+                int(s, 16)
+            except ValueError:
+                return False
+            return len(s) % 2 == 0
+
         p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         (out,err) = p.communicate("docker images  -q %s" % database)
         dbid = out.splitlines()[len(out.splitlines()) - 1]
 
-        # TODO: this feels a bit jank, but we get something like
-        # fe12ca519b47 if it exists and something from the MOTD
-        # otherwise.
-        if len(dbid) != 12:
+        # If the database image exists, then dbid will look like
+        # fe12ca519b47, and we do not want to rebuild if it exists
+        if len(dbid) != 12 and not __is_hex(dbid):
             def __scp_string(files):
                 scpstr = ["scp", "-i", self.database_identity_file]
                 for file in files:
