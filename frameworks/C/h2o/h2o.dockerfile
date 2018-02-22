@@ -1,4 +1,4 @@
-tfb/ruby-2.4:latest
+FROM tfb/ruby-2.4:latest
 
 COPY ./ ./
 
