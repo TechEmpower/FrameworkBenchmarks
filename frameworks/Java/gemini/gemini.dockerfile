@@ -1,4 +1,4 @@
-FROM ant:latest as tfb/ant
+FROM ant:latest as tfbant
 
 ADD Docroot/ /gemini/Docroot
 ADD Source/ /gemini/Source
@@ -12,6 +12,6 @@ RUN cd /gemini; mkdir -p Docroot/WEB-INF/classes; mkdir -p Docroot/WEB-INF/lib; 
 
 FROM resin:latest
 
-COPY --from=tfb/ant /gemini /gemini
+COPY --from=tfbant /gemini /gemini
 
 CMD ["resinctl", "-conf", "/gemini/Docroot/WEB-INF/resin.xml", "console"]
