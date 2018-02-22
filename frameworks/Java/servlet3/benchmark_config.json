@@ -12,11 +12,30 @@
       "framework": "None",
       "language": "Java",
       "orm": "Raw",
-      "platform": "Servlet 3.1",
-      "webserver": "Resin",
+      "platform": "Servlet",
+      "webserver": "Tomcat",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "servlet3",
+      "notes": "Servlet 3.1 Async I/O",
+      "versus": "servlet"
+    },
+    "sync": {
+      "setup_file": "setup-sync.sh",
+      "json_url": "/servlet3/json",
+      "plaintext_url": "/servlet3/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification" : "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "Tomcat",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "servlet"
       "notes": "",
       "versus": "servlet"
     }
