@@ -16,6 +16,7 @@ import logging
 import csv
 import shlex
 import math
+import multiprocessing
 from collections import OrderedDict
 from requests import ConnectionError
 from threading import Thread
@@ -206,7 +207,18 @@ class FrameworkTest:
       if not docker_file:
         tee_output(prefix, "Docker build failed; %s could not be found; terminating\n" % (dependency + ".dockerfile"))
         return 1
-      p = subprocess.Popen(["docker", "build", "-f", docker_file, "-t", dependency, os.path.dirname(docker_file)],
+      p = subprocess.Popen([
+        "docker", 
+        "build", 
+        "--build-arg",
+        "CPU_COUNT=%s" % str(multiprocessing.cpu_count()),
+        "--build-arg",
+        "MAX_CONCURRENCY=%s" % max(self.benchmarker.concurrency_levels),
+        "-f", 
+        docker_file, 
+        "-t", 
+        dependency, 
+        os.path.dirname(docker_file)],
           stdout=subprocess.PIPE,
           stderr=subprocess.STDOUT)
       nbsr = setup_util.NonBlockingStreamReader(p.stdout)
@@ -221,7 +233,18 @@ class FrameworkTest:
       if p.returncode != 0:
         tee_output(prefix, "Docker build failed; terminating\n")
         return 1
-    p = subprocess.Popen(["docker", "build", "-f", test_docker_file, "-t", "tfb-test-%s" % self.name, self.directory],
+    p = subprocess.Popen([
+      "docker", 
+      "build", 
+      "--build-arg",
+      "CPU_COUNT=%s" % str(multiprocessing.cpu_count()),
+      "--build-arg",
+      "MAX_CONCURRENCY=%s" % max(self.benchmarker.concurrency_levels),
+      "-f", 
+      test_docker_file, 
+      "-t", 
+      "tfb-test-%s" % self.name, 
+      self.directory],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT)
     nbsr = setup_util.NonBlockingStreamReader(p.stdout)
