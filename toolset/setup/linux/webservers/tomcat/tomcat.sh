@@ -4,7 +4,7 @@ fw_depends java openssl apache-apr
 
 fw_installed tomcat && return 0
 
-TOMCAT_VERSION=9.0.4
+TOMCAT_VERSION=9.0.5
 TEMP_DIRECTORY="$(mktemp -d)"
 
 # Ask Apache about the preferred mirror for our connection using JSON response. Source: https://stackoverflow.com/a/39670213

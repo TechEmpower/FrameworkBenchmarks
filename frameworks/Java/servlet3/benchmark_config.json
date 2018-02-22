@@ -21,7 +21,7 @@
       "versus": "servlet"
     },
     "sync": {
-      "setup_file": "setup-sync.sh",
+      "setup_file": "setup-sync",
       "json_url": "/servlet3/json",
       "plaintext_url": "/servlet3/plaintext",
       "port": 8080,
@@ -35,7 +35,7 @@
       "webserver": "Tomcat",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "servlet"
+      "display_name": "servlet3",
       "notes": "",
       "versus": "servlet"
     }
