@@ -1,4 +1,4 @@
-package fi.markoa.tfb.servlet3;
+package com.gitlab.zloster.tfb.servlet3;
 
 public class HelloMessage {
   private String message = "Hello, World!";

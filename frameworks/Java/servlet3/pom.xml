@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>fi.markoa.tfb.servlet3</groupId>
+	<groupId>com.gitlab.zloster.tfb.servlet3</groupId>
 	<artifactId>servlet3</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
@@ -13,6 +13,24 @@
 		<slf4j.version>1.7.10</slf4j.version>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>sync</id>
+			<properties>
+				<exludeSources>**/async/*.java</exludeSources>
+			</properties>
+		</profile>
+		<profile>
+			<id>async</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<exludeSources>**/sync/*.java</exludeSources>
+			</properties>
+		</profile>
+	</profiles>
+
 	<build>
 		<finalName>servlet3</finalName>
 
@@ -21,12 +39,15 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
+				<version>3.7.0</version>
 				<configuration>
-					<source>${java-version}</source>
-					<target>${java-version}</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 					<optimize>true</optimize>
 					<debug>false</debug>
+					<excludes>
+						<exclude>${exludeSources}</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 
@@ -49,7 +70,6 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
-			<!--Resin can't find javax.servlet.WriteListener <scope>provided</scope> -->
 		</dependency>
 
 		<dependency>
