@@ -612,7 +612,8 @@ class Benchmarker:
                     # TODO: this is horrible... how should we really do it?
                     ports = {
                         "mysql": 3306,
-                        "postgres": 5432
+                        "postgres": 5432,
+                        "mongodb": 27017
                     }
                     database_container_id = self.__setup_database_container(test.database.lower(), ports[test.database.lower()])
                     if not database_container_id:

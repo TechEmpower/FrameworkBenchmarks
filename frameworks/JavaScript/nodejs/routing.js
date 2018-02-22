@@ -1,12 +1,8 @@
 // Intialized database connections, one for each db config
 // * Mongoose is a popular Node/MongoDB driver
 // * Sequelize is a popular Node/SQL driver
-const MongodbRawHandler = require('./handlers/mongodb-raw');
-const MySQLRawHandler = require('./handlers/mysql-raw');
-const MongooseHandler = require('./handlers/mongoose');
-const SequelizeHandler = require('./handlers/sequelize');
-const SequelizePgHandler = require('./handlers/sequelize-postgres');
 
+const Handler = require(`./handlers/${process.env.NODE_HANDLER}`);
 const h = require('./helper');
 
 module.exports.BasicHandler = ((() => {
@@ -15,21 +11,8 @@ module.exports.BasicHandler = ((() => {
   self.routes = {
     '/json':               h.responses.jsonSerialization,
     '/plaintext':          h.responses.plaintext,
-
-    '/mongoose/db':        MongooseHandler.SingleQuery,
-    '/mongoose/fortunes':  MongooseHandler.Fortunes,
-
-    '/mongodb/db':         MongodbRawHandler.SingleQuery,
-    '/mongodb/fortunes':   MongodbRawHandler.Fortunes,
-
-    '/sequelize/db':       SequelizeHandler.SingleQuery,
-    '/sequelize/fortunes': SequelizeHandler.Fortunes,
-
-    '/mysql/db':           MySQLRawHandler.SingleQuery,
-    '/mysql/fortunes':     MySQLRawHandler.Fortunes,
-
-    '/sequelize-pg/db':       SequelizePgHandler.SingleQuery,
-    '/sequelize-pg/fortunes': SequelizePgHandler.Fortunes
+    '/db':        Handler.SingleQuery,
+    '/fortunes':  Handler.Fortunes,
   };
 
   self.has = (path) => self.routes[path];
@@ -43,21 +26,9 @@ module.exports.QueryHandler = ((() => {
   const self = {};
 
   self.routes = {
-    '/mongoose/queries':  MongooseHandler.MultipleQueries,
-    '/mongoose/updates':  MongooseHandler.Updates,
-
-    '/mongodb/queries':   MongodbRawHandler.MultipleQueries,
-    '/mongodb/updates':   MongodbRawHandler.Updates,
-
-    '/sequelize/queries': SequelizeHandler.MultipleQueries,
-    '/sequelize/updates': SequelizeHandler.Updates,
-
-    '/mysql/queries':     MySQLRawHandler.MultipleQueries,
-    '/mysql/updates':     MySQLRawHandler.Updates,
-    '/mysql/cached' :     MySQLRawHandler.CachedQueries,
-
-    '/sequelize-pg/queries': SequelizePgHandler.MultipleQueries,
-    '/sequelize-pg/updates': SequelizePgHandler.Updates
+    '/queries':     Handler.MultipleQueries,
+    '/updates':     Handler.Updates,
+    '/cached' :     Handler.CachedQueries,
   };
 
   self.has = (path) => self.routes[path];
