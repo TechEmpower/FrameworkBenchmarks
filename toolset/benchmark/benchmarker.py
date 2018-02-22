@@ -409,30 +409,49 @@ class Benchmarker:
     ############################################################
 
     ############################################################
+    # Sets up a container for the given database and port, and
+    # starts said docker container.
     ############################################################
     def __setup_database_container(self, database, port):
-        def __scp_string(files):
-            scpstr = ["scp", "-i", self.database_identity_file]
-            for file in files:
-                scpstr.append(file)
-            scpstr.append("%s@%s:~/" % (self.database_user, self.database_host))
-            return scpstr
+        def __is_hex(s):
+            try:
+                int(s, 16)
+            except ValueError:
+                return False
+            return len(s) % 2 == 0
 
-        dbpath = os.path.join(self.fwroot, "toolset", "setup", "linux", "docker", "databases", database)
-        dbfiles = ""
-        for dbfile in os.listdir(dbpath):
-            dbfiles += "%s " % os.path.join(dbpath,dbfile)
-        p = subprocess.Popen(__scp_string(dbfiles.split()), stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
-        p.communicate()
-        p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
-        p.communicate("docker build -f ~/%s.dockerfile -t %s ~/" % (database, database))
-        if p.returncode != 0:
-            return None
+        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        (out,err) = p.communicate("docker images  -q %s" % database)
+        dbid = ''
+        if len(out.splitlines()) > 0:
+            dbid = out.splitlines()[len(out.splitlines()) - 1]
+
+        # If the database image exists, then dbid will look like
+        # fe12ca519b47, and we do not want to rebuild if it exists
+        if len(dbid) != 12 and not __is_hex(dbid):
+            def __scp_string(files):
+                scpstr = ["scp", "-i", self.database_identity_file]
+                for file in files:
+                    scpstr.append(file)
+                scpstr.append("%s@%s:~/" % (self.database_user, self.database_host))
+                return scpstr
+
+            dbpath = os.path.join(self.fwroot, "toolset", "setup", "linux", "docker", "databases", database)
+            dbfiles = ""
+            for dbfile in os.listdir(dbpath):
+                dbfiles += "%s " % os.path.join(dbpath,dbfile)
+            p = subprocess.Popen(__scp_string(dbfiles.split()), stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            p.communicate()
+            p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            p.communicate("docker build -f ~/%s.dockerfile -t %s ~/" % (database, database))
+            if p.returncode != 0:
+                return None
 
         p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         (out,err) = p.communicate("docker run -d --rm -p %s:%s --network=host %s" % (port,port,database))
         return out.splitlines()[len(out.splitlines()) - 1]
     ############################################################
+    # End __setup_database_container
     ############################################################
 
     ############################################################
@@ -593,7 +612,8 @@ class Benchmarker:
                     # TODO: this is horrible... how should we really do it?
                     ports = {
                         "mysql": 3306,
-                        "postgres": 5432
+                        "postgres": 5432,
+                        "mongodb": 27017
                     }
                     database_container_id = self.__setup_database_container(test.database.lower(), ports[test.database.lower()])
                     if not database_container_id:

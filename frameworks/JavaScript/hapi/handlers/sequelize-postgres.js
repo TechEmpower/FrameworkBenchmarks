@@ -21,7 +21,7 @@ const Worlds = sequelize.define('World', {
   freezeTableName: true
 });
 
-const Fortunes = sequelize.define('Fortune', {
+const Fortunes = sequelize.define('fortune', {
   id: {
     type: 'Sequelize.INTEGER',
     primaryKey: true
