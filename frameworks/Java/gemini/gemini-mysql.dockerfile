@@ -1,4 +1,4 @@
-FROM ant:latest
+FROM ant:latest as ant
 
 RUN apt-get install -qqy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     ant
