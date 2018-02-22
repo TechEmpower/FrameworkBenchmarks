@@ -1,4 +1,4 @@
-FROM java:latest
+FROM tfb/java:latest
 
 ENV NODE_ENV=production
 

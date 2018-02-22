@@ -742,7 +742,7 @@ class Benchmarker:
                         docker_id = subprocess.check_output(["docker", "ps", "-q"]).strip()
                     # We still need to sleep a bit before removing the image
                     time.sleep(5)
-                    subprocess.check_output(["docker", "image", "rm", "tfb-test-%s" % test.name])
+                    subprocess.check_output(["docker", "image", "rm", "tfb/test/%s" % test.name])
     ############################################################
     # End __stop_test
     ############################################################

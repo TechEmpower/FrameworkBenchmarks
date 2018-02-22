@@ -1,4 +1,4 @@
-FROM java:latest
+FROM tfb/java:latest
 
 RUN add-apt-repository -y ppa:openjdk-r/ppa
 RUN apt-get update

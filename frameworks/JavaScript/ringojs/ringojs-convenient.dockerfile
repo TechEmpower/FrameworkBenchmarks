@@ -1,4 +1,4 @@
-FROM ringo-base:latest
+FROM tfb/ringo-base:latest
 
 RUN ringo-admin install grob/ringo-sqlstore && \
     ringo-admin install ringo/stick && \

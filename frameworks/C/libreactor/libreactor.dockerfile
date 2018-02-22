@@ -1,4 +1,4 @@
-FROM gcc-6:latest
+FROM tfb/gcc-6:latest
 
 COPY ./ ./
 

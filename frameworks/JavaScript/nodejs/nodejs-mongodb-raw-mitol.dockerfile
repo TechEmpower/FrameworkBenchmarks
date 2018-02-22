@@ -1,4 +1,4 @@
-FROM mitol:latest
+FROM tfb/mitol:latest
 
 ENV NODE_HANDLER mongoose
 
