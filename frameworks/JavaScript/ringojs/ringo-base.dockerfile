@@ -1,5 +1,7 @@
 FROM java:latest
 
+COPY ./ ./
+
 ENV RINGOJS_VERSION="1.1.0"
 ENV RINGOJS_HOME=/ringojs-$RINGOJS_VERSION
 
