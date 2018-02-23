@@ -1,5 +1,5 @@
-FROM tfb/dart:latest
+FROM tfb/dart-lang:latest
 
 COPY ./ ./
 
-CMD ["./setup.sh"]
+CMD ["./start-server.sh"]

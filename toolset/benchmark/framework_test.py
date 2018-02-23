@@ -17,6 +17,7 @@ import csv
 import shlex
 import math
 import multiprocessing
+import docker
 from collections import OrderedDict
 from requests import ConnectionError
 from threading import Thread
@@ -198,6 +199,14 @@ class FrameworkTest:
 
     # Build the test docker file based on the test name
     # then build any additional docker files specified in the benchmark_config
+    # Note - If you want to be able to stream the output of the build process you have
+    # to use the low level API:
+    #  https://docker-py.readthedocs.io/en/stable/api.html#module-docker.api.build
+
+    client = docker.APIClient(base_url='unix://var/run/docker.sock')
+
+    docker_buildargs = { 'CPU_COUNT': str(multiprocessing.cpu_count()),
+                         'MAX_CONCURRENCY': str(max(self.benchmarker.concurrency_levels)) }
 
     test_docker_files = ["%s.dockerfile" % self.name]
     if self.docker_files is not None:
@@ -221,59 +230,40 @@ class FrameworkTest:
           if not docker_file:
             tee_output(prefix, "Docker build failed; %s could not be found; terminating\n" % (dependency + ".dockerfile"))
             return 1
-          p = subprocess.Popen([
-            "docker",
-            "build",
-            "--build-arg",
-            "CPU_COUNT=%s" % str(multiprocessing.cpu_count()),
-            "--build-arg",
-            "MAX_CONCURRENCY=%s" % max(self.benchmarker.concurrency_levels),
-            "-f",
-            docker_file,
-            "-t",
-            "tfb/%s" % dependency,
-            os.path.dirname(docker_file)],
-              stdout=subprocess.PIPE,
-              stderr=subprocess.STDOUT)
-          nbsr = setup_util.NonBlockingStreamReader(p.stdout)
-          while (p.poll() is None):
-            for i in xrange(10):
-              try:
-                line = nbsr.readline(0.05)
-                if line:
-                  tee_output(prefix, line)
-              except setup_util.EndOfStream:
-                break
-          if p.returncode != 0:
-            tee_output(prefix, "Docker build failed; terminating\n")
+
+          # Build the dependency image
+          try:
+            for line in client.build(
+              path=os.path.dirname(docker_file),
+              dockerfile="%s.dockerfile" % dependency,
+              tag="tfb/%s" % dependency,
+              buildargs=docker_buildargs,
+              forcerm=True
+            ):
+              if 'stream' in line:
+                line = json.loads(line)
+                tee_output(prefix, line[line.keys()[0]])
+          except Exception as e:
+            tee_output(prefix, "Docker dependency build failed; terminating\n")
+            print(e)
             return 1
 
-        p = subprocess.Popen([
-          "docker",
-          "build",
-          "--build-arg",
-          "CPU_COUNT=%s" % str(multiprocessing.cpu_count()),
-          "--build-arg",
-          "MAX_CONCURRENCY=%s" % max(self.benchmarker.concurrency_levels),
-          "-f",
-          test_docker_file_path,
-          "-t",
-          "tfb/test/%s" % test_docker_file_name,
-          self.directory],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT)
-        nbsr = setup_util.NonBlockingStreamReader(p.stdout)
-        while (p.poll() is None):
-          for i in xrange(10):
-            try:
-              line = nbsr.readline(0.05)
-              if line:
-                tee_output(prefix, line)
-            except setup_util.EndOfStream:
-              break
-        if p.returncode != 0:
-          tee_output(prefix, "Docker build failed; terminating\n")
-          return 1
+    # Build the test image
+    try:
+      for line in client.build(
+        path=self.directory,
+        dockerfile="%s.dockerfile" % test_docker_file_name,
+        tag="tfb/test/%s" % test_docker_file_name,
+        buildargs=docker_buildargs,
+        forcerm=True
+      ):
+        if 'stream' in line:
+          line = json.loads(line)
+          tee_output(prefix, line[line.keys()[0]])
+    except Exception as e:
+      tee_output(prefix, "Docker build failed; terminating\n")
+      print(e)
+      return 1
 
 
     ##########################
