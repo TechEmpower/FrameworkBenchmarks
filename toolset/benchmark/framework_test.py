@@ -196,21 +196,15 @@ class FrameworkTest:
     # Build the Docker images
     ##########################
 
-    # Grab a list of all the docker files we need with
-    # the following priority:
-    # 1) An array of files in docker_files
-    # 2) A single file in docker_files
-    # 3) If none of the above, default to <test name>.dockerfile
+    # Build the test docker file based on the test name
+    # then build any additional docker files specified in the benchmark_config
 
-    test_docker_files = []
-    if self.docker_file is not None:
-      if type(self.docker_file) is list:
-        print "HERE WE ARE"
-        test_docker_files = self.docker_file
+    test_docker_files = ["%s.dockerfile" % self.name]
+    if self.docker_files is not None:
+      if type(self.docker_files) is list:
+        test_docker_files.extend(self.docker_files)
       else:
-        test_docker_files.append(self.docker_file)
-    if len(test_docker_files) == 0:
-      test_docker_files = ["%s.dockerfile" % self.name]
+        raise Exception("docker_files in benchmark_config.json must be an array")
 
     for test_docker_file in test_docker_files:
         test_docker_file_name = test_docker_file.replace(".dockerfile", "")
@@ -876,7 +870,7 @@ class FrameworkTest:
     self.display_name = ""
     self.notes = ""
     self.versus = ""
-    self.docker_file = None
+    self.docker_files = None
 
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
