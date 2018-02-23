@@ -1,5 +1,5 @@
-FROM tfb/dart-nginx:latest
+FROM tfb/dart:latest
 
 COPY ./ ./
 
-CMD ./setup.sh
+CMD ["./setup.sh"]
