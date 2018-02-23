@@ -1,4 +1,4 @@
-FROM dart-nginx:latest
+FROM tfb/dart-nginx:latest
 
 COPY ./ ./
 

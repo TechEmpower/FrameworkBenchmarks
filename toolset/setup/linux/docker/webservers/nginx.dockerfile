@@ -1,4 +1,4 @@
-FROM tfb:latest
+FROM tfb/base:latest
 
 RUN apt install -yqq libpcre3 libpcre3-dev zlib1g-dev
 
