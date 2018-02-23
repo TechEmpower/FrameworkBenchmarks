@@ -283,7 +283,7 @@ class FrameworkTest:
     for test_docker_file in test_docker_files:
         test_docker_file_name = test_docker_file.replace(".dockerfile", "")
         test_docker_file_path = os.path.join(self.directory, "%s.dockerfile" % self.name)
-        p = subprocess.Popen(["docker", "run", "--rm", "-p", "%s:%s" % (self.port, self.port), "--network=host", "tfb/test/%s" % test_docker_file_name],
+        p = subprocess.Popen(["docker", "run", "--rm", "--network=host", "tfb/test/%s" % test_docker_file_name],
               stdout=subprocess.PIPE,
               stderr=subprocess.STDOUT)
         nbsr = setup_util.NonBlockingStreamReader(p.stdout,
