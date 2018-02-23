@@ -242,7 +242,7 @@ class FrameworkTest:
             ):
               if 'stream' in line:
                 line = json.loads(line)
-                tee_output(prefix, line[line.keys()[0]])
+                tee_output(prefix, line[line.keys()[0].encode('utf-8')].encode('utf-8'))
           except Exception as e:
             tee_output(prefix, "Docker dependency build failed; terminating\n")
             print(e)
@@ -270,96 +270,24 @@ class FrameworkTest:
     # Run the Docker container
     ##########################
 
+    client = docker.from_env()
+
     for test_docker_file in test_docker_files:
         test_docker_file_name = test_docker_file.replace(".dockerfile", "")
         test_docker_file_path = os.path.join(self.directory, "%s.dockerfile" % self.name)
-        p = subprocess.Popen(["docker", "run", "--rm", "--network=host", "tfb/test/%s" % test_docker_file_name],
-              stdout=subprocess.PIPE,
-              stderr=subprocess.STDOUT)
-        nbsr = setup_util.NonBlockingStreamReader(p.stdout,
-          "%s: framework processes have terminated" % self.name)
 
-        # Set a limit on total execution time of setup.sh
-        timeout = datetime.now() + timedelta(minutes = 105)
-        time_remaining = timeout - datetime.now()
-
-        # Need to print to stdout once every 10 minutes or Travis-CI will abort
-        travis_timeout = datetime.now() + timedelta(minutes = 5)
-
-        # Flush output until docker run work is finished. This is
-        # either a) when docker run exits b) when the port is bound
-        # c) when we run out of time.
-        prefix = "Server %s: " % self.name
-        while (p.poll() is None
-          and not self.benchmarker.is_port_bound(self.port)
-          and not time_remaining.total_seconds() < 0):
-
-          # The conditions above are slow to check, so
-          # we will delay output substantially if we only
-          # print one line per condition check.
-          # Adding a tight loop here mitigates the effect,
-          # ensuring that most of the output directly from
-          # docker is sent to tee_output before the outer
-          # loop exits and prints things like "docker exited"
-          for i in xrange(10):
-            try:
-              line = nbsr.readline(0.05)
-              if line:
-                tee_output(prefix, line)
-
-                # Reset Travis-CI timer
-                travis_timeout = datetime.now() + timedelta(minutes = 5)
-            except setup_util.EndOfStream:
-              tee_output(prefix, "Docker has terminated\n")
-              break
-          time_remaining = timeout - datetime.now()
-
-          if (travis_timeout - datetime.now()).total_seconds() < 0:
-            sys.stdout.write(prefix + 'Printing so Travis-CI does not time out\n')
-            sys.stdout.write(prefix + "Status: Poll: %s, Port %s bound: %s, Time Left: %s\n" % (
-              p.poll(), self.port, self.benchmarker.is_port_bound(self.port), time_remaining))
-            sys.stdout.flush()
-            travis_timeout = datetime.now() + timedelta(minutes = 5)
-
-        # Did we time out?
-        if time_remaining.total_seconds() < 0:
-          tee_output(prefix, "Docker run has timed out!! Aborting...\n" % self.setup_file)
-          p.kill()
+        try:
+          container = client.containers.run(
+            "tfb/test/%s" % test_docker_file_name,
+            network_mode="host",
+            detach=True
+          )
+        except Exception as e:
+          tee_output(prefix, "Running docker cointainer: %s failed" % test_docker_file)
+          print(e)
           return 1
 
-        # What's our return code?
-        # If docker run has terminated, use that code
-        # Otherwise, detect if the port was bound
-        tee_output(prefix, "Status: Poll: %s, Port %s bound: %s, Time Left: %s\n" % (
-          p.poll(), self.port, self.benchmarker.is_port_bound(self.port), time_remaining))
-        retcode = (p.poll() if p.poll() is not None else 0 if self.benchmarker.is_port_bound(self.port) else 1)
-        if p.poll() is not None:
-          tee_output(prefix, "Docker run process exited naturally with %s\n" % p.poll())
-        elif self.benchmarker.is_port_bound(self.port):
-          tee_output(prefix, "Bound port detected on %s\n" % self.port)
-
-    # Before we return control to the benchmarker, spin up a
-    # thread to keep an eye on the pipes in case the running
-    # framework uses stdout/stderr. Once all processes accessing
-    # the subprocess.PIPEs are dead, this thread will terminate.
-    # Use a different prefix to indicate this is the framework
-    # speaking
-    def watch_child_pipes(nbsr, prefix):
-      while True:
-        try:
-          line = nbsr.readline(60)
-          if line:
-            tee_output(prefix, line)
-        except setup_util.EndOfStream:
-          tee_output(prefix, "Framework processes have terminated\n")
-          return
-
-    watch_thread = Thread(target = watch_child_pipes,
-      args = (nbsr, prefix))
-    watch_thread.daemon = True
-    watch_thread.start()
-
-    return retcode
+    return 0
   ############################################################
   # End start
   ############################################################

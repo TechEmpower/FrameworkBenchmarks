@@ -4,7 +4,6 @@
 
 sudo: required
 dist: trusty
-group: deprecated-2017Q2
 language: generic
 python:
   - "2.7"
