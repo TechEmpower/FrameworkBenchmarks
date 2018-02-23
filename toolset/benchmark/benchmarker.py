@@ -950,7 +950,7 @@ class Benchmarker:
         return subprocess.check_output(["git", "rev-parse", "HEAD"]).strip()
 
     def __get_git_repository_url(self):
-        return subprocess.check_output('git config --get remote.origin.url', shell=True).strip()
+        return subprocess.check_output(["git", "config", "--get", "remote.origin.url"]).strip()
 
     ############################################################
     # __finish
