@@ -173,38 +173,6 @@ class Benchmarker:
     ############################################################
 
     ############################################################
-    # database_sftp_string(batch_file)
-    # generates a fully qualified URL for sftp to database
-    ############################################################
-    def database_sftp_string(self, batch_file):
-        sftp_string =  "sftp -oStrictHostKeyChecking=no "
-        if batch_file != None: sftp_string += " -b " + batch_file + " "
-
-        if self.database_identity_file != None:
-            sftp_string += " -i " + self.database_identity_file + " "
-
-        return sftp_string + self.database_user + "@" + self.database_host
-    ############################################################
-    # End database_sftp_string
-    ############################################################
-
-    ############################################################
-    # client_sftp_string(batch_file)
-    # generates a fully qualified URL for sftp to client
-    ############################################################
-    def client_sftp_string(self, batch_file):
-        sftp_string =  "sftp -oStrictHostKeyChecking=no "
-        if batch_file != None: sftp_string += " -b " + batch_file + " "
-
-        if self.client_identity_file != None:
-            sftp_string += " -i " + self.client_identity_file + " "
-
-        return sftp_string + self.client_user + "@" + self.client_host
-    ############################################################
-    # End client_sftp_string
-    ############################################################
-
-    ############################################################
     # generate_url(url, port)
     # generates a fully qualified URL for accessing a test url
     ############################################################
@@ -448,9 +416,11 @@ class Benchmarker:
                 scpstr = ["scp", "-i", self.database_identity_file]
                 for file in files:
                     scpstr.append(file)
-                scpstr.append("%s@%s:~/" % (self.database_user, self.database_host))
+                scpstr.append("%s@%s:~/%s/" % (self.database_user, self.database_host, database))
                 return scpstr
 
+            p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            p.communicate("mkdir -p %s" % database)
             dbpath = os.path.join(self.fwroot, "toolset", "setup", "linux", "docker", "databases", database)
             dbfiles = ""
             for dbfile in os.listdir(dbpath):
@@ -458,7 +428,7 @@ class Benchmarker:
             p = subprocess.Popen(__scp_string(dbfiles.split()), stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
             p.communicate()
             p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
-            p.communicate("docker build -f ~/%s.dockerfile -t %s ~/" % (database, database))
+            p.communicate("docker build -f ~/%s/%s.dockerfile -t %s ~/%s" % (database, database, database, database))
             if p.returncode != 0:
                 return None
 
