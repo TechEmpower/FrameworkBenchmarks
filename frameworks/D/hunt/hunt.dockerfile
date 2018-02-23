@@ -1,14 +1,9 @@
-#!/bin/bash
+FROM tfb/d-lang:latest
 
-fw_depends dlang
+COPY ./ ./
 
-# Clean any files from last run
-rm -f website
-rm -rf .dub
-rm -f dub.selections.json
+RUN dub upgrade --verbose
 
-dub upgrade --verbose
+RUN dub build -f -b release -v
 
-dub build -f -b release -v
-
-./website
+CMD ["./website"]

@@ -1,13 +1,8 @@
-#!/bin/bash
+FROM tfb/d-lang:latest
 
-fw_depends mongodb dlang
+COPY ./ ./
 
-# Clean any files from last run
-rm -f fwb
-rm -rf .dub
+RUN dub upgrade --verbose
+RUN dub build -b release --compiler=ldc2 --combined --verbose
 
-dub upgrade --verbose
-
-dub build -b release --compiler=ldc2 --combined --verbose
-
-./fwb &
+CMD ["./fwb"]

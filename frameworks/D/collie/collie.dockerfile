@@ -1,13 +1,8 @@
-#!/bin/bash
+FROM tfb/d-lang:latest
 
-fw_depends dlang
+COPY ./ ./
 
-# Clean any files from last run
-rm -f http
-rm -rf .dub
-rm -f dub.selections.json
+RUN dub upgrade --verbose
+RUN dub build -f -b release
 
-dub upgrade --verbose
-dub build -f -b release
-
-./http &
+CMD ["./http"]
