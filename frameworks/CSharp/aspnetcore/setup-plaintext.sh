@@ -12,8 +12,8 @@ fi
 
 if [ -z "$threadCount" ]
 then
-    echo "Invalid thread count, aborting"
-    exit 1
+    echo "Invalid thread count ($(nproc)), using default"
+    threadCount=2
 fi
 
 source run-linux.sh plaintext $threadCount
