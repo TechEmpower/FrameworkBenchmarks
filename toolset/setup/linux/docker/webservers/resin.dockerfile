@@ -1,4 +1,4 @@
-FROM java:latest
+FROM tfb/java:latest
 
 ENV RESIN_HOME=/resin-4.0.55
 

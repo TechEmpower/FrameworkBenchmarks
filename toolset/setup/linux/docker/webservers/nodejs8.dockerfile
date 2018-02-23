@@ -1,4 +1,4 @@
-FROM tfb:latest
+FROM tfb/base:latest
 
 ENV NODE_ENV=production
 

@@ -1,4 +1,4 @@
-FROM tfb:latest
+FROM tfb/base:latest
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
     apt-get -yq update && \

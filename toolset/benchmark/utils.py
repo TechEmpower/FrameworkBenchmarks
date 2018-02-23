@@ -25,19 +25,16 @@ def gather_docker_dependencies(docker_file):
 
     if os.path.exists(docker_file):
         with open(docker_file) as fp:
-            line = fp.readline()
-            if line:
+            for line in fp.readlines():
                 tokens = line.strip().split(' ')
                 if tokens[0] == "FROM":
                     # This is magic that our base image points to
                     if tokens[1] != "ubuntu:16.04":
-                        depTokens = tokens[1].strip().split(':')
-                        deps.append(depTokens[0])
-                        dep_docker_file = os.path.join(os.path.dirname(docker_file), depTokens[0] + ".dockerfile")
+                        depToken = tokens[1].strip().split(':')[0].strip().split('/')[1]
+                        deps.append(depToken)
+                        dep_docker_file = os.path.join(os.path.dirname(docker_file), depToken + ".dockerfile")
                         if not os.path.exists(dep_docker_file):
-                            # dep_docker_file = os.path.join(setup_util.get_fwroot(),
-                            #     "toolset", "setup", "linux", "docker", depTokens[0] + ".dockerfile")
-                            dep_docker_file = find_docker_file(docker_dir, depTokens[0] + ".dockerfile")
+                            dep_docker_file = find_docker_file(docker_dir, depToken + ".dockerfile")
                         deps.extend(gather_docker_dependencies(dep_docker_file))
 
     return deps

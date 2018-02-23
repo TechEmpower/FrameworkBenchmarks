@@ -1,4 +1,4 @@
-FROM resin:latest
+FROM tfb/ant:latest as ant
 
 RUN apt-get install -qqy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     ant
@@ -12,5 +12,9 @@ ADD ivysettings.xml /gemini/
 RUN cd /gemini/Docroot/WEB-INF; mv gemini-postgres.conf GeminiHello.conf;
 
 RUN cd /gemini; mkdir -p Docroot/WEB-INF/classes; mkdir -p Docroot/WEB-INF/lib; ant resolve; ant compile
+
+FROM tfb/resin:latest
+
+COPY --from=ant /gemini /gemini
 
 CMD ["resinctl", "-conf", "/gemini/Docroot/WEB-INF/resin.xml", "console"]

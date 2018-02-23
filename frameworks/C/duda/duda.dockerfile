@@ -1,4 +1,4 @@
-FROM tfb:latest
+FROM tfb/base:latest
 
 RUN apt install git python -y
 

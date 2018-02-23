@@ -1,4 +1,4 @@
-FROM java:latest
+FROM tfb/java:latest
 
 COPY ./ ./
 

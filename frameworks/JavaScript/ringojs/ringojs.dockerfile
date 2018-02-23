@@ -1,4 +1,4 @@
-FROM ringo-base:latest
+FROM tfb/ringo-base:latest
 
 RUN ringo-admin install oberhamsi/sql-ringojs-client && \
     ringo-admin install orfon/reinhardt && \
