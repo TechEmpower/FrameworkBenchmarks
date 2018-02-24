@@ -11,7 +11,7 @@ python:
 
 env:
   matrix:
-     - "TESTDIR=C/duda C/facil.io C/h2o C/libreactor C/octane C/onion"
+     - "TESTDIR=\"C/duda C/facil.io C/h2o C/libreactor C/octane C/onion\""
     # - "TESTDIR=CSharp/aspnet"
     # - "TESTDIR=CSharp/aspnetcore"
     # ## - "TESTDIR=CSharp/aspnet-stripped"
