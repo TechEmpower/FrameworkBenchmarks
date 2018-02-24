@@ -86,7 +86,6 @@ env:
     - "TESTDIR=Java/dropwizard"
     - "TESTDIR=Java/gemini"
     - "TESTDIR=Java/grizzly-bm"
-    - "TESTDIR=Java/grizzly-jersey"
     - "TESTDIR=Java/jawn"
     - "TESTDIR=Java/jetty"
     - "TESTDIR=Java/jlhttp"
