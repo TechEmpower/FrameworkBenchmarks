@@ -4,9 +4,6 @@
 
 sudo: required
 dist: trusty
-language: generic
-python:
-  - "2.7"
 
 env:
   matrix:
@@ -221,7 +218,7 @@ before_script:
   # build. Using language: generic gets us an ubuntu build with fewer services,
   # but includes database installs, ruby and rvm installs, and others that interfere
   # with running the suite in a clean ubuntu install.
-  - if [ $CONTINUE_TEST ]; then source ./toolset/travis/travis_clean.sh; else echo 'Skipping travis_clean.sh'; fi
+  # - if [ $CONTINUE_TEST ]; then source ./toolset/travis/travis_clean.sh; else echo 'Skipping travis_clean.sh'; fi
 
   # travis_setup.sh runs all the same commands you would run if you were setting up
   # a development environment via:
