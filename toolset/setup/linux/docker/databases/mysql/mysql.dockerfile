@@ -33,8 +33,10 @@ RUN cp -R -p /var/log/mysql /ssd/log
 # do not see running processes from prior RUN calls; therefor, each command here
 # that relies on the mysql server running will explicitly start the server and
 # perform the work required.
-RUN service mysql start && \
+RUN chown -R mysql:mysql /var/lib/mysql /var/log/mysql /var/run/mysqld /ssd && \
+    service mysql start & \
+    until mysql -uroot -psecret -e "exit"; do sleep 1; done && \
     mysqladmin -uroot -psecret flush-hosts && \
     mysql -uroot -psecret < create.sql
 
-CMD ["mysqld"]
+CMD chown -R mysql:mysql /var/lib/mysql /var/log/mysql /var/run/mysqld /ssd && mysqld
