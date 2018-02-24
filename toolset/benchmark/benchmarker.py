@@ -23,6 +23,7 @@ import logging
 import socket
 import threading
 import textwrap
+import docker
 from pprint import pprint
 
 from contextlib import contextmanager
@@ -723,20 +724,16 @@ class Benchmarker:
     # Attempts to stop the running test container.
     ############################################################
     def __stop_test(self, database_container_id, test, out):
-        docker_ids = subprocess.check_output(["docker", "ps", "-q"]).splitlines()
-        for docker_id in docker_ids:
-            # This check is in case the database and server machines are the same
-            if docker_id:
-                if not database_container_id or docker_id not in database_container_id:
-                    subprocess.check_output(["docker", "kill", docker_id])
-                    slept = 0
-                    while(slept < 300 and docker_id is ''):
-                        time.sleep(1)
-                        slept += 1
-                        docker_id = subprocess.check_output(["docker", "ps", "-q"]).strip()
-                    # We still need to sleep a bit before removing the image
-                    time.sleep(5)
-                    subprocess.check_output(["docker", "image", "rm", "tfb/test/%s" % test.name])
+        client = docker.from_env()
+        # Stop all the containers
+        for container in client.containers.list():
+            if container.status == "running" and container.id != database_container_id:
+              container.stop()
+        # Remove only the tfb/test images
+        for image in client.images.list():
+            if len(image.tags) > 0 and image.tags[0].startswith("tfb/test/"):
+                client.images.remove(image.id, force=True)
+
     ############################################################
     # End __stop_test
     ############################################################

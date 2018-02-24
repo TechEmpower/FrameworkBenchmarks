@@ -216,10 +216,7 @@ class FrameworkTest:
         raise Exception("docker_files in benchmark_config.json must be an array")
 
     for test_docker_file in test_docker_files:
-        test_docker_file_name = test_docker_file.replace(".dockerfile", "")
-        test_docker_file_path = os.path.join(self.directory, "%s.dockerfile" % self.name)
-
-        deps = list(reversed(gather_docker_dependencies( test_docker_file_path )))
+        deps = list(reversed(gather_docker_dependencies(os.path.join(self.directory, test_docker_file))))
 
         docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup", "linux", "docker")
 
@@ -248,22 +245,23 @@ class FrameworkTest:
             print(e)
             return 1
 
-    # Build the test image
-    try:
-      for line in client.build(
-        path=self.directory,
-        dockerfile="%s.dockerfile" % test_docker_file_name,
-        tag="tfb/test/%s" % test_docker_file_name,
-        buildargs=docker_buildargs,
-        forcerm=True
-      ):
-        if 'stream' in line:
-          line = json.loads(line)
-          tee_output(prefix, line[line.keys()[0]])
-    except Exception as e:
-      tee_output(prefix, "Docker build failed; terminating\n")
-      print(e)
-      return 1
+    # Build the test images
+    for test_docker_file in test_docker_files:
+        try:
+          for line in client.build(
+            path=self.directory,
+            dockerfile=test_docker_file,
+            tag="tfb/test/%s" % test_docker_file.replace(".dockerfile",""),
+            buildargs=docker_buildargs,
+            forcerm=True
+          ):
+            if 'stream' in line:
+              line = json.loads(line)
+              tee_output(prefix, line[line.keys()[0]])
+        except Exception as e:
+          tee_output(prefix, "Docker build failed; terminating\n")
+          print(e)
+          return 1
 
 
     ##########################
@@ -273,12 +271,9 @@ class FrameworkTest:
     client = docker.from_env()
 
     for test_docker_file in test_docker_files:
-        test_docker_file_name = test_docker_file.replace(".dockerfile", "")
-        test_docker_file_path = os.path.join(self.directory, "%s.dockerfile" % self.name)
-
         try:
           container = client.containers.run(
-            "tfb/test/%s" % test_docker_file_name,
+            "tfb/test/%s" % test_docker_file.replace(".dockerfile", ""),
             network_mode="host",
             detach=True
           )

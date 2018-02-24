@@ -70,7 +70,6 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 
 sudo pip install docker
-pip show docker
 
 # Get the ulimit from the benchmark config
 if [ -f benchmark.cfg ]; then

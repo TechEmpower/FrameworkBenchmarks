@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 #
 # start dart servers
 #
