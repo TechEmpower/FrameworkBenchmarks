@@ -34,6 +34,8 @@ def quit_diffing(should_test_run):
         print("travis-diff-continue")
     exit(0)
 
+# TODO: Remove this
+quit_diffing(True)
 
 # COMMIT MESSAGES:
 # Before any complicated diffing, check for forced runs from the commit message
