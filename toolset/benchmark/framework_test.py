@@ -195,6 +195,7 @@ class FrameworkTest:
     ###########################
     # Build the Docker images
     ###########################
+
     test_docker_file = os.path.join(self.directory, "%s.dockerfile" % self.name)
     deps = list(reversed(gather_docker_dependencies( test_docker_file )))
 
