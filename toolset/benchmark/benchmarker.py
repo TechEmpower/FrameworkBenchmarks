@@ -24,6 +24,7 @@ import socket
 import threading
 import textwrap
 import docker
+import shutil
 from pprint import pprint
 
 from contextlib import contextmanager
@@ -43,6 +44,20 @@ class Benchmarker:
     ##########################################################################################
     # Public methods
     ##########################################################################################
+
+    def clean_all(self):
+        if os.path.exists(self.results_directory):
+            for file in os.listdir(self.results_directory):
+                if not os.path.exists(os.path.dirname(file)):
+                    shutil.rmtree(os.path.join(self.results_directory, file))
+                else:
+                    os.remove(os.path.join(self.results_directory, file))
+
+        subprocess.check_call(["docker", "image", "prune", "-f"])
+
+        docker_ids = subprocess.check_output(["docker", "images", "-q"]).splitlines()
+        for docker_id in docker_ids:
+            subprocess.check_call(["docker", "image", "rmi", "-f", docker_id])
 
     ############################################################
     # Prints all the available tests
@@ -159,38 +174,6 @@ class Benchmarker:
     ############################################################
 
     ############################################################
-    # database_sftp_string(batch_file)
-    # generates a fully qualified URL for sftp to database
-    ############################################################
-    def database_sftp_string(self, batch_file):
-        sftp_string =  "sftp -oStrictHostKeyChecking=no "
-        if batch_file != None: sftp_string += " -b " + batch_file + " "
-
-        if self.database_identity_file != None:
-            sftp_string += " -i " + self.database_identity_file + " "
-
-        return sftp_string + self.database_user + "@" + self.database_host
-    ############################################################
-    # End database_sftp_string
-    ############################################################
-
-    ############################################################
-    # client_sftp_string(batch_file)
-    # generates a fully qualified URL for sftp to client
-    ############################################################
-    def client_sftp_string(self, batch_file):
-        sftp_string =  "sftp -oStrictHostKeyChecking=no "
-        if batch_file != None: sftp_string += " -b " + batch_file + " "
-
-        if self.client_identity_file != None:
-            sftp_string += " -i " + self.client_identity_file + " "
-
-        return sftp_string + self.client_user + "@" + self.client_host
-    ############################################################
-    # End client_sftp_string
-    ############################################################
-
-    ############################################################
     # generate_url(url, port)
     # generates a fully qualified URL for accessing a test url
     ############################################################
@@ -206,7 +189,7 @@ class Benchmarker:
     # test_type timestamp/test_type/test_name/raw.txt
     ############################################################
     def get_output_file(self, test_name, test_type):
-        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "raw.txt")
+        return os.path.join(self.results_directory, self.timestamp, test_name, test_type, "raw.txt")
     ############################################################
     # End get_output_file
     ############################################################
@@ -234,7 +217,7 @@ class Benchmarker:
     # test_type timestamp/test_type/test_name/stats.txt
     ############################################################
     def get_stats_file(self, test_name, test_type):
-        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "stats.txt")
+        return os.path.join(self.results_directory, self.timestamp, test_name, test_type, "stats.txt")
     ############################################################
     # End get_stats_file
     ############################################################
@@ -261,7 +244,7 @@ class Benchmarker:
     # full_results_directory
     ############################################################
     def full_results_directory(self):
-        path = os.path.join(self.fwroot, self.result_directory, self.timestamp)
+        path = os.path.join(self.fwroot, self.results_directory, self.timestamp)
         try:
             os.makedirs(path)
         except OSError:
@@ -434,9 +417,11 @@ class Benchmarker:
                 scpstr = ["scp", "-i", self.database_identity_file]
                 for file in files:
                     scpstr.append(file)
-                scpstr.append("%s@%s:~/" % (self.database_user, self.database_host))
+                scpstr.append("%s@%s:~/%s/" % (self.database_user, self.database_host, database))
                 return scpstr
 
+            p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
+            p.communicate("mkdir -p %s" % database)
             dbpath = os.path.join(self.fwroot, "toolset", "setup", "linux", "docker", "databases", database)
             dbfiles = ""
             for dbfile in os.listdir(dbpath):
@@ -444,7 +429,7 @@ class Benchmarker:
             p = subprocess.Popen(__scp_string(dbfiles.split()), stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
             p.communicate()
             p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
-            p.communicate("docker build -f ~/%s.dockerfile -t %s ~/" % (database, database))
+            p.communicate("docker build -f ~/%s/%s.dockerfile -t %s ~/%s" % (database, database, database, database))
             if p.returncode != 0:
                 return None
 
@@ -921,10 +906,10 @@ class Benchmarker:
             pass
 
     def __get_git_commit_id(self):
-        return subprocess.check_output('git rev-parse HEAD', shell=True).strip()
+        return subprocess.check_output(["git", "rev-parse", "HEAD"]).strip()
 
     def __get_git_repository_url(self):
-        return subprocess.check_output('git config --get remote.origin.url', shell=True).strip()
+        return subprocess.check_output(["git", "config", "--get", "remote.origin.url"]).strip()
 
     ############################################################
     # __finish
@@ -954,7 +939,7 @@ class Benchmarker:
             print(prefix + header('', top='', bottom='=') + Style.RESET_ALL)
 
         print("Time to complete: " + str(int(time.time() - self.start_time)) + " seconds")
-        print("Results are saved in " + os.path.join(self.result_directory, self.timestamp))
+        print("Results are saved in " + os.path.join(self.results_directory, self.timestamp))
 
     ############################################################
     # End __finish
@@ -992,7 +977,6 @@ class Benchmarker:
             args['pipeline_concurrency_levels'] = [256,1024,4096,16384]
 
         self.__dict__.update(args)
-        # pprint(self.__dict__)
 
         self.quiet_out = QuietOutputStream(self.quiet)
 
@@ -1019,16 +1003,7 @@ class Benchmarker:
             self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
 
         # setup results and latest_results directories
-        self.result_directory = os.path.join(self.fwroot, "results")
-        if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
-            os.system("sudo rm -rf " + self.result_directory + "/*")
-
-        # TODO: remove this as installs goes away with docker implementation
-        # remove installs directories if --clean-all provided
-        self.install_root = "%s/%s" % (self.fwroot, "installs")
-        if args['clean_all']:
-            os.system("sudo rm -rf " + self.install_root)
-            os.mkdir(self.install_root)
+        self.results_directory = os.path.join(self.fwroot, "results")
 
         self.results = None
         try:
