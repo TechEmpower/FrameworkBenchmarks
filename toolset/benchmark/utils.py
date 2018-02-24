@@ -106,6 +106,7 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
         defaults['results_name'] = "(unspecified, datetime = %Y-%m-%d %H:%M:%S)"
         defaults['results_environment'] = "My Server Environment"
         defaults['test_dir'] = None
+        defaults['test_lang'] = None
         defaults['quiet'] = True
 
         benchmarker = Benchmarker(defaults)
@@ -114,6 +115,16 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
     # Search for configuration files
     fwroot = setup_util.get_fwroot()
     config_files = []
+
+    if benchmarker.test_lang:
+        benchmarker.test_dir = []
+        for lang in benchmarker.test_lang:
+            if os.path.exists("{!s}/frameworks/{!s}".format(fwroot, lang)):
+                for test_dir in os.listdir("{!s}/frameworks/{!s}".format(fwroot, lang)):
+                    benchmarker.test_dir.append("{!s}/{!s}".format(lang, test_dir))
+            else:
+                raise Exception("Unable to locate language directory: {!s}".format(lang))
+
     if benchmarker.test_dir:
         for test_dir in benchmarker.test_dir:
             dir_config_files = glob.glob("{!s}/frameworks/{!s}/benchmark_config.json".format(fwroot, test_dir))
