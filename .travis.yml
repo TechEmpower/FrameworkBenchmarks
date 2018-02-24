@@ -79,7 +79,7 @@ env:
     # - "TESTDIR=Java/comsat-webactors"
     # - "TESTDIR=Java/curacao"
     # - "TESTDIR=Java/dropwizard"
-#     - "TESTDIR=Java/gemini"
+     - "TESTDIR=Java/gemini"
     # - "TESTDIR=Java/grizzly-bm"
     # - "TESTDIR=Java/grizzly-jersey"
     # - "TESTDIR=Java/jawn"
@@ -107,12 +107,12 @@ env:
     # - "TESTDIR=Java/vertx-web"
     # - "TESTDIR=Java/wicket"
     # - "TESTDIR=Java/wildfly-ee7"
-#     - "TESTDIR=JavaScript/express"
-#     - "TESTDIR=JavaScript/hapi"
-#     - "TESTDIR=JavaScript/koa"
-#     - "TESTDIR=JavaScript/nodejs"
-#     - "TESTDIR=JavaScript/ringojs"
-#     - "TESTDIR=JavaScript/sailsjs"
+     - "TESTDIR=JavaScript/express"
+     - "TESTDIR=JavaScript/hapi"
+     - "TESTDIR=JavaScript/koa"
+     - "TESTDIR=JavaScript/nodejs"
+     - "TESTDIR=JavaScript/ringojs"
+     - "TESTDIR=JavaScript/sailsjs"
     # - "TESTDIR=Kotlin/hexagon"
     # - "TESTDIR=Kotlin/ktor"
     # - "TESTDIR=Kotlin/pronghorn"
@@ -230,8 +230,8 @@ script:
   # we'd like to try and do the diffing before travis_clean & setup.
   # This will run the tests exactly as you would in your own vm:
   # ./toolset/run-tests.py --mode verify --test (all the valid tests for this framework)
-  # - if [ $CONTINUE_TEST ]; then tfb --mode verify --test-dir "$TESTDIR"; else echo 'Skipping test verification.'; fi
-  - if [ $CONTINUE_TEST ]; then tfb --mode verify --test-lang "$TESTLANG"; else echo 'Skipping test verification.'; fi
+  - if [[ $CONTINUE_TEST && "$TESTDIR" ]]; then tfb --mode verify --test-dir "$TESTDIR"; else echo 'Skipping test verification.'; fi
+  - if [[ $CONTINUE_TEST && "$TESTLANG" ]]; then tfb --mode verify --test-lang "$TESTLANG"; else echo 'Skipping test verification.'; fi
   # - tfb --mode verify --test
 
 cache:
