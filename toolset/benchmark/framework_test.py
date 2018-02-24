@@ -205,6 +205,14 @@ class FrameworkTest:
 
     client = docker.APIClient(base_url='unix://var/run/docker.sock')
 
+    def handle_build_output(line):
+        if line.startswith('{"stream":'):
+          line = json.loads(line)
+          line = line[line.keys()[0]].encode('utf-8')
+          if not line.endswith('\n'):
+            line = line + '\n'
+          tee_output(prefix, line)
+
     docker_buildargs = { 'CPU_COUNT': str(multiprocessing.cpu_count()),
                          'MAX_CONCURRENCY': str(max(self.benchmarker.concurrency_levels)) }
 
@@ -237,9 +245,7 @@ class FrameworkTest:
               buildargs=docker_buildargs,
               forcerm=True
             ):
-              if 'stream' in line:
-                line = json.loads(line)
-                tee_output(prefix, line[line.keys()[0].encode('utf-8')].encode('utf-8'))
+              handle_build_output(line)
           except Exception as e:
             tee_output(prefix, "Docker dependency build failed; terminating\n")
             print(e)
@@ -255,9 +261,7 @@ class FrameworkTest:
             buildargs=docker_buildargs,
             forcerm=True
           ):
-            if 'stream' in line:
-              line = json.loads(line)
-              tee_output(prefix, line[line.keys()[0]])
+            handle_build_output(line)
         except Exception as e:
           tee_output(prefix, "Docker build failed; terminating\n")
           print(e)
