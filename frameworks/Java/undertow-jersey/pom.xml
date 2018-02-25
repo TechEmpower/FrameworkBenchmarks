@@ -47,7 +47,7 @@
       </build>
     </profile>
     <profile>
-      <id>hikarycp</id>
+      <id>hikaricp</id>
       <dependencies>
         <dependency>
           <groupId>org.hibernate</groupId>
