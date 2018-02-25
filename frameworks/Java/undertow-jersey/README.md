@@ -1,7 +1,7 @@
-# Undertow + Jersey + c3p0 Benchmarking Test
+# Undertow + Jersey Benchmarking Test
 ### Heavily borrowed from the grizzly-jersey test
 
-This is the Undertow+Jersey portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the Undertow+Jersey portion of a [benchmarking test suite](../) comparing a variety of web development platforms. The project is using two SQL connection pools: c3p0 and hikaricp.
 
 ### JSON serialization test
 * [JSON test resource](src/main/java/hello/JsonResource.java)
