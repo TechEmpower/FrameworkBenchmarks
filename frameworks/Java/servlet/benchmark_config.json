@@ -104,7 +104,7 @@
       "versus": "servlet-raw"
     },
     "async-tomcat": {
-      "setup_file": "tomcat-async",
+      "setup_file": "servlet3-async",
       "json_url": "/servlet3/json",
       "plaintext_url": "/servlet3/plaintext",
       "port": 8080,
@@ -123,7 +123,7 @@
       "versus": "servlet"
     },
     "sync-tomcat": {
-      "setup_file": "tomcat-sync",
+      "setup_file": "servlet3-sync",
       "json_url": "/servlet3/json",
       "plaintext_url": "/servlet3/plaintext",
       "port": 8080,
