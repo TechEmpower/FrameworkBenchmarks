@@ -13,11 +13,69 @@
     <maven>3.0</maven>
   </prerequisites>
 
-
   <properties>
     <jersey.version>2.22.1</jersey.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>c3p0</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-c3p0</artifactId>
+          <version>4.3.11.Final</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources/</directory>
+            <includes>
+              <include>fortunes.mustache</include>
+              <include>hibernate.cfg.xml</include>
+            </includes>
+            <excludes>
+              <exclude>hikarycp/hibernate.cfg.xml</exclude>
+            </excludes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+    <profile>
+      <id>hikaricp</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-hikaricp</artifactId>
+          <version>4.3.11.Final</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources/</directory>
+            <includes>
+              <include>fortunes.mustache</include>
+            </includes>
+            <excludes>
+              <exclude>hibernate.cfg.xml</exclude>
+            </excludes>
+          </resource>
+          <resource>
+            <directory>src/main/resources/hikarycp</directory>
+            <includes>
+              <include>hibernate.cfg.xml</include>
+            </includes>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+  </profiles>
 
   <dependencyManagement>
     <dependencies>
@@ -38,11 +96,6 @@
       <version>${jersey.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.glassfish.jersey.core</groupId>
-      <artifactId>jersey-server</artifactId>
-      <version>${jersey.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.glassfish.jersey.ext</groupId>
       <artifactId>jersey-mvc-mustache</artifactId>
       <version>${jersey.version}</version>
@@ -56,11 +109,6 @@
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
-      <version>4.3.11.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-c3p0</artifactId>
       <version>4.3.11.Final</version>
     </dependency>
 
