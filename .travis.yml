@@ -11,12 +11,7 @@ python:
 
 env:
   matrix:
-     - "TESTDIR=C/duda"
-     - "TESTDIR=C/facil.io"
-     - "TESTDIR=C/h2o"
-     - "TESTDIR=C/libreactor"
-     - "TESTDIR=C/octane"
-     - "TESTDIR=C/onion"
+     - "TESTLANG=C"
     # - "TESTDIR=CSharp/aspnet"
     # - "TESTDIR=CSharp/aspnetcore"
     # ## - "TESTDIR=CSharp/aspnet-stripped"
@@ -112,12 +107,7 @@ env:
     # - "TESTDIR=Java/vertx-web"
     # - "TESTDIR=Java/wicket"
     # - "TESTDIR=Java/wildfly-ee7"
-     - "TESTDIR=JavaScript/express"
-     - "TESTDIR=JavaScript/hapi"
-     - "TESTDIR=JavaScript/koa"
-     - "TESTDIR=JavaScript/nodejs"
-     - "TESTDIR=JavaScript/ringojs"
-     - "TESTDIR=JavaScript/sailsjs"
+     - "TESTLANG=JavaScript"
     # - "TESTDIR=Kotlin/hexagon"
     # - "TESTDIR=Kotlin/ktor"
     # - "TESTDIR=Kotlin/pronghorn"
@@ -235,7 +225,8 @@ script:
   # we'd like to try and do the diffing before travis_clean & setup.
   # This will run the tests exactly as you would in your own vm:
   # ./toolset/run-tests.py --mode verify --test (all the valid tests for this framework)
-  - if [ $CONTINUE_TEST ]; then tfb --mode verify --test-dir "$TESTDIR"; else echo 'Skipping test verification.'; fi
+  - if [[ $CONTINUE_TEST && "$TESTDIR" ]]; then tfb --mode verify --test-dir "$TESTDIR"; else echo 'Skipping test verification.'; fi
+  - if [[ $CONTINUE_TEST && "$TESTLANG" ]]; then tfb --mode verify --test-lang "$TESTLANG"; else echo 'Skipping test verification.'; fi
   # - tfb --mode verify --test
 
 cache:
