@@ -193,7 +193,7 @@ class FrameworkTest:
 
     prefix = "Setup %s: " % self.name
 
-    ##########################
+    ###########################
     # Build the Docker images
     ##########################
 

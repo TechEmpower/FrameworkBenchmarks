@@ -30,7 +30,7 @@ end
 def provider_virtualbox(config)
   config.vm.provider :virtualbox do |vb, override|
     override.vm.hostname = "TFB-all"
-    override.vm.box = "ubuntu/trusty64"
+    override.vm.box = "ubuntu/xenial64"
 
     if ENV.fetch('TFB_SHOW_VM', false)
       vb.gui = true
