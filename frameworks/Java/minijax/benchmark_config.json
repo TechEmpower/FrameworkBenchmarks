@@ -18,7 +18,7 @@
       "flavor": "None",
       "orm": "Full",
       "platform": "JAX-RS",
-      "webserver": "Jetty",
+      "webserver": "Undertow",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Minijax"
