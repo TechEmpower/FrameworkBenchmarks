@@ -272,20 +272,30 @@ class FrameworkTest:
     # Run the Docker container
     ##########################
 
-    client = docker.from_env()
+	client = docker.from_env()
 
     for test_docker_file in test_docker_files:
-        try:
-          container = client.containers.run(
-            "tfb/test/%s" % test_docker_file.replace(".dockerfile", ""),
-            network_mode="host",
-            privileged=True,
-            detach=True
-          )
-        except Exception as e:
-          tee_output(prefix, "Running docker cointainer: %s failed" % test_docker_file)
-          print(e)
-          return 1
+      try:
+        def watch_container(container, prefix):
+          for line in container.logs(stream=True):
+            tee_output(prefix, line)
+
+        container = client.containers.run(
+          "tfb/test/%s" % test_docker_file.replace(".dockerfile", ""),
+          network_mode="host",
+          privileged=True,
+          stderr=True,
+          detach=True)
+
+        prefix = "Server %s: " % self.name
+        watch_thread = Thread(target = watch_container, args=(container,prefix))
+        watch_thread.daemon = True
+        watch_thread.start()
+
+      except Exception as e:
+        tee_output(prefix, "Running docker cointainer: %s failed" % test_docker_file)
+        print(e)
+        return 1
 
     return 0
   ############################################################
