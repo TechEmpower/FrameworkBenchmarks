@@ -279,6 +279,7 @@ class FrameworkTest:
           container = client.containers.run(
             "tfb/test/%s" % test_docker_file.replace(".dockerfile", ""),
             network_mode="host",
+            privileged=True,
             detach=True
           )
         except Exception as e:
