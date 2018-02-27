@@ -18,9 +18,9 @@ object FortunesRoute {
     private val viewBody = Body.view(HandlebarsTemplates().CachingClasspath(), TEXT_HTML)
 
     operator fun invoke(database: Database) = "/fortunes" bind GET to {
-        val items = database.withConnection {
-            it.prepareStatement("select * from fortune").executeQuery().toList {
-                Fortune(it.getInt(1), it.getString(2))
+        val items = database.withStatement("select * from fortune") {
+            executeQuery().toList {
+                Fortune(getInt(1), getString(2))
             }
         }
             .plus(Fortune(0, "Additional fortune added at request time."))
