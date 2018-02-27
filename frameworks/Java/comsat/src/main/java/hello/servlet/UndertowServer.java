@@ -1,12 +1,14 @@
-package hello;
+package hello.servlet;
 
 import co.paralleluniverse.embedded.containers.AbstractEmbeddedServer;
+import hello.Server;
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
 import io.undertow.server.HttpHandler;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
+
 import org.xnio.Options;
 
 import java.io.IOException;

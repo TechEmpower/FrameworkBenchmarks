@@ -1,7 +1,8 @@
-package hello;
+package hello.webactors;
 
 import co.paralleluniverse.comsat.webactors.netty.AutoWebActorHandler;
 import co.paralleluniverse.embedded.containers.AbstractEmbeddedServer;
+import hello.Server;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;

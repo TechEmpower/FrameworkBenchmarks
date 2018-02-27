@@ -15,8 +15,9 @@ ext.quasarVer   = '0.7.5'
 ext.comsatVer   = '0.7.0'
 ext.capsuleVer  = '1.0.2'
 
-ext.nettyVer    = '4.0.37.Final'
+ext.jettyVer    = '9.3.9.v20160517'
 ext.undertowVer = '1.3.22.Final'
+ext.nettyVer    = '4.0.37.Final'
 
 ext.slf4jVer    = '1.7.21'
 
@@ -35,8 +36,19 @@ configurations {
 configurations.all {
     resolutionStrategy {
         failOnVersionConflict()
-        force "io.netty:netty-all:$nettyVer"
+        force "org.eclipse.jetty:jetty-util:$jettyVer"
+        force "org.eclipse.jetty:jetty-io:$jettyVer"
+        force "org.eclipse.jetty:jetty-http:$jettyVer"
+        force "org.eclipse.jetty:jetty-server:$jettyVer"
+        force "org.eclipse.jetty:jetty-servlet:$jettyVer"
+        force "org.eclipse.jetty:jetty-webapp:$jettyVer"
+        force "org.eclipse.jetty:jetty-xml:$jettyVer"
+        force "org.eclipse.jetty.websocket:websocket-server:$jettyVer"
+        force "org.eclipse.jetty.websocket:websocket-servlet:$jettyVer"
+        force "org.eclipse.jetty.websocket:websocket-client:$jettyVer"
         force "io.undertow:undertow-core:$undertowVer"
+        force "io.undertow:undertow-servlet:$undertowVer"
+        force "io.netty:netty-all:$nettyVer"
         force "org.slf4j:slf4j-api:$slf4jVer"
         force "co.paralleluniverse:quasar-actors:$quasarVer"
     }
@@ -47,6 +59,8 @@ configurations.capsule.dependencies.clear()
 dependencies {
     compile "co.paralleluniverse:quasar-core:$quasarVer:jdk8"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVer"
+    compile "co.paralleluniverse:comsat-servlet:$comsatVer"
+    compile "co.paralleluniverse:comsat-test-utils:$comsatVer"
     compile "co.paralleluniverse:comsat-actors-api:$comsatVer"
     compile "co.paralleluniverse:comsat-actors-netty:$comsatVer"
     compile "co.paralleluniverse:comsat-actors-undertow:$comsatVer"
@@ -63,12 +77,20 @@ task capsule(type: FatCapsule) {
     capsuleManifest {
         javaAgents = [configurations.quasar.iterator().next().getName()]
 
-        mode('netty') {
-            systemProperties['serverClass'] = 'hello.NettyServer'
+        mode('servlet-undertow') {
+            systemProperties['serverClass'] = 'hello.servlet.UndertowServer'
         }
 
-        mode('undertow') {
-            systemProperties['serverClass'] = 'hello.UndertowServer'
+        mode('servlet-jetty') {
+            systemProperties['serverClass'] = 'hello.servlet.JettyServer'
+        }
+        
+        mode('webactors-netty') {
+            systemProperties['serverClass'] = 'hello.webactors.NettyServer'
+        }
+
+        mode('webactors-undertow') {
+            systemProperties['serverClass'] = 'hello.webactors.UndertowServer'
         }
     }
 }

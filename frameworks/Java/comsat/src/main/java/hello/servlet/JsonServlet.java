@@ -1,14 +1,17 @@
-package hello;
+package hello.servlet;
 
 import co.paralleluniverse.fibers.Suspendable;
 import co.paralleluniverse.fibers.servlet.FiberHttpServlet;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
+@SuppressWarnings("serial")
 public final class JsonServlet extends FiberHttpServlet {
     private static final class HelloWorldData {
         @SuppressWarnings("unused")

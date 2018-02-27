@@ -1,4 +1,4 @@
-package hello;
+package hello.webactors;
 
 import co.paralleluniverse.actors.BasicActor;
 import co.paralleluniverse.comsat.webactors.HttpRequest;
