@@ -2,4 +2,4 @@
 
 MODE="servlet-undertow"
 
-. $TROOT/setup-servlet-generic.sh
+. $TROOT/setup-generic.sh

@@ -2,4 +2,4 @@
 
 MODE="webactors-undertow"
 
-. $TROOT/setup-webactors-generic.sh
+. $TROOT/setup-generic.sh

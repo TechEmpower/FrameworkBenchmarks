@@ -2,4 +2,4 @@
 
 MODE="servlet-jetty"
 
-. $TROOT/setup-servlet-generic.sh
+. $TROOT/setup-generic.sh
