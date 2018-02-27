@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-MODE="netty"
+MODE="servlet-jetty"
 
 . $TROOT/setup-generic.sh

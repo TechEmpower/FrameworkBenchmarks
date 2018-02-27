@@ -1,9 +1,11 @@
-package hello;
+package hello.webactors;
 
 import co.paralleluniverse.comsat.webactors.undertow.AutoWebActorHandler;
 import co.paralleluniverse.embedded.containers.AbstractEmbeddedServer;
+import hello.Server;
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
+
 import org.xnio.Options;
 
 public final class UndertowServer implements Server {

@@ -1,6 +1,8 @@
-package hello;
+package hello.servlet;
 
+import hello.Server;
 import co.paralleluniverse.embedded.containers.AbstractEmbeddedServer;
+
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;

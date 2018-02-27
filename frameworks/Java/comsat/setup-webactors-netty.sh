@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-MODE="jetty"
+MODE="webactors-netty"
 
 . $TROOT/setup-generic.sh

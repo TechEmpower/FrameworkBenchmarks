@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-MODE="undertow"
+MODE="webactors-undertow"
 
 . $TROOT/setup-generic.sh
