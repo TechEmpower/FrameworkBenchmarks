@@ -714,10 +714,9 @@ class Benchmarker:
         for container in client.containers.list():
             if container.status == "running" and container.id != database_container_id:
               container.stop()
-        # Remove only the tfb/test images
-        for image in client.images.list():
-            if len(image.tags) > 0 and image.tags[0].startswith("tfb/test/"):
-                client.images.remove(image.id, force=True)
+        # Remove only the tfb/test image for this test
+        client.images.remove("tfb/test/%s" % test.name, force=True)
+        client.images.prune()
 
     ############################################################
     # End __stop_test
