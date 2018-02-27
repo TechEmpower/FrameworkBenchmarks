@@ -35,5 +35,3 @@ conf+="}"
 # write nginx configuration to disk
 #
 echo -e $conf > nginx.conf
-
-nginx -c $(pwd)/nginx.conf &

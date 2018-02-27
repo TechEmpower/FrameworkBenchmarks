@@ -2,4 +2,6 @@ FROM tfb/nginx:latest
 
 COPY ./ ./
 
-CMD ["./start-nginx.sh"]
+RUN ./start-nginx.sh
+
+CMD ["nginx", "-c", "/nginx.conf", "-g", "daemon off;"]

@@ -203,8 +203,6 @@ class FrameworkTest:
     # to use the low level API:
     #  https://docker-py.readthedocs.io/en/stable/api.html#module-docker.api.build
 
-    client = docker.APIClient(base_url='unix://var/run/docker.sock')
-
     prev_line = os.linesep
     def handle_build_output(line):
       if line.startswith('{"stream":'):
@@ -241,7 +239,7 @@ class FrameworkTest:
 
         # Build the dependency image
         try:
-          for line in client.build(
+          for line in docker.APIClient(base_url='unix://var/run/docker.sock').build(
             path=os.path.dirname(docker_file),
             dockerfile="%s.dockerfile" % dependency,
             tag="tfb/%s" % dependency,
@@ -257,7 +255,7 @@ class FrameworkTest:
     # Build the test images
     for test_docker_file in test_docker_files:
         try:
-          for line in client.build(
+          for line in docker.APIClient(base_url='unix://var/run/docker.sock').build(
             path=self.directory,
             dockerfile=test_docker_file,
             tag="tfb/test/%s" % test_docker_file.replace(".dockerfile",""),
