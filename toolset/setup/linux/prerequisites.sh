@@ -45,18 +45,6 @@ sudo pip install colorama==0.3.1
 sudo pip install progressbar==2.2 requests MySQL-python psycopg2 pymongo
 
 #
-# Install Rust
-#
-curl -sL https://sh.rustup.rs -o rustup.sh
-chmod 777 rustup.sh
-./rustup.sh -y
-rm ./rustup.sh
-source ~/.profile
-cd toolset/setup/linux/docker/TFBReaper
-cargo build
-cd ../../../../..
-
-#
 # Install Docker
 #
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
