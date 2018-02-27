@@ -69,7 +69,7 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
 sudo groupadd docker
 sudo usermod -aG docker $USER
 
-sudo pip install docker
+sudo pip install docker==3.1.0
 
 # Get the ulimit from the benchmark config
 if [ -f benchmark.cfg ]; then
