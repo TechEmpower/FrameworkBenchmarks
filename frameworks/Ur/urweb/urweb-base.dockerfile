@@ -17,5 +17,3 @@ RUN mkdir -p $COMPILER && \
 ENV URWEB_HOME=${COMPILER}
 ENV LD_LIBRARY_PATH=${COMPILER}/lib
 ENV PATH=${COMPILER}/bin:${PATH}
-
-RUN urweb -dbms mysql -db "dbname=hello_world user=benchmarkdbuser password=benchmarkdbpass host=TFB-database" bench
