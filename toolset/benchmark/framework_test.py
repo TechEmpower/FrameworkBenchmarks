@@ -205,15 +205,16 @@ class FrameworkTest:
 
     client = docker.APIClient(base_url='unix://var/run/docker.sock')
 
-    prev_line = "\n"
+    prev_line = os.linesep
     def handle_build_output(line):
       if line.startswith('{"stream":'):
         line = json.loads(line)
         line = line[line.keys()[0]].encode('utf-8')
-        if prev_line.endswith('\n'):
+        if prev_line.endswith(os.linesep):
           tee_output(prefix, line)
         else:
           tee_output(line)
+        self.prev_line = line
 
     docker_buildargs = { 'CPU_COUNT': str(multiprocessing.cpu_count()),
                          'MAX_CONCURRENCY': str(max(self.benchmarker.concurrency_levels)) }
