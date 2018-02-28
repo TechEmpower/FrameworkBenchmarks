@@ -30,13 +30,12 @@ impl DbExecutor {
 
 pub struct RandomWorld;
 
-impl ResponseType for RandomWorld {
-    type Item = models::World;
-    type Error = io::Error;
+impl Message for RandomWorld {
+    type Result = io::Result<models::World>;
 }
 
 impl Handler<RandomWorld> for DbExecutor {
-    type Result = MessageResult<RandomWorld>;
+    type Result = io::Result<models::World>;
 
     fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Self::Result {
         use schema::World::dsl::*;
@@ -53,13 +52,12 @@ impl Handler<RandomWorld> for DbExecutor {
 
 pub struct RandomWorlds(pub u16);
 
-impl ResponseType for RandomWorlds {
-    type Item = Vec<models::World>;
-    type Error = io::Error;
+impl Message for RandomWorlds {
+    type Result = io::Result<Vec<models::World>>;
 }
 
 impl Handler<RandomWorlds> for DbExecutor {
-    type Result = MessageResult<RandomWorlds>;
+    type Result = io::Result<Vec<models::World>>;
 
     fn handle(&mut self, msg: RandomWorlds, _: &mut Self::Context) -> Self::Result {
         use schema::World::dsl::*;
@@ -79,15 +77,14 @@ impl Handler<RandomWorlds> for DbExecutor {
 
 pub struct UpdateWorld(pub usize);
 
-impl ResponseType for UpdateWorld {
-    type Item = Vec<models::World>;
-    type Error = io::Error;
+impl Message for UpdateWorld {
+    type Result = io::Result<Vec<models::World>>;
 }
 
 impl Handler<UpdateWorld> for DbExecutor {
-    type Result = MessageResult<UpdateWorld>;
+    type Result = io::Result<Vec<models::World>>;
 
-    fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> MessageResult<UpdateWorld> {
+    fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
         use schema::World::dsl::*;
 
         let mut worlds = Vec::with_capacity(msg.0);
@@ -112,9 +109,8 @@ impl Handler<UpdateWorld> for DbExecutor {
 
 pub struct TellFortune;
 
-impl ResponseType for TellFortune {
-    type Item = Vec<models::Fortune>;
-    type Error = io::Error;
+impl Message for TellFortune {
+    type Result = io::Result<Vec<models::Fortune>>;
 }
 
 impl Handler<TellFortune> for DbExecutor {
