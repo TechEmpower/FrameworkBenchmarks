@@ -1,20 +1,5 @@
 #!/bin/bash
 
-fw_depends dart nginx
-
-pub upgrade
-
-#
-# start dart servers
-#
-current=9001
-end=$(($current+$CPU_COUNT))
-while [ $current -lt $end ]; do
-  dart server.dart -a 127.0.0.1 -p $current -d ${CPU_COUNT} &
-  let current=current+1
-done
-
-
 #
 # create nginx configuration
 #
@@ -50,5 +35,3 @@ conf+="}"
 # write nginx configuration to disk
 #
 echo -e $conf > nginx.conf
-
-nginx -c $(pwd)/nginx.conf &

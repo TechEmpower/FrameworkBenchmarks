@@ -23,6 +23,7 @@ import logging
 import socket
 import threading
 import textwrap
+import docker
 import shutil
 from pprint import pprint
 
@@ -395,7 +396,7 @@ class Benchmarker:
     # Sets up a container for the given database and port, and
     # starts said docker container.
     ############################################################
-    def __setup_database_container(self, database, port):
+    def __setup_database_container(self, database):
         def __is_hex(s):
             try:
                 int(s, 16)
@@ -433,7 +434,7 @@ class Benchmarker:
                 return None
 
         p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        (out,err) = p.communicate("docker run -d --rm -p %s:%s --network=host %s" % (port,port,database))
+        (out,err) = p.communicate("docker run -d --rm --network=host %s" % database)
         return out.splitlines()[len(out.splitlines()) - 1]
     ############################################################
     # End __setup_database_container
@@ -594,13 +595,7 @@ class Benchmarker:
                 # Start database container
                 ##########################
                 if test.database != "None":
-                    # TODO: this is horrible... how should we really do it?
-                    ports = {
-                        "mysql": 3306,
-                        "postgres": 5432,
-                        "mongodb": 27017
-                    }
-                    database_container_id = self.__setup_database_container(test.database.lower(), ports[test.database.lower()])
+                    database_container_id = self.__setup_database_container(test.database.lower())
                     if not database_container_id:
                         out.write("ERROR: Problem building/running database container")
                         out.flush()
@@ -714,22 +709,15 @@ class Benchmarker:
     # Attempts to stop the running test container.
     ############################################################
     def __stop_test(self, database_container_id, test, out):
-        docker_ids = subprocess.check_output(["docker", "ps", "-q"]).splitlines()
-        for docker_id in docker_ids:
-            # This check is in case the database and server machines are the same
-            if docker_id:
-                if not database_container_id or docker_id not in database_container_id:
-                    subprocess.check_output(["docker", "kill", docker_id])
-                    slept = 0
-                    while(slept < 300 and docker_id is ''):
-                        time.sleep(1)
-                        slept += 1
-                        docker_id = subprocess.check_output(["docker", "ps", "-q"]).strip()
-                    # We still need to sleep a bit before removing the image
-                    time.sleep(5)
-                    subprocess.check_call(["docker", "image", "rm", "tfb/test/%s" % test.name])
-                    time.sleep(5)
-                    subprocess.check_call(["docker", "image", "prune", "-f"])
+        client = docker.from_env()
+        # Stop all the containers
+        for container in client.containers.list():
+            if container.status == "running" and container.id != database_container_id:
+              container.stop()
+        # Remove only the tfb/test image for this test
+        client.images.remove("tfb/test/%s" % test.name, force=True)
+        client.images.prune()
+
     ############################################################
     # End __stop_test
     ############################################################
