@@ -12,7 +12,7 @@ end
 def provider_libvirt(config)
   config.vm.provider :libvirt do |virt, override|
     override.vm.hostname = "TFB-all"
-    override.vm.box = "RX14/trusty64"
+    override.vm.box = "generic/ubuntu1604"
 
     unless ENV.fetch('TFB_SHOW_VM', false)
       virt.graphics_type = "none"
@@ -21,9 +21,9 @@ def provider_libvirt(config)
     virt.memory = ENV.fetch('TFB_KVM_MEM', 3022)
     virt.cpus = ENV.fetch('TFB_KVM_CPU', 2)
 
-    override.vm.synced_folder "../../toolset", "/home/vagrant/FrameworkBenchmarks/toolset", type: "nfs"
-    override.vm.synced_folder "../../frameworks", "/home/vagrant/FrameworkBenchmarks/frameworks", type: "nfs"
-    override.vm.synced_folder "../../results", "/home/vagrant/FrameworkBenchmarks/results", type: "nfs", create: true
+    override.vm.synced_folder "../../toolset", "/home/vagrant/FrameworkBenchmarks/toolset", type: "nfs", nfs_udp: false
+    override.vm.synced_folder "../../frameworks", "/home/vagrant/FrameworkBenchmarks/frameworks", type: "nfs", nfs_udp: false
+    override.vm.synced_folder "../../results", "/home/vagrant/FrameworkBenchmarks/results", type: "nfs", nfs_udp: false, create: true
   end
 end
 
