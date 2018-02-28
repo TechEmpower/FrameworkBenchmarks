@@ -19,6 +19,6 @@ php composer-installer.php --install-dir=${COMPOSER_HOME} --version=1.6.3
 cd ..
 
 echo "export COMPOSER_HOME=${COMPOSER_HOME}" > $IROOT/composer.installed
-echo -e "php \$COMPOSER_HOME/composer.phar install --no-interaction --working-dir \$TROOT --no-progress --optimize-autoloader" >> $IROOT/composer.installed
+echo -e "php \$COMPOSER_HOME/composer.phar install --working-dir \$TROOT --no-dev --no-interaction --no-progress --no-suggest --optimize-autoloader --classmap-authoritative" >> $IROOT/composer.installed
 
 source $IROOT/composer.installed
