@@ -2,7 +2,7 @@
 
 fw_installed cutelyst && return 0
 
-CUTELYST_VER=1.9.0
+CUTELYST_VER=1.12.0
 QT_VERSION_MM=59
 QT_VERSION_FULL=591-trusty
 CROOT=${IROOT}/cutelyst
@@ -38,6 +38,7 @@ cmake .. \
 -DCMAKE_BUILD_TYPE=Release \
 -DCMAKE_INSTALL_PREFIX=$CROOT \
 -DUWSGI_PLUGINS_DIR=${CROOT}/lib/uwsgi/plugins \
+-DPLUGIN_UWSGI=on \
 -DUSE_JEMALLOC=on
 
 make -j $CPU_COUNT && make install

@@ -17,6 +17,7 @@ import csv
 import shlex
 import math
 import multiprocessing
+import docker
 from collections import OrderedDict
 from requests import ConnectionError
 from threading import Thread
@@ -192,165 +193,112 @@ class FrameworkTest:
 
     prefix = "Setup %s: " % self.name
 
-    ##########################
+    ###########################
     # Build the Docker images
     ##########################
-    test_docker_file = os.path.join(self.directory, "%s.dockerfile" % self.name)
-    deps = list(reversed(gather_docker_dependencies( test_docker_file )))
 
-    docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup", "linux", "docker")
+    # Build the test docker file based on the test name
+    # then build any additional docker files specified in the benchmark_config
+    # Note - If you want to be able to stream the output of the build process you have
+    # to use the low level API:
+    #  https://docker-py.readthedocs.io/en/stable/api.html#module-docker.api.build
 
-    for dependency in deps:
-      docker_file = os.path.join(self.directory, dependency + ".dockerfile")
-      if not docker_file or not os.path.exists(docker_file):
-        docker_file = find_docker_file(docker_dir, dependency + ".dockerfile")
-      if not docker_file:
-        tee_output(prefix, "Docker build failed; %s could not be found; terminating\n" % (dependency + ".dockerfile"))
-        return 1
-      p = subprocess.Popen([
-        "docker", 
-        "build", 
-        "--build-arg",
-        "CPU_COUNT=%s" % str(multiprocessing.cpu_count()),
-        "--build-arg",
-        "MAX_CONCURRENCY=%s" % max(self.benchmarker.concurrency_levels),
-        "-f", 
-        docker_file, 
-        "-t", 
-        "tfb/%s" % dependency, 
-        os.path.dirname(docker_file)],
-          stdout=subprocess.PIPE,
-          stderr=subprocess.STDOUT)
-      nbsr = setup_util.NonBlockingStreamReader(p.stdout)
-      while (p.poll() is None):
-        for i in xrange(10):
-          try:
-            line = nbsr.readline(0.05)
-            if line:
-              tee_output(prefix, line)
-          except setup_util.EndOfStream:
-            break
-      if p.returncode != 0:
-        tee_output(prefix, "Docker build failed; terminating\n")
-        return 1
-    p = subprocess.Popen([
-      "docker", 
-      "build", 
-      "--build-arg",
-      "CPU_COUNT=%s" % str(multiprocessing.cpu_count()),
-      "--build-arg",
-      "MAX_CONCURRENCY=%s" % max(self.benchmarker.concurrency_levels),
-      "-f", 
-      test_docker_file, 
-      "-t", 
-      "tfb/test/%s" % self.name, 
-      self.directory],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
-    nbsr = setup_util.NonBlockingStreamReader(p.stdout)
-    while (p.poll() is None):
-      for i in xrange(10):
+    prev_line = os.linesep
+    def handle_build_output(line):
+      if line.startswith('{"stream":'):
+        line = json.loads(line)
+        line = line[line.keys()[0]].encode('utf-8')
+        if prev_line.endswith(os.linesep):
+          tee_output(prefix, line)
+        else:
+          tee_output(line)
+        self.prev_line = line
+
+    docker_buildargs = { 'CPU_COUNT': str(multiprocessing.cpu_count()),
+                         'MAX_CONCURRENCY': str(max(self.benchmarker.concurrency_levels)) }
+
+    test_docker_files = ["%s.dockerfile" % self.name]
+    if self.docker_files is not None:
+      if type(self.docker_files) is list:
+        test_docker_files.extend(self.docker_files)
+      else:
+        raise Exception("docker_files in benchmark_config.json must be an array")
+
+    for test_docker_file in test_docker_files:
+      deps = list(reversed(gather_docker_dependencies(os.path.join(self.directory, test_docker_file))))
+
+      docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup", "linux", "docker")
+
+      for dependency in deps:
+        docker_file = os.path.join(self.directory, dependency + ".dockerfile")
+        if not docker_file or not os.path.exists(docker_file):
+          docker_file = find_docker_file(docker_dir, dependency + ".dockerfile")
+        if not docker_file:
+          tee_output(prefix, "Docker build failed; %s could not be found; terminating\n" % (dependency + ".dockerfile"))
+          return 1
+
+        # Build the dependency image
         try:
-          line = nbsr.readline(0.05)
-          if line:
-            tee_output(prefix, line)
-        except setup_util.EndOfStream:
-          break
-    if p.returncode != 0:
-      tee_output(prefix, "Docker build failed; terminating\n")
-      return 1
-        
+          for line in docker.APIClient(base_url='unix://var/run/docker.sock').build(
+            path=os.path.dirname(docker_file),
+            dockerfile="%s.dockerfile" % dependency,
+            tag="tfb/%s" % dependency,
+            buildargs=docker_buildargs,
+            forcerm=True
+          ):
+            handle_build_output(line)
+        except Exception as e:
+          tee_output(prefix, "Docker dependency build failed; terminating\n")
+          print(e)
+          return 1
+
+    # Build the test images
+    for test_docker_file in test_docker_files:
+        try:
+          for line in docker.APIClient(base_url='unix://var/run/docker.sock').build(
+            path=self.directory,
+            dockerfile=test_docker_file,
+            tag="tfb/test/%s" % test_docker_file.replace(".dockerfile",""),
+            buildargs=docker_buildargs,
+            forcerm=True
+          ):
+            handle_build_output(line)
+        except Exception as e:
+          tee_output(prefix, "Docker build failed; terminating\n")
+          print(e)
+          return 1
+
 
     ##########################
     # Run the Docker container
     ##########################
-    p = subprocess.Popen(["docker", "run", "--rm", "-p", "%s:%s" % (self.port, self.port), "--network=host", "tfb/test/%s" % self.name],
-          stdout=subprocess.PIPE,
-          stderr=subprocess.STDOUT)
-    nbsr = setup_util.NonBlockingStreamReader(p.stdout,
-      "%s: framework processes have terminated" % self.name)
 
-    # Set a limit on total execution time of setup.sh
-    timeout = datetime.now() + timedelta(minutes = 105)
-    time_remaining = timeout - datetime.now()
+	client = docker.from_env()
 
-    # Need to print to stdout once every 10 minutes or Travis-CI will abort
-    travis_timeout = datetime.now() + timedelta(minutes = 5)
-
-    # Flush output until docker run work is finished. This is
-    # either a) when docker run exits b) when the port is bound
-    # c) when we run out of time. 
-    prefix = "Server %s: " % self.name
-    while (p.poll() is None
-      and not self.benchmarker.is_port_bound(self.port)
-      and not time_remaining.total_seconds() < 0):
-
-      # The conditions above are slow to check, so
-      # we will delay output substantially if we only
-      # print one line per condition check.
-      # Adding a tight loop here mitigates the effect,
-      # ensuring that most of the output directly from
-      # docker is sent to tee_output before the outer
-      # loop exits and prints things like "docker exited"
-      for i in xrange(10):
-        try:
-          line = nbsr.readline(0.05)
-          if line:
+    for test_docker_file in test_docker_files:
+      try:
+        def watch_container(container, prefix):
+          for line in container.logs(stream=True):
             tee_output(prefix, line)
 
-            # Reset Travis-CI timer
-            travis_timeout = datetime.now() + timedelta(minutes = 5)
-        except setup_util.EndOfStream:
-          tee_output(prefix, "Docker has terminated\n")
-          break
-      time_remaining = timeout - datetime.now()
+        container = client.containers.run(
+          "tfb/test/%s" % test_docker_file.replace(".dockerfile", ""),
+          network_mode="host",
+          privileged=True,
+          stderr=True,
+          detach=True)
 
-      if (travis_timeout - datetime.now()).total_seconds() < 0:
-        sys.stdout.write(prefix + 'Printing so Travis-CI does not time out\n')
-        sys.stdout.write(prefix + "Status: Poll: %s, Port %s bound: %s, Time Left: %s\n" % (
-          p.poll(), self.port, self.benchmarker.is_port_bound(self.port), time_remaining))
-        sys.stdout.flush()
-        travis_timeout = datetime.now() + timedelta(minutes = 5)
+        prefix = "Server %s: " % self.name
+        watch_thread = Thread(target = watch_container, args=(container,prefix))
+        watch_thread.daemon = True
+        watch_thread.start()
 
-    # Did we time out?
-    if time_remaining.total_seconds() < 0:
-      tee_output(prefix, "Docker run has timed out!! Aborting...\n" % self.setup_file)
-      p.kill()
-      return 1
+      except Exception as e:
+        tee_output(prefix, "Running docker cointainer: %s failed" % test_docker_file)
+        print(e)
+        return 1
 
-    # What's our return code?
-    # If docker run has terminated, use that code
-    # Otherwise, detect if the port was bound
-    tee_output(prefix, "Status: Poll: %s, Port %s bound: %s, Time Left: %s\n" % (
-      p.poll(), self.port, self.benchmarker.is_port_bound(self.port), time_remaining))
-    retcode = (p.poll() if p.poll() is not None else 0 if self.benchmarker.is_port_bound(self.port) else 1)
-    if p.poll() is not None:
-      tee_output(prefix, "Docker run process exited naturally with %s\n" % p.poll())
-    elif self.benchmarker.is_port_bound(self.port):
-      tee_output(prefix, "Bound port detected on %s\n" % self.port)
-
-    # Before we return control to the benchmarker, spin up a
-    # thread to keep an eye on the pipes in case the running
-    # framework uses stdout/stderr. Once all processes accessing
-    # the subprocess.PIPEs are dead, this thread will terminate.
-    # Use a different prefix to indicate this is the framework
-    # speaking
-    def watch_child_pipes(nbsr, prefix):
-      while True:
-        try:
-          line = nbsr.readline(60)
-          if line:
-            tee_output(prefix, line)
-        except setup_util.EndOfStream:
-          tee_output(prefix, "Framework processes have terminated\n")
-          return
-
-    watch_thread = Thread(target = watch_child_pipes,
-      args = (nbsr, prefix))
-    watch_thread.daemon = True
-    watch_thread.start()
-
-    return retcode
+    return 0
   ############################################################
   # End start
   ############################################################
@@ -851,6 +799,7 @@ class FrameworkTest:
     self.display_name = ""
     self.notes = ""
     self.versus = ""
+    self.docker_files = None
 
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)

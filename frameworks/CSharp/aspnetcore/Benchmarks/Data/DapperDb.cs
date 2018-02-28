@@ -37,9 +37,9 @@ namespace Benchmarks.Data
             }
         }
 
-        async Task<World> ReadSingleRow(DbConnection db)
+        Task<World> ReadSingleRow(DbConnection db)
         {
-            return await db.QueryFirstOrDefaultAsync<World>(
+            return db.QueryFirstOrDefaultAsync<World>(
                     "SELECT id, randomnumber FROM world WHERE id = @Id",
                     new { Id = _random.Next(1, 10001) });
         }

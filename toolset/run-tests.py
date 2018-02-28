@@ -149,12 +149,10 @@ def main(argv=None):
     parser.add_argument('--results-upload-uri', default=None, help='A URI where the in-progress results.json file will be POSTed periodically')
     parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
 
-    # TODO: remove this; install dir goes away with docker
-    parser.add_argument('--clean-all', action='store_true', dest='clean_all', default=False, help='Removes the results and installs directories')
-
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
     parser.add_argument('--test-dir', nargs='+', dest='test_dir', help='name of framework directory containing all tests to run')
+    parser.add_argument('--test-lang', nargs='+', dest='test_lang', help='name of language directory containing all tests to run')
     parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
     parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'cached_query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
     parser.add_argument('-m', '--mode', choices=['benchmark', 'verify', 'debug'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown. debug mode will skip verification and leave the server running.')
@@ -176,6 +174,10 @@ def main(argv=None):
         return 0
 
     benchmarker = Benchmarker(vars(args))
+
+    if args.clean:
+        benchmarker.clean_all()
+        return 0
 
     # Run the benchmarker in the specified mode
     #   Do not use benchmarker variables for these checks,
