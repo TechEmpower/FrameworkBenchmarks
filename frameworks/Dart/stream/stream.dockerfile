@@ -4,4 +4,4 @@ COPY ./ ./
 
 RUN pub upgrade
 
-CMD ["./stream-server.sh"]
+CMD dart server.dart -a 0.0.0.0 -p 9001 -d ${CPU_COUNT}
