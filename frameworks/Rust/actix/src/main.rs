@@ -22,11 +22,11 @@ mod schema;
 mod models;
 
 struct State {
-    db: SyncAddress<db::DbExecutor>
+    db: Addr<Syn, db::DbExecutor>
 }
 
 fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
-    req.state().db.call_fut(db::RandomWorld)
+    req.state().db.send(db::RandomWorld)
         .from_err()
         .and_then(|res| {
             match res {
@@ -54,7 +54,7 @@ fn queries(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
     let q = cmp::min(500, cmp::max(1, q));
 
     // run sql queries
-    req.state().db.call_fut(db::RandomWorlds(q))
+    req.state().db.send(db::RandomWorlds(q))
         .from_err()
         .and_then(|res| {
             if let Ok(worlds) = res {
@@ -81,7 +81,7 @@ fn updates(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
     let q = cmp::min(500, cmp::max(1, q));
 
     // update worlds
-    req.state().db.call_fut(db::UpdateWorld(q))
+    req.state().db.send(db::UpdateWorld(q))
         .from_err()
         .and_then(move |res| {
             if let Ok(worlds) = res {
@@ -105,7 +105,7 @@ struct FortuneTemplate<'a> {
 }
 
 fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
-    req.state().db.call_fut(db::TellFortune)
+    req.state().db.send(db::TellFortune)
         .from_err()
         .and_then(|res| {
             match res {
@@ -136,7 +136,7 @@ fn main() {
 
     // Start db executor actors
     let addr = SyncArbiter::start(
-        num_cpus::get() * 3, move || db::DbExecutor::new(&db_url));
+        num_cpus::get() * 4, move || db::DbExecutor::new(&db_url));
 
     // start http server
     HttpServer::new(
