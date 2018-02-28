@@ -137,6 +137,7 @@ env:
     - "TESTDIR=PHP/fat-free"
     - "TESTDIR=PHP/fuel"
     - "TESTDIR=PHP/kohana"
+    - "TESTDIR=PHP/kumbiaphp"
     - "TESTDIR=PHP/laravel"
     - "TESTDIR=PHP/limonade"
     - "TESTDIR=PHP/lithium"
