@@ -51,4 +51,6 @@ RUN cd "${IROOT}" && \
 
 ENV PATH=${H2O_HOME}/bin:${PATH}
 
-CMD ["./setup.sh"]
+RUN chmod a+wrx start-servers.sh
+
+CMD ["./start-servers.sh"]

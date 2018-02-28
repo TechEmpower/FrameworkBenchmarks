@@ -79,3 +79,5 @@ else
 	echo "Running h2o_app multithreaded."
 	run_h2o_app 0 "${H2O_APP_HOME}/bin" "${H2O_APP_HOME}/share/h2o_app"
 fi
+
+wait
