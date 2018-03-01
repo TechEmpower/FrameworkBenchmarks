@@ -1,6 +1,6 @@
 # Grizzly Benchmarking Test
 
-This is the Grizzly portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the Grizzly portion of a [benchmarking test suite](../) comparing a variety of web development platforms. There is a subfolder `grizzly-jersey` where the combination of these two projects is used.
 
 ### Plain text serialization test
 * [Plain text test resource](src/main/java/org/glassfish/grizzly/bm/PlainTextHttpHandler.java)

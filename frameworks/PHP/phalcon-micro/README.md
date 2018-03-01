@@ -22,10 +22,10 @@ Uses Phalcon's template engine 'Volt'
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Phalcon 3.2.4](http://phalconphp.com/)
-* [PHP Version 5.6.32](http://www.php.net/) with FPM, APC and Phalcon extension
-* [nginx 1.12.0](http://nginx.org/)
-* [MySQL 5.7.20](https://dev.mysql.com/)
+* [Phalcon 3.3.1](http://phalconphp.com/)
+* [PHP Version 5.6.33](http://www.php.net/) with FPM, APC and Phalcon extension
+* [nginx 1.12.2](http://nginx.org/)
+* [MySQL 5.7.21](https://dev.mysql.com/)
 
 ## Test URLs
 ### JSON Encoding Test

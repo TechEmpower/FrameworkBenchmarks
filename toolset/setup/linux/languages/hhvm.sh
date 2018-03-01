@@ -12,10 +12,7 @@ fi
 
 fw_get http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -
 
-# hhvm 3.24 causes most of our hhvm-using test implementations to segmentation
-# fault when connecting to the mysql database (the crash happens right as they
-# try to specify utf8 as the charset).  hhvm 3.21 doesn't have this problem.
-echo deb [arch=amd64] http://dl.hhvm.com/ubuntu `lsb_release -sc`-lts-3.21 main | sudo tee /etc/apt/sources.list.d/hhvm.list
+echo deb [arch=amd64] http://dl.hhvm.com/ubuntu `lsb_release -sc`-lts-3.24 main | sudo tee /etc/apt/sources.list.d/hhvm.list
 sudo apt-get update
 sudo apt-get install -y hhvm
 

@@ -10,7 +10,7 @@ RETCODE=$(fw_exists ${IROOT}/php7.installed)
   source $IROOT/php7.installed
   return 0; }
 
-VERSION="7.2.1"
+VERSION="7.2.2"
 PHP_HOME=$IROOT/php-$VERSION
 
 rm -rf $IROOT/php7
