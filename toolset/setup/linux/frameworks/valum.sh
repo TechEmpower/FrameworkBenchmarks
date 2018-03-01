@@ -2,7 +2,7 @@
 
 VALUM_VERSION="0.3.15"
 
-fw_depends meson ninja vala libsoup2.4-dev
+fw_depends meson ninja vala libsoup
 
 fw_installed valum && return 0
 
