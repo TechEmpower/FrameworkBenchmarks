@@ -1,5 +1,7 @@
 FROM tfb/erlang:latest
 
+COPY ./ ./
+
 RUN rebar get-deps
 RUN rebar compile
 
