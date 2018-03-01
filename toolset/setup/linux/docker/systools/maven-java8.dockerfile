@@ -1,4 +1,4 @@
-FROM tfb/java:latest
+FROM tfb/java8:latest
 
 RUN mkdir /maven
 WORKDIR /maven
