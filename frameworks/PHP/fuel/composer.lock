@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "85a315b794fce9dcce6a9dd2b986156e",
+    "content-hash": "e9e3a1602c27b69aeef10e8dd9f3d54c",
     "packages": [
         {
             "name": "composer/installers",
@@ -127,123 +127,84 @@
             "time": "2017-12-29T09:13:20+00:00"
         },
         {
-            "name": "kohana/core",
-            "version": "v3.3.3",
+            "name": "fuel/auth",
+            "version": "1.7.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kohana/core.git",
-                "reference": "fa66e193b56cbf4bc36aa16caec31feccf31e92a"
+                "url": "https://github.com/fuel/auth.git",
+                "reference": "1.8/develop"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kohana/core/zipball/fa66e193b56cbf4bc36aa16caec31feccf31e92a",
-                "reference": "fa66e193b56cbf4bc36aa16caec31feccf31e92a",
-                "shasum": ""
+                "url": "https://github.com/fuel/auth/archive/1.7/master.zip",
+                "reference": "1.8/develop",
+                "shasum": null
             },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "kohana/koharness": "*@dev",
-                "kohana/unittest": "3.3.*@dev"
-            },
-            "suggest": {
-                "ext-curl": "*",
-                "ext-http": "*",
-                "ext-mcrypt": "*"
-            },
-            "type": "library",
-            "extra": {
-                "installer-paths": {
-                    "vendor/{$vendor}/{$name}": [
-                        "type:kohana-module"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-3.3/develop": "3.3.x-dev",
-                    "dev-3.4/develop": "3.4.x-dev"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Kohana Team",
-                    "email": "team@kohanaframework.org",
-                    "homepage": "http://kohanaframework.org/team",
-                    "role": "developer"
-                }
-            ],
-            "description": "Core system classes for the Kohana application framework",
-            "homepage": "http://kohanaframework.org",
-            "keywords": [
-                "framework",
-                "kohana"
-            ],
-            "time": "2014-12-11T02:17:12+00:00"
+            "type": "fuel-package"
         },
         {
-            "name": "kohana/database",
-            "version": "v3.3.6",
+            "name": "fuel/core",
+            "version": "1.7.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kohana/database.git",
-                "reference": "3edf2fe2cc6deeab41acfff032f38f697f9ef6fc"
+                "url": "https://github.com/fuel/core.git",
+                "reference": "1.8/develop"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kohana/database/zipball/3edf2fe2cc6deeab41acfff032f38f697f9ef6fc",
-                "reference": "3edf2fe2cc6deeab41acfff032f38f697f9ef6fc",
-                "shasum": ""
+                "url": "https://github.com/fuel/core/archive/1.7/master.zip",
+                "reference": "1.8/develop",
+                "shasum": null
             },
-            "require": {
-                "composer/installers": "~1.0",
-                "kohana/core": ">=3.3",
-                "php": ">=5.3.6"
+            "type": "fuel-package"
+        },
+        {
+            "name": "fuel/oil",
+            "version": "1.7.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fuel/oil.git",
+                "reference": "1.8/develop"
             },
-            "require-dev": {
-                "kohana/core": "3.3.*@dev",
-                "kohana/koharness": "*@dev",
-                "kohana/unittest": "3.3.*@dev"
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/fuel/oil/archive/1.7/master.zip",
+                "reference": "1.8/develop",
+                "shasum": null
             },
-            "suggest": {
-                "ext-mysql": "*",
-                "ext-pdo": "*"
+            "type": "fuel-package"
+        },
+        {
+            "name": "fuel/orm",
+            "version": "1.7.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fuel/orm.git",
+                "reference": "1.8/develop"
             },
-            "type": "kohana-module",
-            "extra": {
-                "branch-alias": {
-                    "dev-3.3/develop": "3.3.x-dev",
-                    "dev-3.4/develop": "3.4.x-dev"
-                },
-                "installer-paths": {
-                    "vendor/{$vendor}/{$name}": [
-                        "type:kohana-module"
-                    ]
-                }
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/fuel/orm/archive/1.7/master.zip",
+                "reference": "1.8/develop",
+                "shasum": null
             },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Kohana Team",
-                    "email": "team@kohanaframework.org",
-                    "homepage": "http://kohanaframework.org/team",
-                    "role": "developer"
-                }
-            ],
-            "description": "The official Kohana module for database interactions, building queries, and prepared statements",
-            "homepage": "http://kohanaframework.org",
-            "keywords": [
-                "database",
-                "framework",
-                "kohana"
-            ],
-            "time": "2016-03-23T17:12:30+00:00"
+            "type": "fuel-package"
+        },
+        {
+            "name": "fuel/parser",
+            "version": "1.7.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fuel/parser.git",
+                "reference": "1.8/develop"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/fuel/parser/archive/1.7/master.zip",
+                "reference": "1.8/develop",
+                "shasum": null
+            },
+            "type": "fuel-package"
         }
     ],
     "packages-dev": [],
