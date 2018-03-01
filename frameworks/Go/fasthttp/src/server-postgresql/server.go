@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"runtime"
-	"sort"
 
 	"github.com/jackc/pgx"
 	"github.com/valyala/fasthttp"
@@ -82,9 +81,9 @@ func fortuneHandler(ctx *fasthttp.RequestCtx) {
 		log.Fatalf("Error selecting db data: %v", err)
 	}
 
+	var f templates.Fortune
 	fortunes := make([]templates.Fortune, 0, 16)
 	for rows.Next() {
-		var f templates.Fortune
 		if err := rows.Scan(&f.ID, &f.Message); err != nil {
 			log.Fatalf("Error scanning fortune row: %s", err)
 		}
@@ -93,7 +92,7 @@ func fortuneHandler(ctx *fasthttp.RequestCtx) {
 	rows.Close()
 	fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
 
-	sort.Sort(common.FortunesByMessage(fortunes))
+	common.SortFortunesByMessage(fortunes)
 
 	ctx.SetContentType("text/html; charset=utf-8")
 	templates.WriteFortunePage(ctx, fortunes)
@@ -110,7 +109,8 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 	}
 
 	// sorting is required for insert deadlock prevention.
-	sort.Sort(common.WorldsByID(worlds))
+	common.SortWorldsByID(worlds)
+
 	txn, err := db.Begin()
 	if err != nil {
 		log.Fatalf("Error starting transaction: %s", err)
