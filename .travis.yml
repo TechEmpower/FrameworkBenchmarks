@@ -70,7 +70,7 @@ env:
     # - "TESTDIR=Haskell/yesod"
     # - "TESTDIR=Haskell/servant"
     # - "TESTDIR=Haskell/spock"
-    # - "TESTDIR=Java/act"
+     - "TESTDIR=Java/act"
     # - "TESTDIR=Java/activeweb"
     # - "TESTDIR=Java/baratine"
     # - "TESTDIR=Java/bayou"
