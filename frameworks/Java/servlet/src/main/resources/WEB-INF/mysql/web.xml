@@ -5,12 +5,21 @@
 	version="2.4">
 	<servlet>
 		<servlet-name>db</servlet-name>
-		<servlet-class>hello.DbPoolServlet</servlet-class>
+		<servlet-class>hello.DbSQLServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>db</servlet-name>
 		<url-pattern>/db</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>queries</servlet-name>
+		<servlet-class>hello.QueriesSQLServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>queries</servlet-name>
+		<url-pattern>/queries</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>fortunes</servlet-name>
