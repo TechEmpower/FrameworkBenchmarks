@@ -1,7 +1,14 @@
 FROM tfb/java:latest
 
-ENV RESIN_HOME=/resin-4.0.55
+RUN mkdir /resin
+WORKDIR /resin
+RUN curl http://www.caucho.com/download/resin-4.0.55.tar.gz | tar xz
+WORKDIR /resin/resin-4.0.55
+RUN ./configure
+RUN make
+RUN make install
 
-RUN curl -sLO http://www.caucho.com/download/resin-4.0.55.tar.gz
-RUN tar xf resin-4.0.55.tar.gz
-RUN cd resin-4.0.55; ./configure; make; make install
+# Remove the default app so that frameworks using Resin don't have to.
+RUN rm -rf /var/resin/webapps/*
+
+ENV RESIN_HOME=/resin/resin-4.0.55
