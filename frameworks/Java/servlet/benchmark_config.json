@@ -62,7 +62,7 @@
     "raw": {
       "setup_file": "setup_mysql",
       "db_url": "/servlet/db",
-      "query_url": "/servlet/db?queries=",
+      "query_url": "/servlet/queries?queries=",
       "fortune_url": "/servlet/fortunes",
       "update_url": "/servlet/update?queries=",
       "port": 8080,
@@ -83,7 +83,7 @@
     "postgres-raw": {
       "setup_file": "setup_postgresql",
       "db_url": "/servlet/db",
-      "query_url": "/servlet/db?queries=",
+      "query_url": "/servlet/queries?queries=",
       "cached_query_url": "/servlet/cached-worlds?queries=",
       "fortune_url": "/servlet/fortunes",
       "update_url": "/servlet/update?queries=",

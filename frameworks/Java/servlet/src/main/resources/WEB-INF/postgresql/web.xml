@@ -4,13 +4,22 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	version="2.4">
 	<servlet>
-		<servlet-name>postgres</servlet-name>
-		<servlet-class>hello.DbPoolServlet</servlet-class>
+		<servlet-name>db</servlet-name>
+		<servlet-class>hello.DbSQLServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>postgres</servlet-name>
+		<servlet-name>db</servlet-name>
 		<url-pattern>/db</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>queries</servlet-name>
+		<servlet-class>hello.QueriesSQLServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>queries</servlet-name>
+		<url-pattern>/queries</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>postgres-update</servlet-name>
