@@ -109,7 +109,7 @@ env:
     # - "TESTDIR=Kotlin/http4k"
     # - "TESTDIR=Kotlin/ktor"
     # - "TESTDIR=Kotlin/pronghorn"
-    # - "TESTDIR=Lua/lapis"
+     - "TESTDIR=Lua/lapis"
     # - "TESTDIR=Lua/octopus"
     # - "TESTDIR=Lua/openresty"
     # - "TESTDIR=Nim/jester"
