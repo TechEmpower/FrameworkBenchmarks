@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 /**
- * Database connectivity (with a Servlet-container managed pool) test.
+ * Handles the multi-query database test using a SQL database with a Servlet-container managed pool.
  */
 @SuppressWarnings("serial")
-public class DbPoolServlet extends HttpServlet {
+public class QueriesSQLServlet extends HttpServlet {
 	// Database details.
 	private static final String DB_QUERY = "SELECT * FROM World WHERE id = ?";
 	private static final int DB_ROWS = 10000;
@@ -31,14 +31,12 @@ public class DbPoolServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
 			IOException {
-		// Reference the data source.
-		final DataSource source = dataSource;
 		final int count = Common.normalise(req.getParameter("queries"));
 		final World[] worlds = new World[count];
 		final Random random = ThreadLocalRandom.current();
 
 		// Fetch some rows from the database.
-		try (Connection conn = source.getConnection()) {
+		try (Connection conn = dataSource.getConnection()) {
 			try (PreparedStatement statement = conn.prepareStatement(DB_QUERY,
 					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
 				// Run the query the number of times requested.
@@ -47,9 +45,8 @@ public class DbPoolServlet extends HttpServlet {
 					statement.setInt(1, id);
 
 					try (ResultSet results = statement.executeQuery()) {
-						if (results.next()) {
-							worlds[i] = new World(id, results.getInt("randomNumber"));
-						}
+						results.next();
+						worlds[i] = new World(id, results.getInt("randomNumber"));
 					}
 				}
 			}
@@ -61,10 +58,6 @@ public class DbPoolServlet extends HttpServlet {
 		res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_JSON);
 
 		// Write JSON encoded message to the response.
-		if (count == 1) {
-			Common.MAPPER.writeValue(res.getOutputStream(), worlds[0]);
-		} else {
-			Common.MAPPER.writeValue(res.getOutputStream(), worlds);
-		}
+		Common.MAPPER.writeValue(res.getOutputStream(), worlds);
 	}
 }
