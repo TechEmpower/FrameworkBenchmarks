@@ -1,6 +1,6 @@
 FROM tfb/sbt:latest
 
-COPY ./play2-scala ./
+COPY ./play2-scala-anorm ./
 
 RUN sbt stage
 
