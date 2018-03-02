@@ -1,7 +1,5 @@
 FROM tfb/sbt-java8:latest
 
-# May need java8?
-
 COPY ./ ./
 
 RUN sbt clean assembly -batch
