@@ -458,7 +458,7 @@ class Benchmarker:
         # Upload the results thus far to another server (optional)
         ##########################################################
 
-        self.__upload_results()
+        self.results.upload()
 
         if self.config.mode == "verify" and not passed_verify:
           print("Failed verify!")

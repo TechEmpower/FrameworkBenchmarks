@@ -73,6 +73,7 @@ class FrameworkTest:
   # Public Methods
   ##########################################################################################
 
+
   def start(self, out):
     '''
     Start the test using its setup file
@@ -95,10 +96,6 @@ class FrameworkTest:
       out.flush()
 
     prefix = "Setup %s: " % self.name
-
-    ###########################
-    # Build the Docker images
-    ##########################
 
     # Build the test docker file based on the test name
     # then build any additional docker files specified in the benchmark_config
@@ -171,10 +168,7 @@ class FrameworkTest:
         print(e)
         return 1
 
-
-    ##########################
     # Run the Docker container
-    ##########################
     client = docker.from_env()
 
     for test_docker_file in test_docker_files:
@@ -362,7 +356,9 @@ class FrameworkTest:
 
 
   def requires_database(self):
-    '''Returns True/False if this test requires a database'''
+    '''
+    Returns True/False if this test requires a database
+    '''
     return any(tobj.requires_db for (ttype,tobj) in self.runTests.iteritems())
 
 
@@ -436,7 +432,6 @@ class FrameworkTest:
                 m = re.search("[0-9]+", line)
                 rawData["endTime"] = int(m.group(0))
                 test_stats = self.__parse_stats(test_type, rawData["startTime"], rawData["endTime"], 1)
-                # rawData["averageStats"] = self.__calculate_average_stats(test_stats)
                 stats.append(test_stats)
       with open(self.results.stats_file(self.name, test_type) + ".json", "w") as stats_file:
         json.dump(stats, stats_file, indent=2)

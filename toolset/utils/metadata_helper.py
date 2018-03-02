@@ -87,16 +87,14 @@ def gather_tests(include = [], exclude=[], benchmarker_config=None, results=None
           benchmarker_config.test_dir.append("{!s}/{!s}".format(lang, test_dir))
       else:
         raise Exception("Unable to locate language directory: {!s}".format(lang))
-
-  if benchmarker_config.test_dir:
+  elif benchmarker_config.test_dir:
     for test_dir in benchmarker_config.test_dir:
       dir_config_files = glob.glob("{!s}/frameworks/{!s}/benchmark_config.json".format(benchmarker_config.fwroot, test_dir))
       if len(dir_config_files):
         config_files.extend(dir_config_files)
       else:
         raise Exception("Unable to locate tests in test-dir: {!s}".format(test_dir))
-
-  if benchmarker_config.test:
+  elif benchmarker_config.test:
     for test in benchmarker_config.test:
       dir_config_files = glob.glob("{!s}/frameworks/*/{!s}/benchmark_config.json".format(benchmarker_config.fwroot, test))
       if len(dir_config_files):
