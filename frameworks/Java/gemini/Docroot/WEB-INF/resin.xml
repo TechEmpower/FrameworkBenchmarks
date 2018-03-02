@@ -3,7 +3,7 @@
 
   <cluster id="">
     
-    <resin:import path="${RESIN_HOME}/conf/app-default.xml" />
+    <resin:import path="/etc/resin/app-default.xml" />
     <log name="" level="config" path="stdout:" timestamp="[%H:%M:%S.%s] " />
 
     <server id="">
@@ -14,7 +14,7 @@
     </server>
 
     <host>
-      <web-app id="/" root-directory="C:/Development/FrameworkBenchmarks/frameworks/Java/gemini/Docroot" />
+      <web-app id="/" root-directory="/gemini/Docroot" />
     </host>
 
   </cluster>
