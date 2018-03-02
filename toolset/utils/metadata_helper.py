@@ -87,20 +87,14 @@ def gather_tests(include = [], exclude=[], benchmarker_config=None, results=None
           benchmarker_config.test_dir.append("{!s}/{!s}".format(lang, test_dir))
       else:
         raise Exception("Unable to locate language directory: {!s}".format(lang))
-  elif benchmarker_config.test_dir:
+
+  if benchmarker_config.test_dir:
     for test_dir in benchmarker_config.test_dir:
       dir_config_files = glob.glob("{!s}/frameworks/{!s}/benchmark_config.json".format(benchmarker_config.fwroot, test_dir))
       if len(dir_config_files):
         config_files.extend(dir_config_files)
       else:
         raise Exception("Unable to locate tests in test-dir: {!s}".format(test_dir))
-  elif benchmarker_config.test:
-    for test in benchmarker_config.test:
-      dir_config_files = glob.glob("{!s}/frameworks/*/{!s}/benchmark_config.json".format(benchmarker_config.fwroot, test))
-      if len(dir_config_files):
-        config_files.extend(dir_config_files)
-      else:
-        raise Exception("Unable to locate tests in test: {!s}".format(benchmarker_config.test))
   else:
     config_files.extend(glob.glob("{!s}/frameworks/*/*/benchmark_config.json".format(benchmarker_config.fwroot)))
 
@@ -113,23 +107,23 @@ def gather_tests(include = [], exclude=[], benchmarker_config=None, results=None
       except ValueError:
         raise Exception("Error loading '{!s}'.".format(config_file_name))
 
-  # Find all tests in the config file
-  config_tests = framework_test.parse_config(config,
-    os.path.dirname(config_file_name), benchmarker_config, results)
+    # Find all tests in the config file
+    config_tests = framework_test.parse_config(config,
+      os.path.dirname(config_file_name), benchmarker_config, results)
 
-  # Filter
-  for test in config_tests:
-    if len(include) is 0 and len(exclude) is 0:
-      # No filters, we are running everything
-      tests.append(test)
-    elif test.name in exclude:
-      continue
-    elif test.name in include:
-      tests.append(test)
-    else:
-      # An include list exists, but this test is
-      # not listed there, so we ignore it
-      pass
+    # Filter
+    for test in config_tests:
+      if len(include) is 0 and len(exclude) is 0:
+        # No filters, we are running everything
+        tests.append(test)
+      elif test.name in exclude:
+        continue
+      elif test.name in include:
+        tests.append(test)
+      else:
+        # An include list exists, but this test is
+        # not listed there, so we ignore it
+        pass
 
   # Ensure we were able to locate everything that was
   # explicitly included
@@ -162,10 +156,11 @@ def gather_remaining_tests(config, results):
 
 
 def gather_frameworks(include = [], exclude=[], config=None):
-  '''Return a dictionary mapping frameworks->[test1,test2,test3]
+  '''
+  Return a dictionary mapping frameworks->[test1,test2,test3]
   for quickly grabbing all tests in a grouped manner.
-  Args have the same meaning as gather_tests'''
-
+  Args have the same meaning as gather_tests
+  '''
   tests = gather_tests(include, exclude, config)
   frameworks = dict()
 

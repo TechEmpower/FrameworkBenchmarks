@@ -49,7 +49,7 @@ class Benchmarker:
     '''
     Prints all the available tests
     '''
-    all_tests = gather_tests()
+    all_tests = gather_tests(benchmarker_config=self.config)
 
     for test in all_tests:
       print(test.name)
@@ -61,7 +61,7 @@ class Benchmarker:
     '''
     Prints the metadata for all the available tests
     '''
-    all_tests = gather_tests()
+    all_tests = gather_tests(benchmarker_config=self.config)
     all_tests_json = json.dumps(map(lambda test: {
       "name": test.name,
       "approach": test.approach,
@@ -87,7 +87,7 @@ class Benchmarker:
     '''
     Re-parses the raw data for a given timestamp
     '''
-    all_tests = gather_tests()
+    all_tests = gather_tests(benchmarker_config=self.config)
 
     for test in all_tests:
       test.parse_all()
