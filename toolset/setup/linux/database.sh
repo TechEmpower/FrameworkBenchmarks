@@ -29,6 +29,7 @@ sudo add-apt-repository \
    $(lsb_release -cs) \
    stable"
 sudo apt-get update
+# TODO: this doesn't work on real machines; only single-server setups which conveniently have docker already
 sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"  docker-ce
 if ! sudo grep -q -E "^docker:" /etc/group; then
   sudo groupadd docker

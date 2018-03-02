@@ -14,6 +14,10 @@ from setup.linux.unbuffered import Unbuffered
 from setup.linux import setup_util
 from scaffolding import Scaffolding
 from initializer import initialize
+from utils import cleaner
+from utils.Results import Results
+from utils.BenchmarkConfig import BenchmarkConfig
+from utils.docker_helper import build_docker_images
 from ast import literal_eval
 
 # Enable cross-platform colored output
@@ -140,6 +144,7 @@ def main(argv=None):
     parser.add_argument('--init', action='store_true', default=False, help='Initializes the benchmark environment')
 
     # Suite options
+    parser.add_argument('--build', nargs='+', help='Builds the dockerfile(s) for the given test(s)')
     parser.add_argument('--clean', action='store_true', default=False, help='Removes the results directory')
     parser.add_argument('--new', action='store_true', default=False, help='Initialize a new framework test')
     parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
@@ -165,29 +170,32 @@ def main(argv=None):
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
 
-    if args.new:
+    config = BenchmarkConfig(vars(args))
+    results = Results(config)
+
+    if config.new:
         Scaffolding().scaffold()
-        return 0
 
-    if args.init:
-        initialize(args)
-        return 0
+    elif config.init:
+        initialize(config)
 
-    benchmarker = Benchmarker(vars(args))
+    elif config.build:
+        build_docker_images(config)
 
-    if args.clean:
-        benchmarker.clean_all()
-        return 0
+    elif config.clean:
+        cleaner.clean(results)
 
-    # Run the benchmarker in the specified mode
-    #   Do not use benchmarker variables for these checks,
-    #   they are either str or bool based on the python version
-    if args.list_tests:
+    elif config.list_tests:
         benchmarker.run_list_tests()
-    elif args.parse != None:
+        
+    elif config.parse != None:
         benchmarker.parse_timestamp()
+    
     else:
+        benchmarker = Benchmarker(config, results)
         return benchmarker.run()
+
+    return 0
 
 if __name__ == "__main__":
     sys.exit(main())

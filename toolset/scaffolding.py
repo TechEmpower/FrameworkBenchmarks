@@ -5,7 +5,7 @@ import os
 import imp
 from shutil import copytree
 from setup.linux.setup_util import replace_text
-from benchmark.utils import gather_frameworks, gather_langauges
+from utils.metadata_helper import gather_frameworks, gather_langauges
 
 class Scaffolding:
   def scaffold(self):
