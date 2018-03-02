@@ -18,7 +18,6 @@ from pprint import pprint
 
 
 class FrameworkTestType:
-
     '''
     Interface between a test type (json, query, plaintext, etc) and 
     the rest of TFB. A test type defines a number of keys it expects
@@ -47,9 +46,12 @@ class FrameworkTestType:
 
     def accept(self, content_type):
         return {
-            'json': 'application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7',
-            'html': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'plaintext': 'text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7'
+            'json':
+            'application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7',
+            'html':
+            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'plaintext':
+            'text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7'
         }[content_type]
 
     def setup_out(self, out):
@@ -76,7 +78,8 @@ class FrameworkTestType:
             return self
         else:  # This is quite common - most tests don't support all types
             raise AttributeError(
-                "A %s requires the benchmark_config.json to contain %s" % (self.name, self.args))
+                "A %s requires the benchmark_config.json to contain %s" %
+                (self.name, self.args))
 
     def request_headers_and_body(self, url):
         '''
@@ -94,7 +97,9 @@ class FrameworkTestType:
         self.out.write(str(headers))
         self.out.write(body)
         b = 40
-        print("  Response (trimmed to {:d} bytes): \"{!s}\"".format(b, body.strip()[:b]))
+        print("  Response (trimmed to {:d} bytes): \"{!s}\"".format(
+            b,
+            body.strip()[:b]))
         return headers, body
 
     def verify(self, base_url):
@@ -146,7 +151,8 @@ class FrameworkTestType:
 
         if database_name == "mysql":
             try:
-                db = MySQLdb.connect("TFB-database", "benchmarkdbuser", "benchmarkdbpass", "hello_world")
+                db = MySQLdb.connect("TFB-database", "benchmarkdbuser",
+                                     "benchmarkdbpass", "hello_world")
                 cursor = db.cursor()
                 cursor.execute("SELECT * FROM World")
                 results = cursor.fetchall()
@@ -157,11 +163,12 @@ class FrameworkTestType:
                 print(e)
         elif database_name == "postgres":
             try:
-                db = psycopg2.connect(host="TFB-database",
-                                      port="5432",
-                                      user="benchmarkdbuser",
-                                      password="benchmarkdbpass",
-                                      database="hello_world")
+                db = psycopg2.connect(
+                    host="TFB-database",
+                    port="5432",
+                    user="benchmarkdbuser",
+                    password="benchmarkdbpass",
+                    database="hello_world")
                 cursor = db.cursor()
                 cursor.execute("SELECT * FROM \"World\"")
                 results = cursor.fetchall()
@@ -182,15 +189,18 @@ class FrameworkTestType:
                 for world in db.world.find():
                     if "randomNumber" in world:
                         if "id" in world:
-                            worlds_json[str(int(world["id"]))] = int(world["randomNumber"])
+                            worlds_json[str(int(world["id"]))] = int(
+                                world["randomNumber"])
                         elif "_id" in world:
-                            worlds_json[str(int(world["_id"]))] = int(world["randomNumber"])
+                            worlds_json[str(int(world["_id"]))] = int(
+                                world["randomNumber"])
                 results_json.append(worlds_json)
                 connection.close()
             except Exception as e:
                 print("ERROR: Unable to load current MongoDB World table.")
                 print(e)
         else:
-            raise ValueError("Database: {!s} does not exist".format(database_name))
+            raise ValueError(
+                "Database: {!s} does not exist".format(database_name))
 
         return results_json

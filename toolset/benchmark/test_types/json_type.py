@@ -1,16 +1,12 @@
-from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.verifications import (
-    basic_body_verification,
-    verify_headers,
-    verify_helloworld_object
-)
+from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
+from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_helloworld_object
 
 import json
 
 
 class JsonTestType(FrameworkTestType):
-
     def __init__(self):
+        self.json_url = ""
         kwargs = {
             'name': 'json',
             'accept_header': self.accept('json'),
@@ -23,7 +19,8 @@ class JsonTestType(FrameworkTestType):
         return self.json_url
 
     def verify(self, base_url):
-        '''Validates the response is a JSON object of 
+        '''
+        Validates the response is a JSON object of 
         { 'message' : 'hello, world!' }. Case insensitive and 
         quoting style is ignored
         '''

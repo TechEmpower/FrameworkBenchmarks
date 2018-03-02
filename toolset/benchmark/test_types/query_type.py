@@ -1,16 +1,12 @@
-from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.verifications import (
-    verify_headers,
-    verify_randomnumber_list,
-    verify_query_cases
-)
+from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
+from toolset.benchmark.test_types.verifications import verify_headers, verify_randomnumber_list, verify_query_cases
 
 import json
 
 
 class QueryTestType(FrameworkTestType):
-
     def __init__(self):
+        self.query_url = ""
         kwargs = {
             'name': 'query',
             'accept_header': self.accept('json'),
@@ -32,13 +28,8 @@ class QueryTestType(FrameworkTestType):
         '''
 
         url = base_url + self.query_url
-        cases = [
-            ('2',   'fail'),
-            ('0',   'fail'),
-            ('foo', 'fail'),
-            ('501', 'warn'),
-            ('',    'fail')
-        ]
+        cases = [('2', 'fail'), ('0', 'fail'), ('foo', 'fail'),
+                 ('501', 'warn'), ('', 'fail')]
 
         problems = verify_query_cases(self, cases, url)
 

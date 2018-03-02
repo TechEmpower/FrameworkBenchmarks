@@ -1,6 +1,7 @@
 import os, sys
 from contextlib import contextmanager
 
+
 def header(message, top='-', bottom='-'):
     '''
     Generates a clean header
@@ -23,9 +24,7 @@ def header(message, top='-', bottom='-'):
     return result + os.linesep
 
 
-
 class QuietOutputStream:
-
     def __init__(self, is_quiet):
         self.is_quiet = is_quiet
         self.null_out = open(os.devnull, 'w')

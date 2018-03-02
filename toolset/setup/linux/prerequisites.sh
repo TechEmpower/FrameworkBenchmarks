@@ -39,10 +39,7 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   #  mlton \
   # re2c libnuma-dev
 
-sudo pip install colorama==0.3.1
-# Version 2.3 has a nice Counter() and other features
-# but it requires --allow-external and --allow-unverified
-sudo pip install progressbar==2.2 requests MySQL-python psycopg2 pymongo
+sudo pip install colorama==0.3.1 requests MySQL-python psycopg2-binary pymongo
 
 #
 # Install Docker
@@ -76,10 +73,11 @@ sudo sh -c "echo '*            soft    rtprio             99' >> /etc/security/l
 
 # Create a tfb command alias for running the toolset
 # For now, this still ensures you have to be in the framework root to run it
+export PWD=$(pwd)
 sudo tee /etc/profile.d/tfb.sh <<EOF
 #!/bin/bash
 tfb() {
-  $(pwd)/toolset/run-tests.py "\$@"
+  PYTHONPATH=$PWD python $PWD/toolset/run-tests.py "\$@"
 }
 EOF
 source /etc/profile.d/tfb.sh

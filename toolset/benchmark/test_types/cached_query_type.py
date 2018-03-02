@@ -1,14 +1,10 @@
-from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.verifications import (
-    verify_headers,
-    verify_randomnumber_list,
-    verify_query_cases
-)
+from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
+from toolset.benchmark.test_types.verifications import verify_headers, verify_randomnumber_list, verify_query_cases
 
 
 class CachedQueryTestType(FrameworkTestType):
-
     def __init__(self):
+        self.cached_query_url = ""
         kwargs = {
             'name': 'cached_query',
             'accept_header': self.accept('json'),
@@ -30,13 +26,8 @@ class CachedQueryTestType(FrameworkTestType):
         '''
 
         url = base_url + self.cached_query_url
-        cases = [
-            ('2',   'fail'),
-            ('0',   'fail'),
-            ('foo', 'fail'),
-            ('501', 'warn'),
-            ('',    'fail')
-        ]
+        cases = [('2', 'fail'), ('0', 'fail'), ('foo', 'fail'),
+                 ('501', 'warn'), ('', 'fail')]
 
         problems = verify_query_cases(self, cases, url)
 
