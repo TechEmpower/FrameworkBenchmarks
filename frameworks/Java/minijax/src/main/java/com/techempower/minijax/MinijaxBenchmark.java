@@ -12,6 +12,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.MediaType;
 
 import org.minijax.Minijax;
@@ -78,6 +81,13 @@ public class MinijaxBenchmark {
         return worlds;
     }
 
+    private static class ServerHeaderFilter implements ContainerResponseFilter {
+        @Override
+        public void filter(final ContainerRequestContext request, final ContainerResponseContext response) {
+            response.getHeaders().add("Server", "M");
+        }
+    }
+
     private static int parseCount(final String count) {
         if (count == null || count.isEmpty()) {
             return 1;
@@ -96,6 +106,7 @@ public class MinijaxBenchmark {
                 .register(JsonFeature.class)
                 .register(MustacheFeature.class)
                 .register(MinijaxBenchmark.class)
-                .run();
+                .register(ServerHeaderFilter.class)
+                .start();
     }
 }
