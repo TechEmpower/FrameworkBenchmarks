@@ -107,7 +107,7 @@ env:
      - "TESTLANG=JavaScript"
     # - "TESTDIR=Kotlin/hexagon"
     # - "TESTDIR=Kotlin/http4k"
-    # - "TESTDIR=Kotlin/ktor"
+     - "TESTDIR=Kotlin/ktor"
     # - "TESTDIR=Kotlin/pronghorn"
      - "TESTDIR=Lua/lapis"
     # - "TESTDIR=Lua/octopus"

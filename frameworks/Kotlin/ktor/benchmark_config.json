@@ -11,7 +11,6 @@
         "fortune_url": "/fortunes",
 
         "port": 9090,
-        "setup_file": "setup-netty",
         "approach": "Realistic",
         "classification": "Micro",
         "database": "MySQL",
@@ -35,7 +34,6 @@
         "fortune_url": "/fortunes",
 
         "port": 9090,
-        "setup_file": "setup-jetty",
         "approach": "Realistic",
         "classification": "Micro",
         "database": "MySQL",
@@ -59,7 +57,6 @@
         "fortune_url": "/fortunes",
 
         "port": 9090,
-        "setup_file": "setup-cio",
         "approach": "Realistic",
         "classification": "Micro",
         "database": "MySQL",
