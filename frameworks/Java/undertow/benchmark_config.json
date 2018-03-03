@@ -2,7 +2,6 @@
   "framework": "undertow",
   "tests": [{
     "default": {
-      "setup_file": "setup_no_database",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -22,7 +21,6 @@
       "versus": ""
     },
     "mysql" : {
-      "setup_file": "setup_mysql",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -44,7 +42,6 @@
       "versus": ""
     },
     "postgresql" : {
-      "setup_file": "setup_postgresql",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -66,7 +63,6 @@
       "versus": ""
     },
     "mongodb" : {
-      "setup_file": "setup_mongodb",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -88,7 +84,6 @@
       "versus": ""
     },
     "mongodb-async" : {
-      "setup_file": "setup_mongodb_async",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",

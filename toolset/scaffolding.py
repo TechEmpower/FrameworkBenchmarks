@@ -8,7 +8,7 @@ from setup.linux.setup_util import replace_text
 from benchmark.utils import gather_frameworks, gather_langauges
 
 class Scaffolding:
-  def __init__(self):
+  def scaffold(self):
     print("""
 -------------------------------------------------------------------------------
     This wizard is intended to help build the scaffolding required for a new 
