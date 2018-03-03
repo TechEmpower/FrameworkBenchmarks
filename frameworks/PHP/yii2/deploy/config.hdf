@@ -1,14 +1,16 @@
 # main configuration file
 
 # Application PID File
-PidFile = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/Yii2/hhvm.pid
+PidFile = __TROOT__/hhvm.pid
 
 # Server settings
 Server {
   Port = 9001
   Type = fastcgi
-  SourceRoot = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/Yii2
+  SourceRoot = __TROOT__/app
   DefaultDocument = index.php
+  GzipCompressionLevel = 0
+  EnableKeepAlive = true
 }
 
 # Disable logging completely
@@ -16,7 +18,7 @@ Log {
   UseLogFile = false
   UseSyslog = false
   Level = Error
-  #File = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/Yii2/error.log
+  #File = __TROOT__/error.log
 }
 
 # Enable jit for production mode
@@ -28,7 +30,7 @@ Eval {
 # Repo file
 Repo {
   Central {
-    Path = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/Yii2/.hhvm.bbhc
+    Path = __TROOT__/.hhvm.bbhc
   }
 }
 
