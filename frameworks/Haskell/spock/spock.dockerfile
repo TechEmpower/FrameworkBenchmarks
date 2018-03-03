@@ -1,4 +1,4 @@
-FROM tfb/haskell:latestFROM tfb/haskell:latest
+FROM tfb/haskell:latest
 
 COPY ./ ./
 
