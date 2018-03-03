@@ -8,6 +8,6 @@
     "pug": "2.0.0-rc.4",
     "sequelize": "3.30.0",
     "mysql": "2.15.0",
-    "mongoose": "5.0.6"
+    "mongoose": "4.12.4"
   }
 }

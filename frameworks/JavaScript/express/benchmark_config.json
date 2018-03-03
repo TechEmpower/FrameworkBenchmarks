@@ -2,6 +2,7 @@
   "framework": "express",
   "tests": [{
     "default": {
+      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -21,6 +22,7 @@
       "versus": "nodejs"
     },
     "mongodb": {
+      "setup_file": "setup-mongodb",
       "db_url": "/mongoose",
       "query_url": "/mongoose?queries=",
       "update_url": "/mongoose-update?queries=",
@@ -42,6 +44,7 @@
       "versus": "nodejs"
     },
     "mysql": {
+      "setup_file": "setup-mysql",
       "db_url": "/mysql-orm",
       "query_url": "/mysql-orm?queries=",
       "fortune_url": "/mysql-orm-fortune",

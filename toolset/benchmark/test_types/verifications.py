@@ -267,6 +267,7 @@ sz
 
     n = 0
     while n < len(old_worlds) and successful_updates == 0:
+        print(old_worlds[n]['1'])
         for i in range(1, 10001):
             try:
                 entry_id = str(i)

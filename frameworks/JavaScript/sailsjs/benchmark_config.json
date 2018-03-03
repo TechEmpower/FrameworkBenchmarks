@@ -2,6 +2,7 @@
   "framework": "sailsjs",
   "tests": [{
     "default": {
+      "setup_file": "setup-mysql",
       "json_url": "/json",
       "db_url": "/mysql/db",
       "query_url": "/mysql/queries?queries=",
@@ -25,6 +26,7 @@
       "versus": "nodejs"
     },
     "postgres": {
+      "setup_file": "setup-postgresql",
       "db_url": "/postgres/db",
       "query_url": "/postgres/queries?queries=",
       "update_url": "/postgres/updates?queries=",

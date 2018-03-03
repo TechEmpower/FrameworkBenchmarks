@@ -11,7 +11,7 @@ var Sequelize = require('sequelize')
 var sequelize = new Sequelize(
   'hello_world', 'benchmarkdbuser', 'benchmarkdbpass',
   {
-    host: 'TFB-database',
+    host: '127.0.0.1',
     dialect: 'mysql',
     pool: {
       max: 5000,

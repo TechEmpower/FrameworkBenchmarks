@@ -167,20 +167,7 @@ public final class HelloWebServer {
       config.setUsername(username);
       config.setPassword(password);
       config.setMaximumPoolSize(connections);
-      // Attempt to work around "FATAL: the database system is starting up"
-      // error seen in Travis+Docker+PostgreSQL environment.
-      for (int i = 0;;) {
-        try {
-          return new HikariDataSource(config);
-        } catch (com.zaxxer.hikari.pool.HikariPool.PoolInitializationException e) {
-          if (++i >= 10) throw e;
-          try {
-            Thread.sleep(1000);
-          } catch (InterruptedException e2) {
-            Thread.currentThread().interrupt();
-          }
-        }
-      }
+      return new HikariDataSource(config);
     }
 
     /**

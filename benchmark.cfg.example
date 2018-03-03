@@ -26,6 +26,7 @@ test=None
 type=all
 verbose=True
 clean=False
+clean_all=False
 ulimit=200000
 #results_name=My Benchmarking Run %%Y-%%m-%%d %%H:%%M:%%S
 #results_environment=My Server Environment

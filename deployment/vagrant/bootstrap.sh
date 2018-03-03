@@ -65,6 +65,7 @@ test=None
 type=all
 verbose=True
 clean=False
+clean_all=False
 ulimit=200000
 EOF
 
@@ -91,8 +92,5 @@ Welcome to the FrameworkBenchmarks project!
 EOF
 
   sudo mv motd /etc/
-
-  echo "Setting up client and database machines"
-  tfb --init --quiet
 
 fi

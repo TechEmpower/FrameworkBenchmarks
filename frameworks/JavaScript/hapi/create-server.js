@@ -26,7 +26,9 @@ server.register(Vision, (err) => {
     });
 });
 
-const Handler = require(`./handlers/${process.env.NODE_HANDLER}`);
+const MongooseHandler = require('./handlers/mongoose');
+const SequelizeHandler = require('./handlers/sequelize');
+const SequelizePgHandler = require('./handlers/sequelize-postgres');
 
 // Makes routing simpler as tfb routes are all GET's
 // We also don't use the nifty route features that Hapi has
@@ -46,10 +48,20 @@ const Plaintext = (req, reply) =>
 Route('/json', JsonSerialization);
 Route('/plaintext', Plaintext);
 
-Route('/db', Handler.SingleQuery);
-Route('/queries', Handler.MultipleQueries);
-Route('/fortunes', Handler.Fortunes);
-Route('/updates', Handler.Updates);
+Route('/mongoose/db', MongooseHandler.SingleQuery);
+Route('/mongoose/queries', MongooseHandler.MultipleQueries);
+Route('/mongoose/fortunes', MongooseHandler.Fortunes);
+Route('/mongoose/updates', MongooseHandler.Updates);
+
+Route('/sequelize/db', SequelizeHandler.SingleQuery);
+Route('/sequelize/queries', SequelizeHandler.MultipleQueries);
+Route('/sequelize/fortunes', SequelizeHandler.Fortunes);
+Route('/sequelize/updates', SequelizeHandler.Updates);
+
+Route('/sequelize-pg/db', SequelizePgHandler.SingleQuery);
+Route('/sequelize-pg/queries', SequelizePgHandler.MultipleQueries);
+Route('/sequelize-pg/fortunes', SequelizePgHandler.Fortunes);
+Route('/sequelize-pg/updates', SequelizePgHandler.Updates);
 
 server.start((err) =>
   console.log('Hapi worker started and listening on ' + server.info.uri + " "
