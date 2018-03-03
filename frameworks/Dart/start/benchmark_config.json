@@ -1,8 +1,8 @@
 {
   "framework": "start",
   "tests": [{
-    "default": {
-      "docker_files": ["start-nginx.dockerfile"],
+    "default": { 
+      "setup_file": "setup_mongodb",
       "db_url": "/db-mongo",
       "query_url": "/queries-mongo?queries=",
       "fortune_url": "/fortunes-mongo",

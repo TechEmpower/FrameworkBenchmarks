@@ -11,7 +11,7 @@ var Sequelize = require('sequelize')
 var sequelize = new Sequelize(
   'hello_world', 'benchmarkdbuser', 'benchmarkdbpass',
   {
-    host: 'TFB-database',
+    host: '127.0.0.1',
     dialect: 'postgres',
     pool: {
       max: 5000,
@@ -40,7 +40,7 @@ var Worlds = sequelize.define('world', {
 })
 
 
-var Fortunes = sequelize.define('fortune', {
+var Fortunes = sequelize.define('Fortune', {
   id: {
        type: Sequelize.INTEGER,
        primaryKey: true
