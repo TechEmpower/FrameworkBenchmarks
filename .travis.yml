@@ -181,6 +181,7 @@ env:
      - "TESTDIR=Rust/iron"
      - "TESTDIR=Rust/nickel"
      - "TESTDIR=Rust/hyper"
+     - "TESTDIR=Rust/may-minihttp"
      - "TESTDIR=Rust/tokio-minihttp"
      - "TESTDIR=Rust/rouille"
      - "TESTDIR=Rust/actix"
