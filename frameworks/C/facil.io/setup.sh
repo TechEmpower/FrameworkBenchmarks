@@ -1,42 +1,42 @@
 #!/bin/bash
 
+fw_depends gcc-6
+
 # enter root folder
 cd $TROOT
 
-# remove existing installation, if any
-if [ -d facil_app ] ; then
-	rm -R facil_app
-fi
+# perform common installations (if required)
+$TROOT/setup-common.sh
 
-# create new installation folder
-mkdir facil_app
+#### Compile test
+
+# Remove boiler-plate and copy app to src folder
+cp -f bench_app.c facil_app/src/app.c
 cd facil_app
 
-# Download and unpack
+# set compiler
+export CC="gcc-6"
 
-curl -s -o facil.io.tar.gz -LJO https://api.github.com/repos/boazsegev/facil.io/tarball/0.6.0.beta.6
-tar --strip-components=1 -xzf facil.io.tar.gz
-if [ $? -ne 0 ]; then echo "Couldn't extract tar."; exit 1; fi
-rm facil.io.tar.gz
-./scripts/new/cleanup
-cd ..
-
-
-# compile test
-rm -r facil_app/src
-mkdir facil_app/src
-cp bench_app.c facil_app/src
-cd facil_app
-
-# we don't need more than 32K concurrent connections
-export CFLAGS="-DLIB_SOCK_MAX_CAPACITY=32768"
+# we don't need more than 24K concurrent connections
+export CFLAGS="${CFLAGS} -DLIB_SOCK_MAX_CAPACITY=24576"
 
 # Build the app
+make clean
 make -j build
 
 # Run the upp
+#
+# Know options:
+#   -? command line options help (lists options I didn't list here).
+#   -w (worker processes). negtive values are replaced by automatic core detection (up to 7 cores).
+#   -t (threads per worker). negtive values are replaced by automatic core detection (up to 7 cores).
+#   -p port to listen to (should be 0 for Unix sockets).
+#   -b address to bind to (accepts Unix socket addresses by using absolute paths (i.e. "/tmp/my_app_sock").
+#   -dbp database port used for database connections (not implemented).
+#   -db database address used for database connections (not implemented).
+#
 cd tmp
-./demo -p 8080 -db "TFB-database" -w -1 -t 1 &
+./demo -p 8080 -w -1 -t -1 -db "TFB-database" &
 # step out of app folder
 cd ../..
  
