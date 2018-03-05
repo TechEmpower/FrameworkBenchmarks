@@ -45,7 +45,7 @@ World sql=world
 |]
 
 mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
-Fortune sql=Fortune
+Fortune sql=fortune
     message Text sql=message
 |]
 
