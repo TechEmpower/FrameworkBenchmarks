@@ -266,9 +266,8 @@ def main(argv=None):
         'the amount of time to sleep after starting each test to allow the server to start up.'
     )
 
-    parser.set_defaults(
-        **defaults
-    )  # Must do this after add, or each option's default will override the configuration file default
+    parser.set_defaults(**defaults)
+    # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
 
     config = BenchmarkConfig(vars(args))

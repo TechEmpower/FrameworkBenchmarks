@@ -4,6 +4,7 @@ from toolset.benchmark import framework_test
 from toolset.utils.output_helper import header
 from toolset.utils.metadata_helper import gather_frameworks, gather_tests, gather_remaining_tests
 from toolset.utils.Results import Results
+from toolset.utils.remote_script_helper import generate_concurrency_script, generate_pipeline_script, generate_query_script
 
 import os
 import shutil
@@ -22,6 +23,7 @@ import docker
 import shutil
 import time
 import json
+import shlex
 from pprint import pprint
 
 from contextlib import contextmanager
@@ -41,33 +43,6 @@ class Benchmarker:
     # Public methods
     ##########################################################################################
 
-    def run_list_test_metadata(self):
-        '''
-        Prints the metadata for all the available tests
-        '''
-        all_tests = gather_tests(benchmarker_config=self.config)
-        all_tests_json = json.dumps(map(lambda test: {
-          "name": test.name,
-          "approach": test.approach,
-          "classification": test.classification,
-          "database": test.database,
-          "framework": test.framework,
-          "language": test.language,
-          "orm": test.orm,
-          "platform": test.platform,
-          "webserver": test.webserver,
-          "os": test.os,
-          "database_os": test.database_os,
-          "display_name": test.display_name,
-          "notes": test.notes,
-          "versus": test.versus
-        }, all_tests))
-
-        with open(
-                os.path.join(self.results.directory, "test_metadata.json"),
-                "w") as f:
-            f.write(all_tests_json)
-
     def run(self):
         '''
         This process involves setting up the client/server machines
@@ -76,7 +51,7 @@ class Benchmarker:
         running benchmarks against them.
         '''
         # Generate metadata
-        self.run_list_test_metadata()
+        self.__run_list_test_metadata()
 
         # Get a list of all known  tests that we can run.
         all_tests = gather_remaining_tests(self.config, self.results)
@@ -115,6 +90,130 @@ class Benchmarker:
     ##########################################################################################
     # Private methods
     ##########################################################################################
+
+    def __benchmark(self, framework_test, logPath):
+        '''
+        Runs the benchmark for each type of test that it implements
+        '''
+
+        def benchmark_type(test_type):
+            benchmarkPath = os.path.join(logPath, test_type)
+            try:
+                os.makedirs(benchmarkPath)
+            except OSError:
+                pass
+            with open(os.path.join(benchmarkPath, 'benchmark.txt'),
+                      'w') as out:
+                out.write("BENCHMARKING %s ... " % test_type.upper())
+
+                test = framework_test.runTests[test_type]
+                test.setup_out(out)
+                raw_file = self.results.get_raw_file(framework_test.name,
+                                                     test_type)
+                if not os.path.exists(raw_file):
+                    # Open to create the empty file
+                    with open(raw_file, 'w'):
+                        pass
+
+                if not test.failed:
+                    if test_type == 'plaintext':  # One special case
+                        remote_script = generate_pipeline_script(
+                            self.config, test.name, test.get_url(),
+                            framework_test.port, test.accept_header)
+                    elif test_type == 'query' or test_type == 'update':
+                        remote_script = generate_query_script(
+                            self.config, test.name, test.get_url(),
+                            framework_test.port, test.accept_header,
+                            self.config.query_levels)
+                    elif test_type == 'cached_query':
+                        remote_script = generate_query_script(
+                            self.config, test.name, test.get_url(),
+                            framework_test.port, test.accept_header,
+                            self.config.cached_query_levels)
+                    else:
+                        remote_script = generate_concurrency_script(
+                            self.config, test.name, test.get_url(),
+                            framework_test.port, test.accept_header)
+
+                    # Begin resource usage metrics collection
+                    self.__begin_logging(framework_test, test_type)
+
+                    # Run the benchmark
+                    with open(raw_file, 'w') as raw_file:
+                        p = subprocess.Popen(
+                            self.config.client_ssh_string.split(" "),
+                            stdin=subprocess.PIPE,
+                            stdout=raw_file,
+                            stderr=raw_file)
+                        p.communicate(remote_script)
+                        out.flush()
+
+                    # End resource usage metrics collection
+                    self.__end_logging()
+
+                results = self.results.parse_test(framework_test, test_type)
+                print("Benchmark results:")
+                pprint(results)
+
+                self.results.report_benchmark_results(
+                    framework_test, test_type, results['results'])
+                out.write("Complete\n")
+                out.flush()
+
+        for test_type in framework_test.runTests:
+            benchmark_type(test_type)
+
+    def __run_list_test_metadata(self):
+        '''
+        Prints the metadata for all the available tests
+        '''
+        all_tests = gather_tests(benchmarker_config=self.config)
+        all_tests_json = json.dumps(map(lambda test: {
+          "name": test.name,
+          "approach": test.approach,
+          "classification": test.classification,
+          "database": test.database,
+          "framework": test.framework,
+          "language": test.language,
+          "orm": test.orm,
+          "platform": test.platform,
+          "webserver": test.webserver,
+          "os": test.os,
+          "database_os": test.database_os,
+          "display_name": test.display_name,
+          "notes": test.notes,
+          "versus": test.versus
+        }, all_tests))
+
+        with open(
+                os.path.join(self.results.directory, "test_metadata.json"),
+                "w") as f:
+            f.write(all_tests_json)
+
+    def __begin_logging(self, framework_test, test_type):
+        '''
+        Starts a thread to monitor the resource usage, to be synced with the 
+        client's time.
+        TODO: MySQL and InnoDB are possible. Figure out how to implement them.
+        '''
+        output_file = "{file_name}".format(
+            file_name=self.results.get_stats_file(framework_test.name,
+                                                  test_type))
+        dstat_string = "dstat -Tafilmprs --aio --fs --ipc --lock --raw --socket --tcp \
+                                      --raw --socket --tcp --udp --unix --vm --disk-util \
+                                      --rpc --rpcd --output {output_file}".format(
+            output_file=output_file)
+        cmd = shlex.split(dstat_string)
+        dev_null = open(os.devnull, "w")
+        self.subprocess_handle = subprocess.Popen(
+            cmd, stdout=dev_null, stderr=subprocess.STDOUT)
+
+    def __end_logging(self):
+        '''
+        Stops the logger thread and blocks until shutdown is complete.
+        '''
+        self.subprocess_handle.terminate()
+        self.subprocess_handle.communicate()
 
     def __setup_server(self):
         '''
@@ -328,8 +427,8 @@ class Benchmarker:
                         args=(test, ))
                     test_process.start()
                     test_process.join(self.config.run_test_timeout_seconds)
-                self.results.load(
-                )  # Load intermediate result from child process
+                # Load intermediate result from child process
+                self.results.load()
                 if (test_process.is_alive()):
                     logging.debug(
                         "Child process for {name} is still alive. Terminating.".
@@ -399,9 +498,7 @@ class Benchmarker:
             out.write(header("Beginning %s" % test.name, top='='))
             out.flush()
 
-            ##########################
             # Start this test
-            ##########################
             out.write(header("Starting %s" % test.name))
             out.flush()
             database_container_id = None
@@ -421,9 +518,7 @@ class Benchmarker:
                     print("Error: Unable to recover port, cannot start test")
                     return sys.exit(1)
 
-                ##########################
                 # Start database container
-                ##########################
                 if test.database != "None":
                     database_container_id = self.__setup_database_container(
                         test.database.lower())
@@ -436,9 +531,7 @@ class Benchmarker:
                             test.name, "ERROR: Problem starting")
                         return sys.exit(1)
 
-                ##########################
                 # Start webapp
-                ##########################
                 result = test.start(out)
                 if result != 0:
                     self.__stop_test(database_container_id, test, out)
@@ -454,9 +547,7 @@ class Benchmarker:
                              % self.config.sleep)
                 time.sleep(self.config.sleep)
 
-                ##########################
                 # Verify URLs
-                ##########################
                 if self.config.mode == "debug":
                     logging.info(
                         "Entering debug mode. Server has started. CTRL-c to stop."
@@ -467,27 +558,21 @@ class Benchmarker:
                     logging.info("Verifying framework URLs")
                     passed_verify = test.verify_urls(logDir)
 
-                ##########################
                 # Benchmark this test
-                ##########################
                 if self.config.mode == "benchmark":
                     logging.info("Benchmarking")
                     out.write(header("Benchmarking %s" % test.name))
                     out.flush()
-                    test.benchmark(logDir)
+                    self.__benchmark(test, logDir)
 
-                ##########################
                 # Stop this test
-                ##########################
                 self.__stop_test(database_container_id, test, out)
                 self.__stop_database(database_container_id, out)
 
                 out.write(header("Stopped %s" % test.name))
                 out.flush()
 
-                ##########################################################
                 # Remove contents of  /tmp folder
-                ##########################################################
                 try:
                     subprocess.check_call(
                         'sudo rm -rf /tmp/*',
@@ -497,15 +582,7 @@ class Benchmarker:
                 except Exception:
                     out.write(header("Error: Could not empty /tmp"))
 
-                ##########################################################
-                # Remove apt sources to avoid pkg errors and collisions
-                ##########################################################
-                os.system("sudo rm -rf /etc/apt/sources.list.d/*")
-
-                ##########################################################
                 # Save results thus far into the latest results directory
-                ##########################################################
-
                 out.write(header("Saving results through %s" % test.name))
                 out.flush()
                 self.results.write_intermediate(test.name,
@@ -513,10 +590,7 @@ class Benchmarker:
                                                     "%Y%m%d%H%M%S",
                                                     time.localtime()))
 
-                ##########################################################
                 # Upload the results thus far to another server (optional)
-                ##########################################################
-
                 self.results.upload()
 
                 if self.config.mode == "verify" and not passed_verify:

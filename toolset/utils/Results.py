@@ -9,6 +9,9 @@ import time
 import json
 import requests
 import threading
+import re
+import math
+import csv
 from datetime import datetime
 
 # Cross-platform colored text
@@ -28,14 +31,6 @@ class Results:
         except OSError:
             pass
         self.file = os.path.join(self.directory, "results.json")
-
-        try:
-            with open(os.path.join(self.directory, 'results.json'), 'r') as f:
-                # Load json file into results object
-                # TODO: fix this
-                self.results = json.load(f)
-        except IOError:
-            logging.warn("results.json for test not found.")
 
         self.uuid = str(uuid.uuid4())
         self.name = datetime.now().strftime(self.config.results_name)
@@ -87,6 +82,13 @@ class Results:
         self.failed['cached_query'] = []
         self.verify = dict()
 
+        try:
+            with open(os.path.join(self.directory, 'results.json'), 'r') as f:
+                # Load json file into results object
+                self.__dict__.update(json.load(f))
+        except IOError:
+            logging.warn("results.json for test not found.")
+
     #############################################################################
     # PUBLIC FUNCTIONS
     #############################################################################
@@ -106,7 +108,95 @@ class Results:
         # Time to create parsed files
         # Aggregate JSON file
         with open(self.file, "w") as f:
-            f.write(json.dumps(self.results, indent=2))
+            f.write(json.dumps(self.__to_jsonable(), indent=2))
+
+    def parse_test(self, framework_test, test_type):
+        '''
+        Parses the given test and test_type from the raw_file.
+        '''
+        try:
+            results = dict()
+            results['results'] = []
+            stats = []
+
+            if os.path.exists(
+                    self.get_raw_file(framework_test.name, test_type)):
+                with open(self.get_raw_file(framework_test.name,
+                                            test_type)) as raw_data:
+
+                    is_warmup = True
+                    rawData = None
+                    for line in raw_data:
+                        if "Queries:" in line or "Concurrency:" in line:
+                            is_warmup = False
+                            rawData = None
+                            continue
+                        if "Warmup" in line or "Primer" in line:
+                            is_warmup = True
+                            continue
+                        if not is_warmup:
+                            if rawData == None:
+                                rawData = dict()
+                                results['results'].append(rawData)
+                            if "Latency" in line:
+                                m = re.findall(
+                                    r"([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
+                                if len(m) == 4:
+                                    rawData['latencyAvg'] = m[0]
+                                    rawData['latencyStdev'] = m[1]
+                                    rawData['latencyMax'] = m[2]
+                            if "requests in" in line:
+                                m = re.search("([0-9]+) requests in", line)
+                                if m != None:
+                                    rawData['totalRequests'] = int(m.group(1))
+                            if "Socket errors" in line:
+                                if "connect" in line:
+                                    m = re.search("connect ([0-9]+)", line)
+                                    rawData['connect'] = int(m.group(1))
+                                if "read" in line:
+                                    m = re.search("read ([0-9]+)", line)
+                                    rawData['read'] = int(m.group(1))
+                                if "write" in line:
+                                    m = re.search("write ([0-9]+)", line)
+                                    rawData['write'] = int(m.group(1))
+                                if "timeout" in line:
+                                    m = re.search("timeout ([0-9]+)", line)
+                                    rawData['timeout'] = int(m.group(1))
+                            if "Non-2xx" in line:
+                                m = re.search(
+                                    "Non-2xx or 3xx responses: ([0-9]+)", line)
+                                if m != None:
+                                    rawData['5xx'] = int(m.group(1))
+                            if "STARTTIME" in line:
+                                m = re.search("[0-9]+", line)
+                                rawData["startTime"] = int(m.group(0))
+                            if "ENDTIME" in line:
+                                m = re.search("[0-9]+", line)
+                                rawData["endTime"] = int(m.group(0))
+                                test_stats = self.__parse_stats(
+                                    framework_test, test_type,
+                                    rawData["startTime"], rawData["endTime"],
+                                    1)
+                                stats.append(test_stats)
+            with open(
+                    self.get_stats_file(framework_test.name, test_type) +
+                    ".json", "w") as stats_file:
+                json.dump(stats, stats_file, indent=2)
+
+            return results
+        except IOError:
+            return None
+
+    def parse_all(self, framework_test):
+        '''
+        Method meant to be run for a given timestamp
+        '''
+        for test_type in framework_test.runTests:
+            if os.path.exists(
+                    self.get_raw_file(framework_test.name, test_type)):
+                results = self.parse_test(framework_test, test_type)
+                self.report_benchmark_results(framework_test, test_type,
+                                              results['results'])
 
     def write_intermediate(self, test_name, status_message):
         '''
@@ -145,13 +235,12 @@ class Results:
         except (ValueError, IOError):
             pass
 
-    def get_output_file(self, test_name, test_type):
+    def get_raw_file(self, test_name, test_type):
         '''
         Returns the output file for this test_name and test_type
         Example: fwroot/results/timestamp/test_type/test_name/raw.txt
         '''
-        path = os.path.join(self.directory, self.config.timestamp, test_name,
-                            test_type, "raw.txt")
+        path = os.path.join(self.directory, test_name, test_type, "raw.txt")
         try:
             os.makedirs(os.path.dirname(path))
         except OSError:
@@ -163,46 +252,45 @@ class Results:
         Returns the stats file name for this test_name and
         Example: fwroot/results/timestamp/test_type/test_name/stats.txt
         '''
-        path = os.path.join(self.directory, self.config.timestamp, test_name,
-                            test_type, "stats.txt")
+        path = os.path.join(self.directory, test_name, test_type, "stats.txt")
         try:
             os.makedirs(os.path.dirname(path))
         except OSError:
             pass
         return path
 
-    def report_verify_results(self, framework, test, result):
+    def report_verify_results(self, framework_test, test_type, result):
         '''
         Used by FrameworkTest to add verification details to our results
         
         TODO: Technically this is an IPC violation - we are accessing
         the parent process' memory from the child process
         '''
-        if framework.name not in self.verify.keys():
-            self.verify[framework.name] = dict()
-        self.verify[framework.name][test] = result
+        if framework_test.name not in self.verify.keys():
+            self.verify[framework_test.name] = dict()
+        self.verify[framework_test.name][test_type] = result
 
-    def report_benchmark_results(self, framework, test, results):
+    def report_benchmark_results(self, framework_test, test_type, results):
         '''
         Used by FrameworkTest to add benchmark data to this
         
         TODO: Technically this is an IPC violation - we are accessing
         the parent process' memory from the child process
         '''
-        if test not in self.rawData.keys():
-            self.rawData[test] = dict()
+        if test_type not in self.rawData.keys():
+            self.rawData[test_type] = dict()
 
         # If results has a size from the parse, then it succeeded.
         if results:
-            self.rawData[test][framework.name] = results
+            self.rawData[test_type][framework_test.name] = results
 
             # This may already be set for single-tests
-            if framework.name not in self.succeeded[test]:
-                self.succeeded[test].append(framework.name)
+            if framework_test.name not in self.succeeded[test_type]:
+                self.succeeded[test_type].append(framework_test.name)
         else:
             # This may already be set for single-tests
-            if framework.name not in self.failed[test]:
-                self.failed[test].append(framework.name)
+            if framework_test.name not in self.failed[test_type]:
+                self.failed[test_type].append(framework_test.name)
 
     def finish(self):
         '''
@@ -326,6 +414,9 @@ class Results:
         self.rawData['slocCounts'] = jsonResult
 
     def __count_commits(self):
+        '''
+        Count the git commits for all the framework tests
+        '''
         frameworks = gather_frameworks(self.config.test, self.config.exclude,
                                        self.config)
 
@@ -385,3 +476,121 @@ class Results:
         '''
         return subprocess.check_output(
             'git rev-parse --abbrev-ref HEAD', shell=True).strip()
+
+    def __parse_stats(self, framework_test, test_type, start_time, end_time,
+                      interval):
+        '''
+        For each test type, process all the statistics, and return a multi-layered 
+        dictionary that has a structure as follows:
+
+        (timestamp)
+        | (main header) - group that the stat is in
+        | | (sub header) - title of the stat
+        | | | (stat) - the stat itself, usually a floating point number
+        '''
+        stats_dict = dict()
+        stats_file = self.get_stats_file(framework_test.name, test_type)
+        with open(stats_file) as stats:
+            # dstat doesn't output a completely compliant CSV file - we need to strip the header
+            while (stats.next() != "\n"):
+                pass
+            stats_reader = csv.reader(stats)
+            main_header = stats_reader.next()
+            sub_header = stats_reader.next()
+            time_row = sub_header.index("epoch")
+            int_counter = 0
+            for row in stats_reader:
+                time = float(row[time_row])
+                int_counter += 1
+                if time < start_time:
+                    continue
+                elif time > end_time:
+                    return stats_dict
+                if int_counter % interval != 0:
+                    continue
+                row_dict = dict()
+                for nextheader in main_header:
+                    if nextheader != "":
+                        row_dict[nextheader] = dict()
+                header = ""
+                for item_num, column in enumerate(row):
+                    if (len(main_header[item_num]) != 0):
+                        header = main_header[item_num]
+                    # all the stats are numbers, so we want to make sure that they stay that way in json
+                    row_dict[header][sub_header[item_num]] = float(column)
+                stats_dict[time] = row_dict
+        return stats_dict
+
+    def __calculate_average_stats(self, raw_stats):
+        '''
+        We have a large amount of raw data for the statistics that may be useful 
+        for the stats nerds, but most people care about a couple of numbers. For 
+        now, we're only going to supply:
+          * Average CPU
+          * Average Memory
+          * Total network use
+          * Total disk use
+        More may be added in the future. If they are, please update the above list.
+        
+        Note: raw_stats is directly from the __parse_stats method.
+        
+        Recall that this consists of a dictionary of timestamps, each of which 
+        contain a dictionary of stat categories which contain a dictionary of stats
+        '''
+        raw_stat_collection = dict()
+
+        for time_dict in raw_stats.items()[1]:
+            for main_header, sub_headers in time_dict.items():
+                item_to_append = None
+                if 'cpu' in main_header:
+                    # We want to take the idl stat and subtract it from 100
+                    # to get the time that the CPU is NOT idle.
+                    item_to_append = sub_headers['idl'] - 100.0
+                elif main_header == 'memory usage':
+                    item_to_append = sub_headers['used']
+                elif 'net' in main_header:
+                    # Network stats have two parts - recieve and send. We'll use a tuple of
+                    # style (recieve, send)
+                    item_to_append = (sub_headers['recv'], sub_headers['send'])
+                elif 'dsk' or 'io' in main_header:
+                    # Similar for network, except our tuple looks like (read, write)
+                    item_to_append = (sub_headers['read'], sub_headers['writ'])
+                if item_to_append is not None:
+                    if main_header not in raw_stat_collection:
+                        raw_stat_collection[main_header] = list()
+                    raw_stat_collection[main_header].append(item_to_append)
+
+        # Simple function to determine human readable size
+        # http://stackoverflow.com/questions/1094841/reusable-library-to-get-human-readable-version-of-file-size
+        def sizeof_fmt(num):
+            # We'll assume that any number we get is convertable to a float, just in case
+            num = float(num)
+            for x in ['bytes', 'KB', 'MB', 'GB']:
+                if num < 1024.0 and num > -1024.0:
+                    return "%3.1f%s" % (num, x)
+                num /= 1024.0
+            return "%3.1f%s" % (num, 'TB')
+
+        # Now we have our raw stats in a readable format - we need to format it for display
+        # We need a floating point sum, so the built in sum doesn't cut it
+        display_stat_collection = dict()
+        for header, values in raw_stat_collection.items():
+            display_stat = None
+            if 'cpu' in header:
+                display_stat = sizeof_fmt(math.fsum(values) / len(values))
+            elif main_header == 'memory usage':
+                display_stat = sizeof_fmt(math.fsum(values) / len(values))
+            elif 'net' in main_header:
+                receive, send = zip(*values)  # unzip
+                display_stat = {
+                    'receive': sizeof_fmt(math.fsum(receive)),
+                    'send': sizeof_fmt(math.fsum(send))
+                }
+            else:  # if 'dsk' or 'io' in header:
+                read, write = zip(*values)  # unzip
+                display_stat = {
+                    'read': sizeof_fmt(math.fsum(read)),
+                    'write': sizeof_fmt(math.fsum(write))
+                }
+            display_stat_collection[header] = display_stat
+        return display_stat
