@@ -226,9 +226,9 @@ script:
   # we'd like to try and do the diffing before travis_clean & setup.
   # This will run the tests exactly as you would in your own vm:
   # ./toolset/run-tests.py --mode verify --test (all the valid tests for this framework)
-  - if [[ $CONTINUE_TEST && "$TESTDIR" ]]; then tfb --mode verify --test-dir "$TESTDIR"; else echo 'Skipping test verification.'; fi
-  - if [[ $CONTINUE_TEST && "$TESTLANG" ]]; then tfb --mode verify --test-lang "$TESTLANG"; else echo 'Skipping test verification.'; fi
-  - if [[ $CONTINUE_TEST && "$TEST" ]]; then tfb --mode verify --test "$TEST"; else echo 'Skipping test verification.'; fi
+  - if [[ $CONTINUE_TEST && "$TESTDIR" ]]; then tfb --mode verify --test-dir $TESTDIR; else echo 'Skipping test verification.'; fi
+  - if [[ $CONTINUE_TEST && "$TESTLANG" ]]; then tfb --mode verify --test-lang $TESTLANG; else echo 'Skipping test verification.'; fi
+  - if [[ $CONTINUE_TEST && "$TEST" ]]; then tfb --mode verify --test $TEST; else echo 'Skipping test verification.'; fi
   # - tfb --mode verify --test
 
 cache:
