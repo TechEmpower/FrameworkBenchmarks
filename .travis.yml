@@ -114,7 +114,7 @@ env:
      - "TESTDIR=Lua/lapis"
     # - "TESTDIR=Lua/octopus"
     # - "TESTDIR=Lua/openresty"
-    # - "TESTDIR=Nim/jester"
+     - "TESTDIR=Nim/jester"
     # - "TESTDIR=Perl/dancer"
     # - "TESTDIR=Perl/kelp"
     # - "TESTDIR=Perl/mojolicious"
