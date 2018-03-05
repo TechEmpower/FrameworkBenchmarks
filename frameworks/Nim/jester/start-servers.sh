@@ -1,5 +1,6 @@
 #!/bin/bash
 
+nim c -d:release hello.nim
 nginx -c /config/nginx.conf
 
 current=9000

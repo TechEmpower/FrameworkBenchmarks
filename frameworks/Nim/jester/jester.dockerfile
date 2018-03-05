@@ -1,13 +1,16 @@
-#!/bin/bash
+FROM tfb/nimble:latest
 
-fw_depends mysql nim jester nginx
+# 2015-06-25
+RUN git clone https://github.com/dom96/jester.git && \
+    cd jester && \
+    git checkout 71b8cc069a0d271d619c2dc41bc6479047885587 && \
+    nimble update && \
+    echo 'y' | nimble install
 
-nim c -d:release hello.nim
-nginx -c $TROOT/config/nginx.conf
+ENV JESTER_HOME=/jester
 
-current=9000
-end=9008
-while [ $current -lt $end ]; do
-  ./hello $current &
-  let current=current+1
-done
+COPY ./ ./
+
+RUN chmod a+wrx start-servers.sh
+
+CMD ./start-servers.sh

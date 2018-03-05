@@ -1,28 +1,21 @@
-#!/bin/bash
+FROM tfb/nginx:latest
 
-fw_installed nim && return 0
+ENV NIM_VERSION="0.11.2"
+ENV NIM_CSOURCES="6bf2282"
 
-NIM_VERSION="0.11.2"
-NIM_CSOURCES="6bf2282"
+RUN wget https://github.com/nim-lang/Nim/archive/v$NIM_VERSION.tar.gz
+RUN tar xvf v$NIM_VERSION.tar.gz
+RUN mv Nim-$NIM_VERSION nim
 
-fw_get -O https://github.com/nim-lang/Nim/archive/v$NIM_VERSION.tar.gz
-fw_untar v$NIM_VERSION.tar.gz
-mv Nim-$NIM_VERSION nim
-cd nim
+RUN cd nim && \
+    git clone git://github.com/nim-lang/csources.git && \
+    cd csources && \
+    git checkout $NIM_CSOURCES && \
+    sh build.sh && \
+    cd .. && \
 
-git clone git://github.com/nim-lang/csources.git
-cd csources
-git checkout $NIM_CSOURCES
-sh build.sh
-cd ..
+    bin/nim c koch && \
+    ./koch boot -d:release
 
-bin/nim c koch
-
-# bootstrapping nim's compiler
-./koch boot -d:release
-
-echo "export NIM_HOME=${IROOT}/nim" > $IROOT/nim.installed
-echo -e "export PATH=\$NIM_HOME/bin:\$PATH" >> $IROOT/nim.installed
-
-source $IROOT/nim.installed
-
+ENV NIM_HOME=/nim
+ENV PATH=${NIM_HOME}/bin:${PATH}
