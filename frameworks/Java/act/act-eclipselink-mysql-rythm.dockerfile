@@ -1,4 +1,4 @@
-FROM tfb/actframework-base:latest
+FROM tfb/act-base:latest
 RUN mvn -Peclipselink_mysql clean package
 WORKDIR /act/target/dist
 RUN unzip -q *.zip
