@@ -14,8 +14,8 @@ from toolset.setup.linux import setup_util
 from toolset.scaffolding import Scaffolding
 from toolset.initializer import initialize
 from toolset.utils import cleaner
-from toolset.utils.Results import Results
-from toolset.utils.BenchmarkConfig import BenchmarkConfig
+from toolset.utils.results import Results
+from toolset.utils.benchmark_config import BenchmarkConfig
 from toolset.utils.docker_helper import build_docker_images
 from toolset.utils.metadata_helper import gather_tests
 from ast import literal_eval

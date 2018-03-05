@@ -41,7 +41,7 @@ def gather_tests(include=[], exclude=[], benchmarker_config=None,
     one is not provided, a default config will be created.
     '''
     # Avoid setting up a circular import
-    from toolset.utils.BenchmarkConfig import BenchmarkConfig
+    from toolset.utils.benchmark_config import BenchmarkConfig
     from toolset.setup.linux import setup_util
 
     # Help callers out a bit

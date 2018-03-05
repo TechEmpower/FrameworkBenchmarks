@@ -3,7 +3,7 @@ from toolset.setup.linux import setup_util
 from toolset.benchmark import framework_test
 from toolset.utils.output_helper import header
 from toolset.utils.metadata_helper import gather_frameworks, gather_tests, gather_remaining_tests
-from toolset.utils.Results import Results
+from toolset.utils.results import Results
 from toolset.utils.remote_script_helper import generate_concurrency_script, generate_pipeline_script, generate_query_script
 
 import os
