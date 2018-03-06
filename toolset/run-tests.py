@@ -16,7 +16,7 @@ from toolset.initializer import initialize
 from toolset.utils import cleaner
 from toolset.utils.results import Results
 from toolset.utils.benchmark_config import BenchmarkConfig
-from toolset.utils.docker_helper import build_docker_images
+from toolset.utils import docker_helper
 from toolset.utils.metadata_helper import gather_tests
 from ast import literal_eval
 
@@ -280,10 +280,11 @@ def main(argv=None):
         initialize(config)
 
     elif config.build:
-        build_docker_images(config)
+        docker_helper.build(config, config.build, None)
 
     elif config.clean:
         cleaner.clean(results)
+        docker_helper.clean()
 
     elif config.list_tests:
         all_tests = gather_tests(benchmarker_config=config)

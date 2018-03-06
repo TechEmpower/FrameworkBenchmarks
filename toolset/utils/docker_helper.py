@@ -3,9 +3,18 @@ import docker
 import fnmatch
 import subprocess
 import multiprocessing
+import json
+import docker
+
+from threading import Thread
+
+from toolset.setup.linux import setup_util
+
+from toolset.utils.output_helper import tee_output
+from toolset.utils.metadata_helper import gather_tests
 
 
-def clean(self):
+def clean():
     '''
     Cleans all the docker images from the system
     '''
@@ -17,84 +26,130 @@ def clean(self):
         subprocess.check_call(["docker", "image", "rmi", "-f", docker_id])
 
 
-def build_docker_images(config):
-
-    print(config.build)
-    return
+def build(benchmarker_config, test_names, out):
     '''
     Builds the dependency chain as well as the test implementation docker images
     for the given tests.
     '''
-    # docker_buildargs = {
-    #     'CPU_COUNT': str(multiprocessing.cpu_count()),
-    #     'MAX_CONCURRENCY': str(max(self.benchmarker.concurrency_levels))
-    # }
+    tests = gather_tests(test_names)
 
-    # test_docker_files = ["%s.dockerfile" % self.name]
-    # if self.docker_files is not None:
-    #     if type(self.docker_files) is list:
-    #         test_docker_files.extend(self.docker_files)
-    #     else:
-    #         raise Exception(
-    #             "docker_files in benchmark_config.json must be an array")
+    for test in tests:
+        docker_buildargs = {
+            'CPU_COUNT': str(multiprocessing.cpu_count()),
+            'MAX_CONCURRENCY': str(max(benchmarker_config.concurrency_levels))
+        }
 
-    # for test_docker_file in test_docker_files:
-    #     deps = list(
-    #         reversed(
-    #             gather_docker_dependencies(
-    #                 os.path.join(self.directory, test_docker_file))))
+        test_docker_files = ["%s.dockerfile" % test.name]
+        if test.docker_files is not None:
+            if type(test.docker_files) is list:
+                test_docker_files.extend(test.docker_files)
+            else:
+                raise Exception(
+                    "docker_files in benchmark_config.json must be an array")
 
-    #     docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup",
-    #                               "linux", "docker")
+        for test_docker_file in test_docker_files:
+            deps = list(
+                reversed(
+                    gather_dependencies(
+                        os.path.join(test.directory, test_docker_file))))
 
-    #     for dependency in deps:
-    #         docker_file = os.path.join(self.directory,
-    #                                    dependency + ".dockerfile")
-    #         if not docker_file or not os.path.exists(docker_file):
-    #             docker_file = find_docker_file(docker_dir,
-    #                                            dependency + ".dockerfile")
-    #         if not docker_file:
-    #             tee_output(
-    #                 prefix,
-    #                 "Docker build failed; %s could not be found; terminating\n"
-    #                 % (dependency + ".dockerfile"))
-    #             return 1
+            docker_dir = os.path.join(setup_util.get_fwroot(), "toolset",
+                                      "setup", "linux", "docker")
+            for dependency in deps:
+                docker_file = os.path.join(test.directory,
+                                           dependency + ".dockerfile")
+                if not docker_file or not os.path.exists(docker_file):
+                    docker_file = find(docker_dir, dependency + ".dockerfile")
+                if not docker_file:
+                    tee_output(
+                        out,
+                        "Docker build failed; %s could not be found; terminating\n"
+                        % (dependency + ".dockerfile"))
+                    return 1
 
-    #         # Build the dependency image
-    #         try:
-    #             for line in docker.APIClient(
-    #                     base_url='unix://var/run/docker.sock').build(
-    #                         path=os.path.dirname(docker_file),
-    #                         dockerfile="%s.dockerfile" % dependency,
-    #                         tag="tfb/%s" % dependency,
-    #                         buildargs=docker_buildargs,
-    #                         forcerm=True):
-    #                 handle_build_output(line)
-    #         except Exception as e:
-    #             tee_output(prefix,
-    #                        "Docker dependency build failed; terminating\n")
-    #             print(e)
-    #             return 1
+                # Build the dependency image
+                try:
+                    for line in docker.APIClient(
+                            base_url='unix://var/run/docker.sock').build(
+                                path=os.path.dirname(docker_file),
+                                dockerfile="%s.dockerfile" % dependency,
+                                tag="tfb/%s" % dependency,
+                                buildargs=docker_buildargs,
+                                forcerm=True):
+                        prev_line = os.linesep
+                        if line.startswith('{"stream":'):
+                            line = json.loads(line)
+                            line = line[line.keys()[0]].encode('utf-8')
+                            if prev_line.endswith(os.linesep):
+                                tee_output(out, line)
+                            else:
+                                tee_output(out, line)
+                            prev_line = line
+                except Exception as e:
+                    tee_output(out,
+                               "Docker dependency build failed; terminating\n")
+                    print(e)
+                    return 1
 
-    # # Build the test images
-    # for test_docker_file in test_docker_files:
-    #     try:
-    #         for line in docker.APIClient(
-    #                 base_url='unix://var/run/docker.sock').build(
-    #                     path=self.directory,
-    #                     dockerfile=test_docker_file,
-    #                     tag="tfb/test/%s" % test_docker_file.replace(
-    #                         ".dockerfile", ""),
-    #                     buildargs=docker_buildargs,
-    #                     forcerm=True):
-    #             handle_build_output(line)
-    #     except Exception as e:
-    #         tee_output(prefix, "Docker build failed; terminating\n")
-    #         print(e)
-    #         return 1
+        # Build the test images
+        for test_docker_file in test_docker_files:
+            print(test)
+            try:
+                for line in docker.APIClient(
+                        base_url='unix://var/run/docker.sock').build(
+                            path=test.directory,
+                            dockerfile=test_docker_file,
+                            tag="tfb/test/%s" % test_docker_file.replace(
+                                ".dockerfile", ""),
+                            buildargs=docker_buildargs,
+                            forcerm=True):
+                    prev_line = os.linesep
+                    if line.startswith('{"stream":'):
+                        line = json.loads(line)
+                        line = line[line.keys()[0]].encode('utf-8')
+                        if prev_line.endswith(os.linesep):
+                            tee_output(out, line)
+                        else:
+                            tee_output(out, line)
+                        prev_line = line
+            except Exception as e:
+                tee_output(out, "Docker build failed; terminating\n")
+                print(e)
+                return 1
 
 
-def find_docker_file(path, pattern):
+def run(docker_files, out):
+    '''
+    Run the given Docker container(s)
+    '''
+    client = docker.from_env()
+
+    for docker_file in docker_files:
+        try:
+
+            def watch_container(container):
+                for line in container.logs(stream=True):
+                    tee_output(out, line)
+
+            container = client.containers.run(
+                "tfb/test/%s" % docker_file.replace(".dockerfile", ""),
+                network_mode="host",
+                privileged=True,
+                stderr=True,
+                detach=True)
+
+            watch_thread = Thread(target=watch_container, args=(container, ))
+            watch_thread.daemon = True
+            watch_thread.start()
+
+        except Exception as e:
+            tee_output(out,
+                       "Running docker cointainer: %s failed" % docker_file)
+            print(e)
+            return 1
+
+
+def find(path, pattern):
     '''
   Finds and returns all the the files matching the given pattern recursively in
   the given path. 
@@ -105,7 +160,7 @@ def find_docker_file(path, pattern):
                 return os.path.join(root, name)
 
 
-def gather_docker_dependencies(docker_file):
+def gather_dependencies(docker_file):
     '''
   Gathers all the known docker dependencies for the given docker image.
   '''
@@ -130,9 +185,8 @@ def gather_docker_dependencies(docker_file):
                             os.path.dirname(docker_file),
                             depToken + ".dockerfile")
                         if not os.path.exists(dep_docker_file):
-                            dep_docker_file = find_docker_file(
-                                docker_dir, depToken + ".dockerfile")
-                        deps.extend(
-                            gather_docker_dependencies(dep_docker_file))
+                            dep_docker_file = find(docker_dir,
+                                                   depToken + ".dockerfile")
+                        deps.extend(gather_dependencies(dep_docker_file))
 
     return deps

@@ -24,6 +24,18 @@ def header(message, top='-', bottom='-'):
     return result + os.linesep
 
 
+def tee_output(out, line):
+    '''
+    Writes to bouth stdout and the provided out file
+    '''
+    sys.stdout.write(line)
+    sys.stdout.flush()
+
+    if out is not None:
+        out.write(line)
+        out.flush()
+
+
 class QuietOutputStream:
     def __init__(self, is_quiet):
         self.is_quiet = is_quiet

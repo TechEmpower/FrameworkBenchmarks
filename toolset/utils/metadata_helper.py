@@ -7,8 +7,6 @@ import logging
 from ast import literal_eval
 from collections import OrderedDict
 
-from toolset.benchmark.framework_test import FrameworkTest
-
 
 def gather_langauges():
     '''
@@ -200,6 +198,7 @@ def parse_config(config, directory, benchmarker_config, results):
     """
     Parses a config file into a list of FrameworkTest objects
     """
+    from toolset.benchmark.framework_test import FrameworkTest
     tests = []
 
     # The config object can specify multiple tests

@@ -46,6 +46,8 @@ class BenchmarkConfig:
         self.build = False
         self.clean = False
         self.list_tests = False
+        self.concurrency_levels = []
+        self.pipeline_concurrency_levels = []
 
         self.__dict__.update(args)
 

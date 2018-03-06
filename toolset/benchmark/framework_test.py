@@ -12,15 +12,12 @@ import traceback
 import json
 import logging
 import multiprocessing
-import docker
 from collections import OrderedDict
 from requests import ConnectionError
-from threading import Thread
 from threading import Event
 
 from toolset.utils.output_helper import header
-from toolset.utils.docker_helper import gather_docker_dependencies
-from toolset.utils.docker_helper import find_docker_file
+from toolset.utils import docker_helper
 
 # Cross-platform colored text
 from colorama import Fore, Back, Style
@@ -71,48 +68,8 @@ class FrameworkTest:
 
     def start(self, out):
         '''
-        Start the test using its setup file
+        Start the test implementation
         '''
-
-        def tee_output(prefix, line):
-            # Needs to be one atomic write
-            # Explicitly use UTF-8 as it's the most common framework output
-            # TODO improve encoding handling
-            line = prefix.encode('utf-8') + line
-
-            # Log to current terminal
-            sys.stdout.write(line)
-            sys.stdout.flush()
-
-            out.write(line)
-            out.flush()
-
-        prefix = "Setup %s: " % self.name
-
-        # Build the test docker file based on the test name
-        # then build any additional docker files specified in the benchmark_config
-        # Note - If you want to be able to stream the output of the build process you have
-        # to use the low level API:
-        #  https://docker-py.readthedocs.io/en/stable/api.html#module-docker.api.build
-
-        prev_line = os.linesep
-
-        def handle_build_output(line):
-            if line.startswith('{"stream":'):
-                line = json.loads(line)
-                line = line[line.keys()[0]].encode('utf-8')
-                if prev_line.endswith(os.linesep):
-                    tee_output(prefix, line)
-                else:
-                    tee_output("", line)
-                self.prev_line = line
-
-        docker_buildargs = {
-            'CPU_COUNT': str(multiprocessing.cpu_count()),
-            'MAX_CONCURRENCY': str(
-                max(self.benchmarker_config.concurrency_levels))
-        }
-
         test_docker_files = ["%s.dockerfile" % self.name]
         if self.docker_files is not None:
             if type(self.docker_files) is list:
@@ -121,91 +78,9 @@ class FrameworkTest:
                 raise Exception(
                     "docker_files in benchmark_config.json must be an array")
 
-        for test_docker_file in test_docker_files:
-            deps = list(
-                reversed(
-                    gather_docker_dependencies(
-                        os.path.join(self.directory, test_docker_file))))
+        docker_helper.build(self.benchmarker_config, [self.name], out)
 
-            docker_dir = os.path.join(setup_util.get_fwroot(), "toolset",
-                                      "setup", "linux", "docker")
-
-            for dependency in deps:
-                docker_file = os.path.join(self.directory,
-                                           dependency + ".dockerfile")
-                if not docker_file or not os.path.exists(docker_file):
-                    docker_file = find_docker_file(docker_dir,
-                                                   dependency + ".dockerfile")
-                if not docker_file:
-                    tee_output(
-                        prefix,
-                        "Docker build failed; %s could not be found; terminating\n"
-                        % (dependency + ".dockerfile"))
-                    return 1
-
-                # Build the dependency image
-                try:
-                    for line in docker.APIClient(
-                            base_url='unix://var/run/docker.sock').build(
-                                path=os.path.dirname(docker_file),
-                                dockerfile="%s.dockerfile" % dependency,
-                                tag="tfb/%s" % dependency,
-                                buildargs=docker_buildargs,
-                                forcerm=True):
-                        handle_build_output(line)
-                except Exception as e:
-                    tee_output(prefix,
-                               "Docker dependency build failed; terminating\n")
-                    print(e)
-                    return 1
-
-        # Build the test images
-        for test_docker_file in test_docker_files:
-            try:
-                for line in docker.APIClient(
-                        base_url='unix://var/run/docker.sock').build(
-                            path=self.directory,
-                            dockerfile=test_docker_file,
-                            tag="tfb/test/%s" % test_docker_file.replace(
-                                ".dockerfile", ""),
-                            buildargs=docker_buildargs,
-                            forcerm=True):
-                    handle_build_output(line)
-            except Exception as e:
-                tee_output(prefix, "Docker build failed; terminating\n")
-                print(e)
-                return 1
-
-        # Run the Docker container
-        client = docker.from_env()
-
-        for test_docker_file in test_docker_files:
-            try:
-
-                def watch_container(container, prefix):
-                    for line in container.logs(stream=True):
-                        tee_output(prefix, line)
-
-                container = client.containers.run(
-                    "tfb/test/%s" % test_docker_file.replace(
-                        ".dockerfile", ""),
-                    network_mode="host",
-                    privileged=True,
-                    stderr=True,
-                    detach=True)
-
-                prefix = "Server %s: " % self.name
-                watch_thread = Thread(
-                    target=watch_container, args=(container, prefix))
-                watch_thread.daemon = True
-                watch_thread.start()
-
-            except Exception as e:
-                tee_output(
-                    prefix,
-                    "Running docker cointainer: %s failed" % test_docker_file)
-                print(e)
-                return 1
+        docker_helper.run(test_docker_files, out)
 
         return 0
 
