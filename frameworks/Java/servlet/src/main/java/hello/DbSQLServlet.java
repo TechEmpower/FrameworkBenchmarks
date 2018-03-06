@@ -38,6 +38,8 @@ public class DbSQLServlet extends HttpServlet {
 
 		// Fetch some rows from the database.
 		try (Connection conn = dataSource.getConnection()) {
+			conn.setAutoCommit(true);
+			conn.setReadOnly(true);
 			try (PreparedStatement statement = conn.prepareStatement(DB_QUERY,
 					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
 				statement.setInt(1, random.nextInt(DB_ROWS) + 1);

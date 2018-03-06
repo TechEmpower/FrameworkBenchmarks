@@ -37,6 +37,8 @@ public class QueriesSQLServlet extends HttpServlet {
 
 		// Fetch some rows from the database.
 		try (Connection conn = dataSource.getConnection()) {
+			conn.setAutoCommit(true);
+			conn.setReadOnly(true);
 			try (PreparedStatement statement = conn.prepareStatement(DB_QUERY,
 					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
 				// Run the query the number of times requested.

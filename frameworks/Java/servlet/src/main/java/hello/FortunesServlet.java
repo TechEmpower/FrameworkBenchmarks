@@ -42,12 +42,15 @@ public class FortunesServlet extends HttpServlet {
 
 		final List<Fortune> fortunes = new ArrayList<>(32);
 
-		try (Connection conn = dataSource.getConnection();
-				PreparedStatement statement = conn.prepareStatement(DB_QUERY,
-						ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-				ResultSet results = statement.executeQuery()) {
-			while (results.next()) {
-				fortunes.add(new Fortune(results.getInt("id"), results.getString("message")));
+		try (Connection conn = dataSource.getConnection()) {
+			conn.setAutoCommit(true);
+			conn.setReadOnly(true);
+			try (PreparedStatement statement = conn.prepareStatement(DB_QUERY,
+					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+					ResultSet results = statement.executeQuery()) {
+				while (results.next()) {
+					fortunes.add(new Fortune(results.getInt("id"), results.getString("message")));
+				}
 			}
 		} catch (SQLException sqlex) {
 			throw new ServletException(sqlex);
