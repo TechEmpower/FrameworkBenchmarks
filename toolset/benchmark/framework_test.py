@@ -67,7 +67,7 @@ class FrameworkTest:
 
         docker_helper.build(self.benchmarker_config, [self.name], out)
 
-        docker_helper.run(test_docker_files, out)
+        docker_helper.run(self.benchmarker_config, test_docker_files, out)
 
         return 0
 
@@ -108,7 +108,7 @@ class FrameworkTest:
                                for (result, reason, url) in results):
                         p = subprocess.call(
                             [
-                                "ssh", "TFB-client",
+                                "ssh", self.benchmarker_config.client_host,
                                 "curl -sSf %s" % base_url + test.get_url()
                             ],
                             shell=False,

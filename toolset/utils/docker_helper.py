@@ -1,5 +1,5 @@
 import os
-import docker
+import socket
 import fnmatch
 import subprocess
 import multiprocessing
@@ -24,6 +24,8 @@ def clean():
     for docker_id in docker_ids:
         subprocess.check_call(["docker", "image", "rmi", "-f", docker_id])
 
+    subprocess.check_call(["docker", "system", "prune", "-a", "-f"])
+
 
 def build(benchmarker_config, test_names, out):
     '''
@@ -35,7 +37,8 @@ def build(benchmarker_config, test_names, out):
     for test in tests:
         docker_buildargs = {
             'CPU_COUNT': str(multiprocessing.cpu_count()),
-            'MAX_CONCURRENCY': str(max(benchmarker_config.concurrency_levels))
+            'MAX_CONCURRENCY': str(max(benchmarker_config.concurrency_levels)),
+            'TFB_DATABASE': str(benchmarker_config.database_host)
         }
 
         test_docker_files = ["%s.dockerfile" % test.name]
@@ -117,7 +120,7 @@ def build(benchmarker_config, test_names, out):
                 return 1
 
 
-def run(docker_files, out):
+def run(benchmarker_config, docker_files, out):
     '''
     Run the given Docker container(s)
     '''
@@ -130,12 +133,22 @@ def run(docker_files, out):
                 for line in container.logs(stream=True):
                     tee_output(out, line)
 
+            extra_hosts = {
+                socket.gethostname(): str(benchmarker_config.server_host),
+                'TFB-SERVER': str(benchmarker_config.server_host),
+                'TFB-DATABASE': str(benchmarker_config.database_host),
+                'TFB-CLIENT': str(benchmarker_config.client_host)
+            }
+
+            print(extra_hosts)
+
             container = client.containers.run(
                 "tfb/test/%s" % docker_file.replace(".dockerfile", ""),
                 network_mode="host",
                 privileged=True,
                 stderr=True,
-                detach=True)
+                detach=True,
+                extra_hosts=extra_hosts)
 
             watch_thread = Thread(target=watch_container, args=(container, ))
             watch_thread.daemon = True
@@ -150,9 +163,9 @@ def run(docker_files, out):
 
 def find(path, pattern):
     '''
-  Finds and returns all the the files matching the given pattern recursively in
-  the given path. 
-  '''
+    Finds and returns all the the files matching the given pattern recursively in
+    the given path. 
+    '''
     for root, dirs, files in os.walk(path):
         for name in files:
             if fnmatch.fnmatch(name, pattern):
@@ -161,8 +174,8 @@ def find(path, pattern):
 
 def gather_dependencies(docker_file):
     '''
-  Gathers all the known docker dependencies for the given docker image.
-  '''
+    Gathers all the known docker dependencies for the given docker image.
+    '''
     # Avoid setting up a circular import
     from toolset.utils import setup_util
     deps = []
