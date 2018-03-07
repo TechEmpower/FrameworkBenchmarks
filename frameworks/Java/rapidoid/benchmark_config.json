@@ -3,7 +3,6 @@
   "tests": [
     {
       "default": {
-        "setup_file": "setup-default",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -22,7 +21,6 @@
         "versus": ""
       },
       "mysql": {
-        "setup_file": "setup-mysql",
         "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
@@ -40,7 +38,6 @@
         "versus": ""
       },
       "postgres": {
-        "setup_file": "setup-postgresql",
         "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
@@ -58,7 +55,6 @@
         "versus": ""
       },
       "http-fast": {
-        "setup_file": "setup-http-fast",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
