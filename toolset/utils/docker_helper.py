@@ -140,8 +140,6 @@ def run(benchmarker_config, docker_files, out):
                 'TFB-CLIENT': str(benchmarker_config.client_host)
             }
 
-            print(extra_hosts)
-
             container = client.containers.run(
                 "tfb/test/%s" % docker_file.replace(".dockerfile", ""),
                 network_mode="host",
