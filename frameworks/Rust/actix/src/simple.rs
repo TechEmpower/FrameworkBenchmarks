@@ -46,8 +46,8 @@ fn main() {
     // start http server
     HttpServer::new(
         move || Application::new()
-            .resource("/json", |r| r.f(json))
-            .resource("/plaintext", |r| r.f(plaintext)))
+            .resource("/plaintext", |r| r.f(plaintext))
+            .resource("/json", |r| r.f(json)))
         .backlog(8192)
         .bind("0.0.0.0:8080").unwrap()
         .start();

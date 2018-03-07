@@ -7,7 +7,7 @@ fw_installed phalcon && return 0
 # Enable the PHP phalcon extension
 sed -i 's|;extension=phalcon.so|extension=phalcon.so|g' $PHP_HOME/lib/php.ini
 
-VERSION="3.2.4"
+VERSION="3.3.1"
 
 fw_get -O https://github.com/phalcon/cphalcon/archive/v${VERSION}.tar.gz
 fw_untar v${VERSION}.tar.gz

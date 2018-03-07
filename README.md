@@ -54,13 +54,18 @@ Once you open an SSH connection to your vagrant box, start the new test initiali
 This will walk you through the entire process of creating a new test to include in the suite.
 
 
-## Official Documentation
+## Resources
 
+#### Official Documentation
 Our official documentation can be found at 
 [frameworkbenchmarks.readthedocs.org](https://frameworkbenchmarks.readthedocs.org/). 
 If you find any errors or areas for improvement within the docs, feel free to either submit a [pull request](https://github.com/TechEmpower/TFB-Documentation/pulls) or [issue](https://github.com/TechEmpower/TFB-Documentation/issues) at the [documentation repository](https://github.com/TechEmpower/TFB-Documentation).
 
-If you have a `results.json` file that you would like to visualize, you can [do that here](https://www.techempower.com/benchmarks/#section=test)(these will be visualized using the metadata from the last known round; if you are adding a new test, it will not visualize anything).
+#### Live Results
+Results of continuous benchmarking runs are available in real time [here](https://tfb-status.techempower.com/).
+
+#### Data Visualization
+If you have a `results.json` file that you would like to visualize, you can [do that here](https://www.techempower.com/benchmarks/#section=test)(these will be visualized using the metadata from the last known round; if you are adding a new test, it will not visualize anything). You can also attach a `runid` parameter to that url where `runid` is a run listed on [tfb-status](https://tfb-status.techempower.com) like so: https://www.techempower.com/benchmarks/#section=test&runid=fd07b64e-47ce-411e-8b9b-b13368e988c6
 
 ## Contributing
 

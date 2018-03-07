@@ -1,0 +1,11 @@
+[package]
+name = "may-minihttp"
+version = "0.1.0"
+authors = ["Xudong Huang <huangxu008@hotmail.com>"]
+
+[dependencies]
+num_cpus = "1.0"
+serde = "1.0"
+serde_json = "1.0"
+may = { git = "https://github.com/Xudong-Huang/may" }
+may_minihttp = { git = "https://github.com/Xudong-Huang/may_minihttp" }

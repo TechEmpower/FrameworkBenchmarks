@@ -1,0 +1,8 @@
+dependencies {
+    compile project(":core")
+}
+
+task uber(type: OneJar) {
+    mainClass = "Http4kSunHttpServerKt"
+    archiveName = 'http4k-sunhttp-benchmark.jar'
+}

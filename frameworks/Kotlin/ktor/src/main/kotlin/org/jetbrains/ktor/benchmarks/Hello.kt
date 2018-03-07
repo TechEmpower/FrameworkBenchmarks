@@ -23,16 +23,14 @@ data class Fortune(val id: Int, var message: String)
 fun Application.main() {
     val gson = GsonBuilder().create()
     val DbRows = 10000
-    Driver::class.java.newInstance()
     val pool by lazy {
         hikari()
     }
 
-    val counter = AtomicInteger()
-    val databaseExecutor = Executors.newFixedThreadPool(256) { r ->
-        Thread(r, "db-${counter.incrementAndGet()}-thread")
+    val databaseDispatcher by lazy {
+        val counter = AtomicInteger()
+        Executors.newFixedThreadPool(100) { r -> Thread(r, "db-${counter.incrementAndGet()}-thread") }.asCoroutineDispatcher()
     }
-    val databaseDispatcher = databaseExecutor.asCoroutineDispatcher()
 
     install(DefaultHeaders)
 
@@ -44,7 +42,7 @@ fun Application.main() {
         }
 
         get("/json") {
-            val content =  TextContent(gson.toJson(Message()), ContentType.Application.Json, HttpStatusCode.OK)
+            val content = TextContent(gson.toJson(Message()), ContentType.Application.Json, HttpStatusCode.OK)
             call.respond(content)
         }
 

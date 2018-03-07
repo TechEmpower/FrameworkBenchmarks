@@ -10,7 +10,6 @@
 .DS_Store
 /tags
 .idea
-composer.lock
 cache.properties
 phpunit.xml
 tmp

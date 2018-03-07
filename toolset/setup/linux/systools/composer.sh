@@ -14,11 +14,11 @@ fw_get -o composer-installer.php https://getcomposer.org/installer
 #
 # NOTE: if you decide to update the composer version, be sure to test ALL of the frameworks
 # that use composer, as some of them have been known to break on newer versions of composer.
-php composer-installer.php --install-dir=${COMPOSER_HOME} --version=1.0.0
+php composer-installer.php --install-dir=${COMPOSER_HOME} --version=1.6.3
 
 cd ..
 
 echo "export COMPOSER_HOME=${COMPOSER_HOME}" > $IROOT/composer.installed
-echo -e "php \$COMPOSER_HOME/composer.phar install --no-interaction --working-dir \$TROOT --no-progress --optimize-autoloader" >> $IROOT/composer.installed
+echo -e "php \$COMPOSER_HOME/composer.phar install --working-dir \$TROOT --no-dev --no-interaction --no-progress --no-suggest --optimize-autoloader --classmap-authoritative" >> $IROOT/composer.installed
 
 source $IROOT/composer.installed

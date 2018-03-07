@@ -15,6 +15,7 @@ app/bootstrap.php.cache
 
 ###> symfony/framework-bundle ###
 .env
+.env.dist
 /public/bundles/
 /var/
 /vendor/

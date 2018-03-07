@@ -15,38 +15,14 @@
       "database": "MySQL",
       "framework": "bottle",
       "language": "Python",
-      "flavor": "Python2",
+      "flavor": "CPython",
       "orm": "Full",
       "platform": "Meinheld",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Bottle",
-      "notes": "CPython 2",
-      "versus": "wsgi"
-    },
-    "py3": {
-      "setup_file": "setup_py3",
-      "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
-      "update_url": "/updates?queries=",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "MySQL",
-      "framework": "bottle",
-      "language": "Python",
-      "flavor": "Python3",
-      "orm": "Full",
-      "platform": "Meinheld",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "Bottle",
-      "notes": "CPython 3",
+      "notes": "",
       "versus": "wsgi"
     },
     "pypy2": {
@@ -73,7 +49,7 @@
       "notes": "PyPy2",
       "versus": "wsgi"
     },
-    "mysql-raw": {
+    "raw": {
       "setup_file": "setup",
       "db_url": "/raw-db",
       "query_url": "/raw-queries?queries=",
@@ -85,14 +61,14 @@
       "database": "MySQL",
       "framework": "bottle",
       "language": "Python",
-      "flavor": "Python2",
+      "flavor": "CPython",
       "orm": "Raw",
       "platform": "Meinheld",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Bottle-raw",
-      "notes": "CPython 2",
+      "notes": "",
       "versus": "wsgi"
     },
     "nginx-uwsgi": {
@@ -109,14 +85,14 @@
       "database": "MySQL",
       "framework": "bottle",
       "language": "Python",
-      "flavor": "Python2",
+      "flavor": "CPython",
       "orm": "Full",
       "platform": "uWSGI",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Bottle-uWSGI",
-      "notes": "CPython 2",
+      "notes": "",
       "versus": "wsgi"
     }
   }]
