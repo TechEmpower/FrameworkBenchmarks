@@ -13,7 +13,7 @@ env:
   matrix:
      - "TESTLANG=C"
     # - "TESTDIR=CSharp/aspnet"
-    # - "TESTDIR=CSharp/aspnetcore"
+     - "TESTDIR=CSharp/aspnetcore"
     # ## - "TESTDIR=CSharp/aspnet-stripped"
     # - "TESTDIR=CSharp/evhttp-sharp"
     # ## - "TESTDIR=CSharp/HttpListener"
