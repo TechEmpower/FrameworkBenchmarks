@@ -5,7 +5,6 @@ from toolset.utils.remote_script_helper import generate_concurrency_script, gene
 import os
 import subprocess
 import traceback
-import pprint
 import sys
 import logging
 import socket
