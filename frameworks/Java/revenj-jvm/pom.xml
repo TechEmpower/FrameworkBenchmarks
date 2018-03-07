@@ -44,7 +44,7 @@
 							<target>revenj.java</target>
 							<dsl>${project.build.sourceDirectory}</dsl>
 							<namespace>dsl</namespace>
-							<compiler>${project.basedir}/../../../installs/dsl-compiler.exe</compiler>
+							<compiler>${project.basedir}/dsl-compiler.exe</compiler>
 							<options>
 								<option>manual-json</option>
 							</options>

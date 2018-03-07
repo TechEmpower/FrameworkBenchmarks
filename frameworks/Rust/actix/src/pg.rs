@@ -33,11 +33,11 @@ pub struct Fortune {
 
 
 struct State {
-    db: SyncAddress<PgConnection>
+    db: Addr<Syn, PgConnection>
 }
 
 fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
-    req.state().db.call_fut(RandomWorld)
+    req.state().db.send(RandomWorld)
         .from_err()
         .and_then(|res| {
             match res {
@@ -64,7 +64,7 @@ fn queries(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
     let q = cmp::min(500, cmp::max(1, q));
 
     // run sql queries
-    req.state().db.call_fut(RandomWorlds(q))
+    req.state().db.send(RandomWorlds(q))
         .from_err()
         .and_then(|res| {
             if let Ok(worlds) = res {
@@ -91,7 +91,7 @@ fn updates(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
     let q = cmp::min(500, cmp::max(1, q));
 
     // update db
-    req.state().db.call_fut(UpdateWorld(q))
+    req.state().db.send(UpdateWorld(q))
         .from_err()
         .and_then(move |res| {
             if let Ok(worlds) = res {
@@ -115,7 +115,7 @@ struct FortuneTemplate<'a> {
 }
 
 fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
-    req.state().db.call_fut(TellFortune)
+    req.state().db.send(TellFortune)
         .from_err()
         .and_then(|res| {
             match res {
@@ -150,7 +150,7 @@ impl PgConnection {
         let conn = Connection::connect(db_url, TlsMode::None)
             .expect(&format!("Error connecting to {}", db_url));
         PgConnection{
-            conn: conn,
+            conn,
             rng: thread_rng(),
         }
     }
@@ -161,13 +161,12 @@ unsafe impl Send for PgConnection {}
 
 pub struct RandomWorld;
 
-impl ResponseType for RandomWorld {
-    type Item = World;
-    type Error = io::Error;
+impl Message for RandomWorld {
+    type Result = io::Result<World>;
 }
 
 impl Handler<RandomWorld> for PgConnection {
-    type Result = MessageResult<RandomWorld>;
+    type Result = io::Result<World>;
 
     fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Self::Result {
         let random_world = self.conn.prepare_cached(
@@ -178,19 +177,18 @@ impl Handler<RandomWorld> for PgConnection {
             return Ok(World {id: row.get(0), randomnumber: row.get(1)})
         }
 
-        Err(io::Error::new(io::ErrorKind::Other, format!("Database error")))
+        Err(io::Error::new(io::ErrorKind::Other, "Database error"))
     }
 }
 
 pub struct RandomWorlds(pub u16);
 
-impl ResponseType for RandomWorlds {
-    type Item = Vec<World>;
-    type Error = io::Error;
+impl Message for RandomWorlds {
+    type Result = io::Result<Vec<World>>;
 }
 
 impl Handler<RandomWorlds> for PgConnection {
-    type Result = MessageResult<RandomWorlds>;
+    type Result = io::Result<Vec<World>>;
 
     fn handle(&mut self, msg: RandomWorlds, _: &mut Self::Context) -> Self::Result {
         let random_world = self.conn.prepare_cached(
@@ -210,15 +208,14 @@ impl Handler<RandomWorlds> for PgConnection {
 
 pub struct UpdateWorld(pub u16);
 
-impl ResponseType for UpdateWorld {
-    type Item = Vec<World>;
-    type Error = io::Error;
+impl Message for UpdateWorld {
+    type Result = io::Result<Vec<World>>;
 }
 
 impl Handler<UpdateWorld> for PgConnection {
-    type Result = MessageResult<UpdateWorld>;
+    type Result = io::Result<Vec<World>>;
 
-    fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> MessageResult<UpdateWorld> {
+    fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
         let get_world = self.conn.prepare_cached(
             "SELECT id FROM World WHERE id=$1").unwrap();
         let update_world = self.conn.prepare_cached(
@@ -241,9 +238,8 @@ impl Handler<UpdateWorld> for PgConnection {
 
 pub struct TellFortune;
 
-impl ResponseType for TellFortune {
-    type Item = Vec<Fortune>;
-    type Error = io::Error;
+impl Message for TellFortune {
+    type Result = io::Result<Vec<Fortune>>;
 }
 
 impl Handler<TellFortune> for PgConnection {
@@ -277,7 +273,7 @@ fn main() {
 
     // Start db executor actors
     let addr = SyncArbiter::start(
-        num_cpus::get() * 3, move || PgConnection::new(&db_url));
+        num_cpus::get() * 4, move || PgConnection::new(&db_url));
 
     // start http server
     HttpServer::new(

@@ -1,8 +1,4 @@
 <?php
-//
-// Database Test
-//
-
 // Set content type
 header("Content-type: application/json");
 
@@ -23,7 +19,7 @@ ActiveRecord\Config::initialize(function($cfg)
 // Read number of queries to run from URL parameter
 $query_count = 1;
 if (isset($_GET['queries']) && $_GET['queries'] > 0) {
-  $query_count = $_GET["queries"];
+  $query_count = $_GET["queries"] > 500 ? 500 : $_GET['queries'];
 }
 
 // Create an array with the response string.
@@ -40,8 +36,9 @@ for ($i = 0; $i < $query_count; $i++) {
   // Store result in array.
   $arr[] = $world->to_array();
 }
-
+if ($query_count === 1) {
+  $arr = $arr[0];
+}
 // Use the PHP standard JSON encoder.
 // http://www.php.net/manual/en/function.json-encode.php
 echo json_encode($arr);
-?>

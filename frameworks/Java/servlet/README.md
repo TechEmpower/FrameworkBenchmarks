@@ -2,6 +2,8 @@
 
 This is the Java Servlet portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
+There is a Servlet 3.1 based tests implementation in the [servlet3](./servlet3) sub-folder. It is using Tomcat 9 as Servlet containter.
+
 ### Plaintext and JSON
 
 * [Plaintext test source](src/main/java/hello/PlaintextServlet.java)

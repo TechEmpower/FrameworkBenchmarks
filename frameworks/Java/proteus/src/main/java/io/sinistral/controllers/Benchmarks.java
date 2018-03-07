@@ -6,12 +6,7 @@ package io.sinistral.controllers;
 import static io.undertow.util.Headers.CONTENT_TYPE;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.StringWriter;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.ByteBuffer;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,7 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.fizzed.rocker.runtime.StringBuilderOutput;
 import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -105,7 +99,7 @@ public class Benchmarks
     
     
  
-	protected final MySqlService sqlService;
+	protected final MySqlService mySqlService;
 	
 	 
 	protected final PostgresService postgresService;
@@ -116,9 +110,9 @@ public class Benchmarks
     }
 
     @Inject
-    public Benchmarks(PostgresService postgresService, MySqlService sqlService)
+    public Benchmarks(PostgresService postgresService, MySqlService mySqlService)
     {
-    	this.sqlService = sqlService;
+    	this.mySqlService = mySqlService;
     	this.postgresService = postgresService;
     }
 	
@@ -167,7 +161,7 @@ public class Benchmarks
 	{ 		
 		final World world;
 		
-		try (final Connection connection = sqlService.getConnection())
+		try (final Connection connection = mySqlService.getConnection())
 		{
 			try (PreparedStatement statement = connection.prepareStatement("SELECT id,randomNumber FROM world WHERE id = ?"))
 			{
@@ -205,7 +199,7 @@ public class Benchmarks
  
 		List<Fortune> fortunes = new ArrayList<>();
 	        
-			try (final Connection connection = postgresService.getConnection())
+			try (final Connection connection = mySqlService.getConnection())
 			{
 				try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Fortune"))
 				{

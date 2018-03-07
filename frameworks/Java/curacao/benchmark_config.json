@@ -2,9 +2,8 @@
   "framework": "curacao",
   "tests": [{
     "default": {
-      "setup_file": "setup",
-      "json_url": "/curacao/json",
-      "plaintext_url": "/curacao/plaintext",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",

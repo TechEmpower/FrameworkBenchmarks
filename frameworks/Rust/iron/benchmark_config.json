@@ -2,7 +2,6 @@
   "framework": "iron",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "fortune_url": "/fortune",
