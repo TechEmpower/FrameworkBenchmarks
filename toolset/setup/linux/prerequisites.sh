@@ -22,22 +22,6 @@ sudo apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options:
   ca-certificates               `# Needed for Docker on Ubuntu 14` \
   curl                          `# Needed for Docker on Ubuntu 14` \
   software-properties-common    `# Needed for Docker on Ubuntu 14`
-  # cmake build-essential automake    `# Needed for building code` \
-  # wget unzip                   `# Common tools` \
-  # mercurial                `# Version control systems` \
-  # libpcre3 libpcre3-dev libpcrecpp0 `# Regular expression support` \
-  # libssl-dev libcurl4-openssl-dev   `# SSL libraries` \
-  # zlib1g-dev \
-  # libreadline6-dev \
-  # libbz2-dev \
-  # libyaml-dev libxml2-dev \
-  # libxslt-dev libgdbm-dev ncurses-dev  \
-  # libffi-dev htop libtool bison libevent-dev \
-  # libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 \
-  # liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev \
-  # libjson0-dev libmcrypt-dev libicu-dev gettext \
-  #  mlton \
-  # re2c libnuma-dev
 
 sudo pip install colorama==0.3.1 requests MySQL-python psycopg2-binary pymongo
 

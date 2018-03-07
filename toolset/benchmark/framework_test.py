@@ -1,28 +1,15 @@
-from toolset.benchmark.fortune_html_parser import FortuneHTMLParser
-from toolset.setup.linux import setup_util
-
-import importlib
 import os
 import subprocess
-import socket
-import time
-from pprint import pprint
 import sys
 import traceback
-import json
 import logging
-import multiprocessing
-from collections import OrderedDict
 from requests import ConnectionError
-from threading import Event
 
 from toolset.utils.output_helper import header
 from toolset.utils import docker_helper
 
 # Cross-platform colored text
-from colorama import Fore, Back, Style
-from datetime import datetime
-from datetime import timedelta
+from colorama import Fore, Style
 
 
 class FrameworkTest:

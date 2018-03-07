@@ -2,12 +2,9 @@ import argparse
 import ConfigParser
 import socket
 import sys
-import time
 import os
 import platform
 import multiprocessing
-import itertools
-import copy
 from toolset.benchmark.benchmarker import Benchmarker
 from toolset.setup.linux.unbuffered import Unbuffered
 from toolset.setup.linux import setup_util

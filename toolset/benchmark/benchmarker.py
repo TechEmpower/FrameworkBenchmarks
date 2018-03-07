@@ -1,32 +1,19 @@
-from toolset.setup.linux import setup_util
-
-from toolset.benchmark import framework_test
 from toolset.utils.output_helper import header
-from toolset.utils.metadata_helper import gather_frameworks, gather_tests, gather_remaining_tests
-from toolset.utils.results_helper import Results
+from toolset.utils.metadata_helper import gather_tests, gather_remaining_tests
 from toolset.utils.remote_script_helper import generate_concurrency_script, generate_pipeline_script, generate_query_script
 
 import os
-import shutil
-import stat
-import requests
 import subprocess
 import traceback
 import pprint
-import csv
 import sys
 import logging
 import socket
-import threading
-import textwrap
 import docker
-import shutil
 import time
 import json
 import shlex
 from pprint import pprint
-
-from contextlib import contextmanager
 
 from multiprocessing import Process
 
@@ -80,12 +67,6 @@ class Benchmarker:
         self.results.upload()
         self.results.finish()
         return result
-
-    def generate_url(self, url, port):
-        '''
-        Generates a fully qualified URL for accessing a test url
-        '''
-        return self.config.server_host + ":" + str(port) + url
 
     ##########################################################################################
     # Private methods

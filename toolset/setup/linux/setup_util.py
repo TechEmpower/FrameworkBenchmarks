@@ -2,7 +2,6 @@ import re
 import os
 import sys
 import subprocess
-import platform
 
 from threading import Thread
 from Queue import Queue, Empty

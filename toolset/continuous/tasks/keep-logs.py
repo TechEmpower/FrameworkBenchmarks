@@ -7,7 +7,6 @@ import os
 import zipfile
 import datetime
 import requests
-import shutil
 # Follows closely from:
 # http://stackoverflow.com/a/34153816
 #

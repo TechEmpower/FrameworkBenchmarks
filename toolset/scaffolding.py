@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
-import sys
 import os
-import imp
 from shutil import copytree
 from toolset.setup.linux.setup_util import replace_text
 from toolset.utils.metadata_helper import gather_frameworks, gather_langauges

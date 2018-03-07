@@ -15,7 +15,7 @@ import csv
 from datetime import datetime
 
 # Cross-platform colored text
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
 
 
 class Results:

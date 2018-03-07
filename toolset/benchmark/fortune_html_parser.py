@@ -1,5 +1,4 @@
 # -*- coding: utf-8
-import re
 from HTMLParser import HTMLParser
 from difflib import unified_diff
 
