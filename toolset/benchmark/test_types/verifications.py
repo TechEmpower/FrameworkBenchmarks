@@ -1,6 +1,5 @@
 import json
 import re
-import math
 
 
 def basic_body_verification(body, url, is_json_check=True):

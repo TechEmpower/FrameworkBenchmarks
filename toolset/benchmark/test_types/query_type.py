@@ -1,7 +1,5 @@
 from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
-from toolset.benchmark.test_types.verifications import verify_headers, verify_randomnumber_list, verify_query_cases
-
-import json
+from toolset.benchmark.test_types.verifications import verify_query_cases
 
 
 class QueryTestType(FrameworkTestType):

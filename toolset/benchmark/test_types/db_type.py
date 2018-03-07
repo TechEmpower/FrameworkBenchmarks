@@ -1,8 +1,6 @@
 from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
 from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_randomnumber_object
 
-import json
-
 
 class DBTestType(FrameworkTestType):
     def __init__(self):

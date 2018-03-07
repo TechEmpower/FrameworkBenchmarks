@@ -1,9 +1,6 @@
 import copy
 import sys
-import os
 import json
-import subprocess
-from subprocess import PIPE
 import requests
 import MySQLdb
 import psycopg2
@@ -13,8 +10,6 @@ import pymongo
 # here we prevent general request logging
 import logging
 logging.getLogger('urllib3').setLevel(logging.CRITICAL)
-
-from pprint import pprint
 
 
 class FrameworkTestType:
