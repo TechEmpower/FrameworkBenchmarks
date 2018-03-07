@@ -316,7 +316,7 @@ class Benchmarker:
                 stderr=subprocess.STDOUT)
             p.communicate("mkdir -p %s" % database)
             dbpath = os.path.join(self.config.fwroot, "toolset", "setup",
-                                  "linux", "docker", "databases", database)
+                                  "docker", "databases", database)
             dbfiles = ""
             for dbfile in os.listdir(dbpath):
                 dbfiles += "%s " % os.path.join(dbpath, dbfile)
