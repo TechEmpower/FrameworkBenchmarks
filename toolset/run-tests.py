@@ -6,10 +6,10 @@ import os
 import platform
 import multiprocessing
 from toolset.benchmark.benchmarker import Benchmarker
-from toolset.setup.linux.unbuffered import Unbuffered
-from toolset.setup.linux import setup_util
-from toolset.scaffolding import Scaffolding
-from toolset.initializer import initialize
+from toolset.utils import setup_util
+from toolset.utils.unbuffered import Unbuffered
+from toolset.utils.scaffolding import Scaffolding
+from toolset.utils.initializer import initialize
 from toolset.utils import cleaner
 from toolset.utils.results_helper import Results
 from toolset.utils.benchmark_config import BenchmarkConfig
@@ -271,7 +271,7 @@ def main(argv=None):
     results = Results(config)
 
     if config.new:
-        Scaffolding().scaffold()
+        Scaffolding()
 
     elif config.init:
         initialize(config)

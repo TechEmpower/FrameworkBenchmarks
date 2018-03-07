@@ -14,7 +14,7 @@ def gather_langauges():
     beneath FWROOT.
     '''
     # Avoid setting up a circular import
-    from toolset.setup.linux import setup_util
+    from toolset.utils import setup_util
 
     lang_dir = os.path.join(setup_util.get_fwroot(), "frameworks")
     langs = []
@@ -40,7 +40,7 @@ def gather_tests(include=[], exclude=[], benchmarker_config=None,
     '''
     # Avoid setting up a circular import
     from toolset.utils.benchmark_config import BenchmarkConfig
-    from toolset.setup.linux import setup_util
+    from toolset.utils import setup_util
 
     # Help callers out a bit
     if include is None:

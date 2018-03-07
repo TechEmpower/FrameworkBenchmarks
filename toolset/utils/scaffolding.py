@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 from shutil import copytree
-from toolset.setup.linux.setup_util import replace_text
+from toolset.utils.setup_util import replace_text
 from toolset.utils.metadata_helper import gather_frameworks, gather_langauges
 
 
 class Scaffolding:
-    def scaffold(self):
+    def __init__(self):
         print("""
 -------------------------------------------------------------------------------
     This wizard is intended to help build the scaffolding required for a new 

@@ -1,5 +1,5 @@
 import subprocess, os
-from toolset.setup.linux import setup_util
+from toolset.utils import setup_util
 
 DEVNULL = open(os.devnull, 'w')
 

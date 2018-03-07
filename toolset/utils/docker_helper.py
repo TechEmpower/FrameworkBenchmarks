@@ -8,8 +8,7 @@ import docker
 
 from threading import Thread
 
-from toolset.setup.linux import setup_util
-
+from toolset.utils import setup_util
 from toolset.utils.output_helper import tee_output
 from toolset.utils.metadata_helper import gather_tests
 
@@ -54,7 +53,7 @@ def build(benchmarker_config, test_names, out):
                         os.path.join(test.directory, test_docker_file))))
 
             docker_dir = os.path.join(setup_util.get_fwroot(), "toolset",
-                                      "setup", "linux", "docker")
+                                      "setup", "docker")
             for dependency in deps:
                 docker_file = os.path.join(test.directory,
                                            dependency + ".dockerfile")
@@ -165,11 +164,11 @@ def gather_dependencies(docker_file):
   Gathers all the known docker dependencies for the given docker image.
   '''
     # Avoid setting up a circular import
-    from toolset.setup.linux import setup_util
+    from toolset.utils import setup_util
     deps = []
 
     docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup",
-                              "linux", "docker")
+                              "docker")
 
     if os.path.exists(docker_file):
         with open(docker_file) as fp:

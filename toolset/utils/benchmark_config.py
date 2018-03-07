@@ -1,4 +1,4 @@
-from toolset.setup.linux import setup_util
+from toolset.utils import setup_util
 from toolset.benchmark.test_types import *
 from toolset.utils.output_helper import QuietOutputStream
 
