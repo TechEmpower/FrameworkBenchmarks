@@ -35,8 +35,8 @@ do
   cp $TFB_REPOPARENT/benchmark.cfg $TFB_REPOPARENT/$TFB_REPONAME/benchmark.cfg 2>/dev/null
   # Set the hosts correctly in the benchmark.cfg
   sed -i 's|server_host=.*|server_host='"$TFB_SERVER"'|g' $TFB_REPOPARENT/$TFB_REPONAME/benchmark.cfg 2>/dev/null
-  sed -i 's|server_host=.*|database_host='"$TFB_DATABASE"'|g' $TFB_REPOPARENT/$TFB_REPONAME/benchmark.cfg 2>/dev/null
-  sed -i 's|server_host=.*|client_host='"$TFB_CLIENT"'|g' $TFB_REPOPARENT/$TFB_REPONAME/benchmark.cfg 2>/dev/null
+  sed -i 's|database_host=.*|database_host='"$TFB_DATABASE"'|g' $TFB_REPOPARENT/$TFB_REPONAME/benchmark.cfg 2>/dev/null
+  sed -i 's|client_host=.*|client_host='"$TFB_CLIENT"'|g' $TFB_REPOPARENT/$TFB_REPONAME/benchmark.cfg 2>/dev/null
 
   echo Running continuous tasks
   $TFB_REPOPARENT/$TFB_REPONAME/toolset/continuous/tasks/run-tasks.sh
