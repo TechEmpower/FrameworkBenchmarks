@@ -1,5 +1,6 @@
 from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
 from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_randomnumber_object
+from toolset.utils.remote_script_helper import generate_concurrency_script
 
 
 class DBTestType(FrameworkTestType):
@@ -56,3 +57,10 @@ class DBTestType(FrameworkTestType):
             return [('pass', '', url)]
         else:
             return problems
+
+    def get_remote_script(self, config, name, url, port):
+        '''
+        Returns the remote script
+        '''
+        return generate_concurrency_script(self.config, name, url, port,
+                                           self.accept_header)

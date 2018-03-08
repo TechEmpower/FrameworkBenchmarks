@@ -1,5 +1,6 @@
 from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
 from toolset.benchmark.test_types.verifications import verify_query_cases
+from toolset.utils.remote_script_helper import generate_query_script
 
 
 class UpdateTestType(FrameworkTestType):
@@ -34,3 +35,11 @@ class UpdateTestType(FrameworkTestType):
             return [('pass', '', url + case) for (case, _) in cases]
         else:
             return problems
+
+    def get_remote_script(self, config, name, url, port):
+        '''
+        Returns the remote script
+        '''
+        return generate_query_script(self.config, name, url, port,
+                                     self.accept_header,
+                                     self.config.query_levels)
