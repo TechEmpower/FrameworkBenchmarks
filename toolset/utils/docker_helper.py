@@ -158,6 +158,33 @@ def run(benchmarker_config, docker_files, out):
             return 1
 
 
+def stop(config, database_container_id, test, out):
+    '''
+    Attempts to stop the running test container.
+    '''
+    client = docker.from_env()
+    # Stop all the containers
+    for container in client.containers.list():
+        if container.status == "running" and container.id != database_container_id:
+            container.stop()
+    # Remove only the tfb/test image for this test
+    try:
+        client.images.remove("tfb/test/%s" % test.name, force=True)
+    except:
+        # This can be okay if the user hit ctrl+c before the image built/ran
+        pass
+    # Stop the database container
+    if database_container_id:
+        p = subprocess.Popen(
+            config.database_ssh_string,
+            stdin=subprocess.PIPE,
+            shell=True,
+            stdout=config.quiet_out,
+            stderr=subprocess.STDOUT)
+        p.communicate("docker stop %s" % database_container_id)
+    client.images.prune()
+
+
 def find(path, pattern):
     '''
     Finds and returns all the the files matching the given pattern recursively in
@@ -199,3 +226,78 @@ def gather_dependencies(docker_file):
                         deps.extend(gather_dependencies(dep_docker_file))
 
     return deps
+
+
+def start_database(config, database):
+    '''
+    Sets up a container for the given database and port, and starts said docker 
+    container.
+    '''
+
+    def __is_hex(s):
+        try:
+            int(s, 16)
+        except ValueError:
+            return False
+        return len(s) % 2 == 0
+
+    p = subprocess.Popen(
+        config.database_ssh_string,
+        stdin=subprocess.PIPE,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT)
+    out = p.communicate("docker images  -q %s" % database)[0]
+    dbid = ''
+    if len(out.splitlines()) > 0:
+        dbid = out.splitlines()[len(out.splitlines()) - 1]
+
+    # If the database image exists, then dbid will look like
+    # fe12ca519b47, and we do not want to rebuild if it exists
+    if len(dbid) != 12 and not __is_hex(dbid):
+
+        def __scp_string(files):
+            scpstr = ["scp", "-i", config.database_identity_file]
+            for file in files:
+                scpstr.append(file)
+            scpstr.append("%s@%s:~/%s/" % (config.database_user,
+                                           config.database_host, database))
+            return scpstr
+
+        p = subprocess.Popen(
+            config.database_ssh_string,
+            shell=True,
+            stdin=subprocess.PIPE,
+            stdout=config.quiet_out,
+            stderr=subprocess.STDOUT)
+        p.communicate("mkdir -p %s" % database)
+        dbpath = os.path.join(config.fwroot, "toolset", "setup", "docker",
+                              "databases", database)
+        dbfiles = ""
+        for dbfile in os.listdir(dbpath):
+            dbfiles += "%s " % os.path.join(dbpath, dbfile)
+        p = subprocess.Popen(
+            __scp_string(dbfiles.split()),
+            stdin=subprocess.PIPE,
+            stdout=config.quiet_out,
+            stderr=subprocess.STDOUT)
+        p.communicate()
+        p = subprocess.Popen(
+            config.database_ssh_string,
+            shell=True,
+            stdin=subprocess.PIPE,
+            stdout=config.quiet_out,
+            stderr=subprocess.STDOUT)
+        p.communicate("docker build -f ~/%s/%s.dockerfile -t %s ~/%s" %
+                      (database, database, database, database))
+        if p.returncode != 0:
+            return None
+
+    p = subprocess.Popen(
+        config.database_ssh_string,
+        stdin=subprocess.PIPE,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT)
+    out = p.communicate("docker run -d --rm --network=host %s" % database)[0]
+    return out.splitlines()[len(out.splitlines()) - 1]

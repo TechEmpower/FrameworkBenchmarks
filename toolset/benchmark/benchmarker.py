@@ -1,6 +1,7 @@
 from toolset.utils.output_helper import header
 from toolset.utils.metadata_helper import gather_tests, gather_remaining_tests
 from toolset.utils.remote_script_helper import generate_concurrency_script, generate_pipeline_script, generate_query_script
+from toolset.utils import docker_helper
 
 import os
 import subprocess
@@ -8,7 +9,6 @@ import traceback
 import sys
 import logging
 import socket
-import docker
 import time
 import json
 import shlex
@@ -271,82 +271,6 @@ class Benchmarker:
         # TODO - print kernel configuration to file
         # echo "Printing kernel configuration:" && sudo sysctl -a
 
-    def __setup_database_container(self, database):
-        '''
-        Sets up a container for the given database and port, and starts said docker 
-        container.
-        '''
-
-        def __is_hex(s):
-            try:
-                int(s, 16)
-            except ValueError:
-                return False
-            return len(s) % 2 == 0
-
-        p = subprocess.Popen(
-            self.config.database_ssh_string,
-            stdin=subprocess.PIPE,
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT)
-        out = p.communicate("docker images  -q %s" % database)[0]
-        dbid = ''
-        if len(out.splitlines()) > 0:
-            dbid = out.splitlines()[len(out.splitlines()) - 1]
-
-        # If the database image exists, then dbid will look like
-        # fe12ca519b47, and we do not want to rebuild if it exists
-        if len(dbid) != 12 and not __is_hex(dbid):
-
-            def __scp_string(files):
-                scpstr = ["scp", "-i", self.config.database_identity_file]
-                for file in files:
-                    scpstr.append(file)
-                scpstr.append("%s@%s:~/%s/" %
-                              (self.config.database_user,
-                               self.config.database_host, database))
-                return scpstr
-
-            p = subprocess.Popen(
-                self.config.database_ssh_string,
-                shell=True,
-                stdin=subprocess.PIPE,
-                stdout=self.config.quiet_out,
-                stderr=subprocess.STDOUT)
-            p.communicate("mkdir -p %s" % database)
-            dbpath = os.path.join(self.config.fwroot, "toolset", "setup",
-                                  "docker", "databases", database)
-            dbfiles = ""
-            for dbfile in os.listdir(dbpath):
-                dbfiles += "%s " % os.path.join(dbpath, dbfile)
-            p = subprocess.Popen(
-                __scp_string(dbfiles.split()),
-                stdin=subprocess.PIPE,
-                stdout=self.config.quiet_out,
-                stderr=subprocess.STDOUT)
-            p.communicate()
-            p = subprocess.Popen(
-                self.config.database_ssh_string,
-                shell=True,
-                stdin=subprocess.PIPE,
-                stdout=self.config.quiet_out,
-                stderr=subprocess.STDOUT)
-            p.communicate("docker build -f ~/%s/%s.dockerfile -t %s ~/%s" %
-                          (database, database, database, database))
-            if p.returncode != 0:
-                return None
-
-        p = subprocess.Popen(
-            self.config.database_ssh_string,
-            stdin=subprocess.PIPE,
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT)
-        out = p.communicate(
-            "docker run -d --rm --network=host %s" % database)[0]
-        return out.splitlines()[len(out.splitlines()) - 1]
-
     def __setup_client(self):
         '''
         Makes any necessary changes to the client machine that should be made 
@@ -500,8 +424,8 @@ class Benchmarker:
 
                 # Start database container
                 if test.database != "None":
-                    database_container_id = self.__setup_database_container(
-                        test.database.lower())
+                    database_container_id = docker_helper.start_database(
+                        self.config, test.database.lower())
                     if not database_container_id:
                         out.write(
                             "ERROR: Problem building/running database container"
@@ -514,7 +438,8 @@ class Benchmarker:
                 # Start webapp
                 result = test.start(out)
                 if result != 0:
-                    self.__stop_test(database_container_id, test, out)
+                    docker_helper.stop(self.config, database_container_id,
+                                       test, out)
                     time.sleep(5)
                     out.write("ERROR: Problem starting {name}\n".format(
                         name=test.name))
@@ -546,8 +471,8 @@ class Benchmarker:
                     self.__benchmark(test, logDir)
 
                 # Stop this test
-                self.__stop_test(database_container_id, test, out)
-                self.__stop_database(database_container_id, out)
+                docker_helper.stop(self.config, database_container_id, test,
+                                   out)
 
                 out.write(header("Stopped %s" % test.name))
                 out.flush()
@@ -577,8 +502,8 @@ class Benchmarker:
                     print("Failed verify!")
                     return sys.exit(1)
             except KeyboardInterrupt:
-                self.__stop_test(database_container_id, test, out)
-                self.__stop_database(database_container_id, out)
+                docker_helper.stop(self.config, database_container_id, test,
+                                   out)
             except (OSError, IOError, subprocess.CalledProcessError):
                 self.results.write_intermediate(
                     test.name, "<setup.py> raised an exception")
@@ -590,36 +515,6 @@ class Benchmarker:
 
             out.close()
             return sys.exit(0)
-
-    def __stop_database(self, database_container_id, out):
-        '''
-        Attempts to stop the running database container.
-        '''
-        if database_container_id:
-            p = subprocess.Popen(
-                self.config.database_ssh_string,
-                stdin=subprocess.PIPE,
-                shell=True,
-                stdout=self.config.quiet_out,
-                stderr=subprocess.STDOUT)
-            p.communicate("docker stop %s" % database_container_id)
-
-    def __stop_test(self, database_container_id, test, out):
-        '''
-        Attempts to stop the running test container.
-        '''
-        client = docker.from_env()
-        # Stop all the containers
-        for container in client.containers.list():
-            if container.status == "running" and container.id != database_container_id:
-                container.stop()
-        # Remove only the tfb/test image for this test
-        try:
-            client.images.remove("tfb/test/%s" % test.name, force=True)
-        except:
-            # This can be okay if the user hit ctrl+c before the image built/ran
-            pass
-        client.images.prune()
 
     def __is_port_bound(self, port):
         '''
