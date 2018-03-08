@@ -614,7 +614,11 @@ class Benchmarker:
             if container.status == "running" and container.id != database_container_id:
                 container.stop()
         # Remove only the tfb/test image for this test
-        client.images.remove("tfb/test/%s" % test.name, force=True)
+        try:
+            client.images.remove("tfb/test/%s" % test.name, force=True)
+        except:
+            # This can be okay if the user hit ctrl+c before the image built/ran
+            pass
         client.images.prune()
 
     def __is_port_bound(self, port):
