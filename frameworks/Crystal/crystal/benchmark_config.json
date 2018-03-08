@@ -2,7 +2,6 @@
   "framework": "crystal",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -26,7 +25,6 @@
       "versus": "crystal"
     },
     "radix": {
-      "setup_file": "setup_radix",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
