@@ -38,30 +38,31 @@
     :delimiters "" ;; remove delimiters
     :maximum-pool-size 256}))
 
-;; MySQL database connection for java.jdbc "raw" using HikariCP
-(def datasource-options-hikaricp {:auto-commit        true
-                                  :read-only          false
-                                  :connection-timeout 30000
-                                  :validation-timeout 5000
-                                  :idle-timeout       600000
-                                  :max-lifetime       1800000
-                                  :minimum-idle       10
-                                  :maximum-pool-size  256
-                                  :pool-name          "db-pool"
-                                  :adapter            "mysql"
-                                  :username           "benchmarkdbuser"
-                                  :password           "benchmarkdbpass"
-                                  :database-name      "hello_world"
-                                  :server-name        "TFB-database"
-                                  :port-number        3306
-                                  :register-mbeans    false})
-
 ;; Create HikariCP-pooled "raw" jdbc data source
-(def db-spec-mysql-raw-hikaricp
-  (make-datasource datasource-options-hikaricp))
+(defn make-hikari-data-source
+  []
+  (make-datasource {:auto-commit        true
+                    :read-only          false
+                    :connection-timeout 30000
+                    :validation-timeout 5000
+                    :idle-timeout       600000
+                    :max-lifetime       1800000
+                    :minimum-idle       10
+                    :maximum-pool-size  256
+                    :pool-name          "db-pool"
+                    :adapter            "mysql"
+                    :username           "benchmarkdbuser"
+                    :password           "benchmarkdbpass"
+                    :database-name      "hello_world"
+                    :server-name        "TFB-database"
+                    :port-number        3306
+                    :register-mbeans    false}))
+
+;; Reuse a single HikariCP-pooled data source
+(def memoize-hikari-data-source (memoize make-hikari-data-source))
 
 ;; Get a HikariCP-pooled "raw" jdbc connection
-(defn db-mysql-raw [] {:datasource db-spec-mysql-raw-hikaricp})
+(defn db-mysql-raw [] {:datasource (memoize-hikari-data-source)})
 
 ;; Set up entity World and the database representation
 (defentity world
