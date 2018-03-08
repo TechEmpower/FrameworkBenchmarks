@@ -34,11 +34,11 @@ cat <<EOF > benchmark.cfg
 [Defaults]
 # Available Keys:
 os=linux
-server_host=TFB-server
-client_host=TFB-client
+server_host=127.0.0.1
+client_host=127.0.0.1
 client_identity_file=/home/vagrant/.ssh/id_rsa
 client_user=vagrant
-database_host=TFB-database
+database_host=127.0.0.1
 database_identity_file=/home/vagrant/.ssh/id_rsa
 database_os=linux
 database_user=vagrant
