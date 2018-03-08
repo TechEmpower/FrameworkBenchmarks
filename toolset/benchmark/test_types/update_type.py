@@ -1,23 +1,24 @@
-from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.verifications import verify_query_cases
+from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
+from toolset.benchmark.test_types.verifications import verify_query_cases
 
 
 class UpdateTestType(FrameworkTestType):
-
-    def __init__(self):
+    def __init__(self, config):
+        self.update_url = ""
         kwargs = {
             'name': 'update',
             'accept_header': self.accept('json'),
             'requires_db': True,
             'args': ['update_url', 'database']
         }
-        FrameworkTestType.__init__(self, **kwargs)
+        FrameworkTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.update_url
 
     def verify(self, base_url):
-        '''Validates the response is a JSON array of 
+        '''
+        Validates the response is a JSON array of 
         the proper length, each JSON Object in the array 
         has keys 'id' and 'randomNumber', and these keys 
         map to integers. Case insensitive and 
@@ -25,13 +26,8 @@ class UpdateTestType(FrameworkTestType):
         '''
 
         url = base_url + self.update_url
-        cases = [
-            ('2',   'fail'),
-            ('0',   'fail'),
-            ('foo', 'fail'),
-            ('501', 'warn'),
-            ('',    'fail')
-        ]
+        cases = [('2', 'fail'), ('0', 'fail'), ('foo', 'fail'),
+                 ('501', 'warn'), ('', 'fail')]
         problems = verify_query_cases(self, cases, url, True)
 
         if len(problems) == 0:

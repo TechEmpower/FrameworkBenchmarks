@@ -22,11 +22,6 @@ if [ ! -e "~/.firstboot" ]; then
   chmod 600 ~/.ssh/config
   echo "vagrant ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 
-  # Setting up hosts aliases
-  echo 127.0.0.1 TFB-database | sudo tee --append /etc/hosts
-  echo 127.0.0.1 TFB-client   | sudo tee --append /etc/hosts
-  echo 127.0.0.1 TFB-server   | sudo tee --append /etc/hosts
-
   # Setting up new FWROOT
   export FWROOT="/home/vagrant/FrameworkBenchmarks"
   echo `export FWROOT="/home/vagrant/FrameworkBenchmarks"` >> ~/.bashrc
