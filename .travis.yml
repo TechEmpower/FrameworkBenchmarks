@@ -63,8 +63,8 @@ env:
     # - "TESTDIR=Go/go-std"
     # - "TESTDIR=Go/revel"
     # - "TESTDIR=Go/webgo"
-    # - "TESTDIR=Groovy/grails"
-    # - "TESTDIR=Groovy/hot"
+     - "TESTDIR=Groovy/grails"
+     - "TESTDIR=Groovy/hot"
      - "TESTDIR=Haskell/snap"
      - "TESTDIR=Haskell/wai"
      # Separating these tests b/c of travis timeout

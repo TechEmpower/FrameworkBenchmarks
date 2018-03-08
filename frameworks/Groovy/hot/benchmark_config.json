@@ -2,7 +2,6 @@
   "framework": "hot",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/rest/json",
       "plaintext_url": "/rest/plaintext",
       "port": 8080,
@@ -21,7 +20,6 @@
       "versus": ""
     },
     "mongodb" : {
-      "setup_file": "setup_mongodb",
       "db_url": "/rest/db/mongodb",
       "query_url": "/rest/queries/mongodb?queries=",
       "fortune_url": "/rest/fortunes/mongodb",
