@@ -4,7 +4,7 @@ from toolset.benchmark.test_types.verifications import basic_body_verification, 
 
 
 class FortuneTestType(FrameworkTestType):
-    def __init__(self):
+    def __init__(self, config):
         self.fortune_url = ""
         kwargs = {
             'name': 'fortune',
@@ -12,7 +12,7 @@ class FortuneTestType(FrameworkTestType):
             'requires_db': True,
             'args': ['fortune_url']
         }
-        FrameworkTestType.__init__(self, **kwargs)
+        FrameworkTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.fortune_url

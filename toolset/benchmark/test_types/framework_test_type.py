@@ -23,7 +23,13 @@ class FrameworkTestType:
     exist a member `X.spam = 'foobar'`. 
     '''
 
-    def __init__(self, name, requires_db=False, accept_header=None, args=[]):
+    def __init__(self,
+                 config,
+                 name,
+                 requires_db=False,
+                 accept_header=None,
+                 args=[]):
+        self.config = config
         self.name = name
         self.requires_db = requires_db
         self.args = args
@@ -146,8 +152,9 @@ class FrameworkTestType:
 
         if database_name == "mysql":
             try:
-                db = MySQLdb.connect("TFB-database", "benchmarkdbuser",
-                                     "benchmarkdbpass", "hello_world")
+                db = MySQLdb.connect(self.config.database_host,
+                                     "benchmarkdbuser", "benchmarkdbpass",
+                                     "hello_world")
                 cursor = db.cursor()
                 cursor.execute("SELECT * FROM World")
                 results = cursor.fetchall()
@@ -159,7 +166,7 @@ class FrameworkTestType:
         elif database_name == "postgres":
             try:
                 db = psycopg2.connect(
-                    host="TFB-database",
+                    host=self.config.database_host,
                     port="5432",
                     user="benchmarkdbuser",
                     password="benchmarkdbpass",
@@ -179,7 +186,8 @@ class FrameworkTestType:
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
-                connection = pymongo.MongoClient(host="TFB-database")
+                connection = pymongo.MongoClient(
+                    host=self.config.database_host)
                 db = connection.hello_world
                 for world in db.world.find():
                     if "randomNumber" in world:

@@ -14,13 +14,13 @@ class BenchmarkConfig:
 
         # Map type strings to their objects
         types = dict()
-        types['json'] = JsonTestType()
-        types['db'] = DBTestType()
-        types['query'] = QueryTestType()
-        types['fortune'] = FortuneTestType()
-        types['update'] = UpdateTestType()
-        types['plaintext'] = PlaintextTestType()
-        types['cached_query'] = CachedQueryTestType()
+        types['json'] = JsonTestType(self)
+        types['db'] = DBTestType(self)
+        types['query'] = QueryTestType(self)
+        types['fortune'] = FortuneTestType(self)
+        types['update'] = UpdateTestType(self)
+        types['plaintext'] = PlaintextTestType(self)
+        types['cached_query'] = CachedQueryTestType(self)
 
         # Turn type into a map instead of a string
         if args['type'] == 'all':

@@ -3,7 +3,7 @@ from toolset.benchmark.test_types.verifications import basic_body_verification, 
 
 
 class JsonTestType(FrameworkTestType):
-    def __init__(self):
+    def __init__(self, config):
         self.json_url = ""
         kwargs = {
             'name': 'json',
@@ -11,7 +11,7 @@ class JsonTestType(FrameworkTestType):
             'requires_db': False,
             'args': ['json_url']
         }
-        FrameworkTestType.__init__(self, **kwargs)
+        FrameworkTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.json_url

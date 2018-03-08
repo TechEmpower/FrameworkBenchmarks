@@ -3,7 +3,7 @@ from toolset.benchmark.test_types.verifications import basic_body_verification, 
 
 
 class DBTestType(FrameworkTestType):
-    def __init__(self):
+    def __init__(self, config):
         self.db_url = ""
         kwargs = {
             'name': 'db',
@@ -11,7 +11,7 @@ class DBTestType(FrameworkTestType):
             'requires_db': True,
             'args': ['db_url']
         }
-        FrameworkTestType.__init__(self, **kwargs)
+        FrameworkTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.db_url

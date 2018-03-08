@@ -3,7 +3,7 @@ from toolset.benchmark.test_types.verifications import verify_query_cases
 
 
 class UpdateTestType(FrameworkTestType):
-    def __init__(self):
+    def __init__(self, config):
         self.update_url = ""
         kwargs = {
             'name': 'update',
@@ -11,7 +11,7 @@ class UpdateTestType(FrameworkTestType):
             'requires_db': True,
             'args': ['update_url', 'database']
         }
-        FrameworkTestType.__init__(self, **kwargs)
+        FrameworkTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.update_url

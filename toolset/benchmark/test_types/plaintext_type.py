@@ -3,7 +3,7 @@ from toolset.benchmark.test_types.verifications import basic_body_verification, 
 
 
 class PlaintextTestType(FrameworkTestType):
-    def __init__(self):
+    def __init__(self, config):
         self.plaintext_url = ""
         kwargs = {
             'name': 'plaintext',
@@ -11,7 +11,7 @@ class PlaintextTestType(FrameworkTestType):
             'accept_header': self.accept('plaintext'),
             'args': ['plaintext_url']
         }
-        FrameworkTestType.__init__(self, **kwargs)
+        FrameworkTestType.__init__(self, config, **kwargs)
 
     def verify(self, base_url):
         url = base_url + self.plaintext_url

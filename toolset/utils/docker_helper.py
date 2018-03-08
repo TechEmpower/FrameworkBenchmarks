@@ -95,7 +95,6 @@ def build(benchmarker_config, test_names, out):
 
         # Build the test images
         for test_docker_file in test_docker_files:
-            print(test)
             try:
                 for line in docker.APIClient(
                         base_url='unix://var/run/docker.sock').build(
