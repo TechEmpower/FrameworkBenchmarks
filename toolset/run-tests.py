@@ -1,37 +1,45 @@
-#!/usr/bin/env python
 import argparse
 import ConfigParser
 import socket
 import sys
-import time
 import os
 import platform
 import multiprocessing
-import itertools
-import copy
-from benchmark.benchmarker import Benchmarker
-from setup.linux.unbuffered import Unbuffered
-from setup.linux import setup_util
-from scaffolding import Scaffolding
-from initializer import initialize
+from toolset.benchmark.benchmarker import Benchmarker
+from toolset.utils import setup_util
+from toolset.utils.unbuffered import Unbuffered
+from toolset.utils.scaffolding import Scaffolding
+from toolset.utils.initializer import initialize
+from toolset.utils import cleaner
+from toolset.utils.results_helper import Results
+from toolset.utils.benchmark_config import BenchmarkConfig
+from toolset.utils import docker_helper
+from toolset.utils.metadata_helper import gather_tests
 from ast import literal_eval
 
 # Enable cross-platform colored output
 from colorama import init
 init()
 
+
 class StoreSeqAction(argparse.Action):
-    '''Helper class for parsing a sequence from the command line'''
+    '''
+    Helper class for parsing a sequence from the command line
+    '''
+
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
-        super(StoreSeqAction, self).__init__(option_strings, dest, type=str, **kwargs)
+        super(StoreSeqAction, self).__init__(
+            option_strings, dest, type=str, **kwargs)
+
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, self.parse_seq(values))
+
     def parse_seq(self, argument):
         result = argument.split(',')
         sequences = [x for x in result if ":" in x]
         for sequence in sequences:
             try:
-                (start,step,end) = sequence.split(':')
+                (start, step, end) = sequence.split(':')
             except ValueError:
                 print("  Invalid: {!s}".format(sequence))
                 print("  Requires start:step:end, e.g. 1:2:10")
@@ -45,7 +53,8 @@ class StoreSeqAction(argparse.Action):
 # Main
 ###################################################################################################
 def main(argv=None):
-    ''' Runs the program. There are three ways to pass arguments
+    '''
+    Runs the program. There are three ways to pass arguments
     1) environment variables TFB_*
     2) configuration file benchmark.cfg
     3) command line flags
@@ -57,7 +66,7 @@ def main(argv=None):
         argv = sys.argv
 
     # Enable unbuffered output so messages will appear in the proper order with subprocess output.
-    sys.stdout=Unbuffered(sys.stdout)
+    sys.stdout = Unbuffered(sys.stdout)
 
     # Update python environment
     # 1) Ensure the current directory (which should be the benchmark home directory) is in the path so that the tests can be imported.
@@ -69,7 +78,9 @@ def main(argv=None):
     os.environ['FWROOT'] = setup_util.get_fwroot()
     os.environ['IROOT'] = os.environ['FWROOT'] + '/installs'
     # 'Ubuntu', '14.04', 'trusty' respectively
-    os.environ['TFB_DISTRIB_ID'], os.environ['TFB_DISTRIB_RELEASE'], os.environ['TFB_DISTRIB_CODENAME'] = platform.linux_distribution()
+    os.environ['TFB_DISTRIB_ID'], os.environ[
+        'TFB_DISTRIB_RELEASE'], os.environ[
+            'TFB_DISTRIB_CODENAME'] = platform.linux_distribution()
     # App server cpu count
     os.environ['CPU_COUNT'] = str(multiprocessing.cpu_count())
 
@@ -78,21 +89,29 @@ def main(argv=None):
         formatter_class=argparse.RawDescriptionHelpFormatter,
         add_help=False)
     conf_parser.add_argument(
-        '--conf_file', default='benchmark.cfg', metavar='FILE',
-        help='Optional configuration file to provide argument defaults. All config options can be overridden using the command line.')
+        '--conf_file',
+        default='benchmark.cfg',
+        metavar='FILE',
+        help=
+        'Optional configuration file to provide argument defaults. All config options can be overridden using the command line.'
+    )
     args, remaining_argv = conf_parser.parse_known_args()
 
     defaults = {}
     try:
-        if not os.path.exists(os.path.join(os.environ['FWROOT'], args.conf_file)) and not os.path.exists(os.path.join(os.environ['FWROOT'] + 'benchmark.cfg')):
+        if not os.path.exists(
+                os.path.join(
+                    os.environ['FWROOT'],
+                    args.conf_file)) and not os.path.exists(
+                        os.path.join(os.environ['FWROOT'] + 'benchmark.cfg')):
             print("No config file found. Aborting!")
             exit(1)
-        with open (os.path.join(os.environ['FWROOT'], args.conf_file)):
+        with open(os.path.join(os.environ['FWROOT'], args.conf_file)):
             config = ConfigParser.SafeConfigParser()
             config.read([os.path.join(os.environ['FWROOT'], args.conf_file)])
             defaults.update(dict(config.items("Defaults")))
             # Convert strings into proper python types
-            for k, v in defaults.iteritems():
+            for k, v in defaults.items():
                 try:
                     defaults[k] = literal_eval(v)
                 except Exception:
@@ -126,10 +145,12 @@ def main(argv=None):
     ##########################################################
     # Set up argument parser
     ##########################################################
-    parser = argparse.ArgumentParser(description="Install or run the Framework Benchmarks test suite.",
-                                     parents=[conf_parser],
-                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-                                     epilog='''If an argument includes (type int-sequence), then it accepts integer lists in multiple forms.
+    parser = argparse.ArgumentParser(
+        description="Install or run the Framework Benchmarks test suite.",
+        parents=[conf_parser],
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        epilog=
+        '''If an argument includes (type int-sequence), then it accepts integer lists in multiple forms.
         Using a single number e.g. 5 will create a list [5]. Using commas will create a list containing those
         values e.g. 1,3,6 creates [1, 3, 6]. Using three colon-separated numbers of start:step:end will create a
         list, using the semantics of python's range function, e.g. 1:3:15 creates [1, 4, 7, 10, 13] while
@@ -137,57 +158,152 @@ def main(argv=None):
         ''')
 
     # Install options
-    parser.add_argument('--init', action='store_true', default=False, help='Initializes the benchmark environment')
+    parser.add_argument(
+        '--init',
+        action='store_true',
+        default=False,
+        help='Initializes the benchmark environment')
 
     # Suite options
-    parser.add_argument('--clean', action='store_true', default=False, help='Removes the results directory')
-    parser.add_argument('--new', action='store_true', default=False, help='Initialize a new framework test')
-    parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
-    parser.add_argument('--quiet', action='store_true', default=False, help='Only print a limited set of messages to stdout, keep the bulk of messages in log files only')
-    parser.add_argument('--results-name', help='Gives a name to this set of results, formatted as a date', default='(unspecified, datetime = %Y-%m-%d %H:%M:%S)')
-    parser.add_argument('--results-environment', help='Describes the environment in which these results were gathered', default='(unspecified, hostname = %s)' % socket.gethostname())
-    parser.add_argument('--results-upload-uri', default=None, help='A URI where the in-progress results.json file will be POSTed periodically')
-    parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
+    parser.add_argument(
+        '--build',
+        nargs='+',
+        help='Builds the dockerfile(s) for the given test(s)')
+    parser.add_argument(
+        '--clean',
+        action='store_true',
+        default=False,
+        help='Removes the results directory')
+    parser.add_argument(
+        '--new',
+        action='store_true',
+        default=False,
+        help='Initialize a new framework test')
+    parser.add_argument(
+        '-v',
+        '--verbose',
+        action='store_true',
+        default=False,
+        help=
+        'Causes the configuration to print before any other commands are executed.'
+    )
+    parser.add_argument(
+        '--quiet',
+        action='store_true',
+        default=False,
+        help=
+        'Only print a limited set of messages to stdout, keep the bulk of messages in log files only'
+    )
+    parser.add_argument(
+        '--results-name',
+        help='Gives a name to this set of results, formatted as a date',
+        default='(unspecified, datetime = %Y-%m-%d %H:%M:%S)')
+    parser.add_argument(
+        '--results-environment',
+        help='Describes the environment in which these results were gathered',
+        default='(unspecified, hostname = %s)' % socket.gethostname())
+    parser.add_argument(
+        '--results-upload-uri',
+        default=None,
+        help=
+        'A URI where the in-progress results.json file will be POSTed periodically'
+    )
+    parser.add_argument(
+        '--parse',
+        help=
+        'Parses the results of the given timestamp and merges that with the latest results'
+    )
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
-    parser.add_argument('--test-dir', nargs='+', dest='test_dir', help='name of framework directory containing all tests to run')
-    parser.add_argument('--test-lang', nargs='+', dest='test_lang', help='name of language directory containing all tests to run')
-    parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
-    parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'cached_query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
-    parser.add_argument('-m', '--mode', choices=['benchmark', 'verify', 'debug'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown. debug mode will skip verification and leave the server running.')
-    parser.add_argument('--list-tests', action='store_true', default=False, help='lists all the known tests that can run')
+    parser.add_argument(
+        '--test-dir',
+        nargs='+',
+        dest='test_dir',
+        help='name of framework directory containing all tests to run')
+    parser.add_argument(
+        '--test-lang',
+        nargs='+',
+        dest='test_lang',
+        help='name of language directory containing all tests to run')
+    parser.add_argument(
+        '--exclude', nargs='+', help='names of tests to exclude')
+    parser.add_argument(
+        '--type',
+        choices=[
+            'all', 'json', 'db', 'query', 'cached_query', 'fortune', 'update',
+            'plaintext'
+        ],
+        default='all',
+        help='which type of test to run')
+    parser.add_argument(
+        '-m',
+        '--mode',
+        choices=['benchmark', 'verify', 'debug'],
+        default='benchmark',
+        help=
+        'verify mode will only start up the tests, curl the urls and shutdown. debug mode will skip verification and leave the server running.'
+    )
+    parser.add_argument(
+        '--list-tests',
+        action='store_true',
+        default=False,
+        help='lists all the known tests that can run')
 
     # Benchmark options
-    parser.add_argument('--duration', default=15, help='Time in seconds that each test should run for.')
-    parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
+    parser.add_argument(
+        '--duration',
+        default=15,
+        help='Time in seconds that each test should run for.')
+    parser.add_argument(
+        '--sleep',
+        type=int,
+        default=60,
+        help=
+        'the amount of time to sleep after starting each test to allow the server to start up.'
+    )
 
-    parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
+    parser.set_defaults(**defaults)
+    # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
 
-    if args.new:
-        Scaffolding().scaffold()
-        return 0
+    config = BenchmarkConfig(vars(args))
+    results = Results(config)
 
-    if args.init:
-        initialize(args)
-        return 0
+    if config.new:
+        Scaffolding()
 
-    benchmarker = Benchmarker(vars(args))
+    elif config.init:
+        initialize(config)
 
-    if args.clean:
-        benchmarker.clean_all()
-        return 0
+    elif config.build:
+        docker_helper.build(config, config.build, None)
 
-    # Run the benchmarker in the specified mode
-    #   Do not use benchmarker variables for these checks,
-    #   they are either str or bool based on the python version
-    if args.list_tests:
-        benchmarker.run_list_tests()
-    elif args.parse != None:
-        benchmarker.parse_timestamp()
+    elif config.clean:
+        cleaner.clean(results)
+        docker_helper.clean()
+
+    elif config.list_tests:
+        all_tests = gather_tests(benchmarker_config=config)
+
+        for test in all_tests:
+            print(test.name)
+
+    elif config.parse != None:
+        # TODO: broken
+        all_tests = gather_tests(benchmarker_config=config)
+
+        for test in all_tests:
+            test.parse_all()
+
+        results.parse(all_tests)
+
     else:
+        benchmarker = Benchmarker(config, results)
         return benchmarker.run()
+
+    return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())
