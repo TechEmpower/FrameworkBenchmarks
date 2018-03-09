@@ -2,7 +2,6 @@
   "framework": "ffead-cpp",
   "tests": [{
     "default": {
-      "setup_file": "setup-mongo",
       "json_url": "/te-benchmark/json",
       "plaintext_url": "/te-benchmark/plaintext",
       "db_url": "/te-benchmark/db",
@@ -25,7 +24,6 @@
       "versus": ""
     },
 	"mysql": {
-      "setup_file": "setup-mysql",
       "json_url": "/te-benchmark/json",
       "plaintext_url": "/te-benchmark/plaintext",
       "db_url": "/te-benchmark/db",
@@ -48,7 +46,6 @@
       "versus": ""
     },
 	"postgresql": {
-      "setup_file": "setup-postgresql",
       "json_url": "/te-benchmark/json",
       "plaintext_url": "/te-benchmark/plaintext",
       "db_url": "/te-benchmark/db",

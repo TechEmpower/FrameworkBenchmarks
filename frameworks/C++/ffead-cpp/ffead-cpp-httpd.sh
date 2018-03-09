@@ -1,20 +1,16 @@
 #!/bin/bash
 
-fw_installed ffead-cpp-httpd && return 0
+cd $IROOT
 
-fw_depends ffead-cpp-framework
-
-sudo apt-get remove -y apache2
-
-fw_get -o httpd-2.4.25.tar.gz https://archive.apache.org/dist/httpd/httpd-2.4.25.tar.gz
-fw_get -o apr-1.5.2.tar.gz https://archive.apache.org/dist/apr/apr-1.5.2.tar.gz
-fw_get -o apr-util-1.5.4.tar.gz https://archive.apache.org/dist/apr/apr-util-1.5.4.tar.gz
+wget https://archive.apache.org/dist/httpd/httpd-2.4.25.tar.gz
+wget https://archive.apache.org/dist/apr/apr-1.5.2.tar.gz
+wget https://archive.apache.org/dist/apr/apr-util-1.5.4.tar.gz
 rm -rf ${IROOT}/httpd-2.4.25
 rm -rf ${IROOT}/apr-1.5.2
 rm -rf ${IROOT}/apr-util-1.5.4
-fw_untar httpd-2.4.25.tar.gz
-fw_untar apr-1.5.2.tar.gz
-fw_untar apr-util-1.5.4.tar.gz
+tar xvf httpd-2.4.25.tar.gz
+tar xvf apr-1.5.2.tar.gz
+tar xvf apr-util-1.5.4.tar.gz
 mv -f apr-1.5.2 httpd-2.4.25/srclib/apr
 mv -f apr-util-1.5.4 httpd-2.4.25/srclib/apr-util
 cd ${IROOT}/httpd-2.4.25
@@ -84,5 +80,3 @@ FFEAD_CPP_PATH '"${FFEADROOT}"'
 	</Directory>
 </VirtualHost>
 EOL'
-
-touch ${IROOT}/ffead-cpp-httpd.installed

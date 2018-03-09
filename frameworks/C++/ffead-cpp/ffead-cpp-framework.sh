@@ -1,7 +1,5 @@
 #!/bin/bash
 
-fw_installed ffead-cpp-framework && return 0
-
 #From https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/frameworks/C%2B%2B/ulib/setup_json.sh
 if [ "$TRAVIS" != "true" ]; then
 MAX_THREADS=$(( 3 * $CPU_COUNT / 2 ))
@@ -12,10 +10,10 @@ fi
 WRIT_THREADS=$(( $MAX_THREADS / 3 ))
 SERV_THREADS=$(( $MAX_THREADS - $WRIT_THREADS ))
 
-fw_get -o ffead-cpp-src.zip https://github.com/sumeetchhetri/ffead-cpp/archive/master.zip
-rm -rf ffead-cpp-src
-rm -rf ffead-cpp-master
-unzip ffead-cpp-src.zip
+cd $IROOT
+
+wget https://github.com/sumeetchhetri/ffead-cpp/archive/master.zip
+unzip master.zip
 mv ffead-cpp-master ffead-cpp-src
 cd ffead-cpp-src/
 
@@ -59,7 +57,3 @@ sed -i 's|localhost|'${DBHOST}'|g' resources/sample-odbc.ini
 
 cp resources/sample-odbcinst.ini ${IROOT}/odbcinst.ini
 cp resources/sample-odbc.ini ${IROOT}/odbc.ini
-
-cd ${IROOT}
-
-echo -e "export FFEAD_CPP_PATH=${IROOT}/ffead-cpp-2.0" > $IROOT/ffead-cpp-framework.installed
