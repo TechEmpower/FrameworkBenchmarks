@@ -389,7 +389,7 @@ class Benchmarker:
                         return sys.exit(1)
 
                 # Start webapp
-                result = test.start(out)
+                result = test.start(out, database_container_id)
                 if result != 0:
                     docker_helper.stop(self.config, database_container_id,
                                        test, out)

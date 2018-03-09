@@ -11,6 +11,7 @@ from threading import Thread
 from toolset.utils import setup_util
 from toolset.utils.output_helper import tee_output
 from toolset.utils.metadata_helper import gather_tests
+from toolset.utils.ordered_set import OrderedSet
 
 
 def clean():
@@ -50,10 +51,11 @@ def build(benchmarker_config, test_names, out):
                     "docker_files in benchmark_config.json must be an array")
 
         for test_docker_file in test_docker_files:
-            deps = list(
-                reversed(
-                    __gather_dependencies(
-                        os.path.join(test.directory, test_docker_file))))
+            deps = OrderedSet(
+                list(
+                    reversed(
+                        __gather_dependencies(
+                            os.path.join(test.directory, test_docker_file)))))
 
             docker_dir = os.path.join(setup_util.get_fwroot(), "toolset",
                                       "setup", "docker")
@@ -121,7 +123,7 @@ def build(benchmarker_config, test_names, out):
     return 0
 
 
-def run(benchmarker_config, docker_files, out):
+def run(benchmarker_config, docker_files, database_container_id, out):
     '''
     Run the given Docker container(s)
     '''
@@ -163,7 +165,9 @@ def run(benchmarker_config, docker_files, out):
     running_container_length = len(
         client.containers.list(filters={'status': 'running'}))
     expected_length = len(docker_files)
-    if (running_container_length < expected_length):
+    if database_container_id is not None:
+        expected_length = expected_length + 1
+    if (running_container_length != expected_length):
         tee_output(out, "Running Containers (id, name):" + os.linesep)
         for running_container in client.containers.list():
             tee_output(out, "%s, %s%s" % (running_container.short_id,

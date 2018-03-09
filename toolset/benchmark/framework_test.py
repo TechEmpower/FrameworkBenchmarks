@@ -53,7 +53,7 @@ class FrameworkTest:
     # Public Methods
     ##########################################################################################
 
-    def start(self, out):
+    def start(self, out, database_container_id):
         '''
         Start the test implementation
         '''
@@ -69,7 +69,8 @@ class FrameworkTest:
         if result != 0:
             return result
 
-        return docker_helper.run(self.benchmarker_config, test_docker_files, out)
+        return docker_helper.run(self.benchmarker_config, test_docker_files,
+                                 database_container_id, out)
 
     def verify_urls(self, logPath):
         '''
