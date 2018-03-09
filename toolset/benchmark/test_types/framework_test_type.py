@@ -125,10 +125,18 @@ class FrameworkTestType:
         raise NotImplementedError("Subclasses must provide verify")
 
     def get_url(self):
-        '''Returns the URL for this test, like '/json'''
+        '''
+        Returns the URL for this test, like '/json'
+        '''
         # This is a method because each test type uses a different key
         # for their URL so the base class can't know which arg is the URL
         raise NotImplementedError("Subclasses must provide get_url")
+
+    def get_remote_script(self, config, name, url, port):
+        '''
+        Returns the remote script for running the benchmarking process.
+        '''
+        raise NotImplementedError("Subclasses must provide get_remote_script")
 
     def copy(self):
         '''

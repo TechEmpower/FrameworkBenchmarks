@@ -1,6 +1,7 @@
 from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
 from toolset.benchmark.fortune_html_parser import FortuneHTMLParser
 from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers
+from toolset.utils.remote_script_helper import generate_concurrency_script
 
 
 class FortuneTestType(FrameworkTestType):
@@ -86,3 +87,10 @@ class FortuneTestType(FrameworkTestType):
             # If there were errors reading the diff, then no diff information
             pass
         return problems
+
+    def get_remote_script(self, config, name, url, port):
+        '''
+        Returns the remote script
+        '''
+        return generate_concurrency_script(self.config, name, url, port,
+                                           self.accept_header)

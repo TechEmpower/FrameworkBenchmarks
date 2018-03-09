@@ -1,6 +1,5 @@
 from toolset.utils.output_helper import header
 from toolset.utils.metadata_helper import gather_tests, gather_remaining_tests
-from toolset.utils.remote_script_helper import generate_concurrency_script, generate_pipeline_script, generate_query_script
 from toolset.utils import docker_helper
 
 import os
@@ -96,24 +95,10 @@ class Benchmarker:
                         pass
 
                 if not test.failed:
-                    if test_type == 'plaintext':  # One special case
-                        remote_script = generate_pipeline_script(
-                            self.config, test.name, test.get_url(),
-                            framework_test.port, test.accept_header)
-                    elif test_type == 'query' or test_type == 'update':
-                        remote_script = generate_query_script(
-                            self.config, test.name, test.get_url(),
-                            framework_test.port, test.accept_header,
-                            self.config.query_levels)
-                    elif test_type == 'cached_query':
-                        remote_script = generate_query_script(
-                            self.config, test.name, test.get_url(),
-                            framework_test.port, test.accept_header,
-                            self.config.cached_query_levels)
-                    else:
-                        remote_script = generate_concurrency_script(
-                            self.config, test.name, test.get_url(),
-                            framework_test.port, test.accept_header)
+                    remote_script = self.config.types[
+                        test_type].get_remote_script(self.config, test.name,
+                                                     test.get_url(),
+                                                     framework_test.port)
 
                     # Begin resource usage metrics collection
                     self.__begin_logging(framework_test, test_type)

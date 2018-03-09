@@ -1,5 +1,6 @@
 from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
 from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers
+from toolset.utils.remote_script_helper import generate_pipeline_script
 
 
 class PlaintextTestType(FrameworkTestType):
@@ -23,7 +24,6 @@ class PlaintextTestType(FrameworkTestType):
             return problems
 
         # Case insensitive
-        orig = body
         body = body.lower()
         expected = "hello, world!"
         extra_bytes = len(body) - len(expected)
@@ -48,3 +48,10 @@ class PlaintextTestType(FrameworkTestType):
 
     def get_url(self):
         return self.plaintext_url
+
+    def get_remote_script(self, config, name, url, port):
+        '''
+        Returns the remote script
+        '''
+        return generate_pipeline_script(self.config, name, url, port,
+                                        self.accept_header)
