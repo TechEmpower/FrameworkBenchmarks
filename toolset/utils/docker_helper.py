@@ -163,7 +163,7 @@ def run(benchmarker_config, docker_files, out):
     running_container_length = len(
         client.containers.list(filters={'status': 'running'}))
     expected_length = len(docker_files)
-    if (running_container_length <= expected_length):
+    if (running_container_length < expected_length):
         tee_output(out, "Running Containers (id, name):" + os.linesep)
         for running_container in client.containers.list():
             tee_output(out, "%s, %s%s" % (running_container.short_id,
