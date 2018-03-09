@@ -67,9 +67,6 @@ class BenchmarkConfig:
         # Remember root directory
         self.fwroot = setup_util.get_fwroot()
 
-        # setup current_benchmark.txt location
-        self.current_benchmark = "/tmp/current_benchmark.txt"
-
         if hasattr(self, 'parse') and self.parse != None:
             self.timestamp = self.parse
         else:

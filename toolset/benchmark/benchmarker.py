@@ -294,9 +294,6 @@ class Benchmarker:
         if self.config.os.lower() == 'windows':
             logging.debug("Executing __run_tests on Windows")
             for test in tests:
-                with open(self.config.current_benchmark,
-                          'w') as benchmark_resume_file:
-                    benchmark_resume_file.write(test.name)
                 with self.config.quiet_out.enable():
                     if self.__run_test(test) != 0:
                         error_happened = True
@@ -306,9 +303,6 @@ class Benchmarker:
             # These features do not work on Windows
             for test in tests:
                 print(header("Running Test: %s" % test.name))
-                with open(self.config.current_benchmark,
-                          'w') as benchmark_resume_file:
-                    benchmark_resume_file.write(test.name)
                 with self.config.quiet_out.enable():
                     test_process = Process(
                         target=self.__run_test,
@@ -331,8 +325,6 @@ class Benchmarker:
                 if test_process.exitcode != 0:
                     error_happened = True
 
-        if os.path.isfile(self.config.current_benchmark):
-            os.remove(self.config.current_benchmark)
         logging.debug("End __run_tests.")
 
         if error_happened:
