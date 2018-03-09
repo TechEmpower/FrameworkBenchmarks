@@ -52,7 +52,7 @@ def build(benchmarker_config, test_names, out):
         for test_docker_file in test_docker_files:
             deps = list(
                 reversed(
-                    gather_dependencies(
+                    __gather_dependencies(
                         os.path.join(test.directory, test_docker_file))))
 
             docker_dir = os.path.join(setup_util.get_fwroot(), "toolset",
@@ -160,8 +160,16 @@ def run(benchmarker_config, docker_files, out):
             print(e)
             return 1
 
-    if (len(client.containers.list(filters={'status': 'running'})) !=
-            len(docker_files)):
+    running_container_length = len(
+        client.containers.list(filters={'status': 'running'}))
+    expected_length = len(docker_files)
+    if (running_container_length != expected_length):
+        tee_output(out, "Running Containers (id, name):")
+        for running_container in client.containers.list():
+            print("%s, %s" % (running_container.short_id,
+                              running_container.image))
+        tee_output(out, "Excepted %s running containers; saw %s" %
+                   (running_container_length, expected_length))
         return 1
 
     return 0
@@ -203,38 +211,6 @@ def find(path, pattern):
         for name in files:
             if fnmatch.fnmatch(name, pattern):
                 return os.path.join(root, name)
-
-
-def gather_dependencies(docker_file):
-    '''
-    Gathers all the known docker dependencies for the given docker image.
-    '''
-    # Avoid setting up a circular import
-    from toolset.utils import setup_util
-    deps = []
-
-    docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup",
-                              "docker")
-
-    if os.path.exists(docker_file):
-        with open(docker_file) as fp:
-            for line in fp.readlines():
-                tokens = line.strip().split(' ')
-                if tokens[0] == "FROM":
-                    # This is magic that our base image points to
-                    if tokens[1] != "ubuntu:16.04":
-                        depToken = tokens[1].strip().split(':')[
-                            0].strip().split('/')[1]
-                        deps.append(depToken)
-                        dep_docker_file = os.path.join(
-                            os.path.dirname(docker_file),
-                            depToken + ".dockerfile")
-                        if not os.path.exists(dep_docker_file):
-                            dep_docker_file = find(docker_dir,
-                                                   depToken + ".dockerfile")
-                        deps.extend(gather_dependencies(dep_docker_file))
-
-    return deps
 
 
 def start_database(config, database):
@@ -310,3 +286,39 @@ def start_database(config, database):
         stderr=subprocess.STDOUT)
     out = p.communicate("docker run -d --rm --network=host %s" % database)[0]
     return out.splitlines()[len(out.splitlines()) - 1]
+
+
+def __gather_dependencies(docker_file):
+    '''
+    Gathers all the known docker dependencies for the given docker image.
+    '''
+    # Avoid setting up a circular import
+    from toolset.utils import setup_util
+    deps = []
+
+    docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup",
+                              "docker")
+
+    if os.path.exists(docker_file):
+        with open(docker_file) as fp:
+            for line in fp.readlines():
+                tokens = line.strip().split(' ')
+                if tokens[0] == "FROM":
+                    # This is magic that our base image points to
+                    if tokens[1] != "ubuntu:16.04":
+                        dep_ref = tokens[1].strip().split(':')[0].strip()
+                        if '/' not in dep_ref:
+                            raise AttributeError(
+                                "Could not find docker FROM dependency: %s" %
+                                dep_ref)
+                        depToken = dep_ref.split('/')[1]
+                        deps.append(depToken)
+                        dep_docker_file = os.path.join(
+                            os.path.dirname(docker_file),
+                            depToken + ".dockerfile")
+                        if not os.path.exists(dep_docker_file):
+                            dep_docker_file = find(docker_dir,
+                                                   depToken + ".dockerfile")
+                        deps.extend(__gather_dependencies(dep_docker_file))
+
+    return deps
