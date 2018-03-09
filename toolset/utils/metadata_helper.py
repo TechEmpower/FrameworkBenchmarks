@@ -154,18 +154,7 @@ def gather_remaining_tests(config, results):
     '''
     Gathers the tests remaining in a current benchmark run.
     '''
-    tests = gather_tests(config.test, config.exclude, config, results)
-
-    # If the tests have been interrupted somehow, then we want to resume them where we left
-    # off, rather than starting from the beginning
-    if os.path.isfile(config.current_benchmark):
-        with open(config.current_benchmark, 'r') as interrupted_benchmark:
-            interrupt_bench = interrupted_benchmark.read().strip()
-        for index, atest in enumerate(tests):
-            if atest.name == interrupt_bench:
-                tests = tests[index:]
-                break
-    return tests
+    return gather_tests(config.test, config.exclude, config, results)
 
 
 def gather_frameworks(include=[], exclude=[], config=None):

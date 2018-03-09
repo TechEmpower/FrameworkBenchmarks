@@ -65,11 +65,11 @@ class FrameworkTest:
                 raise Exception(
                     "docker_files in benchmark_config.json must be an array")
 
-        docker_helper.build(self.benchmarker_config, [self.name], out)
+        result = docker_helper.build(self.benchmarker_config, [self.name], out)
+        if result != 0:
+            return result
 
-        docker_helper.run(self.benchmarker_config, test_docker_files, out)
-
-        return 0
+        return docker_helper.run(self.benchmarker_config, test_docker_files, out)
 
     def verify_urls(self, logPath):
         '''

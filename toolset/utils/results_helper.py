@@ -221,7 +221,7 @@ class Results:
                 requests.post(
                     self.config.results_upload_uri,
                     headers={'Content-Type': 'application/json'},
-                    data=json.dumps(self, indent=2))
+                    data=json.dumps(self.__to_jsonable(), indent=2))
             except (Exception):
                 logging.error("Error uploading results.json")
 
