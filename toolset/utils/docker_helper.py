@@ -118,6 +118,8 @@ def build(benchmarker_config, test_names, out):
                 print(e)
                 return 1
 
+    return 0
+
 
 def run(benchmarker_config, docker_files, out):
     '''
@@ -156,6 +158,8 @@ def run(benchmarker_config, docker_files, out):
                        "Running docker cointainer: %s failed" % docker_file)
             print(e)
             return 1
+
+    return 0
 
 
 def stop(config, database_container_id, test, out):
