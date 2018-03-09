@@ -147,6 +147,7 @@ def run(benchmarker_config, docker_files, out):
                 privileged=True,
                 stderr=True,
                 detach=True,
+                init=True,
                 extra_hosts=extra_hosts)
 
             watch_thread = Thread(target=watch_container, args=(container, ))
@@ -158,6 +159,10 @@ def run(benchmarker_config, docker_files, out):
                        "Running docker cointainer: %s failed" % docker_file)
             print(e)
             return 1
+
+    if (len(client.containers.list(filters={'status': 'running'})) !=
+            len(docker_files)):
+        return 1
 
     return 0
 
