@@ -1,8 +1,8 @@
-#!/bin/bash
+FROM tfb/wt-base:latest
 
-fw_depends wt
+COPY ./ ./
 
-g++-6 \
+RUN g++-6 \
   -std=c++14 \
   -O3 -march=native -DNDEBUG \
   -I${BOOST_INC} \
@@ -21,4 +21,6 @@ g++-6 \
   -lpthread \
   -lpq
 
-./te-benchmark-pg.wt -c wt_config.xml -t ${CPU_COUNT} --docroot . --approot . --http-listen 0.0.0.0:8080 --accesslog=- --no-compression
+ENV DBHOST=TFB-database
+
+CMD ./te-benchmark-pg.wt -c wt_config.xml -t ${CPU_COUNT} --docroot . --approot . --http-listen 0.0.0.0:8080 --accesslog=- --no-compression
