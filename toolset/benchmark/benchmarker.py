@@ -358,30 +358,6 @@ class Benchmarker:
                     format(name=test.name))
                 return sys.exit(0)
 
-            out.write(
-                "test.os.lower() = {os}  test.database_os.lower() = {dbos}\n".
-                format(os=test.os.lower(), dbos=test.database_os.lower()))
-            out.write("self.results.frameworks != None: {val}\n".format(
-                val=str(self.results.frameworks != None)))
-            out.write("test.name: {name}\n".format(name=str(test.name)))
-            out.write("self.results.completed.: {completed}\n".format(
-                completed=str(self.results.completed)))
-            if self.results.frameworks != None and test.name in self.results.completed:
-                out.write(
-                    'Framework {name} found in latest saved data. Skipping.\n'.
-                    format(name=str(test.name)))
-                print(
-                    'WARNING: Test {test} exists in the results directory; this must be removed before running a new test.\n'.
-                    format(test=str(test.name)))
-                return sys.exit(1)
-            out.flush()
-
-            out.write(header("Beginning %s" % test.name, top='='))
-            out.flush()
-
-            # Start this test
-            out.write(header("Starting %s" % test.name))
-            out.flush()
             database_container_id = None
             try:
                 if self.__is_port_bound(test.port):
@@ -413,7 +389,7 @@ class Benchmarker:
                         return sys.exit(1)
 
                 # Start webapp
-                result = test.start(out)
+                result = test.start(out, database_container_id)
                 if result != 0:
                     docker_helper.stop(self.config, database_container_id,
                                        test, out)
@@ -451,9 +427,6 @@ class Benchmarker:
                 docker_helper.stop(self.config, database_container_id, test,
                                    out)
 
-                out.write(header("Stopped %s" % test.name))
-                out.flush()
-
                 # Remove contents of  /tmp folder
                 try:
                     subprocess.check_call(
@@ -465,8 +438,6 @@ class Benchmarker:
                     out.write(header("Error: Could not empty /tmp"))
 
                 # Save results thus far into the latest results directory
-                out.write(header("Saving results through %s" % test.name))
-                out.flush()
                 self.results.write_intermediate(test.name,
                                                 time.strftime(
                                                     "%Y%m%d%H%M%S",
