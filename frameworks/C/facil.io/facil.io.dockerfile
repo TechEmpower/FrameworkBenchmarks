@@ -17,5 +17,8 @@ RUN cp -f bench_app.c facil_app/src/app.c
 # Build the app
 RUN cd facil_app && make -j build
 
+# Set Worker (process) count
+ENV WORKERS=$((CPU_COUNT / 8))
+
 # Run the app
-CMD ["./facil_app/tmp/demo", "-p", "8080", "-db \"TFB-database\"", "-w", "-1", "-t", "-1"]
+CMD ["./facil_app/tmp/demo", "-p", "8080", "-db \"TFB-database\"", "-w", ${WORKERS:--1}, ${WORKERS:+-t=8}]
