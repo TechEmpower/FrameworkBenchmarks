@@ -400,7 +400,7 @@ class Benchmarker:
                     return sys.exit(1)
 
                 # Start database container
-                if test.database != "None":
+                if test.database.lower() != "none":
                     database_container_id = docker_helper.start_database(
                         self.config, test.database.lower())
                     if not database_container_id:
@@ -481,9 +481,10 @@ class Benchmarker:
             except KeyboardInterrupt:
                 docker_helper.stop(self.config, database_container_id, test,
                                    out)
-            except (OSError, IOError, subprocess.CalledProcessError):
+            except (OSError, IOError, subprocess.CalledProcessError) as e:
+                traceback.print_exc()
                 self.results.write_intermediate(
-                    test.name, "<setup.py> raised an exception")
+                    test.name, "error during test setup: " + str(e))
                 out.write(header("Subprocess Error %s" % test.name))
                 traceback.print_exc(file=out)
                 out.flush()
