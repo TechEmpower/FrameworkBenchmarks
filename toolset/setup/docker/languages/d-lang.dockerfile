@@ -21,7 +21,6 @@ RUN mkdir -p $DLANG && \
 # We are trying to maintain as little global presence as possible, so
 # we need to change the DFLAGS in the dmd.conf to be correctly sandboxed
 # to the $DLANG folder.
-
 RUN cp $DLANG/etc/dmd.conf $DLANG/usr/bin && \
     sed -i "s|-I/usr/|-I${DLANG}/usr/|g" $DLANG/usr/bin/dmd.conf && \
     sed -i "s|-L/usr/|-L${DLANG}/usr/|g" $DLANG/usr/bin/dmd.conf
