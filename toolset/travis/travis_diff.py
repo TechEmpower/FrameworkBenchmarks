@@ -122,7 +122,7 @@ changes = clean_output(
 # trigger a full run as we remove old fw_depends scripts. [ci run-all] will
 # still work if it's needed.
 
-if re.search(r'^toolset/(?!(travis/|docker/|linux/))', changes, re.M) is not None:
+if re.search(r'^toolset/(?!(travis/|setup/|continuous/))', changes, re.M) is not None:
     print("Found changes to core toolset. Running all tests.")
     quit_diffing(True)
 
