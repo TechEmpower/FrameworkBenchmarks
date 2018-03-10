@@ -24,7 +24,7 @@ env:
     # - "TESTDIR=C++/ffead-cpp"
     # - "TESTDIR=C++/cpoll_cppsp"
     # - "TESTDIR=C++/cutelyst"
-    # - "TESTDIR=C++/silicon"
+     - "TESTDIR=C++/silicon"
      - "TESTDIR=C++/treefrog"
     # - "TESTDIR=C++/ulib"
      - "TESTDIR=C++/wt"
