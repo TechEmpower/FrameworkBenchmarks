@@ -1,0 +1,27 @@
+{
+  "framework": "grizzly-jersey",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "db_url": "/db?single=true",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "Grizzly",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Full",
+      "platform": "JAX-RS",
+      "webserver": "Grizzly",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "grizzly",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
