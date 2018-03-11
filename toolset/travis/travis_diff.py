@@ -129,6 +129,8 @@ changes = clean_output(
         'bash', '-c',
         'git log --name-only --pretty="format:" {!s}'.format(commit_range)
     ]))
+print("Determining what to run based on the following file changes: \n{!s}"
+      .format(changes))
 
 # TODO: any changes in the toolset folder will generate a full run.
 #       Instead limit this to core toolset files and work on diffing
