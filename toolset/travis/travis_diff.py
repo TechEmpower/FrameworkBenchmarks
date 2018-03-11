@@ -81,7 +81,7 @@ if re.search(r'\[ci fw-only.+\]', last_commit_msg, re.M):
 
 # TODO: Fix to work with TESTLANG and TEST
 # Forced framework run
-if re.search(
+if os.getenv("TESTDIR") and re.search(
         r'\[ci fw(.?)+ ' + re.escape(os.getenv("TESTDIR")) + '( .+\]|\])',
         last_commit_msg, re.M):
     print('This test has been forced to run from the commit message.')
