@@ -56,7 +56,8 @@ def quit_diffing(should_test_run):
 
 # COMMIT MESSAGES:
 # Before any complicated diffing, check for forced runs from the commit message
-last_commit_msg = os.getenv("TRAVIS_COMMIT_MESSAGE", "")
+last_commit_msg = subprocess.check_output(
+    ['bash', '-c', 'git log -1 --pretty=%B'])
 print("Parsing commit message for travis commands: {!s}"
       .format(last_commit_msg))
 
