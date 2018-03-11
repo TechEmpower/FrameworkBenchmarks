@@ -56,8 +56,9 @@ def quit_diffing(should_test_run):
 
 # COMMIT MESSAGES:
 # Before any complicated diffing, check for forced runs from the commit message
+# Use -2 because travis now inserts a merge commit as the last commit
 last_commit_msg = subprocess.check_output(
-    ['bash', '-c', 'git log -1 --pretty=%B'])
+    ['bash', '-c', 'git log -2 --pretty=%B'])
 print("Parsing commit message for travis commands: {!s}"
       .format(last_commit_msg))
 
