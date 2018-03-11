@@ -56,8 +56,9 @@ def quit_diffing(should_test_run):
 
 # COMMIT MESSAGES:
 # Before any complicated diffing, check for forced runs from the commit message
-last_commit_msg = subprocess.check_output(
-    ['bash', '-c', 'git log -1 --pretty=%B'])
+last_commit_msg = os.getenv("TRAVIS_COMMIT_MESSAGE", "")
+print("Parsing commit message for travis commands: {!s}"
+      .format(last_commit_msg))
 
 # Forced full run
 if re.search(r'\[ci run-all\]', last_commit_msg, re.M):
