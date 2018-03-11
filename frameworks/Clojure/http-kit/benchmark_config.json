@@ -2,7 +2,6 @@
   "framework": "http-kit",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries/",
@@ -26,7 +25,6 @@
       "versus": "http-kit"
     },
     "raw": {
-      "setup_file": "setup",
       "db_url": "/raw/db",
       "query_url": "/raw/queries/",
       "update_url": "/raw/updates/",

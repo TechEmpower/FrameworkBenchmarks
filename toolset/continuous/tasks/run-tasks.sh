@@ -20,4 +20,4 @@ $TFB_REPOPARENT/$TFB_REPONAME/toolset/continuous/tasks/run-benchmarks.sh
 #  Tasks after the run   #
 ##########################
 
-$TFB_REPOPARENT/$TFB_REPONAME/toolset/continuous/tasks/keep-logs.py
+PYTHONPATH=$TFB_REPOPARENT/$TFB_REPONAME python $TFB_REPOPARENT/$TFB_REPONAME/toolset/continuous/tasks/keep-logs.py

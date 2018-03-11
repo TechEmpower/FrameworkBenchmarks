@@ -2,27 +2,8 @@
   "framework": "dropwizard",
   "tests": [{
     "default": {
-      "setup_file": "setup_mysql",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
-      "port": 9090,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "none",
-      "framework": "dropwizard",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Full",
-      "platform": "JAX-RS",
-      "webserver": "Jetty",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "Dropwizard",
-      "notes": "dropwizard mysql using hibernate",
-      "versus": "servlet"
-    },
-    "mysql": {
-      "setup_file": "setup_mysql",
       "db_url": "/db",
       "query_url": "/db/query?queries=",
       "fortune_url": "/fortunes",
@@ -44,7 +25,6 @@
       "versus": "servlet-raw"
     },
     "mongodb": {
-      "setup_file": "setup_mongo",
       "db_url": "/db",
       "query_url": "/db/query?queries=",
       "fortune_url": "/fortunes",
@@ -66,7 +46,6 @@
       "versus": ""
     },
     "postgres": {
-      "setup_file": "setup_postgresql",
       "db_url": "/db",
       "query_url": "/db/query?queries=",
       "fortune_url": "/fortunes",
@@ -88,7 +67,6 @@
       "versus": "servlet-postgres-raw"
     },
     "jdbi-postgres": {
-      "setup_file": "setup_jdbi_postgres",
       "db_url": "/db",
       "query_url": "/db/query?queries=",
       "fortune_url": "/fortunes",

@@ -2,7 +2,6 @@
   "framework": "go",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -26,7 +25,6 @@
       "versus": "go"
     },
     "interpolate": {
-      "setup_file": "setup",
       "db_url": "/dbInterpolate",
       "query_url": "/queriesInterpolate?queries=",
       "fortune_url": "/fortuneInterpolate",
@@ -48,7 +46,6 @@
       "versus": "go"
     },
     "prefork": {
-      "setup_file": "setup_prefork",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -72,7 +69,6 @@
       "versus": "go"
     },
     "mongo": {
-      "setup_file": "setup_mongo",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortune",
@@ -94,7 +90,6 @@
       "versus": "go"
     },
     "postgres": {
-      "setup_file": "setup_postgres",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortune",
