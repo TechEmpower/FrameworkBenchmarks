@@ -25,10 +25,22 @@ def get_docker_changes(changes_output):
             re.findall(r"toolset/setup/docker/.+/(.+)\.dockerfile", changes_output,
                        re.M)))
 
-# TODO: Fix to work with TESTLANG and TEST
+
 def fw_found_in_changes(changes_output):
-    return re.search(r"" + re.escape(os.environ['TESTDIR']), changes_output,
-                     re.M)
+    if os.getenv("TESTLANG"):
+        return re.search(
+            r"^frameworks/" + re.escape(os.getenv("TESTLANG")) + "/",
+            changes_output, re.M)
+    elif os.getenv("TESTDIR"):
+        return re.search(
+            r"^frameworks/" + re.escape(os.getenv("TESTDIR")) + "/",
+            changes_output, re.M)
+    elif os.getenv("TEST"):
+        for test in os.getenv("TEST").split(" "):
+            if re.search(
+                  r"^frameworks/.+/" + re.escape(os.getenv("TEST")) + "/",
+                  changes_output, re.M):
+                return True
 
 
 # Cleans up diffing and grep output and into an array of strings
@@ -55,8 +67,9 @@ if re.search(r'\[ci run-all\]', last_commit_msg, re.M):
 # TODO: Fix to work with TESTLANG and TEST
 # Forced *fw-only* specific tests
 if re.search(r'\[ci fw-only.+\]', last_commit_msg, re.M):
-    if re.search(r'\[ci fw-only(.?)+ ' + re.escape(os.environ['TESTDIR']) +
-                 '( .+\]|])', last_commit_msg, re.M):
+    if os.getenv("TESTDIR") and re.search(
+            r'\[ci fw-only(.?)+ ' + re.escape(os.getenv("TESTDIR")) +
+            '( .+\]|])', last_commit_msg, re.M):
         print("This test has been forced to run from the commit message.")
         quit_diffing(True)
     else:
@@ -66,20 +79,20 @@ if re.search(r'\[ci fw-only.+\]', last_commit_msg, re.M):
 # TODO: Fix to work with TESTLANG and TEST
 # Forced framework run
 if re.search(
-        r'\[ci fw(.?)+ ' + re.escape(os.environ['TESTDIR']) + '( .+\]|\])',
+        r'\[ci fw(.?)+ ' + re.escape(os.getenv("TESTDIR")) + '( .+\]|\])',
         last_commit_msg, re.M):
     print('This test has been forced to run from the commit message.')
     quit_diffing(True)
 
-print("TRAVIS_COMMIT_RANGE: {!s}".format(os.environ['TRAVIS_COMMIT_RANGE']))
-print("TRAVIS_COMMIT      : {!s}".format(os.environ['TRAVIS_COMMIT']))
+print("TRAVIS_COMMIT_RANGE: {!s}".format(os.getenv("TRAVIS_COMMIT_RANGE")))
+print("TRAVIS_COMMIT      : {!s}".format(os.getenv("TRAVIS_COMMIT")))
 
-is_PR = (os.environ['TRAVIS_PULL_REQUEST'] != "false")
+is_PR = (os.getenv("TRAVIS_PULL_REQUEST") != "false")
 commit_range = ""
 
 if is_PR:
     print('I am testing a pull request')
-    first_commit = os.environ['TRAVIS_COMMIT_RANGE'].split('...')[0]
+    first_commit = os.getenv("TRAVIS_COMMIT_RANGE").split('...')[0]
     last_commit = subprocess.check_output(
         "git rev-list -n 1 FETCH_HEAD^2", shell=True).rstrip('\n')
     print("Guessing that first commit in PR is : {!s}".format(first_commit))
@@ -98,12 +111,12 @@ if is_PR:
 if not is_PR:
     print('I am not testing a pull request')
     commit_range = "--first-parent -m {!s}".format(
-        os.environ['TRAVIS_COMMIT_RANGE'])
+        os.getenv("TRAVIS_COMMIT_RANGE"))
 
     # Handle 1
     if commit_range == "":
         commit_range = "--first-parent -m -1 {!s}".format(
-            os.environ['TRAVIS_COMMIT'])
+            os.getenv("TRAVIS_COMMIT"))
 
 print("Using commit range `{!s}`".format(commit_range))
 print("Running `git log --name-only --pretty=\"format:\" {!s}`".format(
@@ -133,15 +146,17 @@ if fw_found_in_changes(changes):
 # Determine what has been changed based on initial diffing output
 docker_changes = get_docker_changes(changes)
 
-# For each of these, find the files that depend on them, if we find more fw_depends stuff,
-# add it to the bottom of the list, if it isn't already there.
+# For each of these, find the files that depend on them, if we find more
+# docker FROM dependencies add it to the bottom of the list, if it isn't
+# already there.
 i = 0
 while i <= len(docker_changes) - 1:
 
-    # Generates output of files that contain the fw_depends for this dependency
+    # Generates output of files that contain a FROM import for this dependency
     more_changes = subprocess.check_output([
         'bash', '-c', 'grep -RP "FROM tfb/' +
-                      re.escape(docker_changes[i].replace('.dockerfile','')) + '(:|$)" . || echo ""'
+                      re.escape(docker_changes[i].replace('.dockerfile', ''))
+                      + '(:|$)" . || echo ""'
     ])
     print("more_changes: {!s}".format(more_changes))
     if fw_found_in_changes(more_changes):
