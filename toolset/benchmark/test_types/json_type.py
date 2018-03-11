@@ -1,29 +1,25 @@
-from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.verifications import (
-    basic_body_verification,
-    verify_headers,
-    verify_helloworld_object
-)
-
-import json
+from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
+from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_helloworld_object
+from toolset.utils.remote_script_helper import generate_concurrency_script
 
 
 class JsonTestType(FrameworkTestType):
-
-    def __init__(self):
+    def __init__(self, config):
+        self.json_url = ""
         kwargs = {
             'name': 'json',
             'accept_header': self.accept('json'),
             'requires_db': False,
             'args': ['json_url']
         }
-        FrameworkTestType.__init__(self, **kwargs)
+        FrameworkTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.json_url
 
     def verify(self, base_url):
-        '''Validates the response is a JSON object of 
+        '''
+        Validates the response is a JSON object of 
         { 'message' : 'hello, world!' }. Case insensitive and 
         quoting style is ignored
         '''
@@ -43,3 +39,10 @@ class JsonTestType(FrameworkTestType):
             return problems
         else:
             return [('pass', '', url)]
+
+    def get_remote_script(self, config, name, url, port):
+        '''
+        Returns the remote script
+        '''
+        return generate_concurrency_script(self.config, name, url, port,
+                                           self.accept_header)

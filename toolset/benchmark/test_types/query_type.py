@@ -1,23 +1,18 @@
-from benchmark.test_types.framework_test_type import FrameworkTestType
-from benchmark.test_types.verifications import (
-    verify_headers,
-    verify_randomnumber_list,
-    verify_query_cases
-)
-
-import json
+from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
+from toolset.benchmark.test_types.verifications import verify_query_cases
+from toolset.utils.remote_script_helper import generate_query_script
 
 
 class QueryTestType(FrameworkTestType):
-
-    def __init__(self):
+    def __init__(self, config):
+        self.query_url = ""
         kwargs = {
             'name': 'query',
             'accept_header': self.accept('json'),
             'requires_db': True,
             'args': ['query_url']
         }
-        FrameworkTestType.__init__(self, **kwargs)
+        FrameworkTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.query_url
@@ -32,13 +27,8 @@ class QueryTestType(FrameworkTestType):
         '''
 
         url = base_url + self.query_url
-        cases = [
-            ('2',   'fail'),
-            ('0',   'fail'),
-            ('foo', 'fail'),
-            ('501', 'warn'),
-            ('',    'fail')
-        ]
+        cases = [('2', 'fail'), ('0', 'fail'), ('foo', 'fail'),
+                 ('501', 'warn'), ('', 'fail')]
 
         problems = verify_query_cases(self, cases, url)
 
@@ -46,3 +36,11 @@ class QueryTestType(FrameworkTestType):
             return [('pass', '', url + case) for case, _ in cases]
         else:
             return problems
+
+    def get_remote_script(self, config, name, url, port):
+        '''
+        Returns the remote script
+        '''
+        return generate_query_script(self.config, name, url, port,
+                                     self.accept_header,
+                                     self.config.query_levels)

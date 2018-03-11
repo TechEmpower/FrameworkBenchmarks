@@ -1,10 +1,8 @@
 {
-  "framework": "play2", 
+  "framework": "play2-java",
   "tests": [
     {
       "default": {
-        "display_name": "play2-java", 
-        "setup_file": "setup_java", 
         "framework": "play2", 
         "language": "Java", 
         "flavor": "None",
@@ -22,9 +20,7 @@
         "json_url": "/json", 
         "plaintext_url": "/plaintext"
       }, 
-      "java-netty": {
-        "display_name": "play2-java-netty", 
-        "setup_file": "setup_java_netty", 
+      "netty": {
         "framework": "play2", 
         "language": "Java", 
         "flavor": "None",
@@ -42,9 +38,7 @@
         "json_url": "/json", 
         "plaintext_url": "/plaintext"
       }, 
-      "java-ebean-hikaricp": {
-        "display_name": "play2-java-ebean-hikaricp", 
-        "setup_file": "setup_java_ebean_hikaricp", 
+      "ebean-hikaricp": {
         "framework": "play2", 
         "language": "Java", 
         "flavor": "None",
@@ -64,9 +58,7 @@
         "fortune_url": "/fortunes", 
         "update_url": "/update?queries="
       }, 
-      "java-ebean-hikaricp-netty": {
-        "display_name": "play2-java-ebean-hikaricp-netty", 
-        "setup_file": "setup_java_ebean_hikaricp_netty", 
+      "ebean-hikaricp-netty": {
         "framework": "play2", 
         "language": "Java", 
         "flavor": "None",
@@ -86,9 +78,7 @@
         "fortune_url": "/fortunes", 
         "update_url": "/update?queries="
       }, 
-      "java-jpa-hikaricp": {
-        "display_name": "play2-java-jpa-hikaricp", 
-        "setup_file": "setup_java_jpa_hikaricp", 
+      "jpa-hikaricp": {
         "framework": "play2", 
         "language": "Java", 
         "flavor": "None",
@@ -108,9 +98,7 @@
         "fortune_url": "/fortunes", 
         "update_url": "/update?queries="
       },
-      "java-jpa-hikaricp-netty": {
-        "display_name": "play2-java-jpa-hikaricp-netty", 
-        "setup_file": "setup_java_jpa_hikaricp_netty", 
+      "jpa-hikaricp-netty": {
         "framework": "play2", 
         "language": "Java", 
         "flavor": "None",
@@ -130,9 +118,7 @@
         "fortune_url": "/fortunes", 
         "update_url": "/update?queries="
       },
-      "java-jooq-hikaricp": {
-        "display_name": "play2-java-jooq-hikaricp", 
-        "setup_file": "setup_java_jooq_hikaricp", 
+      "jooq-hikaricp": {
         "framework": "play2", 
         "language": "Java", 
         "flavor": "None",
@@ -152,9 +138,7 @@
         "fortune_url": "/fortunes", 
         "update_url": "/update?queries="
       },
-      "java-jooq-hikaricp-netty": {
-        "display_name": "play2-java-jooq-hikaricp-netty", 
-        "setup_file": "setup_java_jooq_hikaricp_netty", 
+      "jooq-hikaricp-netty": {
         "framework": "play2", 
         "language": "Java", 
         "flavor": "None",

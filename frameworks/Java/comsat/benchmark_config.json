@@ -3,7 +3,6 @@
   "tests": [
     {
       "default": {
-        "setup_file": "setup-servlet-jetty",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -23,7 +22,6 @@
         "versus": ""
       },
       "servlet-undertow": {
-        "setup_file": "setup-servlet-undertow",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -43,7 +41,6 @@
         "versus": "comsat"
       },
       "webactors-netty": {
-        "setup_file": "setup-webactors-netty",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -63,7 +60,6 @@
         "versus": ""
       },
       "webactors-undertow": {
-        "setup_file": "setup-webactors-undertow",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,

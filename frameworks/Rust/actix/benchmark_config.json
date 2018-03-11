@@ -2,7 +2,6 @@
   "framework": "actix",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -21,7 +20,6 @@
       "versus": ""
     },
     "diesel": {
-      "setup_file": "setup_diesel",
       "db_url": "/db",
       "fortune_url": "/fortune",
       "query_url": "/queries?q=",
@@ -42,7 +40,6 @@
       "versus": ""
     },
     "pg": {
-      "setup_file": "setup_pg",
       "db_url": "/db",
       "fortune_url": "/fortune",
       "query_url": "/queries?q=",

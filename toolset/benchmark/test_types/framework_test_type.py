@@ -1,9 +1,6 @@
 import copy
 import sys
-import os
 import json
-import subprocess
-from subprocess import PIPE
 import requests
 import MySQLdb
 import psycopg2
@@ -14,11 +11,8 @@ import pymongo
 import logging
 logging.getLogger('urllib3').setLevel(logging.CRITICAL)
 
-from pprint import pprint
-
 
 class FrameworkTestType:
-
     '''
     Interface between a test type (json, query, plaintext, etc) and 
     the rest of TFB. A test type defines a number of keys it expects
@@ -29,7 +23,13 @@ class FrameworkTestType:
     exist a member `X.spam = 'foobar'`. 
     '''
 
-    def __init__(self, name, requires_db=False, accept_header=None, args=[]):
+    def __init__(self,
+                 config,
+                 name,
+                 requires_db=False,
+                 accept_header=None,
+                 args=[]):
+        self.config = config
         self.name = name
         self.requires_db = requires_db
         self.args = args
@@ -47,9 +47,12 @@ class FrameworkTestType:
 
     def accept(self, content_type):
         return {
-            'json': 'application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7',
-            'html': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'plaintext': 'text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7'
+            'json':
+            'application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7',
+            'html':
+            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'plaintext':
+            'text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7'
         }[content_type]
 
     def setup_out(self, out):
@@ -76,7 +79,8 @@ class FrameworkTestType:
             return self
         else:  # This is quite common - most tests don't support all types
             raise AttributeError(
-                "A %s requires the benchmark_config.json to contain %s" % (self.name, self.args))
+                "A %s requires the benchmark_config.json to contain %s" %
+                (self.name, self.args))
 
     def request_headers_and_body(self, url):
         '''
@@ -94,7 +98,9 @@ class FrameworkTestType:
         self.out.write(str(headers))
         self.out.write(body)
         b = 40
-        print("  Response (trimmed to {:d} bytes): \"{!s}\"".format(b, body.strip()[:b]))
+        print("  Response (trimmed to {:d} bytes): \"{!s}\"".format(
+            b,
+            body.strip()[:b]))
         return headers, body
 
     def verify(self, base_url):
@@ -119,10 +125,18 @@ class FrameworkTestType:
         raise NotImplementedError("Subclasses must provide verify")
 
     def get_url(self):
-        '''Returns the URL for this test, like '/json'''
+        '''
+        Returns the URL for this test, like '/json'
+        '''
         # This is a method because each test type uses a different key
         # for their URL so the base class can't know which arg is the URL
         raise NotImplementedError("Subclasses must provide get_url")
+
+    def get_remote_script(self, config, name, url, port):
+        '''
+        Returns the remote script for running the benchmarking process.
+        '''
+        raise NotImplementedError("Subclasses must provide get_remote_script")
 
     def copy(self):
         '''
@@ -146,7 +160,9 @@ class FrameworkTestType:
 
         if database_name == "mysql":
             try:
-                db = MySQLdb.connect("TFB-database", "benchmarkdbuser", "benchmarkdbpass", "hello_world")
+                db = MySQLdb.connect(self.config.database_host,
+                                     "benchmarkdbuser", "benchmarkdbpass",
+                                     "hello_world")
                 cursor = db.cursor()
                 cursor.execute("SELECT * FROM World")
                 results = cursor.fetchall()
@@ -157,11 +173,12 @@ class FrameworkTestType:
                 print(e)
         elif database_name == "postgres":
             try:
-                db = psycopg2.connect(host="TFB-database",
-                                      port="5432",
-                                      user="benchmarkdbuser",
-                                      password="benchmarkdbpass",
-                                      database="hello_world")
+                db = psycopg2.connect(
+                    host=self.config.database_host,
+                    port="5432",
+                    user="benchmarkdbuser",
+                    password="benchmarkdbpass",
+                    database="hello_world")
                 cursor = db.cursor()
                 cursor.execute("SELECT * FROM \"World\"")
                 results = cursor.fetchall()
@@ -177,20 +194,24 @@ class FrameworkTestType:
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
-                connection = pymongo.MongoClient(host="TFB-database")
+                connection = pymongo.MongoClient(
+                    host=self.config.database_host)
                 db = connection.hello_world
                 for world in db.world.find():
                     if "randomNumber" in world:
                         if "id" in world:
-                            worlds_json[str(int(world["id"]))] = int(world["randomNumber"])
+                            worlds_json[str(int(world["id"]))] = int(
+                                world["randomNumber"])
                         elif "_id" in world:
-                            worlds_json[str(int(world["_id"]))] = int(world["randomNumber"])
+                            worlds_json[str(int(world["_id"]))] = int(
+                                world["randomNumber"])
                 results_json.append(worlds_json)
                 connection.close()
             except Exception as e:
                 print("ERROR: Unable to load current MongoDB World table.")
                 print(e)
         else:
-            raise ValueError("Database: {!s} does not exist".format(database_name))
+            raise ValueError(
+                "Database: {!s} does not exist".format(database_name))
 
         return results_json
