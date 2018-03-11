@@ -23,8 +23,6 @@ import logging
 import socket
 import threading
 import textwrap
-import docker
-import shutil
 from pprint import pprint
 
 from contextlib import contextmanager
@@ -44,20 +42,6 @@ class Benchmarker:
     ##########################################################################################
     # Public methods
     ##########################################################################################
-
-    def clean_all(self):
-        if os.path.exists(self.results_directory):
-            for file in os.listdir(self.results_directory):
-                if not os.path.exists(os.path.dirname(file)):
-                    shutil.rmtree(os.path.join(self.results_directory, file))
-                else:
-                    os.remove(os.path.join(self.results_directory, file))
-
-        subprocess.check_call(["docker", "image", "prune", "-f"])
-
-        docker_ids = subprocess.check_output(["docker", "images", "-q"]).splitlines()
-        for docker_id in docker_ids:
-            subprocess.check_call(["docker", "image", "rmi", "-f", docker_id])
 
     ############################################################
     # Prints all the available tests
@@ -174,6 +158,38 @@ class Benchmarker:
     ############################################################
 
     ############################################################
+    # database_sftp_string(batch_file)
+    # generates a fully qualified URL for sftp to database
+    ############################################################
+    def database_sftp_string(self, batch_file):
+        sftp_string =  "sftp -oStrictHostKeyChecking=no "
+        if batch_file != None: sftp_string += " -b " + batch_file + " "
+
+        if self.database_identity_file != None:
+            sftp_string += " -i " + self.database_identity_file + " "
+
+        return sftp_string + self.database_user + "@" + self.database_host
+    ############################################################
+    # End database_sftp_string
+    ############################################################
+
+    ############################################################
+    # client_sftp_string(batch_file)
+    # generates a fully qualified URL for sftp to client
+    ############################################################
+    def client_sftp_string(self, batch_file):
+        sftp_string =  "sftp -oStrictHostKeyChecking=no "
+        if batch_file != None: sftp_string += " -b " + batch_file + " "
+
+        if self.client_identity_file != None:
+            sftp_string += " -i " + self.client_identity_file + " "
+
+        return sftp_string + self.client_user + "@" + self.client_host
+    ############################################################
+    # End client_sftp_string
+    ############################################################
+
+    ############################################################
     # generate_url(url, port)
     # generates a fully qualified URL for accessing a test url
     ############################################################
@@ -189,7 +205,7 @@ class Benchmarker:
     # test_type timestamp/test_type/test_name/raw.txt
     ############################################################
     def get_output_file(self, test_name, test_type):
-        return os.path.join(self.results_directory, self.timestamp, test_name, test_type, "raw.txt")
+        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "raw.txt")
     ############################################################
     # End get_output_file
     ############################################################
@@ -217,7 +233,7 @@ class Benchmarker:
     # test_type timestamp/test_type/test_name/stats.txt
     ############################################################
     def get_stats_file(self, test_name, test_type):
-        return os.path.join(self.results_directory, self.timestamp, test_name, test_type, "stats.txt")
+        return os.path.join(self.result_directory, self.timestamp, test_name, test_type, "stats.txt")
     ############################################################
     # End get_stats_file
     ############################################################
@@ -244,7 +260,7 @@ class Benchmarker:
     # full_results_directory
     ############################################################
     def full_results_directory(self):
-        path = os.path.join(self.fwroot, self.results_directory, self.timestamp)
+        path = os.path.join(self.fwroot, self.result_directory, self.timestamp)
         try:
             os.makedirs(path)
         except OSError:
@@ -393,54 +409,6 @@ class Benchmarker:
     ############################################################
 
     ############################################################
-    # Sets up a container for the given database and port, and
-    # starts said docker container.
-    ############################################################
-    def __setup_database_container(self, database):
-        def __is_hex(s):
-            try:
-                int(s, 16)
-            except ValueError:
-                return False
-            return len(s) % 2 == 0
-
-        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        (out,err) = p.communicate("docker images  -q %s" % database)
-        dbid = ''
-        if len(out.splitlines()) > 0:
-            dbid = out.splitlines()[len(out.splitlines()) - 1]
-
-        # If the database image exists, then dbid will look like
-        # fe12ca519b47, and we do not want to rebuild if it exists
-        if len(dbid) != 12 and not __is_hex(dbid):
-            def __scp_string(files):
-                scpstr = ["scp", "-i", self.database_identity_file]
-                for file in files:
-                    scpstr.append(file)
-                scpstr.append("%s@%s:~/%s/" % (self.database_user, self.database_host, database))
-                return scpstr
-
-            p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
-            p.communicate("mkdir -p %s" % database)
-            dbpath = os.path.join(self.fwroot, "toolset", "setup", "linux", "docker", "databases", database)
-            dbfiles = ""
-            for dbfile in os.listdir(dbpath):
-                dbfiles += "%s " % os.path.join(dbpath,dbfile)
-            p = subprocess.Popen(__scp_string(dbfiles.split()), stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
-            p.communicate()
-            p = subprocess.Popen(self.database_ssh_string, shell=True, stdin=subprocess.PIPE, stdout=self.quiet_out, stderr=subprocess.STDOUT)
-            p.communicate("docker build -f ~/%s/%s.dockerfile -t %s ~/%s" % (database, database, database, database))
-            if p.returncode != 0:
-                return None
-
-        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        (out,err) = p.communicate("docker run -d --rm --network=host %s" % database)
-        return out.splitlines()[len(out.splitlines()) - 1]
-    ############################################################
-    # End __setup_database_container
-    ############################################################
-
-    ############################################################
     # Makes any necessary changes to the client machine that
     # should be made before running the tests. Is very similar
     # to the server setup, but may also include client specific
@@ -542,6 +510,14 @@ class Benchmarker:
     # are needed.
     ############################################################
     def __run_test(self, test):
+
+        # Used to capture return values
+        def exit_with_code(code):
+            if self.os.lower() == 'windows':
+                return code
+            else:
+                sys.exit(code)
+
         logDir = os.path.join(self.full_results_directory(), test.name.lower())
         try:
             os.makedirs(logDir)
@@ -551,12 +527,12 @@ class Benchmarker:
 
             if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
                 out.write("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.\n")
-                return sys.exit(0)
+                return exit_with_code(0)
 
             # If the test is in the excludes list, we skip it
             if self.exclude != None and test.name in self.exclude:
                 out.write("Test {name} has been added to the excludes list. Skipping.\n".format(name=test.name))
-                return sys.exit(0)
+                return exit_with_code(0)
 
             out.write("test.os.lower() = {os}  test.database_os.lower() = {dbos}\n".format(os=test.os.lower(),dbos=test.database_os.lower()))
             out.write("self.results['frameworks'] != None: {val}\n".format(val=str(self.results['frameworks'] != None)))
@@ -565,7 +541,7 @@ class Benchmarker:
             if self.results['frameworks'] != None and test.name in self.results['completed']:
                 out.write('Framework {name} found in latest saved data. Skipping.\n'.format(name=str(test.name)))
                 print('WARNING: Test {test} exists in the results directory; this must be removed before running a new test.\n'.format(test=str(test.name)))
-                return sys.exit(1)
+                return exit_with_code(1)
             out.flush()
 
             out.write(header("Beginning %s" % test.name, top='='))
@@ -576,9 +552,8 @@ class Benchmarker:
             ##########################
             out.write(header("Starting %s" % test.name))
             out.flush()
-            database_container_id = None
             try:
-                # self.__cleanup_leftover_processes_before_test()
+                self.__cleanup_leftover_processes_before_test()
 
                 if self.__is_port_bound(test.port):
                     time.sleep(60)
@@ -589,30 +564,17 @@ class Benchmarker:
                     out.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
                     out.flush()
                     print("Error: Unable to recover port, cannot start test")
-                    return sys.exit(1)
+                    return exit_with_code(1)
 
-                ##########################
-                # Start database container
-                ##########################
-                if test.database != "None":
-                    database_container_id = self.__setup_database_container(test.database.lower())
-                    if not database_container_id:
-                        out.write("ERROR: Problem building/running database container")
-                        out.flush()
-                        self.__write_intermediate_results(test.name,"ERROR: Problem starting")
-                        return sys.exit(1)
-
-                ##########################
-                # Start webapp
-                ##########################
-                result = test.start(out)
+                result, process = test.start(out)
+                self.__process = process
                 if result != 0:
-                    self.__stop_test(database_container_id, test, out)
+                    self.__process.terminate()
                     time.sleep(5)
                     out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
                     out.flush()
-                    self.__write_intermediate_results(test.name,"ERROR: Problem starting")
-                    return sys.exit(1)
+                    self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
+                    return exit_with_code(1)
 
                 logging.info("Sleeping %s seconds to ensure framework is ready" % self.sleep)
                 time.sleep(self.sleep)
@@ -640,8 +602,7 @@ class Benchmarker:
                 ##########################
                 # Stop this test
                 ##########################
-                self.__stop_test(database_container_id, test, out)
-                self.__stop_database(database_container_id, out)
+                self.__stop_test(test, out)
 
                 out.write(header("Stopped %s" % test.name))
                 out.flush()
@@ -676,48 +637,52 @@ class Benchmarker:
 
                 if self.mode == "verify" and not passed_verify:
                     print("Failed verify!")
-                    return sys.exit(1)
+                    return exit_with_code(1)
             except KeyboardInterrupt:
-                self.__stop_test(database_container_id, test, out)
-                self.__stop_database(database_container_id, out)
+                self.__stop_test(test, out)
             except (OSError, IOError, subprocess.CalledProcessError) as e:
                 self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
                 out.write(header("Subprocess Error %s" % test.name))
                 traceback.print_exc(file=out)
                 out.flush()
                 out.close()
-                return sys.exit(1)
+                return exit_with_code(1)
 
             out.close()
-            return sys.exit(0)
+            return exit_with_code(0)
 
     ############################################################
     # End __run_tests
     ############################################################
 
     ############################################################
-    # __stop_database
-    # Attempts to stop the running database container.
-    ############################################################
-    def __stop_database(self, database_container_id, out):
-        if database_container_id:
-            p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=self.quiet_out, stderr=subprocess.STDOUT)
-            p.communicate("docker stop %s" % database_container_id)
-
-    ############################################################
     # __stop_test
-    # Attempts to stop the running test container.
+    # Attempts to stop the running test.
     ############################################################
-    def __stop_test(self, database_container_id, test, out):
-        client = docker.from_env()
-        # Stop all the containers
-        for container in client.containers.list():
-            if container.status == "running" and container.id != database_container_id:
-              container.stop()
-        # Remove only the tfb/test image for this test
-        client.images.remove("tfb/test/%s" % test.name, force=True)
-        client.images.prune()
-
+    def __stop_test(self, test, out):
+        # self.__process may not be set if the user hit ctrl+c prior to the test
+        # starting properly.
+        if self.__process is not None:
+            out.write(header("Stopping %s" % test.name))
+            out.flush()
+            # Ask TFBReaper to nicely terminate itself
+            self.__process.terminate()
+            slept = 0
+            returnCode = None
+            # Check once a second to see if TFBReaper has exited
+            while(slept < 300 and returnCode is None):
+                time.sleep(1)
+                slept += 1
+                returnCode = self.__process.poll()
+            
+            # If TFBReaper has not exited at this point, we have a problem
+            if returnCode is None:
+                self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
+                out.write(header("Error: Port %s was not released by stop - %s" % (test.port, test.name)))
+                out.write(header("Running Processes"))
+                out.write(subprocess.check_output(['ps -aux'], shell=True))
+                out.flush()
+                return exit_with_code(1)
     ############################################################
     # End __stop_test
     ############################################################
@@ -905,10 +870,10 @@ class Benchmarker:
             pass
 
     def __get_git_commit_id(self):
-        return subprocess.check_output(["git", "rev-parse", "HEAD"]).strip()
+        return subprocess.check_output('git rev-parse HEAD', shell=True).strip()
 
     def __get_git_repository_url(self):
-        return subprocess.check_output(["git", "config", "--get", "remote.origin.url"]).strip()
+        return subprocess.check_output('git config --get remote.origin.url', shell=True).strip()
 
     def __get_git_branch_name(self):
         return subprocess.check_output('git rev-parse --abbrev-ref HEAD', shell=True).strip()
@@ -941,7 +906,7 @@ class Benchmarker:
             print(prefix + header('', top='', bottom='=') + Style.RESET_ALL)
 
         print("Time to complete: " + str(int(time.time() - self.start_time)) + " seconds")
-        print("Results are saved in " + os.path.join(self.results_directory, self.timestamp))
+        print("Results are saved in " + os.path.join(self.result_directory, self.timestamp))
 
     ############################################################
     # End __finish
@@ -979,6 +944,7 @@ class Benchmarker:
             args['pipeline_concurrency_levels'] = [256,1024,4096,16384]
 
         self.__dict__.update(args)
+        # pprint(self.__dict__)
 
         self.quiet_out = QuietOutputStream(self.quiet)
 
@@ -1005,7 +971,15 @@ class Benchmarker:
             self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
 
         # setup results and latest_results directories
-        self.results_directory = os.path.join(self.fwroot, "results")
+        self.result_directory = os.path.join(self.fwroot, "results")
+        if (args['clean'] or args['clean_all']) and os.path.exists(os.path.join(self.fwroot, "results")):
+            os.system("sudo rm -rf " + self.result_directory + "/*")
+
+        # remove installs directories if --clean-all provided
+        self.install_root = "%s/%s" % (self.fwroot, "installs")
+        if args['clean_all']:
+            os.system("sudo rm -rf " + self.install_root)
+            os.mkdir(self.install_root)
 
         self.results = None
         try:

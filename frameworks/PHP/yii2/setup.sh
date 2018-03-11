@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends mysql php5 nginx composer
+fw_depends mysql php7 nginx composer
 
 sed -i 's|root .*/FrameworkBenchmarks/php-yii2|root '"${TROOT}"'|g' deploy/nginx.conf
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf

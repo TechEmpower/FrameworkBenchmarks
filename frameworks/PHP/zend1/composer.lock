@@ -1,0 +1,67 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "c77248c721c29e059efd76c0a33653d9",
+    "packages": [
+        {
+            "name": "zendframework/zendframework1",
+            "version": "1.12.20",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zf1.git",
+                "reference": "737ef159654fbbef37cf9af742b2c8f9690c2ece"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zf1/zipball/737ef159654fbbef37cf9af742b2c8f9690c2ece",
+                "reference": "737ef159654fbbef37cf9af742b2c8f9690c2ece",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.11"
+            },
+            "require-dev": {
+                "phpunit/dbunit": "1.3.*",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.12.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend_": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "library/"
+            ],
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Zend Framework 1",
+            "homepage": "http://framework.zend.com/",
+            "keywords": [
+                "ZF1",
+                "framework"
+            ],
+            "time": "2016-09-08T14:50:34+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.2.11"
+    },
+    "platform-dev": []
+}

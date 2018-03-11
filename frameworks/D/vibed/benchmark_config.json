@@ -2,6 +2,7 @@
   "framework": "vibed",
   "tests": [{
     "default": {
+      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -25,6 +26,7 @@
       "versus": "vibed"
     },
     "dmd-pgsql": {
+      "setup_file": "setup_pgsql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -48,6 +50,7 @@
       "versus": "vibed"
     },
     "ldc": {
+      "setup_file": "setup_ldc",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -71,6 +74,7 @@
       "versus": "vibed"
     },
     "ldc-pgsql": {
+      "setup_file": "setup_ldc_pgsql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",

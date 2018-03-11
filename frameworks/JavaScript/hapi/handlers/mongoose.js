@@ -3,7 +3,10 @@
 
 const h = require('../helper');
 const Mongoose = require('mongoose');
-Mongoose.connect('mongodb://TFB-database/hello_world');
+const connection = Mongoose.connect(
+  'mongodb://TFB-database/hello_world',
+  { useMongoClient: true }
+);
 
 const WorldSchema = new Mongoose.Schema({
     id :          Number,
@@ -11,7 +14,6 @@ const WorldSchema = new Mongoose.Schema({
   }, {
     collection: 'world'
   });
-
 const FortuneSchema = new Mongoose.Schema({
     id:      Number,
     message: String
@@ -19,8 +21,8 @@ const FortuneSchema = new Mongoose.Schema({
     collection: 'fortune'
   });
 
-const Worlds = Mongoose.model('world', WorldSchema);
-const Fortunes = Mongoose.model('fortune', FortuneSchema);
+const Worlds = connection.model('World', WorldSchema);
+const Fortunes = connection.model('Fortune', FortuneSchema);
 
 const randomWorld = async () =>
   await Worlds.findOne({ id: h.randomTfbNumber() });
@@ -45,7 +47,7 @@ module.exports = {
   },
 
   Fortunes: async (req, reply) => {
-    const fortunes = await Fortunes.find();
+    const fortunes = await Fortunes.find({});
     fortunes.push(h.additionalFortune());
     fortunes.sort((a, b) => a.message.localeCompare(b.message));
 

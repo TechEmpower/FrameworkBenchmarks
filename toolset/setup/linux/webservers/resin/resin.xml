@@ -1,0 +1,22 @@
+<resin xmlns="http://caucho.com/ns/resin"
+       xmlns:resin="http://caucho.com/ns/resin/core">
+
+  <cluster id="">
+
+    <resin:import path="${RESIN_HOME}/conf/app-default.xml" />
+    <log name="" level="config" path="stdout:" timestamp="[%H:%M:%S.%s] " />
+
+    <server id="">
+      <jvm-arg>-Xms1g</jvm-arg>
+      <jvm-arg>-Xmx1g</jvm-arg>
+
+      <http port="8080" />
+    </server>
+
+    <host>
+        <web-app-deploy path="${RESIN_HOME}/webapps"
+                      expand-preserve-fileset="WEB-INF/work/**"/>
+    </host>
+
+  </cluster>
+</resin>

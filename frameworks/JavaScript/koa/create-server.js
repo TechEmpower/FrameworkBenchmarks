@@ -4,7 +4,10 @@ const hbs = require('koa-hbs');
 const bodyParser = require('koa-bodyparser');
 const handlebars = require('handlebars');
 
-const Handler = require(`./handlers/${process.env.NODE_HANDLER}`);
+const MongooseHandler = require('./handlers/mongoose');
+const SequelizeHandler = require('./handlers/sequelize');
+const SequelizePgHandler = require('./handlers/sequelize-postgres');
+
 
 const app = new Koa();
 const router = new Router();
@@ -30,11 +33,22 @@ function Plaintext(ctx, next) {
 
 router.get('/json', JsonSerialization);
 router.get('/plaintext', Plaintext);
-router.get('/db', Handler.SingleQuery);
-router.get('/queries', Handler.MultipleQueries);
-router.get('/fortunes', Handler.Fortunes);
-router.get('/updates', Handler.Updates);
 
+
+router.get('/mongoose/db', MongooseHandler.SingleQuery);
+router.get('/mongoose/queries', MongooseHandler.MultipleQueries);
+router.get('/mongoose/fortunes', MongooseHandler.Fortunes);
+router.get('/mongoose/updates', MongooseHandler.Updates);
+
+router.get('/sequelize/db', SequelizeHandler.SingleQuery);
+router.get('/sequelize/queries', SequelizeHandler.MultipleQueries);
+router.get('/sequelize/fortunes', SequelizeHandler.Fortunes);
+router.get('/sequelize/updates', SequelizeHandler.Updates);
+
+router.get('/sequelize-pg/db', SequelizePgHandler.SingleQuery);
+router.get('/sequelize-pg/queries', SequelizePgHandler.MultipleQueries);
+router.get('/sequelize-pg/fortunes', SequelizePgHandler.Fortunes);
+router.get('/sequelize-pg/updates', SequelizePgHandler.Updates);
 
 app.use(router.routes());
 const server = app.listen(8080);

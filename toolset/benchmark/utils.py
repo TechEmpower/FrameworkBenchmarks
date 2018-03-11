@@ -3,42 +3,8 @@ import os
 import glob
 import json
 import socket
-import fnmatch
 
 from ast import literal_eval
-
-def find_docker_file(path, pattern):
-    for root, dirs, files in os.walk(path):
-        for name in files:
-            if fnmatch.fnmatch(name, pattern):
-                return os.path.join(root, name)
-
-def gather_docker_dependencies(docker_file):
-    '''
-    Gathers all the known docker dependencies for the given docker image.
-    '''
-    # Avoid setting up a circular import
-    from setup.linux import setup_util
-    deps = []
-
-    docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup", "linux", "docker")
-
-    if os.path.exists(docker_file):
-        with open(docker_file) as fp:
-            for line in fp.readlines():
-                tokens = line.strip().split(' ')
-                if tokens[0] == "FROM":
-                    # This is magic that our base image points to
-                    if tokens[1] != "ubuntu:16.04":
-                        depToken = tokens[1].strip().split(':')[0].strip().split('/')[1]
-                        deps.append(depToken)
-                        dep_docker_file = os.path.join(os.path.dirname(docker_file), depToken + ".dockerfile")
-                        if not os.path.exists(dep_docker_file):
-                            dep_docker_file = find_docker_file(docker_dir, depToken + ".dockerfile")
-                        deps.extend(gather_docker_dependencies(dep_docker_file))
-
-    return deps
-
 
 def gather_langauges():
     '''
@@ -53,6 +19,7 @@ def gather_langauges():
     for dir in glob.glob(os.path.join(lang_dir, "*")):
         langs.append(dir.replace(lang_dir,"")[1:])
     return langs
+
 
 def gather_tests(include = [], exclude=[], benchmarker=None):
     '''
@@ -106,7 +73,6 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
         defaults['results_name'] = "(unspecified, datetime = %Y-%m-%d %H:%M:%S)"
         defaults['results_environment'] = "My Server Environment"
         defaults['test_dir'] = None
-        defaults['test_lang'] = None
         defaults['quiet'] = True
 
         benchmarker = Benchmarker(defaults)
@@ -115,16 +81,6 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
     # Search for configuration files
     fwroot = setup_util.get_fwroot()
     config_files = []
-
-    if benchmarker.test_lang:
-        benchmarker.test_dir = []
-        for lang in benchmarker.test_lang:
-            if os.path.exists("{!s}/frameworks/{!s}".format(fwroot, lang)):
-                for test_dir in os.listdir("{!s}/frameworks/{!s}".format(fwroot, lang)):
-                    benchmarker.test_dir.append("{!s}/{!s}".format(lang, test_dir))
-            else:
-                raise Exception("Unable to locate language directory: {!s}".format(lang))
-
     if benchmarker.test_dir:
         for test_dir in benchmarker.test_dir:
             dir_config_files = glob.glob("{!s}/frameworks/{!s}/benchmark_config.json".format(fwroot, test_dir))
