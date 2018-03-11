@@ -29,16 +29,16 @@ def get_docker_changes(changes_output):
 def fw_found_in_changes(changes_output):
     if os.getenv("TESTLANG"):
         return re.search(
-            r"^frameworks/" + re.escape(os.getenv("TESTLANG")) + "/",
+            r"frameworks/" + re.escape(os.getenv("TESTLANG")) + "/",
             changes_output, re.M)
     elif os.getenv("TESTDIR"):
         return re.search(
-            r"^frameworks/" + re.escape(os.getenv("TESTDIR")) + "/",
+            r"frameworks/" + re.escape(os.getenv("TESTDIR")) + "/",
             changes_output, re.M)
     elif os.getenv("TEST"):
         for test in os.getenv("TEST").split(" "):
             if re.search(
-                  r"^frameworks/.+/" + re.escape(os.getenv("TEST")) + "/",
+                  r"frameworks/.+/" + re.escape(os.getenv("TEST")) + "/",
                   changes_output, re.M):
                 return True
 
