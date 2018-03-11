@@ -67,12 +67,17 @@ if re.search(r'\[ci run-all\]', last_commit_msg, re.M):
     print("All tests have been forced to run from the commit message.")
     quit_diffing(True)
 
-# TODO: Fix to work with TESTLANG and TEST
+# TODO: Fix to work with new TEST env var
 # Forced *fw-only* specific tests
 if re.search(r'\[ci fw-only.+\]', last_commit_msg, re.M):
     if os.getenv("TESTDIR") and re.search(
             r'\[ci fw-only(.?)+ ' + re.escape(os.getenv("TESTDIR")) +
             '( .+\]|])', last_commit_msg, re.M):
+        print("This test has been forced to run from the commit message.")
+        quit_diffing(True)
+    elif os.getenv("TESTLANG") and re.search(
+            r'\[ci fw-only(.?)+ ' + re.escape(os.getenv("TESTLANG")) +
+            '/', last_commit_msg, re.M):
         print("This test has been forced to run from the commit message.")
         quit_diffing(True)
     else:
@@ -81,11 +86,18 @@ if re.search(r'\[ci fw-only.+\]', last_commit_msg, re.M):
 
 # TODO: Fix to work with TESTLANG and TEST
 # Forced framework run
-if os.getenv("TESTDIR") and re.search(
-        r'\[ci fw(.?)+ ' + re.escape(os.getenv("TESTDIR")) + '( .+\]|\])',
-        last_commit_msg, re.M):
-    print('This test has been forced to run from the commit message.')
-    quit_diffing(True)
+if re.search(r'\[ci fw .+\]', last_commit_msg, re.M):
+    if os.getenv("TESTDIR") and re.search(
+            r'\[ci fw(.?)+ ' + re.escape(os.getenv("TESTDIR")) + '( .+\]|\])',
+            last_commit_msg, re.M):
+        print('This test has been forced to run from the commit message.')
+        quit_diffing(True)
+    elif os.getenv("TESTLANG") and re.search(
+            r'\[ci fw(.?)+ ' + re.escape(os.getenv("TESTLANG")) +
+            '/', last_commit_msg, re.M):
+        print("This test has been forced to run from the commit message.")
+        quit_diffing(True)
+
 
 print("TRAVIS_COMMIT_RANGE: {!s}".format(os.getenv("TRAVIS_COMMIT_RANGE")))
 print("TRAVIS_COMMIT      : {!s}".format(os.getenv("TRAVIS_COMMIT")))
