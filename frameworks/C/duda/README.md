@@ -25,4 +25,3 @@ Most of tests that are related to database query are pending and will be availab
 ## Contact
 
 Eduardo Silva <eduardo@monkey.io>
-
