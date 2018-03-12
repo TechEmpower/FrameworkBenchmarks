@@ -54,56 +54,13 @@ def quit_diffing(should_test_run):
     exit(0)
 
 
-# COMMIT MESSAGES:
-# Before any complicated diffing, check for forced runs from the commit message
-# Use -2 because travis now inserts a merge commit as the last commit
-last_commit_msg = subprocess.check_output(
-    ['bash', '-c', 'git log -2 --pretty=%B'])
-print("Parsing commit message for travis commands: {!s}"
-      .format(last_commit_msg))
-
-# Forced full run
-if re.search(r'\[ci run-all\]', last_commit_msg, re.M):
-    print("All tests have been forced to run from the commit message.")
-    quit_diffing(True)
-
-# TODO: Fix to work with new TEST env var
-# Forced *fw-only* specific tests
-if re.search(r'\[ci fw-only.+\]', last_commit_msg, re.M):
-    if os.getenv("TESTDIR") and re.search(
-            r'\[ci fw-only(.?)+ ' + re.escape(os.getenv("TESTDIR")) +
-            '( .+\]|])', last_commit_msg, re.M):
-        print("This test has been forced to run from the commit message.")
-        quit_diffing(True)
-    elif os.getenv("TESTLANG") and re.search(
-            r'\[ci fw-only(.?)+ ' + re.escape(os.getenv("TESTLANG")) +
-            '/', last_commit_msg, re.M):
-        print("This test has been forced to run from the commit message.")
-        quit_diffing(True)
-    else:
-        print("Skipping this test from the commit message.")
-        quit_diffing(False)
-
-# TODO: Fix to work with TESTLANG and TEST
-# Forced framework run
-if re.search(r'\[ci fw .+\]', last_commit_msg, re.M):
-    if os.getenv("TESTDIR") and re.search(
-            r'\[ci fw(.?)+ ' + re.escape(os.getenv("TESTDIR")) + '( .+\]|\])',
-            last_commit_msg, re.M):
-        print('This test has been forced to run from the commit message.')
-        quit_diffing(True)
-    elif os.getenv("TESTLANG") and re.search(
-            r'\[ci fw(.?)+ ' + re.escape(os.getenv("TESTLANG")) +
-            '/', last_commit_msg, re.M):
-        print("This test has been forced to run from the commit message.")
-        quit_diffing(True)
-
-
 print("TRAVIS_COMMIT_RANGE: {!s}".format(os.getenv("TRAVIS_COMMIT_RANGE")))
 print("TRAVIS_COMMIT      : {!s}".format(os.getenv("TRAVIS_COMMIT")))
 
 is_PR = (os.getenv("TRAVIS_PULL_REQUEST") != "false")
 commit_range = ""
+first_commit = ""
+last_commit  = ""
 
 if is_PR:
     print('I am testing a pull request')
@@ -143,6 +100,51 @@ changes = clean_output(
     ]))
 print("Determining what to run based on the following file changes: \n{!s}"
       .format(changes))
+
+# COMMIT MESSAGES:
+# Before any complicated diffing, check for forced runs from the commit message
+# Use -2 because travis now inserts a merge commit as the last commit
+last_commit_msg = subprocess.check_output(
+    ["bash", "-c", "git log --format=%B -n 1 {!s}".format(last_commit)])
+print("Parsing commit message for travis commands: {!s}"
+      .format(last_commit_msg))
+
+# Forced full run
+if re.search(r'\[ci run-all\]', last_commit_msg, re.M):
+    print("All tests have been forced to run from the commit message.")
+    quit_diffing(True)
+
+# TODO: Fix to work with new TEST env var
+# Forced *fw-only* specific tests
+if re.search(r'\[ci fw-only.+\]', last_commit_msg, re.M):
+    if os.getenv("TESTDIR") and re.search(
+            r'\[ci fw-only(.?)+ ' + re.escape(os.getenv("TESTDIR")) +
+            '( .+\]|])', last_commit_msg, re.M):
+        print("This test has been forced to run from the commit message.")
+        quit_diffing(True)
+    elif os.getenv("TESTLANG") and re.search(
+            r'\[ci fw-only(.?)+ ' + re.escape(os.getenv("TESTLANG")) +
+            '/', last_commit_msg, re.M):
+        print("This test has been forced to run from the commit message.")
+        quit_diffing(True)
+    else:
+        print("Skipping this test from the commit message.")
+        quit_diffing(False)
+
+# TODO: Fix to work with TESTLANG and TEST
+# Forced framework run
+if re.search(r'\[ci fw .+\]', last_commit_msg, re.M):
+    if os.getenv("TESTDIR") and re.search(
+            r'\[ci fw(.?)+ ' + re.escape(os.getenv("TESTDIR")) + '( .+\]|\])',
+            last_commit_msg, re.M):
+        print('This test has been forced to run from the commit message.')
+        quit_diffing(True)
+    elif os.getenv("TESTLANG") and re.search(
+            r'\[ci fw(.?)+ ' + re.escape(os.getenv("TESTLANG")) +
+            '/', last_commit_msg, re.M):
+        print("This test has been forced to run from the commit message.")
+        quit_diffing(True)
+
 
 # TODO: any changes in the toolset folder will generate a full run.
 #       Instead limit this to core toolset files and work on diffing
