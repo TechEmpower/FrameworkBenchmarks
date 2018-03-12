@@ -50,6 +50,16 @@ static void on_request_json(http_s *h);
 static void on_request_plain_text(http_s *h);
 
 /* *****************************************************************************
+This is the same as setting `FIO_DEDICATED_SYSTEM` compiling the facil.io master
+***************************************************************************** */
+#include "evio.h"
+void defer_thread_wait(pool_pt pool, void *p_thr) {
+  (void)pool;
+  (void)p_thr;
+  evio_wait(500);
+}
+
+/* *****************************************************************************
 The main function
 ***************************************************************************** */
 int main(int argc, char const *argv[]) {
