@@ -97,7 +97,7 @@ env:
      - "TESTDIR=Java/rapidoid"
      - "TESTDIR=Java/restexpress"
      - "TESTDIR=Java/revenj-jvm"
-    # - "TESTDIR=Java/servlet"
+     - "TESTDIR=Java/servlet"
      - "TESTDIR=Java/spark"
      - "TESTDIR=Java/spring"
      - "TESTDIR=Java/tapestry"
