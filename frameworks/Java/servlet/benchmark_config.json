@@ -2,9 +2,8 @@
   "framework": "servlet",
   "tests": [{
     "default": {
-      "setup_file": "setup",
-      "json_url": "/servlet/json",
-      "plaintext_url": "/servlet/plaintext",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -22,8 +21,7 @@
       "versus": "servlet"
     },
     "afterburner": {
-      "setup_file": "setup_afterburner",
-      "json_url": "/servlet/json",
+      "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -41,8 +39,7 @@
       "versus": "servlet"
     },
     "cjs": {
-      "setup_file": "setup_cjs",
-      "json_url": "/servlet/json",
+      "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -59,12 +56,11 @@
       "notes": "Jackson with custom serialization",
       "versus": "servlet"
     },
-    "raw": {
-      "setup_file": "setup_mysql",
-      "db_url": "/servlet/db",
-      "query_url": "/servlet/queries?queries=",
-      "fortune_url": "/servlet/fortunes",
-      "update_url": "/servlet/update?queries=",
+    "mysql": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -80,13 +76,12 @@
       "display_name": "servlet",
       "notes": ""
     },
-    "postgres-raw": {
-      "setup_file": "setup_postgresql",
-      "db_url": "/servlet/db",
-      "query_url": "/servlet/queries?queries=",
-      "cached_query_url": "/servlet/cached-worlds?queries=",
-      "fortune_url": "/servlet/fortunes",
-      "update_url": "/servlet/update?queries=",
+    "postgresql": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "cached_query_url": "/cached-worlds?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -102,44 +97,6 @@
       "display_name": "servlet",
       "notes": "",
       "versus": "servlet-raw"
-    },
-    "async-tomcat": {
-      "setup_file": "servlet3-async",
-      "json_url": "/servlet3/json",
-      "plaintext_url": "/servlet3/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "None",
-      "framework": "None",
-      "language": "Java",
-      "orm": "Raw",
-      "platform": "Servlet",
-      "webserver": "Tomcat",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "servlet3",
-      "notes": "Servlet 3.1 Async I/O",
-      "versus": "servlet"
-    },
-    "sync-tomcat": {
-      "setup_file": "servlet3-sync",
-      "json_url": "/servlet3/json",
-      "plaintext_url": "/servlet3/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification" : "Platform",
-      "database": "None",
-      "framework": "None",
-      "language": "Java",
-      "orm": "Raw",
-      "platform": "Servlet",
-      "webserver": "Tomcat",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "servlet3",
-      "notes": "",
-      "versus": "servlet"
     }
   }]
 }
