@@ -3,6 +3,9 @@ FROM tfb/base:latest
 ADD ./ /aspnetcore
 WORKDIR /aspnetcore
 
+ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE true
+ENV DOTNET_CLI_TELEMETRY_OPTOUT true
+
 RUN apt-get install apt-transport-https
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.gpg
 RUN sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" > /etc/apt/sources.list.d/dotnetdev.list'
