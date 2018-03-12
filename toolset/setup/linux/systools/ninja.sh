@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NINJA_VERSION="1.7.2"
+NINJA_VERSION="1.8.2"
 
 fw_installed ninja && return 0
 

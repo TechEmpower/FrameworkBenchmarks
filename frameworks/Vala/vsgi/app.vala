@@ -30,4 +30,7 @@ public class App : Handler
 	}
 }
 
-Server.new ("http", handler: new App ()).run ();
+int main (string[] args)
+{
+	return Server.new ("http", handler: new App ()).run (args);
+}

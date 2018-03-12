@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MESON_VERSION="0.40.1"
+MESON_VERSION="0.44.0"
 
 fw_depends python3
 
