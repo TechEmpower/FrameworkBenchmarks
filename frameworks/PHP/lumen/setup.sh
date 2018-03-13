@@ -1,16 +1,11 @@
 #!/bin/bash
 
-sed -i 's|localhost|'"${DBHOST}"'|g' .env
-sed -i 's|root .*/FrameworkBenchmarks/lumen|root '"${TROOT}"'|g' deploy/nginx.conf
-sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
+fw_depends mysql php7 nginx composer
 
-fw_depends mysql php5 nginx composer
+sed -i 's|__DBHOST__|'${DBHOST}'|g' .env
 
-rm vendor/illuminate/view/FileViewFinder.php
-cp modifiedVendorFiles/FileViewFinder.php vendor/illuminate/view/
-rm vendor/laravel/lumen-framework/src/Application.php
-cp modifiedVendorFiles/Application.php vendor/laravel/lumen-framework/src/
-touch vendor/laravel/lumen-framework/storage/logs/lumen.log
+sed -i 's|__IROOT__|'${IROOT}'|g' deploy/nginx.conf
+sed -i 's|__TROOT__|'${TROOT}'|g' deploy/nginx.conf
 
-php-fpm --fpm-config $FWROOT/toolset/setup/linux/languages/php/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
-nginx -c $TROOT/deploy/nginx.conf
+php-fpm --fpm-config ${FWROOT}/toolset/setup/linux/languages/php/php-fpm.conf -g ${TROOT}/deploy/php-fpm.pid
+nginx -c ${TROOT}/deploy/nginx.conf
