@@ -196,14 +196,13 @@ def stop(config, database_container_id, test, out):
         pass
     # Stop the database container
     if database_container_id:
-        p = subprocess.Popen(
-            config.database_ssh_string,
-            stdin=subprocess.PIPE,
-            shell=True,
-            stdout=config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate("docker stop %s" % database_container_id)
+        command = list(config.database_ssh_command)
+        command.extend(['docker', 'stop', database_container_id])
+        subprocess.check_call(command)
     client.images.prune()
+    client.containers.prune()
+    client.networks.prune()
+    client.volumes.prune()
 
 
 def find(path, pattern):
@@ -230,13 +229,9 @@ def start_database(config, database):
             return False
         return len(s) % 2 == 0
 
-    p = subprocess.Popen(
-        config.database_ssh_string,
-        stdin=subprocess.PIPE,
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
-    out = p.communicate("docker images  -q %s" % database)[0]
+    command = list(config.database_ssh_command)
+    command.extend(['docker', 'images', '-q', database])
+    out = subprocess.check_output(command)
     dbid = ''
     if len(out.splitlines()) > 0:
         dbid = out.splitlines()[len(out.splitlines()) - 1]
@@ -245,7 +240,7 @@ def start_database(config, database):
     # fe12ca519b47, and we do not want to rebuild if it exists
     if len(dbid) != 12 and not __is_hex(dbid):
 
-        def __scp_string(files):
+        def __scp_command(files):
             scpstr = ["scp", "-i", config.database_identity_file]
             for file in files:
                 scpstr.append(file)
@@ -253,43 +248,29 @@ def start_database(config, database):
                                            config.database_host, database))
             return scpstr
 
-        p = subprocess.Popen(
-            config.database_ssh_string,
-            shell=True,
-            stdin=subprocess.PIPE,
-            stdout=config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate("mkdir -p %s" % database)
+        command = list(config.database_ssh_command)
+        command.extend(['mkdir', '-p', database])
+        subprocess.check_call(command)
         dbpath = os.path.join(config.fwroot, "toolset", "setup", "docker",
                               "databases", database)
         dbfiles = ""
         for dbfile in os.listdir(dbpath):
             dbfiles += "%s " % os.path.join(dbpath, dbfile)
-        p = subprocess.Popen(
-            __scp_string(dbfiles.split()),
-            stdin=subprocess.PIPE,
-            stdout=config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate()
-        p = subprocess.Popen(
-            config.database_ssh_string,
-            shell=True,
-            stdin=subprocess.PIPE,
-            stdout=config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate("docker build -f ~/%s/%s.dockerfile -t %s ~/%s" %
-                      (database, database, database, database))
-        if p.returncode != 0:
-            return None
+        subprocess.check_call(__scp_command(dbfiles.split()))
 
-    p = subprocess.Popen(
-        config.database_ssh_string,
-        stdin=subprocess.PIPE,
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
-    out = p.communicate("docker run -d --rm --network=host %s" % database)[0]
-    return out.splitlines()[len(out.splitlines()) - 1]
+        command = list(config.database_ssh_command)
+        command.extend([
+            'docker', 'build', '-f',
+            '~/%s/%s.dockerfile' % (database, database), '-t', database,
+            '~/%s' % database
+        ])
+        subprocess.check_call(command)
+
+    command = list(config.database_ssh_command)
+    command.extend(
+        ['docker', 'run', '-d', '--rm', '--init', '--network=host', database])
+    pid = subprocess.check_output(command).strip()
+    return pid
 
 
 def __gather_dependencies(docker_file):

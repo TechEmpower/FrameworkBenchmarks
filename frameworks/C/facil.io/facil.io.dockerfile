@@ -18,4 +18,4 @@ RUN cp -f bench_app.c facil_app/src/app.c
 RUN cd facil_app && make -j build
 
 # Run the app
-CMD ["./facil_app/tmp/demo", "-p", "8080", "-db \"TFB-database\"", "-w", "-1", "-t", "-1"]
+CMD ./facil_app/tmp/demo -p 8080 -db "TFB-database" -w 4 -t $(( CPU_COUNT >4 ? (CPU_COUNT/4) : 1))

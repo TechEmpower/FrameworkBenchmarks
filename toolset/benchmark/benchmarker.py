@@ -106,7 +106,7 @@ class Benchmarker:
                     # Run the benchmark
                     with open(raw_file, 'w') as raw_file:
                         p = subprocess.Popen(
-                            self.config.client_ssh_string.split(" "),
+                            self.config.client_ssh_command,
                             stdin=subprocess.PIPE,
                             stdout=raw_file,
                             stderr=raw_file)
@@ -236,13 +236,9 @@ class Benchmarker:
         kernel.shm*: http://seriousbirder.com/blogs/linux-understanding-shmmax-and-shmall-settings/
         For kernel.sem: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/5/html/Tuning_and_Optimizing_Red_Hat_Enterprise_Linux_for_Oracle_9i_and_10g_Databases/chap-Oracle_9i_and_10g_Tuning_Guide-Setting_Semaphores.html
         '''
-        p = subprocess.Popen(
-            self.config.database_ssh_string,
-            stdin=subprocess.PIPE,
-            shell=True,
-            stdout=self.config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate("""
+        command = list(self.config.database_ssh_command)
+        command.extend([
+            """
             sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
             sudo sysctl -w net.core.somaxconn=65535
             sudo sysctl -w kernel.sched_autogroup_enabled=0
@@ -252,7 +248,9 @@ class Benchmarker:
             sudo sysctl -w kernel.shmmax=2147483648
             sudo sysctl -w kernel.shmall=2097152
             sudo sysctl -w kernel.sem="250 32000 256 512"
-        """)
+            """
+        ])
+        subprocess.check_call(command)
         # TODO - print kernel configuration to file
         # echo "Printing kernel configuration:" && sudo sysctl -a
 
@@ -262,13 +260,9 @@ class Benchmarker:
         before running the tests. Is very similar to the server setup, but may also 
         include client specific changes.
         '''
-        p = subprocess.Popen(
-            self.config.client_ssh_string,
-            stdin=subprocess.PIPE,
-            shell=True,
-            stdout=self.config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate("""
+        command = list(self.config.client_ssh_command)
+        command.extend([
+            """
             sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
             sudo sysctl -w net.core.somaxconn=65535
             sudo -s ulimit -n 65535
@@ -276,7 +270,8 @@ class Benchmarker:
             sudo sysctl net.ipv4.tcp_tw_recycle=1
             sudo sysctl -w kernel.shmmax=2147483648
             sudo sysctl -w kernel.shmall=2097152
-        """)
+            """
+        ])
 
     def __run_tests(self, tests):
         '''
