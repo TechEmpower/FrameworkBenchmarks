@@ -25,10 +25,10 @@ Currently implemented test types are Plaintext and JSON. Their implementation co
 
 The `async` profile is activated by default.
 
-* Plaintext - `http://localhost:8080/servlet3/plaintext`
-* JSON - `http://localhost:8080/servlet3/json`
+* Plaintext - `http://localhost:8080/plaintext`
+* JSON - `http://localhost:8080/json`
 
 ### `sync` Maven profile
 
-* Plaintext - `http://localhost:8080/servlet3/plaintext`
-* JSON - `http://localhost:8080/servlet3/json`
+* Plaintext - `http://localhost:8080/plaintext`
+* JSON - `http://localhost:8080/json`
