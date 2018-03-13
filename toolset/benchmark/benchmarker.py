@@ -399,16 +399,17 @@ class Benchmarker:
                 slept = 0
                 max_sleep = 60
                 while not test.is_running() and slept < max_sleep:
+                    if not docker_helper.successfully_running_containers(
+                            test.get_docker_files(), database_container_id,
+                            out):
+                        tee_output(
+                            out,
+                            "ERROR: One or more expected docker container exited early"
+                            + os.linesep)
+                        return sys.exit(1)
+
                     time.sleep(1)
                     slept += 1
-
-                if not docker_helper.successfully_running_containers(
-                        test.get_docker_files(), database_container_id, out):
-                    tee_output(
-                        out,
-                        "ERROR: One or more expected docker container exited early"
-                        + os.linesep)
-                    return sys.exit(1)
 
                 # Debug mode blocks execution here until ctrl+c
                 if self.config.mode == "debug":
