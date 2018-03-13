@@ -72,12 +72,20 @@ class BenchmarkConfig:
         else:
             self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
 
-        # Setup the ssh command string
-        self.database_ssh_string = "ssh -T -o StrictHostKeyChecking=no " + self.database_user + "@" + self.database_host
-        self.client_ssh_string = "ssh -T -o StrictHostKeyChecking=no " + self.client_user + "@" + self.client_host
-        if self.database_identity_file != None:
-            self.database_ssh_string = self.database_ssh_string + " -i " + self.database_identity_file
+        # Setup the ssh commands
+        self.client_ssh_command = [
+            'ssh', '-T', 'o', 'StrictHostKeyChecking=no',
+            self.client_user + "@" + self.client_host
+        ]
         if self.client_identity_file != None:
-            self.client_ssh_string = self.client_ssh_string + " -i " + self.client_identity_file
+            self.client_ssh_command.extend(['-i', self.client_identity_file])
+
+        self.database_ssh_command = [
+            'ssh', '-T', '-o', 'StrictHostKeyChecking=no',
+            self.database_user + "@" + self.database_host
+        ]
+        if self.database_identity_file != None:
+            self.database_ssh_command.extend(
+                ['-i', self.database_identity_file])
 
         self.run_test_timeout_seconds = 7200

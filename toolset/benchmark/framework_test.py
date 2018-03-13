@@ -74,7 +74,7 @@ class FrameworkTest:
 
     def verify_urls(self, logPath):
         '''
-        Verifys each of the URLs for this test. THis will sinply curl the URL and 
+        Verifys each of the URLs for this test. This will simply curl the URL and 
         check for it's return status. For each url, a flag will be set on this 
         object for whether or not it passed.
         Returns True if all verifications succeeded
