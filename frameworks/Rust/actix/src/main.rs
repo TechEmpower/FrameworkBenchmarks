@@ -127,12 +127,11 @@ fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
 
 fn main() {
     let sys = System::new("techempower");
-    let dbhost = match option_env!("DBHOST") {
-        Some(it) => it,
-        _ => "127.0.0.1"
-    };
-    let db_url = format!(
-        "postgres://benchmarkdbuser:benchmarkdbpass@{}/hello_world", dbhost);
+    let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@TFB-database/hello_world";
+
+    // Avoid triggering "FATAL: the database system is starting up" error from postgres.
+    // TODO: Fix that problem in the TFB toolset, remove this sleep.
+    std::thread::sleep(std::time::Duration::from_secs(5));
 
     // Start db executor actors
     let addr = SyncArbiter::start(

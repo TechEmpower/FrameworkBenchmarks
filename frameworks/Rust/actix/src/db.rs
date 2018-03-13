@@ -1,5 +1,5 @@
 //! Db executor actor
-use std::{io, thread, time};
+use std::io;
 use rand::{thread_rng, Rng, ThreadRng};
 use actix::prelude::*;
 use diesel;
@@ -21,24 +21,10 @@ impl Actor for DbExecutor {
 
 impl DbExecutor {
     pub fn new(db_url: &str) -> DbExecutor {
-        // Attempt to work around "FATAL: the database system is starting up"
-        // error seen in Travis+Docker+PostgreSQL environment.
-        let mut i = 0;
-        loop {
-            let connection_result = PgConnection::establish(db_url);
-            if connection_result.is_ok() {
-                return DbExecutor {
-                    conn: connection_result.unwrap(),
-                    rng: thread_rng()
-                }
-            }
-            i = i + 1;
-            if i >= 10 {
-                // intentional panic
-                connection_result.unwrap();
-            }
-            thread::sleep(time::Duration::from_secs(1));
-        }
+        DbExecutor{
+            conn: PgConnection::establish(db_url)
+                .expect(&format!("Error connecting to {}", db_url)),
+            rng: thread_rng()}
     }
 }
 
