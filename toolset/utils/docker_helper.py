@@ -200,6 +200,9 @@ def stop(config, database_container_id, test, out):
         command.extend(['docker', 'stop', database_container_id])
         subprocess.check_call(command)
     client.images.prune()
+    client.containers.prune()
+    client.networks.prune()
+    client.volumes.prune()
 
 
 def find(path, pattern):
