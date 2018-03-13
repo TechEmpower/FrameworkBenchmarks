@@ -1,5 +1,5 @@
 {
-  "framework": "actframework",
+  "framework": "act",
   "tests": [{
       "default": {
       "json_url": "/json",
