@@ -34,7 +34,8 @@ impl DbExecutor {
             }
             i = i + 1;
             if i >= 10 {
-                panic!(connection_result.unwrap_err().description());
+                // intentional panic
+                connection_result.unwrap();
             }
             thread::sleep(time::Duration::from_secs(1));
         }
