@@ -1,0 +1,21 @@
+{
+    "framework": "jester",
+    "tests": [{
+        "default": {
+            "setup_file": "setup",
+            "plaintext_url": "/plaintext",
+            "port": 8080,
+            "approach": "Realistic",
+            "classification": "Micro",
+            "database": "None",
+            "framework": "mofuw",
+            "language": "Nim",
+            "orm": "Raw",
+            "platform": "Nim",
+            "webserver": "mofuw",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "mofuw"
+        }
+    }]
+}
