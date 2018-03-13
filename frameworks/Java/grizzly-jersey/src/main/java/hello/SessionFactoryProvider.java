@@ -22,11 +22,11 @@ public class SessionFactoryProvider
 
   private static SessionFactory createSessionFactory(ResourceConfig rc) {
     Configuration configuration = new Configuration().configure();
-    String url = configuration.getProperty("hibernate.hikari.dataSource.url");
-    url = url.replace(
-        "//localhost:3306/",
-        "//" + rc.getProperty("dbhost") + ":" + rc.getProperty("dbport") + "/");
-    configuration.setProperty("hibernate.hikari.dataSource.url", url);
+//    String url = configuration.getProperty("hibernate.hikari.dataSource.url");
+//    url = url.replace(
+//        "//localhost:3306/",
+//        "//" + rc.getProperty("dbhost") + ":" + rc.getProperty("dbport") + "/");
+//    configuration.setProperty("hibernate.hikari.dataSource.url", url);
     configuration.addAnnotatedClass(World.class);
     configuration.addAnnotatedClass(Fortune.class);
     StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
