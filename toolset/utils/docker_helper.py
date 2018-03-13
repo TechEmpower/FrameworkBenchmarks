@@ -5,6 +5,7 @@ import subprocess
 import multiprocessing
 import json
 import docker
+import time
 
 from threading import Thread
 
@@ -12,6 +13,7 @@ from toolset.utils import setup_util
 from toolset.utils.output_helper import tee_output
 from toolset.utils.metadata_helper import gather_tests
 from toolset.utils.ordered_set import OrderedSet
+from toolset.utils.database_helper import test_database
 
 
 def clean():
@@ -123,7 +125,7 @@ def build(benchmarker_config, test_names, out):
     return 0
 
 
-def run(benchmarker_config, docker_files, database_container_id, out):
+def run(benchmarker_config, docker_files, out):
     '''
     Run the given Docker container(s)
     '''
@@ -162,6 +164,15 @@ def run(benchmarker_config, docker_files, database_container_id, out):
             print(e)
             return 1
 
+    return 0
+
+
+def successfully_running_containers(docker_files, database_container_id, out):
+    '''
+    Returns whether all the expected containers for the given docker_files are
+    running.
+    '''
+    client = docker.from_env()
     running_container_length = len(
         client.containers.list(filters={'status': 'running'}))
     expected_length = len(docker_files)
@@ -174,9 +185,8 @@ def run(benchmarker_config, docker_files, database_container_id, out):
                                           running_container.image, os.linesep))
         tee_output(out, "Excepted %s running containers; saw %s%s" %
                    (running_container_length, expected_length, os.linesep))
-        return 1
-
-    return 0
+        return False
+    return True
 
 
 def stop(config, database_container_id, test, out):
@@ -269,8 +279,16 @@ def start_database(config, database):
     command = list(config.database_ssh_command)
     command.extend(
         ['docker', 'run', '-d', '--rm', '--init', '--network=host', database])
-    pid = subprocess.check_output(command).strip()
-    return pid
+    docker_id = subprocess.check_output(command).strip()
+
+    # Sleep until the database accepts connections
+    slept = 0
+    max_sleep = 60
+    while not test_database(config, database) and slept < max_sleep:
+        time.sleep(1)
+        slept += 1
+
+    return docker_id
 
 
 def __gather_dependencies(docker_file):

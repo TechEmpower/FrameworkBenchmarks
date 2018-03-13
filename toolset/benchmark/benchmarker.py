@@ -1,4 +1,4 @@
-from toolset.utils.output_helper import header
+from toolset.utils.output_helper import header, tee_output
 from toolset.utils.metadata_helper import gather_tests, gather_remaining_tests
 from toolset.utils import docker_helper
 
@@ -396,20 +396,31 @@ class Benchmarker:
                                                     "ERROR: Problem starting")
                     return sys.exit(1)
 
-                logging.info("Sleeping %s seconds to ensure framework is ready"
-                             % self.config.sleep)
-                time.sleep(self.config.sleep)
+                slept = 0
+                max_sleep = 60
+                while not test.is_running() and slept < max_sleep:
+                    time.sleep(1)
+                    slept += 1
 
-                # Verify URLs
+                if not docker_helper.successfully_running_containers(
+                        test.get_docker_files(), database_container_id, out):
+                    tee_output(
+                        out,
+                        "ERROR: One or more expected docker container exited early"
+                        + os.linesep)
+                    return sys.exit(1)
+
+                # Debug mode blocks execution here until ctrl+c
                 if self.config.mode == "debug":
                     logging.info(
                         "Entering debug mode. Server has started. CTRL-c to stop."
                     )
                     while True:
                         time.sleep(1)
-                else:
-                    logging.info("Verifying framework URLs")
-                    passed_verify = test.verify_urls(logDir)
+
+                # Verify URLs
+                logging.info("Verifying framework URLs")
+                passed_verify = test.verify_urls(logDir)
 
                 # Benchmark this test
                 if self.config.mode == "benchmark":

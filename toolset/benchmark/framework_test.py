@@ -57,6 +57,42 @@ class FrameworkTest:
         '''
         Start the test implementation
         '''
+        test_docker_files = self.get_docker_files()
+
+        result = docker_helper.build(self.benchmarker_config, [self.name], out)
+        if result != 0:
+            return result
+
+        return docker_helper.run(self.benchmarker_config, test_docker_files,
+                                 out)
+
+    def is_running(self):
+        '''
+        Determines whether this test implementation is up and accepting 
+        requests.
+        '''
+        test_type = None
+        for any_type in self.runTests:
+            test_type = any_type
+            break
+
+        url = "http://%s:%s/%s" % (self.benchmarker_config.server_host,
+                                   self.port,
+                                   self.runTests[test_type].get_url())
+
+        try:
+            FNULL = open(os.devnull, 'w')
+            subprocess.check_call(
+                ['curl', '-sSfl', url], stdout=FNULL, stderr=subprocess.STDOUT)
+        except:
+            return False
+
+        return True
+
+    def get_docker_files(self):
+        '''
+        Returns all the docker_files for this test.
+        '''
         test_docker_files = ["%s.dockerfile" % self.name]
         if self.docker_files is not None:
             if type(self.docker_files) is list:
@@ -65,12 +101,7 @@ class FrameworkTest:
                 raise Exception(
                     "docker_files in benchmark_config.json must be an array")
 
-        result = docker_helper.build(self.benchmarker_config, [self.name], out)
-        if result != 0:
-            return result
-
-        return docker_helper.run(self.benchmarker_config, test_docker_files,
-                                 database_container_id, out)
+        return test_docker_files
 
     def verify_urls(self, logPath):
         '''
