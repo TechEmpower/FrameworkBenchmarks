@@ -34,7 +34,7 @@ impl DbExecutor {
             }
             i = i + 1;
             if i >= 10 {
-                panic!(&format!("Error connecting to {}", db_url));
+                panic!(connection_result.unwrap_err().description());
             }
             thread::sleep(time::Duration::from_secs(1));
         }
