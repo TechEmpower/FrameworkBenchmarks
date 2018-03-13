@@ -119,7 +119,10 @@ fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
                        .content_encoding(headers::ContentEncoding::Identity)
                        .body(res)?)
                 },
-                Err(_) => Ok(httpcodes::HTTPInternalServerError.into())
+                Err(e) => {
+                    println!("fortune error: {}", e);
+                    Ok(httpcodes::HTTPInternalServerError.into())
+                }
             }
         })
         .responder()
