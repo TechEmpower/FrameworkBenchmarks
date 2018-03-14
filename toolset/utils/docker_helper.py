@@ -187,7 +187,8 @@ def successfully_running_containers(docker_files, out):
     for image_name in expected_running_container_images:
         if image_name not in running_container_images:
             tee_output(out,
-                       "ERROR: Expected tfb/test/%s to be running container")
+                       "ERROR: Expected tfb/test/%s to be running container" %
+                       image_name)
             return False
     return True
 
