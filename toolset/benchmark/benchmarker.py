@@ -52,7 +52,7 @@ class Benchmarker:
 
         # Run tests
         print(header("Running Tests...", top='=', bottom='='))
-        result = self.__run_tests(all_tests)
+        self.__run_tests(all_tests)
 
         # Parse results
         if self.config.mode == "benchmark":
@@ -62,7 +62,6 @@ class Benchmarker:
         self.results.set_completion_time()
         self.results.upload()
         self.results.finish()
-        return result
 
     ##########################################################################################
     # Private methods
@@ -283,29 +282,15 @@ class Benchmarker:
         logging.debug("Start __run_tests.")
         logging.debug("__name__ = %s", __name__)
 
-        error_happened = False
-        if self.config.os.lower() == 'windows':
-            logging.debug("Executing __run_tests on Windows")
-            for test in tests:
-                with self.config.quiet_out.enable():
-                    if self.__run_test(test) != 0:
-                        error_happened = True
-        else:
-            logging.debug("Executing __run_tests on Linux")
-
-            # These features do not work on Windows
-            for test in tests:
-                print(header("Running Test: %s" % test.name))
-                with self.config.quiet_out.enable():
-                    self.__run_test(test)
-                # Load intermediate result from child process
-                self.results.load()
+        # These features do not work on Windows
+        for test in tests:
+            print(header("Running Test: %s" % test.name))
+            with self.config.quiet_out.enable():
+                self.__run_test(test)
+            # Load intermediate result from child process
+            self.results.load()
 
         logging.debug("End __run_tests.")
-
-        if error_happened:
-            return 1
-        return 0
 
     def __run_test(self, test):
         '''
@@ -325,14 +310,14 @@ class Benchmarker:
                 out.write(
                     "OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.\n"
                 )
-                return sys.exit(0)
+                return
 
             # If the test is in the excludes list, we skip it
             if self.config.exclude != None and test.name in self.config.exclude:
                 out.write(
                     "Test {name} has been added to the excludes list. Skipping.\n".
                     format(name=test.name))
-                return sys.exit(0)
+                return
 
             database_container_id = None
             try:
@@ -349,7 +334,7 @@ class Benchmarker:
                             % (test.port, test.name)))
                     out.flush()
                     print("Error: Unable to recover port, cannot start test")
-                    return sys.exit(1)
+                    return
 
                 # Start database container
                 if test.database.lower() != "none":
@@ -362,7 +347,7 @@ class Benchmarker:
                         out.flush()
                         self.results.write_intermediate(
                             test.name, "ERROR: Problem starting")
-                        return sys.exit(1)
+                        return
 
                 # Start webapp
                 result = test.start(out, database_container_id)
@@ -374,7 +359,7 @@ class Benchmarker:
                     out.flush()
                     self.results.write_intermediate(test.name,
                                                     "ERROR: Problem starting")
-                    return sys.exit(1)
+                    return
 
                 slept = 0
                 max_sleep = 60
@@ -387,7 +372,7 @@ class Benchmarker:
                             out,
                             "ERROR: One or more expected docker container exited early"
                             + os.linesep)
-                        return sys.exit(1)
+                        return
                     time.sleep(1)
                     slept += 1
 
@@ -434,7 +419,7 @@ class Benchmarker:
 
                 if self.config.mode == "verify" and not passed_verify:
                     print("Failed verify!")
-                    return sys.exit(1)
+                    return
             except KeyboardInterrupt:
                 docker_helper.stop(self.config, database_container_id, test)
             except (OSError, IOError, subprocess.CalledProcessError) as e:
@@ -445,10 +430,9 @@ class Benchmarker:
                 traceback.print_exc(file=out)
                 out.flush()
                 out.close()
-                return sys.exit(1)
+                return
 
             out.close()
-            return sys.exit(0)
 
     def __is_port_bound(self, port):
         '''

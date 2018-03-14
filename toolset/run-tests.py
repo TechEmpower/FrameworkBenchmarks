@@ -80,12 +80,6 @@ def main(argv=None):
     # Enable unbuffered output so messages will appear in the proper order with subprocess output.
     sys.stdout = Unbuffered(sys.stdout)
 
-    # Update python environment
-    # 1) Ensure the current directory (which should be the benchmark home directory) is in the path so that the tests can be imported.
-    sys.path.append('.')
-    # 2) Ensure toolset/setup/linux is in the path so that the tests can "import setup_util".
-    sys.path.append('toolset/setup/linux')
-
     # Update environment for shell scripts
     os.environ['FWROOT'] = setup_util.get_fwroot()
     os.environ['IROOT'] = os.environ['FWROOT'] + '/installs'
@@ -312,7 +306,7 @@ def main(argv=None):
 
     else:
         benchmarker = Benchmarker(config, results)
-        return benchmarker.run()
+        benchmarker.run()
 
     return 0
 
