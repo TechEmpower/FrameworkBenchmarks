@@ -4,7 +4,7 @@ fw_depends nim
 
 fw_installed nimble && return 0
   
-NIMBLE_VERSION="0.6.2"
+NIMBLE_VERSION="0.8.10"
 
 cd $NIM_HOME
 # nim's package manager

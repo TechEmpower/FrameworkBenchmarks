@@ -2,8 +2,8 @@
 
 fw_installed nim && return 0
 
-NIM_VERSION="0.11.2"
-NIM_CSOURCES="6bf2282"
+NIM_VERSION="0.18.0"
+NIM_CSOURCES="da97f85"
 
 fw_get -O https://github.com/nim-lang/Nim/archive/v$NIM_VERSION.tar.gz
 fw_untar v$NIM_VERSION.tar.gz
