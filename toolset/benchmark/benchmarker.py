@@ -394,6 +394,8 @@ class Benchmarker:
                     out.flush()
                     self.results.write_intermediate(test.name,
                                                     "ERROR: Problem starting")
+                    docker_helper.stop(self.config, database_container_id,
+                                       test, out)
                     return sys.exit(1)
 
                 slept = 0
@@ -406,6 +408,8 @@ class Benchmarker:
                             out,
                             "ERROR: One or more expected docker container exited early"
                             + os.linesep)
+                        docker_helper.stop(self.config, database_container_id,
+                                           test, out)
                         return sys.exit(1)
 
                     time.sleep(1)
