@@ -13,14 +13,14 @@
     <maven.compiler.source>9</maven.compiler.source>
     <maven.compiler.target>9</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <hikaricp.version>2.7.7</hikaricp.version>
+    <hikaricp.version>2.7.8</hikaricp.version>
     <jackson.version>2.9.4</jackson.version>
     <maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
     <mongodb.version>3.6.3</mongodb.version>
     <mustache.version>0.9.5</mustache.version>
-    <mysql.version>5.1.45</mysql.version>
+    <mysql.version>5.1.46</mysql.version>
     <postgresql.version>42.2.1</postgresql.version>
-    <undertow.version>1.4.22.Final</undertow.version>
+    <undertow.version>2.0.1.Final</undertow.version>
     <versions-maven-plugin.version>2.4</versions-maven-plugin.version>
   </properties>
 
