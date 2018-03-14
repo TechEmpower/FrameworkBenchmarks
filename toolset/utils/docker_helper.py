@@ -167,25 +167,26 @@ def run(benchmarker_config, docker_files, out):
     return 0
 
 
-def successfully_running_containers(docker_files, database_container_id, out):
+def successfully_running_containers(docker_files, out):
     '''
     Returns whether all the expected containers for the given docker_files are
     running.
     '''
     client = docker.from_env()
-    running_container_length = len(
-        client.containers.list(filters={'status': 'running'}))
-    expected_length = len(docker_files)
-    if database_container_id is not None:
-        expected_length = expected_length + 1
-    if (running_container_length != expected_length):
-        tee_output(out, "Running Containers (id, name):" + os.linesep)
-        for running_container in client.containers.list():
-            tee_output(out, "%s, %s%s" % (running_container.short_id,
-                                          running_container.image, os.linesep))
-        tee_output(out, "Expected %s running containers; saw %s%s" %
-                   (expected_length, running_container_length, os.linesep))
-        return False
+    expected_running_container_images = []
+    for docker_file in docker_files:
+        # 'gemini.dockerfile' -> 'gemini'
+        image_tag = docker_file.split('.')[0]
+        expected_running_container_images.append(image_tag)
+    running_container_images = []
+    for container in client.containers.list():
+        # 'tfb/test/gemini:latest' -> 'gemini'
+        image_tag = container.image.tags[0].split(':')[0][9:]
+        running_container_images.append(image_tag)
+
+    for image_name in expected_running_container_images:
+        if image_name not in running_container_images:
+            return False
     return True
 
 

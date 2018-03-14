@@ -399,8 +399,7 @@ class Benchmarker:
                 max_sleep = 60
                 while not test.is_running() and slept < max_sleep:
                     if not docker_helper.successfully_running_containers(
-                            test.get_docker_files(), database_container_id,
-                            out):
+                            test.get_docker_files(), out):
                         docker_helper.stop(self.config, database_container_id,
                                            test, out)
                         tee_output(
