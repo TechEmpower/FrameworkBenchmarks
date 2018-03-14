@@ -5,6 +5,7 @@ import sys
 import os
 import platform
 import multiprocessing
+import signal
 from toolset.benchmark.benchmarker import Benchmarker
 from toolset.utils import setup_util
 from toolset.utils.unbuffered import Unbuffered
@@ -47,6 +48,17 @@ class StoreSeqAction(argparse.Action):
             result.remove(sequence)
             result = result + range(int(start), int(end), int(step))
         return [abs(int(item)) for item in result]
+
+
+def __stop(signal, frame):
+    '''
+    Method called on SIGTERM to stop all running containers 
+    '''
+    docker_helper.stop()
+    sys.exit(0)
+
+
+signal.signal(signal.SIGTERM, __stop)
 
 
 ###################################################################################################

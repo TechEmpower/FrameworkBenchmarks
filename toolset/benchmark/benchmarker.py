@@ -13,8 +13,6 @@ import json
 import shlex
 from pprint import pprint
 
-from multiprocessing import Process
-
 
 class Benchmarker:
     def __init__(self, config, results):
@@ -299,26 +297,9 @@ class Benchmarker:
             for test in tests:
                 print(header("Running Test: %s" % test.name))
                 with self.config.quiet_out.enable():
-                    test_process = Process(
-                        target=self.__run_test,
-                        name="Test Runner (%s)" % test.name,
-                        args=(test, ))
-                    test_process.start()
-                    test_process.join(self.config.run_test_timeout_seconds)
+                    self.__run_test(test)
                 # Load intermediate result from child process
                 self.results.load()
-                if (test_process.is_alive()):
-                    logging.debug(
-                        "Child process for {name} is still alive. Terminating.".
-                        format(name=test.name))
-                    self.results.write_intermediate(
-                        test.name, "__run_test timeout (=" +
-                        str(self.config.run_test_timeout_seconds) +
-                        " seconds)")
-                    test_process.terminate()
-                    test_process.join()
-                if test_process.exitcode != 0:
-                    error_happened = True
 
         logging.debug("End __run_tests.")
 
