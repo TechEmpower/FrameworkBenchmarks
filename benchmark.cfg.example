@@ -21,7 +21,6 @@ pipeline_concurrency_levels=[256,1024,4096,16384]
 query_levels=[1,5,10,15,20]
 cached_query_levels=[1,10,20,50,100]
 mode=benchmark
-sleep=60
 test=None
 type=all
 verbose=True
