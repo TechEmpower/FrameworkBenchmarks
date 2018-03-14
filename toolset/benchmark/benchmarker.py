@@ -388,7 +388,6 @@ class Benchmarker:
                 if result != 0:
                     docker_helper.stop(self.config, database_container_id,
                                        test, out)
-                    time.sleep(5)
                     out.write("ERROR: Problem starting {name}\n".format(
                         name=test.name))
                     out.flush()
@@ -402,12 +401,13 @@ class Benchmarker:
                     if not docker_helper.successfully_running_containers(
                             test.get_docker_files(), database_container_id,
                             out):
+                        docker_helper.stop(self.config, database_container_id,
+                                           test, out)
                         tee_output(
                             out,
                             "ERROR: One or more expected docker container exited early"
                             + os.linesep)
                         return sys.exit(1)
-
                     time.sleep(1)
                     slept += 1
 
