@@ -127,8 +127,8 @@ impl Handler<TellFortune> for DbExecutor {
                 items.sort_by(|it, next| it.message.cmp(&next.message));
                 Ok(items)
             }
-            Err(_) =>
-                Err(io::Error::new(io::ErrorKind::Other, "Databse error"))
+            Err(e) =>
+                Err(io::Error::new(io::ErrorKind::Other, e))
         }
     }
 }
