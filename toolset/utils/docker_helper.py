@@ -183,8 +183,8 @@ def successfully_running_containers(docker_files, database_container_id, out):
         for running_container in client.containers.list():
             tee_output(out, "%s, %s%s" % (running_container.short_id,
                                           running_container.image, os.linesep))
-        tee_output(out, "Excepted %s running containers; saw %s%s" %
-                   (running_container_length, expected_length, os.linesep))
+        tee_output(out, "Expected %s running containers; saw %s%s" %
+                   (expected_length, running_container_length, os.linesep))
         return False
     return True
 
