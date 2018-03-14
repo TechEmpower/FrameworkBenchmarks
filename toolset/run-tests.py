@@ -281,7 +281,7 @@ def main(argv=None):
 
     elif config.clean:
         cleaner.clean(results)
-        docker_helper.clean()
+        docker_helper.clean(config)
 
     elif config.list_tests:
         all_tests = gather_tests(benchmarker_config=config)

@@ -16,10 +16,11 @@ from toolset.utils.ordered_set import OrderedSet
 from toolset.utils.database_helper import test_database
 
 
-def clean():
+def clean(config):
     '''
     Cleans all the docker images from the system
     '''
+    # Clean the app server images
     subprocess.check_call(["docker", "image", "prune", "-f"])
 
     docker_ids = subprocess.check_output(["docker", "images",
@@ -28,6 +29,24 @@ def clean():
         subprocess.check_call(["docker", "image", "rmi", "-f", docker_id])
 
     subprocess.check_call(["docker", "system", "prune", "-a", "-f"])
+
+    # Clean the database server images
+    command = list(config.database_ssh_command)
+    command.extend(["docker", "image", "prune", "-f"])
+    subprocess.check_call(command)
+
+    command = list(config.database_ssh_command)
+    command.extend(["docker", "images", "-q"])
+    docker_ids = subprocess.check_output(command).splitlines()
+
+    for docker_id in docker_ids:
+        command = list(config.database_ssh_command)
+        command.extend(["docker", "image", "rmi", "-f", docker_id])
+        subprocess.check_call(command)
+
+    command = list(config.database_ssh_command)
+    command.extend(["docker", "system", "prune", "-a", "-f"])
+    subprocess.check_call(command)
 
 
 def build(benchmarker_config, test_names, out):
