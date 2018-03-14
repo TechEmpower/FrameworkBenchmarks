@@ -74,7 +74,7 @@ class BenchmarkConfig:
 
         # Setup the ssh commands
         self.client_ssh_command = [
-            'ssh', '-T', 'o', 'StrictHostKeyChecking=no',
+            'ssh', '-T', '-o', 'StrictHostKeyChecking=no',
             self.client_user + "@" + self.client_host
         ]
         if self.client_identity_file != None:
