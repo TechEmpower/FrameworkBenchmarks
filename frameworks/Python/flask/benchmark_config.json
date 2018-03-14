@@ -2,7 +2,6 @@
   "framework": "flask",
   "tests": [{
     "default": {
-      "setup_file": "setup_py3",
       "json_url": "/json",
       "db_url": "/dbs",
       "query_url": "/db?queries=",
@@ -26,7 +25,6 @@
       "versus": "wsgi"
     },
     "raw": {
-      "setup_file": "setup_py3",
       "db_url": "/dbsraw",
       "query_url": "/dbraw?queries=",
       "fortune_url": "/fortunesraw",
@@ -48,7 +46,6 @@
       "versus": "wsgi"
     },
     "pypy2": {
-      "setup_file": "setup_pypy2",
       "json_url": "/json",
       "db_url": "/dbs",
       "query_url": "/db?queries=",
@@ -94,7 +91,6 @@
       "versus": "wsgi"
     },
     "nginx-uwsgi": {
-      "setup_file": "setup_nginxuwsgi",
       "json_url": "/json",
       "db_url": "/dbs",
       "query_url": "/db?queries=",
