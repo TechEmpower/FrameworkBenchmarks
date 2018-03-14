@@ -8,8 +8,8 @@ JESTER=$IROOT/jester
 
 git clone https://github.com/dom96/jester.git
 cd jester
-# 2015-06-25
-git checkout 71b8cc069a0d271d619c2dc41bc6479047885587
+# 2018-02-28
+git checkout 86744f7dff56522c9baa1b4f4381db44044abd9f
 nimble update
 # If ~/.nimble/pkgs/jester exists, write over it.
 echo 'y' | nimble install
