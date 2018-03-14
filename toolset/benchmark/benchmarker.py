@@ -387,7 +387,7 @@ class Benchmarker:
                 result = test.start(out, database_container_id)
                 if result != 0:
                     docker_helper.stop(self.config, database_container_id,
-                                       test, out)
+                                       test)
                     out.write("ERROR: Problem starting {name}\n".format(
                         name=test.name))
                     out.flush()
@@ -401,7 +401,7 @@ class Benchmarker:
                     if not docker_helper.successfully_running_containers(
                             test.get_docker_files(), out):
                         docker_helper.stop(self.config, database_container_id,
-                                           test, out)
+                                           test)
                         tee_output(
                             out,
                             "ERROR: One or more expected docker container exited early"
@@ -430,8 +430,7 @@ class Benchmarker:
                     self.__benchmark(test, logDir)
 
                 # Stop this test
-                docker_helper.stop(self.config, database_container_id, test,
-                                   out)
+                docker_helper.stop(self.config, database_container_id, test)
 
                 # Remove contents of  /tmp folder
                 try:
@@ -456,8 +455,7 @@ class Benchmarker:
                     print("Failed verify!")
                     return sys.exit(1)
             except KeyboardInterrupt:
-                docker_helper.stop(self.config, database_container_id, test,
-                                   out)
+                docker_helper.stop(self.config, database_container_id, test)
             except (OSError, IOError, subprocess.CalledProcessError) as e:
                 traceback.print_exc()
                 self.results.write_intermediate(

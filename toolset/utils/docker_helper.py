@@ -212,7 +212,7 @@ def successfully_running_containers(docker_files, out):
     return True
 
 
-def stop(config, database_container_id, test, out):
+def stop(config, database_container_id, test):
     '''
     Attempts to stop the running test container.
     '''
