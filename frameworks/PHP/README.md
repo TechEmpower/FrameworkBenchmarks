@@ -2,9 +2,9 @@
 
 The information below contains information specific to PHP. 
 For further guidance, review the 
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
+[documentation](https://frameworkbenchmarks.readthedocs.io/en/latest/).
 
-## Infrastructre Software Versions
+## Infrastructure Software Versions
 
 ### PHP Versions
 
@@ -102,18 +102,14 @@ longer to run, and it can even halt and require user input
 #### Setting up Composer
 
 Add a `composer.json` file to your framework's root folder, e.g. `php-fuel/composer.json`. 
-Ensure your `install.sh` lists composer as a dependency, and uses `composer.phar` to 
-install the dependencies required by your project. 
+Ensure your `setup.sh` lists composer as a dependency.
 
-    # Note the order! Composer depends on PHP so it has to come second
-    fw_depends php composer 
-    
-    # Download dependencies
-    ${IROOT}/php-5.5.17/bin/php ${COMPOSER_HOME}/composer.phar install \
-    --no-interaction --working-dir $TROOT --no-progress \
-    --optimize-autoloader 
+    # Note the order! Composer depends on PHP so it has to be defined after
+    fw_depends mysql php7 nginx composer
 
-After installation runs, your framework folder will have a new `vendor` folder, 
+The `composer install` command will run automatically using the following flags: `--no-dev --no-interaction --no-progress --no-suggest --optimize-autoloader --classmap-authoritative`
+
+After the installation completes, your framework folder will have a new `vendor` folder, 
 e.g. `php-fuel/vendor` that contains all dependencies. Update your PHP scripts
 to either directly reference files inside of vendor, or use the `vendor/autoload.php`
 file. 

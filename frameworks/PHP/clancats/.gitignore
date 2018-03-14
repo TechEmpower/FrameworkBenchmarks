@@ -5,7 +5,6 @@ storage/
 .DS_Store
 Thumbs.db
 composer.phar
-composer.lock
 phpunit.xml
 phpunit.phar
 report/
