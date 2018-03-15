@@ -1,11 +1,10 @@
 import subprocess, os
-from toolset.utils import setup_util
 
 DEVNULL = open(os.devnull, 'w')
 
 
 def initialize(args):
-    fwroot = setup_util.get_fwroot()
+    fwroot = os.getenv('FWROOT')
     dbuser = args.database_user
     dbhost = args.database_host
     dbiden = args.database_identity_file

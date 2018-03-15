@@ -1,6 +1,8 @@
 import json
 import re
 
+from toolset.utils.output_helper import log
+
 
 def basic_body_verification(body, url, is_json_check=True):
     '''
@@ -276,7 +278,7 @@ def verify_updates(old_worlds, new_worlds, updates_expected, url):
                     if old_worlds[n][entry_id] != new_worlds[n][entry_id]:
                         successful_updates += 1
             except Exception as e:
-                print(e)
+                log(e)
         n += 1
 
     if successful_updates == 0:

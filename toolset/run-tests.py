@@ -7,7 +7,6 @@ import platform
 import multiprocessing
 import signal
 from toolset.benchmark.benchmarker import Benchmarker
-from toolset.utils import setup_util
 from toolset.utils.unbuffered import Unbuffered
 from toolset.utils.scaffolding import Scaffolding
 from toolset.utils.initializer import initialize
@@ -16,11 +15,8 @@ from toolset.utils.results_helper import Results
 from toolset.utils.benchmark_config import BenchmarkConfig
 from toolset.utils import docker_helper
 from toolset.utils.metadata_helper import gather_tests
+from toolset.utils.output_helper import log
 from ast import literal_eval
-
-# Enable cross-platform colored output
-from colorama import init
-init()
 
 
 class StoreSeqAction(argparse.Action):
@@ -42,8 +38,8 @@ class StoreSeqAction(argparse.Action):
             try:
                 (start, step, end) = sequence.split(':')
             except ValueError:
-                print("  Invalid: {!s}".format(sequence))
-                print("  Requires start:step:end, e.g. 1:2:10")
+                log("  Invalid: {!s}".format(sequence))
+                log("  Requires start:step:end, e.g. 1:2:10")
                 raise
             result.remove(sequence)
             result = result + range(int(start), int(end), int(step))
@@ -80,9 +76,6 @@ def main(argv=None):
     # Enable unbuffered output so messages will appear in the proper order with subprocess output.
     sys.stdout = Unbuffered(sys.stdout)
 
-    # Update environment for shell scripts
-    os.environ['FWROOT'] = setup_util.get_fwroot()
-    os.environ['IROOT'] = os.environ['FWROOT'] + '/installs'
     # 'Ubuntu', '14.04', 'trusty' respectively
     os.environ['TFB_DISTRIB_ID'], os.environ[
         'TFB_DISTRIB_RELEASE'], os.environ[
@@ -110,7 +103,7 @@ def main(argv=None):
                     os.environ['FWROOT'],
                     args.conf_file)) and not os.path.exists(
                         os.path.join(os.environ['FWROOT'] + 'benchmark.cfg')):
-            print("No config file found. Aborting!")
+            log("No config file found. Aborting!")
             exit(1)
         with open(os.path.join(os.environ['FWROOT'], args.conf_file)):
             config = ConfigParser.SafeConfigParser()
@@ -123,7 +116,7 @@ def main(argv=None):
                 except Exception:
                     pass
     except IOError:
-        print("Configuration file not found!")
+        log("Configuration file not found!")
         exit(1)
 
     ##########################################################
@@ -132,9 +125,9 @@ def main(argv=None):
 
     # Verify and massage options
     if defaults['client_user'] is None or defaults['client_host'] is None:
-        print("client_user and client_host are required!")
-        print("Please check your configuration file.")
-        print("Aborting!")
+        log("client_user and client_host are required!")
+        log("Please check your configuration file.")
+        log("Aborting!")
         exit(1)
 
     if defaults['database_user'] is None:
@@ -293,7 +286,7 @@ def main(argv=None):
         all_tests = gather_tests(benchmarker_config=config)
 
         for test in all_tests:
-            print(test.name)
+            log(test.name)
 
     elif config.parse != None:
         # TODO: broken

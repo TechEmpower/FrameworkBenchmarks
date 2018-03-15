@@ -1,8 +1,7 @@
-from toolset.utils import setup_util
 from toolset.benchmark.test_types import *
 from toolset.utils.output_helper import QuietOutputStream
 
-import logging
+import os
 import time
 
 
@@ -55,9 +54,6 @@ class BenchmarkConfig:
 
         self.start_time = time.time()
 
-        # setup logging
-        logging.basicConfig(stream=self.quiet_out, level=logging.INFO)
-
         # setup some additional variables
         if self.database_user == None: self.database_user = self.client_user
         if self.database_host == None: self.database_host = self.client_host
@@ -65,7 +61,7 @@ class BenchmarkConfig:
             self.database_identity_file = self.client_identity_file
 
         # Remember root directory
-        self.fwroot = setup_util.get_fwroot()
+        self.fwroot = os.getenv('FWROOT')
 
         if hasattr(self, 'parse') and self.parse != None:
             self.timestamp = self.parse

@@ -5,7 +5,7 @@ import traceback
 import logging
 from requests import ConnectionError
 
-from toolset.utils.output_helper import header
+from toolset.utils.output_helper import header, log
 from toolset.utils import docker_helper
 
 # Cross-platform colored text
@@ -121,8 +121,9 @@ class FrameworkTest:
             with open(os.path.join(verificationPath, 'verification.txt'),
                       'w') as verification:
                 test = self.runTests[test_type]
-                test.setup_out(verification)
-                verification.write(header("VERIFYING %s" % test_type.upper()))
+                header(
+                    message="VERIFYING %s" % test_type.upper(),
+                    log_file=verification)
 
                 base_url = "http://%s:%s" % (
                     self.benchmarker_config.server_host, self.port)
@@ -151,24 +152,21 @@ class FrameworkTest:
                                 'fail',
                                 "Server did not respond to request from client machine.",
                                 base_url)]
-                            logging.warning(
-                                """This error usually means your server is only accepting
+                            log("""This error usually means your server is only accepting
                 requests from localhost.""")
                 except ConnectionError as e:
                     results = [('fail', "Server did not respond to request",
                                 base_url)]
-                    logging.warning(
-                        "Verifying test %s for %s caused an exception: %s",
-                        test_type, self.name, e)
+                    log("Verifying test %s for %s caused an exception: %s" %
+                        (test_type, self.name, e))
                 except Exception as e:
                     results = [('fail', """Caused Exception in TFB
             This almost certainly means your return value is incorrect,
             but also that you have found a bug. Please submit an issue
             including this message: %s\n%s""" % (e, traceback.format_exc()),
                                 base_url)]
-                    logging.warning(
-                        "Verifying test %s for %s caused an exception: %s",
-                        test_type, self.name, e)
+                    log("Verifying test %s for %s caused an exception: %s" %
+                        (test_type, self.name, e))
                     traceback.format_exc()
 
                 test.failed = any(
@@ -186,19 +184,15 @@ class FrameworkTest:
                     elif result.upper() == "FAIL":
                         color = Fore.RED
 
-                    verification.write((
-                        "   " + color + "%s" + Style.RESET_ALL + " for %s\n") %
-                                       (result.upper(), url))
-                    print("   {!s}{!s}{!s} for {!s}\n".format(
-                        color, result.upper(), Style.RESET_ALL, url))
+                    log("   {!s}{!s}{!s} for {!s}".format(
+                        color, result.upper(), Style.RESET_ALL, url), None,
+                        verification)
                     if reason is not None and len(reason) != 0:
                         for line in reason.splitlines():
-                            verification.write("     " + line + '\n')
-                            print("     " + line)
+                            log("     " + line, None, verification)
                         if not test.passed:
-                            verification.write(
-                                "     See %s\n" % specific_rules_url)
-                            print("     See {!s}\n".format(specific_rules_url))
+                            log("     See {!s}".format(specific_rules_url),
+                                None, verification)
 
                 [output_result(r1, r2, url) for (r1, r2, url) in results]
 
@@ -211,8 +205,6 @@ class FrameworkTest:
                 else:
                     raise Exception(
                         "Unknown error - test did not pass,warn,or fail")
-
-                verification.flush()
 
         result = True
         for test_type in self.runTests:

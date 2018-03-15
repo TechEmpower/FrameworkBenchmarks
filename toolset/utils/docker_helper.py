@@ -9,8 +9,7 @@ import time
 
 from threading import Thread
 
-from toolset.utils import setup_util
-from toolset.utils.output_helper import tee_output
+from toolset.utils.output_helper import log
 from toolset.utils.metadata_helper import gather_tests
 from toolset.utils.ordered_set import OrderedSet
 from toolset.utils.database_helper import test_database
@@ -57,6 +56,8 @@ def build(benchmarker_config, test_names, out):
     tests = gather_tests(test_names)
 
     for test in tests:
+        log_prefix = "%s: " % test.name
+
         docker_buildargs = {
             'CPU_COUNT': str(multiprocessing.cpu_count()),
             'MAX_CONCURRENCY': str(max(benchmarker_config.concurrency_levels)),
@@ -78,18 +79,16 @@ def build(benchmarker_config, test_names, out):
                         __gather_dependencies(
                             os.path.join(test.directory, test_docker_file)))))
 
-            docker_dir = os.path.join(setup_util.get_fwroot(), "toolset",
-                                      "setup", "docker")
+            docker_dir = os.path.join(
+                os.getenv('FWROOT'), "toolset", "setup", "docker")
             for dependency in deps:
                 docker_file = os.path.join(test.directory,
                                            dependency + ".dockerfile")
                 if not docker_file or not os.path.exists(docker_file):
                     docker_file = find(docker_dir, dependency + ".dockerfile")
                 if not docker_file:
-                    tee_output(
-                        out,
-                        "Docker build failed; %s could not be found; terminating\n"
-                        % (dependency + ".dockerfile"))
+                    log("Docker build failed; %s could not be found; terminating"
+                        % (dependency + ".dockerfile"), log_prefix, out)
                     return 1
 
                 # Build the dependency image
@@ -101,19 +100,14 @@ def build(benchmarker_config, test_names, out):
                                 tag="tfb/%s" % dependency,
                                 buildargs=docker_buildargs,
                                 forcerm=True):
-                        prev_line = os.linesep
                         if line.startswith('{"stream":'):
                             line = json.loads(line)
                             line = line[line.keys()[0]].encode('utf-8')
-                            if prev_line.endswith(os.linesep):
-                                tee_output(out, line)
-                            else:
-                                tee_output(out, line)
-                            prev_line = line
+                            log(log_prefix, line, out)
                 except Exception as e:
-                    tee_output(out,
-                               "Docker dependency build failed; terminating\n")
-                    print(e)
+                    log("Docker dependency build failed; terminating",
+                        log_prefix, out)
+                    log(e, log_prefix, out)
                     return 1
 
         # Build the test images
@@ -127,18 +121,13 @@ def build(benchmarker_config, test_names, out):
                                 ".dockerfile", ""),
                             buildargs=docker_buildargs,
                             forcerm=True):
-                    prev_line = os.linesep
                     if line.startswith('{"stream":'):
                         line = json.loads(line)
                         line = line[line.keys()[0]].encode('utf-8')
-                        if prev_line.endswith(os.linesep):
-                            tee_output(out, line)
-                        else:
-                            tee_output(out, line)
-                        prev_line = line
+                        log(line, log_prefix, out)
             except Exception as e:
-                tee_output(out, "Docker build failed; terminating\n")
-                print(e)
+                log("Docker build failed; terminating", log_prefix, out)
+                log(e, log_prefix, out)
                 return 1
 
     return 0
@@ -151,11 +140,12 @@ def run(benchmarker_config, docker_files, out):
     client = docker.from_env()
 
     for docker_file in docker_files:
+        log_prefix = "%s: " % docker_file.replace(".dockerfile", "")
         try:
 
             def watch_container(container):
                 for line in container.logs(stream=True):
-                    tee_output(out, line)
+                    log(line, log_prefix, out)
 
             extra_hosts = {
                 socket.gethostname(): str(benchmarker_config.server_host),
@@ -178,9 +168,9 @@ def run(benchmarker_config, docker_files, out):
             watch_thread.start()
 
         except Exception as e:
-            tee_output(out,
-                       "Running docker cointainer: %s failed" % docker_file)
-            print(e)
+            log("Running docker cointainer: %s failed" % docker_file,
+                log_prefix, out)
+            log(e, log_prefix, out)
             return 1
 
     return 0
@@ -205,9 +195,9 @@ def successfully_running_containers(docker_files, out):
 
     for image_name in expected_running_container_images:
         if image_name not in running_container_images:
-            tee_output(out,
-                       "ERROR: Expected tfb/test/%s to be running container" %
-                       image_name)
+            log_prefix = "%s: " % image_name
+            log("ERROR: Expected tfb/test/%s to be running container" %
+                image_name, log_prefix, out)
             return False
     return True
 
@@ -318,12 +308,10 @@ def __gather_dependencies(docker_file):
     '''
     Gathers all the known docker dependencies for the given docker image.
     '''
-    # Avoid setting up a circular import
-    from toolset.utils import setup_util
     deps = []
 
-    docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup",
-                              "docker")
+    docker_dir = os.path.join(
+        os.getenv('FWROOT'), "toolset", "setup", "docker")
 
     if os.path.exists(docker_file):
         with open(docker_file) as fp:

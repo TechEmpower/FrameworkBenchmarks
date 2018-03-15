@@ -1,5 +1,5 @@
 from toolset.utils.metadata_helper import gather_remaining_tests, gather_frameworks
-from toolset.utils.output_helper import header
+from toolset.utils.output_helper import header, log
 
 import os
 import logging
@@ -301,12 +301,13 @@ class Results:
             # Normally you don't have to use Fore.BLUE before each line, but
             # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
             # or stream flush, so we have to ensure that the color code is printed repeatedly
-            prefix = Fore.CYAN
-            for line in header(
-                    "Verification Summary", top='=', bottom='').split('\n'):
-                print(prefix + line)
+            header(
+                "Verification Summary%s" % os.linesep,
+                top='=',
+                bottom='',
+                color=Fore.CYAN)
             for test in tests:
-                print(prefix + "| Test: {!s}".format(test.name))
+                log(Fore.CYAN + "| Test: {!s}".format(test.name))
                 if test.name in self.verify.keys():
                     for test_type, result in self.verify[
                             test.name].iteritems():
@@ -316,16 +317,16 @@ class Results:
                             color = Fore.YELLOW
                         else:
                             color = Fore.RED
-                        print(prefix + "|       " + test_type.ljust(13) +
-                              ' : ' + color + result.upper())
+                        log(Fore.CYAN + "|       " + test_type.ljust(13) +
+                            ' : ' + color + result.upper())
                 else:
-                    print(prefix + "|      " + Fore.RED +
-                          "NO RESULTS (Did framework launch?)")
-            print(prefix + header('', top='', bottom='=') + Style.RESET_ALL)
+                    log(Fore.CYAN + "|      " + Fore.RED +
+                        "NO RESULTS (Did framework launch?)")
+            header('', top='=', bottom='', color=Fore.CYAN)
 
-        print("Time to complete: " +
-              str(int(time.time() - self.config.start_time)) + " seconds")
-        print("Results are saved in " + self.directory)
+        log("%sTime to complete: %s seconds" %
+            (Style.RESET_ALL, str(int(time.time() - self.config.start_time))))
+        log("Results are saved in " + self.directory)
 
     #############################################################################
     # PRIVATE FUNCTIONS

@@ -1,12 +1,10 @@
-from toolset.utils.output_helper import header, tee_output
+from toolset.utils.output_helper import header, log
 from toolset.utils.metadata_helper import gather_tests, gather_remaining_tests
 from toolset.utils import docker_helper
 
 import os
 import subprocess
 import traceback
-import sys
-import logging
 import socket
 import time
 import json
@@ -40,23 +38,20 @@ class Benchmarker:
         all_tests = gather_remaining_tests(self.config, self.results)
 
         # Setup client/server
-        print(
-            header(
-                "Preparing Server, Database, and Client ...",
-                top='=',
-                bottom='='))
+        header(
+            "Preparing Server, Database, and Client ...", top='=', bottom='=')
         with self.config.quiet_out.enable():
             self.__setup_server()
             self.__setup_database()
             self.__setup_client()
 
         # Run tests
-        print(header("Running Tests...", top='=', bottom='='))
+        header("Running Tests...", top='=', bottom='=')
         self.__run_tests(all_tests)
 
         # Parse results
         if self.config.mode == "benchmark":
-            print(header("Parsing Results ...", top='=', bottom='='))
+            header("Parsing Results ...", top='=', bottom='=')
             self.results.parse(all_tests)
 
         self.results.set_completion_time()
@@ -80,7 +75,7 @@ class Benchmarker:
                 pass
             with open(os.path.join(benchmarkPath, 'benchmark.txt'),
                       'w') as out:
-                out.write("BENCHMARKING %s ... " % test_type.upper())
+                log("BENCHMARKING %s ... " % test_type.upper(), out)
 
                 test = framework_test.runTests[test_type]
                 test.setup_out(out)
@@ -114,13 +109,13 @@ class Benchmarker:
                     self.__end_logging()
 
                 results = self.results.parse_test(framework_test, test_type)
-                print("Benchmark results:")
+                log("Benchmark results:", out)
+                # TODO move into log somehow
                 pprint(results)
 
                 self.results.report_benchmark_results(
                     framework_test, test_type, results['results'])
-                out.write("Complete\n")
-                out.flush()
+                log("Complete", out)
 
         for test_type in framework_test.runTests:
             benchmark_type(test_type)
@@ -279,18 +274,13 @@ class Benchmarker:
         if len(tests) == 0:
             return 0
 
-        logging.debug("Start __run_tests.")
-        logging.debug("__name__ = %s", __name__)
-
         # These features do not work on Windows
         for test in tests:
-            print(header("Running Test: %s" % test.name))
+            header("Running Test: %s" % test.name)
             with self.config.quiet_out.enable():
                 self.__run_test(test)
             # Load intermediate result from child process
             self.results.load()
-
-        logging.debug("End __run_tests.")
 
     def __run_test(self, test):
         '''
@@ -304,19 +294,20 @@ class Benchmarker:
         except Exception:
             pass
         with open(os.path.join(logDir, 'out.txt'), 'w') as out:
+            log_prefix = "%s: " % test.name
 
             if test.os.lower() != self.config.os.lower(
             ) or test.database_os.lower() != self.config.database_os.lower():
-                out.write(
-                    "OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.\n"
-                )
+                log("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.",
+                    log_prefix, out)
                 return
 
             # If the test is in the excludes list, we skip it
             if self.config.exclude != None and test.name in self.config.exclude:
-                out.write(
-                    "Test {name} has been added to the excludes list. Skipping.\n".
-                    format(name=test.name))
+                log("Test {name} has been added to the excludes list. Skipping.".
+                    format(name=test.name),
+                    log_prefix,
+                    out)
                 return
 
             database_container_id = None
@@ -328,12 +319,11 @@ class Benchmarker:
                     # We gave it our all
                     self.results.write_intermediate(test.name, "port " + str(
                         test.port) + " is not available before start")
-                    out.write(
-                        header(
-                            "Error: Port %s is not available, cannot start %s"
-                            % (test.port, test.name)))
-                    out.flush()
-                    print("Error: Unable to recover port, cannot start test")
+                    header(
+                        message=
+                        "Error: Port %s is not available, cannot start %s" %
+                        (test.port, test.name),
+                        log_file=out)
                     return
 
                 # Start database container
@@ -341,12 +331,10 @@ class Benchmarker:
                     database_container_id = docker_helper.start_database(
                         self.config, test.database.lower())
                     if not database_container_id:
-                        out.write(
-                            "ERROR: Problem building/running database container"
-                        )
-                        out.flush()
                         self.results.write_intermediate(
                             test.name, "ERROR: Problem starting")
+                        log("ERROR: Problem building/running database container",
+                            log_prefix, out)
                         return
 
                 # Start webapp
@@ -354,11 +342,12 @@ class Benchmarker:
                 if result != 0:
                     docker_helper.stop(self.config, database_container_id,
                                        test)
-                    out.write("ERROR: Problem starting {name}\n".format(
-                        name=test.name))
-                    out.flush()
                     self.results.write_intermediate(test.name,
                                                     "ERROR: Problem starting")
+                    log("ERROR: Problem starting {name}\n".format(
+                        name=test.name),
+                        log_prefix,
+                        out)
                     return
 
                 slept = 0
@@ -368,31 +357,26 @@ class Benchmarker:
                             test.get_docker_files(), out):
                         docker_helper.stop(self.config, database_container_id,
                                            test)
-                        tee_output(
-                            out,
-                            "ERROR: One or more expected docker container exited early"
-                            + os.linesep)
+                        log("ERROR: One or more expected docker container exited early",
+                            log_prefix, out)
                         return
                     time.sleep(1)
                     slept += 1
 
                 # Debug mode blocks execution here until ctrl+c
                 if self.config.mode == "debug":
-                    logging.info(
-                        "Entering debug mode. Server has started. CTRL-c to stop."
-                    )
+                    log("Entering debug mode. Server has started. CTRL-c to stop.",
+                        log_prefix, out)
                     while True:
                         time.sleep(1)
 
                 # Verify URLs
-                logging.info("Verifying framework URLs")
+                log("Verifying framework URLs", log_prefix)
                 passed_verify = test.verify_urls(logDir)
 
                 # Benchmark this test
                 if self.config.mode == "benchmark":
-                    logging.info("Benchmarking")
-                    out.write(header("Benchmarking %s" % test.name))
-                    out.flush()
+                    header(message="Benchmarking %s" % test.name, log_file=out)
                     self.__benchmark(test, logDir)
 
                 # Stop this test
@@ -406,7 +390,7 @@ class Benchmarker:
                         stderr=out,
                         stdout=out)
                 except Exception:
-                    out.write(header("Error: Could not empty /tmp"))
+                    header(message="Error: Could not empty /tmp", log_file=out)
 
                 # Save results thus far into the latest results directory
                 self.results.write_intermediate(test.name,
@@ -418,7 +402,7 @@ class Benchmarker:
                 self.results.upload()
 
                 if self.config.mode == "verify" and not passed_verify:
-                    print("Failed verify!")
+                    log("Failed verify!", log_prefix, out)
                     return
             except KeyboardInterrupt:
                 docker_helper.stop(self.config, database_container_id, test)
@@ -426,10 +410,8 @@ class Benchmarker:
                 traceback.print_exc()
                 self.results.write_intermediate(
                     test.name, "error during test setup: " + str(e))
-                out.write(header("Subprocess Error %s" % test.name))
-                traceback.print_exc(file=out)
-                out.flush()
-                out.close()
+                header(message="Subprocess Error %s" % test.name, log_file=out)
+                log(e, log_prefix, out)
                 return
 
             out.close()

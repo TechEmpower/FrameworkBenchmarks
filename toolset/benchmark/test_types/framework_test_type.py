@@ -11,6 +11,8 @@ import pymongo
 import logging
 logging.getLogger('urllib3').setLevel(logging.CRITICAL)
 
+from toolset.utils.output_helper import log
+
 
 class FrameworkTestType:
     '''
@@ -87,18 +89,17 @@ class FrameworkTestType:
         Downloads a URL and returns the HTTP response headers
         and body content as a tuple
         '''
-        print("Accessing URL {!s}:".format(url))
-        self.out.write("Accessing URL %s \n" % url)
+        log("Accessing URL {!s}:".format(url))
 
         headers = {'Accept': self.accept_header}
         r = requests.get(url, timeout=15, headers=headers)
 
         headers = r.headers
         body = r.content
-        self.out.write(str(headers))
-        self.out.write(body)
+        log(str(headers))
+        log(body)
         b = 40
-        print("  Response (trimmed to {:d} bytes): \"{!s}\"".format(
+        log("  Response (trimmed to {:d} bytes): \"{!s}\"".format(
             b,
             body.strip()[:b]))
         return headers, body
@@ -169,8 +170,8 @@ class FrameworkTestType:
                 results_json.append(json.loads(json.dumps(dict(results))))
                 db.close()
             except Exception as e:
-                print("ERROR: Unable to load current MySQL World table.")
-                print(e)
+                log("ERROR: Unable to load current MySQL World table.")
+                log(e)
         elif database_name == "postgres":
             try:
                 db = psycopg2.connect(
@@ -189,8 +190,8 @@ class FrameworkTestType:
                 results_json.append(json.loads(json.dumps(dict(results))))
                 db.close()
             except Exception as e:
-                print("ERROR: Unable to load current Postgres World table.")
-                print(e)
+                log("ERROR: Unable to load current Postgres World table.")
+                log(e)
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
@@ -208,8 +209,8 @@ class FrameworkTestType:
                 results_json.append(worlds_json)
                 connection.close()
             except Exception as e:
-                print("ERROR: Unable to load current MongoDB World table.")
-                print(e)
+                log("ERROR: Unable to load current MongoDB World table.")
+                log(e)
         else:
             raise ValueError(
                 "Database: {!s} does not exist".format(database_name))

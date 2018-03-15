@@ -1,39 +1,74 @@
 import os, sys
 from contextlib import contextmanager
 
+# Enable cross-platform colored output
+from colorama import init
 
-def header(message, top='-', bottom='-'):
+
+def header(message,
+           top='-',
+           bottom='-',
+           log_file=None,
+           quiet=False,
+           color=None):
     '''
-    Generates a clean header
+    Generates a clean header with the given message and top/bottom text breaks.
+    Optionally, a log file can be provided to log this header to, as well.
     '''
     topheader = (top * 80)[:80]
     bottomheader = (bottom * 80)[:80]
     result = ""
     if topheader != "":
+        if color is not None:
+            result += color
         result += "%s" % topheader
     if message != "":
+        if color is not None:
+            result += color
+
         if result == "":
             result = "  %s" % message
         else:
             result += "%s  %s" % (os.linesep, message)
     if bottomheader != "":
-        if result == "":
-            result = "%s" % bottomheader
+        if color is not None:
+            result += color
+        result += "%s%s" % (os.linesep, bottomheader)
+    log(result + os.linesep, None, log_file, True, quiet)
+
+
+def log(log_text=None,
+        prefix=None,
+        log_file=None,
+        allow_newlines=False,
+        quiet=False):
+    '''
+    Logs the given text and optional prefix to stdout (if quiet is False) and
+    to an optional log file. By default, we strip out newlines in order to 
+    print our lines correctly, but you can override this functionality if you
+    want to print multi-line output.
+    '''
+    if not allow_newlines:
+        log_text = log_text.splitlines()[0] + os.linesep
+
+    if not log_text:
+        return
+
+    if not allow_newlines and log_text.splitlines()[0] is '':
+        return
+
+    if not quiet:
+        init()
+        if prefix is not None:
+            sys.stdout.write(prefix + log_text)
         else:
-            result += "%s%s" % (os.linesep, bottomheader)
-    return result + os.linesep
+            sys.stdout.write(log_text)
+        sys.stdout.flush()
 
-
-def tee_output(out, line):
-    '''
-    Writes to bouth stdout and the provided out file
-    '''
-    sys.stdout.write(line)
-    sys.stdout.flush()
-
-    if out is not None:
-        out.write(line)
-        out.flush()
+    if log_file is not None:
+        init(strip=True)
+        log_file.write(log_text)
+        log_file.flush()
 
 
 class QuietOutputStream:

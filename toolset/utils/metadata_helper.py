@@ -13,10 +13,8 @@ def gather_langauges():
     Gathers all the known languages in the suite via the folder names
     beneath FWROOT.
     '''
-    # Avoid setting up a circular import
-    from toolset.utils import setup_util
 
-    lang_dir = os.path.join(setup_util.get_fwroot(), "frameworks")
+    lang_dir = os.path.join(os.getenv('FWROOT'), "frameworks")
     langs = []
     for dir in glob.glob(os.path.join(lang_dir, "*")):
         langs.append(dir.replace(lang_dir, "")[1:])
@@ -40,7 +38,6 @@ def gather_tests(include=[], exclude=[], benchmarker_config=None,
     '''
     # Avoid setting up a circular import
     from toolset.utils.benchmark_config import BenchmarkConfig
-    from toolset.utils import setup_util
 
     # Help callers out a bit
     if include is None:
@@ -57,7 +54,7 @@ def gather_tests(include=[], exclude=[], benchmarker_config=None,
 
     # Setup default BenchmarkerConfig using example configuration
     if benchmarker_config is None:
-        default_config = setup_util.get_fwroot() + "/benchmark.cfg"
+        default_config = os.getenv('FWROOT') + "/benchmark.cfg"
         config = ConfigParser.SafeConfigParser()
         config.readfp(open(default_config))
         defaults = dict(config.items("Defaults"))
