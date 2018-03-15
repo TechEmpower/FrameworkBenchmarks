@@ -170,7 +170,7 @@ impl Handler<RandomWorld> for PgConnection {
 
     fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Self::Result {
         let random_world = self.conn.prepare_cached(
-            "SELECT id, randomnumber FROM World WHERE id=$1").unwrap();
+            "SELECT id, randomnumber FROM world WHERE id=$1").unwrap();
 
         let random_id = self.rng.gen_range::<i32>(1, 10_000);
         for row in &random_world.query(&[&random_id]).unwrap() {
@@ -192,7 +192,7 @@ impl Handler<RandomWorlds> for PgConnection {
 
     fn handle(&mut self, msg: RandomWorlds, _: &mut Self::Context) -> Self::Result {
         let random_world = self.conn.prepare_cached(
-            "SELECT id, randomnumber FROM World WHERE id=$1").unwrap();
+            "SELECT id, randomnumber FROM world WHERE id=$1").unwrap();
 
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
@@ -217,9 +217,9 @@ impl Handler<UpdateWorld> for PgConnection {
 
     fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
         let get_world = self.conn.prepare_cached(
-            "SELECT id FROM World WHERE id=$1").unwrap();
+            "SELECT id FROM world WHERE id=$1").unwrap();
         let update_world = self.conn.prepare_cached(
-            "UPDATE World SET randomnumber=$1 WHERE id=$2").unwrap();
+            "UPDATE world SET randomnumber=$1 WHERE id=$2").unwrap();
 
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
@@ -246,7 +246,7 @@ impl Handler<TellFortune> for PgConnection {
     type Result = io::Result<Vec<Fortune>>;
 
     fn handle(&mut self, _: TellFortune, _: &mut Self::Context) -> Self::Result {
-        let fortune = self.conn.prepare_cached("SELECT id, message FROM Fortune").unwrap();
+        let fortune = self.conn.prepare_cached("SELECT id, message FROM fortune").unwrap();
 
         let mut items = Vec::with_capacity(13);
         items.push(
@@ -265,6 +265,9 @@ impl Handler<TellFortune> for PgConnection {
 fn main() {
     let sys = System::new("techempower");
     let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@TFB-database/hello_world";
+
+    // Avoid triggering "FATAL: the database system is starting up" error from postgres.
+    std::thread::sleep(std::time::Duration::from_secs(5));
 
     // Start db executor actors
     let addr = SyncArbiter::start(
