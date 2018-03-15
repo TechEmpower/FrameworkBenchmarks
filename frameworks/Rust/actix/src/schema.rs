@@ -1,14 +1,14 @@
 #![allow(non_snake_case)]
 
 table! {
-    World (id) {
+    world (id) {
         id -> Integer,
         randomnumber -> Integer,
     }
 }
 
 table! {
-    Fortune (id) {
+    fortune (id) {
         id -> Integer,
         message -> Text,
     }
