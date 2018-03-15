@@ -5,6 +5,7 @@ import sys
 import os
 import platform
 import multiprocessing
+import signal
 from toolset.benchmark.benchmarker import Benchmarker
 from toolset.utils import setup_util
 from toolset.utils.unbuffered import Unbuffered
@@ -49,6 +50,17 @@ class StoreSeqAction(argparse.Action):
         return [abs(int(item)) for item in result]
 
 
+def __stop(signal, frame):
+    '''
+    Method called on SIGTERM to stop all running containers 
+    '''
+    docker_helper.stop()
+    sys.exit(0)
+
+
+signal.signal(signal.SIGTERM, __stop)
+
+
 ###################################################################################################
 # Main
 ###################################################################################################
@@ -67,12 +79,6 @@ def main(argv=None):
 
     # Enable unbuffered output so messages will appear in the proper order with subprocess output.
     sys.stdout = Unbuffered(sys.stdout)
-
-    # Update python environment
-    # 1) Ensure the current directory (which should be the benchmark home directory) is in the path so that the tests can be imported.
-    sys.path.append('.')
-    # 2) Ensure toolset/setup/linux is in the path so that the tests can "import setup_util".
-    sys.path.append('toolset/setup/linux')
 
     # Update environment for shell scripts
     os.environ['FWROOT'] = setup_util.get_fwroot()
@@ -281,7 +287,7 @@ def main(argv=None):
 
     elif config.clean:
         cleaner.clean(results)
-        docker_helper.clean()
+        docker_helper.clean(config)
 
     elif config.list_tests:
         all_tests = gather_tests(benchmarker_config=config)
@@ -300,7 +306,7 @@ def main(argv=None):
 
     else:
         benchmarker = Benchmarker(config, results)
-        return benchmarker.run()
+        benchmarker.run()
 
     return 0
 

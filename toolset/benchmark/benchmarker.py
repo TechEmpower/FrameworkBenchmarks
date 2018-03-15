@@ -13,8 +13,6 @@ import json
 import shlex
 from pprint import pprint
 
-from multiprocessing import Process
-
 
 class Benchmarker:
     def __init__(self, config, results):
@@ -54,7 +52,7 @@ class Benchmarker:
 
         # Run tests
         print(header("Running Tests...", top='=', bottom='='))
-        result = self.__run_tests(all_tests)
+        self.__run_tests(all_tests)
 
         # Parse results
         if self.config.mode == "benchmark":
@@ -64,7 +62,6 @@ class Benchmarker:
         self.results.set_completion_time()
         self.results.upload()
         self.results.finish()
-        return result
 
     ##########################################################################################
     # Private methods
@@ -285,46 +282,15 @@ class Benchmarker:
         logging.debug("Start __run_tests.")
         logging.debug("__name__ = %s", __name__)
 
-        error_happened = False
-        if self.config.os.lower() == 'windows':
-            logging.debug("Executing __run_tests on Windows")
-            for test in tests:
-                with self.config.quiet_out.enable():
-                    if self.__run_test(test) != 0:
-                        error_happened = True
-        else:
-            logging.debug("Executing __run_tests on Linux")
-
-            # These features do not work on Windows
-            for test in tests:
-                print(header("Running Test: %s" % test.name))
-                with self.config.quiet_out.enable():
-                    test_process = Process(
-                        target=self.__run_test,
-                        name="Test Runner (%s)" % test.name,
-                        args=(test, ))
-                    test_process.start()
-                    test_process.join(self.config.run_test_timeout_seconds)
-                # Load intermediate result from child process
-                self.results.load()
-                if (test_process.is_alive()):
-                    logging.debug(
-                        "Child process for {name} is still alive. Terminating.".
-                        format(name=test.name))
-                    self.results.write_intermediate(
-                        test.name, "__run_test timeout (=" +
-                        str(self.config.run_test_timeout_seconds) +
-                        " seconds)")
-                    test_process.terminate()
-                    test_process.join()
-                if test_process.exitcode != 0:
-                    error_happened = True
+        # These features do not work on Windows
+        for test in tests:
+            print(header("Running Test: %s" % test.name))
+            with self.config.quiet_out.enable():
+                self.__run_test(test)
+            # Load intermediate result from child process
+            self.results.load()
 
         logging.debug("End __run_tests.")
-
-        if error_happened:
-            return 1
-        return 0
 
     def __run_test(self, test):
         '''
@@ -344,14 +310,14 @@ class Benchmarker:
                 out.write(
                     "OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.\n"
                 )
-                return sys.exit(0)
+                return
 
             # If the test is in the excludes list, we skip it
             if self.config.exclude != None and test.name in self.config.exclude:
                 out.write(
                     "Test {name} has been added to the excludes list. Skipping.\n".
                     format(name=test.name))
-                return sys.exit(0)
+                return
 
             database_container_id = None
             try:
@@ -368,7 +334,7 @@ class Benchmarker:
                             % (test.port, test.name)))
                     out.flush()
                     print("Error: Unable to recover port, cannot start test")
-                    return sys.exit(1)
+                    return
 
                 # Start database container
                 if test.database.lower() != "none":
@@ -381,33 +347,32 @@ class Benchmarker:
                         out.flush()
                         self.results.write_intermediate(
                             test.name, "ERROR: Problem starting")
-                        return sys.exit(1)
+                        return
 
                 # Start webapp
                 result = test.start(out, database_container_id)
                 if result != 0:
                     docker_helper.stop(self.config, database_container_id,
-                                       test, out)
+                                       test)
                     out.write("ERROR: Problem starting {name}\n".format(
                         name=test.name))
                     out.flush()
                     self.results.write_intermediate(test.name,
                                                     "ERROR: Problem starting")
-                    return sys.exit(1)
+                    return
 
                 slept = 0
                 max_sleep = 60
                 while not test.is_running() and slept < max_sleep:
                     if not docker_helper.successfully_running_containers(
-                            test.get_docker_files(), database_container_id,
-                            out):
+                            test.get_docker_files(), out):
                         docker_helper.stop(self.config, database_container_id,
-                                           test, out)
+                                           test)
                         tee_output(
                             out,
                             "ERROR: One or more expected docker container exited early"
                             + os.linesep)
-                        return sys.exit(1)
+                        return
                     time.sleep(1)
                     slept += 1
 
@@ -431,8 +396,7 @@ class Benchmarker:
                     self.__benchmark(test, logDir)
 
                 # Stop this test
-                docker_helper.stop(self.config, database_container_id, test,
-                                   out)
+                docker_helper.stop(self.config, database_container_id, test)
 
                 # Remove contents of  /tmp folder
                 try:
@@ -455,10 +419,9 @@ class Benchmarker:
 
                 if self.config.mode == "verify" and not passed_verify:
                     print("Failed verify!")
-                    return sys.exit(1)
+                    return
             except KeyboardInterrupt:
-                docker_helper.stop(self.config, database_container_id, test,
-                                   out)
+                docker_helper.stop(self.config, database_container_id, test)
             except (OSError, IOError, subprocess.CalledProcessError) as e:
                 traceback.print_exc()
                 self.results.write_intermediate(
@@ -467,10 +430,9 @@ class Benchmarker:
                 traceback.print_exc(file=out)
                 out.flush()
                 out.close()
-                return sys.exit(1)
+                return
 
             out.close()
-            return sys.exit(0)
 
     def __is_port_bound(self, port):
         '''
