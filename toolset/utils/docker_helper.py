@@ -103,7 +103,7 @@ def build(benchmarker_config, test_names, out):
                         if line.startswith('{"stream":'):
                             line = json.loads(line)
                             line = line[line.keys()[0]].encode('utf-8')
-                            log(log_prefix, line, out)
+                            log(line, log_prefix, out)
                 except Exception as e:
                     log("Docker dependency build failed; terminating",
                         log_prefix, out)

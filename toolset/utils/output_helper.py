@@ -48,14 +48,14 @@ def log(log_text=None,
     print our lines correctly, but you can override this functionality if you
     want to print multi-line output.
     '''
-    if not allow_newlines:
-        log_text = log_text.splitlines()[0] + os.linesep
-
     if not log_text:
         return
 
-    if not allow_newlines and log_text.splitlines()[0] is '':
-        return
+    if not allow_newlines:
+        log_text = log_text.splitlines()[0] + os.linesep
+
+        if log_text.splitlines()[0].strip() is '':
+            return
 
     if not quiet:
         if prefix is not None:
@@ -70,6 +70,11 @@ def log(log_text=None,
 
 
 class QuietOutputStream:
+    '''
+    Provides an output stream which either writes to stdout or nothing 
+    depending on the is_quiet param.
+    '''
+
     def __init__(self, is_quiet):
         self.is_quiet = is_quiet
         self.null_out = open(os.devnull, 'w')

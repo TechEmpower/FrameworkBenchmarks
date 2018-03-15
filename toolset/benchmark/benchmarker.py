@@ -182,8 +182,6 @@ class Benchmarker:
         http://redmine.lighttpd.net/projects/weighttp/wiki#Troubleshooting
         '''
         try:
-            if os.name == 'nt':
-                return True
             subprocess.call(
                 ['sudo', 'sysctl', '-w', 'net.ipv4.tcp_max_syn_backlog=65535'],
                 stdout=self.config.quiet_out,
@@ -242,7 +240,8 @@ class Benchmarker:
             sudo sysctl -w kernel.sem="250 32000 256 512"
             """
         ])
-        subprocess.check_call(command)
+        subprocess.check_call(
+            command, stdout=self.config.quiet_out, stderr=subprocess.STDOUT)
         # TODO - print kernel configuration to file
         # echo "Printing kernel configuration:" && sudo sysctl -a
 
@@ -264,6 +263,8 @@ class Benchmarker:
             sudo sysctl -w kernel.shmall=2097152
             """
         ])
+        subprocess.check_call(
+            command, stdout=self.config.quiet_out, stderr=subprocess.STDOUT)
 
     def __run_tests(self, tests):
         '''
