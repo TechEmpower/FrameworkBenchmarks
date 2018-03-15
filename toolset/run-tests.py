@@ -18,6 +18,10 @@ from toolset.utils.metadata_helper import gather_tests
 from toolset.utils.output_helper import log
 from ast import literal_eval
 
+# Enable cross-platform colored output
+from colorama import init
+init()
+
 
 class StoreSeqAction(argparse.Action):
     '''

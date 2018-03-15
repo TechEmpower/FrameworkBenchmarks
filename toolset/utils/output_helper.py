@@ -1,8 +1,8 @@
-import os, sys
+import os, sys, re
 from contextlib import contextmanager
 
-# Enable cross-platform colored output
-from colorama import init
+# RegExp for stripping color codes
+seq = re.compile(r'\x1B\[\d+m')
 
 
 def header(message,
@@ -58,7 +58,6 @@ def log(log_text=None,
         return
 
     if not quiet:
-        init()
         if prefix is not None:
             sys.stdout.write(prefix + log_text)
         else:
@@ -66,8 +65,7 @@ def log(log_text=None,
         sys.stdout.flush()
 
     if log_file is not None:
-        init(strip=True)
-        log_file.write(log_text)
+        log_file.write(seq.sub('', log_text))
         log_file.flush()
 
 
