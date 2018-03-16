@@ -1,6 +1,6 @@
 FROM tfb/nim:latest
   
-ENV NIMBLE_VERSION="0.6.2"
+ENV NIMBLE_VERSION="0.8.10"
 
 RUN cd $NIM_HOME && \
     wget https://github.com/nim-lang/nimble/archive/v$NIMBLE_VERSION.tar.gz && \
