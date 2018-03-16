@@ -303,7 +303,8 @@ def main(argv=None):
 
     else:
         benchmarker = Benchmarker(config, results)
-        benchmarker.run()
+        if not benchmarker.run():
+            return 1
 
     return 0
 

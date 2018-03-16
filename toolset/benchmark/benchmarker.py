@@ -46,13 +46,14 @@ class Benchmarker:
             self.__setup_client()
 
         # Run tests
+        success = True
         header("Running Tests...", top='=', bottom='=')
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
             for test in all_tests:
                 header("Running Test: %s" % test.name)
                 with self.config.quiet_out.enable():
-                    self.__run_test(test, benchmark_log)
+                    success = self.__run_test(test, benchmark_log) and success
                 # Load intermediate result from child process
                 self.results.load()
 
@@ -64,6 +65,8 @@ class Benchmarker:
         self.results.set_completion_time()
         self.results.upload()
         self.results.finish()
+
+        return success
 
     ##########################################################################################
     # Private methods
@@ -202,7 +205,7 @@ class Benchmarker:
         ) != self.config.database_os.lower():
             log("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.",
                 log_prefix, benchmark_log)
-            return
+            return False
 
         # If the test is in the excludes list, we skip it
         if self.config.exclude != None and test.name in self.config.exclude:
@@ -210,7 +213,7 @@ class Benchmarker:
                 format(name=test.name),
                 log_prefix,
                 benchmark_log)
-            return
+            return False
 
         database_container_id = None
         try:
@@ -223,7 +226,7 @@ class Benchmarker:
                     test.port) + " is not available before start")
                 header("Error: Port %s is not available, cannot start %s" %
                        (test.port, test.name), log_prefix, benchmark_log)
-                return
+                return False
 
             # Start database container
             if test.database.lower() != "none":
@@ -234,7 +237,7 @@ class Benchmarker:
                                                     "ERROR: Problem starting")
                     log("ERROR: Problem building/running database container",
                         log_prefix, benchmark_log)
-                    return
+                    return False
 
             # Start webapp
             result = test.start(database_container_id)
@@ -245,7 +248,7 @@ class Benchmarker:
                 log("ERROR: Problem starting {name}".format(name=test.name),
                     log_prefix,
                     benchmark_log)
-                return
+                return False
 
             slept = 0
             max_sleep = 60
@@ -256,7 +259,7 @@ class Benchmarker:
                                        test)
                     log("ERROR: One or more expected docker container exited early",
                         log_prefix, benchmark_log)
-                    return
+                    return False
                 time.sleep(1)
                 slept += 1
 
@@ -304,7 +307,7 @@ class Benchmarker:
 
             if self.config.mode == "verify" and not passed_verify:
                 log("Failed verify!", log_prefix, benchmark_log)
-                return
+                return False
         except KeyboardInterrupt:
             docker_helper.stop(self.config, database_container_id, test)
         except (OSError, IOError, subprocess.CalledProcessError) as e:
@@ -315,7 +318,9 @@ class Benchmarker:
                 message="Subprocess Error %s" % test.name,
                 log_file=benchmark_log)
             log_error(e, log_prefix, benchmark_log)
-            return
+            return False
+
+        return True
 
     def __benchmark(self, framework_test, benchmark_log):
         '''
