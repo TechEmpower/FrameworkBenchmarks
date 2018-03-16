@@ -5,6 +5,7 @@ import requests
 import MySQLdb
 import psycopg2
 import pymongo
+import traceback
 
 # Requests is built ontop of urllib3,
 # here we prevent general request logging
@@ -169,9 +170,10 @@ class FrameworkTestType:
                 results = cursor.fetchall()
                 results_json.append(json.loads(json.dumps(dict(results))))
                 db.close()
-            except Exception as e:
+            except Exception:
+                tb = traceback.format_exc()
                 log("ERROR: Unable to load current MySQL World table.")
-                log_error(e)
+                log_error(tb)
         elif database_name == "postgres":
             try:
                 db = psycopg2.connect(
@@ -189,9 +191,10 @@ class FrameworkTestType:
                 results = cursor.fetchall()
                 results_json.append(json.loads(json.dumps(dict(results))))
                 db.close()
-            except Exception as e:
+            except Exception:
+                tb = traceback.format_exc()
                 log("ERROR: Unable to load current Postgres World table.")
-                log_error(e)
+                log_error(tb)
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
@@ -208,9 +211,10 @@ class FrameworkTestType:
                                 world["randomNumber"])
                 results_json.append(worlds_json)
                 connection.close()
-            except Exception as e:
+            except Exception:
+                tb = traceback.format_exc()
                 log("ERROR: Unable to load current MongoDB World table.")
-                log_error(e)
+                log_error(tb)
         else:
             raise ValueError(
                 "Database: {!s} does not exist".format(database_name))

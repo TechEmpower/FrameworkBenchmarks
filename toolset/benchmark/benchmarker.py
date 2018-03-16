@@ -310,14 +310,14 @@ class Benchmarker:
                 return False
         except KeyboardInterrupt:
             docker_helper.stop(self.config, database_container_id, test)
-        except (OSError, IOError, subprocess.CalledProcessError) as e:
-            traceback.print_exc()
+        except (OSError, IOError, subprocess.CalledProcessError):
+            tb = traceback.format_exc()()
             self.results.write_intermediate(
                 test.name, "error during test setup: " + str(e))
             header(
                 message="Subprocess Error %s" % test.name,
                 log_file=benchmark_log)
-            log_error(e, log_prefix, benchmark_log)
+            log_error(tb, log_prefix, benchmark_log)
             return False
 
         return True

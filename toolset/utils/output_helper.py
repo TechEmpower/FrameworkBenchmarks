@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os, sys, re
 from contextlib import contextmanager
 
@@ -57,23 +58,26 @@ def log(log_text=None,
         if log_text.splitlines()[0].strip() is '':
             return
 
-    if not quiet:
-        if prefix is not None:
-            sys.stdout.write(prefix + log_text)
-        else:
-            sys.stdout.write(log_text)
-        sys.stdout.flush()
+    try:
+        if not quiet:
+            if prefix is not None:
+                sys.stdout.write(prefix + log_text)
+            else:
+                sys.stdout.write(log_text)
+            sys.stdout.flush()
 
-    if log_file is not None:
-        log_file.write(seq.sub('', log_text))
-        log_file.flush()
+        if log_file is not None:
+            log_file.write(seq.sub('', log_text))
+            log_file.flush()
+    except:
+        pass
 
 
 def log_error(exception=None, prefix=None, log_file=None, quiet=False):
     '''
     Logs the given exception
     '''
-    log(str(exception) + os.linesep, prefix, log_file, True, quiet)
+    log(exception + os.linesep, prefix, log_file, True, quiet)
 
 
 class QuietOutputStream:

@@ -1,7 +1,8 @@
 import json
 import re
+import traceback
 
-from toolset.utils.output_helper import log, log_error
+from toolset.utils.output_helper import log_error
 
 
 def basic_body_verification(body, url, is_json_check=True):
@@ -277,8 +278,9 @@ def verify_updates(old_worlds, new_worlds, updates_expected, url):
                 if entry_id in old_worlds[n] and entry_id in new_worlds[n]:
                     if old_worlds[n][entry_id] != new_worlds[n][entry_id]:
                         successful_updates += 1
-            except Exception as e:
-                log_error(e)
+            except Exception:
+                tb = traceback.format_exc()
+                log_error(tb)
         n += 1
 
     if successful_updates == 0:

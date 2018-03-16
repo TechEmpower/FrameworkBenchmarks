@@ -6,7 +6,7 @@ import multiprocessing
 import json
 import docker
 import time
-
+import traceback
 from threading import Thread
 
 from toolset.utils.output_helper import log, log_error
@@ -111,10 +111,11 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                                 line = json.loads(line)
                                 line = line[line.keys()[0]].encode('utf-8')
                                 log(line, log_prefix, build_log)
-                    except Exception as e:
+                    except Exception:
+                        tb = traceback.format_exc()
                         log("Docker dependency build failed; terminating",
                             log_prefix, build_log)
-                        log_error(e, log_prefix, build_log)
+                        log_error(tb, log_prefix, build_log)
                         return 1
 
         # Build the test images
@@ -138,10 +139,11 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                             line = json.loads(line)
                             line = line[line.keys()[0]].encode('utf-8')
                             log(line, log_prefix, build_log)
-                except Exception as e:
+                except Exception:
+                    tb = traceback.format_exc()
                     log("Docker build failed; terminating", log_prefix,
                         build_log)
-                    log_error(e, log_prefix, build_log)
+                    log_error(tb, log_prefix, build_log)
                     return 1
 
     return 0
@@ -189,13 +191,14 @@ def run(benchmarker_config, docker_files, run_log_dir):
             watch_thread.daemon = True
             watch_thread.start()
 
-        except Exception as e:
+        except Exception:
             with open(
                     os.path.join(run_log_dir, "%s.log" % docker_file.replace(
                         ".dockerfile", "").lower()), 'w') as run_log:
+                tb = traceback.format_exc()
                 log("Running docker cointainer: %s failed" % docker_file,
                     log_prefix, run_log)
-                log_error(e, log_prefix, run_log)
+                log_error(tb, log_prefix, run_log)
                 return 1
 
     return 0

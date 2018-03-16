@@ -7,7 +7,6 @@ import platform
 import multiprocessing
 import signal
 from toolset.benchmark.benchmarker import Benchmarker
-from toolset.utils.unbuffered import Unbuffered
 from toolset.utils.scaffolding import Scaffolding
 from toolset.utils.initializer import initialize
 from toolset.utils import cleaner
@@ -76,9 +75,6 @@ def main(argv=None):
     # Do argv default this way, as doing it in the functional declaration sets it at compile time
     if argv is None:
         argv = sys.argv
-
-    # Enable unbuffered output so messages will appear in the proper order with subprocess output.
-    sys.stdout = Unbuffered(sys.stdout)
 
     # 'Ubuntu', '14.04', 'trusty' respectively
     os.environ['TFB_DISTRIB_ID'], os.environ[
