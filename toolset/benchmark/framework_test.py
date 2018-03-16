@@ -53,18 +53,31 @@ class FrameworkTest:
     # Public Methods
     ##########################################################################################
 
-    def start(self, out, database_container_id):
+    def start(self, database_container_id):
         '''
         Start the test implementation
         '''
         test_docker_files = self.get_docker_files()
+        test_log_dir = os.path.join(self.results.directory, self.name.lower())
+        build_log_dir = os.path.join(test_log_dir, 'build')
+        run_log_dir = os.path.join(test_log_dir, 'run')
 
-        result = docker_helper.build(self.benchmarker_config, [self.name], out)
+        try:
+            os.makedirs(build_log_dir)
+        except OSError:
+            pass
+        try:
+            os.makedirs(run_log_dir)
+        except OSError:
+            pass
+
+        result = docker_helper.build(self.benchmarker_config, [self.name],
+                                     build_log_dir)
         if result != 0:
             return result
 
         return docker_helper.run(self.benchmarker_config, test_docker_files,
-                                 out)
+                                 run_log_dir)
 
     def is_running(self):
         '''
@@ -103,17 +116,18 @@ class FrameworkTest:
 
         return test_docker_files
 
-    def verify_urls(self, logPath):
+    def verify_urls(self):
         '''
         Verifys each of the URLs for this test. This will simply curl the URL and 
         check for it's return status. For each url, a flag will be set on this 
         object for whether or not it passed.
         Returns True if all verifications succeeded
         '''
+        log_path = os.path.join(self.results.directory, self.name.lower())
         result = True
 
         def verify_type(test_type):
-            verificationPath = os.path.join(logPath, test_type)
+            verificationPath = os.path.join(log_path, test_type)
             try:
                 os.makedirs(verificationPath)
             except OSError:

@@ -302,12 +302,9 @@ class Results:
             # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
             # or stream flush, so we have to ensure that the color code is printed repeatedly
             header(
-                "Verification Summary%s" % os.linesep,
-                top='=',
-                bottom='',
-                color=Fore.CYAN)
+                "Verification Summary", top='=', bottom='-', color=Fore.CYAN)
             for test in tests:
-                log(Fore.CYAN + "| Test: {!s}".format(test.name))
+                log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
                     for test_type, result in self.verify[
                             test.name].iteritems():

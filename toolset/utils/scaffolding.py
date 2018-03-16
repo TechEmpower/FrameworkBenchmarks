@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os
+import os, re
 from shutil import copytree
 from toolset.utils.metadata_helper import gather_frameworks, gather_langauges
 

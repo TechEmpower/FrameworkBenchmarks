@@ -48,7 +48,7 @@ def clean(config):
     subprocess.check_call(command)
 
 
-def build(benchmarker_config, test_names, out):
+def build(benchmarker_config, test_names, build_log_dir=os.devnull):
     '''
     Builds the dependency chain as well as the test implementation docker images
     for the given tests.
@@ -82,58 +82,72 @@ def build(benchmarker_config, test_names, out):
             docker_dir = os.path.join(
                 os.getenv('FWROOT'), "toolset", "setup", "docker")
             for dependency in deps:
-                docker_file = os.path.join(test.directory,
+                build_log_file = build_log_dir
+                if build_log_dir is not os.devnull:
+                    build_log_file = os.path.join(
+                        build_log_dir, "%s.log" % dependency.lower())
+                with open(build_log_file, 'w') as build_log:
+                    docker_file = os.path.join(test.directory,
+                                               dependency + ".dockerfile")
+                    if not docker_file or not os.path.exists(docker_file):
+                        docker_file = find(docker_dir,
                                            dependency + ".dockerfile")
-                if not docker_file or not os.path.exists(docker_file):
-                    docker_file = find(docker_dir, dependency + ".dockerfile")
-                if not docker_file:
-                    log("Docker build failed; %s could not be found; terminating"
-                        % (dependency + ".dockerfile"), log_prefix, out)
-                    return 1
+                    if not docker_file:
+                        log("Docker build failed; %s could not be found; terminating"
+                            % (dependency + ".dockerfile"), log_prefix,
+                            build_log)
+                        return 1
 
-                # Build the dependency image
+                    # Build the dependency image
+                    try:
+                        for line in docker.APIClient(
+                                base_url='unix://var/run/docker.sock').build(
+                                    path=os.path.dirname(docker_file),
+                                    dockerfile="%s.dockerfile" % dependency,
+                                    tag="tfb/%s" % dependency,
+                                    buildargs=docker_buildargs,
+                                    forcerm=True):
+                            if line.startswith('{"stream":'):
+                                line = json.loads(line)
+                                line = line[line.keys()[0]].encode('utf-8')
+                                log(line, log_prefix, build_log)
+                    except Exception as e:
+                        log("Docker dependency build failed; terminating",
+                            log_prefix, build_log)
+                        log(e, log_prefix, build_log)
+                        return 1
+
+        # Build the test images
+        for test_docker_file in test_docker_files:
+            build_log_file = build_log_dir
+            if build_log_dir is not os.devnull:
+                build_log_file = os.path.join(
+                    build_log_dir, "%s.log" % test_docker_file.replace(
+                        ".dockerfile", "").lower())
+            with open(build_log_file, 'w') as build_log:
                 try:
                     for line in docker.APIClient(
                             base_url='unix://var/run/docker.sock').build(
-                                path=os.path.dirname(docker_file),
-                                dockerfile="%s.dockerfile" % dependency,
-                                tag="tfb/%s" % dependency,
+                                path=test.directory,
+                                dockerfile=test_docker_file,
+                                tag="tfb/test/%s" % test_docker_file.replace(
+                                    ".dockerfile", ""),
                                 buildargs=docker_buildargs,
                                 forcerm=True):
                         if line.startswith('{"stream":'):
                             line = json.loads(line)
                             line = line[line.keys()[0]].encode('utf-8')
-                            log(line, log_prefix, out)
+                            log(line, log_prefix, build_log)
                 except Exception as e:
-                    log("Docker dependency build failed; terminating",
-                        log_prefix, out)
-                    log(e, log_prefix, out)
+                    log("Docker build failed; terminating", log_prefix,
+                        build_log)
+                    log(e, log_prefix, build_log)
                     return 1
-
-        # Build the test images
-        for test_docker_file in test_docker_files:
-            try:
-                for line in docker.APIClient(
-                        base_url='unix://var/run/docker.sock').build(
-                            path=test.directory,
-                            dockerfile=test_docker_file,
-                            tag="tfb/test/%s" % test_docker_file.replace(
-                                ".dockerfile", ""),
-                            buildargs=docker_buildargs,
-                            forcerm=True):
-                    if line.startswith('{"stream":'):
-                        line = json.loads(line)
-                        line = line[line.keys()[0]].encode('utf-8')
-                        log(line, log_prefix, out)
-            except Exception as e:
-                log("Docker build failed; terminating", log_prefix, out)
-                log(e, log_prefix, out)
-                return 1
 
     return 0
 
 
-def run(benchmarker_config, docker_files, out):
+def run(benchmarker_config, docker_files, run_log_dir):
     '''
     Run the given Docker container(s)
     '''
@@ -143,9 +157,13 @@ def run(benchmarker_config, docker_files, out):
         log_prefix = "%s: " % docker_file.replace(".dockerfile", "")
         try:
 
-            def watch_container(container):
-                for line in container.logs(stream=True):
-                    log(line, log_prefix, out)
+            def watch_container(container, docker_file):
+                with open(
+                        os.path.join(
+                            run_log_dir, "%s.log" % docker_file.replace(
+                                ".dockerfile", "").lower()), 'w') as run_log:
+                    for line in container.logs(stream=True):
+                        log(line, log_prefix, run_log)
 
             extra_hosts = {
                 socket.gethostname(): str(benchmarker_config.server_host),
@@ -163,15 +181,22 @@ def run(benchmarker_config, docker_files, out):
                 init=True,
                 extra_hosts=extra_hosts)
 
-            watch_thread = Thread(target=watch_container, args=(container, ))
+            watch_thread = Thread(
+                target=watch_container, args=(
+                    container,
+                    docker_file,
+                ))
             watch_thread.daemon = True
             watch_thread.start()
 
         except Exception as e:
-            log("Running docker cointainer: %s failed" % docker_file,
-                log_prefix, out)
-            log(e, log_prefix, out)
-            return 1
+            with open(
+                    os.path.join(run_log_dir, "%s.log" % docker_file.replace(
+                        ".dockerfile", "").lower()), 'w') as run_log:
+                log("Running docker cointainer: %s failed" % docker_file,
+                    log_prefix, run_log)
+                log(e, log_prefix, run_log)
+                return 1
 
     return 0
 

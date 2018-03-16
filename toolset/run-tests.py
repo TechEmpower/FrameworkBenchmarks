@@ -280,7 +280,7 @@ def main(argv=None):
         initialize(config)
 
     elif config.build:
-        docker_helper.build(config, config.build, None)
+        docker_helper.build(config, config.build)
 
     elif config.clean:
         cleaner.clean(results)
