@@ -1,4 +1,4 @@
-from toolset.utils.output_helper import header, log
+from toolset.utils.output_helper import header, log, log_error
 from toolset.utils.metadata_helper import gather_tests, gather_remaining_tests
 from toolset.utils import docker_helper
 
@@ -314,7 +314,7 @@ class Benchmarker:
             header(
                 message="Subprocess Error %s" % test.name,
                 log_file=benchmark_log)
-            log(e, log_prefix, benchmark_log)
+            log_error(e, log_prefix, benchmark_log)
             return
 
     def __benchmark(self, framework_test, benchmark_log):

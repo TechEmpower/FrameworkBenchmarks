@@ -11,7 +11,7 @@ import pymongo
 import logging
 logging.getLogger('urllib3').setLevel(logging.CRITICAL)
 
-from toolset.utils.output_helper import log
+from toolset.utils.output_helper import log, log_error
 
 
 class FrameworkTestType:
@@ -171,7 +171,7 @@ class FrameworkTestType:
                 db.close()
             except Exception as e:
                 log("ERROR: Unable to load current MySQL World table.")
-                log(e)
+                log_error(e)
         elif database_name == "postgres":
             try:
                 db = psycopg2.connect(
@@ -191,7 +191,7 @@ class FrameworkTestType:
                 db.close()
             except Exception as e:
                 log("ERROR: Unable to load current Postgres World table.")
-                log(e)
+                log_error(e)
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
@@ -210,7 +210,7 @@ class FrameworkTestType:
                 connection.close()
             except Exception as e:
                 log("ERROR: Unable to load current MongoDB World table.")
-                log(e)
+                log_error(e)
         else:
             raise ValueError(
                 "Database: {!s} does not exist".format(database_name))

@@ -9,7 +9,7 @@ import time
 
 from threading import Thread
 
-from toolset.utils.output_helper import log
+from toolset.utils.output_helper import log, log_error
 from toolset.utils.metadata_helper import gather_tests
 from toolset.utils.ordered_set import OrderedSet
 from toolset.utils.database_helper import test_database
@@ -114,7 +114,7 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                     except Exception as e:
                         log("Docker dependency build failed; terminating",
                             log_prefix, build_log)
-                        log(e, log_prefix, build_log)
+                        log_error(e, log_prefix, build_log)
                         return 1
 
         # Build the test images
@@ -141,7 +141,7 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                 except Exception as e:
                     log("Docker build failed; terminating", log_prefix,
                         build_log)
-                    log(e, log_prefix, build_log)
+                    log_error(e, log_prefix, build_log)
                     return 1
 
     return 0
@@ -195,7 +195,7 @@ def run(benchmarker_config, docker_files, run_log_dir):
                         ".dockerfile", "").lower()), 'w') as run_log:
                 log("Running docker cointainer: %s failed" % docker_file,
                     log_prefix, run_log)
-                log(e, log_prefix, run_log)
+                log_error(e, log_prefix, run_log)
                 return 1
 
     return 0

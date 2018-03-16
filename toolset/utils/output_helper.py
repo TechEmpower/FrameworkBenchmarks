@@ -69,6 +69,13 @@ def log(log_text=None,
         log_file.flush()
 
 
+def log_error(exception=None, prefix=None, log_file=None, quiet=False):
+    '''
+    Logs the given exception
+    '''
+    log(str(exception) + os.linesep, prefix, log_file, True, quiet)
+
+
 class QuietOutputStream:
     '''
     Provides an output stream which either writes to stdout or nothing 
