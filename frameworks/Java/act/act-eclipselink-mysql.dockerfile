@@ -1,5 +1,5 @@
-FROM tfb/actframework-base:latest
-RUN mvn -Pebean_pgsql clean package
+FROM tfb/act-base:latest
+RUN mvn -Peclipselink_mysql clean package
 WORKDIR /act/target/dist
 RUN unzip -q *.zip
 CMD java \
@@ -13,8 +13,8 @@ CMD java \
     -XX:+AggressiveOpts \
     -Dapp.mode=prod \
     -Dapp.nodeGroup= \
-    -Dprofile=ebean_pgsql \
+    -Dprofile=eclipselink_mysql \
     -Dxio.worker_threads.max=256 \
-    -Dpgsql.host=TFB-database \
+    -Dmysql.host=TFB-database \
     -cp "/act/target/dist/classes:/act/target/dist/lib/*" \
     com.techempower.act.AppEntry

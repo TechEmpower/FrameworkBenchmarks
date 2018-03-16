@@ -1,4 +1,4 @@
-FROM tfb/actframework-base:latest
+FROM tfb/act-base:latest
 RUN mvn -Peclipselink_pgsql clean package
 WORKDIR /act/target/dist
 RUN unzip -q *.zip
@@ -13,7 +13,7 @@ CMD java \
     -XX:+AggressiveOpts \
     -Dapp.mode=prod \
     -Dapp.nodeGroup= \
-    -Dprofile=eclipselink_pgsql_rythm \
+    -Dprofile=eclipselink_pgsql \
     -Dxio.worker_threads.max=256 \
     -Dpgsql.host=TFB-database \
     -cp "/act/target/dist/classes:/act/target/dist/lib/*" \
