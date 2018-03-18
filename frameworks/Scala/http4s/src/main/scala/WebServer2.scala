@@ -19,7 +19,7 @@ class WebServer2[F[_]: Effect] extends StreamApp[F] {
       ctx = new ApiModule[F]
       init <- BlazeBuilder[F]
         .bindHttp(conf.port, conf.host)
-          .mountService(ctx.api, conf.apiRoot)
+        .mountService(ctx.api, conf.apiRoot)
         .serve(implicitly, global)
     } yield init
 }

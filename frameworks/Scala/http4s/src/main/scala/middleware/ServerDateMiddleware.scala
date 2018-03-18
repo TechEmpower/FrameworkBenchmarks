@@ -19,7 +19,7 @@ final class ServerDateMiddleware[F[_]: Effect] extends Http4sDsl[F] {
             Header("Server", req.serverAddr),
             Header("Date", Instant.now.toString)
           )
-        case resp => resp
+        case r => r
       }
   }
 }

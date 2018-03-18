@@ -13,7 +13,7 @@ val circeVersion = "0.9.2"
 val doobieVersion = "0.5.1"
 val catsEffectVersion = "0.10"
 // NOTE: Bump to 1.0.1 when cats effect 1.0.0 is release 04/2017
-val catsVersion = "0.9.0"
+val catsVersion = "1.0.1"
 
 libraryDependencies ++= List(
 	"org.typelevel" %% "cats-effect" % catsEffectVersion,

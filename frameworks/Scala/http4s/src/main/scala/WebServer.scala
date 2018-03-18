@@ -166,17 +166,17 @@
 //    } yield ()
 //  }
 //}
-
-//@(fortunes: Seq[Fortune])
-//<!DOCTYPE html>
-//  <html>
-//    <head><title>Fortunes</title></head>
-//    <body>
-//      <table>
-//        <tr><th>id</th><th>message</th></tr>
-//        @for(fortune <- fortunes) {
-//        <tr><td>@fortune.id</td><td>@fortune.message</td></tr>
-//        }
-//      </table>
-//      </body>
-//    </html>
+//
+////@(fortunes: Seq[Fortune])
+////<!DOCTYPE html>
+////  <html>
+////    <head><title>Fortunes</title></head>
+////    <body>
+////      <table>
+////        <tr><th>id</th><th>message</th></tr>
+////        @for(fortune <- fortunes) {
+////        <tr><td>@fortune.id</td><td>@fortune.message</td></tr>
+////        }
+////      </table>
+////      </body>
+////    </html>
