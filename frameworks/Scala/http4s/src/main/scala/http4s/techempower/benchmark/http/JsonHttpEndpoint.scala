@@ -16,7 +16,7 @@ final class JsonHttpEndpoint[F[_]: Effect] {
     HttpService[F] {
       case GET -> Root / "json" =>
         Ok(
-          """{"message":"Hello, World!"}""",
+          response,
           `Content-Length`.unsafeFromLong(28L),
           `Content-Type`.apply(
             MediaType.`application/json`
@@ -25,7 +25,7 @@ final class JsonHttpEndpoint[F[_]: Effect] {
     }
   }
 
-//  private[this] val response: Stream[Pure, Byte] =
-//    Stream.chunk(Chunk.bytes("""{"message":"Hello, World!"}""".getBytes("utf-8")))
+  private[this] val response: Stream[F, Byte] =
+    Stream.chunk(Chunk.bytes("""{"message":"Hello, World!"}""".getBytes("utf-8")))
 
 }
