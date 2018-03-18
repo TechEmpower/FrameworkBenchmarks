@@ -15,33 +15,39 @@
 //object Middleware {
 //  def addHeaders(service: HttpService): HttpService = {
 //    Service.lift { req: Request =>
-//      service.map { resp =>
-//        resp.putHeaders(
-//          Header("Server", req.serverAddr)
-//        )
-//      }.apply(req)
+//      service
+//        .map { resp =>
+//          resp.putHeaders(
+//            Header("Server", req.serverAddr)
+//          )
+//        }
+//        .apply(req)
 //    }
 //  }
 //}
 //
-//object Queries extends OptionalValidatingQueryParamDecoderMatcher[Int]("queries") {
-//  def clampQueries(numQueries: Option[ValidationNel[ParseFailure, Int]]): Int = {
-//    numQueries.fold(1)(_.fold(
-//      errors => 1,
-//      queries => {
-//        if (queries < 1)
-//          1
-//        else if (queries > 500)
-//          500
-//        else
-//          queries
-//      }
-//    ))
+//object Queries
+//    extends OptionalValidatingQueryParamDecoderMatcher[Int]("queries") {
+//  def clampQueries(
+//      numQueries: Option[ValidationNel[ParseFailure, Int]]): Int = {
+//    numQueries.fold(1)(
+//      _.fold(
+//        errors => 1,
+//        queries => {
+//          if (queries < 1)
+//            1
+//          else if (queries > 500)
+//            500
+//          else
+//            queries
+//        }
+//      ))
 //  }
 //}
 //
 //object WebServer extends TaskApp {
-//  implicit def jsonEncoder[A](implicit encoder: Encoder[A]) = jsonEncoderOf[A](encoder)
+//  implicit def jsonEncoder[A](implicit encoder: Encoder[A]) =
+//    jsonEncoderOf[A](encoder)
 //
 //  def xaTask(host: String) = {
 //    val driver = "org.postgresql.Driver"
@@ -53,15 +59,17 @@
 //
 //    for {
 //      xa <- HikariTransactor[Task](driver, url, user, pass)
-//      _  <- xa.configure(ds => Task.delay {
-//         ds.setMaximumPoolSize(maxPoolSize)
-//         ds.setMinimumIdle(minIdle)
+//      _ <- xa.configure(ds =>
+//        Task.delay {
+//          ds.setMaximumPoolSize(maxPoolSize)
+//          ds.setMinimumIdle(minIdle)
 //      })
 //    } yield xa
 //  }
 //
 //  // Provide a random number between 1 and 10000 (inclusive)
-//  val randomWorldId: Task[Int] = Task.delay(ThreadLocalRandom.current.nextInt(1, 10001))
+//  val randomWorldId: Task[Int] =
+//    Task.delay(ThreadLocalRandom.current.nextInt(1, 10001))
 //
 //  // Update the randomNumber field with a random number
 //  def updateRandomNumber(world: World): Task[World] = {
@@ -72,7 +80,8 @@
 //
 //  // Select a World object from the database by ID
 //  def selectWorld(xa: Transactor[Task], id: Int): Task[World] = {
-//    val query = sql"select id, randomNumber from World where id = $id".query[World]
+//    val query =
+//      sql"select id, randomNumber from World where id = $id".query[World]
 //    query.unique.transact(xa)
 //  }
 //
@@ -96,7 +105,8 @@
 //  // this uses a batch update SQL call.
 //  def updateWorlds(xa: Transactor[Task], newWorlds: List[World]): Task[Int] = {
 //    val sql = "update World set randomNumber = ? where id = ?"
-//    val update = Update[(Int, Int)](sql).updateMany(newWorlds.map(w => (w.randomNumber, w.id)))
+//    val update = Update[(Int, Int)](sql).updateMany(newWorlds.map(w =>
+//      (w.randomNumber, w.id)))
 //    update.transact(xa)
 //  }
 //
@@ -151,7 +161,8 @@
 //  // Given a fully constructed HttpService, start the server and wait for completion
 //  def startServer(service: HttpService): Task[Unit] = {
 //    Task.delay {
-//      BlazeBuilder.bindHttp(8080, "0.0.0.0")
+//      BlazeBuilder
+//        .bindHttp(8080, "0.0.0.0")
 //        .mountService(service, "/")
 //        .run
 //        .awaitShutdown()
