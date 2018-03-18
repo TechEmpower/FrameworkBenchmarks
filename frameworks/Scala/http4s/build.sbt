@@ -27,8 +27,6 @@ lazy val root = (project in file("."))
     "io.circe" %% "circe-parser" % circeVersion,
     "io.circe" %% "circe-literal" % circeVersion,
     "org.tpolecat" %% "doobie-core" % doobieVersion,
-    "org.tpolecat" %% "doobie-hikari" % doobieVersion,
-    "com.zaxxer" % "HikariCP" % "2.6.1",
     "org.postgresql" % "postgresql" % "42.1.4",
     "com.github.pureconfig" %% "pureconfig" % "0.9.0"
   ))
