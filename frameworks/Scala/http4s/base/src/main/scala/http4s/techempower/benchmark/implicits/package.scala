@@ -1,3 +1,5 @@
+package http4s.techempower.benchmark
+
 import cats.Show
 import model.{Fortune, World}
 

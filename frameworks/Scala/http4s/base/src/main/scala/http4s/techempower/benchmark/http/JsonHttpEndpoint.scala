@@ -1,4 +1,4 @@
-package http
+package http4s.techempower.benchmark.http
 
 import cats.Monad
 import cats.effect.Effect

@@ -1,3 +1,5 @@
+package http4s.techempower.benchmark
+
 import cats.effect.{Effect, IO}
 import fs2.StreamApp
 import fs2.StreamApp.ExitCode
@@ -7,7 +9,7 @@ import org.http4s.server.blaze.BlazeBuilder
 
 import scala.concurrent.ExecutionContext.global
 
-object Serve extends WebServer2[IO]
+object Main extends WebServer2[IO]
 
 class WebServer2[F[_]: Effect] extends StreamApp[F] {
   import config._

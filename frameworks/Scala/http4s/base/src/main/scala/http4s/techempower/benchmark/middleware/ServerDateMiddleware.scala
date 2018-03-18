@@ -1,4 +1,4 @@
-package middleware
+package http4s.techempower.benchmark.middleware
 
 import java.time.Instant
 

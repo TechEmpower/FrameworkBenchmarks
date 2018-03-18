@@ -1,3 +1,5 @@
+package http4s.techempower.benchmark
+
 package object config {
 
   final case class Config(host: String, port: Int, apiRoot: String)

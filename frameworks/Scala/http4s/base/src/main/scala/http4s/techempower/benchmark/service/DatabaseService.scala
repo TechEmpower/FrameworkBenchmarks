@@ -1,11 +1,11 @@
-package service
+package http4s.techempower.benchmark.service
 
 import java.util.concurrent.ThreadLocalRandom
 
 import cats.effect._
 import doobie.implicits._
 import doobie.util.transactor.Transactor
-import model.World
+import http4s.techempower.benchmark.model.World
 
 final class DatabaseService[F[_]: Effect](xa: Transactor[F]) {
 

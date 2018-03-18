@@ -1,12 +1,12 @@
-package modules
+package http4s.techempower.benchmark.modules
 
 import cats.effect.Effect
 import doobie.util.transactor.Transactor
-import http.{DatabaseHttpEndpoint, JsonHttpEndpoint}
-import middleware.ServerDateMiddleware
 import org.http4s.HttpService
-import service.DatabaseService
 import cats.implicits._
+import http4s.techempower.benchmark.http.{DatabaseHttpEndpoint, JsonHttpEndpoint}
+import http4s.techempower.benchmark.middleware.ServerDateMiddleware
+import http4s.techempower.benchmark.service.DatabaseService
 
 final class ApiModule[F[_]: Effect] {
 
