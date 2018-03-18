@@ -1,26 +1,12 @@
 package http4s.techempower.benchmark
 
+import java.util.concurrent.ThreadLocalRandom
+
+import doobie.imports._
 import org.http4s._
 import org.http4s.circe._
-import org.http4s.dsl._
-import org.http4s.server._
+import org.http4s.headers._
 import org.http4s.server.blaze.BlazeBuilder
-import org.http4s.twirl._
-import headers._
-
-import doobie.hikari.hikaritransactor._
-import doobie.imports._
-
-import io.circe._
-import io.circe.generic.auto._
-import io.circe.syntax._
-
-import scalaz._
-import scalaz.concurrent.{Task, TaskApp}
-import scalaz.std.list._
-import scalaz.syntax.traverse._
-
-import java.util.concurrent.ThreadLocalRandom
 
 case class World(id: Int, randomNumber: Int)
 
