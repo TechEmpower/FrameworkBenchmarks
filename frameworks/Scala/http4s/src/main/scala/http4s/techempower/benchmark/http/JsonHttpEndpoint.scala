@@ -26,6 +26,7 @@ final class JsonHttpEndpoint[F[_]: Effect] {
   }
 
   private[this] val response: Stream[F, Byte] =
-    Stream.chunk(Chunk.bytes("""{"message":"Hello, World!"}""".getBytes("utf-8")))
+    Stream.chunk(
+      Chunk.bytes("""{"message":"Hello, World!"}""".getBytes("utf-8")))
 
 }

@@ -13,8 +13,9 @@ object Main extends WebServer2[IO]
 class WebServer2[F[_]: Effect] extends StreamApp[F] {
   import config._
 
-  override def stream(args: List[String],
-                      requestShutdown: F[Unit]): fs2.Stream[F, StreamApp.ExitCode] =
+  override def stream(
+      args: List[String],
+      requestShutdown: F[Unit]): fs2.Stream[F, StreamApp.ExitCode] =
     Scheduler(corePoolSize = conf.corePoolSize) flatMap { implicit scheduler =>
       for {
         client <- Http1Client.stream[F]()
