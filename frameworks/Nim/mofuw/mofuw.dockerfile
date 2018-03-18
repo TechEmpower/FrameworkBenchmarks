@@ -8,4 +8,4 @@ COPY ./ ./
 
 RUN chmod a+wrx start-servers.sh
 
-CMD ./start-servers.sh
+CMD sudo ./start-servers.sh
