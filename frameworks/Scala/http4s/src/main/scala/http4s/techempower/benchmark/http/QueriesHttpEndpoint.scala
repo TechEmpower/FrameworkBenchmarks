@@ -9,6 +9,7 @@ import http4s.techempower.benchmark.implicits._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.headers.{`Content-Type`, `Content-Length`}
 import org.http4s._
+import implicits._
 
 final class QueriesHttpEndpoint[F[_]: Effect](
     databaseService: DatabaseService[F]) {
@@ -20,15 +21,14 @@ final class QueriesHttpEndpoint[F[_]: Effect](
       case GET -> Root / "queries" / IntVar(query) =>
         for {
           q <- databaseService.selectNWorlds(normalize(query))
-          qq = Show[List[World]].show(q)
-          r <- Ok(qq, `Content-Length`.unsafeFromLong(qq.size.toLong)) >>= (r =>
-            F.pure(r.withContentType(
-              `Content-Type`.apply(MediaType.`application/json`))))
+          r <- Ok(q,
+                  `Content-Length`.unsafeFromLong(q.size.toLong),
+                  `Content-Type`.apply(MediaType.`application/json`))
         } yield r
     }
   }
 
-  private[this] def normalize(i: Int): Int =
+  @inline private[this] def normalize(i: Int): Int =
     if (i < 1) 1
     else if (i > 500) 500
     else i

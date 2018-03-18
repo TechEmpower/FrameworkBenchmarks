@@ -13,10 +13,10 @@ final class PlaintextHttpEndpoint[F[_]: Effect] {
     import dsl._
     HttpService[F] {
       case GET -> Root / "plaintext" =>
-        Ok(response, `Content-Type`.apply(MediaType.`text/plain`))
+        Ok("Hello, World!", `Content-Type`.apply(MediaType.`text/plain`))
     }
   }
 
-  private[this] val response: Stream[Pure, Byte] =
-    Stream.chunk(Chunk.bytes("Hello, World!".getBytes("utf-8")))
+//  private[this] val response =
+//    Stream.chunk(Chunk.bytes("Hello, World!".getBytes("utf-8")))
 }

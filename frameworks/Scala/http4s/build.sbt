@@ -5,13 +5,11 @@ val catsEffectVersion = "0.10"
 val catsVersion = "1.0.1"
 
 lazy val root = (project in file("."))
-	.settings(assemblyJarName in assembly := "http4s-benchmark.jar")
-	.aggregate(base)
-
-lazy val base = project
-	.settings(moduleName := "base")
 	.settings(commonSettings)
+	.settings(baseAssemblySettings)
+	.settings(mainClass in (Compile, run) := Some("http4s.techempower.benchmark.Main"))
 	.settings(mainClass in assembly := Some("http4s.techempower.benchmark.Main"))
+	.settings(assemblyJarName in assembly := "http4s-benchmark.jar")
 	.settings(libraryDependencies ++= List(
 		"org.typelevel" %% "cats-effect" % catsEffectVersion,
 		"org.typelevel" %% "cats-core" % "0.9.0",
@@ -41,4 +39,3 @@ lazy val commonSettings = List(
 		"-Xexperimental"
 	)
 )
-
