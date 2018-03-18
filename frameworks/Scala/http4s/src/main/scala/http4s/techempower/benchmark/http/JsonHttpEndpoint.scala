@@ -17,7 +17,6 @@ final class JsonHttpEndpoint[F[_]: Effect] {
       case GET -> Root / "json" =>
         Ok(
           response,
-          `Content-Length`.unsafeFromLong(28L),
           `Content-Type`.apply(
             MediaType.`application/json`
           )

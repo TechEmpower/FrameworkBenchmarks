@@ -1,0 +1,11 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- NOTE: this truncates messages -->
+            <pattern>%d{HH:mm:ss.SSS} %-5level %X{akkaSource:-None} %logger{10} - %.-250msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="WARN">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
