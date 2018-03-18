@@ -4,11 +4,9 @@ version := "1.0-SNAPSHOT"
 
 scalaVersion := "2.12.4"
 
-enablePlugins(SbtTwirl)
-
-TwirlKeys.templateImports += "http4s.techempower.benchmark._"
-
-com.github.retronym.SbtOneJar.oneJarSettings
+//TwirlKeys.templateImports += "http4s.techempower.benchmark._"
+//
+//com.github.retronym.SbtOneJar.oneJarSettings
 
 val http4sVersion = "0.18.2"
 val circeVersion = "0.9.2"
@@ -37,7 +35,7 @@ libraryDependencies ++= List(
 	"com.github.pureconfig" %% "pureconfig" % "0.9.0"
 )
 
-mainClass in oneJar := Some("http4s.techempower.benchmark.WebServer")
+//mainClass in oneJar := Some("http4s.techempower.benchmark.WebServer")
 
 scalacOptions ++= List(
 	"-Ypartial-unification",
