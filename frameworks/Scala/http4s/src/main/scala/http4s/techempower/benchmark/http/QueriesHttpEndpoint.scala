@@ -1,15 +1,13 @@
 package http4s.techempower.benchmark.http
 
-import cats.{Monad, Show}
-import cats.implicits._
+import cats.Monad
 import cats.effect.Effect
-import http4s.techempower.benchmark.model.World
-import http4s.techempower.benchmark.service.DatabaseService
+import cats.implicits._
 import http4s.techempower.benchmark.implicits._
+import http4s.techempower.benchmark.service.DatabaseService
+import org.http4s._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.headers.{`Content-Length`, `Content-Type`}
-import org.http4s._
-import implicits._
 
 final class QueriesHttpEndpoint[F[_]: Effect](
     databaseService: DatabaseService[F]) {

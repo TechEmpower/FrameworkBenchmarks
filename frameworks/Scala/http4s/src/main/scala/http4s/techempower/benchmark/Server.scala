@@ -8,9 +8,9 @@ import org.http4s.server.blaze.BlazeBuilder
 
 import scala.concurrent.ExecutionContext.global
 
-object Main extends WebServer2[IO]
+object Main extends Server[IO]
 
-class WebServer2[F[_]: Effect] extends StreamApp[F] {
+class Server[F[_]: Effect] extends StreamApp[F] {
   import config._
 
   override def stream(
@@ -23,7 +23,7 @@ class WebServer2[F[_]: Effect] extends StreamApp[F] {
         init <- BlazeBuilder[F]
           .bindHttp(conf.port, conf.host)
           .mountService(ctx.api, conf.apiRoot)
-          .serve(implicitly, global)
+          .serve
       } yield init
     }
 }

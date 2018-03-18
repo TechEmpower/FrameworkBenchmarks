@@ -30,7 +30,6 @@ lazy val root = (project in file("."))
     "org.tpolecat" %% "doobie-hikari" % doobieVersion,
     "com.zaxxer" % "HikariCP" % "2.6.1",
     "org.postgresql" % "postgresql" % "42.1.4",
-    "ch.qos.logback" % "logback-classic" % "1.2.3",
     "com.github.pureconfig" %% "pureconfig" % "0.9.0"
   ))
 
