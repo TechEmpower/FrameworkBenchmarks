@@ -21,10 +21,9 @@ final class DatabaseService[F[_]](val xa: Transactor[F]) {
       .unique
       .transact(xa)
 
-  // TODO: parallelize
   def selectNWorlds(i: Int)(implicit F: Effect[F]): F[List[World]] = {
     // Kmett forgive me for i have sinned
-    var t = F.pure(Nil: List[World])
+    var t = F.pure(List.empty[World])
     var k = 1
     while (k <= i) {
       t = (selectRandomWorldId, t).mapN(_ :: _)

@@ -4,9 +4,8 @@ import cats.Monad
 import cats.effect.Effect
 import org.http4s.{HttpService, MediaType}
 import org.http4s.dsl.Http4sDsl
-import org.http4s.headers.{`Content-Type`, `Content-Length`}
-import io.circe.literal._
-import org.http4s.circe._
+import org.http4s.headers.{`Content-Length`, `Content-Type`}
+import fs2.{Chunk, Pure, Stream}
 
 final class JsonHttpEndpoint[F[_]: Effect] {
 
@@ -16,7 +15,7 @@ final class JsonHttpEndpoint[F[_]: Effect] {
     HttpService[F] {
       case GET -> Root / "json" =>
         Ok(
-          json"""{"message":"Hello, World!"}""",
+          response,
           `Content-Length`.unsafeFromLong(28L),
           `Content-Type`.apply(
             MediaType.`application/json`
@@ -24,4 +23,7 @@ final class JsonHttpEndpoint[F[_]: Effect] {
         )
     }
   }
+
+  private[this] val response: Stream[Pure, Byte] =
+    Stream.chunk(Chunk.bytes("""{"message":"Hello, World!"}""".getBytes("utf-8")))
 }
