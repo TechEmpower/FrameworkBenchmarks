@@ -7,7 +7,7 @@ import http4s.techempower.benchmark.model.World
 import http4s.techempower.benchmark.service.DatabaseService
 import http4s.techempower.benchmark.implicits._
 import org.http4s.dsl.Http4sDsl
-import org.http4s.headers.{`Content-Type`, `Content-Length`}
+import org.http4s.headers.{`Content-Length`, `Content-Type`}
 import org.http4s._
 import implicits._
 
@@ -18,12 +18,20 @@ final class QueriesHttpEndpoint[F[_]: Effect](
     val dsl: Http4sDsl[F] = new Http4sDsl[F] {}
     import dsl._
     HttpService[F] {
-      case GET -> Root / "queries" / IntVar(query) =>
+      case GET -> Root / "queries" :? IntParamDecoderQueries(query) =>
         for {
           q <- databaseService.selectNWorlds(normalize(query))
           r <- Ok(q,
                   `Content-Length`.unsafeFromLong(q.size.toLong),
                   `Content-Type`.apply(MediaType.`application/json`))
+        } yield r
+
+      case GET -> Root / "updates" :? IntParamDecoderUpdates(updates) =>
+        for {
+          u <- databaseService.selectNWorlds(normalize(updates))
+          w <- databaseService.selectNDifferentWorlds(u)
+          _ <- databaseService.updateNWorlds(w)
+          r <- Ok(w)
         } yield r
     }
   }

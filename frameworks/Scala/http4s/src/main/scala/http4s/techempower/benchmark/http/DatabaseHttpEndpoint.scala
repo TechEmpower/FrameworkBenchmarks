@@ -15,10 +15,11 @@ final class DatabaseHttpEndpoint[F[_]: Effect](
   def service(implicit F: Monad[F]): HttpService[F] = {
     val dsl: Http4sDsl[F] = new Http4sDsl[F] {}
     import dsl._
+    import databaseService._
     HttpService[F] {
       case GET -> Root / "db" =>
         for {
-          w <- databaseService.selectRandomWorldId
+          w <- random >>= databaseService.selectRandomWorldId
           r <- Ok(w, `Content-Type`.apply(MediaType.`application/json`))
         } yield r
     }
