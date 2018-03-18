@@ -9,7 +9,7 @@ The tests were run with:
 
 * [Java Oracle 1.8](http://www.oracle.com/technetwork/java/javase)
 * [http4s 0.18.2](http://http4s.org/)
-* [blaze 0.18.2](https://github.com/http4s/blaze/)
+* [blaze 0.12.11](https://github.com/http4s/blaze/)
 
 ## Test URLs
 ### JSON Encoding Test
