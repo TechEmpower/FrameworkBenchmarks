@@ -35,9 +35,9 @@ final class ApiModule[F[_]: Effect] {
   private[this] val headerMiddleware: ServerDateMiddleware[F] =
     new ServerDateMiddleware[F]
 
+  private[this] val endpoints: HttpService[F] =
+    queriesHttpEndpoint <+> databaseHttpEndpoint <+> jsonHttpEndpoint <+> plaintextHttpEndpoint
+
   val api: HttpService[F] =
-    headerMiddleware.addServerDateHeaders(jsonHttpEndpoint) <+>
-      headerMiddleware.addServerDateHeaders(databaseHttpEndpoint) <+>
-      headerMiddleware.addServerDateHeaders(queriesHttpEndpoint) <+>
-      headerMiddleware.addServerDateHeaders(plaintextHttpEndpoint)
+    headerMiddleware.addServerDateHeaders(endpoints)
 }

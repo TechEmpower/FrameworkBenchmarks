@@ -2,7 +2,6 @@ package http4s.techempower.benchmark.http
 
 import cats.Monad
 import cats.effect.Effect
-import cats.implicits._
 import org.http4s.{HttpService, MediaType}
 import org.http4s.dsl.Http4sDsl
 import org.http4s.headers.{`Content-Type`, `Content-Length`}
@@ -18,11 +17,11 @@ final class JsonHttpEndpoint[F[_]: Effect] {
       case GET -> Root / "json" =>
         Ok(
           json"""{"message":"Hello, World!"}""",
-          `Content-Length`.unsafeFromLong(28L)
-        ) map (_.withContentType(
+          `Content-Length`.unsafeFromLong(28L),
           `Content-Type`.apply(
             MediaType.`application/json`
-          )))
+          )
+        )
     }
   }
 }
