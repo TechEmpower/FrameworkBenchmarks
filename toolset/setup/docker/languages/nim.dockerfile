@@ -1,7 +1,7 @@
 FROM tfb/nginx:latest
 
-ENV NIM_VERSION="0.11.2"
-ENV NIM_CSOURCES="6bf2282"
+ENV NIM_VERSION="0.18.0"
+ENV NIM_CSOURCES="da97f85"
 
 RUN wget https://github.com/nim-lang/Nim/archive/v$NIM_VERSION.tar.gz
 RUN tar xvf v$NIM_VERSION.tar.gz
