@@ -8,7 +8,10 @@ from toolset.utils.output_helper import log
 
 
 class FortuneHTMLParser(HTMLParser):
-    body = []
+
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.body = []
 
     valid_fortune = '''<!doctype html><html>
 <head><title>Fortunes</title></head>

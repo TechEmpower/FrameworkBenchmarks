@@ -2,7 +2,6 @@
   "framework": "web2py",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "plaintext_url": "/standard/plaintext",
       "json_url": "/standard/json",
       "db_url": "/standard/db",
@@ -26,7 +25,6 @@
       "versus": "wsgi"
     },
     "optimized": {
-      "setup_file": "setup",
       "plaintext_url": "/optimized/plaintext",
       "json_url": "/optimized/json",
       "db_url": "/optimized/db",

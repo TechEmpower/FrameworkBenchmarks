@@ -1,5 +1,5 @@
-FROM tfb/actframework-base:latest
-RUN mvn -Phibernate_mysql clean package
+FROM tfb/act-base:latest
+RUN mvn -Peclipselink_mysql clean package
 WORKDIR /act/target/dist
 RUN unzip -q *.zip
 CMD java \
@@ -13,7 +13,7 @@ CMD java \
     -XX:+AggressiveOpts \
     -Dapp.mode=prod \
     -Dapp.nodeGroup= \
-    -Dprofile=hibernate_mysql_rythm \
+    -Dprofile=eclipselink_mysql_rythm \
     -Dxio.worker_threads.max=256 \
     -Dmysql.host=TFB-database \
     -cp "/act/target/dist/classes:/act/target/dist/lib/*" \

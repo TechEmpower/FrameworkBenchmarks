@@ -28,7 +28,7 @@ diesel = { version = "1.1", features = ["postgres"] }
 postgres = "0.15"
 
 actix = "0.5"
-actix-web = "0.4"
+actix-web = "^0.4.9"
 
 [build-dependencies]
 askama = "0.5"

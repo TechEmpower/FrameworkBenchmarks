@@ -1,3 +1,5 @@
+BEGIN;
+
 CREATE TABLE  World (
   id integer NOT NULL,
   randomNumber integer NOT NULL default 0,
@@ -57,3 +59,5 @@ INSERT INTO "Fortune" (id, message) VALUES (9, 'Feature: A bug with seniority.')
 INSERT INTO "Fortune" (id, message) VALUES (10, 'Computers make very fast, very accurate mistakes.');
 INSERT INTO "Fortune" (id, message) VALUES (11, '<script>alert("This should not be displayed in a browser alert box.");</script>');
 INSERT INTO "Fortune" (id, message) VALUES (12, 'フレームワークのベンチマーク');
+
+COMMIT;
