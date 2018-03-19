@@ -1,5 +1,5 @@
-FROM tfb/actframework-base:latest
-RUN mvn -Pmongo clean package
+FROM tfb/act-base:latest
+RUN mvn -Pebean_pgsql clean package
 WORKDIR /act/target/dist
 RUN unzip -q *.zip
 CMD java \
@@ -13,8 +13,8 @@ CMD java \
     -XX:+AggressiveOpts \
     -Dapp.mode=prod \
     -Dapp.nodeGroup= \
-    -Dprofile=mongo_rythm \
+    -Dprofile=ebean_pgsql_rythm \
     -Dxio.worker_threads.max=256 \
-    -Dmongo.host=TFB-database \
+    -Dpgsql.host=TFB-database \
     -cp "/act/target/dist/classes:/act/target/dist/lib/*" \
     com.techempower.act.AppEntry

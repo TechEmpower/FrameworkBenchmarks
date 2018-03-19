@@ -1,5 +1,5 @@
 {
-  "framework": "actframework",
+  "framework": "act",
   "tests": [{
       "default": {
       "json_url": "/json",
@@ -16,7 +16,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actframework",
+      "display_name": "act",
       "notes": "",
       "versus": "undertow"
     },
@@ -55,7 +55,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-ebean-pgsql",
+      "display_name": "act-ebean-pgsql-rythm",
       "notes": "",
       "versus": "undertow-postgresql"
     },
@@ -94,7 +94,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-ebean-mysql",
+      "display_name": "act-ebean-mysql-rythm",
       "notes": "",
       "versus": "undertow-mysql"
     },
@@ -133,7 +133,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-hibernate-pgsql",
+      "display_name": "act-hibernate-pgsql-rythm",
       "notes": "",
       "versus": "undertow-postgresql"
     },
@@ -172,7 +172,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-hibernate-mysql",
+      "display_name": "act-hibernate-mysql-rythm",
       "notes": "",
       "versus": "undertow-mysql"
     },
@@ -211,7 +211,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-eclipselink-pgsql",
+      "display_name": "act-eclipselink-pgsql-rythm",
       "notes": "",
       "versus": "undertow-postgresql"
     },
@@ -250,7 +250,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-eclipselink-mysql",
+      "display_name": "act-eclipselink-mysql-rythm",
       "notes": "",
       "versus": "undertow-mysql"
     },
@@ -271,7 +271,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-morphia",
+      "display_name": "act-morphia-mongo",
       "notes": "",
       "versus": "undertow-mongodb"
     },
@@ -289,7 +289,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-morphia",
+      "display_name": "act-morphia-mongo-rythm",
       "notes": "",
       "versus": "undertow-mongodb"
     }
