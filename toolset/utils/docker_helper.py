@@ -9,7 +9,7 @@ import time
 import traceback
 from threading import Thread
 
-from toolset.utils.output_helper import log, log_error
+from toolset.utils.output_helper import log, log_error, FNULL
 from toolset.utils.metadata_helper import gather_tests
 from toolset.utils.ordered_set import OrderedSet
 from toolset.utils.database_helper import test_database
@@ -249,7 +249,7 @@ def stop(config=None, database_container_id=None, test=None):
     if database_container_id:
         command = list(config.database_ssh_command)
         command.extend(['docker', 'stop', database_container_id])
-        subprocess.check_call(command)
+        subprocess.check_call(command, stdout=FNULL, stderr=subprocess.STDOUT)
     client.images.prune()
     client.containers.prune()
     client.networks.prune()

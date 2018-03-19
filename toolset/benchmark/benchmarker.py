@@ -1,4 +1,4 @@
-from toolset.utils.output_helper import header, log, log_error
+from toolset.utils.output_helper import header, log, log_error, FNULL
 from toolset.utils.metadata_helper import gather_tests, gather_remaining_tests
 from toolset.utils import docker_helper
 
@@ -111,27 +111,27 @@ class Benchmarker:
         try:
             subprocess.call(
                 ['sudo', 'sysctl', '-w', 'net.ipv4.tcp_max_syn_backlog=65535'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
             subprocess.call(
                 ['sudo', 'sysctl', '-w', 'net.core.somaxconn=65535'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
             subprocess.call(
                 ['sudo', 'sysctl', 'net.ipv4.tcp_tw_reuse=1'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
             subprocess.call(
                 ['sudo', 'sysctl', 'net.ipv4.tcp_tw_recycle=1'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
             subprocess.call(
                 ['sudo', 'sysctl', '-w', 'kernel.shmmax=134217728'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
             subprocess.call(
                 ['sudo', 'sysctl', '-w', 'kernel.shmall=2097152'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
 
             with open(os.path.join(self.results.directory, 'sysctl.txt'),
@@ -167,8 +167,7 @@ class Benchmarker:
             sudo sysctl -w kernel.sem="250 32000 256 512"
             """
         ])
-        subprocess.check_call(
-            command, stdout=self.config.quiet_out, stderr=subprocess.STDOUT)
+        subprocess.check_call(command, stdout=FNULL, stderr=subprocess.STDOUT)
         # TODO - print kernel configuration to file
         # echo "Printing kernel configuration:" && sudo sysctl -a
 
@@ -190,8 +189,7 @@ class Benchmarker:
             sudo sysctl -w kernel.shmall=2097152
             """
         ])
-        subprocess.check_call(
-            command, stdout=self.config.quiet_out, stderr=subprocess.STDOUT)
+        subprocess.check_call(command, stdout=FNULL, stderr=subprocess.STDOUT)
 
     def __run_test(self, test, benchmark_log):
         '''
@@ -310,8 +308,8 @@ class Benchmarker:
                 return False
         except KeyboardInterrupt:
             docker_helper.stop(self.config, database_container_id, test)
-        except (OSError, IOError, subprocess.CalledProcessError):
-            tb = traceback.format_exc()()
+        except (OSError, IOError, subprocess.CalledProcessError) as e:
+            tb = traceback.format_exc()
             self.results.write_intermediate(
                 test.name, "error during test setup: " + str(e))
             header(
@@ -385,9 +383,8 @@ class Benchmarker:
                                       --rpc --rpcd --output {output_file}".format(
             output_file=output_file)
         cmd = shlex.split(dstat_string)
-        dev_null = open(os.devnull, "w")
         self.subprocess_handle = subprocess.Popen(
-            cmd, stdout=dev_null, stderr=subprocess.STDOUT)
+            cmd, stdout=FNULL, stderr=subprocess.STDOUT)
 
     def __end_logging(self):
         '''

@@ -5,6 +5,8 @@ from contextlib import contextmanager
 # RegExp for stripping color codes
 seq = re.compile(r'\x1B\[\d+m')
 
+FNULL = open(os.devnull, 'w')
+
 
 def header(message,
            top='-',
@@ -88,7 +90,6 @@ class QuietOutputStream:
 
     def __init__(self, is_quiet):
         self.is_quiet = is_quiet
-        self.null_out = open(os.devnull, 'w')
 
     def fileno(self):
         with self.enable():
@@ -104,8 +105,8 @@ class QuietOutputStream:
             old_out = sys.stdout
             old_err = sys.stderr
             try:
-                sys.stdout = self.null_out
-                sys.stderr = self.null_out
+                sys.stdout = FNULL
+                sys.stderr = FNULL
                 yield
             finally:
                 sys.stdout = old_out

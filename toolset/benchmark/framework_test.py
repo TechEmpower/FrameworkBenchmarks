@@ -5,7 +5,7 @@ import traceback
 import logging
 from requests import ConnectionError
 
-from toolset.utils.output_helper import header, log
+from toolset.utils.output_helper import header, log, FNULL
 from toolset.utils import docker_helper
 
 # Cross-platform colored text
@@ -94,7 +94,6 @@ class FrameworkTest:
                                    self.runTests[test_type].get_url())
 
         try:
-            FNULL = open(os.devnull, 'w')
             subprocess.check_call(
                 ['curl', '-sSfl', url], stdout=FNULL, stderr=subprocess.STDOUT)
         except:

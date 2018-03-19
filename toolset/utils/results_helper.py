@@ -1,5 +1,5 @@
 from toolset.utils.metadata_helper import gather_remaining_tests, gather_frameworks
-from toolset.utils.output_helper import header, log
+from toolset.utils.output_helper import header, log, FNULL
 
 import os
 import logging
@@ -37,13 +37,13 @@ class Results:
         self.environmentDescription = self.config.results_environment
         try:
             self.git = dict()
+            subprocess.check_call(
+                ['git', 'status'], stdout=FNULL, stderr=subprocess.STDOUT)
             self.git['commitId'] = self.__get_git_commit_id()
             self.git['repositoryUrl'] = self.__get_git_repository_url()
             self.git['branchName'] = self.__get_git_branch_name()
-        except Exception as e:
-            logging.debug(
-                'Could not read local git repository, which is fine. The error was: %s',
-                e)
+        except Exception:
+            #Could not read local git repository, which is fine.
             self.git = None
         self.startTime = int(round(time.time() * 1000))
         self.completionTime = None
@@ -81,13 +81,6 @@ class Results:
         self.failed['plaintext'] = []
         self.failed['cached_query'] = []
         self.verify = dict()
-
-        try:
-            with open(os.path.join(self.directory, 'results.json'), 'r') as f:
-                # Load json file into results object
-                self.__dict__.update(json.load(f))
-        except IOError:
-            logging.warn("results.json for test not found.")
 
     #############################################################################
     # PUBLIC FUNCTIONS
