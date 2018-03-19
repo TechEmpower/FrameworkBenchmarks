@@ -7,11 +7,6 @@ import psycopg2
 import pymongo
 import traceback
 
-# Requests is built ontop of urllib3,
-# here we prevent general request logging
-import logging
-logging.getLogger('urllib3').setLevel(logging.CRITICAL)
-
 from toolset.utils.output_helper import log, log_error
 
 

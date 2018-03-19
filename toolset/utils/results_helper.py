@@ -216,7 +216,7 @@ class Results:
                     headers={'Content-Type': 'application/json'},
                     data=json.dumps(self.__to_jsonable(), indent=2))
             except (Exception):
-                logging.error("Error uploading results.json")
+                log("Error uploading results.json")
 
     def load(self):
         '''
@@ -353,7 +353,7 @@ class Results:
             with open(self.file, 'w') as f:
                 f.write(json.dumps(self.__to_jsonable(), indent=2))
         except (IOError):
-            logging.error("Error writing results.json")
+            log("Error writing results.json")
 
     def __count_sloc(self):
         '''
@@ -366,9 +366,8 @@ class Results:
         for framework, testlist in frameworks.items():
             if not os.path.exists(
                     os.path.join(testlist[0].directory, "source_code")):
-                logging.warn(
-                    "Cannot count lines of code for %s - no 'source_code' file",
-                    framework)
+                log("Cannot count lines of code for %s - no 'source_code' file"
+                    % framework)
                 continue
 
             # Unfortunately the source_code files use lines like
@@ -385,23 +384,21 @@ class Results:
                         os.path.join(testlist[0].directory, "cloc_defs.txt")):
                     command += " --read-lang-def %s" % os.path.join(
                         testlist[0].directory, "cloc_defs.txt")
-                    logging.info("Using custom cloc definitions for %s",
-                                 framework)
+                    log("Using custom cloc definitions for %s" % framework)
 
                 # Find the last instance of the word 'code' in the yaml output. This should
                 # be the line count for the sum of all listed files or just the line count
                 # for the last file in the case where there's only one file listed.
                 command = command + "| grep code | tail -1 | cut -d: -f 2"
-                logging.debug("Running \"%s\" (cwd=%s)", command, wd)
+                log("Running \"%s\" (cwd=%s)" % (command, wd))
                 lineCount = subprocess.check_output(
                     command, cwd=wd, shell=True)
                 jsonResult[framework] = int(lineCount)
             except subprocess.CalledProcessError:
                 continue
             except ValueError as ve:
-                logging.warn(
-                    "Unable to get linecount for %s due to error '%s'",
-                    framework, ve)
+                log("Unable to get linecount for %s due to error '%s'" %
+                    (framework, ve))
         self.rawData['slocCounts'] = jsonResult
 
     def __count_commits(self):

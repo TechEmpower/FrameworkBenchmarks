@@ -1,8 +1,6 @@
 import os
 import subprocess
-import sys
 import traceback
-import logging
 from requests import ConnectionError
 
 from toolset.utils.output_helper import header, log, FNULL
@@ -39,9 +37,6 @@ class FrameworkTest:
         self.port = ""
         self.versus = ""
         self.docker_files = None
-
-        # setup logging
-        logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
         # Used in setup.sh scripts for consistency with
         # the bash environment variables
