@@ -5,8 +5,7 @@ import fs2.{Scheduler, StreamApp}
 import modules.ApiModule
 import org.http4s.client.blaze.Http1Client
 import org.http4s.server.blaze.BlazeBuilder
-
-import scala.concurrent.ExecutionContext.global
+import monix.execution.Scheduler.Implicits.global
 
 object Main extends Server[IO]
 

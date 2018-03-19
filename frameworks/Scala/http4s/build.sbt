@@ -6,6 +6,7 @@ val circeVersion = "0.9.2"
 val doobieVersion = "0.5.1"
 val catsEffectVersion = "0.10"
 val catsVersion = "1.0.1"
+val monixVersion = "3.0.0-M3"
 
 lazy val root = (project in file("."))
   .settings(commonSettings)
@@ -26,6 +27,7 @@ lazy val root = (project in file("."))
     "io.circe" %% "circe-generic" % circeVersion,
     "io.circe" %% "circe-parser" % circeVersion,
     "io.circe" %% "circe-literal" % circeVersion,
+    "io.monix" %% "monix" % monixVersion,
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.postgresql" % "postgresql" % "42.1.4",
     "com.github.pureconfig" %% "pureconfig" % "0.9.0"
