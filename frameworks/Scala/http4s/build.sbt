@@ -30,7 +30,8 @@ lazy val root = (project in file("."))
     "io.monix" %% "monix" % monixVersion,
     "org.tpolecat" %% "doobie-core" % doobieVersion,
     "org.postgresql" % "postgresql" % "42.1.4",
-    "com.github.pureconfig" %% "pureconfig" % "0.9.0"
+    "com.github.pureconfig" %% "pureconfig" % "0.9.0",
+    "ch.qos.logback" % "logback-classic" % "1.2.3"
   ))
 
 lazy val commonSettings = List(
