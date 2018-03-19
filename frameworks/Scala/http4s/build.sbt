@@ -1,11 +1,11 @@
 addCommandAlias("cpl", "all compile test:compile")
 addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
 
-val http4sVersion = "0.18.2"
+val http4sVersion = "0.18.3"
 val circeVersion = "0.9.2"
 val doobieVersion = "0.5.1"
 val catsEffectVersion = "0.10"
-val catsVersion = "1.0.1"
+val catsVersion = "1.1.0"
 val monixVersion = "3.0.0-M3"
 
 lazy val root = (project in file("."))
