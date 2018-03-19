@@ -1,0 +1,9 @@
+-Dfile.encoding=UTF8
+-XX:MaxMetaspaceSize=1g
+-Xss2m
+-Xms1g
+-Xmx1g
+-XX:+UseG1GC
+-XX:+AlwaysPreTouch
+-XX:-UseBiasedLocking
+-XX:MaxGCPauseMillis=30
