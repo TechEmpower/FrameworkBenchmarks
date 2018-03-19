@@ -1,11 +1,10 @@
 import subprocess, os
-from toolset.utils import setup_util
 
-DEVNULL = open(os.devnull, 'w')
+from toolset.utils.output_helper import FNULL
 
 
 def initialize(args):
-    fwroot = setup_util.get_fwroot()
+    fwroot = os.getenv('FWROOT')
     dbuser = args.database_user
     dbhost = args.database_host
     dbiden = args.database_identity_file
@@ -71,8 +70,8 @@ def __check_connection(user, host, identity_file, app_host):
         p = subprocess.Popen(
             __ssh_string(user, host, identity_file),
             stdin=subprocess.PIPE,
-            stdout=DEVNULL,
-            stderr=DEVNULL)
+            stdout=FNULL,
+            stderr=subprocess.STDOUT)
         p.communicate("ssh -T -o StrictHostKeyChecking=no %s" % app_host)
         if p.returncode:
             client_conn = False
@@ -96,8 +95,8 @@ def __init_client(fwroot, user, host, identity_file, quiet):
             p = subprocess.Popen(
                 __ssh_string(user, host, identity_file),
                 stdin=subprocess.PIPE,
-                stdout=DEVNULL,
-                stderr=DEVNULL)
+                stdout=FNULL,
+                stderr=subprocess.STDOUT)
         else:
             p = subprocess.Popen(
                 __ssh_string(user, host, identity_file), stdin=subprocess.PIPE)
@@ -120,8 +119,8 @@ def __init_database(fwroot, user, host, identity_file, quiet):
             p = subprocess.Popen(
                 __ssh_string(user, host, identity_file),
                 stdin=subprocess.PIPE,
-                stdout=DEVNULL,
-                stderr=DEVNULL)
+                stdout=FNULL,
+                stderr=subprocess.STDOUT)
         else:
             p = subprocess.Popen(
                 __ssh_string(user, host, identity_file), stdin=subprocess.PIPE)

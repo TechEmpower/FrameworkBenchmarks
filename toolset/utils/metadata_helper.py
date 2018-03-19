@@ -2,10 +2,11 @@ import ConfigParser
 import os
 import glob
 import json
-import logging
 
 from ast import literal_eval
 from collections import OrderedDict
+
+from toolset.utils.output_helper import log
 
 
 def gather_langauges():
@@ -13,10 +14,8 @@ def gather_langauges():
     Gathers all the known languages in the suite via the folder names
     beneath FWROOT.
     '''
-    # Avoid setting up a circular import
-    from toolset.utils import setup_util
 
-    lang_dir = os.path.join(setup_util.get_fwroot(), "frameworks")
+    lang_dir = os.path.join(os.getenv('FWROOT'), "frameworks")
     langs = []
     for dir in glob.glob(os.path.join(lang_dir, "*")):
         langs.append(dir.replace(lang_dir, "")[1:])
@@ -40,7 +39,6 @@ def gather_tests(include=[], exclude=[], benchmarker_config=None,
     '''
     # Avoid setting up a circular import
     from toolset.utils.benchmark_config import BenchmarkConfig
-    from toolset.utils import setup_util
 
     # Help callers out a bit
     if include is None:
@@ -57,7 +55,7 @@ def gather_tests(include=[], exclude=[], benchmarker_config=None,
 
     # Setup default BenchmarkerConfig using example configuration
     if benchmarker_config is None:
-        default_config = setup_util.get_fwroot() + "/benchmark.cfg"
+        default_config = os.getenv('FWROOT') + "/benchmark.cfg"
         config = ConfigParser.SafeConfigParser()
         config.readfp(open(default_config))
         defaults = dict(config.items("Defaults"))
@@ -196,9 +194,8 @@ def parse_config(config, directory, benchmarker_config, results):
 
         tests_to_run = [name for (name, keys) in test.iteritems()]
         if "default" not in tests_to_run:
-            logging.warn(
-                "Framework %s does not define a default test in benchmark_config.json",
-                config['framework'])
+            log("Framework %s does not define a default test in benchmark_config.json"
+                % config['framework'])
 
         # Check that each test configuration is acceptable
         # Throw exceptions if a field is missing, or how to improve the field
@@ -217,7 +214,7 @@ def parse_config(config, directory, benchmarker_config, results):
                     # This is quite common - most tests don't support all types
                     # Quitely log it and move on (debug logging is on in travis and this causes
                     # ~1500 lines of debug, so I'm totally ignoring it for now
-                    # logging.debug("Missing arguments for test type %s for framework test %s", type_name, test_name)
+                    # log("Missing arguments for test type %s for framework test %s" % (type_name, test_name))
                     pass
 
             # We need to sort by test_type to run
