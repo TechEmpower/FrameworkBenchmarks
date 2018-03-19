@@ -16,7 +16,7 @@ final class QueriesHttpEndpoint[F[_]: Effect](
     val dsl: Http4sDsl[F] = new Http4sDsl[F] {}
     import dsl._
     HttpService[F] {
-      case GET -> Root / "queries" :? IntParamDecoderQueries(query) =>
+      case GET -> Root / "queries" / IntVar(query) =>
         for {
           q <- databaseService.selectNWorlds(normalize(query))
           r <- Ok(q,
@@ -24,7 +24,7 @@ final class QueriesHttpEndpoint[F[_]: Effect](
                   `Content-Type`.apply(MediaType.`application/json`))
         } yield r
 
-      case GET -> Root / "updates" :? IntParamDecoderUpdates(updates) =>
+      case GET -> Root / "updates" / IntVar(updates) =>
         for {
           u <- databaseService.selectNWorlds(normalize(updates))
           w <- databaseService.selectNDifferentWorlds(u)
