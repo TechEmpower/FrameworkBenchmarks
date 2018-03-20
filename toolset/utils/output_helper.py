@@ -65,7 +65,7 @@ def log(log_text=None,
             sys.stdout.flush()
 
         if log_file is not None:
-            log_file.write(seq.sub('', new_log_text))
+            log_file.write(seq.sub('', log_text))
             log_file.flush()
     except:
         pass
