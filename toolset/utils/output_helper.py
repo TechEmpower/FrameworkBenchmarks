@@ -37,13 +37,12 @@ def header(message,
         if color is not None:
             result += color
         result += "%s%s" % (os.linesep, bottomheader)
-    log(result + os.linesep, None, log_file, True, quiet)
+    log(result + os.linesep, log_file, True, quiet)
 
 
 def log(log_text=None,
-        prefix=None,
+        prefix='',
         log_file=None,
-        allow_newlines=False,
         quiet=False):
     '''
     Logs the given text and optional prefix to stdout (if quiet is False) and
@@ -54,18 +53,12 @@ def log(log_text=None,
     if not log_text:
         return
 
-    if not allow_newlines:
-        log_text = log_text.splitlines()[0] + os.linesep
-
-        if log_text.splitlines()[0].strip() is '':
-            return
-
     try:
         if not quiet:
-            if prefix is not None:
-                sys.stdout.write(prefix + log_text)
-            else:
-                sys.stdout.write(log_text)
+            for line in log_text.splitlines():
+                if line.strip() is '':
+                    return
+                sys.stdout.write(prefix + line + os.linesep)
             sys.stdout.flush()
 
         if log_file is not None:
