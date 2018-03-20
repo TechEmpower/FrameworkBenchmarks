@@ -37,15 +37,17 @@ RUN chown postgres:postgres /etc/sysctl.d/60-postgresql-shm.conf
 RUN chown postgres:postgres create-postgres*
 RUN chown -Rf postgres:postgres /ssd
 
+ENV PGDATA=/ssd/postgresql
+
 USER postgres
 
 # We have to wait for postgres to start before we can use the cli
 RUN service postgresql start && \
     until psql -c "\q"; do sleep 1; done && \
     psql < create-postgres-database.sql && \
-    psql -q hello_world < create-postgres.sql
+    psql -a hello_world < create-postgres.sql && \
+    service postgresql stop
 
 ENV PATH $PATH:/usr/lib/postgresql/$PG_VERSION/bin
-ENV PGDATA=/var/lib/postgresql/data 
 
-CMD ["postgres", "-D", "/ssd/postgresql"]
+CMD ["postgres"]
