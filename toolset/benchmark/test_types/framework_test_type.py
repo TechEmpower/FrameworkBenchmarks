@@ -94,10 +94,7 @@ class FrameworkTestType:
         body = r.content
         log(str(headers))
         log(body)
-        b = 40
-        log("  Response (trimmed to {:d} bytes): \"{!s}\"".format(
-            b,
-            body.strip()[:b]))
+        log("  Response: \"{!s}\"".format(body))
         return headers, body
 
     def verify(self, base_url):
