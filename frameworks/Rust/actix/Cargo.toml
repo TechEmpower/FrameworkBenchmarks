@@ -23,12 +23,14 @@ serde_derive = "1.0"
 rand = "0.4"
 num_cpus = "1.0"
 futures = "0.1"
+tokio-io = "=0.1.5"
+tokio-core = "=0.1.11"
 http = "0.1"
 diesel = { version = "1.1", features = ["postgres"] }
 postgres = "0.15"
 
 actix = "0.5"
-actix-web = "^0.4.9"
+actix-web = "^0.4.10"
 
 [build-dependencies]
 askama = "0.5"
