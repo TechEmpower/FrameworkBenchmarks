@@ -1,2 +1,2 @@
 FROM tfb/activeweb-base:latest
-CMD resinctl console
+CMD java -jar ${RESIN_HOME}/lib/resin.jar console

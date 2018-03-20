@@ -4,4 +4,4 @@ WORKDIR /activeweb
 RUN mvn clean package -DskipTests
 
 FROM tfb/resin:latest
-COPY --from=maven /activeweb/target/activeweb.war /var/resin/webapps/ROOT.war
+COPY --from=maven /activeweb/target/activeweb.war ${RESIN_HOME}/webapps/ROOT.war
