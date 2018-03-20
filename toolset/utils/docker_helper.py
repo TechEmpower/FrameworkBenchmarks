@@ -110,7 +110,8 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                             if line.startswith('{"stream":'):
                                 line = json.loads(line)
                                 line = line[line.keys()[0]].encode('utf-8')
-                                log(line, log_prefix, build_log)
+                                for linee in line.splitlines():
+                                    log(linee, log_prefix, build_log)
                     except Exception:
                         tb = traceback.format_exc()
                         log("Docker dependency build failed; terminating",
@@ -138,7 +139,8 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                         if line.startswith('{"stream":'):
                             line = json.loads(line)
                             line = line[line.keys()[0]].encode('utf-8')
-                            log(line, log_prefix, build_log)
+                            for linee in line.splitlines():
+                                log(linee, log_prefix, build_log)
                 except Exception:
                     tb = traceback.format_exc()
                     log("Docker build failed; terminating", log_prefix,
