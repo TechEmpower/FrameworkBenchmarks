@@ -54,15 +54,18 @@ def log(log_text=None,
         return
 
     try:
+        new_log_text = ''
+        for line in log_text.splitlines():
+            if line.strip() is '':
+                return
+            new_log_text = new_log_text + prefix + line + os.linesep
+
         if not quiet:
-            for line in log_text.splitlines():
-                if line.strip() is '':
-                    return
-                sys.stdout.write(prefix + line + os.linesep)
+            sys.stdout.write(new_log_text)
             sys.stdout.flush()
 
         if log_file is not None:
-            log_file.write(seq.sub('', log_text))
+            log_file.write(seq.sub('', new_log_text))
             log_file.flush()
     except:
         pass
