@@ -37,7 +37,7 @@ def header(message,
         if color is not None:
             result += color
         result += "%s%s" % (os.linesep, bottomheader)
-    log(result + os.linesep, log_file, True, quiet)
+    log(result + os.linesep, '', log_file, quiet)
 
 
 def log(log_text=None,
