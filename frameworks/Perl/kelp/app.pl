@@ -16,7 +16,7 @@ my @sth;
 my $dbh;
 
 if ($ENV{MONGO}) {
-    $mongo   = $MongoDB::MongoClient->new( host => 'TFB-database', port => 27017 );
+    $mongo   = MongoDB::MongoClient->new( host => 'TFB-database', port => 27017 );
     $mdb     = $mongo->get_database('hello_world');
     $world   = $mdb->get_collection('world');
     $fortune = $mdb->get_collection('fortune');

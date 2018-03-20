@@ -17,7 +17,7 @@ RUN cpanm --notest --no-man-page \
         Kelp@0.9071 \
         DBI@1.636 \
         DBD::mysql@4.033 \
-        MongoDB@1.4.2 \
+        MongoDB@1.8.1 \
         Kelp::Module::JSON::XS@0.502 \
         HTML::Escape@1.10 \
         HTTP::Parser::XS@0.17 \
@@ -25,4 +25,4 @@ RUN cpanm --notest --no-man-page \
 
 ADD ./app.ini /kelp/
 ADD ./app.pl /kelp/
-add ./nginx.conf /kelp/
+ADD ./nginx.conf /kelp/
