@@ -1,4 +1,4 @@
-const {Worlds, Fortunes} = require('../models/sequelize');
+const {Worlds, Fortunes} = require('../models/sequelize-postgres');
 const Bluebird = require('bluebird');
 
 module.exports = {

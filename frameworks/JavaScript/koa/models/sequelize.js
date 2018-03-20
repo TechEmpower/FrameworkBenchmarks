@@ -5,12 +5,13 @@ const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpa
   logging: false
 });
 
-const Worlds = sequelize.define('World', {
+const {DataTypes} = Sequelize;
+const Worlds = sequelize.define('world', {
   id: {
-    type: 'Sequelize.INTEGER',
+    type: DataTypes.INTEGER,
     primaryKey: true
   },
-  randomNumber: {type: 'Sequelize.INTEGER'}
+  randomNumber: {type: DataTypes.INTEGER}
 }, {
   timestamps: false,
   freezeTableName: true
@@ -18,10 +19,10 @@ const Worlds = sequelize.define('World', {
 
 const Fortunes = sequelize.define('Fortune', {
   id: {
-    type: 'Sequelize.INTEGER',
+    type: DataTypes.INTEGER,
     primaryKey: true
   },
-  message: {type: 'Sequelize.STRING'}
+  message: {type: DataTypes.STRING}
 }, {
   timestamps: false,
   freezeTableName: true
