@@ -3,40 +3,46 @@ const Router = require('koa-router');
 const hbs = require('koa-hbs');
 const bodyParser = require('koa-bodyparser');
 const handlebars = require('handlebars');
+const handler = require('./handlers/handler');
 
-const Handler = require(`./handlers/${process.env.NODE_HANDLER}`);
+const handlerName = process.env.NODE_HANDLER;
+const dbLayer = require(`./handlers/${handlerName}`);
 
 const app = new Koa();
 const router = new Router();
-app.use(bodyParser());
-app.use(hbs.middleware({
-  handlebars: handlebars,
-  viewPath: __dirname + '/views'
-}));
 
-function JsonSerialization(ctx, next) {
-  ctx.set('Server', 'Koa');
-  ctx.type = 'application/json';
-  ctx.body = { message: 'Hello, World!' };
-  return next();
-}
+app
+  .use(bodyParser())
+  .use(hbs.middleware({
+    handlebars: handlebars,
+    viewPath: __dirname + '/views'
+  }))
+  .use((ctx, next) => {
+    ctx.set('Server', 'Koa');
+    next();
+  });
 
-function Plaintext(ctx, next) {
-  ctx.set('Server', 'Koa');
-  ctx.type = 'text/plain';
-  ctx.body = 'Hello, World!';
-  return next();
-}
-
-router.get('/json', JsonSerialization);
-router.get('/plaintext', Plaintext);
-router.get('/db', Handler.SingleQuery);
-router.get('/queries', Handler.MultipleQueries);
-router.get('/fortunes', Handler.Fortunes);
-router.get('/updates', Handler.Updates);
-
+router
+  .get('/json', (ctx) => {
+    ctx.body = {message: 'Hello, World!'};
+  })
+  .get('/plaintext', (ctx) => {
+    ctx.body = 'Hello, World!';
+  });
 
 app.use(router.routes());
-const server = app.listen(8080);
-console.log('Worker started and listening on http://0.0.0.0:8080 ' 
-  + new Date().toISOString(" "));
+
+const dbRouter = new Router();
+const routerHandler = handler(dbLayer);
+
+dbRouter
+  .get('/db', routerHandler.SingleQuery)
+  .get('/queries', routerHandler.MultipleQueries)
+  .get('/fortunes', routerHandler.Fortunes)
+  .get('/updates', routerHandler.Updates);
+
+app.use(dbRouter.routes());
+
+
+app.listen(8080);
+console.log(`Worker started and listening on http://0.0.0.0:8080 ${new Date().toISOString()}`);
