@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import os
+import os, re
 from shutil import copytree
-from toolset.utils.setup_util import replace_text
 from toolset.utils.metadata_helper import gather_frameworks, gather_langauges
 
 
@@ -308,28 +307,29 @@ class Scaffolding:
 
     def __edit_scaffold_files(self):
         for file in os.listdir(os.path.join(self.test_dir)):
-            replace_text(
+            self.__replace_text(
                 os.path.join(self.test_dir, file), "\$NAME", self.name)
-            replace_text(
+            self.__replace_text(
                 os.path.join(self.test_dir, file), "\$DISPLAY_NAME",
                 self.display_name)
-            replace_text(
+            self.__replace_text(
                 os.path.join(self.test_dir, file), "\$APPROACH", self.approach)
-            replace_text(
+            self.__replace_text(
                 os.path.join(self.test_dir, file), "\$CLASSIFICATION",
                 self.classification)
-            replace_text(
+            self.__replace_text(
                 os.path.join(self.test_dir, file), "\$FRAMEWORK",
                 self.framework)
-            replace_text(
+            self.__replace_text(
                 os.path.join(self.test_dir, file), "\$LANGUAGE", self.language)
-            replace_text(os.path.join(self.test_dir, file), "\$ORM", self.orm)
-            replace_text(
+            self.__replace_text(
+                os.path.join(self.test_dir, file), "\$ORM", self.orm)
+            self.__replace_text(
                 os.path.join(self.test_dir, file), "\$PLATFORM", self.platform)
-            replace_text(
+            self.__replace_text(
                 os.path.join(self.test_dir, file), "\$WEBSERVER",
                 self.webserver)
-            replace_text(
+            self.__replace_text(
                 os.path.join(self.test_dir, file), "\$VERSUS", self.versus)
 
     def __print_success(self):
@@ -354,3 +354,11 @@ class Scaffolding:
   provided therein.
 -------------------------------------------------------------------------------"""
               % (self.language, self.name))
+
+    # Replaces all text found using the regular expression to_replace with the supplied replacement.
+    def __replace_text(self, file, to_replace, replacement):
+        with open(file, "r") as conf:
+            contents = conf.read()
+        replaced_text = re.sub(to_replace, replacement, contents)
+        with open(file, "w") as f:
+            f.write(replaced_text)

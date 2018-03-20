@@ -1,6 +1,10 @@
 # -*- coding: utf-8
+import os
+
 from HTMLParser import HTMLParser
 from difflib import unified_diff
+
+from toolset.utils.output_helper import log
 
 
 class FortuneHTMLParser(HTMLParser):
@@ -111,7 +115,7 @@ class FortuneHTMLParser(HTMLParser):
 
         # Append a newline after the <table> and <html>
         if tag.lower() == 'table' or tag.lower() == 'html':
-            self.body.append("\n")
+            self.body.append(os.linesep)
 
     def handle_data(self, data):
         '''
@@ -154,9 +158,9 @@ class FortuneHTMLParser(HTMLParser):
 
         # Append a newline after each </tr> and </head>
         if tag.lower() == 'tr' or tag.lower() == 'head':
-            self.body.append("\n")
+            self.body.append(os.linesep)
 
-    def isValidFortune(self, out):
+    def isValidFortune(self, name, out):
         '''
         Returns whether the HTML input parsed by this parser
         is valid against our known "fortune" spec.
@@ -167,13 +171,13 @@ class FortuneHTMLParser(HTMLParser):
         same = self.valid_fortune == body
         diff_lines = []
         if not same:
-            output = "Oh no! I compared {!s}\n\n\nto.....{!s}\n".format(
-                self.valid_fortune, body)
-            output += "Fortune invalid. Diff following:\n"
+            output = "Oh no! I compared {!s}".format(self.valid_fortune)
+            output += os.linesep + os.linesep + "to" + os.linesep + os.linesep + body + os.linesep
+            output += "Fortune invalid. Diff following:" + os.linesep
             headers_left = 3
             for line in unified_diff(
-                    self.valid_fortune.split('\n'),
-                    body.split('\n'),
+                    self.valid_fortune.split(os.linesep),
+                    body.split(os.linesep),
                     fromfile='Valid',
                     tofile='Response',
                     n=0):
@@ -181,7 +185,6 @@ class FortuneHTMLParser(HTMLParser):
                 output += line
                 headers_left -= 1
                 if headers_left <= 0:
-                    output += "\n"
-            print(output)
-            out.write(output)
+                    output += os.linesep
+            log(output, "%s: " % name)
         return (same, diff_lines)
