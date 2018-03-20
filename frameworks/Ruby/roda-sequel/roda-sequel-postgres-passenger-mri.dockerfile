@@ -2,7 +2,7 @@ FROM tfb/roda-sequel-base:latest
 
 # TODO: https://github.com/phusion/passenger/issues/1916
 ENV _PASSENGER_FORCE_HTTP_SESSION=true
-ENV DBTYPE=postgres
+ENV DBTYPE=postgresql
 
 RUN ruby -r /roda-sequel/config/auto_tune -e 'puts auto_tune.first' > instances
 CMD bundle exec passenger start --log-level 1 \
