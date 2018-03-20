@@ -7,6 +7,7 @@ import psycopg2
 import pymongo
 import traceback
 
+from colorama import Fore
 from toolset.utils.output_helper import log, log_error
 
 
@@ -85,7 +86,7 @@ class FrameworkTestType:
         Downloads a URL and returns the HTTP response headers
         and body content as a tuple
         '''
-        log("Accessing URL {!s}:".format(url))
+        log("{!s}Accessing URL {!s}:{!s}".format(Fore.CYAN, url, Fore.RESET))
 
         headers = {'Accept': self.accept_header}
         r = requests.get(url, timeout=15, headers=headers)
@@ -94,7 +95,6 @@ class FrameworkTestType:
         body = r.content
         log(str(headers))
         log(body)
-        log("  Response: \"{!s}\"".format(body))
         return headers, body
 
     def verify(self, base_url):
