@@ -28,9 +28,9 @@ def log(log_text=None, **kwargs):
     quiet = kwargs.get('quiet')
 
     if border is not None:
-        border = color + (border * 80) + os.linesep
+        border = color + (border * 80) + os.linesep + color_reset
         border_bottom = border if border_bottom is None else \
-            color + (border_bottom * 80) + os.linesep
+            color + (border_bottom * 80) + os.linesep + color_reset
     elif not log_text:
         return
 
