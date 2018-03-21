@@ -186,5 +186,5 @@ class FortuneHTMLParser(HTMLParser):
                 headers_left -= 1
                 if headers_left <= 0:
                     output += os.linesep
-            log(output, "%s: " % name)
+            log(output, prefix="%s: " % name)
         return (same, diff_lines)

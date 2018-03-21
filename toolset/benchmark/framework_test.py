@@ -3,7 +3,7 @@ import subprocess
 import traceback
 from requests import ConnectionError
 
-from toolset.utils.output_helper import header, log, FNULL
+from toolset.utils.output_helper import log, FNULL
 from toolset.utils import docker_helper
 
 # Cross-platform colored text
@@ -129,9 +129,8 @@ class FrameworkTest:
             with open(os.path.join(verificationPath, 'verification.txt'),
                       'w') as verification:
                 test = self.runTests[test_type]
-                header(
-                    message="VERIFYING %s" % test_type.upper(),
-                    log_file=verification)
+                log("VERIFYING %s" % test_type.upper(),
+                    file=verification, border='-', color=Fore.WHITE + Style.BRIGHT)
 
                 base_url = "http://%s:%s" % (
                     self.benchmarker_config.server_host, self.port)
@@ -166,7 +165,7 @@ class FrameworkTest:
                     results = [('fail', "Server did not respond to request",
                                 base_url)]
                     log("Verifying test %s for %s caused an exception: %s" %
-                        (test_type, self.name, e))
+                        (test_type, self.name, e), color=Fore.RED)
                 except Exception as e:
                     results = [('fail', """Caused Exception in TFB
             This almost certainly means your return value is incorrect,
@@ -174,7 +173,7 @@ class FrameworkTest:
             including this message: %s\n%s""" % (e, traceback.format_exc()),
                                 base_url)]
                     log("Verifying test %s for %s caused an exception: %s" %
-                        (test_type, self.name, e))
+                        (test_type, self.name, e), color=Fore.RED)
                     traceback.format_exc()
 
                 test.failed = any(
@@ -193,14 +192,14 @@ class FrameworkTest:
                         color = Fore.RED
 
                     log("   {!s}{!s}{!s} for {!s}".format(
-                        color, result.upper(), Style.RESET_ALL, url), None,
-                        verification)
+                        color, result.upper(), Style.RESET_ALL, url),
+                        file=verification)
                     if reason is not None and len(reason) != 0:
                         for line in reason.splitlines():
-                            log("     " + line, None, verification)
+                            log("     " + line, file=verification)
                         if not test.passed:
                             log("     See {!s}".format(specific_rules_url),
-                                None, verification)
+                                file=verification)
 
                 [output_result(r1, r2, url) for (r1, r2, url) in results]
 
