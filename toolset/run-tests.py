@@ -41,8 +41,8 @@ class StoreSeqAction(argparse.Action):
             try:
                 (start, step, end) = sequence.split(':')
             except ValueError:
-                log("  Invalid: {!s}".format(sequence))
-                log("  Requires start:step:end, e.g. 1:2:10")
+                log("  Invalid: {!s}".format(sequence), color=Fore.RED)
+                log("  Requires start:step:end, e.g. 1:2:10", color=Fore.RED)
                 raise
             result.remove(sequence)
             result = result + range(int(start), int(end), int(step))
@@ -103,7 +103,7 @@ def main(argv=None):
                     os.environ['FWROOT'],
                     args.conf_file)) and not os.path.exists(
                         os.path.join(os.environ['FWROOT'] + 'benchmark.cfg')):
-            log("No config file found. Aborting!")
+            log("No config file found. Aborting!", Fore.RED)
             exit(1)
         with open(os.path.join(os.environ['FWROOT'], args.conf_file)):
             config = ConfigParser.SafeConfigParser()
@@ -116,7 +116,7 @@ def main(argv=None):
                 except Exception:
                     pass
     except IOError:
-        log("Configuration file not found!")
+        log("Configuration file not found!", Fore.RED)
         exit(1)
 
     ##########################################################
@@ -125,7 +125,7 @@ def main(argv=None):
 
     # Verify and massage options
     if defaults['client_user'] is None or defaults['client_host'] is None:
-        log("client_user and client_host are required!")
+        log("client_user and client_host are required!", color=Fore.RED)
         log("Please check your configuration file.")
         log("Aborting!")
         exit(1)

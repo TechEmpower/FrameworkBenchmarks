@@ -8,7 +8,7 @@ import pymongo
 import traceback
 
 from colorama import Fore
-from toolset.utils.output_helper import log, log_error
+from toolset.utils.output_helper import log
 
 
 class FrameworkTestType:
@@ -86,7 +86,7 @@ class FrameworkTestType:
         Downloads a URL and returns the HTTP response headers
         and body content as a tuple
         '''
-        log("{!s}Accessing URL {!s}:{!s}".format(Fore.CYAN, url, Fore.RESET))
+        log("Accessing URL {!s}: ".format(url), color=Fore.CYAN)
 
         headers = {'Accept': self.accept_header}
         r = requests.get(url, timeout=15, headers=headers)
@@ -164,8 +164,8 @@ class FrameworkTestType:
                 db.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current MySQL World table.")
-                log_error(tb)
+                log("ERROR: Unable to load current MySQL World table.", color=Fore.RED)
+                log(tb)
         elif database_name == "postgres":
             try:
                 db = psycopg2.connect(
@@ -185,8 +185,8 @@ class FrameworkTestType:
                 db.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current Postgres World table.")
-                log_error(tb)
+                log("ERROR: Unable to load current Postgres World table.", color=Fore.RED)
+                log(tb)
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
@@ -205,8 +205,8 @@ class FrameworkTestType:
                 connection.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current MongoDB World table.")
-                log_error(tb)
+                log("ERROR: Unable to load current MongoDB World table.", color=Fore.RED)
+                log(tb)
         else:
             raise ValueError(
                 "Database: {!s} does not exist".format(database_name))

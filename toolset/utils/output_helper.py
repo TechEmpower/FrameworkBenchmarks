@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, sys, re
+
+from colorama import Fore, Style
 from contextlib import contextmanager
 
 # RegExp for stripping color codes
@@ -8,74 +10,49 @@ seq = re.compile(r'\x1B\[\d+m')
 FNULL = open(os.devnull, 'w')
 
 
-def header(message,
-           top='-',
-           bottom='-',
-           log_file=None,
-           quiet=False,
-           color=None):
-    '''
-    Generates a clean header with the given message and top/bottom text breaks.
-    Optionally, a log file can be provided to log this header to, as well.
-    '''
-    topheader = (top * 80)[:80]
-    bottomheader = (bottom * 80)[:80]
-    result = ""
-    if topheader != "":
-        if color is not None:
-            result += color
-        result += "%s" % topheader
-    if message != "":
-        if color is not None:
-            result += color
-
-        if result == "":
-            result = "  %s" % message
-        else:
-            result += "%s  %s" % (os.linesep, message)
-    if bottomheader != "":
-        if color is not None:
-            result += color
-        result += "%s%s" % (os.linesep, bottomheader)
-    log(result + os.linesep, '', log_file, quiet)
-
-
-def log(log_text=None,
-        prefix='',
-        log_file=None,
-        quiet=False):
+def log(log_text=None, **kwargs):
     '''
     Logs the given text and optional prefix to stdout (if quiet is False) and
     to an optional log file. By default, we strip out newlines in order to 
     print our lines correctly, but you can override this functionality if you
     want to print multi-line output.
     '''
-    if not log_text:
+
+    # set up some defaults
+    color = kwargs.get('color', '')
+    color_reset = Style.RESET_ALL if color else ''
+    prefix = kwargs.get('prefix', '')
+    border = kwargs.get('border')
+    border_bottom = kwargs.get('border_bottom')
+    file = kwargs.get('file')
+    quiet = kwargs.get('quiet')
+
+    if border is not None:
+        border = color + (border * 80) + os.linesep
+        border_bottom = border if border_bottom is None else \
+            color + (border_bottom * 80) + os.linesep
+    elif not log_text:
         return
 
     try:
-        new_log_text = ''
-        for line in log_text.splitlines():
-            if line.strip() is '':
-                return
-            new_log_text = new_log_text + prefix + line + os.linesep
-
         if not quiet:
+            new_log_text = border or ''
+            for line in log_text.splitlines():
+                if line.strip() is not '':
+                    if prefix:
+                        new_log_text += Style.DIM + prefix + Style.RESET_ALL
+                    new_log_text += color + line + color_reset + os.linesep
+            new_log_text += border_bottom or ''
+
             sys.stdout.write(new_log_text)
             sys.stdout.flush()
 
-        if log_file is not None:
-            log_file.write(seq.sub('', log_text))
-            log_file.flush()
+        if file is not None:
+            file.write(seq.sub('', log_text))
+            file.flush()
     except:
+        print('error')
         pass
-
-
-def log_error(exception=None, prefix=None, log_file=None, quiet=False):
-    '''
-    Logs the given exception
-    '''
-    log(exception + os.linesep, prefix, log_file, True, quiet)
 
 
 class QuietOutputStream:

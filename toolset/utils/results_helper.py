@@ -1,8 +1,7 @@
 from toolset.utils.metadata_helper import gather_remaining_tests, gather_frameworks
-from toolset.utils.output_helper import header, log, FNULL
+from toolset.utils.output_helper import log, FNULL
 
 import os
-import logging
 import subprocess
 import uuid
 import time
@@ -294,8 +293,8 @@ class Results:
             # Normally you don't have to use Fore.BLUE before each line, but
             # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
             # or stream flush, so we have to ensure that the color code is printed repeatedly
-            header(
-                "Verification Summary", top='=', bottom='-', color=Fore.CYAN)
+            log(
+                "Verification Summary", border='=', border_bottom='-', color=Fore.CYAN)
             for test in tests:
                 log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
@@ -312,7 +311,7 @@ class Results:
                 else:
                     log(Fore.CYAN + "|      " + Fore.RED +
                         "NO RESULTS (Did framework launch?)")
-            header('', top='=', bottom='', color=Fore.CYAN)
+            log('', border='=', border_bottom='', color=Fore.CYAN)
 
         log("%sTime to complete: %s seconds" %
             (Style.RESET_ALL, str(int(time.time() - self.config.start_time))))
