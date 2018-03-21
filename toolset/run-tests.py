@@ -18,7 +18,7 @@ from toolset.utils.output_helper import log
 from ast import literal_eval
 
 # Enable cross-platform colored output
-from colorama import init
+from colorama import init, Fore
 init()
 
 
