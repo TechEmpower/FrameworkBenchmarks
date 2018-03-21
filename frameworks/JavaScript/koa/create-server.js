@@ -5,18 +5,10 @@ const bodyParser = require('koa-bodyparser');
 const handlebars = require('handlebars');
 const handler = require('./handlers/handler');
 
-const handlerName = process.env.NODE_HANDLER;
-const dbLayer = require(`./handlers/${handlerName}`);
-
 const app = new Koa();
 const router = new Router();
 
 app
-  .use(bodyParser())
-  .use(hbs.middleware({
-    handlebars: handlebars,
-    viewPath: __dirname + '/views'
-  }))
   .use((ctx, next) => {
     ctx.set('Server', 'Koa');
     next();
@@ -32,17 +24,28 @@ router
 
 app.use(router.routes());
 
-const dbRouter = new Router();
-const routerHandler = handler(dbLayer);
 
-dbRouter
-  .get('/db', routerHandler.SingleQuery)
-  .get('/queries', routerHandler.MultipleQueries)
-  .get('/fortunes', routerHandler.Fortunes)
-  .get('/updates', routerHandler.Updates);
+const handlerName = process.env.NODE_HANDLER;
 
-app.use(dbRouter.routes());
+if (handlerName) {
+  const dbLayer = require(`./handlers/${handlerName}`);
 
+  const dbRouter = new Router();
+  const routerHandler = handler(dbLayer);
+
+  dbRouter
+    .use(bodyParser())
+    .use(hbs.middleware({
+      handlebars: handlebars,
+      viewPath: __dirname + '/views'
+    }))
+    .get('/db', routerHandler.SingleQuery)
+    .get('/queries', routerHandler.MultipleQueries)
+    .get('/fortunes', routerHandler.Fortunes)
+    .get('/updates', routerHandler.Updates);
+
+  app.use(dbRouter.routes());
+}
 
 app.listen(8080);
 console.log(`Worker started and listening on http://0.0.0.0:8080 ${new Date().toISOString()}`);

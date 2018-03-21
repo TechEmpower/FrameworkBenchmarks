@@ -37,12 +37,12 @@ module.exports = (databaseLayer) => ({
 
     return Bluebird
       .all(worldPromises)
-      .map((world) => {
+      .map(world => {
         world.randomNumber = h.randomTfbNumber();
         return world
       })
       .then(worlds => databaseLayer.saveWorlds(worlds))
-      .then((worlds) => {
+      .then(worlds => {
         ctx.body = worlds;
       });
   }
