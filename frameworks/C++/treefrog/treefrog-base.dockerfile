@@ -7,8 +7,8 @@ RUN apt install -yqq g++ gcc libjemalloc-dev qt5-qmake qt5-default qtbase5-dev \
     qtdeclarative5-dev libqt5quick5 libqt5quickparticles5 libqt5gui5 libqt5printsupport5 \
     libqt5widgets5 libqt5opengl5-dev libqt5quicktest5
 
-RUN wget https://github.com/treefrogframework/treefrog-framework/archive/v${TFVER}.tar.gz
-RUN tar xvf v${TFVER}.tar.gz
+RUN wget -q https://github.com/treefrogframework/treefrog-framework/archive/v${TFVER}.tar.gz
+RUN tar xf v${TFVER}.tar.gz
 RUN cd treefrog-framework-${TFVER} && \
     ./configure && \
     cd src && \

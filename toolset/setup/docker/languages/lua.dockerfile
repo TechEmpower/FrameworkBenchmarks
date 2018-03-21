@@ -6,7 +6,7 @@ ENV LUA_MICRO="5"
 RUN apt install -yqq libreadline-dev lib32ncurses5-dev
 
 RUN wget https://github.com/LuaDist/lua/archive/$LUA_VERSION.$LUA_MICRO.tar.gz
-RUN tar xvf $LUA_VERSION.$LUA_MICRO.tar.gz
+RUN tar xf $LUA_VERSION.$LUA_MICRO.tar.gz
 
 ENV LUA_HOME=/lua-$LUA_VERSION.$LUA_MICRO
 

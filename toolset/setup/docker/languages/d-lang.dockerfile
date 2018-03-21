@@ -11,7 +11,7 @@ RUN mkdir -p $DLANG && \
     dpkg-deb -x dmd_$DMDVER-0_amd64.deb $DLANG && \
     cd $DLANG && \
     wget https://github.com/ldc-developers/ldc/releases/download/v$LDCVER/ldc2-$LDCVER-linux-x86_64.tar.xz && \
-    tar xvf ldc2-$LDCVER-linux-x86_64.tar.xz && \
+    tar xf ldc2-$LDCVER-linux-x86_64.tar.xz && \
     ln -s $DLANG/ldc2-$LDCVER-linux-x86_64/bin/ldc2 $DLANG/usr/bin/ldc2
 
 # According to this file (dmd.conf) dmd will, upon execution, look for

@@ -5,7 +5,7 @@ ENV MICROHTTPD=/libmicrohttpd
 ENV MICROHTTPD_HOME=$MICROHTTPD-$VERSION
 
 RUN wget http://mirror.ibcp.fr/pub/gnu/libmicrohttpd/libmicrohttpd-$MICROHTTPD_VERSION.tar.gz
-RUN tar xvf libmicrohttpd-$MICROHTTPD_VERSION.tar.gz
+RUN tar xf libmicrohttpd-$MICROHTTPD_VERSION.tar.gz
 RUN cd libmicrohttpd-$MICROHTTPD_VERSION && \
     ./configure --prefix=$MICROHTTPD_HOME && \
     make install

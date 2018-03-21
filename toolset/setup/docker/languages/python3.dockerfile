@@ -8,7 +8,7 @@ ENV PATH=${PY3_ROOT}/bin:${PATH}
 RUN mkdir py3
 
 RUN wget -q http://www.python.org/ftp/python/${PY3_VERSION}/Python-${PY3_VERSION}.tar.xz
-RUN tar xvf Python-${PY3_VERSION}.tar.xz
+RUN tar xf Python-${PY3_VERSION}.tar.xz
 
 WORKDIR Python-${PY3_VERSION}
 

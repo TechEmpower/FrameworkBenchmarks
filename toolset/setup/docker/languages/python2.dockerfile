@@ -8,7 +8,7 @@ ENV PATH=${PY2_ROOT}/bin:${PATH}
 RUN mkdir $PY2_ROOT
 
 RUN wget -q http://www.python.org/ftp/python/${PY2_VERSION}/Python-${PY2_VERSION}.tar.xz
-RUN tar xvf Python-${PY2_VERSION}.tar.xz
+RUN tar xf Python-${PY2_VERSION}.tar.xz
 
 WORKDIR Python-${PY2_VERSION}
 
