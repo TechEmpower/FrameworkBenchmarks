@@ -5,4 +5,4 @@ RUN lein clean
 RUN lein ring uberwar
 
 FROM tfb/resin-java8:latest
-COPY --from=leiningen /compojure/target/hello-compojure-standalone.war /var/resin/webapps/ROOT.war
+COPY --from=leiningen /compojure/target/hello-compojure-standalone.war ${RESIN_HOME}/webapps/ROOT.war

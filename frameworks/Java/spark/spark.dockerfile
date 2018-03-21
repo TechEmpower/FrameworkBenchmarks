@@ -4,5 +4,5 @@ WORKDIR /spark
 RUN mvn clean package
 
 FROM tfb/resin-java8
-COPY --from=maven /spark/target/spark.war /var/resin/webapps/ROOT.war
-CMD resinctl console
+COPY --from=maven /spark/target/spark.war ${RESIN_HOME}/webapps/ROOT.war
+CMD java -jar ${RESIN_HOME}/lib/resin.jar console
