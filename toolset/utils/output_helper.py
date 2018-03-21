@@ -10,13 +10,7 @@ seq = re.compile(r'\x1B\[\d+m')
 FNULL = open(os.devnull, 'w')
 
 
-def log(log_text=None,
-        color='',
-        prefix='',
-        border=None,
-        border_bottom=None,
-        file=None,
-        quiet=False):
+def log(log_text=None, **kwargs):
     '''
     Logs the given text and optional prefix to stdout (if quiet is False) and
     to an optional log file. By default, we strip out newlines in order to 
@@ -25,13 +19,13 @@ def log(log_text=None,
     '''
 
     # set up some defaults
-    # color = kwargs.get('color', '')
+    color = kwargs.get('color', '')
     color_reset = Style.RESET_ALL if color else ''
-    # prefix = kwargs.get('prefix', '')
-    # border = kwargs.get('border')
-    # border_bottom = kwargs.get('border_bottom')
-    # file = kwargs.get('file')
-    # quiet = kwargs.get('quiet')
+    prefix = kwargs.get('prefix', '')
+    border = kwargs.get('border')
+    border_bottom = kwargs.get('border_bottom')
+    file = kwargs.get('file')
+    quiet = kwargs.get('quiet')
 
     if border is not None:
         border = color + (border * 80) + os.linesep + color_reset
