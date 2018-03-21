@@ -27,4 +27,4 @@ ADD ./nginx.conf /simple/
 
 CMD nginx -c /simple/nginx.conf && \
     plackup -E production -s Starman --workers=${CPU_COUNT} \
-    -l /simple/perl-simple.sock -a /simple/app.pl
+    -l /tmp/perl-simple.sock -a /simple/app.pl
