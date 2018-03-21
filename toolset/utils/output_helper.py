@@ -51,7 +51,6 @@ def log(log_text=None, **kwargs):
             file.write(seq.sub('', log_text))
             file.flush()
     except:
-        print('error')
         pass
 
 
