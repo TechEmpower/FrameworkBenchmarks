@@ -16,6 +16,7 @@ use actix::prelude::*;
 use askama::Template;
 use http::header;
 use futures::Future;
+use diesel::prelude::{Connection, PgConnection};
 
 mod db;
 mod schema;
@@ -133,7 +134,11 @@ fn main() {
     let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@TFB-database/hello_world";
 
     // Avoid triggering "FATAL: the database system is starting up" error from postgres.
-    std::thread::sleep(std::time::Duration::from_secs(5));
+    {
+        if PgConnection::establish(db_url).is_err() {
+            std::thread::sleep(std::time::Duration::from_secs(5));
+        }
+    }
 
     // Start db executor actors
     let addr = SyncArbiter::start(

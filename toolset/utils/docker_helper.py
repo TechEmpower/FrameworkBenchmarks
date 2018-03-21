@@ -6,10 +6,12 @@ import multiprocessing
 import json
 import docker
 import time
+import re
 import traceback
 from threading import Thread
+from colorama import Fore, Style
 
-from toolset.utils.output_helper import log, log_error, FNULL
+from toolset.utils.output_helper import log, FNULL
 from toolset.utils.metadata_helper import gather_tests
 from toolset.utils.ordered_set import OrderedSet
 from toolset.utils.database_helper import test_database
@@ -94,8 +96,8 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                                            dependency + ".dockerfile")
                     if not docker_file:
                         log("Docker build failed; %s could not be found; terminating"
-                            % (dependency + ".dockerfile"), log_prefix,
-                            build_log)
+                            % (dependency + ".dockerfile"),
+                            prefix=log_prefix, file=build_log, color=Fore.RED)
                         return 1
 
                     # Build the dependency image
@@ -110,12 +112,16 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                             if line.startswith('{"stream":'):
                                 line = json.loads(line)
                                 line = line[line.keys()[0]].encode('utf-8')
-                                log(line, log_prefix, build_log)
+                                log(line,
+                                    prefix=log_prefix,
+                                    file=build_log,
+                                    color=Fore.WHITE + Style.BRIGHT \
+                                        if re.match(r'^Step \d+\/\d+', line) else '')
                     except Exception:
                         tb = traceback.format_exc()
                         log("Docker dependency build failed; terminating",
-                            log_prefix, build_log)
-                        log_error(tb, log_prefix, build_log)
+                            prefix=log_prefix, file=build_log, color=Fore.RED)
+                        log(tb, prefix=log_prefix, file=build_log)
                         return 1
 
         # Build the test images
@@ -138,12 +144,16 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                         if line.startswith('{"stream":'):
                             line = json.loads(line)
                             line = line[line.keys()[0]].encode('utf-8')
-                            log(line, log_prefix, build_log)
+                            log(line,
+                                prefix=log_prefix,
+                                file=build_log,
+                                color=Fore.WHITE + Style.BRIGHT \
+                                    if re.match(r'^Step \d+\/\d+', line) else '')
                 except Exception:
                     tb = traceback.format_exc()
-                    log("Docker build failed; terminating", log_prefix,
-                        build_log)
-                    log_error(tb, log_prefix, build_log)
+                    log("Docker build failed; terminating",
+                        prefix=log_prefix, file=build_log, color=Fore.RED)
+                    log(tb, prefix=log_prefix, file=build_log)
                     return 1
 
     return 0
@@ -165,7 +175,7 @@ def run(benchmarker_config, docker_files, run_log_dir):
                             run_log_dir, "%s.log" % docker_file.replace(
                                 ".dockerfile", "").lower()), 'w') as run_log:
                     for line in container.logs(stream=True):
-                        log(line, log_prefix, run_log)
+                        log(line, prefix=log_prefix, file=run_log)
 
             extra_hosts = {
                 socket.gethostname(): str(benchmarker_config.server_host),
@@ -197,8 +207,8 @@ def run(benchmarker_config, docker_files, run_log_dir):
                         ".dockerfile", "").lower()), 'w') as run_log:
                 tb = traceback.format_exc()
                 log("Running docker cointainer: %s failed" % docker_file,
-                    log_prefix, run_log)
-                log_error(tb, log_prefix, run_log)
+                    prefix=log_prefix, file=run_log)
+                log(tb, prefix=log_prefix, file=run_log)
                 return 1
 
     return 0
@@ -225,7 +235,7 @@ def successfully_running_containers(docker_files, out):
         if image_name not in running_container_images:
             log_prefix = "%s: " % image_name
             log("ERROR: Expected tfb/test/%s to be running container" %
-                image_name, log_prefix, out)
+                image_name, prefix=log_prefix, file=out)
             return False
     return True
 

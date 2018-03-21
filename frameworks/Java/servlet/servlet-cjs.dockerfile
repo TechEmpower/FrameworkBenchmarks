@@ -4,5 +4,5 @@ WORKDIR /servlet
 RUN mvn clean compile war:war -P cjs
 
 FROM tfb/resin:latest
-COPY --from=maven /servlet/target/servlet.war /var/resin/webapps/ROOT.war
-CMD resinctl console
+COPY --from=maven /servlet/target/servlet.war ${RESIN_HOME}/webapps/ROOT.war
+CMD java -jar ${RESIN_HOME}/lib/resin.jar console
