@@ -3,7 +3,6 @@
   "tests": [
     {
       "default": {
-        "setup_file": "run_mri_puma",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -26,7 +25,6 @@
         "notes": ""
       },
       "postgres": {
-        "setup_file": "run_mri_puma",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -49,7 +47,6 @@
         "notes": ""
       },
       "passenger-mri": {
-        "setup_file": "run_mri_passenger",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -72,7 +69,6 @@
         "notes": ""
       },
       "postgres-passenger-mri": {
-        "setup_file": "run_mri_passenger",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -95,7 +91,6 @@
         "notes": ""
       },
       "unicorn-mri": {
-        "setup_file": "run_mri_unicorn",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -118,7 +113,6 @@
         "notes": ""
       },
       "postgres-unicorn-mri": {
-        "setup_file": "run_mri_unicorn",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -141,7 +135,6 @@
         "notes": ""
       },
       "torquebox-jruby": {
-        "setup_file": "run_jruby_torquebox",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -164,7 +157,6 @@
         "notes": ""
       },
       "postgres-torquebox-jruby": {
-        "setup_file": "run_jruby_torquebox",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
