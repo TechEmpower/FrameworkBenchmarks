@@ -40,8 +40,7 @@ class Benchmarker:
         all_tests = gather_remaining_tests(self.config, self.results)
 
         # Setup client/server
-        log(
-            "Preparing Server, Database, and Client ...", border='=')
+        log("Preparing Server, Database, and Client ...", border='=')
         with self.config.quiet_out.enable():
             self.__setup_server()
             self.__setup_database()
@@ -204,15 +203,16 @@ class Benchmarker:
         if test.os.lower() != self.config.os.lower() or test.database_os.lower(
         ) != self.config.database_os.lower():
             log("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.",
-                log_prefix, benchmark_log)
+                prefix=log_prefix,
+                file=benchmark_log)
             return False
 
         # If the test is in the excludes list, we skip it
         if self.config.exclude != None and test.name in self.config.exclude:
             log("Test {name} has been added to the excludes list. Skipping.".
                 format(name=test.name),
-                log_prefix,
-                benchmark_log)
+                prefix=log_prefix,
+                file=benchmark_log)
             return False
 
         database_container_id = None
@@ -225,8 +225,10 @@ class Benchmarker:
                 self.results.write_intermediate(test.name, "port " + str(
                     test.port) + " is not available before start")
                 log("Error: Port %s is not available, cannot start %s" %
-                       (test.port, test.name),
-                    prefix=log_prefix, file=benchmark_log, color=Fore.RED)
+                    (test.port, test.name),
+                    prefix=log_prefix,
+                    file=benchmark_log,
+                    color=Fore.RED)
                 return False
 
             # Start database container
@@ -237,7 +239,9 @@ class Benchmarker:
                     self.results.write_intermediate(test.name,
                                                     "ERROR: Problem starting")
                     log("ERROR: Problem building/running database container",
-                        prefix=log_prefix, file=benchmark_log, color=Fore.RED)
+                        prefix=log_prefix,
+                        file=benchmark_log,
+                        color=Fore.RED)
                     return False
 
             # Start webapp
@@ -247,7 +251,9 @@ class Benchmarker:
                 self.results.write_intermediate(test.name,
                                                 "ERROR: Problem starting")
                 log("ERROR: Problem starting {name}".format(name=test.name),
-                    prefix=log_prefix, file=benchmark_log, color=Fore.RED)
+                    prefix=log_prefix,
+                    file=benchmark_log,
+                    color=Fore.RED)
                 return False
 
             slept = 0
@@ -258,7 +264,9 @@ class Benchmarker:
                     docker_helper.stop(self.config, database_container_id,
                                        test)
                     log("ERROR: One or more expected docker container exited early",
-                        prefix=log_prefix, file=benchmark_log, color=Fore.RED)
+                        prefix=log_prefix,
+                        file=benchmark_log,
+                        color=Fore.RED)
                     return False
                 time.sleep(1)
                 slept += 1
@@ -266,7 +274,9 @@ class Benchmarker:
             # Debug mode blocks execution here until ctrl+c
             if self.config.mode == "debug":
                 log("Entering debug mode. Server has started. CTRL-c to stop.",
-                    prefix=log_prefix, file=benchmark_log, color=Fore.YELLOW)
+                    prefix=log_prefix,
+                    file=benchmark_log,
+                    color=Fore.YELLOW)
                 while True:
                     time.sleep(1)
 
@@ -277,7 +287,8 @@ class Benchmarker:
             # Benchmark this test
             if self.config.mode == "benchmark":
                 log("Benchmarking %s" % test.name,
-                    file=benchmark_log, border='-')
+                    file=benchmark_log,
+                    border='-')
                 self.__benchmark(test, benchmark_log)
 
             # Stop this test
@@ -292,7 +303,8 @@ class Benchmarker:
                     stdout=benchmark_log)
             except Exception:
                 log("Error: Could not empty /tmp",
-                    file=benchmark_log, color=Fore.RED)
+                    file=benchmark_log,
+                    color=Fore.RED)
 
             # Save results thus far into the latest results directory
             self.results.write_intermediate(test.name,
@@ -305,7 +317,9 @@ class Benchmarker:
 
             if self.config.mode == "verify" and not passed_verify:
                 log("Failed verify!",
-                    prefix=log_prefix, file=benchmark_log, color=Fore.RED)
+                    prefix=log_prefix,
+                    file=benchmark_log,
+                    color=Fore.RED)
                 return False
         except KeyboardInterrupt:
             docker_helper.stop(self.config, database_container_id, test)
@@ -314,7 +328,9 @@ class Benchmarker:
             self.results.write_intermediate(
                 test.name, "error during test setup: " + str(e))
             log("Subprocess Error %s" % test.name,
-                file=benchmark_log, border='-', color=Fore.RED)
+                file=benchmark_log,
+                border='-',
+                color=Fore.RED)
             log(tb, prefix=log_prefix, file=benchmark_log)
             return False
 
