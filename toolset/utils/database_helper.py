@@ -10,7 +10,7 @@ def test_database(config, database_name):
                                  "benchmarkdbpass", "hello_world")
             cursor = db.cursor()
             cursor.execute("SELECT 1")
-            results = cursor.fetchall()
+            cursor.fetchall()
             db.close()
         except:
             return False
@@ -24,7 +24,7 @@ def test_database(config, database_name):
                 database="hello_world")
             cursor = db.cursor()
             cursor.execute("SELECT 1")
-            results = cursor.fetchall()
+            cursor.fetchall()
             db.close()
         except:
             return False

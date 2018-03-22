@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, sys, re
 
-from colorama import Fore, Style
+from colorama import Style
 from contextlib import contextmanager
 
 # RegExp for stripping color codes
