@@ -1,5 +1,6 @@
 extern crate actix;
 extern crate actix_web;
+extern crate bytes;
 extern crate http;
 extern crate futures;
 extern crate serde;
@@ -8,9 +9,14 @@ extern crate serde_json;
 
 use actix_web::*;
 use actix::prelude::*;
+use bytes::BytesMut;
 use http::StatusCode;
 use http::header::{self, HeaderValue};
 
+mod utils;
+use utils::Writer;
+
+const SIZE: usize = 29;
 
 #[derive(Serialize, Deserialize)]
 pub struct Message {
@@ -21,7 +27,8 @@ fn json(_: HttpRequest) -> HttpResponse {
     let message = Message {
         message: "Hello, World!"
     };
-    let body = serde_json::to_string(&message).unwrap();
+    let mut body = BytesMut::with_capacity(SIZE);
+    serde_json::to_writer(Writer(&mut body), &message).unwrap();
 
     let mut resp = HttpResponse::new(StatusCode::OK, body.into());
     resp.headers_mut().insert(
@@ -46,8 +53,8 @@ fn main() {
     // start http server
     HttpServer::new(
         move || Application::new()
-            .resource("/plaintext", |r| r.f(plaintext))
-            .resource("/json", |r| r.f(json)))
+            .resource("/json", |r| r.f(json))
+            .resource("/plaintext", |r| r.f(plaintext)))
         .backlog(8192)
         .bind("0.0.0.0:8080").unwrap()
         .start();

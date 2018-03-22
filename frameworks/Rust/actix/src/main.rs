@@ -1,6 +1,7 @@
 extern crate actix;
 extern crate actix_web;
 extern crate http;
+extern crate bytes;
 extern crate rand;
 extern crate num_cpus;
 extern crate futures;
@@ -13,6 +14,7 @@ extern crate serde_json;
 use std::cmp;
 use actix_web::*;
 use actix::prelude::*;
+use bytes::BytesMut;
 use askama::Template;
 use http::header;
 use futures::Future;
@@ -21,6 +23,8 @@ use diesel::prelude::{Connection, PgConnection};
 mod db;
 mod schema;
 mod models;
+mod utils;
+use utils::Writer;
 
 struct State {
     db: Addr<Syn, db::DbExecutor>
@@ -32,11 +36,12 @@ fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Err
         .and_then(|res| {
             match res {
                 Ok(row) => {
-                    let body = serde_json::to_string(&row).unwrap();
+                    let mut body = BytesMut::with_capacity(31);
+                    serde_json::to_writer(Writer(&mut body), &row).unwrap();
                     Ok(httpcodes::HTTPOk.build()
                        .header(header::SERVER, "Actix")
                        .content_type("application/json")
-                       .body(body)?)
+                       .body(body.freeze())?)
                 },
                 Err(_) =>
                     Ok(httpcodes::HTTPInternalServerError.into()),
@@ -59,12 +64,12 @@ fn queries(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
         .from_err()
         .and_then(|res| {
             if let Ok(worlds) = res {
-                let body = serde_json::to_string(&worlds).unwrap();
+                let mut body = BytesMut::with_capacity(35 * worlds.len());
+                serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
                 Ok(httpcodes::HTTPOk.build()
                    .header(header::SERVER, "Actix")
                    .content_type("application/json")
-                   .content_encoding(headers::ContentEncoding::Identity)
-                   .body(body)?)
+                   .body(body.freeze())?)
             } else {
                 Ok(httpcodes::HTTPInternalServerError.into())
             }
@@ -86,11 +91,11 @@ fn updates(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
         .from_err()
         .and_then(move |res| {
             if let Ok(worlds) = res {
-                let body = serde_json::to_string(&worlds).unwrap();
+                let mut body = BytesMut::with_capacity(35 * worlds.len());
+                serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
                 Ok(httpcodes::HTTPOk.build()
                    .header(header::SERVER, "Actix")
                    .content_type("application/json")
-                   .content_encoding(headers::ContentEncoding::Identity)
                    .body(body)?)
             } else {
                 Ok(httpcodes::HTTPInternalServerError.into())
@@ -120,8 +125,7 @@ fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
                        .content_encoding(headers::ContentEncoding::Identity)
                        .body(res)?)
                 },
-                Err(e) => {
-                    println!("fortune error: {}", e);
+                Err(_) => {
                     Ok(httpcodes::HTTPInternalServerError.into())
                 }
             }
@@ -142,14 +146,14 @@ fn main() {
 
     // Start db executor actors
     let addr = SyncArbiter::start(
-        num_cpus::get() * 4, move || db::DbExecutor::new(&db_url));
+        num_cpus::get() * 4, move || db::DbExecutor::new(db_url));
 
     // start http server
     HttpServer::new(
         move || Application::with_state(State{db: addr.clone()})
             .resource("/db", |r| r.route().a(world_row))
-            .resource("/queries", |r| r.route().a(queries))
             .resource("/fortune", |r| r.route().a(fortune))
+            .resource("/queries", |r| r.route().a(queries))
             .resource("/updates", |r| r.route().a(updates)))
         .backlog(8192)
         .bind("0.0.0.0:8080").unwrap()
