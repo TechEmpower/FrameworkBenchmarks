@@ -28,4 +28,4 @@ app.get ("/json", accept ("application/json", (req, res, next, stack) => {
 	return res.expand (gen.to_data (null).data);
 }));
 
-Server.@new ("http", handler: app).run ();
+Server.@new ("http", handler: app).run ({"app", "--address=0.0.0.0:8080"});
