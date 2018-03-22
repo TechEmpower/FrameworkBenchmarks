@@ -2,7 +2,6 @@
   "framework": "nancy",
   "tests": [{
     "default": {
-      "setup_file": "setup_nginx",
       "plaintext_url":"/plaintext",
       "json_url": "/json",
       "db_url": "/db",
