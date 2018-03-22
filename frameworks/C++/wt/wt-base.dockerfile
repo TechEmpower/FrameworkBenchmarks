@@ -16,8 +16,8 @@ RUN apt-get update -qq
 RUN apt-get install -qqy cmake
 
 # Build boost_thread, boost_system, boost_filesystem and boost_program_options
-RUN wget https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz
-RUN tar xvf boost_1_65_1.tar.gz
+RUN wget -q https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.gz
+RUN tar xf boost_1_65_1.tar.gz
 RUN cd boost_1_65_1 && \
     ./bootstrap.sh && \
     ./b2 \
@@ -34,9 +34,9 @@ RUN cd boost_1_65_1 && \
       --with-filesystem \
       install
 
-RUN wget https://github.com/emweb/wt/archive/$WT_VERSION.tar.gz
+RUN wget -q https://github.com/emweb/wt/archive/$WT_VERSION.tar.gz
 RUN mv $WT_VERSION.tar.gz wt-$WT_VERSION.tar.gz
-RUN tar xvf wt-$WT_VERSION.tar.gz
+RUN tar xf wt-$WT_VERSION.tar.gz
 
 RUN cd wt-$WT_VERSION && \
     mkdir -p build && \

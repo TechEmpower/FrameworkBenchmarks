@@ -9,7 +9,7 @@ RUN mkdir install
 WORKDIR /install
 
 RUN wget -q http://pocoproject.org/releases/poco-$VERSION/poco-$VERSION-all.tar.gz
-RUN tar xvf poco-$VERSION-all.tar.gz
+RUN tar xf poco-$VERSION-all.tar.gz
 
 RUN cp -R poco-$VERSION-all/ $POCO_HOME
 
