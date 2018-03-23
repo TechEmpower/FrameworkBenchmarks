@@ -11,4 +11,5 @@ CMD cutelyst-wsgi2 \
     --threads=${C_THREADS} \
     --cpu-affinity=${CPU_AFFINITY} \
     --socket-timeout 0 \
-    --reuse-port
+    --reuse-port \
+    --tcp-nodelay

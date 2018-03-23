@@ -2,12 +2,11 @@
 
 fw_installed cutelyst && return 0
 
-CUTELYST_VER=1.12.0
+CUTELYST_VER=2.0.0
 QT_VERSION_MM=59
-QT_VERSION_FULL=591-trusty
+QT_VERSION_FULL=594-xenial
 CROOT=${IROOT}/cutelyst
 
-sudo apt-add-repository --yes ppa:george-edison55/cmake-3.x
 sudo apt-add-repository --yes ppa:beineri/opt-qt$QT_VERSION_FULL
 sudo apt-get update -qq
 

@@ -19,7 +19,7 @@
                 "notes": "",
                 "versus": ""
             },
-            "pf-postgres": {
+            "pf-pg": {
                 "db_url": "/db_postgres",
                 "query_url": "/query_postgres?queries=",
                 "update_url": "/updates_postgres?queries=",
@@ -39,7 +39,7 @@
                 "notes": "",
                 "versus": ""
             },
-            "pf-mysql": {
+            "pf-my": {
                 "db_url": "/db_mysql",
                 "query_url": "/query_mysql?queries=",
                 "update_url": "/updates_mysql?queries=",
@@ -77,7 +77,7 @@
                 "notes": "",
                 "versus": ""
             },
-            "thread-postgres-raw": {
+            "thread-pg": {
                 "db_url": "/db_postgres",
                 "query_url": "/query_postgres?queries=",
                 "update_url": "/updates_postgres?queries=",
@@ -97,7 +97,7 @@
                 "notes": "",
                 "versus": ""
             },
-            "thread-mysql-raw": {
+            "thread-my": {
                 "db_url": "/db_mysql",
                 "query_url": "/query_mysql?queries=",
                 "update_url": "/updates_mysql?queries=",
@@ -117,7 +117,7 @@
                 "notes": "",
                 "versus": ""
             },
-            "pf-epoll": {
+            "pf-nodelay": {
                 "json_url": "/json",
                 "plaintext_url": "/plaintext",
                 "port": 8080,
@@ -131,11 +131,11 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-pf-epoll",
+                "display_name": "cutelyst-pf-nodelay",
                 "notes": "",
                 "versus": ""
             },
-            "pf-postgres-epoll": {
+            "pf-pg-nodelay": {
                 "db_url": "/db_postgres",
                 "query_url": "/query_postgres?queries=",
                 "update_url": "/updates_postgres?queries=",
@@ -151,11 +151,11 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-pf-pg-epoll",
+                "display_name": "cutelyst-pf-pg-nodelay",
                 "notes": "",
                 "versus": ""
             },
-            "pf-mysql-epoll": {
+            "pf-my-nodelay": {
                 "db_url": "/db_mysql",
                 "query_url": "/query_mysql?queries=",
                 "update_url": "/updates_mysql?queries=",
@@ -171,11 +171,11 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-pf-my-epoll",
+                "display_name": "cutelyst-pf-my-nodelay",
                 "notes": "",
                 "versus": ""
             },
-            "thread-epoll": {
+            "thread-nodelay": {
                 "json_url": "/json",
                 "plaintext_url": "/plaintext",
                 "port": 8080,
@@ -189,11 +189,11 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-thr-epoll",
+                "display_name": "cutelyst-thr-nodelay",
                 "notes": "",
                 "versus": ""
             },
-            "thread-postgres-epoll": {
+            "thread-pg-nodelay": {
                 "db_url": "/db_postgres",
                 "query_url": "/query_postgres?queries=",
                 "update_url": "/updates_postgres?queries=",
@@ -209,11 +209,11 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-thr-pg-epoll",
+                "display_name": "cutelyst-thr-pg-nodelay",
                 "notes": "",
                 "versus": ""
             },
-            "thread-mysql-epoll": {
+            "thread-my-nodelay": {
                 "db_url": "/db_mysql",
                 "query_url": "/query_mysql?queries=",
                 "update_url": "/updates_mysql?queries=",
@@ -229,45 +229,7 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "cutelyst-thr-my-epoll",
-                "notes": "",
-                "versus": ""
-            },
-            "thread-epoll-half": {
-                "json_url": "/json",
-                "plaintext_url": "/plaintext",
-                "port": 8080,
-                "approach": "Realistic",
-                "classification": "Fullstack",
-                "database": "None",
-                "framework": "cutelyst",
-                "language": "C++",
-                "orm": "Raw",
-                "platform": "Qt",
-                "webserver": "None",
-                "os": "Linux",
-                "database_os": "Linux",
-                "display_name": "cutelyst-thr-epoll-half",
-                "notes": "",
-                "versus": ""
-            },
-            "thread-postgres-epoll-half": {
-                "db_url": "/db_postgres",
-                "query_url": "/query_postgres?queries=",
-                "update_url": "/updates_postgres?queries=",
-                "fortune_url": "/fortunes_raw_postgres",
-                "port": 8080,
-                "approach": "Realistic",
-                "classification": "Fullstack",
-                "database": "Postgres",
-                "framework": "cutelyst",
-                "language": "C++",
-                "orm": "Raw",
-                "platform": "Qt",
-                "webserver": "None",
-                "os": "Linux",
-                "database_os": "Linux",
-                "display_name": "cutelyst-thr-pg-epoll-half",
+                "display_name": "cutelyst-thr-my-nodelay",
                 "notes": "",
                 "versus": ""
             },
@@ -289,7 +251,7 @@
                 "notes": "",
                 "versus": ""
             },
-            "nginx-postgres-raw": {
+            "nginx-pg-raw": {
                 "db_url": "/db_postgres",
                 "query_url": "/query_postgres?queries=",
                 "update_url": "/updates_postgres?queries=",
@@ -309,7 +271,7 @@
                 "notes": "",
                 "versus": ""
             },
-            "nginx-mysql-raw": {
+            "nginx-my-raw": {
                 "db_url": "/db_mysql",
                 "query_url": "/query_mysql?queries=",
                 "update_url": "/updates_mysql?queries=",
