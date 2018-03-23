@@ -84,9 +84,9 @@ class FrameworkTest:
             test_type = any_type
             break
 
-        url = "http://%s:%s/%s" % (self.benchmarker_config.server_host,
-                                   self.port,
-                                   self.runTests[test_type].get_url())
+        url = "http://%s:%s%s" % (self.benchmarker_config.server_host,
+                                  self.port,
+                                  self.runTests[test_type].get_url())
 
         try:
             subprocess.check_call(
