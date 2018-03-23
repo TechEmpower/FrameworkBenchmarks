@@ -251,7 +251,7 @@
                 "notes": "",
                 "versus": ""
             },
-            "nginx-pg-raw": {
+            "nginx-pg": {
                 "db_url": "/db_postgres",
                 "query_url": "/query_postgres?queries=",
                 "update_url": "/updates_postgres?queries=",
@@ -271,7 +271,7 @@
                 "notes": "",
                 "versus": ""
             },
-            "nginx-my-raw": {
+            "nginx-my": {
                 "db_url": "/db_mysql",
                 "query_url": "/query_mysql?queries=",
                 "update_url": "/updates_mysql?queries=",
