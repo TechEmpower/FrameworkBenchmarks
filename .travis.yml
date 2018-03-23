@@ -138,7 +138,7 @@ env:
     # - "TESTDIR=PHP/phpixie"
      - "TESTDIR=PHP/silex"
     # - "TESTDIR=PHP/slim"
-     - "TESTDIR=PHP/symfony"
+    # - "TESTDIR=PHP/symfony"
     # - "TESTDIR=PHP/workerman"
     # - "TESTDIR=PHP/yaf"
     # - "TESTDIR=PHP/yii2"
