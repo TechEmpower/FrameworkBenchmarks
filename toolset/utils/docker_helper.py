@@ -357,7 +357,7 @@ def __gather_dependencies(docker_file):
                 tokens = line.strip().split(' ')
                 if tokens[0] == "FROM":
                     # This is magic that our base image points to
-                    if tokens[1] != "ubuntu:16.04":
+                    if tokens[1] != "ubuntu:18.04":
                         dep_ref = tokens[1].strip().split(':')[0].strip()
                         if '/' not in dep_ref:
                             raise AttributeError(
