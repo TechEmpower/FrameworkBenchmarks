@@ -3,6 +3,10 @@ FROM tfb/php7:latest
 ADD ./ /zend
 WORKDIR /zend
 
-RUN composer.phar install
+RUN mkdir -p data/cache
+RUN chmod 777 data/cache
 
-CMD bash run.sh
+RUN composer.phar install --no-progress
+
+CMD service php7.2-fpm start && \
+    nginx -c /zend/deploy/nginx.conf -g "daemon off;"
