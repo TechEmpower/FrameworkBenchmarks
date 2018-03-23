@@ -1,7 +1,6 @@
 import os
 import socket
 import fnmatch
-import subprocess
 import multiprocessing
 import json
 import docker
@@ -337,11 +336,34 @@ def test_client_connection(url):
     client = docker.from_env()
 
     try:
-        client.containers.run('wrk', 'curl %s' % url, network_mode="host")
+        client.containers.run('tfb/wrk', 'curl %s' % url, network_mode="host")
     except:
         return False
 
     return True
+
+
+def benchmark(script, variables, raw_file):
+    '''
+    Runs the given remote_script on the wrk container on the client machine.
+    '''
+
+    def watch_container(container, raw_file):
+        with open(raw_file, 'w') as benchmark_file:
+            for line in container.logs(stream=True):
+                log(line, file=benchmark_file)
+
+    client = docker.from_env()
+
+    watch_container(
+        client.containers.run(
+            "tfb/wrk",
+            "/bin/bash /%s" % script,
+            environment=variables,
+            network_mode="host",
+            privileged=True,
+            detach=True,
+            stderr=True), raw_file)
 
 
 def __gather_dependencies(docker_file):

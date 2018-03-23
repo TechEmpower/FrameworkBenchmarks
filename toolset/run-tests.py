@@ -7,7 +7,6 @@ import platform
 import multiprocessing
 from toolset.benchmark.benchmarker import Benchmarker
 from toolset.utils.scaffolding import Scaffolding
-from toolset.utils.initializer import initialize
 from toolset.utils import cleaner
 from toolset.utils.results_helper import Results
 from toolset.utils.benchmark_config import BenchmarkConfig
@@ -144,13 +143,6 @@ def main(argv=None):
         0:1:5 creates [0, 1, 2, 3, 4]
         ''')
 
-    # Install options
-    parser.add_argument(
-        '--init',
-        action='store_true',
-        default=False,
-        help='Initializes the benchmark environment')
-
     # Suite options
     parser.add_argument(
         '--build',
@@ -259,9 +251,6 @@ def main(argv=None):
 
     if config.new:
         Scaffolding()
-
-    elif config.init:
-        initialize(config)
 
     elif config.build:
         docker_helper.build(config, config.build)

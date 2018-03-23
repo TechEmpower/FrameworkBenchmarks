@@ -1,6 +1,5 @@
 from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
 from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers
-from toolset.utils.remote_script_helper import generate_pipeline_script
 
 
 class PlaintextTestType(FrameworkTestType):
@@ -49,9 +48,26 @@ class PlaintextTestType(FrameworkTestType):
     def get_url(self):
         return self.plaintext_url
 
-    def get_remote_script(self, config, name, url, port):
-        '''
-        Returns the remote script
-        '''
-        return generate_pipeline_script(self.config, name, url, port,
-                                        self.accept_header)
+    def get_script_name(self):
+        return 'pipeline.sh'
+
+    def get_script_variables(self, name, url):
+        return {
+            'max_concurrency':
+            max(self.config.concurrency_levels),
+            'name':
+            name,
+            'duration':
+            self.config.duration,
+            'levels':
+            " ".join("{}".format(item)
+                     for item in self.config.pipeline_concurrency_levels),
+            'server_host':
+            self.config.server_host,
+            'url':
+            url,
+            'pipeline':
+            16,
+            'accept':
+            "text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7"
+        }

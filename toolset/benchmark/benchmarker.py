@@ -274,6 +274,7 @@ class Benchmarker:
                 slept += 1
 
             if not accepting_requests:
+                docker_helper.stop(self.config, database_container_id, test)
                 log("ERROR: Framework is not accepting requests from client machine",
                     prefix=log_prefix,
                     file=benchmark_log,
@@ -351,21 +352,32 @@ class Benchmarker:
                     pass
 
             if not test.failed:
-                remote_script = self.config.types[test_type].get_remote_script(
-                    self.config, test.name, test.get_url(),
-                    framework_test.port)
+                # remote_script = self.config.types[test_type].get_remote_script(
+                #     self.config, test.name, test.get_url(),
+                #     framework_test.port)
 
                 # Begin resource usage metrics collection
                 self.__begin_logging(framework_test, test_type)
 
                 # Run the benchmark
-                with open(raw_file, 'w') as raw_file:
-                    p = subprocess.Popen(
-                        self.config.client_ssh_command,
-                        stdin=subprocess.PIPE,
-                        stdout=raw_file,
-                        stderr=raw_file)
-                    p.communicate(remote_script)
+                # with open(raw_file, 'w') as raw_file:
+                #     p = subprocess.Popen(
+                #         self.config.client_ssh_command,
+                #         stdin=subprocess.PIPE,
+                #         stdout=raw_file,
+                #         stderr=raw_file)
+                #     p.communicate(remote_script)
+
+                script = self.config.types[test_type].get_script_name()
+                script_variables = self.config.types[
+                    test_type].get_script_variables(
+                        test.name, "http://%s:%s%s" % (self.config.server_host,
+                                                       framework_test.port,
+                                                       test.get_url()))
+                print(script)
+                print(script_variables)
+
+                docker_helper.benchmark(script, script_variables, raw_file)
 
                 # End resource usage metrics collection
                 self.__end_logging()

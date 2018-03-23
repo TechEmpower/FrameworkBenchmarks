@@ -1,9 +1,8 @@
 import os
-import subprocess
 import traceback
 from requests import ConnectionError
 
-from toolset.utils.output_helper import log, FNULL
+from toolset.utils.output_helper import log
 from toolset.utils import docker_helper
 
 # Cross-platform colored text
@@ -84,9 +83,9 @@ class FrameworkTest:
             test_type = any_type
             break
 
-        url = "http://%s:%s/%s" % (self.benchmarker_config.server_host,
-                                   self.port,
-                                   self.runTests[test_type].get_url())
+        url = "http://%s:%s%s" % (self.benchmarker_config.server_host,
+                                  self.port,
+                                  self.runTests[test_type].get_url())
 
         return docker_helper.test_client_connection(url)
 

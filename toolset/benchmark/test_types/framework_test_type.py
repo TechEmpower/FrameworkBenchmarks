@@ -126,11 +126,18 @@ class FrameworkTestType:
         # for their URL so the base class can't know which arg is the URL
         raise NotImplementedError("Subclasses must provide get_url")
 
-    def get_remote_script(self, config, name, url, port):
+    def get_script_name(self):
         '''
-        Returns the remote script for running the benchmarking process.
+        Returns the remote script name for running the benchmarking process.
         '''
-        raise NotImplementedError("Subclasses must provide get_remote_script")
+        raise NotImplementedError("Subclasses must provide get_script_name")
+
+    def get_script_variables(self, name, url, port):
+        '''
+        Returns the remote script variables for running the benchmarking process.
+        '''
+        raise NotImplementedError(
+            "Subclasses must provide get_script_variables")
 
     def copy(self):
         '''
