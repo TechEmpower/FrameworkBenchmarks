@@ -5,7 +5,8 @@ WORKDIR /cakephp
 
 RUN mkdir -p app/tmp/cache/models
 RUN mkdir -p app/tmp/cache/persistent
-RUN chmod -R 777 app/tmp/cache
+RUN mkdir -p app/tmp/logs
+RUN chmod -R 777 app/tmp
 
 RUN composer.phar install --no-progress
 
