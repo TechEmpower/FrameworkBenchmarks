@@ -13,7 +13,7 @@ RUN apt-get install -y software-properties-common build-essential curl locales w
     libxslt-dev libgdbm-dev ncurses-dev  \
     libffi-dev libtool bison libevent-dev \
     libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 \
-    liborc-0.4-0 libgnutls-dev \
+    liborc-0.4-0 \
     libjson0-dev libmcrypt-dev libicu-dev \
     re2c libnuma-dev
 
