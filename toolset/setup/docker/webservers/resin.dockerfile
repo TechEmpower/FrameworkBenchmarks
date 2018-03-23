@@ -2,7 +2,7 @@ FROM tfb/java:latest
 
 RUN mkdir /resin
 WORKDIR /resin
-RUN curl -s http://www.caucho.com/download/resin-4.0.55.tar.gz | tar xz
+RUN curl -sL http://www.caucho.com/download/resin-4.0.55.tar.gz | tar xz
 
 ENV RESIN_HOME=/resin/resin-4.0.55
 
