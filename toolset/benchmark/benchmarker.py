@@ -40,11 +40,11 @@ class Benchmarker:
         all_tests = gather_remaining_tests(self.config, self.results)
 
         # Setup client/server
-        log("Preparing Server, Database, and Client ...", border='=')
-        with self.config.quiet_out.enable():
-            self.__setup_server()
-            self.__setup_database()
-            self.__setup_client()
+        # log("Preparing Server, Database, and Client ...", border='=')
+        # with self.config.quiet_out.enable():
+        #     self.__setup_server()
+        #     self.__setup_database()
+        #     self.__setup_client()
 
         # Run tests
         success = True
@@ -234,7 +234,7 @@ class Benchmarker:
             # Start database container
             if test.database.lower() != "none":
                 database_container_id = docker_helper.start_database(
-                    self.config, test.database.lower())
+                    self.config, test, test.database.lower())
                 if not database_container_id:
                     self.results.write_intermediate(test.name,
                                                     "ERROR: Problem starting")
@@ -258,7 +258,9 @@ class Benchmarker:
 
             slept = 0
             max_sleep = 60
-            while not test.is_running() and slept < max_sleep:
+            accepting_requests = False
+            while not accepting_requests and slept < max_sleep:
+                accepting_requests = test.is_accepting_requests()
                 if not docker_helper.successfully_running_containers(
                         test.get_docker_files(), benchmark_log):
                     docker_helper.stop(self.config, database_container_id,
@@ -270,6 +272,13 @@ class Benchmarker:
                     return False
                 time.sleep(1)
                 slept += 1
+
+            if not accepting_requests:
+                log("ERROR: Framework is not accepting requests from client machine",
+                    prefix=log_prefix,
+                    file=benchmark_log,
+                    color=Fore.RED)
+                return False
 
             # Debug mode blocks execution here until ctrl+c
             if self.config.mode == "debug":
@@ -293,18 +302,6 @@ class Benchmarker:
 
             # Stop this test
             docker_helper.stop(self.config, database_container_id, test)
-
-            # Remove contents of  /tmp folder
-            try:
-                subprocess.check_call(
-                    'sudo rm -rf /tmp/*',
-                    shell=True,
-                    stderr=benchmark_log,
-                    stdout=benchmark_log)
-            except Exception:
-                log("Error: Could not empty /tmp",
-                    file=benchmark_log,
-                    color=Fore.RED)
 
             # Save results thus far into the latest results directory
             self.results.write_intermediate(test.name,

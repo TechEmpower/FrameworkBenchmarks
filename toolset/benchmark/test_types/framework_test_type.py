@@ -164,7 +164,8 @@ class FrameworkTestType:
                 db.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current MySQL World table.", color=Fore.RED)
+                log("ERROR: Unable to load current MySQL World table.",
+                    color=Fore.RED)
                 log(tb)
         elif database_name == "postgres":
             try:
@@ -185,7 +186,8 @@ class FrameworkTestType:
                 db.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current Postgres World table.", color=Fore.RED)
+                log("ERROR: Unable to load current Postgres World table.",
+                    color=Fore.RED)
                 log(tb)
         elif database_name == "mongodb":
             try:
@@ -205,7 +207,8 @@ class FrameworkTestType:
                 connection.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current MongoDB World table.", color=Fore.RED)
+                log("ERROR: Unable to load current MongoDB World table.",
+                    color=Fore.RED)
                 log(tb)
         else:
             raise ValueError(

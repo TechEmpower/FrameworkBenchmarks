@@ -11,7 +11,7 @@ import traceback
 from threading import Thread
 from colorama import Fore, Style
 
-from toolset.utils.output_helper import log, FNULL
+from toolset.utils.output_helper import log
 from toolset.utils.metadata_helper import gather_tests
 from toolset.utils.ordered_set import OrderedSet
 from toolset.utils.database_helper import test_database
@@ -22,32 +22,38 @@ def clean(config):
     Cleans all the docker images from the system
     '''
     # Clean the app server images
-    subprocess.check_call(["docker", "image", "prune", "-f"])
+    # subprocess.check_call(["docker", "image", "prune", "-f"])
 
-    docker_ids = subprocess.check_output(["docker", "images",
-                                          "-q"]).splitlines()
-    for docker_id in docker_ids:
-        subprocess.check_call(["docker", "image", "rmi", "-f", docker_id])
+    # docker_ids = subprocess.check_output(["docker", "images",
+    #                                       "-q"]).splitlines()
+    # for docker_id in docker_ids:
+    #     subprocess.check_call(["docker", "image", "rmi", "-f", docker_id])
 
-    subprocess.check_call(["docker", "system", "prune", "-a", "-f"])
+    # subprocess.check_call(["docker", "system", "prune", "-a", "-f"])
 
     # Clean the database server images
-    command = list(config.database_ssh_command)
-    command.extend(["docker", "image", "prune", "-f"])
-    subprocess.check_call(command)
+    # command = list(config.database_ssh_command)
+    # command.extend(["docker", "image", "prune", "-f"])
+    # subprocess.check_call(command)
 
-    command = list(config.database_ssh_command)
-    command.extend(["docker", "images", "-q"])
-    docker_ids = subprocess.check_output(command).splitlines()
+    # command = list(config.database_ssh_command)
+    # command.extend(["docker", "images", "-q"])
+    # docker_ids = subprocess.check_output(command).splitlines()
 
-    for docker_id in docker_ids:
-        command = list(config.database_ssh_command)
-        command.extend(["docker", "image", "rmi", "-f", docker_id])
-        subprocess.check_call(command)
+    # for docker_id in docker_ids:
+    #     command = list(config.database_ssh_command)
+    #     command.extend(["docker", "image", "rmi", "-f", docker_id])
+    #     subprocess.check_call(command)
 
-    command = list(config.database_ssh_command)
-    command.extend(["docker", "system", "prune", "-a", "-f"])
-    subprocess.check_call(command)
+    # command = list(config.database_ssh_command)
+    # command.extend(["docker", "system", "prune", "-a", "-f"])
+    # subprocess.check_call(command)
+
+    client = docker.from_env()
+
+    for image in client.images.list():
+        client.images.remove(image.id)
+    client.images.prune()
 
 
 def build(benchmarker_config, test_names, build_log_dir=os.devnull):
@@ -97,7 +103,9 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                     if not docker_file:
                         log("Docker build failed; %s could not be found; terminating"
                             % (dependency + ".dockerfile"),
-                            prefix=log_prefix, file=build_log, color=Fore.RED)
+                            prefix=log_prefix,
+                            file=build_log,
+                            color=Fore.RED)
                         return 1
 
                     # Build the dependency image
@@ -120,7 +128,9 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                     except Exception:
                         tb = traceback.format_exc()
                         log("Docker dependency build failed; terminating",
-                            prefix=log_prefix, file=build_log, color=Fore.RED)
+                            prefix=log_prefix,
+                            file=build_log,
+                            color=Fore.RED)
                         log(tb, prefix=log_prefix, file=build_log)
                         return 1
 
@@ -152,7 +162,9 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                 except Exception:
                     tb = traceback.format_exc()
                     log("Docker build failed; terminating",
-                        prefix=log_prefix, file=build_log, color=Fore.RED)
+                        prefix=log_prefix,
+                        file=build_log,
+                        color=Fore.RED)
                     log(tb, prefix=log_prefix, file=build_log)
                     return 1
 
@@ -207,7 +219,8 @@ def run(benchmarker_config, docker_files, run_log_dir):
                         ".dockerfile", "").lower()), 'w') as run_log:
                 tb = traceback.format_exc()
                 log("Running docker cointainer: %s failed" % docker_file,
-                    prefix=log_prefix, file=run_log)
+                    prefix=log_prefix,
+                    file=run_log)
                 log(tb, prefix=log_prefix, file=run_log)
                 return 1
 
@@ -235,7 +248,9 @@ def successfully_running_containers(docker_files, out):
         if image_name not in running_container_images:
             log_prefix = "%s: " % image_name
             log("ERROR: Expected tfb/test/%s to be running container" %
-                image_name, prefix=log_prefix, file=out)
+                image_name,
+                prefix=log_prefix,
+                file=out)
             return False
     return True
 
@@ -247,7 +262,8 @@ def stop(config=None, database_container_id=None, test=None):
     client = docker.from_env()
     # Stop all the containers
     for container in client.containers.list():
-        if container.status == "running" and container.id != database_container_id:
+        image_name = container.image.tags[0].split(':')[0]
+        if container.status == "running" and container.id != database_container_id and image_name != 'tfb':
             container.stop()
     # Remove only the tfb/test image for this test
     try:
@@ -257,9 +273,8 @@ def stop(config=None, database_container_id=None, test=None):
         pass
     # Stop the database container
     if database_container_id:
-        command = list(config.database_ssh_command)
-        command.extend(['docker', 'stop', database_container_id])
-        subprocess.check_call(command, stdout=FNULL, stderr=subprocess.STDOUT)
+        client = docker.from_env()
+        client.containers.get(database_container_id).stop()
     client.images.prune()
     client.containers.prune()
     client.networks.prune()
@@ -277,60 +292,32 @@ def find(path, pattern):
                 return os.path.join(root, name)
 
 
-def start_database(config, database):
+def start_database(config, test, database):
     '''
     Sets up a container for the given database and port, and starts said docker 
     container.
     '''
+    log_prefix = "%s: " % test.name
 
-    def __is_hex(s):
-        try:
-            int(s, 16)
-        except ValueError:
-            return False
-        return len(s) % 2 == 0
+    database_dir = os.path.join(config.fwroot, "toolset", "setup", "docker",
+                                "databases", database)
+    docker_file = "%s.dockerfile" % database
 
-    command = list(config.database_ssh_command)
-    command.extend(['docker', 'images', '-q', database])
-    out = subprocess.check_output(command)
-    dbid = ''
-    if len(out.splitlines()) > 0:
-        dbid = out.splitlines()[len(out.splitlines()) - 1]
+    for line in docker.APIClient(base_url='unix://var/run/docker.sock').build(
+            path=database_dir, dockerfile=docker_file,
+            tag="tfb/%s" % database):
+        if line.startswith('{"stream":'):
+            line = json.loads(line)
+            line = line[line.keys()[0]].encode('utf-8')
+            log(line,
+                prefix=log_prefix,
+                color=Fore.WHITE + Style.BRIGHT \
+                    if re.match(r'^Step \d+\/\d+', line) else '')
 
-    # If the database image exists, then dbid will look like
-    # fe12ca519b47, and we do not want to rebuild if it exists
-    if len(dbid) != 12 and not __is_hex(dbid):
+    client = docker.from_env()
 
-        def __scp_command(files):
-            scpstr = ["scp", "-i", config.database_identity_file]
-            for file in files:
-                scpstr.append(file)
-            scpstr.append("%s@%s:~/%s/" % (config.database_user,
-                                           config.database_host, database))
-            return scpstr
-
-        command = list(config.database_ssh_command)
-        command.extend(['mkdir', '-p', database])
-        subprocess.check_call(command)
-        dbpath = os.path.join(config.fwroot, "toolset", "setup", "docker",
-                              "databases", database)
-        dbfiles = ""
-        for dbfile in os.listdir(dbpath):
-            dbfiles += "%s " % os.path.join(dbpath, dbfile)
-        subprocess.check_call(__scp_command(dbfiles.split()))
-
-        command = list(config.database_ssh_command)
-        command.extend([
-            'docker', 'build', '-f',
-            '~/%s/%s.dockerfile' % (database, database), '-t', database,
-            '~/%s' % database
-        ])
-        subprocess.check_call(command)
-
-    command = list(config.database_ssh_command)
-    command.extend(
-        ['docker', 'run', '-d', '--rm', '--init', '--network=host', database])
-    docker_id = subprocess.check_output(command).strip()
+    container = client.containers.run(
+        "tfb/%s" % database, network_mode="host", privileged=True, detach=True)
 
     # Sleep until the database accepts connections
     slept = 0
@@ -339,7 +326,22 @@ def start_database(config, database):
         time.sleep(1)
         slept += 1
 
-    return docker_id
+    return container.id
+
+
+def test_client_connection(url):
+    '''
+    Tests that the app server at the given url responds successfully to a 
+    request.
+    '''
+    client = docker.from_env()
+
+    try:
+        client.containers.run('wrk', 'curl %s' % url, network_mode="host")
+    except:
+        return False
+
+    return True
 
 
 def __gather_dependencies(docker_file):
