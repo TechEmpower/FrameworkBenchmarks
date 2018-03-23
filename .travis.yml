@@ -135,7 +135,7 @@ env:
     # - "TESTDIR=PHP/peachpie"
     # - "TESTDIR=PHP/phalcon"
     # - "TESTDIR=PHP/phalcon-micro"
-    # - "TESTDIR=PHP/phpixie"
+     - "TESTDIR=PHP/phpixie"
      - "TESTDIR=PHP/silex"
     # - "TESTDIR=PHP/slim"
     # - "TESTDIR=PHP/symfony"
