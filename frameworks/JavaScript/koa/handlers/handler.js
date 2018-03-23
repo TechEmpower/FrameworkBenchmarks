@@ -7,14 +7,14 @@ const Bluebird = require('bluebird');
  */
 module.exports = (databaseLayer) => ({
   SingleQuery: async (ctx) => {
-    ctx.body = await databaseLayer.getWorld(h.randomTfbNumber())
+    ctx.body = await databaseLayer.getWorldLean(h.randomTfbNumber());
   },
 
   MultipleQueries: async (ctx) => {
     const queries = h.getQueries(ctx.request.query.queries);
     const promisesArray = [];
     for (let i = 0; i < queries; i++) {
-      promisesArray.push(databaseLayer.getWorld(h.randomTfbNumber()))
+      promisesArray.push(databaseLayer.getWorldLean(h.randomTfbNumber()));
     }
     ctx.body = await Bluebird.all(promisesArray)
   },

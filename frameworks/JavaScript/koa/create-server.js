@@ -9,9 +9,9 @@ const app = new Koa();
 const router = new Router();
 
 app
-  .use((ctx, next) => {
+  .use(async (ctx, next) => {
     ctx.set('Server', 'Koa');
-    next();
+    await next();
   });
 
 router
@@ -22,18 +22,14 @@ router
     ctx.body = 'Hello, World!';
   });
 
-app.use(router.routes());
-
-
 const handlerName = process.env.NODE_HANDLER;
 
 if (handlerName) {
   const dbLayer = require(`./handlers/${handlerName}`);
 
-  const dbRouter = new Router();
   const routerHandler = handler(dbLayer);
 
-  dbRouter
+  router
     .use(bodyParser())
     .use(hbs.middleware({
       handlebars: handlebars,
@@ -43,9 +39,9 @@ if (handlerName) {
     .get('/queries', routerHandler.MultipleQueries)
     .get('/fortunes', routerHandler.Fortunes)
     .get('/updates', routerHandler.Updates);
-
-  app.use(dbRouter.routes());
 }
+
+app.use(router.routes());
 
 app.listen(8080);
 console.log(`Worker started and listening on http://0.0.0.0:8080 ${new Date().toISOString()}`);

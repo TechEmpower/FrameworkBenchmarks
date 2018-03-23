@@ -12,14 +12,20 @@ Mongoose.connect('mongodb://TFB-database/hello_world')
   });
 
 const WorldSchema = new Mongoose.Schema({
-  id: SchemaTypes.Number,
+  _id: SchemaTypes.Number,
   randomNumber: SchemaTypes.Number,
+}, {
+  collection: 'World',
+  versionKey: false,
 });
 
 const FortuneSchema = new Mongoose.Schema({
   id: SchemaTypes.Number,
   message: SchemaTypes.String,
+}, {
+  collection: 'Fortune',
+  versionKey: false,
 });
 
-module.exports.Worlds = Mongoose.model('World', WorldSchema);
-module.exports.Fortunes = Mongoose.model('Fortune', FortuneSchema);
+module.exports.Worlds = Mongoose.model('World', WorldSchema, 'World');
+module.exports.Fortunes = Mongoose.model('Fortune', FortuneSchema, 'Fortune');
