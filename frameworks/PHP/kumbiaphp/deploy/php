@@ -1,6 +1,6 @@
 <VirtualHost *:8080>
-  Alias /php/ "TEST_ROOT"
-  <Directory TEST_ROOT>
+  Alias /php/ "/kumbiaphp/bench/public"
+  <Directory /kumbiaphp/bench/public>
           Options Indexes FollowSymLinks MultiViews
           #AllowOverride None
           Order allow,deny
