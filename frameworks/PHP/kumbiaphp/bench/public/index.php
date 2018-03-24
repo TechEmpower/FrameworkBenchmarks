@@ -62,7 +62,7 @@ const APP_PATH = '/kumbiaphp/bench/app/';
  * - Ruta al directorio que contiene el núcleo de Kumbia (por defecto la ruta al directorio core)
  */
 //define('CORE_PATH', dirname(dirname(APP_PATH)).'/vendor/Kumbia/core/');
-const CORE_PATH = '/kumbiaphp/bench/app/vendor/Kumbia/core/';
+const CORE_PATH = '/kumbiaphp/vendor/Kumbia/core/';
 /**
  * Define el PUBLIC_PATH.
  *
