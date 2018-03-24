@@ -4,20 +4,22 @@ extern crate num_cpus;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
-extern crate tokio;
+//extern crate tokio;
+extern crate tokio_proto;
 
 use std::env;
 use std::net::SocketAddr;
 use std::process;
 
-use futures::{future, Future, Stream};
+use futures::{future}; //, Future, Stream};
 
 use hyper::Method::Get;
 use hyper::header::{ContentLength, ContentType, Server};
 use hyper::StatusCode::NotFound;
 use hyper::server::{Http, Service, Request, Response};
 
-use tokio::net::TcpListener;
+//use tokio::net::TcpListener;
+use tokio_proto::TcpServer;
 
 static HELLOWORLD: &'static [u8] = b"Hello, world!";
 
@@ -32,7 +34,7 @@ impl Service for TechEmpower {
     type Request = Request;
     type Response = Response;
     type Error = hyper::Error;
-    type Future = ::futures::Finished<Response, hyper::Error>;
+    type Future = future::FutureResult<Response, hyper::Error>;
 
     fn call(&self, req: Request) -> Self::Future {
         let response = match (req.method(), req.path()) {
@@ -86,6 +88,22 @@ fn main() {
 
     // Bind to 0.0.0.0:8080
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
+
+    let mut srv = TcpServer::new(http, addr);
+    srv.threads(num_cpus::get());
+
+    println!("Listening on http://{}", addr);
+    srv.serve(|| Ok(TechEmpower));
+}
+
+/* This is the future, but there's still a few blockers in new tokio,
+ * so disable this for now while we work them out.
+fn main() {
+    // Check for some runtime configuration
+    let http = configure();
+
+    // Bind to 0.0.0.0:8080
+    let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
     let tcp = TcpListener::bind(&addr)
         .expect("couldn't bind to addr");
 
@@ -105,3 +123,4 @@ fn main() {
     println!("Listening on http://{}", addr);
     tokio::run(server);
 }
+*/
