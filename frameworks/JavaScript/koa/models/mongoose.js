@@ -15,7 +15,7 @@ const WorldSchema = new Mongoose.Schema({
   _id: SchemaTypes.Number,
   randomNumber: SchemaTypes.Number,
 }, {
-  collection: 'World',
+  collection: 'world',
   versionKey: false,
 });
 
@@ -23,9 +23,9 @@ const FortuneSchema = new Mongoose.Schema({
   id: SchemaTypes.Number,
   message: SchemaTypes.String,
 }, {
-  collection: 'Fortune',
+  collection: 'fortune',
   versionKey: false,
 });
 
-module.exports.Worlds = Mongoose.model('World', WorldSchema, 'World');
-module.exports.Fortunes = Mongoose.model('Fortune', FortuneSchema, 'Fortune');
+module.exports.Worlds = Mongoose.model('World', WorldSchema, 'world');
+module.exports.Fortunes = Mongoose.model('Fortune', FortuneSchema, 'fortune');

@@ -6,7 +6,7 @@ const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpa
 });
 
 const {DataTypes} = Sequelize;
-const Worlds = sequelize.define('world', {
+const Worlds = sequelize.define('World', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true
