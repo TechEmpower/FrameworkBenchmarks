@@ -7,5 +7,11 @@ ENV APP_ENV=prod
 
 RUN composer.phar install --no-progress
 
-CMD service php7.2-fpm start && \
-    nginx -c /symfony/deploy/nginx.conf -g "daemon off;"
+RUN php bin/console cache:clear --env=prod --no-debug --no-warmup
+RUN php bin/console cache:warmup --env=prod --no-debug
+
+RUN mkdir -p /symfony/var/cache/dev
+RUN chmod 777 -R /symfony/var/cache/dev
+
+RUN mkdir -p /symfony/var/log
+RUN chmod 777 -R /symfony/var/log

@@ -8,7 +8,7 @@ try {
     $app['db'] = function() {
 
         return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-            'dsn'       => 'host=localhost;dbname=hello_world;charset=utf8',
+            'dsn'       => 'host=TFB-database;dbname=hello_world;charset=utf8',
             'username'   => 'benchmarkdbuser',
             'password'   => 'benchmarkdbpass',
             'persistent' => true
@@ -20,7 +20,7 @@ try {
 
         $view = new \Phalcon\Mvc\View();
 
-        $view->setViewsDir(__DIR__ . '/../views/');
+        $view->setViewsDir(__DIR__ . '/../app/views/');
 
         $view->registerEngines(array(
             ".volt" => function($view, $di) {
@@ -28,7 +28,7 @@ try {
                 $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
 
                 $volt->setOptions(array(
-                    "compiledPath" => __DIR__ . "/../compiled-templates/",
+                    "compiledPath" => __DIR__ . "/../app/compiled-templates/",
                     "compiledExtension" => ".c",
                     "compiledSeparator" => '_',
                 ));
