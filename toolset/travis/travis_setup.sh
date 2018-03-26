@@ -5,6 +5,10 @@ export DEBIAN_FRONTEND=noninteractive
 # Turn on command tracing
 set -x
 
+# Stop services that travis starts to free up those ports for docker usage
+sudo service mysql stop
+sudo service postgresql stop
+
 # Run as travis user (who already has passwordless sudo)
 ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa
 cat /home/travis/.ssh/id_rsa.pub >> /home/travis/.ssh/authorized_keys
