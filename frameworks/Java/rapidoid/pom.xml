@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.4.1211</version>
+			<version>42.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.zaxxer</groupId>
@@ -37,6 +37,11 @@
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
 			<version>2.2.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.22.0-GA</version>
 		</dependency>
 	</dependencies>
 

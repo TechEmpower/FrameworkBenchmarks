@@ -18,6 +18,24 @@ rm -rf ffead-cpp-master
 unzip ffead-cpp-src.zip
 mv ffead-cpp-master ffead-cpp-src
 cd ffead-cpp-src/
+
+#
+# In the current version of the ffead-cpp framework, when the framework figures
+# out the column name for each data entity property, it forces all the column
+# names to lowercase.  This is a problem for our MongoDB tests because it will
+# lead to records being written to the "world" collection that have a
+# "randomnumber" attribute rather than the expected "randomNumber" (capital "N")
+# even though we specify the correct capitalization in the test implementation.
+# This causes the implementation to fail the updates test verification.
+#
+# There doesn't seem to be any way to work around this problem in the test
+# implementation, so instead we modify the framework, making it trust the
+# provided capitalization of all column names.
+#
+# TODO: Address this problem in the ffead-cpp framework itself.
+#
+sed -i 's|toLowerCopy|trimCopy|g' src/modules/sdorm/DataSourceMapping.cpp
+
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 rm -rf web/te-benchmark
 cp -f ${TROOT}/server.sh script/

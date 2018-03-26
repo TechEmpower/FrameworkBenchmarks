@@ -9,5 +9,8 @@ logs/
 .classpath
 .project
 /bin/
+docker/
 tools/
 sbt
+sql/
+results*

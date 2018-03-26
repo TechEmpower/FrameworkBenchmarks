@@ -23,7 +23,7 @@ var sequelize = new Sequelize(
   })
 
 
-var Worlds = sequelize.define('World', {
+var Worlds = sequelize.define('world', {
   id: {
       type: Sequelize.INTEGER,
       primaryKey: true
@@ -66,6 +66,7 @@ var randomWorldPromise = function() {
 }
 
 var updateWorld = function(world) {
+  world.randomNumber = h.randomTfbNumber()
   var promise = Worlds
     .update(
       { randomNumber: world.randomNumber },
@@ -155,6 +156,6 @@ module.exports = {
         process.exit(1)
       })
   }
-  
+
 };
 

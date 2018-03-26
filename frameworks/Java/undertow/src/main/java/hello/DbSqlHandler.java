@@ -1,6 +1,6 @@
 package hello;
 
-import static hello.Helper.randomWorld;
+import static hello.Helper.randomWorldNumber;
 import static hello.Helper.sendJson;
 
 import io.undertow.server.HttpHandler;
@@ -27,7 +27,7 @@ final class DbSqlHandler implements HttpHandler {
     try (Connection connection = db.getConnection();
          PreparedStatement statement =
              connection.prepareStatement("SELECT * FROM World WHERE id = ?")) {
-      statement.setInt(1, randomWorld());
+      statement.setInt(1, randomWorldNumber());
       try (ResultSet resultSet = statement.executeQuery()) {
         resultSet.next();
         int id = resultSet.getInt("id");

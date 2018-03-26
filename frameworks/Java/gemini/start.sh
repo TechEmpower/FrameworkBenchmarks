@@ -9,4 +9,4 @@ sed -i 's|db.Driver.UrlPrefix = .*|db.Driver.UrlPrefix = jdbc:mysql://|g' Docroo
 mkdir -p Docroot/WEB-INF/classes
 ant resolve
 ant compile
-resinctl -conf $TROOT/Docroot/WEB-INF/resin.xml start
+resinctl -conf $TROOT/Docroot/WEB-INF/resin.xml console

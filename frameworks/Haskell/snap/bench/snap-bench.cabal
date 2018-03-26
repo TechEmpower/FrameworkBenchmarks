@@ -14,21 +14,17 @@ Executable snap-bench
   hs-source-dirs: src
   main-is: Main.hs
 
-  Build-depends:
-    aeson,
-    base,
-    bytestring,
-    MonadCatchIO-transformers,
-    mtl,
-    snap-core,
-    snap-server,
-    configurator,
-    resource-pool,
-    mysql-simple,
-    text,
-    transformers,
-    random,
-    unordered-containers
+  Build-depends: base
+               , aeson
+               , bytestring
+               , configurator
+               , mysql-simple
+               , random
+               , resource-pool
+               , snap-core
+               , snap-server
+               , text
+               , unordered-containers
 
   ghc-options: -threaded -Wall -fwarn-tabs -funbox-strict-fields -O2
                -fno-warn-unused-do-bind -rtsopts

@@ -71,7 +71,7 @@
       "port": 8081,
       "approach": "Stripped",
       "classification": "Platform",
-      "database": "None",
+      "database": "Postgres",
       "framework": "api_hour",
       "language": "Python",
       "flavor": "Python3",

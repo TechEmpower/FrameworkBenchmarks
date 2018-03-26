@@ -1,10 +1,10 @@
 #!/bin/bash
 
-fw_depends mysql java sbt
+fw_depends mysql java8 sbt
 
 cd play2-java-ebean-hikaricp
 
-rm -rf target/universal/stage/RUNNING_PID
+rm -rf target/ project/target/ project/project/
 
 sbt stage
-target/universal/stage/bin/play2-java-ebean-hikaricp &
+target/universal/stage/bin/play2-java-ebean-hikaricp -Dplay.server.provider=play.core.server.AkkaHttpServerProvider &

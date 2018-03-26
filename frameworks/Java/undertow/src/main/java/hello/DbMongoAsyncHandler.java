@@ -1,6 +1,6 @@
 package hello;
 
-import static hello.Helper.randomWorld;
+import static hello.Helper.randomWorldNumber;
 import static hello.Helper.sendException;
 import static hello.Helper.sendJson;
 
@@ -25,7 +25,7 @@ final class DbMongoAsyncHandler implements HttpHandler {
   @Override
   public void handleRequest(HttpServerExchange exchange) {
     worldCollection
-        .find(Filters.eq(randomWorld()))
+        .find(Filters.eq(randomWorldNumber()))
         .map(Helper::mongoDocumentToWorld)
         .first(
             (world, exception) -> {

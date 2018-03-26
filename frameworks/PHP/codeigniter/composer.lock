@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cb1f735c5760f769abbc696a6b129ff4",
     "content-hash": "5d9e345faac86f61cf4288da91bf779b",
     "packages": [
         {
@@ -37,7 +36,7 @@
             ],
             "description": "The CodeIgniter framework",
             "homepage": "https://codeigniter.com",
-            "time": "2016-03-21 16:26:30"
+            "time": "2016-03-21T16:26:30+00:00"
         }
     ],
     "packages-dev": [],

@@ -215,7 +215,7 @@
 		<dependency>
 			<groupId>io.sinistral</groupId>
 			<artifactId>proteus-core</artifactId>
-			<version>0.1.7.2-SNAPSHOT</version>
+			<version>0.1.7.4-SNAPSHOT</version>
 			
 		</dependency>
 			<dependency>
@@ -248,7 +248,7 @@
 	  	<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.4.1212</version>
+			<version>42.1.4</version>
 		</dependency>  
 	</dependencies>
 	<properties>

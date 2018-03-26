@@ -6,6 +6,8 @@ fw_depends mongodb dlang
 rm -f fwb
 rm -rf .dub
 
-dub build -b release --compiler=ldc2 --combined
+dub upgrade --verbose
+
+dub build -b release --compiler=ldc2 --combined --verbose
 
 ./fwb &

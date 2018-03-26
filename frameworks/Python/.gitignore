@@ -1,6 +1,7 @@
 uwsgi_params
 *.pid
 __pycache__
+!*.lock
 
 # ignore virtual environments
 pyvenv*/

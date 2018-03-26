@@ -1,7 +1,10 @@
 const h = require('../helper');
 const async = require('async');
 const Mongoose = require('mongoose');
-const connection = Mongoose.connect('mongodb://TFB-database/hello_world');
+const connection = Mongoose.connect(
+  'mongodb://TFB-database/hello_world',
+  { useMongoClient: true }
+);
 
 // Mongoose Setup
 const WorldSchema = new Mongoose.Schema({

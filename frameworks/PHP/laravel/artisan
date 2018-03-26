@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+define('LARAVEL_START', microtime(true));
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -13,37 +15,9 @@
 |
 */
 
-require __DIR__.'/bootstrap/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
-/*
-|--------------------------------------------------------------------------
-| Turn On The Lights
-|--------------------------------------------------------------------------
-|
-| We need to illuminate PHP development, so let's turn on the lights.
-| This bootstraps the framework and gets it ready for and then it
-| will load up this application so that we can run it and send
-| the responses back to the browser and delight these users.
-|
-*/
-
-$app = require_once __DIR__.'/bootstrap/start.php';
-
-/*
-|--------------------------------------------------------------------------
-| Load The Artisan Console Application
-|--------------------------------------------------------------------------
-|
-| We'll need to run the script to load and return the Artisan console
-| application. We keep this in its own script so that we will load
-| the console application independent of running commands which
-| will allow us to fire commands from Routes when we want to.
-|
-*/
-
-$app->setRequestForConsoleEnvironment();
-
-$artisan = Illuminate\Console\Application::start($app);
+$app = require_once __DIR__.'/bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -56,19 +30,24 @@ $artisan = Illuminate\Console\Application::start($app);
 |
 */
 
-$status = $artisan->run();
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+
+$status = $kernel->handle(
+    $input = new Symfony\Component\Console\Input\ArgvInput,
+    new Symfony\Component\Console\Output\ConsoleOutput
+);
 
 /*
 |--------------------------------------------------------------------------
 | Shutdown The Application
 |--------------------------------------------------------------------------
 |
-| Once Artisan has finished running. We will fire off the shutdown events
+| Once Artisan has finished running, we will fire off the shutdown events
 | so that any final work may be done by the application before we shut
 | down the process. This is the last thing to happen to the request.
 |
 */
 
-$app->shutdown();
+$kernel->terminate($input, $status);
 
 exit($status);

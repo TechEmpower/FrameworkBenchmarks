@@ -3,7 +3,7 @@
 fw_installed pypy2 && return 0
   
 PYPY2_ROOT=$IROOT/pypy2
-PYPY2_VERSION=5.8.0
+PYPY2_VERSION=5.10.0
 
 fw_get -o pypy2-v${PYPY2_VERSION}-linux64.tar.bz2 https://bitbucket.org/pypy/pypy/downloads/pypy2-v${PYPY2_VERSION}-linux64.tar.bz2
 fw_untar pypy2-v${PYPY2_VERSION}-linux64.tar.bz2

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-fw_depends java leiningen
+fw_depends java8 leiningen
 
 cd hello
 lein clean
 lein uberjar
-java -server -Xmx2g -XX:+UseG1GC -XX:MaxGCPauseMillis=10 -jar target/*-standalone.jar &
+java -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts -jar target/hello-reitit-standalone.jar

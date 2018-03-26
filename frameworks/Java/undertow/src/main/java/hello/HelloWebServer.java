@@ -18,7 +18,7 @@ import io.undertow.server.handlers.BlockingHandler;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.SetHeaderHandler;
 import java.io.InputStream;
-import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import javax.sql.DataSource;
 
@@ -31,18 +31,18 @@ public final class HelloWebServer {
   }
 
   public static void main(String[] args) throws Exception {
-    Mode mode = Mode.valueOf(args[0]);
-    Properties props = new Properties();
+    ServerMode serverMode = ServerMode.valueOf(args[0]);
+    Properties config = new Properties();
     try (InputStream in =
              Thread.currentThread()
                    .getContextClassLoader()
                    .getResourceAsStream("hello/server.properties")) {
-      props.load(in);
+      config.load(in);
     }
-    int port = Integer.parseInt(props.getProperty("undertow.port"));
-    String host = props.getProperty("undertow.host");
-    HttpHandler paths = mode.paths(props);
-    HttpHandler rootHandler = new SetHeaderHandler(paths, "Server", "U-tow");
+    int port = Integer.parseInt(config.getProperty("undertow.port"));
+    String host = config.getProperty("undertow.host");
+    HttpHandler pathHandler = serverMode.newPathHandler(config);
+    HttpHandler rootHandler = new SetHeaderHandler(pathHandler, "Server", "U-tow");
     Undertow.builder()
             .addHttpListener(port, host)
             // In HTTP/1.1, connections are persistent unless declared
@@ -54,14 +54,14 @@ public final class HelloWebServer {
             .start();
   }
 
-  enum Mode {
+  enum ServerMode {
     /**
      * The server will only implement the test types that do not require a
      * database.
      */
-    NO_DATABASE() {
+    NO_DATABASE {
       @Override
-      HttpHandler paths(Properties props) {
+      HttpHandler newPathHandler(Properties config) {
         return new PathHandler()
             .addExactPath("/plaintext", new PlaintextHandler())
             .addExactPath("/json",      new JsonHandler());
@@ -72,13 +72,13 @@ public final class HelloWebServer {
      * The server will use a MySQL database and will only implement the test
      * types that require a database.
      */
-    MYSQL() {
+    MYSQL {
       @Override
-      HttpHandler paths(Properties props) {
-        String jdbcUrl = props.getProperty("mysql.jdbcUrl");
-        String username = props.getProperty("mysql.username");
-        String password = props.getProperty("mysql.password");
-        int connections = Integer.parseInt(props.getProperty("mysql.connections"));
+      HttpHandler newPathHandler(Properties config) {
+        String jdbcUrl = config.getProperty("mysql.jdbcUrl");
+        String username = config.getProperty("mysql.username");
+        String password = config.getProperty("mysql.password");
+        int connections = Integer.parseInt(config.getProperty("mysql.connections"));
         DataSource db = newSqlDataSource(jdbcUrl, username, password, connections);
         return new PathHandler()
             .addExactPath("/db",       new BlockingHandler(new DbSqlHandler(db)))
@@ -92,13 +92,13 @@ public final class HelloWebServer {
      * The server will use a PostgreSQL database and will only implement the
      * test types that require a database.
      */
-    POSTGRESQL() {
+    POSTGRESQL {
       @Override
-      HttpHandler paths(Properties props) {
-        String jdbcUrl = props.getProperty("postgresql.jdbcUrl");
-        String username = props.getProperty("postgresql.username");
-        String password = props.getProperty("postgresql.password");
-        int connections = Integer.parseInt(props.getProperty("postgresql.connections"));
+      HttpHandler newPathHandler(Properties config) {
+        String jdbcUrl = config.getProperty("postgresql.jdbcUrl");
+        String username = config.getProperty("postgresql.username");
+        String password = config.getProperty("postgresql.password");
+        int connections = Integer.parseInt(config.getProperty("postgresql.connections"));
         DataSource db = newSqlDataSource(jdbcUrl, username, password, connections);
         return new PathHandler()
             .addExactPath("/db",       new BlockingHandler(new DbSqlHandler(db)))
@@ -112,12 +112,12 @@ public final class HelloWebServer {
      * The server will use a MongoDB database and will only implement the test
      * types that require a database.
      */
-    MONGODB() {
+    MONGODB {
       @Override
-      HttpHandler paths(Properties props) {
-        String host = props.getProperty("mongodb.host");
-        String databaseName = props.getProperty("mongodb.databaseName");
-        int connections = Integer.parseInt(props.getProperty("mongodb.connections"));
+      HttpHandler newPathHandler(Properties config) {
+        String host = config.getProperty("mongodb.host");
+        String databaseName = config.getProperty("mongodb.databaseName");
+        int connections = Integer.parseInt(config.getProperty("mongodb.connections"));
         MongoDatabase db = newMongoDatabase(host, databaseName, connections);
         return new PathHandler()
             .addExactPath("/db",       new BlockingHandler(new DbMongoHandler(db)))
@@ -131,12 +131,12 @@ public final class HelloWebServer {
      * The server will use a MongoDB database with an asynchronous API and will
      * only implement the test types that require a database.
      */
-    MONGODB_ASYNC() {
+    MONGODB_ASYNC {
       @Override
-      HttpHandler paths(Properties props) {
-        String host = props.getProperty("mongodb.host");
-        String databaseName = props.getProperty("mongodb.databaseName");
-        int connections = Integer.parseInt(props.getProperty("mongodb.connections"));
+      HttpHandler newPathHandler(Properties config) {
+        String host = config.getProperty("mongodb.host");
+        String databaseName = config.getProperty("mongodb.databaseName");
+        int connections = Integer.parseInt(config.getProperty("mongodb.connections"));
         com.mongodb.async.client.MongoDatabase db =
             newMongoDatabaseAsync(host, databaseName, connections);
         return new PathHandler()
@@ -151,9 +151,9 @@ public final class HelloWebServer {
      * Returns an HTTP handler that provides routing for all the
      * test-type-specific endpoints of the server.
      *
-     * @param props the server configuration
+     * @param config the server configuration
      */
-    abstract HttpHandler paths(Properties props);
+    abstract HttpHandler newPathHandler(Properties config);
 
     /**
      * Provides a source of connections to a SQL database.
@@ -196,7 +196,7 @@ public final class HelloWebServer {
           ClusterSettings
               .builder()
               .mode(ClusterConnectionMode.SINGLE)
-              .hosts(Collections.singletonList(new ServerAddress(host)))
+              .hosts(List.of(new ServerAddress(host)))
               .build();
       ConnectionPoolSettings connectionPoolSettings =
           ConnectionPoolSettings
@@ -216,7 +216,7 @@ public final class HelloWebServer {
       return client.getDatabase(databaseName);
     }
 
-    private static final int MAX_DB_REQUEST_CONCURRENCY = 256;
+    private static final int MAX_DB_REQUEST_CONCURRENCY = 512;
     private static final int MAX_DB_QUERIES_PER_REQUEST = 20;
   }
 }
