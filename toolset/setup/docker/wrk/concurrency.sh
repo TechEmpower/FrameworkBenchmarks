@@ -19,13 +19,6 @@ echo ""
 wrk "-H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-alive'" --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads $url
 sleep 5
 
-echo ""
-echo "---------------------------------------------------------"
-echo " Synchronizing time"
-echo "---------------------------------------------------------"
-echo ""
-ntpdate -s pool.ntp.org
-
 for c in $levels
 do
 echo ""

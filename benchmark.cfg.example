@@ -1,12 +1,10 @@
 [Defaults]
 # Available Keys:
 os=linux
-server_host=127.0.0.1
-client_host=127.0.0.1
-client_identity_file=/home/techempower/.ssh/id_rsa
-client_user=techempower
-database_host=127.0.0.1
-database_identity_file=/home/techempower/.ssh/id_rsa
+server_host=tfb-server
+server_docker_host=unix://var/run/docker.sock
+database_host=TFB-database
+database_docker_host=unix://var/run/docker.sock
 database_os=linux
 database_user=techempower
 duration=15
@@ -26,6 +24,7 @@ type=all
 verbose=True
 clean=False
 ulimit=200000
+network_mode=None
 #results_name=My Benchmarking Run %%Y-%%m-%%d %%H:%%M:%%S
 #results_environment=My Server Environment
 #results_upload_uri=https://example.com/uploads

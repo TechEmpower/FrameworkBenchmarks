@@ -110,15 +110,6 @@ def main(argv=None):
     # Set up default values
     ##########################################################
 
-    # Verify and massage options
-    if defaults['client_user'] is None or defaults['client_host'] is None:
-        log("client_user and client_host are required!", color=Fore.RED)
-        log("Please check your configuration file.", color=Fore.RED)
-        log("Aborting!", color=Fore.RED)
-        exit(1)
-
-    if defaults['database_user'] is None:
-        defaults['database_user'] = defaults['client_user']
     if defaults['database_host'] is None:
         defaults['database_host'] = defaults['client_host']
     if defaults['server_host'] is None:

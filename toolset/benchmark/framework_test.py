@@ -47,7 +47,7 @@ class FrameworkTest:
     # Public Methods
     ##########################################################################################
 
-    def start(self, database_container_id):
+    def start(self):
         '''
         Start the test implementation
         '''
@@ -87,7 +87,8 @@ class FrameworkTest:
                                   self.port,
                                   self.runTests[test_type].get_url())
 
-        return docker_helper.test_client_connection(url)
+        return docker_helper.test_client_connection(self.benchmarker_config,
+                                                    url)
 
     def get_docker_files(self):
         '''
@@ -142,7 +143,7 @@ class FrameworkTest:
                     if not any(result == 'fail'
                                for (result, reason, url) in results):
                         docker_helper.test_client_connection(
-                            base_url + test.get_url())
+                            self.benchmarker_config, base_url + test.get_url())
                 except ConnectionError as e:
                     results = [('fail', "Server did not respond to request",
                                 base_url)]

@@ -16,7 +16,7 @@ from toolset.utils.ordered_set import OrderedSet
 from toolset.utils.database_helper import test_database
 
 
-def clean(config):
+def clean(benchmarker_config):
     '''
     Cleans all the docker images from the system
     '''
@@ -48,7 +48,8 @@ def clean(config):
     # command.extend(["docker", "system", "prune", "-a", "-f"])
     # subprocess.check_call(command)
 
-    client = docker.from_env()
+    client = docker.DockerClient(
+        base_url=benchmarker_config.server_docker_host)
 
     for image in client.images.list():
         client.images.remove(image.id)
@@ -110,12 +111,13 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                     # Build the dependency image
                     try:
                         for line in docker.APIClient(
-                                base_url='unix://var/run/docker.sock').build(
-                                    path=os.path.dirname(docker_file),
-                                    dockerfile="%s.dockerfile" % dependency,
-                                    tag="tfb/%s" % dependency,
-                                    buildargs=docker_buildargs,
-                                    forcerm=True):
+                                base_url=benchmarker_config.server_docker_host
+                        ).build(
+                                path=os.path.dirname(docker_file),
+                                dockerfile="%s.dockerfile" % dependency,
+                                tag="tfb/%s" % dependency,
+                                buildargs=docker_buildargs,
+                                forcerm=True):
                             if line.startswith('{"stream":'):
                                 line = json.loads(line)
                                 line = line[line.keys()[0]].encode('utf-8')
@@ -143,13 +145,14 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
             with open(build_log_file, 'w') as build_log:
                 try:
                     for line in docker.APIClient(
-                            base_url='unix://var/run/docker.sock').build(
-                                path=test.directory,
-                                dockerfile=test_docker_file,
-                                tag="tfb/test/%s" % test_docker_file.replace(
-                                    ".dockerfile", ""),
-                                buildargs=docker_buildargs,
-                                forcerm=True):
+                            base_url=benchmarker_config.server_docker_host
+                    ).build(
+                            path=test.directory,
+                            dockerfile=test_docker_file,
+                            tag="tfb/test/%s" % test_docker_file.replace(
+                                ".dockerfile", ""),
+                            buildargs=docker_buildargs,
+                            forcerm=True):
                         if line.startswith('{"stream":'):
                             line = json.loads(line)
                             line = line[line.keys()[0]].encode('utf-8')
@@ -174,7 +177,9 @@ def run(benchmarker_config, docker_files, run_log_dir):
     '''
     Run the given Docker container(s)
     '''
-    client = docker.from_env()
+    client = docker.DockerClient(
+        base_url=benchmarker_config.server_docker_host)
+    containers = []
 
     for docker_file in docker_files:
         log_prefix = "%s: " % docker_file.replace(".dockerfile", "")
@@ -188,21 +193,26 @@ def run(benchmarker_config, docker_files, run_log_dir):
                     for line in container.logs(stream=True):
                         log(line, prefix=log_prefix, file=run_log)
 
-            extra_hosts = {
-                socket.gethostname(): str(benchmarker_config.server_host),
-                'TFB-SERVER': str(benchmarker_config.server_host),
-                'TFB-DATABASE': str(benchmarker_config.database_host),
-                'TFB-CLIENT': str(benchmarker_config.client_host)
-            }
+            extra_hosts = None
+
+            if benchmarker_config.network is None:
+                extra_hosts = {
+                    socket.gethostname(): str(benchmarker_config.server_host),
+                    'TFB-SERVER': str(benchmarker_config.server_host),
+                    'TFB-DATABASE': str(benchmarker_config.database_host)
+                }
 
             container = client.containers.run(
                 "tfb/test/%s" % docker_file.replace(".dockerfile", ""),
-                network_mode="host",
-                privileged=True,
+                name="tfb-server",
+                network=benchmarker_config.network,
+                network_mode=benchmarker_config.network_mode,
                 stderr=True,
                 detach=True,
                 init=True,
                 extra_hosts=extra_hosts)
+
+            containers.append(container)
 
             watch_thread = Thread(
                 target=watch_container, args=(
@@ -221,17 +231,17 @@ def run(benchmarker_config, docker_files, run_log_dir):
                     prefix=log_prefix,
                     file=run_log)
                 log(tb, prefix=log_prefix, file=run_log)
-                return 1
 
-    return 0
+    return containers
 
 
-def successfully_running_containers(docker_files, out):
+def successfully_running_containers(benchmarker_config, docker_files, out):
     '''
     Returns whether all the expected containers for the given docker_files are
     running.
     '''
-    client = docker.from_env()
+    client = docker.DockerClient(
+        base_url=benchmarker_config.server_docker_host)
     expected_running_container_images = []
     for docker_file in docker_files:
         # 'gemini.dockerfile' -> 'gemini'
@@ -254,26 +264,23 @@ def successfully_running_containers(docker_files, out):
     return True
 
 
-def stop(config=None, database_container_id=None, test=None):
+def stop(benchmarker_config=None,
+         containers=None,
+         database_container=None,
+         test=None):
     '''
     Attempts to stop the running test container.
     '''
-    client = docker.from_env()
-    # Stop all the containers
-    for container in client.containers.list():
-        image_name = container.image.tags[0].split(':')[0]
-        if container.status == "running" and container.id != database_container_id and image_name != 'tfb':
-            container.stop()
-    # Remove only the tfb/test image for this test
-    try:
-        client.images.remove("tfb/test/%s" % test.name, force=True)
-    except:
-        # This can be okay if the user hit ctrl+c before the image built/ran
-        pass
+    client = docker.DockerClient(
+        base_url=benchmarker_config.server_docker_host)
+    # Stop all our running containers
+    for container in containers:
+        container.stop()
+        # 'tfb/test/gemini:latest' -> 'tfb/test/gemini'
+        client.images.remove(container.image.tags[0].split(':')[0], force=True)
     # Stop the database container
-    if database_container_id:
-        client = docker.from_env()
-        client.containers.get(database_container_id).stop()
+    if database_container is not None:
+        database_container.stop()
     client.images.prune()
     client.containers.prune()
     client.networks.prune()
@@ -291,20 +298,22 @@ def find(path, pattern):
                 return os.path.join(root, name)
 
 
-def start_database(config, test, database):
+def start_database(benchmarker_config, test, database):
     '''
     Sets up a container for the given database and port, and starts said docker 
     container.
     '''
     log_prefix = "%s: " % test.name
 
-    database_dir = os.path.join(config.fwroot, "toolset", "setup", "docker",
-                                "databases", database)
+    database_dir = os.path.join(benchmarker_config.fwroot, "toolset", "setup",
+                                "docker", "databases", database)
     docker_file = "%s.dockerfile" % database
 
-    for line in docker.APIClient(base_url='unix://var/run/docker.sock').build(
-            path=database_dir, dockerfile=docker_file,
-            tag="tfb/%s" % database):
+    for line in docker.APIClient(
+            base_url=benchmarker_config.database_docker_host).build(
+                path=database_dir,
+                dockerfile=docker_file,
+                tag="tfb/%s" % database):
         if line.startswith('{"stream":'):
             line = json.loads(line)
             line = line[line.keys()[0]].encode('utf-8')
@@ -313,37 +322,48 @@ def start_database(config, test, database):
                 color=Fore.WHITE + Style.BRIGHT \
                     if re.match(r'^Step \d+\/\d+', line) else '')
 
-    client = docker.from_env()
+    client = docker.DockerClient(
+        base_url=benchmarker_config.database_docker_host)
 
     container = client.containers.run(
-        "tfb/%s" % database, network_mode="host", privileged=True, detach=True)
+        "tfb/%s" % database,
+        name="TFB-database",
+        network=benchmarker_config.network,
+        network_mode=benchmarker_config.network_mode,
+        detach=True)
 
     # Sleep until the database accepts connections
     slept = 0
     max_sleep = 60
-    while not test_database(config, database) and slept < max_sleep:
+    while not test_database(benchmarker_config,
+                            database) and slept < max_sleep:
         time.sleep(1)
         slept += 1
 
-    return container.id
+    return container
 
 
-def test_client_connection(url):
+def test_client_connection(benchmarker_config, url):
     '''
     Tests that the app server at the given url responds successfully to a 
     request.
     '''
-    client = docker.from_env()
+    client = docker.DockerClient(
+        base_url=benchmarker_config.server_docker_host)
 
     try:
-        client.containers.run('tfb/wrk', 'curl %s' % url, network_mode="host")
+        client.containers.run(
+            'tfb/wrk',
+            'curl %s' % url,
+            network=benchmarker_config.network,
+            network_mode=benchmarker_config.network_mode)
     except:
         return False
 
     return True
 
 
-def benchmark(script, variables, raw_file):
+def benchmark(benchmarker_config, script, variables, raw_file):
     '''
     Runs the given remote_script on the wrk container on the client machine.
     '''
@@ -353,15 +373,16 @@ def benchmark(script, variables, raw_file):
             for line in container.logs(stream=True):
                 log(line, file=benchmark_file)
 
-    client = docker.from_env()
+    client = docker.DockerClient(
+        base_url=benchmarker_config.server_docker_host)
 
     watch_container(
         client.containers.run(
             "tfb/wrk",
             "/bin/bash /%s" % script,
             environment=variables,
-            network_mode="host",
-            privileged=True,
+            network=benchmarker_config.network,
+            network_mode=benchmarker_config.network_mode,
             detach=True,
             stderr=True), raw_file)
 
