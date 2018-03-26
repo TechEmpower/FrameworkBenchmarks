@@ -12,7 +12,7 @@ from commons import JsonHandler, JsonHelloWorldHandler, PlaintextHelloWorldHandl
 
 
 tornado.options.define('port', default=8888, type=int, help="Server port")
-tornado.options.define('postgres', default=None,
+tornado.options.define('postgres', default="localhost",
                        type=str, help="PostgreSQL host")
 tornado.options.define('backlog', default=8192, type=int,
                        help="Server backlog")
@@ -45,7 +45,7 @@ class MultipleQueriesHandler(JsonHandler):
         queries = min(max(1, queries), 500)
         worlds = []
 
-        cursors = yield [db.execute(self.SQL, (randint(1, 10000),)) for _ in xrange(queries)]
+        cursors = yield (db.execute(self.SQL, (randint(1, 10000),)) for _ in xrange(queries))
         for cursor in cursors:
             row = cursor.fetchone()
             worlds.append({self.ID: row[0], self.RANDOM_NUMBER: row[1]})
