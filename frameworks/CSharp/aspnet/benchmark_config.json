@@ -2,7 +2,6 @@
   "framework": "aspnet",
   "tests": [{
     "default": {
-      "setup_file": "setup_nginx",
       "json_url": "/json/default",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -22,7 +21,6 @@
       "versus": "aspnet-mono"
     },
     "mono-jsonnet": {
-      "setup_file": "setup_nginx",
       "json_url": "/json/jsonnet",
       "port": 8080,
       "approach": "Realistic",
@@ -41,7 +39,6 @@
       "versus": "aspnet-mono"
     },
     "mono-servicestack": {
-      "setup_file": "setup_nginx",
       "json_url": "/json/servicestack",
       "port": 8080,
       "approach": "Realistic",
@@ -60,7 +57,6 @@
       "versus": "aspnet-mono"
     },
     "mono-mysql-raw": {
-      "setup_file": "setup_mysql",
       "json_url": "/json/default",
       "plaintext_url": "/plaintext",
       "db_url": "/ado/mysql",
@@ -84,7 +80,6 @@
       "versus": "aspnet"
     },
     "mono-mysql-entityframework": {
-      "setup_file": "setup_mysql",
       "db_url": "/entityframework/mysql",
       "query_url": "/entityframework/mysql?queries=",
       "fortune_url": "/entityframework/mysql/fortunes",

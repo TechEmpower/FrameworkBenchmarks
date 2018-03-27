@@ -2,7 +2,6 @@
   "framework": "servicestack",
   "tests": [{
     "default": {
-      "setup_file": "setup_nginx",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
