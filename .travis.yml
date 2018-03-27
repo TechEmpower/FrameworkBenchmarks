@@ -212,7 +212,8 @@ before_script:
 
   # Runs travis_diff, printing the output to the terminal, and searches for travis-diff-continue
   # to determine if the suite should be installed and the current $TESTDIR test should run.
-  - export CONTINUE_TEST=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -q "travis-diff-continue" && echo 1`
+  # - export CONTINUE_TEST=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -q "travis-diff-continue" && echo 1`
+  - export CONTINUE_TEST=1
 
 script:
 
