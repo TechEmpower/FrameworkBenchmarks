@@ -377,7 +377,7 @@ def test_client_connection(benchmarker_config, url):
     request.
     '''
     client = docker.DockerClient(
-        base_url=benchmarker_config.server_docker_host)
+        base_url=benchmarker_config.client_docker_host)
 
     client.images.pull('techempower/tfb.wrk')
 
@@ -404,7 +404,7 @@ def benchmark(benchmarker_config, script, variables, raw_file):
                 log(line, file=benchmark_file)
 
     client = docker.DockerClient(
-        base_url=benchmarker_config.server_docker_host)
+        base_url=benchmarker_config.client_docker_host)
 
     watch_container(
         client.containers.run(

@@ -47,12 +47,14 @@ class BenchmarkConfig:
         self.network = None
         self.server_docker_host = None
         self.database_docker_host = None
+        self.client_docker_host = None
 
         self.__dict__.update(args)
 
         if self.network_mode is None:
-            self.network_mode = None
             self.network = 'tfb'
+        else:
+            self.network = None
 
         self.quiet_out = QuietOutputStream(self.quiet)
 
