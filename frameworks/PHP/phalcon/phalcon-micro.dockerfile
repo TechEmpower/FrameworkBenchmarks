@@ -13,5 +13,7 @@ RUN cd cphalcon-${VERSION}/build && ./install
 
 RUN mv /phalcon/public/index-micro.php /phalcon/public/index.php
 
+RUN chmod -R 777 app
+
 CMD service php7.2-fpm start && \
     nginx -c /phalcon/deploy/nginx.conf -g "daemon off;"
