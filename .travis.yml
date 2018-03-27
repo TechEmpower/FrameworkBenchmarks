@@ -216,6 +216,14 @@ before_script:
   # - export CONTINUE_TEST=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -q "travis-diff-continue" && echo 1`
   - export CONTINUE_TEST=1
 
+  # Stop services that would claim ports we may need
+  - sudo service mysql stop
+  - sudo service postgresql stop
+
+  # Set up the benchmark.cfg for travis user
+  - cp ./benchmark.cfg.example ./benchmark.cfg
+  - sed -i s/techempower/travis/g ./benchmark.cfg
+
 script:
 
   # run-ci.py runs the diffing to see if travis needs to test this framework. Ideally/eventually,
