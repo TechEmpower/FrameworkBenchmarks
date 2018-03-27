@@ -207,6 +207,7 @@ env:
 
 install:
   - docker build -t tfb/wrk -f toolset/setup/docker/wrk/wrk.dockerfile toolset/setup/docker/wrk
+  - docker build -t tfb - < Dockerfile
 
 before_script:
 
