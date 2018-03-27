@@ -206,8 +206,8 @@ env:
     #  - "TESTDIR=Vala/valum"
 
 install:
-  - docker build -t tfb/wrk -f toolset/setup/docker/wrk/wrk.dockerfile toolset/setup/docker/wrk
-  - docker build -t tfb - < Dockerfile
+  - docker pull techempower/tfb.wrk
+  - docker pull techempower/tfb
 
 before_script:
 

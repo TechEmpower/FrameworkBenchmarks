@@ -353,7 +353,7 @@ def test_client_connection(benchmarker_config, url):
 
     try:
         client.containers.run(
-            'tfb/wrk',
+            'techempower/tfb.wrk',
             'curl %s' % url,
             network=benchmarker_config.network,
             network_mode=benchmarker_config.network_mode)
@@ -378,7 +378,7 @@ def benchmark(benchmarker_config, script, variables, raw_file):
 
     watch_container(
         client.containers.run(
-            "tfb/wrk",
+            "techempower/tfb.wrk",
             "/bin/bash /%s" % script,
             environment=variables,
             network=benchmarker_config.network,
