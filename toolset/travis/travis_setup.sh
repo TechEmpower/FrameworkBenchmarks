@@ -5,6 +5,9 @@ export DEBIAN_FRONTEND=noninteractive
 # Turn on command tracing
 set -x
 
+sudo service mysql stop
+sudo service postgresql stop
+
 # Run as travis user (who already has passwordless sudo)
 ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa
 cat /home/travis/.ssh/id_rsa.pub >> /home/travis/.ssh/authorized_keys
