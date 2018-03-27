@@ -1,4 +1,4 @@
-FROM tfb/java:latest
+FROM techempower/java:0.1
 
 RUN mkdir /resin
 WORKDIR /resin

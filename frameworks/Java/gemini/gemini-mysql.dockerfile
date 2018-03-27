@@ -1,4 +1,4 @@
-FROM tfb/ant:latest as ant
+FROM techempower/ant:0.1 as ant
 
 RUN apt-get install -qqy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     ant
@@ -13,7 +13,7 @@ RUN cd /gemini/Docroot/WEB-INF; mv gemini-mysql.conf GeminiHello.conf;
 
 RUN cd /gemini; mkdir -p Docroot/WEB-INF/classes; mkdir -p Docroot/WEB-INF/lib; ant resolve; ant compile
 
-FROM tfb/resin:latest
+FROM techempower/resin:0.1
 
 COPY --from=ant /gemini /gemini
 

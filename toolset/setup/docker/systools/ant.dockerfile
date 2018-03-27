@@ -1,4 +1,4 @@
-FROM tfb/java:latest
+FROM techempower/java:0.1
 
 RUN add-apt-repository -y ppa:openjdk-r/ppa
 RUN apt-get update
