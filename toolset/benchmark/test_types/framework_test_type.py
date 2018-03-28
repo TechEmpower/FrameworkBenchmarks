@@ -44,6 +44,16 @@ class FrameworkTestType:
         self.failed = None
         self.warned = None
 
+    def accept(self, content_type):
+        return {
+            'json':
+            'application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7',
+            'html':
+            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'plaintext':
+            'text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7'
+        }[content_type]
+
     def setup_out(self, out):
         '''
         Sets up file-like objects for logging. Used in 
