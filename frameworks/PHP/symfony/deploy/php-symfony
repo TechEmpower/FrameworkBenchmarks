@@ -3,8 +3,8 @@
   SetEnv APP_ENV "prod"
   SetEnv DATABASE_URL "mysql://benchmarkdbuser:benchmarkdbpass@tfbdata:3306/hello_world"
 
-  Alias /php-symfony/ "/home/ubuntu/FrameworkBenchmarks/php-symfony/public/"
-  <Directory /home/ubuntu/FrameworkBenchmarks/php-symfony/public/>
+  Alias /php-symfony/ "/symfony/public/"
+  <Directory /symfony/public/>
           Options Indexes FollowSymLinks MultiViews
           #AllowOverride None
           Order allow,deny

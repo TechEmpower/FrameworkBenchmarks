@@ -9,6 +9,11 @@ seq = re.compile(r'\x1B\[\d+m')
 
 FNULL = open(os.devnull, 'w')
 
+# To prevent the entire disk from being consumed, refuse to
+# append more lines to a log file once it's grown too large.
+# Logs that hit this limit are probably repeating the same
+# message endlessly anyway.
+TOO_MANY_BYTES = 50 * 1024 * 1024
 
 def log(log_text=None, **kwargs):
     '''
@@ -47,7 +52,7 @@ def log(log_text=None, **kwargs):
             sys.stdout.write(new_log_text)
             sys.stdout.flush()
 
-        if file is not None:
+        if file is not None and os.fstat(file.fileno()).st_size < TOO_MANY_BYTES:
             file.write(seq.sub('', log_text))
             file.flush()
     except:
