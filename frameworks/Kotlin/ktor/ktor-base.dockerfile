@@ -1,4 +1,4 @@
 FROM tfb/maven:latest
 ADD ./ /ktor
 WORKDIR /ktor
-RUN ./mvnw clean package
+RUN mvn clean package
