@@ -4,7 +4,6 @@
 
 sudo: required
 dist: trusty
-group: deprecated-2017Q2
 language: generic
 python:
   - "2.7"
@@ -20,14 +19,14 @@ env:
      - "TESTDIR=CSharp/servicestack"
      - "TESTDIR=C++/cppcms"
     # - "TESTDIR=C++/ffead-cpp"
-    # - "TESTDIR=C++/cpoll_cppsp"
+     - "TESTDIR=C++/cpoll_cppsp"
      - "TESTDIR=C++/cutelyst"
      - "TESTDIR=C++/silicon"
      - "TESTDIR=C++/treefrog"
     # - "TESTDIR=C++/ulib"
      - "TESTDIR=C++/wt"
      - "TESTDIR=C++/poco"
-    # - "TESTDIR=C++/luna"
+     - "TESTDIR=C++/luna"
      - "TESTDIR=Clojure/aleph"
      - "TESTDIR=Clojure/compojure"
      - "TESTDIR=Clojure/http-kit"
@@ -121,31 +120,29 @@ env:
      - "TESTDIR=Perl/web-simple"
      - "TESTDIR=PHP/cakephp"
      - "TESTDIR=PHP/hhvm"
-    # - "TESTDIR=PHP/php"
+     - "TESTDIR=PHP/php"
      - "TESTDIR=PHP/codeigniter"
      - "TESTDIR=PHP/cygnite"
      - "TESTDIR=PHP/clancats"
-    # - "TESTDIR=PHP/fat-free"
-    # - "TESTDIR=PHP/fuel"
-    # - "TESTDIR=PHP/kohana"
-    # - "TESTDIR=PHP/laravel"
-    # - "TESTDIR=PHP/limonade"
-    # - "TESTDIR=PHP/lithium"
-    # - "TESTDIR=PHP/lumen"
-    # - "TESTDIR=PHP/peachpie"
-    # - "TESTDIR=PHP/phalcon"
-    # - "TESTDIR=PHP/phalcon-micro"
-    # - "TESTDIR=PHP/phpixie"
-    # - "TESTDIR=PHP/silex"
-    # - "TESTDIR=PHP/silex-orm"
-    # - "TESTDIR=PHP/slim"
-    # - "TESTDIR=PHP/symfony"
-    # - "TESTDIR=PHP/workerman"
-    # - "TESTDIR=PHP/yaf"
+     - "TESTDIR=PHP/fat-free"
+     - "TESTDIR=PHP/fuel"
+     - "TESTDIR=PHP/kohana"
+     - "TESTDIR=PHP/kumbiaphp"
+     - "TESTDIR=PHP/laravel"
+     - "TESTDIR=PHP/limonade"
+     - "TESTDIR=PHP/lithium"
+     - "TESTDIR=PHP/lumen"
+     - "TESTDIR=PHP/peachpie"
+     - "TESTDIR=PHP/phalcon"
+     - "TESTDIR=PHP/phpixie"
+     - "TESTDIR=PHP/silex"
+     - "TESTDIR=PHP/slim"
+     - "TESTDIR=PHP/symfony"
+     - "TESTDIR=PHP/workerman"
      - "TESTDIR=PHP/yii2"
      - "TESTDIR=PHP/zend"
      - "TESTDIR=PHP/zend1"
-    # - "TESTDIR=PHP/phreeze"
+     - "TESTDIR=PHP/phreeze"
      - "TESTDIR=Python/aiohttp"
      - "TESTDIR=Python/apistar"
      - "TESTDIR=Python/api_hour"
@@ -207,15 +204,11 @@ before_script:
   # Runs travis_diff, printing the output to the terminal, and searches for travis-diff-continue
   # to determine if the suite should be installed and the current $TESTDIR test should run.
   - export CONTINUE_TEST=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -q "travis-diff-continue" && echo 1`
-  # travis_clean.sh takes care of some services that are baked into the travis
-  # build. Using language: generic gets us an ubuntu build with fewer services,
-  # but includes database installs, ruby and rvm installs, and others that interfere
-  # with running the suite in a clean ubuntu install.
-  - if [ $CONTINUE_TEST ]; then source ./toolset/travis/travis_clean.sh; else echo 'Skipping travis_clean.sh'; fi
 
   # travis_setup.sh runs all the same commands you would run if you were setting up
   # a development environment via:
   # http://frameworkbenchmarks.readthedocs.io/en/latest/Development/Installation-Guide/
+  # it also stops a few conflicting services
   - if [ $CONTINUE_TEST ]; then source ./toolset/travis/travis_setup.sh; else echo 'Skipping travis_setup.sh'; fi
 
 script:
