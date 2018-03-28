@@ -1,5 +1,5 @@
-FROM tfb/nginx:latest
-FROM tfb/cutelyst-benchmark-app:latest
+FROM techempower/nginx:0.1
+FROM techempower/cutelyst-benchmark-app:0.1
 
 COPY --from=0 /nginx /nginx
 

@@ -1,4 +1,5 @@
-FROM tfb/java:latest
+FROM techempower/java:0.1
+
 ADD ./ /hexagon
 WORKDIR /hexagon
 RUN ./gradlew -x test

@@ -1,4 +1,4 @@
-FROM tfb/nim:latest
+FROM techempower/nim:0.1
   
 ENV NIMBLE_VERSION="0.6.2"
 

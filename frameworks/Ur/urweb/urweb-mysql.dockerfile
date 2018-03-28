@@ -1,4 +1,4 @@
-FROM tfb/urweb-base:latest
+FROM techempower/urweb-base:0.1
 
 RUN urweb -dbms mysql -db "dbname=hello_world user=benchmarkdbuser password=benchmarkdbpass host=TFB-database" bench
 

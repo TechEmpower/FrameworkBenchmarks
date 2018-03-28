@@ -1,4 +1,4 @@
-FROM tfb/gcc-6:latest
+FROM techempower/gcc-6:0.1
 
 ENV WT_VERSION=4.0.2
 ENV BOOST_ROOT=${IROOT}/boost

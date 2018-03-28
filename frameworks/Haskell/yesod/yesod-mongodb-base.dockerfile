@@ -1,4 +1,4 @@
-FROM tfb/haskell:latest
+FROM techempower/haskell:0.1
 
 COPY ./yesod-mysql-mongo ./
 

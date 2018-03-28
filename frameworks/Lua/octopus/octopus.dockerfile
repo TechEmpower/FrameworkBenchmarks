@@ -1,4 +1,4 @@
-FROM tfb/lua:latest
+FROM techempower/lua:0.1
 
 WORKDIR /octo
 

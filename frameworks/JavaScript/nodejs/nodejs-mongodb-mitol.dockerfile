@@ -1,4 +1,4 @@
-FROM tfb/mitol:latest
+FROM techempower/mitol:0.1
 
 ENV NODE_HANDLER mongoose
 

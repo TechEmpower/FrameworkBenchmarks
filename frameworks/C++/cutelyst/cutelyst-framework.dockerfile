@@ -1,4 +1,4 @@
-FROM tfb/cutelyst-deps:latest
+FROM techempower/cutelyst-deps:0.1
 
 ENV CUTELYST_VER=2.0.1
 

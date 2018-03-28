@@ -1,4 +1,4 @@
-FROM tfb/kelp-base:latest
+FROM techempower/kelp-base:0.1
 
 ENV MONGO=1
 

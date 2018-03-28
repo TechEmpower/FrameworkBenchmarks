@@ -1,4 +1,4 @@
-FROM tfb/cutelyst-nginx-base:latest
+FROM techempower/cutelyst-nginx-base:0.1
 
 ENV C_PROCESSES=${CPU_COUNT}
 ENV C_THREADS=1

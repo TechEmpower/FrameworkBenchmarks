@@ -1,4 +1,4 @@
-FROM tfb/django-base:latest
+FROM techempower/django-base:0.1
 
 WORKDIR /django
 

@@ -1,4 +1,4 @@
-FROM tfb/erlang:latest
+FROM techempower/erlang:0.1
 
 COPY ./ ./
 

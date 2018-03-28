@@ -1,4 +1,4 @@
-FROM tfb/d-lang:latest
+FROM techempower/d-lang:0.1
 
 COPY ./ ./
 

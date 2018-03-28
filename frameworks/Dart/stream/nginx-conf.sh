@@ -3,8 +3,9 @@
 #
 # create nginx configuration
 #
+conf+="user root;\n"
 conf+="worker_processes ${CPU_COUNT};\n"
-conf+="error_log /dev/null error;\n"
+conf+="error_log stderr;\n"
 conf+="events {\n"
 conf+="\tworker_connections 1024;\n"
 conf+="}\n"

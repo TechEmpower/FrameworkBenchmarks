@@ -1,4 +1,4 @@
-FROM tfb/gcc-4.8:latest
+FROM techempower/gcc-4.8:0.1
 
 ENV IROOT=/install
 ENV VERSION=1.6.1

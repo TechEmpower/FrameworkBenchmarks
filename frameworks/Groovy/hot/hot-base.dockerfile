@@ -1,4 +1,5 @@
-FROM tfb/java8:latest
+FROM techempower/java8:0.1
+
 ADD ./ /hot
 WORKDIR /hot
 ENV HOT_VERSION=0.9.2-SNAPSHOT

@@ -1,4 +1,4 @@
-FROM tfb/nginx:latest
+FROM techempower/nginx:0.1
 
 ENV NIM_VERSION="0.11.2"
 ENV NIM_CSOURCES="6bf2282"

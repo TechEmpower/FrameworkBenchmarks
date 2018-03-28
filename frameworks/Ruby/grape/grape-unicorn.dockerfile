@@ -1,6 +1,6 @@
-FROM tfb/nginx:latest
+FROM techempower/nginx:0.1
 
-FROM tfb/ruby-2.4:latest
+FROM techempower/ruby-2.4:0.1
 
 COPY --from=0 /nginx /nginx
 

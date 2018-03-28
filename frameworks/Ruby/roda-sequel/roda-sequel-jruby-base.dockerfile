@@ -1,4 +1,4 @@
-FROM tfb/jruby-9.1:latest
+FROM techempower/jruby-9.1:0.1
 
 ADD ./ /roda-sequel
 

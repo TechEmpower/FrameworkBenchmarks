@@ -1,4 +1,4 @@
-FROM tfb/wt-base:latest
+FROM techempower/wt-base:0.1
 
 COPY ./ ./
 

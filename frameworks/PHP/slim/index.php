@@ -14,7 +14,11 @@ $app = new Slim\App(array(
 
     'view' => function ($c) {
         return new Slim\Views\PhpRenderer("templates/");
-    }
+    },
+
+    'settings' => [
+        'outputBuffering' => false,
+    ]
 ));
 
 // Test 1: Plaintext
@@ -50,7 +54,12 @@ $app->get('/db', function ($request, $response) {
 
 // Test 4: Multiple database queries
 $app->get('/dbs', function ($request, $response) {
-    $queries = max(1, min($request->getParam('queries'), 500));
+    $queries = $request->getParam('queries');
+    if (is_numeric($queries)) {
+        $queries = max(1, min($queries, 500));
+    } else {
+        $queries = 1;
+    }
 
     $sth = $this->db->prepare('SELECT * FROM World WHERE id = ?');
     $worlds = array();
@@ -71,7 +80,12 @@ $app->get('/dbs', function ($request, $response) {
 
 // Test 5: Updates
 $app->get('/updates', function ($request, $response) {
-    $queries = max(1, min($request->getParam('queries'), 500));
+    $queries = $request->getParam('queries');
+    if (is_numeric($queries)) {
+        $queries = max(1, min($queries, 500));
+    } else {
+        $queries = 1;
+    }
 
     $sth = $this->db->prepare('SELECT * FROM World WHERE id = ?');
     $updateSth = $this->db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');

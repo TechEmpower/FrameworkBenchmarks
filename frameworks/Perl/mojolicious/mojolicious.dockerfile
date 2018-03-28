@@ -1,4 +1,4 @@
-FROM tfb/perl:latest
+FROM techempower/perl:0.1
 
 WORKDIR /mojo
 

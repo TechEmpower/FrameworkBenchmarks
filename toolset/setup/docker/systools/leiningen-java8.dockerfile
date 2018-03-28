@@ -1,4 +1,5 @@
-FROM tfb/java8:latest
+FROM techempower/java8:0.1
+
 ENV LEIN_HOME=/lein
 RUN mkdir ${LEIN_HOME}
 RUN mkdir ${LEIN_HOME}/bin

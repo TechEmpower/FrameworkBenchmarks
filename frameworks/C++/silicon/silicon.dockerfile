@@ -1,4 +1,4 @@
-FROM tfb/silicon-base:latest
+FROM techempower/silicon-base:0.1
 
 RUN cd build && \
     cmake .. -DCMAKE_CXX_COMPILER=clang++-3.9 && \

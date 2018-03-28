@@ -1,4 +1,5 @@
-FROM tfb/act-base:latest
+FROM techempower/act-base:0.1
+
 RUN mvn clean package
 WORKDIR /act/target/dist
 RUN unzip -q *.zip

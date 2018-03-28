@@ -1,4 +1,4 @@
-FROM tfb/clang-3.9:latest
+FROM techempower/clang-3.9:0.1
 
 ENV MICROHTTPD_VERSION=0.9.39
 ENV MICROHTTPD=/libmicrohttpd

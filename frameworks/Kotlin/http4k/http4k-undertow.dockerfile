@@ -1,4 +1,5 @@
-FROM tfb/java:latest
+FROM techempower/java:0.1
+
 ADD ./ /http4k
 WORKDIR /http4k
 RUN ./gradlew clean build undertow:uber

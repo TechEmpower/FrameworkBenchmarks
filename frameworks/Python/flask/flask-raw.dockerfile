@@ -1,4 +1,4 @@
-FROM tfb/flask-py3-base:latest
+FROM techempower/flask-py3-base:0.1
 
 WORKDIR /flask
 

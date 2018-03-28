@@ -268,7 +268,7 @@ def successfully_running_containers(benchmarker_config, docker_files, out):
         expected_running_container_images.append(image_tag)
     running_container_images = []
     for container in client.containers.list():
-        # 'techempower/tfb.test.gemini:latest' -> 'gemini'
+        # 'techempower/tfb.test.gemini:0.1' -> 'gemini'
         image_tag = container.image.tags[0].split(':')[0][21:]
         running_container_images.append(image_tag)
 
@@ -295,7 +295,7 @@ def stop(benchmarker_config=None,
     # Stop all our running containers
     for container in containers:
         container.stop()
-        # 'techempower/tfb.test.gemini:latest' -> 'techempower/tfb.test.gemini'
+        # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
         client.images.remove(container.image.tags[0].split(':')[0], force=True)
     # Stop the database container
     if database_container is not None:

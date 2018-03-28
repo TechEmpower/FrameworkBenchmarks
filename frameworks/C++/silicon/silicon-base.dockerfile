@@ -1,4 +1,4 @@
-FROM tfb/microhttpd:latest
+FROM techempower/microhttpd:0.1
 
 RUN apt install -yqq libboost-dev cmake
 

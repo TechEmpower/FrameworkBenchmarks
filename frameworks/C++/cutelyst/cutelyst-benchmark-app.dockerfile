@@ -1,4 +1,4 @@
-FROM tfb/cutelyst-framework:latest
+FROM techempower/cutelyst-framework:0.1
 
 ENV TROOT=/cutelyst-benchmark-app
 ENV LD_LIBRARY_PATH=${CMAKE_PREFIX_PATH}/lib

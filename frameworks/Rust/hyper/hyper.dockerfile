@@ -1,3 +1,3 @@
-FROM tfb/hyper-base:latest
+FROM techempower/hyper-base:0.1
 
 CMD ["./target/release/hyper-techempower"]

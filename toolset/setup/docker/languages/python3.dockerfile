@@ -1,4 +1,4 @@
-FROM tfb/base:latest
+FROM techempower/base:0.1
   
 ENV PY3_ROOT=/py3
 ENV PYTHONHOME=${PY3_ROOT}

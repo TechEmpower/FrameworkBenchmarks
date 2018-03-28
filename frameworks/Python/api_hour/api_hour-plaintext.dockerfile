@@ -1,4 +1,4 @@
-FROM tfb/yocto_http-base:latest
+FROM techempower/yocto_http-base:0.1
 
 WORKDIR /yocto_http
 

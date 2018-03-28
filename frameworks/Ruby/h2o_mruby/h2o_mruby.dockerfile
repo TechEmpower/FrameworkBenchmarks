@@ -1,4 +1,4 @@
-FROM tfb/h2o:latest
+FROM techempower/h2o:0.1
 
 ADD ./h2o.conf /h2o_mruby/
 

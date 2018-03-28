@@ -1,4 +1,5 @@
-FROM tfb/java8:latest
+FROM techempower/java8:0.1
+
 ADD ./ /jawn
 WORKDIR /jawn
 RUN ./gradlew clean

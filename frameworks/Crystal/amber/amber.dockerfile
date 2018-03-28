@@ -1,4 +1,4 @@
-FROM tfb/crystal-lang:latest
+FROM techempower/crystal-lang:0.1
 
 ADD ./ /amber
 WORKDIR /amber

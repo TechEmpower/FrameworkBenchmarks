@@ -1,4 +1,5 @@
-FROM tfb/maven:latest
+FROM techempower/maven:0.1
+
 ADD ./ /bayou
 WORKDIR /bayou
 RUN mvn clean compile assembly:single

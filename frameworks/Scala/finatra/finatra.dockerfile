@@ -1,4 +1,4 @@
-FROM tfb/sbt-java8:latest
+FROM techempower/sbt-java8:0.1
 
 COPY ./ ./
 
