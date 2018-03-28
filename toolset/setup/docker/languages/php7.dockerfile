@@ -2,7 +2,7 @@ FROM tfb/nginx:latest
 
 RUN add-apt-repository ppa:ondrej/php
 RUN apt-get update
-RUN apt-get install -y php7.2 php7.2-common php7.2-cli php7.2-fpm php7.2-mysql php7.2-xml php7.2-mbstring
+RUN apt-get install -y php7.2 php7.2-common php7.2-cli php7.2-fpm php7.2-mysql php7.2-xml php7.2-mbstring php7.2-mongodb
 
 RUN mkdir /composer
 WORKDIR /composer
