@@ -210,6 +210,7 @@ def run(benchmarker_config, docker_files, run_log_dir):
                         log(line, prefix=log_prefix, file=run_log)
 
             extra_hosts = None
+            name = "tfb-server"
 
             if benchmarker_config.network is None:
                 extra_hosts = {
@@ -217,11 +218,12 @@ def run(benchmarker_config, docker_files, run_log_dir):
                     'TFB-SERVER': str(benchmarker_config.server_host),
                     'TFB-DATABASE': str(benchmarker_config.database_host)
                 }
+                name = None
 
             container = client.containers.run(
                 "techempower/tfb.test.%s" % docker_file.replace(
                     ".dockerfile", ""),
-                name="tfb-server",
+                name=name,
                 network=benchmarker_config.network,
                 network_mode=benchmarker_config.network_mode,
                 stderr=True,
@@ -330,7 +332,7 @@ def start_database(benchmarker_config, test, database):
     # Pull the dependency image
     try:
         client = docker.DockerClient(
-            base_url=benchmarker_config.server_docker_host)
+            base_url=benchmarker_config.database_docker_host)
         client.images.pull("techempower/%s" % database)
         pulled = True
     except:

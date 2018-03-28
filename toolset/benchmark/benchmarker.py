@@ -101,13 +101,6 @@ class Benchmarker:
         '''
         log_prefix = "%s: " % test.name
 
-        if test.os.lower() != self.config.os.lower() or test.database_os.lower(
-        ) != self.config.database_os.lower():
-            log("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.",
-                prefix=log_prefix,
-                file=benchmark_log)
-            return False
-
         # If the test is in the excludes list, we skip it
         if self.config.exclude != None and test.name in self.config.exclude:
             log("Test {name} has been added to the excludes list. Skipping.".
