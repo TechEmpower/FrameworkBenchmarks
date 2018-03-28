@@ -12,7 +12,7 @@ SERV_THREADS=$(( $MAX_THREADS - $WRIT_THREADS ))
 
 cd $IROOT
 
-wget https://github.com/sumeetchhetri/ffead-cpp/archive/master.zip
+wget -q https://github.com/sumeetchhetri/ffead-cpp/archive/master.zip
 unzip master.zip
 mv ffead-cpp-master ffead-cpp-src
 cd ffead-cpp-src/

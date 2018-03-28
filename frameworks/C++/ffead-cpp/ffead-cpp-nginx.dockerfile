@@ -2,8 +2,8 @@ FROM tfb/ffead-cpp-base:latest
 
 WORKDIR $IROOT
 
-RUN wget http://nginx.org/download/nginx-1.13.1.tar.gz
-RUN tar xvf nginx-1.13.1.tar.gz
+RUN wget -q http://nginx.org/download/nginx-1.13.1.tar.gz
+RUN tar xf nginx-1.13.1.tar.gz
 
 WORKDIR $IROOT/nginx-1.13.1
 

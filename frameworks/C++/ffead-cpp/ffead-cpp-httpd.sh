@@ -2,15 +2,15 @@
 
 cd $IROOT
 
-wget https://archive.apache.org/dist/httpd/httpd-2.4.25.tar.gz
-wget https://archive.apache.org/dist/apr/apr-1.5.2.tar.gz
-wget https://archive.apache.org/dist/apr/apr-util-1.5.4.tar.gz
+wget -q https://archive.apache.org/dist/httpd/httpd-2.4.25.tar.gz
+wget -q https://archive.apache.org/dist/apr/apr-1.5.2.tar.gz
+wget -q https://archive.apache.org/dist/apr/apr-util-1.5.4.tar.gz
 rm -rf ${IROOT}/httpd-2.4.25
 rm -rf ${IROOT}/apr-1.5.2
 rm -rf ${IROOT}/apr-util-1.5.4
-tar xvf httpd-2.4.25.tar.gz
-tar xvf apr-1.5.2.tar.gz
-tar xvf apr-util-1.5.4.tar.gz
+tar xf httpd-2.4.25.tar.gz
+tar xf apr-1.5.2.tar.gz
+tar xf apr-util-1.5.4.tar.gz
 mv -f apr-1.5.2 httpd-2.4.25/srclib/apr
 mv -f apr-util-1.5.4 httpd-2.4.25/srclib/apr-util
 cd ${IROOT}/httpd-2.4.25
