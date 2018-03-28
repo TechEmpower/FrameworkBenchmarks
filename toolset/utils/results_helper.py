@@ -1,8 +1,7 @@
 from toolset.utils.metadata_helper import gather_remaining_tests, gather_frameworks
-from toolset.utils.output_helper import header
+from toolset.utils.output_helper import log, FNULL
 
 import os
-import logging
 import subprocess
 import uuid
 import time
@@ -37,13 +36,13 @@ class Results:
         self.environmentDescription = self.config.results_environment
         try:
             self.git = dict()
+            subprocess.check_call(
+                ['git', 'status'], stdout=FNULL, stderr=subprocess.STDOUT)
             self.git['commitId'] = self.__get_git_commit_id()
             self.git['repositoryUrl'] = self.__get_git_repository_url()
             self.git['branchName'] = self.__get_git_branch_name()
-        except Exception as e:
-            logging.debug(
-                'Could not read local git repository, which is fine. The error was: %s',
-                e)
+        except Exception:
+            #Could not read local git repository, which is fine.
             self.git = None
         self.startTime = int(round(time.time() * 1000))
         self.completionTime = None
@@ -81,13 +80,6 @@ class Results:
         self.failed['plaintext'] = []
         self.failed['cached_query'] = []
         self.verify = dict()
-
-        try:
-            with open(os.path.join(self.directory, 'results.json'), 'r') as f:
-                # Load json file into results object
-                self.__dict__.update(json.load(f))
-        except IOError:
-            logging.warn("results.json for test not found.")
 
     #############################################################################
     # PUBLIC FUNCTIONS
@@ -223,7 +215,7 @@ class Results:
                     headers={'Content-Type': 'application/json'},
                     data=json.dumps(self.__to_jsonable(), indent=2))
             except (Exception):
-                logging.error("Error uploading results.json")
+                log("Error uploading results.json")
 
     def load(self):
         '''
@@ -301,12 +293,10 @@ class Results:
             # Normally you don't have to use Fore.BLUE before each line, but
             # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
             # or stream flush, so we have to ensure that the color code is printed repeatedly
-            prefix = Fore.CYAN
-            for line in header(
-                    "Verification Summary", top='=', bottom='').split('\n'):
-                print(prefix + line)
+            log(
+                "Verification Summary", border='=', border_bottom='-', color=Fore.CYAN)
             for test in tests:
-                print(prefix + "| Test: {!s}".format(test.name))
+                log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
                     for test_type, result in self.verify[
                             test.name].iteritems():
@@ -316,16 +306,16 @@ class Results:
                             color = Fore.YELLOW
                         else:
                             color = Fore.RED
-                        print(prefix + "|       " + test_type.ljust(13) +
-                              ' : ' + color + result.upper())
+                        log(Fore.CYAN + "|       " + test_type.ljust(13) +
+                            ' : ' + color + result.upper())
                 else:
-                    print(prefix + "|      " + Fore.RED +
-                          "NO RESULTS (Did framework launch?)")
-            print(prefix + header('', top='', bottom='=') + Style.RESET_ALL)
+                    log(Fore.CYAN + "|      " + Fore.RED +
+                        "NO RESULTS (Did framework launch?)")
+            log('', border='=', border_bottom='', color=Fore.CYAN)
 
-        print("Time to complete: " +
-              str(int(time.time() - self.config.start_time)) + " seconds")
-        print("Results are saved in " + self.directory)
+        log("%sTime to complete: %s seconds" %
+            (Style.RESET_ALL, str(int(time.time() - self.config.start_time))))
+        log("Results are saved in " + self.directory)
 
     #############################################################################
     # PRIVATE FUNCTIONS
@@ -362,7 +352,7 @@ class Results:
             with open(self.file, 'w') as f:
                 f.write(json.dumps(self.__to_jsonable(), indent=2))
         except (IOError):
-            logging.error("Error writing results.json")
+            log("Error writing results.json")
 
     def __count_sloc(self):
         '''
@@ -375,9 +365,8 @@ class Results:
         for framework, testlist in frameworks.items():
             if not os.path.exists(
                     os.path.join(testlist[0].directory, "source_code")):
-                logging.warn(
-                    "Cannot count lines of code for %s - no 'source_code' file",
-                    framework)
+                log("Cannot count lines of code for %s - no 'source_code' file"
+                    % framework)
                 continue
 
             # Unfortunately the source_code files use lines like
@@ -394,23 +383,21 @@ class Results:
                         os.path.join(testlist[0].directory, "cloc_defs.txt")):
                     command += " --read-lang-def %s" % os.path.join(
                         testlist[0].directory, "cloc_defs.txt")
-                    logging.info("Using custom cloc definitions for %s",
-                                 framework)
+                    log("Using custom cloc definitions for %s" % framework)
 
                 # Find the last instance of the word 'code' in the yaml output. This should
                 # be the line count for the sum of all listed files or just the line count
                 # for the last file in the case where there's only one file listed.
                 command = command + "| grep code | tail -1 | cut -d: -f 2"
-                logging.debug("Running \"%s\" (cwd=%s)", command, wd)
+                log("Running \"%s\" (cwd=%s)" % (command, wd))
                 lineCount = subprocess.check_output(
                     command, cwd=wd, shell=True)
                 jsonResult[framework] = int(lineCount)
             except subprocess.CalledProcessError:
                 continue
             except ValueError as ve:
-                logging.warn(
-                    "Unable to get linecount for %s due to error '%s'",
-                    framework, ve)
+                log("Unable to get linecount for %s due to error '%s'" %
+                    (framework, ve))
         self.rawData['slocCounts'] = jsonResult
 
     def __count_commits(self):

@@ -39,5 +39,11 @@
 			"id" : "01C0MBGZ184NXGJSE6HFTV8B43",
 			"allow-contrib" : false
 		}
+	},
+	"scripts": {
+		"auto-scripts": {
+			"cache:clear": "symfony-cmd",
+			"assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
+		}
 	}
 }

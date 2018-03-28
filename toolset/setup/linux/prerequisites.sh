@@ -57,11 +57,9 @@ sudo sh -c "echo '*            soft    rtprio             99' >> /etc/security/l
 
 # Create a tfb command alias for running the toolset
 # For now, this still ensures you have to be in the framework root to run it
-export PWD=$(pwd)
-sudo tee /etc/profile.d/tfb.sh <<EOF
+export FWROOT=$(pwd)
+sudo tee /usr/local/bin/tfb <<EOF
 #!/bin/bash
-tfb() {
-  PYTHONPATH=$PWD python $PWD/toolset/run-tests.py "\$@"
-}
+FWROOT=$FWROOT PYTHONPATH=$FWROOT python $PWD/toolset/run-tests.py "\$@"
 EOF
-source /etc/profile.d/tfb.sh
+sudo chmod a+x /usr/local/bin/tfb

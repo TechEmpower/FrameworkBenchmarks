@@ -1,9 +1,0 @@
-/vendor
-/build
-/dist
-.DS_Store
-/tags
-.idea
-composer.lock
-/data
-/deploy/php-fpm.pid

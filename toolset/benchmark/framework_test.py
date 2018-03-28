@@ -1,11 +1,9 @@
 import os
 import subprocess
-import sys
 import traceback
-import logging
 from requests import ConnectionError
 
-from toolset.utils.output_helper import header
+from toolset.utils.output_helper import log, FNULL
 from toolset.utils import docker_helper
 
 # Cross-platform colored text
@@ -40,9 +38,6 @@ class FrameworkTest:
         self.versus = ""
         self.docker_files = None
 
-        # setup logging
-        logging.basicConfig(stream=sys.stderr, level=logging.INFO)
-
         # Used in setup.sh scripts for consistency with
         # the bash environment variables
         self.troot = self.directory
@@ -53,9 +48,57 @@ class FrameworkTest:
     # Public Methods
     ##########################################################################################
 
-    def start(self, out):
+    def start(self, database_container_id):
         '''
         Start the test implementation
+        '''
+        test_docker_files = self.get_docker_files()
+        test_log_dir = os.path.join(self.results.directory, self.name.lower())
+        build_log_dir = os.path.join(test_log_dir, 'build')
+        run_log_dir = os.path.join(test_log_dir, 'run')
+
+        try:
+            os.makedirs(build_log_dir)
+        except OSError:
+            pass
+        try:
+            os.makedirs(run_log_dir)
+        except OSError:
+            pass
+
+        result = docker_helper.build(self.benchmarker_config, [self.name],
+                                     build_log_dir)
+        if result != 0:
+            return result
+
+        return docker_helper.run(self.benchmarker_config, test_docker_files,
+                                 run_log_dir)
+
+    def is_running(self):
+        '''
+        Determines whether this test implementation is up and accepting 
+        requests.
+        '''
+        test_type = None
+        for any_type in self.runTests:
+            test_type = any_type
+            break
+
+        url = "http://%s:%s%s" % (self.benchmarker_config.server_host,
+                                  self.port,
+                                  self.runTests[test_type].get_url())
+
+        try:
+            subprocess.check_call(
+                ['curl', '-sSfl', url], stdout=FNULL, stderr=subprocess.STDOUT)
+        except:
+            return False
+
+        return True
+
+    def get_docker_files(self):
+        '''
+        Returns all the docker_files for this test.
         '''
         test_docker_files = ["%s.dockerfile" % self.name]
         if self.docker_files is not None:
@@ -65,23 +108,20 @@ class FrameworkTest:
                 raise Exception(
                     "docker_files in benchmark_config.json must be an array")
 
-        result = docker_helper.build(self.benchmarker_config, [self.name], out)
-        if result != 0:
-            return result
+        return test_docker_files
 
-        return docker_helper.run(self.benchmarker_config, test_docker_files, out)
-
-    def verify_urls(self, logPath):
+    def verify_urls(self):
         '''
-        Verifys each of the URLs for this test. THis will sinply curl the URL and 
+        Verifys each of the URLs for this test. This will simply curl the URL and 
         check for it's return status. For each url, a flag will be set on this 
         object for whether or not it passed.
         Returns True if all verifications succeeded
         '''
+        log_path = os.path.join(self.results.directory, self.name.lower())
         result = True
 
         def verify_type(test_type):
-            verificationPath = os.path.join(logPath, test_type)
+            verificationPath = os.path.join(log_path, test_type)
             try:
                 os.makedirs(verificationPath)
             except OSError:
@@ -89,8 +129,8 @@ class FrameworkTest:
             with open(os.path.join(verificationPath, 'verification.txt'),
                       'w') as verification:
                 test = self.runTests[test_type]
-                test.setup_out(verification)
-                verification.write(header("VERIFYING %s" % test_type.upper()))
+                log("VERIFYING %s" % test_type.upper(),
+                    file=verification, border='-', color=Fore.WHITE + Style.BRIGHT)
 
                 base_url = "http://%s:%s" % (
                     self.benchmarker_config.server_host, self.port)
@@ -119,24 +159,21 @@ class FrameworkTest:
                                 'fail',
                                 "Server did not respond to request from client machine.",
                                 base_url)]
-                            logging.warning(
-                                """This error usually means your server is only accepting
+                            log("""This error usually means your server is only accepting
                 requests from localhost.""")
                 except ConnectionError as e:
                     results = [('fail', "Server did not respond to request",
                                 base_url)]
-                    logging.warning(
-                        "Verifying test %s for %s caused an exception: %s",
-                        test_type, self.name, e)
+                    log("Verifying test %s for %s caused an exception: %s" %
+                        (test_type, self.name, e), color=Fore.RED)
                 except Exception as e:
                     results = [('fail', """Caused Exception in TFB
             This almost certainly means your return value is incorrect,
             but also that you have found a bug. Please submit an issue
             including this message: %s\n%s""" % (e, traceback.format_exc()),
                                 base_url)]
-                    logging.warning(
-                        "Verifying test %s for %s caused an exception: %s",
-                        test_type, self.name, e)
+                    log("Verifying test %s for %s caused an exception: %s" %
+                        (test_type, self.name, e), color=Fore.RED)
                     traceback.format_exc()
 
                 test.failed = any(
@@ -154,19 +191,15 @@ class FrameworkTest:
                     elif result.upper() == "FAIL":
                         color = Fore.RED
 
-                    verification.write((
-                        "   " + color + "%s" + Style.RESET_ALL + " for %s\n") %
-                                       (result.upper(), url))
-                    print("   {!s}{!s}{!s} for {!s}\n".format(
-                        color, result.upper(), Style.RESET_ALL, url))
+                    log("   {!s}{!s}{!s} for {!s}".format(
+                        color, result.upper(), Style.RESET_ALL, url),
+                        file=verification)
                     if reason is not None and len(reason) != 0:
                         for line in reason.splitlines():
-                            verification.write("     " + line + '\n')
-                            print("     " + line)
+                            log("     " + line, file=verification)
                         if not test.passed:
-                            verification.write(
-                                "     See %s\n" % specific_rules_url)
-                            print("     See {!s}\n".format(specific_rules_url))
+                            log("     See {!s}".format(specific_rules_url),
+                                file=verification)
 
                 [output_result(r1, r2, url) for (r1, r2, url) in results]
 
@@ -179,8 +212,6 @@ class FrameworkTest:
                 else:
                     raise Exception(
                         "Unknown error - test did not pass,warn,or fail")
-
-                verification.flush()
 
         result = True
         for test_type in self.runTests:

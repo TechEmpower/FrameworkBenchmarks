@@ -13,5 +13,5 @@ RUN rm dsl-compiler.zip
 RUN mvn clean compile war:war
 
 FROM tfb/resin-java8:latest
-COPY --from=maven /revenj-jvm/target/revenj.war /var/resin/webapps/ROOT.war
-CMD resinctl console
+COPY --from=maven /revenj-jvm/target/revenj.war ${RESIN_HOME}/webapps/ROOT.war
+CMD java -jar ${RESIN_HOME}/lib/resin.jar console

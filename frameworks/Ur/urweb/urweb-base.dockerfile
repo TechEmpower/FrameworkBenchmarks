@@ -7,8 +7,8 @@ ENV COMPILER=/urweb-build
 
 RUN apt install -yqq mlton libssl-dev libpq-dev libmysqlclient-dev
 RUN mkdir -p $COMPILER && \
-    wget http://www.impredicative.com/ur/urweb-$URWEB_VERSION.tgz && \
-    tar xvf urweb-$URWEB_VERSION.tgz && \
+    wget -q http://www.impredicative.com/ur/urweb-$URWEB_VERSION.tgz && \
+    tar xf urweb-$URWEB_VERSION.tgz && \
     cd urweb-$URWEB_VERSION && \
     ./configure --prefix=$COMPILER && \
     make && \

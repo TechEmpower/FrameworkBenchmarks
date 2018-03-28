@@ -1,9 +1,19 @@
+FROM tfb/nginx:latest
+
 FROM tfb/dart-lang:latest
 
-COPY ./ ./
+COPY --from=0 /nginx /nginx
+
+ENV NGINX_HOME="/nginx"
+ENV PATH=/nginx/sbin:${PATH}
+
+ADD ./ /stream
+WORKDIR /stream
 
 RUN pub upgrade
 
-RUN chmod a+rwx start-servers.sh
+RUN chmod -R 777 /stream
 
-CMD ["./start-servers.sh"]
+RUN ./nginx-conf.sh
+
+CMD  ./start-servers.sh && sleep 20 && nginx -c /stream/nginx.conf -g "daemon off;"

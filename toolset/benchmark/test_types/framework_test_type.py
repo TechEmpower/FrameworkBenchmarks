@@ -5,11 +5,10 @@ import requests
 import MySQLdb
 import psycopg2
 import pymongo
+import traceback
 
-# Requests is built ontop of urllib3,
-# here we prevent general request logging
-import logging
-logging.getLogger('urllib3').setLevel(logging.CRITICAL)
+from colorama import Fore
+from toolset.utils.output_helper import log
 
 
 class FrameworkTestType:
@@ -87,20 +86,15 @@ class FrameworkTestType:
         Downloads a URL and returns the HTTP response headers
         and body content as a tuple
         '''
-        print("Accessing URL {!s}:".format(url))
-        self.out.write("Accessing URL %s \n" % url)
+        log("Accessing URL {!s}: ".format(url), color=Fore.CYAN)
 
         headers = {'Accept': self.accept_header}
         r = requests.get(url, timeout=15, headers=headers)
 
         headers = r.headers
         body = r.content
-        self.out.write(str(headers))
-        self.out.write(body)
-        b = 40
-        print("  Response (trimmed to {:d} bytes): \"{!s}\"".format(
-            b,
-            body.strip()[:b]))
+        log(str(headers))
+        log(body)
         return headers, body
 
     def verify(self, base_url):
@@ -168,9 +162,10 @@ class FrameworkTestType:
                 results = cursor.fetchall()
                 results_json.append(json.loads(json.dumps(dict(results))))
                 db.close()
-            except Exception as e:
-                print("ERROR: Unable to load current MySQL World table.")
-                print(e)
+            except Exception:
+                tb = traceback.format_exc()
+                log("ERROR: Unable to load current MySQL World table.", color=Fore.RED)
+                log(tb)
         elif database_name == "postgres":
             try:
                 db = psycopg2.connect(
@@ -188,9 +183,10 @@ class FrameworkTestType:
                 results = cursor.fetchall()
                 results_json.append(json.loads(json.dumps(dict(results))))
                 db.close()
-            except Exception as e:
-                print("ERROR: Unable to load current Postgres World table.")
-                print(e)
+            except Exception:
+                tb = traceback.format_exc()
+                log("ERROR: Unable to load current Postgres World table.", color=Fore.RED)
+                log(tb)
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
@@ -207,9 +203,10 @@ class FrameworkTestType:
                                 world["randomNumber"])
                 results_json.append(worlds_json)
                 connection.close()
-            except Exception as e:
-                print("ERROR: Unable to load current MongoDB World table.")
-                print(e)
+            except Exception:
+                tb = traceback.format_exc()
+                log("ERROR: Unable to load current MongoDB World table.", color=Fore.RED)
+                log(tb)
         else:
             raise ValueError(
                 "Database: {!s} does not exist".format(database_name))

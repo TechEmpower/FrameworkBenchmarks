@@ -1,19 +1,17 @@
-from toolset.utils.output_helper import header
+from toolset.utils.output_helper import log, FNULL
 from toolset.utils.metadata_helper import gather_tests, gather_remaining_tests
 from toolset.utils import docker_helper
 
 import os
 import subprocess
 import traceback
-import sys
-import logging
 import socket
 import time
 import json
 import shlex
 from pprint import pprint
 
-from multiprocessing import Process
+from colorama import Fore
 
 
 class Benchmarker:
@@ -42,91 +40,38 @@ class Benchmarker:
         all_tests = gather_remaining_tests(self.config, self.results)
 
         # Setup client/server
-        print(
-            header(
-                "Preparing Server, Database, and Client ...",
-                top='=',
-                bottom='='))
+        log("Preparing Server, Database, and Client ...", border='=')
         with self.config.quiet_out.enable():
             self.__setup_server()
             self.__setup_database()
             self.__setup_client()
 
         # Run tests
-        print(header("Running Tests...", top='=', bottom='='))
-        result = self.__run_tests(all_tests)
+        success = True
+        log("Running Tests...", border='=')
+        with open(os.path.join(self.results.directory, 'benchmark.log'),
+                  'w') as benchmark_log:
+            for test in all_tests:
+                log("Running Test: %s" % test.name, border='-')
+                with self.config.quiet_out.enable():
+                    success = self.__run_test(test, benchmark_log) and success
+                # Load intermediate result from child process
+                self.results.load()
 
         # Parse results
         if self.config.mode == "benchmark":
-            print(header("Parsing Results ...", top='=', bottom='='))
+            log("Parsing Results ...", border='=')
             self.results.parse(all_tests)
 
         self.results.set_completion_time()
         self.results.upload()
         self.results.finish()
-        return result
+
+        return success
 
     ##########################################################################################
     # Private methods
     ##########################################################################################
-
-    def __benchmark(self, framework_test, logPath):
-        '''
-        Runs the benchmark for each type of test that it implements
-        '''
-
-        def benchmark_type(test_type):
-            benchmarkPath = os.path.join(logPath, test_type)
-            try:
-                os.makedirs(benchmarkPath)
-            except OSError:
-                pass
-            with open(os.path.join(benchmarkPath, 'benchmark.txt'),
-                      'w') as out:
-                out.write("BENCHMARKING %s ... " % test_type.upper())
-
-                test = framework_test.runTests[test_type]
-                test.setup_out(out)
-                raw_file = self.results.get_raw_file(framework_test.name,
-                                                     test_type)
-                if not os.path.exists(raw_file):
-                    # Open to create the empty file
-                    with open(raw_file, 'w'):
-                        pass
-
-                if not test.failed:
-                    remote_script = self.config.types[
-                        test_type].get_remote_script(self.config, test.name,
-                                                     test.get_url(),
-                                                     framework_test.port)
-
-                    # Begin resource usage metrics collection
-                    self.__begin_logging(framework_test, test_type)
-
-                    # Run the benchmark
-                    with open(raw_file, 'w') as raw_file:
-                        p = subprocess.Popen(
-                            self.config.client_ssh_string.split(" "),
-                            stdin=subprocess.PIPE,
-                            stdout=raw_file,
-                            stderr=raw_file)
-                        p.communicate(remote_script)
-                        out.flush()
-
-                    # End resource usage metrics collection
-                    self.__end_logging()
-
-                results = self.results.parse_test(framework_test, test_type)
-                print("Benchmark results:")
-                pprint(results)
-
-                self.results.report_benchmark_results(
-                    framework_test, test_type, results['results'])
-                out.write("Complete\n")
-                out.flush()
-
-        for test_type in framework_test.runTests:
-            benchmark_type(test_type)
 
     def __run_list_test_metadata(self):
         '''
@@ -155,31 +100,6 @@ class Benchmarker:
                 "w") as f:
             f.write(all_tests_json)
 
-    def __begin_logging(self, framework_test, test_type):
-        '''
-        Starts a thread to monitor the resource usage, to be synced with the 
-        client's time.
-        TODO: MySQL and InnoDB are possible. Figure out how to implement them.
-        '''
-        output_file = "{file_name}".format(
-            file_name=self.results.get_stats_file(framework_test.name,
-                                                  test_type))
-        dstat_string = "dstat -Tafilmprs --aio --fs --ipc --lock --raw --socket --tcp \
-                                      --raw --socket --tcp --udp --unix --vm --disk-util \
-                                      --rpc --rpcd --output {output_file}".format(
-            output_file=output_file)
-        cmd = shlex.split(dstat_string)
-        dev_null = open(os.devnull, "w")
-        self.subprocess_handle = subprocess.Popen(
-            cmd, stdout=dev_null, stderr=subprocess.STDOUT)
-
-    def __end_logging(self):
-        '''
-        Stops the logger thread and blocks until shutdown is complete.
-        '''
-        self.subprocess_handle.terminate()
-        self.subprocess_handle.communicate()
-
     def __setup_server(self):
         '''
         Makes any necessary changes to the server that should be
@@ -190,31 +110,29 @@ class Benchmarker:
         http://redmine.lighttpd.net/projects/weighttp/wiki#Troubleshooting
         '''
         try:
-            if os.name == 'nt':
-                return True
             subprocess.call(
                 ['sudo', 'sysctl', '-w', 'net.ipv4.tcp_max_syn_backlog=65535'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
             subprocess.call(
                 ['sudo', 'sysctl', '-w', 'net.core.somaxconn=65535'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
             subprocess.call(
                 ['sudo', 'sysctl', 'net.ipv4.tcp_tw_reuse=1'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
             subprocess.call(
                 ['sudo', 'sysctl', 'net.ipv4.tcp_tw_recycle=1'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
             subprocess.call(
                 ['sudo', 'sysctl', '-w', 'kernel.shmmax=134217728'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
             subprocess.call(
                 ['sudo', 'sysctl', '-w', 'kernel.shmall=2097152'],
-                stdout=self.config.quiet_out,
+                stdout=FNULL,
                 stderr=subprocess.STDOUT)
 
             with open(os.path.join(self.results.directory, 'sysctl.txt'),
@@ -236,13 +154,9 @@ class Benchmarker:
         kernel.shm*: http://seriousbirder.com/blogs/linux-understanding-shmmax-and-shmall-settings/
         For kernel.sem: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/5/html/Tuning_and_Optimizing_Red_Hat_Enterprise_Linux_for_Oracle_9i_and_10g_Databases/chap-Oracle_9i_and_10g_Tuning_Guide-Setting_Semaphores.html
         '''
-        p = subprocess.Popen(
-            self.config.database_ssh_string,
-            stdin=subprocess.PIPE,
-            shell=True,
-            stdout=self.config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate("""
+        command = list(self.config.database_ssh_command)
+        command.extend([
+            """
             sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
             sudo sysctl -w net.core.somaxconn=65535
             sudo sysctl -w kernel.sched_autogroup_enabled=0
@@ -252,7 +166,9 @@ class Benchmarker:
             sudo sysctl -w kernel.shmmax=2147483648
             sudo sysctl -w kernel.shmall=2097152
             sudo sysctl -w kernel.sem="250 32000 256 512"
-        """)
+            """
+        ])
+        subprocess.check_call(command, stdout=FNULL, stderr=subprocess.STDOUT)
         # TODO - print kernel configuration to file
         # echo "Printing kernel configuration:" && sudo sysctl -a
 
@@ -262,13 +178,9 @@ class Benchmarker:
         before running the tests. Is very similar to the server setup, but may also 
         include client specific changes.
         '''
-        p = subprocess.Popen(
-            self.config.client_ssh_string,
-            stdin=subprocess.PIPE,
-            shell=True,
-            stdout=self.config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate("""
+        command = list(self.config.client_ssh_command)
+        command.extend([
+            """
             sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
             sudo sysctl -w net.core.somaxconn=65535
             sudo -s ulimit -n 65535
@@ -276,222 +188,226 @@ class Benchmarker:
             sudo sysctl net.ipv4.tcp_tw_recycle=1
             sudo sysctl -w kernel.shmmax=2147483648
             sudo sysctl -w kernel.shmall=2097152
-        """)
+            """
+        ])
+        subprocess.check_call(command, stdout=FNULL, stderr=subprocess.STDOUT)
 
-    def __run_tests(self, tests):
+    def __run_test(self, test, benchmark_log):
         '''
-        Calls each test passed in tests to __run_test in a separate process. 
-        Each test is given a set amount of time and if kills the child process 
-        (and subsequently all of its child processes).
+        Runs the given test, verifies that the webapp is accepting requests,
+        optionally benchmarks the webapp, and ultimately stops all services
+        started for this test.
         '''
-        if len(tests) == 0:
-            return 0
+        log_prefix = "%s: " % test.name
 
-        logging.debug("Start __run_tests.")
-        logging.debug("__name__ = %s", __name__)
+        if test.os.lower() != self.config.os.lower() or test.database_os.lower(
+        ) != self.config.database_os.lower():
+            log("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.",
+                prefix=log_prefix,
+                file=benchmark_log)
+            return False
 
-        error_happened = False
-        if self.config.os.lower() == 'windows':
-            logging.debug("Executing __run_tests on Windows")
-            for test in tests:
-                with self.config.quiet_out.enable():
-                    if self.__run_test(test) != 0:
-                        error_happened = True
-        else:
-            logging.debug("Executing __run_tests on Linux")
+        # If the test is in the excludes list, we skip it
+        if self.config.exclude != None and test.name in self.config.exclude:
+            log("Test {name} has been added to the excludes list. Skipping.".
+                format(name=test.name),
+                prefix=log_prefix,
+                file=benchmark_log)
+            return False
 
-            # These features do not work on Windows
-            for test in tests:
-                print(header("Running Test: %s" % test.name))
-                with self.config.quiet_out.enable():
-                    test_process = Process(
-                        target=self.__run_test,
-                        name="Test Runner (%s)" % test.name,
-                        args=(test, ))
-                    test_process.start()
-                    test_process.join(self.config.run_test_timeout_seconds)
-                # Load intermediate result from child process
-                self.results.load()
-                if (test_process.is_alive()):
-                    logging.debug(
-                        "Child process for {name} is still alive. Terminating.".
-                        format(name=test.name))
-                    self.results.write_intermediate(
-                        test.name, "__run_test timeout (=" +
-                        str(self.config.run_test_timeout_seconds) +
-                        " seconds)")
-                    test_process.terminate()
-                    test_process.join()
-                if test_process.exitcode != 0:
-                    error_happened = True
-
-        logging.debug("End __run_tests.")
-
-        if error_happened:
-            return 1
-        return 0
-
-    def __run_test(self, test):
-        '''
-        Ensures that the system has all necessary software to run the tests. 
-        This does not include that software for the individual test, but covers 
-        software such as curl and weighttp that are needed.
-        '''
-        logDir = os.path.join(self.results.directory, test.name.lower())
+        database_container_id = None
         try:
-            os.makedirs(logDir)
-        except Exception:
-            pass
-        with open(os.path.join(logDir, 'out.txt'), 'w') as out:
+            if self.__is_port_bound(test.port):
+                time.sleep(60)
 
-            if test.os.lower() != self.config.os.lower(
-            ) or test.database_os.lower() != self.config.database_os.lower():
-                out.write(
-                    "OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.\n"
-                )
-                return sys.exit(0)
+            if self.__is_port_bound(test.port):
+                # We gave it our all
+                self.results.write_intermediate(test.name, "port " + str(
+                    test.port) + " is not available before start")
+                log("Error: Port %s is not available, cannot start %s" %
+                    (test.port, test.name),
+                    prefix=log_prefix,
+                    file=benchmark_log,
+                    color=Fore.RED)
+                return False
 
-            # If the test is in the excludes list, we skip it
-            if self.config.exclude != None and test.name in self.config.exclude:
-                out.write(
-                    "Test {name} has been added to the excludes list. Skipping.\n".
-                    format(name=test.name))
-                return sys.exit(0)
-
-            out.write(
-                "test.os.lower() = {os}  test.database_os.lower() = {dbos}\n".
-                format(os=test.os.lower(), dbos=test.database_os.lower()))
-            out.write("self.results.frameworks != None: {val}\n".format(
-                val=str(self.results.frameworks != None)))
-            out.write("test.name: {name}\n".format(name=str(test.name)))
-            out.write("self.results.completed.: {completed}\n".format(
-                completed=str(self.results.completed)))
-            if self.results.frameworks != None and test.name in self.results.completed:
-                out.write(
-                    'Framework {name} found in latest saved data. Skipping.\n'.
-                    format(name=str(test.name)))
-                print(
-                    'WARNING: Test {test} exists in the results directory; this must be removed before running a new test.\n'.
-                    format(test=str(test.name)))
-                return sys.exit(1)
-            out.flush()
-
-            out.write(header("Beginning %s" % test.name, top='='))
-            out.flush()
-
-            # Start this test
-            out.write(header("Starting %s" % test.name))
-            out.flush()
-            database_container_id = None
-            try:
-                if self.__is_port_bound(test.port):
-                    time.sleep(60)
-
-                if self.__is_port_bound(test.port):
-                    # We gave it our all
-                    self.results.write_intermediate(test.name, "port " + str(
-                        test.port) + " is not available before start")
-                    out.write(
-                        header(
-                            "Error: Port %s is not available, cannot start %s"
-                            % (test.port, test.name)))
-                    out.flush()
-                    print("Error: Unable to recover port, cannot start test")
-                    return sys.exit(1)
-
-                # Start database container
-                if test.database != "None":
-                    database_container_id = docker_helper.start_database(
-                        self.config, test.database.lower())
-                    if not database_container_id:
-                        out.write(
-                            "ERROR: Problem building/running database container"
-                        )
-                        out.flush()
-                        self.results.write_intermediate(
-                            test.name, "ERROR: Problem starting")
-                        return sys.exit(1)
-
-                # Start webapp
-                result = test.start(out)
-                if result != 0:
-                    docker_helper.stop(self.config, database_container_id,
-                                       test, out)
-                    time.sleep(5)
-                    out.write("ERROR: Problem starting {name}\n".format(
-                        name=test.name))
-                    out.flush()
+            # Start database container
+            if test.database.lower() != "none":
+                database_container_id = docker_helper.start_database(
+                    self.config, test.database.lower())
+                if not database_container_id:
                     self.results.write_intermediate(test.name,
                                                     "ERROR: Problem starting")
-                    return sys.exit(1)
+                    log("ERROR: Problem building/running database container",
+                        prefix=log_prefix,
+                        file=benchmark_log,
+                        color=Fore.RED)
+                    return False
 
-                logging.info("Sleeping %s seconds to ensure framework is ready"
-                             % self.config.sleep)
-                time.sleep(self.config.sleep)
-
-                # Verify URLs
-                if self.config.mode == "debug":
-                    logging.info(
-                        "Entering debug mode. Server has started. CTRL-c to stop."
-                    )
-                    while True:
-                        time.sleep(1)
-                else:
-                    logging.info("Verifying framework URLs")
-                    passed_verify = test.verify_urls(logDir)
-
-                # Benchmark this test
-                if self.config.mode == "benchmark":
-                    logging.info("Benchmarking")
-                    out.write(header("Benchmarking %s" % test.name))
-                    out.flush()
-                    self.__benchmark(test, logDir)
-
-                # Stop this test
-                docker_helper.stop(self.config, database_container_id, test,
-                                   out)
-
-                out.write(header("Stopped %s" % test.name))
-                out.flush()
-
-                # Remove contents of  /tmp folder
-                try:
-                    subprocess.check_call(
-                        'sudo rm -rf /tmp/*',
-                        shell=True,
-                        stderr=out,
-                        stdout=out)
-                except Exception:
-                    out.write(header("Error: Could not empty /tmp"))
-
-                # Save results thus far into the latest results directory
-                out.write(header("Saving results through %s" % test.name))
-                out.flush()
+            # Start webapp
+            result = test.start(database_container_id)
+            if result != 0:
+                docker_helper.stop(self.config, database_container_id, test)
                 self.results.write_intermediate(test.name,
-                                                time.strftime(
-                                                    "%Y%m%d%H%M%S",
-                                                    time.localtime()))
+                                                "ERROR: Problem starting")
+                log("ERROR: Problem starting {name}".format(name=test.name),
+                    prefix=log_prefix,
+                    file=benchmark_log,
+                    color=Fore.RED)
+                return False
 
-                # Upload the results thus far to another server (optional)
-                self.results.upload()
+            slept = 0
+            max_sleep = 60
+            while not test.is_running() and slept < max_sleep:
+                if not docker_helper.successfully_running_containers(
+                        test.get_docker_files(), benchmark_log):
+                    docker_helper.stop(self.config, database_container_id,
+                                       test)
+                    log("ERROR: One or more expected docker container exited early",
+                        prefix=log_prefix,
+                        file=benchmark_log,
+                        color=Fore.RED)
+                    return False
+                time.sleep(1)
+                slept += 1
 
-                if self.config.mode == "verify" and not passed_verify:
-                    print("Failed verify!")
-                    return sys.exit(1)
-            except KeyboardInterrupt:
-                docker_helper.stop(self.config, database_container_id, test,
-                                   out)
-            except (OSError, IOError, subprocess.CalledProcessError):
-                self.results.write_intermediate(
-                    test.name, "<setup.py> raised an exception")
-                out.write(header("Subprocess Error %s" % test.name))
-                traceback.print_exc(file=out)
-                out.flush()
-                out.close()
-                return sys.exit(1)
+            # Debug mode blocks execution here until ctrl+c
+            if self.config.mode == "debug":
+                log("Entering debug mode. Server has started. CTRL-c to stop.",
+                    prefix=log_prefix,
+                    file=benchmark_log,
+                    color=Fore.YELLOW)
+                while True:
+                    time.sleep(1)
 
-            out.close()
-            return sys.exit(0)
+            # Verify URLs
+            log("Verifying framework URLs", prefix=log_prefix)
+            passed_verify = test.verify_urls()
+
+            # Benchmark this test
+            if self.config.mode == "benchmark":
+                log("Benchmarking %s" % test.name,
+                    file=benchmark_log,
+                    border='-')
+                self.__benchmark(test, benchmark_log)
+
+            # Stop this test
+            docker_helper.stop(self.config, database_container_id, test)
+
+            # Remove contents of  /tmp folder
+            try:
+                subprocess.check_call(
+                    'sudo rm -rf /tmp/*',
+                    shell=True,
+                    stderr=benchmark_log,
+                    stdout=benchmark_log)
+            except Exception:
+                log("Error: Could not empty /tmp",
+                    file=benchmark_log,
+                    color=Fore.RED)
+
+            # Save results thus far into the latest results directory
+            self.results.write_intermediate(test.name,
+                                            time.strftime(
+                                                "%Y%m%d%H%M%S",
+                                                time.localtime()))
+
+            # Upload the results thus far to another server (optional)
+            self.results.upload()
+
+            if self.config.mode == "verify" and not passed_verify:
+                log("Failed verify!",
+                    prefix=log_prefix,
+                    file=benchmark_log,
+                    color=Fore.RED)
+                return False
+        except KeyboardInterrupt:
+            docker_helper.stop(self.config, database_container_id, test)
+        except (OSError, IOError, subprocess.CalledProcessError) as e:
+            tb = traceback.format_exc()
+            self.results.write_intermediate(
+                test.name, "error during test setup: " + str(e))
+            log("Subprocess Error %s" % test.name,
+                file=benchmark_log,
+                border='-',
+                color=Fore.RED)
+            log(tb, prefix=log_prefix, file=benchmark_log)
+            return False
+
+        return True
+
+    def __benchmark(self, framework_test, benchmark_log):
+        '''
+        Runs the benchmark for each type of test that it implements
+        '''
+
+        def benchmark_type(test_type):
+            log("BENCHMARKING %s ... " % test_type.upper(), file=benchmark_log)
+
+            test = framework_test.runTests[test_type]
+            test.setup_out(benchmark_log)
+            raw_file = self.results.get_raw_file(framework_test.name,
+                                                 test_type)
+            if not os.path.exists(raw_file):
+                # Open to create the empty file
+                with open(raw_file, 'w'):
+                    pass
+
+            if not test.failed:
+                remote_script = self.config.types[test_type].get_remote_script(
+                    self.config, test.name, test.get_url(),
+                    framework_test.port)
+
+                # Begin resource usage metrics collection
+                self.__begin_logging(framework_test, test_type)
+
+                # Run the benchmark
+                with open(raw_file, 'w') as raw_file:
+                    p = subprocess.Popen(
+                        self.config.client_ssh_command,
+                        stdin=subprocess.PIPE,
+                        stdout=raw_file,
+                        stderr=raw_file)
+                    p.communicate(remote_script)
+
+                # End resource usage metrics collection
+                self.__end_logging()
+
+            results = self.results.parse_test(framework_test, test_type)
+            log("Benchmark results:", file=benchmark_log)
+            # TODO move into log somehow
+            pprint(results)
+
+            self.results.report_benchmark_results(framework_test, test_type,
+                                                  results['results'])
+            log("Complete", file=benchmark_log)
+
+        for test_type in framework_test.runTests:
+            benchmark_type(test_type)
+
+    def __begin_logging(self, framework_test, test_type):
+        '''
+        Starts a thread to monitor the resource usage, to be synced with the 
+        client's time.
+        TODO: MySQL and InnoDB are possible. Figure out how to implement them.
+        '''
+        output_file = "{file_name}".format(
+            file_name=self.results.get_stats_file(framework_test.name,
+                                                  test_type))
+        dstat_string = "dstat -Tafilmprs --aio --fs --ipc --lock --raw --socket --tcp \
+                                      --raw --socket --tcp --udp --unix --vm --disk-util \
+                                      --rpc --rpcd --output {output_file}".format(
+            output_file=output_file)
+        cmd = shlex.split(dstat_string)
+        self.subprocess_handle = subprocess.Popen(
+            cmd, stdout=FNULL, stderr=subprocess.STDOUT)
+
+    def __end_logging(self):
+        '''
+        Stops the logger thread and blocks until shutdown is complete.
+        '''
+        self.subprocess_handle.terminate()
+        self.subprocess_handle.communicate()
 
     def __is_port_bound(self, port):
         '''

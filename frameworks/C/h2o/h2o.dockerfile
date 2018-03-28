@@ -23,8 +23,8 @@ ENV YAJL_VERSION="2.1.0"
 ENV YAJL_ARCHIVE="${YAJL_VERSION}.tar.gz"
 ENV YAJL_BUILD_DIR="yajl-${YAJL_VERSION}"
 
-RUN wget https://github.com/lloyd/yajl/archive/${YAJL_ARCHIVE} && \
-    tar xvf ${YAJL_ARCHIVE} && \
+RUN wget -q https://github.com/lloyd/yajl/archive/${YAJL_ARCHIVE} && \
+    tar xf ${YAJL_ARCHIVE} && \
     cd ${YAJL_BUILD_DIR} && \
     ./configure -p /yajl && \
     make -j "$(nproc)" install
@@ -42,8 +42,8 @@ ENV BUILD_DIR="h2o-${VERSION}"
 
 RUN mkdir install
 RUN cd "${IROOT}" && \
-    wget "https://github.com/h2o/h2o/archive/$ARCHIVE" && \
-    tar xvf "$ARCHIVE" && \
+    wget -q "https://github.com/h2o/h2o/archive/$ARCHIVE" && \
+    tar xf "$ARCHIVE" && \
     cd "$BUILD_DIR" && \
     cmake -DCMAKE_INSTALL_PREFIX="$H2O_HOME" -DCMAKE_C_FLAGS="-flto -march=native" \
       -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -DWITH_MRUBY=on && \

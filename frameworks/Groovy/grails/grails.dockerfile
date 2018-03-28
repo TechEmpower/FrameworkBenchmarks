@@ -16,5 +16,5 @@ RUN grails -Dgrails.work.dir=${GRAILS_WORK_DIR} -non-interactive -plain-output r
 RUN grails -Dgrails.work.dir=${GRAILS_WORK_DIR} -non-interactive -plain-output compile
 RUN grails -Dgrails.work.dir=${GRAILS_WORK_DIR} prod -non-interactive -plain-output war
 
-RUN cp target/hello-0.1.war /var/resin/webapps/ROOT.war
-CMD resinctl console
+RUN cp target/hello-0.1.war ${RESIN_HOME}/webapps/ROOT.war
+CMD java -jar ${RESIN_HOME}/lib/resin.jar console

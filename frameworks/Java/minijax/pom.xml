@@ -10,8 +10,7 @@
     <properties>
         <eclipselink.version>2.7.0</eclipselink.version>
         <jpa.version>2.1.1</jpa.version>
-        <logback.version>1.2.3</logback.version>
-        <minijax.version>0.0.30</minijax.version>
+        <minijax.version>0.1.4</minijax.version>
         <mysql-connector.version>6.0.6</mysql-connector.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shade.version>3.1.0</shade.version>
@@ -27,6 +26,10 @@
             <artifactId>eclipselink</artifactId>
             <version>${eclipselink.version}</version>
             <exclusions>
+                <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.eclipse.persistence</groupId>
                     <artifactId>javax.persistence</artifactId>
@@ -98,6 +101,30 @@
                             <goal>sort</goal>
                         </goals>
                         <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>de.empulse.eclipselink</groupId>
+                <artifactId>staticweave-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.eclipse.persistence</groupId>
+                        <artifactId>org.eclipse.persistence.jpa</artifactId>
+                        <version>${eclipselink.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>weave</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <persistenceXMLLocation>META-INF/persistence.xml</persistenceXMLLocation>
+                            <logLevel>FINE</logLevel>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

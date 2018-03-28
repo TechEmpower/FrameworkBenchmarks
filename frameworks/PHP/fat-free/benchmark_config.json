@@ -2,7 +2,6 @@
   "framework": "fat-free",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db-orm",
@@ -25,7 +24,6 @@
       "versus": "php7"
     },
     "raw": {
-      "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/db-multiple/",
       "fortune_url": "/fortune",

@@ -7,7 +7,7 @@ ENV OPENRESTY=/openresty
 ENV OPENRESTY_HOME=$OPENRESTY-$OPENRESTY_VERSION
 
 RUN wget http://openresty.org/download/openresty-$OPENRESTY_VERSION.tar.gz
-RUN tar xvf openresty-$OPENRESTY_VERSION.tar.gz
+RUN tar xf openresty-$OPENRESTY_VERSION.tar.gz
 
 RUN cd openresty-$OPENRESTY_VERSION && \
     ./configure --with-http_postgres_module --prefix=$OPENRESTY_HOME --with-luajit-xcflags="-DLUAJIT_NUMMODE=2 -O3" --with-cc-opt="-O3" -j4 && \

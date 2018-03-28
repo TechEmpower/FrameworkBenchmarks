@@ -3,7 +3,6 @@
   "tests": [{
     "default": {
       "json_url": "/json",
-      "plaintext_url": "/plaintext", 
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
@@ -12,10 +11,26 @@
       "language": "Rust",
       "orm": "Raw",
       "platform": "Rust",
-      "webserver": "Hyper",
+      "webserver": "hyper",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Hyper",
+      "display_name": "hyper",
+      "notes": ""
+    },
+    "pipeline": {
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "hyper",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "Rust",
+      "webserver": "hyper",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hyper-pipeline",
       "notes": ""
     }
   }]

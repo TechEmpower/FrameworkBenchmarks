@@ -11,7 +11,7 @@ RUN mkdir -p $DLANG && \
     dpkg-deb -x dmd_$DMDVER-0_amd64.deb $DLANG && \
     cd $DLANG && \
     wget https://github.com/ldc-developers/ldc/releases/download/v$LDCVER/ldc2-$LDCVER-linux-x86_64.tar.xz && \
-    tar xvf ldc2-$LDCVER-linux-x86_64.tar.xz && \
+    tar xf ldc2-$LDCVER-linux-x86_64.tar.xz && \
     ln -s $DLANG/ldc2-$LDCVER-linux-x86_64/bin/ldc2 $DLANG/usr/bin/ldc2
 
 # According to this file (dmd.conf) dmd will, upon execution, look for
@@ -21,7 +21,6 @@ RUN mkdir -p $DLANG && \
 # We are trying to maintain as little global presence as possible, so
 # we need to change the DFLAGS in the dmd.conf to be correctly sandboxed
 # to the $DLANG folder.
-
 RUN cp $DLANG/etc/dmd.conf $DLANG/usr/bin && \
     sed -i "s|-I/usr/|-I${DLANG}/usr/|g" $DLANG/usr/bin/dmd.conf && \
     sed -i "s|-L/usr/|-L${DLANG}/usr/|g" $DLANG/usr/bin/dmd.conf

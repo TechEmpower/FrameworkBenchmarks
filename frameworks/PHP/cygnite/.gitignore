@@ -13,7 +13,6 @@
 # Composer
 /vendor/
 composer.phar
-composer.lock
 
 # Code Coverage
 build/coverage/*

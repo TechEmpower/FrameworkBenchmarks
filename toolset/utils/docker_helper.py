@@ -5,18 +5,23 @@ import subprocess
 import multiprocessing
 import json
 import docker
-
+import time
+import re
+import traceback
 from threading import Thread
+from colorama import Fore, Style
 
-from toolset.utils import setup_util
-from toolset.utils.output_helper import tee_output
+from toolset.utils.output_helper import log, FNULL
 from toolset.utils.metadata_helper import gather_tests
+from toolset.utils.ordered_set import OrderedSet
+from toolset.utils.database_helper import test_database
 
 
-def clean():
+def clean(config):
     '''
     Cleans all the docker images from the system
     '''
+    # Clean the app server images
     subprocess.check_call(["docker", "image", "prune", "-f"])
 
     docker_ids = subprocess.check_output(["docker", "images",
@@ -26,8 +31,26 @@ def clean():
 
     subprocess.check_call(["docker", "system", "prune", "-a", "-f"])
 
+    # Clean the database server images
+    command = list(config.database_ssh_command)
+    command.extend(["docker", "image", "prune", "-f"])
+    subprocess.check_call(command)
 
-def build(benchmarker_config, test_names, out):
+    command = list(config.database_ssh_command)
+    command.extend(["docker", "images", "-q"])
+    docker_ids = subprocess.check_output(command).splitlines()
+
+    for docker_id in docker_ids:
+        command = list(config.database_ssh_command)
+        command.extend(["docker", "image", "rmi", "-f", docker_id])
+        subprocess.check_call(command)
+
+    command = list(config.database_ssh_command)
+    command.extend(["docker", "system", "prune", "-a", "-f"])
+    subprocess.check_call(command)
+
+
+def build(benchmarker_config, test_names, build_log_dir=os.devnull):
     '''
     Builds the dependency chain as well as the test implementation docker images
     for the given tests.
@@ -35,6 +58,8 @@ def build(benchmarker_config, test_names, out):
     tests = gather_tests(test_names)
 
     for test in tests:
+        log_prefix = "%s: " % test.name
+
         docker_buildargs = {
             'CPU_COUNT': str(multiprocessing.cpu_count()),
             'MAX_CONCURRENCY': str(max(benchmarker_config.concurrency_levels)),
@@ -50,89 +75,107 @@ def build(benchmarker_config, test_names, out):
                     "docker_files in benchmark_config.json must be an array")
 
         for test_docker_file in test_docker_files:
-            deps = list(
-                reversed(
-                    gather_dependencies(
-                        os.path.join(test.directory, test_docker_file))))
+            deps = OrderedSet(
+                list(
+                    reversed(
+                        __gather_dependencies(
+                            os.path.join(test.directory, test_docker_file)))))
 
-            docker_dir = os.path.join(setup_util.get_fwroot(), "toolset",
-                                      "setup", "docker")
+            docker_dir = os.path.join(
+                os.getenv('FWROOT'), "toolset", "setup", "docker")
             for dependency in deps:
-                docker_file = os.path.join(test.directory,
+                build_log_file = build_log_dir
+                if build_log_dir is not os.devnull:
+                    build_log_file = os.path.join(
+                        build_log_dir, "%s.log" % dependency.lower())
+                with open(build_log_file, 'w') as build_log:
+                    docker_file = os.path.join(test.directory,
+                                               dependency + ".dockerfile")
+                    if not docker_file or not os.path.exists(docker_file):
+                        docker_file = find(docker_dir,
                                            dependency + ".dockerfile")
-                if not docker_file or not os.path.exists(docker_file):
-                    docker_file = find(docker_dir, dependency + ".dockerfile")
-                if not docker_file:
-                    tee_output(
-                        out,
-                        "Docker build failed; %s could not be found; terminating\n"
-                        % (dependency + ".dockerfile"))
-                    return 1
+                    if not docker_file:
+                        log("Docker build failed; %s could not be found; terminating"
+                            % (dependency + ".dockerfile"),
+                            prefix=log_prefix, file=build_log, color=Fore.RED)
+                        return 1
 
-                # Build the dependency image
-                try:
-                    for line in docker.APIClient(
-                            base_url='unix://var/run/docker.sock').build(
-                                path=os.path.dirname(docker_file),
-                                dockerfile="%s.dockerfile" % dependency,
-                                tag="tfb/%s" % dependency,
-                                buildargs=docker_buildargs,
-                                forcerm=True):
-                        prev_line = os.linesep
-                        if line.startswith('{"stream":'):
-                            line = json.loads(line)
-                            line = line[line.keys()[0]].encode('utf-8')
-                            if prev_line.endswith(os.linesep):
-                                tee_output(out, line)
-                            else:
-                                tee_output(out, line)
-                            prev_line = line
-                except Exception as e:
-                    tee_output(out,
-                               "Docker dependency build failed; terminating\n")
-                    print(e)
-                    return 1
+                    # Build the dependency image
+                    try:
+                        for line in docker.APIClient(
+                                base_url='unix://var/run/docker.sock').build(
+                                    path=os.path.dirname(docker_file),
+                                    dockerfile="%s.dockerfile" % dependency,
+                                    tag="tfb/%s" % dependency,
+                                    buildargs=docker_buildargs,
+                                    forcerm=True):
+                            if line.startswith('{"stream":'):
+                                line = json.loads(line)
+                                line = line[line.keys()[0]].encode('utf-8')
+                                log(line,
+                                    prefix=log_prefix,
+                                    file=build_log,
+                                    color=Fore.WHITE + Style.BRIGHT \
+                                        if re.match(r'^Step \d+\/\d+', line) else '')
+                    except Exception:
+                        tb = traceback.format_exc()
+                        log("Docker dependency build failed; terminating",
+                            prefix=log_prefix, file=build_log, color=Fore.RED)
+                        log(tb, prefix=log_prefix, file=build_log)
+                        return 1
 
         # Build the test images
         for test_docker_file in test_docker_files:
-            try:
-                for line in docker.APIClient(
-                        base_url='unix://var/run/docker.sock').build(
-                            path=test.directory,
-                            dockerfile=test_docker_file,
-                            tag="tfb/test/%s" % test_docker_file.replace(
-                                ".dockerfile", ""),
-                            buildargs=docker_buildargs,
-                            forcerm=True):
-                    prev_line = os.linesep
-                    if line.startswith('{"stream":'):
-                        line = json.loads(line)
-                        line = line[line.keys()[0]].encode('utf-8')
-                        if prev_line.endswith(os.linesep):
-                            tee_output(out, line)
-                        else:
-                            tee_output(out, line)
-                        prev_line = line
-            except Exception as e:
-                tee_output(out, "Docker build failed; terminating\n")
-                print(e)
-                return 1
+            build_log_file = build_log_dir
+            if build_log_dir is not os.devnull:
+                build_log_file = os.path.join(
+                    build_log_dir, "%s.log" % test_docker_file.replace(
+                        ".dockerfile", "").lower())
+            with open(build_log_file, 'w') as build_log:
+                try:
+                    for line in docker.APIClient(
+                            base_url='unix://var/run/docker.sock').build(
+                                path=test.directory,
+                                dockerfile=test_docker_file,
+                                tag="tfb/test/%s" % test_docker_file.replace(
+                                    ".dockerfile", ""),
+                                buildargs=docker_buildargs,
+                                forcerm=True):
+                        if line.startswith('{"stream":'):
+                            line = json.loads(line)
+                            line = line[line.keys()[0]].encode('utf-8')
+                            log(line,
+                                prefix=log_prefix,
+                                file=build_log,
+                                color=Fore.WHITE + Style.BRIGHT \
+                                    if re.match(r'^Step \d+\/\d+', line) else '')
+                except Exception:
+                    tb = traceback.format_exc()
+                    log("Docker build failed; terminating",
+                        prefix=log_prefix, file=build_log, color=Fore.RED)
+                    log(tb, prefix=log_prefix, file=build_log)
+                    return 1
 
     return 0
 
 
-def run(benchmarker_config, docker_files, out):
+def run(benchmarker_config, docker_files, run_log_dir):
     '''
     Run the given Docker container(s)
     '''
     client = docker.from_env()
 
     for docker_file in docker_files:
+        log_prefix = "%s: " % docker_file.replace(".dockerfile", "")
         try:
 
-            def watch_container(container):
-                for line in container.logs(stream=True):
-                    tee_output(out, line)
+            def watch_container(container, docker_file):
+                with open(
+                        os.path.join(
+                            run_log_dir, "%s.log" % docker_file.replace(
+                                ".dockerfile", "").lower()), 'w') as run_log:
+                    for line in container.logs(stream=True):
+                        log(line, prefix=log_prefix, file=run_log)
 
             extra_hosts = {
                 socket.gethostname(): str(benchmarker_config.server_host),
@@ -147,22 +190,57 @@ def run(benchmarker_config, docker_files, out):
                 privileged=True,
                 stderr=True,
                 detach=True,
+                init=True,
                 extra_hosts=extra_hosts)
 
-            watch_thread = Thread(target=watch_container, args=(container, ))
+            watch_thread = Thread(
+                target=watch_container, args=(
+                    container,
+                    docker_file,
+                ))
             watch_thread.daemon = True
             watch_thread.start()
 
-        except Exception as e:
-            tee_output(out,
-                       "Running docker cointainer: %s failed" % docker_file)
-            print(e)
-            return 1
+        except Exception:
+            with open(
+                    os.path.join(run_log_dir, "%s.log" % docker_file.replace(
+                        ".dockerfile", "").lower()), 'w') as run_log:
+                tb = traceback.format_exc()
+                log("Running docker cointainer: %s failed" % docker_file,
+                    prefix=log_prefix, file=run_log)
+                log(tb, prefix=log_prefix, file=run_log)
+                return 1
 
     return 0
 
 
-def stop(config, database_container_id, test, out):
+def successfully_running_containers(docker_files, out):
+    '''
+    Returns whether all the expected containers for the given docker_files are
+    running.
+    '''
+    client = docker.from_env()
+    expected_running_container_images = []
+    for docker_file in docker_files:
+        # 'gemini.dockerfile' -> 'gemini'
+        image_tag = docker_file.split('.')[0]
+        expected_running_container_images.append(image_tag)
+    running_container_images = []
+    for container in client.containers.list():
+        # 'tfb/test/gemini:latest' -> 'gemini'
+        image_tag = container.image.tags[0].split(':')[0][9:]
+        running_container_images.append(image_tag)
+
+    for image_name in expected_running_container_images:
+        if image_name not in running_container_images:
+            log_prefix = "%s: " % image_name
+            log("ERROR: Expected tfb/test/%s to be running container" %
+                image_name, prefix=log_prefix, file=out)
+            return False
+    return True
+
+
+def stop(config=None, database_container_id=None, test=None):
     '''
     Attempts to stop the running test container.
     '''
@@ -179,14 +257,13 @@ def stop(config, database_container_id, test, out):
         pass
     # Stop the database container
     if database_container_id:
-        p = subprocess.Popen(
-            config.database_ssh_string,
-            stdin=subprocess.PIPE,
-            shell=True,
-            stdout=config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate("docker stop %s" % database_container_id)
+        command = list(config.database_ssh_command)
+        command.extend(['docker', 'stop', database_container_id])
+        subprocess.check_call(command, stdout=FNULL, stderr=subprocess.STDOUT)
     client.images.prune()
+    client.containers.prune()
+    client.networks.prune()
+    client.volumes.prune()
 
 
 def find(path, pattern):
@@ -198,38 +275,6 @@ def find(path, pattern):
         for name in files:
             if fnmatch.fnmatch(name, pattern):
                 return os.path.join(root, name)
-
-
-def gather_dependencies(docker_file):
-    '''
-    Gathers all the known docker dependencies for the given docker image.
-    '''
-    # Avoid setting up a circular import
-    from toolset.utils import setup_util
-    deps = []
-
-    docker_dir = os.path.join(setup_util.get_fwroot(), "toolset", "setup",
-                              "docker")
-
-    if os.path.exists(docker_file):
-        with open(docker_file) as fp:
-            for line in fp.readlines():
-                tokens = line.strip().split(' ')
-                if tokens[0] == "FROM":
-                    # This is magic that our base image points to
-                    if tokens[1] != "ubuntu:16.04":
-                        depToken = tokens[1].strip().split(':')[
-                            0].strip().split('/')[1]
-                        deps.append(depToken)
-                        dep_docker_file = os.path.join(
-                            os.path.dirname(docker_file),
-                            depToken + ".dockerfile")
-                        if not os.path.exists(dep_docker_file):
-                            dep_docker_file = find(docker_dir,
-                                                   depToken + ".dockerfile")
-                        deps.extend(gather_dependencies(dep_docker_file))
-
-    return deps
 
 
 def start_database(config, database):
@@ -245,13 +290,9 @@ def start_database(config, database):
             return False
         return len(s) % 2 == 0
 
-    p = subprocess.Popen(
-        config.database_ssh_string,
-        stdin=subprocess.PIPE,
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
-    out = p.communicate("docker images  -q %s" % database)[0]
+    command = list(config.database_ssh_command)
+    command.extend(['docker', 'images', '-q', database])
+    out = subprocess.check_output(command)
     dbid = ''
     if len(out.splitlines()) > 0:
         dbid = out.splitlines()[len(out.splitlines()) - 1]
@@ -260,7 +301,7 @@ def start_database(config, database):
     # fe12ca519b47, and we do not want to rebuild if it exists
     if len(dbid) != 12 and not __is_hex(dbid):
 
-        def __scp_string(files):
+        def __scp_command(files):
             scpstr = ["scp", "-i", config.database_identity_file]
             for file in files:
                 scpstr.append(file)
@@ -268,40 +309,68 @@ def start_database(config, database):
                                            config.database_host, database))
             return scpstr
 
-        p = subprocess.Popen(
-            config.database_ssh_string,
-            shell=True,
-            stdin=subprocess.PIPE,
-            stdout=config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate("mkdir -p %s" % database)
+        command = list(config.database_ssh_command)
+        command.extend(['mkdir', '-p', database])
+        subprocess.check_call(command)
         dbpath = os.path.join(config.fwroot, "toolset", "setup", "docker",
                               "databases", database)
         dbfiles = ""
         for dbfile in os.listdir(dbpath):
             dbfiles += "%s " % os.path.join(dbpath, dbfile)
-        p = subprocess.Popen(
-            __scp_string(dbfiles.split()),
-            stdin=subprocess.PIPE,
-            stdout=config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate()
-        p = subprocess.Popen(
-            config.database_ssh_string,
-            shell=True,
-            stdin=subprocess.PIPE,
-            stdout=config.quiet_out,
-            stderr=subprocess.STDOUT)
-        p.communicate("docker build -f ~/%s/%s.dockerfile -t %s ~/%s" %
-                      (database, database, database, database))
-        if p.returncode != 0:
-            return None
+        subprocess.check_call(__scp_command(dbfiles.split()))
 
-    p = subprocess.Popen(
-        config.database_ssh_string,
-        stdin=subprocess.PIPE,
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
-    out = p.communicate("docker run -d --rm --network=host %s" % database)[0]
-    return out.splitlines()[len(out.splitlines()) - 1]
+        command = list(config.database_ssh_command)
+        command.extend([
+            'docker', 'build', '-f',
+            '~/%s/%s.dockerfile' % (database, database), '-t', database,
+            '~/%s' % database
+        ])
+        subprocess.check_call(command)
+
+    command = list(config.database_ssh_command)
+    command.extend(
+        ['docker', 'run', '-d', '--rm', '--init', '--network=host', database])
+    docker_id = subprocess.check_output(command).strip()
+
+    # Sleep until the database accepts connections
+    slept = 0
+    max_sleep = 60
+    while not test_database(config, database) and slept < max_sleep:
+        time.sleep(1)
+        slept += 1
+
+    return docker_id
+
+
+def __gather_dependencies(docker_file):
+    '''
+    Gathers all the known docker dependencies for the given docker image.
+    '''
+    deps = []
+
+    docker_dir = os.path.join(
+        os.getenv('FWROOT'), "toolset", "setup", "docker")
+
+    if os.path.exists(docker_file):
+        with open(docker_file) as fp:
+            for line in fp.readlines():
+                tokens = line.strip().split(' ')
+                if tokens[0] == "FROM":
+                    # This is magic that our base image points to
+                    if tokens[1] != "ubuntu:16.04":
+                        dep_ref = tokens[1].strip().split(':')[0].strip()
+                        if '/' not in dep_ref:
+                            raise AttributeError(
+                                "Could not find docker FROM dependency: %s" %
+                                dep_ref)
+                        depToken = dep_ref.split('/')[1]
+                        deps.append(depToken)
+                        dep_docker_file = os.path.join(
+                            os.path.dirname(docker_file),
+                            depToken + ".dockerfile")
+                        if not os.path.exists(dep_docker_file):
+                            dep_docker_file = find(docker_dir,
+                                                   depToken + ".dockerfile")
+                        deps.extend(__gather_dependencies(dep_docker_file))
+
+    return deps

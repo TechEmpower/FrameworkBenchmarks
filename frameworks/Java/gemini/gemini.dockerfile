@@ -14,4 +14,4 @@ FROM tfb/resin:latest
 
 COPY --from=ant /gemini /gemini
 
-CMD ["resinctl", "-conf", "/gemini/Docroot/WEB-INF/resin.xml", "console"]
+CMD java -jar ${RESIN_HOME}/lib/resin.jar -conf /gemini/Docroot/WEB-INF/resin.xml console
