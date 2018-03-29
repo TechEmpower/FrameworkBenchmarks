@@ -1,4 +1,4 @@
-FROM techempower/base:0.1
+FROM techempower/base:0.2
   
 ENV PYPY2_ROOT=/pypy2
 ENV PYTHONHOME=${PYPY2_ROOT}

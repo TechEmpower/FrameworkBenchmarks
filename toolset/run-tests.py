@@ -123,7 +123,7 @@ def main(argv=None):
         dest='test_lang',
         help='name of language directory containing all tests to run')
     parser.add_argument(
-        '--exclude', default=None, help='names of tests to exclude')
+        '--exclude', default=None, nargs='+', help='names of tests to exclude')
     parser.add_argument(
         '--type',
         choices=[

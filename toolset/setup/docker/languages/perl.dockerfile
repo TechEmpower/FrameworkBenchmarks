@@ -1,4 +1,4 @@
-FROM techempower/base:0.1
+FROM techempower/base:0.2
 
 ENV PERL_VERSION="5.18"
 ENV PERL=/perl-${PERL_VERSION}

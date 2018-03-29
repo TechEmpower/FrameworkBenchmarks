@@ -1,4 +1,4 @@
-FROM techempower/base:0.1
+FROM techempower/base:0.2
 
 RUN mkdir /crystal-lang
 WORKDIR /crystal-lang

@@ -1,4 +1,4 @@
-FROM techempower/base:0.1
+FROM techempower/base:0.2
 
 ENV RUST_VERSION="1.24.1"
 

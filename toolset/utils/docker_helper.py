@@ -24,22 +24,26 @@ def clean(benchmarker_config):
     client = docker.DockerClient(
         base_url=benchmarker_config.server_docker_host)
 
+    client.images.prune()
     for image in client.images.list():
-        # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
-        image_tag = image.tags[0].split(':')[0]
-        if image_tag != 'techempower/tfb':
-            client.images.remove(image.id, force=True)
+        if len(image.tags) > 0:
+            # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
+            image_tag = image.tags[0].split(':')[0]
+            if image_tag != 'techempower/tfb':
+                client.images.remove(image.id, force=True)
     client.images.prune()
 
     # Clean the database server images
     client = docker.DockerClient(
         base_url=benchmarker_config.database_docker_host)
 
+    client.images.prune()
     for image in client.images.list():
-        # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
-        image_tag = image.tags[0].split(':')[0]
-        if image_tag != 'techempower/tfb':
-            client.images.remove(image.id, force=True)
+        if len(image.tags) > 0:
+            # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
+            image_tag = image.tags[0].split(':')[0]
+            if image_tag != 'techempower/tfb':
+                client.images.remove(image.id, force=True)
     client.images.prune()
 
 
@@ -79,14 +83,17 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                 os.getenv('FWROOT'), "toolset", "setup", "docker")
             for dep in dependencies:
                 pulled = False
-                # Pull the dependency image
-                try:
-                    client = docker.DockerClient(
-                        base_url=benchmarker_config.server_docker_host)
-                    client.images.pull(dep)
-                    pulled = True
-                except:
-                    pass
+
+                # Do not pull images if we are building specifically
+                if not benchmarker_config.build:
+                    # Pull the dependency image
+                    try:
+                        client = docker.DockerClient(
+                            base_url=benchmarker_config.server_docker_host)
+                        client.images.pull(dep)
+                        pulled = True
+                    except:
+                        pass
 
                 if not pulled:
                     dep_ref = dep.strip().split(':')[0].strip()
@@ -201,8 +208,8 @@ def run(benchmarker_config, docker_files, run_log_dir):
             if benchmarker_config.network is None:
                 extra_hosts = {
                     socket.gethostname(): str(benchmarker_config.server_host),
-                    'TFB-SERVER': str(benchmarker_config.server_host),
-                    'TFB-DATABASE': str(benchmarker_config.database_host)
+                    'TFB_SERVER': str(benchmarker_config.server_host),
+                    'TFB_DATABASE': str(benchmarker_config.database_host)
                 }
                 name = None
 
