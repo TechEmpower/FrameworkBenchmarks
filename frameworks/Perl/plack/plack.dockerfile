@@ -28,4 +28,4 @@ add ./nginx.conf /plack/
 CMD nginx -c /plack/nginx.conf && \
     start_server --backlog=16384 --pid-file=/plack/app.pid --path=/tmp/perl-plack.sock -- plackup \
     -E production -s Starlet --max-keepalive-reqs 1000 --max-reqs-per-child 50000 \
-    --min-reqs-per-child 40000 --max-workers=${CPU_COUNT} -a /plack/app.psgi
+    --min-reqs-per-child 40000 --max-workers=$(nproc) -a /plack/app.psgi

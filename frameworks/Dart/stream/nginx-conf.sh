@@ -3,6 +3,7 @@
 #
 # create nginx configuration
 #
+CPU_COUNT=$(nproc)
 conf+="user root;\n"
 conf+="worker_processes ${CPU_COUNT};\n"
 conf+="error_log stderr;\n"

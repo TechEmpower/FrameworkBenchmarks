@@ -15,4 +15,4 @@ RUN pip install --install-option="--prefix=${PY2_ROOT}" -r /weppy/requirements.t
 
 RUN sed -i 's|include .*/conf/uwsgi_params;|include '"${NGINX_HOME}"'/conf/uwsgi_params;|g' /weppy/nginx.conf
 
-CMD nginx -c /weppy/nginx.conf && uwsgi --ini /weppy/uwsgi.ini --processes $CPU_COUNT --wsgi app:app
+CMD nginx -c /weppy/nginx.conf && uwsgi --ini /weppy/uwsgi.ini --processes $(nproc) --wsgi app:app
