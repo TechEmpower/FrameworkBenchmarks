@@ -1,4 +1,4 @@
-FROM tfb/java:latest
+FROM tfb/gradle:latest
 ADD ./ /pronghorn
 WORKDIR /pronghorn
-CMD ./gradlew --no-daemon clean run
+CMD gradle --no-daemon clean run

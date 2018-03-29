@@ -5,14 +5,11 @@ of web development platforms.
 
 
 ## Running the application
-If you have [gradle](http://gradle.org) installed:
+Have [gradle](http://gradle.org) installed, then:
 ```
 gradle run
 ```
-Or use the included wrapper:
-```
-./gradlew run
-```
+
 Point your browser at `localhost:8080/json`
 
 ### A couple of commands to get going with the benchmark framework
