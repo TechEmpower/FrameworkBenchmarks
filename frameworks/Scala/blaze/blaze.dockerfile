@@ -1,7 +1,8 @@
 FROM tfb/sbt:latest
 
-COPY ./ ./
+ADD ./ /blaze
+WORKDIR /blaze
 
-RUN sbt 'oneJar' -batch
+RUN sbt assembly -batch
 
-CMD java -jar target/scala-2.11/blaze*one-jar.jar
+CMD java -jar target/scala-2.12/blaze-assembly-1.0.jar

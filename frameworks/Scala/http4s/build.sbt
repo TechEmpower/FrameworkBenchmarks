@@ -1,14 +1,12 @@
 name := "http4s"
 
-version := "1.0-SNAPSHOT"
+version := "1.0"
 
-scalaVersion := "2.12.2"
+scalaVersion := "2.12.5"
 
 enablePlugins(SbtTwirl)
 
 TwirlKeys.templateImports += "http4s.techempower.benchmark._"
-
-com.github.retronym.SbtOneJar.oneJarSettings
 
 val http4sVersion = "0.15.9a"
 val circeVersion = "0.7.1"
@@ -28,6 +26,3 @@ libraryDependencies ++= Seq(
 	"org.postgresql" % "postgresql" % "42.1.4",
 	"ch.qos.logback" % "logback-classic" % "1.2.2"
 )
-
-mainClass in oneJar := Some("http4s.techempower.benchmark.WebServer")
-

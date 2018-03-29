@@ -1,12 +1,8 @@
 name := """colossus-example"""
 
-version := "0.4.0"
+version := "1.0"
 
-scalaVersion := "2.12.4"
-
-com.github.retronym.SbtOneJar.oneJarSettings
-
-mainClass in oneJar := Some("example.Main")
+scalaVersion := "2.12.5"
 
 libraryDependencies ++= Seq(
   "com.tumblr" %% "colossus" % "0.11.0-M4",
