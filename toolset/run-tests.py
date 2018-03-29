@@ -114,10 +114,6 @@ def main(argv=None):
         defaults['database_host'] = defaults['client_host']
     if defaults['server_host'] is None:
         defaults['server_host'] = defaults['client_host']
-    if defaults['ulimit'] is None:
-        defaults['ulimit'] = 200000
-
-    os.environ['ULIMIT'] = str(defaults['ulimit'])
 
     ##########################################################
     # Set up argument parser

@@ -21,38 +21,21 @@ def clean(benchmarker_config):
     Cleans all the docker images from the system
     '''
     # Clean the app server images
-    # subprocess.check_call(["docker", "image", "prune", "-f"])
-
-    # docker_ids = subprocess.check_output(["docker", "images",
-    #                                       "-q"]).splitlines()
-    # for docker_id in docker_ids:
-    #     subprocess.check_call(["docker", "image", "rmi", "-f", docker_id])
-
-    # subprocess.check_call(["docker", "system", "prune", "-a", "-f"])
-
-    # Clean the database server images
-    # command = list(config.database_ssh_command)
-    # command.extend(["docker", "image", "prune", "-f"])
-    # subprocess.check_call(command)
-
-    # command = list(config.database_ssh_command)
-    # command.extend(["docker", "images", "-q"])
-    # docker_ids = subprocess.check_output(command).splitlines()
-
-    # for docker_id in docker_ids:
-    #     command = list(config.database_ssh_command)
-    #     command.extend(["docker", "image", "rmi", "-f", docker_id])
-    #     subprocess.check_call(command)
-
-    # command = list(config.database_ssh_command)
-    # command.extend(["docker", "system", "prune", "-a", "-f"])
-    # subprocess.check_call(command)
-
     client = docker.DockerClient(
         base_url=benchmarker_config.server_docker_host)
 
-    # TODO: this will need to check that the image is not being used by the
-    # container from which this toolset is being run
+    for image in client.images.list():
+        # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
+        image_tag = image.tags[0].split(':')[0]
+        print(image_tag)
+        if image_tag != 'techempower/tfb':
+            client.images.remove(image.id, force=True)
+    client.images.prune()
+
+    # Clean the database server images
+    client = docker.DockerClient(
+        base_url=benchmarker_config.database_docker_host)
+
     for image in client.images.list():
         client.images.remove(image.id, force=True)
     client.images.prune()
@@ -220,6 +203,18 @@ def run(benchmarker_config, docker_files, run_log_dir):
                 }
                 name = None
 
+            sysctl = {'net.core.somaxconn': 65535}
+
+            ulimit = [{
+                'name': 'nofile',
+                'hard': 200000,
+                'soft': 200000
+            }, {
+                'name': 'rtprio',
+                'hard': 99,
+                'soft': 99
+            }]
+
             container = client.containers.run(
                 "techempower/tfb.test.%s" % docker_file.replace(
                     ".dockerfile", ""),
@@ -229,7 +224,10 @@ def run(benchmarker_config, docker_files, run_log_dir):
                 stderr=True,
                 detach=True,
                 init=True,
-                extra_hosts=extra_hosts)
+                extra_hosts=extra_hosts,
+                privileged=True,
+                ulimits=ulimit,
+                sysctls=sysctl)
 
             containers.append(container)
 
@@ -264,7 +262,7 @@ def successfully_running_containers(benchmarker_config, docker_files, out):
     expected_running_container_images = []
     for docker_file in docker_files:
         # 'gemini.dockerfile' -> 'gemini'
-        image_tag = docker_file.split('.')[0]
+        image_tag = '.'.join(docker_file.split('.')[:-1])
         expected_running_container_images.append(image_tag)
     running_container_images = []
     for container in client.containers.list():
@@ -355,12 +353,18 @@ def start_database(benchmarker_config, test, database):
     client = docker.DockerClient(
         base_url=benchmarker_config.database_docker_host)
 
+    sysctl = {'net.core.somaxconn': 65535, 'kernel.sem': "250 32000 256 512"}
+
+    ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
+
     container = client.containers.run(
         "techempower/%s" % database,
         name="TFB-database",
         network=benchmarker_config.network,
         network_mode=benchmarker_config.network_mode,
-        detach=True)
+        detach=True,
+        ulimits=ulimit,
+        sysctls=sysctl)
 
     # Sleep until the database accepts connections
     slept = 0
@@ -408,6 +412,10 @@ def benchmark(benchmarker_config, script, variables, raw_file):
     client = docker.DockerClient(
         base_url=benchmarker_config.client_docker_host)
 
+    sysctl = {'net.core.somaxconn': 65535}
+
+    ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
+
     watch_container(
         client.containers.run(
             "techempower/tfb.wrk",
@@ -416,7 +424,9 @@ def benchmark(benchmarker_config, script, variables, raw_file):
             network=benchmarker_config.network,
             network_mode=benchmarker_config.network_mode,
             detach=True,
-            stderr=True), raw_file)
+            stderr=True,
+            ulimits=ulimit,
+            sysctls=sysctl), raw_file)
 
 
 def __gather_dependencies(docker_file):
