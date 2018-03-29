@@ -15,4 +15,4 @@ RUN pip3 install --install-option="--prefix=${PY3_ROOT}" -r /flask/requirements.
 
 RUN sed -i 's|include .*/conf/uwsgi_params;|include '"${NGINX_HOME}"'/conf/uwsgi_params;|g' /flask/nginx.conf
 
-CMD nginx -c /flask/nginx.conf && uwsgi --ini /flask/uwsgi.ini --processes $((CPU_COUNT*3)) --wsgi app:app
+CMD nginx -c /flask/nginx.conf && uwsgi --ini /flask/uwsgi.ini --processes $(($(nproc)*3)) --wsgi app:app
