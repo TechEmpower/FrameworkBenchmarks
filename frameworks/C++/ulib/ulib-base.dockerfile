@@ -58,9 +58,6 @@ RUN USP_FLAGS="-DAS_cpoll_cppsp_DO" \
 RUN make install
 RUN cd examples/userver && make install
 
-# Never use setcap inside of TRAVIS
-RUN setcap cap_sys_nice,cap_sys_resource,cap_net_bind_service,cap_net_raw+eip $IROOT/ULib/bin/userver_tcp
-
 # Compile usp pages (no more REDIS)
 RUN cd src/ulib/net/server/plugin/usp && \
     make json.la plaintext.la db.la query.la update.la fortune.la cached_worlds.la \
