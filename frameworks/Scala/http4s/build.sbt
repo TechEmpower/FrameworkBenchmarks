@@ -9,7 +9,7 @@ enablePlugins(SbtTwirl)
 TwirlKeys.templateImports += "http4s.techempower.benchmark._"
 
 val http4sVersion = "0.15.9a"
-val circeVersion = "0.7.1"
+val circeVersion = "0.9.3"
 val doobieVersion = "0.4.1"
 
 libraryDependencies ++= Seq(
@@ -22,7 +22,7 @@ libraryDependencies ++= Seq(
 	"io.circe" %% "circe-parser" % circeVersion,
 	"org.tpolecat" %% "doobie-core" % doobieVersion,
 	"org.tpolecat" %% "doobie-hikari" % doobieVersion,
-	"com.zaxxer" %  "HikariCP" % "2.6.1",
-	"org.postgresql" % "postgresql" % "42.1.4",
-	"ch.qos.logback" % "logback-classic" % "1.2.2"
+	"com.zaxxer" %  "HikariCP" % "2.7.8",
+	"org.postgresql" % "postgresql" % "42.2.2",
+	"ch.qos.logback" % "logback-classic" % "1.2.3"
 )

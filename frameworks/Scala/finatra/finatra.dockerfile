@@ -1,4 +1,4 @@
-FROM tfb/sbt-java8:latest
+FROM tfb/sbt:latest
 
 ADD ./ /finatra
 WORKDIR /finatra
