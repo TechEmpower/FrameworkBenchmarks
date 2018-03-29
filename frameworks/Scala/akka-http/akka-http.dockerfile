@@ -1,6 +1,7 @@
 FROM tfb/sbt:latest
 
-COPY ./ ./
+ADD ./ /akka-http
+WORKDIR /akka-http
 
 RUN sbt -batch 'universal:stage'
 

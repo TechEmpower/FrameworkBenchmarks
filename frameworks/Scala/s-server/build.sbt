@@ -2,7 +2,7 @@ name := "s-server-tfb"
 
 organization := "woshilaiceshide"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.5"
 
 version := "1.0"
 
