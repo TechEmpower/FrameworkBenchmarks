@@ -16,4 +16,4 @@ RUN chmod -R 777 /stream
 
 CMD ./nginx-conf.sh && \
     ./start-servers.sh && \
-    sleep 20 && nginx -c /start/nginx.conf -g "daemon off;"
+    sleep 20 && nginx -c /stream/nginx.conf -g "daemon off;"
