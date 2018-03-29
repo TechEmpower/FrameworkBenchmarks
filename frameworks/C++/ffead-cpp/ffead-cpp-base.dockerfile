@@ -10,14 +10,6 @@ RUN apt install -yqq autoconf uuid-dev odbc-postgresql unixodbc unixodbc-dev
 
 WORKDIR $IROOT
 
-# unixodbc
-
-RUN wget -q ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.4.tar.gz
-RUN tar xf unixODBC-2.3.4.tar.gz
-RUN cd unixODBC-2.3.4 && \
-    ./configure --enable-stats=no --enable-gui=no --enable-drivers=no --enable-iconv --with-iconv-char-enc=UTF8 --with-iconv-ucode-enc=UTF16LE --libdir=${IROOT} --prefix=${IROOT} --sysconfdir=${IROOT} && \
-    make install
-
 # libmyodbc has been removed from apt
 
 RUN wget -q http://www.mirrorservice.org/sites/ftp.mysql.com/Downloads/Connector-ODBC/5.3/mysql-connector-odbc-5.3.10-linux-ubuntu16.04-x86-64bit.tar.gz
