@@ -14,6 +14,6 @@ RUN pub upgrade
 
 RUN chmod -R 777 /stream
 
-RUN ./nginx-conf.sh
-
-CMD  ./start-servers.sh && sleep 20 && nginx -c /stream/nginx.conf -g "daemon off;"
+CMD ./nginx-conf.sh && \
+    ./start-servers.sh && \
+    sleep 20 && nginx -c /start/nginx.conf -g "daemon off;"

@@ -24,4 +24,4 @@ COPY ./benchmark.cpp ./
 
 RUN  g++-4.8 -O3 -DNDEBUG -std=c++0x -o poco benchmark.cpp -I$POCO_HOME/Foundation/include -I$POCO_HOME/Util/include -I$POCO_HOME/Net/include -L$POCO_HOME/lib/Linux/x86_64 -lPocoNet -lPocoUtil -lPocoFoundation -lPocoXML -lPocoJSON
 
-CMD ./poco 8080 $CPU_COUNT
+CMD ./poco 8080 $(nproc)
