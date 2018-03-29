@@ -3,19 +3,19 @@
 
 const h = require('../helper');
 const Mongoose = require('mongoose');
-Mongoose.connect('mongodb://TFB-database/hello_world');
+Mongoose.connect('mongodb://tfb-database/hello_world');
 
 const WorldSchema = new Mongoose.Schema({
-    id :          Number,
-    randomNumber: Number
-  }, {
+  id: Number,
+  randomNumber: Number
+}, {
     collection: 'world'
   });
 
 const FortuneSchema = new Mongoose.Schema({
-    id:      Number,
-    message: String
-  }, {
+  id: Number,
+  message: String
+}, {
     collection: 'fortune'
   });
 
@@ -27,9 +27,9 @@ const randomWorld = async () =>
 
 const updateWorld = async (world) =>
   await Worlds.update(
-      { id: world.randomNumber },
-      { randomNumber: world.randomNumber }
-    );
+    { id: world.randomNumber },
+    { randomNumber: world.randomNumber }
+  );
 
 module.exports = {
 

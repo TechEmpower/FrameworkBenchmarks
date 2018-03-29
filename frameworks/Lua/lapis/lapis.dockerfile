@@ -5,4 +5,4 @@ COPY ./ ./
 RUN luarocks install lua-resty-template
 RUN luarocks install lapis
 
-CMD echo -e "export DBHOST=`getent hosts TFB-database | awk '{ print $1 }'`"; lapis server production
+CMD echo -e "export DBHOST=`getent hosts tfb-database | awk '{ print $1 }'`"; lapis server production

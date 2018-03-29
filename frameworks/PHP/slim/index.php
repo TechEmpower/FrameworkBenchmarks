@@ -5,7 +5,7 @@ require_once __DIR__.'/vendor/autoload.php';
 
 $app = new Slim\App(array(
     'db' => function ($c) {
-        $pdo = new PDO('mysql:host=TFB-database;dbname=hello_world;charset=utf8', 'benchmarkdbuser', 'benchmarkdbpass');
+        $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8', 'benchmarkdbuser', 'benchmarkdbpass');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 

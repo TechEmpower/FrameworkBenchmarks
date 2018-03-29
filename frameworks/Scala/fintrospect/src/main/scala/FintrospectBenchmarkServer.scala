@@ -24,7 +24,7 @@ object FintrospectBenchmarkServer extends App {
     })
   }
 
-  val dbHost = Properties.envOrNone("TFB-database").map(Host(_)).getOrElse(Host.localhost)
+  val dbHost = Properties.envOrNone("tfb-database").map(Host(_)).getOrElse(Host.localhost)
   val database = Database(dbHost)
 
   val module = RouteModule(Root)

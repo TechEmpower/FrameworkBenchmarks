@@ -199,6 +199,7 @@ class FrameworkTestType:
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
+                print("DATABASE_HOST: %s" % self.config.database_host)
                 connection = pymongo.MongoClient(
                     host=self.config.database_host)
                 db = connection.hello_world

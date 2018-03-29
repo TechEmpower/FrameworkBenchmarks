@@ -3,13 +3,13 @@
 return new \Phalcon\Config(array(
     'database'     => array(
         'adapter'  => 'Mysql',
-        'host'     => 'TFB-database',
+        'host'     => 'tfb-database',
         'username' => 'benchmarkdbuser',
         'password' => 'benchmarkdbpass',
         'name'     => 'hello_world',
     ),
     'mongodb'     => array(
-        'url'     => 'mongodb://TFB-database:27017',
+        'url'     => 'mongodb://tfb-database:27017',
         'db'      => 'hello_world'
     ),
     'application' => array(

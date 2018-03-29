@@ -16,6 +16,6 @@ CMD java \
     -Dapp.nodeGroup= \
     -Dprofile=ebean_mysql \
     -Dxio.worker_threads.max=256 \
-    -Dmysql.host=TFB-database \
+    -Dmysql.host=tfb-database \
     -cp "/act/target/dist/classes:/act/target/dist/lib/*" \
     com.techempower.act.AppEntry

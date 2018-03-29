@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: 'TFB-database',
+  host: 'tfb-database',
   dialect: 'postgres',
   logging: false
 });
 
-const {DataTypes} = Sequelize;
+const { DataTypes } = Sequelize;
 const Worlds = sequelize.define('World', {
   id: {
     type: DataTypes.INTEGER,
@@ -16,20 +16,20 @@ const Worlds = sequelize.define('World', {
     field: 'randomnumber'
   },
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
 const Fortunes = sequelize.define('Fortune', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true
   },
-  message: {type: DataTypes.STRING}
+  message: { type: DataTypes.STRING }
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
 module.exports = {
   Worlds,

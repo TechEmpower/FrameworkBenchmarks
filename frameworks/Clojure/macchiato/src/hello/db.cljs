@@ -10,7 +10,7 @@
            "hello_world"
            "benchmarkdbuser"
            "benchmarkdbpass"
-           #js {:host    "TFB-database"
+           #js {:host    "tfb-database"
                 :dialect "postgres"
                 :logging false
                 :pool #js {:max 64

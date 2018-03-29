@@ -1,6 +1,6 @@
 [Defaults]
 server_host=tfb-server
-database_host=TFB-database
+database_host=tfb-database
 duration=15
 exclude=None
 list_tests=False

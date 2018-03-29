@@ -359,7 +359,7 @@ def start_database(benchmarker_config, test, database):
 
     container = client.containers.run(
         "techempower/%s" % database,
-        name="TFB-database",
+        name="tfb-database",
         network=benchmarker_config.network,
         network_mode=benchmarker_config.network_mode,
         detach=True,

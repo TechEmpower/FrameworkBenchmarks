@@ -4,4 +4,4 @@ COPY ./yesod-postgres ./
 
 RUN stack --allow-different-user build --install-ghc
 
-CMD stack --allow-different-user exec yesod-postgres -- ${CPU_COUNT} TFB-database +RTS -A32m -N${CPU_COUNT}
+CMD stack --allow-different-user exec yesod-postgres -- ${CPU_COUNT} tfb-database +RTS -A32m -N${CPU_COUNT}

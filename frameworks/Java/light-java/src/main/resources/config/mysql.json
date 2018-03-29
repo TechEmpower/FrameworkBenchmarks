@@ -1,6 +1,6 @@
 {
   "description": "mysql connection",
-  "jdbcUrl": "jdbc:mysql://TFB-database:3306/hello_world",
+  "jdbcUrl": "jdbc:mysql://tfb-database:3306/hello_world",
   "username": "benchmarkdbuser",
   "password": "benchmarkdbpass",
   "maximumPoolSize": 256,

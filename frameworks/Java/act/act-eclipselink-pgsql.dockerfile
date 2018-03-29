@@ -16,6 +16,6 @@ CMD java \
     -Dapp.nodeGroup= \
     -Dprofile=eclipselink_pgsql \
     -Dxio.worker_threads.max=256 \
-    -Dpgsql.host=TFB-database \
+    -Dpgsql.host=tfb-database \
     -cp "/act/target/dist/classes:/act/target/dist/lib/*" \
     com.techempower.act.AppEntry

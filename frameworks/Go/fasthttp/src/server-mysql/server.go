@@ -13,7 +13,7 @@ import (
 	"templates"
 )
 
-const connectionString = "benchmarkdbuser:benchmarkdbpass@tcp(TFB-database:3306)/hello_world"
+const connectionString = "benchmarkdbuser:benchmarkdbpass@tcp(tfb-database:3306)/hello_world"
 
 var (
 	worldSelectStmt   *sql.Stmt

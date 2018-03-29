@@ -31,7 +31,7 @@ Configuration::initialize(
             array(
                 'db' => array(
                     'driver' => 'mysql',
-                    'host' => 'TFB-database',
+                    'host' => 'tfb-database',
                     'port' => '',
                     'database' => 'hello_world',
                     'username' => 'benchmarkdbuser',
