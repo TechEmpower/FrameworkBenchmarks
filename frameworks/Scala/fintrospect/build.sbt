@@ -18,3 +18,8 @@ libraryDependencies ++= Seq(
   "io.fintrospect" %% "fintrospect-mustache" % "14.15.0",
   "com.twitter" %% "finagle-mysql" % "6.43.0"
 )
+
+assemblyMergeStrategy in assembly := {
+ case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+ case x => MergeStrategy.first
+}
