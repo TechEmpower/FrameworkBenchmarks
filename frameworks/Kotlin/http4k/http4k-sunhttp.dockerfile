@@ -1,7 +1,7 @@
-FROM tfb/java:latest
+FROM tfb/gradle:latest
 ADD ./ /http4k
 WORKDIR /http4k
-RUN ./gradlew clean build sunhttp:uber
+RUN gradle clean build sunhttp:uber
 CMD java \
     -server \
     -XX:+UseNUMA \

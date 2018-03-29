@@ -1,4 +1,4 @@
-FROM tfb/java8:latest
+FROM tfb/gradle-java8:latest
 ADD ./ /comsat
 WORKDIR /comsat
-RUN ./gradlew clean capsule
+RUN gradle clean capsule
