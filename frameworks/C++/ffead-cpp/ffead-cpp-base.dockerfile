@@ -32,4 +32,6 @@ COPY te-benchmark/ te-benchmark/
 COPY ffead-cpp-framework.sh ./
 COPY server.sh ./
 
+RUN chmod 755 *.sh
+
 RUN ./ffead-cpp-framework.sh
