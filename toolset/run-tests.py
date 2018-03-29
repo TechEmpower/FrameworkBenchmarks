@@ -80,8 +80,6 @@ def main(argv=None):
     os.environ['TFB_DISTRIB_ID'], os.environ[
         'TFB_DISTRIB_RELEASE'], os.environ[
             'TFB_DISTRIB_CODENAME'] = platform.linux_distribution()
-    # App server cpu count
-    os.environ['CPU_COUNT'] = str(multiprocessing.cpu_count())
 
     conf_parser = argparse.ArgumentParser(
         description=__doc__,
