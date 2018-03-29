@@ -146,14 +146,6 @@ def main(argv=None):
         default=False,
         help='Initialize a new framework test')
     parser.add_argument(
-        '-v',
-        '--verbose',
-        action='store_true',
-        default=False,
-        help=
-        'Causes the configuration to print before any other commands are executed.'
-    )
-    parser.add_argument(
         '--quiet',
         action='store_true',
         default=False,

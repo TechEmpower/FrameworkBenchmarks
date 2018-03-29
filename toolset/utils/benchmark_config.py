@@ -53,8 +53,17 @@ class BenchmarkConfig:
 
         if self.network_mode is None:
             self.network = 'tfb'
+            self.server_docker_host = "unix://var/run/docker.sock"
+            self.database_docker_host = "unix://var/run/docker.sock"
+            self.client_docker_host = "unix://var/run/docker.sock"
         else:
             self.network = None
+            # The only other supported network_mode is 'host', and that means
+            # that we hav ea tri-machine setup, so we need to use tcp to
+            # communicate with docker.
+            self.server_docker_host = "tcp://%s:2375" % self.server_host
+            self.database_docker_host = "tcp://%s:2375" % self.database_host
+            self.client_docker_host = "tcp://%s:2375" % self.client_host
 
         self.quiet_out = QuietOutputStream(self.quiet)
 
