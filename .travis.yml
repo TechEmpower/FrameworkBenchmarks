@@ -215,10 +215,6 @@ before_script:
   - sudo service mysql stop
   - sudo service postgresql stop
 
-  # Set up the benchmark.cfg for travis user
-  - cp ./benchmark.cfg.example ./benchmark.cfg
-  - sed -i s/techempower/travis/g ./benchmark.cfg
-
 script:
 
   # run-ci.py runs the diffing to see if travis needs to test this framework. Ideally/eventually,

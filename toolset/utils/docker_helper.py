@@ -27,7 +27,6 @@ def clean(benchmarker_config):
     for image in client.images.list():
         # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
         image_tag = image.tags[0].split(':')[0]
-        print(image_tag)
         if image_tag != 'techempower/tfb':
             client.images.remove(image.id, force=True)
     client.images.prune()
@@ -37,7 +36,10 @@ def clean(benchmarker_config):
         base_url=benchmarker_config.database_docker_host)
 
     for image in client.images.list():
-        client.images.remove(image.id, force=True)
+        # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
+        image_tag = image.tags[0].split(':')[0]
+        if image_tag != 'techempower/tfb':
+            client.images.remove(image.id, force=True)
     client.images.prune()
 
 
@@ -46,7 +48,8 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
     Builds the dependency chain as well as the test implementation docker images
     for the given tests.
     '''
-    tests = gather_tests(test_names)
+    tests = gather_tests(
+        include=test_names, benchmarker_config=benchmarker_config)
 
     for test in tests:
         log_prefix = "%s: " % test.name
