@@ -4,13 +4,6 @@
 # @author:      Nate Brady
 # @description: This script is only for use within Travis-CI. It is meant to look through the commit history
 #   and determine whether or not the current framework test directory needs to be run.
-#
-# Notes: This script will run in python 2 and 3. print is being used instead of the logging import because
-#   travis does not echo python logging during the before_script lifecycle.
-
-# TODO: Needs to be updated to look at the new Travis test possibilities
-#       of TEST, TESTDIR, and TESTLANG. IE. Only run a single framework test
-#       in TESTLANG if it's the only one that's changed
 
 import subprocess
 import os
@@ -127,6 +120,18 @@ if re.search(r'\[ci fw-only .+\]', last_commit_msg, re.M):
     # quit here because we're using "only"
     quit_diffing()
 
+# Forced *lang-only* specific tests
+if re.search(r'\[ci lang-only .+\]', last_commit_msg, re.M):
+    langs = re.findall(r'\[ci lang-only (.+)\]', last_commit_msg, re.M)[0].strip().split(' ')
+    for test in test_dirs:
+        for lang in langs:
+            if test.startswith(lang + "/"):
+                print("{!s} has been forced to run from the commit message.".format(test))
+                run_tests.append(test)
+
+    # quit here because we're using "only"
+    quit_diffing()
+
 # Forced framework run in addition to other tests
 if re.search(r'\[ci fw .+\]', last_commit_msg, re.M):
     tests = re.findall(r'\[ci fw (.+)\]', last_commit_msg, re.M)[0].strip().split(' ')
@@ -135,15 +140,20 @@ if re.search(r'\[ci fw .+\]', last_commit_msg, re.M):
             print("{!s} has been forced to run from the commit message.".format(test))
             run_tests.append(test)
 
+# Forced lang run in addition to other running tests
+if re.search(r'\[ci lang .+\]', last_commit_msg, re.M):
+    langs = re.findall(r'\[ci lang (.+)\]', last_commit_msg, re.M)[0].strip().split(' ')
+    for test in test_dirs:
+        for lang in langs:
+            if test.startswith(lang + "/"):
+                print("{!s} has been forced to run from the commit message.".format(test))
+                run_tests.append(test)
 
-# TODO: any changes in the toolset folder will generate a full run.
-#       Instead limit this to core toolset files and work on diffing
-#       docker dependencies
+
 # Ignore travis and docker directory changes
 # Also for now, ignore the old linux setup folders, as we don't want to
 # trigger a full run as we remove old fw_depends scripts. [ci run-all] will
 # still work if it's needed.
-
 if re.search(r'^toolset/(?!(travis/|setup/|continuous/))', changes, re.M) is not None:
     print("Found changes to core toolset. Running all tests.")
     run_tests = test_dirs
