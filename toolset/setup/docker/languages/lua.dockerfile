@@ -1,4 +1,4 @@
-FROM techempower/base:0.2
+FROM techempower/base:0.1
 
 ENV LUA_VERSION="5.1"
 ENV LUA_MICRO="5"

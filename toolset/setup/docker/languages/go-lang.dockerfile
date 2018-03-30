@@ -1,4 +1,4 @@
-FROM techempower/base:0.2
+FROM techempower/base:0.1
 
 RUN mkdir /go-lang
 WORKDIR /go-lang

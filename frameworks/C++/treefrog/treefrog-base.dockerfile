@@ -1,4 +1,4 @@
-FROM techempower/base:0.2
+FROM techempower/base:0.1
 
 ENV TFVER=1.19.0
 

@@ -1,4 +1,4 @@
-FROM techempower/base:0.2
+FROM techempower/base:0.1
 
 RUN apt-get install -y flex libglib2.0-dev libsoup2.4-dev libjson-glib-dev python3-pip
 

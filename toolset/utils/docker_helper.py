@@ -47,6 +47,40 @@ def clean(benchmarker_config):
     client.images.prune()
 
 
+def publish(benchmarker_config):
+    '''
+    Builds fresh versions of all the docker container images known in the 
+    system and attempts to publish them to dockerhub.
+    Note: this requires `docker login` to have been performed prior to the
+    call.
+    '''
+    # Force building instead of pulling
+    benchmarker_config.build = True
+
+    tests = gather_tests(benchmarker_config=benchmarker_config)
+
+    start_time = time.time()
+    test_names = []
+    for test in tests:
+        if test.name == "gemini":
+            test_names.append(test.name)
+
+    if build(benchmarker_config, test_names) != 0:
+        log("Build failed")
+        return 1
+
+    client = docker.DockerClient(
+        base_url=benchmarker_config.server_docker_host)
+
+    client.login("USERNAME", "USERNAME")
+
+    for image in client.images.list():
+        if len(image.tags) > 0 and 'techempower' in image.tags[0]:
+            client.images.push(image.tags[0].split(':')[0])
+
+    log("Publish took: %s seconds" % (time.time() - start_time))
+
+
 def build(benchmarker_config, test_names, build_log_dir=os.devnull):
     '''
     Builds the dependency chain as well as the test implementation docker images
@@ -86,14 +120,23 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
 
                 # Do not pull images if we are building specifically
                 if not benchmarker_config.build:
-                    # Pull the dependency image
+                    client = docker.DockerClient(
+                        base_url=benchmarker_config.server_docker_host)
                     try:
-                        client = docker.DockerClient(
-                            base_url=benchmarker_config.server_docker_host)
-                        client.images.pull(dep)
+                        # If we have it, use it
+                        client.images.get(dep)
                         pulled = True
+                        log("Found published image; skipping build: %s" % dep)
                     except:
-                        pass
+                        # Pull the dependency image
+                        try:
+                            log("Attempting docker pull for image (this can take some time): %s"
+                                % dep)
+                            client.images.pull(dep)
+                            pulled = True
+                            log("Found published image; skipping build")
+                        except:
+                            pass
 
                 if not pulled:
                     dep_ref = dep.strip().split(':')[0].strip()
@@ -208,8 +251,8 @@ def run(benchmarker_config, docker_files, run_log_dir):
             if benchmarker_config.network is None:
                 extra_hosts = {
                     socket.gethostname(): str(benchmarker_config.server_host),
-                    'TFB_SERVER': str(benchmarker_config.server_host),
-                    'TFB_DATABASE': str(benchmarker_config.database_host)
+                    'tfb-server': str(benchmarker_config.server_host),
+                    'tfb-database': str(benchmarker_config.database_host)
                 }
                 name = None
 
@@ -337,14 +380,24 @@ def start_database(benchmarker_config, test, database):
     docker_file = "%s.dockerfile" % database
 
     pulled = False
-    # Pull the dependency image
+    client = docker.DockerClient(
+        base_url=benchmarker_config.database_docker_host)
     try:
-        client = docker.DockerClient(
-            base_url=benchmarker_config.database_docker_host)
-        client.images.pull("techempower/%s" % database)
+        # Don't pull if we have it
+        client.images.get("techempower/%s:latest" % database)
         pulled = True
+        log("Found published image; skipping build: techempower/%s:latest" %
+            database)
     except:
-        pass
+        # Pull the dependency image
+        try:
+            log("Attempting docker pull for image (this can take some time): techempower/%s"
+                % database)
+            client.images.pull("techempower/%s:latest" % database)
+            pulled = True
+            log("Found published image; skipping build")
+        except:
+            pass
 
     if not pulled:
         for line in docker.APIClient(
@@ -395,7 +448,12 @@ def test_client_connection(benchmarker_config, url):
     client = docker.DockerClient(
         base_url=benchmarker_config.client_docker_host)
 
-    client.images.pull('techempower/tfb.wrk')
+    try:
+        client.images.get('techempower/tfb.wrk:latest')
+    except:
+        log("Attempting docker pull for image (this can take some time): techempower/tfb.wrk"
+            )
+        client.images.pull('techempower/tfb.wrk:latest')
 
     try:
         client.containers.run(

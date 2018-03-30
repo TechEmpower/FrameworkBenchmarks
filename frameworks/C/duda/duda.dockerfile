@@ -1,4 +1,4 @@
-FROM techempowr/base:0.1
+FROM techempower/base:0.1
 
 RUN apt install git python -y
 

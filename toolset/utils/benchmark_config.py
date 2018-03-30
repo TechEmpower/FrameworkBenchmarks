@@ -29,6 +29,7 @@ class BenchmarkConfig:
 
         self.duration = args.duration
         self.exclude = args.exclude
+        self.publish = args.publish
         self.build = args.build
         self.quiet = args.quiet
         self.server_host = args.server_host

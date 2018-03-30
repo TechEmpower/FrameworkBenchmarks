@@ -69,6 +69,11 @@ def main(argv=None):
 
     # Suite options
     parser.add_argument(
+        '--publish',
+        action='store_true',
+        default=False,
+        help='Builds and publishes all the docker images in the suite')
+    parser.add_argument(
         '--build',
         nargs='+',
         help='Builds the dockerfile(s) for the given test(s)')
@@ -195,6 +200,9 @@ def main(argv=None):
 
     if config.new:
         Scaffolding()
+
+    elif config.publish:
+        docker_helper.publish(config)
 
     elif config.build:
         docker_helper.build(config, config.build)
