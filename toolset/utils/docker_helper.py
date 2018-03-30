@@ -54,28 +54,30 @@ def publish(benchmarker_config):
     Note: this requires `docker login` to have been performed prior to the
     call.
     '''
+    start_time = time.time()
+
+    docker_buildargs = {
+        'CPU_COUNT': str(multiprocessing.cpu_count()),
+        'MAX_CONCURRENCY': str(max(benchmarker_config.concurrency_levels)),
+        'TFB_DATABASE': str(benchmarker_config.database_host)
+    }
+
     # Force building instead of pulling
     benchmarker_config.build = True
-
     tests = gather_tests(benchmarker_config=benchmarker_config)
-
-    start_time = time.time()
-    test_names = []
     for test in tests:
-        if test.name == "gemini":
-            test_names.append(test.name)
-
-    if build(benchmarker_config, test_names) != 0:
-        log("Build failed")
-        return 1
+        __build_dependencies(benchmarker_config, test,
+                             ["%s.dockerfile" % test.name], docker_buildargs)
 
     client = docker.DockerClient(
         base_url=benchmarker_config.server_docker_host)
 
-    client.login("USERNAME", "USERNAME")
+    client.login("USERNAME", "PASSWORD")
 
     for image in client.images.list():
-        if len(image.tags) > 0 and 'techempower' in image.tags[0]:
+        has_tags = len(image.tags) > 0
+        if has_tags and 'techempower' in image.tags[0] and 'tfb.test' not in image.tags[0]:
+            log("Pushing docker image: %s" % image.tags[0].split(':')[0])
             client.images.push(image.tags[0].split(':')[0])
 
     log("Publish took: %s seconds" % (time.time() - start_time))
@@ -86,17 +88,17 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
     Builds the dependency chain as well as the test implementation docker images
     for the given tests.
     '''
+    docker_buildargs = {
+        'CPU_COUNT': str(multiprocessing.cpu_count()),
+        'MAX_CONCURRENCY': str(max(benchmarker_config.concurrency_levels)),
+        'TFB_DATABASE': str(benchmarker_config.database_host)
+    }
+
     tests = gather_tests(
         include=test_names, benchmarker_config=benchmarker_config)
 
     for test in tests:
         log_prefix = "%s: " % test.name
-
-        docker_buildargs = {
-            'CPU_COUNT': str(multiprocessing.cpu_count()),
-            'MAX_CONCURRENCY': str(max(benchmarker_config.concurrency_levels)),
-            'TFB_DATABASE': str(benchmarker_config.database_host)
-        }
 
         test_docker_files = ["%s.dockerfile" % test.name]
         if test.docker_files is not None:
@@ -106,86 +108,9 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                 raise Exception(
                     "docker_files in benchmark_config.json must be an array")
 
-        for test_docker_file in test_docker_files:
-            dependencies = OrderedSet(
-                list(
-                    reversed(
-                        __gather_dependencies(
-                            os.path.join(test.directory, test_docker_file)))))
-
-            docker_dir = os.path.join(
-                os.getenv('FWROOT'), "toolset", "setup", "docker")
-            for dep in dependencies:
-                pulled = False
-
-                # Do not pull images if we are building specifically
-                if not benchmarker_config.build:
-                    client = docker.DockerClient(
-                        base_url=benchmarker_config.server_docker_host)
-                    try:
-                        # If we have it, use it
-                        client.images.get(dep)
-                        pulled = True
-                        log("Found published image; skipping build: %s" % dep)
-                    except:
-                        # Pull the dependency image
-                        try:
-                            log("Attempting docker pull for image (this can take some time): %s"
-                                % dep)
-                            client.images.pull(dep)
-                            pulled = True
-                            log("Found published image; skipping build")
-                        except:
-                            pass
-
-                if not pulled:
-                    dep_ref = dep.strip().split(':')[0].strip()
-                    dependency = dep_ref.split('/')[1]
-                    build_log_file = build_log_dir
-                    if build_log_dir is not os.devnull:
-                        build_log_file = os.path.join(
-                            build_log_dir, "%s.log" % dependency.lower())
-                    with open(build_log_file, 'w') as build_log:
-                        docker_file = os.path.join(test.directory,
-                                                   dependency + ".dockerfile")
-                        if not docker_file or not os.path.exists(docker_file):
-                            docker_file = find(docker_dir,
-                                               dependency + ".dockerfile")
-                        if not docker_file:
-                            log("Docker build failed; %s could not be found; terminating"
-                                % (dependency + ".dockerfile"),
-                                prefix=log_prefix,
-                                file=build_log,
-                                color=Fore.RED)
-                            return 1
-
-                        # Build the dependency image
-                        try:
-                            for line in docker.APIClient(
-                                    base_url=benchmarker_config.
-                                    server_docker_host).build(
-                                        path=os.path.dirname(docker_file),
-                                        dockerfile="%s.dockerfile" %
-                                        dependency,
-                                        tag=dep,
-                                        buildargs=docker_buildargs,
-                                        forcerm=True):
-                                if line.startswith('{"stream":'):
-                                    line = json.loads(line)
-                                    line = line[line.keys()[0]].encode('utf-8')
-                                    log(line,
-                                        prefix=log_prefix,
-                                        file=build_log,
-                                        color=Fore.WHITE + Style.BRIGHT \
-                                            if re.match(r'^Step \d+\/\d+', line) else '')
-                        except Exception:
-                            tb = traceback.format_exc()
-                            log("Docker dependency build failed; terminating",
-                                prefix=log_prefix,
-                                file=build_log,
-                                color=Fore.RED)
-                            log(tb, prefix=log_prefix, file=build_log)
-                            return 1
+        if __build_dependencies(benchmarker_config, test, test_docker_files,
+                                docker_buildargs, build_log_dir) > 0:
+            return 1
 
         # Build the test images
         for test_docker_file in test_docker_files:
@@ -373,7 +298,8 @@ def start_database(benchmarker_config, test, database):
     Sets up a container for the given database and port, and starts said docker 
     container.
     '''
-    log_prefix = "%s: " % test.name
+    image_name = "techempower/%s:latest" % database
+    log_prefix = image_name + ": "
 
     database_dir = os.path.join(benchmarker_config.fwroot, "toolset", "setup",
                                 "docker", "databases", database)
@@ -384,7 +310,7 @@ def start_database(benchmarker_config, test, database):
         base_url=benchmarker_config.database_docker_host)
     try:
         # Don't pull if we have it
-        client.images.get("techempower/%s:latest" % database)
+        client.images.get(image_name)
         pulled = True
         log("Found published image; skipping build: techempower/%s:latest" %
             database)
@@ -393,7 +319,7 @@ def start_database(benchmarker_config, test, database):
         try:
             log("Attempting docker pull for image (this can take some time): techempower/%s"
                 % database)
-            client.images.pull("techempower/%s:latest" % database)
+            client.images.pull(image_name)
             pulled = True
             log("Found published image; skipping build")
         except:
@@ -432,10 +358,14 @@ def start_database(benchmarker_config, test, database):
     # Sleep until the database accepts connections
     slept = 0
     max_sleep = 60
-    while not test_database(benchmarker_config,
-                            database) and slept < max_sleep:
+    database_ready = False
+    while not database_ready and slept < max_sleep:
         time.sleep(1)
         slept += 1
+        database_ready = test_database(benchmarker_config, database)
+
+    if not database_ready:
+        log("Database was not ready after startup", prefix=log_prefix)
 
     return container
 
@@ -451,8 +381,8 @@ def test_client_connection(benchmarker_config, url):
     try:
         client.images.get('techempower/tfb.wrk:latest')
     except:
-        log("Attempting docker pull for image (this can take some time): techempower/tfb.wrk"
-            )
+        log("Attempting docker pull for image (this can take some time): techempower/tfb.wrk",
+            prefix="techempower/tfb.wrk:latest: ")
         client.images.pull('techempower/tfb.wrk:latest')
 
     try:
@@ -529,3 +459,97 @@ def __gather_dependencies(docker_file):
                         deps.extend(__gather_dependencies(dep_docker_file))
 
     return deps
+
+
+def __build_dependencies(benchmarker_config,
+                         test,
+                         test_docker_files,
+                         docker_buildargs,
+                         build_log_dir=os.devnull):
+    '''
+    Builds all the dependency docker images for the given test.
+    Does not build the test docker image.
+    '''
+    for test_docker_file in test_docker_files:
+        dependencies = OrderedSet(
+            list(
+                reversed(
+                    __gather_dependencies(
+                        os.path.join(test.directory, test_docker_file)))))
+
+        docker_dir = os.path.join(
+            os.getenv('FWROOT'), "toolset", "setup", "docker")
+        for dep in dependencies:
+            log_prefix = dep + ": "
+            pulled = False
+
+            # Do not pull images if we are building specifically
+            if not benchmarker_config.build:
+                client = docker.DockerClient(
+                    base_url=benchmarker_config.server_docker_host)
+                try:
+                    # If we have it, use it
+                    client.images.get(dep)
+                    pulled = True
+                    log("Found published image; skipping build: %s" % dep,
+                        prefix=log_prefix)
+                except:
+                    # Pull the dependency image
+                    try:
+                        log("Attempting docker pull for image (this can take some time): %s"
+                            % dep,
+                            prefix=log_prefix)
+                        client.images.pull(dep)
+                        pulled = True
+                        log("Found published image; skipping build",
+                            prefix=log_prefix)
+                    except:
+                        pass
+
+            if not pulled:
+                dep_ref = dep.strip().split(':')[0].strip()
+                dependency = dep_ref.split('/')[1]
+                build_log_file = build_log_dir
+                if build_log_dir is not os.devnull:
+                    build_log_file = os.path.join(
+                        build_log_dir, "%s.log" % dependency.lower())
+                with open(build_log_file, 'w') as build_log:
+                    docker_file = os.path.join(test.directory,
+                                               dependency + ".dockerfile")
+                    if not docker_file or not os.path.exists(docker_file):
+                        docker_file = find(docker_dir,
+                                           dependency + ".dockerfile")
+                    if not docker_file:
+                        log("Docker build failed; %s could not be found; terminating"
+                            % (dependency + ".dockerfile"),
+                            prefix=log_prefix,
+                            file=build_log,
+                            color=Fore.RED)
+                        return 1
+
+                    # Build the dependency image
+                    try:
+                        for line in docker.APIClient(
+                                base_url=benchmarker_config.server_docker_host
+                        ).build(
+                                path=os.path.dirname(docker_file),
+                                dockerfile="%s.dockerfile" % dependency,
+                                tag=dep,
+                                buildargs=docker_buildargs,
+                                forcerm=True):
+                            if line.startswith('{"stream":'):
+                                line = json.loads(line)
+                                line = line[line.keys()[0]].encode('utf-8')
+                                log(line,
+                                    prefix=log_prefix,
+                                    file=build_log,
+                                    color=Fore.WHITE + Style.BRIGHT \
+                                        if re.match(r'^Step \d+\/\d+', line) else '')
+                    except Exception:
+                        tb = traceback.format_exc()
+                        log("Docker dependency build failed; terminating",
+                            prefix=log_prefix,
+                            file=build_log,
+                            color=Fore.RED)
+                        log(tb, prefix=log_prefix, file=build_log)
+                        return 1

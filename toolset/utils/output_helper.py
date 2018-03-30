@@ -15,6 +15,7 @@ FNULL = open(os.devnull, 'w')
 # message endlessly anyway.
 TOO_MANY_BYTES = 50 * 1024 * 1024
 
+
 def log(log_text=None, **kwargs):
     '''
     Logs the given text and optional prefix to stdout (if quiet is False) and
@@ -49,10 +50,11 @@ def log(log_text=None, **kwargs):
                     new_log_text += color + line + color_reset + os.linesep
             new_log_text += border_bottom or ''
 
-            sys.stdout.write(new_log_text)
+            sys.stdout.write(Style.RESET_ALL + new_log_text)
             sys.stdout.flush()
 
-        if file is not None and os.fstat(file.fileno()).st_size < TOO_MANY_BYTES:
+        if file is not None and os.fstat(
+                file.fileno()).st_size < TOO_MANY_BYTES:
             file.write(seq.sub('', log_text))
             file.flush()
     except:
