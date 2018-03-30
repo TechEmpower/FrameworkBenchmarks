@@ -1,6 +1,6 @@
 FROM tfb/sbt:latest
 
-ADD ./play2-scala-anorm-netty /play_app
+ADD ./play2-scala-anorm /play_app
 WORKDIR /play_app
 
 RUN sbt stage
