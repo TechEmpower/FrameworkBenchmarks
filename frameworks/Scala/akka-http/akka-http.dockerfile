@@ -1,6 +1,7 @@
 FROM techempower/sbt:0.1
 
-COPY ./ ./
+ADD ./ /akka-http
+WORKDIR /akka-http
 
 RUN sbt -batch 'universal:stage'
 

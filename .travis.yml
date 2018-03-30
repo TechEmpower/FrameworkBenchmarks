@@ -66,9 +66,7 @@ env:
      - "TESTDIR=Groovy/hot"
      - "TESTDIR=Haskell/snap"
      - "TESTDIR=Haskell/wai"
-     # Separating these tests b/c of travis timeout
-     - 'TEST="yesod yesod-mongodb-raw"'
-     - "TEST=yesod-postgres"
+     - "TESTDIR=Haskell/yesod"
      - "TESTDIR=Haskell/servant"
      - "TESTDIR=Haskell/spock"
      - "TESTDIR=Java/act"
@@ -189,13 +187,10 @@ env:
      - "TESTDIR=Scala/colossus"
      - "TESTDIR=Scala/finagle"
      - "TESTDIR=Scala/finatra"
-     - "TESTDIR=Scala/fintrospect"
-     - "TESTDIR=Scala/play2-scala"
-     - "TESTDIR=Scala/scruffy"
-     - "TESTDIR=Scala/spray"
-     - "TESTDIR=Scala/s-server"
-     - "TESTDIR=Scala/http4s"
      - "TESTDIR=Scala/finch"
+     - "TESTDIR=Scala/fintrospect"
+     - "TESTDIR=Scala/http4s"
+     - "TESTDIR=Scala/play2-scala"
      - "TESTDIR=Swift/vapor"
      - "TESTDIR=Ur/urweb"
      - "TESTDIR=Vala/vsgi"
@@ -209,7 +204,7 @@ before_script:
 
   # Runs travis_diff, printing the output to the terminal, and searches for travis-diff-continue
   # to determine if the suite should be installed and the current $TESTDIR test should run.
-  - export CONTINUE_TEST=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -q "travis-diff-continue" && echo 1`
+  - export RUN_TESTS=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -oP "travis-run-tests \K(.*)"`
 
   # Stop services that would claim ports we may need
   - sudo service mysql stop
@@ -220,6 +215,4 @@ script:
   # run-ci.py runs the diffing to see if travis needs to test this framework. Ideally/eventually,
   # we'd like to try and do the diffing before travis_clean & setup.
   # This will run the tests exactly as you would in your own vm:
-  - if [[ $CONTINUE_TEST && "$TESTDIR" ]]; then docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $TESTDIR; else echo 'Skipping test verification.'; fi
-  - if [[ $CONTINUE_TEST && "$TESTLANG" ]]; then docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-lang $TESTLANG; else echo 'Skipping test verification.'; fi
-  - if [[ $CONTINUE_TEST && "$TEST" ]]; then docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test $TEST; else echo 'Skipping test verification.'; fi
+  - if [ "$RUN_TESTS" ]; then docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS; else echo 'Skipping test verification.'; fi

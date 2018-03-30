@@ -5,10 +5,7 @@ export DEBIAN_FRONTEND=noninteractive
 # Turn on command tracing
 set -x
 
-<<<<<<< HEAD
-=======
 # Stop services that travis starts to free up those ports for docker usage
->>>>>>> 567abd0d076bbf062f37ab0db8692bb2464d171f
 sudo service mysql stop
 sudo service postgresql stop
 

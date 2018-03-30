@@ -1,7 +1,15 @@
 FROM techempower/sbt:0.1
 
-COPY ./ ./
+ADD ./ /fintrospect
+WORKDIR /fintrospect
 
-RUN sbt 'oneJar' -batch
+RUN sbt assembly -batch
 
-CMD java -Dcom.twitter.finagle.toggle.flag.overrides=com.twitter.http.UseNetty4=1.0 -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts -XX:+AlwaysPreTouch -jar target/scala-2.12/*fintrospect*one-jar.jar
+CMD java \
+    -Dcom.twitter.finagle.toggle.flag.overrides=com.twitter.http.UseNetty4=1.0 \
+    -server \
+    -XX:+UseNUMA \
+    -XX:+UseParallelGC \
+    -XX:+AggressiveOpts \
+    -XX:+AlwaysPreTouch \
+    -jar target/scala-2.12/techempower-benchmarks-fintrospect-assembly-1.0.jar
