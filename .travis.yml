@@ -18,7 +18,7 @@ env:
      - "TESTDIR=CSharp/revenj"
      - "TESTDIR=CSharp/servicestack"
      - "TESTDIR=C++/cppcms"
-    # - "TESTDIR=C++/ffead-cpp"
+     - "TESTDIR=C++/ffead-cpp"
      - "TESTDIR=C++/cpoll_cppsp"
      - "TESTDIR=C++/cutelyst"
      - "TESTDIR=C++/silicon"
