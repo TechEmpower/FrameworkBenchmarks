@@ -1,4 +1,4 @@
-FROM tfb/sbt-java8:latest
+FROM tfb/sbt:latest
 ADD ./play2-java-jooq-hikaricp /play2-java-jooq-hikaricp
 WORKDIR /play2-java-jooq-hikaricp
 RUN sbt stage

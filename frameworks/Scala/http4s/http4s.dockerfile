@@ -1,7 +1,8 @@
 FROM tfb/sbt:latest
 
-COPY ./ ./
+ADD ./ /http4s
+WORKDIR /http4s
 
-RUN sbt 'oneJar' -batch
+RUN sbt assembly -batch
 
-CMD java -jar target/scala-2.12/http4s*one-jar.jar "TFB-database"
+CMD java -jar target/scala-2.12/http4s-assembly-1.0.jar "TFB-database"
