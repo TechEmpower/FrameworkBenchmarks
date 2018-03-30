@@ -1,7 +1,7 @@
 FROM tfb/java:latest as java
 FROM tfb/mono:latest
 COPY --from=java /java /java
-ENV JAVA_HOME=/java/jdk-9.0.4
+ENV JAVA_HOME=/java/jdk-10
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 ADD ./ /revenj

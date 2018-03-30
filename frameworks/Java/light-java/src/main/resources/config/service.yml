@@ -1,0 +1,4 @@
+singletons:
+ - com.networknt.server.HandlerProvider: "com.networknt.techempower.PathHandlerProvider::create"
+ - com.networknt.server.StartupHookProvider: "com.networknt.techempower.db.postgres.PostgresStartupHookProvider::create"
+
