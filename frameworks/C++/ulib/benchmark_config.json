@@ -2,7 +2,6 @@
   "framework": "ulib",
   "tests": [{
     "default": {
-      "setup_file": "setup_plaintext",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -20,7 +19,6 @@
       "versus": ""
     },
     "plaintext_fit": {
-      "setup_file": "setup_plaintext_fit",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -38,7 +36,6 @@
       "versus": ""
     },
     "json": {
-      "setup_file": "setup_json",
       "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
@@ -56,7 +53,6 @@
       "versus": ""
     },
     "json_fit": {
-      "setup_file": "setup_json_fit",
       "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
@@ -74,7 +70,6 @@
       "versus": ""
     },
     "mysql": {
-      "setup_file": "setup_mysql",
       "db_url": "/db",
       "query_url": "/query?queries=",
       "fortune_url": "/fortune",
@@ -96,7 +91,6 @@
       "versus": ""
     },
     "postgres": {
-      "setup_file": "setup_postgres",
       "db_url": "/db",
       "query_url": "/query?queries=",
       "fortune_url": "/fortune",
@@ -118,7 +112,6 @@
       "versus": ""
     },
     "postgres_fit": {
-      "setup_file": "setup_postgres_fit",
       "db_url": "/db",
       "query_url": "/query?queries=",
       "fortune_url": "/fortune",

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CPU_COUNT=$(nproc)
+
 # one fastcgi instance for each thread
 # load balanced by nginx
 port_start=9001

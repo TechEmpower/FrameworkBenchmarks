@@ -11,6 +11,4 @@ RUN wget https://github.com/cutelyst/cutelyst/archive/v$CUTELYST_VER.tar.gz -O c
     -DPLUGIN_UWSGI=on \
     -DPLUGIN_VIEW_GRANTLEE=on \
     -DUSE_JEMALLOC=on && \
-    make -j ${CPU_COUNT} && \
-    make install
-
+    make && make install

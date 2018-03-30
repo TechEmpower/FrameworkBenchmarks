@@ -3,6 +3,7 @@
 #
 # start dart servers
 #
+CPU_COUNT=$(nproc)
 current=9001
 end=$(($current+$CPU_COUNT))
 while [ $current -lt $end ]; do
