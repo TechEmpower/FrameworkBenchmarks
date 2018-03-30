@@ -64,9 +64,7 @@ env:
      - "TESTDIR=Groovy/hot"
      - "TESTDIR=Haskell/snap"
      - "TESTDIR=Haskell/wai"
-     # Separating these tests b/c of travis timeout
-     - 'TEST="yesod yesod-mongodb-raw"'
-     - "TEST=yesod-postgres"
+     - "TESTDIR=Haskell/yesod"
      - "TESTDIR=Haskell/servant"
      - "TESTDIR=Haskell/spock"
      - "TESTDIR=Java/act"
@@ -200,13 +198,13 @@ before_script:
 
   # Runs travis_diff, printing the output to the terminal, and searches for travis-diff-continue
   # to determine if the suite should be installed and the current $TESTDIR test should run.
-  - export CONTINUE_TEST=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -q "travis-diff-continue" && echo 1`
+  - export RUN_TESTS=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -oP "travis-run-tests \K(.*)"`
 
   # travis_setup.sh runs all the same commands you would run if you were setting up
   # a development environment via:
   # http://frameworkbenchmarks.readthedocs.io/en/latest/Development/Installation-Guide/
   # it also stops a few conflicting services
-  - if [ $CONTINUE_TEST ]; then source ./toolset/travis/travis_setup.sh; else echo 'Skipping travis_setup.sh'; fi
+  - if [ "$RUN_TESTS" ]; then source ./toolset/travis/travis_setup.sh; else echo 'Skipping travis_setup.sh'; fi
 
 script:
 
@@ -214,10 +212,7 @@ script:
   # we'd like to try and do the diffing before travis_clean & setup.
   # This will run the tests exactly as you would in your own vm:
   # ./toolset/run-tests.py --mode verify --test (all the valid tests for this framework)
-  - if [[ $CONTINUE_TEST && "$TESTDIR" ]]; then tfb --mode verify --test-dir $TESTDIR; else echo 'Skipping test verification.'; fi
-  - if [[ $CONTINUE_TEST && "$TESTLANG" ]]; then tfb --mode verify --test-lang $TESTLANG; else echo 'Skipping test verification.'; fi
-  - if [[ $CONTINUE_TEST && "$TEST" ]]; then tfb --mode verify --test $TEST; else echo 'Skipping test verification.'; fi
-  # - tfb --mode verify --test
+  - if [ "$RUN_TESTS" ]; then tfb --mode verify --test-dir $RUN_TESTS; else echo 'Skipping test verification.'; fi
 
 cache:
   directories:
