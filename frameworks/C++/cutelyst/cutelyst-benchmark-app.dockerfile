@@ -16,4 +16,4 @@ RUN cd ${TROOT} && \
     cd build && \
     cmake ${TROOT} \
     -DCMAKE_BUILD_TYPE=Release && \
-    make -j ${CPU_COUNT}
+    make

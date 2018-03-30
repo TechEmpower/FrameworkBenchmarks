@@ -89,7 +89,6 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
     for the given tests.
     '''
     docker_buildargs = {
-        'CPU_COUNT': str(multiprocessing.cpu_count()),
         'MAX_CONCURRENCY': str(max(benchmarker_config.concurrency_levels)),
         'TFB_DATABASE': str(benchmarker_config.database_host)
     }

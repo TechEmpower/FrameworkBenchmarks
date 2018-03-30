@@ -25,4 +25,4 @@ RUN cpanm --notest --no-man-page \
       Starman@0.4011
 
 CMD nginx -c /dancer/nginx.conf && \
-    plackup -E production -s Starman --workers=${CPU_COUNT} -l /tmp/perl-dancer.sock -a ./app.pl
+    plackup -E production -s Starman --workers=$(nproc) -l /tmp/perl-dancer.sock -a ./app.pl

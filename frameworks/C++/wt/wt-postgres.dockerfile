@@ -23,4 +23,4 @@ RUN g++-6 \
 
 ENV DBHOST=tfb-database
 
-CMD ./te-benchmark-pg.wt -c wt_config.xml -t ${CPU_COUNT} --docroot . --approot . --http-listen 0.0.0.0:8080 --accesslog=- --no-compression
+CMD ./te-benchmark-pg.wt -c wt_config.xml -t $(nproc) --docroot . --approot . --http-listen 0.0.0.0:8080 --accesslog=- --no-compression
