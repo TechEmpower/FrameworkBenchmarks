@@ -1,6 +1,6 @@
-FROM tfb/nginx:latest
+FROM techempower/nginx:0.1
 
-FROM tfb/ruby-2.4:latest
+FROM techempower/ruby-2.4:0.1
 
 COPY --from=0 /nginx /nginx
 
@@ -14,4 +14,4 @@ WORKDIR /padrino
 RUN bundle install --jobs=4 --gemfile=/padrino/Gemfile --path=/padrino/padrino/bundle
 
 CMD nginx -c /padrino/config/nginx.conf && \
-    DB_HOST=TFB-database bundle exec unicorn -E production -c config/unicorn.rb
+    DB_HOST=tfb-database bundle exec unicorn -E production -c config/unicorn.rb

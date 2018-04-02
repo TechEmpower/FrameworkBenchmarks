@@ -1,4 +1,4 @@
-FROM tfb/nginx:latest
+FROM techempower/nginx:0.1
 
 RUN add-apt-repository ppa:ondrej/php
 RUN apt-get update

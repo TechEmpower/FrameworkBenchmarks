@@ -1,6 +1,6 @@
-FROM tfb/nginx:latest
+FROM techempower/nginx:0.1
 
-FROM tfb/dart-lang:latest
+FROM techempower/dart-lang:0.1
 
 COPY --from=0 /nginx /nginx
 

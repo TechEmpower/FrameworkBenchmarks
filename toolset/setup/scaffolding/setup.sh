@@ -19,7 +19,7 @@
 
 # Three HOST entries are provided to this script:
 #
-#   TFB-database = The IP address of the database 
+#   tfb-database = The IP address of the database 
 #   TFB-client   = The IP address of the client making the HTTP requests
 #   TFB-server   = The IP address of this machine servicing HTTP requests
 #

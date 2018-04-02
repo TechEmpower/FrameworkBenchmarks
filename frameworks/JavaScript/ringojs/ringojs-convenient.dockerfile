@@ -1,4 +1,4 @@
-FROM tfb/ringo-base:latest
+FROM techempower/ringo-base:0.1
 
 RUN ringo-admin install grob/ringo-sqlstore && \
     ringo-admin install ringo/stick && \

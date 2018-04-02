@@ -126,11 +126,18 @@ class FrameworkTestType:
         # for their URL so the base class can't know which arg is the URL
         raise NotImplementedError("Subclasses must provide get_url")
 
-    def get_remote_script(self, config, name, url, port):
+    def get_script_name(self):
         '''
-        Returns the remote script for running the benchmarking process.
+        Returns the remote script name for running the benchmarking process.
         '''
-        raise NotImplementedError("Subclasses must provide get_remote_script")
+        raise NotImplementedError("Subclasses must provide get_script_name")
+
+    def get_script_variables(self, name, url, port):
+        '''
+        Returns the remote script variables for running the benchmarking process.
+        '''
+        raise NotImplementedError(
+            "Subclasses must provide get_script_variables")
 
     def copy(self):
         '''
@@ -164,7 +171,8 @@ class FrameworkTestType:
                 db.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current MySQL World table.", color=Fore.RED)
+                log("ERROR: Unable to load current MySQL World table.",
+                    color=Fore.RED)
                 log(tb)
         elif database_name == "postgres":
             try:
@@ -185,11 +193,13 @@ class FrameworkTestType:
                 db.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current Postgres World table.", color=Fore.RED)
+                log("ERROR: Unable to load current Postgres World table.",
+                    color=Fore.RED)
                 log(tb)
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
+                print("DATABASE_HOST: %s" % self.config.database_host)
                 connection = pymongo.MongoClient(
                     host=self.config.database_host)
                 db = connection.hello_world
@@ -205,7 +215,8 @@ class FrameworkTestType:
                 connection.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current MongoDB World table.", color=Fore.RED)
+                log("ERROR: Unable to load current MongoDB World table.",
+                    color=Fore.RED)
                 log(tb)
         else:
             raise ValueError(

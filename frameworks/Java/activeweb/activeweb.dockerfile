@@ -1,2 +1,3 @@
-FROM tfb/activeweb-base:latest
+FROM techempower/activeweb-base:0.1
+
 CMD java -jar ${RESIN_HOME}/lib/resin.jar console

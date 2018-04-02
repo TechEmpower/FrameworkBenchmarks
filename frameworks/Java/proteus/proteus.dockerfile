@@ -1,2 +1,3 @@
-FROM tfb/proteus-base:latest
+FROM techempower/proteus-base:0.1
+
 CMD bash run.sh

@@ -1,4 +1,4 @@
-FROM tfb/base:latest
+FROM techempower/base:0.1
 
 RUN mkdir /java
 WORKDIR /java

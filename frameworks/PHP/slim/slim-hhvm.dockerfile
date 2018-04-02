@@ -1,4 +1,4 @@
-FROM tfb/hhvm-php5:latest
+FROM techempower/hhvm-php5:0.1
 
 ADD ./ /slim
 WORKDIR /slim

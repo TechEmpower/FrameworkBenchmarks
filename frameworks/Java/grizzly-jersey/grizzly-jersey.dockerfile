@@ -1,4 +1,5 @@
-FROM tfb/maven:latest
+FROM techempower/maven:0.1
+
 ADD ./ /grizzly-jersey
 WORKDIR /grizzly-jersey
 RUN mvn clean package

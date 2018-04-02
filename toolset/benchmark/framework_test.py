@@ -1,9 +1,8 @@
 import os
-import subprocess
 import traceback
 from requests import ConnectionError
 
-from toolset.utils.output_helper import log, FNULL
+from toolset.utils.output_helper import log
 from toolset.utils import docker_helper
 
 # Cross-platform colored text
@@ -48,7 +47,7 @@ class FrameworkTest:
     # Public Methods
     ##########################################################################################
 
-    def start(self, database_container_id):
+    def start(self):
         '''
         Start the test implementation
         '''
@@ -74,7 +73,7 @@ class FrameworkTest:
         return docker_helper.run(self.benchmarker_config, test_docker_files,
                                  run_log_dir)
 
-    def is_running(self):
+    def is_accepting_requests(self):
         '''
         Determines whether this test implementation is up and accepting 
         requests.
@@ -88,13 +87,8 @@ class FrameworkTest:
                                   self.port,
                                   self.runTests[test_type].get_url())
 
-        try:
-            subprocess.check_call(
-                ['curl', '-sSfl', url], stdout=FNULL, stderr=subprocess.STDOUT)
-        except:
-            return False
-
-        return True
+        return docker_helper.test_client_connection(self.benchmarker_config,
+                                                    url)
 
     def get_docker_files(self):
         '''
@@ -130,7 +124,9 @@ class FrameworkTest:
                       'w') as verification:
                 test = self.runTests[test_type]
                 log("VERIFYING %s" % test_type.upper(),
-                    file=verification, border='-', color=Fore.WHITE + Style.BRIGHT)
+                    file=verification,
+                    border='-',
+                    color=Fore.WHITE + Style.BRIGHT)
 
                 base_url = "http://%s:%s" % (
                     self.benchmarker_config.server_host, self.port)
@@ -146,26 +142,14 @@ class FrameworkTest:
                     # we're already failing
                     if not any(result == 'fail'
                                for (result, reason, url) in results):
-                        p = subprocess.call(
-                            [
-                                "ssh", self.benchmarker_config.client_host,
-                                "curl -sSf %s" % base_url + test.get_url()
-                            ],
-                            shell=False,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
-                        if p is not 0:
-                            results = [(
-                                'fail',
-                                "Server did not respond to request from client machine.",
-                                base_url)]
-                            log("""This error usually means your server is only accepting
-                requests from localhost.""")
+                        docker_helper.test_client_connection(
+                            self.benchmarker_config, base_url + test.get_url())
                 except ConnectionError as e:
                     results = [('fail', "Server did not respond to request",
                                 base_url)]
                     log("Verifying test %s for %s caused an exception: %s" %
-                        (test_type, self.name, e), color=Fore.RED)
+                        (test_type, self.name, e),
+                        color=Fore.RED)
                 except Exception as e:
                     results = [('fail', """Caused Exception in TFB
             This almost certainly means your return value is incorrect,
@@ -173,7 +157,8 @@ class FrameworkTest:
             including this message: %s\n%s""" % (e, traceback.format_exc()),
                                 base_url)]
                     log("Verifying test %s for %s caused an exception: %s" %
-                        (test_type, self.name, e), color=Fore.RED)
+                        (test_type, self.name, e),
+                        color=Fore.RED)
                     traceback.format_exc()
 
                 test.failed = any(

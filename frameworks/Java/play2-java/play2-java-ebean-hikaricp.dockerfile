@@ -1,4 +1,5 @@
-FROM tfb/sbt:latest
+FROM techempower/sbt:0.1
+
 ADD ./play2-java-ebean-hikaricp /play2-java-ebean-hikaricp
 WORKDIR /play2-java-ebean-hikaricp
 RUN sbt stage

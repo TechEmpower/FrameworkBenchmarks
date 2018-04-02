@@ -1,4 +1,4 @@
-FROM tfb/rust:latest
+FROM techempower/rust:0.1
 
 ADD ./ /actix
 WORKDIR /actix

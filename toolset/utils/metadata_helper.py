@@ -37,8 +37,6 @@ def gather_tests(include=[], exclude=[], benchmarker_config=None,
     A config is needed to construct full FrameworkTest objects. If
     one is not provided, a default config will be created.
     '''
-    # Avoid setting up a circular import
-    from toolset.utils.benchmark_config import BenchmarkConfig
 
     # Help callers out a bit
     if include is None:
@@ -52,29 +50,6 @@ def gather_tests(include=[], exclude=[], benchmarker_config=None,
     # nothing immediately
     if len(include) == 1 and '' in include:
         return []
-
-    # Setup default BenchmarkerConfig using example configuration
-    if benchmarker_config is None:
-        default_config = os.getenv('FWROOT') + "/benchmark.cfg"
-        config = ConfigParser.SafeConfigParser()
-        config.readfp(open(default_config))
-        defaults = dict(config.items("Defaults"))
-
-        # Convert strings into proper python types
-        for k, v in defaults.items():
-            try:
-                defaults[k] = literal_eval(v)
-            except Exception:
-                pass
-
-        defaults[
-            'results_name'] = "(unspecified, datetime = %Y-%m-%d %H:%M:%S)"
-        defaults['results_environment'] = "My Server Environment"
-        defaults['test_dir'] = None
-        defaults['test_lang'] = None
-        defaults['quiet'] = True
-
-        benchmarker_config = BenchmarkConfig(defaults)
 
     # Search for configuration files
     config_files = []

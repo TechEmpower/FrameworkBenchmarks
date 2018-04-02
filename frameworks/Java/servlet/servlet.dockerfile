@@ -1,8 +1,10 @@
-FROM tfb/maven:latest as maven
+FROM techempower/maven:0.1 as maven
+
 ADD ./ /servlet
 WORKDIR /servlet
 RUN mvn clean compile war:war
 
-FROM tfb/resin:latest
+FROM techempower/resin:0.1
+
 COPY --from=maven /servlet/target/servlet.war ${RESIN_HOME}/webapps/ROOT.war
 CMD java -jar ${RESIN_HOME}/lib/resin.jar console

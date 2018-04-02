@@ -1,4 +1,4 @@
-FROM tfb/hhvm-php7:latest
+FROM techempower/hhvm-php7:0.1
 
 ADD ./ /codeigniter
 WORKDIR /codeigniter

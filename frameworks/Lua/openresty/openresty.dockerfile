@@ -1,4 +1,4 @@
-FROM tfb/openresty-server:latest
+FROM techempower/openresty-server:0.1
 
 ADD ./nginx.conf /openresty/
 ADD ./app.lua /openresty/

@@ -1,4 +1,4 @@
-FROM tfb/ffead-cpp-nginx:latest
+FROM techempower/ffead-cpp-nginx:0.1
 
 WORKDIR ${IROOT}/ffead-cpp-src/
 

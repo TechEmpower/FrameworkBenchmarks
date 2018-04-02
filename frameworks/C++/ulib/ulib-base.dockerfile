@@ -1,4 +1,4 @@
-FROM tfb/gcc-6:latest
+FROM techempower/gcc-6:0.1
 
 ENV IROOT=/install
 ENV ULIB_VERSION=1.4.2

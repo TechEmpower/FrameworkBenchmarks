@@ -1,4 +1,4 @@
-FROM tfb/ant:latest as ant
+FROM techempower/ant:0.1 as ant
 
 ADD Docroot/ /gemini/Docroot
 ADD Source/ /gemini/Source
@@ -10,7 +10,7 @@ RUN cd /gemini/Docroot/WEB-INF; mv gemini.conf GeminiHello.conf;
 
 RUN cd /gemini; mkdir -p Docroot/WEB-INF/classes; mkdir -p Docroot/WEB-INF/lib; ant resolve; ant compile
 
-FROM tfb/resin:latest
+FROM techempower/resin:0.1
 
 COPY --from=ant /gemini /gemini
 

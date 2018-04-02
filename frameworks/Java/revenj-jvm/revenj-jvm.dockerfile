@@ -1,4 +1,4 @@
-FROM tfb/maven-java8:latest as maven
+FROM techempower/maven-java8:0.1 as maven
 
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
 RUN echo "deb http://download.mono-project.com/repo/debian wheezy main" | tee /etc/apt/sources.list.d/mono-xamarin.list
@@ -12,6 +12,7 @@ RUN unzip -o dsl-compiler.zip
 RUN rm dsl-compiler.zip
 RUN mvn clean compile war:war
 
-FROM tfb/resin-java8:latest
+FROM techempower/resin-java8:0.1
+
 COPY --from=maven /revenj-jvm/target/revenj.war ${RESIN_HOME}/webapps/ROOT.war
 CMD java -jar ${RESIN_HOME}/lib/resin.jar console

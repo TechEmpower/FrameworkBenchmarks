@@ -1,4 +1,5 @@
-FROM tfb/maven-java8:latest
+FROM techempower/maven-java8:0.1
+
 RUN apt-get install -y unzip
 ADD ./ /act
 WORKDIR /act

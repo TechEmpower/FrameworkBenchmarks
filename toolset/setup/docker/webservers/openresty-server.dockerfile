@@ -1,4 +1,4 @@
-FROM tfb/luarocks:latest
+FROM techempower/luarocks:0.1
 
 RUN apt install -yqq libpq-dev libpcre3 libpcre3-dev
 

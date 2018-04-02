@@ -1,4 +1,5 @@
-FROM tfb/swift:latest
+FROM techempower/swift:0.1
+
 ADD ./ /vapor
 WORKDIR /vapor
 RUN curl -sL -o apt.vapor.sh https://apt.vapor.sh

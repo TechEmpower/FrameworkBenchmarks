@@ -1,4 +1,6 @@
-FROM tfb/gradle:latest
+FROM techempower/java:0.1
+FROM techempower/gradle:0.1
+
 ADD ./ /http4k
 WORKDIR /http4k
 RUN gradle clean build netty:uber

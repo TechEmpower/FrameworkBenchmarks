@@ -1,4 +1,4 @@
-FROM tfb/python2:latest
+FROM techempower/python2:0.1
 
 ADD ./ /wheezyweb
 

@@ -1,4 +1,5 @@
-FROM tfb/leiningen-java8:latest
+FROM techempower/leiningen-java8:0.1
+
 ADD ./ /pedestal
 WORKDIR /pedestal
 RUN lein clean

@@ -1,4 +1,4 @@
-FROM tfb/sbt:latest
+FROM techempower/sbt:0.1
 
 ADD ./play2-scala-slick /play_app
 WORKDIR /play_app

@@ -1,4 +1,4 @@
-FROM tfb/erlang:latest
+FROM techempower/erlang:0.1
 
 ENV ELIXIR_VERSION="1.5.2-1"
 ENV RELEASE="xenial"

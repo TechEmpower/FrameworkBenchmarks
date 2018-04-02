@@ -1,4 +1,4 @@
-FROM tfb/python3:latest
+FROM techempower/python3:0.1
 
 ADD ./ /flask
 

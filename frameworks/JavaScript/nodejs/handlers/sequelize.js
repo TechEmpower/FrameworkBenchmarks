@@ -2,7 +2,7 @@ const h = require('../helper');
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: 'TFB-database',
+  host: 'tfb-database',
   dialect: 'mysql',
   logging: false
 });
@@ -14,9 +14,9 @@ const Worlds = sequelize.define('World', {
   },
   randomNumber: { type: 'Sequelize.INTEGER' }
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
 const Fortunes = sequelize.define('Fortune', {
   id: {
@@ -25,9 +25,9 @@ const Fortunes = sequelize.define('Fortune', {
   },
   message: { type: 'Sequelize.STRING' }
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
 const randomWorldPromise = () => {
   return Worlds.findOne({
@@ -53,7 +53,7 @@ module.exports = {
 
     for (let i = 0; i < queries; i++) {
       worldPromises.push(randomWorldPromise());
-    } 
+    }
 
     Promise.all(worldPromises).then((worlds) => {
       h.addTfbHeaders(res, 'json');
@@ -91,13 +91,13 @@ module.exports = {
       return Worlds.update({
         randomNumber: world.randomNumber
       },
-      {
-        where: { id: world.id }
-      }).then((results) => {
-        return world;
-      }).catch((err) => {
-        process.exit(1);
-      });
+        {
+          where: { id: world.id }
+        }).then((results) => {
+          return world;
+        }).catch((err) => {
+          process.exit(1);
+        });
     };
 
     Promise.all(worldPromises).then((worlds) => {

@@ -1,6 +1,6 @@
-FROM tfb/nginx:latest
+FROM techempower/nginx:0.1
 
-FROM tfb/ruby-2.4:latest
+FROM techempower/ruby-2.4:0.1
 
 COPY --from=0 /nginx /nginx
 
@@ -14,4 +14,4 @@ WORKDIR /rails
 RUN bundle install --jobs=4 --gemfile=/rails/Gemfile --path=/rails/rails/bundle
 
 CMD nginx -c /rails/config/nginx.conf && \
-    DB_HOST=TFB-database bundle exec unicorn_rails -E production -c config/unicorn.rb
+    DB_HOST=tfb-database bundle exec unicorn_rails -E production -c config/unicorn.rb

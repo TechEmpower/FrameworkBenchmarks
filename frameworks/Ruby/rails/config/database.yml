@@ -4,7 +4,7 @@ _: &common
   database: hello_world
   username: benchmarkdbuser
   password: benchmarkdbpass
-  host: TFB-database
+  host: tfb-database
   timeout: 5000
 
 development:

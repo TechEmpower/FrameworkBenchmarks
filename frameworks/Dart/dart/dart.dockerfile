@@ -1,4 +1,4 @@
-FROM tfb/dart-lang:latest
+FROM techempower/dart-lang:0.1
 
 COPY ./ ./
 

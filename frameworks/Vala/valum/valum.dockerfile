@@ -1,4 +1,4 @@
-FROM tfb/vala:latest
+FROM techempower/vala:0.1
 
 ADD ./ /valum_app
 WORKDIR /valum_app

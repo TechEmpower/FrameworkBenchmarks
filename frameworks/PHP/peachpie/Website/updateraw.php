@@ -5,7 +5,7 @@
 
 function updateraw() {
   // Database connection (TODO: When it works, use PDO instead)
-  $link = mysql_connect('TFB-database', 'benchmarkdbuser', 'benchmarkdbpass');
+  $link = mysql_connect('tfb-database', 'benchmarkdbuser', 'benchmarkdbpass');
   mysql_select_db('hello_world', $link);
 
   // Read number of queries to run from URL parameter

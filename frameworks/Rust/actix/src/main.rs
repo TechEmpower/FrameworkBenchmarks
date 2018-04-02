@@ -135,7 +135,7 @@ fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
 
 fn main() {
     let sys = System::new("techempower");
-    let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@TFB-database/hello_world";
+    let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
     // Avoid triggering "FATAL: the database system is starting up" error from postgres.
     {

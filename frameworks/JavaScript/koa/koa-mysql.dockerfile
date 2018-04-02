@@ -1,4 +1,4 @@
-FROM tfb/nodejs8:latest
+FROM techempower/nodejs8:0.1
 
 COPY ./ ./
 

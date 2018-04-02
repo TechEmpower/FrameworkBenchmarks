@@ -1,7 +1,7 @@
 ---
 engines:
   pg:
-    host: TFB-database
+    host: tfb-database
     port: 5432
     dbname: hello_world
     user: benchmarkdbuser

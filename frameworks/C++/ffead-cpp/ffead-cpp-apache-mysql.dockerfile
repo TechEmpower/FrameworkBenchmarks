@@ -1,4 +1,4 @@
-FROM tfb/ffead-cpp-httpd:latest
+FROM techempower/ffead-cpp-httpd:0.1
 
 WORKDIR ${IROOT}/ffead-cpp-src/
 

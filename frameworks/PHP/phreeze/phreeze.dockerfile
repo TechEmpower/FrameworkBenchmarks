@@ -1,4 +1,4 @@
-FROM tfb/php5:latest
+FROM techempower/php5:0.1
 
 ADD ./ /phreeze
 WORKDIR /phreeze

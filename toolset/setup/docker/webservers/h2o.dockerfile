@@ -1,4 +1,4 @@
-FROM tfb/ruby-2.4:latest
+FROM techempower/ruby-2.4:0.1
 
 ENV H2O_HOME=/h2o
 ENV VERSION="2.2.4"

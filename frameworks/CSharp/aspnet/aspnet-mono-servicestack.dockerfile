@@ -1,2 +1,3 @@
-FROM tfb/aspnet-base:latest
+FROM techempower/aspnet-base:0.1
+
 CMD bash run.sh

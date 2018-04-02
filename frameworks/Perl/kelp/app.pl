@@ -16,13 +16,13 @@ my @sth;
 my $dbh;
 
 if ($ENV{MONGO}) {
-    $mongo   = MongoDB::MongoClient->new( host => 'TFB-database', port => 27017 );
+    $mongo   = MongoDB::MongoClient->new( host => 'tfb-database', port => 27017 );
     $mdb     = $mongo->get_database('hello_world');
     $world   = $mdb->get_collection('world');
     $fortune = $mdb->get_collection('fortune');
 } else {
     $dbh = DBI->connect(
-        "dbi:mysql:database=hello_world;host=TFB-database;port=3306",
+        "dbi:mysql:database=hello_world;host=tfb-database;port=3306",
         'benchmarkdbuser',
         'benchmarkdbpass',
         { RaiseError => 0, PrintError => 0, mysql_enable_utf8 => 1 }

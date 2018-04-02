@@ -22,14 +22,12 @@ from sets import Set
 def get_docker_changes(changes_output):
     return list(
         Set(
-            re.findall(r"toolset/setup/docker/.+/(.+)\.dockerfile", changes_output,
-                       re.M)))
+            re.findall(r"toolset/setup/docker/.+/(.+)\.dockerfile",
+                       changes_output, re.M)))
 
 
 def fw_found_in_changes(test, changes_output):
-    return re.search(
-        r"frameworks/" + test + "/",
-        changes_output, re.M)
+    return re.search(r"frameworks/" + test + "/", changes_output, re.M)
 
 
 # Cleans up diffing and grep output and into an array of strings
@@ -51,7 +49,7 @@ print("TRAVIS_COMMIT      : {!s}".format(os.getenv("TRAVIS_COMMIT")))
 is_PR = (os.getenv("TRAVIS_PULL_REQUEST") != "false")
 commit_range = ""
 first_commit = ""
-last_commit  = ""
+last_commit = ""
 
 if is_PR:
     print('I am testing a pull request')
@@ -118,10 +116,13 @@ if re.search(r'\[ci run-all\]', last_commit_msg, re.M):
 
 # Forced *fw-only* specific tests
 if re.search(r'\[ci fw-only .+\]', last_commit_msg, re.M):
-    tests = re.findall(r'\[ci fw-only (.+)\]', last_commit_msg, re.M)[0].strip().split(' ')
+    tests = re.findall(r'\[ci fw-only (.+)\]', last_commit_msg,
+                       re.M)[0].strip().split(' ')
     for test in tests:
         if test in test_dirs:
-            print("{!s} has been forced to run from the commit message.".format(test))
+            print(
+                "{!s} has been forced to run from the commit message.".format(
+                    test))
             run_tests.append(test)
 
     # quit here because we're using "only"
@@ -129,12 +130,14 @@ if re.search(r'\[ci fw-only .+\]', last_commit_msg, re.M):
 
 # Forced framework run in addition to other tests
 if re.search(r'\[ci fw .+\]', last_commit_msg, re.M):
-    tests = re.findall(r'\[ci fw (.+)\]', last_commit_msg, re.M)[0].strip().split(' ')
+    tests = re.findall(r'\[ci fw (.+)\]', last_commit_msg,
+                       re.M)[0].strip().split(' ')
     for test in tests:
         if test in test_dirs:
-            print("{!s} has been forced to run from the commit message.".format(test))
+            print(
+                "{!s} has been forced to run from the commit message.".format(
+                    test))
             run_tests.append(test)
-
 
 # TODO: any changes in the toolset folder will generate a full run.
 #       Instead limit this to core toolset files and work on diffing
@@ -144,7 +147,8 @@ if re.search(r'\[ci fw .+\]', last_commit_msg, re.M):
 # trigger a full run as we remove old fw_depends scripts. [ci run-all] will
 # still work if it's needed.
 
-if re.search(r'^toolset/(?!(travis/|setup/|continuous/))', changes, re.M) is not None:
+if re.search(r'^toolset/(?!(travis/|setup/|continuous/))', changes,
+             re.M) is not None:
     print("Found changes to core toolset. Running all tests.")
     run_tests = test_dirs
     quit_diffing()
@@ -167,9 +171,9 @@ for test in test_dirs:
 
         # Generates output of files that contain a FROM import for this dependency
         more_changes = subprocess.check_output([
-            'bash', '-c', 'grep -RP "FROM tfb/' +
-                          re.escape(docker_changes[i].replace('.dockerfile', ''))
-                          + '(:|$)" . || echo ""'
+            'bash', '-c',
+            'grep -RP "FROM tfb/' + re.escape(docker_changes[i].replace(
+                '.dockerfile', '')) + '(:|$)" . || echo ""'
         ])
         print("more_changes: {!s}".format(more_changes))
         if fw_found_in_changes(test, more_changes):

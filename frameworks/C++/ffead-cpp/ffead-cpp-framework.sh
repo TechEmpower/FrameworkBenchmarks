@@ -2,9 +2,9 @@
 
 #From https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/frameworks/C%2B%2B/ulib/setup_json.sh
 if [ "$TRAVIS" != "true" ]; then
-MAX_THREADS=$(( 3 * $CPU_COUNT / 2 ))
+MAX_THREADS=$(( 3 * nproc / 2 ))
 else
-MAX_THREADS=$(( 2 * $CPU_COUNT ))
+MAX_THREADS=$(( 2 * nproc ))
 fi
 
 WRIT_THREADS=$(( $MAX_THREADS / 3 ))

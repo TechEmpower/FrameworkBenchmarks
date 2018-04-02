@@ -1,4 +1,5 @@
-FROM tfb/maven:latest
+FROM techempower/maven:0.1
+
 ADD ./ /blade
 WORKDIR /blade
 RUN mvn clean package

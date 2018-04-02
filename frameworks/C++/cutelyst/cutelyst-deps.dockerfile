@@ -1,4 +1,4 @@
-FROM tfb/base:latest
+FROM techempower/base:0.1
 
 ENV QT_VERSION_MM=59
 ENV QT_VERSION_FULL=594-xenial

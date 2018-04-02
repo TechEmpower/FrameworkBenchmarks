@@ -1,4 +1,4 @@
-FROM tfb/lua:latest
+FROM techempower/lua:0.1
 
 ENV LUAROCKS_VERSION="2.2.1"
 ENV LUAROCKS=/luarocks-$LUAROCKS_VERSION

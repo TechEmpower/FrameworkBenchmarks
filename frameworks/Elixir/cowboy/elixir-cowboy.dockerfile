@@ -1,4 +1,4 @@
-FROM tfb/elixir:latest
+FROM techempower/elixir:0.1
 
 COPY ./ ./
 

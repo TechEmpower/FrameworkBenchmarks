@@ -1,21 +1,14 @@
 import argparse
-import ConfigParser
 import socket
 import sys
-import os
-import platform
-import multiprocessing
-import signal
 from toolset.benchmark.benchmarker import Benchmarker
 from toolset.utils.scaffolding import Scaffolding
-from toolset.utils.initializer import initialize
 from toolset.utils import cleaner
 from toolset.utils.results_helper import Results
 from toolset.utils.benchmark_config import BenchmarkConfig
 from toolset.utils import docker_helper
 from toolset.utils.metadata_helper import gather_tests
 from toolset.utils.output_helper import log
-from ast import literal_eval
 
 # Enable cross-platform colored output
 from colorama import init, Fore
@@ -49,102 +42,22 @@ class StoreSeqAction(argparse.Action):
         return [abs(int(item)) for item in result]
 
 
-def __stop(signal, frame):
-    '''
-    Method called on SIGTERM to stop all running containers 
-    '''
-    docker_helper.stop()
-    sys.exit(0)
-
-
-signal.signal(signal.SIGTERM, __stop)
-
-
 ###################################################################################################
 # Main
 ###################################################################################################
 def main(argv=None):
     '''
-    Runs the program. There are three ways to pass arguments
-    1) environment variables TFB_*
-    2) configuration file benchmark.cfg
-    3) command line flags
-    In terms of precedence, 3 > 2 > 1, so config file trumps environment variables
-    but command line flags have the final say
+    Runs the toolset.
     '''
     # Do argv default this way, as doing it in the functional declaration sets it at compile time
     if argv is None:
         argv = sys.argv
-
-    # 'Ubuntu', '14.04', 'trusty' respectively
-    os.environ['TFB_DISTRIB_ID'], os.environ[
-        'TFB_DISTRIB_RELEASE'], os.environ[
-            'TFB_DISTRIB_CODENAME'] = platform.linux_distribution()
-
-    conf_parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        add_help=False)
-    conf_parser.add_argument(
-        '--conf_file',
-        default='benchmark.cfg',
-        metavar='FILE',
-        help=
-        'Optional configuration file to provide argument defaults. All config options can be overridden using the command line.'
-    )
-    args, remaining_argv = conf_parser.parse_known_args()
-
-    defaults = {}
-    try:
-        if not os.path.exists(
-                os.path.join(
-                    os.environ['FWROOT'],
-                    args.conf_file)) and not os.path.exists(
-                        os.path.join(os.environ['FWROOT'] + 'benchmark.cfg')):
-            log("No config file found. Aborting!", color=Fore.RED)
-            exit(1)
-        with open(os.path.join(os.environ['FWROOT'], args.conf_file)):
-            config = ConfigParser.SafeConfigParser()
-            config.read([os.path.join(os.environ['FWROOT'], args.conf_file)])
-            defaults.update(dict(config.items("Defaults")))
-            # Convert strings into proper python types
-            for k, v in defaults.items():
-                try:
-                    defaults[k] = literal_eval(v)
-                except Exception:
-                    pass
-    except IOError:
-        log("Configuration file not found!", color=Fore.RED)
-        exit(1)
-
-    ##########################################################
-    # Set up default values
-    ##########################################################
-
-    # Verify and massage options
-    if defaults['client_user'] is None or defaults['client_host'] is None:
-        log("client_user and client_host are required!", color=Fore.RED)
-        log("Please check your configuration file.", color=Fore.RED)
-        log("Aborting!", color=Fore.RED)
-        exit(1)
-
-    if defaults['database_user'] is None:
-        defaults['database_user'] = defaults['client_user']
-    if defaults['database_host'] is None:
-        defaults['database_host'] = defaults['client_host']
-    if defaults['server_host'] is None:
-        defaults['server_host'] = defaults['client_host']
-    if defaults['ulimit'] is None:
-        defaults['ulimit'] = 200000
-
-    os.environ['ULIMIT'] = str(defaults['ulimit'])
 
     ##########################################################
     # Set up argument parser
     ##########################################################
     parser = argparse.ArgumentParser(
         description="Install or run the Framework Benchmarks test suite.",
-        parents=[conf_parser],
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         epilog=
         '''If an argument includes (type int-sequence), then it accepts integer lists in multiple forms.
@@ -154,14 +67,12 @@ def main(argv=None):
         0:1:5 creates [0, 1, 2, 3, 4]
         ''')
 
-    # Install options
+    # Suite options
     parser.add_argument(
-        '--init',
+        '--publish',
         action='store_true',
         default=False,
-        help='Initializes the benchmark environment')
-
-    # Suite options
+        help='Builds and publishes all the docker images in the suite')
     parser.add_argument(
         '--build',
         nargs='+',
@@ -176,14 +87,6 @@ def main(argv=None):
         action='store_true',
         default=False,
         help='Initialize a new framework test')
-    parser.add_argument(
-        '-v',
-        '--verbose',
-        action='store_true',
-        default=False,
-        help=
-        'Causes the configuration to print before any other commands are executed.'
-    )
     parser.add_argument(
         '--quiet',
         action='store_true',
@@ -212,7 +115,8 @@ def main(argv=None):
     )
 
     # Test options
-    parser.add_argument('--test', nargs='+', help='names of tests to run')
+    parser.add_argument(
+        '--test', default=None, nargs='+', help='names of tests to run')
     parser.add_argument(
         '--test-dir',
         nargs='+',
@@ -224,7 +128,7 @@ def main(argv=None):
         dest='test_lang',
         help='name of language directory containing all tests to run')
     parser.add_argument(
-        '--exclude', nargs='+', help='names of tests to exclude')
+        '--exclude', default=None, nargs='+', help='names of tests to exclude')
     parser.add_argument(
         '--type',
         choices=[
@@ -253,25 +157,52 @@ def main(argv=None):
         default=15,
         help='Time in seconds that each test should run for.')
     parser.add_argument(
-        '--sleep',
-        type=int,
-        default=60,
-        help=
-        'the amount of time to sleep after starting each test to allow the server to start up.'
-    )
+        '--server-host',
+        default='tfb-server',
+        help='Hostname/IP for application server')
+    parser.add_argument(
+        '--database-host',
+        default='tfb-database',
+        help='Hostname/IP for database server')
+    parser.add_argument(
+        '--client-host', default='', help='Hostname/IP for client server')
+    parser.add_argument(
+        '--concurrency-levels',
+        nargs='+',
+        default=[16, 32, 64, 128, 256, 512],
+        help='List of concurrencies to benchmark')
+    parser.add_argument(
+        '--pipeline-concurrency-levels',
+        nargs='+',
+        default=[256, 1024, 4096, 16384],
+        help='List of pipeline concurrencies to benchmark')
+    parser.add_argument(
+        '--query-levels',
+        nargs='+',
+        default=[1, 5, 10, 15, 20],
+        help='List of query levels to benchmark')
+    parser.add_argument(
+        '--cached-query-levels',
+        nargs='+',
+        default=[1, 10, 20, 50, 100],
+        help='List of cached query levels to benchmark')
 
-    parser.set_defaults(**defaults)
-    # Must do this after add, or each option's default will override the configuration file default
-    args = parser.parse_args(remaining_argv)
+    # Network options
+    parser.add_argument(
+        '--network-mode',
+        default=None,
+        help='The network mode to run docker in')
 
-    config = BenchmarkConfig(vars(args))
+    args = parser.parse_args()
+
+    config = BenchmarkConfig(args)
     results = Results(config)
 
     if config.new:
         Scaffolding()
 
-    elif config.init:
-        initialize(config)
+    elif config.publish:
+        docker_helper.publish(config)
 
     elif config.build:
         docker_helper.build(config, config.build)

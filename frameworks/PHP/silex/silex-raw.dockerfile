@@ -1,4 +1,4 @@
-FROM tfb/silex-base:latest
+FROM techempower/silex-base:0.1
 
 RUN mv /silex/web/index_raw.php /silex/web/index.php
 

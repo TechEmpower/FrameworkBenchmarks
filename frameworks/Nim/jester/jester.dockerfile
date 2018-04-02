@@ -1,4 +1,4 @@
-FROM tfb/nimble:latest
+FROM techempower/nimble:0.1
 
 # 2015-06-25
 RUN git clone https://github.com/dom96/jester.git && \

@@ -1,4 +1,4 @@
-FROM tfb/base:latest
+FROM techempower/base:0.1
 
 RUN apt install -yqq llvm-dev libjemalloc-dev zlib1g-dev libssl-dev libcurl4-openssl-dev bison
 

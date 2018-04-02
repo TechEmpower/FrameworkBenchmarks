@@ -1,4 +1,4 @@
-FROM tfb/go-lang:latest
+FROM techempower/go-lang:0.1
 
 ADD ./ /aah
 WORKDIR /aah

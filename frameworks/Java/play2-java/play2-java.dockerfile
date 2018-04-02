@@ -1,4 +1,5 @@
-FROM tfb/sbt:latest
+FROM techempower/sbt:0.1
+
 ADD ./play2-java /play2-java
 WORKDIR /play2-java
 RUN sbt stage

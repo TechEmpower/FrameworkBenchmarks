@@ -1,4 +1,4 @@
-FROM tfb/php7:latest
+FROM techempower/php7:0.1
 
 ADD ./ /workerman
 WORKDIR /workerman

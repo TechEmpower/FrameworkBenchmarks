@@ -3,10 +3,13 @@
 #
 
 sudo: required
+group: deprecated-2017-Q4
 dist: trusty
 language: generic
 python:
   - "2.7"
+services:
+  - docker
 
 env:
   matrix:
@@ -194,27 +197,23 @@ env:
      - "TESTDIR=Vala/vsgi"
      - "TESTDIR=Vala/valum"
 
+install:
+  - docker pull techempower/tfb.wrk
+  - docker pull techempower/tfb
+
 before_script:
 
   # Runs travis_diff, printing the output to the terminal, and searches for travis-diff-continue
   # to determine if the suite should be installed and the current $TESTDIR test should run.
   - export RUN_TESTS=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -oP "travis-run-tests \K(.*)"`
 
-  # travis_setup.sh runs all the same commands you would run if you were setting up
-  # a development environment via:
-  # http://frameworkbenchmarks.readthedocs.io/en/latest/Development/Installation-Guide/
-  # it also stops a few conflicting services
-  - if [ "$RUN_TESTS" ]; then source ./toolset/travis/travis_setup.sh; else echo 'Skipping travis_setup.sh'; fi
+  # Stop services that would claim ports we may need
+  - sudo service mysql stop
+  - sudo service postgresql stop
 
 script:
 
   # run-ci.py runs the diffing to see if travis needs to test this framework. Ideally/eventually,
   # we'd like to try and do the diffing before travis_clean & setup.
   # This will run the tests exactly as you would in your own vm:
-  # ./toolset/run-tests.py --mode verify --test (all the valid tests for this framework)
-  - if [ "$RUN_TESTS" ]; then tfb --mode verify --test-dir $RUN_TESTS; else echo 'Skipping test verification.'; fi
-
-cache:
-  directories:
-    - $HOME/.m2/repository
-    - $HOME/.cache/pip
+  - if [ "$RUN_TESTS" ]; then docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS; else echo 'Skipping test verification.'; fi

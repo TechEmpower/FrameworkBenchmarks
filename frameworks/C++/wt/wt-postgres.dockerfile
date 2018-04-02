@@ -1,4 +1,4 @@
-FROM tfb/wt-base:latest
+FROM techempower/wt-base:0.1
 
 COPY ./ ./
 
@@ -21,6 +21,6 @@ RUN g++-6 \
   -lpthread \
   -lpq
 
-ENV DBHOST=TFB-database
+ENV DBHOST=tfb-database
 
 CMD ./te-benchmark-pg.wt -c wt_config.xml -t $(nproc) --docroot . --approot . --http-listen 0.0.0.0:8080 --accesslog=- --no-compression

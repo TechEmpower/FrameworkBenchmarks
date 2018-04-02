@@ -1,4 +1,4 @@
-FROM tfb/ringo-base:latest
+FROM techempower/ringo-base:0.1
 
 RUN ringo-admin install oberhamsi/sql-ringojs-client && \
     ringo-admin install orfon/reinhardt && \

@@ -1,4 +1,4 @@
-FROM tfb/gcc-4.9:latest
+FROM techempower/gcc-4.9:0.1
 
 RUN apt install -yqq python-dev python-pip cmake autoconf
 

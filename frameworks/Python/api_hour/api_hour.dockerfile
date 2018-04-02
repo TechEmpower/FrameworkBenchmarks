@@ -1,4 +1,4 @@
-FROM tfb/aiohttpweb-base:latest
+FROM techempower/aiohttpweb-base:0.1
 
 WORKDIR /aiohttp.web
 

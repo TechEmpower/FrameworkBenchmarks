@@ -39,13 +39,6 @@ class Benchmarker:
         # Get a list of all known  tests that we can run.
         all_tests = gather_remaining_tests(self.config, self.results)
 
-        # Setup client/server
-        log("Preparing Server, Database, and Client ...", border='=')
-        with self.config.quiet_out.enable():
-            self.__setup_server()
-            self.__setup_database()
-            self.__setup_client()
-
         # Run tests
         success = True
         log("Running Tests...", border='=')
@@ -100,98 +93,6 @@ class Benchmarker:
                 "w") as f:
             f.write(all_tests_json)
 
-    def __setup_server(self):
-        '''
-        Makes any necessary changes to the server that should be
-        made before running the tests. This involves setting kernal
-        settings to allow for more connections, or more file
-        descriptiors
-        
-        http://redmine.lighttpd.net/projects/weighttp/wiki#Troubleshooting
-        '''
-        try:
-            subprocess.call(
-                ['sudo', 'sysctl', '-w', 'net.ipv4.tcp_max_syn_backlog=65535'],
-                stdout=FNULL,
-                stderr=subprocess.STDOUT)
-            subprocess.call(
-                ['sudo', 'sysctl', '-w', 'net.core.somaxconn=65535'],
-                stdout=FNULL,
-                stderr=subprocess.STDOUT)
-            subprocess.call(
-                ['sudo', 'sysctl', 'net.ipv4.tcp_tw_reuse=1'],
-                stdout=FNULL,
-                stderr=subprocess.STDOUT)
-            subprocess.call(
-                ['sudo', 'sysctl', 'net.ipv4.tcp_tw_recycle=1'],
-                stdout=FNULL,
-                stderr=subprocess.STDOUT)
-            subprocess.call(
-                ['sudo', 'sysctl', '-w', 'kernel.shmmax=134217728'],
-                stdout=FNULL,
-                stderr=subprocess.STDOUT)
-            subprocess.call(
-                ['sudo', 'sysctl', '-w', 'kernel.shmall=2097152'],
-                stdout=FNULL,
-                stderr=subprocess.STDOUT)
-
-            with open(os.path.join(self.results.directory, 'sysctl.txt'),
-                      'w') as f:
-                f.write(subprocess.check_output(['sudo', 'sysctl', '-a']))
-        except subprocess.CalledProcessError:
-            return False
-
-    def __setup_database(self):
-        '''
-        Makes any necessary changes to the database machine that should be made 
-        before running the tests. Is very similar to the server setup, but may also 
-        include database specific changes.
-
-        Explanations:
-        net.ipv4.tcp_max_syn_backlog, net.core.somaxconn, kernel.sched_autogroup_enabled: http://tweaked.io/guide/kernel/
-        ulimit -n: http://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files/
-        net.ipv4.tcp_tw_*: http://www.linuxbrigade.com/reduce-time_wait-socket-connections/
-        kernel.shm*: http://seriousbirder.com/blogs/linux-understanding-shmmax-and-shmall-settings/
-        For kernel.sem: https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/5/html/Tuning_and_Optimizing_Red_Hat_Enterprise_Linux_for_Oracle_9i_and_10g_Databases/chap-Oracle_9i_and_10g_Tuning_Guide-Setting_Semaphores.html
-        '''
-        command = list(self.config.database_ssh_command)
-        command.extend([
-            """
-            sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
-            sudo sysctl -w net.core.somaxconn=65535
-            sudo sysctl -w kernel.sched_autogroup_enabled=0
-            sudo -s ulimit -n 65535
-            sudo sysctl net.ipv4.tcp_tw_reuse=1
-            sudo sysctl net.ipv4.tcp_tw_recycle=1
-            sudo sysctl -w kernel.shmmax=2147483648
-            sudo sysctl -w kernel.shmall=2097152
-            sudo sysctl -w kernel.sem="250 32000 256 512"
-            """
-        ])
-        subprocess.check_call(command, stdout=FNULL, stderr=subprocess.STDOUT)
-        # TODO - print kernel configuration to file
-        # echo "Printing kernel configuration:" && sudo sysctl -a
-
-    def __setup_client(self):
-        '''
-        Makes any necessary changes to the client machine that should be made 
-        before running the tests. Is very similar to the server setup, but may also 
-        include client specific changes.
-        '''
-        command = list(self.config.client_ssh_command)
-        command.extend([
-            """
-            sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
-            sudo sysctl -w net.core.somaxconn=65535
-            sudo -s ulimit -n 65535
-            sudo sysctl net.ipv4.tcp_tw_reuse=1
-            sudo sysctl net.ipv4.tcp_tw_recycle=1
-            sudo sysctl -w kernel.shmmax=2147483648
-            sudo sysctl -w kernel.shmall=2097152
-            """
-        ])
-        subprocess.check_call(command, stdout=FNULL, stderr=subprocess.STDOUT)
-
     def __run_test(self, test, benchmark_log):
         '''
         Runs the given test, verifies that the webapp is accepting requests,
@@ -199,13 +100,6 @@ class Benchmarker:
         started for this test.
         '''
         log_prefix = "%s: " % test.name
-
-        if test.os.lower() != self.config.os.lower() or test.database_os.lower(
-        ) != self.config.database_os.lower():
-            log("OS or Database OS specified in benchmark_config.json does not match the current environment. Skipping.",
-                prefix=log_prefix,
-                file=benchmark_log)
-            return False
 
         # If the test is in the excludes list, we skip it
         if self.config.exclude != None and test.name in self.config.exclude:
@@ -215,7 +109,7 @@ class Benchmarker:
                 file=benchmark_log)
             return False
 
-        database_container_id = None
+        database_container = None
         try:
             if self.__is_port_bound(test.port):
                 time.sleep(60)
@@ -233,9 +127,9 @@ class Benchmarker:
 
             # Start database container
             if test.database.lower() != "none":
-                database_container_id = docker_helper.start_database(
-                    self.config, test.database.lower())
-                if not database_container_id:
+                database_container = docker_helper.start_database(
+                    self.config, test, test.database.lower())
+                if database_container is None:
                     self.results.write_intermediate(test.name,
                                                     "ERROR: Problem starting")
                     log("ERROR: Problem building/running database container",
@@ -245,9 +139,10 @@ class Benchmarker:
                     return False
 
             # Start webapp
-            result = test.start(database_container_id)
-            if result != 0:
-                docker_helper.stop(self.config, database_container_id, test)
+            containers = test.start()
+            if containers is None:
+                docker_helper.stop(self.config, containers, database_container,
+                                   test)
                 self.results.write_intermediate(test.name,
                                                 "ERROR: Problem starting")
                 log("ERROR: Problem starting {name}".format(name=test.name),
@@ -258,11 +153,13 @@ class Benchmarker:
 
             slept = 0
             max_sleep = 60
-            while not test.is_running() and slept < max_sleep:
+            accepting_requests = False
+            while not accepting_requests and slept < max_sleep:
+                accepting_requests = test.is_accepting_requests()
                 if not docker_helper.successfully_running_containers(
-                        test.get_docker_files(), benchmark_log):
-                    docker_helper.stop(self.config, database_container_id,
-                                       test)
+                        self.config, test.get_docker_files(), benchmark_log):
+                    docker_helper.stop(self.config, containers,
+                                       database_container, test)
                     log("ERROR: One or more expected docker container exited early",
                         prefix=log_prefix,
                         file=benchmark_log,
@@ -270,6 +167,15 @@ class Benchmarker:
                     return False
                 time.sleep(1)
                 slept += 1
+
+            if not accepting_requests:
+                docker_helper.stop(self.config, containers, database_container,
+                                   test)
+                log("ERROR: Framework is not accepting requests from client machine",
+                    prefix=log_prefix,
+                    file=benchmark_log,
+                    color=Fore.RED)
+                return False
 
             # Debug mode blocks execution here until ctrl+c
             if self.config.mode == "debug":
@@ -292,19 +198,8 @@ class Benchmarker:
                 self.__benchmark(test, benchmark_log)
 
             # Stop this test
-            docker_helper.stop(self.config, database_container_id, test)
-
-            # Remove contents of  /tmp folder
-            try:
-                subprocess.check_call(
-                    'sudo rm -rf /tmp/*',
-                    shell=True,
-                    stderr=benchmark_log,
-                    stdout=benchmark_log)
-            except Exception:
-                log("Error: Could not empty /tmp",
-                    file=benchmark_log,
-                    color=Fore.RED)
+            docker_helper.stop(self.config, containers, database_container,
+                               test)
 
             # Save results thus far into the latest results directory
             self.results.write_intermediate(test.name,
@@ -321,8 +216,6 @@ class Benchmarker:
                     file=benchmark_log,
                     color=Fore.RED)
                 return False
-        except KeyboardInterrupt:
-            docker_helper.stop(self.config, database_container_id, test)
         except (OSError, IOError, subprocess.CalledProcessError) as e:
             tb = traceback.format_exc()
             self.results.write_intermediate(
@@ -354,21 +247,18 @@ class Benchmarker:
                     pass
 
             if not test.failed:
-                remote_script = self.config.types[test_type].get_remote_script(
-                    self.config, test.name, test.get_url(),
-                    framework_test.port)
-
                 # Begin resource usage metrics collection
                 self.__begin_logging(framework_test, test_type)
 
-                # Run the benchmark
-                with open(raw_file, 'w') as raw_file:
-                    p = subprocess.Popen(
-                        self.config.client_ssh_command,
-                        stdin=subprocess.PIPE,
-                        stdout=raw_file,
-                        stderr=raw_file)
-                    p.communicate(remote_script)
+                script = self.config.types[test_type].get_script_name()
+                script_variables = self.config.types[
+                    test_type].get_script_variables(
+                        test.name, "http://%s:%s%s" % (self.config.server_host,
+                                                       framework_test.port,
+                                                       test.get_url()))
+
+                docker_helper.benchmark(self.config, script, script_variables,
+                                        raw_file)
 
                 # End resource usage metrics collection
                 self.__end_logging()

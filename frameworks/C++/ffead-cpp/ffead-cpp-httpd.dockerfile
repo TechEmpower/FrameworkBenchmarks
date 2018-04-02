@@ -1,4 +1,4 @@
-FROM tfb/ffead-cpp-base:latest
+FROM techempower/ffead-cpp-base:0.1
 
 COPY ffead-cpp-httpd.sh ./
 

@@ -1,4 +1,4 @@
-FROM tfb/treefrog-base:latest
+FROM techempower/treefrog-base:0.1
 
 RUN sed -i 's|DriverType=.*|DriverType=QPSQL|g' config/database.ini
 RUN sed -i 's|MultiProcessingModule=.*|MultiProcessingModule=thread|g' config/application.ini

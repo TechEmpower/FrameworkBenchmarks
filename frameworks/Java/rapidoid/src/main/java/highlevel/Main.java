@@ -38,10 +38,10 @@ public class Main {
 		JdbcClient jdbc = JDBC.api();
 
 		if (Env.hasProfile("mysql")) {
-			jdbc.url("jdbc:mysql://TFB-database:3306/hello_world?" + Helper.MYSQL_CONFIG);
+			jdbc.url("jdbc:mysql://tfb-database:3306/hello_world?" + Helper.MYSQL_CONFIG);
 
 		} else if (Env.hasProfile("postgres")) {
-			jdbc.url("jdbc:postgresql://TFB-database:5432/hello_world?" + Helper.POSTGRES_CONFIG);
+			jdbc.url("jdbc:postgresql://tfb-database:5432/hello_world?" + Helper.POSTGRES_CONFIG);
 
 		} else {
 			throw Err.notExpected();

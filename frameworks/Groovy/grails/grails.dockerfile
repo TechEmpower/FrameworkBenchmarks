@@ -1,4 +1,4 @@
-FROM tfb/resin-java8:latest
+FROM techempower/resin-java8:0.1
 
 ADD ./ /grails
 WORKDIR /grails

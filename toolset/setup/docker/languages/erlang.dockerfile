@@ -1,4 +1,4 @@
-FROM tfb/base:latest
+FROM techempower/base:0.1
 
 ENV ERLANG_VERSION="18.2-1"
 ENV RELEASE="xenial"

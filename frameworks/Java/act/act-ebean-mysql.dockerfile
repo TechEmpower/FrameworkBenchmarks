@@ -1,4 +1,5 @@
-FROM tfb/act-base:latest
+FROM techempower/act-base:0.1
+
 RUN mvn -Pebean_mysql clean package
 WORKDIR /act/target/dist
 RUN unzip -q *.zip
@@ -15,6 +16,6 @@ CMD java \
     -Dapp.nodeGroup= \
     -Dprofile=ebean_mysql \
     -Dxio.worker_threads.max=256 \
-    -Dmysql.host=TFB-database \
+    -Dmysql.host=tfb-database \
     -cp "/act/target/dist/classes:/act/target/dist/lib/*" \
     com.techempower.act.AppEntry

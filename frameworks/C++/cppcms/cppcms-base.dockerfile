@@ -1,4 +1,4 @@
-FROM tfb/nginx:latest
+FROM techempower/nginx:0.1
 
 RUN apt install -yqq libgcrypt11-dev cmake python
 

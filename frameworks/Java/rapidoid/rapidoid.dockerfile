@@ -1,4 +1,5 @@
-FROM tfb/rapidoid-base:latest
+FROM techempower/rapidoid-base:0.1
+
 CMD java \
     -server \
     -XX:+UseNUMA \

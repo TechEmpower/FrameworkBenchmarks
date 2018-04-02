@@ -1,7 +1,7 @@
 production:
   adapter: mysql2
   encoding: utf8
-  host: TFB-database
+  host: tfb-database
   database: hello_world
   username: benchmarkdbuser
   password: benchmarkdbpass

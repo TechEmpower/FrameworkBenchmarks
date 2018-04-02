@@ -1,4 +1,4 @@
-FROM tfb/cutelyst-benchmark-app:latest
+FROM techempower/cutelyst-benchmark-app:0.1
 
 ENV C_THREADS=1
 ENV CPU_AFFINITY=1

@@ -1,4 +1,4 @@
-FROM tfb/sinatra-sequel-base:latest
+FROM techempower/sinatra-sequel-base:0.1
 
 # TODO: https://github.com/phusion/passenger/issues/1916
 ENV _PASSENGER_FORCE_HTTP_SESSION=true

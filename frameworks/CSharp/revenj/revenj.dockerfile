@@ -1,5 +1,5 @@
-FROM tfb/java:latest as java
-FROM tfb/mono:latest
+FROM techempower/java:0.1 as java
+FROM techempower/mono:0.1
 COPY --from=java /java /java
 ENV JAVA_HOME=/java/jdk-9.0.4
 ENV PATH="${JAVA_HOME}/bin:${PATH}"

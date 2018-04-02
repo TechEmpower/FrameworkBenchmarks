@@ -62,8 +62,8 @@
                  (.setUsername "benchmarkdbuser")
                  (.setPassword "benchmarkdbpass")
                  ;(.setDataSourceClassName "com.mysql.jdbc.jdbc2.optional.MysqlDataSource")
-                 ;(.setJdbcUrl "jdbc:mysql://TFB-database:3306/hello_world?username=benchmarkdbuser&password=benchmarkdbpass")
-                 (.setJdbcUrl "jdbc:mysql://TFB-database:3306/hello_world")
+                 ;(.setJdbcUrl "jdbc:mysql://tfb-database:3306/hello_world?username=benchmarkdbuser&password=benchmarkdbpass")
+                 (.setJdbcUrl "jdbc:mysql://tfb-database:3306/hello_world")
                  (.setRegisterMbeans false))]
     (HikariDataSource. config)))
 

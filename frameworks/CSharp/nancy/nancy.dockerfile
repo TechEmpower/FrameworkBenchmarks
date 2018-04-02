@@ -1,4 +1,4 @@
-FROM tfb/mono:latest
+FROM techempower/mono:0.1
 
 ADD ./ /nancy
 WORKDIR /nancy

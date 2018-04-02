@@ -1,4 +1,4 @@
-FROM tfb/base:latest
+FROM techempower/base:0.1
 
 ADD ./ /peachpie
 WORKDIR /peachpie

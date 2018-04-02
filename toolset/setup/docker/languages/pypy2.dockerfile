@@ -1,4 +1,4 @@
-FROM tfb/base:latest
+FROM techempower/base:0.1
   
 ENV PYPY2_ROOT=/pypy2
 ENV PYTHONHOME=${PYPY2_ROOT}
