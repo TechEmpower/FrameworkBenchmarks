@@ -98,8 +98,9 @@ run_tests = []
 
 # Break the test env variable down into test directories
 if os.getenv("TESTLANG"):
-    test_dirs = map(lambda x: os.getenv("TESTLANG") + '/' + x,
-                    os.listdir("frameworks/" + os.getenv("TESTLANG")))
+    dir = "frameworks/" + os.getenv("TESTLANG") + "/"
+    test_dirs = map(lambda x: dir + x,
+                    filter(lambda x: os.path.isdir(dir + x), os.listdir(dir)))
 elif os.getenv("TESTDIR"):
     test_dirs = os.getenv("TESTDIR").split(' ')
 
