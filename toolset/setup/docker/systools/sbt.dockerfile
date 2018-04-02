@@ -1,4 +1,4 @@
-FROM techempower/java:0.1
+FROM techempower/java8:0.1
 
 RUN mkdir /sbt
 WORKDIR /sbt
