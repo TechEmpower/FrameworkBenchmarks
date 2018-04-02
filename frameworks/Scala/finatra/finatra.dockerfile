@@ -1,4 +1,4 @@
-FROM tfb/sbt:latest:0.1
+FROM techempower/sbt:0.1
 
 ADD ./ /finatra
 WORKDIR /finatra

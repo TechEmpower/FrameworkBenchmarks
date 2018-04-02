@@ -1,4 +1,4 @@
-FROM tfb/ulib-base:latest
+FROM techempower/ulib-base:0.1
 
 # 1. Change ULib Server (userver_tcp) configuration
 RUN sed -i "s|TCP_LINGER_SET .*|TCP_LINGER_SET 0|g" $IROOT/ULib/benchmark.cfg

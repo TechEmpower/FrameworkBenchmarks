@@ -311,16 +311,15 @@ def start_database(benchmarker_config, test, database):
         # Don't pull if we have it
         client.images.get(image_name)
         pulled = True
-        log("Found published image; skipping build: techempower/%s:latest" %
-            database)
+        log("Found published image; skipping build", prefix=log_prefix)
     except:
         # Pull the dependency image
         try:
-            log("Attempting docker pull for image (this can take some time): techempower/%s"
-                % database)
+            log("Attempting docker pull for image (this can take some time)",
+                prefix=log_prefix)
             client.images.pull(image_name)
             pulled = True
-            log("Found published image; skipping build")
+            log("Found published image; skipping build", prefix=log_prefix)
         except:
             pass
 
@@ -380,7 +379,7 @@ def test_client_connection(benchmarker_config, url):
     try:
         client.images.get('techempower/tfb.wrk:latest')
     except:
-        log("Attempting docker pull for image (this can take some time): techempower/tfb.wrk",
+        log("Attempting docker pull for image (this can take some time)",
             prefix="techempower/tfb.wrk:latest: ")
         client.images.pull('techempower/tfb.wrk:latest')
 
@@ -490,13 +489,12 @@ def __build_dependencies(benchmarker_config,
                     # If we have it, use it
                     client.images.get(dep)
                     pulled = True
-                    log("Found published image; skipping build: %s" % dep,
+                    log("Found published image; skipping build",
                         prefix=log_prefix)
                 except:
                     # Pull the dependency image
                     try:
-                        log("Attempting docker pull for image (this can take some time): %s"
-                            % dep,
+                        log("Attempting docker pull for image (this can take some time)",
                             prefix=log_prefix)
                         client.images.pull(dep)
                         pulled = True

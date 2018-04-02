@@ -1,4 +1,4 @@
-FROM tfb/base:latest
+FROM techempower/base:0.1
 
 ENV IROOT=/installs
 ENV FFEAD_CPP_PATH=${IROOT}/ffead-cpp-2.0
