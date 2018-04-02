@@ -2,8 +2,9 @@
 
 # @file:        toolset/travis/travis_diff.py
 # @author:      Nate Brady
-# @description: This script is only for use within Travis-CI. It is meant to look through the commit history
-#   and determine whether or not the current framework test directory needs to be run.
+# @description: This script is only for use within Travis-CI. It is meant to
+# look through the commit history and determine whether or not the current
+# framework test directory needs to be run.
 
 import subprocess
 import os
@@ -176,7 +177,7 @@ for test in test_dirs:
     found = False
     while i <= len(docker_changes) - 1 and not found:
 
-        # Generates output of files that contain a FROM import for this dependency
+        # Generates output of files that contain a FROM for this dependency
         more_changes = subprocess.check_output([
             'bash', '-c', 'grep -RP "FROM tfb/' +
                           re.escape(docker_changes[i].replace('.dockerfile', ''))
