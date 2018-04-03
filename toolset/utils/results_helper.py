@@ -36,8 +36,6 @@ class Results:
         self.environmentDescription = self.config.results_environment
         try:
             self.git = dict()
-            subprocess.check_call(
-                ['git', 'status'], stdout=FNULL, stderr=subprocess.STDOUT)
             self.git['commitId'] = self.__get_git_commit_id()
             self.git['repositoryUrl'] = self.__get_git_repository_url()
             self.git['branchName'] = self.__get_git_branch_name()
@@ -448,21 +446,21 @@ class Results:
         '''
         Get the git commit id for this benchmark
         '''
-        return subprocess.check_output(["git", "rev-parse", "HEAD"]).strip()
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=self.config.fwroot).strip()
 
     def __get_git_repository_url(self):
         '''
         Gets the git repository url for this benchmark
         '''
         return subprocess.check_output(
-            ["git", "config", "--get", "remote.origin.url"]).strip()
+            ["git", "config", "--get", "remote.origin.url"], cwd=self.config.fwroot).strip()
 
     def __get_git_branch_name(self):
         '''
         Gets the git branch name for this benchmark
         '''
         return subprocess.check_output(
-            'git rev-parse --abbrev-ref HEAD', shell=True).strip()
+            'git rev-parse --abbrev-ref HEAD', shell=True, cwd=self.config.fwroot).strip()
 
     def __parse_stats(self, framework_test, test_type, start_time, end_time,
                       interval):
