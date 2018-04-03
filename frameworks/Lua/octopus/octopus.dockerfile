@@ -15,10 +15,6 @@ ADD ./ /octo
 RUN cp -avr app octopus/extensions
 RUN cp -vf config.lua octopus/extensions
 
-RUN DBIP=`getent hosts tfb-database | awk '{ print $1 }'` sed -i "s|DBHOSTNAME|$DBIP|g" octopus/extensions/config.lua
-
-RUN cat octopus/extensions/config.lua
-
 WORKDIR /octo/octopus/bin/unix
 
 RUN chmod +x *.sh
@@ -29,8 +25,6 @@ RUN sed -i 's|-c nginx.conf|-c nginx.conf -g "daemon off;"|g' server.sh
 RUN ./server.sh install
 RUN ./server.sh build
 
-RUN ls /octo
-RUN ls /octo/octopus
-RUN ls /octo/octopus/extensions
-
-CMD ./server.sh start
+CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
+    sed -i "s|DBHOSTNAME|$DBIP|g" octopus/extensions/config.lua && \
+    ./server.sh start
