@@ -9,61 +9,17 @@ if [ ! -e "~/.firstboot" ]; then
   echo "grub-pc grub-pc/install_devices multiselect     /dev/sda" | sudo debconf-set-selections
 
   # Install prerequisite tools
-  echo "Installing prerequisites"
+  echo "Installing docker"
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   sudo apt-get update
-  sudo apt-get install -y git
-  git config --global core.autocrlf input
+  sudo apt-get install -yqq docker-ce
 
-  # Setting up ssh & passwordless sudo
-  ssh-keygen -f /home/vagrant/.ssh/id_rsa -N '' -t rsa
-  cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
-  chmod og-wx /home/vagrant/.ssh/authorized_keys
-  echo "NoHostAuthenticationForLocalhost yes" | tee -a /home/vagrant/.ssh/config
-  chmod 600 ~/.ssh/config
+  # Setting up passwordless sudo
   echo "vagrant ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
-
-  # Setting up new FWROOT
-  export FWROOT="/home/vagrant/FrameworkBenchmarks"
-  echo `export FWROOT="/home/vagrant/FrameworkBenchmarks"` >> ~/.bashrc
 
   sudo chown vagrant:vagrant ~/FrameworkBenchmarks
   cd ~/FrameworkBenchmarks
-
-  # Set up the benchmark.cfg for vagrant user
-cat <<EOF > benchmark.cfg
-[Defaults]
-# Available Keys:
-os=linux
-server_host=127.0.0.1
-client_host=127.0.0.1
-client_identity_file=/home/vagrant/.ssh/id_rsa
-client_user=vagrant
-database_host=127.0.0.1
-database_identity_file=/home/vagrant/.ssh/id_rsa
-database_os=linux
-database_user=vagrant
-duration=60
-exclude=None
-install=server
-install_error_action=continue
-install_strategy=unified
-install_only=False
-list_tests=False
-concurrency_levels=[8, 16, 32, 64, 128, 256]
-pipeline_concurrency_levels=[256,1024,4096,16384]
-query_levels=[1, 5,10,15,20]
-cached_query_levels=[1,10,20,50,100]
-threads=8
-mode=benchmark
-sleep=60
-test=None
-type=all
-verbose=True
-clean=False
-ulimit=200000
-EOF
-
-  source ./toolset/setup/linux/prerequisites.sh
 
   # Setup a nice welcome message for our guest
   echo "Setting up welcome message"
@@ -87,7 +43,22 @@ EOF
 
   sudo mv motd /etc/
 
-  echo "Setting up client and database machines"
-  tfb --init --quiet
+  sudo cat <<EOF > tfb
+#!/bin/bash
 
+# Defaults
+ds=/var/run/docker.sock
+sd=/home/vagrant/FrameworkBenchmarks
+
+# Build the tfb image
+docker pull techempower/tfb
+
+# Create the tfb network
+docker network create tfb > /dev/null 2>&1
+# Run the suite
+docker run --network=tfb -v \${DOCKER_SOCKET_PATH-\$ds}:/var/run/docker.sock --mount type=bind,source=\${TFB_SOURCE_DIR-\$sd},target=/FrameworkBenchmarks techempower/tfb "\$@"
+EOF
+  sudo mv tfb /usr/local/bin
+  sudo chmod a+x /usr/local/bin/tfb
+  sudo chmod 777 /var/run/docker.sock
 fi
