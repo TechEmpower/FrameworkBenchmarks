@@ -197,8 +197,6 @@ env:
      - "TESTDIR=Vala/vsgi"
      - "TESTDIR=Vala/valum"
 
-install:
-
 
 before_script:
 
