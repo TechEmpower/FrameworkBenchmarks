@@ -192,6 +192,7 @@ env:
      - "TESTDIR=Scala/fintrospect"
      - "TESTDIR=Scala/http4s"
      - "TESTDIR=Scala/play2-scala"
+     - "TESTDIR=Swift/swift-nio"
      - "TESTDIR=Swift/vapor"
      - "TESTDIR=Ur/urweb"
      - "TESTDIR=Vala/vsgi"
