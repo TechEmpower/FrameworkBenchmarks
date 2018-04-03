@@ -26,5 +26,5 @@ RUN ./server.sh install
 RUN ./server.sh build
 
 CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
-    sed -i "s|DBHOSTNAME|$DBIP|g" octopus/extensions/config.lua && \
+    sed -i "s|DBHOSTNAME|$DBIP|g" /octo/octopus/extensions/build/src/types.lua && \
     ./server.sh start
