@@ -48,7 +48,19 @@ That run script is pretty wordy, but each and every flag is required. Unfortunat
 - `techempower/tfb` is the name of toolset container to run
 - `--mode verify --test gemini` are the command to pass to the toolset.
 
-A note on Windows:
+#### A note on Linux:
+
+You may not want to call step 4 from above every time. You can add an `alias` to your `~/.bash_aliases` file to shorten it since it will not change once configured:
+
+`$ alias tfb="docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=[ABS PATH TO THIS DIR],target=/FrameworkBenchmarks techempower/tfb"`
+
+`$ source ~/.bash_aliases`
+
+Now you can run the toolset via `tfb`:
+
+`$ tfb --mode verify --test gemini`
+
+#### A note on Windows:
 
 - Docker expects Linux-style paths. If you cloned on your `C:\` drive, then `[ABS PATH TO THIS DIR]` would be `/c/FrameworkBenchmarks`.
 - [Docker for Windows](https://www.docker.com/docker-windows) understands `/var/run/docker.sock` even though that is not a valid path on Windows. [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_windows/) **may** not - use at your own risk.

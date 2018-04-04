@@ -29,9 +29,6 @@ if [ ! -e "~/.firstboot" ]; then
   sudo cat <<EOF > motd
 Welcome to the FrameworkBenchmarks project!
 
-  To get started, perhaps try this:
-    $ cd FrameworkBenchmarks
-
   You can get lots of help:
     $ tfb --help
 
