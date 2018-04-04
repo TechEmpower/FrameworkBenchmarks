@@ -44,4 +44,5 @@ EOF
 
   sudo mv motd /etc/
   sudo chmod 777 /var/run/docker.sock
+  docker network create tfb
 fi

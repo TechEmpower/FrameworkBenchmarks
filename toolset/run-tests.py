@@ -47,6 +47,7 @@ class StoreSeqAction(argparse.Action):
 
 
 def __stop(signal, frame):
+    log("Shutting down (may take a moment)")
     docker_helper.stop(config)
     sys.exit(0)
 

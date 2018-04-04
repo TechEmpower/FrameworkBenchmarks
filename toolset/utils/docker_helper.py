@@ -283,10 +283,6 @@ def stop(benchmarker_config=None,
             # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
             client.images.remove(
                 container.image.tags[0].split(':')[0], force=True)
-    client.images.prune()
-    client.containers.prune()
-    client.networks.prune()
-    client.volumes.prune()
 
     database_client = docker.DockerClient(
         base_url=benchmarker_config.database_docker_host)
@@ -303,10 +299,13 @@ def stop(benchmarker_config=None,
     else:
         database_container.stop()
 
+    client.images.prune()
+    client.containers.prune()
+    client.volumes.prune()
+
     if benchmarker_config.server_docker_host != benchmarker_config.database_docker_host:
         database_client.images.prune()
         database_client.containers.prune()
-        database_client.networks.prune()
         database_client.volumes.prune()
 
 
