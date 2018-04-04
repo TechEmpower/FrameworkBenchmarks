@@ -42,22 +42,6 @@ Welcome to the FrameworkBenchmarks project!
 EOF
 
   sudo mv motd /etc/
-
-  sudo cat <<EOF > tfb
-#!/bin/bash
-
-# Defaults
-ds=/var/run/docker.sock
-sd=/home/vagrant/FrameworkBenchmarks
-
-# Build the tfb image
-docker pull techempower/tfb
-
-# Create the tfb network
-docker network create tfb > /dev/null 2>&1
-# Run the suite
-docker run --network=tfb -v \${DOCKER_SOCKET_PATH-\$ds}:/var/run/docker.sock --mount type=bind,source=\${TFB_SOURCE_DIR-\$sd},target=/FrameworkBenchmarks techempower/tfb "\$@"
-EOF
   sudo mv tfb /usr/local/bin
   sudo chmod a+x /usr/local/bin/tfb
   sudo chmod 777 /var/run/docker.sock
