@@ -25,25 +25,33 @@ required.
 
         $ git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
 
-2. Move into the vagrant-development directory.
+2. Change directories
 
         $ cd FrameworkBenchmarks/deployment/vagrant
 
-3. Turn on the VM (takes at least 20 minutes).
+3. Create the TFB Docker virtual network
 
-        $ vagrant up
+        $ docker network create tfb
 
-4. Enter the VM.
+4. Run a test.
 
-        $ vagrant ssh
+        $ docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=[ABS PATH TO THIS DIR],target=/FrameworkBenchmarks techempower/tfb --mode verify --test gemini
 
-5. Move into the FrameworkBenchmarks directory in the vm.
+### Explanation of the run script
 
-        vagrant@TFB-all:~$ cd ~/FrameworkBenchmarks
-        
-6. Run a test.
+That run script is pretty wordy, but each and every flag is required. Unfortunately, because of the way that Docker runs processes, you **cannot** put this inside of a shell script without breaking how `ctrl+c` and `SIGTERM` work (the shell script would receive the signal, do nothing with the underlying python suite running, and exit, orphaning the toolset to continue running).
 
-        vagrant@TFB-all:~/FrameworkBenchmarks$ tfb --mode verify --test beego
+- `-it` tells docker to run this in 'interactive' mode and simulate a TTY, so that `ctrl+c` is propagated.
+- `--network=tfb` tells the container to join the 'tfb' Docker virtual network
+- `-v` specifies which Docker socket path to mount as a volume in the running container. This allows docker commands run inside this container to use the host container's docker to create/run/stop/remove containers.
+- `--mount` mounts the FrameworkBenchmarks source directory as a volume to share with the container so that rebuilding the toolset image is unnecessary and any changes you make on the host system are available in the running toolset container.
+- `techempower/tfb` is the name of toolset container to run
+- `--mode verify --test gemini` are the command to pass to the toolset.
+
+A note on Windows:
+
+- Docker expects Linux-style paths. If you cloned on your `C:\` drive, then `[ABS PATH TO THIS DIR]` would be `/c/FrameworkBenchmarks`.
+- [Docker for Windows](https://www.docker.com/docker-windows) understands `/var/run/docker.sock` even though that is not a valid path on Windows. [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_windows/) **may** not - use at your own risk.
 
 ## Add a New Test
 
