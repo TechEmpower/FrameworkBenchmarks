@@ -48,7 +48,5 @@ Welcome to the FrameworkBenchmarks project!
 EOF
 
   sudo mv motd /etc/
-  sudo mv tfb /usr/local/bin
-  sudo chmod a+x /usr/local/bin/tfb
   sudo chmod 777 /var/run/docker.sock
 fi
