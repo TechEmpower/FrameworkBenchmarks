@@ -28,7 +28,7 @@ echo " wrk \"-H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-a
 echo "---------------------------------------------------------"
 echo ""
 STARTTIME=$(date +"%s")
-wrk "-H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-alive'" --latency -d $duration -c %max_concurrency --timeout 8 -t $max_threads "$url$c"
+wrk "-H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-alive'" --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads "$url$c"
 echo "STARTTIME $STARTTIME"
 echo "ENDTIME $(date +"%s")"
 sleep 2

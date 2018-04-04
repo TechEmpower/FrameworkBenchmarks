@@ -279,6 +279,13 @@ def stop(benchmarker_config=None,
     client.containers.prune()
     client.networks.prune()
     client.volumes.prune()
+    if benchmarker_config.server_docker_host != benchmarker_config.database_docker_host:
+        db_client = docker.DockerClient(
+            base_url=benchmarker_config.database_docker_host)
+        db_client.images.prune()
+        db_client.containers.prune()
+        db_client.networks.prune()
+        db_client.volumes.prune()
 
 
 def find(path, pattern):
