@@ -33,10 +33,16 @@ Welcome to the FrameworkBenchmarks project!
     $ cd FrameworkBenchmarks
 
   You can get lots of help:
-    $ tfb --help
+    $ docker run -it --network=tfb \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks \
+        techempower/tfb --help
 
   You can run a test like:
-    $ tfb --mode verify --test gemini
+    $ docker run -it --network=tfb \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks \
+        techempower/tfb --mode verify --test gemini
 
   This Vagrant environment is already setup and ready to go.
 EOF
