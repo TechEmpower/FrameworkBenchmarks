@@ -1,6 +1,7 @@
 import argparse
 import socket
 import sys
+import signal
 from toolset.benchmark.benchmarker import Benchmarker
 from toolset.utils.scaffolding import Scaffolding
 from toolset.utils import cleaner
@@ -13,6 +14,9 @@ from toolset.utils.output_helper import log
 # Enable cross-platform colored output
 from colorama import init, Fore
 init()
+
+# Required to be globally known
+config = None
 
 
 class StoreSeqAction(argparse.Action):
@@ -40,6 +44,16 @@ class StoreSeqAction(argparse.Action):
             result.remove(sequence)
             result = result + range(int(start), int(end), int(step))
         return [abs(int(item)) for item in result]
+
+
+def __stop(signal, frame):
+    log("Shutting down (may take a moment)")
+    docker_helper.stop(config)
+    sys.exit(0)
+
+
+signal.signal(signal.SIGTERM, __stop)
+signal.signal(signal.SIGINT, __stop)
 
 
 ###################################################################################################
@@ -195,6 +209,7 @@ def main(argv=None):
 
     args = parser.parse_args()
 
+    global config
     config = BenchmarkConfig(args)
     results = Results(config)
 

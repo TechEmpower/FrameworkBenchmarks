@@ -267,25 +267,46 @@ def stop(benchmarker_config=None,
     '''
     client = docker.DockerClient(
         base_url=benchmarker_config.server_docker_host)
-    # Stop all our running containers
-    for container in containers:
-        container.stop()
-        # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
-        client.images.remove(container.image.tags[0].split(':')[0], force=True)
+    if containers is None:
+        for container in client.containers.list():
+            if len(
+                    container.image.tags
+            ) > 0 and 'techempower' in container.image.tags[0] and 'tfb:latest' not in container.image.tags[0]:
+                container.stop()
+                # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
+                client.images.remove(
+                    container.image.tags[0].split(':')[0], force=True)
+    else:
+        # Stop all our running containers
+        for container in containers:
+            container.stop()
+            # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
+            client.images.remove(
+                container.image.tags[0].split(':')[0], force=True)
+
+    database_client = docker.DockerClient(
+        base_url=benchmarker_config.database_docker_host)
     # Stop the database container
-    if database_container is not None:
+    if database_container is None:
+        for container in database_client.containers.list():
+            if len(
+                    container.image.tags
+            ) > 0 and 'techempower' in container.image.tags[0] and 'tfb:latest' not in container.image.tags[0]:
+                container.stop()
+                # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
+                client.images.remove(
+                    container.image.tags[0].split(':')[0], force=True)
+    else:
         database_container.stop()
+
     client.images.prune()
     client.containers.prune()
-    client.networks.prune()
     client.volumes.prune()
+
     if benchmarker_config.server_docker_host != benchmarker_config.database_docker_host:
-        db_client = docker.DockerClient(
-            base_url=benchmarker_config.database_docker_host)
-        db_client.images.prune()
-        db_client.containers.prune()
-        db_client.networks.prune()
-        db_client.volumes.prune()
+        database_client.images.prune()
+        database_client.containers.prune()
+        database_client.volumes.prune()
 
 
 def find(path, pattern):

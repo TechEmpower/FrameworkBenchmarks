@@ -29,9 +29,6 @@ if [ ! -e "~/.firstboot" ]; then
   sudo cat <<EOF > motd
 Welcome to the FrameworkBenchmarks project!
 
-  To get started, perhaps try this:
-    $ cd FrameworkBenchmarks
-
   You can get lots of help:
     $ tfb --help
 
@@ -41,24 +38,11 @@ Welcome to the FrameworkBenchmarks project!
   This Vagrant environment is already setup and ready to go.
 EOF
 
-  sudo mv motd /etc/
-
-  sudo cat <<EOF > tfb
-#!/bin/bash
-
-# Defaults
-ds=/var/run/docker.sock
-sd=/home/vagrant/FrameworkBenchmarks
-
-# Build the tfb image
-docker pull techempower/tfb
-
-# Create the tfb network
-docker network create tfb > /dev/null 2>&1
-# Run the suite
-docker run --network=tfb -v \${DOCKER_SOCKET_PATH-\$ds}:/var/run/docker.sock --mount type=bind,source=\${TFB_SOURCE_DIR-\$sd},target=/FrameworkBenchmarks techempower/tfb "\$@"
+  cat <<EOF > /home/vagrant/.bash_aliases
+alias tfb="docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=/home/vagrant/FrameworkBenchmarks,target=/FrameworkBenchmarks techempower/tfb"
 EOF
-  sudo mv tfb /usr/local/bin
-  sudo chmod a+x /usr/local/bin/tfb
+
+  sudo mv motd /etc/
   sudo chmod 777 /var/run/docker.sock
+  docker network create tfb
 fi

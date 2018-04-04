@@ -68,7 +68,7 @@ class FrameworkTest:
         result = docker_helper.build(self.benchmarker_config, [self.name],
                                      build_log_dir)
         if result != 0:
-            return result
+            return None
 
         return docker_helper.run(self.benchmarker_config, test_docker_files,
                                  run_log_dir)
