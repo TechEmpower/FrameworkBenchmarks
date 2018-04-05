@@ -510,7 +510,7 @@ def __build_dependencies(benchmarker_config,
             pulled = False
 
             # Do not pull techempower/ images if we are building specifically
-            if not benchmarker_config.build and not dep.startswith('techempower/'):
+            if not benchmarker_config.build and 'techempower/' not in dep:
                 client = docker.DockerClient(
                     base_url=benchmarker_config.server_docker_host)
                 try:
