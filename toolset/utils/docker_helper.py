@@ -468,7 +468,7 @@ def __gather_dependencies(docker_file):
                 tokens = line.strip().split(' ')
                 if tokens[0] == "FROM":
                     # This is magic that our base image points to
-                    if tokens[1] != "ubuntu:16.04":
+                    if tokens[1].startswith('techempower/'):
                         dep_ref = tokens[1].strip().split(':')[0].strip()
                         if '/' not in dep_ref:
                             raise AttributeError(
@@ -509,8 +509,8 @@ def __build_dependencies(benchmarker_config,
             log_prefix = dep + ": "
             pulled = False
 
-            # Do not pull images if we are building specifically
-            if not benchmarker_config.build:
+            # Do not pull techempower/ images if we are building specifically
+            if not benchmarker_config.build and not dep.startswith('techempower/'):
                 client = docker.DockerClient(
                     base_url=benchmarker_config.server_docker_host)
                 try:
@@ -529,7 +529,10 @@ def __build_dependencies(benchmarker_config,
                         log("Found published image; skipping build",
                             prefix=log_prefix)
                     except:
-                        pass
+                        log("Docker pull failed; %s could not be found; terminating" % dep,
+                            prefix=log_prefix,
+                            color=Fore.RED)
+                        return 1
 
             if not pulled:
                 dep_ref = dep.strip().split(':')[0].strip()

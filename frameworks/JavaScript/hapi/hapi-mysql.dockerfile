@@ -1,4 +1,4 @@
-FROM techempower/nodejs8:0.1
+FROM node:9.10.1
 
 COPY ./ ./
 
