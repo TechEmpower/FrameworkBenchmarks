@@ -22,7 +22,7 @@
 				"webserver": "nginx",
 				"os": "Linux",
 				"database_os": "Linux",
-				"display_name": "Lumen 5.6",
+				"display_name": "Lumen",
 				"notes": "",
 				"versus": "php7"
 			}

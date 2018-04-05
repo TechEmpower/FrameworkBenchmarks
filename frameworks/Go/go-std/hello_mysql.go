@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"flag"
-	"fmt"
 	"html/template"
 	"log"
 	"math/rand"
@@ -63,7 +62,7 @@ const (
 	// It reduces round trips without prepared statement.
 	//
 	// We can see difference between prepared statement and interpolation by comparing go-std-mysql and go-std-mysql-interpolate
-	connectionString = "benchmarkdbuser:benchmarkdbpass@tcp(%s:3306)/hello_world?interpolateParams=true"
+	connectionString = "benchmarkdbuser:benchmarkdbpass@tcp(tfb-database:3306)/hello_world?interpolateParams=true"
 	worldSelect      = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate      = "UPDATE World SET randomNumber = ? WHERE id = ?"
 	fortuneSelect    = "SELECT id, message FROM Fortune"
@@ -89,11 +88,7 @@ var child = flag.Bool("child", false, "is child proc")
 
 func initDB() {
 	var err error
-	var dbhost = os.Getenv("DBHOST")
-	if dbhost == "" {
-		dbhost = "localhost"
-	}
-	db, err = sql.Open("mysql", fmt.Sprintf(connectionString, dbhost))
+	db, err = sql.Open("mysql", connectionString)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
 	}

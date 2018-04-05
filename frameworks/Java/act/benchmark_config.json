@@ -1,8 +1,7 @@
 {
-  "framework": "actframework",
+  "framework": "act",
   "tests": [{
       "default": {
-      "setup_file": "setup-json-plaintext",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 5460,
@@ -17,12 +16,11 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actframework",
+      "display_name": "act",
       "notes": "",
       "versus": "undertow"
     },
     "ebean-pgsql": {
-      "setup_file": "setup-ebean-pgsql",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -44,7 +42,6 @@
       "versus": "undertow-postgresql"
     },
     "ebean-pgsql-rythm": {
-      "setup_file": "setup-ebean-pgsql-rythm",
       "fortune_url": "/fortunes",
       "port": 5460,
       "approach": "Realistic",
@@ -58,12 +55,11 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-ebean-pgsql",
+      "display_name": "act-ebean-pgsql-rythm",
       "notes": "",
       "versus": "undertow-postgresql"
     },
     "ebean-mysql": {
-      "setup_file": "setup-ebean-mysql",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -85,7 +81,6 @@
       "versus": "undertow-mysql"
     },
     "ebean-mysql-rythm": {
-      "setup_file": "setup-ebean-mysql-rythm",
       "fortune_url": "/fortunes",
       "port": 5460,
       "approach": "Realistic",
@@ -99,12 +94,11 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-ebean-mysql",
+      "display_name": "act-ebean-mysql-rythm",
       "notes": "",
       "versus": "undertow-mysql"
     },
     "hibernate-pgsql": {
-      "setup_file": "setup-hibernate-pgsql",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -126,7 +120,6 @@
       "versus": "undertow-postgresql"
     },
     "hibernate-pgsql-rythm": {
-      "setup_file": "setup-hibernate-pgsql-rythm",
       "fortune_url": "/fortunes",
       "port": 5460,
       "approach": "Realistic",
@@ -140,12 +133,11 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-hibernate-pgsql",
+      "display_name": "act-hibernate-pgsql-rythm",
       "notes": "",
       "versus": "undertow-postgresql"
     },
     "hibernate-mysql": {
-      "setup_file": "setup-hibernate-mysql",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -167,7 +159,6 @@
       "versus": "undertow-mysql"
     },
     "hibernate-mysql-rythm": {
-      "setup_file": "setup-hibernate-mysql-rythm",
       "fortune_url": "/fortunes",
       "port": 5460,
       "approach": "Realistic",
@@ -181,12 +172,11 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-hibernate-mysql",
+      "display_name": "act-hibernate-mysql-rythm",
       "notes": "",
       "versus": "undertow-mysql"
     },
     "eclipselink-pgsql": {
-      "setup_file": "setup-eclipselink-pgsql",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -208,7 +198,6 @@
       "versus": "undertow-postgresql"
     },
     "eclipselink-pgsql-rythm": {
-      "setup_file": "setup-eclipselink-pgsql-rythm",
       "fortune_url": "/fortunes",
       "port": 5460,
       "approach": "Realistic",
@@ -222,12 +211,11 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-eclipselink-pgsql",
+      "display_name": "act-eclipselink-pgsql-rythm",
       "notes": "",
       "versus": "undertow-postgresql"
     },
     "eclipselink-mysql": {
-      "setup_file": "setup-eclipselink-mysql",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -249,7 +237,6 @@
       "versus": "undertow-mysql"
     },
     "eclipselink-mysql-rythm": {
-      "setup_file": "setup-eclipselink-mysql-rythm",
       "fortune_url": "/fortunes",
       "port": 5460,
       "approach": "Realistic",
@@ -263,12 +250,11 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-eclipselink-mysql",
+      "display_name": "act-eclipselink-mysql-rythm",
       "notes": "",
       "versus": "undertow-mysql"
     },
     "morphia-mongo": {
-      "setup_file": "setup-morphia-mongo",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -285,12 +271,11 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-morphia",
+      "display_name": "act-morphia-mongo",
       "notes": "",
       "versus": "undertow-mongodb"
     },
     "morphia-mongo-rythm": {
-      "setup_file": "setup-morphia-mongo-rythm",
       "fortune_url": "/fortunes",
       "port": 5460,
       "approach": "Realistic",
@@ -304,7 +289,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "act-morphia",
+      "display_name": "act-morphia-mongo-rythm",
       "notes": "",
       "versus": "undertow-mongodb"
     }

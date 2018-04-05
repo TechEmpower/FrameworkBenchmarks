@@ -5,6 +5,10 @@ export DEBIAN_FRONTEND=noninteractive
 # Turn on command tracing
 set -x
 
+# Stop services that travis starts to free up those ports for docker usage
+sudo service mysql stop
+sudo service postgresql stop
+
 # Run as travis user (who already has passwordless sudo)
 ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa
 cat /home/travis/.ssh/id_rsa.pub >> /home/travis/.ssh/authorized_keys
@@ -18,8 +22,6 @@ sed -i s/techempower/travis/g ./benchmark.cfg
 
 echo "travis ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
 
-echo 127.0.0.1 TFB-database | sudo tee --append /etc/hosts
-echo 127.0.0.1 TFB-client   | sudo tee --append /etc/hosts
-echo 127.0.0.1 TFB-server   | sudo tee --append /etc/hosts
-
 source ./toolset/setup/linux/prerequisites.sh
+
+tfb --init --quiet

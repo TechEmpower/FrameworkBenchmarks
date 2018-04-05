@@ -2,7 +2,6 @@
   "framework": "treefrog",
   "tests": [{
     "default": {
-      "setup_file": "setup-thread",
       "json_url": "/json/json",
       "db_url": "/world/random",
       "query_url": "/world/queries/",
@@ -25,7 +24,6 @@
       "versus": ""
     },
     "hybrid": {
-      "setup_file": "setup",
       "json_url": "/json/json",
       "db_url": "/world/random",
       "query_url": "/world/queries/",
@@ -49,7 +47,6 @@
       "versus": "treefrog"
     },
     "postgres": {
-      "setup_file": "setup-postgres",
       "json_url": "/json/json",
       "db_url": "/world/random",
       "query_url": "/world/queries/",
@@ -73,7 +70,6 @@
       "versus": ""
     },
     "mongodb": {
-      "setup_file": "setup-mongodb",
       "json_url": "/json/json",
       "db_url": "/world/mrandom",
       "query_url": "/world/mqueries/",

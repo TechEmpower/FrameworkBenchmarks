@@ -5,7 +5,7 @@
 
 function fortune() {
   // Database connection // TODO: use PDO once implemented
-  $link = mysql_connect('TFB-database', 'benchmarkdbuser', 'benchmarkdbpass');
+  $link = mysql_connect('tfb-database', 'benchmarkdbuser', 'benchmarkdbpass');
   mysql_select_db('hello_world', $link);
     
   // Store result in array.

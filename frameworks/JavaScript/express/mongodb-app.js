@@ -7,9 +7,7 @@ const cluster = require('cluster'),
   numCPUs = require('os').cpus().length,
   express = require('express'),
   mongoose = require('mongoose'),
-  conn = mongoose.connect('mongodb://TFB-database/hello_world', {
-    useMongoClient: true
-  });
+  conn = mongoose.connect('mongodb://tfb-database/hello_world');
 
 // Middleware
 const bodyParser = require('body-parser');
@@ -18,20 +16,20 @@ const Schema = mongoose.Schema,
   ObjectId = Schema.ObjectId;
 
 const WorldSchema = new mongoose.Schema({
-    id          : Number,
-    randomNumber: Number
-  }, {
+  id: Number,
+  randomNumber: Number
+}, {
     collection: 'world'
   }),
-  MWorld = conn.model('world', WorldSchema);
+  MWorld = mongoose.model('world', WorldSchema);
 
 const FortuneSchema = new mongoose.Schema({
-    id          : Number,
-    message     : String
-  }, {
+  id: Number,
+  message: String
+}, {
     collection: 'fortune'
   }),
-  MFortune = conn.model('fortune', FortuneSchema);
+  MFortune = mongoose.model('fortune', FortuneSchema);
 
 if (cluster.isMaster) {
   // Fork workers.
@@ -62,7 +60,7 @@ if (cluster.isMaster) {
       results = [];
 
     for (let i = 1; i <= queries; i++) {
-      results.push(await MWorld.findOne({id: (Math.floor(Math.random() * 10000) + 1)}));
+      results.push(await MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) }));
     }
 
     res.send(queries > 1 ? results : results[0]);
@@ -70,11 +68,11 @@ if (cluster.isMaster) {
 
   app.get('/mongoose-fortune', (req, res) => {
     MFortune.find({}, (err, fortunes) => {
-      const newFortune = {id: 0, message: "Additional fortune added at request time."};
+      const newFortune = { id: 0, message: "Additional fortune added at request time." };
       fortunes.push(newFortune);
       fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
-      res.render('fortunes/index', {fortunes: fortunes});
+      res.render('fortunes/index', { fortunes: fortunes });
     });
   });
 
@@ -82,14 +80,14 @@ if (cluster.isMaster) {
     const results = [],
       queries = Math.min(parseInt(req.query.queries) || 1, 500);
 
-    for (let i = 1; i <= queries; i++ ) {
-      const world = await MWorld.findOne({id: (Math.floor(Math.random() * 10000) + 1)});
+    for (let i = 1; i <= queries; i++) {
+      const world = await MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) });
       world.randomNumber = ~~(Math.random() * 10000) + 1;
       await MWorld.update({
         id: world.id
       }, {
-        randomNumber: world.randomNumber
-      });
+          randomNumber: world.randomNumber
+        });
 
       results.push(world);
     }

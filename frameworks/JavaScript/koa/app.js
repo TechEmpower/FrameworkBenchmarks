@@ -7,8 +7,8 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
-  console.log('Master starting ' + new Date().toISOString(" "));
-  cluster.on('exit', (worker, code, signal) => {
+  console.log('Master starting ' + new Date().toISOString());
+  cluster.on('exit', () => {
     process.exit(1);
   });
 } else {

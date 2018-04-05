@@ -4,6 +4,7 @@ use rand::{thread_rng, Rng, ThreadRng};
 use actix::prelude::*;
 use diesel;
 use diesel::prelude::*;
+use diesel::result::Error;
 
 use models;
 
@@ -38,10 +39,10 @@ impl Handler<RandomWorld> for DbExecutor {
     type Result = io::Result<models::World>;
 
     fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Self::Result {
-        use schema::World::dsl::*;
+        use schema::world::dsl::*;
 
         let random_id = self.rng.gen_range(1, 10_000);
-        match World.filter(id.eq(random_id)).load::<models::World>(&self.conn) {
+        match world.filter(id.eq(random_id)).load::<models::World>(&self.conn) {
             Ok(mut items) =>
                 Ok(items.pop().unwrap()),
             Err(_) =>
@@ -60,16 +61,16 @@ impl Handler<RandomWorlds> for DbExecutor {
     type Result = io::Result<Vec<models::World>>;
 
     fn handle(&mut self, msg: RandomWorlds, _: &mut Self::Context) -> Self::Result {
-        use schema::World::dsl::*;
+        use schema::world::dsl::*;
 
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
             let w_id = self.rng.gen_range(1, 10_000);
-            let world = match World.filter(id.eq(w_id)).load::<models::World>(&self.conn) {
+            let w = match world.filter(id.eq(w_id)).load::<models::World>(&self.conn) {
                 Ok(mut items) => items.pop().unwrap(),
                 Err(_) => return Err(io::Error::new(io::ErrorKind::Other, "Database error")),
             };
-            worlds.push(world)
+            worlds.push(w)
         }
         Ok(worlds)
     }
@@ -85,24 +86,31 @@ impl Handler<UpdateWorld> for DbExecutor {
     type Result = io::Result<Vec<models::World>>;
 
     fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
-        use schema::World::dsl::*;
+        use schema::world::dsl::*;
 
         let mut worlds = Vec::with_capacity(msg.0);
         for _ in 0..msg.0 {
             let w_id = self.rng.gen_range::<i32>(1, 10_000);
-            let mut world = match World.filter(id.eq(w_id)).load::<models::World>(&self.conn) {
+            let mut w = match world.filter(id.eq(w_id)).load::<models::World>(&self.conn) {
                 Ok(mut items) => items.pop().unwrap(),
-                Err(_) => return Err(io::Error::new(io::ErrorKind::Other, "Database error")),
+                Err(_) => return Err(
+                    io::Error::new(io::ErrorKind::Other, "Database error")),
             };
-
-            world.randomnumber = self.rng.gen_range(1, 10_000);
-            let _ = diesel::update(World)
-                .filter(id.eq(world.id))
-                .set(randomnumber.eq(world.randomnumber))
-                .execute(&self.conn);
-
-            worlds.push(world);
+            w.randomnumber = self.rng.gen_range(1, 10_000);
+            worlds.push(w);
         }
+        worlds.sort_by_key(|w| w.id);
+
+        let _ = self.conn.transaction::<(), Error, _>(|| {
+            for w in &worlds {
+                let _ = diesel::update(world)
+                    .filter(id.eq(w.id))
+                    .set(randomnumber.eq(w.randomnumber))
+                    .execute(&self.conn);
+            }
+            Ok(())
+        });
+
         Ok(worlds)
     }
 }
@@ -117,9 +125,9 @@ impl Handler<TellFortune> for DbExecutor {
     type Result = io::Result<Vec<models::Fortune>>;
 
     fn handle(&mut self, _: TellFortune, _: &mut Self::Context) -> Self::Result {
-        use schema::Fortune::dsl::*;
+        use schema::fortune::dsl::*;
 
-        match Fortune.load::<models::Fortune>(&self.conn) {
+        match fortune.load::<models::Fortune>(&self.conn) {
             Ok(mut items) => {
                 items.push(models::Fortune{
                     id: 0,
@@ -127,8 +135,7 @@ impl Handler<TellFortune> for DbExecutor {
                 items.sort_by(|it, next| it.message.cmp(&next.message));
                 Ok(items)
             }
-            Err(_) =>
-                Err(io::Error::new(io::ErrorKind::Other, "Databse error"))
+            Err(e) => Err(io::Error::new(io::ErrorKind::Other, e))
         }
     }
 }

@@ -5,7 +5,6 @@
       "default": {
         "orm": "Raw",
         "database_os": "Linux",
-        "setup_file": "setup",
         "db_url": "/db",
         "fortune_url": "/fortunes",
         "json_url": "/json",

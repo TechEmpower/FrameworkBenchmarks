@@ -2,7 +2,6 @@
     "framework": "cakephp",
     "tests": [{
         "default": {
-            "setup_file": "setup_php5",
             "json_url": "/json",
             "db_url": "/db",
             "query_url": "/queries?queries=",

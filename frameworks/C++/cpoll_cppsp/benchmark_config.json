@@ -2,7 +2,6 @@
   "framework": "cpoll_cppsp",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 16969,
@@ -22,7 +21,6 @@
       "versus": "cpoll_cppsp"
     },
     "raw": {
-      "setup_file": "setup_mysql",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "fortune_url": "/fortune",
@@ -44,7 +42,6 @@
       "versus": "cpoll_cppsp"
     },
     "postgres-raw": {
-      "setup_file": "setup_postgresql",
       "db_url": "/db_pg_async",
       "query_url": "/db_pg_async?queries=", 
       "port": 16969,
@@ -64,7 +61,6 @@
       "versus": "cpoll_cppsp"
     },
     "postgres-raw-threadpool": {
-      "setup_file": "setup_postgresql",
       "db_url": "/db_pg_threadpool",
       "query_url": "/db_pg_threadpool?queries=", 
       "port": 16969,

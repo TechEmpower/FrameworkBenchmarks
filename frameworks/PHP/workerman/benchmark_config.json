@@ -2,7 +2,6 @@
   "framework": "workerman",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json.php",
       "plaintext_url": "/plaintext.php",
       "db_url": "/dbraw.php",

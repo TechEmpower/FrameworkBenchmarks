@@ -14,7 +14,7 @@ import com.zaxxer.hikari.HikariDataSource;
 @Bean
 public class DbConfig implements BeanProcessor {
 
-    private static final String DB_URL = "jdbc:mysql://TFB-database:3306/hello_world?jdbcCompliantTruncation=false&amp;elideSetAutoCommits=true&amp;useLocalSessionState=true&amp;cachePrepStmts=true&amp;cacheCallableStmts=true&amp;alwaysSendSetIsolation=false&amp;prepStmtCacheSize=4096&amp;cacheServerConfiguration=true&amp;prepStmtCacheSqlLimit=2048&amp;zeroDateTimeBehavior=convertToNull&amp;traceProtocol=false&amp;useUnbufferedInput=false&amp;useReadAheadInput=false&amp;maintainTimeStats=false&amp;useServerPrepStmts&amp;cacheRSMetadata=true&amp;useSSL=false";
+    private static final String DB_URL = "jdbc:mysql://tfb-database:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true&useSSL=false";
 
     @Override
     public void processor(Blade blade) {

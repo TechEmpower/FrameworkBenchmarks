@@ -2,7 +2,6 @@
   "framework": "collie",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8085,
@@ -22,7 +21,6 @@
       "versus": "Collie"
   },
     "ldc": {
-      "setup_file": "setup_ldc",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8085,

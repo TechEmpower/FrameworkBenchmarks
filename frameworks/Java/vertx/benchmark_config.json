@@ -2,7 +2,6 @@
   "framework": "vertx",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -22,7 +21,6 @@
       "versus": ""
     },
     "postgres": {
-      "setup_file": "setup_postgresql",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",

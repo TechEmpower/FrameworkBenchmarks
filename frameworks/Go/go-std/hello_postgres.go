@@ -4,12 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"flag"
-	"fmt"
 	"html/template"
 	"log"
 	"math/rand"
 	"net/http"
-	"os"
 	"sort"
 	"strconv"
 
@@ -54,7 +52,7 @@ const (
 </html>`
 
 	// Database
-	connectionString = "postgres://benchmarkdbuser:benchmarkdbpass@%s/hello_world?sslmode=disable"
+	connectionString = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world?sslmode=disable"
 	worldSelect      = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldUpdate      = "UPDATE World SET randomNumber = $1 WHERE id = $2"
 	fortuneSelect    = "SELECT id, message FROM Fortune"
@@ -75,11 +73,7 @@ var (
 
 func initDB() {
 	var err error
-	var dbhost = os.Getenv("DBHOST")
-	if dbhost == "" {
-		dbhost = "localhost"
-	}
-	db, err = sql.Open("postgres", fmt.Sprintf(connectionString, dbhost))
+	db, err = sql.Open("postgres", connectionString)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
 	}

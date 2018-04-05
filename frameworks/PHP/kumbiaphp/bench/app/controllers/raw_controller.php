@@ -9,7 +9,7 @@ class RawController extends AppController
         View::select(null, null);
         header('Content-type: application/json');
 
-        $this->pdo = new PDO('mysql:host=TFB-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
+        $this->pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
             PDO::ATTR_PERSISTENT => true
         ));
     }

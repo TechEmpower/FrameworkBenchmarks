@@ -16,7 +16,7 @@ return array(
 		'driver' => 'mysql',
 	
 		// auth
-		'host'		=> 'localhost',
+		'host'		=> 'tfb-database',
 		'user' 		=> 'benchmarkdbuser',
 		'pass'		=> 'benchmarkdbpass',
 		'charset'	=> 'utf8'

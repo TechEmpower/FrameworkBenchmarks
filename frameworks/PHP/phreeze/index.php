@@ -15,7 +15,7 @@ require_once 'verysimple/Phreeze/Phreezer.php';
 require_once 'Controller/TestController.php';
 
 $cs = new ConnectionSetting();
-$cs->ConnectionString = "localhost:3306";
+$cs->ConnectionString = "tfb-database:3306";
 $cs->DBName = "hello_world";
 $cs->Username = "benchmarkdbuser";
 $cs->Password = "benchmarkdbpass";

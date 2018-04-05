@@ -62,7 +62,7 @@ use lithium\data\Connections;
  Connections::add('default', array(
  	'type' => 'database',
  	'adapter' => 'MySql',
- 	'host' => '192.168.100.102',
+ 	'host' => 'tfb-database',
  	'login' => 'benchmarkdbuser',
  	'password' => 'benchmarkdbpass',
  	'database' => 'hello_world',
