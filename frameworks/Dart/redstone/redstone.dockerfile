@@ -1,4 +1,4 @@
-FROM techempower/dart-lang:0.1
+FROM google/dart:1.24
 
 COPY ./ ./
 
