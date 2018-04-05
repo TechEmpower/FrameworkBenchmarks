@@ -1,3 +1,0 @@
-
-# allow composer.lock files in top level directories for all PHP frameworks
-!/*/composer.lock

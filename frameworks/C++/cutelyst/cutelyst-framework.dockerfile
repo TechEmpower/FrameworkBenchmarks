@@ -2,7 +2,7 @@ FROM techempower/cutelyst-deps:0.1
 
 ENV CUTELYST_VER=2.0.1
 
-RUN wget https://github.com/cutelyst/cutelyst/archive/v$CUTELYST_VER.tar.gz -O cutelyst-$CUTELYST_VER.tar.gz && \
+RUN wget -q https://github.com/cutelyst/cutelyst/archive/v$CUTELYST_VER.tar.gz -O cutelyst-$CUTELYST_VER.tar.gz && \
     tar zxf cutelyst-$CUTELYST_VER.tar.gz && \
     cd cutelyst-$CUTELYST_VER && mkdir build && cd build && \
     cmake .. \
