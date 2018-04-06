@@ -1,4 +1,4 @@
-FROM techempower/swift:0.1
+FROM swift:4.1
 
 ADD ./ /swift-nio
 WORKDIR /swift-nio
