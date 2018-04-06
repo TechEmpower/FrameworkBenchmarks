@@ -25,21 +25,11 @@ void main(List<String> args) {
   var isolates = int.parse(arguments['isolates']);
   var dbConnections = int.parse(arguments['dbconnections']) ~/ isolates;
   ServerSocket
-      .bind(arguments['address'], int.parse(arguments['port']))
+      .bind(arguments['address'], int.parse(arguments['port']), shared: true)
       .then((server) {
-    var ref = server.reference;
-    for (int i = 1; i < isolates; i++) {
-      Isolate.spawn(startInIsolate, [ref, dbConnections]);
-    }
-    _startServer(server, dbConnections);
-  });
-}
-
-void startInIsolate(List args) {
-  var ref = args[0];
-  var dbConnections = args[1];
-  ref.create().then((server) {
-    _startServer(server, dbConnections);
+        for (int i = 1; i < isolates; i++) {
+          _startServer(server, dbConnections);
+        }
   });
 }
 
