@@ -1,6 +1,14 @@
-FROM techempower/gcc-6:0.1
+FROM ubuntu:16.04
 
-COPY ./ ./
+RUN apt update -yqq
+RUN apt install -yqq software-properties-common python-software-properties wget make
+
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
+    apt update -yqq && \
+    apt install -yqq gcc-6 g++-6
+
+ADD ./ /libreactor
+WORKDIR /libreactor
 
 RUN wget -q https://github.com/fredrikwidlund/libdynamic/releases/download/v1.1.0/libdynamic-1.1.0.tar.gz && \
     tar xfz libdynamic-1.1.0.tar.gz && \
