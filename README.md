@@ -24,7 +24,7 @@ To get started developing you'll need to install [docker](https://docs.docker.co
 
 #### A note on Windows:
 
-Git on Windows will, by default, automatically convert line endings from `lf` to `crlf`. This is problematic for the Docker images we build for tests targeting Linux operating systems. Therefore, in order to run tests on Windows, you must clone the repository with `autocrlf` as either `false` or `input`.
+Git on Windows will, by default, automatically convert line endings from `lf` to `crlf`. This is problematic for the Docker images we build for tests targeting Linux operating systems. Therefore, in order to run tests on Windows, you must set `autocrlf` as either `true` or `input` **prior** to cloning.
 
 See [this writeup](https://help.github.com/articles/dealing-with-line-endings/) for more information.
 
