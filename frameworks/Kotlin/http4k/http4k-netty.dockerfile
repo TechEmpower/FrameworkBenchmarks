@@ -1,13 +1,13 @@
-FROM techempower/java:0.1
-FROM techempower/gradle:0.1
-
-ADD ./ /http4k
+FROM gradle:4.6.0-jdk10
+USER root
 WORKDIR /http4k
-RUN gradle clean build netty:uber
-CMD java \
-    -server \
-    -XX:+UseNUMA \
-    -XX:+UseParallelGC \
-    -XX:+AggressiveOpts \
-    -XX:+AlwaysPreTouch \
-    -jar netty/build/libs/http4k-netty-benchmark.jar
+COPY build.gradle build.gradle
+COPY settings.gradle settings.gradle
+COPY apache apache
+COPY core core
+COPY jetty jetty
+COPY netty netty
+COPY sunhttp sunhttp
+COPY undertow undertow
+RUN gradle --quiet build netty:uber
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "netty/build/libs/http4k-netty-benchmark.jar"]
