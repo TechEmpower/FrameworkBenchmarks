@@ -1,6 +1,7 @@
-FROM techempower/elixir:0.1
+FROM elixir:1.5.3
 
-COPY ./ ./
+ADD ./ /cowboy
+WORKDIR /cowboy
 
 ENV MIX_ENV=prod
 RUN mix local.hex --force
