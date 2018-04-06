@@ -214,7 +214,7 @@ def main(argv=None):
     results = Results(config)
 
     if config.new:
-        Scaffolding()
+        Scaffolding(config)
 
     elif config.publish:
         docker_helper.publish(config)
