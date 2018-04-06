@@ -3,7 +3,8 @@ FROM ruby:2.4
 COPY ./ ./
 
 RUN apt update
-RUN apt install -yqq cmake automake libpq-dev libnuma-dev checkinstall autoconf pkg-config libtool python-sphinx libcunit1-dev nettle-dev libyaml-dev
+RUN apt install -yqq cmake automake libpq-dev libnuma-dev checkinstall autoconf pkg-config \
+    libtool python-sphinx libcunit1-dev nettle-dev libyaml-dev bison
 
 ### Install mustache-c
 
