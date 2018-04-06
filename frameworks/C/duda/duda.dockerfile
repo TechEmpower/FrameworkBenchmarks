@@ -1,6 +1,4 @@
-FROM techempower/base:0.1
-
-RUN apt install git python -y
+FROM python:2.7
 
 COPY ./ ./
 # Get v0.31 (no official releases that work 2015-06-25)

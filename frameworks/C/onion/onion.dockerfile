@@ -1,8 +1,9 @@
-FROM techempower/base:0.1
+FROM ubuntu:16.04
 
-COPY ./ ./
+ADD ./ /onion
+WORKDIR /onion
 
-RUN apt install -yqq cmake libmysqlclient-dev libjson0-dev libgnutls-dev libgcrypt-dev
+RUN apt update -yqq && apt install -yqq git cmake make libmysqlclient-dev libjson0-dev libgnutls-dev libgcrypt-dev
 
 ENV ONION_LOG noinfo
 
