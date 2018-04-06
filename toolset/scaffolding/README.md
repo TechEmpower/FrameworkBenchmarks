@@ -14,23 +14,19 @@ You will need to ensure that your source code is beneath this directory. The mos
 
 A metric we capture, in addition to the actual benchmark numbers, is the significant lines of code required to run your application. To help our suite identify your source code, we require you to list your source files in `source_files`.
 
-3. Edit `.gitignore`
-
-It is very important that any files created by building or running your application are included in your `.gitignore`. The repository **must** be only source files and the files the suite requires for starting your test application.
-
-4. Edit `benchmark_config.json`
+3. Edit `benchmark_config.json`
 
 The initialization process made some assumptions about your test implementation that may or may not be true. For example, it laid out two separate tests: the non-database tests; and the database tests. You, on the other hand, may only want to implement the `JSON` test, so you will need alter `benchmark_config.json`.
 
 Additionally, `benchmark_config.json` has, for each test, a key called "setup_file". This value refers to the next bullet.
 
-5. Edit `setup.sh`
+4. Create `$NAME.dockerfile`
 
-This is the script that is executed when a benchmark test is run. Specifically, this file tells the suite how to build and start your test application.
+This is the dockerfile that is built into a docker image and run when a benchmark test is run. Specifically, this file tells the suite how to build and start your test application.
 
-In this file, there are detailed instructions on what is expected and what is available to help you start your test application.
+You can create multiple implementations and they will all conform to `[name in benchmark_config.json].dockerfile`. For example, the `default` implementation in `benchmark_config.json` will be `$NAME.dockerfile`, but if you wanted to make another implementation that did only the database tests for MySQL, you could make `$NAME-mysql.dockerfile` and have an entry in your `benchmark_config.json` for `$NAME-mysql`.
 
-6. Test your application
+5. Test your application
 
         $ tfb --mode verify --test $NAME
 
@@ -38,11 +34,11 @@ This will run the suite in `verify` mode for your test. This means that no bench
 
 Once you are able to successfully run your test through our suite in this way **and** your test passes our validation, you may move on to the next step.
 
-7. Add your test to `.travis.yml`
+6. Add your test to `.travis.yml`
 
 Edit `.travis.yml` to ensure that Travis-CI will automatically run our verification tests against your new test. This file is kept in alphabetical order, so find where `TESTDIR=$LANGUAGE/$NAME` should be inserted under `env > matrix` and put it there.
 
-8. Fix this `README.md` and open a pull request
+7. Fix this `README.md` and open a pull request
 
 Starting on line 59 is your actual `README.md` that will sit with your test implementation. Update all the dummy values to their correct values so that when people visit your test in our Github repository, they will be greated with information on how your test implementation works and where to look for useful source code.
 
