@@ -1,6 +1,7 @@
-FROM techempower/elixir:0.1
+FROM elixir:1.5.3
 
-COPY ./ ./
+ADD ./ /phoenix
+WORKDIR /phoenix
 
 ENV MIX_ENV=prod
 

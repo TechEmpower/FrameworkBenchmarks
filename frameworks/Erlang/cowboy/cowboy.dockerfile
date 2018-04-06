@@ -1,6 +1,7 @@
-FROM techempower/erlang:0.1
+FROM erlang:18.3.4.8
 
-COPY ./ ./
+ADD ./ /cowboy
+WORKDIR /cowboy
 
 RUN rebar get-deps
 RUN rebar compile
