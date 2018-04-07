@@ -1,4 +1,6 @@
-FROM techempower/go-lang:0.1
+FROM golang:1.10.1
+
+RUN apt update -yqq && apt install unzip
 
 ADD ./ /aah
 WORKDIR /aah
