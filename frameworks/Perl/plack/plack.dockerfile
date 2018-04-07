@@ -1,19 +1,11 @@
-FROM techempower/nginx:0.1
+FROM perl:5.26
 
-FROM techempower/perl:0.1
-
-COPY --from=0 /nginx /nginx
-
-ENV NGINX_HOME="/nginx"
-ENV PATH=/nginx/sbin:${PATH}
+RUN apt update -yqq && apt install -yqq nginx
 
 WORKDIR /plack
 
-ENV PERL_CARTON_PATH=/plack/local
-ENV PERL5LIB=${PERL_CARTON_PATH}/lib/perl5
-ENV PATH=${PERL_CARTON_PATH}/bin:${PERL_HOME}/bin:${PATH}
-
 RUN cpanm --notest --no-man-page \
+        JSON JSON::XS IO::Socket::IP IO::Socket::SSL \
         JSON::XS@3.01 \
         HTTP::Parser::XS@0.16 \
         Plack@1.0030 \
