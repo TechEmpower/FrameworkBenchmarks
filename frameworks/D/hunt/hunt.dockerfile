@@ -1,6 +1,7 @@
-FROM techempower/d-lang:0.1
+FROM dlanguage/ldc:1.7.0
 
-COPY ./ ./
+ADD ./ /hunt
+WORKDIR /hunt
 
 RUN dub upgrade --verbose
 

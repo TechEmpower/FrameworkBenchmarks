@@ -182,7 +182,7 @@ struct FortuneResponse {
 static this()
 {
 	import std.process : environment;
-	auto connectionInfo = "host=" ~ environment.get("DBHOST", "127.0.0.1") ~ " port=5432 "
+	auto connectionInfo = "host=tfb-database port=5432 "
 						~ "dbname=hello_world  user=benchmarkdbuser password=benchmarkdbpass";
 	client = new PostgresClient(connectionInfo, poolSize);
 }
