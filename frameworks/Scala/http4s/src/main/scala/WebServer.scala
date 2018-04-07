@@ -2,44 +2,44 @@ package http4s.techempower.benchmark
 
 import org.http4s._
 import org.http4s.circe._
-import org.http4s.dsl._
+import org.http4s.dsl.io._
 import org.http4s.server._
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.twirl._
 import headers._
 
-import doobie.hikari.hikaritransactor._
-import doobie.imports._
+import doobie._
+import doobie.implicits._
+import doobie.hikari.HikariTransactor
 
 import io.circe._
-import io.circe.generic.auto._
 import io.circe.syntax._
+import io.circe.generic.auto._
 
-import scalaz._
-import scalaz.concurrent.{Task, TaskApp}
-import scalaz.std.list._
-import scalaz.syntax.traverse._
+import cats.data.{Kleisli, ValidatedNel}
+import cats.effect.IO
+import cats.implicits._
+
+import fs2.{StreamApp, Stream}
 
 import java.util.concurrent.ThreadLocalRandom
+import scala.concurrent.ExecutionContext.Implicits.global
 
 case class World(id: Int, randomNumber: Int)
 
 case class Fortune(id: Int, message: String)
 
 object Middleware {
-  def addHeaders(service: HttpService): HttpService = {
-    Service.lift { req: Request =>
-      service.map { resp =>
-        resp.putHeaders(
-          Header("Server", req.serverAddr)
-        )
-      }.apply(req)
+  def addHeaders(service: HttpService[IO]): HttpService[IO] =
+    Kleisli { req: Request[IO] =>
+      service.run(req).map { resp =>
+        resp.putHeaders(Header("Server", req.serverAddr))
+      }
     }
-  }
 }
 
 object Queries extends OptionalValidatingQueryParamDecoderMatcher[Int]("queries") {
-  def clampQueries(numQueries: Option[ValidationNel[ParseFailure, Int]]): Int = {
+  def clampQueries(numQueries: Option[ValidatedNel[ParseFailure, Int]]): Int = {
     numQueries.fold(1)(_.fold(
       errors => 1,
       queries => {
@@ -54,10 +54,9 @@ object Queries extends OptionalValidatingQueryParamDecoderMatcher[Int]("queries"
   }
 }
 
-object WebServer extends TaskApp {
-  implicit def jsonEncoder[A](implicit encoder: Encoder[A]) = jsonEncoderOf[A](encoder)
+object WebServer extends StreamApp[IO] {
 
-  def xaTask(host: String) = {
+  def transactor(host: String): Stream[IO, Transactor[IO]] = Stream.eval {
     val driver = "org.postgresql.Driver"
     val url = s"jdbc:postgresql://$host/hello_world"
     val user = "benchmarkdbuser"
@@ -66,8 +65,8 @@ object WebServer extends TaskApp {
     val minIdle = 256
 
     for {
-      xa <- HikariTransactor[Task](driver, url, user, pass)
-      _  <- xa.configure(ds => Task.delay {
+      xa <- HikariTransactor.newHikariTransactor[IO](driver, url, user, pass)
+      _  <- xa.configure(ds => IO {
          ds.setMaximumPoolSize(maxPoolSize)
          ds.setMinimumIdle(minIdle)
       })
@@ -75,49 +74,44 @@ object WebServer extends TaskApp {
   }
 
   // Provide a random number between 1 and 10000 (inclusive)
-  val randomWorldId: Task[Int] = Task.delay(ThreadLocalRandom.current.nextInt(1, 10001))
+  val randomWorldId: IO[Int] = IO(ThreadLocalRandom.current.nextInt(1, 10001))
 
   // Update the randomNumber field with a random number
-  def updateRandomNumber(world: World): Task[World] = {
+  def updateRandomNumber(world: World): IO[World] =
     randomWorldId map { id =>
       world.copy(randomNumber = id)
     }
-  }
 
   // Select a World object from the database by ID
-  def selectWorld(xa: Transactor[Task], id: Int): Task[World] = {
+  def selectWorld(xa: Transactor[IO], id: Int): IO[World] = {
     val query = sql"select id, randomNumber from World where id = $id".query[World]
     query.unique.transact(xa)
   }
 
   // Select a random World object from the database
-  def selectRandomWorld(xa: Transactor[Task]): Task[World] = {
-    randomWorldId flatMap { id =>
-      selectWorld(xa, id)
-    }
-  }
+  def selectRandomWorld(xa: Transactor[IO]): IO[World] =
+    randomWorldId.flatMap(selectWorld(xa, _))
 
   // Select a specified number of random World objects from the database
-  def getWorlds(xa: Transactor[Task], numQueries: Int): Task[List[World]] =
-    Nondeterminism[Task].replicateM(numQueries, selectRandomWorld(xa))
+  def getWorlds(xa: Transactor[IO], numQueries: Int): IO[List[World]] =
+    List.fill(numQueries)(selectRandomWorld(xa)).parSequence
 
   // Update the randomNumber field with a new random number, for a list of World objects
-  def getNewWorlds(worlds: List[World]): Task[List[World]] = {
+  def getNewWorlds(worlds: List[World]): IO[List[World]] =
     worlds.traverse(updateRandomNumber)
-  }
 
   // Update the randomNumber column in the database for a specified set of World objects,
   // this uses a batch update SQL call.
-  def updateWorlds(xa: Transactor[Task], newWorlds: List[World]): Task[Int] = {
+  def updateWorlds(xa: Transactor[IO], newWorlds: List[World]): IO[Int] = {
     val sql = "update World set randomNumber = ? where id = ?"
     val update = Update[(Int, Int)](sql).updateMany(newWorlds.map(w => (w.randomNumber, w.id)))
     update.transact(xa)
   }
 
   // Retrieve all fortunes from the database
-  def getFortunes(xa: Transactor[Task]): Task[List[Fortune]] = {
+  def getFortunes(xa: Transactor[IO]): IO[List[Fortune]] = {
     val query = sql"select id, message from Fortune".query[Fortune]
-    query.list.transact(xa)
+    query.to[List].transact(xa)
   }
 
   // Add a new fortune to an existing list, and sort by message.
@@ -127,16 +121,16 @@ object WebServer extends TaskApp {
   }
 
   // HTTP service definition
-  def service(xa: Transactor[Task]) = HttpService {
+  def service(xa: Transactor[IO]) = HttpService[IO] {
     case GET -> Root / "json" =>
       Ok(Json.obj("message" -> Json.fromString("Hello, World!")))
 
     case GET -> Root / "db" =>
-      Ok(selectRandomWorld(xa))
+      Ok(selectRandomWorld(xa).map(_.asJson))
 
     case GET -> Root / "queries" :? Queries(rawQueries) =>
       val numQueries = Queries.clampQueries(rawQueries)
-      Ok(getWorlds(xa, numQueries))
+      Ok(getWorlds(xa, numQueries).map(_.asJson))
 
     case GET -> Root / "fortunes" =>
       val page = for {
@@ -149,34 +143,22 @@ object WebServer extends TaskApp {
     case GET -> Root / "updates" :? Queries(rawQueries) =>
       val numQueries = Queries.clampQueries(rawQueries)
 
-      val updated = for {
-        worlds <- getWorlds(xa, numQueries)
+      for {
+        worlds    <- getWorlds(xa, numQueries)
         newWorlds <- getNewWorlds(worlds)
-        _ <- updateWorlds(xa, newWorlds)
-      } yield newWorlds
-
-      Ok(updated)
+        _         <- updateWorlds(xa, newWorlds)
+        resp      <- Ok(newWorlds.asJson)
+      } yield resp
 
     case GET -> Root / "plaintext" =>
-      Ok("Hello, World!")
-        .withContentType(Some(`Content-Type`(MediaType.`text/plain`)))
+      Ok("Hello, World!", `Content-Type`(MediaType.`text/plain`))
   }
 
-  // Given a fully constructed HttpService, start the server and wait for completion
-  def startServer(service: HttpService): Task[Unit] = {
-    Task.delay {
-      BlazeBuilder.bindHttp(8080, "0.0.0.0")
-        .mountService(service, "/")
-        .run
-        .awaitShutdown()
+  def stream(args: List[String], requestShutdown: IO[Unit]) =
+    transactor(args.head).flatMap { xa =>
+      BlazeBuilder[IO]
+        .bindHttp(8080, "0.0.0.0")
+        .mountService(Middleware.addHeaders(service(xa)))
+        .serve
     }
-  }
-
-  // Entry point when starting service
-  override def runl(args: List[String]): Task[Unit] = {
-    for {
-      xa <- xaTask(args.head)
-      server <- startServer(Middleware.addHeaders(service(xa)))
-    } yield ()
-  }
 }
