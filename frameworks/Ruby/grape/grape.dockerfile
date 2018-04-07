@@ -1,4 +1,4 @@
-FROM techempower/ruby-2.4:0.1
+FROM ruby:2.4
 
 ADD ./ /grape
 

@@ -1,4 +1,9 @@
-FROM techempower/sinatra-base:0.1
+FROM ruby:2.4
+
+ADD ./ /sinatra
+WORKDIR /sinatra
+
+RUN bundle install --jobs=4 --gemfile=/sinatra/Gemfile --path=/sinatra/sinatra/bundle
 
 # TODO: https://github.com/phusion/passenger/issues/1916
 ENV _PASSENGER_FORCE_HTTP_SESSION=true
