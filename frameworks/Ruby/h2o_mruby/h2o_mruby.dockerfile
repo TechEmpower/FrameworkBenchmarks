@@ -14,7 +14,7 @@ RUN tar xf $ARCHIVE
 
 WORKDIR /h2o/h2o-2.2.4
 
-RUN apt install -yqq cmake
+RUN apt update -yqq && apt install -yqq make cmake
 RUN cmake -DCMAKE_INSTALL_PREFIX="$H2O_HOME" -DCMAKE_C_FLAGS="-flto -march=native" \
       -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -DWITH_MRUBY=on
 RUN make -j "$(nproc)" install
