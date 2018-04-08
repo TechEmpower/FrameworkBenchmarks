@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nim c --threads:on techempower.nim
+nim c -d:release --threads:on techempower.nim
 
 ./techempower
 
