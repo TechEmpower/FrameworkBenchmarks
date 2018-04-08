@@ -6,7 +6,7 @@ WORKDIR /urweb
 ENV URWEB_VERSION=20160621
 ENV COMPILER=/urweb/urweb-build
 
-RUN apt update -yqq && apt install -yqq wget mlton libssl-dev libpq-dev libmysqlclient-dev
+RUN apt update -yqq && apt install -yqq make wget mlton libssl-dev libpq-dev libmysqlclient-dev
 
 RUN mkdir -p $COMPILER && \
     wget -q http://www.impredicative.com/ur/urweb-$URWEB_VERSION.tgz && \
