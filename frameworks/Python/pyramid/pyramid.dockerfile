@@ -1,9 +1,9 @@
-FROM techempower/python3:0.1
+FROM python:3.6.5
 
 ADD ./ /pyramid
 
 WORKDIR /pyramid
 
-RUN pip3 install --install-option="--prefix=${PY3_ROOT}" -r /pyramid/requirements.txt
+RUN pip3 install -r /pyramid/requirements.txt
 
 CMD gunicorn wsgi:app -c gunicorn_conf.py
