@@ -1,6 +1,7 @@
-FROM techempower/rust:0.1
+FROM rust:1.25
 
-COPY ./ ./
+ADD ./ /tokio
+WORKDIR /tokio
 
 RUN cargo clean
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release

@@ -1,7 +1,9 @@
-FROM techempower/rust:0.1
+FROM rust:1.25
 
-COPY ./ ./
+ADD ./ /iron
+WORKDIR /iron
 
 RUN cargo clean
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+
 CMD ./target/release/iron
