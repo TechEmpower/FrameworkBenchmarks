@@ -1,4 +1,6 @@
-FROM techempower/haskell:0.1
+FROM haskell:8.2.1
+
+RUN apt update -yqq && apt install -yqq xz-utils make libpq-dev
 
 COPY ./yesod-postgres ./
 

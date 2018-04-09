@@ -1,6 +1,9 @@
-FROM techempower/haskell:0.1
+FROM haskell:8.2.1
 
-COPY ./bench ./
+RUN apt update -yqq && apt install -yqq xz-utils make libmysqlclient-dev
+
+COPY ./bench /snap
+WORKDIR /snap
 
 RUN stack --allow-different-user build --install-ghc
 

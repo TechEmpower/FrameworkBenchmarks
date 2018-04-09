@@ -1,6 +1,9 @@
-FROM techempower/haskell:0.1
+FROM haskell:8.2.1
 
-COPY ./ ./
+RUN apt update -yqq && apt install -yqq xz-utils make
+
+ADD ./ /wai
+WORKDIR /wai
 
 RUN cd bench && stack --allow-different-user build --install-ghc
 
