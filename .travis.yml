@@ -60,6 +60,7 @@ env:
      - "TESTDIR=Go/fasthttp"
      - "TESTDIR=Go/gin"
      - "TESTDIR=Go/goji"
+     - "TESTDIR=Go/chi"
      - "TESTDIR=Go/go-std"
      - "TESTDIR=Go/revel"
      - "TESTDIR=Go/webgo"
