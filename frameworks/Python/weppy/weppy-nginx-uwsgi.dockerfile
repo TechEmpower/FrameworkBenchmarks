@@ -1,6 +1,10 @@
 FROM python:2.7.14
 
-RUN apt update -yqq && apt -yqq install nginx
+RUN curl -s http://nginx.org/keys/nginx_signing.key | apt-key add -
+RUN echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list
+RUN echo "deb-src http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list
+
+RUN apt update -yqq && apt install -yqq nginx
 
 ADD ./ /weppy
 
