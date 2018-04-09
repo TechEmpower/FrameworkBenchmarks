@@ -1,7 +1,10 @@
-FROM techempower/leiningen-java8:0.1
-
-ADD ./ /luminus
+FROM clojure:lein-2.8.1
 WORKDIR /luminus
-RUN lein clean
+COPY project.clj project.clj
+COPY Procfile Procfile
+COPY env env
+COPY resources resources
+COPY src src
+COPY test test
 RUN lein uberjar
-CMD java -server -jar target/hello.jar
+CMD ["java", "-server", "-jar", "target/hello.jar"]

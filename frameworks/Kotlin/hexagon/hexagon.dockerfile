@@ -1,9 +1,10 @@
-FROM techempower/java:0.1
-FROM techempower/gradle:0.1
-
-ADD ./ /hexagon
+FROM gradle:4.6.0-jdk10
+USER root
 WORKDIR /hexagon
-RUN gradle -x test
+COPY src src
+COPY build.gradle build.gradle
+COPY gradle.properties gradle.properties
+RUN gradle --quiet --exclude-task test
 ENV DBSTORE mongodb
 ENV WEBENGINE jetty
-CMD build/install/hexagon/bin/hexagon
+CMD ["build/install/hexagon/bin/hexagon"]

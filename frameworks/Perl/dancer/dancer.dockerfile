@@ -1,21 +1,12 @@
-FROM techempower/nginx:0.1
+FROM perl:5.26
 
-FROM techempower/perl:0.1
-
-COPY --from=0 /nginx /nginx
-
-ENV NGINX_HOME="/nginx"
-ENV PATH=/nginx/sbin:${PATH}
+RUN apt update -yqq && apt install -yqq nginx
 
 ADD ./ /dancer
-
 WORKDIR /dancer
 
-ENV PERL_CARTON_PATH=/dancer/local
-ENV PERL5LIB=${PERL_CARTON_PATH}/lib/perl5
-ENV PATH=${PERL_CARTON_PATH}/bin:${PERL_HOME}/bin:${PATH}
-
 RUN cpanm --notest --no-man-page \
+      JSON IO::Socket::IP IO::Socket::SSL \
       Dancer@1.3134 \
       Dancer::Plugin::Database@2.10 \
       DBI@1.633 \
