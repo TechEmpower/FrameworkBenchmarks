@@ -1,4 +1,4 @@
-FROM gradle:4.6.0-jdk10
+FROM gradle:4.6.0-jdk8
 USER root
 WORKDIR /jawn
 COPY build.gradle build.gradle
