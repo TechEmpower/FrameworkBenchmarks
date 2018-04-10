@@ -1,4 +1,5 @@
-FROM techempower/mono:0.1
+FROM mono:5.10.0.160
+RUN apt update -yqq && apt install -yqq unzip
 
 RUN mkdir /java
 WORKDIR /java
