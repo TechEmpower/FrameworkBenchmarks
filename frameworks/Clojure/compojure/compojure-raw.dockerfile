@@ -1,7 +1,7 @@
 FROM clojure:lein-2.8.1 as lein
 WORKDIR /compojure
-COPY project.clj project.clj
 COPY src src
+COPY project.clj project.clj
 RUN lein ring uberwar
 
 FROM techempower/resin-java8:0.1

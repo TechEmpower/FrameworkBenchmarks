@@ -1,7 +1,8 @@
-FROM techempower/maven:0.1 as maven
-ADD ./ /wicket
+FROM maven:3.5.3-jdk-9-slim as maven
 WORKDIR /wicket
-RUN mvn clean compile war:war
+COPY src src
+COPY pom.xml pom.xml
+RUN mvn compile war:war -q
 
 FROM techempower/resin:0.1
 COPY --from=maven /wicket/target/hellowicket-1.0.war ${RESIN_HOME}/webapps/ROOT.war
