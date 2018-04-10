@@ -3,7 +3,8 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"html/template"
+	"fmt"
+	"html"
 	"io"
 	"io/ioutil"
 	"log"
@@ -11,9 +12,19 @@ import (
 	"net/http"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi"
 	"github.com/jackc/pgx"
+)
+
+const (
+	htmlTemplate = `<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body><table><tr><th>id</th><th>message</th></tr>%s</table></body>
+</html>`
+	fortuneTemplate = `<tr><td>%d</td><td>%s</td></tr>`
 )
 
 const (
@@ -32,11 +43,6 @@ var (
 	connectionString = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world?sslmode=disable"
 	bindHost         = ":8080"
 	debug            = false
-
-	// Templates
-	tmpl = template.Must(template.
-		ParseFiles("templates/layout.html",
-			"templates/fortune.html"))
 
 	// Database
 	helloWorldMessage = &Message{helloWorldString}
@@ -138,7 +144,7 @@ func fortunes(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error preparing statement: %v", err)
 	}
 
-	fortunes := make(Fortunes, 0, 16)
+	fortunes := make(Fortunes, 0, 256)
 
 	for rows.Next() {
 		fortune := Fortune{}
@@ -154,9 +160,13 @@ func fortunes(w http.ResponseWriter, r *http.Request) {
 		return fortunes[i].Message < fortunes[j].Message
 	})
 	setContentType(w, "text/html")
-	if err := tmpl.Execute(w, fortunes); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+
+	var body strings.Builder
+	for _, fortune := range fortunes {
+		fmt.Fprintf(&body, fortuneTemplate, fortune.ID, html.EscapeString(fortune.Message))
 	}
+
+	fmt.Fprintf(w, htmlTemplate, body.String())
 }
 
 // Test 5: Database Updates
