@@ -1,19 +1,23 @@
+import ConfigParser
 import os
 import glob
 import json
 
+from ast import literal_eval
 from collections import OrderedDict
+
+from colorama import Fore
 
 from toolset.utils.output_helper import log
 
 
-def gather_langauges(benchmarker_config):
+def gather_langauges():
     '''
     Gathers all the known languages in the suite via the folder names
     beneath FWROOT.
     '''
 
-    lang_dir = os.path.join(benchmarker_config.fwroot, "frameworks")
+    lang_dir = os.path.join(os.getenv('FWROOT'), "frameworks")
     langs = []
     for dir in glob.glob(os.path.join(lang_dir, "*")):
         langs.append(dir.replace(lang_dir, "")[1:])
@@ -88,8 +92,10 @@ def gather_tests(include=[], exclude=[], benchmarker_config=None,
             try:
                 config = json.load(config_file)
             except ValueError:
+                log("Error loading '{!s}".format(config_file_name),
+                    color=Fore.RED)
                 raise Exception(
-                    "Error loading '{!s}'.".format(config_file_name))
+                    "Error loading config file")
 
         # Find all tests in the config file
         config_tests = parse_config(config, os.path.dirname(config_file_name),
