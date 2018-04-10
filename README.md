@@ -22,12 +22,6 @@ To get started developing you'll need to install [docker](https://docs.docker.co
 
         $ git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
 
-#### A note on Windows:
-
-Git on Windows will, by default, automatically convert line endings from `lf` to `crlf`. This is problematic for the Docker images we build for tests targeting Linux operating systems. Therefore, in order to run tests on Windows, you must set `autocrlf` as either `true` or `input` **prior** to cloning.
-
-See [this writeup](https://help.github.com/articles/dealing-with-line-endings/) for more information.
-
 2. Create the TFB Docker virtual network
 
         $ docker network create tfb

@@ -30,7 +30,7 @@ class Benchmarker:
         '''
         This process involves setting up the client/server machines
         with any necessary change. Then going through each test,
-        running their setup script, verifying the URLs, and
+        running their docker build and run, verifying the URLs, and
         running benchmarks against them.
         '''
         # Generate metadata
@@ -157,7 +157,7 @@ class Benchmarker:
             while not accepting_requests and slept < max_sleep:
                 accepting_requests = test.is_accepting_requests()
                 if not docker_helper.successfully_running_containers(
-                        self.config, test.get_docker_files(), benchmark_log):
+                        self.config, test, benchmark_log):
                     docker_helper.stop(self.config, containers,
                                        database_container, test)
                     log("ERROR: One or more expected docker container exited early",
@@ -218,8 +218,8 @@ class Benchmarker:
                 return False
         except (OSError, IOError, subprocess.CalledProcessError) as e:
             tb = traceback.format_exc()
-            self.results.write_intermediate(
-                test.name, "error during test setup: " + str(e))
+            self.results.write_intermediate(test.name,
+                                            "error during test: " + str(e))
             log("Subprocess Error %s" % test.name,
                 file=benchmark_log,
                 border='-',

@@ -1,21 +1,19 @@
-import ConfigParser
 import os
 import glob
 import json
 
-from ast import literal_eval
 from collections import OrderedDict
 
 from toolset.utils.output_helper import log
 
 
-def gather_langauges():
+def gather_langauges(benchmarker_config):
     '''
     Gathers all the known languages in the suite via the folder names
     beneath FWROOT.
     '''
 
-    lang_dir = os.path.join(os.getenv('FWROOT'), "frameworks")
+    lang_dir = os.path.join(benchmarker_config.fwroot, "frameworks")
     langs = []
     for dir in glob.glob(os.path.join(lang_dir, "*")):
         langs.append(dir.replace(lang_dir, "")[1:])

@@ -20,7 +20,6 @@ class FrameworkTest:
         self.benchmarker_config = benchmarker_config
         self.results = results
         self.runTests = runTests
-        self.fwroot = benchmarker_config.fwroot
         self.approach = ""
         self.classification = ""
         self.database = ""
@@ -35,11 +34,6 @@ class FrameworkTest:
         self.notes = ""
         self.port = ""
         self.versus = ""
-        self.docker_files = None
-
-        # Used in setup.sh scripts for consistency with
-        # the bash environment variables
-        self.troot = self.directory
 
         self.__dict__.update(args)
 
@@ -51,7 +45,6 @@ class FrameworkTest:
         '''
         Start the test implementation
         '''
-        test_docker_files = self.get_docker_files()
         test_log_dir = os.path.join(self.results.directory, self.name.lower())
         build_log_dir = os.path.join(test_log_dir, 'build')
         run_log_dir = os.path.join(test_log_dir, 'run')
@@ -70,8 +63,7 @@ class FrameworkTest:
         if result != 0:
             return None
 
-        return docker_helper.run(self.benchmarker_config, test_docker_files,
-                                 run_log_dir)
+        return docker_helper.run(self.benchmarker_config, self, run_log_dir)
 
     def is_accepting_requests(self):
         '''
@@ -89,20 +81,6 @@ class FrameworkTest:
 
         return docker_helper.test_client_connection(self.benchmarker_config,
                                                     url)
-
-    def get_docker_files(self):
-        '''
-        Returns all the docker_files for this test.
-        '''
-        test_docker_files = ["%s.dockerfile" % self.name]
-        if self.docker_files is not None:
-            if type(self.docker_files) is list:
-                test_docker_files.extend(self.docker_files)
-            else:
-                raise Exception(
-                    "docker_files in benchmark_config.json must be an array")
-
-        return test_docker_files
 
     def verify_urls(self):
         '''

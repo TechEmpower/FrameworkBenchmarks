@@ -16,9 +16,7 @@ A metric we capture, in addition to the actual benchmark numbers, is the signifi
 
 3. Edit `benchmark_config.json`
 
-The initialization process made some assumptions about your test implementation that may or may not be true. For example, it laid out two separate tests: the non-database tests; and the database tests. You, on the other hand, may only want to implement the `JSON` test, so you will need alter `benchmark_config.json`.
-
-Additionally, `benchmark_config.json` has, for each test, a key called "setup_file". This value refers to the next bullet.
+You will need alter `benchmark_config.json` to have the appropriate end-points and port specified.
 
 4. Create `$NAME.dockerfile`
 

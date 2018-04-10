@@ -70,7 +70,7 @@ class Scaffolding:
     def __prompt_language(self):
         self.language = raw_input("Language: ").strip()
 
-        known_languages = gather_langauges()
+        known_languages = gather_langauges(benchmarker_config)
         language = None
         for lang in known_languages:
             if lang.lower() == self.language.lower():
