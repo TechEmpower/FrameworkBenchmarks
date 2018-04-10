@@ -1,11 +1,6 @@
-FROM techempower/nginx:0.1
+FROM ruby:2.4
 
-FROM techempower/ruby-2.4:0.1
-
-COPY --from=0 /nginx /nginx
-
-ENV NGINX_HOME="/nginx"
-ENV PATH=/nginx/sbin:${PATH}
+RUN apt update -yqq && apt install -yqq nginx
 
 ADD ./ /grape
 

@@ -1,9 +1,9 @@
-FROM techempower/python2:0.1
+FROM python:2.7.14
 
 ADD ./ /tornado
 
 WORKDIR /tornado
 
-RUN pip install --install-option="--prefix=${PY2_ROOT}" -r /tornado/requirements_pg.txt
+RUN pip install -r /tornado/requirements_pg.txt
 
-CMD python server_pg.py --port=8080 --postgres=$DBHOST --logging=error
+CMD python server_pg.py --port=8080 --postgres=tfb-database --logging=error

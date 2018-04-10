@@ -18,7 +18,7 @@ if sys.version_info[0] == 3:
 _is_pypy = hasattr(sys, 'pypy_version_info')
 
 DBDRIVER = 'mysql+pymysql' if _is_pypy else 'mysql'  # mysqlclient is slow on PyPy
-DBHOST = os.environ.get('DBHOST', 'localhost')
+DBHOST = 'tfb-database'
 
 
 # setup

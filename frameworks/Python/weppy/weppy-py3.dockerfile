@@ -1,9 +1,9 @@
-FROM techempower/python3:0.1
+FROM python:3.6.5
 
 ADD ./ /weppy
 
 WORKDIR /weppy
 
-RUN pip3 install --install-option="--prefix=${PY3_ROOT}" -r /weppy/requirements.txt
+RUN pip3 install -r /weppy/requirements.txt
 
 CMD gunicorn app:app -c gunicorn_conf.py

@@ -18,7 +18,7 @@ use Scalar::Util 'looks_like_number';
 }
 
 {
-  my $db_host = $ENV{DBHOST} || 'localhost';
+  my $db_host = 'tfb-database';
   helper pg => sub { state $pg = Mojo::Pg->new('postgresql://benchmarkdbuser:benchmarkdbpass@' . $db_host . '/hello_world') };
 }
 
