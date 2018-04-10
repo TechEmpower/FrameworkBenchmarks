@@ -11,6 +11,7 @@ import threading
 import re
 import math
 import csv
+import traceback
 from datetime import datetime
 
 # Cross-platform colored text
@@ -175,6 +176,7 @@ class Results:
 
             return results
         except IOError:
+            traceback.print_exc()
             return None
 
     def parse_all(self, framework_test):
