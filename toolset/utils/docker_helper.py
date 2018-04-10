@@ -139,7 +139,7 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
     return 0
 
 
-def run(benchmarker_config, docker_file, run_log_dir):
+def run(benchmarker_config, test, run_log_dir):
     '''
     Run the given Docker container(s)
     '''
@@ -147,7 +147,7 @@ def run(benchmarker_config, docker_file, run_log_dir):
         base_url=benchmarker_config.server_docker_host)
     containers = []
 
-    log_prefix = "%s: " % docker_file.replace(".dockerfile", "")
+    log_prefix = "%s: " % test.name
     try:
 
         def watch_container(container, docker_file):
@@ -181,7 +181,7 @@ def run(benchmarker_config, docker_file, run_log_dir):
         }]
 
         container = client.containers.run(
-            "techempower/tfb.test.%s" % docker_file.replace(".dockerfile", ""),
+            "techempower/tfb.test.%s" % test.name,
             name=name,
             network=benchmarker_config.network,
             network_mode=benchmarker_config.network_mode,
@@ -196,21 +196,20 @@ def run(benchmarker_config, docker_file, run_log_dir):
         containers.append(container)
 
         watch_thread = Thread(
-            target=watch_container, args=(
+            target=watch_container,
+            args=(
                 container,
-                docker_file,
+                "%s.dockerfile" % test.name,
             ))
         watch_thread.daemon = True
         watch_thread.start()
 
     except Exception:
         with open(
-                os.path.join(
-                    run_log_dir,
-                    "%s.log" % docker_file.replace(".dockerfile", "").lower()),
+                os.path.join(run_log_dir, "%s.log" % test.name.lower()),
                 'w') as run_log:
             tb = traceback.format_exc()
-            log("Running docker cointainer: %s failed" % docker_file,
+            log("Running docker cointainer: %s.dockerfile failed" % test.name,
                 prefix=log_prefix,
                 file=run_log)
             log(tb, prefix=log_prefix, file=run_log)
