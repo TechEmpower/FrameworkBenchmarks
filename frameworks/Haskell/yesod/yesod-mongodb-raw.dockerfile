@@ -1,6 +1,6 @@
 FROM haskell:8.2.1
 
-RUN apt update -yqq && apt install -yqq xz-utils make libpq-dev libmysqlclient-dev
+RUN apt update -yqq && apt install -yqq xz-utils make libpq-dev libmysqlclient-dev pkg-config libpcre3 libpcre3-dev
 
 COPY ./yesod-mysql-mongo ./
 
