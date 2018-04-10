@@ -4,23 +4,6 @@
     "default": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "None",
-      "framework": "None",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "Light-4J",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "light-4j",
-      "notes": "",
-      "versus": ""
-    },
-    "postgresql" : {
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",

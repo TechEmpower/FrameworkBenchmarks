@@ -21,7 +21,7 @@
     <mustache.version>0.9.5</mustache.version>
     <mysql.version>5.1.46</mysql.version>
     <postgresql.version>42.2.2</postgresql.version>
-    <undertow.version>2.0.3.Final</undertow.version>
+    <undertow.version>2.0.4.Final</undertow.version>
     <versions-maven-plugin.version>2.5</versions-maven-plugin.version>
   </properties>
 

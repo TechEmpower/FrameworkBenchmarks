@@ -1,11 +1,16 @@
-FROM techempower/java:0.1 as java
 FROM techempower/mono:0.1
-COPY --from=java /java /java
-ENV JAVA_HOME=/java/jdk-9.0.4
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
-ADD ./ /revenj
+RUN mkdir /java
+WORKDIR /java
+RUN curl -sL -O https://download.java.net/java/GA/jdk10/10/binaries/openjdk-10_linux-x64_bin.tar.gz
+RUN tar xf openjdk-10_linux-x64_bin.tar.gz
+ENV JAVA_HOME=/java/jdk-10
+ENV PATH ${JAVA_HOME}/bin:${PATH}
+
 WORKDIR /revenj
+COPY Revenj.Bench Revenj.Bench
+COPY Revenj.Bench.sln Reveng.Bench.sln
+COPY Revenj.Http.exe.config Revenj.Http.exe.config
 
 RUN curl -sL -O https://github.com/ngs-doo/revenj/releases/download/1.4.2/dsl-compiler.zip
 RUN unzip dsl-compiler.zip
@@ -29,4 +34,4 @@ RUN xbuild /revenj/Revenj.Bench/Revenj.Bench.csproj /t:Rebuild /p:Configuration=
 
 RUN mv /revenj/Revenj.Http.exe.config /revenj/exe/Revenj.Http.exe.config
 
-CMD mono /revenj/exe/Revenj.Http.exe
+CMD ["mono", "/revenj/exe/Revenj.Http.exe"]

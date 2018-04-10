@@ -1,13 +1,6 @@
-FROM techempower/leiningen-java8:0.1
-
-ADD ./ /aleph
+FROM clojure:lein-2.8.1
 WORKDIR /aleph
-RUN lein clean
+COPY src src
+COPY project.clj project.clj
 RUN lein uberjar
-RUN ls -alh
-CMD java \
-    -server \
-    -Xmx2g \
-    -XX:+UseG1GC \
-    -XX:MaxGCPauseMillis=10 \
-    -jar target/*-standalone.jar
+CMD ["java", "-server", "-Xmx2g", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=10", "-jar", "target/hello-aleph-standalone.jar"]

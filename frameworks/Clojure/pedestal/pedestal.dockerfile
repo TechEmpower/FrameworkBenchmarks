@@ -1,12 +1,9 @@
-FROM techempower/leiningen-java8:0.1
-
-ADD ./ /pedestal
+FROM clojure:lein-2.8.1
 WORKDIR /pedestal
-RUN lein clean
+COPY config config
+COPY src src
+COPY test test
+COPY project.clj project.clj
 RUN lein uberjar
-CMD java \
-    -jar \
-    -D"io.pedestal.log.defaultMetricsRecorder=nil" \
-    -D"io.pedestal.log.overrideLogger=nil" \
-    target/pedestal-standalone.jar
+CMD java -jar -Dio.pedestal.log.defaultMetricsRecorder=nil -Dio.pedestal.log.overrideLogger=nil target/pedestal-standalone.jar
 

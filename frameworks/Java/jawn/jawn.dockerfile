@@ -1,7 +1,7 @@
-FROM techempower/java8:0.1
-FROM techempower/gradle-java8:0.1
-
-ADD ./ /jawn
+FROM gradle:4.6.0-jdk10
+USER root
 WORKDIR /jawn
-RUN gradle clean
-CMD gradle --no-daemon --refresh-dependencies run -Pargs=8080,production
+COPY build.gradle build.gradle
+COPY src src
+COPY webapp webapp
+CMD ["gradle", "--no-daemon", "--refresh-dependencies", "run", "-Pargs=8080,production"]

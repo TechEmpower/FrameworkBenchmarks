@@ -1,10 +1,12 @@
-FROM techempower/maven:0.1
-
-ADD ./ /jooby
+FROM maven:3.5.3-jdk-9-slim as maven
 WORKDIR /jooby
-RUN mvn clean package
-CMD java \
-    -server \
-    -Xms512m \
-    -Xmx2g \
-    -jar target/jooby-1.0.jar
+COPY pom.xml pom.xml
+COPY src src
+COPY public public
+RUN mvn package -q
+
+FROM openjdk:9-jre-slim
+WORKDIR /jooby
+COPY --from=maven /jooby/target/jooby-1.0.jar app.jar
+COPY conf conf
+CMD ["java", "-server", "-Xms512m", "-Xmx2g", "-jar", "app.jar"]
