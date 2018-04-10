@@ -159,7 +159,7 @@ func fortunes(w http.ResponseWriter, r *http.Request) {
 	sort.Slice(fortunes, func(i, j int) bool {
 		return fortunes[i].Message < fortunes[j].Message
 	})
-	setContentType(w, "text/html")
+	setContentType(w, "text/html; charset=utf-8")
 
 	var body strings.Builder
 	for _, fortune := range fortunes {
