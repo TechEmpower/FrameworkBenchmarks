@@ -35,7 +35,7 @@ class Container(api_hour.Container):
     def start(self):
         yield from super().start()
         LOG.info('Starting engines...')
-        self.engines['pg'] = self.loop.create_task(aiopg.create_pool(host=os.environ.get('DBHOST', self.config['engines']['pg']['host']),
+        self.engines['pg'] = self.loop.create_task(aiopg.create_pool(host='tfb-database',
                                                                      port=int(self.config['engines']['pg']['port']),
                                                                      sslmode='disable',
                                                                      dbname=self.config['engines']['pg']['dbname'],

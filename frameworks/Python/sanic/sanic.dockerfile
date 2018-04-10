@@ -1,9 +1,9 @@
-FROM techempower/python3:0.1
+FROM python:3.6.5
 
 ADD ./ /sanic
 
 WORKDIR /sanic
 
-RUN pip3 install --install-option="--prefix=${PY3_ROOT}" -r /sanic/requirements.txt
+RUN pip3 install -r /sanic/requirements.txt
 
 CMD python3 app.py

@@ -35,7 +35,7 @@ def pg_dsn() -> str:
     return str(URL(
         database='hello_world',
         password=os.getenv('PGPASS', 'benchmarkdbpass'),
-        host=os.getenv('DBHOST', 'localhost'),
+        host='tfb-database',
         port='5432',
         username=os.getenv('PGUSER', 'benchmarkdbuser'),
         drivername='postgres',

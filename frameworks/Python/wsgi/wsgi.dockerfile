@@ -1,9 +1,9 @@
-FROM techempower/python3:0.1
+FROM python:3.6.5
 
 ADD ./ /wsgi
 
 WORKDIR /wsgi
 
-RUN pip3 install --install-option="--prefix=${PY3_ROOT}" -r /wsgi/requirements.txt
+RUN pip3 install -r /wsgi/requirements.txt
 
 CMD gunicorn hello:app -c gunicorn_conf.py

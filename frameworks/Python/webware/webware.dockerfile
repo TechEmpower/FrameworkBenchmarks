@@ -1,10 +1,10 @@
-FROM techempower/python2:0.1
+FROM python:2.7.14
 
 ADD ./ /webware
 
 WORKDIR /webware
 
-RUN pip install --install-option="--prefix=${PY2_ROOT}" -r /webware/requirements.txt
+RUN pip install -r /webware/requirements.txt
 
 RUN wget -q https://downloads.sourceforge.net/webware/Webware-1.1.1.tar.gz
 RUN tar xf Webware-1.1.1.tar.gz

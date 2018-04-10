@@ -1,6 +1,10 @@
-FROM techempower/aiohttp-base:0.1
+FROM python:3.6.5
 
-WORKDIR /aiohttp
+ADD ./ /aiohttp
+
+WORKDIR aiohttp
+
+RUN pip3 install -r /aiohttp/requirements.txt
 
 ENV CONNECTION=RAW
 
