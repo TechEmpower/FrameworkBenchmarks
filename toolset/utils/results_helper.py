@@ -105,79 +105,75 @@ class Results:
         '''
         Parses the given test and test_type from the raw_file.
         '''
-        try:
-            results = dict()
-            results['results'] = []
-            stats = []
+        results = dict()
+        results['results'] = []
+        stats = []
 
-            if os.path.exists(
-                    self.get_raw_file(framework_test.name, test_type)):
-                with open(self.get_raw_file(framework_test.name,
-                                            test_type)) as raw_data:
+        if os.path.exists(
+                self.get_raw_file(framework_test.name, test_type)):
+            with open(self.get_raw_file(framework_test.name,
+                                        test_type)) as raw_data:
 
-                    is_warmup = True
-                    rawData = None
-                    for line in raw_data:
-                        if "Queries:" in line or "Concurrency:" in line:
-                            is_warmup = False
-                            rawData = None
-                            continue
-                        if "Warmup" in line or "Primer" in line:
-                            is_warmup = True
-                            continue
-                        if not is_warmup:
-                            if rawData == None:
-                                rawData = dict()
-                                results['results'].append(rawData)
-                            if "Latency" in line:
-                                m = re.findall(
-                                    r"([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
-                                if len(m) == 4:
-                                    rawData['latencyAvg'] = m[0]
-                                    rawData['latencyStdev'] = m[1]
-                                    rawData['latencyMax'] = m[2]
-                            if "requests in" in line:
-                                m = re.search("([0-9]+) requests in", line)
-                                if m != None:
-                                    rawData['totalRequests'] = int(m.group(1))
-                            if "Socket errors" in line:
-                                if "connect" in line:
-                                    m = re.search("connect ([0-9]+)", line)
-                                    rawData['connect'] = int(m.group(1))
-                                if "read" in line:
-                                    m = re.search("read ([0-9]+)", line)
-                                    rawData['read'] = int(m.group(1))
-                                if "write" in line:
-                                    m = re.search("write ([0-9]+)", line)
-                                    rawData['write'] = int(m.group(1))
-                                if "timeout" in line:
-                                    m = re.search("timeout ([0-9]+)", line)
-                                    rawData['timeout'] = int(m.group(1))
-                            if "Non-2xx" in line:
-                                m = re.search(
-                                    "Non-2xx or 3xx responses: ([0-9]+)", line)
-                                if m != None:
-                                    rawData['5xx'] = int(m.group(1))
-                            if "STARTTIME" in line:
-                                m = re.search("[0-9]+", line)
-                                rawData["startTime"] = int(m.group(0))
-                            if "ENDTIME" in line:
-                                m = re.search("[0-9]+", line)
-                                rawData["endTime"] = int(m.group(0))
-                                test_stats = self.__parse_stats(
-                                    framework_test, test_type,
-                                    rawData["startTime"], rawData["endTime"],
-                                    1)
-                                stats.append(test_stats)
-            with open(
-                    self.get_stats_file(framework_test.name, test_type) +
-                    ".json", "w") as stats_file:
-                json.dump(stats, stats_file, indent=2)
+                is_warmup = True
+                rawData = None
+                for line in raw_data:
+                    if "Queries:" in line or "Concurrency:" in line:
+                        is_warmup = False
+                        rawData = None
+                        continue
+                    if "Warmup" in line or "Primer" in line:
+                        is_warmup = True
+                        continue
+                    if not is_warmup:
+                        if rawData == None:
+                            rawData = dict()
+                            results['results'].append(rawData)
+                        if "Latency" in line:
+                            m = re.findall(
+                                r"([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
+                            if len(m) == 4:
+                                rawData['latencyAvg'] = m[0]
+                                rawData['latencyStdev'] = m[1]
+                                rawData['latencyMax'] = m[2]
+                        if "requests in" in line:
+                            m = re.search("([0-9]+) requests in", line)
+                            if m != None:
+                                rawData['totalRequests'] = int(m.group(1))
+                        if "Socket errors" in line:
+                            if "connect" in line:
+                                m = re.search("connect ([0-9]+)", line)
+                                rawData['connect'] = int(m.group(1))
+                            if "read" in line:
+                                m = re.search("read ([0-9]+)", line)
+                                rawData['read'] = int(m.group(1))
+                            if "write" in line:
+                                m = re.search("write ([0-9]+)", line)
+                                rawData['write'] = int(m.group(1))
+                            if "timeout" in line:
+                                m = re.search("timeout ([0-9]+)", line)
+                                rawData['timeout'] = int(m.group(1))
+                        if "Non-2xx" in line:
+                            m = re.search(
+                                "Non-2xx or 3xx responses: ([0-9]+)", line)
+                            if m != None:
+                                rawData['5xx'] = int(m.group(1))
+                        if "STARTTIME" in line:
+                            m = re.search("[0-9]+", line)
+                            rawData["startTime"] = int(m.group(0))
+                        if "ENDTIME" in line:
+                            m = re.search("[0-9]+", line)
+                            rawData["endTime"] = int(m.group(0))
+                            test_stats = self.__parse_stats(
+                                framework_test, test_type,
+                                rawData["startTime"], rawData["endTime"],
+                                1)
+                            stats.append(test_stats)
+        with open(
+                self.get_stats_file(framework_test.name, test_type) +
+                ".json", "w") as stats_file:
+            json.dump(stats, stats_file, indent=2)
 
-            return results
-        except IOError:
-            traceback.print_exc()
-            return None
+        return results
 
     def parse_all(self, framework_test):
         '''
