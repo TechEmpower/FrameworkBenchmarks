@@ -1,5 +1,5 @@
 from toolset.utils.metadata_helper import gather_remaining_tests, gather_frameworks
-from toolset.utils.output_helper import log, FNULL
+from toolset.utils.output_helper import log
 
 import os
 import subprocess
@@ -291,8 +291,10 @@ class Results:
             # Normally you don't have to use Fore.BLUE before each line, but
             # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
             # or stream flush, so we have to ensure that the color code is printed repeatedly
-            log(
-                "Verification Summary", border='=', border_bottom='-', color=Fore.CYAN)
+            log("Verification Summary",
+                border='=',
+                border_bottom='-',
+                color=Fore.CYAN)
             for test in tests:
                 log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
@@ -446,21 +448,25 @@ class Results:
         '''
         Get the git commit id for this benchmark
         '''
-        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=self.config.fwroot).strip()
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=self.config.fwroot).strip()
 
     def __get_git_repository_url(self):
         '''
         Gets the git repository url for this benchmark
         '''
         return subprocess.check_output(
-            ["git", "config", "--get", "remote.origin.url"], cwd=self.config.fwroot).strip()
+            ["git", "config", "--get", "remote.origin.url"],
+            cwd=self.config.fwroot).strip()
 
     def __get_git_branch_name(self):
         '''
         Gets the git branch name for this benchmark
         '''
         return subprocess.check_output(
-            'git rev-parse --abbrev-ref HEAD', shell=True, cwd=self.config.fwroot).strip()
+            'git rev-parse --abbrev-ref HEAD',
+            shell=True,
+            cwd=self.config.fwroot).strip()
 
     def __parse_stats(self, framework_test, test_type, start_time, end_time,
                       interval):
