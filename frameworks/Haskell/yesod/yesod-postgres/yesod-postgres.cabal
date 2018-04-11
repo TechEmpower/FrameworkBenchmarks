@@ -28,7 +28,6 @@ executable         yesod-postgres
                  , auto-update
                  , primitive
                  , mwc-random
-                 , resource-pool
                  , network
                  , monad-logger
                  , mtl
