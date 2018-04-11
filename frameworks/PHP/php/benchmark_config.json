@@ -84,6 +84,24 @@
       "display_name": "PHP-raw",
       "notes": "",
       "versus": "php-php5"
+    },
+    "swoole": {
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "swoole",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "PHP-swool",
+      "notes": "",
+      "versus": "php7"
     }
   }]
 }
