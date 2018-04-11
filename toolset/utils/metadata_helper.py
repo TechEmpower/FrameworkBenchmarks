@@ -5,6 +5,7 @@ import json
 from collections import OrderedDict
 
 from toolset.utils.output_helper import log
+from colorama import Fore
 
 
 def gather_langauges(benchmarker_config):
@@ -88,8 +89,9 @@ def gather_tests(include=[], exclude=[], benchmarker_config=None,
             try:
                 config = json.load(config_file)
             except ValueError:
-                raise Exception(
-                    "Error loading '{!s}'.".format(config_file_name))
+                log("Error loading config: {!s}".format(config_file_name),
+                    color=Fore.RED)
+                raise Exception("Error loading config file")
 
         # Find all tests in the config file
         config_tests = parse_config(config, os.path.dirname(config_file_name),
