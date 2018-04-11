@@ -1,0 +1,41 @@
+analyzer:
+  strong-mode: true
+
+linter:
+  rules:
+    - empty_constructor_bodies
+    - always_declare_return_types
+    - camel_case_types
+    - implementation_imports
+    - library_names
+    - library_prefixes
+    - non_constant_identifier_names
+    - package_api_docs
+    - package_prefixed_library_names
+    - prefer_is_not_empty
+    - slash_for_doc_comments
+    - super_goes_last
+    - type_annotate_public_apis
+    - type_init_formals
+    - unnecessary_brace_in_string_interp
+    - unnecessary_getters_setters
+    - avoid_empty_else
+    - package_names
+    - unrelated_type_equality_checks
+    - throw_in_finally
+    - close_sinks
+    - comment_references
+    - control_flow_in_finally
+    - empty_statements
+    - hash_and_equals
+    - iterable_contains_unrelated_type
+    - list_remove_unrelated_type
+    - test_types_in_equals
+    - throw_in_finally
+    - valid_regexps
+    - annotate_overrides
+    - avoid_init_to_null
+    - avoid_return_types_on_setters
+    - await_only_futures
+    - sort_constructors_first
+    - sort_unnamed_constructors_first
