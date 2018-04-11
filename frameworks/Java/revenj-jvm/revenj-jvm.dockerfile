@@ -14,6 +14,9 @@ RUN unzip -o dsl-compiler.zip
 RUN rm dsl-compiler.zip
 RUN mvn compile war:war -q
 
-FROM techempower/resin-java8:0.1
-COPY --from=maven /revenj-jvm/target/revenj.war ${RESIN_HOME}/webapps/ROOT.war
-CMD java -jar ${RESIN_HOME}/lib/resin.jar console
+FROM openjdk:8-jdk
+WORKDIR /resin
+RUN curl -sL http://www.caucho.com/download/resin-4.0.55.tar.gz | tar xz --strip-components=1
+RUN rm -rf webapps/*
+COPY --from=maven /revenj-jvm/target/revenj.war webapps/ROOT.war
+CMD ["java", "-jar", "lib/resin.jar", "console"]
