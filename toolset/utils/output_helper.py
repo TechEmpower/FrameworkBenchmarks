@@ -27,7 +27,6 @@ def log(log_text=None, **kwargs):
     # set up some defaults
     color = kwargs.get('color', '')
     color_reset = Style.RESET_ALL if color else ''
-    dim = Style.DIM if color else ''
     prefix = kwargs.get('prefix', '')
     border = kwargs.get('border')
     border_bottom = kwargs.get('border_bottom')
@@ -47,11 +46,11 @@ def log(log_text=None, **kwargs):
             for line in log_text.splitlines():
                 if line.strip() is not '':
                     if prefix:
-                        new_log_text += dim + prefix + color_reset
+                        new_log_text += Style.DIM + prefix + Style.RESET_ALL
                     new_log_text += color + line + color_reset + os.linesep
             new_log_text += border_bottom or ''
 
-            sys.stdout.write(color_reset + new_log_text)
+            sys.stdout.write(Style.RESET_ALL + new_log_text)
             sys.stdout.flush()
 
         if file is not None and os.fstat(
