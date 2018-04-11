@@ -1,70 +1,56 @@
-# dart_aqueduct_benchmark
+# Aqueduct Framework Benchmarking Test
 
-An application built with [aqueduct](https://github.com/stablekernel/aqueduct).
+This test adds [Aqueduct](https://aqueduct.io), a microframework for Dart, to the [benchmarking test suite](../). The test is based on the Dart Benchmarking Test.
 
-## Running the Application in Development
+## Versions
 
-Run `aqueduct serve` from this directory to run the application.
+* [Dart SDK version >=1.7.0](http://www.dartlang.org/)
+* [Dart aqueduct version 2.5.0+1](https://pub.dartlang.org/packages/aqueduct)
 
-If you wish to use the debugger in your IDE, run the `bin/main.dart` script from your IDE.
+## Test URLs
 
-You must have a `config.yaml` file that has connection information to a locally running PostgreSQL database. To provision a local database with this application's schema, run the following commands from this directory:
+### Common
 
-```
-aqueduct db generate
-aqueduct db upgrade --connect postgres://user:password@localhost:5432/app_name
-```
+#### JSON Encoding Test
+http://localhost:8080/json
 
-## Running Application Tests
-
-This application is tested against a local PostgreSQL database. The test harness (`test/harness/app.dart`) creates database tables for each `ManagedObject` subclass declared in this application. These tables are discarded when the tests complete.
-
-The local database installation must have a database named `dart_test`, for which a user named `dart` (with password `dart`) has full privileges to.
-The following command creates this database and user on a locally running PostgreSQL database:
-
-```
-aqueduct setup
-```
-
-See `test/simple_controller_test.dart` for an example of a test suite.
-
-To run all tests for this application, run the following in this directory:
-
-```
-pub run test
-```
-
-You may also run tests from an IntelliJ IDE by right-clicking on a test file or test case and selected 'Run tests'.
-
-Tests will be run using the configuration file `config.src.yaml`. This file should contain  test configuration values and remain in source control. This file is the template for `config.yaml` files, which live on deployed server instances. 
-
-See the application test harness, `test/app/harness.dart`, for more details. This file contains a `TestApplication` class that can be set up and torn down for tests. It will create a temporary database that the tests run against. See examples of usage in the `_test.dart` files in `test/`.
-
-For more information, see [Getting Started](https://aqueduct.io/docs/) and [Testing](https://aqueduct.io/docs/testing/overview).
-
-## Application Structure
-
-The data model of this application is defined by all declared subclasses of `ManagedObject`. Each of these subclasses is defined in a file in the `lib/model` directory.
-
-Routes and other initialization are configured in `lib/dart_aqueduct_benchmark_sink.dart`. Endpoint controller files are in `lib/controller/`.
+#### Plaintext Test
+http://localhost:8080/plaintext
 
 
-## Configuration
+### PostgreSQL
 
-The configuration file (`config.yaml`) currently requires an entry for `database:` which describes a database connection.
+#### Data-Store/Database Mapping Test
+http://localhost:8080/pg/db
 
-The file `config.src.yaml` is used for testing: it should be checked into source control and contain values for testing purposes. It should maintain the same keys as `config.yaml`.
+#### Variable Query Test
+http://localhost:8080/pg/queries?queries=2
 
-## Creating API Documentation
+#### Fortunes Test
+http://localhost:8080/pg/fortunes
 
-In the project directory, run:
+#### Data-Store/Database Update Test
+http://localhost:8080/pg/updates
 
-```bash
-aqueduct document
-```
+#### Variable Update Test
+http://localhost:8080/pg/updates?queries=2
 
-This will print a JSON OpenAPI specification to stdout.
 
-## Deploying an Application
+### MongoDB
 
-See the documentation for [Deployment](https://aqueduct.io/docs/deploy/overview/).
+#### Data-Store/Database Mapping Test
+http://localhost:8080/mongo/db
+
+#### Variable Query Test
+http://localhost:8080/mongo/queries?queries=2
+
+#### Fortunes Test
+http://localhost:8080/mongo/fortunes
+
+#### Data-Store/Database Update Test
+http://localhost:8080/mongo/updates
+
+#### Variable Update Test
+http://localhost:8080/mongo/updates?queries=2
+
+

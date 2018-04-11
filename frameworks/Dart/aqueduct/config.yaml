@@ -1,6 +1,6 @@
 database:
- username: dart
- password: dart
- host: localhost
+ username: benchmarkdbuser
+ password: benchmarkdbpass
+ host: tfb-database
  port: 5432
- databaseName: dart_test
+ databaseName: hello_world

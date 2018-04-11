@@ -1,0 +1,4 @@
+./dart-aqueduct/fortunes.mustache
+./dart-aqueduct/server.dart
+./dart-aqueduct/postgresql.yaml
+./dart-aqueduct/pubspec.yaml

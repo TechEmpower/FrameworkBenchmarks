@@ -1,6 +1,47 @@
-import 'dart_aqueduct_benchmark.dart';
+import 'dart:async';
 
-import 'model/model.dart';
+import 'package:aqueduct/aqueduct.dart';
+
+export 'dart:async';
+export 'dart:io';
+export 'package:aqueduct/aqueduct.dart';
+
+Future main() async {
+  try {
+    var app = new Application<DartAqueductBenchmarkSink>();
+    var config = new ApplicationConfiguration()
+      ..port = 8081
+      ..configurationFilePath = "config.yaml";
+
+    app.configuration = config;
+
+    await app.start(numberOfInstances: 3);
+  } catch (e, st) {
+    await writeError("$e\n $st");
+  }
+}
+
+Future writeError(String error) async {
+  print("$error");
+}
+
+class Fortune extends ManagedObject<_Fortune> implements _Fortune {}
+
+class _Fortune {
+  @managedPrimaryKey
+  int id;
+
+  String message;
+
+}
+
+class World extends ManagedObject<_World> implements _World {}
+class _World {
+  @managedPrimaryKey
+  int id;
+
+  int randomNumber;
+}
 
 /// This type initializes an application.
 ///
@@ -15,10 +56,13 @@ class DartAqueductBenchmarkSink extends RequestSink {
   ///
   /// The [appConfig] contains configuration data from `aqueduct serve`, e.g.
   /// the port the application is running on and the path to a configuration file.
-  DartAqueductBenchmarkSink(ApplicationConfiguration appConfig) : super(appConfig) {
-    logger.onRecord.listen((rec) => print("$rec ${rec.error ?? ""} ${rec.stackTrace ?? ""}"));
+  DartAqueductBenchmarkSink(ApplicationConfiguration appConfig)
+      : super(appConfig) {
+//    logger.onRecord.listen(
+//        (rec) => print("$rec ${rec.error ?? ""} ${rec.stackTrace ?? ""}"));
 
-    var options = new DartAqueductBenchmarkConfiguration(appConfig.configurationFilePath);
+    var options =
+        new DartAqueductBenchmarkConfiguration(appConfig.configurationFilePath);
     ManagedContext.defaultContext = contextWithConnectionInfo(options.database);
   }
 
@@ -29,8 +73,9 @@ class DartAqueductBenchmarkSink extends RequestSink {
   @override
   void setupRouter(Router router) {
     router
-        .route("/model/[:id]")
-        .generate(() => new ManagedObjectController<Model>());
+        .route("/json")
+        .listen((req) async => new Response.ok({"message": "Hello, World!"}));
+//        .generate(() => new ManagedObjectController<Model>());
   }
 
   /// Final initialization method for this instance.
@@ -66,7 +111,8 @@ class DartAqueductBenchmarkSink extends RequestSink {
 /// For more documentation on configuration files, see https://aqueduct.io/docs/configure/ and
 /// https://pub.dartlang.org/packages/safe_config.
 class DartAqueductBenchmarkConfiguration extends ConfigurationItem {
-  DartAqueductBenchmarkConfiguration(String fileName) : super.fromFile(fileName);
+  DartAqueductBenchmarkConfiguration(String fileName)
+      : super.fromFile(fileName);
 
   DatabaseConnectionConfiguration database;
 }
