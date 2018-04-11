@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 RUN apt-get update
 
-RUN apt-get install -y software-properties-common build-essential curl locales wget unzip git \
+RUN apt-get install -qqy software-properties-common build-essential curl locales wget unzip git \
     libmysqlclient-dev libpq-dev \
     libpcre3 libpcre3-dev \
     libssl-dev libcurl4-openssl-dev \
@@ -28,7 +28,7 @@ RUN apt install -qqy g++-4.9
 RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 50
 
 RUN apt install -qqy python-dev python-pip cmake autoconf
-RUN pip install conan==0.28.1
+RUN pip install -q conan==0.28.1
 
 WORKDIR /luna
 COPY CMakeLists.txt CMakeLists.txt
@@ -38,8 +38,8 @@ COPY default.cpp default.cpp
 COPY epoll.cpp epoll.cpp
 COPY thread.cpp thread.cpp
 
-RUN CC=gcc-4.9 CXX=g++-4.9 conan install --build=missing -s compiler="gcc" -s compiler.version="4.9" .
-RUN cmake . -DCMAKE_CXX_COMPILER=g++-4.9 -DCMAKE_CC_COMPILER=gcc-4.9
-RUN cmake --build .
+RUN CC=gcc-4.9 CXX=g++-4.9 conan install --build=missing -s compiler="gcc" -s compiler.version="4.9" . >/dev/null
+RUN cmake . -DCMAKE_CXX_COMPILER=g++-4.9 -DCMAKE_CC_COMPILER=gcc-4.9 >/dev/null
+RUN cmake --build . >/dev/null
 
 CMD /luna/bin/lunabench_thread 8080
