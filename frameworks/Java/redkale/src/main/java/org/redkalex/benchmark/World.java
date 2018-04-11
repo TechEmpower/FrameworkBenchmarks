@@ -5,6 +5,7 @@
  */
 package org.redkalex.benchmark;
 
+import javax.persistence.Id;
 import org.redkale.convert.json.JsonConvert;
 
 /**
@@ -13,6 +14,7 @@ import org.redkale.convert.json.JsonConvert;
  */
 public class World implements Comparable<World> {
 
+    @Id
     private int id;
 
     private int randomNumber;
