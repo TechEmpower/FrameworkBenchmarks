@@ -1,7 +1,10 @@
-FROM techempower/mono:0.1
+FROM mono:5.8.0.127
+RUN apt update -yqq && apt install -yqq nginx wget mono-fastcgi-server
 
-ADD ./ /servicestack
 WORKDIR /servicestack
+COPY src src
+COPY nginx.conf nginx.conf
+COPY run.sh run.sh
 
 RUN mkdir lib
 RUN curl -sL -O https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
