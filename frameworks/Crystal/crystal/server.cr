@@ -3,7 +3,7 @@ require "json"
 require "pg"
 require "ecr"
 
-APPDB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@#{ENV["DBHOST"]? || "127.0.0.1"}:5432/hello_world?initial_pool_size=256&max_pool_size=256&max_idle_pool_size=256")
+APPDB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?initial_pool_size=256&max_pool_size=256&max_idle_pool_size=256")
 ID_MAXIMUM = 10_000
 
 server = HTTP::Server.new("0.0.0.0", 8080) do |context|

@@ -1,7 +1,11 @@
-FROM techempower/crystal-lang:0.1
+FROM crystallang/crystal:0.24.1
 
-ADD ./ /kemal
 WORKDIR /kemal
+COPY views views
+COPY run.sh run.sh
+COPY server-postgres.cr server-postgres.cr
+COPY shard.lock shard.lock
+COPY shard.yml shard.yml
 
 ENV GC_MARKERS 1
 ENV KEMAL_ENV production
