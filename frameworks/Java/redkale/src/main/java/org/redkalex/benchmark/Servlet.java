@@ -75,4 +75,10 @@ public class Servlet extends HttpServlet {
     private static int randomId() {
         return 1 + ThreadLocalRandom.current().nextInt(10000);
     }
+
+	
+    public static void main(String[] args) throws Throwable {
+        org.redkale.boot.Application.main(args);
+    }
+
 }

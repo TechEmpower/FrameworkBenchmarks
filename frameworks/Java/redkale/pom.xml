@@ -7,7 +7,7 @@
 
 	<properties>
 		<!-- the main class -->
-		<main.class>org.redkalex.benchmark.Bootstrap</main.class>
+		<main.class>org.redkalex.benchmark.Servlet</main.class>
 		<stack.version>0.1.0</stack.version>
 	</properties>
 
