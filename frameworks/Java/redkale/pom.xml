@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.techempower</groupId>
-	<artifactId>vertx.benchmark</artifactId>
+	<groupId>org.redkalex</groupId>
+	<artifactId>redkale-benchmark</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
 		<!-- the main class -->
 		<main.class>org.redkalex.benchmark.Servlet</main.class>
-		<stack.version>0.1.0</stack.version>
+		<stack.version>0.0.1</stack.version>
 	</properties>
 
 	<dependencies>
@@ -83,7 +83,7 @@
 							</transformers>
 							<artifactSet>
 							</artifactSet>
-							<outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar</outputFile>
+							<outputFile>${project.build.directory}/${project.artifactId}-${project.version}.jar</outputFile>
 						</configuration>
 					</execution>
 				</executions>
