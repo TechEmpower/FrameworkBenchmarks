@@ -18,13 +18,7 @@ ENV PATH /composer:${PATH}
 ADD ./ /phalcon
 WORKDIR /phalcon
 
-RUN apt install -yqq wget php7.2-phalcon php7.2-dev
-
-ENV VERSION="3.3.1"
-
-RUN wget -q https://github.com/phalcon/cphalcon/archive/v${VERSION}.tar.gz
-RUN tar xf v${VERSION}.tar.gz
-RUN cd cphalcon-${VERSION}/build && ./install
+RUN apt install -yqq php7.2-phalcon php7.2-dev
 
 RUN mv /phalcon/public/index-micro.php /phalcon/public/index.php
 

@@ -19,6 +19,9 @@ ADD ./ /laravel
 WORKDIR /laravel
 
 RUN mkdir -p /laravel/bootstrap/cache
+RUN mkdir -p /laravel/storage
+RUN mkdir -p /laravel/vendor
+
 RUN chmod -R 777 /laravel
 
 RUN composer.phar install --no-progress
