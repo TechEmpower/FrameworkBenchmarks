@@ -18,7 +18,7 @@ ENV PATH /composer:${PATH}
 ADD ./ /phalcon
 WORKDIR /phalcon
 
-RUN apt install -yqq php7.2-phalcon php7.2-dev
+RUN apt install -yqq wget php7.2-phalcon php7.2-dev
 
 ENV VERSION="3.3.1"
 

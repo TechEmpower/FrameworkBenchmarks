@@ -18,6 +18,9 @@ ENV PATH /composer:${PATH}
 ADD ./ /laravel
 WORKDIR /laravel
 
+RUN mkdir -p /laravel/bootstrap/cache
+RUN chmod -R 777 /laravel
+
 RUN composer.phar install --no-progress
 
 RUN php artisan config:cache
