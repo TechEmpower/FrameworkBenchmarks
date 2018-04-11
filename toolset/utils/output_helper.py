@@ -55,7 +55,7 @@ def log(log_text=None, **kwargs):
 
         if file is not None and os.fstat(
                 file.fileno()).st_size < TOO_MANY_BYTES:
-            file.write(seq.sub('', log_text))
+            file.write(seq.sub('', log_text + os.linesep))
             file.flush()
     except:
         pass
