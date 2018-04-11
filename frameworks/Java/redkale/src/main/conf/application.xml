@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<application port="8585">     
+    
+    <!--  see： http://redkale.org/redkale.html#redkale_confxml  -->
+    
+    <resources></resources> 
+        
+    <server protocol="HTTP" host="0.0.0.0" port="8080" root="root">      
+                
+        <services autoload="true"/>
+        
+        <servlets autoload="true"/>
+        
+    </server>
+    
+</application>
