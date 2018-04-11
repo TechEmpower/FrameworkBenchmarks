@@ -21,6 +21,9 @@ WORKDIR /lumen
 RUN composer.phar install --no-progress
 
 RUN mkdir -p /lumen/storage
+RUN mkdir -p /lumen/storage/framework/sessions
+RUN mkdir -p /lumen/storage/framework/views
+RUN mkdir -p /lumen/storage/framework/cache
 
 RUN chmod -R 777 /lumen
 

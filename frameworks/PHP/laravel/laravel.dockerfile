@@ -19,8 +19,9 @@ ADD ./ /laravel
 WORKDIR /laravel
 
 RUN mkdir -p /laravel/bootstrap/cache
-RUN mkdir -p /laravel/storage
-RUN mkdir -p /laravel/vendor
+RUN mkdir -p /laravel/storage/framework/sessions
+RUN mkdir -p /laravel/storage/framework/views
+RUN mkdir -p /laravel/storage/framework/cache
 
 RUN chmod -R 777 /laravel
 
