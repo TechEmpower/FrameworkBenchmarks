@@ -14,6 +14,7 @@ import org.redkale.source.DataSource;
  *
  * @author zhangjx
  */
+@SuppressWarnings("unchecked")
 public class Service extends org.redkale.service.AbstractService {
 
     private final Random random = new Random();

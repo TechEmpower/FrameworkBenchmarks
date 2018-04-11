@@ -6,7 +6,7 @@
     
     <resources></resources> 
         
-    <server protocol="HTTP" host="0.0.0.0" port="8080" root="root">      
+    <server protocol="HTTP" host="0.0.0.0" port="8080" root="root" lib="target">      
                 
         <services autoload="true"/>
         
