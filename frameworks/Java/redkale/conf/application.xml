@@ -4,10 +4,18 @@
     
     <!--  see： http://redkale.org/redkale.html#redkale_confxml  -->
     
-    <resources></resources> 
+    <resources>
+		<properties>
+            <property name="system.property.http.response.header.server" value="redkale"/>
+        </properties>
+	</resources> 
         
     <server protocol="HTTP" host="0.0.0.0" port="8080" root="root" lib="target">      
                 
+        <response>
+			<contenttype plain="text/plain" json="application/json"/>    
+		</response>
+
         <services autoload="true"/>
         
         <servlets autoload="true"/>

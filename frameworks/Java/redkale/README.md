@@ -4,27 +4,27 @@ This is the Redkale portion of a [benchmarking test suite](../) comparing a vari
 
 ### Plaintext Test
 
-* [Plaintext test source](src/main/java/org/redkalex/benchmark/BenchmarkServlet.java)
+* [Plaintext test source](src/main/java/org/redkalex/benchmark/Servlet.java)
 
 ### JSON Serialization Test
 
-* [JSON test source](src/main/java/org/redkalex/benchmark/BenchmarkServlet.java)
+* [JSON test source](src/main/java/org/redkalex/benchmark/Servlet.java)
 
 ### Database Query Test
 
-* [Database Query test source](src/main/java/org/redkalex/benchmark/BenchmarkServlet.java)
+* [Database Query test source](src/main/java/org/redkalex/benchmark/Servlet.java)
 
 ### Database Queries Test
 
-* [Database Queries test source](src/main/java/org/redkalex/benchmark/BenchmarkServlet.java)
+* [Database Queries test source](src/main/java/org/redkalex/benchmark/Servlet.java)
 
 ### Database Update Test
 
-* [Database Update test source](src/main/java/org/redkalex/benchmark/BenchmarkServlet.java)
+* [Database Update test source](src/main/java/org/redkalex/benchmark/Servlet.java)
 
 ### Template rendering Test
 
-* [Template rendering test source](src/main/java/org/redkalex/benchmark/BenchmarkServlet.java)
+* [Template rendering test source](src/main/java/org/redkalex/benchmark/Servlet.java)
 
 ## Versions
 
