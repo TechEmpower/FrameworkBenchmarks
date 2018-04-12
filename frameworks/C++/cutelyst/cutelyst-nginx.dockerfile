@@ -1,7 +1,11 @@
-FROM techempower/cutelyst-nginx-base:0.1
+FROM techempower/cutelyst-shared-setup:latest
 
-ENV C_THREADS=1
-ENV CPU_AFFINITY=1
+RUN apt-get install -yqq nginx
+
+RUN sed -i "s|SendDate=.*|SendDate=false|g" /cutelyst_socket.ini
+
+ENV C_THREADS 1
+ENV CPU_AFFINITY 1
 
 CMD nginx -c /nginx.conf && uwsgi \
     --ini /cutelyst_socket.ini \

@@ -1,8 +1,8 @@
-FROM techempower/cutelyst-benchmark-app:0.1
+FROM techempower/cutelyst-shared-setup:latest
 
-ENV C_THREADS=1
-ENV CPU_AFFINITY=1
-ENV DRIVER=QPSQL
+ENV C_THREADS 1
+ENV CPU_AFFINITY 1
+ENV DRIVER QPSQL
 
 RUN sed -i "s|Driver=.*|Driver=${DRIVER}|g" /cutelyst.ini
 
