@@ -100,14 +100,18 @@ class DartAqueductBenchmarkSink extends RequestSink {
           ..headers["date"] = new DateTime.now());
 
     router.route("/db").listen((req) async {
-      Query query = new Query<World>()
-        ..values.id = _random.nextInt(_world_table_size) + 1;
-      ManagedObject<World> result = await query.fetchOne();
+      ManagedObject<World> result = await getRandomWorldObject();
       return new Response.ok(result)
         ..contentType = _stripped_json
         ..headers["date"] = new DateTime.now();
     });
 
+  Future<ManagedObject<World>> getRandomWorldObject() async {
+    int worldId = _random.nextInt(_world_table_size) + 1;
+    Query query = new Query<World>()
+      ..values.id = worldId;
+    Future<ManagedObject<World>> result = query.fetchOne();
+    return result;
   }
 
   /// Final initialization method for this instance.
