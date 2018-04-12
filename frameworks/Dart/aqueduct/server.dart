@@ -106,6 +106,28 @@ class DartAqueductBenchmarkSink extends RequestSink {
         ..headers["date"] = new DateTime.now();
     });
 
+    router.route("/queries/[:queryCount]").listen((req) async {
+      int queryCount = 1;
+      if (req.path.variables.containsKey("queryCount")) {
+        queryCount = int
+            .parse(req.path.variables["queryCount"], onError: (_) => queryCount)
+            .clamp(1, 500);
+      }
+      List<Future> resultFutures = [];
+      for (int queryNumber = 0; queryNumber < queryCount; queryNumber++) {
+        resultFutures.add(getRandomWorldObject());
+      }
+      List results = await Future.wait(resultFutures);
+      return new Response.ok(results)
+        ..contentType = _stripped_json
+        ..headers["date"] = new DateTime.now();
+    });
+
+    router.route("/updates");
+
+    router.route("/fortunes");
+  }
+
   Future<ManagedObject<World>> getRandomWorldObject() async {
     int worldId = _random.nextInt(_world_table_size) + 1;
     Query query = new Query<World>()
