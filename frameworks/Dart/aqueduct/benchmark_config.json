@@ -3,10 +3,6 @@
   "tests": [{
     "default": {
       "json_url": "/json",
-      "db_url": "/pg/db",
-      "query_url": "/pg/queries?queries=",
-      "fortune_url": "/pg/fortunes",
-      "update_url": "/pg/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",

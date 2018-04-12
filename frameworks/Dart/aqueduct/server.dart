@@ -7,15 +7,17 @@ export 'dart:async';
 export 'dart:io';
 export 'package:aqueduct/aqueduct.dart';
 
+final STRIPPED_TEXT = new ContentType("text", "plain");
+final STRIPPED_JSON = new ContentType("application", "json");
+
 Future main() async {
   try {
     var app = new Application<DartAqueductBenchmarkSink>();
     var config = new ApplicationConfiguration()
-      ..port = 8081
+      ..port = 8080
       ..configurationFilePath = "config.yaml";
 
     app.configuration = config;
-
     await app.start(numberOfInstances: 3);
   } catch (e, st) {
     await writeError("$e\n $st");
@@ -75,11 +77,15 @@ class DartAqueductBenchmarkSink extends RequestSink {
   void setupRouter(Router router) {
     router
         .route("/json")
-        .listen((req) async => new Response.ok({"message": "Hello, World!"}));
+        .listen((req) async => new Response.ok({"message": "Hello, World!"})
+          ..contentType = STRIPPED_JSON
+          ..headers["date"] = new DateTime.now());
 
     router
         .route("/plaintext")
-        .listen((req) async => new Response.ok("Hello, World!")..contentType = ContentType.TEXT);
+        .listen((req) async => new Response.ok("Hello, World!")
+          ..contentType = STRIPPED_TEXT
+          ..headers["date"] = new DateTime.now());
   }
 
   /// Final initialization method for this instance.
