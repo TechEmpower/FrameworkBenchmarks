@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:aqueduct/aqueduct.dart';
 
@@ -7,8 +8,15 @@ export 'dart:async';
 export 'dart:io';
 export 'package:aqueduct/aqueduct.dart';
 
-final STRIPPED_TEXT = new ContentType("text", "plain");
-final STRIPPED_JSON = new ContentType("application", "json");
+final _stripped_text = new ContentType("text", "plain");
+final _stripped_json = new ContentType("application", "json");
+
+final _random = new Random();
+
+// World table size
+const int _world_table_size = 10000;
+// Fortune table size used only for generation of data
+const int _FORTUNE_TABLE_SIZE = 100;
 
 Future main() async {
   try {
@@ -18,7 +26,7 @@ Future main() async {
       ..configurationFilePath = "config.yaml";
 
     app.configuration = config;
-    await app.start(numberOfInstances: 3);
+    await app.start(numberOfInstances: 3, consoleLogging: false);
   } catch (e, st) {
     await writeError("$e\n $st");
   }
@@ -31,6 +39,8 @@ Future writeError(String error) async {
 class Fortune extends ManagedObject<_Fortune> implements _Fortune {}
 
 class _Fortune {
+  static String tableName() => "fortune";
+
   @managedPrimaryKey
   int id;
 
@@ -40,6 +50,8 @@ class _Fortune {
 class World extends ManagedObject<_World> implements _World {}
 
 class _World {
+  static String tableName() => "world";
+
   @managedPrimaryKey
   int id;
 
@@ -78,14 +90,24 @@ class DartAqueductBenchmarkSink extends RequestSink {
     router
         .route("/json")
         .listen((req) async => new Response.ok({"message": "Hello, World!"})
-          ..contentType = STRIPPED_JSON
+          ..contentType = _stripped_json
           ..headers["date"] = new DateTime.now());
 
     router
         .route("/plaintext")
         .listen((req) async => new Response.ok("Hello, World!")
-          ..contentType = STRIPPED_TEXT
+          ..contentType = _stripped_text
           ..headers["date"] = new DateTime.now());
+
+    router.route("/db").listen((req) async {
+      Query query = new Query<World>()
+        ..values.id = _random.nextInt(_world_table_size) + 1;
+      ManagedObject<World> result = await query.fetchOne();
+      return new Response.ok(result)
+        ..contentType = _stripped_json
+        ..headers["date"] = new DateTime.now();
+    });
+
   }
 
   /// Final initialization method for this instance.
