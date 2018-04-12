@@ -4,6 +4,6 @@ RUN apt update -yqq && apt install -yqq xz-utils make libpq-dev libmysqlclient-d
 
 COPY ./yesod-postgres ./
 
-RUN stack --allow-different-user build
+RUN stack build -j$(nproc) --skip-ghc-check --no-terminal
 
 CMD stack --allow-different-user exec yesod-postgres -- $(nproc) tfb-database +RTS -A32m -N$(nproc)
