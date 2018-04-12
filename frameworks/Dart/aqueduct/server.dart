@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:aqueduct/aqueduct.dart';
 
@@ -32,10 +33,10 @@ class _Fortune {
   int id;
 
   String message;
-
 }
 
 class World extends ManagedObject<_World> implements _World {}
+
 class _World {
   @managedPrimaryKey
   int id;
@@ -75,7 +76,10 @@ class DartAqueductBenchmarkSink extends RequestSink {
     router
         .route("/json")
         .listen((req) async => new Response.ok({"message": "Hello, World!"}));
-//        .generate(() => new ManagedObjectController<Model>());
+
+    router
+        .route("/plaintext")
+        .listen((req) async => new Response.ok("Hello, World!")..contentType = ContentType.TEXT);
   }
 
   /// Final initialization method for this instance.
