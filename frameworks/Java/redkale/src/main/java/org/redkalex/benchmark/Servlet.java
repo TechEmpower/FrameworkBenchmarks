@@ -9,6 +9,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 import javax.annotation.Resource;
+import org.redkale.convert.json.JsonConvert;
 import org.redkale.net.http.*;
 
 /**
@@ -21,11 +22,15 @@ public class Servlet extends HttpServlet {
     private static final ByteBuffer helloBuffer = ByteBuffer.wrap("Hello, world!".getBytes()).asReadOnlyBuffer();
 
     @Resource
+    private JsonConvert convert;
+
+    @Resource
     private Service service;
 
     @HttpMapping(url = "/json")
     public void json(HttpRequest request, HttpResponse response) throws IOException {
-        response.finishJson(new Message("Hello, World!"));
+        ByteBuffer[] buffers = convert.convertTo(response.getBufferSupplier(), new Message("Hello, World!"));
+        response.setContentType("application/json").finish(buffers);
     }
 
     @HttpMapping(url = "/plaintext")
@@ -35,19 +40,26 @@ public class Servlet extends HttpServlet {
 
     @HttpMapping(url = "/db")
     public void db(HttpRequest request, HttpResponse response) throws IOException {
-        response.finishJson(service.findWorld());
+        ByteBuffer[] buffers = convert.convertTo(response.getBufferSupplier(), service.findWorld());
+        response.setContentType("application/json").finish(buffers);
     }
 
     @HttpMapping(url = "/queries")
     public void queries(HttpRequest request, HttpResponse response) throws IOException {
         int count = getQueries(request);
-        response.finishJson(service.queryWorld(count));
+        service.queryWorld(count).whenComplete((obj, t) -> {
+            ByteBuffer[] buffers = convert.convertTo(response.getBufferSupplier(), obj);
+            response.setContentType("application/json").finish(buffers);
+        });
     }
 
     @HttpMapping(url = "/updates")
     public void updates(HttpRequest request, HttpResponse response) throws IOException {
         int count = getQueries(request);
-        response.finishJson(service.updateWorld(count));
+        service.updateWorld(count).whenComplete((obj, t) -> {
+            ByteBuffer[] buffers = convert.convertTo(response.getBufferSupplier(), obj);
+            response.setContentType("application/json").finish(buffers);
+        });
     }
 
     @HttpMapping(url = "/fortunes")
