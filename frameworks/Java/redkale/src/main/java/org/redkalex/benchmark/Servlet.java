@@ -40,13 +40,13 @@ public class Servlet extends HttpServlet {
 
     @HttpMapping(url = "/queries")
     public void queries(HttpRequest request, HttpResponse response) throws IOException {
-        int count = request.getIntParameter("queries", 1);
+        int count = getQueries(request);
         response.finishJson(service.queryWorld(count));
     }
 
     @HttpMapping(url = "/updates")
     public void updates(HttpRequest request, HttpResponse response) throws IOException {
-        int count = request.getIntParameter("queries", 1);
+        int count = getQueries(request);
         response.finishJson(service.updateWorld(count));
     }
 
@@ -56,6 +56,14 @@ public class Servlet extends HttpServlet {
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
         response.setContentType("text/html; charset=UTF-8").finish(FortunesTemplate.template(fortunes).render().toString());
+    }
+
+    private static int getQueries(HttpRequest request) {
+        try {
+            return request.getIntParameter("queries", 1);
+        } catch (Exception e) {
+            return 1;
+        }
     }
 
     public static void main(String[] args) throws Throwable {
