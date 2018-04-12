@@ -29,7 +29,6 @@ end
 
 def provider_virtualbox(config)
   config.vm.provider :virtualbox do |vb, override|
-    vb.name = "TechEmpower Framework Benchmarks"
     override.vm.hostname = "TFB-all"
     override.vm.box = "ubuntu/xenial64"
 
