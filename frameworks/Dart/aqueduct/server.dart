@@ -103,9 +103,8 @@ class DartAqueductBenchmarkSink extends RequestSink {
   @override
   Future willOpen() async {
     // Load the Mustache Template
-    await new File('fortunes.mustache').readAsString().then((template) {
-      fortunesTemplate = new mustache.Template(template);
-    });
+    final template = await new File('fortunes.mustache').readAsString();
+    fortunesTemplate = new mustache.Template(template);
   }
 
   /// All routes must be configured in this method.
