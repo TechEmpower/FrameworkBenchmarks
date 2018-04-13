@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:aqueduct/aqueduct.dart';
+import 'package:mustache/mustache.dart' as mustache;
 
 export 'dart:async';
 export 'dart:io';
@@ -39,12 +40,15 @@ Future writeError(String error) async {
   print("$error");
 }
 
-class Fortune extends ManagedObject<_Fortune> implements _Fortune {}
+class Fortune extends ManagedObject<_Fortune>
+    implements _Fortune, Comparable<Fortune> {
+  compareTo(Fortune other) => message.compareTo(other.message);
+}
 
 class _Fortune {
   static String tableName() => "fortune";
 
-  @managedPrimaryKey
+  @ManagedColumnAttributes(primaryKey: true)
   int id;
 
   String message;
@@ -66,6 +70,8 @@ class _World {
 /// Override methods in this class to set up routes and initialize resources like
 /// database connections. See http://aqueduct.io/docs/http/request_sink.
 class DartAqueductBenchmarkSink extends RequestSink {
+  mustache.Template fortunesTemplate;
+
   /// Resource initialization code goes here.
   ///
   /// Resources like [AuthServer] and [PostgreSQLPersistentStore] should be instantiated
@@ -76,12 +82,19 @@ class DartAqueductBenchmarkSink extends RequestSink {
   /// the port the application is running on and the path to a configuration file.
   DartAqueductBenchmarkSink(ApplicationConfiguration appConfig)
       : super(appConfig) {
+    // Use logging for debuging only
 //    logger.onRecord.listen(
 //        (rec) => print("$rec ${rec.error ?? ""} ${rec.stackTrace ?? ""}"));
 
     var options =
         new DartAqueductBenchmarkConfiguration(appConfig.configurationFilePath);
     ManagedContext.defaultContext = contextWithConnectionInfo(options.database);
+
+    Future.wait([
+      new File('fortunes.mustache').readAsString().then((template) {
+        fortunesTemplate = new mustache.Template(template);
+      })
+    ]);
   }
 
   /// All routes must be configured in this method.
@@ -147,7 +160,25 @@ class DartAqueductBenchmarkSink extends RequestSink {
         ..headers["date"] = new DateTime.now();
     });
 
-    router.route("/fortunes");
+    router.route("/fortunes").listen((req) async {
+      Query query = new Query<Fortune>();
+      List<Fortune> results = await query.fetch();
+      results.add(new Fortune()
+        ..id = 0
+        ..message = "Additional fortune added at request time.");
+      results.sort();
+
+      List resultsMapped = results
+          .map((Fortune fortune) =>
+              {'id': fortune.id, 'message': fortune.message})
+          .toList();
+
+      String renderedTemplate =
+          fortunesTemplate.renderString({'fortunes': resultsMapped});
+      return new Response.ok(renderedTemplate)
+        ..contentType = ContentType.HTML
+        ..headers["date"] = new DateTime.now();
+    });
   }
 
   Future<World> getRandomWorldObject() async {

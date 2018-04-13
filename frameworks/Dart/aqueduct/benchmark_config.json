@@ -7,6 +7,7 @@
       "db_url": "/db",
       "query_url": "/queries/",
       "update_url": "/updates/",
+      "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",

@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   aqueduct: ^2.5.0+1
+  mustache: ^1.0.0
 
 dev_dependencies:
   test: '>=0.12.0 <0.13.0'
