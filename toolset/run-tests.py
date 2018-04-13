@@ -235,8 +235,7 @@ def main(argv=None):
 
     else:
         benchmarker = Benchmarker(config, results)
-        if not benchmarker.run():
-            return 1
+        benchmarker.run()
 
     return 0
 
