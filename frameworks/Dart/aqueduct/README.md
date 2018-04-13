@@ -6,6 +6,7 @@ This test adds [Aqueduct](https://aqueduct.io), a microframework for Dart, to th
 
 * [Dart SDK version >=1.7.0](http://www.dartlang.org/)
 * [Dart aqueduct version 2.5.0+1](https://pub.dartlang.org/packages/aqueduct)
+* [Dart Mustache version 1.0.0](https://pub.dartlang.org/packages/mustache)
 
 ## Test URLs
 
@@ -21,36 +22,16 @@ http://localhost:8080/plaintext
 ### PostgreSQL
 
 #### Data-Store/Database Mapping Test
-http://localhost:8080/pg/db
+http://localhost:8080/db
 
 #### Variable Query Test
-http://localhost:8080/pg/queries?queries=2
+http://localhost:8080/queries/2
 
 #### Fortunes Test
-http://localhost:8080/pg/fortunes
+http://localhost:8080/fortunes
 
 #### Data-Store/Database Update Test
-http://localhost:8080/pg/updates
+http://localhost:8080/updates
 
 #### Variable Update Test
-http://localhost:8080/pg/updates?queries=2
-
-
-### MongoDB
-
-#### Data-Store/Database Mapping Test
-http://localhost:8080/mongo/db
-
-#### Variable Query Test
-http://localhost:8080/mongo/queries?queries=2
-
-#### Fortunes Test
-http://localhost:8080/mongo/fortunes
-
-#### Data-Store/Database Update Test
-http://localhost:8080/mongo/updates
-
-#### Variable Update Test
-http://localhost:8080/mongo/updates?queries=2
-
-
+http://localhost:8080/updates/2
