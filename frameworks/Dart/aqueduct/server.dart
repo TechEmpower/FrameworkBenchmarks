@@ -18,6 +18,9 @@ const int _world_table_size = 10000;
 // Fortune table size used only for generation of data
 const int _FORTUNE_TABLE_SIZE = 100;
 
+const int _min_query_count = 1;
+const int _max_query_count = 500;
+
 Future main() async {
   try {
     var app = new Application<DartAqueductBenchmarkSink>();
@@ -107,31 +110,49 @@ class DartAqueductBenchmarkSink extends RequestSink {
     });
 
     router.route("/queries/[:queryCount]").listen((req) async {
-      int queryCount = 1;
+      int queryCount = _min_query_count;
       if (req.path.variables.containsKey("queryCount")) {
         queryCount = int
             .parse(req.path.variables["queryCount"], onError: (_) => queryCount)
-            .clamp(1, 500);
+            .clamp(_min_query_count, _max_query_count);
       }
-      List<Future> resultFutures = [];
-      for (int queryNumber = 0; queryNumber < queryCount; queryNumber++) {
-        resultFutures.add(getRandomWorldObject());
-      }
+      List<Future> resultFutures =
+          new List.generate(queryCount, (_) => getRandomWorldObject());
       List results = await Future.wait(resultFutures);
       return new Response.ok(results)
         ..contentType = _stripped_json
         ..headers["date"] = new DateTime.now();
     });
 
-    router.route("/updates");
+    router.route("/updates/[:queryCount]").listen((req) async {
+      int queryCount = _min_query_count;
+      if (req.path.variables.containsKey("queryCount")) {
+        queryCount = int
+            .parse(req.path.variables["queryCount"], onError: (_) => queryCount)
+            .clamp(_min_query_count, _max_query_count);
+      }
+      List<Future> resultFutures = new List.generate(
+          queryCount,
+          (_) => getRandomWorldObject().then((ManagedObject<World> world) async {
+            world.willUpdate()
+                Query query = new Query<World>()
+                  ..where.id = whereEqualTo(world.asMap()["id"])
+                  ..values.randomNumber = (_random.nextInt(_world_table_size) + 1);
+                Future<ManagedObject<World>> result = query.updateOne();
+                return await result;
+              }));
+      List results = await Future.wait(resultFutures);
+      return new Response.ok(results)
+        ..contentType = _stripped_json
+        ..headers["date"] = new DateTime.now();
+    });
 
     router.route("/fortunes");
   }
 
   Future<ManagedObject<World>> getRandomWorldObject() async {
     int worldId = _random.nextInt(_world_table_size) + 1;
-    Query query = new Query<World>()
-      ..values.id = worldId;
+    Query query = new Query<World>()..values.id = worldId;
     Future<ManagedObject<World>> result = query.fetchOne();
     return result;
   }
