@@ -55,7 +55,7 @@ class World extends ManagedObject<_World> implements _World {}
 class _World {
   static String tableName() => "world";
 
-  @managedPrimaryKey
+  @ManagedColumnAttributes(primaryKey: true)
   int id;
 
   int randomNumber;
@@ -138,7 +138,7 @@ class DartAqueductBenchmarkSink extends RequestSink {
                   ..where.id = whereEqualTo(world.id)
                   ..values.randomNumber =
                       (_random.nextInt(_world_table_size) + 1);
-                Future<World> result = query.fetchOne();
+                Future<World> result = query.updateOne();
                 return await result;
               }));
       List results = await Future.wait(resultFutures);
