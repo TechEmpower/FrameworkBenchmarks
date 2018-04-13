@@ -7,7 +7,7 @@
 
 	<properties>
 		<!-- the main class -->
-		<main.class>org.redkalex.benchmark.Servlet</main.class>
+		<main.class>org.redkale.boot.Application</main.class>
 		<stack.version>0.0.1</stack.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>org.redkale</groupId>
 			<artifactId>redkale</artifactId>
-			<version>1.9.2</version>
+			<version>1.9.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
