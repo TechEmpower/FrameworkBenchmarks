@@ -43,6 +43,7 @@ env:
      - "TESTDIR=D/vibed"
      - "TESTDIR=D/hunt"
      - "TESTDIR=D/collie"
+     - "TESTDIR=Dart/aqueduct"
      - "TESTDIR=Dart/dart"
      - "TESTDIR=Dart/redstone"
      - "TESTDIR=Dart/start"
