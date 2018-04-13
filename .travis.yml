@@ -29,7 +29,6 @@ env:
      - "TESTDIR=C++/ulib"
      - "TESTDIR=C++/wt"
      - "TESTDIR=C++/poco"
-     - "TESTDIR=C++/luna"
      - "TESTDIR=Clojure/aleph"
      - "TESTDIR=Clojure/compojure"
      - "TESTDIR=Clojure/http-kit"
