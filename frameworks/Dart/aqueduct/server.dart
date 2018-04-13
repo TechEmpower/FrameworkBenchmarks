@@ -103,7 +103,7 @@ class DartAqueductBenchmarkSink extends RequestSink {
           ..headers["date"] = new DateTime.now());
 
     router.route("/db").listen((req) async {
-      ManagedObject<World> result = await getRandomWorldObject();
+      World result = await getRandomWorldObject();
       return new Response.ok(result)
         ..contentType = _stripped_json
         ..headers["date"] = new DateTime.now();
@@ -133,12 +133,12 @@ class DartAqueductBenchmarkSink extends RequestSink {
       }
       List<Future> resultFutures = new List.generate(
           queryCount,
-          (_) => getRandomWorldObject().then((ManagedObject<World> world) async {
-            world.willUpdate()
+          (_) => getRandomWorldObject().then((World world) async {
                 Query query = new Query<World>()
-                  ..where.id = whereEqualTo(world.asMap()["id"])
-                  ..values.randomNumber = (_random.nextInt(_world_table_size) + 1);
-                Future<ManagedObject<World>> result = query.updateOne();
+                  ..where.id = whereEqualTo(world.id)
+                  ..values.randomNumber =
+                      (_random.nextInt(_world_table_size) + 1);
+                Future<World> result = query.fetchOne();
                 return await result;
               }));
       List results = await Future.wait(resultFutures);
@@ -150,10 +150,10 @@ class DartAqueductBenchmarkSink extends RequestSink {
     router.route("/fortunes");
   }
 
-  Future<ManagedObject<World>> getRandomWorldObject() async {
+  Future<World> getRandomWorldObject() async {
     int worldId = _random.nextInt(_world_table_size) + 1;
-    Query query = new Query<World>()..values.id = worldId;
-    Future<ManagedObject<World>> result = query.fetchOne();
+    Query query = new Query<World>()..where.id = worldId;
+    Future<World> result = query.fetchOne();
     return result;
   }
 
