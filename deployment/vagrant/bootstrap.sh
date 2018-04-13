@@ -39,7 +39,7 @@ Welcome to the FrameworkBenchmarks project!
 EOF
 
   cat <<EOF > /home/vagrant/.bash_aliases
-alias tfb="docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=/home/vagrant/FrameworkBenchmarks,target=/FrameworkBenchmarks techempower/tfb"
+alias tfb="docker network create tfb > /dev/null 2>&1 && docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=/home/vagrant/FrameworkBenchmarks,target=/FrameworkBenchmarks techempower/tfb"
 EOF
 
   sudo mv motd /etc/

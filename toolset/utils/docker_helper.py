@@ -1,7 +1,6 @@
 import os
 import socket
 import fnmatch
-import multiprocessing
 import json
 import docker
 import time
@@ -29,7 +28,7 @@ def clean(benchmarker_config):
         if len(image.tags) > 0:
             # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
             image_tag = image.tags[0].split(':')[0]
-            if image_tag != 'techempower/tfb':
+            if image_tag != 'techempower/tfb' and 'techempower' in image_tag:
                 client.images.remove(image.id, force=True)
     client.images.prune()
 
@@ -45,41 +44,6 @@ def clean(benchmarker_config):
             if image_tag != 'techempower/tfb':
                 client.images.remove(image.id, force=True)
     client.images.prune()
-
-
-def publish(benchmarker_config):
-    '''
-    Builds fresh versions of all the docker container images known in the 
-    system and attempts to publish them to dockerhub.
-    Note: this requires `docker login` to have been performed prior to the
-    call.
-    '''
-    start_time = time.time()
-
-    docker_buildargs = {
-        'CPU_COUNT': str(multiprocessing.cpu_count()),
-        'MAX_CONCURRENCY': str(max(benchmarker_config.concurrency_levels)),
-        'TFB_DATABASE': str(benchmarker_config.database_host)
-    }
-
-    # Force building instead of pulling
-    benchmarker_config.build = True
-    tests = gather_tests(benchmarker_config=benchmarker_config)
-    for test in tests:
-        __build_dependencies(benchmarker_config, test, docker_buildargs)
-
-    client = docker.DockerClient(
-        base_url=benchmarker_config.server_docker_host)
-
-    client.login("USERNAME", "PASSWORD")
-
-    for image in client.images.list():
-        has_tags = len(image.tags) > 0
-        if has_tags and 'techempower' in image.tags[0] and 'tfb.test' not in image.tags[0]:
-            log("Pushing docker image: %s" % image.tags[0].split(':')[0])
-            client.images.push(image.tags[0].split(':')[0])
-
-    log("Publish took: %s seconds" % (time.time() - start_time))
 
 
 def build(benchmarker_config, test_names, build_log_dir=os.devnull):
@@ -262,9 +226,6 @@ def stop(benchmarker_config=None,
         # Stop all our running containers
         for container in containers:
             container.stop()
-            # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
-            client.images.remove(
-                container.image.tags[0].split(':')[0], force=True)
 
     database_client = docker.DockerClient(
         base_url=benchmarker_config.database_docker_host)
@@ -280,15 +241,6 @@ def stop(benchmarker_config=None,
                     container.image.tags[0].split(':')[0], force=True)
     else:
         database_container.stop()
-
-    client.images.prune()
-    client.containers.prune()
-    client.volumes.prune()
-
-    if benchmarker_config.server_docker_host != benchmarker_config.database_docker_host:
-        database_client.images.prune()
-        database_client.containers.prune()
-        database_client.volumes.prune()
 
 
 def find(path, pattern):
