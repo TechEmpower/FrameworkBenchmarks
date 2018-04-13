@@ -6,17 +6,7 @@ ENV PATH=${FFEAD_CPP_PATH}:${PATH}
 
 RUN mkdir /installs
 
-RUN apt update -yqq && apt install -yqq unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev
-
-WORKDIR $IROOT
-
-# mongocdriver also used in all tests
-
-RUN wget -q https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
-RUN tar xf mongo-c-driver-1.4.0.tar.gz
-RUN cd mongo-c-driver-1.4.0/ && \
-    ./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup && \
-    make && make install
+RUN apt update -yqq && apt install -yqq unzip uuid-dev libmongoc-dev
 
 WORKDIR /
 
