@@ -219,9 +219,6 @@ def stop(benchmarker_config=None,
                     container.image.tags
             ) > 0 and 'techempower' in container.image.tags[0] and 'tfb:latest' not in container.image.tags[0]:
                 container.stop()
-                # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
-                client.images.remove(
-                    container.image.tags[0].split(':')[0], force=True)
     else:
         # Stop all our running containers
         for container in containers:
@@ -236,11 +233,13 @@ def stop(benchmarker_config=None,
                     container.image.tags
             ) > 0 and 'techempower' in container.image.tags[0] and 'tfb:latest' not in container.image.tags[0]:
                 container.stop()
-                # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
-                client.images.remove(
-                    container.image.tags[0].split(':')[0], force=True)
     else:
         database_container.stop()
+
+    client.containers.prune()
+
+    if benchmarker_config.server_docker_host != benchmarker_config.database_docker_host:
+        database_client.containers.prune()
 
 
 def find(path, pattern):
