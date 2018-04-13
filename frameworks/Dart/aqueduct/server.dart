@@ -33,8 +33,7 @@ Future main() async {
     int optimalInstanceCount =
         (Platform.numberOfProcessors > 1 ? Platform.numberOfProcessors - 1 : 1);
     await app.start(
-        numberOfInstances: optimalInstanceCount,
-        consoleLogging: false);
+        numberOfInstances: optimalInstanceCount, consoleLogging: false);
   } catch (e, st) {
     await writeError("$e\n $st");
   }
