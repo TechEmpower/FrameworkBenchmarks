@@ -30,7 +30,11 @@ Future main() async {
       ..configurationFilePath = "config.yaml";
 
     app.configuration = config;
-    await app.start(numberOfInstances: 3, consoleLogging: false);
+    int optimalInstanceCount =
+        (Platform.numberOfProcessors > 1 ? Platform.numberOfProcessors - 1 : 1);
+    await app.start(
+        numberOfInstances: optimalInstanceCount,
+        consoleLogging: false);
   } catch (e, st) {
     await writeError("$e\n $st");
   }
@@ -89,12 +93,19 @@ class DartAqueductBenchmarkSink extends RequestSink {
     var options =
         new DartAqueductBenchmarkConfiguration(appConfig.configurationFilePath);
     ManagedContext.defaultContext = contextWithConnectionInfo(options.database);
+  }
 
-    Future.wait([
-      new File('fortunes.mustache').readAsString().then((template) {
-        fortunesTemplate = new mustache.Template(template);
-      })
-    ]);
+  /// Final initialization method for this instance.
+  ///
+  /// This method allows any resources that require asynchronous initialization to complete their
+  /// initialization process. This method is invoked after [setupRouter] and prior to this
+  /// instance receiving any requests.
+  @override
+  Future willOpen() async {
+    // Load the Mustache Template
+    await new File('fortunes.mustache').readAsString().then((template) {
+      fortunesTemplate = new mustache.Template(template);
+    });
   }
 
   /// All routes must be configured in this method.
@@ -151,8 +162,7 @@ class DartAqueductBenchmarkSink extends RequestSink {
                   ..where.id = whereEqualTo(world.id)
                   ..values.randomNumber =
                       (_random.nextInt(_world_table_size) + 1);
-                Future<World> result = query.updateOne();
-                return await result;
+                return query.updateOne();
               }));
       List results = await Future.wait(resultFutures);
       return new Response.ok(results)
@@ -184,17 +194,8 @@ class DartAqueductBenchmarkSink extends RequestSink {
   Future<World> getRandomWorldObject() async {
     int worldId = _random.nextInt(_world_table_size) + 1;
     Query query = new Query<World>()..where.id = worldId;
-    Future<World> result = query.fetchOne();
-    return result;
+    return query.fetchOne();
   }
-
-  /// Final initialization method for this instance.
-  ///
-  /// This method allows any resources that require asynchronous initialization to complete their
-  /// initialization process. This method is invoked after [setupRouter] and prior to this
-  /// instance receiving any requests.
-  @override
-  Future willOpen() async {}
 
   /*
    * Helper methods
