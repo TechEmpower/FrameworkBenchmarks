@@ -18,6 +18,8 @@
 
         <services autoload="true"/>
         
+        <rest autoload="true"/>
+
         <servlets autoload="true"/>
         
     </server>
