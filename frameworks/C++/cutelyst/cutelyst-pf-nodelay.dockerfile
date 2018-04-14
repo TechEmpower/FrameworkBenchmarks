@@ -1,7 +1,7 @@
-FROM techempower/cutelyst-benchmark-app:0.1
+FROM techempower/cutelyst-shared-setup:latest
 
-ENV C_THREADS=1
-ENV CPU_AFFINITY=1
+ENV C_THREADS 1
+ENV CPU_AFFINITY 1
 
 CMD cutelyst-wsgi2 \
     --ini /cutelyst.ini:uwsgi \

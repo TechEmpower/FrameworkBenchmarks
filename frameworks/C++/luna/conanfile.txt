@@ -1,6 +1,0 @@
-[requires]
-luna/2.11.0@DEGoodmanWilson/stable
-json/2.1.0@jjones646/stable
-
-[generators]
-cmake

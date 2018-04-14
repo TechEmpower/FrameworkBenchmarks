@@ -1,8 +1,12 @@
-FROM techempower/cutelyst-nginx-base:0.1
+FROM techempower/cutelyst-shared-setup:latest
 
-ENV C_THREADS=1
-ENV CPU_AFFINITY=1
-ENV DRIVER=QPSQL
+RUN apt-get install -yqq nginx
+
+RUN sed -i "s|SendDate=.*|SendDate=false|g" /cutelyst_socket.ini
+
+ENV C_THREADS 1
+ENV CPU_AFFINITY 1
+ENV DRIVER QPSQL
 
 RUN sed -i "s|Driver=.*|Driver=${DRIVER}|g" /cutelyst_socket.ini
 

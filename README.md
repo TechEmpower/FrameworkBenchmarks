@@ -45,7 +45,7 @@ That run script is pretty wordy, but each and every flag is required. Unfortunat
 
 You may not want to call step 4 from above every time. You can add an `alias` to your `~/.bash_aliases` file to shorten it since it will not change once configured:
 
-`$ alias tfb="docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=[ABS PATH TO THIS DIR],target=/FrameworkBenchmarks techempower/tfb"`
+`$ alias tfb="docker network create tfb > /dev/null 2>&1; docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=[ABS PATH TO THIS DIR],target=/FrameworkBenchmarks techempower/tfb"`
 
 `$ source ~/.bash_aliases`
 

@@ -40,14 +40,13 @@ class Benchmarker:
         all_tests = gather_remaining_tests(self.config, self.results)
 
         # Run tests
-        success = True
         log("Running Tests...", border='=')
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
             for test in all_tests:
                 log("Running Test: %s" % test.name, border='-')
                 with self.config.quiet_out.enable():
-                    success = self.__run_test(test, benchmark_log) and success
+                    self.__run_test(test, benchmark_log)
                 # Load intermediate result from child process
                 self.results.load()
 
@@ -59,8 +58,6 @@ class Benchmarker:
         self.results.set_completion_time()
         self.results.upload()
         self.results.finish()
-
-        return success
 
     ##########################################################################################
     # Private methods
