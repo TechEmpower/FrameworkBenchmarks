@@ -5,24 +5,6 @@
       "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "None",
-      "framework": "None",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "Redkale",
-      "webserver": "Redkale",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "redkale",
-      "notes": "",
-      "versus": ""
-    },
-    "postgres": {
-      "setup_file": "setup_postgres",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -39,7 +21,7 @@
       "webserver": "Redkale",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "redkale-postgres",
+      "display_name": "redkale",
       "notes": "",
       "versus": ""
     }
