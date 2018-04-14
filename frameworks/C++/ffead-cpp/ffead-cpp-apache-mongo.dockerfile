@@ -1,4 +1,42 @@
-FROM techempower/ffead-cpp-httpd:0.1
+FROM buildpack-deps:xenial
+
+ENV IROOT=/installs
+ENV FFEAD_CPP_PATH=${IROOT}/ffead-cpp-2.0
+ENV PATH=${FFEAD_CPP_PATH}:${PATH}
+
+RUN mkdir /installs
+
+RUN apt update -yqq && apt install -yqq unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev
+
+WORKDIR $IROOT
+
+# mongocdriver also used in all tests
+
+RUN wget -q https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
+RUN tar xf mongo-c-driver-1.4.0.tar.gz
+RUN cd mongo-c-driver-1.4.0/ && \
+    ./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup && \
+    make && make install
+
+WORKDIR /
+
+COPY te-benchmark/ te-benchmark/
+COPY ffead-cpp-framework.sh ./
+COPY server.sh ./
+
+RUN chmod 755 *.sh
+
+RUN sed -i 's|--enable-mod_sdormsql=yes||g' ffead-cpp-framework.sh
+
+RUN ./ffead-cpp-framework.sh
+
+COPY ffead-cpp-httpd.sh ./
+
+RUN chmod 755 *.sh
+
+RUN ./ffead-cpp-httpd.sh
+
+ENV PATH=${IROOT}/httpd/bin:${PATH}
 
 WORKDIR ${IROOT}/ffead-cpp-src/
 

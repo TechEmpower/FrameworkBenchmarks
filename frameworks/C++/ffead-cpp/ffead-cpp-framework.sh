@@ -1,11 +1,7 @@
 #!/bin/bash
 
 #From https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/frameworks/C%2B%2B/ulib/setup_json.sh
-if [ "$TRAVIS" != "true" ]; then
 MAX_THREADS=$(( 3 * nproc / 2 ))
-else
-MAX_THREADS=$(( 2 * nproc ))
-fi
 
 WRIT_THREADS=$(( $MAX_THREADS / 3 ))
 SERV_THREADS=$(( $MAX_THREADS - $WRIT_THREADS ))
@@ -41,19 +37,19 @@ cp -rf ${TROOT}/te-benchmark web/
 sed -i 's|THRD_PSIZ=6|THRD_PSIZ='${SERV_THREADS}'|g' resources/server.prop
 sed -i 's|W_THRD_PSIZ=2|W_THRD_PSIZ='${WRIT_THREADS}'|g' resources/server.prop
 sed -i 's|LOGGING_ENABLED=true|LOGGING_ENABLED=false|g' resources/server.prop
-sed -i 's|localhost|'${DBHOST}'|g' resources/server.prop
+sed -i 's|localhost|tfb-database|g' resources/server.prop
 ./autogen.sh
 ./configure --enable-apachemod=yes --enable-mod_sdormmongo=yes --enable-mod_sdormsql=yes CPPFLAGS="$CPPFLAGS -I${IROOT}/include/libmongoc-1.0 -I${IROOT}/include/libbson-1.0 -I${IROOT}/include/" LDFLAGS="$LDFLAGS -L${IROOT}"
 make install
 rm -rf ${IROOT}/ffead-cpp-2.0
 cp -rf ffead-cpp-2.0-bin ${IROOT}/ffead-cpp-2.0
 
-sed -i 's|localhost|'${DBHOST}'|g' web/te-benchmark/config/sdorm.xml
-sed -i 's|localhost|'${DBHOST}'|g' web/te-benchmark/config/sdormmongo.xml
-sed -i 's|localhost|'${DBHOST}'|g' web/te-benchmark/config/sdormmysql.xml
-sed -i 's|localhost|'${DBHOST}'|g' web/te-benchmark/config/sdormpostgresql.xml
-sed -i 's|localhost|'${DBHOST}'|g' resources/sample-odbcinst.ini
-sed -i 's|localhost|'${DBHOST}'|g' resources/sample-odbc.ini
+sed -i 's|localhost|tfb-database|g' web/te-benchmark/config/sdorm.xml
+sed -i 's|localhost|tfb-database|g' web/te-benchmark/config/sdormmongo.xml
+sed -i 's|localhost|tfb-database|g' web/te-benchmark/config/sdormmysql.xml
+sed -i 's|localhost|tfb-database|g' web/te-benchmark/config/sdormpostgresql.xml
+sed -i 's|localhost|tfb-database|g' resources/sample-odbcinst.ini
+sed -i 's|localhost|tfb-database|g' resources/sample-odbc.ini
 
 cp resources/sample-odbcinst.ini ${IROOT}/odbcinst.ini
 cp resources/sample-odbc.ini ${IROOT}/odbc.ini
