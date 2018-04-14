@@ -23,7 +23,6 @@ chmod 700 $FFEAD_CPP_PATH/CHS*
 chmod 700 $FFEAD_CPP_PATH/resources/*.sh
 chmod 700 $FFEAD_CPP_PATH/tests/*
 chmod 700 $FFEAD_CPP_PATH/rtdcf/*
-#chmod 700 $FFEAD_CPP_PATH/rtdcf/autotools/*
 #/usr/sbin/setenforce 0
 
 ./CHS $FFEAD_CPP_PATH
