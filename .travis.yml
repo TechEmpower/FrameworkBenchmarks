@@ -105,6 +105,7 @@ env:
      - "TESTDIR=Java/vertx-web"
      - "TESTDIR=Java/wicket"
      - "TESTDIR=Java/wildfly-ee7"
+     - "TESTDIR=Java/wizzardo-http"
      - "TESTLANG=JavaScript"
      - "TESTDIR=Kotlin/hexagon"
      - "TESTDIR=Kotlin/http4k"
