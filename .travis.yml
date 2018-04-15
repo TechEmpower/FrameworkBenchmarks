@@ -14,12 +14,7 @@ services:
 env:
   matrix:
      - "TESTLANG=C"
-     - "TESTDIR=CSharp/aspnet"
-     - "TESTDIR=CSharp/aspnetcore"
-     - "TESTDIR=CSharp/evhttp-sharp"
-     - "TESTDIR=CSharp/nancy"
-     - "TESTDIR=CSharp/revenj"
-     - "TESTDIR=CSharp/servicestack"
+     - "TESTLANG=CSharp"
      - "TESTDIR=C++/cppcms"
      - "TESTDIR=C++/ffead-cpp"
      - "TESTDIR=C++/cpoll_cppsp"
