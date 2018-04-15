@@ -11,7 +11,6 @@ from colorama import Fore, Style
 
 from toolset.utils.output_helper import log
 from toolset.utils.metadata_helper import gather_tests
-from toolset.utils.ordered_set import OrderedSet
 from toolset.utils.database_helper import test_database
 
 
@@ -255,26 +254,14 @@ def start_database(benchmarker_config, test, database):
                                 "databases", database)
     docker_file = "%s.dockerfile" % database
 
-    pulled = False
     client = docker.DockerClient(
         base_url=benchmarker_config.database_docker_host)
     try:
         # Don't pull if we have it
         client.images.get(image_name)
-        pulled = True
         log("Found published image; skipping build", prefix=log_prefix)
     except:
-        # Pull the dependency image
-        try:
-            log("Attempting docker pull for image (this can take some time)",
-                prefix=log_prefix)
-            client.images.pull(image_name)
-            pulled = True
-            log("Found published image; skipping build", prefix=log_prefix)
-        except:
-            pass
-
-    if not pulled:
+        # Build the database image
         for line in docker.APIClient(
                 base_url=benchmarker_config.database_docker_host).build(
                     path=database_dir,
