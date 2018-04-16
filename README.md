@@ -22,12 +22,6 @@ To get started developing you'll need to install [docker](https://docs.docker.co
 
         $ git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
 
-#### A note on Windows:
-
-Git on Windows will, by default, automatically convert line endings from `lf` to `crlf`. This is problematic for the Docker images we build for tests targeting Linux operating systems. Therefore, in order to run tests on Windows, you must set `autocrlf` as either `true` or `input` **prior** to cloning.
-
-See [this writeup](https://help.github.com/articles/dealing-with-line-endings/) for more information.
-
 2. Create the TFB Docker virtual network
 
         $ docker network create tfb
@@ -51,7 +45,7 @@ That run script is pretty wordy, but each and every flag is required. Unfortunat
 
 You may not want to call step 4 from above every time. You can add an `alias` to your `~/.bash_aliases` file to shorten it since it will not change once configured:
 
-`$ alias tfb="docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=[ABS PATH TO THIS DIR],target=/FrameworkBenchmarks techempower/tfb"`
+`$ alias tfb="docker network create tfb > /dev/null 2>&1; docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=[ABS PATH TO THIS DIR],target=/FrameworkBenchmarks techempower/tfb"`
 
 `$ source ~/.bash_aliases`
 

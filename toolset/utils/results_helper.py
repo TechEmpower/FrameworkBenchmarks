@@ -1,5 +1,5 @@
 from toolset.utils.metadata_helper import gather_remaining_tests, gather_frameworks
-from toolset.utils.output_helper import log, FNULL
+from toolset.utils.output_helper import log
 
 import os
 import subprocess
@@ -11,6 +11,7 @@ import threading
 import re
 import math
 import csv
+import traceback
 from datetime import datetime
 
 # Cross-platform colored text
@@ -104,78 +105,75 @@ class Results:
         '''
         Parses the given test and test_type from the raw_file.
         '''
-        try:
-            results = dict()
-            results['results'] = []
-            stats = []
+        results = dict()
+        results['results'] = []
+        stats = []
 
-            if os.path.exists(
-                    self.get_raw_file(framework_test.name, test_type)):
-                with open(self.get_raw_file(framework_test.name,
-                                            test_type)) as raw_data:
+        if os.path.exists(
+                self.get_raw_file(framework_test.name, test_type)):
+            with open(self.get_raw_file(framework_test.name,
+                                        test_type)) as raw_data:
 
-                    is_warmup = True
-                    rawData = None
-                    for line in raw_data:
-                        if "Queries:" in line or "Concurrency:" in line:
-                            is_warmup = False
-                            rawData = None
-                            continue
-                        if "Warmup" in line or "Primer" in line:
-                            is_warmup = True
-                            continue
-                        if not is_warmup:
-                            if rawData == None:
-                                rawData = dict()
-                                results['results'].append(rawData)
-                            if "Latency" in line:
-                                m = re.findall(
-                                    r"([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
-                                if len(m) == 4:
-                                    rawData['latencyAvg'] = m[0]
-                                    rawData['latencyStdev'] = m[1]
-                                    rawData['latencyMax'] = m[2]
-                            if "requests in" in line:
-                                m = re.search("([0-9]+) requests in", line)
-                                if m != None:
-                                    rawData['totalRequests'] = int(m.group(1))
-                            if "Socket errors" in line:
-                                if "connect" in line:
-                                    m = re.search("connect ([0-9]+)", line)
-                                    rawData['connect'] = int(m.group(1))
-                                if "read" in line:
-                                    m = re.search("read ([0-9]+)", line)
-                                    rawData['read'] = int(m.group(1))
-                                if "write" in line:
-                                    m = re.search("write ([0-9]+)", line)
-                                    rawData['write'] = int(m.group(1))
-                                if "timeout" in line:
-                                    m = re.search("timeout ([0-9]+)", line)
-                                    rawData['timeout'] = int(m.group(1))
-                            if "Non-2xx" in line:
-                                m = re.search(
-                                    "Non-2xx or 3xx responses: ([0-9]+)", line)
-                                if m != None:
-                                    rawData['5xx'] = int(m.group(1))
-                            if "STARTTIME" in line:
-                                m = re.search("[0-9]+", line)
-                                rawData["startTime"] = int(m.group(0))
-                            if "ENDTIME" in line:
-                                m = re.search("[0-9]+", line)
-                                rawData["endTime"] = int(m.group(0))
-                                test_stats = self.__parse_stats(
-                                    framework_test, test_type,
-                                    rawData["startTime"], rawData["endTime"],
-                                    1)
-                                stats.append(test_stats)
-            with open(
-                    self.get_stats_file(framework_test.name, test_type) +
-                    ".json", "w") as stats_file:
-                json.dump(stats, stats_file, indent=2)
+                is_warmup = True
+                rawData = None
+                for line in raw_data:
+                    if "Queries:" in line or "Concurrency:" in line:
+                        is_warmup = False
+                        rawData = None
+                        continue
+                    if "Warmup" in line or "Primer" in line:
+                        is_warmup = True
+                        continue
+                    if not is_warmup:
+                        if rawData == None:
+                            rawData = dict()
+                            results['results'].append(rawData)
+                        if "Latency" in line:
+                            m = re.findall(
+                                r"([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
+                            if len(m) == 4:
+                                rawData['latencyAvg'] = m[0]
+                                rawData['latencyStdev'] = m[1]
+                                rawData['latencyMax'] = m[2]
+                        if "requests in" in line:
+                            m = re.search("([0-9]+) requests in", line)
+                            if m != None:
+                                rawData['totalRequests'] = int(m.group(1))
+                        if "Socket errors" in line:
+                            if "connect" in line:
+                                m = re.search("connect ([0-9]+)", line)
+                                rawData['connect'] = int(m.group(1))
+                            if "read" in line:
+                                m = re.search("read ([0-9]+)", line)
+                                rawData['read'] = int(m.group(1))
+                            if "write" in line:
+                                m = re.search("write ([0-9]+)", line)
+                                rawData['write'] = int(m.group(1))
+                            if "timeout" in line:
+                                m = re.search("timeout ([0-9]+)", line)
+                                rawData['timeout'] = int(m.group(1))
+                        if "Non-2xx" in line:
+                            m = re.search(
+                                "Non-2xx or 3xx responses: ([0-9]+)", line)
+                            if m != None:
+                                rawData['5xx'] = int(m.group(1))
+                        if "STARTTIME" in line:
+                            m = re.search("[0-9]+", line)
+                            rawData["startTime"] = int(m.group(0))
+                        if "ENDTIME" in line:
+                            m = re.search("[0-9]+", line)
+                            rawData["endTime"] = int(m.group(0))
+                            test_stats = self.__parse_stats(
+                                framework_test, test_type,
+                                rawData["startTime"], rawData["endTime"],
+                                1)
+                            stats.append(test_stats)
+        with open(
+                self.get_stats_file(framework_test.name, test_type) +
+                ".json", "w") as stats_file:
+            json.dump(stats, stats_file, indent=2)
 
-            return results
-        except IOError:
-            return None
+        return results
 
     def parse_all(self, framework_test):
         '''
@@ -291,8 +289,10 @@ class Results:
             # Normally you don't have to use Fore.BLUE before each line, but
             # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
             # or stream flush, so we have to ensure that the color code is printed repeatedly
-            log(
-                "Verification Summary", border='=', border_bottom='-', color=Fore.CYAN)
+            log("Verification Summary",
+                border='=',
+                border_bottom='-',
+                color=Fore.CYAN)
             for test in tests:
                 log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
@@ -446,21 +446,25 @@ class Results:
         '''
         Get the git commit id for this benchmark
         '''
-        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=self.config.fwroot).strip()
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=self.config.fwroot).strip()
 
     def __get_git_repository_url(self):
         '''
         Gets the git repository url for this benchmark
         '''
         return subprocess.check_output(
-            ["git", "config", "--get", "remote.origin.url"], cwd=self.config.fwroot).strip()
+            ["git", "config", "--get", "remote.origin.url"],
+            cwd=self.config.fwroot).strip()
 
     def __get_git_branch_name(self):
         '''
         Gets the git branch name for this benchmark
         '''
         return subprocess.check_output(
-            'git rev-parse --abbrev-ref HEAD', shell=True, cwd=self.config.fwroot).strip()
+            'git rev-parse --abbrev-ref HEAD',
+            shell=True,
+            cwd=self.config.fwroot).strip()
 
     def __parse_stats(self, framework_test, test_type, start_time, end_time,
                       interval):

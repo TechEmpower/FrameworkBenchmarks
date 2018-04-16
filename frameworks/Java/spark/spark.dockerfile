@@ -1,10 +1,12 @@
-FROM techempower/maven-java8:0.1 as maven
-
-ADD ./ /spark
+FROM maven:3.5.3-jdk-8-slim as maven
 WORKDIR /spark
-RUN mvn clean package
+COPY src src
+COPY pom.xml pom.xml
+RUN mvn package -q
 
-FROM techempower/resin-java8:0.1
-
-COPY --from=maven /spark/target/spark.war ${RESIN_HOME}/webapps/ROOT.war
-CMD java -jar ${RESIN_HOME}/lib/resin.jar console
+FROM openjdk:8-jdk
+WORKDIR /resin
+RUN curl -sL http://www.caucho.com/download/resin-4.0.55.tar.gz | tar xz --strip-components=1
+RUN rm -rf webapps/*
+COPY --from=maven /spark/target/spark.war webapps/ROOT.war
+CMD ["java", "-jar", "lib/resin.jar", "console"]

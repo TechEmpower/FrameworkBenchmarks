@@ -1,17 +1,14 @@
 extern crate actix;
 extern crate actix_web;
 extern crate bytes;
-extern crate http;
 extern crate futures;
 extern crate serde;
 extern crate serde_json;
 #[macro_use] extern crate serde_derive;
 
-use actix_web::*;
-use actix::prelude::*;
 use bytes::BytesMut;
-use http::StatusCode;
-use http::header::{self, HeaderValue};
+use actix::prelude::*;
+use actix_web::{http, server, App, HttpRequest, HttpResponse};
 
 mod utils;
 use utils::Writer;
@@ -23,39 +20,36 @@ pub struct Message {
     pub message: &'static str,
 }
 
-fn json(_: HttpRequest) -> HttpResponse {
+fn json(req: HttpRequest) -> HttpResponse {
     let message = Message {
         message: "Hello, World!"
     };
     let mut body = BytesMut::with_capacity(SIZE);
     serde_json::to_writer(Writer(&mut body), &message).unwrap();
 
-    let mut resp = HttpResponse::new(StatusCode::OK, body.into());
-    resp.headers_mut().insert(
-        header::SERVER, HeaderValue::from_static("Actix"));
-    resp.headers_mut().insert(
-        header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
-    resp
+    HttpResponse::build_from(&req)
+        .header(http::header::SERVER, "Actix")
+        .header(http::header::CONTENT_TYPE, "application/json")
+        .body(body)
 }
 
-fn plaintext(_: HttpRequest) -> HttpResponse {
-    let mut resp = HttpResponse::new(StatusCode::OK, "Hello, World!".into());
-    resp.headers_mut().insert(
-        header::SERVER, HeaderValue::from_static("Actix"));
-    resp.headers_mut().insert(
-        header::CONTENT_TYPE, HeaderValue::from_static("text/plain"));
-    resp
+fn plaintext(req: HttpRequest) -> HttpResponse {
+    HttpResponse::build_from(&req)
+        .header(http::header::SERVER, "Actix")
+        .header(http::header::CONTENT_TYPE, "text/plain")
+        .body("Hello, World!")
 }
 
 fn main() {
     let sys = System::new("techempower");
 
     // start http server
-    HttpServer::new(
-        move || Application::new()
+    server::new(
+        move || App::new()
             .resource("/json", |r| r.f(json))
             .resource("/plaintext", |r| r.f(plaintext)))
         .backlog(8192)
+        .threads(1)
         .bind("0.0.0.0:8080").unwrap()
         .start();
 

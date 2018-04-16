@@ -1,7 +1,8 @@
-FROM techempower/mono:0.1
+FROM mono:5.10.0.160
+RUN apt update -yqq && apt install -yqq libevent-dev
 
-ADD ./ /evhttp
 WORKDIR /evhttp
+COPY src src
 
 RUN xbuild src/EvHttpSharpBenchmark.csproj /t:Clean
 RUN xbuild src/EvHttpSharpBenchmark.csproj /p:Configuration=Release

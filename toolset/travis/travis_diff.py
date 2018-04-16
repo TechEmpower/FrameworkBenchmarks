@@ -22,7 +22,7 @@ def get_docker_changes(changes_output):
 
 def fw_found_in_changes(test, changes_output):
     return re.search(
-        r"frameworks/" + test + "/",
+        r"frameworks/" + re.escape(test) + "/",
         changes_output, re.M)
 
 
@@ -165,33 +165,5 @@ for test in test_dirs:
     if fw_found_in_changes(test, changes):
         print("Found changes that affect {!s}".format(test))
         run_tests.append(test)
-        continue
-
-    # Determine what has been changed based on initial diffing output
-    docker_changes = get_docker_changes(changes)
-
-    # For each of these, find the files that depend on them, if we find more
-    # docker FROM dependencies add it to the bottom of the list, if it isn't
-    # already there.
-    i = 0
-    found = False
-    while i <= len(docker_changes) - 1 and not found:
-
-        # Generates output of files that contain a FROM for this dependency
-        more_changes = subprocess.check_output([
-            'bash', '-c', 'grep -RP "FROM tfb/' +
-                          re.escape(docker_changes[i].replace('.dockerfile', ''))
-                          + '(:|$)" . || echo ""'
-        ])
-        print("more_changes: {!s}".format(more_changes))
-        if fw_found_in_changes(test, more_changes):
-            print("Found changes that affect {!s}".format(test))
-            run_tests.append(test)
-            found = True
-
-        # Preserves the order of the list, so we can continue with this loop
-        docker_changes.extend(
-            Set(get_docker_changes(more_changes)) - Set(docker_changes))
-        i += 1
 
 quit_diffing()

@@ -1,9 +1,9 @@
-FROM techempower/python2:0.1
+FROM python:2.7.14
 
 ADD ./ /klein
 
 WORKDIR /klein
 
-RUN pip install --install-option="--prefix=${PY2_ROOT}" -r /klein/requirements.txt
+RUN pip install -r /klein/requirements.txt
 
 CMD python app.py

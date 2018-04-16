@@ -1,6 +1,10 @@
-FROM techempower/maven:0.1
-
-ADD ./ /baratine
+FROM maven:3.5.3-jdk-9-slim as maven
 WORKDIR /baratine
-RUN mvn clean package
-CMD java -jar target/testTechempowerBaratine-0.0.1-SNAPSHOT.jar tfb-database
+COPY pom.xml pom.xml
+COPY src src
+RUN mvn package -q
+
+FROM openjdk:9-jre-slim
+WORKDIR /baratine
+COPY --from=maven /baratine/target/testTechempowerBaratine-0.0.1-SNAPSHOT.jar app.jar
+CMD ["java", "-jar", "app.jar", "tfb-database"]

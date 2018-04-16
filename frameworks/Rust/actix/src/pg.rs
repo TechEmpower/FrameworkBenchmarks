@@ -1,6 +1,5 @@
 extern crate actix;
 extern crate actix_web;
-extern crate http;
 extern crate bytes;
 extern crate rand;
 extern crate num_cpus;
@@ -12,14 +11,14 @@ extern crate serde_json;
 #[macro_use] extern crate askama;
 
 use std::{io, cmp};
-use actix_web::*;
 use actix::prelude::*;
 use askama::Template;
-use http::header;
 use bytes::BytesMut;
 use postgres::{Connection, TlsMode};
 use rand::{thread_rng, Rng, ThreadRng};
 use futures::Future;
+use actix_web::{
+    http, server, App, HttpRequest, HttpResponse, FutureResponse, AsyncResponder};
 
 mod utils;
 use utils::Writer;
@@ -42,26 +41,26 @@ struct State {
     db: Addr<Syn, PgConnection>
 }
 
-fn world_row(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
-    req.state().db.send(RandomWorld)
+fn world_row(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
+    req.clone().state().db.send(RandomWorld)
         .from_err()
-        .and_then(|res| {
+        .and_then(move |res| {
             match res {
                 Ok(row) => {
                     let mut body = BytesMut::with_capacity(31);
                     serde_json::to_writer(Writer(&mut body), &row).unwrap();
-                    Ok(httpcodes::HTTPOk.build()
-                       .header(header::SERVER, "Actix")
+                    Ok(HttpResponse::build_from(&req)
+                       .header(http::header::SERVER, "Actix")
                        .content_type("application/json")
-                       .body(body)?)
+                       .body(body))
                 },
-                Err(_) => Ok(httpcodes::HTTPInternalServerError.into()),
+                Err(_) => Ok(HttpResponse::InternalServerError().into()),
             }
         })
         .responder()
 }
 
-fn queries(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
+fn queries(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
     // get queries parameter
     let q = if let Some(q) = req.query().get("q") {
         q.parse::<u16>().ok().unwrap_or(1)
@@ -71,24 +70,24 @@ fn queries(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
     let q = cmp::min(500, cmp::max(1, q));
 
     // run sql queries
-    req.state().db.send(RandomWorlds(q))
+    req.clone().state().db.send(RandomWorlds(q))
         .from_err()
-        .and_then(|res| {
+        .and_then(move |res| {
             if let Ok(worlds) = res {
                 let mut body = BytesMut::with_capacity(35 * worlds.len());
                 serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
-                Ok(httpcodes::HTTPOk.build()
-                   .header(header::SERVER, "Actix")
+                Ok(HttpResponse::build_from(&req)
+                   .header(http::header::SERVER, "Actix")
                    .content_type("application/json")
-                   .body(body)?)
+                   .body(body))
             } else {
-                Ok(httpcodes::HTTPInternalServerError.into())
+                Ok(HttpResponse::InternalServerError().into())
             }
         })
         .responder()
 }
 
-fn updates(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
+fn updates(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
     // get queries parameter
     let q = if let Some(q) = req.query().get("q") {
         q.parse::<u16>().ok().unwrap_or(1)
@@ -98,18 +97,18 @@ fn updates(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
     let q = cmp::min(500, cmp::max(1, q));
 
     // update db
-    req.state().db.send(UpdateWorld(q))
+    req.clone().state().db.send(UpdateWorld(q))
         .from_err()
         .and_then(move |res| {
             if let Ok(worlds) = res {
                 let mut body = BytesMut::with_capacity(35 * worlds.len());
                 serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
-                Ok(httpcodes::HTTPOk.build()
-                   .header(header::SERVER, "Actix")
+                Ok(HttpResponse::build_from(&req)
+                   .header(http::header::SERVER, "Actix")
                    .content_type("application/json")
-                   .body(body)?)
+                   .body(body))
             } else {
-                Ok(httpcodes::HTTPInternalServerError.into())
+                Ok(HttpResponse::InternalServerError().into())
             }
         })
         .responder()
@@ -121,7 +120,7 @@ struct FortuneTemplate<'a> {
     items: &'a Vec<Fortune>,
 }
 
-fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error>> {
+fn fortune(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
     req.state().db.send(TellFortune)
         .from_err()
         .and_then(|res| {
@@ -130,13 +129,12 @@ fn fortune(req: HttpRequest<State>) -> Box<Future<Item=HttpResponse, Error=Error
                     let tmpl = FortuneTemplate { items: &rows };
                     let res = tmpl.render().unwrap();
 
-                    Ok(httpcodes::HTTPOk.build()
-                       .header(header::SERVER, "Actix")
+                    Ok(HttpResponse::Ok()
+                       .header(http::header::SERVER, "Actix")
                        .content_type("text/html; charset=utf-8")
-                       .content_encoding(headers::ContentEncoding::Identity)
-                       .body(res)?)
+                       .body(res))
                 },
-                Err(_) => Ok(httpcodes::HTTPInternalServerError.into())
+                Err(_) => Ok(HttpResponse::InternalServerError().into())
             }
         })
         .responder()
@@ -288,8 +286,9 @@ fn main() {
         num_cpus::get() * 4, move || PgConnection::new(db_url));
 
     // start http server
-    HttpServer::new(
-        move || Application::with_state(State{db: addr.clone()})
+    server::new(
+        move || App::with_state(State{db: addr.clone()})
+            .default_encoding(http::ContentEncoding::Identity)
             .resource("/db", |r| r.route().a(world_row))
             .resource("/queries", |r| r.route().a(queries))
             .resource("/fortune", |r| r.route().a(fortune))

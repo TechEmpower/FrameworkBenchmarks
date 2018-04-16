@@ -1,9 +1,9 @@
-FROM techempower/python3:0.1
+FROM python:3.6.5
 
 ADD ./ /uvicorn
 
 WORKDIR /uvicorn
 
-RUN pip3 install --install-option="--prefix=${PY3_ROOT}" -r /uvicorn/requirements.txt
+RUN pip3 install -r /uvicorn/requirements.txt
 
 CMD uvicorn app:main -c uvicorn_conf.py

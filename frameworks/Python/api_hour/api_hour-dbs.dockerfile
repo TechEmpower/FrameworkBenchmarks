@@ -1,4 +1,11 @@
-FROM techempower/yocto_http-base:0.1
+FROM python:3.6.5
+
+ADD ./yocto_http /yocto_http
+ADD ./requirements.txt /yocto_http
+
+WORKDIR /yocto_http
+
+RUN pip3 install -r /yocto_http/requirements.txt
 
 WORKDIR /yocto_http
 

@@ -30,7 +30,7 @@ class Benchmarker:
         '''
         This process involves setting up the client/server machines
         with any necessary change. Then going through each test,
-        running their setup script, verifying the URLs, and
+        running their docker build and run, verifying the URLs, and
         running benchmarks against them.
         '''
         # Generate metadata
@@ -40,14 +40,13 @@ class Benchmarker:
         all_tests = gather_remaining_tests(self.config, self.results)
 
         # Run tests
-        success = True
         log("Running Tests...", border='=')
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
             for test in all_tests:
                 log("Running Test: %s" % test.name, border='-')
                 with self.config.quiet_out.enable():
-                    success = self.__run_test(test, benchmark_log) and success
+                    self.__run_test(test, benchmark_log)
                 # Load intermediate result from child process
                 self.results.load()
 
@@ -59,8 +58,6 @@ class Benchmarker:
         self.results.set_completion_time()
         self.results.upload()
         self.results.finish()
-
-        return success
 
     ##########################################################################################
     # Private methods
@@ -103,8 +100,9 @@ class Benchmarker:
 
         # If the test is in the excludes list, we skip it
         if self.config.exclude != None and test.name in self.config.exclude:
-            log("Test {name} has been added to the excludes list. Skipping.".
-                format(name=test.name),
+            message = "Test {name} has been added to the excludes list. Skipping.".format(name=test.name)
+            self.results.write_intermediate(test.name, message)
+            log(message,
                 prefix=log_prefix,
                 file=benchmark_log)
             return False
@@ -116,10 +114,9 @@ class Benchmarker:
 
             if self.__is_port_bound(test.port):
                 # We gave it our all
-                self.results.write_intermediate(test.name, "port " + str(
-                    test.port) + " is not available before start")
-                log("Error: Port %s is not available, cannot start %s" %
-                    (test.port, test.name),
+                message = "Error: Port %s is not available, cannot start %s" % (test.port, test.name)
+                self.results.write_intermediate(test.name, message)
+                log(message,
                     prefix=log_prefix,
                     file=benchmark_log,
                     color=Fore.RED)
@@ -130,9 +127,9 @@ class Benchmarker:
                 database_container = docker_helper.start_database(
                     self.config, test, test.database.lower())
                 if database_container is None:
-                    self.results.write_intermediate(test.name,
-                                                    "ERROR: Problem starting")
-                    log("ERROR: Problem building/running database container",
+                    message = "ERROR: Problem building/running database container"
+                    self.results.write_intermediate(test.name, message)
+                    log(message,
                         prefix=log_prefix,
                         file=benchmark_log,
                         color=Fore.RED)
@@ -143,9 +140,9 @@ class Benchmarker:
             if containers is None:
                 docker_helper.stop(self.config, containers, database_container,
                                    test)
-                self.results.write_intermediate(test.name,
-                                                "ERROR: Problem starting")
-                log("ERROR: Problem starting {name}".format(name=test.name),
+                message = "ERROR: Problem starting {name}".format(name=test.name)
+                self.results.write_intermediate(test.name, message)
+                log(message,
                     prefix=log_prefix,
                     file=benchmark_log,
                     color=Fore.RED)
@@ -157,10 +154,12 @@ class Benchmarker:
             while not accepting_requests and slept < max_sleep:
                 accepting_requests = test.is_accepting_requests()
                 if not docker_helper.successfully_running_containers(
-                        self.config, test.get_docker_files(), benchmark_log):
+                        self.config, test, benchmark_log):
                     docker_helper.stop(self.config, containers,
                                        database_container, test)
-                    log("ERROR: One or more expected docker container exited early",
+                    message = "ERROR: One or more expected docker containers exited early"
+                    self.results.write_intermediate(test.name, message)
+                    log(message,
                         prefix=log_prefix,
                         file=benchmark_log,
                         color=Fore.RED)
@@ -171,7 +170,9 @@ class Benchmarker:
             if not accepting_requests:
                 docker_helper.stop(self.config, containers, database_container,
                                    test)
-                log("ERROR: Framework is not accepting requests from client machine",
+                message = "ERROR: Framework is not accepting requests from client machine"
+                self.results.write_intermediate(test.name, message)
+                log(message,
                     prefix=log_prefix,
                     file=benchmark_log,
                     color=Fore.RED)
@@ -218,8 +219,8 @@ class Benchmarker:
                 return False
         except (OSError, IOError, subprocess.CalledProcessError) as e:
             tb = traceback.format_exc()
-            self.results.write_intermediate(
-                test.name, "error during test setup: " + str(e))
+            self.results.write_intermediate(test.name,
+                                            "error during test: " + str(e))
             log("Subprocess Error %s" % test.name,
                 file=benchmark_log,
                 border='-',
