@@ -4,4 +4,4 @@ COPY src src
 COPY conf conf
 COPY pom.xml pom.xml
 RUN mvn package -q
-CMD ["java", "-DAPP_HOME=./", "-jar", "target/redkale-benchmark-0.0.1.jar"]
+CMD ["java", "-Xms2G", "-Xmx2G", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-DAPP_HOME=./", "-jar", "target/redkale-benchmark-0.0.1.jar"]
