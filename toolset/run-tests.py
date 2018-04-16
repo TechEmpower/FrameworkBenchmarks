@@ -235,9 +235,9 @@ def main(argv=None):
 
     else:
         benchmarker = Benchmarker(config, results)
-        all_passed = benchmarker.run()
+        any_failed = benchmarker.run()
         if config.mode == "verify":
-            return 0 if all_passed else 1
+            return any_failed
 
     return 0
 

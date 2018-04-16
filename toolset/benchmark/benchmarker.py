@@ -39,7 +39,7 @@ class Benchmarker:
         # Get a list of all known  tests that we can run.
         all_tests = gather_remaining_tests(self.config, self.results)
 
-        all_passed = True
+        any_failed = False
         # Run tests
         log("Running Tests...", border='=')
         with open(os.path.join(self.results.directory, 'benchmark.log'),
@@ -47,8 +47,8 @@ class Benchmarker:
             for test in all_tests:
                 log("Running Test: %s" % test.name, border='-')
                 with self.config.quiet_out.enable():
-                    all_passed = all_passed and \
-                                 self.__run_test(test, benchmark_log)
+                    if not self.__run_test(test, benchmark_log):
+                        any_failed = True
                 # Load intermediate result from child process
                 self.results.load()
 
