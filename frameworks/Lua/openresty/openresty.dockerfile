@@ -1,13 +1,11 @@
-FROM ubuntu:16.04
+FROM buildpack-deps:xenial
 
 ENV LUA_VERSION="5.1"
 ENV LUA_MICRO="5"
 
-RUN apt update -yqq && \
-    apt install -yqq libreadline-dev lib32ncurses5-dev wget curl build-essential \
-      libpq-dev libpcre3 libpcre3-dev unzip git
+RUN apt update -yqq && apt install -yqq unzip
 
-RUN wget -q https://github.com/LuaDist/lua/archive/$LUA_VERSION.$LUA_MICRO.tar.gz
+RUN wget https://github.com/LuaDist/lua/archive/$LUA_VERSION.$LUA_MICRO.tar.gz
 RUN tar xf $LUA_VERSION.$LUA_MICRO.tar.gz
 
 ENV LUA_HOME=/lua-$LUA_VERSION.$LUA_MICRO
