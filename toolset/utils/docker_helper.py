@@ -100,13 +100,15 @@ def run(benchmarker_config, test, run_log_dir):
         base_url=benchmarker_config.server_docker_host)
 
     log_prefix = "%s: " % test.name
+    container = None
+
     try:
 
-        def watch_container(container, docker_file):
+        def watch_container(docker_container, docker_file):
             with open(
                     os.path.join(run_log_dir, "%s.log" % docker_file.replace(
                         ".dockerfile", "").lower()), 'w') as run_log:
-                for line in container.logs(stream=True):
+                for line in docker_container.logs(stream=True):
                     log(line, prefix=log_prefix, file=run_log)
 
         extra_hosts = None
