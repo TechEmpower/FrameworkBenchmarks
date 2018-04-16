@@ -98,7 +98,6 @@ def run(benchmarker_config, test, run_log_dir):
     '''
     client = docker.DockerClient(
         base_url=benchmarker_config.server_docker_host)
-    containers = []
 
     log_prefix = "%s: " % test.name
     try:
@@ -146,8 +145,6 @@ def run(benchmarker_config, test, run_log_dir):
             ulimits=ulimit,
             sysctls=sysctl)
 
-        containers.append(container)
-
         watch_thread = Thread(
             target=watch_container,
             args=(
@@ -167,34 +164,11 @@ def run(benchmarker_config, test, run_log_dir):
                 file=run_log)
             log(tb, prefix=log_prefix, file=run_log)
 
-    return containers
-
-
-def successfully_running_containers(benchmarker_config, test, out):
-    '''
-    Returns whether all the expected containers for the given docker_files are
-    running.
-    '''
-    client = docker.DockerClient(
-        base_url=benchmarker_config.server_docker_host)
-    running_container_images = []
-    for container in client.containers.list():
-        # 'techempower/tfb.test.gemini:0.1' -> 'gemini'
-        image_tag = container.image.tags[0].split(':')[0][21:]
-        running_container_images.append(image_tag)
-
-    if test.name not in running_container_images:
-        log_prefix = "%s: " % test.name
-        log("ERROR: Expected techempower/tfb.test.%s to be running container" %
-            test.name,
-            prefix=log_prefix,
-            file=out)
-        return False
-    return True
+    return container
 
 
 def stop(benchmarker_config=None,
-         containers=None,
+         container=None,
          database_container=None,
          test=None):
     '''
@@ -202,16 +176,15 @@ def stop(benchmarker_config=None,
     '''
     client = docker.DockerClient(
         base_url=benchmarker_config.server_docker_host)
-    if containers is None:
+    if container is None:
         for container in client.containers.list():
             if len(
                     container.image.tags
             ) > 0 and 'techempower' in container.image.tags[0] and 'tfb:latest' not in container.image.tags[0]:
                 container.stop()
     else:
-        # Stop all our running containers
-        for container in containers:
-            container.stop()
+        # Stop the running container
+        container.stop()
 
     database_client = docker.DockerClient(
         base_url=benchmarker_config.database_docker_host)

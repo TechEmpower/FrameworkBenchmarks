@@ -140,9 +140,9 @@ class Benchmarker:
                     return False
 
             # Start webapp
-            containers = test.start()
-            if containers is None:
-                docker_helper.stop(self.config, containers, database_container,
+            container = test.start()
+            if container is None:
+                docker_helper.stop(self.config, container, database_container,
                                    test)
                 message = "ERROR: Problem starting {name}".format(name=test.name)
                 self.results.write_intermediate(test.name, message)
@@ -157,22 +157,11 @@ class Benchmarker:
             accepting_requests = False
             while not accepting_requests and slept < max_sleep:
                 accepting_requests = test.is_accepting_requests()
-                if not docker_helper.successfully_running_containers(
-                        self.config, test, benchmark_log):
-                    docker_helper.stop(self.config, containers,
-                                       database_container, test)
-                    message = "ERROR: One or more expected docker containers exited early"
-                    self.results.write_intermediate(test.name, message)
-                    log(message,
-                        prefix=log_prefix,
-                        file=benchmark_log,
-                        color=Fore.RED)
-                    return False
                 time.sleep(1)
                 slept += 1
 
             if not accepting_requests:
-                docker_helper.stop(self.config, containers, database_container,
+                docker_helper.stop(self.config, container, database_container,
                                    test)
                 message = "ERROR: Framework is not accepting requests from client machine"
                 self.results.write_intermediate(test.name, message)
@@ -203,7 +192,7 @@ class Benchmarker:
                 self.__benchmark(test, benchmark_log)
 
             # Stop this test
-            docker_helper.stop(self.config, containers, database_container,
+            docker_helper.stop(self.config, container, database_container,
                                test)
 
             # Save results thus far into the latest results directory
