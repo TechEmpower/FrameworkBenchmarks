@@ -12,7 +12,7 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "None",
+        "database": "Postgres",
         "framework": "wizzardo-http",
         "language": "Java",
         "orm": "Raw",
