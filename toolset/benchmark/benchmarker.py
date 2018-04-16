@@ -61,7 +61,7 @@ class Benchmarker:
         self.results.upload()
         self.results.finish()
 
-        return all_passed
+        return any_failed
 
     ##########################################################################################
     # Private methods
