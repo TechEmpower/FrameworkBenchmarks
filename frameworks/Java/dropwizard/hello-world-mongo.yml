@@ -14,7 +14,9 @@ server:
     appenders: []
 
 logging:
-  appenders: []
+  level: WARN
+  appenders:
+    - type: console
 
 mongo:
   host: tfb-database

@@ -7,14 +7,16 @@ server:
     useServerHeader: true
     # There is no proxy in front of the server
     useForwardedHeaders: false
-  # Test requirements forgid gzip compression of the replies
+  # Test requirements forbid gzip compression of the replies
   gzip:
     enabled: false
   requestLog:
     appenders: []
 
 logging:
-  appenders: []
+  level: WARN
+  appenders:
+    - type: console
 
 database:
   # the name of your JDBC driver
