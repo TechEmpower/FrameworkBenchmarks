@@ -89,6 +89,7 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                             file=build_log,
                             color=Fore.WHITE + Style.BRIGHT \
                                 if re.match(r'^Step \d+\/\d+', line) else '')
+
                 if buffer:
                     log(buffer,
                         prefix=log_prefix,
