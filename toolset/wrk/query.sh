@@ -7,7 +7,7 @@ echo " Running Primer $name"
 echo " wrk -H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-alive' --latency -d 5 -c 8 --timeout 8 -t 8 \"${url}2\""
 echo "---------------------------------------------------------"
 echo ""
-wrk -H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-alive' --latency -d 5 -c 8 --timeout 8 -t 8 "${url}2"
+wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d 5 -c 8 --timeout 8 -t 8 "${url}2"
 sleep 5
 
 echo ""
@@ -16,7 +16,7 @@ echo " Running Warmup $name"
 echo " wrk -H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-alive' --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads \"${url}2\""
 echo "---------------------------------------------------------"
 echo ""
-wrk -H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-alive' --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads "${url}2"
+wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads "${url}2"
 sleep 5
 
 for c in $levels
@@ -28,7 +28,7 @@ echo " wrk -H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-ali
 echo "---------------------------------------------------------"
 echo ""
 STARTTIME=$(date +"%s")
-wrk -H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-alive' --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads "$url$c"
+wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads "$url$c"
 echo "STARTTIME $STARTTIME"
 echo "ENDTIME $(date +"%s")"
 sleep 2
