@@ -25,10 +25,11 @@ namespace Benchmarks
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnv.ContentRootPath)
-                .AddCommandLine(Program.Args)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{hostingEnv.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
+                .AddEnvironmentVariables()
+                .AddCommandLine(Program.Args)
+                ;
 
             Configuration = builder.Build();
 
