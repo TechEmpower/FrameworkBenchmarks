@@ -62,6 +62,27 @@
       "notes": "",
       "versus": ""
     },
+    "postgresql-async" : {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "None",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Undertow",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "undertow-postgresql-reactive",
+      "notes": "",
+      "versus": ""
+    },
     "mongodb" : {
       "db_url": "/db",
       "query_url": "/queries?queries=",

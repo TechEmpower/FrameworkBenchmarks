@@ -10,6 +10,8 @@ import com.mongodb.connection.ClusterSettings;
 import com.mongodb.connection.ConnectionPoolSettings;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import io.reactiverse.pgclient.PgClient;
+import io.reactiverse.pgclient.PgPoolOptions;
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
 import io.undertow.server.HttpHandler;
@@ -94,6 +96,30 @@ public final class HelloWebServer {
       handler.addExactPath("/queries", new BlockingHandler(new QueriesSqlHandler(db)));
       handler.addExactPath("/fortunes", new BlockingHandler(new FortunesSqlHandler(db)));
       handler.addExactPath("/updates", new BlockingHandler(new UpdatesSqlHandler(db)));
+      return handler;
+    }),
+
+    /**
+     * The server will use a PostgreSQL database with an asynchronous API and
+     * will only implement the test types that require a database.
+     */
+    POSTGRESQL_ASYNC(() -> {
+      var options = new PgPoolOptions();
+      options.setHost("tfb-database");
+      options.setPort(5432);
+      options.setDatabase("hello_world");
+      options.setUsername("benchmarkdbuser");
+      options.setPassword("benchmarkdbpass");
+      options.setCachePreparedStatements(true);
+      options.setMaxSize(1); // Without this, the updates test breaks.
+
+      var client = PgClient.pool(options);
+
+      var handler = new PathHandler();
+      handler.addExactPath("/db", new AsyncHandler(new DbPgAsyncHandler(client)));
+      handler.addExactPath("/queries", new AsyncHandler(new QueriesPgAsyncHandler(client)));
+      handler.addExactPath("/fortunes", new AsyncHandler(new FortunesPgAsyncHandler(client)));
+      handler.addExactPath("/updates", new AsyncHandler(new UpdatesPgAsyncHandler(client)));
       return handler;
     }),
 
