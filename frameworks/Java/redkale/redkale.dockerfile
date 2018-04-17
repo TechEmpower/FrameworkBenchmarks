@@ -7,4 +7,5 @@ RUN mvn package -q
 
 FROM openjdk:10-jre-slim
 WORKDIR /redkale
-CMD ["java", "-Xms2G", "-Xmx2G", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-DAPP_HOME=./", "-jar", "target/redkale-benchmark-0.0.1.jar"]
+COPY --from=maven /rapidoid/target/redkale-benchmark-0.0.1.jar redkale-benchmark.jar
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-DAPP_HOME=./", "-jar", "redkale-benchmark.jar"]
