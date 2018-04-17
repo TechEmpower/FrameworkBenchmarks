@@ -76,6 +76,7 @@ env:
      - "TESTDIR=Java/vertx-web"
      - "TESTDIR=Java/wicket"
      - "TESTDIR=Java/wildfly-ee7"
+     - "TESTDIR=Java/wizzardo-http"
      - "TESTLANG=JavaScript"
      - "TESTLANG=Kotlin"
      - "TESTLANG=Lua"
