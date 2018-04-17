@@ -72,7 +72,8 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                     dockerfile=test_docker_file,
                     tag="techempower/tfb.test.%s" %
                         test_docker_file.replace(".dockerfile", ""),
-                    forcerm=True)
+                    forcerm=True,
+                    pull=True)
                 buffer = ""
                 for token in output:
                     if token.startswith('{"stream":'):
