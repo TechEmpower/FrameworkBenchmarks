@@ -71,7 +71,8 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                             dockerfile=test_docker_file,
                             tag="techempower/tfb.test.%s" %
                             test_docker_file.replace(".dockerfile", ""),
-                            forcerm=True):
+                            forcerm=True,
+                            pull=True):
                     if line.startswith('{"stream":'):
                         line = json.loads(line)
                         line = line[line.keys()[0]].encode('utf-8')
