@@ -93,7 +93,7 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                         prefix=log_prefix,
                         file=build_log,
                         color=Fore.WHITE + Style.BRIGHT \
-                            if re.match(r'^Step \d+\/\d+', line) else '')
+                            if re.match(r'^Step \d+\/\d+', buffer) else '')
             except Exception:
                 tb = traceback.format_exc()
                 log("Docker build failed; terminating",
