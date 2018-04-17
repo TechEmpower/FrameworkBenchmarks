@@ -8,7 +8,7 @@ CREATE TABLE  World (
 GRANT SELECT, UPDATE ON World to benchmarkdbuser;
 
 INSERT INTO World (id, randomnumber)
-SELECT x.id, random() * 10000 + 1 FROM generate_series(1,10000) as x(id);
+SELECT x.id, random() * 10000 FROM generate_series(1,10000) as x(id);
 
 CREATE TABLE Fortune (
   id integer NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE  "World" (
 GRANT SELECT, UPDATE ON "World" to benchmarkdbuser;
 
 INSERT INTO "World" (id, randomnumber)
-SELECT x.id, random() * 10000 + 1 FROM generate_series(1,10000) as x(id);
+SELECT x.id, random() * 10000 FROM generate_series(1,10000) as x(id);
 
 CREATE TABLE "Fortune" (
   id integer NOT NULL,
