@@ -7,15 +7,23 @@
     [clj-tuple :as t])
   (:gen-class))
 
+(def plaintext-response
+  (t/hash-map
+    :status 200
+    :headers (t/hash-map "content-type" "text/plain; charset=utf-8")
+    :body (bs/to-byte-array "Hello, World!")))
+
+(def json-response
+  (t/hash-map
+    :status 200
+    :headers (t/hash-map "content-type" "application/json")))
+
 (defn handler [req]
   (let [uri (:uri req)]
     (cond
-      (.equals "/plaintext" uri) {:status 200
-                                  :headers {"content-type" "text/plain; charset=utf-8"}
-                                  :body (bs/to-byte-array "Hello, World!")}
-      (.equals "/json" uri) {:status 200
-                             :headers {"content-type" "application/json"}
-                             :body (json/write-value-as-bytes {:message "Hello, World!"})}
+      (.equals "/plaintext" uri) plaintext-response
+      (.equals "/json" uri) (assoc json-response
+                              :body (json/write-value-as-bytes (t/hash-map :message "Hello, World!")))
       :else {:status 404})))
 
 ;;;
