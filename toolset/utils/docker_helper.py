@@ -65,22 +65,37 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                 "%s.log" % test_docker_file.replace(".dockerfile", "").lower())
         with open(build_log_file, 'w') as build_log:
             try:
-                for line in docker.APIClient(
-                        base_url=benchmarker_config.server_docker_host).build(
-                            path=test.directory,
-                            dockerfile=test_docker_file,
-                            tag="techempower/tfb.test.%s" %
-                            test_docker_file.replace(".dockerfile", ""),
-                            forcerm=True,
-                            pull=True):
-                    if line.startswith('{"stream":'):
-                        line = json.loads(line)
-                        line = line[line.keys()[0]].encode('utf-8')
+                client = docker.APIClient(
+                    base_url=benchmarker_config.server_docker_host)
+                output = client.build(
+                    path=test.directory,
+                    dockerfile=test_docker_file,
+                    tag="techempower/tfb.test.%s" %
+                        test_docker_file.replace(".dockerfile", ""),
+                    forcerm=True,
+                    pull=True)
+                buffer = ""
+                for token in output:
+                    if token.startswith('{"stream":'):
+                        token = json.loads(token)
+                        token = token[token.keys()[0]].encode('utf-8')
+                    buffer += token
+                    while "\n" in buffer:
+                        index = buffer.index("\n")
+                        line = buffer[:index]
+                        buffer = buffer[index + 1:]
                         log(line,
                             prefix=log_prefix,
                             file=build_log,
                             color=Fore.WHITE + Style.BRIGHT \
                                 if re.match(r'^Step \d+\/\d+', line) else '')
+
+                if buffer:
+                    log(buffer,
+                        prefix=log_prefix,
+                        file=build_log,
+                        color=Fore.WHITE + Style.BRIGHT \
+                            if re.match(r'^Step \d+\/\d+', buffer) else '')
             except Exception:
                 tb = traceback.format_exc()
                 log("Docker build failed; terminating",
