@@ -3,27 +3,20 @@
     [byte-streams :as bs]
     [clojure.tools.cli :as cli]
     [aleph.http :as http]
-    [cheshire.core :as json]
+    [jsonista.core :as json]
     [clj-tuple :as t])
   (:gen-class))
 
-(def plaintext-response
-  (t/hash-map
-    :status 200
-    :headers (t/hash-map "content-type" "text/plain; charset=utf-8")
-    :body (bs/to-byte-array "Hello, World!")))
-
-(def json-response
-  (t/hash-map
-    :status 200
-    :headers (t/hash-map "content-type" "application/json")))
-
-(defn handler [{:keys [uri] :as req}]
-  (cond
-    (= "/plaintext" uri) plaintext-response
-    (= "/json" uri) (assoc json-response
-                      :body (json/encode (t/hash-map :message "Hello, World!")))
-    :else {:status 404}))
+(defn handler [req]
+  (let [uri (:uri req)]
+    (cond
+      (.equals "/plaintext" uri) {:status 200
+                                  :headers {"content-type" "text/plain; charset=utf-8"}
+                                  :body (bs/to-byte-array "Hello, World!")}
+      (.equals "/json" uri) {:status 200
+                             :headers {"content-type" "application/json"}
+                             :body (json/write-value-as-bytes {:message "Hello, World!"})}
+      :else {:status 404})))
 
 ;;;
 
