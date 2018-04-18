@@ -5,7 +5,7 @@ RUN apt update -yqq && apt install -yqq software-properties-common unzip cmake
 RUN add-apt-repository -s "deb http://apt.llvm.org/`lsb_release -cs`/ llvm-toolchain-`lsb_release -cs`-3.9 main"
 RUN wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key| apt-key add -
 RUN apt -yq update
-RUN apt install -qqy clang-3.9 lldb-3.9
+RUN apt install -yqq clang-3.9 lldb-3.9
 
 ENV MICROHTTPD_VERSION=0.9.39
 ENV MICROHTTPD=/libmicrohttpd

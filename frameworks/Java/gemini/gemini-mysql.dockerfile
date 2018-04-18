@@ -1,5 +1,5 @@
 FROM openjdk:9-jdk-slim as ant
-RUN apt update -qqy && apt install -qqy ant curl
+RUN apt update -qqy && apt install -yqq ant curl
 
 WORKDIR /gemini
 COPY Docroot Docroot

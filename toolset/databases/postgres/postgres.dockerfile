@@ -1,12 +1,12 @@
 FROM ubuntu:16.04
 
-RUN apt-get update
-RUN apt-get install -qqy locales
+RUN apt update
+RUN apt install -yqq locales
 
 RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8 
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 ADD postgresql.conf postgresql.conf
 ADD pg_hba.conf pg_hba.conf
