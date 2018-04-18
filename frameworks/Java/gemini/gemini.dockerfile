@@ -15,6 +15,6 @@ RUN ant resolve
 RUN ant compile
 
 WORKDIR /resin
-RUN curl -sL http://www.caucho.com/download/resin-4.0.55.tar.gz | tar xz --strip-components=1
+RUN curl -sL http://caucho.com/download/resin-4.0.56.tar.gz | tar xz --strip-components=1
 RUN rm -rf webapps/*
 CMD ["java", "-jar", "lib/resin.jar", "-conf", "/gemini/Docroot/WEB-INF/resin.xml", "console"]

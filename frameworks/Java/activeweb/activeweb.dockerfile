@@ -7,7 +7,7 @@ RUN mvn package -DskipTests -q
 
 FROM openjdk:9-jdk
 WORKDIR /resin
-RUN curl -sL http://www.caucho.com/download/resin-4.0.55.tar.gz | tar xz --strip-components=1
+RUN curl -sL http://caucho.com/download/resin-4.0.56.tar.gz | tar xz --strip-components=1
 RUN rm -rf webapps/*
 COPY --from=maven /activeweb/target/activeweb.war webapps/ROOT.war
 CMD ["java", "-jar", "lib/resin.jar", "console"]
