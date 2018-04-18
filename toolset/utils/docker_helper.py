@@ -79,7 +79,10 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                     if token.startswith('{"stream":'):
                         token = json.loads(token)
                         token = token[token.keys()[0]].encode('utf-8')
-                    buffer += token
+                        buffer += token
+                    elif token.startswith('{"errorDetail":'):
+                        token = json.loads(token)
+                        raise Exception(token['errorDetail']['message'])
                     while "\n" in buffer:
                         index = buffer.index("\n")
                         line = buffer[:index]
@@ -225,7 +228,7 @@ def stop(benchmarker_config=None,
 def find(path, pattern):
     '''
     Finds and returns all the the files matching the given pattern recursively in
-    the given path. 
+    the given path.
     '''
     for root, dirs, files in os.walk(path):
         for name in files:
@@ -235,7 +238,7 @@ def find(path, pattern):
 
 def start_database(benchmarker_config, test, database):
     '''
-    Sets up a container for the given database and port, and starts said docker 
+    Sets up a container for the given database and port, and starts said docker
     container.
     '''
     image_name = "techempower/%s:latest" % database
@@ -265,6 +268,9 @@ def start_database(benchmarker_config, test, database):
                     prefix=log_prefix,
                     color=Fore.WHITE + Style.BRIGHT \
                         if re.match(r'^Step \d+\/\d+', line) else '')
+            elif line.startswith('{"errorDetail":'):
+                line = json.loads(line)
+                raise Exception(line['errorDetail']['message'])
 
     client = docker.DockerClient(
         base_url=benchmarker_config.database_docker_host)
@@ -299,7 +305,7 @@ def start_database(benchmarker_config, test, database):
 
 def test_client_connection(benchmarker_config, url):
     '''
-    Tests that the app server at the given url responds successfully to a 
+    Tests that the app server at the given url responds successfully to a
     request.
     '''
     client = docker.DockerClient(
