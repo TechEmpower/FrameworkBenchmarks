@@ -20,7 +20,7 @@ COPY deploy/conf/* /etc/php/7.2/fpm/
 ADD ./ /phpixie
 WORKDIR /phpixie
 
-RUN composer.phar install --no-progress
+RUN php composer.phar install --no-progress
 
 CMD service php7.2-fpm start && \
     nginx -c /phpixie/deploy/nginx.conf -g "daemon off;"

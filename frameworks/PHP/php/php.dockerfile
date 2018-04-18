@@ -20,7 +20,7 @@ COPY deploy/conf/* /etc/php/7.2/fpm/
 ADD ./ /php
 WORKDIR /php
 
-RUN composer.phar install --no-progress
+RUN php composer.phar install --no-progress
 
 RUN chmod -R 777 /php
 

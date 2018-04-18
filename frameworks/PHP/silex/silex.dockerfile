@@ -20,7 +20,7 @@ COPY deploy/conf/* /etc/php/7.2/fpm/
 ADD ./ /silex
 WORKDIR /silex
 
-RUN composer.phar install --no-progress
+RUN php composer.phar install --no-progress
 
 CMD service php7.2-fpm start && \
     nginx -c /silex/deploy/nginx.conf -g "daemon off;"

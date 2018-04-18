@@ -21,7 +21,7 @@ RUN sed -i "s|listen = /run/php/php7.2-fpm.sock|listen = /run/php/php5.6-fpm.soc
 ADD ./ /php
 WORKDIR /php
 
-RUN composer.phar install --no-progress
+RUN php composer.phar install --no-progress
 
 RUN chmod -R 777 /php
 
