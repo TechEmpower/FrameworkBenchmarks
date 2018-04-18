@@ -1,0 +1,27 @@
+need copy classes:
+
+AnnotationVisitor.java
+AnnotationWriter.java
+Attribute.java
+ByteVector.java
+ClassReader.java
+ClassVisitor.java
+ClassWriter.java
+Context.java
+CurrentFrame.java
+Edge.java
+FieldVisitor.java
+FieldWriter.java
+Frame.java
+Handle.java
+Handler.java
+Item.java
+Label.java
+MethodVisitor.java
+MethodWriter.java
+ModuleVisitor.java
+ModuleWriter.java
+Opcodes.java
+Type.java
+TypePath.java
+TypeReference.java
