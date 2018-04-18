@@ -62,7 +62,6 @@ env:
      - "TESTDIR=Java/play2-java"
      - "TESTDIR=Java/proteus"
      - "TESTDIR=Java/rapidoid"
-     - "TESTDIR=Java/redkale"
      - "TESTDIR=Java/restexpress"
      - "TESTDIR=Java/revenj-jvm"
      - "TESTDIR=Java/servlet"
