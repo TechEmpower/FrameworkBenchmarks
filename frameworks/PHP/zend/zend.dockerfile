@@ -24,7 +24,7 @@ WORKDIR /zend
 RUN mkdir -p data/cache
 RUN chmod 777 data/cache
 
-RUN php composer.phar install --no-progress
+RUN composer.phar install
 
 CMD service php7.2-fpm start && \
     nginx -c /zend/deploy/nginx.conf -g "daemon off;"

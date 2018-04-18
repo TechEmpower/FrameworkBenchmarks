@@ -21,7 +21,7 @@ RUN sed -i "s|listen = /run/php/php7.2-fpm.sock|listen = /run/php/php5.6-fpm.soc
 ADD ./ /lithium
 WORKDIR /lithium
 
-RUN php composer.phar install --no-progress
+RUN composer.phar install
 
 RUN chmod -R 777 /lithium
 

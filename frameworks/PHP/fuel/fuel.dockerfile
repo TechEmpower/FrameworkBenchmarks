@@ -21,7 +21,7 @@ RUN sed -i "s|listen = /run/php/php7.2-fpm.sock|listen = /run/php/php5.6-fpm.soc
 ADD ./ /fuel
 WORKDIR /fuel
 
-RUN php composer.phar install --no-progress
+RUN composer.phar install
 
 CMD service php5.6-fpm start && \
     nginx -c /fuel/deploy/nginx.conf -g "daemon off;"

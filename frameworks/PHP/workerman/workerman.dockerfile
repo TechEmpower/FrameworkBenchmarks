@@ -20,6 +20,6 @@ COPY deploy/conf/* /etc/php/7.2/fpm/
 ADD ./ /workerman
 WORKDIR /workerman
 
-RUN php composer.phar install --no-progress
+RUN composer.phar install
 
 CMD php /workerman/server.php start

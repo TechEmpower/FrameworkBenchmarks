@@ -20,7 +20,7 @@ COPY deploy/conf/* /etc/php/7.2/fpm/
 ADD ./ /silex
 WORKDIR /silex
 
-RUN php composer.phar install --no-progress
+RUN composer.phar install
 
 RUN mv /silex/web/index_raw.php /silex/web/index.php
 

@@ -21,7 +21,7 @@ RUN sed -i "s|listen = /run/php/php7.2-fpm.sock|listen = /run/php/php5.6-fpm.soc
 ADD ./ /clancats
 WORKDIR /clancats
 
-RUN php composer.phar install --no-progress
+RUN composer.phar install
 
 RUN git clone --branch v2.0.6 https://github.com/ClanCats/Framework.git clancatsapp
 RUN cp -r app/ clancatsapp/CCF/

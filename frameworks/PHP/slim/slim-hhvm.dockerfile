@@ -20,7 +20,7 @@ RUN php -r "unlink('composer-setup.php');"
 ADD ./ /slim
 WORKDIR /slim
 
-RUN php composer.phar install --no-progress
+RUN composer.phar install
 
 RUN chmod -R 777 /slim
 

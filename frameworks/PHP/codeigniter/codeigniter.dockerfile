@@ -20,7 +20,7 @@ COPY deploy/conf/* /etc/php/7.2/fpm/
 ADD ./ /codeigniter
 WORKDIR /codeigniter
 
-RUN php composer.phar install --no-progress
+RUN composer.phar install
 
 CMD service php7.2-fpm start && \
     nginx -c /codeigniter/deploy/nginx-fpm.conf -g "daemon off;"

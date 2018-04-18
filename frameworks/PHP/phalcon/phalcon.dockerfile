@@ -22,7 +22,7 @@ WORKDIR /phalcon
 
 RUN apt install -yqq php7.2-phalcon
 
-RUN php composer.phar install --no-progress
+RUN composer.phar install
 
 RUN chmod -R 777 app
 

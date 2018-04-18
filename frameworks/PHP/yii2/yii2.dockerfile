@@ -20,7 +20,7 @@ COPY deploy/conf/* /etc/php/7.2/fpm/
 ADD ./ /yii2
 WORKDIR /yii2
 
-RUN php composer.phar install --no-progress
+RUN composer.phar install
 
 CMD service php7.2-fpm start && \
     nginx -c /yii2/deploy/nginx-fpm.conf -g "daemon off;"
