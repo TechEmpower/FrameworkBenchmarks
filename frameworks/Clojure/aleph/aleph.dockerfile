@@ -3,4 +3,4 @@ WORKDIR /aleph
 COPY src src
 COPY project.clj project.clj
 RUN lein uberjar
-CMD ["java", "-server", "-Xmx2g", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=10", "-jar", "target/hello-aleph-standalone.jar"]
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-jar", "target/hello-aleph-standalone.jar"]
