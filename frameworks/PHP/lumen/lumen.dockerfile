@@ -21,7 +21,7 @@ ENV PATH /composer:${PATH}
 ADD ./ /lumen
 WORKDIR /lumen
 
-RUN composer.phar install --no-progress
+RUN php composer.phar install --no-progress
 
 RUN mkdir -p /lumen/storage
 RUN mkdir -p /lumen/storage/framework/sessions

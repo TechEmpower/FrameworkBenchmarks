@@ -20,7 +20,7 @@ ENV PATH /composer:${PATH}
 ADD ./ /kohana
 WORKDIR /kohana
 
-RUN composer.phar install --no-progress
+RUN php composer.phar install --no-progress
 
 RUN chmod -R 777 /kohana
 

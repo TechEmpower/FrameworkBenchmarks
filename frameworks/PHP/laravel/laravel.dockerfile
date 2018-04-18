@@ -28,7 +28,7 @@ RUN mkdir -p /laravel/storage/framework/cache
 
 RUN chmod -R 777 /laravel
 
-RUN composer.phar install --no-progress
+RUN php composer.phar install --no-progress
 
 RUN php artisan config:cache
 RUN php artisan route:cache

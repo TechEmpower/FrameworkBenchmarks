@@ -20,7 +20,7 @@ ENV PATH /composer:${PATH}
 ADD ./ /slim
 WORKDIR /slim
 
-RUN composer.phar install --no-progress
+RUN php composer.phar install --no-progress
 
 RUN chmod -R 777 /slim
 

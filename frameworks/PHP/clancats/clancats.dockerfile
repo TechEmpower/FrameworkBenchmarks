@@ -21,7 +21,7 @@ ENV PATH /composer:${PATH}
 ADD ./ /clancats
 WORKDIR /clancats
 
-RUN composer.phar install --no-progress
+RUN php composer.phar install --no-progress
 
 RUN git clone --branch v2.0.6 https://github.com/ClanCats/Framework.git clancatsapp
 RUN cp -r app/ clancatsapp/CCF/

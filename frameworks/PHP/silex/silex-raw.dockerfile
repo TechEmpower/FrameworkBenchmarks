@@ -20,7 +20,7 @@ ENV PATH /composer:${PATH}
 ADD ./ /silex
 WORKDIR /silex
 
-RUN composer.phar install --no-progress
+RUN php composer.phar install --no-progress
 
 RUN mv /silex/web/index_raw.php /silex/web/index.php
 

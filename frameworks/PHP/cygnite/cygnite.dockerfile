@@ -21,7 +21,7 @@ ENV PATH /composer:${PATH}
 ADD ./ /cygnite
 WORKDIR /cygnite
 
-RUN composer.phar install --no-progress
+RUN php composer.phar install --no-progress
 
 CMD service php5.6-fpm start && \
     nginx -c /cygnite/deploy/nginx.conf -g "daemon off;"
