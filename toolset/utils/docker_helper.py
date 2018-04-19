@@ -44,6 +44,7 @@ def clean(benchmarker_config):
                 client.images.remove(image.id, force=True)
     client.images.prune()
 
+
 def __build(base_url, path, build_log_file, log_prefix, dockerfile, tag):
     '''
     Builds docker containers using docker-py low-level api
@@ -118,8 +119,8 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
                 log_prefix=log_prefix,
                 path=test.directory,
                 dockerfile=test_docker_file,
-                tag="techempower/tfb.test.%s" %
-                    test_docker_file.replace(".dockerfile", ""))
+                tag="techempower/tfb.test.%s" % test_docker_file.replace(
+                    ".dockerfile", ""))
         except Exception:
             return 1
 
@@ -179,7 +180,8 @@ def run(benchmarker_config, test, run_log_dir):
             extra_hosts=extra_hosts,
             privileged=True,
             ulimits=ulimit,
-            sysctls=sysctl)
+            sysctls=sysctl,
+            log_config={'type': None})
 
         watch_thread = Thread(
             target=watch_container,
@@ -285,7 +287,8 @@ def start_database(benchmarker_config, database):
         network_mode=benchmarker_config.network_mode,
         detach=True,
         ulimits=ulimit,
-        sysctls=sysctl)
+        sysctls=sysctl,
+        log_config={'type': None})
 
     # Sleep until the database accepts connections
     slept = 0
@@ -301,6 +304,7 @@ def start_database(benchmarker_config, database):
 
     return container
 
+
 def build_wrk(benchmarker_config):
     '''
     Builds the techempower/tfb.wrk container
@@ -312,6 +316,7 @@ def build_wrk(benchmarker_config):
         log_prefix="wrk: ",
         build_log_file=os.devnull,
         tag="techempower/tfb.wrk")
+
 
 def test_client_connection(benchmarker_config, url):
     '''
@@ -360,4 +365,5 @@ def benchmark(benchmarker_config, script, variables, raw_file):
             detach=True,
             stderr=True,
             ulimits=ulimit,
-            sysctls=sysctl), raw_file)
+            sysctls=sysctl,
+            log_config={'type': None}), raw_file)
