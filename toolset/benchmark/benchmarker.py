@@ -129,7 +129,7 @@ class Benchmarker:
             # Start database container
             if test.database.lower() != "none":
                 database_container = docker_helper.start_database(
-                    self.config, test, test.database.lower())
+                    self.config, test.database.lower())
                 if database_container is None:
                     message = "ERROR: Problem building/running database container"
                     self.results.write_intermediate(test.name, message)
@@ -271,7 +271,7 @@ class Benchmarker:
 
     def __begin_logging(self, framework_test, test_type):
         '''
-        Starts a thread to monitor the resource usage, to be synced with the 
+        Starts a thread to monitor the resource usage, to be synced with the
         client's time.
         TODO: MySQL and InnoDB are possible. Figure out how to implement them.
         '''
@@ -295,7 +295,7 @@ class Benchmarker:
 
     def __is_port_bound(self, port):
         '''
-        Check if the requested port is available. If it isn't available, then a 
+        Check if the requested port is available. If it isn't available, then a
         previous test probably didn't shutdown properly.
         '''
         port = int(port)
