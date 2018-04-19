@@ -30,6 +30,8 @@ To get started developing you'll need to install [docker](https://docs.docker.co
 
 The run script is pretty wordy, but each and every flag is required. If you are using windows, either adapt the docker command at the end of the `./tfb` shell script (replacing `${SCRIPT_ROOT}` with `/c/path/to/FrameworkBenchmarks`), or use vagrant.
 
+The command looks like this: `docker run -it --rm --network tfb -v /var/run/docker.sock:/var/run/docker.sock -v [FWROOT]:/FrameworkBenchmarks techempower/tfb [ARGS]`
+
 - `-it` tells docker to run this in 'interactive' mode and simulate a TTY, so that `ctrl+c` is propagated.
 - `--rm` tells docker to remove the container as soon as the toolset finishes running, meaning there aren't hundreds of stopped containers lying around.
 - `--network=tfb` tells the container to join the 'tfb' Docker virtual network
