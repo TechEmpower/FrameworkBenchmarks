@@ -303,6 +303,17 @@ def start_database(benchmarker_config, database):
 
     return container
 
+def build_wrk(benchmarker_config):
+    '''
+    Builds the techempower/tfb.wrk container
+    '''
+    __build(
+        base_url=benchmarker_config.client_docker_host,
+        path=os.path.join(benchmarker_config.fwroot, "toolset", "wrk"),
+        dockerfile="wrk.dockerfile",
+        log_prefix="wrk: ",
+        build_log_file=os.devnull,
+        tag="techempower/tfb.wrk")
 
 def test_client_connection(benchmarker_config, url):
     '''
@@ -311,13 +322,6 @@ def test_client_connection(benchmarker_config, url):
     '''
     client = docker.DockerClient(
         base_url=benchmarker_config.client_docker_host)
-
-    try:
-        client.images.get('techempower/tfb.wrk:latest')
-    except:
-        log("Attempting docker pull for image (this can take some time)",
-            prefix="techempower/tfb.wrk:latest: ")
-        client.images.pull('techempower/tfb.wrk:latest')
 
     try:
         client.containers.run(

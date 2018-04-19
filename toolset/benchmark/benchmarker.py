@@ -42,6 +42,8 @@ class Benchmarker:
         any_failed = False
         # Run tests
         log("Running Tests...", border='=')
+        docker_helper.build_wrk(self.config)
+
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
             for test in all_tests:
