@@ -2,10 +2,10 @@ FROM ubuntu:16.04
 
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
-RUN apt-get -yq update
+RUN apt update -yqq
 
 # WARNING: DONT PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
-RUN apt-get -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+RUN apt -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   git-core \
   cloc dstat                    `# Collect resource usage statistics` \
   python-dev \
