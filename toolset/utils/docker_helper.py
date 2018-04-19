@@ -46,8 +46,7 @@ def clean(benchmarker_config):
 
 def __build(base_url, path, build_log_file, log_prefix, dockerfile, tag):
     '''
-    Builds the dependency chain as well as the test implementation docker images
-    for the given tests.
+    Builds docker containers using docker-py low-level api
     '''
 
     with open(build_log_file, 'w') as build_log:
@@ -96,8 +95,7 @@ def __build(base_url, path, build_log_file, log_prefix, dockerfile, tag):
 
 def build(benchmarker_config, test_names, build_log_dir=os.devnull):
     '''
-    Builds the dependency chain as well as the test implementation docker images
-    for the given tests.
+    Builds the test docker containers
     '''
     tests = gather_tests(
         include=test_names, benchmarker_config=benchmarker_config)
