@@ -1,4 +1,4 @@
-FROM openjdk:9-jdk-slim as ant
+FROM openjdk:10-jdk-slim
 RUN apt update -qqy && apt install -yqq ant curl
 
 WORKDIR /gemini
