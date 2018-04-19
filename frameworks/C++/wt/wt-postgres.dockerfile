@@ -3,7 +3,7 @@ FROM buildpack-deps:xenial
 RUN apt update -yqq && apt install -yqq software-properties-common unzip cmake
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y
-RUN apt-get -yq update
+RUN apt update -yqq
 RUN apt install -yqq gcc-6 g++-6
 
 ENV WT_VERSION 4.0.2

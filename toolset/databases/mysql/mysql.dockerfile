@@ -18,7 +18,7 @@ RUN apt update
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/data-dir select 'Y'\""]
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/root-pass password secret\""]
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/re-root-pass password secret\""]
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server
+RUN DEBIAN_FRONTEND=noninteractive apt -y install mysql-server
 
 RUN mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
 RUN cp my.cnf /etc/mysql/my.cnf

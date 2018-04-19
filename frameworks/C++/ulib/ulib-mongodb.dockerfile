@@ -23,7 +23,7 @@ ENV LC_ALL en_US.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
-    apt-get -yq update && \
+    apt update -yqq && \
     apt install -yqq gcc-6 g++-6
 
 ENV IROOT=/install

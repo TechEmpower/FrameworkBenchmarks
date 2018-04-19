@@ -15,8 +15,8 @@ ADD create-postgres-database.sql create-postgres-database.sql
 ADD create-postgres.sql create-postgres.sql
 
 # install postgresql on database machine
-RUN apt-get -y update
-RUN apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql
+RUN apt -y update
+RUN apt -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql
 
 ENV PG_VERSION 9.5
 
