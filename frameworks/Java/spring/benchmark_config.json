@@ -11,18 +11,18 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "spring",
       "language": "Java",
       "flavor": "None",
       "orm": "Full",
-      "platform": "Undertow",
+      "platform": "Tomcat",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "spring",
       "notes": "",
-      "versus": "servlet"
+      "versus": ""
     }
   }]
 }
