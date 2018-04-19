@@ -19,7 +19,7 @@ RUN grails -Dgrails.work.dir=${GRAILS_WORK_DIR} -non-interactive -plain-output c
 RUN grails -Dgrails.work.dir=${GRAILS_WORK_DIR} prod -non-interactive -plain-output war
 
 WORKDIR /resin
-RUN curl -sL http://www.caucho.com/download/resin-4.0.55.tar.gz | tar xz --strip-components=1
+RUN curl -sL http://caucho.com/download/resin-4.0.56.tar.gz | tar xz --strip-components=1
 RUN rm -rf webapps/*
 RUN cp /grails/target/hello-0.1.war webapps/ROOT.war
 CMD ["java", "-jar", "lib/resin.jar", "console"]
