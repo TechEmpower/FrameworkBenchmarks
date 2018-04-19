@@ -181,6 +181,7 @@ def run(benchmarker_config, test, run_log_dir):
             privileged=True,
             ulimits=ulimit,
             sysctls=sysctl,
+            remove=True,
             log_config={'type': None})
 
         watch_thread = Thread(
@@ -288,6 +289,7 @@ def start_database(benchmarker_config, database):
         detach=True,
         ulimits=ulimit,
         sysctls=sysctl,
+        remove=True,
         log_config={'type': None})
 
     # Sleep until the database accepts connections
@@ -330,6 +332,8 @@ def test_client_connection(benchmarker_config, url):
         client.containers.run(
             'techempower/tfb.wrk',
             'curl %s' % url,
+            remove=True,
+            log_config={'type': None},
             network=benchmarker_config.network,
             network_mode=benchmarker_config.network_mode)
     except:
@@ -366,4 +370,5 @@ def benchmark(benchmarker_config, script, variables, raw_file):
             stderr=True,
             ulimits=ulimit,
             sysctls=sysctl,
+            remove=True,
             log_config={'type': None}), raw_file)
