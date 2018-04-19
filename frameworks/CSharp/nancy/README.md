@@ -50,7 +50,7 @@ comparing a variety of web platforms.
 
 ### Mono Installation
 
-    sudo apt-get install build-essential autoconf automake libtool zlib1g-dev git
+    sudo apt install build-essential autoconf automake libtool zlib1g-dev git
 
     git clone git://github.com/mono/mono
     cd mono

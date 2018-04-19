@@ -1,6 +1,7 @@
 FROM haskell:8.2.1
 
-RUN apt update -yqq && apt install -yqq xz-utils make libmysqlclient-dev pkg-config libpcre3 libpcre3-dev
+RUN apt update -yqq && apt install -yqq xz-utils make
+RUN apt install -yqq libmysqlclient-dev pkg-config libpcre3 libpcre3-dev
 
 COPY ./bench /snap
 WORKDIR /snap

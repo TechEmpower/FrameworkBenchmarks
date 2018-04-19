@@ -1,8 +1,8 @@
 FROM ubuntu:16.04
 
-RUN apt-get update
+RUN apt update
 
-RUN apt-get install -qqy software-properties-common build-essential curl locales wget unzip git \
+RUN apt install -yqq software-properties-common build-essential curl locales wget unzip git \
     libmysqlclient-dev libpq-dev \
     libpcre3 libpcre3-dev \
     libssl-dev libcurl4-openssl-dev \
@@ -24,7 +24,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
     apt-get -yq update && \
-    apt-get install -qqy gcc-6 g++-6
+    apt install -yqq gcc-6 g++-6
 
 ENV IROOT=/install
 ENV ULIB_VERSION=1.4.2

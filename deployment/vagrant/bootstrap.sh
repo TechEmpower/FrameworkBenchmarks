@@ -12,8 +12,8 @@ if [ ! -e "~/.firstboot" ]; then
   echo "Installing docker"
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  sudo apt-get update
-  sudo apt-get install -yqq docker-ce
+  sudo apt update
+  sudo apt install -yqq docker-ce
 
   # Setting up passwordless sudo
   echo "vagrant ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
