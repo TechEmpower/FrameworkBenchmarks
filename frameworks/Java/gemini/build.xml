@@ -1,14 +1,3 @@
-<!--
-  
-  Ant build script for GeminiHello.  Running this script produces a .zip archive 
-  with the following structure:
-  
-    GeminiHello-yyyy-MM-dd.zip
-       |~ GeminiHello.war
-       |~ Source
-       |~~~ (The current source code of GeminiHello and Gemini.)
-  
--->
 <project default="build" name="geminihello" xmlns:ivy="antlib:org.apache.ivy.ant" >
 
   <target name="compile">
@@ -32,6 +21,10 @@
      </classpath>
     </javac>
     
+  </target>
+
+  <target name="package" depends="compile">
+    <war destfile="gemini.war" basedir="Docroot"/>
   </target>
 
   <property name="ivy.install.version" value="2.4.0" />
