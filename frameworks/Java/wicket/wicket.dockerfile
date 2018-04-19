@@ -1,4 +1,4 @@
-FROM maven:3.5.3-jdk-9-slim as maven
+FROM maven:3.5.3-jdk-8-slim as maven
 WORKDIR /wicket
 COPY src src
 COPY pom.xml pom.xml
