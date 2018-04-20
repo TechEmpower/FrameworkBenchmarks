@@ -10,7 +10,6 @@ from threading import Thread
 from colorama import Fore, Style
 
 from toolset.utils.output_helper import log
-from toolset.utils.metadata_helper import gather_tests
 from toolset.utils.database_helper import test_database
 
 
@@ -45,12 +44,12 @@ def clean(benchmarker_config):
     client.images.prune()
 
 
-def __build(base_url, path, build_log_file, log_prefix, dockerfile, tag):
+def __build(benchmarker, base_url, path, build_log_file, log_prefix, dockerfile, tag):
     '''
     Builds docker containers using docker-py low-level api
     '''
 
-    start = time.time()
+    benchmarker.timeLogger.log_build_start()
     with open(build_log_file, 'w') as build_log:
         try:
             client = docker.APIClient(base_url=base_url)
@@ -92,20 +91,19 @@ def __build(base_url, path, build_log_file, log_prefix, dockerfile, tag):
                 file=build_log,
                 color=Fore.RED)
             log(tb, prefix=log_prefix, file=build_log)
+            benchmarker.timeLogger.log_build_end(
+                log_prefix=log_prefix, file=build_log)
             raise
-    end = time.time()
-    log("Total build time: %s seconds" % int(end - start),
-        prefix=log_prefix,
-        file=build_log,
-        color=Fore.YELLOW)
+    benchmarker.timeLogger.log_build_end(
+        log_prefix=log_prefix, file=build_log)
 
 
-def build(benchmarker_config, test_names, build_log_dir=os.devnull):
+def build(benchmarker, test_names, build_log_dir=os.devnull):
     '''
     Builds the test docker containers
     '''
-    tests = gather_tests(
-        include=test_names, benchmarker_config=benchmarker_config)
+    tests = benchmarker.metadata.gather_tests(
+        include=test_names)
 
     for test in tests:
         log_prefix = "%s: " % test.name
@@ -120,7 +118,8 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
 
         try:
             __build(
-                base_url=benchmarker_config.server_docker_host,
+                benchmarker=benchmarker,
+                base_url=benchmarker.config.server_docker_host,
                 build_log_file=build_log_file,
                 log_prefix=log_prefix,
                 path=test.directory,
@@ -133,12 +132,12 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
     return 0
 
 
-def run(benchmarker_config, test, run_log_dir):
+def run(benchmarker, test, run_log_dir):
     '''
     Run the given Docker container(s)
     '''
     client = docker.DockerClient(
-        base_url=benchmarker_config.server_docker_host)
+        base_url=benchmarker.config.server_docker_host)
 
     log_prefix = "%s: " % test.name
     container = None
@@ -155,11 +154,11 @@ def run(benchmarker_config, test, run_log_dir):
         extra_hosts = None
         name = "tfb-server"
 
-        if benchmarker_config.network is None:
+        if benchmarker.config.network is None:
             extra_hosts = {
-                socket.gethostname(): str(benchmarker_config.server_host),
-                'tfb-server': str(benchmarker_config.server_host),
-                'tfb-database': str(benchmarker_config.database_host)
+                socket.gethostname(): str(benchmarker.config.server_host),
+                'tfb-server': str(benchmarker.config.server_host),
+                'tfb-database': str(benchmarker.config.database_host)
             }
             name = None
 
@@ -178,8 +177,8 @@ def run(benchmarker_config, test, run_log_dir):
         container = client.containers.run(
             "techempower/tfb.test.%s" % test.name,
             name=name,
-            network=benchmarker_config.network,
-            network_mode=benchmarker_config.network_mode,
+            network=benchmarker.config.network,
+            network_mode=benchmarker.config.network_mode,
             stderr=True,
             detach=True,
             init=True,
@@ -212,7 +211,7 @@ def run(benchmarker_config, test, run_log_dir):
     return container
 
 
-def stop(benchmarker_config=None,
+def stop(benchmarker,
          container=None,
          database_container=None,
          test=None):
@@ -220,7 +219,7 @@ def stop(benchmarker_config=None,
     Attempts to stop the running test container.
     '''
     client = docker.DockerClient(
-        base_url=benchmarker_config.server_docker_host)
+        base_url=benchmarker.config.server_docker_host)
     if container is None:
         for container in client.containers.list():
             if len(
@@ -232,7 +231,7 @@ def stop(benchmarker_config=None,
         container.stop()
 
     database_client = docker.DockerClient(
-        base_url=benchmarker_config.database_docker_host)
+        base_url=benchmarker.config.database_docker_host)
     # Stop the database container
     if database_container is None:
         for container in database_client.containers.list():
@@ -245,7 +244,7 @@ def stop(benchmarker_config=None,
 
     client.containers.prune()
 
-    if benchmarker_config.server_docker_host != benchmarker_config.database_docker_host:
+    if benchmarker.config.server_docker_host != benchmarker.config.database_docker_host:
         database_client.containers.prune()
 
 
@@ -260,7 +259,7 @@ def find(path, pattern):
                 return os.path.join(root, name)
 
 
-def start_database(benchmarker_config, database):
+def start_database(benchmarker, database):
     '''
     Sets up a container for the given database and port, and starts said docker
     container.
@@ -268,12 +267,13 @@ def start_database(benchmarker_config, database):
     image_name = "techempower/%s:latest" % database
     log_prefix = image_name + ": "
 
-    database_dir = os.path.join(benchmarker_config.fwroot, "toolset",
+    database_dir = os.path.join(benchmarker.config.fwroot, "toolset",
                                 "databases", database)
     docker_file = "%s.dockerfile" % database
 
     __build(
-        base_url=benchmarker_config.database_docker_host,
+        benchmarker=benchmarker,
+        base_url=benchmarker.config.database_docker_host,
         path=database_dir,
         dockerfile=docker_file,
         log_prefix=log_prefix,
@@ -281,7 +281,7 @@ def start_database(benchmarker_config, database):
         tag="techempower/%s" % database)
 
     client = docker.DockerClient(
-        base_url=benchmarker_config.database_docker_host)
+        base_url=benchmarker.config.database_docker_host)
 
     sysctl = {'net.core.somaxconn': 65535, 'kernel.sem': "250 32000 256 512"}
 
@@ -290,8 +290,8 @@ def start_database(benchmarker_config, database):
     container = client.containers.run(
         "techempower/%s" % database,
         name="tfb-database",
-        network=benchmarker_config.network,
-        network_mode=benchmarker_config.network_mode,
+        network=benchmarker.config.network,
+        network_mode=benchmarker.config.network_mode,
         detach=True,
         ulimits=ulimit,
         sysctls=sysctl,
@@ -305,7 +305,7 @@ def start_database(benchmarker_config, database):
     while not database_ready and slept < max_sleep:
         time.sleep(1)
         slept += 1
-        database_ready = test_database(benchmarker_config, database)
+        database_ready = test_database(benchmarker.config, database)
 
     if not database_ready:
         log("Database was not ready after startup", prefix=log_prefix)
@@ -313,26 +313,27 @@ def start_database(benchmarker_config, database):
     return container
 
 
-def build_wrk(benchmarker_config):
+def build_wrk(benchmarker):
     '''
     Builds the techempower/tfb.wrk container
     '''
     __build(
-        base_url=benchmarker_config.client_docker_host,
-        path=os.path.join(benchmarker_config.fwroot, "toolset", "wrk"),
+        benchmarker=benchmarker,
+        base_url=benchmarker.config.client_docker_host,
+        path=os.path.join(benchmarker.config.fwroot, "toolset", "wrk"),
         dockerfile="wrk.dockerfile",
         log_prefix="wrk: ",
         build_log_file=os.devnull,
         tag="techempower/tfb.wrk")
 
 
-def test_client_connection(benchmarker_config, url):
+def test_client_connection(benchmarker, url):
     '''
     Tests that the app server at the given url responds successfully to a
     request.
     '''
     client = docker.DockerClient(
-        base_url=benchmarker_config.client_docker_host)
+        base_url=benchmarker.config.client_docker_host)
 
     try:
         client.containers.run(
@@ -340,15 +341,15 @@ def test_client_connection(benchmarker_config, url):
             'curl %s' % url,
             remove=True,
             log_config={'type': None},
-            network=benchmarker_config.network,
-            network_mode=benchmarker_config.network_mode)
+            network=benchmarker.config.network,
+            network_mode=benchmarker.config.network_mode)
     except:
         return False
 
     return True
 
 
-def benchmark(benchmarker_config, script, variables, raw_file):
+def benchmark(benchmarker, script, variables, raw_file):
     '''
     Runs the given remote_script on the wrk container on the client machine.
     '''
@@ -359,7 +360,7 @@ def benchmark(benchmarker_config, script, variables, raw_file):
                 log(line, file=benchmark_file)
 
     client = docker.DockerClient(
-        base_url=benchmarker_config.client_docker_host)
+        base_url=benchmarker.config.client_docker_host)
 
     sysctl = {'net.core.somaxconn': 65535}
 
@@ -370,8 +371,8 @@ def benchmark(benchmarker_config, script, variables, raw_file):
             "techempower/tfb.wrk",
             "/bin/bash /%s" % script,
             environment=variables,
-            network=benchmarker_config.network,
-            network_mode=benchmarker_config.network_mode,
+            network=benchmarker.config.network,
+            network_mode=benchmarker.config.network_mode,
             detach=True,
             stderr=True,
             ulimits=ulimit,

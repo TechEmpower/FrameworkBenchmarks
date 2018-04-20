@@ -1,4 +1,3 @@
-from toolset.utils.metadata_helper import gather_remaining_tests, gather_frameworks
 from toolset.utils.output_helper import log
 
 import os
@@ -19,11 +18,12 @@ from colorama import Fore, Style
 
 
 class Results:
-    def __init__(self, config):
+    def __init__(self, benchmarker):
         '''
         Constructor
         '''
-        self.config = config
+        self.benchmarker = benchmarker
+        self.config = benchmarker.config
         self.directory = os.path.join(self.config.fwroot, "results",
                                       self.config.timestamp)
         try:
@@ -50,7 +50,7 @@ class Results:
         self.queryIntervals = self.config.query_levels
         self.cachedQueryIntervals = self.config.cached_query_levels
         self.frameworks = [
-            t.name for t in gather_remaining_tests(self.config, self)
+            t.name for t in benchmarker.metadata.gather_remaining_tests()
         ]
         self.duration = self.config.duration
         self.rawData = dict()
@@ -250,7 +250,7 @@ class Results:
     def report_verify_results(self, framework_test, test_type, result):
         '''
         Used by FrameworkTest to add verification details to our results
-        
+
         TODO: Technically this is an IPC violation - we are accessing
         the parent process' memory from the child process
         '''
@@ -261,7 +261,7 @@ class Results:
     def report_benchmark_results(self, framework_test, test_type, results):
         '''
         Used by FrameworkTest to add benchmark data to this
-        
+
         TODO: Technically this is an IPC violation - we are accessing
         the parent process' memory from the child process
         '''
@@ -285,7 +285,7 @@ class Results:
         Finishes these results.
         '''
         if not self.config.parse:
-            tests = gather_remaining_tests(self.config, self)
+            tests = self.benchmarker.metadata.gather_remaining_tests()
             # Normally you don't have to use Fore.BLUE before each line, but
             # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
             # or stream flush, so we have to ensure that the color code is printed repeatedly
@@ -297,7 +297,7 @@ class Results:
                 log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
                     for test_type, result in self.verify[
-                            test.name].iteritems():
+                        test.name].iteritems():
                         if result.upper() == "PASS":
                             color = Fore.GREEN
                         elif result.upper() == "WARN":
@@ -311,8 +311,6 @@ class Results:
                         "NO RESULTS (Did framework launch?)")
             log('', border='=', border_bottom='', color=Fore.CYAN)
 
-        log("%sTime to complete: %s seconds" %
-            (Style.RESET_ALL, str(int(time.time() - self.config.start_time))))
         log("Results are saved in " + self.directory)
 
     #############################################################################
@@ -356,8 +354,7 @@ class Results:
         '''
         Counts the significant lines of code for all tests and stores in results.
         '''
-        frameworks = gather_frameworks(self.config.test, self.config.exclude,
-                                       self.config)
+        frameworks = self.benchmarker.metadata.gather_frameworks(self.config.test, self.config.exclude)
 
         jsonResult = {}
         for framework, testlist in frameworks.items():
@@ -402,8 +399,8 @@ class Results:
         '''
         Count the git commits for all the framework tests
         '''
-        frameworks = gather_frameworks(self.config.test, self.config.exclude,
-                                       self.config)
+        frameworks = self.benchmarker.metadata.gather_frameworks(
+            self.config.test, self.config.exclude)
 
         def count_commit(directory, jsonResult):
             command = "git rev-list HEAD -- " + directory + " | sort -u | wc -l"
@@ -469,7 +466,7 @@ class Results:
     def __parse_stats(self, framework_test, test_type, start_time, end_time,
                       interval):
         '''
-        For each test type, process all the statistics, and return a multi-layered 
+        For each test type, process all the statistics, and return a multi-layered
         dictionary that has a structure as follows:
 
         (timestamp)
@@ -512,18 +509,18 @@ class Results:
 
     def __calculate_average_stats(self, raw_stats):
         '''
-        We have a large amount of raw data for the statistics that may be useful 
-        for the stats nerds, but most people care about a couple of numbers. For 
+        We have a large amount of raw data for the statistics that may be useful
+        for the stats nerds, but most people care about a couple of numbers. For
         now, we're only going to supply:
           * Average CPU
           * Average Memory
           * Total network use
           * Total disk use
         More may be added in the future. If they are, please update the above list.
-        
+
         Note: raw_stats is directly from the __parse_stats method.
-        
-        Recall that this consists of a dictionary of timestamps, each of which 
+
+        Recall that this consists of a dictionary of timestamps, each of which
         contain a dictionary of stat categories which contain a dictionary of stats
         '''
         raw_stat_collection = dict()

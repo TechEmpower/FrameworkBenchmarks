@@ -5,10 +5,8 @@ import signal
 from toolset.benchmark.benchmarker import Benchmarker
 from toolset.utils.scaffolding import Scaffolding
 from toolset.utils import cleaner
-from toolset.utils.results_helper import Results
 from toolset.utils.benchmark_config import BenchmarkConfig
 from toolset.utils import docker_helper
-from toolset.utils.metadata_helper import gather_tests
 from toolset.utils.output_helper import log
 
 # Enable cross-platform colored output
@@ -206,35 +204,34 @@ def main(argv=None):
 
     global config
     config = BenchmarkConfig(args)
-    results = Results(config)
+    benchmarker = Benchmarker(config)
 
     if config.new:
-        Scaffolding(config)
+        Scaffolding(benchmarker)
 
     elif config.build:
         docker_helper.build(config, config.build)
 
     elif config.clean:
-        cleaner.clean(results)
+        cleaner.clean(benchmarker.results)
         docker_helper.clean(config)
 
     elif config.list_tests:
-        all_tests = gather_tests(benchmarker_config=config)
+        all_tests = benchmarker.metadata.gather_tests()
 
         for test in all_tests:
             log(test.name)
 
     elif config.parse != None:
         # TODO: broken
-        all_tests = gather_tests(benchmarker_config=config)
+        all_tests = benchmarker.metadata.gather_tests()
 
         for test in all_tests:
             test.parse_all()
 
-        results.parse(all_tests)
+        benchmarker.results.parse(all_tests)
 
     else:
-        benchmarker = Benchmarker(config, results)
         any_failed = benchmarker.run()
         if config.mode == "verify":
             return any_failed

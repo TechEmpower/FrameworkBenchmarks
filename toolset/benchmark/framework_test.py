@@ -10,15 +10,14 @@ from colorama import Fore, Style
 
 
 class FrameworkTest:
-    def __init__(self, name, directory, benchmarker_config, results, runTests,
+    def __init__(self, name, directory, benchmarker, runTests,
                  args):
         '''
         Constructor
         '''
         self.name = name
         self.directory = directory
-        self.benchmarker_config = benchmarker_config
-        self.results = results
+        self.benchmarker = benchmarker
         self.runTests = runTests
         self.approach = ""
         self.classification = ""
@@ -41,11 +40,11 @@ class FrameworkTest:
     # Public Methods
     ##########################################################################################
 
-    def start(self):
+    def start(self, benchmarker):
         '''
         Start the test implementation
         '''
-        test_log_dir = os.path.join(self.results.directory, self.name.lower())
+        test_log_dir = os.path.join(self.benchmarker.results.directory, self.name.lower())
         build_log_dir = os.path.join(test_log_dir, 'build')
         run_log_dir = os.path.join(test_log_dir, 'run')
 
@@ -58,16 +57,16 @@ class FrameworkTest:
         except OSError:
             pass
 
-        result = docker_helper.build(self.benchmarker_config, [self.name],
+        result = docker_helper.build(benchmarker, [self.name],
                                      build_log_dir)
         if result != 0:
             return None
 
-        return docker_helper.run(self.benchmarker_config, self, run_log_dir)
+        return docker_helper.run(benchmarker, self, run_log_dir)
 
     def is_accepting_requests(self):
         '''
-        Determines whether this test implementation is up and accepting 
+        Determines whether this test implementation is up and accepting
         requests.
         '''
         test_type = None
@@ -75,21 +74,21 @@ class FrameworkTest:
             test_type = any_type
             break
 
-        url = "http://%s:%s%s" % (self.benchmarker_config.server_host,
+        url = "http://%s:%s%s" % (self.benchmarker.config.server_host,
                                   self.port,
                                   self.runTests[test_type].get_url())
 
-        return docker_helper.test_client_connection(self.benchmarker_config,
+        return docker_helper.test_client_connection(self.benchmarker,
                                                     url)
 
     def verify_urls(self):
         '''
-        Verifys each of the URLs for this test. This will simply curl the URL and 
-        check for it's return status. For each url, a flag will be set on this 
+        Verifys each of the URLs for this test. This will simply curl the URL and
+        check for it's return status. For each url, a flag will be set on this
         object for whether or not it passed.
         Returns True if all verifications succeeded
         '''
-        log_path = os.path.join(self.results.directory, self.name.lower())
+        log_path = os.path.join(self.benchmarker.results.directory, self.name.lower())
         result = True
 
         def verify_type(test_type):
@@ -107,7 +106,7 @@ class FrameworkTest:
                     color=Fore.WHITE + Style.BRIGHT)
 
                 base_url = "http://%s:%s" % (
-                    self.benchmarker_config.server_host, self.port)
+                    self.benchmarker.config.server_host, self.port)
 
                 try:
                     # Verifies headers from the server. This check is made from the
@@ -121,7 +120,7 @@ class FrameworkTest:
                     if not any(result == 'fail'
                                for (result, reason, url) in results):
                         docker_helper.test_client_connection(
-                            self.benchmarker_config, base_url + test.get_url())
+                            self.benchmarker, base_url + test.get_url())
                 except ConnectionError as e:
                     results = [('fail', "Server did not respond to request",
                                 base_url)]
@@ -167,11 +166,11 @@ class FrameworkTest:
                 [output_result(r1, r2, url) for (r1, r2, url) in results]
 
                 if test.failed:
-                    self.results.report_verify_results(self, test_type, 'fail')
+                    self.benchmarker.results.report_verify_results(self, test_type, 'fail')
                 elif test.warned:
-                    self.results.report_verify_results(self, test_type, 'warn')
+                    self.benchmarker.results.report_verify_results(self, test_type, 'warn')
                 elif test.passed:
-                    self.results.report_verify_results(self, test_type, 'pass')
+                    self.benchmarker.results.report_verify_results(self, test_type, 'pass')
                 else:
                     raise Exception(
                         "Unknown error - test did not pass,warn,or fail")

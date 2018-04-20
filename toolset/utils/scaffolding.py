@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import os, re
 from shutil import copytree
-from toolset.utils.metadata_helper import gather_frameworks, gather_langauges
 
 
 class Scaffolding:
-    def __init__(self, benchmarker_config):
+    def __init__(self, benchmarker):
         print("""
 -------------------------------------------------------------------------------
     This wizard is intended to help build the scaffolding required for a new 
@@ -16,7 +15,8 @@ class Scaffolding:
 -------------------------------------------------------------------------------"""
               )
 
-        self.benchmarker_config = benchmarker_config
+        self.benchmarker = benchmarker
+        self.benchmarker_config = benchmarker.config
 
         try:
             self.__gather_display_name()
@@ -46,7 +46,7 @@ class Scaffolding:
         self.display_name = raw_input("Name: ").strip()
 
         found = False
-        for framework in gather_frameworks(config=self.benchmarker_config):
+        for framework in self.benchmarker.metadata.gather_frameworks():
             if framework.lower() == self.display_name.lower():
                 found = True
 
@@ -70,7 +70,7 @@ class Scaffolding:
     def __prompt_language(self):
         self.language = raw_input("Language: ").strip()
 
-        known_languages = gather_langauges(benchmarker_config)
+        known_languages = self.benchmarker.metadata.gather_langauges()
         language = None
         for lang in known_languages:
             if lang.lower() == self.language.lower():
