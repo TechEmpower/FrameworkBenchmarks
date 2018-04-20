@@ -3,5 +3,5 @@
   "dependencies": {
     "restify": "7.1.1"
   },
-  "main": "app.js"
+  "main": "server.js"
 }
