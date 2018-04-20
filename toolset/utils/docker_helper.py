@@ -223,7 +223,11 @@ def stop(benchmarker_config=None,
                 container.stop()
     else:
         # Stop the running container
-        container.stop()
+        try:
+            container.stop()
+        except Exception:
+            # Suppress "No such container" errors
+            pass
 
     database_client = docker.DockerClient(
         base_url=benchmarker_config.database_docker_host)
@@ -235,7 +239,11 @@ def stop(benchmarker_config=None,
             ) > 0 and 'techempower' in container.image.tags[0] and 'tfb:latest' not in container.image.tags[0]:
                 container.stop()
     else:
-        database_container.stop()
+        try:
+            database_container.stop()
+        except Exception:
+            # Suppress "No such container" errors
+            pass
 
     client.containers.prune()
 
@@ -340,6 +348,19 @@ def test_client_connection(benchmarker_config, url):
         return False
 
     return True
+
+
+def server_container_exists(benchmarker_config, container_id_or_name):
+    '''
+    Returns True if the container still exists on the server.
+    '''
+    client = docker.DockerClient(
+        base_url=benchmarker_config.server_docker_host)
+    try:
+        client.containers.get(container_id_or_name)
+        return True
+    except:
+        return False
 
 
 def benchmark(benchmarker_config, script, variables, raw_file):
