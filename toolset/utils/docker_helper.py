@@ -50,6 +50,7 @@ def __build(base_url, path, build_log_file, log_prefix, dockerfile, tag):
     Builds docker containers using docker-py low-level api
     '''
 
+    start = time.time()
     with open(build_log_file, 'w') as build_log:
         try:
             client = docker.APIClient(base_url=base_url)
@@ -92,6 +93,11 @@ def __build(base_url, path, build_log_file, log_prefix, dockerfile, tag):
                 color=Fore.RED)
             log(tb, prefix=log_prefix, file=build_log)
             raise
+    end = time.time()
+    log("Total build time: %s seconds" % int(end - start),
+        prefix=log_prefix,
+        file=build_log,
+        color=Fore.YELLOW)
 
 
 def build(benchmarker_config, test_names, build_log_dir=os.devnull):
