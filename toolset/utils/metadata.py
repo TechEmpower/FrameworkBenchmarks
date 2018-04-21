@@ -25,8 +25,15 @@ class Metadata:
             langs.append(dir.replace(lang_dir, "")[1:])
         return langs
 
+    def gather_language_tests(self, language):
+        '''
+        Gathers all the test names from a known language
+        '''
+        dir = os.path.join(self.benchmarker.config.fwroot, "frameworks", language)
+        tests = map(lambda x: os.path.join(language, x), os.listdir(dir))
+        return filter(lambda x: os.path.isdir(x), tests)
 
-    def gather_tests(self, include=[], exclude=[]):
+    def gather_tests(self, include=None, exclude=None):
         '''
         Given test names as strings, returns a list of FrameworkTest objects.
         For example, 'aspnet-mysql-raw' turns into a FrameworkTest object with
@@ -36,39 +43,23 @@ class Metadata:
         With no arguments, every test in this framework will be returned.
         With include, only tests with this exact name will be returned.
         With exclude, all tests but those excluded will be returned.
-
-        A config is needed to construct full FrameworkTest objects. If
-        one is not provided, a default config will be created.
         '''
 
         # Help callers out a bit
-        if include is None:
-            include = []
-        if exclude is None:
-            exclude = []
-
-        # Old, hacky method to exclude all tests was to
-        # request a test known to not exist, such as ''.
-        # If test '' was requested, short-circuit and return
-        # nothing immediately
-        if len(include) == 1 and '' in include:
-            return []
+        include = include or []
+        exclude = exclude or []
 
         # Search for configuration files
         config_files = []
 
         if self.benchmarker.config.test_lang:
+            languages = self.gather_languages()
             self.benchmarker.config.test_dir = []
             for lang in self.benchmarker.config.test_lang:
-                if os.path.exists("{!s}/frameworks/{!s}".format(
-                        self.benchmarker.config.fwroot, lang)):
-                    for test_dir in os.listdir("{!s}/frameworks/{!s}".format(
-                            self.benchmarker.config.fwroot, lang)):
-                        self.benchmarker.config.test_dir.append("{!s}/{!s}".format(
-                            lang, test_dir))
-                else:
+                if lang not in languages:
                     raise Exception(
                         "Unable to locate language directory: {!s}".format(lang))
+                self.benchmarker.config.test_dir.extend(self.gather_language_tests(lang))
 
         if self.benchmarker.config.test_dir:
             for test_dir in self.benchmarker.config.test_dir:
@@ -105,20 +96,14 @@ class Metadata:
                 if len(include) is 0 and len(exclude) is 0:
                     # No filters, we are running everything
                     tests.append(test)
-                elif test.name in exclude:
-                    continue
                 elif test.name in include:
                     tests.append(test)
-                else:
-                    # An include list exists, but this test is
-                    # not listed there, so we ignore it
-                    pass
 
         # Ensure we were able to locate everything that was
         # explicitly included
-        if 0 != len(include):
+        if len(include):
             names = {test.name for test in tests}
-            if 0 != len(set(include) - set(names)):
+            if len(set(include) - set(names)):
                 missing = list(set(include) - set(names))
                 raise Exception("Unable to locate tests %s" % missing)
 
@@ -126,16 +111,16 @@ class Metadata:
         return tests
 
 
-    def gather_remaining_tests(self):
+    def tests_to_run(self):
         '''
-        Gathers the tests remaining in a current benchmark run.
+        Gathers all tests for current benchmark run.
         '''
         return self.gather_tests(
             self.benchmarker.config.test,
             self.benchmarker.config.exclude)
 
 
-    def gather_frameworks(self, include=[], exclude=[]):
+    def gather_frameworks(self, include=None, exclude=None):
         '''
         Return a dictionary mapping frameworks->[test1,test2,test3]
         for quickly grabbing all tests in a grouped manner.

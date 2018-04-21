@@ -23,8 +23,14 @@ class Benchmarker:
         self.config = config
         self.timeLogger = TimeLogger()
         self.metadata = Metadata(self)
+
+        # a list of all tests for this run
+        self.tests = self.metadata.tests_to_run()
+
         self.results = Results(self)
         self.docker_helper = DockerHelper(self)
+
+
 
     ##########################################################################################
     # Public methods
@@ -40,9 +46,6 @@ class Benchmarker:
         # Generate metadata
         self.metadata.list_test_metadata()
 
-        # Get a list of all known tests that we can run.
-        all_tests = self.metadata.gather_remaining_tests()
-
         any_failed = False
         # Run tests
         log("Running Tests...", border='=')
@@ -50,7 +53,7 @@ class Benchmarker:
 
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
-            for test in all_tests:
+            for test in self.tests:
                 log("Running Test: %s" % test.name, border='-')
                 with self.config.quiet_out.enable():
                     if not self.__run_test(test, benchmark_log):
@@ -61,7 +64,7 @@ class Benchmarker:
         # Parse results
         if self.config.mode == "benchmark":
             log("Parsing Results ...", border='=')
-            self.results.parse(all_tests)
+            self.results.parse(self.tests)
 
         self.results.set_completion_time()
         self.results.upload()
@@ -200,14 +203,14 @@ class Benchmarker:
                     message="Failed verify!",
                     prefix=log_prefix,
                     file=benchmark_log)
-        except (OSError, IOError, subprocess.CalledProcessError) as e:
+        except Exception as e:
             tb = traceback.format_exc()
             self.results.write_intermediate(test.name,
                                             "error during test: " + str(e))
             log(tb, prefix=log_prefix, file=benchmark_log)
             return self.__exit_test(
                 success=False,
-                message="Subprocess Error %s" % test.name,
+                message="Error during test: %s" % test.name,
                 prefix=log_prefix,
                 file=benchmark_log)
 

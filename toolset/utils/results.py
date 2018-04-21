@@ -50,7 +50,7 @@ class Results:
         self.queryIntervals = self.config.query_levels
         self.cachedQueryIntervals = self.config.cached_query_levels
         self.frameworks = [
-            t.name for t in benchmarker.metadata.gather_remaining_tests()
+            t.name for t in benchmarker.tests
         ]
         self.duration = self.config.duration
         self.rawData = dict()
@@ -285,7 +285,6 @@ class Results:
         Finishes these results.
         '''
         if not self.config.parse:
-            tests = self.benchmarker.metadata.gather_remaining_tests()
             # Normally you don't have to use Fore.BLUE before each line, but
             # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
             # or stream flush, so we have to ensure that the color code is printed repeatedly
@@ -293,7 +292,7 @@ class Results:
                 border='=',
                 border_bottom='-',
                 color=Fore.CYAN)
-            for test in tests:
+            for test in self.benchmarker.tests:
                 log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
                     for test_type, result in self.verify[

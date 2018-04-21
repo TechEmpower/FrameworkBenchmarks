@@ -6,7 +6,6 @@ from toolset.benchmark.benchmarker import Benchmarker
 from toolset.utils.scaffolding import Scaffolding
 from toolset.utils import cleaner
 from toolset.utils.benchmark_config import BenchmarkConfig
-from toolset.utils import docker_helper
 from toolset.utils.output_helper import log
 
 # Enable cross-platform colored output
