@@ -212,11 +212,11 @@ class Benchmarker:
                     file=benchmark_log,
                     color=Fore.RED)
                 return False
-        except (OSError, IOError, subprocess.CalledProcessError) as e:
+        except Exception as e:
             tb = traceback.format_exc()
             self.results.write_intermediate(test.name,
                                             "error during test: " + str(e))
-            log("Subprocess Error %s" % test.name,
+            log("Error during test: %s" % test.name,
                 file=benchmark_log,
                 border='-',
                 color=Fore.RED)
