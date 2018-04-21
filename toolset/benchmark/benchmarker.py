@@ -1,5 +1,5 @@
 from toolset.utils.output_helper import log, FNULL
-from toolset.utils import docker_helper
+from toolset.utils.docker_helper import DockerHelper
 from toolset.utils.time_logger import TimeLogger
 from toolset.utils.metadata import Metadata
 from toolset.utils.results import Results
@@ -7,7 +7,7 @@ from toolset.utils.results import Results
 import os
 import subprocess
 import traceback
-import socket
+import sys
 import time
 import shlex
 from pprint import pprint
@@ -24,6 +24,7 @@ class Benchmarker:
         self.timeLogger = TimeLogger()
         self.metadata = Metadata(self)
         self.results = Results(self)
+        self.docker_helper = DockerHelper(self)
 
     ##########################################################################################
     # Public methods
@@ -39,13 +40,13 @@ class Benchmarker:
         # Generate metadata
         self.metadata.list_test_metadata()
 
-        # Get a list of all known  tests that we can run.
+        # Get a list of all known tests that we can run.
         all_tests = self.metadata.gather_remaining_tests()
 
         any_failed = False
         # Run tests
         log("Running Tests...", border='=')
-        docker_helper.build_wrk(self)
+        self.docker_helper.build_wrk()
 
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
@@ -68,9 +69,16 @@ class Benchmarker:
 
         return any_failed
 
+
     ##########################################################################################
     # Private methods
     ##########################################################################################
+
+    def stop(self, signal, frame):
+        log("Shutting down (may take a moment)")
+        self.docker_helper.stop()
+        sys.exit(0)
+
 
     def __exit_test(self, success, prefix, file, message=None):
         if message:
@@ -93,7 +101,7 @@ class Benchmarker:
 
 
         # If the test is in the excludes list, we skip it
-        if self.config.exclude != None and test.name in self.config.exclude:
+        if self.config.exclude and test.name in self.config.exclude:
             message = "Test {name} has been added to the excludes list. Skipping.".format(name=test.name)
             self.results.write_intermediate(test.name, message)
             return self.__exit_test(
@@ -104,23 +112,10 @@ class Benchmarker:
 
         database_container = None
         try:
-            if self.__is_port_bound(test.port):
-                time.sleep(60)
-
-            if self.__is_port_bound(test.port):
-                # We gave it our all
-                message = "Error: Port %s is not available, cannot start %s" % (test.port, test.name)
-                self.results.write_intermediate(test.name, message)
-                return self.__exit_test(
-                    success=False,
-                    message=message,
-                    prefix=log_prefix,
-                    file=benchmark_log)
-
             # Start database container
             if test.database.lower() != "none":
-                database_container = docker_helper.start_database(
-                    self, test.database.lower())
+                database_container = self.docker_helper.start_database(
+                    test.database.lower())
                 if database_container is None:
                     message = "ERROR: Problem building/running database container"
                     return self.__exit_test(
@@ -130,10 +125,9 @@ class Benchmarker:
                         file=benchmark_log)
 
             # Start webapp
-            container = test.start(self)
+            container = test.start()
             if container is None:
-                docker_helper.stop(self, container, database_container,
-                                   test)
+                self.docker_helper.stop(container, database_container)
                 message = "ERROR: Problem starting {name}".format(name=test.name)
                 self.results.write_intermediate(test.name, message)
                 return self.__exit_test(
@@ -151,8 +145,7 @@ class Benchmarker:
                 slept += 1
 
             if not accepting_requests:
-                docker_helper.stop(self, container, database_container,
-                                   test)
+                self.docker_helper.stop(container, database_container)
                 message = "ERROR: Framework is not accepting requests from client machine"
                 self.results.write_intermediate(test.name, message)
                 return self.__exit_test(
@@ -190,8 +183,7 @@ class Benchmarker:
                     file=benchmark_log)
 
             # Stop this test
-            docker_helper.stop(self, container, database_container,
-                               test)
+            self.docker_helper.stop(container, database_container)
 
             # Save results thus far into the latest results directory
             self.results.write_intermediate(test.name,
@@ -252,8 +244,7 @@ class Benchmarker:
                                                        framework_test.port,
                                                        test.get_url()))
 
-                docker_helper.benchmark(self, script, script_variables,
-                                        raw_file)
+                self.docker_helper.benchmark(script, script_variables, raw_file)
 
                 # End resource usage metrics collection
                 self.__end_logging()
@@ -293,35 +284,3 @@ class Benchmarker:
         '''
         self.subprocess_handle.terminate()
         self.subprocess_handle.communicate()
-
-    def __is_port_bound(self, port):
-        '''
-        Check if the requested port is available. If it isn't available, then a
-        previous test probably didn't shutdown properly.
-        '''
-        port = int(port)
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            # Try to bind to all IP addresses, this port
-            s.bind(("", port))
-            # If we get here, we were able to bind successfully,
-            # which means the port is free.
-        except socket.error:
-            # If we get an exception, it might be because the port is still bound
-            # which would be bad, or maybe it is a privileged port (<1024) and we
-            # are not running as root, or maybe the server is gone, but sockets are
-            # still in TIME_WAIT (SO_REUSEADDR). To determine which scenario, try to
-            # connect.
-            try:
-                s.connect(("127.0.0.1", port))
-                # If we get here, we were able to connect to something, which means
-                # that the port is still bound.
-                return True
-            except socket.error:
-                # An exception means that we couldn't connect, so a server probably
-                # isn't still running on the port.
-                pass
-        finally:
-            s.close()
-
-        return False

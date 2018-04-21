@@ -13,9 +13,6 @@ from toolset.utils.output_helper import log
 from colorama import init, Fore
 init()
 
-# Required to be globally known
-config = None
-
 
 class StoreSeqAction(argparse.Action):
     '''
@@ -42,16 +39,6 @@ class StoreSeqAction(argparse.Action):
             result.remove(sequence)
             result = result + range(int(start), int(end), int(step))
         return [abs(int(item)) for item in result]
-
-
-def __stop(signal, frame):
-    log("Shutting down (may take a moment)")
-    docker_helper.stop(config)
-    sys.exit(0)
-
-
-signal.signal(signal.SIGTERM, __stop)
-signal.signal(signal.SIGINT, __stop)
 
 
 ###################################################################################################
@@ -202,19 +189,21 @@ def main(argv=None):
 
     args = parser.parse_args()
 
-    global config
     config = BenchmarkConfig(args)
     benchmarker = Benchmarker(config)
+
+    signal.signal(signal.SIGTERM, benchmarker.stop)
+    signal.signal(signal.SIGINT, benchmarker.stop)
 
     if config.new:
         Scaffolding(benchmarker)
 
     elif config.build:
-        docker_helper.build(config, config.build)
+        benchmarker.docker_helper.build()
 
     elif config.clean:
         cleaner.clean(benchmarker.results)
-        docker_helper.clean(config)
+        benchmarker.docker_helper.clean()
 
     elif config.list_tests:
         all_tests = benchmarker.metadata.gather_tests()
@@ -222,8 +211,7 @@ def main(argv=None):
         for test in all_tests:
             log(test.name)
 
-    elif config.parse != None:
-        # TODO: broken
+    elif config.parse:
         all_tests = benchmarker.metadata.gather_tests()
 
         for test in all_tests:

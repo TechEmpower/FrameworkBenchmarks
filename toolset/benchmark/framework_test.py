@@ -3,7 +3,6 @@ import traceback
 from requests import ConnectionError
 
 from toolset.utils.output_helper import log
-from toolset.utils import docker_helper
 
 # Cross-platform colored text
 from colorama import Fore, Style
@@ -40,7 +39,7 @@ class FrameworkTest:
     # Public Methods
     ##########################################################################################
 
-    def start(self, benchmarker):
+    def start(self):
         '''
         Start the test implementation
         '''
@@ -57,12 +56,11 @@ class FrameworkTest:
         except OSError:
             pass
 
-        result = docker_helper.build(benchmarker, [self.name],
-                                     build_log_dir)
+        result = self.benchmarker.docker_helper.build(self, build_log_dir)
         if result != 0:
             return None
 
-        return docker_helper.run(benchmarker, self, run_log_dir)
+        return self.benchmarker.docker_helper.run(self, run_log_dir)
 
     def is_accepting_requests(self):
         '''
@@ -78,8 +76,7 @@ class FrameworkTest:
                                   self.port,
                                   self.runTests[test_type].get_url())
 
-        return docker_helper.test_client_connection(self.benchmarker,
-                                                    url)
+        return self.benchmarker.docker_helper.test_client_connection(url)
 
     def verify_urls(self):
         '''
@@ -119,8 +116,8 @@ class FrameworkTest:
                     # we're already failing
                     if not any(result == 'fail'
                                for (result, reason, url) in results):
-                        docker_helper.test_client_connection(
-                            self.benchmarker, base_url + test.get_url())
+                        self.benchmarker.docker_helper.test_client_connection(
+                            base_url + test.get_url())
                 except ConnectionError as e:
                     results = [('fail', "Server did not respond to request",
                                 base_url)]
