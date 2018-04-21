@@ -1,0 +1,24 @@
+{
+  "framework": "restify",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "restify",
+      "language": "JavaScript",
+      "flavor": "NodeJS",
+      "orm": "Raw",
+      "platform": "nodejs",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "restify",
+      "notes": "",
+      "versus": "nodejs"
+    }
+  }]
+}
