@@ -72,16 +72,14 @@ class Benchmarker:
 
         return any_failed
 
-
-    ##########################################################################################
-    # Private methods
-    ##########################################################################################
-
     def stop(self, signal=None, frame=None):
         log("Shutting down (may take a moment)")
         self.docker_helper.stop()
         sys.exit(0)
 
+    ##########################################################################################
+    # Private methods
+    ##########################################################################################
 
     def __exit_test(self, success, prefix, file, message=None):
         if message:
