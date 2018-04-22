@@ -21,7 +21,6 @@ class TimeLogger:
         self.verify_start = 0
         self.verify_total = 0
 
-
     @staticmethod
     def output(sec):
         output = ""
@@ -35,10 +34,8 @@ class TimeLogger:
         output = output + "%ss" % s
         return output
 
-
     def log_benchmarking_start(self):
         self.benchmarking_start = time.time()
-
 
     def log_benchmarking_end(self, log_prefix, file):
         total = int(time.time() - self.benchmarking_start)
@@ -48,10 +45,8 @@ class TimeLogger:
             file=file,
             color=Fore.YELLOW)
 
-
     def log_build_start(self):
         self.build_start = time.time()
-
 
     def log_build_end(self, log_prefix, file):
         total = int(time.time() - self.build_start)
@@ -61,10 +56,8 @@ class TimeLogger:
             file=file,
             color=Fore.YELLOW)
 
-
     def log_test_start(self):
         self.test_start = time.time()
-
 
     def log_test_end(self, log_prefix, file):
         total = int(time.time() - self.test_start)
@@ -95,10 +88,8 @@ class TimeLogger:
             file=file,
             color=Fore.YELLOW)
 
-
     def log_verify_start(self):
         self.verify_start = time.time()
-
 
     def log_verify_end(self, log_prefix, file):
         total = int(time.time() - self.verify_start)

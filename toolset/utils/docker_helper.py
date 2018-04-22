@@ -24,7 +24,6 @@ class DockerHelper:
         self.database = docker.DockerClient(
             base_url=self.benchmarker.config.database_docker_host)
 
-
     def __build(self, base_url, path, build_log_file, log_prefix, dockerfile, tag):
         '''
         Builds docker containers using docker-py low-level api
@@ -81,7 +80,6 @@ class DockerHelper:
                 log_prefix=log_prefix,
                 file=build_log)
 
-
     def clean(self):
         '''
         Cleans all the docker images from the system
@@ -104,7 +102,6 @@ class DockerHelper:
                 if image_tag != 'techempower/tfb':
                     self.database.images.remove(image.id, force=True)
         self.database.images.prune()
-
 
     def build(self, test, build_log_dir=os.devnull):
         '''
@@ -133,7 +130,6 @@ class DockerHelper:
             return 1
 
         return 0
-
 
     def run(self, test, run_log_dir):
         '''
@@ -211,7 +207,6 @@ class DockerHelper:
 
         return container
 
-
     @staticmethod
     def kill(container):
         try:
@@ -220,7 +215,6 @@ class DockerHelper:
             # container is already killed
             pass
 
-
     @staticmethod
     def __stop(docker_client):
         for container in docker_client.containers.list():
@@ -228,7 +222,6 @@ class DockerHelper:
                     and 'techempower' in container.image.tags[0] \
                     and 'tfb:latest' not in container.image.tags[0]:
                 DockerHelper.kill(container)
-
 
     def stop(self,
              container=None,
@@ -254,7 +247,6 @@ class DockerHelper:
             # Then we're on a 3 machine set up
             self.server.containers.prune()
             self.client.containers.prune()
-
 
     def start_database(self, database):
         '''
@@ -305,7 +297,6 @@ class DockerHelper:
 
         return container
 
-
     def build_wrk(self):
         '''
         Builds the techempower/tfb.wrk container
@@ -317,7 +308,6 @@ class DockerHelper:
             log_prefix="wrk: ",
             build_log_file=os.devnull,
             tag="techempower/tfb.wrk")
-
 
     def test_client_connection(self, url):
         '''
@@ -336,7 +326,6 @@ class DockerHelper:
             return False
 
         return True
-
 
     def benchmark(self, script, variables, raw_file):
         '''

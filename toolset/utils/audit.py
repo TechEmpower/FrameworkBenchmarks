@@ -1,6 +1,7 @@
 from toolset.utils.output_helper import log
 from colorama import Fore
 
+
 class Audit:
     '''
     Audits frameworks for inconsistencies
