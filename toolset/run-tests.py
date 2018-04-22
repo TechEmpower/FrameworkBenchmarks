@@ -2,6 +2,7 @@ import argparse
 import socket
 import sys
 import signal
+import traceback
 from toolset.benchmark.benchmarker import Benchmarker
 from toolset.utils.scaffolding import Scaffolding
 from toolset.utils import cleaner
@@ -66,10 +67,6 @@ def main(argv=None):
         ''')
 
     # Suite options
-    parser.add_argument(
-        '--build',
-        nargs='+',
-        help='Builds the dockerfile(s) for the given test(s)')
     parser.add_argument(
         '--clean',
         action='store_true',
@@ -194,34 +191,42 @@ def main(argv=None):
     signal.signal(signal.SIGTERM, benchmarker.stop)
     signal.signal(signal.SIGINT, benchmarker.stop)
 
-    if config.new:
-        Scaffolding(benchmarker)
+    try:
+        if config.new:
+            Scaffolding(benchmarker)
 
-    elif config.build:
-        benchmarker.docker_helper.build()
+        elif config.clean:
+            cleaner.clean(benchmarker.results)
+            benchmarker.docker_helper.clean()
 
-    elif config.clean:
-        cleaner.clean(benchmarker.results)
-        benchmarker.docker_helper.clean()
+        elif config.list_tests:
+            all_tests = benchmarker.metadata.gather_tests()
 
-    elif config.list_tests:
-        all_tests = benchmarker.metadata.gather_tests()
+            for test in all_tests:
+                log(test.name)
 
-        for test in all_tests:
-            log(test.name)
+        elif config.parse:
+            all_tests = benchmarker.metadata.gather_tests()
 
-    elif config.parse:
-        all_tests = benchmarker.metadata.gather_tests()
+            for test in all_tests:
+                test.parse_all()
 
-        for test in all_tests:
-            test.parse_all()
+            benchmarker.results.parse(all_tests)
 
-        benchmarker.results.parse(all_tests)
-
-    else:
-        any_failed = benchmarker.run()
-        if config.mode == "verify":
-            return any_failed
+        else:
+            any_failed = benchmarker.run()
+            if config.mode == "verify":
+                return any_failed
+    except Exception:
+        tb = traceback.format_exc()
+        log("A fatal error has occurred",
+            color=Fore.RED)
+        log(tb)
+        # try one last time to stop docker containers on fatal error
+        try:
+            benchmarker.stop()
+        except:
+            sys.exit(1)
 
     return 0
 
