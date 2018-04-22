@@ -2,8 +2,8 @@ FROM ubuntu:16.04
 
 RUN apt update -yqq && apt install -yqq software-properties-common
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
-RUN apt update -yqq
-RUN apt install -yqq nginx git unzip php5.6 php5.6-common php5.6-cli php5.6-fpm php5.6-mysql php5.6-xml php5.6-mbstring php5.6-mcrypt
+RUN apt update -yqq  > /dev/null
+RUN apt install -yqq nginx git unzip php5.6 php5.6-common php5.6-cli php5.6-fpm php5.6-mysql php5.6-xml php5.6-mbstring php5.6-mcrypt  > /dev/null
 
 RUN mkdir /composer
 WORKDIR /composer
