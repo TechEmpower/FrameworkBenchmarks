@@ -104,8 +104,11 @@ def verify_helloworld_object(json_object, url):
 
     problems = []
 
-    # Make everything case insensitive
-    json_object = {k.lower(): v.lower() for k, v in json_object.iteritems()}
+    try:
+        # Make everything case insensitive
+        json_object = {k.lower(): v.lower() for k, v in json_object.iteritems()}
+    except:
+        return [('fail', "Not a valid JSON object", url)]
 
     if 'message' not in json_object:
         return [('fail', "Missing required key 'message'", url)]
