@@ -10,6 +10,13 @@ from colorama import Fore
 
 class Metadata:
 
+    supported_dbs = [
+        ('MySQL',
+         'One of the most popular databases around the web and in TFB'),
+        ('Postgres',
+         'An advanced SQL database with a larger feature set than MySQL'),
+        ('MongoDB', 'A popular document-store database')]
+
     def __init__(self, benchmarker = None):
         self.benchmarker = benchmarker
 
@@ -29,9 +36,29 @@ class Metadata:
         '''
         Gathers all the test names from a known language
         '''
-        dir = os.path.join(self.benchmarker.config.fwroot, "frameworks", language)
-        tests = map(lambda x: os.path.join(language, x), os.listdir(dir))
-        return filter(lambda x: os.path.isdir(x), tests)
+        try:
+            dir = os.path.join(self.benchmarker.config.fwroot, "frameworks", language)
+            tests = map(lambda x: os.path.join(language, x), os.listdir(dir))
+            return filter(lambda x: os.path.isdir(x), tests)
+        except Exception:
+            raise Exception(
+                "Unable to locate language directory: {!s}".format(language))
+
+    def get_framework_config(self, test_dir):
+        '''
+        Gets a framework's benchmark_config from the given
+        test directory
+        '''
+        dir_config_files = glob.glob(
+            "{!s}/frameworks/{!s}/benchmark_config.json".format(
+                self.benchmarker.config.fwroot, test_dir))
+        if len(dir_config_files):
+            return dir_config_files[0]
+        else:
+            raise Exception(
+                "Unable to locate tests in test-dir: {!s}".format(
+                    test_dir))
+
 
     def gather_tests(self, include=None, exclude=None):
         '''
@@ -53,25 +80,14 @@ class Metadata:
         config_files = []
 
         if self.benchmarker.config.test_lang:
-            languages = self.gather_languages()
             self.benchmarker.config.test_dir = []
             for lang in self.benchmarker.config.test_lang:
-                if lang not in languages:
-                    raise Exception(
-                        "Unable to locate language directory: {!s}".format(lang))
-                self.benchmarker.config.test_dir.extend(self.gather_language_tests(lang))
+                self.benchmarker.config.test_dir.extend(
+                    self.gather_language_tests(lang))
 
         if self.benchmarker.config.test_dir:
             for test_dir in self.benchmarker.config.test_dir:
-                dir_config_files = glob.glob(
-                    "{!s}/frameworks/{!s}/benchmark_config.json".format(
-                        self.benchmarker.config.fwroot, test_dir))
-                if len(dir_config_files):
-                    config_files.extend(dir_config_files)
-                else:
-                    raise Exception(
-                        "Unable to locate tests in test-dir: {!s}".format(
-                            test_dir))
+                config_files.append(self.get_framework_config(test_dir))
         else:
             config_files.extend(
                 glob.glob("{!s}/frameworks/*/*/benchmark_config.json".format(
@@ -166,8 +182,8 @@ class Metadata:
             # Check that each test configuration is acceptable
             # Throw exceptions if a field is missing, or how to improve the field
             for test_name, test_keys in test.iteritems():
-                # Validates the benchmark_config entry
-                Metadata.validate_test(test_name, test_keys, directory)
+                # Validates and normalizes the benchmark_config entry
+                test_keys = Metadata.validate_test(test_name, test_keys, directory)
 
                 # Map test type to a parsed FrameworkTestType object
                 runTests = dict()
@@ -235,12 +251,15 @@ class Metadata:
     @staticmethod
     def validate_test(test_name, test_keys, directory):
         """
-        Validate benchmark config values for this test based on a schema
+        Validate and normalizes benchmark config values for this test based on a schema
         """
         recommended_lang = directory.split('/')[-2]
         windows_url = "https://github.com/TechEmpower/FrameworkBenchmarks/issues/1038"
         schema = {
             'language': {
+                # Language is the only key right now with no 'allowed' key that can't
+                # have a "None" value
+                'required': True,
                 'help':
                     ('language', 'The language of the framework used, suggestion: %s' %
                      recommended_lang)
@@ -257,22 +276,8 @@ class Metadata:
             },
             'database': {
                 'allowed':
-                    [('MySQL',
-                      'One of the most popular databases around the web and in TFB'),
-                     ('Postgres',
-                      'An advanced SQL database with a larger feature set than MySQL'),
-                     ('MongoDB', 'A popular document-store database'),
-                     ('Cassandra', 'A highly performant and scalable NoSQL database'),
-                     ('Elasticsearch',
-                      'A distributed RESTful search engine that is used as a database for TFB tests'
-                      ),
-                     ('Redis',
-                      'An open-sourced, BSD licensed, advanced key-value cache and store'
-                      ),
-                     ('SQLite',
-                      'A network-less database, still supported for backwards compatibility'
-                      ), ('SQLServer', 'Microsoft\'s SQL implementation'),
-                     ('None',
+                    Metadata.supported_dbs +
+                    [('None',
                       'No database was used for these tests, as is the case with Json Serialization and Plaintext'
                       )]
             },
@@ -280,6 +285,7 @@ class Metadata:
                 'allowed': [('Realistic', '...'), ('Stripped', '...')]
             },
             'orm': {
+                'required_with': 'database',
                 'allowed':
                     [('Full',
                       'Has a full suite of features like lazy loading, caching, multiple language support, sometimes pre-configured with scripts.'
@@ -298,7 +304,7 @@ class Metadata:
                      )
             },
             'framework': {
-                # Guranteed to be here and correct at this point
+                # Guaranteed to be here and correct at this point
                 # key is left here to produce the set of required keys
             },
             'os': {
@@ -311,6 +317,7 @@ class Metadata:
                       % windows_url)]
             },
             'database_os': {
+                'required_with': 'database',
                 'allowed':
                     [('Linux',
                       'Our best-supported host OS, it is recommended that you build your tests for Linux hosts'
@@ -321,47 +328,50 @@ class Metadata:
             }
         }
 
-        # Confirm required keys are present
-        required_keys = schema.keys()
-        missing = list(set(required_keys) - set(test_keys))
-
-        if len(missing) > 0:
-            missingstr = (", ").join(map(str, missing))
-            raise Exception(
-                "benchmark_config.json for test %s is invalid, please amend by adding the following required keys: [%s]"
-                % (test_name, missingstr))
-
         # Check the (all optional) test urls
         Metadata.validate_urls(test_name, test_keys)
 
-        # Check values of keys against schema
-        for key in required_keys:
-            val = test_keys.get(key, "").lower()
-            has_predefined_acceptables = 'allowed' in schema[key]
+        def get_test_val(k):
+            return test_keys.get(k, "none").lower()
 
-            if has_predefined_acceptables:
+        def throw_incorrect_key(k):
+            msg = (
+                    "Invalid `%s` value specified for test \"%s\" in framework \"%s\"; suggestions:\n"
+                    % (k, test_name, test_keys['framework']))
+            helpinfo = ('\n').join([
+                "  `%s` -- %s" % (v, desc)
+                for (v, desc) in zip(acceptable_values, descriptors)
+            ])
+            fullerr = msg + helpinfo + "\n"
+            raise Exception(fullerr)
+
+        # Check values of keys against schema
+        for key in schema.keys():
+            val = get_test_val(key)
+            test_keys[key] = val
+
+            if val == "none":
+                # incorrect if key requires a value other than none
+                if schema[key].get('required', False):
+                    throw_incorrect_key(key)
+                # certain keys are only required if another key is not none
+                if 'required_with' in schema[key]:
+                    if get_test_val(schema[key]['required_with']) == "none":
+                        continue
+                    else:
+                        throw_incorrect_key(key)
+
+            # if we're here, the key needs to be one of the "allowed" values
+            if 'allowed' in schema[key]:
                 allowed = schema[key].get('allowed', [])
                 acceptable_values, descriptors = zip(*allowed)
                 acceptable_values = [a.lower() for a in acceptable_values]
 
                 if val not in acceptable_values:
-                    msg = (
-                            "Invalid `%s` value specified for test \"%s\" in framework \"%s\"; suggestions:\n"
-                            % (key, test_name, test_keys['framework']))
-                    helpinfo = ('\n').join([
-                        "  `%s` -- %s" % (v, desc)
-                        for (v, desc) in zip(acceptable_values, descriptors)
-                    ])
-                    fullerr = msg + helpinfo + "\n"
-                    raise Exception(fullerr)
+                    throw_incorrect_key(key)
 
-            elif not has_predefined_acceptables and val == "":
-                msg = (
-                        "Value for `%s` in test \"%s\" in framework \"%s\" was missing:\n"
-                        % (key, test_name, test_keys['framework']))
-                helpinfo = "  %s -- %s" % schema[key]['help']
-                fullerr = msg + helpinfo + '\n'
-                raise Exception(fullerr)
+        return test_keys
+
 
     @staticmethod
     def validate_urls(test_name, test_keys):
