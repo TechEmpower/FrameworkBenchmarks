@@ -9,7 +9,6 @@ class T_CONTROLLER_EXPORT WorldController : public ApplicationController
     Q_OBJECT
 public:
     WorldController() { }
-    WorldController(const WorldController &other);
     bool sessionEnabled() const { return false; }
     bool transactionEnabled() const { return false; }
 
@@ -39,7 +38,5 @@ private:
     void renderEntry(const QVariantMap &world = QVariantMap());
     void renderEdit(const QVariantMap &world = QVariantMap());
 };
-
-T_DECLARE_CONTROLLER(WorldController, worldcontroller)
 
 #endif // WORLDCONTROLLER_H
