@@ -33,6 +33,7 @@ class BenchmarkConfig:
         self.server_host = args.server_host
         self.database_host = args.database_host
         self.client_host = args.client_host
+        self.audit = args.audit
         self.new = args.new
         self.clean = args.clean
         self.mode = args.mode

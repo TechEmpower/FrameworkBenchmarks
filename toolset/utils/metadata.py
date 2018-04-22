@@ -39,7 +39,8 @@ class Metadata:
         try:
             dir = os.path.join(self.benchmarker.config.fwroot, "frameworks", language)
             tests = map(lambda x: os.path.join(language, x), os.listdir(dir))
-            return filter(lambda x: os.path.isdir(x), tests)
+            return filter(lambda x: os.path.isdir(
+                os.path.join(self.benchmarker.config.fwroot, "frameworks", x)), tests)
         except Exception:
             raise Exception(
                 "Unable to locate language directory: {!s}".format(language))
@@ -58,7 +59,6 @@ class Metadata:
             raise Exception(
                 "Unable to locate tests in test-dir: {!s}".format(
                     test_dir))
-
 
     def gather_tests(self, include=None, exclude=None):
         '''
@@ -126,7 +126,6 @@ class Metadata:
         tests.sort(key=lambda x: x.name)
         return tests
 
-
     def tests_to_run(self):
         '''
         Gathers all tests for current benchmark run.
@@ -134,7 +133,6 @@ class Metadata:
         return self.gather_tests(
             self.benchmarker.config.test,
             self.benchmarker.config.exclude)
-
 
     def gather_frameworks(self, include=None, exclude=None):
         '''
@@ -151,6 +149,12 @@ class Metadata:
             frameworks[test.framework].append(test)
         return frameworks
 
+    def has_file(self, test_dir, filename):
+        '''
+        Returns True if the file exists in the test dir
+        '''
+        return os.path.isfile("{!s}/frameworks/{!s}/{!s}".format(
+                self.benchmarker.config.fwroot, test_dir, filename))
 
     @staticmethod
     def test_order(type_name):
@@ -161,7 +165,6 @@ class Metadata:
         needed to ensure that it was run last for every framework.
         """
         return len(type_name)
-
 
     def parse_config(self, config, directory):
         """
@@ -177,7 +180,7 @@ class Metadata:
             tests_to_run = [name for (name, keys) in test.iteritems()]
             if "default" not in tests_to_run:
                 log("Framework %s does not define a default test in benchmark_config.json"
-                    % config['framework'])
+                    % config['framework'], color=Fore.YELLOW)
 
             # Check that each test configuration is acceptable
             # Throw exceptions if a field is missing, or how to improve the field
@@ -219,7 +222,6 @@ class Metadata:
 
         return tests
 
-
     def list_test_metadata(self):
         '''
         Prints the metadata for all the available tests
@@ -246,7 +248,6 @@ class Metadata:
                 os.path.join(self.benchmarker.results.directory, "test_metadata.json"),
                 "w") as f:
             f.write(all_tests_json)
-
 
     @staticmethod
     def validate_test(test_name, test_keys, directory):
@@ -371,7 +372,6 @@ class Metadata:
                     throw_incorrect_key(key)
 
         return test_keys
-
 
     @staticmethod
     def validate_urls(test_name, test_keys):
