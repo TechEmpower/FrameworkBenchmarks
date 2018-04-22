@@ -20,7 +20,7 @@ RUN php -r "unlink('composer-setup.php');"
 ADD ./ /codeigniter
 WORKDIR /codeigniter
 
-RUN composer.phar install
+RUN composer.phar install --quiet
 
 CMD hhvm -m daemon --config /codeigniter/deploy/config.hdf && \
     nginx -c /codeigniter/deploy/nginx-hhvm.conf -g "daemon off;"

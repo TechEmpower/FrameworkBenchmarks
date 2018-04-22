@@ -20,7 +20,7 @@ RUN php -r "unlink('composer-setup.php');"
 ADD ./ /yii2
 WORKDIR /yii2
 
-RUN composer.phar install
+RUN composer.phar install --quiet
 
 CMD hhvm -m daemon --config /yii2/deploy/config.hdf && \
     nginx -c /yii2/deploy/nginx-hhvm.conf -g "daemon off;"

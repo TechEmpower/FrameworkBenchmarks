@@ -20,7 +20,7 @@ COPY deploy/conf/* /etc/php/7.2/fpm/
 ADD ./ /kohana
 WORKDIR /kohana
 
-RUN composer.phar install
+RUN composer.phar install --quiet
 
 RUN chmod -R 777 /kohana
 

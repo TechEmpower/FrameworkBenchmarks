@@ -26,7 +26,7 @@ RUN mkdir -p app/tmp/cache/persistent
 RUN mkdir -p app/tmp/logs
 RUN chmod -R 777 app/tmp
 
-RUN composer.phar install
+RUN composer.phar install --quiet
 
 CMD service php5.6-fpm start && \
     nginx -c /cakephp/deploy/nginx.conf -g "daemon off;"

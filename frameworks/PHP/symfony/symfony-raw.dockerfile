@@ -23,7 +23,7 @@ WORKDIR /symfony
 
 ENV APP_ENV=prod
 
-RUN composer.phar install
+RUN composer.phar install --quiet
 
 RUN php bin/console cache:clear --env=prod --no-debug --no-warmup
 RUN php bin/console cache:warmup --env=prod --no-debug

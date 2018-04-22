@@ -20,7 +20,7 @@ COPY deploy/conf/* /etc/php/7.2/fpm/
 ADD ./ /zend1
 WORKDIR /zend1
 
-RUN composer.phar install
+RUN composer.phar install --quiet
 
 CMD service php7.2-fpm start && \
     nginx -c /zend1/deploy/nginx.conf -g "daemon off;"

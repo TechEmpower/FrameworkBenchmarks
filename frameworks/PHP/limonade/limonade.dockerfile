@@ -20,7 +20,7 @@ COPY deploy/conf/* /etc/php/7.2/fpm/
 ADD ./ /limonade
 WORKDIR /limonade
 
-RUN composer.phar install
+RUN composer.phar install --quiet
 
 CMD service php7.2-fpm start && \
     nginx -c /limonade/deploy/nginx.conf -g "daemon off;"
