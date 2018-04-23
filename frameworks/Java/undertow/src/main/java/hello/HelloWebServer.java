@@ -83,18 +83,9 @@ public final class HelloWebServer {
   }
 
   static HttpHandler plaintextHandler() {
-    // Normally, one would send the string "Hello, World!" directly.  Reusing a
-    // ByteBuffer is a micro-optimization that is explicitly permitted by the
-    // plaintext test requirements.
-
-    var bytes = "Hello, World!".getBytes(US_ASCII);
-    var buffer = ByteBuffer.allocateDirect(bytes.length);
-    buffer.put(bytes);
-    buffer.flip();
-
     return exchange -> {
       exchange.getResponseHeaders().put(CONTENT_TYPE, "text/plain");
-      exchange.getResponseSender().send(buffer.duplicate());
+      exchange.getResponseSender().send("Hello, World!");
     };
   }
 
