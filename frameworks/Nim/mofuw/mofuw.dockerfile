@@ -25,5 +25,4 @@ RUN git clone https://github.com/2vg/mofuw.git && \
 WORKDIR /mofuw_app
 COPY techempower.nim techempower.nim
 RUN nim c -d:release --threads:on techempower.nim
-RUN find /
 CMD ["./techempower"]
