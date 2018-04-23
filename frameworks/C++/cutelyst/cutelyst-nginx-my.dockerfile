@@ -1,8 +1,8 @@
 FROM ubuntu:16.04
 
-RUN apt-get update
+RUN apt update
 
-RUN apt-get install -qqy software-properties-common build-essential curl locales wget unzip git \
+RUN apt install -yqq software-properties-common build-essential curl locales wget unzip git \
     libmysqlclient-dev libpq-dev \
     libpcre3 libpcre3-dev \
     libssl-dev libcurl4-openssl-dev \
@@ -33,8 +33,8 @@ ENV CMAKE_PREFIX_PATH /opt/qt${QT_VERSION_MM}
 ENV LD_LIBRARY_PATH ${CMAKE_PREFIX_PATH}/lib
 
 RUN apt-add-repository --yes ppa:beineri/opt-qt$QT_VERSION_FULL && \
-    apt-get update -qq && \
-    apt-get install -qqy \
+    apt update -qq && \
+    apt install -yqq \
     cmake \
     clearsilver-dev \
     libgrantlee5-dev \
@@ -77,7 +77,7 @@ RUN cd ${TROOT} && \
     -DCMAKE_BUILD_TYPE=Release && \
     make
 
-RUN apt-get install -yqq nginx
+RUN apt install -yqq nginx
 
 RUN sed -i "s|SendDate=.*|SendDate=false|g" /cutelyst_socket.ini
 

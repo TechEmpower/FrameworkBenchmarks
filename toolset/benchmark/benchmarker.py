@@ -42,6 +42,8 @@ class Benchmarker:
         any_failed = False
         # Run tests
         log("Running Tests...", border='=')
+        docker_helper.build_wrk(self.config)
+
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
             for test in all_tests:
@@ -129,7 +131,7 @@ class Benchmarker:
             # Start database container
             if test.database.lower() != "none":
                 database_container = docker_helper.start_database(
-                    self.config, test, test.database.lower())
+                    self.config, test.database.lower())
                 if database_container is None:
                     message = "ERROR: Problem building/running database container"
                     self.results.write_intermediate(test.name, message)
@@ -210,11 +212,11 @@ class Benchmarker:
                     file=benchmark_log,
                     color=Fore.RED)
                 return False
-        except (OSError, IOError, subprocess.CalledProcessError) as e:
+        except Exception as e:
             tb = traceback.format_exc()
             self.results.write_intermediate(test.name,
                                             "error during test: " + str(e))
-            log("Subprocess Error %s" % test.name,
+            log("Error during test: %s" % test.name,
                 file=benchmark_log,
                 border='-',
                 color=Fore.RED)
@@ -271,7 +273,7 @@ class Benchmarker:
 
     def __begin_logging(self, framework_test, test_type):
         '''
-        Starts a thread to monitor the resource usage, to be synced with the 
+        Starts a thread to monitor the resource usage, to be synced with the
         client's time.
         TODO: MySQL and InnoDB are possible. Figure out how to implement them.
         '''
@@ -295,7 +297,7 @@ class Benchmarker:
 
     def __is_port_bound(self, port):
         '''
-        Check if the requested port is available. If it isn't available, then a 
+        Check if the requested port is available. If it isn't available, then a
         previous test probably didn't shutdown properly.
         '''
         port = int(port)

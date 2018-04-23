@@ -1,29 +1,8 @@
-FROM ubuntu:16.04
+FROM buildpack-deps:xenial
 
-RUN apt-get update
+RUN apt update -yqq && apt install -yqq software-properties-common unzip cmake
 
-# Install some common development tools
-RUN apt-get install -y software-properties-common build-essential curl locales wget unzip git \
-    libmysqlclient-dev libpq-dev \
-    libpcre3 libpcre3-dev \
-    libssl-dev libcurl4-openssl-dev \
-    zlib1g-dev \
-    libreadline6-dev \
-    libbz2-dev \
-    libxslt-dev libgdbm-dev ncurses-dev  \
-    libffi-dev libtool bison libevent-dev \
-    libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 \
-    liborc-0.4-0 libgnutls-dev \
-    libjson0-dev libmcrypt-dev libicu-dev \
-    re2c libnuma-dev
-
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-ENV DEBIAN_FRONTEND noninteractive
-
-ENV TFVER=1.19.0
+ENV TFVER=1.21.0
 
 RUN apt install -yqq g++ gcc libjemalloc-dev qt5-qmake qt5-default qtbase5-dev \
     qtbase5-dev-tools libqt5sql5 libqt5sql5-mysql libqt5sql5-psql libqt5qml5 libqt5xml5 \

@@ -2,7 +2,7 @@ FROM node:9.10.1
 
 COPY ./ ./
 
-RUN apt install -y wget
+RUN apt install -yqq wget
 RUN npm install
 RUN mkdir -p node_modules/mns & mkdir -p tmp
 RUN wget -q https://github.com/Helidium/Mitol/archive/v0.0.1.tar.gz -P tmp

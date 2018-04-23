@@ -45,10 +45,58 @@ def clean(benchmarker_config):
     client.images.prune()
 
 
+def __build(base_url, path, build_log_file, log_prefix, dockerfile, tag):
+    '''
+    Builds docker containers using docker-py low-level api
+    '''
+
+    with open(build_log_file, 'w') as build_log:
+        try:
+            client = docker.APIClient(base_url=base_url)
+            output = client.build(
+                path=path,
+                dockerfile=dockerfile,
+                tag=tag,
+                forcerm=True,
+                pull=True)
+            buffer = ""
+            for token in output:
+                if token.startswith('{"stream":'):
+                    token = json.loads(token)
+                    token = token[token.keys()[0]].encode('utf-8')
+                    buffer += token
+                elif token.startswith('{"errorDetail":'):
+                    token = json.loads(token)
+                    raise Exception(token['errorDetail']['message'])
+                while "\n" in buffer:
+                    index = buffer.index("\n")
+                    line = buffer[:index]
+                    buffer = buffer[index + 1:]
+                    log(line,
+                        prefix=log_prefix,
+                        file=build_log,
+                        color=Fore.WHITE + Style.BRIGHT \
+                            if re.match(r'^Step \d+\/\d+', line) else '')
+
+            if buffer:
+                log(buffer,
+                    prefix=log_prefix,
+                    file=build_log,
+                    color=Fore.WHITE + Style.BRIGHT \
+                        if re.match(r'^Step \d+\/\d+', buffer) else '')
+        except Exception:
+            tb = traceback.format_exc()
+            log("Docker build failed; terminating",
+                prefix=log_prefix,
+                file=build_log,
+                color=Fore.RED)
+            log(tb, prefix=log_prefix, file=build_log)
+            raise
+
+
 def build(benchmarker_config, test_names, build_log_dir=os.devnull):
     '''
-    Builds the dependency chain as well as the test implementation docker images
-    for the given tests.
+    Builds the test docker containers
     '''
     tests = gather_tests(
         include=test_names, benchmarker_config=benchmarker_config)
@@ -63,47 +111,18 @@ def build(benchmarker_config, test_names, build_log_dir=os.devnull):
             build_log_file = os.path.join(
                 build_log_dir,
                 "%s.log" % test_docker_file.replace(".dockerfile", "").lower())
-        with open(build_log_file, 'w') as build_log:
-            try:
-                client = docker.APIClient(
-                    base_url=benchmarker_config.server_docker_host)
-                output = client.build(
-                    path=test.directory,
-                    dockerfile=test_docker_file,
-                    tag="techempower/tfb.test.%s" %
-                        test_docker_file.replace(".dockerfile", ""),
-                    forcerm=True,
-                    pull=True)
-                buffer = ""
-                for token in output:
-                    if token.startswith('{"stream":'):
-                        token = json.loads(token)
-                        token = token[token.keys()[0]].encode('utf-8')
-                    buffer += token
-                    while "\n" in buffer:
-                        index = buffer.index("\n")
-                        line = buffer[:index]
-                        buffer = buffer[index + 1:]
-                        log(line,
-                            prefix=log_prefix,
-                            file=build_log,
-                            color=Fore.WHITE + Style.BRIGHT \
-                                if re.match(r'^Step \d+\/\d+', line) else '')
 
-                if buffer:
-                    log(buffer,
-                        prefix=log_prefix,
-                        file=build_log,
-                        color=Fore.WHITE + Style.BRIGHT \
-                            if re.match(r'^Step \d+\/\d+', buffer) else '')
-            except Exception:
-                tb = traceback.format_exc()
-                log("Docker build failed; terminating",
-                    prefix=log_prefix,
-                    file=build_log,
-                    color=Fore.RED)
-                log(tb, prefix=log_prefix, file=build_log)
-                return 1
+        try:
+            __build(
+                base_url=benchmarker_config.server_docker_host,
+                build_log_file=build_log_file,
+                log_prefix=log_prefix,
+                path=test.directory,
+                dockerfile=test_docker_file,
+                tag="techempower/tfb.test.%s" % test_docker_file.replace(
+                    ".dockerfile", ""))
+        except Exception:
+            return 1
 
     return 0
 
@@ -161,7 +180,9 @@ def run(benchmarker_config, test, run_log_dir):
             extra_hosts=extra_hosts,
             privileged=True,
             ulimits=ulimit,
-            sysctls=sysctl)
+            sysctls=sysctl,
+            remove=True,
+            log_config={'type': None})
 
         watch_thread = Thread(
             target=watch_container,
@@ -225,7 +246,7 @@ def stop(benchmarker_config=None,
 def find(path, pattern):
     '''
     Finds and returns all the the files matching the given pattern recursively in
-    the given path. 
+    the given path.
     '''
     for root, dirs, files in os.walk(path):
         for name in files:
@@ -233,9 +254,9 @@ def find(path, pattern):
                 return os.path.join(root, name)
 
 
-def start_database(benchmarker_config, test, database):
+def start_database(benchmarker_config, database):
     '''
-    Sets up a container for the given database and port, and starts said docker 
+    Sets up a container for the given database and port, and starts said docker
     container.
     '''
     image_name = "techempower/%s:latest" % database
@@ -245,26 +266,13 @@ def start_database(benchmarker_config, test, database):
                                 "databases", database)
     docker_file = "%s.dockerfile" % database
 
-    client = docker.DockerClient(
-        base_url=benchmarker_config.database_docker_host)
-    try:
-        # Don't pull if we have it
-        client.images.get(image_name)
-        log("Found published image; skipping build", prefix=log_prefix)
-    except:
-        # Build the database image
-        for line in docker.APIClient(
-                base_url=benchmarker_config.database_docker_host).build(
-                    path=database_dir,
-                    dockerfile=docker_file,
-                    tag="techempower/%s" % database):
-            if line.startswith('{"stream":'):
-                line = json.loads(line)
-                line = line[line.keys()[0]].encode('utf-8')
-                log(line,
-                    prefix=log_prefix,
-                    color=Fore.WHITE + Style.BRIGHT \
-                        if re.match(r'^Step \d+\/\d+', line) else '')
+    __build(
+        base_url=benchmarker_config.database_docker_host,
+        path=database_dir,
+        dockerfile=docker_file,
+        log_prefix=log_prefix,
+        build_log_file=os.devnull,
+        tag="techempower/%s" % database)
 
     client = docker.DockerClient(
         base_url=benchmarker_config.database_docker_host)
@@ -280,7 +288,9 @@ def start_database(benchmarker_config, test, database):
         network_mode=benchmarker_config.network_mode,
         detach=True,
         ulimits=ulimit,
-        sysctls=sysctl)
+        sysctls=sysctl,
+        remove=True,
+        log_config={'type': None})
 
     # Sleep until the database accepts connections
     slept = 0
@@ -297,25 +307,33 @@ def start_database(benchmarker_config, test, database):
     return container
 
 
+def build_wrk(benchmarker_config):
+    '''
+    Builds the techempower/tfb.wrk container
+    '''
+    __build(
+        base_url=benchmarker_config.client_docker_host,
+        path=os.path.join(benchmarker_config.fwroot, "toolset", "wrk"),
+        dockerfile="wrk.dockerfile",
+        log_prefix="wrk: ",
+        build_log_file=os.devnull,
+        tag="techempower/tfb.wrk")
+
+
 def test_client_connection(benchmarker_config, url):
     '''
-    Tests that the app server at the given url responds successfully to a 
+    Tests that the app server at the given url responds successfully to a
     request.
     '''
     client = docker.DockerClient(
         base_url=benchmarker_config.client_docker_host)
 
     try:
-        client.images.get('techempower/tfb.wrk:latest')
-    except:
-        log("Attempting docker pull for image (this can take some time)",
-            prefix="techempower/tfb.wrk:latest: ")
-        client.images.pull('techempower/tfb.wrk:latest')
-
-    try:
         client.containers.run(
             'techempower/tfb.wrk',
             'curl %s' % url,
+            remove=True,
+            log_config={'type': None},
             network=benchmarker_config.network,
             network_mode=benchmarker_config.network_mode)
     except:
@@ -351,4 +369,6 @@ def benchmark(benchmarker_config, script, variables, raw_file):
             detach=True,
             stderr=True,
             ulimits=ulimit,
-            sysctls=sysctl), raw_file)
+            sysctls=sysctl,
+            remove=True,
+            log_config={'type': None}), raw_file)

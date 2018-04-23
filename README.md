@@ -22,36 +22,22 @@ To get started developing you'll need to install [docker](https://docs.docker.co
 
         $ git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
 
-2. Create the TFB Docker virtual network
+2. Run a test.
 
-        $ docker network create tfb
+        $ ./tfb --mode verify --test gemini
 
-3. Run a test.
+### Explanation of the `./tfb` script
 
-        $ docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=[ABS PATH TO THIS DIR],target=/FrameworkBenchmarks techempower/tfb --mode verify --test gemini
+The run script is pretty wordy, but each and every flag is required. If you are using windows, either adapt the docker command at the end of the `./tfb` shell script (replacing `${SCRIPT_ROOT}` with `/c/path/to/FrameworkBenchmarks`), or use vagrant.
 
-### Explanation of the run script
-
-That run script is pretty wordy, but each and every flag is required. Unfortunately, because of the way that Docker runs processes, you **cannot** put this inside of a shell script without breaking how `ctrl+c` and `SIGTERM` work (the shell script would receive the signal, do nothing with the underlying python suite running, and exit, orphaning the toolset to continue running).
+The command looks like this: `docker run -it --rm --network tfb -v /var/run/docker.sock:/var/run/docker.sock -v [FWROOT]:/FrameworkBenchmarks techempower/tfb [ARGS]`
 
 - `-it` tells docker to run this in 'interactive' mode and simulate a TTY, so that `ctrl+c` is propagated.
+- `--rm` tells docker to remove the container as soon as the toolset finishes running, meaning there aren't hundreds of stopped containers lying around.
 - `--network=tfb` tells the container to join the 'tfb' Docker virtual network
-- `-v` specifies which Docker socket path to mount as a volume in the running container. This allows docker commands run inside this container to use the host container's docker to create/run/stop/remove containers.
-- `--mount` mounts the FrameworkBenchmarks source directory as a volume to share with the container so that rebuilding the toolset image is unnecessary and any changes you make on the host system are available in the running toolset container.
+- The first `-v` specifies which Docker socket path to mount as a volume in the running container. This allows docker commands run inside this container to use the host container's docker to create/run/stop/remove containers.
+- The second `-v` mounts the FrameworkBenchmarks source directory as a volume to share with the container so that rebuilding the toolset image is unnecessary and any changes you make on the host system are available in the running toolset container.
 - `techempower/tfb` is the name of toolset container to run
-- `--mode verify --test gemini` are the command to pass to the toolset.
-
-#### A note on Linux:
-
-You may not want to call step 4 from above every time. You can add an `alias` to your `~/.bash_aliases` file to shorten it since it will not change once configured:
-
-`$ alias tfb="docker network create tfb > /dev/null 2>&1; docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=[ABS PATH TO THIS DIR],target=/FrameworkBenchmarks techempower/tfb"`
-
-`$ source ~/.bash_aliases`
-
-Now you can run the toolset via `tfb`:
-
-`$ tfb --mode verify --test gemini`
 
 #### A note on Windows:
 
@@ -84,9 +70,9 @@ required.
 
 ## Add a New Test
 
-Once you open an SSH connection to your vagrant box, start the new test initialization wizard.
+Either on your computer, or once you open an SSH connection to your vagrant box, start the new test initialization wizard.
 
-        vagrant@TFB-all:~/FrameworkBenchmarks$ tfb --new
+        vagrant@TFB-all:~/FrameworkBenchmarks$ ./tfb --new
 
 This will walk you through the entire process of creating a new test to include in the suite.
 

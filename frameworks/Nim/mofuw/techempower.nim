@@ -6,4 +6,4 @@ proc h(req: mofuwReq, res: mofuwRes) {.async.} =
   else:
     mofuwResp(HTTP404, "text/plain", "NOT FOUND")
 
-h.mofuwRun(port = 8080, bufSize = 512)
+h.mofuwRun(port = 8080, bufSize = 1024)

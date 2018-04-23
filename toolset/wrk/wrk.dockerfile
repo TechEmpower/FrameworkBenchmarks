@@ -1,11 +1,4 @@
-FROM ubuntu:16.04
-
-# One -q produces output suitable for logging (mostly hides
-# progress indicators)
-RUN apt-get -yq update
-
-RUN apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-    build-essential git libev-dev libpq-dev libreadline6-dev curl
+FROM buildpack-deps:xenial
 
 # wrk
 RUN curl -sL -o wrk-4.0.1.tar.gz https://github.com/wg/wrk/archive/4.0.1.tar.gz
