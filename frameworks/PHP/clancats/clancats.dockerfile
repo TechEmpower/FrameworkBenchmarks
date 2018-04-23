@@ -23,7 +23,7 @@ WORKDIR /clancats
 
 RUN composer.phar install --quiet
 
-RUN git clone --branch v2.0.6 https://github.com/ClanCats/Framework.git clancatsapp
+RUN git clone --branch v2.0.6 --depth 1 https://github.com/ClanCats/Framework.git clancatsapp
 RUN cp -r app/ clancatsapp/CCF/
 RUN cp -r vendor/ clancatsapp/CCF/
 
