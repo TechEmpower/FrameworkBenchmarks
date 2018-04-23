@@ -91,7 +91,7 @@ $(tcmalloc_path):
 	cd $(tcmalloc_path);make
 
 $(lockless_path):
-	if [ ! -d "$(lockless_path)" ]; then wget https://locklessinc.com/downloads/lockless_allocator_src.tgz -P lib; fi
+	if [ ! -d "$(lockless_path)" ]; then wget -q https://locklessinc.com/downloads/lockless_allocator_src.tgz -P lib; fi
 	cd lib;tar xvzf lockless_allocator_src.tgz
 	cd lib/lockless_allocator;make
 

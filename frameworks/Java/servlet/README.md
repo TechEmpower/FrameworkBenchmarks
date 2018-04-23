@@ -42,24 +42,24 @@ Please confirm the versions data with the latest install scripts of TFB project.
 
 ### Default Maven profile
 
- * Plaintext - `http://localhost:8080/servlet/plaintext`
- * JSON - `http://localhost:8080/servlet/json`
+ * Plaintext - `http://localhost:8080/plaintext`
+ * JSON - `http://localhost:8080/json`
 
 ### `afterburner` Maven profile
 
- * JSON - `http://localhost:8080/servlet/json`
+ * JSON - `http://localhost:8080/json`
 
 ### `cjs` Maven profile
 
- * JSON - `http://localhost:8080/servlet/json`
+ * JSON - `http://localhost:8080/json`
 
 ### `mysql` and `postgresql` Maven profiles
 
- * DB - `http://localhost:8080/servlet/db`
- * Queries - `http://localhost:8080/servlet/db?queries=`
- * Updates - `http://localhost:8080/servlet/update?queries=`
- * Fortune - `http://localhost:8080/servlet/fortunes`
+ * DB - `http://localhost:8080/db`
+ * Queries - `http://localhost:8080/db?queries=`
+ * Updates - `http://localhost:8080/update?queries=`
+ * Fortune - `http://localhost:8080/fortunes`
 
 ### `postgresql` Maven profile
  
- * Cache - `http://localhost:8080/servlet/cached-worlds`
+ * Cache - `http://localhost:8080/cached-worlds`

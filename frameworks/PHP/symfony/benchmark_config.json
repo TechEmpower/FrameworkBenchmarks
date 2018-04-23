@@ -2,7 +2,6 @@
   "framework": "symfony",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -26,7 +25,6 @@
       "versus": "php-php5"
     },
     "raw": {
-      "setup_file": "setup",
       "db_url": "/db-raw",
       "update_url": "/update-raw?queries=",
       "query_url": "/db-raw?queries=",

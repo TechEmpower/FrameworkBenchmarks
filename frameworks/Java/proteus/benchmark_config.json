@@ -2,7 +2,6 @@
   "framework": "proteus",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "fortune_url": "/fortunes",
@@ -24,7 +23,6 @@
       "versus": ""
     },
     "mysql" : {
-      "setup_file": "setup",
       "db_url": "/db/mysql",
       "fortune_url": "/fortunes/mysql",
       "port": 8080,

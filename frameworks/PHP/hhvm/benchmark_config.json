@@ -3,7 +3,6 @@
   "tests":
     [{
       "default": {
-        "setup_file"     : "setup_hhvm",
         "json_url"       : "/json.php",
         "db_url"         : "/db.php",
         "query_url"      : "/queries.php?queries=",

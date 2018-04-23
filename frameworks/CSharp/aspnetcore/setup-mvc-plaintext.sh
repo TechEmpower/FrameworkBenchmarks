@@ -1,3 +1,3 @@
 #!/bin/bash
 
-source run-linux.sh mvcplaintext $(($(nproc)*3/10))
+source run-linux.sh mvcplaintext 2

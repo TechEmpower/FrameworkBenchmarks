@@ -4,7 +4,7 @@ use JSON::XS;
 use DBI;
 
 sub get_database_handle {
-    DBI->connect_cached('dbi:mysql:database=hello_world;host=TFB-database', 'benchmarkdbuser', 'benchmarkdbpass', { RaiseError => 1 });
+    DBI->connect_cached('dbi:mysql:database=hello_world;host=tfb-database', 'benchmarkdbuser', 'benchmarkdbpass', { RaiseError => 1 });
 }
 
 sub dispatch_request {

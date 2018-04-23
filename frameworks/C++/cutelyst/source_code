@@ -1,5 +1,4 @@
 cutelyst/
-cutelyst/CMakeLists.txt
 cutelyst/src
 cutelyst/src/plaintexttest.cpp
 cutelyst/src/jsontest.cpp

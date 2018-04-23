@@ -22,15 +22,6 @@
   <servlet-mapping url-pattern="/html/*" servlet-name="resin-file" />
   <servlet-mapping url-pattern="favicon.ico" servlet-name="resin-file" />
   
-  <!-- Assets located in "/static/" are files that should be cached forever, by
-       convention. -->
-  <servlet-mapping url-pattern="/static/*" servlet-name="resin-file" />
-  <resin:Forward regexp="^/static/([\d|-]+)/(css|js|images|html)/(.*)$" target="/$2/$3">
-    <gemini:filter.ExpiresFilter>
-      <expirationDelta>31556926000</expirationDelta>
-    </gemini:filter.ExpiresFilter>
-  </resin:Forward>
-  
   <!-- Disallow Resin 4 from compiling PHP or JSP pages directly. -->
   <mime-mapping extension=".php" mime-type="text/plain" />
   <mime-mapping extension=".jsp" mime-type="text/plain" />

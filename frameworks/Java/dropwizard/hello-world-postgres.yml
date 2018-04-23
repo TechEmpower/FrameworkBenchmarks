@@ -14,7 +14,9 @@ server:
     appenders: []
 
 logging:
-  appenders: []
+  level: WARN
+  appenders:
+    - type: console
 
 database:
   # the name of your JDBC driver
@@ -27,7 +29,7 @@ database:
   password: benchmarkdbpass
 
   # the JDBC URL
-  url: jdbc:postgresql://TFB-database:5432/hello_world
+  url: jdbc:postgresql://tfb-database:5432/hello_world
 
   # any properties specific to your JDBC driver:
   properties:

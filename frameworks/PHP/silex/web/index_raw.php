@@ -19,7 +19,7 @@ $app->get('/json', function() {
 
 // Test 2: Single database query
 $app->get('/db', function() {
-    $db = new mysqli('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+    $db = new mysqli('tfb-database', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
     $row = mysqli_query($db, 'SELECT id, randomNumber FROM World WHERE id = '.rand(1, 10000));
     $result = mysqli_fetch_assoc($row);
     $result['id'] = (int) $result['id'];
@@ -31,7 +31,7 @@ $app->get('/db', function() {
 // Test 3: Multiple database queries
 $app->get('/queries', function(Request $request) {
     $queries = max(1, min($request->query->get('queries'), 500));
-    $db = new mysqli('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+    $db = new mysqli('tfb-database', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
 
     for ($i=0; $i<$queries; $i++) {
         $result = mysqli_fetch_assoc(mysqli_query($db, 'SELECT id, randomNumber FROM World WHERE id = '.rand(1, 10000)));
@@ -45,7 +45,7 @@ $app->get('/queries', function(Request $request) {
 
 // Test 4: Fortunes
 $app->get('/fortunes', function() {
-    $db = new mysqli('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+    $db = new mysqli('tfb-database', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
     $result = mysqli_query($db, 'SELECT * FROM Fortune');
     while ($row = mysqli_fetch_row($result)) {
         $fortunes[$row[0]] = htmlspecialchars($row[1], ENT_IGNORE);
@@ -64,7 +64,7 @@ $app->get('/fortunes', function() {
 // Test 5: Database updates
 $app->get('/updates', function(Request $request) {
     $queries = max(1, min($request->query->get('queries'), 500));
-    $db = new mysqli('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+    $db = new mysqli('tfb-database', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
     for ($i=0; $i<$queries; $i++) {
         $rows[] = mysqli_fetch_assoc(mysqli_query($db, 'SELECT id, randomNumber FROM World WHERE id = '.rand(1, 10000)));
     }

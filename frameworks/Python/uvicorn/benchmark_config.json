@@ -2,7 +2,6 @@
   "framework": "uvicorn",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "fortune_url": "/fortunes",
       "plaintext_url": "/plaintext",

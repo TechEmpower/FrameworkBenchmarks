@@ -1,5 +1,6 @@
 require 'erb'
 require 'active_record'
+require 'yaml'
 
 Bundler.require :default
 

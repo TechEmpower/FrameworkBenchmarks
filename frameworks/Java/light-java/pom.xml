@@ -1,47 +1,52 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
         <version>5</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.networknt</groupId>
     <artifactId>techempower</artifactId>
     <packaging>jar</packaging>
     <name>techempower</name>
     <version>1.0.0</version>
+
     <prerequisites>
         <maven>2.2.0</maven>
     </prerequisites>
 
     <properties>
-        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.light-java>1.2.5</version.light-java>
-        <version.light-java-rest>1.2.5</version.light-java-rest>
-        <version.jackson>2.8.2</version.jackson>
-        <version.slf4j>1.7.22</version.slf4j>
-        <version.jose4j>0.5.2</version.jose4j>
-        <version.antlr4>4.5.3</version.antlr4>
-        <version.commons-lang>2.6</version.commons-lang>
-        <version.commons.io>2.5</version.commons.io>
-        <version.commons.codec>1.10</version.commons.codec>
-        <version.encoder>1.2</version.encoder>
-        <version.logback>1.1.9</version.logback>
-        <version.junit>4.12</version.junit>
-        <version.mockito>2.1.0-beta.124</version.mockito>
-        <!--<version.undertow>1.4.10.Final</version.undertow>-->
-        <version.undertow>1.2.5.Final</version.undertow>
+        <version.java>1.8</version.java>
+        <version.light-java>1.5.10</version.light-java>
+        <version.logback>1.2.3</version.logback>
+        <version.undertow>2.0.3.Final</version.undertow>
         <version.jsonpath>2.2.0</version.jsonpath>
         <version.httpclient>4.5.2</version.httpclient>
         <version.httpasyncclient>4.1.2</version.httpasyncclient>
         <version.swagger>1.5.10</version.swagger>
-        <version.hikaricp>2.6.1</version.hikaricp>
-        <version.mysql>5.1.41</version.mysql>
-        <version.postgres>42.1.4</version.postgres>
+        <version.hikaricp>2.7.8</version.hikaricp>
+        <version.mysql>5.1.46</version.mysql>
+        <version.postgres>42.2.2</version.postgres>
+        <version.dsl-json>1.7.0</version.dsl-json>
+        <version.mustache>0.9.5</version.mustache>
+        <version.guava>24.1-jre</version.guava>
+        <version.maven-compiler-plugin>3.7.0</version.maven-compiler-plugin>
+        <version.maven-jar-plugin>3.0.2</version.maven-jar-plugin>
+        <version.maven-shade-plugin>3.1.0</version.maven-shade-plugin>
+        <version.exec-maven-plugin>1.6.0</version.exec-maven-plugin>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${version.guava}</version>
+        </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>config</artifactId>
@@ -77,7 +82,6 @@
             <artifactId>server</artifactId>
             <version>${version.light-java}</version>
         </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -105,24 +109,15 @@
         </dependency>
         <dependency>
             <groupId>com.dslplatform</groupId>
-            <artifactId>dsl-json-java8</artifactId>
-            <version>1.4.0</version>
+            <artifactId>dsl-json-processor</artifactId>
+            <version>${version.dsl-json}</version>
         </dependency>
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
-            <version>0.9.0</version>
-        </dependency>
-
-        <!-- Test Dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${version.junit}</version>
-            <scope>test</scope>
+            <version>${version.mustache}</version>
         </dependency>
     </dependencies>
-
 
     <build>
         <defaultGoal>install</defaultGoal>
@@ -132,7 +127,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>${version.maven-shade-plugin}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -150,7 +145,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <version>${version.maven-jar-plugin}</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -162,7 +157,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.4.0</version>
+                <version>${version.exec-maven-plugin}</version>
                 <configuration>
                     <executable>java</executable>
                     <arguments>
@@ -171,89 +166,18 @@
                     </arguments>
                 </configuration>
             </plugin>
-            <!-- Google error-prone compiles -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>${version.maven-compiler-plugin}</version>
                 <configuration>
-                    <compilerId>javac-with-errorprone</compilerId>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
-                    <compilerArgs>
-                        <!-- add command line validation here -->
-                    </compilerArgs>
                     <forceJavacCompilerUse>true</forceJavacCompilerUse>
-                    <!-- maven-compiler-plugin defaults to targeting Java 5, but our javac
-                         only supports >=6 -->
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>${version.java}</source>
+                    <target>${version.java}</target>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.plexus</groupId>
-                        <artifactId>plexus-compiler-javac-errorprone</artifactId>
-                        <version>2.8.2</version>
-                    </dependency>
-                    <!-- override plexus-compiler-javac-errorprone's dependency on
-                         Error Prone with the latest version -->
-                    <dependency>
-                        <groupId>com.google.errorprone</groupId>
-                        <artifactId>error_prone_core</artifactId>
-                        <version>2.1.3</version>
-                    </dependency>
-                </dependencies>
             </plugin>
-
-            <!-- end Google error-proce compiles -->
         </plugins>
-
-        <pluginManagement>
-        	<plugins>
-        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-        		<plugin>
-        			<groupId>org.eclipse.m2e</groupId>
-        			<artifactId>lifecycle-mapping</artifactId>
-        			<version>1.0.0</version>
-        			<configuration>
-        				<lifecycleMappingMetadata>
-        					<pluginExecutions>
-        						<pluginExecution>
-        							<pluginExecutionFilter>
-        								<groupId>
-        									org.apache.maven.plugins
-        								</groupId>
-        								<artifactId>
-        									maven-compiler-plugin
-        								</artifactId>
-        								<versionRange>
-        									[3.7.0,)
-        								</versionRange>
-        								<goals>
-        									<goal>compile</goal>
-        									<goal>testCompile</goal>
-        								</goals>
-        							</pluginExecutionFilter>
-        							<action>
-        								<ignore></ignore>
-        							</action>
-        						</pluginExecution>
-        					</pluginExecutions>
-        				</lifecycleMappingMetadata>
-        			</configuration>
-        		</plugin>
-        	</plugins>
-        </pluginManagement>
-
     </build>
-
-    <repositories>
-        <repository>
-            <id>sonatype-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 </project>

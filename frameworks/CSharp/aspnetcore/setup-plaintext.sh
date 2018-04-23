@@ -5,6 +5,11 @@ then
     threadCount=24
 fi
 
+if [ "$(nproc)" -eq "28" ]
+then
+    threadCount=8
+fi
+
 if [ "$(nproc)" -eq "4" ]
 then
     threadCount=2

@@ -10,7 +10,7 @@ _is_pypy = hasattr(sys, 'pypy_version_info')
 if sys.version_info[0] == 3:
     xrange = range
 
-DBHOSTNAME = os.environ.get('DBHOST', 'localhost')
+DBHOSTNAME = 'tfb-database'
 
 app = App(__name__)
 

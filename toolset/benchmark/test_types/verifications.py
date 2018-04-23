@@ -1,6 +1,8 @@
 import json
 import re
-import math
+import traceback
+
+from toolset.utils.output_helper import log
 
 
 def basic_body_verification(body, url, is_json_check=True):
@@ -48,24 +50,23 @@ def verify_headers(headers, url, should_be='json'):
 
     problems = []
 
-    for v in (v for v in ('Server', 'Date', 'Content-Type') if v.lower() not in headers):
-        problems.append(
-            ('warn', 'Required response header missing: %s' % v, url))
+    for v in (v for v in ('Server', 'Date', 'Content-Type')
+              if v.lower() not in headers):
+        problems.append(('warn', 'Required response header missing: %s' % v,
+                         url))
 
-    if all(v.lower() not in headers for v in ('Content-Length', 'Transfer-Encoding')):
-        problems.append(
-            ('warn',
-             'Required response size header missing, please include either "Content-Length" or "Transfer-Encoding"',
-             url))
+    if all(v.lower() not in headers
+           for v in ('Content-Length', 'Transfer-Encoding')):
+        problems.append((
+            'warn',
+            'Required response size header missing, please include either "Content-Length" or "Transfer-Encoding"',
+            url))
 
     content_type = headers.get('Content-Type', None)
 
     if content_type is None:
-        problems.append(
-            ('warn',
-             'No content encoding found, expected \"%s\"' % (
-                 expected_type),
-             url))
+        problems.append(('warn', 'No content encoding found, expected \"%s\"' %
+                         (expected_type), url))
     else:
         # Split out "charset=utf-8" if it's included
         content_type_list = re.split('; *', content_type.lower())
@@ -73,31 +74,25 @@ def verify_headers(headers, url, should_be='json'):
         # "text/html" requires charset to be set. The others do not
         if expected_type == types['html']:
             if expected_type not in content_type_list:
-                problems.append(
-                    ('warn',
-                     'Unexpected content encoding, found \"%s\", expected \"%s\".' % (
-                         content_type, expected_type + '; ' + charset),
-                     url))
+                problems.append((
+                    'warn',
+                    'Unexpected content encoding, found \"%s\", expected \"%s\".'
+                    % (content_type, expected_type + '; ' + charset), url))
             elif charset not in content_type_list:
-                problems.append(
-                    ('warn',
-                     ('The \"%s\" content type requires \"charset=utf-8\" to be specified.'
-                      % expected_type),
-                     url))
+                problems.append(('warn', (
+                    'The \"%s\" content type requires \"charset=utf-8\" to be specified.'
+                    % expected_type), url))
         else:
             if expected_type not in content_type_list:
-                problems.append(
-                    ('warn',
-                     'Unexpected content encoding, found \"%s\", expected \"%s\"' % (
-                         content_type, expected_type),
-                     url))
+                problems.append((
+                    'warn',
+                    'Unexpected content encoding, found \"%s\", expected \"%s\"'
+                    % (content_type, expected_type), url))
             elif charset in content_type_list:
-                problems.append(
-                    ('warn',
-                     ("Content encoding found in \"%s\" where \"%s\" is acceptable.\n"
-                      "Additional response bytes may negatively affect benchmark performance."
-                      % (content_type, expected_type)),
-                     url))
+                problems.append(('warn', (
+                    "Content encoding found in \"%s\" where \"%s\" is acceptable.\n"
+                    "Additional response bytes may negatively affect benchmark performance."
+                    % (content_type, expected_type)), url))
     return problems
 
 
@@ -109,9 +104,11 @@ def verify_helloworld_object(json_object, url):
 
     problems = []
 
-    # Make everything case insensitive
-    json_object = {k.lower(): v.lower()
-                   for k, v in json_object.iteritems()}
+    try:
+        # Make everything case insensitive
+        json_object = {k.lower(): v.lower() for k, v in json_object.iteritems()}
+    except:
+        return [('fail', "Not a valid JSON object", url)]
 
     if 'message' not in json_object:
         return [('fail', "Missing required key 'message'", url)]
@@ -121,14 +118,19 @@ def verify_helloworld_object(json_object, url):
             additional = (', ').join(
                 [k for k in json_object.keys() if k != 'message'])
             problems.append(
-                ('warn', "Too many JSON key/value pairs, consider removing: %s" % additional, url))
+                ('warn', "Too many JSON key/value pairs, consider removing: %s"
+                 % additional, url))
         if json_len > 27:
             problems.append(
-                'warn', "%s additional response byte(s) found. Consider removing unnecessary whitespace." % (json_len - 26))
+                'warn',
+                "%s additional response byte(s) found. Consider removing unnecessary whitespace."
+                % (json_len - 26))
         message = json_object['message']
 
         if message != 'hello, world!':
-            return [('fail', "Expected message of 'hello, world!', got '%s'" % message, url)]
+            return [('fail',
+                     "Expected message of 'hello, world!', got '%s'" % message,
+                     url)]
         return problems
 
 
@@ -148,7 +150,8 @@ def verify_randomnumber_object(db_object, url, max_infraction='fail'):
         got = str(db_object)[:20]
         if len(str(db_object)) > 20:
             got = str(db_object)[:17] + '...'
-        return [(max_infraction, "Expected a JSON object, got '%s' instead" % got, url)]
+        return [(max_infraction,
+                 "Expected a JSON object, got '%s' instead" % got, url)]
 
     # Make keys case insensitive
     db_object = {k.lower(): v for k, v in db_object.iteritems()}
@@ -156,15 +159,14 @@ def verify_randomnumber_object(db_object, url, max_infraction='fail'):
 
     for v in (v for v in required_keys if v not in db_object):
         problems.append(
-            (max_infraction, 'Response object was missing required key: %s' % v, url))
+            (max_infraction,
+             'Response object was missing required key: %s' % v, url))
 
     if len(db_object) > len(required_keys):
         extras = set(db_object.keys()) - required_keys
         problems.append(
-            ('warn',
-             'An extra key(s) is being included with the db object: %s' % ', '.join(
-                 extras),
-             url))
+            ('warn', 'An extra key(s) is being included with the db object: %s'
+             % ', '.join(extras), url))
 
     # All required keys must be present
     if len(problems) > 0:
@@ -175,31 +177,37 @@ def verify_randomnumber_object(db_object, url, max_infraction='fail'):
         o_id = int(db_object['id'])
 
         if o_id > 10000 or o_id < 1:
-            problems.append(
-                ('warn',
-                 'Response key id should be between 1 and 10,000: ' +
-                 str(o_id),
-                 url))
+            problems.append((
+                'warn',
+                'Response key id should be between 1 and 10,000: ' + str(o_id),
+                url))
     except TypeError as e:
         problems.append(
-            (max_infraction, "Response key 'id' does not map to an integer - %s" % e, url))
+            (max_infraction,
+             "Response key 'id' does not map to an integer - %s" % e, url))
 
     try:
         o_rn = int(db_object['randomnumber'])
 
         if o_rn > 10000:
-            problems.append(
-                ('warn',
-                 'Response key `randomNumber` is over 10,000. This may negatively affect performance by sending extra bytes',
-                 url))
+            problems.append((
+                'warn',
+                'Response key `randomNumber` is over 10,000. This may negatively affect performance by sending extra bytes',
+                url))
     except TypeError as e:
         problems.append(
-            (max_infraction, "Response key 'randomnumber' does not map to an integer - %s" % e, url))
+            (max_infraction,
+             "Response key 'randomnumber' does not map to an integer - %s" % e,
+             url))
 
     return problems
 
 
-def verify_randomnumber_list(expected_len, headers, body, url, max_infraction='fail'):
+def verify_randomnumber_list(expected_len,
+                             headers,
+                             body,
+                             url,
+                             max_infraction='fail'):
     '''
     Validates that the object is a list containing a number of
     randomnumber object. Should closely resemble:
@@ -215,21 +223,20 @@ def verify_randomnumber_list(expected_len, headers, body, url, max_infraction='f
     # rather than a list containing one element. We allow this with a warn,
     # then verify the supplied object
     if type(response) is not list:
-        problems.append(
-            ('warn', 'Top-level JSON is an object, not an array', url))
+        problems.append(('warn', 'Top-level JSON is an object, not an array',
+                         url))
         problems += verify_randomnumber_object(response, url, max_infraction)
         return problems
 
     if any(type(item) is not dict for item in response):
         problems.append(
-            (max_infraction, 'Not all items in the JSON array were JSON objects', url))
+            (max_infraction,
+             'Not all items in the JSON array were JSON objects', url))
 
     if len(response) != expected_len:
-        problems.append(
-            (max_infraction,
-             "JSON array length of %s != expected length of %s" % (
-                 len(response), expected_len),
-             url))
+        problems.append((max_infraction,
+                         "JSON array length of %s != expected length of %s" %
+                         (len(response), expected_len), url))
 
     # Verify individual objects, arbitrarily stop after 5 bad ones are found
     # i.e. to not look at all 500
@@ -249,11 +256,12 @@ def verify_randomnumber_list(expected_len, headers, body, url, max_infraction='f
 
     return problems
 
+
 def verify_updates(old_worlds, new_worlds, updates_expected, url):
     '''
     Validates that the /updates requests actually updated values in the database and didn't
     just return a JSON list of the correct number of World items.
-sz
+
     old_worlds  a JSON object containing the state of the Worlds table BEFORE the /updates requests
     new_worlds  a JSON object containing the state of the Worlds table AFTER the /updates requests
     If no items were updated, this validation test returns a "fail."
@@ -267,31 +275,33 @@ sz
 
     n = 0
     while n < len(old_worlds) and successful_updates == 0:
-        print(old_worlds[n]['1'])
         for i in range(1, 10001):
             try:
                 entry_id = str(i)
-                if entry_id in old_worlds[n] and entry_id  in new_worlds[n]:
+                if entry_id in old_worlds[n] and entry_id in new_worlds[n]:
                     if old_worlds[n][entry_id] != new_worlds[n][entry_id]:
                         successful_updates += 1
-            except Exception as e:
-                print e
+            except Exception:
+                tb = traceback.format_exc()
+                log(tb)
         n += 1
 
     if successful_updates == 0:
-        problems.append(
-            ("fail", "No items were updated in the database.", url))
+        problems.append(("fail", "No items were updated in the database.",
+                         url))
     elif successful_updates <= (updates_expected * 0.90):
-        problems.append(
-            ("fail", "Only %s items were updated in the database out of roughly %s expected." % (successful_updates, updates_expected), url))
+        problems.append((
+            "fail",
+            "Only %s items were updated in the database out of roughly %s expected."
+            % (successful_updates, updates_expected), url))
     elif successful_updates <= (updates_expected * 0.95):
-        problems.append(
-            ("warn",
-             "There may have been an error updating the database. Only %s items were updated in the database out of the roughly %s expected." % (
-                 successful_updates, updates_expected),
-             url))
+        problems.append((
+            "warn",
+            "There may have been an error updating the database. Only %s items were updated in the database out of the roughly %s expected."
+            % (successful_updates, updates_expected), url))
 
     return problems
+
 
 def verify_query_cases(self, cases, url, check_updates=False):
     '''
@@ -337,8 +347,8 @@ def verify_query_cases(self, cases, url, check_updates=False):
             else:
                 expected_len = queries
 
-            problems += verify_randomnumber_list(
-                expected_len, headers, body, case_url, max_infraction)
+            problems += verify_randomnumber_list(expected_len, headers, body,
+                                                 case_url, max_infraction)
             problems += verify_headers(headers, case_url)
 
             # Only check update changes if we are doing an Update verification and if we're testing
@@ -347,7 +357,8 @@ def verify_query_cases(self, cases, url, check_updates=False):
             # previously held
             if check_updates and queries >= MAX:
                 world_db_after = self.get_current_world_table()
-                problems += verify_updates(world_db_before, world_db_after, MAX, case_url)
+                problems += verify_updates(world_db_before, world_db_after,
+                                           MAX, case_url)
 
         except ValueError:
             warning = (
@@ -356,15 +367,11 @@ def verify_query_cases(self, cases, url, check_updates=False):
                 '(this will be a failure in future rounds, please fix)')
 
             if body is None:
-                problems.append(
-                    (max_infraction,
-                     warning % ('No response', q),
-                     case_url))
+                problems.append((max_infraction, warning % ('No response', q),
+                                 case_url))
             elif len(body) == 0:
-                problems.append(
-                    (max_infraction,
-                     warning % ('Empty response', q),
-                     case_url))
+                problems.append((max_infraction, warning % ('Empty response',
+                                                            q), case_url))
             else:
                 expected_len = 1
                 # Strictness will be upped in a future round, i.e. Frameworks currently do not have

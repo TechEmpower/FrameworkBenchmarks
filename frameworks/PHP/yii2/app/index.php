@@ -14,7 +14,7 @@ $config = [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=TFB-database;dbname=hello_world',
+            'dsn' => 'mysql:host=tfb-database;dbname=hello_world',
             'username' => 'benchmarkdbuser',
             'password' => 'benchmarkdbpass',
             'charset' => 'utf8',

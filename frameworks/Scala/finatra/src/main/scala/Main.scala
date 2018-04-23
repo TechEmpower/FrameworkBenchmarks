@@ -1,4 +1,4 @@
-import com.twitter.finagle.Http.{Netty3Impl, Server}
+import com.twitter.finagle.Http.Server
 import com.twitter.finagle.http.Request
 import com.twitter.finagle.stack.nilStack
 import com.twitter.finagle.stats.NullStatsReceiver
@@ -11,7 +11,6 @@ object FinatraBenchmarkServerMain extends FinatraBenchmarkServer
 class FinatraBenchmarkServer extends HttpServer {
   override def configureHttpServer(server: Server): Server = {
     server
-      .configured(Netty3Impl)
       .withCompressionLevel(0)
       .withStatsReceiver(NullStatsReceiver)
       .withStack(nilStack)

@@ -15,7 +15,7 @@ public class BenchmarkMain extends Jawn {
     private static final byte[] bytemessage = message.getBytes();
     
 
-    String host = "TFB-database:5432";
+    String host = "tfb-database:5432";
     String dbUrl = "jdbc:postgresql://"+host+"/hello_world";
     
     // implicit constructor

@@ -5,7 +5,7 @@ class RawFortuneController extends AppController
     public function index()
     {
         View::select(null,'raw');
-        $pdo = new PDO('mysql:host=TFB-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
+        $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
             PDO::ATTR_PERSISTENT => true
         ));
         $res = $pdo->query('SELECT id, message FROM Fortune', PDO::FETCH_ASSOC);

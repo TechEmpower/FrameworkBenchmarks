@@ -1,9 +1,9 @@
 /*
-This is an incomplete example meant to be used as a benchmark application for
-the TechEmpower Framework Benchmarks. See:
+This is a short implementation fo the TechEmpower Framework Benchmarks. See:
 http://frameworkbenchmarks.readthedocs.io/en/latest/
 
-At the moment it's incomplete and might be broken.
+At the moment it's incomplete and only answers the plaintext and json tests
+using the full HTTP framework stack (without any DB support).
 */
 #include "http.h"
 

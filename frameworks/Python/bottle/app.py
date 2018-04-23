@@ -20,7 +20,7 @@ if sys.version_info[0] == 3:
 _is_pypy = hasattr(sys, 'pypy_version_info')
 
 DBDRIVER = 'mysql+pymysql' if _is_pypy else 'mysql'
-DBHOSTNAME = os.environ.get('DBHOST', 'localhost')
+DBHOSTNAME = 'tfb-database'
 DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % (DBDRIVER, DBHOSTNAME)
 
 app = Bottle()

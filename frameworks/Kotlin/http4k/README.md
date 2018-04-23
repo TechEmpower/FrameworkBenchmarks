@@ -16,7 +16,6 @@ The tests were run with:
 
 ## How to run
 ```bash
-./gradlew clean build jetty
-java -jar build/libs/http4k-standalone.jar &
+gradle clean build jetty
+java -jar build/libs/http4k-standalone.jar
 ```
-

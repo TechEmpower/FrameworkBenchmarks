@@ -2,7 +2,6 @@
   "framework": "vapor",
   "tests": [{
     "default": {
-      "setup_file": "setup-mysql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -26,7 +25,6 @@
       "versus": ""
     },
     "postgresql": {
-      "setup_file": "setup-postgresql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -50,7 +48,6 @@
       "versus": ""
     },
     "mongodb": {
-      "setup_file": "setup-mongodb",
       "json_url": "/json",
       "db_url": "/db",
       "fortune_url": "/fortunes",

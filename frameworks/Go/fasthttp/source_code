@@ -1,6 +1,7 @@
 ./fasthttp/server.go
 ./fasthttp/src/
 ./fasthttp/src/common/common.go
+./fasthttp/src/common/common_easyjson.go
 ./fasthttp/src/server-mysql/server.go
 ./fasthttp/src/server-postgresql/server.go
 ./fasthttp/src/templates/

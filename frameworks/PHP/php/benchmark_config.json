@@ -2,7 +2,6 @@
   "framework": "php",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json.php",
       "plaintext_url": "/plaintext.php",
       "db_url": "/dborm.php",
@@ -24,7 +23,6 @@
       "versus": "php7"
     },
     "raw7": {
-      "setup_file": "setup",
       "db_url": "/dbraw.php",
       "query_url": "/dbraw.php?queries=",
       "fortune_url": "/fortune.php",
@@ -46,7 +44,6 @@
       "versus": "php7"
     },
     "php5": {
-      "setup_file": "setup_php5",
       "json_url": "/json.php",
       "plaintext_url": "/plaintext.php",
       "db_url": "/dborm.php",
@@ -68,7 +65,6 @@
       "versus": "php-php5"
     },
     "php5-raw": {
-      "setup_file": "setup",
       "db_url": "/dbraw.php",
       "query_url": "/dbraw.php?queries=",
       "fortune_url": "/fortune.php",
@@ -88,6 +84,24 @@
       "display_name": "PHP-raw",
       "notes": "",
       "versus": "php-php5"
+    },
+    "swoole": {
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "swoole",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "PHP-swool",
+      "notes": "",
+      "versus": "php7"
     }
   }]
 }

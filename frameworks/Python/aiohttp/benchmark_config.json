@@ -2,7 +2,6 @@
   "framework": "aiohttp",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries/",
@@ -25,7 +24,6 @@
       "notes": "uses aiopg with sqlalchemy for database access"
     },
     "pg-raw": {
-      "setup_file": "setup_raw",
       "db_url": "/db",
       "query_url": "/queries/",
       "fortune_url": "/fortunes",

@@ -2,7 +2,6 @@
   "framework": "cppcms",
   "tests": [{
     "default": {
-      "setup_file": "setup-nginx-mysql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries/",
@@ -26,7 +25,6 @@
       "notes": ""
     },
     "postgres": {
-      "setup_file": "setup-nginx-postgresql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries/",
@@ -50,7 +48,6 @@
       "notes": ""
     },
     "direct": {
-      "setup_file": "setup-direct-mysql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries/",

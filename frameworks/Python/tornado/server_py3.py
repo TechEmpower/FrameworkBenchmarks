@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import asyncio
 import json
 import motor
 import tornado.ioloop
@@ -9,9 +9,6 @@ import tornado.httpserver
 from random import randint
 from tornado.options import options
 from commons import JsonHandler, JsonHelloWorldHandler, PlaintextHelloWorldHandler, HtmlHandler
-from tornado.ioloop import IOLoop
-
-IOLoop.configure('tornado.platform.asyncio.AsyncIOLoop')
 
 
 options.define('port', default=8888, type=int, help="Server port")
@@ -44,8 +41,10 @@ class MultipleQueriesHandler(JsonHandler):
                 queries = 500
 
         worlds = []
-        for future in [db.world.find_one(randint(1, 10000)) for _ in range(queries)]:
-            world = await future
+        futures, _ = await asyncio.wait([db.world.find_one(randint(1, 10000)) for _ in range(queries)])
+
+        for future in futures:
+            world = future.result()
 
             worlds.append({self.ID: int(world['_id']),
                     self.RANDOM_NUMBER: int(world[self.RANDOM_NUMBER])})
@@ -66,15 +65,17 @@ class UpdateHandler(JsonHandler):
                 queries = 500
 
         worlds = []
-        futures = [db.world.find_one(randint(1, 10000)) for _ in range(queries)]
+        updates = []
+        futures, _ = await asyncio.wait([db.world.find_one(randint(1, 10000)) for _ in range(queries)])
 
-        for world in futures:
-            world = await world
+        for future in futures:
+            world = future.result()
             new_value = randint(1, 10000)
-            await db.world.update_one({'_id': world['_id']}, {"$set": {self.RANDOM_NUMBER: new_value}})
 
+            updates.append(db.world.update_one({'_id': world['_id']}, {"$set": {self.RANDOM_NUMBER: new_value}}))
             worlds.append({self.ID: int(world['_id']),
                     self.RANDOM_NUMBER: world[self.RANDOM_NUMBER]})
+        await asyncio.wait(updates)
         self.finish(json.dumps(worlds))
 
 
