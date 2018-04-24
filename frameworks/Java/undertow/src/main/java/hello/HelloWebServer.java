@@ -1,7 +1,6 @@
 package hello;
 
 import static io.undertow.util.Headers.CONTENT_TYPE;
-import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.util.Comparator.comparing;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
