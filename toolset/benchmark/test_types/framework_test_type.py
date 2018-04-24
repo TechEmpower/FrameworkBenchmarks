@@ -13,13 +13,13 @@ from toolset.utils.output_helper import log
 
 class FrameworkTestType:
     '''
-    Interface between a test type (json, query, plaintext, etc) and 
+    Interface between a test type (json, query, plaintext, etc) and
     the rest of TFB. A test type defines a number of keys it expects
     to find in the benchmark_config.json, and this base class handles extracting
-    those keys and injecting them into the test. For example, if 
+    those keys and injecting them into the test. For example, if
     benchmark_config.json contains a line `"spam" : "foobar"` and a subclasses X
-    passes an argument list of ['spam'], then after parsing there will 
-    exist a member `X.spam = 'foobar'`. 
+    passes an argument list of ['spam'], then after parsing there will
+    exist a member `X.spam = 'foobar'`.
     '''
 
     def __init__(self,
@@ -32,8 +32,6 @@ class FrameworkTestType:
         self.name = name
         self.requires_db = requires_db
         self.args = args
-        self.out = sys.stdout
-        self.err = sys.stderr
 
         if accept_header is None:
             self.accept_header = self.accept('json')
@@ -54,21 +52,9 @@ class FrameworkTestType:
             'text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7'
         }[content_type]
 
-    def setup_out(self, out):
-        '''
-        Sets up file-like objects for logging. Used in 
-        cases where it is hard just return the output. Any
-        output sent to these file objects is also printed to 
-        the console
-
-        NOTE: I detest this. It would be much better to use
-        logging like it's intended
-        '''
-        self.out = out
-
     def parse(self, test_keys):
         '''
-        Takes the dict of key/value pairs describing a FrameworkTest 
+        Takes the dict of key/value pairs describing a FrameworkTest
         and collects all variables needed by this FrameworkTestType
 
         Raises AttributeError if required keys are missing
@@ -99,20 +85,20 @@ class FrameworkTestType:
 
     def verify(self, base_url):
         '''
-        Accesses URL used by this test type and checks the return 
+        Accesses URL used by this test type and checks the return
         values for correctness. Most test types run multiple checks,
         so this returns a list of results. Each result is a 3-tuple
         of (String result, String reason, String urlTested).
 
         - result : 'pass','warn','fail'
-        - reason : Short human-readable reason if result was 
-            warn or fail. Please do not print the response as part of this, 
-            other parts of TFB will do that based upon the current logging 
+        - reason : Short human-readable reason if result was
+            warn or fail. Please do not print the response as part of this,
+            other parts of TFB will do that based upon the current logging
             settings if this method indicates a failure happened
         - urlTested: The exact URL that was queried
 
         Subclasses should make a best-effort attempt to report as many
-        failures and warnings as they can to help users avoid needing 
+        failures and warnings as they can to help users avoid needing
         to run TFB repeatedly while debugging
         '''
         # TODO make String result into an enum to enforce

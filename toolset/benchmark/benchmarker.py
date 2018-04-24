@@ -230,7 +230,6 @@ class Benchmarker:
             log("BENCHMARKING %s ... " % test_type.upper(), file=benchmark_log)
 
             test = framework_test.runTests[test_type]
-            test.setup_out(benchmark_log)
             raw_file = self.results.get_raw_file(framework_test.name,
                                                  test_type)
             if not os.path.exists(raw_file):
