@@ -1,9 +1,11 @@
 FROM ubuntu:16.04
 
-RUN apt update -yqq && apt install -yqq software-properties-common
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
-RUN apt update -yqq
-RUN apt install -yqq nginx git unzip php5.6 php5.6-common php5.6-cli php5.6-fpm php5.6-mysql php5.6-xml php5.6-mbstring php5.6-mcrypt
+RUN apt-get update -yqq  > /dev/null
+RUN apt-get install -yqq nginx git unzip php5.6 php5.6-common php5.6-cli php5.6-fpm php5.6-mysql php5.6-xml php5.6-mbstring php5.6-mcrypt  > /dev/null
 
 RUN mkdir /composer
 WORKDIR /composer
@@ -21,7 +23,7 @@ RUN sed -i "s|listen = /run/php/php7.2-fpm.sock|listen = /run/php/php5.6-fpm.soc
 ADD ./ /cygnite
 WORKDIR /cygnite
 
-RUN composer.phar install
+RUN composer.phar install --quiet
 
 CMD service php5.6-fpm start && \
     nginx -c /cygnite/deploy/nginx.conf -g "daemon off;"
