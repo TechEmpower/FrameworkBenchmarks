@@ -42,7 +42,7 @@ public class FortunesPostgresqlGetHandler implements HttpHandler {
         StringWriter writer = new StringWriter();
         mustache.execute(writer, fortunes);
         exchange.getResponseHeaders().put(
-                Headers.CONTENT_TYPE, "text/html");
+                Headers.CONTENT_TYPE, "text/html;charset=utf-8");
         exchange.getResponseSender().send(writer.toString());
     }
 }
