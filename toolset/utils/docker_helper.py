@@ -383,7 +383,7 @@ def benchmark(benchmarker_config, script, variables, raw_file):
     watch_container(
         client.containers.run(
             "techempower/tfb.wrk",
-            "/bin/bash /%s" % script,
+            "/bin/bash %s" % script,
             environment=variables,
             network=benchmarker_config.network,
             network_mode=benchmarker_config.network_mode,

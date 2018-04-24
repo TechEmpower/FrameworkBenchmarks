@@ -1,16 +1,15 @@
 FROM buildpack-deps:xenial
 
-# wrk
-RUN curl -sL -o wrk-4.0.1.tar.gz https://github.com/wg/wrk/archive/4.0.1.tar.gz
-RUN tar xzf wrk-4.0.1.tar.gz
-RUN cd wrk-4.0.1 && make
-RUN cp wrk-4.0.1/wrk /usr/local/bin
+WORKDIR /wrk
+RUN curl -sL https://github.com/wg/wrk/archive/4.1.0.tar.gz | tar xz --strip-components=1
+RUN make > /dev/null
+RUN cp wrk /usr/local/bin
 
 # Required scripts for benchmarking
-ADD pipeline.lua pipeline.lua
-ADD concurrency.sh concurrency.sh
-ADD pipeline.sh pipeline.sh
-ADD query.sh query.sh
+COPY pipeline.lua pipeline.lua
+COPY concurrency.sh concurrency.sh
+COPY pipeline.sh pipeline.sh
+COPY query.sh query.sh
 
 RUN chmod 777 pipeline.lua concurrency.sh pipeline.sh query.sh
 
