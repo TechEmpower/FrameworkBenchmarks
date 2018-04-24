@@ -256,8 +256,7 @@ class DockerHelper:
         image_name = "techempower/%s:latest" % database
         log_prefix = image_name + ": "
 
-        database_dir = os.path.join(self.benchmarker.config.fwroot, "toolset",
-                                    "databases", database)
+        database_dir = os.path.join(self.benchmarker.config.db_root, database)
         docker_file = "%s.dockerfile" % database
 
         self.__build(
@@ -303,7 +302,7 @@ class DockerHelper:
         '''
         self.__build(
             base_url=self.benchmarker.config.client_docker_host,
-            path=os.path.join(self.benchmarker.config.fwroot, "toolset", "wrk"),
+            path=self.benchmarker.config.wrk_root,
             dockerfile="wrk.dockerfile",
             log_prefix="wrk: ",
             build_log_file=os.devnull,

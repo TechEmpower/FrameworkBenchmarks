@@ -3,6 +3,7 @@ from toolset.utils.docker_helper import DockerHelper
 from toolset.utils.time_logger import TimeLogger
 from toolset.utils.metadata import Metadata
 from toolset.utils.results import Results
+from toolset.utils.audit import Audit
 
 import os
 import subprocess
@@ -23,6 +24,7 @@ class Benchmarker:
         self.config = config
         self.timeLogger = TimeLogger()
         self.metadata = Metadata(self)
+        self.audit = Audit(self)
 
         # a list of all tests for this run
         self.tests = self.metadata.tests_to_run()
@@ -100,7 +102,6 @@ class Benchmarker:
         log_prefix = "%s: " % test.name
         self.timeLogger.log_test_start()
 
-
         # If the test is in the excludes list, we skip it
         if self.config.exclude and test.name in self.config.exclude:
             message = "Test {name} has been added to the excludes list. Skipping.".format(name=test.name)
@@ -166,10 +167,11 @@ class Benchmarker:
                 while True:
                     time.sleep(1)
 
-            # Verify URLs
+            # Verify URLs and audit
             log("Verifying framework URLs", prefix=log_prefix)
             self.timeLogger.log_verify_start()
             passed_verify = test.verify_urls()
+            self.audit.audit_test_dir(test.directory)
             self.timeLogger.log_verify_end(
                 log_prefix=log_prefix,
                 file=benchmark_log)

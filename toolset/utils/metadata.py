@@ -26,7 +26,7 @@ class Metadata:
         beneath FWROOT.
         '''
 
-        lang_dir = os.path.join(self.benchmarker.config.fwroot, "frameworks")
+        lang_dir = os.path.join(self.benchmarker.config.lang_root)
         langs = []
         for dir in glob.glob(os.path.join(lang_dir, "*")):
             langs.append(dir.replace(lang_dir, "")[1:])
@@ -37,10 +37,10 @@ class Metadata:
         Gathers all the test names from a known language
         '''
         try:
-            dir = os.path.join(self.benchmarker.config.fwroot, "frameworks", language)
+            dir = os.path.join(self.benchmarker.config.lang_root, language)
             tests = map(lambda x: os.path.join(language, x), os.listdir(dir))
             return filter(lambda x: os.path.isdir(
-                os.path.join(self.benchmarker.config.fwroot, "frameworks", x)), tests)
+                os.path.join(self.benchmarker.config.lang_root, x)), tests)
         except Exception:
             raise Exception(
                 "Unable to locate language directory: {!s}".format(language))
@@ -51,8 +51,8 @@ class Metadata:
         test directory
         '''
         dir_config_files = glob.glob(
-            "{!s}/frameworks/{!s}/benchmark_config.json".format(
-                self.benchmarker.config.fwroot, test_dir))
+            "{!s}/{!s}/benchmark_config.json".format(
+                self.benchmarker.config.lang_root, test_dir))
         if len(dir_config_files):
             return dir_config_files[0]
         else:
@@ -90,8 +90,8 @@ class Metadata:
                 config_files.append(self.get_framework_config(test_dir))
         else:
             config_files.extend(
-                glob.glob("{!s}/frameworks/*/*/benchmark_config.json".format(
-                    self.benchmarker.config.fwroot)))
+                glob.glob("{!s}/*/*/benchmark_config.json".format(
+                    self.benchmarker.config.lang_root)))
 
         tests = []
         for config_file_name in config_files:
@@ -153,8 +153,10 @@ class Metadata:
         '''
         Returns True if the file exists in the test dir
         '''
-        return os.path.isfile("{!s}/frameworks/{!s}/{!s}".format(
-                self.benchmarker.config.fwroot, test_dir, filename))
+        path = test_dir
+        if not self.benchmarker.config.lang_root in path:
+            path = os.path.join(self.benchmarker.config.lang_root, path)
+        return os.path.isfile("{!s}/{!s}".format(path, filename))
 
     @staticmethod
     def test_order(type_name):

@@ -1,3 +1,4 @@
+import os
 from toolset.utils.output_helper import log
 from colorama import Fore
 
@@ -9,8 +10,6 @@ class Audit:
 
     def __init__(self, benchmarker):
         self.benchmarker = benchmarker
-
-        self.start_audit()
 
     def start_audit(self):
         for lang in self.benchmarker.metadata.gather_languages():

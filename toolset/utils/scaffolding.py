@@ -294,8 +294,8 @@ class Scaffolding:
             self.__edit_scaffold_files()
 
     def __create_test_folder(self):
-        self.language_dir = os.path.join(self.benchmarker_config.fwroot,
-                                         "frameworks", self.language)
+        self.language_dir = os.path.join(self.benchmarker_config.lang_root,
+                                         self.language)
         self.test_dir = os.path.join(self.language_dir, self.name)
 
         if os.path.exists(self.test_dir):
@@ -305,9 +305,7 @@ class Scaffolding:
         return True
 
     def __copy_scaffold_files(self):
-        self.scaffold_dir = os.path.join(self.benchmarker_config.fwroot,
-                                         "toolset", "scaffolding")
-        copytree(self.scaffold_dir, self.test_dir)
+        copytree(self.benchmarker_config.scaffold_root, self.test_dir)
 
     def __edit_scaffold_files(self):
         for file in os.listdir(os.path.join(self.test_dir)):

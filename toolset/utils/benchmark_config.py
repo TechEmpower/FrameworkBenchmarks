@@ -74,8 +74,13 @@ class BenchmarkConfig:
 
         self.start_time = time.time()
 
-        # Remember root directory
-        self.fwroot = os.getenv('FWROOT')
+        # Remember directories
+        self.fw_root = os.getenv('FWROOT')
+        self.db_root = os.path.join(self.fw_root, "toolset", "databases")
+        self.lang_root = os.path.join(self.fw_root, "frameworks")
+        self.results_root = os.path.join(self.fw_root, "results")
+        self.wrk_root = os.path.join(self.fw_root, "toolset", "wrk")
+        self.scaffold_root = os.path.join(self.fw_root, "toolset", "scaffolding")
 
         if hasattr(self, 'parse') and self.parse != None:
             self.timestamp = self.parse

@@ -24,7 +24,7 @@ class Results:
         '''
         self.benchmarker = benchmarker
         self.config = benchmarker.config
-        self.directory = os.path.join(self.config.fwroot, "results",
+        self.directory = os.path.join(self.config.results_root,
                                       self.config.timestamp)
         try:
             os.makedirs(self.directory)
@@ -226,7 +226,7 @@ class Results:
     def get_raw_file(self, test_name, test_type):
         '''
         Returns the output file for this test_name and test_type
-        Example: fwroot/results/timestamp/test_type/test_name/raw.txt
+        Example: fw_root/results/timestamp/test_type/test_name/raw.txt
         '''
         path = os.path.join(self.directory, test_name, test_type, "raw.txt")
         try:
@@ -238,7 +238,7 @@ class Results:
     def get_stats_file(self, test_name, test_type):
         '''
         Returns the stats file name for this test_name and
-        Example: fwroot/results/timestamp/test_type/test_name/stats.txt
+        Example: fw_root/results/timestamp/test_type/test_name/stats.txt
         '''
         path = os.path.join(self.directory, test_name, test_type, "stats.txt")
         try:
@@ -443,7 +443,7 @@ class Results:
         Get the git commit id for this benchmark
         '''
         return subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=self.config.fwroot).strip()
+            ["git", "rev-parse", "HEAD"], cwd=self.config.fw_root).strip()
 
     def __get_git_repository_url(self):
         '''
@@ -451,7 +451,7 @@ class Results:
         '''
         return subprocess.check_output(
             ["git", "config", "--get", "remote.origin.url"],
-            cwd=self.config.fwroot).strip()
+            cwd=self.config.fw_root).strip()
 
     def __get_git_branch_name(self):
         '''
@@ -460,7 +460,7 @@ class Results:
         return subprocess.check_output(
             'git rev-parse --abbrev-ref HEAD',
             shell=True,
-            cwd=self.config.fwroot).strip()
+            cwd=self.config.fw_root).strip()
 
     def __parse_stats(self, framework_test, test_type, start_time, end_time,
                       interval):

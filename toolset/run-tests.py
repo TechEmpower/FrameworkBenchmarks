@@ -202,7 +202,7 @@ def main(argv=None):
             Scaffolding(benchmarker)
 
         elif config.audit:
-            Audit(benchmarker)
+            Audit(benchmarker).start_audit()
 
         elif config.clean:
             cleaner.clean(benchmarker.results)
