@@ -99,7 +99,7 @@ class DockerHelper:
             if len(image.tags) > 0:
                 # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
                 image_tag = image.tags[0].split(':')[0]
-                if image_tag != 'techempower/tfb':
+                if image_tag != 'techempower/tfb' and 'techempower' in image_tag:
                     self.database.images.remove(image.id, force=True)
         self.database.images.prune()
 
