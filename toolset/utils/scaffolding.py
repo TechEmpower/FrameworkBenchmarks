@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, re
 from shutil import copytree
-
+from toolset.utils.metadata import Metadata
 
 class Scaffolding:
     def __init__(self, benchmarker):
@@ -23,6 +23,7 @@ class Scaffolding:
             self.__gather_language()
             self.__gather_approach()
             self.__gather_classification()
+            self.__gather_database()
             self.__gather_orm()
             self.__gather_webserver()
             self.__gather_versus()
@@ -70,7 +71,7 @@ class Scaffolding:
     def __prompt_language(self):
         self.language = raw_input("Language: ").strip()
 
-        known_languages = self.benchmarker.metadata.gather_langauges()
+        known_languages = self.benchmarker.metadata.gather_languages()
         language = None
         for lang in known_languages:
             if lang.lower() == self.language.lower():
@@ -93,9 +94,9 @@ class Scaffolding:
       
   Did you mean to add the new language, '%s', to the benchmark suite?
       """ % (similar, self.language))
-            valid = self.__prompt_confirm_new_language(known_languages)
+            valid = self.__prompt_confirm_new_language()
             while not valid:
-                valid = self.__prompt_confirm_new_language(known_languages)
+                valid = self.__prompt_confirm_new_language()
 
             if self.confirm_new_lang == 'n':
                 self.language = None
@@ -104,7 +105,7 @@ class Scaffolding:
 
         return self.language
 
-    def __prompt_confirm_new_language(self, known_languages):
+    def __prompt_confirm_new_language(self):
         self.confirm_new_lang = raw_input("Create New Language '%s' (y/n): " %
                                           self.language).strip().lower()
         return self.confirm_new_lang == 'y' or self.confirm_new_lang == 'n'
@@ -195,7 +196,38 @@ class Scaffolding:
         if self.platform == '':
             self.platform = 'None'
 
+    def __gather_database(self):
+        print("""
+  Which database will you be using for your test?
+    """)
+        i = 1
+        prompt = "Database ["
+        options = []
+        for db in Metadata.supported_dbs:
+            print("  {!s}) {!s}: {!s}".format(i, db[0], db[1]))
+            prompt += "{!s}/".format(i)
+            options.append(db[0])
+            i += 1
+        print("  {!s}) None: No database at this time{!s}".format(i, os.linesep))
+        prompt += "{!s}]: ".format(i)
+        options.append("None")
+        valid = self.__prompt_database(prompt, options)
+        while not valid:
+            valid = self.__prompt_database(prompt, options)
+
+    def __prompt_database(self, prompt, options):
+        self.database = raw_input(prompt).strip()
+        if 0 < int(self.database) <= len(options):
+            self.database = options[int(self.database) - 1]
+            return True
+        else:
+            return False
+
     def __gather_orm(self):
+        if self.database == 'None':
+            self.orm = 'None'
+            return
+
         print("""
   How you would classify the ORM (object relational mapper) of your test?
 
@@ -324,6 +356,8 @@ class Scaffolding:
                 self.framework)
             self.__replace_text(
                 os.path.join(self.test_dir, file), "\$LANGUAGE", self.language)
+            self.__replace_text(
+                os.path.join(self.test_dir, file), "\$DATABASE", self.database)
             self.__replace_text(
                 os.path.join(self.test_dir, file), "\$ORM", self.orm)
             self.__replace_text(
