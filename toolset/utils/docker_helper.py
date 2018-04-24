@@ -208,39 +208,41 @@ class DockerHelper:
         return container
 
     @staticmethod
-    def kill(container):
+    def __stop_container(container, kill):
         try:
-            container.kill()
+            if kill:
+                container.kill()
+            else:
+                container.stop()
         except:
-            # container is already killed
+            # container has already been stopped/killed
             pass
 
     @staticmethod
-    def __stop(docker_client):
+    def __stop_all(docker_client, kill):
         for container in docker_client.containers.list():
             if len(container.image.tags) > 0 \
                     and 'techempower' in container.image.tags[0] \
                     and 'tfb:latest' not in container.image.tags[0]:
-                DockerHelper.kill(container)
+                DockerHelper.__stop_container(container, kill)
 
-    def stop(self,
-             container=None,
-             database_container=None):
+    def stop(self, containers=None, kill=False):
         '''
-        Attempts to stop the running test container.
+        Attempts to stop a container or list of containers.
+        If no containers are passed, stops all running containers.
         '''
         is_multi_setup = self.benchmarker.config.server_docker_host != \
                          self.benchmarker.config.database_docker_host
 
-        if container:
-            DockerHelper.kill(container)
+        if containers:
+            if not isinstance(containers, list):
+                containers = [containers]
+            for container in containers:
+                DockerHelper.__stop_container(container, kill)
         else:
-            self.stop(self.server)
-
-        if database_container:
-            DockerHelper.kill(database_container)
-        elif is_multi_setup:
-            self.stop(self.database)
+            self.__stop_all(self.server, kill)
+            if is_multi_setup:
+                self.__stop_all(self.database, kill)
 
         self.database.containers.prune()
         if is_multi_setup:

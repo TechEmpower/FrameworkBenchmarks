@@ -76,7 +76,7 @@ class Benchmarker:
 
     def stop(self, signal=None, frame=None):
         log("Shutting down (may take a moment)")
-        self.docker_helper.stop()
+        self.docker_helper.stop(kill=True)
         sys.exit(0)
 
     ##########################################################################################
@@ -129,7 +129,7 @@ class Benchmarker:
             # Start webapp
             container = test.start()
             if container is None:
-                self.docker_helper.stop(container, database_container)
+                self.docker_helper.stop([container, database_container])
                 message = "ERROR: Problem starting {name}".format(name=test.name)
                 self.results.write_intermediate(test.name, message)
                 return self.__exit_test(
@@ -149,7 +149,7 @@ class Benchmarker:
                 slept += 1
 
             if not accepting_requests:
-                self.docker_helper.stop(container, database_container)
+                self.docker_helper.stop([container, database_container])
                 message = "ERROR: Framework is not accepting requests from client machine"
                 self.results.write_intermediate(test.name, message)
                 return self.__exit_test(
@@ -188,7 +188,7 @@ class Benchmarker:
                     file=benchmark_log)
 
             # Stop this test
-            self.docker_helper.stop(container, database_container)
+            self.docker_helper.stop([container, database_container])
 
             # Save results thus far into the latest results directory
             self.results.write_intermediate(test.name,
