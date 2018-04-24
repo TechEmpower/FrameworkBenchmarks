@@ -33,7 +33,7 @@ handle('GET', ["updates"], Req) ->
     json(Req, erl_bench:update_randoms_json(Queries));
 
 handle('GET', ["fortunes"], Req) ->
-    html(Req, erl_bench:fortunes_html());
+    fortune(Req, erl_bench:fortunes_html());
 
 handle(_Method, _Path, Req) ->
     Req:respond({404, [{"Content-Type", "text/plain"}], "Not Found"}).
@@ -48,6 +48,9 @@ plain(Req, Text) ->
 
 html(Req, Html) ->
     Req:ok({"text/html", Html}).
+
+fortune(Req, Html) ->
+    Req:ok({"text/html;charset=UTF-8", Html}).
 
 queries(Req) ->
     Params = Req:parse_qs(),
