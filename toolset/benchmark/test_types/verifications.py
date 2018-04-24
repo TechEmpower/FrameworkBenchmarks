@@ -56,18 +56,19 @@ def verify_headers(headers, url, should_be='json'):
             url))
 
     content_type = headers.get('Content-Type')
-    types = {
-        'json':      '^application/json(; ?charset=(UTF|utf)-8)?$',
-        'html':      '^text/html; ?charset=(UTF|utf)-8$',
-        'plaintext': '^text/plain(; ?charset=(UTF|utf)-8)?$'
-    }
-    expected_type = types[should_be]
+    if content_type is not None:
+        types = {
+            'json':      '^application/json(; ?charset=(UTF|utf)-8)?$',
+            'html':      '^text/html; ?charset=(UTF|utf)-8$',
+            'plaintext': '^text/plain(; ?charset=(UTF|utf)-8)?$'
+        }
+        expected_type = types[should_be]
 
-    if not re.match(expected_type, content_type):
-        problems.append((
-            'fail',
-            'Unexpected content type, found \"%s\", did not match \"%s\".'
-            % (content_type, expected_type), url))
+        if not re.match(expected_type, content_type):
+            problems.append((
+                'fail',
+                'Unexpected content type, found \"%s\", did not match \"%s\".'
+                % (content_type, expected_type), url))
 
     return problems
 
