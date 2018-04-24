@@ -230,7 +230,7 @@ class DockerHelper:
         Attempts to stop the running test container.
         '''
         is_multi_setup = self.benchmarker.config.server_docker_host != \
-                      self.benchmarker.config.database_docker_host
+                         self.benchmarker.config.database_docker_host
 
         if container:
             DockerHelper.kill(container)
@@ -326,6 +326,16 @@ class DockerHelper:
             return False
 
         return True
+
+    def server_container_exists(self, container_id_or_name):
+        '''
+        Returns True if the container still exists on the server.
+        '''
+        try:
+            self.server.containers.get(container_id_or_name)
+            return True
+        except:
+            return False
 
     def benchmark(self, script, variables, raw_file):
         '''

@@ -141,6 +141,8 @@ class Benchmarker:
             max_sleep = 60
             accepting_requests = False
             while not accepting_requests and slept < max_sleep:
+                if not self.docker_helper.server_container_exists(container.id):
+                    break
                 accepting_requests = test.is_accepting_requests()
                 time.sleep(1)
                 slept += 1

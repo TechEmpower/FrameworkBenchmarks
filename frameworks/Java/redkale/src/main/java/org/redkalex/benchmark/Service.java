@@ -7,7 +7,6 @@ package org.redkalex.benchmark;
 
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
@@ -20,7 +19,7 @@ import org.redkale.source.DataSource;
 @RestService(name = " ", repair = false)
 public class Service extends AbstractService {
 
-    private static final ByteBuffer helloBuffer = ByteBuffer.wrap("Hello, world!".getBytes()).asReadOnlyBuffer();
+    private static final ByteBuffer helloBuffer = ((ByteBuffer)ByteBuffer.allocateDirect("Hello, world!".length()).put("Hello, world!".getBytes()).flip()).asReadOnlyBuffer();
 
     private final Random random = new Random();
 
