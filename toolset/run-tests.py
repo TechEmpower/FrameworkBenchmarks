@@ -228,8 +228,7 @@ def main(argv=None):
                 return any_failed
     except Exception:
         tb = traceback.format_exc()
-        log("A fatal error has occurred",
-            color=Fore.RED)
+        log("A fatal error has occurred", color=Fore.RED)
         log(tb)
         # try one last time to stop docker containers on fatal error
         try:

@@ -49,9 +49,7 @@ class Results:
         self.pipelineConcurrencyLevels = self.config.pipeline_concurrency_levels
         self.queryIntervals = self.config.query_levels
         self.cachedQueryIntervals = self.config.cached_query_levels
-        self.frameworks = [
-            t.name for t in benchmarker.tests
-        ]
+        self.frameworks = [t.name for t in benchmarker.tests]
         self.duration = self.config.duration
         self.rawData = dict()
         self.rawData['json'] = dict()
@@ -109,8 +107,7 @@ class Results:
         results['results'] = []
         stats = []
 
-        if os.path.exists(
-                self.get_raw_file(framework_test.name, test_type)):
+        if os.path.exists(self.get_raw_file(framework_test.name, test_type)):
             with open(self.get_raw_file(framework_test.name,
                                         test_type)) as raw_data:
 
@@ -129,8 +126,8 @@ class Results:
                             rawData = dict()
                             results['results'].append(rawData)
                         if "Latency" in line:
-                            m = re.findall(
-                                r"([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
+                            m = re.findall(r"([0-9]+\.*[0-9]*[us|ms|s|m|%]+)",
+                                           line)
                             if len(m) == 4:
                                 rawData['latencyAvg'] = m[0]
                                 rawData['latencyStdev'] = m[1]
@@ -153,8 +150,8 @@ class Results:
                                 m = re.search("timeout ([0-9]+)", line)
                                 rawData['timeout'] = int(m.group(1))
                         if "Non-2xx" in line:
-                            m = re.search(
-                                "Non-2xx or 3xx responses: ([0-9]+)", line)
+                            m = re.search("Non-2xx or 3xx responses: ([0-9]+)",
+                                          line)
                             if m != None:
                                 rawData['5xx'] = int(m.group(1))
                         if "STARTTIME" in line:
@@ -165,12 +162,11 @@ class Results:
                             rawData["endTime"] = int(m.group(0))
                             test_stats = self.__parse_stats(
                                 framework_test, test_type,
-                                rawData["startTime"], rawData["endTime"],
-                                1)
+                                rawData["startTime"], rawData["endTime"], 1)
                             stats.append(test_stats)
         with open(
-                self.get_stats_file(framework_test.name, test_type) +
-                ".json", "w") as stats_file:
+                self.get_stats_file(framework_test.name, test_type) + ".json",
+                "w") as stats_file:
             json.dump(stats, stats_file, indent=2)
 
         return results
@@ -296,7 +292,7 @@ class Results:
                 log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
                     for test_type, result in self.verify[
-                        test.name].iteritems():
+                            test.name].iteritems():
                         if result.upper() == "PASS":
                             color = Fore.GREEN
                         elif result.upper() == "WARN":
@@ -353,7 +349,8 @@ class Results:
         '''
         Counts the significant lines of code for all tests and stores in results.
         '''
-        frameworks = self.benchmarker.metadata.gather_frameworks(self.config.test, self.config.exclude)
+        frameworks = self.benchmarker.metadata.gather_frameworks(
+            self.config.test, self.config.exclude)
 
         jsonResult = {}
         for framework, testlist in frameworks.items():
