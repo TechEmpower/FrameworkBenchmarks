@@ -76,7 +76,7 @@ class Benchmarker:
 
     def stop(self, signal=None, frame=None):
         log("Shutting down (may take a moment)")
-        self.docker_helper.stop(kill=True)
+        self.docker_helper.stop()
         sys.exit(0)
 
     ##########################################################################################

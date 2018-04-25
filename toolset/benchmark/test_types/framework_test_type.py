@@ -32,6 +32,8 @@ class FrameworkTestType:
         self.name = name
         self.requires_db = requires_db
         self.args = args
+        self.headers = ""
+        self.body = ""
 
         if accept_header is None:
             self.accept_header = self.accept('json')
@@ -77,11 +79,13 @@ class FrameworkTestType:
         headers = {'Accept': self.accept_header}
         r = requests.get(url, timeout=15, headers=headers)
 
-        headers = r.headers
-        body = r.content
-        log(str(headers))
-        log(body)
-        return headers, body
+        self.headers = r.headers
+        self.body = r.content
+        return self.headers, self.body
+
+    def output_headers_and_body(self):
+        log(str(self.headers))
+        log(self.body)
 
     def verify(self, base_url):
         '''

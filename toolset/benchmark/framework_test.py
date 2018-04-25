@@ -163,8 +163,10 @@ class FrameworkTest:
                 [output_result(r1, r2, url) for (r1, r2, url) in results]
 
                 if test.failed:
+                    test.output_headers_and_body()
                     self.benchmarker.results.report_verify_results(self, test_type, 'fail')
                 elif test.warned:
+                    test.output_headers_and_body()
                     self.benchmarker.results.report_verify_results(self, test_type, 'warn')
                 elif test.passed:
                     self.benchmarker.results.report_verify_results(self, test_type, 'pass')

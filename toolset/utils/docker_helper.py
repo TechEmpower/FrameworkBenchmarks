@@ -208,25 +208,22 @@ class DockerHelper:
         return container
 
     @staticmethod
-    def __stop_container(container, kill):
+    def __stop_container(container):
         try:
-            if kill:
-                container.kill()
-            else:
-                container.stop()
+            container.kill()
         except:
-            # container has already been stopped/killed
+            # container has already been killed
             pass
 
     @staticmethod
-    def __stop_all(docker_client, kill):
+    def __stop_all(docker_client):
         for container in docker_client.containers.list():
             if len(container.image.tags) > 0 \
                     and 'techempower' in container.image.tags[0] \
                     and 'tfb:latest' not in container.image.tags[0]:
-                DockerHelper.__stop_container(container, kill)
+                DockerHelper.__stop_container(container)
 
-    def stop(self, containers=None, kill=False):
+    def stop(self, containers=None):
         '''
         Attempts to stop a container or list of containers.
         If no containers are passed, stops all running containers.
@@ -238,11 +235,11 @@ class DockerHelper:
             if not isinstance(containers, list):
                 containers = [containers]
             for container in containers:
-                DockerHelper.__stop_container(container, kill)
+                DockerHelper.__stop_container(container)
         else:
-            self.__stop_all(self.server, kill)
+            self.__stop_all(self.server)
             if is_multi_setup:
-                self.__stop_all(self.database, kill)
+                self.__stop_all(self.database)
 
         self.database.containers.prune()
         if is_multi_setup:
