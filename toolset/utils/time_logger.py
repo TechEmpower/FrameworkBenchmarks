@@ -71,7 +71,6 @@ class TimeLogger:
         self.test_start = time.time()
 
     def log_test_end(self, log_prefix, file):
-        self.log_build_flush(file)
         total = int(time.time() - self.test_start)
         log("Total test time: %s" % TimeLogger.output(total),
             prefix=log_prefix,
@@ -104,6 +103,7 @@ class TimeLogger:
         self.verify_start = time.time()
 
     def log_verify_end(self, log_prefix, file):
+        self.log_build_flush(file)
         total = int(time.time() - self.verify_start)
         self.verify_total = self.verify_total + total
         log("Total verify time: %s" % TimeLogger.output(total),
