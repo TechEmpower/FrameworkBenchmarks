@@ -20,6 +20,7 @@ class TimeLogger:
         self.test_total = 0
         self.verify_start = 0
         self.verify_total = 0
+        self.build_logs = []
 
     @staticmethod
     def output(sec):
@@ -51,15 +52,26 @@ class TimeLogger:
     def log_build_end(self, log_prefix, file):
         total = int(time.time() - self.build_start)
         self.build_total = self.build_total + total
-        log("Total build time: %s" % TimeLogger.output(total),
+        log_str = "Total build time: %s" % TimeLogger.output(total)
+        self.build_logs.append({'log_prefix': log_prefix, 'str': log_str})
+        log(log_str,
             prefix=log_prefix,
             file=file,
             color=Fore.YELLOW)
+
+    def log_build_flush(self, file):
+        for b_log in self.build_logs:
+            log(b_log['str'],
+                prefix=b_log['log_prefix'],
+                file=file,
+                color=Fore.YELLOW)
+        self.build_logs = []
 
     def log_test_start(self):
         self.test_start = time.time()
 
     def log_test_end(self, log_prefix, file):
+        self.log_build_flush(file)
         total = int(time.time() - self.test_start)
         log("Total test time: %s" % TimeLogger.output(total),
             prefix=log_prefix,
