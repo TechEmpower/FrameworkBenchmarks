@@ -254,7 +254,7 @@ class DockerHelper:
         built = []
         for test in self.benchmarker.tests:
             db = test.database.lower()
-            if db not in built:
+            if db not in built and db != "none":
                 image_name = "techempower/%s:latest" % db
                 log_prefix = image_name + ": "
 
