@@ -2,21 +2,17 @@ import argparse
 import socket
 import sys
 import signal
+import traceback
 from toolset.benchmark.benchmarker import Benchmarker
 from toolset.utils.scaffolding import Scaffolding
+from toolset.utils.audit import Audit
 from toolset.utils import cleaner
-from toolset.utils.results_helper import Results
 from toolset.utils.benchmark_config import BenchmarkConfig
-from toolset.utils import docker_helper
-from toolset.utils.metadata_helper import gather_tests
 from toolset.utils.output_helper import log
 
 # Enable cross-platform colored output
 from colorama import init, Fore
 init()
-
-# Required to be globally known
-config = None
 
 
 class StoreSeqAction(argparse.Action):
@@ -46,16 +42,6 @@ class StoreSeqAction(argparse.Action):
         return [abs(int(item)) for item in result]
 
 
-def __stop(signal, frame):
-    log("Shutting down (may take a moment)")
-    docker_helper.stop(config)
-    sys.exit(0)
-
-
-signal.signal(signal.SIGTERM, __stop)
-signal.signal(signal.SIGINT, __stop)
-
-
 ###################################################################################################
 # Main
 ###################################################################################################
@@ -83,9 +69,10 @@ def main(argv=None):
 
     # Suite options
     parser.add_argument(
-        '--build',
-        nargs='+',
-        help='Builds the dockerfile(s) for the given test(s)')
+        '--audit',
+        action='store_true',
+        default=False,
+        help='Audits framework tests for inconsistencies')
     parser.add_argument(
         '--clean',
         action='store_true',
@@ -204,40 +191,51 @@ def main(argv=None):
 
     args = parser.parse_args()
 
-    global config
     config = BenchmarkConfig(args)
-    results = Results(config)
+    benchmarker = Benchmarker(config)
 
-    if config.new:
-        Scaffolding(config)
+    signal.signal(signal.SIGTERM, benchmarker.stop)
+    signal.signal(signal.SIGINT, benchmarker.stop)
 
-    elif config.build:
-        docker_helper.build(config, config.build)
+    try:
+        if config.new:
+            Scaffolding(benchmarker)
 
-    elif config.clean:
-        cleaner.clean(results)
-        docker_helper.clean(config)
+        elif config.audit:
+            Audit(benchmarker).start_audit()
 
-    elif config.list_tests:
-        all_tests = gather_tests(benchmarker_config=config)
+        elif config.clean:
+            cleaner.clean(benchmarker.results)
+            benchmarker.docker_helper.clean()
 
-        for test in all_tests:
-            log(test.name)
+        elif config.list_tests:
+            all_tests = benchmarker.metadata.gather_tests()
 
-    elif config.parse != None:
-        # TODO: broken
-        all_tests = gather_tests(benchmarker_config=config)
+            for test in all_tests:
+                log(test.name)
 
-        for test in all_tests:
-            test.parse_all()
+        elif config.parse:
+            all_tests = benchmarker.metadata.gather_tests()
 
-        results.parse(all_tests)
+            for test in all_tests:
+                test.parse_all()
 
-    else:
-        benchmarker = Benchmarker(config, results)
-        any_failed = benchmarker.run()
-        if config.mode == "verify":
-            return any_failed
+            benchmarker.results.parse(all_tests)
+
+        else:
+            any_failed = benchmarker.run()
+            if config.mode == "verify":
+                return any_failed
+    except Exception:
+        tb = traceback.format_exc()
+        log("A fatal error has occurred",
+            color=Fore.RED)
+        log(tb)
+        # try one last time to stop docker containers on fatal error
+        try:
+            benchmarker.stop()
+        except:
+            sys.exit(1)
 
     return 0
 
