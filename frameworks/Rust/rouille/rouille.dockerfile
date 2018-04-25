@@ -1,9 +1,9 @@
 FROM rust:1.25
 
-ADD ./ /rouille
 WORKDIR /rouille
+COPY src src
+COPY Cargo.toml Cargo.toml
 
-RUN cargo clean
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
 
-CMD ./target/release/rouille
+CMD ["./target/release/rouille"]
