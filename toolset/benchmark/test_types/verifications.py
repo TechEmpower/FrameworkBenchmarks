@@ -2,6 +2,7 @@ import json
 import re
 import traceback
 
+from datetime import datetime
 from toolset.utils.output_helper import log
 
 
@@ -54,6 +55,17 @@ def verify_headers(headers, url, should_be='json'):
             'fail',
             'Required response size header missing, please include either "Content-Length" or "Transfer-Encoding"',
             url))
+
+    date = headers.get('Date')
+    if date is not None:
+        expected_date_format = '%a, %d %b %Y %H:%M:%S %Z'
+        try:
+            datetime.strptime(date, expected_date_format)
+        except ValueError:
+            problems.append((
+                'fail',
+                'Unexpected date format, found \"%s\", did not match \"%s\".'
+                % (date, expected_date_format), url))
 
     content_type = headers.get('Content-Type')
     if content_type is not None:
