@@ -158,7 +158,7 @@ func fortunes(c web.C, w http.ResponseWriter, r *http.Request) {
 	fortunes = append(fortunes, &Fortune{Message: extraFortuneMessage})
 
 	sort.Sort(ByMessage{fortunes})
-	setContentType(w, "text/html")
+	setContentType(w, "text/html;charset=utf-8")
 	if err := tmpl.Execute(w, fortunes); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

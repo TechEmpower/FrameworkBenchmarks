@@ -1,4 +1,7 @@
 {
+    "localization": {
+        "locales": [ "en_US.UTF-8" ]
+    },
     "service": {
         "api": "fastcgi",
         "socket": "/var/tmp/cppcms.sock"

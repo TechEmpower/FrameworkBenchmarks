@@ -2,6 +2,7 @@ import json
 import re
 import traceback
 
+from datetime import datetime
 from toolset.utils.output_helper import log
 
 
@@ -41,58 +42,46 @@ def verify_headers(headers, url, should_be='json'):
     param `should_be` is a switch for the three acceptable content types
     '''
 
-    types = {
-        'json': 'application/json',
-        'html': 'text/html',
-        'plaintext': 'text/plain'
-    }
-    expected_type = types[should_be]
-
     problems = []
 
     for v in (v for v in ('Server', 'Date', 'Content-Type')
               if v.lower() not in headers):
-        problems.append(('warn', 'Required response header missing: %s' % v,
+        problems.append(('fail', 'Required response header missing: %s' % v,
                          url))
 
     if all(v.lower() not in headers
            for v in ('Content-Length', 'Transfer-Encoding')):
         problems.append((
-            'warn',
+            'fail',
             'Required response size header missing, please include either "Content-Length" or "Transfer-Encoding"',
             url))
 
-    content_type = headers.get('Content-Type', None)
+    date = headers.get('Date')
+    if date is not None:
+        expected_date_format = '%a, %d %b %Y %H:%M:%S %Z'
+        try:
+            datetime.strptime(date, expected_date_format)
+        except ValueError:
+            problems.append((
+                'warn',
+                'Invalid Date header, found \"%s\", did not match \"%s\".'
+                % (date, expected_date_format), url))
 
-    if content_type is None:
-        problems.append(('warn', 'No content encoding found, expected \"%s\"' %
-                         (expected_type), url))
-    else:
-        # Split out "charset=utf-8" if it's included
-        content_type_list = re.split('; *', content_type.lower())
-        charset = 'charset=utf-8'
-        # "text/html" requires charset to be set. The others do not
-        if expected_type == types['html']:
-            if expected_type not in content_type_list:
-                problems.append((
-                    'warn',
-                    'Unexpected content encoding, found \"%s\", expected \"%s\".'
-                    % (content_type, expected_type + '; ' + charset), url))
-            elif charset not in content_type_list:
-                problems.append(('warn', (
-                    'The \"%s\" content type requires \"charset=utf-8\" to be specified.'
-                    % expected_type), url))
-        else:
-            if expected_type not in content_type_list:
-                problems.append((
-                    'warn',
-                    'Unexpected content encoding, found \"%s\", expected \"%s\"'
-                    % (content_type, expected_type), url))
-            elif charset in content_type_list:
-                problems.append(('warn', (
-                    "Content encoding found in \"%s\" where \"%s\" is acceptable.\n"
-                    "Additional response bytes may negatively affect benchmark performance."
-                    % (content_type, expected_type)), url))
+    content_type = headers.get('Content-Type')
+    if content_type is not None:
+        types = {
+            'json':      '^application/json(; ?charset=(UTF|utf)-8)?$',
+            'html':      '^text/html; ?charset=(UTF|utf)-8$',
+            'plaintext': '^text/plain(; ?charset=(UTF|utf)-8)?$'
+        }
+        expected_type = types[should_be]
+
+        if not re.match(expected_type, content_type):
+            problems.append((
+                'fail',
+                'Invalid Content-Type header, found \"%s\", did not match \"%s\".'
+                % (content_type, expected_type), url))
+
     return problems
 
 

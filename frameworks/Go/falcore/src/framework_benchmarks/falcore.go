@@ -232,7 +232,7 @@ var fortuneFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Re
 			pipeWriter.Close()
 		}()
 
-		textHtml := http.Header{"Content-Type": []string{"text/html"}}
+		textHtml := http.Header{"Content-Type": []string{"text/html;charset=utf-8"}}
 		return falcore.SimpleResponse(req.HttpRequest, 200, textHtml, -1, pipeReader)
 	}
 	return nil

@@ -1,4 +1,7 @@
 {
+    "localization": {
+        "locales": [ "en_US.UTF-8" ]
+    },
     "service": {
         "api": "http",
         "ip": "0.0.0.0",

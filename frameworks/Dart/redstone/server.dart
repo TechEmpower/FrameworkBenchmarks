@@ -145,7 +145,7 @@ class PgTests {
     })));
   }
   
-  @app.Route("/fortunes", responseType: "text/html")
+  @app.Route("/fortunes", responseType: "text/html;charset=utf-8")
   Future<String> fortunesTest(@app.Inject() mustache.Template template) {
     return pgSql.query(fortuneQuery, Fortune).then((values) {
       values
@@ -193,7 +193,7 @@ class MongoTests {
     })));
   }
   
-  @app.Route("/fortunes", responseType: "text/html")
+  @app.Route("/fortunes", responseType: "text/html;charset=utf-8")
   Future<String> fortunesTest(@app.Inject() mustache.Template template) {
     return mongoDb.find(fortuneCollection, MongoFortune).then((values) {
       values

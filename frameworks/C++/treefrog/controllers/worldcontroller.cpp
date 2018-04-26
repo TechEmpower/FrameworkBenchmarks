@@ -12,6 +12,7 @@ void WorldController::index()
 
 void WorldController::plain()
 {
+    setContentType("text/plain");
     renderText(QLatin1String("Hello, World!"));
 }
 

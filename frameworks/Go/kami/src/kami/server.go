@@ -141,7 +141,7 @@ func fortuneHandler(ctx context.Context, w http.ResponseWriter, r *http.Request)
 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
 
 	sort.Sort(ByMessage{fortunes})
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html;charset=utf-8")
 	if err := tmpl.Execute(w, fortunes); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

@@ -44,7 +44,7 @@ end
 
 before_all do |env|
   env.response.headers["Server"] = "Kemal"
-  env.response.headers["Date"] = Time.now.to_s
+  env.response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
 end
 
 #
