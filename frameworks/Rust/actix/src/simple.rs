@@ -4,11 +4,12 @@ extern crate bytes;
 extern crate futures;
 extern crate serde;
 extern crate serde_json;
-#[macro_use] extern crate serde_derive;
+#[macro_use]
+extern crate serde_derive;
 
-use bytes::BytesMut;
 use actix::prelude::*;
 use actix_web::{http, server, App, HttpRequest, HttpResponse};
+use bytes::BytesMut;
 
 mod utils;
 use utils::Writer;
@@ -22,7 +23,7 @@ pub struct Message {
 
 fn json(req: HttpRequest) -> HttpResponse {
     let message = Message {
-        message: "Hello, World!"
+        message: "Hello, World!",
     };
     let mut body = BytesMut::with_capacity(SIZE);
     serde_json::to_writer(Writer(&mut body), &message).unwrap();
@@ -44,12 +45,13 @@ fn main() {
     let sys = System::new("techempower");
 
     // start http server
-    server::new(
-        move || App::new()
+    server::new(move || {
+        App::new()
+            .resource("/json", |r| r.f(json))
             .resource("/plaintext", |r| r.f(plaintext))
-            .resource("/json", |r| r.f(json)))
-        .backlog(8192)
-        .bind("0.0.0.0:8080").unwrap()
+    }).backlog(8192)
+        .bind("0.0.0.0:8080")
+        .unwrap()
         .start();
 
     println!("Started http server: 127.0.0.1:8080");
