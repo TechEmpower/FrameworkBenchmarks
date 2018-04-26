@@ -12,8 +12,8 @@ if [ ! -e "~/.firstboot" ]; then
   echo "Installing docker"
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  sudo apt-get update
-  sudo apt-get install -yqq docker-ce
+  sudo apt update
+  sudo apt install -yqq docker-ce
 
   # Setting up passwordless sudo
   echo "vagrant ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
@@ -39,10 +39,9 @@ Welcome to the FrameworkBenchmarks project!
 EOF
 
   cat <<EOF > /home/vagrant/.bash_aliases
-alias tfb="docker network create tfb > /dev/null 2>&1; docker run -it --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=/home/vagrant/FrameworkBenchmarks,target=/FrameworkBenchmarks techempower/tfb"
+alias tfb="/home/vagrant/FrameworkBenchmarks/tfb"
 EOF
 
   sudo mv motd /etc/
   sudo chmod 777 /var/run/docker.sock
-  docker network create tfb
 fi

@@ -1,7 +1,8 @@
 FROM erlang:18.3.4.8
 
-ADD ./ /elli
 WORKDIR /elli
+COPY src src
+COPY rebar.config rebar.config
 
 RUN rebar get-deps
 RUN rebar compile

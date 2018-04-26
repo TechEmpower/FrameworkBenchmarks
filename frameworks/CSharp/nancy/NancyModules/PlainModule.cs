@@ -8,7 +8,7 @@ namespace NancyModules
     {
       Get["/"] = x =>
       {
-        return "Hello, World!";
+        return Response.AsText("Hello, World!");
       };
     }
   }

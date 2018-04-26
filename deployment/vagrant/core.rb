@@ -21,9 +21,7 @@ def provider_libvirt(config)
     virt.memory = ENV.fetch('TFB_KVM_MEM', 3022)
     virt.cpus = ENV.fetch('TFB_KVM_CPU', 2)
 
-    override.vm.synced_folder "../../toolset", "/home/vagrant/FrameworkBenchmarks/toolset", type: "nfs", nfs_udp: false
-    override.vm.synced_folder "../../frameworks", "/home/vagrant/FrameworkBenchmarks/frameworks", type: "nfs", nfs_udp: false
-    override.vm.synced_folder "../../results", "/home/vagrant/FrameworkBenchmarks/results", type: "nfs", nfs_udp: false, create: true
+    override.vm.synced_folder "../..", "/home/vagrant/FrameworkBenchmarks", type: "nfs", nfs_udp: false
   end
 end
 
@@ -55,8 +53,6 @@ def provider_virtualbox(config)
     # See mitchellh/vagrant#4997
     # See http://superuser.com/a/640028/136050
 
-    override.vm.synced_folder "../../toolset", "/home/vagrant/FrameworkBenchmarks/toolset"
-    override.vm.synced_folder "../../frameworks", "/home/vagrant/FrameworkBenchmarks/frameworks"
-    override.vm.synced_folder "../../results", "/home/vagrant/FrameworkBenchmarks/results", create: true
+    override.vm.synced_folder "../..", "/home/vagrant/FrameworkBenchmarks"
   end
 end

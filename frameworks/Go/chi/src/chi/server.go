@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"math/rand"
+	"net"
 	"net/http"
 	"sort"
 	"strconv"
@@ -42,11 +43,12 @@ const (
 var (
 	connectionString = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world?sslmode=disable"
 	bindHost         = ":8080"
-	debug            = false
+	debugFlag        = false
+	preforkFlag      = false
+	childFlag        = false
 
 	// Database
 	helloWorldMessage = &Message{helloWorldString}
-	db                *pgx.ConnPool
 )
 
 // Message is a JSON struct to render a message
@@ -61,7 +63,7 @@ type World struct {
 }
 
 func randomRow() *pgx.Row {
-	return db.QueryRow("worldSelect", rand.Intn(worldRowCount)+1)
+	return defaultDB.QueryRow("worldSelect", rand.Intn(worldRowCount)+1)
 }
 
 // Fortune renders a fortune in JSON
@@ -139,7 +141,7 @@ func multipleQueries(w http.ResponseWriter, r *http.Request) {
 
 // Test 4: Fortunes
 func fortunes(w http.ResponseWriter, r *http.Request) {
-	rows, err := db.Query("fortuneSelect")
+	rows, err := defaultDB.Query("fortuneSelect")
 	if err != nil {
 		log.Printf("Error preparing statement: %v", err)
 	}
@@ -180,7 +182,7 @@ func dbupdate(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Error scanning world row: %s", err.Error())
 		}
 		worlds[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
-		if _, err := db.Exec("worldUpdate", w.RandomNumber, w.ID); err != nil {
+		if _, err := defaultDB.Exec("worldUpdate", w.RandomNumber, w.ID); err != nil {
 			log.Printf("Error updating world row: %s", err.Error())
 		}
 	}
@@ -198,48 +200,13 @@ func plaintext(w http.ResponseWriter, r *http.Request) {
 func init() {
 	flag.StringVar(&bindHost, "bind", bindHost, "Set bind host")
 	flag.StringVar(&connectionString, "db", connectionString, "Set database URL")
-	flag.BoolVar(&debug, "debug", false, "Enable debug mode")
+	flag.BoolVar(&debugFlag, "debug", false, "Enable debug mode")
+	flag.BoolVar(&preforkFlag, "prefork", false, "Enable prefork mode")
+	flag.BoolVar(&childFlag, "child", false, "Enable child mode")
 	flag.Parse()
 }
 
-func main() {
-	if !debug {
-		log.SetOutput(ioutil.Discard)
-	}
-
-	config, err := pgx.ParseConnectionString(connectionString)
-	if err != nil {
-		flag.PrintDefaults()
-		log.Fatalf("Error parsing db URL: %v", err)
-	}
-
-	connPoolConfig := pgx.ConnPoolConfig{
-		ConnConfig:     config,
-		MaxConnections: maxConnectionCount,
-	}
-
-	db, err = pgx.NewConnPool(connPoolConfig)
-	if err != nil {
-		flag.PrintDefaults()
-		log.Fatalf("Error opening database: %v", err)
-	}
-
-	_, err = db.Prepare("worldSelect", worldSelect)
-	if err != nil {
-		flag.PrintDefaults()
-		log.Fatal(err)
-	}
-	_, err = db.Prepare("fortuneSelect", fortuneSelect)
-	if err != nil {
-		flag.PrintDefaults()
-		log.Fatal(err)
-	}
-	_, err = db.Prepare("worldUpdate", worldUpdate)
-	if err != nil {
-		flag.PrintDefaults()
-		log.Fatal(err)
-	}
-
+func initRouter() http.Handler {
 	r := chi.NewRouter()
 
 	r.Get("/json", serializeJSON)
@@ -249,8 +216,33 @@ func main() {
 	r.Get("/plaintext", plaintext)
 	r.Get("/updates", dbupdate)
 
-	err = http.ListenAndServe(bindHost, r)
-	if err != nil {
+	return r
+}
+
+func startListening(listener net.Listener) error {
+	var err error
+	if !preforkFlag {
+		err = http.ListenAndServe(bindHost, initRouter())
+	} else {
+		err = http.Serve(listener, initRouter())
+	}
+
+	return err
+}
+
+func main() {
+	var listener net.Listener
+	if preforkFlag {
+		listener = doPrefork(childFlag, bindHost)
+	}
+
+	initDBConnection(connectionString)
+
+	if !debugFlag {
+		log.SetOutput(ioutil.Discard)
+	}
+
+	if err := startListening(listener); err != nil {
 		log.Fatal(err)
 	}
 }

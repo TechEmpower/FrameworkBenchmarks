@@ -46,10 +46,9 @@ fn main() {
     // start http server
     server::new(
         move || App::new()
-            .resource("/json", |r| r.f(json))
-            .resource("/plaintext", |r| r.f(plaintext)))
+            .resource("/plaintext", |r| r.f(plaintext))
+            .resource("/json", |r| r.f(json)))
         .backlog(8192)
-        .threads(1)
         .bind("0.0.0.0:8080").unwrap()
         .start();
 

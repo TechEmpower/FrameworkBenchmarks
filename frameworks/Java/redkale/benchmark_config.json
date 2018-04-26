@@ -11,7 +11,7 @@
       "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Platform",
+      "classification": "Fullstack",
       "database": "Postgres",
       "framework": "None",
       "language": "Java",

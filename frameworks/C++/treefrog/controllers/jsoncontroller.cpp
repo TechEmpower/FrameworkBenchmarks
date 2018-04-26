@@ -1,8 +1,5 @@
 #include "jsoncontroller.h"
 
-JsonController::JsonController(const JsonController &)
-    : ApplicationController()
-{ }
 
 void JsonController::index()
 {
@@ -17,4 +14,4 @@ void JsonController::json()
 }
 
 // Don't remove below this line
-T_REGISTER_CONTROLLER(jsoncontroller)
+T_DEFINE_CONTROLLER(JsonController)

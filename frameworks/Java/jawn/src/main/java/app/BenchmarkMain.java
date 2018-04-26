@@ -30,8 +30,8 @@ public class BenchmarkMain extends Jawn {
         get("/queries",DbController.class, DbController::getQueries);
         get("/updates",DbController.class, DbController::getUpdates);
         
-        get("/json", (context) -> Results.json(new Message(message)));
-        get("/plaintext", (context) -> Results.text(bytemessage));
+        get("/json", (context) -> Results.json(new Message(message)).addHeader("Server", "jawn"));
+        get("/plaintext", (context) -> Results.text(bytemessage).addHeader("Server", "jawn"));
         
         use(new AbstractModule() {
             @Override

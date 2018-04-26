@@ -41,21 +41,21 @@ def log(log_text=None, **kwargs):
         return
 
     try:
-        if not quiet:
-            new_log_text = border or ''
-            for line in log_text.splitlines():
-                if line.strip() is not '':
-                    if prefix:
-                        new_log_text += Style.DIM + prefix + Style.RESET_ALL
-                    new_log_text += color + line + color_reset + os.linesep
-            new_log_text += border_bottom or ''
+        new_log_text = border or ''
+        for line in log_text.splitlines():
+            if line.strip() is not '':
+                if prefix:
+                    new_log_text += Style.DIM + prefix + Style.RESET_ALL
+                new_log_text += color + line + color_reset + os.linesep
+        new_log_text += border_bottom or ''
 
+        if not quiet:
             sys.stdout.write(Style.RESET_ALL + new_log_text)
             sys.stdout.flush()
 
         if file is not None and os.fstat(
                 file.fileno()).st_size < TOO_MANY_BYTES:
-            file.write(seq.sub('', log_text + os.linesep))
+            file.write(seq.sub('', new_log_text))
             file.flush()
     except:
         pass

@@ -7,7 +7,6 @@ package org.redkalex.benchmark;
 
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
@@ -20,7 +19,7 @@ import org.redkale.source.DataSource;
 @RestService(name = " ", repair = false)
 public class Service extends AbstractService {
 
-    private static final ByteBuffer helloBuffer = ByteBuffer.wrap("Hello, world!".getBytes()).asReadOnlyBuffer();
+    private static final ByteBuffer helloBuffer = ((ByteBuffer)ByteBuffer.allocateDirect("Hello, world!".length()).put("Hello, world!".getBytes()).flip()).asReadOnlyBuffer();
 
     private final Random random = new Random();
 
@@ -38,47 +37,39 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "db")
-    public CompletableFuture<World> findWorld() {
-        return source.findAsync(World.class, randomId());
+    public World findWorld() {
+        return source.find(World.class, randomId());
     }
 
     @RestMapping(name = "queries")
-    public CompletableFuture<World[]> queryWorld(@RestParam(name = "queries") int count) {
+    public World[] queryWorld(@RestParam(name = "queries") int count) {
         count = Math.min(500, Math.max(1, count));
         final World[] rs = new World[count];
-        final CompletableFuture<World>[] futures = new CompletableFuture[count];
         for (int i = 0; i < count; i++) {
-            final int index = i;
-            futures[index] = source.findAsync(World.class, randomId()).whenComplete((w, t) -> rs[index] = w);
+            rs[i] = source.find(World.class, randomId());
         }
-        return CompletableFuture.allOf(futures).thenApply((r) -> rs);
+        return rs;
     }
 
     @RestMapping(name = "updates")
-    public CompletableFuture<World[]> updateWorld(@RestParam(name = "queries") int count) {
+    public World[] updateWorld(@RestParam(name = "queries") int count) {
         count = Math.min(500, Math.max(1, count));
         final World[] rs = new World[count];
-        final CompletableFuture<World>[] futures = new CompletableFuture[count];
         for (int i = 0; i < count; i++) {
-            final int index = i;
-            futures[index] = source.findAsync(World.class, randomId()).whenComplete((w, t) -> {
-                rs[index] = w;
-                rs[index].setRandomNumber(randomId());
-            });
+            rs[i] = source.find(World.class, randomId());
+            rs[i].setRandomNumber(randomId());
         }
-        return CompletableFuture.allOf(futures).thenCompose((r) -> {
-            return source.updateAsync(rs).thenApply((v) -> rs);
-        });
+        source.update(rs);
+        return rs;
     }
 
     @RestMapping(name = "fortunes")
-    public CompletableFuture<HttpResult<String>> queryFortunes() {
-        return source.queryListAsync(Fortune.class).thenApply((fortunes) -> {
-            fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            Collections.sort(fortunes);
-            String html = FortunesTemplate.template(fortunes).render().toString();
-            return new HttpResult("text/html; charset=UTF-8", html);
-        });
+    public HttpResult<String> queryFortunes() {
+        List<Fortune> fortunes = source.queryList(Fortune.class);
+        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+        Collections.sort(fortunes);
+        String html = FortunesTemplate.template(fortunes).render().toString();
+        return new HttpResult("text/html; charset=UTF-8", html);
     }
 
     private int randomId() {

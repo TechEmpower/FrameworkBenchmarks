@@ -14,21 +14,21 @@ public class DbController extends Controller {
     
     // /db
     public void index() {
-        respond().json(db.getWorld(Helper.getRandomNumber()));
+        respond().json(db.getWorld(Helper.getRandomNumber())).addHeader("Server", "jawn");
     }
     
     // /queries?queries=
     public void getQueries() {
         int param = parseQueryParam();
-        
-        respond().json(db.getWorlds(param));
+
+        respond().json(db.getWorlds(param)).addHeader("Server", "jawn");
     }
     
     // /updates?queries=
     public void getUpdates() {
         int param = parseQueryParam();
-        
-        respond().json(db.getAndUpdateWorlds(param));
+
+        respond().json(db.getAndUpdateWorlds(param)).addHeader("Server", "jawn");
     }
     
     private int parseQueryParam() {

@@ -1,33 +1,39 @@
 package hello;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.ServerAddress;
-import com.mongodb.async.client.MongoClientSettings;
-import com.mongodb.async.client.MongoClients;
-import com.mongodb.connection.ClusterConnectionMode;
-import com.mongodb.connection.ClusterSettings;
-import com.mongodb.connection.ConnectionPoolSettings;
+import static io.undertow.util.Headers.CONTENT_TYPE;
+import static java.util.Comparator.comparing;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mustachejava.DefaultMustacheFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
 import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
 import io.undertow.server.handlers.BlockingHandler;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.SetHeaderHandler;
-import java.util.List;
-import java.util.function.Supplier;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
+import javax.sql.DataSource;
 
-/**
- * Provides the {@link #main(String[])} method, which launches the application.
- */
 public final class HelloWebServer {
   private HelloWebServer() {
     throw new AssertionError();
   }
 
+  enum Mode { NO_DATABASE, POSTGRESQL }
+
   public static void main(String[] args) {
+    var mode = Mode.valueOf(args[0]);
+    var handler = serverHeaderHandler(pathHandler(mode));
+
     Undertow
         .builder()
         .addHttpListener(8080, "0.0.0.0")
@@ -35,147 +41,233 @@ public final class HelloWebServer {
         // Adding a "Connection: keep-alive" header to every response would only
         // add useless bytes.
         .setServerOption(UndertowOptions.ALWAYS_SET_KEEP_ALIVE, false)
-        .setHandler(ServerMode.valueOf(args[0]).createRootHandler())
+        .setHandler(handler)
         .build()
         .start();
   }
 
-  static final int MAX_DB_REQUEST_CONCURRENCY = 512;
-  static final int MAX_DB_QUERIES_PER_REQUEST = 20;
+  static HttpHandler serverHeaderHandler(HttpHandler next) {
+    return new SetHeaderHandler(next, "Server", "U-tow");
+  }
 
-  enum ServerMode {
-    /**
-     * The server will only implement the test types that do not require a
-     * database.
-     */
-    NO_DATABASE(() -> {
-      var handler = new PathHandler();
-      handler.addExactPath("/plaintext", new PlaintextHandler());
-      handler.addExactPath("/json", new JsonHandler());
-      return handler;
-    }),
+  static HttpHandler pathHandler(Mode mode) {
+    switch (mode) {
+      case NO_DATABASE: return noDatabasePathHandler();
+      case POSTGRESQL:  return postgresqlPathHandler();
+    }
+    throw new AssertionError(mode);
+  }
 
-    /**
-     * The server will use a MySQL database and will only implement the test
-     * types that require a database.
-     */
-    MYSQL(() -> {
-      var config = new HikariConfig();
-      config.setJdbcUrl("jdbc:mysql://tfb-database:3306/hello_world?useSSL=false&useServerPrepStmts=true&cachePrepStmts=true");
-      config.setUsername("benchmarkdbuser");
-      config.setPassword("benchmarkdbpass");
-      config.setMaximumPoolSize(48);
+  static HttpHandler noDatabasePathHandler() {
+    return new PathHandler()
+        .addExactPath("/plaintext", plaintextHandler())
+        .addExactPath("/json", jsonHandler());
+  }
 
-      var db = new HikariDataSource(config);
+  static HttpHandler postgresqlPathHandler() {
+    var config = new HikariConfig();
+    config.setJdbcUrl("jdbc:postgresql://tfb-database:5432/hello_world");
+    config.setUsername("benchmarkdbuser");
+    config.setPassword("benchmarkdbpass");
+    config.setMaximumPoolSize(48);
 
-      var handler = new PathHandler();
-      handler.addExactPath("/db", new BlockingHandler(new DbSqlHandler(db)));
-      handler.addExactPath("/queries", new BlockingHandler(new QueriesSqlHandler(db)));
-      handler.addExactPath("/fortunes", new BlockingHandler(new FortunesSqlHandler(db)));
-      handler.addExactPath("/updates", new BlockingHandler(new UpdatesSqlHandler(db)));
-      return handler;
-    }),
+    var db = new HikariDataSource(config);
 
-    /**
-     * The server will use a PostgreSQL database and will only implement the
-     * test types that require a database.
-     */
-    POSTGRESQL(() -> {
-      var config = new HikariConfig();
-      config.setJdbcUrl("jdbc:postgresql://tfb-database:5432/hello_world");
-      config.setUsername("benchmarkdbuser");
-      config.setPassword("benchmarkdbpass");
-      config.setMaximumPoolSize(48);
+    return new BlockingHandler(
+        new PathHandler()
+            .addExactPath("/db", dbHandler(db))
+            .addExactPath("/queries", queriesHandler(db))
+            .addExactPath("/fortunes", fortunesHandler(db))
+            .addExactPath("/updates", updatesHandler(db)));
+  }
 
-      var db = new HikariDataSource(config);
+  static HttpHandler plaintextHandler() {
+    return exchange -> {
+      exchange.getResponseHeaders().put(CONTENT_TYPE, "text/plain");
+      exchange.getResponseSender().send("Hello, World!");
+    };
+  }
 
-      var handler = new PathHandler();
-      handler.addExactPath("/db", new BlockingHandler(new DbSqlHandler(db)));
-      handler.addExactPath("/queries", new BlockingHandler(new QueriesSqlHandler(db)));
-      handler.addExactPath("/fortunes", new BlockingHandler(new FortunesSqlHandler(db)));
-      handler.addExactPath("/updates", new BlockingHandler(new UpdatesSqlHandler(db)));
-      return handler;
-    }),
+  static HttpHandler jsonHandler() {
+    return exchange -> {
+      var value = Map.of("message", "Hello, World!");
+      sendJson(exchange, value);
+    };
+  }
 
-    /**
-     * The server will use a MongoDB database and will only implement the test
-     * types that require a database.
-     */
-    MONGODB(() -> {
-      int connectionPoolSize = 256;
+  static HttpHandler dbHandler(DataSource db) {
+    Objects.requireNonNull(db);
 
-      var options = MongoClientOptions.builder();
-      options.connectionsPerHost(connectionPoolSize);
-      options.threadsAllowedToBlockForConnectionMultiplier(
-          (int) Math.ceil((double) MAX_DB_REQUEST_CONCURRENCY / connectionPoolSize));
+    return exchange -> {
+      World world;
 
-      var client = new MongoClient("tfb-database:27017", options.build());
+      try (var connection = db.getConnection();
+           var statement =
+               connection.prepareStatement(
+                   "SELECT * FROM world WHERE id = ?")) {
 
-      var db = client.getDatabase("hello_world");
+        statement.setInt(1, randomWorldNumber());
+        try (var resultSet = statement.executeQuery()) {
+          resultSet.next();
+          var id = resultSet.getInt("id");
+          var randomNumber = resultSet.getInt("randomnumber");
+          world = new World(id, randomNumber);
+        }
+      }
 
-      var handler = new PathHandler();
-      handler.addExactPath("/db", new BlockingHandler(new DbMongoHandler(db)));
-      handler.addExactPath("/queries", new BlockingHandler(new QueriesMongoHandler(db)));
-      handler.addExactPath("/fortunes", new BlockingHandler(new FortunesMongoHandler(db)));
-      handler.addExactPath("/updates", new BlockingHandler(new UpdatesMongoHandler(db)));
-      return handler;
-    }),
+      sendJson(exchange, world);
+    };
+  }
 
-    /**
-     * The server will use a MongoDB database with an asynchronous API and will
-     * only implement the test types that require a database.
-     */
-    MONGODB_ASYNC(() -> {
-      int connectionPoolSize = 256;
+  static HttpHandler queriesHandler(DataSource db) {
+    Objects.requireNonNull(db);
 
-      var clusterSettings =
-          ClusterSettings
-              .builder()
-              .mode(ClusterConnectionMode.SINGLE)
-              .hosts(List.of(new ServerAddress("tfb-database:27017")))
-              .build();
+    return exchange -> {
+      var worlds = new World[getQueries(exchange)];
 
-      var connectionPoolSettings =
-          ConnectionPoolSettings
-              .builder()
-              .maxSize(connectionPoolSize)
-              .maxWaitQueueSize(MAX_DB_REQUEST_CONCURRENCY * MAX_DB_QUERIES_PER_REQUEST)
-              .build();
+      try (var connection = db.getConnection();
+           var statement =
+               connection.prepareStatement(
+                   "SELECT * FROM world WHERE id = ?")) {
 
-      var clientSettings =
-          MongoClientSettings
-              .builder()
-              .clusterSettings(clusterSettings)
-              .connectionPoolSettings(connectionPoolSettings)
-              .build();
+        for (var i = 0; i < worlds.length; i++) {
+          statement.setInt(1, randomWorldNumber());
+          try (var resultSet = statement.executeQuery()) {
+            resultSet.next();
+            var id = resultSet.getInt("id");
+            var randomNumber = resultSet.getInt("randomnumber");
+            worlds[i] = new World(id, randomNumber);
+          }
+        }
+      }
 
-      var client = MongoClients.create(clientSettings);
+      sendJson(exchange, worlds);
+    };
+  }
 
-      var db = client.getDatabase("hello_world");
+  static HttpHandler updatesHandler(DataSource db) {
+    Objects.requireNonNull(db);
 
-      var handler = new PathHandler();
-      handler.addExactPath("/db", new AsyncHandler(new DbMongoAsyncHandler(db)));
-      handler.addExactPath("/queries", new AsyncHandler(new QueriesMongoAsyncHandler(db)));
-      handler.addExactPath("/fortunes", new AsyncHandler(new FortunesMongoAsyncHandler(db)));
-      handler.addExactPath("/updates", new AsyncHandler(new UpdatesMongoAsyncHandler(db)));
-      return handler;
-    });
+    return exchange -> {
+      var worlds = new World[getQueries(exchange)];
 
-    private final Supplier<HttpHandler> routerSupplier;
+      try (var connection = db.getConnection()) {
+        try (var statement =
+                 connection.prepareStatement(
+                     "SELECT * FROM world WHERE id = ?")) {
 
-    ServerMode(Supplier<HttpHandler> routerSupplier) {
-      this.routerSupplier = routerSupplier;
+          for (int i = 0; i < worlds.length; i++) {
+            statement.setInt(1, randomWorldNumber());
+            try (var resultSet = statement.executeQuery()) {
+              resultSet.next();
+              var id = resultSet.getInt("id");
+              var randomNumber = resultSet.getInt("randomnumber");
+              worlds[i] = new World(id, randomNumber);
+            }
+          }
+        }
+
+        try (var statement =
+                 connection.prepareStatement(
+                     "UPDATE world SET randomnumber = ? WHERE id = ?")) {
+
+          for (var world : worlds) {
+            world.randomNumber = randomWorldNumber();
+            statement.setInt(1, world.randomNumber);
+            statement.setInt(2, world.id);
+            statement.executeUpdate();
+          }
+        }
+      }
+
+      sendJson(exchange, worlds);
+    };
+  }
+
+  static HttpHandler fortunesHandler(DataSource db) {
+    Objects.requireNonNull(db);
+
+    var mustacheFactory = new DefaultMustacheFactory();
+
+    return exchange -> {
+      var fortunes = new ArrayList<Fortune>();
+
+      try (var connection = db.getConnection();
+           var statement = connection.prepareStatement("SELECT * FROM fortune");
+           var resultSet = statement.executeQuery()) {
+
+        while (resultSet.next()) {
+          var id = resultSet.getInt("id");
+          var message = resultSet.getString("message");
+          fortunes.add(new Fortune(id, message));
+        }
+      }
+
+      fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+      fortunes.sort(comparing(fortune -> fortune.message));
+
+      var mustache = mustacheFactory.compile("hello/fortunes.mustache");
+      var writer = new StringWriter();
+      mustache.execute(writer, fortunes);
+      var html = writer.toString();
+
+      exchange.getResponseHeaders().put(CONTENT_TYPE, "text/html;charset=utf-8");
+      exchange.getResponseSender().send(html);
+    };
+  }
+
+  static int getQueries(HttpServerExchange exchange) {
+    var values = exchange.getQueryParameters().get("queries");
+    if (values == null)
+      return 1;
+
+    var textValue = values.peekFirst();
+    if (textValue == null)
+      return 1;
+
+    int parsedValue;
+    try {
+      parsedValue = Integer.parseInt(textValue);
+    } catch (NumberFormatException e) {
+      return 1;
     }
 
-    /**
-     * Returns an HTTP handler that provides routing for all the
-     * test-type-specific endpoints of the server.
-     */
-    HttpHandler createRootHandler() {
-      return new SetHeaderHandler(
-          /* next= */ routerSupplier.get(),
-          /* header= */ "Server",
-          /* value= */ "U-tow");
+    return Math.min(500, Math.max(1, parsedValue));
+  }
+
+  static int randomWorldNumber() {
+    return 1 + ThreadLocalRandom.current().nextInt(10000);
+  }
+
+  static void sendJson(HttpServerExchange exchange, Object value)
+      throws IOException {
+
+    var bytes = objectMapper.writeValueAsBytes(value);
+    var buffer = ByteBuffer.wrap(bytes);
+
+    exchange.getResponseHeaders().put(CONTENT_TYPE, "application/json");
+    exchange.getResponseSender().send(buffer);
+  }
+
+  private static final ObjectMapper objectMapper = new ObjectMapper();
+
+  public static final class Fortune {
+    public final int id;
+    public final String message;
+
+    public Fortune(int id, String message) {
+      this.id = id;
+      this.message = Objects.requireNonNull(message);
+    }
+  }
+
+  public static final class World {
+    public int id;
+    public int randomNumber;
+
+    public World(int id, int randomNumber) {
+      this.id = id;
+      this.randomNumber = randomNumber;
     }
   }
 }

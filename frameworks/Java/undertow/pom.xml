@@ -14,15 +14,12 @@
     <maven.compiler.source>10</maven.compiler.source>
     <maven.compiler.target>10</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <hikaricp.version>3.0.0</hikaricp.version>
+    <hikaricp.version>3.1.0</hikaricp.version>
     <jackson.version>2.9.5</jackson.version>
     <maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
-    <mongodb.version>3.6.3</mongodb.version>
     <mustache.version>0.9.5</mustache.version>
-    <mysql.version>5.1.46</mysql.version>
     <postgresql.version>42.2.2</postgresql.version>
     <undertow.version>2.0.4.Final</undertow.version>
-    <versions-maven-plugin.version>2.5</versions-maven-plugin.version>
   </properties>
 
   <prerequisites>
@@ -36,34 +33,9 @@
       <version>${undertow.version}</version>
     </dependency>
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>${mysql.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>${postgresql.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver</artifactId>
-      <version>${mongodb.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver-core</artifactId>
-      <version>${mongodb.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver-async</artifactId>
-      <version>${mongodb.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>bson</artifactId>
-      <version>${mongodb.version}</version>
     </dependency>
     <dependency>
       <groupId>com.zaxxer</groupId>
@@ -85,14 +57,6 @@
   <build>
     <finalName>app</finalName>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>versions-maven-plugin</artifactId>
-        <version>${versions-maven-plugin.version}</version>
-        <configuration>
-          <rulesUri>file://${basedir}/maven-version-rules.xml</rulesUri>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
