@@ -9,6 +9,7 @@ header("Content-type: application/json");
 # inclue the ActiveRecord library
 require_once 'vendor/php-activerecord/php-activerecord/ActiveRecord.php';
 
+ActiveRecord\Connection::$PDO_OPTIONS[PDO::ATTR_PERSISTENT] = true;
 ActiveRecord\Config::initialize(function($cfg)
 {
   $cfg->set_model_directory('models');
