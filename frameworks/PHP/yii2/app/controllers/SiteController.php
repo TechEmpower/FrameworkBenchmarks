@@ -125,6 +125,7 @@ EOM;
     }
 
     public function actionPlaintext() {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
         header("Content-Type: text/plain");
         echo 'Hello, World!';
     }
