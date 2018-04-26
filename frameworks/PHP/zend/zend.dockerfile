@@ -1,10 +1,12 @@
 FROM ubuntu:16.04
 
-RUN apt update -yqq && apt install -yqq software-properties-common
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
-RUN apt update -yqq
-RUN apt install -yqq nginx git unzip php7.2 php7.2-common php7.2-cli php7.2-fpm php7.2-mysql
-RUN apt install -yqq php7.2-xml php7.2-mbstring
+RUN apt-get update -yqq  > /dev/null
+RUN apt-get install -yqq nginx git unzip php7.2 php7.2-common php7.2-cli php7.2-fpm php7.2-mysql  > /dev/null
+RUN apt-get install -yqq php7.2-xml php7.2-mbstring  > /dev/null
 
 RUN mkdir /composer
 WORKDIR /composer
@@ -24,7 +26,7 @@ WORKDIR /zend
 RUN mkdir -p data/cache
 RUN chmod 777 data/cache
 
-RUN composer.phar install
+RUN composer.phar install --quiet
 
 CMD service php7.2-fpm start && \
     nginx -c /zend/deploy/nginx.conf -g "daemon off;"

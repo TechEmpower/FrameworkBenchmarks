@@ -3,6 +3,7 @@ module Web::Controllers::HelloWorld
     include Web::Action
 
     def call(params)
+      self.headers.merge!({ 'Content-Type' => 'application/json' })
       queries = (params[:queries] || 1).to_i
       queries = 1 if queries < 1
       queries = 500 if queries > 500

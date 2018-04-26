@@ -221,7 +221,8 @@ onion_connection_status return_fortune(MYSQL *db, onion_request *req, onion_resp
 	}
 	
 	onion_dict_add(context,"fortunes",fortunes, OD_DICT|OD_FREE_VALUE);
-	
+
+	onion_response_set_header(res, "Content-Type","text/html;charset=utf-8");
 	onion_connection_status ret=fortunes_html_template(context, req, res);
 	free(fortune_list.list);
 	return ret;

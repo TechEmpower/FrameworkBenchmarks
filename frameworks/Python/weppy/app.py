@@ -5,6 +5,7 @@ from random import randint
 from weppy import App, request, response
 from weppy.orm import Database, Model, Field, rowmethod
 from weppy.tools import service
+from email.utils import formatdate
 
 _is_pypy = hasattr(sys, 'pypy_version_info')
 if sys.version_info[0] == 3:
@@ -49,12 +50,14 @@ db.define_models(World, Fortune)
 @app.route()
 @service.json
 def json():
+    response.headers["Date"] = formatdate(timeval=None, localtime=False, usegmt=True)
     return {'message': 'Hello, World!'}
 
 
 @app.route("/db", pipeline=[db.pipe])
 @service.json
 def get_random_world():
+    response.headers["Date"] = formatdate(timeval=None, localtime=False, usegmt=True)
     return World.get(randint(1, 10000)).serialize()
 
 
@@ -73,6 +76,7 @@ def get_qparam():
 @app.route("/queries", pipeline=[db.pipe])
 @service.json
 def get_random_worlds():
+    response.headers["Date"] = formatdate(timeval=None, localtime=False, usegmt=True)
     num_queries = get_qparam()
     worlds = [
         World.get(randint(1, 10000)).serialize() for _ in xrange(num_queries)]
@@ -81,6 +85,7 @@ def get_random_worlds():
 
 @app.route(pipeline=[db.pipe])
 def fortunes():
+    response.headers["Date"] = formatdate(timeval=None, localtime=False, usegmt=True)
     fortunes = Fortune.all().select()
     fortunes.append(
         Fortune.new(id=0, message="Additional fortune added at request time."))
@@ -91,6 +96,7 @@ def fortunes():
 @app.route(pipeline=[db.pipe])
 @service.json
 def updates():
+    response.headers["Date"] = formatdate(timeval=None, localtime=False, usegmt=True)
     num_queries = get_qparam()
     worlds = []
     rp = partial(randint, 1, 10000)
@@ -105,6 +111,7 @@ def updates():
 
 @app.route()
 def plaintext():
+    response.headers["Date"] = formatdate(timeval=None, localtime=False, usegmt=True)
     response.headers["Content-Type"] = "text/plain"
     return 'Hello, World!'
 

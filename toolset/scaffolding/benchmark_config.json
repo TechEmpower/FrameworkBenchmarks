@@ -8,7 +8,7 @@
         "port": 8080,
         "approach": "$APPROACH",
         "classification": "$CLASSIFICATION",
-        "database": "None",
+        "database": "$DATABASE",
         "framework": "$FRAMEWORK",
         "language": "$LANGUAGE",
         "flavor": "None",

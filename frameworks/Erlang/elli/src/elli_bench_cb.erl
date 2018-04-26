@@ -12,13 +12,13 @@ handle(Req, _Args) ->
 handle('GET', [<<"plaintext">>], _Req) ->
     %% Reply with a normal response. 'ok' can be used instead of '200'
     %% to signal success.
-    {ok,[{<<"Content-Type">>, <<"text/plain">>}], <<"Hello, World!">>};
+    {ok, [{<<"Server">>, <<"elli">>}, {<<"Content-Type">>, <<"text/plain">>}], <<"Hello, World!">>};
 
 %% Json test route
 handle('GET',[<<"json">>], _Req) ->
     %% Reply with a normal response. 'ok' can be used instead of '200'
     %% to signal success.
-    {ok, [{<<"Content-Type">>, <<"application/json">>}], jiffy:encode({[{<<"message">>, <<"Hello, World!">>}]})};
+    {ok, [{<<"Server">>, <<"elli">>}, {<<"Content-Type">>, <<"application/json">>}], jiffy:encode({[{<<"message">>, <<"Hello, World!">>}]})};
 
 %% db test route (Single Database Query)
 handle('GET',[<<"db">>], Req) ->
@@ -33,7 +33,7 @@ handle('GET',[<<"db">>], Req) ->
 			        {result_packet, _, _, [[ID, Rand]], _} <- [emysql:execute(test_pool, db_stmt, [random:uniform(10000)]) || _ <- lists:seq(1, I) ]],
 			Res
 		end,
-    {ok, [{<<"Content-Type">>, <<"application/json">>}], jiffy:encode(lists:nth(1,JSON))};
+    {ok, [{<<"Server">>, <<"elli">>}, {<<"Content-Type">>, <<"application/json">>}], jiffy:encode(lists:nth(1,JSON))};
 
 %% TODO : Finish this function with correct logic.
 %%        Please check TFB document

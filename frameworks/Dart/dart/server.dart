@@ -2,35 +2,30 @@ import 'dart:async' show Future;
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
-import 'dart:math' show Random;
-import 'package:args/args.dart' show ArgParser;
+import 'dart:math' show Random, max;
 import 'package:mustache/mustache.dart' as mustache;
 import 'package:postgresql/postgresql.dart' as pg;
 import 'package:postgresql/postgresql_pool.dart' as pgpool;
+import 'package:system_info/system_info.dart';
 import 'package:yaml/yaml.dart' as yaml;
+
+final _NUM_PROCESSORS = SysInfo.processors.length;
 
 final _encoder = new JsonUtf8Encoder();
 
-/// Starts a new HTTP server that implements the tests to be benchmarked.  The
-/// address and port for incoming connections is configurable via command line
-/// arguments, as is the number of database connections to be maintained in the
-/// connection pool.
 void main(List<String> args) {
-  var parser = new ArgParser()
-    ..addOption('address', abbr: 'a', defaultsTo: '0.0.0.0')
-    ..addOption('port', abbr: 'p', defaultsTo: '8080')
-    ..addOption('dbconnections', abbr: 'd', defaultsTo: '256')
-    ..addOption('isolates', abbr: 'i', defaultsTo: '1');
-  var arguments = parser.parse(args);
-  var isolates = int.parse(arguments['isolates']);
-  var dbConnections = int.parse(arguments['dbconnections']) ~/ isolates;
-  ServerSocket
-      .bind(arguments['address'], int.parse(arguments['port']), shared: true)
-      .then((server) {
-        for (int i = 1; i < isolates; i++) {
-          _startServer(server, dbConnections);
-        }
-  });
+  ReceivePort errorPort = new ReceivePort();
+  errorPort.listen((e) => print(e));
+  for (int i = 0; i < _NUM_PROCESSORS; i++) {
+    Isolate.spawn(
+        startInIsolate,
+        [],
+        onError: errorPort.sendPort);
+  }
+}
+
+void startInIsolate(List args) {
+  _startServer();
 }
 
 /// The entity used in the database query and update tests.
@@ -67,11 +62,10 @@ pgpool.Pool _connectionPool;
 /// The mustache template which is rendered in the fortunes test.
 mustache.Template _fortunesTemplate;
 
-/// Starts a benchmark server, which listens for connections from
-/// '[address] : [port]' and maintains [dbConnections] connections to the
-/// database.
-void _startServer(serverSocket, dbConnections) {
+void _startServer() {
+  var dbConnections = max(1, (256 / _NUM_PROCESSORS).floor());
   Future.wait([
+    HttpServer.bind("0.0.0.0", 8080, shared: true),
     new File('postgresql.yaml').readAsString().then((config) {
       _connectionPool = new pgpool.Pool(
           new pg.Settings.fromMap(yaml.loadYaml(config)).toUri(),
@@ -81,8 +75,8 @@ void _startServer(serverSocket, dbConnections) {
     new File('fortunes.mustache').readAsString().then((template) {
       _fortunesTemplate = mustache.parse(template);
     })
-  ]).then((_) {
-    var server = new HttpServer.listenOn(serverSocket);
+  ]).then((List waitResults) {
+    var server = waitResults[0];
     server.defaultResponseHeaders.clear();
     server.serverHeader = 'dart';
     server.listen((request) {

@@ -47,6 +47,10 @@ public class HelloWorldController {
         Act.getNonblock("/json", context -> context.resp()
                 .contentType(H.Format.JSON.contentType())
                 .writeContent(JSON.toJSONString(new Message(HELLO_WORLD))));
+
+        Act.getNonblock("/plaintext", context -> context.resp()
+                .contentType(H.Format.TXT.contentType())
+                .writeContent(HELLO_WORLD));
     }
 
 }
