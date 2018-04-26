@@ -183,13 +183,6 @@ class Benchmarker:
             passed_verify = test.verify_urls()
             self.audit.audit_test_dir(test.directory)
 
-            # Log test timing stats
-            self.time_logger.log_build_flush(benchmark_log)
-            self.time_logger.log_database_start_time(log_prefix, benchmark_log)
-            self.time_logger.log_test_accepting_requests(
-                log_prefix, benchmark_log)
-            self.time_logger.log_verify_end(log_prefix, benchmark_log)
-
             # Benchmark this test
             if self.config.mode == "benchmark":
                 log("Benchmarking %s" % test.name,
@@ -199,6 +192,13 @@ class Benchmarker:
                 self.__benchmark(test, benchmark_log)
                 self.time_logger.log_benchmarking_end(
                     log_prefix=log_prefix, file=benchmark_log)
+
+            # Log test timing stats
+            self.time_logger.log_build_flush(benchmark_log)
+            self.time_logger.log_database_start_time(log_prefix, benchmark_log)
+            self.time_logger.log_test_accepting_requests(
+                log_prefix, benchmark_log)
+            self.time_logger.log_verify_end(log_prefix, benchmark_log)
 
             # Stop this test
             self.docker_helper.stop([container, database_container])

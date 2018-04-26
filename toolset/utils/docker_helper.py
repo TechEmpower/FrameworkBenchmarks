@@ -286,17 +286,6 @@ class DockerHelper:
         image_name = "techempower/%s:latest" % database
         log_prefix = image_name + ": "
 
-        database_dir = os.path.join(self.benchmarker.config.db_root, database)
-        docker_file = "%s.dockerfile" % database
-
-        self.__build(
-            base_url=self.benchmarker.config.database_docker_host,
-            path=database_dir,
-            dockerfile=docker_file,
-            log_prefix=log_prefix,
-            build_log_file=os.devnull,
-            tag="techempower/%s" % database)
-
         sysctl = {
             'net.core.somaxconn': 65535,
             'kernel.sem': "250 32000 256 512"
