@@ -49,7 +49,10 @@ class Benchmarker:
         any_failed = False
         # Run tests
         log("Running Tests...", border='=')
+
+        # build wrk and all databases needed for current run
         self.docker_helper.build_wrk()
+        self.docker_helper.build_databases()
 
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:

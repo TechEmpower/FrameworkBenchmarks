@@ -213,7 +213,11 @@ class DockerHelper:
     @staticmethod
     def __stop_container(container):
         try:
+            client = container.client
             container.kill()
+            while container.id in map(
+                    lambda x: x.id, client.containers.list()):
+                pass
         except:
             # container has already been killed
             pass
@@ -249,6 +253,29 @@ class DockerHelper:
             # Then we're on a 3 machine set up
             self.server.containers.prune()
             self.client.containers.prune()
+
+    def build_databases(self):
+        '''
+        Builds all the databases necessary to run the list of benchmarker tests
+        '''
+        built = []
+        for test in self.benchmarker.tests:
+            db = test.database.lower()
+            if db not in built and db != "none":
+                image_name = "techempower/%s:latest" % db
+                log_prefix = image_name + ": "
+
+                database_dir = os.path.join(self.benchmarker.config.db_root, db)
+                docker_file = "%s.dockerfile" % db
+
+                self.__build(
+                    base_url=self.benchmarker.config.database_docker_host,
+                    path=database_dir,
+                    dockerfile=docker_file,
+                    log_prefix=log_prefix,
+                    build_log_file=os.devnull,
+                    tag="techempower/%s" % db)
+                built.append(db)
 
     def start_database(self, database):
         '''
