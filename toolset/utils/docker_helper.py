@@ -210,7 +210,11 @@ class DockerHelper:
     @staticmethod
     def __stop_container(container):
         try:
+            client = container.client
             container.kill()
+            while container.id in map(
+                    lambda x: x.id, client.containers.list()):
+                pass
         except:
             # container has already been killed
             pass
@@ -247,6 +251,29 @@ class DockerHelper:
             self.server.containers.prune()
             self.client.containers.prune()
 
+    def build_databases(self):
+        '''
+        Builds all the databases necessary to run the list of benchmarker tests
+        '''
+        built = []
+        for test in self.benchmarker.tests:
+            db = test.database.lower()
+            if db not in built and db != "none":
+                image_name = "techempower/%s:latest" % db
+                log_prefix = image_name + ": "
+
+                database_dir = os.path.join(self.benchmarker.config.db_root, db)
+                docker_file = "%s.dockerfile" % db
+
+                self.__build(
+                    base_url=self.benchmarker.config.database_docker_host,
+                    path=database_dir,
+                    dockerfile=docker_file,
+                    log_prefix=log_prefix,
+                    build_log_file=os.devnull,
+                    tag="techempower/%s" % db)
+                built.append(db)
+
     def start_database(self, database):
         '''
         Sets up a container for the given database and port, and starts said docker
@@ -254,17 +281,6 @@ class DockerHelper:
         '''
         image_name = "techempower/%s:latest" % database
         log_prefix = image_name + ": "
-
-        database_dir = os.path.join(self.benchmarker.config.db_root, database)
-        docker_file = "%s.dockerfile" % database
-
-        self.__build(
-            base_url=self.benchmarker.config.database_docker_host,
-            path=database_dir,
-            dockerfile=docker_file,
-            log_prefix=log_prefix,
-            build_log_file=os.devnull,
-            tag="techempower/%s" % database)
 
         sysctl = {'net.core.somaxconn': 65535, 'kernel.sem': "250 32000 256 512"}
 
