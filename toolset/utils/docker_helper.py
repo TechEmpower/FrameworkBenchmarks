@@ -215,8 +215,8 @@ class DockerHelper:
         try:
             client = container.client
             container.kill()
-            while container.id in map(
-                    lambda x: x.id, client.containers.list()):
+            while container.id in map(lambda x: x.id,
+                                      client.containers.list()):
                 pass
         except:
             # container has already been killed
@@ -265,7 +265,8 @@ class DockerHelper:
                 image_name = "techempower/%s:latest" % db
                 log_prefix = image_name + ": "
 
-                database_dir = os.path.join(self.benchmarker.config.db_root, db)
+                database_dir = os.path.join(self.benchmarker.config.db_root,
+                                            db)
                 docker_file = "%s.dockerfile" % db
 
                 self.__build(
