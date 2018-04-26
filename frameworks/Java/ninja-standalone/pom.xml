@@ -9,8 +9,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>10</maven.compiler.source>
+        <maven.compiler.target>10</maven.compiler.target>
 
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
@@ -18,14 +18,14 @@
         <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
         <maven-war-plugin.version>3.2.0</maven-war-plugin.version>
 
-        <h2.version>1.4.196</h2.version>
-        <hibernate.version>5.2.12.Final</hibernate.version>
-        <hibernate-validator.version>6.0.5.Final</hibernate-validator.version>
-        <jaxb-api.version>2.2.12</jaxb-api.version>
-        <jetty.version>9.3.6.v20151106</jetty.version>
-        <mysql.version>5.1.45</mysql.version>
-        <ninja.version>6.2.0</ninja.version>
-        <xml-apis.version>1.4.01</xml-apis.version>
+        <h2.version>1.4.197</h2.version>
+        <hibernate.version>5.2.16.Final</hibernate.version>
+        <hibernate-validator.version>6.0.9.Final</hibernate-validator.version>
+        <jaxb-api.version>2.3.0</jaxb-api.version>
+        <jetty.version>9.3.15.v20161220</jetty.version>
+        <mysql.version>5.1.46</mysql.version>
+        <ninja.version>6.2.2</ninja.version>
+        <xml-apis.version>2.0.2</xml-apis.version>
     </properties>
 
     <dependencies>
@@ -39,13 +39,6 @@
             <groupId>org.ninjaframework</groupId>
             <artifactId>ninja-standalone</artifactId>
             <version>${ninja.version}</version>
-        </dependency>   
-
-        <dependency>
-            <groupId>org.ninjaframework</groupId>
-            <artifactId>ninja-test-utilities</artifactId>
-            <version>${ninja.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
