@@ -13,8 +13,7 @@ from toolset.utils.database_helper import test_database
 
 
 class DockerHelper:
-
-    def __init__(self, benchmarker = None):
+    def __init__(self, benchmarker=None):
         self.benchmarker = benchmarker
 
         self.client = docker.DockerClient(
@@ -24,12 +23,13 @@ class DockerHelper:
         self.database = docker.DockerClient(
             base_url=self.benchmarker.config.database_docker_host)
 
-    def __build(self, base_url, path, build_log_file, log_prefix, dockerfile, tag):
+    def __build(self, base_url, path, build_log_file, log_prefix, dockerfile,
+                tag):
         '''
         Builds docker containers using docker-py low-level api
         '''
 
-        self.benchmarker.timeLogger.log_build_start()
+        self.benchmarker.time_logger.mark_build_start()
         with open(build_log_file, 'w') as build_log:
             try:
                 client = docker.APIClient(base_url=base_url)
@@ -71,14 +71,12 @@ class DockerHelper:
                     file=build_log,
                     color=Fore.RED)
                 log(tb, prefix=log_prefix, file=build_log)
-                self.benchmarker.timeLogger.log_build_end(
-                    log_prefix=log_prefix,
-                    file=build_log)
+                self.benchmarker.time_logger.log_build_end(
+                    log_prefix=log_prefix, file=build_log)
                 raise
 
-            self.benchmarker.timeLogger.log_build_end(
-                log_prefix=log_prefix,
-                file=build_log)
+            self.benchmarker.time_logger.log_build_end(
+                log_prefix=log_prefix, file=build_log)
 
     def clean(self):
         '''
@@ -143,8 +141,9 @@ class DockerHelper:
 
             def watch_container(docker_container, docker_file):
                 with open(
-                        os.path.join(run_log_dir, "%s.log" % docker_file.replace(
-                            ".dockerfile", "").lower()), 'w') as run_log:
+                        os.path.join(
+                            run_log_dir, "%s.log" % docker_file.replace(
+                                ".dockerfile", "").lower()), 'w') as run_log:
                     for line in docker_container.logs(stream=True):
                         log(line, prefix=log_prefix, file=run_log)
 
@@ -153,9 +152,12 @@ class DockerHelper:
 
             if self.benchmarker.config.network is None:
                 extra_hosts = {
-                    socket.gethostname(): str(self.benchmarker.config.server_host),
-                    'tfb-server': str(self.benchmarker.config.server_host),
-                    'tfb-database': str(self.benchmarker.config.database_host)
+                    socket.gethostname():
+                    str(self.benchmarker.config.server_host),
+                    'tfb-server':
+                    str(self.benchmarker.config.server_host),
+                    'tfb-database':
+                    str(self.benchmarker.config.database_host)
                 }
                 name = None
 
@@ -200,7 +202,8 @@ class DockerHelper:
                     os.path.join(run_log_dir, "%s.log" % test.name.lower()),
                     'w') as run_log:
                 tb = traceback.format_exc()
-                log("Running docker cointainer: %s.dockerfile failed" % test.name,
+                log("Running docker cointainer: %s.dockerfile failed" %
+                    test.name,
                     prefix=log_prefix,
                     file=run_log)
                 log(tb, prefix=log_prefix, file=run_log)
@@ -212,8 +215,8 @@ class DockerHelper:
         try:
             client = container.client
             container.kill()
-            while container.id in map(
-                    lambda x: x.id, client.containers.list()):
+            while container.id in map(lambda x: x.id,
+                                      client.containers.list()):
                 pass
         except:
             # container has already been killed
@@ -262,7 +265,8 @@ class DockerHelper:
                 image_name = "techempower/%s:latest" % db
                 log_prefix = image_name + ": "
 
-                database_dir = os.path.join(self.benchmarker.config.db_root, db)
+                database_dir = os.path.join(self.benchmarker.config.db_root,
+                                            db)
                 docker_file = "%s.dockerfile" % db
 
                 self.__build(
@@ -282,7 +286,10 @@ class DockerHelper:
         image_name = "techempower/%s:latest" % database
         log_prefix = image_name + ": "
 
-        sysctl = {'net.core.somaxconn': 65535, 'kernel.sem': "250 32000 256 512"}
+        sysctl = {
+            'net.core.somaxconn': 65535,
+            'kernel.sem': "250 32000 256 512"
+        }
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 

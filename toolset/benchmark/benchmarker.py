@@ -22,7 +22,7 @@ class Benchmarker:
         Initialize the benchmarker.
         '''
         self.config = config
-        self.timeLogger = TimeLogger()
+        self.time_logger = TimeLogger()
         self.metadata = Metadata(self)
         self.audit = Audit(self)
 
@@ -31,8 +31,6 @@ class Benchmarker:
 
         self.results = Results(self)
         self.docker_helper = DockerHelper(self)
-
-
 
     ##########################################################################################
     # Public methods
@@ -92,7 +90,7 @@ class Benchmarker:
                 prefix=prefix,
                 file=file,
                 color=Fore.RED if success else '')
-        self.timeLogger.log_test_end(log_prefix=prefix, file=file)
+        self.time_logger.log_test_end(log_prefix=prefix, file=file)
         return success
 
     def __run_test(self, test, benchmark_log):
@@ -103,11 +101,13 @@ class Benchmarker:
         '''
 
         log_prefix = "%s: " % test.name
-        self.timeLogger.log_test_start()
+        # Start timing the total test duration
+        self.time_logger.mark_test_start()
 
         # If the test is in the excludes list, we skip it
         if self.config.exclude and test.name in self.config.exclude:
-            message = "Test {name} has been added to the excludes list. Skipping.".format(name=test.name)
+            message = "Test {name} has been added to the excludes list. Skipping.".format(
+                name=test.name)
             self.results.write_intermediate(test.name, message)
             return self.__exit_test(
                 success=False,
@@ -119,6 +119,7 @@ class Benchmarker:
         try:
             # Start database container
             if test.database.lower() != "none":
+                self.time_logger.mark_starting_database()
                 database_container = self.docker_helper.start_database(
                     test.database.lower())
                 if database_container is None:
@@ -128,12 +129,15 @@ class Benchmarker:
                         message=message,
                         prefix=log_prefix,
                         file=benchmark_log)
+                self.time_logger.mark_started_database()
 
             # Start webapp
             container = test.start()
+            self.time_logger.mark_test_starting()
             if container is None:
                 self.docker_helper.stop([container, database_container])
-                message = "ERROR: Problem starting {name}".format(name=test.name)
+                message = "ERROR: Problem starting {name}".format(
+                    name=test.name)
                 self.results.write_intermediate(test.name, message)
                 return self.__exit_test(
                     success=False,
@@ -145,7 +149,8 @@ class Benchmarker:
             max_sleep = 60
             accepting_requests = False
             while not accepting_requests and slept < max_sleep:
-                if not self.docker_helper.server_container_exists(container.id):
+                if not self.docker_helper.server_container_exists(
+                        container.id):
                     break
                 accepting_requests = test.is_accepting_requests()
                 time.sleep(1)
@@ -161,6 +166,8 @@ class Benchmarker:
                     prefix=log_prefix,
                     file=benchmark_log)
 
+            self.time_logger.mark_test_accepting_requests()
+
             # Debug mode blocks execution here until ctrl+c
             if self.config.mode == "debug":
                 log("Entering debug mode. Server has started. CTRL-c to stop.",
@@ -172,23 +179,26 @@ class Benchmarker:
 
             # Verify URLs and audit
             log("Verifying framework URLs", prefix=log_prefix)
-            self.timeLogger.log_verify_start()
+            self.time_logger.mark_verify_start()
             passed_verify = test.verify_urls()
             self.audit.audit_test_dir(test.directory)
-            self.timeLogger.log_verify_end(
-                log_prefix=log_prefix,
-                file=benchmark_log)
 
             # Benchmark this test
             if self.config.mode == "benchmark":
                 log("Benchmarking %s" % test.name,
                     file=benchmark_log,
                     border='-')
-                self.timeLogger.log_benchmarking_start()
+                self.time_logger.mark_benchmarking_start()
                 self.__benchmark(test, benchmark_log)
-                self.timeLogger.log_benchmarking_end(
-                    log_prefix=log_prefix,
-                    file=benchmark_log)
+                self.time_logger.log_benchmarking_end(
+                    log_prefix=log_prefix, file=benchmark_log)
+
+            # Log test timing stats
+            self.time_logger.log_build_flush(benchmark_log)
+            self.time_logger.log_database_start_time(log_prefix, benchmark_log)
+            self.time_logger.log_test_accepting_requests(
+                log_prefix, benchmark_log)
+            self.time_logger.log_verify_end(log_prefix, benchmark_log)
 
             # Stop this test
             self.docker_helper.stop([container, database_container])
@@ -220,9 +230,7 @@ class Benchmarker:
                 file=benchmark_log)
 
         return self.__exit_test(
-            success=True,
-            prefix=log_prefix,
-            file=benchmark_log)
+            success=True, prefix=log_prefix, file=benchmark_log)
 
     def __benchmark(self, framework_test, benchmark_log):
         '''
@@ -251,7 +259,8 @@ class Benchmarker:
                                                        framework_test.port,
                                                        test.get_url()))
 
-                self.docker_helper.benchmark(script, script_variables, raw_file)
+                self.docker_helper.benchmark(script, script_variables,
+                                             raw_file)
 
                 # End resource usage metrics collection
                 self.__end_logging()

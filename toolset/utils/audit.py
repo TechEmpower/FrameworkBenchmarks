@@ -1,4 +1,3 @@
-import os
 from toolset.utils.output_helper import log
 from colorama import Fore
 
@@ -13,7 +12,8 @@ class Audit:
 
     def start_audit(self):
         for lang in self.benchmarker.metadata.gather_languages():
-            for test_dir in self.benchmarker.metadata.gather_language_tests(lang):
+            for test_dir in self.benchmarker.metadata.gather_language_tests(
+                    lang):
                 self.audit_test_dir(test_dir)
 
     def audit_test_dir(self, test_dir):

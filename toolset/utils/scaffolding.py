@@ -3,6 +3,7 @@ import os, re
 from shutil import copytree
 from toolset.utils.metadata import Metadata
 
+
 class Scaffolding:
     def __init__(self, benchmarker):
         print("""
@@ -208,7 +209,8 @@ class Scaffolding:
             prompt += "{!s}/".format(i)
             options.append(db[0])
             i += 1
-        print("  {!s}) None: No database at this time{!s}".format(i, os.linesep))
+        print("  {!s}) None: No database at this time{!s}".format(
+            i, os.linesep))
         prompt += "{!s}]: ".format(i)
         options.append("None")
         valid = self.__prompt_database(prompt, options)

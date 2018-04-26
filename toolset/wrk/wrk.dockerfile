@@ -5,6 +5,7 @@ RUN curl -sL https://github.com/wg/wrk/archive/4.1.0.tar.gz | tar xz --strip-com
 RUN make > /dev/null
 RUN cp wrk /usr/local/bin
 
+WORKDIR /
 # Required scripts for benchmarking
 COPY pipeline.lua pipeline.lua
 COPY concurrency.sh concurrency.sh
