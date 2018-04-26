@@ -63,8 +63,8 @@ def verify_headers(headers, url, should_be='json'):
             datetime.strptime(date, expected_date_format)
         except ValueError:
             problems.append((
-                'fail',
-                'Unexpected date format, found \"%s\", did not match \"%s\".'
+                'warn',
+                'Invalid Date header, found \"%s\", did not match \"%s\".'
                 % (date, expected_date_format), url))
 
     content_type = headers.get('Content-Type')
@@ -79,7 +79,7 @@ def verify_headers(headers, url, should_be='json'):
         if not re.match(expected_type, content_type):
             problems.append((
                 'fail',
-                'Unexpected content type, found \"%s\", did not match \"%s\".'
+                'Invalid Content-Type header, found \"%s\", did not match \"%s\".'
                 % (content_type, expected_type), url))
 
     return problems
