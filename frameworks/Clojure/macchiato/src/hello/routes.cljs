@@ -28,7 +28,7 @@
 
 (defn plaintext [_ res _]
   (-> (r/ok "Hello, World!")
-      (r/content-type "text/html")
+      (r/content-type "text/plain")
       (res)))
 
 (defn single-query-test [req res raise]

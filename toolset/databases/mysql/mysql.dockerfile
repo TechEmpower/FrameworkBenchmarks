@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
-RUN apt update
-RUN apt install -yqq locales
+RUN apt-get update > /dev/null
+RUN apt-get install -yqq locales > /dev/null
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
@@ -14,11 +14,11 @@ ADD mysql.list mysql.list
 
 RUN cp mysql.list /etc/apt/sources.list.d/
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8C718D3B5072E1F5
-RUN apt update
+RUN apt-get update > /dev/null
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/data-dir select 'Y'\""]
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/root-pass password secret\""]
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/re-root-pass password secret\""]
-RUN DEBIAN_FRONTEND=noninteractive apt -y install mysql-server
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server > /dev/null
 
 RUN mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
 RUN cp my.cnf /etc/mysql/my.cnf
