@@ -18,26 +18,12 @@
 
     <repositories>
         <repository>
-            <id>clojars</id>
-            <url>http://clojars.org/repo</url>
-        </repository>
-        <repository>
-            <id>atlassian 3rd-party</id>
-            <url>https://maven.atlassian.com/3rdparty</url>
-        </repository>
-        <repository>
-            <id>caucho</id>
-            <url>http://caucho.com/m2</url>
-        </repository>
-        <repository>
             <id>techempower</id>
             <url>https://maven.techempower.com/releases</url>
         </repository>
     </repositories>
 
     <build>
-        <directory>target</directory>
-        <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -49,41 +35,10 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.5</version>
-                <executions>
-                   <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.spullara.mustache.java</groupId>
-            <artifactId>compiler</artifactId>
-            <version>0.8.17</version>
-        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -97,12 +52,12 @@
         <dependency>
             <groupId>com.techempower</groupId>
             <artifactId>gemini-public</artifactId>
-            <version>2.18.1</version>
+            <version>2.19.0</version>
         </dependency>
         <dependency>
             <groupId>com.techempower</groupId>
             <artifactId>gemini-resin-public</artifactId>
-            <version>2.18.1</version>
+            <version>2.19.0</version>
         </dependency>
     </dependencies>
 
