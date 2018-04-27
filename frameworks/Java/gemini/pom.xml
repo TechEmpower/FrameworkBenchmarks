@@ -175,12 +175,12 @@
         <!-- From techempower-snapshots -->
         <dependency>
             <groupId>com.techempower</groupId>
-            <artifactId>gemini</artifactId>
+            <artifactId>gemini-public</artifactId>
             <version>2.18.1</version>
         </dependency>
         <dependency>
             <groupId>com.techempower</groupId>
-            <artifactId>gemini-resin</artifactId>
+            <artifactId>gemini-resin-public</artifactId>
             <version>2.18.1</version>
         </dependency>
         <!-- =============================================================== -->
