@@ -23,8 +23,8 @@ $server->on('request', function ($req, $res) {
             ));
             // Read number of queries to run from URL parameter
             $query_count = 1;
-            if (isset($_GET['queries']) && $_GET['queries'] > 0)
-                $query_count = $_GET['queries'] > 500 ? 500 : $_GET['queries'];
+            if (isset($req->get['queries']) && $req->get['queries'] > 0)
+                $query_count = $req->get['queries'] > 500 ? 500 : $req->get['queries'];
 
             // Create an array with the response string.
             $arr = array();
@@ -76,9 +76,9 @@ $server->on('request', function ($req, $res) {
             ));
 
             $query_count = 1;
-            if (isset($_GET['queries']) && $_GET['queries'] > 0)
+            if (isset($req->get['queries']) && $req->get['queries'] > 0)
             {
-                $query_count = $_GET['queries'] > 500 ? 500 : $_GET['queries'];
+                $query_count = $req->get['queries'] > 500 ? 500 : $req->get['queries'];
             }
 
             $arr = array();
