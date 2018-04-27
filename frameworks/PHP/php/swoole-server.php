@@ -48,36 +48,6 @@ $server->on('request', function ($req, $res) {
             $res->end(json_encode($arr));
             break;
 
-        case "/queries":
-            include 'vendor/php-activerecord/php-activerecord/ActiveRecord.php';
-            ActiveRecord\Config::initialize(function ($cfg) {
-                $cfg->set_model_directory('models');
-                $cfg->set_connections(array('development' =>
-                    'mysql://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world'));
-            });
-
-            $query_count = 1;
-            if (isset($_GET['queries']) && $_GET['queries'] > 0)
-                $query_count = $_GET["queries"] > 500 ? 500 : $_GET['queries'];
-
-            $arr = array();
-            for ($i = 0; $i < $query_count; $i++)
-            {
-                // Choose a random row
-                // http://www.php.net/mt_rand
-                $id = mt_rand(1, 10000);
-                $world = World::find_by_id($id);
-
-                // Store result in array.
-                $arr[] = $world->to_array();
-            }
-            if ($query_count === 1)
-                $arr = $arr[0];
-
-            $res->header('Content-Type', 'application/json');
-            $res->end(json_encode($arr));
-            break;
-
         case "/fortunes":
             $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8', 'benchmarkdbuser', 'benchmarkdbpass', array(
                 PDO::ATTR_PERSISTENT => true
