@@ -17,7 +17,7 @@ return array
 	    'dsn'        => 'mysql:host=tfb-database;dbname=hello_world',
             'username'   => 'benchmarkdbuser',
             'password'   => 'benchmarkdbpass',
-            'persistent' => FALSE,
+            'persistent' => true,
         ),
         'table_prefix' => '',
         'charset'      => 'utf8',
