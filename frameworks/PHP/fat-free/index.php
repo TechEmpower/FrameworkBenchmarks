@@ -18,7 +18,7 @@ $f3->set('ONERROR',function($f3){
     echo $f3->get('ERROR.code').': '.$f3->get('ERROR.text')."\n".$f3->get('ERROR.trace');
 });
 
-$f3->set('DBS',array('mysql:host=tfb-database;port=3306;dbname=hello_world','benchmarkdbuser','benchmarkdbpass'));
+$f3->set('DBS',array('mysql:host=tfb-database;port=3306;dbname=hello_world','benchmarkdbuser','benchmarkdbpass',[PDO::ATTR_PERSISTENT => true]));
 // http: //www.techempower.com/benchmarks/#section=code
 
 // JSON test
