@@ -4,19 +4,18 @@ This is the Gemini portion of a [benchmarking test suite](../) comparing a varie
 
 ### JSON Encoding Test
 
-* [JSON test source](Source/hello/home/handler/HelloHandler.java)
+* [JSON test source](src/main/java/hello/home/handler/HelloHandler.java)
 
 ### Data-Store/Database Mapping Test
 
-* [DB test controller](Source/hello/home/handler/HelloHandler.java)
-* [DB test model](Source/hello/home/entity/World.java)
+* [DB test controller](src/main/java/hello/home/handler/HelloHandler.java)
+* [DB test model](src/main/java/hello/home/entity/World.java)
 
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Oracle Java 1.8](https://www.oracle.com/java/)
-* [Resin 4.0.55](http://www.caucho.com/)
-* [MySQL 5.5.29](https://dev.mysql.com/)
+* [OpenJDK Java 10](http://jdk.java.net/10/)
+* [Resin 4.0.56](http://www.caucho.com/)
 
 ## Test URLs
 ### JSON Encoding Test

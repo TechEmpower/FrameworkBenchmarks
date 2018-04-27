@@ -1,21 +1,20 @@
-FROM openjdk:10-jdk-slim
-RUN apt update -qqy && apt install -yqq ant curl
+FROM maven:3.5.3-jdk-10-slim as maven
 
 WORKDIR /gemini
-COPY Docroot Docroot
-COPY Source Source
-COPY build.xml build.xml
-COPY ivy.xml ivy.xml
-COPY ivysettings.xml ivysettings.xml
 
-RUN mv Docroot/WEB-INF/gemini-mysql.conf Docroot/WEB-INF/GeminiHello.conf
-RUN mkdir Docroot/WEB-INF/classes
-RUN mkdir Docroot/WEB-INF/lib
-RUN ant resolve
-RUN ant package
+COPY src src
+COPY pom.xml pom.xml
+
+RUN mv src/main/webapp/WEB-INF/gemini-mysql.conf src/main/webapp/WEB-INF/GeminiHello.conf
+RUN mvn -q compile
+RUN mvn -q war:war
+
+FROM openjdk:10-jdk-slim
+RUN apt update -qqy && apt install -yqq curl > /dev/null
 
 WORKDIR /resin
 RUN curl -sL http://caucho.com/download/resin-4.0.56.tar.gz | tar xz --strip-components=1
 RUN rm -rf webapps/*
-RUN cp /gemini/gemini.war webapps/ROOT.war
+COPY --from=maven /gemini/target/HelloWorld-0.0.1.war webapps/ROOT.war
+
 CMD ["java", "-jar", "lib/resin.jar", "console"]
