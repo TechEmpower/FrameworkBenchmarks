@@ -1,5 +1,5 @@
 <?php
-$server = new swoole_http_server('0.0.0.0', 8080);
+$server = new swoole_http_server('0.0.0.0', 8080, SWOOLE_BASE);
 $server->set(array(
     'worker_num' => NUMCORES,
 ));
