@@ -171,8 +171,6 @@
             <artifactId>javassist</artifactId>
             <version>3.12.1.GA</version>
         </dependency>
-        <!-- =============================================================== -->
-        <!-- From techempower-snapshots -->
         <dependency>
             <groupId>com.techempower</groupId>
             <artifactId>gemini-public</artifactId>
@@ -183,7 +181,6 @@
             <artifactId>gemini-resin-public</artifactId>
             <version>2.18.1</version>
         </dependency>
-        <!-- =============================================================== -->
     </dependencies>
 
 </project>
