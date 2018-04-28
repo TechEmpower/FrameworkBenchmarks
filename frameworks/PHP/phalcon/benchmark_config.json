@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "phalcon",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "mongodb": {
       "db_url": "/mongodb/db",
@@ -42,7 +42,7 @@
       "database_os": "Linux",
       "display_name": "phalcon",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "micro": {
       "json_url": "/json",
@@ -63,7 +63,7 @@
       "database_os": "Linux",
       "display_name": "phalcon",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     }
   }]
 }
