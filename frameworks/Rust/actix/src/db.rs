@@ -1,17 +1,16 @@
 //! Db executor actor
-use std::io;
-use rand::{thread_rng, Rng, ThreadRng};
 use actix::prelude::*;
 use diesel;
 use diesel::prelude::*;
 use diesel::result::Error;
+use rand::{thread_rng, Rng, ThreadRng};
+use std::io;
 
 use models;
 
-
-pub struct DbExecutor{
+pub struct DbExecutor {
     conn: PgConnection,
-    rng: ThreadRng
+    rng: ThreadRng,
 }
 
 unsafe impl Send for DbExecutor {}
@@ -22,10 +21,11 @@ impl Actor for DbExecutor {
 
 impl DbExecutor {
     pub fn new(db_url: &str) -> DbExecutor {
-        DbExecutor{
+        DbExecutor {
             conn: PgConnection::establish(db_url)
                 .expect(&format!("Error connecting to {}", db_url)),
-            rng: thread_rng()}
+            rng: thread_rng(),
+        }
     }
 }
 
@@ -42,11 +42,12 @@ impl Handler<RandomWorld> for DbExecutor {
         use schema::world::dsl::*;
 
         let random_id = self.rng.gen_range(1, 10_000);
-        match world.filter(id.eq(random_id)).load::<models::World>(&self.conn) {
-            Ok(mut items) =>
-                Ok(items.pop().unwrap()),
-            Err(_) =>
-                Err(io::Error::new(io::ErrorKind::Other, "Database error")),
+        match world
+            .filter(id.eq(random_id))
+            .load::<models::World>(&self.conn)
+        {
+            Ok(mut items) => Ok(items.pop().unwrap()),
+            Err(_) => Err(io::Error::new(io::ErrorKind::Other, "Database error")),
         }
     }
 }
@@ -66,9 +67,14 @@ impl Handler<RandomWorlds> for DbExecutor {
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
             let w_id = self.rng.gen_range(1, 10_000);
-            let w = match world.filter(id.eq(w_id)).load::<models::World>(&self.conn) {
+            let w = match world
+                .filter(id.eq(w_id))
+                .load::<models::World>(&self.conn)
+            {
                 Ok(mut items) => items.pop().unwrap(),
-                Err(_) => return Err(io::Error::new(io::ErrorKind::Other, "Database error")),
+                Err(_) => {
+                    return Err(io::Error::new(io::ErrorKind::Other, "Database error"))
+                }
             };
             worlds.push(w)
         }
@@ -91,10 +97,14 @@ impl Handler<UpdateWorld> for DbExecutor {
         let mut worlds = Vec::with_capacity(msg.0);
         for _ in 0..msg.0 {
             let w_id = self.rng.gen_range::<i32>(1, 10_000);
-            let mut w = match world.filter(id.eq(w_id)).load::<models::World>(&self.conn) {
+            let mut w = match world
+                .filter(id.eq(w_id))
+                .load::<models::World>(&self.conn)
+            {
                 Ok(mut items) => items.pop().unwrap(),
-                Err(_) => return Err(
-                    io::Error::new(io::ErrorKind::Other, "Database error")),
+                Err(_) => {
+                    return Err(io::Error::new(io::ErrorKind::Other, "Database error"))
+                }
             };
             w.randomnumber = self.rng.gen_range(1, 10_000);
             worlds.push(w);
@@ -129,13 +139,14 @@ impl Handler<TellFortune> for DbExecutor {
 
         match fortune.load::<models::Fortune>(&self.conn) {
             Ok(mut items) => {
-                items.push(models::Fortune{
+                items.push(models::Fortune {
                     id: 0,
-                    message: "Additional fortune added at request time.".to_string()});
+                    message: "Additional fortune added at request time.".to_string(),
+                });
                 items.sort_by(|it, next| it.message.cmp(&next.message));
                 Ok(items)
             }
-            Err(e) => Err(io::Error::new(io::ErrorKind::Other, e))
+            Err(e) => Err(io::Error::new(io::ErrorKind::Other, e)),
         }
     }
 }

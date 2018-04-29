@@ -8,6 +8,7 @@ $app = new Slim\App(array(
         $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8', 'benchmarkdbuser', 'benchmarkdbpass');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        $pdo->setAttribute(PDO::ATTR_PERSISTENT, true);
 
         return $pdo;
     },

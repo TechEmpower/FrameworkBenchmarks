@@ -9,7 +9,7 @@ class Benchmark {
             'mysql:host=tfb-database;dbname=hello_world;charset=utf8',
             'benchmarkdbuser',
             'benchmarkdbpass',
-            array(PDO::ATTR_PERSISTENT => false));
+            array(PDO::ATTR_PERSISTENT => true));
     }
 
     public function bench_json()
