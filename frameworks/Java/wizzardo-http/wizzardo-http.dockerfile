@@ -6,9 +6,7 @@ WORKDIR /wizzardo-http
 COPY build.gradle build.gradle
 COPY src src
 
-RUN gradle --refresh-dependencies clean fatJar
-
-CMD java \
+CMD gradle --refresh-dependencies clean fatJar && java \
     -Xmx2G \
     -Xms2G \
     -server \
