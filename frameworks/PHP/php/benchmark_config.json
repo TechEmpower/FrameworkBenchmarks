@@ -20,7 +20,7 @@
       "database_os": "Linux",
       "display_name": "PHP",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "raw7": {
       "db_url": "/dbraw.php",
@@ -41,7 +41,7 @@
       "database_os": "Linux",
       "display_name": "PHP-raw",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "php5": {
       "json_url": "/json.php",
@@ -106,7 +106,7 @@
       "database_os": "Linux",
       "display_name": "PHP-swool",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     }
   }]
 }

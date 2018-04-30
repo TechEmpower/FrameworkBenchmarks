@@ -17,7 +17,7 @@ if [[ "$CPU_COUNT" -gt 16 ]]; then
 	# In the physical hardware environment the number of threads used by the application is not
 	# the same as the number of logical CPU cores that the database server has, so we need to
 	# adjust the maximum number of database connections per thread accordingly.
-	DB_CONN=8
+	DB_CONN=6
 else
 	echo "Running h2o_app in the cloud environment."
 	USE_PROCESSES=false

@@ -21,7 +21,7 @@
       "database_os": "Linux",
       "display_name": "fat-free",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "raw": {
       "db_url": "/db",
@@ -42,7 +42,7 @@
       "database_os": "Linux",
       "display_name": "fat-free",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     }    
   }]
 }

@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "yii2",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "hhvm": {
       "plaintext_url": "/site/plaintext",
@@ -45,7 +45,7 @@
       "database_os": "Linux",
       "display_name": "yii2",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     }
   }]
 }
