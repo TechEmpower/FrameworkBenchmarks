@@ -9,16 +9,12 @@ sourceCompatibility = 1.8
 mainClassName = "com.wizzardo.techempower.App"
 
 repositories {
-    maven {
-        url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-
     jcenter()
     mavenCentral()
 }
 
 dependencies {
-    compile 'com.wizzardo:http:0.2-SNAPSHOT'
+    compile 'com.wizzardo:http:0.2'
     compile 'org.postgresql:postgresql:9.4.1212'
     compile 'com.zaxxer:HikariCP:2.7.3'
 }
