@@ -40,8 +40,18 @@ Amp\Loop::run(function () {
         }
     });
 
-    $options = (new Options)->withoutCompression();
-    $server = new Server($sockets, $router, new NullLogger, $options);
+    $logHandler = Amp\Cluster\createLogHandler();
+    $logger = new Monolog\Logger("server");
+    $logger->pushHandler($logHandler);
+
+    $logger->info("Using " . get_class(Amp\Loop::get()));
+
+    $options = (new Options)
+        ->withoutCompression()
+        ->withConnectionLimit(16384)
+        ->withConnectionsPerIpLimit(16384);
+
+    $server = new Server($sockets, $router, $logger, $options);
 
     yield $server->start();
 
