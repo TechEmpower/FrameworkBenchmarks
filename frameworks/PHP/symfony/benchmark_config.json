@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "symfony",
       "notes": "",
-      "versus": "php-php5"
+      "versus": "php"
     },
     "raw": {
       "db_url": "/db-raw",
@@ -42,7 +42,7 @@
       "database_os": "Linux",
       "display_name": "symfony",
       "notes": "",
-      "versus": "php-php5"
+      "versus": "php"
     }
   }]
 }

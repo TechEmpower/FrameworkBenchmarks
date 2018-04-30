@@ -22,7 +22,7 @@
             "database_os": "Linux",
             "display_name": "kumbiaphp",
             "notes": "",
-            "versus": "php7"
+            "versus": "php"
         },
         "raw": {
             "db_url": "/raw",
@@ -43,7 +43,7 @@
             "database_os": "Linux",
             "display_name": "kumbiaphp-raw",
             "notes": "",
-            "versus": "php7"
+            "versus": "php"
           }
         }]
       }
