@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "28215008cf7e94aaa431bfbc416e652d",
+    "content-hash": "3bb2a266958d9be1f9efc24a2c736f34",
     "packages": [
         {
             "name": "amphp/amp",
@@ -267,16 +267,16 @@
         },
         {
             "name": "amphp/dns",
-            "version": "v0.9.12",
+            "version": "v0.9.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/dns.git",
-                "reference": "2c8133a7b4267ba570f473abe4b08b01a0c8238a"
+                "reference": "4647e5f58263ffdeff7da5c269f517cb48cff84f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/dns/zipball/2c8133a7b4267ba570f473abe4b08b01a0c8238a",
-                "reference": "2c8133a7b4267ba570f473abe4b08b01a0c8238a",
+                "url": "https://api.github.com/repos/amphp/dns/zipball/4647e5f58263ffdeff7da5c269f517cb48cff84f",
+                "reference": "4647e5f58263ffdeff7da5c269f517cb48cff84f",
                 "shasum": ""
             },
             "require": {
@@ -288,6 +288,7 @@
                 "amphp/uri": "^0.1",
                 "amphp/windows-registry": "^0.3",
                 "daverandom/libdns": "^2.0.1",
+                "ext-filter": "*",
                 "php": ">=7.0"
             },
             "require-dev": {
@@ -340,7 +341,7 @@
                 "dns",
                 "resolve"
             ],
-            "time": "2018-01-10T16:26:11+00:00"
+            "time": "2018-05-01T18:08:54+00:00"
         },
         {
             "name": "amphp/file",
@@ -704,6 +705,55 @@
                 "non-blocking"
             ],
             "time": "2018-03-22T19:39:52+00:00"
+        },
+        {
+            "name": "amphp/mysql",
+            "version": "v0.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/amphp/mysql.git",
+                "reference": "1f4a2229832b38eeb94154296c9f3cbcb4362b38"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/amphp/mysql/zipball/1f4a2229832b38eeb94154296c9f3cbcb4362b38",
+                "reference": "1f4a2229832b38eeb94154296c9f3cbcb4362b38",
+                "shasum": ""
+            },
+            "require": {
+                "amphp/amp": "^2",
+                "amphp/socket": "^0.10"
+            },
+            "require-dev": {
+                "amphp/phpunit-util": "^1",
+                "friendsofphp/php-cs-fixer": "^2.3",
+                "phpunit/phpunit": "^6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Amp\\Mysql\\": "lib/"
+                },
+                "files": [
+                    "lib/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bob Weinand",
+                    "email": "bobwei9@hotmail.com"
+                },
+                {
+                    "name": "Aaron Piotrowski",
+                    "email": "aaron@trowski.com"
+                }
+            ],
+            "description": "Asynchronous parallel Mysql client built on the Amp concurrency framework",
+            "time": "2017-12-15T16:08:04+00:00"
         },
         {
             "name": "amphp/parallel",

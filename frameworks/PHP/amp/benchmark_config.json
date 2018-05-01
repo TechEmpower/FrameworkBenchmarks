@@ -3,6 +3,9 @@
   "tests": [{
     "default": {
       "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -10,6 +13,7 @@
       "framework": "None",
       "language": "PHP",
       "flavor": "PHP7",
+      "database": "MySQL",
       "orm": "Raw",
       "platform": "None",
       "webserver": "amphp/http-server",
