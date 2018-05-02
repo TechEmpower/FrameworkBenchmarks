@@ -1,6 +1,7 @@
 import Vapor
 import Foundation
 import TfbCommon
+import FluentMySQL
 
 struct EmptyJSON: Content {}
 
@@ -51,24 +52,26 @@ public func routes(_ router: Router) throws {
     }
 
     // Test type 4: Fortunes
-//    let posixLocale = Locale(identifier: "en_US_POSIX")
-//    router.get("fortunes") { req -> Future<View> in
-//        return req.withNewConnection(to: DatabaseIdentifier.mysql, closure: { db -> Future<[Fortune]> in
-//                return db.query(Fortune.self).all()
-//                    .map(to: [Fortune].self) { fortunes in
-//                        var newFortunes = fortunes
-//                        let additional = Fortune(id: 0, message: "Additional fortune added at request time.")
-//                        newFortunes.insert(additional, at: 0)
-//                        newFortunes.sort(by: { lhs, rhs -> Bool in
-//                            return lhs.message.compare(rhs.message, locale: posixLocale) == .orderedAscending
-//                        })
-//                        return newFortunes
-//                    }
-//                    .flatMap(to: View.self) { fortunes in
-//                        return req.view().render("fortune", fortunes)
-//                    }
-//            })
-//    }
+    router.get("fortunes") { req -> Future<View> in
+        let posixLocale = Locale(identifier: "en_US_POSIX")
+
+        return req.withPooledConnection(to: .mysql, closure: { (db: MySQLConnection) -> Future<[Fortune]> in
+                return db.query(Fortune.self).all()
+            })
+            .map { fortunes -> [Fortune] in
+                var newFortunes = fortunes
+                let additional = Fortune(id: 0, message: "Additional fortune added at request time.")
+                newFortunes.insert(additional, at: 0)
+                newFortunes.sort(by: { lhs, rhs -> Bool in
+                    return lhs.message.compare(rhs.message, locale: posixLocale) == .orderedAscending
+                })
+                return newFortunes
+            }
+            .flatMap { fortunes in
+                return try req.view().render("fortune", fortunes)
+            }
+
+    }
 
     // Test type 5: Database updates
     router.get("updates") { req -> Future<[World]> in
@@ -89,7 +92,7 @@ public func routes(_ router: Router) throws {
                     .map { $0.save(on: req) }
                     .flatten(on: req)
             }.flatMap { _ in
-                return req.withNewConnection(to: .mysql, closure: { db -> Future<[World]> in
+                return req.withPooledConnection(to: .mysql, closure: { db -> Future<[World]> in
                     return db.query(World.self).all()
                 })
             }

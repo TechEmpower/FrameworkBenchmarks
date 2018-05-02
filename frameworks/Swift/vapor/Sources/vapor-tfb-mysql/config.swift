@@ -11,6 +11,7 @@ public func configure(
     _ services: inout Services
 ) throws {
 
+    try services.register(LeafProvider())
     try services.register(FluentMySQLProvider())
     /// Register custom MySQL Config
     let mySQLUrl = URL(string: "mysql://benchmarkdbuser:benchmarkdbpass@tfb-database:3306/hello_world")!
