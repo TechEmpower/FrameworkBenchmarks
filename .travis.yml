@@ -17,9 +17,7 @@ jobs:
       env:
         - FOO=foo
       script:
-        - echo "tests to run = [$RUN_TESTS]"
-        - export TRAVIS_TEST_RESULT=0
-        - travis_terminate 1
+        - travis_result 1 && travis_terminate 0
 
 stages:
   - quicktest
