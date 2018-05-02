@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/vapor/console.git",
         "state": {
           "branch": null,
-          "revision": "30f102dcf4d18862a14df9f65c4b91d117005926",
-          "version": "3.0.1"
+          "revision": "5b9796d39f201b3dd06800437abd9d774a455e57",
+          "version": "3.0.2"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/vapor/http.git",
         "state": {
           "branch": null,
-          "revision": "f934c1391c370fbf529bd461b40aa75ce40ce1e5",
-          "version": "3.0.2"
+          "revision": "82b97f68471830759a3a8f90f53df243d0c97db1",
+          "version": "3.0.4"
         }
       },
       {
@@ -186,7 +186,7 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": "gm",
-          "revision": "990855feb29772f80afc9b5f3db12f2bd8024434",
+          "revision": "c5ad20a7ec7bee13227461faeb2e00f51e249a0d",
           "version": null
         }
       },
