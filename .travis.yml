@@ -11,6 +11,18 @@ python:
 services:
   - docker
 
+jobs:
+  include:
+    - stage: quicktest
+      env:
+        - FOO=foo
+      script:
+        - echo "In the quicktest stage: ${RUN_TESTS}"
+
+stages:
+  - quicktest
+  - test
+
 env:
   matrix:
      - "TESTLANG=C"
