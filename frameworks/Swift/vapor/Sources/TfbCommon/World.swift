@@ -6,7 +6,7 @@ import Glibc
 internal extension Int {
     static func random<T>(_ max: T) -> Int where T: BinaryInteger {
         #if os(Linux)
-        return Int(SwiftGlibc.random() % (max + 1))
+        return Int(SwiftGlibc.random() % (Int(max) + 1))
         #else
         return Int(arc4random_uniform(UInt32(max)))
         #endif
