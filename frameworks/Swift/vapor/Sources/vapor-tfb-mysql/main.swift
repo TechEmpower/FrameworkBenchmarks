@@ -1,25 +1,25 @@
-/// We have isolated all of our App's logic into
-/// the App module because it makes our app
-/// more testable.
-///
-/// In general, the executable portion of our App
-/// shouldn't include much more code than is presented
-/// here.
-///
-/// We simply initialize our Droplet, optionally
-/// passing in values if necessary
-/// Then, we pass it to our App's setup function
-/// this should setup all the routes and special
-/// features of our app
-///
-/// .run() runs the Droplet's commands, 
-/// if no command is given, it will default to "serve"
-var config = try Config()
+import Service
+import Vapor
+import Foundation
 
-try config.set("fluent.driver", "mysql")
-try config.setup()
+// The contents of main are wrapped in a do/catch block because any errors that get raised to the top level will crash Xcode
+do {
+    var config = Config.default()
+    var env = try Environment.detect()
+    var services = Services.default()
 
-let drop = try Droplet(config)
+    try configure(&config, &env, &services)
 
-try drop.setup()
-try drop.run()
+    let app = try Application(
+        config: config,
+        environment: env,
+        services: services
+    )
+
+    try boot(app)
+
+    try app.run()
+} catch {
+    print(error)
+    exit(1)
+}

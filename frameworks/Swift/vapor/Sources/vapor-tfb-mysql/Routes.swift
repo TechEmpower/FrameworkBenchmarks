@@ -1,73 +1,97 @@
 import Vapor
-import TfbCommon
 import Foundation
+import TfbCommon
 
-final class Routes: RouteCollection {
-    func build(_ builder: RouteBuilder) throws {
-        builder.get("json") { req in
-            return try JSON(node: Message("Hello, World!"))
-        }
+struct EmptyJSON: Content {}
 
-        builder.get("plaintext") { req in
-            return "Hello, world!"
-        }
+public func routes(_ router: Router) throws {
 
-        // response to requests to /info domain
-        // with a description of the request
-        builder.get("info") { req in
-            return req.description
-        }
+    router.get("json") { req in
+        return Message("Hello, World!")
+    }
 
-        builder.get("description") { req in return req.description }
+    router.get("plaintext") { req in
+        return "Hello, world!"
+    }
 
-        // Test type 2: Single database query
-        builder.get("db") { _ in
-            let worldId = WorldMeta.randomId()
-            return try World.find(worldId)?.makeJSON() ?? JSON(node: .null)
-        }
+    // response to requests to /info domain
+    // with a description of the request
+    router.get("info") { req in
+        return req.description
+    }
 
-        // Test type 3: Multiple database queries
-        builder.get("queries") { req in
-            let queries = queriesParam(for: req)
-            let ids = (1...queries).map({ _ in WorldMeta.randomId() })
-            let worlds = try ids.flatMap { try World.find($0)?.makeJSON() }
-            return JSON(worlds)
-        }
+    router.get("description") { req in
+        return req.description
+    }
 
-        // Test type 4: Fortunes
-        let posixLocale = Locale(identifier: "en_US_POSIX")
-        builder.get("fortunes") { _ in
-            var fortunes = try Fortune.all()
-            let additional = Fortune(id: 0, message: "Additional fortune added at request time.")
-            fortunes.insert(additional, at: 0)
-            fortunes.sort(by: { lhs, rhs -> Bool in
-                return lhs.message.compare(rhs.message, locale: posixLocale) == .orderedAscending
-            })
+    // Test type 2: Single database query
+    router.get("db") { req -> Future<Response> in
+        let worldId = WorldMeta.randomId()
+        return try World.find(worldId, on: req)
+            .flatMap(to: Response.self) { world in
+                guard let world = world
+                    else { return try EmptyJSON().encode(for: req) }
 
-            let nodes = try fortunes.map { try $0.makeJSONNode() }
-            return try drop.view.make("fortune", ["fortunes": Node(nodes)])
-        }
-
-        // Test type 5: Database updates
-        builder.get("updates") { req in
-            let queries = queriesParam(for: req)
-            let ids = (1...queries).map({ _ in WorldMeta.randomId() })
-            var worlds = try ids.flatMap { try World.find($0) }
-            worlds.forEach { $0.randomNumber = WorldMeta.randomRandomNumber() }
-            worlds = try worlds.flatMap { world in
-                let modifiedWorld = world
-                try modifiedWorld.save()
-                return modifiedWorld
-            }
-            let updatedWorlds = try worlds.flatMap { try $0.makeJSON() }
-            return JSON(updatedWorlds)
+                return try world.encode(for: req)
         }
     }
+
+    // Test type 3: Multiple database queries
+    router.get("queries") { req -> Future<[World]> in
+        let queries = queriesParam(for: req)
+        let ids = (1...queries).map({ _ in WorldMeta.randomId() })
+
+        return try ids.map { id in
+                return try World.find(id, on: req)
+            }
+            .flatten(on: req)
+            .map(to: [World].self) { result in
+                return result.compactMap({ $0 })
+            }
+    }
+
+    // Test type 4: Fortunes
+//    let posixLocale = Locale(identifier: "en_US_POSIX")
+//    router.get("fortunes") { req -> Future<View> in
+//        return req.withNewConnection(to: DatabaseIdentifier.mysql, closure: { db -> Future<[Fortune]> in
+//                return db.query(Fortune.self).all()
+//                    .map(to: [Fortune].self) { fortunes in
+//                        var newFortunes = fortunes
+//                        let additional = Fortune(id: 0, message: "Additional fortune added at request time.")
+//                        newFortunes.insert(additional, at: 0)
+//                        newFortunes.sort(by: { lhs, rhs -> Bool in
+//                            return lhs.message.compare(rhs.message, locale: posixLocale) == .orderedAscending
+//                        })
+//                        return newFortunes
+//                    }
+//                    .flatMap(to: View.self) { fortunes in
+//                        return req.view().render("fortune", fortunes)
+//                    }
+//            })
+//    }
+
+    // Test type 5: Database updates
+    router.get("updates") { req -> Future<[World]> in
+        let queries = queriesParam(for: req)
+        let ids = (1...queries).map({ _ in WorldMeta.randomId() })
+
+        return try ids.map { id in
+                return try World.find(id, on: req)
+            }
+            .flatten(on: req)
+            .map(to: [World].self) { result in
+                let worlds = result.compactMap({ $0 })
+                worlds.forEach { $0.randomNumber = WorldMeta.randomRandomNumber() }
+                return worlds
+            }
+            .flatMap(to: [World].self) { worlds in
+                return worlds
+                    .map { $0.save(on: req) }
+                    .flatten(on: req)
+            }.flatMap { _ in
+                return req.withNewConnection(to: .mysql, closure: { db -> Future<[World]> in
+                    return db.query(World.self).all()
+                })
+            }
+    }
 }
-
-
-/// Since Routes doesn't depend on anything
-/// to be initialized, we can conform it to EmptyInitializable
-///
-/// This will allow it to be passed by type.
-extension Routes: EmptyInitializable { }

@@ -1,10 +1,29 @@
-import Crypto
+import Vapor
+#if os(Linux)
+import Glibc
+#endif
+
+internal extension Int {
+    static func random<T>(_ max: T) -> Int where T: BinaryInteger {
+        #if os(Linux)
+        return Int(random() % (max + 1))
+        #else
+        return Int(arc4random_uniform(UInt32(max)))
+        #endif
+    }
+}
 
 public struct WorldMeta {
-  private init() { }
+    private init() { }
 
-  public static let maxId: UInt32 = 10000
-  public static let randomId = { () -> UInt32 in UInt32(1) + (try! Random.makeUInt32()) % maxId }
-  public static let maxRandomNumber: Int32 = 10000
-  public static let randomRandomNumber = { () -> Int32 in Int32(1) + abs(try! Random.makeInt32()) % maxRandomNumber }
+    public static let maxId: UInt32 = 10_000
+
+    public static func randomId() -> Int {
+        return Int.random(maxId)
+    }
+
+    public static let maxRandomNumber: Int32 = 10_000
+    public static func randomRandomNumber() -> Int {
+        return Int.random(maxRandomNumber)
+    }
 }
