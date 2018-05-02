@@ -11,6 +11,7 @@ public func configure(
     _ services: inout Services
 ) throws {
 
+    services.register(EngineServerConfig.default(hostname: "0.0.0.0"))
     try services.register(LeafProvider())
     try services.register(FluentMySQLProvider())
     /// Register custom MySQL Config
