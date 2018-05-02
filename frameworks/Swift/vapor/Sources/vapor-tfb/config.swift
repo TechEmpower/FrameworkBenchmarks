@@ -1,4 +1,5 @@
 import Vapor
+import TfbCommon
 
 /// Called before your application initializes.
 ///
@@ -8,7 +9,9 @@ public func configure(
     _ env: inout Environment,
     _ services: inout Services
 ) throws {
-    
+
+    services.register(ServerMiddleware.self)
+
     // Register routes to the router
     let router = EngineRouter.default()
     try routes(router)
@@ -16,6 +19,7 @@ public func configure(
 
     // Register middleware
     var middlewares = MiddlewareConfig()
+    middlewares.use(ServerMiddleware.self)
     middlewares.use(DateMiddleware.self)
     services.register(middlewares)
 
