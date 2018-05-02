@@ -1,7 +1,6 @@
 import Vapor
 import Foundation
 import TfbCommon
-import FluentMySQL
 
 struct EmptyJSON: Content {}
 
