@@ -7,16 +7,6 @@ struct EmptyJSON: Content {}
 
 public func routes(_ router: Router) throws {
 
-    // response to requests to /info domain
-    // with a description of the request
-    router.get("info") { req in
-        return req.description
-    }
-
-    router.get("description") { req in
-        return req.description
-    }
-
     // Test type 2: Single database query
     router.get("db") { req -> Future<Response> in
         let worldId = WorldMeta.randomId()

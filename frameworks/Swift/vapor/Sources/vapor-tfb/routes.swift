@@ -13,15 +13,5 @@ public func routes(_ router: Router) throws {
     router.get("plaintext") { req in
         return "Hello, world!" as StaticString
     }
-
-    // response to requests to /info domain
-    // with a description of the request
-    router.get("info") { req in
-        return req.description
-    }
-
-    router.get("description") { req in
-        return req.description
-    }
     
 }

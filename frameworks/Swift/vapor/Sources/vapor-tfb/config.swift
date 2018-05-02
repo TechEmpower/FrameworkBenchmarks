@@ -21,7 +21,6 @@ public func configure(
     // Register middleware
     var middlewares = MiddlewareConfig()
     middlewares.use(ServerMiddleware.self)
-    middlewares.use(DateMiddleware.self)
     services.register(middlewares)
 
     // Configure the rest of your application here

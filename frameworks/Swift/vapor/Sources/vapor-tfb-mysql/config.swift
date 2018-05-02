@@ -1,6 +1,7 @@
 import FluentMySQL
 import Leaf
 import Vapor
+import TfbCommon
 
 /// Called before your application initializes.
 ///
@@ -32,7 +33,7 @@ public func configure(
 
     // Register middleware
     var middlewares = MiddlewareConfig()
-    middlewares.use(DateMiddleware.self)
+    middlewares.use(ServerMiddleware.self)
     services.register(middlewares)
 
     // Configure the rest of your application here
