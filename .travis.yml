@@ -17,7 +17,7 @@ jobs:
       env:
         - FOO=foo
       script:
-        - echo "In the quicktest stage: ${RUN_TESTS}"
+        - echo 'In the quicktest stage:' && echo $RUN_TESTS
 
 stages:
   - quicktest
