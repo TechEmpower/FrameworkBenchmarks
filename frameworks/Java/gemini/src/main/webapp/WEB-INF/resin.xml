@@ -1,0 +1,15 @@
+<resin xmlns="http://caucho.com/ns/resin"
+       xmlns:resin="http://caucho.com/ns/resin/core">
+
+    <cluster id="">
+        <access-log path="/dev/null" />
+        <log name="" level="config" path="stdout:" timestamp="[%H:%M:%S.%s] " />
+
+        <server id="">
+            <jvm-arg>-Xms1g</jvm-arg>
+            <jvm-arg>-Xmx1g</jvm-arg>
+
+            <http port="8080" />
+        </server>
+    </cluster>
+</resin>
