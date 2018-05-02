@@ -7,14 +7,6 @@ struct EmptyJSON: Content {}
 
 public func routes(_ router: Router) throws {
 
-    router.get("json") { req in
-        return Message("Hello, World!")
-    }
-
-    router.get("plaintext") { req in
-        return "Hello, world!"
-    }
-
     // response to requests to /info domain
     // with a description of the request
     router.get("info") { req in
@@ -55,9 +47,7 @@ public func routes(_ router: Router) throws {
     router.get("fortunes") { req -> Future<View> in
         let posixLocale = Locale(identifier: "en_US_POSIX")
 
-        return req.withPooledConnection(to: .mysql, closure: { (db: MySQLConnection) -> Future<[Fortune]> in
-                return db.query(Fortune.self).all()
-            })
+        return Fortune.query(on: req).all()
             .map { fortunes -> [Fortune] in
                 var newFortunes = fortunes
                 let additional = Fortune(id: 0, message: "Additional fortune added at request time.")
@@ -82,19 +72,17 @@ public func routes(_ router: Router) throws {
                 return try World.find(id, on: req)
             }
             .flatten(on: req)
-            .map(to: [World].self) { result in
+            .map { result -> [World] in
                 let worlds = result.compactMap({ $0 })
                 worlds.forEach { $0.randomNumber = WorldMeta.randomRandomNumber() }
                 return worlds
             }
-            .flatMap(to: [World].self) { worlds in
+            .flatMap { worlds -> Future<[World]> in
                 return worlds
                     .map { $0.save(on: req) }
                     .flatten(on: req)
             }.flatMap { _ in
-                return req.withPooledConnection(to: .mysql, closure: { db -> Future<[World]> in
-                    return db.query(World.self).all()
-                })
+                return World.query(on: req).all()
             }
     }
 }
