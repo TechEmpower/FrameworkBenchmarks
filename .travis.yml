@@ -11,6 +11,18 @@ python:
 services:
   - docker
 
+jobs:
+  include:
+    - stage: quicktest
+      env:
+        - FOO=foo
+      script:
+        - travis_result 1 && travis_terminate 0
+
+stages:
+  - quicktest
+  - test
+
 env:
   matrix:
      - "TESTLANG=C"
