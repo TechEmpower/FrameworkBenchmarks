@@ -18,8 +18,8 @@ jobs:
         - FOO=foo
       script:
         - echo "tests to run = [$RUN_TESTS]"
-        - export TRAVIS_TEST_RESULT=1
-        - travis_terminate 0
+        - export TRAVIS_TEST_RESULT=0
+        - travis_terminate 1
 
 stages:
   - quicktest
