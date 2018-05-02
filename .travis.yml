@@ -17,7 +17,8 @@ jobs:
       env:
         - FOO=foo
       script:
-        - echo 'In the quicktest stage:' && echo $RUN_TESTS
+        - echo "tests to run = [$RUN_TESTS]"
+        - travis_terminate 0
 
 stages:
   - quicktest
