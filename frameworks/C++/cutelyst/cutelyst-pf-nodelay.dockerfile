@@ -73,12 +73,12 @@ RUN cd ${TROOT} && \
     make
 
 ENV C_THREADS 1
-ENV CPU_AFFINITY 1
+ENV CPU_AFFINITY 2
 
 CMD cutelyst-wsgi2 \
     --ini /cutelyst.ini:uwsgi \
     --application ${CUTELYST_APP} \
-    --processes=$(nproc) \
+    --processes=$( ($(nproc) + 1) / 2 ) \
     --threads=${C_THREADS} \
     --cpu-affinity=${CPU_AFFINITY} \
     --socket-timeout 0 \
