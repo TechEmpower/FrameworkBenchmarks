@@ -11,7 +11,7 @@ RUN apt-get install -yqq git unzip php7.2 php7.2-common php7.2-cli php7.2-dev ph
 # We deal with concurrencies over 1k, which stream_select doesn't support.
 
 ADD ./install-ev.sh /install-ev.sh
-RUN /install-ev.sh
+RUN /install-ev.sh > /dev/null
 
 ADD ./ /amp
 WORKDIR /amp
