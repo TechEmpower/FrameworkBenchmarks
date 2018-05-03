@@ -24,9 +24,7 @@ public func routes(_ router: Router) throws {
         let queries = try queriesParam(for: req)
         let ids = (1...queries).map({ _ in WorldMeta.randomId() })
 
-        return try World.query(on: req)
-            .filter(\.id, .in, .array(ids))
-            .all()
+        return try World.findWith(ids: ids, on: req)
     }
 
     // Test type 4: Fortunes
@@ -54,12 +52,9 @@ public func routes(_ router: Router) throws {
         let queries = try queriesParam(for: req)
         let ids = (1...queries).map({ _ in WorldMeta.randomId() })
 
-        return try ids.map { id in
-                return try World.find(id, on: req)
-            }
-            .flatten(on: req)
+        return try World.findWith(ids: ids, on: req)
             .map { result -> [World] in
-                let worlds = result.compactMap({ $0 })
+                let worlds = result
                 worlds.forEach { $0.randomNumber = WorldMeta.randomRandomNumber() }
                 return worlds
             }
