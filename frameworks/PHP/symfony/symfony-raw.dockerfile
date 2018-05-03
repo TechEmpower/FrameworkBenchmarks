@@ -7,7 +7,7 @@ RUN apt install -yqq software-properties-common
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt update -yqq
 RUN apt install -yqq nginx git unzip php7.2 php7.2-common php7.2-cli php7.2-fpm php7.2-mysql
-RUN apt install php7.2-xml
+RUN apt install -yqq php7.2-xml
 
 RUN apt install -yqq composer
 
