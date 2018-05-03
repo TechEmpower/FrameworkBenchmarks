@@ -37,7 +37,7 @@ public func routes(_ router: Router) throws {
             .map { fortunes -> [Fortune] in
                 var newFortunes = fortunes
                 let additional = Fortune(id: 0, message: "Additional fortune added at request time.")
-                newFortunes.insert(additional, at: 0)
+                newFortunes.append(additional) // example used insert(, at: 0)
                 newFortunes.sort(by: { lhs, rhs -> Bool in
                     return lhs.message.compare(rhs.message, locale: posixLocale) == .orderedAscending
                 })
