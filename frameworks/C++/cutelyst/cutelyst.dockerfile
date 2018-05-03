@@ -40,7 +40,7 @@ RUN apt-add-repository --yes ppa:beineri/opt-qt$QT_VERSION_FULL && \
 
 RUN apt install -yqq uwsgi uwsgi uuid-dev libcap-dev libzmq3-dev
 
-ENV CUTELYST_VER 2.0.1
+ENV CUTELYST_VER 2.2.1
 
 RUN wget -q https://github.com/cutelyst/cutelyst/archive/v$CUTELYST_VER.tar.gz -O cutelyst-$CUTELYST_VER.tar.gz && \
     tar zxf cutelyst-$CUTELYST_VER.tar.gz && \
