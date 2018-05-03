@@ -1,6 +1,6 @@
 FROM mono:5.8.0.127
 RUN apt update -yqq
-RUN apt install -yqq nginx wget mono-fastcgi-server > /dev/null
+RUN apt install -yqq nginx wget mono-fastcgi-server
 
 WORKDIR /servicestack
 COPY src src

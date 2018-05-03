@@ -1,11 +1,11 @@
 FROM buildpack-deps:xenial
 
 RUN apt update -yqq
-RUN apt install -yqq software-properties-common unzip cmake > /dev/null
+RUN apt install -yqq software-properties-common unzip cmake
 
 ENV TFVER=1.21.0
 
-RUN apt install -yqq g++ gcc libjemalloc-dev qt5-qmake qt5-default qtbase5-dev \ > /dev/null
+RUN apt install -yqq g++ gcc libjemalloc-dev qt5-qmake qt5-default qtbase5-dev \
     qtbase5-dev-tools libqt5sql5 libqt5sql5-mysql libqt5sql5-psql libqt5qml5 libqt5xml5 \
     qtdeclarative5-dev libqt5quick5 libqt5quickparticles5 libqt5gui5 libqt5printsupport5 \
     libqt5widgets5 libqt5opengl5-dev libqt5quicktest5

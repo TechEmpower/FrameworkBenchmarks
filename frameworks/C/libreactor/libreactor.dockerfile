@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 RUN apt update -yqq
-RUN apt install -yqq software-properties-common python-software-properties wget make > /dev/null
+RUN apt install -yqq software-properties-common python-software-properties wget make
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
     apt update -yqq

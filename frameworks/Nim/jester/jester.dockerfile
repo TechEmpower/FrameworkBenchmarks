@@ -1,7 +1,7 @@
 FROM nimlang/nim:0.16.0
 
 RUN apt update -yqq
-RUN apt install -yqq nginx > /dev/null
+RUN apt install -yqq nginx
 
 # 2016-10-01
 RUN git clone https://github.com/dom96/jester.git && \

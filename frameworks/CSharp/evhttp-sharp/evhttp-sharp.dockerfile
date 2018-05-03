@@ -1,6 +1,6 @@
 FROM mono:5.10.0.160
 RUN apt update -yqq
-RUN apt install -yqq libevent-dev > /dev/null
+RUN apt install -yqq libevent-dev
 
 WORKDIR /evhttp
 COPY src src

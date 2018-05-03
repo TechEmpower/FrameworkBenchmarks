@@ -1,8 +1,8 @@
 FROM haskell:8.2.1
 
 RUN apt update -yqq
-RUN apt install -yqq xz-utils make > /dev/null
-RUN apt install -yqq libpq-dev > /dev/null
+RUN apt install -yqq xz-utils make
+RUN apt install -yqq libpq-dev
 
 ADD ./ /spock
 WORKDIR spock

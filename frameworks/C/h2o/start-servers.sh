@@ -35,7 +35,7 @@ build_h2o_app()
 run_curl()
 {
 	for ((i = 0; i < 10; i++)); do
-		curl "${H2O_APP_PROFILE_URL}/$1" > /dev/null 2>&1
+		curl "${H2O_APP_PROFILE_URL}/$1" 2>&1
 	done
 }
 
@@ -50,7 +50,7 @@ generate_profile_data()
 {
 	run_h2o_app 0 . "$TROOT" "-p$H2O_APP_PROFILE_PORT" -t1
 	local -r H2O_APP_PROFILE_PID=$!
-	while ! curl "$H2O_APP_PROFILE_URL" > /dev/null 2>&1; do sleep 1; done
+	while ! curl "$H2O_APP_PROFILE_URL" 2>&1; do sleep 1; done
 	run_curl json
 	run_curl db
 	run_curl queries?queries=20

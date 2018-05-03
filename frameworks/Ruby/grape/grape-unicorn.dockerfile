@@ -1,7 +1,7 @@
 FROM ruby:2.4
 
 RUN apt update -yqq
-RUN apt install -yqq nginx > /dev/null
+RUN apt install -yqq nginx
 
 ADD ./ /grape
 

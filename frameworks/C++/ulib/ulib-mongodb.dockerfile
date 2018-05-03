@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 RUN apt update
 
-RUN apt install -yqq software-properties-common build-essential curl locales wget unzip git \ > /dev/null
+RUN apt install -yqq software-properties-common build-essential curl locales wget unzip git \
     libmysqlclient-dev libpq-dev \
     libpcre3 libpcre3-dev \
     libssl-dev libcurl4-openssl-dev \
@@ -39,7 +39,7 @@ ENV RANLIB=gcc-ranlib-6
 RUN mkdir -p $ULIB_ROOT
 RUN mkdir -p $ULIB_DOCUMENT_ROOT
 
-RUN apt install -yqq postgresql-server-dev-all libcap2-bin > /dev/null
+RUN apt install -yqq postgresql-server-dev-all libcap2-bin
 
 WORKDIR $IROOT
 

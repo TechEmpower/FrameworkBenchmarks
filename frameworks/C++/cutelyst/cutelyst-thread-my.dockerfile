@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 RUN apt update
 
-RUN apt install -yqq software-properties-common build-essential curl locales wget unzip git \ > /dev/null
+RUN apt install -yqq software-properties-common build-essential curl locales wget unzip git \
     libmysqlclient-dev libpq-dev \
     libpcre3 libpcre3-dev \
     libssl-dev libcurl4-openssl-dev \
@@ -43,7 +43,7 @@ RUN apt-add-repository --yes ppa:beineri/opt-qt$QT_VERSION_FULL && \
     qt${QT_VERSION_MM}script \
     qt${QT_VERSION_MM}tools
 
-RUN apt install -yqq uwsgi uwsgi uuid-dev libcap-dev libzmq3-dev > /dev/null
+RUN apt install -yqq uwsgi uwsgi uuid-dev libcap-dev libzmq3-dev
 
 ENV CUTELYST_VER 2.0.1
 

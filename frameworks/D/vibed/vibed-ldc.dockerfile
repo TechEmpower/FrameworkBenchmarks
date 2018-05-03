@@ -4,7 +4,7 @@ ADD ./ /vibed
 WORKDIR /vibed
 
 RUN apt update -yqq
-RUN apt install -yqq zlib1g-dev > /dev/null
+RUN apt install -yqq zlib1g-dev
 
 RUN dub upgrade --verbose
 RUN dub build -b release --compiler=ldc2 --combined --verbose

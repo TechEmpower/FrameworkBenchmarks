@@ -7,7 +7,7 @@ ENV URWEB_VERSION=20160621
 ENV COMPILER=/urweb/urweb-build
 
 RUN apt update -yqq
-RUN apt install -yqq build-essential wget mlton libssl-dev libpq-dev libmysqlclient-dev > /dev/null
+RUN apt install -yqq build-essential wget mlton libssl-dev libpq-dev libmysqlclient-dev
 
 RUN mkdir -p $COMPILER && \
     wget -q http://www.impredicative.com/ur/urweb-$URWEB_VERSION.tgz && \

@@ -4,7 +4,7 @@ ENV LUA_VERSION="5.1"
 ENV LUA_MICRO="5"
 
 RUN apt update -yqq
-RUN apt install -yqq unzip > /dev/null
+RUN apt install -yqq unzip
 
 RUN wget https://github.com/LuaDist/lua/archive/$LUA_VERSION.$LUA_MICRO.tar.gz
 RUN tar xf $LUA_VERSION.$LUA_MICRO.tar.gz
