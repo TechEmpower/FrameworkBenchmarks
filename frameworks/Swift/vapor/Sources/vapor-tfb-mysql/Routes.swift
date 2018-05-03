@@ -20,8 +20,8 @@ public func routes(_ router: Router) throws {
     }
 
     // Test type 3: Multiple database queries
-    router.get("queries") { req -> Future<[World]> in
-        let queries = queriesParam(for: req)
+    router.get("queries", String.parameter) { req -> Future<[World]> in
+        let queries = try queriesParam(for: req)
         let ids = (1...queries).map({ _ in WorldMeta.randomId() })
 
         return try ids.map { id in
@@ -54,8 +54,8 @@ public func routes(_ router: Router) throws {
     }
 
     // Test type 5: Database updates
-    router.get("updates") { req -> Future<[World]> in
-        let queries = queriesParam(for: req)
+    router.get("updates", String.parameter) { req -> Future<[World]> in
+        let queries = try queriesParam(for: req)
         let ids = (1...queries).map({ _ in WorldMeta.randomId() })
 
         return try ids.map { id in

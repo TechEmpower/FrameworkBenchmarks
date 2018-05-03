@@ -13,18 +13,20 @@ public func configure(
 ) throws {
 
     services.register(EngineServerConfig.default(hostname: "0.0.0.0"))
+    services.register(ServerMiddleware.self)
     try services.register(LeafProvider())
     try services.register(FluentMySQLProvider())
     /// Register custom MySQL Config
-    let mySQLUrl = URL(string: "mysql://benchmarkdbuser:benchmarkdbpass@tfb-database:3306/hello_world")!
-    let mysqlConfig = MySQLDatabaseConfig(hostname: mySQLUrl.host!, port: mySQLUrl.port!, username: mySQLUrl.user!, password: mySQLUrl.password!, database: "hello_world")
+    let mySQLUrl = URL(string: "mysql://vapor_username:vapor_username@localhost:3306/hello_world")!
+    let mysqlConfig = MySQLDatabaseConfig(hostname: mySQLUrl.host!, port: mySQLUrl.port!, username: mySQLUrl.user!, password: mySQLUrl.password, database: "hello_world")
     services.register(mysqlConfig)
     
+    
     /// Configure migrations
-    var migrations = MigrationConfig()
-    migrations.add(model: Fortune.self, database: .mysql)
-    migrations.add(model: World.self, database: .mysql)
-    services.register(migrations)
+    services.register(MigrationConfig())
+    /// Allow requests as DatabaseConnectible
+    Fortune.defaultDatabase = .mysql
+    World.defaultDatabase = .mysql
     
     // Register routes to the router
     let router = EngineRouter.default()

@@ -10,9 +10,14 @@ public let validQueriesRange: ClosedRange<Int> = 1...500
 ///
 /// - Parameter request: HTTP request
 /// - Returns: queries
-public func queriesParam(for request: Request) -> Int {
-    let queriesParam = request.parameters.values.filter({ $0.slug == "queries" }).first?.value ?? "1"
-    return clamp(Int(queriesParam)!, to: validQueriesRange)
+public func queriesParam(for request: Request) throws -> Int {
+    // TODO: throw instead of using !
+    let rangeMax = try request.parameters.next(String.self)
+        .components(separatedBy: "...")
+        .last! // ignore lower bound, only retain last part which contains upper bound
+        .removingPercentEncoding! // convert url-encoded chars
+        .dropLast() // remove ]
+    return clamp(Int(rangeMax)!, to: validQueriesRange)
 }
 
 func clamp(_ value: Int, to: ClosedRange<Int>) -> Int {
