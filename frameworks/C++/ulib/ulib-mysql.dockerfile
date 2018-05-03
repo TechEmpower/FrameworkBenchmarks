@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 RUN apt update
 
-RUN apt install -yqq software-properties-common build-essential curl locales wget unzip git \
+RUN apt install -yqq software-properties-common build-essential curl locales wget unzip git \ > /dev/null
     libmysqlclient-dev libpq-dev \
     libpcre3 libpcre3-dev \
     libssl-dev libcurl4-openssl-dev \
@@ -23,7 +23,8 @@ ENV LC_ALL en_US.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
-    apt update -yqq && \
+    apt update -yqq
+RUN \
     apt install -yqq gcc-6 g++-6
 
 ENV IROOT=/install
@@ -38,7 +39,7 @@ ENV RANLIB=gcc-ranlib-6
 RUN mkdir -p $ULIB_ROOT
 RUN mkdir -p $ULIB_DOCUMENT_ROOT
 
-RUN apt install -yqq postgresql-server-dev-all libcap2-bin
+RUN apt install -yqq postgresql-server-dev-all libcap2-bin > /dev/null
 
 WORKDIR $IROOT
 

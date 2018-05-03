@@ -1,6 +1,7 @@
 FROM google/dart:1.24
 
-RUN apt update -yqq && apt install -yqq nginx
+RUN apt update -yqq
+RUN apt install -yqq nginx > /dev/null
 
 ADD ./ /stream
 WORKDIR /stream

@@ -1,6 +1,7 @@
 FROM gcc:7
 
-RUN apt update -yqq &&                                                  \
+RUN apt update -yqq
+RUN                                                  \
     mkdir -p /nim &&                                                    \
     cd /nim &&                                                          \
     git clone -b devel https://github.com/nim-lang/Nim.git nim-devel && \
