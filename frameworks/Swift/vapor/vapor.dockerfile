@@ -7,4 +7,4 @@ RUN bash apt.vapor.sh
 # RUN apt update -yqq
 RUN swift build -c release
 
-CMD .build/release/vapor-tfb --env production
+CMD .build/release/vapor-tfb -e production -b 0.0.0.0:8080

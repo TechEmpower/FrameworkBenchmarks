@@ -9,8 +9,6 @@ public func configure(
     _ env: inout Environment,
     _ services: inout Services
 ) throws {
-
-    services.register(NIOServerConfig.default(hostname: "0.0.0.0"))
     services.register(ServerMiddleware.self)
 
     // Register routes to the router
