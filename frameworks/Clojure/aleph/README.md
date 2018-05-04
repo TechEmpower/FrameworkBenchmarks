@@ -12,7 +12,7 @@ but the main ones are:
 
 * [Aleph 0.4.5-alpha6](https://github.com/ztellman/aleph)
 * [Clojure 1.9.0](http://clojure.org/)
-* [metosin/jsonista 0.1.1](https://github.com/metosin/jsonista), which in turn uses [Jackson](http://jackson.codehaus.org/)
+* [metosin/jsonista 0.2.0](https://github.com/metosin/jsonista), which in turn uses [Jackson](http://jackson.codehaus.org/)
 
 ## Test URLs
 ### JSON Encoding Test
