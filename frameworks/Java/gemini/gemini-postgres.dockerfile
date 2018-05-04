@@ -9,7 +9,7 @@ RUN mv src/main/webapp/WEB-INF/gemini-postgres.conf src/main/webapp/WEB-INF/Gemi
 RUN mvn -q compile
 RUN mvn -q war:war
 
-FROM openjdk:10-jdk-slim
+FROM openjdk:10-jdk
 RUN apt update -qqy && apt install -yqq curl > /dev/null
 
 WORKDIR /resin

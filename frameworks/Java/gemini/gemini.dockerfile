@@ -9,7 +9,7 @@ RUN mv src/main/webapp/WEB-INF/gemini.conf src/main/webapp/WEB-INF/GeminiHello.c
 RUN mvn -q compile
 RUN mvn -q war:war
 
-FROM openjdk:10-jdk-slim
+FROM openjdk:10-jdk
 RUN apt update -qqy && apt install -yqq curl > /dev/null
 
 WORKDIR /resin
