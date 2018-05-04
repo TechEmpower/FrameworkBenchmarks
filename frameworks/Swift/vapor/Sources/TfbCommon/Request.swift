@@ -1,5 +1,4 @@
 import Vapor
-import HTTP
 
 public let validQueriesRange: ClosedRange<Int> = 1...500
 
@@ -11,9 +10,16 @@ public let validQueriesRange: ClosedRange<Int> = 1...500
 ///
 /// - Parameter request: HTTP request
 /// - Returns: queries
-public func queriesParam(for request: Request) -> Int {
-  let queriesParam = request.query?["queries"]?.int ?? 1
-  return clamp(queriesParam, to: validQueriesRange)
+public func queriesParam(for request: Request) throws -> Int {
+    // TODO: throw instead of using !
+    let rangeMax = try request.parameters.next(String.self)
+        .removingPercentEncoding? // convert url-encoded chars
+        .components(separatedBy: "...")
+        .last? // ignore lower bound, only retain last part which contains upper bound
+        .dropLast() // remove ]
+
+    let paramNormalized = rangeMax.flatMap(String.init).flatMap(Int.init) ?? validQueriesRange.upperBound
+    return clamp(paramNormalized, to: validQueriesRange)
 }
 
 func clamp(_ value: Int, to: ClosedRange<Int>) -> Int {
