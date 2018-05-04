@@ -18,9 +18,7 @@ env:
      - 'TESTDIR="C++/cppcms C++/cpoll_cppsp C++/poco"'
      - "TESTDIR=C++/ffead-cpp"
      - "TESTDIR=C++/cutelyst"
-     - "TESTDIR=C++/silicon"
-     - "TESTDIR=C++/treefrog"
-     - "TESTDIR=C++/ulib"
+     - 'TESTDIR="C++/silicon C++/treefrog C++/ulib"'
      - "TESTDIR=C++/wt"
      - "TESTLANG=Clojure"
      - "TESTLANG=Crystal"

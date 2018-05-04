@@ -1,31 +1,11 @@
-FROM ubuntu:16.04
+FROM buildpack-deps:xenial
 
 RUN apt update -yqq
-
-RUN apt install -yqq software-properties-common build-essential curl locales wget unzip git \
-    libmysqlclient-dev libpq-dev \
-    libpcre3 libpcre3-dev \
-    libssl-dev libcurl4-openssl-dev \
-    zlib1g-dev \
-    libreadline6-dev \
-    libbz2-dev \
-    libxslt-dev libgdbm-dev ncurses-dev  \
-    libffi-dev libtool bison libevent-dev \
-    libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 \
-    liborc-0.4-0 libgnutls-dev \
-    libjson0-dev libmcrypt-dev libicu-dev \
-    re2c libnuma-dev
-
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
-    apt update -yqq
-RUN \
-    apt install -yqq gcc-6 g++-6
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && apt update -yqq
+RUN apt install -yqq software-properties-common unzip cmake > /dev/null
+RUN apt install -yqq libmysqlclient-dev libpq-dev > /dev/null
+RUN apt install -yqq gcc-6 g++-6 > /dev/null
+RUN apt install -yqq postgresql-server-dev-all libcap2-bin > /dev/null
 
 ENV IROOT=/install
 ENV ULIB_VERSION=1.4.2
@@ -38,8 +18,6 @@ ENV RANLIB=gcc-ranlib-6
 
 RUN mkdir -p $ULIB_ROOT
 RUN mkdir -p $ULIB_DOCUMENT_ROOT
-
-RUN apt install -yqq postgresql-server-dev-all libcap2-bin > /dev/null
 
 WORKDIR $IROOT
 
