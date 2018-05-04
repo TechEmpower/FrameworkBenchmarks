@@ -11,10 +11,10 @@ public func configure(
     _ env: inout Environment,
     _ services: inout Services
 ) throws {
-
-    services.register(EngineServerConfig.default(hostname: "0.0.0.0"))
+    services.register(NIOServerConfig.default(hostname: "0.0.0.0"))
     services.register(ServerMiddleware.self)
     try services.register(LeafProvider())
+    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
     try services.register(FluentMySQLProvider())
     /// Register custom MySQL Config
     let mySQLUrl = URL(string: "mysql://vapor_username:vapor_username@localhost:3306/hello_world")!

@@ -10,7 +10,7 @@ public func configure(
     _ services: inout Services
 ) throws {
 
-    services.register(EngineServerConfig.default(hostname: "0.0.0.0"))
+    services.register(NIOServerConfig.default(hostname: "0.0.0.0"))
     services.register(ServerMiddleware.self)
 
     // Register routes to the router

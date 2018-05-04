@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
   name: "tfb",
   dependencies: [
-    .package(url: "https://github.com/vapor/vapor.git", .branch("gm")),
+    .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
     .package(url: "https://github.com/vapor/fluent-mysql.git", from: "3.0.0-rc"),
     .package(url: "https://github.com/vapor/leaf.git", from: "3.0.0-rc.1")
   ],
