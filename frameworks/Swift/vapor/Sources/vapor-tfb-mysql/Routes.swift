@@ -51,7 +51,7 @@ public func routes(_ router: Router) throws {
     router.get("updates", String.parameter) { req -> Future<[World]> in
         let queries = try queriesParam(for: req)
         let ids = (1...queries).map({ _ in WorldMeta.randomId() })
-
+        
         return try World.findWith(ids: ids, on: req)
             .map { result -> [World] in
                 let worlds = result
@@ -59,11 +59,15 @@ public func routes(_ router: Router) throws {
                 return worlds
             }
             .flatMap { worlds -> Future<[World]> in
-                return worlds
-                    .map { $0.save(on: req) }
-                    .flatten(on: req)
+                req.databaseConnection(to: .mysql).map { db in
+                    // no generic transactions yet
+                    // see https://github.com/vapor/fluent-mysql/pull/106
+                    return World.Database.transaction(on: db) { conn in
+                        return worlds.map({ $0.save(on: conn) })
+                    }
+                }
             }.flatMap { _ in
                 return World.query(on: req).all()
-            }
+        }
     }
 }
