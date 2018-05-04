@@ -1,4 +1,4 @@
-FROM dlanguage/ldc:1.9.0
+FROM dlanguage/ldc:1.7.0
 
 ADD ./ /kiss
 WORKDIR /kiss
