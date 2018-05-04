@@ -5,8 +5,8 @@ WORKDIR /gemini
 COPY src src
 COPY pom.xml pom.xml
 
-RUN mv src/main/webapp/WEB-INF/gemini.conf src/main/webapp/WEB-INF/GeminiHello.conf
 RUN mvn -q compile
+RUN mv src/main/webapp/WEB-INF/gemini.conf src/main/webapp/WEB-INF/GeminiHello.conf
 RUN mvn -q war:war
 
 FROM openjdk:10-jdk
