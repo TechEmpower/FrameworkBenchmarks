@@ -339,7 +339,7 @@ class DockerHelper:
         try:
             self.client.containers.run(
                 'techempower/tfb.wrk',
-                'curl %s' % url,
+                'curl --max-time 5 %s' % url,
                 remove=True,
                 log_config={'type': None},
                 network=self.benchmarker.config.network,
