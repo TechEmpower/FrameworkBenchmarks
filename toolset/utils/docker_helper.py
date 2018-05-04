@@ -38,6 +38,7 @@ class DockerHelper:
                     dockerfile=dockerfile,
                     tag=tag,
                     forcerm=True,
+                    timeout=3600,
                     pull=True)
                 buffer = ""
                 for token in output:
