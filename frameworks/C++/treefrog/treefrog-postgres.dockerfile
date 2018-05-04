@@ -1,7 +1,7 @@
 FROM buildpack-deps:xenial
 
 RUN apt update -yqq
-RUN apt install -yqq software-properties-common unzip cmake
+RUN apt install -yqq software-properties-common unzip cmake > /dev/null
 
 ENV TFVER=1.21.0
 

@@ -1,9 +1,9 @@
 FROM buildpack-deps:xenial
 
 RUN apt update -yqq
-RUN apt install -yqq software-properties-common unzip cmake
+RUN apt install -yqq software-properties-common unzip cmake > /dev/null
 
-RUN apt install -yqq libgcrypt11-dev python nginx
+RUN apt install -yqq libgcrypt11-dev python nginx > /dev/null
 
 WORKDIR /installs
 

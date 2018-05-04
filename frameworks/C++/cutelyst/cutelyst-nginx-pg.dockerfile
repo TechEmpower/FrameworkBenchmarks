@@ -43,7 +43,7 @@ RUN apt-add-repository --yes ppa:beineri/opt-qt$QT_VERSION_FULL && \
     qt${QT_VERSION_MM}script \
     qt${QT_VERSION_MM}tools
 
-RUN apt install -yqq uwsgi uwsgi uuid-dev libcap-dev libzmq3-dev
+RUN apt install -yqq uwsgi uwsgi uuid-dev libcap-dev libzmq3-dev > /dev/null
 
 ENV CUTELYST_VER 2.0.1
 
@@ -77,7 +77,7 @@ RUN cd ${TROOT} && \
     -DCMAKE_BUILD_TYPE=Release && \
     make
 
-RUN apt install -yqq nginx
+RUN apt install -yqq nginx > /dev/null
 
 RUN sed -i "s|SendDate=.*|SendDate=false|g" /cutelyst_socket.ini
 

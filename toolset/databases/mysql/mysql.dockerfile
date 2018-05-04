@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 RUN apt update > /dev/null
-RUN apt install -yqq locales > /dev/null
+RUN apt install -yqq locales > /dev/null > /dev/null
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8

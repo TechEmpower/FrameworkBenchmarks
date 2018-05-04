@@ -1,6 +1,6 @@
 FROM mono:5.10.0.160
 RUN apt update -yqq
-RUN apt install -yqq nginx wget mono-fastcgi-server
+RUN apt install -yqq nginx wget mono-fastcgi-server > /dev/null
 
 WORKDIR /aspnet
 COPY src src

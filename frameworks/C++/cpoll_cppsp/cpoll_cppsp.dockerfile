@@ -1,9 +1,9 @@
 FROM buildpack-deps:xenial
 
 RUN apt update -yqq
-RUN apt install -yqq software-properties-common unzip
+RUN apt install -yqq software-properties-common unzip > /dev/null
 
-RUN apt install -yqq g++-4.8 libjson0-dev
+RUN apt install -yqq g++-4.8 libjson0-dev > /dev/null
 RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
 
 WORKDIR /installs

@@ -22,10 +22,8 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
-    apt update -yqq
-RUN \
-    apt install -yqq gcc-6 g++-6
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && apt update -yqq
+RUN apt install -yqq gcc-6 g++-6 > /dev/null
 
 ENV IROOT=/install
 ENV ULIB_VERSION=1.4.2
@@ -39,7 +37,7 @@ ENV RANLIB=gcc-ranlib-6
 RUN mkdir -p $ULIB_ROOT
 RUN mkdir -p $ULIB_DOCUMENT_ROOT
 
-RUN apt install -yqq postgresql-server-dev-all libcap2-bin
+RUN apt install -yqq postgresql-server-dev-all libcap2-bin > /dev/null
 
 WORKDIR $IROOT
 

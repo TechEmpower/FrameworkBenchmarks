@@ -12,7 +12,7 @@ RUN echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/source
 RUN echo "deb-src http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list
 
 RUN apt update -yqq
-RUN apt install -yqq nginx
+RUN apt install -yqq nginx > /dev/null
 
 RUN pip3 install -r requirements.txt
 

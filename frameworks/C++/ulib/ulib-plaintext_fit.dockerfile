@@ -39,7 +39,7 @@ ENV RANLIB=gcc-ranlib-6
 RUN mkdir -p $ULIB_ROOT
 RUN mkdir -p $ULIB_DOCUMENT_ROOT
 
-RUN apt install -yqq postgresql-server-dev-all libcap2-bin
+RUN apt install -yqq postgresql-server-dev-all libcap2-bin > /dev/null
 
 WORKDIR $IROOT
 

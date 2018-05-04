@@ -4,7 +4,7 @@ ADD ./ /vibed
 WORKDIR /vibed
 
 RUN apt update -yqq
-RUN apt install -yqq libpq-dev zlib1g-dev
+RUN apt install -yqq libpq-dev zlib1g-dev > /dev/null
 
 RUN dub upgrade --verbose
 RUN dub build -b release --combined --config=postgresql

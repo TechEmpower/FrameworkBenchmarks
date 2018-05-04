@@ -1,6 +1,6 @@
 FROM mono:5.10.0.160
 RUN apt update -yqq
-RUN apt install -yqq unzip
+RUN apt install -yqq unzip > /dev/null
 
 RUN mkdir /java
 WORKDIR /java

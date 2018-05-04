@@ -1,7 +1,7 @@
 FROM golang:1.10.1
 
 RUN apt update -yqq
-RUN apt install -yqq unzip
+RUN apt install -yqq unzip > /dev/null
 
 ADD ./ /aah
 WORKDIR /aah

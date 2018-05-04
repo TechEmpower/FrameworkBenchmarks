@@ -1,9 +1,9 @@
 FROM buildpack-deps:xenial
 
 RUN apt update -yqq
-RUN apt install -yqq software-properties-common unzip
+RUN apt install -yqq software-properties-common unzip > /dev/null
 
-RUN apt install -yqq g++-4.8 libjson0-dev
+RUN apt install -yqq g++-4.8 libjson0-dev > /dev/null
 RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
 
 WORKDIR /installs
@@ -19,7 +19,7 @@ RUN mv cppsp_rel$VERSION/ $CPPSP_HOME
 RUN sed -i 's|CXX := .*|CXX := g++-4.8|g' $CPPSP_HOME/makefile
 RUN sed -i 's|-Wall|-w|g' $CPPSP_HOME/makefile
 
-RUN apt install -yqq postgresql-server-dev-9.5
+RUN apt install -yqq postgresql-server-dev-9.5 > /dev/null
 ENV CPLUS_INCLUDE_PATH=/usr/include/postgresql:/usr/include/postgresql/9.5/server:${CPLUS_INCLUDE_PATH}
 
 ADD ./ /cpoll_cppsp
