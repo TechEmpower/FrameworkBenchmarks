@@ -13,11 +13,13 @@ public let validQueriesRange: ClosedRange<Int> = 1...500
 public func queriesParam(for request: Request) throws -> Int {
     // TODO: throw instead of using !
     let rangeMax = try request.parameters.next(String.self)
+        .removingPercentEncoding? // convert url-encoded chars
         .components(separatedBy: "...")
-        .last! // ignore lower bound, only retain last part which contains upper bound
-        .removingPercentEncoding! // convert url-encoded chars
+        .last? // ignore lower bound, only retain last part which contains upper bound
         .dropLast() // remove ]
-    return clamp(Int(rangeMax)!, to: validQueriesRange)
+
+    let paramNormalized = rangeMax.flatMap(String.init).flatMap(Int.init) ?? validQueriesRange.upperBound
+    return clamp(paramNormalized, to: validQueriesRange)
 }
 
 func clamp(_ value: Int, to: ClosedRange<Int>) -> Int {
