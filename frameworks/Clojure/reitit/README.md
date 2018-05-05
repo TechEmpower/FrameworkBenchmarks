@@ -13,8 +13,8 @@ but the main ones are:
 
 * [Clojure 1.9.0](http://clojure.org/)
 * [ikitommi/immutant-web "3.0.0-alpha1"](https://github.com/ikitommi/immutant) - a performant fork of [Immutant]((http://immutant.org/))
-* [metosin/jsonista "0.1.1"](https://github.com/metosin/jsonista)
-* [metosin/reitit "0.1.0-20171101.170818-9"](https://github.com/metosin/reitit)
+* [metosin/jsonista "0.2.0"](https://github.com/metosin/jsonista)
+* [metosin/reitit "0.1.1-20180425.095607-7"](https://github.com/metosin/reitit)
 
 ## Test URLs
 ### JSON Encoding Test
