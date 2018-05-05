@@ -10,7 +10,7 @@ let json = Message(message: "Hello, world!")
 router.get("json") { req in
     return json.encode(status: .ok, headers: ["Server": "Vapor"], for: req)
 }
-let plaintextRes = HTTPResponse(status: .ok, headers: ["Server": "Vapor"], body: "Hello, world!")
+let plaintextRes = HTTPResponse(status: .ok, headers: ["Server": "Vapor", "Content-Type": "text/plain"], body: "Hello, world!")
 router.get("plaintext") { req in
     return plaintextRes
 }
