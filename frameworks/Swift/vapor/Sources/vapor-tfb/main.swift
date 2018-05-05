@@ -1,27 +1,23 @@
 import Vapor
 
-// Models
-struct Message: Content {
-	let message: String?
-}
-
 // Services
 var services = Services.default()
-services.register(ServerMiddleware.self)
 
-// Routes
+// Router
 let router = EngineRouter.default()
+// Routes
+let json = Message(message: "Hello, world!")
 router.get("json") { req in
-    return Message(message: nil)
+    return json.encode(status: .ok, headers: ["Server": "Vapor"], for: req)
 }
+let plaintextRes = HTTPResponse(status: .ok, headers: ["Server": "Vapor"], body: "Hello, world!")
 router.get("plaintext") { req in
-    return "Hello, world!" as StaticString
+    return plaintextRes
 }
 services.register(router, as: Router.self)
 
-// Middlewares
+// Middlewares (remove default mws)
 var middlewares = MiddlewareConfig()
-middlewares.use(ServerMiddleware.self)
 services.register(middlewares)
 
 let app = try Application(config: .default(), environment: .detect(), services: services)
