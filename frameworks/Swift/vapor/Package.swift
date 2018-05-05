@@ -7,7 +7,6 @@ let package = Package(
     .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
   ],
   targets: [
-    .target(name: "vapor-tfb", dependencies: ["TfbCommon"], exclude: ["Resources"]),
-    .target(name: "TfbCommon", dependencies: ["Vapor"], exclude: ["Resources"])
+    .target(name: "vapor-tfb", dependencies: ["Vapor"], exclude: ["Resources"]),
   ]
 )
