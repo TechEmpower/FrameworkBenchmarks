@@ -7,7 +7,7 @@ struct Message: Content {
 
 // Services
 var services = Services.default()
-// services.register(ServerMiddleware.self)
+services.register(ServerMiddleware.self)
 
 // Routes
 let router = EngineRouter.default()
@@ -21,7 +21,7 @@ services.register(router, as: Router.self)
 
 // Middlewares
 var middlewares = MiddlewareConfig()
-//middlewares.use(ServerMiddleware.self)
+middlewares.use(ServerMiddleware.self)
 services.register(middlewares)
 
 let app = try Application(config: .default(), environment: .detect(), services: services)
