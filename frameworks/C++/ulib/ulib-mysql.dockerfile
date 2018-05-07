@@ -1,8 +1,8 @@
 FROM buildpack-deps:xenial
 
 RUN apt update -yqq
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && apt update -yqq
 RUN apt install -yqq software-properties-common unzip cmake > /dev/null
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && apt update -yqq
 RUN apt install -yqq libmysqlclient-dev libpq-dev > /dev/null
 RUN apt install -yqq gcc-6 g++-6 > /dev/null
 RUN apt install -yqq postgresql-server-dev-all libcap2-bin > /dev/null
