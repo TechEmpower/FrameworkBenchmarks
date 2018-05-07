@@ -5,7 +5,7 @@
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "port": 8000,
-      "approach": "Realistic",
+      "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
       "framework": "None",

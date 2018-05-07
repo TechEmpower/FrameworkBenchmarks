@@ -1,3 +1,4 @@
+#include <string.h>
 #include <uv.h>
 #include "sds.h"
 #include "sds_responder.hpp"
@@ -8,13 +9,15 @@ using namespace rapidjson;
 
 extern char* current_time;
 
+const char* PLAINTEXT_CONTENT = "Hello, World!";
+
 void create_plaintext_response_sds(write_batch* batch) {
     sds response_buffer = sdsnew("HTTP/1.1 200 OK\r\n");
     response_buffer = sdscat(response_buffer, "Server: octane\r\n");
     response_buffer = sdscat(response_buffer, "Content-Type: text/plain\r\n");
-    response_buffer = sdscat(response_buffer, "Content-Length: 13\r\n");
+    response_buffer = sdscatprintf(response_buffer, "Content-Length: %d\r\n", strlen(PLAINTEXT_CONTENT));
     response_buffer = sdscatprintf(response_buffer, "Date: %s\r\n", current_time);
-    response_buffer = sdscat(response_buffer, "Hello, World!");
+    response_buffer = sdscat(response_buffer, PLAINTEXT_CONTENT);
 
     batch->buffers[batch->number_of_used_buffers].base = response_buffer;
     batch->buffers[batch->number_of_used_buffers].len = sdslen(response_buffer);
