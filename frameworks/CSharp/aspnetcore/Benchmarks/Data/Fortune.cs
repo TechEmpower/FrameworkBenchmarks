@@ -24,6 +24,7 @@ namespace Benchmarks.Data
 
         public int CompareTo(Fortune other)
         {
+            // Performance critical, using culture insensitive comparison
             return String.CompareOrdinal(Message, other.Message);
         }
     }
