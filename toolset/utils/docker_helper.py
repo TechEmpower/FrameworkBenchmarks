@@ -215,7 +215,7 @@ class DockerHelper:
     def __stop_container(container):
         try:
             container.kill()
-            container.wait()
+            time.sleep(2)
         except:
             # container has already been killed
             pass
