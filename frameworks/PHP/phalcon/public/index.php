@@ -68,7 +68,8 @@ try {
             'password' => $database->password,
             'dbname' => $database->name,
             'options'  => array(
-                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+                PDO::ATTR_PERSISTENT => true,
             )
         ));
     });
