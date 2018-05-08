@@ -214,11 +214,8 @@ class DockerHelper:
     @staticmethod
     def __stop_container(container):
         try:
-            client = container.client
             container.kill()
-            while container.id in map(lambda x: x.id,
-                                      client.containers.list()):
-                pass
+            time.sleep(2)
         except:
             # container has already been killed
             pass
