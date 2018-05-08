@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Dapper" Version="1.50.4" />
     <PackageReference Include="MySqlConnector" Version="0.40.3" />
-    <PackageReference Include="Npgsql" Version="4.0.0-preview2" />
+    <PackageReference Include="Npgsql" Version="4.0.0-rc1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.0-rc1" />
   </ItemGroup>
 </Project>
