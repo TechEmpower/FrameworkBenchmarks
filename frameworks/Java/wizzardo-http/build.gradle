@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.wizzardo:http:0.2'
+    compile 'com.wizzardo:http:0.2.1'
     compile 'org.postgresql:postgresql:9.4.1212'
     compile 'com.zaxxer:HikariCP:2.7.3'
 }
