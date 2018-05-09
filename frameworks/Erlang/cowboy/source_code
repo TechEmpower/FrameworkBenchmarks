@@ -1,7 +1,0 @@
-./cowboy/src/
-./cowboy/src/hello_world_app.erl
-./cowboy/src/db_handler.erl
-./cowboy/src/hello_world_sup.erl
-./cowboy/src/hello_world.app.src
-./cowboy/src/json_handler.erl
-./cowboy/src/hello_world.erl
