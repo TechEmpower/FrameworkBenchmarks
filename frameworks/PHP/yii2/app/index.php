@@ -18,6 +18,9 @@ $config = [
             'username' => 'benchmarkdbuser',
             'password' => 'benchmarkdbpass',
             'charset' => 'utf8',
+            'attributes' => [
+                PDO::ATTR_PERSISTENT => true,
+            ]
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,

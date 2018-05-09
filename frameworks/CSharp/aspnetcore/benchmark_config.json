@@ -1,11 +1,12 @@
 {
-  "framework": "aspnetcore",
+  "framework": "aspcore",
   "tests": [{
     "default": {
       "plaintext_url": "/plaintext",
+      "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Micro",
+      "classification": "Platform",
       "database": "None",
       "framework": "ASP.NET Core",
       "language": "C#",
@@ -15,11 +16,12 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-linux",
+      "display_name": "aspcore",
       "notes": "",
       "versus": ""
     },
-    "middleware-json": {
+    "mw": {
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
@@ -33,11 +35,11 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-linux",
+      "display_name": "aspcore-mw",
       "notes": "",
       "versus": ""
     },
-    "middleware-raw": {
+    "mw-ado-pg": {
       "db_url": "/db/raw",
       "query_url": "/queries/raw?queries=",
       "update_url": "/updates/raw?queries=",
@@ -54,11 +56,11 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-middleware-raw",
+      "display_name": "aspcore-mw-ado-pg",
       "notes": "",
       "versus": ""
     },
-    "middleware-ef": {
+    "mw-ef-pg": {
       "db_url": "/db/ef",
       "query_url": "/queries/ef?queries=",
       "update_url": "/updates/ef?queries=",
@@ -75,11 +77,11 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-middleware-ef",
+      "display_name": "aspcore-mw-ef-pg",
       "notes": "",
       "versus": ""
     },
-    "middleware-dapper": {
+    "mw-dap-pg": {
       "db_url": "/db/dapper",
       "query_url": "/queries/dapper?queries=",
       "update_url": "/updates/dapper?queries=",
@@ -96,16 +98,19 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-middleware-dapper",
+      "display_name": "aspcore-mw-dap-pg",
       "notes": "",
       "versus": ""
     },
-    "mvc": {
-      "plaintext_url": "/mvc/plaintext",
+    "mw-ado-my": {
+      "db_url": "/db/raw",
+      "query_url": "/queries/raw?queries=",
+      "update_url": "/updates/raw?queries=",
+      "fortune_url": "/fortunes/raw",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "None",
+      "classification": "Micro",
+      "database": "MySQL",
       "framework": "ASP.NET Core",
       "language": "C#",
       "orm": "Raw",
@@ -114,11 +119,33 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-mvc-linux",
+      "display_name": "aspcore-mw-ado-my",
       "notes": "",
       "versus": ""
     },
-    "mvc-json": {
+    "mw-dap-my": {
+      "db_url": "/db/dapper",
+      "query_url": "/queries/dapper?queries=",
+      "update_url": "/updates/dapper?queries=",
+      "fortune_url": "/fortunes/dapper",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Micro",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "aspcore-mw-dap-my",
+      "notes": "",
+      "versus": ""
+    },    
+    "mvc": {
+      "plaintext_url": "/mvc/plaintext",
       "json_url": "/mvc/json",
       "port": 8080,
       "approach": "Realistic",
@@ -132,11 +159,11 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-mvc-linux",
+      "display_name": "aspcore-mvc",
       "notes": "",
       "versus": ""
     },
-    "mvc-raw": {
+    "mvc-ado-pg": {
       "db_url": "/mvc/db/raw",
       "query_url": "/mvc/queries/raw?queries=",
       "update_url": "/mvc/updates/raw?queries=",
@@ -153,11 +180,11 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-mvc-raw",
+      "display_name": "aspcore-mvc-ado-pg",
       "notes": "",
       "versus": ""
     },
-    "mvc-ef": {
+    "mvc-ef-pg": {
       "db_url": "/mvc/db/ef",
       "query_url": "/mvc/queries/ef?queries=",
       "update_url": "/mvc/updates/ef?queries=",
@@ -174,11 +201,11 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-mvc-ef",
+      "display_name": "aspcore-mvc-ef-pg",
       "notes": "",
       "versus": ""
     },
-    "mvc-dapper": {
+    "mvc-dap-pg": {
       "db_url": "/mvc/db/dapper",
       "query_url": "/mvc/queries/dapper?queries=",
       "update_url": "/mvc/updates/dapper?queries=",
@@ -195,7 +222,49 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspnetcore-mvc-dapper",
+      "display_name": "aspcore-mvc-dap-pg",
+      "notes": "",
+      "versus": ""
+    },
+    "mvc-ado-my": {
+      "db_url": "/mvc/db/raw",
+      "query_url": "/mvc/queries/raw?queries=",
+      "update_url": "/mvc/updates/raw?queries=",
+      "fortune_url": "/mvc/fortunes/raw",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "aspcore-mvc-ado-my",
+      "notes": "",
+      "versus": ""
+    },
+    "mvc-dap-my": {
+      "db_url": "/mvc/db/dapper",
+      "query_url": "/mvc/queries/dapper?queries=",
+      "update_url": "/mvc/updates/dapper?queries=",
+      "fortune_url": "/mvc/fortunes/dapper",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Micro",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "aspcore-mvc-dap-my",
       "notes": "",
       "versus": ""
     }
