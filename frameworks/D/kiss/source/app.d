@@ -12,20 +12,18 @@ import std.stdio;
 
 import kiss.event;
 import kiss.net;
-import kiss.util.KissTimer;
 import kiss.util.thread;
 
+import std.array;
 import std.conv;
 import std.json;
 import std.functional;
 import std.getopt;
 import std.exception;
-import std.experimental.logger;
 import std.datetime;
 import std.parallelism;
 import std.socket;
 import std.string;
-
 
 /**
 */
@@ -50,14 +48,9 @@ abstract class AbstractTcpServer
 	{
 		if (_isStarted)
 			return;
-		debug writeln("start to listen:");
 
 		for (size_t i = 0; i < _group.length; ++i)
-		{
 			createServer(_group[i]);
-			debug writefln("lister[%d] created", i);
-		}
-		debug writefln("All the servers is listening on %s.", _address.toString());
 		_group.start();
 		_isStarted = true;
 	}
@@ -100,15 +93,14 @@ class HttpServer : AbstractTcpServer
 	override protected void onConnectionAccepted(TcpListener sender, TcpStream client)
 	{
 		client.onDataReceived((in ubyte[] data) {
-			notifyDataReceived(client, data);
+			handleReceivedData(client, data);
 		}).onClosed(() { notifyClientClosed(client); }).onError((string msg) {
 			writeln("Error: ", msg);
 		});
 	}
 
-	protected void notifyDataReceived(TcpStream client, in ubyte[] data)
+	protected void handleReceivedData(TcpStream client, in ubyte[] data)
 	{
-		debug writefln("on thread:%s, data received: %s", getTid(), cast(string) data);
 		string request = cast(string) data;
 		bool keepAlive = indexOf(request, " keep-alive", CaseSensitive.no) > 0;
 
@@ -128,9 +120,23 @@ class HttpServer : AbstractTcpServer
 
 	private void respondPlaintext(TcpStream client, bool keepAlive)
 	{
-		string writeData = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\nConnection: Keep-Alive\r\nContent-Type: text/plain\r\nServer: Kiss/0.3\r\nDate: Wed, 17 Apr 2013 12:00:00 GMT\r\n\r\nHello, World!";
-		client.write(cast(ubyte[]) writeData, (in ubyte[] wdata, size_t size) {
-			debug writeln("sent bytes: ", size, "  content: ", cast(string) writeData);
+		string content = "Hello, World!";
+		Appender!string sb;
+		sb.put("HTTP/1.1 200 OK");
+		sb.put("\r\n");
+		sb.put("Server: Kiss/0.3");
+		sb.put("\r\n");
+		sb.put("Connection: Keep-Alive");
+		sb.put("\r\n");
+		sb.put("Content-Type: text/plain");
+		sb.put("\r\n");
+		sb.put("Content-Length: " ~ to!string(content.length));
+		sb.put("\r\n");
+		sb.put("Date: " ~ Clock.currTime.toString());
+		sb.put("\r\n\r\n");
+		sb.put(content);
+
+		client.write(cast(ubyte[]) sb.data, (in ubyte[], size_t) {
 			if (!keepAlive)
 				client.close();
 		});
@@ -142,12 +148,22 @@ class HttpServer : AbstractTcpServer
 		js["message"] = "Hello, World!";
 		string content = js.toString();
 
-		string writeData = "HTTP/1.1 200 OK\r\nConnection: Keep-Alive\r\nContent-Type: application/json\r\nContent-Length: " ~ to!string(
-				content.length)
-			~ "\r\nServer: Kiss/0.3\r\nDate: Wed, 17 Apr 2013 12:00:00 GMT\r\n\r\n";
-		writeData ~= content;
-		client.write(cast(ubyte[]) writeData, (in ubyte[] wdata, size_t size) {
-			debug writeln("sent bytes: ", size, "  content: ", cast(string) writeData);
+		Appender!string sb;
+		sb.put("HTTP/1.1 200 OK");
+		sb.put("\r\n");
+		sb.put("Server: Kiss/0.3");
+		sb.put("\r\n");
+		sb.put("Connection: Keep-Alive");
+		sb.put("\r\n");
+		sb.put("Content-Type: application/json");
+		sb.put("\r\n");
+		sb.put("Content-Length: " ~ to!string(content.length));
+		sb.put("\r\n");
+		sb.put("Date: " ~ Clock.currTime.toString());
+		sb.put("\r\n\r\n");
+		sb.put(content);
+
+		client.write(cast(ubyte[]) sb.data, (in ubyte[], size_t) {
 			if (!keepAlive)
 				client.close();
 		});
@@ -155,22 +171,29 @@ class HttpServer : AbstractTcpServer
 
 	private void badRequest(TcpStream client)
 	{
-		// string writeData = "HTTP/1.1 404 Not Found\r\nServer: Kiss/0.3\r\nConnection: close\r\n\r\n";
-		string writeData = `HTTP/1.1 404 Not Found
-Server: Kiss/0.3
-Content-Type: text/html
-Content-Length: 165
-Connection: keep-alive
-
-<html>
+		string content = `<html>
 <head><title>404 Not Found</title></head>
 <body bgcolor="white">
 <center><h1>404 Not Found</h1></center>
 <hr><center>Kiss/0.3</center>
 </body>
-</html>
-`;
-		client.write(cast(ubyte[]) writeData);
+</html>`;
+		Appender!string sb;
+		sb.put("HTTP/1.1 404 Not Found");
+		sb.put("\r\n");
+		sb.put("Server: Kiss/0.3");
+		sb.put("\r\n");
+		sb.put("Connection: keep-alive");
+		sb.put("\r\n");
+		sb.put("Content-Type: text/html");
+		sb.put("\r\n");
+		sb.put("Content-Length: " ~ to!string(content.length));
+		sb.put("\r\n");
+		sb.put("Date: " ~ Clock.currTime.toString());
+		sb.put("\r\n\r\n");
+		sb.put(content);
+
+		client.write(cast(ubyte[]) sb.data);
 		client.close();
 	}
 
