@@ -19,7 +19,7 @@ $app->get('/json', function() {
 
 // Test 2: Single database query
 $app->get('/db', function() {
-    $db = new mysqli('tfb-database', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+    $db = new mysqli('p:tfb-database', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
     $row = mysqli_query($db, 'SELECT id, randomNumber FROM World WHERE id = '.rand(1, 10000));
     $result = mysqli_fetch_assoc($row);
     $result['id'] = (int) $result['id'];
