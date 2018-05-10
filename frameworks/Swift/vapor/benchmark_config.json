@@ -19,6 +19,27 @@
       "display_name": "Vapor",
       "notes": "",
       "versus": ""
+    },
+    "mysql": {
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "Vapor",
+      "language": "Swift",
+      "flavor": "None",
+      "orm": "Full",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Vapor",
+      "notes": "",
+      "versus": ""
     }
   }]
 }
