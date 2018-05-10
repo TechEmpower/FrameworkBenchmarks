@@ -352,44 +352,30 @@ class Results:
         frameworks = self.benchmarker.metadata.gather_frameworks(
             self.config.test, self.config.exclude)
 
-        jsonResult = {}
+        framework_to_count = {}
+
         for framework, testlist in frameworks.items():
-            if not os.path.exists(
-                    os.path.join(testlist[0].directory, "source_code")):
-                log("Cannot count lines of code for %s - no 'source_code' file"
-                    % framework)
-                continue
 
-            # Unfortunately the source_code files use lines like
-            # ./cpoll_cppsp/www/fortune_old instead of
-            # ./www/fortune_old
-            # so we have to back our working dir up one level
-            wd = os.path.dirname(testlist[0].directory)
+            wd = testlist[0].directory
 
+            # Find the last instance of the word 'code' in the yaml output. This
+            # should be the line count for the sum of all listed files or just
+            # the line count for the last file in the case where there's only
+            # one file listed.
+            command = "cloc --yaml --follow-links . | grep code | tail -1 | cut -d: -f 2"
+
+            log("Running \"%s\" (cwd=%s)" % (command, wd))
             try:
-                command = "cloc --list-file=%s/source_code --yaml" % testlist[
-                    0].directory
-
-                if os.path.exists(
-                        os.path.join(testlist[0].directory, "cloc_defs.txt")):
-                    command += " --read-lang-def %s" % os.path.join(
-                        testlist[0].directory, "cloc_defs.txt")
-                    log("Using custom cloc definitions for %s" % framework)
-
-                # Find the last instance of the word 'code' in the yaml output. This should
-                # be the line count for the sum of all listed files or just the line count
-                # for the last file in the case where there's only one file listed.
-                command = command + "| grep code | tail -1 | cut -d: -f 2"
-                log("Running \"%s\" (cwd=%s)" % (command, wd))
-                lineCount = subprocess.check_output(
-                    command, cwd=wd, shell=True)
-                jsonResult[framework] = int(lineCount)
-            except subprocess.CalledProcessError:
+                line_count = int(subprocess.check_output(command, cwd=wd, shell=True))
+            except (subprocess.CalledProcessError, ValueError) as e:
+                log("Unable to count lines of code for %s due to error '%s'" %
+                    (framework, e))
                 continue
-            except ValueError as ve:
-                log("Unable to get linecount for %s due to error '%s'" %
-                    (framework, ve))
-        self.rawData['slocCounts'] = jsonResult
+
+            log("Counted %s lines of code" % line_count)
+            framework_to_count[framework] = line_count
+
+        self.rawData['slocCounts'] = framework_to_count
 
     def __count_commits(self):
         '''
