@@ -66,7 +66,7 @@ public class Service extends AbstractService {
                 rs[index].setRandomNumber(randomId());
             });
         }
-        return CompletableFuture.allOf(futures).thenCompose((r) -> {
+        return CompletableFuture.allOf(futures).thenCompose((r) -> { 
             return source.updateAsync(rs).thenApply((v) -> rs);
         });
     }
