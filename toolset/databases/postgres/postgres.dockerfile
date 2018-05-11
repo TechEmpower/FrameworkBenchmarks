@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
-RUN apt-get update > /dev/null
-RUN apt-get install -yqq locales > /dev/null
+RUN apt update > /dev/null
+RUN apt install -yqq locales > /dev/null > /dev/null
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
@@ -15,8 +15,8 @@ ADD create-postgres-database.sql create-postgres-database.sql
 ADD create-postgres.sql create-postgres.sql
 
 # install postgresql on database machine
-RUN apt-get -y update > /dev/null
-RUN apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql > /dev/null
+RUN apt update -yqq > /dev/null
+RUN apt install -yqq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql > /dev/null > /dev/null
 
 ENV PG_VERSION 9.5
 

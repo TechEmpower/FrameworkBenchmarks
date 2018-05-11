@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-RUN apt update
+RUN apt update -yqq
 
 RUN apt install -yqq software-properties-common build-essential curl locales wget unzip git \
     libmysqlclient-dev libpq-dev \

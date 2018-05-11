@@ -11,7 +11,8 @@ COPY Rakefile Rakefile
 
 RUN bundle install --jobs=4 --gemfile=/padrino/Gemfile --path=/padrino/padrino/bundle
 
-RUN apt update -yqq && apt install -yqq nginx
+RUN apt update -yqq
+RUN apt install -yqq nginx > /dev/null
 
 CMD nginx -c /padrino/config/nginx.conf && \
     bundle exec unicorn -E production -c config/unicorn.rb

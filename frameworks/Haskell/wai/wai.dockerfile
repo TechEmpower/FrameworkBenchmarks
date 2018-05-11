@@ -1,6 +1,7 @@
 FROM haskell:8.2.1
 
-RUN apt update -yqq && apt install -yqq xz-utils make
+RUN apt update -yqq
+RUN apt install -yqq xz-utils make > /dev/null
 
 ADD ./ /wai
 WORKDIR /wai

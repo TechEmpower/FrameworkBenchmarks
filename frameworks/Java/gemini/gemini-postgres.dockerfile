@@ -10,7 +10,7 @@ RUN mv src/main/webapp/WEB-INF/gemini-postgres.conf src/main/webapp/WEB-INF/Gemi
 RUN mvn -q war:war
 
 FROM openjdk:10-jdk
-RUN apt update -qqy && apt install -yqq curl > /dev/null
+RUN apt update -yqq && apt install -yqq curl
 
 WORKDIR /resin
 RUN curl -sL http://caucho.com/download/resin-4.0.56.tar.gz | tar xz --strip-components=1

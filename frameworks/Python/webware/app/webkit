@@ -110,7 +110,7 @@ d_start() {
         start-stop-daemon -S -b -q -p "$PID_FILE" \
             $WEBWARE_USER $WEBWARE_GROUP -a "$APP_SERVER" \
             -- $PYTHONOPTS -d "$WORK_DIR" -o "$LOG_FILE" \
-            -i "$PID_FILE" > /dev/null
+            -i "$PID_FILE"
 
     else
         # Prepare option to set user

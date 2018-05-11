@@ -6,7 +6,8 @@ ENV PATH=${FFEAD_CPP_PATH}:${PATH}
 
 RUN mkdir /installs
 
-RUN apt update -yqq && apt install -yqq unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev
+RUN apt update -yqq
+RUN apt install -yqq unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev > /dev/null
 
 WORKDIR $IROOT
 
