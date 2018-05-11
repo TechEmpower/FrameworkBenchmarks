@@ -9,6 +9,8 @@ apt update -qq && \
     clearsilver-dev \
     libgrantlee5-dev \
     libjemalloc-dev \
+    libqt5sql5-mysql \
+    libqt5sql5-psql \
     uwsgi \
     uuid-dev \
     libcap-dev \
