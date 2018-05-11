@@ -1,4 +1,4 @@
-FROM gradle:4.6.0-jdk8
+FROM gradle:4.7.0-jdk8
 
 USER root
 WORKDIR /wizzardo-http

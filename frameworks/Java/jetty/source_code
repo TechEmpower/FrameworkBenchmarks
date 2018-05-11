@@ -1,7 +1,0 @@
-./jetty/src/main/java/hello/
-./jetty/src/main/java/hello/handler/HelloWebServer.java
-./jetty/src/main/java/hello/handler/JsonHandler.java
-./jetty/src/main/java/hello/handler/PlainTextHandler.java
-./jetty/src/main/java/hello/servlet/HelloWebServerServlet.java
-./jetty/src/main/java/hello/servlet/JsonServlet.java
-./jetty/src/main/java/hello/servlet/PlaintextServlet.java

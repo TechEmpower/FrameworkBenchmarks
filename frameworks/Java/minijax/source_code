@@ -1,7 +1,0 @@
-minijax/src/main/java/com/techempower/minijax/Dao.java
-minijax/src/main/java/com/techempower/minijax/Fortune.java
-minijax/src/main/java/com/techempower/minijax/MinijaxBenchmark.java
-minijax/src/main/java/com/techempower/minijax/World.java
-minijax/src/main/resources/META-INF/persistence.xml
-minijax/src/main/resources/templates/error.mustache
-minijax/src/main/resources/templates/fortunes.mustache

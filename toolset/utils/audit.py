@@ -20,10 +20,6 @@ class Audit:
         warnings = 0
         log('Auditing %s:' % test_dir, color=Fore.BLUE)
 
-        if not self.benchmarker.metadata.has_file(test_dir, 'source_code'):
-            log('source_code file is missing')
-            warnings += 1
-
         if not self.benchmarker.metadata.has_file(test_dir, 'README.md'):
             log('README.md file is missing')
             warnings += 1

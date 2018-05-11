@@ -1,4 +1,4 @@
-FROM gradle:4.6.0-jdk8 as gradle
+FROM gradle:4.7.0-jdk8 as gradle
 USER root
 WORKDIR /comsat
 COPY build.gradle build.gradle
