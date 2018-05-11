@@ -21,9 +21,9 @@
 			<version>1.9.2.7</version>
 		</dependency>
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>42.2.2</version>
+			<groupId>org.redkalex</groupId>
+			<artifactId>redkale-plugins</artifactId>
+			<version>1.9.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fizzed</groupId>
