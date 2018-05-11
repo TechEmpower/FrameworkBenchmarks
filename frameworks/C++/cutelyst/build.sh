@@ -1,27 +1,24 @@
 #!/bin/bash
 
-export CUTELYST_VER=2.2.2
+export CUTELYST_VER=2.3.0
 
-export QT_VERSION_MM=59
-export QT_VERSION_FULL=594-xenial
-
-export CMAKE_PREFIX_PATH=/opt/qt${QT_VERSION_MM}
-
-echo ${CMAKE_PREFIX_PATH}/lib > /etc/ld.so.conf.d/qt${QT_VERSION_MM}.conf
-ldconfig
-
-apt-add-repository --yes ppa:beineri/opt-qt$QT_VERSION_FULL && \
-    apt update -qq && \
-    apt install -yqq \
+apt update -qq && \
+    apt install -yqq --no-install-recommends \
     cmake \
+    pkg-config \
     clearsilver-dev \
     libgrantlee5-dev \
     libjemalloc-dev \
-    qt${QT_VERSION_MM}base \
-    qt${QT_VERSION_MM}script \
-    qt${QT_VERSION_MM}tools
-
-apt install -yqq uwsgi uwsgi uuid-dev libcap-dev libzmq3-dev nginx
+    libqt5sql5-mysql \
+    libqt5sql5-psql \
+    uwsgi \
+    uuid-dev \
+    libcap-dev \
+    libssl-dev \
+    libzmq3-dev \
+    libpcre3-dev \
+    zlib1g-dev \
+    nginx 
 
 wget -q https://github.com/cutelyst/cutelyst/archive/v$CUTELYST_VER.tar.gz -O cutelyst-$CUTELYST_VER.tar.gz && \
     tar zxf cutelyst-$CUTELYST_VER.tar.gz && \
