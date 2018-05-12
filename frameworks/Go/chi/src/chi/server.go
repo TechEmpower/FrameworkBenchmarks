@@ -46,9 +46,6 @@ var (
 	debugFlag        = false
 	preforkFlag      = false
 	childFlag        = false
-
-	// Database
-	helloWorldMessage = &Message{helloWorldString}
 )
 
 // Message is a JSON struct to render a message
@@ -94,7 +91,7 @@ func setContentType(w http.ResponseWriter, contentType string) {
 // Test 1: JSON Serialization
 func serializeJSON(w http.ResponseWriter, r *http.Request) {
 	setContentType(w, "application/json")
-	_ = json.NewEncoder(w).Encode(helloWorldMessage)
+	_ = json.NewEncoder(w).Encode(Message{helloWorldString})
 }
 
 // Test 2: Single Database Query

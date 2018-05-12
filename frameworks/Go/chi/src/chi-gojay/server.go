@@ -46,9 +46,6 @@ var (
 	debugFlag        = false
 	preforkFlag      = false
 	childFlag        = false
-
-	// Database
-	helloWorldMessage = &Message{helloWorldString}
 )
 
 // Message is a JSON struct to render a message
@@ -131,7 +128,7 @@ func setContentType(w http.ResponseWriter, contentType string) {
 func serializeJSON(w http.ResponseWriter, r *http.Request) {
 	setContentType(w, "application/json")
 
-	_ = gojay.NewEncoder(w).Encode(helloWorldMessage)
+	_ = gojay.NewEncoder(w).Encode(&Message{helloWorldString})
 }
 
 // Test 2: Single Database Query
