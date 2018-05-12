@@ -2,9 +2,25 @@
   "framework": "redkale",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "None",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Redkale",
+      "webserver": "Redkale",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "redkale",
+      "notes": "",
+      "versus": ""
+    },
+	"postgres": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
