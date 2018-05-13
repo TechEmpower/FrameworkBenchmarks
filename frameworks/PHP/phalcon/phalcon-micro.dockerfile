@@ -12,6 +12,8 @@ COPY deploy/conf/* /etc/php/7.2/fpm/
 ADD ./ /phalcon
 WORKDIR /phalcon
 
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.2/fpm/php-fpm.conf ; fi;
+
 RUN apt-get install -yqq php7.2-phalcon php7.2-dev  > /dev/null
 
 RUN mv /phalcon/public/index-micro.php /phalcon/public/index.php
