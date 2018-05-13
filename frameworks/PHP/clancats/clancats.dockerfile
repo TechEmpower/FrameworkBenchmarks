@@ -15,6 +15,8 @@ RUN sed -i "s|listen = /run/php/php7.2-fpm.sock|listen = /run/php/php5.6-fpm.soc
 ADD ./ /clancats
 WORKDIR /clancats
 
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/5.6/fpm/php-fpm.conf ; fi;
+
 RUN composer install --quiet
 
 RUN git clone --branch v2.0.6 --depth 1 https://github.com/ClanCats/Framework.git clancatsapp
