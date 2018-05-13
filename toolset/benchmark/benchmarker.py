@@ -145,16 +145,14 @@ class Benchmarker:
                     prefix=log_prefix,
                     file=benchmark_log)
 
-            slept = 0
-            max_sleep = 60
-            accepting_requests = False
-            while not accepting_requests and slept < max_sleep:
-                if not self.docker_helper.server_container_exists(
-                        container.id):
-                    break
+            max_time = time.time() + 60
+            while True:
                 accepting_requests = test.is_accepting_requests()
+                if accepting_requests \
+                        or time.time() >= max_time \
+                        or not self.docker_helper.server_container_exists(container.id):
+                    break
                 time.sleep(1)
-                slept += 1
 
             if not accepting_requests:
                 self.docker_helper.stop([container, database_container])

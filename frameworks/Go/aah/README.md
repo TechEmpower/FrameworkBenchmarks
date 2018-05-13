@@ -8,10 +8,6 @@ This is the `Go` portion of a [benchmarking test suite](../) comparing a variety
 
 Requires ≥ go1.8
 
-## Source
-
-  * [Test source files](source_code)
-
 ## Test URLs
 
   * http://localhost:8080/json

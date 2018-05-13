@@ -5,7 +5,6 @@ extern crate num_cpus;
 extern crate serde_derive;
 extern crate serde_json;
 //extern crate tokio;
-extern crate tokio_proto;
 
 use std::env;
 use std::net::SocketAddr;
@@ -19,9 +18,8 @@ use hyper::StatusCode::NotFound;
 use hyper::server::{Http, Service, Request, Response};
 
 //use tokio::net::TcpListener;
-use tokio_proto::TcpServer;
 
-static HELLOWORLD: &'static [u8] = b"Hello, world!";
+static HELLO_WORLD: &'static [u8] = b"Hello, world!";
 
 #[derive(Serialize)]
 struct JsonResponse<'a> {
@@ -40,9 +38,9 @@ impl Service for TechEmpower {
         let response = match (req.method(), req.path()) {
             (&Get, "/plaintext") => {
                 Response::new()
-                    .with_header(ContentLength(HELLOWORLD.len() as u64))
+                    .with_header(ContentLength(HELLO_WORLD.len() as u64))
                     .with_header(ContentType::text())
-                    .with_body(HELLOWORLD)
+                    .with_body(HELLO_WORLD)
             }
             (&Get, "/json") => {
                 let rep = JsonResponse { message: "Hello, world!" };
@@ -54,7 +52,7 @@ impl Service for TechEmpower {
             }
             _ => Response::new().with_status(NotFound),
         };
-        future::ok(response.with_header(Server::new("Hyper")))
+        future::ok(response.with_header(Server::new("hyper")))
     }
 }
 
@@ -89,11 +87,14 @@ fn main() {
     // Bind to 0.0.0.0:8080
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
 
-    let mut srv = TcpServer::new(http, addr);
-    srv.threads(num_cpus::get());
+    let srv = http
+        .bind(&addr, || Ok(TechEmpower))
+        .expect("bind to address");
 
-    println!("Listening on http://{}", addr);
-    srv.serve(|| Ok(TechEmpower));
+    println!("Listening on http://{}", srv.local_addr().unwrap());
+
+    // Use newer hyper dispatcher
+    srv.run_threads(num_cpus::get());
 }
 
 /* This is the future, but there's still a few blockers in new tokio,

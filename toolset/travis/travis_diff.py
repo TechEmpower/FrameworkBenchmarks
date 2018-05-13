@@ -2,22 +2,36 @@
 
 # @file:        toolset/travis/travis_diff.py
 # @author:      Nate Brady
+#
 # @description: This script is only for use within Travis-CI. It is meant to
 # look through the commit history and determine whether or not the current
-# framework test directory needs to be run.
+# framework test directory needs to be run. It compares the state of the PR branch
+# against the target branch.
+#
+# Any changes found in the toolset/* directory other than continuous/*, travis/* and
+# scaffolding/* will cause all tests to be run.
+#
+# The following commands can be put in commit messages to affect which tests will run:
+#
+# [ci skip] - Provided by Travis. Travis won't trigger any builds.
+# [ci run-all] - This will force all tests to run.
+# [ci fw-only Java/gemini JavaScript/nodejs] - Ensures that only Java/gemini and
+#   JavaScript/nodejs tests are run despite the detected changes.
+# [ci fw Java/gemini] - Forces Java/gemini to run in addition to detected changes.
+# [ci lang-only Java C++] - Ensures that only Java and C++ run despite detected changes.
+# [ci lang Java C++] - Forces Java and C++ tests to run in addition to detected changes.
+#
+# If only a single test within a language group is forced to run, none of the other tests
+# in that language group will run.
+#
+# IMPORTANT: the [ci *] commands must be added to every commit message. We do not look at
+#  previous commit messages. Make sure to keep your PR branch up-to-date with the target
+#  branch to avoid running unwanted tests.
+
 
 import subprocess
 import os
 import re
-from sets import Set
-
-
-# Returns a unique list of dockerfile changes
-def get_docker_changes(changes_output):
-    return list(
-        Set(
-            re.findall(r"toolset/setup/docker/.+/(.+)\.dockerfile", changes_output,
-                       re.M)))
 
 
 def fw_found_in_changes(test, changes_output):
@@ -156,7 +170,7 @@ if re.search(r'\[ci lang .+\]', last_commit_msg, re.M):
 # Also for now, ignore the old linux setup folders, as we don't want to
 # trigger a full run as we remove old fw_depends scripts. [ci run-all] will
 # still work if it's needed.
-if re.search(r'^toolset/(?!(travis/|continuous/))', changes, re.M) is not None:
+if re.search(r'^toolset/(?!(travis/|continuous/|scaffolding/))', changes, re.M) is not None:
     print("Found changes to core toolset. Running all tests.")
     run_tests = test_dirs
     quit_diffing()

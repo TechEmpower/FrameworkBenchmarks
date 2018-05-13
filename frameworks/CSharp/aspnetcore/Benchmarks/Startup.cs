@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MySql.Data.MySqlClient;
 using Npgsql;
 
 namespace Benchmarks
@@ -50,24 +51,28 @@ namespace Benchmarks
 
             // Common DB services
             services.AddSingleton<IRandom, DefaultRandom>();
-            services.AddSingleton<ApplicationDbSeeder>();
             services.AddEntityFrameworkSqlServer();
 
             var appSettings = Configuration.Get<AppSettings>();
+            Console.WriteLine($"Database: {appSettings.Database}");
+
             if (appSettings.Database == DatabaseServer.PostgreSql)
             {
-                services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(appSettings.ConnectionString));
+                if (Scenarios.Any("Ef"))
+                {
+                    services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(appSettings.ConnectionString));
+                }
+                
                 if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
                 {
                     services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
                 }
             }
-            else
+            else if (appSettings.Database == DatabaseServer.MySql)
             {
-                services.AddDbContextPool<ApplicationDbContext>(options => options.UseSqlServer(appSettings.ConnectionString));
                 if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
                 {
-                    services.AddSingleton<DbProviderFactory>(SqlClientFactory.Instance);
+                    services.AddSingleton<DbProviderFactory>(MySqlClientFactory.Instance);
                 }
             }
 
@@ -116,7 +121,7 @@ namespace Benchmarks
             }
         }
 
-        public void Configure(IApplicationBuilder app, ApplicationDbSeeder dbSeeder)
+        public void Configure(IApplicationBuilder app)
         {
             if (Scenarios.Plaintext)
             {
@@ -192,14 +197,6 @@ namespace Benchmarks
                 app.UseFortunesEf();
             }
 
-            if (Scenarios.Any("Db"))
-            {
-                if (!dbSeeder.Seed())
-                {
-                    Environment.Exit(1);
-                }
-            }
-
             if (Scenarios.Any("Mvc"))
             {
                 app.UseMvc();
@@ -209,8 +206,6 @@ namespace Benchmarks
             {
                 app.UseStaticFiles();
             }
-
-            app.RunDebugInfoPage();
         }
     }
 }

@@ -1,0 +1,43 @@
+{
+  "framework": "kiss",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "Kiss",
+      "language": "D",
+      "flavor": "DLang2",
+      "orm": "Raw",
+      "platform": "Kiss",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Kiss",
+      "notes": "",
+      "versus": "Kiss"
+  },
+    "ldc": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "Kiss",
+      "language": "D",
+      "flavor": "DLang2",
+      "orm": "Raw",
+      "platform": "Kiss",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Kiss",
+      "notes": "",
+      "versus": "Kiss"
+    }
+  }]
+}

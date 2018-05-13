@@ -38,6 +38,7 @@ class DockerHelper:
                     dockerfile=dockerfile,
                     tag=tag,
                     forcerm=True,
+                    timeout=3600,
                     pull=True)
                 buffer = ""
                 for token in output:
@@ -213,11 +214,8 @@ class DockerHelper:
     @staticmethod
     def __stop_container(container):
         try:
-            client = container.client
             container.kill()
-            while container.id in map(lambda x: x.id,
-                                      client.containers.list()):
-                pass
+            time.sleep(2)
         except:
             # container has already been killed
             pass
@@ -338,7 +336,7 @@ class DockerHelper:
         try:
             self.client.containers.run(
                 'techempower/tfb.wrk',
-                'curl %s' % url,
+                'curl --fail --max-time 5 %s' % url,
                 remove=True,
                 log_config={'type': None},
                 network=self.benchmarker.config.network,

@@ -19,19 +19,13 @@ namespace Benchmarks.Data
         
         public int CompareTo(object obj)
         {
-            var other = obj as Fortune;
-
-            if (other == null)
-            {
-                throw new ArgumentException($"Object to compare must be of type {nameof(Fortune)}", nameof(obj));
-            }
-
-            return CompareTo(other);
+            return CompareTo((Fortune)obj);
         }
 
         public int CompareTo(Fortune other)
         {
-            return Message.CompareTo(other.Message);
+            // Performance critical, using culture insensitive comparison
+            return String.CompareOrdinal(Message, other.Message);
         }
     }
 }

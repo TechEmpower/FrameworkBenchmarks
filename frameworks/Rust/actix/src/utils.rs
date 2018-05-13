@@ -1,6 +1,5 @@
-use std::io;
 use bytes::BytesMut;
-
+use std::io;
 
 pub struct Writer<'a>(pub &'a mut BytesMut);
 

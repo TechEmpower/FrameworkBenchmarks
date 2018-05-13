@@ -383,7 +383,6 @@ class Scaffolding:
               └─── %s
                     ├─── benchmark_config.json
                     ├─── README.md
-                    └─── source_code
 
   The next step is to read through your README.md and follow the instructions
   provided therein.

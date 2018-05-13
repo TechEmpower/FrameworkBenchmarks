@@ -7,6 +7,7 @@ return new \Phalcon\Config(array(
         'username' => 'benchmarkdbuser',
         'password' => 'benchmarkdbpass',
         'name'     => 'hello_world',
+        'persistent' => true,
     ),
     'mongodb'     => array(
         'url'     => 'mongodb://tfb-database:27017',
