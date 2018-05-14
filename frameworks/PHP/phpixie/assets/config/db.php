@@ -11,6 +11,9 @@ return array(
 		
 		// 'db' and 'host' are required if you use Mysqli driver
 		'db' => 'hello_world',
-		'host'=>'tfb-database'
+		'host'=>'tfb-database',
+		'connectionOptions' => array(
+			PDO::ATTR_PERSISTENT => true
+		)
 	)
 );

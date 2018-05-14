@@ -64,6 +64,27 @@
       "notes": "TCP sockets",
       "versus": "php"
     },
+    "pgsql-raw": {
+      "db_url": "/dbraw.php",
+      "query_url": "/dbraw.php?queries=",
+      "fortune_url": "/fortune.php",
+      "update_url": "/updateraw.php?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "PHP-pgsql-raw",
+      "notes": "",
+      "versus": "php"
+    },
     "php5": {
       "json_url": "/json.php",
       "plaintext_url": "/plaintext.php",
