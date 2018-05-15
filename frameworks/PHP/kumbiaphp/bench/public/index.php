@@ -54,7 +54,7 @@ const PRODUCTION = false;
  * - En producción, es recomendable ponerla manual
  */
 //define('APP_PATH', dirname(__DIR__).'/app/');
-const APP_PATH = 'APP_ROOT';
+const APP_PATH = '/kumbiaphp/bench/app/';
 /**
  * Define el CORE_PATH.
  *
@@ -62,7 +62,7 @@ const APP_PATH = 'APP_ROOT';
  * - Ruta al directorio que contiene el núcleo de Kumbia (por defecto la ruta al directorio core)
  */
 //define('CORE_PATH', dirname(dirname(APP_PATH)).'/vendor/Kumbia/core/');
-const CORE_PATH = 'CORE_ROOT';
+const CORE_PATH = '/kumbiaphp/vendor/Kumbia/core/';
 /**
  * Define el PUBLIC_PATH.
  *

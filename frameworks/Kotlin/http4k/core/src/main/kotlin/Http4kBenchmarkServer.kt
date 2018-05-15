@@ -20,7 +20,7 @@ object Http4kBenchmarkServer {
         }
     }
 
-    private val database = Database("TFB-database")
+    private val database = Database("tfb-database")
 
     fun start(config: ServerConfig) = headers.then(
         routes(

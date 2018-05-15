@@ -41,6 +41,7 @@ var (
 
 func init() {
 	revel.Filters = []revel.Filter{
+		ServerHeaderFilter,
 		revel.RouterFilter,
 		revel.ParamsFilter,
 		revel.ActionInvoker,
@@ -63,6 +64,11 @@ func init() {
 			revel.ERROR.Fatalln(err)
 		}
 	})
+}
+
+var ServerHeaderFilter = func(c *revel.Controller, fc []revel.Filter) {
+	c.Response.Out.Header().Set("Server", "revel")
+	fc[0](c, fc[1:]) // Execute the next filter stage.
 }
 
 type App struct {

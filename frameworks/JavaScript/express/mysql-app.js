@@ -12,7 +12,7 @@ const cluster = require('cluster'),
 const bodyParser = require('body-parser');
 
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: 'TFB-database',
+  host: 'tfb-database',
   dialect: 'mysql',
   logging: false
 });
@@ -26,9 +26,9 @@ const World = sequelize.define('world', {
     type: 'Sequelize.INTEGER'
   }
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
 const Fortune = sequelize.define('Fortune', {
   id: {
@@ -39,9 +39,9 @@ const Fortune = sequelize.define('Fortune', {
     type: 'Sequelize.STRING'
   }
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
 if (cluster.isMaster) {
   // Fork workers.
@@ -72,13 +72,14 @@ if (cluster.isMaster) {
     const results = [],
       queries = Math.min(parseInt(req.query.queries) || 1, 500);
 
-    for (let i = 1; i <= queries; i++ ) {
-       const world = await World.findOne({
-            where: {
-              id: Math.floor(Math.random() * 10000) + 1}
-          }
-        );
-       results.push(world);
+    for (let i = 1; i <= queries; i++) {
+      const world = await World.findOne({
+        where: {
+          id: Math.floor(Math.random() * 10000) + 1
+        }
+      }
+      );
+      results.push(world);
     }
 
     res.setHeader("Content-Type", "application/json");
@@ -87,11 +88,11 @@ if (cluster.isMaster) {
 
   app.get('/mysql-orm-fortune', (req, res) => {
     Fortune.findAll().then((fortunes) => {
-      const newFortune = {id: 0, message: "Additional fortune added at request time."};
+      const newFortune = { id: 0, message: "Additional fortune added at request time." };
       fortunes.push(newFortune);
       fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
-      res.render('fortunes/index', {fortunes: fortunes});
+      res.render('fortunes/index', { fortunes: fortunes });
     });
   });
 
@@ -99,16 +100,16 @@ if (cluster.isMaster) {
     const results = [],
       queries = Math.min(parseInt(req.query.queries) || 1, 500);
 
-    for (let i = 1; i <= queries; i++ ) {
-        const world = await World.findOne({
-            where: {
-              id: ~~(Math.random() * 10000) + 1
-            }
-          }
-        );
-        world.randomNumber = ~~(Math.random() * 10000) + 1;
-        await world.save();
-        results.push(world);
+    for (let i = 1; i <= queries; i++) {
+      const world = await World.findOne({
+        where: {
+          id: ~~(Math.random() * 10000) + 1
+        }
+      }
+      );
+      world.randomNumber = ~~(Math.random() * 10000) + 1;
+      await world.save();
+      results.push(world);
     }
 
     res.send(results);

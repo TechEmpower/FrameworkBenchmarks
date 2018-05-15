@@ -8,7 +8,7 @@ class BenchmarkController < Amber::Controller::Base
   before_action do
     all do
       response.headers["Server"] = "Amber"
-      response.headers["Date"] = "#{Time.now}"
+      response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
     end
   end
 

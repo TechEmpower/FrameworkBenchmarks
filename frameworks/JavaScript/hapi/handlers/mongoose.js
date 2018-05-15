@@ -3,35 +3,33 @@
 
 const h = require('../helper');
 const Mongoose = require('mongoose');
-const connection = Mongoose.connect(
-  'mongodb://TFB-database/hello_world',
-  { useMongoClient: true }
-);
+Mongoose.connect('mongodb://tfb-database/hello_world');
 
 const WorldSchema = new Mongoose.Schema({
-    id :          Number,
-    randomNumber: Number
-  }, {
+  id: Number,
+  randomNumber: Number
+}, {
     collection: 'world'
   });
+
 const FortuneSchema = new Mongoose.Schema({
-    id:      Number,
-    message: String
-  }, {
+  id: Number,
+  message: String
+}, {
     collection: 'fortune'
   });
 
-const Worlds = connection.model('World', WorldSchema);
-const Fortunes = connection.model('Fortune', FortuneSchema);
+const Worlds = Mongoose.model('world', WorldSchema);
+const Fortunes = Mongoose.model('fortune', FortuneSchema);
 
 const randomWorld = async () =>
   await Worlds.findOne({ id: h.randomTfbNumber() });
 
 const updateWorld = async (world) =>
   await Worlds.update(
-      { id: world.randomNumber },
-      { randomNumber: world.randomNumber }
-    );
+    { id: world.randomNumber },
+    { randomNumber: world.randomNumber }
+  );
 
 module.exports = {
 
@@ -47,7 +45,7 @@ module.exports = {
   },
 
   Fortunes: async (req, reply) => {
-    const fortunes = await Fortunes.find({});
+    const fortunes = await Fortunes.find();
     fortunes.push(h.additionalFortune());
     fortunes.sort((a, b) => a.message.localeCompare(b.message));
 

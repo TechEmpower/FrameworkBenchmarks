@@ -24,7 +24,7 @@ from sqlalchemy.orm import sessionmaker
 from meinheld import server
 
 DBDRIVER = 'mysql'
-DBHOSTNAME = os.environ.get('DBHOST', 'localhost')
+DBHOSTNAME = 'tfb-database'
 DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % (DBDRIVER, DBHOSTNAME)
 
 Base = declarative_base()

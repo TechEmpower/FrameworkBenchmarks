@@ -9,7 +9,7 @@ name := "akka-http-benchmark"
 
 version := "0.0.1-SNAPSHOT"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.5"
 
 resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/"
 

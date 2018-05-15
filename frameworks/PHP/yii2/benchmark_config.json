@@ -2,7 +2,6 @@
   "framework": "yii2",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "plaintext_url": "/site/plaintext",
       "json_url": "/site/json",
       "db_url": "/site/db",
@@ -16,17 +15,16 @@
       "framework": "yii2",
       "language": "PHP",
       "flavor": "PHP7",
-      "orm": "Full",
+      "orm": "Raw",
       "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "yii2",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "hhvm": {
-      "setup_file": "setup_hhvm",
       "plaintext_url": "/site/plaintext",
       "json_url": "/site/json",
       "db_url": "/site/db",
@@ -40,14 +38,14 @@
       "framework": "yii2",
       "language": "PHP",
       "flavor": "HHVM",
-      "orm": "Full",
+      "orm": "Raw",
       "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "yii2",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     }
   }]
 }

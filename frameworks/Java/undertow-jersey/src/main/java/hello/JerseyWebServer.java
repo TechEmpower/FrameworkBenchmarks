@@ -31,7 +31,7 @@ public class JerseyWebServer
     CommandLine cmd = parser.parse(options(), args);
 
     final int port = Integer.parseInt(cmd.getOptionValue("port", "8080"));
-    final String dbHost = cmd.getOptionValue("dbhost", "localhost");
+    final String dbHost = cmd.getOptionValue("dbhost", "tfb-database");
     final int dbPort = Integer.parseInt(cmd.getOptionValue("dbport", "3306"));
 
     ResourceConfig config = new ResourceConfig(DbResource.class,

@@ -3,7 +3,7 @@ header('Content-type: application/json');
 
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
-$pdo = new PDO('mysql:host=TFB-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
+$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
     PDO::ATTR_PERSISTENT => true
 ));
 

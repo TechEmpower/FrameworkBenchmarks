@@ -1,0 +1,13 @@
+{
+	"name": "kiss-benchmark",
+	"targetType": "executable",
+	"authors": [
+		"Putao"
+	],
+	"description": "A simple http server powered by KISS.",
+	"copyright": "Copyright © 2017-2018, HuntLabs.cn",
+	"license": "Apache-2.0",
+	"dependencies": {
+		"kiss" : "~>0.3.2"
+	}
+}

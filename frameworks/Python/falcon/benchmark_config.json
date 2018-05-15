@@ -2,7 +2,6 @@
   "framework": "falcon",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -22,7 +21,6 @@
       "versus": "wsgi"
     },
     "py3": {
-      "setup_file": "setup_py3",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -42,7 +40,6 @@
       "versus": "wsgi"
     },
     "pypy2": {
-      "setup_file": "setup_pypy2",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,

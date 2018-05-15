@@ -1,7 +1,6 @@
 [package]
 name = "actix"
-version = "0.2.0"
-build = "build.rs"
+version = "0.4.1"
 
 [[bin]]
 name = "actix"
@@ -16,19 +15,25 @@ name = "actix-pg"
 path = "src/pg.rs"
 
 [dependencies]
-askama = "0.5"
+askama = "0.6"
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
 rand = "0.4"
+bytes = "0.4"
 num_cpus = "1.0"
 futures = "0.1"
+tokio-io = "=0.1.5"
+tokio-core = "=0.1.12"
 http = "0.1"
-diesel = { version = "1.1", features = ["postgres"] }
+diesel = { version = "1.2", features = ["postgres"] }
 postgres = "0.15"
+horrorshow = "0.6"
 
 actix = "0.5"
-actix-web = "0.4"
+actix-web = "^0.5"
 
-[build-dependencies]
-askama = "0.5"
+[profile.release]
+lto = true
+opt-level = 3
+codegen-units = 1

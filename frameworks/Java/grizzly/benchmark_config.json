@@ -1,0 +1,24 @@
+{
+  "framework": "grizzly",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "Grizzly",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "Grizzly",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "grizzly",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

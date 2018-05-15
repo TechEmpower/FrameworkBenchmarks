@@ -2,7 +2,6 @@
   "framework": "zend",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -22,7 +21,7 @@
       "database_os": "Linux",
       "display_name": "zend",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     }
   }]
 }

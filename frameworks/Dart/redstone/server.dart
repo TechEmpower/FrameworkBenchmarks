@@ -2,7 +2,7 @@ import "dart:core";
 import "dart:io";
 import "dart:isolate";
 import 'dart:async' show Future;
-import 'dart:math' show Random;
+import 'dart:math' show Random, max;
 import "package:redstone/server.dart" as app;
 import "package:redstone_mapper/mapper.dart";
 import "package:redstone_mapper/plugin.dart";
@@ -10,9 +10,11 @@ import "package:redstone_mapper_mongo/manager.dart";
 import "package:redstone_mapper_pg/manager.dart";
 import "package:postgresql/postgresql.dart" as pg;
 import "package:di/di.dart";
-import "package:args/args.dart";
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:mustache/mustache.dart' as mustache;
+import 'package:system_info/system_info.dart';
+
+final _NUM_PROCESSORS = SysInfo.processors.length;
 
 const _WORLD_TABLE_SIZE = 10000;
 
@@ -143,7 +145,7 @@ class PgTests {
     })));
   }
   
-  @app.Route("/fortunes", responseType: "text/html")
+  @app.Route("/fortunes", responseType: "text/html;charset=utf-8")
   Future<String> fortunesTest(@app.Inject() mustache.Template template) {
     return pgSql.query(fortuneQuery, Fortune).then((values) {
       values
@@ -191,7 +193,7 @@ class MongoTests {
     })));
   }
   
-  @app.Route("/fortunes", responseType: "text/html")
+  @app.Route("/fortunes", responseType: "text/html;charset=utf-8")
   Future<String> fortunesTest(@app.Inject() mustache.Template template) {
     return mongoDb.find(fortuneCollection, MongoFortune).then((values) {
       values
@@ -207,66 +209,45 @@ class MongoTests {
 }
 
 main(List<String> args) {
-  var parser = new ArgParser();
-  parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
-  parser.addOption('port', abbr: 'p', defaultsTo: '8080');
-  parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
-  parser.addOption('isolates', abbr: 'i', defaultsTo: '1');
-  
-  var arguments = parser.parse(args);
-  var isolates = int.parse(arguments['isolates']);
-  var dbConnections = int.parse(arguments['dbconnections']) ~/ isolates;
-
-  ServerSocket.bind(arguments['address'], int.parse(arguments['port']))
-      .then((server) {
-        var ref = server.reference;
-        for (int i = 1; i < isolates; i++) {
-          Isolate.spawn(startInIsolate, [ref, dbConnections]);
-        }
-        _startServer(server, dbConnections);
-      });
-  
+  ReceivePort errorPort = new ReceivePort();
+  errorPort.listen((e) => print(e));
+  for (int i = 0; i < _NUM_PROCESSORS; i++) {
+    Isolate.spawn(
+        startInIsolate,
+        [],
+        onError: errorPort.sendPort);
+  }
 }
 
-void startInIsolate(args) {
-  var ref = args[0];
-  var dbConnections = args[1];
-  ref.create().then((server) {
-    _startServer(server, dbConnections);
-  });
+startInIsolate(List args) {
+  _startServer();
 }
 
-_startServer(serverSocket, dbConnections) {
+_startServer() {
+  var dbConnections = max(1, (256 / _NUM_PROCESSORS).floor());
 
-  MongoDbManager mongoDbManager;
-  PostgreSqlManager pgSqlManager;
+  var mongoDbManager = new MongoDbManager(
+      "mongodb://tfb-database/hello_world",
+      poolSize: dbConnections);
+
+  var pgSqlManager = new PostgreSqlManager(
+      "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world",
+      min: dbConnections,
+      max: dbConnections);
+
   mustache.Template fortunesTemplate;
   
   Future.wait([
-     
-    //load PostgreSql configuration
-    new File("postgresql.yaml").readAsString().then((config){
-      pgSqlManager = new PostgreSqlManager(
-          new pg.Settings.fromMap(yaml.loadYaml(config)).toUri(),
-          min: dbConnections,
-          max: dbConnections);
-    }),
-    
-    //load MongoDb configuration
-    new File("mongodb.yaml").readAsString().then((config) {
-      var mongoConfig = yaml.loadYaml(config);
-      mongoDbManager = new MongoDbManager(
-          "mongodb://${mongoConfig["host"]}/${mongoConfig["database"]}", 
-          poolSize: dbConnections);
-    }),
-    
-    //load fortunes mustache template
+
+    HttpServer.bind("0.0.0.0", 8080, shared: true),
+
     new File('fortunes.mustache').readAsString().then((template) {
       fortunesTemplate = mustache.parse(template);
     })
-    
-  ]).then((_) {
-    
+
+  ]).then((List waitResults) {
+    var server = waitResults[0];
+
     //app.setupConsoleLog();
     
     //install module for dependency injection
@@ -279,7 +260,6 @@ _startServer(serverSocket, dbConnections) {
     app.addPlugin(getMapperPlugin());
     
     //start the server
-    var server = new HttpServer.listenOn(serverSocket);
     app.serveRequests(server);
     
   });
