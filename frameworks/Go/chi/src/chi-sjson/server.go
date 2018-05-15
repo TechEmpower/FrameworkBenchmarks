@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"html"
@@ -17,6 +16,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/jackc/pgx"
+	"github.com/tidwall/sjson"
 )
 
 const (
@@ -48,15 +48,48 @@ var (
 	childFlag        = false
 )
 
+// sjson
+var (
+	messageJSONTmpl = []byte(`{"message": ""}`)
+	worldJSONTmpl   = []byte(`{"id": 0, "randomNumber": 0}`)
+	optimistic      = &sjson.Options{Optimistic: true}
+	inPlace         = &sjson.Options{Optimistic: true, ReplaceInPlace: true}
+)
+
 // Message is a JSON struct to render a message
 type Message struct {
-	Message string `json:"message"`
+	Message string
+}
+
+// MarshalJSON marshals the object as json
+func (m Message) MarshalJSON() ([]byte, error) {
+	return sjson.SetBytesOptions(messageJSONTmpl, "message", m.Message, optimistic)
 }
 
 // World is a JSON struct to render a random number
 type World struct {
 	ID           uint16 `json:"id"`
 	RandomNumber uint16 `json:"randomNumber"`
+}
+
+// MarshalJSON marshals the object as json
+func (w World) MarshalJSON() ([]byte, error) {
+	data, _ := sjson.SetBytesOptions(worldJSONTmpl, "id", w.ID, optimistic)
+	return sjson.SetBytesOptions(data, "randomNumber", w.RandomNumber, inPlace)
+}
+
+// Worlds is a list of worlds
+type Worlds []World
+
+// MarshalJSON marshals the object as json
+func (ws Worlds) MarshalJSON() ([]byte, error) {
+	jsonResult := []byte(`[]`)
+
+	for _, w := range ws {
+		jsonResult, _ = sjson.SetBytesOptions(jsonResult, "-1", &w, inPlace)
+	}
+
+	return jsonResult, nil
 }
 
 func randomRow() *pgx.Row {
@@ -91,7 +124,9 @@ func setContentType(w http.ResponseWriter, contentType string) {
 // Test 1: JSON Serialization
 func serializeJSON(w http.ResponseWriter, r *http.Request) {
 	setContentType(w, "application/json")
-	_ = json.NewEncoder(w).Encode(Message{helloWorldString})
+
+	data, _ := Message{helloWorldString}.MarshalJSON()
+	_, _ = w.Write(data)
 }
 
 // Test 2: Single Database Query
@@ -102,7 +137,8 @@ func singleQuery(w http.ResponseWriter, r *http.Request) {
 	}
 
 	setContentType(w, "application/json")
-	_ = json.NewEncoder(w).Encode(&world)
+	data, _ := world.MarshalJSON()
+	_, _ = w.Write(data)
 }
 
 // Caps queries parameter between 1 and 500.
@@ -124,7 +160,7 @@ func sanitizeQueryParam(queries string) int {
 // Test 3: Multiple Database Queries
 func multipleQueries(w http.ResponseWriter, r *http.Request) {
 	queries := sanitizeQueryParam(r.URL.Query().Get("queries"))
-	worlds := make([]World, queries)
+	worlds := make(Worlds, queries)
 
 	for i := 0; i < queries; i++ {
 		if err := randomRow().Scan(&worlds[i].ID, &worlds[i].RandomNumber); err != nil {
@@ -133,7 +169,8 @@ func multipleQueries(w http.ResponseWriter, r *http.Request) {
 	}
 
 	setContentType(w, "application/json")
-	_ = json.NewEncoder(w).Encode(worlds)
+	data, _ := worlds.MarshalJSON()
+	_, _ = w.Write(data)
 }
 
 // Test 4: Fortunes
@@ -171,7 +208,7 @@ func fortunes(w http.ResponseWriter, r *http.Request) {
 // Test 5: Database Updates
 func dbupdate(w http.ResponseWriter, r *http.Request) {
 	queries := sanitizeQueryParam(r.URL.Query().Get("queries"))
-	worlds := make([]World, queries)
+	worlds := make(Worlds, queries)
 
 	for i := 0; i < queries; i++ {
 		w := &worlds[i]
@@ -185,7 +222,8 @@ func dbupdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	setContentType(w, "application/json")
-	_ = json.NewEncoder(w).Encode(worlds)
+	data, _ := worlds.MarshalJSON()
+	_, _ = w.Write(data)
 }
 
 // Test 6: Plaintext
