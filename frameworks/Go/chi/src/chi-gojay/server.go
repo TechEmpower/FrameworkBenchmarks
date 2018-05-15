@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"html"
@@ -15,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/francoispqt/gojay"
 	"github.com/go-chi/chi"
 	"github.com/jackc/pgx"
 )
@@ -50,13 +50,49 @@ var (
 
 // Message is a JSON struct to render a message
 type Message struct {
-	Message string `json:"message"`
+	Message string
+}
+
+// MarshalObject encodes the message as JSON
+func (m *Message) MarshalObject(dec *gojay.Encoder) {
+	dec.AddStringKey("message", m.Message)
+}
+
+// IsNil returns true if the object is nil
+func (m *Message) IsNil() bool {
+	return m == nil
 }
 
 // World is a JSON struct to render a random number
 type World struct {
 	ID           uint16 `json:"id"`
 	RandomNumber uint16 `json:"randomNumber"`
+}
+
+// Worlds is a list of World
+type Worlds []World
+
+// MarshalArray marshals the list of worlds
+func (ws Worlds) MarshalArray(enc *gojay.Encoder) {
+	for _, w := range ws {
+		enc.AddObject(&w)
+	}
+}
+
+// IsNil returns true if the object is nil
+func (ws Worlds) IsNil() bool {
+	return ws == nil
+}
+
+// MarshalObject encodes the message as JSON
+func (w *World) MarshalObject(dec *gojay.Encoder) {
+	dec.AddIntKey("id", int(w.ID))
+	dec.AddIntKey("randomNumber", int(w.RandomNumber))
+}
+
+// IsNil returns true if the object is nil
+func (w *World) IsNil() bool {
+	return w == nil
 }
 
 func randomRow() *pgx.Row {
@@ -91,7 +127,8 @@ func setContentType(w http.ResponseWriter, contentType string) {
 // Test 1: JSON Serialization
 func serializeJSON(w http.ResponseWriter, r *http.Request) {
 	setContentType(w, "application/json")
-	_ = json.NewEncoder(w).Encode(Message{helloWorldString})
+
+	_ = gojay.NewEncoder(w).Encode(&Message{helloWorldString})
 }
 
 // Test 2: Single Database Query
@@ -102,7 +139,7 @@ func singleQuery(w http.ResponseWriter, r *http.Request) {
 	}
 
 	setContentType(w, "application/json")
-	_ = json.NewEncoder(w).Encode(&world)
+	_ = gojay.NewEncoder(w).Encode(&world)
 }
 
 // Caps queries parameter between 1 and 500.
@@ -124,7 +161,7 @@ func sanitizeQueryParam(queries string) int {
 // Test 3: Multiple Database Queries
 func multipleQueries(w http.ResponseWriter, r *http.Request) {
 	queries := sanitizeQueryParam(r.URL.Query().Get("queries"))
-	worlds := make([]World, queries)
+	worlds := make(Worlds, queries)
 
 	for i := 0; i < queries; i++ {
 		if err := randomRow().Scan(&worlds[i].ID, &worlds[i].RandomNumber); err != nil {
@@ -133,7 +170,7 @@ func multipleQueries(w http.ResponseWriter, r *http.Request) {
 	}
 
 	setContentType(w, "application/json")
-	_ = json.NewEncoder(w).Encode(worlds)
+	_ = gojay.NewEncoder(w).EncodeArray(worlds)
 }
 
 // Test 4: Fortunes
@@ -171,7 +208,7 @@ func fortunes(w http.ResponseWriter, r *http.Request) {
 // Test 5: Database Updates
 func dbupdate(w http.ResponseWriter, r *http.Request) {
 	queries := sanitizeQueryParam(r.URL.Query().Get("queries"))
-	worlds := make([]World, queries)
+	worlds := make(Worlds, queries)
 
 	for i := 0; i < queries; i++ {
 		w := &worlds[i]
@@ -185,7 +222,7 @@ func dbupdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	setContentType(w, "application/json")
-	_ = json.NewEncoder(w).Encode(worlds)
+	_ = gojay.NewEncoder(w).EncodeArray(worlds)
 }
 
 // Test 6: Plaintext
