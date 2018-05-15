@@ -42,7 +42,7 @@ The command looks like this: `docker run -it --rm --network tfb -v /var/run/dock
 #### A note on Windows:
 
 - Docker expects Linux-style paths. If you cloned on your `C:\` drive, then `[ABS PATH TO THIS DIR]` would be `/c/FrameworkBenchmarks`.
-- [Docker for Windows](https://www.docker.com/docker-windows) understands `/var/run/docker.sock` even though that is not a valid path on Windows. [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_windows/) **may** not - use at your own risk.
+- [Docker for Windows](https://www.docker.com/docker-windows) understands `/var/run/docker.sock` even though that is not a valid path on Windows, but only when using Linux containers (it doesn't work with Windows containers and LCOW). [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_windows/) **may** not understand `/var/run/docker.sock`, even when using Linux containers - use at your own risk.
 
 ## Quick Start Guide (Vagrant)
 
