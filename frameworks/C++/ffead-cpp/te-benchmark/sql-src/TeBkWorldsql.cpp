@@ -23,6 +23,11 @@ void TeBkWorld::setRandomNumber(int randomNumber) {
 	this->randomNumber = randomNumber;
 }
 
+TeBkWorld::TeBkWorld() {
+	id = 0;
+	randomNumber = 0;
+}
+
 TeBkWorld::~TeBkWorld() {
 	// TODO Auto-generated destructor stub
 }

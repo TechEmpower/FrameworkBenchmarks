@@ -55,6 +55,7 @@ class BenchmarkConfig:
         self.database_docker_host = None
         self.client_docker_host = None
         self.network = None
+        self.enable_core_dumps = args.enable_core_dumps
 
         if self.network_mode is None:
             self.network = 'tfb'
