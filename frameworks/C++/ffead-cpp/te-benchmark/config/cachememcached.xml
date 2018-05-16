@@ -1,0 +1,15 @@
+<caches>
+        <cache>
+                <nodes>
+                        <node>
+                                <host>localhost</host>
+                                <port>11211</port>
+                        </node>
+                </nodes>
+                <init>TeBkRestController.updateCache</init>
+                <pool-size>10</pool-size>
+                <expiryTime>3600</expiryTime>
+                <name>Memcached-Cached</name>
+                <type>memcached</type>
+        </cache>
+</caches>

@@ -1,3 +1,5 @@
+\c hello_world
+
 BEGIN;
 
 CREATE TABLE  World (
