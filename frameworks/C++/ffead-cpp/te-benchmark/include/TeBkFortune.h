@@ -19,6 +19,7 @@ class TeBkFortune {
 	#pragma @Column dbf="message"
 	std::string message;
 public:
+	TeBkFortune();
 	virtual ~TeBkFortune();
 	int getId() const;
 	void setId(int id);

@@ -28,4 +28,4 @@ RUN ./install_ffead-cpp-nginx.sh
 
 WORKDIR /
 
-CMD ./run_ffead.sh emb postgresql
+CMD ./run_ffead.sh nginx memcached
