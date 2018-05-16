@@ -11,8 +11,12 @@ namespace PlatformBenchmarks
 {
     public class Program
     {
+        public static string[] Args;
+
         public static void Main(string[] args)
         {
+            Args = args;
+
             Console.WriteLine(BenchmarkApplication.ApplicationName);
             Console.WriteLine(BenchmarkApplication.Paths.Plaintext);
             Console.WriteLine(BenchmarkApplication.Paths.Json);
@@ -24,6 +28,7 @@ namespace PlatformBenchmarks
         public static IWebHost BuildWebHost(string[] args)
         {
             var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .Build();

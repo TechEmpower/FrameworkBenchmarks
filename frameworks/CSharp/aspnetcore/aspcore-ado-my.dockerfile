@@ -2,7 +2,7 @@ FROM microsoft/dotnet:2.1-sdk-stretch AS build
 WORKDIR /app
 COPY PlatformBenchmarks .
 RUN dotnet publish -c Release -o out
-COPY Benchmarks/appsettings.json ./out/appsettings.json
+COPY Benchmarks/appsettings.mysql.json ./out/appsettings.json
 
 FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
 ENV ASPNETCORE_URLS http://+:8080
