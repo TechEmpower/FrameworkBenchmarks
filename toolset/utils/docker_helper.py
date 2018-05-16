@@ -109,10 +109,7 @@ class DockerHelper:
         log_prefix = "%s: " % test.name
 
         # Build the test image
-        if test.image_name is not None:
-            test_docker_file = "%s.dockerfile" % test.image_name
-        else:
-            test_docker_file = "%s.dockerfile" % test.name
+        test_docker_file = "%s.dockerfile" % test.name
         build_log_file = build_log_dir
         if build_log_dir is not os.devnull:
             build_log_file = os.path.join(
@@ -177,44 +174,20 @@ class DockerHelper:
                 'soft': 99
             }]
 
-            if self.benchmarker.config.enable_core_dumps:
-                ulimit.append({
-                    'name': 'core',
-                    'hard': 900000000000,
-                    'soft': 900000000000
-                })
-
-            if test.image_name is not None:
-                container = self.server.containers.run(
-                    "techempower/tfb.test.%s" % test.image_name,
-                    command=test.command,
-                    name=name,
-                    network=self.benchmarker.config.network,
-                    network_mode=self.benchmarker.config.network_mode,
-                    stderr=True,
-                    detach=True,
-                    init=True,
-                    extra_hosts=extra_hosts,
-                    privileged=True,
-                    ulimits=ulimit,
-                    sysctls=sysctl,
-                    remove=True,
-                    log_config={'type': None})
-            else:
-                container = self.server.containers.run(
-                    "techempower/tfb.test.%s" % test.name,
-                    name=name,
-                    network=self.benchmarker.config.network,
-                    network_mode=self.benchmarker.config.network_mode,
-                    stderr=True,
-                    detach=True,
-                    init=True,
-                    extra_hosts=extra_hosts,
-                    privileged=True,
-                    ulimits=ulimit,
-                    sysctls=sysctl,
-                    remove=True,
-                    log_config={'type': None})
+            container = self.server.containers.run(
+                "techempower/tfb.test.%s" % test.name,
+                name=name,
+                network=self.benchmarker.config.network,
+                network_mode=self.benchmarker.config.network_mode,
+                stderr=True,
+                detach=True,
+                init=True,
+                extra_hosts=extra_hosts,
+                privileged=True,
+                ulimits=ulimit,
+                sysctls=sysctl,
+                remove=True,
+                log_config={'type': None})
 
             watch_thread = Thread(
                 target=watch_container,

@@ -150,7 +150,7 @@ class Benchmarker:
                 accepting_requests = test.is_accepting_requests()
                 if accepting_requests \
                         or time.time() >= max_time \
-                        or (not self.docker_helper.server_container_exists(container.id)):
+                        or not self.docker_helper.server_container_exists(container.id):
                     break
                 time.sleep(1)
 

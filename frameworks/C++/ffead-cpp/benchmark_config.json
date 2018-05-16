@@ -2,8 +2,6 @@
 	"framework": "ffead-cpp",
 	"tests": [{
 		"default": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh emb mongo",
 			"json_url": "/te-benchmark/json",
 			"plaintext_url": "/te-benchmark/plaintext",
 			"db_url": "/te-benchmark/db",
@@ -26,8 +24,6 @@
 			"versus": ""
 		},
 		"mysql": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh emb mysql",
 			"json_url": "/te-benchmark/json",
 			"plaintext_url": "/te-benchmark/plaintext",
 			"db_url": "/te-benchmark/db",
@@ -50,8 +46,6 @@
 			"versus": ""
 		},
 		"postgresql": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh emb postgresql",
 			"json_url": "/te-benchmark/json",
 			"plaintext_url": "/te-benchmark/plaintext",
 			"db_url": "/te-benchmark/db",
@@ -74,8 +68,6 @@
 			"versus": ""
 		},
 		"apache-mongo": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh apache mongo",
 			"json_url": "/te-benchmark/json",
 			"plaintext_url": "/te-benchmark/plaintext",
 			"db_url": "/te-benchmark/db",
@@ -98,8 +90,6 @@
 			"versus": ""
 		},
 		"apache-mysql": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh apache mysql",
 			"json_url": "/te-benchmark/json",
 			"plaintext_url": "/te-benchmark/plaintext",
 			"db_url": "/te-benchmark/db",
@@ -122,8 +112,6 @@
 			"versus": ""
 		},
 		"apache-postgresql": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh apache postgresql",
 			"json_url": "/te-benchmark/json",
 			"plaintext_url": "/te-benchmark/plaintext",
 			"db_url": "/te-benchmark/db",
@@ -146,8 +134,6 @@
 			"versus": ""
 		},
 		"nginx-mongo": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh nginx mongo",
 			"json_url": "/te-benchmark/json",
 			"plaintext_url": "/te-benchmark/plaintext",
 			"db_url": "/te-benchmark/db",
@@ -170,8 +156,6 @@
 			"versus": ""
 		},
 		"nginx-mysql": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh nginx mysql",
 			"json_url": "/te-benchmark/json",
 			"plaintext_url": "/te-benchmark/plaintext",
 			"db_url": "/te-benchmark/db",
@@ -194,8 +178,6 @@
 			"versus": ""
 		},
 		"nginx-postgresql": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh nginx postgresql",
 			"json_url": "/te-benchmark/json",
 			"plaintext_url": "/te-benchmark/plaintext",
 			"db_url": "/te-benchmark/db",
@@ -218,8 +200,6 @@
 			"versus": ""
 		},
 		"redis": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh emb redis",
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",
@@ -238,8 +218,6 @@
 			"versus": ""
 		},
 		"nginx-redis": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh nginx redis",
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",
@@ -258,8 +236,6 @@
 			"versus": ""
 		},
 		"apache-redis": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh apache redis",
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",
@@ -278,8 +254,6 @@
 			"versus": ""
 		},
 		"memcached": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh emb memcached",
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",
@@ -298,8 +272,6 @@
 			"versus": ""
 		},
 		"nginx-memcached": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh nginx memcached",
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",
@@ -318,8 +290,6 @@
 			"versus": ""
 		},
 		"apache-memcached": {
-			"image_name": "ffead-cpp",
-			"command": "run_ffead.sh apache memcached",
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",

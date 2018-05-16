@@ -189,12 +189,6 @@ def main(argv=None):
         default=None,
         help='The network mode to run docker in')
 
-    parser.add_argument(
-        '--enable-core-dumps',
-        action='store_true',
-        default=False,
-        help='sometimes we may need core dumps from the conatiner')
-
     args = parser.parse_args()
 
     config = BenchmarkConfig(args)
