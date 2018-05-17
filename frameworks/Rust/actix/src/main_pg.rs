@@ -230,29 +230,26 @@ impl Handler<UpdateWorld> for PgConnection {
             .conn
             .prepare_cached("SELECT id FROM world WHERE id=$1")
             .unwrap();
+        let mut update = String::with_capacity(120 + 6 * msg.0 as usize);
+        update
+            .push_str("UPDATE world SET randomnumber = temp.randomnumber FROM (VALUES ");
 
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
             let random_id = self.rng.gen_range::<i32>(1, 10_000);
             let rows = &get_world.query(&[&random_id]).unwrap();
-            let row = rows.get(0);
-            let w_id: i32 = row.get(0);
-            let new_num: i32 = self.rng.gen_range(1, 10_000);
-            worlds.push(World {
-                id: w_id,
-                randomnumber: new_num,
-            });
+            let w = World {
+                id: rows.get(0).get(0),
+                randomnumber: self.rng.gen_range(1, 10_000),
+            };
+            update.push_str(&format!("({}, {}),", w.id, w.randomnumber));
+            worlds.push(w);
         }
         worlds.sort_by_key(|w| w.id);
 
-        let trans = self.conn.transaction().unwrap();
-        let update_world = trans
-            .prepare_cached("UPDATE world SET randomnumber=$1 WHERE id=$2")
-            .unwrap();
-        for w in &worlds {
-            let _ = update_world.execute(&[&w.id, &w.randomnumber]);
-        }
-        trans.commit().unwrap();
+        update.pop();
+        update.push_str(") AS temp(id, randomnumber) WHERE temp.id = world.id");
+        self.conn.execute(&update, &[]).unwrap();
 
         Ok(worlds)
     }
