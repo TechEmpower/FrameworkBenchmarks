@@ -10,13 +10,15 @@ extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
-extern crate horrorshow;
-#[macro_use]
 extern crate diesel;
+#[macro_use]
+extern crate askama;
 
 use actix::prelude::*;
-use actix_web::{http, server, App, AsyncResponder, FutureResponse, HttpRequest,
-                HttpResponse};
+use actix_web::{
+    http, server, App, AsyncResponder, FutureResponse, HttpRequest, HttpResponse,
+};
+use askama::Template;
 use bytes::BytesMut;
 use futures::Future;
 use postgres::{Connection, TlsMode};
@@ -24,7 +26,6 @@ use rand::{thread_rng, Rng, ThreadRng};
 use std::{cmp, io};
 
 mod models;
-mod tmpl;
 mod utils;
 use models::{Fortune, World};
 use utils::Writer;
@@ -55,12 +56,11 @@ fn world_row(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
 
 fn queries(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
     // get queries parameter
-    let q = if let Some(q) = req.query().get("q") {
-        q.parse::<u16>().ok().unwrap_or(1)
-    } else {
-        1
-    };
-    let q = cmp::min(500, cmp::max(1, q));
+    let q = req
+        .query()
+        .get("q")
+        .map(|q| cmp::min(500, q.parse::<u16>().ok().unwrap_or(1)))
+        .unwrap_or(1);
 
     // run sql queries
     req.clone()
@@ -113,6 +113,12 @@ fn updates(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
         .responder()
 }
 
+#[derive(Template)]
+#[template(path = "fortune.html")]
+struct FortuneTemplate<'a> {
+    items: &'a Vec<models::Fortune>,
+}
+
 fn fortune(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
     req.state()
         .db
@@ -120,7 +126,8 @@ fn fortune(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
         .from_err()
         .and_then(|res| match res {
             Ok(rows) => {
-                let res = tmpl::render_fortune(&rows);
+                let tmpl = FortuneTemplate { items: &rows };
+                let res = tmpl.render().unwrap();
 
                 Ok(HttpResponse::Ok()
                     .header(http::header::SERVER, "Actix")
@@ -165,7 +172,8 @@ impl Handler<RandomWorld> for PgConnection {
     type Result = io::Result<World>;
 
     fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Self::Result {
-        let random_world = self.conn
+        let random_world = self
+            .conn
             .prepare_cached("SELECT id, randomnumber FROM world WHERE id=$1")
             .unwrap();
 
@@ -189,7 +197,8 @@ impl Handler<RandomWorlds> for PgConnection {
     type Result = io::Result<Vec<World>>;
 
     fn handle(&mut self, msg: RandomWorlds, _: &mut Self::Context) -> Self::Result {
-        let random_world = self.conn
+        let random_world = self
+            .conn
             .prepare_cached("SELECT id, randomnumber FROM world WHERE id=$1")
             .unwrap();
 
@@ -217,7 +226,8 @@ impl Handler<UpdateWorld> for PgConnection {
     type Result = io::Result<Vec<World>>;
 
     fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
-        let get_world = self.conn
+        let get_world = self
+            .conn
             .prepare_cached("SELECT id FROM world WHERE id=$1")
             .unwrap();
 
@@ -258,7 +268,8 @@ impl Handler<TellFortune> for PgConnection {
     type Result = io::Result<Vec<Fortune>>;
 
     fn handle(&mut self, _: TellFortune, _: &mut Self::Context) -> Self::Result {
-        let fortune = self.conn
+        let fortune = self
+            .conn
             .prepare_cached("SELECT id, message FROM fortune")
             .unwrap();
 
@@ -299,10 +310,10 @@ fn main() {
     server::new(move || {
         App::with_state(State { db: addr.clone() })
             .default_encoding(http::ContentEncoding::Identity)
-            .resource("/db", |r| r.route().a(world_row))
-            .resource("/queries", |r| r.route().a(queries))
-            .resource("/fortune", |r| r.route().a(fortune))
-            .resource("/updates", |r| r.route().a(updates))
+            .resource("/db", |r| r.route().f(world_row))
+            .resource("/queries", |r| r.route().f(queries))
+            .resource("/fortune", |r| r.route().f(fortune))
+            .resource("/updates", |r| r.route().f(updates))
     }).backlog(8192)
         .bind("0.0.0.0:8080")
         .unwrap()

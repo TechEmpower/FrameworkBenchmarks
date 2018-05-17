@@ -67,10 +67,7 @@ impl Handler<RandomWorlds> for DbExecutor {
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
             let w_id = self.rng.gen_range(1, 10_000);
-            let w = match world
-                .filter(id.eq(w_id))
-                .load::<models::World>(&self.conn)
-            {
+            let w = match world.filter(id.eq(w_id)).load::<models::World>(&self.conn) {
                 Ok(mut items) => items.pop().unwrap(),
                 Err(_) => {
                     return Err(io::Error::new(io::ErrorKind::Other, "Database error"))
@@ -97,9 +94,7 @@ impl Handler<UpdateWorld> for DbExecutor {
         let mut worlds = Vec::with_capacity(msg.0);
         for _ in 0..msg.0 {
             let w_id = self.rng.gen_range::<i32>(1, 10_000);
-            let mut w = match world
-                .filter(id.eq(w_id))
-                .load::<models::World>(&self.conn)
+            let mut w = match world.filter(id.eq(w_id)).load::<models::World>(&self.conn)
             {
                 Ok(mut items) => items.pop().unwrap(),
                 Err(_) => {

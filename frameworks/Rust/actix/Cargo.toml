@@ -1,6 +1,7 @@
 [package]
 name = "actix"
 version = "0.5.0"
+build = "build.rs"
 
 [[bin]]
 name = "actix"
@@ -28,10 +29,12 @@ tokio-core = "=0.1.12"
 http = "0.1"
 diesel = { version = "1.2", features = ["postgres"] }
 postgres = "0.15"
-horrorshow = "0.6"
 
 actix = "0.5"
 actix-web = "^0.6"
+
+[build-dependencies]
+askama = "0.6"
 
 [profile.release]
 lto = true

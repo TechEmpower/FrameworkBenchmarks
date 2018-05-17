@@ -11,11 +11,13 @@ extern crate serde_derive;
 #[macro_use]
 extern crate diesel;
 #[macro_use]
-extern crate horrorshow;
+extern crate askama;
 
 use actix::prelude::*;
-use actix_web::{http, server, App, AsyncResponder, FutureResponse, HttpRequest,
-                HttpResponse};
+use actix_web::{
+    http, server, App, AsyncResponder, FutureResponse, HttpRequest, HttpResponse,
+};
+use askama::Template;
 use bytes::BytesMut;
 use diesel::prelude::{Connection, PgConnection};
 use futures::Future;
@@ -24,7 +26,6 @@ use std::cmp;
 mod db;
 mod models;
 mod schema;
-mod tmpl;
 mod utils;
 use utils::Writer;
 
@@ -54,12 +55,11 @@ fn world_row(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
 
 fn queries(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
     // get queries parameter
-    let q = if let Some(q) = req.query().get("q") {
-        q.parse::<u16>().ok().unwrap_or(1)
-    } else {
-        1
-    };
-    let q = cmp::min(500, cmp::max(1, q));
+    let q = req
+        .query()
+        .get("q")
+        .map(|q| cmp::min(500, q.parse::<u16>().ok().unwrap_or(1)))
+        .unwrap_or(1);
 
     // run sql queries
     req.clone()
@@ -112,6 +112,12 @@ fn updates(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
         .responder()
 }
 
+#[derive(Template)]
+#[template(path = "fortune.html")]
+struct FortuneTemplate<'a> {
+    items: &'a Vec<models::Fortune>,
+}
+
 fn fortune(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
     req.clone()
         .state()
@@ -120,7 +126,8 @@ fn fortune(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
         .from_err()
         .and_then(move |res| match res {
             Ok(rows) => {
-                let res = tmpl::render_fortune(&rows);
+                let tmpl = FortuneTemplate { items: &rows };
+                let res = tmpl.render().unwrap();
 
                 Ok(HttpResponse::build_from(&req)
                     .header(http::header::SERVER, "Actix")
@@ -145,18 +152,17 @@ fn main() {
     }
 
     // Start db executor actors
-    let addr = SyncArbiter::start(num_cpus::get() * 4, move || {
-        db::DbExecutor::new(db_url)
-    });
+    let addr =
+        SyncArbiter::start(num_cpus::get() * 4, move || db::DbExecutor::new(db_url));
 
     // start http server
     server::new(move || {
         App::with_state(State { db: addr.clone() })
             .default_encoding(http::ContentEncoding::Identity)
-            .resource("/db", |r| r.route().a(world_row))
-            .resource("/fortune", |r| r.route().a(fortune))
-            .resource("/queries", |r| r.route().a(queries))
-            .resource("/updates", |r| r.route().a(updates))
+            .resource("/db", |r| r.route().f(world_row))
+            .resource("/fortune", |r| r.route().f(fortune))
+            .resource("/queries", |r| r.route().f(queries))
+            .resource("/updates", |r| r.route().f(updates))
     }).backlog(8192)
         .bind("0.0.0.0:8080")
         .unwrap()
