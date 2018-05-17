@@ -6,16 +6,23 @@ using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
+using MySql.Data.MySqlClient;
 
 namespace PlatformBenchmarks
 {
     public class Program
     {
+        public static string[] Args;
+
         public static void Main(string[] args)
         {
+            Args = args;
+
             Console.WriteLine(BenchmarkApplication.ApplicationName);
             Console.WriteLine(BenchmarkApplication.Paths.Plaintext);
             Console.WriteLine(BenchmarkApplication.Paths.Json);
+            Console.WriteLine(BenchmarkApplication.Paths.Fortunes);
             DateHeader.SyncDateTimer();
 
             BuildWebHost(args).Run();
@@ -24,9 +31,22 @@ namespace PlatformBenchmarks
         public static IWebHost BuildWebHost(string[] args)
         {
             var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .Build();
+
+            var appSettings = config.Get<AppSettings>();
+            Console.WriteLine($"Database: {appSettings.Database}");
+
+            if (appSettings.Database == DatabaseServer.PostgreSql)
+            {
+                BenchmarkApplication.Db = new RawDb(new DefaultRandom(), NpgsqlFactory.Instance, appSettings);
+            }
+            else if (appSettings.Database == DatabaseServer.MySql)
+            {
+                BenchmarkApplication.Db = new RawDb(new DefaultRandom(), MySqlClientFactory.Instance, appSettings);
+            }
 
             var host = new WebHostBuilder()
                 .UseBenchmarksConfiguration(config)

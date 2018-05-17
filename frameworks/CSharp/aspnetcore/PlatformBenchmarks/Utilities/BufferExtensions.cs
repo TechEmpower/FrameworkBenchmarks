@@ -3,8 +3,10 @@
 
 using System;
 using System.Buffers;
+using System.Buffers.Text;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace PlatformBenchmarks
 {
@@ -19,6 +21,15 @@ namespace PlatformBenchmarks
 
         [ThreadStatic]
         private static byte[] _numericBytesScratch;
+
+        internal static void WriteUtf8String<T>(ref this BufferWriter<T> buffer, string text)
+             where T : struct, IBufferWriter<byte>
+        {
+            var byteCount = Encoding.UTF8.GetByteCount(text);
+            buffer.Ensure(byteCount);
+            byteCount = Encoding.UTF8.GetBytes(text.AsSpan(), buffer.Span);
+            buffer.Advance(byteCount);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static unsafe void WriteNumeric<T>(ref this BufferWriter<T> buffer, uint number)

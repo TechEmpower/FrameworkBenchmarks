@@ -5,6 +5,8 @@ using System;
 using System.Buffers;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
@@ -16,6 +18,8 @@ namespace PlatformBenchmarks
 
         public PipeReader Reader { get; set; }
         public PipeWriter Writer { get; set; }
+
+        protected HtmlEncoder HtmlEncoder { get; } = CreateHtmlEncoder();
 
         private HttpParser<ParsingAdapter> Parser { get; } = new HttpParser<ParsingAdapter>();
 
@@ -128,6 +132,13 @@ namespace PlatformBenchmarks
         public async ValueTask OnReadCompletedAsync()
         {
             await Writer.FlushAsync();
+        }
+
+        private static HtmlEncoder CreateHtmlEncoder()
+        {
+            var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
+            settings.AllowCharacter('\u2014');  // allow EM DASH through
+            return HtmlEncoder.Create(settings);
         }
 
         private static void ThrowUnexpectedEndOfData()
