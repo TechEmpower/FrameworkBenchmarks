@@ -59,7 +59,7 @@ fn queries(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
     let q = req
         .query()
         .get("q")
-        .map(|q| cmp::min(500, q.parse::<u16>().ok().unwrap_or(1)))
+        .map(|q| cmp::min(500, cmp::max(1, q.parse::<u16>().ok().unwrap_or(1))))
         .unwrap_or(1);
 
     // run sql queries
