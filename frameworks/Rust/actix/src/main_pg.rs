@@ -306,7 +306,6 @@ fn main() {
     // start http server
     server::new(move || {
         App::with_state(State { db: addr.clone() })
-            .default_encoding(http::ContentEncoding::Identity)
             .resource("/db", |r| r.route().f(world_row))
             .resource("/queries", |r| r.route().f(queries))
             .resource("/fortune", |r| r.route().f(fortune))
