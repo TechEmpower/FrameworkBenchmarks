@@ -20,7 +20,7 @@ public:
 
    Fortune()
       {
-      U_TRACE_REGISTER_OBJECT(5, Fortune, "")
+      U_TRACE_CTOR(5, Fortune, "")
 
       // coverity[uninit_ctor]
 #  ifdef U_COVERITY_FALSE_POSITIVE
@@ -30,19 +30,19 @@ public:
 
    Fortune(uint32_t _id, const UString& _message) : id(_id), message(_message)
       {
-      U_TRACE_REGISTER_OBJECT(5, Fortune, "%u,%V", _id, _message.rep)
+      U_TRACE_CTOR(5, Fortune, "%u,%V", _id, _message.rep)
       }
 
    Fortune(const Fortune& f) : id(f.id), message((void*)U_STRING_TO_PARAM(f.message))
       {
-      U_TRACE_REGISTER_OBJECT(5, Fortune, "%p", &f)
+      U_TRACE_CTOR(5, Fortune, "%p", &f)
 
       U_MEMORY_TEST_COPY(f)
       }
 
    ~Fortune()
       {
-      U_TRACE_UNREGISTER_OBJECT(5, Fortune)
+      U_TRACE_DTOR(5, Fortune)
       }
 
    // SERVICE

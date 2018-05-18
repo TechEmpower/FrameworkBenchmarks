@@ -20,8 +20,9 @@ static void usp_fork_edb()
       {
       U_WARNING("usp_fork_edb(): connection disabled or failed");
 
-      delete es;
-             es = U_NULLPTR;
+      U_DELETE(es)
+
+      es = U_NULLPTR;
 
       return;
       }
@@ -34,7 +35,7 @@ static void usp_end_edb()
 {
    U_TRACE(5, "::usp_end_edb()")
 
-   if (es) delete es;
+   if (es) U_DELETE(es)
 }
 #endif
 -->

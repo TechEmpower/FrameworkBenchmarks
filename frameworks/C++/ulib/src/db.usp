@@ -19,8 +19,9 @@ static void usp_fork_db()
       {
       U_WARNING("usp_fork_db(): we cound't connect to db");
 
-      delete psql_db;
-             psql_db = U_NULLPTR;
+      U_DELETE(psql_db)
+
+      psql_db = U_NULLPTR;
 
       return;
       }
@@ -40,9 +41,9 @@ static void usp_end_db()
 
    if (pstmt_db)
       {
-      delete pstmt_db;
-      delete pworld_db;
-      delete psql_db;
+      U_DELETE(pstmt_db)
+      U_DELETE(pworld_db)
+      U_DELETE(psql_db)
       }
 }
 #endif

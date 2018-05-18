@@ -5,7 +5,7 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static bson_t* query;  
+static bson_t* query;
 static UMongoDBClient* mc;
 
 static void usp_fork_mdb()
@@ -18,8 +18,9 @@ static void usp_fork_mdb()
       {
       U_WARNING("usp_fork_mdb(): connection failed");
 
-      delete mc;
-             mc = U_NULLPTR;
+      U_DELETE(mc)
+
+      mc = U_NULLPTR;
 
       return;
       }
@@ -28,8 +29,9 @@ static void usp_fork_mdb()
       {
       U_WARNING("usp_fork_mdb(): selectCollection() failed");
 
-      delete mc;
-             mc = U_NULLPTR;
+      U_DELETE(mc)
+
+      mc = U_NULLPTR;
 
       return;
       }
@@ -44,7 +46,7 @@ static void usp_end_mdb()
 
    if (query)
       {
-      delete mc;
+      U_DELETE(mc)
 
       U_SYSCALL_VOID(bson_destroy, "%p", query);
       }
