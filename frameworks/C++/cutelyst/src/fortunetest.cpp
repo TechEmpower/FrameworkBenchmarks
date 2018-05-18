@@ -39,9 +39,14 @@ void FortuneTest::fortunes_grantlee_postgres(Context *c)
                             {QStringLiteral("id"), 0},
                             {QStringLiteral("message"), QStringLiteral("Additional fortune added at request time.")},
                         });
+        std::sort(fortunes.begin(), fortunes.end(), [] (const QVariant &a1, const QVariant &a2) {
+            return a1.toMap()[QStringLiteral("message")].toString() < a2.toMap()[QStringLiteral("message")].toString();
+        });
         c->setStash(QStringLiteral("template"), QStringLiteral("fortunes.html"));
         c->setStash(QStringLiteral("fortunes"), fortunes);
-        c->view()->execute(c);
+        static thread_local View *view = c->view();
+        view->execute(c);
+        c->response()->setContentType(QStringLiteral("text/html; charset=UTF-8"));
     }
 }
 
@@ -56,9 +61,14 @@ void FortuneTest::fortunes_grantlee_mysql(Context *c)
                             {QStringLiteral("id"), 0},
                             {QStringLiteral("message"), QStringLiteral("Additional fortune added at request time.")},
                         });
+        std::sort(fortunes.begin(), fortunes.end(), [] (const QVariant &a1, const QVariant &a2) {
+            return a1.toMap()[QStringLiteral("message")].toString() < a2.toMap()[QStringLiteral("message")].toString();
+        });
         c->setStash(QStringLiteral("template"), QStringLiteral("fortunes.html"));
         c->setStash(QStringLiteral("fortunes"), fortunes);
-        c->view()->execute(c);
+        static thread_local View *view = c->view();
+        view->execute(c);
+        c->response()->setContentType(QStringLiteral("text/html; charset=UTF-8"));
     }
 }
 
