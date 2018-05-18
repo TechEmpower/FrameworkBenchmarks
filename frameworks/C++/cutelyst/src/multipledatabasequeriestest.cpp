@@ -55,5 +55,5 @@ void MultipleDatabaseQueriesTest::processQuery(Context *c, QSqlQuery &query)
                      });
     }
 
-    c->response()->setJsonBody(QJsonDocument(array));
+    c->response()->setJsonArrayBody(array);
 }
