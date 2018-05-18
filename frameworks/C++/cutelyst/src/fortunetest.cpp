@@ -1,6 +1,7 @@
 #include "fortunetest.h"
 
 #include <Cutelyst/Plugins/Utils/Sql>
+#include <Cutelyst/View>
 
 #include <QSqlQuery>
 
@@ -25,6 +26,40 @@ void FortuneTest::fortunes_raw_mysql(Context *c)
                 QStringLiteral("mysql"));
     auto fortunes = processQuery(c, query);
     renderRaw(c, fortunes);
+}
+
+void FortuneTest::fortunes_grantlee_postgres(Context *c)
+{
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
+                QLatin1String("SELECT id, message FROM fortune"),
+                QStringLiteral("postgres"));
+    if (query.exec()) {
+        QVariantList fortunes = Sql::queryToMapList(query);
+        fortunes.append(QVariantMap{
+                            {QStringLiteral("id"), 0},
+                            {QStringLiteral("message"), QStringLiteral("Additional fortune added at request time.")},
+                        });
+        c->setStash(QStringLiteral("template"), QStringLiteral("fortunes.html"));
+        c->setStash(QStringLiteral("fortunes"), fortunes);
+        c->view()->execute(c);
+    }
+}
+
+void FortuneTest::fortunes_grantlee_mysql(Context *c)
+{
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
+                QLatin1String("SELECT id, message FROM fortune"),
+                QStringLiteral("mysql"));
+    if (query.exec()) {
+        QVariantList fortunes = Sql::queryToMapList(query);
+        fortunes.append(QVariantMap{
+                            {QStringLiteral("id"), 0},
+                            {QStringLiteral("message"), QStringLiteral("Additional fortune added at request time.")},
+                        });
+        c->setStash(QStringLiteral("template"), QStringLiteral("fortunes.html"));
+        c->setStash(QStringLiteral("fortunes"), fortunes);
+        c->view()->execute(c);
+    }
 }
 
 FortuneList FortuneTest::processQuery(Context *c, QSqlQuery &query)
