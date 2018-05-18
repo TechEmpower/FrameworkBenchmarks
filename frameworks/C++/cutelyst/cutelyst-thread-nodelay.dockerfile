@@ -31,7 +31,7 @@ CMD cutelyst-wsgi2 \
     --ini /cutelyst.ini:uwsgi \
     --application ${CUTELYST_APP} \
     --processes=${C_PROCESSES} \
-    --threads=$(( (`nproc` + 1) / 2 )) \
+    --threads=$(nproc) \
     --cpu-affinity=${CPU_AFFINITY} \
     --socket-timeout 0 \
     --reuse-port \
