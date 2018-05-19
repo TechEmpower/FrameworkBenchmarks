@@ -11,6 +11,11 @@ namespace Benchmarks.AspNet.Models
         public EntityFramework(string providerName)
             : base(providerName)
         {
+            Configuration.AutoDetectChangesEnabled = false;
+            Configuration.EnsureTransactionsForFunctionsAndCommands = false;
+            Configuration.LazyLoadingEnabled = false;
+            Configuration.ProxyCreationEnabled = false;
+            Configuration.ValidateOnSaveEnabled = false;
         }
         
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -19,8 +24,6 @@ namespace Benchmarks.AspNet.Models
             Database.SetInitializer<EntityFramework>(null);
 
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-
-            modelBuilder.Ignore<MongoWorld>();
             
             if (Database.Connection is Npgsql.NpgsqlConnection)
                 modelBuilder.Conventions.Add(new PostgreSqlConfigurationConvention());
