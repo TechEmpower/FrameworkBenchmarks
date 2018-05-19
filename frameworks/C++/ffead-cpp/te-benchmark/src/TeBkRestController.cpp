@@ -7,8 +7,10 @@
 
 #include "TeBkRestController.h"
 
+TeBkRestController::TeBkRestController() {
+}
+
 TeBkRestController::~TeBkRestController() {
-	// TODO Auto-generated destructor stub
 }
 
 TeBkMessage TeBkRestController::json() {
@@ -38,7 +40,9 @@ std::vector<TeBkWorld> TeBkRestController::queries(std::string queries) {
 	else if(queryCount>500)queryCount=500;
 
 	DataSourceInterface* sqli = DataSourceManager::getImpl();
-	sqli->startSession();
+
+	std::string tbName = "world";
+	sqli->startSession(&tbName);
 	for (int c = 0; c < queryCount; ++c) {
 		int rid = rand() % 10000 + 1;
 		GenericObject id;
@@ -62,21 +66,70 @@ std::vector<TeBkWorld> TeBkRestController::updates(std::string queries) {
 	else if(queryCount>500)queryCount=500;
 
 	DataSourceInterface* sqli = DataSourceManager::getImpl();
-	sqli->startSession();
+
+	std::string tbName = "world";
+	sqli->startSession(&tbName);
 	for (int c = 0; c < queryCount; ++c) {
 		int rid = rand() % 10000 + 1;
 		GenericObject id;
 		id << rid;
 		TeBkWorld w = sqli->get<TeBkWorld>(id);
-		w.setRandomNumber(rand() % 10000 + 1);
+		int newRandomNumber = rand() % 10000 + 1;
+		if(w.getRandomNumber() == newRandomNumber) {
+			newRandomNumber -= 1;
+		}
+		w.setRandomNumber(newRandomNumber);
 		wlst.push_back(w);
 	}
+
+	sqli->startTransaction();
 	sqli->bulkUpdate<TeBkWorld>(wlst);
+	sqli->commit();
+
 	sqli->endSession();
+
 	delete sqli;
 	return wlst;
 }
 
 std::string TeBkRestController::plaintext() {
 	return "Hello, World!";
+}
+
+void TeBkRestController::updateCache() {
+	CacheInterface* cchi = CacheManager::getImpl();
+	DataSourceInterface* sqli = DataSourceManager::getImpl();
+	std::string tbName = "world";
+	sqli->startSession(&tbName);
+	for (int c = 1; c <= 10000; ++c) {
+		GenericObject id;
+		id << c;
+		TeBkWorld w = sqli->get<TeBkWorld>(id);
+		cchi->setO(CastUtil::lexical_cast<std::string>(c), w);
+	}
+	sqli->endSession();
+	delete sqli;
+	delete cchi;
+}
+
+std::vector<TeBkWorld> TeBkRestController::cachedWorlds(std::string count) {
+	int queryCount = 1;
+	try {
+		queryCount = CastUtil::lexical_cast<int>(count);
+	} catch(...) {
+	}
+	if(queryCount<1)queryCount=1;
+	else if(queryCount>500)queryCount=500;
+
+	CacheInterface* cchi = CacheManager::getImpl();
+	std::vector<std::string> keys;
+	for (int c = 0; c < queryCount; ++c) {
+		int rid = rand() % 10000 + 1;
+		keys.push_back(CastUtil::lexical_cast<std::string>(rid));
+	}
+
+	std::vector<TeBkWorld> wlst = cchi->mgetO<TeBkWorld>(keys);
+
+	delete cchi;
+	return wlst;
 }

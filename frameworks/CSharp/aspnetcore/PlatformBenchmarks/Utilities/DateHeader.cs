@@ -37,7 +37,10 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
             s_headerBytesScratch[suffixIndex] = (byte)'\r';
             s_headerBytesScratch[suffixIndex + 1] = (byte)'\n';
             SetDateValues(DateTimeOffset.UtcNow);
+            SyncDateTimer();
         }
+
+        public static void SyncDateTimer() => s_timer.Change(1000, 1000);
 
         public static ReadOnlySpan<byte> HeaderBytes => s_headerBytesMaster;
 
@@ -45,7 +48,7 @@ namespace Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
         {
             lock (s_headerBytesScratch)
             {
-                if (!Utf8Formatter.TryFormat(value, s_headerBytesScratch.AsSpan().Slice(prefixLength), out int written, 'R'))
+                if (!Utf8Formatter.TryFormat(value, s_headerBytesScratch.AsSpan(prefixLength), out int written, 'R'))
                 {
                     throw new Exception("date time format failed");
                 }

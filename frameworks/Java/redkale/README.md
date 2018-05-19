@@ -1,4 +1,4 @@
-# Vertx Benchmarking Test
+# Redkale Benchmarking Test
 
 This is the Redkale portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 

@@ -23,6 +23,10 @@ void TeBkFortune::setMessage(const std::string& message) {
 	this->message = message;
 }
 
+TeBkFortune::TeBkFortune() {
+	id = 0;
+}
+
 TeBkFortune::~TeBkFortune() {
 	// TODO Auto-generated destructor stub
 }

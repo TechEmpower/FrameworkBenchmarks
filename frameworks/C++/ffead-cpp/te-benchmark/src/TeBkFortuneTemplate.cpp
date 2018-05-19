@@ -11,9 +11,8 @@ TeBkFortuneTemplate::~TeBkFortuneTemplate() {
 	// TODO Auto-generated destructor stub
 }
 
-Context TeBkFortuneTemplate::getContext(HttpRequest* request)
+void TeBkFortuneTemplate::getContext(HttpRequest* request, Context* context)
 {
-	Context cnt;
 	DataSourceInterface* sqli = DataSourceManager::getImpl();
 	std::vector<TeBkFortune> flst = sqli->getAll<TeBkFortune>();
 	for(int i=0;i<(int)flst.size();i++)
@@ -30,8 +29,6 @@ Context TeBkFortuneTemplate::getContext(HttpRequest* request)
 	std::sort (flst.begin(), flst.end());
 	delete sqli;
 
-	GenericObject fortunes;
+	GenericObject& fortunes = (*context)["fortunes"];
 	fortunes << flst;
-	cnt["fortunes"] = fortunes;
-	return cnt;
 }

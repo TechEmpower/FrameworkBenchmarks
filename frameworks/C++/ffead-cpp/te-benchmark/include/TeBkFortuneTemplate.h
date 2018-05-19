@@ -19,7 +19,7 @@
 class TeBkFortuneTemplate {
 public:
 	virtual ~TeBkFortuneTemplate();
-	Context getContext(HttpRequest* request);
+	void getContext(HttpRequest* request, Context* context);
 };
 
 #endif /* TEBKFORTUNETEMPLATE_H_ */
