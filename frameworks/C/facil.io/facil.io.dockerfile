@@ -15,4 +15,4 @@ RUN cp -f bench_app.c facil_app/src/app.c
 RUN cd facil_app && make -j build
 
 # Run the app
-CMD ./facil_app/tmp/demo -p 8080 -db "tfb-database" -w 4 -t -4
+CMD ./facil_app/tmp/demo -p 8080 -db "tfb-database" -w 4 -t -5
