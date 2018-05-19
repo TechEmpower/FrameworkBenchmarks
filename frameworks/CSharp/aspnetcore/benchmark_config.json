@@ -34,7 +34,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore",
+      "display_name": "aspcore-pg",
       "notes": "",
       "versus": ""
     },
@@ -52,7 +52,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore",
+      "display_name": "aspcore-my",
       "notes": "",
       "versus": ""
     },
@@ -73,7 +73,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mw",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore"
     },
     "mw-ado-pg": {
       "db_url": "/db/raw",
@@ -94,7 +94,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mw-ado-pg",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-pg"
     },
     "mw-ef-pg": {
       "db_url": "/db/ef",
@@ -115,7 +115,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mw-ef-pg",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-pg"
     },
     "mw-dap-pg": {
       "db_url": "/db/dapper",
@@ -136,7 +136,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mw-dap-pg",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-pg"
     },
     "mw-ado-my": {
       "db_url": "/db/raw",
@@ -157,7 +157,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mw-ado-my",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-my"
     },
     "mw-dap-my": {
       "db_url": "/db/dapper",
@@ -178,7 +178,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mw-dap-my",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-my"
     },    
     "mvc": {
       "plaintext_url": "/mvc/plaintext",
@@ -197,7 +197,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mvc",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore"
     },
     "mvc-ado-pg": {
       "db_url": "/mvc/db/raw",
@@ -218,7 +218,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mvc-ado-pg",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-pg"
     },
     "mvc-ef-pg": {
       "db_url": "/mvc/db/ef",
@@ -239,7 +239,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mvc-ef-pg",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-pg"
     },
     "mvc-dap-pg": {
       "db_url": "/mvc/db/dapper",
@@ -260,7 +260,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mvc-dap-pg",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-pg"
     },
     "mvc-ado-my": {
       "db_url": "/mvc/db/raw",
@@ -281,7 +281,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mvc-ado-my",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-my"
     },
     "mvc-dap-my": {
       "db_url": "/mvc/db/dapper",
@@ -302,7 +302,7 @@
       "database_os": "Linux",
       "display_name": "aspcore-mvc-dap-my",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-my"
     }
   }]
 }
