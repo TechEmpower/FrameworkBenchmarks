@@ -76,6 +76,16 @@
       <groupId>org.actframework</groupId>
       <artifactId>act-sql-common</artifactId>
       <version>${act-sql-common.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.avaje.ebean</groupId>
+          <artifactId>ebean</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.avaje.ebean</groupId>
+          <artifactId>ebean-agent</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
   </dependencies>
