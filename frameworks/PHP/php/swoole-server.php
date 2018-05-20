@@ -75,8 +75,8 @@ $server->on('request', function ($req, $res) {
             asort($arr);
 
             $html = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-            foreach ($arr as $id => $fortune)
-                $html .= "<tr><td>" . $id . "</td><td>" . htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8') . "</td></tr>";
+            foreach ($arr as $fortune)
+                $html .= "<tr><td>" . $fortune['id'] . "</td><td>" . htmlspecialchars($fortune['message'], ENT_QUOTES, 'UTF-8') . "</td></tr>";
 
             $html .= "</table></body></html>";
 
