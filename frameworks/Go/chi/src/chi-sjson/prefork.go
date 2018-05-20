@@ -26,7 +26,7 @@ func doPrefork(isChild bool, bind string) (listener net.Listener) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		children := make([]*exec.Cmd, runtime.NumCPU())
+		children := make([]*exec.Cmd, runtime.NumCPU()/2)
 		for i := range children {
 			args := make([]string, len(os.Args)-1)
 			copy(args, os.Args[1:])
