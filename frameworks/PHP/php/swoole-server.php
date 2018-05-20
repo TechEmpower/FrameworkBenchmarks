@@ -71,12 +71,13 @@ $server->on('request', function ($req, $res) {
 
             // Store result in array.
             //$arr = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-            $arr[0] = 'Additional fortune added at request time.';
-            asort($arr);
+            array_unshift($arr[0], 'Additional fortune added at request time.');
+            asort($arr[0]);
 
             $html = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
             foreach ($arr as $fortune)
-                $html .= "<tr><td>" . $fortune['id'] . "</td><td>" . htmlspecialchars($fortune['message'], ENT_QUOTES, 'UTF-8') . "</td></tr>";
+                foreach ($fortune as $id => $message)             
+                    $html .= "<tr><td>" . $id . "</td><td>" . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . "</td></tr>";
 
             $html .= "</table></body></html>";
 
