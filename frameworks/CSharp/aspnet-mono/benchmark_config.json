@@ -1,5 +1,5 @@
 {
-  "framework": "aspnet",
+  "framework": "aspnet-mono",
   "tests": [{
     "default": {
       "json_url": "/json/default",
@@ -18,9 +18,9 @@
       "database_os": "Linux",
       "display_name": "ASP.NET",
       "notes": "",
-      "versus": "aspnet-mono"
+      "versus": ""
     },
-    "mono-jsonnet": {
+    "jsonnet": {
       "json_url": "/json/jsonnet",
       "port": 8080,
       "approach": "Realistic",
@@ -38,7 +38,7 @@
       "notes": "",
       "versus": "aspnet-mono"
     },
-    "mono-servicestack": {
+    "servicestack": {
       "json_url": "/json/servicestack",
       "port": 8080,
       "approach": "Realistic",
@@ -56,9 +56,7 @@
       "notes": "",
       "versus": "aspnet-mono"
     },
-    "mono-mysql-raw": {
-      "json_url": "/json/default",
-      "plaintext_url": "/plaintext",
+    "mysql": {
       "db_url": "/ado/mysql",
       "query_url": "/ado/mysql?queries=",
       "fortune_url": "/ado/mysql/fortunes",
@@ -75,11 +73,11 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET-raw",
+      "display_name": "ASP.NET MySQL",
       "notes": "",
-      "versus": "aspnet"
+      "versus": ""
     },
-    "mono-mysql-entityframework": {
+    "mysql-ef": {
       "db_url": "/entityframework/mysql",
       "query_url": "/entityframework/mysql?queries=",
       "fortune_url": "/entityframework/mysql/fortunes",
@@ -96,9 +94,9 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "EntityFramework",
+      "display_name": "ASP.NET EntityFramework",
       "notes": "Entity framework",
-      "versus": "aspnet"
+      "versus": "aspnet-mysql"
     }
   }]
 }
