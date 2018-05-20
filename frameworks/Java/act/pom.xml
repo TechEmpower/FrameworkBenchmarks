@@ -22,7 +22,7 @@
   <groupId>com.techempower</groupId>
   <artifactId>actframework</artifactId>
   <packaging>jar</packaging>
-  <version>1.8.8.1</version>
+  <version>1.8.8.2</version>
 
   <name>TEB ActFramework Project</name>
   <description>TEB benchmark project with ActFramework</description>
@@ -36,13 +36,16 @@
   <parent>
     <groupId>org.actframework</groupId>
     <artifactId>act-starter-parent</artifactId>
-    <version>1.8.8.2-SNAPSHOT</version>
+    <version>1.8.8.2</version>
   </parent>
 
   <properties>
     <java.version>1.8</java.version>
     <mysql.version>5.1.45</mysql.version>
     <postgres-jdbc.version>42.2.2</postgres-jdbc.version>
+    <morphia.version>1.3.2</morphia.version>
+    <ebean-annotation.version>3.4</ebean-annotation.version>
+    <act-sql-common.version>1.3.4</act-sql-common.version>
     <app.entry>com.techempower.act.AppEntry</app.entry>
   </properties>
 
@@ -60,13 +63,19 @@
     <dependency>
       <groupId>io.ebean</groupId>
       <artifactId>ebean-annotation</artifactId>
-      <version>3.4</version>
+      <version>${ebean-annotation.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.mongodb.morphia</groupId>
       <artifactId>morphia</artifactId>
-      <version>1.3.2</version>
+      <version>${morphia.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.actframework</groupId>
+      <artifactId>act-sql-common</artifactId>
+      <version>${act-sql-common.version}</version>
     </dependency>
 
   </dependencies>
