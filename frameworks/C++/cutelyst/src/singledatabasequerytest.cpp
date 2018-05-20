@@ -38,8 +38,8 @@ void SingleDatabaseQueryTest::processQuery(Context *c, QSqlQuery &query)
         return;
     }
 
-    c->response()->setJsonBody(QJsonDocument({
-                                                 {QStringLiteral("id"), query.value(0).toInt()},
-                                                 {QStringLiteral("randomNumber"), query.value(1).toInt()}
-                                             }));
+    c->response()->setJsonObjectBody({
+                                         {QStringLiteral("id"), query.value(0).toInt()},
+                                         {QStringLiteral("randomNumber"), query.value(1).toInt()}
+                                     });
 }

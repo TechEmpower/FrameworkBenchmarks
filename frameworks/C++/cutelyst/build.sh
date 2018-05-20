@@ -18,7 +18,7 @@ apt update -qq && \
     libzmq3-dev \
     libpcre3-dev \
     zlib1g-dev \
-    nginx 
+    nginx
 
 wget -q https://github.com/cutelyst/cutelyst/archive/v$CUTELYST_VER.tar.gz -O cutelyst-$CUTELYST_VER.tar.gz && \
     tar zxf cutelyst-$CUTELYST_VER.tar.gz && \
