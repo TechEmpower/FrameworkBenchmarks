@@ -71,7 +71,7 @@ $server->on('request', function ($req, $res) {
 
             // Store result in array.
             //$arr = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-            //$arr[0] = 'Additional fortune added at request time.';
+            $arr[0] = 'Additional fortune added at request time.';
             asort($arr);
 
             $html = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
