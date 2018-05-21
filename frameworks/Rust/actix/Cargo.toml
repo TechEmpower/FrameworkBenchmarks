@@ -12,6 +12,10 @@ name = "actix-raw"
 path = "src/main_raw.rs"
 
 [[bin]]
+name = "actix-raw-db"
+path = "src/main_raw_db.rs"
+
+[[bin]]
 name = "actix-diesel"
 path = "src/main_diesel.rs"
 

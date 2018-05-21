@@ -20,6 +20,7 @@
       "versus": ""
     },
     "raw": {
+      "fortune_url": "/fortune",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -34,6 +35,25 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "actix-raw",
+      "notes": "",
+      "versus": ""
+    },
+    "raw-db": {
+      "db_url": "/db",
+      "query_url": "/queries?q=",
+      "update_url": "/updates?q=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "actix",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "actix-web",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "actix-raw-db",
       "notes": "",
       "versus": ""
     },

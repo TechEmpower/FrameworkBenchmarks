@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use bytes::BytesMut;
 use std::io;
 

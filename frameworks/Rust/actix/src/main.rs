@@ -12,14 +12,7 @@ use actix_web::{http, server, App, HttpRequest, HttpResponse};
 use bytes::BytesMut;
 
 mod utils;
-use utils::Writer;
-
-const SIZE: usize = 29;
-
-#[derive(Serialize, Deserialize)]
-pub struct Message {
-    pub message: &'static str,
-}
+use utils::{Message, Writer, SIZE};
 
 fn json(req: HttpRequest) -> HttpResponse {
     let message = Message {
