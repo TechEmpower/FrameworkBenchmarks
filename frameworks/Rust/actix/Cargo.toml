@@ -1,6 +1,6 @@
 [package]
 name = "actix"
-version = "0.5.0"
+version = "0.6.0"
 build = "build.rs"
 
 [[bin]]
@@ -39,8 +39,7 @@ diesel = { version = "1.2", features = ["postgres"] }
 postgres = "0.15"
 
 actix = "0.5"
-#actix-web = { version = "^0.6", default-features = false }
-actix-web = { path = "../../../../actix-web", default-features = false }
+actix-web = { version = "^0.6", default-features = false }
 
 [build-dependencies]
 askama = "0.6"
