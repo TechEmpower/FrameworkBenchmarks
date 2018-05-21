@@ -13,7 +13,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.1.0-rc1-final" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="2.1.0-rc1-final" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets" Version="2.1.0-rc1-final" />
+    <!-- Fix https://github.com/aspnet/KestrelHttpServer/pull/2562  -->
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets" Version="2.1.0-rtm-30793" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.1.0-rc1-final" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.0-rc1-final" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
