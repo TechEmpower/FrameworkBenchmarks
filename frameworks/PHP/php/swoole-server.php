@@ -66,17 +66,17 @@ $server->on('request', function ($req, $res) {
             ];
             $db->connect($server);
 
+            $fortune = [];
             // Define query
             $arr = $db->query('SELECT id, message FROM Fortune');
-
-            // Store result in array.
-            //$arr = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-            array_unshift($arr[0], 'Additional fortune added at request time.');
-            asort($arr);
+            foreach ($arr as $row) 
+                $fortune[$row['id']] = $row['message'];    
+            $fortune[0] = 'Additional fortune added at request time.';           
+            asort($fortune);
 
             $html = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-            foreach ($arr as $fortune)     
-                $html .= "<tr><td>" . $fortune[0] . "</td><td>" . htmlspecialchars($fortune[1], ENT_QUOTES, 'UTF-8') . "</td></tr>";
+            foreach ($fortune as $id => $message)     
+                $html .= "<tr><td>" . $id . "</td><td>" . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . "</td></tr>";
 
             $html .= "</table></body></html>";
 
