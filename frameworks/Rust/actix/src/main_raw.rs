@@ -35,7 +35,7 @@ const HTTPOK: &[u8] = b"HTTP/1.1 200 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: Actix\r\n";
 const HDR_CTPLAIN: &[u8] = b"Content-Type: text/plain";
 const HDR_CTJSON: &[u8] = b"Content-Type: application/json";
-const HDR_CTHTML: &[u8] = b"Content-Type: text/html";
+const HDR_CTHTML: &[u8] = b"Content-Type: text/html; charset=utf-8";
 const BODY: &[u8] = b"Hello, World!";
 
 struct App {
