@@ -56,8 +56,8 @@ type Message struct {
 	Message string
 }
 
-// MarshalObject encodes the message as JSON
-func (m *Message) MarshalObject(dec *gojay.Encoder) {
+// MarshalJSONObject encodes the message as JSON
+func (m *Message) MarshalJSONObject(dec *gojay.Encoder) {
 	dec.AddStringKey("message", m.Message)
 }
 
@@ -75,8 +75,8 @@ type World struct {
 // Worlds is a list of World
 type Worlds []World
 
-// MarshalArray marshals the list of worlds
-func (ws Worlds) MarshalArray(enc *gojay.Encoder) {
+// MarshalJSONArray marshals the list of worlds
+func (ws Worlds) MarshalJSONArray(enc *gojay.Encoder) {
 	for _, w := range ws {
 		enc.AddObject(&w)
 	}
@@ -87,8 +87,8 @@ func (ws Worlds) IsNil() bool {
 	return ws == nil
 }
 
-// MarshalObject encodes the message as JSON
-func (w *World) MarshalObject(dec *gojay.Encoder) {
+// MarshalJSONObject encodes the message as JSON
+func (w *World) MarshalJSONObject(dec *gojay.Encoder) {
 	dec.AddIntKey("id", int(w.ID))
 	dec.AddIntKey("randomNumber", int(w.RandomNumber))
 }
