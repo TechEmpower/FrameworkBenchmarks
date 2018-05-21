@@ -3,7 +3,7 @@ name = "actix"
 version = "0.5.0"
 dependencies = [
  "actix 0.5.7 (registry+https://github.com/rust-lang/crates.io-index)",
- "actix-web 0.6.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "actix-web 0.6.7",
  "askama 0.6.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "bytes 0.4.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "diesel 1.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -44,7 +44,6 @@ dependencies = [
 [[package]]
 name = "actix-web"
 version = "0.6.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "actix 0.5.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "base64 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1488,7 +1487,6 @@ dependencies = [
 
 [metadata]
 "checksum actix 0.5.7 (registry+https://github.com/rust-lang/crates.io-index)" = "7f01f05bfb6e77d47a04752efdac401e0e20b49130ac673cde367cda8eb7c92c"
-"checksum actix-web 0.6.7 (registry+https://github.com/rust-lang/crates.io-index)" = "ed40e344fc684ad0aeae72effef4f0d1a900daeacf59681a686518550103409b"
 "checksum actix_derive 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c4b1dc922654b9aca7a8a31eab875fde804fa9fbd67f220f2e457787b23590f2"
 "checksum aho-corasick 0.6.4 (registry+https://github.com/rust-lang/crates.io-index)" = "d6531d44de723825aa81398a6415283229725a00fa30713812ab9323faa82fc4"
 "checksum arrayref 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)" = "0fd1479b7c29641adbd35ff3b5c293922d696a92f25c8c975da3e0acbc87258f"

@@ -19,6 +19,24 @@
       "notes": "",
       "versus": ""
     },
+    "raw": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "actix",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "actix-web",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "actix-raw",
+      "notes": "",
+      "versus": ""
+    },
     "diesel": {
       "db_url": "/db",
       "fortune_url": "/fortune",

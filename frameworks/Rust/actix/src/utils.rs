@@ -1,6 +1,13 @@
 use bytes::BytesMut;
 use std::io;
 
+pub const SIZE: usize = 29;
+
+#[derive(Serialize, Deserialize)]
+pub struct Message {
+    pub message: &'static str,
+}
+
 pub struct Writer<'a>(pub &'a mut BytesMut);
 
 impl<'a> io::Write for Writer<'a> {

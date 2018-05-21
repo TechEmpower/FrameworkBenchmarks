@@ -8,6 +8,10 @@ name = "actix"
 path = "src/main.rs"
 
 [[bin]]
+name = "actix-raw"
+path = "src/main_raw.rs"
+
+[[bin]]
 name = "actix-diesel"
 path = "src/main_diesel.rs"
 
@@ -31,7 +35,8 @@ diesel = { version = "1.2", features = ["postgres"] }
 postgres = "0.15"
 
 actix = "0.5"
-actix-web = { version = "^0.6", default-features = false }
+#actix-web = { version = "^0.6", default-features = false }
+actix-web = { path = "../../../../actix-web", default-features = false }
 
 [build-dependencies]
 askama = "0.6"
