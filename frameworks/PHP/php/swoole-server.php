@@ -70,7 +70,7 @@ $server->on('request', function ($req, $res) {
             // Define query
             $arr = $db->query('SELECT id, message FROM Fortune');
             foreach ($arr as $row) 
-                $fortune[$row[0]] = $row[1];    
+                $fortune[$row['id']] = $row['message'];
             $fortune[0] = 'Additional fortune added at request time.';           
             asort($fortune);
 
