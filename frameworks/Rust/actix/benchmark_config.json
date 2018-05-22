@@ -15,7 +15,7 @@
       "webserver": "actix-web",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actix",
+      "display_name": "Actix",
       "notes": "",
       "versus": ""
     },
@@ -25,7 +25,7 @@
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Micro",
+      "classification": "Platform",
       "database": "Postgres",
       "framework": "actix",
       "language": "Rust",
@@ -34,7 +34,7 @@
       "webserver": "actix-web",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actix-raw",
+      "display_name": "Actix [raw]",
       "notes": "",
       "versus": ""
     },
@@ -44,7 +44,7 @@
       "update_url": "/updates?q=",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Micro",
+      "classification": "Platform",
       "database": "Postgres",
       "framework": "actix",
       "language": "Rust",
@@ -53,7 +53,7 @@
       "webserver": "actix-web",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actix-raw-db",
+      "display_name": "Actix [pg-raw]",
       "notes": "",
       "versus": ""
     },
@@ -73,7 +73,7 @@
       "webserver": "actix-web",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actix-diesel",
+      "display_name": "Actix [Diesel]",
       "notes": "",
       "versus": ""
     },
@@ -93,7 +93,7 @@
       "webserver": "actix-web",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actix-pg",
+      "display_name": "Actix [Postgres]",
       "notes": "",
       "versus": ""
     }
