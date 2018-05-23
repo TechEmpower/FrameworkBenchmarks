@@ -16,9 +16,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore",
+      "display_name": "ASP.NET Core",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore"
     },
     "ado-pg": {
       "fortune_url": "/fortunes",
@@ -34,9 +34,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-pg",
+      "display_name": "ASP.NET Core, ADO.NET",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-ado-pg"
     },
     "ado-my": {
       "fortune_url": "/fortunes",
@@ -52,9 +52,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-my",
+      "display_name": "ASP.NET Core, ADO.NET",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-ado-my"
     },
     "mw": {
       "plaintext_url": "/plaintext",
@@ -71,7 +71,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-mw",
+      "display_name": "ASP.NET Core, Middleware",
       "notes": "",
       "versus": "aspcore"
     },
@@ -92,9 +92,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-mw-ado-pg",
+      "display_name": "ASP.NET Core, Middleware, ADO.NET",
       "notes": "",
-      "versus": "aspcore-pg"
+      "versus": "aspcore-ado-pg"
     },
     "mw-ef-pg": {
       "db_url": "/db/ef",
@@ -113,9 +113,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-mw-ef-pg",
+      "display_name": "ASP.NET Core, Middleware, Entity Framework Core",
       "notes": "",
-      "versus": "aspcore-pg"
+      "versus": "aspcore-ado-pg"
     },
     "mw-dap-pg": {
       "db_url": "/db/dapper",
@@ -134,9 +134,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-mw-dap-pg",
+      "display_name": "ASP.NET Core, Middleware, Dapper",
       "notes": "",
-      "versus": "aspcore-pg"
+      "versus": "aspcore-ado-pg"
     },
     "mw-ado-my": {
       "db_url": "/db/raw",
@@ -155,9 +155,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-mw-ado-my",
+      "display_name": "ASP.NET Core, Middleware, ADO.NET",
       "notes": "",
-      "versus": "aspcore-my"
+      "versus": "aspcore-ado-my"
     },
     "mw-dap-my": {
       "db_url": "/db/dapper",
@@ -176,9 +176,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-mw-dap-my",
+      "display_name": "ASP.NET Core, Middleware, Dapper",
       "notes": "",
-      "versus": "aspcore-my"
+      "versus": "aspcore-ado-my"
     },    
     "mvc": {
       "plaintext_url": "/mvc/plaintext",
@@ -216,9 +216,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-mvc-ado-pg",
+      "display_name": "ASP.NET Core, MVC, ADO.NET",
       "notes": "",
-      "versus": "aspcore-pg"
+      "versus": "aspcore-ado-pg"
     },
     "mvc-ef-pg": {
       "db_url": "/mvc/db/ef",
@@ -237,9 +237,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-mvc-ef-pg",
+      "display_name": "ASP.NET Core, MVC, Entity Framework Core",
       "notes": "",
-      "versus": "aspcore-pg"
+      "versus": "aspcore-ado-pg"
     },
     "mvc-dap-pg": {
       "db_url": "/mvc/db/dapper",
@@ -258,9 +258,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-mvc-dap-pg",
+      "display_name": "ASP.NET Core, MVC, Dapper",
       "notes": "",
-      "versus": "aspcore-pg"
+      "versus": "aspcore-ado-pg"
     },
     "mvc-ado-my": {
       "db_url": "/mvc/db/raw",
@@ -279,9 +279,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-mvc-ado-my",
+      "display_name": "ASP.NET Core, MVC, Raw",
       "notes": "",
-      "versus": "aspcore-my"
+      "versus": "aspcore-ado-my"
     },
     "mvc-dap-my": {
       "db_url": "/mvc/db/dapper",
@@ -300,9 +300,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aspcore-mvc-dap-my",
+      "display_name": "ASP.NET Core, MVC, Dapper",
       "notes": "",
-      "versus": "aspcore-my"
+      "versus": "aspcore-ado-my"
     }
   }]
 }
