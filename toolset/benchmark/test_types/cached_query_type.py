@@ -37,7 +37,7 @@ class CachedQueryTestType(FrameworkTestType):
             return problems
 
     def get_script_name(self):
-        return 'concurrency.sh'
+        return 'query.sh'
 
     def get_script_variables(self, name, url):
         return {
