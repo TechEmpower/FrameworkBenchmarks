@@ -6,4 +6,4 @@ WORKDIR /actix
 RUN cargo clean
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
 
-CMD ./target/release/actix
+CMD ./target/release/actix-raw-db
