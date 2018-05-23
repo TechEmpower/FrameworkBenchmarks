@@ -56,11 +56,11 @@ static void usp_end_cached_worlds()
 
    if (cache)
       {
-      delete cache;
-      delete pworld_query;
+      U_DELETE(cache)
+      U_DELETE(pworld_query)
 
 #  ifndef AS_cpoll_cppsp_DO
-      delete pvworld_query;
+      U_DELETE(pvworld_query)
 #  endif
       }
 }

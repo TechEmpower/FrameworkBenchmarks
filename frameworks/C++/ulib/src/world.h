@@ -19,7 +19,7 @@ public:
 
    World()
       {
-      U_TRACE_REGISTER_OBJECT(5, World, "")
+      U_TRACE_CTOR(5, World, "")
 
       // coverity[uninit_ctor]
 #  ifdef U_COVERITY_FALSE_POSITIVE
@@ -29,19 +29,19 @@ public:
 
    World(uint32_t _id, uint32_t _randomNumber) : id(_id), randomNumber(_randomNumber)
       {
-      U_TRACE_REGISTER_OBJECT(5, World, "%u,%u", _id, _randomNumber)
+      U_TRACE_CTOR(5, World, "%u,%u", _id, _randomNumber)
       }
 
    World(const World& w) : id(w.id), randomNumber(w.randomNumber)
       {
-      U_TRACE_REGISTER_OBJECT(5, World, "%p", &w)
+      U_TRACE_CTOR(5, World, "%p", &w)
 
       U_MEMORY_TEST_COPY(w)
       }
 
    ~World()
       {
-      U_TRACE_UNREGISTER_OBJECT(5, World)
+      U_TRACE_DTOR(5, World)
       }
 
    // JSON

@@ -23,8 +23,9 @@ static void usp_fork_query()
       {
       U_WARNING("usp_fork_query(): we cound't connect to db");
 
-      delete psql_query;
-             psql_query = U_NULLPTR;
+      U_DELETE(psql_query)
+
+      psql_query = U_NULLPTR;
 
       return;
       }
@@ -50,12 +51,12 @@ static void usp_end_query()
 
    if (pstmt_query)
       {
-      delete pstmt_query;
-      delete pworld_query;
-      delete psql_query;
+      U_DELETE(pstmt_query)
+      U_DELETE(pworld_query)
+      U_DELETE(psql_query)
 
 #  ifndef AS_cpoll_cppsp_DO
-      delete pvworld_query;
+      U_DELETE(pvworld_query)
 #  endif
       }
 }
