@@ -46,6 +46,9 @@ var (
 	debugFlag        = false
 	preforkFlag      = false
 	childFlag        = false
+
+	helloWorldMessage = &Message{helloWorldString}
+	extraFortune      = &Fortune{Message: extraFortuneMessage}
 )
 
 // sjson
@@ -125,7 +128,7 @@ func setContentType(w http.ResponseWriter, contentType string) {
 func serializeJSON(w http.ResponseWriter, r *http.Request) {
 	setContentType(w, "application/json")
 
-	data, _ := Message{helloWorldString}.MarshalJSON()
+	data, _ := helloWorldMessage.MarshalJSON()
 	_, _ = w.Write(data)
 }
 
@@ -190,7 +193,7 @@ func fortunes(w http.ResponseWriter, r *http.Request) {
 		fortunes = append(fortunes, &fortune)
 	}
 	rows.Close()
-	fortunes = append(fortunes, &Fortune{Message: extraFortuneMessage})
+	fortunes = append(fortunes, extraFortune)
 
 	sort.Slice(fortunes, func(i, j int) bool {
 		return fortunes[i].Message < fortunes[j].Message

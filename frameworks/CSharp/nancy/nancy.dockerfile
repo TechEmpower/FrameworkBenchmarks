@@ -1,14 +1,11 @@
-FROM mono:5.10.0.160
-RUN apt update -yqq && apt install -yqq nginx wget mono-fastcgi-server
+FROM microsoft/dotnet:2.1-sdk-stretch AS build
+WORKDIR /app
+COPY src .
+RUN dotnet publish -c Release -f net471 -o out
 
-WORKDIR /nancy
-COPY lib lib
-COPY NancyModules NancyModules
-COPY src src
-COPY nginx.conf nginx.conf
-COPY run.sh run.sh
+FROM mono:5.12.0.226 AS runtime
+WORKDIR /app
+COPY --from=build /app/out ./
+ENV ASPNETCORE_URLS http://+:8080
 
-RUN xbuild src/NancyBenchmark.csproj /t:Clean
-RUN xbuild src/NancyBenchmark.csproj /p:Configuration=Release
-
-CMD bash run.sh
+ENTRYPOINT ["mono", "--server", "--gc=sgen", "--gc-params=mode=throughput", "NancyBenchmark.exe"]
