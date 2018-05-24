@@ -151,7 +151,7 @@ fn main() {
     }
 
     // Start db executor actors
-    let addr = SyncArbiter::start(num_cpus::get() * 4, move || {
+    let addr = SyncArbiter::start(num_cpus::get() * 3, move || {
         db_pg::PgConnection::new(db_url)
     });
 

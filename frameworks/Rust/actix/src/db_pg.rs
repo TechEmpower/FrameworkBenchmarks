@@ -114,7 +114,7 @@ impl Handler<UpdateWorld> for PgConnection {
         worlds.sort_by_key(|w| w.id);
 
         update.pop();
-        update.push_str(") AS temp(id, randomnumber) WHERE temp.id = world.id");
+        update.push_str(" ORDER BY 1) AS temp(id, randomnumber) WHERE temp.id = world.id");
         self.conn.execute(&update, &[]).unwrap();
 
         Ok(worlds)
