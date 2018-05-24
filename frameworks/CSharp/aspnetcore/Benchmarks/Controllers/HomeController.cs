@@ -23,7 +23,7 @@ namespace Benchmarks.Controllers
         {
             return new { message = "Hello, World!" };
         }
-        
+
         [HttpGet("view")]
         public ViewResult Index()
         {

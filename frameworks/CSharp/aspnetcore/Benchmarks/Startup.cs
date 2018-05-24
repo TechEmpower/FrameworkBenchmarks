@@ -91,6 +91,11 @@ namespace Benchmarks
                 services.AddScoped<DapperDb>();
             }
 
+            if (Scenarios.Any("Raven"))
+            {
+                services.AddSingleton<RavenDb>();
+            }
+
             if (Scenarios.Any("Update"))
             {
                 BatchUpdateString.Initalize();
@@ -159,6 +164,11 @@ namespace Benchmarks
                 app.UseSingleQueryEf();
             }
 
+            if (Scenarios.DbSingleQueryRaven)
+            {
+                app.UseSingleQueryRavenDb();
+            }
+
             // Multiple query endpoints
             if (Scenarios.DbMultiQueryRaw)
             {
@@ -173,6 +183,11 @@ namespace Benchmarks
             if (Scenarios.DbMultiQueryEf)
             {
                 app.UseMultipleQueriesEf();
+            }
+
+            if (Scenarios.DbMultiQueryRaven)
+            {
+                app.UseMultipleQueriesRaven();
             }
 
             // Multiple update endpoints
@@ -191,6 +206,11 @@ namespace Benchmarks
                 app.UseMultipleUpdatesEf();
             }
 
+            if (Scenarios.DbMultiUpdateRaven)
+            {
+                app.UseMultipleUpdatesRaven();
+            }
+
             // Fortunes endpoints
             if (Scenarios.DbFortunesRaw)
             {
@@ -205,6 +225,10 @@ namespace Benchmarks
             if (Scenarios.DbFortunesEf)
             {
                 app.UseFortunesEf();
+            }
+            if (Scenarios.DbFortunesRaven)
+            {
+                app.UseFortunesRaven();
             }
 
             if (Scenarios.Any("Mvc"))

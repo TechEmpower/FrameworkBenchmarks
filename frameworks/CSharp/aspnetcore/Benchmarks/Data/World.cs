@@ -14,4 +14,11 @@ namespace Benchmarks.Data
         [Column("randomnumber")]
         public int RandomNumber { get; set; }
     }
+
+    public class WorldRaven
+    {
+        public string Id { get; set; }
+
+        public int RandomNumber { get; set; }
+    }
 }

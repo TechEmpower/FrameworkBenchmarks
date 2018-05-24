@@ -11,6 +11,16 @@ namespace Benchmarks.Controllers
     [Route("mvc/fortunes")]
     public class FortunesController : Controller
     {
+        private readonly RavenDb _db;
+
+        public FortunesController()
+        { }
+
+        public FortunesController(RavenDb provider)
+        {
+            _db = provider;
+        }
+
         [HttpGet("raw")]
         public async Task<IActionResult> Raw()
         {
@@ -30,6 +40,12 @@ namespace Benchmarks.Controllers
         {
             var db = HttpContext.RequestServices.GetRequiredService<EfDb>();
             return View("Fortunes", await db.LoadFortunesRows());
+        }
+
+        [HttpGet("raven")]
+        public async Task<IActionResult> Raven()
+        {
+            return View("FortunesRaven", await _db.LoadFortunesRows());
         }
     }
 }

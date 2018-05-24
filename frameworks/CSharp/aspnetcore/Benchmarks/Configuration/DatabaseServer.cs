@@ -9,6 +9,7 @@ namespace Benchmarks.Configuration
         None,
         SqlServer,
         PostgreSql,
-        MySql
+        MySql,
+        RavenDb
     }
 }

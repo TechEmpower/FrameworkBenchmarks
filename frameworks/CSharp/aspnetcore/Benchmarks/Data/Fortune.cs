@@ -28,4 +28,22 @@ namespace Benchmarks.Data
             return String.CompareOrdinal(Message, other.Message);
         }
     }
+
+    public class FortuneRaven : IComparable<FortuneRaven>, IComparable
+    {       
+        public int _Id { get; set; }
+
+        public string Message { get; set; }
+
+        public int CompareTo(object obj)
+        {
+            return CompareTo((FortuneRaven)obj);
+        }
+
+        public int CompareTo(FortuneRaven other)
+        {
+            // Performance critical, using culture insensitive comparison
+            return String.CompareOrdinal(Message, other.Message);
+        }
+    }
 }
