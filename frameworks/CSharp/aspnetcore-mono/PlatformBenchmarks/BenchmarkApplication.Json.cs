@@ -31,7 +31,7 @@ namespace PlatformBenchmarks
 
             // Content-Length header
             writer.Write(_headerContentLength);
-            var jsonPayload = JsonSerializer.SerializeUnsafe(new { message = "Hello, World!" });
+            var jsonPayload = JsonSerializer.SerializeUnsafe(new JsonMessage() { message = "Hello, World!" });
             writer.WriteNumeric((uint)jsonPayload.Count);
 
             // End of headers
