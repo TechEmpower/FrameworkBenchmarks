@@ -22,6 +22,7 @@
     },
     "ado-pg": {
       "fortune_url": "/fortunes",
+      "db_url": "/db",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -40,6 +41,7 @@
     },
     "ado-my": {
       "fortune_url": "/fortunes",
+      "db_url": "/db",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

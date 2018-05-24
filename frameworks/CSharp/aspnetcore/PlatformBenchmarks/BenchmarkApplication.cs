@@ -42,6 +42,7 @@ namespace PlatformBenchmarks
             public readonly static AsciiString Plaintext = "/plaintext";
             public readonly static AsciiString Json = "/json";
             public readonly static AsciiString Fortunes = "/fortunes";
+            public readonly static AsciiString SingleQuery = "/db";
         }
 
         private RequestType _requestType;
@@ -63,6 +64,10 @@ namespace PlatformBenchmarks
                 {
                     requestType = RequestType.Fortunes;
                 }
+                else if (Paths.SingleQuery.Length <= path.Length && path.StartsWith(Paths.SingleQuery))
+                {
+                    requestType = RequestType.SingleQuery;
+                }
             }
 
             _requestType = requestType;
@@ -81,6 +86,10 @@ namespace PlatformBenchmarks
             else if (_requestType == RequestType.Fortunes)
             {
                 return Fortunes(Writer);
+            }
+            else if (_requestType == RequestType.SingleQuery)
+            {
+                return SingleQuery(Writer);
             }
             else
             {
@@ -194,6 +203,40 @@ namespace PlatformBenchmarks
             writer.Commit();
         }
 
+        private async Task SingleQuery(PipeWriter pipeWriter)
+        {
+            OutputSingleQuery(pipeWriter, await Db.LoadSingleQueryRow());
+        }
+
+        private static void OutputSingleQuery(PipeWriter pipeWriter, World row)
+        {
+            var writer = GetWriter(pipeWriter);
+
+            // HTTP 1.1 OK
+            writer.Write(_http11OK);
+
+            // Server headers
+            writer.Write(_headerServer);
+
+            // Date header
+            writer.Write(DateHeader.HeaderBytes);
+
+            // Content-Type header
+            writer.Write(_headerContentTypeJson);
+
+            // Content-Length header
+            writer.Write(_headerContentLength);
+            var jsonPayload = JsonSerializer.SerializeUnsafe(row);
+            writer.WriteNumeric((uint)jsonPayload.Count);
+
+            // End of headers
+            writer.Write(_eoh);
+
+            // Body
+            writer.Write(jsonPayload);
+            writer.Commit();
+        }
+
         private static void Default(PipeWriter pipeWriter)
         {
             var writer = GetWriter(pipeWriter);
@@ -220,7 +263,8 @@ namespace PlatformBenchmarks
             NotRecognized,
             PlainText,
             Json,
-            Fortunes
+            Fortunes,
+            SingleQuery
         }
     }
 }
