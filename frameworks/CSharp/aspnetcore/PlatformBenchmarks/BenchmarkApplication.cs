@@ -39,10 +39,10 @@ namespace PlatformBenchmarks
 
         public static class Paths
         {
-            public readonly static AsciiString Plaintext = "/plaintext";
+            public readonly static AsciiString SingleQuery = "/db";
             public readonly static AsciiString Json = "/json";
             public readonly static AsciiString Fortunes = "/fortunes";
-            public readonly static AsciiString SingleQuery = "/db";
+            public readonly static AsciiString Plaintext = "/plaintext";
         }
 
         private RequestType _requestType;
@@ -52,21 +52,22 @@ namespace PlatformBenchmarks
             var requestType = RequestType.NotRecognized;
             if (method == HttpMethod.Get)
             {
-                if (Paths.Plaintext.Length <= path.Length && path.StartsWith(Paths.Plaintext))
+                var pathLength = path.Length;
+                if (Paths.SingleQuery.Length <= pathLength && path.StartsWith(Paths.SingleQuery))
                 {
-                    requestType = RequestType.PlainText;
+                    requestType = RequestType.SingleQuery;
                 }
-                else if (Paths.Json.Length <= path.Length && path.StartsWith(Paths.Json))
+                else if (Paths.Json.Length <= pathLength && path.StartsWith(Paths.Json))
                 {
                     requestType = RequestType.Json;
                 }
-                else if (Paths.Fortunes.Length <= path.Length && path.StartsWith(Paths.Fortunes))
+                else if (Paths.Fortunes.Length <= pathLength && path.StartsWith(Paths.Fortunes))
                 {
                     requestType = RequestType.Fortunes;
                 }
-                else if (Paths.SingleQuery.Length <= path.Length && path.StartsWith(Paths.SingleQuery))
+                else if (Paths.Plaintext.Length <= pathLength && path.StartsWith(Paths.Plaintext))
                 {
-                    requestType = RequestType.SingleQuery;
+                    requestType = RequestType.PlainText;
                 }
             }
 
