@@ -12,9 +12,6 @@ static bool caseSensitiveMngFortuneLessThan(const MngFortune &f1, const MngFortu
     return f1.message() < f2.message();
 }
 
-FortuneController::FortuneController(const FortuneController &)
-    : ApplicationController()
-{ }
 
 void FortuneController::index()
 {
@@ -132,6 +129,5 @@ void FortuneController::remove(const QString &pk)
     redirect(urla("index"));
 }
 
-
 // Don't remove below this line
-T_REGISTER_CONTROLLER(fortunecontroller)
+T_DEFINE_CONTROLLER(FortuneController)

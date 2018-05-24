@@ -19,8 +19,9 @@ static void usp_fork_rquery()
       {
       U_WARNING("usp_fork_rquery(): %V", rc->UClient_Base::getResponse().rep);
 
-      delete rc;
-             rc = U_NULLPTR;
+      U_DELETE(rc)
+
+      rc = U_NULLPTR;
 
       return;
       }
@@ -35,8 +36,8 @@ static void usp_end_rquery()
 
    if (pvworld_query)
       {
-      delete rc;
-      delete pvworld_query;
+      U_DELETE(rc)
+      U_DELETE(pvworld_query)
       }
 }
 #endif

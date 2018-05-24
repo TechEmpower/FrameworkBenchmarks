@@ -1,16 +1,17 @@
 # main configuration file
 
 # Application PID File
-PidFile = /tmp/FrameworkBenchmarks/hhvm/hhvm.pid
+PidFile = /hhvm_app/hhvm.pid
 
 # Server settings
 Server {
-  Port = 9001
+  FileSocket = /hhvm_app/hhvm.sock
   Type = fastcgi
-  SourceRoot = /tmp/FrameworkBenchmarks/hhvm
+  SourceRoot = /hhvm_app
   DefaultDocument = index.php
   GzipCompressionLevel = 0
   EnableKeepAlive = true
+  AllowRunAsRoot = 1
 }
 
 # Disable logging completely
@@ -18,7 +19,7 @@ Log {
   UseLogFile = false
   UseSyslog = false
   Level = Error
-  #File = /tmp/FrameworkBenchmarks/hhvm/error.log
+  #File = /hhvm_app/error.log
 }
 
 # Enable jit for production mode
@@ -30,7 +31,7 @@ Eval {
 # Repo file
 Repo {
   Central {
-    Path = /tmp/FrameworkBenchmarks/hhvm/.hhvm.hhbc
+    Path = /hhvm_app/.hhvm.hhbc
   }
 }
 

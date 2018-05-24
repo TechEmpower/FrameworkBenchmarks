@@ -20,13 +20,14 @@ static void usp_fork_rfortune()
       {
       U_WARNING("usp_fork_rfortune(): %V", rc->UClient_Base::getResponse().rep);
 
-      delete rc;
-             rc = U_NULLPTR;
+      U_DELETE(rc)
+
+      rc = U_NULLPTR;
 
       return;
       }
 
-   U_NEW(UString, pencoded, UString(100U));
+   U_NEW_STRING(pencoded, UString(100U));
    U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
    U_NEW(Fortune, pfortune2add, Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
 }
@@ -38,10 +39,10 @@ static void usp_end_rfortune()
 
    if (pencoded)
       {
-      delete rc;
-      delete pencoded;
-      delete pvfortune;
-      delete pfortune2add;
+      U_DELETE(rc)
+      U_DELETE(pencoded)
+      U_DELETE(pvfortune)
+      U_DELETE(pfortune2add)
       }
 }
 #endif

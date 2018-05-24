@@ -2,7 +2,6 @@
   "framework": "redstone",
   "tests": [{
     "default": {
-      "setup_file": "setup_postgresql",
       "json_url": "/json",
       "db_url": "/pg/db",
       "query_url": "/pg/queries?queries=",
@@ -26,7 +25,6 @@
       "versus": "dart"
     },
     "mongodb": {
-      "setup_file": "setup_mongodb",
       "db_url": "/mongo/db",
       "query_url": "/mongo/queries?queries=",
       "fortune_url": "/mongo/fortunes",

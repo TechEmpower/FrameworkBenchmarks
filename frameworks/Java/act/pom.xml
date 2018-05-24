@@ -22,7 +22,7 @@
   <groupId>com.techempower</groupId>
   <artifactId>actframework</artifactId>
   <packaging>jar</packaging>
-  <version>1.7.0</version>
+  <version>1.8.8.2</version>
 
   <name>TEB ActFramework Project</name>
   <description>TEB benchmark project with ActFramework</description>
@@ -36,23 +36,16 @@
   <parent>
     <groupId>org.actframework</groupId>
     <artifactId>act-starter-parent</artifactId>
-    <version>1.6.6.0</version>
+    <version>1.8.8.2</version>
   </parent>
 
   <properties>
     <java.version>1.8</java.version>
-    <HikariCP.version>2.7.3</HikariCP.version>
     <mysql.version>5.1.45</mysql.version>
-    <postgres-jdbc.version>42.2.1</postgres-jdbc.version>
+    <postgres-jdbc.version>42.2.2</postgres-jdbc.version>
     <morphia.version>1.3.2</morphia.version>
-    <ebean.version>11.9.1</ebean.version>
-    <act-sql-common.version>1.3.0-teb-SNAPSHOT</act-sql-common.version>
-    <act-hibernate.version>1.0.0-teb-SNAPSHOT</act-hibernate.version>
-    <act-eclipselink.version>1.0.0-teb-SNAPSHOT</act-eclipselink.version>
-    <act-ebean.version>1.4.0-teb-SNAPSHOT</act-ebean.version>
-    <act-morphia.version>1.4.0-teb-SNAPSHOT</act-morphia.version>
-    <act-mustache.version>1.3.0</act-mustache.version>
-    <act.version>1.7.0-teb-SNAPSHOT</act.version>
+    <ebean-annotation.version>3.4</ebean-annotation.version>
+    <act-sql-common.version>1.3.4</act-sql-common.version>
     <app.entry>com.techempower.act.AppEntry</app.entry>
   </properties>
 
@@ -64,13 +57,19 @@
 
     <dependency>
       <groupId>org.actframework</groupId>
-      <artifactId>act</artifactId>
-      <version>${act.version}</version>
+      <artifactId>act-mustache</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.actframework</groupId>
-      <artifactId>act-mustache</artifactId>
+      <groupId>io.ebean</groupId>
+      <artifactId>ebean-annotation</artifactId>
+      <version>${ebean-annotation.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mongodb.morphia</groupId>
+      <artifactId>morphia</artifactId>
+      <version>${morphia.version}</version>
     </dependency>
 
     <dependency>
@@ -89,18 +88,6 @@
       </exclusions>
     </dependency>
 
-    <dependency>
-      <groupId>io.ebean</groupId>
-      <artifactId>ebean-annotation</artifactId>
-      <version>3.4</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.mongodb.morphia</groupId>
-      <artifactId>morphia</artifactId>
-      <version>${morphia.version}</version>
-    </dependency>
-
   </dependencies>
 
   <profiles>
@@ -113,7 +100,6 @@
         <dependency>
           <groupId>org.actframework</groupId>
           <artifactId>act-morphia</artifactId>
-          <version>${act-morphia.version}</version>
         </dependency>
       </dependencies>
     </profile>
@@ -125,13 +111,7 @@
       <dependencies>
         <dependency>
           <groupId>org.actframework</groupId>
-          <artifactId>act-ebean2</artifactId>
-          <version>${act-ebean.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>io.ebean</groupId>
-          <artifactId>ebean</artifactId>
-          <version>${ebean.version}</version>
+          <artifactId>act-ebean</artifactId>
         </dependency>
         <dependency>
           <groupId>mysql</groupId>
@@ -141,7 +121,6 @@
         <dependency>
           <groupId>com.zaxxer</groupId>
           <artifactId>HikariCP</artifactId>
-          <version>${HikariCP.version}</version>
         </dependency>
       </dependencies>
     </profile>
@@ -154,7 +133,6 @@
         <dependency>
           <groupId>org.actframework</groupId>
           <artifactId>act-hibernate</artifactId>
-          <version>${act-hibernate.version}</version>
         </dependency>
         <dependency>
           <groupId>mysql</groupId>
@@ -164,7 +142,6 @@
         <dependency>
           <groupId>com.zaxxer</groupId>
           <artifactId>HikariCP</artifactId>
-          <version>${HikariCP.version}</version>
         </dependency>
       </dependencies>
     </profile>
@@ -177,7 +154,6 @@
         <dependency>
           <groupId>org.actframework</groupId>
           <artifactId>act-eclipselink</artifactId>
-          <version>${act-eclipselink.version}</version>
         </dependency>
         <dependency>
           <groupId>mysql</groupId>
@@ -187,7 +163,6 @@
         <dependency>
           <groupId>com.zaxxer</groupId>
           <artifactId>HikariCP</artifactId>
-          <version>${HikariCP.version}</version>
         </dependency>
       </dependencies>
     </profile>
@@ -199,13 +174,7 @@
       <dependencies>
         <dependency>
           <groupId>org.actframework</groupId>
-          <artifactId>act-ebean2</artifactId>
-          <version>${act-ebean.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>io.ebean</groupId>
-          <artifactId>ebean</artifactId>
-          <version>${ebean.version}</version>
+          <artifactId>act-ebean</artifactId>
         </dependency>
         <dependency>
           <groupId>org.postgresql</groupId>
@@ -215,7 +184,6 @@
         <dependency>
           <groupId>com.zaxxer</groupId>
           <artifactId>HikariCP</artifactId>
-          <version>${HikariCP.version}</version>
         </dependency>
       </dependencies>
     </profile>
@@ -228,7 +196,6 @@
         <dependency>
           <groupId>org.actframework</groupId>
           <artifactId>act-hibernate</artifactId>
-          <version>${act-hibernate.version}</version>
         </dependency>
         <dependency>
           <groupId>org.postgresql</groupId>
@@ -238,7 +205,6 @@
         <dependency>
           <groupId>com.zaxxer</groupId>
           <artifactId>HikariCP</artifactId>
-          <version>${HikariCP.version}</version>
         </dependency>
       </dependencies>
     </profile>
@@ -251,7 +217,6 @@
         <dependency>
           <groupId>org.actframework</groupId>
           <artifactId>act-eclipselink</artifactId>
-          <version>${act-eclipselink.version}</version>
         </dependency>
         <dependency>
           <groupId>org.postgresql</groupId>
@@ -261,7 +226,6 @@
         <dependency>
           <groupId>com.zaxxer</groupId>
           <artifactId>HikariCP</artifactId>
-          <version>${HikariCP.version}</version>
         </dependency>
       </dependencies>
     </profile>

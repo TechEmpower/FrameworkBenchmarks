@@ -161,7 +161,7 @@ fun ApplicationCall.queries() = try {
 
 private fun hikari(): DataSource {
     val config = HikariConfig()
-    config.jdbcUrl = "jdbc:mysql://TFB-database:3306/hello_world?useSSL=false"
+    config.jdbcUrl = "jdbc:mysql://tfb-database:3306/hello_world?useSSL=false"
     config.username = "benchmarkdbuser"
     config.password = "benchmarkdbpass"
     config.addDataSourceProperty("cachePrepStmts", "true")

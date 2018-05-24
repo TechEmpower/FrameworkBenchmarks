@@ -14,9 +14,11 @@ server:
     appenders: []
 
 logging:
-  appenders: []
+  level: WARN
+  appenders:
+    - type: console
 
 mongo:
-  host: TFB-database
+  host: tfb-database
   port: 27017
   db: hello_world

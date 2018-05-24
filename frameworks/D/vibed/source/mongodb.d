@@ -43,7 +43,7 @@ class WebInterface {
 	this()
 	{
 		import std.process : environment;
-		auto db = connectMongoDB(environment.get("DBHOST", "127.0.0.1"));
+		auto db = connectMongoDB("tfb-database");
 		_worldCollection = db.getCollection("hello_world.world");
 		_fortuneCollection = db.getCollection("hello_world.fortune");
 

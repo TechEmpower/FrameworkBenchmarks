@@ -11,9 +11,8 @@ end
 
 def provider_libvirt(config)
   config.vm.provider :libvirt do |virt, override|
-    virt.name = "TechEmpower Framework Benchmarks"
     override.vm.hostname = "TFB-all"
-    override.vm.box = "RX14/trusty64"
+    override.vm.box = "generic/ubuntu1604"
 
     unless ENV.fetch('TFB_SHOW_VM', false)
       virt.graphics_type = "none"
@@ -22,17 +21,14 @@ def provider_libvirt(config)
     virt.memory = ENV.fetch('TFB_KVM_MEM', 3022)
     virt.cpus = ENV.fetch('TFB_KVM_CPU', 2)
 
-    override.vm.synced_folder "../../toolset", "/home/vagrant/FrameworkBenchmarks/toolset", type: "nfs"
-    override.vm.synced_folder "../../frameworks", "/home/vagrant/FrameworkBenchmarks/frameworks", type: "nfs"
-    override.vm.synced_folder "../../results", "/home/vagrant/FrameworkBenchmarks/results", type: "nfs", create: true
+    override.vm.synced_folder "../..", "/home/vagrant/FrameworkBenchmarks", type: "nfs", nfs_udp: false
   end
 end
 
 def provider_virtualbox(config)
   config.vm.provider :virtualbox do |vb, override|
-    vb.name = "TechEmpower Framework Benchmarks"
     override.vm.hostname = "TFB-all"
-    override.vm.box = "ubuntu/trusty64"
+    override.vm.box = "ubuntu/xenial64"
 
     if ENV.fetch('TFB_SHOW_VM', false)
       vb.gui = true
@@ -57,8 +53,6 @@ def provider_virtualbox(config)
     # See mitchellh/vagrant#4997
     # See http://superuser.com/a/640028/136050
 
-    override.vm.synced_folder "../../toolset", "/home/vagrant/FrameworkBenchmarks/toolset"
-    override.vm.synced_folder "../../frameworks", "/home/vagrant/FrameworkBenchmarks/frameworks"
-    override.vm.synced_folder "../../results", "/home/vagrant/FrameworkBenchmarks/results", create: true
+    override.vm.synced_folder "../..", "/home/vagrant/FrameworkBenchmarks"
   end
 end

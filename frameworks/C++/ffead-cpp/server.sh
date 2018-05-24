@@ -8,15 +8,13 @@ else
 	export FFEAD_CPP_PATH=`echo $(dirname $(readlink -f $0))`
 fi
 
+export ODBCINI=${IROOT}/odbc.ini
+export ODBCSYSINI=${IROOT}
 echo $FFEAD_CPP_PATH
-export LD_LIBRARY_PATH=$FFEAD_CPP_PATH/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${IROOT}/:${IROOT}/lib:$FFEAD_CPP_PATH/lib:$LD_LIBRARY_PATH
 echo $LD_LIBRARY_PATH
 export PATH=$FFEAD_CPP_PATH/lib:$PATH
 echo $PATH
-export ODBCINI=$IROOT/odbc.ini
-export ODBCSYSINI=$IROOT
-echo $ODBCINI
-echo $ODBCSYSINI
 rm -f $FFEAD_CPP_PATH/rtdcf/*.d $FFEAD_CPP_PATH/rtdcf/*.o 
 rm -f $FFEAD_CPP_PATH/*.cntrl
 rm -f $FFEAD_CPP_PATH/tmp/*.sess

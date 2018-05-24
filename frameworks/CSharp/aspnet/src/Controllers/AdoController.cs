@@ -94,7 +94,8 @@ namespace Benchmarks.AspNet.Controllers
             
             fortunes.Add(new Fortune { ID = 0, Message = "Additional fortune added at request time." });
             fortunes.Sort();
-            
+
+            Response.Charset = "utf-8";
             return View("Fortunes", fortunes);
         }
 

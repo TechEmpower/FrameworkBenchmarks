@@ -1,16 +1,17 @@
 # main configuration file
 
 # Application PID File
-PidFile = __TROOT__/hhvm.pid
+PidFile = /yii2/hhvm.pid
 
 # Server settings
 Server {
-  Port = 9001
+  FileSocket = /yii2/hhvm.sock
   Type = fastcgi
-  SourceRoot = __TROOT__/app
+  SourceRoot = /yii2
   DefaultDocument = index.php
   GzipCompressionLevel = 0
   EnableKeepAlive = true
+  AllowRunAsRoot = 1
 }
 
 # Disable logging completely
@@ -18,7 +19,7 @@ Log {
   UseLogFile = false
   UseSyslog = false
   Level = Error
-  #File = __TROOT__/error.log
+  #File = /yii2/error.log
 }
 
 # Enable jit for production mode
@@ -30,7 +31,7 @@ Eval {
 # Repo file
 Repo {
   Central {
-    Path = __TROOT__/.hhvm.bbhc
+    Path = /yii2/.hhvm.hhbc
   }
 }
 

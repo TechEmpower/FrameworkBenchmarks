@@ -1,8 +1,8 @@
 name := "techempower-benchmarks-finatra"
 organization := "com.twitter"
-version := "2.11.0"
+version := "18.3.0"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.5"
 
 resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
@@ -16,7 +16,8 @@ assemblyMergeStrategy in assembly := {
 }
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "finatra-http" % "17.11.0",
+  "com.twitter" %% "finatra-http" % "18.3.0",
   "org.slf4j" % "slf4j-nop" % "1.7.25",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.4",
   "javax.activation" % "activation" % "1.1.1"
 )

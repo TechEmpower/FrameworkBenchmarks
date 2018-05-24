@@ -3,7 +3,6 @@
   "tests": [
     {
       "default": {
-        "setup_file": "setup_jetty",
         "orm": "Raw",
         "database_os": "Linux",
         "db_url": "/db",
@@ -21,12 +20,10 @@
         "platform": "servlet",
         "webserver": "None",
         "os": "Linux",
-        "display_name": "http4k-jetty",
         "notes": "",
         "versus": "servlet"
       },
       "undertow": {
-        "setup_file": "setup_undertow",
         "orm": "Raw",
         "database_os": "Linux",
         "db_url": "/db",
@@ -44,12 +41,10 @@
         "platform": "undertow",
         "webserver": "None",
         "os": "Linux",
-        "display_name": "http4k-undertow",
         "notes": "",
         "versus": "undertow"
       },
       "netty": {
-        "setup_file": "setup_netty",
         "orm": "Raw",
         "database_os": "Linux",
         "db_url": "/db",
@@ -67,12 +62,10 @@
         "platform": "netty",
         "webserver": "None",
         "os": "Linux",
-        "display_name": "http4k-netty",
         "notes": "",
         "versus": "netty"
       },
-      "apache-httpcore": {
-        "setup_file": "setup_apache",
+      "apache": {
         "orm": "Raw",
         "database_os": "Linux",
         "db_url": "/db",
@@ -90,12 +83,10 @@
         "platform": "apache-httpcore",
         "webserver": "None",
         "os": "Linux",
-        "display_name": "http4k-apache-httpcore",
         "notes": "",
         "versus": "servlet"
       },
       "sunhttp": {
-        "setup_file": "setup_sunhttp",
         "orm": "Raw",
         "database_os": "Linux",
         "db_url": "/db",
@@ -113,7 +104,6 @@
         "platform": "sun-http",
         "webserver": "None",
         "os": "Linux",
-        "display_name": "http4k-sunhttp",
         "notes": "",
         "versus": "servlet"
       }

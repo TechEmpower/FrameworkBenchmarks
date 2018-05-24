@@ -24,6 +24,7 @@ import act.Act;
 import act.job.OnAppStart;
 import act.sys.Env;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.techempower.act.AppEntry;
 import org.osgl.http.H;
 
@@ -46,7 +47,7 @@ public class HelloWorldController {
     public void routing() {
         Act.getNonblock("/json", context -> context.resp()
                 .contentType(H.Format.JSON.contentType())
-                .writeContent(JSON.toJSONString(new Message(HELLO_WORLD))));
+                .writeContent(JSON.toJSONString(new Message(HELLO_WORLD), SerializerFeature.DisableCircularReferenceDetect)));
     }
 
 }

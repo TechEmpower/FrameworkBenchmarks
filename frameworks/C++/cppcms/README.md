@@ -14,9 +14,8 @@ It is available under open source LGPLv3 license and alternative Commercial Lice
 
 
 ## Problems/DOTO
-- Test PostgreSQL
 - Test 7 CachedWorld uses normal worlds table
-- Fix direct conection WARNING: Required response size header missing, please include either "Content-Length" or "Transfer-Encoding"
+
 
 
 

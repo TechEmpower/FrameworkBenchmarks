@@ -3,7 +3,6 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"os"
 	"runtime"
 
 	"aahframework.org/aah.v0"
@@ -26,10 +25,7 @@ func DB() *sql.DB {
 // DatabaseInit initializes the Database.
 func DatabaseInit(e *aah.Event) {
 	cfg := aah.AppConfig()
-	dbHost := os.Getenv("DBHOST")
-	if dbHost == "" {
-		dbHost = "localhost"
-	}
+	dbHost := "tfb-database"
 
 	dbURL := fmt.Sprintf(cfg.StringDefault("datasource.benchmark.url", ""), dbHost)
 

@@ -24,6 +24,7 @@ namespace MyWebsite.Server
     {
         public void Configure(IApplicationBuilder app)
         {
+            app.UseResponseBuffering();
             app.UsePhp(new PhpRequestOptions(scriptAssemblyName: "Website"));
             app.UseDefaultFiles();
             app.UseStaticFiles();

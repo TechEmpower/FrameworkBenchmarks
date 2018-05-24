@@ -2,7 +2,6 @@
   "framework": "grape",
   "tests": [{
     "default": {
-      "setup_file": "run_mri_puma",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/query?queries=",
@@ -23,30 +22,7 @@
       "notes": "",
       "versus": "rack-puma-mri"
     },
-    "thin": {
-      "setup_file": "run_mri_thin",
-      "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/query?queries=",
-      "update_url": "/updates?queries=",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "MySQL",
-      "framework": "grape",
-      "language": "Ruby",
-      "orm": "Full",
-      "platform": "Rack",
-      "webserver": "Thin",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "grape-thin-mri",
-      "notes": "",
-      "versus": "rack-thin-mri"
-    },
     "unicorn": {
-      "setup_file": "run_mri_unicorn",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/query?queries=",

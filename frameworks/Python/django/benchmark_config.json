@@ -2,7 +2,6 @@
   "framework": "django",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "plaintext_url" : "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -26,7 +25,6 @@
       "versus": "wsgi"
     },
     "py3": {
-      "setup_file": "setup_py3",
       "plaintext_url" : "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -50,7 +48,6 @@
       "versus": "wsgi"
     },
     "postgresql": {
-      "setup_file": "setup_pg",
       "db_url": "/db",
       "query_url": "/dbs?queries=",
       "fortune_url": "/fortunes",

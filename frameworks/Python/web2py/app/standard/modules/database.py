@@ -4,7 +4,7 @@ from operator import itemgetter
 from gluon.storage import Storage
 from gluon.dal import DAL, Field, Row
 
-DBHOST = os.environ.get('DBHOST', 'localhost')
+DBHOST = 'tfb-database'
 DATABASE_URI = 'mysql://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world' % DBHOST
 
 class Dal(object):

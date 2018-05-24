@@ -2,7 +2,6 @@
   "framework": "restexpress",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/restexpress/json",
       "plaintext_url": "/restexpress/plaintext",
       "db_url": "/restexpress/mongodb",
@@ -24,7 +23,6 @@
       "versus": "netty"
     },
     "mysql-raw": {
-      "setup_file": "setup",
       "db_url": "/restexpress/mysql",
       "query_url": "/restexpress/mysql?queries=",
       "port": 8080,

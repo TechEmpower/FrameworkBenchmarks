@@ -18,7 +18,7 @@ use Scalar::Util 'looks_like_number';
 }
 
 {
-  my $db_host = $ENV{DBHOST} || 'localhost';
+  my $db_host = 'tfb-database';
   helper pg => sub { state $pg = Mojo::Pg->new('postgresql://benchmarkdbuser:benchmarkdbpass@' . $db_host . '/hello_world') };
 }
 
@@ -74,7 +74,7 @@ helper 'render_query' => sub {
   my $db = $self->helpers->pg->db;
 
   foreach (1 .. $q) {
-    my $id = int rand 10_000;
+    my $id = 1 + int rand 10_000;
     my $randomNumber = $db->query('SELECT randomnumber FROM World WHERE id=?', $id)->array->[0];
     $db->query('UPDATE World SET randomnumber=? WHERE id=?', ($randomNumber = 1 + int rand 10_000), $id) if $update;
     push @$r, { id => $id, randomNumber => $randomNumber };

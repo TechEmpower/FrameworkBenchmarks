@@ -1,14 +1,20 @@
 HelloWorld::App.controllers  do
-  get '/json', :provides => [:js] do
+  get '/json', :provides => [:json] do
+    response.headers['Server'] = 'padrino'
+    response.headers['Date'] = Time.now.httpdate
     {message: "Hello, World!"}.to_json
   end
 
-  get '/db', :provides => [:js] do
+  get '/db', :provides => [:json] do
+    response.headers['Server'] = 'padrino'
+    response.headers['Date'] = Time.now.httpdate
     id = Random.rand(10000) + 1
     World.get(id).attributes.to_json
   end
 
-  get '/queries', :provides => [:js] do
+  get '/queries', :provides => [:json] do
+    response.headers['Server'] = 'padrino'
+    response.headers['Date'] = Time.now.httpdate
     queries = params['queries'].to_i
     queries = 1 if queries < 1
     queries = 500 if queries > 500
@@ -19,6 +25,8 @@ HelloWorld::App.controllers  do
   end
 
   get '/fortunes' do
+    response.headers['Server'] = 'padrino'
+    response.headers['Date'] = Time.now.httpdate
     @fortunes = Fortune.all
     @fortunes << Fortune.new(:id => 0, :message => "Additional fortune added at request time.")
     @fortunes = @fortunes.sort_by { |x| x.message }
@@ -26,7 +34,9 @@ HelloWorld::App.controllers  do
     render 'fortunes', layout: "layout"
   end
 
-  get '/updates', :provides => [:js] do
+  get '/updates', :provides => [:json] do
+    response.headers['Server'] = 'padrino'
+    response.headers['Date'] = Time.now.httpdate
     queries = params['queries'].to_i
     queries = 1 if queries < 1
     queries = 500 if queries > 500
@@ -43,6 +53,8 @@ HelloWorld::App.controllers  do
   end
 
   get '/plaintext' do
+    response.headers['Server'] = 'padrino'
+    response.headers['Date'] = Time.now.httpdate
     content_type 'text/plain'
     "Hello, World!"
   end

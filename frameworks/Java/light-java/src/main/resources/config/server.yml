@@ -1,0 +1,10 @@
+ip: "0.0.0.0"
+httpPort: 8080
+enableHttp: true
+httpsPort: 8443
+enableHttps: false
+keystoreName: "tls/server.keystore"
+enableTwoWayTls: false
+truststoreName: "tls/server.truststore"
+serviceId: "com.networknt.techempower-1.0.0"
+enableRegistry: false

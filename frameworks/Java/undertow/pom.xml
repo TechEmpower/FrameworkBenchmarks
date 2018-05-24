@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -10,22 +11,19 @@
   <version>1.0-SNAPSHOT</version>
 
   <properties>
-    <maven.compiler.source>9</maven.compiler.source>
-    <maven.compiler.target>9</maven.compiler.target>
+    <maven.compiler.source>10</maven.compiler.source>
+    <maven.compiler.target>10</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <hikaricp.version>2.7.7</hikaricp.version>
-    <jackson.version>2.9.4</jackson.version>
-    <maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
-    <mongodb.version>3.6.3</mongodb.version>
+    <hikaricp.version>3.1.0</hikaricp.version>
+    <jackson.version>2.9.5</jackson.version>
+    <maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
     <mustache.version>0.9.5</mustache.version>
-    <mysql.version>5.1.45</mysql.version>
-    <postgresql.version>42.2.1</postgresql.version>
-    <undertow.version>1.4.22.Final</undertow.version>
-    <versions-maven-plugin.version>2.4</versions-maven-plugin.version>
+    <postgresql.version>42.2.2</postgresql.version>
+    <undertow.version>2.0.7.Final</undertow.version>
   </properties>
 
   <prerequisites>
-    <maven>3.0</maven>
+    <maven>3.5</maven>
   </prerequisites>
 
   <dependencies>
@@ -35,34 +33,9 @@
       <version>${undertow.version}</version>
     </dependency>
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>${mysql.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>${postgresql.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver</artifactId>
-      <version>${mongodb.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver-core</artifactId>
-      <version>${mongodb.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver-async</artifactId>
-      <version>${mongodb.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>bson</artifactId>
-      <version>${mongodb.version}</version>
     </dependency>
     <dependency>
       <groupId>com.zaxxer</groupId>
@@ -82,16 +55,8 @@
   </dependencies>
 
   <build>
-    <finalName>hello-undertow</finalName>
+    <finalName>app</finalName>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>versions-maven-plugin</artifactId>
-        <version>${versions-maven-plugin.version}</version>
-        <configuration>
-          <rulesUri>file://${basedir}/maven-version-rules.xml</rulesUri>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>

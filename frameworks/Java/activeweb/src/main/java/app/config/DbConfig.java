@@ -44,8 +44,8 @@ public class DbConfig extends AbstractDBConfig {
         environment("development").jndi("java:comp/env/jdbc/hello_world");
 
         //need to set ACTIVE_ENV=local to run on dev box.
-        environment("local").jdbc("com.mysql.jdbc.Driver", "jdbc:mysql://TFB-database/hello_world?" + jdbcParams, "benchmarkdbuser", "benchmarkdbpass");
+        environment("local").jdbc("com.mysql.jdbc.Driver", "jdbc:mysql://tfb-database/hello_world?" + jdbcParams, "benchmarkdbuser", "benchmarkdbpass");
 
-        environment("development").testing().jdbc("com.mysql.jdbc.Driver", "jdbc:mysql://TFB-database/hello_world?" + jdbcParams, "benchmarkdbuser", "benchmarkdbpass");
+        environment("development").testing().jdbc("com.mysql.jdbc.Driver", "jdbc:mysql://tfb-database/hello_world?" + jdbcParams, "benchmarkdbuser", "benchmarkdbpass");
     }
 }

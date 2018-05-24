@@ -28,12 +28,11 @@ import act.db.sql.tx.Transactional;
 import act.sys.Env;
 import act.util.FastJsonFeature;
 import act.util.Global;
+import act.util.JsonView;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.techempower.act.AppEntry;
 import com.techempower.act.model.World;
-import org.osgl.http.H;
 import org.osgl.mvc.annotation.GetAction;
-import org.osgl.mvc.annotation.ResponseContentType;
 import org.osgl.mvc.annotation.SessionFree;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ import javax.inject.Inject;
 
 @AutoConfig
 @Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
-@ResponseContentType(H.MediaType.JSON)
+@JsonView
 public class WorldController {
 
     private static boolean BATCH_SAVE;
@@ -114,11 +113,11 @@ public class WorldController {
     }
 
     private static int regulateQueries(String param) {
-        if (null == param || "".equals(param)) {
+        if (null == param) {
             return 1;
         }
         try {
-            int val = Integer.parseInt(param);
+            int val = Integer.parseInt(param, 10);
             return val < 1 ? 1 : val > 500 ? 500 : val;
         } catch (NumberFormatException e) {
             return 1;

@@ -2,7 +2,6 @@
   "framework": "fasthttp",
   "tests": [{
     "default": {
-      "setup_file": "setup-mysql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -26,7 +25,6 @@
       "versus": "go"
     },
     "postgresql": {
-      "setup_file": "setup-postgresql",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortune",

@@ -1,8 +1,0 @@
-app/tmp
-/plugins
-/build
-/dist
-.DS_Store
-/tags
-app/Vendor
-deploy/php-fpm.pid

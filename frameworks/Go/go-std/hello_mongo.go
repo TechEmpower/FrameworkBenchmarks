@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	connectionString = "localhost"
+	connectionString = "tfb-database"
 	worldRowCount    = 10000
 	fortuneHTML      = `<!DOCTYPE html>
 <html>

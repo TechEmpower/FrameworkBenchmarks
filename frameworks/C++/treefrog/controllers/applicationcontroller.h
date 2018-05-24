@@ -12,7 +12,6 @@ class T_CONTROLLER_EXPORT ApplicationController : public TActionController
     Q_OBJECT
 public:
     ApplicationController();
-    ApplicationController(const ApplicationController &other);
     virtual ~ApplicationController();
 
 public slots:
@@ -21,7 +20,5 @@ public slots:
 protected:
     virtual bool preFilter();
 };
-
-T_DECLARE_CONTROLLER(ApplicationController, applicationcontroller)
 
 #endif // APPLICATIONCONTROLLER_H

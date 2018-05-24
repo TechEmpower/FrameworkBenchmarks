@@ -28,8 +28,9 @@ static void usp_fork_eupdate()
       {
       U_WARNING("usp_fork_eupdate(): connection disabled or failed");
 
-      delete es;
-             es = U_NULLPTR;
+      U_DELETE(es)
+
+      es = U_NULLPTR;
 
       return;
       }
@@ -54,10 +55,10 @@ static void usp_end_eupdate()
 
    if (es)
       {
-      delete es;
+      U_DELETE(es)
 
 #  ifndef AS_cpoll_cppsp_DO
-      delete pvworld_update;
+      U_DELETE(pvworld_update)
 #  endif
       }
 }

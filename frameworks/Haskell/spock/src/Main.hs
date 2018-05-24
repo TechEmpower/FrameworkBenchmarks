@@ -24,7 +24,7 @@ import           Views.Fortune
 creds :: PG.ConnectInfo
 creds =
     PG.ConnectInfo
-        { PG.connectHost     = "localhost"
+        { PG.connectHost     = "tfb-database"
         , PG.connectPort     = 5432
         , PG.connectUser     = "benchmarkdbuser"
         , PG.connectPassword = "benchmarkdbpass"

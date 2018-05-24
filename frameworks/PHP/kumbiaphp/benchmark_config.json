@@ -2,7 +2,6 @@
     "framework": "kumbiaphp",
     "tests": [{
         "default": {
-            "setup_file": "setup",
             "plaintext_url": "/",
             "json_url": "/json",
             "db_url": "/db",
@@ -23,10 +22,9 @@
             "database_os": "Linux",
             "display_name": "kumbiaphp",
             "notes": "",
-            "versus": "php7"
+            "versus": "php"
         },
         "raw": {
-            "setup_file": "setup",
             "db_url": "/raw",
             "query_url": "/raw/queries/",
             "fortune_url": "/raw-fortune",
@@ -45,7 +43,7 @@
             "database_os": "Linux",
             "display_name": "kumbiaphp-raw",
             "notes": "",
-            "versus": "php7"
+            "versus": "php"
           }
         }]
       }

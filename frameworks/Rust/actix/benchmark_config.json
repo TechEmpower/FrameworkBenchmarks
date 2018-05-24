@@ -2,7 +2,6 @@
   "framework": "actix",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -16,12 +15,49 @@
       "webserver": "actix-web",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actix",
+      "display_name": "Actix",
+      "notes": "",
+      "versus": ""
+    },
+    "raw": {
+      "fortune_url": "/fortune",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "actix",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "actix-web",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Actix [raw]",
+      "notes": "",
+      "versus": ""
+    },
+    "raw-db": {
+      "db_url": "/db",
+      "query_url": "/queries?q=",
+      "update_url": "/updates?q=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "actix",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "actix-web",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Actix [pg-raw]",
       "notes": "",
       "versus": ""
     },
     "diesel": {
-      "setup_file": "setup_diesel",
       "db_url": "/db",
       "fortune_url": "/fortune",
       "query_url": "/queries?q=",
@@ -37,12 +73,11 @@
       "webserver": "actix-web",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actix-diesel",
+      "display_name": "Actix [Diesel]",
       "notes": "",
       "versus": ""
     },
     "pg": {
-      "setup_file": "setup_pg",
       "db_url": "/db",
       "fortune_url": "/fortune",
       "query_url": "/queries?q=",
@@ -58,7 +93,7 @@
       "webserver": "actix-web",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "actix-pg",
+      "display_name": "Actix [Postgres]",
       "notes": "",
       "versus": ""
     }

@@ -7,6 +7,7 @@ import com.twitter.util.Await
 
 import io.circe.Json
 import io.finch._
+import io.finch.syntax._
 import io.finch.circe._
 
 object Main extends App {
@@ -27,10 +28,10 @@ object Main extends App {
       .serve[Text.Plain](plaintext)
       .toService
 
-  Await.ready(Http.server
-    .configured(Http.Netty3Impl)
-    .withCompressionLevel(0)
-    .withStack(nilStack)
-    .serve(":9000", service)
+  Await.ready(
+    Http.server
+      .withCompressionLevel(0)
+      .withStack(nilStack)
+      .serve(":9000", service)
   )
 }
