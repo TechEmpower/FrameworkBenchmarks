@@ -133,6 +133,11 @@ namespace Benchmarks
                 app.UseJson();
             }
 
+            if (Scenarios.Utf8Json)
+            {
+                app.UseUtf8Json();
+            }
+
             // Single query endpoints
             if (Scenarios.DbSingleQueryRaw)
             {
