@@ -19,13 +19,10 @@ public class DBService implements Service, PostConstruct {
 
     @Override
     public void init() {
-        System.out.println(config);
-
         PGSimpleDataSource source = new PGSimpleDataSource();
         source.setUrl("jdbc:postgresql://" + config.host + ":" + config.port + "/" + config.dbname);
         source.setUser(config.username);
         source.setPassword(config.password);
-//        source.setSocketFactory(MySocketFactory.class.getCanonicalName());
 
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setMaximumPoolSize(config.maximumPoolSize);
