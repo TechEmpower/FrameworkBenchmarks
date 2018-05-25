@@ -11,10 +11,14 @@ mainClassName = "com.wizzardo.techempower.App"
 repositories {
     jcenter()
     mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
 }
 
 dependencies {
-    compile 'com.wizzardo:http:0.2.1'
+    compile 'com.wizzardo:http:0.2.2'
+
     compile 'org.postgresql:postgresql:9.4.1212'
     compile 'com.zaxxer:HikariCP:2.7.3'
 }

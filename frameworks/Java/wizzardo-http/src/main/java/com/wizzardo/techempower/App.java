@@ -31,15 +31,16 @@ public class App {
         };
 
         webApplication.onSetup(app -> {
-                app.getUrlMapping()
-                        .append("/plaintext", (request, response) -> response.setBody(HELLO_WORLD)
-                                .appendHeader(Header.KV_CONTENT_TYPE_TEXT_PLAIN))
-                        .append("/json", (request, response) -> response
-                                .setBody(JsonTools.serializeToBytes(new Message("Hello, World!")))
-                                .appendHeader(Header.KV_CONTENT_TYPE_APPLICATION_JSON))
-                        .append("/db", DBController.class, "world")
-                        .append("/queries", DBController.class, "queries")
-                        .append("/updates", DBController.class, "updates");
+                    app.getUrlMapping()
+                            .append("/plaintext", (request, response) -> response.setBody(HELLO_WORLD)
+                                    .appendHeader(Header.KV_CONTENT_TYPE_TEXT_PLAIN))
+                            .append("/json", (request, response) -> response
+                                    .setBody(JsonTools.serializeToBytes(new Message("Hello, World!")))
+                                    .appendHeader(Header.KV_CONTENT_TYPE_APPLICATION_JSON))
+                            .append("/db", DBController.class, "world")
+                            .append("/queries", DBController.class, "queries")
+                            .append("/updates", DBController.class, "updates")
+                    ;
                 }
         );
 
