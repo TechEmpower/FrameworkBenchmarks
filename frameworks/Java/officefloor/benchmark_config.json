@@ -1,0 +1,28 @@
+{
+  "framework": "officefloor",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json-service.woof",
+      "db_url": "/singleQuery-service.woof",
+      "query_url": "/multipleQueries-service.woof?queries=",
+      "fortune_url": "/fortune.woof",
+      "update_url": "/databaseUpdate-service.woof?queries=",
+      "plaintext_url": "/plaintext.woof",
+      "port": 7878,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "officefloor",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "OfficeFloor",
+      "webserver": "WoOF (Web on OfficeFloor)",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "officefloor",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
