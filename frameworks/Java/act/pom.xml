@@ -158,14 +158,14 @@
           <artifactId>mysql-connector-java</artifactId>
           <version>${mysql.version}</version>
         </dependency>
-        <!--<dependency>-->
-          <!--<groupId>com.zaxxer</groupId>-->
-          <!--<artifactId>HikariCP</artifactId>-->
-        <!--</dependency>-->
         <dependency>
+          <groupId>com.zaxxer</groupId>
+          <artifactId>HikariCP</artifactId>
+        </dependency>
+        <!-- <dependency>
           <groupId>com.alibaba</groupId>
           <artifactId>druid</artifactId>
-        </dependency>
+        </dependency>-->
       </dependencies>
     </profile>
     <profile>
