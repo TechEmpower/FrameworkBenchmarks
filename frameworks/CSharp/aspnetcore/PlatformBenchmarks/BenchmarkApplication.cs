@@ -39,9 +39,10 @@ namespace PlatformBenchmarks
 
         public static class Paths
         {
-            public readonly static AsciiString Plaintext = "/plaintext";
+            public readonly static AsciiString SingleQuery = "/db";
             public readonly static AsciiString Json = "/json";
             public readonly static AsciiString Fortunes = "/fortunes";
+            public readonly static AsciiString Plaintext = "/plaintext";
         }
 
         private RequestType _requestType;
@@ -51,17 +52,22 @@ namespace PlatformBenchmarks
             var requestType = RequestType.NotRecognized;
             if (method == HttpMethod.Get)
             {
-                if (Paths.Plaintext.Length <= path.Length && path.StartsWith(Paths.Plaintext))
+                var pathLength = path.Length;
+                if (Paths.SingleQuery.Length <= pathLength && path.StartsWith(Paths.SingleQuery))
                 {
-                    requestType = RequestType.PlainText;
+                    requestType = RequestType.SingleQuery;
                 }
-                else if (Paths.Json.Length <= path.Length && path.StartsWith(Paths.Json))
+                else if (Paths.Json.Length <= pathLength && path.StartsWith(Paths.Json))
                 {
                     requestType = RequestType.Json;
                 }
-                else if (Paths.Fortunes.Length <= path.Length && path.StartsWith(Paths.Fortunes))
+                else if (Paths.Fortunes.Length <= pathLength && path.StartsWith(Paths.Fortunes))
                 {
                     requestType = RequestType.Fortunes;
+                }
+                else if (Paths.Plaintext.Length <= pathLength && path.StartsWith(Paths.Plaintext))
+                {
+                    requestType = RequestType.PlainText;
                 }
             }
 
@@ -81,6 +87,10 @@ namespace PlatformBenchmarks
             else if (_requestType == RequestType.Fortunes)
             {
                 return Fortunes(Writer);
+            }
+            else if (_requestType == RequestType.SingleQuery)
+            {
+                return SingleQuery(Writer);
             }
             else
             {
@@ -194,6 +204,40 @@ namespace PlatformBenchmarks
             writer.Commit();
         }
 
+        private async Task SingleQuery(PipeWriter pipeWriter)
+        {
+            OutputSingleQuery(pipeWriter, await Db.LoadSingleQueryRow());
+        }
+
+        private static void OutputSingleQuery(PipeWriter pipeWriter, World row)
+        {
+            var writer = GetWriter(pipeWriter);
+
+            // HTTP 1.1 OK
+            writer.Write(_http11OK);
+
+            // Server headers
+            writer.Write(_headerServer);
+
+            // Date header
+            writer.Write(DateHeader.HeaderBytes);
+
+            // Content-Type header
+            writer.Write(_headerContentTypeJson);
+
+            // Content-Length header
+            writer.Write(_headerContentLength);
+            var jsonPayload = JsonSerializer.SerializeUnsafe(row);
+            writer.WriteNumeric((uint)jsonPayload.Count);
+
+            // End of headers
+            writer.Write(_eoh);
+
+            // Body
+            writer.Write(jsonPayload);
+            writer.Commit();
+        }
+
         private static void Default(PipeWriter pipeWriter)
         {
             var writer = GetWriter(pipeWriter);
@@ -220,7 +264,8 @@ namespace PlatformBenchmarks
             NotRecognized,
             PlainText,
             Json,
-            Fortunes
+            Fortunes,
+            SingleQuery
         }
     }
 }
