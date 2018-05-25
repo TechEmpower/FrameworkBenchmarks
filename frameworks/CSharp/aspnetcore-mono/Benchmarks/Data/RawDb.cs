@@ -68,42 +68,7 @@ namespace Benchmarks.Data
 
         public async Task<World[]> LoadMultipleQueriesRows(int count)
         {
-            const int partitions = 10;
-
-            if (count == 1)
-            {
-                return new []{ await LoadSingleQueryRow() };
-            }
-            else
-            {
-                var minGroup = count / partitions;
-                var extra = count - minGroup * partitions;
-                var groups = minGroup > 0 ? partitions : extra;
-
-                var result = new World[count];
-                var tasks = new Task[groups];
-
-                int offset = 0;
-                for (var i = 0; i < tasks.Length; i++)
-                {
-                    var size = minGroup;
-                    if (extra > 0)
-                    {
-                        size++;
-                        extra--;
-                    }
-
-                    tasks[i] = LoadMultipleQueriesParition(offset, size, result);
-                    offset += size;
-                }
-
-                await Task.WhenAll(tasks);
-                return result;
-            }
-        }
-
-        private async Task LoadMultipleQueriesParition(int offset, int count, World[] result)
-        {
+            var result = new World[count];
             using (var db = _dbProviderFactory.CreateConnection())
             {
                 db.ConnectionString = _connectionString;
@@ -112,11 +77,13 @@ namespace Benchmarks.Data
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        result[offset + i] = await ReadSingleRow(db, cmd);
+                        result[i] = await ReadSingleRow(db, cmd);
                         cmd.Parameters["@Id"].Value = _random.Next(1, 10001);
                     }
                 }
             }
+
+            return result;
         }
 
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
