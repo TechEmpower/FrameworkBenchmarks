@@ -1,8 +1,0 @@
-./play2-java-jpa-hikaricp/app/
-./play2-java-jpa-hikaricp/app/controllers
-./play2-java-jpa-hikaricp/app/controllers/Application.java
-./play2-java-jpa-hikaricp/app/utils
-./play2-java-jpa-hikaricp/app/utils/DatabaseExecutionContext.java
-./play2-java-jpa-hikaricp/app/models
-./play2-java-jpa-hikaricp/app/models/World.java
-./play2-java-jpa-hikaricp/app/models/Fortune.java

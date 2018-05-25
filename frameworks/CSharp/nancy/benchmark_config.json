@@ -13,15 +13,35 @@
       "framework": "nancy",
       "language": "C#",
       "flavor": "Mono",
-      "orm": "Raw",
+      "orm": "Micro",
       "platform": ".NET",
-      "webserver": "nginx",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nancy",
+      "notes": "",
+      "versus": ""
+    },
+    "netcore": {
+      "plaintext_url":"/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/query/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "nancy",
+      "language": "C#",
+      "flavor": "CoreCLR",
+      "orm": "Micro",
+      "platform": ".NET",
+      "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "nancy",
       "notes": "",
       "versus": "nancy"
     }
-
   }]
 }

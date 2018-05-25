@@ -1,8 +1,0 @@
-
-./morepath/app/__init__.py
-./morepath/app/app.py
-./morepath/app/model.py
-./morepath/app/path.py
-./morepath/app/run.py
-./morepath/app/view.py
-./morepath/app/templates/fortune.jinja2

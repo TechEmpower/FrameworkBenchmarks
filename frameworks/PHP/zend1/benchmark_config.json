@@ -15,7 +15,7 @@
       "framework": "ZendFramework1",
       "language": "PHP",
       "flavor": "PHP7",
-      "orm": "Full",
+      "orm": "Raw",
       "platform": "None",
       "webserver": "nginx",
       "os": "Linux",

@@ -15,6 +15,8 @@ RUN sed -i "s|listen = /run/php/php7.2-fpm.sock|listen = /run/php/php5.6-fpm.soc
 ADD ./ /cakephp
 WORKDIR /cakephp
 
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/5.6/fpm/php-fpm.conf ; fi;
+
 RUN mkdir -p app/tmp/cache/models
 RUN mkdir -p app/tmp/cache/persistent
 RUN mkdir -p app/tmp/logs

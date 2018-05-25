@@ -70,10 +70,9 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
 
     updateQuery.bindValue(QStringLiteral(":id"), ids);
     updateQuery.bindValue(QStringLiteral(":randomNumber"), randomNumbers);
-    if (Q_UNLIKELY(!updateQuery.execBatch())) {
+    if (Q_LIKELY(updateQuery.execBatch())) {
+        c->response()->setJsonArrayBody(array);
+    } else {
         c->res()->setStatus(Response::InternalServerError);
-        return;
     }
-
-    c->response()->setJsonBody(QJsonDocument(array));
 }

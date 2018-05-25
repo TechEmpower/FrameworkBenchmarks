@@ -8,19 +8,25 @@ $server->on('request', function ($req, $res) {
     switch ($req->server['request_uri'])
     {
         case "/json":
-            $res->header('Content-type', 'application/json');
+            $res->header('Content-Type', 'application/json');
             $res->end(json_encode(array('message' => 'Hello, World!')));
             break;
 
         case "/plaintext":
-            $res->header('Content-Type', 'text/plain');
+            $res->header('Content-Type', 'text/plain; charset=utf-8');
             $res->end('Hello, World!');
             break;
 
         case "/db":
-            $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
-                PDO::ATTR_PERSISTENT => true
-            ));
+            $db = new Swoole\Coroutine\Mysql;
+            $server = [
+                'host' => 'tfb-database',
+                'user' => 'benchmarkdbuser',
+                'password' => 'benchmarkdbpass',
+                'database' => 'hello_world'
+            ];
+            $db->connect($server);
+
             // Read number of queries to run from URL parameter
             $query_count = 1;
             if (isset($req->get['queries']) && $req->get['queries'] > 0)
@@ -29,16 +35,18 @@ $server->on('request', function ($req, $res) {
             // Create an array with the response string.
             $arr = array();
             // Define query
-            $statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id = ?');
+            $stmt = $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
+
             // For each query, store the result set values in the response array
             while (0 < $query_count--)
             {
                 $id = mt_rand(1, 10000);
-                $statement->execute(array($id));
+                $ret = $stmt->execute(array($id));
 
                 // Store result in array.
-                $arr[] = array('id' => $id, 'randomNumber' => $statement->fetchColumn());
+                $arr[] = array('id' => $id, 'randomNumber' => $ret[0]['randomNumber']);
             }
+
             // Use the PHP standard JSON encoder.
             // http://www.php.net/manual/en/function.json-encode.php
             if (count($arr) === 1)
@@ -49,20 +57,26 @@ $server->on('request', function ($req, $res) {
             break;
 
         case "/fortunes":
-            $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8', 'benchmarkdbuser', 'benchmarkdbpass', array(
-                PDO::ATTR_PERSISTENT => true
-            ));
-            // Define query
-            $statement = $pdo->query('SELECT id, message FROM Fortune');
+            $db = new Swoole\Coroutine\Mysql;
+            $server = [
+                'host' => 'tfb-database',
+                'user' => 'benchmarkdbuser',
+                'password' => 'benchmarkdbpass',
+                'database' => 'hello_world' //;charset=utf8
+            ];
+            $db->connect($server);
 
-            // Store result in array.
-            $arr = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-            $arr[0] = 'Additional fortune added at request time.';
-            asort($arr);
+            $fortune = [];
+            // Define query
+            $arr = $db->query('SELECT id, message FROM Fortune');
+            foreach ($arr as $row) 
+                $fortune[$row['id']] = $row['message'];
+            $fortune[0] = 'Additional fortune added at request time.';           
+            asort($fortune);
 
             $html = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-            foreach ($arr as $id => $fortune)
-                $html .= "<tr><td>" . $id . "</td><td>" . htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8') . "</td></tr>";
+            foreach ($fortune as $id => $message)     
+                $html .= "<tr><td>" . $id . "</td><td>" . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . "</td></tr>";
 
             $html .= "</table></body></html>";
 
@@ -71,28 +85,31 @@ $server->on('request', function ($req, $res) {
             break;
 
         case "/updates":
-            $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
-                PDO::ATTR_PERSISTENT => true
-            ));
+            $db = new Swoole\Coroutine\Mysql;
+            $server = [
+                'host' => 'tfb-database',
+                'user' => 'benchmarkdbuser',
+                'password' => 'benchmarkdbpass',
+                'database' => 'hello_world'
+            ];
+            $db->connect($server);
 
             $query_count = 1;
             if (isset($req->get['queries']) && $req->get['queries'] > 0)
-            {
                 $query_count = $req->get['queries'] > 500 ? 500 : $req->get['queries'];
-            }
 
             $arr = array();
-            $statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id = ?');
-            $updateStatement = $pdo->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+            $statement = $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
+            $updateStatement = $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
 
             while (0 < $query_count--)
             {
                 $id = mt_rand(1, 10000);
                 $randomNumber = mt_rand(1, 10000);
-                $statement->execute(array($id));
+                $ret = $statement->execute(array($id));
 
                 // Store result in array.
-                $world = array('id' => $id, 'randomNumber' => $statement->fetchColumn());
+                $world = array('id' => $id, 'randomNumber' => $ret[0]['randomNumber']);
                 $world['randomNumber'] = $randomNumber;
                 $updateStatement->execute(array($randomNumber, $id));
 
@@ -105,4 +122,5 @@ $server->on('request', function ($req, $res) {
     }
 
 });
+
 $server->start();

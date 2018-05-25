@@ -47,8 +47,8 @@ var (
 	preforkFlag      = false
 	childFlag        = false
 
-	// Database
 	helloWorldMessage = &Message{helloWorldString}
+	extraFortune      = &Fortune{Message: extraFortuneMessage}
 )
 
 // Message is a JSON struct to render a message
@@ -156,7 +156,7 @@ func fortunes(w http.ResponseWriter, r *http.Request) {
 		fortunes = append(fortunes, &fortune)
 	}
 	rows.Close()
-	fortunes = append(fortunes, &Fortune{Message: extraFortuneMessage})
+	fortunes = append(fortunes, extraFortune)
 
 	sort.Slice(fortunes, func(i, j int) bool {
 		return fortunes[i].Message < fortunes[j].Message

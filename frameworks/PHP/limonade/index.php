@@ -3,6 +3,7 @@ require_once "vendor/sofadesign/limonade/lib/limonade.php";
 require_once "vendor/php-activerecord/php-activerecord/ActiveRecord.php";
 
 function configure() {
+	ActiveRecord\Connection::$PDO_OPTIONS[PDO::ATTR_PERSISTENT] = true;
 	$cfg = ActiveRecord\Config::instance();
 	$cfg->set_model_directory("models");
 	$cfg->set_connections(array(

@@ -20,6 +20,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.sql.DataSource;
 
@@ -167,16 +168,23 @@ public final class HelloWebServer {
           }
         }
 
-        try (var statement =
-                 connection.prepareStatement(
-                     "UPDATE world SET randomnumber = ? WHERE id = ?")) {
+        var updateSql = new StringJoiner(
+            ", ",
+            "UPDATE world SET randomnumber = temp.randomnumber FROM (VALUES ",
+            " ORDER BY 1) AS temp(id, randomnumber) WHERE temp.id = world.id");
 
+        for (var world : worlds) {
+          updateSql.add("(?, ?)");
+        }
+
+        try (var statement = connection.prepareStatement(updateSql.toString())) {
+          var i = 0;
           for (var world : worlds) {
             world.randomNumber = randomWorldNumber();
-            statement.setInt(1, world.randomNumber);
-            statement.setInt(2, world.id);
-            statement.executeUpdate();
+            statement.setInt(++i, world.id);
+            statement.setInt(++i, world.randomNumber);
           }
+          statement.executeUpdate();
         }
       }
 

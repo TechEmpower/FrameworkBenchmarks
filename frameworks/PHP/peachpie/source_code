@@ -1,9 +1,0 @@
-./Benchmarks.sln
-./Server/Program.cs
-./Server/Server.csproj
-./Website/dbraw.php
-./Website/fortune.php
-./Website/json.php
-./Website/plaintext.php
-./Website/updateraw.php
-./Website/Website.msbuildproj

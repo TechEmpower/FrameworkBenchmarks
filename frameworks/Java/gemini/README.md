@@ -1,6 +1,6 @@
-# Gemini Benchmarking Test
+# [Gemini](https://github.com/TechEmpower/gemini) Benchmarking Test
 
-This is the Gemini portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the [Gemini](https://github.com/TechEmpower/gemini) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ### JSON Encoding Test
 

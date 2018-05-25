@@ -38,6 +38,7 @@ add_library(cutelyst_benchmarks SHARED ${cutelyst_benchmarks_SRCS})
 target_link_libraries(cutelyst_benchmarks
     Cutelyst::Core
     Cutelyst::Utils::Sql
+    Cutelyst::View::Grantlee
     Qt5::Core
     Qt5::Network
     Qt5::Sql

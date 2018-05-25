@@ -1,4 +1,4 @@
-FROM gradle:4.6.0-jdk10
+FROM gradle:4.7.0-jdk10
 USER root
 WORKDIR /hexagon
 COPY src src

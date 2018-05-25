@@ -13,12 +13,12 @@ COPY Revenj.Bench Revenj.Bench
 COPY Revenj.Bench.sln Reveng.Bench.sln
 COPY Revenj.Http.exe.config Revenj.Http.exe.config
 
-RUN curl -sL -O https://github.com/ngs-doo/revenj/releases/download/1.4.2/dsl-compiler.zip
+RUN curl -sL -O https://github.com/ngs-doo/revenj/releases/download/v1.5.0/dsl-compiler.zip
 RUN unzip dsl-compiler.zip
 RUN rm dsl-compiler.zip
 
-RUN curl -sL -O https://github.com/ngs-doo/dsl-compiler-client/releases/download/1.8.2/dsl-clc.jar
-RUN curl -sL -O https://github.com/ngs-doo/revenj/releases/download/1.4.2/http-server.zip
+RUN curl -sL -O https://github.com/ngs-doo/dsl-compiler-client/releases/download/clc-v1.9.6/dsl-clc.jar
+RUN curl -sL -O https://github.com/ngs-doo/revenj/releases/download/v1.5.0/http-server.zip
 RUN unzip http-server.zip -d /revenj/exe
 
 RUN java -jar dsl-clc.jar \
@@ -31,7 +31,7 @@ RUN java -jar dsl-clc.jar \
 	no-prompt \
 	dependencies:revenj.net=/revenj/exe
 
-RUN xbuild /revenj/Revenj.Bench/Revenj.Bench.csproj /t:Rebuild /p:Configuration=Release
+RUN msbuild /revenj/Revenj.Bench/Revenj.Bench.csproj /t:Rebuild /p:Configuration=Release
 
 RUN mv /revenj/Revenj.Http.exe.config /revenj/exe/Revenj.Http.exe.config
 
