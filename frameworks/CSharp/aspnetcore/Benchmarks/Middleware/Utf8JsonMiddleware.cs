@@ -14,7 +14,7 @@ namespace Benchmarks.Middleware
 
     public class Utf8JsonMiddleware
     {
-        private static readonly PathString _path = new PathString(Scenarios.GetPath(s => s.Json));
+        private static readonly PathString _path = new PathString(Scenarios.GetPath(s => s.Utf8Json));
         private const int _bufferSize = 27;
 
         private readonly RequestDelegate _next;
