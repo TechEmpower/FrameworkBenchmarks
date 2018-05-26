@@ -2,7 +2,7 @@
 use bytes::BytesMut;
 use std::io;
 
-pub const SIZE: usize = 29;
+pub const SIZE: usize = 27;
 
 #[derive(Serialize, Deserialize)]
 pub struct Message {
