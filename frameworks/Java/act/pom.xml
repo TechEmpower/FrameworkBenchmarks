@@ -48,10 +48,6 @@
     <app.entry>com.techempower.act.AppEntry</app.entry>
   </properties>
 
-  <build>
-    <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
-  </build>
-
   <dependencies>
 
     <dependency>
