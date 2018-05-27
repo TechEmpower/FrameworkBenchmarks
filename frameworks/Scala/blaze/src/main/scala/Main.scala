@@ -25,8 +25,8 @@ case class Message(message: String)
 object Main {
   private val config = HttpServerStageConfig()
   private val fjp = new ForkJoinPool(getRuntime.availableProcessors, defaultForkJoinWorkerThreadFactory, null, true)
-  private val jsonHeaders = Seq("server" -> "blaze", "content-type" -> "text/plain")
-  private val plaintextHeaders = Seq("server" -> "blaze", "content-type" -> "application/json")
+  private val jsonHeaders = Seq("server" -> "blaze", "content-type" -> "application/json")
+  private val plaintextHeaders = Seq("server" -> "blaze", "content-type" -> "text/plain")
 
   private implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make[Message](CodecMakerConfig())
 
