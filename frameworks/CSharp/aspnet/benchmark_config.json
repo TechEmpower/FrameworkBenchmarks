@@ -57,8 +57,6 @@
       "versus": "aspnet-mono"
     },
     "mono-mysql-raw": {
-      "json_url": "/json/default",
-      "plaintext_url": "/plaintext",
       "db_url": "/ado/mysql",
       "query_url": "/ado/mysql?queries=",
       "fortune_url": "/ado/mysql/fortunes",

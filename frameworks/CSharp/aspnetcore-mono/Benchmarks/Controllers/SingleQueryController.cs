@@ -13,21 +13,17 @@ namespace Benchmarks.Controllers
     {
         [HttpGet("raw")]
         [Produces("application/json")]
-        public Task<World> Raw()
+        public Task<WorldRaw> Raw()
         {
-            return ExecuteQuery<RawDb>();
+            var db = HttpContext.RequestServices.GetRequiredService<RawDb>();
+            return db.LoadSingleQueryRow();
         }
 
         [HttpGet("ef")]
         [Produces("application/json")]
         public Task<World> Ef()
         {
-            return ExecuteQuery<EfDb>();
-        }
-
-        private Task<World> ExecuteQuery<T>() where T : IDb
-        {
-            var db = HttpContext.RequestServices.GetRequiredService<T>();
+            var db = HttpContext.RequestServices.GetRequiredService<EfDb>();
             return db.LoadSingleQueryRow();
         }
     }
