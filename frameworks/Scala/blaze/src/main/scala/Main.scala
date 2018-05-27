@@ -1,50 +1,49 @@
 package blaze.techempower.benchmark
 
+import java.lang.Runtime._
 import java.net.InetSocketAddress
+import java.nio.ByteBuffer
+import java.nio.channels.AsynchronousChannelGroup
 import java.nio.charset.StandardCharsets.UTF_8
+import java.util.concurrent.ForkJoinPool
+import java.util.concurrent.ForkJoinPool._
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
-
-import org.http4s.blaze.channel.SocketConnection
+import org.http4s.blaze.channel.nio2.NIO2SocketServerGroup
 import org.http4s.blaze.http._
+import org.http4s.blaze.http.HttpServerStageConfig
+import org.http4s.blaze.http.http1.server.Http1ServerStage
+import org.http4s.blaze.pipeline.LeafBuilder
+import com.github.plokhotnyuk.jsoniter_scala.macros._
+import com.github.plokhotnyuk.jsoniter_scala.core._
+import org.http4s.blaze.channel.SocketConnection
+import org.http4s.blaze.http.RouteAction._
 
 import scala.concurrent.Future
 
+case class Message(message: String)
+
 object Main {
+  private val config = HttpServerStageConfig()
+  private val fjp = new ForkJoinPool(getRuntime.availableProcessors, defaultForkJoinWorkerThreadFactory, null, true)
+  private val jsonHeaders = Seq("server" -> "blaze", "content-type" -> "text/plain")
+  private val plaintextHeaders = Seq("server" -> "blaze", "content-type" -> "application/json")
 
-  private val mapper: ObjectMapper = new ObjectMapper().registerModule(DefaultScalaModule)
+  private implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make[Message](CodecMakerConfig())
 
-  private val plaintextResult = Future.successful {
-    val hs = Seq("server" -> "blaze", "content-type" -> "text/plain")
-    RouteAction.Ok("Hello, World!".getBytes(UTF_8), hs)
-  }
-
-  private def notFound(path: String) = Future.successful {
-    RouteAction.String(s"Not found: $path", 404, "Not Found", Nil)
-  }
-
-  // HTTP service definition
-  private def service(request: HttpRequest): Future[RouteAction] = request.uri match {
-    case "/plaintext" => plaintextResult
-
-    case "/json" => Future.successful {
-      val msg = mapper.writeValueAsBytes(Map("message" -> "Hello, World!"))
-      RouteAction.Ok(msg, Seq("server" -> "blaze", "content-type" -> "application/json"))
+  def serve(request: HttpRequest): Future[RouteAction] = Future.successful {
+    request.url match {
+      case "/plaintext" => Ok("Hello, World!".getBytes(UTF_8), plaintextHeaders)
+      case "/json" => Ok(writeToArray(Message("Hello, World!")), jsonHeaders)
     }
-
-    case other => notFound(other)
   }
+
+  def connect(conn: SocketConnection): Future[LeafBuilder[ByteBuffer]] =
+    Future.successful(LeafBuilder(new Http1ServerStage(serve, config)))
 
   def main(args: Array[String]): Unit = {
-    val srvc = { _: SocketConnection => service(_:HttpRequest) }
-    val server = Http1Server(srvc, new InetSocketAddress(8080), HttpServerStageConfig())
-      .getOrElse(sys.error("Failed to bind socket"))
-
-    try server.channel.join()
-    finally {
-      server.group.closeGroup()
-    }
+    NIO2SocketServerGroup(group = Some(AsynchronousChannelGroup.withThreadPool(fjp)))
+      .bind(new InetSocketAddress(8080), connect)
+      .getOrElse(sys.error("Failed to start server."))
+      .join()
   }
 }
-
