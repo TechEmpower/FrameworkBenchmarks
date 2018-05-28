@@ -1,17 +1,15 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.InteropServices;
 
 namespace PlatformBenchmarks
 {
-    [Table("world")]
-    public class World
+    [StructLayout(LayoutKind.Sequential, Size = 8)]
+    public struct World
     {
-        [Column("id")]
         public int Id { get; set; }
 
-        [Column("randomnumber")]
         public int RandomNumber { get; set; }
     }
 }
