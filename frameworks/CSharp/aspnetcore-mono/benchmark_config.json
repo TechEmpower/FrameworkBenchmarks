@@ -44,7 +44,7 @@
     "my": {
       "fortune_url": "/fortunes",
       "db_url": "/db",
-      "query_url": "/queries/count=",
+      "query_url": "/queries/queries=",
       "update_url": "/updates/queries=",
       "port": 8080,
       "approach": "Realistic",
