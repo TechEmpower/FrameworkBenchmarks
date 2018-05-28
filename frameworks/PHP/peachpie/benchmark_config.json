@@ -17,7 +17,7 @@
       "flavor": "PHP7",
       "orm": "Raw",
       "platform": ".NET",
-      "webserver": "None",
+      "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Peachpie",
