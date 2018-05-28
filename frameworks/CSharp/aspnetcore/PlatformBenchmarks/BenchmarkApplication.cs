@@ -2,12 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
+using System.Buffers.Text;
 using System.IO.Pipelines;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
-using Utf8Json;
 
 namespace PlatformBenchmarks
 {
@@ -35,7 +33,7 @@ namespace PlatformBenchmarks
         private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
         private readonly static AsciiString _contentLengthGap = new string(' ', 4);
 
-        public static IDb Db { get; set; }
+        public static RawDb Db { get; set; }
 
         public static class Paths
         {
@@ -43,9 +41,11 @@ namespace PlatformBenchmarks
             public readonly static AsciiString Json = "/json";
             public readonly static AsciiString Fortunes = "/fortunes";
             public readonly static AsciiString Plaintext = "/plaintext";
+            public readonly static AsciiString Updates = "/updates/queries=";
         }
 
         private RequestType _requestType;
+        private int _queries;
 
         public void OnStartLine(HttpMethod method, HttpVersion version, Span<byte> target, Span<byte> path, Span<byte> query, Span<byte> customMethod, bool pathEncoded)
         {
@@ -69,28 +69,52 @@ namespace PlatformBenchmarks
                 {
                     requestType = RequestType.PlainText;
                 }
+                else if (Paths.Updates.Length <= pathLength && path.StartsWith(Paths.Updates))
+                {
+                    _queries = ParseQueries(path);
+                    requestType = RequestType.Updates;
+                }
             }
 
             _requestType = requestType;
         }
 
+        private static int ParseQueries(Span<byte> path)
+        {
+            if (!Utf8Parser.TryParse(path.Slice(Paths.Updates.Length), out int queries, out _) || queries < 1)
+            {
+                queries = 1;
+            }
+            else if (queries > 500)
+            {
+                queries = 500;
+            }
+
+            return queries;
+        }
+
         public Task ProcessRequestAsync()
         {
-            if (_requestType == RequestType.PlainText)
+            var requestType = _requestType;
+            if (requestType == RequestType.PlainText)
             {
                 PlainText(Writer);
             }
-            else if (_requestType == RequestType.Json)
+            else if (requestType == RequestType.Json)
             {
                 Json(Writer);
             }
-            else if (_requestType == RequestType.Fortunes)
+            else if (requestType == RequestType.Fortunes)
             {
                 return Fortunes(Writer);
             }
-            else if (_requestType == RequestType.SingleQuery)
+            else if (requestType == RequestType.SingleQuery)
             {
                 return SingleQuery(Writer);
+            }
+            else if (requestType == RequestType.Updates)
+            {
+                return Updates(Writer, _queries);
             }
             else
             {
@@ -98,144 +122,6 @@ namespace PlatformBenchmarks
             }
 
             return Task.CompletedTask;
-        }
-
-        private static void PlainText(PipeWriter pipeWriter)
-        {
-            var writer = GetWriter(pipeWriter);
-
-            // HTTP 1.1 OK
-            writer.Write(_http11OK);
-
-            // Server headers
-            writer.Write(_headerServer);
-
-            // Date header
-            writer.Write(DateHeader.HeaderBytes);
-
-            // Content-Type header
-            writer.Write(_headerContentTypeText);
-
-            // Content-Length header
-            writer.Write(_headerContentLength);
-            writer.WriteNumeric((uint)_plainTextBody.Length);
-
-            // End of headers
-            writer.Write(_eoh);
-
-            // Body
-            writer.Write(_plainTextBody);
-            writer.Commit();
-        }
-
-        private static void Json(PipeWriter pipeWriter)
-        {
-            var writer = GetWriter(pipeWriter);
-
-            // HTTP 1.1 OK
-            writer.Write(_http11OK);
-
-            // Server headers
-            writer.Write(_headerServer);
-
-            // Date header
-            writer.Write(DateHeader.HeaderBytes);
-
-            // Content-Type header
-            writer.Write(_headerContentTypeJson);
-
-            // Content-Length header
-            writer.Write(_headerContentLength);
-            var jsonPayload = JsonSerializer.SerializeUnsafe(new { message = "Hello, World!" });
-            writer.WriteNumeric((uint)jsonPayload.Count);
-
-            // End of headers
-            writer.Write(_eoh);
-
-            // Body
-            writer.Write(jsonPayload);
-            writer.Commit();
-        }
-
-        private async Task Fortunes(PipeWriter pipeWriter)
-        {
-            OutputFortunes(pipeWriter, await Db.LoadFortunesRows());
-        }
-
-        private void OutputFortunes(PipeWriter pipeWriter, List<Fortune> model)
-        {
-            var writer = GetWriter(pipeWriter);
-
-            // HTTP 1.1 OK
-            writer.Write(_http11OK);
-
-            // Server headers
-            writer.Write(_headerServer);
-
-            // Date header
-            writer.Write(DateHeader.HeaderBytes);
-
-            // Content-Type header
-            writer.Write(_headerContentTypeHtml);
-
-            // Content-Length header
-            writer.Write(_headerContentLength);
-
-            var lengthWriter = writer;
-            writer.Write(_contentLengthGap);
-
-            // End of headers
-            writer.Write(_eoh);
-
-            var bodyStart = writer.Buffered;
-            // Body
-            writer.Write(_fortunesTableStart);
-            foreach (var item in model)
-            {
-                writer.Write(_fortunesRowStart);
-                writer.WriteNumeric((uint)item.Id);
-                writer.Write(_fortunesColumn);
-                writer.WriteUtf8String(HtmlEncoder.Encode(item.Message));
-                writer.Write(_fortunesRowEnd);
-            }
-            writer.Write(_fortunesTableEnd);
-            lengthWriter.WriteNumeric((uint)(writer.Buffered - bodyStart));
-
-            writer.Commit();
-        }
-
-        private async Task SingleQuery(PipeWriter pipeWriter)
-        {
-            OutputSingleQuery(pipeWriter, await Db.LoadSingleQueryRow());
-        }
-
-        private static void OutputSingleQuery(PipeWriter pipeWriter, World row)
-        {
-            var writer = GetWriter(pipeWriter);
-
-            // HTTP 1.1 OK
-            writer.Write(_http11OK);
-
-            // Server headers
-            writer.Write(_headerServer);
-
-            // Date header
-            writer.Write(DateHeader.HeaderBytes);
-
-            // Content-Type header
-            writer.Write(_headerContentTypeJson);
-
-            // Content-Length header
-            writer.Write(_headerContentLength);
-            var jsonPayload = JsonSerializer.SerializeUnsafe(row);
-            writer.WriteNumeric((uint)jsonPayload.Count);
-
-            // End of headers
-            writer.Write(_eoh);
-
-            // Body
-            writer.Write(jsonPayload);
-            writer.Commit();
         }
 
         private static void Default(PipeWriter pipeWriter)
@@ -265,7 +151,8 @@ namespace PlatformBenchmarks
             PlainText,
             Json,
             Fortunes,
-            SingleQuery
+            SingleQuery,
+            Updates
         }
     }
 }
