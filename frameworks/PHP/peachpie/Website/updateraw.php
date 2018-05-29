@@ -46,7 +46,11 @@ function updateraw() {
 
   // Use the PHP standard JSON encoder.
   // http://www.php.net/manual/en/function.json-encode.php
-  echo json_encode($arr);
+  $output = json_encode($arr);
+  // Set content length
+  header("Content-Length: {strlen($output)}");
+
+  echo $output;
 }
 
 updateraw();
