@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.IO.Pipelines;
 using System.Text.Encodings.Web;
@@ -42,26 +43,47 @@ namespace PlatformBenchmarks
             public readonly static AsciiString Plaintext = "/plaintext";
             public readonly static AsciiString Json = "/json";
             public readonly static AsciiString Fortunes = "/fortunes";
+            public readonly static AsciiString SingleQuery = "/db";
+            public readonly static AsciiString MultipleQueries = "/queries/count=";
         }
 
         private RequestType _requestType;
+        private int _queries;
 
         public void OnStartLine(HttpMethod method, HttpVersion version, Span<byte> target, Span<byte> path, Span<byte> query, Span<byte> customMethod, bool pathEncoded)
         {
             var requestType = RequestType.NotRecognized;
             if (method == HttpMethod.Get)
             {
-                if (Paths.Plaintext.Length <= path.Length && path.StartsWith(Paths.Plaintext))
+                var pathLength = path.Length;
+                if (Paths.SingleQuery.Length <= pathLength && path.StartsWith(Paths.SingleQuery))
                 {
-                    requestType = RequestType.PlainText;
+                    requestType = RequestType.SingleQuery;
                 }
-                else if (Paths.Json.Length <= path.Length && path.StartsWith(Paths.Json))
+                else if (Paths.Json.Length <= pathLength && path.StartsWith(Paths.Json))
                 {
                     requestType = RequestType.Json;
                 }
-                else if (Paths.Fortunes.Length <= path.Length && path.StartsWith(Paths.Fortunes))
+                else if (Paths.Fortunes.Length <= pathLength && path.StartsWith(Paths.Fortunes))
                 {
                     requestType = RequestType.Fortunes;
+                }
+                else if (Paths.Plaintext.Length <= pathLength && path.StartsWith(Paths.Plaintext))
+                {
+                    requestType = RequestType.PlainText;
+                }
+                else if (Paths.MultipleQueries.Length <= pathLength && path.StartsWith(Paths.MultipleQueries))
+                {
+                    if (!Utf8Parser.TryParse(path.Slice(Paths.MultipleQueries.Length), out int queries, out _) || queries < 1)
+                    {
+                        queries = 1;
+                    }
+                    else if (queries > 500)
+                    {
+                        queries = 500;
+                    }
+                    _queries = queries;
+                    requestType = RequestType.MultipleQueries;
                 }
             }
 
@@ -81,6 +103,14 @@ namespace PlatformBenchmarks
             else if (_requestType == RequestType.Fortunes)
             {
                 return Fortunes(Writer);
+            }
+            else if (_requestType == RequestType.SingleQuery)
+            {
+                return SingleQuery(Writer);
+            }
+            else if (_requestType == RequestType.MultipleQueries)
+            {
+                return MultipleQueries(Writer, _queries);
             }
             else
             {
@@ -116,7 +146,9 @@ namespace PlatformBenchmarks
             NotRecognized,
             PlainText,
             Json,
-            Fortunes
+            Fortunes,
+            SingleQuery,
+            MultipleQueries
         }
     }
 }

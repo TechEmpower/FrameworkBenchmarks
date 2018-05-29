@@ -41,10 +41,14 @@ function dbraw() {
   // Use the PHP standard JSON encoder.
   // http://www.php.net/manual/en/function.json-encode.php
   if ($is_multi) {
-    echo json_encode($arr);
+    $output = json_encode($arr);
   } else {
-    echo json_encode($arr[0]);
+    $output = json_encode($arr[0]);
   }
+  // Set content length
+  header("Content-Length: {strlen($output)}");
+
+  echo $output;
 }
 
 dbraw();

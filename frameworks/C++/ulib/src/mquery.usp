@@ -22,8 +22,9 @@ static void usp_fork_mquery()
       {
       U_WARNING("usp_fork_mquery(): connection disabled or failed");
 
-      delete mc;
-             mc = U_NULLPTR;
+      U_DELETE(mc)
+
+      mc = U_NULLPTR;
 
       return;
       }
@@ -32,8 +33,9 @@ static void usp_fork_mquery()
       {
       U_WARNING("usp_fork_mquery(): selectCollection() failed");
 
-      delete mc;
-             mc = U_NULLPTR;
+      U_DELETE(mc)
+
+      mc = U_NULLPTR;
 
       return;
       }
@@ -52,12 +54,12 @@ static void usp_end_mquery()
 
    if (query)
       {
-      delete mc;
+      U_DELETE(mc)
 
       U_SYSCALL_VOID(bson_destroy, "%p", query);
 
 #  ifndef AS_cpoll_cppsp_DO
-      delete pvworld_query;
+      U_DELETE(pvworld_query)
 #  endif
       }
 }

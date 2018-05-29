@@ -1,13 +1,10 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.IO.Pipelines;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
-using Utf8Json;
 
 namespace PlatformBenchmarks
 {
@@ -18,7 +15,7 @@ namespace PlatformBenchmarks
             OutputFortunes(pipeWriter, await Db.LoadFortunesRows());
         }
 
-        private void OutputFortunes(PipeWriter pipeWriter, List<Fortune> model)
+        private static void OutputFortunes(PipeWriter pipeWriter, List<Fortune> model)
         {
             var writer = GetWriter(pipeWriter);
 

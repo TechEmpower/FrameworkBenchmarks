@@ -22,6 +22,8 @@
     },
     "pg": {
       "fortune_url": "/fortunes",
+      "db_url": "/db",
+      "query_url": "/queries/count=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -40,6 +42,8 @@
     },
     "my": {
       "fortune_url": "/fortunes",
+      "db_url": "/db",
+      "query_url": "/queries/count=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

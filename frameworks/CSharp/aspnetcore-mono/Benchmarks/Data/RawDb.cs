@@ -69,7 +69,6 @@ namespace Benchmarks.Data
         public async Task<World[]> LoadMultipleQueriesRows(int count)
         {
             var result = new World[count];
-
             using (var db = _dbProviderFactory.CreateConnection())
             {
                 db.ConnectionString = _connectionString;

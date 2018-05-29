@@ -30,6 +30,7 @@ This includes tests for plaintext and json serialization.
 * [Plaintext MVC](Benchmarks/Controllers/HomeController.cs): "/mvc/plaintext"
 * [JSON Serialization](Benchmarks/Middleware/JsonMiddleware.cs): "/json"
 * [JSON Serialization MVC](Benchmarks/Controllers/HomeController.cs): "/mvc/json"
+* [JSON Serialization Utf8Json](Benchmarks/Middleware/Utf8JsonMiddleware.cs): "/utf8json"
 * [Single Query Raw](Benchmarks/Middleware/SingleQueryRawMiddleware.cs): "/db/raw"
 * [Single Query EF](Benchmarks/Middleware/SingleQueryEfMiddleware.cs): "/db/ef"
 * [Single Query Dapper](Benchmarks/Middleware/SingleQueryDapperMiddleware.cs): "/db/dapper"

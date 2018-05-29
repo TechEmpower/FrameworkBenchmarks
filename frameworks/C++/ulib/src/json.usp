@@ -18,8 +18,8 @@ static void usp_init_json()
    U_TRACE(5, "::usp_init_json()")
 
 #ifndef AS_cpoll_cppsp_DO
-   U_NEW(UString, pkey,   U_STRING_FROM_CONSTANT("message"));
-   U_NEW(UString, pvalue, U_STRING_FROM_CONSTANT("Hello, World!"));
+   U_NEW_STRING(pkey,   UString(U_CONSTANT_TO_PARAM("message")));
+   U_NEW_STRING(pvalue, UString(U_CONSTANT_TO_PARAM("Hello, World!")));
 #endif
 }
 
@@ -29,8 +29,8 @@ static void usp_end_json()
    U_TRACE(5, "::usp_end_json()")
 
 #ifndef AS_cpoll_cppsp_DO
-   delete pkey;
-   delete pvalue;
+   U_DELETE(pkey)
+   U_DELETE(pvalue)
 #endif
 }
 #endif

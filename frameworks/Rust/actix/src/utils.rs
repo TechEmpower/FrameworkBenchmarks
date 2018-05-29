@@ -1,5 +1,13 @@
+#![allow(dead_code)]
 use bytes::BytesMut;
 use std::io;
+
+pub const SIZE: usize = 27;
+
+#[derive(Serialize, Deserialize)]
+pub struct Message {
+    pub message: &'static str,
+}
 
 pub struct Writer<'a>(pub &'a mut BytesMut);
 
