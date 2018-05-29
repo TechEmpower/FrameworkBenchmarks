@@ -36,7 +36,7 @@
   <parent>
     <groupId>org.actframework</groupId>
     <artifactId>act-starter-parent</artifactId>
-    <version>1.8.8.4-SNAPSHOT</version>
+    <version>1.8.8.4</version>
   </parent>
 
   <properties>
@@ -154,14 +154,6 @@
           <artifactId>mysql-connector-java</artifactId>
           <version>${mysql.version}</version>
         </dependency>
-        <dependency>
-          <groupId>com.zaxxer</groupId>
-          <artifactId>HikariCP</artifactId>
-        </dependency>
-        <!-- <dependency>
-          <groupId>com.alibaba</groupId>
-          <artifactId>druid</artifactId>
-        </dependency>-->
       </dependencies>
     </profile>
     <profile>
@@ -220,10 +212,6 @@
           <groupId>org.postgresql</groupId>
           <artifactId>postgresql</artifactId>
           <version>${postgres-jdbc.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>com.zaxxer</groupId>
-          <artifactId>HikariCP</artifactId>
         </dependency>
       </dependencies>
     </profile>
