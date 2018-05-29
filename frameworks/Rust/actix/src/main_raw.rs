@@ -20,7 +20,6 @@ use actix::prelude::*;
 use actix_web::server::{self, HttpHandler, HttpHandlerTask, HttpServer, Writer};
 use actix_web::{Error, HttpRequest};
 use askama::Template;
-use bytes::BytesMut;
 use futures::{Async, Future, Poll};
 use postgres::{Connection, TlsMode};
 
@@ -29,7 +28,7 @@ mod models;
 mod utils;
 
 use db_pg::{PgConnection, TellFortune};
-use utils::{Message, Writer as JsonWriter, SIZE};
+use utils::{Message, Writer as JsonWriter};
 
 const HTTPOK: &[u8] = b"HTTP/1.1 200 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: Actix\r\n";
@@ -44,15 +43,19 @@ struct App {
 
 impl HttpHandler for App {
     fn handle(&mut self, req: HttpRequest) -> Result<Box<HttpHandlerTask>, HttpRequest> {
-        match req.path() {
-            "/plaintext" => Ok(Box::new(Plaintext)),
-            "/json" => Ok(Box::new(Json)),
-            "/fortune" => {
-                let fut = Box::new(self.db.send(TellFortune));
-                Ok(Box::new(Fortune { fut }))
+        {
+            let path = req.path();
+            match path.len() {
+                10 if path == "/plaintext" => return Ok(Box::new(Plaintext)),
+                5 if path == "/json" => return Ok(Box::new(Json)),
+                8 if path == "/fortune" => {
+                    let fut = Box::new(self.db.send(TellFortune));
+                    return Ok(Box::new(Fortune { fut }));
+                }
+                _ => (),
             }
-            _ => Err(req),
         }
+        Err(req)
     }
 }
 
@@ -65,7 +68,7 @@ impl HttpHandlerTask for Plaintext {
         bytes.extend_from_slice(HTTPOK);
         bytes.extend_from_slice(HDR_SERVER);
         bytes.extend_from_slice(HDR_CTPLAIN);
-        server::write_content_length(BODY.len(), &mut bytes);
+        server::write_content_length(13, &mut bytes);
         io.set_date(bytes);
         bytes.extend_from_slice(BODY);
         Ok(Async::Ready(true))
@@ -79,17 +82,15 @@ impl HttpHandlerTask for Json {
         let message = Message {
             message: "Hello, World!",
         };
-        let mut body = BytesMut::with_capacity(SIZE);
-        serde_json::to_writer(JsonWriter(&mut body), &message).unwrap();
 
         let mut bytes = io.buffer();
         bytes.reserve(196);
         bytes.extend_from_slice(HTTPOK);
         bytes.extend_from_slice(HDR_SERVER);
         bytes.extend_from_slice(HDR_CTJSON);
-        server::write_content_length(body.len(), &mut bytes);
+        server::write_content_length(27, &mut bytes);
         io.set_date(bytes);
-        bytes.extend_from_slice(&body[..]);
+        serde_json::to_writer(JsonWriter(bytes), &message).unwrap();
         Ok(Async::Ready(true))
     }
 }
@@ -143,7 +144,7 @@ fn main() {
     }
 
     // Start db executor actors
-    let addr = SyncArbiter::start(num_cpus::get() * 4, move || {
+    let addr = SyncArbiter::start(num_cpus::get() * 3, move || {
         db_pg::PgConnection::new(db_url)
     });
 
