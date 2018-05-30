@@ -20,7 +20,7 @@ $server->on('request', function ($req, $res) {
         case "/db":
             $db = new Swoole\Coroutine\Mysql;
             $server = [
-                'host' => 'tfb-database',
+                'host' => co::gethostbyname('tfb-database'),
                 'user' => 'benchmarkdbuser',
                 'password' => 'benchmarkdbpass',
                 'database' => 'hello_world'
@@ -59,7 +59,7 @@ $server->on('request', function ($req, $res) {
         case "/fortunes":
             $db = new Swoole\Coroutine\Mysql;
             $server = [
-                'host' => 'tfb-database',
+                'host' => co::gethostbyname('tfb-database'),
                 'user' => 'benchmarkdbuser',
                 'password' => 'benchmarkdbpass',
                 'database' => 'hello_world' //;charset=utf8
@@ -87,7 +87,7 @@ $server->on('request', function ($req, $res) {
         case "/updates":
             $db = new Swoole\Coroutine\Mysql;
             $server = [
-                'host' => 'tfb-database',
+                'host' => co::gethostbyname('tfb-database'),
                 'user' => 'benchmarkdbuser',
                 'password' => 'benchmarkdbpass',
                 'database' => 'hello_world'
