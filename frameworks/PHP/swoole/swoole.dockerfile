@@ -9,8 +9,8 @@ RUN cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE
 
 RUN docker-php-ext-install pdo_mysql > /dev/null
 
-ADD ./ /swoole
 WORKDIR /swoole
+COPY swoole-server.php swoole-server.php
 
 CMD sed -i 's|NUMCORES|'"$(nproc)"'|g' swoole-server.php && \
     php swoole-server.php
