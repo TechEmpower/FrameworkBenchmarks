@@ -49,7 +49,7 @@ namespace Benchmarks
             services.AddSingleton(Scenarios);
 
             // Common DB services
-            services.AddSingleton<IRandom, DefaultRandom>();
+            services.AddSingleton<ConcurrentRandom>();
 
             var appSettings = Configuration.Get<AppSettings>();
             Console.WriteLine($"Database: {appSettings.Database}");
@@ -173,6 +173,11 @@ namespace Benchmarks
             if (Scenarios.Any("Mvc"))
             {
                 app.UseMvc();
+            }
+
+            if (Scenarios.Any("Update"))
+            {
+                BatchUpdateString.Initalize();
             }
 
             if (Scenarios.StaticFiles)
