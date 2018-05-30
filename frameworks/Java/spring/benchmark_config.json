@@ -15,7 +15,7 @@
       "framework": "spring",
       "language": "Java",
       "flavor": "None",
-      "orm": "Full",
+      "orm": "Micro",
       "platform": "Tomcat",
       "webserver": "None",
       "os": "Linux",
