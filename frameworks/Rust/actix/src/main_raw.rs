@@ -14,12 +14,13 @@ extern crate rand;
 #[macro_use]
 extern crate diesel;
 
-use std::io;
+use std::{cmp, io};
 
 use actix::prelude::*;
 use actix_web::server::{self, HttpHandler, HttpHandlerTask, HttpServer, Writer};
 use actix_web::{Error, HttpRequest};
 use askama::Template;
+use bytes::BytesMut;
 use futures::{Async, Future, Poll};
 use postgres::{Connection, TlsMode};
 
@@ -27,7 +28,7 @@ mod db_pg;
 mod models;
 mod utils;
 
-use db_pg::{PgConnection, TellFortune};
+use db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateWorld};
 use utils::{Message, Writer as JsonWriter};
 
 const HTTPOK: &[u8] = b"HTTP/1.1 200 OK\r\n";
@@ -48,9 +49,44 @@ impl HttpHandler for App {
             match path.len() {
                 10 if path == "/plaintext" => return Ok(Box::new(Plaintext)),
                 5 if path == "/json" => return Ok(Box::new(Json)),
+                3 if path == "/db" => {
+                    return Ok(Box::new(World {
+                        fut: Box::new(self.db.send(RandomWorld)),
+                    }))
+                }
                 8 if path == "/fortune" => {
                     let fut = Box::new(self.db.send(TellFortune));
                     return Ok(Box::new(Fortune { fut }));
+                }
+                8 if path == "/queries" => {
+                    let q = req
+                        .query()
+                        .get("q")
+                        .map(|q| {
+                            cmp::min(
+                                500,
+                                cmp::max(1, q.parse::<u16>().ok().unwrap_or(1)),
+                            )
+                        })
+                        .unwrap_or(1);
+                    return Ok(Box::new(Queries {
+                        fut: Box::new(self.db.send(RandomWorlds(q))),
+                    }));
+                }
+                8 if path == "/updates" => {
+                    let q = req
+                        .query()
+                        .get("q")
+                        .map(|q| {
+                            cmp::min(
+                                500,
+                                cmp::max(1, q.parse::<u16>().ok().unwrap_or(1)),
+                            )
+                        })
+                        .unwrap_or(1);
+                    return Ok(Box::new(Updates {
+                        fut: Box::new(self.db.send(UpdateWorld(q))),
+                    }));
                 }
                 _ => (),
             }
@@ -119,6 +155,90 @@ impl HttpHandlerTask for Fortune {
                 bytes.extend_from_slice(HTTPOK);
                 bytes.extend_from_slice(HDR_SERVER);
                 bytes.extend_from_slice(HDR_CTHTML);
+                server::write_content_length(body.len(), &mut bytes);
+                io.set_date(bytes);
+                bytes.extend_from_slice(body.as_ref());
+                Ok(Async::Ready(true))
+            }
+            Ok(Async::NotReady) => Ok(Async::NotReady),
+            Ok(Async::Ready(Err(e))) => Err(e.into()),
+            Err(e) => Err(e.into()),
+        }
+    }
+}
+
+struct World {
+    fut: Box<Future<Item = io::Result<models::World>, Error = actix::MailboxError>>,
+}
+
+impl HttpHandlerTask for World {
+    fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
+        match self.fut.poll() {
+            Ok(Async::Ready(Ok(row))) => {
+                let mut body = BytesMut::with_capacity(31);
+                serde_json::to_writer(JsonWriter(&mut body), &row).unwrap();
+
+                let mut bytes = io.buffer();
+                bytes.reserve(196);
+                bytes.extend_from_slice(HTTPOK);
+                bytes.extend_from_slice(HDR_SERVER);
+                bytes.extend_from_slice(HDR_CTJSON);
+                server::write_content_length(body.len(), &mut bytes);
+                io.set_date(bytes);
+                bytes.extend_from_slice(body.as_ref());
+                Ok(Async::Ready(true))
+            }
+            Ok(Async::NotReady) => Ok(Async::NotReady),
+            Ok(Async::Ready(Err(e))) => Err(e.into()),
+            Err(e) => Err(e.into()),
+        }
+    }
+}
+
+struct Queries {
+    fut: Box<Future<Item = io::Result<Vec<models::World>>, Error = actix::MailboxError>>,
+}
+
+impl HttpHandlerTask for Queries {
+    fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
+        match self.fut.poll() {
+            Ok(Async::Ready(Ok(worlds))) => {
+                let mut body = BytesMut::with_capacity(35 * worlds.len());
+                serde_json::to_writer(JsonWriter(&mut body), &worlds).unwrap();
+
+                let mut bytes = io.buffer();
+                bytes.reserve(196);
+                bytes.extend_from_slice(HTTPOK);
+                bytes.extend_from_slice(HDR_SERVER);
+                bytes.extend_from_slice(HDR_CTJSON);
+                server::write_content_length(body.len(), &mut bytes);
+                io.set_date(bytes);
+                bytes.extend_from_slice(body.as_ref());
+                Ok(Async::Ready(true))
+            }
+            Ok(Async::NotReady) => Ok(Async::NotReady),
+            Ok(Async::Ready(Err(e))) => Err(e.into()),
+            Err(e) => Err(e.into()),
+        }
+    }
+}
+
+struct Updates {
+    fut: Box<Future<Item = io::Result<Vec<models::World>>, Error = actix::MailboxError>>,
+}
+
+impl HttpHandlerTask for Updates {
+    fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
+        match self.fut.poll() {
+            Ok(Async::Ready(Ok(worlds))) => {
+                let mut body = BytesMut::with_capacity(35 * worlds.len());
+                serde_json::to_writer(JsonWriter(&mut body), &worlds).unwrap();
+
+                let mut bytes = io.buffer();
+                bytes.reserve(196 + body.len());
+                bytes.extend_from_slice(HTTPOK);
+                bytes.extend_from_slice(HDR_SERVER);
+                bytes.extend_from_slice(HDR_CTJSON);
                 server::write_content_length(body.len(), &mut bytes);
                 io.set_date(bytes);
                 bytes.extend_from_slice(body.as_ref());
