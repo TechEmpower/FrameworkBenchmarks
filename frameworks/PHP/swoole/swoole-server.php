@@ -124,7 +124,7 @@ class MySQLPool
     var $pool_count = 0;
 
     var $server = [
-        'host' => "0.0.0.0",
+        'host' => 'tfb-database',
         'user' => 'benchmarkdbuser',
         'password' => 'benchmarkdbpass',
         'database' => 'hello_world'
@@ -133,7 +133,6 @@ class MySQLPool
     function __construct()
     {
         $this->pool = new SplQueue;
-        $this->server['host'] = Swoole\Coroutine::gethostbyname('tfb-database');
     }
 
     function put($redis)
