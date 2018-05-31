@@ -41,11 +41,5 @@ namespace Benchmarks.Controllers
             var db = HttpContext.RequestServices.GetRequiredService<EfDb>();
             return View("Fortunes", await db.LoadFortunesRows());
         }
-
-        [HttpGet("raven")]
-        public async Task<IActionResult> Raven()
-        {
-            return View("FortunesRaven", await _db.LoadFortunesRows());
-        }
     }
 }

@@ -369,10 +369,10 @@
       "versus": "aspcore-ado-my"
     },
     "mvc-raven-linux": {
-      "db_url": "/mvc/db/raven",
-      "query_url": "/mvc/queries/raven?queries=",
-      "update_url": "/mvc/updates/raven?queries=",
-      "fortune_url": "/mvc/fortunes/raven",
+      "db_url": "/mvc/raven/single",
+      "query_url": "/mvc/raven/queries?queries=",
+      "update_url": "/mvc/raven/updates?queries=",
+      "fortune_url": "/mvc/raven/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -390,10 +390,10 @@
       "versus": "aspcore-raven-win"
     },
     "mvc-raven-win": {
-      "db_url": "/mvc/db/raven",
-      "query_url": "/mvc/queries/raven?queries=",
-      "update_url": "/mvc/updates/raven?queries=",
-      "fortune_url": "/mvc/fortunes/raven",
+      "db_url": "/mvc/raven/single",
+      "query_url": "/mvc/raven/queries?queries=",
+      "update_url": "/mvc/raven/updates?queries=",
+      "fortune_url": "/mvc/raven/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",

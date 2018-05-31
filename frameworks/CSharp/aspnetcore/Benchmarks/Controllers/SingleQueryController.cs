@@ -11,16 +11,6 @@ namespace Benchmarks.Controllers
     [Route("mvc/db")]
     public class SingleQueryController : Controller
     {
-        private readonly RavenDb _db;
-
-        public SingleQueryController()
-        { }
-
-        public SingleQueryController(RavenDb provider)
-        {
-            _db = provider;
-        }
-
         [HttpGet("raw")]
         [Produces("application/json")]
         public Task<World> Raw()
@@ -46,13 +36,6 @@ namespace Benchmarks.Controllers
         {
             var db = HttpContext.RequestServices.GetRequiredService<T>();
             return db.LoadSingleQueryRow();
-        }
-
-        [HttpGet("raven")]
-        [Produces("application/json")]
-        public Task<WorldRaven> Raven()
-        {
-            return _db.LoadSingleQueryRow();
         }
     }
 }

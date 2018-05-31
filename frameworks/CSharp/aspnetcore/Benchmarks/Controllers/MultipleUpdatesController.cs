@@ -12,16 +12,6 @@ namespace Benchmarks.Controllers
     [Route("mvc/updates")]
     public class MultipleUpdatesController : Controller
     {
-        private readonly RavenDb _db;
-
-        public MultipleUpdatesController()
-        { }
-
-        public MultipleUpdatesController(RavenDb provider)
-        {
-            _db = provider;
-        }
-
         [HttpGet("raw")]
         [Produces("application/json")]
         public Task<World[]> Raw(int queries = 1)
@@ -48,14 +38,6 @@ namespace Benchmarks.Controllers
             queries = queries < 1 ? 1 : queries > 500 ? 500 : queries;
             var db = HttpContext.RequestServices.GetRequiredService<T>();
             return db.LoadMultipleUpdatesRows(queries);
-        }
-
-        [HttpGet("raven")]
-        [Produces("application/json")]
-        public Task<IEnumerable<WorldRaven>> Raven(int queries = 1)
-        {
-            queries = queries < 1 ? 1 : queries > 500 ? 500 : queries;
-            return _db.LoadMultipleUpdatesRows(queries);
         }
     }
 }
