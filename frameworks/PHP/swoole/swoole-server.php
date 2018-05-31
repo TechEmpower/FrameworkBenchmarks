@@ -133,7 +133,7 @@ class MySQLPool
     function __construct()
     {
         $this->pool = new SplQueue;
-        $this->server['host'] = co::gethostbyname('tfb-database');
+        $this->server['host'] = Swoole\Coroutine::gethostbyname('tfb-database');
     }
 
     function put($redis)
