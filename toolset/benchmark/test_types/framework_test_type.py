@@ -5,6 +5,7 @@ import requests
 import MySQLdb
 import psycopg2
 import pymongo
+import pyodbc
 import traceback
 
 from colorama import Fore
@@ -206,6 +207,25 @@ class FrameworkTestType:
             except Exception:
                 tb = traceback.format_exc()
                 log("ERROR: Unable to load current MongoDB World table.",
+                    color=Fore.RED)
+                log(tb)
+        elif database_name == "sqlserver":
+            try:
+                db = pyodbc.connect(
+                    "Driver={{ODBC Driver 17 for SQL Server}};"
+                    "Server={0};"
+                    "Port=1433;"
+                    "Database=hello_world;"
+                    "UID=benchmarkdbuser;"
+                    "PWD=benchmarkdbpass;".format(self.config.database_host))
+                cursor = db.cursor()
+                cursor.execute("SELECT * FROM world")
+                results = cursor.fetchall()
+                results_json.append(json.loads(json.dumps(dict(results))))
+                db.close()
+            except Exception:
+                tb = traceback.format_exc()
+                log("ERROR: Unable to load current SQL Server World table.",
                     color=Fore.RED)
                 log(tb)
         else:

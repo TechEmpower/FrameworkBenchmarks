@@ -64,6 +64,28 @@
         "display_name": "Gemini",
         "notes": "",
         "versus": "servlet"
+      },
+      "sqlserver": {
+        "db_url": "/db",
+        "query_url": "/query?queries=",
+        "cached_query_url": "/cached_query?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/update?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "SQLServer",
+        "framework": "gemini",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "Servlet",
+        "webserver": "Resin",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Gemini",
+        "notes": "",
+        "versus": "servlet"
       }
     }
   ]
