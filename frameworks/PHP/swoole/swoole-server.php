@@ -3,7 +3,10 @@ $server = new swoole_http_server('0.0.0.0', 8080, SWOOLE_BASE);
 $server->set(array(
     'worker_num' => NUMCORES
 ));
-$server->on('request', function ($req, $res) {
+
+$pool = new MySQLPool();
+
+$server->on('request', function ($req, $res) use ($pool) {
 
     switch ($req->server['request_uri'])
     {
@@ -18,14 +21,7 @@ $server->on('request', function ($req, $res) {
             break;
 
         case "/db":
-            $db = new Swoole\Coroutine\Mysql;
-            $server = [
-                'host' => co::gethostbyname('tfb-database'),
-                'user' => 'benchmarkdbuser',
-                'password' => 'benchmarkdbpass',
-                'database' => 'hello_world'
-            ];
-            $db->connect($server);
+            $db = $pool->get();
 
             // Read number of queries to run from URL parameter
             $query_count = 1;
@@ -52,19 +48,14 @@ $server->on('request', function ($req, $res) {
             if (count($arr) === 1)
                 $arr = $arr[0];
 
+            $pool->put($db);
+
             $res->header('Content-Type', 'application/json');
             $res->end(json_encode($arr));
             break;
 
         case "/fortunes":
-            $db = new Swoole\Coroutine\Mysql;
-            $server = [
-                'host' => co::gethostbyname('tfb-database'),
-                'user' => 'benchmarkdbuser',
-                'password' => 'benchmarkdbpass',
-                'database' => 'hello_world' //;charset=utf8
-            ];
-            $db->connect($server);
+            $db = $pool->get();
 
             $fortune = [];
             // Define query
@@ -80,19 +71,14 @@ $server->on('request', function ($req, $res) {
 
             $html .= "</table></body></html>";
 
+            $pool->put($db);
+
             $res->header('Content-Type', 'text/html; charset=utf-8');
             $res->end($html);
             break;
 
         case "/updates":
-            $db = new Swoole\Coroutine\Mysql;
-            $server = [
-                'host' => co::gethostbyname('tfb-database'),
-                'user' => 'benchmarkdbuser',
-                'password' => 'benchmarkdbpass',
-                'database' => 'hello_world'
-            ];
-            $db->connect($server);
+            $db = $pool->get();
 
             $query_count = 1;
             if (isset($req->get['queries']) && $req->get['queries'] > 0)
@@ -116,6 +102,8 @@ $server->on('request', function ($req, $res) {
                 $arr[] = $world;
             }
 
+            $pool->put($db);
+
             $res->header('Content-Type', 'application/json');
             $res->end(json_encode($arr));
             break;
@@ -124,3 +112,51 @@ $server->on('request', function ($req, $res) {
 });
 
 $server->start();
+
+/**
+ * Class MySQLPool
+ *
+ * Deal with the fact that Swoole 2.1.3 has no build in database pooling
+ */
+class MySQLPool
+{
+    protected $pool;
+    var $pool_count = 0;
+
+    var $server = [
+        'host' => "0.0.0.0",
+        'user' => 'benchmarkdbuser',
+        'password' => 'benchmarkdbpass',
+        'database' => 'hello_world'
+    ];
+
+    function __construct()
+    {
+        $this->pool = new SplQueue;
+        $this->server['host'] = co::gethostbyname('tfb-database');
+    }
+
+    function put($redis)
+    {
+        $this->pool->push($redis);
+        $this->pool_count++;
+    }
+
+    function get()
+    {
+        if ( $this->pool_count > 0)
+        {
+            $this->pool_count--;
+            return $this->pool->pop();
+        }
+
+        // No idle connection to create a new connection
+        $db = new Swoole\Coroutine\Mysql;
+        $db->connect($this->server);
+
+        if ($db == false)
+            return false;
+        else
+            return $db;
+    }
+}
