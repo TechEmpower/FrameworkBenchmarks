@@ -1,12 +1,13 @@
 namespace Benchmarks
 {
     using System.IO;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
 
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var config = new ConfigurationBuilder()
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
@@ -20,7 +21,7 @@ namespace Benchmarks
                 .UseKestrel()
                 .Build();
 
-            webHost.Run();
+            await webHost.RunAsync();
         }
     }
 }
