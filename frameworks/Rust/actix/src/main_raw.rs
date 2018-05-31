@@ -14,13 +14,12 @@ extern crate rand;
 #[macro_use]
 extern crate diesel;
 
-use std::{cmp, io};
+use std::{cmp, mem};
 
 use actix::prelude::*;
 use actix_web::server::{self, HttpHandler, HttpHandlerTask, HttpServer, Writer};
 use actix_web::{Error, HttpRequest};
 use askama::Template;
-use bytes::BytesMut;
 use futures::{Async, Future, Poll};
 use postgres::{Connection, TlsMode};
 
@@ -29,7 +28,7 @@ mod models;
 mod utils;
 
 use db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateWorld};
-use utils::{Message, Writer as JsonWriter};
+use utils::{Message, StackWriter, Writer as JsonWriter};
 
 const HTTPOK: &[u8] = b"HTTP/1.1 200 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: Actix\r\n";
@@ -51,12 +50,13 @@ impl HttpHandler for App {
                 5 if path == "/json" => return Ok(Box::new(Json)),
                 3 if path == "/db" => {
                     return Ok(Box::new(World {
-                        fut: Box::new(self.db.send(RandomWorld)),
+                        fut: self.db.send(RandomWorld),
                     }))
                 }
                 8 if path == "/fortune" => {
-                    let fut = Box::new(self.db.send(TellFortune));
-                    return Ok(Box::new(Fortune { fut }));
+                    return Ok(Box::new(Fortune {
+                        fut: self.db.send(TellFortune),
+                    }));
                 }
                 8 if path == "/queries" => {
                     let q = req
@@ -70,7 +70,7 @@ impl HttpHandler for App {
                         })
                         .unwrap_or(1);
                     return Ok(Box::new(Queries {
-                        fut: Box::new(self.db.send(RandomWorlds(q))),
+                        fut: self.db.send(RandomWorlds(q)),
                     }));
                 }
                 8 if path == "/updates" => {
@@ -85,7 +85,7 @@ impl HttpHandler for App {
                         })
                         .unwrap_or(1);
                     return Ok(Box::new(Updates {
-                        fut: Box::new(self.db.send(UpdateWorld(q))),
+                        fut: self.db.send(UpdateWorld(q)),
                     }));
                 }
                 _ => (),
@@ -132,9 +132,7 @@ impl HttpHandlerTask for Json {
 }
 
 struct Fortune {
-    fut: Box<
-        Future<Item = io::Result<Vec<models::Fortune>>, Error = actix::MailboxError>,
-    >,
+    fut: actix::dev::Request<Syn, PgConnection, TellFortune>,
 }
 
 #[derive(Template)]
@@ -147,17 +145,22 @@ impl HttpHandlerTask for Fortune {
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
             Ok(Async::Ready(Ok(rows))) => {
-                let tmpl = FortuneTemplate { items: &rows };
-                let body = tmpl.render().unwrap();
+                let mut body: [u8; 2048] = unsafe { mem::uninitialized() };
+                let len = {
+                    let mut writer = StackWriter(&mut body, 0);
+                    let tmpl = FortuneTemplate { items: &rows };
+                    tmpl.render_into(&mut writer).unwrap();
+                    writer.1
+                };
 
                 let mut bytes = io.buffer();
-                bytes.reserve(196 + body.len());
+                bytes.reserve(196 + len);
                 bytes.extend_from_slice(HTTPOK);
                 bytes.extend_from_slice(HDR_SERVER);
                 bytes.extend_from_slice(HDR_CTHTML);
-                server::write_content_length(body.len(), &mut bytes);
+                server::write_content_length(len, &mut bytes);
                 io.set_date(bytes);
-                bytes.extend_from_slice(body.as_ref());
+                bytes.extend_from_slice(&body[..len]);
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
@@ -168,24 +171,28 @@ impl HttpHandlerTask for Fortune {
 }
 
 struct World {
-    fut: Box<Future<Item = io::Result<models::World>, Error = actix::MailboxError>>,
+    fut: actix::dev::Request<Syn, PgConnection, RandomWorld>,
 }
 
 impl HttpHandlerTask for World {
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
             Ok(Async::Ready(Ok(row))) => {
-                let mut body = BytesMut::with_capacity(31);
-                serde_json::to_writer(JsonWriter(&mut body), &row).unwrap();
+                let mut body: [u8; 48] = unsafe { mem::uninitialized() };
+                let len = {
+                    let mut writer = StackWriter(&mut body, 0);
+                    serde_json::to_writer(&mut writer, &row).unwrap();
+                    writer.1
+                };
 
                 let mut bytes = io.buffer();
                 bytes.reserve(196);
                 bytes.extend_from_slice(HTTPOK);
                 bytes.extend_from_slice(HDR_SERVER);
                 bytes.extend_from_slice(HDR_CTJSON);
-                server::write_content_length(body.len(), &mut bytes);
+                server::write_content_length(len, &mut bytes);
                 io.set_date(bytes);
-                bytes.extend_from_slice(body.as_ref());
+                bytes.extend_from_slice(&body[..len]);
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
@@ -196,24 +203,28 @@ impl HttpHandlerTask for World {
 }
 
 struct Queries {
-    fut: Box<Future<Item = io::Result<Vec<models::World>>, Error = actix::MailboxError>>,
+    fut: actix::dev::Request<Syn, PgConnection, RandomWorlds>,
 }
 
 impl HttpHandlerTask for Queries {
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
             Ok(Async::Ready(Ok(worlds))) => {
-                let mut body = BytesMut::with_capacity(35 * worlds.len());
-                serde_json::to_writer(JsonWriter(&mut body), &worlds).unwrap();
+                let mut body: [u8; 24576] = unsafe { mem::uninitialized() };
+                let len = {
+                    let mut writer = StackWriter(&mut body, 0);
+                    serde_json::to_writer(&mut writer, &worlds).unwrap();
+                    writer.1
+                };
 
                 let mut bytes = io.buffer();
-                bytes.reserve(196);
+                bytes.reserve(196 + len);
                 bytes.extend_from_slice(HTTPOK);
                 bytes.extend_from_slice(HDR_SERVER);
                 bytes.extend_from_slice(HDR_CTJSON);
-                server::write_content_length(body.len(), &mut bytes);
+                server::write_content_length(len, &mut bytes);
                 io.set_date(bytes);
-                bytes.extend_from_slice(body.as_ref());
+                bytes.extend_from_slice(&body[..len]);
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
@@ -224,24 +235,28 @@ impl HttpHandlerTask for Queries {
 }
 
 struct Updates {
-    fut: Box<Future<Item = io::Result<Vec<models::World>>, Error = actix::MailboxError>>,
+    fut: actix::dev::Request<Syn, PgConnection, UpdateWorld>,
 }
 
 impl HttpHandlerTask for Updates {
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
             Ok(Async::Ready(Ok(worlds))) => {
-                let mut body = BytesMut::with_capacity(35 * worlds.len());
-                serde_json::to_writer(JsonWriter(&mut body), &worlds).unwrap();
+                let mut body: [u8; 24576] = unsafe { mem::uninitialized() };
+                let len = {
+                    let mut writer = StackWriter(&mut body, 0);
+                    serde_json::to_writer(&mut writer, &worlds).unwrap();
+                    writer.1
+                };
 
                 let mut bytes = io.buffer();
-                bytes.reserve(196 + body.len());
+                bytes.reserve(196 + len);
                 bytes.extend_from_slice(HTTPOK);
                 bytes.extend_from_slice(HDR_SERVER);
                 bytes.extend_from_slice(HDR_CTJSON);
-                server::write_content_length(body.len(), &mut bytes);
+                server::write_content_length(len, &mut bytes);
                 io.set_date(bytes);
-                bytes.extend_from_slice(body.as_ref());
+                bytes.extend_from_slice(&body[..len]);
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
