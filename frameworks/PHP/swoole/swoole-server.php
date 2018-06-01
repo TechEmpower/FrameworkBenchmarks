@@ -125,6 +125,7 @@ $server->start();
 class MySQLPool
 {
     protected $pool;
+    var $pool_count = 0;
 
     var $server = [
         'host' => '',
@@ -150,12 +151,16 @@ class MySQLPool
     function put($db)
     {
         $this->pool->push($db);
+        $this->pool_count++;
     }
 
     function get()
     {
-        if($db = $this->pool->pop())
-            return $db;
+        if($this->pool_count > 0)
+        {
+            $this->pool_count--;
+            return $this->pool->pop();
+        }
 
         // No idle connection to create a new connection
         $db = new Swoole\Coroutine\Mysql;
