@@ -7,8 +7,7 @@ $server->set(array(
 $pool = new MySQLPool();
 
 $server->on('workerStart', function () use (&$pool) {
-    $tfb_database_ip = Swoole\Coroutine::gethostbyname('tfb-database');
-    $pool->set_host_ip($tfb_database_ip);
+    $pool->set_host_ip();
 });
 
 $server->on('request', function ($req, $res) use ($pool) {
@@ -139,10 +138,13 @@ class MySQLPool
         $this->pool = new \SplQueue;
     }
 
-    function set_host_ip($ip)
+    function set_host_ip()
     {
         if( empty( $this->server['host'] ) )
-            $this->server['host'] = $ip;
+        {
+            $tfb_database_ip = Swoole\Coroutine::gethostbyname('tfb-database');
+            $this->server['host'] = $tfb_database_ip;
+        }
     }
 
     function put($db)
