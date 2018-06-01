@@ -11,7 +11,7 @@ RUN docker-php-ext-install pdo_mysql > /dev/null
 
 WORKDIR /swoole
 COPY swoole-server.php swoole-server.php
-COPY php.ini /etc/php/7.2/cli/conf.d/
+COPY php.ini /usr/local/etc/php/
 
 CMD sed -i 's|NUMCORES|'"$(nproc)"'|g' swoole-server.php && \
     php swoole-server.php
