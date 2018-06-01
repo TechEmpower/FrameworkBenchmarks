@@ -1,5 +1,5 @@
 {
-  "framework": "aspnet",
+  "framework": "aspnet-mono-ngx",
   "tests": [{
     "default": {
       "json_url": "/json/default",
@@ -16,11 +16,11 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET",
+      "display_name": "ASP.NET MVC on Mono via NGINX FastCGI",
       "notes": "",
       "versus": "aspnet-mono"
     },
-    "mono-jsonnet": {
+    "jn": {
       "json_url": "/json/jsonnet",
       "port": 8080,
       "approach": "Realistic",
@@ -34,11 +34,11 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "JSONNet",
+      "display_name": "Json.NET, ASP.NET MVC on Mono via NGINX FastCGI",
       "notes": "",
       "versus": "aspnet-mono"
     },
-    "mono-servicestack": {
+    "ss": {
       "json_url": "/json/servicestack",
       "port": 8080,
       "approach": "Realistic",
@@ -52,13 +52,11 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ServiceStack",
+      "display_name": "ServiceStack, ASP.NET MVC on Mono via NGINX FastCGI",
       "notes": "",
       "versus": "aspnet-mono"
     },
-    "mono-mysql-raw": {
-      "json_url": "/json/default",
-      "plaintext_url": "/plaintext",
+    "my": {
       "db_url": "/ado/mysql",
       "query_url": "/ado/mysql?queries=",
       "fortune_url": "/ado/mysql/fortunes",
@@ -75,11 +73,11 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET-raw",
+      "display_name": "ADO, ASP.NET MVC on Mono via NGINX FastCGI",
       "notes": "",
       "versus": "aspnet"
     },
-    "mono-mysql-entityframework": {
+    "my-ef": {
       "db_url": "/entityframework/mysql",
       "query_url": "/entityframework/mysql?queries=",
       "fortune_url": "/entityframework/mysql/fortunes",
@@ -96,7 +94,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "EntityFramework",
+      "display_name": "EntityFramework, ASP.NET MVC on Mono via NGINX FastCGI",
       "notes": "Entity framework",
       "versus": "aspnet"
     }

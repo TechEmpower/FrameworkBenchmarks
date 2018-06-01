@@ -3,6 +3,7 @@ package com.wizzardo.techempower;
 import com.wizzardo.http.framework.Configuration;
 import com.wizzardo.http.framework.di.PostConstruct;
 import com.wizzardo.http.framework.di.Service;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.postgresql.ds.PGSimpleDataSource;
@@ -13,8 +14,8 @@ import java.sql.SQLException;
 
 public class DBService implements Service, PostConstruct {
 
-    protected DataSource dataSource;
     protected DBConfig config;
+    protected DataSource dataSource;
 
     @Override
     public void init() {
@@ -58,6 +59,19 @@ public class DBService implements Service, PostConstruct {
         @Override
         public String prefix() {
             return "db";
+        }
+
+        @Override
+        public String toString() {
+            return "DBConfig{" +
+                    "dbname='" + dbname + '\'' +
+                    ", host='" + host + '\'' +
+                    ", port=" + port +
+                    ", username='" + username + '\'' +
+                    ", password='" + password + '\'' +
+                    ", maximumPoolSize=" + maximumPoolSize +
+                    ", minimumIdle=" + minimumIdle +
+                    '}';
         }
     }
 }

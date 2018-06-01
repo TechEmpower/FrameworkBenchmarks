@@ -20,7 +20,7 @@ $server->on('request', function ($req, $res) {
         case "/db":
             $db = new Swoole\Coroutine\Mysql;
             $server = [
-                'host' => 'tfb-database',
+                'host' => co::gethostbyname('tfb-database'),
                 'user' => 'benchmarkdbuser',
                 'password' => 'benchmarkdbpass',
                 'database' => 'hello_world'
@@ -59,7 +59,7 @@ $server->on('request', function ($req, $res) {
         case "/fortunes":
             $db = new Swoole\Coroutine\Mysql;
             $server = [
-                'host' => 'tfb-database',
+                'host' => co::gethostbyname('tfb-database'),
                 'user' => 'benchmarkdbuser',
                 'password' => 'benchmarkdbpass',
                 'database' => 'hello_world' //;charset=utf8
@@ -69,13 +69,13 @@ $server->on('request', function ($req, $res) {
             $fortune = [];
             // Define query
             $arr = $db->query('SELECT id, message FROM Fortune');
-            foreach ($arr as $row) 
+            foreach ($arr as $row)
                 $fortune[$row['id']] = $row['message'];
-            $fortune[0] = 'Additional fortune added at request time.';           
+            $fortune[0] = 'Additional fortune added at request time.';
             asort($fortune);
 
             $html = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-            foreach ($fortune as $id => $message)     
+            foreach ($fortune as $id => $message)
                 $html .= "<tr><td>" . $id . "</td><td>" . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . "</td></tr>";
 
             $html .= "</table></body></html>";
@@ -87,7 +87,7 @@ $server->on('request', function ($req, $res) {
         case "/updates":
             $db = new Swoole\Coroutine\Mysql;
             $server = [
-                'host' => 'tfb-database',
+                'host' => co::gethostbyname('tfb-database'),
                 'user' => 'benchmarkdbuser',
                 'password' => 'benchmarkdbpass',
                 'database' => 'hello_world'

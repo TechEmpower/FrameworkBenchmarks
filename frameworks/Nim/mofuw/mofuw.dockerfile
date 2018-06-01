@@ -1,4 +1,4 @@
-FROM gcc:7
+FROM gcc:latest
 
 RUN apt update -yqq &&                                                  \
     mkdir -p /nim &&                                                    \
@@ -11,18 +11,13 @@ RUN apt update -yqq &&                                                  \
     cd ../ &&                                                           \
     bin/nim c koch &&                                                   \
     ./koch boot -d:release &&                                           \
-    ./koch nimble &&                                                    \
     ./koch tools
 
 ENV PATH $PATH:/nim/nim-devel/bin:/root/.nimble/bin
 
-WORKDIR /mofu_framework
-RUN git clone https://github.com/2vg/mofuw.git && \
-    cd mofuw && \
-    nimble update && \
-    echo 'y' | nimble install
+RUN nimble install -y mofuw
 
-WORKDIR /mofuw_app
+WORKDIR /mofuwApp
 COPY techempower.nim techempower.nim
-RUN nim c -d:release --threads:on techempower.nim
+RUN nim c -d:release --threads:on -d:bufSize:512 techempower.nim
 CMD ["./techempower"]
