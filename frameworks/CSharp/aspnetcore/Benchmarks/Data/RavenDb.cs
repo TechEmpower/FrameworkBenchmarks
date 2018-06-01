@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Benchmarks.Configuration;
@@ -68,8 +69,8 @@ namespace Benchmarks.Data
             _worldStore = wstore;
             _fortuneStore = fstore;
         }
-
-        public async Task<WorldRaven> LoadSingleQueryRow()
+        
+        public async ValueTask<WorldRaven> LoadSingleQueryRow()
         {
             using (var session = _worldStore.OpenAsyncSession())
             {
@@ -77,22 +78,22 @@ namespace Benchmarks.Data
             }
         }
 
-        public async Task<IEnumerable<WorldRaven>> LoadMultipleQueriesRows(int count)
+        public async ValueTask<IEnumerable<WorldRaven>> LoadMultipleQueriesRows(int count)
         {
             using (var session = _worldStore.OpenAsyncSession())
-            {                
+            {
                 var ids = new string[count];
 
                 for (var i = 0; i < count; i++)
                     ids[i] = _identifiers[_random.Next(1, 10001)];
 
-                var result = await session.LoadAsync<WorldRaven>(ids)                    ;
+                var result = await session.LoadAsync<WorldRaven>(ids);
                 return result.Values;
             }
         }
 
-        public async Task<IEnumerable<WorldRaven>> LoadMultipleUpdatesRows(int count)
-        {
+        public async ValueTask<IEnumerable<WorldRaven>> LoadMultipleUpdatesRows(int count)
+        {         
             using (var session = _worldStore.OpenAsyncSession())
             {
                 var ids = new string[count];
@@ -112,7 +113,7 @@ namespace Benchmarks.Data
             }
         }
 
-        public async Task<List<FortuneRaven>> LoadFortunesRows()
+        public async ValueTask<List<FortuneRaven>> LoadFortunesRows()
         {
             using (var session = _fortuneStore.OpenAsyncSession())
             {
@@ -120,7 +121,7 @@ namespace Benchmarks.Data
 
                 // TODO: We need to have an static index and stream it completely. 
                 var query = session.Advanced
-                                   .AsyncRawQuery<FortuneRaven>("from Fortune order by Id");
+                                   .AsyncRawQuery<FortuneRaven>("from Fortune order by id()");
 
                 var results = await session.Advanced.StreamAsync(query);
                 while (await results.MoveNextAsync())
