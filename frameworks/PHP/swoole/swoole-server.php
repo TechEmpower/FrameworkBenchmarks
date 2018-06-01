@@ -6,6 +6,11 @@ $server->set(array(
 
 $pool = new MySQLPool();
 
+$server->on('workerStart', function () use (&$pool) {
+    $tfb_database_ip = Swoole\Coroutine::gethostbyname('tfb-database');
+    $pool->set_host_ip($tfb_database_ip);
+});
+
 $server->on('request', function ($req, $res) use ($pool) {
 
     switch ($req->server['request_uri'])
@@ -121,10 +126,9 @@ $server->start();
 class MySQLPool
 {
     protected $pool;
-    var $pool_count = 0;
 
     var $server = [
-        'host' => 'tfb-database',
+        'host' => '',
         'user' => 'benchmarkdbuser',
         'password' => 'benchmarkdbpass',
         'database' => 'hello_world'
@@ -132,22 +136,24 @@ class MySQLPool
 
     function __construct()
     {
-        $this->pool = new SplQueue;
+        $this->pool = new \SplQueue;
     }
 
-    function put($redis)
+    function set_host_ip($ip)
     {
-        $this->pool->push($redis);
-        $this->pool_count++;
+        if( empty( $this->server['host'] ) )
+            $this->server['host'] = $ip;
+    }
+
+    function put($db)
+    {
+        $this->pool->push($db);
     }
 
     function get()
     {
-        if ( $this->pool_count > 0)
-        {
-            $this->pool_count--;
-            return $this->pool->pop();
-        }
+        if($db = $this->pool->pop())
+            return $db;
 
         // No idle connection to create a new connection
         $db = new Swoole\Coroutine\Mysql;
