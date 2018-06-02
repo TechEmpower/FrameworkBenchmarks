@@ -460,7 +460,7 @@ class Results:
         stats_file = self.get_stats_file(framework_test.name, test_type)
         with open(stats_file) as stats:
             # dstat doesn't output a completely compliant CSV file - we need to strip the header
-            while (stats.next() != "\n"):
+            while stats.next() != "\n":
                 pass
             stats_reader = csv.reader(stats)
             main_header = stats_reader.next()
