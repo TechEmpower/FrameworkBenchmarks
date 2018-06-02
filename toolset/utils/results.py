@@ -342,7 +342,7 @@ class Results:
         try:
             with open(self.file, 'w') as f:
                 f.write(json.dumps(self.__to_jsonable(), indent=2))
-        except (IOError):
+        except IOError:
             log("Error writing results.json")
 
     def __count_sloc(self):
