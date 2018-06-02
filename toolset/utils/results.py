@@ -482,7 +482,7 @@ class Results:
                         row_dict[nextheader] = dict()
                 header = ""
                 for item_num, column in enumerate(row):
-                    if (len(main_header[item_num]) != 0):
+                    if len(main_header[item_num]) != 0:
                         header = main_header[item_num]
                     # all the stats are numbers, so we want to make sure that they stay that way in json
                     row_dict[header][sub_header[item_num]] = float(column)
