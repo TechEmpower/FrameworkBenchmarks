@@ -534,7 +534,7 @@ class Results:
             # We'll assume that any number we get is convertable to a float, just in case
             num = float(num)
             for x in ['bytes', 'KB', 'MB', 'GB']:
-                if num < 1024.0 and num > -1024.0:
+                if 1024.0 > num > -1024.0:
                     return "%3.1f%s" % (num, x)
                 num /= 1024.0
             return "%3.1f%s" % (num, 'TB')
