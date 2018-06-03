@@ -206,7 +206,7 @@ class Results:
                     self.config.results_upload_uri,
                     headers={'Content-Type': 'application/json'},
                     data=json.dumps(self.__to_jsonable(), indent=2))
-            except (Exception):
+            except Exception:
                 log("Error uploading results.json")
 
     def load(self):
@@ -342,7 +342,7 @@ class Results:
         try:
             with open(self.file, 'w') as f:
                 f.write(json.dumps(self.__to_jsonable(), indent=2))
-        except (IOError):
+        except IOError:
             log("Error writing results.json")
 
     def __count_sloc(self):
@@ -460,7 +460,7 @@ class Results:
         stats_file = self.get_stats_file(framework_test.name, test_type)
         with open(stats_file) as stats:
             # dstat doesn't output a completely compliant CSV file - we need to strip the header
-            while (stats.next() != "\n"):
+            while stats.next() != "\n":
                 pass
             stats_reader = csv.reader(stats)
             main_header = stats_reader.next()
@@ -482,7 +482,7 @@ class Results:
                         row_dict[nextheader] = dict()
                 header = ""
                 for item_num, column in enumerate(row):
-                    if (len(main_header[item_num]) != 0):
+                    if len(main_header[item_num]) != 0:
                         header = main_header[item_num]
                     # all the stats are numbers, so we want to make sure that they stay that way in json
                     row_dict[header][sub_header[item_num]] = float(column)
