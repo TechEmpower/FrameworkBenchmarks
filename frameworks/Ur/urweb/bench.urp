@@ -1,4 +1,3 @@
-library meta
 database dbname=hello_world user=benchmarkdbuser password=benchmarkdbpass host=localhost
 rewrite all Bench/*
 allow responseHeader Date
