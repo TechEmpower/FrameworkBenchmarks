@@ -203,7 +203,7 @@ class DockerHelper:
                     os.path.join(run_log_dir, "%s.log" % test.name.lower()),
                     'w') as run_log:
                 tb = traceback.format_exc()
-                log("Running docker cointainer: %s.dockerfile failed" %
+                log("Running docker container: %s.dockerfile failed" %
                     test.name,
                     prefix=log_prefix,
                     file=run_log)
