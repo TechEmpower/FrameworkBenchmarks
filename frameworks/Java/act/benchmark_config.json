@@ -1,7 +1,7 @@
 {
   "framework": "act",
   "tests": [{
-      "default": {
+    "default": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 5460,
