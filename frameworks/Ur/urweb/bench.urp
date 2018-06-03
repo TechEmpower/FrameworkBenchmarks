@@ -8,5 +8,8 @@ safeGet updates
 noMangleSql
 html5
 
+$/char
+$/string
 $/list
+$/json
 bench
