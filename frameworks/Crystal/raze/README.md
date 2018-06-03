@@ -1,27 +1,5 @@
-# raze
+# Crystal-Raze
 
-TODO: Write a description here
+This is the [Raze](https://github.com/samueleaton/raze) test of the Framework Benchmarks. Crystal is a new language that closely resembles Ruby with a goal of removing typed variables and parameters (instead inferencing), whilst maintaining top speed through bindings into C.
 
-## Installation
-
-TODO: Write installation instructions here
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-TODO: Write development instructions here
-
-## Contributing
-
-1. Fork it ( https://github.com/[your-github-name]/raze/fork )
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request
-
-## Contributors
-
-- [[your-github-name]](https://github.com/[your-github-name]) Carlos Donderis - creator, maintainer
+Raze is a Modular, light web framework for Crystal https://razecr.com/
