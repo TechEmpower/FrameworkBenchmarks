@@ -1,6 +1,5 @@
 require "raze"
 require "pg"
-# require "./raze/*"
 
 BENCH_DB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world")
 
