@@ -200,7 +200,7 @@ class Results:
         '''
         Attempts to upload the results.json to the configured results_upload_uri
         '''
-        if self.config.results_upload_uri != None:
+        if self.config.results_upload_uri is not None:
             try:
                 requests.post(
                     self.config.results_upload_uri,
