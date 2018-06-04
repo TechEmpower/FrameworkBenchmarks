@@ -122,7 +122,7 @@ class Results:
                         is_warmup = True
                         continue
                     if not is_warmup:
-                        if rawData == None:
+                        if rawData is None:
                             rawData = dict()
                             results['results'].append(rawData)
                         if "Latency" in line:
@@ -134,7 +134,7 @@ class Results:
                                 rawData['latencyMax'] = m[2]
                         if "requests in" in line:
                             m = re.search("([0-9]+) requests in", line)
-                            if m != None:
+                            if m is not None:
                                 rawData['totalRequests'] = int(m.group(1))
                         if "Socket errors" in line:
                             if "connect" in line:
