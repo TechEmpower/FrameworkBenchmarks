@@ -1,7 +1,7 @@
 {
   "framework": "nancy",
   "tests": [{
-    "mono": {
+    "default": {
       "plaintext_url":"/plaintext",
       "json_url": "/json",
       "db_url": "/db",
