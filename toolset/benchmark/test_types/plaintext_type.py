@@ -36,7 +36,7 @@ class PlaintextTestType(FrameworkTestType):
                 ('warn',
                  ("Server is returning %s more bytes than are required. "
                   "This may negatively affect benchmark performance." %
-                  (extra_bytes)), url))
+                  extra_bytes), url))
 
         problems += verify_headers(headers, url, should_be='plaintext')
 
