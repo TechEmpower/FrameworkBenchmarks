@@ -122,7 +122,7 @@ class Results:
                         is_warmup = True
                         continue
                     if not is_warmup:
-                        if rawData == None:
+                        if rawData is None:
                             rawData = dict()
                             results['results'].append(rawData)
                         if "Latency" in line:
