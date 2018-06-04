@@ -1,6 +1,6 @@
 [package]
 name = "hyper-techempower"
-version = "0.4.0"
+version = "0.5.0"
 authors = [
     "Steve Klabnik <steve@steveklabnik.com>",
     "Alexander Polyakov <plhk@sdf.org>",
@@ -9,12 +9,17 @@ authors = [
 
 [dependencies]
 futures = "0.1"
-hyper = { version = "0.11.26", default-features = false }
+# Disable default runtime, so that tokio-core can be used instead.
+# See below for why...
+hyper = { version = "0.12", default-features = false }
+net2 = "0.2"
 num_cpus = "1.2"
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
-#tokio = "0.1"
+# tokio-core 0.1.11 is used because its technically faster
+# in these specific benchmarks, as work-stealing executors
+# aren't needed.
 tokio-core = "=0.1.11"
 tokio-io = "=0.1.4"
 
