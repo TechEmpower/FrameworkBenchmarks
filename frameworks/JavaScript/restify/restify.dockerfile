@@ -1,4 +1,4 @@
-FROM node:9.10.1
+FROM node:10.3.0
 
 WORKDIR /nextjs
 ADD ./ ./
