@@ -134,7 +134,7 @@ class Results:
                                 rawData['latencyMax'] = m[2]
                         if "requests in" in line:
                             m = re.search("([0-9]+) requests in", line)
-                            if m != None:
+                            if m is not None:
                                 rawData['totalRequests'] = int(m.group(1))
                         if "Socket errors" in line:
                             if "connect" in line:
