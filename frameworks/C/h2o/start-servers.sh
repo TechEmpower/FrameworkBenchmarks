@@ -18,13 +18,13 @@ if [[ "$CPU_COUNT" -gt 16 ]]; then
 else
 	echo "Running h2o_app in the cloud environment."
 	USE_PROCESSES=false
-	DB_CONN=4
+	DB_CONN=8
 fi
 
 build_h2o_app()
 {
 	cmake -DCMAKE_INSTALL_PREFIX="$H2O_APP_HOME" -DCMAKE_BUILD_TYPE=Release \
-	      -DCMAKE_PREFIX_PATH="${H2O_HOME};${MUSTACHE_C_HOME};${YAJL_HOME}" \
+	      -DCMAKE_PREFIX_PATH="${H2O_HOME};${MUSTACHE_C_HOME}" \
 	      -DCMAKE_C_FLAGS="-march=native $1" "$TROOT"
 	make -j "$CPU_COUNT"
 }

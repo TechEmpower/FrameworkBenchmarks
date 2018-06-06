@@ -80,6 +80,7 @@ static void free_global_data(global_data_t *global_data)
 	if (global_data->world_cache)
 		h2o_cache_destroy(global_data->world_cache);
 
+	CHECK_ERROR(pthread_mutex_destroy, &global_data->world_cache_lock);
 	h2o_config_dispose(&global_data->h2o_config);
 
 	if (global_data->ssl_ctx)
@@ -132,7 +133,8 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	CHECK_ERRNO_RETURN(global_data->signal_fd, signalfd, -1, &signals, SFD_NONBLOCK | SFD_CLOEXEC);
 	global_data->fortunes_template = get_fortunes_template(config->template_path);
 	h2o_config_init(&global_data->h2o_config);
-	global_data->world_cache = h2o_cache_create(H2O_CACHE_FLAG_MULTITHREADED,
+	CHECK_ERROR(pthread_mutex_init, &global_data->world_cache_lock, NULL);
+	global_data->world_cache = h2o_cache_create(0,
 	                                            config->world_cache_capacity,
 	                                            config->world_cache_duration,
 	                                            free_world_cache_entry);
@@ -177,6 +179,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	}
 
 error:
+	close(global_data->signal_fd);
 	free_global_data(global_data);
 	return EXIT_FAILURE;
 }

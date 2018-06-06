@@ -404,7 +404,7 @@ class Metadata:
             "plaintext_url", "cached_query_url"
         ]:
             key_value = test_keys.get(test_url, None)
-            if key_value != None and not key_value.startswith('/'):
+            if key_value is not None and not key_value.startswith('/'):
                 errmsg = """`%s` field in test \"%s\" does not appear to be a valid url: \"%s\"\n
             Example `%s` url: \"%s\"
           """ % (test_url, test_name, key_value, test_url, example_urls[test_url])

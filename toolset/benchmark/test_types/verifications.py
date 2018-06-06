@@ -104,7 +104,7 @@ def verify_helloworld_object(json_object, url):
     else:
         json_len = len(json_object)
         if json_len > 1:
-            additional = (', ').join(
+            additional = ', '.join(
                 [k for k in json_object.keys() if k != 'message'])
             problems.append(
                 ('warn', "Too many JSON key/value pairs, consider removing: %s"
