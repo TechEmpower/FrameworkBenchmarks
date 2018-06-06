@@ -14,7 +14,7 @@ $pool = new DatabasePool();
  *
  * @return string
  */
-$db = function ($database_type, $queries) use ($pool) {
+$db = function ($database_type, $queries = 0) use ($pool) {
     $db = $pool->get($database_type);
 
     // Read number of queries to run from URL parameter
@@ -39,7 +39,7 @@ $db = function ($database_type, $queries) use ($pool) {
 
     // Use the PHP standard JSON encoder.
     // http://www.php.net/manual/en/function.json-encode.php
-    if (count($arr) === 1)
+    if ($queries == -1)
         $arr = $arr[0];
 
     $pool->put($db);
@@ -84,7 +84,7 @@ $fortunes = function ($database_type) use ($pool) {
  *
  * @return string
  */
-$updates = function ($database_type, $queries) use ($pool) {
+$updates = function ($database_type, $queries = 0) use ($pool) {
     $db = $pool->get($database_type);
 
     $query_count = 1;
@@ -124,7 +124,7 @@ $server->on('workerStart', function () use (&$pool) {
 /**
  * On every request to the (web)server, execute the following code
  */
-$server->on('request', function ($req, $res) use ($pool, $db, $fortunes, $updates) {
+$server->on('request', function ($req, $res) use ($db, $fortunes, $updates) {
 
     switch ($req->server['request_uri'])
     {
@@ -141,10 +141,10 @@ $server->on('request', function ($req, $res) use ($pool, $db, $fortunes, $update
         case "/db":
             $res->header('Content-Type', 'application/json');
 
-            if (isset($req->get['queries']) && $req->get['queries'] > 0)
+            if (isset($req->get['queries']))
                 $res->end($db("mysql", $req->get['queries']));
             else
-                $res->end($db("mysql", 0));
+                $res->end($db("mysql", -1));
             break;
 
         case "/fortunes":
@@ -155,19 +155,19 @@ $server->on('request', function ($req, $res) use ($pool, $db, $fortunes, $update
         case "/updates":
             $res->header('Content-Type', 'application/json');
 
-            if (isset($req->get['queries']) && $req->get['queries'] > 0)
+            if (isset($req->get['queries']))
                 $res->end($updates("mysql", $req->get['queries']));
             else
-                $res->end($updates("mysql", 0));
+                $res->end($updates("mysql", -1));
             break;
 
         case "/db_postgres":
             $res->header('Content-Type', 'application/json');
 
-            if (isset($req->get['queries']) && $req->get['queries'] > 0)
+            if (isset($req->get['queries']))
                 $res->end($db("postgres", $req->get['queries']));
             else
-                $res->end($db("postgres", 0));
+                $res->end($db("postgres", -1));
             break;
 
         case "/fortunes_postgres":
@@ -178,10 +178,10 @@ $server->on('request', function ($req, $res) use ($pool, $db, $fortunes, $update
         case "/updates_postgres":
             $res->header('Content-Type', 'application/json');
 
-            if (isset($req->get['queries']) && $req->get['queries'] > 0)
+            if (isset($req->get['queries']))
                 $res->end($updates("postgres", $req->get['queries']));
             else
-                $res->end($updates("postgres", 0));
+                $res->end($updates("postgres", -1));
             break;
     }
 
