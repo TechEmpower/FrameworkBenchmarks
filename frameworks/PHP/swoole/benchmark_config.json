@@ -23,27 +23,6 @@
       "display_name": "Swoole",
       "notes": "",
       "versus": "php"
-    },
-    "postgres": {
-      "db_url": "/db_postgres",
-      "query_url": "/db_postgres?queries=",
-      "fortune_url": "/fortunes_postgres",
-      "update_url": "/updates_postgres?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "Postgres",
-      "framework": "None",
-      "language": "PHP",
-      "flavor": "PHP7",
-      "orm": "Raw",
-      "platform": "None",
-      "webserver": "swoole",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "Swoole-Postgres",
-      "notes": "",
-      "versus": "php"
     }
   }]
 }
