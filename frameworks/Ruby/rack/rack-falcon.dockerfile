@@ -8,4 +8,5 @@ WORKDIR /rack
 
 RUN bundle install --jobs=4 --gemfile=/rack/Gemfile --path=/rack/rack/bundle
 
-CMD falcon serve --forked
+CMD bundle exec falcon serve --forked --bind tcp://0.0.0.0:8080
+
