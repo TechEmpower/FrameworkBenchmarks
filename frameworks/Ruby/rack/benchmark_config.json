@@ -40,8 +40,8 @@
       "database_os": "Linux",
       "display_name": "rack-unicorn-mri",
       "notes": ""
-     },
-     "falcon": {
+    },
+    "falcon": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
