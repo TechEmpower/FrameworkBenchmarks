@@ -149,7 +149,7 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
             $res->header('Content-Type', 'application/json');
 
             if (isset($req->get['queries'])) {
-                $res->end($db('mysql', $req->get['queries']));
+                $res->end($db('mysql', (int)$req->get['queries']));
             } else {
                 $res->end($db('mysql', -1));
             }
@@ -164,7 +164,7 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
             $res->header('Content-Type', 'application/json');
 
             if (isset($req->get['queries'])) {
-                $res->end($updates('mysql', $req->get['queries']));
+                $res->end($updates('mysql', (int)$req->get['queries']));
             } else {
                 $res->end($updates('mysql', -1));
             }
@@ -174,7 +174,7 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
             $res->header('Content-Type', 'application/json');
 
             if (isset($req->get['queries'])) {
-                $res->end($db('postgres', $req->get['queries']));
+                $res->end($db('postgres', (int)$req->get['queries']));
             } else {
                 $res->end($db('postgres', -1));
             }
@@ -189,7 +189,7 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
             $res->header('Content-Type', 'application/json');
 
             if (isset($req->get['queries'])) {
-                $res->end($updates('postgres', $req->get['queries']));
+                $res->end($updates('postgres', (int)$req->get['queries']));
             } else {
                 $res->end($updates('postgres', -1));
             }
