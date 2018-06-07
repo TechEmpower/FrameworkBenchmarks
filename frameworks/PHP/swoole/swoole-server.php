@@ -30,12 +30,12 @@ $db = function (string $database_type, int $queries = 0) use ($pool): string {
     // Create an array with the response string.
     $arr = [];
     // Define query
-    $stmt = $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
+    $db->db_test = $db->db_test ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
 
     // For each query, store the result set values in the response array
     while (0 < $query_count--) {
         $id = mt_rand(1, 10000);
-        $ret = $stmt->execute([$id]);
+        $ret = $db->db_test->execute([$id]);
 
         // Store result in array.
         $arr[] = ['id' => $id, 'randomNumber' => $ret[0]['randomNumber']];
@@ -63,8 +63,8 @@ $fortunes = function (string $database_type) use ($pool): string {
     $db = $pool->get($database_type);
 
     $fortune = [];
-    // Define query
-    $arr = $db->query('SELECT id, message FROM Fortune');
+    $db->fortune_test = $db->fortune_test ?? $db->prepare('SELECT id, message FROM Fortune');
+    $arr = $db->fortune_test->execute([]);
     foreach ($arr as $row) {
         $fortune[$row['id']] = $row['message'];
     }
@@ -101,18 +101,18 @@ $updates = function (string $database_type, int $queries = 0) use ($pool): strin
     }
 
     $arr = [];
-    $statement = $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
-    $updateStatement = $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+    $db->updates_test_select = $db->updates_test_select ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
+    $db->updates_test_update = $db->updates_test_update ?? $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
 
     while (0 < $query_count--) {
         $id = mt_rand(1, 10000);
         $randomNumber = mt_rand(1, 10000);
-        $ret = $statement->execute([$id]);
+        $ret = $db->updates_test_select->execute([$id]);
 
         // Store result in array.
         $world = ['id' => $id, 'randomNumber' => $ret[0]['randomNumber']];
         $world['randomNumber'] = $randomNumber;
-        $updateStatement->execute([$randomNumber, $id]);
+        $db->updates_test_update->execute([$randomNumber, $id]);
 
         $arr[] = $world;
     }
