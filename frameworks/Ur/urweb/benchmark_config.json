@@ -61,7 +61,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "Postgres",
+      "database": "MySQL",
       "framework": "urweb",
       "language": "Ur",
       "orm": "Micro",
