@@ -2,7 +2,6 @@
   "framework": "rack",
   "tests": [{
     "default": {
-      "setup_file": "run_mri_puma",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -23,7 +22,6 @@
       "notes": ""
     },
     "unicorn": {
-      "setup_file": "run_mri_unicorn",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -44,7 +42,6 @@
       "notes": ""
      },
      "falcon": {
-      "setup_file": "run_mri_falcon",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
