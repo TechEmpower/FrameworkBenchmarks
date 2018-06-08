@@ -10,7 +10,7 @@ This is the Play portion of a [benchmarking test suite](../) comparing a variety
 The tests were run with:
 
 * Java 8
-* [Play 2.6.7](https://www.playframework.com/)
+* [Play 2.6.15](https://www.playframework.com/)
 
 ## Test URLs
 ### JSON Encoding Test
