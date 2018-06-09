@@ -66,6 +66,7 @@ env:
      - "TESTDIR=Java/spark"
      - "TESTDIR=Java/spring"
      - "TESTDIR=Java/tapestry"
+     - "TESTDIR=Java/t-io"
      - "TESTDIR=Java/undertow"
      - "TESTDIR=Java/undertow-jersey"
      - "TESTDIR=Java/vertx"
