@@ -5,8 +5,8 @@ This is the t-io portion of a [benchmarking test suite](../) comparing a variety
 ## Controller
 
 These implementations use the t-io's controller.
-* [Plaintext test source](src/main/java/org/tio/http/server/benchmark/controller/TestController)
-* [JSON test source](src/main/java/org/tio/http/server/benchmark/controller/TestController)
+* [Plaintext test source](src/main/java/org/tio/http/server/benchmark/controller/TestController.java)
+* [JSON test source](src/main/java/org/tio/http/server/benchmark/controller/TestController.java)
 
 
 ## Versions
