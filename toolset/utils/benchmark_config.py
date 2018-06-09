@@ -82,7 +82,7 @@ class BenchmarkConfig:
         self.wrk_root = os.path.join(self.fw_root, "toolset", "wrk")
         self.scaffold_root = os.path.join(self.fw_root, "toolset", "scaffolding")
 
-        if hasattr(self, 'parse') and self.parse != None:
+        if hasattr(self, 'parse') and self.parse is not None:
             self.timestamp = self.parse
         else:
             self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())

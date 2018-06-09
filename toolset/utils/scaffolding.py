@@ -375,7 +375,7 @@ class Scaffolding:
 -------------------------------------------------------------------------------
   Success!
 
-  Your new test structure has been built to the sepcifications of the suite.
+  Your new test structure has been built to the specifications of the suite.
   Here is a brief run-down of what has been built:
 
     frameworks

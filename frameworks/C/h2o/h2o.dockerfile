@@ -4,7 +4,7 @@ COPY ./ ./
 
 RUN apt update && \
     apt install -yqq autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev libssl-dev \
-                     libtool make wget
+                     libtool libyajl-dev make wget
 
 ### Install mustache-c
 
@@ -18,20 +18,6 @@ RUN git clone "https://github.com/x86-64/mustache-c.git" "$MUSTACHE_C_BUILD_DIR"
     make -j "$(nproc)" install
 
 ENV LD_LIBRARY_PATH="${MUSTACHE_C_HOME}/lib:$LD_LIBRARY_PATH"
-
-### Install yajl
-
-ENV YAJL_VERSION=2.1.0
-ENV YAJL_ARCHIVE="${YAJL_VERSION}.tar.gz"
-ENV YAJL_HOME=/yajl
-
-RUN wget -qO "$YAJL_ARCHIVE" "https://github.com/lloyd/yajl/archive/$YAJL_ARCHIVE" && \
-    tar xf "$YAJL_ARCHIVE" && \
-    cd "yajl-$YAJL_VERSION" && \
-    ./configure -p "$YAJL_HOME" && \
-    make -j "$(nproc)" install
-
-ENV LD_LIBRARY_PATH="${YAJL_HOME}/lib:$LD_LIBRARY_PATH"
 
 ### Install h2o
 

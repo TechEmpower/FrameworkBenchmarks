@@ -34,13 +34,12 @@ void FortuneTest::fortunes_grantlee_postgres(Context *c)
                 QLatin1String("SELECT id, message FROM fortune"),
                 QStringLiteral("postgres"));
     if (query.exec()) {
-        QVariantList fortunes = Sql::queryToMapList(query);
-        fortunes.append(QVariantMap{
-                            {QStringLiteral("id"), 0},
-                            {QStringLiteral("message"), QStringLiteral("Additional fortune added at request time.")},
-                        });
+        QVariantList fortunes = Sql::queryToList(query);
+        fortunes.append(QVariant::fromValue(QVariantList{
+                            {0, QStringLiteral("Additional fortune added at request time.")},
+                        }));
         std::sort(fortunes.begin(), fortunes.end(), [] (const QVariant &a1, const QVariant &a2) {
-            return a1.toMap()[QStringLiteral("message")].toString() < a2.toMap()[QStringLiteral("message")].toString();
+            return a1.toList()[1].toString() < a2.toList()[1].toString();
         });
         c->setStash(QStringLiteral("template"), QStringLiteral("fortunes.html"));
         c->setStash(QStringLiteral("fortunes"), fortunes);
@@ -56,13 +55,12 @@ void FortuneTest::fortunes_grantlee_mysql(Context *c)
                 QLatin1String("SELECT id, message FROM fortune"),
                 QStringLiteral("mysql"));
     if (query.exec()) {
-        QVariantList fortunes = Sql::queryToMapList(query);
-        fortunes.append(QVariantMap{
-                            {QStringLiteral("id"), 0},
-                            {QStringLiteral("message"), QStringLiteral("Additional fortune added at request time.")},
-                        });
+        QVariantList fortunes = Sql::queryToList(query);
+        fortunes.append(QVariant::fromValue(QVariantList{
+                            {0, QStringLiteral("Additional fortune added at request time.")},
+                        }));
         std::sort(fortunes.begin(), fortunes.end(), [] (const QVariant &a1, const QVariant &a2) {
-            return a1.toMap()[QStringLiteral("message")].toString() < a2.toMap()[QStringLiteral("message")].toString();
+            return a1.toList()[1].toString() < a2.toList()[1].toString();
         });
         c->setStash(QStringLiteral("template"), QStringLiteral("fortunes.html"));
         c->setStash(QStringLiteral("fortunes"), fortunes);

@@ -2,11 +2,9 @@ name := "blaze"
 
 version := "1.0"
 
-scalaVersion := "2.12.5"
-
-val blazeVersion = "0.13.0"
+scalaVersion := "2.12.6"
 
 libraryDependencies ++= Seq(
-	"org.http4s" %% "blaze-http" % blazeVersion,
-	"com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.4"
+	"org.http4s" %% "blaze-http" % "0.14.0-M3",
+	"com.github.plokhotnyuk.jsoniter-scala" %% "macros" % "0.27.1"
 )

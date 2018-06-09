@@ -36,15 +36,16 @@ namespace PlatformBenchmarks
         private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
         private readonly static AsciiString _contentLengthGap = new string(' ', 4);
 
-        public static IDb Db { get; set; }
+        public static RawDb Db { get; set; }
 
         public static class Paths
         {
-            public readonly static AsciiString Plaintext = "/plaintext";
+            public readonly static AsciiString SingleQuery = "/db";
             public readonly static AsciiString Json = "/json";
             public readonly static AsciiString Fortunes = "/fortunes";
-            public readonly static AsciiString SingleQuery = "/db";
-            public readonly static AsciiString MultipleQueries = "/queries/count=";
+            public readonly static AsciiString Plaintext = "/plaintext";
+            public readonly static AsciiString MultipleQueries = "/queries/queries=";
+            public readonly static AsciiString Updates = "/updates/queries=";
         }
 
         private RequestType _requestType;
@@ -74,43 +75,59 @@ namespace PlatformBenchmarks
                 }
                 else if (Paths.MultipleQueries.Length <= pathLength && path.StartsWith(Paths.MultipleQueries))
                 {
-                    if (!Utf8Parser.TryParse(path.Slice(Paths.MultipleQueries.Length), out int queries, out _) || queries < 1)
-                    {
-                        queries = 1;
-                    }
-                    else if (queries > 500)
-                    {
-                        queries = 500;
-                    }
-                    _queries = queries;
+                    _queries = ParseQueries(path);
                     requestType = RequestType.MultipleQueries;
+                }
+                else if (Paths.Updates.Length <= pathLength && path.StartsWith(Paths.Updates))
+                {
+                    _queries = ParseQueries(path);
+                    requestType = RequestType.Updates;
                 }
             }
 
             _requestType = requestType;
         }
 
+        private static int ParseQueries(Span<byte> path)
+        {
+            if (!Utf8Parser.TryParse(path.Slice(Paths.MultipleQueries.Length), out int queries, out _) || queries < 1)
+            {
+                queries = 1;
+            }
+            else if (queries > 500)
+            {
+                queries = 500;
+            }
+
+            return queries;
+        }
+
         public Task ProcessRequestAsync()
         {
-            if (_requestType == RequestType.PlainText)
+            var requestType = _requestType;
+            if (requestType == RequestType.PlainText)
             {
                 PlainText(Writer);
             }
-            else if (_requestType == RequestType.Json)
+            else if (requestType == RequestType.Json)
             {
                 Json(Writer);
             }
-            else if (_requestType == RequestType.Fortunes)
+            else if (requestType == RequestType.Fortunes)
             {
                 return Fortunes(Writer);
             }
-            else if (_requestType == RequestType.SingleQuery)
+            else if (requestType == RequestType.SingleQuery)
             {
                 return SingleQuery(Writer);
             }
-            else if (_requestType == RequestType.MultipleQueries)
+            else if (requestType == RequestType.MultipleQueries)
             {
                 return MultipleQueries(Writer, _queries);
+            }
+            else if (requestType == RequestType.Updates)
+            {
+                return Updates(Writer, _queries);
             }
             else
             {
@@ -148,7 +165,8 @@ namespace PlatformBenchmarks
             Json,
             Fortunes,
             SingleQuery,
-            MultipleQueries
+            MultipleQueries,
+            Updates
         }
     }
 }

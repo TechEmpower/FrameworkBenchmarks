@@ -26,6 +26,8 @@ namespace PlatformBenchmarks
             Console.WriteLine(BenchmarkApplication.Paths.SingleQuery);
             DateHeader.SyncDateTimer();
 
+            BatchUpdateString.Initalize();
+
             BuildWebHost(args).Run();
         }
 
@@ -42,11 +44,11 @@ namespace PlatformBenchmarks
 
             if (appSettings.Database == DatabaseServer.PostgreSql)
             {
-                BenchmarkApplication.Db = new RawDb(new DefaultRandom(), NpgsqlFactory.Instance, appSettings);
+                BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), NpgsqlFactory.Instance, appSettings);
             }
             else if (appSettings.Database == DatabaseServer.MySql)
             {
-                BenchmarkApplication.Db = new RawDb(new DefaultRandom(), MySqlClientFactory.Instance, appSettings);
+                BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), MySqlClientFactory.Instance, appSettings);
             }
 
             var host = new WebHostBuilder()

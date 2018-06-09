@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CUTELYST_VER=2.3.0
+export CUTELYST_VER=2.4.1
 
 apt update -qq && \
     apt install -yqq --no-install-recommends \

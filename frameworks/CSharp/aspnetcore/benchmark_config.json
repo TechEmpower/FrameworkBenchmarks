@@ -23,6 +23,7 @@
     "ado-pg": {
       "fortune_url": "/fortunes",
       "db_url": "/db",
+      "update_url": "/updates/queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -42,6 +43,7 @@
     "ado-my": {
       "fortune_url": "/fortunes",
       "db_url": "/db",
+      "update_url": "/updates/queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -74,6 +76,24 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "ASP.NET Core, Middleware",
+      "notes": "",
+      "versus": "aspcore"
+    },
+    "mw-utf8json": {
+      "json_url": "/utf8json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ASP.NET Core, Middleware, Utf8Json",
       "notes": "",
       "versus": "aspcore"
     },

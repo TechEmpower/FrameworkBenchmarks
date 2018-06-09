@@ -91,6 +91,11 @@ namespace Benchmarks
                 services.AddScoped<DapperDb>();
             }
 
+            if (Scenarios.Any("Update"))
+            {
+                BatchUpdateString.Initalize();
+            }
+
             if (Scenarios.Any("Fortunes"))
             {
                 var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
@@ -131,6 +136,11 @@ namespace Benchmarks
             if (Scenarios.Json)
             {
                 app.UseJson();
+            }
+
+            if (Scenarios.Utf8Json)
+            {
+                app.UseUtf8Json();
             }
 
             // Single query endpoints

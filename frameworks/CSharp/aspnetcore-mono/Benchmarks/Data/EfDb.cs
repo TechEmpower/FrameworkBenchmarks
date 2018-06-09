@@ -12,13 +12,13 @@ using Microsoft.Extensions.Options;
 
 namespace Benchmarks.Data
 {
-    public class EfDb : IDb
+    public class EfDb
     {
-        private readonly IRandom _random;
+        private readonly ConcurrentRandom _random;
         private readonly ApplicationDbContext _dbContext;
         private readonly bool _useBatchUpdate;
 
-        public EfDb(IRandom random, ApplicationDbContext dbContext, IOptions<AppSettings> appSettings)
+        public EfDb(ConcurrentRandom random, ApplicationDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _random = random;
             _dbContext = dbContext;
@@ -84,7 +84,7 @@ namespace Benchmarks.Data
         private static readonly Func<ApplicationDbContext, AsyncEnumerable<Fortune>> _fortunesQuery
             = EF.CompileAsyncQuery((ApplicationDbContext context) => context.Fortune);
 
-        public async Task<IEnumerable<Fortune>> LoadFortunesRows()
+        public async Task<List<Fortune>> LoadFortunesRows()
         {
             var result = await _fortunesQuery(_dbContext).ToListAsync();
 

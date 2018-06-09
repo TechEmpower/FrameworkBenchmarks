@@ -4,7 +4,7 @@ defmodule Hello.Mixfile do
   def project do
    [app: :hello,
     version: "0.1.0",
-    elixir: "~> 1.5",
+    elixir: "~> 1.6.5",
     elixirc_paths: elixirc_paths(Mix.env),
     compilers: [:phoenix] ++ Mix.compilers,
     build_embedded: Mix.env == :prod,
@@ -26,11 +26,11 @@ defmodule Hello.Mixfile do
   #
   # Type `mix help deps` for examples and options
   defp deps do
-    [{:phoenix, "~> 1.3"},
+    [{:phoenix, "~> 1.3.2"},
      {:phoenix_ecto, "~> 3.3"},
      {:postgrex, ">= 0.0.0"},
      {:cowboy, "~> 1.0"},
-     {:phoenix_html, "~> 2.10"},
+     {:phoenix_html, "~> 2.11"},
      {:phoenix_live_reload, "~> 1.1", only: :dev}]
   end
 end

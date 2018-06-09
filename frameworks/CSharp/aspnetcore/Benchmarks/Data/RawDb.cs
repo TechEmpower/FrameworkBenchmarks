@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Text;
 using System.Threading.Tasks;
 using Benchmarks.Configuration;
 using Microsoft.Extensions.Options;
@@ -14,6 +13,8 @@ namespace Benchmarks.Data
 {
     public class RawDb : IDb
     {
+        private static readonly Comparison<World> WorldSortComparison = (a, b) => a.Id.CompareTo(b.Id);
+
         private readonly IRandom _random;
         private readonly DbProviderFactory _dbProviderFactory;
         private readonly string _connectionString;
@@ -89,10 +90,6 @@ namespace Benchmarks.Data
 
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {
-            var results = new World[count];
-
-            var updateCommand = new StringBuilder(count);
-
             using (var db = _dbProviderFactory.CreateConnection())
             {
                 db.ConnectionString = _connectionString;
@@ -101,6 +98,7 @@ namespace Benchmarks.Data
                 using (var updateCmd = db.CreateCommand())
                 using (var queryCmd = CreateReadCommand(db))
                 {
+                    var results = new World[count];
                     for (int i = 0; i < count; i++)
                     {
                         results[i] = await ReadSingleRow(db, queryCmd);
@@ -108,17 +106,18 @@ namespace Benchmarks.Data
                     }
 
                     // Postgres has problems with deadlocks when these aren't sorted
-                    Array.Sort<World>(results, (a, b) => a.Id.CompareTo(b.Id));
+                    Array.Sort<World>(results, WorldSortComparison);
 
                     for(int i = 0; i < count; i++)
                     {
+                        var strings = BatchUpdateString.Strings[i];
                         var id = updateCmd.CreateParameter();
-                        id.ParameterName = BatchUpdateString.Strings[i].Id;
+                        id.ParameterName = strings.Id;
                         id.DbType = DbType.Int32;
                         updateCmd.Parameters.Add(id);
 
                         var random = updateCmd.CreateParameter();
-                        random.ParameterName = BatchUpdateString.Strings[i].Random;
+                        random.ParameterName = strings.Random;
                         random.DbType = DbType.Int32;
                         updateCmd.Parameters.Add(random);
 
@@ -126,16 +125,14 @@ namespace Benchmarks.Data
                         id.Value = results[i].Id;
                         random.Value = randomNumber;
                         results[i].RandomNumber = randomNumber;
-
-                        updateCommand.Append(BatchUpdateString.Strings[i].UpdateQuery);
                     }
 
-                    updateCmd.CommandText = updateCommand.ToString();
+                    updateCmd.CommandText = BatchUpdateString.Strings[results.Length - 1].UpdateQuery;
+
                     await updateCmd.ExecuteNonQueryAsync();
+                    return results;
                 }
             }
-
-            return results;
         }
 
         public async Task<IEnumerable<Fortune>> LoadFortunesRows()

@@ -22,6 +22,7 @@
 #define UTILITY_H_
 
 #include <h2o.h>
+#include <pthread.h>
 #include <stdint.h>
 #include <h2o/cache.h>
 #include <openssl/ssl.h>
@@ -73,6 +74,7 @@ typedef struct {
 	int signal_fd;
 	bool shutdown;
 	h2o_globalconf_t h2o_config;
+	pthread_mutex_t world_cache_lock;
 } global_data_t;
 
 typedef struct {

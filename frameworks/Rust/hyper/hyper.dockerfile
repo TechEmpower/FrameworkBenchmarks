@@ -1,4 +1,4 @@
-FROM rust:1.25
+FROM rust:1.26
 
 ADD ./ /hyper
 WORKDIR /hyper
@@ -6,4 +6,4 @@ WORKDIR /hyper
 RUN cargo clean
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
 
-CMD ["./target/release/hyper-techempower", "pipeline"]
+CMD ["./target/release/hyper-techempower"]
