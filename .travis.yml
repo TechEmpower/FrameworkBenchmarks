@@ -52,6 +52,7 @@ env:
      - "TESTDIR=Java/jooby"
      - "TESTDIR=Java/light-java"
      - "TESTDIR=Java/minijax"
+     - "TESTDIR=Java/nanohttpd"
      - "TESTDIR=Java/netty"
      - "TESTDIR=Java/ninja-standalone"
      - "TESTDIR=Java/play1"
