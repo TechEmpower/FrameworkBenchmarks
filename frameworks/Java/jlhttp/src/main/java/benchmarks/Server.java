@@ -1,4 +1,4 @@
-package hello;
+package benchmarks;
 
 import java.io.IOException;
 import java.util.concurrent.*;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import net.freeutils.httpserver.HTTPServer;
 import net.freeutils.httpserver.HTTPServer.*;
 
-public class HelloWebServer {
+public class Server {
 
     private static final String HELLO_TEXT = "Hello, World!";
     private static final byte[] HELLO_BYTES = HELLO_TEXT.getBytes();
