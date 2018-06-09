@@ -1,0 +1,24 @@
+{
+  "framework": "t-io",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "t-io",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "tio-http-server",
+      "notes": "tio-http-server",
+      "versus": "t-io"
+    }
+  }]
+}
