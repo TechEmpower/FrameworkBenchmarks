@@ -24,5 +24,4 @@ public class TestController {
 	public HttpResponse plaintext(HttpRequest request) throws Exception {
 		return Resps.txt(request, HELLO_WORLD);
 	}
-
 }

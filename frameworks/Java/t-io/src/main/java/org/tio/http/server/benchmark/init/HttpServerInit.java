@@ -1,7 +1,5 @@
 package org.tio.http.server.benchmark.init;
 
-import java.io.IOException;
-
 import org.tio.http.common.HttpConfig;
 import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.server.HttpServerStarter;
