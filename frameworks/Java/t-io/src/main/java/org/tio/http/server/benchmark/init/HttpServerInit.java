@@ -27,11 +27,6 @@ public class HttpServerInit {
 		httpConfig = new HttpConfig(8080, null, null, null);
 		httpConfig.setUseSession(false);
 		
-		int workerid = 1;
-		int datacenter = 1;
-		ISessionIdGenerator sessionIdGenerator = new SnowflakeSessionIdGenerator(workerid, datacenter);
-		httpConfig.setSessionIdGenerator(sessionIdGenerator);
-		
 		String[] scanPackages = new String[] { TestController.class.getPackage().getName() };
 		Routes routes = new Routes(scanPackages);
 		
