@@ -6,6 +6,7 @@ import org.tio.http.server.HttpServerStarter;
 import org.tio.http.server.benchmark.controller.TestController;
 import org.tio.http.server.handler.DefaultHttpRequestHandler;
 import org.tio.http.server.mvc.Routes;
+import org.tio.server.ServerGroupContext;
 
 /**
  * @author tanyaowu
@@ -17,6 +18,8 @@ public class HttpServerInit {
 	public static HttpRequestHandler requestHandler;
 
 	public static HttpServerStarter httpServerStarter;
+	
+	public static ServerGroupContext serverGroupContext;
 
 	public static void init() throws Exception {
 		httpConfig = new HttpConfig(8080, null, null, null);
@@ -28,6 +31,8 @@ public class HttpServerInit {
 		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 
 		httpServerStarter = new HttpServerStarter(httpConfig, requestHandler);
+		serverGroupContext = httpServerStarter.getServerGroupContext();
+		serverGroupContext.setReadBufferSize(1024 * 60);
 		httpServerStarter.start();
 	}
 }
