@@ -6,7 +6,7 @@
       "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Full",
+      "classification": "fullstack",
       "database": "None",
       "framework": "giraffe",
       "language": "F#",
