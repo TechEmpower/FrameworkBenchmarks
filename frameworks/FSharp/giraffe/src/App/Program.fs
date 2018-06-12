@@ -18,15 +18,11 @@ let jsonUtf8 data : HttpHandler =
         ctx.WriteBytesAsync bytes
 
 let webApp =
-    choose [
-        GET >=>
-            choose [
-                route "/plaintext" >=> text "Hello, World!"
-                route "/json" >=> json { JsonMessage.message = "Hello, World!" }
-                route "/jsonutf8" >=> jsonUtf8 { JsonStructMessage.message = "Hello, World!" }
-            ]
-        setStatusCode 404 >=> text "Not Found"
-    ]
+        GET >=> choose [
+            route "/plaintext" >=> text "Hello, World!"
+            route "/json" >=> json { JsonMessage.message = "Hello, World!" }
+            route "/jsonutf8" >=> jsonUtf8 { JsonStructMessage.message = "Hello, World!" }
+        ]
 
 [<EntryPoint>]
 let main _ =
