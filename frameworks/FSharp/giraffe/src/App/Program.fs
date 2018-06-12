@@ -4,14 +4,17 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Http
 open Giraffe
 
-[<CLIMutable>]
+[<CLIMutable>] 
 type JsonMessage = { message : string }
 
-let jsonutf8 (data:obj) : HttpHandler =
+[<CLIMutable>][<Struct>] 
+type JsonStructMessage = { message : string }
+
+let jsonutf8 data : HttpHandler =
     fun (_ : HttpFunc) (ctx : HttpContext) ->
         let bytes = Utf8Json.JsonSerializer.Serialize(data)
-        ctx.SetContentType "application/json"
         ctx.Response.ContentLength <- new System.Nullable<int64>( int64 bytes.Length )
+        ctx.SetContentType "application/json"
         ctx.WriteBytesAsync bytes
 
 let webApp =
@@ -19,8 +22,8 @@ let webApp =
         GET >=>
             choose [
                 route "/plaintext" >=> text "Hello, World!"
-                route "/json" >=> json { message = "Hello, World!" }
-                route "/jsonutf8" >=> jsonutf8 { message = "Hello, World!" }
+                route "/json" >=> json { JsonMessage.message = "Hello, World!" }
+                route "/jsonutf8" >=> jsonutf8 { JsonStructMessage.message = "Hello, World!" }
             ]
         setStatusCode 404 >=> text "Not Found" 
     ]
