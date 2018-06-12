@@ -9,4 +9,4 @@ ENV COMPlus_ReadyToRun 0
 WORKDIR /app
 COPY --from=build /app/out ./
 
-ENTRYPOINT ["dotnet", "App.dll", "stock"]
+ENTRYPOINT ["dotnet", "App.dll"]

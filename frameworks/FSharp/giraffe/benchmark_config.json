@@ -24,7 +24,27 @@
     },
     {
       "utf8json": {
-        "json_url": "/jsonutf8",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "fullstack",
+        "database": "None",
+        "framework": "giraffe",
+        "language": "F#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Giraffe",
+        "notes": "",
+        "versus": "aspcore"
+      }
+    },
+    {
+      "utf8plaintext": {
+        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "fullstack",
