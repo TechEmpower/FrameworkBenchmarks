@@ -23,8 +23,7 @@
       }
     },
     {
-      "jsonutf8": {
-        "plaintext_url": "/plaintext",
+      "utf8json": {
         "json_url": "/jsonutf8",
         "port": 8080,
         "approach": "Realistic",

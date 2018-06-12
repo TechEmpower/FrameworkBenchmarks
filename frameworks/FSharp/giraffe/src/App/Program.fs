@@ -10,7 +10,7 @@ type JsonMessage = { message : string }
 [<CLIMutable>][<Struct>] 
 type JsonStructMessage = { message : string }
 
-let jsonutf8 data : HttpHandler =
+let jsonUtf8 data : HttpHandler =
     fun (_ : HttpFunc) (ctx : HttpContext) ->
         let bytes = Utf8Json.JsonSerializer.Serialize(data)
         ctx.Response.ContentLength <- new System.Nullable<int64>( int64 bytes.Length )
@@ -23,9 +23,9 @@ let webApp =
             choose [
                 route "/plaintext" >=> text "Hello, World!"
                 route "/json" >=> json { JsonMessage.message = "Hello, World!" }
-                route "/jsonutf8" >=> jsonutf8 { JsonStructMessage.message = "Hello, World!" }
+                route "/jsonutf8" >=> jsonUtf8 { JsonStructMessage.message = "Hello, World!" }
             ]
-        setStatusCode 404 >=> text "Not Found" 
+        setStatusCode 404 >=> text "Not Found"
     ]
 
 [<EntryPoint>]
