@@ -28,6 +28,7 @@ env:
      - "TESTLANG=Dart"
      - "TESTLANG=Elixir"
      - "TESTLANG=Erlang"
+     - "TESTLANG=FSharp"
      - "TESTLANG=Go"
      - "TESTLANG=Groovy"
      - "TESTDIR=Haskell/snap"
