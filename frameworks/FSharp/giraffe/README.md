@@ -1,31 +1,26 @@
-# App
+# girrafe Tests on Linux
+This includes tests for plaintext and json serialization.
 
-A [Giraffe](https://github.com/giraffe-fsharp/Giraffe) web application, which has been created via the `dotnet new giraffe` command.
+## Infrastructure Software Versions
 
-## Build and test the application
+**Language**
 
-### Windows
+* F# 4.1
 
-Run the `build.bat` script in order to restore, build and test (if you've selected to include tests) the application:
+**Platforms**
 
-```
-> ./build.bat
-```
+* .NET Core (Windows and Linux)
 
-### Linux/macOS
+**Web Servers**
 
-Run the `build.sh` script in order to restore, build and test (if you've selected to include tests) the application:
+* [Kestrel](https://github.com/aspnet/KestrelHttpServer)
 
-```
-$ ./build.sh
-```
+**Web Stack**
 
-## Run the application
+* [giraffe](https://github.com/giraffe-fsharp/Giraffe)
+* ASP.NET Core
 
-After a successful build you can start the web application by executing the following command in your terminal:
+## Paths & Source for Tests
 
-```
-dotnet run src/App
-```
-
-After the application has started visit [http://localhost:5000](http://localhost:5000) in your preferred browser.
+* [Plaintext](src/App/Programs.fs): "/plaintext"
+* [JSON Serialization](src/App/Programs.fs): "/json"

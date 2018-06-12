@@ -1,0 +1,24 @@
+{
+  "framework": "giraffe",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Full",
+      "database": "None",
+      "framework": "giraffe",
+      "language": "F#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Giraffe",
+      "notes": "",
+      "versus": "aspcore"
+    }
+  }]
+}
