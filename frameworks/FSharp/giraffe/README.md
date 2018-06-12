@@ -23,4 +23,5 @@ This includes tests for plaintext and json serialization.
 ## Paths & Source for Tests
 
 * [Plaintext](src/App/Programs.fs): "/plaintext"
-* [JSON Serialization](src/App/Programs.fs): "/json"
+* [JSON serialization](src/App/Programs.fs): "/json"
+* [JSON serialization via utf8json lib](src/App/Programs.fs): "/jsonutf8"
