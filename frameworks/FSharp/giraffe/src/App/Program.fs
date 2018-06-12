@@ -24,11 +24,11 @@ let webApp =
             ]
         setStatusCode 404 >=> text "Not Found" 
     ]
-            
+
 [<EntryPoint>]
-let main _ =    
+let main _ =
     WebHostBuilder()
-        .UseKestrel()        
+        .UseKestrel()
         .Configure(fun app -> app.UseGiraffe(webApp))
         .ConfigureServices(fun services -> services.AddGiraffe() |> ignore)
         .Build()
