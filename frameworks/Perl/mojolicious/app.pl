@@ -51,11 +51,7 @@ get '/updates' => sub {
   $c->helpers->render_query(scalar $c->param('queries'), {update => 1});
 };
 
-get '/plaintext' => sub {
-  my $c = shift;
-  $c->res->headers->content_type('text/plain');
-  $c->render( text => 'Hello, World!' );
-};
+get '/plaintext' => { text => 'Hello, World!', format => 'txt' };
 
 # Additional helpers (shared code)
 
