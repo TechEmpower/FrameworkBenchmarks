@@ -6,6 +6,7 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
+open Microsoft.AspNetCore.Http
 
 // ---------------------------------
 // Models
@@ -17,16 +18,20 @@ type JsonMessage = { message : string }
 // Web app
 // ---------------------------------
 
-let jsonHandler =    
-    let model = { message = "Hello, World!" }    
-    json model
+let jsonUtf8 (data:obj) : HttpHandler =
+    fun (next : HttpFunc) (ctx : HttpContext) ->
+        let bytes = Utf8Json.JsonSerializer.Serialize(data)
+        ctx.SetContentType "application/json"
+        ctx.WriteBytesAsync bytes
+
 
 let webApp =
     choose [
         GET >=>
             choose [
                 route "/plaintext" >=> text "Hello, World!"
-                route "/json" >=> jsonHandler
+                route "/json" >=> json { message = "Hello, World!" }
+                route "/jsonutf8" >=> jsonUtf8 { message = "Hello, World!" }
             ]
         setStatusCode 404 >=> text "Not Found" ]
 
