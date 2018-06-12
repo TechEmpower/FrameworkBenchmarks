@@ -11,7 +11,7 @@ open Microsoft.AspNetCore.Http
 // ---------------------------------
 // Models
 // ---------------------------------
-
+[<CLIMutable>]
 type JsonMessage = { message : string }
 
 // ---------------------------------
@@ -23,7 +23,6 @@ let jsonUtf8 (data:obj) : HttpHandler =
         let bytes = Utf8Json.JsonSerializer.Serialize(data)
         ctx.SetContentType "application/json"
         ctx.WriteBytesAsync bytes
-
 
 let webApp =
     choose [
