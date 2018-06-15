@@ -14,6 +14,11 @@ let layout (content: XmlNode list) =
 let fortunes (fortunes: Fortune seq) =
     [
         table [] [ 
+            yield 
+                tr [] [
+                    th [] [ rawText "id" ]
+                    th [] [ rawText "message" ]
+                ]
             for f in fortunes ->
                 tr [] [
                     td [] [ rawText <| string f.Id ]
