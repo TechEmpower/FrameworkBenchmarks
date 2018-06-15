@@ -11,7 +11,7 @@ open System.Text
 let application : HttpHandler = 
     
     let fortunes : HttpHandler = 
-        let extra = {Id = 0; Message = "Additional fortune added at request time."}
+        let extra = {id = 0; message = "Additional fortune added at request time."}
         let extra' = Seq.singleton extra
 
         fun (_ : HttpFunc) (ctx : HttpContext) ->
@@ -22,7 +22,7 @@ let application : HttpHandler =
                 let view = 
                     data 
                     |> Seq.append extra'
-                    |> Seq.sortBy (fun x -> x.Message)
+                    |> Seq.sortBy (fun x -> x.message)
                     |> HtmlViews.fortunes
 
                 // stock implementation does not allow to set content type for view rendering in 1.1.0

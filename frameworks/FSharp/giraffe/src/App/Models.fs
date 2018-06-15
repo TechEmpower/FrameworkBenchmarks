@@ -6,7 +6,7 @@ type JsonMessage = { message : string }
 type JsonStructMessage = { message : string }
 
  [<CLIMutable>]
-type Fortune = { Id: int; Message: string }
+type Fortune = { id: int; message: string }
 
 [<Literal>]
 let ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3"

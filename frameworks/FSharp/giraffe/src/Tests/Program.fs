@@ -11,7 +11,7 @@ open System.Text
 type FastAndDirty() as self =
     inherit ManualConfig()
     do 
-        let job = new Job("", RunMode.Medium, InfrastructureMode.InProcess)
+        let job = new Job("", RunMode.Short, InfrastructureMode.InProcess)
         self.Add(job)
         self.Add(DefaultConfig.Instance.GetLoggers() |> Array.ofSeq)
         self.Add(DefaultConfig.Instance.GetColumnProviders() |> Array.ofSeq)
@@ -19,38 +19,52 @@ type FastAndDirty() as self =
         self.Add(DefaultConfig.Instance.GetDiagnosers() |> Array.ofSeq)
         self.Add([|MemoryDiagnoser() :> IDiagnoser|])
 
-let node = HtmlViews.fortunes (
+let node () = HtmlViews.fortunes (
     [
-        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
-        { Id = 1; Message = """<script>alert("This should not be displayed in a browser alert box.");</script>""" }
-        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
-        { Id = 1; Message = """<script>alert("This should not be displayed in a browser alert box.");</script>""" }
-        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
-        { Id = 1; Message = """<script>alert("This should not be displayed in a browser alert box.");</script>""" }
+        { id = 1; message = "Hello world! Hello world! Hello world!" }
+        { id = 1; message = "Привет мир! Привет мир! Привет мир!" }
+        { id = 1; message = "Hello world! Hello world! Hello world!" }
+        { id = 1; message = "Привет мир! Привет мир! Привет мир!" }
+        { id = 1; message = "Hello world! Hello world! Hello world!" }
+        { id = 1; message = """<script>alert("This should not be displayed in a browser alert box.");</script>""" }
+        { id = 1; message = "Hello world! Hello world! Hello world!" }
+        { id = 1; message = "Привет мир! Привет мир! Привет мир!" }
+        { id = 1; message = "Hello world! Hello world! Hello world!" }
+        { id = 1; message = "Привет мир! Привет мир! Привет мир!" }
+        { id = 1; message = "Hello world! Hello world! Hello world!" }
+        { id = 1; message = """<script>alert("This should not be displayed in a browser alert box.");</script>""" }
+        { id = 1; message = "Hello world! Hello world! Hello world!" }
+        { id = 1; message = "Привет мир! Привет мир! Привет мир!" }
+        { id = 1; message = "Hello world! Hello world! Hello world!" }
+        { id = 1; message = "Привет мир! Привет мир! Привет мир!" }
+        { id = 1; message = "Hello world! Hello world! Hello world!" }
+        { id = 1; message = """<script>alert("This should not be displayed in a browser alert box.");</script>""" }
     ]) 
+
+let node' = node()
 
 type HtmlBench () =
 
-    [<Benchmark(Baseline = true)>]
+    [<Benchmark()>]
     member self.Standard () = 
-        let bytes = Giraffe.GiraffeViewEngine.renderHtmlDocument node |> Encoding.UTF8.GetBytes
+        let bytes = Giraffe.GiraffeViewEngine.renderHtmlDocument node' |> Encoding.UTF8.GetBytes
         ()
 
     [<Benchmark>]
     member self.Custom () = 
-        let stream = StetefullRendering.renderHtmlToStream Encoding.UTF8 node
+        let stream = StetefullRendering.renderHtmlToStream Encoding.UTF8 node'
+        ()
+
+
+    [<Benchmark(Baseline = true)>]
+    member self.StandardWithView () = 
+        let bytes = Giraffe.GiraffeViewEngine.renderHtmlDocument (node()) |> Encoding.UTF8.GetBytes
+        ()
+
+
+    [<Benchmark>]
+    member self.CustomWithView () = 
+        let stream = StetefullRendering.renderHtmlToStream Encoding.UTF8 (node())
         ()
 
 [<EntryPoint>]

@@ -16,7 +16,7 @@ let application : HttpHandler =
     let inline contentLength x = new Nullable<_> ( int64 x )
 
     let comp = { new IComparer<Fortune> with 
-        member self.Compare(a,b) = String.CompareOrdinal(a.Message, b.Message)
+        member self.Compare(a,b) = String.CompareOrdinal(a.message, b.message)
     }
 
     let none: Option<HttpContext> = None
@@ -44,7 +44,7 @@ let application : HttpHandler =
             }
   
     let fortunes' : HttpHandler = 
-        let extra = {Id = 0; Message = "Additional fortune added at request time."}
+        let extra = {id = 0; message = "Additional fortune added at request time."}
         let encoding = new UTF8Encoding(false)
 
         fun (_ : HttpFunc) (ctx : HttpContext) ->

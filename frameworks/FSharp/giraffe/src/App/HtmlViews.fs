@@ -3,26 +3,31 @@
 open Giraffe.GiraffeViewEngine
 open Models
 
-let layout (content: XmlNode list) =
+let private fortunesHead = 
+    head [] [
+        title []  [ rawText "Fortunes" ]
+    ]
+
+let private layout (content: XmlNode list) =
     html [] [
-        head [] [
-            title []  [ rawText "Fortunes" ]
-        ]
+        fortunesHead
         body [] content
+    ]
+
+let private fortunesTableHeader = 
+    tr [] [
+        th [] [ rawText "id" ]
+        th [] [ rawText "message" ]
     ]
 
 let fortunes (fortunes: Fortune seq) =
     [
         table [] [ 
-            yield 
-                tr [] [
-                    th [] [ rawText "id" ]
-                    th [] [ rawText "message" ]
-                ]
+            yield fortunesTableHeader
             for f in fortunes ->
                 tr [] [
-                    td [] [ rawText <| string f.Id ]
-                    td [] [ encodedText <| f.Message ]
+                    td [] [ rawText <| string f.id ]
+                    td [] [ encodedText <| f.message ]
                 ] 
         ]
     ] |> layout
