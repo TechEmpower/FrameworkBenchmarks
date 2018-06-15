@@ -9,14 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="Giraffe.TokenRouter" Version="0.1.0-beta-110" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
     <PackageReference Include="Giraffe" Version="1.1.0" />
+    <PackageReference Include="Npgsql" Version="4.0.0" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Models.fs" />
+    <Compile Include="HtmlViews.fs" />
+    <Compile Include="Custom.fs" />
+    <Compile Include="Stock.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
