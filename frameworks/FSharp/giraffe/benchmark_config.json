@@ -5,7 +5,7 @@
       "default": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
-        "fortunes_url": "/fortunes",
+        "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "fullstack",
@@ -44,28 +44,9 @@
       }
     },
     {
-      "utf8plaintext": {
+      "stripped": {
+        "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "None",
-        "framework": "giraffe",
-        "language": "F#",
-        "orm": "Raw",
-        "platform": ".NET",
-        "flavor": "CoreCLR",
-        "webserver": "Kestrel",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Giraffe, utf8plaintext",
-        "notes": "",
-        "versus": "aspcore"
-      }
-    },
-    {
-      "dapper-stripped": {
-        "fortunes_url": "/fortunes",
         "port": 8080,
         "approach": "Stripped",
         "classification": "Micro",
