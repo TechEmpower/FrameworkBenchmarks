@@ -13,9 +13,7 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.10.14" />
     <ProjectReference Include="..\App\App.fsproj" />
-    <Reference Include="Giraffe">
-      <HintPath>..\..\..\..\..\..\..\Users\dmytro.kushnir\.nuget\packages\giraffe\1.1.0\lib\netstandard2.0\Giraffe.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Giraffe" Version="1.1.0" /> 
     <PackageReference Update="FSharp.Core" Version="4.5.0" />
   </ItemGroup>
 
