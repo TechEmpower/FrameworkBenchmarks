@@ -1,0 +1,9 @@
+---
+:orm: activerecord
+:test: minitest
+:mock: none
+:script: none
+:renderer: erb
+:stylesheet: none
+:namespace: PadrinoActiverecord
+:migration_format: number
