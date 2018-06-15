@@ -2,24 +2,27 @@ module App.App
 
 open Microsoft.AspNetCore.Hosting
 open Giraffe
+open Models
 
 [<EntryPoint>]
 let main args = 
     let implementation = 
         match args with
-        | [| "stock" |] -> Models.Stock
-        | _ -> Models.Custom
+        | [| "stock" |] -> Implementation.Stock
+        | _ -> Implementation.Custom
 
     printfn "Running with %A implementation" implementation
 
     let webApp = function
-    | Models.Custom -> Custom.application
-    | Models.Stock -> Stock.application
+    | Implementation.Custom -> Custom.application
+    | Implementation.Stock -> Stock.application
+
+    let app = webApp implementation
 
     WebHostBuilder()
         .UseKestrel()
-        .Configure(fun app -> app.UseGiraffe (webApp implementation))
-        .ConfigureServices(fun services -> services.AddGiraffe() |> ignore)
+        .Configure(fun b -> b.UseGiraffe app)
+        .ConfigureServices(fun s -> s.AddGiraffe() |> ignore)
         .Build()
         .Run()
     0
