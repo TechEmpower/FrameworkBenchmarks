@@ -6,6 +6,7 @@ open Npgsql
 open Microsoft.AspNetCore.Http
 open Models
 open FSharp.Control.Tasks
+open System.Text
 
 let application : HttpHandler = 
     
@@ -16,7 +17,7 @@ let application : HttpHandler =
         fun (_ : HttpFunc) (ctx : HttpContext) ->
             task {
                 use conn = new NpgsqlConnection(ConnectionString)
-                let! data = conn.QueryAsync<Fortune>("SELECT * FROM Fortune")
+                let! data = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
 
                 let view = 
                     data 
@@ -24,7 +25,14 @@ let application : HttpHandler =
                     |> Seq.sortBy (fun x -> x.Message)
                     |> HtmlViews.fortunes
 
-                return! ctx.WriteHtmlViewAsync(view)
+                // stock implementation does not allow to set content type for view rendering in 1.1.0
+                let bytes = 
+                    view 
+                    |> GiraffeViewEngine.renderHtmlDocument 
+                    |> Encoding.UTF8.GetBytes
+
+                ctx.SetContentType "text/html;charset=utf-8"
+                return! ctx.WriteBytesAsync bytes
             }
 
     GET >=> choose [

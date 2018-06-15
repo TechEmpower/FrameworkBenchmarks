@@ -10,7 +10,6 @@ open Npgsql
 open FSharp.Control.Tasks
 open Microsoft.AspNetCore.Http
 open System.Text
-open System 
 
 let application : HttpHandler = 
     
@@ -20,13 +19,18 @@ let application : HttpHandler =
         member self.Compare(a,b) = String.CompareOrdinal(a.Message, b.Message)
     }
 
+    let none: Option<HttpContext> = None
+
     let json' data : HttpHandler =
         let bytes = Utf8Json.JsonSerializer.Serialize(data)
-        fun _ ctx ->
+        fun _ ctx -> 
             ctx.Response.ContentLength <- contentLength bytes.Length
             ctx.Response.ContentType <- "application/json"
             ctx.Response.StatusCode <- 200
-            ctx.WriteBytesAsync bytes
+            task {
+                do! ctx.Response.Body.WriteAsync(bytes, 0, bytes.Length)
+                return none
+            }
 
     let text' (msg:string): HttpHandler = 
         let bytes = System.Text.Encoding.UTF8.GetBytes(msg)
@@ -34,36 +38,39 @@ let application : HttpHandler =
             ctx.Response.ContentLength <- contentLength bytes.Length
             ctx.Response.ContentType <- "text/plain"
             ctx.Response.StatusCode <- 200
-            ctx.WriteBytesAsync bytes
+            task {
+                do! ctx.Response.Body.WriteAsync(bytes, 0, bytes.Length)
+                return none
+            }
   
     let fortunes' : HttpHandler = 
         let extra = {Id = 0; Message = "Additional fortune added at request time."}
         let encoding = new UTF8Encoding(false)
 
         fun (_ : HttpFunc) (ctx : HttpContext) ->
-            task {
+            
                 let conn = new NpgsqlConnection(ConnectionString)
                 ctx.Response.RegisterForDispose conn
-
-                let! data = conn.QueryAsync<Fortune>("SELECT * FROM Fortune")
+                task {
+                    let! data = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
                 
-                let list = 
-                    let xs = data.AsList()
-                    xs.Add extra
-                    xs.Sort comp
-                    xs
+                    let fortunes = 
+                        let xs = data.AsList()
+                        xs.Add extra
+                        xs.Sort comp
+                        xs
 
-                let stream = 
-                    list
-                    |> HtmlViews.fortunes
-                    |> StetefullRendering.renderHtmlToStream encoding
+                    let html = 
+                        fortunes
+                        |> HtmlViews.fortunes
+                        |> StetefullRendering.renderHtmlToStream encoding
 
-                ctx.Response.ContentType <- "text/html"
-                ctx.Response.ContentLength <- contentLength stream.Length
-                ctx.Response.StatusCode <- 200
-                do! stream.CopyToAsync ctx.Response.Body
-                return None
-            }
+                    ctx.Response.ContentType <- "text/html;charset=utf-8"
+                    ctx.Response.ContentLength <- contentLength html.Length
+                    ctx.Response.StatusCode <- 200
+                    do! html.CopyToAsync ctx.Response.Body
+                    return none
+                }
 
     let table = [
         route "/plaintext" >=> ( text' "Hello, World!" )
@@ -71,4 +78,4 @@ let application : HttpHandler =
         route "/fortunes" >=> ( fortunes' )
     ]
 
-    GET >=> choose table
+    choose table
