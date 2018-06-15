@@ -188,6 +188,7 @@ void set_default_response_param(content_type_t content_type, size_t content_leng
 	req->res.content_length = content_length;
 	req->res.status = OK;
 	req->res.reason = status_code_to_string(req->res.status);
+	h2o_resp_add_date_header(req);
 
 	switch (content_type) {
 		case JSON:

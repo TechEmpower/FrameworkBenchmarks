@@ -97,6 +97,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	sigset_t signals;
 
 	memset(global_data, 0, sizeof(*global_data));
+	global_data->buffer_prototype._initial_buf.capacity = H2O_SOCKET_INITIAL_INPUT_BUFFER_SIZE;
 	global_data->memory_alignment = get_maximum_cache_line_size();
 	CHECK_ERRNO(sigemptyset, &signals);
 #ifdef NDEBUG
