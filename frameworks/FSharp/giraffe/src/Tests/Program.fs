@@ -12,7 +12,6 @@ type FastAndDirty() as self =
     inherit ManualConfig()
     do 
         let job = new Job("", RunMode.Medium, InfrastructureMode.InProcess)
-        //self.Add(job.WithLaunchCount(1).WithInvocationCount(32 * 32))
         self.Add(job)
         self.Add(DefaultConfig.Instance.GetLoggers() |> Array.ofSeq)
         self.Add(DefaultConfig.Instance.GetColumnProviders() |> Array.ofSeq)
@@ -22,32 +21,24 @@ type FastAndDirty() as self =
 
 let node = HtmlViews.fortunes (
     [
+        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
         { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
+        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
         { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
+        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
+        { Id = 1; Message = """<script>alert("This should not be displayed in a browser alert box.");</script>""" }
+        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
         { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
+        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
         { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
+        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
+        { Id = 1; Message = """<script>alert("This should not be displayed in a browser alert box.");</script>""" }
+        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
         { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
+        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
         { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
-        { Id = 1; Message = "Привет мир! Привет мир! Привет мир!" }
+        { Id = 1; Message = "Hello world! Hello world! Hello world!" }
+        { Id = 1; Message = """<script>alert("This should not be displayed in a browser alert box.");</script>""" }
     ]) 
 
 type HtmlBench () =
