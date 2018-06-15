@@ -9,6 +9,6 @@ type JsonStructMessage = { message : string }
 type Fortune = { Id: int; Message: string }
 
 [<Literal>]
-let ConnectionString = "Server=127.0.0.1;Port=5432;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;"
+let ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3"
 
 type Implementation = Stock | Custom
