@@ -1,10 +1,10 @@
 ﻿namespace App
-module rec StetefullRendering =
+open System.Text
+open Giraffe.GiraffeViewEngine
+open System.Net
+open System.IO
 
-    open System.Text
-    open Giraffe.GiraffeViewEngine
-    open System.Net
-    open System.IO
+module rec StetefullRendering =
 
     let private UTF8WithoutBOM = new UTF8Encoding(false)
 
@@ -59,7 +59,7 @@ module rec StetefullRendering =
         nodes |> List.iter (writeHtmlNode target)
         name  |> writeEndElement target
 
-    let rec writeHtmlNode (target: StreamWriter) (node : XmlNode)  =
+    let rec private writeHtmlNode (target: StreamWriter) (node : XmlNode)  =
         match node with
         | EncodedText text -> target |> add' (WebUtility.HtmlEncode text)
         | RawText text -> target |> add' text

@@ -7,11 +7,10 @@ open System
 open Models
 open Npgsql
 open FSharp.Control.Tasks
-open Microsoft.AspNetCore.Http
 
 let application : HttpHandler = 
 
-    let inline contentLength x = new Nullable<_> ( int64 x )
+    let inline contentLength x = new Nullable<int64> ( int64 x )
 
     let json' data : HttpHandler =
         let bytes = Utf8Json.JsonSerializer.Serialize(data)
@@ -37,8 +36,7 @@ let application : HttpHandler =
   
     let fortunes' : HttpHandler = 
         let extra = { id = 0; message = "Additional fortune added at request time." }
-
-        fun (_ : HttpFunc) (ctx : HttpContext) ->
+        fun _ ctx ->
             
             let conn = new NpgsqlConnection(ConnectionString)
             ctx.Response.RegisterForDispose conn

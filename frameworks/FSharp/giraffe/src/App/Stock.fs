@@ -3,7 +3,6 @@
 open Giraffe
 open Dapper
 open Npgsql
-open Microsoft.AspNetCore.Http
 open Models
 open FSharp.Control.Tasks
 open System.Text
@@ -13,7 +12,7 @@ let application : HttpHandler =
     let fortunes : HttpHandler = 
         let extra = {id = 0; message = "Additional fortune added at request time."}
 
-        fun (_ : HttpFunc) (ctx : HttpContext) ->
+        fun _ ctx ->
             task {
                 use conn = new NpgsqlConnection(ConnectionString)
                 let! data = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
