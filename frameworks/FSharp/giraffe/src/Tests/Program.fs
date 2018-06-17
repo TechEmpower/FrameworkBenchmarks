@@ -7,11 +7,13 @@ open BenchmarkDotNet.Configs
 open BenchmarkDotNet.Jobs
 open BenchmarkDotNet.Diagnosers
 open System.Text
+open System.IO
+open Microsoft.IO
 
 type FastAndDirty() as self =
     inherit ManualConfig()
     do 
-        let job = new Job("", RunMode.Short, InfrastructureMode.InProcess)
+        let job = new Job("", RunMode.Default, InfrastructureMode.InProcess)
         self.Add(job)
         self.Add(DefaultConfig.Instance.GetLoggers() |> Array.ofSeq)
         self.Add(DefaultConfig.Instance.GetColumnProviders() |> Array.ofSeq)
@@ -43,6 +45,21 @@ let node () = HtmlViews.fortunes (
 
 let node' = node()
 
+type MemoryPoolBench () =
+    let pool = new RecyclableMemoryStreamManager();    
+
+    [<Benchmark(Baseline = true)>]
+    member self.NewMemoryStream () = 
+        let start = new MemoryStream()
+        let stream = StetefullRendering.renderHtmlToStream start Encoding.UTF8 node'
+        ()
+
+    [<Benchmark>]
+    member self.PooledMemoryStream () = 
+        use start = pool.GetStream()
+        let stream = StetefullRendering.renderHtmlToStream start Encoding.UTF8 node'
+        ()
+
 type HtmlBench () =
 
     [<Benchmark()>]
@@ -52,22 +69,22 @@ type HtmlBench () =
 
     [<Benchmark>]
     member self.Custom () = 
-        let stream = StetefullRendering.renderHtmlToStream Encoding.UTF8 node'
+        let start = new MemoryStream()
+        let stream = StetefullRendering.renderHtmlToStream start Encoding.UTF8 node'
         ()
-
 
     [<Benchmark(Baseline = true)>]
     member self.StandardWithView () = 
         let bytes = Giraffe.GiraffeViewEngine.renderHtmlDocument (node()) |> Encoding.UTF8.GetBytes
         ()
 
-
     [<Benchmark>]
     member self.CustomWithView () = 
-        let stream = StetefullRendering.renderHtmlToStream Encoding.UTF8 (node())
+        let start = new MemoryStream()
+        let stream = StetefullRendering.renderHtmlToStream start Encoding.UTF8 (node())
         ()
 
 [<EntryPoint>]
 let Main args =
-    let _ = BenchmarkRunner.Run<HtmlBench>(FastAndDirty())
+    let _ = BenchmarkRunner.Run<MemoryPoolBench>(FastAndDirty())
     0

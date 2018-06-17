@@ -3,23 +3,15 @@
 open App
 open Dapper
 open Giraffe
-open System.Collections.Generic
 open System
 open Models
 open Npgsql
 open FSharp.Control.Tasks
 open Microsoft.AspNetCore.Http
-open System.Text
 
 let application : HttpHandler = 
-    
+
     let inline contentLength x = new Nullable<_> ( int64 x )
-
-    let comp = { new IComparer<Fortune> with 
-        member self.Compare(a,b) = String.CompareOrdinal(a.message, b.message)
-    }
-
-    let none: Option<HttpContext> = None
 
     let json' data : HttpHandler =
         let bytes = Utf8Json.JsonSerializer.Serialize(data)
@@ -29,7 +21,7 @@ let application : HttpHandler =
             ctx.Response.StatusCode <- 200
             task {
                 do! ctx.Response.Body.WriteAsync(bytes, 0, bytes.Length)
-                return none
+                return Some ctx
             }
 
     let text' (msg:string): HttpHandler = 
@@ -40,42 +32,53 @@ let application : HttpHandler =
             ctx.Response.StatusCode <- 200
             task {
                 do! ctx.Response.Body.WriteAsync(bytes, 0, bytes.Length)
-                return none
+                return Some ctx
             }
   
     let fortunes' : HttpHandler = 
-        let extra = {id = 0; message = "Additional fortune added at request time."}
-        let encoding = new UTF8Encoding(false)
+        let extra = { id = 0; message = "Additional fortune added at request time." }
 
         fun (_ : HttpFunc) (ctx : HttpContext) ->
             
-                let conn = new NpgsqlConnection(ConnectionString)
-                ctx.Response.RegisterForDispose conn
-                task {
-                    let! data = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
+            let conn = new NpgsqlConnection(ConnectionString)
+            ctx.Response.RegisterForDispose conn
                 
-                    let fortunes = 
-                        let xs = data.AsList()
-                        xs.Add extra
-                        xs.Sort comp
-                        xs
+            task {
+                let! data = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
+                
+                let fortunes = 
+                    let xs = data.AsList()
+                    xs.Add extra
+                    xs.Sort FortuneComparer
+                    xs
 
-                    let html = 
-                        fortunes
-                        |> HtmlViews.fortunes
-                        |> StetefullRendering.renderHtmlToStream encoding
+                let html = fortunes |> HtmlViews.fortunes |> StetefullRendering.renderHtml
 
-                    ctx.Response.ContentType <- "text/html;charset=utf-8"
-                    ctx.Response.ContentLength <- contentLength html.Length
-                    ctx.Response.StatusCode <- 200
-                    do! html.CopyToAsync ctx.Response.Body
-                    return none
-                }
+                ctx.Response.ContentType <- "text/html;charset=utf-8"
+                ctx.Response.ContentLength <- contentLength html.Length
+                ctx.Response.StatusCode <- 200
+                do! html.CopyToAsync ctx.Response.Body
+                return Some ctx
+            }
 
-    let table = [
-        route "/plaintext" >=> ( text' "Hello, World!" )
-        route "/json" >=> ( json' { JsonStructMessage.message = "Hello, World!" } )
-        route "/fortunes" >=> ( fortunes' )
+    let routes' (routes: (string * HttpHandler) list) : HttpHandler = 
+        let table = Map.ofList routes
+        let notFound = setStatusCode 404
+
+        let go key = 
+            if table |> Map.containsKey key then
+                table.[key]
+            else
+                notFound
+
+        fun next ctx ->
+            let path = ctx.Request.Path.Value
+            let handler = go path
+            handler next ctx
+
+    routes' [
+        "/plaintext", text' "Hello, World!"
+        "/json", json' { JsonStructMessage.message = "Hello, World!" }
+        "/fortunes", fortunes'
     ]
 
-    choose table

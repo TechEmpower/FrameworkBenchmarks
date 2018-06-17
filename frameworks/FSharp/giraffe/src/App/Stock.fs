@@ -12,20 +12,18 @@ let application : HttpHandler =
     
     let fortunes : HttpHandler = 
         let extra = {id = 0; message = "Additional fortune added at request time."}
-        let extra' = Seq.singleton extra
 
         fun (_ : HttpFunc) (ctx : HttpContext) ->
             task {
                 use conn = new NpgsqlConnection(ConnectionString)
                 let! data = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
 
-                let view = 
-                    data 
-                    |> Seq.append extra'
-                    |> Seq.sortBy (fun x -> x.message)
-                    |> HtmlViews.fortunes
+                let view =
+                    let xs = data.AsList()
+                    xs.Add extra
+                    xs.Sort FortuneComparer
+                    HtmlViews.fortunes xs
 
-                // stock implementation does not allow to set content type for view rendering in 1.1.0
                 let bytes = 
                     view 
                     |> GiraffeViewEngine.renderHtmlDocument 
@@ -35,7 +33,7 @@ let application : HttpHandler =
                 return! ctx.WriteBytesAsync bytes
             }
 
-    GET >=> choose [
+    choose [
         route "/plaintext" >=> text "Hello, World!" 
         route "/json" >=> json { JsonMessage.message = "Hello, World!" }
         route "/fortunes" >=> fortunes

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.10.14" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="1.2.2" />
     <ProjectReference Include="..\App\App.fsproj" />
     <PackageReference Include="Giraffe" Version="1.1.0" /> 
     <PackageReference Update="FSharp.Core" Version="4.5.0" />
