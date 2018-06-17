@@ -1,4 +1,4 @@
-package hello;
+package benchmarks;
 
 public class Message {
 

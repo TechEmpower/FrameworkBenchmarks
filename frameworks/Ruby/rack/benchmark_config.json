@@ -2,7 +2,6 @@
   "framework": "rack",
   "tests": [{
     "default": {
-      "setup_file": "run_mri_puma",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -23,7 +22,6 @@
       "notes": ""
     },
     "unicorn": {
-      "setup_file": "run_mri_unicorn",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -41,6 +39,26 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "rack-unicorn-mri",
+      "notes": ""
+    },
+    "falcon": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "rack",
+      "language": "Ruby",
+      "orm": "Raw",
+      "platform": "Rack",
+      "webserver": "Falcon",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rack-falcon-mri",
       "notes": ""
     }
   }]
