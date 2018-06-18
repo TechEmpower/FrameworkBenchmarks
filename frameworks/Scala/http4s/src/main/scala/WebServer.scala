@@ -50,7 +50,7 @@ object WebServer extends StreamApp[IO] with Http4sDsl[IO] {
 
   def addHeaders(service: HttpService[IO]): HttpService[IO] =
     cats.data.Kleisli { req: Request[IO] =>
-      service.mapF(_.transform(_.map(_.putHeaders(Header("Server", req.serverAddr)))))(req)
+      service.run(req).map(_.putHeaders(Header("Server", req.serverAddr)))
     }
 
   def connectDatabase(host: String, poolSize: Int): IO[HikariTransactor[IO]] = {
