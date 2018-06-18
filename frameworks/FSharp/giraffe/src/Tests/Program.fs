@@ -15,7 +15,7 @@ open Custom
 type FastAndDirty() as self =
     inherit ManualConfig()
     do 
-        let job = new Job("", RunMode.Default, InfrastructureMode.InProcess)
+        let job = new Job("", RunMode.Short, InfrastructureMode.InProcess)
         self.Add(job)
         self.Add(DefaultConfig.Instance.GetLoggers() |> Array.ofSeq)
         self.Add(DefaultConfig.Instance.GetColumnProviders() |> Array.ofSeq)
@@ -71,29 +71,19 @@ type MemoryPoolBench () =
 
 type HtmlBench () =
 
-    [<Benchmark()>]
-    member self.Standard () = 
-        let bytes = Giraffe.GiraffeViewEngine.renderHtmlDocument node' |> Encoding.UTF8.GetBytes
-        ()
-
-    [<Benchmark>]
-    member self.Custom () = 
-        let start = new MemoryStream()
-        let stream = StetefullRendering.renderHtmlToStream start node'
-        ()
-
     [<Benchmark(Baseline = true)>]
-    member self.StandardWithView () = 
+    member self.Standard () = 
         let bytes = Giraffe.GiraffeViewEngine.renderHtmlDocument (node()) |> Encoding.UTF8.GetBytes
         ()
 
     [<Benchmark>]
-    member self.CustomWithView () = 
-        let start = new MemoryStream()
-        let stream = StetefullRendering.renderHtmlToStream start (node())
+    member self.Custom () = 
+        let stream = MemoryStreamCache.Get()
+        StetefullRendering.renderHtmlToStream stream (node())
+        MemoryStreamCache.Release stream
         ()
 
 [<EntryPoint>]
 let Main args =
-    let _ = BenchmarkRunner.Run<MemoryPoolBench>(FastAndDirty())
+    let _ = BenchmarkRunner.Run<HtmlBench>(FastAndDirty())
     0
