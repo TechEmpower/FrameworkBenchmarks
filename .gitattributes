@@ -1,2 +1,0 @@
-# Docker relies on lf in bash scripts - force it
-*.sh text eol=lf

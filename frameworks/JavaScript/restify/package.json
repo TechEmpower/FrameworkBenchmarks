@@ -1,7 +1,0 @@
-{
-  "name": "restify",
-  "dependencies": {
-    "restify": "7.1.1"
-  },
-  "main": "server.js"
-}

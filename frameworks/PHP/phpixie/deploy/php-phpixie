@@ -1,9 +1,0 @@
-<VirtualHost *:8080>
-  Alias /php-phpixie/ "/phpixie/web/"
-  <Directory /php-phpixie/web/>
-          Options Indexes FollowSymLinks MultiViews
-          #AllowOverride None
-          Order allow,deny
-          allow from all
-  </Directory>
-</VirtualHost>

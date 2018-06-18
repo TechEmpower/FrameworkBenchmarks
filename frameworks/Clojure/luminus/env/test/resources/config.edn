@@ -1,3 +1,0 @@
-{:test true
- :port 3001
- :nrepl-port 7001} ;; when :nrepl-port is set the application starts the nREPL server on load
