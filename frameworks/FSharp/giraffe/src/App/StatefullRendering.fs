@@ -66,14 +66,14 @@ module rec StetefullRendering =
         | ParentNode (e, nodes) -> writeParentNode target e nodes
         | VoidElement (n, attrs) -> writeStartElement target n attrs
     
-    let renderHtmlToStream (ms:MemoryStream) (encoding:Encoding) node = 
-        let sb = new StreamWriter(ms, encoding)
+    let renderHtmlToStream (ms:MemoryStream) node = 
+        let sb = new StreamWriter(ms, UTF8WithoutBOM)
         sb.WriteLine "<!DOCTYPE html>"
         writeHtmlNode sb node
         sb.Flush()
         ms.Seek(0L, SeekOrigin.Begin) |> ignore
-        ms
 
     let renderHtml node =
         let ms = new MemoryStream()
-        renderHtmlToStream ms UTF8WithoutBOM node
+        renderHtmlToStream ms node
+        ms

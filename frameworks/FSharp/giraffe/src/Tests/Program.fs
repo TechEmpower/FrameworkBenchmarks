@@ -9,6 +9,8 @@ open BenchmarkDotNet.Diagnosers
 open System.Text
 open System.IO
 open Microsoft.IO
+open System
+open Custom
 
 type FastAndDirty() as self =
     inherit ManualConfig()
@@ -51,13 +53,20 @@ type MemoryPoolBench () =
     [<Benchmark(Baseline = true)>]
     member self.NewMemoryStream () = 
         let start = new MemoryStream()
-        let stream = StetefullRendering.renderHtmlToStream start Encoding.UTF8 node'
+        let stream = StetefullRendering.renderHtmlToStream start node'
         ()
 
     [<Benchmark>]
-    member self.PooledMemoryStream () = 
+    member self.CustomPool() = 
+        let stream = MemoryStreamCache.Get()
+        StetefullRendering.renderHtmlToStream stream node'
+        MemoryStreamCache.Release stream
+        ()
+
+    [<Benchmark>]
+    member self.MSPool () = 
         use start = pool.GetStream()
-        let stream = StetefullRendering.renderHtmlToStream start Encoding.UTF8 node'
+        let stream = StetefullRendering.renderHtmlToStream start node'
         ()
 
 type HtmlBench () =
@@ -70,7 +79,7 @@ type HtmlBench () =
     [<Benchmark>]
     member self.Custom () = 
         let start = new MemoryStream()
-        let stream = StetefullRendering.renderHtmlToStream start Encoding.UTF8 node'
+        let stream = StetefullRendering.renderHtmlToStream start node'
         ()
 
     [<Benchmark(Baseline = true)>]
@@ -81,7 +90,7 @@ type HtmlBench () =
     [<Benchmark>]
     member self.CustomWithView () = 
         let start = new MemoryStream()
-        let stream = StetefullRendering.renderHtmlToStream start Encoding.UTF8 (node())
+        let stream = StetefullRendering.renderHtmlToStream start (node())
         ()
 
 [<EntryPoint>]
