@@ -6,5 +6,5 @@ RUN mvn compile assembly:single -q
 
 FROM openjdk:10-jre-slim
 WORKDIR /t-io
-COPY --from=maven /t-io/target/tio-http-server-benchmark-3.0.2.v20180612-RELEASE.jar app.jar
+COPY --from=maven /t-io/target/tio-http-server-benchmark-3.0.3.v20180620-RELEASE.jar app.jar
 CMD ["java", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-jar", "app.jar"]
