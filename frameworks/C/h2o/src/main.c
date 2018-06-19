@@ -121,6 +121,7 @@ static size_t get_maximum_cache_line_size(void)
 
 static int initialize_global_data(const config_t *config, global_data_t *global_data)
 {
+	pthread_mutexattr_t attr;
 	sigset_t signals;
 
 	memset(global_data, 0, sizeof(*global_data));
@@ -133,7 +134,10 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	CHECK_ERRNO_RETURN(global_data->signal_fd, signalfd, -1, &signals, SFD_NONBLOCK | SFD_CLOEXEC);
 	global_data->fortunes_template = get_fortunes_template(config->template_path);
 	h2o_config_init(&global_data->h2o_config);
-	CHECK_ERROR(pthread_mutex_init, &global_data->world_cache_lock, NULL);
+	CHECK_ERROR(pthread_mutexattr_init, &attr);
+	CHECK_ERROR(pthread_mutexattr_settype, &attr, PTHREAD_MUTEX_ADAPTIVE_NP);
+	CHECK_ERROR(pthread_mutex_init, &global_data->world_cache_lock, &attr);
+	CHECK_ERROR(pthread_mutexattr_destroy, &attr);
 	global_data->world_cache = h2o_cache_create(0,
 	                                            config->world_cache_capacity,
 	                                            config->world_cache_duration,

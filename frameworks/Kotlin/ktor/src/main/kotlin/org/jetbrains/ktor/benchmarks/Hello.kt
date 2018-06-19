@@ -11,6 +11,7 @@ import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.scheduling.*
 import kotlinx.html.*
 import java.util.concurrent.*
 import java.util.concurrent.atomic.*
@@ -27,10 +28,7 @@ fun Application.main() {
         hikari()
     }
 
-    val databaseDispatcher by lazy {
-        val counter = AtomicInteger()
-        Executors.newFixedThreadPool(100) { r -> Thread(r, "db-${counter.incrementAndGet()}-thread") }.asCoroutineDispatcher()
-    }
+    val databaseDispatcher by lazy { ExperimentalCoroutineDispatcher().blocking(32) }
 
     install(DefaultHeaders)
 
