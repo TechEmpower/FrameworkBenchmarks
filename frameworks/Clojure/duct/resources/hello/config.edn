@@ -1,0 +1,50 @@
+{:duct.core/project-ns       hello
+ :duct.core/environment      :production
+
+ :duct.core/include ["hello/db" "hello/server"]
+
+ :duct.module/logging
+ {}
+
+ :duct.module.web/api
+ {}
+
+ ; for benchmarking performance, disable logging
+ :duct.logger/timbre
+ {:enabled? false
+  :appenders {}
+  :level :error}
+
+ :duct.module/ataraxy
+ {[:get "/json"]                       [:json]
+  [:get "/plaintext"]                  [:plaintext]
+  [:get "/db"]                         [:single-query]
+  [:get "/db-mongo"]                   [:single-query-mongodb]
+  [:get "/queries" #{?queries}]        [:queries]
+  [:get "/queries-mongo" #{?queries}]  [:queries-mongodb]
+  [:get "/fortunes"]                   [:fortunes]
+  [:get "/fortunes-mongo"]             [:fortunes-mongodb]}
+
+ [:duct.handler.static/ok :hello.handler/json]
+ {:body {:message "Hello, World!"}}
+
+ [:duct.handler.static/okplain :hello.handler/plaintext]
+ {:body "Hello, World!"}
+
+ :hello.handler/single-query
+ {:db #ig/ref :duct.database/sql}
+
+ :hello.handler/single-query-mongodb
+ {:db #ig/ref :duct.database.mongodb/monger}
+
+ :hello.handler/queries
+ {:db #ig/ref :duct.database/sql}
+
+ :hello.handler/queries-mongodb
+ {:db #ig/ref :duct.database.mongodb/monger}
+
+ :hello.handler/fortunes
+ {:db #ig/ref :duct.database/sql}
+
+ :hello.handler/fortunes-mongodb
+ {:db #ig/ref :duct.database.mongodb/monger}}

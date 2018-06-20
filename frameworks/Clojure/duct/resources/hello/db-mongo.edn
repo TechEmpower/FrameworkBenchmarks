@@ -1,0 +1,7 @@
+{:duct.database/sql {} ; define it empty
+
+ :duct.database.mongodb/monger
+ {:logger #ig/ref :duct/logger
+  ;:uri    "mongodb://127.0.0.1:27017/hello_world"}
+  :uri "mongodb://tfb-database:27017/hello_world?username=benchmarkdbuser&password=benchmarkdbpass&maxPoolSize=64"}
+}
