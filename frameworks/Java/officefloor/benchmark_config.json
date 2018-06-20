@@ -1,0 +1,26 @@
+{
+  "framework": "officefloor",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "OfficeFloor",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "OfficeFloor",
+        "webserver": "WoOF",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "OfficeFloor",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
