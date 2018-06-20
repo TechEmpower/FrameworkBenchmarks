@@ -9,6 +9,7 @@
 
 start() ->
 	ok = application:start(crypto),
+	ok = application:start(ssl),
 	ok = application:start(ranch),
 	ok = application:start(cowboy),
 	ok = application:start(hello_world).
