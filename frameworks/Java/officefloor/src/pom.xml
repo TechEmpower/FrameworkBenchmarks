@@ -9,5 +9,40 @@
 	<name>OfficeFloor Benchmarks</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<officefloor.version>3.0.0</officefloor.version>
 	</properties>
+	<modules>
+		<module>woof_benchmark</module>
+	</modules>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>net.officefloor.web</groupId>
+				<artifactId>woof</artifactId>
+				<version>${officefloor.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.7.0</version>
+					<configuration>
+						<source>8</source>
+						<target>8</target>
+						<optimize>true</optimize>
+						<debug>false</debug>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
