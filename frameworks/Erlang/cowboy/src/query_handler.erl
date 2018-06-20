@@ -11,7 +11,7 @@ init(_Transport, Req, []) ->
   {ok, Req, undefined}.
 
 handle(Req, State) ->
-        random:seed(erlang:now()),
+        %%random:seed(erlang:now()),
     {N, Req1} = cowboy_req:qs_val(<<"queries">>, Req, <<"1">>),
 
       I = try binary_to_integer(N) of
@@ -21,7 +21,7 @@ handle(Req, State) ->
           catch error:badarg -> 1 end,
 
       JSON = [ {[{<<"id">>, ID}, {<<"randomNumber">>, Rand}]} ||
-              {result_packet, _, _, [[ID, Rand]], _} <- [emysql:execute(test_pool, db_stmt, [random:uniform(10000)]) || _ <- lists:seq(1, I) ]],
+              {result_packet, _, _, [[ID, Rand]], _} <- [emysql:execute(test_pool, db_stmt, [rand:uniform(10000)]) || _ <- lists:seq(1, I) ]],
 
   {ok, Req2} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"application/json">>}], jiffy:encode(JSON), Req1),
   {ok, Req2, State}.
