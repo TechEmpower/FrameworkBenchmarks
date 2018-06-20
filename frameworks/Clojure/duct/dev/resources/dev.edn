@@ -1,13 +1,10 @@
 {:duct.core/environment :development
  :duct.core/include     ["hello/config"]
 
- ;:duct.module/sql
- ;{:database-url "jdbc:postgresql://localhost:5432/benchmark?ssl=false&loggerLevel=OFF&tcpKeepAlive=true&logUnclosedConnections=false&readOnly=true&disableColumnSanitiser=true&hostRecheckSeconds=15"}
-
- ;:duct.logger/timbre
- ;{:level :debug,
- ; :appenders {:duct.logger.timbre/spit #ig/ref :duct.logger.timbre/spit,
- ;             :duct.logger.timbre/brief #ig/ref :duct.logger.timbre/brief}}}
+ :duct.logger/timbre
+ {:level :debug,
+  :appenders {:duct.logger.timbre/spit #ig/ref :duct.logger.timbre/spit,
+              :duct.logger.timbre/brief #ig/ref :duct.logger.timbre/brief}}}
 
  :duct.database.mongodb/monger
  {:host "localhost" :port 27017}

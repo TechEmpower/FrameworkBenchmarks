@@ -1,11 +1,7 @@
 (ns hello.handler.fortunes
   (:require [integrant.core :as ig]
             [ataraxy.response :as response]
-            [hello.boundary.fortune-db :as fortune-db]
-    ;[hiccup.core :as hiccup]
-    ;[hiccup.util]
-    ;[hiccup.page]
-            ))
+            [hello.boundary.fortune-db :as fortune-db]))
 
 ; copied from pedestal implementation
 (defn prepare-fortunes
@@ -43,22 +39,3 @@
     (let [fortunes (prepare-fortunes (fortune-db/get-all db))]
       [::response/ok (fortunes-str fortunes)])))
 
-; ------- same but with hiccup --------
-
-;(defn fortunes-hiccup
-;  "Render the given fortunes to simple HTML using Hiccup."
-;  [fortunes]
-;  (hiccup.page/html5
-;    [:head
-;     [:title "Fortunes"]]
-;    [:body
-;     [:table
-;      [:tr [:th "id"] [:th "message"]]
-;      (map #(vector :tr
-;                    [:td (:id %)]
-;                    [:td (hiccup.util/escape-html (:message %))]) fortunes)]]))
-;
-;(defmethod ig/init-key :hello.handler/fortunes-hiccup [_ {:keys [db]}]
-;  (fn [{[_] :ataraxy/result}]
-;    (let [fortunes (prepare-fortunes (fortune-db/get-all db))]
-;      [::response/ok (fortunes-hiccup fortunes)])))
