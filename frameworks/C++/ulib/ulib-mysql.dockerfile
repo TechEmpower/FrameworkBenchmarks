@@ -68,7 +68,8 @@ RUN USP_FLAGS="-DAS_cpoll_cppsp_DO" \
 RUN make install && \
 	 cd examples/userver && make install && \
 	 cd ../../src/ulib/net/server/plugin/usp && \
-    make db.la query.la update.la fortune.la cached_worlds.la && \
+    AM_LDFLAGS="-lFortune" make fortune.la && \
+	 AM_LDFLAGS="-lWorld" make db.la query.la update.la cached_worlds.la && \
     cp .libs/db.so .libs/query.so .libs/update.so .libs/fortune.so .libs/cached_worlds.so $ULIB_DOCUMENT_ROOT
 
 ENV PATH=${ULIB_ROOT}/bin:${PATH}

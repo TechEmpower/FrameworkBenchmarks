@@ -73,7 +73,8 @@ RUN USP_FLAGS="-DAS_cpoll_cppsp_DO" \
 RUN make install && \
 	 cd examples/userver && make install && \
 	 cd ../../src/ulib/net/server/plugin/usp && \
-    make mdb.la mquery.la mupdate.la mfortune.la && \
+    AM_LDFLAGS="-lFortune -lFortuneNoSql" make mfortune.la && \
+	 AM_LDFLAGS="-lWorld -lWorldNoSql" make mdb.la mquery.la mupdate.la && \
     cp .libs/mdb.so .libs/mquery.so .libs/mupdate.so .libs/mfortune.so $ULIB_DOCUMENT_ROOT
 
 ENV PATH=${ULIB_ROOT}/bin:${PATH}

@@ -3,8 +3,13 @@
 #ifndef FORTUNE_H
 #define FORTUNE_H 1
 
+#include <ulib/base/coder/xml.h>
+
 #include <ulib/orm/orm.h>
 #include <ulib/json/value.h>
+#include <ulib/utility/uhttp.h>
+#include <ulib/orm/orm_driver.h>
+#include <ulib/net/server/client_image.h>
 
 class Fortune {
 public:
@@ -105,24 +110,137 @@ public:
       stmt->bindResult(U_ORM_TYPE_HANDLER(message, UString));
       }
 
-#ifdef DEBUG
-   const char* dump(bool breset) const
+   static char* pwbuffer;
+   static Fortune* pfortune;
+   static Fortune* pfortune2add;
+   static UVector<Fortune*>* pvfortune;
+
+   static UOrmSession*    psql_fortune;
+   static UOrmStatement* pstmt_fortune;
+
+   static void doQuery(vPF handlerQuery)
       {
-      *UObjectIO::os << "id               " << id              << '\n'
-                     << "message (UString " << (void*)&message << ')';
+      U_TRACE(0, "Fortune::doQuery(%p)", handlerQuery)
 
-      if (breset)
+      U_INTERNAL_ASSERT_POINTER(pfortune2add)
+
+      pwbuffer = UClientImage_Base::wbuffer->pend();
+
+      (void) memcpy(pwbuffer, U_CONSTANT_TO_PARAM("<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"));
+                    pwbuffer   += U_CONSTANT_SIZE("<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
+
+      pvfortune->push(pfortune2add);
+
+      handlerQuery();
+
+      pvfortune->sort(Fortune::cmp_obj);
+
+      Fortune* elem;
+
+      for (uint32_t i = 0, n = pvfortune->size(); i < n; ++i)
          {
-         UObjectIO::output();
+         elem = pvfortune->at(i);
 
-         return UObjectIO::buffer_output;
+         u_put_unalignedp64(pwbuffer, U_MULTICHAR_CONSTANT64('<','t','r','>','<','t','d','>'));
+
+         pwbuffer = u_num2str32(elem->id, pwbuffer+8);
+
+         u_put_unalignedp64(pwbuffer, U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','t','d'));
+                            pwbuffer += 8;
+
+         *pwbuffer++ = '>';
+
+         pwbuffer += u_xml_encode((const unsigned char*)U_STRING_TO_PARAM(elem->message), (unsigned char*)pwbuffer);
+
+         u_put_unalignedp64(pwbuffer,   U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','/','t'));
+         u_put_unalignedp16(pwbuffer+8, U_MULTICHAR_CONSTANT16('r','>'));
+                            pwbuffer += 10;
+
+         if (elem != pfortune2add) U_DELETE(elem)
          }
 
-      return U_NULLPTR;
+      pvfortune->setEmpty();
+
+      (void) memcpy(pwbuffer, U_CONSTANT_TO_PARAM("</table></body></html>"));
+
+      UClientImage_Base::wbuffer->size_adjust(pwbuffer + U_CONSTANT_SIZE("</table></body></html>"));
+
+      UHTTP::mime_index = U_html;
       }
+
+   static void handlerFork()
+      {
+      U_TRACE_NO_PARAM(0, "Fortune::handlerFork()")
+
+      U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
+
+      U_NEW(Fortune, pfortune2add, Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
+      }
+
+   static void handlerForkSql()
+      {
+      U_TRACE_NO_PARAM(0, "Fortune::handlerForkSql()")
+
+      if (psql_fortune == U_NULLPTR)
+         {
+         U_NEW(UOrmSession, psql_fortune, UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
+
+         if (psql_fortune->isReady() == false)
+            {
+            U_WARNING("Fortune::handlerForkSql(): we cound't connect to db");
+
+            U_DELETE(psql_fortune)
+
+            psql_fortune = U_NULLPTR;
+
+            return;
+            }
+
+         U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
+
+         U_NEW(Fortune, pfortune, Fortune);
+
+         pstmt_fortune->into(*pfortune);
+
+         handlerFork();
+         }
+      }
+
+#ifdef DEBUG
+   static void handlerEnd()
+      {
+      U_TRACE_NO_PARAM(0, "Fortune::handlerEnd()")
+
+      U_INTERNAL_ASSERT_POINTER(pvfortune)
+      U_INTERNAL_ASSERT_POINTER(pfortune2add)
+
+      U_DELETE(pvfortune)
+      U_DELETE(pfortune2add)
+      }
+
+   static void handlerEndSql()
+      {
+      U_TRACE_NO_PARAM(0, "Fortune::handlerEndSql()")
+
+      if (pstmt_fortune)
+         {
+         handlerEnd();
+
+         U_DELETE(pfortune)
+         U_DELETE(psql_fortune)
+         U_DELETE(pstmt_fortune)
+
+         pstmt_fortune = U_NULLPTR;
+         }
+      }
+
+   const char* dump(bool breset) const;
 #endif
 
 private:
    U_DISALLOW_ASSIGN(Fortune)
 };
+
+// override the default...
+template <> inline void u_destroy(const Fortune** ptr, uint32_t n) { U_TRACE(0,"u_destroy<Fortune*>(%p,%u)", ptr, n) }
 #endif
