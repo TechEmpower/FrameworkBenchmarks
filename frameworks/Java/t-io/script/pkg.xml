@@ -1,0 +1,37 @@
+<assembly>
+	<!-- http://maven.apache.org/plugins/maven-assembly-plugin/assembly.html -->
+	<id>dist</id>
+	<formats>
+		<!-- zip,tar.gz,tar.bz2,jar,dir,war -->
+		<format>dir</format>
+	</formats>
+	
+	<includeBaseDirectory>false</includeBaseDirectory>
+  
+	<fileSets> 
+		
+		<!-- 把项目的配置文件放config目录 -->
+		<fileSet>
+			<directory>${project.basedir}/src/main/resources</directory>
+			<outputDirectory>config</outputDirectory>
+		</fileSet>
+        
+		<fileSet>
+			<directory>${project.basedir}</directory>
+			<outputDirectory></outputDirectory>
+			<includes>
+				<include>startup.*</include>
+				<include>debug.*</include>
+				<include>_cmd.*</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+	
+
+	
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>lib</outputDirectory>			
+		</dependencySet>
+	</dependencySets>
+</assembly>
