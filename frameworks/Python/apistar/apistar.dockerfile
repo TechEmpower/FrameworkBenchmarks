@@ -6,4 +6,4 @@ WORKDIR /apistar
 
 RUN pip3 install -r /apistar/requirements.txt
 
-CMD gunicorn app:app.wsgi -c gunicorn_conf.py
+CMD gunicorn app:app -c gunicorn_conf.py
