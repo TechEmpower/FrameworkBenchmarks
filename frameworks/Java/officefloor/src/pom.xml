@@ -16,6 +16,13 @@
 		<module>woof_benchmark</module>
 		<module>woof_raw</module>
 	</modules>
+	<repositories>
+		<repository>
+			<id>maven2-repository.officefloor.net</id>
+			<name>OfficeFloor staging repository for Maven</name>
+			<url>http://www.officefloor.net/maven2/</url>
+		</repository>
+	</repositories>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
