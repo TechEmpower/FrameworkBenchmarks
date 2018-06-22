@@ -1,10 +1,8 @@
-FROM maven:3.5.3-jdk-10-slim as maven
+FROM maven:3.5.3-jdk-8
 WORKDIR /t-io
 COPY pom.xml pom.xml
 COPY src src
-RUN mvn compile assembly:single -q
-
-FROM openjdk:10-jre-slim
-WORKDIR /t-io
-COPY --from=maven /t-io/target/tio-http-server-benchmark-3.0.3.v20180620-RELEASE.jar app.jar
-CMD ["java", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-jar", "app.jar"]
+COPY script script
+RUN mvn package -q
+WORKDIR /t-io/target/tio-http-server-benchmark
+CMD ["java", "-server", "-Xms1G", "-Xmx1G", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dpacket.handler.mode=queue1", "-cp", "/t-io/target/tio-http-server-benchmark/config:/t-io/target/tio-http-server-benchmark/lib/*", "org.tio.http.server.benchmark.TioBenchmarkStarter"]

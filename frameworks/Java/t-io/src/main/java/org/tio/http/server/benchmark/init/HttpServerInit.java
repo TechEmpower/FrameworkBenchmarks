@@ -36,7 +36,10 @@ public class HttpServerInit {
 		httpServerStarter = new HttpServerStarter(httpConfig, requestHandler);
 		serverGroupContext = httpServerStarter.getServerGroupContext();
 		serverGroupContext.setReadBufferSize(TcpConst.MAX_DATA_LENGTH);
-		serverGroupContext.setPacketHandlerMode(PacketHandlerMode.QUEUE);
+		String mode = System.getProperty("packet.handler.mode");
+		if ("queue".equalsIgnoreCase(mode)) {
+			serverGroupContext.setPacketHandlerMode(PacketHandlerMode.QUEUE);
+		}
 		httpServerStarter.start();
 	}
 }
