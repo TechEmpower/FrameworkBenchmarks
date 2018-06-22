@@ -51,36 +51,36 @@ if (UOrmDriver::isAsyncPipelineModeAvaliable() == false)
       }
 
    World::endResult();
-
-   return;
    }
-
-(void) World::pstmt_query->asyncPipelineMode(World::handlerResult);
-
-pquery = query + U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES");
-
-for (i = 0; i < num_queries; ++i)
+else
    {
-   *pquery++ = '(';
+   (void) World::pstmt_query->asyncPipelineMode(World::handlerResult);
 
-   pquery = u_num2str32(World::pworld_query->id = World::rnumber[i], pquery);
+   pquery = query + U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES");
 
-   (void) World::pstmt_query->asyncPipelineSendQueryPrepared(i);
+   for (i = 0; i < num_queries; ++i)
+      {
+      *pquery++ = '(';
 
-   *pquery++ = ',';
+      pquery = u_num2str32(World::pworld_query->id = World::rnumber[i], pquery);
 
-   pquery = u_num2str32(World::pworld_query->randomNumber = u_get_num_random(10000-1), pquery);
+      (void) World::pstmt_query->asyncPipelineSendQueryPrepared(i);
 
-   u_put_unalignedp16(pquery, U_MULTICHAR_CONSTANT16(')',','));
-                      pquery += 2;
+      *pquery++ = ',';
 
-   World::handlerResultSql(i);
+      pquery = u_num2str32(World::pworld_query->randomNumber = u_get_num_random(10000-1), pquery);
+
+      u_put_unalignedp16(pquery, U_MULTICHAR_CONSTANT16(')',','));
+                         pquery += 2;
+
+      World::handlerResultSql(i);
+      }
+
+   World::endResult();
+
+   (void) memcpy(pquery-1, ") AS v (id,randomNumber) WHERE World.id = v.id;",
+           U_CONSTANT_SIZE(") AS v (id,randomNumber) WHERE World.id = v.id;")+1);
+
+   (void) World::pstmt_query->asyncPipelineSendQuery(query, pquery+U_CONSTANT_SIZE(") AS v (id,randomNumber) WHERE World.id = v.id;")-1-query, num_queries); 
    }
-
-World::endResult();
-
-(void) memcpy(pquery-1, ") AS v (id,randomNumber) WHERE World.id = v.id;",
-        U_CONSTANT_SIZE(") AS v (id,randomNumber) WHERE World.id = v.id;")+1);
-
-(void) World::pstmt_query->asyncPipelineSendQuery(query, pquery+U_CONSTANT_SIZE(") AS v (id,randomNumber) WHERE World.id = v.id;")-1-query, num_queries); 
 -->
