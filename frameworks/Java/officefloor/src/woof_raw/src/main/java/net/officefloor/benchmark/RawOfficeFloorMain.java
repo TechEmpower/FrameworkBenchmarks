@@ -19,19 +19,27 @@ package net.officefloor.benchmark;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Data;
+import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.managedobject.ProcessAwareContext;
 import net.officefloor.frame.api.managedobject.ProcessSafeOperation;
 import net.officefloor.server.SocketManager;
 import net.officefloor.server.http.AbstractHttpServicerFactory;
+import net.officefloor.server.http.HttpHeaderName;
 import net.officefloor.server.http.HttpHeaderValue;
 import net.officefloor.server.http.HttpRequest;
 import net.officefloor.server.http.HttpResponse;
+import net.officefloor.server.http.HttpResponseHeaders;
 import net.officefloor.server.http.HttpServerLocation;
 import net.officefloor.server.http.HttpServerSocketManagedObjectSource;
 import net.officefloor.server.http.HttpStatus;
@@ -43,7 +51,10 @@ import net.officefloor.server.stream.StreamBufferPool;
 import net.officefloor.server.stream.impl.ThreadLocalStreamBufferPool;
 
 /**
+ * <p>
  * {@link SocketManager} raw performance.
+ * <p>
+ * Allows determining the overhead of the {@link OfficeFloor} framework.
  */
 public class RawOfficeFloorMain {
 
@@ -74,6 +85,10 @@ public class RawOfficeFloorMain {
 		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, serviceBufferPool);
 		socketManager.bindServerSocket(serverLocation.getClusterHttpPort(), null, null, serviceFactory, serviceFactory);
 
+		// Setup Date
+		Timer dateTimer = new Timer(true);
+		dateTimer.schedule(serviceFactory.updateDate, 0, 1000);
+
 		// Start servicing
 		Executor executor = Executors.newCachedThreadPool();
 		for (Runnable runnable : socketManager.getRunnables()) {
@@ -89,9 +104,28 @@ public class RawOfficeFloorMain {
 	 */
 	private static class RawHttpServicerFactory extends AbstractHttpServicerFactory {
 
+		private static HttpHeaderName NAME_SERVER = new HttpHeaderName("Server");
+
+		private static HttpHeaderValue VALUE_SERVER = new HttpHeaderValue("OF");
+
+		private static HttpHeaderName NAME_DATE = new HttpHeaderName("Date");
+
 		private static byte[] HELLO_WORLD = "Hello, World!".getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
 
 		private static HttpHeaderValue APPLICATION_JSON = new HttpHeaderValue("application/json");
+
+		/**
+		 * <code>Date</code> {@link HttpHeaderValue}.
+		 */
+		private volatile HttpHeaderValue dateHttpHeader;
+
+		private final TimerTask updateDate = new TimerTask() {
+			@Override
+			public void run() {
+				String now = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneOffset.UTC));
+				RawHttpServicerFactory.this.dateHttpHeader = new HttpHeaderValue(now);
+			}
+		};
 
 		/**
 		 * {@link ObjectMapper}.
@@ -136,6 +170,11 @@ public class RawOfficeFloorMain {
 			// Service the connection
 			HttpRequest request = connection.getRequest();
 			HttpResponse response = connection.getResponse();
+
+			// Provider Server and Date
+			HttpResponseHeaders headers = response.getHeaders();
+			headers.addHeader(NAME_SERVER, VALUE_SERVER);
+			headers.addHeader(NAME_DATE, this.dateHttpHeader);
 
 			// Determine request
 			switch (request.getUri()) {

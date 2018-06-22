@@ -1,6 +1,7 @@
 package net.officefloor.benchmark;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -31,6 +32,8 @@ public class JsonTest {
 		String entity = EntityUtils.toString(response.getEntity());
 		assertEquals("Incorrect response", "{\"message\":\"Hello, World!\"}", entity);
 		assertEquals("Should be JSON", "application/json", response.getFirstHeader("content-type").getValue());
+		assertEquals("Incorrect server", "OF", response.getFirstHeader("server").getValue());
+		assertNotNull("Should have date", response.getFirstHeader("date"));
 	}
 
 	@After
