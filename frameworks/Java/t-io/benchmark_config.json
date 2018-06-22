@@ -1,12 +1,12 @@
 {
-  "framework": "t-io",
+  "framework": "tio-mvc",
   "tests": [{
     "default": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Platform",
+      "classification": "Micro",
       "database": "None",
       "framework": "None",
       "language": "Java",
@@ -16,8 +16,8 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "tio-http-server",
-      "notes": "tio-http-server",
+      "display_name": "tio-mvc",
+      "notes": "tio-mvc",
       "versus": "t-io"
     }
   }]
