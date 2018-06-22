@@ -61,6 +61,11 @@
 				<version>5.3.1.Final</version>
 			</dependency>
 			<dependency>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>42.2.2</version>
+			</dependency>
+			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
 				<version>1.4.197</version>
@@ -68,7 +73,7 @@
 			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
-				<version>1.16.12</version>
+				<version>1.18.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
@@ -98,22 +103,8 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.1.0</version>
-					<configuration>
-						<descriptorRefs>
-							<descriptorRef>jar-with-dependencies</descriptorRef>
-						</descriptorRefs>
-					</configuration>
-					<executions>
-						<execution>
-							<id>make-assembly</id>
-							<phase>package</phase>
-							<goals>
-								<goal>single</goal>
-							</goals>
-						</execution>
-					</executions>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>3.1.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
