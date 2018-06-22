@@ -26,22 +26,6 @@ static void usp_fork_update()
          }
       }
 }
-
-#ifdef DEBUG
-static void usp_end_update()
-{
-   U_TRACE(5, "::usp_end_update()")
-
-   World::handlerEndSql();
-
-   if (pstmt_update)
-      {
-      U_DELETE(pstmt_update)
-
-      pstmt_update = U_NULLPTR;
-      }
-}
-#endif
 -->
 <!--#header
 Content-Type: application/json
