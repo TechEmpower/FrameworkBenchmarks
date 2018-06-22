@@ -1,4 +1,4 @@
-import mofuw, json
+import mofuw, packedjson
 
 proc h(req: mofuwReq, res: mofuwRes) {.async.} =
   case req.getPath
