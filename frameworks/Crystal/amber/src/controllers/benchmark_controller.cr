@@ -26,7 +26,7 @@ class BenchmarkController < Amber::Controller::Base
     response.content_type = JSON
     results = {} of Symbol => Int32
     if world = World.find rand(1..ID_MAXIMUM)
-      results = {id: world.id, randomNumber: world.randomNumber}
+      results = {id: world.id, randomNumber: world.randomnumber}
     end
     results.to_json
   end
@@ -39,7 +39,7 @@ class BenchmarkController < Amber::Controller::Base
 
     results = (1..queries).map do
       if world = World.find rand(1..ID_MAXIMUM)
-        {id: world.id, randomNumber: world.randomNumber}
+        {id: world.id, randomNumber: world.randomnumber}
       end
     end
 
@@ -54,9 +54,9 @@ class BenchmarkController < Amber::Controller::Base
 
     results = (1..queries).map do
       if world = World.find rand(1..ID_MAXIMUM)
-        world.randomNumber = rand(1..ID_MAXIMUM)
+        world.randomnumber = rand(1..ID_MAXIMUM)
         world.save
-        {id: world.id, randomNumber: world.randomNumber}
+        {id: world.id, randomNumber: world.randomnumber}
       end
     end
 
