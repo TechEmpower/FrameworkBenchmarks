@@ -8,4 +8,4 @@ COPY ./Cargo.lock ./Cargo.lock
 ENV RUSTFLAGS "-C target-cpu=native"
 RUN cargo build --release
 
-CMD ["./target/release/gotham"]
+CMD ["./target/release/gotham_techempower"]
