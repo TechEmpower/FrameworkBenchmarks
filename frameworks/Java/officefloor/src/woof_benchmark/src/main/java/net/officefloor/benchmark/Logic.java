@@ -73,7 +73,7 @@ public class Logic {
 
 	// =========== UPDATES ===================
 
-	public void updates(@HttpQueryParameter("queries") String queries, UpdatesFlows flows,
+	public void update(@HttpQueryParameter("queries") String queries, UpdatesFlows flows,
 			ObjectResponse<World[]> response) {
 		int[] loaded = new int[] { 0 };
 		int count = getQueryCount(queries);
@@ -111,8 +111,12 @@ public class Logic {
 	// =========== helper ===================
 
 	private static int getQueryCount(String queries) {
-		int count = Integer.parseInt(queries);
-		return (count < 1) ? 1 : (count > 500) ? 500 : count;
+		try {
+			int count = Integer.parseInt(queries);
+			return (count < 1) ? 1 : (count > 500) ? 500 : count;
+		} catch (NumberFormatException ex) {
+			return 1;
+		}
 	}
 
 }

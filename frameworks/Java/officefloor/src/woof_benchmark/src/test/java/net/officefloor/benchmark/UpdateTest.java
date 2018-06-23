@@ -23,7 +23,7 @@ import net.officefloor.woof.mock.MockWoofServerRule;
 /**
  * Tests multiple queries.
  */
-public class UpdatesTest {
+public class UpdateTest {
 
 	@ClassRule
 	public static DataSourceRule dataSource = new DataSourceRule("datasource.properties");
@@ -47,7 +47,7 @@ public class UpdatesTest {
 
 	@Test
 	public void validRequest() throws Exception {
-		MockHttpResponse response = this.server.send(MockHttpServer.mockRequest("/updates?queries=10"));
+		MockHttpResponse response = this.server.send(MockHttpServer.mockRequest("/update?queries=10"));
 		assertEquals("Should be successful", 200, response.getStatus().getStatusCode());
 		response.assertHeader("content-type", "application/json");
 		WorldResponse[] worlds = new ObjectMapper().readValue(response.getEntity(null), WorldResponse[].class);

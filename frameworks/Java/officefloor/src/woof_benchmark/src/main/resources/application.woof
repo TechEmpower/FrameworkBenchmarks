@@ -9,14 +9,14 @@
     <http-continuation path="/queries" secure="false" x="80" y="222">
       <section name="Logic" input="queries"/>
     </http-continuation>
-    <http-continuation path="/updates" secure="false" x="80" y="275">
-      <section name="Logic" input="updates"/>
+    <http-continuation path="/update" secure="false" x="80" y="275">
+      <section name="Logic" input="update"/>
     </http-continuation>
   </http-continuations>
   <http-inputs>
   </http-inputs>
   <templates>
-    <template path="/fortunes" location="fortunes.html" class="net.officefloor.benchmark.FortunesLogic" content-type="" charset="" secure="false" redirect-values-function="" link-separator-character="" x="276" y="44">
+    <template path="/fortunes" location="fortunes.html" class="net.officefloor.benchmark.FortunesLogic" content-type="text/html;charset=utf-8" charset="" secure="false" redirect-values-function="" link-separator-character="" x="276" y="44">
     </template>
     <template path="/plaintext" location="plaintext.html" class="" content-type="text/plain" charset="" secure="false" redirect-values-function="" link-separator-character="" x="64" y="46">
     </template>
@@ -26,7 +26,7 @@
       <input name="db" parameter-type=""/>
       <input name="json" parameter-type=""/>
       <input name="queries" parameter-type=""/>
-      <input name="updates" parameter-type=""/>
+      <input name="update" parameter-type=""/>
     </section>
   </sections>
   <securities>

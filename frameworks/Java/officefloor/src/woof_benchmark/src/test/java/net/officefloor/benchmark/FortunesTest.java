@@ -68,7 +68,7 @@ public class FortunesTest {
 						+ "<tr><td>9</td><td>Feature: A bug with seniority.</td></tr>"
 						+ "<tr><td>1</td><td>fortune: No such file or directory</td></tr>"
 						+ "<tr><td>12</td><td>フレームワークのベンチマーク</td></tr>" + "</table></body></html>");
-		response.assertHeader("content-type", "text/html");
+		response.assertHeader("content-type", "text/html;charset=utf-8");
 	}
 
 }
