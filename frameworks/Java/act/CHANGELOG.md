@@ -1,5 +1,9 @@
 TechEmpower Framework Benchmark - ActFramework Change log
 
+**1.8.8d**
+
+* update act to 1.8.8-RC11
+
 **1.8.8c**
 
 * revert max connection to 48 for eclipselink-pgsql and eclipselink-mysql update test
