@@ -52,6 +52,11 @@
 			</dependency>
 			<dependency>
 				<groupId>net.officefloor.persistence</groupId>
+				<artifactId>officejdbc_postgresql</artifactId>
+				<version>${officefloor.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.persistence</groupId>
 				<artifactId>officejpa_hibernate</artifactId>
 				<version>${officefloor.version}</version>
 			</dependency>

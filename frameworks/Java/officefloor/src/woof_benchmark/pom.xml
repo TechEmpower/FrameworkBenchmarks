@@ -38,6 +38,10 @@
 			<artifactId>hibernate-core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>net.officefloor.persistence</groupId>
+			<artifactId>officejdbc_postgresql</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
