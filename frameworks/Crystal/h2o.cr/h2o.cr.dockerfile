@@ -4,8 +4,8 @@ RUN apt update \
   && apt install -yqq libh2o-evloop-dev libwslay-dev libyaml-0-2 libevent-dev libpcre3-dev \
     gcc wget git libssl-dev libuv1-dev ca-certificates --no-install-recommends
 
-RUN wget -q https://github.com/crystal-lang/crystal/releases/download/0.24.2/crystal-0.24.2-1-linux-x86_64.tar.gz \
-  && tar --strip-components=1 -xzf crystal-0.24.2-1-linux-x86_64.tar.gz -C /usr/ \
+RUN wget -q https://github.com/crystal-lang/crystal/releases/download/0.25.0/crystal-0.25.0-1-linux-x86_64.tar.gz \
+  && tar --strip-components=1 -xzf crystal-0.25.0-1-linux-x86_64.tar.gz -C /usr/ \
   && rm -f *.tar.gz
 
 WORKDIR /crystal

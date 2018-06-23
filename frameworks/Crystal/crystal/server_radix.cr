@@ -92,7 +92,7 @@ tree.add "/updates", updates_handler
 APPDB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world")
 ID_MAXIMUM = 10_000
 
-server = HTTP::Server.new("0.0.0.0", 8080) do |context|
+server = HTTP::Server.new do |context|
   request = context.request
   response = context.response
   response.headers["Server"] = "Crystal"
@@ -134,4 +134,4 @@ private def sanitized_query_count(request)
   queries.clamp(1..500)
 end
 
-server.listen(reuse_port: true)
+server.listen("0.0.0.0", 8080, reuse_port: true)

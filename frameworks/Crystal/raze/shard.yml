@@ -5,13 +5,14 @@ targets:
   raze:
     main: src/raze.cr
 
-crystal: 0.24.1
+crystal: 0.25.0
 
 license: MIT
 
 dependencies:
   raze:
     github: samueleaton/raze
+    commit: deff93baf428969371180340711e362aea947d81
   pg:
     github: will/crystal-pg
-    version: 0.14.1
+    version: 0.15.0
