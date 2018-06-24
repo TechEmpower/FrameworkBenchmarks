@@ -1,18 +1,26 @@
 package net.officefloor.benchmark;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
 import net.officefloor.jdbc.test.DataSourceRule;
-import net.officefloor.server.http.mock.MockHttpResponse;
-import net.officefloor.server.http.mock.MockHttpServer;
-import net.officefloor.woof.mock.MockWoofServerRule;
+import net.officefloor.server.http.HttpClientRule;
+import net.officefloor.server.http.HttpServer;
+import net.officefloor.server.http.HttpServerLocation;
+import net.officefloor.server.http.SystemPropertiesRule;
+import net.officefloor.test.OfficeFloorRule;
 
 /**
  * Tests multiple queries.
@@ -22,8 +30,15 @@ public class FortunesTest {
 	@ClassRule
 	public static DataSourceRule dataSource = new DataSourceRule("datasource.properties");
 
+	@ClassRule
+	public static SystemPropertiesRule systemProperties = new SystemPropertiesRule(HttpServer.PROPERTY_HTTP_SERVER_NAME,
+			"OF", HttpServer.PROPERTY_HTTP_DATE_HEADER, "true", HttpServerLocation.PROPERTY_HTTP_PORT, "8080");
+
 	@Rule
-	public MockWoofServerRule server = new MockWoofServerRule();
+	public OfficeFloorRule server = new OfficeFloorRule();
+
+	@Rule
+	public HttpClientRule client = new HttpClientRule();
 
 	@Before
 	public void setupDatabase() throws SQLException {
@@ -52,8 +67,13 @@ public class FortunesTest {
 
 	@Test
 	public void validRequest() throws Exception {
-		MockHttpResponse response = this.server.send(MockHttpServer.mockRequest("/fortunes"));
-		response.assertResponse(200,
+		HttpResponse response = this.client.execute(new HttpGet("http://localhost:8080/fortunes"));
+		assertEquals("Should be successful", 200, response.getStatusLine().getStatusCode());
+		assertEquals("Incorrect content-type", "text/html;charset=utf-8",
+				response.getFirstHeader("content-type").getValue());
+		assertEquals("Incorrect server", "OF", response.getFirstHeader("Server").getValue());
+		assertNotNull("Should have date", response.getFirstHeader("date"));
+		assertEquals("Incorrect content",
 				"<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
 						+ "<tr><td>11</td><td>&lt;script&gt;alert(&quot;This should not be displayed in a browser alert box.&quot;);&lt;/script&gt;</td></tr>"
 						+ "<tr><td>4</td><td>A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1</td></tr>"
@@ -67,8 +87,8 @@ public class FortunesTest {
 						+ "<tr><td>6</td><td>Emacs is a nice operating system, but I prefer UNIX. &mdash; Tom Christaensen</td></tr>"
 						+ "<tr><td>9</td><td>Feature: A bug with seniority.</td></tr>"
 						+ "<tr><td>1</td><td>fortune: No such file or directory</td></tr>"
-						+ "<tr><td>12</td><td>フレームワークのベンチマーク</td></tr>" + "</table></body></html>");
-		response.assertHeader("content-type", "text/html;charset=utf-8");
+						+ "<tr><td>12</td><td>フレームワークのベンチマーク</td></tr>" + "</table></body></html>",
+				EntityUtils.toString(response.getEntity()));
 	}
 
 }

@@ -13,6 +13,7 @@
 		<jackson.version>2.9.6</jackson.version>
 	</properties>
 	<modules>
+		<module>woof_test</module>
 		<module>woof_benchmark</module>
 		<module>woof_raw</module>
 	</modules>
@@ -52,6 +53,11 @@
 			</dependency>
 			<dependency>
 				<groupId>net.officefloor.persistence</groupId>
+				<artifactId>officejdbc</artifactId>
+				<version>${officefloor.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.persistence</groupId>
 				<artifactId>officejdbc_postgresql</artifactId>
 				<version>${officefloor.version}</version>
 			</dependency>
@@ -79,6 +85,11 @@
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>1.18.0</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.benchmarks</groupId>
+				<artifactId>woof_test</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>

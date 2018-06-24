@@ -1,6 +1,7 @@
 package net.officefloor.benchmark;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
@@ -8,6 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -17,9 +21,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Data;
 import net.officefloor.jdbc.test.DataSourceRule;
-import net.officefloor.server.http.mock.MockHttpResponse;
-import net.officefloor.server.http.mock.MockHttpServer;
-import net.officefloor.woof.mock.MockWoofServerRule;
+import net.officefloor.server.http.HttpClientRule;
+import net.officefloor.server.http.HttpServer;
+import net.officefloor.server.http.HttpServerLocation;
+import net.officefloor.server.http.SystemPropertiesRule;
+import net.officefloor.test.OfficeFloorRule;
 
 /**
  * Tests multiple queries.
@@ -29,8 +35,15 @@ public class QueriesTest {
 	@ClassRule
 	public static DataSourceRule dataSource = new DataSourceRule("datasource.properties");
 
+	@ClassRule
+	public static SystemPropertiesRule systemProperties = new SystemPropertiesRule(HttpServer.PROPERTY_HTTP_SERVER_NAME,
+			"OF", HttpServer.PROPERTY_HTTP_DATE_HEADER, "true", HttpServerLocation.PROPERTY_HTTP_PORT, "8080");
+
 	@Rule
-	public MockWoofServerRule server = new MockWoofServerRule();
+	public OfficeFloorRule server = new OfficeFloorRule();
+
+	@Rule
+	public HttpClientRule client = new HttpClientRule();
 
 	@Before
 	public void setupDatabase() throws SQLException {
@@ -48,14 +61,18 @@ public class QueriesTest {
 
 	@Test
 	public void validRequest() throws Exception {
-		MockHttpResponse response = this.server.send(MockHttpServer.mockRequest("/queries?queries=20"));
-		assertEquals("Should be successful", 200, response.getStatus().getStatusCode());
-		response.assertHeader("content-type", "application/json");
-		WorldResponse[] worlds = new ObjectMapper().readValue(response.getEntity(null), WorldResponse[].class);
+		HttpResponse response = this.client.execute(new HttpGet("http://localhost:8080/queries?queries=20"));
+		assertEquals("Should be successful", 200, response.getStatusLine().getStatusCode());
+		assertEquals("Incorrect content-type", "application/json", response.getFirstHeader("content-type").getValue());
+		assertEquals("Incorrect server", "OF", response.getFirstHeader("Server").getValue());
+		assertNotNull("Should have date", response.getFirstHeader("date"));
+		WorldResponse[] worlds = new ObjectMapper().readValue(EntityUtils.toString(response.getEntity()),
+				WorldResponse[].class);
 		assertEquals("Incorrect number of worlds", 20, worlds.length);
 		for (WorldResponse world : worlds) {
 			assertTrue("Invalid id: " + world.id, (world.id >= 1) && (world.id <= 10000));
 		}
+
 	}
 
 	@Data

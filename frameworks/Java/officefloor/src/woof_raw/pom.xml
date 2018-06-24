@@ -32,8 +32,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>net.officefloor.benchmarks</groupId>
+			<artifactId>woof_test</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
