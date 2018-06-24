@@ -47,13 +47,18 @@ public class UpdateTest {
 	@Before
 	public void setupDatabase() throws SQLException {
 		try (Connection connection = dataSource.getConnection()) {
-			connection.createStatement().executeUpdate("CREATE TABLE World ( id INT PRIMARY KEY, randomNumber INT)");
-			PreparedStatement insert = connection
-					.prepareStatement("INSERT INTO World (id, randomNumber) VALUES (?, ?)");
-			for (int i = 0; i < 10000; i++) {
-				insert.setInt(1, i + 1);
-				insert.setInt(2, ThreadLocalRandom.current().nextInt(1, 10000));
-				insert.executeUpdate();
+			try {
+				connection.createStatement().executeQuery("SELECT * FROM World");
+			} catch (SQLException ex) {
+				connection.createStatement()
+						.executeUpdate("CREATE TABLE World ( id INT PRIMARY KEY, randomNumber INT)");
+				PreparedStatement insert = connection
+						.prepareStatement("INSERT INTO World (id, randomNumber) VALUES (?, ?)");
+				for (int i = 0; i < 10000; i++) {
+					insert.setInt(1, i + 1);
+					insert.setInt(2, ThreadLocalRandom.current().nextInt(1, 10000));
+					insert.executeUpdate();
+				}
 			}
 		}
 	}
