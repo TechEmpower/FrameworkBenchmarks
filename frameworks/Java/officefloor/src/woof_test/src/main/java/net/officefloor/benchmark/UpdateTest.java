@@ -65,12 +65,16 @@ public class UpdateTest {
 		}
 	}
 
+	protected String getServerName() {
+		return "OF";
+	}
+
 	@Test
 	public void validRequest() throws Exception {
 		HttpResponse response = this.client.execute(new HttpGet("http://localhost:8080/update?queries=20"));
 		assertEquals("Should be successful", 200, response.getStatusLine().getStatusCode());
 		assertEquals("Incorrect content-type", "application/json", response.getFirstHeader("content-type").getValue());
-		assertEquals("Incorrect server", "OF", response.getFirstHeader("Server").getValue());
+		assertEquals("Incorrect server", this.getServerName(), response.getFirstHeader("Server").getValue());
 		assertNotNull("Should have date", response.getFirstHeader("date"));
 		WorldResponse[] worlds = new ObjectMapper().readValue(EntityUtils.toString(response.getEntity()),
 				WorldResponse[].class);

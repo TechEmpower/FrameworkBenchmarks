@@ -17,6 +17,8 @@
 		<module>woof_benchmark</module>
 		<module>woof_micro</module>
 		<module>woof_raw</module>
+		<module>woof_netty</module>
+		<module>woof_rapidoid</module>
 	</modules>
 	<repositories>
 		<repository>
@@ -30,6 +32,16 @@
 			<dependency>
 				<groupId>net.officefloor.web</groupId>
 				<artifactId>woof</artifactId>
+				<version>${officefloor.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.server</groupId>
+				<artifactId>officeserver_netty</artifactId>
+				<version>${officefloor.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.server</groupId>
+				<artifactId>officeserver_rapidoid</artifactId>
 				<version>${officefloor.version}</version>
 			</dependency>
 			<dependency>
@@ -86,6 +98,11 @@
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>1.18.0</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.benchmarks</groupId>
+				<artifactId>woof_benchmark</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>net.officefloor.benchmarks</groupId>

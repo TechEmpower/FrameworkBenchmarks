@@ -65,13 +65,17 @@ public class FortunesTest {
 		}
 	}
 
+	protected String getServerName() {
+		return "OF";
+	}
+
 	@Test
 	public void validRequest() throws Exception {
 		HttpResponse response = this.client.execute(new HttpGet("http://localhost:8080/fortunes"));
 		assertEquals("Should be successful", 200, response.getStatusLine().getStatusCode());
 		assertEquals("Incorrect content-type", "text/html;charset=utf-8",
 				response.getFirstHeader("content-type").getValue());
-		assertEquals("Incorrect server", "OF", response.getFirstHeader("Server").getValue());
+		assertEquals("Incorrect server", this.getServerName(), response.getFirstHeader("Server").getValue());
 		assertNotNull("Should have date", response.getFirstHeader("date"));
 		assertEquals("Incorrect content",
 				"<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
