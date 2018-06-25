@@ -15,6 +15,7 @@
 	<modules>
 		<module>woof_test</module>
 		<module>woof_benchmark</module>
+		<module>woof_micro</module>
 		<module>woof_raw</module>
 	</modules>
 	<repositories>

@@ -2,9 +2,11 @@ package net.officefloor.benchmark;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -73,6 +75,18 @@ public class UpdateTest {
 		WorldResponse[] worlds = new ObjectMapper().readValue(EntityUtils.toString(response.getEntity()),
 				WorldResponse[].class);
 		assertEquals("Incorrect number of worlds", 20, worlds.length);
+
+		// Ensure database updated to the values
+		try (Connection connection = dataSource.getConnection()) {
+			PreparedStatement statement = connection
+					.prepareStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = ?");
+			for (WorldResponse world : worlds) {
+				statement.setInt(1, world.getId());
+				ResultSet resultSet = statement.executeQuery();
+				assertTrue("Should find row", resultSet.next());
+				assertEquals("Should update row " + world.getId(), world.getRandomNumber(), resultSet.getInt(2));
+			}
+		}
 	}
 
 	@Data
