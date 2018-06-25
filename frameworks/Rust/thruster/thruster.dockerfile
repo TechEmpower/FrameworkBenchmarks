@@ -1,6 +1,6 @@
 FROM rust:1.26
 
-WORKDIR /gotham
+WORKDIR /thruster
 COPY ./src ./src
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./Cargo.lock ./Cargo.lock
