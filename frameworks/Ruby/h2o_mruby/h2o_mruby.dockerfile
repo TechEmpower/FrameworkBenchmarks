@@ -4,7 +4,7 @@ ADD ./h2o.conf ./
 
 RUN apt update && apt install -yqq bison cmake libssl-dev make
 
-ENV H2O_VERSION=2.2.5
+ENV H2O_VERSION=2.3.0-beta1
 ENV H2O_ARCHIVE="v${H2O_VERSION}.tar.gz"
 ENV H2O_HOME=/h2o
 
