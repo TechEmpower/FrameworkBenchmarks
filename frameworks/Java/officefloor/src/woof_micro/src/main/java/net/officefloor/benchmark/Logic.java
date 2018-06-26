@@ -1,16 +1,25 @@
 package net.officefloor.benchmark;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 import lombok.Data;
 import net.officefloor.frame.api.function.FlowCallback;
 import net.officefloor.plugin.managedfunction.clazz.FlowInterface;
 import net.officefloor.plugin.section.clazz.Parameter;
 import net.officefloor.plugin.section.clazz.Spawn;
+import net.officefloor.server.http.HttpHeaderValue;
+import net.officefloor.server.http.HttpResponse;
+import net.officefloor.server.http.ServerHttpConnection;
+import net.officefloor.server.stream.ServerWriter;
 import net.officefloor.web.HttpQueryParameter;
 import net.officefloor.web.ObjectResponse;
 
@@ -90,8 +99,7 @@ public class Logic {
 
 	// =========== UPDATES ===================
 
-	public void update(@HttpQueryParameter("queries") String queries, UpdatesFlows flows, Connection connection,
-			ObjectResponse<World[]> response) {
+	public void update(@HttpQueryParameter("queries") String queries, UpdatesFlows flows) {
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		int[] loaded = new int[] { 0 };
 		int count = getQueryCount(queries);
@@ -103,20 +111,7 @@ public class Logic {
 				worlds[index] = entry.world;
 				loaded[0]++;
 				if (loaded[0] >= count) {
-
-					// Update the worlds
-					PreparedStatement statement = connection
-							.prepareStatement("UPDATE WORLD SET RANDOMNUMBER = ? WHERE ID = ?");
-					for (int u = 0; u < worlds.length; u++) {
-						worlds[u].setRandomNumber(random.nextInt(1, 10000));
-						statement.setInt(1, worlds[u].getRandomNumber());
-						statement.setInt(2, worlds[u].getId());
-						statement.addBatch();
-					}
-					statement.executeBatch();
-
-					// Sent the response
-					response.send(worlds);
+					flows.doUpdates(worlds);
 				}
 			});
 		}
@@ -126,6 +121,8 @@ public class Logic {
 	public static interface UpdatesFlows {
 		@Spawn
 		void updateEntry(UpdateEntry entry, FlowCallback callback);
+
+		void doUpdates(World[] worlds);
 	}
 
 	@Data
@@ -142,6 +139,67 @@ public class Logic {
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
 			entry.world = new World(resultSet.getInt(1), resultSet.getInt(2));
+		}
+	}
+
+	public void doUpdates(@Parameter World[] worlds, Connection connection, ObjectResponse<World[]> response)
+			throws SQLException {
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+
+		// Update the worlds
+		PreparedStatement statement = connection.prepareStatement("UPDATE WORLD SET RANDOMNUMBER = ? WHERE ID = ?");
+		for (int u = 0; u < worlds.length; u++) {
+			worlds[u].setRandomNumber(random.nextInt(1, 10000));
+			statement.setInt(1, worlds[u].getRandomNumber());
+			statement.setInt(2, worlds[u].getId());
+			statement.addBatch();
+		}
+		statement.executeBatch();
+
+		// Sent the response
+		response.send(worlds);
+	}
+
+	// =========== FORTUNES ==================
+
+	private static final HttpHeaderValue TEXT_HTML = new HttpHeaderValue("text/html;charset=utf-8");
+
+	private static final byte[] TEMPLATE_START = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
+			.getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+	private static final byte[] FORTUNE_START = "<tr><td>".getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+	private static final byte[] FORTUNE_MIDDLE = "</td><td>".getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+	private static final byte[] FORTUNE_END = "</td></tr>".getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+	private static final byte[] TEMPLATE_END = "</table></body></html>"
+			.getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+	public void fortunes(Connection connection, ServerHttpConnection httpConnection) throws IOException, SQLException {
+		try (PreparedStatement statement = connection.prepareStatement("SELECT ID, MESSAGE FROM FORTUNE",
+				ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
+			List<Fortune> fortunes = new ArrayList<>(12);
+			fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				fortunes.add(new Fortune(resultSet.getInt(1), resultSet.getString(2)));
+				fortunes.sort((a, b) -> a.getMessage().compareTo(b.getMessage()));
+			}
+			HttpResponse response = httpConnection.getResponse();
+			response.setContentType(TEXT_HTML, null);
+			ServerWriter writer = response.getEntityWriter();
+			writer.write(TEMPLATE_START);
+			for (int i = 0; i < fortunes.size(); i++) {
+				Fortune fortune = fortunes.get(i);
+				writer.write(FORTUNE_START);
+				int id = fortune.getId();
+				writer.write(Integer.valueOf(id).toString());
+				writer.write(FORTUNE_MIDDLE);
+				StringEscapeUtils.ESCAPE_HTML4.translate(fortune.getMessage(), writer);
+				writer.write(FORTUNE_END);
+			}
+			writer.write(TEMPLATE_END);
 		}
 	}
 
