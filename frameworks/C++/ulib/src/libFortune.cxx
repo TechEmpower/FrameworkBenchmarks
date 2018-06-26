@@ -2,9 +2,8 @@
 
 #include "fortune.h"
 
-char*              Fortune::pwbuffer;
-Fortune*           Fortune::pfortune;
-Fortune*           Fortune::pfortune2add;
+uint32_t           Fortune::uid;
+UString*           Fortune::pmessage;
 UOrmSession*       Fortune::psql_fortune;
 UOrmStatement*     Fortune::pstmt_fortune;
 UVector<Fortune*>* Fortune::pvfortune;

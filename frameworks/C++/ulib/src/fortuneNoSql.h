@@ -23,19 +23,18 @@ public:
       {
       U_TRACE(0, "FortuneNoSql::handlerQueryMongoDB()")
 
+      U_INTERNAL_ASSERT_POINTER(Fortune::pmessage)
+
 #  ifdef USE_MONGODB
       (void) mc->findAll();
 
       for (uint32_t i = 0, n = mc->vitem.size(); i < n; ++i)
          {
-         Fortune* item;
-         UString result;
+         (void) U_JFIND(mc->vitem[i], "message", *Fortune::pmessage);
 
-         (void) U_JFIND(mc->vitem[i], "message", result);
+         Fortune::replace(i, i+1);
 
-         U_NEW(Fortune, item, Fortune(i+1, result));
-
-         Fortune::pvfortune->push(item);
+         Fortune::pmessage->clear();
          }
 #  endif
       }
@@ -84,14 +83,7 @@ public:
 
       (void) rc->lrange(U_CONSTANT_TO_PARAM("fortunes 0 -1"));
 
-      for (uint32_t i = 0, n = rc->vitem.size(); i < n; ++i)
-         {
-         Fortune* item;
-
-         U_NEW(Fortune, item, Fortune(i+1, rc->vitem[i]));
-
-         Fortune::pvfortune->push(item);
-         }
+      for (uint32_t i = 0, n = rc->vitem.size(); i < n; ++i) Fortune::replace(i, rc->vitem[i]);
       }
 
    static void handlerForkREDIS()

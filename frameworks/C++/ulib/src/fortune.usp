@@ -5,28 +5,75 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "fortune.h"
 
+static vPF handle_query;
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+static UOrmDriver* pdrv;
+static USqlStatement* pstmt;
+#endif
+
 static void handlerQuery()
 {
    U_TRACE_NO_PARAM(5, "::handlerQuery()")
 
-   Fortune* elem;
+   uint32_t i = 0;
 
    Fortune::pstmt_fortune->execute();
 
    do {
-      U_NEW(Fortune, elem, Fortune(*Fortune::pfortune));
-
-      Fortune::pvfortune->push(elem);
+      Fortune::replace(i++);
       }
    while (Fortune::pstmt_fortune->nextRow());
 }
 
-static void usp_fork_fortune() { Fortune::handlerForkSql(); }
+static void handlerQueryPGSQL()
+{
+   U_TRACE_NO_PARAM(5, "::handlerQueryPGSQL()")
+
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+   int sz;
+   char* id;
+   char* ptr;
+   PGresult* res = ((UOrmDriverPgSql*)pdrv)->execPrepared(pstmt);
+
+   U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 2)
+
+   for (uint32_t i = 0, n = U_SYSCALL(PQntuples, "%p", res); i < n; ++i)
+      {
+       id = U_SYSCALL(PQgetvalue,  "%p,%d,%d", res, i, 0);
+      ptr = U_SYSCALL(PQgetvalue,  "%p,%d,%d", res, i, 1);
+      sz  = U_SYSCALL(PQgetlength, "%p,%d,%d", res, i, 1);
+
+      Fortune::replace(i, ntohl(*(uint32_t*)id), ptr, sz);
+      }
+
+   U_SYSCALL_VOID(PQclear, "%p", res);
+#endif
+}
+
+static void usp_fork_fortune()
+{
+   U_TRACE_NO_PARAM(5, "::usp_fork_fortune()")
+
+   Fortune::handlerForkSql();
+
+   if (UOrmDriver::isPGSQL() == false) handle_query = handlerQuery;
+   else
+      {
+      handle_query = handlerQueryPGSQL;
+
+#  ifdef U_STATIC_ORM_DRIVER_PGSQL
+      pdrv  = Fortune::psql_fortune->getDriver();
+      pstmt = Fortune::pstmt_fortune->getStatement();
+
+      ((UPgSqlStatement*)pstmt)->prepareStatement(pdrv);
+#  endif
+      }
+}
 
 #ifdef DEBUG
 static void usp_end_fortune() { Fortune::handlerEndSql(); }
 #endif
 -->
 <!--#code
-Fortune::doQuery(handlerQuery);
+Fortune::doQuery(handle_query);
 -->

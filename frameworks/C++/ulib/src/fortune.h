@@ -3,13 +3,16 @@
 #ifndef FORTUNE_H
 #define FORTUNE_H 1
 
-#include <ulib/base/coder/xml.h>
-
 #include <ulib/orm/orm.h>
 #include <ulib/json/value.h>
 #include <ulib/utility/uhttp.h>
 #include <ulib/orm/orm_driver.h>
+#include <ulib/utility/xml_escape.h>
 #include <ulib/net/server/client_image.h>
+
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+#  include <ulib/orm/driver/orm_driver_pgsql.h>
+#endif
 
 class Fortune {
 public:
@@ -23,14 +26,9 @@ public:
    uint32_t id;
    UString message;
 
-   Fortune()
+   Fortune(uint32_t _id) : id(_id), message(101U)
       {
-      U_TRACE_CTOR(5, Fortune, "")
-
-      // coverity[uninit_ctor]
-#  ifdef U_COVERITY_FALSE_POSITIVE
-      id = 0;
-#  endif
+      U_TRACE_CTOR(5, Fortune, "%u", _id)
       }
 
    Fortune(uint32_t _id, const UString& _message) : id(_id), message(_message)
@@ -38,7 +36,7 @@ public:
       U_TRACE_CTOR(5, Fortune, "%u,%V", _id, _message.rep)
       }
 
-   Fortune(const Fortune& f) : id(f.id), message((void*)U_STRING_TO_PARAM(f.message))
+   Fortune(const Fortune& f) : id(f.id), message(f.message)
       {
       U_TRACE_CTOR(5, Fortune, "%p", &f)
 
@@ -110,34 +108,52 @@ public:
       stmt->bindResult(U_ORM_TYPE_HANDLER(message, UString));
       }
 
-   static char* pwbuffer;
-   static Fortune* pfortune;
-   static Fortune* pfortune2add;
+   static uint32_t uid;
+   static UString* pmessage;
    static UVector<Fortune*>* pvfortune;
 
    static UOrmSession*    psql_fortune;
    static UOrmStatement* pstmt_fortune;
 
+   static void replace(uint32_t i, uint32_t _id, const char* msg, uint32_t len)
+      {
+      U_TRACE(0, "Fortune::replace(%u,%u,%.*S,%u)", i, _id, len, msg, len)
+
+      U_INTERNAL_ASSERT_POINTER(pvfortune)
+
+      Fortune* elem = pvfortune->at(1+i);
+
+      elem->id = _id;
+
+      UXMLEscape::encode(msg, len, elem->message);
+      }
+
+   static void replace(uint32_t i)                                       { replace(i, uid, U_STRING_TO_PARAM(*pmessage)); }
+   static void replace(uint32_t i, uint32_t _id)                         { replace(i, _id, U_STRING_TO_PARAM(*pmessage)); }
+   static void replace(uint32_t i,               const UString& message) { replace(i, i+1, U_STRING_TO_PARAM(message)); }
+   static void replace(uint32_t i, uint32_t _id, const UString& message) { replace(i, _id, U_STRING_TO_PARAM(message)); }
+
    static void doQuery(vPF handlerQuery)
       {
       U_TRACE(0, "Fortune::doQuery(%p)", handlerQuery)
 
-      U_INTERNAL_ASSERT_POINTER(pfortune2add)
+      U_INTERNAL_ASSERT_POINTER(pvfortune)
 
-      pwbuffer = UClientImage_Base::wbuffer->pend();
+      char* pwbuffer = UClientImage_Base::wbuffer->pend();
 
       (void) memcpy(pwbuffer, U_CONSTANT_TO_PARAM("<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"));
                     pwbuffer   += U_CONSTANT_SIZE("<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
 
-      pvfortune->push(pfortune2add);
+      Fortune* elem = pvfortune->at(0);
+
+      elem->id = 0;
+      elem->message.rep->replace(U_CONSTANT_TO_PARAM("Additional fortune added at request time."));
 
       handlerQuery();
 
       pvfortune->sort(Fortune::cmp_obj);
 
-      Fortune* elem;
-
-      for (uint32_t i = 0, n = pvfortune->size(); i < n; ++i)
+      for (uint32_t sz, i = 0, n = pvfortune->size(); i < n; ++i)
          {
          elem = pvfortune->at(i);
 
@@ -150,16 +166,13 @@ public:
 
          *pwbuffer++ = '>';
 
-         pwbuffer += u_xml_encode((const unsigned char*)U_STRING_TO_PARAM(elem->message), (unsigned char*)pwbuffer);
+         (void) memcpy(pwbuffer, elem->message.data(), sz = elem->message.size());
+                       pwbuffer += sz;
 
          u_put_unalignedp64(pwbuffer,   U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','/','t'));
          u_put_unalignedp16(pwbuffer+8, U_MULTICHAR_CONSTANT16('r','>'));
                             pwbuffer += 10;
-
-         if (elem != pfortune2add) U_DELETE(elem)
          }
-
-      pvfortune->setEmpty();
 
       (void) memcpy(pwbuffer, U_CONSTANT_TO_PARAM("</table></body></html>"));
 
@@ -172,9 +185,18 @@ public:
       {
       U_TRACE_NO_PARAM(0, "Fortune::handlerFork()")
 
+      U_NEW_STRING(pmessage, UString(101U));
+
       U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
 
-      U_NEW(Fortune, pfortune2add, Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
+      Fortune* elem;
+
+      for (uint32_t i = 0; i < 13; ++i)
+         {
+         U_NEW(Fortune, elem, Fortune(i));
+
+         pvfortune->push(elem);
+         }
       }
 
    static void handlerForkSql()
@@ -198,11 +220,9 @@ public:
 
          U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
 
-         U_NEW(Fortune, pfortune, Fortune);
-
-         pstmt_fortune->into(*pfortune);
-
          handlerFork();
+
+         pstmt_fortune->into(uid, *pmessage);
          }
       }
 
@@ -211,11 +231,11 @@ public:
       {
       U_TRACE_NO_PARAM(0, "Fortune::handlerEnd()")
 
+      U_INTERNAL_ASSERT_POINTER(pmessage)
       U_INTERNAL_ASSERT_POINTER(pvfortune)
-      U_INTERNAL_ASSERT_POINTER(pfortune2add)
 
+      U_DELETE(pmessage)
       U_DELETE(pvfortune)
-      U_DELETE(pfortune2add)
       }
 
    static void handlerEndSql()
@@ -226,7 +246,6 @@ public:
          {
          handlerEnd();
 
-         U_DELETE(pfortune)
          U_DELETE(psql_fortune)
          U_DELETE(pstmt_fortune)
 
@@ -240,7 +259,4 @@ public:
 private:
    U_DISALLOW_ASSIGN(Fortune)
 };
-
-// override the default...
-template <> inline void u_destroy(const Fortune** ptr, uint32_t n) { U_TRACE(0,"u_destroy<Fortune*>(%p,%u)", ptr, n) }
 #endif

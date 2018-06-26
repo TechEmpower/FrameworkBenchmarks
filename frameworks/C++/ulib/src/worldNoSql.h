@@ -89,6 +89,8 @@ public:
       if (str_rnumber == U_NULLPTR) U_NEW_STRING(str_rnumber, UString);
 
       World::handlerFork();
+
+      U_INTERNAL_ASSERT_POINTER(str_rnumber)
       }
 
 #ifdef USE_MONGODB
