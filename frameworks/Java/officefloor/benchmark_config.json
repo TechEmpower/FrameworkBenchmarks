@@ -35,6 +35,7 @@
 				"port": 8080,
 				"approach": "Realistic",
 				"classification": "Platform",
+				"database": "Postgres",
 				"framework": "OfficeFloor",
 				"language": "Java",
 				"flavor": "None",
