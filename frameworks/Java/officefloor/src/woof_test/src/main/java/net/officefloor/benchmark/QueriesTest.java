@@ -81,7 +81,6 @@ public class QueriesTest {
 		for (WorldResponse world : worlds) {
 			assertTrue("Invalid id: " + world.id, (world.id >= 1) && (world.id <= 10000));
 		}
-
 	}
 
 	@Data
