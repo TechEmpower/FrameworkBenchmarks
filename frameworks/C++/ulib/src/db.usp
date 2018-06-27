@@ -5,7 +5,27 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static void usp_fork_db() { World::handlerForkSql(); }
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+static UOrmDriver* pdrv;
+static USqlStatement* pstmt;
+#endif
+
+static void usp_fork_db()
+{
+   U_TRACE_NO_PARAM(5, "::usp_fork_db()")
+
+   World::handlerForkSql();
+
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+   if (UOrmDriver::isPGSQL())
+      {
+      pdrv  = World::psql_query->getDriver();
+      pstmt = World::pstmt_query->getStatement();
+
+      (void) ((UPgSqlStatement*)pstmt)->setBindParam(pdrv);
+      }
+#endif
+}
 
 #ifdef DEBUG
 static void usp_end_db() { World::handlerEndSql(); }
@@ -15,13 +35,33 @@ static void usp_end_db() { World::handlerEndSql(); }
 Content-Type: application/json
 -->
 <!--#code
-World::pworld_query->id = World::rnumber[0];
-
-(void) World::pstmt_query->execute();
-
 World::pwbuffer = UClientImage_Base::wbuffer->pend();
 
-World::handlerOneResult(World::rnumber[0], World::pworld_query->randomNumber);
+World::pworld_query->id = World::rnumber[u_now->tv_usec % 500];
+
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+if (pdrv)
+   {
+   ((UPgSqlStatement*)pstmt)->setBindParam();
+
+   PGresult* res = ((UOrmDriverPgSql*)pdrv)->execPrepared(pstmt);
+
+   U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
+   U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)
+
+   char* randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", res, 0, 0);
+
+   World::handlerOneResult(World::pworld_query->id, ntohl(*(uint32_t*)randomNumber));
+
+   U_SYSCALL_VOID(PQclear, "%p", res);
+   }
+else
+#endif
+{
+(void) World::pstmt_query->execute();
+
+World::handlerOneResult(World::pworld_query->id, World::pworld_query->randomNumber);
+}
 
 World::endOneResult();
 -->

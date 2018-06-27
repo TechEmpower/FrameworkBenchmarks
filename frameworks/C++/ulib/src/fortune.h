@@ -121,7 +121,7 @@ public:
 
       U_INTERNAL_ASSERT_POINTER(pvfortune)
 
-      Fortune* elem = pvfortune->at(1+i);
+      Fortune* elem = pvfortune->at(i);
 
       elem->id = _id;
 
@@ -141,15 +141,29 @@ public:
 
       char* pwbuffer = UClientImage_Base::wbuffer->pend();
 
-      (void) memcpy(pwbuffer, U_CONSTANT_TO_PARAM("<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"));
-                    pwbuffer   += U_CONSTANT_SIZE("<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
+      u_put_unalignedp64(pwbuffer,     U_MULTICHAR_CONSTANT64('<','!','d','o','c','t','y','p'));
+      u_put_unalignedp64(pwbuffer+8,   U_MULTICHAR_CONSTANT64('e',' ','h','t','m','l','>','<'));
+      u_put_unalignedp64(pwbuffer+16,  U_MULTICHAR_CONSTANT64('h','t','m','l','>','<','h','e'));
+      u_put_unalignedp64(pwbuffer+24,  U_MULTICHAR_CONSTANT64('a','d','>','<','t','i','t','l'));
+      u_put_unalignedp64(pwbuffer+32,  U_MULTICHAR_CONSTANT64('e','>','F','o','r','t','u','n'));
+      u_put_unalignedp64(pwbuffer+40,  U_MULTICHAR_CONSTANT64('e','s','<','/','t','i','t','l'));
+      u_put_unalignedp64(pwbuffer+48,  U_MULTICHAR_CONSTANT64('e','>','<','/','h','e','a','d'));
+      u_put_unalignedp64(pwbuffer+56,  U_MULTICHAR_CONSTANT64('>','<','b','o','d','y','>','<'));
+      u_put_unalignedp64(pwbuffer+64,  U_MULTICHAR_CONSTANT64('t','a','b','l','e','>','<','t'));
+      u_put_unalignedp64(pwbuffer+72,  U_MULTICHAR_CONSTANT64('r','>','<','t','h','>','i','d'));
+      u_put_unalignedp64(pwbuffer+80,  U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','t','h'));
+      u_put_unalignedp64(pwbuffer+88,  U_MULTICHAR_CONSTANT64('>','m','e','s','s','a','g','e'));
+      u_put_unalignedp64(pwbuffer+96,  U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','/','t'));
+      u_put_unalignedp16(pwbuffer+104, U_MULTICHAR_CONSTANT16('r','>'));
 
-      Fortune* elem = pvfortune->at(0);
+      pwbuffer += U_CONSTANT_SIZE("<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
+
+      handlerQuery();
+
+      Fortune* elem = pvfortune->last();
 
       elem->id = 0;
       elem->message.rep->replace(U_CONSTANT_TO_PARAM("Additional fortune added at request time."));
-
-      handlerQuery();
 
       pvfortune->sort(Fortune::cmp_obj);
 
@@ -171,10 +185,12 @@ public:
 
          u_put_unalignedp64(pwbuffer,   U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','/','t'));
          u_put_unalignedp16(pwbuffer+8, U_MULTICHAR_CONSTANT16('r','>'));
-                            pwbuffer += 10;
+                            pwbuffer += 8+2;
          }
 
-      (void) memcpy(pwbuffer, U_CONSTANT_TO_PARAM("</table></body></html>"));
+      u_put_unalignedp64(pwbuffer,    U_MULTICHAR_CONSTANT64('<','/','t','a','b','l','e','>'));
+      u_put_unalignedp64(pwbuffer+8,  U_MULTICHAR_CONSTANT64('<','/','b','o','d','y','>','<'));
+      u_put_unalignedp64(pwbuffer+16, U_MULTICHAR_CONSTANT64('/','h','t','m','l','>','\0','\0'));
 
       UClientImage_Base::wbuffer->size_adjust(pwbuffer + U_CONSTANT_SIZE("</table></body></html>"));
 
@@ -193,7 +209,7 @@ public:
 
       for (uint32_t i = 0; i < 13; ++i)
          {
-         U_NEW(Fortune, elem, Fortune(i));
+         U_NEW(Fortune, elem, Fortune(i+1));
 
          pvfortune->push(elem);
          }

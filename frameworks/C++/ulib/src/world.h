@@ -9,6 +9,10 @@
 #include <ulib/orm/orm_driver.h>
 #include <ulib/net/server/client_image.h>
 
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+#  include <ulib/orm/driver/orm_driver_pgsql.h>
+#endif
+
 class World {
 public:
    // Check for memory error
