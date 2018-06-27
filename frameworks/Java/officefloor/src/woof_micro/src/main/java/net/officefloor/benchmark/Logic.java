@@ -178,7 +178,7 @@ public class Logic {
 	public void fortunes(Connection connection, ServerHttpConnection httpConnection) throws IOException, SQLException {
 		try (PreparedStatement statement = connection.prepareStatement("SELECT ID, MESSAGE FROM FORTUNE",
 				ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
-			List<Fortune> fortunes = new ArrayList<>(12);
+			List<Fortune> fortunes = new ArrayList<>();
 			fortunes.add(new Fortune(0, "Additional fortune added at request time."));
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {

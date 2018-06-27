@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
 public class FortunesLogic {
 
 	public Fortune[] getFortunes(EntityManager entityManager) {
-		List<Fortune> fortunes = new ArrayList<>(12);
+		List<Fortune> fortunes = new ArrayList<>();
 		entityManager.createNamedQuery("All", Fortune.class).getResultStream()
 				.forEach((fortune) -> fortunes.add(fortune));
 		fortunes.add(new Fortune(0, "Additional fortune added at request time."));
