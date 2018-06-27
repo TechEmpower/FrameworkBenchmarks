@@ -18,7 +18,9 @@
 package net.officefloor.benchmark;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -30,27 +32,38 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ TestSuite.RawJsonTest.class, TestSuite.RawPlaintextTest.class })
 public class TestSuite {
 
+	@BeforeClass
+	public static void start() throws Exception {
+		RawOfficeFloorMain.main(new String[0]);
+	}
+
+	@AfterClass
+	public static void stop() throws Exception {
+		RawOfficeFloorMain.socketManager.shutdown();
+		RawOfficeFloorMain.client.close();
+	}
+
 	public static class RawJsonTest extends JsonTest {
 		@Before
 		public void start() throws Exception {
-			RawOfficeFloorMain.main(new String[0]);
+			TestSuite.start();
 		}
 
 		@After
 		public void stop() throws Exception {
-			RawOfficeFloorMain.socketManager.shutdown();
+			TestSuite.stop();
 		}
 	}
 
 	public static class RawPlaintextTest extends PlaintextTest {
 		@Before
 		public void start() throws Exception {
-			RawOfficeFloorMain.main(new String[0]);
+			TestSuite.start();
 		}
 
 		@After
 		public void stop() throws Exception {
-			RawOfficeFloorMain.socketManager.shutdown();
+			TestSuite.stop();
 		}
 	}
 

@@ -8,6 +8,17 @@
 		<version>1.0.0</version>
 	</parent>
 	<artifactId>woof_raw</artifactId>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.vertx</groupId>
+				<artifactId>vertx-dependencies</artifactId>
+				<version>3.5.2</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>net.officefloor.web</groupId>
@@ -20,6 +31,19 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-afterburner</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.reactiverse</groupId>
+			<artifactId>reactive-pg-client</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-rx-java2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

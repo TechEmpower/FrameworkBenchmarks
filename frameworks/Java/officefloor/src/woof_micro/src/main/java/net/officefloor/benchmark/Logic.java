@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -99,8 +101,7 @@ public class Logic {
 
 	// =========== UPDATES ===================
 
-	public void update(@HttpQueryParameter("queries") String queries, UpdatesFlows flows,
-			ObjectResponse<World[]> response) {
+	public void update(@HttpQueryParameter("queries") String queries, UpdatesFlows flows) {
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		int[] loaded = new int[] { 0 };
 		int count = getQueryCount(queries);
@@ -112,7 +113,7 @@ public class Logic {
 				worlds[index] = entry.world;
 				loaded[0]++;
 				if (loaded[0] >= count) {
-					response.send(worlds);
+					flows.doUpdates(worlds);
 				}
 			});
 		}
@@ -122,6 +123,8 @@ public class Logic {
 	public static interface UpdatesFlows {
 		@Spawn
 		void updateEntry(UpdateEntry entry, FlowCallback callback);
+
+		void doUpdates(World[] worlds);
 	}
 
 	@Data
@@ -131,25 +134,29 @@ public class Logic {
 	}
 
 	public void updateEntry(@Parameter UpdateEntry entry, Connection connection) throws SQLException {
-		connection.setAutoCommit(false);
-
-		// Obtain the row
-		PreparedStatement statement = connection.prepareStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = ?",
-				ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-		statement.setInt(1, entry.id);
-		ResultSet resultSet = statement.executeQuery();
-		resultSet.next();
-		entry.world = new World(resultSet.getInt(1), resultSet.getInt(2));
-
-		// Update the row
 		ThreadLocalRandom random = ThreadLocalRandom.current();
-		statement = connection.prepareStatement("UPDATE WORLD SET RANDOMNUMBER = ? WHERE ID = ?");
-		entry.world.setRandomNumber(random.nextInt(1, 10000));
-		statement.setInt(1, entry.world.getRandomNumber());
-		statement.setInt(2, entry.world.getId());
-		statement.executeUpdate();
+		try (PreparedStatement statement = connection.prepareStatement("SELECT ID FROM WORLD WHERE ID = ?",
+				ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
+			statement.setInt(1, entry.id);
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			entry.world = new World(resultSet.getInt(1), random.nextInt(1, 10000));
+		}
+	}
 
-		connection.commit();
+	public void doUpdates(@Parameter World[] worlds, Connection connection, ObjectResponse<World[]> response)
+			throws SQLException {
+		Arrays.sort(worlds, (a, b) -> a.getId() - b.getId());
+		try (PreparedStatement statement = connection
+				.prepareStatement("UPDATE WORLD SET RANDOMNUMBER = ? WHERE ID = ?")) {
+			for (int u = 0; u < worlds.length; u++) {
+				statement.setInt(1, worlds[u].getRandomNumber());
+				statement.setInt(2, worlds[u].getId());
+				statement.addBatch();
+			}
+			statement.executeBatch();
+		}
+		response.send(worlds);
 	}
 
 	// =========== FORTUNES ==================
@@ -176,12 +183,12 @@ public class Logic {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				fortunes.add(new Fortune(resultSet.getInt(1), resultSet.getString(2)));
-				fortunes.sort((a, b) -> a.getMessage().compareTo(b.getMessage()));
 			}
 			HttpResponse response = httpConnection.getResponse();
 			response.setContentType(TEXT_HTML, null);
 			ServerWriter writer = response.getEntityWriter();
 			writer.write(TEMPLATE_START);
+			Collections.sort(fortunes);
 			for (int i = 0; i < fortunes.size(); i++) {
 				Fortune fortune = fortunes.get(i);
 				writer.write(FORTUNE_START);
