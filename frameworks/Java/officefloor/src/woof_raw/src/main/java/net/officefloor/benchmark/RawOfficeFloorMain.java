@@ -143,6 +143,8 @@ public class RawOfficeFloorMain {
 		private static byte[] HELLO_WORLD = "Hello, World!".getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
 
 		private static HttpHeaderValue APPLICATION_JSON = new HttpHeaderValue("application/json");
+		
+		private static final HttpHeaderValue TEXT_PLAIN = new HttpHeaderValue("text/plain");
 
 		private static final HttpHeaderValue TEXT_HTML = new HttpHeaderValue("text/html;charset=utf-8");
 
@@ -228,6 +230,7 @@ public class RawOfficeFloorMain {
 			String requestUri = request.getUri();
 			switch (requestUri) {
 			case "/plaintext":
+				response.setContentType(TEXT_PLAIN, null);
 				response.getEntity().write(HELLO_WORLD);
 				sendResponse(connection);
 				break;
@@ -286,6 +289,7 @@ public class RawOfficeFloorMain {
 							writer.write(FORTUNE_END);
 						}
 						writer.write(TEMPLATE_END);
+						writer.flush();
 					} catch (IOException ex) {
 					}
 				});
