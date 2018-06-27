@@ -1,4 +1,4 @@
-FROM rust:1.25
+FROM rust:1.27
 
 WORKDIR /rouille
 COPY src src
