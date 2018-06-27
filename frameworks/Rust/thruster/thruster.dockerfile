@@ -1,4 +1,4 @@
-FROM rust:1.26
+FROM rust:1.27
 
 WORKDIR /thruster
 COPY ./src ./src
