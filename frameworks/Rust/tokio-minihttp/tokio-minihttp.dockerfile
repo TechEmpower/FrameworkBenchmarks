@@ -1,4 +1,4 @@
-FROM rust:1.25
+FROM rust:1.27
 
 ADD ./ /tokio
 WORKDIR /tokio
