@@ -145,7 +145,7 @@ class Benchmarker:
                     prefix=log_prefix,
                     file=benchmark_log)
 
-            max_time = time.time() + 60
+            max_time = time.time() + 300
             while True:
                 accepting_requests = test.is_accepting_requests()
                 if accepting_requests \
