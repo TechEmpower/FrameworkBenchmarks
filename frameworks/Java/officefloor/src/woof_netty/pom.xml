@@ -17,11 +17,6 @@
 			<groupId>net.officefloor.server</groupId>
 			<artifactId>officeserver_netty</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>net.officefloor.benchmarks</groupId>
-			<artifactId>woof_test</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

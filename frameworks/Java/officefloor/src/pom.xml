@@ -13,7 +13,6 @@
 		<jackson.version>2.9.6</jackson.version>
 	</properties>
 	<modules>
-		<module>woof_test</module>
 		<module>woof_benchmark</module>
 		<module>woof_micro</module>
 		<module>woof_raw</module>
@@ -90,11 +89,6 @@
 				<version>42.2.2</version>
 			</dependency>
 			<dependency>
-				<groupId>com.h2database</groupId>
-				<artifactId>h2</artifactId>
-				<version>1.4.197</version>
-			</dependency>
-			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>1.18.0</version>
@@ -103,21 +97,6 @@
 				<groupId>net.officefloor.benchmarks</groupId>
 				<artifactId>woof_benchmark</artifactId>
 				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.officefloor.benchmarks</groupId>
-				<artifactId>woof_test</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>4.5.2</version>
-			</dependency>
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.12</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
