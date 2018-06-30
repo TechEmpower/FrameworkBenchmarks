@@ -112,55 +112,70 @@ public:
       }
 
    static char* pwbuffer;
+   static char wbuffer[18000];
    static uint32_t rnum, rnumber[500];
 
    static World*        pworld_query;
    static UOrmSession*    psql_query;
    static UOrmStatement* pstmt_query;
 
-   static void initResult(uint32_t num_queries)
+   static void initResult()
       {
-      U_TRACE(0, "World::initResult(%u)", num_queries)
+      U_TRACE(0, "World::initResult()")
 
-      (void) UClientImage_Base::wbuffer->reserve(36U * num_queries);
+      u_put_unalignedp64(wbuffer,    U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
+      u_put_unalignedp64(wbuffer+8,  U_MULTICHAR_CONSTANT64('T','y','p','e',':',' ','a','p'));
+      u_put_unalignedp64(wbuffer+16, U_MULTICHAR_CONSTANT64('p','l','i','c','a','t','i','o'));
+      u_put_unalignedp64(wbuffer+24, U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'));
+      u_put_unalignedp32(wbuffer+32, U_MULTICHAR_CONSTANT32('\r','\n','[','\0'));
 
-      pwbuffer = UClientImage_Base::wbuffer->pend();
+      pwbuffer = wbuffer + U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n[");
 
-      *pwbuffer++ = '[';
+      U_http_info.endHeader = (uint32_t)-U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n");
       }
 
    static void endResult()
       {
       U_TRACE_NO_PARAM(0, "World::endResult()")
 
-      U_INTERNAL_ASSERT_POINTER(pwbuffer)
-
       *(pwbuffer-1) = ']';
 
-      UClientImage_Base::wbuffer->size_adjust(pwbuffer);
+      UClientImage_Base::wbuffer->setConstant(wbuffer, pwbuffer-wbuffer);
+      }
+
+   static void initOneResult()
+      {
+      U_TRACE(0, "World::initOneResult()")
+
+      u_put_unalignedp64(wbuffer,    U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
+      u_put_unalignedp64(wbuffer+8,  U_MULTICHAR_CONSTANT64('T','y','p','e',':',' ','a','p'));
+      u_put_unalignedp64(wbuffer+16, U_MULTICHAR_CONSTANT64('p','l','i','c','a','t','i','o'));
+      u_put_unalignedp64(wbuffer+24, U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'));
+      u_put_unalignedp32(wbuffer+32, U_MULTICHAR_CONSTANT32('\r','\n','{','\0'));
+
+      pwbuffer = wbuffer + U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n{");
+
+      U_http_info.endHeader = (uint32_t)-U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n");
       }
 
    static void endOneResult()
       {
       U_TRACE_NO_PARAM(0, "World::endOneResult()")
 
-      U_INTERNAL_ASSERT_POINTER(pwbuffer)
+      *pwbuffer = '}';
 
-      *pwbuffer++ = '}';
-
-      UClientImage_Base::wbuffer->size_adjust(pwbuffer);
+      UClientImage_Base::wbuffer->setConstant(wbuffer, pwbuffer-wbuffer+1);
       }
 
    static void handlerOneResult(uint32_t uid, uint32_t random)
       {
       U_TRACE(0, "World::handlerOneResult(%u,%u)", uid, random)
 
-      U_INTERNAL_ASSERT_POINTER(pwbuffer)
+      u_put_unalignedp32(pwbuffer, U_MULTICHAR_CONSTANT32('"','i','d','"'));
 
-      u_put_unalignedp32(pwbuffer,   U_MULTICHAR_CONSTANT32('{','"','i','d'));
-      u_put_unalignedp16(pwbuffer+4, U_MULTICHAR_CONSTANT16('"',':'));
+      pwbuffer[4] = ':';
 
-      pwbuffer = u_num2str32(uid, pwbuffer+6);
+      pwbuffer = u_num2str32(uid, pwbuffer+5);
 
       u_put_unalignedp64(pwbuffer,   U_MULTICHAR_CONSTANT64(',','"','r','a','n','d','o','m'));
       u_put_unalignedp64(pwbuffer+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'));
@@ -172,7 +187,15 @@ public:
       {
       U_TRACE(0, "World::handlerResult(%u,%u)", uid, random)
 
-      handlerOneResult(uid, random);
+      u_put_unalignedp32(pwbuffer,   U_MULTICHAR_CONSTANT32('{','"','i','d'));
+      u_put_unalignedp16(pwbuffer+4, U_MULTICHAR_CONSTANT16('"',':'));
+
+      pwbuffer = u_num2str32(uid, pwbuffer+6);
+
+      u_put_unalignedp64(pwbuffer,   U_MULTICHAR_CONSTANT64(',','"','r','a','n','d','o','m'));
+      u_put_unalignedp64(pwbuffer+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'));
+
+      pwbuffer = u_num2str32(random, pwbuffer+16);
 
       u_put_unalignedp16(pwbuffer, U_MULTICHAR_CONSTANT16('}',','));
                          pwbuffer += 2;
@@ -200,11 +223,9 @@ public:
       {
       U_TRACE(0, "World::doUpdateNoSql(%p)", handlerUpdateNoSql)
 
-      uint32_t num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+      initResult();
 
-      initResult(num_queries);
-
-      for (uint32_t i = 0; i < num_queries; ++i)
+      for (uint32_t i = 0, n = UHTTP::getFormFirstNumericValue(1, 500); i < n; ++i)
          {
          handlerUpdateNoSql(i);
 

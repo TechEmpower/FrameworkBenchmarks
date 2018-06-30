@@ -6,10 +6,6 @@ TechEmpower Web Framework Benchmarks
 #include "fortuneNoSql.h"
 
 static void usp_fork_rfortune() { FortuneNoSql::handlerForkREDIS(); }
-
-#ifdef DEBUG
-static void usp_end_rfortune() { FortuneNoSql::handlerEndREDIS(); }
-#endif
 -->
 Fortune::doQuery(FortuneNoSql::handlerQueryREDIS);
 -->

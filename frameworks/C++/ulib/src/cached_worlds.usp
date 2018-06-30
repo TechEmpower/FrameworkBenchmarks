@@ -7,15 +7,6 @@ TechEmpower Web Framework Benchmarks
 
 static UCache* cache;
 
-static void handlerQuery(uint32_t i)
-{
-   U_TRACE(5, "::handlerQuery(%u)", i)
-
-   U_INTERNAL_ASSERT_POINTER(cache)
-
-   World::rnum = cache->getNumber(World::rnumber[i]);
-}
-
 static void usp_init_cached_worlds()
 {
    U_TRACE(5, "::usp_init_cached_worlds()")
@@ -49,17 +40,16 @@ static void usp_init_cached_worlds()
    World::handlerFork();
 }
 
-#ifdef DEBUG
-static void usp_end_cached_worlds()
+static void handlerQuery(uint32_t i)
 {
-   U_TRACE(5, "::usp_end_cached_worlds()")
+   U_TRACE(5, "::handlerQuery(%u)", i)
 
-   if (cache) U_DELETE(cache)
+   U_INTERNAL_ASSERT_POINTER(cache)
+
+   World::rnum = cache->getNumber(World::rnumber[i]);
 }
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
 World::doUpdateNoSql(handlerQuery);

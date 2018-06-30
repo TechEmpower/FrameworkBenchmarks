@@ -24,16 +24,17 @@ public:
       U_INTERNAL_ASSERT_POINTER(str_rnumber)
       U_INTERNAL_ASSERT_POINTER(World::pwbuffer)
 
-      uint32_t sz = str_rnumber->size();
+      u_put_unalignedp32(World::pwbuffer, U_MULTICHAR_CONSTANT32('"','i','d','"'));
 
-      u_put_unalignedp32(World::pwbuffer,   U_MULTICHAR_CONSTANT32('{','"','i','d'));
-      u_put_unalignedp16(World::pwbuffer+4, U_MULTICHAR_CONSTANT16('"',':'));
+      World::pwbuffer[4] = ':';
 
-      World::pwbuffer = u_num2str32(uid, World::pwbuffer+6);
+      World::pwbuffer = u_num2str32(uid, World::pwbuffer+5);
 
       u_put_unalignedp64(World::pwbuffer,   U_MULTICHAR_CONSTANT64(',','"','r','a','n','d','o','m'));
       u_put_unalignedp64(World::pwbuffer+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'));
                          World::pwbuffer += 16;
+
+      uint32_t sz = str_rnumber->size();
 
       (void) memcpy(World::pwbuffer, str_rnumber->data(), sz);
                     World::pwbuffer +=                    sz;
@@ -45,7 +46,24 @@ public:
       {
       U_TRACE(0, "WorldNoSql::handlerResult(%u)", uid)
 
-      handlerOneResult(uid);
+      U_INTERNAL_ASSERT_POINTER(str_rnumber)
+      U_INTERNAL_ASSERT_POINTER(World::pwbuffer)
+
+      u_put_unalignedp32(World::pwbuffer,   U_MULTICHAR_CONSTANT32('{','"','i','d'));
+      u_put_unalignedp16(World::pwbuffer+4, U_MULTICHAR_CONSTANT16('"',':'));
+
+      World::pwbuffer = u_num2str32(uid, World::pwbuffer+6);
+
+      u_put_unalignedp64(World::pwbuffer,   U_MULTICHAR_CONSTANT64(',','"','r','a','n','d','o','m'));
+      u_put_unalignedp64(World::pwbuffer+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'));
+                         World::pwbuffer += 16;
+
+      uint32_t sz = str_rnumber->size();
+
+      (void) memcpy(World::pwbuffer, str_rnumber->data(), sz);
+                    World::pwbuffer +=                    sz;
+
+      str_rnumber->clear();
 
       u_put_unalignedp16(World::pwbuffer, U_MULTICHAR_CONSTANT16('}',','));
                          World::pwbuffer += 2;
@@ -55,11 +73,13 @@ public:
       {
       U_TRACE(0, "WorldNoSql::doOneQuery(%p)", handlerQuery)
 
-      World::pwbuffer = UClientImage_Base::wbuffer->pend();
+      World::initOneResult();
 
-      handlerQuery(World::rnumber[0]);
+      uint32_t i = u_now->tv_usec % 500;
 
-      handlerOneResult(World::rnumber[0]);
+      handlerQuery(World::rnumber[i]);
+
+      handlerOneResult(World::rnumber[i]);
 
       World::endOneResult();
       }
@@ -68,11 +88,9 @@ public:
       {
       U_TRACE(0, "WorldNoSql::doQuery(%p)", handlerQuery)
 
-      uint32_t num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+      World::initResult();
 
-      World::initResult(num_queries);
-
-      for (uint32_t i = 0; i < num_queries; ++i)
+      for (uint32_t i = 0, n = UHTTP::getFormFirstNumericValue(1, 500); i < n; ++i)
          {
          handlerQuery(World::rnumber[i]);
 

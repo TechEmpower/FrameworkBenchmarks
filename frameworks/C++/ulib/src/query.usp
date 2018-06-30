@@ -6,20 +6,15 @@ TechEmpower Web Framework Benchmarks
 #include "world.h"
 
 static void usp_fork_query() { World::handlerForkSql(); }
-
-#ifdef DEBUG
-static void usp_end_query() { World::handlerEndSql(); }
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-uint32_t num_queries = UHTTP::getFormFirstNumericValue(1, 500);
-
-World::initResult(num_queries);
-
 (void) World::pstmt_query->asyncPipelineMode(World::handlerResultSql);
+
+World::initResult();
+
+uint32_t num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
 for (uint32_t i = 0; i < num_queries; ++i)
    {

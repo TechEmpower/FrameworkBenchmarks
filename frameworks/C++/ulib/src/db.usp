@@ -6,8 +6,8 @@ TechEmpower Web Framework Benchmarks
 #include "world.h"
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
-static UOrmDriver* pdrv;
-static USqlStatement* pstmt;
+static UOrmDriverPgSql* pdrv;
+static UPgSqlStatement* pstmt;
 #endif
 
 static void usp_fork_db()
@@ -19,32 +19,27 @@ static void usp_fork_db()
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
    if (UOrmDriver::isPGSQL())
       {
-      pdrv  = World::psql_query->getDriver();
-      pstmt = World::pstmt_query->getStatement();
+      pdrv  = (UOrmDriverPgSql*) World::psql_query->getDriver();
+      pstmt = (UPgSqlStatement*) World::pstmt_query->getStatement();
 
       (void) ((UPgSqlStatement*)pstmt)->setBindParam(pdrv);
       }
 #endif
 }
-
-#ifdef DEBUG
-static void usp_end_db() { World::handlerEndSql(); }
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-World::pwbuffer = UClientImage_Base::wbuffer->pend();
+World::initOneResult();
 
 World::pworld_query->id = World::rnumber[u_now->tv_usec % 500];
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
 if (pdrv)
    {
-   ((UPgSqlStatement*)pstmt)->setBindParam();
+   pstmt->setBindParam();
 
-   PGresult* res = ((UOrmDriverPgSql*)pdrv)->execPrepared(pstmt);
+   PGresult* res = pdrv->execPrepared(pstmt);
 
    U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
    U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)

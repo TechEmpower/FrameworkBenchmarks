@@ -6,13 +6,8 @@ TechEmpower Web Framework Benchmarks
 #include "worldNoSql.h"
 
 static void usp_fork_mquery() { WorldNoSql::handlerForkMongoDB(); }
-
-#ifdef DEBUG
-static void usp_end_mquery() { WorldNoSql::handlerEndMongoDB(); }
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
 WorldNoSql::doQuery(WorldNoSql::handlerQueryMongoDB);

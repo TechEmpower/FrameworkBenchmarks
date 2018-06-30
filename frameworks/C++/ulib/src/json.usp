@@ -13,20 +13,23 @@ static void usp_init_json()
    U_NEW_STRING(pkey,   UString(U_CONSTANT_TO_PARAM("message")));
    U_NEW_STRING(pvalue, UString(U_CONSTANT_TO_PARAM("Hello, World!")));
 }
-
-#ifdef DEBUG
-static void usp_end_json()
-{
-   U_TRACE(5, "::usp_end_json()")
-
-   U_DELETE(pkey)
-   U_DELETE(pvalue)
-}
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-UValue::stringify(*UClientImage_Base::wbuffer, UValue(*pkey, *pvalue));
+char* pwbuffer = UClientImage_Base::wbuffer->data();
+
+u_put_unalignedp64(pwbuffer,    U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
+u_put_unalignedp64(pwbuffer+8,  U_MULTICHAR_CONSTANT64('T','y','p','e',':',' ','a','p'));
+u_put_unalignedp64(pwbuffer+16, U_MULTICHAR_CONSTANT64('p','l','i','c','a','t','i','o'));
+u_put_unalignedp64(pwbuffer+24, U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'));
+u_put_unalignedp16(pwbuffer+32, U_MULTICHAR_CONSTANT16('\r','\n'));
+
+UValue::pstringify = pwbuffer + U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n");
+
+UValue(*pkey, *pvalue).stringify();
+
+UClientImage_Base::wbuffer->size_adjust(UValue::pstringify);
+
+U_http_info.endHeader = (uint32_t)-U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n");
 -->

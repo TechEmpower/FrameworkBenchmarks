@@ -2,6 +2,7 @@
 
 #include "world.h"
 
+char           World::wbuffer[18000];
 char*          World::pwbuffer;
 World*         World::pworld_query;
 uint32_t       World::rnum;

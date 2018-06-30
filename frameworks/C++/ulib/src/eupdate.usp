@@ -20,13 +20,8 @@ static void usp_fork_eupdate()
       WorldNoSql::pbuffer2 = WorldNoSql::es_buffer2 + U_CONSTANT_SIZE("{\"doc\":{\"_id\":\"");
       }
 }
-
-#ifdef DEBUG
-static void usp_end_eupdate() { WorldNoSql::handlerEndElasticSearch(); }
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
 World::doUpdateNoSql(WorldNoSql::handlerUpdateElasticSearch);

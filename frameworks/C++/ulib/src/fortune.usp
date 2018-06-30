@@ -7,8 +7,8 @@ TechEmpower Web Framework Benchmarks
 
 static vPF handle_query;
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
-static UOrmDriver* pdrv;
-static USqlStatement* pstmt;
+static UOrmDriverPgSql* pdrv;
+static UPgSqlStatement* pstmt;
 #endif
 
 static void handlerQuery()
@@ -33,7 +33,7 @@ static void handlerQueryPGSQL()
    int sz;
    char* id;
    char* ptr;
-   PGresult* res = ((UOrmDriverPgSql*)pdrv)->execPrepared(pstmt);
+   PGresult* res = pdrv->execPrepared(pstmt);
 
    U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 2)
 
@@ -62,17 +62,13 @@ static void usp_fork_fortune()
       handle_query = handlerQueryPGSQL;
 
 #  ifdef U_STATIC_ORM_DRIVER_PGSQL
-      pdrv  = Fortune::psql_fortune->getDriver();
-      pstmt = Fortune::pstmt_fortune->getStatement();
+      pdrv  = (UOrmDriverPgSql*) Fortune::psql_fortune->getDriver();
+      pstmt = (UPgSqlStatement*) Fortune::pstmt_fortune->getStatement();
 
-      ((UPgSqlStatement*)pstmt)->prepareStatement(pdrv);
+      pstmt->prepareStatement(pdrv);
 #  endif
       }
 }
-
-#ifdef DEBUG
-static void usp_end_fortune() { Fortune::handlerEndSql(); }
-#endif
 -->
 <!--#code
 Fortune::doQuery(handle_query);

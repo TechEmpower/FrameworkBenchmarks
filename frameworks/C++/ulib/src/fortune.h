@@ -139,7 +139,7 @@ public:
 
       U_INTERNAL_ASSERT_POINTER(pvfortune)
 
-      char* pwbuffer = UClientImage_Base::wbuffer->pend();
+      char* pwbuffer = UClientImage_Base::wbuffer->data();
 
       u_put_unalignedp64(pwbuffer,     U_MULTICHAR_CONSTANT64('<','!','d','o','c','t','y','p'));
       u_put_unalignedp64(pwbuffer+8,   U_MULTICHAR_CONSTANT64('e',' ','h','t','m','l','>','<'));

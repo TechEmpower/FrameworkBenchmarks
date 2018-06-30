@@ -6,10 +6,6 @@ TechEmpower Web Framework Benchmarks
 #include "fortuneNoSql.h"
 
 static void usp_fork_mfortune() { FortuneNoSql::handlerForkMongoDB(); }
-
-#ifdef DEBUG
-static void usp_end_mfortune() { FortuneNoSql::handlerEndMongoDB(); }
-#endif
 -->
 <!--#code
 Fortune::doQuery(FortuneNoSql::handlerQueryMongoDB);

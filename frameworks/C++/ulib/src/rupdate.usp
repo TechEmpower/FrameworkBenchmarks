@@ -6,13 +6,8 @@ TechEmpower Web Framework Benchmarks
 #include "worldNoSql.h"
 
 static void usp_fork_rupdate() { WorldNoSql::handlerForkREDIS(); }
-
-#ifdef DEBUG
-static void usp_end_rupdate() { WorldNoSql::handlerEndREDIS(); }
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
 World::doUpdateNoSql(WorldNoSql::handlerUpdateREDIS);

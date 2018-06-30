@@ -6,13 +6,8 @@ TechEmpower Web Framework Benchmarks
 #include "worldNoSql.h"
 
 static void usp_fork_edb() { WorldNoSql::handlerForkElasticSearch(); }
-
-#ifdef DEBUG
-static void usp_end_edb() { WorldNoSql::handlerEndElasticSearch(); }
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
 WorldNoSql::doOneQuery(WorldNoSql::handlerQueryElasticSearch);

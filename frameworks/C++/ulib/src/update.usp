@@ -28,16 +28,24 @@ static void usp_fork_update()
 }
 -->
 <!--#header
-Content-Type: application/json
+-->
+<!--#vcode
+uint32_t num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+
+/*
+if (num_queries >= 20 &&
+    UServer_Base::startParallelization())
+   {
+   return;
+   }
+*/
 -->
 <!--#code
-uint32_t i, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
-
-World::initResult(num_queries);
+World::initResult();
 
 if (UOrmDriver::isAsyncPipelineModeAvaliable() == false)
    {
-   for (i = 0; i < num_queries; ++i)
+   for (uint32_t i = 0; i < num_queries; ++i)
       {
       World::pworld_query->id = World::rnumber[i];
 
@@ -58,7 +66,7 @@ else
 
    pquery = query + U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES");
 
-   for (i = 0; i < num_queries; ++i)
+   for (uint32_t i = 0; i < num_queries; ++i)
       {
       *pquery++ = '(';
 
