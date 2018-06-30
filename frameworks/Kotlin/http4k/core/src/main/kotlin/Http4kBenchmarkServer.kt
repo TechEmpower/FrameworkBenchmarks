@@ -10,19 +10,20 @@ import java.util.TimeZone.getTimeZone
 object Http4kBenchmarkServer {
     private val dateFormat = getInstance("EEE, d MMM yyyy HH:mm:ss 'GMT'", getTimeZone("GMT"))
 
-    private val headers = Filter { next ->
+    private fun headers(addDate: Boolean) = Filter { next ->
         {
             next(it).let {
                 it.headers(listOf(
                         "Server" to "http4k",
-                        "Date" to dateFormat.format(System.currentTimeMillis()),
-                        "Content-Length" to it.body.length.toString()))
+                        "Content-Length" to it.body.length.toString(),
+                        "Date" to if (addDate) dateFormat.format(System.currentTimeMillis()) else null
+                ))
             }
         }
     }
 
-    operator fun invoke(database: Database = Database("tfb-database")) =
-            headers.then(
+    operator fun invoke(addDateHeader: Boolean = true, database: Database = Database("tfb-database")) =
+            headers(addDateHeader).then(
                     routes(
                             JsonRoute(),
                             PlainTextRoute(),

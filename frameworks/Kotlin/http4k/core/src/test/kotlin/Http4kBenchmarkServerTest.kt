@@ -14,7 +14,7 @@ import java.sql.PreparedStatement
 class Http4kBenchmarkServerTest {
 
     private val database = mockk<Database>()
-    private val app = Http4kBenchmarkServer(database)
+    private val app = Http4kBenchmarkServer(true, database)
 
     @Test
     fun `json`() {
