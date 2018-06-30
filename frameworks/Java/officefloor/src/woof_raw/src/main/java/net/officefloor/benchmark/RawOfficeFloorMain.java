@@ -68,13 +68,16 @@ public class RawOfficeFloorMain {
 	 */
 	public static void main(String[] args) throws Exception {
 
+		// Obtain the port from properties
+		int port = args.length > 0 ? Integer.parseInt(args[0]) : 8080;
+
 		// Ensure previous socket manager shutdown (typically from tests)
 		if (socketManager != null) {
 			socketManager.shutdown();
 		}
 
 		// Create the server location
-		HttpServerLocation serverLocation = new HttpServerLocationImpl("localhost", 8080, -1);
+		HttpServerLocation serverLocation = new HttpServerLocationImpl("localhost", port, -1);
 
 		// Create the socket manager
 		socketManager = HttpServerSocketManagedObjectSource.createSocketManager();
@@ -147,10 +150,8 @@ public class RawOfficeFloorMain {
 		/**
 		 * Instantiate.
 		 *
-		 * @param serverLocation
-		 *            {@link HttpServerLocation}.
-		 * @param serviceBufferPool
-		 *            {@link StreamBufferPool}.
+		 * @param serverLocation    {@link HttpServerLocation}.
+		 * @param serviceBufferPool {@link StreamBufferPool}.
 		 */
 		public RawHttpServicerFactory(HttpServerLocation serverLocation,
 				StreamBufferPool<ByteBuffer> serviceBufferPool) {
