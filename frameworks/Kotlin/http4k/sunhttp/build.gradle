@@ -1,3 +1,6 @@
 dependencies {
     compile project(":core")
 }
+
+apply plugin: 'application'
+mainClassName = "Http4kSunHttpServerKt"
