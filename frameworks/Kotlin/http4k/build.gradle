@@ -43,10 +43,10 @@ allprojects {
 }
 
 dependencies {
-    implementation project(":core")
-    implementation project(":apache")
-    implementation project(":jetty")
-    implementation project(":netty")
-    implementation project(":sunhttp")
-    implementation project(":undertow")
+    compile project(":core")
+    compile project(":apache")
+    compile project(":jetty")
+    compile project(":netty")
+    compile project(":sunhttp")
+    compile project(":undertow")
 }

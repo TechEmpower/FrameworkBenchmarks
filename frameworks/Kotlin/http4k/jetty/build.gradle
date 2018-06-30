@@ -1,6 +1,6 @@
 dependencies {
-    implementation project(":core")
-    implementation "org.http4k:http4k-server-jetty:$http4k_version"
+    compile project(":core")
+    compile "org.http4k:http4k-server-jetty:$http4k_version"
 }
 
 task uber(type: OneJar) {
