@@ -25,7 +25,6 @@ import static act.controller.Controller.Util.notFoundIfNull;
 import act.app.conf.AutoConfig;
 import act.db.Dao;
 import act.db.sql.tx.Transactional;
-import act.handler.SkipBuiltInEvents;
 import act.sys.Env;
 import act.util.Global;
 import act.util.JsonView;
@@ -43,7 +42,6 @@ import javax.inject.Inject;
 @Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
 @JsonView
 @SessionFree
-@SkipBuiltInEvents
 public class WorldController {
 
     private static boolean BATCH_SAVE;
