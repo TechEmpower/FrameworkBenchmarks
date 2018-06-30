@@ -1,5 +1,10 @@
 TechEmpower Framework Benchmark - ActFramework Change log
 
+**1.8.8e**
+
+* update act to 1.8.8-RC12-SNAPSHOT
+    - fix fortune mustache bad performance issue
+
 **1.8.8d**
 
 * update act to 1.8.8-RC11

@@ -25,11 +25,10 @@ import static act.controller.Controller.Util.notFoundIfNull;
 import act.app.conf.AutoConfig;
 import act.db.Dao;
 import act.db.sql.tx.Transactional;
+import act.handler.SkipBuiltInEvents;
 import act.sys.Env;
-import act.util.FastJsonFeature;
 import act.util.Global;
 import act.util.JsonView;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.techempower.act.AppEntry;
 import com.techempower.act.model.World;
 import org.osgl.mvc.annotation.GetAction;
@@ -43,6 +42,8 @@ import javax.inject.Inject;
 @AutoConfig
 @Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
 @JsonView
+@SessionFree
+@SkipBuiltInEvents
 public class WorldController {
 
     private static boolean BATCH_SAVE;
@@ -59,14 +60,11 @@ public class WorldController {
 
 
     @GetAction("db")
-    @SessionFree
     public World findOne() {
         return dao.findById(randomWorldNumber());
     }
 
     @GetAction("queries")
-    @SessionFree
-    @FastJsonFeature(SerializerFeature.DisableCircularReferenceDetect)
     public final World[] multipleQueries(String queries) {
         int q = regulateQueries(queries);
 
@@ -78,8 +76,6 @@ public class WorldController {
     }
 
     @GetAction("updates")
-    @SessionFree
-    @FastJsonFeature(SerializerFeature.DisableCircularReferenceDetect)
     public final List<World> updateQueries(String queries) {
         int q = regulateQueries(queries);
         return doUpdate(q);

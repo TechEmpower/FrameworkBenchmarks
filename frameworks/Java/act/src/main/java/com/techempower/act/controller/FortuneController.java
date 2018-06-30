@@ -23,6 +23,7 @@ package com.techempower.act.controller;
 import static act.controller.Controller.Util.renderTemplate;
 
 import act.db.Dao;
+import act.handler.SkipBuiltInEvents;
 import act.sys.Env;
 import act.util.Global;
 import act.view.NoImplicitTemplateVariable;
@@ -45,6 +46,7 @@ public class FortuneController {
     @GetAction("fortunes")
     @NoImplicitTemplateVariable
     @SessionFree
+    @SkipBuiltInEvents
     public void fortunes() {
         List<Fortune> fortunes = dao.findAllAsList();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
