@@ -22,11 +22,13 @@ public class TestController {
 	
 	@RequestPath(value = "json")
 	public HttpResponse json(HttpRequest request) throws Exception {
+		request.channelContext.groupContext.useQueueSend = false;
 		return Resps.json(request, new Message(HELLO_WORLD));
 	}
 
 	@RequestPath(value = "plaintext")
 	public HttpResponse plaintext(HttpRequest request) throws Exception {
+		request.channelContext.groupContext.useQueueSend = true;
 		return Resps.bytesWithContentType(request, HELLO_WORLD_BYTES, MimeType.TEXT_PLAIN_TXT.getType());
 	}
 }
