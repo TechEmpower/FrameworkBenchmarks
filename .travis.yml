@@ -56,6 +56,7 @@ env:
      - "TESTDIR=Java/nanohttpd"
      - "TESTDIR=Java/netty"
      - "TESTDIR=Java/ninja-standalone"
+     - "TESTDIR=Java/officefloor"
      - "TESTDIR=Java/play1"
      - "TESTDIR=Java/play2-java"
      - "TESTDIR=Java/proteus"
