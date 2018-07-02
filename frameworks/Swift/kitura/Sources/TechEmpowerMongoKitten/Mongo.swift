@@ -18,6 +18,7 @@ import Foundation
 import LoggerAPI
 import Configuration
 import MongoKitten
+import TechEmpowerCommon
 
 #if os(Linux)
     import Glibc
@@ -49,10 +50,10 @@ func connectToDB() throws {
     //myDatabase = try MongoKitten.Database("mongodb://\(dbUser):\(dbPass)@\(dbHost):\(dbPort)/\(dbName)")
     myDatabase = try MongoKitten.Database(connectString)
     guard let myDatabase = myDatabase else {
-        throw AppError.MongoError("Nil MongoDB connection to \(connectString)")
+        throw AppError.ConnectionError("Nil MongoDB connection to \(connectString)")
     }
     guard myDatabase.server.isConnected else {
-        throw AppError.MongoError("Not connected to \(connectString)")
+        throw AppError.ConnectionError("Not connected to \(connectString)")
     }
     world = myDatabase["world"]
     fortune = myDatabase["fortune"]

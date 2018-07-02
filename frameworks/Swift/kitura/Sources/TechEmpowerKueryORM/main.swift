@@ -20,8 +20,8 @@ import LoggerAPI
 import HeliumLogger
 import KituraStencil
 import Stencil
-import TechEmpowerCommon
-import KueryPostgresRaw
+import TechEmpower
+import KueryPostgres
 
 Log.logger = HeliumLogger(.info)
 
@@ -45,6 +45,26 @@ ext.registerFilter("htmlencode") { (value: Any?) in
 
 let router = Router()
 router.add(templateEngine: StencilTemplateEngine(extension: ext))
+
+//
+// TechEmpower test 6: plaintext
+//
+router.get("/plaintext") {
+    request, response, next in
+    response.headers["Server"] = "Kitura"
+    response.headers["Content-Type"] = "text/plain"
+    try response.status(.OK).send("Hello, world!").end()
+}
+
+//
+// TechEmpower test 1: JSON serialization
+//
+router.get("/json") {
+    request, response, next in
+    response.headers["Server"] = "Kitura"
+    let result = ["message":"Hello, World!"]
+    try response.status(.OK).send(json: result).end()
+}
 
 //
 // TechEmpower test 2: Single database query (raw, no ORM)

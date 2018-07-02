@@ -14,11 +14,31 @@
  * limitations under the License.
  */
 
-import Mustache
+import Foundation
+import Kitura
 import TechEmpowerCommon
 
-extension Fortune: MustacheBoxable {
-  public var mustacheBox: MustacheBox {
-    return Box(["id": self.id, "message": self.message])
-  }
+let router = Router()
+
+//
+// TechEmpower test 6: plaintext
+//
+router.get("/plaintext") {
+    request, response, next in
+    response.headers["Server"] = "Kitura"
+    response.headers["Content-Type"] = "text/plain"
+    try response.status(.OK).send("Hello, world!").end()
 }
+
+//
+// TechEmpower test 1: JSON serialization
+//
+router.get("/json") {
+    request, response, next in
+    response.headers["Server"] = "Kitura"
+    let result = ["message":"Hello, World!"]
+    try response.status(.OK).send(json: result).end()
+}
+
+Kitura.addHTTPServer(onPort: 8080, with: router)
+Kitura.run()

@@ -14,9 +14,19 @@
  * limitations under the License.
  */
 
-public enum AppError: Error {
-    case DBError(String, query: String)
-    case DBKueryError(String)
-    case DataFormatError(String)
-    case OtherError(String)
+import Foundation
+
+public struct RandomRow {
+
+    public let id: Int
+    public let randomNumber: Int
+
+    public init(id: Int, randomNumber: Int) {
+        self.id = id
+        self.randomNumber = randomNumber
+    }
+
+    public func asDictionary() -> [String: Int] {
+        return ["id": self.id, "randomNumber": self.randomNumber]
+    }
 }

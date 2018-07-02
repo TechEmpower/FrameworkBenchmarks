@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-struct Fortune {
+import Foundation
 
-  let id: Int
-  let message: String
+public struct Fortune {
+
+  public let id: Int
+  public let message: String
 
   public init(id: Int, message: String) {
     self.id = id
     self.message = message
   }
 
-  init(row: [String:Any?]) throws {
+  public init(row: [String:Any?]) throws {
     guard let idField = row["id"] else {
       throw AppError.DataFormatError("Missing 'id' field")
     }
@@ -44,11 +46,11 @@ struct Fortune {
 
 extension Fortune: Comparable {
 
-  static func == (lhs: Fortune, rhs: Fortune) -> Bool {
+  public static func == (lhs: Fortune, rhs: Fortune) -> Bool {
     return lhs.id == rhs.id && lhs.message == rhs.message
   }
 
-  static func < (lhs: Fortune, rhs: Fortune) -> Bool {
+  public static func < (lhs: Fortune, rhs: Fortune) -> Bool {
     return lhs.message < rhs.message || (lhs.message == rhs.message && lhs.id < rhs.id)
   }
 

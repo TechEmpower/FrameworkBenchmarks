@@ -2,21 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "Signals",
-        "repositoryURL": "https://github.com/IBM-Swift/BlueSignals.git",
-        "state": {
-          "branch": null,
-          "revision": "acd6304348ebeb181c0952ee91aa2c72a7826a12",
-          "version": "1.0.1"
-        }
-      },
-      {
         "package": "Socket",
         "repositoryURL": "https://github.com/IBM-Swift/BlueSocket.git",
         "state": {
           "branch": null,
-          "revision": "36561e7722f26151b8a6ba4b4bb96fd9b3f36980",
-          "version": "1.0.4"
+          "revision": "e2f6aee81b9e316f61e173e8350cb69d7714ead8",
+          "version": "1.0.10"
         }
       },
       {
@@ -24,8 +15,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/BlueSSLService.git",
         "state": {
           "branch": null,
-          "revision": "4759df40007b50d087c6513f844c36b243415296",
-          "version": "1.0.4"
+          "revision": "f4c012b783f8809d4e6597b304357c5324ff459b",
+          "version": "1.0.10"
         }
       },
       {
@@ -43,15 +34,6 @@
         "state": {
           "branch": null,
           "revision": "2a431e3a5fb8d004aa7d4d1bebb5d511f568c43e",
-          "version": "1.0.0"
-        }
-      },
-      {
-        "package": "CEpoll",
-        "repositoryURL": "https://github.com/IBM-Swift/CEpoll.git",
-        "state": {
-          "branch": null,
-          "revision": "4e56acbea4d452110236dcbfcee0045a697c0e9f",
           "version": "1.0.0"
         }
       },
@@ -119,21 +101,12 @@
         }
       },
       {
-        "package": "KittenCTLS",
-        "repositoryURL": "https://github.com/OpenKitten/KittenCTLS.git",
-        "state": {
-          "branch": null,
-          "revision": "be8c42f22975e8033c6f342f42b8999407672bb3",
-          "version": "1.0.1"
-        }
-      },
-      {
         "package": "Kitura",
         "repositoryURL": "https://github.com/IBM-Swift/Kitura.git",
         "state": {
           "branch": null,
-          "revision": "55c2937de7d2d766082a5af63f28325dea6473fa",
-          "version": "2.3.0"
+          "revision": "daa071669590584b6d9c277a2e3c465a904cd0d7",
+          "version": "2.4.1"
         }
       },
       {
@@ -141,8 +114,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/Kitura-MustacheTemplateEngine.git",
         "state": {
           "branch": null,
-          "revision": "54e4929c4bab6b5c44a11ef68bb04894245a8370",
-          "version": "1.7.3"
+          "revision": "98c2f8e6207914985ce2f32a23faf2e2586db6b5",
+          "version": "1.8.0"
         }
       },
       {
@@ -159,8 +132,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/Kitura-StencilTemplateEngine.git",
         "state": {
           "branch": null,
-          "revision": "535d9e1a3def131386cca1e26cfb5ef0477d4c65",
-          "version": "1.9.1"
+          "revision": "1b66e77c7d63524c6b7717bf8cb03c289b3e4ddc",
+          "version": "1.10.0"
         }
       },
       {
@@ -168,8 +141,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/Kitura-TemplateEngine.git",
         "state": {
           "branch": null,
-          "revision": "d43155da4dadd91c1d34d76e317571dc54655594",
-          "version": "1.7.4"
+          "revision": "b030d2d176719acc6a902c40db1b87dc6a83e2fc",
+          "version": "2.0.0"
         }
       },
       {
@@ -177,8 +150,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/KituraContracts.git",
         "state": {
           "branch": null,
-          "revision": "de85c1a28bb379cd423f5a17eb651222112d2c3e",
-          "version": "0.0.22"
+          "revision": "fca1d07d9e81cfd3d70822a6b2544bc5c9f366fd",
+          "version": "1.0.1"
         }
       },
       {
@@ -197,15 +170,6 @@
           "branch": null,
           "revision": "f564cc39c6088c23bbafd7ea8910dc270517b77e",
           "version": "4.1.3"
-        }
-      },
-      {
-        "package": "OpenSSL",
-        "repositoryURL": "https://github.com/IBM-Swift/OpenSSL.git",
-        "state": {
-          "branch": null,
-          "revision": "95c405c18a071a1c13616e984ba1b3c6091ca6ca",
-          "version": "1.0.0"
         }
       },
       {
@@ -249,8 +213,17 @@
         "repositoryURL": "https://github.com/IBM-Swift/Swift-Kuery.git",
         "state": {
           "branch": null,
-          "revision": "a95ae0131c6742e8ff1575db8ed7fda1bf4b93ee",
-          "version": "1.3.0"
+          "revision": "de890f1eb5e483961dcaf806467cb2770399efa1",
+          "version": "2.0.0"
+        }
+      },
+      {
+        "package": "SwiftKueryORM",
+        "repositoryURL": "https://github.com/IBM-Swift/Swift-Kuery-ORM.git",
+        "state": {
+          "branch": null,
+          "revision": "d1b3588820ee8cf741d0a6e0433a5465223a98b4",
+          "version": "0.3.0"
         }
       },
       {
@@ -258,8 +231,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/Swift-Kuery-PostgreSQL",
         "state": {
           "branch": null,
-          "revision": "4177014a8e85da24afbcdbbb7baaac070d549fac",
-          "version": "1.1.4"
+          "revision": "3892fee6c51827298c7df3805a92e3120125e68d",
+          "version": "1.2.0"
         }
       },
       {
@@ -269,6 +242,15 @@
           "branch": null,
           "revision": "7eb6c83f91c519c19e6a507d604c9176d5ae5b15",
           "version": "17.0.1"
+        }
+      },
+      {
+        "package": "TypeDecoder",
+        "repositoryURL": "https://github.com/IBM-Swift/TypeDecoder.git",
+        "state": {
+          "branch": null,
+          "revision": "3a321fc0ccbd49a9e240b0c0df3b290f393960d2",
+          "version": "1.0.0"
         }
       }
     ]

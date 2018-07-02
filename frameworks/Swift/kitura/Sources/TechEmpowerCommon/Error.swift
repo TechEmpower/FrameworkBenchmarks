@@ -16,7 +16,9 @@
 
 public enum AppError: Error {
     case DBError(String, query: String)
-    case MongoError(String)
+    case DBKueryError(String)
     case DataFormatError(String)
+    case ConnectionError(String)
+    case MongoError(String)
     case OtherError(String)
 }
