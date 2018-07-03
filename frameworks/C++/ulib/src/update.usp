@@ -51,7 +51,7 @@ if (UOrmDriver::isAsyncPipelineModeAvaliable() == false)
 
       World::pstmt_query->execute();
 
-      World::pworld_query->randomNumber = u_get_num_random(10000-1);
+      World::pworld_query->randomNumber = u_get_num_random_range1(10000);
 
       pstmt_update->execute();
 
@@ -76,7 +76,7 @@ else
 
       *pquery++ = ',';
 
-      pquery = u_num2str32(World::pworld_query->randomNumber = u_get_num_random(10000-1), pquery);
+      pquery = u_num2str32(World::pworld_query->randomNumber = u_get_num_random_range1(10000), pquery);
 
       u_put_unalignedp16(pquery, U_MULTICHAR_CONSTANT16(')',','));
                          pquery += 2;

@@ -75,11 +75,9 @@ public:
 
       World::initOneResult();
 
-      uint32_t i = u_now->tv_usec % 500;
+      handlerQuery(World::rnumber[0]);
 
-      handlerQuery(World::rnumber[i]);
-
-      handlerOneResult(World::rnumber[i]);
+      handlerOneResult(World::rnumber[0]);
 
       World::endOneResult();
       }
@@ -138,7 +136,7 @@ public:
 
 #  ifdef USE_MONGODB
       (void) mc->findOne(World::rnumber[i], query);
-      (void) mc->update( World::rnumber[i], "randomNumber", World::rnum = u_get_num_random(10000-1));
+      (void) mc->update( World::rnumber[i], "randomNumber", World::rnum = u_get_num_random_range1(10000));
 #  endif
       }
 
@@ -206,7 +204,7 @@ public:
       (void) rc->get(start, ptr-start);
 
       *ptr = ' ';
-       ptr = u_num2str32(World::rnum = u_get_num_random(10000-1), ptr+1);
+       ptr = u_num2str32(World::rnum = u_get_num_random_range1(10000), ptr+1);
 
       (void) rc->mset(start, ptr-start);
       }
@@ -262,7 +260,7 @@ public:
       U_TRACE(0, "WorldNoSql::handlerUpdateElasticSearch(%u)", i)
 
       uint32_t len1 = u__snprintf(pbuffer1, 100, U_CONSTANT_TO_PARAM("%u/_update"), World::rnumber[i]),
-               len2 = u__snprintf(pbuffer2, 100, U_CONSTANT_TO_PARAM("%u\"}}"), World::rnum = u_get_num_random(10000-1));
+               len2 = u__snprintf(pbuffer2, 100, U_CONSTANT_TO_PARAM("%u\"}}"), World::rnum = u_get_num_random_range1(10000));
 
       (void) es->sendPOST(es_buffer1, len1+U_CONSTANT_SIZE("/tfb/world/"), es_buffer2, len2+U_CONSTANT_SIZE("{\"doc\":{\"_id\":\""));
       }

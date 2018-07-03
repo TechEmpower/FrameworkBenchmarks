@@ -32,7 +32,7 @@ static void usp_fork_db()
 <!--#code
 World::initOneResult();
 
-World::pworld_query->id = World::rnumber[u_now->tv_usec % 500];
+World::pworld_query->id = World::rnumber[0];
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
 if (pdrv)

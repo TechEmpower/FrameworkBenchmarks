@@ -9,12 +9,21 @@ static void usp_fork_query() { World::handlerForkSql(); }
 -->
 <!--#header
 -->
-<!--#code
-(void) World::pstmt_query->asyncPipelineMode(World::handlerResultSql);
+<!--#vcode
+uint32_t num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
+/*
+if (num_queries >= 20 &&
+    UServer_Base::startParallelization())
+   {
+   return;
+   }
+*/
+-->
+<!--#code
 World::initResult();
 
-uint32_t num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+(void) World::pstmt_query->asyncPipelineMode(World::handlerResultSql);
 
 for (uint32_t i = 0; i < num_queries; ++i)
    {

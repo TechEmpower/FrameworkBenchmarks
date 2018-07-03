@@ -239,7 +239,7 @@ public:
       {
       U_TRACE_NO_PARAM(0, "World::handlerFork()")
 
-      if (rnumber[0] == 0) for (uint32_t i = 0; i < 500; ++i) rnumber[i] = u_get_num_random(10000-1);
+      if (rnumber[0] == 0) for (uint32_t i = 0; i < 500; ++i) rnumber[i] = u_get_num_random_range1(10000);
       }
 
    static void handlerForkSql()
