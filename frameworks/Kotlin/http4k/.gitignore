@@ -2,3 +2,4 @@ build
 out
 docker
 .idea
+.gradle

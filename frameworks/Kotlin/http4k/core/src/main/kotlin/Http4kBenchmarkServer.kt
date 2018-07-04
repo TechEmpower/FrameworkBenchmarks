@@ -1,5 +1,6 @@
 import org.apache.commons.lang3.time.FastDateFormat.getInstance
 import org.http4k.core.Filter
+import org.http4k.core.HttpHandler
 import org.http4k.core.then
 import org.http4k.routing.routes
 import org.http4k.server.ServerConfig
@@ -9,27 +10,29 @@ import java.util.TimeZone.getTimeZone
 object Http4kBenchmarkServer {
     private val dateFormat = getInstance("EEE, d MMM yyyy HH:mm:ss 'GMT'", getTimeZone("GMT"))
 
-    private val headers = Filter { next ->
+    private fun headers(addDate: Boolean) = Filter { next ->
         {
             next(it).let {
                 it.headers(listOf(
-                    "Server" to "http4k",
-                    "Date" to dateFormat.format(System.currentTimeMillis()),
-                    "Content-Length" to it.body.length.toString()))
+                        "Server" to "http4k",
+                        "Content-Length" to it.body.length.toString(),
+                        "Date" to if (addDate) dateFormat.format(System.currentTimeMillis()) else null
+                ))
             }
         }
     }
 
-    private val database = Database("tfb-database")
-
-    fun start(config: ServerConfig) = headers.then(
-        routes(
-            JsonRoute(),
-            PlainTextRoute(),
-            FortunesRoute(database),
-            WorldRoutes.queryRoute(database),
-            WorldRoutes.updateRoute(database),
-            WorldRoutes.multipleRoute(database)
-        )
-    ).asServer(config).start().block()
+    operator fun invoke(addDateHeader: Boolean = true, database: Database = Database("tfb-database")) =
+            headers(addDateHeader).then(
+                    routes(
+                            JsonRoute(),
+                            PlainTextRoute(),
+                            FortunesRoute(database),
+                            WorldRoutes.queryRoute(database),
+                            WorldRoutes.updateRoute(database),
+                            WorldRoutes.multipleRoute(database)
+                    )
+            )
 }
+
+fun HttpHandler.start(config: ServerConfig) = asServer(config).start().block()
