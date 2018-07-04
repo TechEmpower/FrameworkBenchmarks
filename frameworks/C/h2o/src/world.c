@@ -20,7 +20,6 @@
 #include <assert.h>
 #include <ctype.h>
 #include <h2o.h>
-#include <pthread.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -32,6 +31,7 @@
 #include <yajl/yajl_gen.h>
 
 #include "bitset.h"
+#include "cache.h"
 #include "database.h"
 #include "error.h"
 #include "request_handler.h"
@@ -88,10 +88,7 @@ static int compare_items(const void *x, const void *y);
 static void complete_multiple_query(multiple_query_ctx_t *query_ctx);
 static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req);
 static void do_updates(multiple_query_ctx_t *query_ctx);
-static void fetch_from_cache(uint64_t now,
-                             h2o_cache_t *world_cache,
-                             pthread_mutex_t *world_cache_lock,
-                             multiple_query_ctx_t *query_ctx);
+static void fetch_from_cache(uint64_t now, cache_t *world_cache, multiple_query_ctx_t *query_ctx);
 static size_t get_query_number(h2o_req_t *req);
 static void initialize_ids(size_t num_query, query_result_t *res, unsigned int *seed);
 static void on_multiple_query_error(db_query_param_t *param, const char *error_string);
@@ -198,8 +195,7 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 
 		if (use_cache) {
 			fetch_from_cache(h2o_now(ctx->event_loop.h2o_ctx.loop),
-			                 ctx->global_data->world_cache,
-			                 &ctx->global_data->world_cache_lock,
+			                 &ctx->global_data->world_cache,
 			                 query_ctx);
 
 			if (query_ctx->num_result == query_ctx->num_query) {
@@ -310,30 +306,23 @@ error:
 	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
 }
 
-static void fetch_from_cache(uint64_t now,
-                             h2o_cache_t *world_cache,
-                             pthread_mutex_t *world_cache_lock,
-                             multiple_query_ctx_t *query_ctx)
+static void fetch_from_cache(uint64_t now, cache_t *world_cache, multiple_query_ctx_t *query_ctx)
 {
 	h2o_iovec_t key = {.len = sizeof(query_ctx->res->id)};
-
-	CHECK_ERROR(pthread_mutex_lock, world_cache_lock);
 
 	for (size_t i = 0; i < query_ctx->num_query; i++) {
 		key.base = (char *) &query_ctx->res[i].id;
 
-		h2o_cache_ref_t * const r = h2o_cache_fetch(world_cache, now, key, 0);
+		h2o_cache_ref_t * const r = cache_fetch(world_cache, now, key);
 
 		if (r) {
 			query_ctx->res[i].id = query_ctx->res[query_ctx->num_result].id;
 			memcpy(query_ctx->res + query_ctx->num_result++,
 			       r->value.base,
 			       sizeof(*query_ctx->res));
-			h2o_cache_release(world_cache, r);
+			cache_release(world_cache, r);
 		}
 	}
-
-	CHECK_ERROR(pthread_mutex_unlock, world_cache_lock);
 }
 
 static size_t get_query_number(h2o_req_t *req)
@@ -410,13 +399,10 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 				const h2o_iovec_t value = {.base = (char *) r, .len = sizeof(*r)};
 
 				*r = query_ctx->res[query_ctx->num_result];
-				CHECK_ERROR(pthread_mutex_lock, &ctx->global_data->world_cache_lock);
-				h2o_cache_set(ctx->global_data->world_cache,
-				              h2o_now(ctx->event_loop.h2o_ctx.loop),
-				              key,
-				              0,
-				              value);
-				CHECK_ERROR(pthread_mutex_unlock, &ctx->global_data->world_cache_lock);
+				cache_set(h2o_now(ctx->event_loop.h2o_ctx.loop),
+				          key,
+				          value,
+				          &ctx->global_data->world_cache);
 			}
 		}
 
