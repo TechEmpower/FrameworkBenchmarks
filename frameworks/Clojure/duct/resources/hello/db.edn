@@ -1,2 +1,2 @@
 ; for local dev purpose
-{:duct.core/include ["hello/db-mongo"]} ;default
+{:duct.core/include ["hello/db-pg"]} ;default
