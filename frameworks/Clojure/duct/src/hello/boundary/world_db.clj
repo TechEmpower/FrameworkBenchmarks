@@ -6,10 +6,10 @@
 
 (defn- query [db]
   (first
-    (jdbc/query db ["select * from world where id = ?" (inc (rand-int 4))])))
+    (jdbc/query db ["select * from world where id = ?" (inc (rand-int 10000))])))
 
 (defn- mongo-query [db]
-  (dissoc (mc/find-one-as-map db "world" {:id 5}) :_id))
+  (dissoc (mc/find-one-as-map db "world" {:id (inc (rand-int 10000))}) :_id))
 
 (defprotocol World
   (make-single-query [db])
