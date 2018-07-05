@@ -25,7 +25,7 @@ public class HttpV2MessageProcessor implements MessageProcessor<HttpEntityV2> {
 
     public HttpV2MessageProcessor() {
         plainText = ("HTTP/1.1 200 OK\r\n" +
-                "Content-Length: 15\r\n" +
+                "Content-Length: 13\r\n" +
                 "Content-Type: text/plain; charset=UTF-8\r\n" +
                 "Server: smart-socket\r\n" +
                 "Date: Wed, 17 Apr 2013 12:00:00 GMT\r\n" +
