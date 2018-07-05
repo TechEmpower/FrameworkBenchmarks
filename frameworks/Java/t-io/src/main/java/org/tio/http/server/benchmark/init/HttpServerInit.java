@@ -29,10 +29,10 @@ public class HttpServerInit {
 		String[] scanPackages = new String[] { TestController.class.getPackage().getName() };
 		Routes routes = new Routes(scanPackages);
 
-		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
-
+		requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 		httpServerStarter = new HttpServerStarter(httpConfig, requestHandler);
 		serverGroupContext = httpServerStarter.getServerGroupContext();
+		serverGroupContext.setUseQueueDecode(true);
 		httpServerStarter.start();
 	}
 }
