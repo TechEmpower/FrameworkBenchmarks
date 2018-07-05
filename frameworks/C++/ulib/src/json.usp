@@ -3,49 +3,33 @@ Test type 1: JSON serialization
 TechEmpower Web Framework Benchmarks
 -->
 <!--#declaration
-#ifdef AS_cpoll_cppsp_DO
-#undef AS_cpoll_cppsp_DO
-#endif
-#ifdef AS_cpoll_cppsp_DO
-#  include <json/json.h>
-#else
 static UString* pkey;
 static UString* pvalue;
-#endif
 
 static void usp_init_json()
 {
    U_TRACE(5, "::usp_init_json()")
 
-#ifndef AS_cpoll_cppsp_DO
    U_NEW_STRING(pkey,   UString(U_CONSTANT_TO_PARAM("message")));
    U_NEW_STRING(pvalue, UString(U_CONSTANT_TO_PARAM("Hello, World!")));
-#endif
 }
-
-#ifdef DEBUG
-static void usp_end_json()
-{
-   U_TRACE(5, "::usp_end_json()")
-
-#ifndef AS_cpoll_cppsp_DO
-   U_DELETE(pkey)
-   U_DELETE(pvalue)
-#endif
-}
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-#ifndef AS_cpoll_cppsp_DO
-UValue::stringify(*UClientImage_Base::wbuffer, UValue(*pkey, *pvalue));
-#else
-json_object* hello = json_object_new_object();
-json_object_object_add(hello, "message", json_object_new_string("Hello, World!"));
-const char* hello_str = json_object_to_json_string(hello);
-USP_PUTS_STRING(hello_str);
-json_object_put(hello);
-#endif
+char* pwbuffer = UClientImage_Base::wbuffer->data();
+
+u_put_unalignedp64(pwbuffer,    U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
+u_put_unalignedp64(pwbuffer+8,  U_MULTICHAR_CONSTANT64('T','y','p','e',':',' ','a','p'));
+u_put_unalignedp64(pwbuffer+16, U_MULTICHAR_CONSTANT64('p','l','i','c','a','t','i','o'));
+u_put_unalignedp64(pwbuffer+24, U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'));
+u_put_unalignedp16(pwbuffer+32, U_MULTICHAR_CONSTANT16('\r','\n'));
+
+UValue::pstringify = pwbuffer + U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n");
+
+UValue(*pkey, *pvalue).stringify();
+
+UClientImage_Base::wbuffer->size_adjust(UValue::pstringify);
+
+U_http_info.endHeader = (uint32_t)-U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n");
 -->

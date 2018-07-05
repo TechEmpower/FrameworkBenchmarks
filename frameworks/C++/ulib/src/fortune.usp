@@ -5,106 +5,71 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "fortune.h"
 
-static Fortune*           pfortune;
-static Fortune*           pfortune2add;
-static UString*           pencoded;
-static UOrmSession*       psql_fortune;
-static UOrmStatement*     pstmt_fortune;
-static UVector<Fortune*>* pvfortune;
+static vPF handle_query;
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+static UOrmDriverPgSql* pdrv;
+static UPgSqlStatement* pstmt;
+#endif
+
+static void handlerQuery()
+{
+   U_TRACE_NO_PARAM(5, "::handlerQuery()")
+
+   uint32_t i = 0;
+
+   Fortune::pstmt_fortune->execute();
+
+   do {
+      Fortune::replace(i++);
+      }
+   while (Fortune::pstmt_fortune->nextRow());
+}
+
+static void handlerQueryPGSQL()
+{
+   U_TRACE_NO_PARAM(5, "::handlerQueryPGSQL()")
+
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+   int sz;
+   char* id;
+   char* ptr;
+   PGresult* res = pdrv->execPrepared(pstmt);
+
+   U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 2)
+
+   for (uint32_t i = 0, n = U_SYSCALL(PQntuples, "%p", res); i < n; ++i)
+      {
+       id = U_SYSCALL(PQgetvalue,  "%p,%d,%d", res, i, 0);
+      ptr = U_SYSCALL(PQgetvalue,  "%p,%d,%d", res, i, 1);
+      sz  = U_SYSCALL(PQgetlength, "%p,%d,%d", res, i, 1);
+
+      Fortune::replace(i, ntohl(*(uint32_t*)id), ptr, sz);
+      }
+
+   U_SYSCALL_VOID(PQclear, "%p", res);
+#endif
+}
 
 static void usp_fork_fortune()
 {
-   U_TRACE(5, "::usp_fork_fortune()")
+   U_TRACE_NO_PARAM(5, "::usp_fork_fortune()")
 
-   U_NEW(UOrmSession, psql_fortune, UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
+   Fortune::handlerForkSql();
 
-   if (psql_fortune->isReady() == false)
+   if (UOrmDriver::isPGSQL() == false) handle_query = handlerQuery;
+   else
       {
-      U_WARNING("usp_fork_fortune(): we cound't connect to db");
+      handle_query = handlerQueryPGSQL;
 
-      U_DELETE(psql_fortune)
+#  ifdef U_STATIC_ORM_DRIVER_PGSQL
+      pdrv  = (UOrmDriverPgSql*) Fortune::psql_fortune->getDriver();
+      pstmt = (UPgSqlStatement*) Fortune::pstmt_fortune->getStatement();
 
-      psql_fortune = U_NULLPTR;
-
-      return;
-      }
-
-   U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
-
-// if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
-
-   U_NEW(Fortune, pfortune, Fortune);
-
-   pstmt_fortune->into(*pfortune);
-
-   U_NEW_STRING(pencoded, UString(100U));
-   U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
-   U_NEW(Fortune, pfortune2add, Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
-}
-
-#ifdef DEBUG
-static void usp_end_fortune()
-{
-   U_TRACE(5, "::usp_end_fortune()")
-
-   if (pstmt_fortune)
-      {
-      U_DELETE(pstmt_fortune)
-      U_DELETE(pfortune)
-      U_DELETE(pencoded)
-      U_DELETE(pvfortune)
-      U_DELETE(pfortune2add)
-      U_DELETE(psql_fortune)
+      pstmt->prepareStatement(pdrv);
+#  endif
       }
 }
-#endif
 -->
-<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
-uint32_t sz;
-Fortune* item;
-char* ptr = UClientImage_Base::wbuffer->pend();
-
-U_NEW(Fortune, item, Fortune(*pfortune2add));
-
-pvfortune->push_back(item);
-
-pstmt_fortune->execute();
-
-do {
-   U_NEW(Fortune, item, Fortune(*pfortune));
-
-   pvfortune->push_back(item);
-   }
-while (pstmt_fortune->nextRow());
-
-pvfortune->sort(Fortune::cmp_obj);
-
-for (uint32_t i = 0, n = pvfortune->size(); i < n; ++i)
-   {
-   Fortune* elem = (*pvfortune)[i];
-
-   UXMLEscape::encode(elem->message, *pencoded);
-
-   sz = pencoded->size();
-
-   u_put_unalignedp64(ptr, U_MULTICHAR_CONSTANT64('<','t','r','>','<','t','d','>'));
-
-   ptr = u_num2str32(elem->id, ptr+8);
-
-   u_put_unalignedp64(ptr, U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','t','d'));
-                      ptr += 8;
-
-   *ptr++ = '>';
-
-   (void) memcpy(ptr, pencoded->data(), sz);
-                 ptr +=                 sz;
-
-   u_put_unalignedp64(ptr,   U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','/','t'));
-   u_put_unalignedp16(ptr+8, U_MULTICHAR_CONSTANT16('r','>'));
-                      ptr += 10;
-   }
-
-UClientImage_Base::wbuffer->size_adjust(ptr);
-
-pvfortune->clear();
---></table></body></html>
+<!--#code
+Fortune::doQuery(handle_query);
+-->
