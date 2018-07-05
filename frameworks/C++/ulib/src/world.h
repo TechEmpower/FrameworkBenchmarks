@@ -119,6 +119,11 @@ public:
    static UOrmSession*    psql_query;
    static UOrmStatement* pstmt_query;
 
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+   static UOrmDriverPgSql* pdrv;
+   static UPgSqlStatement* pstmt;
+#endif
+
    static void initResult()
       {
       U_TRACE(0, "World::initResult()")
@@ -267,6 +272,16 @@ public:
 
          pstmt_query->use( pworld_query->id);
          pstmt_query->into(pworld_query->randomNumber);
+
+#     ifdef U_STATIC_ORM_DRIVER_PGSQL
+         if (UOrmDriver::isPGSQL())
+            {
+            pdrv  = (UOrmDriverPgSql*) World::psql_query->getDriver();
+            pstmt = (UPgSqlStatement*) World::pstmt_query->getStatement();
+
+            (void) ((UPgSqlStatement*)pstmt)->setBindParam(pdrv);
+            }
+#     endif
 
          handlerFork();
          }

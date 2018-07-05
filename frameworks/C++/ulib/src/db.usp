@@ -5,27 +5,7 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-#ifdef U_STATIC_ORM_DRIVER_PGSQL
-static UOrmDriverPgSql* pdrv;
-static UPgSqlStatement* pstmt;
-#endif
-
-static void usp_fork_db()
-{
-   U_TRACE_NO_PARAM(5, "::usp_fork_db()")
-
-   World::handlerForkSql();
-
-#ifdef U_STATIC_ORM_DRIVER_PGSQL
-   if (UOrmDriver::isPGSQL())
-      {
-      pdrv  = (UOrmDriverPgSql*) World::psql_query->getDriver();
-      pstmt = (UPgSqlStatement*) World::pstmt_query->getStatement();
-
-      (void) ((UPgSqlStatement*)pstmt)->setBindParam(pdrv);
-      }
-#endif
-}
+static void usp_fork_db() { World::handlerForkSql(); }
 -->
 <!--#header
 -->
@@ -35,11 +15,11 @@ World::initOneResult();
 World::pworld_query->id = World::rnumber[0];
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
-if (pdrv)
+if (World::pdrv)
    {
-   pstmt->setBindParam();
+   World::pstmt->setBindParam();
 
-   PGresult* res = pdrv->execPrepared(pstmt);
+   PGresult* res = World::pdrv->execPrepared(World::pstmt);
 
    U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
    U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)

@@ -23,16 +23,34 @@ if (num_queries >= 20 &&
 <!--#code
 World::initResult();
 
-(void) World::pstmt_query->asyncPipelineMode(World::handlerResultSql);
-
 for (uint32_t i = 0; i < num_queries; ++i)
    {
    World::pworld_query->id = World::rnumber[i];
 
-   (void) World::pstmt_query->asyncPipelineSendQueryPrepared(i);
-   }
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+   if (World::pdrv)
+      {
+      World::pstmt->setBindParam();
 
-(void) World::pstmt_query->asyncPipelineProcessQueue(num_queries);
+      PGresult* res = World::pdrv->execPrepared(World::pstmt);
+
+      U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
+      U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)
+
+      char* randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", res, 0, 0);
+
+      World::handlerResult(World::pworld_query->id, ntohl(*(uint32_t*)randomNumber));
+
+      U_SYSCALL_VOID(PQclear, "%p", res);
+      }
+   else
+#endif
+   {
+   World::pstmt_query->execute();
+
+   World::handlerResultSql(i);
+   }
+   }
 
 World::endResult();
 -->
