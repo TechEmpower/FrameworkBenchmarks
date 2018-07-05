@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.t-io</groupId>
 		<artifactId>tio-http-parent</artifactId>
-		<version>3.0.8.v20180630-RELEASE</version>
+		<version>3.1.0.v20180705-RELEASE</version>
 	</parent>
 
 	<properties>
