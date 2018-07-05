@@ -30,7 +30,7 @@ static h2o_cache_t *get_cache(cache_t *cache, h2o_cache_hashcode_t keyhash)
 	return cache->cache[keyhash & (cache->cache_num - 1)];
 }
 
-int cache_create(size_t thread_num,
+int cache_create(size_t concurrency,
                  size_t capacity,
                  uint64_t duration,
                  void (*destroy_cb)(h2o_iovec_t value),
@@ -41,7 +41,7 @@ int cache_create(size_t thread_num,
 	memset(cache, 0, sizeof(*cache));
 	// Rounding up to a power of 2 simplifies the calculations a little bit, and, as any increase in
 	// the number of caches, potentially reduces thread contention.
-	cache->cache_num = round_up_to_power_of_2(thread_num);
+	cache->cache_num = round_up_to_power_of_2(concurrency);
 	cache->cache_num = MAX(cache->cache_num, 1);
 	capacity = (capacity + cache->cache_num - 1) / cache->cache_num;
 	cache->cache = malloc(cache->cache_num * sizeof(*cache->cache));

@@ -28,7 +28,7 @@ typedef struct {
 	size_t cache_num;
 } cache_t;
 
-int cache_create(size_t thread_num,
+int cache_create(size_t concurrency,
                  size_t capacity,
                  uint64_t duration,
                  void (*destroy_cb)(h2o_iovec_t value),

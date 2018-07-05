@@ -66,14 +66,14 @@ typedef struct {
 typedef struct {
 	h2o_logger_t *file_logger;
 	mustache_template_t *fortunes_template;
+	global_thread_data_t *global_thread_data;
 	h2o_socket_t *signals;
 	SSL_CTX *ssl_ctx;
-	global_thread_data_t *global_thread_data;
 	size_t memory_alignment;
 	int signal_fd;
 	bool shutdown;
-	cache_t world_cache;
 	h2o_globalconf_t h2o_config;
+	cache_t world_cache;
 } global_data_t;
 
 typedef struct {
