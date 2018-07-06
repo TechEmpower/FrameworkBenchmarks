@@ -111,7 +111,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware, Utf8Json",
+      "display_name": "ASP.NET Core, Middleware, SpanJson",
       "notes": "",
       "versus": "aspcore"
     },
