@@ -118,7 +118,7 @@ class MultipleDatabaseQueries:
         connection = await pool.acquire()
         try:
             worlds = []
-            for i in range(queries):
+            for i in range(self.queries):
                 sql = 'SELECT id, "randomnumber" FROM "world" WHERE id = ' + str(random_int())
                 row = await connection.fetchrow(sql)
                 worlds.append({'id': row[0], 'randomNumber': row[1]})
