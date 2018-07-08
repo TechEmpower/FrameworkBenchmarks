@@ -24,4 +24,4 @@ RUN aah -y migrate code
 RUN mkdir -p views/common
 RUN aah build -s
 
-CMD build/bin/benchmark -profile bm_default
+CMD build/bin/benchmark -profile bm_postgresql
