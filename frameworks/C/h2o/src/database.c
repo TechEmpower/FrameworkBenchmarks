@@ -314,7 +314,9 @@ static void poll_database_connection(h2o_socket_t *db_sock, const char *err)
 
 		switch (status) {
 			case PGRES_POLLING_WRITING:
-				h2o_socket_notify_write(db_conn->sock, on_database_write_ready);
+				if (!h2o_socket_is_writing(db_conn->sock))
+					h2o_socket_notify_write(db_conn->sock, on_database_write_ready);
+
 				return;
 			case PGRES_POLLING_OK:
 				if (PQsetnonblocking(db_conn->conn, 1)) {
