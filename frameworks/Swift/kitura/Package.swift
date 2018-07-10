@@ -21,25 +21,25 @@ let package = Package(
             name: "TechEmpowerCommon",
             dependencies: []),
         .target(
-            name: "TechEmpower",
-            dependencies: ["Kitura"]),
-        .target(
             name: "KueryPostgres",
             dependencies: [.target(name: "TechEmpowerCommon"), "Configuration", "SwiftKueryPostgreSQL"]),
         .target(
             name: "KueryPostgresRaw",
             dependencies: [.target(name: "KueryPostgres"), "LoggerAPI"]),
-//        .target(
-//            name: "KueryPostgresORM",
-//            dependencies: [.target(name: "KueryPostgres"), "LoggerAPI", "SwiftKueryORM"]),
         .target(
-            name: "TechEmpowerKuery",
+            name: "KueryPostgresORM",
+            dependencies: [.target(name: "KueryPostgres"), "LoggerAPI", "SwiftKueryORM"]),
+        .target(
+            name: "TechEmpower",
+            dependencies: ["Kitura"]),
+        .target(
+            name: "TechEmpowerPostgres",
             dependencies: [.target(name: "KueryPostgresRaw"), "Kitura", "HeliumLogger", "KituraStencil"]),
-//        .target(
-//            name: "TechEmpowerKueryORM",
-//            dependencies: [.target(name: "KueryPostgresORM"), "Kitura", "HeliumLogger", "KituraStencil"]),
         .target(
-            name: "TechEmpowerKueryMustache",
+            name: "TechEmpowerPostgresORM",
+            dependencies: [.target(name: "KueryPostgresORM"), "Kitura", "HeliumLogger", "KituraStencil"]),
+        .target(
+            name: "TechEmpowerPostgresMustache",
             dependencies: [.target(name: "KueryPostgresRaw"), "Kitura", "HeliumLogger", "KituraMustache"]),
         .target(
             name: "TechEmpowerMongoKitten",

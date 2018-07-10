@@ -20,8 +20,8 @@ import LoggerAPI
 import HeliumLogger
 import KituraStencil
 import Stencil
-import TechEmpower
-import KueryPostgres
+import TechEmpowerCommon
+import KueryPostgresORM
 
 Log.logger = HeliumLogger(.info)
 
@@ -46,28 +46,10 @@ ext.registerFilter("htmlencode") { (value: Any?) in
 let router = Router()
 router.add(templateEngine: StencilTemplateEngine(extension: ext))
 
-//
-// TechEmpower test 6: plaintext
-//
-router.get("/plaintext") {
-    request, response, next in
-    response.headers["Server"] = "Kitura"
-    response.headers["Content-Type"] = "text/plain"
-    try response.status(.OK).send("Hello, world!").end()
-}
+setupORM()
 
 //
-// TechEmpower test 1: JSON serialization
-//
-router.get("/json") {
-    request, response, next in
-    response.headers["Server"] = "Kitura"
-    let result = ["message":"Hello, World!"]
-    try response.status(.OK).send(json: result).end()
-}
-
-//
-// TechEmpower test 2: Single database query (raw, no ORM)
+// TechEmpower test 2: Single database query (full ORM)
 //
 router.get("/db") {
     request, response, next in
@@ -88,7 +70,7 @@ router.get("/db") {
 }
 
 //
-// TechEmpower test 3: Multiple database queries (raw, no ORM)
+// TechEmpower test 3: Multiple database queries (full ORM)
 // Get param provides number of queries: /queries?queries=N
 //
 router.get("/queries") {
@@ -131,7 +113,7 @@ router.get("/queries") {
 }
 
 //
-// TechEmpower test 4: fortunes (raw, no ORM)
+// TechEmpower test 4: fortunes (full ORM)
 //
 router.get("/fortunes") {
     request, response, next in
@@ -158,7 +140,7 @@ router.get("/fortunes") {
 }
 
 //
-// TechEmpower test 5: updates (raw, no ORM)
+// TechEmpower test 5: updates (full ORM)
 //
 router.get("/updates") {
     request, response, next in

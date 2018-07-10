@@ -23,6 +23,7 @@ import TechEmpowerCommon
 let dbRows = 10000
 let maxValue = 10000
 
+// Kuery table definition for World
 class World: Table {
     let tableName = "world"
     
@@ -30,6 +31,7 @@ class World: Table {
     let randomNumber = Column("randomnumber")
 }
 
+// Kuery table definition for Fortune
 class Fortunes: Table {
     let tableName = "fortune"
 
@@ -40,13 +42,16 @@ class Fortunes: Table {
 let world = World()
 let fortunes = Fortunes()
 
-var update = Update(world, set: [(world.randomNumber, randomNumberGenerator(maxValue))])
-    .where(world.id == randomNumberGenerator(dbRows))
+// Kuery update statement for Updates
+var update = Update(world, set: [(world.randomNumber, RandomRow.randomValue)])
+    .where(world.id == RandomRow.randomId)
 
 /// Get a list of Fortunes from the database.
 ///
 /// - Parameter callback: The callback that will be invoked once the DB query
-///                       has completed and results are available.
+///                       has completed and results are available, passing an
+///                       optional [Fortune] (on success) or AppError on
+///                       failure.
 ///
 public func getFortunes(callback: @escaping ([Fortune]?, AppError?) -> Void) -> Void {
     // Get a dedicated connection object for this transaction from the pool
@@ -71,16 +76,20 @@ public func getFortunes(callback: @escaping ([Fortune]?, AppError?) -> Void) -> 
 
 }
 
-// Get a random row (range 1 to 10,000) from DB: id(int),randomNumber(int)
-// Convert to object using object-relational mapping (ORM) tool
-// Serialize object to JSON - example: {"id":3217,"randomNumber":2149}
+/// Get a random row (range 1 to 10,000) from the database.
+///
+/// - Parameter callback: The callback that will be invoked once the DB query
+///                       has completed and results are available, passing an
+///                       optional RandomRow (on success) or AppError on
+///                       failure.
+///
 public func getRandomRow(callback: @escaping (RandomRow?, AppError?) -> Void) -> Void {
     // Get a dedicated connection object for this transaction from the pool
     guard let dbConn = dbConnPool.getConnection() else {
         return callback(nil, AppError.OtherError("Timed out waiting for a DB connection from the pool"))
     }
     // Select random row from database range
-    let rnd = randomNumberGenerator(dbRows)
+    let rnd = RandomRow.randomId
     let query = Select(world.randomNumber, from: world)
         .where(world.id == rnd)
     // Initiate database query
@@ -106,14 +115,19 @@ public func getRandomRow(callback: @escaping (RandomRow?, AppError?) -> Void) ->
     }
 }
 
-// Updates a row of World to a new value.
+/// Updates a row of World to a new value.
+///
+/// - Parameter callback: The callback that will be invoked once the DB update
+///                       has completed, passing an optional AppError if the
+///                       update failed.
+///
 public func updateRow(id: Int, callback: @escaping (AppError?) -> Void) -> Void {
     // Get a dedicated connection object for this transaction from the pool
     guard let dbConn = dbConnPool.getConnection() else {
         return callback(AppError.OtherError("Timed out waiting for a DB connection from the pool"))
     }
     // Generate a random number for this row
-    let rndValue = randomNumberGenerator(maxValue)
+    let rndValue = RandomRow.randomValue
     let query = Update(world, set: [(world.randomNumber, rndValue)])
         .where(world.id == id)
     // Initiate database query

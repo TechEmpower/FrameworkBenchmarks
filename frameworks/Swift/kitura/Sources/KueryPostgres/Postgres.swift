@@ -40,12 +40,3 @@ let dbConnPoolOpts = ConnectionPoolOptions(initialCapacity: 20, maxCapacity: 50,
 
 public let dbConnPool = PostgreSQLConnection.createPool(host: dbHost, port: dbPort, options: [.databaseName(dbName), .userName(dbUser), .password(dbPass)], poolOptions: dbConnPoolOpts)
 
-// Return a random number within the range of rows in the database
-public func randomNumberGenerator(_ maxVal: Int) -> Int {
-    #if os(Linux)
-        return Int(random() % maxVal) + 1
-    #else
-        return Int(arc4random_uniform(UInt32(maxVal))) + 1
-    #endif
-}
-

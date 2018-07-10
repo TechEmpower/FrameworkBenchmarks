@@ -16,9 +16,39 @@
 
 import Foundation
 
-public struct RandomRow {
+// Return a random number within the range of rows in the database
+private func randomNumberGenerator(_ maxVal: Int) -> Int {
+    #if os(Linux)
+    return Int(random() % maxVal) + 1
+    #else
+    return Int(arc4random_uniform(UInt32(maxVal))) + 1
+    #endif
+}
 
+public struct RandomRow: Codable {
+
+    /// The number of rows in the World table
+    public static let dbRows = 10000
+
+    /// The maximum value for randomNumber
+    public static let maxValue = 10000
+
+    /// A generated random row id suitable for retrieving
+    /// or creating a RandomRow instance.
+    public static var randomId: Int {
+        return randomNumberGenerator(dbRows)
+    }
+
+    /// A generated random value suitable for assigning as the
+    /// `randomNumber` for a RandomRow instance.
+    public static var randomValue: Int {
+        return randomNumberGenerator(maxValue)
+    }
+
+    /// The id for this RandomRow, ranging from 1 to dbRows
     public let id: Int
+
+    /// A random number ranging from 1 to maxValue
     public let randomNumber: Int
 
     public init(id: Int, randomNumber: Int) {
@@ -26,6 +56,14 @@ public struct RandomRow {
         self.randomNumber = randomNumber
     }
 
+    /// Map the properties of this type to their corresponding database
+    /// column names (required by the ORM).
+    enum CodingKeys: String, CodingKey {
+        case id
+        case randomNumber = "randomnumber"
+    }
+
+    /// Returns a JSON-convertible dictionary representation of this RandomRow.
     public func asDictionary() -> [String: Int] {
         return ["id": self.id, "randomNumber": self.randomNumber]
     }
