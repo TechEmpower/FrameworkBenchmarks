@@ -1,5 +1,6 @@
 extern crate futures;
 extern crate serde;
+extern crate smallvec;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
