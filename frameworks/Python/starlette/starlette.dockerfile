@@ -6,4 +6,4 @@ WORKDIR /starlette
 
 RUN pip3 install -r /starlette/requirements.txt
 
-CMD gunicorn app:main -k uvicorn.workers.UvicornWorker -c starlette_conf.py
+CMD gunicorn app:app -k uvicorn.workers.UvicornWorker -c starlette_conf.py
