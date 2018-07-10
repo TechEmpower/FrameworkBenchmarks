@@ -7,6 +7,7 @@ extern crate postgres;
 extern crate rand;
 extern crate serde;
 extern crate serde_json;
+extern crate url;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
@@ -22,7 +23,6 @@ use askama::Template;
 use bytes::BytesMut;
 use futures::Future;
 use postgres::{Connection, TlsMode};
-use std::cmp;
 
 mod db_pg;
 mod models;
@@ -31,12 +31,12 @@ use db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateWorld};
 use utils::Writer;
 
 struct State {
-    db: Addr<Syn, PgConnection>,
+    db: Addr<PgConnection>,
 }
 
-fn world_row(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
-    req.clone()
-        .state()
+fn world_row(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
+    let mut resp = HttpResponse::build_from(req);
+    req.state()
         .db
         .send(RandomWorld)
         .from_err()
@@ -44,7 +44,7 @@ fn world_row(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
             Ok(row) => {
                 let mut body = BytesMut::with_capacity(31);
                 serde_json::to_writer(Writer(&mut body), &row).unwrap();
-                Ok(HttpResponse::build_from(&req)
+                Ok(resp
                     .header(http::header::SERVER, "Actix")
                     .content_type("application/json")
                     .body(body))
@@ -54,15 +54,12 @@ fn world_row(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
         .responder()
 }
 
-fn queries(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
+fn queries(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
     // get queries parameter
-    let q = req
-        .query()
-        .get("q")
-        .map(|q| cmp::min(500, cmp::max(1, q.parse::<u16>().ok().unwrap_or(1))))
-        .unwrap_or(1);
+    let q = utils::get_query_param(req.uri());
 
     // run sql queries
+    let mut resp = HttpResponse::build_from(req);
     req.clone()
         .state()
         .db
@@ -72,7 +69,7 @@ fn queries(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
             if let Ok(worlds) = res {
                 let mut body = BytesMut::with_capacity(35 * worlds.len());
                 serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
-                Ok(HttpResponse::build_from(&req)
+                Ok(resp
                     .header(http::header::SERVER, "Actix")
                     .content_type("application/json")
                     .body(body))
@@ -83,17 +80,13 @@ fn queries(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
         .responder()
 }
 
-fn updates(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
+fn updates(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
     // get queries parameter
-    let q = req
-        .query()
-        .get("q")
-        .map(|q| cmp::min(500, cmp::max(1, q.parse::<u16>().ok().unwrap_or(1))))
-        .unwrap_or(1);
+    let q = utils::get_query_param(req.uri());
 
     // update db
-    req.clone()
-        .state()
+    let mut resp = HttpResponse::build_from(req);
+    req.state()
         .db
         .send(UpdateWorld(q))
         .from_err()
@@ -101,7 +94,7 @@ fn updates(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
             if let Ok(worlds) = res {
                 let mut body = BytesMut::with_capacity(35 * worlds.len());
                 serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
-                Ok(HttpResponse::build_from(&req)
+                Ok(resp
                     .header(http::header::SERVER, "Actix")
                     .content_type("application/json")
                     .body(body))
@@ -118,17 +111,18 @@ struct FortuneTemplate<'a> {
     items: &'a Vec<models::Fortune>,
 }
 
-fn fortune(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
+fn fortune(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
+    let mut resp = HttpResponse::build_from(req);
     req.state()
         .db
         .send(TellFortune)
         .from_err()
-        .and_then(|res| match res {
+        .and_then(move |res| match res {
             Ok(rows) => {
                 let tmpl = FortuneTemplate { items: &rows };
                 let res = tmpl.render().unwrap();
 
-                Ok(HttpResponse::Ok()
+                Ok(resp
                     .header(http::header::SERVER, "Actix")
                     .content_type("text/html; charset=utf-8")
                     .body(res))

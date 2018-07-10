@@ -11,14 +11,17 @@ extern crate askama;
 extern crate num_cpus;
 extern crate postgres;
 extern crate rand;
+extern crate url;
 #[macro_use]
 extern crate diesel;
 
-use std::{cmp, mem};
+use std::mem;
 
 use actix::prelude::*;
-use actix_web::server::{self, HttpHandler, HttpHandlerTask, HttpServer, Writer};
-use actix_web::{Error, HttpRequest};
+use actix_web::server::{
+    self, HttpHandler, HttpHandlerTask, HttpServer, Request, Writer,
+};
+use actix_web::Error;
 use askama::Template;
 use futures::{Async, Future, Poll};
 use postgres::{Connection, TlsMode};
@@ -38,11 +41,13 @@ const HDR_CTHTML: &[u8] = b"Content-Type: text/html; charset=utf-8";
 const BODY: &[u8] = b"Hello, World!";
 
 struct App {
-    db: Addr<Syn, PgConnection>,
+    db: Addr<PgConnection>,
 }
 
 impl HttpHandler for App {
-    fn handle(&mut self, req: HttpRequest) -> Result<Box<HttpHandlerTask>, HttpRequest> {
+    type Task = Box<HttpHandlerTask>;
+
+    fn handle(&self, req: Request) -> Result<Box<HttpHandlerTask>, Request> {
         {
             let path = req.path();
             match path.len() {
@@ -59,31 +64,13 @@ impl HttpHandler for App {
                     }));
                 }
                 8 if path == "/queries" => {
-                    let q = req
-                        .query()
-                        .get("q")
-                        .map(|q| {
-                            cmp::min(
-                                500,
-                                cmp::max(1, q.parse::<u16>().ok().unwrap_or(1)),
-                            )
-                        })
-                        .unwrap_or(1);
+                    let q = utils::get_query_param(req.uri());
                     return Ok(Box::new(Queries {
                         fut: self.db.send(RandomWorlds(q)),
                     }));
                 }
                 8 if path == "/updates" => {
-                    let q = req
-                        .query()
-                        .get("q")
-                        .map(|q| {
-                            cmp::min(
-                                500,
-                                cmp::max(1, q.parse::<u16>().ok().unwrap_or(1)),
-                            )
-                        })
-                        .unwrap_or(1);
+                    let q = utils::get_query_param(req.uri());
                     return Ok(Box::new(Updates {
                         fut: self.db.send(UpdateWorld(q)),
                     }));
@@ -99,14 +86,16 @@ struct Plaintext;
 
 impl HttpHandlerTask for Plaintext {
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
-        let mut bytes = io.buffer();
-        bytes.reserve(196);
-        bytes.extend_from_slice(HTTPOK);
-        bytes.extend_from_slice(HDR_SERVER);
-        bytes.extend_from_slice(HDR_CTPLAIN);
-        server::write_content_length(13, &mut bytes);
-        io.set_date(bytes);
-        bytes.extend_from_slice(BODY);
+        {
+            let mut bytes = io.buffer();
+            bytes.reserve(196);
+            bytes.extend_from_slice(HTTPOK);
+            bytes.extend_from_slice(HDR_SERVER);
+            bytes.extend_from_slice(HDR_CTPLAIN);
+            server::write_content_length(13, &mut bytes);
+        }
+        io.set_date();
+        io.buffer().extend_from_slice(BODY);
         Ok(Async::Ready(true))
     }
 }
@@ -119,20 +108,22 @@ impl HttpHandlerTask for Json {
             message: "Hello, World!",
         };
 
-        let mut bytes = io.buffer();
-        bytes.reserve(196);
-        bytes.extend_from_slice(HTTPOK);
-        bytes.extend_from_slice(HDR_SERVER);
-        bytes.extend_from_slice(HDR_CTJSON);
-        server::write_content_length(27, &mut bytes);
-        io.set_date(bytes);
-        serde_json::to_writer(JsonWriter(bytes), &message).unwrap();
+        {
+            let mut bytes = io.buffer();
+            bytes.reserve(196);
+            bytes.extend_from_slice(HTTPOK);
+            bytes.extend_from_slice(HDR_SERVER);
+            bytes.extend_from_slice(HDR_CTJSON);
+            server::write_content_length(27, &mut bytes);
+        }
+        io.set_date();
+        serde_json::to_writer(JsonWriter(io.buffer()), &message).unwrap();
         Ok(Async::Ready(true))
     }
 }
 
 struct Fortune {
-    fut: actix::dev::Request<Syn, PgConnection, TellFortune>,
+    fut: actix::dev::Request<PgConnection, TellFortune>,
 }
 
 #[derive(Template)]
@@ -153,14 +144,16 @@ impl HttpHandlerTask for Fortune {
                     writer.1
                 };
 
-                let mut bytes = io.buffer();
-                bytes.reserve(196 + len);
-                bytes.extend_from_slice(HTTPOK);
-                bytes.extend_from_slice(HDR_SERVER);
-                bytes.extend_from_slice(HDR_CTHTML);
-                server::write_content_length(len, &mut bytes);
-                io.set_date(bytes);
-                bytes.extend_from_slice(&body[..len]);
+                {
+                    let mut bytes = io.buffer();
+                    bytes.reserve(196 + len);
+                    bytes.extend_from_slice(HTTPOK);
+                    bytes.extend_from_slice(HDR_SERVER);
+                    bytes.extend_from_slice(HDR_CTHTML);
+                    server::write_content_length(len, &mut bytes);
+                }
+                io.set_date();
+                io.buffer().extend_from_slice(&body[..len]);
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
@@ -171,7 +164,7 @@ impl HttpHandlerTask for Fortune {
 }
 
 struct World {
-    fut: actix::dev::Request<Syn, PgConnection, RandomWorld>,
+    fut: actix::dev::Request<PgConnection, RandomWorld>,
 }
 
 impl HttpHandlerTask for World {
@@ -185,14 +178,16 @@ impl HttpHandlerTask for World {
                     writer.1
                 };
 
-                let mut bytes = io.buffer();
-                bytes.reserve(196);
-                bytes.extend_from_slice(HTTPOK);
-                bytes.extend_from_slice(HDR_SERVER);
-                bytes.extend_from_slice(HDR_CTJSON);
-                server::write_content_length(len, &mut bytes);
-                io.set_date(bytes);
-                bytes.extend_from_slice(&body[..len]);
+                {
+                    let mut bytes = io.buffer();
+                    bytes.reserve(196);
+                    bytes.extend_from_slice(HTTPOK);
+                    bytes.extend_from_slice(HDR_SERVER);
+                    bytes.extend_from_slice(HDR_CTJSON);
+                    server::write_content_length(len, &mut bytes);
+                }
+                io.set_date();
+                io.buffer().extend_from_slice(&body[..len]);
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
@@ -203,7 +198,7 @@ impl HttpHandlerTask for World {
 }
 
 struct Queries {
-    fut: actix::dev::Request<Syn, PgConnection, RandomWorlds>,
+    fut: actix::dev::Request<PgConnection, RandomWorlds>,
 }
 
 impl HttpHandlerTask for Queries {
@@ -217,14 +212,16 @@ impl HttpHandlerTask for Queries {
                     writer.1
                 };
 
-                let mut bytes = io.buffer();
-                bytes.reserve(196 + len);
-                bytes.extend_from_slice(HTTPOK);
-                bytes.extend_from_slice(HDR_SERVER);
-                bytes.extend_from_slice(HDR_CTJSON);
-                server::write_content_length(len, &mut bytes);
-                io.set_date(bytes);
-                bytes.extend_from_slice(&body[..len]);
+                {
+                    let mut bytes = io.buffer();
+                    bytes.reserve(196 + len);
+                    bytes.extend_from_slice(HTTPOK);
+                    bytes.extend_from_slice(HDR_SERVER);
+                    bytes.extend_from_slice(HDR_CTJSON);
+                    server::write_content_length(len, &mut bytes);
+                }
+                io.set_date();
+                io.buffer().extend_from_slice(&body[..len]);
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
@@ -235,7 +232,7 @@ impl HttpHandlerTask for Queries {
 }
 
 struct Updates {
-    fut: actix::dev::Request<Syn, PgConnection, UpdateWorld>,
+    fut: actix::dev::Request<PgConnection, UpdateWorld>,
 }
 
 impl HttpHandlerTask for Updates {
@@ -249,14 +246,16 @@ impl HttpHandlerTask for Updates {
                     writer.1
                 };
 
-                let mut bytes = io.buffer();
-                bytes.reserve(196 + len);
-                bytes.extend_from_slice(HTTPOK);
-                bytes.extend_from_slice(HDR_SERVER);
-                bytes.extend_from_slice(HDR_CTJSON);
-                server::write_content_length(len, &mut bytes);
-                io.set_date(bytes);
-                bytes.extend_from_slice(&body[..len]);
+                {
+                    let mut bytes = io.buffer();
+                    bytes.reserve(196 + len);
+                    bytes.extend_from_slice(HTTPOK);
+                    bytes.extend_from_slice(HDR_SERVER);
+                    bytes.extend_from_slice(HDR_CTJSON);
+                    server::write_content_length(len, &mut bytes);
+                }
+                io.set_date();
+                io.buffer().extend_from_slice(&body[..len]);
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),

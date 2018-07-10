@@ -1,6 +1,9 @@
 #![allow(dead_code)]
 use bytes::BytesMut;
-use std::{fmt, io};
+use std::{cmp, fmt, io};
+
+use actix_web::http::Uri;
+use url::form_urlencoded;
 
 pub const SIZE: usize = 31;
 
@@ -50,4 +53,18 @@ impl<'a> fmt::Write for StackWriter<'a> {
         }
         Ok(())
     }
+}
+
+pub fn get_query_param(uri: &Uri) -> u16 {
+    let mut q = None;
+    let q_str = if let Some(s) = uri.query() { s } else { "" };
+    for (key, val) in form_urlencoded::parse(q_str.as_ref()) {
+        if key == "q" {
+            q = Some(val);
+            break;
+        }
+    }
+
+    q.map(|q| cmp::min(500, cmp::max(1, q.parse::<u16>().ok().unwrap_or(1))))
+        .unwrap_or(1)
 }
