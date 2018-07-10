@@ -14,19 +14,6 @@ pub struct Ctx {
 }
 
 impl Ctx {
-    pub fn new(context: Ctx) -> Ctx {
-        Ctx {
-            body: context.body,
-            method: context.method,
-            path: context.path,
-            params: context.params,
-            query_params: context.query_params,
-            request_body: context.request_body,
-            headers: SmallVec::new(),
-            status_code: 200,
-        }
-    }
-
     pub fn set_header(&mut self, key: String, val: String) {
         self.headers.push((key, val));
     }
