@@ -19,7 +19,7 @@ static void usp_fork_update()
    if (World::psql_query)
       {
 #  ifdef U_STATIC_ORM_DRIVER_PGSQL
-      if (World::pdrv) (void) memcpy(query, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES"));
+      if (World::initPipeline()) (void) memcpy(query, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES"));
       else
 #  endif
       {
@@ -33,17 +33,11 @@ static void usp_fork_update()
 <!--#header
 -->
 <!--#vcode
-uint32_t num_queries = UHTTP::getFormFirstNumericValue(1, 500);
-
-/*
-if (num_queries >= 20 &&
-    UServer_Base::startParallelization())
-   {
-   return;
-   }
-*/
+if (UServer_Base::startParallelization()) return;
 -->
 <!--#code
+uint32_t i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+
 World::initResult();
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
@@ -52,31 +46,24 @@ if (World::pdrv)
    PGresult* res;
    char* pquery = query + U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES");
 
-   for (uint32_t i = 0; i < num_queries; ++i)
+   for (; i < num_queries; ++i)
       {
-      *pquery++ = '(';
+      *pquery = '(';
 
-      pquery = u_num2str32(World::pworld_query->id = World::rnumber[i], pquery);
+      pquery = u_num2str32(World::rnumber[i], pquery+1);
 
-      World::pstmt->setBindParam();
+      *pquery = ',';
 
-      res = World::pdrv->execPrepared(World::pstmt);
-
-      U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
-      U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)
-
-      (void) U_SYSCALL(PQgetvalue, "%p,%d,%d", res, 0, 0);
-
-      *pquery++ = ',';
-
-      pquery = u_num2str32(World::pworld_query->randomNumber = u_get_num_random_range1(10000), pquery);
+      pquery = u_num2str32(World::rnum = u_get_num_random_range1(10000), pquery+1);
 
       u_put_unalignedp16(pquery, U_MULTICHAR_CONSTANT16(')',','));
                          pquery += 2;
 
-      World::handlerResultSql(i);
+      World::handlerResult(World::rnumber[i], World::rnum);
 
-      U_SYSCALL_VOID(PQclear, "%p", res);
+      World::sendQueryPrepared(i);
+
+      (void) U_SYSCALL(PQbatchPutSyncOnQueue, "%p", World::conn); // NB: make the difference between pipeline vs batch...
       }
 
    World::endResult();
@@ -84,16 +71,19 @@ if (World::pdrv)
    (void) memcpy(pquery-1, ") AS v (id,randomNumber) WHERE World.id = v.id;",
            U_CONSTANT_SIZE(") AS v (id,randomNumber) WHERE World.id = v.id;")+1);
 
-   res = (PGresult*) U_SYSCALL(PQexec, "%p,%S", (PGconn*)World::pdrv->UOrmDriver::connection, query);
+   (void) U_SYSCALL(PQsendQueryParams, "%p,%S,%d,%p,%p,%p,%d", World::conn, query, 0, U_NULLPTR, U_NULLPTR, U_NULLPTR, U_NULLPTR, 0);
 
-   U_INTERNAL_ASSERT_EQUALS(PQresultStatus(res), PGRES_COMMAND_OK)
+   (void) U_SYSCALL(PQbatchSendQueue, "%p", World::conn);
 
-   U_SYSCALL_VOID(PQclear, "%p", res);
+   while (U_SYSCALL(PQbatchProcessQueue, "%p", World::conn) == 1)
+      {
+      while ((res = (PGresult*) U_SYSCALL(PQgetResult, "%p", World::conn))) U_SYSCALL_VOID(PQclear, "%p", res);
+      }
    }
 else
 #endif
 {
-for (uint32_t i = 0; i < num_queries; ++i)
+for (; i < num_queries; ++i)
    {
    World::pworld_query->id = World::rnumber[i];
 

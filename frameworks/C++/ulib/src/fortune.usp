@@ -70,6 +70,11 @@ static void usp_fork_fortune()
       }
 }
 -->
+<!--#header
+-->
+<!--#vcode
+if (UServer_Base::startParallelization()) return;
+-->
 <!--#code
 Fortune::doQuery(handle_query);
 -->
