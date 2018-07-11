@@ -25,6 +25,8 @@ public class HttpServerInit {
 		httpConfig = new HttpConfig(8080, null, null, null);
 		httpConfig.setUseSession(false);
 		httpConfig.setWelcomeFile(null);
+		httpConfig.setCheckHost(false);
+		httpConfig.setCompatible1_0(false);
 
 		String[] scanPackages = new String[] { TestController.class.getPackage().getName() };
 		Routes routes = new Routes(scanPackages);
@@ -32,7 +34,8 @@ public class HttpServerInit {
 		requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 		httpServerStarter = new HttpServerStarter(httpConfig, requestHandler);
 		serverGroupContext = httpServerStarter.getServerGroupContext();
-		serverGroupContext.setUseQueueDecode(true);
+//		serverGroupContext.setUseQueueDecode(true);
+		serverGroupContext.statOn = false;
 		httpServerStarter.start();
 	}
 }
