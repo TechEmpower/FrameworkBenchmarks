@@ -1,7 +1,5 @@
 package org.tio.http.server.benchmark.init;
 
-import org.tio.core.PacketHandlerMode;
-import org.tio.core.TcpConst;
 import org.tio.http.common.HttpConfig;
 import org.tio.http.common.handler.HttpRequestHandler;
 import org.tio.http.server.HttpServerStarter;
@@ -31,15 +29,10 @@ public class HttpServerInit {
 		String[] scanPackages = new String[] { TestController.class.getPackage().getName() };
 		Routes routes = new Routes(scanPackages);
 
-		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
-
+		requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 		httpServerStarter = new HttpServerStarter(httpConfig, requestHandler);
 		serverGroupContext = httpServerStarter.getServerGroupContext();
-		serverGroupContext.setReadBufferSize(TcpConst.MAX_DATA_LENGTH);
-		String mode = System.getProperty("packet.handler.mode");
-		if ("queue".equalsIgnoreCase(mode)) {
-			serverGroupContext.setPacketHandlerMode(PacketHandlerMode.QUEUE);
-		}
+		serverGroupContext.setUseQueueDecode(true);
 		httpServerStarter.start();
 	}
 }

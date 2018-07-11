@@ -22,7 +22,7 @@
   <groupId>com.techempower</groupId>
   <artifactId>actframework</artifactId>
   <packaging>jar</packaging>
-  <version>1.8.8d</version>
+  <version>1.8.8e</version>
 
   <name>TEB ActFramework Project</name>
   <description>TEB benchmark project with ActFramework</description>
@@ -49,6 +49,12 @@
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>org.actframework</groupId>
+      <artifactId>act</artifactId>
+      <version>1.8.8-RC12-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>org.actframework</groupId>

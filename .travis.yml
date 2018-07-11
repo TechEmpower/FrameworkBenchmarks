@@ -90,6 +90,7 @@ env:
      - "TESTLANG=Swift"
      - "TESTLANG=Ur"
      - "TESTLANG=Vala"
+     - "TESTLANG=VB"
 
 
 before_script:

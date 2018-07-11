@@ -6,6 +6,10 @@ This is a framework implementation using the [H2O](https://h2o.examp1e.net) HTTP
 
 [CMake](https://cmake.org), [H2O](https://h2o.examp1e.net), [libpq](https://www.postgresql.org), [mustache-c](https://github.com/x86-64/mustache-c), [OpenSSL](https://www.openssl.org), [YAJL](https://lloyd.github.io/yajl)
 
+## Performance tuning
+
+If the test environment changes, it will probably be necessary to tune some of the framework settings in order to achieve the best performance possible. The most significant parameter is the maximum number of database connections per thread, which is controlled by the `DB_CONN` variable in the `start-servers.sh` script.
+
 ## Performance issues
 
 ### Database tests
@@ -19,10 +23,6 @@ In the Citrine environment the database connection settings that improve the per
 ### Plaintext
 
 `libh2o` performs at least one system call per pipelined response.
-
-### Cached queries
-
-Most of the operations that the in-memory caching mechanism provided by `libh2o` supports modify the cache (in particular, `h2o_cache_fetch()` updates a list of least recently used entries, and may remove expired ones), so when the application is running multithreaded, cache access must be serialized.
 
 ## Contact
 

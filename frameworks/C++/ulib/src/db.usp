@@ -5,74 +5,38 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static World*         pworld_db;
-static UOrmSession*   psql_db;
-static UOrmStatement* pstmt_db;
-
-static void usp_fork_db()
-{
-   U_TRACE(5, "::usp_fork_db()")
-
-   U_NEW(UOrmSession, psql_db, UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
-
-   if (psql_db->isReady() == false)
-      {
-      U_WARNING("usp_fork_db(): we cound't connect to db");
-
-      U_DELETE(psql_db)
-
-      psql_db = U_NULLPTR;
-
-      return;
-      }
-
-   U_NEW(UOrmStatement, pstmt_db, UOrmStatement(*psql_db, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
-
-   U_NEW(World, pworld_db, World);
-
-   pstmt_db->use( pworld_db->id);
-   pstmt_db->into(pworld_db->randomNumber);
-}
-
-#ifdef DEBUG
-static void usp_end_db()
-{
-   U_TRACE(5, "::usp_end_db()")
-
-   if (pstmt_db)
-      {
-      U_DELETE(pstmt_db)
-      U_DELETE(pworld_db)
-      U_DELETE(psql_db)
-      }
-}
-#endif
+static void usp_fork_db() { World::handlerForkSql(); }
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-pworld_db->id = u_get_num_random(10000-1);
+World::initOneResult();
 
-pstmt_db->execute();
+World::pworld_query->id = World::rnumber[0];
 
-#ifdef AS_cpoll_cppsp_DO
-char* ptr = UClientImage_Base::wbuffer->pend();
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+if (World::pdrv)
+   {
+   World::pstmt->setBindParam();
 
-u_put_unalignedp32(ptr,   U_MULTICHAR_CONSTANT32('{','"','i','d'));
-u_put_unalignedp16(ptr+4, U_MULTICHAR_CONSTANT16('"',':'));
+   PGresult* res = World::pdrv->execPrepared(World::pstmt);
 
-ptr = u_num2str32(pworld_db->id, ptr+6);
+   U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
+   U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)
 
-u_put_unalignedp64(ptr,   U_MULTICHAR_CONSTANT64(',','"','r','a','n','d','o','m'));
-u_put_unalignedp64(ptr+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'));
+   char* randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", res, 0, 0);
 
-ptr = u_num2str32(pworld_db->randomNumber, ptr+16);
+   World::handlerOneResult(World::pworld_query->id, ntohl(*(uint32_t*)randomNumber));
 
-*ptr++ = '}';
-
-UClientImage_Base::wbuffer->size_adjust(ptr);
-#else
-USP_OBJ_JSON_stringify(*pworld_db);
+   U_SYSCALL_VOID(PQclear, "%p", res);
+   }
+else
 #endif
+{
+(void) World::pstmt_query->execute();
+
+World::handlerOneResult(World::pworld_query->id, World::pworld_query->randomNumber);
+}
+
+World::endOneResult();
 -->

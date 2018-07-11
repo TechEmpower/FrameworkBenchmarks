@@ -10,7 +10,7 @@ These implementations use the t-io's controller.
 
 
 ## Versions
-3.0.6.v20180626-RELEASE (https://gitee.com/tywo45/t-io)
+3.1.0.v20180705-RELEASE (https://gitee.com/tywo45/t-io)
 
 ## Test URLs
 
