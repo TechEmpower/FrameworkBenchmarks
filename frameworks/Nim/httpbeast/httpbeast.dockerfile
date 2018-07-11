@@ -9,6 +9,6 @@ ENV PATH $PATH:/root/.nimble/bin
 
 ADD ./ /httpbeast
 WORKDIR /httpbeast
-RUN nimble c -d:release --gc:boehm -y techempower.nim
+RUN nimble c -d:release --threads:on --gc:boehm -y techempower.nim
 
 CMD ./techempower
