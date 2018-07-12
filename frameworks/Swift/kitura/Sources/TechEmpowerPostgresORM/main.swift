@@ -119,22 +119,16 @@ router.get("/fortunes") {
     request, response, next in
     response.headers["Server"] = "Kitura"
     response.headers["Content-Type"] = "text/html; charset=UTF-8"
-    getFortunes { (fortunes, err) in
-        guard var fortunes = fortunes else {
-            guard let err = err else {
-                Log.error("Unknown Error")
-                try? response.status(.badRequest).send("Unknown error").end()
-                return
+    Fortune.findAll { (fortunes, err) in
+        if var fortunes = fortunes {
+            fortunes.append(Fortune(id: 0, message: "Additional fortune added at request time."))
+            do {
+                try response.render("fortunes.stencil", context: ["fortunes": fortunes.sorted()]).end()
+            } catch {
+                try? response.status(.internalServerError).send("Error: \(error)").end()
             }
-            Log.error("\(err)")
-            try? response.status(.badRequest).send("Error: \(err)").end()
-            return
-        }
-        fortunes.append(Fortune(id: 0, message: "Additional fortune added at request time."))
-        do {
-          try response.render("fortunes.stencil", context: ["fortunes": fortunes.sorted()]).end()
-        } catch {
-          print("Error: \(error)")
+        } else {
+            try? response.status(.internalServerError).send("Error: \(err ?? .internalServerError)").end()
         }
     }
 }

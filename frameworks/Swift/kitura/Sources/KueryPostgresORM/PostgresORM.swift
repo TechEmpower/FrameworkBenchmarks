@@ -31,10 +31,6 @@ extension Fortune: Model {
     public static var tableName: String { return "fortune" }
 }
 
-public enum ORMAppError: Error {
-    case ORMError(SwiftKueryORM.RequestError)
-}
-
 // Configure our ORM Database connection pool as dbConnPool created by KueryPostgres
 public func setupORM() {
     Database.default = Database(dbConnPool)
@@ -44,56 +40,113 @@ public func setupORM() {
 ///
 /// - Parameter callback: The callback that will be invoked once the DB query
 ///                       has completed and results are available, passing an
-///                       optional [Fortune] (on success) or ORMAppError on
+///                       optional [Fortune] (on success) or RequestError on
 ///                       failure.
 ///
-public func getFortunes(callback: @escaping ([Fortune]?, ORMAppError?) -> Void) -> Void {
+public func getFortunes(callback: @escaping ([Fortune]?, RequestError?) -> Void) -> Void {
     Fortune.findAll { (fortunes, err) in
         if let err = err {
-            return callback(nil, .ORMError(err))
+            return callback(nil, err)
         } else {
             callback(fortunes, nil)
         }
     }
-
 }
 
 /// Get a random row (range 1 to 10,000) from the database.
 ///
 /// - Parameter callback: The callback that will be invoked once the DB query
 ///                       has completed and results are available, passing an
-///                       optional RandomRow (on success) or ORMAppError on
+///                       optional RandomRow (on success) or RequestError on
 ///                       failure.
 ///
-public func getRandomRow(callback: @escaping (RandomRow?, ORMAppError?) -> Void) -> Void {
+public func getRandomRow(callback: @escaping (RandomRow?, RequestError?) -> Void) -> Void {
     // Select random row from database range
     let rnd = RandomRow.randomId
-    RandomRow.find(id: rnd) { (resultRow, err) in
-        if let err = err {
-            return callback(nil, .ORMError(err))
-        } else {
-            callback(resultRow, nil)
-        }
-    }
+    RandomRow.find(id: rnd, callback)
 }
 
 /// Updates a row of World to a new value.
 ///
 /// - Parameter callback: The callback that will be invoked once the DB update
-///                       has completed, passing an optional ORMAppError if the
+///                       has completed, passing an optional RequestError if the
 ///                       update failed.
 ///
-public func updateRow(id: Int, callback: @escaping (ORMAppError?) -> Void) -> Void {
+public func updateRow(id: Int, callback: @escaping (RequestError?) -> Void) -> Void {
     // Generate a random number for this row
     let row = RandomRow(id: id, randomNumber: RandomRow.randomValue)
     row.update(id: id) { (resultRow, err) in
         if let err = err {
-            return callback(.ORMError(err))
+            return callback(err)
         } else {
             callback(nil)
         }
     }
 }
 
+/// Get `count` random rows from the database, and pass the resulting array
+/// to a completion handler (or a RequestError, in the event that a row could
+/// not be retrieved).
+///
+/// - Parameter count: The number of rows to retrieve
+/// - Parameter result: The intermediate result array being built
+/// - Parameter completion: The closure to invoke with the result array, or error
+///
+public func getRandomRows(count: Int, result: [RandomRow] = [], completion: @escaping ([RandomRow]?, RequestError?) -> Void) {
+    if count > 0 {
+        // Select random row from database range
+        RandomRow.find(id: RandomRow.randomId) { (resultRow, err) in
+            if let resultRow = resultRow {
+                var result = result
+                result.append(resultRow)
+                getRandomRows(count: count-1, result: result, completion: completion)
+            } else {
+                if let err = err {
+                    completion(nil, err)
+                } else {
+                    fatalError("Unexpected: result and error both nil")
+                }
+            }
+        }
+    } else {
+        completion(result, nil)
+    }
+}
+
+/// Update and retrieve `count` random rows from the database, and pass the
+/// resulting array to a completion handler (or a RequestError, in the event
+/// that a row could not be retrieved or updated).
+///
+/// - Parameter count: The number of rows to retrieve
+/// - Parameter result: The intermediate result array being built
+/// - Parameter completion: The closure to invoke with the result array, or error
+///
+public func updateRandomRows(count: Int, result: [RandomRow] = [], completion: @escaping ([RandomRow]?, RequestError?) -> Void) {
+    if count > 0 {
+        // Select random row from database range
+        RandomRow.find(id: RandomRow.randomId) { (resultRow, err) in
+            if let resultRow = resultRow {
+                var result = result
+                let row = RandomRow(id: resultRow.id, randomNumber: RandomRow.randomValue)
+                row.update(id: row.id) { (resultRow, err) in
+                    if let resultRow = resultRow {
+                        result.append(resultRow)
+                        updateRandomRows(count: count-1, result: result, completion: completion)
+                    } else {
+                        completion(nil, err)
+                    }
+                }
+            } else {
+                if let err = err {
+                    completion(nil, err)
+                } else {
+                    fatalError("Unexpected: result and error both nil")
+                }
+            }
+        }
+    } else {
+        completion(result, nil)
+    }
+}
 
 

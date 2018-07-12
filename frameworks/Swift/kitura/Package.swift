@@ -39,6 +39,9 @@ let package = Package(
             name: "TechEmpowerPostgresORM",
             dependencies: [.target(name: "KueryPostgresORM"), "Kitura", "HeliumLogger", "KituraStencil"]),
         .target(
+            name: "TechEmpowerPostgresORMCodable",
+            dependencies: [.target(name: "KueryPostgresORM"), "Kitura", "HeliumLogger", "KituraStencil"]),
+        .target(
             name: "TechEmpowerPostgresMustache",
             dependencies: [.target(name: "KueryPostgresRaw"), "Kitura", "HeliumLogger", "KituraMustache"]),
         .target(
