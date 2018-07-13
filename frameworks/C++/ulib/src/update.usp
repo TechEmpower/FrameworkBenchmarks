@@ -52,7 +52,7 @@ if (World::pdrv)
 
       pquery = u_num2str32(World::rnumber[i], pquery+1);
 
-      res = World::pdrv->execPrepared(World::pstmt);
+      res = World::execPrepared(i);
 
       U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
       U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)
