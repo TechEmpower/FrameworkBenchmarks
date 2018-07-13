@@ -9,6 +9,9 @@ static void usp_fork_edb() { WorldNoSql::handlerForkElasticSearch(); }
 -->
 <!--#header
 -->
+<!--#vcode
+if (UServer_Base::startParallelization()) return;
+-->
 <!--#code
 WorldNoSql::doOneQuery(WorldNoSql::handlerQueryElasticSearch);
 -->
