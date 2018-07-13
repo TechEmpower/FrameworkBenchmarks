@@ -146,6 +146,19 @@ public:
       U_RETURN_POINTER(res, PGresult);
       }
 
+   static PGresult* execPrepared(uint32_t i)
+      {
+      U_TRACE(5, "World::execPrepared(%u)", i)
+
+      U_INTERNAL_ASSERT_MAJOR(rnumber[i], 0)
+
+      *(unsigned int*)num2str = htonl(rnumber[i]);
+
+      PGresult* res = (PGresult*) U_SYSCALL(PQexecPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 1, pstmt->paramValues, pstmt->paramLengths, pstmt->paramFormats, 1);
+
+      U_RETURN_POINTER(res, PGresult);
+      }
+
    static void sendQueryPrepared(uint32_t i)
       {
       U_TRACE(5, "World::sendQueryPrepared(%u)", i)
@@ -337,6 +350,9 @@ public:
          handlerFork();
          }
       }
+
+   const char* dump(bool breset) const;
+#endif
 
 private:
    U_DISALLOW_ASSIGN(World)
