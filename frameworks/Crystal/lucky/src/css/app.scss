@@ -1,0 +1,15 @@
+// Lucky generates 3 folders to help you organize your CSS:
+//
+//    - static/css/variables # Files for colors, spacing, etc.
+//    - static/css/mixins # Put your mixin functions in files here
+//    - static/css/components # CSS for your components
+//
+// Remember to import your new CSS files or they won't be loaded:
+//
+//    @import "./variables/colors" # Imports the file in static/css/variables/_colors.scss
+//
+// Note: importing with `~` tells webpack to look in the installed npm packages
+// https://stackoverflow.com/questions/39535760/what-does-a-tilde-in-a-css-url-do
+
+@import "~normalize-scss/sass/normalize/import-now";
+// @import "components/my_new_component";

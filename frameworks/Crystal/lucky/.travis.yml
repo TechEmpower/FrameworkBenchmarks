@@ -1,0 +1,26 @@
+language: crystal
+addons:
+  chrome: stable
+services:
+  - postgresql
+before_install:
+  # Setup chromedriver for LuckyFlow
+  - sudo apt-get install chromium-chromedriver
+  - sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+
+  # Setup assets
+  - yarn install
+  - yarn prod
+script:
+  - crystal spec
+  # Uncomment the next line if you'd like Travis to check code formatting
+  # - crystal tool format spec src --check
+cache:
+  yarn: true
+  directories:
+    - bin/lucky
+    - lib
+    - .shards

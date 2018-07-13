@@ -1,0 +1,26 @@
+{
+  "framework": "lucky",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "Lucky",
+        "language": "Crystal",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Lucky",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
