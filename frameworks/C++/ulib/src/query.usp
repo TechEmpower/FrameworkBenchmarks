@@ -5,16 +5,7 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static void usp_fork_query()
-{
-   U_TRACE(5, "::usp_fork_query()")
-
-   World::handlerForkSql();
-
-#ifdef U_STATIC_ORM_DRIVER_PGSQL
-   (void) World::initPipeline();
-#endif
-}
+static void usp_fork_query() { World::handlerForkSql(); }
 -->
 <!--#header
 -->
@@ -32,38 +23,16 @@ if (World::pdrv)
    PGresult* res;
    char* randomNumber;
 
-   while (true)
+   for (; i < num_queries; ++i)
       {
-      World::sendQueryPrepared(i);
+      res = World::pdrv->execPrepared(World::pstmt);
 
-      if (++i == num_queries) break;
-
-      (void) U_SYSCALL(PQbatchPutSyncOnQueue, "%p", World::conn); // NB: make the difference between pipeline vs batch...
-      }
-
-   (void) U_SYSCALL(PQbatchSendQueue, "%p", World::conn);
-
-   for (i = 0; i < num_queries; ++i)
-      {
-      (void) U_SYSCALL(PQbatchProcessQueue, "%p", World::conn);
-
-      res = (PGresult*) U_SYSCALL(PQgetResult, "%p", World::conn);
-
-      U_INTERNAL_DUMP("Result status: %d (%s) for i=%u, tuples: %d", PQresultStatus(res), PQresStatus(PQresultStatus(res)), i, PQntuples(res))
+      U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
+      U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)
 
       randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", res, 0, 0);
 
       World::handlerResult(World::rnumber[i], ntohl(*(uint32_t*)randomNumber));
-
-      U_SYSCALL_VOID(PQclear, "%p", res);
-
-      (void) U_SYSCALL(PQgetResult, "%p", World::conn);
-
-      (void) U_SYSCALL(PQbatchProcessQueue, "%p", World::conn);
-
-      res = (PGresult*) U_SYSCALL(PQgetResult, "%p", World::conn);
-
-      U_INTERNAL_DUMP("Result status: %d (%s) for i=%u, tuples: %d", PQresultStatus(res), PQresStatus(PQresultStatus(res)), i, PQntuples(res))
 
       U_SYSCALL_VOID(PQclear, "%p", res);
       }
