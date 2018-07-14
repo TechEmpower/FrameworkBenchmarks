@@ -1,6 +1,5 @@
 package com.typesafe.akka.http.benchmark
 
-import akka.http.scaladsl.model.headers.Connection
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.typesafe.akka.http.benchmark.handlers._

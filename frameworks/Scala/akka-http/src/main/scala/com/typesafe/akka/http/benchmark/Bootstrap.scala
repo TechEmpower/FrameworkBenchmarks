@@ -8,13 +8,10 @@ trait Bootstrap {
 }
 
 trait BenchmarkBootstrap extends Bootstrap { _: Infrastructure with RequestMapping =>
-  override def run(): Unit = {
-    val routeHandler = Route.asyncHandler(asRoute)
-
+  override def run(): Unit =
     Http().bindAndHandleAsync(
-      routeHandler,
+      Route.asyncHandler(asRoute),
       appConfig.getString("akka.http.benchmark.host"),
       appConfig.getInt("akka.http.benchmark.port"),
       parallelism = 16)
-  }
 }
