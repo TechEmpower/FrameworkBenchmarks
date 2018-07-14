@@ -23,6 +23,9 @@ static void usp_fork_eupdate()
 -->
 <!--#header
 -->
+<!--#vcode
+if (UServer_Base::startParallelization()) return;
+-->
 <!--#code
 World::doUpdateNoSql(WorldNoSql::handlerUpdateElasticSearch);
 -->

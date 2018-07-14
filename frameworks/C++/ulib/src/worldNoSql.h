@@ -19,7 +19,7 @@ public:
 
    static void handlerOneResult(uint32_t uid)
       {
-      U_TRACE(0, "WorldNoSql::handlerOneResult(%u)", uid)
+      U_TRACE(5, "WorldNoSql::handlerOneResult(%u)", uid)
 
       U_INTERNAL_ASSERT_POINTER(str_rnumber)
       U_INTERNAL_ASSERT_POINTER(World::pwbuffer)
@@ -44,7 +44,7 @@ public:
 
    static void handlerResult(uint32_t uid)
       {
-      U_TRACE(0, "WorldNoSql::handlerResult(%u)", uid)
+      U_TRACE(5, "WorldNoSql::handlerResult(%u)", uid)
 
       U_INTERNAL_ASSERT_POINTER(str_rnumber)
       U_INTERNAL_ASSERT_POINTER(World::pwbuffer)
@@ -71,7 +71,7 @@ public:
 
    static void doOneQuery(vPFu handlerQuery)
       {
-      U_TRACE(0, "WorldNoSql::doOneQuery(%p)", handlerQuery)
+      U_TRACE(5, "WorldNoSql::doOneQuery(%p)", handlerQuery)
 
       World::initOneResult();
 
@@ -84,7 +84,7 @@ public:
 
    static void doQuery(vPFu handlerQuery)
       {
-      U_TRACE(0, "WorldNoSql::doQuery(%p)", handlerQuery)
+      U_TRACE(5, "WorldNoSql::doQuery(%p)", handlerQuery)
 
       World::initResult();
 
@@ -100,7 +100,7 @@ public:
 
    static void handlerFork()
       {
-      U_TRACE_NO_PARAM(0, "WorldNoSql::handlerFork()")
+      U_TRACE_NO_PARAM(5, "WorldNoSql::handlerFork()")
 
       if (str_rnumber == U_NULLPTR) U_NEW_STRING(str_rnumber, UString);
 
@@ -116,7 +116,7 @@ public:
 
    static void handlerQueryMongoDB(uint32_t uid)
       {
-      U_TRACE(0, "WorldNoSql::handlerQueryMongoDB(%u)", uid)
+      U_TRACE(5, "WorldNoSql::handlerQueryMongoDB(%u)", uid)
 
       U_INTERNAL_ASSERT_POINTER(str_rnumber)
 
@@ -132,7 +132,7 @@ public:
 
    static void handlerUpdateMongoDB(uint32_t i)
       {
-      U_TRACE(0, "WorldNoSql::handlerUpdateMongoDB(%u)", i)
+      U_TRACE(5, "WorldNoSql::handlerUpdateMongoDB(%u)", i)
 
 #  ifdef USE_MONGODB
       (void) mc->findOne(World::rnumber[i], query);
@@ -142,7 +142,7 @@ public:
 
    static void handlerForkMongoDB()
       {
-      U_TRACE_NO_PARAM(0, "WorldNoSql::handlerForkMongoDB()")
+      U_TRACE_NO_PARAM(5, "WorldNoSql::handlerForkMongoDB()")
 
 #  ifdef USE_MONGODB
       if (mc == U_NULLPTR)
@@ -183,7 +183,7 @@ public:
 
    static void handlerQueryREDIS(uint32_t uid)
       {
-      U_TRACE(0, "WorldNoSql::handlerQueryREDIS(%u)", uid)
+      U_TRACE(5, "WorldNoSql::handlerQueryREDIS(%u)", uid)
 
       U_INTERNAL_ASSERT_POINTER(str_rnumber)
 
@@ -196,7 +196,7 @@ public:
 
    static void handlerUpdateREDIS(uint32_t i)
       {
-      U_TRACE(0, "WorldNoSql::handlerUpdateREDIS(%u)", i)
+      U_TRACE(5, "WorldNoSql::handlerUpdateREDIS(%u)", i)
 
       char* start = rc_buffer+U_CONSTANT_SIZE("world:");
       char* ptr = u_num2str32(World::rnumber[i], start);
@@ -211,7 +211,7 @@ public:
 
    static void handlerForkREDIS()
       {
-      U_TRACE_NO_PARAM(0, "WorldNoSql::handlerForkREDIS()")
+      U_TRACE_NO_PARAM(5, "WorldNoSql::handlerForkREDIS()")
 
       if (rc == U_NULLPTR)
          {
@@ -244,7 +244,7 @@ public:
 
    static void handlerQueryElasticSearch(uint32_t uid)
       {
-      U_TRACE(0, "WorldNoSql::handlerQueryElasticSearch(%u)", uid)
+      U_TRACE(5, "WorldNoSql::handlerQueryElasticSearch(%u)", uid)
 
       U_INTERNAL_ASSERT_POINTER(str_rnumber)
 
@@ -257,7 +257,7 @@ public:
 
    static void handlerUpdateElasticSearch(uint32_t i)
       {
-      U_TRACE(0, "WorldNoSql::handlerUpdateElasticSearch(%u)", i)
+      U_TRACE(5, "WorldNoSql::handlerUpdateElasticSearch(%u)", i)
 
       uint32_t len1 = u__snprintf(pbuffer1, 100, U_CONSTANT_TO_PARAM("%u/_update"), World::rnumber[i]),
                len2 = u__snprintf(pbuffer2, 100, U_CONSTANT_TO_PARAM("%u\"}}"), World::rnum = u_get_num_random_range1(10000));
@@ -267,7 +267,7 @@ public:
 
    static void handlerForkElasticSearch()
       {
-      U_TRACE_NO_PARAM(0, "WorldNoSql::handlerForkElasticSearch()")
+      U_TRACE_NO_PARAM(5, "WorldNoSql::handlerForkElasticSearch()")
 
       if (es == U_NULLPTR)
          {
@@ -289,66 +289,6 @@ public:
          handlerFork();
          }
       }
-
-#ifdef DEBUG
-   static void handlerEnd()
-      {
-      U_TRACE_NO_PARAM(0, "WorldNoSql::handlerEnd()")
-
-      if (str_rnumber)
-         {
-         U_DELETE(str_rnumber)
-
-         str_rnumber = U_NULLPTR;
-         }
-      }
-
-   static void handlerEndMongoDB()
-      {
-      U_TRACE_NO_PARAM(0, "WorldNoSql::handlerEndMongoDB()")
-
-#  ifdef USE_MONGODB
-      if (query)
-         {
-         U_DELETE(mc)
-
-         U_SYSCALL_VOID(bson_destroy, "%p", query);
-
-         query = U_NULLPTR;
-
-         handlerEnd();
-         }
-#  endif
-      }
-
-   static void handlerEndREDIS()
-      {
-      U_TRACE_NO_PARAM(0, "WorldNoSql::handlerEndREDIS()")
-
-      if (rc)
-         {
-         U_DELETE(rc)
-
-         rc = U_NULLPTR;
-
-         handlerEnd();
-         }
-      }
-
-   static void handlerEndElasticSearch()
-      {
-      U_TRACE_NO_PARAM(0, "WorldNoSql::handlerEndElasticSearch()")
-
-      if (es)
-         {
-         U_DELETE(es)
-
-         es = U_NULLPTR;
-
-         handlerEnd();
-         }
-      }
-#endif
 
 private:
    U_DISALLOW_ASSIGN(WorldNoSql)

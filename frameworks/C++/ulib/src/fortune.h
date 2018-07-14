@@ -16,13 +16,6 @@
 
 class Fortune {
 public:
-   // Check for memory error
-   U_MEMORY_TEST
-
-   // Allocator e Deallocator
-   U_MEMORY_ALLOCATOR
-   U_MEMORY_DEALLOCATOR
-
    uint32_t id;
    UString message;
 
@@ -76,7 +69,7 @@ public:
 
    void toJSON(UString& json)
       {
-      U_TRACE(0, "Fortune::toJSON(%V)", json.rep)
+      U_TRACE(5, "Fortune::toJSON(%V)", json.rep)
 
       json.toJSON(U_JSON_METHOD_HANDLER(id,      unsigned int));
       json.toJSON(U_JSON_METHOD_HANDLER(message, UString));
@@ -84,7 +77,7 @@ public:
 
    void fromJSON(UValue& json)
       {
-      U_TRACE(0, "Fortune::fromJSON(%p)", &json)
+      U_TRACE(5, "Fortune::fromJSON(%p)", &json)
 
       json.fromJSON(U_JSON_METHOD_HANDLER(id,      unsigned int));
       json.fromJSON(U_JSON_METHOD_HANDLER(message, UString));
@@ -94,7 +87,7 @@ public:
 
    void bindParam(UOrmStatement* stmt)
       {
-      U_TRACE(0, "Fortune::bindParam(%p)", stmt)
+      U_TRACE(5, "Fortune::bindParam(%p)", stmt)
 
       stmt->bindParam(U_ORM_TYPE_HANDLER(id,      unsigned int));
       stmt->bindParam(U_ORM_TYPE_HANDLER(message, UString));
@@ -102,7 +95,7 @@ public:
 
    void bindResult(UOrmStatement* stmt)
       {
-      U_TRACE(0, "Fortune::bindResult(%p)", stmt)
+      U_TRACE(5, "Fortune::bindResult(%p)", stmt)
 
       stmt->bindResult(U_ORM_TYPE_HANDLER(id,      unsigned int));
       stmt->bindResult(U_ORM_TYPE_HANDLER(message, UString));
@@ -117,7 +110,7 @@ public:
 
    static void replace(uint32_t i, uint32_t _id, const char* msg, uint32_t len)
       {
-      U_TRACE(0, "Fortune::replace(%u,%u,%.*S,%u)", i, _id, len, msg, len)
+      U_TRACE(5, "Fortune::replace(%u,%u,%.*S,%u)", i, _id, len, msg, len)
 
       U_INTERNAL_ASSERT_POINTER(pvfortune)
 
@@ -135,28 +128,37 @@ public:
 
    static void doQuery(vPF handlerQuery)
       {
-      U_TRACE(0, "Fortune::doQuery(%p)", handlerQuery)
+      U_TRACE(5, "Fortune::doQuery(%p)", handlerQuery)
 
       U_INTERNAL_ASSERT_POINTER(pvfortune)
 
       char* pwbuffer = UClientImage_Base::wbuffer->data();
 
-      u_put_unalignedp64(pwbuffer,     U_MULTICHAR_CONSTANT64('<','!','d','o','c','t','y','p'));
-      u_put_unalignedp64(pwbuffer+8,   U_MULTICHAR_CONSTANT64('e',' ','h','t','m','l','>','<'));
-      u_put_unalignedp64(pwbuffer+16,  U_MULTICHAR_CONSTANT64('h','t','m','l','>','<','h','e'));
-      u_put_unalignedp64(pwbuffer+24,  U_MULTICHAR_CONSTANT64('a','d','>','<','t','i','t','l'));
-      u_put_unalignedp64(pwbuffer+32,  U_MULTICHAR_CONSTANT64('e','>','F','o','r','t','u','n'));
-      u_put_unalignedp64(pwbuffer+40,  U_MULTICHAR_CONSTANT64('e','s','<','/','t','i','t','l'));
-      u_put_unalignedp64(pwbuffer+48,  U_MULTICHAR_CONSTANT64('e','>','<','/','h','e','a','d'));
-      u_put_unalignedp64(pwbuffer+56,  U_MULTICHAR_CONSTANT64('>','<','b','o','d','y','>','<'));
-      u_put_unalignedp64(pwbuffer+64,  U_MULTICHAR_CONSTANT64('t','a','b','l','e','>','<','t'));
-      u_put_unalignedp64(pwbuffer+72,  U_MULTICHAR_CONSTANT64('r','>','<','t','h','>','i','d'));
-      u_put_unalignedp64(pwbuffer+80,  U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','t','h'));
-      u_put_unalignedp64(pwbuffer+88,  U_MULTICHAR_CONSTANT64('>','m','e','s','s','a','g','e'));
-      u_put_unalignedp64(pwbuffer+96,  U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','/','t'));
-      u_put_unalignedp16(pwbuffer+104, U_MULTICHAR_CONSTANT16('r','>'));
+      u_put_unalignedp64(pwbuffer,     U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
+      u_put_unalignedp64(pwbuffer+8,   U_MULTICHAR_CONSTANT64('L','e','n','g','t','h',':',' '));
+      u_put_unalignedp64(pwbuffer+16,  U_MULTICHAR_CONSTANT64('1','2','2','7','\r','\n','C','o'));
+      u_put_unalignedp64(pwbuffer+24,  U_MULTICHAR_CONSTANT64('n','t','e','n','t','-','T','y'));
+      u_put_unalignedp64(pwbuffer+32,  U_MULTICHAR_CONSTANT64('p','e',':',' ','t','e','x','t'));
+      u_put_unalignedp64(pwbuffer+40,  U_MULTICHAR_CONSTANT64('/','h','t','m','l',';',' ','c'));
+      u_put_unalignedp64(pwbuffer+48,  U_MULTICHAR_CONSTANT64('h','a','r','s','e','t','=','U'));
+      u_put_unalignedp64(pwbuffer+56,  U_MULTICHAR_CONSTANT64('T','F','-','8','\r','\n','\r','\n'));
+      u_put_unalignedp64(pwbuffer+64,  U_MULTICHAR_CONSTANT64('<','!','d','o','c','t','y','p'));
+      u_put_unalignedp64(pwbuffer+72,  U_MULTICHAR_CONSTANT64('e',' ','h','t','m','l','>','<'));
+      u_put_unalignedp64(pwbuffer+80,  U_MULTICHAR_CONSTANT64('h','t','m','l','>','<','h','e'));
+      u_put_unalignedp64(pwbuffer+88,  U_MULTICHAR_CONSTANT64('a','d','>','<','t','i','t','l'));
+      u_put_unalignedp64(pwbuffer+96,  U_MULTICHAR_CONSTANT64('e','>','F','o','r','t','u','n'));
+      u_put_unalignedp64(pwbuffer+104, U_MULTICHAR_CONSTANT64('e','s','<','/','t','i','t','l'));
+      u_put_unalignedp64(pwbuffer+112, U_MULTICHAR_CONSTANT64('e','>','<','/','h','e','a','d'));
+      u_put_unalignedp64(pwbuffer+120, U_MULTICHAR_CONSTANT64('>','<','b','o','d','y','>','<'));
+      u_put_unalignedp64(pwbuffer+128, U_MULTICHAR_CONSTANT64('t','a','b','l','e','>','<','t'));
+      u_put_unalignedp64(pwbuffer+136, U_MULTICHAR_CONSTANT64('r','>','<','t','h','>','i','d'));
+      u_put_unalignedp64(pwbuffer+144, U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','t','h'));
+      u_put_unalignedp64(pwbuffer+152, U_MULTICHAR_CONSTANT64('>','m','e','s','s','a','g','e'));
+      u_put_unalignedp64(pwbuffer+160, U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','/','t'));
+      u_put_unalignedp16(pwbuffer+168, U_MULTICHAR_CONSTANT16('r','>'));
 
-      pwbuffer += U_CONSTANT_SIZE("<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
+      pwbuffer += U_CONSTANT_SIZE("Content-Length: 1227\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n"
+                                  "<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
 
       handlerQuery();
 
@@ -192,14 +194,12 @@ public:
       u_put_unalignedp64(pwbuffer+8,  U_MULTICHAR_CONSTANT64('<','/','b','o','d','y','>','<'));
       u_put_unalignedp64(pwbuffer+16, U_MULTICHAR_CONSTANT64('/','h','t','m','l','>','\0','\0'));
 
-      UClientImage_Base::wbuffer->size_adjust(pwbuffer + U_CONSTANT_SIZE("</table></body></html>"));
-
-      UHTTP::mime_index = U_html;
+      UClientImage_Base::wbuffer->size_adjust_constant(pwbuffer + U_CONSTANT_SIZE("</table></body></html>"));
       }
 
    static void handlerFork()
       {
-      U_TRACE_NO_PARAM(0, "Fortune::handlerFork()")
+      U_TRACE_NO_PARAM(5, "Fortune::handlerFork()")
 
       U_NEW_STRING(pmessage, UString(101U));
 
@@ -217,7 +217,7 @@ public:
 
    static void handlerForkSql()
       {
-      U_TRACE_NO_PARAM(0, "Fortune::handlerForkSql()")
+      U_TRACE_NO_PARAM(5, "Fortune::handlerForkSql()")
 
       if (psql_fortune == U_NULLPTR)
          {
@@ -241,36 +241,6 @@ public:
          pstmt_fortune->into(uid, *pmessage);
          }
       }
-
-#ifdef DEBUG
-   static void handlerEnd()
-      {
-      U_TRACE_NO_PARAM(0, "Fortune::handlerEnd()")
-
-      U_INTERNAL_ASSERT_POINTER(pmessage)
-      U_INTERNAL_ASSERT_POINTER(pvfortune)
-
-      U_DELETE(pmessage)
-      U_DELETE(pvfortune)
-      }
-
-   static void handlerEndSql()
-      {
-      U_TRACE_NO_PARAM(0, "Fortune::handlerEndSql()")
-
-      if (pstmt_fortune)
-         {
-         handlerEnd();
-
-         U_DELETE(psql_fortune)
-         U_DELETE(pstmt_fortune)
-
-         pstmt_fortune = U_NULLPTR;
-         }
-      }
-
-   const char* dump(bool breset) const;
-#endif
 
 private:
    U_DISALLOW_ASSIGN(Fortune)

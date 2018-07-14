@@ -21,7 +21,7 @@ public:
 
    static void handlerQueryMongoDB()
       {
-      U_TRACE(0, "FortuneNoSql::handlerQueryMongoDB()")
+      U_TRACE(5, "FortuneNoSql::handlerQueryMongoDB()")
 
       U_INTERNAL_ASSERT_POINTER(Fortune::pmessage)
 
@@ -41,7 +41,7 @@ public:
 
    static void handlerForkMongoDB()
       {
-      U_TRACE_NO_PARAM(0, "FortuneNoSql::handlerForkMongoDB()")
+      U_TRACE_NO_PARAM(5, "FortuneNoSql::handlerForkMongoDB()")
 
 #  ifdef USE_MONGODB
       if (mc == U_NULLPTR)
@@ -79,7 +79,7 @@ public:
 
    static void handlerQueryREDIS()
       {
-      U_TRACE(0, "FortuneNoSql::handlerQueryREDIS()")
+      U_TRACE(5, "FortuneNoSql::handlerQueryREDIS()")
 
       (void) rc->lrange(U_CONSTANT_TO_PARAM("fortunes 0 -1"));
 
@@ -88,7 +88,7 @@ public:
 
    static void handlerForkREDIS()
       {
-      U_TRACE_NO_PARAM(0, "Fortune::handlerForkREDIS()")
+      U_TRACE_NO_PARAM(5, "Fortune::handlerForkREDIS()")
 
       if (rc == U_NULLPTR)
          {
@@ -108,38 +108,6 @@ public:
          Fortune::handlerFork();
          }
       }
-
-#ifdef DEBUG
-   static void handlerEndMongoDB()
-      {
-      U_TRACE_NO_PARAM(0, "FortuneNoSql::handlerEndMongoDB()")
-
-#  ifdef USE_MONGODB
-      if (mc)
-         {
-         Fortune::handlerEnd();
-
-         U_DELETE(mc)
-
-         mc = U_NULLPTR;
-         }
-#  endif
-      }
-
-   static void handlerEndREDIS()
-      {
-      U_TRACE_NO_PARAM(0, "FortuneNoSql::handlerEndREDIS()")
-
-      if (rc)
-         {
-         Fortune::handlerEnd();
-
-         U_DELETE(rc)
-
-         rc = U_NULLPTR;
-         }
-      }
-#endif
 
 private:
    U_DISALLOW_ASSIGN(FortuneNoSql)

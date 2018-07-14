@@ -10,47 +10,45 @@ static void usp_fork_query() { World::handlerForkSql(); }
 <!--#header
 -->
 <!--#vcode
-uint32_t num_queries = UHTTP::getFormFirstNumericValue(1, 500);
-
-/*
-if (num_queries >= 20 &&
-    UServer_Base::startParallelization())
-   {
-   return;
-   }
-*/
+if (UServer_Base::startParallelization()) return;
 -->
 <!--#code
+uint32_t i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+
 World::initResult();
 
-for (uint32_t i = 0; i < num_queries; ++i)
-   {
-   World::pworld_query->id = World::rnumber[i];
-
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
-   if (World::pdrv)
-      {
-      World::pstmt->setBindParam();
+if (World::pdrv)
+   {
+   PGresult* res;
+   char* randomNumber;
 
-      PGresult* res = World::pdrv->execPrepared(World::pstmt);
+   for (; i < num_queries; ++i)
+      {
+      res = World::execPrepared(i);
 
       U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
       U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)
 
-      char* randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", res, 0, 0);
+      randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", res, 0, 0);
 
-      World::handlerResult(World::pworld_query->id, ntohl(*(uint32_t*)randomNumber));
+      World::handlerResult(World::rnumber[i], ntohl(*(uint32_t*)randomNumber));
 
       U_SYSCALL_VOID(PQclear, "%p", res);
       }
-   else
+   }
+else
 #endif
+{
+for (; i < num_queries; ++i)
    {
+   World::pworld_query->id = World::rnumber[i];
+
    World::pstmt_query->execute();
 
    World::handlerResultSql(i);
    }
-   }
+}
 
 World::endResult();
 -->
