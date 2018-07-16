@@ -1,4 +1,4 @@
-# girrafe Tests on Linux
+# Zebra Tests on Linux
 This includes tests for plaintext and json serialization.
 
 ## Infrastructure Software Versions
