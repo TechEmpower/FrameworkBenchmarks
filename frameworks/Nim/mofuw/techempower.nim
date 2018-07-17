@@ -1,4 +1,4 @@
-import ../../src/mofuw, packedjson
+import mofuw, packedjson
 
 proc h(ctx: MofuwCtx) {.async.} =
   case ctx.getPath
