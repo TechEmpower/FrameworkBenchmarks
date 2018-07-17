@@ -21,3 +21,8 @@ libraryDependencies ++= Seq(
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.4",
   "javax.activation" % "activation" % "1.1.1"
 )
+
+excludeDependencies ++= Seq(
+  // commons-logging is replaced by jcl-over-slf4j
+  ExclusionRule("commons-logging", "commons-logging")
+)
