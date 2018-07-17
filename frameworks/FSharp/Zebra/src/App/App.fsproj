@@ -27,6 +27,7 @@
     <Compile Include="RouteNode.fs" />
     <Compile Include="Router.fs" />
     <Compile Include="Composition.fs" />
+    <Compile Include="Middleware.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
