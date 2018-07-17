@@ -4,7 +4,6 @@ open State
 open Router
 open ExecNodes
 open Middleware
-open Giraffe
 open System.Threading.Tasks
 open System.Runtime.CompilerServices
 open Microsoft.AspNetCore.Http
@@ -12,8 +11,6 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Builder
 
 
-// [<CLIMutable>] 
-// type JsonMessage = { message : string }
 
 [<CLIMutable>][<Struct>] 
 type JsonStructMessage = { message : string }

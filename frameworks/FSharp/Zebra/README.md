@@ -1,7 +1,7 @@
 # Zebra Tests on Linux
 This includes tests for plaintext and json serialization.
 
-Zebra is a new F# functional Asp.net Framework Wrapper that utalises a shared state-machine for Task binding the same as C# async/await but done using F# conputation expressions.
+Zebra is a new F# functional Asp.net Framework Wrapper that utalises a shared state-machine for Task binding the same as C# async/await but done using F# computation expressions.
 
 ## Infrastructure Software Versions
 

@@ -10,24 +10,3 @@ let StreamWrite (str:string,stream:Stream) =
         else
         for byte in Encoding.UTF8.GetBytes([|char|]) do
             stream.WriteByte byte
-       
-
-type JsonWrap<'T> =
-    struct
-        val Value : 'T
-    new (v) = {Value=v}
-    end
-
-type XmlWrap<'T> =
-    struct
-        val Value : 'T
-    new (v) = {Value=v}
-    end
-
-type TextWrap<'T> =
-    struct
-        val Value : 'T
-    new (v) = {Value=v}
-    end
-
-let inline json (v:'T) : Stream -> unit = fun (ms:Stream) -> Utf8Json.JsonSerializer.Serialize<'T>(ms,v) 
