@@ -1,5 +1,9 @@
 TechEmpower Framework Benchmark - ActFramework Change log
 
+**1.8.8f**
+
+* experiment: take HikariCP from eclipse-mysql permutations
+
 **1.8.8e**
 
 * update act to 1.8.8-RC12-SNAPSHOT

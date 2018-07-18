@@ -9,30 +9,31 @@ static void usp_fork_db() { World::handlerForkSql(); }
 -->
 <!--#header
 -->
+<!--#vcode
+if (UServer_Base::startParallelization()) return;
+-->
 <!--#code
 World::initOneResult();
-
-World::pworld_query->id = World::rnumber[0];
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
 if (World::pdrv)
    {
-   World::pstmt->setBindParam();
-
-   PGresult* res = World::pdrv->execPrepared(World::pstmt);
+   PGresult* res = World::execPrepared();
 
    U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
    U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)
 
    char* randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", res, 0, 0);
 
-   World::handlerOneResult(World::pworld_query->id, ntohl(*(uint32_t*)randomNumber));
+   World::handlerOneResult(World::rnumber[0], ntohl(*(uint32_t*)randomNumber));
 
    U_SYSCALL_VOID(PQclear, "%p", res);
    }
 else
 #endif
 {
+World::pworld_query->id = World::rnumber[0];
+
 (void) World::pstmt_query->execute();
 
 World::handlerOneResult(World::pworld_query->id, World::pworld_query->randomNumber);

@@ -1,3 +1,4 @@
+use smallvec::SmallVec;
 use std::collections::HashMap;
 use thruster::{Context, Request, Response};
 
@@ -8,22 +9,30 @@ pub struct Ctx {
     pub request_body: String,
     pub params: HashMap<String, String>,
     pub query_params: HashMap<String, String>,
-    pub headers: Vec<(String, String)>,
+    pub headers: SmallVec<[(String, String); 8]>,
     pub status_code: u32,
 }
 
+impl Ctx {
+    pub fn set_header(&mut self, key: String, val: String) {
+        self.headers.push((key, val));
+    }
+}
+
 impl Context for Ctx {
-    fn get_response(&self) -> Response<String> {
-        let mut builder = Response::builder();
-        builder.status(200);
+    fn get_response(&self) -> Response {
+        let mut response = Response::new();
+        response.status_code(200, "OK");
 
         for header_pair in &self.headers {
             let key: &str = &header_pair.0;
             let val: &str = &header_pair.1;
-            builder.header(key, val);
+            response.header(key, val);
         }
 
-        builder.body(self.body.clone()).unwrap()
+        response.body(&self.body);
+
+        response
     }
 
     fn set_body(&mut self, body: String) {
@@ -43,7 +52,7 @@ pub fn generate_context(request: Request) -> Ctx {
         params: request.params,
         query_params: request.query_params,
         request_body: request_body,
-        headers: Vec::new(),
+        headers: SmallVec::new(),
         status_code: 200,
     }
 }

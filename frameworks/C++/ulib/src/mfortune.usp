@@ -7,6 +7,11 @@ TechEmpower Web Framework Benchmarks
 
 static void usp_fork_mfortune() { FortuneNoSql::handlerForkMongoDB(); }
 -->
+<!--#header
+-->
+<!--#vcode
+if (UServer_Base::startParallelization()) return;
+-->
 <!--#code
 Fortune::doQuery(FortuneNoSql::handlerQueryMongoDB);
 -->

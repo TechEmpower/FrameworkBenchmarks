@@ -15,13 +15,6 @@
 
 class World {
 public:
-   // Check for memory error
-   U_MEMORY_TEST
-
-   // Allocator e Deallocator
-   U_MEMORY_ALLOCATOR
-   U_MEMORY_DEALLOCATOR
-
    uint32_t id, randomNumber;
 
    World()
@@ -55,7 +48,7 @@ public:
 
    void toJSON(UString& json)
       {
-      U_TRACE(0, "World::toJSON(%V)", json.rep)
+      U_TRACE(5, "World::toJSON(%V)", json.rep)
 
       json.toJSON(U_JSON_METHOD_HANDLER(id,           unsigned int));
       json.toJSON(U_JSON_METHOD_HANDLER(randomNumber, unsigned int));
@@ -63,7 +56,7 @@ public:
 
    void fromJSON(UValue& json)
       {
-      U_TRACE(0, "World::fromJSON(%p)", &json)
+      U_TRACE(5, "World::fromJSON(%p)", &json)
 
       json.fromJSON(U_JSON_METHOD_HANDLER(id,           unsigned int));
       json.fromJSON(U_JSON_METHOD_HANDLER(randomNumber, unsigned int));
@@ -73,7 +66,7 @@ public:
 
    void bindParam(UOrmStatement* stmt)
       {
-      U_TRACE(0, "World::bindParam(%p)", stmt)
+      U_TRACE(5, "World::bindParam(%p)", stmt)
 
       stmt->bindParam(U_ORM_TYPE_HANDLER(id,           unsigned int));
       stmt->bindParam(U_ORM_TYPE_HANDLER(randomNumber, unsigned int));
@@ -81,7 +74,7 @@ public:
 
    void bindResult(UOrmStatement* stmt)
       {
-      U_TRACE(0, "World::bindResult(%p)", stmt)
+      U_TRACE(5, "World::bindResult(%p)", stmt)
 
       stmt->bindResult(U_ORM_TYPE_HANDLER(id,           unsigned int));
       stmt->bindResult(U_ORM_TYPE_HANDLER(randomNumber, unsigned int));
@@ -120,61 +113,129 @@ public:
    static UOrmStatement* pstmt_query;
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
+   static PGconn* conn;
    static UOrmDriverPgSql* pdrv;
    static UPgSqlStatement* pstmt;
+   static char num2str[sizeof(unsigned int)];
+
+   static bool initPipeline()
+      {
+      U_TRACE(5, "World::initPipeline()")
+
+      if (pdrv)
+         {
+         (void) U_SYSCALL(PQsetnonblocking, "%p,%u", conn, 1);
+         (void) U_SYSCALL(PQenterBatchMode, "%p",    conn);
+
+         U_RETURN(true);
+         }
+
+      U_RETURN(false);
+      }
+
+   static PGresult* execPrepared()
+      {
+      U_TRACE_NO_PARAM(5, "World::execPrepared()")
+
+      U_INTERNAL_ASSERT_MAJOR(rnumber[0], 0)
+
+      *(unsigned int*)num2str = htonl(rnumber[0]);
+
+      PGresult* res = (PGresult*) U_SYSCALL(PQexecPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 1, pstmt->paramValues, pstmt->paramLengths, pstmt->paramFormats, 1);
+
+      U_RETURN_POINTER(res, PGresult);
+      }
+
+   static PGresult* execPrepared(uint32_t i)
+      {
+      U_TRACE(5, "World::execPrepared(%u)", i)
+
+      U_INTERNAL_ASSERT_MAJOR(rnumber[i], 0)
+
+      *(unsigned int*)num2str = htonl(rnumber[i]);
+
+      PGresult* res = (PGresult*) U_SYSCALL(PQexecPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 1, pstmt->paramValues, pstmt->paramLengths, pstmt->paramFormats, 1);
+
+      U_RETURN_POINTER(res, PGresult);
+      }
+
+   static void sendQueryPrepared(uint32_t i)
+      {
+      U_TRACE(5, "World::sendQueryPrepared(%u)", i)
+
+      U_INTERNAL_ASSERT_MAJOR(rnumber[i], 0)
+
+      *(unsigned int*)num2str = htonl(rnumber[i]);
+
+      (void) U_SYSCALL(PQsendQueryPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 1, pstmt->paramValues, pstmt->paramLengths, pstmt->paramFormats, 1);
+      }
 #endif
 
    static void initResult()
       {
-      U_TRACE(0, "World::initResult()")
+      U_TRACE(5, "World::initResult()")
 
       u_put_unalignedp64(wbuffer,    U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
-      u_put_unalignedp64(wbuffer+8,  U_MULTICHAR_CONSTANT64('T','y','p','e',':',' ','a','p'));
-      u_put_unalignedp64(wbuffer+16, U_MULTICHAR_CONSTANT64('p','l','i','c','a','t','i','o'));
-      u_put_unalignedp64(wbuffer+24, U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'));
-      u_put_unalignedp32(wbuffer+32, U_MULTICHAR_CONSTANT32('\r','\n','[','\0'));
+      u_put_unalignedp64(wbuffer+8,  U_MULTICHAR_CONSTANT64('L','e','n','g','t','h',':',' '));
+      u_put_unalignedp64(wbuffer+16, U_MULTICHAR_CONSTANT64('1','3','3','3','1','\r','\n','C'));
+      u_put_unalignedp64(wbuffer+24, U_MULTICHAR_CONSTANT64('o','n','t','e','n','t','-','T'));
+      u_put_unalignedp64(wbuffer+32, U_MULTICHAR_CONSTANT64('y','p','e',':',' ','a','p','p'));
+      u_put_unalignedp64(wbuffer+40, U_MULTICHAR_CONSTANT64('l','i','c','a','t','i','o','n'));
+      u_put_unalignedp64(wbuffer+48, U_MULTICHAR_CONSTANT64('/','j','s','o','n','\r','\n','\r'));
+      u_put_unalignedp16(wbuffer+56, U_MULTICHAR_CONSTANT16('\n','['));
 
-      pwbuffer = wbuffer + U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n[");
-
-      U_http_info.endHeader = (uint32_t)-U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n");
+      pwbuffer = wbuffer + U_CONSTANT_SIZE("Content-Length: 13331\r\nContent-Type: application/json\r\n\r\n[");
       }
 
    static void endResult()
       {
-      U_TRACE_NO_PARAM(0, "World::endResult()")
+      U_TRACE_NO_PARAM(5, "World::endResult()")
 
       *(pwbuffer-1) = ']';
 
-      UClientImage_Base::wbuffer->setConstant(wbuffer, pwbuffer-wbuffer);
+      uint32_t      len = pwbuffer-wbuffer,
+               body_len = len - U_CONSTANT_SIZE("Content-Length: 13331\r\nContent-Type: application/json\r\n\r\n");
+
+      pwbuffer = u_num2str32(body_len, wbuffer + U_CONSTANT_SIZE("Content-Length: "));
+
+      while (*pwbuffer != '\r') *pwbuffer++ = ' ';
+
+      UClientImage_Base::wbuffer->setConstant(wbuffer, len);
       }
 
    static void initOneResult()
       {
-      U_TRACE(0, "World::initOneResult()")
+      U_TRACE(5, "World::initOneResult()")
 
       u_put_unalignedp64(wbuffer,    U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
-      u_put_unalignedp64(wbuffer+8,  U_MULTICHAR_CONSTANT64('T','y','p','e',':',' ','a','p'));
-      u_put_unalignedp64(wbuffer+16, U_MULTICHAR_CONSTANT64('p','l','i','c','a','t','i','o'));
-      u_put_unalignedp64(wbuffer+24, U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'));
-      u_put_unalignedp32(wbuffer+32, U_MULTICHAR_CONSTANT32('\r','\n','{','\0'));
+      u_put_unalignedp64(wbuffer+8,  U_MULTICHAR_CONSTANT64('L','e','n','g','t','h',':',' '));
+      u_put_unalignedp32(wbuffer+16, U_MULTICHAR_CONSTANT32('3','1','\r','\n'));
+      u_put_unalignedp64(wbuffer+20, U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
+      u_put_unalignedp64(wbuffer+28, U_MULTICHAR_CONSTANT64('T','y','p','e',':',' ','a','p'));
+      u_put_unalignedp64(wbuffer+36, U_MULTICHAR_CONSTANT64('p','l','i','c','a','t','i','o'));
+      u_put_unalignedp64(wbuffer+44, U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'));
+      u_put_unalignedp32(wbuffer+52, U_MULTICHAR_CONSTANT32('\r','\n','{','\0'));
 
-      pwbuffer = wbuffer + U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n{");
-
-      U_http_info.endHeader = (uint32_t)-U_CONSTANT_SIZE("Content-Type: application/json\r\n\r\n");
+      pwbuffer = wbuffer + U_CONSTANT_SIZE("Content-Length: 31\r\nContent-Type: application/json\r\n\r\n{");
       }
 
    static void endOneResult()
       {
-      U_TRACE_NO_PARAM(0, "World::endOneResult()")
+      U_TRACE_NO_PARAM(5, "World::endOneResult()")
 
       *pwbuffer = '}';
 
-      UClientImage_Base::wbuffer->setConstant(wbuffer, pwbuffer-wbuffer+1);
+      uint32_t      len = pwbuffer-wbuffer+1,
+               body_len = len - U_CONSTANT_SIZE("Content-Length: 31\r\nContent-Type: application/json\r\n\r\n");
+
+      (void) u_num2str32(body_len, wbuffer+U_CONSTANT_SIZE("Content-Length: "));
+
+      UClientImage_Base::wbuffer->setConstant(wbuffer, len);
       }
 
    static void handlerOneResult(uint32_t uid, uint32_t random)
       {
-      U_TRACE(0, "World::handlerOneResult(%u,%u)", uid, random)
+      U_TRACE(5, "World::handlerOneResult(%u,%u)", uid, random)
 
       u_put_unalignedp32(pwbuffer, U_MULTICHAR_CONSTANT32('"','i','d','"'));
 
@@ -190,7 +251,7 @@ public:
 
    static void handlerResult(uint32_t uid, uint32_t random)
       {
-      U_TRACE(0, "World::handlerResult(%u,%u)", uid, random)
+      U_TRACE(5, "World::handlerResult(%u,%u)", uid, random)
 
       u_put_unalignedp32(pwbuffer,   U_MULTICHAR_CONSTANT32('{','"','i','d'));
       u_put_unalignedp16(pwbuffer+4, U_MULTICHAR_CONSTANT16('"',':'));
@@ -208,7 +269,7 @@ public:
 
    static void handlerResult(uint32_t i)
       {
-      U_TRACE(0, "World::handlerResult(%u)", i)
+      U_TRACE(5, "World::handlerResult(%u)", i)
 
       U_INTERNAL_ASSERT_POINTER(pworld_query)
 
@@ -217,7 +278,7 @@ public:
 
    static void handlerResultSql(uint32_t i)
       {
-      U_TRACE(0, "World::handlerResultSql(%u)", i)
+      U_TRACE(5, "World::handlerResultSql(%u)", i)
 
       U_INTERNAL_ASSERT_POINTER(pworld_query)
 
@@ -226,7 +287,7 @@ public:
 
    static void doUpdateNoSql(vPFu handlerUpdateNoSql)
       {
-      U_TRACE(0, "World::doUpdateNoSql(%p)", handlerUpdateNoSql)
+      U_TRACE(5, "World::doUpdateNoSql(%p)", handlerUpdateNoSql)
 
       initResult();
 
@@ -242,14 +303,14 @@ public:
 
    static void handlerFork()
       {
-      U_TRACE_NO_PARAM(0, "World::handlerFork()")
+      U_TRACE_NO_PARAM(5, "World::handlerFork()")
 
       if (rnumber[0] == 0) for (uint32_t i = 0; i < 500; ++i) rnumber[i] = u_get_num_random_range1(10000);
       }
 
    static void handlerForkSql()
       {
-      U_TRACE_NO_PARAM(0, "World::handlerForkSql()")
+      U_TRACE_NO_PARAM(5, "World::handlerForkSql()")
 
       if (psql_query == U_NULLPTR)
          {
@@ -276,29 +337,17 @@ public:
 #     ifdef U_STATIC_ORM_DRIVER_PGSQL
          if (UOrmDriver::isPGSQL())
             {
-            pdrv  = (UOrmDriverPgSql*) World::psql_query->getDriver();
-            pstmt = (UPgSqlStatement*) World::pstmt_query->getStatement();
+            conn  = (PGconn*)(pdrv = (UOrmDriverPgSql*)psql_query->getDriver())->UOrmDriver::connection;
+            pstmt = (UPgSqlStatement*)pstmt_query->getStatement();
 
-            (void) ((UPgSqlStatement*)pstmt)->setBindParam(pdrv);
+            (void) pstmt->setBindParam(pdrv);
+
+            pstmt->paramValues[0]  = num2str;
+            pstmt->paramLengths[0] = sizeof(unsigned int);
             }
 #     endif
 
          handlerFork();
-         }
-      }
-
-#ifdef DEBUG
-   static void handlerEndSql()
-      {
-      U_TRACE_NO_PARAM(0, "World::handlerEndSql()")
-
-      if (pstmt_query)
-         {
-         U_DELETE( pstmt_query)
-         U_DELETE(pworld_query)
-         U_DELETE(  psql_query)
-
-         pstmt_query = U_NULLPTR;
          }
       }
 
