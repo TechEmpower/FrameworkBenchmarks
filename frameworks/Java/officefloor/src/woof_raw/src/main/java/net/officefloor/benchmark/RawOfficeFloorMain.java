@@ -28,6 +28,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 import lombok.Data;
 import net.officefloor.frame.api.manage.OfficeFloor;
@@ -157,6 +158,7 @@ public class RawOfficeFloorMain {
 				StreamBufferPool<ByteBuffer> serviceBufferPool) {
 			super(serverLocation, false, new HttpRequestParserMetaData(100, 1000, 1000000), serviceBufferPool, 1000,
 					null, null, true);
+			this.objectMapper.registerModule(new AfterburnerModule());
 		}
 
 		/*
