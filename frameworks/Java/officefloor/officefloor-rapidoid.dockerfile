@@ -2,11 +2,11 @@ FROM maven:3.5.4-jdk-10 as maven
 WORKDIR /officefloor
 COPY src src
 WORKDIR /officefloor/src
-RUN mvn -N clean install
+RUN mvn -q -N clean install
 WORKDIR /officefloor/src/woof_benchmark
-RUN mvn clean install
+RUN mvn -q clean install
 WORKDIR /officefloor/src/woof_rapidoid
-RUN mvn clean package
+RUN mvn -q clean package
 
 FROM openjdk:10
 WORKDIR /officefloor
