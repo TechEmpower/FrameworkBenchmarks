@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
             override fun port() = PORT
 
             private val server = ServerBootstrap.bootstrap()
-                    .setListenerPort(9000)
+                    .setListenerPort(PORT)
                     .setSocketConfig(SocketConfig.custom()
                             .setTcpNoDelay(true)
                             .setSoKeepAlive(true)
