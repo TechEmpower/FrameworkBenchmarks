@@ -9,9 +9,6 @@ static void usp_fork_mupdate() { WorldNoSql::handlerForkMongoDB(); }
 -->
 <!--#header
 -->
-<!--#vcode
-if (UServer_Base::startParallelization()) return;
--->
 <!--#code
 World::doUpdateNoSql(WorldNoSql::handlerUpdateMongoDB);
 -->
