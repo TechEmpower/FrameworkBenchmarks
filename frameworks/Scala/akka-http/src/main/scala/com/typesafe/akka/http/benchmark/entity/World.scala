@@ -1,10 +1,11 @@
 package com.typesafe.akka.http.benchmark.entity
 
-import spray.json.DefaultJsonProtocol
-import spray.json.RootJsonFormat
+import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.macros._
 
 case class World(id: Int, randomNumber: Int)
+
 object World {
-  import DefaultJsonProtocol._
-  implicit val worldFormat: RootJsonFormat[World] = jsonFormat(World.apply, "id", "randomNumber")
+  implicit val codec: JsonValueCodec[World] = JsonCodecMaker.make[World](CodecMakerConfig())
+  implicit val seqCodec: JsonValueCodec[Seq[World]] = JsonCodecMaker.make[Seq[World]](CodecMakerConfig())
 }
