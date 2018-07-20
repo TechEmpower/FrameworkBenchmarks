@@ -9,9 +9,6 @@ static void usp_fork_db() { World::handlerForkSql(); }
 -->
 <!--#header
 -->
-<!--#vcode
-if (UServer_Base::startParallelization()) return;
--->
 <!--#code
 World::initOneResult();
 
