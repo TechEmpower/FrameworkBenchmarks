@@ -28,7 +28,7 @@ open class Database(private val dataSource: DataSource) {
 
             val config = HikariConfig()
             config.jdbcUrl = postgresqlUrl
-            config.maximumPoolSize = 100
+            config.maximumPoolSize = 256
             config.username = "benchmarkdbuser"
             config.password = "benchmarkdbpass"
             return Database(HikariDataSource(config))
