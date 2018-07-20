@@ -1,9 +1,6 @@
 ENV["LUCKY_ENV"] = "test"
-ENV["PORT"] = "5001"
 require "spec"
-require "lucky_flow"
 require "../src/app"
-require "./support/flows/base_flow"
 require "./support/**"
 require "../db/migrations/**"
 
@@ -14,6 +11,5 @@ require "../db/migrations/**"
 require "./setup/**"
 
 include Carbon::Expectations
-include LuckyFlow::Expectations
 
 Habitat.raise_if_missing_settings!
