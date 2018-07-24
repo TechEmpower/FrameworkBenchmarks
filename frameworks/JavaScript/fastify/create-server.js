@@ -1,4 +1,4 @@
-const fastify = require('fastify');
+const fastify = require('fastify')();
 const handler = require('./handlers/handler');
 
 fastify.register(require('point-of-view'), {
@@ -8,16 +8,22 @@ fastify.register(require('point-of-view'), {
   templates: __dirname + '/views'
 })
 
-router.get('/json', (req, reply) => {
-  reply.header('Content-Type', 'application/json').code(200)
+fastify.use((req, reply, next) => {
+  reply.setHeader('Server', 'Fastify')
 
-  reply.send({ message: 'Hello, World!' });
+  next()
+})
+
+fastify.get('/json', (req, reply) => {
+  reply.header('Content-Type', 'application/json')
+    .code(200)
+    .send({ message: 'Hello, World!' });
 })
 
 fastify.get('/plaintext', (req, reply) => {
-  reply.header('Content-Type', 'text/plain').code(200)
-
-  reply.send('Hello, World!');
+  reply.header('Content-Type', 'text/plain')
+    .code(200)
+    .send('Hello, World!');
 });
 
 const handlerName = process.env.NODE_HANDLER;

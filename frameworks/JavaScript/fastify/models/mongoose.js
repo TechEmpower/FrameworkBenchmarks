@@ -4,7 +4,7 @@ Mongoose.Promise = Promise;
 
 const { SchemaTypes } = Mongoose;
 
-Mongoose.connect('mongodb://tfb-database/hello_world')
+Mongoose.connect('mongodb://tfb-database:27017/hello_world', { useNewUrlParser: true })
   .catch(error => {
     console.error(error);
     process.exit(1);
