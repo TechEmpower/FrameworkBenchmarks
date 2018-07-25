@@ -1,4 +1,4 @@
-const {Worlds, Fortunes} = require('../models/mongoose');
+const { Worlds, Fortunes } = require('../models/mongoose');
 
 module.exports = {
   getWorld: _id => Worlds.findById(_id),

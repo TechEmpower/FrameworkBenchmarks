@@ -8,6 +8,7 @@ if (cluster.isMaster) {
   }
 
   console.log('Master starting ' + new Date().toISOString());
+
   cluster.on('exit', () => {
     process.exit(1);
   });

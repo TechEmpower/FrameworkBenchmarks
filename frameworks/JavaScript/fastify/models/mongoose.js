@@ -11,11 +11,13 @@ Mongoose.connect('mongodb://tfb-database:27017/hello_world', { useNewUrlParser: 
   });
 
 const WorldSchema = new Mongoose.Schema({
-  _id: SchemaTypes.Number,
-  randomNumber: SchemaTypes.Number,
+  _id: Number,
+  randomNumber: Number,
 }, {
     collection: 'world',
     versionKey: false,
+    _id: false,
+    id: true
   });
 
 const FortuneSchema = new Mongoose.Schema({

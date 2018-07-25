@@ -8,17 +8,20 @@ module.exports = (databaseLayer) => ({
   SingleQuery: async (req, reply) => {
     const world = await databaseLayer.getWorldLean(h.randomTfbNumber());
 
-    reply(world);
+    console.log(world);
+
+    reply.send(world);
   },
 
   MultipleQueries: async (req, reply) => {
-    const queries = h.getQueries(ctx.request.query.queries);
+    const queries = h.getQueries(req.query.queries);
     const promisesArray = [];
+
     for (let i = 0; i < queries; i++) {
       promisesArray.push(databaseLayer.getWorldLean(h.randomTfbNumber()));
     }
 
-    reply(await Promise.all(promisesArray));
+    reply.send(await Promise.all(promisesArray));
   },
 
   Fortunes: async (req, reply) => {
@@ -29,23 +32,21 @@ module.exports = (databaseLayer) => ({
     reply.view('fortunes.hbs', { fortunes })
   },
 
-  Updates: (req, reply) => {
-    const queries = h.getQueries(ctx.request.query.queries);
+  Updates: async (req, reply) => {
+    const queries = h.getQueries(req.query.queries);
     const worldPromises = [];
 
     for (let i = 0; i < queries; i++) {
       worldPromises.push(databaseLayer.getWorld(h.randomTfbNumber()));
     }
 
-    return Promise
-      .all(worldPromises)
-      .map(world => {
-        world.randomNumber = h.randomTfbNumber();
-        return world
-      })
-      .then(worlds => databaseLayer.saveWorlds(worlds))
-      .then(worlds => {
-        reply(worlds);
-      });
+    const worlds = await Promise.all(worldPromises);
+
+    const updatedWorlds = worlds.map(world => {
+      world.randomNumber = h.randomTfbNumber();
+      return world
+    });
+
+    reply.send(await databaseLayer.saveWorlds(updatedWorlds));
   }
 });
