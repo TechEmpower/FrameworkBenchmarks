@@ -8,8 +8,6 @@ module.exports = (databaseLayer) => ({
   SingleQuery: async (req, reply) => {
     const world = await databaseLayer.getWorldLean(h.randomTfbNumber());
 
-    console.log(world);
-
     reply.send(world);
   },
 
@@ -42,11 +40,13 @@ module.exports = (databaseLayer) => ({
 
     const worlds = await Promise.all(worldPromises);
 
-    const updatedWorlds = worlds.map(world => {
+    const worldsToUpdate = worlds.map(world => {
       world.randomNumber = h.randomTfbNumber();
       return world
     });
 
-    reply.send(await databaseLayer.saveWorlds(updatedWorlds));
+    const updatedWorlds = await databaseLayer.saveWorlds(worldsToUpdate);
+
+    reply.send(updatedWorlds);
   }
 });

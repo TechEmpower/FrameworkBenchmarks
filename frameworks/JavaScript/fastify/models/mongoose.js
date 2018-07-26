@@ -15,9 +15,7 @@ const WorldSchema = new Mongoose.Schema({
   randomNumber: Number,
 }, {
     collection: 'world',
-    versionKey: false,
-    _id: false,
-    id: true
+    versionKey: false
   });
 
 const FortuneSchema = new Mongoose.Schema({
