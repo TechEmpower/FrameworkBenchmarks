@@ -14,10 +14,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.apache.commons.text.StringEscapeUtils;
 
 import lombok.Data;
-import net.officefloor.frame.api.function.FlowCallback;
-import net.officefloor.plugin.managedfunction.clazz.FlowInterface;
-import net.officefloor.plugin.section.clazz.Parameter;
-import net.officefloor.plugin.section.clazz.Spawn;
 import net.officefloor.server.http.HttpHeaderValue;
 import net.officefloor.server.http.HttpResponse;
 import net.officefloor.server.http.ServerHttpConnection;
@@ -57,95 +53,40 @@ public class Logic {
 
 	// ========== QUERIES ==================
 
-	public void queries(@HttpQueryParameter("queries") String queries, QueriesFlows flows,
-			ObjectResponse<World[]> response) {
+	public void queries(@HttpQueryParameter("queries") String queries, Connection connection,
+			ObjectResponse<World[]> response) throws SQLException {
 		ThreadLocalRandom random = ThreadLocalRandom.current();
-		int[] loaded = new int[] { 0 };
 		int count = getQueryCount(queries);
 		World[] worlds = new World[count];
-		for (int i = 0; i < worlds.length; i++) {
-			int index = i;
-			GetEntry entry = new GetEntry(random.nextInt(1, 10000));
-			flows.getEntry(entry, (escalation) -> {
-				worlds[index] = entry.world;
-				loaded[0]++;
-				if (loaded[0] >= count) {
-					response.send(worlds);
-				}
-			});
-		}
-	}
-
-	@Data
-	public static class GetEntry {
-		private final int id;
-		private World world;
-	}
-
-	@FlowInterface
-	public static interface QueriesFlows {
-		@Spawn
-		void getEntry(GetEntry entry, FlowCallback callback);
-	}
-
-	public void getEntry(@Parameter GetEntry entry, Connection connection) throws SQLException {
 		try (PreparedStatement statement = connection.prepareStatement(
 				"SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = ?", ResultSet.TYPE_FORWARD_ONLY,
 				ResultSet.CONCUR_READ_ONLY)) {
-			statement.setInt(1, entry.id);
-			ResultSet resultSet = statement.executeQuery();
-			resultSet.next();
-			entry.world = new World(resultSet.getInt(1), resultSet.getInt(2));
+			for (int i = 0; i < worlds.length; i++) {
+				statement.setInt(1, random.nextInt(1, 10000));
+				ResultSet resultSet = statement.executeQuery();
+				resultSet.next();
+				worlds[i] = new World(resultSet.getInt(1), resultSet.getInt(2));
+			}
+			response.send(worlds);
 		}
 	}
 
 	// =========== UPDATES ===================
 
-	public void update(@HttpQueryParameter("queries") String queries, UpdatesFlows flows) {
+	public void update(@HttpQueryParameter("queries") String queries, Connection connection,
+			ObjectResponse<World[]> response) throws SQLException {
 		ThreadLocalRandom random = ThreadLocalRandom.current();
-		int[] loaded = new int[] { 0 };
 		int count = getQueryCount(queries);
 		World[] worlds = new World[count];
-		for (int i = 0; i < worlds.length; i++) {
-			int index = i;
-			UpdateEntry entry = new UpdateEntry(random.nextInt(1, 10000));
-			flows.updateEntry(entry, (escalation) -> {
-				worlds[index] = entry.world;
-				loaded[0]++;
-				if (loaded[0] >= count) {
-					flows.doUpdates(worlds);
-				}
-			});
-		}
-	}
-
-	@FlowInterface
-	public static interface UpdatesFlows {
-		@Spawn
-		void updateEntry(UpdateEntry entry, FlowCallback callback);
-
-		void doUpdates(World[] worlds);
-	}
-
-	@Data
-	public static class UpdateEntry {
-		private final int id;
-		private World world;
-	}
-
-	public void updateEntry(@Parameter UpdateEntry entry, Connection connection) throws SQLException {
-		ThreadLocalRandom random = ThreadLocalRandom.current();
 		try (PreparedStatement statement = connection.prepareStatement("SELECT ID FROM WORLD WHERE ID = ?",
 				ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
-			statement.setInt(1, entry.id);
-			ResultSet resultSet = statement.executeQuery();
-			resultSet.next();
-			entry.world = new World(resultSet.getInt(1), random.nextInt(1, 10000));
+			for (int i = 0; i < worlds.length; i++) {
+				statement.setInt(1, random.nextInt(1, 10000));
+				ResultSet resultSet = statement.executeQuery();
+				resultSet.next();
+				worlds[i] = new World(resultSet.getInt(1), random.nextInt(1, 10000));
+			}
 		}
-	}
-
-	public void doUpdates(@Parameter World[] worlds, Connection connection, ObjectResponse<World[]> response)
-			throws SQLException {
 		Arrays.sort(worlds, (a, b) -> a.getId() - b.getId());
 		try (PreparedStatement statement = connection
 				.prepareStatement("UPDATE WORLD SET RANDOMNUMBER = ? WHERE ID = ?")) {
