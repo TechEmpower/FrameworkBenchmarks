@@ -1,6 +1,6 @@
 [package]
 name = "actix"
-version = "0.7.0"
+version = "0.7.1"
 build = "build.rs"
 
 [[bin]]
@@ -31,10 +31,16 @@ futures = "0.1"
 http = "0.1"
 diesel = { version = "1.2", features = ["postgres"] }
 url = { version="1.7", features=["query_encoding"] }
-postgres = "0.15"
 
 actix = "0.7"
 actix-web = { version="0.7", default-features = false }
+
+phf = "0.7.22"
+tokio-postgres = { git="https://github.com/sfackler/rust-postgres.git" }
+
+[patch.crates-io]
+tokio-io = { git="https://github.com/tokio-rs/tokio.git" }
+tokio-uds = { git="https://github.com/tokio-rs/tokio.git" }
 
 [build-dependencies]
 askama = "0.7"
