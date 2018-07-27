@@ -10,6 +10,7 @@ static char query[8192];
 #endif
 static UOrmStatement* pstmt_update;
 
+static void usp_init_update() { World::handlerInitSql(); }
 static void usp_fork_update()
 {
    U_TRACE(5, "::usp_fork_update()")
@@ -63,7 +64,7 @@ if (World::pdrv)
       u_put_unalignedp16(pquery, U_MULTICHAR_CONSTANT16(')',','));
                          pquery += 2;
 
-      World::handlerResult(World::rnumber[i], World::rnum);
+      World::handlerResult(i, World::rnum);
 
       U_SYSCALL_VOID(PQclear, "%p", res);
       }
@@ -92,7 +93,7 @@ for (; i < num_queries; ++i)
 
    pstmt_update->execute();
 
-   World::handlerResultSql(i);
+   World::handlerResult(i, World::pworld_query->randomNumber);
    }
 
 World::endResult();

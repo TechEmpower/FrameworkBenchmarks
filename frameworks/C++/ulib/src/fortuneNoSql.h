@@ -12,104 +12,136 @@
 #  include <ulib/net/client/mongodb.h>
 #endif
 
-class FortuneNoSql {
+class U_EXPORT FortuneNoSql {
 public:
 
 #ifdef USE_MONGODB
-   static UMongoDBClient* mc;
+	static UMongoDBClient* mc;
 #endif
 
-   static void handlerQueryMongoDB()
-      {
-      U_TRACE(5, "FortuneNoSql::handlerQueryMongoDB()")
+	static void handlerQueryMongoDB()
+		{
+		U_TRACE(5, "FortuneNoSql::handlerQueryMongoDB()")
 
-      U_INTERNAL_ASSERT_POINTER(Fortune::pmessage)
+		U_INTERNAL_ASSERT_POINTER(Fortune::pmessage)
 
-#  ifdef USE_MONGODB
-      (void) mc->findAll();
+#	ifdef USE_MONGODB
+		(void) mc->findAll();
 
-      for (uint32_t i = 0, n = mc->vitem.size(); i < n; ++i)
-         {
-         (void) U_JFIND(mc->vitem[i], "message", *Fortune::pmessage);
+		for (uint32_t i = 0, n = mc->vitem.size(); i < n; ++i)
+			{
+			(void) U_JFIND(mc->vitem[i], "message", *Fortune::pmessage);
 
-         Fortune::replace(i, i+1);
+			Fortune::replace(i, i+1);
 
-         Fortune::pmessage->clear();
-         }
-#  endif
-      }
+			Fortune::pmessage->clear();
+			}
+#	endif
+		}
 
-   static void handlerForkMongoDB()
-      {
-      U_TRACE_NO_PARAM(5, "FortuneNoSql::handlerForkMongoDB()")
+	static void handlerForkMongoDB()
+		{
+		U_TRACE_NO_PARAM(5, "FortuneNoSql::handlerForkMongoDB()")
 
-#  ifdef USE_MONGODB
-      if (mc == U_NULLPTR)
-         {
-         U_NEW(UMongoDBClient, mc, UMongoDBClient);
+#	ifdef USE_MONGODB
+		if (mc == U_NULLPTR)
+			{
+			U_NEW(UMongoDBClient, mc, UMongoDBClient);
 
-         if (mc->connect(U_NULLPTR, 0) == false)
-            {
-            U_WARNING("FortuneNoSql::handlerForkMongoDB(): connection failed");
+			if (mc->connect(U_NULLPTR, 0) == false)
+				{
+				U_WARNING("FortuneNoSql::handlerForkMongoDB(): connection failed");
 
-            U_DELETE(mc)
+				U_DELETE(mc)
 
-            mc = U_NULLPTR;
+				mc = U_NULLPTR;
 
-            return;
-            }
+				return;
+				}
 
-         if (mc->selectCollection("hello_world", "fortune") == false)
-            {
-            U_WARNING("FortuneNoSql::handlerForkMongoDB(): selectCollection() failed");
+			if (mc->selectCollection("hello_world", "fortune") == false)
+				{
+				U_WARNING("FortuneNoSql::handlerForkMongoDB(): selectCollection() failed");
 
-            U_DELETE(mc)
+				U_DELETE(mc)
 
-            mc = U_NULLPTR;
+				mc = U_NULLPTR;
 
-            return;
-            }
+				return;
+				}
 
-         Fortune::handlerFork();
-         }
-#  endif
-      }
+			Fortune::handlerFork();
+			}
+#	endif
+		}
 
-   static UREDISClient_Base* rc;
+	static UREDISClient_Base* rc;
 
-   static void handlerQueryREDIS()
-      {
-      U_TRACE(5, "FortuneNoSql::handlerQueryREDIS()")
+	static void handlerQueryREDIS()
+		{
+		U_TRACE(5, "FortuneNoSql::handlerQueryREDIS()")
 
-      (void) rc->lrange(U_CONSTANT_TO_PARAM("fortunes 0 -1"));
+		(void) rc->lrange(U_CONSTANT_TO_PARAM("fortunes 0 -1"));
 
-      for (uint32_t i = 0, n = rc->vitem.size(); i < n; ++i) Fortune::replace(i, rc->vitem[i]);
-      }
+		for (uint32_t i = 0, n = rc->vitem.size(); i < n; ++i) Fortune::replace(i, rc->vitem[i]);
+		}
 
-   static void handlerForkREDIS()
-      {
-      U_TRACE_NO_PARAM(5, "Fortune::handlerForkREDIS()")
+	static void handlerForkREDIS()
+		{
+		U_TRACE_NO_PARAM(5, "Fortune::handlerForkREDIS()")
 
-      if (rc == U_NULLPTR)
-         {
-         U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
+		if (rc == U_NULLPTR)
+			{
+			U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
 
-         if (rc->connect() == false)
-            {
-            U_WARNING("FortuneNoSql::handlerForkREDIS(): %V", rc->UClient_Base::getResponse().rep);
+			if (rc->connect() == false)
+				{
+				U_WARNING("FortuneNoSql::handlerForkREDIS(): %V", rc->UClient_Base::getResponse().rep);
 
-            U_DELETE(rc)
+				U_DELETE(rc)
 
-            rc = U_NULLPTR;
+				rc = U_NULLPTR;
 
-            return;
-            }
+				return;
+				}
 
-         Fortune::handlerFork();
-         }
-      }
+			Fortune::handlerFork();
+			}
+		}
+
+#ifdef DEBUG
+	static void handlerEndMongoDB()
+		{
+		U_TRACE_NO_PARAM(5, "FortuneNoSql::handlerEndMongoDB()")
+
+#	ifdef USE_MONGODB
+		if (mc)
+			{
+			Fortune::handlerEnd();
+
+			U_DELETE(mc)
+
+			mc = U_NULLPTR;
+			}
+#	endif
+		}
+
+	static void handlerEndREDIS()
+		{
+		U_TRACE_NO_PARAM(5, "FortuneNoSql::handlerEndREDIS()")
+
+		if (rc)
+			{
+			Fortune::handlerEnd();
+
+			U_DELETE(rc)
+
+			rc = U_NULLPTR;
+			}
+		}
+#endif
 
 private:
-   U_DISALLOW_ASSIGN(FortuneNoSql)
+	U_DISALLOW_ASSIGN(FortuneNoSql)
 };
 #endif
