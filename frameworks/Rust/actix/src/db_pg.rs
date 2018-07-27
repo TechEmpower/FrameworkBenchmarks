@@ -13,6 +13,7 @@ pub struct PgConnection {
     cl: Option<Client>,
     fortune: Option<Statement>,
     world: Option<Statement>,
+    update: Option<Statement>,
     rng: ThreadRng,
 }
 
@@ -29,6 +30,7 @@ impl PgConnection {
                 cl: None,
                 fortune: None,
                 world: None,
+                update: None,
                 rng: thread_rng(),
             };
 
@@ -50,6 +52,15 @@ impl PgConnection {
                             .into_actor(act)
                             .and_then(|st, act, _| {
                                 act.world = Some(st);
+                                fut::ok(())
+                            }),
+                    );
+                    ctx.wait(
+                        cl.prepare("SELECT id FROM world WHERE id=$1")
+                            .map_err(|_| ())
+                            .into_actor(act)
+                            .and_then(|st, act, _| {
+                                act.update = Some(st);
                                 fut::ok(())
                             }),
                     );
@@ -141,19 +152,20 @@ impl Handler<UpdateWorld> for PgConnection {
     fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
+            let id: i32 = self.rng.gen_range(1, 10_000);
             let w_id: i32 = self.rng.gen_range(1, 10_000);
             worlds.push(
                 self.cl
                     .as_mut()
                     .unwrap()
-                    .query(self.world.as_ref().unwrap(), &[&w_id])
+                    .query(self.update.as_ref().unwrap(), &[&w_id])
                     .into_future()
                     .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
-                    .and_then(|(row, _)| {
+                    .and_then(move |(row, _)| {
                         let row = row.unwrap();
                         Ok(World {
                             id: row.get(0),
-                            randomnumber: row.get(1),
+                            randomnumber: id,
                         })
                     }),
             );
