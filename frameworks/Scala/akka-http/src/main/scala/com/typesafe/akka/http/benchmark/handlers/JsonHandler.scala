@@ -1,24 +1,21 @@
 package com.typesafe.akka.http.benchmark.handlers
 
 import akka.http.scaladsl.server.Directives._
-import spray.json.DefaultJsonProtocol
-import spray.json.RootJsonFormat
+import akka.http.scaladsl.server.Route
+import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.macros._
 
 case class JsonResponse(message: String)
+
 object JsonResponse {
-  import DefaultJsonProtocol._
-  implicit val responseFormat: RootJsonFormat[JsonResponse] = jsonFormat1(JsonResponse.apply)
+  implicit val codec: JsonValueCodec[JsonResponse] = JsonCodecMaker.make[JsonResponse](CodecMakerConfig())
 }
 
 trait JsonHandler {
-  import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+  import de.heikoseeberger.akkahttpjsoniterscala.JsoniterScalaSupport._
 
-  def jsonResponse = JsonResponse("Hello, World!") // domain object
-
-  def jsonEndpoint =
-    get {
-      path("json") {
-        complete(jsonResponse)
-      }
+  def jsonEndpoint: Route =
+    (get & path("json")) {
+      complete(JsonResponse("Hello, World!"))
     }
 }

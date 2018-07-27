@@ -9,9 +9,6 @@ static void usp_fork_query() { World::handlerForkSql(); }
 -->
 <!--#header
 -->
-<!--#vcode
-if (UServer_Base::startParallelization()) return;
--->
 <!--#code
 uint32_t i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 

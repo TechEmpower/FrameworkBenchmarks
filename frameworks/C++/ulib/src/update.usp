@@ -32,9 +32,6 @@ static void usp_fork_update()
 -->
 <!--#header
 -->
-<!--#vcode
-if (UServer_Base::startParallelization()) return;
--->
 <!--#code
 uint32_t i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 

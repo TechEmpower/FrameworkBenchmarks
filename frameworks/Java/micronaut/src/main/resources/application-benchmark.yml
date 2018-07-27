@@ -1,0 +1,9 @@
+postgres:
+    reactive:
+        client:
+            user: benchmarkdbuser
+            password: benchmarkdbpass
+            host: tfb-database
+            port: 5432
+            database: hello_world
+            cachePreparedStatements: true

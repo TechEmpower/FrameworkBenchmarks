@@ -8,7 +8,10 @@ import scala.concurrent.ExecutionContext
 
 trait Infrastructure {
   implicit def system: ActorSystem
+
   implicit def executionContext: ExecutionContext
+
   implicit def materializer: Materializer
+
   def appConfig: Config
 }
