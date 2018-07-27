@@ -34,7 +34,7 @@ url = { version="1.7", features=["query_encoding"] }
 postgres = "0.15"
 
 actix = "0.7"
-actix-web = { git = "https://github.com/actix/actix-web.git", default-features = false }
+actix-web = { version="0.7", default-features = false }
 
 [build-dependencies]
 askama = "0.7"
