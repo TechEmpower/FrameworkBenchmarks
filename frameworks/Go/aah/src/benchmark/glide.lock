@@ -1,14 +1,14 @@
 hash: a61d685b506cb25836a56a85c6c67a2ecf0e827bbd2921e46068d24735e4618e
-updated: 2018-07-07T18:56:52.836749848-07:00
+updated: 2018-07-27T18:36:22.826547848-07:00
 imports:
 - name: aahframework.org/aah.v0
-  version: 3a30b0c90ca2ca9c2d0d31fabab47b6689ab688c
+  version: aa1960d4bf0bbe343709890970a7bbfdefc5bdb3
 - name: aahframework.org/ahttp.v0
-  version: d4d049fa4cb0bdfc40e936e4dfdea876e9a3b3d5
+  version: 266c519271025770fdbd26d5d252884d2287ba76
 - name: aahframework.org/ainsp.v0
   version: 14b9cae19d5d96d73369dacbf82f03499b780984
 - name: aahframework.org/aruntime.v0
-  version: 2086b0399afb84f1c086b25acb4d772c2e59a6af
+  version: d04ceb7c6da8a666575100892a608751862f78e6
 - name: aahframework.org/config.v0
   version: 4a83eccfa602aa46ee50a19785e04376a2c9df0c
 - name: aahframework.org/essentials.v0
@@ -20,9 +20,9 @@ imports:
 - name: aahframework.org/i18n.v0
   version: 82db044e58f6ee644e0c8f1db36cb1a423b3859d
 - name: aahframework.org/log.v0
-  version: e8fbaf78e3c4c935debeee51a2e3765d0a4a49f1
+  version: c9bcdc50123ccef7d644ecf749a782f7e5b4b6b8
 - name: aahframework.org/router.v0
-  version: 2e5e6f7789cdc68143f1e7603ce6fd98c8da5ac4
+  version: 419205d2467190e2cf94948186d40b0063ae3eab
 - name: aahframework.org/security.v0
   version: c82895034e1356832e421a07010ac9f10e1b6a18
   subpackages:
