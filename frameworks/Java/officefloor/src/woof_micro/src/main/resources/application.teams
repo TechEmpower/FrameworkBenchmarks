@@ -1,5 +1,7 @@
 <teams>
 
-	<team source="net.officefloor.frame.impl.spi.team.ExecutorCachedTeamSource" type="java.sql.Connection" />
+	<team source="net.officefloor.frame.impl.spi.team.ExecutorFixedTeamSource" type="java.sql.Connection">
+		<property name="team.size" value="28" />
+	</team>
 
 </teams>

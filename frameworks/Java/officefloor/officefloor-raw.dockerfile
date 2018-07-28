@@ -2,7 +2,7 @@ FROM maven:3.5.4-jdk-10 as maven
 WORKDIR /officefloor
 COPY src src
 WORKDIR /officefloor/src/woof_raw
-RUN mvn clean package
+RUN mvn -q clean package
 
 FROM openjdk:10
 WORKDIR /officefloor
