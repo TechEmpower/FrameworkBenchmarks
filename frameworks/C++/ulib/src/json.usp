@@ -3,6 +3,7 @@ Test type 1: JSON serialization
 TechEmpower Web Framework Benchmarks
 -->
 <!--#declaration
+static char* ptr;
 static UString* pkey;
 static UString* pvalue;
 
@@ -32,13 +33,15 @@ if (*pwbuffer == '\0')
    u_put_unalignedp64(pwbuffer+44, U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'));
    u_put_unalignedp16(pwbuffer+52, U_MULTICHAR_CONSTANT16('\r','\n'));
 
-   UValue::pstringify = pwbuffer + U_CONSTANT_SIZE("Content-Length: 27\r\nContent-Type: application/json\r\n\r\n");
+   ptr = pwbuffer + U_CONSTANT_SIZE("Content-Length: 27\r\nContent-Type: application/json\r\n\r\n");
 
    UClientImage_Base::wbuffer->size_adjust_constant(U_CONSTANT_SIZE("Content-Length: 27\r\nContent-Type: application/json\r\n\r\n") + 27);
    }
 
 U_INTERNAL_ASSERT_EQUALS(u_get_unalignedp64(UClientImage_Base::wbuffer->data()),        U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'))
 U_INTERNAL_ASSERT_EQUALS(u_get_unalignedp64(UClientImage_Base::wbuffer->c_pointer(44)), U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'))
+
+UValue::pstringify = ptr;
 
 UValue(*pkey, *pvalue).stringify();
 -->
