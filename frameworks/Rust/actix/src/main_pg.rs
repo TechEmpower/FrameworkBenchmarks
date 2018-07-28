@@ -3,10 +3,10 @@ extern crate actix_web;
 extern crate bytes;
 extern crate futures;
 extern crate num_cpus;
-extern crate postgres;
 extern crate rand;
 extern crate serde;
 extern crate serde_json;
+extern crate tokio_postgres;
 extern crate url;
 #[macro_use]
 extern crate serde_derive;
@@ -22,7 +22,6 @@ use actix_web::{
 use askama::Template;
 use bytes::BytesMut;
 use futures::Future;
-use postgres::{Connection, TlsMode};
 
 mod db_pg;
 mod models;
@@ -136,22 +135,11 @@ fn main() {
     let sys = System::new("techempower");
     let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
-    // Avoid triggering "FATAL: the database system is starting up" error from
-    // postgres.
-    {
-        if Connection::connect(db_url, TlsMode::None).is_err() {
-            std::thread::sleep(std::time::Duration::from_secs(5));
-        }
-    }
-
-    // Start db executor actors
-    let addr = SyncArbiter::start(num_cpus::get() * 3, move || {
-        db_pg::PgConnection::new(db_url)
-    });
-
     // start http server
     server::new(move || {
-        App::with_state(State { db: addr.clone() })
+        let addr = PgConnection::connect(db_url);
+
+        App::with_state(State { db: addr })
             .resource("/db", |r| r.route().f(world_row))
             .resource("/queries", |r| r.route().f(queries))
             .resource("/fortune", |r| r.route().f(fortune))
@@ -159,6 +147,7 @@ fn main() {
     }).backlog(8192)
         .bind("0.0.0.0:8080")
         .unwrap()
+        .workers(1)
         .start();
 
     println!("Started http server: 127.0.0.1:8080");

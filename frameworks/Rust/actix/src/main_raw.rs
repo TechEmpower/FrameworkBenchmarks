@@ -9,11 +9,11 @@ extern crate serde_derive;
 #[macro_use]
 extern crate askama;
 extern crate num_cpus;
-extern crate postgres;
 extern crate rand;
 extern crate url;
 #[macro_use]
 extern crate diesel;
+extern crate tokio_postgres;
 
 use std::mem;
 
@@ -24,7 +24,6 @@ use actix_web::server::{
 use actix_web::Error;
 use askama::Template;
 use futures::{Async, Future, Poll};
-use postgres::{Connection, TlsMode};
 
 mod db_pg;
 mod models;
@@ -269,22 +268,12 @@ fn main() {
     let sys = System::new("techempower");
     let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
-    // Avoid triggering "FATAL: the database system is starting up" error from
-    // postgres.
-    {
-        if Connection::connect(db_url, TlsMode::None).is_err() {
-            std::thread::sleep(std::time::Duration::from_secs(5));
-        }
-    }
-
-    // Start db executor actors
-    let addr = SyncArbiter::start(num_cpus::get() * 3, move || {
-        db_pg::PgConnection::new(db_url)
-    });
-
     // start http server
-    HttpServer::new(move || vec![App { db: addr.clone() }])
-        .backlog(8192)
+    HttpServer::new(move || {
+        let db = PgConnection::connect(db_url);
+
+        vec![App { db }]
+    }).backlog(8192)
         .bind("0.0.0.0:8080")
         .unwrap()
         .start();
