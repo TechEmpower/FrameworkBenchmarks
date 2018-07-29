@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     // Framework
-    def framework_version = '0.9.10'
+    def framework_version = '0.9.12'
     compile "net.javapla.jawn:jawn:${framework_version}"
 
 
