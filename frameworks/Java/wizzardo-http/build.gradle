@@ -1,0 +1,33 @@
+group 'com.wizzardo.techempower'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+
+mainClassName = "com.wizzardo.techempower.App"
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.wizzardo:http:0.2.2'
+
+    compile 'org.postgresql:postgresql:9.4.1212'
+    compile 'com.zaxxer:HikariCP:2.7.3'
+}
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes(
+                "Main-Class": mainClassName
+        )
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

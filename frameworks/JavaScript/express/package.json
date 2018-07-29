@@ -5,12 +5,9 @@
   "dependencies": {
     "express": "4.16.2",
     "body-parser": "1.18.2",
-    "method-override": "2.3.10",
-    "errorhandler": "1.5.0",
-    "async": "2.5.0",
-    "pug": "2.0.0-rc.4",
+    "pug": "2.0.1",
     "sequelize": "3.30.0",
     "mysql": "2.15.0",
-    "mongoose": "4.12.4"
+    "mongoose": "5.0.6"
   }
 }

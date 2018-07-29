@@ -1,32 +1,53 @@
 # carton snapshot format: version 1.0
 DISTRIBUTIONS
-  Canary-Stability-2006
-    pathname: M/ML/MLEHMANN/Canary-Stability-2006.tar.gz
+  Canary-Stability-2012
+    pathname: M/ML/MLEHMANN/Canary-Stability-2012.tar.gz
     provides:
-      Canary::Stability 2006
+      Canary::Stability 2012
     requirements:
       ExtUtils::MakeMaker 0
-  Cpanel-JSON-XS-3.0213
-    pathname: R/RU/RURBAN/Cpanel-JSON-XS-3.0213.tar.gz
+  Class-Method-Modifiers-2.12
+    pathname: E/ET/ETHER/Class-Method-Modifiers-2.12.tar.gz
     provides:
-      Cpanel::JSON::XS 3.0213
+      Class::Method::Modifiers 2.12
+    requirements:
+      B 0
+      Carp 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      base 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Clone-Choose-0.010
+    pathname: H/HE/HERMES/Clone-Choose-0.010.tar.gz
+    provides:
+      Clone::Choose 0.010
+    requirements:
+      ExtUtils::MakeMaker 0
+      Storable 0
+      perl 5.008001
+  Cpanel-JSON-XS-4.02
+    pathname: R/RU/RURBAN/Cpanel-JSON-XS-4.02.tar.gz
+    provides:
+      Cpanel::JSON::XS 4.02
+      Cpanel::JSON::XS::Type undef
     requirements:
       ExtUtils::MakeMaker 0
       Pod::Text 2.08
-      Pod::Usage 1.33
-  DBD-Pg-3.5.3
-    pathname: T/TU/TURNSTEP/DBD-Pg-3.5.3.tar.gz
+  DBD-Pg-3.7.4
+    pathname: T/TU/TURNSTEP/DBD-Pg-3.7.4.tar.gz
     provides:
-      Bundle::DBD::Pg v3.5.3
-      DBD::Pg v3.5.3
+      Bundle::DBD::Pg v3.7.4
+      DBD::Pg v3.7.4
     requirements:
       DBI 1.614
       ExtUtils::MakeMaker 6.11
       Test::More 0.88
       Time::HiRes 0
       version 0
-  DBI-1.634
-    pathname: T/TI/TIMB/DBI-1.634.tar.gz
+  DBI-1.641
+    pathname: T/TI/TIMB/DBI-1.641.tar.gz
     provides:
       Bundle::DBI 12.008696
       DBD::DBM 0.08
@@ -61,6 +82,13 @@ DISTRIBUTIONS
       DBD::Gofer::db 0.015327
       DBD::Gofer::dr 0.015327
       DBD::Gofer::st 0.015327
+      DBD::Mem 0.001
+      DBD::Mem::DataSource 0.001
+      DBD::Mem::Statement 0.001
+      DBD::Mem::Table 0.001
+      DBD::Mem::db 0.001
+      DBD::Mem::dr 0.001
+      DBD::Mem::st 0.001
       DBD::NullP 12.014715
       DBD::NullP::db 12.014715
       DBD::NullP::dr 12.014715
@@ -75,7 +103,7 @@ DISTRIBUTIONS
       DBD::Sponge::dr 12.010003
       DBD::Sponge::st 12.010003
       DBDI 12.015129
-      DBI 1.634
+      DBI 1.641
       DBI::Const::GetInfo::ANSI 2.008697
       DBI::Const::GetInfo::ODBC 2.011374
       DBI::Const::GetInfoReturn 2.008697
@@ -92,7 +120,6 @@ DISTRIBUTIONS
       DBI::DBD::SqlEngine::db 0.06
       DBI::DBD::SqlEngine::dr 0.06
       DBI::DBD::SqlEngine::st 0.06
-      DBI::FAQ 1.014935
       DBI::Gofer::Execute 0.014283
       DBI::Gofer::Request 0.012537
       DBI::Gofer::Response 0.011566
@@ -116,11 +143,19 @@ DISTRIBUTIONS
       DBI::SQL::Nano::Table_ 1.015544
       DBI::Util::CacheMemory 0.010315
       DBI::Util::_accessor 0.009479
-      DBI::common 1.634
+      DBI::common 1.641
     requirements:
       ExtUtils::MakeMaker 6.48
       Test::Simple 0.90
       perl 5.008
+  Devel-GlobalDestruction-0.14
+    pathname: H/HA/HAARG/Devel-GlobalDestruction-0.14.tar.gz
+    provides:
+      Devel::GlobalDestruction 0.14
+    requirements:
+      ExtUtils::MakeMaker 0
+      Sub::Exporter::Progressive 0.001011
+      perl 5.006
   EV-4.22
     pathname: M/ML/MLEHMANN/EV-4.22.tar.gz
     provides:
@@ -130,29 +165,100 @@ DISTRIBUTIONS
       Canary::Stability 0
       ExtUtils::MakeMaker 6.52
       common::sense 0
-  IO-Socket-IP-0.37
-    pathname: P/PE/PEVANS/IO-Socket-IP-0.37.tar.gz
+  Hash-Merge-0.300
+    pathname: R/RE/REHSACK/Hash-Merge-0.300.tar.gz
     provides:
-      IO::Socket::IP 0.37
+      Hash::Merge 0.300
     requirements:
-      IO::Socket 0
-      Socket 1.97
-      Test::More 0.88
-  Mojo-Pg-2.23
-    pathname: S/SR/SRI/Mojo-Pg-2.23.tar.gz
+      Clone::Choose 0.008
+      ExtUtils::MakeMaker 6.64
+      Scalar::Util 0
+      perl 5.008001
+  MRO-Compat-0.13
+    pathname: H/HA/HAARG/MRO-Compat-0.13.tar.gz
     provides:
-      Mojo::Pg 2.23
+      MRO::Compat 0.13
+    requirements:
+      ExtUtils::MakeMaker 0
+      perl 5.006
+  Module-Build-0.4224
+    pathname: L/LE/LEONT/Module-Build-0.4224.tar.gz
+    provides:
+      Module::Build 0.4224
+      Module::Build::Base 0.4224
+      Module::Build::Compat 0.4224
+      Module::Build::Config 0.4224
+      Module::Build::Cookbook 0.4224
+      Module::Build::Dumper 0.4224
+      Module::Build::Notes 0.4224
+      Module::Build::PPMMaker 0.4224
+      Module::Build::Platform::Default 0.4224
+      Module::Build::Platform::MacOS 0.4224
+      Module::Build::Platform::Unix 0.4224
+      Module::Build::Platform::VMS 0.4224
+      Module::Build::Platform::VOS 0.4224
+      Module::Build::Platform::Windows 0.4224
+      Module::Build::Platform::aix 0.4224
+      Module::Build::Platform::cygwin 0.4224
+      Module::Build::Platform::darwin 0.4224
+      Module::Build::Platform::os2 0.4224
+      Module::Build::PodParser 0.4224
+    requirements:
+      CPAN::Meta 2.142060
+      CPAN::Meta::YAML 0.003
+      Cwd 0
+      Data::Dumper 0
+      ExtUtils::CBuilder 0.27
+      ExtUtils::Install 0
+      ExtUtils::Manifest 0
+      ExtUtils::Mkbootstrap 0
+      ExtUtils::ParseXS 2.21
+      File::Basename 0
+      File::Compare 0
+      File::Copy 0
+      File::Find 0
+      File::Path 0
+      File::Spec 0.82
+      File::Temp 0.15
+      Getopt::Long 0
+      Module::Metadata 1.000002
+      Parse::CPAN::Meta 1.4401
+      Perl::OSType 1
+      Pod::Man 2.17
+      TAP::Harness 3.29
+      Test::More 0.49
+      Text::Abbrev 0
+      Text::ParseWords 0
+      perl 5.006001
+      version 0.87
+  Module-Runtime-0.016
+    pathname: Z/ZE/ZEFRAM/Module-Runtime-0.016.tar.gz
+    provides:
+      Module::Runtime 0.016
+    requirements:
+      Module::Build 0
+      Test::More 0.41
+      perl 5.006
+      strict 0
+      warnings 0
+  Mojo-Pg-4.08
+    pathname: S/SR/SRI/Mojo-Pg-4.08.tar.gz
+    provides:
+      Mojo::Pg 4.08
       Mojo::Pg::Database undef
       Mojo::Pg::Migrations undef
       Mojo::Pg::PubSub undef
       Mojo::Pg::Results undef
       Mojo::Pg::Transaction undef
+      SQL::Abstract::Pg undef
     requirements:
       DBD::Pg 3.005001
       ExtUtils::MakeMaker 0
-      Mojolicious 6.0
-  Mojolicious-6.55
-    pathname: S/SR/SRI/Mojolicious-6.55.tar.gz
+      Mojolicious 7.53
+      SQL::Abstract 1.85
+      perl 5.010001
+  Mojolicious-7.84
+    pathname: S/SR/SRI/Mojolicious-7.84.tar.gz
     provides:
       Mojo undef
       Mojo::Asset undef
@@ -174,6 +280,7 @@ DISTRIBUTIONS
       Mojo::Date undef
       Mojo::EventEmitter undef
       Mojo::Exception undef
+      Mojo::File undef
       Mojo::Headers undef
       Mojo::HelloWorld undef
       Mojo::Home undef
@@ -182,6 +289,12 @@ DISTRIBUTIONS
       Mojo::IOLoop::Delay undef
       Mojo::IOLoop::Server undef
       Mojo::IOLoop::Stream undef
+      Mojo::IOLoop::Stream::HTTPClient undef
+      Mojo::IOLoop::Stream::HTTPServer undef
+      Mojo::IOLoop::Stream::WebSocketClient undef
+      Mojo::IOLoop::Stream::WebSocketServer undef
+      Mojo::IOLoop::Subprocess undef
+      Mojo::IOLoop::TLS undef
       Mojo::JSON undef
       Mojo::JSON::Pointer undef
       Mojo::Loader undef
@@ -191,6 +304,7 @@ DISTRIBUTIONS
       Mojo::Message::Response undef
       Mojo::Parameters undef
       Mojo::Path undef
+      Mojo::Promise undef
       Mojo::Reactor undef
       Mojo::Reactor::EV undef
       Mojo::Reactor::Poll undef
@@ -199,6 +313,8 @@ DISTRIBUTIONS
       Mojo::Server::Daemon undef
       Mojo::Server::Hypnotoad undef
       Mojo::Server::Morbo undef
+      Mojo::Server::Morbo::Backend undef
+      Mojo::Server::Morbo::Backend::Poll undef
       Mojo::Server::PSGI undef
       Mojo::Server::PSGI::_IO undef
       Mojo::Server::Prefork undef
@@ -215,7 +331,7 @@ DISTRIBUTIONS
       Mojo::UserAgent::Transactor undef
       Mojo::Util undef
       Mojo::WebSocket undef
-      Mojolicious 6.55
+      Mojolicious 7.84
       Mojolicious::Command undef
       Mojolicious::Command::cgi undef
       Mojolicious::Command::cpanify undef
@@ -237,7 +353,6 @@ DISTRIBUTIONS
       Mojolicious::Controller undef
       Mojolicious::Lite undef
       Mojolicious::Plugin undef
-      Mojolicious::Plugin::Charset undef
       Mojolicious::Plugin::Config undef
       Mojolicious::Plugin::Config::Sandbox undef
       Mojolicious::Plugin::DefaultHelpers undef
@@ -267,6 +382,77 @@ DISTRIBUTIONS
       JSON::PP 2.27103
       Pod::Simple 3.09
       Time::Local 1.2
+      perl 5.010001
+  Moo-2.003004
+    pathname: H/HA/HAARG/Moo-2.003004.tar.gz
+    provides:
+      Method::Generate::Accessor undef
+      Method::Generate::BuildAll undef
+      Method::Generate::Constructor undef
+      Method::Generate::DemolishAll undef
+      Moo 2.003004
+      Moo::HandleMoose undef
+      Moo::HandleMoose::FakeConstructor undef
+      Moo::HandleMoose::FakeMetaClass undef
+      Moo::HandleMoose::_TypeMap undef
+      Moo::Object undef
+      Moo::Role 2.003004
+      Moo::_Utils undef
+      Moo::_mro undef
+      Moo::_strictures undef
+      Moo::sification undef
+      oo undef
+    requirements:
+      Class::Method::Modifiers 1.1
+      Devel::GlobalDestruction 0.11
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      Module::Runtime 0.014
+      Role::Tiny 2.000004
+      Scalar::Util 0
+      Sub::Defer 2.003001
+      Sub::Quote 2.003001
+      perl 5.006
+  Role-Tiny-2.000006
+    pathname: H/HA/HAARG/Role-Tiny-2.000006.tar.gz
+    provides:
+      Role::Tiny 2.000006
+      Role::Tiny::With 2.000006
+    requirements:
+      Exporter 5.57
+      perl 5.006
+  SQL-Abstract-1.85
+    pathname: I/IL/ILMARI/SQL-Abstract-1.85.tar.gz
+    provides:
+      SQL::Abstract 1.85
+      SQL::Abstract::Test undef
+      SQL::Abstract::Tree undef
+    requirements:
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      Hash::Merge 0.12
+      List::Util 0
+      MRO::Compat 0.12
+      Moo 2.000001
+      Scalar::Util 0
+      Sub::Quote 2.000001
+      Text::Balanced 2.00
+      perl 5.006
+  Sub-Exporter-Progressive-0.001013
+    pathname: F/FR/FREW/Sub-Exporter-Progressive-0.001013.tar.gz
+    provides:
+      Sub::Exporter::Progressive 0.001013
+    requirements:
+      ExtUtils::MakeMaker 0
+  Sub-Quote-2.005001
+    pathname: H/HA/HAARG/Sub-Quote-2.005001.tar.gz
+    provides:
+      Sub::Defer 2.005001
+      Sub::Quote 2.005001
+    requirements:
+      ExtUtils::MakeMaker 0
+      Scalar::Util 0
+      perl 5.006
   common-sense-3.74
     pathname: M/ML/MLEHMANN/common-sense-3.74.tar.gz
     provides:

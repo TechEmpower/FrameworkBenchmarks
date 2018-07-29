@@ -45,18 +45,15 @@ class Application (val controllerComponents: ControllerComponents, reactiveMongo
     futureFortunes
   }
 
-  def updateWorlds(queries: Int): Future[Seq[Option[JsObject]]] = {
-    val futureWorlds: Future[Seq[Option[JsObject]]] = getRandomWorlds(queries)
-    val futureNewWorlds: Future[Seq[Option[JsObject]]] = futureWorlds.map( worlds => {
-      worlds.map(worldOption => {
-        worldOption.map(world => {
-          val newWorld = world ++ Json.obj("randomNumber" -> getNextRandom)
-          worldCollection.update(world, newWorld)
-          newWorld
-        })
-      })
-    })
-    futureNewWorlds
+  def updateWorlds(queries: Int): Future[Seq[JsObject]] = {
+    getRandomWorlds(queries)
+      .map(_.flatten)
+      .map(_.map(oldWorld => {
+        val newWorld = oldWorld ++ Json.obj("randomNumber" -> getNextRandom)
+        worldCollection.update(oldWorld, newWorld).map(result => newWorld)
+      }))
+      .map(Future.sequence(_))
+      .flatten
   }
 
   def getNextRandom: Int = {

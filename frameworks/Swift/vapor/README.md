@@ -4,41 +4,40 @@ This is the Vapor portion of a [benchmarking tests suite](../../) comparing a va
 
 ### Targets
 
-Three executable targets. Each listens on port 8080. All handle same URLs.  
-`vapor-tfb-mysql` is for MySQL  
-`vapor-tfb-postgresql` is for PostgreSQL  
-`vapor-tfb-mongodb` is for MongoDB
+Two executable targets. Each listens on port 8080.
+`vapor-tfb` is for a bare server, (neither Fluent nor Leaf are dependencies)
+`vapor-tfb-mysql` is for MySQL
 
 ### Dependencies
 
-Linked MySQL and PostgreSQL client libraries are required to build the app, please consult Vapor's documentation [for MySQL](https://github.com/vapor/mysql), [for PostgreSQL](https://github.com/vapor/postgresql).
+Linked MySQL client libraries are required to build the app, please consult Vapor's documentation [for MySQL](https://github.com/vapor/mysql).
 
 ### Database
 
-MySQL  
-PostgreSQL  
-MongoDB
+MySQL
 
 ## Versions
-[Swift 3.0.2](http://swift.org/)
-[Vapor 1.5](https://vapor.codes/)
+[Swift 4.1.0](https://swift.org/)
+[Vapor 3.0.0 gm](https://vapor.codes/)
 
-## Test URLs
+## Test URLs: `vapor-tfb`
 
-### JSON serialization test
+### Plaintext test
+http://localhost:8080/plaintext
+
+#### JSON serialization test
 http://localhost:8080/json
+
+## Test URLs: `vapor-tfb-mysql`
 
 ### Single database query test
 http://localhost:8080/db
 
 ### Multiple database queries test
-http://localhost:8080/queries?queries=[1...500]
+http://localhost:8080/queries/[1...500]
 
 ### Fortunes test
 http://localhost:8080/fortunes
 
 ### Database updates test
-http://localhost:8080/updates?queries=[1...500]
-
-### Plaintext test
-http://localhost:8080/plaintext
+http://localhost:8080/updates/[1...500]

@@ -2,7 +2,6 @@
   "framework": "minijax",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db",
@@ -18,7 +17,7 @@
       "flavor": "None",
       "orm": "Full",
       "platform": "JAX-RS",
-      "webserver": "Jetty",
+      "webserver": "Undertow",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Minijax"

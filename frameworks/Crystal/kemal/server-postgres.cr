@@ -4,7 +4,7 @@ require "pg"
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
 
-APPDB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@#{ENV["DBHOST"]? || "127.0.0.1"}/hello_world")
+APPDB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world")
 
 class CONTENT
   UTF8  = "; charset=UTF-8"
@@ -44,7 +44,7 @@ end
 
 before_all do |env|
   env.response.headers["Server"] = "Kemal"
-  env.response.headers["Date"] = Time.now.to_s
+  env.response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
 end
 
 #
@@ -113,4 +113,4 @@ Kemal.config do |cfg|
   cfg.logging = false
 end
 
-Kemal.run { |cfg| cfg.server.bind(reuse_port: true) }
+Kemal.run { |cfg| cfg.server.not_nil!.bind(reuse_port: true) }

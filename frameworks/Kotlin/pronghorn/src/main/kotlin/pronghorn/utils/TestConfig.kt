@@ -7,7 +7,7 @@ object TestConfig {
     private val properties = parsePropertiesConfig()
     val listenHost = properties.getProperty("listenHost", "0.0.0.0")
     val listenPort = getIntProperty("listenPort", 8080)
-    val dbHost = properties.getProperty("dbHost", "TFB-database")
+    val dbHost = properties.getProperty("dbHost", "tfb-database")
     val dbPort = getIntProperty("dbPort", 27017)
     val dbName = properties.getProperty("dbName", "hello_world")
     val fortunesCollectionName = properties.getProperty("fortunesCollectionName", "fortune")

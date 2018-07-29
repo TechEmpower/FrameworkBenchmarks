@@ -6,10 +6,10 @@ import (
 	"log"
 	"math/rand"
 	"net"
+	"sort"
 	"sync"
 
 	"github.com/valyala/fasthttp"
-
 	"templates"
 )
 
@@ -65,22 +65,18 @@ func GetQueriesCount(ctx *fasthttp.RequestCtx) int {
 	return n
 }
 
-type FortunesByMessage []templates.Fortune
-
-func (s FortunesByMessage) Len() int           { return len(s) }
-func (s FortunesByMessage) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
-func (s FortunesByMessage) Less(i, j int) bool { return s[i].Message < s[j].Message }
-
-type WorldsByID []World
-
-func (w WorldsByID) Len() int           { return len(w) }
-func (w WorldsByID) Swap(i, j int)      { w[i], w[j] = w[j], w[i] }
-func (w WorldsByID) Less(i, j int) bool { return w[i].Id < w[j].Id }
-
 func GetListener() net.Listener {
 	ln, err := net.Listen("tcp4", *listenAddr)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return ln
+}
+
+func SortFortunesByMessage(fortunes []templates.Fortune) {
+	sort.Slice(fortunes, func(i, j int) bool { return fortunes[i].Message < fortunes[j].Message })
+}
+
+func SortWorldsByID(worlds []World) {
+	sort.Slice(worlds, func(i, j int) bool { return worlds[i].Id < worlds[j].Id })
 }

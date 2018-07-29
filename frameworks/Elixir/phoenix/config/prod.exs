@@ -14,8 +14,14 @@ config :hello, Hello.Repo,
   username: "benchmarkdbuser",
   password: "benchmarkdbpass",
   database: "hello_world",
-  hostname: "TFB-database",
-  pool_size: 256
+  hostname: "tfb-database",
+  pool_size: 256,
+  loggers: []
+
+  config :logger,
+    compile_time_purge_level: :error,
+    level: :error,
+    backends: []
 
 # ## SSL Support
 #
@@ -30,5 +36,3 @@ config :hello, Hello.Repo,
 #
 # Where those two env variables point to a file on
 # disk for the key and cert.
-
-config :logger, level: :error

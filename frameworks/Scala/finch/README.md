@@ -26,5 +26,5 @@ http://localhost:9000/plaintext
 ## How to run
 sbt 'oneJar'
 
-`java -jar target/scala-2.11/*finch*one-jar.jar`
+`java -jar target/scala-2.12/*finch*one-jar.jar`
 

@@ -2,10 +2,14 @@
 
 This is the Java Servlet portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
+There is a Servlet 3.1 based tests implementation in the [servlet3](./servlet3) sub-folder. It is using Tomcat 9 as Servlet containter.
+
 ### Plaintext and JSON
 
 * [Plaintext test source](src/main/java/hello/PlaintextServlet.java)
 * [JSON test source](src/main/java/hello/JsonServlet.java)
+* [JSON test source with Jackson Afterburner module](src/main/java/hello/JsonAfterburnerServlet.java)
+* [JSON test source with custom Jackson serialization](src/main/java/hell/JsonCJSServlet.java)
 
 ### `MySQL` implementation
 
@@ -26,28 +30,36 @@ DB, Queries and Fortune use the same implementation as MySQL.
 The tests were run with:
 
 * [Java Oracle JDK 1.8.0](http://openjdk.java.net/)
-* [Resin 4.0.53](http://www.caucho.com/)
-* [Jackson 2.8.9](http://wiki.fasterxml.com/JacksonHome)
+* [Resin 4.0.55](http://www.caucho.com/)
+* [Jackson 2.9.3](http://wiki.fasterxml.com/JacksonHome)
 * [MySQL 5.7](https://dev.mysql.com/)
 * [Postgres 9.3](http://www.postgresql.org/)
-* [cache2k 1.0.0.CR4](https://cache2k.org/)
+* [cache2k 1.0.2Final](https://cache2k.org/)
 
 Please confirm the versions data with the latest install scripts of TFB project.
 
 ## Test URLs
 
-### Default maven profile
+### Default Maven profile
 
- * Plaintext - `http://localhost:8080/servlet/plaintext`
- * JSON - `http://localhost:8080/servlet/json`
+ * Plaintext - `http://localhost:8080/plaintext`
+ * JSON - `http://localhost:8080/json`
+
+### `afterburner` Maven profile
+
+ * JSON - `http://localhost:8080/json`
+
+### `cjs` Maven profile
+
+ * JSON - `http://localhost:8080/json`
 
 ### `mysql` and `postgresql` Maven profiles
 
- * DB - `http://localhost:8080/servlet/db`
- * Queries - `http://localhost:8080/servlet/db?queries=`
- * Updates - `http://localhost:8080/servlet/update?queries=`
- * Fortune - `http://localhost:8080/servlet/fortunes`
+ * DB - `http://localhost:8080/db`
+ * Queries - `http://localhost:8080/db?queries=`
+ * Updates - `http://localhost:8080/update?queries=`
+ * Fortune - `http://localhost:8080/fortunes`
 
 ### `postgresql` Maven profile
  
- * Cache - `http://localhost:8080/servlet/cached-worlds`
+ * Cache - `http://localhost:8080/cached-worlds`

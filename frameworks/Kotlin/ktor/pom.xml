@@ -14,17 +14,17 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gson.version>2.8.2</gson.version>
-        <hikaricp.version>2.7.4</hikaricp.version>
-        <kotlin.version>1.2.0</kotlin.version>
-        <ktor.version>0.9.0</ktor.version>
+        <hikaricp.version>2.7.8</hikaricp.version>
+        <kotlin.version>1.2.50</kotlin.version>
+        <ktor.version>0.9.3-alpha-4</ktor.version>
         <logback.version>1.2.3</logback.version>
-        <mysql-connector.version>5.1.44</mysql-connector.version>
+        <mysql-connector.version>5.1.46</mysql-connector.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jre8</artifactId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
@@ -40,6 +40,16 @@
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-jetty</artifactId>
+            <version>${ktor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-cio</artifactId>
+            <version>${ktor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-html-builder</artifactId>
             <version>${ktor.version}</version>
         </dependency>
         <dependency>
@@ -66,7 +76,6 @@
 
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
 
         <plugins>
             <plugin>
@@ -81,8 +90,8 @@
                             <goal>compile</goal>
                         </goals>
                         <configuration>
-                            <languageVersion>1.1</languageVersion>
-                            <apiVersion>1.1</apiVersion>
+                            <languageVersion>1.2</languageVersion>
+                            <apiVersion>1.2</apiVersion>
                             <args>
                                 <arg>-Xcoroutines=enable</arg>
                             </args>
@@ -114,6 +123,25 @@
                 <version>3.0.0</version>
 
                 <executions>
+                    <execution>
+                        <id>cio</id>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+
+                        <phase>package</phase>
+
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/cio-bundle.xml</descriptor>
+                            </descriptors>
+                            <archive>
+                                <manifest>
+                                    <mainClass>io.ktor.server.cio.DevelopmentEngine</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>netty</id>
                         <goals>

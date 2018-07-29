@@ -2,7 +2,6 @@
   "framework": "reitit",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
@@ -12,13 +11,13 @@
       "language": "Clojure",
       "flavor": "None",
       "orm": "Raw",
-      "platform": "Netty",
+      "platform": "Undertow",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "reitit",
       "notes": "",
-      "versus": "netty"
+      "versus": "Undertow"
     }
   }]
 }

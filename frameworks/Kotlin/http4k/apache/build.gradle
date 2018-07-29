@@ -1,0 +1,7 @@
+dependencies {
+    compile project(":core")
+    compile "org.http4k:http4k-server-apache:$http4k_version"
+}
+
+apply plugin: 'application'
+mainClassName = "Http4kApacheServerKt"

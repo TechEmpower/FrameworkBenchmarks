@@ -1,6 +1,6 @@
 <VirtualHost *:8080>
-  Alias /php-silex/ "/home/mrobertson/FrameworkBenchmarks/php-silex/web/"
-  <Directory /home/mrobertson/FrameworkBenchmarks/php-silex/web/>
+  Alias /php-silex/ "/silex/web/"
+  <Directory /silex/web/>
           Options Indexes FollowSymLinks MultiViews
           #AllowOverride None
           Order allow,deny

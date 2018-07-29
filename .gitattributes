@@ -1,7 +1,2 @@
-# disable line endings normalisation
-* -text
-
-# ensure Linux/Win specific files retain native line endings
+# Docker relies on lf in bash scripts - force it
 *.sh text eol=lf
-*.py text eol=lf
-*.ps1 text eol=crlf

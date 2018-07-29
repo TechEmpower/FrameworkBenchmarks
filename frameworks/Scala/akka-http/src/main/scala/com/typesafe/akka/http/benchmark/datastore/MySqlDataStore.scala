@@ -5,8 +5,8 @@ import java.sql.ResultSet
 import java.util.concurrent.Executors
 
 import com.typesafe.akka.http.benchmark.Infrastructure
-import com.typesafe.akka.http.benchmark.entity.Fortune
-import com.typesafe.akka.http.benchmark.entity.World
+import com.typesafe.akka.http.benchmark.entity.{ Fortune, World }
+import com.typesafe.config.Config
 import com.zaxxer.hikari._
 
 import scala.collection.immutable
@@ -15,7 +15,7 @@ import scala.concurrent.Future
 
 // TODO: use slick or similar here instead for more idiomatic usage
 trait MySqlDataStore extends DataStore { _: Infrastructure =>
-  lazy val config = appConfig.getConfig("akka.http.benchmark.mysql")
+  lazy val config: Config = appConfig.getConfig("akka.http.benchmark.mysql")
 
   private lazy val dataSource = new HikariDataSource {
     setJdbcUrl(config.getString("jdbc-url"))
@@ -30,12 +30,13 @@ trait MySqlDataStore extends DataStore { _: Infrastructure =>
     ExecutionContext.fromExecutor(threadPool)
   }
 
-  def requireWorldById(id: Int): Future[World] = findWorldById(id).map(_.getOrElse(throw new RuntimeException(s"Element with id $id was not found.")))(executionContext)
+  def requireWorldById(id: Int): Future[World] =
+    findWorldById(id).map(_.getOrElse(throw new RuntimeException(s"Element with id $id was not found.")))(executionContext)
+
   override def findWorldById(id: Int): Future[Option[World]] =
     withStatement("select id, randomNumber from World where id = ?") { stmt =>
       stmt.setInt(1, id)
       val rs = stmt.executeQuery()
-
       if (rs.next()) Some(World(rs.getInt("id"), rs.getInt("randomNumber")))
       else None
     }

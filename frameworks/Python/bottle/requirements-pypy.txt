@@ -1,7 +1,6 @@
-bottle==0.12.9
+bottle==0.12.13
 bottle-sqlalchemy==0.4.3
-SQLAlchemy==1.0.12
-gunicorn==19.4.5
-PyMySQL==0.7.2
-tornado==4.3
-ujson==1.35
+gunicorn==19.7.1
+PyMySQL==0.8.0
+SQLAlchemy==1.2.2
+tornado==4.5.3

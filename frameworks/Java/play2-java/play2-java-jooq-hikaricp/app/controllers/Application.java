@@ -52,7 +52,7 @@ public class Application extends Controller {
     public CompletionStage<Result> fortunes() {
         return CompletableFuture.supplyAsync(() -> {
             final List<FortuneRecord> fortunes = this.db.withConnection(connection -> {
-                return DSL.using(connection, DIALECT).selectFrom(FORTUNE).fetch();
+                return DSL.using(connection, DIALECT).select(FORTUNE.ID, FORTUNE.MESSAGE).from(FORTUNE).fetchInto(FortuneRecord.class);
             });
             fortunes.add(new FortuneRecord(UInteger.valueOf(0), "Additional fortune added at request time."));
             Collections.sort(fortunes, (f1, f2) -> f1.getMessage().compareTo(f2.getMessage()));

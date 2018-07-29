@@ -1,9 +1,0 @@
-FROM includeos/includeos-common:0.10.0.1
-
-VOLUME /service/build
-WORKDIR /service/build
-
-ENTRYPOINT ["qemu-system-x86_64", "-nographic", "-m", "128", "-net", "nic,model=virtio", "-net", "user,hostfwd=tcp::8080-:80"]
-
-# working example i.e. curl <docker_ip>:8080
-#sudo qemu-system-x86_64 -nographic -m 128 -net nic,model=virtio -net user,hostfwd=tcp::8080-:80 -kernel $INCLUDEOS_PREFIX/chainloader -initrd mana_simple.img

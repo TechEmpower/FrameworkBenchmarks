@@ -5,10 +5,11 @@ class BenchmarkController < Amber::Controller::Base
   TEXT_PLAIN = "text/plain"
   ID_MAXIMUM = 10_000
 
-  def initialize(@context)
-    super(@context)
-    response.headers["Server"] = "Amber"
-    response.headers["Date"] = Time.now.to_s
+  before_action do
+    all do
+      response.headers["Server"] = "Amber"
+      response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
+    end
   end
 
   def plaintext
@@ -70,7 +71,7 @@ class BenchmarkController < Amber::Controller::Base
 
     fortunes = Fortune.all
     fortunes << fortune
-    fortunes.sort_by! { |fortune| fortune.message.to_s }
+    fortunes.sort_by! { |fortune| fortune.message || "" }
 
     render("fortune/index.ecr")
   end

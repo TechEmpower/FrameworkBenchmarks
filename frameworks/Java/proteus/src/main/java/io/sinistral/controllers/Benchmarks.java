@@ -61,14 +61,19 @@ public class Benchmarks
 	private static final String HTML_UTF8_TYPE = io.sinistral.proteus.server.MediaType.TEXT_HTML_UTF8.toString(); 
 	private static final ByteBuffer MESSAGE_BUFFER;
     private static final String MESSAGE = "Hello, World!";
-    
+    private static final String FORTUNES_TEMPLATE = Benchmarks.class.getResource("/templates/Fortunes.mustache").getFile();
+ 
 	private static final ObjectMapper DEFAULT_MAPPER = new ObjectMapper();
  
+	private final MustacheFactory mustacheFactory = new DefaultMustacheFactory();
      
 
  
     static {
+    	    	
+
     	MESSAGE_BUFFER = ByteBuffer.allocateDirect(MESSAGE.length());
+    	
     	try {
     		MESSAGE_BUFFER.put(MESSAGE.getBytes("US-ASCII"));
      } catch (Exception e) {
@@ -94,7 +99,7 @@ public class Benchmarks
     
     
  
-	protected final MySqlService sqlService;
+	protected final MySqlService mySqlService;
 	
 	 
 	protected final PostgresService postgresService;
@@ -105,15 +110,15 @@ public class Benchmarks
     }
 
     @Inject
-    public Benchmarks(PostgresService postgresService, MySqlService sqlService)
+    public Benchmarks(PostgresService postgresService, MySqlService mySqlService)
     {
-    	this.sqlService = sqlService;
+    	this.mySqlService = mySqlService;
     	this.postgresService = postgresService;
     }
 	
 	
 	@GET
-	@Path("/db/postgres")
+	@Path("/db")
 	@Blocking
 	@ApiOperation(value = "World postgres db endpoint",   httpMethod = "GET" , response = World.class)
 	public void dbPostgres(HttpServerExchange exchange)
@@ -145,7 +150,8 @@ public class Benchmarks
 		  
  		 
 	}
-	
+
+
 	
 	@GET
 	@Path("/db/mysql")
@@ -155,7 +161,7 @@ public class Benchmarks
 	{ 		
 		final World world;
 		
-		try (final Connection connection = sqlService.getConnection())
+		try (final Connection connection = mySqlService.getConnection())
 		{
 			try (PreparedStatement statement = connection.prepareStatement("SELECT id,randomNumber FROM world WHERE id = ?"))
 			{
@@ -193,7 +199,7 @@ public class Benchmarks
  
 		List<Fortune> fortunes = new ArrayList<>();
 	        
-			try (final Connection connection = postgresService.getConnection())
+			try (final Connection connection = mySqlService.getConnection())
 			{
 				try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Fortune"))
 				{
@@ -222,10 +228,9 @@ public class Benchmarks
 	        exchange.getResponseSender().send(render);  
 		  
 	}
-
 	
 	@GET
-	@Path("/fortunes/postgres")
+	@Path("/fortunes")
 	@Blocking
 	@Produces(MediaType.TEXT_HTML)
 	@ApiOperation(value = "Fortunes postgres endpoint",   httpMethod = "GET"  )

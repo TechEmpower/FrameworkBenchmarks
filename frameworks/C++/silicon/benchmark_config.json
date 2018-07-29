@@ -2,7 +2,6 @@
   "framework": "silicon",
   "tests": [{
     "default": {
-      "setup_file": "setup_mhd_tpc_mysql",
       "json_url"       : "/json",
       "db_url"         : "/db",
       "query_url"      : "/queries?queries=",

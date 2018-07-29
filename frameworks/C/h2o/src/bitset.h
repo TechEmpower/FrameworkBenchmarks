@@ -34,8 +34,9 @@ typedef uint_fast32_t bitset_base_t;
 #define BITSET_SET(i, b) bitset_set((i), (b), sizeof(b) * CHAR_BIT)
 // Use a designated initializer to set all array elements to zero.
 #define DEFINE_BITSET(b, s) \
-	assert(s); \
-	bitset_base_t (b)[((s) - 1) / (sizeof(bitset_base_t) * CHAR_BIT) + 1] = {[0] = 0}
+	bitset_base_t (b)[ \
+		((s) + sizeof(bitset_base_t) * CHAR_BIT - 1) / (sizeof(bitset_base_t) * CHAR_BIT)] = \
+		{[0] = 0}
 
 static inline bool bitset_isset(size_t i, bitset_base_t *b, size_t num)
 {

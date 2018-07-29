@@ -19,12 +19,7 @@ import kotlin.reflect.KProperty1
 
 internal const val WORLD_ROWS = 10000
 
-private val DB_HOST = systemSetting("DBHOST", "localhost")
-private val DB_NAME = setting("database", "hello_world")
-private val WORLD_NAME: String = setting("worldCollection", "world")
-private val FORTUNE_NAME: String = setting("fortuneCollection", "fortune")
-
-private val postgresqlUrl = "jdbc:postgresql://$DB_HOST/$DB_NAME?" +
+private val postgresqlUrl = "jdbc:postgresql://tfb-database/hello_world?" +
     "jdbcCompliantTruncation=false&" +
     "elideSetAutoCommits=true&" +
     "useLocalSessionState=true&" +
@@ -55,10 +50,10 @@ internal interface Store {
 }
 
 private class MongoDbStore : Store {
-    private val database = mongoDatabase("mongodb://$DB_HOST/$DB_NAME")
+    private val database = mongoDatabase("mongodb://tfb-database/hello_world")
 
-    private val worldRepository = repository(WORLD_NAME, World::class, World::_id)
-    private val fortuneRepository = repository(FORTUNE_NAME, Fortune::class, Fortune::_id)
+    private val worldRepository = repository("world", World::class, World::_id)
+    private val fortuneRepository = repository("fortune", Fortune::class, Fortune::_id)
 
     // TODO Find out why it fails when creating index '_id' with background: true
     private fun <T : Any> repository(name: String, type: KClass<T>, key: KProperty1<T, Int>) =
@@ -92,8 +87,8 @@ private class SqlStore(jdbcUrl: String) : Store {
         val config = HikariConfig()
         config.jdbcUrl = jdbcUrl
         config.maximumPoolSize =  setting("maximumPoolSize", 16)
-        config.username = setting("databaseUsername", "benchmarkdbuser")
-        config.password = setting("databasePassword", "benchmarkdbpass")
+        config.username = "benchmarkdbuser"
+        config.password = "benchmarkdbpass"
         DATA_SOURCE = HikariDataSource(config)
     }
 

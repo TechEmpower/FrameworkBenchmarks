@@ -30,4 +30,4 @@ public class App : Handler
 	}
 }
 
-Server.new ("http", handler: new App ()).run ();
+Server.new ("http", handler: new App ()).run ({"app", "--address=0.0.0.0:8080"});

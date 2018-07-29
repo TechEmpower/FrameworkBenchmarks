@@ -4,7 +4,7 @@ version '0.1.0'
 buildscript {
     ext {
         pronghornVersion = '0.1.3'
-        kotlinVersion = '1.2.0'
+        kotlinVersion = '1.2.31'
     }
 
     repositories {

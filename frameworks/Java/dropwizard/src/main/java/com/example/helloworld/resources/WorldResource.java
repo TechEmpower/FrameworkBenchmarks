@@ -23,14 +23,14 @@ public class WorldResource {
 	}
 	
 	@GET
-	@UnitOfWork(transactional = false) // Needed only for Hibernate - not for Mongo or JDBI
+	@UnitOfWork(transactional = false, readOnly = true) // Needed only for Hibernate - not for Mongo or JDBI
 	public Object db() {
 		return worldDAO.findById(Helper.randomWorld());
 	}
 	
 	@GET
 	@Path("/query")
-	@UnitOfWork(transactional = false) // Needed only for Hibernate - not for Mongo or JDBI
+	@UnitOfWork(transactional = false,  readOnly = true) // Needed only for Hibernate - not for Mongo or JDBI
 	public Object dbTest(@QueryParam("queries") String queries) {
 		int totalQueries = Helper.getQueries(queries); // Optional check is done inside
 		final World[] worlds = new World[totalQueries];

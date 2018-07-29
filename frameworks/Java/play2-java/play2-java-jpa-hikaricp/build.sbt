@@ -2,14 +2,14 @@ name := "play2-java-jpa-hikaricp"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
+lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayNettyServer)
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.6"
 
 libraryDependencies ++= Seq(
   guice,
   javaJpa,
-  "mysql" % "mysql-connector-java" % "5.1.44",
+  "mysql" % "mysql-connector-java" % "5.1.45",
   "org.hibernate" % "hibernate-core" % "5.2.12.Final"
 )
 

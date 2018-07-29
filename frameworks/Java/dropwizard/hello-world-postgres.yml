@@ -14,7 +14,9 @@ server:
     appenders: []
 
 logging:
-  appenders: []
+  level: WARN
+  appenders:
+    - type: console
 
 database:
   # the name of your JDBC driver
@@ -27,12 +29,15 @@ database:
   password: benchmarkdbpass
 
   # the JDBC URL
-  url: jdbc:postgresql://TFB-database:5432/hello_world
+  url: jdbc:postgresql://tfb-database:5432/hello_world
 
   # any properties specific to your JDBC driver:
   properties:
     charSet: UTF-8
     hibernate.dialect: org.hibernate.dialect.PostgreSQL9Dialect
+    # enable batch updates in Hibernate
+    hibernate.jdbc.batch_size: 30
+    hibernate.jdbc.batch_versioned_data: true
 
   # the maximum amount of time to wait on an empty pool before throwing an exception
   maxWaitForConnection: 1s

@@ -1,7 +1,18 @@
 {
-"require": {
-	"phpixie/core": "2.*@dev",
-	"phpixie/db": "2.*@dev",
-	"phpixie/orm": "2.*@dev"
-    }	
+	"require": {
+		"phpixie/core": "2.*@dev",
+		"phpixie/db": "2.*@dev",
+		"phpixie/orm": "2.*@dev"
+	},
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/PHPixie/ORM/"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"App\\": "classes/App/"
+		}
+	}
 }

@@ -11,10 +11,10 @@ This is the [Reitit](https://github.com/metosin/reitit) portion of a [benchmarki
 The dependencies are documented in [project.clj](hello/project.clj),
 but the main ones are:
 
-* [Immutant 2.1.9](http://immutant.org/)
-* [Clojure 1.9.0-RC1](http://clojure.org/)
-* [metosin/jsonista "0.1.0-20171106.055332-4"](https://github.com/metosin/jsonista)
-* [metosin/reitit "0.1.0-20171101.170818-9"](https://github.com/metosin/reitit)
+* [Clojure 1.9.0](http://clojure.org/)
+* [ikitommi/immutant-web "3.0.0-alpha1"](https://github.com/ikitommi/immutant) - a performant fork of [Immutant]((http://immutant.org/))
+* [metosin/jsonista "0.2.0"](https://github.com/metosin/jsonista)
+* [metosin/reitit "0.1.1-20180425.095607-7"](https://github.com/metosin/reitit)
 
 ## Test URLs
 ### JSON Encoding Test

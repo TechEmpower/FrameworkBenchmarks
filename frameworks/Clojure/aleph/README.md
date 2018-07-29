@@ -10,9 +10,9 @@ This is the [Aleph](https://github.com/ztellman/aleph) portion of a [benchmarkin
 The dependencies are documented in [project.clj](hello/project.clj),
 but the main ones are:
 
-* [Aleph 0.4.1-beta2](https://github.com/ztellman/aleph)
-* [Clojure 1.8.0](http://clojure.org/)
-* [Cheshire 5.5.0](https://github.com/dakrone/cheshire), which in turn uses [Jackson](http://jackson.codehaus.org/)
+* [Aleph 0.4.5-alpha6](https://github.com/ztellman/aleph)
+* [Clojure 1.9.0](http://clojure.org/)
+* [metosin/jsonista 0.2.0](https://github.com/metosin/jsonista), which in turn uses [Jackson](http://jackson.codehaus.org/)
 
 ## Test URLs
 ### JSON Encoding Test

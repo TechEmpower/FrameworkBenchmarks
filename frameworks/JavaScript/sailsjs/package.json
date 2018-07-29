@@ -7,14 +7,12 @@
   "dependencies": {
     "async": "1.5.2",
     "bluebird": "3.4.1",
-    "ejs": "2.4.2",
+    "ejs": "2.5.7",
     "handlebars": "4.0.5",
-    "hiredis": "0.5.0",
     "mysql": "2.11.0",
     "pg": "6.0.2",
     "pg-hstore": "2.3.2",
     "rc": "1.1.6",
-    "redis": "2.6.2",
     "sails": "0.12.3",
     "sails-disk": "0.10.10",
     "sequelize": "3.23.4"
