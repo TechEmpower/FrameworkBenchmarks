@@ -20,7 +20,7 @@ static void usp_fork_update()
    if (World::psql_query)
       {
 #  ifdef U_STATIC_ORM_DRIVER_PGSQL
-      if (World::pdrv) (void) memcpy(query, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES"));
+      if (World::pstmt) (void) memcpy(query, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES"));
       else
 #  endif
       {
@@ -39,7 +39,7 @@ uint32_t i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 World::initResult();
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
-if (World::pdrv)
+if (World::pstmt)
    {
    PGresult* res;
    char* pquery = query + U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES");

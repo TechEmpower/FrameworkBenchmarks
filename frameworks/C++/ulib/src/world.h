@@ -16,13 +16,6 @@
 
 class U_EXPORT World {
 public:
-	// Check for memory error
-	U_MEMORY_TEST
-
-	// Allocator e Deallocator
-	U_MEMORY_ALLOCATOR
-	U_MEMORY_DEALLOCATOR
-
 	uint32_t id, randomNumber;
 
 	World()
@@ -123,7 +116,6 @@ public:
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
 	static PGconn* conn;
-	static UOrmDriverPgSql* pdrv;
 	static UPgSqlStatement* pstmt;
 	static char num2str[sizeof(unsigned int)];
 
@@ -172,14 +164,7 @@ public:
 
 		*(unsigned int*)num2str = htonl(rnumber[i]);
 
-#	ifdef DEBUG
-		if (U_SYSCALL(PQsendQueryPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 1, pstmt->paramValues, pstmt->paramLengths, pstmt->paramFormats, 1) == 0)
-			{
-			pdrv->printError(__PRETTY_FUNCTION__);
-			}
-#	else
 		(void) U_SYSCALL(PQsendQueryPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 1, pstmt->paramValues, pstmt->paramLengths, pstmt->paramFormats, 1);
-#	endif
 		}
 #endif
 
@@ -189,7 +174,7 @@ public:
 
 		U_INTERNAL_DUMP("wbuffer = %#.10S", wbuffer)
 
-		if (*wbuffer == '\0')
+		if (u_get_unalignedp64(wbuffer+52) != U_MULTICHAR_CONSTANT64('\r','\n','{','"','i','d','"',':'))
 			{
 			u_put_unalignedp64(wbuffer,	 U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
 			u_put_unalignedp64(wbuffer+8,  U_MULTICHAR_CONSTANT64('L','e','n','g','t','h',':',' '));
@@ -206,8 +191,7 @@ public:
 			u_put_unalignedp64(pwbuffer+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'));
 			}
 
-		U_INTERNAL_ASSERT_EQUALS(u_get_unalignedp64(wbuffer),		U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'))
-		U_INTERNAL_ASSERT_EQUALS(u_get_unalignedp64(wbuffer+52), U_MULTICHAR_CONSTANT64('\r','\n','{','"','i','d','"',':'))
+		U_INTERNAL_ASSERT_EQUALS(u_get_unalignedp64(wbuffer),	U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'))
 		}
 
 	static void endOneResult()
@@ -241,7 +225,7 @@ public:
 
 		U_INTERNAL_DUMP("wbuffer = %#.10S", wbuffer)
 
-		if (*wbuffer == '\0')
+		if (u_get_unalignedp64(wbuffer+56) != U_MULTICHAR_CONSTANT64('\n','[','{','"','i','d','"',':'))
 			{
 			u_put_unalignedp64(wbuffer,	 U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
 			u_put_unalignedp64(wbuffer+8,  U_MULTICHAR_CONSTANT64('L','e','n','g','t','h',':',' '));
@@ -258,8 +242,7 @@ public:
 			u_put_unalignedp64(pwbuffer+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'));
 			}
 
-		U_INTERNAL_ASSERT_EQUALS(u_get_unalignedp64(wbuffer),		U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'))
-		U_INTERNAL_ASSERT_EQUALS(u_get_unalignedp64(wbuffer+56), U_MULTICHAR_CONSTANT64('\n','[','{','"','i','d','"',':'))
+		U_INTERNAL_ASSERT_EQUALS(u_get_unalignedp64(wbuffer),	U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'))
 
 		ptr = pwbuffer;
 		}
@@ -339,7 +322,7 @@ public:
 
 		if (UServer_Base::handler_db1 == U_NULLPTR)
 			{
-			U_NEW_WITHOUT_CHECK_MEMORY(UEventDB, UServer_Base::handler_db1, UEventDB);
+			U_NEW(UEventDB, UServer_Base::handler_db1, UEventDB);
 			}
 #	endif
 		}
@@ -380,7 +363,9 @@ public:
 #		ifdef U_STATIC_ORM_DRIVER_PGSQL
 			if (UOrmDriver::isPGSQL())
 				{
-				 conn = (PGconn*)(pdrv = (UOrmDriverPgSql*)psql_query->getDriver())->UOrmDriver::connection;
+				UOrmDriverPgSql* pdrv = (UOrmDriverPgSql*)psql_query->getDriver();
+
+				 conn = (PGconn*)pdrv->UOrmDriver::connection;
 				pstmt = (UPgSqlStatement*)pstmt_query->getStatement();
 
 				(void) pstmt->setBindParam(pdrv);
@@ -388,31 +373,13 @@ public:
 				pstmt->paramValues[0]  = num2str;
 				pstmt->paramLengths[0] = sizeof(unsigned int);
 
-				((UEventDB*)UServer_Base::handler_db1)->setConnection(conn);
+				UServer_Base::handler_db1->setConnection(conn);
 				}
 #		endif
 
 			handlerFork();
 			}
 		}
-
-#ifdef DEBUG
-	static void handlerEndSql()
-		{
-		U_TRACE_NO_PARAM(5, "World::handlerEndSql()")
-
-		if (pstmt_query)
-			{
-			U_DELETE( pstmt_query)
-			U_DELETE(pworld_query)
-			U_DELETE(  psql_query)
-
-			pstmt_query = U_NULLPTR;
-			}
-		}
-
-	const char* dump(bool breset) const;
-#endif
 
 private:
 	U_DISALLOW_ASSIGN(World)

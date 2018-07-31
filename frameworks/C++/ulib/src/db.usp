@@ -27,11 +27,13 @@ static void usp_fork_db() { World::handlerForkSql(); }
 -->
 <!--#code
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
-if (World::pdrv)
+if (World::pstmt)
    {
+   UServer_Base::handler_db1->handlerQuery();
+
    World::sendQueryPrepared();
 
-   ((UEventDB*)UServer_Base::handler_db1)->addClientImage(handlerResult);
+   UServer_Base::handler_db1->handlerResult(handlerResult);
    }
 else
 #endif

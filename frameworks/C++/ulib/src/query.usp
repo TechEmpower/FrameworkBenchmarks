@@ -16,7 +16,7 @@ uint32_t i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 World::initResult();
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
-if (World::pdrv)
+if (World::pstmt)
    {
    PGresult* res;
    char* randomNumber;

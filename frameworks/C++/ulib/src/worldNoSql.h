@@ -264,66 +264,6 @@ public:
 			}
 		}
 
-#ifdef DEBUG
-	static void handlerEnd()
-		{
-		U_TRACE_NO_PARAM(5, "WorldNoSql::handlerEnd()")
-
-		if (str_rnumber)
-			{
-			U_DELETE(str_rnumber)
-
-			str_rnumber = U_NULLPTR;
-			}
-		}
-
-	static void handlerEndMongoDB()
-		{
-		U_TRACE_NO_PARAM(5, "WorldNoSql::handlerEndMongoDB()")
-
-#	ifdef USE_MONGODB
-		if (query)
-			{
-			U_DELETE(mc)
-
-			U_SYSCALL_VOID(bson_destroy, "%p", query);
-
-			query = U_NULLPTR;
-
-			handlerEnd();
-			}
-#	endif
-		}
-
-	static void handlerEndREDIS()
-		{
-		U_TRACE_NO_PARAM(5, "WorldNoSql::handlerEndREDIS()")
-
-		if (rc)
-			{
-			U_DELETE(rc)
-
-			rc = U_NULLPTR;
-
-			handlerEnd();
-			}
-		}
-
-	static void handlerEndElasticSearch()
-		{
-		U_TRACE_NO_PARAM(5, "WorldNoSql::handlerEndElasticSearch()")
-
-		if (es)
-			{
-			U_DELETE(es)
-
-			es = U_NULLPTR;
-
-			handlerEnd();
-			}
-		}
-#endif
-
 private:
 	U_DISALLOW_ASSIGN(WorldNoSql)
 };

@@ -109,38 +109,6 @@ public:
 			}
 		}
 
-#ifdef DEBUG
-	static void handlerEndMongoDB()
-		{
-		U_TRACE_NO_PARAM(5, "FortuneNoSql::handlerEndMongoDB()")
-
-#	ifdef USE_MONGODB
-		if (mc)
-			{
-			Fortune::handlerEnd();
-
-			U_DELETE(mc)
-
-			mc = U_NULLPTR;
-			}
-#	endif
-		}
-
-	static void handlerEndREDIS()
-		{
-		U_TRACE_NO_PARAM(5, "FortuneNoSql::handlerEndREDIS()")
-
-		if (rc)
-			{
-			Fortune::handlerEnd();
-
-			U_DELETE(rc)
-
-			rc = U_NULLPTR;
-			}
-		}
-#endif
-
 private:
 	U_DISALLOW_ASSIGN(FortuneNoSql)
 };
