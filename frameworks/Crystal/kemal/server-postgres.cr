@@ -113,4 +113,4 @@ Kemal.config do |cfg|
   cfg.logging = false
 end
 
-Kemal.run { |cfg| cfg.server.not_nil!.bind(reuse_port: true) }
+Kemal.run { |cfg| cfg.server.not_nil!.bind_tcp(cfg.port, reuse_port: true) }

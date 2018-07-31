@@ -3,7 +3,7 @@ version: 0.0.1
 
 license: MIT
 
-crystal: 0.24.2
+crystal: 0.25.0
 
 dependencies:
   h2o:
