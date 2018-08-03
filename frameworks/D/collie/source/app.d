@@ -15,7 +15,7 @@ import std.typecons;
 import std.functional;
 import std.parallelism;
 
-import collie.socket;
+import collie.net;
 import collie.codec.http;
 import collie.codec.http.server;
 
@@ -42,7 +42,7 @@ void main()
     writeln("Edit source/app.d to start your project.");
     globalLogLevel(LogLevel.warning);
     HTTPServerOptions option = new HTTPServerOptions();
-    option.handlerFactories.insertBack(&newHandler);
+    option.handlerFactories ~= toDelegate(&newHandler);
     option.threads = totalCPUs;
     HttpServer server = new HttpServer(option);
 

@@ -1,14 +1,10 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.With;
 import play.libs.Json;
-import utils.Headers;
+import play.mvc.Controller;
+import play.mvc.Http.MimeTypes;
+import play.mvc.Result;
 
-@With(Headers.class)
 public class Application extends Controller {
 
     public static class Message {
@@ -20,7 +16,7 @@ public class Application extends Controller {
     }
 
     public Result plainText() {
-        return ok("Hello, World!");
+        return ok("Hello, World!").as(MimeTypes.TEXT);
     }
 
 }

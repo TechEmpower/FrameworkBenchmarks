@@ -45,7 +45,7 @@ public class HelloDbController {
         return Results.json().render(worlds);
     }
 
-    @Transactional
+    @UnitOfWork
     public Result update(@Param("queries") Integer queries) {
         if (queries == null || queries < 1) {
             queries = 1;
@@ -63,10 +63,15 @@ public class HelloDbController {
         // now update stuff:
         for (World world : worlds) {
             world.randomNumber = ThreadLocalRandom.current().nextInt(DB_ROWS) + 1;
-            worldDao.put(world);
+            this.updateWorld(world);
         }
 
         return Results.json().render(worlds);
+    }
+
+    @Transactional
+    public void updateWorld(World world) {
+        worldDao.put(world);
     }
 
     private World getRandomWorld() {

@@ -12,8 +12,8 @@ This is the Express portion of a [benchmarking test suite](../) comparing a vari
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v7.5.0](http://nodejs.org/)
-* [Express 4.14.1](http://expressjs.com/)
+* [Node.js v8.1.0](http://nodejs.org/)
+* [Express 4.16.2](http://expressjs.com/)
 
 ## Resources
 * http://nodejs.org/api/cluster.html

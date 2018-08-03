@@ -1,6 +1,6 @@
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.1.3-2'
+    id 'org.jetbrains.kotlin.jvm' version '1.2.31'
 }
 
 apply from: "$gradleScripts/kotlin.gradle"
@@ -10,7 +10,7 @@ apply plugin: 'war'
 
 defaultTasks 'installDist'
 
-mainClassName = "co.there4.hexagon.BenchmarkKt"
+mainClassName = "com.hexagonkt.BenchmarkKt"
 applicationDefaultJvmArgs = [
     '-Xms2G', '-Xmx2G', '-XX:+UseNUMA', '-XX:+UseParallelGC', '-XX:+AggressiveOpts'
 ]
@@ -21,20 +21,21 @@ war {
 
 installDist.dependsOn 'war'
 
-repositories {
-    jcenter ()
-    mavenCentral ()
-    maven { url  "http://dl.bintray.com/jamming/maven" }
-}
-
 dependencies {
-    compile ("co.there4.hexagon:server_jetty:$hexagonVersion")
-    compile ("co.there4.hexagon:templates_pebble:$hexagonVersion")
+    compile ("com.hexagonkt:hexagon_store:$hexagonVersion")
+    compile ("com.hexagonkt:server_jetty:$hexagonVersion")
+    compile ("com.hexagonkt:server_undertow:$hexagonVersion")
+    compile ("com.hexagonkt:templates_pebble:$hexagonVersion")
 
     compile ("ch.qos.logback:logback-classic:$logbackVersion")
     compile ("org.mongodb:mongodb-driver:$mongodbVersion")
     compile ("com.zaxxer:HikariCP:$hikariVersion")
     compile ("org.postgresql:postgresql:$postgresqlVersion")
+
+    // hexagon's UndertowEngine class depends on javax.activation.MimetypesFileTypeMap,
+    // which is not available by default in Java 9.  Including this javax.activation
+    // dependency fixes that issue with running on Java 9.
+    compile ("com.sun.activation:javax.activation:$activationVersion")
 
     // providedCompile excludes the dependency only in the WAR, not in the distribution
     providedCompile ("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }

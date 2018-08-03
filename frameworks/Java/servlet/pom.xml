@@ -11,7 +11,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java-version>1.8</java-version>
-		<cache2k-version>1.0.0.CR4</cache2k-version>
+		<cache2k-version>1.0.2.Final</cache2k-version>
+		<jackson-version>2.9.3</jackson-version>
 		<!-- This is the default web.xml for plaintext and json only -->
 		<maven.war.xml>src/main/webapp/WEB-INF/web.xml</maven.war.xml>
 	</properties>
@@ -20,7 +21,13 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.8.9</version>
+			<version>${jackson-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-afterburner</artifactId>
+			<version>${jackson-version}</version>
 		</dependency>
 
 		<dependency>
@@ -60,6 +67,58 @@
 	</dependencies>
 
 	<profiles>
+		<profile>
+			<id>afterburner</id>
+			<properties>
+				<maven.war.xml>src/main/resources/WEB-INF/afterburner/web.xml</maven.war.xml>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<webResources>
+								<resource>
+									<directory>src/main/resources/WEB-INF/afterburner</directory>
+									<excludes>
+										<exclude>src/main/resources/WEB-INF/</exclude>
+									</excludes>
+									<targetPath>WEB-INF</targetPath>
+								</resource>
+							</webResources>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>cjs</id>
+			<properties>
+				<maven.war.xml>src/main/resources/WEB-INF/cjs/web.xml</maven.war.xml>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<webResources>
+								<resource>
+									<directory>src/main/resources/WEB-INF/cjs</directory>
+									<excludes>
+										<exclude>src/main/resources/WEB-INF/</exclude>
+									</excludes>
+									<targetPath>WEB-INF</targetPath>
+								</resource>
+							</webResources>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 		<profile>
 			<id>mysql</id>
 			<properties>
@@ -104,7 +163,7 @@
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
-					<version>42.1.1</version>
+					<version>42.1.4</version>
 				</dependency>
 			</dependencies>
 			<build>

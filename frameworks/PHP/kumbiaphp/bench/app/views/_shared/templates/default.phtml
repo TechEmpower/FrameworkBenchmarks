@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+ <head>
+  <meta charset=<?= APP_CHARSET ?> >
+  <title>KumbiaPHP Framework</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <?php Tag::css('kumbia') ?>
+  <?= Html::includeCss() ?>
+</head>
+<body>
+<div class="container">
+  <header class="row">
+      <div class="col-8">
+        <?= Html::img('kumbiaphp.svg', 'KumbiaPHP logo') ?>
+      </div>
+      <div class="col-4 text-right">
+          App: <strong><?= basename(dirname(APP_PATH)) ?></strong> (<?= PRODUCTION ? 'Production' : 'Development' ?>)
+      </div>
+  </header>
+  <?php View::content() ?>
+  <?php View::partial('kumbia/footer') ?>
+</div>
+</body>
+</html>

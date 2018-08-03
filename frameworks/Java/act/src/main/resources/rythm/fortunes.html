@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-@args List<com.techempower.act.domain.IFortune> fortunes;
-<html>
-<head>
+@args List<com.techempower.act.model.Fortune> fortunes;
+  <html>
+  <head>
     <title>Fortunes</title>
-</head>
-<body>
-<table>
+  </head>
+  <body>
+  <table>
     <tr>
-        <th>id</th>
-        <th>message</th>
+      <th>id</th>
+      <th>message</th>
     </tr>
     @for (fortunes) {
     <tr>
-        <td>@_.getId()</td>
-        <td>@_.getMessage()</td>
+      <td>@_.id</td>
+      <td>@_.message</td>
     </tr>
     }
-</table>
-</body>
-</html>
+  </table>
+  </body>
+  </html>

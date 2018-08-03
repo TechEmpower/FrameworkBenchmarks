@@ -1,0 +1,28 @@
+{
+  "framework": "workerman",
+  "tests": [{
+    "default": {
+      "json_url": "/json.php",
+      "plaintext_url": "/plaintext.php",
+      "db_url": "/dbraw.php",
+      "query_url": "/dbraw.php?queries=",
+      "update_url": "/updateraw.php?queries=",
+      "fortune_url": "/fortune.php",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "workerman",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "workerman",
+      "notes": "",
+      "versus": "php7"
+    }
+  }]
+}

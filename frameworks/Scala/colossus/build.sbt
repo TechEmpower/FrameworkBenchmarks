@@ -1,14 +1,10 @@
 name := """colossus-example"""
 
-version := "0.3.0"
+version := "1.0"
 
-scalaVersion := "2.11.7"
-
-com.github.retronym.SbtOneJar.oneJarSettings
-
-mainClass in oneJar := Some("example.Main")
+scalaVersion := "2.12.5"
 
 libraryDependencies ++= Seq(
-  "com.tumblr" %% "colossus" % "0.7.1-RC1",
-  "org.json4s" %% "json4s-jackson" % "3.3.0"  
+  "com.tumblr" %% "colossus" % "0.11.0",
+  "com.github.plokhotnyuk.jsoniter-scala" %% "macros" % "0.21.6"
 )

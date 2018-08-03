@@ -11,7 +11,7 @@
 <p style="color: green"><%=$ notice %></p>
 
 <h1>Showing World</h1>
-<dt>ID</dt><dd><%= world.id() %></dd><br />
+<dt>ID</dt><dd><%= (ulong)world.id() %></dd><br />
 <dt>RandomNumber</dt><dd><%= world.randomNumber() %></dd><br />
 
 <%== linkTo("Edit", urla("edit", world.id())) %> |

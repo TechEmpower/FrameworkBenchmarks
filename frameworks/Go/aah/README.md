@@ -1,22 +1,26 @@
-# [aah framework](https://aahframework.org) Benchmarking Test
+<p align="center">
+  <img src="https://cdn.aahframework.org/assets/img/aah-logo-64x64.png" />
+  <h2 align="center">Benchmark Application</h2>
+  <p align="center">aah - A secure, flexible, rapid Go web framework</p>
+</p>
 
-This is the `Go` portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+Visit official website https://aahframework.org to learn more about `aah` framework. 
 
-> **aah framework** is a scalable, performant, rapid development Web framework for Go. aah focuses on very small footprint, maintainability, performance, configurability, security and extensibility as application use cases expands.
-
-**|**  [Getting started](https://docs.aahframework.org/getting-started.html) **|** [Features](https://aahframework.org/features.html) **|** [Documentation](https://docs.aahframework.org) **|**
-
-Requires ≥ go1.8
-
-## Source
-
-  * [Test source files](source_code)
-
-## Test URLs
+### Test URLs
 
   * http://localhost:8080/json
-  * http://localhost:8080/db
-  * http://localhost:8080/queries?count=[1-500]
-  * http://localhost:8080/fortunes
-  * http://localhost:8080/updates?count=[1-500]
   * http://localhost:8080/plaintext
+
+### Test URLs - w/ MySQL Datasource
+
+  * http://localhost:8080/db
+  * http://localhost:8080/db/queries?count=[1-500]
+  * http://localhost:8080/db/fortunes
+  * http://localhost:8080/db/updates?count=[1-500]
+  
+### Test URLs - w/ PostgreSQL Datasource
+
+  * http://localhost:8080/pg-db
+  * http://localhost:8080/pg-db/queries?count=[1-500]
+  * http://localhost:8080/pg-db/fortunes
+  * http://localhost:8080/pg-db/updates?count=[1-500]

@@ -37,7 +37,7 @@ class IndexController : Controller
 	@Action void plaintext()
 	{
 		res.setHeader("Date",printDate);
-		res.html("Hello, World!");
+		res.plain("Hello, World!");
 	}
 
 	private string printDate() {

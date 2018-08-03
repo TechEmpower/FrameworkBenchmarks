@@ -1,0 +1,49 @@
+{
+    "framework": "kumbiaphp",
+    "tests": [{
+        "default": {
+            "plaintext_url": "/",
+            "json_url": "/json",
+            "db_url": "/db",
+            "query_url": "/db/queries/",
+            "fortune_url": "/fortune",
+            "update_url": "/db/update/",
+            "port": 8080,
+            "approach": "Realistic",
+            "classification": "Fullstack",
+            "database": "MySQL",
+            "framework": "KumbiaPHP",
+            "language": "PHP",
+            "flavor": "PHP7",
+            "orm": "micro",
+            "platform": "None",
+            "webserver": "nginx",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "kumbiaphp",
+            "notes": "",
+            "versus": "php"
+        },
+        "raw": {
+            "db_url": "/raw",
+            "query_url": "/raw/queries/",
+            "fortune_url": "/raw-fortune",
+            "update_url": "/raw/update/",
+            "port": 8080,
+            "approach": "Realistic",
+            "classification": "Fullstack",
+            "database": "MySQL",
+            "framework": "KumbiaPHP",
+            "language": "PHP",
+            "flavor": "PHP7",
+            "orm": "Raw",
+            "platform": "None",
+            "webserver": "nginx",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "kumbiaphp-raw",
+            "notes": "",
+            "versus": "php"
+          }
+        }]
+      }

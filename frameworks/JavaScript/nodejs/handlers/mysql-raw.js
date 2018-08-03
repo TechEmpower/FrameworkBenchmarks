@@ -2,13 +2,13 @@ const h = require('../helper');
 const async = require('async');
 const mysql = require('mysql');
 const connection = mysql.createConnection({
-  host     : 'TFB-database',
-  user     : 'benchmarkdbuser',
-  password : 'benchmarkdbpass',
-  database : 'hello_world'
+  host: 'tfb-database',
+  user: 'benchmarkdbuser',
+  password: 'benchmarkdbpass',
+  database: 'hello_world'
 });
-const NodeCache = require( "node-cache" );
-const myCache = new NodeCache( { stdTTL: 0, checkperiod: 0 } );
+const NodeCache = require("node-cache");
+const myCache = new NodeCache({ stdTTL: 0, checkperiod: 0 });
 
 let cachePopulated = false;
 

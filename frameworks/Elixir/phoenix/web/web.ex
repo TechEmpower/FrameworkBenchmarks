@@ -24,7 +24,7 @@ defmodule Hello.Web do
 
   def controller do
     quote do
-      use Phoenix.Controller
+      use Phoenix.Controller, log: false
 
       # Alias the data repository and import query/model functions
       alias Hello.Repo

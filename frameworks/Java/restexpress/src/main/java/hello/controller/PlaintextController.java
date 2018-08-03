@@ -9,6 +9,7 @@ public class PlaintextController
 
 	public String helloWorld(Request request, Response response)
 	{
+		response.setContentType("text/plain");
 		return MESSAGE;
 	}
 }

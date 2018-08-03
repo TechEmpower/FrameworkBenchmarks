@@ -17,13 +17,18 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.util.AsciiString;
 import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.FastThreadLocal;
 
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaderNames.DATE;
+import static io.netty.handler.codec.http.HttpHeaderNames.SERVER;
+import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_JSON;
+import static io.netty.handler.codec.http.HttpHeaderValues.TEXT_PLAIN;
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
 import static io.netty.handler.codec.http.HttpVersion.*;
 
@@ -56,17 +61,12 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 
 	private static final byte[] STATIC_PLAINTEXT = "Hello, World!".getBytes(CharsetUtil.UTF_8);
 	private static final int STATIC_PLAINTEXT_LEN = STATIC_PLAINTEXT.length;
-	private static final ByteBuf PLAINTEXT_CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_PLAINTEXT));
-	private static final CharSequence PLAINTEXT_CLHEADER_VALUE = new AsciiString(String.valueOf(STATIC_PLAINTEXT_LEN));
-	private static final CharSequence JSON_CLHEADER_VALUE = new AsciiString(String.valueOf(jsonLen()));
 
-	private static final CharSequence TYPE_PLAIN = new AsciiString("text/plain");
-	private static final CharSequence TYPE_JSON = new AsciiString("application/json");
-	private static final CharSequence SERVER_NAME = new AsciiString("Netty");
-	private static final CharSequence CONTENT_TYPE_ENTITY = HttpHeaderNames.CONTENT_TYPE;
-	private static final CharSequence DATE_ENTITY = HttpHeaderNames.DATE;
-	private static final CharSequence CONTENT_LENGTH_ENTITY = HttpHeaderNames.CONTENT_LENGTH;
-	private static final CharSequence SERVER_ENTITY = HttpHeaderNames.SERVER;
+	private static final ByteBuf PLAINTEXT_CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_PLAINTEXT));
+	private static final CharSequence PLAINTEXT_CLHEADER_VALUE = AsciiString.cached(String.valueOf(STATIC_PLAINTEXT_LEN));
+	private static final CharSequence JSON_CLHEADER_VALUE = AsciiString.cached(String.valueOf(jsonLen()));
+	private static final CharSequence SERVER_NAME = AsciiString.cached("Netty");
+
 	private static final ObjectMapper MAPPER = newMapper();
 
 	private volatile CharSequence date = new AsciiString(FORMAT.get().format(new Date()));
@@ -113,20 +113,20 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	private void writePlainResponse(ChannelHandlerContext ctx, ByteBuf buf) {
-		ctx.write(makeResponse(buf, TYPE_PLAIN, PLAINTEXT_CLHEADER_VALUE), ctx.voidPromise());
+		ctx.write(makeResponse(buf, TEXT_PLAIN, PLAINTEXT_CLHEADER_VALUE), ctx.voidPromise());
 	}
 
 	private void writeJsonResponse(ChannelHandlerContext ctx, ByteBuf buf) {
-		ctx.write(makeResponse(buf, TYPE_JSON, JSON_CLHEADER_VALUE), ctx.voidPromise());
+		ctx.write(makeResponse(buf, APPLICATION_JSON, JSON_CLHEADER_VALUE), ctx.voidPromise());
 	}
 
 	private FullHttpResponse makeResponse(ByteBuf buf, CharSequence contentType, CharSequence contentLength) {
 		final FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, buf, false);
 		response.headers()
-				.set(CONTENT_TYPE_ENTITY, contentType)
-				.set(SERVER_ENTITY, SERVER_NAME)
-				.set(DATE_ENTITY, date)
-				.set(CONTENT_LENGTH_ENTITY, contentLength);
+				.set(CONTENT_TYPE, contentType)
+				.set(SERVER, SERVER_NAME)
+				.set(DATE, date)
+				.set(CONTENT_LENGTH, contentLength);
 		return response;
 	}
 

@@ -13,7 +13,7 @@
 <% tfetch(QList<Fortune>, fortuneList); %>
 <% for (auto &i : fortuneList) { %>
 <tr>
-<td><%= i.id() %></td>
+<td><%= (ulong)i.id() %></td>
 <td><%= i.message() %></td>
 </tr>
 <% } %>

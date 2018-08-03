@@ -12,7 +12,6 @@
 DataMapper.logger = logger
 DataMapper::Property::String.length(255)
 
-host = ENV['DB_HOST'] || 'localhost'
 case Padrino.env
-  when :production  then DataMapper.setup(:default, "mysql://benchmarkdbuser:benchmarkdbpass@#{host}/hello_world")
+  when :production  then DataMapper.setup(:default, "mysql://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world")
 end

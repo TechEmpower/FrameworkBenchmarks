@@ -2,11 +2,10 @@
 
 #include <Cutelyst/Plugins/Utils/Sql>
 
-#include <QtSql/QSqlQuery>
+#include <QSqlQuery>
 
-#include <QtCore/QThread>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonObject>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 SingleDatabaseQueryTest::SingleDatabaseQueryTest(QObject *parent) : Controller(parent)
 {
@@ -34,14 +33,13 @@ void SingleDatabaseQueryTest::processQuery(Context *c, QSqlQuery &query)
     int id = (qrand() % 10000) + 1;
 
     query.bindValue(QStringLiteral(":id"), id);
-    if (!query.exec() || !query.next()) {
+    if (Q_UNLIKELY(!query.exec() || !query.next())) {
         c->res()->setStatus(Response::InternalServerError);
         return;
     }
 
-    QJsonObject obj;
-    obj.insert(QStringLiteral("id"), query.value(0).toInt());
-    obj.insert(QStringLiteral("randomNumber"), query.value(1).toInt());
-
-    c->response()->setJsonBody(QJsonDocument(obj));
+    c->response()->setJsonObjectBody({
+                                         {QStringLiteral("id"), query.value(0).toInt()},
+                                         {QStringLiteral("randomNumber"), query.value(1).toInt()}
+                                     });
 }

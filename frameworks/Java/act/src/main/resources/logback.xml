@@ -11,30 +11,6 @@
         </encoder>
     </appender>
 
-    <logger name="act" level="OFF" additivity="false">
-        <appender-ref ref="STDOUT" />
-    </logger>
-
-    <logger name="act.Act" level="OFF" additivity="false">
-        <appender-ref ref="STDOUT" />
-    </logger>
-
-    <!--<logger name="act.route" level="OFF" additivity="false">-->
-        <!--<appender-ref ref="STDOUT" />-->
-    <!--</logger>-->
-
-    <!--<logger name="act.event" level="OFF" additivity="false">-->
-        <!--<appender-ref ref="STDOUT" />-->
-    <!--</logger>-->
-
-    <!--<logger name="act.job" level="OFF" additivity="false">-->
-        <!--<appender-ref ref="STDOUT" />-->
-    <!--</logger>-->
-
-    <!--<logger name="act.db" level="OFF" additivity="false">-->
-        <!--<appender-ref ref="STDOUT" />-->
-    <!--</logger>-->
-
     <logger name="metric" level="OFF">
         <appender-ref ref="STDOUT" />
     </logger>

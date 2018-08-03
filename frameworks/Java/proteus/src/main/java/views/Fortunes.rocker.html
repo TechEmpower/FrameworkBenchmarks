@@ -1,13 +1,4 @@
 @import io.sinistral.models.*
 @import java.util.List
 @args (List<Fortune> items)
-<!DOCTYPE html>
-<html>
-<head><title>Fortunes</title></head>
-<body><table>
-<tr><th>id</th><th>message</th></tr>
-@for ((ForIterator i, Fortune item) : items) {
-	<tr><td>@item.id</td><td>@item.message</td></tr>
-}
-</table></body>
-</html>
+<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>@for ((ForIterator i, Fortune item) : items) {<tr><td>@item.id</td><td>@item.message</td></tr>}</table></body></html>

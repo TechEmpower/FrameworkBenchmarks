@@ -1,42 +1,34 @@
 package com.techempower.act;
 
+/*-
+ * #%L
+ * TEB ActFramework Project
+ * %%
+ * Copyright (C) 2016 - 2017 ActFramework
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 
 import act.Act;
-import act.Version;
-import act.boot.app.RunApp;
-import act.job.OnAppStart;
-import com.alibaba.fastjson.JSON;
-import org.osgl.http.H;
 
-@SuppressWarnings("unused")
 public class AppEntry {
 
-	private static final String HELLO_WORLD = "Hello, World!";
-
-	public static final class Message {
-
-		private final String message;
-
-		private Message(String message) {
-			this.message = message;
-		}
-
-		public String getMessage() {
-			return message;
-		}
-
-	}
-
-
-	@OnAppStart
-	public void routing() {
-		Act.getNonblock("/json", context -> context.resp()
-				.contentType(H.Format.JSON.contentType())
-				.writeContent(JSON.toJSONString(new Message(HELLO_WORLD))));
-	}
+	public static final String PROFILE_JSON_PLAINTEXT = "json_plaintext";
 
 	public static void main(String[] args) throws Exception {
-		RunApp.start("ACT Benchmark", Version.appVersion(), AppEntry.class);
+		Act.start();
 	}
 
 }

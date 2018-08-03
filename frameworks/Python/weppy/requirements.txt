@@ -1,5 +1,5 @@
 psycopg2==2.6.1
-weppy==1.0.1
+weppy==1.2
 gunicorn==19.4.5
 meinheld==0.6.1
 uwsgi==2.0.12

@@ -2,7 +2,6 @@
   "framework": "vertx-web",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -22,7 +21,6 @@
       "versus": "vertx"
     },
     "mongodb": {
-      "setup_file": "setup_mongodb",
       "db_url": "/mongo/db",
       "query_url": "/mongo/queries?queries=",
       "fortune_url": "/mongo/fortunes",
@@ -43,30 +41,7 @@
       "notes": "",
       "versus": ""
     },
-    "mysql": {
-      "setup_file": "setup_mysql",
-      "db_url": "/mysql/db",
-      "query_url": "/mysql/queries?queries=",
-      "fortune_url": "/mysql/fortunes",
-      "update_url": "/mysql/update?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "MySQL",
-      "framework": "vertx-web",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "vertx",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "vertx-web-mysql",
-      "notes": "",
-      "versus": ""
-    },
     "postgres": {
-      "setup_file": "setup_postgresql",
       "db_url": "/psql/db",
       "query_url": "/psql/queries?queries=",
       "fortune_url": "/psql/fortunes",
@@ -88,7 +63,6 @@
       "versus": ""
     },
     "susom-postgres": {
-      "setup_file": "setup_postgresql",
       "db_url": "/dbpsql/db",
       "query_url": "/dbpsql/queries?queries=",
       "fortune_url": "/dbpsql/fortunes",

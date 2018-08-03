@@ -1,0 +1,28 @@
+{
+  "framework": "raze",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "raze",
+      "language": "Crystal",
+      "flavor": "None",
+      "orm": "micro",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Raze (PostgreSQL)",
+      "notes": "",
+      "versus": "crystal"
+    }
+  }]
+}

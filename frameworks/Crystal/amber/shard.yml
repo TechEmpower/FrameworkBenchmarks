@@ -1,0 +1,20 @@
+name: amber
+version: 0.1.0
+
+authors:
+  - Amber Team and Contributors <amberframework.org>
+
+license: MIT
+
+targets:
+  amber:
+    main: src/amber.cr
+
+dependencies:
+  amber:
+    github: amberframework/amber
+    version: 0.6.7
+
+  granite_orm:
+    github: amberframework/granite-orm
+    version: 0.8.4

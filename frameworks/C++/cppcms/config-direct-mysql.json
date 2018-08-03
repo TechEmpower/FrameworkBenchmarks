@@ -1,0 +1,23 @@
+{
+    "localization": {
+        "locales": [ "en_US.UTF-8" ]
+    },
+    "service": {
+        "api": "http",
+        "ip": "0.0.0.0",
+        "port": 8080
+    },
+    "http": {
+        "script": "/"
+    },
+    "gzip": {
+        "enable": false
+    },
+    "app": {
+        "db_connection_string": "mysql:host=tfb-database;database=hello_world;user=benchmarkdbuser;password=benchmarkdbpass;set_charset_name=utf8;@pool_size=10"
+    },
+    "cache": {
+        "backend": "thread_shared",
+        "limit": 10000
+    }
+}

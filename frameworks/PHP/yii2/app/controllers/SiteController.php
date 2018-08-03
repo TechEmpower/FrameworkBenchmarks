@@ -8,13 +8,9 @@ use yii\web\Controller;
 
 class SiteController extends Controller
 {
-    private function resJson($data) {
-        header('Content-type: application/json');
-        echo  json_encode($data);
-    }
 
     public function actionJson() {
-        return $this->resJson(array('message'=>'Hello, World!'));
+        return $this->asJson(array('message'=>'Hello, World!'));
     }
 
     public function actionDb($queries = 1) {
@@ -45,7 +41,7 @@ class SiteController extends Controller
             }
         }
 
-        return $this->resJson($arr);
+        return $this->asJson($arr);
     }
 
     private static function cmp($a, $b) {
@@ -80,7 +76,7 @@ class SiteController extends Controller
         $arr = Yii::$app->db->createCommand('select id, message from Fortune')->queryAll();
         $arr[] = ['id'=>0,'message'=>'Additional fortune added at request time.'];
 
-	usort($arr, array($this, 'cmp'));	       
+	usort($arr, array($this, 'cmp'));
 
         header("Content-Type: text/html; charset=utf-8");
         echo <<<EOM
@@ -125,11 +121,12 @@ EOM;
             $arr[] = array('id' => $id, 'randomNumber' => $randomNumber);
         }
 
-        return $this->resJson($arr);
+        return $this->asJson($arr);
     }
 
     public function actionPlaintext() {
-        header("Content-Type: text/plain;");
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        header("Content-Type: text/plain");
         echo 'Hello, World!';
     }
 }

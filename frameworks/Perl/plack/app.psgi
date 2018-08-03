@@ -5,7 +5,7 @@ use JSON::XS qw(encode_json);
 use DBI;
 
 my $dbh = DBI->connect_cached(
-    'dbi:mysql:database=hello_world;host=localhost;port=3306', 
+    'dbi:mysql:database=hello_world;host=tfb-database;port=3306',
     'benchmarkdbuser',
     'benchmarkdbpass',
     { AutoInactiveDestroy => 1, mysql_enable_utf8 => 1 }

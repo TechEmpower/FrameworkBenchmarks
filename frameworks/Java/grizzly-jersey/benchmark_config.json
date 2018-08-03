@@ -2,7 +2,6 @@
   "framework": "grizzly-jersey",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db?single=true",
       "query_url": "/db?queries=",
@@ -17,10 +16,10 @@
       "flavor": "None",
       "orm": "Full",
       "platform": "JAX-RS",
-      "webserver": "None",
+      "webserver": "Grizzly",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Grizzly",
+      "display_name": "grizzly",
       "notes": "",
       "versus": ""
     }

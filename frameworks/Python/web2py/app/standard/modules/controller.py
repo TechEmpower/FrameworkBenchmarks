@@ -40,8 +40,6 @@ def updates():
         world['randomNumber'] = newNumber
         worlds.append(world)
         update_world(wid, newNumber)
-    if current.optimized:
-        db.flush_world_updates() # Batch updates.
     return jsonOut.dumps(worlds)
 
 def fortune():

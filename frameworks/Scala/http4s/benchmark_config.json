@@ -4,7 +4,6 @@
     "default": {
       "orm": "Raw",
       "database_os": "Linux",
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "query_url": "/queries?queries=",

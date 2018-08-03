@@ -7,7 +7,7 @@ defmodule Hello do
     {:ok, _} = :cowboy.start_http(:http,
                                   5000,
                                   [port: 8080],
-                                  [env: [dispatch: dispatch], max_keepalive: 5_000_000])
+                                  [env: [dispatch: dispatch], max_keepalive: :infinity])
   end
 end
 

@@ -2,7 +2,6 @@
   "framework": "php",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json.php",
       "plaintext_url": "/plaintext.php",
       "db_url": "/dborm.php",
@@ -21,10 +20,9 @@
       "database_os": "Linux",
       "display_name": "PHP",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "raw7": {
-      "setup_file": "setup",
       "db_url": "/dbraw.php",
       "query_url": "/dbraw.php?queries=",
       "fortune_url": "/fortune.php",
@@ -43,10 +41,51 @@
       "database_os": "Linux",
       "display_name": "PHP-raw",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
+    },
+    "raw7-tcp": {
+      "db_url": "/dbraw.php",
+      "query_url": "/dbraw.php?queries=",
+      "fortune_url": "/fortune.php",
+      "update_url": "/updateraw.php?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "PHP-raw-tcp",
+      "notes": "TCP sockets",
+      "versus": "php"
+    },
+    "pgsql-raw": {
+      "db_url": "/dbraw.php",
+      "query_url": "/dbraw.php?queries=",
+      "fortune_url": "/fortune.php",
+      "update_url": "/updateraw.php?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "PHP-pgsql-raw",
+      "notes": "",
+      "versus": "php"
     },
     "php5": {
-      "setup_file": "setup_php5",
       "json_url": "/json.php",
       "plaintext_url": "/plaintext.php",
       "db_url": "/dborm.php",
@@ -68,7 +107,6 @@
       "versus": "php-php5"
     },
     "php5-raw": {
-      "setup_file": "setup",
       "db_url": "/dbraw.php",
       "query_url": "/dbraw.php?queries=",
       "fortune_url": "/fortune.php",

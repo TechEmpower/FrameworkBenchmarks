@@ -6,7 +6,7 @@
 	<artifactId>revenj</artifactId>
 	<name>Revenj.JVM</name>
 	<packaging>war</packaging>
-	<version>1.0.3</version>
+	<version>1.1.0</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -14,12 +14,7 @@
 		<dependency>
 			<groupId>org.revenj</groupId>
 			<artifactId>revenj-core</artifactId>
-			<version>1.1.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.4</version>
+			<version>1.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -27,13 +22,18 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.fizzed</groupId>
+			<artifactId>rocker-runtime</artifactId>
+			<version>0.20.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>com.dslplatform</groupId>
 				<artifactId>dsl-platform-maven-plugin</artifactId>
-				<version>1.1.2</version>
+				<version>1.2.0</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
@@ -44,7 +44,7 @@
 							<target>revenj.java</target>
 							<dsl>${project.build.sourceDirectory}</dsl>
 							<namespace>dsl</namespace>
-							<compiler>${project.basedir}/../../../installs/dsl-compiler.exe</compiler>
+							<compiler>${project.basedir}/dsl-compiler.exe</compiler>
 							<options>
 								<option>manual-json</option>
 							</options>
@@ -68,6 +68,20 @@
 				<configuration>
 					<warName>revenj</warName>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.fizzed</groupId>
+				<artifactId>rocker-maven-plugin</artifactId>
+				<version>0.20.0</version>
+				<executions>
+					<execution>
+						<id>generate-rocker-templates</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

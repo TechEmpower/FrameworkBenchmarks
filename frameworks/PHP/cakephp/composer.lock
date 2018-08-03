@@ -1,32 +1,35 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bf07c097a7c8de1802081c1c7fb0fa1e",
+    "content-hash": "0b4706d5f1d84034911f82cbe3485dc1",
     "packages": [
         {
             "name": "cakephp/cakephp",
-            "version": "2.5.7",
+            "version": "2.10.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "ef28b42b2b8885a2be216c11adbbf32919e04a5b"
+                "reference": "8744e53d0e6db411646ca54b1275a072af601344"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/ef28b42b2b8885a2be216c11adbbf32919e04a5b",
-                "reference": "ef28b42b2b8885a2be216c11adbbf32919e04a5b",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/8744e53d0e6db411646ca54b1275a072af601344",
+                "reference": "8744e53d0e6db411646ca54b1275a072af601344",
                 "shasum": ""
             },
             "require": {
-                "ext-mcrypt": "*",
-                "php": ">=5.2.8"
+                "php": ">=5.3.0"
             },
             "require-dev": {
-                "cakephp/debug_kit": "2.2.*",
-                "phpunit/phpunit": "3.7.*"
+                "cakephp/cakephp-codesniffer": "^1.0.0",
+                "phpunit/phpunit": "^3.7"
+            },
+            "suggest": {
+                "ext-mcrypt": "You need to install ext-openssl or ext-mcrypt to use AES-256 encryption",
+                "ext-openssl": "You need to install ext-openssl or ext-mcrypt to use AES-256 encryption"
             },
             "bin": [
                 "lib/Cake/Console/cake"
@@ -43,11 +46,11 @@
                 }
             ],
             "description": "The CakePHP framework",
-            "homepage": "http://cakephp.org",
+            "homepage": "https://cakephp.org",
             "keywords": [
                 "framework"
             ],
-            "time": "2014-12-09 01:50:35"
+            "time": "2018-02-25T03:32:53+00:00"
         }
     ],
     "packages-dev": [],

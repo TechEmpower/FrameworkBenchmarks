@@ -26,12 +26,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <h2o/cache.h>
 #include <h2o/serverutil.h>
 #include <sys/resource.h>
 #include <sys/signalfd.h>
 #include <sys/time.h>
 
+#include "cache.h"
 #include "error.h"
 #include "event_loop.h"
 #include "request_handler.h"
@@ -77,9 +77,7 @@ static void free_global_data(global_data_t *global_data)
 		mustache_free(&api, global_data->fortunes_template);
 	}
 
-	if (global_data->world_cache)
-		h2o_cache_destroy(global_data->world_cache);
-
+	cache_destroy(&global_data->world_cache);
 	h2o_config_dispose(&global_data->h2o_config);
 
 	if (global_data->ssl_ctx)
@@ -132,12 +130,12 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	CHECK_ERRNO_RETURN(global_data->signal_fd, signalfd, -1, &signals, SFD_NONBLOCK | SFD_CLOEXEC);
 	global_data->fortunes_template = get_fortunes_template(config->template_path);
 	h2o_config_init(&global_data->h2o_config);
-	global_data->world_cache = h2o_cache_create(H2O_CACHE_FLAG_MULTITHREADED,
-	                                            config->world_cache_capacity,
-	                                            config->world_cache_duration,
-	                                            free_world_cache_entry);
 
-	if (!global_data->world_cache)
+	if (cache_create(config->thread_num,
+	                 config->world_cache_capacity,
+	                 config->world_cache_duration,
+	                 free_world_cache_entry,
+	                 &global_data->world_cache))
 		goto error;
 
 	if (config->cert && config->key)
@@ -177,6 +175,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	}
 
 error:
+	close(global_data->signal_fd);
 	free_global_data(global_data);
 	return EXIT_FAILURE;
 }
@@ -333,6 +332,8 @@ int main(int argc, char *argv[])
 			setup_process();
 			start_threads(global_data.global_thread_data);
 			initialize_thread_context(global_data.global_thread_data, true, &ctx);
+			// This is just an optimization, so that the application does not try to
+			// establish database connections in the middle of servicing requests.
 			connect_to_database(&ctx);
 			event_loop(&ctx);
 			// Even though this is global data, we need to close
