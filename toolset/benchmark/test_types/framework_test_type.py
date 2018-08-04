@@ -211,7 +211,7 @@ class FrameworkTestType:
         elif database_name == "reindexer":
             try:
                 worlds_json = {}
-                resp = requests.get ("http://" + self.config.database_host + ":9088/api/v1/db/techempower/namespaces/world/items?limit=10000" )
+                resp = requests.get ("http://" + self.config.database_host + ":9088/api/v1/db/hello_world/namespaces/world/items?limit=10000" )
                 for world in resp.json()["items"]:
                     if "randomNumber" in world:
                         worlds_json[str(int(world["id"]))] = int(

@@ -1,6 +1,7 @@
 import MySQLdb
 import psycopg2
 import pymongo
+import requests
 
 
 def test_database(config, database_name):
@@ -35,6 +36,11 @@ def test_database(config, database_name):
             db.world.find()
             db.close()
         except:
+            return False
+    elif database_name == "reindexer":
+        try:
+            requests.get ("http://" + config.database_host + ":9088/api/v1/db/hello_world/namespaces/world/items?limit=1" )
+        except Exception:
             return False
 
     return True

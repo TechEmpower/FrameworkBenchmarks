@@ -23,7 +23,7 @@ func main() {
 	var err error
 	maxConnectionCount := runtime.NumCPU() * 4
 
-	if db, err = initDatabase("cproto://tfb-database:6534/techempower", maxConnectionCount); err != nil {
+	if db, err = initDatabase("cproto://tfb-database:6534/hello_world", maxConnectionCount); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
 
