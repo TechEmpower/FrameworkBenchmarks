@@ -208,6 +208,20 @@ class FrameworkTestType:
                 log("ERROR: Unable to load current MongoDB World table.",
                     color=Fore.RED)
                 log(tb)
+        elif database_name == "reindexer":
+            try:
+                worlds_json = {}
+                resp = requests.get ("http://" + self.config.database_host + ":9088/api/v1/db/techempower/namespaces/world/items?limit=10000" )
+                for world in resp.json()["items"]:
+                    if "randomNumber" in world:
+                        worlds_json[str(int(world["id"]))] = int(
+                            world["randomNumber"])
+                        results_json.append(worlds_json)
+            except Exception:
+                tb = traceback.format_exc()
+                log("ERROR: Unable to load current Reindexer World table.",
+                    color=Fore.RED)
+                log(tb)
         else:
             raise ValueError(
                 "Database: {!s} does not exist".format(database_name))

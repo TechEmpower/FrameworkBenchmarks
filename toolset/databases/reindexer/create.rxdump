@@ -1,0 +1,18 @@
+-- Reindexer DB backup file
+-- VERSION 1.0
+-- Dumping namespace 'fortune' ...
+\NAMESPACES ADD fortune {"name":"fortune","storage":{"enabled":true},"indexes":[{"name":"id","json_path":"id","field_type":"int","index_type":"hash","is_pk":true}]}
+\UPSERT fortune {"id":1,"message":"fortune: No such file or directory"}
+\UPSERT fortune {"id":2,"message":"A computer scientist is someone who fixes things that aren't broken."}
+\UPSERT fortune {"id":3,"message":"After enough decimal places, nobody gives a damn."}
+\UPSERT fortune {"id":4,"message":"A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1"}
+\UPSERT fortune {"id":5,"message":"A computer program does what you tell it to do, not what you want it to do."}
+\UPSERT fortune {"id":6,"message":"Emacs is a nice operating system, but I prefer UNIX. — Tom Christaensen"}
+\UPSERT fortune {"id":7,"message":"Any program that runs right is obsolete."}
+\UPSERT fortune {"id":8,"message":"A list is only as strong as its weakest link. — Donald Knuth"}
+\UPSERT fortune {"id":9,"message":"Feature: A bug with seniority."}
+\UPSERT fortune {"id":10,"message":"Computers make very fast, very accurate mistakes."}
+\UPSERT fortune {"id":11,"message":"<script>alert(\"This should not be displayed in a browser alert box.\");</script>"}
+\UPSERT fortune {"id":12,"message":"フレームワークのベンチマーク"}
+-- Dumping namespace 'world' ...
+\NAMESPACES ADD world {"name":"world","storage":{"enabled":true},"indexes":[{"name":"id","json_path":"id","field_type":"int","index_type":"hash","is_pk":true}]}
