@@ -17,4 +17,5 @@ RUN rm -f ./server-reindexer
 RUN go generate templates
 RUN go build -gcflags='-l=4' server-reindexer
 
+
 CMD ./server-reindexer
