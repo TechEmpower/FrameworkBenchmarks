@@ -15,7 +15,7 @@ type Stream with
         // for i in 0 .. 8 do
         //     if v >= divisors.[i] then Math.DivRem(v,divisors.[i],&v) |> byte |> ms.WriteByte
         let inline check divisor =
-            if v >= divisor then System.Math.DivRem(v,divisor,&v) |> byte |> x.WriteByte
+            if v >= divisor then byte '0' + (System.Math.DivRem(v,divisor,&v) |> byte) |> x.WriteByte
 
         check 1000000000
         check 100000000
@@ -27,7 +27,7 @@ type Stream with
         check 100
         check 10
 
-        v |> byte |> x.WriteByte
+        byte '0' + (v |> byte) |> x.WriteByte
 
     member x.Write(value:string) =
         for char in value do
