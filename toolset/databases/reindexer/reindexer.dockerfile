@@ -1,4 +1,4 @@
-FROM reindexer/reindexer
+FROM reindexer/reindexer:latest
 
 ADD . /src
 RUN reindexer_tool --dsn builtin:///db/hello_world --filename /src/create.rxdump
