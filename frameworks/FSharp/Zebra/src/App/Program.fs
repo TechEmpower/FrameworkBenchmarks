@@ -9,12 +9,21 @@ open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore
 open System
-
-
+open TemplateViewEngine
+open Npgsql
+open Dapper
+open System.Collections.Generic
 
 
 [<CLIMutable>][<Struct>] 
 type JsonStructMessage = { message : string }
+
+ [<CLIMutable>]
+type Fortune = { id: int; message: string }
+
+[<Literal>]
+let ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3"
+
 
 module Simple =
     let textFn<'T> (text:string) = 
@@ -41,6 +50,34 @@ module Simple =
             x.CurrentState <- MachineState.Complete
             awt.OnCompleted x.Continue
 
+module View =
+     
+    let fortuneView =
+        html [] [
+            head [] [
+                title []  [ rawText "Fortunes" ]
+            ]        
+            body [] [
+                table [] [ 
+                    tr [] [
+                        th [] [ rawText "id" ]
+                        th [] [ rawText "message" ]
+                    ]
+                    bindFor<Fortune List,Fortune> (fun ls -> ls :> seq<Fortune> ) (
+                        tr [] [
+                            td [] [ bindInt (fun v -> v.id) ]
+                            td [] [ bindStr (fun v -> v.message) ]
+                        ]
+                    )
+                ]
+            ]
+        ] |> compile
+
+    let extra = { id = 0; message = "Additional fortune added at request time." }
+    let FortuneComparer = { new IComparer<Fortune> with 
+        member self.Compare(a,b) = String.CompareOrdinal(a.message, b.message)
+}
+
 [<EntryPoint>]
 let main args = 
 
@@ -54,6 +91,19 @@ let main args =
         router [
             get "/plaintext" => fun ctx -> ctx { text "Hello, World!" }
             get "/json"      => fun ctx -> ctx { json {JsonStructMessage.message = "Hello, World!"} }
+            get "/fortunes"  => fun ctx -> ctx { 
+                use conn = new NpgsqlConnection(ConnectionString)
+                
+                let! (data : Fortune seq) = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
+                
+                let fortunes = 
+                    let xs = data.AsList()
+                    xs.Add View.extra
+                    xs.Sort View.FortuneComparer
+                    xs
+
+                ctx.Render( fortunes, View.fortuneView )
+                }
         ]
 
     // Simple implimentation
@@ -61,18 +111,21 @@ let main args =
     let jsonPrint = Simple.jsonFn<unit> {JsonStructMessage.message = "Hello, World!"}
     let notFound = Simple.textFn "Not Found"
 
-    let inline simpleApp (ctx:State<unit>) =
+    let inline simpleApp (ctx:State<_>) =
         match ctx.HttpContext.Request.Path.Value with
         | "/plaintext" -> plaintextPrint ctx
         | "/json"      -> jsonPrint      ctx
         | _            -> notFound       ctx
 
-
     // Config to used based on console arg
     let config : Action<Builder.IApplicationBuilder> =
             match args with
-            | [|"simple"|] -> Action<Builder.IApplicationBuilder>( fun app -> app.UseZebraSimpleMiddleware(simpleApp) |> ignore )
-            | _            -> Action<Builder.IApplicationBuilder>( fun app -> app.UseZebraMiddleware<unit>((),fallback,webapp) |> ignore )
+            | [|"simple"|] -> 
+                printfn "Using Simple Config..."
+                Action<Builder.IApplicationBuilder>( fun app -> app.UseZebraSimpleMiddleware<unit>((),simpleApp) |> ignore )
+            | _            -> 
+                printfn "Using Stock Config..."
+                Action<Builder.IApplicationBuilder>( fun app -> app.UseZebraMiddleware<int>(0,fallback,webapp) |> ignore )
         
     WebHostBuilder()
         .UseKestrel()

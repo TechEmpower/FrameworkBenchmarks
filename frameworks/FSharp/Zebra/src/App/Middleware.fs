@@ -32,9 +32,10 @@ type ZebraMiddleware<'T>(
         tcs.Task
 
 
-type ZebraSimpleMiddleware(
+type ZebraSimpleMiddleware<'T>(
                         next          : RequestDelegate,
-                        App    : State<unit> -> unit
+                        Dependencies  : 'T,
+                        App    : State<'T> -> unit
                         ) =
     
     //do GC.Collect()
@@ -43,7 +44,7 @@ type ZebraSimpleMiddleware(
         
         let tcs  = TaskCompletionSource()
                 
-        let mutable state = State<unit>(ctx,(),tcs)
+        let mutable state = State<'T>(ctx,Dependencies,tcs)
         App state
 
         tcs.Task
@@ -52,5 +53,5 @@ type IApplicationBuilder with
     member x.UseZebraMiddleware<'T>(dependencies:'T,fallback:Zapp<'T>,app:PipeLine<'T>) = 
         x.UseMiddleware<ZebraMiddleware<'T>> [|box dependencies;box fallback;box app|]
 
-    member x.UseZebraSimpleMiddleware(app:State<'T> -> unit) = 
-         x.UseMiddleware<ZebraSimpleMiddleware> [|box app|]
+    member x.UseZebraSimpleMiddleware<'T>(dependencies:'T,app:State<'T> -> unit) = 
+         x.UseMiddleware<ZebraSimpleMiddleware<'T>> [|box dependencies;box app|]

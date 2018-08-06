@@ -10,22 +10,14 @@ open System.Xml.Serialization
 open StreamBuffer
 open System.IO
 open EncodeHelper
-open System.Net.Mime
-open System.Threading
-open System.Threading.Tasks
-open System.Threading
-open System.Threading.Tasks
+
 open System.Text
 open System
+open TemplateViewEngine   
 
 [<Struct>]
-type GenericStateAwaiter<'T>(awaiter:TaskAwaiter<'T> ,continuation:'T -> unit) = //,methodBuilder:AsyncTaskMethodBuilder) =
+type GenericStateAwaiter<'T>(awaiter:TaskAwaiter<'T> ,continuation:'T -> unit) =
     member x.Apply() = continuation ( awaiter.GetResult() ) 
-    // interface IAsyncStateMachine with
-    //     member __.MoveNext() =
-    //             //Diagnostics.Debug.WriteLine("MoveNext : GenericStateAwaiter")   
-    //             continuation ( awaiter.GetResult() )  // runs cont, will update awaiter & continuation
-    //     member __.SetStateMachine (sm) = methodBuilder.SetStateMachine sm 
 
 [<Struct>]
 type PlainStateAwaiter(continuation:unit -> unit) =
@@ -208,8 +200,26 @@ and State<'T>(hctx: HttpContext, deps: 'T, amb: TaskCompletionSource<unit>) =
                 Utf8Json.JsonSerializer.Serialize< ^a>(ms,value)
                 BindType.Stream ms
 
-        member inline x.Json< ^a>(value: ^a ) = x.Json< ^a>(x.BindType, value)            
+        member inline x.Json< ^a>(value: ^a ) = x.Json< ^a>(x.BindType, value) 
+
+         
        
+        [<CustomOperation("render",MaintainsVariableSpaceUsingBind=true)>]//,MaintainsVariableSpaceUsingBind = true)>]
+        member inline x.Render< ^a>(n:BindType, value: ^a, compiledNodes :CompiledNode< ^a> [] ) =
+            match n with
+            | BindType.None -> 
+                x.HttpContext.Response.Headers.["Content-Type"] <- StringValues "text/html;charset=utf-8"
+                let ms = MemoryStreamCache.Get()
+                renderHtmlDocument value compiledNodes ms
+                BindType.Stream ms
+            | _ -> failwith "render can be the only writer in a pipeline" 
+
+        member inline x.Render< ^a>(value: ^a,compiledNodes :CompiledNode< ^a> []) =
+            x.HttpContext.Response.Headers.["Content-Type"] <- StringValues "text/html;charset=utf-8"
+            let ms = MemoryStreamCache.Get()
+            renderHtmlDocument value compiledNodes ms
+            x.BindType <- BindType.Stream ms
+
         // setHeader
         ////////////
         member inline x.SetHeader(header: string, value:string ) =
