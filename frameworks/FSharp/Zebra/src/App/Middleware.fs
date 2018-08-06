@@ -20,7 +20,7 @@ type ZebraMiddleware<'T>(
     let failNode = FailNode<'T>(failAction,finishNode)
     let appNode = AppBuilder(finishNode,failNode) // build App node
     
-    //do GC.Collect()
+    do System.GC.Collect()
     
     member __.Invoke (ctx : HttpContext) = 
         
