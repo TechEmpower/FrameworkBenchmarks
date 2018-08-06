@@ -5,26 +5,35 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+static void handlerResult(void* res, uint32_t num_result)
+{
+   U_TRACE(5, "::handlerResult(%p,%u)", res, num_result)
+
+   U_INTERNAL_ASSERT_EQUALS(num_result, 1)
+   U_INTERNAL_ASSERT_EQUALS(PQnfields((PGresult*)res), 1)
+   U_INTERNAL_ASSERT_EQUALS(PQntuples((PGresult*)res), 1)
+
+   char* randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", (PGresult*)res, 0, 0);
+
+   World::handlerOneResult(ntohl(*(uint32_t*)randomNumber));
+}
+#endif
+
+static void usp_init_db() { World::handlerInitSql(); }
 static void usp_fork_db() { World::handlerForkSql(); }
 -->
 <!--#header
 -->
 <!--#code
-World::initOneResult();
-
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
-if (World::pdrv)
+if (World::pstmt)
    {
-   PGresult* res = World::execPrepared();
+   UServer_Base::handler_db1->handlerQuery();
 
-   U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
-   U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)
+   World::sendQueryPrepared();
 
-   char* randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", res, 0, 0);
-
-   World::handlerOneResult(World::rnumber[0], ntohl(*(uint32_t*)randomNumber));
-
-   U_SYSCALL_VOID(PQclear, "%p", res);
+   UServer_Base::handler_db1->handlerResult(handlerResult);
    }
 else
 #endif
@@ -33,8 +42,6 @@ World::pworld_query->id = World::rnumber[0];
 
 (void) World::pstmt_query->execute();
 
-World::handlerOneResult(World::pworld_query->id, World::pworld_query->randomNumber);
+World::handlerOneResult(World::pworld_query->randomNumber);
 }
-
-World::endOneResult();
 -->
