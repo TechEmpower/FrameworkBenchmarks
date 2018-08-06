@@ -38,7 +38,7 @@ type ZebraSimpleMiddleware<'T>(
                         App    : State<'T> -> unit
                         ) =
     
-    //do GC.Collect()
+    do System.GC.Collect()
     
     member __.Invoke (ctx : HttpContext) = 
         
