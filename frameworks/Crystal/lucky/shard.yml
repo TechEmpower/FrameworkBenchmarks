@@ -2,7 +2,7 @@ name: lucky
 version: 0.1.0
 
 authors:
-  - Carlos Donderis <donderis@sansan.com>
+  - Carlos Donderis <cdonderis@gmail.com>
 
 targets:
   lucky:
