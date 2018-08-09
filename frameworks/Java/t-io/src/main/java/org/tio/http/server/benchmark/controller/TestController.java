@@ -23,8 +23,6 @@ public class TestController {
 		
 	@RequestPath(value = "json")
 	public HttpResponse json(HttpRequest request) throws Exception {
-		request.channelContext.groupContext.setUseQueueSend(false);
-		
 		//更高性能的写法
 		HttpResponse ret = new HttpResponse(request);
 		ret.setBody(Json.toJson(new Message(HELLO_WORLD)).getBytes());
@@ -37,8 +35,6 @@ public class TestController {
 
 	@RequestPath(value = "plaintext")
 	public HttpResponse plaintext(HttpRequest request) throws Exception {
-		request.channelContext.groupContext.setUseQueueSend(true);
-		
 		//更高性能的写法
 		HttpResponse ret = new HttpResponse(request);
 		ret.setBody(HELLO_WORLD_BYTES);
