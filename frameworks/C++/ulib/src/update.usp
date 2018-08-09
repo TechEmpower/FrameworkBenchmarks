@@ -10,6 +10,7 @@ static char query[8192];
 #endif
 static UOrmStatement* pstmt_update;
 
+static void usp_init_update() { World::handlerInitSql(); }
 static void usp_fork_update()
 {
    U_TRACE(5, "::usp_fork_update()")
@@ -19,7 +20,7 @@ static void usp_fork_update()
    if (World::psql_query)
       {
 #  ifdef U_STATIC_ORM_DRIVER_PGSQL
-      if (World::pdrv) (void) memcpy(query, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES"));
+      if (World::pstmt) (void) memcpy(query, U_CONSTANT_TO_PARAM("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES"));
       else
 #  endif
       {
@@ -38,7 +39,7 @@ uint32_t i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 World::initResult();
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
-if (World::pdrv)
+if (World::pstmt)
    {
    PGresult* res;
    char* pquery = query + U_CONSTANT_SIZE("UPDATE World SET randomNumber = v.randomNumber FROM (VALUES");
@@ -63,7 +64,7 @@ if (World::pdrv)
       u_put_unalignedp16(pquery, U_MULTICHAR_CONSTANT16(')',','));
                          pquery += 2;
 
-      World::handlerResult(World::rnumber[i], World::rnum);
+      World::handlerResult(i, World::rnum);
 
       U_SYSCALL_VOID(PQclear, "%p", res);
       }
@@ -92,7 +93,7 @@ for (; i < num_queries; ++i)
 
    pstmt_update->execute();
 
-   World::handlerResultSql(i);
+   World::handlerResult(i, World::pworld_query->randomNumber);
    }
 
 World::endResult();
