@@ -107,7 +107,7 @@ let main args =
         ]
 
     // Simple implimentation
-    let plaintextPrint = Simple.textFn "Hello World!"
+    let plaintextPrint = Simple.textFn "Hello, World!"
     let jsonPrint = Simple.jsonFn<_> {JsonStructMessage.message = "Hello, World!"}
     let notFound = Simple.textFn "Not Found"
 
