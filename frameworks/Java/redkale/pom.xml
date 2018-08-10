@@ -19,13 +19,13 @@
 		<dependency>
 			<groupId>org.redkale</groupId>
 			<artifactId>redkale</artifactId>
-			<version>1.9.3</version>
+			<version>1.9.5.2</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.redkalex</groupId>
 			<artifactId>redkale-plugins</artifactId>
-			<version>1.9.3</version>
+			<version>1.9.5.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fizzed</groupId>

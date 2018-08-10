@@ -23,7 +23,7 @@
 				"database_os": "Linux",
 				"display_name": "OfficeFloor",
 				"notes": "",
-				"versus": "officefloor-raw"
+				"versus": "officefloor-micro"
 			},
 			"raw": {
 				"json_url": "/json",
@@ -40,8 +40,30 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-raw",
+				"notes": ""
+			},
+			"tpr": {
+				"json_url": "/json",
+				"plaintext_url": "/plaintext",
+				"db_url": "/db",
+				"query_url": "/queries?queries=",
+				"fortune_url": "/fortunes",
+				"update_url": "/update?queries=",
+				"port": 8080,
+				"approach": "Realistic",
+				"classification": "Fullstack",
+				"database": "Postgres",
+				"framework": "OfficeFloor",
+				"language": "Java",
+				"flavor": "None",
+				"orm": "raw",
+				"platform": "OfficeFloor",
+				"webserver": "WoOF",
+				"os": "Linux",
+				"database_os": "Linux",
+				"display_name": "OfficeFloor-tpr",
 				"notes": "",
-				"versus": "None"
+				"versus": "OfficeFloor-raw"
 			},
 			"micro": {
 				"json_url": "/json",

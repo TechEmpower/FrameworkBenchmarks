@@ -97,6 +97,24 @@
       "notes": "",
       "versus": "aspcore"
     },
+    "mw-spanjson": {
+      "json_url": "/spanjson",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ASP.NET Core, Middleware, SpanJson",
+      "notes": "",
+      "versus": "aspcore"
+    },
     "mw-ado-pg": {
       "db_url": "/db/raw",
       "query_url": "/queries/raw?queries=",
