@@ -128,7 +128,7 @@ let rec processNodes (item:'T,sw:Stream,nodes:CompiledNode<'T> [] ) =
     for node in nodes do
         match node with                
         | CText v -> sw.Write(v,0,v.Length) //.Write v
-        | CBindStr fn -> item |> fn |> sw.Write
+        | CBindStr fn -> item |> fn |> WebUtility.HtmlEncode |> sw.Write
         | CBindInt fn -> item |> fn |> sw.Write
         | CAttr fn -> let key,value = fn item in sw.Write(key) ; sw.Write("=") ; sw.Write(value)  
         | CBindIf (pred,trueFns,falseFns) ->

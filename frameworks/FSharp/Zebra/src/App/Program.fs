@@ -108,7 +108,7 @@ let main args =
 
     // Simple implimentation
     let plaintextPrint = Simple.textFn "Hello World!"
-    let jsonPrint = Simple.jsonFn<unit> {JsonStructMessage.message = "Hello, World!"}
+    let jsonPrint = Simple.jsonFn<_> {JsonStructMessage.message = "Hello, World!"}
     let notFound = Simple.textFn "Not Found"
 
     let inline simpleApp (ctx:State<_>) =
@@ -122,7 +122,7 @@ let main args =
             match args with
             | [|"simple"|] -> 
                 printfn "Using Simple Config..."
-                Action<Builder.IApplicationBuilder>( fun app -> app.UseZebraSimpleMiddleware<unit>((),simpleApp) |> ignore )
+                Action<Builder.IApplicationBuilder>( fun app -> app.UseZebraSimpleMiddleware<int>(0,simpleApp) |> ignore )
             | _            -> 
                 printfn "Using Stock Config..."
                 Action<Builder.IApplicationBuilder>( fun app -> app.UseZebraMiddleware<int>(0,fallback,webapp) |> ignore )
