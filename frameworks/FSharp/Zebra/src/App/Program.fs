@@ -63,7 +63,7 @@ module View =
                         th [] [ rawText "id" ]
                         th [] [ rawText "message" ]
                     ]
-                    bindFor<Fortune List,Fortune> (fun ls -> ls :> seq<Fortune> ) (
+                    bindFor<_,_> (fun ls -> ls :> seq<Fortune> ) (
                         tr [] [
                             td [] [ bindInt (fun v -> v.id) ]
                             td [] [ bindStr (fun v -> v.message) ]
