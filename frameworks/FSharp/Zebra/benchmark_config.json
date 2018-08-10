@@ -9,7 +9,7 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "fullstack",
-        "database": "None",
+        "database": "Postgres",
         "framework": "zebra",
         "language": "F#",
         "orm": "Raw",
