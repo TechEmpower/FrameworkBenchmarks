@@ -70,7 +70,7 @@ let writeFlush (sb:StringBuilder,acc:CompiledNode<'T> list) =
         nacc
     else acc
 
-let compile (raw:XmlNode<'T>) : CompiledNode<'T> [] =
+let private compile (raw:XmlNode<'T>) (prefix:string option) : CompiledNode<'T> [] =
     let rec go node (sb:StringBuilder) acc =
         match node with
         | ParentNode (name,attrs,children) ->
@@ -108,7 +108,11 @@ let compile (raw:XmlNode<'T>) : CompiledNode<'T> [] =
         | BindIf (p,t,f) -> CBindIf(p,t,f) :: writeFlush(sb,acc)
         | BindFor fn     -> CBindFor(fn) :: writeFlush(sb,acc)
     
-    let sb = StringBuilder() // re-usable stringbuilder for building string parts
+    let sb = 
+        match prefix with
+        | Some pre -> StringBuilder(pre) // re-usable stringbuilder for building string parts
+        | None -> StringBuilder()
+
     let acc = go raw sb [] // node list in reverse order so position backwards down array
     let acc' = writeFlush(sb,acc)
     let result = Array.zeroCreate<_>(acc'.Length)
@@ -134,16 +138,19 @@ let rec processNodes (item:'T,sw:Stream,nodes:CompiledNode<'T> [] ) =
                 processNodes(item,sw,falseFns)
         | CBindFor (fn) -> fn(item,sw)
 
-let inline bindFor<'T,'U> (enumFn:'T -> #seq<'U>) (template:XmlNode<'U>) =
-    let compiledNodes = compile template
+let compileDoc (raw:XmlNode<'T>) = 
+    compile raw (Some "<!DOCTYPE html>")
+
+let bindFor<'T,'U> (enumFn:'T -> #seq<'U>) (template:XmlNode<'U>) =
+    let compiledNodes = compile template None
     BindFor (fun (model:'T,sw:Stream) ->
         for item in enumFn model do
             processNodes(item,sw,compiledNodes)
     )
 
-let inline bindIf<'T> (predicate:'T -> bool,trueTemplate:XmlNode<'T>,falseTemplate:XmlNode<'T>) =
-    let trueNodes = compile trueTemplate
-    let falseNodes = compile falseTemplate
+let bindIf<'T> (predicate:'T -> bool,trueTemplate:XmlNode<'T>,falseTemplate:XmlNode<'T>) =
+    let trueNodes = compile trueTemplate None
+    let falseNodes = compile falseTemplate None
     BindIf(predicate,trueNodes,falseNodes)
 
 let inline bindStr<'T>(map:'T -> string) = BindStr(map)

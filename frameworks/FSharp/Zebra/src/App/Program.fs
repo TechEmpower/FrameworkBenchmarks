@@ -71,7 +71,7 @@ module View =
                     )
                 ]
             ]
-        ] |> compile
+        ] |> compileDoc
 
     let extra = { id = 0; message = "Additional fortune added at request time." }
     let FortuneComparer = { new IComparer<Fortune> with 
