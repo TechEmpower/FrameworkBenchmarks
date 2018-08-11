@@ -130,7 +130,7 @@ impl PgConnection {
     }
 
     pub fn tell_fortune(&self) -> impl Future<Item=Vec<Fortune>, Error=io::Error> {
-        let mut items = Vec::with_capacity(16);
+        let mut items = Vec::new();
         items.push(Fortune {
             id: 0,
             message: "Additional fortune added at request time.".to_string(),
