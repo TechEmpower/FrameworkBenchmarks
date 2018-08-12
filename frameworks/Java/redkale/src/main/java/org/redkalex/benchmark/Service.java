@@ -20,7 +20,7 @@ import org.redkale.source.DataSource;
 @RestService(name = " ", repair = false)
 public class Service extends AbstractService {
 
-    private static final ByteBuffer helloBuffer = ((ByteBuffer) ByteBuffer.allocateDirect("Hello, world!".length()).put("Hello, world!".getBytes()).flip()).asReadOnlyBuffer();
+    private static final byte[] helloBytes = "Hello, world!".getBytes();
 
     private final Random random = new Random();
 
@@ -33,8 +33,8 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "plaintext")
-    public ByteBuffer getHelloBuffer() {
-        return helloBuffer.duplicate();
+    public byte[] getHelloBytes() {
+        return helloBytes;
     }
 
     @RestMapping(name = "db")
