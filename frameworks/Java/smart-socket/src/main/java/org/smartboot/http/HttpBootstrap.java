@@ -51,8 +51,7 @@ public class HttpBootstrap {
 
     public static void http(MessageProcessor<org.smartboot.http.common.HttpEntityV2> processor) {
         // 定义服务器接受的消息类型以及各类消息对应的处理器
-        int port = NumberUtils.toInt(System.getProperty("port"), 8888);
-        AioQuickServer<org.smartboot.http.common.HttpEntityV2> server = new AioQuickServer<org.smartboot.http.common.HttpEntityV2>(port, new HttpRequestProtocol(), processor);
+        AioQuickServer<org.smartboot.http.common.HttpEntityV2> server = new AioQuickServer<org.smartboot.http.common.HttpEntityV2>(8080, new HttpRequestProtocol(), processor);
         server.setWriteQueueSize(4);
         server.setReadBufferSize(1024);
 //        server.setThreadNum(8);
