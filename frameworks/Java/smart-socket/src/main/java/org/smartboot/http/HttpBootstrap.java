@@ -8,7 +8,6 @@
 
 package org.smartboot.http;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.smartboot.http.common.HttpEntityV2;
 import org.smartboot.http.common.HttpRequestProtocol;
 import org.smartboot.http.common.utils.HttpHeaderConstant;
@@ -18,12 +17,11 @@ import org.smartboot.socket.MessageProcessor;
 import org.smartboot.socket.transport.AioQuickServer;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 public class HttpBootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) {
         org.smartboot.http.server.HttpV2MessageProcessor processor = new org.smartboot.http.server.HttpV2MessageProcessor(System.getProperty("webapps.dir", "./"));
         processor.route("/plaintext", new HttpHandle() {
 
