@@ -32,9 +32,9 @@ let inline composeFnFn (parentFn:PipeLine<'T>) (childFn:PipeLine<'T>) : PipeLine
         let parent = parentFn(child,fail)
         parent
 
-let inline composeFnChoose (parentFn:PipeLine<'T>) (childFn:ChooseWrap<'T>) : PipeLine<'T> =
+let inline composeFnChoose (parentFn:PipeLine<'T>) (ChooseWrap(childFn):ChooseWrap<'T>) : PipeLine<'T> =
     fun (next:INode<'T>,fail:INode<'T>) -> // new nodeTree Fn
-        let child = childFn.Apply(next,fail)
+        let child = childFn(next,fail)
         let parent = parentFn(child,fail)
         parent
 
@@ -63,9 +63,9 @@ let inline composeBase (a:RouteBase<'T>) (b:Zapp<'T>) =
         let child = ChoiceNode<'T>(next,fail,b)
         route a.Method a.Pattern (child,fail)
 
-let inline composeRouteChoose (a:RouteBase<'T>) (b:ChooseWrap<'T>) =
+let inline composeRouteChoose (a:RouteBase<'T>) (ChooseWrap(b):ChooseWrap<'T>) =
     fun (next:INode<'T>,fail:INode<'T>) ->
-        let child = b.Apply(next,fail)
+        let child = b(next,fail)
         route a.Method a.Pattern (child,fail)
 
 

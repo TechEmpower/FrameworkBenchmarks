@@ -36,7 +36,7 @@ impl PgConnection {
 
             hs.map_err(|_| panic!("can not connect to postgresql"))
                 .into_actor(&act)
-                .and_then(|(mut cl, conn), act, ctx| {
+                .and_then(|(cl, conn), act, ctx| {
                     ctx.wait(
                         cl.prepare("SELECT id, message FROM fortune")
                             .map_err(|_| ())

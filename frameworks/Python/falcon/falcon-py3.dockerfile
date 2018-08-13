@@ -1,4 +1,4 @@
-FROM python:3.6.5
+FROM python:3.6.6-stretch
 
 WORKDIR /falcon
 COPY app.py app.py

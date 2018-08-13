@@ -4,10 +4,12 @@ open ExecNodes
 open Parsers
 open System.Collections.Generic
 open System.Text
+open System.Collections.Generic
 
 
 type IRouteNode<'T> =
-    abstract Parse : Range [] * State<'T> -> unit
+    abstract Parse : Range [] * State<'T> -> bool
+    
 
 let validFormats = set ['s';'i';'b';'f';'o'] // the PrintfFormat already valids but we check in pattern parse to be sure
 
@@ -97,6 +99,8 @@ type RNode<'T>(token:string) =
         with get () = edges.Count
     member __.GetEdgeKeys = edges.Keys
     member __.TryGetValue v = edges.TryGetValue v
+
+    member val MethodFilters = HashSet<METHODS>() with get,set
     override x.ToString() =
         let sb = StringBuilder()
         x.ToString(0, sb)
@@ -223,3 +227,16 @@ and Cont<'T> =
             | MatchComplete _   -> 3             
             | Complete _        -> 4
             | Empty             -> 5
+
+let private emptyMethodSet = HashSet<METHODS>()
+
+let MethodOptimise (root:RNode<'T>) =
+
+    let rec go(node:RNode<'T>,parent:HashSet<METHODS>) =
+        for kvp in node.Edges do
+            if kvp.Value.MethodFilters = parent then
+                kvp.Value.MethodFilters <- emptyMethodSet // clear the hashset
+                go(kvp.Value,parent)
+            else
+                go(kvp.Value,kvp.Value.MethodFilters)
+    go(root,root.MethodFilters)

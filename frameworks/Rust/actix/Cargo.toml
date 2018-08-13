@@ -36,7 +36,7 @@ actix = "0.7"
 actix-web = { version="0.7", default-features = false }
 
 phf = "0.7.22"
-tokio-postgres = { git="https://github.com/sfackler/rust-postgres.git" }
+tokio-postgres = { git="https://github.com/fafhrd91/rust-postgres.git" }
 
 [patch.crates-io]
 tokio-io = { git="https://github.com/tokio-rs/tokio.git" }
