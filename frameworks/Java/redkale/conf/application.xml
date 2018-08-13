@@ -10,7 +10,7 @@
         </properties>
 	</resources> 
         
-    <server protocol="HTTP" host="0.0.0.0" port="8080" threads="28" aliveTimeoutSeconds="300">      
+    <server protocol="HTTP" host="0.0.0.0" port="8080" threads="56" aliveTimeoutSeconds="300">      
                 
         <response>
 			<contenttype plain="text/plain" json="application/json"/>  
