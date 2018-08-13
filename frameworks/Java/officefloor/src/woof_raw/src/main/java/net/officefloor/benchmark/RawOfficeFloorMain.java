@@ -26,10 +26,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collector;
+
+import org.postgresql.sql2.PGConnectionProperties;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
+import jdk.incubator.sql2.Connection;
+import jdk.incubator.sql2.DataSource;
+import jdk.incubator.sql2.DataSourceFactory;
+import jdk.incubator.sql2.Result;
 import lombok.Data;
 import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.managedobject.ProcessAwareContext;
@@ -65,6 +73,11 @@ public class RawOfficeFloorMain {
 	public static SocketManager socketManager = null;
 
 	/**
+	 * {@link DataSource}.
+	 */
+	public static DataSource dataSource = null;
+
+	/**
 	 * Run application.
 	 */
 	public static void main(String[] args) throws Exception {
@@ -89,6 +102,14 @@ public class RawOfficeFloorMain {
 		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, serviceBufferPool);
 		socketManager.bindServerSocket(serverLocation.getClusterHttpPort(), null, null, serviceFactory, serviceFactory);
 
+		// Create the data source
+		dataSource = DataSourceFactory.newFactory("org.postgresql.sql2.PGDataSourceFactory").builder()
+				.url("jdbc:postgresql://" + getProperty("db-server", "tfb-database") + ":"
+						+ getProperty("db-port", "5432") + "/" + getProperty("db-name", "hello_world"))
+				.connectionProperty(PGConnectionProperties.USER, getProperty("db-username", "benchmarkdbuser"))
+				.connectionProperty(PGConnectionProperties.PASSWORD, getProperty("db-password", "benchmarkdbpass"))
+				.build();
+
 		// Setup Date
 		Timer dateTimer = new Timer(true);
 		dateTimer.schedule(serviceFactory.updateDate, 0, 1000);
@@ -101,6 +122,18 @@ public class RawOfficeFloorMain {
 
 		// Indicate running
 		System.out.println("OfficeFloor raw running");
+	}
+
+	/**
+	 * Obtains the property.
+	 * 
+	 * @param name         Name of the property.
+	 * @param defaultValue Default value for the property.
+	 * @return Property value.
+	 */
+	private static String getProperty(String name, String defaultValue) {
+		String value = System.getenv(name);
+		return value != null ? value : defaultValue;
 	}
 
 	/**
@@ -119,6 +152,13 @@ public class RawOfficeFloorMain {
 		private static HttpHeaderValue APPLICATION_JSON = new HttpHeaderValue("application/json");
 
 		private static final HttpHeaderValue TEXT_PLAIN = new HttpHeaderValue("text/plain");
+
+		private static final ThreadLocal<Connection> threadLocalConnection = new ThreadLocal<>() {
+			@Override
+			protected Connection initialValue() {
+				return RawOfficeFloorMain.dataSource.getConnection();
+			}
+		};
 
 		/**
 		 * <code>Date</code> {@link HttpHeaderValue}.
@@ -161,6 +201,20 @@ public class RawOfficeFloorMain {
 			this.objectMapper.registerModule(new AfterburnerModule());
 		}
 
+		/**
+		 * Sends the {@link HttpResponse}.
+		 * 
+		 * @param connection {@link ServerHttpConnection}.
+		 * @throws IOException If fails to send.
+		 */
+		protected void send(ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) throws IOException {
+			try {
+				connection.getServiceFlowCallback().run(null);
+			} catch (Throwable ex) {
+				throw new IOException(ex);
+			}
+		}
+
 		/*
 		 * ===================== HttpServicer ====================
 		 */
@@ -187,22 +241,45 @@ public class RawOfficeFloorMain {
 			case "/plaintext":
 				response.setContentType(TEXT_PLAIN, null);
 				response.getEntity().write(HELLO_WORLD);
+				this.send(connection);
 				break;
 
 			case "/json":
 				response.setContentType(APPLICATION_JSON, null);
 				this.objectMapper.writeValue(response.getEntityWriter(), new Message("Hello, World!"));
+				this.send(connection);
+				break;
+
+			case "/db":
+				// Retrieve random row and send in response
+				Connection db = threadLocalConnection.get();
+				db.<World>rowOperation("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+						.set("$1", ThreadLocalRandom.current().nextInt(1, 10000)).collect(dbCollector()).submit()
+						.getCompletionStage().thenAcceptAsync((world) -> {
+							try {
+								response.setContentType(APPLICATION_JSON, null);
+								this.objectMapper.writeValue(response.getEntityWriter(), world);
+								this.send(connection);
+							} catch (IOException ex) {
+								// TODO handle error
+								ex.printStackTrace();
+							}
+						});
 				break;
 
 			default:
-				response.setStatus(HttpStatus.NOT_FOUND);
-				break;
-			}
+				// Database based query
 
-			try {
-				connection.getServiceFlowCallback().run(null);
-			} catch (Throwable ex) {
-				throw new IOException(ex);
+				// Handle query parameters
+				int queryStart = requestUri.indexOf('?');
+				String path = requestUri.substring(0, queryStart);
+				switch (path) {
+
+				default:
+					// Unknown request
+					response.setStatus(HttpStatus.NOT_FOUND);
+					break;
+				}
 			}
 		}
 	}
@@ -210,6 +287,17 @@ public class RawOfficeFloorMain {
 	@Data
 	public static class Message {
 		private final String message;
+	}
+
+	@Data
+	public static class World {
+		private final int id;
+		private final int randomNumber;
+	}
+
+	public static Collector<Result.RowColumn, World[], World> dbCollector() {
+		return Collector.of(() -> new World[1],
+				(a, r) -> a[0] = new World(r.at(1).get(int.class), r.at(2).get(int.class)), (l, r) -> null, a -> a[0]);
 	}
 
 }
