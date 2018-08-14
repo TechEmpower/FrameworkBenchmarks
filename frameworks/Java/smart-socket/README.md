@@ -20,4 +20,4 @@ This is the smart-socket portion of a [benchmarking test suite](../) comparing a
     
 ### Plaintext Encoding Test
 
-    http://localhost:8080/plaintexta
+    http://localhost:8080/plaintext
