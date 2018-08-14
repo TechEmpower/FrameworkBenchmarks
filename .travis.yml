@@ -68,6 +68,7 @@ env:
      - "TESTDIR=Java/revenj-jvm"
      - "TESTDIR=Java/servlet"
      - "TESTDIR=Java/servlet3"
+     - "TESTDIR=Java/smart-socket"
      - "TESTDIR=Java/spark"
      - "TESTDIR=Java/spring"
      - "TESTDIR=Java/tapestry"
