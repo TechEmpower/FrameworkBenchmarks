@@ -22,6 +22,9 @@ import java.nio.ByteBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
@@ -29,6 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collector;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.postgresql.sql2.PGConnectionProperties;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,6 +60,7 @@ import net.officefloor.server.http.ServerHttpConnection;
 import net.officefloor.server.http.impl.HttpServerLocationImpl;
 import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedObject;
 import net.officefloor.server.http.parse.HttpRequestParser.HttpRequestParserMetaData;
+import net.officefloor.server.stream.ServerWriter;
 import net.officefloor.server.stream.StreamBufferPool;
 import net.officefloor.server.stream.impl.ThreadLocalStreamBufferPool;
 
@@ -152,6 +157,23 @@ public class RawOfficeFloorMain {
 		private static HttpHeaderValue APPLICATION_JSON = new HttpHeaderValue("application/json");
 
 		private static final HttpHeaderValue TEXT_PLAIN = new HttpHeaderValue("text/plain");
+
+		private static final HttpHeaderValue TEXT_HTML = new HttpHeaderValue("text/html;charset=utf-8");
+
+		private static final byte[] TEMPLATE_START = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
+				.getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+		private static final byte[] FORTUNE_START = "<tr><td>"
+				.getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+		private static final byte[] FORTUNE_MIDDLE = "</td><td>"
+				.getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+		private static final byte[] FORTUNE_END = "</td></tr>"
+				.getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+		private static final byte[] TEMPLATE_END = "</table></body></html>"
+				.getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
 
 		private static final ThreadLocal<Connection> threadLocalConnection = new ThreadLocal<>() {
 			@Override
@@ -252,8 +274,7 @@ public class RawOfficeFloorMain {
 
 			case "/db":
 				// Retrieve random row and send in response
-				Connection db = threadLocalConnection.get();
-				db.<World>rowOperation("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+				threadLocalConnection.get().<World>rowOperation("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
 						.set("$1", ThreadLocalRandom.current().nextInt(1, 10000)).collect(dbCollector()).submit()
 						.getCompletionStage().thenAcceptAsync((world) -> {
 							try {
@@ -267,9 +288,35 @@ public class RawOfficeFloorMain {
 						});
 				break;
 
-			default:
-				// Database based query
+			case "/fortunes":
+				// Retrieve the rows
+				threadLocalConnection.get().<List<Fortune>>rowOperation("SELECT ID, MESSAGE FROM FORTUNE")
+						.collect(fortunesCollector()).submit().getCompletionStage().thenAcceptAsync((fortunes) -> {
+							try {
+								fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+								response.setContentType(TEXT_HTML, null);
+								ServerWriter writer = response.getEntityWriter();
+								writer.write(TEMPLATE_START);
+								Collections.sort(fortunes);
+								for (int i = 0; i < fortunes.size(); i++) {
+									Fortune fortune = fortunes.get(i);
+									writer.write(FORTUNE_START);
+									int id = fortune.getId();
+									writer.write(Integer.valueOf(id).toString());
+									writer.write(FORTUNE_MIDDLE);
+									StringEscapeUtils.ESCAPE_HTML4.translate(fortune.getMessage(), writer);
+									writer.write(FORTUNE_END);
+								}
+								writer.write(TEMPLATE_END);
+								this.send(connection);
+							} catch (IOException ex) {
+								// TODO handle error
+								ex.printStackTrace();
+							}
+						});
+				break;
 
+			default:
 				// Handle query parameters
 				int queryStart = requestUri.indexOf('?');
 				String path = requestUri.substring(0, queryStart);
@@ -290,6 +337,17 @@ public class RawOfficeFloorMain {
 	}
 
 	@Data
+	public static class Fortune implements Comparable<Fortune> {
+		private final int id;
+		private final String message;
+
+		@Override
+		public int compareTo(Fortune o) {
+			return this.getMessage().compareTo(o.getMessage());
+		}
+	}
+
+	@Data
 	public static class World {
 		private final int id;
 		private final int randomNumber;
@@ -298,6 +356,17 @@ public class RawOfficeFloorMain {
 	public static Collector<Result.RowColumn, World[], World> dbCollector() {
 		return Collector.of(() -> new World[1],
 				(a, r) -> a[0] = new World(r.at(1).get(int.class), r.at(2).get(int.class)), (l, r) -> null, a -> a[0]);
+	}
+
+	public static Collector<Result.RowColumn, List<World>, List<World>> queriesCollector() {
+		return Collector.of(() -> new ArrayList<>(),
+				(a, r) -> a.add(new World(r.at(1).get(int.class), r.at(2).get(int.class))), (l, r) -> null, a -> a);
+	}
+
+	public static Collector<Result.RowColumn, List<Fortune>, List<Fortune>> fortunesCollector() {
+		return Collector.of(() -> new ArrayList<>(),
+				(a, r) -> a.add(new Fortune(r.at(1).get(int.class), r.at(2).get(String.class))), (l, r) -> null,
+				a -> a);
 	}
 
 }
