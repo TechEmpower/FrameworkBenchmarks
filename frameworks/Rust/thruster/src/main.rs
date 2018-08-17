@@ -26,8 +26,7 @@ fn json(mut context: Ctx, _chain: &MiddlewareChain<Ctx>) -> MiddlewareReturnValu
     let val = serde_json::to_string(&json).unwrap();
 
     context.body = val;
-    context.set_header("Server".to_owned(), "thruster".to_owned());
-    context.set_header("Content-Type".to_owned(), "application/json".to_owned());
+    context.set_header("Content-Type", "application/json");
 
     Box::new(future::ok(context))
 }
@@ -36,8 +35,7 @@ fn plaintext(mut context: Ctx, _chain: &MiddlewareChain<Ctx>) -> MiddlewareRetur
     let val = "Hello, world!".to_owned();
 
     context.body = val;
-    context.set_header("Server".to_owned(), "thruster".to_owned());
-    context.set_header("Content-Type".to_owned(), "text/plain".to_owned());
+    context.set_header("Content-Type", "text/plain");
 
     Box::new(future::ok(context))
 }
@@ -50,5 +48,5 @@ fn main() {
     app.get("/json", vec![json]);
     app.get("/plaintext", vec![plaintext]);
 
-    App::start(app, "0.0.0.0", 8080);
+    App::start_small_load_optimized(app, "0.0.0.0", 8080);
 }

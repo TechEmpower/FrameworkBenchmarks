@@ -9,13 +9,15 @@ extern crate serde_derive;
 #[macro_use]
 extern crate askama;
 extern crate num_cpus;
-extern crate postgres;
 extern crate rand;
 extern crate url;
 #[macro_use]
 extern crate diesel;
+extern crate tokio_postgres;
 
-use std::mem;
+use std::{mem, io};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 use actix::prelude::*;
 use actix_web::server::{
@@ -24,13 +26,13 @@ use actix_web::server::{
 use actix_web::Error;
 use askama::Template;
 use futures::{Async, Future, Poll};
-use postgres::{Connection, TlsMode};
+use rand::{thread_rng, Rng};
 
-mod db_pg;
+mod db_pg_direct;
 mod models;
 mod utils;
 
-use db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateWorld};
+use db_pg_direct::PgConnection;
 use utils::{Message, StackWriter, Writer as JsonWriter};
 
 const HTTPOK: &[u8] = b"HTTP/1.1 200 OK\r\n";
@@ -41,7 +43,7 @@ const HDR_CTHTML: &[u8] = b"Content-Type: text/html; charset=utf-8";
 const BODY: &[u8] = b"Hello, World!";
 
 struct App {
-    db: Addr<PgConnection>,
+    dbs: Rc<RefCell<Vec<PgConnection>>>,
 }
 
 impl HttpHandler for App {
@@ -54,26 +56,26 @@ impl HttpHandler for App {
                 10 if path == "/plaintext" => return Ok(Box::new(Plaintext)),
                 5 if path == "/json" => return Ok(Box::new(Json)),
                 3 if path == "/db" => {
-                    return Ok(Box::new(World {
-                        fut: self.db.send(RandomWorld),
-                    }))
+                    if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
+                        return Ok(Box::new(World {fut: Box::new(db.get_world())}))
+                    }
                 }
                 8 if path == "/fortune" => {
-                    return Ok(Box::new(Fortune {
-                        fut: self.db.send(TellFortune),
-                    }));
+                    if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
+                        return Ok(Box::new(Fortune {fut: Box::new(db.tell_fortune())}));
+                    }
                 }
                 8 if path == "/queries" => {
                     let q = utils::get_query_param(req.uri());
-                    return Ok(Box::new(Queries {
-                        fut: self.db.send(RandomWorlds(q)),
-                    }));
+                    if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
+                        return Ok(Box::new(Queries {fut: Box::new(db.get_worlds(q as usize))}));
+                    }
                 }
                 8 if path == "/updates" => {
                     let q = utils::get_query_param(req.uri());
-                    return Ok(Box::new(Updates {
-                        fut: self.db.send(UpdateWorld(q)),
-                    }));
+                    if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
+                        return Ok(Box::new(Updates {fut: Box::new(db.update(q as usize))}));
+                    }
                 }
                 _ => (),
             }
@@ -123,7 +125,7 @@ impl HttpHandlerTask for Json {
 }
 
 struct Fortune {
-    fut: actix::dev::Request<PgConnection, TellFortune>,
+    fut: Box<Future<Item=Vec<models::Fortune>, Error=io::Error>>,
 }
 
 #[derive(Template)]
@@ -135,7 +137,7 @@ struct FortuneTemplate<'a> {
 impl HttpHandlerTask for Fortune {
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
-            Ok(Async::Ready(Ok(rows))) => {
+            Ok(Async::Ready(rows)) => {
                 let mut body: [u8; 2048] = unsafe { mem::uninitialized() };
                 let len = {
                     let mut writer = StackWriter(&mut body, 0);
@@ -157,20 +159,19 @@ impl HttpHandlerTask for Fortune {
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
-            Ok(Async::Ready(Err(e))) => Err(e.into()),
             Err(e) => Err(e.into()),
         }
     }
 }
 
 struct World {
-    fut: actix::dev::Request<PgConnection, RandomWorld>,
+    fut: Box<Future<Item=models::World, Error=io::Error>>,
 }
 
 impl HttpHandlerTask for World {
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
-            Ok(Async::Ready(Ok(row))) => {
+            Ok(Async::Ready(row)) => {
                 let mut body: [u8; 48] = unsafe { mem::uninitialized() };
                 let len = {
                     let mut writer = StackWriter(&mut body, 0);
@@ -191,20 +192,19 @@ impl HttpHandlerTask for World {
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
-            Ok(Async::Ready(Err(e))) => Err(e.into()),
             Err(e) => Err(e.into()),
         }
     }
 }
 
 struct Queries {
-    fut: actix::dev::Request<PgConnection, RandomWorlds>,
+    fut: Box<Future<Item=Vec<models::World>, Error=io::Error>>,
 }
 
 impl HttpHandlerTask for Queries {
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
-            Ok(Async::Ready(Ok(worlds))) => {
+            Ok(Async::Ready(worlds)) => {
                 let mut body: [u8; 24576] = unsafe { mem::uninitialized() };
                 let len = {
                     let mut writer = StackWriter(&mut body, 0);
@@ -225,20 +225,19 @@ impl HttpHandlerTask for Queries {
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
-            Ok(Async::Ready(Err(e))) => Err(e.into()),
             Err(e) => Err(e.into()),
         }
     }
 }
 
 struct Updates {
-    fut: actix::dev::Request<PgConnection, UpdateWorld>,
+    fut: Box<Future<Item=Vec<models::World>, Error=io::Error>>,
 }
 
 impl HttpHandlerTask for Updates {
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
-            Ok(Async::Ready(Ok(worlds))) => {
+            Ok(Async::Ready(worlds)) => {
                 let mut body: [u8; 24576] = unsafe { mem::uninitialized() };
                 let len = {
                     let mut writer = StackWriter(&mut body, 0);
@@ -259,7 +258,6 @@ impl HttpHandlerTask for Updates {
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
-            Ok(Async::Ready(Err(e))) => Err(e.into()),
             Err(e) => Err(e.into()),
         }
     }
@@ -269,22 +267,22 @@ fn main() {
     let sys = System::new("techempower");
     let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
-    // Avoid triggering "FATAL: the database system is starting up" error from
-    // postgres.
-    {
-        if Connection::connect(db_url, TlsMode::None).is_err() {
-            std::thread::sleep(std::time::Duration::from_secs(5));
-        }
-    }
-
-    // Start db executor actors
-    let addr = SyncArbiter::start(num_cpus::get() * 3, move || {
-        db_pg::PgConnection::new(db_url)
-    });
-
     // start http server
-    HttpServer::new(move || vec![App { db: addr.clone() }])
-        .backlog(8192)
+    HttpServer::new(move || {
+        let dbs = Rc::new(RefCell::new(Vec::new()));
+
+        for _ in 0..2 {
+            let db = dbs.clone();
+            Arbiter::spawn(
+                PgConnection::connect(db_url)
+                    .and_then(move |conn| {
+                        db.borrow_mut().push(conn);
+                        Ok(())
+                    }));
+        }
+
+        vec![App { dbs }]
+    }).backlog(8192)
         .bind("0.0.0.0:8080")
         .unwrap()
         .start();

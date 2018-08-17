@@ -11,238 +11,310 @@
 #include <ulib/net/server/client_image.h>
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
+#	include <ulib/event/event_db.h>
 #  include <ulib/orm/driver/orm_driver_pgsql.h>
 #endif
 
-class Fortune {
+class U_EXPORT Fortune {
 public:
-   uint32_t id;
-   UString message;
+	uint32_t id;
+	UString message;
 
-   Fortune(uint32_t _id) : id(_id), message(101U)
-      {
-      U_TRACE_CTOR(5, Fortune, "%u", _id)
-      }
+	Fortune(uint32_t _id) : id(_id), message(101U)
+		{
+		U_TRACE_CTOR(5, Fortune, "%u", _id)
+		}
 
-   Fortune(uint32_t _id, const UString& _message) : id(_id), message(_message)
-      {
-      U_TRACE_CTOR(5, Fortune, "%u,%V", _id, _message.rep)
-      }
+	Fortune(uint32_t _id, const UString& _message) : id(_id), message(_message)
+		{
+		U_TRACE_CTOR(5, Fortune, "%u,%V", _id, _message.rep)
+		}
 
-   Fortune(const Fortune& f) : id(f.id), message(f.message)
-      {
-      U_TRACE_CTOR(5, Fortune, "%p", &f)
+	Fortune(const Fortune& f) : id(f.id), message(f.message)
+		{
+		U_TRACE_CTOR(5, Fortune, "%p", &f)
 
-      U_MEMORY_TEST_COPY(f)
-      }
+		U_MEMORY_TEST_COPY(f)
+		}
 
-   ~Fortune()
-      {
-      U_TRACE_DTOR(5, Fortune)
-      }
+	~Fortune()
+		{
+		U_TRACE_DTOR(5, Fortune)
+		}
 
-   // SERVICE
+	// SERVICE
 
-   bool operator<(const Fortune& other) const { return cmp_obj(&message, &other.message); }
+	bool operator<(const Fortune& other) const { return cmp_obj(&message, &other.message); }
 
-   static int cmp_obj(const void* a, const void* b)
-      {
-      U_TRACE(5, "Fortune::cmp_obj(%p,%p)", a, b)
+	static int cmp_obj(const void* a, const void* b)
+		{
+		U_TRACE(5, "Fortune::cmp_obj(%p,%p)", a, b)
 
-#  ifdef U_STDCPP_ENABLE
-      /**
-       * The comparison function must follow a strict-weak-ordering
-       *
-       * 1) For all x, it is not the case that x < x (irreflexivity)
-       * 2) For all x, y, if x < y then it is not the case that y < x (asymmetry)
-       * 3) For all x, y, and z, if x < y and y < z then x < z (transitivity)
-       * 4) For all x, y, and z, if x is incomparable with y, and y is incomparable with z, then x is incomparable with z (transitivity of incomparability)
-       */
+#	ifdef U_STDCPP_ENABLE
+		/**
+		 * The comparison function must follow a strict-weak-ordering
+		 *
+		 * 1) For all x, it is not the case that x < x (irreflexivity)
+		 * 2) For all x, y, if x < y then it is not the case that y < x (asymmetry)
+		 * 3) For all x, y, and z, if x < y and y < z then x < z (transitivity)
+		 * 4) For all x, y, and z, if x is incomparable with y, and y is incomparable with z, then x is incomparable with z (transitivity of incomparability)
+		 */
 
-      return (((const Fortune*)a)->message.compare(((const Fortune*)b)->message) < 0);
-#  else
-      return (*(const Fortune**)a)->message.compare((*(const Fortune**)b)->message);
-#  endif
-      }
+		return (((const Fortune*)a)->message.compare(((const Fortune*)b)->message) < 0);
+#	else
+		return (*(const Fortune**)a)->message.compare((*(const Fortune**)b)->message);
+#	endif
+		}
 
-   // JSON
+	// JSON
 
-   void toJSON(UString& json)
-      {
-      U_TRACE(5, "Fortune::toJSON(%V)", json.rep)
+	void toJSON(UString& json)
+		{
+		U_TRACE(5, "Fortune::toJSON(%V)", json.rep)
 
-      json.toJSON(U_JSON_METHOD_HANDLER(id,      unsigned int));
-      json.toJSON(U_JSON_METHOD_HANDLER(message, UString));
-      }
+		json.toJSON(U_JSON_METHOD_HANDLER(id,		 unsigned int));
+		json.toJSON(U_JSON_METHOD_HANDLER(message, UString));
+		}
 
-   void fromJSON(UValue& json)
-      {
-      U_TRACE(5, "Fortune::fromJSON(%p)", &json)
+	void fromJSON(UValue& json)
+		{
+		U_TRACE(5, "Fortune::fromJSON(%p)", &json)
 
-      json.fromJSON(U_JSON_METHOD_HANDLER(id,      unsigned int));
-      json.fromJSON(U_JSON_METHOD_HANDLER(message, UString));
-      }
+		json.fromJSON(U_JSON_METHOD_HANDLER(id,		unsigned int));
+		json.fromJSON(U_JSON_METHOD_HANDLER(message, UString));
+		}
 
-   // ORM
+	// ORM
 
-   void bindParam(UOrmStatement* stmt)
-      {
-      U_TRACE(5, "Fortune::bindParam(%p)", stmt)
+	void bindParam(UOrmStatement* stmt)
+		{
+		U_TRACE(5, "Fortune::bindParam(%p)", stmt)
 
-      stmt->bindParam(U_ORM_TYPE_HANDLER(id,      unsigned int));
-      stmt->bindParam(U_ORM_TYPE_HANDLER(message, UString));
-      }
+		stmt->bindParam(U_ORM_TYPE_HANDLER(id,		  unsigned int));
+		stmt->bindParam(U_ORM_TYPE_HANDLER(message, UString));
+		}
 
-   void bindResult(UOrmStatement* stmt)
-      {
-      U_TRACE(5, "Fortune::bindResult(%p)", stmt)
+	void bindResult(UOrmStatement* stmt)
+		{
+		U_TRACE(5, "Fortune::bindResult(%p)", stmt)
 
-      stmt->bindResult(U_ORM_TYPE_HANDLER(id,      unsigned int));
-      stmt->bindResult(U_ORM_TYPE_HANDLER(message, UString));
-      }
+		stmt->bindResult(U_ORM_TYPE_HANDLER(id,		unsigned int));
+		stmt->bindResult(U_ORM_TYPE_HANDLER(message, UString));
+		}
 
-   static uint32_t uid;
-   static UString* pmessage;
-   static UVector<Fortune*>* pvfortune;
+	static uint32_t uid;
+	static char* pwbuffer;
+	static UString* pmessage;
+	static UVector<Fortune*>* pvfortune;
 
-   static UOrmSession*    psql_fortune;
-   static UOrmStatement* pstmt_fortune;
+	static UOrmSession*	  psql_fortune;
+	static UOrmStatement* pstmt_fortune;
 
-   static void replace(uint32_t i, uint32_t _id, const char* msg, uint32_t len)
-      {
-      U_TRACE(5, "Fortune::replace(%u,%u,%.*S,%u)", i, _id, len, msg, len)
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+	static PGconn* conn;
+	static UPgSqlStatement* pstmt;
 
-      U_INTERNAL_ASSERT_POINTER(pvfortune)
+	static PGresult* execPrepared()
+		{
+		U_TRACE_NO_PARAM(5, "Fortune::execPrepared()")
 
-      Fortune* elem = pvfortune->at(i);
+		PGresult* res = (PGresult*) U_SYSCALL(PQexecPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 0, 0, 0, 0, 1);
 
-      elem->id = _id;
+		U_RETURN_POINTER(res, PGresult);
+		}
 
-      UXMLEscape::encode(msg, len, elem->message);
-      }
+	static void sendQueryPrepared()
+		{
+		U_TRACE_NO_PARAM(5, "Fortune::sendQueryPrepared()")
 
-   static void replace(uint32_t i)                                       { replace(i, uid, U_STRING_TO_PARAM(*pmessage)); }
-   static void replace(uint32_t i, uint32_t _id)                         { replace(i, _id, U_STRING_TO_PARAM(*pmessage)); }
-   static void replace(uint32_t i,               const UString& message) { replace(i, i+1, U_STRING_TO_PARAM(message)); }
-   static void replace(uint32_t i, uint32_t _id, const UString& message) { replace(i, _id, U_STRING_TO_PARAM(message)); }
+		(void) U_SYSCALL(PQsendQueryPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 0, 0, 0, 0, 1);
+		}
+#endif
 
-   static void doQuery(vPF handlerQuery)
-      {
-      U_TRACE(5, "Fortune::doQuery(%p)", handlerQuery)
+	static void replace(uint32_t i, uint32_t _id, const char* msg, uint32_t len)
+		{
+		U_TRACE(5, "Fortune::replace(%u,%u,%.*S,%u)", i, _id, len, msg, len)
 
-      U_INTERNAL_ASSERT_POINTER(pvfortune)
+		U_INTERNAL_ASSERT_POINTER(pvfortune)
 
-      char* pwbuffer = UClientImage_Base::wbuffer->data();
+		Fortune* elem = pvfortune->at(i);
 
-      u_put_unalignedp64(pwbuffer,     U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
-      u_put_unalignedp64(pwbuffer+8,   U_MULTICHAR_CONSTANT64('L','e','n','g','t','h',':',' '));
-      u_put_unalignedp64(pwbuffer+16,  U_MULTICHAR_CONSTANT64('1','2','2','7','\r','\n','C','o'));
-      u_put_unalignedp64(pwbuffer+24,  U_MULTICHAR_CONSTANT64('n','t','e','n','t','-','T','y'));
-      u_put_unalignedp64(pwbuffer+32,  U_MULTICHAR_CONSTANT64('p','e',':',' ','t','e','x','t'));
-      u_put_unalignedp64(pwbuffer+40,  U_MULTICHAR_CONSTANT64('/','h','t','m','l',';',' ','c'));
-      u_put_unalignedp64(pwbuffer+48,  U_MULTICHAR_CONSTANT64('h','a','r','s','e','t','=','U'));
-      u_put_unalignedp64(pwbuffer+56,  U_MULTICHAR_CONSTANT64('T','F','-','8','\r','\n','\r','\n'));
-      u_put_unalignedp64(pwbuffer+64,  U_MULTICHAR_CONSTANT64('<','!','d','o','c','t','y','p'));
-      u_put_unalignedp64(pwbuffer+72,  U_MULTICHAR_CONSTANT64('e',' ','h','t','m','l','>','<'));
-      u_put_unalignedp64(pwbuffer+80,  U_MULTICHAR_CONSTANT64('h','t','m','l','>','<','h','e'));
-      u_put_unalignedp64(pwbuffer+88,  U_MULTICHAR_CONSTANT64('a','d','>','<','t','i','t','l'));
-      u_put_unalignedp64(pwbuffer+96,  U_MULTICHAR_CONSTANT64('e','>','F','o','r','t','u','n'));
-      u_put_unalignedp64(pwbuffer+104, U_MULTICHAR_CONSTANT64('e','s','<','/','t','i','t','l'));
-      u_put_unalignedp64(pwbuffer+112, U_MULTICHAR_CONSTANT64('e','>','<','/','h','e','a','d'));
-      u_put_unalignedp64(pwbuffer+120, U_MULTICHAR_CONSTANT64('>','<','b','o','d','y','>','<'));
-      u_put_unalignedp64(pwbuffer+128, U_MULTICHAR_CONSTANT64('t','a','b','l','e','>','<','t'));
-      u_put_unalignedp64(pwbuffer+136, U_MULTICHAR_CONSTANT64('r','>','<','t','h','>','i','d'));
-      u_put_unalignedp64(pwbuffer+144, U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','t','h'));
-      u_put_unalignedp64(pwbuffer+152, U_MULTICHAR_CONSTANT64('>','m','e','s','s','a','g','e'));
-      u_put_unalignedp64(pwbuffer+160, U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','/','t'));
-      u_put_unalignedp16(pwbuffer+168, U_MULTICHAR_CONSTANT16('r','>'));
+		elem->id = _id;
 
-      pwbuffer += U_CONSTANT_SIZE("Content-Length: 1227\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n"
-                                  "<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
+		UXMLEscape::encode(msg, len, elem->message);
+		}
 
-      handlerQuery();
+	static void replace(uint32_t i)													 { replace(i, uid, U_STRING_TO_PARAM(*pmessage)); }
+	static void replace(uint32_t i, uint32_t _id)								 { replace(i, _id, U_STRING_TO_PARAM(*pmessage)); }
+	static void replace(uint32_t i,					 const UString& message) { replace(i, i+1, U_STRING_TO_PARAM(message)); }
+	static void replace(uint32_t i, uint32_t _id, const UString& message) { replace(i, _id, U_STRING_TO_PARAM(message)); }
 
-      Fortune* elem = pvfortune->last();
+	static void initQuery()
+		{
+		U_TRACE_NO_PARAM(5, "::initQuery()")
 
-      elem->id = 0;
-      elem->message.rep->replace(U_CONSTANT_TO_PARAM("Additional fortune added at request time."));
+		char* ptr = UClientImage_Base::wbuffer->data();
 
-      pvfortune->sort(Fortune::cmp_obj);
+		U_INTERNAL_DUMP("wbuffer(%u) = %#.10S", UClientImage_Base::wbuffer->size(), ptr)
 
-      for (uint32_t sz, i = 0, n = pvfortune->size(); i < n; ++i)
-         {
-         elem = pvfortune->at(i);
+		if (u_get_unalignedp64(ptr+48) != U_MULTICHAR_CONSTANT64('h','a','r','s','e','t','=','U'))
+			{
+			u_put_unalignedp64(ptr,	    U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
+			u_put_unalignedp64(ptr+8,   U_MULTICHAR_CONSTANT64('L','e','n','g','t','h',':',' '));
+			u_put_unalignedp64(ptr+16,  U_MULTICHAR_CONSTANT64('1','2','2','7','\r','\n','C','o'));
+			u_put_unalignedp64(ptr+24,  U_MULTICHAR_CONSTANT64('n','t','e','n','t','-','T','y'));
+			u_put_unalignedp64(ptr+32,  U_MULTICHAR_CONSTANT64('p','e',':',' ','t','e','x','t'));
+			u_put_unalignedp64(ptr+40,  U_MULTICHAR_CONSTANT64('/','h','t','m','l',';',' ','c'));
+			u_put_unalignedp64(ptr+48,  U_MULTICHAR_CONSTANT64('h','a','r','s','e','t','=','U'));
+			u_put_unalignedp64(ptr+56,  U_MULTICHAR_CONSTANT64('T','F','-','8','\r','\n','\r','\n'));
+			u_put_unalignedp64(ptr+64,  U_MULTICHAR_CONSTANT64('<','!','d','o','c','t','y','p'));
+			u_put_unalignedp64(ptr+72,  U_MULTICHAR_CONSTANT64('e',' ','h','t','m','l','>','<'));
+			u_put_unalignedp64(ptr+80,  U_MULTICHAR_CONSTANT64('h','t','m','l','>','<','h','e'));
+			u_put_unalignedp64(ptr+88,  U_MULTICHAR_CONSTANT64('a','d','>','<','t','i','t','l'));
+			u_put_unalignedp64(ptr+96,  U_MULTICHAR_CONSTANT64('e','>','F','o','r','t','u','n'));
+			u_put_unalignedp64(ptr+104, U_MULTICHAR_CONSTANT64('e','s','<','/','t','i','t','l'));
+			u_put_unalignedp64(ptr+112, U_MULTICHAR_CONSTANT64('e','>','<','/','h','e','a','d'));
+			u_put_unalignedp64(ptr+120, U_MULTICHAR_CONSTANT64('>','<','b','o','d','y','>','<'));
+			u_put_unalignedp64(ptr+128, U_MULTICHAR_CONSTANT64('t','a','b','l','e','>','<','t'));
+			u_put_unalignedp64(ptr+136, U_MULTICHAR_CONSTANT64('r','>','<','t','h','>','i','d'));
+			u_put_unalignedp64(ptr+144, U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','t','h'));
+			u_put_unalignedp64(ptr+152, U_MULTICHAR_CONSTANT64('>','m','e','s','s','a','g','e'));
+			u_put_unalignedp64(ptr+160, U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','/','t'));
+			u_put_unalignedp16(ptr+168, U_MULTICHAR_CONSTANT16('r','>'));
 
-         u_put_unalignedp64(pwbuffer, U_MULTICHAR_CONSTANT64('<','t','r','>','<','t','d','>'));
+			pwbuffer	= ptr + U_CONSTANT_SIZE("Content-Length: 1227\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n"
+														"<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
+			}
 
-         pwbuffer = u_num2str32(elem->id, pwbuffer+8);
+		U_INTERNAL_ASSERT_EQUALS(u_get_unalignedp64(UClientImage_Base::wbuffer->data()), U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'))
 
-         u_put_unalignedp64(pwbuffer, U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','t','d'));
-                            pwbuffer += 8;
+		UClientImage_Base::wbuffer->size_adjust_constant(U_CONSTANT_SIZE("Content-Length: 1227\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n") + 1227);
+		}
 
-         *pwbuffer++ = '>';
+	static void endQuery()
+		{
+		U_TRACE_NO_PARAM(5, "::endQuery()")
 
-         (void) memcpy(pwbuffer, elem->message.data(), sz = elem->message.size());
-                       pwbuffer += sz;
+		U_INTERNAL_ASSERT_POINTER(pvfortune)
 
-         u_put_unalignedp64(pwbuffer,   U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','/','t'));
-         u_put_unalignedp16(pwbuffer+8, U_MULTICHAR_CONSTANT16('r','>'));
-                            pwbuffer += 8+2;
-         }
+		Fortune* elem = pvfortune->last();
 
-      u_put_unalignedp64(pwbuffer,    U_MULTICHAR_CONSTANT64('<','/','t','a','b','l','e','>'));
-      u_put_unalignedp64(pwbuffer+8,  U_MULTICHAR_CONSTANT64('<','/','b','o','d','y','>','<'));
-      u_put_unalignedp64(pwbuffer+16, U_MULTICHAR_CONSTANT64('/','h','t','m','l','>','\0','\0'));
+		elem->id = 0;
+		elem->message.rep->replace(U_CONSTANT_TO_PARAM("Additional fortune added at request time."));
 
-      UClientImage_Base::wbuffer->size_adjust_constant(pwbuffer + U_CONSTANT_SIZE("</table></body></html>"));
-      }
+		pvfortune->sort(Fortune::cmp_obj);
 
-   static void handlerFork()
-      {
-      U_TRACE_NO_PARAM(5, "Fortune::handlerFork()")
+		char* ptr = pwbuffer;
 
-      U_NEW_STRING(pmessage, UString(101U));
+		for (uint32_t sz, i = 0, n = pvfortune->size(); i < n; ++i)
+			{
+			elem = pvfortune->at(i);
 
-      U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
+			u_put_unalignedp64(ptr, U_MULTICHAR_CONSTANT64('<','t','r','>','<','t','d','>'));
 
-      Fortune* elem;
+			ptr = u_num2str32(elem->id, ptr+8);
 
-      for (uint32_t i = 0; i < 13; ++i)
-         {
-         U_NEW(Fortune, elem, Fortune(i+1));
+			u_put_unalignedp64(ptr, U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','t','d'));
+									 ptr += 8;
 
-         pvfortune->push(elem);
-         }
-      }
+			*ptr++ = '>';
 
-   static void handlerForkSql()
-      {
-      U_TRACE_NO_PARAM(5, "Fortune::handlerForkSql()")
+			(void) memcpy(ptr, elem->message.data(), sz = elem->message.size());
+							  ptr += sz;
 
-      if (psql_fortune == U_NULLPTR)
-         {
-         U_NEW(UOrmSession, psql_fortune, UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
+			u_put_unalignedp64(ptr,   U_MULTICHAR_CONSTANT64('<','/','t','d','>','<','/','t'));
+			u_put_unalignedp16(ptr+8, U_MULTICHAR_CONSTANT16('r','>'));
+									 ptr += 8+2;
+			}
 
-         if (psql_fortune->isReady() == false)
-            {
-            U_WARNING("Fortune::handlerForkSql(): we cound't connect to db");
+		u_put_unalignedp64(ptr,    U_MULTICHAR_CONSTANT64('<','/','t','a','b','l','e','>'));
+		u_put_unalignedp64(ptr+8,  U_MULTICHAR_CONSTANT64('<','/','b','o','d','y','>','<'));
+		u_put_unalignedp64(ptr+16, U_MULTICHAR_CONSTANT64('/','h','t','m','l','>','\0','\0'));
+		}
 
-            U_DELETE(psql_fortune)
+	static void doQuery(vPF handlerQuery)
+		{
+		U_TRACE(5, "Fortune::doQuery(%p)", handlerQuery)
 
-            psql_fortune = U_NULLPTR;
+			initQuery();
+		handlerQuery();
+			 endQuery();
+		}
 
-            return;
-            }
+	static void handlerInitSql()
+		{
+		U_TRACE_NO_PARAM(5, "Fortune::handlerInitSql()")
 
-         U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
+#	ifdef U_STATIC_ORM_DRIVER_PGSQL
+		U_INTERNAL_DUMP("UServer_Base::handler_db2 = %p", UServer_Base::handler_db2)
 
-         handlerFork();
+		if (UServer_Base::handler_db2 == U_NULLPTR)
+			{
+			U_NEW(UEventDB, UServer_Base::handler_db2, UEventDB);
+			}
+#	endif
+		}
 
-         pstmt_fortune->into(uid, *pmessage);
-         }
-      }
+	static void handlerFork()
+		{
+		U_TRACE_NO_PARAM(5, "Fortune::handlerFork()")
+
+		U_NEW_STRING(pmessage, UString(101U));
+
+		U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
+
+		Fortune* elem;
+
+		for (uint32_t i = 0; i < 13; ++i)
+			{
+			U_NEW(Fortune, elem, Fortune(i+1));
+
+			pvfortune->push(elem);
+			}
+		}
+
+	static void handlerForkSql()
+		{
+		U_TRACE_NO_PARAM(5, "Fortune::handlerForkSql()")
+
+		if (psql_fortune == U_NULLPTR)
+			{
+			U_NEW(UOrmSession, psql_fortune, UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
+
+			if (psql_fortune->isReady() == false)
+				{
+				U_WARNING("Fortune::handlerForkSql(): we cound't connect to db");
+
+				U_DELETE(psql_fortune)
+
+				psql_fortune = U_NULLPTR;
+
+				return;
+				}
+
+			U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
+
+			handlerFork();
+
+			pstmt_fortune->into(uid, *pmessage);
+
+#		ifdef U_STATIC_ORM_DRIVER_PGSQL
+			if (UOrmDriver::isPGSQL())
+				{
+				UOrmDriverPgSql* pdrv = (UOrmDriverPgSql*)psql_fortune->getDriver();
+
+				 conn = (PGconn*)pdrv->UOrmDriver::connection;
+				pstmt = (UPgSqlStatement*)pstmt_fortune->getStatement();
+
+				pstmt->prepareStatement(pdrv);
+
+				UServer_Base::handler_db2->setConnection(conn);
+				}
+#		endif
+			}
+		}
 
 private:
-   U_DISALLOW_ASSIGN(Fortune)
+	U_DISALLOW_ASSIGN(Fortune)
 };
 #endif

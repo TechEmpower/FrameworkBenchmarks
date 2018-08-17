@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "io.ratpack:ratpack-gradle:1.5.4"
+        classpath "com.github.jengelman.gradle.plugins:shadow:1.2.4"
+    }
+}
+
+apply plugin: "io.ratpack.ratpack-java"
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "idea"
+apply plugin: "eclipse"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'io.ratpack:ratpack-guice:1.5.4'
+    compile 'io.ratpack:ratpack-hikari:1.5.4'
+    compile 'io.ratpack:ratpack-handlebars:1.5.4'
+
+    // Default SLF4J binding.  Note that this is a blocking implementation.
+    // See here for a non blocking appender http://logging.apache.org/log4j/2.x/manual/async.html
+    runtime 'org.slf4j:slf4j-simple:1.7.25'
+    runtime 'mysql:mysql-connector-java:5.1.46'
+
+}
+
+mainClassName = "Main"

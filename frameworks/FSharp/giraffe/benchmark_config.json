@@ -21,9 +21,7 @@
         "display_name": "Giraffe, Dapper",
         "notes": "",
         "versus": "aspcore"
-      }
-    },
-    {
+      },
       "utf8json": {
         "json_url": "/json",
         "port": 8080,
@@ -41,10 +39,8 @@
         "display_name": "Giraffe, utf8json",
         "notes": "",
         "versus": "aspcore"
-      }
-    },
-    {
-      "utf8direct":{
+      },
+      "utf8direct": {
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
@@ -61,9 +57,7 @@
         "display_name": "Giraffe, Direct utf8",
         "notes": "",
         "versus": "aspcore"
-      }
-    },
-    {
+      },
       "stripped": {
         "fortune_url": "/fortunes",
         "port": 8080,

@@ -5,12 +5,10 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
+static void usp_init_query() { World::handlerInitSql(); }
 static void usp_fork_query() { World::handlerForkSql(); }
 -->
 <!--#header
--->
-<!--#vcode
-if (UServer_Base::startParallelization()) return;
 -->
 <!--#code
 uint32_t i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
@@ -18,7 +16,7 @@ uint32_t i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 World::initResult();
 
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
-if (World::pdrv)
+if (World::pstmt)
    {
    PGresult* res;
    char* randomNumber;
@@ -32,7 +30,7 @@ if (World::pdrv)
 
       randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", res, 0, 0);
 
-      World::handlerResult(World::rnumber[i], ntohl(*(uint32_t*)randomNumber));
+      World::handlerResult(i, ntohl(*(uint32_t*)randomNumber));
 
       U_SYSCALL_VOID(PQclear, "%p", res);
       }
@@ -46,7 +44,7 @@ for (; i < num_queries; ++i)
 
    World::pstmt_query->execute();
 
-   World::handlerResultSql(i);
+   World::handlerResult(i, World::pworld_query->randomNumber);
    }
 }
 

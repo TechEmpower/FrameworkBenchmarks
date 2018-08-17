@@ -9,9 +9,6 @@ static void usp_fork_mquery() { WorldNoSql::handlerForkMongoDB(); }
 -->
 <!--#header
 -->
-<!--#vcode
-if (UServer_Base::startParallelization()) return;
--->
 <!--#code
 WorldNoSql::doQuery(WorldNoSql::handlerQueryMongoDB);
 -->

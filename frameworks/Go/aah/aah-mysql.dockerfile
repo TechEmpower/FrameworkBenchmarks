@@ -16,8 +16,8 @@ WORKDIR src/benchmark
 RUN glide -v
 RUN glide install
 
-RUN curl -sL -o /tmp/aah_linux_amd64.zip  https://aahframework.org/releases/cli/0.12.0/aah_linux_amd64.zip
-RUN unzip -q /tmp/aah_linux_amd64.zip -d ${GOPATH}/bin/
+RUN curl -sL -o /tmp/aah-linux-amd64.zip  https://cdn.aahframework.org/releases/cli/0.12.1/aah-linux-amd64.zip
+RUN unzip -q /tmp/aah-linux-amd64.zip -d ${GOPATH}/bin/
 
 RUN aah -v
 RUN aah -y migrate code

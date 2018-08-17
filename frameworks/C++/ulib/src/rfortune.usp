@@ -9,9 +9,6 @@ static void usp_fork_rfortune() { FortuneNoSql::handlerForkREDIS(); }
 -->
 <!--#header
 -->
-<!--#vcode
-if (UServer_Base::startParallelization()) return;
--->
 <!--#code
 Fortune::doQuery(FortuneNoSql::handlerQueryREDIS);
 -->

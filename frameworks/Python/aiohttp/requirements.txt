@@ -3,8 +3,8 @@ aiohttp-jinja2==0.17.0
 aiopg==0.13.2
 asyncpg==0.15.0
 cchardet==2.1.1
-gunicorn==19.7.1
-psycopg2==2.7.4
+gunicorn==19.9.0
+psycopg2==2.7.5
 SQLAlchemy==1.1.10
 ujson==1.35
 uvloop==0.9.1

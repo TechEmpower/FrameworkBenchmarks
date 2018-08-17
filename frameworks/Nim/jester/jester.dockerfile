@@ -9,7 +9,7 @@ ENV PATH $PATH:/root/.nimble/bin
 
 ADD ./ /jester
 WORKDIR /jester
-RUN nimble install -y httpbeast@#995fe86443d4a0
-RUN nimble c -d:release --threads:on --gc:boehm -y techempower.nim
+RUN nimble install -y httpbeast@#v0.2.0
+RUN nimble c -d:release --threads:on -y techempower.nim
 
 CMD ./techempower
