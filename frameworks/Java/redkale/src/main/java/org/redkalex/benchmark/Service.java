@@ -38,18 +38,20 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "db")
-    public World findWorld() {
-        return source.find(World.class, randomId());
+    public CompletableFuture<World> findWorld() {
+        return source.findAsync(World.class, randomId());
     }
 
     @RestMapping(name = "queries")
-    public World[] queryWorld(@RestParam(name = "queries") int count) {
+    public CompletableFuture<World[]> queryWorld(@RestParam(name = "queries") int count) {
         count = Math.min(500, Math.max(1, count));
         final World[] rs = new World[count];
+        final CompletableFuture<World>[] futures = new CompletableFuture[count];
         for (int i = 0; i < count; i++) {
-            rs[i] = source.find(World.class, randomId());
+            final int index = i;
+            futures[index] = source.findAsync(World.class, randomId()).whenComplete((w, t) -> rs[index] = w);
         }
-        return rs;
+        return CompletableFuture.allOf(futures).thenApply((r) -> rs);
     }
 
     @RestMapping(name = "updates")
@@ -65,12 +67,13 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "fortunes")
-    public HttpResult<String> queryFortunes() {
-        List<Fortune> fortunes = source.queryList(Fortune.class);
-        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-        Collections.sort(fortunes);
-        String html = FortunesTemplate.template(fortunes).render().toString();
-        return new HttpResult("text/html; charset=UTF-8", html);
+    public CompletableFuture<HttpResult<String>> queryFortunes() {
+        return source.queryListAsync(Fortune.class).thenApply((fortunes) -> {
+            fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+            Collections.sort(fortunes);
+            String html = FortunesTemplate.template(fortunes).render().toString();
+            return new HttpResult("text/html; charset=UTF-8", html);
+        });
     }
 
     private int randomId() {
