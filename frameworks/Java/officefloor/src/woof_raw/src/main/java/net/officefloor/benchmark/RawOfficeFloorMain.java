@@ -38,6 +38,7 @@ import org.postgresql.sql2.PGConnectionProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
+import jdk.incubator.sql2.AdbaType;
 import jdk.incubator.sql2.Connection;
 import jdk.incubator.sql2.DataSource;
 import jdk.incubator.sql2.DataSourceFactory;
@@ -260,6 +261,7 @@ public class RawOfficeFloorMain {
 			// Determine request
 			String requestUri = request.getUri();
 			switch (requestUri) {
+
 			case "/plaintext":
 				response.setContentType(TEXT_PLAIN, null);
 				response.getEntity().write(HELLO_WORLD);
@@ -273,7 +275,6 @@ public class RawOfficeFloorMain {
 				break;
 
 			case "/db":
-				// Retrieve random row and send in response
 				threadLocalConnection.get().<World>rowOperation("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
 						.set("$1", ThreadLocalRandom.current().nextInt(1, 10000)).collect(dbCollector()).submit()
 						.getCompletionStage().thenAcceptAsync((world) -> {
@@ -289,7 +290,6 @@ public class RawOfficeFloorMain {
 				break;
 
 			case "/fortunes":
-				// Retrieve the rows
 				threadLocalConnection.get().<List<Fortune>>rowOperation("SELECT ID, MESSAGE FROM FORTUNE")
 						.collect(fortunesCollector()).submit().getCompletionStage().thenAcceptAsync((fortunes) -> {
 							try {
@@ -320,11 +320,63 @@ public class RawOfficeFloorMain {
 				// Handle query parameters
 				int queryStart = requestUri.indexOf('?');
 				String path = requestUri.substring(0, queryStart);
+				int queryCount = getQueryCount(requestUri, queryStart);
+				Connection db = threadLocalConnection.get();
+				List<World> worlds = new ArrayList<>();
+				ThreadLocalRandom random = ThreadLocalRandom.current();
 				switch (path) {
+
+				case "/queries":
+					for (int i = 0; i < queryCount; i++) {
+						db.<World>rowOperation("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+								.set("$1", random.nextInt(1, 10000)).collect(dbCollector()).submit()
+								.getCompletionStage().thenAcceptAsync((world) -> {
+									try {
+										worlds.add(world);
+										if (worlds.size() >= queryCount) {
+											response.setContentType(APPLICATION_JSON, null);
+											this.objectMapper.writeValue(response.getEntityWriter(), worlds);
+											this.send(connection);
+										}
+									} catch (IOException ex) {
+										// TODO handle error
+										ex.printStackTrace();
+									}
+								});
+					}
+					break;
+
+				case "/update":
+					for (int i = 0; i < queryCount; i++) {
+						db.<World>rowOperation("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+								.set("$1", random.nextInt(1, 10000)).collect(dbCollector()).submit()
+								.getCompletionStage().thenAcceptAsync((world) -> {
+									try {
+										world = new World(world.id, random.nextInt(1, 10000));
+										worlds.add(world);
+										if (worlds.size() >= queryCount) {
+											response.setContentType(APPLICATION_JSON, null);
+											this.objectMapper.writeValue(response.getEntityWriter(), worlds);
+											for (int u = 0; u < worlds.size(); u++) {
+												World update = worlds.get(u);
+												db.rowCountOperation("UPDATE WORLD SET RANDOMNUMBER = $1 WHERE ID = $2")
+														.set("$1", update.randomNumber, AdbaType.INTEGER)
+														.set("$2", update.id, AdbaType.INTEGER).submit();
+											}
+											this.send(connection);
+										}
+									} catch (IOException ex) {
+										// TODO handle error
+										ex.printStackTrace();
+									}
+								});
+					}
+					break;
 
 				default:
 					// Unknown request
 					response.setStatus(HttpStatus.NOT_FOUND);
+					this.send(connection);
 					break;
 				}
 			}
@@ -358,15 +410,24 @@ public class RawOfficeFloorMain {
 				(a, r) -> a[0] = new World(r.at(1).get(int.class), r.at(2).get(int.class)), (l, r) -> null, a -> a[0]);
 	}
 
-	public static Collector<Result.RowColumn, List<World>, List<World>> queriesCollector() {
-		return Collector.of(() -> new ArrayList<>(),
-				(a, r) -> a.add(new World(r.at(1).get(int.class), r.at(2).get(int.class))), (l, r) -> null, a -> a);
-	}
-
 	public static Collector<Result.RowColumn, List<Fortune>, List<Fortune>> fortunesCollector() {
 		return Collector.of(() -> new ArrayList<>(),
 				(a, r) -> a.add(new Fortune(r.at(1).get(int.class), r.at(2).get(String.class))), (l, r) -> null,
 				a -> a);
+	}
+
+	public static int getQueryCount(String requestPath, int queryIndex) {
+		if (queryIndex < 0) {
+			return 1;
+		}
+		int countIndex = queryIndex + "queries=".length();
+		try {
+			// +1 to not include '='
+			String countValue = requestPath.substring(countIndex + 1);
+			return Integer.parseInt(countValue);
+		} catch (Exception ex) {
+			return 1;
+		}
 	}
 
 }
