@@ -43,15 +43,13 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "queries")
-    public CompletableFuture<World[]> queryWorld(@RestParam(name = "queries") int count) {
+    public World[] queryWorld(@RestParam(name = "queries") int count) {
         count = Math.min(500, Math.max(1, count));
         final World[] rs = new World[count];
-        final CompletableFuture<World>[] futures = new CompletableFuture[count];
         for (int i = 0; i < count; i++) {
-            final int index = i;
-            futures[index] = source.findAsync(World.class, randomId()).whenComplete((w, t) -> rs[index] = w);
+            rs[i] = source.find(World.class, randomId());
         }
-        return CompletableFuture.allOf(futures).thenApply((r) -> rs);
+        return rs;
     }
 
     @RestMapping(name = "updates")
