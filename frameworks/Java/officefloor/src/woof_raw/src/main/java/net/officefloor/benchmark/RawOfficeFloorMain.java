@@ -424,7 +424,8 @@ public class RawOfficeFloorMain {
 		try {
 			// +1 to not include '='
 			String countValue = requestPath.substring(countIndex + 1);
-			return Integer.parseInt(countValue);
+			int count = Integer.parseInt(countValue);
+			return (count < 1) ? 1 : (count > 500) ? 500 : count;
 		} catch (Exception ex) {
 			return 1;
 		}
