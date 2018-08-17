@@ -18,6 +18,7 @@
 package net.officefloor.benchmark;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -30,6 +31,7 @@ import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 import java.util.stream.Collector;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -238,6 +240,25 @@ public class RawOfficeFloorMain {
 			}
 		}
 
+		/**
+		 * Sends an error {@link HttpResponse}.
+		 * 
+		 * @param connection {@link ServerHttpConnection}.
+		 * @return {@link Consumer} for sending error {@link HttpResponse}.
+		 */
+		public Consumer<Throwable> onError(ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
+			return (failure) -> {
+				try {
+					HttpResponse response = connection.getResponse();
+					response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+					failure.printStackTrace(new PrintWriter(response.getEntityWriter()));
+					this.send(connection);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			};
+		}
+
 		/*
 		 * ===================== HttpServicer ====================
 		 */
@@ -276,8 +297,8 @@ public class RawOfficeFloorMain {
 
 			case "/db":
 				threadLocalConnection.get().<World>rowOperation("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
-						.set("$1", ThreadLocalRandom.current().nextInt(1, 10000)).collect(dbCollector()).submit()
-						.getCompletionStage().thenAcceptAsync((world) -> {
+						.set("$1", ThreadLocalRandom.current().nextInt(1, 10000)).collect(dbCollector())
+						.onError(this.onError(connection)).submit().getCompletionStage().thenAcceptAsync((world) -> {
 							try {
 								response.setContentType(APPLICATION_JSON, null);
 								this.objectMapper.writeValue(response.getEntityWriter(), world);
@@ -291,7 +312,8 @@ public class RawOfficeFloorMain {
 
 			case "/fortunes":
 				threadLocalConnection.get().<List<Fortune>>rowOperation("SELECT ID, MESSAGE FROM FORTUNE")
-						.collect(fortunesCollector()).submit().getCompletionStage().thenAcceptAsync((fortunes) -> {
+						.collect(fortunesCollector()).onError(this.onError(connection)).submit().getCompletionStage()
+						.thenAcceptAsync((fortunes) -> {
 							try {
 								fortunes.add(new Fortune(0, "Additional fortune added at request time."));
 								response.setContentType(TEXT_HTML, null);
@@ -310,7 +332,6 @@ public class RawOfficeFloorMain {
 								writer.write(TEMPLATE_END);
 								this.send(connection);
 							} catch (IOException ex) {
-								// TODO handle error
 								ex.printStackTrace();
 							}
 						});
@@ -329,8 +350,9 @@ public class RawOfficeFloorMain {
 				case "/queries":
 					for (int i = 0; i < queryCount; i++) {
 						db.<World>rowOperation("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
-								.set("$1", random.nextInt(1, 10000)).collect(dbCollector()).submit()
-								.getCompletionStage().thenAcceptAsync((world) -> {
+								.set("$1", random.nextInt(1, 10000)).collect(dbCollector())
+								.onError(this.onError(connection)).submit().getCompletionStage()
+								.thenAcceptAsync((world) -> {
 									try {
 										worlds.add(world);
 										if (worlds.size() >= queryCount) {
@@ -349,8 +371,9 @@ public class RawOfficeFloorMain {
 				case "/update":
 					for (int i = 0; i < queryCount; i++) {
 						db.<World>rowOperation("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
-								.set("$1", random.nextInt(1, 10000)).collect(dbCollector()).submit()
-								.getCompletionStage().thenAcceptAsync((world) -> {
+								.set("$1", random.nextInt(1, 10000)).collect(dbCollector())
+								.onError(this.onError(connection)).submit().getCompletionStage()
+								.thenAcceptAsync((world) -> {
 									try {
 										world = new World(world.id, random.nextInt(1, 10000));
 										worlds.add(world);
