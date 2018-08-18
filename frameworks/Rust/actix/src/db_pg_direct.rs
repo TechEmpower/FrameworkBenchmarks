@@ -49,7 +49,7 @@ impl PgConnection {
 impl PgConnection {
 
     pub fn get_world(&self) -> impl Future<Item=World, Error=io::Error> {
-        let random_id = thread_rng().gen_range::<i32>(1, 10_000);
+        let random_id = thread_rng().gen_range::<i32>(1, 10_001);
 
         self.cl
             .query(&self.world, &[&random_id])
@@ -67,7 +67,7 @@ impl PgConnection {
     pub fn get_worlds(&self, num: usize) -> impl Future<Item=Vec<World>, Error=io::Error> {
         let mut worlds = Vec::with_capacity(num);
         for _ in 0..num {
-            let w_id: i32 = thread_rng().gen_range(1, 10_000);
+            let w_id: i32 = thread_rng().gen_range(1, 10_001);
             worlds.push(
                 self.cl
                     .query(&self.world, &[&w_id])
@@ -89,8 +89,8 @@ impl PgConnection {
     pub fn update(&self, num: usize) -> impl Future<Item=Vec<World>, Error=io::Error> {
         let mut worlds = Vec::with_capacity(num);
         for _ in 0..num {
-            let id: i32 = thread_rng().gen_range(1, 10_000);
-            let w_id: i32 =thread_rng().gen_range(1, 10_000);
+            let id: i32 = thread_rng().gen_range(1, 10_001);
+            let w_id: i32 = thread_rng().gen_range(1, 10_001);
             worlds.push(
                 self.cl
                     .query(&self.update, &[&w_id])
