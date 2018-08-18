@@ -23,7 +23,7 @@ struct QueryString {
 }
 
 fn random_number() -> i32 {
-    rand::thread_rng().gen_range(1, 10000)
+    rand::thread_rng().gen_range(1, 10_001)
 }
 
 #[get("/plaintext")]
