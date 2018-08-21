@@ -21,5 +21,17 @@ AngelConfigurer configureServer(ArgResults argResults) {
     } else {
       throw UnsupportedError('Unsupported DB ${argResults['type']}');
     }
+
+    // JSON response.
+    app.get('/json', (req, res) {
+      res.serialize({'message': 'Hello, World!'});
+    });
+
+    // Plaintext response.
+    app.get('/plaintext', (req, res) {
+      res
+        ..write('Hello, World!')
+        ..close();
+    });
   };
 }

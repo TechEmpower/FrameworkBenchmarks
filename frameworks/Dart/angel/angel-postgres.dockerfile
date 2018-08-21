@@ -4,4 +4,4 @@ COPY ./ ./
 
 RUN pub upgrade
 
-CMD dart bin/main.dart --type=postgres
+CMD ANGEL_ENV=production dart bin/main.dart --type=postgres

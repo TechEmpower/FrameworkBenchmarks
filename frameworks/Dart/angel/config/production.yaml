@@ -1,0 +1,2 @@
+# https://github.com/TechEmpower/FrameworkBenchmarks/blob/82eadc9dce3badda758f9f9cbb0ff2bcdec15002/frameworks/Clojure/duct/resources/hello/db-mongo.edn
+mongo_db: "mongodb://tfb-database:27017/hello_world?username=benchmarkdbuser&password=benchmarkdbpass&maxPoolSize=64"
