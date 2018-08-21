@@ -1,1 +1,4 @@
 !bin/
+.dart_tool
+.packages
+*.lock

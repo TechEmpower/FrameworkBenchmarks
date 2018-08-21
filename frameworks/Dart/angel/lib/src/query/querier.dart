@@ -6,5 +6,5 @@ abstract class Querier {
 
   Future<World> getRandomWorld();
 
-  Future<World> updateWorld(int id, World world);
+  Future<World> updateWorld(id, World world);
 }

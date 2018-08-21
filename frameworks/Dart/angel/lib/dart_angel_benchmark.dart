@@ -5,6 +5,7 @@ import 'package:angel_framework/angel_framework.dart';
 import 'package:args/args.dart';
 import 'package:file/local.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:mustache4dart/mustache4dart.dart' as mustache;
 import 'src/models/models.dart';
 import 'src/query/query.dart';
 
@@ -13,12 +14,18 @@ AngelConfigurer configureServer(ArgResults argResults) {
   var minQueryCount = 1;
   var maxQueryCount = 500;
   var worldTableSize = 10000;
-  var fortuneTableSize = 100;
   var fs = const LocalFileSystem();
 
   return (Angel app) async {
     // Load configuration.
     await app.configure(configuration(fs));
+
+    // Set up the view engine.
+    var fortunesTemplate =
+        await fs.file('views/fortune.mustache').readAsString();
+
+    app.viewGenerator =
+        (name, [data]) => mustache.render(fortunesTemplate, data);
 
     // Select a querier, either MongoDB or PostgreSQL.
     //
