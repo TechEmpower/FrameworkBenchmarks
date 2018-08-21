@@ -1,6 +1,6 @@
 import 'dart:async';
-import '../models/fortune.dart';
+import '../models/models.dart';
 
 abstract class Querier {
-  Stream getFortunes();
+  Future<List<Fortune>> getFortunes();
 }
