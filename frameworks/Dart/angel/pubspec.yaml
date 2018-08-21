@@ -5,6 +5,11 @@ environment:
 dependencies:
   angel_configuration: ^2.0.0
   angel_framework: ^2.0.0-alpha
+  angel_model: ^1.0.0
+  angel_serialize: ^2.0.0
   args: ^1.0.0
   mongo_dart: ^0.3.0
   postgres: ^1.0.0
+dev_dependencies:
+  angel_serialize_generator: ^2.0.0
+  build_runner: ^0.10.0
