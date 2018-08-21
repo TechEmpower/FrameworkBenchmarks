@@ -114,15 +114,6 @@ public:
 	static PGconn* conn;
 	static UPgSqlStatement* pstmt;
 
-	static PGresult* execPrepared()
-		{
-		U_TRACE_NO_PARAM(5, "Fortune::execPrepared()")
-
-		PGresult* res = (PGresult*) U_SYSCALL(PQexecPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 0, 0, 0, 0, 1);
-
-		U_RETURN_POINTER(res, PGresult);
-		}
-
 	static void sendQueryPrepared()
 		{
 		U_TRACE_NO_PARAM(5, "Fortune::sendQueryPrepared()")
