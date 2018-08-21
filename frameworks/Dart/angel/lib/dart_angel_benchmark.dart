@@ -1,14 +1,23 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:angel_configuration/angel_configuration.dart';
 import 'package:angel_framework/angel_framework.dart';
 import 'package:args/args.dart';
 import 'package:file/local.dart';
 import 'package:mongo_dart/mongo_dart.dart';
+import 'src/models/models.dart';
 import 'src/query/query.dart';
 
 AngelConfigurer configureServer(ArgResults argResults) {
+  var rnd = new Random();
+  var minQueryCount = 1;
+  var maxQueryCount = 500;
+  var worldTableSize = 10000;
+  var fortuneTableSize = 100;
+  var fs = const LocalFileSystem();
+
   return (Angel app) async {
     // Load configuration.
-    var fs = const LocalFileSystem();
     await app.configure(configuration(fs));
 
     // Select a querier, either MongoDB or PostgreSQL.
@@ -39,6 +48,56 @@ AngelConfigurer configureServer(ArgResults argResults) {
     app.get('/db', (req, res) async {
       var querier = req.container.make<Querier>();
       res.serialize(await querier.getRandomWorld());
+    });
+
+    // DB queries
+    app.get('/queries/int:queryCount?', (req, res) async {
+      // Get the querier and query count.
+      var querier = req.container.make<Querier>();
+      var queryCount = req.params['queryCount'] as int ?? minQueryCount;
+      queryCount = queryCount.clamp(minQueryCount, maxQueryCount);
+
+      // Fetch the objects.
+      var worlds = await Future.wait<World>(
+          List.generate(queryCount, (_) => querier.getRandomWorld()));
+      res.serialize(worlds);
+    });
+
+    // DB updates
+    app.get('/updates/int:queryCount?', (req, res) async {
+      // Get the querier and query count.
+      var querier = req.container.make<Querier>();
+      var queryCount = req.params['queryCount'] as int ?? minQueryCount;
+      queryCount = queryCount.clamp(minQueryCount, maxQueryCount);
+
+      // Fetch the objects.
+      var worlds =
+          await Future.wait<World>(List.generate(queryCount, (_) async {
+        var world = await querier.getRandomWorld();
+        await querier.updateWorld(world.id,
+            world.copyWith(randomNumber: rnd.nextInt(worldTableSize) + 1));
+      }));
+      res.serialize(worlds);
+    });
+
+    // Templating
+    app.get('/fortunes', (req, res) async {
+      var querier = req.container.make<Querier>();
+      var fortunes = await querier.getFortunes();
+
+      // Insert an additional fortune.
+      fortunes.add(
+        Fortune(
+          id: 0,
+          message: 'Additional fortune added at request time.',
+        ),
+      );
+
+      // Sort the fortunes.
+      fortunes.sort((a, b) => a.id.compareTo(b.id));
+
+      // Render the template.
+      await res.render('fortunes', {'fortunes': fortunes});
     });
   };
 }

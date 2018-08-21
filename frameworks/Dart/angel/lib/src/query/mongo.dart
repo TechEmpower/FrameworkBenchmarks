@@ -26,4 +26,9 @@ class MongoQuerier implements Querier {
       }
     ]).then(WorldSerializer.fromMap);
   }
+
+  @override
+  Future<World> updateWorld(int id, World world) {
+    // TODO: implement updateWorld
+  }
 }
