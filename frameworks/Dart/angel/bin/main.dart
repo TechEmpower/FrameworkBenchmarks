@@ -11,11 +11,12 @@ main(List<String> args) async {
         abbr: 't', allowed: ['mongo', 'postgres'], defaultsTo: 'mongo');
 
   try {
-    for (int i = 1; i < Platform.numberOfProcessors; i++) {
-      Isolate.spawn(serverMain, i);
-    }
+    var argResults = argParser.parse(args);
+    serverMain(new StartConfig(0, argResults));
 
-    serverMain(0);
+    for (int i = 1; i < Platform.numberOfProcessors; i++) {
+      Isolate.spawn(serverMain, new StartConfig(i, argResults));
+    }
   } on ArgParserException catch (e) {
     stderr
       ..writeln('fatal error: ${e.message}')
@@ -26,14 +27,21 @@ main(List<String> args) async {
   }
 }
 
-void serverMain(int id) {
+void serverMain(StartConfig config) {
   var app = new Angel();
 
-  app.configure(dart_angel_benchmark.configureServer).then((_) async {
+  app.configure(dart_angel_benchmark.configureServer(config.argResults)).then((_) async {
     var http = new AngelHttp.custom(app, startShared);
     var server = await http.startServer('127.0.0.1', 8080);
     var url = new Uri(
         scheme: 'http', host: server.address.address, port: server.port);
-    print('Instance #$id listening at $url');
+    print('Instance #${config.id} listening at $url');
   });
+}
+
+class StartConfig {
+  final int id;
+  final ArgResults argResults;
+
+  StartConfig(this.id, this.argResults);
 }
