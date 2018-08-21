@@ -3,4 +3,6 @@ import '../models/models.dart';
 
 abstract class Querier {
   Future<List<Fortune>> getFortunes();
+
+  Future<World> getRandomWorld();
 }

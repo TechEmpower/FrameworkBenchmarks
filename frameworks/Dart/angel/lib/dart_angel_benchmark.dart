@@ -18,6 +18,7 @@ AngelConfigurer configureServer(ArgResults argResults) {
       var db = Db(app.configuration['mongo_db']);
       app.container.registerSingleton<Querier>(MongoQuerier(db));
       await db.open();
+      app.shutdownHooks.add((_) => db.close());
     } else {
       throw UnsupportedError('Unsupported DB ${argResults['type']}');
     }
@@ -32,6 +33,12 @@ AngelConfigurer configureServer(ArgResults argResults) {
       res
         ..write('Hello, World!')
         ..close();
+    });
+
+    // Fetch random world object.
+    app.get('/db', (req, res) async {
+      var querier = req.container.make<Querier>();
+      res.serialize(await querier.getRandomWorld());
     });
   };
 }

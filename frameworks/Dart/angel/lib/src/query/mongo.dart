@@ -17,4 +17,13 @@ class MongoQuerier implements Querier {
   Future<List<Fortune>> getFortunes() {
     return _fortunes.find().map(FortuneSerializer.fromMap).toList();
   }
+
+  @override
+  Future<World> getRandomWorld() {
+    return _worlds.aggregate([
+      {
+        r'$sample': {'size': 1}
+      }
+    ]).then(WorldSerializer.fromMap);
+  }
 }
