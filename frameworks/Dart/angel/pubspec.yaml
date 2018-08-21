@@ -1,0 +1,9 @@
+name: dart_angel_benchmark
+publish_to: none
+environment:
+  sdk: ">=2.0.0-dev <3.0.0"
+dependencies:
+  angel_framework: ^2.0.0-alpha
+  args: ^1.0.0
+  mongo_dart: ^0.3.0
+  postgresql: ^1.0.0
