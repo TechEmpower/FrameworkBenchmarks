@@ -6,6 +6,7 @@ import 'package:args/args.dart';
 import 'package:file/local.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:mustache4dart/mustache4dart.dart' as mustache;
+import 'package:postgres/postgres.dart';
 import 'src/models/models.dart';
 import 'src/query/query.dart';
 
@@ -22,7 +23,7 @@ AngelConfigurer configureServer(ArgResults argResults) {
 
     // Set up the view engine.
     var fortunesTemplate =
-        await fs.file('views/fortune.mustache').readAsString();
+        await fs.file('views/fortunes.mustache').readAsString();
 
     app.viewGenerator =
         (name, [data]) => mustache.render(fortunesTemplate, data);
@@ -35,6 +36,18 @@ AngelConfigurer configureServer(ArgResults argResults) {
       app.container.registerSingleton<Querier>(MongoQuerier(db));
       await db.open();
       app.shutdownHooks.add((_) => db.close());
+    } else if (argResults['type'] == 'postgres') {
+      var postgresConfig = app.configuration['postgres'] as Map;
+      var connection = PostgreSQLConnection(
+        postgresConfig['host'],
+        postgresConfig['port'],
+        postgresConfig['databaseName'],
+        username: postgresConfig['username'],
+        password: postgresConfig['password'],
+      );
+      app.container.registerSingleton<Querier>(PostgresQuerier(connection));
+      await connection.open();
+      app.shutdownHooks.add((_) => connection.close());
     } else {
       throw UnsupportedError('Unsupported DB ${argResults['type']}');
     }
