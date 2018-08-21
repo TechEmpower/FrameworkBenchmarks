@@ -5,6 +5,10 @@
       "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries/",
+        "update_url": "/updates/",
+        "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -17,7 +21,32 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Angel",
+        "display_name": "Angel (MongoDB)",
+        "notes": "",
+        "versus": "None"
+      }
+    },
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries/",
+        "update_url": "/updates/",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MongoDB",
+        "framework": "angel-postgres",
+        "language": "Dart",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Angel (PostgreSQL)",
         "notes": "",
         "versus": "None"
       }
