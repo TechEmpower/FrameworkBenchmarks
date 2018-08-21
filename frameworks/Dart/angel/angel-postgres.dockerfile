@@ -4,4 +4,4 @@ COPY ./ ./
 
 RUN pub upgrade
 
-CMD dart server.dart --type=postgres
+CMD dart bin/main.dart --type=postgres

@@ -4,4 +4,4 @@ COPY ./ ./
 
 RUN pub upgrade
 
-CMD dart server.dart --type=mongo
+CMD dart bin/main.dart --type=mongo
