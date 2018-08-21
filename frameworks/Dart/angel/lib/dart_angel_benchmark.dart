@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'package:angel_configuration/angel_configuration.dart';
 import 'package:angel_framework/angel_framework.dart';
@@ -51,6 +52,11 @@ AngelConfigurer configureServer(ArgResults argResults) {
     } else {
       throw UnsupportedError('Unsupported DB ${argResults['type']}');
     }
+
+    // Always add a Date header.
+    app.fallback((req, res) {
+      res.headers['date'] = HttpDate.format(DateTime.now());
+    });
 
     // JSON response.
     app.get('/json', (req, res) {
@@ -114,7 +120,7 @@ AngelConfigurer configureServer(ArgResults argResults) {
       );
 
       // Sort the fortunes.
-      fortunes.sort((a, b) => a.id.compareTo(b.id));
+      fortunes.sort((a, b) => a.message.compareTo(b.message));
 
       // Render the template.
       await res.render('fortunes', {'fortunes': fortunes});

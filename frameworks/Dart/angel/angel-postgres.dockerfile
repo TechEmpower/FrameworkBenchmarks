@@ -2,6 +2,6 @@ FROM google/dart:2.0
 
 COPY ./ ./
 
-RUN pub upgrade
+RUN pub get
 
 CMD ANGEL_ENV=production dart bin/main.dart --type=postgres

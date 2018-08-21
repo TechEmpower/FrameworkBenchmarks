@@ -34,7 +34,7 @@ void serverMain(StartConfig config) {
       .configure(dart_angel_benchmark.configureServer(config.argResults))
       .then((_) async {
     var http = AngelHttp.custom(app, startShared);
-    var server = await http.startServer('127.0.0.1', 8080);
+    var server = await http.startServer('0.0.0.0', 8080);
     var url =
         Uri(scheme: 'http', host: server.address.address, port: server.port);
     print('Instance #${config.id} listening at $url');
