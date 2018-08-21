@@ -20,8 +20,8 @@ main(List<String> args) async {
   } on ArgParserException catch (e) {
     stderr
       ..writeln('fatal error: ${e.message}')
-      ..writeln()
       ..writeln('usage: bin/main.dart [options...]')
+      ..writeln()
       ..writeln(argParser.usage);
     exitCode = 1;
   }
