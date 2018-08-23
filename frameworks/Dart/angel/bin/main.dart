@@ -5,7 +5,6 @@ import 'package:angel_framework/angel_framework.dart';
 import 'package:args/args.dart';
 import 'package:dart_angel_benchmark/dart_angel_benchmark.dart'
     as dart_angel_benchmark;
-import 'package:logging/logging.dart';
 
 main(List<String> args) async {
   var argParser = ArgParser()
