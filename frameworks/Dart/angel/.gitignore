@@ -1,3 +1,4 @@
 !bin/
 .dart_tool
 .packages
+*.g.part
