@@ -43,7 +43,7 @@ void serverMain(StartConfig config) {
     //logger: Logger('tfb'),
   );
 
-  hierarchicalLoggingEnabled = true;
+  // hierarchicalLoggingEnabled = true;
 
   //app.logger.onRecord.listen((rec) {
   //  print(rec);
