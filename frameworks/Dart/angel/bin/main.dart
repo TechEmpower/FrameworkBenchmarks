@@ -40,16 +40,16 @@ main(List<String> args) async {
 
 void serverMain(StartConfig config) {
   var app = Angel(
-    logger: Logger('tfb'),
+    //logger: Logger('tfb'),
   );
 
   hierarchicalLoggingEnabled = true;
 
-  app.logger.onRecord.listen((rec) {
-    print(rec);
-    if (rec.error != null) print(rec.error);
-    if (rec.stackTrace != null) print(rec.stackTrace);
-  });
+  //app.logger.onRecord.listen((rec) {
+  //  print(rec);
+  //  if (rec.error != null) print(rec.error);
+  //  if (rec.stackTrace != null) print(rec.stackTrace);
+  //});
 
   app
       .configure(dart_angel_benchmark.configureServer(config.argResults))

@@ -27,14 +27,14 @@ class PostgresQuerier implements Querier {
   @override
   Future<World> getRandomWorld() async {
     var rows = await connection
-        .query('SELECT id, message FROM world ORDER BY RANDOM() LIMIT 1');
+        .query('SELECT id, randomNumber FROM world ORDER BY RANDOM() LIMIT 1');
     return parseWorld(rows[0]);
   }
 
   @override
   Future<World> updateWorld(id, World world) async {
     await connection.query(
-        'UPDATE world WHERE id = @id SET randomNumber = @randomNumber',
+        'UPDATE world SET randomNumber = @randomNumber WHERE id = @id',
         substitutionValues: {'id': id, 'randomNumber': world.randomNumber});
     return world;
   }
