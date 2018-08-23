@@ -1,6 +1,7 @@
 # Angel Framework Benchmarking Test
 This test adds [Angel](https://angel-dart.github.io),
-a full-featured framework for Dart, to the benchmarking test suite. The test is based on the Dart Benchmarking Test.
+a full-featured framework for Dart, to the
+[benchmarking test suite](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/frameworks/Dart). The test is based on the Dart Benchmarking Test.
 
 ## Versions
 The `pubspec.lock` file is included; so that dependencies are kept consistent between deployments.
