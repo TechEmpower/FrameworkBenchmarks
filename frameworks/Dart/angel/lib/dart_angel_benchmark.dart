@@ -34,7 +34,8 @@ AngelConfigurer configureServer(ArgResults argResults) {
     // Either way, the container *must* contain a `Querier`.
     if (argResults['type'] == 'mongo') {
       var db = Db(app.configuration['mongo_db']);
-      app.container.registerSingleton<Querier>(MongoQuerier(db));
+      app.container
+          .registerSingleton<Querier>(MongoQuerier(db, rnd, worldTableSize));
       await db.open();
       app.shutdownHooks.add((_) => db.close());
     } else if (argResults['type'] == 'postgres') {
@@ -77,10 +78,12 @@ AngelConfigurer configureServer(ArgResults argResults) {
     });
 
     // DB queries
-    app.get('/queries/int:queryCount?', (req, res) async {
+    app.get('/queries', (req, res) async {
       // Get the querier and query count.
       var querier = req.container.make<Querier>();
-      var queryCount = req.params['queryCount'] as int ?? minQueryCount;
+      var queryCount =
+          int.tryParse(req.uri.queryParameters['queryCount'].toString()) ??
+              minQueryCount;
       queryCount = queryCount.clamp(minQueryCount, maxQueryCount);
 
       // Fetch the objects.
@@ -90,10 +93,12 @@ AngelConfigurer configureServer(ArgResults argResults) {
     });
 
     // DB updates
-    app.get('/updates/int:queryCount?', (req, res) async {
+    app.get('/updates', (req, res) async {
       // Get the querier and query count.
       var querier = req.container.make<Querier>();
-      var queryCount = req.params['queryCount'] as int ?? minQueryCount;
+      var queryCount =
+          int.tryParse(req.uri.queryParameters['queryCount'].toString()) ??
+              minQueryCount;
       queryCount = queryCount.clamp(minQueryCount, maxQueryCount);
 
       // Fetch the objects.

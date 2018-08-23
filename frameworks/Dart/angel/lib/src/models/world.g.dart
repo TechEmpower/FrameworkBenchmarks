@@ -11,12 +11,12 @@ class World implements _World {
   const World({this.id, this.randomNumber});
 
   @override
-  final int id;
+  final num id;
 
   @override
   final int randomNumber;
 
-  World copyWith({int id, int randomNumber}) {
+  World copyWith({num id, int randomNumber}) {
     return new World(
         id: id ?? this.id, randomNumber: randomNumber ?? this.randomNumber);
   }

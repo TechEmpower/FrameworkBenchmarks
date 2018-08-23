@@ -2,9 +2,10 @@ import 'package:angel_serialize/angel_serialize.dart';
 part 'world.g.dart';
 part 'world.serializer.g.dart';
 
-@Serializable(autoIdAndDateFields: false)
+@Serializable(autoIdAndDateFields: false, autoSnakeCaseNames: false)
 abstract class _World {
-  int get id;
+  num get id;
 
+  @Alias('randomnumber')
   int get randomNumber;
 }

@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 import 'package:angel_framework/angel_framework.dart';
 import 'package:args/args.dart';
 import 'package:dart_angel_benchmark/dart_angel_benchmark.dart'
     as dart_angel_benchmark;
+import 'package:logging/logging.dart';
 
 main(List<String> args) async {
   var argParser = ArgParser()
@@ -15,7 +17,16 @@ main(List<String> args) async {
     serverMain(StartConfig(0, argResults));
 
     for (int i = 1; i < Platform.numberOfProcessors; i++) {
-      Isolate.spawn(serverMain, StartConfig(i, argResults));
+      var onError = new ReceivePort();
+      onError.first.then((data) {
+        print(data);
+
+        if (data is List) {
+          Zone.current.errorCallback(data[0], data[1] as StackTrace);
+        }
+      });
+      Isolate.spawn(serverMain, StartConfig(i, argResults),
+          onError: onError.sendPort);
     }
   } on ArgParserException catch (e) {
     stderr
@@ -28,7 +39,17 @@ main(List<String> args) async {
 }
 
 void serverMain(StartConfig config) {
-  var app = Angel();
+  var app = Angel(
+    logger: Logger('tfb'),
+  );
+
+  hierarchicalLoggingEnabled = true;
+
+  app.logger.onRecord.listen((rec) {
+    print(rec);
+    if (rec.error != null) print(rec.error);
+    if (rec.stackTrace != null) print(rec.stackTrace);
+  });
 
   app
       .configure(dart_angel_benchmark.configureServer(config.argResults))

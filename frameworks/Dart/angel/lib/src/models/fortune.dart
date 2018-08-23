@@ -4,7 +4,7 @@ part 'fortune.serializer.g.dart';
 
 @Serializable(autoIdAndDateFields: false, autoSnakeCaseNames: false)
 abstract class _Fortune {
-  int get id;
+  num get id;
 
   String get message;
 }

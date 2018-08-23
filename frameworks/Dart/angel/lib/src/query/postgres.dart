@@ -19,7 +19,7 @@ class PostgresQuerier implements Querier {
 
   @override
   Future<List<Fortune>> getFortunes() {
-    return connection.query('SELECT id, message FROM fortunes').then((rows) {
+    return connection.query('SELECT id, message FROM fortune').then((rows) {
       return rows.map((parseFortune)).toList();
     });
   }
@@ -27,14 +27,14 @@ class PostgresQuerier implements Querier {
   @override
   Future<World> getRandomWorld() async {
     var rows = await connection
-        .query('SELECT id, message FROM worlds ORDER BY RANDOM() LIMIT 1');
+        .query('SELECT id, message FROM world ORDER BY RANDOM() LIMIT 1');
     return parseWorld(rows[0]);
   }
 
   @override
   Future<World> updateWorld(id, World world) async {
     await connection.query(
-        'UPDATE worlds WHERE id = @id SET randomnumber = @randomNumber',
+        'UPDATE world WHERE id = @id SET randomnumber = @randomNumber',
         substitutionValues: {'id': id, 'randomNumber': world.randomNumber});
     return world;
   }

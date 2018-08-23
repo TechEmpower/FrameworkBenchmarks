@@ -8,7 +8,7 @@ part of 'fortune.dart';
 
 abstract class FortuneSerializer {
   static Fortune fromMap(Map map) {
-    return new Fortune(id: map['id'] as int, message: map['message'] as String);
+    return new Fortune(id: map['id'] as num, message: map['message'] as String);
   }
 
   static Map<String, dynamic> toMap(Fortune model) {
