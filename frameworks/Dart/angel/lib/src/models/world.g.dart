@@ -14,9 +14,9 @@ class World implements _World {
   final num id;
 
   @override
-  final int randomNumber;
+  final num randomNumber;
 
-  World copyWith({num id, int randomNumber}) {
+  World copyWith({num id, num randomNumber}) {
     return new World(
         id: id ?? this.id, randomNumber: randomNumber ?? this.randomNumber);
   }

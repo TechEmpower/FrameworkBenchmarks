@@ -9,7 +9,7 @@ part of 'world.dart';
 abstract class WorldSerializer {
   static World fromMap(Map map) {
     return new World(
-        id: map['id'] as num, randomNumber: map['randomNumber'] as int);
+        id: map['id'] as num, randomNumber: map['randomNumber'] as num);
   }
 
   static Map<String, dynamic> toMap(World model) {

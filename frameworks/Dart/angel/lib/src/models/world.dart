@@ -6,5 +6,5 @@ part 'world.serializer.g.dart';
 abstract class _World {
   num get id;
 
-  int get randomNumber;
+  num get randomNumber;
 }

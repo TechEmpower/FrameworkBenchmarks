@@ -5,6 +5,7 @@ import 'package:angel_configuration/angel_configuration.dart';
 import 'package:angel_framework/angel_framework.dart';
 import 'package:args/args.dart';
 import 'package:file/local.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:mustache4dart/mustache4dart.dart' as mustache;
 import 'package:postgres/postgres.dart';
@@ -105,8 +106,9 @@ AngelConfigurer configureServer(ArgResults argResults) {
       var worlds =
           await Future.wait<World>(List.generate(queryCount, (_) async {
         var world = await querier.getRandomWorld();
-        await querier.updateWorld(world.id,
-            world.copyWith(randomNumber: rnd.nextInt(worldTableSize) + 1));
+        world = world.copyWith(randomNumber: rnd.nextInt(worldTableSize) + 1);
+        await querier.updateWorld(world.id, world);
+        return world;
       }));
       res.serialize(worlds);
     });
@@ -128,7 +130,9 @@ AngelConfigurer configureServer(ArgResults argResults) {
       fortunes.sort((a, b) => a.message.compareTo(b.message));
 
       // Render the template.
-      await res.render('fortunes', {'fortunes': fortunes});
+      res.contentType = new MediaType('text', 'html', {'charset': 'utf-8'});
+      await res.render('fortunes',
+          {'fortunes': fortunes.map((f) => f.copyWith(id: f.id.toInt()))});
     });
   };
 }

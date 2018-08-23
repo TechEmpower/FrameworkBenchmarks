@@ -34,7 +34,7 @@ class PostgresQuerier implements Querier {
   @override
   Future<World> updateWorld(id, World world) async {
     await connection.query(
-        'UPDATE world WHERE id = @id SET randomnumber = @randomNumber',
+        'UPDATE world WHERE id = @id SET randomNumber = @randomNumber',
         substitutionValues: {'id': id, 'randomNumber': world.randomNumber});
     return world;
   }
