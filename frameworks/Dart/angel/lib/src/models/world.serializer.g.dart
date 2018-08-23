@@ -9,14 +9,14 @@ part of 'world.dart';
 abstract class WorldSerializer {
   static World fromMap(Map map) {
     return new World(
-        id: map['id'] as num, randomNumber: map['randomnumber'] as int);
+        id: map['id'] as num, randomNumber: map['randomNumber'] as int);
   }
 
   static Map<String, dynamic> toMap(World model) {
     if (model == null) {
       return null;
     }
-    return {'id': model.id, 'randomnumber': model.randomNumber};
+    return {'id': model.id, 'randomNumber': model.randomNumber};
   }
 }
 
@@ -25,5 +25,5 @@ abstract class WorldFields {
 
   static const String id = 'id';
 
-  static const String randomNumber = 'randomnumber';
+  static const String randomNumber = 'randomNumber';
 }

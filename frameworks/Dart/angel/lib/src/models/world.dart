@@ -6,6 +6,5 @@ part 'world.serializer.g.dart';
 abstract class _World {
   num get id;
 
-  @Alias('randomnumber')
   int get randomNumber;
 }
