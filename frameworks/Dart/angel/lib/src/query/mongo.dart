@@ -18,10 +18,7 @@ class MongoQuerier implements Querier {
 
   @override
   Future<List<Fortune>> getFortunes() {
-    return _fortunes
-        .find()
-        .map(FortuneSerializer.fromMap)
-        .toList();
+    return _fortunes.find().map(FortuneSerializer.fromMap).toList();
   }
 
   @override

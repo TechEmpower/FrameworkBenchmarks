@@ -40,8 +40,8 @@ main(List<String> args) async {
 
 void serverMain(StartConfig config) {
   var app = Angel(
-    //logger: Logger('tfb'),
-  );
+      //logger: Logger('tfb'),
+      );
 
   // hierarchicalLoggingEnabled = true;
 
