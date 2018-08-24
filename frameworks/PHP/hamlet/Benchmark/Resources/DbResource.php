@@ -20,7 +20,8 @@ class DbResource implements WebResource
 
     public function getResponse(Request $request): Response
     {
-        $count = $request->parameter('queries');
+        $queryParams = $request->getQueryParams();
+        $count = $queryParams['queries'] ?? null;
         if ($count !== null && $count > 0) {
             $count = min($count, 500);
         } else {
@@ -42,7 +43,7 @@ class DbResource implements WebResource
             $payload[] = $procedure->fetchOne();
         }
 
-        if (!$request->hasParameter('queries')) {
+        if (!isset($queryParams['queries'])) {
             $payload = $payload[0];
         }
 

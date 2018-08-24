@@ -40,7 +40,7 @@ run_h2o_app()
 {
 	taskset -c "$1" "$2/h2o_app" -a20 -f "$3/template/fortunes.mustache" -m "$DB_CONN" "$4" "$5" \
 	        -d "host=tfb-database dbname=hello_world user=benchmarkdbuser \
-	            password=benchmarkdbpass" -w262144 &
+	            password=benchmarkdbpass" -w536870912 &
 }
 
 generate_profile_data()

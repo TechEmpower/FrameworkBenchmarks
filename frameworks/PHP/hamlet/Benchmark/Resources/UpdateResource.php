@@ -20,7 +20,7 @@ class UpdateResource implements WebResource
 
     public function getResponse(Request $request): Response
     {
-        $count = $request->parameter('queries');
+        $count = $request->getQueryParams()['queries'] ?? null;
         if ($count !== null && $count > 0) {
             $count = min($count, 500);
         } else {

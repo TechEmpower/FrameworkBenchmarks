@@ -1,5 +1,5 @@
 {
-  "framework": "suave",
+  "framework": "cask",
   "tests": [
     {
       "default": {
@@ -9,17 +9,17 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "None",
-        "framework": "Suave",
-        "language": "F#",
+        "framework": "cask",
+        "language": "Scala",
         "flavor": "None",
         "orm": "None",
-        "platform": ".NET",
+        "platform": "Undertow",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Suave",
+        "display_name": "cask",
         "notes": "",
-        "versus": "None"
+        "versus": "Undertow"
       }
     }
   ]

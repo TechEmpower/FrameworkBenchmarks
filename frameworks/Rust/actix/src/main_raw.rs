@@ -271,7 +271,7 @@ fn main() {
     HttpServer::new(move || {
         let dbs = Rc::new(RefCell::new(Vec::new()));
 
-        for _ in 0..3 {
+        for _ in 0..2 {
             let db = dbs.clone();
             Arbiter::spawn(
                 PgConnection::connect(db_url)

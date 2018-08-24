@@ -38,6 +38,7 @@ public final class HelloWebServer {
     Undertow
         .builder()
         .addHttpListener(8080, "0.0.0.0")
+        .setIoThreads(Runtime.getRuntime().availableProcessors() * 2)
         // In HTTP/1.1, connections are persistent unless declared otherwise.
         // Adding a "Connection: keep-alive" header to every response would only
         // add useless bytes.
