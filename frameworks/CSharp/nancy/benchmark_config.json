@@ -18,9 +18,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "nancy",
+      "display_name": "Nancy on ASP.NET Core on Mono",
       "notes": "",
-      "versus": ""
+      "versus": "aspcore-mono"
     },
     "netcore": {
       "plaintext_url":"/plaintext",
@@ -39,9 +39,9 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "nancy",
+      "display_name": "Nancy on ASP.NET Core on .NET Core",
       "notes": "",
-      "versus": "nancy"
+      "versus": "aspcore"
     }
   }]
 }

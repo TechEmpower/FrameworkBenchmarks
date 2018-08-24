@@ -1,11 +1,11 @@
-FROM microsoft/dotnet:2.0-sdk-jessie
+FROM microsoft/dotnet:2.1-sdk-stretch AS build
+WORKDIR /app
+COPY . .
+RUN dotnet publish -c Release -o ../out Server
 
-ADD ./ /peachpie
-WORKDIR /peachpie
+FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
+ENV COMPlus_ReadyToRun 0
+WORKDIR /app
+COPY --from=build /app/out ./
 
-ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE true
-ENV DOTNET_CLI_TELEMETRY_OPTOUT true
-
-ENV PATH="/root/.dotnet:${PATH}"
-
-CMD dotnet run -p Server -c Release
+ENTRYPOINT ["dotnet", "Server.dll"]

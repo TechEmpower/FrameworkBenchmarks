@@ -5,19 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 
 namespace PlatformBenchmarks
 {
-    public class RawDb : IDb
+    public class RawDb
     {
-        private readonly IRandom _random;
+        private static readonly Comparison<World> WorldSortComparison = (a, b) => a.Id.CompareTo(b.Id);
+
+        private readonly ConcurrentRandom _random;
         private readonly DbProviderFactory _dbProviderFactory;
         private readonly string _connectionString;
 
-        public RawDb(IRandom random, DbProviderFactory dbProviderFactory, AppSettings appSettings)
+        public RawDb(ConcurrentRandom random, DbProviderFactory dbProviderFactory, AppSettings appSettings)
         {
             _random = random;
             _dbProviderFactory = dbProviderFactory;
@@ -67,57 +67,56 @@ namespace PlatformBenchmarks
 
         public async Task<World[]> LoadMultipleQueriesRows(int count)
         {
-            var result = new World[count];
-
             using (var db = _dbProviderFactory.CreateConnection())
             {
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();
-                using (var cmd = CreateReadCommand(db))
-                {
-                    for (int i = 0; i < count; i++)
-                    {
-                        result[i] = await ReadSingleRow(db, cmd);
-                        cmd.Parameters["@Id"].Value = _random.Next(1, 10001);
-                    }
-                }
+                return await LoadMultipleRows(count, db);
             }
 
-            return result;
+        }
+
+        private async Task<World[]> LoadMultipleRows(int count, DbConnection db)
+        {
+            using (var cmd = CreateReadCommand(db))
+            {
+                cmd.Parameters["@Id"].Value = _random.Next(1, 10001);
+
+                var result = new World[count];
+                for (int i = 0; i < result.Length; i++)
+                {
+                    result[i] = await ReadSingleRow(db, cmd);
+                    cmd.Parameters["@Id"].Value = _random.Next(1, 10001);
+                }
+                return result;
+            }
         }
 
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {
-            var results = new World[count];
-
-            var updateCommand = new StringBuilder(count);
-
             using (var db = _dbProviderFactory.CreateConnection())
             {
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();
 
+                var results = await LoadMultipleRows(count, db);
+
+                // Postgres has problems with deadlocks when these aren't sorted
+                Array.Sort<World>(results, WorldSortComparison);
+
                 using (var updateCmd = db.CreateCommand())
-                using (var queryCmd = CreateReadCommand(db))
                 {
-                    for (int i = 0; i < count; i++)
+                    for (int i = 0; i < results.Length; i++)
                     {
-                        results[i] = await ReadSingleRow(db, queryCmd);
-                        queryCmd.Parameters["@Id"].Value = _random.Next(1, 10001);
-                    }
+                        var strings = BatchUpdateString.Strings[i];
 
-                    // Postgres has problems with deadlocks when these aren't sorted
-                    Array.Sort<World>(results, (a, b) => a.Id.CompareTo(b.Id));
-
-                    for(int i = 0; i < count; i++)
-                    {
                         var id = updateCmd.CreateParameter();
-                        id.ParameterName = BatchUpdateString.Strings[i].Id;
+                        id.ParameterName = strings.Id;
                         id.DbType = DbType.Int32;
                         updateCmd.Parameters.Add(id);
 
                         var random = updateCmd.CreateParameter();
-                        random.ParameterName = BatchUpdateString.Strings[i].Random;
+                        random.ParameterName = strings.Random;
                         random.DbType = DbType.Int32;
                         updateCmd.Parameters.Add(random);
 
@@ -125,16 +124,14 @@ namespace PlatformBenchmarks
                         id.Value = results[i].Id;
                         random.Value = randomNumber;
                         results[i].RandomNumber = randomNumber;
-
-                        updateCommand.Append(BatchUpdateString.Strings[i].UpdateQuery);
                     }
 
-                    updateCmd.CommandText = updateCommand.ToString();
+                    updateCmd.CommandText = BatchUpdateString.Strings[count - 1].UpdateQuery;
                     await updateCmd.ExecuteNonQueryAsync();
+
+                    return results;
                 }
             }
-
-            return results;
         }
 
         public async Task<List<Fortune>> LoadFortunesRows()

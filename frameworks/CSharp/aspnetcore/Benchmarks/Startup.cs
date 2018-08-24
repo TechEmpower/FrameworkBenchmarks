@@ -11,6 +11,7 @@ using Benchmarks.Data;
 using Benchmarks.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -91,6 +92,11 @@ namespace Benchmarks
                 services.AddScoped<DapperDb>();
             }
 
+            if (Scenarios.Any("Update"))
+            {
+                BatchUpdateString.Initalize();
+            }
+
             if (Scenarios.Any("Fortunes"))
             {
                 var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
@@ -105,7 +111,8 @@ namespace Benchmarks
             {
                 var mvcBuilder = services
                     .AddMvcCore()
-                    .AddControllersAsServices();
+                    .SetCompatibilityVersion(CompatibilityVersion.Latest)
+                    ;
 
                 if (Scenarios.MvcJson || Scenarios.Any("MvcDbSingle") || Scenarios.Any("MvcDbMulti"))
                 {
@@ -131,6 +138,16 @@ namespace Benchmarks
             if (Scenarios.Json)
             {
                 app.UseJson();
+            }
+
+            if (Scenarios.Utf8Json)
+            {
+                app.UseUtf8Json();
+            }
+
+            if (Scenarios.SpanJson)
+            {
+                app.UseSpanJson();
             }
 
             // Single query endpoints

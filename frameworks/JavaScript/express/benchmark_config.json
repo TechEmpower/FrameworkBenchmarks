@@ -15,6 +15,20 @@
       "display_name": "express",
       "versus": "nodejs"
     },
+    "chakra": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "framework": "express",
+      "language": "JavaScript",
+      "flavor": "node-chakracore",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "express",
+      "versus": "nodejs"
+    },
     "mongodb": {
       "db_url": "/mongoose",
       "query_url": "/mongoose?queries=",

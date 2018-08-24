@@ -5,116 +5,48 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static World*         pworld_query;
-static UOrmSession*   psql_query;
-static UOrmStatement* pstmt_query;
-
-#ifndef AS_cpoll_cppsp_DO
-static UVector<World*>* pvworld_query;
-#endif
-
-static void usp_fork_query()
-{
-   U_TRACE(5, "::usp_fork_query()")
-
-   U_NEW(UOrmSession, psql_query, UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
-
-   if (psql_query->isReady() == false)
-      {
-      U_WARNING("usp_fork_query(): we cound't connect to db");
-
-      U_DELETE(psql_query)
-
-      psql_query = U_NULLPTR;
-
-      return;
-      }
-
-   U_NEW(UOrmStatement, pstmt_query, UOrmStatement(*psql_query, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
-
-// if (UOrmDriver::isPGSQL()) *psql_query << "BEGIN TRANSACTION";
-
-   U_NEW(World, pworld_query, World);
-
-   pstmt_query->use( pworld_query->id);
-   pstmt_query->into(pworld_query->randomNumber);
-
-#ifndef AS_cpoll_cppsp_DO
-   U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
-#endif
-}
-
-#ifdef DEBUG
-static void usp_end_query()
-{
-   U_TRACE(5, "::usp_end_query()")
-
-   if (pstmt_query)
-      {
-      U_DELETE(pstmt_query)
-      U_DELETE(pworld_query)
-      U_DELETE(psql_query)
-
-#  ifndef AS_cpoll_cppsp_DO
-      U_DELETE(pvworld_query)
-#  endif
-      }
-}
-#endif
+static void usp_init_query() { World::handlerInitSql(); }
+static void usp_fork_query() { World::handlerForkSql(); }
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+uint32_t i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
-(void) UClientImage_Base::wbuffer->reserve(36U * num_queries);
+World::initResult();
 
-#ifdef AS_cpoll_cppsp_DO
-char* ptr = UClientImage_Base::wbuffer->pend();
-
-*ptr++ = '[';
-#endif
-
-while (true)
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+if (World::pstmt)
    {
-   pworld_query->id = u_get_num_random(10000-1);
+   PGresult* res;
+   char* randomNumber;
 
-   pstmt_query->execute();
+   for (; i < num_queries; ++i)
+      {
+      res = World::execPrepared(i);
 
-#ifdef AS_cpoll_cppsp_DO
-   u_put_unalignedp32(ptr,   U_MULTICHAR_CONSTANT32('{','"','i','d'));
-   u_put_unalignedp16(ptr+4, U_MULTICHAR_CONSTANT16('"',':'));
+      U_INTERNAL_ASSERT_EQUALS(PQnfields(res), 1)
+      U_INTERNAL_ASSERT_EQUALS(PQntuples(res), 1)
 
-   ptr = u_num2str32(pworld_query->id, ptr+6);
+      randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", res, 0, 0);
 
-   u_put_unalignedp64(ptr,   U_MULTICHAR_CONSTANT64(',','"','r','a','n','d','o','m'));
-   u_put_unalignedp64(ptr+8, U_MULTICHAR_CONSTANT64('N','u','m','b','e','r','"',':'));
+      World::handlerResult(i, ntohl(*(uint32_t*)randomNumber));
 
-   ptr = u_num2str32(pworld_query->randomNumber, ptr+16);
-
-   *ptr++ = '}';
-#else
-   World* pworld;
-
-   U_NEW(World, pworld, World(*pworld_query));
-
-   pvworld_query->push_back(pworld);
-#endif
-
-   if (++i == num_queries) break;
-
-#ifdef AS_cpoll_cppsp_DO
-   *ptr++ = ',';
-#endif
+      U_SYSCALL_VOID(PQclear, "%p", res);
+      }
    }
-
-#ifdef AS_cpoll_cppsp_DO
-*ptr++ = ']';
-
-UClientImage_Base::wbuffer->size_adjust(ptr);
-#else
-USP_OBJ_JSON_stringify(*pvworld_query);
-pvworld_query->clear();
+else
 #endif
+{
+for (; i < num_queries; ++i)
+   {
+   World::pworld_query->id = World::rnumber[i];
+
+   World::pstmt_query->execute();
+
+   World::handlerResult(i, World::pworld_query->randomNumber);
+   }
+}
+
+World::endResult();
 -->

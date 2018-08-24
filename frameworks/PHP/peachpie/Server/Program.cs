@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,10 @@ namespace MyWebsite.Server
     {
         static void Main(string[] args)
         {
+            ThreadPool.GetMinThreads(out int workerThread, out int completionThread);
+            // Double ThreadPool for non-async calls
+            ThreadPool.SetMinThreads(workerThread * 2, completionThread);
+
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseUrls("http://*:8080/")
@@ -24,10 +29,10 @@ namespace MyWebsite.Server
     {
         public void Configure(IApplicationBuilder app)
         {
-            app.UseResponseBuffering();
+            // app.UseResponseBuffering();
             app.UsePhp(new PhpRequestOptions(scriptAssemblyName: "Website"));
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            // app.UseDefaultFiles();
+            // app.UseStaticFiles();
         }
     }
 }

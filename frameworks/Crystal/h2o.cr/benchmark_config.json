@@ -1,0 +1,25 @@
+{
+  "framework": "h2o.cr",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/hello",
+        "port": 7890,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "h2o.cr",
+        "language": "Crystal",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "crystal-h2o",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

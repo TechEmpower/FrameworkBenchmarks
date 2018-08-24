@@ -101,4 +101,5 @@ if ! docker network inspect tfb >/dev/null 2>&1; then
   docker network create tfb >/dev/null
 fi
 
-exec docker run -it --rm --network tfb -v /var/run/docker.sock:/var/run/docker.sock -v ${SCRIPT_ROOT}:/FrameworkBenchmarks techempower/tfb "${@}"
+test -t 1 && USE_TTY="-t"
+exec docker run -i ${USE_TTY} --rm --network tfb -v /var/run/docker.sock:/var/run/docker.sock -v ${SCRIPT_ROOT}:/FrameworkBenchmarks techempower/tfb "${@}"
