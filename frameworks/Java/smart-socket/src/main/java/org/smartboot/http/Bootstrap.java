@@ -18,7 +18,7 @@ import org.smartboot.socket.transport.AioQuickServer;
 
 import java.io.IOException;
 
-public class HttpBootstrap {
+public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
