@@ -122,7 +122,7 @@ impl Techempower {
     }
 
     fn random_world_row(&self) -> CpuFuture<WorldRow, io::Error> {
-        let random_id = rand::thread_rng().gen_range(1, 10_000);
+        let random_id = rand::thread_rng().gen_range(1, 10_001);
         let db = self.db_pool.clone();
         self.thread_pool.spawn_fn(move || {
             let conn = db.get().map_err(|e| {

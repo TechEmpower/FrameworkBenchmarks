@@ -86,7 +86,7 @@ impl Handler<RandomWorld> for PgConnection {
     type Result = ResponseFuture<World, io::Error>;
 
     fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Self::Result {
-        let random_id = self.rng.gen_range::<i32>(1, 10_000);
+        let random_id = self.rng.gen_range::<i32>(1, 10_001);
 
         Box::new(
             self.cl
@@ -118,7 +118,7 @@ impl Handler<RandomWorlds> for PgConnection {
     fn handle(&mut self, msg: RandomWorlds, _: &mut Self::Context) -> Self::Result {
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
-            let w_id: i32 = self.rng.gen_range(1, 10_000);
+            let w_id: i32 = self.rng.gen_range(1, 10_001);
             worlds.push(
                 self.cl
                     .as_mut()
@@ -152,8 +152,8 @@ impl Handler<UpdateWorld> for PgConnection {
     fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
-            let id: i32 = self.rng.gen_range(1, 10_000);
-            let w_id: i32 = self.rng.gen_range(1, 10_000);
+            let id: i32 = self.rng.gen_range(1, 10_001);
+            let w_id: i32 = self.rng.gen_range(1, 10_001);
             worlds.push(
                 self.cl
                     .as_mut()

@@ -147,7 +147,6 @@ fn main() {
     }).backlog(8192)
         .bind("0.0.0.0:8080")
         .unwrap()
-        .workers(1)
         .start();
 
     println!("Started http server: 127.0.0.1:8080");
