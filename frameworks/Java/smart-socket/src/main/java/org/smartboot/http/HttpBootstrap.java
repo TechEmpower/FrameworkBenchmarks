@@ -52,7 +52,6 @@ public class HttpBootstrap {
         AioQuickServer<HttpEntity> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
         server.setWriteQueueSize(4);
         server.setReadBufferSize(1024);
-        server.setThreadNum(8);
         try {
             server.start();
         } catch (IOException e) {
