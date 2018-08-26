@@ -11,7 +11,7 @@ server = HTTP::Server.new do |context|
   request = context.request
 
   response.headers["Server"] = "Crystal"
-  response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
+  response.headers["Date"] = HTTP.format_time(Time.now)
   
   case request.path
   when "/json"
