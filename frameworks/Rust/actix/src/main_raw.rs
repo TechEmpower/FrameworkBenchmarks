@@ -6,8 +6,6 @@ extern crate serde;
 extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
-#[macro_use]
-extern crate askama;
 extern crate num_cpus;
 extern crate rand;
 extern crate url;
@@ -18,13 +16,13 @@ extern crate tokio_postgres;
 use std::{mem, io};
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::io::Write;
 
 use actix::prelude::*;
 use actix_web::server::{
     self, HttpHandler, HttpHandlerTask, HttpServer, Request, Writer,
 };
 use actix_web::Error;
-use askama::Template;
 use futures::{Async, Future, Poll};
 use rand::{thread_rng, Rng};
 
@@ -33,7 +31,7 @@ mod models;
 mod utils;
 
 use db_pg_direct::PgConnection;
-use utils::{Message, StackWriter, Writer as JsonWriter};
+use utils::{Message, StackWriter, Writer as JsonWriter, escape};
 
 const HTTPOK: &[u8] = b"HTTP/1.1 200 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: Actix\r\n";
@@ -128,11 +126,12 @@ struct Fortune {
     fut: Box<Future<Item=Vec<models::Fortune>, Error=io::Error>>,
 }
 
-#[derive(Template)]
-#[template(path = "fortune.html")]
-struct FortuneTemplate<'a> {
-    items: &'a Vec<models::Fortune>,
-}
+const FORTUNES_START: &[u8] = b"<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
+const FORTUNES_ROW_START: &[u8] = b"<tr><td>";
+const FORTUNES_COLUMN: &[u8] = b"</td><td>";
+const FORTUNES_ROW_END: &[u8] = b"</td></tr>";
+const FORTUNES_END: &[u8] = b"</table></body></html>";
+
 
 impl HttpHandlerTask for Fortune {
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
@@ -141,8 +140,15 @@ impl HttpHandlerTask for Fortune {
                 let mut body: [u8; 2048] = unsafe { mem::uninitialized() };
                 let len = {
                     let mut writer = StackWriter(&mut body, 0);
-                    let tmpl = FortuneTemplate { items: &rows };
-                    tmpl.render_into(&mut writer).unwrap();
+                    let _ = writer.write(FORTUNES_START);
+                    for row in rows {
+                        let _ = writer.write(FORTUNES_ROW_START);
+                        let _ = write!(&mut writer, "{}", row.id);
+                        let _ = writer.write(FORTUNES_COLUMN);
+                        escape(&mut writer, row.message);
+                        let _ = writer.write(FORTUNES_ROW_END);
+                    }
+                    let _ = writer.write(FORTUNES_END);
                     writer.1
                 };
 
@@ -271,15 +277,13 @@ fn main() {
     HttpServer::new(move || {
         let dbs = Rc::new(RefCell::new(Vec::new()));
 
-        for _ in 0..2 {
-            let db = dbs.clone();
-            Arbiter::spawn(
-                PgConnection::connect(db_url)
-                    .and_then(move |conn| {
-                        db.borrow_mut().push(conn);
-                        Ok(())
-                    }));
-        }
+        let db = dbs.clone();
+        Arbiter::spawn(
+            PgConnection::connect(db_url)
+                .and_then(move |conn| {
+                    db.borrow_mut().push(conn);
+                    Ok(())
+                }));
 
         vec![App { dbs }]
     }).backlog(8192)
