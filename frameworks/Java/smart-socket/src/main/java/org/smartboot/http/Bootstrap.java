@@ -8,26 +8,26 @@
 
 package org.smartboot.http;
 
-import org.smartboot.http.common.HttpEntityV2;
-import org.smartboot.http.common.HttpRequestProtocol;
-import org.smartboot.http.common.utils.HttpHeaderConstant;
 import org.smartboot.http.server.handle.HttpHandle;
-import org.smartboot.http.server.http11.HttpResponse;
+import org.smartboot.http.server.v1.HttpMessageProcessor;
+import org.smartboot.http.server.v1.decode.HttpEntity;
+import org.smartboot.http.server.v1.decode.HttpRequestProtocol;
+import org.smartboot.http.utils.HttpHeaderConstant;
 import org.smartboot.socket.MessageProcessor;
 import org.smartboot.socket.transport.AioQuickServer;
 
 import java.io.IOException;
 
-public class HttpBootstrap {
+public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-        org.smartboot.http.server.HttpV2MessageProcessor processor = new org.smartboot.http.server.HttpV2MessageProcessor(System.getProperty("webapps.dir", "./"));
+        HttpMessageProcessor processor = new HttpMessageProcessor(System.getProperty("webapps.dir", "./"));
         processor.route("/plaintext", new HttpHandle() {
 
 
             @Override
-            public void doHandle(HttpEntityV2 request, HttpResponse response) throws IOException {
+            public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
 
                 response.setHeader(HttpHeaderConstant.Names.CONTENT_LENGTH, body.length + "");
                 response.setHeader(HttpHeaderConstant.Names.CONTENT_TYPE, "text/plain; charset=UTF-8");
@@ -36,7 +36,7 @@ public class HttpBootstrap {
         });
         processor.route("/json", new HttpHandle() {
             @Override
-            public void doHandle(HttpEntityV2 request, HttpResponse response) throws IOException {
+            public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
                 byte[] b = JSON.toJson(new Message("Hello, World!"));
                 response.setHeader(HttpHeaderConstant.Names.CONTENT_LENGTH, b.length + "");
                 response.setHeader(HttpHeaderConstant.Names.CONTENT_TYPE, "application/json");
@@ -47,12 +47,11 @@ public class HttpBootstrap {
 //        https(processor);
     }
 
-    public static void http(MessageProcessor<org.smartboot.http.common.HttpEntityV2> processor) {
+    public static void http(MessageProcessor<HttpEntity> processor) {
         // 定义服务器接受的消息类型以及各类消息对应的处理器
-        AioQuickServer<org.smartboot.http.common.HttpEntityV2> server = new AioQuickServer<org.smartboot.http.common.HttpEntityV2>(8080, new HttpRequestProtocol(), processor);
+        AioQuickServer<HttpEntity> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
         server.setWriteQueueSize(4);
         server.setReadBufferSize(1024);
-//        server.setThreadNum(8);
         try {
             server.start();
         } catch (IOException e) {
