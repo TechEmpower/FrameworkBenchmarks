@@ -119,30 +119,11 @@ public:
 	static UPgSqlStatement* pstmt;
 	static char num2str[sizeof(unsigned int)];
 
-	static PGresult* execPrepared()
+	static void _sendQueryPrepared()
 		{
-		U_TRACE_NO_PARAM(5, "World::execPrepared()")
+		U_TRACE_NO_PARAM(5, "World::_sendQueryPrepared()")
 
-		U_INTERNAL_ASSERT_MAJOR(rnumber[0], 0)
-
-		*(unsigned int*)num2str = htonl(rnumber[0]);
-
-		PGresult* res = (PGresult*) U_SYSCALL(PQexecPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 1, pstmt->paramValues, pstmt->paramLengths, pstmt->paramFormats, 1);
-
-		U_RETURN_POINTER(res, PGresult);
-		}
-
-	static PGresult* execPrepared(uint32_t i)
-		{
-		U_TRACE(5, "World::execPrepared(%u)", i)
-
-		U_INTERNAL_ASSERT_MAJOR(rnumber[i], 0)
-
-		*(unsigned int*)num2str = htonl(rnumber[i]);
-
-		PGresult* res = (PGresult*) U_SYSCALL(PQexecPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 1, pstmt->paramValues, pstmt->paramLengths, pstmt->paramFormats, 1);
-
-		U_RETURN_POINTER(res, PGresult);
+		(void) U_SYSCALL(PQsendQueryPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 1, pstmt->paramValues, pstmt->paramLengths, pstmt->paramFormats, 1);
 		}
 
 	static void sendQueryPrepared()
@@ -153,7 +134,7 @@ public:
 
 		*(unsigned int*)num2str = htonl(rnumber[0]);
 
-		(void) U_SYSCALL(PQsendQueryPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 1, pstmt->paramValues, pstmt->paramLengths, pstmt->paramFormats, 1);
+		_sendQueryPrepared();
 		}
 
 	static void sendQueryPrepared(uint32_t i)
@@ -164,7 +145,7 @@ public:
 
 		*(unsigned int*)num2str = htonl(rnumber[i]);
 
-		(void) U_SYSCALL(PQsendQueryPrepared, "%p,%S,%u,%p,%p,%p,%u", conn, pstmt->stmtName, 1, pstmt->paramValues, pstmt->paramLengths, pstmt->paramFormats, 1);
+		_sendQueryPrepared();
 		}
 #endif
 
