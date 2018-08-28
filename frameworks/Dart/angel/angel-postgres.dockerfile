@@ -4,4 +4,6 @@ COPY ./ ./
 
 RUN pub get
 
+RUN pub run build_runner build
+
 CMD ANGEL_ENV=production dart bin/main.dart --type=postgres
