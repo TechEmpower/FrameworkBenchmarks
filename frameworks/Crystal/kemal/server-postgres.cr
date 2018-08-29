@@ -111,6 +111,7 @@ end
 Kemal.config do |cfg|
   cfg.serve_static = false
   cfg.logging = false
+  cfg.powered_by_header = false
 end
 
 Kemal.run { |cfg| cfg.server.not_nil!.bind_tcp(cfg.host_binding, cfg.port, reuse_port: true) }
