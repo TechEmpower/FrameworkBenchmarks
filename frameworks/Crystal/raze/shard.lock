@@ -10,7 +10,7 @@ shards:
 
   pg:
     github: will/crystal-pg
-    version: 0.14.1
+    version: 0.15.0
 
   radix:
     github: luislavena/radix
@@ -18,5 +18,5 @@ shards:
 
   raze:
     github: samueleaton/raze
-    version: 0.2.1
+    version: 0.3.0
 

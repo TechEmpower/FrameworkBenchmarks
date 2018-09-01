@@ -6,12 +6,12 @@ require "ecr"
 APPDB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?initial_pool_size=256&max_pool_size=256&max_idle_pool_size=256")
 ID_MAXIMUM = 10_000
 
-server = HTTP::Server.new("0.0.0.0", 8080) do |context|
+server = HTTP::Server.new do |context|
   response = context.response
   request = context.request
 
   response.headers["Server"] = "Crystal"
-  response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
+  response.headers["Date"] = HTTP.format_time(Time.now)
   
   case request.path
   when "/json"
@@ -95,4 +95,4 @@ private def sanitized_query_count(request)
   queries.clamp(1..500)
 end
 
-server.listen(reuse_port: true)
+server.listen("0.0.0.0", 8080, reuse_port: true)
