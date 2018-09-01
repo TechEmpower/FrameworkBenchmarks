@@ -55,11 +55,9 @@ static void usp_fork_fortune() { Fortune::handlerForkSql(); }
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
 if (Fortune::pstmt)
    {
-   UServer_Base::handler_db2->handlerQuery();
-
    Fortune::sendQueryPrepared();
 
-   UServer_Base::handler_db2->handlerResult(handlerResult);
+   UServer_Base::handler_db2->handlerQuery(handlerResult);
    }
 else
 #endif
