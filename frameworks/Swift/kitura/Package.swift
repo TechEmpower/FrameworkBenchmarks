@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Kitura-TechEmpower",
     dependencies: [
-        .package(url: "https://github.com/IBM-Swift/Kitura.git", from: "2.3.0"),
+        .package(url: "https://github.com/IBM-Swift/Kitura.git", .upToNextMinor(from: "2.5.0")),
         .package(url: "https://github.com/IBM-Swift/LoggerAPI.git", from: "1.7.0"),
         .package(url: "https://github.com/IBM-Swift/HeliumLogger.git", from: "1.7.0"),
         .package(url: "https://github.com/IBM-Swift/Configuration.git", from: "3.0.0"),

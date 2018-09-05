@@ -53,7 +53,21 @@ Database.default = Database(dbConnPool)
 
 // Define the query parameters we can receive
 struct TFBParams: QueryParams {
-    let queries: Int?
+    let queries: Int
+
+    // Override default decode to cater for the query parameter specification:
+    //   If the parameter is missing, is not an integer, or is an integer less
+    //   than 1, the value should be interpreted as 1.
+    // This means that rather than failing to decode on a non-integer value, we
+    // should fall back to a value of 1.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try? container.decode(Int.self, forKey: CodingKeys.queries) {
+            self.queries = value
+        } else {
+            self.queries = 1
+        }
+    }
 }
 
 // Set Server header on all responses as per TechEmpower spec
@@ -76,8 +90,12 @@ router.get("/db") { (respondWith: @escaping (RandomRow?, RequestError?) -> Void)
 // Get param provides number of queries: /queries?queries=N
 //
 router.get("/queries") { (params: TFBParams, respondWith: @escaping ([RandomRow]?, RequestError?) -> Void) in
-    let numQueries = max(1, min(params.queries ?? 1, 500))  // Snap to range of 1-500 as per test spec
+    let numQueries = max(1, min(params.queries, 500))  // Snap to range of 1-500 as per test spec
     getRandomRows(count: numQueries, completion: respondWith)
+}
+router.get("/queriesParallel") { (params: TFBParams, respondWith: @escaping ([RandomRow]?, RequestError?) -> Void) in
+    let numQueries = max(1, min(params.queries, 500))  // Snap to range of 1-500 as per test spec
+    getRandomRowsParallel(count: numQueries, completion: respondWith)
 }
 
 //
@@ -105,8 +123,12 @@ router.get("/fortunes") {
 // TechEmpower test 5: updates (full ORM)
 //
 router.get("/updates") { (params: TFBParams, respondWith: @escaping ([RandomRow]?, RequestError?) -> Void) in
-    let numQueries = max(1, min(params.queries ?? 1, 500))  // Snap to range of 1-500 as per test spec
+    let numQueries = max(1, min(params.queries, 500))  // Snap to range of 1-500 as per test spec
     updateRandomRows(count: numQueries, completion: respondWith)
+}
+router.get("/updatesParallel") { (params: TFBParams, respondWith: @escaping ([RandomRow]?, RequestError?) -> Void) in
+    let numQueries = max(1, min(params.queries, 500))  // Snap to range of 1-500 as per test spec
+    updateRandomRowsParallel(count: numQueries, completion: respondWith)
 }
 
 

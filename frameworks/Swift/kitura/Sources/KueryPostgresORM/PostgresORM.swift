@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import Dispatch
 import LoggerAPI
 import SwiftKuery
 import SwiftKueryORM
@@ -113,6 +114,49 @@ public func getRandomRows(count: Int, result: [RandomRow] = [], completion: @esc
     }
 }
 
+/// A parallel version of `getRandomRows` that invokes each get in parallel, builds an
+/// array of results and waits for each get to complete before returning.
+///
+/// - Parameter count: The number of rows to retrieve
+/// - Parameter completion: The closure to invoke with the result array, or error
+///
+public func getRandomRowsParallel(count: Int, completion: @escaping ([RandomRow]?, RequestError?) -> Void) {
+    var results: [RandomRow] = []
+    var error: RequestError? = nil
+    guard count > 0 else {
+        return completion(results, nil)
+    }
+    // Used to track completion of concurrent queries
+    let resultNotification = DispatchSemaphore(value: 0)
+    // Used to protect result array from concurrent modification
+    let updateLock = DispatchSemaphore(value: 1)
+    // Execute each query. Each callback will append its result to `results`
+    for _ in 1...count {
+        RandomRow.find(id: RandomRow.randomId) { (resultRow, err) in
+            guard let resultRow = resultRow else {
+                Log.error("\(err ?? .internalServerError)")
+                error = err ?? .internalServerError
+                resultNotification.signal()
+                return
+            }
+            updateLock.wait()
+            results.append(resultRow)
+            updateLock.signal()
+            resultNotification.signal()
+        }
+    }
+    // Wait for all callbacks to complete
+    for _ in 1...count {
+        resultNotification.wait()
+    }
+    // If any of the callbacks resulted in an error, return an error
+    if let error = error {
+        completion(nil, error)
+    } else {
+        completion(results, nil)
+    }
+}
+
 /// Update and retrieve `count` random rows from the database, and pass the
 /// resulting array to a completion handler (or a RequestError, in the event
 /// that a row could not be retrieved or updated).
@@ -149,4 +193,56 @@ public func updateRandomRows(count: Int, result: [RandomRow] = [], completion: @
     }
 }
 
-
+/// A parallel version of `updateRandomRows` that invokes each get/update operation
+/// in parallel, builds an array of results and waits for each get to complete before
+/// returning.
+///
+/// - Parameter count: The number of rows to retrieve
+/// - Parameter completion: The closure to invoke with the result array, or error
+///
+public func updateRandomRowsParallel(count: Int, completion: @escaping ([RandomRow]?, RequestError?) -> Void) {
+    var results: [RandomRow] = []
+    var error: RequestError? = nil
+    guard count > 0 else {
+        return completion(results, nil)
+    }
+    // Used to track completion of concurrent queries
+    let resultNotification = DispatchSemaphore(value: 0)
+    // Used to protect result array from concurrent modification
+    let updateLock = DispatchSemaphore(value: 1)
+    // Execute each query. Each callback will append its result to `results`
+    for _ in 1...count {
+        RandomRow.find(id: RandomRow.randomId) { (resultRow, err) in
+            guard let resultRow = resultRow else {
+                Log.error("\(err ?? .internalServerError)")
+                error = err ?? .internalServerError
+                resultNotification.signal()
+                return
+            }
+            let row = RandomRow(id: resultRow.id, randomNumber: RandomRow.randomValue)
+            row.update(id: row.id) { (resultRow, err) in
+                if let resultRow = resultRow {
+                    updateLock.wait()
+                    results.append(resultRow)
+                    updateLock.signal()
+                    resultNotification.signal()
+                } else {
+                    Log.error("\(err ?? .internalServerError)")
+                    error = err ?? .internalServerError
+                    resultNotification.signal()
+                    return
+                }
+            }
+        }
+    }
+    // Wait for all callbacks to complete
+    for _ in 1...count {
+        resultNotification.wait()
+    }
+    // If any of the callbacks resulted in an error, return an error
+    if let error = error {
+        completion(nil, error)
+    } else {
+        completion(results, nil)
+    }
+}

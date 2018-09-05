@@ -58,9 +58,9 @@
     },
     "postgres-orm-codable": {
       "db_url": "/db",
-      "query_url": "/queries?queries=",
+      "query_url": "/queriesParallel?queries=",
       "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
+      "update_url": "/updatesParallel?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
@@ -151,9 +151,9 @@
     },
     "gcd-postgres-orm-codable": {
       "db_url": "/db",
-      "query_url": "/queries?queries=",
+      "query_url": "/queriesParallel?queries=",
       "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
+      "update_url": "/updatesParallel?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
