@@ -2,23 +2,17 @@ import asyncio
 import asyncpg
 import os
 import jinja2
-from starlette import (
-    asgi_application, HTMLResponse, JSONResponse, Path, PlainTextResponse, Router
-)
+from starlette.applications import Starlette
+from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from random import randint
 from operator import itemgetter
 from urllib.parse import parse_qs
-from ujson import dumps as ujson_dumps
 
 
 READ_ROW_SQL = 'SELECT "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 
-
-class UJSONResponse(JSONResponse):
-    def render(self, content):
-        return ujson_dumps(content).encode('utf-8')
 
 
 async def setup_database():
@@ -60,22 +54,25 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(setup_database())
 
 
-@asgi_application
+app = Starlette()
+
+
+@app.route('/json')
 def json_serialization(request):
-    return UJSONResponse({'message': 'Hello, world!'})
+    return JSONResponse({'message': 'Hello, world!'})
 
 
-@asgi_application
+@app.route('/db')
 async def single_database_query(request):
     row_id = randint(1, 10000)
 
     async with connection_pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
-    return UJSONResponse({'id': row_id, 'randomNumber': number})
+    return JSONResponse({'id': row_id, 'randomNumber': number})
 
 
-@asgi_application
+@app.route('/queries')
 async def multiple_database_queries(request):
     num_queries = get_num_queries(request)
     row_ids = [randint(1, 10000) for _ in range(num_queries)]
@@ -87,10 +84,10 @@ async def multiple_database_queries(request):
             number = await statement.fetchval(row_id)
             worlds.append({'id': row_id, 'randomNumber': number})
 
-    return UJSONResponse(worlds)
+    return JSONResponse(worlds)
 
 
-@asgi_application
+@app.route('/fortunes')
 async def fortunes(request):
     async with connection_pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
@@ -101,7 +98,7 @@ async def fortunes(request):
     return HTMLResponse(content)
 
 
-@asgi_application
+@app.route('/updates')
 async def database_updates(request):
     num_queries = get_num_queries(request)
     updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
@@ -113,19 +110,9 @@ async def database_updates(request):
             await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)
 
-    return UJSONResponse(worlds)
+    return JSONResponse(worlds)
 
 
-@asgi_application
+@app.route('/plaintext')
 def plaintext(request):
     return PlainTextResponse(b'Hello, world!')
-
-
-app = Router(routes=[
-    Path('/json', json_serialization),
-    Path('/db', single_database_query),
-    Path('/queries', multiple_database_queries),
-    Path('/fortunes', fortunes),
-    Path('/updates', database_updates),
-    Path('/plaintext', plaintext),
-])
