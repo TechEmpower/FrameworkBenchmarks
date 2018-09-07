@@ -71,7 +71,7 @@ def verify_headers(headers, url, should_be='json'):
     if content_type is not None:
         types = {
             'json':      '^application/json(; ?charset=(UTF|utf)-8)?$',
-            'html':      '^text/html; ?charset=(UTF|utf)-8$',
+            'html':      '^text/html(; ?charset=(UTF|utf)-8)?$',
             'plaintext': '^text/plain(; ?charset=(UTF|utf)-8)?$'
         }
         expected_type = types[should_be]
