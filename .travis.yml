@@ -71,6 +71,7 @@ env:
      - "TESTDIR=Java/smart-socket"
      - "TESTDIR=Java/spark"
      - "TESTDIR=Java/spring"
+     - "TESTDIR=Java/spring-webflux"
      - "TESTDIR=Java/tapestry"
      - "TESTDIR=Java/t-io"
      - "TESTDIR=Java/undertow"
