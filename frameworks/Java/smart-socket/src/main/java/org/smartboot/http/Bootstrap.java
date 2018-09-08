@@ -9,9 +9,9 @@
 package org.smartboot.http;
 
 import org.smartboot.http.server.handle.HttpHandle;
-import org.smartboot.http.server.v1.HttpMessageProcessor;
-import org.smartboot.http.server.v1.decode.HttpEntity;
-import org.smartboot.http.server.v1.decode.HttpRequestProtocol;
+import org.smartboot.http.server.v2.HttpMessageProcessor;
+import org.smartboot.http.server.v2.decode.Http11Request;
+import org.smartboot.http.server.v2.decode.HttpRequestProtocol;
 import org.smartboot.http.utils.HttpHeaderConstant;
 import org.smartboot.socket.MessageProcessor;
 import org.smartboot.socket.transport.AioQuickServer;
@@ -47,11 +47,12 @@ public class Bootstrap {
 //        https(processor);
     }
 
-    public static void http(MessageProcessor<HttpEntity> processor) {
+    public static void http(MessageProcessor<Http11Request> processor) {
         // 定义服务器接受的消息类型以及各类消息对应的处理器
-        AioQuickServer<HttpEntity> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
-        server.setWriteQueueSize(4);
-        server.setReadBufferSize(1024);
+        AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
+        server.setWriteQueueSize(2);
+        server.setReadBufferSize(256);
+        server.setThreadNum((int) (Runtime.getRuntime().availableProcessors() * 1.5));
         try {
             server.start();
         } catch (IOException e) {
