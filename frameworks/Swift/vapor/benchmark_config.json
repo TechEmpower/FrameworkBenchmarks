@@ -1,24 +1,28 @@
 {
   "framework": "vapor",
-  "tests": [{
-    "default": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "None",
-      "framework": "Vapor",
-      "language": "Swift",
-      "flavor": "None",
-      "orm": "None",
-      "platform": "None",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "Vapor",
-      "notes": "",
-      "versus": ""
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "Vapor",
+        "language": "Swift",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Vapor",
+        "notes": "",
+        "versus": "None"
+      }
     }
-  }]
+  ]
 }
