@@ -13,7 +13,7 @@ TROOT=/
 # A hacky way to detect whether we are running in the physical hardware or the cloud environment.
 if [[ "$CPU_COUNT" -gt 16 ]]; then
 	echo "Running h2o_app in the physical hardware environment."
-	USE_PROCESSES=false
+	USE_PROCESSES=true
 	DB_CONN=3
 else
 	echo "Running h2o_app in the cloud environment."
@@ -40,7 +40,7 @@ run_h2o_app()
 {
 	taskset -c "$1" "$2/h2o_app" -a20 -f "$3/template/fortunes.mustache" -m "$DB_CONN" "$4" "$5" \
 	        -d "host=tfb-database dbname=hello_world user=benchmarkdbuser \
-	            password=benchmarkdbpass" -w536870912 &
+	            password=benchmarkdbpass" &
 }
 
 generate_profile_data()

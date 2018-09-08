@@ -44,7 +44,7 @@ end
 
 before_all do |env|
   env.response.headers["Server"] = "Kemal"
-  env.response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
+  env.response.headers["Date"] = HTTP.format_time(Time.now)
 end
 
 #
@@ -111,6 +111,7 @@ end
 Kemal.config do |cfg|
   cfg.serve_static = false
   cfg.logging = false
+  cfg.powered_by_header = false
 end
 
-Kemal.run { |cfg| cfg.server.not_nil!.bind(reuse_port: true) }
+Kemal.run { |cfg| cfg.server.not_nil!.bind_tcp(cfg.host_binding, cfg.port, reuse_port: true) }
