@@ -13,13 +13,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <gson.version>2.8.5</gson.version>
         <hikaricp.version>3.2.0</hikaricp.version>
         <kotlin.version>1.2.60</kotlin.version>
         <ktor.version>0.9.4</ktor.version>
         <logback.version>1.2.3</logback.version>
         <mysql.version>5.1.46</mysql.version>
         <postgresql.version>42.2.2</postgresql.version>
+        <serialization.version>0.6.1</serialization.version>
     </properties>
 
     <dependencies>
@@ -33,6 +33,12 @@
             <artifactId>kotlin-reflect</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-serialization-runtime</artifactId>
+            <version>${serialization.version}</version>
+        </dependency>
+        
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-netty</artifactId>
@@ -52,11 +58,6 @@
             <groupId>io.ktor</groupId>
             <artifactId>ktor-html-builder</artifactId>
             <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -114,6 +115,18 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <compilerPlugins>
+                        <plugin>kotlinx-serialization</plugin>
+                    </compilerPlugins>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlinx</groupId>
+                        <artifactId>kotlinx-maven-serialization-plugin</artifactId>
+                        <version>${serialization.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -198,23 +211,23 @@
         <repository>
             <id>ktor-repo</id>
             <url>https://dl.bintray.com/kotlin/ktor</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
         </repository>
         <repository>
             <id>jcenter</id>
             <url>https://jcenter.bintray.com/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+        </repository>
+        <repository>
+            <id>bintray-kotlin-kotlinx</id>
+            <name>bintray</name>
+            <url>https://kotlin.bintray.com/kotlinx</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>bintray-kotlin-kotlinx-plugins</id>
+            <name>bintray-plugins</name>
+            <url>https://kotlin.bintray.com/kotlinx</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>
