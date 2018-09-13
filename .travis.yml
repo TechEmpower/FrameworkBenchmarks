@@ -81,7 +81,6 @@ env:
      - "TESTDIR=Java/wildfly-ee7"
      - "TESTDIR=Java/wizzardo-http"
      - "TESTDIR=Scala/cask"
-     - "TESTDIR=JavaScript/graphql-express-mysql"
      - "TESTLANG=JavaScript"
      - "TESTLANG=Kotlin"
      - "TESTLANG=Lua"

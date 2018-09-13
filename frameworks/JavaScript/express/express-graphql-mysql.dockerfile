@@ -6,4 +6,4 @@ RUN npm install
 
 ENV NODE_ENV production
 
-CMD ["node", "server.js"]
+CMD ["node", "graphql-mysql-app.js"]
