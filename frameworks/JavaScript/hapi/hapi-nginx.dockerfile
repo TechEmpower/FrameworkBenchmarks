@@ -7,7 +7,6 @@ WORKDIR /
 
 COPY ./ ./
 RUN chmod +x start-servers.sh
-RUN mkdir -p /tmp/nginx/cache
 
 ENV NODE_HANDLER sequelize-postgres
 
