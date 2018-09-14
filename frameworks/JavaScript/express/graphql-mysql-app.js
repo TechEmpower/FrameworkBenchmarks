@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const graphqlHTTP = require('express-graphql');
 const escape = require('escape-html');
-var dateFormat = require('dateformat');
+const dateFormat = require('dateformat');
 
 const bodyParser = require('body-parser');
 const port = 8080;
@@ -36,7 +36,7 @@ app.get('/json', async(req, res) => {
 
     res.end = (data) => {
         
-        var toRet;
+        let toRet;
         const json = JSON.parse(data.toString('utf8'));
 
         if(json.data.helloWorld) {
@@ -73,7 +73,7 @@ app.get('/queries', async (req, res) => {
     
     const graphql = await graphqlHTTP((req, res, graphQLParams) => {
         
-        var totalNumOfQueries = ensureQueryIsAnInt(req.query.queries);
+        let totalNumOfQueries = ensureQueryIsAnInt(req.query.queries);
 
         graphQLParams.query = `{ multipleDatabaseQueries(total: ${totalNumOfQueries}) { id, randomNumber }}`
         graphQLParams.variables = {};
@@ -160,7 +160,7 @@ const retrieveUpdateAndFormatWorlds = res => {
 
     res.end = data => {
         
-        var toRet;
+        let toRet;
         const json = JSON.parse(data.toString('utf8'));
 
         if(json.data.getRandomAndUpdate) {
@@ -182,7 +182,7 @@ const retrieveAndFormatAllFortunes = res => {
     res.real_end = res.end;
 
     res.end = async (data) => {
-        var toRet;
+        let toRet;
         const json = JSON.parse(data.toString('utf8'));
 
         if(json.data.getAllFortunes) {
@@ -210,9 +210,9 @@ const spoofHTML = arr => {
 
     return new Promise((resolve, reject) => {
 
-        var count = 0;
+        let count = 0;
 
-        var htmlToRet = `<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>`;
+        let htmlToRet = `<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>`;
 
         for (let fortune of arr) {
 
@@ -234,7 +234,7 @@ const multipleJsonFormatResponseFromWorld = (res) => {
 
     res.end = (data) => {
 
-        var toRet;
+        let toRet;
         const json = JSON.parse(data.toString('utf8'));
 
         if(json.error) console.log(json.error);
@@ -259,7 +259,7 @@ const singleJsonFormatResponseFromWorld = (res, queryName) => {
     
     res.end = (data) => {
 
-        var to_ret;
+        let to_ret;
         const json = JSON.parse(data.toString('utf8'));
 
         if(json.data[`${queryName}`]) {
@@ -281,7 +281,7 @@ const singleJsonFormatResponseFromWorld = (res, queryName) => {
 
 const setResponseHeaders = (res, jsonLength) => {
 
-    var now = new Date();
+    let now = new Date();
 
     res.status(200);
     res.contentType('application/json', 'charset=UTF-8');
