@@ -205,13 +205,6 @@ const spoofHTML = arr => {
 
 const formatResData = (res, queryName) => {
 
-    const responseDict = {
-
-        singleDatabaseQuery: {id: null, randomNumber: null},
-        multipleDatabaseQueries: [],
-        getRandomAndUpdate: []
-    };
-
     res.real_end = res.end;
     
     res.end = (data) => {
