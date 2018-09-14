@@ -7,6 +7,9 @@ WORKDIR /
 
 COPY ./ ./
 RUN chmod +x start-servers.sh
+RUN chmod +x build-nginx-conf.sh
+
+RUN ./build-nginx-conf.sh
 
 ENV NODE_HANDLER sequelize-postgres
 
