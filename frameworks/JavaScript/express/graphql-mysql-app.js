@@ -64,7 +64,7 @@ app.get('/db', async (req, res) => {
         return graphqlOpts();
     });
 
-    singleJsonFormatResponseFromWorld(res, "singleDatabaseQuery");
+    formatResData(res, "singleDatabaseQuery");
 
     await graphql(req, res);
 });
@@ -82,7 +82,7 @@ app.get('/queries', async (req, res) => {
         return graphqlOpts();
     });
 
-    multipleJsonFormatResponseFromWorld(res);
+    formatResData(res, "multipleDatabaseQueries");
 
     await graphql(req, res);
 });
@@ -116,11 +116,10 @@ app.get('/updates', async (req, res) => {
         return graphqlOpts();
     });
 
-    retrieveUpdateAndFormatWorlds(res);
+    formatResData(res, 'getRandomAndUpdate');
 
     await graphql(req, res);
 });
-
 
 app.get('/plaintext', (req, res) => {
 
@@ -151,29 +150,6 @@ const graphqlOpts = (params) => {
         schema,
         graphiql: false,
         context: params || {}
-    }
-};
-
-const retrieveUpdateAndFormatWorlds = res => {
-
-    res.real_end = res.end;
-
-    res.end = data => {
-        
-        let toRet;
-        const json = JSON.parse(data.toString('utf8'));
-
-        if(json.data.getRandomAndUpdate) {
-            toRet = json.data.getRandomAndUpdate;
-        } else {
-            toRet = [];
-        }
-
-        const jsonToRet = JSON.stringify(toRet);
-
-        setResponseHeaders(res, jsonToRet.length);
-
-        res.real_end(jsonToRet);
     }
 };
 
@@ -225,58 +201,59 @@ const spoofHTML = arr => {
         if(count == arr.length)resolve(htmlToRet);
 
     });
-
 };
 
-const multipleJsonFormatResponseFromWorld = (res) => {
+const formatResData = (res, queryName) => {
+
+    const responseDict = {
+
+        singleDatabaseQuery: {id: null, randomNumber: null},
+        multipleDatabaseQueries: [],
+        getRandomAndUpdate: []
+    };
 
     res.real_end = res.end;
-
+    
     res.end = (data) => {
 
-        let toRet;
         const json = JSON.parse(data.toString('utf8'));
-
-        if(json.error) console.log(json.error);
-
-        if(json.data.multipleDatabaseQueries) {
-            toRet = json.data.multipleDatabaseQueries;
-        } else {
-            toRet = [];
-        }
+        
+        let toRet = formatJson(queryName, json);
 
         const jsonToRet = JSON.stringify(toRet);
         
         setResponseHeaders(res, jsonToRet.length);
 
         res.real_end(jsonToRet);
-    }
+    };
 };
 
-const singleJsonFormatResponseFromWorld = (res, queryName) => {
+const formatJson = (queryName, jsonData) => {
 
-    res.real_end = res.end;
-    
-    res.end = (data) => {
+    const isQueryReturningAnArray = {
 
-        let to_ret;
-        const json = JSON.parse(data.toString('utf8'));
+        singleDatabaseQuery: false,
+        multipleDatabaseQueries: true,
+        getRandomAndUpdate: true
+    };
 
-        if(json.data[`${queryName}`]) {
-            to_ret = {
-                id: json.data[`${queryName}`].id,
-                randomNumber: json.data[`${queryName}`].randomNumber
+    if (isQueryReturningAnArray[queryName] == false) {
+
+        if(jsonData.data[`${queryName}`]) {
+            return {
+                id: jsonData.data[`${queryName}`].id,
+                randomNumber: jsonData.data[`${queryName}`].randomNumber
             };
         } else {
-            to_ret = {id: null, randomNumber: null};
+            return {
+                id: null,
+                randomNumber: null
+            }
         }
+    } else {
 
-        const jsonToRet = JSON.stringify(to_ret);
-        
-        setResponseHeaders(res, jsonToRet.length);
-
-        res.real_end(jsonToRet);
-    };
+        return jsonData.data[`${queryName}`] || [];
+    }
 };
 
 const setResponseHeaders = (res, jsonLength) => {
