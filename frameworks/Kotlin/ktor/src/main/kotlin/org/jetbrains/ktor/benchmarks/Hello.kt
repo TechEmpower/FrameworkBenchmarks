@@ -1,6 +1,5 @@
 package org.jetbrains.ktor.benchmarks
 
-import com.google.gson.*
 import com.zaxxer.hikari.*
 import io.ktor.application.*
 import io.ktor.content.*
@@ -12,14 +11,22 @@ import io.ktor.routing.*
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.scheduling.*
 import kotlinx.html.*
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 import java.util.concurrent.*
 
+@Serializable
 data class Message(val message: String = "Hello, World!")
+
+@Serializable
 data class World(val id: Int, var randomNumber: Int)
+
+@Serializable
 data class Fortune(val id: Int, var message: String)
 
 fun Application.main() {
-    val gson = GsonBuilder().create()
+    val worldSerializer = World.serializer()
+    val worldListSerializer = World.serializer().list
 
     val dbRows = 10000
     val poolSize = 48
@@ -36,7 +43,7 @@ fun Application.main() {
         }
 
         get("/json") {
-            call.respondText(gson.toJson(Message()), ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(JSON.stringify(Message()), ContentType.Application.Json, HttpStatusCode.OK)
         }
 
         get("/db") {
@@ -59,10 +66,10 @@ fun Application.main() {
                 }
             }
 
-            call.respondText(gson.toJson(when (queries) {
-                null -> result.single()
-                else -> result
-            }), ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(when (queries) {
+                null -> JSON.stringify(worldSerializer, result.single())
+                else -> JSON.stringify(worldListSerializer, result)
+            }, ContentType.Application.Json, HttpStatusCode.OK)
         }
 
         get("/fortunes") {
@@ -134,10 +141,10 @@ fun Application.main() {
                 }
             }
 
-            call.respondText(gson.toJson(when (queries) {
-                null -> result.single()
-                else -> result
-            }), ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(when (queries) {
+                null -> JSON.stringify(worldSerializer, result.single())
+                else -> JSON.stringify(worldListSerializer, result)
+            }, ContentType.Application.Json, HttpStatusCode.OK)
         }
     }
 }
