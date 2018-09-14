@@ -1,0 +1,27 @@
+{
+  "framework": "armeria",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "update_url": "/updates/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "armeria",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "armeria",
+      "notes": "",
+      "versus": "netty"
+    }
+  }]
+}
