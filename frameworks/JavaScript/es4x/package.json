@@ -1,0 +1,26 @@
+{
+  "name": "es4x",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "vertx-scripts init",
+    "package": "vertx-scripts package"
+  },
+  "devDependencies": {
+    "vertx-scripts": "latest",
+    "@vertx/unit": "latest"
+  },
+  "dependencies": {
+    "@vertx/core": "3.5.3",
+    "@vertx/web": "3.5.3",
+    "@reactiverse/reactive-pg-client": "0.10.3"
+  },
+  "mvnDependencies": {
+    "io.vertx:vertx-web-templ-handlebars": "3.5.3"
+  },
+  "files": [
+    "util.js",
+    "templates/fortunes.hbs"
+  ]
+}

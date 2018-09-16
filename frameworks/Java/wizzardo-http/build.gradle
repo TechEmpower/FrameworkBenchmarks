@@ -9,15 +9,16 @@ sourceCompatibility = 1.8
 mainClassName = "com.wizzardo.techempower.App"
 
 repositories {
-    jcenter()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
     mavenCentral()
+//    jcenter()
 }
 
 dependencies {
-    compile 'com.wizzardo:http:0.2.2'
-
-    compile 'org.postgresql:postgresql:9.4.1212'
-    compile 'com.zaxxer:HikariCP:2.7.3'
+    compile 'com.wizzardo:http:0.2.3'
+    compile 'com.wizzardo:reactive-pg-client:0.10.2.1'
 }
 
 //create a single Jar with all dependencies
