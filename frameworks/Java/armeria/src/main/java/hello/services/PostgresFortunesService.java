@@ -40,8 +40,9 @@ public class PostgresFortunesService {
 
   // Mustache cannot find a classloader on the current thread. Have to pass the classloader manually.
   // TODO: Look into why mustache cannot find a classloader.
-  //  private final MustacheFactory mustacheFactory = new DefaultMustacheFactory(name -> new InputStreamReader(HelloService.class.getClassLoader().getResourceAsStream(name)));
-  private final MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+  private final MustacheFactory mustacheFactory = new DefaultMustacheFactory(
+      name -> new InputStreamReader(
+          HelloService.class.getClassLoader().getResourceAsStream(name)));
 
   @Get("/fortunes")
   public HttpResponse fortunes() {
