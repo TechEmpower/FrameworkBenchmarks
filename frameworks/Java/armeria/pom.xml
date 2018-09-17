@@ -12,9 +12,8 @@
 
   <properties>
     <!-- Compiler options -->
-    <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>10</maven.compiler.source>
+    <maven.compiler.target>10</maven.compiler.target>
 
     <!-- Dependency versions -->
     <armeria.version>0.71.1</armeria.version>
