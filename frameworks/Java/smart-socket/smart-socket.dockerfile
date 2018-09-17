@@ -2,7 +2,7 @@ FROM maven:3.5.3-jdk-10-slim as maven
 WORKDIR /smart-socket
 COPY pom.xml pom.xml
 COPY src src
-RUN mvn compile assembly:single
+RUN mvn compile assembly:single -q
 
 FROM openjdk:10-jre-slim
 WORKDIR /smart-socket
