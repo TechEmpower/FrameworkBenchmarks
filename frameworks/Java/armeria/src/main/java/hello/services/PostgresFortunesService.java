@@ -32,7 +32,7 @@ import com.github.mustachejava.MustacheFactory;
 
 public class PostgresFortunesService {
   private static final String DATABASE_HOST =
-      "jdbc:postgresql://localhost:5432/hello_world";
+      "jdbc:postgresql://tfb-database:5432/hello_world";
   private static final String DATABASE_USER = "benchmarkdbuser";
   private static final String DATABASE_PASSWORD = "benchmarkdbpass";
 
