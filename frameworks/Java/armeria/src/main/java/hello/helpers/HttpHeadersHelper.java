@@ -10,7 +10,7 @@ import com.linecorp.armeria.common.HttpStatus;
 import com.linecorp.armeria.common.MediaType;
 
 public class HttpHeadersHelper {
-  public HttpHeaders getHttpHeader(MediaType mediaType) {
+  public static HttpHeaders getHttpHeader(MediaType mediaType) {
     return HttpHeaders
         .of(HttpStatus.OK)
         .add(HttpHeaderNames.SERVER, "armeria")

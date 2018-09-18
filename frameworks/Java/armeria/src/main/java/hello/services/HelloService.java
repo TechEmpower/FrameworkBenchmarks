@@ -22,7 +22,7 @@ public class HelloService {
   @Get("/plaintext")
   public HttpResponse plaintext() {
     return HttpResponse.of(
-        new HttpHeadersHelper().getHttpHeader(MediaType.PLAIN_TEXT_UTF_8),
+        HttpHeadersHelper.getHttpHeader(MediaType.PLAIN_TEXT_UTF_8),
         HttpData.of(PLAINTEXT));
   }
 
@@ -30,7 +30,7 @@ public class HelloService {
   @ProducesJson
   public HttpResponse json() throws JsonProcessingException {
     return HttpResponse.of(
-        new HttpHeadersHelper().getHttpHeader(MediaType.JSON_UTF_8),
+        HttpHeadersHelper.getHttpHeader(MediaType.JSON_UTF_8),
         HttpData.of(MAPPER.writeValueAsBytes(new Message("Hello, World!"))));
   }
 }

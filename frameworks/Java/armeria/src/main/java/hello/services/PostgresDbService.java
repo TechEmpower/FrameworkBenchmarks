@@ -34,7 +34,7 @@ public class PostgresDbService {
   @ProducesJson
   public HttpResponse db() throws Exception {
     return HttpResponse.of(
-        new HttpHeadersHelper().getHttpHeader(MediaType.JSON_UTF_8),
+        HttpHeadersHelper.getHttpHeader(MediaType.JSON_UTF_8),
         HttpData.of(MAPPER.writeValueAsBytes(getWorld(getRandomNumber()))));
   }
 
@@ -46,7 +46,7 @@ public class PostgresDbService {
       @Default("")
           String count) throws JsonProcessingException, SQLException {
     return HttpResponse.of(
-        new HttpHeadersHelper().getHttpHeader(MediaType.JSON_UTF_8),
+        HttpHeadersHelper.getHttpHeader(MediaType.JSON_UTF_8),
         HttpData.of(
             MAPPER.writeValueAsBytes(getWorlds(getSanitizedCount(count)))));
   }
@@ -58,7 +58,7 @@ public class PostgresDbService {
       @Default("")
           String count) throws JsonProcessingException, SQLException {
     return HttpResponse.of(
-        new HttpHeadersHelper().getHttpHeader(MediaType.JSON_UTF_8),
+        HttpHeadersHelper.getHttpHeader(MediaType.JSON_UTF_8),
         HttpData.of(
             MAPPER.writeValueAsBytes(
                 getUpdatedWorlds(getSanitizedCount(count)))));

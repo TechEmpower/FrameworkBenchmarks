@@ -43,7 +43,7 @@ public class PostgresFortunesService {
     fortunes.sort(Comparator.comparing(Fortune::getMessage));
 
     return HttpResponse.of(
-        new HttpHeadersHelper().getHttpHeader(MediaType.HTML_UTF_8),
+        HttpHeadersHelper.getHttpHeader(MediaType.HTML_UTF_8),
         HttpData.ofUtf8(buildMustacheTemplate(fortunes)));
   }
 
