@@ -43,6 +43,7 @@ class FortuneHTMLParser(HTMLParser):
         # allow all casings. We will lower for our normalization.
         self.body.append("<!{d}>".format(d=decl.lower()))
 
+    # TODO: Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.
     def handle_charref(self, name):
         '''
         This is called when an HTML character is parsed (i.e.

@@ -59,6 +59,7 @@ class Metadata:
             raise Exception(
                 "Unable to locate tests in test-dir: {!s}".format(test_dir))
 
+    # TODO: Refactor this function to reduce its Cognitive Complexity from 22 to the 15 allowed.
     def gather_tests(self, include=None, exclude=None):
         '''
         Given test names as strings, returns a list of FrameworkTest objects.
@@ -109,10 +110,8 @@ class Metadata:
 
             # Filter
             for test in config_tests:
-                if len(include) is 0 and len(exclude) is 0:
+                if (len(include) is 0 and len(exclude) is 0) or test.name in include:
                     # No filters, we are running everything
-                    tests.append(test)
-                elif test.name in include:
                     tests.append(test)
 
         # Ensure we were able to locate everything that was
@@ -168,6 +167,7 @@ class Metadata:
         """
         return len(type_name)
 
+    # TODO: Refactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.
     def parse_config(self, config, directory):
         """
         Parses a config file into a list of FrameworkTest objects
@@ -257,6 +257,7 @@ class Metadata:
             f.write(all_tests_json)
 
     @staticmethod
+    # TODO: Refactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.
     def validate_test(test_name, test_keys, directory):
         """
         Validate and normalizes benchmark config values for this test based on a schema

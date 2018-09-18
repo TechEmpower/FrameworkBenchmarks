@@ -93,6 +93,7 @@ class Benchmarker:
         self.time_logger.log_test_end(log_prefix=prefix, file=file)
         return success
 
+    # TODO: Refactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.
     def __run_test(self, test, benchmark_log):
         '''
         Runs the given test, verifies that the webapp is accepting requests,
@@ -244,6 +245,7 @@ class Benchmarker:
             if not os.path.exists(raw_file):
                 # Open to create the empty file
                 with open(raw_file, 'w'):
+                    # TODO: Either remove or fill this block of code.
                     pass
 
             if not test.failed:
