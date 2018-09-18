@@ -1,13 +1,12 @@
 package hello.services;
 
+import hello.helpers.PostgresDbHelper;
 import hello.models.Fortune;
+import hello.helpers.HttpHeadersHelper;
 
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -19,10 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.linecorp.armeria.common.HttpData;
-import com.linecorp.armeria.common.HttpHeaderNames;
-import com.linecorp.armeria.common.HttpHeaders;
 import com.linecorp.armeria.common.HttpResponse;
-import com.linecorp.armeria.common.HttpStatus;
 import com.linecorp.armeria.common.MediaType;
 import com.linecorp.armeria.server.annotation.Get;
 
@@ -31,11 +27,6 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
 public class PostgresFortunesService {
-  private static final String DATABASE_HOST =
-      "jdbc:postgresql://tfb-database:5432/hello_world";
-  private static final String DATABASE_USER = "benchmarkdbuser";
-  private static final String DATABASE_PASSWORD = "benchmarkdbpass";
-
   private static final String SELECT_QUERY = "SELECT * FROM fortune";
 
   // Mustache cannot find a classloader on the current thread. Have to pass the classloader manually.
@@ -45,47 +36,37 @@ public class PostgresFortunesService {
           HelloService.class.getClassLoader().getResourceAsStream(name)));
 
   @Get("/fortunes")
-  public HttpResponse fortunes() {
+  public HttpResponse fortunes() throws SQLException, IOException {
     List<Fortune> fortunes = getFortunes();
     fortunes.add(
         new Fortune(0, "Additional fortune added at request time."));
     fortunes.sort(Comparator.comparing(Fortune::getMessage));
 
-    try {
-      HttpHeaders headers = HttpHeaders
-          .of(HttpStatus.OK)
-          .add(HttpHeaderNames.SERVER, "armeria")
-          .add(HttpHeaderNames.DATE,
-               DateTimeFormatter.RFC_1123_DATE_TIME
-                   .format(ZonedDateTime.now(ZoneOffset.UTC)))
-          .contentType(MediaType.HTML_UTF_8);
-
-      return HttpResponse.of(
-          headers,
-          HttpData.ofUtf8(buildMustacheTemplate(fortunes)));
-    } catch (Exception e) {
-      return HttpResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return HttpResponse.of(
+        new HttpHeadersHelper().getHttpHeader(MediaType.HTML_UTF_8),
+        HttpData.ofUtf8(buildMustacheTemplate(fortunes)));
   }
 
-  private List<Fortune> getFortunes() {
+  private List<Fortune> getFortunes() throws SQLException {
     List<Fortune> fortunes = new ArrayList<>();
-    try (Connection connection = DriverManager.getConnection(
-        DATABASE_HOST,
-        DATABASE_USER,
-        DATABASE_PASSWORD)) {
-      final PreparedStatement statement = connection.prepareStatement(
-          SELECT_QUERY);
-      ResultSet resultSet = statement.executeQuery();
 
-      while (resultSet.next()) {
-        fortunes.add(
-            new Fortune(
-                resultSet.getInt(1),
-                resultSet.getString(2)));
-      }
-    } catch (SQLException e) {}
+    Connection connection = DriverManager.getConnection(
+        PostgresDbHelper.DATABASE_HOST,
+        PostgresDbHelper.DATABASE_USER,
+        PostgresDbHelper.DATABASE_PASSWORD);
 
+    final PreparedStatement statement =
+        connection.prepareStatement(SELECT_QUERY);
+    ResultSet resultSet = statement.executeQuery();
+
+    while (resultSet.next()) {
+      fortunes.add(
+          new Fortune(
+              resultSet.getInt(1),
+              resultSet.getString(2)));
+    }
+
+    connection.close();
     return fortunes;
   }
 

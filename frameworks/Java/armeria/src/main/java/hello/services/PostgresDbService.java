@@ -1,10 +1,9 @@
 package hello.services;
 
 import hello.models.World;
+import hello.helpers.PostgresDbHelper;
+import hello.helpers.HttpHeadersHelper;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ThreadLocalRandom;
 
 import java.sql.Connection;
@@ -17,10 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.linecorp.armeria.common.HttpData;
-import com.linecorp.armeria.common.HttpHeaderNames;
-import com.linecorp.armeria.common.HttpHeaders;
 import com.linecorp.armeria.common.HttpResponse;
-import com.linecorp.armeria.common.HttpStatus;
 import com.linecorp.armeria.common.MediaType;
 import com.linecorp.armeria.server.annotation.Default;
 import com.linecorp.armeria.server.annotation.Get;
@@ -30,58 +26,29 @@ import com.linecorp.armeria.server.annotation.ProducesJson;
 public class PostgresDbService {
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
-  private static final String DATABASE_HOST =
-      "jdbc:postgresql://tfb-database:5432/hello_world";
-  private static final String DATABASE_USER = "benchmarkdbuser";
-  private static final String DATABASE_PASSWORD = "benchmarkdbpass";
-
   private static final String SELECT_QUERY = "SELECT * FROM world WHERE id = ?";
   private static final String UPDATE_QUERY =
       "UPDATE world SET randomNumber = ? WHERE id = ?";
 
   @Get("/db")
   @ProducesJson
-  public HttpResponse db() {
-    try {
-      HttpHeaders headers = HttpHeaders
-          .of(HttpStatus.OK)
-          .add(HttpHeaderNames.SERVER, "armeria")
-          .add(HttpHeaderNames.DATE,
-               DateTimeFormatter.RFC_1123_DATE_TIME
-                   .format(ZonedDateTime.now(ZoneOffset.UTC)))
-          .contentType(MediaType.JSON_UTF_8);
-
-      return HttpResponse.of(
-          headers,
-          HttpData.of(MAPPER.writeValueAsBytes(getWorld(getRandomNumber()))));
-    } catch (Exception e) {
-      return HttpResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  public HttpResponse db() throws Exception {
+    return HttpResponse.of(
+        new HttpHeadersHelper().getHttpHeader(MediaType.JSON_UTF_8),
+        HttpData.of(MAPPER.writeValueAsBytes(getWorld(getRandomNumber()))));
   }
 
-  // need to use regex as /queries/{count} doesnt work when count is null
+  // need to use regex as /queries/{count} doesn't work when count is null
   @Get("regex:^/queries/(?<count>.*)$")
   @ProducesJson
   public HttpResponse queries(
       @Param("count")
       @Default("")
-          String count) {
-    try {
-      HttpHeaders headers = HttpHeaders
-          .of(HttpStatus.OK)
-          .add(HttpHeaderNames.SERVER, "armeria")
-          .add(HttpHeaderNames.DATE,
-               DateTimeFormatter.RFC_1123_DATE_TIME
-                   .format(ZonedDateTime.now(ZoneOffset.UTC)))
-          .contentType(MediaType.JSON_UTF_8);
-
-      return HttpResponse.of(
-          headers,
-          HttpData.of(
-              MAPPER.writeValueAsBytes(getWorlds(getSanitizedCount(count)))));
-    } catch (JsonProcessingException e) {
-      return HttpResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+          String count) throws JsonProcessingException, SQLException {
+    return HttpResponse.of(
+        new HttpHeadersHelper().getHttpHeader(MediaType.JSON_UTF_8),
+        HttpData.of(
+            MAPPER.writeValueAsBytes(getWorlds(getSanitizedCount(count)))));
   }
 
   @Get("regex:^/updates/(?<count>.*)$")
@@ -89,24 +56,12 @@ public class PostgresDbService {
   public HttpResponse update(
       @Param("count")
       @Default("")
-          String count) {
-    try {
-      HttpHeaders headers = HttpHeaders
-          .of(HttpStatus.OK)
-          .add(HttpHeaderNames.SERVER, "armeria")
-          .add(HttpHeaderNames.DATE,
-               DateTimeFormatter.RFC_1123_DATE_TIME
-                   .format(ZonedDateTime.now(ZoneOffset.UTC)))
-          .contentType(MediaType.JSON_UTF_8);
-
-      return HttpResponse.of(
-          headers,
-          HttpData.of(
-              MAPPER.writeValueAsBytes(
-                  getUpdatedWorlds(getSanitizedCount(count)))));
-    } catch (JsonProcessingException e) {
-      return HttpResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+          String count) throws JsonProcessingException, SQLException {
+    return HttpResponse.of(
+        new HttpHeadersHelper().getHttpHeader(MediaType.JSON_UTF_8),
+        HttpData.of(
+            MAPPER.writeValueAsBytes(
+                getUpdatedWorlds(getSanitizedCount(count)))));
   }
 
   private static int getRandomNumber() {
@@ -128,79 +83,79 @@ public class PostgresDbService {
     }
   }
 
-  private World getWorld(int number) {
-    try (Connection connection = DriverManager.getConnection(
-        DATABASE_HOST,
-        DATABASE_USER,
-        DATABASE_PASSWORD)) {
-      final PreparedStatement statement = connection.prepareStatement(
-          SELECT_QUERY);
+  private World getWorld(int number) throws SQLException {
+    Connection connection = DriverManager.getConnection(
+        PostgresDbHelper.DATABASE_HOST,
+        PostgresDbHelper.DATABASE_USER,
+        PostgresDbHelper.DATABASE_PASSWORD);
 
-      statement.setInt(1, number);
+    final PreparedStatement statement =
+        connection.prepareStatement(SELECT_QUERY);
+
+    statement.setInt(1, number);
+    ResultSet resultSet = statement.executeQuery();
+    resultSet.next();
+
+    connection.close();
+    return new World(resultSet.getInt(1), resultSet.getInt(2));
+  }
+
+  private World[] getWorlds(int count) throws SQLException {
+    World[] worlds = new World[count];
+
+    Connection connection = DriverManager.getConnection(
+        PostgresDbHelper.DATABASE_HOST,
+        PostgresDbHelper.DATABASE_USER,
+        PostgresDbHelper.DATABASE_PASSWORD);
+
+    for (int i = 0; i < count; i++) {
+      final int id = getRandomNumber();
+      final PreparedStatement statement =
+          connection.prepareStatement(SELECT_QUERY);
+
+      statement.setInt(1, id);
       ResultSet resultSet = statement.executeQuery();
       resultSet.next();
 
-      return new World(
-          resultSet.getInt(1), resultSet.getInt(2));
-    } catch (SQLException e) {}
+      worlds[i] = new World(id, resultSet.getInt(2));
+    }
 
-    return null;
-  }
-
-  private World[] getWorlds(int count) {
-    World[] worlds = new World[count];
-
-    try (Connection connection = DriverManager.getConnection(
-        DATABASE_HOST,
-        DATABASE_USER,
-        DATABASE_PASSWORD)) {
-      for (int i = 0; i < count; i++) {
-        final int id = getRandomNumber();
-        final PreparedStatement statement =
-            connection.prepareStatement(SELECT_QUERY);
-
-        statement.setInt(1, id);
-        ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
-
-        worlds[i] = new World(id, resultSet.getInt(2));
-      }
-    } catch (SQLException e) {}
-
+    connection.close();
     return worlds;
   }
 
-  private World[] getUpdatedWorlds(int count) {
+  private World[] getUpdatedWorlds(int count) throws SQLException {
     World[] worlds = new World[count];
 
-    try (Connection connection = DriverManager.getConnection(
-        DATABASE_HOST,
-        DATABASE_USER,
-        DATABASE_PASSWORD)) {
-      for (int i = 0; i < count; i++) {
-        final int id = getRandomNumber();
-        final int randomNumber = getRandomNumber();
+    Connection connection = DriverManager.getConnection(
+        PostgresDbHelper.DATABASE_HOST,
+        PostgresDbHelper.DATABASE_USER,
+        PostgresDbHelper.DATABASE_PASSWORD);
 
-        final PreparedStatement select =
-            connection.prepareStatement(SELECT_QUERY);
-        final PreparedStatement update =
-            connection.prepareStatement(UPDATE_QUERY);
+    for (int i = 0; i < count; i++) {
+      final int id = getRandomNumber();
+      final int randomNumber = getRandomNumber();
 
-        // get
-        select.setInt(1, id);
-        ResultSet set = select.executeQuery();
-        set.next();
-        worlds[i] = new World(id, set.getInt(2));
+      final PreparedStatement select =
+          connection.prepareStatement(SELECT_QUERY);
+      final PreparedStatement update =
+          connection.prepareStatement(UPDATE_QUERY);
 
-        // update
-        update.setInt(1, randomNumber);
-        update.setInt(2, id);
-        update.execute();
+      // get
+      select.setInt(1, id);
+      ResultSet set = select.executeQuery();
+      set.next();
+      worlds[i] = new World(id, set.getInt(2));
 
-        worlds[i].randomNumber = randomNumber;
-      }
-    } catch (SQLException e) {}
+      // update
+      update.setInt(1, randomNumber);
+      update.setInt(2, id);
+      update.execute();
 
+      worlds[i].randomNumber = randomNumber;
+    }
+
+    connection.close();
     return worlds;
   }
 }
