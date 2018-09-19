@@ -1,5 +1,6 @@
 package hello.services;
 
+import com.zaxxer.hikari.HikariDataSource;
 import hello.helpers.PostgresDbHelper;
 import hello.models.Fortune;
 import hello.helpers.HttpHeadersHelper;
@@ -12,10 +13,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.sql.DataSource;
 
 import com.linecorp.armeria.common.HttpData;
 import com.linecorp.armeria.common.HttpResponse;
@@ -35,6 +36,12 @@ public class PostgresFortunesService {
       name -> new InputStreamReader(
           HelloService.class.getClassLoader().getResourceAsStream(name)));
 
+  private DataSource dataSource;
+
+  public PostgresFortunesService() {
+    dataSource = new HikariDataSource(PostgresDbHelper.hikariConfig());
+  }
+
   @Get("/fortunes")
   public HttpResponse fortunes() throws SQLException, IOException {
     List<Fortune> fortunes = getFortunes();
@@ -50,23 +57,19 @@ public class PostgresFortunesService {
   private List<Fortune> getFortunes() throws SQLException {
     List<Fortune> fortunes = new ArrayList<>();
 
-    Connection connection = DriverManager.getConnection(
-        PostgresDbHelper.DATABASE_HOST,
-        PostgresDbHelper.DATABASE_USER,
-        PostgresDbHelper.DATABASE_PASSWORD);
+    try (Connection connection = dataSource.getConnection()) {
+      final PreparedStatement statement =
+          connection.prepareStatement(SELECT_QUERY);
 
-    final PreparedStatement statement =
-        connection.prepareStatement(SELECT_QUERY);
-    ResultSet resultSet = statement.executeQuery();
-
-    while (resultSet.next()) {
-      fortunes.add(
-          new Fortune(
-              resultSet.getInt(1),
-              resultSet.getString(2)));
+      try (ResultSet resultSet = statement.executeQuery()) {
+        while (resultSet.next()) {
+          fortunes.add(
+              new Fortune(
+                  resultSet.getInt(1),
+                  resultSet.getString(2)));
+        }
+      }
     }
-
-    connection.close();
     return fortunes;
   }
 

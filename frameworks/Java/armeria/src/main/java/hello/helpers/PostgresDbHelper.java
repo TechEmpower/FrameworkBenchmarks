@@ -1,8 +1,13 @@
 package hello.helpers;
 
+import com.zaxxer.hikari.HikariConfig;
+
 public final class PostgresDbHelper {
-  public static final String DATABASE_HOST =
-      "jdbc:postgresql://tfb-database:5432/hello_world";
-  public static final String DATABASE_USER = "benchmarkdbuser";
-  public static final String DATABASE_PASSWORD = "benchmarkdbpass";
+  public static HikariConfig hikariConfig() {
+    HikariConfig config = new HikariConfig();
+    config.setJdbcUrl("jdbc:postgresql://tfb-database:5432/hello_world");
+    config.setUsername("benchmarkdbuser");
+    config.setPassword("benchmarkdbpass");
+    return config;
+  }
 }
