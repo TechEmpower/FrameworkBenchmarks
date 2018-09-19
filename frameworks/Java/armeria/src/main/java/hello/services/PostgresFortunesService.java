@@ -57,17 +57,16 @@ public class PostgresFortunesService {
   private List<Fortune> getFortunes() throws SQLException {
     List<Fortune> fortunes = new ArrayList<>();
 
-    try (Connection connection = dataSource.getConnection()) {
-      final PreparedStatement statement =
-          connection.prepareStatement(SELECT_QUERY);
+    try (final Connection connection = dataSource.getConnection();
+         final PreparedStatement statement =
+             connection.prepareStatement(SELECT_QUERY);
+         final ResultSet resultSet = statement.executeQuery()) {
 
-      try (ResultSet resultSet = statement.executeQuery()) {
-        while (resultSet.next()) {
-          fortunes.add(
-              new Fortune(
-                  resultSet.getInt(1),
-                  resultSet.getString(2)));
-        }
+      while (resultSet.next()) {
+        fortunes.add(
+            new Fortune(
+                resultSet.getInt(1),
+                resultSet.getString(2)));
       }
     }
     return fortunes;

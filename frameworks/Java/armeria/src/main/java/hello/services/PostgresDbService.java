@@ -91,12 +91,13 @@ public class PostgresDbService {
   }
 
   private World getWorld(int number) throws SQLException {
-    try (Connection connection = dataSource.getConnection()) {
-      final PreparedStatement statement =
-          connection.prepareStatement(SELECT_QUERY);
+    try (final Connection connection = dataSource.getConnection();
+         final PreparedStatement statement =
+             connection.prepareStatement(SELECT_QUERY)) {
+
       statement.setInt(1, number);
 
-      try (ResultSet resultSet = statement.executeQuery()) {
+      try (final ResultSet resultSet = statement.executeQuery()) {
         resultSet.next();
         return new World(resultSet.getInt(1), resultSet.getInt(2));
       }
@@ -106,16 +107,18 @@ public class PostgresDbService {
   private World[] getWorlds(int count) throws SQLException {
     World[] worlds = new World[count];
 
-    try (Connection connection = dataSource.getConnection()) {
+    try (final Connection connection = dataSource.getConnection()) {
       for (int i = 0; i < count; i++) {
         final int id = getRandomNumber();
-        final PreparedStatement statement =
-            connection.prepareStatement(SELECT_QUERY);
-        statement.setInt(1, id);
 
-        try (ResultSet resultSet = statement.executeQuery()) {
-          resultSet.next();
-          worlds[i] = new World(id, resultSet.getInt(2));
+        try (final PreparedStatement statement =
+                 connection.prepareStatement(SELECT_QUERY)) {
+          statement.setInt(1, id);
+
+          try (final ResultSet resultSet = statement.executeQuery()) {
+            resultSet.next();
+            worlds[i] = new World(id, resultSet.getInt(2));
+          }
         }
       }
     }
@@ -125,29 +128,30 @@ public class PostgresDbService {
   private World[] getUpdatedWorlds(int count) throws SQLException {
     World[] worlds = new World[count];
 
-    try (Connection connection = dataSource.getConnection()) {
+    try (final Connection connection = dataSource.getConnection()) {
       for (int i = 0; i < count; i++) {
         final int id = getRandomNumber();
         final int randomNumber = getRandomNumber();
 
-        final PreparedStatement select =
-            connection.prepareStatement(SELECT_QUERY);
-        final PreparedStatement update =
-            connection.prepareStatement(UPDATE_QUERY);
+        try (final PreparedStatement select =
+                 connection.prepareStatement(SELECT_QUERY);
+             final PreparedStatement update =
+                 connection.prepareStatement(UPDATE_QUERY)) {
 
-        // get
-        select.setInt(1, id);
+          // get
+          select.setInt(1, id);
 
-        try (ResultSet set = select.executeQuery()) {
-          set.next();
+          try (final ResultSet set = select.executeQuery()) {
+            set.next();
 
-          // update
-          update.setInt(1, randomNumber);
-          update.setInt(2, id);
-          update.execute();
+            // update
+            update.setInt(1, randomNumber);
+            update.setInt(2, id);
+            update.execute();
 
-          worlds[i] = new World(id, set.getInt(2));
-          worlds[i].randomNumber = randomNumber;
+            worlds[i] = new World(id, set.getInt(2));
+            worlds[i].randomNumber = randomNumber;
+          }
         }
       }
     }
