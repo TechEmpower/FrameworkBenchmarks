@@ -26,5 +26,6 @@ libraryDependencies ++= Seq(
 
 excludeDependencies ++= Seq(
   // commons-logging is replaced by jcl-over-slf4j
+  ExclusionRule("org.slf4j", "slf4j-simple"),
   ExclusionRule("commons-logging", "commons-logging")
 )
