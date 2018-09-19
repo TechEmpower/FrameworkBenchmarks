@@ -5,6 +5,9 @@ This is the armeria portion of a [benchmarking test suite](../) comparing a vari
 ## Infrastructure Software Versions
 
 * [Armeria 0.71.1](https://line.github.io/armeria/)
+* [HikariCP 2.7.8](https://github.com/brettwooldridge/HikariCP)
+* [Postgresql 42.1.4](https://jdbc.postgresql.org/)
+* [Mustache 0.9.5](https://mustache.github.io/)
 
 ## Source for Tests
 
