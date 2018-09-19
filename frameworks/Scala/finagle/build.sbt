@@ -6,7 +6,7 @@ version := finagleVersion
 
 libraryDependencies ++= Seq(
   "com.twitter" %% "finagle-http" % finagleVersion,
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.4"
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.6"
 )
 
 assemblyJarName in assembly := "finagle-benchmark.jar"
