@@ -8,7 +8,7 @@ targets:
   lucky:
     main: src/lucky.cr
 
-crystal: 0.25.1
+crystal: 0.26.1
 
 dependencies:
   lucky:
@@ -23,3 +23,6 @@ dependencies:
   carbon:
     github: luckyframework/carbon
     version: ~> 0.1.0
+  lucky_flow:
+    github: luckyframework/lucky_flow
+    version: ~> 0.2
