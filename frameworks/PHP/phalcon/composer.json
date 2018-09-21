@@ -1,6 +1,0 @@
-{
-   "require": {
-   	"mongodb/mongodb" : "1.0.2",
-   	"phalcon/incubator": "3.0.2"
-   }
-}

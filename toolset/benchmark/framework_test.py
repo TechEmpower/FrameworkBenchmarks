@@ -78,6 +78,7 @@ class FrameworkTest:
 
         return self.benchmarker.docker_helper.test_client_connection(url)
 
+    # TODO: Refactor this function to reduce its Cognitive Complexity from 32 to the 15 allowed.
     def verify_urls(self):
         '''
         Verifys each of the URLs for this test. This will simply curl the URL and
