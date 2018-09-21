@@ -1,0 +1,25 @@
+name: lucky
+version: 0.1.0
+
+authors:
+  - Carlos Donderis <cdonderis@gmail.com>
+
+targets:
+  lucky:
+    main: src/lucky.cr
+
+crystal: 0.25.1
+
+dependencies:
+  lucky:
+    github: luckyframework/lucky
+    version: ~> 0.11
+  lucky_migrator:
+    github: luckyframework/lucky_migrator
+    version: ~> 0.6
+  authentic:
+    github: luckyframework/authentic
+    version: ~> 0.1.0
+  carbon:
+    github: luckyframework/carbon
+    version: ~> 0.1.0

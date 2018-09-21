@@ -1,0 +1,12 @@
+language: crystal
+services:
+  - postgresql
+script:
+  - crystal spec
+  # Uncomment the next line if you'd like Travis to check code formatting
+  # - crystal tool format spec src --check
+cache:
+  directories:
+    - bin/lucky
+    - lib
+    - .shards

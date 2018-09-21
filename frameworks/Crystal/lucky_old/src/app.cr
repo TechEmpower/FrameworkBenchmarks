@@ -11,8 +11,6 @@ require "./emails/base_email"
 require "./emails/**"
 require "./actions/mixins/**"
 require "./actions/**"
-require "./components/**"
-require "./pages/**"
 require "../config/env"
 require "../config/**"
 
