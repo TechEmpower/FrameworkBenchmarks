@@ -1,18 +1,15 @@
-FROM nimlang/nim:0.16.0
+FROM gcc:latest
 
-RUN apt update -yqq && apt install -yqq nginx
+RUN apt update && apt install -y libgc-dev
 
-# 2016-10-01
-RUN git clone https://github.com/dom96/jester.git && \
-    cd jester && \
-    git checkout 22f6ce61924a8f4d170c54f1a6709f898085deb4 && \
-    nimble update && \
-    echo 'y' | nimble install
+ENV CHOOSENIM_NO_ANALYTICS 1
+ENV CHOOSENIM_CHOOSE_VERSION #0c683d28bbd5
+RUN curl https://nim-lang.org/choosenim/init.sh -sSf | sh -s -- -y
+ENV PATH $PATH:/root/.nimble/bin
 
-ENV JESTER_HOME=/jester
+ADD ./ /jester
+WORKDIR /jester
+RUN nimble install -y httpbeast@#v0.2.0
+RUN nimble c -d:release --threads:on -y techempower.nim
 
-COPY ./ ./
-
-RUN chmod a+wrx start-servers.sh
-
-CMD ./start-servers.sh
+CMD ./techempower

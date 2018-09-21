@@ -22,7 +22,7 @@
   <groupId>com.techempower</groupId>
   <artifactId>actframework</artifactId>
   <packaging>jar</packaging>
-  <version>1.8.8.4</version>
+  <version>1.8.8g</version>
 
   <name>TEB ActFramework Project</name>
   <description>TEB benchmark project with ActFramework</description>
@@ -36,7 +36,7 @@
   <parent>
     <groupId>org.actframework</groupId>
     <artifactId>act-starter-parent</artifactId>
-    <version>1.8.8.4</version>
+    <version>1.8.8.6</version>
   </parent>
 
   <properties>
@@ -49,6 +49,18 @@
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>org.actframework</groupId>
+      <artifactId>act</artifactId>
+      <version>1.8.8-RC12-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.osgl</groupId>
+      <artifactId>osgl-tool</artifactId>
+      <version>1.18.0-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>org.actframework</groupId>
@@ -113,9 +125,22 @@
           <artifactId>mysql-connector-java</artifactId>
           <version>${mysql.version}</version>
         </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>ebean_pgsql</id>
+      <build>
+        <finalName>teb-act-ebean-pgsql</finalName>
+      </build>
+      <dependencies>
         <dependency>
-          <groupId>com.zaxxer</groupId>
-          <artifactId>HikariCP</artifactId>
+          <groupId>org.actframework</groupId>
+          <artifactId>act-ebean</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>${postgres-jdbc.version}</version>
         </dependency>
       </dependencies>
     </profile>
@@ -133,44 +158,6 @@
           <groupId>mysql</groupId>
           <artifactId>mysql-connector-java</artifactId>
           <version>${mysql.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>com.zaxxer</groupId>
-          <artifactId>HikariCP</artifactId>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>eclipselink_mysql</id>
-      <build>
-        <finalName>teb-act-eclipselink-mysql</finalName>
-      </build>
-      <dependencies>
-        <dependency>
-          <groupId>org.actframework</groupId>
-          <artifactId>act-eclipselink</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-          <version>${mysql.version}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>ebean_pgsql</id>
-      <build>
-        <finalName>teb-act-ebean-pgsql</finalName>
-      </build>
-      <dependencies>
-        <dependency>
-          <groupId>org.actframework</groupId>
-          <artifactId>act-ebean</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.postgresql</groupId>
-          <artifactId>postgresql</artifactId>
-          <version>${postgres-jdbc.version}</version>
         </dependency>
         <dependency>
           <groupId>com.zaxxer</groupId>
@@ -213,6 +200,27 @@
           <groupId>org.postgresql</groupId>
           <artifactId>postgresql</artifactId>
           <version>${postgres-jdbc.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.zaxxer</groupId>
+          <artifactId>HikariCP</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>eclipselink_mysql</id>
+      <build>
+        <finalName>teb-act-eclipselink-mysql</finalName>
+      </build>
+      <dependencies>
+        <dependency>
+          <groupId>org.actframework</groupId>
+          <artifactId>act-eclipselink</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <version>${mysql.version}</version>
         </dependency>
       </dependencies>
     </profile>

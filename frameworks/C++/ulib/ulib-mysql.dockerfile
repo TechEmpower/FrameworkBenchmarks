@@ -33,7 +33,7 @@ ENV AR=gcc-ar-8
 ENV RANLIB=gcc-ranlib-8
 ENV IROOT=/install
 ENV ULIB_ROOT=$IROOT/ULib
-ENV ULIB_VERSION=1.4.2
+ENV ULIB_VERSION=2.4.2
 ENV ULIB_DOCUMENT_ROOT=$ULIB_ROOT/ULIB_DOCUMENT_ROOT
 
 WORKDIR $IROOT
@@ -68,7 +68,8 @@ RUN USP_FLAGS="-DAS_cpoll_cppsp_DO" \
 RUN make install && \
 	 cd examples/userver && make install && \
 	 cd ../../src/ulib/net/server/plugin/usp && \
-    make db.la query.la update.la fortune.la cached_worlds.la && \
+    AM_LDFLAGS="-lFortune" make fortune.la && \
+	 AM_LDFLAGS="-lWorld" make db.la query.la update.la cached_worlds.la && \
     cp .libs/db.so .libs/query.so .libs/update.so .libs/fortune.so .libs/cached_worlds.so $ULIB_DOCUMENT_ROOT
 
 ENV PATH=${ULIB_ROOT}/bin:${PATH}
@@ -78,7 +79,7 @@ WORKDIR /ulib
 
 ENV ORM_DRIVER="mysql"
 ENV ORM_OPTION="host=tfb-database user=benchmarkdbuser password=benchmarkdbpass character-set=utf8 dbname=hello_world"
-ENV UMEMPOOL="581,0,0,59,16409,-7,-20,-23,31"
+ENV UMEMPOOL="96,0,0,97,16417,-14,-20,-18,26"
 
 CMD setcap cap_sys_nice,cap_sys_resource,cap_net_bind_service,cap_net_raw+eip $IROOT/ULib/bin/userver_tcp && \
     $IROOT/ULib/bin/userver_tcp -c $IROOT/ULib/benchmark.cfg

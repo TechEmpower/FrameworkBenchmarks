@@ -33,7 +33,7 @@ ENV AR=gcc-ar-8
 ENV RANLIB=gcc-ranlib-8
 ENV IROOT=/install
 ENV ULIB_ROOT=$IROOT/ULib
-ENV ULIB_VERSION=1.4.2
+ENV ULIB_VERSION=2.4.2
 ENV ULIB_DOCUMENT_ROOT=$ULIB_ROOT/ULIB_DOCUMENT_ROOT
 
 WORKDIR $IROOT
@@ -73,7 +73,8 @@ RUN USP_FLAGS="-DAS_cpoll_cppsp_DO" \
 RUN make install && \
 	 cd examples/userver && make install && \
 	 cd ../../src/ulib/net/server/plugin/usp && \
-    make mdb.la mquery.la mupdate.la mfortune.la && \
+    AM_LDFLAGS="-lFortune -lFortuneNoSql" make mfortune.la && \
+	 AM_LDFLAGS="-lWorld -lWorldNoSql" make mdb.la mquery.la mupdate.la && \
     cp .libs/mdb.so .libs/mquery.so .libs/mupdate.so .libs/mfortune.so $ULIB_DOCUMENT_ROOT
 
 ENV PATH=${ULIB_ROOT}/bin:${PATH}
@@ -82,7 +83,7 @@ ADD ./ /ulib
 WORKDIR /ulib
 
 ENV MONGODB_HOST=tfb-database
-ENV UMEMPOOL="96,0,0,47,16401,-14,-20,-18,26"
+ENV UMEMPOOL="96,0,0,97,16417,-14,-20,-18,26"
 
 CMD setcap cap_sys_nice,cap_sys_resource,cap_net_bind_service,cap_net_raw+eip $IROOT/ULib/bin/userver_tcp && \
     $IROOT/ULib/bin/userver_tcp -c $IROOT/ULib/benchmark.cfg

@@ -11,6 +11,7 @@ using Benchmarks.Data;
 using Benchmarks.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -110,7 +111,8 @@ namespace Benchmarks
             {
                 var mvcBuilder = services
                     .AddMvcCore()
-                    .AddControllersAsServices();
+                    .SetCompatibilityVersion(CompatibilityVersion.Latest)
+                    ;
 
                 if (Scenarios.MvcJson || Scenarios.Any("MvcDbSingle") || Scenarios.Any("MvcDbMulti"))
                 {
@@ -141,6 +143,11 @@ namespace Benchmarks
             if (Scenarios.Utf8Json)
             {
                 app.UseUtf8Json();
+            }
+
+            if (Scenarios.SpanJson)
+            {
+                app.UseSpanJson();
             }
 
             // Single query endpoints

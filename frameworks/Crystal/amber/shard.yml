@@ -13,8 +13,8 @@ targets:
 dependencies:
   amber:
     github: amberframework/amber
-    version: 0.6.7
+    version: 0.9.0
 
-  granite_orm:
-    github: amberframework/granite-orm
-    version: 0.8.4
+  granite:
+    github: amberframework/granite
+    version: 0.13.1

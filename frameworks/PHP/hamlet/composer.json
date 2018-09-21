@@ -1,0 +1,11 @@
+{
+  "require": {
+    "hamlet/hamlet-core" : "^3",
+    "cache/void-adapter": "^1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Benchmark\\": "Benchmark/"
+    }
+  }
+}

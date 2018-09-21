@@ -1,0 +1,15 @@
+name: crystal-h2o
+version: 0.0.1
+
+license: MIT
+
+crystal: 0.26.1
+
+dependencies:
+  h2o:
+    github: s-you/h2o.cr
+  uv:
+    github: s-you/uv.cr
+  reset:
+    github: s-you/reset.cr
+    branch: h2o

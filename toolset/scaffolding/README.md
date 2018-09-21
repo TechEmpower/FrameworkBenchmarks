@@ -10,21 +10,17 @@ There are some remaining tasks to do before you are ready to open a pull request
 
 You will need to ensure that your source code is beneath this directory. The most common solution is to include a `src` directory and place your source code there.
 
-2. Edit `source_files`
-
-A metric we capture, in addition to the actual benchmark numbers, is the significant lines of code required to run your application. To help our suite identify your source code, we require you to list your source files in `source_files`.
-
-3. Edit `benchmark_config.json`
+2. Edit `benchmark_config.json`
 
 You will need alter `benchmark_config.json` to have the appropriate end-points and port specified.
 
-4. Create `$NAME.dockerfile`
+3. Create `$NAME.dockerfile`
 
 This is the dockerfile that is built into a docker image and run when a benchmark test is run. Specifically, this file tells the suite how to build and start your test application.
 
 You can create multiple implementations and they will all conform to `[name in benchmark_config.json].dockerfile`. For example, the `default` implementation in `benchmark_config.json` will be `$NAME.dockerfile`, but if you wanted to make another implementation that did only the database tests for MySQL, you could make `$NAME-mysql.dockerfile` and have an entry in your `benchmark_config.json` for `$NAME-mysql`.
 
-5. Test your application
+4. Test your application
 
         $ tfb --mode verify --test $NAME
 
@@ -32,11 +28,11 @@ This will run the suite in `verify` mode for your test. This means that no bench
 
 Once you are able to successfully run your test through our suite in this way **and** your test passes our validation, you may move on to the next step.
 
-6. Add your test to `.travis.yml`
+5. Add your test to `.travis.yml`
 
 Edit `.travis.yml` to ensure that Travis-CI will automatically run our verification tests against your new test. This file is kept in alphabetical order, so find where `TESTDIR=$LANGUAGE/$NAME` should be inserted under `env > matrix` and put it there.
 
-7. Fix this `README.md` and open a pull request
+6. Fix this `README.md` and open a pull request
 
 Starting on line 59 is your actual `README.md` that will sit with your test implementation. Update all the dummy values to their correct values so that when people visit your test in our Github repository, they will be greated with information on how your test implementation works and where to look for useful source code.
 

@@ -32,6 +32,7 @@ import org.osgl.http.H;
 public class HelloWorldController {
 
     private static final String HELLO_WORLD = "Hello, World!";
+    private static final String JSON_TYPE = H.Format.JSON.contentType();
 
     public static final class Message {
         private final String message;
@@ -46,7 +47,7 @@ public class HelloWorldController {
     @OnAppStart
     public void routing() {
         Act.getNonblock("/json", context -> context.resp()
-                .contentType(H.Format.JSON.contentType())
+                .contentType(JSON_TYPE)
                 .writeContent(JSON.toJSONString(new Message(HELLO_WORLD), SerializerFeature.DisableCircularReferenceDetect)));
     }
 

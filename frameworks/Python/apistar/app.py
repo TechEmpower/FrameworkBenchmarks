@@ -1,30 +1,16 @@
-from apistar import App, Route, wsgi
-import ujson as json
+from apistar import App, Route, http
 
 
-def json_view() -> wsgi.WSGIResponse:
-    content = json.dumps({'message': 'Hello, world!'}).encode('utf-8')
-    return wsgi.WSGIResponse(
-        '200 OK',
-        [
-            ('Content-Type', 'application/json'),
-            ('Content-Length', str(len(content)))
-        ],
-        [content]
-    )
+def json_view() -> http.JSONResponse:
+    content = {'message': 'Hello, world!'}
+    return http.JSONResponse(content, status_code=200)
 
 
-def plaintext_view() -> wsgi.WSGIResponse:
-    content = b'Hello, world!'
-    return wsgi.WSGIResponse(
-        '200 OK',
-        [
-            ('Content-Type', 'text/plain'),
-            ('Content-Length', str(len(content)))
-        ],
-        [content]
-    )
+def plaintext_view() -> http.Response:
 
+    content = 'Hello, world!'
+    headers = {'Content-Type': 'text/plain'}
+    return http.Response(content, headers=headers)
 
 app = App(routes=[
     Route('/json', 'GET', json_view),

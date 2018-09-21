@@ -1,15 +1,17 @@
-name := "finagle"
+lazy val finagleVersion = "18.9.0"
 
+name := "finagle-benchmark"
 scalaVersion := "2.12.5"
-
-version := "18.4.0"
+version := finagleVersion
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "finagle-http" % "18.4.0",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.4"
+  "com.twitter" %% "finagle-http" % finagleVersion,
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.6"
 )
 
+assemblyJarName in assembly := "finagle-benchmark.jar"
 assemblyMergeStrategy in assembly := {
- case PathList("META-INF", xs @ _*) => MergeStrategy.discard
- case x => MergeStrategy.first
+ case PathList("META-INF", "services", _*) => MergeStrategy.last
+ case PathList("META-INF", _*) => MergeStrategy.discard
+ case _ => MergeStrategy.first
 }
