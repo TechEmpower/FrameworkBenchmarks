@@ -21,9 +21,7 @@
         "display_name": "Zebra, Dapper",
         "notes": "",
         "versus": "aspcore"
-      }
-    },
-    {
+      },
       "simple": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
