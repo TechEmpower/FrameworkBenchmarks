@@ -1,0 +1,8 @@
+
+lpython:S3776?"TRefactor this function to reduce its Cognitive Complexity from 22 to the 15 allowed.(…™å¿
+wpython:S117Ö"_Rename this local variable "sortedRunTests" to match the regular expression ^[_a-z][a-z0-9_]*$.(É†“Ã
+rpython:S3776…"TRefactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.(íóôûþÿÿÿÿ
+vpython:S117Å"YRename this local variable "runTests" to match the regular expression ^[_a-z][a-z0-9_]*$.(„ÝšÞüÿÿÿÿ
+vpython:S117×"^Rename this local variable "sortedTestKey" to match the regular expression ^[_a-z][a-z0-9_]*$.(„õÓ¹
+wpython:S117Ô"_Rename this local variable "sortedTestKeys" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÄÏÿÍ
+rpython:S3776«"TRefactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.(Ë³ù¾ûÿÿÿÿ

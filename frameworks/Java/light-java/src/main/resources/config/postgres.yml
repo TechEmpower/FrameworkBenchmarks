@@ -1,4 +1,0 @@
-jdbcUrl: "jdbc:postgresql://tfb-database:5432/hello_world"
-username: "benchmarkdbuser"
-password: "benchmarkdbpass"
-maximumPoolSize: 256

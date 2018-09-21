@@ -1,6 +1,0 @@
-{
-    "require": {
-        "slim/slim": "3.8.1",
-        "slim/php-view": "2.2.0"
-    }
-}

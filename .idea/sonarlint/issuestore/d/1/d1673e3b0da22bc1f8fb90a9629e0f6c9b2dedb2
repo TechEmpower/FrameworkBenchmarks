@@ -1,0 +1,4 @@
+
+qpython:S3776R"TRefactor this function to reduce its Cognitive Complexity from 32 to the 15 allowed.(ØÉ¶Øÿÿÿÿÿ
+ppython:S117"TRename this parameter "runTests" to match the regular expression ^[_a-z][a-z0-9_]*$.(š–ÝŽûÿÿÿÿ
+xpython:S117]"aRename this local variable "verificationPath" to match the regular expression ^[_a-z][a-z0-9_]*$.(’ëÏ—

@@ -1,0 +1,10 @@
+
+rpython:S117“"[Rename this local variable "jsonResult" to match the regular expression ^[_a-z][a-z0-9_]*$.(‚Á˜-
+tpython:S117t"XRename this local variable "rawData" to match the regular expression ^[_a-z][a-z0-9_]*$.(óô÷Þÿÿÿÿÿ
+mpython:S3776À"TRefactor this function to reduce its Cognitive Complexity from 17 to the 15 allowed.(¨ÿûÑ
+ypython:S117ˆ"\Rename this local variable "commitCount" to match the regular expression ^[_a-z][a-z0-9_]*$.(ù°ÁÙýÿÿÿÿ
+mpython:S3776î"TRefactor this function to reduce its Cognitive Complexity from 28 to the 15 allowed.(¯Ç€Å
+qpython:S3776g"TRefactor this function to reduce its Cognitive Complexity from 77 to the 15 allowed.(Ïíˆûùÿÿÿÿ
+spython:S117…"VRename this parameter "jsonResult" to match the regular expression ^[_a-z][a-z0-9_]*$.(ÏŽ‘Ôùÿÿÿÿ
+rpython:S3776™"TRefactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.(ÕæúÐúÿÿÿÿ
+npython:S117Á"VRename this local variable "toRet" to match the regular expression ^[_a-z][a-z0-9_]*$.(’’ÊÉ

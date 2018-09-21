@@ -1,9 +1,0 @@
-production:
-  adapter: mysql2
-  encoding: utf8
-  host: tfb-database
-  database: hello_world
-  username: benchmarkdbuser
-  password: benchmarkdbpass
-  pool: 512
-  timeout: 5000

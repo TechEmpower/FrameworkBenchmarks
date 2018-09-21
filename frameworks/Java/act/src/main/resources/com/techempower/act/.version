@@ -1,3 +1,0 @@
-artifact=${project.artifactId}
-version=${project.version}
-build=${buildNumber}
