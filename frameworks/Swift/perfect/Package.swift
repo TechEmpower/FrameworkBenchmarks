@@ -3,15 +3,17 @@
 import PackageDescription
 
 let package = Package(
-	name: "PerfectTemplate",
+	name: "Perfect-TechEmpower",
 	products: [
-		.executable(name: "PerfectTemplate", targets: ["PerfectTemplate"])
+		.executable(name: "Perfect", targets: ["Perfect"]),
+		.executable(name: "Perfect-MySQL", targets: ["Perfect-MySQL"])
 	],
 	dependencies: [
 		.package(url: "https://github.com/PerfectlySoft/Perfect-HTTPServer.git", from: "3.0.0"),
-		// .Package(url:"https://github.com/PerfectlySoft/Perfect-MySQL.git", majorVersion: 3),
+		.package(url:"https://github.com/PerfectlySoft/Perfect-MySQL.git", from: "3.0.0"),
 	],
 	targets: [
-		.target(name: "PerfectTemplate", dependencies: ["PerfectHTTPServer"])
+		.target(name: "Perfect", dependencies: ["PerfectHTTPServer", "PerfectMySQL"]),
+		.target(name: "Perfect-MySQL", dependencies: ["PerfectHTTPServer", "PerfectMySQL"])
 	]
 )

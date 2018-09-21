@@ -10,15 +10,30 @@
       "database": "None",
       "framework": "Perfect",
       "language": "Swift",
-      "flavor": "None",
-      "orm": "None",
-      "platform": "None",
-      "webserver": "None",
+      "orm": "Raw",
+      "platform": "Perfect",
+      "webserver": "Perfect",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Perfect",
-      "notes": "",
-      "versus": ""
+      "notes": ""
+    },
+    "mysql": {
+      "update_url": "/updates?queries=",
+      "query_url": "/queries?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "Perfect",
+      "language": "Swift",
+      "orm": "Raw",
+      "platform": "Perfect",
+      "webserver": "Perfect",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Perfect",
+      "notes": ""
     }
   }]
 }

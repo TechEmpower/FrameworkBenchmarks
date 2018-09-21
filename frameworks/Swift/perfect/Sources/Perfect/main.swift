@@ -1,8 +1,7 @@
 import PerfectHTTP
 import PerfectHTTPServer
 import PerfectLib
-// import PerfectMySQL
-
+import Foundation
 
 func plaintextHandler(request: HTTPRequest, response: HTTPResponse) {
 
@@ -32,12 +31,12 @@ func jsonHandler(request: HTTPRequest, response: HTTPResponse) {
 
     do {
         responseString = try helloDictionary.jsonEncodedString()
+        response.appendBody(string: responseString)
     } catch {
         response.status = HTTPResponseStatus.internalServerError
         response.appendBody(string: errorString)
     }
 
-    response.appendBody(string: responseString)
 
     setHeaders(response: response, contentType: "application/json")
     response.completed()
@@ -50,7 +49,7 @@ func setHeaders(response: HTTPResponse, contentType: String) {
     response.setHeader(.contentType, value: contentType)
     response.setHeader(.custom(name: "Server"), value: "Perfect")
 
-    var currDate: String = getCurrDate()
+    let currDate: String = getCurrDate()
 
 	response.setHeader(.custom(name: "Date"), value: currDate)
 }
@@ -63,7 +62,6 @@ func getCurrDate() -> String {
         let formatted = try formatDate(now, format: "%a, %d %b %Y %H:%M:%S %Z", timezone: nil, locale: nil)
         return formatted
     } catch {
-        print("uh oh")
         return "error formatting date string"
     }
 }
