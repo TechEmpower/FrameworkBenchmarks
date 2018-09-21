@@ -38,6 +38,7 @@ env:
      - "TESTDIR=Haskell/spock"
      - "TESTDIR=Java/act"
      - "TESTDIR=Java/activeweb"
+     - "TESTDIR=Java/armeria"
      - "TESTDIR=Java/baratine"
      - "TESTDIR=Java/bayou"
      - "TESTDIR=Java/blade"
