@@ -136,6 +136,7 @@ class FrameworkTestType:
         '''
         return copy.copy(self)
 
+    # TODO: Refactor this function to reduce its Cognitive Complexity from 21 to the 15 allowed.
     def get_current_world_table(self):
         '''
         Return a JSON object containing all 10,000 World items as they currently

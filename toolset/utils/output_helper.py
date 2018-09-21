@@ -15,7 +15,7 @@ FNULL = open(os.devnull, 'w')
 # message endlessly anyway.
 TOO_MANY_BYTES = 50 * 1024 * 1024
 
-
+# TODO: Refactor this function to reduce its Cognitive Complexity from 17 to the 15 allowed.
 def log(log_text=None, **kwargs):
     '''
     Logs the given text and optional prefix to stdout (if quiet is False) and

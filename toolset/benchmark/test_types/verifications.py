@@ -245,7 +245,7 @@ def verify_randomnumber_list(expected_len,
 
     return problems
 
-
+# TODO: Refactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.
 def verify_updates(old_worlds, new_worlds, updates_expected, url):
     '''
     Validates that the /updates requests actually updated values in the database and didn't
@@ -291,7 +291,7 @@ def verify_updates(old_worlds, new_worlds, updates_expected, url):
 
     return problems
 
-
+# TODO: Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.
 def verify_query_cases(self, cases, url, check_updates=False):
     '''
     The /updates and /queries tests accept a `queries` parameter

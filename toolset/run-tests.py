@@ -45,6 +45,7 @@ class StoreSeqAction(argparse.Action):
 ###################################################################################################
 # Main
 ###################################################################################################
+# TODO: Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.
 def main(argv=None):
     '''
     Runs the toolset.

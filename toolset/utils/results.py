@@ -99,6 +99,7 @@ class Results:
         with open(self.file, "w") as f:
             f.write(json.dumps(self.__to_jsonable(), indent=2))
 
+    # TODO: Refactor this function to reduce its Cognitive Complexity from 77 to the 15 allowed.
     def parse_test(self, framework_test, test_type):
         '''
         Parses the given test and test_type from the raw_file.
@@ -276,6 +277,7 @@ class Results:
             if framework_test.name not in self.failed[test_type]:
                 self.failed[test_type].append(framework_test.name)
 
+    # TODO: Refactor this function to reduce its Cognitive Complexity from 18 to the 15 allowed.
     def finish(self):
         '''
         Finishes these results.
@@ -399,7 +401,6 @@ class Results:
         # accesses one key in the dictionary
         threads = []
         jsonResult = {}
-        # t1 = datetime.now()
         for framework, testlist in frameworks.items():
             directory = testlist[0].directory
             t = threading.Thread(
@@ -415,8 +416,6 @@ class Results:
         # Wait for remaining threads
         for t in threads:
             t.join()
-        # t2 = datetime.now()
-        # print "Took %s seconds " % (t2 - t1).seconds
 
         self.rawData['commitCounts'] = jsonResult
         self.config.commits = jsonResult
@@ -445,6 +444,7 @@ class Results:
             shell=True,
             cwd=self.config.fw_root).strip()
 
+    # TODO: Refactor this function to reduce its Cognitive Complexity from 17 to the 15 allowed.
     def __parse_stats(self, framework_test, test_type, start_time, end_time,
                       interval):
         '''
@@ -461,6 +461,7 @@ class Results:
         with open(stats_file) as stats:
             # dstat doesn't output a completely compliant CSV file - we need to strip the header
             while stats.next() != "\n":
+                # TODO: Either remove or fill this block of code.
                 pass
             stats_reader = csv.reader(stats)
             main_header = stats_reader.next()
@@ -489,6 +490,7 @@ class Results:
                 stats_dict[time] = row_dict
         return stats_dict
 
+    # TODO: Refactor this function to reduce its Cognitive Complexity from 28 to the 15 allowed.
     def __calculate_average_stats(self, raw_stats):
         '''
         We have a large amount of raw data for the statistics that may be useful
@@ -544,9 +546,7 @@ class Results:
         display_stat_collection = dict()
         for header, values in raw_stat_collection.items():
             display_stat = None
-            if 'cpu' in header:
-                display_stat = sizeof_fmt(math.fsum(values) / len(values))
-            elif main_header == 'memory usage':
+            if 'cpu' in header or main_header == 'memory usage':
                 display_stat = sizeof_fmt(math.fsum(values) / len(values))
             elif 'net' in main_header:
                 receive, send = zip(*values)  # unzip
