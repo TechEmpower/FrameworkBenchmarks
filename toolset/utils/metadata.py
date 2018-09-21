@@ -179,7 +179,7 @@ class Metadata:
         # Loop over them and parse each into a FrameworkTest
         for test in config['tests']:
 
-            tests_to_run = [name for (name, keys) in test.iteritems()]
+            tests_to_run = [name for (name, keys) in iter(test.items())]
 
             if "default" not in tests_to_run:
                 log("Framework %s does not define a default test in benchmark_config.json"
@@ -188,15 +188,14 @@ class Metadata:
 
             # Check that each test configuration is acceptable
             # Throw exceptions if a field is missing, or how to improve the field
-            for test_name, test_keys in test.iteritems():
+            for test_name, test_keys in iter(test.items()):
                 # Validates and normalizes the benchmark_config entry
                 test_keys = Metadata.validate_test(test_name, test_keys,
                                                    directory)
 
                 # Map test type to a parsed FrameworkTestType object
                 runTests = dict()
-                for type_name, type_obj in self.benchmarker.config.types.iteritems(
-                ):
+                for type_name, type_obj in iter(self.benchmarker.config.types.items()):
                     try:
                         # Makes a FrameWorkTestType object using some of the keys in config
                         # e.g. JsonTestType uses "json_url"
