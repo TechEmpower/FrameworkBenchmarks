@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.t-io</groupId>
 		<artifactId>tio-http-parent</artifactId>
-		<version>3.1.3.v20180720-RELEASE</version>
+		<version>3.1.8.v20180818-RELEASE</version>
 	</parent>
 
 	<properties>
@@ -21,62 +21,19 @@
 		<dependency>
 			<groupId>org.t-io</groupId>
 			<artifactId>tio-http-server</artifactId>
-			<!-- 因为没用集群，所以可以把redisson依赖的netty全部排除掉 -->
-			<exclusions>
-				<exclusion>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-common</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-buffer</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-resolver-dns</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-codec</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-handler</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>io.netty</groupId>
-					<artifactId>netty-transport</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<!-- slf4j-logback绑定 -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.mail</groupId>
+					<artifactId>javax.mail</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-access</artifactId>
-		</dependency>
-
-
-		<!-- redirect apache commons logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-		</dependency>
-		<!-- redirect jdk util logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jul-to-slf4j</artifactId>
-		</dependency>
-		<!-- redirect log4j -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -136,3 +93,4 @@
 	</build>
 
 </project>
+

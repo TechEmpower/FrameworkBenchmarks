@@ -29,11 +29,9 @@ static void usp_fork_db() { World::handlerForkSql(); }
 #ifdef U_STATIC_ORM_DRIVER_PGSQL
 if (World::pstmt)
    {
-   UServer_Base::handler_db1->handlerQuery();
-
    World::sendQueryPrepared();
 
-   UServer_Base::handler_db1->handlerResult(handlerResult);
+   UServer_Base::handler_db1->handlerQuery(handlerResult);
    }
 else
 #endif

@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Nancy" Version="2.0.0-pre1909" />
-    <PackageReference Include="MySqlConnector" Version="0.40.3" />
+    <PackageReference Include="MySqlConnector" Version="0.44.1" />
     <PackageReference Include="Dapper" Version="1.50.4" />
   </ItemGroup>
 

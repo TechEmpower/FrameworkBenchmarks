@@ -6,8 +6,6 @@ extern crate serde;
 extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
-#[macro_use]
-extern crate askama;
 extern crate num_cpus;
 extern crate rand;
 extern crate url;
@@ -15,22 +13,25 @@ extern crate url;
 extern crate diesel;
 extern crate tokio_postgres;
 
-use std::mem;
+use std::cell::RefCell;
+use std::io::Write;
+use std::rc::Rc;
+use std::{io, mem};
 
 use actix::prelude::*;
 use actix_web::server::{
-    self, HttpHandler, HttpHandlerTask, HttpServer, Request, Writer,
+    self, HttpHandler, HttpHandlerTask, HttpServer, KeepAlive, Request, Writer,
 };
 use actix_web::Error;
-use askama::Template;
 use futures::{Async, Future, Poll};
+use rand::{thread_rng, Rng};
 
-mod db_pg;
+mod db_pg_direct;
 mod models;
 mod utils;
 
-use db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateWorld};
-use utils::{Message, StackWriter, Writer as JsonWriter};
+use db_pg_direct::PgConnection;
+use utils::{escape, Message, StackWriter, Writer as JsonWriter};
 
 const HTTPOK: &[u8] = b"HTTP/1.1 200 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: Actix\r\n";
@@ -40,7 +41,8 @@ const HDR_CTHTML: &[u8] = b"Content-Type: text/html; charset=utf-8";
 const BODY: &[u8] = b"Hello, World!";
 
 struct App {
-    db: Addr<PgConnection>,
+    dbs: Rc<RefCell<Vec<PgConnection>>>,
+    useall: bool,
 }
 
 impl HttpHandler for App {
@@ -53,26 +55,52 @@ impl HttpHandler for App {
                 10 if path == "/plaintext" => return Ok(Box::new(Plaintext)),
                 5 if path == "/json" => return Ok(Box::new(Json)),
                 3 if path == "/db" => {
-                    return Ok(Box::new(World {
-                        fut: self.db.send(RandomWorld),
-                    }))
+                    if self.useall {
+                        if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
+                            return Ok(Box::new(World {
+                                fut: db.get_world(),
+                            }));
+                        }
+                    } else {
+                        return Ok(Box::new(World {
+                            fut: self.dbs.borrow()[0].get_world(),
+                        }));
+                    }
                 }
                 8 if path == "/fortune" => {
-                    return Ok(Box::new(Fortune {
-                        fut: self.db.send(TellFortune),
-                    }));
+                    if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
+                        return Ok(Box::new(Fortune {
+                            fut: db.tell_fortune(),
+                        }));
+                    }
                 }
                 8 if path == "/queries" => {
                     let q = utils::get_query_param(req.uri());
-                    return Ok(Box::new(Queries {
-                        fut: self.db.send(RandomWorlds(q)),
-                    }));
+                    if self.useall {
+                        if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
+                            return Ok(Box::new(Queries {
+                                fut: db.get_worlds(q as usize),
+                            }));
+                        }
+                    } else {
+                        return Ok(Box::new(Queries {
+                            fut: self.dbs.borrow()[0].get_worlds(q as usize),
+                        }));
+                    }
                 }
                 8 if path == "/updates" => {
                     let q = utils::get_query_param(req.uri());
-                    return Ok(Box::new(Updates {
-                        fut: self.db.send(UpdateWorld(q)),
-                    }));
+                    if self.useall {
+                        if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
+                            return Ok(Box::new(Updates {
+                                fut: db.update(q as usize),
+                            }));
+                        }
+                    } else {
+                        return Ok(Box::new(Updates {
+                            fut: self.dbs.borrow()[0].update(q as usize),
+                        }));
+                    }
                 }
                 _ => (),
             }
@@ -121,25 +149,35 @@ impl HttpHandlerTask for Json {
     }
 }
 
-struct Fortune {
-    fut: actix::dev::Request<PgConnection, TellFortune>,
+struct Fortune<F> {
+    fut: F,
 }
 
-#[derive(Template)]
-#[template(path = "fortune.html")]
-struct FortuneTemplate<'a> {
-    items: &'a Vec<models::Fortune>,
-}
+const FORTUNES_START: &[u8] = b"<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
+const FORTUNES_ROW_START: &[u8] = b"<tr><td>";
+const FORTUNES_COLUMN: &[u8] = b"</td><td>";
+const FORTUNES_ROW_END: &[u8] = b"</td></tr>";
+const FORTUNES_END: &[u8] = b"</table></body></html>";
 
-impl HttpHandlerTask for Fortune {
+impl<F> HttpHandlerTask for Fortune<F>
+where
+    F: Future<Item = Vec<models::Fortune>, Error = io::Error>,
+{
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
-            Ok(Async::Ready(Ok(rows))) => {
+            Ok(Async::Ready(rows)) => {
                 let mut body: [u8; 2048] = unsafe { mem::uninitialized() };
                 let len = {
                     let mut writer = StackWriter(&mut body, 0);
-                    let tmpl = FortuneTemplate { items: &rows };
-                    tmpl.render_into(&mut writer).unwrap();
+                    let _ = writer.write(FORTUNES_START);
+                    for row in rows {
+                        let _ = writer.write(FORTUNES_ROW_START);
+                        let _ = write!(&mut writer, "{}", row.id);
+                        let _ = writer.write(FORTUNES_COLUMN);
+                        escape(&mut writer, row.message);
+                        let _ = writer.write(FORTUNES_ROW_END);
+                    }
+                    let _ = writer.write(FORTUNES_END);
                     writer.1
                 };
 
@@ -156,20 +194,22 @@ impl HttpHandlerTask for Fortune {
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
-            Ok(Async::Ready(Err(e))) => Err(e.into()),
             Err(e) => Err(e.into()),
         }
     }
 }
 
-struct World {
-    fut: actix::dev::Request<PgConnection, RandomWorld>,
+struct World<F> {
+    fut: F,
 }
 
-impl HttpHandlerTask for World {
+impl<F> HttpHandlerTask for World<F>
+where
+    F: Future<Item = models::World, Error = io::Error>,
+{
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
-            Ok(Async::Ready(Ok(row))) => {
+            Ok(Async::Ready(row)) => {
                 let mut body: [u8; 48] = unsafe { mem::uninitialized() };
                 let len = {
                     let mut writer = StackWriter(&mut body, 0);
@@ -190,20 +230,22 @@ impl HttpHandlerTask for World {
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
-            Ok(Async::Ready(Err(e))) => Err(e.into()),
             Err(e) => Err(e.into()),
         }
     }
 }
 
-struct Queries {
-    fut: actix::dev::Request<PgConnection, RandomWorlds>,
+struct Queries<F> {
+    fut: F,
 }
 
-impl HttpHandlerTask for Queries {
+impl<F> HttpHandlerTask for Queries<F>
+where
+    F: Future<Item = Vec<models::World>, Error = io::Error>,
+{
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
-            Ok(Async::Ready(Ok(worlds))) => {
+            Ok(Async::Ready(worlds)) => {
                 let mut body: [u8; 24576] = unsafe { mem::uninitialized() };
                 let len = {
                     let mut writer = StackWriter(&mut body, 0);
@@ -224,20 +266,22 @@ impl HttpHandlerTask for Queries {
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
-            Ok(Async::Ready(Err(e))) => Err(e.into()),
             Err(e) => Err(e.into()),
         }
     }
 }
 
-struct Updates {
-    fut: actix::dev::Request<PgConnection, UpdateWorld>,
+struct Updates<F> {
+    fut: F,
 }
 
-impl HttpHandlerTask for Updates {
+impl<F> HttpHandlerTask for Updates<F>
+where
+    F: Future<Item = Vec<models::World>, Error = io::Error>,
+{
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
-            Ok(Async::Ready(Ok(worlds))) => {
+            Ok(Async::Ready(worlds)) => {
                 let mut body: [u8; 24576] = unsafe { mem::uninitialized() };
                 let len = {
                     let mut writer = StackWriter(&mut body, 0);
@@ -258,7 +302,6 @@ impl HttpHandlerTask for Updates {
                 Ok(Async::Ready(true))
             }
             Ok(Async::NotReady) => Ok(Async::NotReady),
-            Ok(Async::Ready(Err(e))) => Err(e.into()),
             Err(e) => Err(e.into()),
         }
     }
@@ -270,13 +313,25 @@ fn main() {
 
     // start http server
     HttpServer::new(move || {
-        let db = PgConnection::connect(db_url);
+        let dbs = Rc::new(RefCell::new(Vec::new()));
 
-        vec![App { db }]
+        for _ in 0..3 {
+            let db = dbs.clone();
+            Arbiter::spawn(PgConnection::connect(db_url).and_then(move |conn| {
+                db.borrow_mut().push(conn);
+                Ok(())
+            }));
+        }
+
+        vec![App {
+            dbs,
+            useall: num_cpus::get() > 4,
+        }]
     }).backlog(8192)
-        .bind("0.0.0.0:8080")
-        .unwrap()
-        .start();
+    .keep_alive(KeepAlive::Os)
+    .bind("0.0.0.0:8080")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

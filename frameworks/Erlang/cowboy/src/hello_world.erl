@@ -8,7 +8,8 @@
 %% API.
 
 start() ->
-	ok = application:start(crypto),
+        ssl:start(),	
 	ok = application:start(ranch),
+	ok = application:start(cowlib),
 	ok = application:start(cowboy),
 	ok = application:start(hello_world).

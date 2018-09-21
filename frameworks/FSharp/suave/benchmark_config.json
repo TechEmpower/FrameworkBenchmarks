@@ -10,7 +10,7 @@
         "classification": "Micro",
         "database": "None",
         "framework": "Suave",
-        "language": "FSharp",
+        "language": "F#",
         "flavor": "None",
         "orm": "None",
         "platform": ".NET",

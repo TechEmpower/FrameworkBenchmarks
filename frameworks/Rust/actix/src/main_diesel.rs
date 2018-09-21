@@ -50,8 +50,7 @@ fn world_row(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
                     .body(body))
             }
             Err(_) => Ok(HttpResponse::InternalServerError().into()),
-        })
-        .responder()
+        }).responder()
 }
 
 fn queries(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
@@ -79,8 +78,7 @@ fn queries(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
             } else {
                 Ok(HttpResponse::InternalServerError().into())
             }
-        })
-        .responder()
+        }).responder()
 }
 
 fn updates(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
@@ -109,8 +107,7 @@ fn updates(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
             } else {
                 Ok(HttpResponse::InternalServerError().into())
             }
-        })
-        .responder()
+        }).responder()
 }
 
 #[derive(Template)]
@@ -136,8 +133,7 @@ fn fortune(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
                     .body(res))
             }
             Err(_) => Ok(HttpResponse::InternalServerError().into()),
-        })
-        .responder()
+        }).responder()
 }
 
 fn main() {
@@ -164,9 +160,9 @@ fn main() {
             .resource("/queries", |r| r.route().f(queries))
             .resource("/updates", |r| r.route().f(updates))
     }).backlog(8192)
-        .bind("0.0.0.0:8080")
-        .unwrap()
-        .start();
+    .bind("0.0.0.0:8080")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

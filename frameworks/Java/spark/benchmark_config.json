@@ -17,7 +17,7 @@
       "flavor": "None",
       "orm": "Full",
       "platform": "Servlet",
-      "webserver": "Resin",
+      "webserver": "Jetty",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "spark",

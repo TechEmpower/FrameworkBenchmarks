@@ -13,7 +13,7 @@ TROOT=/
 # A hacky way to detect whether we are running in the physical hardware or the cloud environment.
 if [[ "$CPU_COUNT" -gt 16 ]]; then
 	echo "Running h2o_app in the physical hardware environment."
-	USE_PROCESSES=false
+	USE_PROCESSES=true
 	DB_CONN=3
 else
 	echo "Running h2o_app in the cloud environment."

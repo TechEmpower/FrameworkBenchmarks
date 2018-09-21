@@ -1,39 +1,40 @@
 package com.wizzardo.techempower;
 
 import com.wizzardo.http.framework.Configuration;
-import com.wizzardo.http.framework.di.PostConstruct;
 import com.wizzardo.http.framework.di.Service;
-
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import org.postgresql.ds.PGSimpleDataSource;
+import io.reactiverse.pgclient.PgPool;
+import io.reactiverse.pgclient.impl.WizzardoPgPool;
+import io.reactiverse.pgclient.impl.WizzardoPgPoolOptions;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DBService implements Service, PostConstruct {
+public class DBService implements Service {
 
     protected DBConfig config;
     protected DataSource dataSource;
 
-    @Override
-    public void init() {
-        PGSimpleDataSource source = new PGSimpleDataSource();
-        source.setUrl("jdbc:postgresql://" + config.host + ":" + config.port + "/" + config.dbname);
-        source.setUser(config.username);
-        source.setPassword(config.password);
+    protected ThreadLocal<PgPool> clientThreadLocal = ThreadLocal.withInitial(this::initPgPool);
 
-        HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(config.maximumPoolSize);
-        hikariConfig.setMinimumIdle(config.minimumIdle);
-        hikariConfig.setDataSource(source);
-
-        dataSource = new HikariDataSource(hikariConfig);
+    protected PgPool initPgPool() {
+        WizzardoPgPoolOptions options = new WizzardoPgPoolOptions();
+        options.setDatabase(config.dbname);
+        options.setHost(config.host);
+        options.setPort(config.port);
+        options.setUser(config.username);
+        options.setPassword(config.password);
+        options.setCachePreparedStatements(true);
+        options.setMaxSize(1);
+        return new WizzardoPgPool(options);
     }
 
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
+    }
+
+    public PgPool getClient() {
+        return clientThreadLocal.get();
     }
 
     public static class DBConfig implements Configuration {
