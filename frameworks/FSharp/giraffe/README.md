@@ -5,7 +5,7 @@ This includes tests for plaintext and json serialization.
 
 **Language**
 
-* F# 4.1
+* F# 4.5
 
 **Platforms**
 
@@ -27,6 +27,6 @@ This includes tests for plaintext and json serialization.
 * [JSON serialization](src/App/Stock.fs): "/json"
 * [JSON serialization via utf8json lib](src/App/Custom.fs): "/json"
 * [Fortunes using Dapper](src/App/Stock.fs): "/fortunes"
-* [Fortunes using Dapper and Custom renderer](src/App/Custom.fs): "/fortunes"
+* [Fortunes using Dapper and StringBuilder cache](src/App/Custom.fs): "/fortunes"
 
 App listents for command line arguments to pick specific implementation. If "stock" passed as command line argument it will use out of the box handlers, otherwise will use custom ones.

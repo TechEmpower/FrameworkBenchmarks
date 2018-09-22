@@ -1,42 +1,41 @@
 ﻿module Custom
 
-open App
 open Dapper
 open Giraffe
 open System
 open Models
 open Npgsql
 open FSharp.Control.Tasks
-open System.IO
+open System.Text
+open System.Buffers
 
 let private DefaultCapacity = 1386
 let private MaxBuilderSize = DefaultCapacity * 3
 
-type MemoryStreamCache = 
+type StringBuilderCache = 
     
     [<ThreadStatic>]
     [<DefaultValue>]
-    static val mutable private instance: MemoryStream
+    static val mutable private instance: StringBuilder
 
-    static member Get() = MemoryStreamCache.Get(DefaultCapacity)
+    static member Get() = StringBuilderCache.Get(DefaultCapacity)
     static member Get(capacity:int) = 
         
         if capacity <= MaxBuilderSize then
-            let ms = MemoryStreamCache.instance;
+            let sb = StringBuilderCache.instance;
             let capacity = max capacity DefaultCapacity
             
-            if ms <> null && capacity <= ms.Capacity then
-                MemoryStreamCache.instance <- null;
-                ms.SetLength 0L
-                ms
+            if sb <> null && capacity <= sb.Capacity then
+                StringBuilderCache.instance <- null;
+                sb.Clear()
             else
-                new MemoryStream(capacity)
+                new StringBuilder(capacity)
         else
-            new MemoryStream(capacity)
+            new StringBuilder(capacity)
 
-    static member Release(ms:MemoryStream) = 
-        if ms.Capacity <= MaxBuilderSize then
-            MemoryStreamCache.instance <- ms
+    static member Release(sb: StringBuilder) = 
+        if sb.Capacity <= MaxBuilderSize then
+            StringBuilderCache.instance <- sb
 
 let application : HttpHandler = 
 
@@ -66,6 +65,17 @@ let application : HttpHandler =
   
     let fortunes' : HttpHandler = 
         let extra = { id = 0; message = "Additional fortune added at request time." }
+        
+        let inline renderHtml view : byte[] =
+            let sb = StringBuilderCache.Get()
+            GiraffeViewEngine.ViewBuilder.buildHtmlDocument sb view
+            let chars = ArrayPool<char>.Shared.Rent sb.Length
+            sb.CopyTo(0, chars, 0, sb.Length)
+            let result = Encoding.UTF8.GetBytes(chars, 0, sb.Length)
+            StringBuilderCache.Release sb
+            ArrayPool<char>.Shared.Return chars
+            result
+
         fun _ ctx ->
             let conn = new NpgsqlConnection(ConnectionString)
             ctx.Response.RegisterForDispose conn
@@ -77,17 +87,14 @@ let application : HttpHandler =
                     xs.Add extra
                     xs.Sort FortuneComparer
                     xs
-
-                let html = MemoryStreamCache.Get()
+                
                 let view = fortunes |> HtmlViews.fortunes 
-                StetefullRendering.renderHtmlToStream html view
-
+                
+                let bytes = renderHtml view
                 ctx.Response.ContentType <- "text/html;charset=utf-8"
-                ctx.Response.ContentLength <- contentLength html.Length
+                ctx.Response.ContentLength <- contentLength bytes.Length
                 ctx.Response.StatusCode <- 200
-                do! html.CopyToAsync ctx.Response.Body
-
-                MemoryStreamCache.Release html
+                do! ctx.Response.Body.WriteAsync(bytes, 0, bytes.Length)
                 return Some ctx
             }
 

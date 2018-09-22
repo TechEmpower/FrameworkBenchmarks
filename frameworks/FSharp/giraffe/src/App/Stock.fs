@@ -1,6 +1,7 @@
 ﻿module Stock
 
 open Giraffe
+open Giraffe.TokenRouter
 open Dapper
 open Npgsql
 open Models
@@ -10,7 +11,7 @@ open System.Text
 let application : HttpHandler = 
     
     let fortunes : HttpHandler = 
-        let extra = {id = 0; message = "Additional fortune added at request time."}
+        let extra = { id = 0; message = "Additional fortune added at request time." }
 
         fun _ ctx ->
             task {
@@ -32,8 +33,9 @@ let application : HttpHandler =
                 return! ctx.WriteBytesAsync bytes
             }
 
-    choose [
-        route "/plaintext" >=> text "Hello, World!" 
-        route "/json" >=> json { JsonMessage.message = "Hello, World!" }
-        route "/fortunes" >=> fortunes
+    let notFound = setStatusCode 404
+    router notFound [
+        route "/plaintext" <| text "Hello, World!" 
+        route "/json" <| json { JsonMessage.message = "Hello, World!" }
+        route "/fortunes" <| fortunes
     ]

@@ -58,10 +58,10 @@
         "notes": "",
         "versus": "aspcore"
       },
-      "stripped": {
+      "cached": {
         "fortune_url": "/fortunes",
         "port": 8080,
-        "approach": "Stripped",
+        "approach": "Realistic",
         "classification": "Micro",
         "database": "Postgres",
         "framework": "giraffe",
