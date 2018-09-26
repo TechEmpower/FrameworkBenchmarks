@@ -17,12 +17,12 @@ TOO_MANY_BYTES = 50 * 1024 * 1024
 
 
 def log(log_text=None, **kwargs):
-    '''
+    """
     Logs the given text and optional prefix to stdout (if quiet is False) and
     to an optional log file. By default, we strip out newlines in order to 
     print our lines correctly, but you can override this functionality if you
     want to print multi-line output.
-    '''
+    """
 
     # set up some defaults
     color = kwargs.get('color', '')
@@ -62,10 +62,10 @@ def log(log_text=None, **kwargs):
 
 
 class QuietOutputStream:
-    '''
+    """
     Provides an output stream which either writes to stdout or nothing 
     depending on the is_quiet param.
-    '''
+    """
 
     def __init__(self, is_quiet):
         self.is_quiet = is_quiet

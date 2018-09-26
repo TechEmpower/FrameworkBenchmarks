@@ -9,15 +9,15 @@ from colorama import Fore, Style
 
 
 class FrameworkTest:
-    def __init__(self, name, directory, benchmarker, runTests,
+    def __init__(self, name, directory, benchmarker, run_tests,
                  args):
-        '''
+        """
         Constructor
-        '''
+        """
         self.name = name
         self.directory = directory
         self.benchmarker = benchmarker
-        self.runTests = runTests
+        self.run_tests = run_tests
         self.approach = ""
         self.classification = ""
         self.database = ""
@@ -40,9 +40,9 @@ class FrameworkTest:
     ##########################################################################################
 
     def start(self):
-        '''
+        """
         Start the test implementation
-        '''
+        """
         test_log_dir = os.path.join(self.benchmarker.results.directory, self.name.lower())
         build_log_dir = os.path.join(test_log_dir, 'build')
         run_log_dir = os.path.join(test_log_dir, 'run')
@@ -63,40 +63,40 @@ class FrameworkTest:
         return self.benchmarker.docker_helper.run(self, run_log_dir)
 
     def is_accepting_requests(self):
-        '''
+        """
         Determines whether this test implementation is up and accepting
         requests.
-        '''
+        """
         test_type = None
-        for any_type in self.runTests:
+        for any_type in self.run_tests:
             test_type = any_type
             break
 
         url = "http://%s:%s%s" % (self.benchmarker.config.server_host,
                                   self.port,
-                                  self.runTests[test_type].get_url())
+                                  self.run_tests[test_type].get_url())
 
         return self.benchmarker.docker_helper.test_client_connection(url)
 
     def verify_urls(self):
-        '''
+        """
         Verifys each of the URLs for this test. This will simply curl the URL and
         check for it's return status. For each url, a flag will be set on this
         object for whether or not it passed.
         Returns True if all verifications succeeded
-        '''
+        """
         log_path = os.path.join(self.benchmarker.results.directory, self.name.lower())
         result = True
 
         def verify_type(test_type):
-            verificationPath = os.path.join(log_path, test_type)
+            verification_path = os.path.join(log_path, test_type)
             try:
-                os.makedirs(verificationPath)
+                os.makedirs(verification_path)
             except OSError:
                 pass
-            with open(os.path.join(verificationPath, 'verification.txt'),
+            with open(os.path.join(verification_path, 'verification.txt'),
                       'w') as verification:
-                test = self.runTests[test_type]
+                test = self.run_tests[test_type]
                 log("VERIFYING %s" % test_type.upper(),
                     file=verification,
                     border='-',
@@ -175,9 +175,9 @@ class FrameworkTest:
                         "Unknown error - test did not pass,warn,or fail")
 
         result = True
-        for test_type in self.runTests:
+        for test_type in self.run_tests:
             verify_type(test_type)
-            if self.runTests[test_type].failed:
+            if self.run_tests[test_type].failed:
                 result = False
 
         return result

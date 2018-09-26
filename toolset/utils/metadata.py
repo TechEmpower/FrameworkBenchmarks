@@ -22,10 +22,10 @@ class Metadata:
         self.benchmarker = benchmarker
 
     def gather_languages(self):
-        '''
+        """
         Gathers all the known languages in the suite via the folder names
         beneath FWROOT.
-        '''
+        """
 
         lang_dir = os.path.join(self.benchmarker.config.lang_root)
         langs = []
@@ -34,9 +34,9 @@ class Metadata:
         return langs
 
     def gather_language_tests(self, language):
-        '''
+        """
         Gathers all the test names from a known language
-        '''
+        """
         try:
             dir = os.path.join(self.benchmarker.config.lang_root, language)
             tests = map(lambda x: os.path.join(language, x), os.listdir(dir))
@@ -47,10 +47,10 @@ class Metadata:
                 "Unable to locate language directory: {!s}".format(language))
 
     def get_framework_config(self, test_dir):
-        '''
+        """
         Gets a framework's benchmark_config from the given
         test directory
-        '''
+        """
         dir_config_files = glob.glob("{!s}/{!s}/benchmark_config.json".format(
             self.benchmarker.config.lang_root, test_dir))
         if len(dir_config_files):
@@ -60,7 +60,7 @@ class Metadata:
                 "Unable to locate tests in test-dir: {!s}".format(test_dir))
 
     def gather_tests(self, include=None, exclude=None):
-        '''
+        """
         Given test names as strings, returns a list of FrameworkTest objects.
         For example, 'aspnet-mysql-raw' turns into a FrameworkTest object with
         variables for checking the test directory, the test database os, and
@@ -69,7 +69,7 @@ class Metadata:
         With no arguments, every test in this framework will be returned.
         With include, only tests with this exact name will be returned.
         With exclude, all tests but those excluded will be returned.
-        '''
+        """
 
         # Help callers out a bit
         include = include or []
@@ -109,10 +109,8 @@ class Metadata:
 
             # Filter
             for test in config_tests:
-                if len(include) is 0 and len(exclude) is 0:
+                if (len(include) is 0 and len(exclude) is 0) or test.name in include:
                     # No filters, we are running everything
-                    tests.append(test)
-                elif test.name in include:
                     tests.append(test)
 
         # Ensure we were able to locate everything that was
@@ -128,18 +126,18 @@ class Metadata:
         return tests
 
     def tests_to_run(self):
-        '''
+        """
         Gathers all tests for current benchmark run.
-        '''
+        """
         return self.gather_tests(self.benchmarker.config.test,
                                  self.benchmarker.config.exclude)
 
     def gather_frameworks(self, include=None, exclude=None):
-        '''
+        """
         Return a dictionary mapping frameworks->[test1,test2,test3]
         for quickly grabbing all tests in a grouped manner.
         Args have the same meaning as gather_tests
-        '''
+        """
         tests = self.gather_tests(include, exclude)
         frameworks = dict()
 
@@ -150,9 +148,9 @@ class Metadata:
         return frameworks
 
     def has_file(self, test_dir, filename):
-        '''
+        """
         Returns True if the file exists in the test dir
-        '''
+        """
         path = test_dir
         if not self.benchmarker.config.lang_root in path:
             path = os.path.join(self.benchmarker.config.lang_root, path)
@@ -179,7 +177,7 @@ class Metadata:
         # Loop over them and parse each into a FrameworkTest
         for test in config['tests']:
 
-            tests_to_run = [name for (name, keys) in test.iteritems()]
+            tests_to_run = [name for (name, keys) in iter(test.items())]
 
             if "default" not in tests_to_run:
                 log("Framework %s does not define a default test in benchmark_config.json"
@@ -188,19 +186,18 @@ class Metadata:
 
             # Check that each test configuration is acceptable
             # Throw exceptions if a field is missing, or how to improve the field
-            for test_name, test_keys in test.iteritems():
+            for test_name, test_keys in iter(test.items()):
                 # Validates and normalizes the benchmark_config entry
                 test_keys = Metadata.validate_test(test_name, test_keys,
                                                    directory)
 
                 # Map test type to a parsed FrameworkTestType object
-                runTests = dict()
-                for type_name, type_obj in self.benchmarker.config.types.iteritems(
-                ):
+                run_tests = dict()
+                for type_name, type_obj in iter(self.benchmarker.config.types.items()):
                     try:
                         # Makes a FrameWorkTestType object using some of the keys in config
                         # e.g. JsonTestType uses "json_url"
-                        runTests[type_name] = type_obj.copy().parse(test_keys)
+                        run_tests[type_name] = type_obj.copy().parse(test_keys)
                     except AttributeError:
                         # This is quite common - most tests don't support all types
                         # Quitely log it and move on (debug logging is on in travis and this causes
@@ -209,11 +206,11 @@ class Metadata:
                         pass
 
                 # We need to sort by test_type to run
-                sortedTestKeys = sorted(
-                    runTests.keys(), key=Metadata.test_order)
-                sortedRunTests = OrderedDict()
-                for sortedTestKey in sortedTestKeys:
-                    sortedRunTests[sortedTestKey] = runTests[sortedTestKey]
+                sorted_test_keys = sorted(
+                    run_tests.keys(), key=Metadata.test_order)
+                sorted_run_tests = OrderedDict()
+                for sorted_test_key in sorted_test_keys:
+                    sorted_run_tests[sorted_test_key] = run_tests[sorted_test_key]
 
                 # Prefix all test names with framework except 'default' test
                 # Done at the end so we may still refer to the primary test as `default` in benchmark config error messages
@@ -225,14 +222,14 @@ class Metadata:
                 # By passing the entire set of keys, each FrameworkTest will have a member for each key
                 tests.append(
                     FrameworkTest(test_name, directory, self.benchmarker,
-                                  sortedRunTests, test_keys))
+                                  sorted_run_tests, test_keys))
 
         return tests
 
     def list_test_metadata(self):
-        '''
+        """
         Prints the metadata for all the available tests
-        '''
+        """
         all_tests = self.gather_tests()
         all_tests_json = json.dumps(map(lambda test: {
             "name": test.name,
@@ -349,7 +346,7 @@ class Metadata:
             msg = (
                 "Invalid `%s` value specified for test \"%s\" in framework \"%s\"; suggestions:\n"
                 % (k, test_name, test_keys['framework']))
-            helpinfo = ('\n').join([
+            helpinfo = '\n'.join([
                 "  `%s` -- %s" % (v, desc)
                 for (v, desc) in zip(acceptable_values, descriptors)
             ])

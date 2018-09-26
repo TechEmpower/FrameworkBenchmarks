@@ -25,9 +25,9 @@ class DockerHelper:
 
     def __build(self, base_url, path, build_log_file, log_prefix, dockerfile,
                 tag):
-        '''
+        """
         Builds docker containers using docker-py low-level api
-        '''
+        """
 
         self.benchmarker.time_logger.mark_build_start()
         with open(build_log_file, 'w') as build_log:
@@ -80,9 +80,9 @@ class DockerHelper:
                 log_prefix=log_prefix, file=build_log)
 
     def clean(self):
-        '''
+        """
         Cleans all the docker images from the system
-        '''
+        """
 
         self.server.images.prune()
         for image in self.server.images.list():
@@ -103,9 +103,9 @@ class DockerHelper:
         self.database.images.prune()
 
     def build(self, test, build_log_dir=os.devnull):
-        '''
+        """
         Builds the test docker containers
-        '''
+        """
         log_prefix = "%s: " % test.name
 
         # Build the test image
@@ -131,9 +131,9 @@ class DockerHelper:
         return 0
 
     def run(self, test, run_log_dir):
-        '''
+        """
         Run the given Docker container(s)
-        '''
+        """
 
         log_prefix = "%s: " % test.name
         container = None
@@ -229,10 +229,10 @@ class DockerHelper:
                 DockerHelper.__stop_container(container)
 
     def stop(self, containers=None):
-        '''
+        """
         Attempts to stop a container or list of containers.
         If no containers are passed, stops all running containers.
-        '''
+        """
         is_multi_setup = self.benchmarker.config.server_docker_host != \
                          self.benchmarker.config.database_docker_host
 
@@ -253,9 +253,9 @@ class DockerHelper:
             self.client.containers.prune()
 
     def build_databases(self):
-        '''
+        """
         Builds all the databases necessary to run the list of benchmarker tests
-        '''
+        """
         built = []
         for test in self.benchmarker.tests:
             db = test.database.lower()
@@ -277,10 +277,10 @@ class DockerHelper:
                 built.append(db)
 
     def start_database(self, database):
-        '''
+        """
         Sets up a container for the given database and port, and starts said docker
         container.
-        '''
+        """
         image_name = "techempower/%s:latest" % database
         log_prefix = image_name + ": "
 
@@ -317,9 +317,9 @@ class DockerHelper:
         return container
 
     def build_wrk(self):
-        '''
+        """
         Builds the techempower/tfb.wrk container
-        '''
+        """
         self.__build(
             base_url=self.benchmarker.config.client_docker_host,
             path=self.benchmarker.config.wrk_root,
@@ -329,10 +329,10 @@ class DockerHelper:
             tag="techempower/tfb.wrk")
 
     def test_client_connection(self, url):
-        '''
+        """
         Tests that the app server at the given url responds successfully to a
         request.
-        '''
+        """
         try:
             self.client.containers.run(
                 'techempower/tfb.wrk',
@@ -347,9 +347,9 @@ class DockerHelper:
         return True
 
     def server_container_exists(self, container_id_or_name):
-        '''
+        """
         Returns True if the container still exists on the server.
-        '''
+        """
         try:
             self.server.containers.get(container_id_or_name)
             return True
@@ -357,9 +357,9 @@ class DockerHelper:
             return False
 
     def benchmark(self, script, variables, raw_file):
-        '''
+        """
         Runs the given remote_script on the wrk container on the client machine.
-        '''
+        """
 
         def watch_container(container):
             with open(raw_file, 'w') as benchmark_file:

@@ -17,13 +17,13 @@ class UpdateTestType(FrameworkTestType):
         return self.update_url
 
     def verify(self, base_url):
-        '''
+        """
         Validates the response is a JSON array of 
         the proper length, each JSON Object in the array 
         has keys 'id' and 'randomNumber', and these keys 
         map to integers. Case insensitive and 
         quoting style is ignored
-        '''
+        """
 
         url = base_url + self.update_url
         cases = [('2', 'fail'), ('0', 'fail'), ('foo', 'fail'),

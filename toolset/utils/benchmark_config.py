@@ -7,9 +7,9 @@ import time
 
 class BenchmarkConfig:
     def __init__(self, args):
-        '''
+        """
         Configures this BenchmarkConfig given the arguments provided.
-        '''
+        """
 
         # Map type strings to their objects
         types = dict()

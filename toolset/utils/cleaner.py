@@ -3,9 +3,9 @@ import shutil
 
 
 def clean(results):
-    '''
+    """
     Cleans the given directory of all files and folders
-    '''
+    """
     results_dir = os.path.dirname(results.directory)
     if os.path.exists(results_dir):
         for file in os.listdir(results_dir):
