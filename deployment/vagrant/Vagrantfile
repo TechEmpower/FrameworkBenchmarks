@@ -19,4 +19,10 @@ Vagrant.configure("2") do |config|
   provider_virtualbox(config)
   provider_libvirt(config)
 
+  config.ssh.insert_key = false
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+  end
+  
 end

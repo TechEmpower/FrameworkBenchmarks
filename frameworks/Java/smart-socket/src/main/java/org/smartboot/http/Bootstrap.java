@@ -50,9 +50,9 @@ public class Bootstrap {
     public static void http(MessageProcessor<Http11Request> processor) {
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
-        server.setWriteQueueSize(2);
-        server.setReadBufferSize(256);
-        server.setThreadNum((int) (Runtime.getRuntime().availableProcessors() * 1.5));
+        server.setWriteQueueSize(1024);
+        server.setReadBufferSize(1024*4);
+//        server.setThreadNum((int) (Runtime.getRuntime().availableProcessors() * 2));
         try {
             server.start();
         } catch (IOException e) {
