@@ -1,5 +1,5 @@
 import Vapor
 
-struct Message: Content {
+struct Message : Content {
     let message: String
 }
