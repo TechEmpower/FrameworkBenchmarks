@@ -4,7 +4,7 @@ This is the [Perfect](https://www.perfect.org) portion of a [benchmarking test s
 
 ## Variants
 
-There is are three versions of the benchmark:
+There is are four versions of the benchmark, three of which use databases:
 - `Perfect`: No DB
 - `Perfect-MySQL`: Using MySQL
 - `Perfect-PostgreSQL`: Using PostgreSQL
