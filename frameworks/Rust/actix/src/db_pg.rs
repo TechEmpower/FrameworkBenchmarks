@@ -68,8 +68,7 @@ impl PgConnection {
                     act.cl = Some(cl);
                     Arbiter::spawn(conn.map_err(|e| panic!("{}", e)));
                     fut::ok(())
-                })
-                .wait(ctx);
+                }).wait(ctx);
 
             act
         })
@@ -228,8 +227,7 @@ impl Handler<TellFortune> for PgConnection {
                         message: row.get(1),
                     });
                     Ok::<_, io::Error>(items)
-                })
-                .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+                }).map_err(|e| io::Error::new(io::ErrorKind::Other, e))
                 .and_then(|mut items| {
                     items.sort_by(|it, next| it.message.cmp(&next.message));
                     Ok(items)

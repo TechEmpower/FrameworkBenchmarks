@@ -5,7 +5,7 @@ import com.wizzardo.http.framework.WebApplication;
 import com.wizzardo.http.request.ByteTree;
 import com.wizzardo.http.request.Header;
 import com.wizzardo.http.request.Request;
-import com.wizzardo.tools.json.JsonTools;
+import com.wizzardo.http.response.JsonResponseHelper;
 
 public class App {
     public static final byte[] HELLO_WORLD = "Hello, World!".getBytes();
@@ -35,7 +35,7 @@ public class App {
                             .append("/plaintext", (request, response) -> response.setBody(HELLO_WORLD)
                                     .appendHeader(Header.KV_CONTENT_TYPE_TEXT_PLAIN))
                             .append("/json", (request, response) -> response
-                                    .setBody(JsonTools.serializeToBytes(new Message("Hello, World!")))
+                                    .setBody(JsonResponseHelper.renderJson(new Message("Hello, World!")))
                                     .appendHeader(Header.KV_CONTENT_TYPE_APPLICATION_JSON))
                             .append("/db", DBController.class, "world")
                             .append("/queries", DBController.class, "queries")
