@@ -15,26 +15,14 @@ let _ = mysql.selectDatabase(named: database)
 
 class LinearCongruntialGenerator {
  
-    var state = 0 //seed of 0 by default
+    var state = 0
     let a, c, m, shift: Int
  
-    //we will use microsoft random by default
     init() {
         self.a = 214013
         self.c = 2531011
-        self.m = Int(pow(2.0, 31.0)) //2^31 or 2147483648
+        self.m = Int(pow(2.0, 31.0))
         self.shift = 16
-    }
- 
-    init(a: Int, c: Int, m: Int, shift: Int) {
-        self.a = a
-        self.c = c
-        self.m = m //2^31 or 2147483648
-        self.shift = shift
-    }
- 
-    func seed(seed: Int) -> Void {
-        state = seed;
     }
  
     func random() -> Int {
@@ -82,7 +70,7 @@ func fetchFromWorld(id: String?) -> [String:Any] {
     var rand:Int = 0
 
     if id == nil {
-        rand = numGenerator.random() % 10000
+        rand = numGenerator.random() % 10000 + 1
     } else {
         rand = Int(id!)!
     }
@@ -328,7 +316,7 @@ routes.add(method: .get, uri: "/db", handler: singleDatabaseQueryHandler)
 routes.add(method: .get, uri: "/**",
 		   handler: StaticFileHandler(documentRoot: "./webroot", allowResponseFilters: true).handleRequest)
 try HTTPServer.launch(name: "localhost",
-					  port: 8080,
-					  routes: routes,
-					  responseFilters: [
-						(PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)])
+    port: 8080,
+    routes: routes,
+    responseFilters: [
+    (PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)])

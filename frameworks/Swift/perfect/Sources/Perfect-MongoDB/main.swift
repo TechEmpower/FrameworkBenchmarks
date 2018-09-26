@@ -27,10 +27,6 @@ class LinearCongruntialGenerator {
         self.shift = 16
     }
  
-    func seed(seed: Int) -> Void {
-        state = seed;
-    }
- 
     func random() -> Int {
         state = (a * state + c) % m
         return state >> shift
@@ -44,7 +40,7 @@ func fetchFromWorld(id: String?) -> [String: Any] {
     var rand:Int = 0
 
     if id == nil {
-        rand = numGenerator.random() % 10000
+        rand = numGenerator.random() % 10000 + 1
     } else {
         rand = Int(id!)!
     }
@@ -308,7 +304,7 @@ routes.add(method: .get, uri: "/db", handler: singleDatabaseQueryHandler)
 routes.add(method: .get, uri: "/**",
 		   handler: StaticFileHandler(documentRoot: "./webroot", allowResponseFilters: true).handleRequest)
 try HTTPServer.launch(name: "localhost",
-					  port: 8080,
-					  routes: routes,
-					  responseFilters: [
-						(PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)])
+    port: 8080,
+    routes: routes,
+    responseFilters: [
+    (PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)])

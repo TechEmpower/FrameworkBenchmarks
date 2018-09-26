@@ -72,7 +72,7 @@ routes.add(method: .get, uri: "/plaintext", handler: plaintextHandler)
 routes.add(method: .get, uri: "/**",
 		   handler: StaticFileHandler(documentRoot: "./webroot", allowResponseFilters: true).handleRequest)
 try HTTPServer.launch(name: "localhost",
-					  port: 8080,
-					  routes: routes,
-					  responseFilters: [
-						(PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)])
+    port: 8080,
+    routes: routes,
+    responseFilters: [
+    (PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)])

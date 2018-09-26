@@ -11,30 +11,17 @@ let password = "benchmarkdbpass"
 
 let p = PGConnection()
 let status = p.connectdb("postgresql://\(username):\(password)@\(tfbHost):5432/\(database)")
-// let status = p.connectdb("host=\(tfbHost) dbname=\(database)")
 
 class LinearCongruntialGenerator {
  
     var state = 0 //seed of 0 by default
     let a, c, m, shift: Int
  
-    //we will use microsoft random by default
     init() {
         self.a = 214013
         self.c = 2531011
         self.m = Int(pow(2.0, 31.0)) //2^31 or 2147483648
         self.shift = 16
-    }
- 
-    init(a: Int, c: Int, m: Int, shift: Int) {
-        self.a = a
-        self.c = c
-        self.m = m //2^31 or 2147483648
-        self.shift = shift
-    }
- 
-    func seed(seed: Int) -> Void {
-        state = seed;
     }
  
     func random() -> Int {
@@ -44,36 +31,6 @@ class LinearCongruntialGenerator {
 }
 
 let numGenerator = LinearCongruntialGenerator()
-
-// func fetchFromFortune() -> [[String: String]] {
-
-//     var arrOfFortunes = [[String: String]]()
-    
-//     let querySuccess = mysql.query(statement: "SELECT id, message FROM fortune")
-
-//     guard querySuccess else {
-
-//         let errorObject = ["id": "Failed to execute query"]
-//         arrOfFortunes.append(errorObject)
-        
-//         return arrOfFortunes
-//     }
- 
-//     let results = mysql.storeResults()!
-
-//     results.forEachRow { row in
-
-//         if let id = row[0], let message = row[1] {
-            
-//             let resObj = ["id": String(describing: id), "message": message]
-//             arrOfFortunes.append(resObj)
-//         } else {
-//             print("not correct values returned: ", row)
-//         }
-//     }
-
-//     return arrOfFortunes
-// }
 
 func fetchFromWorld(id: String?) -> [String:Any] {
 
@@ -97,8 +54,8 @@ func fetchFromWorld(id: String?) -> [String:Any] {
 func updateOneFromWorld() -> [String: Any] {
 
     var returnObj = [String: Any]()
-    let rand = numGenerator.random() % 10000
-    let rand2 = numGenerator.random() % 10000
+    let rand = numGenerator.random() % 10000 + 1
+    let rand2 = numGenerator.random() % 10000 + 1
 
     let _ = p.exec(statement: "UPDATE world SET randomNumber = \(rand) WHERE id = \(rand2)")
 
@@ -110,26 +67,6 @@ func updateOneFromWorld() -> [String: Any] {
 
     return returnObj
 }
-
-// func fortunesHandler(request: HTTPRequest, response: HTTPResponse) {
-
-//     var arrOfFortunes = fetchFromFortune()
-
-//     let newObj: [String: String] = ["id": "0", "message": "Additional fortune added at request time."]
-
-//     arrOfFortunes.append(newObj)
-
-//     let sortedArr = arrOfFortunes.sorted(by: ({ $0["message"]! < $1["message"]! }))
-
-//     let htmlToRet = spoofHTML(fortunesArr: sortedArr)
-
-//     response.appendBody(string: htmlToRet)
-    
-//     setHeaders(response: response, contentType: "text/html")
-//     response.setHeader(.custom(name: "CustomLength"), value: String(describing: htmlToRet.count + 32))
-
-//     response.completed()
-// }
 
 func updatesHandler(request: HTTPRequest, response: HTTPResponse) {
 
@@ -277,14 +214,13 @@ func spoofHTML(fortunesArr: [[String: Any]]) -> String {
 }
 
 var routes = Routes()
-// routes.add(method: .get, uri: "/fortunes", handler: fortunesHandler)
 routes.add(method: .get, uri: "/updates", handler: updatesHandler)
 routes.add(method: .get, uri: "/queries", handler: multipleDatabaseQueriesHandler)
 routes.add(method: .get, uri: "/db", handler: singleDatabaseQueryHandler)
 routes.add(method: .get, uri: "/**",
 		   handler: StaticFileHandler(documentRoot: "./webroot", allowResponseFilters: true).handleRequest)
 try HTTPServer.launch(name: "localhost",
-					  port: 8080,
-					  routes: routes,
-					  responseFilters: [
-						(PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)])
+    port: 8080,
+    routes: routes,
+    responseFilters: [
+    (PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)])
