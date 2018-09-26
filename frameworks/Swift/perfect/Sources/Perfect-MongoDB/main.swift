@@ -1,7 +1,7 @@
 import PerfectHTTP
 import PerfectHTTPServer
 import PerfectLib
-import PerfectMySQL
+import PerfectMongoDB
 import Foundation
 
 let tfbHost = "tfb-database"
@@ -9,28 +9,22 @@ let database = "hello_world"
 let username = "benchmarkdbuser"
 let password = "benchmarkdbpass"
 
-let mysql = MySQL()
-let connected = mysql.connect(host: tfbHost, user: username, password: password)
-let _ = mysql.selectDatabase(named: database)
+let client = try! MongoClient(uri: "mongodb://\(tfbHost)")
+let db = client.getDatabase(name: database)
+let World = db.getCollection(name: "world")
+let Fortune = db.getCollection(name: "fortune")
+
 
 class LinearCongruntialGenerator {
  
     var state = 0 //seed of 0 by default
     let a, c, m, shift: Int
  
-    //we will use microsoft random by default
     init() {
         self.a = 214013
         self.c = 2531011
         self.m = Int(pow(2.0, 31.0)) //2^31 or 2147483648
         self.shift = 16
-    }
- 
-    init(a: Int, c: Int, m: Int, shift: Int) {
-        self.a = a
-        self.c = c
-        self.m = m //2^31 or 2147483648
-        self.shift = shift
     }
  
     func seed(seed: Int) -> Void {
@@ -45,40 +39,8 @@ class LinearCongruntialGenerator {
 
 let numGenerator = LinearCongruntialGenerator()
 
-func fetchFromFortune() -> [[String: String]] {
+func fetchFromWorld(id: String?) -> [String: Any] {
 
-    var arrOfFortunes = [[String: String]]()
-    
-    let querySuccess = mysql.query(statement: "SELECT id, message FROM fortune")
-
-    guard querySuccess else {
-
-        let errorObject = ["id": "Failed to execute query"]
-        arrOfFortunes.append(errorObject)
-        
-        return arrOfFortunes
-    }
- 
-    let results = mysql.storeResults()!
-
-    results.forEachRow { row in
-
-        if let id = row[0], let message = row[1] {
-            
-            let resObj = ["id": String(describing: id), "message": message]
-            arrOfFortunes.append(resObj)
-        } else {
-            print("not correct values returned: ", row)
-        }
-    }
-
-    return arrOfFortunes
-}
-
-func fetchFromWorld(id: String?) -> [String:Any] {
-
-    var returnObj = [String: Any]()
-    var errorObject = [String: Any]()
     var rand:Int = 0
 
     if id == nil {
@@ -87,92 +49,105 @@ func fetchFromWorld(id: String?) -> [String:Any] {
         rand = Int(id!)!
     }
 
-    let querySuccess = mysql.query(statement: "SELECT id, randomNumber FROM World WHERE id = \(rand)")
+    if let world = World {
 
-    guard querySuccess else {
+        var json = [String:Any]()
+        json["id"] = rand
 
-        errorObject["id"] = "Failed to execute query"
+        var fields = [String: Any]()
+        fields["id"] = 1
+        fields["randomNumber"] = 1
+        fields["_id"] = 0
 
-        return errorObject
-    }
- 
-    let results = mysql.storeResults()!
+        var fieldString: String = ""
 
-    results.forEachRow { row in
-
-        if let id = row[0], let randomNumber = row[1] {
-
-            returnObj["id"] = id
-            returnObj["randomNumber"] = randomNumber
-        } else {
-
-            returnObj["id"] = "No return value"
-            returnObj["randomNumber"] = "what happened?"
+        do {
+            fieldString = try fields.jsonEncodedString()
+        } catch {
+            fieldString = String(describing: fields)
         }
-    }
 
-    return returnObj
+        do {
+            let jsonString = try json.jsonEncodedString()
+            do {
+                let results = try world.find(query: BSON( json: jsonString ), fields: BSON( json: fieldString ))
+
+                if let res = results {
+                    for item in res {
+                        let itemString = String(describing: item)
+                        return convertStringToDictionary(str: itemString)
+                    }
+                } else {
+                    print("results couldn't be unwrapped: ", rand)
+                }
+            } catch {
+                //
+            }
+        } catch {
+            // empty on purpose
+        } 
+    } else {
+        //
+    }
+    
+    let emptyObj = [String: Any]()
+    return emptyObj
 }
 
 func updateOneFromWorld() -> [String: Any] {
 
-    var returnObj = [String: Any]()
-    var errorObject = [String: Any]()
-
     let rand = numGenerator.random() % 10000
     let rand2 = numGenerator.random() % 10000
+    var errorObj = [String: Any]()
 
-    let querySuccess = mysql.query(statement: "UPDATE World SET randomNumber = \(rand) WHERE id = \(rand2)")
+    if let world = World {
 
-    guard querySuccess else {
+        var json = [String:Any]()
+        json["id"] = rand
 
-        errorObject["id"] = "Failed to execute query"
+        var fields = [String: Any]()
+        fields["id"] = 1
+        fields["randomNumber"] = 1
+        fields["_id"] = 0
 
-        return errorObject
-    }
- 
-    if let results = mysql.storeResults() {
+        var update = [String: Any]()
+        update["randomNumber"] = rand2
 
-        results.forEachRow { row in
+        var fieldString: String = ""
 
-            if let id = row[0], let randomNumber = row[1] {
-
-                returnObj["id"] = id
-                returnObj["randomNumber"] = randomNumber
-            } else {
-
-                returnObj["id"] = "No return value"
-                returnObj["randomNumber"] = "what happened?"
-            }
+        do {
+            fieldString = try fields.jsonEncodedString()
+        } catch {
+            fieldString = String(describing: fields)
         }
 
-        return returnObj
+        var updateString: String = ""
+        var jsonString: String = ""
+
+        do {
+            updateString = try update.jsonEncodedString()
+        } catch {
+            updateString = String(describing: update)
+        }
+
+        do {
+            jsonString = try json.jsonEncodedString()
+        } catch {
+            jsonString = String(describing: json)
+        }
+
+        do {
+            let results = try world.findAndModify(query: BSON( json: jsonString ), sort: nil, update: BSON( json: updateString ), fields: BSON( json: fieldString ), remove: false, upsert: false, new: true)
+            let resultsStr = String(describing: results)
+            return convertUpdateStringToDictionary(str: resultsStr, id: rand)
+        } catch {
+            errorObj["id"] = "Error running query findAndModify"
+            return errorObj
+        }
     } else {
-
-        returnObj["id"] = rand2
-        returnObj["randomNumber"] = rand
-        return returnObj
+        errorObj["id"] = "world is empty"
+        return errorObj
     }
-}
-
-func fortunesHandler(request: HTTPRequest, response: HTTPResponse) {
-
-    var arrOfFortunes = fetchFromFortune()
-
-    let newObj: [String: String] = ["id": "0", "message": "Additional fortune added at request time."]
-
-    arrOfFortunes.append(newObj)
-
-    let sortedArr = arrOfFortunes.sorted(by: ({ $0["message"]! < $1["message"]! }))
-
-    let htmlToRet = spoofHTML(fortunesArr: sortedArr)
-
-    response.appendBody(string: htmlToRet)
-    
-    setHeaders(response: response, contentType: "text/html")
-    response.setHeader(.custom(name: "CustomLength"), value: String(describing: htmlToRet.count + 32))
-
-    response.completed()
 }
 
 func updatesHandler(request: HTTPRequest, response: HTTPResponse) {
@@ -205,7 +180,7 @@ func multipleDatabaseQueriesHandler(request: HTTPRequest, response: HTTPResponse
     let queryStr = returnCorrectTuple(queryArr: request.queryParams)
     var totalQueries = sanitizeQueryValue(queryString: queryStr)
 
-    var queryArr: Array = [[String: Any]]()
+    var queryArr = [[String: Any]]()
 
     while 0 < totalQueries {
 
@@ -214,10 +189,8 @@ func multipleDatabaseQueriesHandler(request: HTTPRequest, response: HTTPResponse
     }  
 
     do {
-
         response.appendBody(string: try queryArr.jsonEncodedString())
     } catch {
-
         response.appendBody(string: String(describing: queryArr))
     }
 
@@ -230,26 +203,11 @@ func singleDatabaseQueryHandler(request: HTTPRequest, response: HTTPResponse) {
 
     let res = fetchFromWorld(id: nil)
 
-    let errorPayload: [String: Any] = [
-        "error": "Could not set body!"
-    ]
-
-    var responseString: String = ""
-    var errorString: String = ""
     do {
-        errorString = try errorPayload.jsonEncodedString()
+        response.appendBody(string: try res.jsonEncodedString())
     } catch {
-        // Nothing to do here - we already have an empty value
+        response.appendBody(string: String(describing: res))
     }
-
-    do {
-        responseString = try res.jsonEncodedString()
-        response.appendBody(string: responseString)
-    } catch {
-        response.status = HTTPResponseStatus.internalServerError
-        response.appendBody(string: errorString)
-    }
-
 
     setHeaders(response: response, contentType: "application/json")
     response.completed()
@@ -320,8 +278,30 @@ func spoofHTML(fortunesArr: [[String: Any]]) -> String {
     return htmlToRet
 }
 
+func convertStringToDictionary(str: String) -> [String: Any] {
+
+    let strOfWordsArray = str.components(separatedBy: " ")
+
+    var returnObj = [String: Any]()
+
+    returnObj["id"] = Int(strOfWordsArray[3].dropLast())
+    returnObj["randomNumber"] = Int(strOfWordsArray[6])
+
+    return returnObj
+}
+
+func convertUpdateStringToDictionary(str: String, id: Int) -> [String: Any] {
+
+    let strOfWordsArray = str.components(separatedBy: " ")
+
+    var returnObj = [String: Any]()
+    returnObj["id"] = id
+    returnObj["randomNumber"] = Int(strOfWordsArray[16])
+
+    return returnObj
+}
+
 var routes = Routes()
-routes.add(method: .get, uri: "/fortunes", handler: fortunesHandler)
 routes.add(method: .get, uri: "/updates", handler: updatesHandler)
 routes.add(method: .get, uri: "/queries", handler: multipleDatabaseQueriesHandler)
 routes.add(method: .get, uri: "/db", handler: singleDatabaseQueryHandler)

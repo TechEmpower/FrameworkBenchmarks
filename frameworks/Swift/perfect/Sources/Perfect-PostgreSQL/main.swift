@@ -1,7 +1,7 @@
 import PerfectHTTP
 import PerfectHTTPServer
 import PerfectLib
-import PerfectMySQL
+import PerfectPostgreSQL
 import Foundation
 
 let tfbHost = "tfb-database"
@@ -9,9 +9,9 @@ let database = "hello_world"
 let username = "benchmarkdbuser"
 let password = "benchmarkdbpass"
 
-let mysql = MySQL()
-let connected = mysql.connect(host: tfbHost, user: username, password: password)
-let _ = mysql.selectDatabase(named: database)
+let p = PGConnection()
+let status = p.connectdb("postgresql://\(username):\(password)@\(tfbHost):5432/\(database)")
+// let status = p.connectdb("host=\(tfbHost) dbname=\(database)")
 
 class LinearCongruntialGenerator {
  
@@ -45,40 +45,39 @@ class LinearCongruntialGenerator {
 
 let numGenerator = LinearCongruntialGenerator()
 
-func fetchFromFortune() -> [[String: String]] {
+// func fetchFromFortune() -> [[String: String]] {
 
-    var arrOfFortunes = [[String: String]]()
+//     var arrOfFortunes = [[String: String]]()
     
-    let querySuccess = mysql.query(statement: "SELECT id, message FROM fortune")
+//     let querySuccess = mysql.query(statement: "SELECT id, message FROM fortune")
 
-    guard querySuccess else {
+//     guard querySuccess else {
 
-        let errorObject = ["id": "Failed to execute query"]
-        arrOfFortunes.append(errorObject)
+//         let errorObject = ["id": "Failed to execute query"]
+//         arrOfFortunes.append(errorObject)
         
-        return arrOfFortunes
-    }
+//         return arrOfFortunes
+//     }
  
-    let results = mysql.storeResults()!
+//     let results = mysql.storeResults()!
 
-    results.forEachRow { row in
+//     results.forEachRow { row in
 
-        if let id = row[0], let message = row[1] {
+//         if let id = row[0], let message = row[1] {
             
-            let resObj = ["id": String(describing: id), "message": message]
-            arrOfFortunes.append(resObj)
-        } else {
-            print("not correct values returned: ", row)
-        }
-    }
+//             let resObj = ["id": String(describing: id), "message": message]
+//             arrOfFortunes.append(resObj)
+//         } else {
+//             print("not correct values returned: ", row)
+//         }
+//     }
 
-    return arrOfFortunes
-}
+//     return arrOfFortunes
+// }
 
 func fetchFromWorld(id: String?) -> [String:Any] {
 
     var returnObj = [String: Any]()
-    var errorObject = [String: Any]()
     var rand:Int = 0
 
     if id == nil {
@@ -87,93 +86,50 @@ func fetchFromWorld(id: String?) -> [String:Any] {
         rand = Int(id!)!
     }
 
-    let querySuccess = mysql.query(statement: "SELECT id, randomNumber FROM World WHERE id = \(rand)")
+    let results = p.exec(statement: "select id, randomNumber from world where id = \(rand)")
 
-    guard querySuccess else {
-
-        errorObject["id"] = "Failed to execute query"
-
-        return errorObject
-    }
- 
-    let results = mysql.storeResults()!
-
-    results.forEachRow { row in
-
-        if let id = row[0], let randomNumber = row[1] {
-
-            returnObj["id"] = id
-            returnObj["randomNumber"] = randomNumber
-        } else {
-
-            returnObj["id"] = "No return value"
-            returnObj["randomNumber"] = "what happened?"
-        }
-    }
-
+    returnObj["id"] = results.getFieldString(tupleIndex: 0, fieldIndex: 0)!
+    returnObj["randomNumber"] = results.getFieldString(tupleIndex: 0, fieldIndex: 1)!
+    
     return returnObj
 }
 
 func updateOneFromWorld() -> [String: Any] {
 
     var returnObj = [String: Any]()
-    var errorObject = [String: Any]()
-
     let rand = numGenerator.random() % 10000
     let rand2 = numGenerator.random() % 10000
 
-    let querySuccess = mysql.query(statement: "UPDATE World SET randomNumber = \(rand) WHERE id = \(rand2)")
+    let _ = p.exec(statement: "UPDATE world SET randomNumber = \(rand) WHERE id = \(rand2)")
 
-    guard querySuccess else {
+    // let checkIfCorrect = fetchFromWorld(id: String(describing: rand2))
 
-        errorObject["id"] = "Failed to execute query"
+    //The exec statement for update doesn't return the updated values. I used to checkIfCorrect variable to confirm that the updates were taking place.
+    returnObj["id"] = rand2
+    returnObj["randomNumber"] = rand
 
-        return errorObject
-    }
- 
-    if let results = mysql.storeResults() {
-
-        results.forEachRow { row in
-
-            if let id = row[0], let randomNumber = row[1] {
-
-                returnObj["id"] = id
-                returnObj["randomNumber"] = randomNumber
-            } else {
-
-                returnObj["id"] = "No return value"
-                returnObj["randomNumber"] = "what happened?"
-            }
-        }
-
-        return returnObj
-    } else {
-
-        returnObj["id"] = rand2
-        returnObj["randomNumber"] = rand
-        return returnObj
-    }
+    return returnObj
 }
 
-func fortunesHandler(request: HTTPRequest, response: HTTPResponse) {
+// func fortunesHandler(request: HTTPRequest, response: HTTPResponse) {
 
-    var arrOfFortunes = fetchFromFortune()
+//     var arrOfFortunes = fetchFromFortune()
 
-    let newObj: [String: String] = ["id": "0", "message": "Additional fortune added at request time."]
+//     let newObj: [String: String] = ["id": "0", "message": "Additional fortune added at request time."]
 
-    arrOfFortunes.append(newObj)
+//     arrOfFortunes.append(newObj)
 
-    let sortedArr = arrOfFortunes.sorted(by: ({ $0["message"]! < $1["message"]! }))
+//     let sortedArr = arrOfFortunes.sorted(by: ({ $0["message"]! < $1["message"]! }))
 
-    let htmlToRet = spoofHTML(fortunesArr: sortedArr)
+//     let htmlToRet = spoofHTML(fortunesArr: sortedArr)
 
-    response.appendBody(string: htmlToRet)
+//     response.appendBody(string: htmlToRet)
     
-    setHeaders(response: response, contentType: "text/html")
-    response.setHeader(.custom(name: "CustomLength"), value: String(describing: htmlToRet.count + 32))
+//     setHeaders(response: response, contentType: "text/html")
+//     response.setHeader(.custom(name: "CustomLength"), value: String(describing: htmlToRet.count + 32))
 
-    response.completed()
-}
+//     response.completed()
+// }
 
 func updatesHandler(request: HTTPRequest, response: HTTPResponse) {
 
@@ -321,7 +277,7 @@ func spoofHTML(fortunesArr: [[String: Any]]) -> String {
 }
 
 var routes = Routes()
-routes.add(method: .get, uri: "/fortunes", handler: fortunesHandler)
+// routes.add(method: .get, uri: "/fortunes", handler: fortunesHandler)
 routes.add(method: .get, uri: "/updates", handler: updatesHandler)
 routes.add(method: .get, uri: "/queries", handler: multipleDatabaseQueriesHandler)
 routes.add(method: .get, uri: "/db", handler: singleDatabaseQueryHandler)
