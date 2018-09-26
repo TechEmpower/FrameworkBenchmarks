@@ -53,7 +53,7 @@ env:
      - "TESTDIR=Java/jlhttp"
      - "TESTDIR=Java/jooby"
      - "TESTDIR=Java/light-java"
-     - "TESTDIR=Java/micronaut"     
+     - "TESTDIR=Java/micronaut"
      - "TESTDIR=Java/minijax"
      - "TESTDIR=Java/nanohttpd"
      - "TESTDIR=Java/netty"
@@ -104,8 +104,6 @@ before_script:
   # Runs travis_diff, printing the output to the terminal, and searches for travis-diff-continue
   # to determine if the suite should be installed and the current $TESTDIR test should run.
   - export RUN_TESTS=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -oP "travis-run-tests \K(.*)"`
-
-  - if [ "$RUN_TESTS" ]; then docker pull techempower/tfb; fi
 
   # Stop services that would claim ports we may need
   - sudo service mysql stop

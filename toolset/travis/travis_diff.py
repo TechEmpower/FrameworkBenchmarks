@@ -33,25 +33,9 @@ import subprocess
 import os
 import re
 
-
-def fw_found_in_changes(test, changes_output):
-    return re.search(
-        r"frameworks/" + re.escape(test) + "/",
-        changes_output, re.M)
-
-
 # Cleans up diffing and grep output and into an array of strings
 def clean_output(output):
     return os.linesep.join([s for s in output.splitlines() if s])
-
-
-def quit_diffing():
-    if len(run_tests):
-        print("travis-run-tests {!s}".format(" ".join(set(run_tests))))
-    else:
-        print("No tests to run.")
-    exit(0)
-
 
 print("TRAVIS_COMMIT_RANGE: {!s}".format(os.getenv("TRAVIS_COMMIT_RANGE")))
 print("TRAVIS_COMMIT      : {!s}".format(os.getenv("TRAVIS_COMMIT")))
@@ -99,6 +83,25 @@ changes = clean_output(
     ]))
 print("Determining what to run based on the following file changes: \n{!s}"
     .format(changes))
+
+
+def fw_found_in_changes(test, changes_output):
+    return re.search(
+        r"frameworks/" + re.escape(test) + "/",
+        changes_output, re.M)
+
+
+def quit_diffing():
+    if len(run_tests):
+        # If running this test, and the base tfb Dockerfile has changed, build
+        # it instead of pulling it from dockerhub
+        if re.search(r'^Dockerfile\b', changes, re.M):
+            subprocess.call(["bash", "-c", "docker build -t techempower/tfb - < Dockerfile"])
+        print("travis-run-tests {!s}".format(" ".join(set(run_tests))))
+    else:
+        print("No tests to run.")
+    exit(0)
+
 
 # COMMIT MESSAGES:
 # Before any complicated diffing, check for forced runs from the commit message
