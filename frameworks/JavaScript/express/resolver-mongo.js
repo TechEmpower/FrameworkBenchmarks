@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const helper = require('./helper');
 
 const Schema = mongoose.Schema,
   ObjectId = Schema.ObjectId;
@@ -21,19 +22,14 @@ const FortuneSchema = new mongoose.Schema({
 
 // Methods
 
-const randomizeNum = () => {
-
-    return Math.floor(Math.random() * 10000) + 1;
-};
-
 async function arrayOfRandomWorlds(totalWorldToReturn) {
 
-    var totalIterations = sanititizeTotal(totalWorldToReturn);
+    var totalIterations = helper.sanititizeTotal(totalWorldToReturn);
     var arr = [];
 
     return new Promise(async (resolve, reject) => {
         for(var i = 0; i < totalIterations; i++) {
-            arr.push(await World.findOne({ id: randomizeNum() }));
+            arr.push(await World.findOne({ id: helper.randomizeNum() }));
         }
         if(arr.length == totalIterations) {
             resolve(arr);
@@ -43,34 +39,18 @@ async function arrayOfRandomWorlds(totalWorldToReturn) {
 
 async function updateRandomWorlds(totalToUpdate) {
 
-    const totalIterations = sanititizeTotal(totalToUpdate);
+    const totalIterations = helper.sanititizeTotal(totalToUpdate);
     var arr = [];
 
     return new Promise(async (resolve, reject) => {
         for(var i = 0; i < totalIterations; i++) {
 
-            arr.push(await World.findOneAndUpdate({ id: randomizeNum() }, { randomNumber: randomizeNum() }));
+            arr.push(await World.findOneAndUpdate({ id: helper.randomizeNum() }, { randomNumber: helper.randomizeNum() }));
         }
         if(arr.length == totalIterations) {
             resolve(arr);
         }
     });
-};
-
-const sanititizeTotal = (total) => {
-
-    var totalIterations;
-
-    if (!total) {
-        totalIterations = 1;
-    } else if(total < 501 && total > 0) {
-        totalIterations = total;
-    } else if (total > 500) {
-        totalIterations = 500;
-    } else {
-        totalIterations = 1;
-    }
-    return totalIterations;
 };
 
 const sayHello = () => {
@@ -85,7 +65,7 @@ module.exports = {
     Query: {
         helloWorld: () => sayHello(),
         getAllWorlds: async() => await World.find({}),
-        singleDatabaseQuery: async() => await World.findOne({ id: randomizeNum() }),
+        singleDatabaseQuery: async() => await World.findOne({ id: helper.randomizeNum() }),
         multipleDatabaseQueries: async(parent, args) => await arrayOfRandomWorlds(args.total),
         getWorldById: async(parent, args) => await World.findById(args.id),
         getAllFortunes: async() => await Fortune.find({}),
