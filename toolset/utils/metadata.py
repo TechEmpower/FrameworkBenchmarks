@@ -189,7 +189,7 @@ class Metadata:
             for test_name, test_keys in iter(test.items()):
                 # Validates and normalizes the benchmark_config entry
                 test_keys = Metadata.validate_test(test_name, test_keys,
-                                                   directory)
+                                                   config['framework'], directory)
 
                 # Map test type to a parsed FrameworkTestType object
                 run_tests = dict()
@@ -254,7 +254,7 @@ class Metadata:
             f.write(all_tests_json)
 
     @staticmethod
-    def validate_test(test_name, test_keys, directory):
+    def validate_test(test_name, test_keys, framework_name, directory):
         """
         Validate and normalizes benchmark config values for this test based on a schema
         """
@@ -342,41 +342,46 @@ class Metadata:
         def get_test_val(k):
             return test_keys.get(k, "none").lower()
 
-        def throw_incorrect_key(k):
+        def throw_incorrect_key(k, acceptable_values, descriptors):
             msg = (
-                "Invalid `%s` value specified for test \"%s\" in framework \"%s\"; suggestions:\n"
-                % (k, test_name, test_keys['framework']))
-            helpinfo = '\n'.join([
-                "  `%s` -- %s" % (v, desc)
-                for (v, desc) in zip(acceptable_values, descriptors)
-            ])
-            fullerr = msg + helpinfo + "\n"
-            raise Exception(fullerr)
+                "`%s` is a required key for test \"%s\" in framework \"%s\"\n"
+                % (k, test_name, framework_name))
+            if acceptable_values:
+                msg = (
+                    "Invalid `%s` value specified for test \"%s\" in framework \"%s\"; suggestions:\n"
+                    % (k, test_name, framework_name))
+                helpinfo = ('\n').join([
+                    "  `%s` -- %s" % (v, desc)
+                    for (v, desc) in zip(acceptable_values, descriptors)
+                ])
+                msg = msg + helpinfo + "\n"
+
+            raise Exception(msg)
 
         # Check values of keys against schema
         for key in schema.keys():
             val = get_test_val(key)
             test_keys[key] = val
+            acceptable_values = None
+            descriptors = None
 
-            if val == "none":
-                # incorrect if key requires a value other than none
-                if schema[key].get('required', False):
-                    throw_incorrect_key(key)
-                # certain keys are only required if another key is not none
-                if 'required_with' in schema[key]:
-                    if get_test_val(schema[key]['required_with']) == "none":
-                        continue
-                    else:
-                        throw_incorrect_key(key)
-
-            # if we're here, the key needs to be one of the "allowed" values
             if 'allowed' in schema[key]:
                 allowed = schema[key].get('allowed', [])
                 acceptable_values, descriptors = zip(*allowed)
                 acceptable_values = [a.lower() for a in acceptable_values]
 
-                if val not in acceptable_values:
-                    throw_incorrect_key(key)
+            if val == "none":
+                # incorrect if key requires a value other than none
+                if schema[key].get('required', False):
+                    throw_incorrect_key(key, acceptable_values, descriptors)
+                # certain keys are only required if another key is not none
+                if 'required_with' in schema[key]:
+                    if get_test_val(schema[key]['required_with']) != "none":
+                        throw_incorrect_key(key, acceptable_values, descriptors)
+
+            # if we're here, the key needs to be one of the "allowed" values
+            elif acceptable_values and val not in acceptable_values:
+                throw_incorrect_key(key, acceptable_values, descriptors)
 
         return test_keys
 
