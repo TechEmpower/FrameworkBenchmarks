@@ -2,6 +2,6 @@
 
 Crystal bindings to h2o
 
-### Plaintext
+### notes
 
 h2o.cr currently only support plaintext and json requests
