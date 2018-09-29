@@ -1,6 +1,6 @@
 FROM php:7.2
 
-ENV SWOOLE_VERSION=4.0.4
+ENV SWOOLE_VERSION=4.2.1
 
 RUN cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz" | tar xzf - \
         && cd swoole-src-${SWOOLE_VERSION} \
@@ -18,4 +18,4 @@ WORKDIR /hamlet
 RUN chmod -R 777 /hamlet
 RUN composer update
 
-CMD php /hamlet/swoole.php
+CMD sed -i 's|NUMCORES|'"$(nproc)"'|g' swoole.php && php swoole.php
