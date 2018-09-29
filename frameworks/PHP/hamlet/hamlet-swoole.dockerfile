@@ -16,6 +16,6 @@ ADD ./ /hamlet
 WORKDIR /hamlet
 
 RUN chmod -R 777 /hamlet
-RUN composer update
+RUN composer update --optimize-autoloader
 
 CMD sed -i 's|NUMCORES|'"$(nproc)"'|g' swoole.php && php swoole.php
