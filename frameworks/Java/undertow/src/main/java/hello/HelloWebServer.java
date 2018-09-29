@@ -1,6 +1,7 @@
 package hello;
 
 import static io.undertow.util.Headers.CONTENT_TYPE;
+import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.util.Comparator.comparing;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,6 +39,7 @@ public final class HelloWebServer {
     Undertow
         .builder()
         .addHttpListener(8080, "0.0.0.0")
+        .setIoThreads(Runtime.getRuntime().availableProcessors() * 2)
         // In HTTP/1.1, connections are persistent unless declared otherwise.
         // Adding a "Connection: keep-alive" header to every response would only
         // add useless bytes.
@@ -83,9 +85,15 @@ public final class HelloWebServer {
   }
 
   static HttpHandler plaintextHandler() {
+    var text = "Hello, World!";
+    var bytes = text.getBytes(US_ASCII);
+    var buffer = ByteBuffer.allocateDirect(bytes.length)
+                           .put(bytes)
+                           .flip();
+
     return exchange -> {
       exchange.getResponseHeaders().put(CONTENT_TYPE, "text/plain");
-      exchange.getResponseSender().send("Hello, World!");
+      exchange.getResponseSender().send(buffer.duplicate());
     };
   }
 

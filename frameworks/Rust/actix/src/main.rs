@@ -44,9 +44,9 @@ fn main() {
             .resource("/json", |r| r.f(json))
             .resource("/plaintext", |r| r.f(plaintext))
     }).backlog(8192)
-        .bind("0.0.0.0:8080")
-        .unwrap()
-        .start();
+    .bind("0.0.0.0:8080")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

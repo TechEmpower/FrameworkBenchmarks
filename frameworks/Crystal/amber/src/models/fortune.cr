@@ -1,6 +1,6 @@
-require "granite_orm/adapter/pg"
+require "granite/adapter/pg"
 
-class Fortune < Granite::ORM::Base
+class Fortune < Granite::Base
   adapter pg
 
   table_name fortune

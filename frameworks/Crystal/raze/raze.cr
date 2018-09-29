@@ -40,7 +40,7 @@ end
 # Test 1: JSON Serialization
 get "/json" do |ctx|
   ctx.response.headers["Server"] = "Raze"
-  ctx.response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
+  ctx.response.headers["Date"] = HTTP.format_time(Time.now)
   ctx.response.content_type = CONTENT::JSON
   { message: "Hello, World!" }.to_json
 end
@@ -48,7 +48,7 @@ end
 # Postgres Test 2: Single database query
 get "/db" do |ctx|
   ctx.response.headers["Server"] = "Raze"
-  ctx.response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
+  ctx.response.headers["Date"] = HTTP.format_time(Time.now)
   ctx.response.content_type = CONTENT::JSON
   get_world.to_json
 end
@@ -59,7 +59,7 @@ get "/queries" do |ctx|
     get_world
   end
   ctx.response.headers["Server"] = "Raze"
-  ctx.response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
+  ctx.response.headers["Date"] = HTTP.format_time(Time.now)
   ctx.response.content_type = CONTENT::JSON
   results.to_json
 end
@@ -67,7 +67,7 @@ end
 # Postgres Test 4: Fortunes
 get "/fortunes" do |ctx|
   ctx.response.headers["Server"] = "Raze"
-  ctx.response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
+  ctx.response.headers["Date"] = HTTP.format_time(Time.now)
   ctx.response.content_type = CONTENT::HTML
   data = fortunes
   additional_fortune = {
@@ -87,7 +87,7 @@ get "/updates" do |ctx|
     set_world({id: get_world[:id], randomNumber: Random.rand(CONTENT::ID_MAX).succ})
   end
   ctx.response.headers["Server"] = "Raze"
-  ctx.response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
+  ctx.response.headers["Date"] = HTTP.format_time(Time.now)
   ctx.response.content_type = CONTENT::JSON
   updated.to_json
 end
@@ -95,7 +95,7 @@ end
 # Test 6: Plaintext
 get "/plaintext" do |ctx|
   ctx.response.headers["Server"] = "Raze"
-  ctx.response.headers["Date"] = Time.utc_now.to_s("%a, %d %b %Y %H:%M:%S GMT")
+  ctx.response.headers["Date"] = HTTP.format_time(Time.now)
   ctx.response.content_type = CONTENT::PLAIN
   "Hello, World!"
 end

@@ -17,12 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@EnableAutoConfiguration
 public final class HelloController {
-
-  public static void main(String[] args) {
-    SpringApplication.run(HelloController.class, args);
-  }
 
   @Autowired
   JdbcTemplate jdbcTemplate;
