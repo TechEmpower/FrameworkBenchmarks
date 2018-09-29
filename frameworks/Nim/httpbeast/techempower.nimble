@@ -10,5 +10,5 @@ skipExt = @["nim"]
 
 # Dependencies
 
-requires "nim >= 0.18.0"
-requires "httpbeast#v0.2.0"
+requires "nim >= 0.19.0"
+requires "httpbeast#v0.2.1"
