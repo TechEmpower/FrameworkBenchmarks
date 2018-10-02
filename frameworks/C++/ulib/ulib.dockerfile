@@ -45,7 +45,7 @@ RUN tar xf ULib-${ULIB_VERSION}.tar.gz
 WORKDIR $IROOT/ULib-$ULIB_VERSION
 
 # AVOID "configure: error: newly created file is older than distributed files! Check your system clock"
-#RUN cp /src/* src/ulib/net/server/plugin/usp 
+RUN cp /src/* src/ulib/net/server/plugin/usp 
 RUN find . -exec touch {} \;
 
 RUN echo "userver {" >> $ULIB_ROOT/benchmark.cfg
