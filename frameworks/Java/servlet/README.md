@@ -31,7 +31,7 @@ The tests were run with:
 
 * [Java Oracle JDK](http://openjdk.java.net/)
 * [Resin](http://www.caucho.com/)
-* [Jackson(http://wiki.fasterxml.com/JacksonHome)
+* [Jackson](http://wiki.fasterxml.com/JacksonHome)
 * [MySQL](https://dev.mysql.com/)
 * [Postgres](http://www.postgresql.org/)
 * [cache2k](https://cache2k.org/)
