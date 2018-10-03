@@ -29,12 +29,12 @@ DB, Queries and Fortune use the same implementation as MySQL.
 
 The tests were run with:
 
-* [Java Oracle JDK 1.8.0](http://openjdk.java.net/)
-* [Resin 4.0.55](http://www.caucho.com/)
-* [Jackson 2.9.3](http://wiki.fasterxml.com/JacksonHome)
-* [MySQL 5.7](https://dev.mysql.com/)
-* [Postgres 9.3](http://www.postgresql.org/)
-* [cache2k 1.0.2Final](https://cache2k.org/)
+* [Java Oracle JDK](http://openjdk.java.net/)
+* [Resin](http://www.caucho.com/)
+* [Jackson(http://wiki.fasterxml.com/JacksonHome)
+* [MySQL](https://dev.mysql.com/)
+* [Postgres](http://www.postgresql.org/)
+* [cache2k](https://cache2k.org/)
 
 Please confirm the versions data with the latest install scripts of TFB project.
 
