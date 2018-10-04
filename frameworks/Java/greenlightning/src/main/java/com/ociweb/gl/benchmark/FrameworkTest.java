@@ -23,7 +23,7 @@ public class FrameworkTest implements GreenApp {
 
     public FrameworkTest() {
     	//this server works best with  -XX:+UseNUMA
-    	this("*.*.*.*",8080, 40, 16*1024, -1); //set -1 to 8098 or some port for remote monitoring over http
+    	this("localhost",8080, 20, 16*1024, 8098);//40
     }
     
     public FrameworkTest(String host, int port, int concurrentWritesPerChannel, int queueLengthOfPendingRequests, int telemetryPort) {
@@ -37,12 +37,12 @@ public class FrameworkTest implements GreenApp {
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //auto-scale of tracks based on cores
+		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
     			 .setHost(host)
     			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)
     			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
-    	         .useInsecureServer(); //turn off TLS, it is on by default
+    	         .useInsecureServer(); //turn off TLS
         
 		framework.defineRoute()
 		         .path("/plaintext")

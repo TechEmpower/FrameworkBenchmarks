@@ -9,29 +9,28 @@ import com.ociweb.pronghorn.network.config.HTTPContentTypeDefaults;
 
 public class JSONBehaviorInstance implements RestListener {
 
-	byte[] messagePayload;
 
-	private static final JSONRenderer<JSONBehaviorInstance> renderJSON = new JSONRenderer<JSONBehaviorInstance>()
+	private static final JSONRenderer<ResultObject> renderJSON = new JSONRenderer<ResultObject>()
 			.startObject()
-				.string("message", (o,t) -> t.write(o.messagePayload) )
+				.string("message", (o,t) -> t.write(o.payload) )
 			.endObject();
 
 	private final HTTPResponseService responseService;
 
 	
 	public JSONBehaviorInstance(GreenRuntime runtime) {
-		responseService = runtime.newCommandChannel().newHTTPResponseService(1<<16);		
+		responseService = runtime.newCommandChannel().newHTTPResponseService(1<<17);		
 	}
 
 
 	@Override
 	public boolean restRequest(HTTPRequestReader request) {
 	
-		messagePayload = FrameworkTest.payload;
+		ResultObject result = new ResultObject(FrameworkTest.payload);
 		
 		return responseService.publishHTTPResponse(request, 
 				                            HTTPContentTypeDefaults.JSON,
-				                            w -> renderJSON.render(w,this)
+				                            w -> renderJSON.render(w,result)
 				                            );
 		
 	}
