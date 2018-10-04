@@ -6,8 +6,6 @@ extern crate serde;
 extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
-#[macro_use]
-extern crate askama;
 extern crate num_cpus;
 extern crate rand;
 extern crate url;
@@ -15,16 +13,16 @@ extern crate url;
 extern crate diesel;
 extern crate tokio_postgres;
 
-use std::{mem, io};
 use std::cell::RefCell;
+use std::io::Write;
 use std::rc::Rc;
+use std::{io, mem};
 
 use actix::prelude::*;
 use actix_web::server::{
-    self, HttpHandler, HttpHandlerTask, HttpServer, Request, Writer,
+    self, HttpHandler, HttpHandlerTask, HttpServer, KeepAlive, Request, Writer,
 };
 use actix_web::Error;
-use askama::Template;
 use futures::{Async, Future, Poll};
 use rand::{thread_rng, Rng};
 
@@ -33,7 +31,7 @@ mod models;
 mod utils;
 
 use db_pg_direct::PgConnection;
-use utils::{Message, StackWriter, Writer as JsonWriter};
+use utils::{escape, Message, StackWriter, Writer as JsonWriter};
 
 const HTTPOK: &[u8] = b"HTTP/1.1 200 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: Actix\r\n";
@@ -44,6 +42,7 @@ const BODY: &[u8] = b"Hello, World!";
 
 struct App {
     dbs: Rc<RefCell<Vec<PgConnection>>>,
+    useall: bool,
 }
 
 impl HttpHandler for App {
@@ -56,25 +55,51 @@ impl HttpHandler for App {
                 10 if path == "/plaintext" => return Ok(Box::new(Plaintext)),
                 5 if path == "/json" => return Ok(Box::new(Json)),
                 3 if path == "/db" => {
-                    if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
-                        return Ok(Box::new(World {fut: Box::new(db.get_world())}))
+                    if self.useall {
+                        if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
+                            return Ok(Box::new(World {
+                                fut: db.get_world(),
+                            }));
+                        }
+                    } else {
+                        return Ok(Box::new(World {
+                            fut: self.dbs.borrow()[0].get_world(),
+                        }));
                     }
                 }
                 8 if path == "/fortune" => {
                     if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
-                        return Ok(Box::new(Fortune {fut: Box::new(db.tell_fortune())}));
+                        return Ok(Box::new(Fortune {
+                            fut: db.tell_fortune(),
+                        }));
                     }
                 }
                 8 if path == "/queries" => {
                     let q = utils::get_query_param(req.uri());
-                    if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
-                        return Ok(Box::new(Queries {fut: Box::new(db.get_worlds(q as usize))}));
+                    if self.useall {
+                        if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
+                            return Ok(Box::new(Queries {
+                                fut: db.get_worlds(q as usize),
+                            }));
+                        }
+                    } else {
+                        return Ok(Box::new(Queries {
+                            fut: self.dbs.borrow()[0].get_worlds(q as usize),
+                        }));
                     }
                 }
                 8 if path == "/updates" => {
                     let q = utils::get_query_param(req.uri());
-                    if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
-                        return Ok(Box::new(Updates {fut: Box::new(db.update(q as usize))}));
+                    if self.useall {
+                        if let Some(db) = thread_rng().choose(&*self.dbs.borrow()) {
+                            return Ok(Box::new(Updates {
+                                fut: db.update(q as usize),
+                            }));
+                        }
+                    } else {
+                        return Ok(Box::new(Updates {
+                            fut: self.dbs.borrow()[0].update(q as usize),
+                        }));
                     }
                 }
                 _ => (),
@@ -124,25 +149,35 @@ impl HttpHandlerTask for Json {
     }
 }
 
-struct Fortune {
-    fut: Box<Future<Item=Vec<models::Fortune>, Error=io::Error>>,
+struct Fortune<F> {
+    fut: F,
 }
 
-#[derive(Template)]
-#[template(path = "fortune.html")]
-struct FortuneTemplate<'a> {
-    items: &'a Vec<models::Fortune>,
-}
+const FORTUNES_START: &[u8] = b"<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
+const FORTUNES_ROW_START: &[u8] = b"<tr><td>";
+const FORTUNES_COLUMN: &[u8] = b"</td><td>";
+const FORTUNES_ROW_END: &[u8] = b"</td></tr>";
+const FORTUNES_END: &[u8] = b"</table></body></html>";
 
-impl HttpHandlerTask for Fortune {
+impl<F> HttpHandlerTask for Fortune<F>
+where
+    F: Future<Item = Vec<models::Fortune>, Error = io::Error>,
+{
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
             Ok(Async::Ready(rows)) => {
                 let mut body: [u8; 2048] = unsafe { mem::uninitialized() };
                 let len = {
                     let mut writer = StackWriter(&mut body, 0);
-                    let tmpl = FortuneTemplate { items: &rows };
-                    tmpl.render_into(&mut writer).unwrap();
+                    let _ = writer.write(FORTUNES_START);
+                    for row in rows {
+                        let _ = writer.write(FORTUNES_ROW_START);
+                        let _ = write!(&mut writer, "{}", row.id);
+                        let _ = writer.write(FORTUNES_COLUMN);
+                        escape(&mut writer, row.message);
+                        let _ = writer.write(FORTUNES_ROW_END);
+                    }
+                    let _ = writer.write(FORTUNES_END);
                     writer.1
                 };
 
@@ -164,11 +199,14 @@ impl HttpHandlerTask for Fortune {
     }
 }
 
-struct World {
-    fut: Box<Future<Item=models::World, Error=io::Error>>,
+struct World<F> {
+    fut: F,
 }
 
-impl HttpHandlerTask for World {
+impl<F> HttpHandlerTask for World<F>
+where
+    F: Future<Item = models::World, Error = io::Error>,
+{
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
             Ok(Async::Ready(row)) => {
@@ -197,11 +235,14 @@ impl HttpHandlerTask for World {
     }
 }
 
-struct Queries {
-    fut: Box<Future<Item=Vec<models::World>, Error=io::Error>>,
+struct Queries<F> {
+    fut: F,
 }
 
-impl HttpHandlerTask for Queries {
+impl<F> HttpHandlerTask for Queries<F>
+where
+    F: Future<Item = Vec<models::World>, Error = io::Error>,
+{
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
             Ok(Async::Ready(worlds)) => {
@@ -230,11 +271,14 @@ impl HttpHandlerTask for Queries {
     }
 }
 
-struct Updates {
-    fut: Box<Future<Item=Vec<models::World>, Error=io::Error>>,
+struct Updates<F> {
+    fut: F,
 }
 
-impl HttpHandlerTask for Updates {
+impl<F> HttpHandlerTask for Updates<F>
+where
+    F: Future<Item = Vec<models::World>, Error = io::Error>,
+{
     fn poll_io(&mut self, io: &mut Writer) -> Poll<bool, Error> {
         match self.fut.poll() {
             Ok(Async::Ready(worlds)) => {
@@ -271,21 +315,23 @@ fn main() {
     HttpServer::new(move || {
         let dbs = Rc::new(RefCell::new(Vec::new()));
 
-        for _ in 0..2 {
+        for _ in 0..3 {
             let db = dbs.clone();
-            Arbiter::spawn(
-                PgConnection::connect(db_url)
-                    .and_then(move |conn| {
-                        db.borrow_mut().push(conn);
-                        Ok(())
-                    }));
+            Arbiter::spawn(PgConnection::connect(db_url).and_then(move |conn| {
+                db.borrow_mut().push(conn);
+                Ok(())
+            }));
         }
 
-        vec![App { dbs }]
+        vec![App {
+            dbs,
+            useall: num_cpus::get() > 4,
+        }]
     }).backlog(8192)
-        .bind("0.0.0.0:8080")
-        .unwrap()
-        .start();
+    .keep_alive(KeepAlive::Os)
+    .bind("0.0.0.0:8080")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

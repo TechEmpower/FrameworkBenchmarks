@@ -1,6 +1,6 @@
 FROM haskell:8.2.1
 
-RUN apt update -yqq && apt install -yqq xz-utils make
+RUN apt update -yqq && apt install -yqq xz-utils make netbase
 RUN apt install -yqq libmysqlclient-dev pkg-config libpcre3 libpcre3-dev
 
 COPY ./bench /snap

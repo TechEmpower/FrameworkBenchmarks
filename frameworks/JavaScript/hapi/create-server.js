@@ -1,5 +1,5 @@
 /**
- * Currently commenting out redis caching as there is no 
+ * Currently commenting out redis caching as there is no
  * working implementation for the benchmark suite.
  */
 
@@ -14,7 +14,7 @@ const options = {
 
 const server = new Hapi.Server(options);
 
-server.connection({port: 8080, host: '0.0.0.0'});
+server.connection({port: process.env.PORT || 8080, host: '0.0.0.0'});
 server.register(Vision, (err) => {
     if (err) {
         throw err;

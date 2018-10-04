@@ -1,6 +1,6 @@
 {
   "require": {
-    "hamlet/hamlet-core" : "^2",
+    "hamlet/hamlet-core" : "^3",
     "cache/void-adapter": "^1"
   },
   "autoload": {
