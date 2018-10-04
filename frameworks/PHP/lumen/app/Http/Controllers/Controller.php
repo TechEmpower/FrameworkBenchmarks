@@ -37,7 +37,7 @@ class Controller extends BaseController {
 		$rows->add($insert);
 		$rows = $rows->sortBy("message");
 
-		return view("fortunes", ["rows" => $rows]);
+		return response()->make(view("fortunes", ["rows" => $rows]), 200, ['Content-Type' => 'text/html; charset=UTF-8']);
 	}
 
 	public function updates($queries = 1) {

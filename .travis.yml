@@ -82,8 +82,6 @@ env:
      - "TESTDIR=Java/wicket"
      - "TESTDIR=Java/wildfly-ee7"
      - "TESTDIR=Java/wizzardo-http"
-     - "TESTDIR=PHP/laravel-swoole"
-     - "TESTDIR=PHP/lumen-swoole"
      - "TESTDIR=Scala/cask"
      - "TESTLANG=JavaScript"
      - "TESTLANG=Kotlin"
