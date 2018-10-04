@@ -1,0 +1,30 @@
+{
+  "framework": "laravel-swoole",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries/",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates/",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "laravel-swoole",
+        "language": "PHP",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "swoole",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Laravel 5.6 on Swoole 4.1.2",
+        "notes": "",
+        "versus": "swoole"
+      }
+    }
+  ]
+}
