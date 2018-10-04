@@ -11,6 +11,6 @@ val jOOQVersion = "3.10.3"
 libraryDependencies ++= Seq(
   guice,
   javaJdbc,
-  "mysql" % "mysql-connector-java" % "5.1.45",
+  "mysql" % "mysql-connector-java" % "5.1.47",
   "org.jooq" % "jooq" % jOOQVersion,
 )
