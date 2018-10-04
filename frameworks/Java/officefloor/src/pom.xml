@@ -48,6 +48,11 @@
 			</dependency>
 			<dependency>
 				<groupId>net.officefloor.web</groupId>
+				<artifactId>officeweb_executive</artifactId>
+				<version>${officefloor.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.web</groupId>
 				<artifactId>officejson_jackson</artifactId>
 				<version>${officefloor.version}</version>
 			</dependency>
