@@ -1,6 +1,10 @@
 FROM maven:3.5.4-jdk-10 as maven
 WORKDIR /officefloor
 COPY src src
+WORKDIR /officefloor/src
+RUN mvn -q -N clean install
+WORKDIR /officefloor/src/woof_micro
+RUN mvn -q clean install
 WORKDIR /officefloor/src/woof_thread_affinity
 RUN mvn -q clean package
 
