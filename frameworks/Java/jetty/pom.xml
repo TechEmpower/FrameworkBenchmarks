@@ -9,7 +9,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jetty.version>9.4.6.v20170531</jetty.version>
+        <jetty.version>9.4.12.v20180830</jetty.version>
         <main.class>hello.handler.HelloWebServer</main.class>
     </properties>
 
