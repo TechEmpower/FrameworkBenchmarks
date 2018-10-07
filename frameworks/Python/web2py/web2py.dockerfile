@@ -10,10 +10,8 @@ RUN git clone --recursive --branch master https://github.com/web2py/web2py.git
 
 WORKDIR /web2py/web2py
 
-# The following commit is checked out in order to take advantage of several
-# bug fixes that were made after the latest stable release. This can be changed
-# in future rounds once a new stable release has been made.
-RUN git checkout 623f3b99477eb97ffadb20d6f7cb3da398253c9c
+# Version R-2.17.2
+RUN git checkout 95709e582d586bd1871ab0fe9f6f265c1884bbe3
 
 WORKDIR /web2py
 
