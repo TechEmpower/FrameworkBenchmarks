@@ -10,7 +10,8 @@ RUN git clone --recursive --branch master https://github.com/web2py/web2py.git
 
 WORKDIR /web2py/web2py
 
-RUN git checkout master
+# Version R-2.17.2
+RUN git checkout 95709e582d586bd1871ab0fe9f6f265c1884bbe3
 
 WORKDIR /web2py
 
