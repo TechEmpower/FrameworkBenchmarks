@@ -1,10 +1,44 @@
 {
+    "name": "cakephp/app",
+    "description": "CakePHP skeleton app",
+    "homepage": "https://cakephp.org",
+    "type": "project",
+    "license": "MIT",
     "require": {
-        "cakephp/cakephp": "^2.10"
+        "php": ">=5.6",
+        "cakephp/cakephp": "3.6.*",
+        "cakephp/plugin-installer": "^1.0"
     },
+    "require-dev": {
+        "cakephp/bake": "^1.1",
+        "cakephp/cakephp-codesniffer": "^3.0",
+        "cakephp/debug_kit": "^3.15.0",
+        "josegonzalez/dotenv": "3.*"
+    },
+    "suggest": {
+        "markstory/asset_compress": "An asset compression plugin which provides file concatenation and a flexible filter system for preprocessing and minification.",
+        "dereuromark/cakephp-ide-helper": "After baking your code, this keeps your annotations in sync with the code evolving from there on for maximum IDE and PHPStan compatibility.",
+        "phpunit/phpunit": "Allows automated tests to be run without system-wide install."
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": "App\\Console\\Installer::postInstall",
+        "post-create-project-cmd": "App\\Console\\Installer::postInstall",
+        "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
+        "check": [
+            "@test",
+            "@cs-check"
+        ],
+        "cs-check": "phpcs --colors -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
+        "cs-fix": "phpcbf --colors --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
+        "test": "phpunit --colors=always"
+    },
+    "prefer-stable": true,
     "config": {
-        "vendor-dir": "app/Vendor"
+        "sort-packages": true
     }
-
 }
-
