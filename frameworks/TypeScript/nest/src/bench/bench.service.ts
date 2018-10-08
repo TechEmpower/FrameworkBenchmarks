@@ -22,10 +22,7 @@ export class BenchService {
             for (let i = 0; i < total; i++) {
                 worldArr.push(await this.getOne());
             }
-
-            if (worldArr.length === total) {
-                resolve(worldArr);
-            }
+            resolve(worldArr);
         });
     }
 
@@ -40,10 +37,7 @@ export class BenchService {
                 worldToUpdate = await this.worldRepository.save(worldToUpdate);
                 worldArr.push(worldToUpdate);
             }
-
-            if (worldArr.length === total) {
-                resolve(worldArr);
-            }
+            resolve(worldArr);
         });
     }
 
