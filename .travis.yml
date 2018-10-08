@@ -46,6 +46,7 @@ env:
      - "TESTDIR=Java/curacao"
      - "TESTDIR=Java/dropwizard"
      - "TESTDIR=Java/gemini"
+     - "TESTDIR=Java/greenlightning"
      - "TESTDIR=Java/grizzly"
      - "TESTDIR=Java/grizzly-jersey"
      - "TESTDIR=Java/jawn"
