@@ -21,7 +21,7 @@ public class PlainBehaviorInstance implements RestListener {
 	};
 	
 	public PlainBehaviorInstance(GreenRuntime runtime) {
-		plainResponseService = runtime.newCommandChannel().newHTTPResponseService(1<<17); 
+		plainResponseService = runtime.newCommandChannel().newHTTPResponseService(1<<14, 1<<8); 
 	}
 
 	@Override
