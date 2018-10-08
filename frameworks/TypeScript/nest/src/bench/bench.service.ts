@@ -35,9 +35,9 @@ export class BenchService {
             const worldArr = [];
             const total = this.sanitizeQueries(totalQueries);
             for (let i = 0; i < total; i++) {
-                const worldToUpdate = await this.getOne();
+                let worldToUpdate = await this.getOne();
                 worldToUpdate.randomnumber = Math.floor(Math.random() * 10000) + 1;
-                await this.worldRepository.save(worldToUpdate);
+                worldToUpdate = await this.worldRepository.save(worldToUpdate);
                 worldArr.push(worldToUpdate);
             }
 
