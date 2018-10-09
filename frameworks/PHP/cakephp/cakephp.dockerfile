@@ -18,7 +18,7 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 2048|pm.max_children =
 
 RUN composer install --no-dev -n
 
-RUN bin/cake schema_shell build
+RUN bin/cake schema_cache build
 
 CMD service php7.2-fpm start && \
     nginx -c /cakephp/deploy/nginx.conf -g "daemon off;"
