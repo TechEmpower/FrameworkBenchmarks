@@ -8,23 +8,23 @@ export class BenchController {
 
     @Get('/db')
     @Header('Server', 'NestJS')
-    async getRandomWorld(){
+    getRandomWorld(){
 
-        return await this.benchService.getOne();
+        return this.benchService.getOne();
     }
 
     @Get('/queries')
     @Header('Server', 'NestJS')
-    async getMultipleRandomWorlds(@Query('queries') query){
+    getMultipleRandomWorlds(@Query('queries') query){
 
-        return await this.benchService.getMultiple(query);
+        return this.benchService.getMultiple(query);
     }
 
     @Get('/updates')
     @Header('Server', 'NestJS')
-    async updateRandomWorlds(@Query('queries') query){
+    updateRandomWorlds(@Query('queries') query){
 
-        return await this.benchService.updateMultiple(query);
+        return this.benchService.updateMultiple(query);
     }
 
     @Get('/json')

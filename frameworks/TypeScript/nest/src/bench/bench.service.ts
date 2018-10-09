@@ -9,9 +9,9 @@ export class BenchService {
         @InjectRepository(WorldEntity)
         private worldRepository: Repository<WorldEntity>){}
 
-    async getOne(){
+    getOne(){
 
-        return await this.worldRepository.findOne({ where: {id: Math.floor(Math.random() * 10000) + 1}});
+        return this.worldRepository.findOne({ where: {id: Math.floor(Math.random() * 10000) + 1}});
     }
 
     async getMultiple(totalQueries: string) {
