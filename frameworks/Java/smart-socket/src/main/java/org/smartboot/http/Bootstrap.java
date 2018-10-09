@@ -8,10 +8,10 @@
 
 package org.smartboot.http;
 
+import org.smartboot.http.server.HttpMessageProcessor;
+import org.smartboot.http.server.decode.Http11Request;
+import org.smartboot.http.server.decode.HttpRequestProtocol;
 import org.smartboot.http.server.handle.HttpHandle;
-import org.smartboot.http.server.v2.HttpMessageProcessor;
-import org.smartboot.http.server.v2.decode.Http11Request;
-import org.smartboot.http.server.v2.decode.HttpRequestProtocol;
 import org.smartboot.http.utils.HttpHeaderConstant;
 import org.smartboot.socket.MessageProcessor;
 import org.smartboot.socket.transport.AioQuickServer;
@@ -52,6 +52,7 @@ public class Bootstrap {
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
         server.setWriteQueueSize(1024);
         server.setReadBufferSize(1024*4);
+        server.setFairIO(true);
 //        server.setThreadNum((int) (Runtime.getRuntime().availableProcessors() * 2));
         try {
             server.start();
