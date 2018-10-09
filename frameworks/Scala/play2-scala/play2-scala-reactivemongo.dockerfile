@@ -1,4 +1,4 @@
-FROM hseeberger/scala-sbt:8u181_2.12.6_1.2.1
+FROM hseeberger/scala-sbt:8u181_2.12.7_1.2.3
 WORKDIR /play2
 COPY play2-scala-reactivemongo .
 
