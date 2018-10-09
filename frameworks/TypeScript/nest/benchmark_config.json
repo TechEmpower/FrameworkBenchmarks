@@ -10,14 +10,13 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "framework": "express",
-      "language": "JavaScript",
-      "flavor": "NodeJS",
+      "framework": "nestjs",
+      "language": "TypeScript",
       "os": "Linux",
       "orm": "Full",
       "database": "Postgres",
       "database_os": "Linux",
-      "display_name": "express",
+      "display_name": "nestjs",
       "versus": "nodejs"
     }
   }]
