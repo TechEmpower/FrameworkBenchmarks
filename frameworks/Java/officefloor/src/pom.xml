@@ -18,6 +18,7 @@
 		<module>woof_benchmark</module>
 		<module>woof_tpr</module>
 		<module>woof_micro</module>
+		<module>woof_thread_affinity</module>
 		<module>woof_raw</module>
 		<module>woof_netty</module>
 		<module>woof_rapidoid</module>
@@ -44,6 +45,11 @@
 			<dependency>
 				<groupId>net.officefloor.server</groupId>
 				<artifactId>officeserver_rapidoid</artifactId>
+				<version>${officefloor.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.web</groupId>
+				<artifactId>officeweb_executive</artifactId>
 				<version>${officefloor.version}</version>
 			</dependency>
 			<dependency>
@@ -114,7 +120,7 @@
 			<dependency>
 				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
-				<version>42.2.2</version>
+				<version>42.2.5</version>
 			</dependency>
 			<dependency>
 				<groupId>com.zaxxer</groupId>
@@ -129,6 +135,11 @@
 			<dependency>
 				<groupId>net.officefloor.benchmarks</groupId>
 				<artifactId>woof_benchmark</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.benchmarks</groupId>
+				<artifactId>woof_micro</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>

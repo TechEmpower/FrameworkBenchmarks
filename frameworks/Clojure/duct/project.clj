@@ -16,7 +16,7 @@
                  [duct/server.http.aleph "0.1.2"]
                  [me.grison/duct-immutant "0.1.0"]
                  ; tested databases
-                 [org.postgresql/postgresql "42.1.4"]
+                 [org.postgresql/postgresql "42.2.5"]
                  [me.grison/duct-mongodb "0.1.1"]]
   :plugins [[duct/lein-duct "0.10.6"]]
   :main ^:skip-aot hello.main
