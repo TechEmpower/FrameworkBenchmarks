@@ -1,7 +1,9 @@
 {
   "require": {
     "hamlet/hamlet-core" : "^3",
-    "cache/void-adapter": "^1"
+    "cache/void-adapter": "^1",
+    "react/http": "*",
+    "swoft/swoole-ide-helper": "*"
   },
   "autoload": {
     "psr-4": {
