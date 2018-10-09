@@ -24,16 +24,17 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 import lombok.Data;
+import net.officefloor.frame.api.executive.Executive;
 import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.managedobject.ProcessAwareContext;
 import net.officefloor.frame.api.managedobject.ProcessSafeOperation;
+import net.officefloor.frame.util.ExecutiveSourceStandAlone;
 import net.officefloor.server.SocketManager;
 import net.officefloor.server.http.AbstractHttpServicerFactory;
 import net.officefloor.server.http.HttpHeaderName;
@@ -50,6 +51,7 @@ import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedO
 import net.officefloor.server.http.parse.HttpRequestParser.HttpRequestParserMetaData;
 import net.officefloor.server.stream.StreamBufferPool;
 import net.officefloor.server.stream.impl.ThreadLocalStreamBufferPool;
+import net.officefloor.web.executive.WebThreadAffinityExecutiveSource;
 
 /**
  * <p>
@@ -80,8 +82,13 @@ public class RawOfficeFloorMain {
 		// Create the server location
 		HttpServerLocation serverLocation = new HttpServerLocationImpl("localhost", port, -1);
 
+		// Create the execution strategy
+		ExecutiveSourceStandAlone standalone = new ExecutiveSourceStandAlone();
+		Executive executive = standalone.loadExecutive(WebThreadAffinityExecutiveSource.class);
+		ThreadFactory[] executionStrategy = executive.getExcutionStrategies()[0].getThreadFactories();
+
 		// Create the socket manager
-		socketManager = HttpServerSocketManagedObjectSource.createSocketManager();
+		socketManager = HttpServerSocketManagedObjectSource.createSocketManager(executionStrategy);
 
 		// Create raw HTTP servicing
 		StreamBufferPool<ByteBuffer> serviceBufferPool = new ThreadLocalStreamBufferPool(
@@ -94,9 +101,9 @@ public class RawOfficeFloorMain {
 		dateTimer.schedule(serviceFactory.updateDate, 0, 1000);
 
 		// Start servicing
-		Executor executor = Executors.newCachedThreadPool();
-		for (Runnable runnable : socketManager.getRunnables()) {
-			executor.execute(runnable);
+		Runnable[] runnables = socketManager.getRunnables();
+		for (int i = 0; i < runnables.length; i++) {
+			executionStrategy[i].newThread(runnables[i]).start();
 		}
 
 		// Indicate running
@@ -161,6 +168,20 @@ public class RawOfficeFloorMain {
 			this.objectMapper.registerModule(new AfterburnerModule());
 		}
 
+		/**
+		 * Sends the {@link HttpResponse}.
+		 * 
+		 * @param connection {@link ServerHttpConnection}.
+		 * @throws IOException If fails to send.
+		 */
+		protected void send(ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) throws IOException {
+			try {
+				connection.getServiceFlowCallback().run(null);
+			} catch (Throwable ex) {
+				throw new IOException(ex);
+			}
+		}
+
 		/*
 		 * ===================== HttpServicer ====================
 		 */
@@ -184,25 +205,24 @@ public class RawOfficeFloorMain {
 			// Determine request
 			String requestUri = request.getUri();
 			switch (requestUri) {
+
 			case "/plaintext":
 				response.setContentType(TEXT_PLAIN, null);
 				response.getEntity().write(HELLO_WORLD);
+				this.send(connection);
 				break;
 
 			case "/json":
 				response.setContentType(APPLICATION_JSON, null);
 				this.objectMapper.writeValue(response.getEntityWriter(), new Message("Hello, World!"));
+				this.send(connection);
 				break;
 
 			default:
+				// Unknown request
 				response.setStatus(HttpStatus.NOT_FOUND);
+				this.send(connection);
 				break;
-			}
-
-			try {
-				connection.getServiceFlowCallback().run(null);
-			} catch (Throwable ex) {
-				throw new IOException(ex);
 			}
 		}
 	}

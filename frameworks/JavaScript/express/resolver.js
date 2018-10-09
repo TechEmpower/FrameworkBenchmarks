@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const helper = require('./helper');
 
 // MySQL
 
@@ -47,20 +48,14 @@ const Fortune = sequelize.define('fortune', {
       freezeTableName: true
 });
 
-const randomizeNum = () => {
-
-    let randomInt = Math.floor(Math.random() * 10000) + 1
-    return randomInt;
-}
-
 async function arrayOfRandomWorlds(totalWorldToReturn) {
 
-    var totalIterations = sanititizeTotal(totalWorldToReturn);
+    var totalIterations = helper.sanititizeTotal(totalWorldToReturn);
     var arr = [];
 
     return new Promise(async (resolve, reject) => {
         for(var i = 0; i < totalIterations; i++) {
-            let world = await World.findById(randomizeNum());
+            let world = await World.findById(helper.randomizeNum());
             arr.push(world);
         }
         if(arr.length == totalIterations) {
@@ -71,15 +66,15 @@ async function arrayOfRandomWorlds(totalWorldToReturn) {
 
 async function updateRandomWorlds(totalToUpdate) {
 
-    const total = sanititizeTotal(totalToUpdate);
+    const total = helper.sanititizeTotal(totalToUpdate);
     var arr = [];
 
     return new Promise(async (resolve, reject) => {
         for(var i = 0; i < total; i++) {
 
-            const world = await World.findById(randomizeNum());
+            const world = await World.findById(helper.randomizeNum());
             world.updateAttributes({
-                randomNumber: randomizeNum()
+                randomNumber: helper.randomizeNum()
             })
             arr.push(world);
         }
@@ -87,22 +82,6 @@ async function updateRandomWorlds(totalToUpdate) {
             resolve(arr);
         }
     });
-};
-
-const sanititizeTotal = (total) => {
-
-    var totalIterations;
-
-    if (!total || typeof(total) != 'number') {
-        totalIterations = 1;
-    } else if(total < 501 && total > 0) {
-        totalIterations = total;
-    } else if (total > 500) {
-        totalIterations = 500;
-    } else {
-        totalIterations = 1;
-    }
-    return totalIterations;
 };
 
 const sayHello = () => {
@@ -117,7 +96,7 @@ module.exports = {
     Query: {
         helloWorld: () => sayHello(),
         getAllWorlds: async() => await World.findAll(),
-        singleDatabaseQuery: async() => await World.findById(randomizeNum()),
+        singleDatabaseQuery: async() => await World.findById(helper.randomizeNum()),
         multipleDatabaseQueries: async(parent, args) => await arrayOfRandomWorlds(args.total),
         getWorldById: async(parent, args) => await World.findById(args.id),
         getAllFortunes: async() => await Fortune.findAll(),

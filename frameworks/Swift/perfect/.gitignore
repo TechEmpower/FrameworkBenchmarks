@@ -1,0 +1,6 @@
+.DS_Store
+.build
+build_gcd
+.swiftenv
+Packages
+*.xcodeproj
