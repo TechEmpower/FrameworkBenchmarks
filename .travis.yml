@@ -94,6 +94,7 @@ env:
      - "TESTLANG=Rust"
      - "TESTLANG=Scala"
      - "TESTLANG=Swift"
+     - "TESTLANG=TypeScript"
      - "TESTLANG=Ur"
      - "TESTLANG=Vala"
      - "TESTLANG=VB"
