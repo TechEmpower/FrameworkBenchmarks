@@ -5,7 +5,7 @@
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
-      "update_url": "/update?queries=",
+      "update_url": "/updates?queries=",
       "query_url": "/db?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
@@ -26,7 +26,7 @@
     },
     "raw": {
       "db_url": "/db-raw",
-      "update_url": "/update-raw?queries=",
+      "update_url": "/updates-raw?queries=",
       "query_url": "/db-raw?queries=",
       "port": 8080,
       "approach": "Realistic",

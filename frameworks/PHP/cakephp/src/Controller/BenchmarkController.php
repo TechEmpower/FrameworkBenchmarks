@@ -62,7 +62,7 @@ class BenchmarkController extends Controller
         return $this->jsonResponse($worlds);
     }
 
-    public function update()
+    public function updates()
     {
         $queries = $this->request->getQuery('queries', 1);
         $queries = min(500, max(1, $queries));
@@ -71,7 +71,7 @@ class BenchmarkController extends Controller
         $repo = $this->getTableLocator()->get('World');
         for ($i = 0; $i < $queries; ++$i) {
             $world = $repo->find('randomId')
-                ->enableHydration(false)
+                ->enableHydration(true)
                 ->first();
 
             $world->randomNumber = mt_rand(1, 10000);
@@ -83,7 +83,7 @@ class BenchmarkController extends Controller
         return $this->jsonResponse($worlds);
     }
 
-    public function updateRaw()
+    public function updatesRaw()
     {
         $queries = $this->request->getQuery('queries', 1);
         $queries = min(500, max(1, $queries));
