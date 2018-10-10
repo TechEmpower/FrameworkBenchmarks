@@ -7,8 +7,6 @@ const DEFAULT_PORT = 3000;
 const PORT = defaultTo(DEFAULT_PORT, +process.env.PORT);
 
 export default class ApiServer {
-  // TypeScript members are `public` by default, so we
-  // don't need to be explicit here.
   private readonly app: express.Application;
 
   constructor() {
