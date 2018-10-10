@@ -1,0 +1,26 @@
+{
+  "framework": "typescript-rest",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "update_url": "/updates?queries=",
+        "query_url": "/queries?queries=",
+        "db_url": "/db",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "express",
+        "language": "JavaScript",
+        "flavor": "NodeJS",
+        "os": "Linux",
+        "orm": "Full",
+        "database": "Postgres",
+        "database_os": "Linux",
+        "display_name": "typescript-rest",
+        "versus": "nodejs"
+      }
+    }
+  ]
+}
