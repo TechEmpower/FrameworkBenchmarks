@@ -1,6 +1,9 @@
 import * as express from "express";
+import * as Knex from "knex";
+import { Model } from "objection";
 import { Server } from "typescript-rest";
 
+import Knexfile from "./config/Knexfile";
 import defaultTo from "./helpers/defaultTo";
 
 import Plaintext from "./controllers/plaintext";
@@ -14,6 +17,10 @@ export default class ApiServer {
 
   constructor() {
     this.app = express();
+    this.app.set("etag", false);         // unsets the defaulted Etag header
+    this.app.set("x-powered-by", false); // unsets the defaulted X-Powered-By header
+
+    this.config();
 
     Server.buildServices(
       this.app,
@@ -22,7 +29,23 @@ export default class ApiServer {
     );
   }
 
-  start() {
+  private config(): void {
+    // Sets the global header `Server` as a middleware. We
+    // are intentionally receiving and ignoring the `req`
+    // parameter, indicated by the underscore.
+    this.app.use((_, res, next): void => {
+      res.set("Server", "TypeScript-rest");
+
+      next();
+    });
+
+    // Initiatlize connection to the database and connect
+    // the knex query builder to our objection models.
+    const knex = Knex(Knexfile);
+    Model.knex(knex);
+  }
+
+  start(): void {
     this.app.listen(PORT, (err: any) => {
       if (err) {
         throw err;

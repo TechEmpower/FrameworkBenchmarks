@@ -1,13 +1,18 @@
 import { GET, Path } from "typescript-rest";
 
+interface IResult {
+  message: string;
+}
+
 @Path("/json")
 export default class Json {
   /**
-   * Sends a json message
+   * Sends a json message. Under the hood, Express should
+   * have serialized the result with `res.json`.
    */
 
   @GET
-  json(): string {
-    return JSON.stringify({ message: "Hello, World!" });
+  json(): IResult {
+    return { message: "Hello, World!" };
   }
 }
