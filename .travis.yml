@@ -97,6 +97,7 @@ env:
      - 'TESTDIR="Rust/rouille Rust/thruster Rust/tokio-minihttp"'
      - "TESTLANG=Scala"
      - "TESTLANG=Swift"
+     - "TESTLANG=TypeScript"
      - "TESTLANG=Ur"
      - "TESTLANG=Vala"
      - "TESTLANG=VB"
