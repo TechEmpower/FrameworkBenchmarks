@@ -3,6 +3,9 @@ import { Server } from "typescript-rest";
 
 import defaultTo from "./helpers/defaultTo";
 
+import Plaintext from "./controllers/plaintext";
+import Json from "./controllers/json";
+
 const DEFAULT_PORT = 3000;
 const PORT = defaultTo(DEFAULT_PORT, +process.env.PORT);
 
@@ -12,7 +15,11 @@ export default class ApiServer {
   constructor() {
     this.app = express();
 
-    Server.loadServices(this.app, ["controllers/*"]);
+    Server.buildServices(
+      this.app,
+      Plaintext,
+      Json
+    );
   }
 
   start() {
