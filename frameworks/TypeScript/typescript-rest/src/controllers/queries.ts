@@ -14,18 +14,16 @@ export default class MultipleQueries {
   @GET
   async multipleQueries(@QueryParam("queries") queries: string): Promise<World[]> {
     const length: number = sanitizeQueries(queries);
-    const ids: number[] = [];
+    const worlds: World[] = [];
 
     // Use a for-loop here because Array.from is just not
     // performant at all, but is really nice.
     // https://jsbench.me/ntjn3s2t0y/1
     for (let i = 0; i < length; i += 1) {
-      ids.push(randomNumber());
+      const id: number = randomNumber();
+      const world: World = await World.query().findById(id).throwIfNotFound();
+      worlds.push(world);
     }
-
-    const worlds: World[] = await World
-      .query()
-      .findByIds(ids);
 
     return worlds;
   }

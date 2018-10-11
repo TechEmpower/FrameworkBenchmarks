@@ -12,6 +12,7 @@
         "approach": "Realistic",
         "classification": "Micro",
         "framework": "express",
+        "platform": "NodeJS",
         "language": "TypeScript",
         "flavor": "NodeJS",
         "os": "Linux",
