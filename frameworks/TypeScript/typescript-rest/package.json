@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "nodemon --delay 1500ms",
     "lint": "tslint -p tsconfig.json",
-    "start": "ts-node src/"
+    "start": "ts-node -r tsconfig-paths/register src/index.ts"
   },
   "dependencies": {
     "express": "^4.16.3",
@@ -20,6 +20,7 @@
     "@types/pg": "^7.4.11",
     "nodemon": "^1.18.4",
     "ts-node": "^7.0.1",
+    "tsconfig-paths": "^3.6.0",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.0",
     "typescript": "^3.1.2"
