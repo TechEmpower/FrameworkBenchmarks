@@ -35,7 +35,7 @@ public class MongoDbRepository implements DbRepository {
     public Mono<World> findAndUpdateWorld(int id, int randomNumber) {
         return mongoTemplate.findAndModify(
                 query(where("id").is(id)),
-                update("randomNumber", randomNumber),
+                update("randomnumber", randomNumber),
                 options().returnNew(true),
                 World.class);
     }
