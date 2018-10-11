@@ -1,6 +1,6 @@
 ---
 spring:
-  profiles: jdbc
+  profiles: jdbc,rxjava
   datasource:
     url: jdbc:postgresql://tfb-database:5432/hello_world
     username: benchmarkdbuser
@@ -8,7 +8,7 @@ spring:
 ---
 
 spring:
-  profiles: pgclient
+  profiles: pgclient,r2dbc
 
 database:
   name: hello_world

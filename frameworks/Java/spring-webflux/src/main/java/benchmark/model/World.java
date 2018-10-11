@@ -8,10 +8,10 @@ public final class World {
 
     @Id
     public int id;
-    public int randomNumber;
+    public int randomnumber;
 
-    public World(int id, int randomNumber) {
+    public World(int id, int randomnumber) {
         this.id = id;
-        this.randomNumber = randomNumber;
+        this.randomnumber = randomnumber;
     }
 }

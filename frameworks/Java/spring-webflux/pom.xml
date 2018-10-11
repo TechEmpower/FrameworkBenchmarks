@@ -8,12 +8,12 @@
 
     <groupId>benchmark</groupId>
     <artifactId>spring-webflux-benchmark</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.5.RELEASE</version>
+        <version>2.1.0.BUILD-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -22,6 +22,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <postgresql.version>42.2.5</postgresql.version>
         <pgclient.version>0.10.6</pgclient.version>
+        <rxjava2-jdbc.version>0.1-RC38</rxjava2-jdbc.version>
+        <spring-data-jdbc.version>1.0.0.r2dbc-SNAPSHOT</spring-data-jdbc.version>
+        <r2dbc-postgresql.version>1.0.0.BUILD-SNAPSHOT</r2dbc-postgresql.version>
     </properties>
 
     <dependencies>
@@ -46,12 +49,45 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
         </dependency>
+
         <dependency>
             <groupId>io.reactiverse</groupId>
             <artifactId>reactive-pg-client</artifactId>
             <version>${pgclient.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>rxjava2-jdbc</artifactId>
+            <version>${rxjava2-jdbc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.r2dbc</groupId>
+            <artifactId>r2dbc-postgresql</artifactId>
+            <version>${r2dbc-postgresql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jdbc</artifactId>
+            <version>${spring-data-jdbc.version}</version>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>spring-libs-snapshot</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/libs-snapshot</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-libs-snapshot</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/libs-snapshot</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <plugins>
