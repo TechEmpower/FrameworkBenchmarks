@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import * as express from "express";
-
->>>>>>> Finishes framework implementation, minus fortunes
-=======
->>>>>>> Fixes broken tests
 import defaultTo from "./defaultTo";
 
 /**
@@ -18,15 +10,7 @@ import defaultTo from "./defaultTo";
  */
 
 export default function (queries: string): number {
-<<<<<<< HEAD
-<<<<<<< HEAD
   const int = defaultTo(1, parseInt(queries, undefined));
-=======
-  const int = defaultTo(1, +queries);
->>>>>>> Finishes framework implementation, minus fortunes
-=======
-  const int = defaultTo(1, parseInt(queries, undefined));
->>>>>>> Fixes broken tests
   const max = 500;
   const min = 1;
 
