@@ -4,6 +4,7 @@
 import { Config, ConnectionConfig, PoolConfig } from "knex";
 
 const client: string = "pg"; // can also be "postgresql"
+<<<<<<< HEAD
 const pool: Readonly<PoolConfig> = { min: 2, max: 10 };
 // const connection: Readonly<ConnectionConfig> = {
 //   host: "tfb-database",
@@ -19,6 +20,8 @@ const connection: string = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-datab
 import { Config, ConnectionConfig, PoolConfig } from "knex";
 
 const client: string = "pg"; // can also be "pg"
+=======
+>>>>>>> Fixes broken tests
 const pool: Readonly<PoolConfig> = { min: 2, max: 10 };
 <<<<<<< HEAD
 const connection: Readonly<ConnectionConfig> = {
