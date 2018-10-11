@@ -2,7 +2,7 @@
   "name": "typescript-rest",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "nodemon --delay 1500ms",
     "lint": "tslint -p tsconfig.json",
     "start": "ts-node src/"
   },

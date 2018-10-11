@@ -7,8 +7,9 @@ interface IResult {
 @Path("/json")
 export default class Json {
   /**
-   * Sends a json message. Under the hood, Express should
-   * have serialized the result with `res.json`.
+   * Implements the `JSON Serialization` test type. Under
+   * the hood, Express should have serialized the result
+   * with `res.json`.
    */
 
   @GET

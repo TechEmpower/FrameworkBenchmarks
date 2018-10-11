@@ -8,8 +8,13 @@ import defaultTo from "./helpers/defaultTo";
 
 import Plaintext from "./controllers/plaintext";
 import Json from "./controllers/json";
+import SingleQuery from "./controllers/db";
+import MultipleQueries from "./controllers/queries";
+import DataUpdates from "./controllers/updates";
 
 const DEFAULT_PORT = 3000;
+// @ts-ignore - process.env.PORT may be undefined, and
+// that's the point.
 const PORT = defaultTo(DEFAULT_PORT, +process.env.PORT);
 
 export default class ApiServer {
@@ -25,7 +30,10 @@ export default class ApiServer {
     Server.buildServices(
       this.app,
       Plaintext,
-      Json
+      Json,
+      SingleQuery,
+      MultipleQueries,
+      DataUpdates
     );
   }
 

@@ -4,7 +4,7 @@ import { ContextResponse, GET, Path } from "typescript-rest";
 @Path("/plaintext")
 export default class Plaintext {
   /**
-   * Sends the plaintext message
+   * Implements the `Plaintext` test type.
    */
 
   @GET
