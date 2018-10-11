@@ -1,5 +1,3 @@
-import * as express from "express";
-
 import defaultTo from "./defaultTo";
 
 /**
@@ -12,7 +10,7 @@ import defaultTo from "./defaultTo";
  */
 
 export default function (queries: string): number {
-  const int = defaultTo(1, +queries);
+  const int = defaultTo(1, parseInt(queries, undefined));
   const max = 500;
   const min = 1;
 
