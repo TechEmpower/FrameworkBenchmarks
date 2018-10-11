@@ -8,14 +8,7 @@
     "noImplicitThis": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-<<<<<<< HEAD
-<<<<<<< HEAD
     "baseUrl": "./src",
-=======
->>>>>>> Finishes framework implementation, minus fortunes
-=======
-    "baseUrl": "./src",
->>>>>>> Final push for the day
     "typeRoots": [
       "./node_modules/@types"
     ]
