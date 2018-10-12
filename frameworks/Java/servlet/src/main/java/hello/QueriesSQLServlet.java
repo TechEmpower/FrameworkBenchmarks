@@ -22,7 +22,6 @@ import javax.sql.DataSource;
 public class QueriesSQLServlet extends HttpServlet {
 	// Database details.
 	private static final String DB_QUERY = "SELECT * FROM World WHERE id = ?";
-	private static final int DB_ROWS = 10000;
 
 	// Database connection pool.
 	@Resource(name = "jdbc/hello_world")
@@ -33,17 +32,15 @@ public class QueriesSQLServlet extends HttpServlet {
 			IOException {
 		final int count = Common.normalise(req.getParameter("queries"));
 		final World[] worlds = new World[count];
-		final Random random = ThreadLocalRandom.current();
 
 		// Fetch some rows from the database.
 		try (Connection conn = dataSource.getConnection()) {
-			conn.setAutoCommit(true);
-			conn.setReadOnly(true);
+			Common.modifySQLConnectionSettings(conn);
 			try (PreparedStatement statement = conn.prepareStatement(DB_QUERY,
 					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
 				// Run the query the number of times requested.
 				for (int i = 0; i < count; i++) {
-					final int id = random.nextInt(DB_ROWS) + 1;
+					final int id = Common.getRandom();
 					statement.setInt(1, id);
 
 					try (ResultSet results = statement.executeQuery()) {
