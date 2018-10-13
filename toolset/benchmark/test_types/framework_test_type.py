@@ -12,7 +12,7 @@ from toolset.utils.output_helper import log
 
 
 class FrameworkTestType:
-    '''
+    """
     Interface between a test type (json, query, plaintext, etc) and
     the rest of TFB. A test type defines a number of keys it expects
     to find in the benchmark_config.json, and this base class handles extracting
@@ -20,7 +20,7 @@ class FrameworkTestType:
     benchmark_config.json contains a line `"spam" : "foobar"` and a subclasses X
     passes an argument list of ['spam'], then after parsing there will
     exist a member `X.spam = 'foobar'`.
-    '''
+    """
 
     def __init__(self,
                  config,
@@ -55,12 +55,12 @@ class FrameworkTestType:
         }[content_type]
 
     def parse(self, test_keys):
-        '''
+        """
         Takes the dict of key/value pairs describing a FrameworkTest
         and collects all variables needed by this FrameworkTestType
 
         Raises AttributeError if required keys are missing
-        '''
+        """
         if all(arg in test_keys for arg in self.args):
             self.__dict__.update({arg: test_keys[arg] for arg in self.args})
             return self
@@ -70,10 +70,10 @@ class FrameworkTestType:
                 (self.name, self.args))
 
     def request_headers_and_body(self, url):
-        '''
+        """
         Downloads a URL and returns the HTTP response headers
         and body content as a tuple
-        '''
+        """
         log("Accessing URL {!s}: ".format(url), color=Fore.CYAN)
 
         headers = {'Accept': self.accept_header}
@@ -88,7 +88,7 @@ class FrameworkTestType:
         log(self.body)
 
     def verify(self, base_url):
-        '''
+        """
         Accesses URL used by this test type and checks the return
         values for correctness. Most test types run multiple checks,
         so this returns a list of results. Each result is a 3-tuple
@@ -104,44 +104,44 @@ class FrameworkTestType:
         Subclasses should make a best-effort attempt to report as many
         failures and warnings as they can to help users avoid needing
         to run TFB repeatedly while debugging
-        '''
+        """
         # TODO make String result into an enum to enforce
         raise NotImplementedError("Subclasses must provide verify")
 
     def get_url(self):
-        '''
+        """
         Returns the URL for this test, like '/json'
-        '''
+        """
         # This is a method because each test type uses a different key
         # for their URL so the base class can't know which arg is the URL
         raise NotImplementedError("Subclasses must provide get_url")
 
     def get_script_name(self):
-        '''
+        """
         Returns the remote script name for running the benchmarking process.
-        '''
+        """
         raise NotImplementedError("Subclasses must provide get_script_name")
 
     def get_script_variables(self, name, url, port):
-        '''
+        """
         Returns the remote script variables for running the benchmarking process.
-        '''
+        """
         raise NotImplementedError(
             "Subclasses must provide get_script_variables")
 
     def copy(self):
-        '''
+        """
         Returns a copy that can be safely modified.
         Use before calling parse
-        '''
+        """
         return copy.copy(self)
 
     def get_current_world_table(self):
-        '''
+        """
         Return a JSON object containing all 10,000 World items as they currently
         exist in the database. This is used for verifying that entries in the
         database have actually changed during an Update verification test.
-        '''
+        """
         database_name = ""
         results_json = []
         try:

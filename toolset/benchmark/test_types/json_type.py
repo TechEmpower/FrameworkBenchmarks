@@ -17,11 +17,11 @@ class JsonTestType(FrameworkTestType):
         return self.json_url
 
     def verify(self, base_url):
-        '''
+        """
         Validates the response is a JSON object of 
         { 'message' : 'hello, world!' }. Case insensitive and 
         quoting style is ignored
-        '''
+        """
 
         url = base_url + self.json_url
         headers, body = self.request_headers_and_body(url)

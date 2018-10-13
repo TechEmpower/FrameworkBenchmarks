@@ -18,11 +18,11 @@ class FortuneTestType(FrameworkTestType):
         return self.fortune_url
 
     def verify(self, base_url):
-        '''
+        """
         Parses the given HTML string and asks the
         FortuneHTMLParser whether the parsed string is a
         valid fortune response
-        '''
+        """
 
         url = base_url + self.fortune_url
         headers, body = self.request_headers_and_body(url)
@@ -34,7 +34,7 @@ class FortuneTestType(FrameworkTestType):
 
         parser = FortuneHTMLParser()
         parser.feed(body)
-        (valid, diff) = parser.isValidFortune(self.name, body)
+        (valid, diff) = parser.is_valid_fortune(self.name, body)
 
         if valid:
             problems += verify_headers(headers, url, should_be='html')
@@ -51,7 +51,7 @@ class FortuneTestType(FrameworkTestType):
             return failures
 
     def _parseDiffForFailure(self, diff, failures, url):
-        '''
+        """
         Example diff:
 
         --- Valid
@@ -61,7 +61,7 @@ class FortuneTestType(FrameworkTestType):
         -<!doctype html><html><head><title>Fortunes</title></head><body><table>
         +<!doctype html><html><head><meta></meta><title>Fortunes</title></head><body><div><table>
         @@ -16 +16 @@
-        '''
+        """
 
         problems = []
 

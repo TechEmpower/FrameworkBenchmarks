@@ -16,9 +16,9 @@ init()
 
 
 class StoreSeqAction(argparse.Action):
-    '''
+    """
     Helper class for parsing a sequence from the command line
-    '''
+    """
 
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
         super(StoreSeqAction, self).__init__(
@@ -46,9 +46,9 @@ class StoreSeqAction(argparse.Action):
 # Main
 ###################################################################################################
 def main(argv=None):
-    '''
+    """
     Runs the toolset.
-    '''
+    """
     # Do argv default this way, as doing it in the functional declaration sets it at compile time
     if argv is None:
         argv = sys.argv
@@ -60,12 +60,12 @@ def main(argv=None):
         description="Install or run the Framework Benchmarks test suite.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         epilog=
-        '''If an argument includes (type int-sequence), then it accepts integer lists in multiple forms.
+        """If an argument includes (type int-sequence), then it accepts integer lists in multiple forms.
         Using a single number e.g. 5 will create a list [5]. Using commas will create a list containing those
         values e.g. 1,3,6 creates [1, 3, 6]. Using three colon-separated numbers of start:step:end will create a
         list, using the semantics of python's range function, e.g. 1:3:15 creates [1, 4, 7, 10, 13] while
         0:1:5 creates [0, 1, 2, 3, 4]
-        ''')
+        """)
 
     # Suite options
     parser.add_argument(

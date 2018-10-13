@@ -18,9 +18,9 @@ from colorama import Fore
 
 class Benchmarker:
     def __init__(self, config):
-        '''
+        """
         Initialize the benchmarker.
-        '''
+        """
         self.config = config
         self.time_logger = TimeLogger()
         self.metadata = Metadata(self)
@@ -37,12 +37,12 @@ class Benchmarker:
     ##########################################################################################
 
     def run(self):
-        '''
+        """
         This process involves setting up the client/server machines
         with any necessary change. Then going through each test,
         running their docker build and run, verifying the URLs, and
         running benchmarks against them.
-        '''
+        """
         # Generate metadata
         self.metadata.list_test_metadata()
 
@@ -94,11 +94,11 @@ class Benchmarker:
         return success
 
     def __run_test(self, test, benchmark_log):
-        '''
+        """
         Runs the given test, verifies that the webapp is accepting requests,
         optionally benchmarks the webapp, and ultimately stops all services
         started for this test.
-        '''
+        """
 
         log_prefix = "%s: " % test.name
         # Start timing the total test duration
@@ -231,9 +231,9 @@ class Benchmarker:
             success=True, prefix=log_prefix, file=benchmark_log)
 
     def __benchmark(self, framework_test, benchmark_log):
-        '''
+        """
         Runs the benchmark for each type of test that it implements
-        '''
+        """
 
         def benchmark_type(test_type):
             log("BENCHMARKING %s ... " % test_type.upper(), file=benchmark_log)
@@ -276,11 +276,11 @@ class Benchmarker:
             benchmark_type(test_type)
 
     def __begin_logging(self, framework_test, test_type):
-        '''
+        """
         Starts a thread to monitor the resource usage, to be synced with the
         client's time.
         TODO: MySQL and InnoDB are possible. Figure out how to implement them.
-        '''
+        """
         output_file = "{file_name}".format(
             file_name=self.results.get_stats_file(framework_test.name,
                                                   test_type))
@@ -293,8 +293,8 @@ class Benchmarker:
             cmd, stdout=FNULL, stderr=subprocess.STDOUT)
 
     def __end_logging(self):
-        '''
+        """
         Stops the logger thread and blocks until shutdown is complete.
-        '''
+        """
         self.subprocess_handle.terminate()
         self.subprocess_handle.communicate()

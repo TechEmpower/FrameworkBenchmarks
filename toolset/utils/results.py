@@ -19,9 +19,9 @@ from colorama import Fore, Style
 
 class Results:
     def __init__(self, benchmarker):
-        '''
+        """
         Constructor
-        '''
+        """
         self.benchmarker = benchmarker
         self.config = benchmarker.config
         self.directory = os.path.join(self.config.results_root,
@@ -83,12 +83,12 @@ class Results:
     #############################################################################
 
     def parse(self, tests):
-        '''
+        """
         Ensures that the system has all necessary software to run
         the tests. This does not include that software for the individual
         test, but covers software such as curl and weighttp that
         are needed.
-        '''
+        """
         # Run the method to get the commmit count of each framework.
         self.__count_commits()
         # Call the method which counts the sloc for each framework
@@ -100,9 +100,9 @@ class Results:
             f.write(json.dumps(self.__to_jsonable(), indent=2))
 
     def parse_test(self, framework_test, test_type):
-        '''
+        """
         Parses the given test and test_type from the raw_file.
-        '''
+        """
         results = dict()
         results['results'] = []
         stats = []
@@ -112,57 +112,57 @@ class Results:
                                         test_type)) as raw_data:
 
                 is_warmup = True
-                rawData = None
+                raw_data = None
                 for line in raw_data:
                     if "Queries:" in line or "Concurrency:" in line:
                         is_warmup = False
-                        rawData = None
+                        raw_data = None
                         continue
                     if "Warmup" in line or "Primer" in line:
                         is_warmup = True
                         continue
                     if not is_warmup:
-                        if rawData is None:
-                            rawData = dict()
-                            results['results'].append(rawData)
+                        if raw_data is None:
+                            raw_data = dict()
+                            results['results'].append(raw_data)
                         if "Latency" in line:
                             m = re.findall(r"([0-9]+\.*[0-9]*[us|ms|s|m|%]+)",
                                            line)
                             if len(m) == 4:
-                                rawData['latencyAvg'] = m[0]
-                                rawData['latencyStdev'] = m[1]
-                                rawData['latencyMax'] = m[2]
+                                raw_data['latencyAvg'] = m[0]
+                                raw_data['latencyStdev'] = m[1]
+                                raw_data['latencyMax'] = m[2]
                         if "requests in" in line:
                             m = re.search("([0-9]+) requests in", line)
                             if m is not None:
-                                rawData['totalRequests'] = int(m.group(1))
+                                raw_data['totalRequests'] = int(m.group(1))
                         if "Socket errors" in line:
                             if "connect" in line:
                                 m = re.search("connect ([0-9]+)", line)
-                                rawData['connect'] = int(m.group(1))
+                                raw_data['connect'] = int(m.group(1))
                             if "read" in line:
                                 m = re.search("read ([0-9]+)", line)
-                                rawData['read'] = int(m.group(1))
+                                raw_data['read'] = int(m.group(1))
                             if "write" in line:
                                 m = re.search("write ([0-9]+)", line)
-                                rawData['write'] = int(m.group(1))
+                                raw_data['write'] = int(m.group(1))
                             if "timeout" in line:
                                 m = re.search("timeout ([0-9]+)", line)
-                                rawData['timeout'] = int(m.group(1))
+                                raw_data['timeout'] = int(m.group(1))
                         if "Non-2xx" in line:
                             m = re.search("Non-2xx or 3xx responses: ([0-9]+)",
                                           line)
                             if m != None:
-                                rawData['5xx'] = int(m.group(1))
+                                raw_data['5xx'] = int(m.group(1))
                         if "STARTTIME" in line:
                             m = re.search("[0-9]+", line)
-                            rawData["startTime"] = int(m.group(0))
+                            raw_data["startTime"] = int(m.group(0))
                         if "ENDTIME" in line:
                             m = re.search("[0-9]+", line)
-                            rawData["endTime"] = int(m.group(0))
+                            raw_data["endTime"] = int(m.group(0))
                             test_stats = self.__parse_stats(
                                 framework_test, test_type,
-                                rawData["startTime"], rawData["endTime"], 1)
+                                raw_data["startTime"], raw_data["endTime"], 1)
                             stats.append(test_stats)
         with open(
                 self.get_stats_file(framework_test.name, test_type) + ".json",
@@ -172,9 +172,9 @@ class Results:
         return results
 
     def parse_all(self, framework_test):
-        '''
+        """
         Method meant to be run for a given timestamp
-        '''
+        """
         for test_type in framework_test.runTests:
             if os.path.exists(
                     self.get_raw_file(framework_test.name, test_type)):
@@ -183,23 +183,23 @@ class Results:
                                               results['results'])
 
     def write_intermediate(self, test_name, status_message):
-        '''
+        """
         Writes the intermediate results for the given test_name and status_message
-        '''
+        """
         self.completed[test_name] = status_message
         self.__write_results()
 
     def set_completion_time(self):
-        '''
+        """
         Sets the completionTime for these results and writes the results
-        '''
+        """
         self.completionTime = int(round(time.time() * 1000))
         self.__write_results()
 
     def upload(self):
-        '''
+        """
         Attempts to upload the results.json to the configured results_upload_uri
-        '''
+        """
         if self.config.results_upload_uri is not None:
             try:
                 requests.post(
@@ -210,9 +210,9 @@ class Results:
                 log("Error uploading results.json")
 
     def load(self):
-        '''
+        """
         Load the results.json file
-        '''
+        """
         try:
             with open(self.file) as f:
                 self.__dict__.update(json.load(f))
@@ -220,10 +220,10 @@ class Results:
             pass
 
     def get_raw_file(self, test_name, test_type):
-        '''
+        """
         Returns the output file for this test_name and test_type
         Example: fw_root/results/timestamp/test_type/test_name/raw.txt
-        '''
+        """
         path = os.path.join(self.directory, test_name, test_type, "raw.txt")
         try:
             os.makedirs(os.path.dirname(path))
@@ -232,10 +232,10 @@ class Results:
         return path
 
     def get_stats_file(self, test_name, test_type):
-        '''
+        """
         Returns the stats file name for this test_name and
         Example: fw_root/results/timestamp/test_type/test_name/stats.txt
-        '''
+        """
         path = os.path.join(self.directory, test_name, test_type, "stats.txt")
         try:
             os.makedirs(os.path.dirname(path))
@@ -244,23 +244,23 @@ class Results:
         return path
 
     def report_verify_results(self, framework_test, test_type, result):
-        '''
+        """
         Used by FrameworkTest to add verification details to our results
 
         TODO: Technically this is an IPC violation - we are accessing
         the parent process' memory from the child process
-        '''
+        """
         if framework_test.name not in self.verify.keys():
             self.verify[framework_test.name] = dict()
         self.verify[framework_test.name][test_type] = result
 
     def report_benchmark_results(self, framework_test, test_type, results):
-        '''
+        """
         Used by FrameworkTest to add benchmark data to this
 
         TODO: Technically this is an IPC violation - we are accessing
         the parent process' memory from the child process
-        '''
+        """
         if test_type not in self.rawData.keys():
             self.rawData[test_type] = dict()
 
@@ -277,9 +277,9 @@ class Results:
                 self.failed[test_type].append(framework_test.name)
 
     def finish(self):
-        '''
+        """
         Finishes these results.
-        '''
+        """
         if not self.config.parse:
             # Normally you don't have to use Fore.BLUE before each line, but
             # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
@@ -291,8 +291,7 @@ class Results:
             for test in self.benchmarker.tests:
                 log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
-                    for test_type, result in self.verify[
-                            test.name].iteritems():
+                    for test_type, result in iter(self.verify[test.name].items()):
                         if result.upper() == "PASS":
                             color = Fore.GREEN
                         elif result.upper() == "WARN":
@@ -313,30 +312,30 @@ class Results:
     #############################################################################
 
     def __to_jsonable(self):
-        '''
+        """
         Returns a dict suitable for jsonification
-        '''
-        toRet = dict()
+        """
+        to_ret = dict()
 
-        toRet['uuid'] = self.uuid
-        toRet['name'] = self.name
-        toRet['environmentDescription'] = self.environmentDescription
-        toRet['git'] = self.git
-        toRet['startTime'] = self.startTime
-        toRet['completionTime'] = self.completionTime
-        toRet['concurrencyLevels'] = self.concurrencyLevels
-        toRet['pipelineConcurrencyLevels'] = self.pipelineConcurrencyLevels
-        toRet['queryIntervals'] = self.queryIntervals
-        toRet['cachedQueryIntervals'] = self.cachedQueryIntervals
-        toRet['frameworks'] = self.frameworks
-        toRet['duration'] = self.duration
-        toRet['rawData'] = self.rawData
-        toRet['completed'] = self.completed
-        toRet['succeeded'] = self.succeeded
-        toRet['failed'] = self.failed
-        toRet['verify'] = self.verify
+        to_ret['uuid'] = self.uuid
+        to_ret['name'] = self.name
+        to_ret['environmentDescription'] = self.environmentDescription
+        to_ret['git'] = self.git
+        to_ret['startTime'] = self.startTime
+        to_ret['completionTime'] = self.completionTime
+        to_ret['concurrencyLevels'] = self.concurrencyLevels
+        to_ret['pipelineConcurrencyLevels'] = self.pipelineConcurrencyLevels
+        to_ret['queryIntervals'] = self.queryIntervals
+        to_ret['cachedQueryIntervals'] = self.cachedQueryIntervals
+        to_ret['frameworks'] = self.frameworks
+        to_ret['duration'] = self.duration
+        to_ret['rawData'] = self.rawData
+        to_ret['completed'] = self.completed
+        to_ret['succeeded'] = self.succeeded
+        to_ret['failed'] = self.failed
+        to_ret['verify'] = self.verify
 
-        return toRet
+        return to_ret
 
     def __write_results(self):
         try:
@@ -346,9 +345,9 @@ class Results:
             log("Error writing results.json")
 
     def __count_sloc(self):
-        '''
+        """
         Counts the significant lines of code for all tests and stores in results.
-        '''
+        """
         frameworks = self.benchmarker.metadata.gather_frameworks(
             self.config.test, self.config.exclude)
 
@@ -378,17 +377,17 @@ class Results:
         self.rawData['slocCounts'] = framework_to_count
 
     def __count_commits(self):
-        '''
+        """
         Count the git commits for all the framework tests
-        '''
+        """
         frameworks = self.benchmarker.metadata.gather_frameworks(
             self.config.test, self.config.exclude)
 
-        def count_commit(directory, jsonResult):
+        def count_commit(directory, json_result):
             command = "git rev-list HEAD -- " + directory + " | sort -u | wc -l"
             try:
-                commitCount = subprocess.check_output(command, shell=True)
-                jsonResult[framework] = int(commitCount)
+                commit_count = subprocess.check_output(command, shell=True)
+                json_result[framework] = int(commit_count)
             except subprocess.CalledProcessError:
                 pass
 
@@ -398,12 +397,12 @@ class Results:
         # This is safe to parallelize as long as each thread only
         # accesses one key in the dictionary
         threads = []
-        jsonResult = {}
+        json_result = {}
         # t1 = datetime.now()
         for framework, testlist in frameworks.items():
             directory = testlist[0].directory
             t = threading.Thread(
-                target=count_commit, args=(directory, jsonResult))
+                target=count_commit, args=(directory, json_result))
             t.start()
             threads.append(t)
             # Git has internal locks, full parallel will just cause contention
@@ -418,28 +417,28 @@ class Results:
         # t2 = datetime.now()
         # print "Took %s seconds " % (t2 - t1).seconds
 
-        self.rawData['commitCounts'] = jsonResult
-        self.config.commits = jsonResult
+        self.rawData['commitCounts'] = json_result
+        self.config.commits = json_result
 
     def __get_git_commit_id(self):
-        '''
+        """
         Get the git commit id for this benchmark
-        '''
+        """
         return subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=self.config.fw_root).strip()
 
     def __get_git_repository_url(self):
-        '''
+        """
         Gets the git repository url for this benchmark
-        '''
+        """
         return subprocess.check_output(
             ["git", "config", "--get", "remote.origin.url"],
             cwd=self.config.fw_root).strip()
 
     def __get_git_branch_name(self):
-        '''
+        """
         Gets the git branch name for this benchmark
-        '''
+        """
         return subprocess.check_output(
             'git rev-parse --abbrev-ref HEAD',
             shell=True,
@@ -447,7 +446,7 @@ class Results:
 
     def __parse_stats(self, framework_test, test_type, start_time, end_time,
                       interval):
-        '''
+        """
         For each test type, process all the statistics, and return a multi-layered
         dictionary that has a structure as follows:
 
@@ -455,7 +454,7 @@ class Results:
         | (main header) - group that the stat is in
         | | (sub header) - title of the stat
         | | | (stat) - the stat itself, usually a floating point number
-        '''
+        """
         stats_dict = dict()
         stats_file = self.get_stats_file(framework_test.name, test_type)
         with open(stats_file) as stats:
@@ -490,7 +489,7 @@ class Results:
         return stats_dict
 
     def __calculate_average_stats(self, raw_stats):
-        '''
+        """
         We have a large amount of raw data for the statistics that may be useful
         for the stats nerds, but most people care about a couple of numbers. For
         now, we're only going to supply:
@@ -504,7 +503,8 @@ class Results:
 
         Recall that this consists of a dictionary of timestamps, each of which
         contain a dictionary of stat categories which contain a dictionary of stats
-        '''
+        """
+        display_stat = {}
         raw_stat_collection = dict()
 
         for time_dict in raw_stats.items()[1]:
@@ -544,9 +544,7 @@ class Results:
         display_stat_collection = dict()
         for header, values in raw_stat_collection.items():
             display_stat = None
-            if 'cpu' in header:
-                display_stat = sizeof_fmt(math.fsum(values) / len(values))
-            elif main_header == 'memory usage':
+            if 'cpu' in header or main_header == 'memory usage':
                 display_stat = sizeof_fmt(math.fsum(values) / len(values))
             elif 'net' in main_header:
                 receive, send = zip(*values)  # unzip

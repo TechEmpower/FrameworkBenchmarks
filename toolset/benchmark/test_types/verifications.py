@@ -7,7 +7,7 @@ from toolset.utils.output_helper import log
 
 
 def basic_body_verification(body, url, is_json_check=True):
-    '''
+    """
     Takes in a raw (stringy) response body, checks that it is non-empty,
     and that it is valid JSON (i.e. can be deserialized into a dict/list of dicts)
     Returns the deserialized body as a dict (or list of dicts), and also returns any
@@ -15,7 +15,7 @@ def basic_body_verification(body, url, is_json_check=True):
     then the response body does not have to be examined further and the caller
     should handle the failing problem(s).
     Plaintext and Fortunes set `is_json_check` to False
-    '''
+    """
 
     # Empty Response?
     if body is None:
@@ -37,10 +37,10 @@ def basic_body_verification(body, url, is_json_check=True):
 
 
 def verify_headers(headers, url, should_be='json'):
-    '''
+    """
     Verifies the headers of a framework response
     param `should_be` is a switch for the three acceptable content types
-    '''
+    """
 
     problems = []
 
@@ -86,16 +86,16 @@ def verify_headers(headers, url, should_be='json'):
 
 
 def verify_helloworld_object(json_object, url):
-    '''
+    """
     Ensure that the JSON object closely resembles
     { 'message': 'Hello, World!' }
-    '''
+    """
 
     problems = []
 
     try:
         # Make everything case insensitive
-        json_object = {k.lower(): v.lower() for k, v in json_object.iteritems()}
+        json_object = {k.lower(): v.lower() for k, v in iter(json_object.items())}
     except:
         return [('fail', "Not a valid JSON object", url)]
 
@@ -124,12 +124,12 @@ def verify_helloworld_object(json_object, url):
 
 
 def verify_randomnumber_object(db_object, url, max_infraction='fail'):
-    '''
+    """
     Ensures that `db_object` is a JSON object with
     keys 'id' and 'randomNumber' that both map to ints.
     Should closely resemble:
     { "id": 2354, "randomNumber": 8952 }
-    '''
+    """
 
     problems = []
 
@@ -143,8 +143,8 @@ def verify_randomnumber_object(db_object, url, max_infraction='fail'):
                  "Expected a JSON object, got '%s' instead" % got, url)]
 
     # Make keys case insensitive
-    db_object = {k.lower(): v for k, v in db_object.iteritems()}
-    required_keys = set(['id', 'randomnumber'])
+    db_object = {k.lower(): v for k, v in iter(db_object.items())}
+    required_keys = {'id', 'randomnumber'}
 
     for v in (v for v in required_keys if v not in db_object):
         problems.append(
@@ -197,11 +197,11 @@ def verify_randomnumber_list(expected_len,
                              body,
                              url,
                              max_infraction='fail'):
-    '''
+    """
     Validates that the object is a list containing a number of
     randomnumber object. Should closely resemble:
     [{ "id": 2354, "randomNumber": 8952 }, { "id": 4421, "randomNumber": 32 }, ... ]
-    '''
+    """
 
     response, problems = basic_body_verification(body, url)
 
@@ -229,17 +229,17 @@ def verify_randomnumber_list(expected_len,
 
     # Verify individual objects, arbitrarily stop after 5 bad ones are found
     # i.e. to not look at all 500
-    badObjectsFound = 0
+    bad_objects_found = 0
     inner_objects = iter(response)
 
     try:
-        while badObjectsFound < 5:
+        while bad_objects_found < 5:
             obj = next(inner_objects)
             findings = verify_randomnumber_object(obj, url, max_infraction)
 
             if len(findings) > 0:
                 problems += findings
-                badObjectsFound += 1
+                bad_objects_found += 1
     except StopIteration:
         pass
 
@@ -247,7 +247,7 @@ def verify_randomnumber_list(expected_len,
 
 
 def verify_updates(old_worlds, new_worlds, updates_expected, url):
-    '''
+    """
     Validates that the /updates requests actually updated values in the database and didn't
     just return a JSON list of the correct number of World items.
 
@@ -258,7 +258,7 @@ def verify_updates(old_worlds, new_worlds, updates_expected, url):
     If only some items were updated (within a 5% margin of error), this test returns a "warn".
     This is to account for the unlikely, but possible situation where an entry in the World
     table is updated to the same value it was previously set as.
-    '''
+    """
     successful_updates = 0
     problems = []
 
@@ -293,7 +293,7 @@ def verify_updates(old_worlds, new_worlds, updates_expected, url):
 
 
 def verify_query_cases(self, cases, url, check_updates=False):
-    '''
+    """
     The /updates and /queries tests accept a `queries` parameter
     that is expected to be between 1-500.
     This method execises a framework with different `queries` parameter values
@@ -312,7 +312,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
     suggest that not sanitizing the `queries` parameter against non-int input, or failing
     to ensure the parameter is between 1-500 will just be a warn,
     and not prevent the framework from being benchmarked.
-    '''
+    """
     problems = []
     MAX = 500
     MIN = 1

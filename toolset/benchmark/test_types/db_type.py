@@ -17,10 +17,10 @@ class DBTestType(FrameworkTestType):
         return self.db_url
 
     def verify(self, base_url):
-        '''
+        """
         Ensures body is valid JSON with a key 'id' and a key 
         'randomNumber', both of which must map to integers
-        '''
+        """
 
         url = base_url + self.db_url
         headers, body = self.request_headers_and_body(url)

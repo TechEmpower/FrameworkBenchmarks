@@ -32,11 +32,11 @@ class FortuneHTMLParser(HTMLParser):
 </table></body></html>'''
 
     def handle_decl(self, decl):
-        '''
+        """
         Is called when a doctype or other such tag is read in.
         For our purposes, we assume this is only going to be
         "DOCTYPE html", so we will surround it with "<!" and ">".
-        '''
+        """
         # The spec says that for HTML this is case insensitive,
         # and since we did not specify xml compliance (where
         # incorrect casing would throw a syntax error), we must
@@ -44,7 +44,7 @@ class FortuneHTMLParser(HTMLParser):
         self.body.append("<!{d}>".format(d=decl.lower()))
 
     def handle_charref(self, name):
-        '''
+        """
         This is called when an HTML character is parsed (i.e.
         &quot;). There are a number of issues to be resolved
         here. For instance, some tests choose to leave the
@@ -56,7 +56,7 @@ class FortuneHTMLParser(HTMLParser):
         validate the input against a single valid spec string.
         Another example problem: "&quot;" is valid, but so is
         "&#34;"
-        '''
+        """
         val = name.lower()
         # "&#34;" is a valid escaping, but we are normalizing
         # it so that our final parse can just be checked for
@@ -96,20 +96,20 @@ class FortuneHTMLParser(HTMLParser):
             self.body.append(")")
 
     def handle_entityref(self, name):
-        '''
+        """
         Again, "&mdash;" is a valid escaping of "—", but we
         need to normalize to "—" for equality checking.
-        '''
+        """
         if name == "mdash":
             self.body.append("—")
         else:
             self.body.append("&{n};".format(n=name))
 
     def handle_starttag(self, tag, attrs):
-        '''
+        """
         This is called every time a tag is opened. We append
         each one wrapped in "<" and ">".
-        '''
+        """
         self.body.append("<{t}>".format(t=tag))
 
         # Append a newline after the <table> and <html>
@@ -117,12 +117,12 @@ class FortuneHTMLParser(HTMLParser):
             self.body.append(os.linesep)
 
     def handle_data(self, data):
-        '''
+        """
         This is called whenever data is presented inside of a
         start and end tag. Generally, this will only ever be
         the contents inside of "<td>" and "</td>", but there
         are also the "<title>" and "</title>" tags.
-        '''
+        """
         if data.strip() != '':
             # After a LOT of debate, these are now considered
             # valid in data. The reason for this approach is
@@ -149,23 +149,23 @@ class FortuneHTMLParser(HTMLParser):
             self.body.append("{d}".format(d=data))
 
     def handle_endtag(self, tag):
-        '''
+        """
         This is called every time a tag is closed. We append
         each one wrapped in "</" and ">".
-        '''
+        """
         self.body.append("</{t}>".format(t=tag))
 
         # Append a newline after each </tr> and </head>
         if tag.lower() == 'tr' or tag.lower() == 'head':
             self.body.append(os.linesep)
 
-    def isValidFortune(self, name, out):
-        '''
+    def is_valid_fortune(self, name, out):
+        """
         Returns whether the HTML input parsed by this parser
         is valid against our known "fortune" spec.
         The parsed data in 'body' is joined on empty strings
         and checked for equality against our spec.
-        '''
+        """
         body = ''.join(self.body)
         same = self.valid_fortune == body
         diff_lines = []

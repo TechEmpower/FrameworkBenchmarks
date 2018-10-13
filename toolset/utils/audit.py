@@ -3,9 +3,9 @@ from colorama import Fore
 
 
 class Audit:
-    '''
+    """
     Audits frameworks for inconsistencies
-    '''
+    """
 
     def __init__(self, benchmarker):
         self.benchmarker = benchmarker
