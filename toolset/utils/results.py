@@ -291,8 +291,8 @@ class Results:
             for test in self.benchmarker.tests:
                 log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
-                    for test_type, result in self.verify[
-                            test.name].iteritems():
+                    for test_type, result in iter(self.verify[
+                            test.name].items()):
                         if result.upper() == "PASS":
                             color = Fore.GREEN
                         elif result.upper() == "WARN":
