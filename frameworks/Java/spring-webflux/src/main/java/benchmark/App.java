@@ -7,8 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.mustache.MustacheResourceTemplateLoader;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.result.view.MustacheViewResolver;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.reactive.config.EnableWebFlux;
@@ -24,6 +26,7 @@ import java.util.concurrent.Executors;
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @EnableWebFlux
 @EnableScheduling
+@EnableConfigurationProperties
 public class App implements WebFluxConfigurer {
 
     public static void main(String[] args) {
@@ -62,6 +65,7 @@ public class App implements WebFluxConfigurer {
     }
 
     @Bean
+    @Profile("jdbc")
     public DataSource datasource(DataSourceProperties dataSourceProperties) {
         HikariDataSource dataSource = (HikariDataSource) dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
         dataSource.setMaximumPoolSize(Runtime.getRuntime().availableProcessors() * 2);

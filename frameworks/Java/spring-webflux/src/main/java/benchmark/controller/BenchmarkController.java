@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.controller;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
