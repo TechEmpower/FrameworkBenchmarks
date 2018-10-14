@@ -15,10 +15,10 @@ ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 async def setup_database():
     global connection_pool
     connection_pool = await asyncpg.create_pool(
-        user=os.getenv('PGUSER', 'felix'),
-        password=os.getenv('PGPASS', 'password'),
+        user=os.getenv('PGUSER', 'benchmarkdbuser'),
+        password=os.getenv('PGPASS', 'benchmarkdbpass'),
         database='hello_world',
-        host='127.0.0.1',
+        host='tfb-database',
         port=5432
     )
 
