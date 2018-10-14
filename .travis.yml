@@ -46,6 +46,7 @@ env:
      - "TESTDIR=Java/curacao"
      - "TESTDIR=Java/dropwizard"
      - "TESTDIR=Java/gemini"
+     - "TESTDIR=Java/greenlightning"
      - "TESTDIR=Java/grizzly"
      - "TESTDIR=Java/grizzly-jersey"
      - "TESTDIR=Java/jawn"
@@ -96,6 +97,7 @@ env:
      - 'TESTDIR="Rust/rouille Rust/thruster Rust/tokio-minihttp"'
      - "TESTLANG=Scala"
      - "TESTLANG=Swift"
+     - "TESTLANG=TypeScript"
      - "TESTLANG=Ur"
      - "TESTLANG=Vala"
      - "TESTLANG=VB"
