@@ -49,15 +49,15 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(setup_database())
 
 
-api = responder.API()
+app = responder.API()
 
 
-@api.route('/json')
+@app.route('/json')
 def json_serialization(req, resp):
     resp.media = {'message': 'Hello, world!'}
 
 
-@api.route('/db')
+@app.route('/db')
 async def single_database_query(req, resp):
     row_id = randint(1, 10000)
 
@@ -67,7 +67,7 @@ async def single_database_query(req, resp):
     resp.media = {'id': row_id, 'randomNumber': number}
 
 
-@api.route('/queries')
+@app.route('/queries')
 async def multiple_database_queries(req, resp):
     num_queries = get_num_queries(req)
     row_ids = [randint(1, 10000) for _ in range(num_queries)]
@@ -82,17 +82,17 @@ async def multiple_database_queries(req, resp):
     resp.media = worlds
 
 
-@api.route('/fortunes')
+@app.route('/fortunes')
 async def fortunes(req, resp):
     async with connection_pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
     fortunes.append(ADDITIONAL_ROW)
     fortunes.sort(key=sort_fortunes_key)
-    resp.content = api.template(template, fortunes=fortunes)
+    resp.content = app.template(template, fortunes=fortunes)
 
 
-@api.route('/updates')
+@app.route('/updates')
 async def database_updates(req, resp):
     num_queries = get_num_queries(req)
     updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
@@ -107,10 +107,11 @@ async def database_updates(req, resp):
     resp.media = worlds
 
 
-@api.route('/plaintext')
+@app.route('/plaintext')
 def plaintext(req, resp):
     resp.text = "Hello, world!"
 
-
+"""
 if __name__ == '__main__':
-    api.run()
+    app.run()
+"""
