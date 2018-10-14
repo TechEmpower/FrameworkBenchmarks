@@ -10,7 +10,7 @@
 	<name>OfficeFloor Benchmarks</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<officefloor.version>3.1.0</officefloor.version>
+		<officefloor.version>3.2.0</officefloor.version>
 		<jackson.version>2.9.6</jackson.version>
 		<jaxb.version>2.3.0</jaxb.version>
 	</properties>
