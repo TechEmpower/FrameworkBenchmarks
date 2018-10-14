@@ -6,9 +6,7 @@ WORKDIR /revel
 ENV GOPATH /revel
 ENV PATH ${GOPATH}/bin:${PATH}
 
-
 RUN go get -u github.com/revel/cmd/revel
-RUN revel build -a benchmark -t target -m prod -v
+RUN revel build -a benchmark -t target -m prod-fasthttp -v
 
 CMD target/run.sh
-
