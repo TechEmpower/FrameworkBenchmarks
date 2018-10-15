@@ -6,9 +6,10 @@
     <artifactId>hello-micronaut</artifactId>
     <version>0.1</version>
     <properties>
+        <maven.compiler.source>10</maven.compiler.source>
+        <maven.compiler.target>10</maven.compiler.target>
         <exec.mainClass>benchmark.Application</exec.mainClass>
         <micronaut.version>1.0.0.M3</micronaut.version>
-        <jdk.version>10</jdk.version>
     </properties>
     <repositories>
         <repository>
@@ -159,10 +160,8 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.7.0</version>
+                    <version>3.8.0</version>
                     <configuration>
-                        <source>${jdk.version}</source>
-                        <target>${jdk.version}</target>
                         <compilerArgs>
                             <arg>-parameters</arg>
                         </compilerArgs>
