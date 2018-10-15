@@ -3,7 +3,6 @@ USER root
 WORKDIR /javalin
 COPY build.gradle build.gradle
 COPY src src
-# RUN gradle build
 RUN gradle --refresh-dependencies clean fatJar
 
 CMD java \
