@@ -8,6 +8,8 @@
 	<version>0.1</version>
 
 	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<netty.version>4.1.25.Final</netty.version>
 	</properties>
 
@@ -55,11 +57,8 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5</version>
+				<version>3.8.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<optimize>true</optimize>
 					<debug>false</debug>
 				</configuration>
 			</plugin>

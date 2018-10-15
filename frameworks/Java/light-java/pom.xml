@@ -21,7 +21,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.java>1.8</version.java>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <version.light-java>1.5.10</version.light-java>
         <version.logback>1.2.3</version.logback>
         <version.undertow>2.0.3.Final</version.undertow>
@@ -35,7 +36,7 @@
         <version.dsl-json>1.7.0</version.dsl-json>
         <version.mustache>0.9.5</version.mustache>
         <version.guava>24.1-jre</version.guava>
-        <version.maven-compiler-plugin>3.7.0</version.maven-compiler-plugin>
+        <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
         <version.maven-jar-plugin>3.0.2</version.maven-jar-plugin>
         <version.maven-shade-plugin>3.1.0</version.maven-shade-plugin>
         <version.exec-maven-plugin>1.6.0</version.exec-maven-plugin>
@@ -174,8 +175,6 @@
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                     <forceJavacCompilerUse>true</forceJavacCompilerUse>
-                    <source>${version.java}</source>
-                    <target>${version.java}</target>
                 </configuration>
             </plugin>
         </plugins>

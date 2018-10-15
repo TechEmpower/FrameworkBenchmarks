@@ -8,11 +8,13 @@
     <name>minijax-techempower</name>
     <description>Minijax implementation of TechEmpower Framework Benchmarks</description>
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>        
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <eclipselink.version>2.7.0</eclipselink.version>
         <jpa.version>2.1.1</jpa.version>
         <minijax.version>0.1.4</minijax.version>
         <mysql-connector.version>6.0.6</mysql-connector.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shade.version>3.1.0</shade.version>
     </properties>
     <dependencies>
@@ -73,12 +75,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.8.0</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <optimize>true</optimize>
                     <debug>false</debug>
                 </configuration>
             </plugin>
