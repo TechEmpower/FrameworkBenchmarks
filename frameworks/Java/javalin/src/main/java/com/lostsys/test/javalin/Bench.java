@@ -2,8 +2,7 @@ package com.lostsys.test.javalin;
 
 import io.javalin.Javalin;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 
 public class Bench {
 
@@ -13,18 +12,8 @@ public class Bench {
         app.get("/plaintext", ctx -> ctx.result("Hello, World!"));
 
         app.get("/json", ctx -> {
-            Map<String, String> hello = new HashMap<>();
-            hello.put("message", "Hello, World!");
-            ctx.json(hello);
+            ctx.json(Collections.singletonMap("message", "Hello, World!"));
         });
 
     }
-
-    private static Map<String, String> sayHello() {
-
-        Map<String, String> hello = new HashMap<>();
-        hello.put("message", "Hello, World!");
-        return hello;
-    }
-
 }

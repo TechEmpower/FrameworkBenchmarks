@@ -1,5 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'application'
 
 group 'com.lostsys.test.javalin'
@@ -19,26 +18,14 @@ dependencies {
     compile "org.slf4j:slf4j-simple:1.7.25"
 }
 
-/* ****************** */
-/*    Application     */
-/* ****************** */
-run {
-    if(project.hasProperty('args')){
-        args project.args.split(',')
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes(
+                "Main-Class": mainClassName
+        )
     }
-    jvmArgs = ['-XX:+UseParallelGC','-XX:+AggressiveOpts']//['-XX:+UseNUMA','-XX:+UseParallelGC','-XX:+AggressiveOpts']
-}
-applicationDistribution.from("webapp") {
-    into "webapp"
-}
-
-/* ****************** */
-/*    Eclipse         */
-/* ****************** */
-eclipse {
-    classpath {
-        // we need the output dir to be the same as the one gradle uses when running Jetty
-        // or else the dynamic loading does not apply
-        defaultOutputDir = file('build/classes/main')
-    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
