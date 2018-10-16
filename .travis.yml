@@ -50,6 +50,7 @@ env:
      - "TESTDIR=Java/grizzly"
      - "TESTDIR=Java/grizzly-jersey"
      - "TESTDIR=Java/jawn"
+     - "TESTDIR=Java/javalin"
      - "TESTDIR=Java/jetty"
      - "TESTDIR=Java/jlhttp"
      - "TESTDIR=Java/jooby"
