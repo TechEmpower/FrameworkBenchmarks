@@ -30,7 +30,7 @@ def load_fortunes_template():
 
 def get_num_queries(request):
     try:
-        query_string = request['query_string']
+        query_string = request.params['query_string']
         query_count = int(parse_qs(query_string)[b'queries'][0])
     except (KeyError, IndexError, ValueError):
         return 1
@@ -109,7 +109,7 @@ async def database_updates(req, resp):
 
 @app.route('/plaintext')
 def plaintext(req, resp):
-    resp.text = "Hello, world!"
+    resp.text = b"Hello, world!"
 
 """
 if __name__ == '__main__':
