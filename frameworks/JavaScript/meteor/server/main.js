@@ -3,7 +3,6 @@ import { EJSON } from 'meteor/ejson'
 import { WebApp } from 'meteor/webapp';
 
 Meteor.startup(() => {
-
   WebApp.connectHandlers.use('/plaintext', (req, res) => {
     res.setHeader('Server', 'Meteor');
     res.setHeader('Content-Type', 'text/plain');
@@ -13,6 +12,6 @@ Meteor.startup(() => {
   WebApp.connectHandlers.use('/json', (req, res) => {
     res.setHeader('Server', 'Meteor');
     res.setHeader('Content-Type', 'application/json');
-    res.end(EJSON.stringify({message: "Hello, World!"}));
+    res.end(EJSON.stringify({ message: "Hello, World!" }));
   });
 });

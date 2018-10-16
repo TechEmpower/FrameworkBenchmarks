@@ -1,5 +1,5 @@
 {
-  "framework": "meteorjs",
+  "framework": "meteor",
   "tests": [{
     "default": {
       "json_url": "/json",
@@ -7,14 +7,11 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "framework": "meteorjs",
+      "framework": "meteor",
       "language": "JavaScript",
       "flavor": "NodeJS",
       "os": "Linux",
-      "database":"None",
-      "orm":"full",
-      "database_os": "Linux",
-      "display_name": "express",
+      "display_name": "meteor",
       "versus": "nodejs"
     }
   }]

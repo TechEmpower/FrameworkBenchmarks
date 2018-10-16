@@ -5,9 +5,7 @@
     "start": "meteor run --allow-superuser --verbose --port 8080 --unsafe-perm"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0",
-    "bcrypt": "^3.0.1",
-    "meteor-node-stubs": "^0.4.1"
+    "@babel/runtime": "^7.0.0"
   },
   "meteor": {
     "mainModule": {
