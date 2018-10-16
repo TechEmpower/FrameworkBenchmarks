@@ -1,5 +1,5 @@
 asyncpg==0.16.0
 gunicorn==19.9.0
-responder==0.0.3
+responder >= 0.0.4
 ujson==1.35
-uvicorn==0.3.3
+uvicorn >= 0.3.13
