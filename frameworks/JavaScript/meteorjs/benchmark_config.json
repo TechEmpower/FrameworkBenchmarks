@@ -1,0 +1,21 @@
+{
+  "framework": "meteorjs",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "framework": "meteorjs",
+      "language": "JavaScript",
+      "flavor": "NodeJS",
+      "os": "Linux",
+      "database":"None",
+      "orm":"full",
+      "database_os": "Linux",
+      "display_name": "express",
+      "versus": "nodejs"
+    }
+  }]
+}
