@@ -1,4 +1,4 @@
-FROM python:3.6.5
+FROM python:3.6.6-stretch
 
 WORKDIR /bottle
 COPY views views
@@ -8,8 +8,8 @@ COPY requirements.txt requirements.txt
 COPY uwsgi.ini uwsgi.ini
 
 RUN curl -s http://nginx.org/keys/nginx_signing.key | apt-key add -
-RUN echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list
-RUN echo "deb-src http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list
+RUN echo "deb http://nginx.org/packages/debian/ stretch nginx" >> /etc/apt/sources.list
+RUN echo "deb-src http://nginx.org/packages/debian/ stretch nginx" >> /etc/apt/sources.list
 
 RUN apt update -yqq && apt install -yqq nginx
 

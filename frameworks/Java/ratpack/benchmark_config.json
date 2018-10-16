@@ -1,0 +1,68 @@
+{
+  "framework": "ratpack",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 5050,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Ratpack",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Ratpack",
+        "notes": "",
+        "versus": "Netty"
+      },
+      "jdbc": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "port": 5050,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Ratpack",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Ratpack-jdbc",
+        "notes": "",
+        "versus": "Netty"
+      },
+      "pgclient": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "port": 5050,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Ratpack",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Ratpack-pgclient",
+        "notes": "",
+        "versus": "Netty"
+      }
+    }
+  ]
+}

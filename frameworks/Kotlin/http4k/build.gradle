@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = "1.2.31"
-    ext.http4k_version = "3.26.5"
+    ext.kotlin_version = "1.2.50"
+    ext.http4k_version = "3.34.0"
 
     repositories {
         mavenCentral()
@@ -9,14 +9,8 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.github.onslip:gradle-one-jar:1.0.5'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
     }
-}
-
-plugins {
-    id "com.jfrog.bintray" version "1.7.3"
-    id 'net.saliman.cobertura' version '2.5.2'
-    id 'com.github.kt3k.coveralls' version '2.8.2'
 }
 
 allprojects {
@@ -27,13 +21,20 @@ allprojects {
     }
 
     apply plugin: "kotlin"
-    apply plugin: 'gradle-one-jar'
+    apply plugin: 'com.github.johnrengelman.shadow'
 
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 
     version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
     group = 'org.http4k'
+
+    shadowJar {
+        baseName = "http4k-${project.name}-benchmark"
+        classifier = null
+        version = null
+        mergeServiceFiles()
+    }
 
     compileTestKotlin {
         kotlinOptions {

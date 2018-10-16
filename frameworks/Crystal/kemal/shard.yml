@@ -6,10 +6,10 @@ license: MIT
 dependencies:
   pg:
     github: will/crystal-pg
-    version: 0.14.1
+    version: 0.15.0
   kemal:
     github: kemalcr/kemal
-    version: 0.22.0
+    version: 0.24.0
   redis:
     github: stefanwille/crystal-redis
-    version: 1.9.0
+    version: 2.0.0

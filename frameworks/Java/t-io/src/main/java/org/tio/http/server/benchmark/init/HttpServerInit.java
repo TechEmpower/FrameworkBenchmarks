@@ -24,15 +24,17 @@ public class HttpServerInit {
 	public static void init() throws Exception {
 		httpConfig = new HttpConfig(8080, null, null, null);
 		httpConfig.setUseSession(false);
+		httpConfig.setWelcomeFile(null);
+		httpConfig.setCheckHost(false);
+		httpConfig.setCompatible1_0(false);
 
 		String[] scanPackages = new String[] { TestController.class.getPackage().getName() };
 		Routes routes = new Routes(scanPackages);
 
-		DefaultHttpRequestHandler requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
-
+		requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 		httpServerStarter = new HttpServerStarter(httpConfig, requestHandler);
 		serverGroupContext = httpServerStarter.getServerGroupContext();
-		serverGroupContext.setReadBufferSize(1024 * 60);
+		serverGroupContext.statOn = false;
 		httpServerStarter.start();
 	}
 }

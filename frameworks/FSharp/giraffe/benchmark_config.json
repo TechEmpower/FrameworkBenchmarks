@@ -5,29 +5,28 @@
       "default": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
+        "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "fullstack",
-        "database": "None",
+        "database": "Postgres",
         "framework": "giraffe",
         "language": "F#",
-        "orm": "Raw",
+        "orm": "micro",
         "platform": ".NET",
         "flavor": "CoreCLR",
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Giraffe",
+        "display_name": "Giraffe, Dapper",
         "notes": "",
         "versus": "aspcore"
-      }
-    },
-    {
+      },
       "utf8json": {
         "json_url": "/json",
         "port": 8080,
         "approach": "Realistic",
-        "classification": "fullstack",
+        "classification": "Micro",
         "database": "None",
         "framework": "giraffe",
         "language": "F#",
@@ -37,17 +36,15 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Giraffe",
+        "display_name": "Giraffe, utf8json",
         "notes": "",
         "versus": "aspcore"
-      }
-    },
-    {
-      "utf8plaintext": {
+      },
+      "utf8direct": {
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
-        "classification": "fullstack",
+        "classification": "Micro",
         "database": "None",
         "framework": "giraffe",
         "language": "F#",
@@ -57,7 +54,25 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Giraffe",
+        "display_name": "Giraffe, Direct utf8",
+        "notes": "",
+        "versus": "aspcore"
+      },
+      "stripped": {
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Stripped",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "giraffe",
+        "language": "F#",
+        "orm": "micro",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Giraffe, Custom Rendering, Dapper",
         "notes": "",
         "versus": "aspcore"
       }

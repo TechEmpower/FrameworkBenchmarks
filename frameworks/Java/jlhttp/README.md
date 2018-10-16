@@ -13,10 +13,13 @@ JLHTTP usually sides with the smaller size.
 
 * [JSON](src/main/java/benchmarks/Server.java)
 * [Plaintext](src/main/java/benchmarks/Server.java)
+* [Fortunes](src/main/java/benchmarks/Server.java)
 
 ## Important Libraries
 The tests were run with:
 * [Jackson](https://github.com/FasterXML/jackson)
+* [HikariCP](https://github.com/brettwooldridge/HikariCP)
+* [HTTL](https://httl.github.io/en/)
 
 ## Test URLs
 ### JSON
@@ -26,3 +29,7 @@ http://localhost:8080/json
 ### Plaintext
 
 http://localhost:8080/plaintext
+
+### Fortunes
+
+http://localhost:8080/fortunes

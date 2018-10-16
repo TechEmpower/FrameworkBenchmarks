@@ -1,7 +1,7 @@
-import mofuw, json
+import mofuw, packedjson
 
-proc h(req: mofuwReq, res: mofuwRes) {.async.} =
-  case req.getPath
+proc h(ctx: MofuwCtx) {.async.} =
+  case ctx.getPath
   of "/plaintext":
     mofuwResp(HTTP200, "text/plain", "Hello, World!")
   of "/json":
@@ -9,4 +9,7 @@ proc h(req: mofuwReq, res: mofuwRes) {.async.} =
   else:
     mofuwResp(HTTP404, "text/plain", "NOT FOUND")
 
-h.mofuwRun(port = 8080)
+newServeCtx(
+  port = 8080,
+  handler = h
+).serve()

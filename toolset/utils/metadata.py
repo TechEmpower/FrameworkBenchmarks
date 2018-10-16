@@ -15,9 +15,10 @@ class Metadata:
          'One of the most popular databases around the web and in TFB'),
         ('Postgres',
          'An advanced SQL database with a larger feature set than MySQL'),
-        ('MongoDB', 'A popular document-store database')]
+        ('MongoDB', 'A popular document-store database')
+    ]
 
-    def __init__(self, benchmarker = None):
+    def __init__(self, benchmarker=None):
         self.benchmarker = benchmarker
 
     def gather_languages(self):
@@ -50,15 +51,13 @@ class Metadata:
         Gets a framework's benchmark_config from the given
         test directory
         '''
-        dir_config_files = glob.glob(
-            "{!s}/{!s}/benchmark_config.json".format(
-                self.benchmarker.config.lang_root, test_dir))
+        dir_config_files = glob.glob("{!s}/{!s}/benchmark_config.json".format(
+            self.benchmarker.config.lang_root, test_dir))
         if len(dir_config_files):
             return dir_config_files[0]
         else:
             raise Exception(
-                "Unable to locate tests in test-dir: {!s}".format(
-                    test_dir))
+                "Unable to locate tests in test-dir: {!s}".format(test_dir))
 
     def gather_tests(self, include=None, exclude=None):
         '''
@@ -105,7 +104,8 @@ class Metadata:
                     raise Exception("Error loading config file")
 
             # Find all tests in the config file
-            config_tests = self.parse_config(config, os.path.dirname(config_file_name))
+            config_tests = self.parse_config(config,
+                                             os.path.dirname(config_file_name))
 
             # Filter
             for test in config_tests:
@@ -124,15 +124,15 @@ class Metadata:
                 raise Exception("Unable to locate tests %s" % missing)
 
         tests.sort(key=lambda x: x.name)
+
         return tests
 
     def tests_to_run(self):
         '''
         Gathers all tests for current benchmark run.
         '''
-        return self.gather_tests(
-            self.benchmarker.config.test,
-            self.benchmarker.config.exclude)
+        return self.gather_tests(self.benchmarker.config.test,
+                                 self.benchmarker.config.exclude)
 
     def gather_frameworks(self, include=None, exclude=None):
         '''
@@ -180,19 +180,23 @@ class Metadata:
         for test in config['tests']:
 
             tests_to_run = [name for (name, keys) in test.iteritems()]
+
             if "default" not in tests_to_run:
                 log("Framework %s does not define a default test in benchmark_config.json"
-                    % config['framework'], color=Fore.YELLOW)
+                    % config['framework'],
+                    color=Fore.YELLOW)
 
             # Check that each test configuration is acceptable
             # Throw exceptions if a field is missing, or how to improve the field
             for test_name, test_keys in test.iteritems():
                 # Validates and normalizes the benchmark_config entry
-                test_keys = Metadata.validate_test(test_name, test_keys, directory)
+                test_keys = Metadata.validate_test(test_name, test_keys,
+                                                   config['framework'], directory)
 
                 # Map test type to a parsed FrameworkTestType object
                 runTests = dict()
-                for type_name, type_obj in self.benchmarker.config.types.iteritems():
+                for type_name, type_obj in self.benchmarker.config.types.iteritems(
+                ):
                     try:
                         # Makes a FrameWorkTestType object using some of the keys in config
                         # e.g. JsonTestType uses "json_url"
@@ -205,7 +209,8 @@ class Metadata:
                         pass
 
                 # We need to sort by test_type to run
-                sortedTestKeys = sorted(runTests.keys(), key=Metadata.test_order)
+                sortedTestKeys = sorted(
+                    runTests.keys(), key=Metadata.test_order)
                 sortedRunTests = OrderedDict()
                 for sortedTestKey in sortedTestKeys:
                     sortedRunTests[sortedTestKey] = runTests[sortedTestKey]
@@ -247,12 +252,12 @@ class Metadata:
         }, all_tests))
 
         with open(
-                os.path.join(self.benchmarker.results.directory, "test_metadata.json"),
-                "w") as f:
+                os.path.join(self.benchmarker.results.directory,
+                             "test_metadata.json"), "w") as f:
             f.write(all_tests_json)
 
     @staticmethod
-    def validate_test(test_name, test_keys, directory):
+    def validate_test(test_name, test_keys, framework_name, directory):
         """
         Validate and normalizes benchmark config values for this test based on a schema
         """
@@ -262,49 +267,51 @@ class Metadata:
             'language': {
                 # Language is the only key right now with no 'allowed' key that can't
                 # have a "None" value
-                'required': True,
-                'help':
-                    ('language', 'The language of the framework used, suggestion: %s' %
-                     recommended_lang)
+                'required':
+                True,
+                'help': ('language',
+                         'The language of the framework used, suggestion: %s' %
+                         recommended_lang)
             },
             'webserver': {
                 'help':
-                    ('webserver',
-                     'Name of the webserver also referred to as the "front-end server"'
-                     )
+                ('webserver',
+                 'Name of the webserver also referred to as the "front-end server"'
+                 )
             },
             'classification': {
-                'allowed': [('Fullstack', '...'), ('Micro', '...'), ('Platform',
-                                                                     '...')]
+                'allowed': [('Fullstack', '...'), ('Micro', '...'),
+                            ('Platform', '...')]
             },
             'database': {
                 'allowed':
-                    Metadata.supported_dbs +
-                    [('None',
-                      'No database was used for these tests, as is the case with Json Serialization and Plaintext'
-                      )]
+                Metadata.supported_dbs +
+                [('None',
+                  'No database was used for these tests, as is the case with Json Serialization and Plaintext'
+                  )]
             },
             'approach': {
                 'allowed': [('Realistic', '...'), ('Stripped', '...')]
             },
             'orm': {
-                'required_with': 'database',
+                'required_with':
+                'database',
                 'allowed':
-                    [('Full',
-                      'Has a full suite of features like lazy loading, caching, multiple language support, sometimes pre-configured with scripts.'
-                      ),
-                     ('Micro',
-                      'Has basic database driver capabilities such as establishing a connection and sending queries.'
-                      ),
-                     ('Raw',
-                      'Tests that do not use an ORM will be classified as "raw" meaning they use the platform\'s raw database connectivity.'
-                      )]
+                [('Full',
+                  'Has a full suite of features like lazy loading, caching, multiple language support, sometimes pre-configured with scripts.'
+                  ),
+                 ('Micro',
+                  'Has basic database driver capabilities such as establishing a connection and sending queries.'
+                  ),
+                 ('Raw',
+                  'Tests that do not use an ORM will be classified as "raw" meaning they use the platform\'s raw database connectivity.'
+                  )]
             },
             'platform': {
                 'help':
-                    ('platform',
-                     'Name of the platform this framework runs on, e.g. Node.js, PyPy, hhvm, JRuby ...'
-                     )
+                ('platform',
+                 'Name of the platform this framework runs on, e.g. Node.js, PyPy, hhvm, JRuby ...'
+                 )
             },
             'framework': {
                 # Guaranteed to be here and correct at this point
@@ -312,22 +319,23 @@ class Metadata:
             },
             'os': {
                 'allowed':
-                    [('Linux',
-                      'Our best-supported host OS, it is recommended that you build your tests for Linux hosts'
-                      ),
-                     ('Windows',
-                      'TFB is not fully-compatible on windows, contribute towards our work on compatibility: %s'
-                      % windows_url)]
+                [('Linux',
+                  'Our best-supported host OS, it is recommended that you build your tests for Linux hosts'
+                  ),
+                 ('Windows',
+                  'TFB is not fully-compatible on windows, contribute towards our work on compatibility: %s'
+                  % windows_url)]
             },
             'database_os': {
-                'required_with': 'database',
+                'required_with':
+                'database',
                 'allowed':
-                    [('Linux',
-                      'Our best-supported host OS, it is recommended that you build your tests for Linux hosts'
-                      ),
-                     ('Windows',
-                      'TFB is not fully-compatible on windows, contribute towards our work on compatibility: %s'
-                      % windows_url)]
+                [('Linux',
+                  'Our best-supported host OS, it is recommended that you build your tests for Linux hosts'
+                  ),
+                 ('Windows',
+                  'TFB is not fully-compatible on windows, contribute towards our work on compatibility: %s'
+                  % windows_url)]
             }
         }
 
@@ -337,41 +345,46 @@ class Metadata:
         def get_test_val(k):
             return test_keys.get(k, "none").lower()
 
-        def throw_incorrect_key(k):
+        def throw_incorrect_key(k, acceptable_values, descriptors):
             msg = (
+                "`%s` is a required key for test \"%s\" in framework \"%s\"\n"
+                % (k, test_name, framework_name))
+            if acceptable_values:
+                msg = (
                     "Invalid `%s` value specified for test \"%s\" in framework \"%s\"; suggestions:\n"
-                    % (k, test_name, test_keys['framework']))
-            helpinfo = ('\n').join([
-                "  `%s` -- %s" % (v, desc)
-                for (v, desc) in zip(acceptable_values, descriptors)
-            ])
-            fullerr = msg + helpinfo + "\n"
-            raise Exception(fullerr)
+                    % (k, test_name, framework_name))
+                helpinfo = ('\n').join([
+                    "  `%s` -- %s" % (v, desc)
+                    for (v, desc) in zip(acceptable_values, descriptors)
+                ])
+                msg = msg + helpinfo + "\n"
+
+            raise Exception(msg)
 
         # Check values of keys against schema
         for key in schema.keys():
             val = get_test_val(key)
             test_keys[key] = val
+            acceptable_values = None
+            descriptors = None
 
-            if val == "none":
-                # incorrect if key requires a value other than none
-                if schema[key].get('required', False):
-                    throw_incorrect_key(key)
-                # certain keys are only required if another key is not none
-                if 'required_with' in schema[key]:
-                    if get_test_val(schema[key]['required_with']) == "none":
-                        continue
-                    else:
-                        throw_incorrect_key(key)
-
-            # if we're here, the key needs to be one of the "allowed" values
             if 'allowed' in schema[key]:
                 allowed = schema[key].get('allowed', [])
                 acceptable_values, descriptors = zip(*allowed)
                 acceptable_values = [a.lower() for a in acceptable_values]
 
-                if val not in acceptable_values:
-                    throw_incorrect_key(key)
+            if val == "none":
+                # incorrect if key requires a value other than none
+                if schema[key].get('required', False):
+                    throw_incorrect_key(key, acceptable_values, descriptors)
+                # certain keys are only required if another key is not none
+                if 'required_with' in schema[key]:
+                    if get_test_val(schema[key]['required_with']) != "none":
+                        throw_incorrect_key(key, acceptable_values, descriptors)
+
+            # if we're here, the key needs to be one of the "allowed" values
+            elif acceptable_values and val not in acceptable_values:
+                throw_incorrect_key(key, acceptable_values, descriptors)
 
         return test_keys
 
@@ -384,28 +397,29 @@ class Metadata:
         """
         example_urls = {
             "json_url":
-                "/json",
+            "/json",
             "db_url":
-                "/mysql/db",
+            "/mysql/db",
             "query_url":
-                "/mysql/queries?queries=  or  /mysql/queries/",
+            "/mysql/queries?queries=  or  /mysql/queries/",
             "fortune_url":
-                "/mysql/fortunes",
+            "/mysql/fortunes",
             "update_url":
-                "/mysql/updates?queries=  or  /mysql/updates/",
+            "/mysql/updates?queries=  or  /mysql/updates/",
             "plaintext_url":
-                "/plaintext",
+            "/plaintext",
             "cached_query_url":
-                "/mysql/cached_queries?queries=  or /mysql/cached_queries"
+            "/mysql/cached_queries?queries=  or /mysql/cached_queries"
         }
 
         for test_url in [
-            "json_url", "db_url", "query_url", "fortune_url", "update_url",
-            "plaintext_url", "cached_query_url"
+                "json_url", "db_url", "query_url", "fortune_url", "update_url",
+                "plaintext_url", "cached_query_url"
         ]:
             key_value = test_keys.get(test_url, None)
             if key_value is not None and not key_value.startswith('/'):
                 errmsg = """`%s` field in test \"%s\" does not appear to be a valid url: \"%s\"\n
             Example `%s` url: \"%s\"
-          """ % (test_url, test_name, key_value, test_url, example_urls[test_url])
+          """ % (test_url, test_name, key_value, test_url,
+                 example_urls[test_url])
                 raise Exception(errmsg)

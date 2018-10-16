@@ -42,7 +42,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "weppy-Py3",
-      "notes": "CPython 3.4",
+      "notes": "CPython 3.6",
       "versus": "wsgi"
     },
     "pypy2": {
@@ -87,7 +87,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "weppy-nginx-uWSGI",
-      "notes": "CPython 2.7",
+      "notes": "CPython 3.6",
       "versus": "wsgi"
     }
   }]

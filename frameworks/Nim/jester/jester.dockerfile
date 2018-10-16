@@ -1,18 +1,8 @@
-FROM nimlang/nim:0.16.0
+FROM nimlang/nim:0.19.0
 
-RUN apt update -yqq && apt install -yqq nginx
+ADD ./ /jester
+WORKDIR /jester
+RUN nimble install -y httpbeast@#v0.2.1
+RUN nimble c -d:release --threads:on -y techempower.nim
 
-# 2016-10-01
-RUN git clone https://github.com/dom96/jester.git && \
-    cd jester && \
-    git checkout 22f6ce61924a8f4d170c54f1a6709f898085deb4 && \
-    nimble update && \
-    echo 'y' | nimble install
-
-ENV JESTER_HOME=/jester
-
-COPY ./ ./
-
-RUN chmod a+wrx start-servers.sh
-
-CMD ./start-servers.sh
+CMD ./techempower

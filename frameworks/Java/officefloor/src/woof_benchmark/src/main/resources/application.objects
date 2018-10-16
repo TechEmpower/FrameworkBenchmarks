@@ -1,0 +1,12 @@
+<objects>
+
+	<managed-object source="net.officefloor.jdbc.ConnectionManagedObjectSource" type="java.sql.Connection">
+		<property-file path="datasource.properties" />
+		<pool source="net.officefloor.jdbc.pool.ThreadLocalJdbcConnectionPoolSource" />
+	</managed-object>
+
+	<managed-object source="net.officefloor.jpa.hibernate.HibernateJpaManagedObjectSource" type="javax.persistence.EntityManager">
+		<property-file path="entitymanager.properties" />
+	</managed-object>
+
+</objects>

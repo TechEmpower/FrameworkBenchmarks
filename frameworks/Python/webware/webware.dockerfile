@@ -1,4 +1,4 @@
-FROM python:2.7.14
+FROM python:2.7.15-stretch
 
 ADD ./ /webware
 
