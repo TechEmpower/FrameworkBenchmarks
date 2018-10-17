@@ -87,19 +87,19 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-codegen</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-rx-java2</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
