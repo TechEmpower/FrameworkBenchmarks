@@ -1,6 +1,6 @@
 # Blade Benchmarking Test
 
-This is the Blade portion of a [benchmarking test suite](../) comparing a variety of web development platforms. The test utilizes Blade routes, JSON serialization, Blade-JDBC for ORM.
+This is the Blade portion of a [benchmarking test suite](../) comparing a variety of web development platforms. The test utilizes Blade routes, JSON serialization, [Anima](https://github.com/biezhi/anima) for ORM.
 
 ### Tests
 
@@ -9,13 +9,9 @@ This is the Blade portion of a [benchmarking test suite](../) comparing a variet
 
 ## Infrastructure Software Versions
 
-* [Blade 2.0.3](https://github.com/biezhi/blade)
+* [Blade 2.0.11.RELEASE](https://github.com/biezhi/blade)
 * [Java OpenJDK 1.8](http://openjdk.java.net/)
-* [HikariCP 2.7.1](https://github.com/brettwooldridge/HikariCP)
-
-## References
-
-* https://github.com/netty/netty/tree/master/example/src/main/java/io/netty/example/http/snoop
+* [HikariCP 3.2.0](https://github.com/brettwooldridge/HikariCP)
 
 ## Test URLs
 
