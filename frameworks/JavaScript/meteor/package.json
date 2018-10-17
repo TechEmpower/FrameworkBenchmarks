@@ -1,0 +1,16 @@
+{
+  "name": "meteorjs",
+  "private": false,
+  "scripts": {
+    "start": "meteor run --allow-superuser --verbose --port 8080 --unsafe-perm"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.0.0"
+  },
+  "meteor": {
+    "mainModule": {
+      "server": "server/main.js"
+    },
+    "testModule": "tests/main.js"
+  }
+}
