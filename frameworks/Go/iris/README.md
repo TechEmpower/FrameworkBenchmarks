@@ -2,7 +2,7 @@
 
 This is the go portion of a [benchmarking test suite](https://www.techempower.com/benchmarks/) comparing a variety of web development platforms.
 
-"Iris is a web framework for Go using Postgres."
+"Iris is a web framework for Go. For database tests Postgres was used."
 
 ## Test URLs
 
