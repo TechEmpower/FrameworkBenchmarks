@@ -10,8 +10,10 @@
 	<name>OfficeFloor Benchmarks</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>10</maven.compiler.source>
+		<maven.compiler.target>10</maven.compiler.target>
 		<officefloor.version>3.1.0</officefloor.version>
-		<jackson.version>2.9.6</jackson.version>
+		<jackson.version>2.9.7</jackson.version>
 		<jaxb.version>2.3.0</jaxb.version>
 	</properties>
 	<modules>
@@ -150,11 +152,8 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.7.0</version>
+					<version>3.8.0</version>
 					<configuration>
-						<source>10</source>
-						<target>10</target>
-						<optimize>true</optimize>
 						<debug>false</debug>
 					</configuration>
 				</plugin>

@@ -4,44 +4,43 @@ This is the Spring Webflux portion of a [benchmarking test suite](../) comparing
 
 Netty is used for the async web server, with nearly everything configured with default settings. The only thing changed is Hikari can use up to (2 * cores count) connections (the default is 10). See [About-Pool-Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)
 
-A fixed thread pool of size equals to the number of database connections is used to run all the blocking code (postgresql database accesses) to not block netty's event loop.
+A fixed thread pool of size equals to the number of database connections is used to run all the blocking code (jdbc database accesses) to not block netty's event loop.
 
-For postgresql access, JdbcTemplate is used.
-For mongoDB access, spring-data-mongodb with reactive support is used.
+For postgresql access, there are two implementations.
+* [JdbcDbRepository](src/main/java/benchmark/JdbcDbRepository.java) is using JdbcTemplate.
+* [PgClientDbRepository](src/main/java/benchmark/PgClientDbRepository.java) is using reactive-pg-client
+For mongoDB access, spring-data-mongodb with reactive support is used. See [MongoDbRepository](src/main/java/benchmark/MongoDbRepository.java)
 
 ### Plaintext Test
 
-* [Plaintext test source](src/main/java/benchmark/BenchmarkController.java)
+* [Plaintext test source](src/main/java/benchmark/Controller/BenchmarkController.java)
 
 ### JSON Serialization Test
 
-* [JSON test source](src/main/java/benchmark/BenchmarkController.java)
+* [JSON test source](src/main/java/benchmark/Controller/BenchmarkController.java)
 
 ### Database Query Test
 
-* [Postgresql Query test source](src/main/java/benchmark/SQLController.java)
-* [MongoDB Query test source](src/main/java/benchmark/NoSQLController.java)
+* [Query test source](src/main/java/benchmark/Controller/ReactiveController.java)
 
 ### Database Queries Test
 
-* [Postgresql Queries test source](src/main/java/benchmark/SQLController.java)
-* [MongoDB Queries test source](src/main/java/benchmark/NoSQLController.java)
+* [Queries test source](src/main/java/benchmark/Controller/ReactiveController.java)
 
 ### Database Update Test
 
-* [Postgresql Update test source](src/main/java/benchmark/SQLController.java)
-* [MongoDB Update test source](src/main/java/benchmark/NoSQLController.java)
+* [Update test source](src/main/java/benchmark/Controller/ReactiveController.java)
 
 ### Template rendering Test
 
-* [Postgresql Template rendering test source](src/main/java/benchmark/SQLController.java)
-* [MongoDB Template rendering test source](src/main/java/benchmark/NoSQLController.java)
+* [Template rendering test source](src/main/java/benchmark/Controller/ReactiveController.java)
 
 ## Versions
 
 * [Java OpenJDK 10](http://openjdk.java.net/)
-* [Spring boot 2.0.4](https://spring.io/projects/spring-boot)
+* [Spring boot 2.0.5](https://spring.io/projects/spring-boot)
 * [Spring data mongodb 2.0.9](https://projects.spring.io/spring-data-mongodb/)
+* [reactive-pg-client 0.10.6](https://github.com/reactiverse/reactive-pg-client)
 
 ## Test URLs
 
@@ -56,19 +55,15 @@ For mongoDB access, spring-data-mongodb with reactive support is used.
 ### Database Query Test
 
     http://localhost:8080/db
-    http://localhost:8080/mongo/db
 
 ### Database Queries Test
 
     http://localhost:8080/queries?queries=5
-    http://localhost:8080/mongo/queries?queries=5
 
 ### Database Update Test
 
     http://localhost:8080/updates?queries=5
-    http://localhost:8080/mongo/updates?queries=5
 
 ### Template rendering Test
 
     http://localhost:8080/fortunes
-    http://localhost:8080/mongo/fortunes

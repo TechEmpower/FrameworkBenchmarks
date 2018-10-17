@@ -1,0 +1,29 @@
+{
+  "framework": "martini",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/bench/json",
+        "db_url": "/bench/single",
+        "query_url": "/bench/multiple?queries=",
+        "update_url": "/bench/update?queries=",
+        "plaintext_url": "/bench/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "martini",
+        "language": "Go",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "martini",
+        "notes": "",
+        "versus": "go"
+      }
+    }
+  ]
+}

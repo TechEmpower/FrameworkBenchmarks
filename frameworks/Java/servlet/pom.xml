@@ -10,7 +10,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java-version>1.8</java-version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<cache2k-version>1.2.0.Final</cache2k-version>
 		<jackson-version>2.9.7</jackson-version>
 		<!-- This is the default web.xml for plaintext and json only -->
@@ -192,11 +193,8 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.8.0</version>
 				<configuration>
-					<source>${java-version}</source>
-					<target>${java-version}</target>
-					<optimize>true</optimize>
 					<debug>false</debug>
 				</configuration>
 			</plugin>

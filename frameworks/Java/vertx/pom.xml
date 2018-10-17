@@ -6,6 +6,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
 		<stack.version>3.5.0.Beta1</stack.version>
@@ -39,10 +41,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
+				<version>3.8.0</version>
 			</plugin>
 			<plugin>
 				<groupId>com.fizzed</groupId>
