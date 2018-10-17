@@ -22,27 +22,6 @@
       "display_name": "Iris",
       "notes": "",
       "versus": "go"
-    },
-    "postgresql": {
-      "db_url": "/db",
-      "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
-      "update_url": "/update?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "Postgres",
-      "framework": "None",
-      "language": "Go",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "None",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "FastHTTP",
-      "notes": "",
-      "versus": "go"
     }
   }]
 }
