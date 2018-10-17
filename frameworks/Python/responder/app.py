@@ -2,9 +2,9 @@ import asyncio
 import asyncpg
 import os
 import responder
+import jinja2
 from random import randint
 from operator import itemgetter
-from urllib.parse import parse_qs
 
 
 READ_ROW_SQL = 'SELECT "randomnumber" FROM "world" WHERE id = $1'
@@ -25,7 +25,9 @@ async def setup_database():
 
 def load_fortunes_template():
     path = os.path.join('templates', 'fortune.html')
-    return path
+    with open(path, 'r') as template_file:
+        template_text = template_file.read()
+        return jinja2.Template(template_text)
 
 
 def get_num_queries(request):
@@ -84,13 +86,14 @@ async def multiple_database_queries(req, resp):
 
 @app.route('/fortunes')
 async def fortunes(req, resp):
+    fortune_list = []
     async with connection_pool.acquire() as connection:
-        fortunes = await connection.fetch('SELECT * FROM Fortune')
+        fortune_list = await connection.fetch('SELECT * FROM Fortune')
 
-    fortunes.append(ADDITIONAL_ROW)
-    fortunes.sort(key=sort_fortunes_key)
-    resp.headers['Content-Type'] = "text/html"
-    resp.content = app.template(template, fortunes=fortunes)
+    fortune_list.append(ADDITIONAL_ROW)
+    fortune_list.sort(key=sort_fortunes_key)
+    resp.headers['Content-Type'] = "text/html;charset=utf-8"
+    resp.content = template.render(fortunes=fortune_list)
 
 
 @app.route('/updates')
