@@ -30,8 +30,8 @@ def load_fortunes_template():
 
 def get_num_queries(request):
     try:
-        query_string = request.params['query_string']
-        query_count = int(parse_qs(query_string)[b'queries'][0])
+        query_string = request.params['queries']
+        query_count = int(query_string)
     except (KeyError, IndexError, ValueError):
         return 1
 
@@ -89,6 +89,7 @@ async def fortunes(req, resp):
 
     fortunes.append(ADDITIONAL_ROW)
     fortunes.sort(key=sort_fortunes_key)
+    resp.headers['Content-Type'] = "text/html"
     resp.content = app.template(template, fortunes=fortunes)
 
 
@@ -109,7 +110,8 @@ async def database_updates(req, resp):
 
 @app.route('/plaintext')
 def plaintext(req, resp):
-    resp.text = b"Hello, world!"
+    resp.headers['Content-Type'] = "text/plain"
+    resp.text = "Hello, world!"
 
 """
 if __name__ == '__main__':
