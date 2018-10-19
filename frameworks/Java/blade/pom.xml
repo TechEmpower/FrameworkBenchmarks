@@ -6,45 +6,57 @@
 
     <groupId>hello.world</groupId>
     <artifactId>hello-blade</artifactId>
-    <version>1.0.0-BUILD-SNAPSHOT</version>
+    <version>latest</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <java.version>1.8</java.version>
+        <blade.version>2.0.12.ALPHA</blade.version>
+        <netty.version>4.1.30.Final</netty.version>
+        <anima.version>0.2.4</anima.version>
+        <hikaricp.version>3.2.0</hikaricp.version>
+        <mysql-conn.version>5.1.47</mysql-conn.version>
+        <blade-jetbrick.version>0.1.3</blade-jetbrick.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.bladejava</groupId>
             <artifactId>blade-mvc</artifactId>
-            <version>2.0.7-beta2</version>
+            <version>${blade.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.biezhi</groupId>
+            <artifactId>anima</artifactId>
+            <version>${anima.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.bladejava</groupId>
-            <artifactId>blade-jdbc</artifactId>
-            <version>0.2.2-RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport-native-epoll</artifactId>
-            <version>4.1.22.Final</version>
-            <classifier>linux-x86_64</classifier>
+            <artifactId>blade-template-jetbrick</artifactId>
+            <version>${blade-jetbrick.version}</version>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.47</version>
+            <version>${mysql-conn.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>2.7.8</version>
+            <version>${hikaricp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport-native-epoll</artifactId>
+            <version>${netty.version}</version>
+            <classifier>linux-x86_64</classifier>
         </dependency>
 
     </dependencies>
@@ -60,6 +72,16 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>oss-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <build>
@@ -67,21 +89,23 @@
             <resource>
                 <directory>src/main/java</directory>
                 <filtering>false</filtering>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
             </resource>
         </resources>
         <extensions>
             <extension>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>os-maven-plugin</artifactId>
-                <version>1.5.0.Final</version>
+                <version>1.6.1</version>
             </extension>
         </extensions>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -90,12 +114,18 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
                 <configuration>
+                    <finalName>${project.build.finalName}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>package.xml</descriptor>
-                    </descriptors>
-                    <outputDirectory>${project.build.directory}/dist/</outputDirectory>
+                    <archive>
+                        <manifest>
+                            <mainClass>hello.Application</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
                 <executions>
                     <execution>
@@ -106,24 +136,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>hello.Application</mainClass>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                        <manifestEntries>
-                            <!-- Add the path to the configuration file under Class-Path -->
-                            <Class-Path>resources/</Class-Path>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
             </plugin>
         </plugins>
     </build>
