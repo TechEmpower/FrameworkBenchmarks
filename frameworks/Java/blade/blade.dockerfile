@@ -2,7 +2,7 @@ FROM maven:3.5.3-jdk-8-slim as maven
 WORKDIR /blade
 COPY pom.xml pom.xml
 COPY src src
-RUN mvn clean package -q
+RUN mvn package -q -U
 
 FROM openjdk:8-jdk
 WORKDIR /blade
