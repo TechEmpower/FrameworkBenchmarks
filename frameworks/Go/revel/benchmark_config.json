@@ -20,6 +20,25 @@
       "notes": "",
       "versus": "go"
     },
+    "fast": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "None",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Revel",
+      "notes": "",
+      "versus": "go"
+    },
     "raw": {
       "db_url": "/db",
       "query_url": "/db?queries=",

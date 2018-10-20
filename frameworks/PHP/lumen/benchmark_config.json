@@ -38,7 +38,7 @@
 			"database": "MySQL",
 			"framework": "lumen",
 			"language": "PHP",
-			"flavor": "None",
+			"flavor": "PHP7",
 			"orm": "Full",
 			"platform": "None",
 			"webserver": "swoole",
