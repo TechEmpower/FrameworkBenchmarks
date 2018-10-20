@@ -29,7 +29,7 @@ http://localhost:9000/plaintext
 
 ### Update Test
 
-http://localhost:9000/updates?queries=
+http://localhost:9000/updates?queries=2
 
 ### Fortunes Test
 
