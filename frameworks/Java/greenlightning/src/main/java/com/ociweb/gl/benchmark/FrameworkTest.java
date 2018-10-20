@@ -13,47 +13,35 @@ import com.ociweb.pronghorn.stage.scheduling.GraphManager;
 
 public class FrameworkTest implements GreenApp {
 
-	static final String payloadText="Hello, World!";
-	static final byte[] payload = payloadText.getBytes();
+	static byte[] payload = "Hello, World!".getBytes();
 
 	private int bindPort;
     private String host;
     private int concurrentWritesPerChannel;
     private int queueLengthOfPendingRequests;
     private int telemetryPort;//for monitoring
-    private int minMemoryOfInputPipes;
 
     public FrameworkTest() {
-    	//this server works best with  -XX:+UseNUMA    	
-    	this(System.getProperty("host","*.*.*.*"), 
-    		 8080, 4, 16*1024, 1<<21, 
-    		 Integer.parseInt(System.getProperty("telemetry.port", "-1")));
+    	//this server works best with  -XX:+UseNUMA
+    	this("*.*.*.*",8080, 20, 16*1024, -1);//set -1 to a port to enable telemetry
     }
     
-    public FrameworkTest(String host, int port, 
-    		             int concurrentWritesPerChannel, 
-    		             int queueLengthOfPendingRequests, 
-    		             int minMemoryOfInputPipes,
-    		             int telemetryPort) {
+    public FrameworkTest(String host, int port, int concurrentWritesPerChannel, int queueLengthOfPendingRequests, int telemetryPort) {
     	this.bindPort = port;
     	this.host = host;
     	this.concurrentWritesPerChannel = concurrentWritesPerChannel;
     	this.queueLengthOfPendingRequests = queueLengthOfPendingRequests;
-    	this.minMemoryOfInputPipes = minMemoryOfInputPipes;
     	this.telemetryPort = telemetryPort;
     }
 
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		GraphManager.showThreadIdOnTelemetry = true;
-			
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
     			 .setHost(host)
     			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)
     			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
-    			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
     	         .useInsecureServer(); //turn off TLS
         
 		framework.defineRoute()
@@ -63,11 +51,11 @@ public class FrameworkTest implements GreenApp {
 		framework.defineRoute()
 		        .path("/json")
 		        .routeId(Struct.JSON_ROUTE);
-	
-		if (telemetryPort>0) {
-			framework.enableTelemetry(host,telemetryPort);
-		}
 		
+		if (telemetryPort>0) {
+			GraphManager.showThreadIdOnTelemetry = true;
+			framework.enableTelemetry(telemetryPort);
+		}
     }
 
 	public void parallelBehavior(GreenRuntime runtime) {
