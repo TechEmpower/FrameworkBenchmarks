@@ -7,3 +7,4 @@ postgres:
             port: 5432
             database: hello_world
             cachePreparedStatements: true
+            maxSize: 48
