@@ -9,7 +9,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.compiler.plugin>3.7.0</version.compiler.plugin>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<version.compiler.plugin>3.8.0</version.compiler.plugin>
 		<version.war.plugin>3.2.1</version.war.plugin>
 		<version.wildfly>13.0.0.Final</version.wildfly>
 		<version.javaee.api>7.0</version.javaee.api>
@@ -108,9 +110,6 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${version.compiler.plugin}</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<optimize>true</optimize>
 					<debug>false</debug>
 				</configuration>
 			</plugin>

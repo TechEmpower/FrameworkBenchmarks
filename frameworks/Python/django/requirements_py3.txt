@@ -1,4 +1,4 @@
-Django==2.0.1
+Django==2.0.2
 greenlet==0.4.14
 gunicorn==19.9.0
 meinheld==0.6.1

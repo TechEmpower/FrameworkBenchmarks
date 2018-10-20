@@ -10,6 +10,9 @@
   <version>3.5.0</version>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
     <!-- the main class -->
     <main.verticle>io.vertx.benchmark.App</main.verticle>
   </properties>
@@ -54,13 +57,13 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.1.4</version>
+      <version>42.2.5</version>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-afterburner</artifactId>
-      <version>2.7.4</version>
+      <version>2.9.7</version>
     </dependency>
 
     <dependency>
@@ -78,11 +81,7 @@
         <!-- We specify the Maven compiler plugin as we need to set it to Java 1.8 -->
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.1</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-          </configuration>
+          <version>3.8.0</version>
         </plugin>
       </plugins>
     </pluginManagement>

@@ -10,14 +10,17 @@
 	<name>OfficeFloor Benchmarks</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>10</maven.compiler.source>
+		<maven.compiler.target>10</maven.compiler.target>
 		<officefloor.version>3.1.0</officefloor.version>
-		<jackson.version>2.9.6</jackson.version>
+		<jackson.version>2.9.7</jackson.version>
 		<jaxb.version>2.3.0</jaxb.version>
 	</properties>
 	<modules>
 		<module>woof_benchmark</module>
 		<module>woof_tpr</module>
 		<module>woof_micro</module>
+		<module>woof_thread_affinity</module>
 		<module>woof_raw</module>
 		<module>woof_netty</module>
 		<module>woof_rapidoid</module>
@@ -44,6 +47,11 @@
 			<dependency>
 				<groupId>net.officefloor.server</groupId>
 				<artifactId>officeserver_rapidoid</artifactId>
+				<version>${officefloor.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.web</groupId>
+				<artifactId>officeweb_executive</artifactId>
 				<version>${officefloor.version}</version>
 			</dependency>
 			<dependency>
@@ -114,7 +122,7 @@
 			<dependency>
 				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
-				<version>42.2.2</version>
+				<version>42.2.5</version>
 			</dependency>
 			<dependency>
 				<groupId>com.zaxxer</groupId>
@@ -131,6 +139,11 @@
 				<artifactId>woof_benchmark</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>net.officefloor.benchmarks</groupId>
+				<artifactId>woof_micro</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>
@@ -139,11 +152,8 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.7.0</version>
+					<version>3.8.0</version>
 					<configuration>
-						<source>10</source>
-						<target>10</target>
-						<optimize>true</optimize>
 						<debug>false</debug>
 					</configuration>
 				</plugin>

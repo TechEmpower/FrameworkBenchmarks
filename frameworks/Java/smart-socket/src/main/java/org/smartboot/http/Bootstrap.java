@@ -8,10 +8,10 @@
 
 package org.smartboot.http;
 
+import org.smartboot.http.server.HttpMessageProcessor;
+import org.smartboot.http.server.decode.Http11Request;
+import org.smartboot.http.server.decode.HttpRequestProtocol;
 import org.smartboot.http.server.handle.HttpHandle;
-import org.smartboot.http.server.v2.HttpMessageProcessor;
-import org.smartboot.http.server.v2.decode.Http11Request;
-import org.smartboot.http.server.v2.decode.HttpRequestProtocol;
 import org.smartboot.http.utils.HttpHeaderConstant;
 import org.smartboot.socket.MessageProcessor;
 import org.smartboot.socket.transport.AioQuickServer;
@@ -22,6 +22,7 @@ public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
+        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack","0");
         HttpMessageProcessor processor = new HttpMessageProcessor(System.getProperty("webapps.dir", "./"));
         processor.route("/plaintext", new HttpHandle() {
 

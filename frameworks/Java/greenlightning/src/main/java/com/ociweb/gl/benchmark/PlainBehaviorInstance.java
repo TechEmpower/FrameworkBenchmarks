@@ -21,7 +21,11 @@ public class PlainBehaviorInstance implements RestListener {
 	};
 	
 	public PlainBehaviorInstance(GreenRuntime runtime) {
+<<<<<<< HEAD
 		plainResponseService = runtime.newCommandChannel().newHTTPResponseService(1<<17); 
+=======
+		plainResponseService = runtime.newCommandChannel().newHTTPResponseService(1<<14, 1<<8); 
+>>>>>>> branch 'master' of https://github.com/oci-pronghorn/FrameworkBenchmarks.git
 	}
 
 	@Override
