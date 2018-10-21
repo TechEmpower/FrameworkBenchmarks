@@ -12,14 +12,15 @@
     <name>org.jetbrains.ktor tech-empower-framework-benchmark</name>
 
     <properties>
+        <kotlin.version>1.3.0-rc-190</kotlin.version>
+        <ktor.version>1.0.0-beta-1</ktor.version>
+        <serialization.runtime>0.8.3-rc13</serialization.runtime>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hikaricp.version>3.2.0</hikaricp.version>
-        <kotlin.version>1.2.60</kotlin.version>
-        <ktor.version>0.9.4</ktor.version>
         <logback.version>1.2.3</logback.version>
         <mysql.version>5.1.47</mysql.version>
         <postgresql.version>42.2.5</postgresql.version>
-        <serialization.version>0.6.1</serialization.version>
     </properties>
 
     <dependencies>
@@ -36,7 +37,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-serialization-runtime</artifactId>
-            <version>${serialization.version}</version>
+            <version>${serialization.runtime}</version>
         </dependency>
         
         <dependency>
@@ -100,8 +101,8 @@
                             <goal>compile</goal>
                         </goals>
                         <configuration>
-                            <languageVersion>1.2</languageVersion>
-                            <apiVersion>1.2</apiVersion>
+                            <languageVersion>1.3</languageVersion>
+                            <apiVersion>1.3</apiVersion>
                             <args>
                                 <arg>-Xcoroutines=enable</arg>
                             </args>
@@ -122,9 +123,9 @@
                 </configuration>
                 <dependencies>
                     <dependency>
-                        <groupId>org.jetbrains.kotlinx</groupId>
+                        <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlinx-maven-serialization-plugin</artifactId>
-                        <version>${serialization.version}</version>
+                        <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -210,7 +211,7 @@
     <repositories>
         <repository>
             <id>ktor-repo</id>
-            <url>https://dl.bintray.com/kotlin/ktor</url>
+            <url>https://kotlin.bintray.com/ktor</url>
         </repository>
         <repository>
             <id>jcenter</id>
@@ -221,12 +222,22 @@
             <name>bintray</name>
             <url>https://kotlin.bintray.com/kotlinx</url>
         </repository>
+        <repository>
+            <id>bintray-kotlin-eap</id>
+            <name>bintray</name>
+            <url>https://kotlin.bintray.com/kotlin-eap</url>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>bintray-kotlin-kotlinx-plugins</id>
             <name>bintray-plugins</name>
             <url>https://kotlin.bintray.com/kotlinx</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>bintray-kotlin-eap</id>
+            <name>bintray</name>
+            <url>https://kotlin.bintray.com/kotlin-eap</url>
         </pluginRepository>
     </pluginRepositories>
 
