@@ -65,7 +65,7 @@
             <dependency>
                 <groupId>com.sparkjava</groupId>
                 <artifactId>spark-template-mustache</artifactId>
-                <version>${spark-version}</version>
+                <version>2.7.1</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>

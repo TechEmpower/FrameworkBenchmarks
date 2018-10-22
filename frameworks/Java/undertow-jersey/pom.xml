@@ -129,7 +129,7 @@
     <dependency>
       <groupId>io.undertow</groupId>
       <artifactId>undertow-core</artifactId>
-      <version>1.3.31</version>
+      <version>1.3.33.Final</version>
     </dependency>
 
     <dependency>
