@@ -17,7 +17,7 @@ CMD java \
     -Dvertx.disableContextTimings=true                \
     -Dvertx.disableTCCL=true                          \
     -jar                                              \
-    target/vertx-web-benchmark-3.5.0-fat.jar          \
+    target/vertx-web-benchmark-3.5.4-fat.jar          \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`           \
     --conf                                            \
