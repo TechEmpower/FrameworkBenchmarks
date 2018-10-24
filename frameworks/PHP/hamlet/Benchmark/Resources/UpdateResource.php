@@ -6,8 +6,8 @@ use Hamlet\Database\Database;
 use Hamlet\Entities\JsonEntity;
 use Hamlet\Requests\Request;
 use Hamlet\Resources\WebResource;
-use Hamlet\Responses\OKResponse;
 use Hamlet\Responses\Response;
+use Hamlet\Responses\SimpleOKResponse;
 
 class UpdateResource implements WebResource
 {
@@ -58,6 +58,6 @@ class UpdateResource implements WebResource
             $payload[] = $entry;
         }
 
-        return new OKResponse(new JsonEntity($payload));
+        return new SimpleOKResponse(new JsonEntity($payload));
     }
 }

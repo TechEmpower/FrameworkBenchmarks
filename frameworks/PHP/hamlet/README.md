@@ -13,9 +13,12 @@ This is the [Hamlet Core](https://github.com/vasily-kartashov/hamlet-core) porti
 {
   ...
   "require": {
-    "hamlet/hamlet-core" : "^2"
+    "hamlet/hamlet-core" : "^3"
     ...
   }
 }
 ```
 
+## Local test
+
+ab -c 1 -n 100 "http://127.0.0.1:8089/json"
