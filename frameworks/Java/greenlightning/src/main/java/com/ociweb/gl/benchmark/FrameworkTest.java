@@ -9,55 +9,15 @@ import com.ociweb.gl.api.GreenApp;
  */
 import com.ociweb.gl.api.GreenFramework;
 import com.ociweb.gl.api.GreenRuntime;
-import com.ociweb.pronghorn.stage.scheduling.GraphManager;
+import com.ociweb.pronghorn.network.ServerSocketWriterStage;
+
+import io.reactiverse.pgclient.PgClient;
+import io.reactiverse.pgclient.PgPoolOptions;
+import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
 
 public class FrameworkTest implements GreenApp {
 
-<<<<<<< HEAD
-	static byte[] payload = "Hello, World!".getBytes();
-
-	private int bindPort;
-    private String host;
-    private int concurrentWritesPerChannel;
-    private int queueLengthOfPendingRequests;
-    private int telemetryPort;//for monitoring
-
-    public FrameworkTest() {
-    	//this server works best with  -XX:+UseNUMA
-    	this("*.*.*.*",8080, 20, 16*1024, -1);//set -1 to a port to enable telemetry
-    }
-    
-    public FrameworkTest(String host, int port, int concurrentWritesPerChannel, int queueLengthOfPendingRequests, int telemetryPort) {
-    	this.bindPort = port;
-    	this.host = host;
-    	this.concurrentWritesPerChannel = concurrentWritesPerChannel;
-    	this.queueLengthOfPendingRequests = queueLengthOfPendingRequests;
-    	this.telemetryPort = telemetryPort;
-    }
-
-	@Override
-    public void declareConfiguration(GreenFramework framework) {
-		
-		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
-    			 .setHost(host)
-    			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)
-    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
-    			 .setMaxQueueIn(queueLengthOfPendingRequests)
-    	         .useInsecureServer(); //turn off TLS
-        
-		framework.defineRoute()
-		         .path("/plaintext")
-		         .routeId(Struct.PLAINTEXT_ROUTE);
-		
-		framework.defineRoute()
-		        .path("/json")
-		        .routeId(Struct.JSON_ROUTE);
-		
-		if (telemetryPort>0) {
-			GraphManager.showThreadIdOnTelemetry = true;
-			framework.enableTelemetry(telemetryPort);
-		}
-=======
 	static final String payloadText="Hello, World!";
 	static final byte[] payload = payloadText.getBytes();
 
@@ -67,40 +27,100 @@ public class FrameworkTest implements GreenApp {
     private int queueLengthOfPendingRequests;
     private int telemetryPort;//for monitoring
     private int minMemoryOfInputPipes;
-
+    private int maxResponseSize;
+    private int pipelineBits;
+	
+    private final PgPoolOptions options;
+    private final Vertx vertx = Vertx.vertx(new VertxOptions().
+			  			setPreferNativeTransport(true)
+    			);
+    
+    
+	public static int connectionsPerTrack =   2;
+	public static int connectionPort =        5432;
+	
+	public static String connectionHost =     "localhost";
+	public static String connectionDB =       "testdb";
+	public static String connectionUser =     "postgres";
+	public static String connectionPassword = "postgres";
+			    
     public FrameworkTest() {
     	//this server works best with  -XX:+UseNUMA    	
-    	this(System.getProperty("host","*.*.*.*"), 
-    		 8080, 4, 16*1024, 1<<21, 
-    		 Integer.parseInt(System.getProperty("telemetry.port", "-1")));
-    }
-    
+    	this(System.getProperty("host","0.0.0.0"), 
+    		 8080,    //default port for test 
+    		 10,      //default concurrency, 10 to support 280 channels on 14 core boxes
+    		 8*1024, //default max rest requests allowed to queue in wait
+    		 1<<21,   //default network buffer per input socket connection
+    		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
+    		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
+    		 "hello_world",
+    		 "benchmarkdbuser",
+    		 "benchmarkdbpass"
+    		 );    	
+    }   
+        
     public FrameworkTest(String host, int port, 
     		             int concurrentWritesPerChannel, 
     		             int queueLengthOfPendingRequests, 
     		             int minMemoryOfInputPipes,
-    		             int telemetryPort) {
+    		             int telemetryPort,
+    		             String dbHost,
+    		             String dbName,
+    		             String dbUser,
+    		             String dbPass) {
     	this.bindPort = port;
     	this.host = host;
     	this.concurrentWritesPerChannel = concurrentWritesPerChannel;
     	this.queueLengthOfPendingRequests = queueLengthOfPendingRequests;
     	this.minMemoryOfInputPipes = minMemoryOfInputPipes;
     	this.telemetryPort = telemetryPort;
+    	this.maxResponseSize = 18_000;
+    	this.pipelineBits = 16;
+    	
+    	if (!"127.0.0.1".equals(System.getProperty("host",null))) { 
+    		    		
+	    	if (null!=dbHost) {
+	    		this.connectionHost = dbHost;
+	    	}
+	    	if (null!=dbName) {
+	    		this.connectionDB = dbName;
+	    	}
+	    	if (null!=dbUser) {
+	    		this.connectionUser = dbUser;
+	    	}
+	    	if (null!=dbPass) {
+	    		this.connectionPassword = dbPass;
+	    	}    	
+    	}
+    	
+    	options = new PgPoolOptions()
+    			.setPort(connectionPort)
+    			.setPipeliningLimit(1<<16)
+    			.setTcpFastOpen(true)
+    			.setHost(connectionHost)
+    			.setDatabase(connectionDB)
+    			.setUser(connectionUser)
+    			.setPassword(connectionPassword)
+    			.setCachePreparedStatements(true)
+    			.setMaxSize(connectionsPerTrack);
+    
     }
 
+    
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		GraphManager.showThreadIdOnTelemetry = true;
-			
+		//for 14 cores this is expected to use less than 16G
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
     			 .setHost(host)
     			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)
     			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
     			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
+    			 .setMaxResponseSize(maxResponseSize) //big enough for large mult db response
     	         .useInsecureServer(); //turn off TLS
-        
+
+		
 		framework.defineRoute()
 		         .path("/plaintext")
 		         .routeId(Struct.PLAINTEXT_ROUTE);
@@ -108,27 +128,44 @@ public class FrameworkTest implements GreenApp {
 		framework.defineRoute()
 		        .path("/json")
 		        .routeId(Struct.JSON_ROUTE);
-	
+		
+		framework.defineRoute()
+		        .path("/db")
+		        .routeId(Struct.DB_SINGLE_ROUTE);
+		
+		framework.defineRoute()
+		        .path("/queries?queries=#{queries}")
+		        .path("/queries")
+		        .refineInteger("queries", Field.QUERIES, 1)
+		        .routeId(Struct.DB_MULTI_ROUTE);
+		
 		if (telemetryPort>0) {
 			framework.enableTelemetry(host,telemetryPort);
 		}
 		
->>>>>>> branch 'master' of https://github.com/oci-pronghorn/FrameworkBenchmarks.git
+		ServerSocketWriterStage.lowLatency = false; //turn on high volume mode, less concerned about low latency. 
+	
     }
 
 	public void parallelBehavior(GreenRuntime runtime) {
 
-		runtime.addRestListener("PlainResponder",new PlainBehaviorInstance(runtime))
-		       .includeRoutes(Struct.PLAINTEXT_ROUTE);
 
-		runtime.addRestListener("JSONResponder",new JSONBehaviorInstance(runtime))
-		       .includeRoutes(Struct.JSON_ROUTE);
+		SimpleRest restTest = new SimpleRest(runtime);
+		
+		runtime.registerListener("Simple", restTest)
+		       .includeRoutes(Struct.PLAINTEXT_ROUTE, restTest::plainRestRequest)
+		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);
+		 
+		//each track has its own pool with its own async thread
+		DBRest dbRestInstance = new DBRest(runtime, PgClient.pool(vertx,options), pipelineBits);
+		runtime.registerListener("DBRest", dbRestInstance)
+				.includeRoutes(Struct.DB_SINGLE_ROUTE, dbRestInstance::singleRestRequest)
+				.includeRoutes(Struct.DB_MULTI_ROUTE, dbRestInstance::multiRestRequest);		
 
 	}
 	 
     @Override
-    public void declareBehavior(GreenRuntime runtime) {   
-    	
+    public void declareBehavior(GreenRuntime runtime) { 
     }
   
 }
