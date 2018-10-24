@@ -8,8 +8,8 @@ import io.ktor.html.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.scheduling.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.scheduling.*
 import kotlinx.html.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
