@@ -39,11 +39,6 @@
 		    <artifactId>reactive-pg-client</artifactId>
 		    <version>0.10.6</version>
 		</dependency>
-		<dependency>
-		    <groupId>io.netty</groupId>
-		    <artifactId>netty-transport-native-epoll</artifactId>
-		    <version>4.1.30.Final</version>
-		</dependency>
 	</dependencies>
 
 	<build>
