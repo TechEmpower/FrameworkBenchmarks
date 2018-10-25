@@ -3,6 +3,7 @@
     "hamlet/hamlet-core" : "^3.2",
     "cache/apcu-adapter": "^1",
     "react/http": "*",
+    "spiral/roadrunner": "*",
     "swoft/swoole-ide-helper": "*"
   },
   "autoload": {
