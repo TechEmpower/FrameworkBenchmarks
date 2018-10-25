@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>com.ociweb</groupId>
 			<artifactId>greenlightning</artifactId>
-			<version>[1.0.7,1.1)</version>
+			<version>[1.0.9,1.1)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -34,6 +34,16 @@
 			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>io.reactiverse</groupId>
+		    <artifactId>reactive-pg-client</artifactId>
+		    <version>0.10.6</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.netty</groupId>
+		    <artifactId>netty-transport-native-epoll</artifactId>
+		    <version>4.1.30.Final</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -43,7 +53,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.0</version>
+				<version>3.8.0</version>
 				<configuration>
 					<compilerArguments>
 						<profile>compact1</profile>

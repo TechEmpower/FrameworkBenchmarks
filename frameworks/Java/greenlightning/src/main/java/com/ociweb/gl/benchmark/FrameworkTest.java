@@ -13,8 +13,6 @@ import com.ociweb.pronghorn.network.ServerSocketWriterStage;
 
 import io.reactiverse.pgclient.PgClient;
 import io.reactiverse.pgclient.PgPoolOptions;
-import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
 
 public class FrameworkTest implements GreenApp {
 
@@ -31,10 +29,7 @@ public class FrameworkTest implements GreenApp {
     private int pipelineBits;
 	
     private final PgPoolOptions options;
-    private final Vertx vertx = Vertx.vertx(new VertxOptions().
-			  			setPreferNativeTransport(true)
-    			);
-    
+   
     
 	public static int connectionsPerTrack =   2;
 	public static int connectionPort =        5432;
@@ -74,8 +69,8 @@ public class FrameworkTest implements GreenApp {
     	this.queueLengthOfPendingRequests = queueLengthOfPendingRequests;
     	this.minMemoryOfInputPipes = minMemoryOfInputPipes;
     	this.telemetryPort = telemetryPort;
-    	this.maxResponseSize = 18_000;
-    	this.pipelineBits = 16;
+    	this.maxResponseSize = 20_000; //for 500 mult db call in JSON format
+    	this.pipelineBits = 18;
     	
     	if (!"127.0.0.1".equals(System.getProperty("host",null))) { 
     		    		
@@ -95,7 +90,7 @@ public class FrameworkTest implements GreenApp {
     	
     	options = new PgPoolOptions()
     			.setPort(connectionPort)
-    			.setPipeliningLimit(1<<16)
+    			.setPipeliningLimit(1<<pipelineBits)
     			.setTcpFastOpen(true)
     			.setHost(connectionHost)
     			.setDatabase(connectionDB)
@@ -132,11 +127,11 @@ public class FrameworkTest implements GreenApp {
 		framework.defineRoute()
 		        .path("/db")
 		        .routeId(Struct.DB_SINGLE_ROUTE);
-		
+			
 		framework.defineRoute()
-		        .path("/queries?queries=#{queries}")
+		        .path("/queries?queries=${queries}")
 		        .path("/queries")
-		        .refineInteger("queries", Field.QUERIES, 1)
+		        .refineText("queries", Field.QUERIES, "1")
 		        .routeId(Struct.DB_MULTI_ROUTE);
 		
 		if (telemetryPort>0) {
@@ -149,7 +144,6 @@ public class FrameworkTest implements GreenApp {
 
 	public void parallelBehavior(GreenRuntime runtime) {
 
-
 		SimpleRest restTest = new SimpleRest(runtime);
 		
 		runtime.registerListener("Simple", restTest)
@@ -157,7 +151,7 @@ public class FrameworkTest implements GreenApp {
 		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);
 		 
 		//each track has its own pool with its own async thread
-		DBRest dbRestInstance = new DBRest(runtime, PgClient.pool(vertx,options), pipelineBits);
+		DBRest dbRestInstance = new DBRest(runtime, PgClient.pool(options), pipelineBits, maxResponseSize);
 		runtime.registerListener("DBRest", dbRestInstance)
 				.includeRoutes(Struct.DB_SINGLE_ROUTE, dbRestInstance::singleRestRequest)
 				.includeRoutes(Struct.DB_MULTI_ROUTE, dbRestInstance::multiRestRequest);		

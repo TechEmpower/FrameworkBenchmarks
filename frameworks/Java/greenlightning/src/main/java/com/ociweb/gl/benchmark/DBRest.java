@@ -28,6 +28,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 	//this collector is for the multi db test so we can collect all the objects until we have them all for 
 	//the request we are currently sending back
 	private final List<ResultObject> collector = new ArrayList<ResultObject>();
+	private boolean collectionPending = false;
 	private final ObjectPipe<ResultObject> inFlight;
 	
 	JSONRenderer<List<ResultObject>> multiTemplate = new JSONRenderer<List<ResultObject>>()
@@ -44,9 +45,9 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 	          .endObject();
 	
 	
-	public DBRest(GreenRuntime runtime, PgPool pool, int pipelineBits) {
+	public DBRest(GreenRuntime runtime, PgPool pool, int pipelineBits, int maxResponseSize) {
 		this.pool = pool;	
-		this.service = runtime.newCommandChannel().newHTTPResponseService(128, 18_000); //for large multi response 
+		this.service = runtime.newCommandChannel().newHTTPResponseService(128, maxResponseSize); 
 		this.inFlight = new ObjectPipe<ResultObject>(pipelineBits, ResultObject.class,	ResultObject::new);
 	}		
 	
@@ -56,46 +57,51 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 	
 	public boolean multiRestRequest(HTTPRequestReader request) { 
 		
-		int queries = Math.max(1, request.structured().readInt(Field.QUERIES));
+		int queries = 1;
+		try {			
+			queries = Math.min(Math.max(1, Integer.parseInt(request.structured().readText(Field.QUERIES))),500);
+		} catch (NumberFormatException e) {
+			//default value of 1 will be used in this non numeric case
+		}
 		
-		//do later if we have no room.
-		if (!inFlight.hasRoomFor(queries)) {
+		
+		if (inFlight.hasRoomFor(queries)) {
+			
+			int q = queries;
+			while (--q >= 0) {
+			
+					final ResultObject target = inFlight.headObject();
+					assert(null!=target);
+				
+					target.setConnectionId(request.getConnectionId());
+					target.setSequenceId(request.getSequenceCode());
+					target.setStatus(-2);//out for work	
+					target.setGroupSize(queries);
+				
+					pool.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
+							if (r.succeeded()) {
+								
+								PgIterator resultSet = r.result().iterator();
+						        Tuple row = resultSet.next();			        
+						        
+						        target.setId(row.getInteger(0));
+						        target.setResult(row.getInteger(1));					
+								target.setStatus(200);
+								
+							} else {
+								System.out.println("fail: "+r.cause().getLocalizedMessage());
+								target.setStatus(500);
+							}				
+						});	
+								
+					inFlight.moveHeadForward(); //always move to ensure this can be read.
+			
+			}
+				
+			return true;
+		} else {
 			return false;
 		}	
-		
-		int q = queries;
-		while (--q >= 0) {
-		
-				final ResultObject target = inFlight.headObject();
-				assert(null!=target);
-			
-				target.setConnectionId(request.getConnectionId());
-				target.setSequenceId(request.getSequenceCode());
-				target.setStatus(-2);//out for work	
-				target.setGroupSize(queries);
-			
-				pool.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
-						if (r.succeeded()) {
-							
-							PgIterator resultSet = r.result().iterator();
-					        Tuple row = resultSet.next();			        
-					        
-					        target.setId(row.getInteger(0));
-					        target.setResult(row.getInteger(1));					
-							target.setStatus(200);
-							
-						} else {
-							System.out.println("fail: "+r.cause().getLocalizedMessage());
-							target.setStatus(500);
-						}				
-					});	
-							
-				inFlight.moveHeadForward(); //always move to ensure this can be read.
-		
-		}
-			
-		return true;	
-		
 	}
 
 	
@@ -138,26 +144,22 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 	@Override
 	public void tickEvent() { 
      		
-		if (collector.size()>0 && (collector.size() == collector.get(0).getGroupSize())) {
+		if (collectionPending) {
 			//now ready to send, we have all the data	
-			if (!publishMultiResponse(collector.get(0))) {
-				return;
-			} else {
+			if (publishMultiResponse(collector.get(0).getConnectionId(), collector.get(0).getSequenceId() )) {
 				inFlight.tryMoveTailForward();
+				collectionPending = false;
+			} else {
+				return;
 			}
-		}
-		
+		}		
 		
 		ResultObject temp = inFlight.tailObject();
-		if (null==temp && inFlight.tryMoveTailForward()) {
-			temp = inFlight.tailObject();
-		}
-
 		while (temp!=null && temp.getStatus()>=0) {
+			final ResultObject t = temp;
 		
 			boolean ok = false;
 							
-			final ResultObject t = temp;
 			///////////////////////////////
 			if (0 == t.getGroupSize()) {	
 				ok = service.publishHTTPResponse(temp.getConnectionId(), temp.getSequenceId(), 200,
@@ -171,7 +173,8 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 				collector.add(t);					
 				if (collector.size() == t.getGroupSize()) {
 					//now ready to send, we have all the data						
-	    			ok =publishMultiResponse(t);
+	    			ok =publishMultiResponse(t.getConnectionId(), t.getSequenceId());
+	    			collectionPending = !ok;
 	    		} else {
 	    			ok = true;//added to list
 	    		}				
@@ -181,13 +184,15 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 		}	   
 	}
 
-	private boolean publishMultiResponse(ResultObject temp) {
-		return service.publishHTTPResponse(temp.getConnectionId(), temp.getSequenceId(), 200,
+	private boolean publishMultiResponse(long conId, long seqCode) {
+		return service.publishHTTPResponse(conId, seqCode, 200,
 					    				   HTTPContentTypeDefaults.JSON,
 					    				   w-> {
 					    					   multiTemplate.render(w, collector);
 					    					   int c = collector.size();
 					    					   while (--c>=0) {
+					    						   assert(collector.get(c).getConnectionId() == conId);
+					    						   assert(collector.get(c).getSequenceId() == seqCode);					    						   
 					    						   collector.get(c).setStatus(-1);
 					    					   }
 					    					   collector.clear();
