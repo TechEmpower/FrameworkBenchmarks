@@ -11,13 +11,12 @@ The tests were run with:
 * [Software](https://oci-pronghorn.gitbook.io/greenlightning/)
 * [Example](https://github.com/oci-pronghorn/GreenLightning/tree/master/slipstream)
 
-## Test URLs
-### JSON
-
-http://localhost:8080/json
-
-### PLAINTEXT
-
-http://localhost:8080/plaintext
+### Implemented benchmarks
+- [x] JSON serialization
+- [x] Single query
+- [x] Multiple queries
+- [ ] Fortunes
+- [ ] Data updates
+- [x] Plaintext
 
 
