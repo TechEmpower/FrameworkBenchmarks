@@ -66,7 +66,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private static final CharSequence RESPONSE_TYPE_JSON = HttpHeaders.createOptimized("application/json");
 
   private static final String HELLO_WORLD = "Hello, world!";
-  private static final Buffer HELLO_WORLD_BUFFER = Buffer.buffer(HELLO_WORLD);
+  private static final Buffer HELLO_WORLD_BUFFER = Buffer.factory.directBuffer(HELLO_WORLD, "UTF-8");
 
   private static final CharSequence HEADER_SERVER = HttpHeaders.createOptimized("server");
   private static final CharSequence HEADER_DATE = HttpHeaders.createOptimized("date");
