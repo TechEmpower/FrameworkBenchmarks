@@ -10,7 +10,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
-		<stack.version>3.5.4</stack.version>
+		<stack.version>3.6.0-SNAPSHOT</stack.version>
 	</properties>
 
 	<dependencies>
