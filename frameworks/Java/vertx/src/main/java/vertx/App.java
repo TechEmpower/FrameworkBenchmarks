@@ -1,11 +1,7 @@
 package vertx;
 
 import com.julienviet.pgclient.*;
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Handler;
-import io.vertx.core.MultiMap;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServer;
@@ -21,7 +17,10 @@ import vertx.model.Fortune;
 import vertx.model.Message;
 import vertx.model.World;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -326,6 +325,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     vertx.exceptionHandler(err -> {
       err.printStackTrace();
     });
+    printConfig(vertx);
     vertx.deployVerticle(App.class.getName(),
         new DeploymentOptions().setInstances(procs * 2).setConfig(config), event -> {
           if (event.succeeded()) {
@@ -334,5 +334,31 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
             logger.error("Unable to start your application", event.cause());
           }
         });
+  }
+
+  private static void printConfig(Vertx vertx) {
+    boolean nativeTransport = vertx.isNativeTransportEnabled();
+    String version = "unknown";
+    try {
+      InputStream in = Vertx.class.getClassLoader().getResourceAsStream("META-INF/vertx/vertx-version.txt");
+      if (in == null) {
+        in = Vertx.class.getClassLoader().getResourceAsStream("vertx-version.txt");
+      }
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      byte[] buffer = new byte[256];
+      while (true) {
+        int amount = in.read(buffer);
+        if (amount == -1) {
+          break;
+        }
+        out.write(buffer, 0, amount);
+      }
+      version = out.toString();
+    } catch (IOException e) {
+      System.out.println("Could not read Vertx version " + e.getMessage());;
+    }
+    System.out.println("Vertx: " + version);
+    System.out.println("Default Event Loop Size: " + VertxOptions.DEFAULT_EVENT_LOOP_POOL_SIZE);
+    System.out.println("Native transport : " + nativeTransport);
   }
 }
