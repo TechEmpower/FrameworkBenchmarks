@@ -321,7 +321,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   public static void main(String[] args) throws Exception {
     JsonObject config = new JsonObject(new String(Files.readAllBytes(new File(args[0]).toPath())));
     int procs = Runtime.getRuntime().availableProcessors();
-    Vertx vertx = Vertx.vertx();
+    Vertx vertx = Vertx.vertx(new VertxOptions().setPreferNativeTransport(true));
     vertx.exceptionHandler(err -> {
       err.printStackTrace();
     });
