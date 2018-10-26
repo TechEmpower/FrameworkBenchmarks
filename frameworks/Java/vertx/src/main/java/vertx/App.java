@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -79,22 +81,31 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
   private static final String SELECT_FORTUNE = "SELECT id, message from FORTUNE";
 
-  private CharSequence dateString;
-
   private HttpServer server;
 
   private PgClient client;
+
+  private CharSequence dateString;
+
+  private CharSequence[] plaintextHeaders;
+
+  public static CharSequence createDateHeader() {
+    return HttpHeaders.createOptimized(DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
+  }
 
   @Override
   public void start() throws Exception {
     int port = 8080;
     server = vertx.createHttpServer(new HttpServerOptions());
     server.requestHandler(App.this).listen(port);
-    dateString = HttpHeaders.createOptimized(java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(java.time.ZonedDateTime.now()));
+    dateString = createDateHeader();
+    plaintextHeaders = new CharSequence[] {
+        HEADER_CONTENT_TYPE, RESPONSE_TYPE_PLAIN,
+        HEADER_SERVER, SERVER,
+        HEADER_DATE, dateString,
+        HEADER_CONTENT_LENGTH, HELLO_WORLD_LENGTH };
     JsonObject config = config();
-    vertx.setPeriodic(1000, handler -> {
-      dateString = HttpHeaders.createOptimized(java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(java.time.ZonedDateTime.now()));
-    });
+    vertx.setPeriodic(1000, id -> plaintextHeaders[5] = dateString = createDateHeader());
     PgPoolOptions options = new PgPoolOptions();
     options.setDatabase(config.getString("database"));
     options.setHost(config.getString("host"));
@@ -142,11 +153,9 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private void handlePlainText(HttpServerRequest request) {
     HttpServerResponse response = request.response();
     MultiMap headers = response.headers();
-    headers
-        .add(HEADER_CONTENT_TYPE, RESPONSE_TYPE_PLAIN)
-        .add(HEADER_SERVER, SERVER)
-        .add(HEADER_DATE, dateString)
-        .add(HEADER_CONTENT_LENGTH, HELLO_WORLD_LENGTH);
+    for (int i = 0;i < plaintextHeaders.length; i+= 2) {
+      headers.add(plaintextHeaders[i], plaintextHeaders[i + 1]);
+    }
     response.end(HELLO_WORLD_BUFFER);
   }
 
@@ -355,10 +364,10 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
       }
       version = out.toString();
     } catch (IOException e) {
-      System.out.println("Could not read Vertx version " + e.getMessage());;
+      logger.error("Could not read Vertx version", e);;
     }
-    System.out.println("Vertx: " + version);
-    System.out.println("Default Event Loop Size: " + VertxOptions.DEFAULT_EVENT_LOOP_POOL_SIZE);
-    System.out.println("Native transport : " + nativeTransport);
+    logger.debug("Vertx: " + version);
+    logger.debug("Default Event Loop Size: " + VertxOptions.DEFAULT_EVENT_LOOP_POOL_SIZE);
+    logger.debug("Native transport : " + nativeTransport);
   }
 }
