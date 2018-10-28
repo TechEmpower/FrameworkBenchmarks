@@ -1,8 +1,0 @@
-*.user
-*.suo
-*/bin/*
-*/obj/*
-obj/
-[Bb]in
-[Dd]ebug*/
-[Rr]elease*/

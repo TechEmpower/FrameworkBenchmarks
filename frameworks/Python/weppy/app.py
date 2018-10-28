@@ -1,23 +1,23 @@
-import os
 import sys
 from functools import partial
 from random import randint
-from weppy import App, request, response
+from weppy import App, Pipe, request, response
 from weppy.orm import Database, Model, Field, rowmethod
 from weppy.tools import service
+from email.utils import formatdate
 
 _is_pypy = hasattr(sys, 'pypy_version_info')
 if sys.version_info[0] == 3:
     xrange = range
 
-DBHOSTNAME = os.environ.get('DBHOST', 'localhost')
+DBHOSTNAME = 'tfb-database'
 
 app = App(__name__)
 
 
 class World(Model):
     tablename = "world"
-    randomnumber = Field('int')
+    randomnumber = Field.int()
 
     @rowmethod('serialize')
     def _serialize(self, row):
@@ -26,11 +26,16 @@ class World(Model):
 
 class Fortune(Model):
     tablename = "fortune"
-    message = Field()
+    message = Field.string()
 
     @rowmethod('serialize')
     def _serialize(self, row):
         return {'id': row.id, 'message': row.message}
+
+
+class DateHeaderPipe(Pipe):
+    def open(self):
+        response.headers["Date"] = formatdate(timeval=None, localtime=False, usegmt=True)
 
 
 app.config.handle_static = False
@@ -41,6 +46,8 @@ app.config.db.user = 'benchmarkdbuser'
 app.config.db.password = 'benchmarkdbpass'
 app.config.db.database = 'hello_world'
 app.config.db.pool_size = 100
+
+app.pipeline = [DateHeaderPipe()]
 
 db = Database(app, auto_migrate=False)
 db.define_models(World, Fortune)

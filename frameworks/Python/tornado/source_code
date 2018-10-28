@@ -1,5 +1,0 @@
-./tornado/commons.py
-./tornado/server_pg.py
-./tornado/server_py2.py
-./tornado/server_py3.py
-./tornado/templates/fortunes.html

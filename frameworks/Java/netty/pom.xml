@@ -8,7 +8,9 @@
 	<version>0.1</version>
 
 	<properties>
-		<netty.version>4.1.16.Final</netty.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<netty.version>4.1.25.Final</netty.version>
 	</properties>
 
 	<packaging>jar</packaging>
@@ -38,13 +40,13 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-afterburner</artifactId>
-			<version>RELEASE</version>
+			<version>2.9.7</version>
 		</dependency>
 
 		<dependency>
 			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>RELEASE</version>
+			<version>3.12.1.GA</version>
 		</dependency>
 
 	</dependencies>
@@ -55,11 +57,8 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5</version>
+				<version>3.8.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<optimize>true</optimize>
 					<debug>false</debug>
 				</configuration>
 			</plugin>

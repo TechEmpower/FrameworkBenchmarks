@@ -4,7 +4,6 @@
 
 #include <QSqlQuery>
 
-#include <QThread>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -54,7 +53,7 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
         int id = (qrand() % 10000) + 1;
 
         query.bindValue(QStringLiteral(":id"), id);
-        if (!query.exec() || !query.next()) {
+        if (Q_UNLIKELY(!query.exec() || !query.next())) {
             c->res()->setStatus(Response::InternalServerError);
             return;
         }
@@ -63,18 +62,17 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
         ids.append(id);
         randomNumbers.append(randomNumber);
 
-        QJsonObject obj;
-        obj.insert(QStringLiteral("id"), id);
-        obj.insert(QStringLiteral("randomNumber"), randomNumber);
-        array.append(obj);
+        array.append(QJsonObject{
+                         {QStringLiteral("id"), id},
+                         {QStringLiteral("randomNumber"), randomNumber}
+                     });
     }
 
     updateQuery.bindValue(QStringLiteral(":id"), ids);
     updateQuery.bindValue(QStringLiteral(":randomNumber"), randomNumbers);
-    if (!updateQuery.execBatch()) {
+    if (Q_LIKELY(updateQuery.execBatch())) {
+        c->response()->setJsonArrayBody(array);
+    } else {
         c->res()->setStatus(Response::InternalServerError);
-        return;
     }
-
-    c->response()->setJsonBody(QJsonDocument(array));
 }

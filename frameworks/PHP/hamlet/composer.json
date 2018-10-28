@@ -1,0 +1,13 @@
+{
+  "require": {
+    "hamlet/hamlet-core" : "^3.2",
+    "cache/apcu-adapter": "^1",
+    "react/http": "*",
+    "swoft/swoole-ide-helper": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Benchmark\\": "Benchmark/"
+    }
+  }
+}

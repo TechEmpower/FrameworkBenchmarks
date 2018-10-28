@@ -118,7 +118,7 @@ Configure::write('App.baseUrl', env('SCRIPT_NAME'));
  * Turn off all caching application-wide.
  *
  */
-	//Configure::write('Cache.disable', true);
+	Configure::write('Cache.disable', true);
 
 /**
  * Enable cache checking.
@@ -257,7 +257,7 @@ if (Configure::read('debug') >= 1) {
 }
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
-$prefix = 'myapp_';
+$prefix = 'cakephp2_';
 
 // NOTE: There is currently no implementation of redis so commenting out this configuration for now. This
 // *may* have also been in violation of the rules of some of the database tests.

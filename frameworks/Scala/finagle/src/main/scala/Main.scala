@@ -43,7 +43,6 @@ object Main extends App {
   }
 
   Await.ready(Http.server
-    .configured(Http.Netty3Impl)
     .withCompressionLevel(0)
     .withStack(nilStack)
     .serve(":8080", serverAndDate.andThen(muxer))

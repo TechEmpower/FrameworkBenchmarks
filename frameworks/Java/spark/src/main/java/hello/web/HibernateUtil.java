@@ -39,12 +39,11 @@ public class HibernateUtil {
     private static SessionFactory createSessionFactory() {
         try {
             Configuration configuration = configuration();
-            String url = configuration.getProperty(AvailableSettings.URL);
-            configuration.setProperty(AvailableSettings.URL, url.replace("{db-host}", "localhost"));
             configuration.setProperty(AvailableSettings.DIALECT, MySQLDialect.class.getName());
             configuration.setProperty(AvailableSettings.USE_QUERY_CACHE, "false");
             configuration.setProperty(AvailableSettings.SHOW_SQL, "false");
             configuration.setProperty(AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+            configuration.setProperty("hibernate.hikari.maximumPoolSize", String.valueOf(Runtime.getRuntime().availableProcessors() * 2));
             configuration.addAnnotatedClass(World.class);
             configuration.addAnnotatedClass(Fortune.class);
             StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
@@ -56,17 +55,7 @@ public class HibernateUtil {
     }
 
     private static Configuration configuration() {
-        boolean jndi = Boolean.parseBoolean(System.getProperty("jndi", "true"));
         Configuration configuration = new Configuration();
-        // We're always going to use the -local config now since there were previous
-        // problems with the jndi config.
-        /*
-        if (jndi) {
-            configuration.configure("/hibernate-jndi.cfg.xml");
-        } else {
-            configuration.configure("/hibernate-local.cfg.xml");
-        }
-        */
         configuration.configure("/hibernate-local.cfg.xml");
         return configuration;
     }

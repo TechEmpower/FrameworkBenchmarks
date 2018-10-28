@@ -12,14 +12,12 @@ extends AbstractController(cc) {
 
   implicit final val helloWorldWrites = Json.writes[HelloWorld]
 
-  val defaultHeader = Http.HeaderNames.SERVER -> "Play Framework"
-
   def getJsonMessage = Action {
-    Ok( Json.toJson(HelloWorld()) ).withHeaders(defaultHeader)
+    Ok( Json.toJson(HelloWorld()) )
   }
 
   val plaintext = Action {
-    Ok("Hello, World!").withHeaders(defaultHeader).as("text/plain")
+    Ok("Hello, World!").as(play.api.http.MimeTypes.TEXT)
   }
 }
 

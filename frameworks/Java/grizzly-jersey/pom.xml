@@ -14,15 +14,22 @@
   </prerequisites>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <activation.version>1.1.1</activation.version>
     <commons-cli.version>1.4</commons-cli.version>
-    <grizzly.version>2.3.30</grizzly.version>
+    <grizzly.version>2.3.35</grizzly.version>
     <hibernate.version>4.3.11.Final</hibernate.version>
     <hibernate-jpa-api.version>1.0.0.Final</hibernate-jpa-api.version>
-    <jackson.version>2.8.7</jackson.version>
-    <jersey.version>1.19.3</jersey.version>
+    <jackson.version>2.9.7</jackson.version>
+    <jaxb.version>2.3.0</jaxb.version>
+    <jersey.version>1.19.4</jersey.version>
     <jsr311-api.version>1.1.1</jsr311-api.version>
-    <mustache.version>0.9.4</mustache.version>
-    <mysql-connector.version>5.1.41</mysql-connector.version>
+    <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+    <maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
+    <mustache.version>0.9.5</mustache.version>
+    <mysql-connector.version>5.1.47</mysql-connector.version>
   </properties>
 
   <dependencies>
@@ -91,6 +98,16 @@
       <artifactId>commons-cli</artifactId>
       <version>${commons-cli.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <version>${jaxb.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+      <version>${activation.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -100,18 +117,15 @@
         <inherited>true</inherited>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
+        <version>${maven-compiler-plugin.version}</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-          <optimize>true</optimize>
           <debug>false</debug>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>2.1</version>
+        <version>${maven-shade-plugin.version}</version>
         <executions>
           <execution>
             <phase>package</phase>

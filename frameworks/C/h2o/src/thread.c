@@ -21,10 +21,13 @@
 
 #include <errno.h>
 #include <h2o.h>
+#include <limits.h>
+#include <numaif.h>
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <h2o/serverutil.h>
 #include <sys/syscall.h>
 
@@ -35,18 +38,53 @@
 #include "utility.h"
 
 static void *run_thread(void *arg);
+static void set_thread_memory_allocation_policy(size_t thread_num);
 
 static void *run_thread(void *arg)
 {
 	thread_context_t ctx;
 
 	initialize_thread_context(arg, false, &ctx);
+	set_thread_memory_allocation_policy(ctx.config->thread_num);
 	// This is just an optimization, so that the application does not try to
 	// establish database connections in the middle of servicing requests.
 	connect_to_database(&ctx);
 	event_loop(&ctx);
 	free_thread_context(&ctx);
 	pthread_exit(NULL);
+}
+
+static void set_thread_memory_allocation_policy(size_t thread_num)
+{
+	// There is no need to set a memory allocation policy unless
+	// the application controls the processor affinity as well.
+	if (thread_num % h2o_numproc())
+		return;
+
+	void *stack_addr;
+	size_t stack_size;
+	unsigned memory_node;
+	pthread_attr_t attr;
+
+	CHECK_ERRNO(syscall, SYS_getcpu, NULL, &memory_node, NULL);
+	CHECK_ERROR(pthread_getattr_np, pthread_self(), &attr);
+	CHECK_ERROR(pthread_attr_getstack, &attr, &stack_addr, &stack_size);
+	pthread_attr_destroy(&attr);
+
+	unsigned long nodemask[
+		(memory_node + sizeof(unsigned long) * CHAR_BIT) / (sizeof(unsigned long) * CHAR_BIT)];
+
+	memset(nodemask, 0, sizeof(nodemask));
+	nodemask[memory_node / (sizeof(*nodemask) * CHAR_BIT)] |=
+		1UL << (memory_node % (sizeof(*nodemask) * CHAR_BIT));
+	CHECK_ERRNO(mbind,
+	            stack_addr,
+	            stack_size,
+	            MPOL_PREFERRED,
+	            nodemask,
+	            memory_node + 1,
+	            MPOL_MF_MOVE | MPOL_MF_STRICT);
+	CHECK_ERRNO(set_mempolicy, MPOL_PREFERRED, NULL, 0);
 }
 
 void free_thread_context(thread_context_t *ctx)

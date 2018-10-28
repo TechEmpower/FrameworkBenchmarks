@@ -4,30 +4,32 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "52a4328fe44f3b0dc52d38f8341ac5b6",
-    "content-hash": "f25f483dab417e210ec599ef6033ed0e",
+    "content-hash": "0b4706d5f1d84034911f82cbe3485dc1",
     "packages": [
         {
             "name": "cakephp/cakephp",
-            "version": "2.10.3",
+            "version": "2.10.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "c3a612aa94d30a4c51653f40f55ce07177300307"
+                "reference": "8744e53d0e6db411646ca54b1275a072af601344"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/c3a612aa94d30a4c51653f40f55ce07177300307",
-                "reference": "c3a612aa94d30a4c51653f40f55ce07177300307",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/8744e53d0e6db411646ca54b1275a072af601344",
+                "reference": "8744e53d0e6db411646ca54b1275a072af601344",
                 "shasum": ""
             },
             "require": {
-                "ext-mcrypt": "*",
                 "php": ">=5.3.0"
             },
             "require-dev": {
                 "cakephp/cakephp-codesniffer": "^1.0.0",
-                "phpunit/phpunit": "<6.0.0"
+                "phpunit/phpunit": "^3.7"
+            },
+            "suggest": {
+                "ext-mcrypt": "You need to install ext-openssl or ext-mcrypt to use AES-256 encryption",
+                "ext-openssl": "You need to install ext-openssl or ext-mcrypt to use AES-256 encryption"
             },
             "bin": [
                 "lib/Cake/Console/cake"
@@ -48,7 +50,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2017-09-18 02:12:29"
+            "time": "2018-02-25T03:32:53+00:00"
         }
     ],
     "packages-dev": [],

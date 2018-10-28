@@ -4,13 +4,14 @@ App::uses('AppController', 'Controller');
 
 class FortunesController extends AppController {
 
+	public $modelClass = 'Fortune';
+
 	public function index() {
 		// use full view stack as encouraged by test rules
 		$this->layout = 'benchmark';
 		$this->set('title_for_layout', 'Fortunes');
 
 		// using ORM instead of raw SQL
-		$this->loadModel('Fortune');
 		$results = $this->Fortune->find('all');
 
 		// stuffing in the dynamic data

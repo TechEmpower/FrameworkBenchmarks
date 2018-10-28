@@ -3,7 +3,6 @@ package models
 import javax.inject.{Inject, Singleton}
 
 import play.api.db.slick.{HasDatabaseConfigProvider, DatabaseConfigProvider}
-import play.db.NamedDatabase
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.Future
@@ -11,7 +10,7 @@ import scala.concurrent.Future
 case class Fortune(id: Long, message: String)
 
 @Singleton()
-class FortunesDAO @Inject()(@NamedDatabase("hello_world") protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
+class FortunesDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
 
   import profile.api._
 

@@ -2,12 +2,8 @@ name := "play2-scala"
 
 version := "1.0-SNAPSHOT"
 
-scalaVersion := "2.12.3"
+lazy val root = (project in file(".")).enablePlugins(PlayScala, PlayNettyServer)
 
-val root =
-  (project in file(".")).
-  enablePlugins(PlayScala, PlayNettyServer).
-  disablePlugins(PlayAkkaHttpServer)
+scalaVersion := "2.12.7"
 
-libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.6"
 libraryDependencies += guice

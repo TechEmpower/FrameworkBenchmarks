@@ -4,8 +4,11 @@ import vibe.http.router;
 import vibe.http.server;
 import vibe.web.web;
 
+import mir.random : unpredictableSeedOf;
+import mir.random.variable : UniformVariable;
+import mir.random.engine.xorshift : Xorshift;
+
 import std.conv : ConvException, to;
-import std.random : uniform;
 import std.array;
 
 enum worldSize = 10000;
@@ -33,14 +36,19 @@ class WebInterface {
 	private {
 		MongoCollection _worldCollection;
 		MongoCollection _fortuneCollection;
+		UniformVariable!uint _uniformVariable;
+		Xorshift _gen;
 	}
 
 	this()
 	{
 		import std.process : environment;
-		auto db = connectMongoDB(environment.get("DBHOST", "127.0.0.1"));
+		auto db = connectMongoDB("tfb-database");
 		_worldCollection = db.getCollection("hello_world.world");
 		_fortuneCollection = db.getCollection("hello_world.fortune");
+
+		_gen = Xorshift(unpredictableSeedOf!uint);
+		_uniformVariable = UniformVariable!uint(1, worldSize);
 	}
 
 	// GET /
@@ -61,7 +69,7 @@ class WebInterface {
 	void getDB(HTTPServerResponse res)
 	{
 		struct Q { int _id; }
-		auto query = Q(uniform(1, worldSize + 1));
+		auto query = Q(_uniformVariable(_gen));
 		auto w = WorldResponse(_worldCollection.findOne!World(query));
 		res.writeJsonBody(w, HTTPStatus.ok, "application/json");
 	}
@@ -78,11 +86,11 @@ class WebInterface {
 		try count = min(max(queries.to!int, 1), 500);
 		catch (ConvException) {}
 
-		// assemble the response array    
+		// assemble the response array
 		scope data = new WorldResponse[count];
 		foreach (ref w; data) {
 			static struct Q { int _id; }
-			auto query = Q(uniform(1, worldSize + 1));
+			auto query = Q(_uniformVariable(_gen));
 			w = WorldResponse(_worldCollection.findOne!World(query));
 		}
 
@@ -114,11 +122,11 @@ class WebInterface {
 		scope data = new WorldResponse[count];
 		foreach (ref w; data) {
 			static struct Q { int _id; }
-			auto query = Q(uniform(1, worldSize + 1));
+			auto query = Q(_uniformVariable(_gen));
 			w = WorldResponse(_worldCollection.findOne!World(query));
 
 			// update random number
-			w.randomNumber = uniform(1, worldSize+1);
+			w.randomNumber = _uniformVariable(_gen);
 
 			// persist to DB
 			static struct US {

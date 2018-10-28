@@ -2,14 +2,13 @@
   "framework": "amber",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
-      "port": 3000,
+      "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "Postgres",
@@ -21,7 +20,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Amber (MVC, Postgres)",
+      "display_name": "Amber (MVC, PSQL)",
       "notes": "",
       "versus": "kemal"
     }

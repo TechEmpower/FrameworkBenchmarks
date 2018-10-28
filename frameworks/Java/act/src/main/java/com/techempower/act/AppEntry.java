@@ -23,7 +23,6 @@ package com.techempower.act;
 
 import act.Act;
 
-@SuppressWarnings("unused")
 public class AppEntry {
 
 	public static final String PROFILE_JSON_PLAINTEXT = "json_plaintext";

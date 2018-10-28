@@ -2,16 +2,19 @@ name: amber
 version: 0.1.0
 
 authors:
-  - Amber <contact@ambercr.io>
+  - Amber Team and Contributors <amberframework.org>
 
 license: MIT
 
+targets:
+  amber:
+    main: src/amber.cr
+
 dependencies:
   amber:
-    github: Amber-Crystal/amber 
+    github: amberframework/amber
+    version: 0.9.0
 
-  granite_orm:
-    github: Amber-Crystal/granite-orm
-
-  pg:
-    github: will/crystal-pg
+  granite:
+    github: amberframework/granite
+    version: 0.13.1

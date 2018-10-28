@@ -14,27 +14,9 @@ public class BenchmarkMain extends Jawn {
     private static final String message = "Hello, World!";
     private static final byte[] bytemessage = message.getBytes();
     
-    String jdbcParams = 
-        "jdbcCompliantTruncation=false" +
-        "&elideSetAutoCommits=true" +
-        "&useLocalSessionState=true" +
-        "&cachePrepStmts=true" +
-        "&cacheCallableStmts=true" +
-        "&alwaysSendSetIsolation=false" +
-        "&prepStmtCacheSize=4096" +
-        "&cacheServerConfiguration=true" +
-        "&prepStmtCacheSqlLimit=2048" +
-        "&zeroDateTimeBehavior=convertToNull" +
-        "&traceProtocol=false" +
-        "&useUnbufferedInput=false" +
-        "&useReadAheadInput=false" +
-        "&maintainTimeStats=false" +
-        "&useServerPrepStmts=true" +
-        "&cacheRSMetadata=true" +
-        "&useSSL=false";
 
-    String host = "TFB-database:5432";
-    String dbUrl = "jdbc:postgresql://"+host+"/hello_world";//"jdbc:mysql://"+host+"/hello_world?";
+    String host = "tfb-database:5432";
+    String dbUrl = "jdbc:postgresql://"+host+"/hello_world";
     
     // implicit constructor
     {
@@ -42,15 +24,14 @@ public class BenchmarkMain extends Jawn {
         server()
             .port(8080)
             .webappPath("webapp")
-            .serverPerformance(PERFORMANCE_MODE.HIGHEST)
-            .contextPath("/");
+            .serverPerformance(PERFORMANCE_MODE.HIGHEST);
         
         
-        get("/queries",DbController.class, "queries");
-        get("/updates",DbController.class, "updates");
+        get("/queries",DbController.class, DbController::getQueries);
+        get("/updates",DbController.class, DbController::getUpdates);
         
-        get("/json", (context) -> Results.json(new Message(message)));
-        get("/plaintext", (context) -> Results.text(bytemessage));
+        get("/json", (context) -> Results.json(new Message(message)).addHeader("Server", "jawn"));
+        get("/plaintext", (context) -> Results.text(bytemessage).addHeader("Server", "jawn"));
         
         use(new AbstractModule() {
             @Override
@@ -62,7 +43,7 @@ public class BenchmarkMain extends Jawn {
         database(Modes.PROD)
             .jdbc()
             .driver("org.postgresql.Driver")
-            .url(dbUrl)// + jdbcParams)
+            .url(dbUrl)
             .user("benchmarkdbuser")
             .password("benchmarkdbpass")
             .maxPoolSize(32)
@@ -70,16 +51,16 @@ public class BenchmarkMain extends Jawn {
         
         database(Modes.TEST)
             .jdbc()
-            .driver("com.mysql.cj.jdbc.Driver")
-            .url("jdbc:mysql://172.16.0.16/hello_world?" + jdbcParams)
+            .driver("org.postgresql.Driver")
+            .url("jdbc:postgresql://172.16.0.16/hello_world")
             .user("benchmarkdbuser")
             .password("benchmarkdbpass")
             .letFrameworkHandleConnectionPool(true);
     
         database(Modes.DEV)
             .jdbc()
-            .driver("com.mysql.cj.jdbc.Driver")
-            .url("jdbc:mysql://172.16.0.16/hello_world?" + jdbcParams)
+            .driver("org.postgresql.Driver")
+            .url("jdbc:postgresql://172.16.0.16:5432/hello_world")
             .user("benchmarkdbuser")
             .password("benchmarkdbpass")
             .letFrameworkHandleConnectionPool(true);

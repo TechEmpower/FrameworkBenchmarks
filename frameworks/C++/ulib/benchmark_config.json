@@ -2,13 +2,12 @@
   "framework": "ulib",
   "tests": [{
     "default": {
-      "setup_file": "setup_plaintext",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "ULib",
+      "framework": "None",
       "language": "C++",
       "orm": "Micro",
       "platform": "None",
@@ -20,13 +19,12 @@
       "versus": ""
     },
     "plaintext_fit": {
-      "setup_file": "setup_plaintext_fit",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "ULib",
+      "framework": "None",
       "language": "C++",
       "orm": "Micro",
       "platform": "None",
@@ -38,13 +36,12 @@
       "versus": ""
     },
     "json": {
-      "setup_file": "setup_json",
       "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "ULib",
+      "framework": "None",
       "language": "C++",
       "orm": "Micro",
       "platform": "None",
@@ -56,13 +53,12 @@
       "versus": ""
     },
     "json_fit": {
-      "setup_file": "setup_json_fit",
       "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "ULib",
+      "framework": "None",
       "language": "C++",
       "orm": "Micro",
       "platform": "None",
@@ -74,7 +70,6 @@
       "versus": ""
     },
     "mysql": {
-      "setup_file": "setup_mysql",
       "db_url": "/db",
       "query_url": "/query?queries=",
       "fortune_url": "/fortune",
@@ -84,7 +79,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "ULib",
+      "framework": "None",
       "language": "C++",
       "orm": "Micro",
       "platform": "None",
@@ -96,9 +91,7 @@
       "versus": ""
     },
     "postgres": {
-      "setup_file": "setup_postgres",
       "db_url": "/db",
-      "query_url": "/query?queries=",
       "fortune_url": "/fortune",
       "update_url": "/update?queries=",
       "cached_query_url": "/cached_worlds?queries=",
@@ -106,7 +99,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "Postgres",
-      "framework": "ULib",
+      "framework": "None",
       "language": "C++",
       "orm": "Micro",
       "platform": "None",
@@ -118,16 +111,14 @@
       "versus": ""
     },
     "postgres_fit": {
-      "setup_file": "setup_postgres_fit",
       "db_url": "/db",
-      "query_url": "/query?queries=",
       "fortune_url": "/fortune",
       "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
       "database": "Postgres",
-      "framework": "ULib",
+      "framework": "None",
       "language": "C++",
       "orm": "Micro",
       "platform": "None",
@@ -148,7 +139,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MongoDB",
-      "framework": "ULib",
+      "framework": "None",
       "language": "C++",
       "orm": "Micro",
       "platform": "None",

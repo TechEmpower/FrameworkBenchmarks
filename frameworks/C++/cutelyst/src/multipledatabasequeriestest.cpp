@@ -4,7 +4,6 @@
 
 #include <QSqlQuery>
 
-#include <QThread>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -34,7 +33,7 @@ void MultipleDatabaseQueriesTest::processQuery(Context *c, QSqlQuery &query)
 {
     QJsonArray array;
 
-    int queries = c->request()->queryParam(QStringLiteral("queries"), QStringLiteral("1")).toInt();
+    int queries = c->request()->queryParam(QStringLiteral("queries")).toInt();
     if (queries < 1) {
         queries = 1;
     } else if (queries > 500) {
@@ -42,19 +41,19 @@ void MultipleDatabaseQueriesTest::processQuery(Context *c, QSqlQuery &query)
     }
 
     for (int i = 0; i < queries; ++i) {
-        int id = (qrand() % 10000) + 1;
+        const int id = (qrand() % 10000) + 1;
 
         query.bindValue(QStringLiteral(":id"), id);
-        if (!query.exec() || !query.next()) {
+        if (Q_LIKELY(query.exec() && query.next())) {
+            array.append(QJsonObject{
+                             {QStringLiteral("id"), query.value(0).toInt()},
+                             {QStringLiteral("randomNumber"), query.value(1).toInt()}
+                         });
+        } else {
             c->res()->setStatus(Response::InternalServerError);
             return;
         }
-
-        QJsonObject obj;
-        obj.insert(QStringLiteral("id"), query.value(0).toInt());
-        obj.insert(QStringLiteral("randomNumber"), query.value(1).toInt());
-        array.append(obj);
     }
 
-    c->response()->setJsonBody(QJsonDocument(array));
+    c->response()->setJsonArrayBody(array);
 }

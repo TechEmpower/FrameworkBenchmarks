@@ -45,17 +45,14 @@ def connect(dbtype)
   Sequel.connect \
     '%{adapter}://%{host}/%{database}?user=%{user}&password=%{password}' % {
       :adapter=>adapters.fetch(dbtype).fetch(defined?(JRUBY_VERSION) ? :jruby : :mri),
-      :host=>ENV.fetch('DBHOST', '127.0.0.1'),
+      :host=>'tfb-database',
       :database=>'hello_world',
       :user=>'benchmarkdbuser',
       :password=>'benchmarkdbpass'
     }, opts
 end
 
-DB = connect(ENV.fetch('DBTYPE').to_sym).tap do |db|
-  db.extension(:freeze_datasets)
-  db.optimize_model_load = true if db.respond_to?(:optimize_model_load=)
-end
+DB = connect ENV.fetch('DBTYPE').to_sym
 
 # Define ORM models
 class World < Sequel::Model(:World)

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard1.6</TargetFramework>
+	<AssemblyName>Website</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="**/*.php" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Peachpie.Compiler.Tools" Version="0.9.0-CI00897" />
+    <PackageReference Include="Peachpie.NET.Sdk" Version="0.9.0-CI00897" PrivateAssets="Build" />
+  </ItemGroup>
+
+</Project>

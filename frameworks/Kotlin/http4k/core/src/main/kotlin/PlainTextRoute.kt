@@ -1,4 +1,4 @@
-
+import org.http4k.asByteBuffer
 import org.http4k.core.Body
 import org.http4k.core.ContentType.Companion.TEXT_PLAIN
 import org.http4k.core.Method.GET
@@ -9,7 +9,7 @@ import org.http4k.lens.binary
 import org.http4k.routing.bind
 
 object PlainTextRoute {
-    private val preAllocatedHelloWorldText = "Hello, World!".byteInputStream()
+    private val preAllocatedHelloWorldText = "Hello, World!".asByteBuffer()
 
     private val plainTextBody = Body.binary(TEXT_PLAIN).toLens()
 

@@ -5,12 +5,13 @@ PidFile = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/php-slim/hhvm.pid
 
 # Server settings
 Server {
-  Port = 9001
+  FileSocket = /slim/hhvm.sock
   Type = fastcgi
-  SourceRoot = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/php-slim
+  SourceRoot = /slim
   DefaultDocument = index.php
   GzipCompressionLevel = 0
   EnableKeepAlive = true
+  AllowRunAsRoot = 1
 }
 
 # Disable logging completely
@@ -18,7 +19,7 @@ Log {
   UseLogFile = false
   UseSyslog = false
   Level = Error
-  #File = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/php-slim/error.log
+  #File = /slim/error.log
 }
 
 # Enable jit for production mode
@@ -30,7 +31,7 @@ Eval {
 # Repo file
 Repo {
   Central {
-    Path = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/php-slim/.hhvm.bbhc
+    Path = /slim/.hhvm.bbhc
   }
 }
 

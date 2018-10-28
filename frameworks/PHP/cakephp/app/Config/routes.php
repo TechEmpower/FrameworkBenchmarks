@@ -20,20 +20,16 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-/**
- * Here, we are connecting '/' (base path) to controller called 'Pages',
- * its action called 'display', and we pass a param to select the view file
- * to use (in this case, /app/View/Pages/home.ctp)...
- */
-	Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
-/**
- * ...and connect the rest of 'Pages' controller's urls.
- */
-	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
-        // Needed to enable JsonView
-        // http://book.cakephp.org/2.0/en/views/json-and-xml-views.html#enabling-data-views-in-your-application
-        Router::parseExtensions('json');
+	// Needed to enable JsonView
+	// http://book.cakephp.org/2.0/en/views/json-and-xml-views.html#enabling-data-views-in-your-application
+	Router::parseExtensions('json');
+
+	Router::connect('/fortunes', ['controller' => 'Fortunes', 'action' => 'index']);
+
+	Router::connect('/db', ['controller' => 'World', 'action' => 'query']);
+	Router::connect('/queries', ['controller' => 'World', 'action' => 'index']);
+	Router::connect('/updates', ['controller' => 'World', 'action' => 'updates']);
 
 /**
  * Load all plugin routes.  See the CakePlugin documentation on

@@ -21,6 +21,10 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class DbManager {
+    
+    private static final String UPDATE_WORLD = "UPDATE world SET randomNumber = ? WHERE id= ?";
+    private static final String SELECT_WORLD = "SELECT id, randomNumber FROM world WHERE id = ?";
+    private static final String SELECT_FORTUNE = "SELECT id, message FROM fortune";
 
     private DataSource source;
 
@@ -33,7 +37,7 @@ public class DbManager {
     
     public World getWorld(int id) {
         try (Connection connection = source.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?");
+            PreparedStatement statement = connection.prepareStatement(SELECT_WORLD, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             statement.setInt(1, id);
             ResultSet set = statement.executeQuery();
             
@@ -52,7 +56,7 @@ public class DbManager {
         try (final Connection connection = source.getConnection()) {
             
             for (int i = 0; i < number; i++) {
-                try (final PreparedStatement statement = connection.prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?")) {
+                try (final PreparedStatement statement = connection.prepareStatement(SELECT_WORLD, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
                 
                     final int id = Helper.getRandomNumber();
                     
@@ -76,8 +80,8 @@ public class DbManager {
             
             for (int i = 0; i < number; i++) {
                 try (
-                    final PreparedStatement statement = connection.prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?");
-                    final PreparedStatement update = connection.prepareStatement("UPDATE World SET randomNumber = ? WHERE id= ?")) {
+                    final PreparedStatement statement = connection.prepareStatement(SELECT_WORLD, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+                    final PreparedStatement update = connection.prepareStatement(UPDATE_WORLD)) {
                 
                     final int id = Helper.getRandomNumber(),
                          newRand = Helper.getRandomNumber();
@@ -91,6 +95,7 @@ public class DbManager {
                     // update world
                     update.setInt(1, newRand);
                     update.setInt(2, id);
+                    update.execute();
                     
                     // return updated world
                     worlds[i].randomNumber = newRand;
@@ -105,7 +110,7 @@ public class DbManager {
     public List<Fortune> fetchAllFortunes() {
         List<Fortune> list = new ArrayList<>();
         try (Connection connection = source.getConnection()) {
-            PreparedStatement fetch = connection.prepareStatement("SELECT id, message FROM Fortune");
+            PreparedStatement fetch = connection.prepareStatement(SELECT_FORTUNE, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             ResultSet set = fetch.executeQuery();
 //            ResultSet set = connection
 //                    .createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)

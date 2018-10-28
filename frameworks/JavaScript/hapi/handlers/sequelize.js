@@ -1,12 +1,11 @@
 // Connects to MySQL using the sequelize driver
 // Handles related routes
 
-const Promise = require('bluebird');
 const h = require('../helper');
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: 'TFB-database',
+  host: 'tfb-database',
   dialect: 'mysql',
   logging: false
 });
@@ -18,46 +17,43 @@ const Worlds = sequelize.define('World', {
   },
   randomNumber: { type: 'Sequelize.INTEGER' }
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
 const Fortunes = sequelize.define('Fortune', {
   id: {
     type: 'Sequelize.INTEGER',
     primaryKey: true
   },
-  message:      { type: 'Sequelize.STRING' }
+  message: { type: 'Sequelize.STRING' }
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
-const randomWorldPromise = () =>
-  Worlds.findOne({ where: { id: h.randomTfbNumber() } })
-    .then((results) => results)
-    .catch((err) => process.exit(1));
-
+const randomWorld = async () =>
+  await Worlds.findOne({ where: { id: h.randomTfbNumber() } });
 
 module.exports = {
 
   SingleQuery: (req, reply) => {
-    randomWorldPromise().then((world) => {
-      reply(world)
-        .header('Server', 'hapi');
-    })
+    reply(randomWorld())
+      .header('Content-Type', 'application/json')
+      .header('Server', 'hapi');
   },
 
-  MultipleQueries: (req, reply) => {
+  MultipleQueries: async (req, reply) => {
     const queries = h.getQueries(req);
-    const worldPromises = [];
+    const results = [];
 
     for (let i = 0; i < queries; i++) {
-      worldPromises.push(randomWorldPromise());
+      results.push(await randomWorld());
     }
 
-    Promise.all(worldPromises).then((worlds) =>
-      reply(worlds).header('Server', 'hapi'));
+    reply(results)
+      .header('Content-Type', 'application/json')
+      .header('Server', 'hapi');
   },
 
   Fortunes: (req, reply) => {
@@ -71,29 +67,23 @@ module.exports = {
     }).catch((err) => process.exit(1));
   },
 
-  Updates: (req, reply) => {
+  Updates: async (req, reply) => {
     const queries = h.getQueries(req);
-    const worldPromises = [];
+    const results = [];
 
     for (let i = 0; i < queries; i++) {
-      worldPromises.push(randomWorldPromise());
+      const world = await randomWorld();
+      world.randomNumber = h.randomTfbNumber();
+      await Worlds.update(
+        { randomNumber: world.randomNumber },
+        { where: { id: world.id } }
+      );
+      results.push(world);
     }
 
-    const worldUpdate = (world) => {
-      world.randomNumber = h.randomTfbNumber();
-
-      return Worlds.update(
-          { randomNumber: world.randomNumber },
-          { where: { id: world.id } }
-        )
-        .then((results) => world)
-        .catch((err) => process.exit(1));
-    };
-
-    Promise
-      .all(worldPromises)
-      .map((world) => worldUpdate(world))
-      .then((updated) => reply(updated).header('Server', 'hapi'))
-      .catch((e) => process.exit(1));
+    reply(results)
+      .header('Content-Type', 'application/json')
+      .header('Server', 'hapi');
   }
+
 };

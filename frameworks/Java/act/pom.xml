@@ -22,7 +22,7 @@
   <groupId>com.techempower</groupId>
   <artifactId>actframework</artifactId>
   <packaging>jar</packaging>
-  <version>1.4.3</version>
+  <version>1.8.8h</version>
 
   <name>TEB ActFramework Project</name>
   <description>TEB benchmark project with ActFramework</description>
@@ -34,183 +34,59 @@
   </organization>
 
   <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>7</version>
+    <groupId>org.actframework</groupId>
+    <artifactId>act-starter-parent</artifactId>
+    <version>1.8.8.7-SNAPSHOT</version>
   </parent>
 
+  <repositories>
+    <repository>
+      <id>sonatype-nexus-snapshots</id>
+      <name>Sonatype Nexus Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>sonatype-nexus-snapshots</id>
+      <name>Sonatype Nexus Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <scm.url>git@github.com:actframework/actframework.git</scm.url>
-
-    <maven-assemply-plugin.version>3.1.0</maven-assemply-plugin.version>
-    <maven-javadoc-plugin.version>3.0.0-M1</maven-javadoc-plugin.version>
-    <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
-
-    <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
-    <license-maven-plugin.version>1.13</license-maven-plugin.version>
-    <markdown-doclet.version>1.4</markdown-doclet.version>
-
-    <act.version>1.4.13-SNAPSHOT</act.version>
-    <act-ebean2.version>1.1.4</act-ebean2.version>
-    <act-mustache.version>1.2.1</act-mustache.version>
-    <act-morphia.version>1.2.1</act-morphia.version>
-    <HikariCP.version>2.7.1</HikariCP.version>
-    <mysql.version>5.1.44</mysql.version>
-    <osgl-ut.version>1.0.0-BETA-6</osgl-ut.version>
-    <postgres-jdbc.version>42.1.4</postgres-jdbc.version>
+    <java.version>1.8</java.version>
+    <mysql.version>5.1.47</mysql.version>
+    <postgres-jdbc.version>42.2.5</postgres-jdbc.version>
     <morphia.version>1.3.2</morphia.version>
-    <ebean.version>10.4.7</ebean.version>
-
+    <ebean-annotation.version>3.4</ebean-annotation.version>
     <app.entry>com.techempower.act.AppEntry</app.entry>
   </properties>
-
-  <scm>
-    <connection>scm:git:${scm.url}</connection>
-    <developerConnection>scm:git:${scm.url}</developerConnection>
-    <url>${scm.url}</url>
-  </scm>
-
-
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>${maven-assemply-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>create-archive</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <descriptors>
-                <descriptor>src/assembly/pkg.xml</descriptor>
-              </descriptors>
-              <outputDirectory>${project.build.directory}/dist/</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <version>${license-maven-plugin.version}</version>
-        <configuration>
-          <licenseName>apache_v2</licenseName>
-          <verbose>false</verbose>
-        </configuration>
-        <executions>
-          <execution>
-            <id>first</id>
-            <goals>
-              <goal>update-file-header</goal>
-            </goals>
-            <phase>process-sources</phase>
-            <configuration>
-              <roots>
-                <root>src/main/java</root>
-                <root>src/test/java</root>
-              </roots>
-              <excludes>
-                <exclude>**/README</exclude>
-                <exclude>src/test/resources/**</exclude>
-                <exclude>src/main/resources/**</exclude>
-              </excludes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>${buildnumber-maven-plugin.version}</version>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <shortRevisionLength>4</shortRevisionLength>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>${maven-source-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 
   <dependencies>
 
     <dependency>
-      <groupId>org.osgl</groupId>
-      <artifactId>osgl-ut</artifactId>
-      <version>${osgl-ut.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.actframework</groupId>
-      <artifactId>act</artifactId>
-      <version>${act.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.1.6</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.actframework</groupId>
       <artifactId>act-mustache</artifactId>
-      <version>${act-mustache.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.ebean</groupId>
-      <artifactId>persistence-api</artifactId>
-      <version>2.2.1</version>
     </dependency>
 
     <dependency>
       <groupId>io.ebean</groupId>
       <artifactId>ebean-annotation</artifactId>
-      <version>2.4</version>
+      <version>${ebean-annotation.version}</version>
     </dependency>
 
     <dependency>
@@ -219,7 +95,23 @@
       <version>${morphia.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.actframework</groupId>
+      <artifactId>act-sql-common</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.avaje.ebean</groupId>
+          <artifactId>ebean</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.avaje.ebean</groupId>
+          <artifactId>ebean-agent</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
   </dependencies>
+
 
   <profiles>
     <profile>
@@ -231,25 +123,52 @@
         <dependency>
           <groupId>org.actframework</groupId>
           <artifactId>act-morphia</artifactId>
-          <version>${act-morphia.version}</version>
         </dependency>
       </dependencies>
     </profile>
     <profile>
-      <id>mysql</id>
+      <id>ebean_mysql</id>
       <build>
-        <finalName>teb-act-mysql</finalName>
+        <finalName>teb-act-ebean-mysql</finalName>
       </build>
       <dependencies>
         <dependency>
           <groupId>org.actframework</groupId>
-          <artifactId>act-ebean2</artifactId>
-          <version>${act-ebean2.version}</version>
+          <artifactId>act-ebean</artifactId>
         </dependency>
         <dependency>
-          <groupId>io.ebean</groupId>
-          <artifactId>ebean</artifactId>
-          <version>${ebean.version}</version>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <version>${mysql.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>ebean_pgsql</id>
+      <build>
+        <finalName>teb-act-ebean-pgsql</finalName>
+      </build>
+      <dependencies>
+        <dependency>
+          <groupId>org.actframework</groupId>
+          <artifactId>act-ebean</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>${postgres-jdbc.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>hibernate_mysql</id>
+      <build>
+        <finalName>teb-act-hibernate-mysql</finalName>
+      </build>
+      <dependencies>
+        <dependency>
+          <groupId>org.actframework</groupId>
+          <artifactId>act-hibernate</artifactId>
         </dependency>
         <dependency>
           <groupId>mysql</groupId>
@@ -259,25 +178,18 @@
         <dependency>
           <groupId>com.zaxxer</groupId>
           <artifactId>HikariCP</artifactId>
-          <version>${HikariCP.version}</version>
         </dependency>
       </dependencies>
     </profile>
     <profile>
-      <id>pgsql</id>
+      <id>hibernate_pgsql</id>
       <build>
-        <finalName>teb-act-pgsql</finalName>
+        <finalName>teb-act-hibernate-pgsql</finalName>
       </build>
       <dependencies>
         <dependency>
           <groupId>org.actframework</groupId>
-          <artifactId>act-ebean2</artifactId>
-          <version>${act-ebean2.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>io.ebean</groupId>
-          <artifactId>ebean</artifactId>
-          <version>${ebean.version}</version>
+          <artifactId>act-hibernate</artifactId>
         </dependency>
         <dependency>
           <groupId>org.postgresql</groupId>
@@ -287,7 +199,44 @@
         <dependency>
           <groupId>com.zaxxer</groupId>
           <artifactId>HikariCP</artifactId>
-          <version>${HikariCP.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>eclipselink_pgsql</id>
+      <build>
+        <finalName>teb-act-eclipselink-pgsql</finalName>
+      </build>
+      <dependencies>
+        <dependency>
+          <groupId>org.actframework</groupId>
+          <artifactId>act-eclipselink</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>${postgres-jdbc.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.zaxxer</groupId>
+          <artifactId>HikariCP</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>eclipselink_mysql</id>
+      <build>
+        <finalName>teb-act-eclipselink-mysql</finalName>
+      </build>
+      <dependencies>
+        <dependency>
+          <groupId>org.actframework</groupId>
+          <artifactId>act-eclipselink</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <version>${mysql.version}</version>
         </dependency>
       </dependencies>
     </profile>

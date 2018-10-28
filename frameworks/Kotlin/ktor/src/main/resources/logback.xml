@@ -5,8 +5,14 @@
         </encoder>
     </appender>
 
-    <root level="trace">
-        <appender-ref ref="STDOUT"/>
+     <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+         <neverBlock>true</neverBlock>
+         <appender-ref ref="STDOUT" />
+     </appender>
+
+
+    <root level="INFO">
+        <appender-ref ref="ASYNC"/>
     </root>
 
     <logger name="org.eclipse.jetty" level="INFO"/>

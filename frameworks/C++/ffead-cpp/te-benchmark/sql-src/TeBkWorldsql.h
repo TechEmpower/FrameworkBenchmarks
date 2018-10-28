@@ -18,6 +18,7 @@ class TeBkWorld {
 	#pragma @Column dbf="randomNumber"
 	int randomNumber;
 public:
+	TeBkWorld();
 	virtual ~TeBkWorld();
 	int getId() const;
 	void setId(int id);

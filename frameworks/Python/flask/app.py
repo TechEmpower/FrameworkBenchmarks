@@ -5,6 +5,7 @@ from operator import attrgetter
 import os
 from random import randint
 import sys
+from email.utils import formatdate
 
 import flask
 from flask import Flask, request, render_template, make_response, jsonify
@@ -18,7 +19,7 @@ if sys.version_info[0] == 3:
 _is_pypy = hasattr(sys, 'pypy_version_info')
 
 DBDRIVER = 'mysql+pymysql' if _is_pypy else 'mysql'  # mysqlclient is slow on PyPy
-DBHOST = os.environ.get('DBHOST', 'localhost')
+DBHOST = 'tfb-database'
 
 
 # setup
@@ -68,12 +69,17 @@ class Fortune(db.Model):
 def json_response(obj):
     res = make_response(json.dumps(obj))
     res.mimetype = "application/json"
+    return add_date_header(res)
+
+
+def add_date_header(res):
+    res.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
     return res
 
 
 @app.route("/json")
 def hello():
-    return jsonify(message='Hello, World!')
+    return add_date_header(jsonify(message='Hello, World!'))
 
 
 @app.route("/db")
@@ -126,16 +132,16 @@ def get_fortunes():
     fortunes = list(Fortune.query.all())
     fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
     fortunes.sort(key=attrgetter('message'))
-    return render_template('fortunes.html', fortunes=fortunes)
+    return add_date_header(make_response(render_template('fortunes.html', fortunes=fortunes)))
 
 @app.route("/fortunesraw")
-def get_forutens_raw():
+def get_fortunes_raw():
     res = dbraw_engine.execute("SELECT * FROM fortune")
     fortunes = res.fetchall()
     res.close()
     fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
     fortunes.sort(key=attrgetter('message'))
-    return render_template('fortunes.html', fortunes=fortunes)
+    return add_date_header(make_response(render_template('fortunes.html', fortunes=fortunes)))
 
 
 @app.route("/updates")
@@ -188,7 +194,7 @@ def plaintext():
     """Test 6: Plaintext"""
     response = make_response(b'Hello, World!')
     response.content_type = 'text/plain'
-    return response
+    return add_date_header(response)
 
 
 try:
