@@ -18,6 +18,6 @@ ADD ./ /php
 WORKDIR /php
 RUN chmod -R 777 /php
 
-RUN composer install --quiet --no-dev --optimize-autoloader --classmap-authoritative
+RUN composer update --quiet --no-dev --optimize-autoloader --classmap-authoritative
 
 CMD php /php/react.php
