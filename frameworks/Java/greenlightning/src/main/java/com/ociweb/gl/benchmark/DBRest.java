@@ -3,6 +3,7 @@ package com.ociweb.gl.benchmark;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ociweb.gl.api.GreenRuntime;
 import com.ociweb.gl.api.HTTPRequestReader;
@@ -35,7 +36,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 		return 1+localRandom.nextInt(10000);
 	}		
 	
-	int totalCountInFlight = 0;//patch needed until we add better access methods to the ObjectPipe.
+	AtomicInteger totalCountInFlight = new AtomicInteger(0);//patch needed until we add better access methods to the ObjectPipe.
 	
 	public boolean multiRestRequest(HTTPRequestReader request) { 
 
@@ -47,12 +48,12 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 		}
 		
 	
-		if (inFlight.hasRoomFor(queries) &&  totalCountInFlight==inFlight.count()) {
+		if (inFlight.hasRoomFor(queries) &&  totalCountInFlight.get()==inFlight.count()) {
 			
 			
 			int q = queries;
 			while (--q >= 0) {
-				    totalCountInFlight++;
+				    totalCountInFlight.incrementAndGet();
 				
 					final ResultObject target = inFlight.headObject();
 					
@@ -191,7 +192,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 					   singleTemplate.render(w, t);
 					   t.setStatus(-1);
 					   inFlight.moveTailForward();//only move forward when it is consumed.
-					   totalCountInFlight--;
+					   totalCountInFlight.decrementAndGet();
 				   });					
 		} else {
 			//collect all the objects
@@ -239,7 +240,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 					    						   assert(collector.get(c).getConnectionId() == conId) : c+" expected conId "+conId+" error: "+showCollection(collector);
 					    						   assert(collector.get(c).getSequenceId() == seqCode) : c+" sequence error: "+showCollection(collector);    						   
 					    						   collector.get(c).setStatus(-1);
-					    						   totalCountInFlight--;
+					    						   totalCountInFlight.decrementAndGet();
 					    					   }
 					    					   collector.clear();					    					   
 					    				   });
@@ -255,7 +256,8 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 		for(ResultObject ro: collector) {
 			builder.append(++i+" Con:"+ro.getConnectionId()).append(" Id:").append(ro.getId()).append(" Seq:").append(ro.getSequenceId());
 			builder.append("\n");
-		}		
+		}
+		
 		
 		return builder.toString();
 	}
