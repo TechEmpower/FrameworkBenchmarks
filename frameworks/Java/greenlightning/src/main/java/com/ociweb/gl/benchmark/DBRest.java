@@ -14,6 +14,7 @@ import com.ociweb.json.encode.JSONRenderer;
 import com.ociweb.pronghorn.network.config.HTTPContentTypeDefaults;
 import com.ociweb.pronghorn.pipe.ObjectPipe;
 
+import io.reactiverse.pgclient.PgConnection;
 import io.reactiverse.pgclient.PgIterator;
 import io.reactiverse.pgclient.PgPool;
 import io.reactiverse.pgclient.Tuple;
@@ -22,59 +23,45 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 
 	private final PgPool pool;
 	private final ThreadLocalRandom localRandom = ThreadLocalRandom.current();
-	private final HTTPResponseService service;
-	private static final boolean useDB = true;	
-
-	//this collector is for the multi db test so we can collect all the objects until we have them all for 
-	//the request we are currently sending back
-	private final List<ResultObject> collector = new ArrayList<ResultObject>();
-	private boolean collectionPending = false;
 	private final ObjectPipe<ResultObject> inFlight;
-	
-	JSONRenderer<List<ResultObject>> multiTemplate = new JSONRenderer<List<ResultObject>>()
-	    	  .array((o,i) -> i<o.size()?o:null)
-		          .startObject((o, i) -> o.get(i))
-					.integer("id", o -> o.getId() )
-					.integer("randomNumber", o -> o.getResult())
-		          .endObject();
-	
-	JSONRenderer<ResultObject> singleTemplate = new JSONRenderer<ResultObject>()
-		   	  .startObject()
-				.integer("id", o -> o.getId() )
-				.integer("randomNumber", o -> o.getResult())
-	          .endObject();
-	
-	
-	public DBRest(GreenRuntime runtime, PgPool pool, int pipelineBits, int maxResponseSize) {
-		this.pool = pool;	
-		this.service = runtime.newCommandChannel().newHTTPResponseService(128, maxResponseSize); 
+		
+	public DBRest(GreenRuntime runtime, PgPool pool, int pipelineBits, int maxResponseCount, int maxResponseSize) {
+		this.pool = pool;		
 		this.inFlight = new ObjectPipe<ResultObject>(pipelineBits, ResultObject.class,	ResultObject::new);
+		this.service = runtime.newCommandChannel().newHTTPResponseService(maxResponseCount, maxResponseSize);
 	}		
 	
 	private int randomValue() {
 		return 1+localRandom.nextInt(10000);
 	}		
 	
+	int totalCountInFlight = 0;//patch needed until we add better access methods to the ObjectPipe.
+	
 	public boolean multiRestRequest(HTTPRequestReader request) { 
-		
-		int queries = 1;
-		try {			
-			queries = Math.min(Math.max(1, Integer.parseInt(request.structured().readText(Field.QUERIES))),500);
-		} catch (NumberFormatException e) {
-			//default value of 1 will be used in this non numeric case
+
+		final int queries;
+		if (Struct.DB_MULTI_ROUTE_INT == request.getRouteAssoc() ) {		
+			queries = Math.min(Math.max(1, (request.structured().readInt(Field.QUERIES))),500);		
+		} else {
+			queries = 1;
 		}
 		
-		
-		if (inFlight.hasRoomFor(queries)) {
+	
+		if (inFlight.hasRoomFor(queries) &&  totalCountInFlight==inFlight.count()) {
+			
 			
 			int q = queries;
 			while (--q >= 0) {
-			
-					final ResultObject target = inFlight.headObject();
-					assert(null!=target);
+				    totalCountInFlight++;
 				
+					final ResultObject target = inFlight.headObject();
+					
+					//already released but not published yet: TODO: we have a problem here!!!
+					assert(null!=target && -1==target.getStatus()) : "found status "+target.getStatus()+" on query "+q+" of "+queries ; //must block that this has been consumed?? should head/tail rsolve.
+									
 					target.setConnectionId(request.getConnectionId());
 					target.setSequenceId(request.getSequenceCode());
+					assert(target.getStatus()==-1);//waiting for work
 					target.setStatus(-2);//out for work	
 					target.setGroupSize(queries);
 				
@@ -90,7 +77,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 								
 							} else {
 								System.out.println("fail: "+r.cause().getLocalizedMessage());
-								target.setStatus(500);
+								target.setStatus(500); //TODO: need to do something with this.
 							}				
 						});	
 								
@@ -110,9 +97,10 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 	public boolean singleRestRequest(HTTPRequestReader request) { 
 
 		final ResultObject target = inFlight.headObject();
-		if (null!=target) {
+		if (null!=target && -1==target.getStatus()) {
 			target.setConnectionId(request.getConnectionId());
 			target.setSequenceId(request.getSequenceCode());
+			assert(target.getStatus()==-1);//waiting for work
 			target.setStatus(-2);//out for work	
 			target.setGroupSize(0);//do not put in a list so mark as 0.
 		
@@ -140,63 +128,138 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 		}
 	}
 
+
 	
+	////////////////////////////////////
+	////////////////////////////////////
+	
+	private final JSONRenderer<List<ResultObject>> multiTemplate = new JSONRenderer<List<ResultObject>>()
+	    	  .array((o,i) -> i<o.size()?o:null)
+		          .startObject((o, i) -> o.get(i))
+					.integer("id", o -> o.getId() )
+					.integer("randomNumber", o -> o.getResult())
+		          .endObject();
+	
+	private final JSONRenderer<ResultObject> singleTemplate = new JSONRenderer<ResultObject>()
+		   	  .startObject()
+				.integer("id", o -> o.getId() )
+				.integer("randomNumber", o -> o.getResult())
+	          .endObject();
+	
+	private boolean collectionPending = false;
+
+	//this collector is for the multi db test so we can collect all the objects until we have them all for 
+	//the request we are currently sending back
+	private final List<ResultObject> collector = new ArrayList<ResultObject>();
+	private final HTTPResponseService service;
+
+
 	@Override
 	public void tickEvent() { 
-     		
-		if (collectionPending) {
-			//now ready to send, we have all the data	
-			if (publishMultiResponse(collector.get(0).getConnectionId(), collector.get(0).getSequenceId() )) {
-				inFlight.tryMoveTailForward();
-				collectionPending = false;
-			} else {
-				return;
-			}
-		}		
 		
 		ResultObject temp = inFlight.tailObject();
-		while (temp!=null && temp.getStatus()>=0) {
-			final ResultObject t = temp;
-		
-			boolean ok = false;
-							
-			///////////////////////////////
-			if (0 == t.getGroupSize()) {	
-				ok = service.publishHTTPResponse(temp.getConnectionId(), temp.getSequenceId(), 200,
-	  				   HTTPContentTypeDefaults.JSON,
-	  				   w-> {
-	  					   singleTemplate.render(w, t);
-	  					   t.setStatus(-1);
-	  				   });					
+		while (isReady(temp)) {			
+			if (consumeResultObject(temp)) {
+				temp = inFlight.tailObject();
 			} else {
-				//collect all the objects
-				collector.add(t);					
-				if (collector.size() == t.getGroupSize()) {
-					//now ready to send, we have all the data						
-	    			ok =publishMultiResponse(t.getConnectionId(), t.getSequenceId());
-	    			collectionPending = !ok;
-	    		} else {
-	    			ok = true;//added to list
-	    		}				
-			}	
-
-			temp = (ok && inFlight.tryMoveTailForward()) ? inFlight.tailObject() : null;
+				break;
+			}
 		}	   
+		
+	}
+
+	private boolean isReady(ResultObject temp) {
+
+		if (collectionPending) {
+			//now ready to send, we have all the data	
+			if (!publishMultiResponse(collector.get(0).getConnectionId(), collector.get(0).getSequenceId() )) {				
+				return false;
+			}
+		}
+		
+		return null!=temp && temp.getStatus()>=0;
+	}
+
+	private boolean consumeResultObject(final ResultObject t) {
+		boolean ok;
+						
+		///////////////////////////////
+		if (0 == t.getGroupSize()) {	
+			ok = service.publishHTTPResponse(t.getConnectionId(), t.getSequenceId(), 200,
+				   HTTPContentTypeDefaults.JSON,
+				   w-> {
+					   singleTemplate.render(w, t);
+					   t.setStatus(-1);
+					   inFlight.moveTailForward();//only move forward when it is consumed.
+					   totalCountInFlight--;
+				   });					
+		} else {
+			//collect all the objects
+			assert(isValidToAdd(t, collector));
+			collector.add(t);					
+			if (collector.size() == t.getGroupSize()) {
+				//now ready to send, we have all the data						
+				ok =publishMultiResponse(t.getConnectionId(), t.getSequenceId());
+				
+			} else {
+				ok = true;//added to list
+			}	
+			inFlight.moveTailForward();
+			//moved forward so we can read next but write logic will still be blocked by state not -1			 
+			
+		}
+		return ok;
+	}
+
+	private boolean isValidToAdd(ResultObject t, List<ResultObject> collector) {
+		if (collector.isEmpty()) {
+			return true;
+		}
+		if (collector.get(0).getSequenceId() != t.getSequenceId()) {
+			
+			System.out.println("show collection: "+showCollection(collector));
+			System.out.println("new result adding con "+t.getConnectionId()+" seq "+t.getSequenceId());
+			
+		};
+		
+		
+		return true;
 	}
 
 	private boolean publishMultiResponse(long conId, long seqCode) {
-		return service.publishHTTPResponse(conId, seqCode, 200,
+		final boolean result =  service.publishHTTPResponse(conId, seqCode, 200,
 					    				   HTTPContentTypeDefaults.JSON,
 					    				   w-> {
 					    					   multiTemplate.render(w, collector);
+					    					   
 					    					   int c = collector.size();
-					    					   while (--c>=0) {
-					    						   assert(collector.get(c).getConnectionId() == conId);
-					    						   assert(collector.get(c).getSequenceId() == seqCode);					    						   
+					    					   assert(collector.get(0).getGroupSize()==c);
+					    					   while (--c >= 0) {
+					    						   assert(collector.get(0).getGroupSize()==collector.size());
+					    						   assert(collector.get(c).getConnectionId() == conId) : c+" expected conId "+conId+" error: "+showCollection(collector);
+					    						   assert(collector.get(c).getSequenceId() == seqCode) : c+" sequence error: "+showCollection(collector);    						   
 					    						   collector.get(c).setStatus(-1);
+					    						   totalCountInFlight--;
 					    					   }
-					    					   collector.clear();
+					    					   collector.clear();					    					   
 					    				   });
+		collectionPending = !result;
+		return result;
 	}
+
+	private String showCollection(List<ResultObject> collector) {
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("\n");
+		int i = 0;
+		for(ResultObject ro: collector) {
+			builder.append(++i+" Con:"+ro.getConnectionId()).append(" Id:").append(ro.getId()).append(" Seq:").append(ro.getSequenceId());
+			builder.append("\n");
+		}		
+		
+		return builder.toString();
+	}
+	
+	
 }
 

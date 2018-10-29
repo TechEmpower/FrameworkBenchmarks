@@ -10,6 +10,7 @@ import com.ociweb.gl.api.GreenApp;
 import com.ociweb.gl.api.GreenFramework;
 import com.ociweb.gl.api.GreenRuntime;
 import com.ociweb.pronghorn.network.ServerSocketWriterStage;
+import com.ociweb.pronghorn.pipe.ObjectPipe;
 
 import io.reactiverse.pgclient.PgClient;
 import io.reactiverse.pgclient.PgPoolOptions;
@@ -26,10 +27,10 @@ public class FrameworkTest implements GreenApp {
     private int telemetryPort;//for monitoring
     private int minMemoryOfInputPipes;
     private int maxResponseSize;
+	private	int maxResponseCount = 1<<8;
     private int pipelineBits;
 	
     private final PgPoolOptions options;
-   
     
 	public static int connectionsPerTrack =   2;
 	public static int connectionPort =        5432;
@@ -115,7 +116,6 @@ public class FrameworkTest implements GreenApp {
     			 .setMaxResponseSize(maxResponseSize) //big enough for large mult db response
     	         .useInsecureServer(); //turn off TLS
 
-		
 		framework.defineRoute()
 		         .path("/plaintext")
 		         .routeId(Struct.PLAINTEXT_ROUTE);
@@ -129,11 +129,16 @@ public class FrameworkTest implements GreenApp {
 		        .routeId(Struct.DB_SINGLE_ROUTE);
 			
 		framework.defineRoute()
-		        .path("/queries?queries=${queries}")
+		        .path("/queries?queries=#{queries}")
 		        .path("/queries")
-		        .refineText("queries", Field.QUERIES, "1")
-		        .routeId(Struct.DB_MULTI_ROUTE);
+		        .refineInteger("queries", Field.QUERIES, 1)
+		        .routeId(Struct.DB_MULTI_ROUTE_INT);
 		
+		framework.defineRoute()
+		        .path("/queries?queries=${queries}")
+			    .routeId(Struct.DB_MULTI_ROUTE_TEXT);
+		
+			
 		if (telemetryPort>0) {
 			framework.enableTelemetry(host,telemetryPort);
 		}
@@ -150,12 +155,15 @@ public class FrameworkTest implements GreenApp {
 		       .includeRoutes(Struct.PLAINTEXT_ROUTE, restTest::plainRestRequest)
 		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);
 		 
-		//each track has its own pool with its own async thread
-		DBRest dbRestInstance = new DBRest(runtime, PgClient.pool(options), pipelineBits, maxResponseSize);
+
+		DBRest dbRestInstance = new DBRest(runtime, PgClient.pool(options), pipelineBits, maxResponseCount, maxResponseSize);
 		runtime.registerListener("DBRest", dbRestInstance)
 				.includeRoutes(Struct.DB_SINGLE_ROUTE, dbRestInstance::singleRestRequest)
-				.includeRoutes(Struct.DB_MULTI_ROUTE, dbRestInstance::multiRestRequest);		
+				.includeRoutes(Struct.DB_MULTI_ROUTE_TEXT, dbRestInstance::multiRestRequest)		
+		        .includeRoutes(Struct.DB_MULTI_ROUTE_INT, dbRestInstance::multiRestRequest);
 
+			      
+		
 	}
 	 
     @Override
