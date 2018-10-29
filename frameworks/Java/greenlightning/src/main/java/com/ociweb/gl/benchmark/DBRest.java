@@ -32,7 +32,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 	private final ObjectPipe<ResultObject> inFlight;
 	
 	JSONRenderer<List<ResultObject>> multiTemplate = new JSONRenderer<List<ResultObject>>()
-	    	  .array((o,i,node) -> i<o.size()?o:null)
+	    	  .array((o,i) -> i<o.size()?o:null)
 		          .startObject((o, i) -> o.get(i))
 					.integer("id", o -> o.getId() )
 					.integer("randomNumber", o -> o.getResult())
