@@ -127,17 +127,7 @@ public class FrameworkTest implements GreenApp {
 		framework.defineRoute()
 		        .path("/db")
 		        .routeId(Struct.DB_SINGLE_ROUTE);
-			
-//		framework.defineRoute()
-//		        .path("/queries?queries=#{queries}")
-//		        .path("/queries")
-//		        .refineInteger("queries", Field.QUERIES, 1)
-//		        .routeId(Struct.DB_MULTI_ROUTE_INT);
-//		
-//		framework.defineRoute()
-//		        .path("/queries?queries=${queries}")
-//			    .routeId(Struct.DB_MULTI_ROUTE_TEXT);
-		
+
 			
 		if (telemetryPort>0) {
 			framework.enableTelemetry(host,telemetryPort);
@@ -159,10 +149,7 @@ public class FrameworkTest implements GreenApp {
 		DBRest dbRestInstance = new DBRest(runtime, PgClient.pool(options), pipelineBits, maxResponseCount, maxResponseSize);
 		runtime.registerListener("DBRest", dbRestInstance)
 				.includeRoutes(Struct.DB_SINGLE_ROUTE, dbRestInstance::singleRestRequest);
-			//	.includeRoutes(Struct.DB_MULTI_ROUTE_TEXT, dbRestInstance::multiRestRequest)		
-		    //    .includeRoutes(Struct.DB_MULTI_ROUTE_INT, dbRestInstance::multiRestRequest);
-
-			      
+	      
 		
 	}
 	 
