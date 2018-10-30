@@ -48,7 +48,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 		}
 		
 	
-		if (inFlight.hasRoomFor(queries) &&  totalCountInFlight.get()==inFlight.count()) {
+		if (inFlight.hasRoomFor(queries) &&  (totalCountInFlight.get()==inFlight.count() || totalCountInFlight.get()==0)) {
 			
 			
 			int q = queries;
