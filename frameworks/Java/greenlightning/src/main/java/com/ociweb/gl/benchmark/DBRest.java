@@ -57,7 +57,6 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 				
 					final ResultObject target = inFlight.headObject();
 					
-					//already released but not published yet: TODO: we have a problem here!!!
 					assert(null!=target && -1==target.getStatus()) : "found status "+target.getStatus()+" on query "+q+" of "+queries ; //must block that this has been consumed?? should head/tail rsolve.
 									
 					target.setConnectionId(request.getConnectionId());
@@ -78,7 +77,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 								
 							} else {
 								System.out.println("fail: "+r.cause().getLocalizedMessage());
-								target.setStatus(500); //TODO: need to do something with this.
+								target.setStatus(500); 
 							}				
 						});	
 								
