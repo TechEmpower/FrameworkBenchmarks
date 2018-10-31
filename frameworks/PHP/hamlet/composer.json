@@ -1,9 +1,17 @@
 {
+  "config": {
+    "discard-changes": true
+  },
   "require": {
     "hamlet/hamlet-core" : "^3.2",
     "cache/apcu-adapter": "^1",
     "react/http": "*",
-    "swoft/swoole-ide-helper": "*"
+    "spiral/roadrunner": "*",
+    "swoft/swoole-ide-helper": "*",
+    "amphp/amp": "*",
+    "amphp/http-server": "*",
+    "amphp/http-server-router": "*",
+    "amphp/cluster": "@dev"
   },
   "autoload": {
     "psr-4": {
