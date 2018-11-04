@@ -73,6 +73,7 @@ public class ResultObject {
 		this.id = id;
 		this.result = result;
 		this.groupSize = 0;
+		this.status = -1;
 	}
 	
 	public ResultObject() {

@@ -3,7 +3,6 @@ package com.ociweb.gl.benchmark;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ociweb.gl.api.GreenRuntime;
 import com.ociweb.gl.api.HTTPRequestReader;
@@ -15,29 +14,36 @@ import com.ociweb.json.encode.JSONRenderer;
 import com.ociweb.pronghorn.network.config.HTTPContentTypeDefaults;
 import com.ociweb.pronghorn.pipe.ObjectPipe;
 
-import io.reactiverse.pgclient.PgConnection;
+import io.reactiverse.pgclient.PgClient;
 import io.reactiverse.pgclient.PgIterator;
 import io.reactiverse.pgclient.PgPool;
+import io.reactiverse.pgclient.PgPoolOptions;
 import io.reactiverse.pgclient.Tuple;
 
 public class DBRest implements RestMethodListener, PubSubMethodListener, TickListener {
 
-	private final PgPool pool;
+	private final transient PgPoolOptions options;
+	private transient PgPool pool;
 	private final ThreadLocalRandom localRandom = ThreadLocalRandom.current();
 	private final ObjectPipe<ResultObject> inFlight;
 		
-	public DBRest(GreenRuntime runtime, PgPool pool, int pipelineBits, int maxResponseCount, int maxResponseSize) {
-		this.pool = pool;		
+	public DBRest(GreenRuntime runtime, PgPoolOptions options, int pipelineBits, int maxResponseCount, int maxResponseSize) {
+		this.options = options;	
 		this.inFlight = new ObjectPipe<ResultObject>(pipelineBits, ResultObject.class,	ResultObject::new);
 		this.service = runtime.newCommandChannel().newHTTPResponseService(maxResponseCount, maxResponseSize);
 	}		
 	
+	private PgPool pool() {
+		if (null==pool) {
+			pool = PgClient.pool(options);
+		}
+		return pool;
+	}
+	
 	private int randomValue() {
 		return 1+localRandom.nextInt(10000);
 	}		
-	
-	AtomicInteger totalCountInFlight = new AtomicInteger(0);//patch needed until we add better access methods to the ObjectPipe.
-	
+
 	public boolean multiRestRequest(HTTPRequestReader request) { 
 
 		final int queries;
@@ -48,15 +54,15 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 		}
 		
 	
-		if (inFlight.hasRoomFor(queries) &&  (totalCountInFlight.get()==inFlight.count() || totalCountInFlight.get()==0)) {
+		if (inFlight.hasRoomFor(queries)) {
 			
 			
 			int q = queries;
 			while (--q >= 0) {
-				    totalCountInFlight.incrementAndGet();
 				
 					final ResultObject target = inFlight.headObject();
 					
+					//already released but not published yet: TODO: we have a problem here!!!
 					assert(null!=target && -1==target.getStatus()) : "found status "+target.getStatus()+" on query "+q+" of "+queries ; //must block that this has been consumed?? should head/tail rsolve.
 									
 					target.setConnectionId(request.getConnectionId());
@@ -65,7 +71,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 					target.setStatus(-2);//out for work	
 					target.setGroupSize(queries);
 				
-					pool.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
+					pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
 							if (r.succeeded()) {
 								
 								PgIterator resultSet = r.result().iterator();
@@ -104,7 +110,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 			target.setStatus(-2);//out for work	
 			target.setGroupSize(0);//do not put in a list so mark as 0.
 		
-			pool.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
+			pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
 					if (r.succeeded()) {
 						
 						PgIterator resultSet = r.result().iterator();
@@ -191,12 +197,14 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 					   singleTemplate.render(w, t);
 					   t.setStatus(-1);
 					   inFlight.moveTailForward();//only move forward when it is consumed.
-					   totalCountInFlight.decrementAndGet();
+					   inFlight.publishTailPosition();
+
 				   });					
 		} else {
 			//collect all the objects
 			assert(isValidToAdd(t, collector));
 			collector.add(t);					
+			inFlight.moveTailForward();
 			if (collector.size() == t.getGroupSize()) {
 				//now ready to send, we have all the data						
 				ok =publishMultiResponse(t.getConnectionId(), t.getSequenceId());
@@ -204,7 +212,6 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 			} else {
 				ok = true;//added to list
 			}	
-			inFlight.moveTailForward();
 			//moved forward so we can read next but write logic will still be blocked by state not -1			 
 			
 		}
@@ -239,9 +246,10 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 					    						   assert(collector.get(c).getConnectionId() == conId) : c+" expected conId "+conId+" error: "+showCollection(collector);
 					    						   assert(collector.get(c).getSequenceId() == seqCode) : c+" sequence error: "+showCollection(collector);    						   
 					    						   collector.get(c).setStatus(-1);
-					    						   totalCountInFlight.decrementAndGet();
+					    						 
 					    					   }
 					    					   collector.clear();					    					   
+					    					   inFlight.publishTailPosition();
 					    				   });
 		collectionPending = !result;
 		return result;
