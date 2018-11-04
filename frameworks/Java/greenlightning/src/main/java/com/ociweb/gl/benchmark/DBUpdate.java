@@ -40,6 +40,7 @@ public class DBUpdate implements RestMethodListener, TickListener {
 	
 	public DBUpdate(GreenRuntime runtime, PgPoolOptions options, int pipelineBits, int maxResponseCount, int maxResponseSize) {
 		this.options = options;
+		this.options.setMaxSize(6);//bump up the connections since we use the pool nested twice		
 		this.service = runtime.newCommandChannel().newHTTPResponseService(maxResponseCount, maxResponseSize);
 		this.inFlight = new ObjectPipe<ResultObject>(pipelineBits, ResultObject.class,	ResultObject::new);
 	}
@@ -70,45 +71,43 @@ public class DBUpdate implements RestMethodListener, TickListener {
 				int q = queries;
 				while (--q >= 0) {
 				
-						final ResultObject target = inFlight.headObject();
-						assert(null!=target);
+						final ResultObject worldObject = inFlight.headObject();
+						assert(null!=worldObject);
 					
-						target.setConnectionId(conId);
-						target.setSequenceId(seqCode);
-						target.setStatus(-2);//out for work	
-						target.setGroupSize(queries);
+						worldObject.setConnectionId(conId);
+						worldObject.setSequenceId(seqCode);
+						worldObject.setStatus(-2);//out for work	
+						worldObject.setGroupSize(queries);
 						
-						final int targetId = randomValue();
-						final int targetUpdate = randomValue();
-						
-						pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(targetId), r -> {
+						worldObject.setId(randomValue());
+												
+						pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(worldObject.getId()), r -> {
 								if (r.succeeded()) {
-									
+																		
 									PgIterator resultSet = r.result().iterator();
 							        Tuple row = resultSet.next();			        
 							        
-							        int oldRnd = row.getInteger(1);
+							        assert(worldObject.getId()==row.getInteger(0));
+							        
+							        //read the existing random value and store it in the world object
+							        worldObject.setResult(row.getInteger(1));
 							        
 							        ///////////////////////////////////
-							        //update the value since we got our call back
-							        //////////////////////////////////
+							        //set the new random value in this object
+							        worldObject.setResult(randomValue());
 							        							       
 							        
-							        final Tuple updateTuple = Tuple.of(targetUpdate, row.getInteger(0));
-							        
-							        pool().preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2", updateTuple, ar -> {
-							        	
-										if (ar.succeeded()) {									
-								        	target.setId(updateTuple.getInteger(1));
-								        	target.setResult(updateTuple.getInteger(0));					
-								        	target.setStatus(200);
+							        pool().preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
+							        			Tuple.of(worldObject.getResult(), worldObject.getId()), ar -> {							        	
+										if (ar.succeeded()) {
+								        	worldObject.setStatus(200);
 										} else {	
 											
 											if (ar.cause()!=null) {
 												ar.cause().printStackTrace();
 											}
 											
-											target.setStatus(500);
+											worldObject.setStatus(500);
 										}	
 																													
 							        });
@@ -118,7 +117,7 @@ public class DBUpdate implements RestMethodListener, TickListener {
 										r.cause().printStackTrace();
 									}
 									
-									target.setStatus(500);
+									worldObject.setStatus(500);
 								}		
 								
 								

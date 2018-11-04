@@ -108,7 +108,7 @@ public class FrameworkTest implements GreenApp {
 	    			.setUser(connectionUser)
 	    			.setPassword(connectionPassword)
 	    			.setCachePreparedStatements(true)
-	    			.setMaxSize(connectionsPerTrack);
+	    			.setMaxSize(connectionsPerTrack);	    	
 	    		
     	try {
 	    	///early check to know if we have a database or not,
