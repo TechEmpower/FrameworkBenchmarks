@@ -42,12 +42,16 @@ server = ActionController::Server.new(port, host)
 # Start clustering
 server.cluster(process_count, "-w", "--workers") if cluster
 
-# Detect ctr-c to shutdown gracefully
-Signal::INT.trap do |signal|
+terminate = Proc(Signal, Nil).new do |signal|
   puts " > terminating gracefully"
   spawn { server.close }
   signal.ignore
 end
+
+# Detect ctr-c to shutdown gracefully
+Signal::INT.trap &terminate
+# Docker containers use the term signal
+Signal::TERM.trap &terminate
 
 # Start the server
 server.run do
