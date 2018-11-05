@@ -27,7 +27,7 @@ public class Logic {
 	// ============ DB ====================
 
 	public void db(EntityManager entityManager, ObjectResponse<World> response) {
-		response.send(entityManager.find(World.class, ThreadLocalRandom.current().nextInt(1, 10000)));
+		response.send(entityManager.find(World.class, ThreadLocalRandom.current().nextInt(1, 10001)));
 	}
 
 	// ========== QUERIES ==================
@@ -38,7 +38,7 @@ public class Logic {
 		int count = getQueryCount(queries);
 		World[] worlds = new World[count];
 		for (int i = 0; i < worlds.length; i++) {
-			worlds[i] = entityManager.find(World.class, random.nextInt(1, 10000));
+			worlds[i] = entityManager.find(World.class, random.nextInt(1, 10001));
 		}
 		response.send(worlds);
 	}
@@ -51,8 +51,8 @@ public class Logic {
 		int count = getQueryCount(queries);
 		World[] worlds = new World[count];
 		for (int i = 0; i < worlds.length; i++) {
-			worlds[i] = entityManager.find(World.class, random.nextInt(1, 10000));
-			worlds[i].setRandomNumber(random.nextInt(1, 10000));
+			worlds[i] = entityManager.find(World.class, random.nextInt(1, 10001));
+			worlds[i].setRandomNumber(random.nextInt(1, 10001));
 		}
 		response.send(worlds);
 	}
