@@ -33,7 +33,7 @@ public class DBUpdate implements RestMethodListener, TickListener {
 	private static final ThreadLocalRandom localRandom = ThreadLocalRandom.current();
 	private static final JSONRenderer<List<ResultObject>> multiTemplate = new JSONRenderer<List<ResultObject>>()
 	    	  .array((o,i) -> i<o.size()?o:null)
-		          .startObject((o, i) -> o.get(i))
+		          .startObject((o, i) ->  o.get(i))  
 					.integer("id", o -> o.getId() )
 					.integer("randomNumber", o -> o.getResult())
 		          .endObject();
@@ -73,7 +73,7 @@ public class DBUpdate implements RestMethodListener, TickListener {
 				
 						final ResultObject worldObject = inFlight.headObject();
 						assert(null!=worldObject);
-					
+											
 						worldObject.setConnectionId(conId);
 						worldObject.setSequenceId(seqCode);
 						worldObject.setStatus(-2);//out for work	
@@ -100,9 +100,11 @@ public class DBUpdate implements RestMethodListener, TickListener {
 							        pool().preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
 							        			Tuple.of(worldObject.getResult(), worldObject.getId()), ar -> {							        	
 										if (ar.succeeded()) {
-								        	worldObject.setStatus(200);
-										} else {	
 											
+								        	worldObject.setStatus(200);							
+								        	
+										} else {	
+											System.out.println("unable to update");
 											if (ar.cause()!=null) {
 												ar.cause().printStackTrace();
 											}
@@ -112,7 +114,7 @@ public class DBUpdate implements RestMethodListener, TickListener {
 																													
 							        });
 								} else {	
-									
+									System.out.println("unable to query");
 									if (r.cause()!=null) {
 										r.cause().printStackTrace();
 									}
@@ -162,7 +164,6 @@ public class DBUpdate implements RestMethodListener, TickListener {
 
 	private boolean consumeResultObject(final ResultObject t) {
 		boolean ok;
-				
 		//collect all the objects
 		collector.add(t);
 		inFlight.moveTailForward();//only move forward when it is consumed.
