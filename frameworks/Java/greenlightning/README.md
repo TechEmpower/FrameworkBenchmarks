@@ -15,8 +15,8 @@ The tests were run with:
 - [x] JSON serialization
 - [x] Single query
 - [x] Multiple queries
-- [ ] Fortunes
-- [ ] Data updates
+- [x] Fortunes
+- [x] Data updates
 - [x] Plaintext
 
 
