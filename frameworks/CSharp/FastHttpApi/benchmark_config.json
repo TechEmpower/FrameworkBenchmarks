@@ -1,5 +1,5 @@
 {
-  "framework": "FastHttpApi",
+  "framework": "fasthttpapi",
   "tests": [{
     "default": {
       "plaintext_url": "/plaintext",
@@ -8,17 +8,17 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "None",
-      "framework": "FastHttpApi",
+      "framework": "fasthttpapi",
       "language": "C#",
       "orm": "Raw",
       "platform": ".NET",
       "flavor": "CoreCLR",
-      "webserver": "FastHttpApi",
+      "webserver": "fasthttpapi",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "FastHttpApi",
+      "display_name": "fasthttpapi",
       "notes": "",
-      "versus": "FastHttpApi"
+      "versus": "fasthttpapi"
     }
   }]
 }
