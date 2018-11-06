@@ -95,3 +95,4 @@ dependency-reduced-pom.xml
 .dart_tool/
 *.packages
 pubspec.lock
+frameworks/CSharp/FastHttpApi/Benchmarks/.vs/
