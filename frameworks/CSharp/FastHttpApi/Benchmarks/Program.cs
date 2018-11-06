@@ -22,6 +22,8 @@ namespace Benchmarks
             mApiServer.Register(typeof(Program).Assembly);
             mApiServer.ServerConfig.Port = 8080;
             mApiServer.ServerConfig.UrlIgnoreCase = false;
+            mApiServer.ServerConfig.LogLevel = BeetleX.EventArgs.LogType.Info;
+            mApiServer.ServerConfig.LogToConsole = true;
             mApiServer.Open();
             mApiServer.HttpRequestNotfound += (o, e) =>
             {
