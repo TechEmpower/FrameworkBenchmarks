@@ -8,8 +8,16 @@ namespace Benchmarks
     {
         private static HttpApiServer mApiServer;
 
+        private static byte[] plaintextData;
+
+        private static byte[] jsonData;
+
         static void Main(string[] args)
         {
+
+            plaintextData = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
+            jsonData = System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject("Hello, World!"));
+
             mApiServer = new HttpApiServer();
             mApiServer.Register(typeof(Program).Assembly);
             mApiServer.ServerConfig.Port = 8080;
@@ -24,13 +32,16 @@ namespace Benchmarks
             Console.Read();
         }
 
-        public object plaintext()
+        public object plaintext(IHttpContext context)
         {
-            return new TextResult("Hello, World!");
+            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            return new StringBytes(plaintextData);
         }
-        public object json()
+        public object json(IHttpContext context)
         {
-            return new JsonResult("Hello, World!");
+            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            return new StringBytes(jsonData);
         }
     }
+
 }
