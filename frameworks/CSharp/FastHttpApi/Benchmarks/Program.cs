@@ -15,6 +15,10 @@ namespace Benchmarks
             mApiServer.ServerConfig.Port = 8080;
             mApiServer.ServerConfig.UrlIgnoreCase = false;
             mApiServer.Open();
+            mApiServer.HttpRequestNotfound += (o, e) =>
+            {
+                e.Response.Result(new TextResult("Hello, World!"));
+            };
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
             Console.Write(mApiServer.BaseServer);
             Console.Read();
