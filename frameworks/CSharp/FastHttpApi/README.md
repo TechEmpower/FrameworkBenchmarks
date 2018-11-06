@@ -18,7 +18,6 @@ This includes tests for plaintext and json serialization.
 **Web Stack**
 
 * [FastHttpApi](https://github.com/IKende/FastHttpApi)
-* ASP.NET Core
 
 ## Paths & Source for Tests
 
