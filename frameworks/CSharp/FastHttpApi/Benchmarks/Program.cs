@@ -20,7 +20,7 @@ namespace Benchmarks
 
             mApiServer = new HttpApiServer();
             mApiServer.Register(typeof(Program).Assembly);
-            mApiServer.ServerConfig.Port = 80;
+            mApiServer.ServerConfig.Port = 8080;
             mApiServer.ServerConfig.UrlIgnoreCase = false;
             mApiServer.ServerConfig.LogLevel = BeetleX.EventArgs.LogType.Info;
             mApiServer.ServerConfig.LogToConsole = true;
@@ -31,7 +31,6 @@ namespace Benchmarks
             };
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
             Console.Write(mApiServer.BaseServer);
-            Console.Read();
         }
 
         public object plaintext(IHttpContext context)
