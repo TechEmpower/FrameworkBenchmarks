@@ -15,21 +15,13 @@ namespace Benchmarks
         static void Main(string[] args)
         {
 
-            plaintextData = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
-            jsonData = System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject("Hello, World!"));
-
             mApiServer = new HttpApiServer();
             mApiServer.Register(typeof(Program).Assembly);
             mApiServer.ServerConfig.Port = 8080;
-            mApiServer.ServerConfig.Host = "127.0.0.1";
             mApiServer.ServerConfig.UrlIgnoreCase = false;
             mApiServer.ServerConfig.LogLevel = BeetleX.EventArgs.LogType.Info;
             mApiServer.ServerConfig.LogToConsole = true;
             mApiServer.Open();
-            mApiServer.HttpRequestNotfound += (o, e) =>
-            {
-                e.Response.Result(new TextResult("Hello, World!"));
-            };
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
             Console.Write(mApiServer.BaseServer);
             Console.Read();
@@ -37,13 +29,13 @@ namespace Benchmarks
 
         public object plaintext(IHttpContext context)
         {
-            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
-            return new StringBytes(plaintextData);
+            //context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            return new TextResult("Hello, World!");
         }
         public object json(IHttpContext context)
         {
-            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
-            return new StringBytes(jsonData);
+            //context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            return new JsonResult("Hello, World!");
         }
     }
 
