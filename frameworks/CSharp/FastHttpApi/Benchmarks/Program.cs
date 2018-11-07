@@ -29,13 +29,18 @@ namespace Benchmarks
 
         public object plaintext(IHttpContext context)
         {
-            //context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
             return new TextResult("Hello, World!");
         }
         public object json(IHttpContext context)
         {
-            //context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
-            return new JsonResult("Hello, World!");
+            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            return new JsonResult(new JsonMessage { message = "Hello, World!" });
+        }
+
+        public class JsonMessage
+        {
+            public string message { get; set; }
         }
     }
 

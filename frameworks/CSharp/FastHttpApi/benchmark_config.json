@@ -13,7 +13,7 @@
       "orm": "Raw",
       "platform": ".NET",
       "flavor": "CoreCLR",
-      "webserver": "beetlex-fasthttpapi",
+      "webserver": "BeetleX",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "beetlex-fasthttpapi",
