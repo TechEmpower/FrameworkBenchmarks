@@ -1,5 +1,5 @@
 {
-  "framework": "fasthttpapi",
+  "framework": "carter",
   "tests": [{
     "default": {
       "plaintext_url": "/plaintext",
@@ -8,17 +8,17 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "None",
-      "framework": "fasthttpapi",
+      "framework": "Carter",
       "language": "C#",
       "orm": "Raw",
       "platform": ".NET",
       "flavor": "CoreCLR",
-      "webserver": "fasthttpapi",
+      "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "fasthttpapi",
+      "display_name": "Carter",
       "notes": "",
-      "versus": "fasthttpapi"
+      "versus": "aspcore"
     }
   }]
 }

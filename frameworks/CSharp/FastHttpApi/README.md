@@ -1,4 +1,4 @@
-# FastHttpApi Tests on Linux and windows
+# Carter Tests on Linux
 This includes tests for plaintext and json serialization.
 
 ## Infrastructure Software Versions
@@ -13,13 +13,14 @@ This includes tests for plaintext and json serialization.
 
 **Web Servers**
 
-* [FastHttpApi](https://github.com/IKende/FastHttpApi)
+* [Kestrel](https://github.com/aspnet/KestrelHttpServer)
 
 **Web Stack**
 
-* [FastHttpApi](https://github.com/IKende/FastHttpApi)
+* [Carter](https://github.com/CarterCommunity/Carter)
+* ASP.NET Core
 
 ## Paths & Source for Tests
 
-* [Plaintext](Benchmarks/Program.cs): "/plaintext"
-* [JSON Serialization](Benchmarks/Program.cs): "/json"
+* [Plaintext](Benchmarks/PlainModule.cs): "/plaintext"
+* [JSON Serialization](Benchmarks/JsonModule.cs): "/utf8json"
