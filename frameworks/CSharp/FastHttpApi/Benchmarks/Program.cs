@@ -1,27 +1,50 @@
+﻿using BeetleX.FastHttpApi;
+using System;
+
 namespace Benchmarks
 {
-    using System.IO;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-
-    public class Program
+    [BeetleX.FastHttpApi.Controller]
+    class Program
     {
-        public static async Task Main(string[] args)
+        private static HttpApiServer mApiServer;
+
+        private static byte[] plaintextData;
+
+        private static byte[] jsonData;
+
+        static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder()
-                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
-                .AddCommandLine(args)
-                .Build();
 
-            var webHost = new WebHostBuilder()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseConfiguration(config)
-                .UseStartup<Startup>()
-                .UseKestrel()
-                .Build();
+            plaintextData = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
+            jsonData = System.Text.Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject("Hello, World!"));
 
-            await webHost.RunAsync();
+            mApiServer = new HttpApiServer();
+            mApiServer.Register(typeof(Program).Assembly);
+            mApiServer.ServerConfig.Port = 8080;
+            mApiServer.ServerConfig.Host = "127.0.0.1";
+            mApiServer.ServerConfig.UrlIgnoreCase = false;
+            mApiServer.ServerConfig.LogLevel = BeetleX.EventArgs.LogType.Info;
+            mApiServer.ServerConfig.LogToConsole = true;
+            mApiServer.Open();
+            mApiServer.HttpRequestNotfound += (o, e) =>
+            {
+                e.Response.Result(new TextResult("Hello, World!"));
+            };
+            Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
+            Console.Write(mApiServer.BaseServer);
+            Console.Read();
+        }
+
+        public object plaintext(IHttpContext context)
+        {
+            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            return new StringBytes(plaintextData);
+        }
+        public object json(IHttpContext context)
+        {
+            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            return new StringBytes(jsonData);
         }
     }
+
 }
