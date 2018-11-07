@@ -14,7 +14,6 @@ namespace Benchmarks
 
         static void Main(string[] args)
         {
-
             mApiServer = new HttpApiServer();
             mApiServer.Register(typeof(Program).Assembly);
             mApiServer.ServerConfig.Port = 8080;
@@ -24,7 +23,6 @@ namespace Benchmarks
             mApiServer.Open();
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
             Console.Write(mApiServer.BaseServer);
-            Console.Read();
         }
 
         public object plaintext(IHttpContext context)
