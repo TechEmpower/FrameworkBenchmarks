@@ -3,7 +3,5 @@ WORKDIR /app
 COPY Benchmarks .
 RUN dotnet publish -c Release -o out
 
-WORKDIR /app
-COPY --from=build /app/out ./
-
+WORKDIR /app/out
 ENTRYPOINT ["dotnet", "Benchmarks.dll"]
