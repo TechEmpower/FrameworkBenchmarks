@@ -21,8 +21,9 @@ namespace Benchmarks
 
                 });
 
-            var reslut = builder.RunConsoleAsync();
-            reslut.Wait();
+            var result = builder.RunConsoleAsync();
+            result.Wait();
+
         }
 
         public object plaintext(IHttpContext context)
@@ -55,7 +56,7 @@ namespace Benchmarks
             mApiServer.Register(typeof(Program).Assembly);
             mApiServer.ServerConfig.Port = 8080;
             mApiServer.ServerConfig.UrlIgnoreCase = false;
-            mApiServer.ServerConfig.LogLevel = BeetleX.EventArgs.LogType.Info;
+            mApiServer.ServerConfig.LogLevel = BeetleX.EventArgs.LogType.Warring;
             mApiServer.ServerConfig.LogToConsole = true;
             mApiServer.Open();
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
