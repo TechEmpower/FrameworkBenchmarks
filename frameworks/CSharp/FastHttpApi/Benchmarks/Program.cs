@@ -1,28 +1,28 @@
 ﻿using BeetleX.FastHttpApi;
+using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
+
 
 namespace Benchmarks
 {
+
     [BeetleX.FastHttpApi.Controller]
     class Program
     {
-        private static HttpApiServer mApiServer;
-
-        private static byte[] plaintextData;
-
-        private static byte[] jsonData;
-
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            mApiServer = new HttpApiServer();
-            mApiServer.Register(typeof(Program).Assembly);
-            mApiServer.ServerConfig.Port = 8080;
-            mApiServer.ServerConfig.UrlIgnoreCase = false;
-            mApiServer.ServerConfig.LogLevel = BeetleX.EventArgs.LogType.Info;
-            mApiServer.ServerConfig.LogToConsole = true;
-            mApiServer.Open();
-            Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
-            Console.Write(mApiServer.BaseServer);
+            var builder = new HostBuilder()
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<BeetleXHttpServer>();
+
+                });
+
+            var reslut = builder.RunConsoleAsync();
+            reslut.Wait();
         }
 
         public object plaintext(IHttpContext context)
@@ -39,6 +39,32 @@ namespace Benchmarks
         public class JsonMessage
         {
             public string message { get; set; }
+        }
+
+
+    }
+
+
+    public class BeetleXHttpServer : BackgroundService
+    {
+        private HttpApiServer mApiServer;
+
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            mApiServer = new HttpApiServer();
+            mApiServer.Register(typeof(Program).Assembly);
+            mApiServer.ServerConfig.Port = 8080;
+            mApiServer.ServerConfig.UrlIgnoreCase = false;
+            mApiServer.ServerConfig.LogLevel = BeetleX.EventArgs.LogType.Info;
+            mApiServer.ServerConfig.LogToConsole = true;
+            mApiServer.Open();
+            Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
+            Console.Write(mApiServer.BaseServer);
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                Console.WriteLine("HttpApiServer is doing background work.");
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+            }
         }
     }
 

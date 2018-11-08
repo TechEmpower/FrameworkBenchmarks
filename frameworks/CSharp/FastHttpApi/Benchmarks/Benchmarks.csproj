@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="BeetleX.FastHttpApi" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.1" />
   </ItemGroup>
 
 </Project>
