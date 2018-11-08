@@ -14,6 +14,7 @@ namespace PlatformBenchmarks
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("HTTP/1.1 200 OK");
+            sb.AppendLine("Content-Type: text/plain");
             sb.AppendLine("Content-Length: 14");
             sb.AppendLine("Date: " + DateTime.Now.ToUniversalTime().ToString("r"));
             sb.AppendLine("");
@@ -24,6 +25,7 @@ namespace PlatformBenchmarks
             //PlaintextBytes
             string helloword = "Hello, World!";
             sb.AppendLine("HTTP/1.1 200 OK");
+            sb.AppendLine("Content-Type: text/plain");
             sb.AppendLine("Content-Length: " + helloword.Length);
             sb.AppendLine("Server: BeetleX");
             sb.AppendLine("Date: " + DateTime.Now.ToUniversalTime().ToString("r"));
@@ -36,6 +38,7 @@ namespace PlatformBenchmarks
 
             helloword = Newtonsoft.Json.JsonConvert.SerializeObject(new JsonMessage { message = "Hello, World!" });
             sb.AppendLine("HTTP/1.1 200 OK");
+            sb.AppendLine("Content-Type: application/json");
             sb.AppendLine("Content-Length: " + helloword.Length);
             sb.AppendLine("Server: BeetleX");
             sb.AppendLine("Date: " + DateTime.Now.ToUniversalTime().ToString("r"));

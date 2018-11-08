@@ -2,7 +2,7 @@
   "framework": "beetlex",
   "tests": [
     {
-      "base": {
+      "default": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "port": 8080,
