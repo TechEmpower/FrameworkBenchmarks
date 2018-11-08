@@ -62,6 +62,8 @@ namespace PlatformBenchmarks
             id.Value = _random.Next(1, 10001);
             cmd.Parameters.Add(id);
 
+            (cmd as MySql.Data.MySqlClient.MySqlCommand)?.Prepare();
+
             return cmd;
         }
 
@@ -145,6 +147,8 @@ namespace PlatformBenchmarks
 
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();
+
+                (cmd as MySql.Data.MySqlClient.MySqlCommand)?.Prepare();
 
                 using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection))
                 {

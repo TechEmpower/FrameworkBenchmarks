@@ -3,10 +3,11 @@ extern crate actix_web;
 extern crate bytes;
 extern crate futures;
 extern crate num_cpus;
-extern crate postgres;
 extern crate rand;
 extern crate serde;
 extern crate serde_json;
+extern crate tokio_postgres;
+extern crate url;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
@@ -21,8 +22,6 @@ use actix_web::{
 use askama::Template;
 use bytes::BytesMut;
 use futures::Future;
-use postgres::{Connection, TlsMode};
-use std::cmp;
 
 mod db_pg;
 mod models;
@@ -31,12 +30,12 @@ use db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateWorld};
 use utils::Writer;
 
 struct State {
-    db: Addr<Syn, PgConnection>,
+    db: Addr<PgConnection>,
 }
 
-fn world_row(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
-    req.clone()
-        .state()
+fn world_row(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
+    let mut resp = HttpResponse::build_from(req);
+    req.state()
         .db
         .send(RandomWorld)
         .from_err()
@@ -44,25 +43,21 @@ fn world_row(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
             Ok(row) => {
                 let mut body = BytesMut::with_capacity(31);
                 serde_json::to_writer(Writer(&mut body), &row).unwrap();
-                Ok(HttpResponse::build_from(&req)
+                Ok(resp
                     .header(http::header::SERVER, "Actix")
                     .content_type("application/json")
                     .body(body))
             }
             Err(_) => Ok(HttpResponse::InternalServerError().into()),
-        })
-        .responder()
+        }).responder()
 }
 
-fn queries(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
+fn queries(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
     // get queries parameter
-    let q = req
-        .query()
-        .get("q")
-        .map(|q| cmp::min(500, cmp::max(1, q.parse::<u16>().ok().unwrap_or(1))))
-        .unwrap_or(1);
+    let q = utils::get_query_param(req.uri());
 
     // run sql queries
+    let mut resp = HttpResponse::build_from(req);
     req.clone()
         .state()
         .db
@@ -72,28 +67,23 @@ fn queries(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
             if let Ok(worlds) = res {
                 let mut body = BytesMut::with_capacity(35 * worlds.len());
                 serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
-                Ok(HttpResponse::build_from(&req)
+                Ok(resp
                     .header(http::header::SERVER, "Actix")
                     .content_type("application/json")
                     .body(body))
             } else {
                 Ok(HttpResponse::InternalServerError().into())
             }
-        })
-        .responder()
+        }).responder()
 }
 
-fn updates(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
+fn updates(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
     // get queries parameter
-    let q = req
-        .query()
-        .get("q")
-        .map(|q| cmp::min(500, cmp::max(1, q.parse::<u16>().ok().unwrap_or(1))))
-        .unwrap_or(1);
+    let q = utils::get_query_param(req.uri());
 
     // update db
-    req.clone()
-        .state()
+    let mut resp = HttpResponse::build_from(req);
+    req.state()
         .db
         .send(UpdateWorld(q))
         .from_err()
@@ -101,15 +91,14 @@ fn updates(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
             if let Ok(worlds) = res {
                 let mut body = BytesMut::with_capacity(35 * worlds.len());
                 serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
-                Ok(HttpResponse::build_from(&req)
+                Ok(resp
                     .header(http::header::SERVER, "Actix")
                     .content_type("application/json")
                     .body(body))
             } else {
                 Ok(HttpResponse::InternalServerError().into())
             }
-        })
-        .responder()
+        }).responder()
 }
 
 #[derive(Template)]
@@ -118,54 +107,43 @@ struct FortuneTemplate<'a> {
     items: &'a Vec<models::Fortune>,
 }
 
-fn fortune(req: HttpRequest<State>) -> FutureResponse<HttpResponse> {
+fn fortune(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
+    let mut resp = HttpResponse::build_from(req);
     req.state()
         .db
         .send(TellFortune)
         .from_err()
-        .and_then(|res| match res {
+        .and_then(move |res| match res {
             Ok(rows) => {
                 let tmpl = FortuneTemplate { items: &rows };
                 let res = tmpl.render().unwrap();
 
-                Ok(HttpResponse::Ok()
+                Ok(resp
                     .header(http::header::SERVER, "Actix")
                     .content_type("text/html; charset=utf-8")
                     .body(res))
             }
             Err(_) => Ok(HttpResponse::InternalServerError().into()),
-        })
-        .responder()
+        }).responder()
 }
 
 fn main() {
     let sys = System::new("techempower");
     let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
-    // Avoid triggering "FATAL: the database system is starting up" error from
-    // postgres.
-    {
-        if Connection::connect(db_url, TlsMode::None).is_err() {
-            std::thread::sleep(std::time::Duration::from_secs(5));
-        }
-    }
-
-    // Start db executor actors
-    let addr = SyncArbiter::start(num_cpus::get() * 3, move || {
-        db_pg::PgConnection::new(db_url)
-    });
-
     // start http server
     server::new(move || {
-        App::with_state(State { db: addr.clone() })
+        let addr = PgConnection::connect(db_url);
+
+        App::with_state(State { db: addr })
             .resource("/db", |r| r.route().f(world_row))
             .resource("/queries", |r| r.route().f(queries))
             .resource("/fortune", |r| r.route().f(fortune))
             .resource("/updates", |r| r.route().f(updates))
     }).backlog(8192)
-        .bind("0.0.0.0:8080")
-        .unwrap()
-        .start();
+    .bind("0.0.0.0:8080")
+    .unwrap()
+    .start();
 
     println!("Started http server: 127.0.0.1:8080");
     let _ = sys.run();

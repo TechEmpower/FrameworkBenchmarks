@@ -4,10 +4,10 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayEbean, PlayNettyServer)
 
-scalaVersion := "2.12.5"
+scalaVersion := "2.12.7"
 
 libraryDependencies ++= Seq(
   guice,
   javaJdbc,
-  "mysql" % "mysql-connector-java" % "5.1.45"
+  "mysql" % "mysql-connector-java" % "5.1.47"
 )

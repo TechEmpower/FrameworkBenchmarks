@@ -15,7 +15,7 @@ RUN apt update -yqq &&                                                  \
 
 ENV PATH $PATH:/nim/nim-devel/bin:/root/.nimble/bin
 
-RUN nimble install -y mofuw
+RUN nimble install -y mofuw packedjson
 
 WORKDIR /mofuwApp
 COPY techempower.nim techempower.nim

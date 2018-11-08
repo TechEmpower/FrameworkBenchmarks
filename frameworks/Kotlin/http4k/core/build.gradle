@@ -3,8 +3,8 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile "org.http4k:http4k-core:$http4k_version"
     compile "org.http4k:http4k-format-jackson:$http4k_version"
-    compile "org.http4k:http4k-template-handlebars:$http4k_version"
+    compile "org.http4k:http4k-template-pebble:$http4k_version"
     compile "org.apache.commons:commons-lang3:3.7"
-    compile "com.zaxxer:HikariCP:2.7.4"
-    compile "org.postgresql:postgresql:42.1.4"
+    compile "com.zaxxer:HikariCP:3.2.0"
+    compile "org.postgresql:postgresql:42.2.2"
 }

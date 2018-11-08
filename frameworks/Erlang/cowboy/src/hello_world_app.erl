@@ -10,8 +10,8 @@
 
 %% API.
 
-%% NOTE: 
-%%   If size of db testpool is too big (e.g: 5000), 
+%% NOTE:
+%%   If size of db testpool is too big (e.g: 5000),
 %%   it will fail travis ci test. So I shrink this to 256.
 %%   blee@techempower.com
 
@@ -31,9 +31,8 @@ start(_Type, _Args) ->
       {"/query", query_handler, []}
 		]}
 	]),
-	{ok, _} = cowboy:start_http(http, 256, [{port, 8080}], [
-		{env, [{dispatch, Dispatch}]}
-	]),
+	{ok, _} = cowboy:start_clear(http, [{port, 8080}], #{env => #{dispatch => Dispatch}}
+	),
 	hello_world_sup:start_link().
 
 stop(_State) ->

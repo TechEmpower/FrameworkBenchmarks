@@ -5,17 +5,19 @@
     <!--  see： http://redkale.org/redkale.html#redkale_confxml  -->
     
     <resources>
-		<properties>
+	<properties>		
+            <property name="system.property.sun.nio.ch.disableSynchronousRead" value="true"/>
+            <property name="system.property.sun.nio.ch.maxCompletionHandlersOnStack" value="56"/>
             <property name="system.property.http.response.header.server" value="redkale"/>
         </properties>
-	</resources> 
+    </resources> 
         
-    <server protocol="HTTP" host="0.0.0.0" port="8080" threads="128" aliveTimeoutSeconds="300">      
+    <server protocol="HTTP" host="0.0.0.0" port="8080" threads="28" aliveTimeoutSeconds="300">      
                 
         <response>
-			<contenttype plain="text/plain" json="application/json"/>  
-			<date period="1000"/>
-		</response>
+	    <contenttype plain="text/plain" json="application/json"/>  
+	    <date period="1000"/>
+	</response>
 
         <services autoload="true"/>
         

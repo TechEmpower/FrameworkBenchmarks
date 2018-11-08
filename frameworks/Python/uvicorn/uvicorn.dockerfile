@@ -1,4 +1,4 @@
-FROM python:3.6.5
+FROM python:3.6.6-stretch
 
 ADD ./ /uvicorn
 
@@ -6,4 +6,4 @@ WORKDIR /uvicorn
 
 RUN pip3 install -r /uvicorn/requirements.txt
 
-CMD uvicorn app:main -c uvicorn_conf.py
+CMD gunicorn app:main -k uvicorn.workers.UvicornWorker -c uvicorn_conf.py
