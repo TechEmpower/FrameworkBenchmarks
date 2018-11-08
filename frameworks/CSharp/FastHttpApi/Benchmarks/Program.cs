@@ -59,6 +59,7 @@ namespace Benchmarks
             mApiServer.ServerConfig.LogLevel = BeetleX.EventArgs.LogType.Warring;
             mApiServer.ServerConfig.LogToConsole = true;
             mApiServer.Open();
+            Console.WriteLine("BeetleX FastHttpApi server");
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
             Console.Write(mApiServer.BaseServer);
             while (!stoppingToken.IsCancellationRequested)

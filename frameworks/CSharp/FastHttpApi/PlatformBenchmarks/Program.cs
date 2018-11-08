@@ -123,6 +123,7 @@ namespace PlatformBenchmarks
             config.LogLevel = LogType.Warring;
             mServer = SocketFactory.CreateTcpServer(config, this, null);
             mServer.Open();
+            Console.WriteLine("BeetleX base server");
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
             Console.Write(mServer);
             while (!stoppingToken.IsCancellationRequested)

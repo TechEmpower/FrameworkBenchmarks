@@ -25,6 +25,7 @@ namespace PlatformBenchmarks
             string helloword = "Hello, World!";
             sb.AppendLine("HTTP/1.1 200 OK");
             sb.AppendLine("Content-Length: " + helloword.Length);
+            sb.AppendLine("Server: BeetleX");
             sb.AppendLine("Date: " + DateTime.Now.ToUniversalTime().ToString("r"));
             sb.AppendLine("");
             sb.Append(helloword);
@@ -36,6 +37,7 @@ namespace PlatformBenchmarks
             helloword = Newtonsoft.Json.JsonConvert.SerializeObject(new JsonMessage { message = "Hello, World!" });
             sb.AppendLine("HTTP/1.1 200 OK");
             sb.AppendLine("Content-Length: " + helloword.Length);
+            sb.AppendLine("Server: BeetleX");
             sb.AppendLine("Date: " + DateTime.Now.ToUniversalTime().ToString("r"));
             sb.AppendLine("");
             sb.Append(helloword);
