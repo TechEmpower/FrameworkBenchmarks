@@ -2,7 +2,7 @@
   "framework": "beetlex",
   "tests": [
     {
-      "base": {
+      "default": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "port": 8080,
@@ -19,7 +19,7 @@
         "database_os": "Linux",
         "display_name": "beetlex",
         "notes": "",
-        "versus": "beetlex-base"
+        "versus": "beetlex"
       },
       "fasthttpapi": {
         "plaintext_url": "/plaintext",
