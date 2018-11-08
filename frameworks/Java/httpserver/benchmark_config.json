@@ -1,0 +1,44 @@
+{
+  "framework": "httpserver",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "httpserver",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "httpserver",
+        "notes": "",
+        "versus": ""
+      },
+      "postgres": {
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "httpserver",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "httpserver-postgres",
+        "notes": "",
+        "versus": ""
+      }
+    }
+  ]
+}
