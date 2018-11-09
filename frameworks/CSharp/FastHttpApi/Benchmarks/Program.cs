@@ -20,12 +20,8 @@ namespace Benchmarks
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<BeetleXHttpServer>();
-
                 });
-
-            var result = builder.RunConsoleAsync();
-            result.Wait();
-
+            builder.Build().Run();
         }
 
         public object plaintext(IHttpContext context)
@@ -67,10 +63,10 @@ namespace Benchmarks
             return Task.CompletedTask;
         }
 
-        public virtual async Task StopAsync(CancellationToken cancellationToken)
+        public virtual Task StopAsync(CancellationToken cancellationToken)
         {
-            return;
-
+            mApiServer.BaseServer.Dispose();
+            return Task.CompletedTask;
         }
     }
 }

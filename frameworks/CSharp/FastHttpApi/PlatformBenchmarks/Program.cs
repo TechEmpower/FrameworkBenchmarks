@@ -18,8 +18,7 @@ namespace PlatformBenchmarks
                {
                    services.AddHostedService<BeetleXServer>();
                });
-            var result = builder.RunConsoleAsync();
-            result.Wait();
+            builder.Build().Run();
         }
     }
 
@@ -129,9 +128,10 @@ namespace PlatformBenchmarks
             return Task.CompletedTask;
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
+        public Task StopAsync(CancellationToken cancellationToken)
         {
-            return;
+            mServer.Dispose();
+            return Task.CompletedTask;
         }
     }
 }
