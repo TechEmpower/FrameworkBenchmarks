@@ -33,9 +33,9 @@
 			<classifier>linux-x86_64</classifier>
 		</dependency>
 		<dependency>
-			<groupId>com.julienviet</groupId>
+			<groupId>io.reactiverse</groupId>
 			<artifactId>reactive-pg-client</artifactId>
-			<version>0.3.1</version>
+			<version>0.10.7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fizzed</groupId>

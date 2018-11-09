@@ -1,6 +1,6 @@
 package vertx;
 
-import com.julienviet.pgclient.*;
+import io.reactiverse.pgclient.*;
 import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
@@ -110,7 +110,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     options.setDatabase(config.getString("database"));
     options.setHost(config.getString("host"));
     options.setPort(config.getInteger("port", 5432));
-    options.setUsername(config.getString("username"));
+    options.setUser(config.getString("username"));
     options.setPassword(config.getString("password"));
     options.setCachePreparedStatements(true);
     options.setMaxSize(1);
@@ -183,7 +183,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     HttpServerResponse resp = req.response();
     client.preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), res -> {
       if (res.succeeded()) {
-        PgIterator<Row> resultSet = res.result().iterator();
+        PgIterator resultSet = res.result().iterator();
         if (!resultSet.hasNext()) {
           resp.setStatusCode(404).end();
           return;
@@ -303,7 +303,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
       HttpServerResponse response = req.response();
       if (ar.succeeded()) {
         List<Fortune> fortunes = new ArrayList<>();
-        PgIterator<Row> resultSet = ar.result().iterator();
+        PgIterator resultSet = ar.result().iterator();
         if (!resultSet.hasNext()) {
           response.setStatusCode(404).end("No results");
           return;
