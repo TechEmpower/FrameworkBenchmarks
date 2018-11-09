@@ -2,16 +2,14 @@
 
 namespace Benchmark;
 
-use Benchmark\Entities\PlainTextEntity;
 use Benchmark\Resources\DbResource;
 use Benchmark\Resources\FortuneResource;
+use Benchmark\Resources\HelloResource;
 use Benchmark\Resources\UpdateResource;
+use Cache\Adapter\Apcu\ApcuCachePool;
 use Hamlet\Applications\AbstractApplication;
-use Hamlet\Cache\VoidCachePool;
 use Hamlet\Database\Database;
-use Hamlet\Entities\JsonEntity;
 use Hamlet\Requests\Request;
-use Hamlet\Resources\EntityResource;
 use Hamlet\Resources\WebResource;
 use Psr\Cache\CacheItemPoolInterface;
 
@@ -23,14 +21,12 @@ class Application extends AbstractApplication
     /** @var Database|null */
     private $database;
 
-    protected function findResource(Request $request): WebResource
+    public function findResource(Request $request): WebResource
     {
         if ($request->pathMatches('/plaintext')) {
-            return new EntityResource(new PlainTextEntity('Hello, World!'), 'GET');
+            return new HelloResource(false);
         } elseif ($request->pathMatches('/json')) {
-            return new EntityResource(new JsonEntity([
-                'message' => 'Hello, World!'
-            ]), 'GET');
+            return new HelloResource(true);
         } elseif ($request->pathMatches('/db') || $request->pathMatches('/queries')) {
             return new DbResource($this->database());
         } elseif ($request->pathMatches('/fortunes')) {
@@ -56,7 +52,7 @@ class Application extends AbstractApplication
     protected function getCache(Request $request): CacheItemPoolInterface
     {
         if (!$this->cache) {
-            $this->cache = new VoidCachePool();
+            $this->cache = new ApcuCachePool();
         }
         return $this->cache;
     }

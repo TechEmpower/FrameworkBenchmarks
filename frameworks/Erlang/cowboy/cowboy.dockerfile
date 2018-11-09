@@ -1,4 +1,4 @@
-FROM erlang:20.3.8.4
+FROM erlang:21.1.1
 
 ADD ./ /cowboy
 WORKDIR /cowboy

@@ -6,8 +6,8 @@ use Benchmark\Entities\FortuneEntity;
 use Hamlet\Database\Database;
 use Hamlet\Requests\Request;
 use Hamlet\Resources\WebResource;
-use Hamlet\Responses\OKResponse;
 use Hamlet\Responses\Response;
+use Hamlet\Responses\SimpleOKResponse;
 
 class FortuneResource implements WebResource
 {
@@ -31,6 +31,6 @@ class FortuneResource implements WebResource
             ->collectAll();
         $messages[0] = 'Additional fortune added at request time.';
         asort($messages);
-        return new OKResponse(new FortuneEntity($messages));
+        return new SimpleOKResponse(new FortuneEntity($messages));
     }
 }
