@@ -47,12 +47,11 @@ namespace Benchmarks
 
     }
 
-
-    public class BeetleXHttpServer : BackgroundService
+    public class BeetleXHttpServer : IHostedService
     {
         private HttpApiServer mApiServer;
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        public virtual Task StartAsync(CancellationToken cancellationToken)
         {
             mApiServer = new HttpApiServer();
             mApiServer.Register(typeof(Program).Assembly);
@@ -65,12 +64,13 @@ namespace Benchmarks
             Console.WriteLine("BeetleX FastHttpApi server");
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
             Console.Write(mApiServer.BaseServer);
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                Console.WriteLine("HttpApiServer is doing background work.");
-                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
-            }
+            return Task.CompletedTask;
+        }
+
+        public virtual async Task StopAsync(CancellationToken cancellationToken)
+        {
+            return;
+
         }
     }
-
 }

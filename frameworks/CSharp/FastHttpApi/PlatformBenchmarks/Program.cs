@@ -23,7 +23,7 @@ namespace PlatformBenchmarks
         }
     }
 
-    public class BeetleXServer : BackgroundService, BeetleX.IServerHandler
+    public class BeetleXServer : IHostedService, BeetleX.IServerHandler
     {
         public virtual void Connected(IServer server, ConnectedEventArgs e)
         {
@@ -116,7 +116,7 @@ namespace PlatformBenchmarks
 
         private BeetleX.IServer mServer;
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             NetConfig config = new NetConfig();
             config.Port = 8080;
@@ -126,11 +126,12 @@ namespace PlatformBenchmarks
             Console.WriteLine("BeetleX base server");
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
             Console.Write(mServer);
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                Console.WriteLine("BeetleX is doing background work.");
-                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
-            }
+            return Task.CompletedTask;
+        }
+
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            return;
         }
     }
 }
