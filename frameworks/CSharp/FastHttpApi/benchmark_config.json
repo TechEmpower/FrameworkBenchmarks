@@ -28,7 +28,7 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "None",
-        "framework": "beetlex-fasthttpapi",
+        "framework": "beetlex",
         "language": "C#",
         "orm": "Raw",
         "platform": ".NET",
