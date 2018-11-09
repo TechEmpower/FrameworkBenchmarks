@@ -12,8 +12,10 @@ namespace Benchmarks
     [BeetleX.FastHttpApi.Controller]
     class Program
     {
+        private static string mDate;
         public static void Main(string[] args)
         {
+            mDate = DateTime.Now.ToUniversalTime().ToString("r");
             var builder = new HostBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
@@ -28,12 +30,12 @@ namespace Benchmarks
 
         public object plaintext(IHttpContext context)
         {
-            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            context.Response.Header[HeaderTypeFactory.DATE] = mDate;
             return new TextResult("Hello, World!");
         }
         public object json(IHttpContext context)
         {
-            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            context.Response.Header[HeaderTypeFactory.DATE] = mDate;
             return new JsonResult(new JsonMessage { message = "Hello, World!" });
         }
 
@@ -55,6 +57,7 @@ namespace Benchmarks
             mApiServer = new HttpApiServer();
             mApiServer.Register(typeof(Program).Assembly);
             mApiServer.ServerConfig.Port = 8080;
+            mApiServer.ServerConfig.MaxConnections = 100000;
             mApiServer.ServerConfig.UrlIgnoreCase = false;
             mApiServer.ServerConfig.LogLevel = BeetleX.EventArgs.LogType.Warring;
             mApiServer.ServerConfig.LogToConsole = true;

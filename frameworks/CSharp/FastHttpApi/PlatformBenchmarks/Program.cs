@@ -73,12 +73,12 @@ namespace PlatformBenchmarks
 
         private void Onplaintext(PipeStream stream)
         {
-            stream.Write(HttpParse.PlaintextBytes, 0, HttpParse.PlaintextBytes.Length);
+            HttpParse.Plaintext(stream);
         }
 
         private void OnJson(PipeStream stream)
         {
-            stream.Write(HttpParse.JsonBytes, 0, HttpParse.JsonBytes.Length);
+            HttpParse.Json(stream);
         }
 
         public virtual void SessionReceive(IServer server, SessionReceiveEventArgs e)
