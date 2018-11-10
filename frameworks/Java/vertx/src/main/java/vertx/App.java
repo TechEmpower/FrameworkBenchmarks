@@ -334,16 +334,15 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
 
   public static void main(String[] args) throws Exception {
     JsonObject config = new JsonObject(new String(Files.readAllBytes(new File(args[0]).toPath())));
-    int procs = Runtime.getRuntime().availableProcessors();
     Vertx vertx = Vertx.vertx(new VertxOptions().setPreferNativeTransport(true));
     vertx.exceptionHandler(err -> {
       err.printStackTrace();
     });
     printConfig(vertx);
     vertx.deployVerticle(App.class.getName(),
-        new DeploymentOptions().setInstances(procs * 2).setConfig(config), event -> {
+        new DeploymentOptions().setInstances(VertxOptions.DEFAULT_EVENT_LOOP_POOL_SIZE).setConfig(config), event -> {
           if (event.succeeded()) {
-            logger.debug("Your Vert.x application is started!");
+            logger.info("Server listening on port " + 8080);
           } else {
             logger.error("Unable to start your application", event.cause());
           }
@@ -371,8 +370,8 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     } catch (IOException e) {
       logger.error("Could not read Vertx version", e);;
     }
-    logger.debug("Vertx: " + version);
-    logger.debug("Default Event Loop Size: " + VertxOptions.DEFAULT_EVENT_LOOP_POOL_SIZE);
-    logger.debug("Native transport : " + nativeTransport);
+    logger.info("Vertx: " + version);
+    logger.info("Event Loop Size: " + VertxOptions.DEFAULT_EVENT_LOOP_POOL_SIZE);
+    logger.info("Native transport : " + nativeTransport);
   }
 }
