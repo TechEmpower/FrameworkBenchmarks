@@ -1,5 +1,7 @@
 package vertx;
 
+import com.fizzed.rocker.ContentType;
+import com.fizzed.rocker.RockerOutputFactory;
 import io.reactiverse.pgclient.*;
 import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
@@ -16,6 +18,7 @@ import io.vertx.core.logging.LoggerFactory;
 import vertx.model.Fortune;
 import vertx.model.Message;
 import vertx.model.World;
+import vertx.rocker.BufferRockerOutput;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -88,6 +91,8 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private CharSequence dateString;
 
   private CharSequence[] plaintextHeaders;
+
+  private final RockerOutputFactory<BufferRockerOutput> factory = BufferRockerOutput.factory(ContentType.RAW);
 
   public static CharSequence createDateHeader() {
     return HttpHeaders.createOptimized(DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
@@ -318,7 +323,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
             .putHeader(HttpHeaders.SERVER, SERVER)
             .putHeader(HttpHeaders.DATE, dateString)
             .putHeader(HttpHeaders.CONTENT_TYPE, RESPONSE_TYPE_HTML)
-            .end(FortunesTemplate.template(fortunes).render().toString());
+            .end(FortunesTemplate.template(fortunes).render(factory).buffer());
       } else {
         Throwable err = ar.cause();
         logger.error("", err);
