@@ -1,0 +1,16 @@
+{
+  "name": "techempower",
+  "version": "0.1",
+  "devMode": false,
+  "dataSources": [
+    {
+      "name": "mysql",
+      "engine": "MYSQL",
+      "hostname": "tfb-database",
+      "port": 3306,
+      "database": "hello_world",
+      "username": "benchmarkdbuser",
+      "password": "benchmarkdbpass"
+    }
+  ]
+}

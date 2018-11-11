@@ -38,6 +38,44 @@
       "display_name": "Hot",
       "notes": "",
       "versus": ""
+    }, "postgres" : {
+      "db_url": "/rest/db/pgsql",
+      "query_url": "/rest/queries/pgsql?queries=",
+      "fortune_url": "/rest/fortunes/pgsql",
+      "update_url": "/rest/updates/pgsql?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "Hot",
+      "language": "Groovy",
+      "orm": "Raw",
+      "platform": "Jetty",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Hot",
+      "notes": "",
+      "versus": ""
+    }, "mysql" : {
+      "db_url": "/rest/db/mysql",
+      "query_url": "/rest/queries/mysql?queries=",
+      "fortune_url": "/rest/fortunes/mysql",
+      "update_url": "/rest/updates/mysql?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "Hot",
+      "language": "Groovy",
+      "orm": "Raw",
+      "platform": "Jetty",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Hot",
+      "notes": "",
+      "versus": ""
     }
   }]
 }
