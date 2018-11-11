@@ -1,5 +1,6 @@
 package net.officefloor.benchmark;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.persistence.EntityManager;
@@ -49,9 +50,14 @@ public class Logic {
 			ObjectResponse<World[]> response) {
 		ThreadLocalRandom random = ThreadLocalRandom.current();
 		int count = getQueryCount(queries);
+		int[] ids = new int[count];
+		for (int i = 0; i < ids.length; i++) {
+			ids[i] = random.nextInt(1, 10001);
+		}
+		Arrays.sort(ids);
 		World[] worlds = new World[count];
 		for (int i = 0; i < worlds.length; i++) {
-			worlds[i] = entityManager.find(World.class, random.nextInt(1, 10001));
+			worlds[i] = entityManager.find(World.class, ids[i]);
 			worlds[i].setRandomNumber(random.nextInt(1, 10001));
 		}
 		response.send(worlds);
