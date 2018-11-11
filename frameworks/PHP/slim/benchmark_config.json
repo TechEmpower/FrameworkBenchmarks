@@ -2,7 +2,6 @@
   "framework": "slim",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -23,10 +22,9 @@
       "database_os": "Linux",
       "display_name": "slim",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "hhvm": {
-      "setup_file": "setup_hhvm",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -47,10 +45,9 @@
       "database_os": "Linux",
       "display_name": "slim",
       "notes": "",
-      "versus": "php5"
+      "versus": "php"
     },
     "php5": {
-      "setup_file": "setup_php5",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -71,7 +68,7 @@
       "database_os": "Linux",
       "display_name": "slim",
       "notes": "",
-      "versus": "php-php5"
+      "versus": "php"
     }
   }]
 }

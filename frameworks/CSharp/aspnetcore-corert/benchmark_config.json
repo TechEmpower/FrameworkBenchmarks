@@ -1,0 +1,23 @@
+{
+  "framework": "aspcore-corert",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "CoreRT",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ASP.NET Core",
+      "notes": "",
+      "versus": "aspcore"
+    }
+  }]
+}

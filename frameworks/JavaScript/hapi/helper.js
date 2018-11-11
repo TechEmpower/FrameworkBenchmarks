@@ -1,8 +1,3 @@
-const Handlebars = require('handlebars');
-
-const GREETING = "Hello, World";
-const HELLO_OBJ = { message: GREETING };
-
 module.exports = {
   randomTfbNumber: () => Math.floor(Math.random() * 10000) + 1,
 

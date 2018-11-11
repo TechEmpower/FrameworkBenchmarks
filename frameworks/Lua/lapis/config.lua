@@ -14,6 +14,6 @@ return config({
     database("hello_world")
     user("benchmarkdbuser")
     password("benchmarkdbpass")
-    return host(os.getenv("DBHOST"))
+    return host("DBHOSTNAME")
   end)
 end)

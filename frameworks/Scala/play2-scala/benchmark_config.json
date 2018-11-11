@@ -4,8 +4,7 @@
     {
       "default": {
         "display_name": "play2-scala", 
-        "setup_file": "setup_scala", 
-        "framework": "play2", 
+        "framework": "play2",
         "language": "Scala", 
         "flavor": "None",
         "orm": "Raw", 
@@ -22,10 +21,9 @@
         "json_url": "/json", 
         "plaintext_url": "/plaintext"
       }, 
-      "scala-netty": {
+      "netty": {
         "display_name": "play2-scala-netty", 
-        "setup_file": "setup_scala_netty", 
-        "framework": "play2", 
+        "framework": "play2",
         "language": "Scala", 
         "flavor": "None",
         "orm": "Raw", 
@@ -42,10 +40,9 @@
         "json_url": "/json", 
         "plaintext_url": "/plaintext"
       }, 
-      "anorm-linux": {
-        "display_name": "play2-scala-anorm-linux", 
-        "setup_file": "setup_scala_anorm", 
-        "framework": "play2", 
+      "anorm": {
+        "display_name": "play2-scala-anorm",
+        "framework": "play2",
         "language": "Scala", 
         "flavor": "None",
         "orm": "Full", 
@@ -64,10 +61,9 @@
         "fortune_url": "/fortunes", 
         "update_url": "/update?queries="
       }, 
-      "anorm-linux-netty": {
-        "display_name": "play2-scala-anorm-linux-netty", 
-        "setup_file": "setup_scala_anorm_netty", 
-        "framework": "play2", 
+      "anorm-netty": {
+        "display_name": "play2-scala-anorm-netty",
+        "framework": "play2",
         "language": "Scala", 
         "flavor": "None",
         "orm": "Full", 
@@ -86,54 +82,9 @@
         "fortune_url": "/fortunes", 
         "update_url": "/update?queries="
       }, 
-      "anorm-windows": {
-        "display_name": "play2-scala-anorm-windows", 
-        "setup_file": "setup_scala_anorm", 
-        "framework": "play2", 
-        "language": "Scala", 
-        "flavor": "None",
-        "orm": "Full", 
-        "os": "Windows", 
-        "database": "MySQL", 
-        "approach": "Realistic", 
-        "classification": "Fullstack", 
-        "platform": "Akka", 
-        "webserver": "None", 
-        "database_os": "Linux", 
-        "notes": "", 
-        "versus": "akka-http", 
-        "port": "9000", 
-        "db_url": "/db", 
-        "query_url": "/queries?queries=", 
-        "fortune_url": "/fortunes", 
-        "update_url": "/update?queries="
-      },
-      "anorm-windows-netty": {
-        "display_name": "play2-scala-anorm-windows-netty", 
-        "setup_file": "setup_scala_anorm_netty", 
-        "framework": "play2", 
-        "language": "Scala", 
-        "flavor": "None",
-        "orm": "Full", 
-        "os": "Windows", 
-        "database": "MySQL", 
-        "approach": "Realistic", 
-        "classification": "Fullstack", 
-        "platform": "Netty", 
-        "webserver": "None", 
-        "database_os": "Linux", 
-        "notes": "", 
-        "versus": "netty", 
-        "port": "9000", 
-        "db_url": "/db", 
-        "query_url": "/queries?queries=", 
-        "fortune_url": "/fortunes", 
-        "update_url": "/update?queries="
-      },
       "reactivemongo": {
         "display_name": "play2-scala-reactivemongo", 
-        "setup_file": "setup_scala_reactivemongo", 
-        "framework": "play2", 
+        "framework": "play2",
         "language": "Scala", 
         "flavor": "None",
         "orm": "Full", 
@@ -155,8 +106,7 @@
       },
       "reactivemongo-netty": {
         "display_name": "play2-scala-reactivemongo-netty", 
-        "setup_file": "setup_scala_reactivemongo_netty", 
-        "framework": "play2", 
+        "framework": "play2",
         "language": "Scala", 
         "flavor": "None",
         "orm": "Full", 
@@ -178,8 +128,7 @@
       },
       "slick": {
         "display_name": "play2-scala-slick", 
-        "setup_file": "setup_scala_slick", 
-        "framework": "play2", 
+        "framework": "play2",
         "language": "Scala", 
         "flavor": "None",
         "orm": "Full", 
@@ -200,8 +149,7 @@
       },
       "slick-netty": {
         "display_name": "play2-scala-slick-netty", 
-        "setup_file": "setup_scala_slick_netty", 
-        "framework": "play2", 
+        "framework": "play2",
         "language": "Scala", 
         "flavor": "None",
         "orm": "Full", 

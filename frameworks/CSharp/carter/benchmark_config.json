@@ -1,0 +1,24 @@
+{
+  "framework": "carter",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "Carter",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Carter",
+      "notes": "",
+      "versus": "aspcore"
+    }
+  }]
+}

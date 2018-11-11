@@ -7,8 +7,16 @@
 	<version>1.0.0</version>
 	<name>proteus-techempower</name>
 	<url>http://maven.apache.org</url>
-	<build>
-	 <resources>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <rocker.version>0.18.0</rocker.version>
+    </properties>
+
+    <build>
+        <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -73,14 +81,9 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.8.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 					<compilerArgument>-parameters</compilerArgument>
-
 				</configuration>
 			</plugin>
 			<plugin>
@@ -243,18 +246,14 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.41</version>
+			<version>5.1.47</version>
 		</dependency>
 	  	<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.4.1212</version>
+			<version>42.2.5</version>
 		</dependency>  
 	</dependencies>
-	<properties>
-		<rocker.version>0.18.0</rocker.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 	<repositories>
     <repository>
         <id>oss-sonatype</id>

@@ -2,7 +2,7 @@
 
 [Minijax](https://minijax.org) - Lightweight subset of JAX-RS and JSR 330.
 
-* Jetty for HTTP server
+* Undertow for HTTP server
 * Mustache for HTML templates
 * MySQL for database
 * Eclipselink for ORM

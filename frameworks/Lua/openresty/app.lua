@@ -13,7 +13,7 @@ template.caching(false)
 local view = template.compile([[<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>{% for _,f in ipairs(fortunes) do %}<tr><td>{{ f.id }}</td><td>{{ f.message }}</td></tr>{% end %}</table></body></html>]], nil, true)
 
 local mysqlconn = {
-	host = os.getenv("DBHOST"),
+	host = os.getenv("DBIP"),
 	port = 3306,
 	database = "hello_world",
 	user = "benchmarkdbuser",

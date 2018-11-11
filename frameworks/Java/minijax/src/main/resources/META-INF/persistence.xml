@@ -3,9 +3,11 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>com.techempower.minijax.Fortune</class>
         <class>com.techempower.minijax.World</class>
+        <shared-cache-mode>NONE</shared-cache-mode>
         <properties>
             <property name="eclipselink.jdbc.batch-writing" value="JDBC" />
             <property name="eclipselink.jdbc.cache-statements" value="true" />
+            <property name="eclipselink.weaving" value="static" />
         </properties>
     </persistence-unit>
 </persistence>

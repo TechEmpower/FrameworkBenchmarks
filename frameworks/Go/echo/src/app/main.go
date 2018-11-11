@@ -9,7 +9,6 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
-	"os"
 	"sort"
 	"strconv"
 
@@ -265,10 +264,7 @@ func InitRoutes(e *echo.Echo) {
 }
 
 func InitPostgres() {
-	host := os.Getenv("DBHOST")
-	if host == "" {
-		host = "localhost"
-	}
+	host := "tfb-database"
 
 	var err error
 	db, err = sql.Open("postgres", fmt.Sprintf(connectionString, host))

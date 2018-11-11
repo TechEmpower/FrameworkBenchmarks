@@ -6,11 +6,6 @@ TechEmpower Web Framework Benchmarks
 #include "world.h"
 
 static UCache* cache;
-static World* pworld_query;
-
-#ifndef AS_cpoll_cppsp_DO
-static UVector<World*>* pvworld_query;
-#endif
 
 static void usp_init_cached_worlds()
 {
@@ -25,12 +20,10 @@ static void usp_init_cached_worlds()
       return;
       }
 
-   U_NEW(World, pworld_query, World);
-
+   World world_query;
    UOrmStatement stmt_query(sql_query, U_CONSTANT_TO_PARAM("SELECT * FROM World"));
 
-   stmt_query.into(*pworld_query);
-
+   stmt_query.into(world_query);
    stmt_query.execute();
 
    // creat and fill the cache
@@ -40,67 +33,24 @@ static void usp_init_cached_worlds()
    (void) cache->open(U_STRING_FROM_CONSTANT("/tmp/ULib_cached_worlds.cache"), 10000 * 64, U_NULLPTR, true);
 
    do {
-      cache->add(pworld_query->id, pworld_query->randomNumber);
+      cache->add(world_query.id, world_query.randomNumber);
       }
    while (stmt_query.nextRow());
 
-#ifndef AS_cpoll_cppsp_DO
-   U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
-#endif
+   World::handlerFork();
 }
 
-#ifdef DEBUG
-static void usp_end_cached_worlds()
+static void handlerQuery(uint32_t i)
 {
-   U_TRACE(5, "::usp_end_cached_worlds()")
+   U_TRACE(5, "::handlerQuery(%u)", i)
 
-   if (cache)
-      {
-      delete cache;
-      delete pworld_query;
+   U_INTERNAL_ASSERT_POINTER(cache)
 
-#  ifndef AS_cpoll_cppsp_DO
-      delete pvworld_query;
-#  endif
-      }
+   World::rnum = cache->getNumber(World::rnumber[i]);
 }
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
-
-#ifdef AS_cpoll_cppsp_DO
-USP_PUTS_CHAR('[');
-#endif
-
-while (true)
-   {
-   pworld_query->randomNumber = cache->getNumber((pworld_query->id = u_get_num_random(10000-1)));
-
-#ifdef AS_cpoll_cppsp_DO
-   USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld_query->id, pworld_query->randomNumber);
-#else
-   World* pworld;
-
-   U_NEW(World, pworld, World(*pworld_query));
-
-   pvworld_query->push_back(pworld);
-#endif
-
-   if (++i == num_queries) break;
-
-#ifdef AS_cpoll_cppsp_DO
-   USP_PUTS_CHAR(',');
-#endif
-   }
-
-#ifdef AS_cpoll_cppsp_DO
-USP_PUTS_CHAR(']');
-#else
-USP_OBJ_JSON_stringify(*pvworld_query);
-pvworld_query->clear();
-#endif
+World::doUpdateNoSql(handlerQuery);
 -->

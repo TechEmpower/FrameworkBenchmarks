@@ -5,10 +5,11 @@ class BenchmarkController < Amber::Controller::Base
   TEXT_PLAIN = "text/plain"
   ID_MAXIMUM = 10_000
 
-  def initialize(@context)
-    super(@context)
-    response.headers["Server"] = "Amber"
-    response.headers["Date"] = Time.now.to_s
+  before_action do
+    all do
+      response.headers["Server"] = "Amber"
+      response.headers["Date"] = HTTP.format_time(Time.now)
+    end
   end
 
   def plaintext
@@ -25,7 +26,7 @@ class BenchmarkController < Amber::Controller::Base
     response.content_type = JSON
     results = {} of Symbol => Int32
     if world = World.find rand(1..ID_MAXIMUM)
-      results = {id: world.id, randomNumber: world.randomNumber}
+      results = {id: world.id, randomNumber: world.randomnumber}
     end
     results.to_json
   end
@@ -38,7 +39,7 @@ class BenchmarkController < Amber::Controller::Base
 
     results = (1..queries).map do
       if world = World.find rand(1..ID_MAXIMUM)
-        {id: world.id, randomNumber: world.randomNumber}
+        {id: world.id, randomNumber: world.randomnumber}
       end
     end
 
@@ -53,9 +54,9 @@ class BenchmarkController < Amber::Controller::Base
 
     results = (1..queries).map do
       if world = World.find rand(1..ID_MAXIMUM)
-        world.randomNumber = rand(1..ID_MAXIMUM)
+        world.randomnumber = rand(1..ID_MAXIMUM)
         world.save
-        {id: world.id, randomNumber: world.randomNumber}
+        {id: world.id, randomNumber: world.randomnumber}
       end
     end
 
@@ -70,7 +71,7 @@ class BenchmarkController < Amber::Controller::Base
 
     fortunes = Fortune.all
     fortunes << fortune
-    fortunes.sort_by! { |fortune| fortune.message.to_s }
+    fortunes.sort_by! { |fortune| fortune.message || "" }
 
     render("fortune/index.ecr")
   end

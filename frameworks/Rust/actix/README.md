@@ -1,12 +1,25 @@
-# [Actix](https://github.com/actix/actix-web) Benchmark Test
+# [Actix](https://actix.rs) web framework
 
 ## Description
 
-Actix web is open source rust web framework. It is based on [Tokio](https://tokio.rs).
+Actix web is a small, fast, pragmatic, open source rust web framework.
 
-* [User Guide](http://actix.github.io/actix-web/guide/)
-* [API Documentation](http://actix.github.io/actix-web/actix_web/)
+* [User Guide](https://actix.rs/book/actix-web/)
+* [API Documentation](https://docs.rs/actix-web/)
+* [Chat on gitter](https://gitter.im/actix/actix)
 * Cargo package: [actix-web](https://crates.io/crates/actix-web)
+
+## Features
+
+* Supported HTTP/1.x and HTTP/2.0 protocols
+* Streaming and pipelining
+* Keep-alive and slow requests handling
+* Client/Server WebSockets
+* Transparent content compression/decompression (br, gzip, deflate)
+* Configurable request routing
+* Graceful server shutdown
+* Multipart streams
+* Middlewares (Logger, Session, DefaultHeaders, CORS)
 
 ## Database
 

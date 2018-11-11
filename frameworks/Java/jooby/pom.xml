@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.jooby</groupId>
     <artifactId>jooby-project</artifactId>
-    <version>1.2.1</version>
+    <version>1.4.0</version>
   </parent>
 
   <artifactId>jooby</artifactId>
@@ -17,8 +17,8 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>1.2.1</jooby.version>
-    <postgresql.version>42.1.1</postgresql.version>
+    <jooby.version>1.4.0</jooby.version>
+    <postgresql.version>42.2.5</postgresql.version>
     <rocker.touchFile>/dev/null</rocker.touchFile>
 
     <!-- Startup class -->

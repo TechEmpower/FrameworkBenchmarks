@@ -13,7 +13,7 @@
 #include "TeBkMessage.h"
 #include "DataSourceManager.h"
 #include <stdlib.h>
-
+#include "CacheManager.h"
 
 
 #pragma @RestController path="/"
@@ -38,6 +38,13 @@ public:
 	#pragma @GET path="/plaintext" statusCode="200" ocontentType="text/plain"
 	std::string plaintext();
 
+	#pragma @GET path="/cached-worlds" statusCode="200" ocontentType="application/json"
+	std::vector<TeBkWorld> cachedWorlds(
+					#pragma @QueryParam name="count"
+					std::string count);
+
+	void updateCache();
+	TeBkRestController();
 	virtual ~TeBkRestController();
 };
 

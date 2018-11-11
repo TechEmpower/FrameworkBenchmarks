@@ -1,13 +1,5 @@
+build
+out
+docker
+.idea
 .gradle
-build/
-target/
-project/target
-bin/
-logs/
-.idea/
-.cache
-.classpath
-.project
-/bin/
-tools/
-sbt

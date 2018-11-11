@@ -1,0 +1,1 @@
+{:duct.core/include ["hello/server-jetty"]} ;default

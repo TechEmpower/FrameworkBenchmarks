@@ -53,6 +53,9 @@ benchmark.cfg
 # netbeans
 /nbproject
 
+# Visual Studio Code
+.vscode
+
 # vim
 .*.sw[a-p]
 
@@ -86,3 +89,9 @@ nimcache
 
 #don't ignore merge request templates
 !.github/
+dependency-reduced-pom.xml
+
+# dart
+.dart_tool/
+*.packages
+pubspec.lock

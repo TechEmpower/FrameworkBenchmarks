@@ -21,5 +21,9 @@ public class PathHandlerProvider implements HandlerProvider {
             .addExactPath("/updates", new BlockingHandler(new UpdatesPostgresqlGetHandler()))
         ;
     }
+
+    public static PathHandlerProvider create() {
+        return new PathHandlerProvider();
+    }
 }
 

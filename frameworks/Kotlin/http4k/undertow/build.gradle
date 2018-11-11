@@ -3,7 +3,5 @@ dependencies {
     compile "org.http4k:http4k-server-undertow:$http4k_version"
 }
 
-task uber(type: OneJar) {
-    mainClass = "Http4kUndertowServerKt"
-    archiveName = 'http4k-undertow-benchmark.jar'
-}
+apply plugin: 'application'
+mainClassName = "Http4kUndertowServerKt"

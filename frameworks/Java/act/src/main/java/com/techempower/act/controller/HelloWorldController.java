@@ -24,14 +24,15 @@ import act.Act;
 import act.job.OnAppStart;
 import act.sys.Env;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.techempower.act.AppEntry;
 import org.osgl.http.H;
 
-@SuppressWarnings("unused")
 @Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT)
 public class HelloWorldController {
 
     private static final String HELLO_WORLD = "Hello, World!";
+    private static final String JSON_TYPE = H.Format.JSON.contentType();
 
     public static final class Message {
         private final String message;
@@ -46,8 +47,8 @@ public class HelloWorldController {
     @OnAppStart
     public void routing() {
         Act.getNonblock("/json", context -> context.resp()
-                .contentType(H.Format.JSON.contentType())
-                .writeContent(JSON.toJSONString(new Message(HELLO_WORLD))));
+                .contentType(JSON_TYPE)
+                .writeContent(JSON.toJSONString(new Message(HELLO_WORLD), SerializerFeature.DisableCircularReferenceDetect)));
     }
 
 }

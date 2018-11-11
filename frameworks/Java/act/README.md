@@ -1,42 +1,39 @@
 # ActFramework Benchmarking Test
 
+[ActFramework](https://github.com/actframework/actframework) Expressive, fast and testable web framework designed by Java developer for Java developer
+
 This is the ActFramework portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-This is using [ActFramework R1.5.1](http://actframework.org) to build an application.
+```java
+public class AppEntry {
 
-## Local benchmark result
+    @GetAction
+    public String sayHelloTo(@DefaultValue("World") String who) {
+        return "Hello " + who + "!";
+    }
 
-### Plain text and JSON
+    public static void main(String[] args) throws Exception {
+        Act.start();
+    }
 
-| Test | Throughput |
-| ---- | ---------: |
-| plaintext | 671911.83  |
-| json | 167184.71 |
+}
+```
 
-### MySQL
+### Plain Text Test
+* [Plain test source](src/main/resources/conf/json_plaintext/routes.conf)
 
-| Test | Throughput |
-| ---- | ----------: |
-| db | 15726.85 |
-| multiple queies (20) | 1634.25 |
-| updates (20) | 112.40 |
-| fortunes | 13340.19 |
+### JSON Encoding Test
+* [JSON test source](src/main/java/com/techempower/act/controller/HelloWorldController.java)
 
-### Postgresql
+### Single Query Test
+* [Single query test source](src/main/java/com/techempower/act/controller/WorldController.java)
 
-| Test | Throughput |
-| ---- | ---------: |
-| db | 19178.11 |
-| multiple queies (20) | 2108/46 |
-| updates (20) | 110.91 |
-| fortunes | 17008.39 |
+### Multiple Queries Test
+* [Multiple queries test source](src/main/java/com/techempower/act/controller/WorldController.java)
 
+### Database Update Test
+* [Database update test source](src/main/java/com/techempower/act/controller/WorldController.java)
 
-### Mongodb
+### Fortunes Test
+* [Fortunes test source](src/main/java/com/techempower/act/controller/FortuneController.java)
 
-| Test | Throughput |
-| ---- | ---------: |
-| db | 19156.71 |
-| multiple queies (20) | 1821.24 |
-| updates (20) | 849.83 |
-| fortunes | 17603.13 |

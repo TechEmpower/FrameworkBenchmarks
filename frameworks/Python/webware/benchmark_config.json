@@ -2,7 +2,6 @@
   "framework": "webware",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json2",
       "plaintext_url": "/plaintext",
       "db_url": "/db",

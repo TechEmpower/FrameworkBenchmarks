@@ -5,7 +5,7 @@
 
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
-$pdo = new PDO('mysql:host=TFB-database;dbname=hello_world;charset=utf8', 'benchmarkdbuser', 'benchmarkdbpass', array(
+$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
     PDO::ATTR_PERSISTENT => true
 ));
 
@@ -18,25 +18,7 @@ $arr[0] = 'Additional fortune added at request time.';
 
 asort($arr);
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-<title>Fortunes</title>
-</head>
-<body>
-<table>
-<tr>
-<th>id</th>
-<th>message</th>
-</tr>
-<?php
-foreach ( $arr as $id => $fortune ) {
-?>
-<tr>
-<td><?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?></td>  
-<td><?php echo htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8'); ?></td>
-</tr>
-<?php } ?>
-</table>
-</body>
-</html>
+<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>
+<?php foreach ( $arr as $id => $fortune ) : ?>
+<tr><td><?php echo $id ?></td><td><?php echo htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8') ?></td></tr>
+<?php endforeach ?></table></body></html>

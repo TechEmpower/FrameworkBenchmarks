@@ -1,6 +1,7 @@
 #include "cutelyst-benchmarks.h"
 
 #include <Cutelyst/Plugins/Utils/Sql>
+#include <Cutelyst/Plugins/View/Grantlee/grantleeview.h>
 
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
@@ -8,6 +9,7 @@
 #include <QThread>
 #include <QDebug>
 #include <QMutexLocker>
+#include <QDir>
 
 #include "root.h"
 #include "jsontest.h"
@@ -36,6 +38,10 @@ bool cutelyst_benchmarks::init()
         qDebug() << "Manually send date";
         new Root(this);
     }
+
+    auto view = new GrantleeView(this);
+    view->setIncludePaths({ QString::fromLatin1(qgetenv("TROOT")), QDir::currentPath() });
+    view->preloadTemplates();
 
     new JsonTest(this);
     new SingleDatabaseQueryTest(this);

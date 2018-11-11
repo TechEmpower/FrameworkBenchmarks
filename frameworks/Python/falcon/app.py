@@ -3,17 +3,20 @@ import json
 
 import falcon
 
+from email.utils import formatdate
 
 # resource endpoints
 
 class JSONResource(object):
     def on_get(self, request, response):
+        response.set_header('Date', formatdate(timeval=None, localtime=False, usegmt=True))
         json_data = {'message': "Hello, world!"}
         response.body = json.dumps(json_data)
 
 
 class PlaintextResource(object):
     def on_get(self, request, response):
+        response.set_header('Date', formatdate(timeval=None, localtime=False, usegmt=True))
         response.set_header('Content-Type', 'text/plain')
         response.body = b'Hello, world!'
 

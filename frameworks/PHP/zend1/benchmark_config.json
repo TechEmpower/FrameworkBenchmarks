@@ -2,7 +2,6 @@
   "framework": "zend1",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -16,14 +15,14 @@
       "framework": "ZendFramework1",
       "language": "PHP",
       "flavor": "PHP7",
-      "orm": "Full",
+      "orm": "Raw",
       "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "ZendFramework1",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     }
   }]
 }

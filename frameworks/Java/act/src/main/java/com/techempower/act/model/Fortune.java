@@ -26,8 +26,10 @@ import com.techempower.act.AppEntry;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity(name = "fortune")
+@Table(name = "fortune")
 @org.mongodb.morphia.annotations.Entity(value = "fortune", noClassnameStored = true)
 @Env.RequireProfile(value = AppEntry.PROFILE_JSON_PLAINTEXT, except = true)
 public final class Fortune implements SimpleBean, Comparable<Fortune> {

@@ -21,6 +21,7 @@ class TeBkWorld {
 	#pragma @Column dbf="id"
 	int anotherId;
 public:
+	TeBkWorld();
 	virtual ~TeBkWorld();
 	int getId() const;
 	void setId(int id);

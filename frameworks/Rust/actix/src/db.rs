@@ -1,14 +1,19 @@
 //! Db executor actor
-use std::io;
-use rand::{self, Rng};
 use actix::prelude::*;
 use diesel;
 use diesel::prelude::*;
+use diesel::result::Error;
+use rand::{thread_rng, Rng, ThreadRng};
+use std::io;
 
 use models;
 
+pub struct DbExecutor {
+    conn: PgConnection,
+    rng: ThreadRng,
+}
 
-pub struct DbExecutor(PgConnection);
+unsafe impl Send for DbExecutor {}
 
 impl Actor for DbExecutor {
     type Context = SyncContext<Self>;
@@ -16,80 +21,127 @@ impl Actor for DbExecutor {
 
 impl DbExecutor {
     pub fn new(db_url: &str) -> DbExecutor {
-        DbExecutor(PgConnection::establish(db_url)
-                   .expect(&format!("Error connecting to {}", db_url)))
+        DbExecutor {
+            conn: PgConnection::establish(db_url)
+                .expect(&format!("Error connecting to {}", db_url)),
+            rng: thread_rng(),
+        }
     }
 }
 
 pub struct RandomWorld;
 
-impl ResponseType for RandomWorld {
-    type Item = models::World;
-    type Error = io::Error;
+impl Message for RandomWorld {
+    type Result = io::Result<models::World>;
 }
 
 impl Handler<RandomWorld> for DbExecutor {
-    fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Response<Self, RandomWorld>
-    {
-        use schema::World::dsl::*;
+    type Result = io::Result<models::World>;
 
-        let random_id = rand::thread_rng().gen_range(1, 10_000);
-        match World.filter(id.eq(random_id)).load::<models::World>(&self.0)
+    fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Self::Result {
+        use schema::world::dsl::*;
+
+        let random_id = self.rng.gen_range(1, 10_001);
+        match world
+            .filter(id.eq(random_id))
+            .load::<models::World>(&self.conn)
         {
-            Ok(mut items) =>
-                Self::reply(items.pop().unwrap()),
-            Err(_) =>
-                Self::reply_error(
-                    io::Error::new(io::ErrorKind::Other, "Database error")),
+            Ok(mut items) => Ok(items.pop().unwrap()),
+            Err(_) => Err(io::Error::new(io::ErrorKind::Other, "Database error")),
         }
     }
 }
 
-pub struct UpdateWorld(pub Vec<models::World>);
+pub struct RandomWorlds(pub u16);
 
-impl ResponseType for UpdateWorld {
-    type Item = ();
-    type Error = io::Error;
+impl Message for RandomWorlds {
+    type Result = io::Result<Vec<models::World>>;
+}
+
+impl Handler<RandomWorlds> for DbExecutor {
+    type Result = io::Result<Vec<models::World>>;
+
+    fn handle(&mut self, msg: RandomWorlds, _: &mut Self::Context) -> Self::Result {
+        use schema::world::dsl::*;
+
+        let mut worlds = Vec::with_capacity(msg.0 as usize);
+        for _ in 0..msg.0 {
+            let w_id = self.rng.gen_range(1, 10_001);
+            let w = match world.filter(id.eq(w_id)).load::<models::World>(&self.conn) {
+                Ok(mut items) => items.pop().unwrap(),
+                Err(_) => {
+                    return Err(io::Error::new(io::ErrorKind::Other, "Database error"))
+                }
+            };
+            worlds.push(w)
+        }
+        Ok(worlds)
+    }
+}
+
+pub struct UpdateWorld(pub usize);
+
+impl Message for UpdateWorld {
+    type Result = io::Result<Vec<models::World>>;
 }
 
 impl Handler<UpdateWorld> for DbExecutor {
-    fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Response<Self, UpdateWorld>
-    {
-        use schema::World::dsl::*;
+    type Result = io::Result<Vec<models::World>>;
 
-        for world in msg.0 {
-            let _ = diesel::update(World)
-                .filter(id.eq(world.id))
-                .set(randomnumber.eq(world.randomnumber))
-                .execute(&self.0);
+    fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
+        use schema::world::dsl::*;
+
+        let mut worlds = Vec::with_capacity(msg.0);
+        for _ in 0..msg.0 {
+            let w_id = self.rng.gen_range::<i32>(1, 10_001);
+            let mut w = match world.filter(id.eq(w_id)).load::<models::World>(&self.conn)
+            {
+                Ok(mut items) => items.pop().unwrap(),
+                Err(_) => {
+                    return Err(io::Error::new(io::ErrorKind::Other, "Database error"))
+                }
+            };
+            w.randomnumber = self.rng.gen_range(1, 10_001);
+            worlds.push(w);
         }
-        Self::empty()
+        worlds.sort_by_key(|w| w.id);
+
+        let _ = self.conn.transaction::<(), Error, _>(|| {
+            for w in &worlds {
+                let _ = diesel::update(world)
+                    .filter(id.eq(w.id))
+                    .set(randomnumber.eq(w.randomnumber))
+                    .execute(&self.conn);
+            }
+            Ok(())
+        });
+
+        Ok(worlds)
     }
 }
 
 pub struct TellFortune;
 
-impl ResponseType for TellFortune {
-    type Item = Vec<models::Fortune>;
-    type Error = io::Error;
+impl Message for TellFortune {
+    type Result = io::Result<Vec<models::Fortune>>;
 }
 
 impl Handler<TellFortune> for DbExecutor {
-    fn handle(&mut self, _: TellFortune, _: &mut Self::Context) -> Response<Self, TellFortune>
-    {
-        use schema::Fortune::dsl::*;
+    type Result = io::Result<Vec<models::Fortune>>;
 
-        match Fortune.load::<models::Fortune>(&self.0) {
+    fn handle(&mut self, _: TellFortune, _: &mut Self::Context) -> Self::Result {
+        use schema::fortune::dsl::*;
+
+        match fortune.load::<models::Fortune>(&self.conn) {
             Ok(mut items) => {
-                items.push(models::Fortune{
+                items.push(models::Fortune {
                     id: 0,
-                    message: "Additional fortune added at request time.".to_string()});
+                    message: "Additional fortune added at request time.".to_string(),
+                });
                 items.sort_by(|it, next| it.message.cmp(&next.message));
-                Self::reply(items)
+                Ok(items)
             }
-            Err(_) =>
-                Self::reply_error(
-                    io::Error::new(io::ErrorKind::Other, "Databse error"))
+            Err(e) => Err(io::Error::new(io::ErrorKind::Other, e)),
         }
     }
 }

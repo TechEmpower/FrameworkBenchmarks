@@ -11,10 +11,9 @@
         "fortune_url": "/fortunes",
 
         "port": 9090,
-        "setup_file": "setup-netty",
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "MySQL",
+        "database": "Postgres",
         "framework": "ktor",
         "language": "Kotlin",
         "orm": "Raw",
@@ -35,10 +34,9 @@
         "fortune_url": "/fortunes",
 
         "port": 9090,
-        "setup_file": "setup-jetty",
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "MySQL",
+        "database": "Postgres",
         "framework": "ktor",
         "language": "Kotlin",
         "orm": "Raw",
@@ -49,6 +47,29 @@
         "display_name": "ktor-jetty",
         "notes": "http://ktor.io/",
         "versus": "servlet"
+      },
+      "cio": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/db?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+
+        "port": 9090,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "ktor",
+        "language": "Kotlin",
+        "orm": "Raw",
+        "platform": "ktor",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ktor-cio",
+        "notes": "http://ktor.io/",
+        "versus": ""
       }
     }
   ]

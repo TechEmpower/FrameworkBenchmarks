@@ -16,6 +16,7 @@
 
             <excludes>
                 <exclude>*:ktor-server-netty</exclude>
+                <exclude>*:ktor-server-cio</exclude>
             </excludes>
         </dependencySet>
     </dependencySets>

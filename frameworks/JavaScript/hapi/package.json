@@ -6,11 +6,11 @@
     "async": "2.1.5",
     "bluebird": "3.4.7",
     "handlebars": "4.0.6",
-    "hapi": "16.1.0",
-    "vision":"4.1.0",
-    "mongoose": "4.12.4",
+    "hapi": "16.1.1",
+    "vision": "4.1.0",
+    "mongoose": "5.0.6",
     "mysql": "2.13.0",
-    "pg": "6.1.2",
+    "pg": "6.1.6",
     "pg-hstore": "2.3.2",
     "sequelize": "3.30.2"
   }
