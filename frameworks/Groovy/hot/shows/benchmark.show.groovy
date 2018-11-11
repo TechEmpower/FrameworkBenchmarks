@@ -1,5 +1,7 @@
 import org.apache.commons.lang3.StringEscapeUtils
 
+show.scale()
+
 def mongo = show.dbs.mongo
 def pgsqldb = show.dbs.pgsql
 def mysql = show.dbs.mysql
@@ -9,9 +11,6 @@ def generator = new Random ()
 def generate = {
 	Math.max(generator.nextInt(10000),1)
 }
-
-def templateHeader = """<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"""
-def templateTail = """</table></body></html>"""
 
 def validateNumQueries = {
 	Integer numQueries
@@ -23,7 +22,7 @@ def validateNumQueries = {
 	} catch (e) {
 		numQueries = 1
 	}
-	numQueries = Math.max(1,Math.min(500,numQueries))
+	Math.max(1,Math.min(500,numQueries))
 }
 
 def query = { db, idLabel = '_id' ->
@@ -64,8 +63,6 @@ $content
 """
 }
 
-//show.scale()
-
 def fortune = { db, idLabel = '_id', parseId = { it } ->
     db.fortune.find().promise().then { fortunes ->
 
@@ -79,8 +76,6 @@ def fortune = { db, idLabel = '_id', parseId = { it } ->
         new hot.Response(200,['Content-Type':'text/html'], response)
     }
 }
-
-
 
 rest.get('/fortunes/mongodb').then {
     fortune mongo, '_id', { Float.parseFloat(it) as Integer }
@@ -117,3 +112,11 @@ def update = { req, db, idLabel = '_id' ->
 rest.get('/updates/mongodb').then { req -> update req, mongo }
 rest.get('/updates/pgsql').then { req -> update req, pgsqldb, 'id' }
 rest.get('/updates/mysql').then { req -> update req, mysql, 'id' }
+
+rest.get("/json").then {
+    [message:'Hello, World!']
+}
+
+rest.get('/plaintext').then {
+    new hot.Response(200,['Content-Type':'text/plain'],'Hello, World!')
+}
