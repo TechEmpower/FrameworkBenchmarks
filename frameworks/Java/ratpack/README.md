@@ -6,7 +6,9 @@ Ratpack's [hikari module](https://github.com/ratpack/ratpack/tree/master/ratpack
 
 Ratpack's [handlebars module](https://github.com/ratpack/ratpack/tree/master/ratpack-handlebars) is used to render the fortune template.
 
-All accesses to the database are done through plain JDBC using an unbounded thread pool to prevent blocking the main event loop.
+There are two repository implementations.
+* [JdbcRepository](src/main/java/models/JdbcRepository.java) is using JDBC and an unbounded thread pool to prevent blocking the main event loop.
+* [PgClientRepository](src/main/java/models/PgClientRepository.java) is using an asynchronous driver to query the database.
 
 ### Plaintext Test
 
@@ -36,6 +38,7 @@ All accesses to the database are done through plain JDBC using an unbounded thre
 
 * [Java OpenJDK 1.8](http://openjdk.java.net/)
 * [Ratpack 1.5.4](http://ratpack.io/)
+* [reactive-pg-client 0.10.5](https://github.com/reactiverse/reactive-pg-client)
 
 ## Test URLs
 

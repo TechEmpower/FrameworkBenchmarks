@@ -5,6 +5,6 @@ gem 'unicorn', '5.3.0'
 gem 'puma', '~> 3.9.1'
 gem 'activerecord', '5.1.5', :require => 'active_record'
 gem 'activerecord-import', "~> 0.18.1"
-gem 'grape', '1.0.2'
+gem 'grape', '1.1.0'
 gem 'rack', '1.6.5'
 gem 'json', '2.1.0'

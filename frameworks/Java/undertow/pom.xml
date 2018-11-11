@@ -15,10 +15,10 @@
     <maven.compiler.target>10</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <hikaricp.version>3.2.0</hikaricp.version>
-    <jackson.version>2.9.6</jackson.version>
+    <jackson.version>2.9.7</jackson.version>
     <maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
     <mustache.version>0.9.5</mustache.version>
-    <postgresql.version>42.2.4</postgresql.version>
+    <postgresql.version>42.2.5</postgresql.version>
     <undertow.version>2.0.13.Final</undertow.version>
   </properties>
 

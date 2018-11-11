@@ -8,11 +8,13 @@ import com.wizzardo.http.framework.template.Renderer;
 import com.wizzardo.http.request.Header;
 import com.wizzardo.http.response.Status;
 import com.wizzardo.tools.json.JsonTools;
+import io.reactiverse.pgclient.PgIterator;
+import io.reactiverse.pgclient.PgPool;
+import io.reactiverse.pgclient.Tuple;
 
-import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,63 +22,54 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DBController extends Controller {
 
     DBService dbService;
-    static ThreadLocal<ByteBufferProvider> byteBufferProviderThreadLocal = ThreadLocal.<ByteBufferProvider>withInitial(() -> {
-        ByteBufferWrapper wrapper = new ByteBufferWrapper(64 * 1024);
-        return () -> wrapper;
-    });
 
-    static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-    public Renderer world() throws SQLException {
-        World world;
-        try (Connection connection = dbService.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT id,randomNumber FROM World WHERE id = ?")
-        ) {
-            statement.setInt(1, getRandomNumber());
-            try (ResultSet resultSet = statement.executeQuery()) {
-                resultSet.next();
-                int id = resultSet.getInt(1);
-                int randomNumber = resultSet.getInt(2);
-                world = new World(id, randomNumber);
+    public void world() {
+        response.async();
+        dbService.getClient().preparedQuery("SELECT * FROM World WHERE id=$1", Tuple.of(getRandomNumber()), res -> {
+            if (res.succeeded()) {
+                PgIterator resultSet = res.result().iterator();
+                if (!resultSet.hasNext()) {
+                    response.status(Status._404);
+                } else {
+                    Tuple row = resultSet.next();
+                    response.appendHeader(Header.KV_CONTENT_TYPE_APPLICATION_JSON);
+                    response.body(JsonTools.serializeToBytes(new World(row.getInteger(0), row.getInteger(1))));
+                }
+            } else {
+                res.cause().printStackTrace();
+                response.status(Status._500).body(res.cause().getMessage());
             }
-        }
-
-        return renderJson(world);
+            commitAsyncResponse();
+        });
     }
 
     public void queries() {
         int queries = Math.min(Math.max(params().getInt("queries", 1), 1), 500);
-        response.async();
+        World[] worlds = new World[queries];
+
         AtomicInteger counter = new AtomicInteger(0);
         AtomicBoolean failed = new AtomicBoolean(false);
+        PgPool pool = dbService.getClient();
 
-        World[] worlds = new World[queries];
+        response.async();
         for (int i = 0; i < queries; i++) {
             int index = i;
-
-            executorService.submit(() -> {
-                try (Connection connection = dbService.getConnection();
-                     PreparedStatement statement = connection.prepareStatement("SELECT id,randomNumber FROM World WHERE id = ?")
-                ) {
-                    statement.setInt(1, getRandomNumber());
-                    try (ResultSet resultSet = statement.executeQuery()) {
-                        resultSet.next();
-                        int id = resultSet.getInt(1);
-                        int randomNumber = resultSet.getInt(2);
-                        worlds[index] = new World(id, randomNumber);
-                    }
-                } catch (SQLException e) {
+            pool.preparedQuery("SELECT * FROM World WHERE id=$1", Tuple.of(getRandomNumber()), res -> {
+                if (res.succeeded()) {
+                    PgIterator resultSet = res.result().iterator();
+                    Tuple row = resultSet.next();
+                    worlds[index] = new World(row.getInteger(0), row.getInteger(1));
+                } else {
+                    res.cause().printStackTrace();
                     if (failed.compareAndSet(false, true)) {
-                        response.status(Status._500).body(e.getMessage());
+                        response.status(Status._500).body(res.cause().getMessage());
                         commitAsyncResponse();
                     }
-                    return;
                 }
 
                 if (counter.incrementAndGet() == queries && !failed.get()) {
                     response.appendHeader(Header.KV_CONTENT_TYPE_APPLICATION_JSON);
                     response.body(JsonTools.serializeToBytes(worlds));
-
                     commitAsyncResponse();
                 }
             });
@@ -85,64 +78,53 @@ public class DBController extends Controller {
 
     public void updates() {
         int queries = Math.min(Math.max(params().getInt("queries", 1), 1), 500);
-        response.async();
+        World[] worlds = new World[queries];
+
         AtomicInteger counter = new AtomicInteger(0);
         AtomicBoolean failed = new AtomicBoolean(false);
+        PgPool pool = dbService.getClient();
 
-        World[] worlds = new World[queries];
+        response.async();
         for (int i = 0; i < queries; i++) {
             int index = i;
-            executorService.submit(() -> {
-                try (Connection connection = dbService.getConnection()) {
-                    try (PreparedStatement statement = connection.prepareStatement("SELECT id,randomNumber FROM World WHERE id = ?")) {
-                        statement.setInt(1, getRandomNumber());
-                        try (ResultSet resultSet = statement.executeQuery()) {
-                            resultSet.next();
-                            int id = resultSet.getInt(1);
-                            int randomNumber = resultSet.getInt(2);
-                            worlds[index] = new World(id, randomNumber);
-                        }
-                    }
-                } catch (Exception e) {
+            pool.preparedQuery("SELECT * FROM World WHERE id=$1", Tuple.of(getRandomNumber()), res -> {
+                if (res.succeeded()) {
+                    PgIterator resultSet = res.result().iterator();
+                    Tuple row = resultSet.next();
+                    worlds[index] = new World(row.getInteger(0), getRandomNumber());
+                } else {
+                    res.cause().printStackTrace();
                     if (failed.compareAndSet(false, true)) {
-                        response.status(Status._500).body(e.getMessage());
+                        response.status(Status._500).body(res.cause().getMessage());
                         commitAsyncResponse();
                     }
                 }
 
-
                 if (counter.incrementAndGet() == queries && !failed.get()) {
-                    executorService.submit(() -> {
-                        try (Connection connection = dbService.getConnection()) {
-                            try (PreparedStatement statement = connection.prepareStatement("UPDATE World SET randomNumber = ? WHERE id = ?")) {
-                                Arrays.sort(worlds, (o1, o2) -> Integer.compare(o2.id, o1.id));
-                                for (int j = queries - 1; j >= 0; j--) {
-                                    World world = worlds[j];
-                                    world.randomNumber = getRandomNumber();
-                                    statement.setInt(1, world.randomNumber);
-                                    statement.setInt(2, world.id);
-                                    if (j > 0)
-                                        statement.addBatch();
-                                    else
-                                        statement.executeBatch();
-                                }
-                            }
+                    Arrays.sort(worlds);
+                    List<Tuple> batch = new ArrayList<>(queries);
+                    for (World world : worlds) {
+                        batch.add(Tuple.of(world.randomNumber, world.id));
+                    }
 
+                    pool.preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", batch, ar -> {
+                        if (ar.failed()) {
+                            response.status(Status._500).body(res.cause().getMessage());
+                        } else {
                             response.appendHeader(Header.KV_CONTENT_TYPE_APPLICATION_JSON);
                             response.body(JsonTools.serializeToBytes(worlds));
-
-                            commitAsyncResponse();
-                        } catch (Exception e) {
-                            if (failed.compareAndSet(false, true)) {
-                                response.status(Status._500).body(e.getMessage());
-                                commitAsyncResponse();
-                            }
                         }
+                        commitAsyncResponse();
                     });
                 }
             });
         }
     }
+
+    static ThreadLocal<ByteBufferProvider> byteBufferProviderThreadLocal = ThreadLocal.<ByteBufferProvider>withInitial(() -> {
+        ByteBufferWrapper wrapper = new ByteBufferWrapper(64 * 1024);
+        return () -> wrapper;
+    });
 
     protected void commitAsyncResponse() {
         ByteBufferProvider bufferProvider = byteBufferProviderThreadLocal.get();
@@ -156,13 +138,18 @@ public class DBController extends Controller {
         return 1 + ThreadLocalRandom.current().nextInt(10000);
     }
 
-    public static final class World {
+    public static final class World implements Comparable<World> {
         public int id;
         public int randomNumber;
 
         public World(int id, int randomNumber) {
             this.id = id;
             this.randomNumber = randomNumber;
+        }
+
+        @Override
+        public int compareTo(World o) {
+            return Integer.compare(id, o.id);
         }
     }
 }

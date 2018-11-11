@@ -1,4 +1,4 @@
-lazy val finatraVersion = "18.8.0"
+lazy val finatraVersion = "18.10.0"
 
 name := "techempower-benchmarks-finatra"
 organization := "com.twitter"
@@ -20,11 +20,12 @@ assemblyMergeStrategy in assembly := {
 libraryDependencies ++= Seq(
   "com.twitter" %% "finatra-http" % finatraVersion,
   "org.slf4j" % "slf4j-nop" % "1.7.25",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.4",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.7",
   "javax.activation" % "activation" % "1.1.1"
 )
 
 excludeDependencies ++= Seq(
   // commons-logging is replaced by jcl-over-slf4j
+  ExclusionRule("org.slf4j", "slf4j-simple"),
   ExclusionRule("commons-logging", "commons-logging")
 )

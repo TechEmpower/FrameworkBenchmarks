@@ -124,6 +124,12 @@ class FrameworkTest:
                     log("Verifying test %s for %s caused an exception: %s" %
                         (test_type, self.name, e),
                         color=Fore.RED)
+                except Timeout as e:
+                    results = [('fail', "Connection to server timed out",
+                                base_url)]
+                    log("Verifying test %s for %s caused an exception: %s" %
+                        (test_type, self.name, e),
+                        color=Fore.RED)
                 except Exception as e:
                     results = [('fail', """Caused Exception in TFB
             This almost certainly means your return value is incorrect,
