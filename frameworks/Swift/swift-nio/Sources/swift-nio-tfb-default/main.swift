@@ -90,10 +90,10 @@ private final class HTTPHandler: ChannelInboundHandler {
 
     private func responseHead(contentType: String, contentLength: String) -> HTTPResponseHead {
         var headers = HTTPHeaders()
-        headers.replaceOrAdd(name: "content-type", value: contentType)
-        headers.replaceOrAdd(name: "content-length", value: contentLength)
-        headers.replaceOrAdd(name: "server", value: Constants.serverName)
-        headers.replaceOrAdd(name: "date", value: dateFormatter.getDate())
+        headers.add(name: "content-type", value: contentType)
+        headers.add(name: "content-length", value: contentLength)
+        headers.add(name: "server", value: Constants.serverName)
+        headers.add(name: "date", value: dateFormatter.getDate())
 
         return HTTPResponseHead(version: Constants.httpVersion,
                                 status: .ok,
