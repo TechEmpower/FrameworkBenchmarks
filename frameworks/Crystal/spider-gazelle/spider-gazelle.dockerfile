@@ -2,7 +2,6 @@ FROM crystallang/crystal:0.27.0
 WORKDIR /usr/src/app
 
 COPY shard.yml ./
-COPY spec spec
 COPY src src
 
 # Build App
