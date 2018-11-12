@@ -5,7 +5,7 @@ WORKDIR /src
 # Build App
 RUN shards build --production
 
-ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world
+ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?initial_pool_size=8&max_pool_size=8&max_idle_pool_size=8
 ENV SG_ENV production
 
 # Run the app binding on port 8080
