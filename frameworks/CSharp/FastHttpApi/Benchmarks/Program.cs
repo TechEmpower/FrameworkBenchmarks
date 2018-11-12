@@ -4,18 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading;
-
-
 namespace Benchmarks
 {
-
     [BeetleX.FastHttpApi.Controller]
     class Program
     {
-        private static string mDate;
         public static void Main(string[] args)
         {
-
             var builder = new HostBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
@@ -29,6 +24,7 @@ namespace Benchmarks
             context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
             return new TextResult("Hello, World!");
         }
+
         public object json(IHttpContext context)
         {
             context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
@@ -39,8 +35,6 @@ namespace Benchmarks
         {
             public string message { get; set; }
         }
-
-
     }
 
     public class BeetleXHttpServer : IHostedService
