@@ -1,4 +1,4 @@
-FROM maven:3.5.3-jdk-10-slim as maven
+FROM maven:3.5.4-jdk-10-slim as maven
 
 WORKDIR /greenlightning    
 COPY pom.xml pom.xml
@@ -8,4 +8,4 @@ RUN mvn clean install -q
 FROM openjdk:10-jre-slim
 WORKDIR /greenlightning
 COPY --from=maven /greenlightning/target/greenlightning-test.jar app.jar
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-jar", "app.jar"]
+CMD ["java", "-server", "-Xms6g", "-Xmx30g", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-jar", "app.jar"]
