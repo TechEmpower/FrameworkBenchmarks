@@ -15,7 +15,7 @@ namespace Benchmarks
         private static string mDate;
         public static void Main(string[] args)
         {
-            mDate = DateTime.Now.ToUniversalTime().ToString("r");
+
             var builder = new HostBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
@@ -26,12 +26,12 @@ namespace Benchmarks
 
         public object plaintext(IHttpContext context)
         {
-            context.Response.Header[HeaderTypeFactory.DATE] = mDate;
+            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
             return new TextResult("Hello, World!");
         }
         public object json(IHttpContext context)
         {
-            context.Response.Header[HeaderTypeFactory.DATE] = mDate;
+            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
             return new JsonResult(new JsonMessage { message = "Hello, World!" });
         }
 
