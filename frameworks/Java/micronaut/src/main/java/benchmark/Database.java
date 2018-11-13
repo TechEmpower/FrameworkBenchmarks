@@ -37,14 +37,12 @@ public class Database {
     public Single<World> db() {
         return pgPool.rxGetConnection()
                 .doAfterSuccess(PgConnection::close)
-                .flatMap((connection) -> {
-                    return findRandomWorld(connection.rxPrepare(SELECT_WORLD), null);
-                });
+                .flatMap((connection) -> findRandomWorld(connection.rxPrepare(SELECT_WORLD), null));
     }
 
     @Get("/queries")
-    public Flowable<World> queries(@QueryValue String queries) {
-        return findRandomWorlds(parseQueryCount(queries));
+    public Single<List<World>> queries(@QueryValue String queries) {
+        return findRandomWorlds(parseQueryCount(queries)).toList();
     }
 
     @Get(value = "/fortunes", produces = "text/html;charset=utf-8")
@@ -74,9 +72,7 @@ public class Database {
         return pgPool.rxGetConnection()
                 .toFlowable()
                 .doAfterNext(PgConnection::close)
-                .flatMap((connection) -> {
-                    return findRandomWorlds(connection.rxPrepare(SELECT_WORLD), count);
-                });
+                .flatMap((connection) -> findRandomWorlds(connection.rxPrepare(SELECT_WORLD), count));
     }
 
     private Flowable<World> findRandomWorlds(Single<PgPreparedQuery> preparedQuery, int count) {
@@ -87,41 +83,35 @@ public class Database {
     private Single<List<World>> updateRandomWorlds(int count) {
         return pgPool.rxGetConnection()
                 .doAfterSuccess(PgConnection::close)
-                .flatMap(connection -> {
-                        return findRandomWorlds(connection.rxPrepare(SELECT_WORLD), count)
-                                .doOnNext(world -> world.setRandomNumber(nextNumber()))
-                                .toList(count)
-                                .flatMap(worlds -> {
-                                    int worldCount = worlds.size();
-                                    List<Tuple> tuples = new ArrayList<>(worldCount);
-                                    for (int i = 0; i < worldCount; i++) {
-                                        World world = worlds.get(i);
-                                        tuples.add(Tuple.of(world.getRandomNumber(), world.getId()));
-                                    }
-                                    return connection.rxPreparedBatch(UPDATE_WORLD, tuples)
-                                            .map(pgRowSet -> worlds);
-                                });
-
-                });
+                .flatMap(connection -> findRandomWorlds(connection.rxPrepare(SELECT_WORLD), count)
+                        .doOnNext(world -> world.setRandomNumber(nextNumber()))
+                        .toList(count)
+                        .flatMap(worlds -> {
+                            int worldCount = worlds.size();
+                            List<Tuple> tuples = new ArrayList<>(worldCount);
+                            for (World world : worlds) {
+                                tuples.add(Tuple.of(world.getRandomNumber(), world.getId()));
+                            }
+                            return connection.rxPreparedBatch(UPDATE_WORLD, tuples)
+                                    .map(pgRowSet -> worlds);
+                        }));
     }
 
     private List<Fortune> findFortunes() {
         return pgPool.rxGetConnection()
                 .doAfterSuccess(PgConnection::close)
-                .flatMap((connection) -> {
-                    return connection.rxPreparedQuery(SELECT_FORTUNE).map((result) -> {
-                        PgIterator iterator = result.iterator();
-                        List<Fortune> fortunes = new ArrayList<>();
-                        while (iterator.hasNext()) {
-                            Row row = iterator.next();
-                            fortunes.add(new Fortune(row.getInteger("id"), row.getString("message")));
-                        }
-                        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-                        fortunes.sort(Comparator.comparing(Fortune::getMessage));
+                .flatMap((connection) -> connection.rxPreparedQuery(SELECT_FORTUNE).map((result) -> {
+                    PgIterator iterator = result.iterator();
+                    List<Fortune> fortunes = new ArrayList<>();
+                    while (iterator.hasNext()) {
+                        Row row = iterator.next();
+                        fortunes.add(new Fortune(row.getInteger("id"), row.getString("message")));
+                    }
+                    fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+                    fortunes.sort(Comparator.comparing(Fortune::getMessage));
 
-                        return fortunes;
-                    });
-                }).blockingGet();
+                    return fortunes;
+                })).blockingGet();
     }
 
     private int parseQueryCount(String textValue) {
