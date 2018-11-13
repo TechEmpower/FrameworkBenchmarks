@@ -102,3 +102,7 @@ frameworks/CSharp/carter/
 frameworks/CSharp/evhttp-sharp/
 frameworks/CSharp/FastHttpApi/.vs/
 frameworks/CSharp/FastHttpApi/PlatformBenchmarks/obj/
+frameworks/CSharp/beetlex/Benchmarks/Properties/
+frameworks/CSharp/beetlex/Benchmarks/obj/
+frameworks/CSharp/beetlex/Benchmarks/.vs/
+frameworks/CSharp/beetlex/.vs/
