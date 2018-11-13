@@ -32,6 +32,7 @@ import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import lombok.Data;
 import net.officefloor.frame.api.executive.Executive;
 import net.officefloor.frame.api.manage.OfficeFloor;
+import net.officefloor.frame.api.manage.ProcessManager;
 import net.officefloor.frame.api.managedobject.ProcessAwareContext;
 import net.officefloor.frame.api.managedobject.ProcessSafeOperation;
 import net.officefloor.frame.util.ExecutiveSourceStandAlone;
@@ -163,8 +164,8 @@ public class RawOfficeFloorMain {
 		 */
 		public RawHttpServicerFactory(HttpServerLocation serverLocation,
 				StreamBufferPool<ByteBuffer> serviceBufferPool) {
-			super(serverLocation, false, new HttpRequestParserMetaData(100, 1000, 1000000), serviceBufferPool, 1000,
-					null, null, true);
+			super(serverLocation, false, new HttpRequestParserMetaData(100, 1000, 1000000), serviceBufferPool, null,
+					null, true);
 			this.objectMapper.registerModule(new AfterburnerModule());
 		}
 
@@ -187,7 +188,7 @@ public class RawOfficeFloorMain {
 		 */
 
 		@Override
-		protected void service(ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection)
+		protected ProcessManager service(ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection)
 				throws IOException {
 
 			// Configure process awareness
@@ -224,6 +225,9 @@ public class RawOfficeFloorMain {
 				this.send(connection);
 				break;
 			}
+
+			// No process management
+			return null;
 		}
 	}
 

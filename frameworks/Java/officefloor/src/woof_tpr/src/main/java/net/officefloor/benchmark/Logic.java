@@ -46,7 +46,7 @@ public class Logic {
 			try (PreparedStatement statement = connection.prepareStatement(
 					"SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = ?", ResultSet.TYPE_FORWARD_ONLY,
 					ResultSet.CONCUR_READ_ONLY)) {
-				statement.setInt(1, ThreadLocalRandom.current().nextInt(1, 10000));
+				statement.setInt(1, ThreadLocalRandom.current().nextInt(1, 10001));
 				ResultSet resultSet = statement.executeQuery();
 				resultSet.next();
 				World world = new World(resultSet.getInt(1), resultSet.getInt(2));
@@ -67,7 +67,7 @@ public class Logic {
 					"SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = ?", ResultSet.TYPE_FORWARD_ONLY,
 					ResultSet.CONCUR_READ_ONLY)) {
 				for (int i = 0; i < worlds.length; i++) {
-					statement.setInt(1, random.nextInt(1, 10000));
+					statement.setInt(1, random.nextInt(1, 10001));
 					ResultSet resultSet = statement.executeQuery();
 					resultSet.next();
 					worlds[i] = new World(resultSet.getInt(1), resultSet.getInt(2));
@@ -88,10 +88,10 @@ public class Logic {
 			try (PreparedStatement statement = connection.prepareStatement("SELECT ID FROM WORLD WHERE ID = ?",
 					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
 				for (int i = 0; i < worlds.length; i++) {
-					statement.setInt(1, random.nextInt(1, 10000));
+					statement.setInt(1, random.nextInt(1, 10001));
 					ResultSet resultSet = statement.executeQuery();
 					resultSet.next();
-					worlds[i] = new World(resultSet.getInt(1), random.nextInt(1, 10000));
+					worlds[i] = new World(resultSet.getInt(1), random.nextInt(1, 10001));
 				}
 			}
 			Arrays.sort(worlds, (a, b) -> a.getId() - b.getId());
