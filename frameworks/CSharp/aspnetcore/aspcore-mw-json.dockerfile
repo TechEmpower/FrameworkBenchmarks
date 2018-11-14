@@ -9,4 +9,4 @@ ENV COMPlus_ReadyToRun 0
 WORKDIR /app
 COPY --from=build /app/out ./
 
-ENTRYPOINT ["dotnet", "Benchmarks.dll", "scenarios=plaintext"]
+ENTRYPOINT ["dotnet", "Benchmarks.dll", "scenarios=json"]
