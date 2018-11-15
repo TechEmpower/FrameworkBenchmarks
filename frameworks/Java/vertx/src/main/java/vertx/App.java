@@ -87,6 +87,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private HttpServer server;
 
   private PgClient client;
+  private PgPool pool;
 
   private CharSequence dateString;
 
@@ -118,8 +119,8 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     options.setUser(config.getString("username"));
     options.setPassword(config.getString("password"));
     options.setCachePreparedStatements(true);
-    options.setMaxSize(1);
-    client = PgClient.pool(vertx, options);
+    client = PgClient.pool(vertx, new PgPoolOptions(options).setMaxSize(1));
+    pool = PgClient.pool(vertx, new PgPoolOptions(options).setMaxSize(4));
   }
 
   @Override
@@ -255,32 +256,43 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     }
 
     private void handle() {
-      for (int i = 0; i < worlds.length; i++) {
-        int id = randomWorld();
-        int index = i;
-        client.preparedQuery(SELECT_WORLD, Tuple.of(id), ar -> {
-          if (!failed) {
-            if (ar.failed()) {
-              failed = true;
-              sendError(ar.cause());
-              return;
+
+      pool.getConnection(ar1 -> {
+        if (ar1.failed()) {
+          failed = true;
+          sendError(ar1.cause());
+          return;
+        }
+        PgConnection conn = ar1.result();
+        for (int i = 0; i < worlds.length; i++) {
+          int id = randomWorld();
+          int index = i;
+          conn.preparedQuery(SELECT_WORLD, Tuple.of(id), ar2 -> {
+            if (!failed) {
+              if (ar2.failed()) {
+                conn.close();
+                failed = true;
+                sendError(ar2.cause());
+                return;
+              }
+              worlds[index] = new World(ar2.result().iterator().next().getInteger(0), randomWorld());
+              if (++queryCount == worlds.length) {
+                handleUpdates(conn);
+              }
             }
-            worlds[index] = new World(ar.result().iterator().next().getInteger(0), randomWorld());
-            if (++queryCount == worlds.length) {
-              handleUpdates();
-            }
-          }
-        });
-      }
+          });
+        }
+      });
     }
 
-    void handleUpdates() {
+    void handleUpdates(PgConnection conn) {
       Arrays.sort(worlds);
       List<Tuple> batch = new ArrayList<>();
       for (World world : worlds) {
         batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
       }
-      client.preparedBatch(UPDATE_WORLD, batch, ar -> {
+      conn.preparedBatch(UPDATE_WORLD, batch, ar -> {
+        conn.close();
         if (ar.failed()) {
           sendError(ar.cause());
           return;
