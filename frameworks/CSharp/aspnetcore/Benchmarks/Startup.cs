@@ -150,6 +150,22 @@ namespace Benchmarks
                 app.UseSpanJson();
             }
 
+            // Fortunes endpoints
+            if (Scenarios.DbFortunesRaw)
+            {
+                app.UseFortunesRaw();
+            }
+
+            if (Scenarios.DbFortunesDapper)
+            {
+                app.UseFortunesDapper();
+            }
+
+            if (Scenarios.DbFortunesEf)
+            {
+                app.UseFortunesEf();
+            }
+
             // Single query endpoints
             if (Scenarios.DbSingleQueryRaw)
             {
@@ -196,22 +212,6 @@ namespace Benchmarks
             if (Scenarios.DbMultiUpdateEf)
             {
                 app.UseMultipleUpdatesEf();
-            }
-
-            // Fortunes endpoints
-            if (Scenarios.DbFortunesRaw)
-            {
-                app.UseFortunesRaw();
-            }
-
-            if (Scenarios.DbFortunesDapper)
-            {
-                app.UseFortunesDapper();
-            }
-
-            if (Scenarios.DbFortunesEf)
-            {
-                app.UseFortunesEf();
             }
 
             if (Scenarios.Any("Mvc"))

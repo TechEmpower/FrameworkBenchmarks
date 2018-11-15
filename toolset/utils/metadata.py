@@ -235,6 +235,7 @@ class Metadata:
         '''
         all_tests = self.gather_tests()
         all_tests_json = json.dumps(map(lambda test: {
+            "project_name": test.project_name,
             "name": test.name,
             "approach": test.approach,
             "classification": test.classification,
@@ -257,7 +258,7 @@ class Metadata:
             f.write(all_tests_json)
 
     @staticmethod
-    def validate_test(test_name, test_keys, framework_name, directory):
+    def validate_test(test_name, test_keys, project_name, directory):
         """
         Validate and normalizes benchmark config values for this test based on a schema
         """
@@ -348,11 +349,11 @@ class Metadata:
         def throw_incorrect_key(k, acceptable_values, descriptors):
             msg = (
                 "`%s` is a required key for test \"%s\" in framework \"%s\"\n"
-                % (k, test_name, framework_name))
+                % (k, test_name, project_name))
             if acceptable_values:
                 msg = (
                     "Invalid `%s` value specified for test \"%s\" in framework \"%s\"; suggestions:\n"
-                    % (k, test_name, framework_name))
+                    % (k, test_name, project_name))
                 helpinfo = ('\n').join([
                     "  `%s` -- %s" % (v, desc)
                     for (v, desc) in zip(acceptable_values, descriptors)
@@ -385,6 +386,8 @@ class Metadata:
             # if we're here, the key needs to be one of the "allowed" values
             elif acceptable_values and val not in acceptable_values:
                 throw_incorrect_key(key, acceptable_values, descriptors)
+
+        test_keys['project_name'] = project_name
 
         return test_keys
 
