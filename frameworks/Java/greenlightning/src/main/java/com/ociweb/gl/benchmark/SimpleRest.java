@@ -4,20 +4,16 @@ import com.ociweb.gl.api.GreenRuntime;
 import com.ociweb.gl.api.HTTPRequestReader;
 import com.ociweb.gl.api.HTTPResponseService;
 import com.ociweb.gl.api.RestMethodListener;
-import com.ociweb.gl.api.Writable;
 import com.ociweb.json.encode.JSONRenderer;
 import com.ociweb.pronghorn.network.config.HTTPContentTypeDefaults;
-import com.ociweb.pronghorn.pipe.ChannelWriter;
 
 public class SimpleRest implements RestMethodListener {
 
-	private static final int QUEUE_LENGTH = 1<<15;
-	private static final int MAX_MESSAGE_SIZE = 1<<9;
 
 	private final HTTPResponseService responseService;
 	
-	public SimpleRest(GreenRuntime runtime) {
-		responseService = runtime.newCommandChannel().newHTTPResponseService(QUEUE_LENGTH, MAX_MESSAGE_SIZE);		
+	public SimpleRest(GreenRuntime runtime, int maxResponseCount, int maxResponseSize) {
+		responseService = runtime.newCommandChannel().newHTTPResponseService(maxResponseCount, maxResponseSize);		
 	}
 	
 	public boolean jsonRestRequest(HTTPRequestReader request) {

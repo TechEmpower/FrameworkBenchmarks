@@ -5,7 +5,7 @@ COPY pom.xml pom.xml
 COPY src src
 RUN mvn clean install -q
 
-FROM openjdk:10-jre-slim
+FROM openjdk:10-jdk-slim
 WORKDIR /greenlightning
 COPY --from=maven /greenlightning/target/greenlightning-test.jar app.jar
-CMD ["java", "-server", "-Xms6g", "-Xmx30g", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-jar", "app.jar"]
+CMD ["java", "-server", "-Xms8g", "-Xmx16g", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-jar", "app.jar"]

@@ -32,11 +32,14 @@ public class FrameworkTest implements GreenApp {
     private int queueLengthOfPendingRequests;
     private int telemetryPort;//for monitoring
     private int minMemoryOfInputPipes;
-    private int maxResponseSize;
-	private	int maxResponseCount = 1<<8;
+    private int dbCallMaxResponseSize;
+	private	final int dbCallMaxResponseCount;
     private int pipelineBits;
 	
-    private final PgPoolOptions options;
+	private final int jsonMaxResponseCount;
+	private final int jsonMaxResponseSize;
+	
+    private PgPoolOptions options;
     
 	public static int connectionsPerTrack =   2;
 	public static int connectionPort =        5432;
@@ -53,9 +56,9 @@ public class FrameworkTest implements GreenApp {
     	//this server works best with  -XX:+UseNUMA    	
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    //default port for test 
-    		 10,      //default concurrency, 10 to support 280 channels on 14 core boxes
-    		 8*1024, //default max rest requests allowed to queue in wait
-    		 1<<21,   //default network buffer per input socket connection
+    		 5,       //default concurrency, 5 to support 140 channels on 14 core boxes
+    		 4*1024,  //default max rest requests allowed to queue in wait
+    		 1<<20,   //default network buffer per input socket connection
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
@@ -80,8 +83,13 @@ public class FrameworkTest implements GreenApp {
     	this.queueLengthOfPendingRequests = queueLengthOfPendingRequests;
     	this.minMemoryOfInputPipes = minMemoryOfInputPipes;
     	this.telemetryPort = telemetryPort;
-    	this.maxResponseSize = 20_000; //for 500 mult db call in JSON format
-    	this.pipelineBits = 19;
+    	this.pipelineBits = 17;//max concurrent in flight database requests 1<<pipelineBits
+
+    	this.dbCallMaxResponseCount = 1<<6;
+    	this.jsonMaxResponseCount = 1<<13;
+    	
+    	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
+    	this.jsonMaxResponseSize = 1<<9;
     	
     	if (!"127.0.0.1".equals(System.getProperty("host",null))) { 
     		    		
@@ -99,6 +107,7 @@ public class FrameworkTest implements GreenApp {
 	    	}    	
     	}
     	
+    	try {
 	    	options = new PgPoolOptions()
 	    			.setPort(connectionPort)
 	    			.setPipeliningLimit(1<<pipelineBits)
@@ -110,15 +119,16 @@ public class FrameworkTest implements GreenApp {
 	    			.setCachePreparedStatements(true)
 	    			.setMaxSize(connectionsPerTrack);	    	
 	    		
-    	try {
 	    	///early check to know if we have a database or not,
 	    	///this helps testing to know which tests should be run on different boxes.
 	    	PgClient.pool(options).getConnection(a->{
 	    		foundDB.set(a.succeeded());
-	    		a.result().close();
+	    		if (null!=a.result()) {
+	    			a.result().close();
+	    		}
 	    	});
     	} catch (Throwable t) {
-    		t.printStackTrace();
+    		//t.printStackTrace();
     		System.out.println("No database in use");
     	}
     	
@@ -135,7 +145,7 @@ public class FrameworkTest implements GreenApp {
     			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
     			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
-    			 .setMaxResponseSize(maxResponseSize) //big enough for large mult db response
+    			 .setMaxResponseSize(dbCallMaxResponseSize) //big enough for large mult db response
     	         .useInsecureServer(); //turn off TLS
 
 		framework.defineRoute()
@@ -183,30 +193,24 @@ public class FrameworkTest implements GreenApp {
 	
     }
 
+
 	public void parallelBehavior(GreenRuntime runtime) {
 
-		SimpleRest restTest = new SimpleRest(runtime);
-		
+
+		SimpleRest restTest = new SimpleRest(runtime, jsonMaxResponseCount, jsonMaxResponseSize);		
 		runtime.registerListener("Simple", restTest)
 		       .includeRoutes(Struct.PLAINTEXT_ROUTE, restTest::plainRestRequest)
 		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);
 		 
 
-		DBRest dbRestInstance = new DBRest(runtime, options, pipelineBits, maxResponseCount, maxResponseSize);
-		runtime.registerListener("DBRest", dbRestInstance)
+		DBRest dbRestInstance = new DBRest(runtime, options, pipelineBits, dbCallMaxResponseCount, dbCallMaxResponseSize);
+		runtime.registerListener("DBReadWrite", dbRestInstance)
 				.includeRoutes(Struct.DB_SINGLE_ROUTE, dbRestInstance::singleRestRequest)
 				.includeRoutes(Struct.DB_MULTI_ROUTE_TEXT, dbRestInstance::multiRestRequest)		
-		        .includeRoutes(Struct.DB_MULTI_ROUTE_INT, dbRestInstance::multiRestRequest);
-
-		
-		DBUpdate dbUpdateInstance = new DBUpdate(runtime, options, pipelineBits, maxResponseCount, maxResponseSize);
-		runtime.registerListener("DBUpdate", dbUpdateInstance)
-		        .includeRoutes(Struct.UPDATES_ROUTE_TEXT, dbUpdateInstance::updateRestRequest)
-		        .includeRoutes(Struct.UPDATES_ROUTE_INT,  dbUpdateInstance::updateRestRequest);
-		
-		FortuneRest fortuneInstance = new FortuneRest(runtime, options, pipelineBits, maxResponseCount, maxResponseSize);
-		runtime.registerListener("Fortune", fortuneInstance)
-		        .includeRoutes(Struct.FORTUNES_ROUTE, fortuneInstance::restRequest);	
+		        .includeRoutes(Struct.DB_MULTI_ROUTE_INT, dbRestInstance::multiRestRequest)
+				.includeRoutes(Struct.UPDATES_ROUTE_TEXT, dbRestInstance::updateRestRequest)
+				.includeRoutes(Struct.UPDATES_ROUTE_INT,  dbRestInstance::updateRestRequest)
+		        .includeRoutes(Struct.FORTUNES_ROUTE, dbRestInstance::restFortuneRequest);	
 		
 	}
 	 
