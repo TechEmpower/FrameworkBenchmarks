@@ -22,7 +22,6 @@
                 "database_os": "Linux",
                 "display_name": "Hexagon Jetty MongoDB",
                 "notes": "http://hexagonkt.com",
-                "setup_file": "setup_jetty_mongodb",
                 "versus": "servlet"
             },
             "jetty_postgresql": {
@@ -45,7 +44,6 @@
                 "database_os": "Linux",
                 "display_name": "Hexagon Jetty PostgreSQL",
                 "notes": "http://hexagonkt.com",
-                "setup_file": "setup_jetty_postgresql",
                 "versus": "servlet"
             }
         }
