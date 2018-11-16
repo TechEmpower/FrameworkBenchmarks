@@ -1,7 +1,7 @@
 require "raze"
 require "pg"
 
-BENCH_DB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world")
+BENCH_DB = DB.open(ENV["DATABASE_URL"])
 
 class CONTENT
   ID_MAX = 10_000
