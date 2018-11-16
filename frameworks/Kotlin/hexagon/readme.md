@@ -6,8 +6,8 @@ development platforms. The test utilizes Hexagon routes, serialization and datab
 
 ## Tests
 
-* [Hexagon Web](src/main/kotlin/com/hexagonkt/Benchmark.kt)
-* [Hexagon Storage](src/main/kotlin/com/hexagonkt/BenchmarkStorage.kt)
+* [Hexagon Web](/src/main/kotlin/Benchmark.kt)
+* [Hexagon Storage](/src/main/kotlin/BenchmarkStorage.kt)
 
 ## Infrastructure Software Versions
 
@@ -15,26 +15,33 @@ development platforms. The test utilizes Hexagon routes, serialization and datab
 
 ## Test URLs
 
-### Jetty & Undertow
+In URLs replace `${DB_ENGINE}` with one of:
+
+* mongodb
+* postgresql
+
+and `${TEMPLATE_ENGINE}` with: `pebble`
+
+### Jetty
 
 * JSON Encoding Test: http://localhost:9090/json
-* Data-Store/Database Mapping Test: http://localhost:9090/db?queries=5 
 * Plain Text Test: http://localhost:9090/plaintext 
-* Fortunes: http://localhost:9090/fortunes
-* Database updates: http://localhost:9090/update
-* Database queries: http://localhost:9090/query
+* Data-Store/Database Mapping Test: http://localhost:9090/${DB_ENGINE}/db?queries=5 
+* Fortunes: http://localhost:9090/${DB_ENGINE}/${TEMPLATE_ENGINE}/fortunes
+* Database updates: http://localhost:9090/${DB_ENGINE}/update
+* Database queries: http://localhost:9090/${DB_ENGINE}/query
 
 ### Resin
 
 * JSON Encoding Test: http://localhost:8080/json
-* Data-Store/Database Mapping Test: http://localhost:8080/db?queries=5 
 * Plain Text Test: http://localhost:8080/plaintext 
-* Fortunes: http://localhost:8080/fortunes
-* Database updates: http://localhost:8080/update
-* Database queries: http://localhost:8080/query
+* Data-Store/Database Mapping Test: http://localhost:8080/${DB_ENGINE}/db?queries=5 
+* Fortunes: http://localhost:8080/${DB_ENGINE}/${TEMPLATE_ENGINE}/fortunes
+* Database updates: http://localhost:8080/${DB_ENGINE}/update
+* Database queries: http://localhost:8080/${DB_ENGINE}/query
 
 ## Run inside vagrant
 
-    rm -rf ~/FrameworkBenchmarks/results
-    ~/FrameworkBenchmarks/toolset/run-tests.py --mode verify --test hexagon
-    ~/FrameworkBenchmarks/toolset/run-tests.py --mode verify --test hexagon-resin
+Follow instructions at: https://github.com/TechEmpower/FrameworkBenchmarks#quick-start-guide-vagrant
+
+And run: `rm -rf ~/FrameworkBenchmarks/results` to clear tests results.
