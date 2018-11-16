@@ -14,5 +14,6 @@
     <appender-ref ref="console" />
   </root>
 
-  <logger name="BENCHMARK_LOGGER" level="info" />
+  <logger name="com.hexagonkt" level="trace" />
+  <logger name="BENCHMARK_LOGGER" level="trace" />
 </configuration>
