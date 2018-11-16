@@ -57,7 +57,7 @@ public class FrameworkTest implements GreenApp {
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    //default port for test 
     		 5,       //default concurrency, 5 to support 140 channels on 14 core boxes
-    		 4*1024,  //default max rest requests allowed to queue in wait
+    		 2*1024,  //default max rest requests allowed to queue in wait
     		 1<<20,   //default network buffer per input socket connection
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
