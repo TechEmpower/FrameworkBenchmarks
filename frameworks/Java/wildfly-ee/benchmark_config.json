@@ -1,13 +1,13 @@
 {
-  "framework": "wildfly-ee7",
+  "framework": "wildfly-ee",
   "tests": [{
     "default" : {
-      "json_url": "/wildfly-ee7/rest/json",
-      "plaintext_url": "/wildfly-ee7/rest/plaintext",
-      "db_url": "/wildfly-ee7/rest/db",
-      "query_url": "/wildfly-ee7/rest/queries?queries=",
-      "fortune_url": "/wildfly-ee7/fortunes.xhtml",
-      "update_url": "/wildfly-ee7/rest/updates?queries=",
+      "json_url": "/wildfly-ee/rest/json",
+      "plaintext_url": "/wildfly-ee/rest/plaintext",
+      "db_url": "/wildfly-ee/rest/db",
+      "query_url": "/wildfly-ee/rest/queries?queries=",
+      "fortune_url": "/wildfly-ee/fortunes.xhtml",
+      "update_url": "/wildfly-ee/rest/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -20,7 +20,7 @@
       "webserver": "Wildfly",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "wildfly-ee7",
+      "display_name": "wildfly-ee",
       "notes": "",
       "versus": ""
     }   
