@@ -63,10 +63,10 @@ internal interface Store {
 }
 
 private class MongoDbStore(dbUrl: String) : Store {
-    private val database = mongoDatabase(dbUrl)
+    private val database by lazy { mongoDatabase(dbUrl) }
 
-    private val worldRepository = repository(worldName, World::class, World::_id)
-    private val fortuneRepository = repository(fortuneName, Fortune::class, Fortune::_id)
+    private val worldRepository by lazy { repository(worldName, World::class, World::_id) }
+    private val fortuneRepository by lazy { repository(fortuneName, Fortune::class, Fortune::_id) }
 
     // TODO Find out why it fails when creating index '_id' with background: true
     private fun <T : Any> repository(name: String, type: KClass<T>, key: KProperty1<T, Int>) =
@@ -96,15 +96,13 @@ private class SqlStore(jdbcUrl: String) : Store {
         private const val SELECT_ALL_FORTUNES = "select * from fortune"
     }
 
-    private val dataSource: HikariDataSource
-
-    init {
+    private val dataSource: HikariDataSource by lazy {
         val config = HikariConfig()
         config.jdbcUrl = jdbcUrl
         config.maximumPoolSize = defaultSetting("maximumPoolSize", 16)
         config.username = defaultSetting("databaseUsername", "benchmarkdbuser")
         config.password = defaultSetting("databasePassword", "benchmarkdbpass")
-        dataSource = HikariDataSource(config)
+        HikariDataSource(config)
     }
 
     override fun close() {

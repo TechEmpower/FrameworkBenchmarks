@@ -24,7 +24,7 @@
                 "notes": "http://hexagonkt.com",
                 "versus": "servlet"
             },
-            "jetty_postgresql": {
+            "jetty-postgresql": {
                 "json_url": "/json",
                 "db_url": "/postgresql/db",
                 "query_url": "/postgresql/query?queries=",
