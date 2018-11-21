@@ -10,6 +10,7 @@ import com.ociweb.pronghorn.network.config.HTTPContentTypeDefaults;
 public class SimpleRest implements RestMethodListener {
 
 
+	private final byte[] messageBytes = "message".getBytes();
 	private final HTTPResponseService responseService;
 	
 	public SimpleRest(GreenRuntime runtime, int maxResponseCount, int maxResponseSize) {
@@ -25,7 +26,7 @@ public class SimpleRest implements RestMethodListener {
 			//      be created once and held as a member.
 			JSONRenderer<HTTPRequestReader> renderJSON = new JSONRenderer<HTTPRequestReader>()
 					.startObject()
-					.string("message", (o,t) -> t.write(FrameworkTest.payload) )
+					.string(messageBytes, (o,t) -> t.write(FrameworkTest.payload) )
 					.endObject();
 					
 			return responseService.publishHTTPResponse(request, 
