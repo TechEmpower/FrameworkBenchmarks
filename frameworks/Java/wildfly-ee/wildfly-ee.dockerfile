@@ -1,6 +1,6 @@
-FROM maven:3.5.3-jdk-10-slim as maven
-ENV wfly=13.0.0.Final
-ENV JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Xms2g -Xmx2g -XX:+UseG1GC -XX:MaxGCPauseMillis=50"
+FROM maven:3.6.0-jdk-11-slim as maven
+ENV wfly=14.0.1.Final
+ENV JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Xms2g -Xmx2g -XX:+UnlockExperimentalVMOptions -XX:+UseZGC"
 WORKDIR /wildfly
 COPY src src
 COPY pom.xml pom.xml
