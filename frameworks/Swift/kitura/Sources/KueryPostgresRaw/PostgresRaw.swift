@@ -83,7 +83,7 @@ public func getFortunes(callback: @escaping ([Fortune]?, AppError?) -> Void) -> 
 ///                       optional RandomRow (on success) or AppError on
 ///                       failure.
 ///
-public func getRandomRow(callback: @escaping (RandomRow?, AppError?) -> Void) -> Void {
+public func getRandomRow_Raw(callback: @escaping (RandomRow?, AppError?) -> Void) -> Void {
     // Get a dedicated connection object for this transaction from the pool
     guard let dbConn = dbConnPool.getConnection() else {
         return callback(nil, AppError.OtherError("Timed out waiting for a DB connection from the pool"))
@@ -121,7 +121,7 @@ public func getRandomRow(callback: @escaping (RandomRow?, AppError?) -> Void) ->
 ///                       has completed, passing an optional AppError if the
 ///                       update failed.
 ///
-public func updateRow(id: Int, callback: @escaping (AppError?) -> Void) -> Void {
+public func updateRow_Raw(id: Int, callback: @escaping (AppError?) -> Void) -> Void {
     // Get a dedicated connection object for this transaction from the pool
     guard let dbConn = dbConnPool.getConnection() else {
         return callback(AppError.OtherError("Timed out waiting for a DB connection from the pool"))
@@ -140,5 +140,68 @@ public func updateRow(id: Int, callback: @escaping (AppError?) -> Void) -> Void 
     }
 }
 
+/// Get `count` random rows from the database, and pass the resulting array
+/// to a completion handler (or an AppError, in the event that a row could
+/// not be retrieved).
+///
+/// - Parameter count: The number of rows to retrieve
+/// - Parameter result: The intermediate result array being built
+/// - Parameter completion: The closure to invoke with the result array, or error
+///
+public func getRandomRows_Raw(count: Int, result: [RandomRow] = [], completion: @escaping ([RandomRow]?, AppError?) -> Void) {
+    if count > 0 {
+        // Select random row from database range
+        getRandomRow_Raw { (resultRow, err) in
+            if let resultRow = resultRow {
+                var result = result
+                result.append(resultRow)
+                // Call recursively to get remaining rows
+                getRandomRows_Raw(count: count-1, result: result, completion: completion)
+            } else {
+                if let err = err {
+                    completion(nil, err)
+                } else {
+                    fatalError("Unexpected: result and error both nil")
+                }
+            }
+        }
+    } else {
+        completion(result, nil)
+    }
+}
 
-
+/// Update and retrieve `count` random rows from the database, and pass the
+/// resulting array to a completion handler (or an AppError, in the event
+/// that a row could not be retrieved or updated).
+///
+/// - Parameter count: The number of rows to retrieve
+/// - Parameter result: The intermediate result array being built
+/// - Parameter completion: The closure to invoke with the result array, or error
+///
+public func updateRandomRows_Raw(count: Int, result: [RandomRow] = [], completion: @escaping ([RandomRow]?, AppError?) -> Void) {
+    if count > 0 {
+        // Select random row from database range
+        getRandomRow_Raw { (resultRow, err) in
+            if let resultRow = resultRow {
+                var result = result
+                // Execute inner callback for updating the row
+                updateRow_Raw(id: resultRow.id) { (err) in
+                    if let err = err {
+                        return completion(nil, err)
+                    }
+                    result.append(resultRow)
+                    // Call recursively to update remaining rows
+                    updateRandomRows_Raw(count: count-1, result: result, completion: completion)
+                }
+            } else {
+                if let err = err {
+                    completion(nil, err)
+                } else {
+                    fatalError("Unexpected: result and error both nil")
+                }
+            }
+        }
+    } else {
+        completion(result, nil)
+    }
+}

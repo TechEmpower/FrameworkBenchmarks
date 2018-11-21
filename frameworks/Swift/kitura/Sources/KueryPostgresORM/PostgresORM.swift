@@ -122,12 +122,9 @@ public func getRandomRows(count: Int, result: [RandomRow] = [], completion: @esc
 ///
 public func getRandomRowsParallel(count: Int, completion: @escaping ([RandomRow]?, RequestError?) -> Void) {
     var results: [RandomRow] = []
-    var error: RequestError? = nil
     guard count > 0 else {
         return completion(results, nil)
     }
-    // Used to track completion of concurrent queries
-    let resultNotification = DispatchSemaphore(value: 0)
     // Used to protect result array from concurrent modification
     let updateLock = DispatchSemaphore(value: 1)
     // Execute each query. Each callback will append its result to `results`
@@ -135,25 +132,16 @@ public func getRandomRowsParallel(count: Int, completion: @escaping ([RandomRow]
         RandomRow.find(id: RandomRow.randomId) { (resultRow, err) in
             guard let resultRow = resultRow else {
                 Log.error("\(err ?? .internalServerError)")
-                error = err ?? .internalServerError
-                resultNotification.signal()
+                completion(nil, err ?? .internalServerError)
                 return
             }
             updateLock.wait()
             results.append(resultRow)
+            if results.count == count {
+                completion(results, nil)
+            }
             updateLock.signal()
-            resultNotification.signal()
         }
-    }
-    // Wait for all callbacks to complete
-    for _ in 1...count {
-        resultNotification.wait()
-    }
-    // If any of the callbacks resulted in an error, return an error
-    if let error = error {
-        completion(nil, error)
-    } else {
-        completion(results, nil)
     }
 }
 
@@ -202,12 +190,9 @@ public func updateRandomRows(count: Int, result: [RandomRow] = [], completion: @
 ///
 public func updateRandomRowsParallel(count: Int, completion: @escaping ([RandomRow]?, RequestError?) -> Void) {
     var results: [RandomRow] = []
-    var error: RequestError? = nil
     guard count > 0 else {
         return completion(results, nil)
     }
-    // Used to track completion of concurrent queries
-    let resultNotification = DispatchSemaphore(value: 0)
     // Used to protect result array from concurrent modification
     let updateLock = DispatchSemaphore(value: 1)
     // Execute each query. Each callback will append its result to `results`
@@ -215,8 +200,7 @@ public func updateRandomRowsParallel(count: Int, completion: @escaping ([RandomR
         RandomRow.find(id: RandomRow.randomId) { (resultRow, err) in
             guard let resultRow = resultRow else {
                 Log.error("\(err ?? .internalServerError)")
-                error = err ?? .internalServerError
-                resultNotification.signal()
+                completion(nil, err ?? .internalServerError)
                 return
             }
             let row = RandomRow(id: resultRow.id, randomNumber: RandomRow.randomValue)
@@ -224,25 +208,16 @@ public func updateRandomRowsParallel(count: Int, completion: @escaping ([RandomR
                 if let resultRow = resultRow {
                     updateLock.wait()
                     results.append(resultRow)
+                    if results.count == count {
+                        completion(results, nil)
+                    }
                     updateLock.signal()
-                    resultNotification.signal()
                 } else {
                     Log.error("\(err ?? .internalServerError)")
-                    error = err ?? .internalServerError
-                    resultNotification.signal()
+                    completion(nil, err ?? .internalServerError)
                     return
                 }
             }
         }
-    }
-    // Wait for all callbacks to complete
-    for _ in 1...count {
-        resultNotification.wait()
-    }
-    // If any of the callbacks resulted in an error, return an error
-    if let error = error {
-        completion(nil, error)
-    } else {
-        completion(results, nil)
     }
 }

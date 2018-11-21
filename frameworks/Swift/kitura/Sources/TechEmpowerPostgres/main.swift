@@ -52,7 +52,7 @@ router.add(templateEngine: StencilTemplateEngine(extension: ext))
 router.get("/db") {
     request, response, next in
     response.headers["Server"] = "Kitura"
-    getRandomRow { (row, err) in
+    getRandomRow_Raw { (row, err) in
         guard let row = row else {
             guard let err = err else {
                 Log.error("Unknown Error")
@@ -76,38 +76,47 @@ router.get("/queries") {
     response.headers["Server"] = "Kitura"
     let queriesParam = request.queryParameters["queries"] ?? "1"
     let numQueries = max(1, min(Int(queriesParam) ?? 1, 500))      // Snap to range of 1-500 as per test spec
+    getRandomRows_Raw(count: numQueries) { (rows, err) in
+        if let rows = rows {
+            try? response.status(.OK).send(json: rows).end()
+        } else if let err = err {
+            try? response.status(.badRequest).send("Error: \(err)").end()
+        } else {
+            fatalError("Unexpected: rows and err both nil")
+        }
+    }
+}
+
+router.get("/queriesParallel") {
+    request, response, next in
+    response.headers["Server"] = "Kitura"
+    let queriesParam = request.queryParameters["queries"] ?? "1"
+    let numQueries = max(1, min(Int(queriesParam) ?? 1, 500))      // Snap to range of 1-500 as per test spec
     var results: [[String:Int]] = []
-    // Used to track completion of concurrent queries
-    let resultNotification = DispatchSemaphore(value: 0)
     // Used to protect result array from concurrent modification
     let updateLock = DispatchSemaphore(value: 1)
     // Execute each query. Each callback will append its result to `results`
     for _ in 1...numQueries {
-        getRandomRow { (row, err) in
+        getRandomRow_Raw { (row, err) in
             guard let row = row else {
                 guard let err = err else {
                     Log.error("Unknown Error")
-                    resultNotification.signal()
                     try? response.status(.badRequest).send("Unknown error").end()
                     return
                 }
                 Log.error("\(err)")
-                resultNotification.signal()
                 try? response.status(.badRequest).send("Error: \(err)").end()
                 return
             }
             updateLock.wait()
             results.append(row.asDictionary())
+            if results.count == numQueries {
+                // Return JSON representation of array of results
+                try? response.status(.OK).send(json: results).end()
+            }
             updateLock.signal()
-            resultNotification.signal()
         }
     }
-    // Wait for all callbacks to complete
-    for _ in 1...numQueries {
-        resultNotification.wait()
-    }
-    // Return JSON representation of array of results
-    try response.status(.OK).send(json: results).end()
 }
 
 //
@@ -145,45 +154,55 @@ router.get("/updates") {
     response.headers["Server"] = "Kitura"
     let queriesParam = request.queryParameters["queries"] ?? "1"
     let numQueries = max(1, min(Int(queriesParam) ?? 1, 500))      // Snap to range of 1-500 as per test spec
+    updateRandomRows_Raw(count: numQueries) { (rows, err) in
+        if let rows = rows {
+            try? response.status(.OK).send(json: rows).end()
+        } else if let err = err {
+            try? response.status(.badRequest).send("Error: \(err)").end()
+        } else {
+            fatalError("Unexpected: rows and err both nil")
+        }
+    }
+}
+
+
+router.get("/updatesParallel") {
+    request, response, next in
+    response.headers["Server"] = "Kitura"
+    let queriesParam = request.queryParameters["queries"] ?? "1"
+    let numQueries = max(1, min(Int(queriesParam) ?? 1, 500))      // Snap to range of 1-500 as per test spec
     var results: [[String:Int]] = []
-    // Used to track completion of concurrent queries
-    let resultNotification = DispatchSemaphore(value: 0)
     // Used to protect result array from concurrent modification
     let updateLock = DispatchSemaphore(value: 1)
     // Execute each query. Each callback will append its result to `results`
     for _ in 1...numQueries {
-        getRandomRow { (row, err) in
+        getRandomRow_Raw { (row, err) in
             guard let row = row else {
                 guard let err = err else {
                     Log.error("Unknown Error")
-                    resultNotification.signal()
                     try? response.status(.badRequest).send("Unknown error").end()
                     return
                 }
                 Log.error("\(err)")
-                resultNotification.signal()
                 try? response.status(.badRequest).send("Error: \(err)").end()
                 return
             }
             // Execute inner callback for updating the row
-            updateRow(id: row.id) { (err) in
+            updateRow_Raw(id: row.id) { (err) in
                 if let err = err {
-                    resultNotification.signal()
                     try? response.status(.badRequest).send("Error: \(err)").end()
                     return
                 }
                 updateLock.wait()
                 results.append(row.asDictionary())
+                if results.count == numQueries {
+                    // Return JSON representation of array of results
+                    try? response.status(.OK).send(json: results).end()
+                }
                 updateLock.signal()
-                resultNotification.signal()
             }
         }
     }
-    for _ in 1...numQueries {
-        resultNotification.wait()
-    }
-    // Return JSON representation of array of results
-    try response.status(.OK).send(json: results).end()
 }
 
 
