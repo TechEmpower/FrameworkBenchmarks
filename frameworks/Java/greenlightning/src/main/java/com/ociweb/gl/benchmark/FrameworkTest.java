@@ -56,7 +56,7 @@ public class FrameworkTest implements GreenApp {
     	//this server works best with  -XX:+UseNUMA    	
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    //default port for test 
-    		 5,       //default concurrency, 5 to support 140 channels on 14 core boxes
+    		 10,      //default concurrency, 5 to support 140 channels on 14 core boxes
     		 2*1024,  //default max rest requests allowed to queue in wait
     		 1<<20,   //default network buffer per input socket connection
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
@@ -85,8 +85,8 @@ public class FrameworkTest implements GreenApp {
     	this.telemetryPort = telemetryPort;
     	this.pipelineBits = 17;//max concurrent in flight database requests 1<<pipelineBits
 
-    	this.dbCallMaxResponseCount = 1<<6;
-    	this.jsonMaxResponseCount = 1<<13;
+    	this.dbCallMaxResponseCount = 1<<4;
+    	this.jsonMaxResponseCount = 1<<11;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<9;
@@ -116,6 +116,7 @@ public class FrameworkTest implements GreenApp {
     				.setHost(connectionHost)
     				.setDatabase(connectionDB)
     				.setUser(connectionUser)
+    				.setIdleTimeout(20)
     				.setPassword(connectionPassword)
     				.setCachePreparedStatements(true)
     				.setMaxSize(connectionsPerTrack);	    	
@@ -142,10 +143,13 @@ public class FrameworkTest implements GreenApp {
 		//for 14 cores this is expected to use less than 16G
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
     			 .setHost(host)
+    			 .setMaxConnectionBits(13) //8K max client connections.
     			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)
     			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
+    			 
     			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
+    			 .setMaxQueueOut(32)
     			 .setMaxResponseSize(dbCallMaxResponseSize) //big enough for large mult db response
     	         .useInsecureServer(); //turn off TLS
 
