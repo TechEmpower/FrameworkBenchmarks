@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>com.ociweb</groupId>
 			<artifactId>greenlightning</artifactId>
-			<version>1.0.13</version>
+			<version>1.0.14</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

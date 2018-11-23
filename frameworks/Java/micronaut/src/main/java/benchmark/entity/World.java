@@ -7,8 +7,8 @@ import java.util.Objects;
  */
 public final class World {
 
-    private int id;
-    private int randomNumber;
+    public int id;
+    public int randomNumber;
 
     public World() {
         super();

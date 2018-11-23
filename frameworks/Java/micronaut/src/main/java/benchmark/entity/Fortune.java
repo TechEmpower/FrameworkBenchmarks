@@ -7,8 +7,8 @@ import java.util.Objects;
  */
 public final class Fortune {
 
-    private int id;
-    private String message;
+    public int id;
+    public String message;
 
     public Fortune() {
         super();
