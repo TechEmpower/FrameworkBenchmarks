@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk-stretch AS build
+FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /app
 COPY PlatformBenchmarks .
 RUN dotnet publish -c Release -o out
