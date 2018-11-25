@@ -1,31 +1,51 @@
 {
 	"framework": "lumen",
-	"tests": [
-		{
-			"default": {
-				"setup_file": "setup",
-				"json_url": "/json",
-				"db_url": "/db",
-				"query_url": "/queries/",
-				"fortune_url": "/fortunes",
-				"update_url": "/updates/",
-				"plaintext_url": "/plaintext",
-				"port": 8080,
-				"approach": "Realistic",
-				"classification": "Micro",
-				"database": "MySQL",
-				"framework": "lumen",
-				"language": "PHP",
-				"flavor": "PHP7",
-				"orm": "Full",
-				"platform": "None",
-				"webserver": "nginx",
-				"os": "Linux",
-				"database_os": "Linux",
-				"display_name": "Lumen",
-				"notes": "",
-				"versus": "php"
-			}
+	"tests": [{
+		"default": {
+			"setup_file": "setup",
+			"json_url": "/json",
+			"db_url": "/db",
+			"query_url": "/queries/",
+			"fortune_url": "/fortunes",
+			"update_url": "/updates/",
+			"plaintext_url": "/plaintext",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "Micro",
+			"database": "MySQL",
+			"framework": "lumen",
+			"language": "PHP",
+			"flavor": "PHP7",
+			"orm": "Full",
+			"platform": "None",
+			"webserver": "nginx",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "Lumen",
+			"notes": "",
+			"versus": "php"
+		},
+		"swoole": {
+			"json_url": "/json",
+			"db_url": "/db",
+			"query_url": "/queries/",
+			"fortune_url": "/fortunes",
+			"update_url": "/updates/",
+			"plaintext_url": "/plaintext",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "Micro",
+			"database": "MySQL",
+			"framework": "lumen",
+			"language": "PHP",
+			"flavor": "PHP7",
+			"orm": "Full",
+			"platform": "None",
+			"webserver": "swoole",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "lumen-swoole",
+			"versus": "swoole"
 		}
-	]
+	}]
 }

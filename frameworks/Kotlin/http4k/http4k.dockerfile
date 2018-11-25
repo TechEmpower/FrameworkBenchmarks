@@ -9,5 +9,5 @@ COPY jetty jetty
 COPY netty netty
 COPY sunhttp sunhttp
 COPY undertow undertow
-RUN gradle --quiet build jetty:uber
+RUN gradle --quiet build jetty:shadowJar
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "jetty/build/libs/http4k-jetty-benchmark.jar"]

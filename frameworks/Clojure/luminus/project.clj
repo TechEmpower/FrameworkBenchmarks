@@ -27,7 +27,7 @@
                  [luminus-immutant "0.2.3"]
                  [luminus-migrations "0.3.0"]
                  [conman "0.6.3"]
-                 [org.postgresql/postgresql "9.4.1212"]
+                 [org.postgresql/postgresql "42.2.5"]
                  [luminus-log4j "0.1.5"]]
 
   :min-lein-version "2.0.0"

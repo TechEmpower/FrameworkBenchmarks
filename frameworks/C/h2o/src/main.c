@@ -26,12 +26,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <h2o/cache.h>
 #include <h2o/serverutil.h>
 #include <sys/resource.h>
 #include <sys/signalfd.h>
 #include <sys/time.h>
 
+#include "cache.h"
 #include "error.h"
 #include "event_loop.h"
 #include "request_handler.h"
@@ -77,10 +77,7 @@ static void free_global_data(global_data_t *global_data)
 		mustache_free(&api, global_data->fortunes_template);
 	}
 
-	if (global_data->world_cache)
-		h2o_cache_destroy(global_data->world_cache);
-
-	CHECK_ERROR(pthread_mutex_destroy, &global_data->world_cache_lock);
+	cache_destroy(&global_data->world_cache);
 	h2o_config_dispose(&global_data->h2o_config);
 
 	if (global_data->ssl_ctx)
@@ -133,13 +130,12 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	CHECK_ERRNO_RETURN(global_data->signal_fd, signalfd, -1, &signals, SFD_NONBLOCK | SFD_CLOEXEC);
 	global_data->fortunes_template = get_fortunes_template(config->template_path);
 	h2o_config_init(&global_data->h2o_config);
-	CHECK_ERROR(pthread_mutex_init, &global_data->world_cache_lock, NULL);
-	global_data->world_cache = h2o_cache_create(0,
-	                                            config->world_cache_capacity,
-	                                            config->world_cache_duration,
-	                                            free_world_cache_entry);
 
-	if (!global_data->world_cache)
+	if (cache_create(config->thread_num,
+	                 config->world_cache_capacity,
+	                 config->world_cache_duration,
+	                 free_world_cache_entry,
+	                 &global_data->world_cache))
 		goto error;
 
 	if (config->cert && config->key)

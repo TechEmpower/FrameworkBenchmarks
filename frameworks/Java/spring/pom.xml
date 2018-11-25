@@ -13,14 +13,14 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.0.1.RELEASE</version>
+    <version>2.0.4.RELEASE</version>
   </parent>
 
   <properties>
     <maven.compiler.source>10</maven.compiler.source>
     <maven.compiler.target>10</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <postgresql.version>42.2.2</postgresql.version>
+    <postgresql.version>42.2.5</postgresql.version>
   </properties>
 
   <dependencies>

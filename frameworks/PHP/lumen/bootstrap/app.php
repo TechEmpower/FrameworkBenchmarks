@@ -82,6 +82,11 @@ $app->singleton(
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
+if (env('APP_SWOOLE',false)) {
+	$app->register(SwooleTW\Http\LumenServiceProvider::class);
+	$app->configure('swoole_http');
+}
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

@@ -1,0 +1,18 @@
+{
+  "framework": "meteor",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "framework": "meteor",
+      "language": "JavaScript",
+      "flavor": "NodeJS",
+      "os": "Linux",
+      "display_name": "meteor",
+      "versus": "nodejs"
+    }
+  }]
+}

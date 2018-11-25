@@ -31,6 +31,9 @@ http://localhost:8080/mongoose
 MySQL:
 http://localhost:8080/sequelize
 
+PostgreSQL:
+http://localhost:8080/db
+
 ### Variable Query Test
 
 MongoDB:
@@ -38,3 +41,6 @@ http://localhost:8080/mongoose?queries=2
 
 MySQL:
 http://localhost:8080/sequelize?queries=2
+
+PostgreSQL:
+http://localhost:8080/queries?queries=2

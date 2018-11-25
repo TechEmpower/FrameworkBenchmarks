@@ -29,7 +29,7 @@ This is the Vert.x portion of a [benchmarking test suite](../) comparing a varie
 ## Versions
 
 * [Java OpenJDK 1.8](http://openjdk.java.net/)
-* [vertx 3.5.0.Beta1](http://vertx.io/)
+* [vertx 3.6.0.CR1](http://vertx.io/)
 
 ## Test URLs
 
