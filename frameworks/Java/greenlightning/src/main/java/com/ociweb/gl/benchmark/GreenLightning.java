@@ -7,8 +7,9 @@ public class GreenLightning {
 	public static void main(String[] args) {
 		
 		//PipeConfig.showConfigsCreatedLargerThan = 1<<23;
+		///GraphManager.showThreadIdOnTelemetry = true;
 		
-		//System.setProperty("pronghorn.processors", "28"); //TODO: could also lower memory usage by shrinking the stack space...
+		//System.setProperty("pronghorn.processors", "28"); 
 		GreenRuntime.run(new FrameworkTest(),args);
 	
 	}

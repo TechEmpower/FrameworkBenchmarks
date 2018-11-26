@@ -14,12 +14,12 @@ import io.reactiverse.pgclient.Tuple;
 
 public class ProcessUpdate {
 	
-	private ObjectPipe<ResultObject> DBUpdateInFlight;	
+	private transient ObjectPipe<ResultObject> DBUpdateInFlight;	
 	private boolean collectionPendingDBUpdate = false;	
-	private final List<ResultObject> collectorDBUpdate = new ArrayList<ResultObject>();
-	private final ThreadLocalRandom localRandom = ThreadLocalRandom.current();
+	private final transient List<ResultObject> collectorDBUpdate = new ArrayList<ResultObject>();
+	private final transient ThreadLocalRandom localRandom = ThreadLocalRandom.current();
 	private final HTTPResponseService service;
-	private final PoolManager pm;
+	private final transient PoolManager pm;
 	
 	public ProcessUpdate(int pipelineBits, HTTPResponseService service, PoolManager pm) {
 		this.DBUpdateInFlight = new ObjectPipe<ResultObject>(pipelineBits, ResultObject.class,	ResultObject::new);
