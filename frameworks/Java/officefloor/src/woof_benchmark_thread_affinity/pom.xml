@@ -12,7 +12,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.officefloor.benchmarks</groupId>
-			<artifactId>woof_micro</artifactId>
+			<artifactId>woof_benchmark_micro</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.officefloor.web</groupId>
