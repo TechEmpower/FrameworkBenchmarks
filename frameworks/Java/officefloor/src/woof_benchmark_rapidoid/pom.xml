@@ -7,7 +7,7 @@
 		<artifactId>benchmarks</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>woof_rapidoid</artifactId>
+	<artifactId>woof_benchmark_rapidoid</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>net.officefloor.benchmarks</groupId>

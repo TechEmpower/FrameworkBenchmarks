@@ -8,7 +8,7 @@
 		<artifactId>benchmarks</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>woof_thread_affinity</artifactId>
+	<artifactId>woof_benchmark_thread_affinity</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>net.officefloor.benchmarks</groupId>

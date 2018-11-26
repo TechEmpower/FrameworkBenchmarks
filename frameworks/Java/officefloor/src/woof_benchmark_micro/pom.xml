@@ -8,8 +8,7 @@
 		<artifactId>benchmarks</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>woof_tpr</artifactId>
-	<description>Thread per request model used by many frameworks</description>
+	<artifactId>woof_benchmark_micro</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>net.officefloor.web</groupId>
@@ -22,10 +21,6 @@
 		<dependency>
 			<groupId>net.officefloor.persistence</groupId>
 			<artifactId>officejdbc_postgresql</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.zaxxer</groupId>
-			<artifactId>HikariCP</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
