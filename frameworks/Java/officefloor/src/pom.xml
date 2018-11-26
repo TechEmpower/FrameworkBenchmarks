@@ -49,7 +49,7 @@
 			</dependency>
 			<dependency>
 				<groupId>net.officefloor.benchmarks</groupId>
-				<artifactId>woof_micro</artifactId>
+				<artifactId>woof_benchmark_micro</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
