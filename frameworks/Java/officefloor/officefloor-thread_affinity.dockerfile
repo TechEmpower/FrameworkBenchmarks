@@ -3,9 +3,9 @@ WORKDIR /officefloor
 COPY src src
 WORKDIR /officefloor/src
 RUN mvn -q -N clean install
-WORKDIR /officefloor/src/woof_micro
+WORKDIR /officefloor/src/woof_benchmark_micro
 RUN mvn -q clean install
-WORKDIR /officefloor/src/woof_thread_affinity
+WORKDIR /officefloor/src/woof_benchmark_thread_affinity
 RUN mvn -q clean package
 
 FROM openjdk:10

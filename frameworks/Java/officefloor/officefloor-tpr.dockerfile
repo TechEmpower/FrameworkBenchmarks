@@ -1,7 +1,7 @@
 FROM maven:3.5.4-jdk-10 as maven
 WORKDIR /officefloor
 COPY src src
-WORKDIR /officefloor/src/woof_tpr
+WORKDIR /officefloor/src/woof_benchmark_tpr
 RUN mvn -q clean package
 
 FROM openjdk:10

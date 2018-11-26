@@ -5,7 +5,7 @@ WORKDIR /officefloor/src
 RUN mvn -q -N clean install
 WORKDIR /officefloor/src/woof_benchmark
 RUN mvn -q clean install
-WORKDIR /officefloor/src/woof_netty
+WORKDIR /officefloor/src/woof_benchmark_netty
 RUN mvn -q clean package
 
 FROM openjdk:10
