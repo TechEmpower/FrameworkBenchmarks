@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-public enum AppError: Error {
-    case DBError(String, query: String)
-    case MongoError(String)
-    case DataFormatError(String)
-    case OtherError(String)
+import Mustache
+import TechEmpowerCommon
+
+extension Fortune: MustacheBoxable {
+  public var mustacheBox: MustacheBox {
+    return Box(["id": self.id, "message": self.message])
+  }
 }
