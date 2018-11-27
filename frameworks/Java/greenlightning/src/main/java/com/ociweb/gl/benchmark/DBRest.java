@@ -14,7 +14,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 	private final ProcessUpdate processUpdate;
 	private final ProcessFortune processFortune;
 	private final ProcessQuery processQuery;
-	private final PoolManager pm;
+	private final transient PoolManager pm;
 	
 	public DBRest(GreenRuntime runtime, PgPoolOptions options, int pipelineBits, int maxResponseCount, int maxResponseSize) {
 		

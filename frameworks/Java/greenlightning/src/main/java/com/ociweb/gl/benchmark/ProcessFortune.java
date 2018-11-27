@@ -14,7 +14,7 @@ public class ProcessFortune {
 	private transient ObjectPipe<FortunesObject> fortuneInFlight;
 	private int htmlFortunePos=0;
 	private final transient AppendableBuilder htmlFortuneBuffer = new AppendableBuilder();
-	private final PoolManager pm;
+	private final transient PoolManager pm;
 	private final HTTPResponseService service;
 	
 	public ProcessFortune(int pipelineBits, HTTPResponseService service, PoolManager pm) {
