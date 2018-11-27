@@ -105,7 +105,7 @@
 				"webserver": "WoOF",
 				"os": "Linux",
 				"database_os": "Linux",
-				"display_name": "OfficeFloor-micro",
+				"display_name": "OfficeFloor-thread_affinity",
 				"notes": "",
 				"versus": "OfficeFloor-raw"
 			},
@@ -155,7 +155,7 @@
 				"notes": "",
 				"versus": "rapidoid"
 			},
-			"spring": {
+			"spring_data": {
 				"json_url": "/json",
 				"plaintext_url": "/plaintext",
 				"db_url": "/db",
@@ -174,7 +174,7 @@
 				"webserver": "WoOF",
 				"os": "Linux",
 				"database_os": "Linux",
-				"display_name": "OfficeFloor-spring",
+				"display_name": "OfficeFloor-spring_data",
 				"notes": "",
 				"versus": "officefloor"
 			}
