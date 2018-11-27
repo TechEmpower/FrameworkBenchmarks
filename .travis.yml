@@ -86,6 +86,7 @@ env:
      - "TESTDIR=Scala/cask"
      - "TESTLANG=JavaScript"
      - "TESTLANG=Kotlin"
+     - "TESTLANG=Lisp"
      - "TESTLANG=Lua"
      - "TESTLANG=Nim"
      - "TESTLANG=Perl"

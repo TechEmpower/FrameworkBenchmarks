@@ -1,0 +1,26 @@
+{
+    "framework": "caveman2",
+    "tests": [
+        {
+            "default": {
+                "json_url": "/json",
+                "plaintext_url": "/plaintext",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "None",
+                "framework": "caveman2",
+                "language": "Lisp",
+                "flavor": "None",
+                "orm": "Raw",
+                "platform": "Lisp",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "caveman2",
+                "notes": "",
+                "versus": ""
+            }
+        }
+    ]
+}
