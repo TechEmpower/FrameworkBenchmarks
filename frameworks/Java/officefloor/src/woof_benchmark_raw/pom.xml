@@ -23,10 +23,6 @@
 			<artifactId>jackson-module-afterburner</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.officefloor.web</groupId>
-			<artifactId>officeweb_executive</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>

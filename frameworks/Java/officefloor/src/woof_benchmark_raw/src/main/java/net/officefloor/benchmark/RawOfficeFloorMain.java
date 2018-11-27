@@ -30,12 +30,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 import lombok.Data;
-import net.officefloor.frame.api.executive.Executive;
 import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.manage.ProcessManager;
 import net.officefloor.frame.api.managedobject.ProcessAwareContext;
 import net.officefloor.frame.api.managedobject.ProcessSafeOperation;
-import net.officefloor.frame.util.ExecutiveSourceStandAlone;
 import net.officefloor.server.SocketManager;
 import net.officefloor.server.http.AbstractHttpServicerFactory;
 import net.officefloor.server.http.HttpHeaderName;
@@ -52,7 +50,6 @@ import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedO
 import net.officefloor.server.http.parse.HttpRequestParser.HttpRequestParserMetaData;
 import net.officefloor.server.stream.StreamBufferPool;
 import net.officefloor.server.stream.impl.ThreadLocalStreamBufferPool;
-import net.officefloor.web.executive.WebThreadAffinityExecutiveSource;
 
 /**
  * <p>
@@ -84,9 +81,10 @@ public class RawOfficeFloorMain {
 		HttpServerLocation serverLocation = new HttpServerLocationImpl("localhost", port, -1);
 
 		// Create the execution strategy
-		ExecutiveSourceStandAlone standalone = new ExecutiveSourceStandAlone();
-		Executive executive = standalone.loadExecutive(WebThreadAffinityExecutiveSource.class);
-		ThreadFactory[] executionStrategy = executive.getExcutionStrategies()[0].getThreadFactories();
+		ThreadFactory[] executionStrategy = new ThreadFactory[Runtime.getRuntime().availableProcessors()];
+		for (int i = 0; i < executionStrategy.length; i++) {
+			executionStrategy[i] = (runnable) -> new Thread(runnable);
+		}
 
 		// Create the socket manager
 		socketManager = HttpServerSocketManagedObjectSource.createSocketManager(executionStrategy);
