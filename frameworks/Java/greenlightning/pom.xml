@@ -8,15 +8,13 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.ociweb</groupId>
 			<artifactId>greenlightning</artifactId>
-			<version>[1.0.6,1.1)</version>
+			<version>1.0.15</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -36,12 +34,15 @@
 			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>io.reactiverse</groupId>
+		    <artifactId>reactive-pg-client</artifactId>
+		    <version>0.10.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>
-
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -50,6 +51,8 @@
 					<compilerArguments>
 						<profile>compact1</profile>
 					</compilerArguments>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 

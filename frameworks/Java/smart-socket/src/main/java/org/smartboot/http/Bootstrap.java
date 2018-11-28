@@ -12,7 +12,6 @@ import org.smartboot.http.server.HttpMessageProcessor;
 import org.smartboot.http.server.decode.Http11Request;
 import org.smartboot.http.server.decode.HttpRequestProtocol;
 import org.smartboot.http.server.handle.HttpHandle;
-import org.smartboot.http.utils.HttpHeaderConstant;
 import org.smartboot.socket.MessageProcessor;
 import org.smartboot.socket.transport.AioQuickServer;
 
@@ -22,15 +21,16 @@ public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
+        System.setProperty("smart-socket.server.pageSize", (16 * 1024 * 1024) + "");
+        System.setProperty("smart-socket.session.writeChunkSize", "2048");
         HttpMessageProcessor processor = new HttpMessageProcessor(System.getProperty("webapps.dir", "./"));
         processor.route("/plaintext", new HttpHandle() {
 
 
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
-
-                response.setHeader(HttpHeaderConstant.Names.CONTENT_LENGTH, body.length + "");
-                response.setHeader(HttpHeaderConstant.Names.CONTENT_TYPE, "text/plain; charset=UTF-8");
+                response.setContentLength(body.length);
+                response.setContentType("text/plain; charset=UTF-8");
                 response.getOutputStream().write(body);
             }
         });
@@ -38,8 +38,8 @@ public class Bootstrap {
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
                 byte[] b = JSON.toJson(new Message("Hello, World!"));
-                response.setHeader(HttpHeaderConstant.Names.CONTENT_LENGTH, b.length + "");
-                response.setHeader(HttpHeaderConstant.Names.CONTENT_TYPE, "application/json");
+                response.setContentLength(b.length);
+                response.setContentType("application/json");
                 response.getOutputStream().write(b);
             }
         });
@@ -50,9 +50,7 @@ public class Bootstrap {
     public static void http(MessageProcessor<Http11Request> processor) {
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
-        server.setWriteQueueSize(1024);
-        server.setReadBufferSize(1024*4);
-        server.setFairIO(true);
+        server.setReadBufferSize(1024*2);
 //        server.setThreadNum((int) (Runtime.getRuntime().availableProcessors() * 2));
         try {
             server.start();

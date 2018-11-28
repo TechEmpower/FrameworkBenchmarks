@@ -6,10 +6,10 @@
     <artifactId>hello-micronaut</artifactId>
     <version>0.1</version>
     <properties>
-        <maven.compiler.source>10</maven.compiler.source>
-        <maven.compiler.target>10</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <exec.mainClass>benchmark.Application</exec.mainClass>
-        <micronaut.version>1.0.0.RC3</micronaut.version>
+        <micronaut.version>1.0.1</micronaut.version>
     </properties>
     <repositories>
         <repository>
@@ -64,6 +64,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>io.micronaut</groupId>
+            <artifactId>micronaut-views</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
             <version>1.3.2</version>
@@ -87,19 +92,19 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-codegen</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-rx-java2</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

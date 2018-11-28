@@ -1,0 +1,8 @@
+http:
+  enable: true
+  address: 0.0.0.0:8080
+  workers:
+    command: php /php/roadrunner.php
+    relay: pipes
+    pool:
+      numWorkers: WORKERS
