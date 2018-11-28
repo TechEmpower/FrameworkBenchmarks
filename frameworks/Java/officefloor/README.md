@@ -1,3 +1,5 @@
+[![Download OfficeFloor](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/officefloor/files/latest/download)
+
 # OfficeFloor Benchmarking Test
 
 OfficeFloor is graphically configured through its true inversion of control.
