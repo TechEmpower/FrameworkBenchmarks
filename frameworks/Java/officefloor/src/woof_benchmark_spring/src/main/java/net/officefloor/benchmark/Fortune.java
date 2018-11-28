@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@NamedQuery(name = "All", query = "SELECT f FROM Fortune f")
 public class Fortune {
 
 	@Id
