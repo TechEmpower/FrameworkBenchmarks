@@ -11,8 +11,8 @@ public class FortunesObject {
 	private long connectionId; 
 	private long sequenceId;
 	private int status;
-	private List<FortuneObject> list = new ArrayList<FortuneObject>();
-	private List<FortuneObject> recycle = new ArrayList<FortuneObject>();
+	private List<FortuneObject> list = new ArrayList<FortuneObject>(32); //non zero default
+	private List<FortuneObject> recycle = new ArrayList<FortuneObject>(32);
 
 	public long getConnectionId() {
 		return connectionId;

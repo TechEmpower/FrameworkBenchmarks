@@ -49,6 +49,16 @@ namespace PlatformBenchmarks
                     }
                 });
             }
+            else if (string.Equals(webHost, "LinuxTransport", StringComparison.OrdinalIgnoreCase))
+            {
+                builder.UseLinuxTransport(options =>
+                {
+                    if (theadCount.HasValue)
+                    {
+                        options.ThreadCount = theadCount.Value;
+                    }
+                });
+            }
 
             return builder;
         }

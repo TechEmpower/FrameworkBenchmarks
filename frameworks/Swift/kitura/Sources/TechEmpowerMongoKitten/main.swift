@@ -21,6 +21,7 @@ import MongoKitten
 import KituraStencil
 import Stencil
 //import KituraMustache
+import TechEmpowerCommon
 
 Log.logger = HeliumLogger(.info)
 
@@ -45,26 +46,6 @@ ext.registerFilter("htmlencode") { (value: Any?) in
 let router = Router()
 router.add(templateEngine: StencilTemplateEngine(extension: ext))
 //router.add(templateEngine: MustacheTemplateEngine())
-
-//
-// TechEmpower test 6: plaintext
-//
-router.get("/plaintext") {
-    request, response, next in
-    response.headers["Server"] = "Kitura"
-    response.headers["Content-Type"] = "text/plain"
-    try response.status(.OK).send("Hello, world!").end()
-}
-
-//
-// TechEmpower test 1: JSON serialization
-//
-router.get("/json") {
-    request, response, next in
-    response.headers["Server"] = "Kitura"
-    let result = ["message":"Hello, World!"]
-    try response.status(.OK).send(json: result).end()
-}
 
 //
 // TechEmpower test 2: Single database query (raw, no ORM)

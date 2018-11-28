@@ -11,15 +11,10 @@ import com.ociweb.gl.api.GreenApp;
  */
 import com.ociweb.gl.api.GreenFramework;
 import com.ociweb.gl.api.GreenRuntime;
-import com.ociweb.gl.api.HTTPResponseService;
-import com.ociweb.pronghorn.network.ServerSocketReaderStage;
 import com.ociweb.pronghorn.network.ServerSocketWriterStage;
-import com.ociweb.pronghorn.network.http.HTTP1xRouterStage;
-import com.ociweb.pronghorn.pipe.ObjectPipe;
 
 import io.reactiverse.pgclient.PgClient;
 import io.reactiverse.pgclient.PgPoolOptions;
-import io.reactiverse.reactivex.pgclient.PgConnection;
 
 public class FrameworkTest implements GreenApp {
 
@@ -56,9 +51,9 @@ public class FrameworkTest implements GreenApp {
     	//this server works best with  -XX:+UseNUMA    	
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    //default port for test 
-    		 5,       //default concurrency, 5 to support 140 channels on 14 core boxes
-    		 2*1024,  //default max rest requests allowed to queue in wait
-    		 1<<20,   //default network buffer per input socket connection
+    		 10,      //default concurrency, 5 to support 140 channels on 14 core boxes
+    		 8*1024,  //default max rest requests allowed to queue in wait
+    		 1<<19,   //default network buffer per input socket connection
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
@@ -85,8 +80,8 @@ public class FrameworkTest implements GreenApp {
     	this.telemetryPort = telemetryPort;
     	this.pipelineBits = 17;//max concurrent in flight database requests 1<<pipelineBits
 
-    	this.dbCallMaxResponseCount = 1<<6;
-    	this.jsonMaxResponseCount = 1<<13;
+    	this.dbCallMaxResponseCount = 1<<4;
+    	this.jsonMaxResponseCount = 1<<16;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<9;
@@ -116,6 +111,7 @@ public class FrameworkTest implements GreenApp {
     				.setHost(connectionHost)
     				.setDatabase(connectionDB)
     				.setUser(connectionUser)
+    				.setIdleTimeout(20)
     				.setPassword(connectionPassword)
     				.setCachePreparedStatements(true)
     				.setMaxSize(connectionsPerTrack);	    	
@@ -139,13 +135,18 @@ public class FrameworkTest implements GreenApp {
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
+		framework.setDefaultRate(20_000);
+		
 		//for 14 cores this is expected to use less than 16G
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
     			 .setHost(host)
+    			 .setMaxConnectionBits(13) //8K max client connections.
     			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)
     			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
+    			 
     			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
+    			 .setMaxQueueOut(64)
     			 .setMaxResponseSize(dbCallMaxResponseSize) //big enough for large mult db response
     	         .useInsecureServer(); //turn off TLS
 

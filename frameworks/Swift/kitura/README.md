@@ -4,25 +4,29 @@ This is the [Kitura](https://kitura.io) portion of a [benchmarking test suite](h
 
 ## Variants
 
-There are two versions of the benchmark, using different database backends:
-- `kitura`: Kitura with Postgres
-- `kitura-mongokitten`: Kitura with MongoDB
+The benchmark is split up into multiple executable targets, demonstrating different database backends and uses of the Kitura routing APIs:
+- `kitura`: Implementations of Plaintext and JSON using 'raw' (Express-style) routing
+- `kitura-postgres`: Implementation of database tests, using Postgres with Swift-Kuery (no ORM)
+- `kitura-postgres-orm`: Equivalent implementation with Postgres and Swift-Kuery-ORM
+- `kitura-postgres-orm-codable`: Equivalent implementation with Postgres, using [Codable Routing together with Swift-Kuery-ORM](https://developer.ibm.com/swift/2018/03/01/introducing-swift-kuery-orm/)
+- `kitura-mongodb`: Implementation of database tests, using MongoDB with MongoKitten (no ORM)
 
-There are two additional variants: `kitura-gcd` and `kitura-gcd-mongokitten`. These are compiled from the same source, but use the Grand Central Dispatch threading model (used by default on macOS) instead of the default epoll implementation on Linux.
+There are additional variants for each of the above implementations, with the '-gcd' suffix: These are compiled from the same source, but use the Grand Central Dispatch threading model (used by default on macOS) instead of a direct epoll implementation (the default on Linux).
 
-Each listens on port 8080, and use common URLs described below.
+Each listens on port 8080, and uses the common URLs described below.
 
 ## Versions and Dependencies
 
-This version of the benchmark requires Swift 4.0.3 or Swift 4.1, and uses the following versions of Kitura and dependencies:
+This version of the benchmark requires Swift 4.0.3 or higher, and uses the following versions of Kitura and dependencies:
 
-- [Kitura 2.3](https://github.com/IBM-Swift/Kitura)
-- [HeliumLogger 1.7](https://github.com/IBM-Swift/HeliumLogger)
-- [Configuration 3.0](https://github.com/IBM-Swift/Configuration)
-- [SwiftKueryPostgreSQL 1.1](https://github.com/IBM-Swift/Swift-Kuery-PostgreSQL)
-- [KituraStencil 1.9](https://github.com/IBM-Swift/Kitura-StencilTemplateEngine)
-- [KituraMustache 1.7](https://github.com/IBM-Swift/Kitura-MustacheTemplateEngine)
-- [MongoKitten 4.1.3](https://github.com/OpenKitten/MongoKitten)
+- [Kitura 2.5](https://github.com/IBM-Swift/Kitura)
+- [HeliumLogger 1.x](https://github.com/IBM-Swift/HeliumLogger)
+- [Configuration 3.x](https://github.com/IBM-Swift/Configuration)
+- [SwiftKueryPostgreSQL 1.x](https://github.com/IBM-Swift/Swift-Kuery-PostgreSQL)
+- [SwiftKueryORM 0.x](https://github.com/IBM-Swift/Swift-Kuery-ORM)
+- [KituraStencil 1.x](https://github.com/IBM-Swift/Kitura-StencilTemplateEngine)
+- [KituraMustache 1.x](https://github.com/IBM-Swift/Kitura-MustacheTemplateEngine)
+- [MongoKitten 4.x](https://github.com/OpenKitten/MongoKitten)
 
 ## Test URLs
 ### JSON serialization
