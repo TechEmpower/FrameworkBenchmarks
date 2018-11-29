@@ -3,6 +3,7 @@ package com.ociweb.gl.benchmark;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.ociweb.gl.api.GreenApp;
+import com.ociweb.gl.api.GreenCommandChannel;
 /**
  * ************************************************************************
  * For greenlightning support, training or feature reqeusts please contact:
@@ -188,8 +189,11 @@ public class FrameworkTest implements GreenApp {
 		
 		if (telemetryPort>0) {
 			framework.enableTelemetry(host,telemetryPort);
+		} else {
+			framework.enableTelemetryLogging();
 		}
-		
+				
+		framework.setTimerPulseRate(30 * 1000);//2x per minute
 		
 		ServerSocketWriterStage.lowLatency = false; //turn on high volume mode, less concerned about low latency. 
 	
@@ -217,7 +221,14 @@ public class FrameworkTest implements GreenApp {
 	}
 	 
     @Override
-    public void declareBehavior(GreenRuntime runtime) { 
+    public void declareBehavior(GreenRuntime runtime) {
+    	
+    	//log the telemetry snapshot upon every pulse
+    	final GreenCommandChannel cmd = runtime.newCommandChannel();    	
+    	runtime.addTimePulseListener("log",(t,i)->{
+    		cmd.logTelemetrySnapshot();
+    	});
+    	
     }
   
 }
