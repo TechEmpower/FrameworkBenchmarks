@@ -63,7 +63,7 @@ While much focus is on HTTP handling, performance also is impacted by database i
 * **officefloor** : WoOF implementation using EntityManager
 * **officefloor-spring_data** : WoOF implementation taking advantage of Spring Data repositories.  This also demonstrates integrating Spring as a library of objects for dependency injection via OfficeFloor into functions/methods.
 
-**officefloor-spring_data** (with possibly **officefloor-netty** incorporated) is likely representative of application development, as provides the mature easier abstractions for the developer to work with (and less code to managed).  However, the above tests show the trade-off costs in performance for the easeir development.
+**officefloor-spring_data** (with possibly **officefloor-netty** incorporated) is likely representative of application development, as provides the mature easier abstractions for the developer to work with (and less code to managed).  However, the above tests show the trade-off costs in performance for the easier development.
 
 
 # OfficeFloor real benefit
@@ -71,7 +71,7 @@ While much focus is on HTTP handling, performance also is impacted by database i
 OfficeFloor is targeted at cloud and SOA/micro-service environments.   In these environments, applications do not operate in isolation with a single database.  Applications need to interact with multiple other services that result in:
 
 * *synchronous threading models* : starving new requests of a thread if all threads in the pool tie up on a slow downstream system
-* *aynchronous single threaded* : hard to write and hard to get write (so OfficeFloor allows synchronous code co-ordinated asynchronously for faster development and faster performance)
+* *aynchronous single threaded* : hard to write and hard to get right (so OfficeFloor allows synchronous code co-ordinated asynchronously for faster development and faster performance)
 
 Furthermore, OfficeFloor handles this by using separate thread pools per downstream systems.  This way if a down stream system goes slow, only threads of that thread pool tie up.  Requests using other downstream resources continue to be serviced by the separated thread pools.
 
