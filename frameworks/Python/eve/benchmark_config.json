@@ -1,0 +1,24 @@
+{
+  "framework": "eve",
+  "tests": [{
+    "default": {
+      "plaintext_url" : "/plaintext",
+      "json_url" : "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "Eve",
+      "language": "Python",
+      "flavor": "Python2",
+      "orm": "Full",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Eve",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

@@ -21,8 +21,5 @@ class App extends Infrastructure with RandomGenerator with MySqlDataStore with P
   val executionContext: ExecutionContext = system.dispatcher
   val materializer: Materializer = ActorMaterializer()
   val appConfig: Config = ConfigFactory.load
-
-  def layout(uri: String, attributes: Map[String, Any], extraBindings: Traversable[Binding]): String =
-    templateEngine.layout(uri, attributes, extraBindings)
 }
 
