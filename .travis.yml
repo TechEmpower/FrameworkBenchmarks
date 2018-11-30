@@ -87,7 +87,6 @@ env:
      - "TESTDIR=Java/wicket"
      - "TESTDIR=Java/wildfly-ee"
      - "TESTDIR=Java/wizzardo-http"
-     - "TESTDIR=Scala/cask"
      - "TESTLANG=JavaScript"
      - "TESTLANG=Kotlin"
      - "TESTLANG=Lua"
