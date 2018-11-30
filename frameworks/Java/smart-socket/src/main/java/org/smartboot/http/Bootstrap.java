@@ -35,10 +35,10 @@ public class Bootstrap {
             }
         });
         processor.route("/json", new HttpHandle() {
-            byte[] b = JSON.toJson(new Message("Hello, World!"));
+
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
-
+                byte[] b = JSON.toJson(new Message("Hello, World!"));
                 response.setContentLength(b.length);
                 response.setContentType("application/json");
                 response.getOutputStream().write(b);
