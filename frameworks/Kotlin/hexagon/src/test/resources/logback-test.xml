@@ -4,6 +4,8 @@
  | All output is ignored by default, to enable logs change root logger level.
  !-->
 <configuration>
+  <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
       <Pattern>%d{HH:mm:ss.SSS} %highlight(%-5p) %magenta([%-18.18t]) %-30c{30} | %m%n</Pattern>

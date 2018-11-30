@@ -45,6 +45,28 @@
                 "display_name": "Hexagon Jetty PostgreSQL",
                 "notes": "http://hexagonkt.com",
                 "versus": "servlet"
+            },
+            "resin-postgresql": {
+                "json_url": "/json",
+                "db_url": "/postgresql/db",
+                "query_url": "/postgresql/query?queries=",
+                "fortune_url": "/postgresql/pebble/fortunes",
+                "update_url": "/postgresql/update?queries=",
+                "plaintext_url": "/plaintext",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "postgres",
+                "framework": "Hexagon",
+                "language": "Kotlin",
+                "orm": "Raw",
+                "platform": "Servlet",
+                "webserver": "Resin",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hexagon Jetty PostgreSQL",
+                "notes": "http://hexagonkt.com",
+                "versus": "servlet"
             }
         }
     ]

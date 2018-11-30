@@ -20,7 +20,7 @@ class BenchmarkJettyPostgreSqlTest : BenchmarkTest("jetty", "postgresql")
     private val databaseEngine: String,
     private val templateEngine: String = "pebble"
 ) {
-    private val client by lazy { Client("http://localhost:${benchmarkServer?.runtimePort}") }
+    private val client by lazy { Client("http://localhost:${benchmarkServer.runtimePort}") }
 
     @BeforeClass fun startUp() {
         setProperty("WEBENGINE", webEngine)
@@ -28,8 +28,8 @@ class BenchmarkJettyPostgreSqlTest : BenchmarkTest("jetty", "postgresql")
     }
 
     @AfterClass fun shutDown() {
-        benchmarkStores?.get(databaseEngine)?.close()
-        benchmarkServer?.stop()
+        benchmarkStores[databaseEngine]?.close()
+        benchmarkServer.stop()
     }
 
     @Test fun store() {

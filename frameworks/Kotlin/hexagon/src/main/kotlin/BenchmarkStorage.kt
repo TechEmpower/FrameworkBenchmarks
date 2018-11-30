@@ -2,9 +2,8 @@ package com.hexagonkt
 
 import com.hexagonkt.helpers.Environment
 import com.hexagonkt.settings.SettingsManager.setting
-import com.hexagonkt.store.mongodb.MongoIdRepository
-import com.hexagonkt.store.mongodb.mongoCollection
-import com.hexagonkt.store.mongodb.mongoDatabase
+import com.mongodb.MongoClient
+import com.mongodb.MongoClientURI
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -20,16 +19,16 @@ internal const val WORLD_ROWS = 10000
 
 private val worldName: String = defaultSetting("worldCollection", "world")
 private val fortuneName: String = defaultSetting("fortuneCollection", "fortune")
+private val databaseName = defaultSetting("database", "hello_world")
 
 internal fun <T : Any> defaultSetting(name: String, value: T): T = setting(name) ?: value
 
 private fun getDbUrl(engine: String): String {
     val dbHost = Environment.systemSetting("${engine.toUpperCase()}_DB_HOST", "localhost")
-    val dbName = defaultSetting("database", "hello_world")
 
     return when (engine) {
-        "mongodb" -> "mongodb://$dbHost/$dbName"
-        "postgresql" -> "jdbc:postgresql://$dbHost/$dbName?" +
+        "mongodb" -> "mongodb://$dbHost/$databaseName"
+        "postgresql" -> "jdbc:postgresql://$dbHost/$databaseName?" +
             "jdbcCompliantTruncation=false&" +
             "elideSetAutoCommits=true&" +
             "useLocalSessionState=true&" +
@@ -63,28 +62,27 @@ internal interface Store {
 }
 
 private class MongoDbStore(dbUrl: String) : Store {
-    private val database by lazy { mongoDatabase(dbUrl) }
+    private val database by lazy { MongoClient(MongoClientURI(dbUrl)).getDatabase(databaseName) }
 
     private val worldRepository by lazy { repository(worldName, World::class, World::_id) }
     private val fortuneRepository by lazy { repository(fortuneName, Fortune::class, Fortune::_id) }
 
-    // TODO Find out why it fails when creating index '_id' with background: true
     private fun <T : Any> repository(name: String, type: KClass<T>, key: KProperty1<T, Int>) =
-        MongoIdRepository(type, mongoCollection(name, database), key, indexOrder = null)
+        com.hexagonkt.store.mongodb.MongoDbStore(type, key, name, database)
 
     override fun close() { /* Not needed */ }
 
-    override fun findAllFortunes() = fortuneRepository.findObjects().toList()
+    override fun findAllFortunes() = fortuneRepository.findAll()
 
     override fun findWorlds(count: Int) =
-        (1..count).mapNotNull { worldRepository.find(randomWorld()) }
+        (1..count).mapNotNull { worldRepository.findOne(randomWorld()) }
 
     override fun replaceWorlds(count: Int) = (1..count)
-        .map { worldRepository.find(randomWorld())?.copy(randomNumber = randomWorld()) }
+        .map { worldRepository.findOne(randomWorld())?.copy(randomNumber = randomWorld()) }
         .toList()
         .filterNotNull()
         .map {
-            worldRepository.replaceObjects(it, bulk = true)
+            worldRepository.replaceOne(it)
             it
         }
 }
