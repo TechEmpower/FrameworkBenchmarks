@@ -98,7 +98,10 @@ changes = clean_output(
         'git log --name-only --pretty="format:" {!s}'.format(commit_range)
     ]))
 print("Determining what to run based on the following file changes: \n{!s}"
-    .format(changes))
+    .format('\n'.join(changes.split('\n')[0:10])))
+if len(changes.split('\n')) > 10:
+    print("Too many files to show.")
+
 
 # COMMIT MESSAGES:
 # Before any complicated diffing, check for forced runs from the commit message
