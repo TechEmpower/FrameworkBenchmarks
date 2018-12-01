@@ -2,7 +2,7 @@
 
 # OfficeFloor Benchmarking Test
 
-OfficeFloor is graphically configured through its true inversion of control.
+OfficeFloor provides true inversion of control.
 
 > Inversion of Control = Dependency Injection + Continuation Injection + Thread Injection
 
