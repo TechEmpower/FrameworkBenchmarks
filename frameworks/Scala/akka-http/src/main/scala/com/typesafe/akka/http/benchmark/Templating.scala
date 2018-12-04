@@ -1,7 +1,7 @@
 package com.typesafe.akka.http.benchmark
 
-import org.fusesource.scalate.Binding
+import org.fusesource.scalate.TemplateEngine
 
 trait Templating {
-  def layout(uri: String, attributes: Map[String, Any] = Map.empty, extraBindings: Traversable[Binding] = Nil): String
+  def templateEngine: TemplateEngine
 }

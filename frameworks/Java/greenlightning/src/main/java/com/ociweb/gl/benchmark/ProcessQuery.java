@@ -14,12 +14,12 @@ import io.reactiverse.pgclient.Tuple;
 
 public class ProcessQuery {
 	
-	private final ObjectPipe<ResultObject> DBRestInFlight;
+	private final transient ObjectPipe<ResultObject> DBRestInFlight;
 	private boolean collectionPendingDBRest = false;
 	private transient final List<ResultObject> collectorDBRest = new ArrayList<ResultObject>();
 	private final HTTPResponseService service;
 	private transient final PoolManager pm;
-	private final ThreadLocalRandom localRandom = ThreadLocalRandom.current();
+	private final transient ThreadLocalRandom localRandom = ThreadLocalRandom.current();
 
 	public ProcessQuery(int pipelineBits, HTTPResponseService service, PoolManager pm) {
 		
