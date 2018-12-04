@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>com.generallycloud</groupId>
 			<artifactId>baseio-all</artifactId>
-			<version>3.2.9-BETA-1</version>
+			<version>3.2.9-BETA-2</version>
 		</dependency>
 		
 		<dependency>
