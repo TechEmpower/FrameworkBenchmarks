@@ -3,9 +3,8 @@
     "tests": [
         {
             "default": {
-                "json_url": "/json",
                 "plaintext_url": "/plaintext",
-                "port": 5000,
+                "port": 8080,
                 "approach": "Realistic",
                 "classification": "Micro",
                 "database": "None",

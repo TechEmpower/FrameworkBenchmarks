@@ -3,6 +3,8 @@ FROM fukamachi/roswell
 WORKDIR /woo
 ADD  . .
 
-RUN ros install woo clack alexandria optima jonathan
+RUN apt install -y libev-dev
 
-CMD ["clackup", "woo.lisp"]
+RUN ["chmod", "+x", "./woo.ros"]
+
+CMD ./woo.ros --worker $(nproc) --port 8080
