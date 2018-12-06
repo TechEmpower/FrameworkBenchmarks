@@ -10,6 +10,7 @@ import com.ociweb.pronghorn.network.config.HTTPContentTypeDefaults;
 import com.ociweb.pronghorn.pipe.ObjectPipe;
 
 import io.reactiverse.pgclient.PgIterator;
+import io.reactiverse.pgclient.PgPool;
 import io.reactiverse.pgclient.Tuple;
 
 public class ProcessQuery {
@@ -51,6 +52,7 @@ public class ProcessQuery {
 		return 1+localRandom.nextInt(10000);
 	}		
 
+	
 	public boolean multiRestRequest(HTTPRequestReader request) { 
 
 		final int queries;
@@ -63,50 +65,51 @@ public class ProcessQuery {
 	
 		if (DBRestInFlight.hasRoomFor(queries)) {
 			
-			
-			int q = queries;
-			while (--q >= 0) {
-				
-					final ResultObject target = DBRestInFlight.headObject();
-					
-					//already released but not published yet: TODO: we have a problem here!!!
-					assert(null!=target && -1==target.getStatus()) : "found status "+target.getStatus()+" on query "+q+" of "+queries ; //must block that this has been consumed?? should head/tail rsolve.
+			sendQueries(pm.pool(),queries,request.getConnectionId(),request.getSequenceCode());
 									
-					target.setConnectionId(request.getConnectionId());
-					target.setSequenceId(request.getSequenceCode());
-					assert(target.getStatus()==-1);//waiting for work
-					target.setStatus(-2);//out for work	
-					target.setGroupSize(queries);
-				
-					pm.pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
-							if (r.succeeded()) {
-								
-								PgIterator resultSet = r.result().iterator();
-						        Tuple row = resultSet.next();			        
-						        
-						        target.setId(row.getInteger(0));
-						        target.setResult(row.getInteger(1));					
-								target.setStatus(200);
-								
-							} else {
-								System.out.println("fail: "+r.cause().getLocalizedMessage());
-								target.setStatus(500); 
-							}				
-						});	
-								
-					DBRestInFlight.moveHeadForward(); //always move to ensure this can be read.
-			
-			}
-				
 			return true;
 		} else {
 			return false;
 		}	
 	}
 
-	
+		
+	private void sendQueries(PgPool p, int queries, long con, long seq) {
+		int q = queries;
+		while (--q >= 0) {
+			
+				final ResultObject target = DBRestInFlight.headObject();
+			
+				assert(null!=target && -1==target.getStatus()) : "found status "+target.getStatus()+" on query "+q+" of "+queries ; //must block that this has been consumed?? should head/tail rsolve.
+								
+				target.setConnectionId(con);
+				target.setSequenceId(seq);
+				assert(target.getStatus()==-1);//waiting for work
+				target.setStatus(-2);//out for work	
+				target.setGroupSize(queries);
+			
+				p.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
+						if (r.succeeded()) {
+							
+							PgIterator resultSet = r.result().iterator();
+					        Tuple row = resultSet.next();			        
+					        
+					        target.setId(row.getInteger(0));
+					        target.setResult(row.getInteger(1));					
+							target.setStatus(200);
+							
+						} else {
+							System.out.println("fail: "+r.cause().getLocalizedMessage());
+							target.setStatus(500); 
+						}		
+						
+					});	
+							
+				DBRestInFlight.moveHeadForward(); //always move to ensure this can be read.
+		
+		}
+	}
 
-	
 	public boolean singleRestRequest(HTTPRequestReader request) { 
 
 		final ResultObject target = DBRestInFlight.headObject();
