@@ -2,7 +2,6 @@ package net.officefloor.benchmark;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
