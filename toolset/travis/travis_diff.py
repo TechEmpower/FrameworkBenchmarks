@@ -98,7 +98,10 @@ changes = clean_output(
         'git log --name-only --pretty="format:" {!s}'.format(commit_range)
     ]))
 print("Determining what to run based on the following file changes: \n{!s}"
-    .format(changes))
+    .format('\n'.join(changes.split('\n')[0:10])))
+if len(changes.split('\n')) > 10:
+    print("Too many files to show.")
+
 
 # COMMIT MESSAGES:
 # Before any complicated diffing, check for forced runs from the commit message
@@ -170,7 +173,7 @@ if re.search(r'\[ci lang .+\]', last_commit_msg, re.M):
 # Also for now, ignore the old linux setup folders, as we don't want to
 # trigger a full run as we remove old fw_depends scripts. [ci run-all] will
 # still work if it's needed.
-if re.search(r'^toolset\/(?!(travis\/|continuous\/|scaffolding\/))|^tfb', changes, re.M) is not None:
+if re.search(r'^toolset\/(?!(travis\/|continuous\/|scaffolding\/))|^tfb|^Dockerfile', changes, re.M) is not None:
     print("Found changes to core toolset. Running all tests.")
     run_tests = test_dirs
     quit_diffing()

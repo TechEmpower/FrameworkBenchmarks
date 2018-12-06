@@ -6,8 +6,8 @@ use Hamlet\Database\Database;
 use Hamlet\Entities\JsonEntity;
 use Hamlet\Requests\Request;
 use Hamlet\Resources\WebResource;
-use Hamlet\Responses\OKResponse;
 use Hamlet\Responses\Response;
+use Hamlet\Responses\SimpleOKResponse;
 
 class DbResource implements WebResource
 {
@@ -47,6 +47,6 @@ class DbResource implements WebResource
             $payload = $payload[0];
         }
 
-        return new OKResponse(new JsonEntity($payload));
+        return new SimpleOKResponse(new JsonEntity($payload));
     }
 }

@@ -1,4 +1,4 @@
-FROM node:10.10.0
+FROM node:10.12.0
 
 RUN apt update
 RUN apt install nginx -y

@@ -2,17 +2,18 @@ package org.jetbrains.ktor.benchmarks
 
 import com.zaxxer.hikari.*
 import io.ktor.application.*
-import io.ktor.content.*
 import io.ktor.features.*
 import io.ktor.html.*
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.scheduling.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.scheduling.*
 import kotlinx.html.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
+import java.util.*
 import java.util.concurrent.*
 
 @Serializable
@@ -24,6 +25,7 @@ data class World(val id: Int, var randomNumber: Int)
 @Serializable
 data class Fortune(val id: Int, var message: String)
 
+@UseExperimental(ImplicitReflectionSerializer::class, InternalCoroutinesApi::class)
 fun Application.main() {
     val worldSerializer = World.serializer()
     val worldListSerializer = World.serializer().list

@@ -7,7 +7,7 @@
 
   <groupId>io.vertx</groupId>
   <artifactId>vertx-web-benchmark</artifactId>
-  <version>3.5.0</version>
+  <version>3.5.4</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
