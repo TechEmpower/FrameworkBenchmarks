@@ -40,15 +40,14 @@ public class TestHttpLoadServer {
         LoggerFactory.setEnableSLF4JLogger(false);
         LoggerFactory.setLogLevel(LoggerFactory.LEVEL_INFO);
         Options.setDevelopDebug(false);
-        Options.setChannelReadFirst(true);
+        Options.setChannelReadFirst(false);
 
         IoEventHandle eventHandle = new IoEventHandle() {
 
             @Override
             public void accept(NioSocketChannel ch, Frame frame) throws Exception {
                 HttpFrame f = (HttpFrame) frame;
-                String action = f.getRequestURI();
-                f.getResponseHeaders().remove(HttpHeader.Connection);
+                String action = f.getRequestURL();
                 f.setResponseHeader(HttpHeader.Server, STATIC_SERVER);
 
                 if ("/plaintext".equals(action)) {
@@ -68,10 +67,11 @@ public class TestHttpLoadServer {
 
         };
 
-        int core_size = Runtime.getRuntime().availableProcessors();
+        int core_size = Runtime.getRuntime().availableProcessors() * 2;
         NioEventLoopGroup group = new NioEventLoopGroup();
-        group.setMemoryPoolCapacity(1024 * 1024 / core_size);
-        group.setMemoryPoolUnit(512);
+        group.setMemoryPoolCapacity(1024 * 128);
+        group.setMemoryPoolUnit(256);
+        group.setWriteBuffers(32);
         group.setEventLoopSize(core_size);
         ChannelAcceptor context = new ChannelAcceptor(group, 8080);
         context.setProtocolCodec(new HttpCodec(1024 * 16));

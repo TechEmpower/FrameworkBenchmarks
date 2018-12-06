@@ -17,8 +17,8 @@ RUN gradle --quiet --exclude-task test
 FROM openjdk:11
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
-ENV WEBENGINE jetty
-ENV PROJECT hexagon
+ENV RESIN 4.0.58
 
-COPY --from=gradle_build /hexagon/build/install/$PROJECT /opt/$PROJECT
-ENTRYPOINT /opt/$PROJECT/bin/$PROJECT
+RUN curl http://caucho.com/download/resin-$RESIN.tar.gz | tar xvz -C /opt
+COPY --from=gradle_build /hexagon/build/libs/ROOT.war /opt/resin-$RESIN/webapps
+ENTRYPOINT /opt/resin-$RESIN/bin/resin.sh console

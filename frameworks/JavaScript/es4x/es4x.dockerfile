@@ -1,24 +1,4 @@
-FROM ubuntu:18.04
-
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN apt-get update && \
-    apt-get -y install curl && \
-    rm -rf /var/lib/apt/lists/*
-
-ENV GRAALVM_VERSION=1.0.0-rc6
-
-# Get GraalVM CE
-RUN echo "Pulling graalvm ${GRAALVM_VERSION} binary from Github." \
-    && curl -sSLf https://github.com/oracle/graal/releases/download/vm-${GRAALVM_VERSION}/graalvm-ce-${GRAALVM_VERSION}-linux-amd64.tar.gz > /tmp/graalvm-ce-${GRAALVM_VERSION}-linux-amd64.tar.gz \
-    && mkdir -p /opt/java \
-    && tar -zxf /tmp/graalvm-ce-${GRAALVM_VERSION}-linux-amd64.tar.gz -C /opt/java \
-    && rm /tmp/graalvm-ce-${GRAALVM_VERSION}-linux-amd64.tar.gz
-
-ENV GRAALVM_HOME=/opt/java/graalvm-ce-${GRAALVM_VERSION}
-ENV JAVA_HOME=${GRAALVM_HOME}
-ENV PATH=${PATH}:${JAVA_HOME}/bin
-
+FROM oracle/graalvm-ce:1.0.0-rc9
 # Set working dir
 RUN mkdir /app
 WORKDIR /app
@@ -30,7 +10,7 @@ RUN npm --unsafe-perm install
 # Generate a runtime blog
 RUN npm run package
 
-CMD ${GRAALVM_HOME}/bin/java \
+CMD java \
     -server                                           \
     -XX:+UseNUMA                                      \
     -XX:+UseParallelGC                                \
@@ -43,6 +23,6 @@ CMD ${GRAALVM_HOME}/bin/java \
     -Dvertx.disableContextTimings=true                \
     -Dvertx.disableTCCL=true                          \
     -jar                                              \
-    target/es4x-0.0.1-fat.jar                         \
+    target/es4x-0.0.1-bin.jar                         \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`
