@@ -11,12 +11,13 @@ public class PoolManager {
 	private transient long lastUsed;
 	
 	public PoolManager(PgPoolOptions options) {
-		this.options = options;		
+		this.options = options;
+		
 	}
 		
 	public PgPool pool() {
 		if (null==pool) {
-			pool = PgClient.pool(options);	//TODO: how to clear this when not in use?		
+			pool = PgClient.pool(options);
 		}
 		lastUsed = System.nanoTime();
 		return pool;

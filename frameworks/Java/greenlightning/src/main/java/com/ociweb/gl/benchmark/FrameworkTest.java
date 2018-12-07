@@ -3,6 +3,7 @@ package com.ociweb.gl.benchmark;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.ociweb.gl.api.GreenApp;
+import com.ociweb.gl.api.GreenCommandChannel;
 /**
  * ************************************************************************
  * For greenlightning support, training or feature reqeusts please contact:
@@ -46,14 +47,14 @@ public class FrameworkTest implements GreenApp {
 			    
     public FrameworkTest() {
     	// use this in commit messages to narrow travis testing to just this project
-    	// [ci fw-only Java/greenlightning]
+    	// rebase before using this:  [ci fw-only Java/greenlightning]
     	
     	//this server works best with  -XX:+UseNUMA    	
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    //default port for test 
-    		 10,      //default concurrency, 5 to support 140 channels on 14 core boxes
-    		 8*1024,  //default max rest requests allowed to queue in wait
-    		 1<<19,   //default network buffer per input socket connection
+    		 7,      //default concurrency per track
+    		 2*1024,  //default max rest requests allowed to queue in wait
+    		 1<<20,   //default network buffer per input socket connection
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
@@ -78,10 +79,10 @@ public class FrameworkTest implements GreenApp {
     	this.queueLengthOfPendingRequests = queueLengthOfPendingRequests;
     	this.minMemoryOfInputPipes = minMemoryOfInputPipes;
     	this.telemetryPort = telemetryPort;
-    	this.pipelineBits = 17;//max concurrent in flight database requests 1<<pipelineBits
-
+    	this.pipelineBits = 14;//max concurrent in flight database requests 1<<pipelineBits
+    	
     	this.dbCallMaxResponseCount = 1<<4;
-    	this.jsonMaxResponseCount = 1<<16;
+    	this.jsonMaxResponseCount = 1<<13;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<9;
@@ -113,7 +114,7 @@ public class FrameworkTest implements GreenApp {
     				.setUser(connectionUser)
     				.setIdleTimeout(20)
     				.setPassword(connectionPassword)
-    				.setCachePreparedStatements(true)
+    				.setCachePreparedStatements(true)    	
     				.setMaxSize(connectionsPerTrack);	    	
 
     		///early check to know if we have a database or not,
@@ -137,7 +138,7 @@ public class FrameworkTest implements GreenApp {
 		
 		framework.setDefaultRate(20_000);
 		
-		//for 14 cores this is expected to use less than 16G
+		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
     			 .setHost(host)
     			 .setMaxConnectionBits(13) //8K max client connections.
@@ -146,7 +147,7 @@ public class FrameworkTest implements GreenApp {
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
     			 
     			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
-    			 .setMaxQueueOut(64)
+    			 .setMaxQueueOut(256)
     			 .setMaxResponseSize(dbCallMaxResponseSize) //big enough for large mult db response
     	         .useInsecureServer(); //turn off TLS
 
@@ -188,11 +189,11 @@ public class FrameworkTest implements GreenApp {
 		
 		if (telemetryPort>0) {
 			framework.enableTelemetry(host,telemetryPort);
+		} else {
+			framework.enableTelemetryLogging();
 		}
-		
-		
-		ServerSocketWriterStage.lowLatency = false; //turn on high volume mode, less concerned about low latency. 
-	
+				
+		framework.setTimerPulseRate(30 * 1000);//2x per minute
     }
 
 
@@ -217,7 +218,14 @@ public class FrameworkTest implements GreenApp {
 	}
 	 
     @Override
-    public void declareBehavior(GreenRuntime runtime) { 
+    public void declareBehavior(GreenRuntime runtime) {
+    	
+    	//log the telemetry snapshot upon every pulse
+    	final GreenCommandChannel cmd = runtime.newCommandChannel();    	
+    	runtime.addTimePulseListener("log",(t,i)->{
+    		cmd.logTelemetrySnapshot();
+    	});
+    	
     }
   
 }
