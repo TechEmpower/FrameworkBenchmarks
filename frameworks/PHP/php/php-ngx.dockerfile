@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update -yqq  > /dev/null
+RUN apt-get update -yqq > /dev/null
 RUN apt-get install -yqq wget git unzip libxml2-dev cmake make
 
 ADD ./ ./
