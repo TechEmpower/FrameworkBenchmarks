@@ -8,7 +8,7 @@ RUN apt-get install -yqq wget git unzip libxml2-dev cmake make
 ADD ./ ./
 
 ENV PHP_VERSION=7.2.12
-ENV NGINX_VERSION=1.10.3
+ENV NGINX_VERSION=1.12.2
 
 RUN wget http://php.net/distributions/php-${PHP_VERSION}.tar.gz && \
     tar xf php-${PHP_VERSION}.tar.gz && \
