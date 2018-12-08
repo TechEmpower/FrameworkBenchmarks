@@ -12,7 +12,7 @@ class DemoProcessor : HttpProcessor {
     override void onComplete(HttpRequest req) {
         switch (req.uri) {
         case "/plaintext":
-            respondWith("Hello, World!", 200);
+            respondWith("Hello, World!", 200, HttpHeader("Content-Type", "text/plain"));
             break;
 
         case "/json":
