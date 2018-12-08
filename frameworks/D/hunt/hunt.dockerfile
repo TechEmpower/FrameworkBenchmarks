@@ -1,5 +1,7 @@
 FROM dlanguage/ldc:1.7.0
 
+RUN apt update -yqq && apt install -yqq git make
+
 ADD ./ /hunt
 WORKDIR /hunt
 
