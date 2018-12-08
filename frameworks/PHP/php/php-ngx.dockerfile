@@ -2,7 +2,8 @@ FROM ubuntu:16.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update -yqq > /dev/null
+RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
+RUN apt-get update -yqq  > /dev/null
 RUN apt-get install -yqq wget git unzip libxml2-dev cmake make libpcre3 libpcre3-dev php7.2 php7.2-common libphp7.2-embed
 
 ADD ./ ./
