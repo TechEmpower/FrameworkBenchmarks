@@ -9,8 +9,6 @@ RUN apt-get install -yqq wget git unzip libxml2-dev cmake make \
                     zlibc zlib1g zlib1g-dev libpcre3 libpcre3-dev libargon2-0-dev libsodium-dev \
                     php7.2 php7.2-common php7.2-dev libphp7.2-embed php7.2-mysql
 
-RUN export PHP_LIB=/usr/lib
-
 ADD ./ ./
 
 #ENV PHP_VERSION=7.2.12
@@ -32,6 +30,7 @@ RUN wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
 #    export PHP_BIN=/php7/bin && \
 #    export PHP_INC=/php7/include && \
 #    export PHP_LIB=/php7/lib && \
+    export PHP_LIB=/usr/lib && \ 
     ./configure --user=www --group=www \
             --prefix=/nginx \
             --with-ld-opt="-Wl,-rpath,$PHP_LIB" \
