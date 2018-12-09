@@ -6,7 +6,7 @@ RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /de
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq  > /dev/null
 RUN apt-get install -yqq wget git unzip libxml2-dev cmake make \
-                    zlibc zlib1g zlib1g-dev libpcre3 libpcre3-dev \
+                    zlibc zlib1g zlib1g-dev libpcre3 libpcre3-dev libargon2-0-dev libsodium-dev \
                     php7.2 php7.2-common php7.2-dev libphp7.2-embed php7.2-mysql
 
 RUN export PHP_LIB=/usr/lib
