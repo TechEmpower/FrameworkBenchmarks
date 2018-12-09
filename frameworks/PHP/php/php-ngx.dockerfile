@@ -38,5 +38,6 @@ RUN wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 && \
     make && make install 
 
+RUN chmod -R 777 /php
 
 CMD /nginx/sbin/nginx -c /deploy/nginx_php.conf
