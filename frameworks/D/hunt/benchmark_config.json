@@ -1,5 +1,5 @@
 {
-  "framework": "kiss",
+  "framework": "hunt",
   "tests": [{
     "default": {
       "json_url": "/json",
@@ -8,17 +8,17 @@
       "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
-      "framework": "Kiss",
+      "framework": "Hunt",
       "language": "D",
       "flavor": "DLang2",
       "orm": "Raw",
-      "platform": "Kiss",
+      "platform": "Hunt",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Kiss",
+      "display_name": "Hunt",
       "notes": "",
-      "versus": "Kiss"
+      "versus": "Hunt"
   },
     "ldc": {
       "json_url": "/json",
@@ -27,17 +27,17 @@
       "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
-      "framework": "Kiss",
+      "framework": "Hunt",
       "language": "D",
       "flavor": "DLang2",
       "orm": "Raw",
-      "platform": "Kiss",
+      "platform": "Hunt",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Kiss",
+      "display_name": "Hunt",
       "notes": "",
-      "versus": "Kiss"
+      "versus": "Hunt"
     }
   }]
 }
