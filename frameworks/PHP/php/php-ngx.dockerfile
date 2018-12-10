@@ -11,7 +11,7 @@ RUN apt-get install -yqq wget git unzip libxml2-dev cmake make \
 
 ADD ./ ./
 
-ENV NGINX_VERSION=1.12.2
+ENV NGINX_VERSION=1.14.2
 
 RUN git clone https://github.com/rryqszq4/ngx_php7.git
 
