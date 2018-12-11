@@ -40,12 +40,11 @@ For mongoDB access, spring-data-mongodb with reactive support is used. See [Mong
 ## Versions
 
 * [Java OpenJDK 10](http://openjdk.java.net/)
-* [Spring boot 2.1.0.BUILD-SNAPSHOT](https://spring.io/projects/spring-boot) - this is needed for R2DBC
-* [Spring data mongodb 2.0.9](https://projects.spring.io/spring-data-mongodb/)
+* [Spring boot 2.1.0.RELEASE](https://spring.io/projects/spring-boot) - this is needed for R2DBC
+* [Spring data mongodb 2.1.0.RELEASE](https://projects.spring.io/spring-data-mongodb/)
 * [reactive-pg-client 0.10.6](https://github.com/reactiverse/reactive-pg-client)
-* [rxjava2-jdbc 0.1-RC38](https://github.com/davidmoten/rxjava2-jdbc)
+* [rxjava2-jdbc 0.2.0](https://github.com/davidmoten/rxjava2-jdbc)
 * [r2dbc-postgresql 1.0.0.BUILD-SNAPSHOT](https://github.com/r2dbc/r2dbc-postgresql)
-* [spring-data-jdbc 1.0.0.r2dbc-SNAPSHOT](https://spring.io/projects/spring-data-jdbc)
 
 ## Test URLs
 
