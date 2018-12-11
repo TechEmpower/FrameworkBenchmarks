@@ -2,8 +2,8 @@ package benchmark.config;
 
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -19,8 +19,9 @@ public class ReactiveMongoConfig extends AbstractReactiveMongoConfiguration {
     private String url;
     private String name;
 
-    @Override
+    @Bean
     public MongoClient reactiveMongoClient() {
+        LoggerFactory.getLogger(getClass()).info("Connecting to mongo url: {}/{}", url, name);
         return MongoClients.create(url);
     }
 

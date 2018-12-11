@@ -37,7 +37,9 @@ public class WebfluxHandler {
     }
 
     public Mono<ServerResponse> db(ServerRequest request) {
-        Mono<World> world = dbRepository.getWorld(randomWorldNumber());
+        int id = randomWorldNumber();
+        Mono<World> world = dbRepository.getWorld(id)
+                .switchIfEmpty(Mono.error(new Exception("No World found with Id: " + id)));
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -52,7 +54,7 @@ public class WebfluxHandler {
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Flux.merge(worlds).collectList(), new ParameterizedTypeReference<>() {
+                .body(Flux.merge(worlds).collectList(), new ParameterizedTypeReference<List<World>>() {
                 });
     }
 
@@ -77,7 +79,7 @@ public class WebfluxHandler {
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Flux.merge(worlds).collectList(), new ParameterizedTypeReference<>() {
+                .body(Flux.merge(worlds).collectList(), new ParameterizedTypeReference<List<World>>() {
                 });
     }
 

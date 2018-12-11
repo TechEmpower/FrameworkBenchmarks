@@ -11,10 +11,10 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Profile("rxjdbc")
-public class RxJava2DbRepository implements DbRepository {
+public class RxJdbcRepository implements DbRepository {
     private final Database db;
 
-    public RxJava2DbRepository(Database db) {
+    public RxJdbcRepository(Database db) {
         this.db = db;
     }
 
