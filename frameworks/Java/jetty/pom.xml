@@ -9,7 +9,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jetty.version>9.4.6.v20170531</jetty.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <jetty.version>9.4.12.v20180830</jetty.version>
         <main.class>hello.handler.HelloWebServer</main.class>
     </properties>
 
@@ -32,14 +34,11 @@
                         <inherited>true</inherited>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
-                        <version>2.3.2</version>
+                        <version>3.8.0</version>
                         <configuration>
                             <excludes>
                                 <exclude>hello/servlet/**</exclude>
                             </excludes>
-                            <source>1.8</source>
-                            <target>1.8</target>
-                            <optimize>true</optimize>
                             <debug>false</debug>
                         </configuration>
                     </plugin>
@@ -64,14 +63,11 @@
                         <inherited>true</inherited>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
-                        <version>2.3.2</version>
+                        <version>3.8.0</version>
                         <configuration>
                             <excludes>
                                 <exclude>hello/handler/**</exclude>
                             </excludes>
-                            <source>1.8</source>
-                            <target>1.8</target>
-                            <optimize>true</optimize>
                             <debug>false</debug>
                         </configuration>
                     </plugin>

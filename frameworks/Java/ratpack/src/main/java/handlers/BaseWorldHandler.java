@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class BaseWorldHandler extends InjectionHandler {
@@ -30,17 +31,10 @@ public abstract class BaseWorldHandler extends InjectionHandler {
         return Math.min(500, Math.max(1, parsedValue));
     }
 
-    protected World getWorld(Connection connection) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT id, randomnumber FROM world WHERE id = ?");
-            statement.setInt(1, randomWorldNumber());
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            World world = new World(rs.getInt(1), rs.getInt(2));
-            statement.close();
-            return world;
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
-        }
+    protected int[] getNumbers(int count) {
+        int[] ids = new int[count];
+        Arrays.setAll(ids, value -> randomWorldNumber());
+
+        return ids;
     }
 }

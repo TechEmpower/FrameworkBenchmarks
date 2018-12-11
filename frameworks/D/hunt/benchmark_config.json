@@ -2,23 +2,42 @@
   "framework": "hunt",
   "tests": [{
     "default": {
-      "plaintext_url": "/plaintext",
       "json_url": "/json",
+      "plaintext_url": "/plaintext",
       "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "MySQL",
-      "framework": "hunt",
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "Hunt",
       "language": "D",
       "flavor": "DLang2",
-      "orm": "raw",
-      "platform": "None",
-      "webserver": "nginx",
+      "orm": "Raw",
+      "platform": "Hunt",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "hunt",
+      "display_name": "Hunt",
       "notes": "",
-      "versus": "hunt"
+      "versus": "Hunt"
+  },
+    "ldc": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "Hunt",
+      "language": "D",
+      "flavor": "DLang2",
+      "orm": "Raw",
+      "platform": "Hunt",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Hunt",
+      "notes": "",
+      "versus": "Hunt"
     }
   }]
 }

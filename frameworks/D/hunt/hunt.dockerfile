@@ -1,12 +1,15 @@
 FROM dlanguage/ldc:1.7.0
 
+RUN apt update -yqq && apt install -yqq git make
+
+ADD ./ /hunt
 WORKDIR /hunt
-COPY config config
-COPY source source
-COPY dub.json dub.json
-COPY dub.selections.json dub.selections.json
 
+RUN git clone https://github.com/nodejs/http-parser.git && \
+    cd http-parser && \
+    make package
+    
 RUN dub upgrade --verbose
-RUN dub build -f -b release -v
+RUN dub build -f --arch=x86_64 --build=release
 
-CMD ["./website"]
+CMD ["./hunt-benchmark"]
