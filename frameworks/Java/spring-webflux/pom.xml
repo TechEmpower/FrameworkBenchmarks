@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.0.BUILD-SNAPSHOT</version>
+        <version>2.1.0.RELEASE</version>
     </parent>
 
     <properties>
@@ -69,8 +69,8 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jdbc</artifactId>
-            <version>${spring-data-jdbc.version}</version>
+            <artifactId>spring-data-r2dbc</artifactId>
+            <version>1.0.0.BUILD-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -90,6 +90,7 @@
     </pluginRepositories>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
