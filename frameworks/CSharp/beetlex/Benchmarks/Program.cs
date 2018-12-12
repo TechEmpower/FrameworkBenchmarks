@@ -4,13 +4,30 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading;
+<<<<<<< HEAD
+=======
+using System.Text;
+
+>>>>>>> master
 namespace Benchmarks
 {
     [BeetleX.FastHttpApi.Controller]
     class Program
     {
+<<<<<<< HEAD
         public static void Main(string[] args)
         {
+=======
+        private static readonly byte[] _helloWorldPayload = Encoding.UTF8.GetBytes("Hello, World!");
+
+        private static StringBytes plaintextResult;
+
+        private static JsonMessage jsonMessage = new JsonMessage { message = "Hello, World!" };
+
+        public static void Main(string[] args)
+        {
+            plaintextResult = new StringBytes(_helloWorldPayload);
+>>>>>>> master
             var builder = new HostBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
@@ -22,13 +39,21 @@ namespace Benchmarks
         public object plaintext(IHttpContext context)
         {
             context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+<<<<<<< HEAD
             return new TextResult("Hello, World!");
+=======
+            return plaintextResult;
+>>>>>>> master
         }
 
         public object json(IHttpContext context)
         {
             context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+<<<<<<< HEAD
             return new JsonResult(new JsonMessage { message = "Hello, World!" });
+=======
+            return new JsonResult(jsonMessage);
+>>>>>>> master
         }
 
         public class JsonMessage
@@ -37,6 +62,11 @@ namespace Benchmarks
         }
     }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> master
     public class BeetleXHttpServer : IHostedService
     {
         private HttpApiServer mApiServer;
