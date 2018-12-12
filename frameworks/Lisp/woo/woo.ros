@@ -50,30 +50,21 @@ exec ros -Q -- $0 "$@"
 ;; END BOILERPLATE
 
 
-;; Plaintext handler
 (defun plaintext (env)
+  "Plaintext handler."
   (declare (ignore env))
   '(200 (:content-type "text/plain" :server "Woo") ("Hello, World!"))
 )
 
-;; JSON handler
 (defun json (env)
+  "JSON handler using Jonathan to encode JSON"
   (declare (ignore env))
-  ;; '(200
-  ;;   (:content-type "application/json" :server "Woo")
-  ;;   (jonathan:with-output-to-string*
-  ;;     (jonathan:with-object
-  ;;       (write-key-value "message" "Hello, World!")
-  ;;     )
-  ;;   )
-  ;; )
-
-  '(200 (:content-type "application/json" :server "Woo") (jonathan:to-json '(:message "Hello, World!")))
+  `(200 (:content-type "application/json" :server "Woo") (,(jonathan:to-json '(:message "Hello, World!"))))
 )
 
 
-;; Route handler
 (defun handler (env)
+  "Woo router using Alexandria and Optima pattern matching."
   (optima:match env
     (
       (guard (property :path-info path) (alexandria:starts-with-subseq "/plaintext" path))
@@ -87,8 +78,8 @@ exec ros -Q -- $0 "$@"
 )
 
 
-;; Create and start the server
 (defun main (&rest argv)
+  "Create and start the server, applying argv to the env"
   (let ((args (parse-argv argv)))
     (apply #'woo:run
       (lambda (env)
