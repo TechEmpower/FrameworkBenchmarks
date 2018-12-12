@@ -1,0 +1,43 @@
+plugins {
+    id "java"
+    id "application"
+    id 'org.jetbrains.kotlin.jvm'
+    id 'kotlinx-serialization'
+    id 'com.github.johnrengelman.shadow' version '4.0.3'
+}
+
+group 'org.jetbrains.ktor'
+version '1.0-SNAPSHOT'
+
+mainClassName = "MainKt"
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url "https://kotlin.bintray.com/kotlinx" }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.9.1"
+    compile "io.ktor:ktor-server-netty:$ktor_version"
+    compile "io.ktor:ktor-html-builder:$ktor_version"
+    compile "com.github.jasync-sql:jasync-postgresql:0.8.54"
+    compile "io.reactiverse:reactive-pg-client:0.11.0"
+    compile "io.reactivex.rxjava2:rxjava:2.2.4"
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.0.1'
+    compile 'io.vertx:vertx-rx-java2:3.6.0'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+shadowJar {
+    baseName = "bench"
+    classifier = null
+    version = null
+}
