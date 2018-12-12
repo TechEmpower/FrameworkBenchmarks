@@ -56,6 +56,21 @@ exec ros -Q -- $0 "$@"
   '(200 (:content-type "text/plain" :server "Woo") ("Hello, World!"))
 )
 
+;; JSON handler
+(defun json (env)
+  (declare (ignore env))
+  ;; '(200
+  ;;   (:content-type "application/json" :server "Woo")
+  ;;   (jonathan:with-output-to-string*
+  ;;     (jonathan:with-object
+  ;;       (write-key-value "message" "Hello, World!")
+  ;;     )
+  ;;   )
+  ;; )
+
+  '(200 (:content-type "application/json" :server "Woo") (jonathan:to-json '(:message "Hello, World!")))
+)
+
 
 ;; Route handler
 (defun handler (env)
@@ -63,6 +78,10 @@ exec ros -Q -- $0 "$@"
     (
       (guard (property :path-info path) (alexandria:starts-with-subseq "/plaintext" path))
       (funcall 'plaintext env)
+    )
+    (
+      (guard (property :path-info path) (alexandria:starts-with-subseq "/json" path))
+      (funcall 'json env)
     )
   )
 )
