@@ -4,7 +4,7 @@
 
 	<groupId>com.ociweb.gl.benchmark</groupId>
 	<artifactId>benchmark-test</artifactId>
-	<version>1.0.17</version>
+	<version>1.0.18</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>com.ociweb</groupId>
 			<artifactId>greenlightning</artifactId>
-			<version>1.0.17</version>
+			<version>1.0.18</version> <!-- must be a fixed version for techempower releases -->
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -66,20 +66,6 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<forceCreation>true</forceCreation>
-					<archive>
-						<manifestEntries>
-							<Build-Time>${maven.build.timestamp}</Build-Time>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
 			
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
@@ -93,7 +79,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.0.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
