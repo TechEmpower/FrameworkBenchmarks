@@ -21,7 +21,7 @@ public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-        System.setProperty("smart-socket.server.pageSize", (32 * 1024 * 1024) + "");
+        System.setProperty("smart-socket.server.pageSize", (5 * 1024 * 1024) + "");
         System.setProperty("smart-socket.session.writeChunkSize", (1024 * 8) + "");
         HttpMessageProcessor processor = new HttpMessageProcessor(System.getProperty("webapps.dir", "./"));
         processor.route("/plaintext", new HttpHandle() {
