@@ -24,52 +24,40 @@ exec ros -Q -- $0 "$@"
 (ql:quickload '(:uiop :woo :alexandria :optima :jonathan) :silent t)
 (use-package :optima)
 
-;; This is just boilerplate
-(defun starts-with (x starts)
-  (and (<= (length starts) (length x))
-       (string= x starts :end1 (length starts))))
-
-(defun parse-argv (args)
-  (flet ((parse-int-value (option value)
-           (handler-case (parse-integer value)
-             (error (e)
-               (error "Invalid value for ~S: ~S~%  ~A" option value e)))))
-    (loop for option = (pop args)
-          for value = (pop args)
-          while option
-          if (not (starts-with option "--"))
-            do (error "Invalid option: ~S" option)
-          else
-            if (equal option "--worker")
-              append (list :worker-num (parse-int-value option value))
-          else
-            if (equal option "--port")
-              append (list :port (parse-int-value option value))
-          else
-            do (error "Unknown option: ~S" option))))
-;; END BOILERPLATE
+(load "./helpers/starts-with.lisp")
+(load "./helpers/parse-argv.lisp")
 
 
-;; Plaintext handler
 (defun plaintext (env)
+  "Plaintext handler."
   (declare (ignore env))
   '(200 (:content-type "text/plain" :server "Woo") ("Hello, World!"))
 )
 
+(defun json (env)
+  "JSON handler using Jonathan to encode JSON"
+  (declare (ignore env))
+  `(200 (:content-type "application/json" :server "Woo") (,(jonathan:to-json '(:message "Hello, World!"))))
+)
 
-;; Route handler
+
 (defun handler (env)
+  "Woo router using Alexandria and Optima pattern matching."
   (optima:match env
     (
       (guard (property :path-info path) (alexandria:starts-with-subseq "/plaintext" path))
       (funcall 'plaintext env)
     )
+    (
+      (guard (property :path-info path) (alexandria:starts-with-subseq "/json" path))
+      (funcall 'json env)
+    )
   )
 )
 
 
-;; Create and start the server
 (defun main (&rest argv)
+  "Create and start the server, applying argv to the env"
   (let ((args (parse-argv argv)))
     (apply #'woo:run
       (lambda (env)
