@@ -1,9 +1,10 @@
 FROM fukamachi/roswell
 
+RUN apt update -y
+RUN apt install -y libev-dev
+
 WORKDIR /woo
 ADD  . .
-
-RUN apt install -y libev-dev
 
 RUN ["chmod", "+x", "./woo.ros"]
 
