@@ -18,11 +18,10 @@ import java.sql.SQLException;
 public class RxJdbcConfig {
     @Bean
     public Database database(DataSourceProperties dsProps) throws SQLException {
-        Connection connection = DriverManager.getConnection(dsProps.getUrl(), dsProps.getUsername(), dsProps.getPassword());
         NonBlockingConnectionPool pool =
                 Pools.nonBlocking()
                         .maxPoolSize(Runtime.getRuntime().availableProcessors() * 2)
-                        .connectionProvider(ConnectionProvider.from(connection))
+                        .connectionProvider(ConnectionProvider.from(dsProps.getUrl(), dsProps.getUsername(), dsProps.getPassword()))
                         .build();
 
         Database db = Database.from(pool);

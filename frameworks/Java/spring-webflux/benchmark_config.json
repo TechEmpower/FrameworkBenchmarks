@@ -1,25 +1,6 @@
 {
   "framework": "spring-webflux",
   "tests": [{
-    "default": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "None",
-      "framework": "spring",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Micro",
-      "platform": "Netty",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "spring-webflux",
-      "notes": "",
-      "versus": "spring"
-    },
     "mongo": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
