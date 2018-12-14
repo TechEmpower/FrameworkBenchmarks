@@ -14,8 +14,6 @@ namespace Benchmarks
 
         private static StringBytes plaintextResult;
 
-        private static JsonMessage jsonMessage = new JsonMessage { message = "Hello, World!" };
-
         public static void Main(string[] args)
         {
             plaintextResult = new StringBytes(_helloWorldPayload);
@@ -36,7 +34,7 @@ namespace Benchmarks
         public object json(IHttpContext context)
         {
             context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
-            return new JsonResult(jsonMessage);
+            return new JsonResult(new JsonMessage { message = "Hello, World!" });
         }
         public class JsonMessage
         {
