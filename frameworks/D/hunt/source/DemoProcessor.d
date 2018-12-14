@@ -2,7 +2,7 @@ module DemoProcessor;
 
 import hunt.io;
 import http.Processor;
-import std.json;
+import stdx.data.json;
 
 class DemoProcessor : HttpProcessor {
     this(TcpStream client) {
@@ -16,10 +16,8 @@ class DemoProcessor : HttpProcessor {
             break;
 
         case "/json":
-            JSONValue js;
-            js["message"] = "Hello, World!";
-            string content = js.toString();
-            respondWith(content, 200, HttpHeader("Content-Type", "application/json"));
+            JSONValue js = JSONValue(["message" : JSONValue("Hello, World!")]);
+            respondWith(js.toJSON(), 200, HttpHeader("Content-Type", "application/json"));
             break;
 
         default:
