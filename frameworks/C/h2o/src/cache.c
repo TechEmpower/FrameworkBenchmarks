@@ -24,6 +24,9 @@
 #include "cache.h"
 #include "utility.h"
 
+// Increasing the number of caches by the following factor reduces contention; must be a power of 2.
+#define CONCURRENCY_FACTOR 4
+
 static h2o_cache_t *get_cache(cache_t *cache, h2o_cache_hashcode_t keyhash)
 {
 	assert(is_power_of_2(cache->cache_num));
@@ -39,9 +42,10 @@ int cache_create(size_t concurrency,
 	int ret = EXIT_SUCCESS;
 
 	memset(cache, 0, sizeof(*cache));
+	assert(is_power_of_2(CONCURRENCY_FACTOR));
 	// Rounding up to a power of 2 simplifies the calculations a little bit, and, as any increase in
 	// the number of caches, potentially reduces thread contention.
-	cache->cache_num = round_up_to_power_of_2(concurrency);
+	cache->cache_num = CONCURRENCY_FACTOR * round_up_to_power_of_2(concurrency);
 	cache->cache_num = MAX(cache->cache_num, 1);
 	capacity = (capacity + cache->cache_num - 1) / cache->cache_num;
 	cache->cache = malloc(cache->cache_num * sizeof(*cache->cache));
