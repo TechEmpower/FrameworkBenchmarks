@@ -1,0 +1,15 @@
+{
+	"name": "hunt-benchmark",
+	"targetType": "executable",
+	"authors": [
+		"Putao"
+	],
+	"description": "A simple http server powered by Hunt.",
+	"copyright": "Copyright © 2017-2018, HuntLabs.cn",
+	"license": "Apache-2.0",
+	"libs-posix": [ "http_parser" ],
+	"lflags-posix": ["-Lhttp-parser/"],
+	"dependencies": {
+		"hunt": "~>1.0.0-rc.5"
+	}
+}

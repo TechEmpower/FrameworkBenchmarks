@@ -101,7 +101,7 @@ private final class HTTPHandler: ChannelInboundHandler {
     }
 }
 
-let group = MultiThreadedEventLoopGroup(numThreads: System.coreCount)
+let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 let bootstrap = ServerBootstrap(group: group)
     .serverChannelOption(ChannelOptions.backlog, value: 8192)
     .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)

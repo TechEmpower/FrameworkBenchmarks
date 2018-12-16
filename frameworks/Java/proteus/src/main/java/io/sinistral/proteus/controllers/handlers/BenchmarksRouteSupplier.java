@@ -41,7 +41,17 @@ public class BenchmarksRouteSupplier implements Supplier<HttpHandler> {
       public void handleRequest(final io.undertow.server.HttpServerExchange exchange) throws
           java.lang.Exception {
 
-        benchmarksController.dbPostgres(exchange);
+            exchange.dispatch(() ->
+            {
+              try
+              {
+                benchmarksController.dbPostgres(exchange);
+              } catch (Exception e)
+              {
+                exchange.putAttachment(io.sinistral.proteus.server.handlers.ServerDefaultResponseListener.EXCEPTION, e);
+                exchange.endExchange();
+              }
+            });
       }
     };
 
@@ -76,7 +86,17 @@ public class BenchmarksRouteSupplier implements Supplier<HttpHandler> {
       public void handleRequest(final io.undertow.server.HttpServerExchange exchange) throws
           java.lang.Exception {
 
-        benchmarksController.fortunesPostgres(exchange);
+            exchange.dispatch(() ->
+            {
+              try
+              {
+                benchmarksController.fortunesPostgres(exchange);
+              } catch (Exception e)
+              {
+                exchange.putAttachment(io.sinistral.proteus.server.handlers.ServerDefaultResponseListener.EXCEPTION, e);
+                exchange.endExchange();
+              }
+            });
       }
     };
 

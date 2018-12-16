@@ -10,7 +10,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<netty.version>4.1.25.Final</netty.version>
+		<netty.version>4.1.32.Final</netty.version>
 	</properties>
 
 	<packaging>jar</packaging>

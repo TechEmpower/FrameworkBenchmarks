@@ -116,11 +116,10 @@ static void cleanup_multiple_query(multiple_query_ctx_t *query_ctx)
 		free_json_generator(query_ctx->gen,
 		                    &query_ctx->ctx->json_generator,
 		                    &query_ctx->ctx->json_generator_num,
-							query_ctx->ctx->config->max_json_generator);
+		                    query_ctx->ctx->config->max_json_generator);
 
 	free(query_ctx);
 }
-
 
 static void cleanup_multiple_query_request(void *data)
 {
