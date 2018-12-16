@@ -1,14 +1,11 @@
 package net.officefloor.benchmark;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.persistence.EntityManager;
 
 import lombok.Data;
-import net.officefloor.frame.api.function.FlowCallback;
-import net.officefloor.plugin.managedfunction.clazz.FlowInterface;
-import net.officefloor.plugin.section.clazz.Parameter;
-import net.officefloor.plugin.section.clazz.Spawn;
 import net.officefloor.web.HttpQueryParameter;
 import net.officefloor.web.ObjectResponse;
 
@@ -31,81 +28,39 @@ public class Logic {
 	// ============ DB ====================
 
 	public void db(EntityManager entityManager, ObjectResponse<World> response) {
-		response.send(entityManager.find(World.class, ThreadLocalRandom.current().nextInt(1, 10000)));
+		response.send(entityManager.find(World.class, ThreadLocalRandom.current().nextInt(1, 10001)));
 	}
 
 	// ========== QUERIES ==================
 
-	public void queries(@HttpQueryParameter("queries") String queries, QueriesFlows flows,
+	public void queries(@HttpQueryParameter("queries") String queries, EntityManager entityManager,
 			ObjectResponse<World[]> response) {
 		ThreadLocalRandom random = ThreadLocalRandom.current();
-		int[] loaded = new int[] { 0 };
 		int count = getQueryCount(queries);
 		World[] worlds = new World[count];
 		for (int i = 0; i < worlds.length; i++) {
-			int index = i;
-			GetEntry entry = new GetEntry(random.nextInt(1, 10000));
-			flows.getEntry(entry, (escalation) -> {
-				worlds[index] = entry.world;
-				loaded[0]++;
-				if (loaded[0] >= count) {
-					response.send(worlds);
-				}
-			});
+			worlds[i] = entityManager.find(World.class, random.nextInt(1, 10001));
 		}
-	}
-
-	@Data
-	public static class GetEntry {
-		private final int id;
-		private World world;
-	}
-
-	@FlowInterface
-	public static interface QueriesFlows {
-		@Spawn
-		void getEntry(GetEntry entry, FlowCallback callback);
-	}
-
-	public void getEntry(@Parameter GetEntry entry, EntityManager entityManager) {
-		entry.world = entityManager.find(World.class, entry.id);
+		response.send(worlds);
 	}
 
 	// =========== UPDATES ===================
 
-	public void update(@HttpQueryParameter("queries") String queries, UpdatesFlows flows,
+	public void update(@HttpQueryParameter("queries") String queries, EntityManager entityManager,
 			ObjectResponse<World[]> response) {
-		int[] loaded = new int[] { 0 };
+		ThreadLocalRandom random = ThreadLocalRandom.current();
 		int count = getQueryCount(queries);
+		int[] ids = new int[count];
+		for (int i = 0; i < ids.length; i++) {
+			ids[i] = random.nextInt(1, 10001);
+		}
+		Arrays.sort(ids);
 		World[] worlds = new World[count];
 		for (int i = 0; i < worlds.length; i++) {
-			int index = i;
-			UpdateEntry entry = new UpdateEntry();
-			flows.updateEntry(entry, (escalation) -> {
-				worlds[index] = entry.world;
-				loaded[0]++;
-				if (loaded[0] >= count) {
-					response.send(worlds);
-				}
-			});
+			worlds[i] = entityManager.find(World.class, ids[i]);
+			worlds[i].setRandomNumber(random.nextInt(1, 10001));
 		}
-	}
-
-	@FlowInterface
-	public static interface UpdatesFlows {
-		@Spawn
-		void updateEntry(UpdateEntry entry, FlowCallback callback);
-	}
-
-	@Data
-	public static class UpdateEntry {
-		private World world;
-	}
-
-	public void updateEntry(@Parameter UpdateEntry entry, EntityManager entityManager) {
-		ThreadLocalRandom random = ThreadLocalRandom.current();
-		entry.world = entityManager.find(World.class, random.nextInt(1, 10000));
-		entry.world.setRandomNumber(random.nextInt(1, 10000));
+		response.send(worlds);
 	}
 
 	// =========== helper ===================

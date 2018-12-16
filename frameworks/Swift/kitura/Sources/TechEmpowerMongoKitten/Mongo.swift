@@ -18,12 +18,17 @@ import Foundation
 import LoggerAPI
 import Configuration
 import MongoKitten
+import TechEmpowerCommon
 
 #if os(Linux)
     import Glibc
 #else
     import Darwin
 #endif
+
+public enum MongoAppError: Error {
+    case MongoError(String)
+}
 
 // We will load our database configuration from config.json, but this can be
 // overridden with the TFB_DB_CONFIG environment variable.
@@ -49,22 +54,13 @@ func connectToDB() throws {
     //myDatabase = try MongoKitten.Database("mongodb://\(dbUser):\(dbPass)@\(dbHost):\(dbPort)/\(dbName)")
     myDatabase = try MongoKitten.Database(connectString)
     guard let myDatabase = myDatabase else {
-        throw AppError.MongoError("Nil MongoDB connection to \(connectString)")
+        throw AppError.ConnectionError("Nil MongoDB connection to \(connectString)")
     }
     guard myDatabase.server.isConnected else {
-        throw AppError.MongoError("Not connected to \(connectString)")
+        throw AppError.ConnectionError("Not connected to \(connectString)")
     }
     world = myDatabase["world"]
     fortune = myDatabase["fortune"]
-}
-
-// Return a random number within the range of rows in the database
-func randomNumberGenerator(_ maxVal: Int) -> Int {
-    #if os(Linux)
-        return Int(random() % maxVal) + 1
-    #else
-        return Int(arc4random_uniform(UInt32(maxVal))) + 1
-    #endif
 }
 
 // Allow construction of a Fortune from a MongoKitten Document
@@ -80,7 +76,7 @@ extension Fortune {
 
 func getFortunes() throws -> [Fortune] {
     guard let fortune = fortune else {
-        throw AppError.MongoError("Fortune collection not initialized")
+        throw MongoAppError.MongoError("Fortune collection not initialized")
     }
     
 //    let allFortunes: [Document] = Array(try fortune.find())
@@ -94,10 +90,10 @@ func getFortunes() throws -> [Fortune] {
 // Serialize object to JSON - example: {"id":3217,"randomNumber":2149}
 func getRandomRow() throws -> [String:Int] {
     guard let world = world else {
-        throw AppError.MongoError("World collection not initialized")
+        throw MongoAppError.MongoError("World collection not initialized")
     }
 
-    let rnd = randomNumberGenerator(dbRows)
+    let rnd = RandomRow.randomId
     let result = try world.findOne("_id" == rnd)
     guard let document = result else {
         throw AppError.DataFormatError("World entry id=\(rnd) not found")
@@ -111,11 +107,11 @@ func getRandomRow() throws -> [String:Int] {
 // Updates a row of World to a new value.
 func updateRandomRow() throws -> [String:Int] {
     guard let world = world else {
-        throw AppError.MongoError("World collection not initialized")
+        throw MongoAppError.MongoError("World collection not initialized")
     }
     
-    let rnd = randomNumberGenerator(dbRows)
-    let rndValue = randomNumberGenerator(maxValue)
+    let rnd = RandomRow.randomId
+    let rndValue = RandomRow.randomValue
     let document = try world.findAndUpdate("_id" == rnd, with: ["randomNumber": rndValue])
     guard let id = Int(document["_id"]), let randomNumber = Int(document["randomNumber"]) else {
         throw AppError.DataFormatError("Expected fields of World document could not be retreived")

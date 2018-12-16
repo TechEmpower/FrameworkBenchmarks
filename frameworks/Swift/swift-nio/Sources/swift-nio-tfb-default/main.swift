@@ -90,10 +90,10 @@ private final class HTTPHandler: ChannelInboundHandler {
 
     private func responseHead(contentType: String, contentLength: String) -> HTTPResponseHead {
         var headers = HTTPHeaders()
-        headers.replaceOrAdd(name: "content-type", value: contentType)
-        headers.replaceOrAdd(name: "content-length", value: contentLength)
-        headers.replaceOrAdd(name: "server", value: Constants.serverName)
-        headers.replaceOrAdd(name: "date", value: dateFormatter.getDate())
+        headers.add(name: "content-type", value: contentType)
+        headers.add(name: "content-length", value: contentLength)
+        headers.add(name: "server", value: Constants.serverName)
+        headers.add(name: "date", value: dateFormatter.getDate())
 
         return HTTPResponseHead(version: Constants.httpVersion,
                                 status: .ok,
@@ -101,7 +101,7 @@ private final class HTTPHandler: ChannelInboundHandler {
     }
 }
 
-let group = MultiThreadedEventLoopGroup(numThreads: System.coreCount)
+let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 let bootstrap = ServerBootstrap(group: group)
     .serverChannelOption(ChannelOptions.backlog, value: 8192)
     .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)

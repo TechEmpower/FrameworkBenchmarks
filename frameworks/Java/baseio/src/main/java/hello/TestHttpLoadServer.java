@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 GenerallyCloud.com
+ * Copyright 2015 The Baseio Project
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,79 +16,104 @@
 package hello;
 
 import com.alibaba.fastjson.JSON;
-import com.generallycloud.baseio.Constants;
-import com.generallycloud.baseio.buffer.ByteBuf;
-import com.generallycloud.baseio.codec.http11.HttpHeader;
-import com.generallycloud.baseio.codec.http11.HttpStatic;
-import com.generallycloud.baseio.codec.http11.HttpStatus;
-import com.generallycloud.baseio.codec.http11.ServerHttpCodec;
-import com.generallycloud.baseio.codec.http11.ServerHttpFrame;
-import com.generallycloud.baseio.common.Encoding;
-import com.generallycloud.baseio.component.ChannelAcceptor;
-import com.generallycloud.baseio.component.ChannelContext;
-import com.generallycloud.baseio.component.IoEventHandle;
-import com.generallycloud.baseio.component.NioEventLoopGroup;
-import com.generallycloud.baseio.component.NioSocketChannel;
-import com.generallycloud.baseio.log.LoggerFactory;
-import com.generallycloud.baseio.protocol.Frame;
+import com.firenio.baseio.Options;
+import com.firenio.baseio.buffer.ByteBuf;
+import com.firenio.baseio.codec.http11.HttpCodec;
+import com.firenio.baseio.codec.http11.HttpCodecLite;
+import com.firenio.baseio.codec.http11.HttpFrameLite;
+import com.firenio.baseio.codec.http11.HttpStatic;
+import com.firenio.baseio.codec.http11.HttpStatus;
+import com.firenio.baseio.common.Encoding;
+import com.firenio.baseio.common.Util;
+import com.firenio.baseio.component.ChannelAcceptor;
+import com.firenio.baseio.component.IoEventHandle;
+import com.firenio.baseio.component.NioEventLoopGroup;
+import com.firenio.baseio.component.NioSocketChannel;
+import com.firenio.baseio.log.DebugUtil;
+import com.firenio.baseio.log.LoggerFactory;
+import com.firenio.baseio.protocol.Frame;
+import com.firenio.baseio.protocol.ProtocolCodec;
 
 public class TestHttpLoadServer {
-    
+
     static final byte[] STATIC_PLAINTEXT = "Hello, World!".getBytes(Encoding.UTF8);
-    static final byte[] CONTENT_TYPE_JSON = "application/json".getBytes(Encoding.UTF8);
-	
+    static final byte[] STATIC_SERVER    = "baseio".getBytes();
+
     public static void main(String[] args) throws Exception {
-    	LoggerFactory.setLogLevel(LoggerFactory.LEVEL_ERROR);
-    	System.setProperty(Constants.DEVELOP_DEBUG_KEY, "false");
-        
+        boolean lite = Util.isSystemTrue("lite");
+        boolean read = Util.isSystemTrue("read");
+        boolean pool = Util.isSystemTrue("pool");
+        boolean direct = Util.isSystemTrue("direct");
+        int core = Util.getProperty("core", 1);
+        int frame = Util.getProperty("frame", 0);
+        int level = Util.getProperty("level");
+        int readBuf = Util.getProperty("readBuf", 1);
+        LoggerFactory.setEnableSLF4JLogger(false);
+        LoggerFactory.setLogLevel(LoggerFactory.LEVEL_INFO);
+        Options.setDebugErrorLevel(level);
+        Options.setChannelReadFirst(read);
+        DebugUtil.info("lite: {}", lite);
+        DebugUtil.info("read: {}", read);
+        DebugUtil.info("pool: {}", pool);
+        DebugUtil.info("core: {}", core);
+        DebugUtil.info("frame: {}", frame);
+        DebugUtil.info("level: {}", level);
+        DebugUtil.info("direct: {}", direct);
+        DebugUtil.info("readBuf: {}", readBuf);
+
         IoEventHandle eventHandle = new IoEventHandle() {
 
             @Override
             public void accept(NioSocketChannel ch, Frame frame) throws Exception {
-            	ServerHttpFrame f = (ServerHttpFrame) frame;
-            	String action = f.getRequestURI();
-            	f.setResponseHeader(HttpHeader.Connection_Bytes, null);
-                
-            	if("/plaintext".equals(action)){
-            		frame.write(STATIC_PLAINTEXT);
-            		f.setResponseHeader(HttpHeader.Content_Type_Bytes, HttpStatic.plain_bytes);
-            	}else if("/json".equals(action)){
-            		frame.write(JSON.toJSONString(new Message("Hello, World!")), ch);
-            		f.setResponseHeader(HttpHeader.Content_Type_Bytes, CONTENT_TYPE_JSON);
-            	}else{
-            		frame.write("404,page not found!",ch);
-            		f.setStatus(HttpStatus.C404);
-            	}
-                ByteBuf buf = ch.encode(frame);
+                HttpFrameLite f = (HttpFrameLite) frame;
+                String action = f.getRequestURL();
+
+                if ("/plaintext".equals(action)) {
+                    f.write(STATIC_PLAINTEXT);
+                    f.setContentType(HttpStatic.text_plain_bytes);
+                } else if ("/json".equals(action)) {
+                    f.write(JSON.toJSONString(new Message("Hello, World!")), ch);
+                    f.setContentType(HttpStatic.application_json_bytes);
+                } else {
+                    f.write("404,page not found!", ch);
+                    f.setStatus(HttpStatus.C404);
+                }
+                ByteBuf buf = ch.encode(f);
                 ch.flush(buf);
-                f.release(ch.getEventLoop());
+                ch.release(f);
             }
 
         };
 
+        ProtocolCodec codec = lite ? new HttpCodecLite("baseio", 1024 * frame)
+                : new HttpCodec("baseio", 1024 * frame);
         NioEventLoopGroup group = new NioEventLoopGroup();
-        group.setMemoryPoolCapacity(1024 * 256);
-        group.setMemoryPoolUnit(512);
-        ChannelContext context = new ChannelContext(8080);
-        ChannelAcceptor acceptor = new ChannelAcceptor(context, group);
-        context.setProtocolCodec(new ServerHttpCodec(1024 * 8));
+        group.setEnableMemoryPool(pool);
+        group.setEnableMemoryPoolDirect(direct);
+        group.setMemoryPoolCapacity(1024 * 128);
+        group.setChannelReadBuffer(1024 * readBuf);
+        group.setMemoryPoolUnit(256);
+        group.setWriteBuffers(32);
+        group.setEventLoopSize(Util.availableProcessors() * core);
+        group.setConcurrentFrameStack(false);
+        ChannelAcceptor context = new ChannelAcceptor(group, 8080);
+        context.setProtocolCodec(codec);
         context.setIoEventHandle(eventHandle);
-
-        acceptor.bind();
+        context.bind();
     }
-    
+
     static class Message {
 
-    	private final String message;
+        private final String message;
 
-    	public Message(String message) {
-    		this.message = message;
-    	}
+        public Message(String message) {
+            this.message = message;
+        }
 
-    	public String getMessage() {
-    		return message;
-    	}
+        public String getMessage() {
+            return message;
+        }
 
     }
-    
+
 }

@@ -22,12 +22,12 @@
 #define UTILITY_H_
 
 #include <h2o.h>
+#include <mustache.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <h2o/cache.h>
 #include <openssl/ssl.h>
-#include <stdbool.h>
 #include <yajl/yajl_gen.h>
-#include <mustache.h>
 
 #include "cache.h"
 #include "list.h"

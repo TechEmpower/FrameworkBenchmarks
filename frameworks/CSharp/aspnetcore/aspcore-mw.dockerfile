@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk-stretch AS build
+FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /app
 COPY Benchmarks .
 RUN dotnet publish -c Release -o out
@@ -9,4 +9,4 @@ ENV COMPlus_ReadyToRun 0
 WORKDIR /app
 COPY --from=build /app/out ./
 
-ENTRYPOINT ["dotnet", "Benchmarks.dll", "scenarios=plaintext,json"]
+ENTRYPOINT ["dotnet", "Benchmarks.dll", "scenarios=plaintext"]
