@@ -1,6 +1,5 @@
 package com.hexagonkt
 
-import com.hexagonkt.helpers.error
 import com.hexagonkt.helpers.Environment.systemSetting
 import com.hexagonkt.serialization.JsonFormat
 import com.hexagonkt.serialization.convertToMap
@@ -29,21 +28,15 @@ private const val QUERIES_PARAM: String = "queries"
 
 private val contentTypeJson: String = JsonFormat.contentType
 
-private val storageEngines: List<String> = listOf("mongodb", "postgresql")
-private val templateEngines: List<String> = listOf("pebble")
-
-internal val benchmarkStores: Map<String, Store> by lazy {
-    storageEngines.map { it to createStore(it) }.toMap()
+internal val benchmarkStores: Map<String, BenchmarkStore> by lazy {
+    mapOf(
+        "mongodb" to BenchmarkMongoDbStore("mongodb"),
+        "postgresql" to BenchmarkSqlStore("postgresql")
+    )
 }
 
 internal val benchmarkTemplateEngines: Map<String, TemplatePort> by lazy {
-    templateEngines.map {
-        when (it) {
-            "pebble" -> it to PebbleAdapter
-            else -> error("Unsupported template engine: $it")
-        }
-    }
-    .toMap()
+    mapOf("pebble" to PebbleAdapter)
 }
 
 internal val benchmarkServer: Server by lazy {
@@ -74,7 +67,7 @@ private fun Call.getWorldsCount() = request[QUERIES_PARAM]?.toIntOrNull().let {
 }
 
 // HANDLERS
-private fun Call.listFortunes(store: Store, templateKind: String, templateEngine: TemplatePort) {
+private fun Call.listFortunes(store: BenchmarkStore, templateKind: String, templateEngine: TemplatePort) {
     val fortunes = store.findAllFortunes() + Fortune(0, "Additional fortune added at request time.")
     val sortedFortunes = fortunes.sortedBy { it.message }
     val context = mapOf("fortunes" to sortedFortunes)
@@ -84,17 +77,17 @@ private fun Call.listFortunes(store: Store, templateKind: String, templateEngine
     ok(render(templateEngine, "fortunes.$templateKind.html", defaultLocale, context))
 }
 
-private fun Call.dbQuery(store: Store) {
+private fun Call.dbQuery(store: BenchmarkStore) {
     val world = store.findWorlds(1).first().convertToMap() - "_id"
 
     ok(world.serialize(), contentTypeJson)
 }
 
-private fun Call.getWorlds(store: Store) {
+private fun Call.getWorlds(store: BenchmarkStore) {
     returnWorlds(store.findWorlds(getWorldsCount()))
 }
 
-private fun Call.updateWorlds(store: Store) {
+private fun Call.updateWorlds(store: BenchmarkStore) {
     returnWorlds(store.replaceWorlds(getWorldsCount()))
 }
 
@@ -110,11 +103,10 @@ private fun router(): Router = router {
     get("/json") { ok(Message(TEXT_MESSAGE).serialize(), contentTypeJson) }
 
     benchmarkStores.forEach { (storeEngine, store) ->
-        templateEngines.forEach { templateKind ->
-            val path = "/$storeEngine/$templateKind/fortunes"
-            val templateEngine = benchmarkTemplateEngines[templateKind] ?: error
+        benchmarkTemplateEngines.forEach { templateKind ->
+            val path = "/$storeEngine/${templateKind.key}/fortunes"
 
-            get(path) { listFortunes(store, templateKind, templateEngine) }
+            get(path) { listFortunes(store, templateKind.key, templateKind.value) }
         }
 
         get("/$storeEngine/db") { dbQuery(store) }
