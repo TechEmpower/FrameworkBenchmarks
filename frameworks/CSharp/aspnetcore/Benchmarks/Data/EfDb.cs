@@ -84,7 +84,7 @@ namespace Benchmarks.Data
         private static readonly Func<ApplicationDbContext, AsyncEnumerable<Fortune>> _fortunesQuery
             = EF.CompileAsyncQuery((ApplicationDbContext context) => context.Fortune);
 
-        public async Task<IEnumerable<Fortune>> LoadFortunesRows()
+        public async Task<List<Fortune>> LoadFortunesRows()
         {
             var result = await _fortunesQuery(_dbContext).ToListAsync();
 
