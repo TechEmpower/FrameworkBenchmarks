@@ -21,9 +21,8 @@ enablePlugins(SbtTwirl)
 
 TwirlKeys.templateImports += "http4s.techempower.benchmark._"
 
-val http4sVersion = "0.18.12"
-val circeVersion = "0.9.3"
-val doobieVersion = "0.5.3"
+val http4sVersion = "0.20.0-M3"
+val doobieVersion = "0.6.0"
 
 libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-blaze-server" % http4sVersion,

@@ -1,11 +1,15 @@
-FROM maven:3.5.4-jdk-8-slim as maven
+FROM maven:3.6.0-jdk-11 as maven
 
 WORKDIR /greenlightning    
 COPY pom.xml pom.xml
 COPY src src
+
 RUN mvn clean install -q
 
-FROM openjdk:11-jdk-slim
+#COPY repo /usr/share/maven/ref/repository
+#RUN mvn clean install -q -Dmaven.repo.local=/usr/share/maven/ref/repository
+
+FROM azul/zulu-openjdk-alpine:11.0.1
 WORKDIR /greenlightning
 COPY --from=maven /greenlightning/target/greenlightning-test.jar app.jar
-CMD ["java", "-server", "-Xmx14g", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-jar", "app.jar"]
+CMD ["java", "-server", "-Xmx18g", "-XX:+UseNUMA", "-jar", "app.jar"]

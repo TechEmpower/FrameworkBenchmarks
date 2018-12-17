@@ -12,7 +12,7 @@ This project provides representative performance measures across a wide field of
 [Read more and see the results of our tests on cloud and physical hardware](http://www.techempower.com/benchmarks/). For descriptions of the test types that we run, see the 
 [test requirements section](https://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/).
 
-If you find yourself in a directory or file that you're not sure what the purpose is, checkout our [file structure](http://frameworkbenchmarks.readthedocs.org/en/latest/Codebase/#file-structure) in our documenation, which will briefly explain the use of relevant directories and files.
+If you find yourself in a directory or file that you're not sure what the purpose is, checkout our [file structure](http://frameworkbenchmarks.readthedocs.org/en/latest/Codebase/#file-structure) in our documentation, which will briefly explain the use of relevant directories and files.
 
 ## Quick Start Guide
 

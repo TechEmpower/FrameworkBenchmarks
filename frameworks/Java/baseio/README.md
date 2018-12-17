@@ -1,6 +1,6 @@
 # Baseio Benchmarking Test
 
- [Baseio](https://github.com/generallycloud/baseio) is an easy of use io framework project based on java nio
+ [Baseio](https://github.com/firenio/baseio) is an easy of use io framework project based on java nio
  
 ### Test Type Implementation Source Code
 
@@ -10,7 +10,7 @@
 
 ## Important Libraries
 The tests were run with:
-* [baseio](https://github.com/generallycloud/baseio/)
+* [baseio](https://github.com/firenio/baseio/)
 * [fastjson](https://github.com/alibaba/fastjson/)
 
 ## Test URLs
