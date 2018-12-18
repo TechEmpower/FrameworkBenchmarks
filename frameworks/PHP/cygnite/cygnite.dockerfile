@@ -10,7 +10,7 @@ RUN apt-get install -yqq nginx git unzip php5.6 php5.6-common php5.6-cli php5.6-
 RUN apt-get install -yqq composer > /dev/null
 
 COPY deploy/conf/* /etc/php/5.6/fpm/
-RUN sed -i "s|listen = /run/php/php7.2-fpm.sock|listen = /run/php/php5.6-fpm.sock|g" /etc/php/5.6/fpm/php-fpm.conf
+RUN sed -i "s|listen = /run/php/php7.3-fpm.sock|listen = /run/php/php5.6-fpm.sock|g" /etc/php/5.6/fpm/php-fpm.conf
 
 ADD ./ /cygnite
 WORKDIR /cygnite
