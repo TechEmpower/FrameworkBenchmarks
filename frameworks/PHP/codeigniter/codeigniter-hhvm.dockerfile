@@ -14,7 +14,7 @@ RUN apt-get install -yqq composer > /dev/null
 ADD ./ /codeigniter
 WORKDIR /codeigniter
 
-RUN composer install --quiet
+RUN composer install --no-dev --quiet
 
 CMD hhvm -m daemon --config /codeigniter/deploy/config.hdf && \
     nginx -c /codeigniter/deploy/nginx-hhvm.conf -g "daemon off;"

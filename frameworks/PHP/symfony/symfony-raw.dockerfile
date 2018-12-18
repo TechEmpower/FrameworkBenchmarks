@@ -19,7 +19,7 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children =
 
 ENV APP_ENV=prod
 
-RUN composer install --quiet
+RUN composer install --no-dev --quiet
 
 RUN php bin/console cache:clear --env=prod --no-debug --no-warmup
 RUN php bin/console cache:warmup --env=prod --no-debug

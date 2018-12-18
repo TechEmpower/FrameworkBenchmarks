@@ -17,7 +17,7 @@ WORKDIR /clancats
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
 
-RUN composer install --quiet
+RUN composer install --no-dev --quiet
 
 RUN git clone --branch v2.0.6 --depth 1 https://github.com/ClanCats/Framework.git clancatsapp
 RUN cp -r app/ clancatsapp/CCF/

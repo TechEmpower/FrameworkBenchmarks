@@ -16,7 +16,7 @@ WORKDIR /yii2
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
 
-RUN composer install --quiet
+RUN composer install --no-dev --quiet
 
 CMD service php7.3-fpm start && \
     nginx -c /yii2/deploy/nginx-fpm.conf -g "daemon off;"

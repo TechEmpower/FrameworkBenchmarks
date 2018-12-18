@@ -22,7 +22,7 @@ RUN mkdir -p app/tmp/cache/persistent
 RUN mkdir -p app/tmp/logs
 RUN chmod -R 777 app/tmp
 
-RUN composer install --quiet
+RUN composer install --no-dev --quiet
 
 CMD service php7.3-fpm start && \
     nginx -c /cakephp/deploy/nginx.conf -g "daemon off;"
