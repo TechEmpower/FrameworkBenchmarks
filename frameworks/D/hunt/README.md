@@ -4,7 +4,7 @@ This is the Hunt portion of a [benchmarking test suite](../) comparing a variety
 
 
 ## Requirements
-* Dlang > 2.083
+* Dlang > 2.077
 
 ## Test URLs
 
