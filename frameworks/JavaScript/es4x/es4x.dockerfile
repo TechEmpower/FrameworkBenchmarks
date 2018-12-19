@@ -1,4 +1,4 @@
-FROM oracle/graalvm-ce:1.0.0-rc9
+FROM oracle/graalvm-ce:1.0.0-rc10
 # Set working dir
 RUN mkdir /app
 WORKDIR /app
@@ -22,7 +22,5 @@ CMD java \
     -Dvertx.threadChecks=false                        \
     -Dvertx.disableContextTimings=true                \
     -Dvertx.disableTCCL=true                          \
-    -jar                                              \
-    target/es4x-0.0.1-bin.jar                         \
-    --instances                                       \
-    `grep --count ^processor /proc/cpuinfo`
+    -jar target/dist/es4x-0.0.1.jar                   \
+    --instances `grep --count ^processor /proc/cpuinfo`

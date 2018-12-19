@@ -1,6 +1,6 @@
 import os
 import traceback
-from requests import ConnectionError
+from requests import ConnectionError, Timeout
 
 from toolset.utils.output_helper import log
 

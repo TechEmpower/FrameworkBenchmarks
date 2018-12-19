@@ -12,4 +12,4 @@ RUN git clone https://github.com/nodejs/http-parser.git && \
 RUN dub upgrade --verbose
 RUN dub build -f --arch=x86_64 --build=release
 
-CMD ["./hunt-benchmark"]
+CMD ["./hunt-minihttp"]

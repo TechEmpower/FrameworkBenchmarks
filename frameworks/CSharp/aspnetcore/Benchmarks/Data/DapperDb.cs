@@ -96,7 +96,7 @@ namespace Benchmarks.Data
 
         }
 
-        public async Task<IEnumerable<Fortune>> LoadFortunesRows()
+        public async Task<List<Fortune>> LoadFortunesRows()
         {
             List<Fortune> result;
 
