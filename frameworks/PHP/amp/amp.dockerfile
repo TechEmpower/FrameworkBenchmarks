@@ -18,6 +18,6 @@ WORKDIR /amp
 
 COPY deploy/conf/* /etc/php/7.2/cli/conf.d/
 
-RUN composer install --quiet
+RUN composer install --no-dev --quiet
 
 CMD php /amp/vendor/bin/cluster -s /amp/server.php
