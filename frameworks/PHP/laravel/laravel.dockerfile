@@ -24,7 +24,7 @@ RUN mkdir -p /laravel/storage/framework/cache
 
 RUN chmod -R 777 /laravel
 
-RUN composer install --no-dev --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN php artisan config:cache
 RUN php artisan route:cache

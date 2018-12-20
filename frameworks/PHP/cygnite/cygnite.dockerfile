@@ -17,7 +17,7 @@ WORKDIR /cygnite
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/5.6/fpm/php-fpm.conf ; fi;
 
-RUN composer install --no-dev --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 CMD service php5.6-fpm start && \
     nginx -c /cygnite/deploy/nginx.conf -g "daemon off;"

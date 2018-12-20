@@ -20,7 +20,7 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children =
 RUN mkdir -p data/cache
 RUN chmod 777 data/cache
 
-RUN composer install --quiet --no-dev -o
+RUN composer install --optimize-autoloader --classmap-authoritative --quiet --no-dev
 
 CMD service php7.3-fpm start && \
     nginx -c /zend/deploy/nginx.conf -g "daemon off;"

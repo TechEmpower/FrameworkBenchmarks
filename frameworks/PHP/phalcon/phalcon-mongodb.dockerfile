@@ -18,7 +18,7 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children =
 
 RUN apt-get install -yqq php7.2-phalcon  > /dev/null
 
-RUN composer install --no-dev --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN chmod -R 777 app
 
