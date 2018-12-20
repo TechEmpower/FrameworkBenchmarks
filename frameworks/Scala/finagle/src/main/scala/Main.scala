@@ -44,7 +44,7 @@ object Main extends App {
 
   Await.ready(Http.server
     .withCompressionLevel(0)
-    .withStack(nilStack)
+    .withStack(nilStack[Request, Response])
     .serve(":8080", serverAndDate.andThen(muxer))
   )
 }
