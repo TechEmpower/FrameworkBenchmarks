@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -7,15 +8,24 @@
 		<artifactId>benchmarks</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>woof_rapidoid</artifactId>
+	<artifactId>woof_benchmark_raw</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>net.officefloor.benchmarks</groupId>
-			<artifactId>woof_benchmark</artifactId>
+			<groupId>net.officefloor.web</groupId>
+			<artifactId>woof</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.officefloor.server</groupId>
-			<artifactId>officeserver_rapidoid</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-afterburner</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -33,7 +43,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>net.officefloor.OfficeFloorMain</mainClass>
+									<mainClass>net.officefloor.benchmark.RawOfficeFloorMain</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>

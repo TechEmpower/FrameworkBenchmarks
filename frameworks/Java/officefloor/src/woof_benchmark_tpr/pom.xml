@@ -8,7 +8,7 @@
 		<artifactId>benchmarks</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>woof_tpr</artifactId>
+	<artifactId>woof_benchmark_tpr</artifactId>
 	<description>Thread per request model used by many frameworks</description>
 	<dependencies>
 		<dependency>
@@ -20,20 +20,8 @@
 			<artifactId>officejson_jackson</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-afterburner</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>net.officefloor.persistence</groupId>
 			<artifactId>officejdbc_postgresql</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.zaxxer</groupId>

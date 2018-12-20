@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -8,28 +7,15 @@
 		<artifactId>benchmarks</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>woof_benchmark</artifactId>
+	<artifactId>woof_benchmark_rapidoid</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>net.officefloor.web</groupId>
-			<artifactId>woof</artifactId>
+			<groupId>net.officefloor.benchmarks</groupId>
+			<artifactId>woof_benchmark</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.officefloor.web</groupId>
-			<artifactId>officejson_jackson</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.officefloor.persistence</groupId>
-			<artifactId>officejpa_hibernate</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.officefloor.persistence</groupId>
-			<artifactId>officejdbc_postgresql</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<scope>provided</scope>
+			<groupId>net.officefloor.server</groupId>
+			<artifactId>officeserver_rapidoid</artifactId>
 		</dependency>
 	</dependencies>
 	<build>

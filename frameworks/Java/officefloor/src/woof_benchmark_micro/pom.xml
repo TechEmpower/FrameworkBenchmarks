@@ -8,15 +8,24 @@
 		<artifactId>benchmarks</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>woof_thread_affinity</artifactId>
+	<artifactId>woof_benchmark_micro</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>net.officefloor.benchmarks</groupId>
-			<artifactId>woof_micro</artifactId>
+			<groupId>net.officefloor.web</groupId>
+			<artifactId>woof</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.officefloor.web</groupId>
-			<artifactId>officeweb_executive</artifactId>
+			<artifactId>officejson_jackson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.officefloor.persistence</groupId>
+			<artifactId>officejdbc_postgresql</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
