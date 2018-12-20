@@ -14,6 +14,6 @@ COPY deploy/conf/* /etc/php/7.3/fpm/
 ADD ./ /workerman
 WORKDIR /workerman
 
-RUN composer install --no-dev --quiet
+RUN composer install -a --no-dev --quiet
 
 CMD php /workerman/server.php start
