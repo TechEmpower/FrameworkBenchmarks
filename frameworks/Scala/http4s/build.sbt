@@ -21,9 +21,8 @@ enablePlugins(SbtTwirl)
 
 TwirlKeys.templateImports += "http4s.techempower.benchmark._"
 
-val http4sVersion = "0.18.12"
-val circeVersion = "0.9.3"
-val doobieVersion = "0.5.3"
+val http4sVersion = "0.20.0-M3"
+val doobieVersion = "0.6.0"
 
 libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-blaze-server" % http4sVersion,
@@ -32,6 +31,6 @@ libraryDependencies ++= Seq(
   "com.github.plokhotnyuk.jsoniter-scala" %% "macros" % "0.21.6",
   "org.tpolecat" %% "doobie-core" % doobieVersion,
   "org.tpolecat" %% "doobie-hikari" % doobieVersion,
-  "org.postgresql" % "postgresql" % "42.2.2",
+  "org.postgresql" % "postgresql" % "42.2.5",
   "ch.qos.logback" % "logback-classic" % "1.2.3"
 )

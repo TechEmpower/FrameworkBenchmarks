@@ -1,18 +1,17 @@
-# Versions
+# Hunt Benchmarking Test
 
-* dub 1.2.1
-* dmd 2.073.1
+This is the Hunt portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-# Test URLs
+
+## Requirements
+* Dlang > 2.077
+
+## Test URLs
 
 ### JSON Encoding Test
 
-    - http://localhost:8080/json
-    - http://localhost:8080/plaintext
+    http://localhost:8080/json
+    
+### PlanText Test
 
-# Contact
-
-viile todddzhu@gmail.com - github:[viile](https://github.com/viile) 
-Core developer team - [putao Dlang team](https://github.com/huntlabs)
-
-
+    http://localhost:8080/plaintext

@@ -68,3 +68,46 @@ pub fn get_query_param(uri: &Uri) -> u16 {
     q.map(|q| cmp::min(500, cmp::max(1, q.parse::<u16>().ok().unwrap_or(1))))
         .unwrap_or(1)
 }
+
+fn escapable(b: u8) -> bool {
+    match b {
+        b'<' | b'>' | b'&' | b'"' | b'\'' | b'/' => true,
+        _ => false,
+    }
+}
+
+pub fn escape<T: io::Write>(writer: &mut T, s: String) {
+    let bytes = s.as_bytes();
+    let mut last_pos = 0;
+    for (idx, b) in s.as_bytes().iter().enumerate() {
+        if escapable(*b) {
+            let _ = writer.write(&bytes[last_pos..idx]);
+
+            last_pos = idx + 1;
+            match *b {
+                b'<' => {
+                    let _ = writer.write(b"&lt;");
+                }
+                b'>' => {
+                    let _ = writer.write(b"&gt;");
+                }
+                b'&' => {
+                    let _ = writer.write(b"&amp;");
+                }
+                b'"' => {
+                    let _ = writer.write(b"&quot;");
+                }
+                b'\'' => {
+                    let _ = writer.write(b"&#x27;");
+                }
+                b'/' => {
+                    let _ = writer.write(b"&#x2f;");
+                }
+                _ => panic!("incorrect indexing"),
+            }
+        }
+    }
+    if last_pos < bytes.len() - 1 {
+        let _ = writer.write(&bytes[last_pos..]);
+    }
+}

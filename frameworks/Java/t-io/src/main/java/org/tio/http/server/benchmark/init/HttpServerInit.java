@@ -34,7 +34,6 @@ public class HttpServerInit {
 		requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 		httpServerStarter = new HttpServerStarter(httpConfig, requestHandler);
 		serverGroupContext = httpServerStarter.getServerGroupContext();
-//		serverGroupContext.setUseQueueDecode(true);
 		serverGroupContext.statOn = false;
 		httpServerStarter.start();
 	}

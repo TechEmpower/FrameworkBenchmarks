@@ -64,6 +64,8 @@ namespace Benchmarks.Data
             id.Value = _random.Next(1, 10001);
             cmd.Parameters.Add(id);
 
+            (cmd as MySql.Data.MySqlClient.MySqlCommand)?.Prepare();
+
             return cmd;
         }
 
@@ -135,7 +137,7 @@ namespace Benchmarks.Data
             }
         }
 
-        public async Task<IEnumerable<Fortune>> LoadFortunesRows()
+        public async Task<List<Fortune>> LoadFortunesRows()
         {
             var result = new List<Fortune>();
 
@@ -146,6 +148,8 @@ namespace Benchmarks.Data
 
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();
+
+                (cmd as MySql.Data.MySqlClient.MySqlCommand)?.Prepare();
 
                 using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection))
                 {

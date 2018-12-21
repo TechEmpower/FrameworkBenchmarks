@@ -1,0 +1,26 @@
+{
+  "name": "es4x",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "devDependencies": {
+    "@vertx/unit": "^3.6.2",
+    "es4x-cli": "^0.1.1"
+  },
+  "dependencies": {
+    "@vertx/core": "^3.6.2",
+    "@vertx/web": "^3.6.2",
+    "@vertx/web-templ-handlebars": "^3.6.2",
+    "@reactiverse/reactive-pg-client": "^0.11.0"
+  },
+  "files": [
+    "util.js",
+    "templates/fortunes.hbs"
+  ],
+  "scripts": {
+    "postinstall": "es4x postinstall",
+    "start": "es4x exec run",
+    "test": "es4x exec test",
+    "package": "es4x package"
+  }
+}

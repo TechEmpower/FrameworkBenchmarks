@@ -33,7 +33,7 @@ ENV AR=gcc-ar-8
 ENV RANLIB=gcc-ranlib-8
 ENV IROOT=/install
 ENV ULIB_ROOT=$IROOT/ULib
-ENV ULIB_VERSION=1.4.2
+ENV ULIB_VERSION=2.4.2
 ENV ULIB_DOCUMENT_ROOT=$ULIB_ROOT/ULIB_DOCUMENT_ROOT
 
 WORKDIR $IROOT
@@ -45,7 +45,7 @@ RUN tar xf ULib-${ULIB_VERSION}.tar.gz
 WORKDIR $IROOT/ULib-$ULIB_VERSION
 
 # AVOID "configure: error: newly created file is older than distributed files! Check your system clock"
-#RUN cp /src/* src/ulib/net/server/plugin/usp
+RUN cp /src/* src/ulib/net/server/plugin/usp
 RUN find . -exec touch {} \;
 
 RUN echo "userver {" >> $ULIB_ROOT/benchmark.cfg

@@ -1,6 +1,6 @@
 FROM haskell:8.2.1
 
-RUN apt update -yqq && apt install -yqq xz-utils make
+RUN apt update -yqq && apt install -yqq xz-utils make netbase
 
 ADD ./ /wai
 WORKDIR /wai

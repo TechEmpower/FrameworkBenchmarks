@@ -1,13 +1,16 @@
 {
-	"name": "website",
-	"description": "A minimal D application.",
-	"copyright": "Copyright © 2016, huntframework.com",
+	"name": "hunt-minihttp",
 	"targetType": "executable",
-	"stringImportPaths": [
-		"./resources/views"
+	"authors": [
+		"Putao"
 	],
-	"mainSourceFile": "./source/bootstrap.d",
+	"description": "A simple http server powered by Hunt.",
+	"copyright": "Copyright © 2017-2018, HuntLabs.cn",
+	"license": "Apache-2.0",
+	"libs-posix": [ "http_parser" ],
+	"lflags-posix": ["-Lhttp-parser/"],
 	"dependencies": {
-		"hunt": "0.10.4"
+		"hunt": "~>1.0.0-rc.5",
+		"std_data_json": "~>0.18.2"
 	}
 }

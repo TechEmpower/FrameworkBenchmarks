@@ -18,7 +18,7 @@
 
   <properties>
     <jooby.version>1.4.0</jooby.version>
-    <postgresql.version>42.2.2</postgresql.version>
+    <postgresql.version>42.2.5</postgresql.version>
     <rocker.touchFile>/dev/null</rocker.touchFile>
 
     <!-- Startup class -->

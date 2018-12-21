@@ -28,7 +28,6 @@
 
 typedef struct {
 	list_t l;
-	PGresult *data;
 	h2o_iovec_t id;
 	h2o_iovec_t message;
 } fortune_t;

@@ -6,9 +6,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
-		<stack.version>3.5.0.Beta1</stack.version>
+		<stack.version>3.6.0.CR1</stack.version>
+		<netty.version>4.1.27.Final</netty.version>
 	</properties>
 
 	<dependencies>
@@ -18,14 +21,26 @@
 			<version>${stack.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.julienviet</groupId>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-transport-native-kqueue</artifactId>
+			<version>${netty.version}</version>
+			<classifier>osx-x86_64</classifier>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-transport-native-epoll</artifactId>
+			<version>${netty.version}</version>
+			<classifier>linux-x86_64</classifier>
+		</dependency>
+		<dependency>
+			<groupId>io.reactiverse</groupId>
 			<artifactId>reactive-pg-client</artifactId>
-			<version>0.3.1</version>
+			<version>0.10.7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fizzed</groupId>
 			<artifactId>rocker-compiler</artifactId>
-			<version>0.22.0</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
@@ -39,15 +54,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
+				<version>3.8.0</version>
 			</plugin>
 			<plugin>
 				<groupId>com.fizzed</groupId>
 				<artifactId>rocker-maven-plugin</artifactId>
-				<version>0.22.0</version>
+				<version>1.0.0</version>
 				<executions>
 					<execution>
 						<id>generate-rocker-templates</id>

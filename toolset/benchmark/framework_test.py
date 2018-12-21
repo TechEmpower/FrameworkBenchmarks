@@ -1,6 +1,6 @@
 import os
 import traceback
-from requests import ConnectionError
+from requests import ConnectionError, Timeout
 
 from toolset.utils.output_helper import log
 
@@ -120,6 +120,12 @@ class FrameworkTest:
                             base_url + test.get_url())
                 except ConnectionError as e:
                     results = [('fail', "Server did not respond to request",
+                                base_url)]
+                    log("Verifying test %s for %s caused an exception: %s" %
+                        (test_type, self.name, e),
+                        color=Fore.RED)
+                except Timeout as e:
+                    results = [('fail', "Connection to server timed out",
                                 base_url)]
                     log("Verifying test %s for %s caused an exception: %s" %
                         (test_type, self.name, e),
