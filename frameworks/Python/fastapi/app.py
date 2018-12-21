@@ -57,7 +57,7 @@ app = FastAPI()
 
 
 @app.get('/json')
-def json_serialization():
+async def json_serialization():
     return {'message': 'Hello, world!'}
 
 
@@ -114,5 +114,5 @@ async def database_updates(queries = None):
 
 
 @app.get('/plaintext')
-def plaintext():
+async def plaintext():
     return PlainTextResponse(b'Hello, world!')
