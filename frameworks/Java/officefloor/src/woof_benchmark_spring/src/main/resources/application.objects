@@ -1,0 +1,7 @@
+<objects>
+
+	<supplier source="SPRING">
+		<property name="configuration.class" value="net.officefloor.benchmark.SpringSetup" />
+	</supplier>
+
+</objects>
