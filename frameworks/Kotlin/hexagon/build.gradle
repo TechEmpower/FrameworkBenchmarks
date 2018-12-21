@@ -11,9 +11,7 @@ apply(plugin: "war")
 defaultTasks("installDist")
 
 mainClassName = "com.hexagonkt.BenchmarkKt"
-applicationDefaultJvmArgs = [
-    "-Xms2G", "-Xmx2G", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts"
-]
+applicationDefaultJvmArgs = [ "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts" ]
 
 war {
     archiveName = "ROOT.war"
@@ -23,7 +21,7 @@ installDist.dependsOn("war")
 
 dependencies {
     compile("com.hexagonkt:store_mongodb:$hexagonVersion")
-    compile("com.hexagonkt:server_jetty:$hexagonVersion")
+    compile("com.hexagonkt:http_server_jetty:$hexagonVersion")
     compile("com.hexagonkt:templates_pebble:$hexagonVersion")
 
     compile("com.zaxxer:HikariCP:$hikariVersion")
@@ -32,7 +30,7 @@ dependencies {
     // providedCompile excludes the dependency only in the WAR, not in the distribution
     providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
 
-    testCompile("com.hexagonkt:port_client:$hexagonVersion")
+    testCompile("com.hexagonkt:port_http_client:$hexagonVersion")
     testCompile("org.testng:testng:$testngVersion")
 }
 

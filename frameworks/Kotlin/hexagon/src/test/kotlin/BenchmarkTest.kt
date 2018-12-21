@@ -1,10 +1,10 @@
 package com.hexagonkt
 
 import com.hexagonkt.serialization.parse
-import com.hexagonkt.client.Client
-import com.hexagonkt.serialization.JsonFormat
+import com.hexagonkt.http.client.Client
+import com.hexagonkt.serialization.Json
 import com.hexagonkt.serialization.parseList
-import com.hexagonkt.http.HttpMethod.GET
+import com.hexagonkt.http.Method.GET
 import org.asynchttpclient.Response
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
@@ -54,7 +54,7 @@ import java.lang.System.setProperty
         val response = client.get("/json")
         val content = response.responseBody
 
-        checkResponse(response, JsonFormat.contentType)
+        checkResponse(response, Json.contentType)
         assert("Hello, World!" == content.parse(Message::class).message)
     }
 
@@ -80,7 +80,7 @@ import java.lang.System.setProperty
         val response = client.get("/$databaseEngine/db")
         val body = response.responseBody
 
-        checkResponse(response, JsonFormat.contentType)
+        checkResponse(response, Json.contentType)
         val bodyMap = body.parse(Map::class)
         assert(bodyMap.containsKey(World::id.name))
         assert(bodyMap.containsKey(World::randomNumber.name))
@@ -90,7 +90,7 @@ import java.lang.System.setProperty
         val response = client.get("/$databaseEngine/update")
         val body = response.responseBody
 
-        checkResponse(response, JsonFormat.contentType)
+        checkResponse(response, Json.contentType)
         val bodyMap = body.parseList(Map::class).first()
         assert(bodyMap.containsKey(World::id.name))
         assert(bodyMap.containsKey(World::randomNumber.name))
@@ -118,7 +118,7 @@ import java.lang.System.setProperty
         val response = client.get(path)
         val content = response.responseBody
 
-        checkResponse(response, JsonFormat.contentType)
+        checkResponse(response, Json.contentType)
 
         val resultsList = content.parse(List::class)
         assert(itemsCount == resultsList.size)

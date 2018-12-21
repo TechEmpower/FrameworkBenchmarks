@@ -1,6 +1,7 @@
 package com.hexagonkt
 
-import com.hexagonkt.helpers.Environment.systemSetting
+import com.hexagonkt.helpers.error
+import com.hexagonkt.helpers.Jvm.systemSetting
 import com.hexagonkt.settings.SettingsManager.defaultSetting
 import com.hexagonkt.store.mongodb.MongoDbStore
 
@@ -10,12 +11,15 @@ import com.zaxxer.hikari.HikariDataSource
 import java.sql.Connection
 import java.sql.ResultSet.CONCUR_READ_ONLY
 import java.sql.ResultSet.TYPE_FORWARD_ONLY
+import java.util.concurrent.ThreadLocalRandom
 
 internal const val WORLD_ROWS: Int = 10000
 
 private val worldName: String = defaultSetting("worldCollection", "world")
 private val fortuneName: String = defaultSetting("fortuneCollection", "fortune")
 private val databaseName: String = defaultSetting("database", "hello_world")
+
+internal fun randomWorld(): Int = ThreadLocalRandom.current().nextInt(WORLD_ROWS) + 1
 
 internal interface BenchmarkStore {
     fun findAllFortunes(): List<Fortune>
@@ -38,21 +42,20 @@ internal class BenchmarkMongoDbStore(engine: String) : BenchmarkStore {
         MongoDbStore(Fortune::class, Fortune::_id, dbUrl, fortuneName)
     }
 
-    override fun close() { /* Not needed */ }
+    override fun findAllFortunes(): List<Fortune> = fortuneRepository.findAll()
 
-    override fun findAllFortunes() = fortuneRepository.findAll()
-
-    override fun findWorlds(count: Int) =
+    override fun findWorlds(count: Int): List<World> =
         (1..count).mapNotNull { worldRepository.findOne(randomWorld()) }
 
-    override fun replaceWorlds(count: Int) = (1..count)
-        .map { worldRepository.findOne(randomWorld())?.copy(randomNumber = randomWorld()) }
-        .toList()
-        .filterNotNull()
+    override fun replaceWorlds(count: Int): List<World> = (1..count)
         .map {
-            worldRepository.replaceOne(it)
-            it
+            val world = worldRepository.findOne(randomWorld()) ?: error
+            val worldCopy = world.copy(randomNumber = randomWorld())
+            worldRepository.replaceOne(worldCopy)
+            worldCopy
         }
+
+    override fun close() { /* Not needed */ }
 }
 
 internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
@@ -64,34 +67,15 @@ internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
 
     private val dbHost: String = systemSetting("${engine.toUpperCase()}_DB_HOST", "localhost")
 
-    private val jdbcUrl: String = "jdbc:postgresql://$dbHost/$databaseName?" +
-        "jdbcCompliantTruncation=false&" +
-        "elideSetAutoCommits=true&" +
-        "useLocalSessionState=true&" +
-        "cachePrepStmts=true&" +
-        "cacheCallableStmts=true&" +
-        "alwaysSendSetIsolation=false&" +
-        "prepStmtCacheSize=4096&" +
-        "cacheServerConfiguration=true&" +
-        "prepStmtCacheSqlLimit=2048&" +
-        "traceProtocol=false&" +
-        "useUnbufferedInput=false&" +
-        "useReadAheadInput=false&" +
-        "maintainTimeStats=false&" +
-        "useServerPrepStmts=true&" +
-        "cacheRSMetadata=true"
+    private val jdbcUrl: String = "jdbc:postgresql://$dbHost/$databaseName"
 
     private val dataSource: HikariDataSource by lazy {
         val config = HikariConfig()
         config.jdbcUrl = jdbcUrl
-        config.maximumPoolSize = defaultSetting("maximumPoolSize", 16)
+        config.maximumPoolSize = defaultSetting("maximumPoolSize", 64)
         config.username = defaultSetting("databaseUsername", "benchmarkdbuser")
         config.password = defaultSetting("databasePassword", "benchmarkdbpass")
         HikariDataSource(config)
-    }
-
-    override fun close() {
-        dataSource.close()
     }
 
     override fun findAllFortunes(): List<Fortune> {
@@ -152,5 +136,9 @@ internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
         }
 
         return worlds
+    }
+
+    override fun close() {
+        dataSource.close()
     }
 }
