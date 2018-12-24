@@ -17,7 +17,8 @@ if [[ (! -d facil_app) ||  (-n "${FIO_EDGE}") ]] ; then
 	# Setting FIO_EDGE will test against the master branch on the development machine. i.e.:
 	#     $ FIO_EDGE=1 tfb --mode verify --test facil.io
 	if [[ -z "${FIO_EDGE}" ]]; then
-	  FIO_URL="https://api.github.com/repos/boazsegev/facil.io/tarball/0.6.4"
+		echo "INFO: loading facil.io version 0.7.0.beta3"
+	  FIO_URL="https://api.github.com/repos/boazsegev/facil.io/tarball/0.7.0.beta3"
 	else
 		echo "INFO: development mode detected, loading facil.io from master."
 		FIO_URL="https://github.com/boazsegev/facil.io/archive/master.tar.gz"

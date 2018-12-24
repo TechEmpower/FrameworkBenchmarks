@@ -1,0 +1,26 @@
+{
+  "framework": "beetlex",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "beetlex",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "BeetleX",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "beetlex",
+        "notes": "",
+        "versus": "beetlex"
+      }
+    }
+  ]
+}

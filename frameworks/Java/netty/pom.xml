@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -10,7 +9,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<netty.version>4.1.25.Final</netty.version>
+		<netty.version>4.1.32.Final</netty.version>
 	</properties>
 
 	<packaging>jar</packaging>
@@ -38,9 +37,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-afterburner</artifactId>
-			<version>2.9.7</version>
+			<groupId>com.jsoniter</groupId>
+			<artifactId>jsoniter</artifactId>
+			<version>0.9.23</version>
 		</dependency>
 
 		<dependency>

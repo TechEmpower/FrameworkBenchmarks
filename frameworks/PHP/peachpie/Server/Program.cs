@@ -3,7 +3,7 @@ using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Peachpie.Web;
+using Peachpie.AspNetCore.Web;
 
 namespace MyWebsite.Server
 {

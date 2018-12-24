@@ -1,10 +1,10 @@
-FROM maven:3.5.3-jdk-10-slim as maven
+FROM maven:3.6.0-jdk-11-slim as maven
 WORKDIR /undertow
 COPY pom.xml pom.xml
 COPY src src
-RUN mvn clean package -q
+RUN mvn package -q
 
-FROM openjdk:10-jre-slim
+FROM openjdk:11-jdk-slim
 WORKDIR /undertow
 COPY --from=maven /undertow/target/app.jar app.jar
 CMD ["java", "-jar", "app.jar", "NO_DATABASE"]

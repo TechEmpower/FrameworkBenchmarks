@@ -40,6 +40,7 @@ env:
      - "TESTDIR=Java/activeweb"
      - "TESTDIR=Java/armeria"
      - "TESTDIR=Java/baratine"
+     - "TESTDIR=Java/baseio"
      - "TESTDIR=Java/bayou"
      - "TESTDIR=Java/blade"
      - "TESTDIR=Java/comsat"
@@ -49,6 +50,8 @@ env:
      - "TESTDIR=Java/greenlightning"
      - "TESTDIR=Java/grizzly"
      - "TESTDIR=Java/grizzly-jersey"
+     - "TESTDIR=Java/helidon"
+     - "TESTDIR=Java/httpserver"
      - "TESTDIR=Java/jawn"
      - "TESTDIR=Java/javalin"
      - "TESTDIR=Java/jetty"
@@ -82,15 +85,17 @@ env:
      - "TESTDIR=Java/vertx"
      - "TESTDIR=Java/vertx-web"
      - "TESTDIR=Java/wicket"
-     - "TESTDIR=Java/wildfly-ee7"
+     - "TESTDIR=Java/wildfly-ee"
      - "TESTDIR=Java/wizzardo-http"
-     - "TESTDIR=Scala/cask"
      - "TESTLANG=JavaScript"
      - "TESTLANG=Kotlin"
+     - "TESTLANG=Lisp"
      - "TESTLANG=Lua"
      - "TESTLANG=Nim"
      - "TESTLANG=Perl"
-     - "TESTLANG=PHP"
+     - 'TESTDIR="PHP/php"'
+     - 'TESTDIR="PHP/cakephp PHP/clancats PHP/codeigniter PHP/cygnite PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/laravel PHP/limonade PHP/lithium PHP/lumen PHP/phpixie PHP/phreeze PHP/silex PHP/slim PHP/symfony PHP/yii2 PHP/zend"'
+     - 'TESTDIR="PHP/amp PHP/hamlet PHP/hhvm PHP/peachpie PHP/swoole PHP/workerman PHP/phalcon"'
      - "TESTLANG=Python"
      - "TESTLANG=Ruby"
      - 'TESTDIR="Rust/actix Rust/gotham Rust/hyper Rust/iron"'

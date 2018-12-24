@@ -18,12 +18,12 @@
 */
 
 #include <errno.h>
+#include <mustache.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <mustache.h>
 
 #include "database.h"
 #include "error.h"
