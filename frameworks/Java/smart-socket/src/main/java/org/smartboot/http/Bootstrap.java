@@ -21,8 +21,8 @@ public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-        System.setProperty("smart-socket.server.pageSize", (5 * 1024 * 1024) + "");
-        System.setProperty("smart-socket.session.writeChunkSize", (1024 * 8) + "");
+        System.setProperty("smart-socket.server.pageSize", (10 * 1024 * 1024) + "");
+        System.setProperty("smart-socket.session.writeChunkSize", (1024 * 16) + "");
         HttpMessageProcessor processor = new HttpMessageProcessor(System.getProperty("webapps.dir", "./"));
         processor.route("/plaintext", new HttpHandle() {
 
@@ -51,7 +51,7 @@ public class Bootstrap {
     public static void http(MessageProcessor<Http11Request> processor) {
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
-        server.setReadBufferSize(1024 * 8);
+        server.setReadBufferSize(1024 * 16);
 //        server.setThreadNum((int) (Runtime.getRuntime().availableProcessors() * 2));
         try {
             server.start();
