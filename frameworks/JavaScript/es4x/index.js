@@ -5,14 +5,14 @@ import {Router} from '@vertx/web';
 
 import {PgClient, Tuple} from '@reactiverse/reactive-pg-client';
 import {PgPoolOptions} from '@reactiverse/reactive-pg-client/options';
+import {HandlebarsTemplateEngine} from '@vertx/web-templ-handlebars'
 
 const util = require('./util');
-const HandlebarsTemplateEngine = Java.type('io.vertx.ext.web.templ.HandlebarsTemplateEngine');
 
 const SERVER = 'vertx.js';
 
 const app = Router.router(vertx);
-const template = HandlebarsTemplateEngine.create();
+const template = HandlebarsTemplateEngine.create(vertx);
 let date = new Date().toString();
 
 vertx.setPeriodic(1000, t => date = new Date().toUTCString());
@@ -80,7 +80,7 @@ app.get("/queries").handler(ctx => {
   let worlds = [];
 
   const queries = util.getQueries(ctx.request());
-  
+
   for (let i = 0; i < queries; i++) {
     client.preparedQuery(SELECT_WORLD, Tuple.of(util.randomWorld()), ar => {
       if (!failed) {
@@ -146,10 +146,8 @@ app.get("/fortunes").handler(ctx => {
       return 0;
     });
 
-    ctx.put("fortunes", fortunes);
-
     // and now delegate to the engine to render it.
-    template.render(ctx, "templates", "/fortunes.hbs", res => {
+    template.render({fortunes: fortunes}, "templates/fortunes.hbs", res => {
       if (res.succeeded()) {
         ctx.response()
           .putHeader("Server", SERVER)
@@ -240,7 +238,7 @@ app.get("/plaintext").handler(ctx => {
 
 vertx
   .createHttpServer()
-  .requestHandler(req => app.accept(req))
+  .requestHandler(app)
   .listen(8080);
 
 console.log('Server listening at: http://localhost:8080/');

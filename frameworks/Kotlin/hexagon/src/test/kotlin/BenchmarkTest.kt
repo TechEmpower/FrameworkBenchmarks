@@ -1,21 +1,21 @@
 package com.hexagonkt
 
 import com.hexagonkt.serialization.parse
-import com.hexagonkt.client.Client
-import com.hexagonkt.serialization.JsonFormat
+import com.hexagonkt.http.client.Client
+import com.hexagonkt.serialization.Json
 import com.hexagonkt.serialization.parseList
-import com.hexagonkt.HttpMethod.GET
+import com.hexagonkt.http.Method.GET
 import org.asynchttpclient.Response
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 import java.lang.System.setProperty
-import kotlin.test.assertFailsWith
 
-class BenchmarkJettyMongoDbTest : BenchmarkTest("jetty", "mongodb")
-class BenchmarkJettyPostgreSqlTest : BenchmarkTest("jetty", "postgresql")
+@Test class BenchmarkJettyMongoDbTest : BenchmarkTestBase("jetty", "mongodb")
 
-@Test abstract class BenchmarkTest(
+@Test class BenchmarkJettyPostgreSqlTest : BenchmarkTestBase("jetty", "postgresql")
+
+@Test abstract class BenchmarkTestBase(
     private val webEngine: String,
     private val databaseEngine: String,
     private val templateEngine: String = "pebble"
@@ -30,12 +30,6 @@ class BenchmarkJettyPostgreSqlTest : BenchmarkTest("jetty", "postgresql")
     @AfterClass fun shutDown() {
         benchmarkStores[databaseEngine]?.close()
         benchmarkServer.stop()
-    }
-
-    @Test fun store() {
-        assertFailsWith<IllegalStateException> {
-            createStore("invalid")
-        }
     }
 
     @Test fun web() {
@@ -60,7 +54,7 @@ class BenchmarkJettyPostgreSqlTest : BenchmarkTest("jetty", "postgresql")
         val response = client.get("/json")
         val content = response.responseBody
 
-        checkResponse(response, JsonFormat.contentType)
+        checkResponse(response, Json.contentType)
         assert("Hello, World!" == content.parse(Message::class).message)
     }
 
@@ -86,7 +80,7 @@ class BenchmarkJettyPostgreSqlTest : BenchmarkTest("jetty", "postgresql")
         val response = client.get("/$databaseEngine/db")
         val body = response.responseBody
 
-        checkResponse(response, JsonFormat.contentType)
+        checkResponse(response, Json.contentType)
         val bodyMap = body.parse(Map::class)
         assert(bodyMap.containsKey(World::id.name))
         assert(bodyMap.containsKey(World::randomNumber.name))
@@ -96,7 +90,7 @@ class BenchmarkJettyPostgreSqlTest : BenchmarkTest("jetty", "postgresql")
         val response = client.get("/$databaseEngine/update")
         val body = response.responseBody
 
-        checkResponse(response, JsonFormat.contentType)
+        checkResponse(response, Json.contentType)
         val bodyMap = body.parseList(Map::class).first()
         assert(bodyMap.containsKey(World::id.name))
         assert(bodyMap.containsKey(World::randomNumber.name))
@@ -124,7 +118,7 @@ class BenchmarkJettyPostgreSqlTest : BenchmarkTest("jetty", "postgresql")
         val response = client.get(path)
         val content = response.responseBody
 
-        checkResponse(response, JsonFormat.contentType)
+        checkResponse(response, Json.contentType)
 
         val resultsList = content.parse(List::class)
         assert(itemsCount == resultsList.size)

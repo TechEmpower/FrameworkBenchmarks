@@ -39,9 +39,3 @@ and `${TEMPLATE_ENGINE}` with: `pebble`
 * Fortunes: http://localhost:8080/${DB_ENGINE}/${TEMPLATE_ENGINE}/fortunes
 * Database updates: http://localhost:8080/${DB_ENGINE}/update
 * Database queries: http://localhost:8080/${DB_ENGINE}/query
-
-## Run inside vagrant
-
-Follow instructions at: https://github.com/TechEmpower/FrameworkBenchmarks#quick-start-guide-vagrant
-
-And run: `rm -rf ~/FrameworkBenchmarks/results` to clear tests results.

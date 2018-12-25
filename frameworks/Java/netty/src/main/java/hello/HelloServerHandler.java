@@ -1,14 +1,26 @@
 package hello;
 
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaderNames.DATE;
+import static io.netty.handler.codec.http.HttpHeaderNames.SERVER;
+import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_JSON;
+import static io.netty.handler.codec.http.HttpHeaderValues.TEXT_PLAIN;
+import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
+import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+import com.jsoniter.output.JsonStream;
+import com.jsoniter.output.JsonStreamPool;
+import com.jsoniter.spi.JsonException;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -23,15 +35,6 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.FastThreadLocal;
 
-import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
-import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
-import static io.netty.handler.codec.http.HttpHeaderNames.DATE;
-import static io.netty.handler.codec.http.HttpHeaderNames.SERVER;
-import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_JSON;
-import static io.netty.handler.codec.http.HttpHeaderValues.TEXT_PLAIN;
-import static io.netty.handler.codec.http.HttpResponseStatus.*;
-import static io.netty.handler.codec.http.HttpVersion.*;
-
 public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 
 	private static final FastThreadLocal<DateFormat> FORMAT = new FastThreadLocal<DateFormat>() {
@@ -41,22 +44,25 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 		}
 	};
 
-	private static ObjectMapper newMapper() {
-		ObjectMapper m = new ObjectMapper();
-		m.registerModule(new AfterburnerModule());
-		return m;
-	}
-
 	private static Message newMsg() {
 		return new Message("Hello, World!");
 	}
 
-	private static int jsonLen() {
+	private static byte[] serializeMsg(Message obj) {
+		JsonStream stream = JsonStreamPool.borrowJsonStream();
 		try {
-			return newMapper().writeValueAsBytes(newMsg()).length;
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
+			stream.reset(null);
+			stream.writeVal(Message.class, obj);
+			return Arrays.copyOfRange(stream.buffer().data(),0 , stream.buffer().tail());
+		} catch (IOException e) {
+			throw new JsonException(e);
+		} finally {
+			JsonStreamPool.returnJsonStream(stream);
 		}
+	}
+
+	private static int jsonLen() {
+		return serializeMsg(newMsg()).length;
 	}
 
 	private static final byte[] STATIC_PLAINTEXT = "Hello, World!".getBytes(CharsetUtil.UTF_8);
@@ -64,10 +70,9 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 
 	private static final ByteBuf PLAINTEXT_CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_PLAINTEXT));
 	private static final CharSequence PLAINTEXT_CLHEADER_VALUE = AsciiString.cached(String.valueOf(STATIC_PLAINTEXT_LEN));
-	private static final CharSequence JSON_CLHEADER_VALUE = AsciiString.cached(String.valueOf(jsonLen()));
+	private static final int JSON_LEN = jsonLen();
+	private static final CharSequence JSON_CLHEADER_VALUE = AsciiString.cached(String.valueOf(JSON_LEN));
 	private static final CharSequence SERVER_NAME = AsciiString.cached("Netty");
-
-	private static final ObjectMapper MAPPER = newMapper();
 
 	private volatile CharSequence date = new AsciiString(FORMAT.get().format(new Date()));
 
@@ -80,7 +85,6 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 				date = new AsciiString(format.format(new Date()));
 			}
 		}, 1000, 1000, TimeUnit.MILLISECONDS);
-
 	}
 
 	@Override
@@ -100,13 +104,13 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 	private void process(ChannelHandlerContext ctx, HttpRequest request) throws Exception {
 		String uri = request.uri();
 		switch (uri) {
-			case "/plaintext":
-				writePlainResponse(ctx, PLAINTEXT_CONTENT_BUFFER.duplicate());
-				return;
-			case "/json":
-				byte[] json = MAPPER.writeValueAsBytes(newMsg());
-				writeJsonResponse(ctx, Unpooled.wrappedBuffer(json));
-				return;
+		case "/plaintext":
+			writePlainResponse(ctx, PLAINTEXT_CONTENT_BUFFER.duplicate());
+			return;
+		case "/json":
+			byte[] json = serializeMsg(newMsg());
+			writeJsonResponse(ctx, Unpooled.wrappedBuffer(json));
+			return;
 		}
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
 		ctx.write(response).addListener(ChannelFutureListener.CLOSE);

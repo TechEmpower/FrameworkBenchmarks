@@ -5,10 +5,10 @@ WORKDIR /officefloor/src
 RUN mvn -q -N clean install
 WORKDIR /officefloor/src/woof_benchmark
 RUN mvn -q clean install
-WORKDIR /officefloor/src/woof_rapidoid
+WORKDIR /officefloor/src/woof_benchmark_rapidoid
 RUN mvn -q clean package
 
 FROM openjdk:10
 WORKDIR /officefloor
-COPY --from=maven /officefloor/src/woof_rapidoid/target/woof_rapidoid-1.0.0.jar server.jar
+COPY --from=maven /officefloor/src/woof_benchmark_rapidoid/target/woof_benchmark_rapidoid-1.0.0.jar server.jar
 CMD ["java", "-server", "-Xms2g", "-Xmx2g", "-XX:+UseNUMA", "-Dhttp.port=8080", "-Dhttp.server.name=OF", "-Dhttp.date.header=true", "-jar", "server.jar"]
