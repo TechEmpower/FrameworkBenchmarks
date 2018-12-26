@@ -16,11 +16,11 @@ libhttpserver lives here: https://github.com/etr/libhttpserver
 
 ### Test Type Implementation Source Code
 
-* [PLAINTEXT](frameworks/C++/libhttpserver/benchmark.cpp)
+* [PLAINTEXT](benchmark.cpp)
 
 ## Important Libraries
 libhttpserver uses libmicrohttpd as base library:
-* [Software](https://www.gnu.org/software/libmicrohttpd/)
+* [libmicrohttpd](https://www.gnu.org/software/libmicrohttpd/)
 
 ## Test URLs
 ### PLAINTEXT
