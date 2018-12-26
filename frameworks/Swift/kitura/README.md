@@ -10,6 +10,7 @@ The benchmark is split up into multiple executable targets, demonstrating differ
 - `kitura-postgres-orm`: Equivalent implementation with Postgres and Swift-Kuery-ORM
 - `kitura-postgres-orm-codable`: Equivalent implementation with Postgres, using [Codable Routing together with Swift-Kuery-ORM](https://developer.ibm.com/swift/2018/03/01/introducing-swift-kuery-orm/)
 - `kitura-mongodb`: Implementation of database tests, using MongoDB with MongoKitten (no ORM)
+- `kitura-nio`: `kitura` implementations of Plaintext and JSON run on [Kitura-NIO](https://github.com/IBM-Swift/Kitura-NIO)
 
 There are additional variants for each of the above implementations, with the '-gcd' suffix: These are compiled from the same source, but use the Grand Central Dispatch threading model (used by default on macOS) instead of a direct epoll implementation (the default on Linux).
 
