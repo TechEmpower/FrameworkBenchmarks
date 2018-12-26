@@ -186,6 +186,23 @@
       "database_os": "Linux",
       "display_name": "Kitura",
       "notes": ""
+    },
+    "nio": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "none",
+      "framework": "Kitura",
+      "language": "Swift",
+      "orm": "none",
+      "platform": "Kitura",
+      "webserver": "Kitura",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Kitura",
+      "notes": ""
     }
   }]
 }
