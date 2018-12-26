@@ -95,8 +95,6 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 			} finally {
 				ReferenceCountUtil.release(msg);
 			}
-		} else {
-			ctx.fireChannelRead(msg);
 		}
 	}
 
