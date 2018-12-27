@@ -1,6 +1,6 @@
 local config = {} -- extension configuration
 
-config.locations = {
+config.location = {
 	{name = "/plaintext", script = "PlaintextController.lua"},
 	{name = "/json", script = "JsonSerializationController.lua"},
 	{name = "/db", script = "SingleQueryController.lua"},
@@ -9,7 +9,7 @@ config.locations = {
 	{name = "/update", script = "UpdateController.lua"},
 }
 
-config.types = {
+config.type = {
 	"types.lua"
 }
 
