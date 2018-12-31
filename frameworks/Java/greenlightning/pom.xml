@@ -37,7 +37,7 @@
 		<dependency>
 		    <groupId>io.reactiverse</groupId>
 		    <artifactId>reactive-pg-client</artifactId>
-		    <version>0.10.6</version>
+		    <version>0.11.1</version>
 		</dependency>
 
 	</dependencies>
@@ -91,29 +91,6 @@
 				</executions>
 			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.3</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<filters>
-								<filter>
-									<artifact>*jnr-ffi:jnr-ffi*</artifact>
-									<excludes>
-										<exclude>**/jni/**</exclude>
-									</excludes>
-								</filter>
-							</filters>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
