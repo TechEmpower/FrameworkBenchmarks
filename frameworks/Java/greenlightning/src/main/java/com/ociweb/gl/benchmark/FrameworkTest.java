@@ -54,7 +54,7 @@ public class FrameworkTest implements GreenApp {
 			    
     public FrameworkTest() {
     	// use this in commit messages to narrow travis testing to just this project
-    	// ebase before using this:  [ci fw-only Java/greenlightning]
+    	// rebase before using this:  [ci fw-only Java/greenlightning]
     	
     	//this server works best with  -XX:+UseNUMA    	
     	this(System.getProperty("host","0.0.0.0"), 
