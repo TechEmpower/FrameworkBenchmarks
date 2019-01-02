@@ -14,7 +14,7 @@ RUN apt-get install -yqq composer > /dev/null
 ADD ./ /slim
 WORKDIR /slim
 
-RUN composer install --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN chmod -R 777 /slim
 

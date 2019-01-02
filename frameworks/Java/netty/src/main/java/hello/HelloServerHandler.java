@@ -53,7 +53,7 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 		try {
 			stream.reset(null);
 			stream.writeVal(Message.class, obj);
-			return Arrays.copyOfRange(stream.buffer().data(),0 , stream.buffer().tail());
+			return Arrays.copyOfRange(stream.buffer().data(), 0, stream.buffer().tail());
 		} catch (IOException e) {
 			throw new JsonException(e);
 		} finally {
@@ -68,7 +68,6 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 	private static final byte[] STATIC_PLAINTEXT = "Hello, World!".getBytes(CharsetUtil.UTF_8);
 	private static final int STATIC_PLAINTEXT_LEN = STATIC_PLAINTEXT.length;
 
-	private static final ByteBuf PLAINTEXT_CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_PLAINTEXT));
 	private static final CharSequence PLAINTEXT_CLHEADER_VALUE = AsciiString.cached(String.valueOf(STATIC_PLAINTEXT_LEN));
 	private static final int JSON_LEN = jsonLen();
 	private static final CharSequence JSON_CLHEADER_VALUE = AsciiString.cached(String.valueOf(JSON_LEN));
@@ -96,8 +95,6 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 			} finally {
 				ReferenceCountUtil.release(msg);
 			}
-		} else {
-			ctx.fireChannelRead(msg);
 		}
 	}
 
@@ -105,7 +102,7 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 		String uri = request.uri();
 		switch (uri) {
 		case "/plaintext":
-			writePlainResponse(ctx, PLAINTEXT_CONTENT_BUFFER.duplicate());
+			writePlainResponse(ctx, Unpooled.wrappedBuffer(STATIC_PLAINTEXT));
 			return;
 		case "/json":
 			byte[] json = serializeMsg(newMsg());

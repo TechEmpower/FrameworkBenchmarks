@@ -11,4 +11,4 @@ fortuneCollection : fortune
 databaseUsername : benchmarkdbuser
 databasePassword : benchmarkdbpass
 
-maximumPoolSize : 32
+maximumPoolSize : 64

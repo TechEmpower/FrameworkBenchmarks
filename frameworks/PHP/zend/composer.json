@@ -1,6 +1,6 @@
 {
     "name": "zendframework/skeleton-application",
-    "description": "Skeleton Application for ZF2",
+    "description": "Skeleton Application for ZF",
     "license": "BSD-3-Clause",
     "keywords": [
         "framework",
@@ -8,8 +8,9 @@
     ],
     "homepage": "http://framework.zend.com/",
     "require": {
-        "php": ">=5.3.3",
-        "zendframework/zendframework": "~2.2"
+        "php": "^7.2",
+        "zendframework/zend-mvc": "^3.0.1",
+        "zendframework/zend-db": "^2.9.3"
     },
     "autoload": {
         "psr-0": {
