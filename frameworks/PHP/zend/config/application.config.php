@@ -1,6 +1,8 @@
 <?php
 return array(
     'modules' => array(
+        'Zend\Router',
+        'Zend\Db',
         'FrameworkBenchmarks',
     ),
     'module_listener_options' => array(

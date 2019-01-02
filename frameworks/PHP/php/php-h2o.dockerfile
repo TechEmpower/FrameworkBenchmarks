@@ -10,11 +10,11 @@ RUN apt-get update && \
 
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq  > /dev/null
-RUN apt-get install -yqq php7.2 php7.2-common php7.2-cli php7.2-fpm php7.2-mysql  > /dev/null
+RUN apt-get install -yqq php7.3 php7.3-common php7.3-cli php7.3-fpm php7.3-mysql  > /dev/null
 
-COPY deploy/conf/* /etc/php/7.2/fpm/
+COPY deploy/conf/* /etc/php/7.3/fpm/
 
-RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 2048|pm.max_children = 512|g" /etc/php/7.2/fpm/php-fpm.conf ; fi;
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 2048|pm.max_children = 512|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
 
 ### Install h2o
 
@@ -29,5 +29,5 @@ RUN wget -qO "$H2O_ARCHIVE" "https://github.com/h2o/h2o/archive/$H2O_ARCHIVE" &&
           -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -DWITH_MRUBY=off && \
     make -j "$(nproc)" install  > /dev/null
 
-CMD service php7.2-fpm start && \
+CMD service php7.3-fpm start && \
     /h2o/bin/h2o -c /deploy/h2o.conf
