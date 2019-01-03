@@ -8,6 +8,8 @@ import static io.undertow.util.Headers.CONTENT_TYPE;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.sql.Connection;
+import java.sql.Statement;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -19,17 +21,17 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.io.OutputStream;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.fizzed.rocker.runtime.StringBuilderOutput;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.MustacheFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.jsoniter.output.EncodingMode;
 import com.jsoniter.output.JsonStream;
+import io.undertow.io.IoCallback;
 
 import io.sinistral.models.Fortune;
 import io.sinistral.models.Message;
@@ -42,126 +44,135 @@ import io.sinistral.services.PostgresService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
+import io.undertow.util.Headers; 
 
 /**
  * Much of this borrowed with reverence from Light-Java
- * 
  * @author jbauer
- *
  */
 
-@Api(tags="benchmark")
+@Api(tags = "benchmark")
 @Path("")
-@Produces((MediaType.APPLICATION_JSON)) 
-@Consumes((MediaType.MEDIA_TYPE_WILDCARD)) 
+@Produces((MediaType.APPLICATION_JSON))
+@Consumes((MediaType.MEDIA_TYPE_WILDCARD))
 @Singleton
 public class Benchmarks
 {
-	private static final String HTML_UTF8_TYPE = io.sinistral.proteus.server.MediaType.TEXT_HTML_UTF8.toString(); 
+
+	private static final String HTML_UTF8_TYPE = io.sinistral.proteus.server.MediaType.TEXT_HTML_UTF8.toString();
 	private static final ByteBuffer MESSAGE_BUFFER;
-    private static final String MESSAGE = "Hello, World!";
-    private static final String FORTUNES_TEMPLATE = Benchmarks.class.getResource("/templates/Fortunes.mustache").getFile();
- 
+
+	private static final String MESSAGE = "Hello, World!";
+
+    public static final byte[] HELLO_WORLD = "Hello, World!".getBytes();
+
+	public static final String PLAIN_TEXT_CONTENT_TYPE = "text/plain";
+
+	public static final String DB_QUERY = "SELECT * FROM world WHERE id = ?";
+
+	public static final String FORTUNES_QUERY = "SELECT * FROM Fortune";
+
+	public static final String ID_KEY = "id";
+
+	public static final String MESSAGE_KEY = "message";
+
+	public static final String RANDOM_NUMBER_KEY = "randomNumber";
+
+	public static final String JSON_CONTENT_TYPE = "application/json";
+
 	private static final ObjectMapper DEFAULT_MAPPER = new ObjectMapper();
- 
-	private final MustacheFactory mustacheFactory = new DefaultMustacheFactory();
-     
 
- 
-    static {
-    	    	
+	static
+	{
 
-    	MESSAGE_BUFFER = ByteBuffer.allocateDirect(MESSAGE.length());
-    	
-    	try {
-    		MESSAGE_BUFFER.put(MESSAGE.getBytes("US-ASCII"));
-     } catch (Exception e) {
-    	 throw new RuntimeException(e);
-     	}
-    	MESSAGE_BUFFER.flip();
-    	
-    	JsonStream.setMode(EncodingMode.STATIC_MODE);
-    	 
-    	
-    	JsonStream.registerNativeEncoder(Message.class, new MessageEncoder());
-    	JsonStream.registerNativeEncoder(World.class, new WorldEncoder());
-    	
-    	DEFAULT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    	DEFAULT_MAPPER.configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true);
-    	DEFAULT_MAPPER.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
-    	DEFAULT_MAPPER.configure(DeserializationFeature.EAGER_DESERIALIZER_FETCH,true); 
-    	DEFAULT_MAPPER.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-    	
-    	DEFAULT_MAPPER.registerModule(new AfterburnerModule()); 
-
-    }
-    
-    
- 
-	protected final MySqlService mySqlService;
+		int length = 0;
 	
-	 
+		
+		MESSAGE_BUFFER = ByteBuffer.allocateDirect(MESSAGE.length());
+		
+		try
+		{
+			MESSAGE_BUFFER.put(MESSAGE.getBytes());
+		} catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+		
+		MESSAGE_BUFFER.flip();
+
+		JsonStream.setMode(EncodingMode.STATIC_MODE);
+
+		JsonStream.registerNativeEncoder(Message.class, new MessageEncoder());
+		JsonStream.registerNativeEncoder(World.class, new WorldEncoder());
+
+		DEFAULT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		DEFAULT_MAPPER.configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true);
+		DEFAULT_MAPPER.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+		DEFAULT_MAPPER.configure(DeserializationFeature.EAGER_DESERIALIZER_FETCH, true);
+		DEFAULT_MAPPER.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+
+		DEFAULT_MAPPER.registerModule(new AfterburnerModule());
+
+	}
+
+	protected final MySqlService sqlService;
+ 
 	protected final PostgresService postgresService;
-	
-   
-    public static int randomWorld() {
-        return 1 + ThreadLocalRandom.current().nextInt(10000);
-    }
 
-    @Inject
-    public Benchmarks(PostgresService postgresService, MySqlService mySqlService)
-    {
-    	this.mySqlService = mySqlService;
-    	this.postgresService = postgresService;
-    }
-	
-	
+	public static int randomWorld()
+	{
+		return 1 + ThreadLocalRandom.current().nextInt(10000);
+	}
+
+	@Inject
+	public Benchmarks(PostgresService postgresService, MySqlService sqlService)
+	{
+		this.sqlService = sqlService;
+		this.postgresService = postgresService; 
+	}
+
 	@GET
 	@Path("/db")
 	@Blocking
-	@ApiOperation(value = "World postgres db endpoint",   httpMethod = "GET" , response = World.class)
+	@ApiOperation(value = "World postgres db endpoint", httpMethod = "GET", response = World.class)
 	public void dbPostgres(HttpServerExchange exchange)
-	{ 		
+	{
 		final World world;
-		
+
 		try (final Connection connection = postgresService.getConnection())
 		{
-			try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM world WHERE id = ?"))
+			try (final PreparedStatement statement = connection.prepareStatement(DB_QUERY))
 			{
 				statement.setInt(1, randomWorld());
 				try (ResultSet resultSet = statement.executeQuery())
 				{
 					resultSet.next();
-					int id = resultSet.getInt("id");
-					int randomNumber = resultSet.getInt("randomNumber");
+					final int id = resultSet.getInt(ID_KEY);
+					final int randomNumber = resultSet.getInt(RANDOM_NUMBER_KEY);
 					world = new World(id, randomNumber);
 				}
 			}
 
+			exchange.getResponseHeaders().put(io.undertow.util.Headers.CONTENT_TYPE,JSON_CONTENT_TYPE);
 			
-			exchange.getResponseHeaders().put(io.undertow.util.Headers.CONTENT_TYPE, "application/json");
 			exchange.getResponseSender().send(JsonStream.serializeToBytes(world));
 
 		} catch (Exception e)
 		{
 			throw new IllegalArgumentException();
 		}
-		  
- 		 
 	}
-
-
-	
+ 
+ 
 	@GET
 	@Path("/db/mysql")
 	@Blocking
-	@ApiOperation(value = "World mysql db endpoint",   httpMethod = "GET" , response = World.class)
+	@ApiOperation(value = "World mysql db endpoint", httpMethod = "GET", response = World.class)
 	public void dbMySql(HttpServerExchange exchange)
-	{ 		
+	{
 		final World world;
-		
-		try (final Connection connection = mySqlService.getConnection())
+
+		try (final Connection connection = sqlService.getConnection())
 		{
 			try (PreparedStatement statement = connection.prepareStatement("SELECT id,randomNumber FROM world WHERE id = ?"))
 			{
@@ -173,122 +184,122 @@ public class Benchmarks
 				}
 			}
 
-			exchange.getResponseHeaders().put(io.undertow.util.Headers.CONTENT_TYPE, "application/json");
-			ByteArrayOutputStream os = new  ByteArrayOutputStream(128);
-			WorldEncoder.encodeRaw(world, os); 
-			 
+			exchange.getResponseHeaders().put(io.undertow.util.Headers.CONTENT_TYPE,JSON_CONTENT_TYPE);
+			ByteArrayOutputStream os = new ByteArrayOutputStream(128);
+			WorldEncoder.encodeRaw(world, os);
+
 			exchange.getResponseSender().send(ByteBuffer.wrap(os.toByteArray()));
 
 		} catch (Exception e)
 		{
 			throw new IllegalArgumentException();
 		}
-		  
- 		 
+
 	}
-	
-	
 
 	@GET
 	@Path("/fortunes/mysql")
 	@Produces(MediaType.TEXT_HTML)
 	@Blocking
-	@ApiOperation(value = "Fortunes mysql endpoint",   httpMethod = "GET"  )
-	public void fortunesMysql(HttpServerExchange exchange  ) throws Exception
-	{ 
- 
+	@ApiOperation(value = "Fortunes mysql endpoint", httpMethod = "GET")
+	public void fortunesMysql(HttpServerExchange exchange) throws Exception
+	{
+
 		List<Fortune> fortunes = new ArrayList<>();
-	        
-			try (final Connection connection = mySqlService.getConnection())
+
+		try (final Connection connection = postgresService.getConnection())
+		{
+			try (PreparedStatement statement = connection.prepareStatement(FORTUNES_QUERY))
 			{
-				try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Fortune"))
+
+				try (ResultSet resultSet = statement.executeQuery())
 				{
-	
-					try (ResultSet resultSet = statement.executeQuery())
+					while (resultSet.next())
 					{
-						while (resultSet.next())
-						{
-							int id = resultSet.getInt("id");
-							String msg = resultSet.getString("message");
-	
-							fortunes.add(new Fortune(id, msg));
-						}
+						int id = resultSet.getInt("id");
+						String msg = resultSet.getString("message");
+
+						fortunes.add(new Fortune(id, msg));
 					}
 				}
 			}
-			
-	        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-	        
-	        fortunes.sort(null);
-         
-	        final String render = views.Fortunes.template(fortunes).render(StringBuilderOutput.FACTORY).toString(); 
-	         
-	        exchange.getResponseHeaders().put(
-	                Headers.CONTENT_TYPE, HTML_UTF8_TYPE);
-	        exchange.getResponseSender().send(render);  
-		  
+		}
+
+		fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+
+		fortunes.sort(null);
+
+		final String render = views.Fortunes.template(fortunes).render(StringBuilderOutput.FACTORY).toString();
+
+		exchange.getResponseHeaders().put(
+											Headers.CONTENT_TYPE, HTML_UTF8_TYPE);
+		exchange.getResponseSender().send(render);
+
 	}
-	
+
 	@GET
 	@Path("/fortunes")
 	@Blocking
 	@Produces(MediaType.TEXT_HTML)
-	@ApiOperation(value = "Fortunes postgres endpoint",   httpMethod = "GET"  )
+	@ApiOperation(value = "Fortunes postgres endpoint", httpMethod = "GET")
 	public void fortunesPostgres(HttpServerExchange exchange) throws Exception
-	{ 
-			List<Fortune> fortunes = new ArrayList<>();
-		  
-			try (final Connection connection = postgresService.getConnection())
+	{
+		List<Fortune> fortunes = new ArrayList<>();
+
+		try (final Connection connection = postgresService.getConnection())
+		{
+			try (PreparedStatement statement = connection.prepareStatement(FORTUNES_QUERY,
+																			ResultSet.TYPE_FORWARD_ONLY,
+																			ResultSet.CONCUR_READ_ONLY))
 			{
-				try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Fortune"))
+
+				try (ResultSet resultSet = statement.executeQuery())
 				{
-	
-					try (ResultSet resultSet = statement.executeQuery())
+					while (resultSet.next())
 					{
-						while (resultSet.next())
-						{
-							int id = resultSet.getInt("id");
-							String msg = resultSet.getString("message");
-	
-							fortunes.add(new Fortune(id, msg));
-						}
+						int id = resultSet.getInt(ID_KEY);
+						String msg = resultSet.getString(MESSAGE_KEY);
+
+						fortunes.add(new Fortune(id, msg));
 					}
 				}
 			}
-			
-	        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-	        
-	        fortunes.sort(null);
-	        
-	        final String render = views.Fortunes.template(fortunes).render(StringBuilderOutput.FACTORY).toString(); 
-	         
-	        exchange.getResponseHeaders().put(
-	                Headers.CONTENT_TYPE, HTML_UTF8_TYPE);
-	        exchange.getResponseSender().send(render);  
-	}
-	
+		}
 
+		fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+
+		fortunes.sort(null);
+
+		final String render = views.Fortunes.template(fortunes).render(StringBuilderOutput.FACTORY).toString();
+
+		exchange.getResponseHeaders().put(
+											Headers.CONTENT_TYPE, HTML_UTF8_TYPE);
+		exchange.getResponseSender().send(render);
+	}
+
+
+	
 	@GET
 	@Path("/plaintext")
-	@ApiOperation(value = "Plaintext endpoint",   httpMethod = "GET" )
+	@ApiOperation(value = "Plaintext endpoint", httpMethod = "GET")
 	public void plaintext(HttpServerExchange exchange)
-	{ 
-		   exchange.getResponseHeaders().put(CONTENT_TYPE, "text/plain");
-		    exchange.getResponseSender().send(MESSAGE_BUFFER.duplicate());
+	{
+		exchange.getResponseHeaders().put(CONTENT_TYPE, PLAIN_TEXT_CONTENT_TYPE);
+		exchange.getResponseSender().send(MESSAGE_BUFFER.duplicate());
 	}
-	
-  
-	
+ 
+
 	@GET
 	@Path("/json")
-	@ApiOperation(value = "Json serialization endpoint",   httpMethod = "GET" )
+	@ApiOperation(value = "Json serialization endpoint", httpMethod = "GET")
 	public void json(HttpServerExchange exchange)
-	{ 
-		 exchange.getResponseHeaders().put(CONTENT_TYPE, "application/json");
-		 
-		 ByteArrayOutputStream os = new  ByteArrayOutputStream(128);
-		 MessageEncoder.encodeRaw(  new Message("Hello, World!"), os); 
-		 exchange.getResponseSender().send( ByteBuffer.wrap(os.toByteArray())   );
-		
+	{
+		exchange.getResponseHeaders().put(CONTENT_TYPE, "application/json");
+
+		ByteArrayOutputStream os = new ByteArrayOutputStream(128);
+		MessageEncoder.encodeRaw(new Message("Hello, World!"), os);
+		exchange.getResponseSender().send(ByteBuffer.wrap(os.toByteArray()));
+
 	}
 }
+

@@ -2,6 +2,7 @@
 java \
   -Dlogback.configurationFile="conf/logback.xml" \
   -Dconfig.file="conf/application.conf" \
+  -Xss256k \
   -Xms4g \
   -Xmx4g \
   -XX:+AggressiveOpts \
@@ -9,6 +10,7 @@ java \
   -XX:-UseBiasedLocking \
   -XX:+UseStringDeduplication \
   -Djava.net.preferIPv4Stack=true \
+  -XX:+UseParallelGC \
   -XX:+UseNUMA \
-  -classpath "/proteus/target/proteus-techempower-1.0.0.jar:/proteus/target/lib/*" \
-  io.sinistral.ExampleApplication
+ -classpath "/proteus/target/proteus-techempower-1.0.0.jar:/proteus/target/lib/*" \
+   io.sinistral.ExampleApplication

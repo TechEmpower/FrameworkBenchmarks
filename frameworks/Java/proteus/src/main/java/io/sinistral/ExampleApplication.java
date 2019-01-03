@@ -47,15 +47,22 @@ public class ExampleApplication extends ProteusApplication
 		HttpHandler rootHandler = new SetHeaderHandler(pathsHandler, "Server", config.getString("globalHeaders.Server"));
 		
 		Undertow.Builder undertowBuilder = Undertow.builder().addHttpListener(httpPort, config.getString("application.host"))
-				.setBufferSize(16 * 1024)
-				.setDirectBuffers(true)
-				.setIoThreads(Runtime.getRuntime().availableProcessors() * 2)
-				.setSocketOption(org.xnio.Options.BACKLOG, 10000)
-				.setServerOption(UndertowOptions.ALWAYS_SET_KEEP_ALIVE, false)
-				.setServerOption(UndertowOptions.RECORD_REQUEST_START_TIME, false)
-				.setServerOption(UndertowOptions.MAX_ENTITY_SIZE, config.getBytes("undertow.server.maxEntitySize"))
-				.setWorkerThreads(Runtime.getRuntime().availableProcessors() * 8)
-				.setHandler(rootHandler);
+		.setSocketOption(org.xnio.Options.BACKLOG,  50000)
+		.setSocketOption(org.xnio.Options.TCP_NODELAY, true)
+		 .setSocketOption(org.xnio.Options.KEEP_ALIVE, false)
+		.setSocketOption(org.xnio.Options.REUSE_ADDRESSES, true)
+		.setServerOption(UndertowOptions.ALWAYS_SET_KEEP_ALIVE, false)
+	//	.setServerOption(UndertowOptions.NO_REQUEST_TIMEOUT, 2 * 1000)
+
+		.setServerOption(UndertowOptions.RECORD_REQUEST_START_TIME, false)
+		.setServerOption(UndertowOptions.ENABLE_CONNECTOR_STATISTICS, false)
+		.setServerOption(UndertowOptions.MAX_ENTITY_SIZE, config.getBytes("undertow.server.maxEntitySize"))
+		.setServerOption(UndertowOptions.BUFFER_PIPELINED_DATA, true)
+		.setDirectBuffers(true)
+		.setBufferSize(16 * 1024)
+		.setIoThreads( Runtime.getRuntime().availableProcessors()  )
+		.setWorkerThreads((Runtime.getRuntime().availableProcessors() * 32))
+		.setHandler(rootHandler);
 		
 		this.undertow = undertowBuilder.build();
 

@@ -74,8 +74,9 @@ public class PostgresService   extends BaseService
  		this.ds.setJdbcUrl(jdbcUrl);
 		this.ds.setUsername(username);
 		this.ds.setPassword(password);  
-		this.ds.setMaximumPoolSize(maximumPoolSize); 
- 
+		this.ds.setMaximumPoolSize( Runtime.getRuntime().availableProcessors() * 2 ); 
+		this.ds.setMinimumIdle( Runtime.getRuntime().availableProcessors() ); 
+		 
 		log.info( this.getClass().getSimpleName() + " started with ds: " + ds); 
 	}
 	
