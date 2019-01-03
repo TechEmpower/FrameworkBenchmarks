@@ -207,7 +207,7 @@ public class Benchmarks
 
 		List<Fortune> fortunes = new ArrayList<>();
 
-		try (final Connection connection = postgresService.getConnection())
+		try (final Connection connection = sqlService.getConnection())
 		{
 			try (PreparedStatement statement = connection.prepareStatement(FORTUNES_QUERY))
 			{
