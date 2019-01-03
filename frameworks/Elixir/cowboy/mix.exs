@@ -4,7 +4,7 @@ defmodule Hello.Mixfile do
   def project do
     [app: :hello,
      version: "0.1.0",
-     elixir: "~> 1.5",
+     elixir: "~> 1.7.4",
      deps: deps()]
   end
 
@@ -14,8 +14,8 @@ defmodule Hello.Mixfile do
   end
 
   defp deps do
-    [{:cowboy, "~> 1.0"},
-     {:poison, "~> 1.4.0"},
-     {:ranch, "~> 1.3.2"}]
+    [{:cowboy, "~> 2.6.1"},
+     {:poison, "~> 3.1"},
+     {:ranch, "~> 1.7.1"}]
   end
 end

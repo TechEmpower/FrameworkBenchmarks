@@ -1,13 +1,18 @@
 defmodule Hello do
   def start(_type, _args) do
-    dispatch = :cowboy_router.compile([
-      {:_, [{"/json", JsonHandler, []},
-            {"/plaintext", PlaintextHandler, []}]}
-    ])
-    {:ok, _} = :cowboy.start_http(:http,
-                                  5000,
-                                  [port: 8080],
-                                  [env: [dispatch: dispatch], max_keepalive: :infinity])
+    dispatch =
+      :cowboy_router.compile([
+        {:_, [{"/json", JsonHandler, []}, {"/plaintext", PlaintextHandler, []}]}
+      ])
+
+    {:ok, _} =
+      :cowboy.start_http(
+        :http,
+        5000,
+        [port: 8080],
+        env: [dispatch: dispatch],
+        max_keepalive: :infinity
+      )
   end
 end
 
@@ -17,10 +22,14 @@ defmodule JsonHandler do
   end
 
   def handle(request, state) do
-    {:ok, reply} = :cowboy_req.reply(200,
-                                     [{"content-type", "application/json"}],
-                                     Poison.encode!(%{message: "Hello, World!"}),
-                                     request)
+    {:ok, reply} =
+      :cowboy_req.reply(
+        200,
+        [{"content-type", "application/json"}],
+        Poison.encode!(%{message: "Hello, World!"}),
+        request
+      )
+
     {:ok, reply, state}
   end
 
@@ -35,10 +44,14 @@ defmodule PlaintextHandler do
   end
 
   def handle(request, state) do
-    {:ok, reply} = :cowboy_req.reply(200,
-                                     [{"content-type", "text/plain"}],
-                                     "Hello, World!",
-                                     request)
+    {:ok, reply} =
+      :cowboy_req.reply(
+        200,
+        [{"content-type", "text/plain"}],
+        "Hello, World!",
+        request
+      )
+
     {:ok, reply, state}
   end
 
