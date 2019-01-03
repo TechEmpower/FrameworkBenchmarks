@@ -10,7 +10,7 @@ MngWorld::MngWorld()
 }
 
 MngWorld::MngWorld(const MngWorld &other)
-    : TAbstractModel(), d(new MngWorldObject(*other.d))
+    : TAbstractModel(), d(other.d)
 { }
 
 MngWorld::MngWorld(const MngWorldObject &object)

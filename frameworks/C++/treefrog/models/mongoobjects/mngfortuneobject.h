@@ -18,7 +18,7 @@ public:
         Message,
     };
 
-    virtual QString collectionName() const { return "fortune"; }
+    virtual QString collectionName() const { return QStringLiteral("fortune"); }
     virtual QString objectId() const { return _id; }
     virtual QString &objectId() { return _id; }
 
