@@ -22,7 +22,7 @@ public class Bootstrap {
 
     public static void main(String[] args) {
         System.setProperty("smart-socket.server.pageSize", (5 * 1024 * 1024) + "");
-        System.setProperty("smart-socket.session.writeChunkSize", (1024 * 4) + "");
+        System.setProperty("smart-socket.session.writeChunkSize", (1024 * 8) + "");
         HttpMessageProcessor processor = new HttpMessageProcessor(System.getProperty("webapps.dir", "./"));
         processor.route("/plaintext", new HttpHandle() {
 
@@ -52,7 +52,7 @@ public class Bootstrap {
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
         server.setReadBufferSize(1024 * 8);
-//        server.setThreadNum((int) (Runtime.getRuntime().availableProcessors() * 2));
+        server.setThreadNum((int)(Runtime.getRuntime().availableProcessors() * 1.5));
         try {
             server.start();
         } catch (IOException e) {
