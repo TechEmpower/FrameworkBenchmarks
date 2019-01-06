@@ -1,3 +1,3 @@
-class World < ActiveRecord::Base
+class World < ApplicationRecord
   self.table_name = "World"
 end
