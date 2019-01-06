@@ -3,7 +3,7 @@ import os
 
 _is_travis = os.environ.get('TRAVIS') == 'true'
 
-workers = multiprocessing.cpu_count()
+workers = multiprocessing.cpu_count() * 2
 if _is_travis:
     workers = 2
 

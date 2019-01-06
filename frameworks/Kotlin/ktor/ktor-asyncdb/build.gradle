@@ -23,10 +23,8 @@ dependencies {
     compile "io.ktor:ktor-server-netty:$ktor_version"
     compile "io.ktor:ktor-html-builder:$ktor_version"
     compile "com.github.jasync-sql:jasync-postgresql:0.8.54"
-    compile "io.reactiverse:reactive-pg-client:0.11.0"
-    compile "io.reactivex.rxjava2:rxjava:2.2.4"
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.0.1'
-    compile 'io.vertx:vertx-rx-java2:3.6.0'
+    compile "io.reactiverse:reactive-pg-client:0.11.1"
+    compile 'io.vertx:vertx-lang-kotlin-coroutines:3.6.2'
 }
 
 compileKotlin {
