@@ -51,11 +51,12 @@ namespace Benchmarks
         {
             mApiServer = new HttpApiServer();
             mApiServer.Register(typeof(Program).Assembly);
-            mApiServer.ServerConfig.Port = 8080;
-            mApiServer.ServerConfig.MaxConnections = 100000;
-            mApiServer.ServerConfig.UrlIgnoreCase = false;
-            mApiServer.ServerConfig.LogLevel = BeetleX.EventArgs.LogType.Warring;
-            mApiServer.ServerConfig.LogToConsole = true;
+            mApiServer.Options.BufferPoolMaxMemory = 500;
+            mApiServer.Options.Port = 8080;
+            mApiServer.Options.MaxConnections = 100000;
+            mApiServer.Options.UrlIgnoreCase = false;
+            mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Warring;
+            mApiServer.Options.LogToConsole = true;
             mApiServer.Open();
             Console.WriteLine("BeetleX FastHttpApi server");
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
