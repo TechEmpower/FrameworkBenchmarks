@@ -9,7 +9,7 @@ Fortune::Fortune()
 }
 
 Fortune::Fortune(const Fortune &other)
-    : TAbstractModel(), d(new FortuneObject(*other.d))
+    : TAbstractModel(), d(other.d)
 { }
 
 Fortune::Fortune(const FortuneObject &object)

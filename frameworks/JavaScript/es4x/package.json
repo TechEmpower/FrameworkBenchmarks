@@ -4,26 +4,23 @@
   "private": true,
   "main": "index.js",
   "devDependencies": {
-    "@vertx/unit": "3.5.4",
-    "es4x-cli": "0.0.3"
+    "@vertx/unit": "^3.6.2",
+    "es4x-cli": "^0.1.1"
   },
   "dependencies": {
-    "@vertx/core": "3.5.4",
-    "@vertx/web": "3.5.4",
-    "@reactiverse/reactive-pg-client": "0.10.5"
-  },
-  "scripts": {
-    "postinstall": "es4x postinstall",
-    "start": "es4x launcher run",
-    "test": "es4x launcher test",
-    "shell": "es4x shell",
-    "package": "es4x package"
-  },
-  "mvnDependencies": {
-    "io.vertx:vertx-web-templ-handlebars": "3.5.4"
+    "@vertx/core": "^3.6.2",
+    "@vertx/web": "^3.6.2",
+    "@vertx/web-templ-handlebars": "^3.6.2",
+    "@reactiverse/reactive-pg-client": "^0.11.0"
   },
   "files": [
     "util.js",
     "templates/fortunes.hbs"
-  ]
+  ],
+  "scripts": {
+    "postinstall": "es4x postinstall",
+    "start": "es4x exec run",
+    "test": "es4x exec test",
+    "package": "es4x package"
+  }
 }

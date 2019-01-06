@@ -2,29 +2,18 @@ package com.networknt.techempower.handler;
 
 import com.dslplatform.json.DslJson;
 import com.dslplatform.json.JsonWriter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.config.Config;
 import com.networknt.techempower.Helper;
-import com.networknt.techempower.db.mysql.MysqlStartupHookProvider;
 import com.networknt.techempower.db.postgres.PostgresStartupHookProvider;
 import com.networknt.techempower.model.World;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
-import io.undertow.util.HttpString;
 
+import javax.sql.DataSource;
 import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-
-import javax.sql.DataSource;
 
 import static com.networknt.techempower.Helper.randomWorld;
 

@@ -21,21 +21,16 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <version.light-java>1.5.10</version.light-java>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <version.light-4j>2.0.0-BETA2</version.light-4j>
         <version.logback>1.2.3</version.logback>
-        <version.undertow>2.0.3.Final</version.undertow>
-        <version.jsonpath>2.2.0</version.jsonpath>
-        <version.httpclient>4.5.2</version.httpclient>
-        <version.httpasyncclient>4.1.2</version.httpasyncclient>
-        <version.swagger>1.5.10</version.swagger>
-        <version.hikaricp>2.7.8</version.hikaricp>
+        <version.undertow>2.0.16.Final</version.undertow>
+        <version.hikaricp>3.2.0</version.hikaricp>
         <version.mysql>5.1.47</version.mysql>
         <version.postgres>42.2.5</version.postgres>
-        <version.dsl-json>1.7.0</version.dsl-json>
+        <version.dsl-json>1.8.4</version.dsl-json>
         <version.mustache>0.9.5</version.mustache>
-        <version.guava>24.1-jre</version.guava>
         <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
         <version.maven-jar-plugin>3.0.2</version.maven-jar-plugin>
         <version.maven-shade-plugin>3.1.0</version.maven-shade-plugin>
@@ -44,44 +39,39 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${version.guava}</version>
-        </dependency>
-        <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>config</artifactId>
-            <version>${version.light-java}</version>
+            <version>${version.light-4j}</version>
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>utility</artifactId>
-            <version>${version.light-java}</version>
+            <version>${version.light-4j}</version>
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>status</artifactId>
-            <version>${version.light-java}</version>
+            <version>${version.light-4j}</version>
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>exception</artifactId>
-            <version>${version.light-java}</version>
+            <version>${version.light-4j}</version>
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>handler</artifactId>
-            <version>${version.light-java}</version>
+            <version>${version.light-4j}</version>
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>service</artifactId>
-            <version>${version.light-java}</version>
+            <version>${version.light-4j}</version>
         </dependency>
         <dependency>
             <groupId>com.networknt</groupId>
             <artifactId>server</artifactId>
-            <version>${version.light-java}</version>
+            <version>${version.light-4j}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

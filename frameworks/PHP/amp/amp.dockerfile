@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.10
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -18,6 +18,6 @@ WORKDIR /amp
 
 COPY deploy/conf/* /etc/php/7.2/cli/conf.d/
 
-RUN composer install --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 CMD php /amp/vendor/bin/cluster -s /amp/server.php

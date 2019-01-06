@@ -17,15 +17,15 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>com.generallycloud</groupId>
+			<groupId>com.firenio</groupId>
 			<artifactId>baseio-all</artifactId>
-			<version>3.2.9-BETA-2</version>
+			<version>3.2.9-BETA-4</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>com.alibaba</groupId>
-		    <artifactId>fastjson</artifactId>
-		    <version>1.2.51</version>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.51</version>
 		</dependency>
 
 	</dependencies>

@@ -9,7 +9,7 @@ MngFortune::MngFortune()
 }
 
 MngFortune::MngFortune(const MngFortune &other)
-    : TAbstractModel(), d(new MngFortuneObject(*other.d))
+    : TAbstractModel(), d(other.d)
 { }
 
 MngFortune::MngFortune(const MngFortuneObject &object)
