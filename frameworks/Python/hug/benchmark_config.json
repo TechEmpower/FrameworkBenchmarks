@@ -19,24 +19,6 @@
         "display_name": "Hug",
         "notes": "CPython 2",
         "versus": "wsgi"
-      },
-      "gunicorn": {
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "None",
-        "framework": "Hug",
-        "language": "Python",
-        "flavor": "Python3",
-        "orm": "Raw",
-        "platform": "Falcon",
-        "webserver": "Meinheld",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Hug",
-        "notes": "CPython 2",
-        "versus": "wsgi"
       }
     }
   ]
