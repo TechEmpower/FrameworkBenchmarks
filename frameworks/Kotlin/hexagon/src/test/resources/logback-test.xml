@@ -17,5 +17,4 @@
   </root>
 
   <logger name="com.hexagonkt" level="trace" />
-  <logger name="BENCHMARK_LOGGER" level="trace" />
 </configuration>

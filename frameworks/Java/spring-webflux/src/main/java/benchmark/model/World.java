@@ -2,16 +2,18 @@ package benchmark.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
 public final class World {
 
     @Id
     public int id;
-    public int randomNumber;
+    @Field("randomNumber")
+    public int randomnumber;
 
-    public World(int id, int randomNumber) {
+    public World(int id, int randomnumber) {
         this.id = id;
-        this.randomNumber = randomNumber;
+        this.randomnumber = randomnumber;
     }
 }

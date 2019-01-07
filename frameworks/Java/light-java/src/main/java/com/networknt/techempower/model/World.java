@@ -3,7 +3,6 @@ package com.networknt.techempower.model;
 import com.dslplatform.json.JsonObject;
 import com.dslplatform.json.JsonWriter;
 import com.dslplatform.json.NumberConverter;
-import com.sun.org.apache.xpath.internal.operations.Number;
 
 /**
  * The model for the "world" database table.
