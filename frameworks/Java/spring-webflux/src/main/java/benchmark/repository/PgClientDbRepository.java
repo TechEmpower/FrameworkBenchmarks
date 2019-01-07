@@ -41,7 +41,7 @@ public class PgClientDbRepository implements DbRepository {
 
     private Mono<World> updateWorld(World world) {
         return Mono.create(sink -> {
-            pgClients.getOne().preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2", Tuple.of(world.randomNumber, world.id), ar -> {
+            pgClients.getOne().preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2", Tuple.of(world.randomnumber, world.id), ar -> {
                 if (ar.failed()) {
                     sink.error(ar.cause());
                 } else {
@@ -54,7 +54,7 @@ public class PgClientDbRepository implements DbRepository {
     @Override
     public Mono<World> findAndUpdateWorld(int id, int randomNumber) {
         return getWorld(id).flatMap(world -> {
-            world.randomNumber = randomNumber;
+            world.randomnumber = randomNumber;
             return updateWorld(world);
         });
     }

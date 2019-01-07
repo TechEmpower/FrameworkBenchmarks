@@ -4,7 +4,7 @@
 
 	<groupId>com.ociweb.gl.benchmark</groupId>
 	<artifactId>benchmark-test</artifactId>
-	<version>1.0.22</version>
+	<version>1.0.24</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>com.ociweb</groupId>
 			<artifactId>greenlightning</artifactId>
-			<version>1.0.22</version> <!-- must be a fixed version for techempower releases -->
+			<version>1.0.24</version> <!-- must be a fixed version for techempower releases -->
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -37,7 +37,7 @@
 		<dependency>
 		    <groupId>io.reactiverse</groupId>
 		    <artifactId>reactive-pg-client</artifactId>
-		    <version>0.10.6</version>
+		    <version>0.11.1</version>
 		</dependency>
 
 	</dependencies>
@@ -91,29 +91,6 @@
 				</executions>
 			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.3</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<filters>
-								<filter>
-									<artifact>*jnr-ffi:jnr-ffi*</artifact>
-									<excludes>
-										<exclude>**/jni/**</exclude>
-									</excludes>
-								</filter>
-							</filters>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>

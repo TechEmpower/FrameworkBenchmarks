@@ -9,8 +9,6 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 
 import java.sql.Connection
-import java.sql.ResultSet.CONCUR_READ_ONLY
-import java.sql.ResultSet.TYPE_FORWARD_ONLY
 import java.util.concurrent.ThreadLocalRandom
 
 internal const val WORLD_ROWS: Int = 10000
@@ -112,24 +110,24 @@ internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
         var worlds: List<World> = listOf()
 
         dataSource.connection.use { con: Connection ->
-            val stmtSelect = con.prepareStatement(SELECT_WORLD, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)
+            val stmtSelect = con.prepareStatement(SELECT_WORLD)
             val stmtUpdate = con.prepareStatement(UPDATE_WORLD)
 
             for (ii in 0 until count) {
-                stmtSelect.setInt(1, randomWorld())
+                val worldId = randomWorld()
+                val newRandomNumber = randomWorld()
+
+                stmtSelect.setInt(1, worldId)
                 val rs = stmtSelect.executeQuery()
                 rs.next()
+                rs.getInt(2) // Read 'randomNumber' to comply with Test type 5, point 6
+                rs.close()
 
-                val id = rs.getInt(1)
-                val world = World(id, id, rs.getInt(2)).copy(randomNumber = randomWorld())
-                worlds += world
+                worlds += World(worldId, worldId, newRandomNumber)
 
-                stmtUpdate.setInt(1, world.randomNumber)
-                stmtUpdate.setInt(2, world.id)
+                stmtUpdate.setInt(1, newRandomNumber)
+                stmtUpdate.setInt(2, worldId)
                 stmtUpdate.addBatch()
-
-                if (ii % 25 == 0)
-                    stmtUpdate.executeBatch()
             }
 
             stmtUpdate.executeBatch()
