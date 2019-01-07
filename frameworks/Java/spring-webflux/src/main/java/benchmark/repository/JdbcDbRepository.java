@@ -38,7 +38,7 @@ public class JdbcDbRepository implements DbRepository {
         return Mono.fromCallable(() -> {
             jdbcTemplate.update(
                     "UPDATE world SET randomnumber = ? WHERE id = ?",
-                    world.randomNumber,
+                    world.randomnumber,
                     world.id);
             return world;
         }).subscribeOn(scheduler);
@@ -47,7 +47,7 @@ public class JdbcDbRepository implements DbRepository {
     @Override
     public Mono<World> findAndUpdateWorld(int id, int randomNumber) {
         return getWorld(id).flatMap(world -> {
-            world.randomNumber = randomNumber;
+            world.randomnumber = randomNumber;
             return updateWorld(world);
         });
     }
