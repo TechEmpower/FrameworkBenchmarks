@@ -24,6 +24,28 @@
                 "notes": "http://hexagonkt.com",
                 "versus": "servlet"
             },
+            "resin-mongodb": {
+                "json_url": "/json",
+                "db_url": "/mongodb/db",
+                "query_url": "/mongodb/query?queries=",
+                "fortune_url": "/mongodb/pebble/fortunes",
+                "update_url": "/mongodb/update?queries=",
+                "plaintext_url": "/plaintext",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "mongodb",
+                "framework": "Hexagon",
+                "language": "Kotlin",
+                "orm": "Raw",
+                "platform": "Servlet",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hexagon Resin MongoDB",
+                "notes": "http://hexagonkt.com",
+                "versus": "servlet"
+            },
             "jetty-postgresql": {
                 "json_url": "/json",
                 "db_url": "/postgresql/db",
@@ -61,10 +83,10 @@
                 "language": "Kotlin",
                 "orm": "Raw",
                 "platform": "Servlet",
-                "webserver": "Resin",
+                "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "Hexagon Jetty PostgreSQL",
+                "display_name": "Hexagon Resin PostgreSQL",
                 "notes": "http://hexagonkt.com",
                 "versus": "servlet"
             }
