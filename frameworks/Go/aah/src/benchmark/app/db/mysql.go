@@ -4,8 +4,7 @@ import (
 	"database/sql"
 	"runtime"
 
-	"aahframework.org/aah.v0"
-	"aahframework.org/log.v0"
+	"aahframe.work"
 
 	// mysql driver
 	_ "github.com/go-sql-driver/mysql"
@@ -23,35 +22,36 @@ var (
 
 // InitMySQLDatabase initializes the Database.
 func InitMySQLDatabase(_ *aah.Event) {
-	cfg := aah.AppConfig()
-	if aah.AppProfile() != "bm_mysql" {
+	app := aah.App()
+	if !app.IsEnvProfile("bm_mysql") {
 		return
 	}
 
+	cfg := app.Config()
 	var err error
 	MySQL, err = sql.Open(
 		cfg.StringDefault("datasource.benchmark.mysql.driver", "mysql"),
 		cfg.StringDefault("datasource.benchmark.mysql.url", ""),
 	)
 	if err != nil {
-		log.Fatal(err)
+		app.Log().Fatal(err)
 	}
 
 	if err = MySQL.Ping(); err != nil {
-		log.Fatal(err)
+		app.Log().Fatal(err)
 	}
 
 	MySQL.SetMaxIdleConns(mysqlMaxConnCount)
 	MySQL.SetMaxOpenConns(mysqlMaxConnCount)
 
 	if MSworldSelectStmt, err = MySQL.Prepare("SELECT id, randomNumber FROM World WHERE id = ?"); err != nil {
-		log.Fatal(err)
+		app.Log().Fatal(err)
 	}
 	if MSworldUpdateStmt, err = MySQL.Prepare("UPDATE World SET randomNumber = ? WHERE id = ?"); err != nil {
-		log.Fatal(err)
+		app.Log().Fatal(err)
 	}
 	if MSfortuneSelectStmt, err = MySQL.Prepare("SELECT id, message FROM Fortune"); err != nil {
-		log.Fatal(err)
+		app.Log().Fatal(err)
 	}
 }
 
