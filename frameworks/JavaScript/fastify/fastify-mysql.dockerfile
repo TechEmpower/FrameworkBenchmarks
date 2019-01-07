@@ -1,10 +1,10 @@
-FROM node:10.12.0
+FROM node:11.6.0
 
 COPY ./ ./
 
 RUN npm install
 
 ENV NODE_ENV production
-ENV NODE_HANDLER sequelize
+ENV DATABASE mysql
 
 CMD ["node", "app.js"]
