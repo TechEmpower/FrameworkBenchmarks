@@ -5,3 +5,11 @@ dependencies {
 
 apply plugin: 'application'
 mainClassName = "Http4kKtorCIOServerKt"
+apply plugin: 'com.github.johnrengelman.shadow'
+
+shadowJar {
+    archiveBaseName = project.name
+    archiveClassifier = null
+    version = null
+    mergeServiceFiles()
+}
