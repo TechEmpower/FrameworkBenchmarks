@@ -186,6 +186,42 @@
       "database_os": "Linux",
       "display_name": "Kitura",
       "notes": ""
+    },
+    "nio": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "none",
+      "framework": "Kitura",
+      "language": "Swift",
+      "orm": "none",
+      "platform": "Kitura",
+      "webserver": "Kitura",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Kitura",
+      "notes": ""
+    },
+    "nio-postgres": {
+      "db_url": "/db",
+      "query_url": "/queriesParallel?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updatesParallel?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "Kitura",
+      "language": "Swift",
+      "orm": "Raw",
+      "platform": "Kitura",
+      "webserver": "Kitura",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Kitura",
+      "notes": ""
     }
   }]
 }
