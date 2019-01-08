@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = "1.2.50"
-    ext.http4k_version = "3.34.0"
+    ext.kotlin_version = "1.3.11"
+    ext.http4k_version = "3.104.0"
 
     repositories {
         mavenCentral()
@@ -47,6 +47,7 @@ dependencies {
     compile project(":core")
     compile project(":apache")
     compile project(":jetty")
+    compile project(":ktor-cio")
     compile project(":netty")
     compile project(":sunhttp")
     compile project(":undertow")

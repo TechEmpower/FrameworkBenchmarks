@@ -5,7 +5,7 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import javax.sql.DataSource
 
-class Database(private val dataSource: DataSource) {
+open class Database(private val dataSource: DataSource) {
 
     companion object {
         operator fun invoke(host: String): Database {

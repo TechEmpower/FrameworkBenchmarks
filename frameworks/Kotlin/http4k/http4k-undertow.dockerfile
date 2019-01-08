@@ -6,6 +6,7 @@ COPY settings.gradle settings.gradle
 COPY apache apache
 COPY core core
 COPY jetty jetty
+COPY ktor-cio ktor-cio
 COPY netty netty
 COPY sunhttp sunhttp
 COPY undertow undertow
