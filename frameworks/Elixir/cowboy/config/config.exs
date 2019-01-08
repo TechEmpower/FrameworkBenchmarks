@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :hello, http_ip: {127, 0, 0, 1}
+config :hello, http_ip: {0, 0, 0, 0}
 config :hello, http_port: 8080
 config :hello, compress_body: true
 config :hello, num_acceptors: 128
