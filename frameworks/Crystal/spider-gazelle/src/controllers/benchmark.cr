@@ -1,5 +1,5 @@
 class Benchmark < Application
-  ID_MAXIMUM = 9_999
+  ID_MAXIMUM = 10_000
 
   base "/"
 
