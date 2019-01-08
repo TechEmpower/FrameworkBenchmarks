@@ -6,9 +6,9 @@ COPY settings.gradle settings.gradle
 COPY apache apache
 COPY core core
 COPY jetty jetty
-COPY ktor-cio ktor-cio
+COPY ktorcio ktorcio
 COPY netty netty
 COPY sunhttp sunhttp
 COPY undertow undertow
-RUN gradle --quiet build ktor-cio:shadowJar
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "ktor-cio/build/libs/http4k-ktor-cio-benchmark.jar"]
+RUN gradle --quiet build ktorcio:shadowJar
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "ktorcio/build/libs/http4k-ktorcio-benchmark.jar"]

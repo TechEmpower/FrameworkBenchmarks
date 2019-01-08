@@ -86,7 +86,7 @@
         "notes": "",
         "versus": "servlet"
       },
-      "ktor-cio": {
+      "ktorcio": {
         "orm": "Raw",
         "database_os": "Linux",
         "db_url": "/db",
@@ -101,7 +101,7 @@
         "classification": "Micro",
         "framework": "http4k",
         "language": "Kotlin",
-        "platform": "ktor-cio",
+        "platform": "ktorcio",
         "webserver": "None",
         "os": "Linux",
         "notes": "",
