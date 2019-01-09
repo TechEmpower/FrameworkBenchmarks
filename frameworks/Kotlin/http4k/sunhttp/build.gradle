@@ -7,8 +7,8 @@ mainClassName = "Http4kSunHttpServerKt"
 apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {
-    archiveBaseName = project.name
-    archiveClassifier = null
+    baseName = "http4k-$project.name-benchmark"
+    classifier = null
     version = null
     mergeServiceFiles()
 }
