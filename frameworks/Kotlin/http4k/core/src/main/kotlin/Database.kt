@@ -42,6 +42,7 @@ class BlockingDatabase private constructor(private val dataSource: DataSource) :
     companion object {
         operator fun invoke(host: String): Database {
             val postgresqlUrl = "jdbc:postgresql://$host:5432/hello_world?" +
+                    "useSSL=false&" +
                     "jdbcCompliantTruncation=false&" +
                     "elideSetAutoCommits=true&" +
                     "useLocalSessionState=true&" +
