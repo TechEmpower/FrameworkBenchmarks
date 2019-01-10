@@ -44,6 +44,5 @@ dependencies {
     compile project(":jetty")
     compile project(":ktorcio")
     compile project(":netty")
-    compile project(":sunhttp")
     compile project(":undertow")
 }
