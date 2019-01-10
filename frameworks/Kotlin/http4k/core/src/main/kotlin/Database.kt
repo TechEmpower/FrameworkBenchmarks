@@ -123,8 +123,7 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
     override fun findWorld(): JsonNode? {
         val deferred = CompletableFuture<JsonNode?>()
         client.preparedQuery("SELECT id, randomnumber from WORLD where id=$1", Tuple.of(randomWorld())) {
-            val receiver = it.result().first()
-            with(receiver) {
+            with(it.result().first()) {
                 deferred.complete(obj("id" to number(getInteger(0)), "randomNumber" to number(getInteger(1))))
             }
         }
