@@ -122,9 +122,10 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
 
     override fun findWorld(): JsonNode? {
         val deferred = CompletableFuture<JsonNode?>()
-        client.preparedQuery("SELECT id, randomNumber from WORLD where id=$1", Tuple.of(randomWorld())) {
-            with(it.result().first()) {
-                deferred.complete(obj("id" to number(getInteger("id")), "randomNumber" to number(getInteger("randomNumber"))))
+        client.preparedQuery("SELECT id, randomnumber from WORLD where id=$1", Tuple.of(randomWorld())) {
+            val receiver = it.result().first()
+            with(receiver) {
+                deferred.complete(obj("id" to number(getInteger(0)), "randomNumber" to number(getInteger(1))))
             }
         }
         return deferred.get()
@@ -135,9 +136,9 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
         val worlds = mutableListOf<JsonNode>()
 
         (1..count).forEach {
-            client.preparedQuery("SELECT id, randomNumber from WORLD where id=$1", Tuple.of(randomWorld())) {
+            client.preparedQuery("SELECT id, randomnumber from WORLD where id=$1", Tuple.of(randomWorld())) {
                 with(it.result().first()) {
-                    worlds.add(obj("id" to number(getInteger("id")), "randomNumber" to number(getInteger("randomNumber"))))
+                    worlds.add(obj("id" to number(getInteger(0)), "randomNumber" to number(getInteger(1))))
                 }
                 if (worlds.size == count) deferred.complete(worlds)
             }
@@ -154,12 +155,12 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
             (1..count).forEach {
                 conn.preparedQuery("SELECT id from WORLD where id=$1", Tuple.of(randomWorld())) { ar ->
                     with(ar.result().first()) {
-                        worlds.add(Tuple.of(getInteger("id"), randomWorld()))
+                        worlds.add(Tuple.of(getInteger(0), randomWorld()))
                     }
                 }
             }
 
-            conn.preparedBatch("UPDATE world SET randomNumber=$1 WHERE id=$2", worlds) {
+            conn.preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", worlds) {
                 conn.close()
                 deferred.complete(worlds.map {
                     obj("id" to number(it.getInteger(0)), "randomNumber" to number(it.getInteger(1)))
@@ -177,7 +178,7 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
             with(it.result().iterator()) {
                 while (hasNext()) {
                     with(next()) {
-                        fortunes.add(Fortune(getInteger(1), getString(2)))
+                        fortunes.add(Fortune(getInteger(0), getString(1)))
                     }
                 }
                 deferred.complete(fortunes)
