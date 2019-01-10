@@ -1,36 +1,39 @@
-const h = require('../helper');
+const h = require("./helper");
 
 /**
  * @param databaseLayer
- * @returns {{SingleQuery: function(*), MultipleQueries: function(*), Fortunes: function(*), Updates: function(*)}}
+ * @returns {{singleQuery: function(*), multipleQueries: function(*), fortunes: function(*), updates: function(*)}}
  */
-module.exports = (databaseLayer) => ({
-  SingleQuery: async (req, reply) => {
-    const world = await databaseLayer.getWorldLean(h.randomTfbNumber());
+module.exports = databaseLayer => ({
+  singleQuery: async (req, reply) => {
+    const world = await databaseLayer.getWorld(h.randomTfbNumber());
 
     reply.send(world);
   },
 
-  MultipleQueries: async (req, reply) => {
+  multipleQueries: async (req, reply) => {
     const queries = h.getQueries(req.query.queries);
     const promisesArray = [];
 
     for (let i = 0; i < queries; i++) {
-      promisesArray.push(databaseLayer.getWorldLean(h.randomTfbNumber()));
+      promisesArray.push(databaseLayer.getWorld(h.randomTfbNumber()));
     }
 
-    reply.send(await Promise.all(promisesArray));
+    const worlds = await Promise.all(promisesArray);
+
+    reply.send(worlds);
   },
 
-  Fortunes: async (req, reply) => {
+  fortunes: async (req, reply) => {
     const fortunes = await databaseLayer.allFortunes();
+
     fortunes.push(h.additionalFortune);
     fortunes.sort((a, b) => a.message.localeCompare(b.message));
 
-    reply.view('fortunes.hbs', { fortunes })
+    reply.view("fortunes.hbs", { fortunes });
   },
 
-  Updates: async (req, reply) => {
+  updates: async (req, reply) => {
     const queries = h.getQueries(req.query.queries);
     const worldPromises = [];
 
@@ -42,11 +45,11 @@ module.exports = (databaseLayer) => ({
 
     const worldsToUpdate = worlds.map(world => {
       world.randomNumber = h.randomTfbNumber();
-      return world
+      return world;
     });
 
-    const updatedWorlds = await databaseLayer.saveWorlds(worldsToUpdate);
+    await databaseLayer.saveWorlds(worldsToUpdate);
 
-    reply.send(updatedWorlds);
+    reply.send(worldsToUpdate);
   }
 });

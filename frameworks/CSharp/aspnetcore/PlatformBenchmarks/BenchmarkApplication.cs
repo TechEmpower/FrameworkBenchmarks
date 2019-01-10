@@ -42,6 +42,7 @@ namespace PlatformBenchmarks
             public readonly static AsciiString Fortunes = "/fortunes";
             public readonly static AsciiString Plaintext = "/plaintext";
             public readonly static AsciiString Updates = "/updates/queries=";
+            public readonly static AsciiString MultipleQueries = "/queries/queries=";
         }
 
         private RequestType _requestType;
@@ -71,17 +72,22 @@ namespace PlatformBenchmarks
                 }
                 else if (Paths.Updates.Length <= pathLength && path.StartsWith(Paths.Updates))
                 {
-                    _queries = ParseQueries(path);
+                    _queries = ParseQueries(path, Paths.Updates.Length);
                     requestType = RequestType.Updates;
+                }
+                else if (Paths.MultipleQueries.Length <= pathLength && path.StartsWith(Paths.MultipleQueries))
+                {
+                    _queries = ParseQueries(path, Paths.MultipleQueries.Length);
+                    requestType = RequestType.MultipleQueries;
                 }
             }
 
             _requestType = requestType;
         }
 
-        private static int ParseQueries(Span<byte> path)
+        private static int ParseQueries(Span<byte> path, int pathLength)
         {
-            if (!Utf8Parser.TryParse(path.Slice(Paths.Updates.Length), out int queries, out _) || queries < 1)
+            if (!Utf8Parser.TryParse(path.Slice(pathLength), out int queries, out _) || queries < 1)
             {
                 queries = 1;
             }
@@ -116,6 +122,10 @@ namespace PlatformBenchmarks
             else if (requestType == RequestType.Updates)
             {
                 task = Updates(Writer, _queries);
+            }
+            else if (requestType == RequestType.MultipleQueries)
+            {
+                task = MultipleQueries(Writer, _queries);
             }
             else
             {
@@ -153,7 +163,8 @@ namespace PlatformBenchmarks
             Json,
             Fortunes,
             SingleQuery,
-            Updates
+            Updates,
+            MultipleQueries
         }
     }
 }

@@ -1,6 +1,0 @@
-package: benchmark
-import:
-- package: aahframework.org/aah.v0
-  version: ^v0.11.2
-- package: github.com/go-sql-driver/mysql
-- package: github.com/jackc/pgx
