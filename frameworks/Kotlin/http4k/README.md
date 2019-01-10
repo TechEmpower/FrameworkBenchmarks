@@ -3,7 +3,7 @@
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Java Oracle 1.8.0_25](http://www.oracle.com/technetwork/java/javase)
+* JDK 11
 * [http4k](https://http4k.org)
 
 ## Test URLs
@@ -12,10 +12,15 @@ The tests were run with:
 - Plaintext: http://localhost:9000/plaintext
 
 ## Supported backends
+- Apache
+- KtorCIO
 - Jetty
+- Netty
+- SunHttp
+- Undertow
 
-## How to run
+## How to run example
 ```bash
-gradle clean build jetty
-java -jar build/libs/http4k-standalone.jar
+gradle clean build jetty:shadowJar
+java -jar jetty/build/libs/http4k-jetty-benchmark.jar
 ```
