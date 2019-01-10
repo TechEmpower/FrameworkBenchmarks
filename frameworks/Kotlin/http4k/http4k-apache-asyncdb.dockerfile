@@ -4,11 +4,11 @@ WORKDIR /http4k
 COPY build.gradle build.gradle
 COPY settings.gradle settings.gradle
 COPY apache apache
+COPY apache-asyncdb apache-asyncdb
 COPY core core
 COPY jetty jetty
 COPY ktorcio ktorcio
 COPY netty netty
-COPY sunhttp sunhttp
 COPY undertow undertow
-RUN gradle --quiet build apache:shadowJar
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "apache/build/libs/http4k-apache-asyncdb-benchmark.jar"]
+RUN gradle --quiet build apache-asyncdb:shadowJar
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "apache-asyncdb/build/libs/http4k-apache-asyncdb-benchmark.jar"]
