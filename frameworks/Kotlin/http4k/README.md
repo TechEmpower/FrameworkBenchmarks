@@ -16,7 +16,6 @@ The tests were run with:
 - KtorCIO
 - Jetty
 - Netty
-- SunHttp
 - Undertow
 
 ## How to run example
