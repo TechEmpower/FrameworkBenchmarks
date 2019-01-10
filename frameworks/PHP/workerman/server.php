@@ -12,7 +12,7 @@ function get_processor_cores_number() {
 }
 
 $http_worker = new Worker('http://0.0.0.0:8080');
-$http_worker->count = (get_processor_cores_number() * 2) || 64;
+$http_worker->count = ($count = get_processor_cores_number()) ? $count : 64;
 $http_worker->onWorkerStart = function()
 {
   global $pdo;
