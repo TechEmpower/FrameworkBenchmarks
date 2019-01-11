@@ -17,11 +17,11 @@ The tests were run with:
 
 
 ## Supported backends
-- Apache
-- KtorCIO
-- Jetty
-- Netty
-- Undertow
+- Apache (w/ Postgres + Reactive PG clienta)
+- KtorCIO (w/ Postgres client)
+- Jetty (w/ Postgres client)
+- Netty (w/ Postgres client)
+- Undertow (w/ Postgres client)
 
 ## How to run example
 ```bash
