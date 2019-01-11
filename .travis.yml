@@ -99,7 +99,7 @@ env:
      - 'TESTDIR="PHP/amp PHP/hamlet PHP/hhvm PHP/peachpie PHP/swoole PHP/workerman PHP/phalcon"'
      - "TESTLANG=Python"
      - "TESTLANG=Ruby"
-     - 'TESTDIR="Rust/actix Rust/gotham Rust/hyper Rust/iron"'
+     - 'TESTDIR="Rust/actix Rust/gotham Rust/hyper Rust/iron Rust/saphir"'
      - 'TESTDIR="Rust/may-minihttp Rust/nickel Rust/rocket"'
      - 'TESTDIR="Rust/rouille Rust/thruster Rust/tokio-minihttp"'
      - "TESTLANG=Scala"
