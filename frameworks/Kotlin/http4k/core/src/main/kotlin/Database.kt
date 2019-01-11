@@ -155,15 +155,17 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
                 conn.preparedQuery("SELECT id from WORLD where id=$1", Tuple.of(randomWorld())) { ar ->
                     with(ar.result().first()) {
                         worlds.add(Tuple.of(getInteger(0), randomWorld()))
+
+                        if(worlds.size == count) {
+                            conn.preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", worlds) {
+                                conn.close()
+                                deferred.complete(worlds.map {
+                                    obj("id" to number(it.getInteger(0)), "randomNumber" to number(it.getInteger(1)))
+                                })
+                            }
+                        }
                     }
                 }
-            }
-
-            conn.preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", worlds) {
-                conn.close()
-                deferred.complete(worlds.map {
-                    obj("id" to number(it.getInteger(0)), "randomNumber" to number(it.getInteger(1)))
-                })
             }
         }
         return deferred.get()
