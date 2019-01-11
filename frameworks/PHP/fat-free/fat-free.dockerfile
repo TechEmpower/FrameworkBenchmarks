@@ -14,7 +14,7 @@ WORKDIR /fat-free
 
 ENV F3DIR="/fat-free/src"
 
-RUN git clone -b 3.6.4 --single-branch --depth 1 "https://github.com/bcosca/fatfree-core.git" src
+RUN git clone -b 3.6.5 --single-branch --depth 1 "https://github.com/bcosca/fatfree-core.git" src
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
 
