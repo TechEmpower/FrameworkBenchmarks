@@ -186,7 +186,7 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
             }
         }
 
-        return deferred.get()
+        return deferred.get().sortedBy { it.message }
     }
 }
 
