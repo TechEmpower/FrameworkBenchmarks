@@ -182,7 +182,7 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
                         fortunes.add(Fortune(getInteger(0), getString(1)))
                     }
                 }
-                deferred.complete(fortunes)
+                deferred.complete(fortunes + Fortune(0, "Additional fortune added at request time."))
             }
         }
 
