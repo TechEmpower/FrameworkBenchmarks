@@ -88,7 +88,7 @@ public class FrameworkTest implements GreenApp {
     	this.queueLengthOfPendingRequests = queueLengthOfPendingRequests;
     	this.minMemoryOfInputPipes = minMemoryOfInputPipes;
     	this.telemetryPort = telemetryPort;
-    	this.pipelineBits = 15;//max concurrent in flight database requests 1<<pipelineBits
+    	this.pipelineBits = 14;//max concurrent in flight database requests 1<<pipelineBits
     	
     	this.dbCallMaxResponseCount = 1<<9;
     	this.jsonMaxResponseCount = 3*(1<<14);
