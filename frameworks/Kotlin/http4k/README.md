@@ -9,7 +9,12 @@ The tests were run with:
 ## Test URLs
 
 - JSON Encoding: http://localhost:9000/json
+- Single query: http://localhost:9000/db
+- Multiple queries: http://localhost:9000/queries
+- Fortunes: http://localhost:9000/fortunes
+- Updates: http://localhost:9000/updates
 - Plaintext: http://localhost:9000/plaintext
+
 
 ## Supported backends
 - Apache
