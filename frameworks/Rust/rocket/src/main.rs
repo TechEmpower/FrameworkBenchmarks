@@ -9,8 +9,8 @@ extern crate rocket_contrib;
 use diesel::prelude::*;
 use diesel::result::Error;
 use rand::Rng;
-use rocket_contrib::Json;
-use rocket_contrib::Template;
+use rocket_contrib::json::Json;
+use rocket_contrib::templates::Template;
 
 mod db;
 mod models;
