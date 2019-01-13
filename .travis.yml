@@ -18,6 +18,7 @@ env:
      - 'TESTDIR="C++/cppcms C++/cpoll_cppsp C++/poco"'
      - "TESTDIR=C++/ffead-cpp"
      - "TESTDIR=C++/cutelyst"
+     - "TESTDIR=C++/libhttpserver"
      - "TESTDIR=C++/silicon"
      - "TESTDIR=C++/treefrog"
      - "TESTDIR=C++/ulib"
@@ -98,7 +99,7 @@ env:
      - 'TESTDIR="PHP/amp PHP/hamlet PHP/hhvm PHP/peachpie PHP/swoole PHP/workerman PHP/phalcon"'
      - "TESTLANG=Python"
      - "TESTLANG=Ruby"
-     - 'TESTDIR="Rust/actix Rust/gotham Rust/hyper Rust/iron"'
+     - 'TESTDIR="Rust/actix Rust/gotham Rust/hyper Rust/iron Rust/saphir"'
      - 'TESTDIR="Rust/may-minihttp Rust/nickel Rust/rocket"'
      - 'TESTDIR="Rust/rouille Rust/thruster Rust/tokio-minihttp"'
      - "TESTLANG=Scala"

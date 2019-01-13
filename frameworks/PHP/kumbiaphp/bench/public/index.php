@@ -79,13 +79,13 @@ const PUBLIC_PATH = '/';
  /**
   * Obtiene la url usando PATH_INFO.
   */
-//$url = empty($_SERVER['PATH_INFO']) ? '/' : $_SERVER['PATH_INFO'];
+$url = $_SERVER['PATH_INFO'];
 
  /**
   * Obtiene la url usando $_GET['_url']
   * Cambiar también en el .htaccess.
   */
- $url = $_GET['_url'] ?? '/';
+ //$url = $_GET['_url'] ?? '/';
 
 /**
  * Carga el gestor de arranque

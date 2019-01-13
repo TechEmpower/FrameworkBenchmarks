@@ -1,8 +1,8 @@
-[![KumbiaPHP logo](https://rawgit.com/kumbiaphp/kumbiaphp/1.0/default/public/img/kumbiaphp.svg)](https://github.com/KumbiaPHP/KumbiaPHP) 
+[![KumbiaPHP logo](https://rawgit.com/kumbiaphp/kumbiaphp/master/default/public/img/kumbiaphp.svg)](https://github.com/KumbiaPHP/KumbiaPHP) 
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/KumbiaPHP/KumbiaPHP/badges/quality-score.png?b=1.0)](https://scrutinizer-ci.com/g/KumbiaPHP/KumbiaPHP/?branch=1.0)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/KumbiaPHP/KumbiaPHP/badges/quality-score.png)](https://scrutinizer-ci.com/g/KumbiaPHP/KumbiaPHP/?branch=1.0)
 [![Code Climate](https://codeclimate.com/github/KumbiaPHP/KumbiaPHP/badges/gpa.svg)](https://codeclimate.com/github/KumbiaPHP/KumbiaPHP)
-![PHP7 ready](https://rawgit.com/kumbiaphp/kumbiaphp/1.0/default/public/img/php7.svg)
+![PHP7 ready](https://rawgit.com/kumbiaphp/kumbiaphp/master/default/public/img/php7.svg)
 
 # KumbiaPHP Benchmarking Test
 
