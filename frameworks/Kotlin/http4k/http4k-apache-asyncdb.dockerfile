@@ -10,5 +10,5 @@ COPY jetty jetty
 COPY ktorcio ktorcio
 COPY netty netty
 COPY undertow undertow
-RUN gradle --quiet build jetty:shadowJar
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "jetty/build/libs/http4k-jetty-benchmark.jar"]
+RUN gradle --quiet build apache-asyncdb:shadowJar
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "apache-asyncdb/build/libs/http4k-apache-asyncdb-benchmark.jar"]

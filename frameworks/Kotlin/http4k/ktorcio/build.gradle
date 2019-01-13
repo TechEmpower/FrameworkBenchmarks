@@ -1,10 +1,10 @@
 dependencies {
     compile project(":core")
-    compile "org.http4k:http4k-server-undertow:$http4k_version"
+    compile "org.http4k:http4k-server-ktorcio:$http4k_version"
 }
 
 apply plugin: 'application'
-mainClassName = "Http4kUndertowServerKt"
+mainClassName = "Http4kKtorCIOServerKt"
 apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {

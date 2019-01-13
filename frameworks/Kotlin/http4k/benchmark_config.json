@@ -86,7 +86,7 @@
         "notes": "",
         "versus": "servlet"
       },
-      "sunhttp": {
+      "apache-asyncdb": {
         "orm": "Raw",
         "database_os": "Linux",
         "db_url": "/db",
@@ -101,11 +101,32 @@
         "classification": "Micro",
         "framework": "http4k",
         "language": "Kotlin",
-        "platform": "sun-http",
+        "platform": "apache-httpcore",
         "webserver": "None",
         "os": "Linux",
         "notes": "",
         "versus": "servlet"
+      },
+      "ktorcio": {
+        "orm": "Raw",
+        "database_os": "Linux",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "database": "Postgres",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 9000,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "http4k",
+        "language": "Kotlin",
+        "platform": "ktorcio",
+        "webserver": "None",
+        "os": "Linux",
+        "notes": "",
+        "versus": "ktor-cio"
       }
     }
   ]
