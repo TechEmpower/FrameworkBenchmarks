@@ -96,7 +96,7 @@ public class FrameworkTest implements GreenApp {
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<8;
 
-    	this.maxQueueOut = 256;
+    	this.maxQueueOut = 64;
     	this.maxConnectionBits = 13;
     	this.maxRequestSize = 1<<9;
     	    	
