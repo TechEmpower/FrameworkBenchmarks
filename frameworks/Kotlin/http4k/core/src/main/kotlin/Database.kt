@@ -102,7 +102,7 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
             }
 }
 
-class ReactivePostgresDatabase private constructor(private val client: PgPool, private val pool: PgPool) : Database {
+class ReactivePostgresDatabase private constructor(private val db: PgPool) : Database {
     companion object {
         operator fun invoke(hostName: String): Database {
             val options = PgPoolOptions().apply {
@@ -111,18 +111,16 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
                 port = 5432
                 user = "benchmarkdbuser"
                 password = "benchmarkdbpass"
-                maxSize = 64
+                maxSize = 100
                 cachePreparedStatements = true
             }
-            return ReactivePostgresDatabase(
-                    pool(PgPoolOptions(options).apply { maxSize = 1 }),
-                    pool(PgPoolOptions(options).apply { maxSize = 4 }))
+            return ReactivePostgresDatabase(pool(PgPoolOptions(options)))
         }
     }
 
     override fun findWorld(): JsonNode? {
         val deferred = CompletableFuture<JsonNode?>()
-        client.preparedQuery("SELECT id, randomnumber from WORLD where id=$1", Tuple.of(randomWorld())) {
+        db.preparedQuery("SELECT id, randomnumber from WORLD where id=$1", Tuple.of(randomWorld())) {
             with(it.result().first()) {
                 deferred.complete(obj("id" to number(getInteger(0)), "randomNumber" to number(getInteger(1))))
             }
@@ -135,7 +133,7 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
         val worlds = mutableListOf<JsonNode>()
 
         (1..count).forEach {
-            client.preparedQuery("SELECT id, randomnumber from WORLD where id=$1", Tuple.of(randomWorld())) {
+            db.preparedQuery("SELECT id, randomnumber from WORLD where id=$1", Tuple.of(randomWorld())) {
                 with(it.result().first()) {
                     worlds.add(obj("id" to number(getInteger(0)), "randomNumber" to number(getInteger(1))))
                 }
@@ -149,16 +147,13 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
     override fun updateWorlds(count: Int): List<JsonNode> {
         val deferred = CompletableFuture<List<JsonNode>>()
         val worlds = mutableListOf<Tuple>()
-        pool.getConnection { r ->
-            val conn = r.result()
             (1..count).forEach {
-                conn.preparedQuery("SELECT id from WORLD where id=$1", Tuple.of(randomWorld())) { ar ->
+                db.preparedQuery("SELECT id from WORLD where id=$1", Tuple.of(randomWorld())) { ar ->
                     with(ar.result().first()) {
                         worlds.add(Tuple.of(getInteger(0), randomWorld()))
 
-                        if(worlds.size == count) {
-                            conn.preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", worlds) {
-                                conn.close()
+                        if (worlds.size == count) {
+                            db.preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", worlds) {
                                 deferred.complete(worlds.map {
                                     obj("id" to number(it.getInteger(0)), "randomNumber" to number(it.getInteger(1)))
                                 })
@@ -166,7 +161,6 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
                         }
                     }
                 }
-            }
         }
         return deferred.get()
     }
@@ -175,12 +169,10 @@ class ReactivePostgresDatabase private constructor(private val client: PgPool, p
         val deferred = CompletableFuture<List<Fortune>>()
         val fortunes = mutableListOf<Fortune>()
 
-        client.preparedQuery("SELECT id, message from FORTUNE") {
+        db.preparedQuery("SELECT id, message from FORTUNE") {
             with(it.result().iterator()) {
                 while (hasNext()) {
-                    with(next()) {
-                        fortunes.add(Fortune(getInteger(0), getString(1)))
-                    }
+                    with(next()) { fortunes.add(Fortune(getInteger(0), getString(1))) }
                 }
                 deferred.complete(fortunes + Fortune(0, "Additional fortune added at request time."))
             }
