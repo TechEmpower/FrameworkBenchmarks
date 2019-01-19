@@ -2,60 +2,6 @@
     "framework": "hexagon",
     "tests": [
         {
-<<<<<<< HEAD
-            "default" : {
-                "json_url" : "/json",
-                "db_url" : "/db",
-                "query_url" : "/query?queries=",
-                "fortune_url" : "/fortunes",
-                "update_url" : "/update?queries=",
-                "plaintext_url" : "/plaintext",
-
-                "port" : 9090,
-
-                "approach" : "Realistic",
-                "classification" : "Micro",
-                "database" : "MongoDB",
-                "framework" : "Hexagon",
-                "language" : "Kotlin",
-                "orm" : "Raw",
-                "platform" : "Servlet",
-                "webserver" : "None",
-                "os" : "Linux",
-                "database_os" : "Linux",
-                "display_name" : "Hexagon Jetty MongoDB",
-                "notes" : "http://there4.co/hexagon",
-
-                "setup_file" : "setup",
-                "versus" : "servlet"
-            },
-            "resin" : { 
-                "json_url" : "/json",
-                "db_url" : "/db",
-                "query_url" : "/query?queries=",
-                "fortune_url" : "/fortunes",
-                "update_url" : "/update?queries=",
-                "plaintext_url" : "/plaintext",
-                
-                "port" : 8080,
-                                                 
-                "approach" : "Realistic",
-                "classification" : "Micro",
-                "database" : "MongoDB",
-                "framework" : "Hexagon",
-                "language" : "Kotlin",
-                "orm" : "Raw",
-                "platform" : "Servlet",
-                "webserver" : "Resin",
-                "os" : "Linux",
-                "database_os" : "Linux",
-                "display_name" : "Hexagon Resin MongoDB",
-                "notes" : "http://there4.co/hexagon",
-
-                "setup_file" : "setup_resin",
-                "versus" : "servlet"
-            }              
-=======
             "default": {
                 "json_url": "/json",
                 "db_url": "/mongodb/db",
@@ -144,7 +90,6 @@
                 "notes": "http://hexagonkt.com",
                 "versus": "servlet"
             }
->>>>>>> 46550cf03dbbb5e1f65e57aa814da45ed30a2b05
         }
     ]
 }
