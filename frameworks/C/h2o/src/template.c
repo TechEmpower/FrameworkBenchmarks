@@ -18,12 +18,12 @@
 */
 
 #include <errno.h>
+#include <mustache.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <mustache.h>
 
 #include "database.h"
 #include "error.h"
@@ -138,7 +138,7 @@ mustache_template_t *get_fortunes_template(const char *path)
 		fclose(template_input.input);
 	}
 	else
-		LIBRARY_ERROR("fopen");
+		STANDARD_ERROR("fopen");
 
 	return ret;
 }

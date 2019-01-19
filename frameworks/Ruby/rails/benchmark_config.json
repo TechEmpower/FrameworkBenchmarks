@@ -2,7 +2,6 @@
   "framework": "rails",
   "tests": [{
     "default": {
-      "setup_file": "run_mri_puma",
       "json_url": "/hello_world/json",
       "db_url": "/hello_world/db",
       "query_url": "/hello_world/query?queries=",
@@ -24,31 +23,7 @@
       "notes": "",
       "versus": "rack-puma-mri"
     },
-    "thin": {
-      "setup_file": "run_thin",
-      "json_url": "/hello_world/json",
-      "db_url": "/hello_world/db",
-      "query_url": "/hello_world/query?queries=",
-      "fortune_url": "/fortune",
-      "update_url": "/update?queries=",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "MySQL",
-      "framework": "rails",
-      "language": "Ruby",
-      "orm": "Full",
-      "platform": "Rack",
-      "webserver": "Thin",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "rails-thin",
-      "notes": "",
-      "versus": "rack-thin"
-    },
     "unicorn": {
-      "setup_file": "run_unicorn",
       "json_url": "/hello_world/json",
       "db_url": "/hello_world/db",
       "query_url": "/hello_world/query?queries=",
@@ -66,9 +41,9 @@
       "webserver": "Unicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-unicorn",
+      "display_name": "rails-unicorn-mri",
       "notes": "",
-      "versus": "rack-unicorn"
+      "versus": "rack-unicorn-mri"
     }
   }]
 }

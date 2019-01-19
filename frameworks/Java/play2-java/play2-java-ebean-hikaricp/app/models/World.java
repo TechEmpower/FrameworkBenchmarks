@@ -1,15 +1,19 @@
 package models;
 
-import com.avaje.ebean.Ebean;
-import play.db.ebean.Model;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.List;
+
+import io.ebean.Finder;
+import io.ebean.Model;
+import io.ebean.Transaction;
 
 @Entity
 public class World extends Model {
+
+    private static final Finder<Long, World> find = new Finder<>(World.class);
 
     @Id
     public Long id;
@@ -17,14 +21,27 @@ public class World extends Model {
     @Column(name = "randomNumber")
     public Long randomNumber;
 
-    public static World find(Long id) {
-        return Ebean.find(World.class, id);
+    public static World find(final Long id) {
+        return find.byId(id);
     }
 
-    public static List<World> save(final List<World> worlds) throws Throwable {
-        worlds.forEach(Ebean::update);
+    public static List<World> save(final List<World> worlds) {
+        final int batchSize = 25;
+        final int batches = ((worlds.size() / batchSize) + 1);
+        for ( int i = 0 ; i < batches ; ++i ) {
+            final Transaction transaction = World.db().beginTransaction();
+            try {
+                transaction.setBatchMode(true);
+                transaction.setBatchSize(batchSize);
+                for(int j = i * batchSize ; j < Math.min((i + 1) * batchSize, worlds.size()); ++j) {
+                    World.db().update(worlds.get(j), transaction);
+                }
+                transaction.commit();
+            } finally {
+                transaction.end();
+            }
+        }
 
         return worlds;
     }
-
 }

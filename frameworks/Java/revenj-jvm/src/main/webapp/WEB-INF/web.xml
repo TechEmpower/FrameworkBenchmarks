@@ -2,7 +2,7 @@
     <env-entry>
         <env-entry-name>revenj.jdbcUrl</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>jdbc:postgresql://localhost:5432/hello_world?user=benchmarkdbuser&amp;password=benchmarkdbpass</env-entry-value>
+        <env-entry-value>jdbc:postgresql://tfb-database:5432/hello_world?user=benchmarkdbuser&amp;password=benchmarkdbpass</env-entry-value>
     </env-entry>
 	<servlet>
 		<servlet-name>json</servlet-name>

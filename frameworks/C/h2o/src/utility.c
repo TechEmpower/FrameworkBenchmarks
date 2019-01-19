@@ -18,69 +18,64 @@
 */
 
 #include <assert.h>
-#include <h2o.h>
-#include <stdalign.h>
+#include <limits.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 #include <yajl/yajl_gen.h>
 
+#include "list.h"
 #include "utility.h"
 
-static void mem_pool_free(void *ctx, void *ptr);
-static void *mem_pool_malloc(void *ctx, size_t sz);
-static void *mem_pool_realloc(void *ctx, void *ptr, size_t sz);
-
-static void mem_pool_free(void *ctx, void *ptr)
+void free_json_generator(json_generator_t *gen, list_t **pool, size_t *gen_num, size_t max_gen)
 {
-	// The memory pool will free all allocations in one go.
-	IGNORE_FUNCTION_PARAMETER(ctx);
-	IGNORE_FUNCTION_PARAMETER(ptr);
-}
+	if (gen) {
+		assert(!pool || gen_num);
 
-static void *mem_pool_malloc(void *ctx, size_t sz)
-{
-	size_t * const p = h2o_mem_alloc_pool(ctx, sz + sizeof(*p));
-	void * const ret = p + 1;
-
-	*p = sz;
-	// check alignment
-	assert(!(((uintptr_t) ret) & (alignof(void *) - 1)));
-	return ret;
-}
-
-static void *mem_pool_realloc(void *ctx, void *ptr, size_t sz)
-{
-	void *ret;
-
-	if (ptr) {
-		const size_t old_sz = ((const size_t *) ptr)[-1];
-
-		if (sz > old_sz) {
-			ret = mem_pool_malloc(ctx, sz);
-			memcpy(ret, ptr, old_sz);
+		if (pool && *gen_num < max_gen) {
+			yajl_gen_reset(gen->gen, NULL);
+			yajl_gen_clear(gen->gen);
+			gen->l.next = *pool;
+			*pool = &gen->l;
+			(*gen_num)++;
 		}
-		else
-			ret = ptr;
+		else {
+			yajl_gen_free(gen->gen);
+			free(gen);
+		}
 	}
-	else
-		ret = mem_pool_malloc(ctx, sz);
-
-	return ret;
 }
 
-yajl_gen get_json_generator(h2o_mem_pool_t *pool)
+json_generator_t *get_json_generator(list_t **pool, size_t *gen_num)
 {
-	const yajl_alloc_funcs mem_pool_alloc_funcs = {mem_pool_malloc,
-	                                               mem_pool_realloc,
-	                                               mem_pool_free,
-	                                               pool};
+	json_generator_t *ret;
 
-	return yajl_gen_alloc(&mem_pool_alloc_funcs);
+	if (pool && *pool) {
+		assert(gen_num && *gen_num);
+		ret = H2O_STRUCT_FROM_MEMBER(json_generator_t, l, *pool);
+		*pool = ret->l.next;
+		(*gen_num)--;
+	}
+	else {
+		ret = malloc(sizeof(*ret));
+
+		if (ret) {
+			ret->gen = yajl_gen_alloc(NULL);
+
+			if (!ret->gen) {
+				free(ret);
+				ret = NULL;
+			}
+		}
+	}
+
+	return ret;
 }
 
 uint32_t get_random_number(uint32_t max_rand, unsigned int *seed)
 {
+	assert(max_rand <= (uint32_t) RAND_MAX);
+
 	// In general, RAND_MAX + 1 is not a multiple of max_rand,
 	// so rand_r() % max_rand would be biased.
 	const unsigned bucket_size = (RAND_MAX + 1U) / max_rand;
@@ -92,4 +87,22 @@ uint32_t get_random_number(uint32_t max_rand, unsigned int *seed)
 	while (ret >= unbiased_rand_max);
 
 	return ret / bucket_size;
+}
+
+bool is_power_of_2(size_t x)
+{
+	return !!x & !(x & (x - 1));
+}
+
+size_t round_up_to_power_of_2(size_t x)
+{
+	static_assert(sizeof(size_t) == sizeof(unsigned long),
+	              "The size_t type must have the same size as unsigned long.");
+
+	size_t ret = (SIZE_MAX ^ SIZE_MAX >> 1) >> __builtin_clzl(x);
+
+	if (x - ret)
+		ret <<= 1;
+
+	return ret;
 }

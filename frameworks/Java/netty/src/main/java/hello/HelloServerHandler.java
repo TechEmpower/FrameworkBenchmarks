@@ -1,32 +1,41 @@
 package hello;
 
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaderNames.DATE;
+import static io.netty.handler.codec.http.HttpHeaderNames.SERVER;
+import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_JSON;
+import static io.netty.handler.codec.http.HttpHeaderValues.TEXT_PLAIN;
+import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
+import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+import com.jsoniter.output.JsonStream;
+import com.jsoniter.output.JsonStreamPool;
+import com.jsoniter.spi.JsonException;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpHeaderNames;
-import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.AsciiString;
 import io.netty.util.CharsetUtil;
+import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.FastThreadLocal;
 
-public class HelloServerHandler extends SimpleChannelInboundHandler<HttpRequest> {
+public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 
 	private static final FastThreadLocal<DateFormat> FORMAT = new FastThreadLocal<DateFormat>() {
 		@Override
@@ -35,38 +44,34 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<HttpRequest>
 		}
 	};
 
-	private static final ObjectMapper newMapper() {
-		ObjectMapper m = new ObjectMapper();
-		m.registerModule(new AfterburnerModule());
-		return m;
-	}
-
-	private static final Message newMsg() {
+	private static Message newMsg() {
 		return new Message("Hello, World!");
 	}
 
-	private static final int jsonLen() {
+	private static byte[] serializeMsg(Message obj) {
+		JsonStream stream = JsonStreamPool.borrowJsonStream();
 		try {
-			return newMapper().writeValueAsBytes(newMsg()).length;
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
+			stream.reset(null);
+			stream.writeVal(Message.class, obj);
+			return Arrays.copyOfRange(stream.buffer().data(), 0, stream.buffer().tail());
+		} catch (IOException e) {
+			throw new JsonException(e);
+		} finally {
+			JsonStreamPool.returnJsonStream(stream);
 		}
+	}
+
+	private static int jsonLen() {
+		return serializeMsg(newMsg()).length;
 	}
 
 	private static final byte[] STATIC_PLAINTEXT = "Hello, World!".getBytes(CharsetUtil.UTF_8);
 	private static final int STATIC_PLAINTEXT_LEN = STATIC_PLAINTEXT.length;
-	private static final ByteBuf PLAINTEXT_CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(STATIC_PLAINTEXT));
-	private static final CharSequence PLAINTEXT_CLHEADER_VALUE = new AsciiString(String.valueOf(STATIC_PLAINTEXT_LEN));
-	private static final CharSequence JSON_CLHEADER_VALUE = new AsciiString(String.valueOf(jsonLen()));
 
-	private static final CharSequence TYPE_PLAIN = new AsciiString("text/plain");
-	private static final CharSequence TYPE_JSON = new AsciiString("application/json");
-	private static final CharSequence SERVER_NAME = new AsciiString("Netty");
-	private static final CharSequence CONTENT_TYPE_ENTITY = HttpHeaderNames.CONTENT_TYPE;
-	private static final CharSequence DATE_ENTITY = HttpHeaderNames.DATE;
-	private static final CharSequence CONTENT_LENGTH_ENTITY = HttpHeaderNames.CONTENT_LENGTH;
-	private static final CharSequence SERVER_ENTITY = HttpHeaderNames.SERVER;
-	private static final ObjectMapper MAPPER = newMapper();
+	private static final CharSequence PLAINTEXT_CLHEADER_VALUE = AsciiString.cached(String.valueOf(STATIC_PLAINTEXT_LEN));
+	private static final int JSON_LEN = jsonLen();
+	private static final CharSequence JSON_CLHEADER_VALUE = AsciiString.cached(String.valueOf(JSON_LEN));
+	private static final CharSequence SERVER_NAME = AsciiString.cached("Netty");
 
 	private volatile CharSequence date = new AsciiString(FORMAT.get().format(new Date()));
 
@@ -79,38 +84,51 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<HttpRequest>
 				date = new AsciiString(format.format(new Date()));
 			}
 		}, 1000, 1000, TimeUnit.MILLISECONDS);
-
 	}
 
 	@Override
-	public void channelRead0(ChannelHandlerContext ctx, HttpRequest msg) throws Exception {
-		HttpRequest request = (HttpRequest) msg;
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		if (msg instanceof HttpRequest) {
+			try {
+				HttpRequest request = (HttpRequest) msg;
+				process(ctx, request);
+			} finally {
+				ReferenceCountUtil.release(msg);
+			}
+		}
+	}
+
+	private void process(ChannelHandlerContext ctx, HttpRequest request) throws Exception {
 		String uri = request.uri();
 		switch (uri) {
 		case "/plaintext":
-			writeResponse(ctx, request, PLAINTEXT_CONTENT_BUFFER.duplicate(), TYPE_PLAIN, PLAINTEXT_CLHEADER_VALUE);
+			writePlainResponse(ctx, Unpooled.wrappedBuffer(STATIC_PLAINTEXT));
 			return;
 		case "/json":
-			byte[] json = MAPPER.writeValueAsBytes(newMsg());
-			writeResponse(ctx, request, Unpooled.wrappedBuffer(json), TYPE_JSON, JSON_CLHEADER_VALUE);
+			byte[] json = serializeMsg(newMsg());
+			writeJsonResponse(ctx, Unpooled.wrappedBuffer(json));
 			return;
 		}
-		FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
+		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
 		ctx.write(response).addListener(ChannelFutureListener.CLOSE);
 	}
 
-	private void writeResponse(ChannelHandlerContext ctx, HttpRequest request, ByteBuf buf, CharSequence contentType, CharSequence contentLength) {
+	private void writePlainResponse(ChannelHandlerContext ctx, ByteBuf buf) {
+		ctx.write(makeResponse(buf, TEXT_PLAIN, PLAINTEXT_CLHEADER_VALUE), ctx.voidPromise());
+	}
 
-		// Build the response object.
-		FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buf, false);
-		HttpHeaders headers = response.headers();
-		headers.set(CONTENT_TYPE_ENTITY, contentType);
-		headers.set(SERVER_ENTITY, SERVER_NAME);
-		headers.set(DATE_ENTITY, date);
-		headers.set(CONTENT_LENGTH_ENTITY, contentLength);
+	private void writeJsonResponse(ChannelHandlerContext ctx, ByteBuf buf) {
+		ctx.write(makeResponse(buf, APPLICATION_JSON, JSON_CLHEADER_VALUE), ctx.voidPromise());
+	}
 
-		// Close the non-keep-alive connection after the write operation is done.
-		ctx.write(response, ctx.voidPromise());
+	private FullHttpResponse makeResponse(ByteBuf buf, CharSequence contentType, CharSequence contentLength) {
+		final FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, buf, false);
+		response.headers()
+				.set(CONTENT_TYPE, contentType)
+				.set(SERVER, SERVER_NAME)
+				.set(DATE, date)
+				.set(CONTENT_LENGTH, contentLength);
+		return response;
 	}
 
 	@Override

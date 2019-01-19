@@ -1,11 +1,11 @@
-var h = require('../helper');
-var async = require('async');
-var MongoClient = require('mongodb').MongoClient;
-var collections = {
+const h = require('../helper');
+const async = require('async');
+const MongoClient = require('mongodb').MongoClient;
+const collections = {
   World: null,
   Fortune: null
 };
-MongoClient.connect('mongodb://127.0.0.1/hello_world?maxPoolSize=5', function (err, db) {
+MongoClient.connect('mongodb://tfb-database/hello_world?maxPoolSize=5', (err, db) => {
   // do nothing if there is err connecting to db
 
   collections.World = db.collection('world');
@@ -13,37 +13,35 @@ MongoClient.connect('mongodb://127.0.0.1/hello_world?maxPoolSize=5', function (e
 });
 
 
-function mongodbRandomWorld(callback) {
+const mongodbRandomWorld = (callback) => {
   collections.World.findOne({
     id: h.randomTfbNumber()
-  }, function (err, world) {
+  }, (err, world) => {
     world._id = undefined; // remove _id from query response
     callback(err, world);
   });
-}
+};
 
-function mongodbGetAllFortunes(callback) {
-  collections.Fortune.find().toArray(function (err, fortunes) {
+const mongodbGetAllFortunes = (callback) => {
+  collections.Fortune.find().toArray((err, fortunes) => {
     callback(err, fortunes);
   })
-}
+};
 
-function mongodbDriverUpdateQuery(callback) {
-  collections.World.findAndModify({
-    id: h.randomTfbNumber()
-  }, [['_id','asc']], {
-    $set: {randomNumber: h.randomTfbNumber()}
-  }, {}, function (err, world) {
-    world.value._id = undefined; // remove _id from query response
-    callback(err, world.value);
+const mongodbDriverUpdateQuery = (callback) => {
+  collections.World.findOne({ id: h.randomTfbNumber() }, (err, world) => {
+    world.randomNumber = h.randomTfbNumber();
+    collections.World.update({ id: world.id }, world, (err, updated) => {
+      callback(err, { id: world.id, randomNumber: world.randomNumber });
+    });
   });
-}
+};
 
 
 module.exports = {
 
-  SingleQuery: function (req, res) {
-    mongodbRandomWorld(function (err, result) {
+  SingleQuery: (req, res) => {
+    mongodbRandomWorld((err, result) => {
       if (err) { return process.exit(1) }
 
       h.addTfbHeaders(res, 'json');
@@ -51,10 +49,10 @@ module.exports = {
     });
   },
 
-  MultipleQueries: function (queries, req, res) {
-    var queryFunctions = h.fillArray(mongodbRandomWorld, queries);
+  MultipleQueries: (queries, req, res) => {
+    const queryFunctions = h.fillArray(mongodbRandomWorld, queries);
 
-    async.parallel(queryFunctions, function (err, results) {
+    async.parallel(queryFunctions, (err, results) => {
       if (err) { return process.exit(1) }
 
       h.addTfbHeaders(res, 'json');
@@ -62,11 +60,11 @@ module.exports = {
     });
   },
 
-  Fortunes: function (req, res) {
-    mongodbGetAllFortunes(function (err, fortunes) {
+  Fortunes: (req, res) => {
+    mongodbGetAllFortunes((err, fortunes) => {
       if (err) { return process.exit(1) }
 
-      fortunes.push(h.ADDITIONAL_FORTUNE);
+      fortunes.push(h.additionalFortune());
       fortunes.sort(function (a, b) {
         return a.message.localeCompare(b.message);
       });
@@ -77,10 +75,10 @@ module.exports = {
     });
   },
 
-  Updates: function (queries, req, res) {
-    var queryFunctions = h.fillArray(mongodbDriverUpdateQuery, queries);
+  Updates: (queries, req, res) => {
+    const queryFunctions = h.fillArray(mongodbDriverUpdateQuery, queries);
 
-    async.parallel(queryFunctions, function (err, results) {
+    async.parallel(queryFunctions, (err, results) => {
       if (err) { return process.exit(1) }
 
       h.addTfbHeaders(res, 'json');

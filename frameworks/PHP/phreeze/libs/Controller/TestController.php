@@ -57,8 +57,9 @@ class TestController extends Controller
 	
 		// Read number of queries to run from URL parameter
 		$query_count = RequestUtil::Get('queries',1);
-		
-		// make sure the query count paramter is in range
+        $query_count = is_numeric($query_count) ? min(max($query_count, 1), 500) : 1;
+
+        // make sure the query count paramter is in range
 		if (!is_numeric($query_count)) {
 			$query_count = 1;
 		}
@@ -118,8 +119,9 @@ class TestController extends Controller
 		
 		// Read number of queries to run from URL parameter
 		$query_count = RequestUtil::Get('queries',1);
-		
-		$arr = array();
+        $query_count = is_numeric($query_count) ? min(max($query_count, 1), 500) : 1;
+
+        $arr = array();
 		
 		for ($i = 0; $i < $query_count; $i++) {
 		

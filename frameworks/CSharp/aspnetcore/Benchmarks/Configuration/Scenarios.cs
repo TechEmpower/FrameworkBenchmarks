@@ -1,11 +1,11 @@
-// Copyright (c) .NET Foundation. All rights reserved. 
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Benchmarks.Configuration
@@ -22,6 +22,12 @@ namespace Benchmarks.Configuration
 
         [ScenarioPath("/json")]
         public bool Json { get; set; }
+
+        [ScenarioPath("/utf8json")]
+        public bool Utf8Json { get; set; }
+
+        [ScenarioPath("/spanjson")]
+        public bool SpanJson { get; set; }
 
         [ScenarioPath("/128B.txt", "/512B.txt", "/1KB.txt", "/4KB.txt", "/16KB.txt", "/512KB.txt", "/1MB.txt", "/5MB.txt")]
         public bool StaticFiles { get; set; }
@@ -134,19 +140,19 @@ namespace Benchmarks.Configuration
                 EnableDefault();
                 return 2;
             }
-            
+
             var props = typeof(Scenarios).GetTypeInfo().DeclaredProperties
-                .Where(p => string.Equals(partialName, "[all]", StringComparison.OrdinalIgnoreCase) || p.Name.IndexOf(partialName, StringComparison.OrdinalIgnoreCase) >= 0)
+                .Where(p => string.Equals(partialName, "[all]", StringComparison.OrdinalIgnoreCase) || p.Name.StartsWith(partialName, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             foreach (var p in props)
             {
                 p.SetValue(this, true);
             }
-            
+
             return props.Count;
         }
-        
+
         public void EnableDefault()
         {
             Plaintext = true;

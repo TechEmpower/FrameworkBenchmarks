@@ -2,24 +2,19 @@ package highlevel;
 
 import common.Helper;
 import common.Message;
-import org.rapidoid.commons.Env;
+import org.rapidoid.commons.Err;
 import org.rapidoid.config.Conf;
+import org.rapidoid.env.Env;
 import org.rapidoid.http.MediaType;
-import org.rapidoid.log.Log;
+import org.rapidoid.jdbc.JDBC;
+import org.rapidoid.jdbc.JdbcClient;
 import org.rapidoid.setup.App;
 import org.rapidoid.setup.On;
-import org.rapidoid.sql.JDBC;
-import org.rapidoid.sql.JdbcClient;
 
 public class Main {
 
 	public static void main(String[] args) {
-
-		App.args(args);
-
-		Conf.C3P0.set("maxPoolSize", 256);
-		Conf.C3P0.set("maxIdleTimeExcessConnections", 256);
-		Conf.C3P0.set("maxStatementsPerConnection", 3);
+		App.run(args);
 
 		Conf.HTTP.set("maxPipeline", 128);
 		Conf.HTTP.set("timeout", 0);
@@ -40,24 +35,19 @@ public class Main {
 	}
 
 	private static void setupDbHandlers() {
-		String dbHost = Conf.ROOT.entry("dbhost").or("localhost");
-		Log.info("Database hostname is: " + dbHost);
-
-		String dbUrl;
+		JdbcClient jdbc = JDBC.api();
 
 		if (Env.hasProfile("mysql")) {
-			dbUrl = "jdbc:mysql://" + dbHost + ":3306/hello_world?" + Helper.MYSQL_CONFIG;
+			jdbc.url("jdbc:mysql://tfb-database:3306/hello_world?" + Helper.MYSQL_CONFIG);
+
+		} else if (Env.hasProfile("postgres")) {
+			jdbc.url("jdbc:postgresql://tfb-database:5432/hello_world?" + Helper.POSTGRES_CONFIG);
+
 		} else {
-			dbUrl = "jdbc:postgresql://" + dbHost + ":5432/hello_world?" + Helper.POSTGRES_CONFIG;
+			throw Err.notExpected();
 		}
 
-		JdbcClient mysqlJdbc = JDBC.newApi()
-			.url(dbUrl)
-			.username("benchmarkdbuser")
-			.password("benchmarkdbpass")
-			.pooled();
-
-		On.get("/fortunes").html(new FortunesHandler(mysqlJdbc));
+		On.get("/fortunes").managed(false).html(new FortunesHandler(jdbc));
 	}
 
 }

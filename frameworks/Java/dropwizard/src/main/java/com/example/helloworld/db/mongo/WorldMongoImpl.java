@@ -3,6 +3,7 @@ package com.example.helloworld.db.mongo;
 import com.example.helloworld.db.WorldDAO;
 import com.example.helloworld.db.model.World;
 import com.example.helloworld.resources.Helper;
+import org.mongojack.DBUpdate;
 import org.mongojack.DBProjection;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -23,14 +24,10 @@ public class WorldMongoImpl implements WorldDAO {
 
     @Override
     public World findAndModify(int worldId, int newRandomNumber) {
-        return worldCollection.findAndModify(
-                DBQuery.is("_id", worldId),
-                DBProjection.include("_id", "randomNumber"),
-                null,
-                false,
-                DBUpdate.set("randomNumber", newRandomNumber),
-                true,
-                false);
+        World theOne = findById(worldId);
+        theOne.setRandomNumber(newRandomNumber);
+        worldCollection.updateById(theOne.getId(), DBUpdate.set("randomNumber", theOne.getRandomNumber()));
+        return theOne;
 
     }
 

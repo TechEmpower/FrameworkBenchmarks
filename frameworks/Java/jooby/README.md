@@ -1,19 +1,18 @@
 # Jooby Benchmarking Test
 
-[Jooby](http://jooby.org) is a micro-web framework for Java.
+[Jooby](http://jooby.org) Scalable, fast and modular micro web framework for Java and Kotlin.
 
 ```java
 public class App extends Jooby {
 
   {
-    get("/plaintext", () -> "Hello, World!");
+    get("/", () -> "Hello, World!");
   }
 
 }
 ```
 
 This is the [Jooby](http://jooby.org) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
-
 
 ### Plain Text Test
 * [Plain test source](src/main/java/com/techempower/App.java)
@@ -24,11 +23,14 @@ This is the [Jooby](http://jooby.org) portion of a [benchmarking test suite](../
 ### Single Query Test
 * [Single query test source](src/main/java/com/techempower/App.java)
 
-## Versions
+### Multiple Queries Test
+* [Multiple queries test source](src/main/java/com/techempower/App.java)
 
-* [Jooby 0.11.x](http://jooby.org)
-* [Undertow 1.2.x](http://undertow.io)
-* [Jackson 2.6.x](http://wiki.fasterxml.com/JacksonHome)
+### Database Update Test
+* [Database update test source](src/main/java/com/techempower/App.java)
+
+### Fortunes Test
+* [Fortunes test source](src/main/java/com/techempower/App.java)
 
 ## Test URLs
 
@@ -44,3 +46,14 @@ This is the [Jooby](http://jooby.org) portion of a [benchmarking test suite](../
 
     http://localhost:8080/db
 
+### Multiple Queries Test
+
+    http://localhost:8080/queries
+
+### Database updates Test
+
+    http://localhost:8080/updates
+
+### Fortunes Test
+
+    http://localhost:8080/fortunes

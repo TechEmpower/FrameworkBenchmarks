@@ -7,10 +7,10 @@ import javax.persistence.Id;
 
 @Entity
 public class World {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
-    public int randomNumber;
-    
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  public int id;
+  public int randomNumber;
+
 }

@@ -12,7 +12,7 @@
             {{for fortune in fortunes:}}
             <tr>
                 <td>{{=fortune.id}}</td>
-                <td>{{=asis(escape(fortune.message))}}</td>
+                <td>{{=fortune.message}}</td>
             </tr>
             {{pass}}
         </table>

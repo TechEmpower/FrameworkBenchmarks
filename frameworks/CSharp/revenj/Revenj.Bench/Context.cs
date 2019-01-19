@@ -12,13 +12,17 @@ namespace Revenj.Bench
 		public readonly IQueryableRepository<Fortune> FortuneRepository;
 		public readonly Random Random = new Random(0);
 		public readonly World[] Worlds = new World[512];
+		private readonly IDatabaseQueryManager QueryManager;
+		private readonly IDatabaseQuery Query;
 		//private readonly IRepositoryBulkReader BulkReader;
 		//private readonly Lazy<World>[] LazyWorlds = new Lazy<World>[512];
 
 		public Context(IObjectFactory factory, IDatabaseQueryManager manager)
 		{
+			QueryManager = manager;
 			var scope = factory.CreateScope(null);
-			scope.RegisterInterfaces(manager.StartQuery(false));
+			Query = manager.StartQuery(false);
+			scope.RegisterInterfaces(Query);
 			WorldRepository = scope.Resolve<IPersistableRepository<World>>();
 			FortuneRepository = scope.Resolve<IQueryableRepository<Fortune>>();
 			//BulkReader = scope.BulkRead(ChunkedMemoryStream.Static());
@@ -46,6 +50,11 @@ namespace Revenj.Bench
 				var id = Random.Next(10000) + 1;
 				worlds[i] = WorldRepository.Find(id);
 			}
+		}
+
+		~Context()
+		{
+			QueryManager.EndQuery(Query, true);
 		}
 	}
 }

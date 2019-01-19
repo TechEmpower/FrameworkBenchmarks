@@ -2,7 +2,6 @@
   "framework": "tokio-minihttp",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db",
@@ -12,7 +11,7 @@
       "classification": "Micro",
       "database": "Postgres",
       "framework": "tokio-minihttp",
-      "language": "rust",
+      "language": "Rust",
       "orm": "raw",
       "platform": "Rust",
       "webserver": "tokio-minihttp",

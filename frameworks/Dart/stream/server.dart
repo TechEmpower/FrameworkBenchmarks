@@ -106,8 +106,8 @@ main(List<String> args) {
        var mongoConfig = yaml.loadYaml(config);
        _mongoDb = new Db("mongodb://${mongoConfig["host"]}/${mongoConfig["database"]}");
        return _mongoDb.open().then((_) {
-         _worldCollection = _mongoDb.collection("World");
-         _fortuneCollection = _mongoDb.collection("Fortune");
+         _worldCollection = _mongoDb.collection("world");
+         _fortuneCollection = _mongoDb.collection("fortune");
        });
      })
    ]).then((_) {

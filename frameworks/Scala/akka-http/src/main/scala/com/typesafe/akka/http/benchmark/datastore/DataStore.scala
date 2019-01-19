@@ -1,13 +1,16 @@
 package com.typesafe.akka.http.benchmark.datastore
 
-import com.typesafe.akka.http.benchmark.entity.{Fortune, World}
+import com.typesafe.akka.http.benchmark.entity.{ Fortune, World }
 
+import scala.collection.immutable
 import scala.concurrent.Future
 
 trait DataStore {
-  def findOne(id: Int): Future[World]
+  def findWorldById(id: Int): Future[Option[World]]
 
-  def updateOne(id: Int, randomNumber: Int): Future[Boolean]
+  def requireWorldById(id: Int): Future[World]
 
-  def getFortunes: Future[List[Fortune]]
+  def updateWorld(world: World): Future[Boolean]
+
+  def getFortunes: Future[immutable.Seq[Fortune]]
 }

@@ -1,7 +1,8 @@
 {
-    "framework" : "hexagon",
-    "tests" : [
+    "framework": "hexagon",
+    "tests": [
         {
+<<<<<<< HEAD
             "default" : {
                 "json_url" : "/json",
                 "db_url" : "/db",
@@ -54,6 +55,96 @@
                 "setup_file" : "setup_resin",
                 "versus" : "servlet"
             }              
+=======
+            "default": {
+                "json_url": "/json",
+                "db_url": "/mongodb/db",
+                "query_url": "/mongodb/query?queries=",
+                "fortune_url": "/mongodb/pebble/fortunes",
+                "update_url": "/mongodb/update?queries=",
+                "plaintext_url": "/plaintext",
+                "port": 9090,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "mongodb",
+                "framework": "Hexagon",
+                "language": "Kotlin",
+                "orm": "Raw",
+                "platform": "Servlet",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hexagon Jetty MongoDB",
+                "notes": "http://hexagonkt.com",
+                "versus": "servlet"
+            },
+            "resin-mongodb": {
+                "json_url": "/json",
+                "db_url": "/mongodb/db",
+                "query_url": "/mongodb/query?queries=",
+                "fortune_url": "/mongodb/pebble/fortunes",
+                "update_url": "/mongodb/update?queries=",
+                "plaintext_url": "/plaintext",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "mongodb",
+                "framework": "Hexagon",
+                "language": "Kotlin",
+                "orm": "Raw",
+                "platform": "Servlet",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hexagon Resin MongoDB",
+                "notes": "http://hexagonkt.com",
+                "versus": "servlet"
+            },
+            "jetty-postgresql": {
+                "json_url": "/json",
+                "db_url": "/postgresql/db",
+                "query_url": "/postgresql/query?queries=",
+                "fortune_url": "/postgresql/pebble/fortunes",
+                "update_url": "/postgresql/update?queries=",
+                "plaintext_url": "/plaintext",
+                "port": 9090,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "postgres",
+                "framework": "Hexagon",
+                "language": "Kotlin",
+                "orm": "Raw",
+                "platform": "Servlet",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hexagon Jetty PostgreSQL",
+                "notes": "http://hexagonkt.com",
+                "versus": "servlet"
+            },
+            "resin-postgresql": {
+                "json_url": "/json",
+                "db_url": "/postgresql/db",
+                "query_url": "/postgresql/query?queries=",
+                "fortune_url": "/postgresql/pebble/fortunes",
+                "update_url": "/postgresql/update?queries=",
+                "plaintext_url": "/plaintext",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "postgres",
+                "framework": "Hexagon",
+                "language": "Kotlin",
+                "orm": "Raw",
+                "platform": "Servlet",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hexagon Resin PostgreSQL",
+                "notes": "http://hexagonkt.com",
+                "versus": "servlet"
+            }
+>>>>>>> 46550cf03dbbb5e1f65e57aa814da45ed30a2b05
         }
     ]
 }

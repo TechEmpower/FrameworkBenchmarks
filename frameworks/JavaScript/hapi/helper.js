@@ -1,31 +1,24 @@
-var Handlebars = require('handlebars');
-
-var GREETING = "Hello, World";
-var HELLO_OBJ = { message: GREETING }
-
 module.exports = {
-  randomTfbNumber: function() {
-    return Math.floor(Math.random() * 10000) + 1;
-  },
+  randomTfbNumber: () => Math.floor(Math.random() * 10000) + 1,
 
-  fillArray: function(value, len) {
-    var filled = [];
+  fillArray: (value, len) => {
+    const filled = [];
 
-    for (var i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       filled.push(value);
     }
     return filled;
   },
 
-  getQueries: function(req) {
-    var queries = ~~(req.query.queries) || 1;
+  getQueries: (req) => {
+    let queries = ~~(req.query.queries) || 1;
     queries = Math.min(Math.max(queries, 1), 500);
     return queries;
   },
 
-  ADDITIONAL_FORTUNE: {
+  additionalFortune: () => ({
     id: 0,
     message: 'Additional fortune added at request time.'
-  }
+  })
 
-}
+};

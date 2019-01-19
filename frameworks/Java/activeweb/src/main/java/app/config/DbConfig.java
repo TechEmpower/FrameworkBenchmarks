@@ -38,13 +38,14 @@ public class DbConfig extends AbstractDBConfig {
                 "&useReadAheadInput=false" +
                 "&maintainTimeStats=false" +
                 "&useServerPrepStmts" +
-                "&cacheRSMetadata=true";
+                "&cacheRSMetadata=true" +
+                "&useSSL=false";
 
         environment("development").jndi("java:comp/env/jdbc/hello_world");
 
         //need to set ACTIVE_ENV=local to run on dev box.
-        environment("local").jdbc("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/hello_world?" + jdbcParams, "benchmarkdbuser", "benchmarkdbpass");
+        environment("local").jdbc("com.mysql.jdbc.Driver", "jdbc:mysql://tfb-database/hello_world?" + jdbcParams, "benchmarkdbuser", "benchmarkdbpass");
 
-        environment("development").testing().jdbc("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/hello_world?" + jdbcParams, "benchmarkdbuser", "benchmarkdbpass");
+        environment("development").testing().jdbc("com.mysql.jdbc.Driver", "jdbc:mysql://tfb-database/hello_world?" + jdbcParams, "benchmarkdbuser", "benchmarkdbpass");
     }
 }

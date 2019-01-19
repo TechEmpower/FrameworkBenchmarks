@@ -4,7 +4,7 @@
 The tests were run with:
 
 * [Java Oracle 1.8.0_25](http://www.oracle.com/technetwork/java/javase)
-* [fintrospect 13.13.0](https://github.com/daviddenton/fintrospect)
+* [fintrospect 14.15.0](https://github.com/daviddenton/fintrospect)
 
 ## Test URLs
 
@@ -18,5 +18,5 @@ The tests were run with:
 ## How to run
 sbt 'oneJar'
 
-`java -jar target/scala-2.11/*fintrospect*one-jar.jar`
+`java -jar target/scala-2.12/*fintrospect*one-jar.jar`
 

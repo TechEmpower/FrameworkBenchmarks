@@ -6,6 +6,9 @@ import hello.controller.JsonController.HelloWorld;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 
 import com.strategicgains.restexpress.RestExpress;
@@ -25,13 +28,19 @@ public class Main
 			.action("helloWorld", HttpMethod.GET);
 
                 server.uri("/restexpress/plaintext", config.getPlaintextController())
-                        .action("helloWorld", HttpMethod.GET);
+                        .action("helloWorld", HttpMethod.GET)
+                        .noSerialization();
 
 		server.uri("/restexpress/mysql", config.getMysqlController())
 			.method(HttpMethod.GET);
 
 		server.uri("/restexpress/mongodb", config.getMongodbController())
 		    .method(HttpMethod.GET);
+
+		server.addPostprocessor((request, response) -> {
+			response.addHeader("Server", "RestExpress");
+			response.addHeader("Date", DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneOffset.UTC)));
+		});
 
 		server.bind(config.getPort());
 		server.awaitShutdown();

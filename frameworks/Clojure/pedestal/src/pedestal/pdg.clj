@@ -61,9 +61,7 @@
                  (.setAllowPoolSuspension false)
                  (.setUsername "benchmarkdbuser")
                  (.setPassword "benchmarkdbpass")
-                 ;(.setDataSourceClassName "com.mysql.jdbc.jdbc2.optional.MysqlDataSource")
-                 ;(.setJdbcUrl "jdbc:mysql://127.0.0.1:3306/hello_world?username=benchmarkdbuser&password=benchmarkdbpass")
-                 (.setJdbcUrl "jdbc:mysql://127.0.0.1:3306/hello_world")
+                 (.setJdbcUrl "jdbc:mysql://tfb-database:3306/hello_world?useSSL=false&useServerPrepStmts=true&cachePrepStmts=true")
                  (.setRegisterMbeans false))]
     (HikariDataSource. config)))
 
@@ -266,7 +264,7 @@
   [service-map server-opts]
   (let [handler (::handler service-map)
         {:keys [host port join?]
-         :or {host "127.0.0.1"
+         :or {host "0.0.0.0"
               port 8080
               join? false}} server-opts
         addr (InetSocketAddress. ^String host ^int port)

@@ -8,15 +8,15 @@ import com.twitter.util.NullMonitor
 import io.fintrospect.configuration.Host
 
 object Database {
-  def apply(dbHost: Host): Client = {
+  def apply(): Client = {
     Mysql.client
       .withCredentials("benchmarkdbuser", "benchmarkdbpass")
       .withDatabase("hello_world")
-      .configured(Param(low = 0, high = 10, idleTime = fromSeconds(5 * 60), bufferSize = 0, maxWaiters = Int.MaxValue))
+      .configured(Param(low = 256, high = 256, idleTime = fromSeconds(5 * 60), bufferSize = 0, maxWaiters = Int.MaxValue))
       .withStatsReceiver(NullStatsReceiver)
       .withMonitor(NullMonitor)
       .withTracer(NullTracer)
       .withMaxConcurrentPrepareStatements(256)
-      .newRichClient(dbHost.value + ":3306")
+      .newRichClient("tfb-database:3306")
   }
 }

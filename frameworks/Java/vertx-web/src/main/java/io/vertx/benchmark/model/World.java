@@ -2,15 +2,13 @@ package io.vertx.benchmark.model;
 
 import io.vertx.core.json.JsonObject;
 
-import java.util.Collections;
-
 /**
  * The model for the "world" database table.
  */
-public final class World extends JsonObject {
+public final class World implements Comparable<World> {
 
-  public static final String ID = "id";
-  public static final String RANDOM_NUMBER = "randomNumber";
+  private final int id;
+  private final int randomNumber;
 
   /**
    * Constructs a new world object with the given parameters.
@@ -19,19 +17,25 @@ public final class World extends JsonObject {
    * @param randomNumber the random number of the world
    */
   public World(int id, int randomNumber) {
-    put(ID, id);
-    put(RANDOM_NUMBER, randomNumber);
+    this.id = id;
+    this.randomNumber = randomNumber;
   }
 
   public World(JsonObject doc) {
-    super(doc == null ? Collections.emptyMap() : doc.getMap());
+    this.id = doc.getInteger("id");
+    this.randomNumber = doc.getInteger("randomNumber");
   }
 
   public int getId() {
-    return getInteger(ID);
+    return id;
   }
 
   public int getRandomNumber() {
-    return getInteger(RANDOM_NUMBER);
+    return randomNumber;
+  }
+
+  @Override
+  public int compareTo(World o) {
+    return Integer.compare(getId(), o.getId());
   }
 }

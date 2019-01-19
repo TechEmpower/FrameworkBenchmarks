@@ -31,27 +31,27 @@ tests:
     puma-jruby:
       <<: *default
       setup_file: run_jruby_puma
-      platform: JRuby
       display_name: rack-sequel-puma-jruby
       versus: rack-puma-jruby
+      disabled: true
     postgres-puma-jruby:
       <<: *default
       setup_file: run_jruby_puma
       database: Postgres
-      platform: JRuby
       display_name: rack-sequel-postgres-puma-jruby
       versus: ~
+      disabled: true
     passenger-mri:
       <<: *default
       setup_file: run_mri_passenger
-      webserver: Passenger Standalone
+      webserver: Passenger
       display_name: rack-sequel-passenger-mri
       versus: ~
     postgres-passenger-mri:
       <<: *default
       setup_file: run_mri_passenger
       database: Postgres
-      webserver: Passenger Standalone
+      webserver: Passenger
       display_name: rack-sequel-postgres-passenger-mri
       versus: ~
     unicorn-mri:
@@ -70,13 +70,13 @@ tests:
     torquebox-jruby:
       <<: *default
       setup_file: run_jruby_torquebox
-      platform: JRuby
+      webserver: TorqueBox
       display_name: rack-sequel-torquebox-jruby
       versus: rack-torqbox-jruby
     postgres-torquebox-jruby:
       <<: *default
       setup_file: run_jruby_torquebox
       database: Postgres
-      platform: JRuby
+      webserver: TorqueBox
       display_name: rack-sequel-postgres-torquebox-jruby
       versus: ~

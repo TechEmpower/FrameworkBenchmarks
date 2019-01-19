@@ -10,14 +10,13 @@ import (
 )
 
 func (c App) JetDb(queries int) revel.Result {
-	if queries <= 1 {
-		var w World
-		err := db.Jet.Query(WorldSelect, rand.Intn(WorldRowCount)+1).Rows(&w)
-		if err != nil {
-			revel.ERROR.Fatalf("Db/WorldSelect error: %v", err)
-		}
-		return c.RenderJson(w)
-	}
+        _, foundQuery := c.Params.Values["queries"]
+        if queries>500 {
+             queries = 500
+        }
+        if queries == 0 {
+          queries = 1
+        }
 
 	ww := make([]World, queries)
 	for i := 0; i < queries; i++ {
@@ -26,22 +25,20 @@ func (c App) JetDb(queries int) revel.Result {
 			revel.ERROR.Fatalf("Db/WorldSelect2 error: %v", err)
 		}
 	}
-	return c.RenderJson(ww)
+        if !foundQuery {
+            return c.RenderJSON(ww[0])
+        }
+        return c.RenderJSON(ww)
 }
 
 func (c App) JetUpdate(queries int) revel.Result {
-	if queries <= 1 {
-		var w World
-		err := db.Jet.Query(WorldSelect, rand.Intn(WorldRowCount)+1).Rows(&w)
-		if err != nil {
-			revel.ERROR.Fatalf("Update/WorldSelect error: %v", err)
-		}
-		w.RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
-		if err = db.Jet.Query(WorldUpdate, w.RandomNumber, w.Id).Run(); err != nil {
-			revel.ERROR.Fatalf("Update/WorldUpdate error: %v", err)
-		}
-		return c.RenderJson(&w)
-	}
+        _, foundQuery := c.Params.Values["queries"]
+        if queries>500 {
+             queries = 500
+        }
+        if queries == 0 {
+          queries = 1
+        }
 
 	ww := make([]World, queries)
 	for i := 0; i < queries; i++ {
@@ -54,7 +51,10 @@ func (c App) JetUpdate(queries int) revel.Result {
 			revel.ERROR.Fatalf("Update/WorldUpdate2 error: %v", err)
 		}
 	}
-	return c.RenderJson(ww)
+        if !foundQuery {
+            return c.RenderJSON(ww[0])
+        }
+        return c.RenderJSON(ww)
 }
 
 func (c App) JetFortune() revel.Result {
@@ -65,6 +65,6 @@ func (c App) JetFortune() revel.Result {
 	}
 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
 	sort.Sort(ByMessage{fortunes})
-	c.RenderArgs["fortunes"] = fortunes
+	c.ViewArgs["fortunes"] = fortunes
 	return c.RenderTemplate("App/Fortune.html")
 }

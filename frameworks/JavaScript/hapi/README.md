@@ -12,8 +12,8 @@ This is the Hapi portion of a [benchmarking test suite](../) comparing a variety
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v0.12.2](http://nodejs.org/)
-* [Hapi 8.4.0](http://hapijs.com/)
+* [Node.js v7.5.0](http://nodejs.org/)
+* [Hapi 16.1.0](http://hapijs.com/)
 
 ## Resources
 * http://nodejs.org/api/cluster.html
@@ -21,34 +21,34 @@ The tests were run with:
 ## Test URLs
 ### JSON Encoding Test
 
-http://localhost:8080/json
+http://TFB-server:8080/json
 
 ### Data-Store/Database Mapping Test
 
 MongoDB:
-http://localhost:8080/mongoose/
+http://TFB-server:8080/mongoose/
 
 MySQL:
-http://localhost:8080/mysql-orm/
+http://TFB-server:8080/mysql-orm/
 
 ### Variable Query Test
 
 MongoDB:
-http://localhost:8080/mongoose/2
+http://TFB-server:8080/mongoose/2
 
 MySQL:
-http://localhost:8080/mysql-orm/2
+http://TFB-server:8080/mysql-orm/2
 
 ### Fortune Test
 
 MySQL:
-http://localhost:8080/fortune
+http://TFB-server:8080/fortune
 
 ### Database Update Test
 
 MongoDB:
-http://localhost:8080/mongoose-update/2
+http://TFB-server:8080/mongoose-update/2
 
 MySQL:
-http://localhost:8080/mysql-orm-update/2
+http://TFB-server:8080/mysql-orm-update/2
 

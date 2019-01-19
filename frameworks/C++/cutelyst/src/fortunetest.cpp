@@ -1,10 +1,9 @@
 #include "fortunetest.h"
 
 #include <Cutelyst/Plugins/Utils/Sql>
+#include <Cutelyst/View>
 
 #include <QSqlQuery>
-
-#include <QThread>
 
 FortuneTest::FortuneTest(QObject *parent) : Controller(parent)
 {
@@ -29,16 +28,53 @@ void FortuneTest::fortunes_raw_mysql(Context *c)
     renderRaw(c, fortunes);
 }
 
-static bool caseSensitiveLessThan(const Fortune &a1, const Fortune &a2)
+void FortuneTest::fortunes_grantlee_postgres(Context *c)
 {
-    return a1.second < a2.second;
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
+                QLatin1String("SELECT id, message FROM fortune"),
+                QStringLiteral("postgres"));
+    if (query.exec()) {
+        QVariantList fortunes = Sql::queryToList(query);
+        fortunes.append(QVariant::fromValue(QVariantList{
+                            {0, QStringLiteral("Additional fortune added at request time.")},
+                        }));
+        std::sort(fortunes.begin(), fortunes.end(), [] (const QVariant &a1, const QVariant &a2) {
+            return a1.toList()[1].toString() < a2.toList()[1].toString();
+        });
+        c->setStash(QStringLiteral("template"), QStringLiteral("fortunes.html"));
+        c->setStash(QStringLiteral("fortunes"), fortunes);
+        static thread_local View *view = c->view();
+        view->execute(c);
+        c->response()->setContentType(QStringLiteral("text/html; charset=UTF-8"));
+    }
+}
+
+void FortuneTest::fortunes_grantlee_mysql(Context *c)
+{
+    QSqlQuery query = CPreparedSqlQueryThreadForDB(
+                QLatin1String("SELECT id, message FROM fortune"),
+                QStringLiteral("mysql"));
+    if (query.exec()) {
+        QVariantList fortunes = Sql::queryToList(query);
+        fortunes.append(QVariant::fromValue(QVariantList{
+                            {0, QStringLiteral("Additional fortune added at request time.")},
+                        }));
+        std::sort(fortunes.begin(), fortunes.end(), [] (const QVariant &a1, const QVariant &a2) {
+            return a1.toList()[1].toString() < a2.toList()[1].toString();
+        });
+        c->setStash(QStringLiteral("template"), QStringLiteral("fortunes.html"));
+        c->setStash(QStringLiteral("fortunes"), fortunes);
+        static thread_local View *view = c->view();
+        view->execute(c);
+        c->response()->setContentType(QStringLiteral("text/html; charset=UTF-8"));
+    }
 }
 
 FortuneList FortuneTest::processQuery(Context *c, QSqlQuery &query)
 {
     FortuneList fortunes;
 
-    if (!query.exec()) {
+    if (Q_UNLIKELY(!query.exec())) {
         c->res()->setStatus(Response::InternalServerError);
         return fortunes;
     }
@@ -48,7 +84,9 @@ FortuneList FortuneTest::processQuery(Context *c, QSqlQuery &query)
     }
     fortunes.push_back({0, QStringLiteral("Additional fortune added at request time.")});
 
-    qSort(fortunes.begin(), fortunes.end(), caseSensitiveLessThan);
+    std::sort(fortunes.begin(), fortunes.end(), [] (const Fortune &a1, const Fortune &a2) {
+        return a1.second < a2.second;
+    });
 
     return fortunes;
 }

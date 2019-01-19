@@ -3,10 +3,6 @@
 #include "mngworld.h"
 
 
-WorldController::WorldController(const WorldController &)
-    : ApplicationController()
-{ }
-
 void WorldController::index()
 {
     QList<World> worldList = World::getAll();
@@ -16,6 +12,7 @@ void WorldController::index()
 
 void WorldController::plain()
 {
+    setContentType("text/plain");
     renderText(QLatin1String("Hello, World!"));
 }
 
@@ -207,4 +204,4 @@ void WorldController::mupdates(const QString &num)
 }
 
 // Don't remove below this line
-T_REGISTER_CONTROLLER(worldcontroller)
+T_DEFINE_CONTROLLER(WorldController)

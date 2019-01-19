@@ -22,6 +22,12 @@ public:
     C_ATTR(fortunes_raw_mysql, :Local :AutoArgs)
     void fortunes_raw_mysql(Context *c);
 
+    C_ATTR(fortunes_grantlee_postgres, :Local :AutoArgs)
+    void fortunes_grantlee_postgres(Context *c);
+
+    C_ATTR(fortunes_grantlee_mysql, :Local :AutoArgs)
+    void fortunes_grantlee_mysql(Context *c);
+
 private:
     inline FortuneList processQuery(Context *c, QSqlQuery &query);
     inline void renderRaw(Context *c, const FortuneList &fortunes);

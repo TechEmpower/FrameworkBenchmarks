@@ -19,7 +19,19 @@ separately [asyncpg](https://magicstack.github.io/asyncpg/current/) for database
 
 ### Database
 
-PostgreSQL
+PostgreSQL.
+
+Two variants:
+* ORM using [aiopg + sqlalchemy](http://aiopg.readthedocs.io/en/stable/sa.html)
+* RAW using [asyncpg](https://magicstack.github.io/asyncpg/current/)
+
+**To enabled "RAW" mode set the following environment variable:**
+ 
+```
+export CONNECTION=RAW
+```
+
+This will switch which database engine the app uses to execute queries with tests 2, 3, 4 & 5.
 
 ### Server
 
@@ -33,44 +45,20 @@ gunicorn+uvloop on CPython
 
 ### Test 2: Single Row Query
 
-With ORM:
-
     http://localhost:8080/db
-
-Without ORM (raw):
-
-    http://localhost:8080/raw/db
 
 ### Test 3: Multi Row Query 
 
-With ORM:
-
-    http://localhost:8080/queries?queries=20
-
-Without ORM (raw):
-
-    http://localhost:8080/raw/queries?queries=20
+    http://localhost:8080/queries/20
 
 ### Test 4: Fortunes (Template rendering)
 
-With ORM:
-
     http://localhost:8080/fortunes
-
-Without ORM (raw):
-
-    http://localhost:8080/raw/fortunes
 
 ### Test 5: Update Query
 
-With ORM:
+    http://localhost:8080/updates/20
 
-    http://localhost:8080/updates?queries=20
-
-Without ORM (raw):
-
-    http://localhost:8080/raw/updates?queries=20
-
-### Test6: Plaintext
+### Test 6: Plaintext
 
     http://localhost:8080/plaintext

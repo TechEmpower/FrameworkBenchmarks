@@ -1,4 +1,5 @@
 import os
+import multiprocessing
 from pathlib import Path
 
 import aiohttp_jinja2
@@ -22,6 +23,8 @@ from .views import (
     updates_raw,
 )
 
+CONNECTION_ORM = os.getenv('CONNECTION', 'ORM').upper() == 'ORM'
+
 THIS_DIR = Path(__file__).parent
 
 
@@ -32,7 +35,7 @@ def pg_dsn() -> str:
     return str(URL(
         database='hello_world',
         password=os.getenv('PGPASS', 'benchmarkdbpass'),
-        host=os.getenv('DBHOST', 'localhost'),
+        host='tfb-database',
         port='5432',
         username=os.getenv('PGUSER', 'benchmarkdbuser'),
         drivername='postgres',
@@ -41,30 +44,40 @@ def pg_dsn() -> str:
 
 async def startup(app: web.Application):
     dsn = pg_dsn()
-    app.update(
-        aiopg_engine=await aiopg.sa.create_engine(dsn=dsn, minsize=10, maxsize=20, loop=app.loop),
-        asyncpg_pool=await asyncpg.create_pool(dsn=dsn, min_size=10, max_size=20, loop=app.loop),
-    )
+    # number of gunicorn workers = multiprocessing.cpu_count() as per gunicorn_conf.py
+    # max_connections = 2000 as per toolset/setup/linux/databases/postgresql/postgresql.conf:64
+    # give 10% leeway
+    max_size = min(1800 / multiprocessing.cpu_count(), 160)
+    max_size = max(int(max_size), 1)
+    min_size = max(int(max_size / 2), 1)
+    print(f'connection pool: min size: {min_size}, max size: {max_size}, orm: {CONNECTION_ORM}')
+    if CONNECTION_ORM:
+        app['pg'] = await aiopg.sa.create_engine(dsn=dsn, minsize=min_size, maxsize=max_size, loop=app.loop)
+    else:
+        app['pg'] = await asyncpg.create_pool(dsn=dsn, min_size=min_size, max_size=max_size, loop=app.loop)
 
 
 async def cleanup(app: web.Application):
-    app['aiopg_engine'].close()
-    await app['aiopg_engine'].wait_closed()
-    await app['asyncpg_pool'].close()
+    if CONNECTION_ORM:
+        app['pg'].close()
+        await app['pg'].wait_closed()
+    else:
+        await app['pg'].close()
 
 
 def setup_routes(app):
-    app.router.add_get('/json', json)
-    app.router.add_get('/db', single_database_query_orm)
-    app.router.add_get('/queries', multiple_database_queries_orm)
-    app.router.add_get('/fortunes', fortunes)
-    app.router.add_get('/updates', updates)
-    app.router.add_get('/plaintext', plaintext)
-
-    app.router.add_get('/raw/db', single_database_query_raw)
-    app.router.add_get('/raw/queries', multiple_database_queries_raw)
-    app.router.add_get('/raw/fortunes', fortunes_raw)
-    app.router.add_get('/raw/updates', updates_raw)
+    if CONNECTION_ORM:
+        app.router.add_get('/json', json)
+        app.router.add_get('/db', single_database_query_orm)
+        app.router.add_get('/queries/{queries:.*}', multiple_database_queries_orm)
+        app.router.add_get('/fortunes', fortunes)
+        app.router.add_get('/updates/{queries:.*}', updates)
+        app.router.add_get('/plaintext', plaintext)
+    else:
+        app.router.add_get('/db', single_database_query_raw)
+        app.router.add_get('/queries/{queries:.*}', multiple_database_queries_raw)
+        app.router.add_get('/fortunes', fortunes_raw)
+        app.router.add_get('/updates/{queries:.*}', updates_raw)
 
 
 def create_app(loop):

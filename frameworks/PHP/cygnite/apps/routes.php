@@ -22,7 +22,7 @@ $app->router->get('/json', function ()
 
 $app->router->get('/plaintext', function ()
 {
-    header("Content-Type: text/plain;");
+    header("Content-Type: text/plain");
     echo 'Hello, World!';
 });
 

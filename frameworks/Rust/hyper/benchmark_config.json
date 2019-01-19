@@ -2,8 +2,8 @@
   "framework": "hyper",
   "tests": [{
     "default": {
-      "setup_file": "setup",
-      "plaintext_url": "/plaintext", 
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
@@ -12,10 +12,10 @@
       "language": "Rust",
       "orm": "Raw",
       "platform": "Rust",
-      "webserver": "Hyper",
+      "webserver": "hyper",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Hyper",
+      "display_name": "hyper",
       "notes": ""
     }
   }]

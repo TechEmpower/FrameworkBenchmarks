@@ -3,17 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "async": "1.5.2",
-    "bluebird": "^2.9.27",
-    "handlebars": "4.0.5",
-    "hapi": "13.5.0",
-    "vision":"4.1.0",
-    "hiredis": "^0.5.0",
-    "mongoose": "4.5.3",
-    "mysql": "2.11.1",
-    "pg": "^6.0.2",
-    "pg-hstore": "^2.3.2",
-    "redis": "^2.6.2",
-    "sequelize": "3.1.1"
+    "async": "2.1.5",
+    "bluebird": "3.4.7",
+    "handlebars": "4.0.6",
+    "hapi": "16.1.1",
+    "vision": "4.1.0",
+    "mongoose": "5.0.6",
+    "mysql": "2.13.0",
+    "pg": "6.1.6",
+    "pg-hstore": "2.3.2",
+    "sequelize": "3.30.2"
   }
 }

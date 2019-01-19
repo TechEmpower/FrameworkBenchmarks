@@ -14,10 +14,13 @@ $config = [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=hello_world',
+            'dsn' => 'mysql:host=tfb-database;dbname=hello_world',
             'username' => 'benchmarkdbuser',
             'password' => 'benchmarkdbpass',
             'charset' => 'utf8',
+            'attributes' => [
+                PDO::ATTR_PERSISTENT => true,
+            ]
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,

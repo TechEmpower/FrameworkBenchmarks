@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "World")
+@Table(name = "world")
 public class World {
 
     @Id
@@ -20,6 +20,11 @@ public class World {
     private int randomNumber;
 
     public World() {
+    }
+    
+    public World(int id, int randomNumber) {
+    	this.id = id;
+    	this.randomNumber = randomNumber;
     }
 
     public int getId() {

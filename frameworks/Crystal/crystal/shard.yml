@@ -1,0 +1,13 @@
+name: crystal
+version: 0.0.1
+
+license: MIT
+
+dependencies:
+  pg:
+    github: will/crystal-pg
+    version: 0.15.0
+
+  radix:
+    github: luislavena/radix
+    version: 0.3.8

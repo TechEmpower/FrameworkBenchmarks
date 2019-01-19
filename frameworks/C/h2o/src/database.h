@@ -29,6 +29,7 @@
 #include "list.h"
 #include "utility.h"
 
+#define DB_ERROR "database error\n"
 #define DB_REQ_ERROR "too many concurrent database requests\n"
 #define DB_TIMEOUT_ERROR "database timeout\n"
 #define FORTUNE_TABLE_NAME "Fortune"
@@ -37,15 +38,19 @@
 #define IS_SINGLE_ROW 2
 #define MAX_ID 10000
 #define MESSAGE_FIELD_NAME "message"
-#define UPDATE_QUERY_NAME "Update"
 #define WORLD_TABLE_NAME "World"
 
-#define UPDATE_QUERY \
-	"EXECUTE \"" WORLD_TABLE_NAME "\"(%" PRIu32 ");" \
-	"EXECUTE \"" UPDATE_QUERY_NAME "\"(%" PRIu32 ", %" PRIu32 ");"
+#define UPDATE_QUERY_BEGIN \
+	"UPDATE " WORLD_TABLE_NAME " SET randomNumber = v.randomNumber " \
+	"FROM (VALUES(%" PRIu32 ", %" PRIu32 ")"
 
-#define MAX_UPDATE_QUERY_LEN \
-	(sizeof(UPDATE_QUERY) + 3 * (sizeof(MKSTR(MAX_ID)) - 1) - 3 * sizeof(PRIu32))
+#define UPDATE_QUERY_ELEM ", (%" PRIu32 ", %" PRIu32 ")"
+#define UPDATE_QUERY_END ") AS v (id, randomNumber) WHERE " WORLD_TABLE_NAME ".id = v.id;"
+
+#define MAX_UPDATE_QUERY_LEN(n) \
+	(sizeof(UPDATE_QUERY_BEGIN) + sizeof(UPDATE_QUERY_END) - sizeof(UPDATE_QUERY_ELEM) + \
+	 (n) * (sizeof(UPDATE_QUERY_ELEM) - 1 + \
+	        2 * (sizeof(MKSTR(MAX_ID)) - 1) - 2 * (sizeof(PRIu32) - 1) - 2))
 
 typedef enum {
 	SUCCESS,
@@ -76,6 +81,8 @@ struct db_query_param_t {
 
 typedef struct {
 	list_t *db_conn;
+	// We use a FIFO queue instead of a simpler stack, otherwise the earlier queries may wait
+	// an unbounded amount of time to be executed.
 	queue_t queries;
 	size_t db_conn_num;
 	size_t free_db_conn_num;

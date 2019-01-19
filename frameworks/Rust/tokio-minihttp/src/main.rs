@@ -5,8 +5,9 @@ extern crate postgres;
 extern crate r2d2;
 extern crate r2d2_postgres;
 extern crate rand;
-#[macro_use]
 extern crate serde_json;
+#[macro_use]
+extern crate serde_derive;
 extern crate tokio_minihttp;
 extern crate tokio_proto;
 extern crate tokio_service;
@@ -21,7 +22,6 @@ use futures::{BoxFuture, Future, Stream};
 use futures_cpupool::{CpuPool, CpuFuture};
 use r2d2_postgres::{TlsMode, PostgresConnectionManager};
 use rand::Rng;
-use serde_json::Value;
 use tokio_minihttp::{Request, Response, Http};
 use tokio_proto::TcpServer;
 use tokio_service::Service;
@@ -33,9 +33,15 @@ struct Techempower {
 }
 
 #[allow(bad_style)]
+#[derive(Serialize)]
 struct WorldRow {
     id: i32,
     randomNumber: i32,
+}
+
+#[derive(Serialize)]
+struct Message<'a> {
+    message: &'a str,
 }
 
 impl Service for Techempower {
@@ -71,24 +77,20 @@ impl Techempower {
     }
 
     fn json(&self) -> Response {
-        let json = json!({ "message": "Hello, World!" });
+        let json = Message { message: "Hello, World!" };
 
         let mut resp = Response::new();
         resp.header("Content-Type", "application/json")
-            .body(&json.to_string());
+            .body(&serde_json::to_string(&json).unwrap());
         return resp
     }
 
     fn db(&self) -> BoxFuture<Response, io::Error> {
         let msg = self.random_world_row();
         msg.map(|msg| {
-            let json = json!({
-                "id": msg.id,
-                "randomNumber": msg.randomNumber,
-            });
             let mut resp = Response::new();
             resp.header("Content-Type", "application/json")
-                .body(&json.to_string());
+                .body(&serde_json::to_string(&msg).unwrap());
             return resp
         }).boxed()
     }
@@ -107,20 +109,20 @@ impl Techempower {
         stream::futures_unordered(stream).collect().map(|list| {
             let mut json = Vec::new();
             for row in list {
-                json.push(json!({
-                    "id": row.id,
-                    "randomNumber": row.randomNumber,
-                }));
+                json.push(WorldRow {
+                    id: row.id,
+                    randomNumber: row.randomNumber,
+                });
             }
             let mut resp = Response::new();
             resp.header("Content-Type", "application/json")
-                .body(&Value::Array(json).to_string());
+                .body(&serde_json::to_string(&json).unwrap());
             return resp
         }).boxed()
     }
 
     fn random_world_row(&self) -> CpuFuture<WorldRow, io::Error> {
-        let random_id = rand::thread_rng().gen_range(1, 10_000);
+        let random_id = rand::thread_rng().gen_range(1, 10_001);
         let db = self.db_pool.clone();
         self.thread_pool.spawn_fn(move || {
             let conn = db.get().map_err(|e| {
@@ -128,7 +130,7 @@ impl Techempower {
             })?;
 
             let stmt = conn.prepare_cached("SELECT id,randomNumber \
-                                              FROM World WHERE id = $1")?;
+                                            FROM World WHERE id = $1")?;
             let rows = stmt.query(&[&random_id])?;
             let row = rows.get(0);
 
@@ -146,7 +148,7 @@ fn main() {
 
     let dbhost = match option_env!("DBHOST") {
         Some(it) => it,
-        _ => "localhost"
+        _ => "tfb-database"
     };
     let db_url = format!("postgres://benchmarkdbuser:benchmarkdbpass@{}/hello_world", dbhost);
     let db_config = r2d2::Config::default();

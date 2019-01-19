@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Fortune")
+@Table(name = "fortune")
 public class Fortune implements Comparable<Fortune> {
 
     @Id
@@ -18,10 +18,17 @@ public class Fortune implements Comparable<Fortune> {
 
     @SuppressWarnings("unused")
     public Fortune() {}
-
+    
     public Fortune(String message) {
-        this.message = message;
-    }
+		super();
+		this.message = message;
+	}
+    
+    public Fortune(int id, String message) {
+		super();
+		this.id = id;
+		this.message = message;
+	}
 
     public int getId() {
         return id;

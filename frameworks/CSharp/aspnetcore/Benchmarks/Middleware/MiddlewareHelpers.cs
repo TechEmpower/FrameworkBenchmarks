@@ -30,12 +30,12 @@ namespace Benchmarks.Middleware
                     : 1;
         }
 
-        public static async Task RenderFortunesHtml(IEnumerable<Fortune> model, HttpContext httpContext, HtmlEncoder htmlEncoder)
+        public static Task RenderFortunesHtml(IEnumerable<Fortune> model, HttpContext httpContext, HtmlEncoder htmlEncoder)
         {
             httpContext.Response.StatusCode = StatusCodes.Status200OK;
             httpContext.Response.ContentType = "text/html; charset=UTF-8";
 
-            var sb = new StringBuilder();
+            var sb = StringBuilderCache.Acquire();
             sb.Append("<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
             foreach (var item in model)
             {
@@ -47,10 +47,10 @@ namespace Benchmarks.Middleware
             }
 
             sb.Append("</table></body></html>");
-            var response = sb.ToString();
+            var response = StringBuilderCache.GetStringAndRelease(sb);
             // fortunes includes multibyte characters so response.Length is incorrect
             httpContext.Response.ContentLength = Encoding.UTF8.GetByteCount(response);
-            await httpContext.Response.WriteAsync(response);
+            return httpContext.Response.WriteAsync(response);
         }
     }
 }

@@ -22,15 +22,21 @@
 #define UTILITY_H_
 
 #include <h2o.h>
-#include <stdint.h>
-#include <openssl/ssl.h>
-#include <stdbool.h>
-#include <yajl/yajl_gen.h>
 #include <mustache.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <h2o/cache.h>
+#include <openssl/ssl.h>
+#include <yajl/yajl_gen.h>
+
+#include "cache.h"
+#include "list.h"
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(*(a)))
 // mainly used to silence compiler warnings about unused function parameters
 #define IGNORE_FUNCTION_PARAMETER(p) ((void) (p))
+// Do not use the following MAX and MIN macros with parameters that have side effects.
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 #define MKSTR(x) TOSTRING(x)
 #define TOSTRING(x) # x
@@ -46,31 +52,39 @@ typedef struct {
 	const char *log;
 	const char *root;
 	const char *template_path;
+	uint64_t world_cache_duration;
 	size_t max_accept;
 	size_t max_db_conn_num;
+	size_t max_json_generator;
 	size_t max_query_num;
 	size_t thread_num;
+	size_t world_cache_capacity;
+	uint16_t https_port;
 	uint16_t port;
 } config_t;
 
 typedef struct {
 	h2o_logger_t *file_logger;
 	mustache_template_t *fortunes_template;
+	global_thread_data_t *global_thread_data;
 	h2o_socket_t *signals;
 	SSL_CTX *ssl_ctx;
-	global_thread_data_t *global_thread_data;
 	size_t memory_alignment;
-	int listener_sd;
 	int signal_fd;
 	bool shutdown;
 	h2o_globalconf_t h2o_config;
+	cache_t world_cache;
 } global_data_t;
 
-// Call yajl_gen_free() on the result, even though the JSON generator
-// uses a memory pool; in this way the code remains correct if the
-// underlying memory allocator is changed (e.g. for debugging purposes).
-yajl_gen get_json_generator(h2o_mem_pool_t *pool);
+typedef struct {
+	list_t l;
+	yajl_gen gen;
+} json_generator_t;
 
+void free_json_generator(json_generator_t *gen, list_t **pool, size_t *gen_num, size_t max_gen);
+json_generator_t *get_json_generator(list_t **pool, size_t *gen_num);
 uint32_t get_random_number(uint32_t max_rand, unsigned int *seed);
+bool is_power_of_2(size_t x);
+size_t round_up_to_power_of_2(size_t x);
 
 #endif // UTILITY_H_

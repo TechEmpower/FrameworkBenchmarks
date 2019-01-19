@@ -15,22 +15,6 @@ the [Python README](../).
 * [Mongodb](https://www.mongodb.org/) with [motor](http://motor.readthedocs.org/en/stable/)
 * [PostgreSQL](http://www.postgresql.org/) with [momoko](http://momoko.61924.nl/en/latest/)
 
-## Test Paths & Sources
-
-### Raw Database Tests
-
-* [Single Database Query](server.py): "/dbraw"
-* [Multiple Database Queries](server.py): "/queriesraw?queries=#"*
-
-### Tests
-
-* [JSON Serialization](server.py): "/json"
-* [Single Database Query](server.py): "/db"
-* [Multiple Database Queries](server.py): "/queries?queries=#"*
-* [Plaintext](server.py): "/plaintext"
-
-*Replace # with an actual number.
-
 ## Get Help
 
 ### Community

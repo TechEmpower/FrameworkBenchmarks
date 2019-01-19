@@ -3,7 +3,6 @@
   "tests": [
     {
       "default": {
-        "setup_file": "run_mri_puma",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -26,7 +25,6 @@
         "notes": ""
       },
       "postgres": {
-        "setup_file": "run_mri_puma",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -48,54 +46,7 @@
         "versus": null,
         "notes": ""
       },
-      "puma-jruby": {
-        "setup_file": "run_jruby_puma",
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Stripped",
-        "classification": "Micro",
-        "database": "MySQL",
-        "framework": "rack-sequel",
-        "language": "Ruby",
-        "orm": "Micro",
-        "platform": "JRuby",
-        "webserver": "Puma",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "rack-sequel-puma-jruby",
-        "versus": "rack-puma-jruby",
-        "notes": ""
-      },
-      "postgres-puma-jruby": {
-        "setup_file": "run_jruby_puma",
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Stripped",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "rack-sequel",
-        "language": "Ruby",
-        "orm": "Micro",
-        "platform": "JRuby",
-        "webserver": "Puma",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "rack-sequel-postgres-puma-jruby",
-        "versus": null,
-        "notes": ""
-      },
       "passenger-mri": {
-        "setup_file": "run_mri_passenger",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -110,7 +61,7 @@
         "language": "Ruby",
         "orm": "Micro",
         "platform": "Rack",
-        "webserver": "Passenger Standalone",
+        "webserver": "Passenger",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "rack-sequel-passenger-mri",
@@ -118,7 +69,6 @@
         "notes": ""
       },
       "postgres-passenger-mri": {
-        "setup_file": "run_mri_passenger",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -133,7 +83,7 @@
         "language": "Ruby",
         "orm": "Micro",
         "platform": "Rack",
-        "webserver": "Passenger Standalone",
+        "webserver": "Passenger",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "rack-sequel-postgres-passenger-mri",
@@ -141,7 +91,6 @@
         "notes": ""
       },
       "unicorn-mri": {
-        "setup_file": "run_mri_unicorn",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -164,7 +113,6 @@
         "notes": ""
       },
       "postgres-unicorn-mri": {
-        "setup_file": "run_mri_unicorn",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -187,7 +135,6 @@
         "notes": ""
       },
       "torquebox-jruby": {
-        "setup_file": "run_jruby_torquebox",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -201,8 +148,8 @@
         "framework": "rack-sequel",
         "language": "Ruby",
         "orm": "Micro",
-        "platform": "JRuby",
-        "webserver": "Puma",
+        "platform": "Rack",
+        "webserver": "TorqueBox",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "rack-sequel-torquebox-jruby",
@@ -210,7 +157,6 @@
         "notes": ""
       },
       "postgres-torquebox-jruby": {
-        "setup_file": "run_jruby_torquebox",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -224,8 +170,8 @@
         "framework": "rack-sequel",
         "language": "Ruby",
         "orm": "Micro",
-        "platform": "JRuby",
-        "webserver": "Puma",
+        "platform": "Rack",
+        "webserver": "TorqueBox",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "rack-sequel-postgres-torquebox-jruby",

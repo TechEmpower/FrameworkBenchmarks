@@ -2,13 +2,31 @@
   "framework": "beego",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
-      "db_url": "/db",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Micro",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "None",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Beego",
+      "notes": "",
+      "versus": "go"
+    },
+    "orm-mysql": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
       "database": "MySQL",
       "framework": "beego",
       "language": "Go",
@@ -18,7 +36,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "beego",
+      "display_name": "Beego",
       "notes": "",
       "versus": "go"
     }

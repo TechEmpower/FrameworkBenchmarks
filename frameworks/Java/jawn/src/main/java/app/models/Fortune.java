@@ -2,10 +2,10 @@ package app.models;
 
 public class Fortune {
 
-    public int id;
-    public String message;
+    public final int id;
+    public final String message;
     
-    public Fortune(int i , String m) {
+    public Fortune(final int i , final String m) {
         id = i;
         message = m;
     }

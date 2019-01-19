@@ -1,8 +1,8 @@
-#Revenj.JVM Benchmarking Test
+# Revenj.JVM Benchmarking Test
 
-Servlet + Revenj DB API + DSL-JSON + PostgreSQL.
+Servlet + Revenj DB API + DSL-JSON + Rocker + PostgreSQL.
 It uses precompiled DSL model for POJO classes.
-It uses JSP for HTML output
+It uses Rocker for HTML output
 
 ### DSL model
 Data structures are defined in a DSL schema
@@ -24,8 +24,9 @@ The tests were run with:
  * [Oracle Java 1.8](https://www.oracle.com/java/)
  * [Postgres 9.3](http://www.postgresql.org/)
  * [Resin 4.0](http://www.caucho.com/)
- * [DSL JSON 1.2.0](http://github.com/ngs-doo/dsl-json)
- * [Revenj.Java 1.0.2](http://github.com/ngs-doo/revenj)
+ * [DSL JSON 1.4.0](http://github.com/ngs-doo/dsl-json)
+ * [Revenj.Java 1.2.0](http://github.com/ngs-doo/revenj)
+ * [Rocker 0.2.0](https://github.com/fizzed/rocker)
 
 ## Test URLs
 

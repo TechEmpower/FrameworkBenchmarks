@@ -1,18 +1,15 @@
-name: "kemal"
-version: "0.0.1"
+name: kemal
+version: 0.0.1
+
+license: MIT
 
 dependencies:
   pg:
-    github: "will/crystal-pg"
-    version: "0.9.0"
-  pool:
-    github: "ysbaddaden/pool"
-    version: "0.2.3"
+    github: will/crystal-pg
+    version: 0.15.0
   kemal:
-    github: "sdogruyol/kemal"
-    version: "0.16.0"
+    github: kemalcr/kemal
+    version: 0.24.0
   redis:
-    github: "stefanwille/crystal-redis"
-    version: "~> 1.6.6"
-
-license: "MIT"
+    github: stefanwille/crystal-redis
+    version: 2.0.0

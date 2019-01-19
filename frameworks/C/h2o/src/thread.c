@@ -21,36 +21,86 @@
 
 #include <errno.h>
 #include <h2o.h>
+#include <limits.h>
+#include <numaif.h>
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <h2o/serverutil.h>
-#include <sys/epoll.h>
 #include <sys/syscall.h>
 
 #include "database.h"
 #include "error.h"
 #include "event_loop.h"
 #include "thread.h"
+#include "utility.h"
 
 static void *run_thread(void *arg);
+static void set_thread_memory_allocation_policy(size_t thread_num);
 
 static void *run_thread(void *arg)
 {
 	thread_context_t ctx;
 
 	initialize_thread_context(arg, false, &ctx);
+	set_thread_memory_allocation_policy(ctx.config->thread_num);
+	// This is just an optimization, so that the application does not try to
+	// establish database connections in the middle of servicing requests.
 	connect_to_database(&ctx);
 	event_loop(&ctx);
 	free_thread_context(&ctx);
 	pthread_exit(NULL);
 }
 
+static void set_thread_memory_allocation_policy(size_t thread_num)
+{
+	// There is no need to set a memory allocation policy unless
+	// the application controls the processor affinity as well.
+	if (thread_num % h2o_numproc())
+		return;
+
+	void *stack_addr;
+	size_t stack_size;
+	unsigned memory_node;
+	pthread_attr_t attr;
+
+	CHECK_ERRNO(syscall, SYS_getcpu, NULL, &memory_node, NULL);
+	CHECK_ERROR(pthread_getattr_np, pthread_self(), &attr);
+	CHECK_ERROR(pthread_attr_getstack, &attr, &stack_addr, &stack_size);
+	pthread_attr_destroy(&attr);
+
+	unsigned long nodemask[
+		(memory_node + sizeof(unsigned long) * CHAR_BIT) / (sizeof(unsigned long) * CHAR_BIT)];
+
+	memset(nodemask, 0, sizeof(nodemask));
+	nodemask[memory_node / (sizeof(*nodemask) * CHAR_BIT)] |=
+		1UL << (memory_node % (sizeof(*nodemask) * CHAR_BIT));
+	CHECK_ERRNO(mbind,
+	            stack_addr,
+	            stack_size,
+	            MPOL_PREFERRED,
+	            nodemask,
+	            memory_node + 1,
+	            MPOL_MF_MOVE | MPOL_MF_STRICT);
+	CHECK_ERRNO(set_mempolicy, MPOL_PREFERRED, NULL, 0);
+}
+
 void free_thread_context(thread_context_t *ctx)
 {
 	free_database_state(ctx->event_loop.h2o_ctx.loop, &ctx->db_state);
 	free_event_loop(&ctx->event_loop, &ctx->global_thread_data->h2o_receiver);
+
+	if (ctx->json_generator)
+		do {
+			json_generator_t * const gen = H2O_STRUCT_FROM_MEMBER(json_generator_t,
+			                                                      l,
+			                                                      ctx->json_generator);
+
+			ctx->json_generator = gen->l.next;
+			free_json_generator(gen, NULL, NULL, 0);
+		} while (ctx->json_generator);
 }
 
 global_thread_data_t *initialize_global_thread_data(const config_t *config,
@@ -93,33 +143,40 @@ void initialize_thread_context(global_thread_data_t *global_thread_data,
 
 void start_threads(global_thread_data_t *global_thread_data)
 {
+	pthread_attr_t attr;
 	const size_t num_cpus = h2o_numproc();
+	const size_t cpusetsize = CPU_ALLOC_SIZE(num_cpus);
+	cpu_set_t * const cpuset = CPU_ALLOC(num_cpus);
 
+	if (!cpuset)
+		abort();
+
+	CHECK_ERROR(pthread_attr_init, &attr);
 	// The first thread context is used by the main thread.
 	global_thread_data->thread = pthread_self();
 
-	for (size_t i = 1; i < global_thread_data->config->thread_num; i++)
-		CHECK_ERROR(pthread_create,
-		            &global_thread_data[i].thread,
-		            NULL,
-		            run_thread,
-		            global_thread_data + i);
+	// If the number of threads is not a multiple of the number of processors, then
+	// let the scheduler decide how to balance the load.
+	if (global_thread_data->config->thread_num % num_cpus == 0) {
+		CPU_ZERO_S(cpusetsize, cpuset);
+		CPU_SET_S(0, cpusetsize, cpuset);
+		CHECK_ERROR(pthread_setaffinity_np, global_thread_data->thread, cpusetsize, cpuset);
+	}
 
-	// If the number of threads is not equal to the number of processors, then let the scheduler
-	// decide how to balance the load.
-	if (global_thread_data->config->thread_num == num_cpus) {
-		const size_t cpusetsize = CPU_ALLOC_SIZE(num_cpus);
-		cpu_set_t * const cpuset = CPU_ALLOC(num_cpus);
-
-		if (!cpuset)
-			abort();
-
-		for (size_t i = 0; i < global_thread_data->config->thread_num; i++) {
+	for (size_t i = global_thread_data->config->thread_num - 1; i > 0; i--) {
+		if (global_thread_data->config->thread_num % num_cpus == 0) {
 			CPU_ZERO_S(cpusetsize, cpuset);
-			CPU_SET_S(i, cpusetsize, cpuset);
-			CHECK_ERROR(pthread_setaffinity_np, global_thread_data[i].thread, cpusetsize, cpuset);
+			CPU_SET_S(i % num_cpus, cpusetsize, cpuset);
+			CHECK_ERROR(pthread_attr_setaffinity_np, &attr, cpusetsize, cpuset);
 		}
 
-		CPU_FREE(cpuset);
+		CHECK_ERROR(pthread_create,
+		            &global_thread_data[i].thread,
+		            &attr,
+		            run_thread,
+		            global_thread_data + i);
 	}
+
+	pthread_attr_destroy(&attr);
+	CPU_FREE(cpuset);
 }

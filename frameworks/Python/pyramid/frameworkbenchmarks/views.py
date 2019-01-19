@@ -17,17 +17,17 @@ def test_1(request):
     return {"message":"Hello, World!"}
 
 
-@view_config(route_name='test_2', renderer='sqla_json')
+@view_config(route_name='test_2', renderer='json')
 def test_2(request):
     """
     Test type 2: Single database query
     """
     num = randint(1, 10000)
     result = DBSession.query(World).filter(World.id == num).one()
-    return result
+    return result.__json__()
 
 
-@view_config(route_name='test_3', renderer='sqla_json')
+@view_config(route_name='test_3', renderer='json')
 def test_3(request):
     """
     Test type 3: Multiple database queries
@@ -46,7 +46,7 @@ def test_3(request):
         DBSession.query(World).filter(World.id == num).one()
         for num in [randint(1, 10000) for _ in range(1, queries + 1)]
     ]
-    return result
+    return [obj.__json__() for obj in result]
 
 
 @view_config(route_name='test_4', renderer='templates/test_4.pt')

@@ -1,6 +1,5 @@
 package hello;
 
-import com.dslplatform.json.JsonWriter;
 import dsl.Boot;
 import dsl.FrameworkBench.*;
 import dsl.FrameworkBench.repositories.*;
@@ -28,7 +27,6 @@ class Context {
 		}
 	}
 
-	public final JsonWriter json;
 	public final WorldRepository worlds;
 	public final FortuneRepository fortunes;
 	public final Connection connection;
@@ -43,7 +41,6 @@ class Context {
 			this.connection = DriverManager.getConnection(jdbcUrl);
 			connection.setAutoCommit(true);
 			ctx.registerInstance(connection);
-			this.json = new JsonWriter();
 			this.random = ThreadLocalRandom.current();
 			this.worlds = ctx.resolve(WorldRepository.class);
 			this.fortunes = ctx.resolve(FortuneRepository.class);
@@ -82,5 +79,10 @@ class Context {
 			buffer[i] = worlds.find(getRandom10k(), connection).get();
 		}
 		return buffer;
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		connection.close();
 	}
 }

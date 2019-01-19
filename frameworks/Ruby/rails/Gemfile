@@ -1,20 +1,9 @@
 source 'http://rubygems.org'
 
-platforms :jruby do
-  gem "activerecord-jdbcmysql-adapter", "~> 1.3.9", :require => false
-  gem 'torqbox', '0.1.7'
-  gem "trinidad", '1.4.6'
-end
-
-platforms :ruby do
-  gem 'mysql2', '0.3.16'
-  gem "unicorn", '4.8.3'
-  gem "thin", '1.6.2'
-end
-
-gem "puma", '2.9.0'
-
-gem "activerecord-import", '0.5.0'
-gem 'activerecord', '4.1.4', :require => 'active_record'
-
-gem 'rails', '~> 4.1.4'
+gem 'mysql2', '0.5.2'
+gem 'unicorn', '5.4.1'
+gem 'puma', '3.12.0'
+gem 'activerecord-import', '0.27.0'
+gem 'activerecord', '5.2.2', :require => 'active_record'
+gem 'rails', '5.2.2'
+gem 'tzinfo-data', '1.2018.7'

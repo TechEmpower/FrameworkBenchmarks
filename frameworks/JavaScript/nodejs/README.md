@@ -9,18 +9,19 @@ The logic for the test cases live in these.
 * [Sequelize (MySQL)](handlers/sequelize.js)
 * [MongoDB raw](handlers/mongodb-raw.js)
 * [Mongoose (MySQL)](handlers/mongoose.js)
-* [Hiredis (Redis)](handlers/redis)
+
+### Alternative server Test
+This test suite also contains tests using an alternative http server. [Mitol](https://github.com/Helidium/Mitol) is a NodeJS addon written in C++.
+The server is currently in Alpha state, but aims to be a drop-in replacement for high performance demands.
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v6.3.0](http://nodejs.org/)
+* [Node.js v8.1.0](http://nodejs.org/)
 
-* [Node MySQL 2.11.1](https://github.com/felixge/node-mysql/)
-* [Sequelize 3.6.0](https://github.com/sequelize/sequelize)
-* [Node MongoDB Driver 2.1.1](https://github.com/mongodb/node-mongodb-native)
-* [Mongoose 4.5.3](http://mongoosejs.com/)
-* [Node Redis 2.6.2](https://github.com/mranney/node_redis)
-* [Hiredis 0.4.0 (C lib for Redis)](https://github.com/redis/hiredis)
+* [Node MySQL 2.15.0](https://github.com/felixge/node-mysql/)
+* [Sequelize 3.30.0](https://github.com/sequelize/sequelize)
+* [Node MongoDB Driver 2.2.33](https://github.com/mongodb/node-mongodb-native)
+* [Mongoose 4.12.4](http://mongoosejs.com/)
 
 ## Test URLs
 
@@ -28,4 +29,4 @@ See the [Benchmark config](benchmark_config.json) file for a list of the tested 
 
 `/json` and `/plaintext` are implemented
 
-The four db-required tests, Single Query, Multiple Query, Fortunes, and Updates have been implemented for each of the 5 database approaches that this test covers
+The four db-required tests, Single Query, Multiple Query, Fortunes, and Updates have been implemented for each of the 5 database approaches that this test covers.

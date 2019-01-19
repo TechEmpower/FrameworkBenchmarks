@@ -1,5 +1,14 @@
 package com.example.helloworld;
 
+import io.dropwizard.Application;
+import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.hibernate.HibernateBundle;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
+import io.dropwizard.views.ViewBundle;
+
+import java.net.UnknownHostException;
+
 import com.example.helloworld.config.HelloWorldConfiguration;
 import com.example.helloworld.db.hibernate.FortuneHibernateImpl;
 import com.example.helloworld.db.hibernate.WorldHibernateImpl;
@@ -9,14 +18,6 @@ import com.example.helloworld.resources.FortuneResource;
 import com.example.helloworld.resources.JsonResource;
 import com.example.helloworld.resources.TextResource;
 import com.example.helloworld.resources.WorldResource;
-import io.dropwizard.Application;
-import io.dropwizard.db.DataSourceFactory;
-import io.dropwizard.hibernate.HibernateBundle;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
-import io.dropwizard.views.ViewBundle;
-
-import java.net.UnknownHostException;
 
 public class HelloWorldService extends Application<HelloWorldConfiguration> {
 
@@ -34,7 +35,7 @@ public class HelloWorldService extends Application<HelloWorldConfiguration> {
     @Override
     public void initialize(Bootstrap<HelloWorldConfiguration> bootstrap) {
         bootstrap.addBundle(hibernate);
-        bootstrap.addBundle(new ViewBundle());
+        bootstrap.addBundle(new ViewBundle<>());
     }
 
     @Override

@@ -23,10 +23,10 @@ import org.apache.wicket.request.http.WebResponse;
  */
 public class FortunePage extends WebPage {
 	private static final long serialVersionUID = 1L;
-	private static final String TEXT_HTML = "text/html";
+	private static final String TEXT_HTML = "text/html;charset=utf-8";
 
 	public FortunePage() throws Exception {
-		List<Fortune> fortunes = new ArrayList<>(10000);
+		List<Fortune> fortunes = new ArrayList<>();
 
 		DataSource dataSource = WicketApplication.get().getDataSource();
 		try ( //

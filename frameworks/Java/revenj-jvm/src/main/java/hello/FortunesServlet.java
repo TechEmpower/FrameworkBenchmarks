@@ -1,5 +1,7 @@
 package hello;
 
+import com.fizzed.rocker.ContentType;
+import com.fizzed.rocker.runtime.OutputStreamOutput;
 import dsl.FrameworkBench.Fortune;
 
 import javax.servlet.ServletException;
@@ -16,9 +18,9 @@ public class FortunesServlet extends HttpServlet {
 		final Context ctx = Utils.getContext();
 		final List<Fortune> fortunes = ctx.fortunes.search();
 		fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-		Collections.sort(fortunes, COMPARATOR);
-		req.setCharacterEncoding("UTF-8");
-		req.setAttribute("fortunes", fortunes);
-		req.getRequestDispatcher("/WEB-INF/jsp/fortunes.jsp").forward(req, res);
+		fortunes.sort(COMPARATOR);
+		OutputStreamOutput oso = new OutputStreamOutput(ContentType.HTML, res.getOutputStream(), "UTF-8");
+		res.setContentType("text/html;charset=UTF-8");
+		views.fortunes.template(fortunes).render((t, n) -> oso);
 	}
 }

@@ -1,0 +1,113 @@
+<configuration packagingData="true">
+
+	<turboFilter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter" />
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<withJansi>true</withJansi>
+		<encoder>
+			<pattern>%date{ISO8601} %highlight(%-5level) [%boldCyan(%logger)] [%boldYellow(%method %F) ] - %boldWhite(%message) %n %red(%ex)
+			</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="org.apache.http" level="ERROR" />
+
+ 	
+	<logger name="javax.mail" level="ERROR" />
+	<logger name="com.squareup.okhttp" level="ERROR" />
+	<logger name="javax.activation" level="ERROR" /> 
+ 
+	<logger name="io.netty" level="ERROR" />
+	<logger name="io.netty.handler" level="ERROR" />
+	 
+	<logger name="io.sinistral.proteus.server.swagger" level="ERROR" />
+	<logger name="io.sinistral.proteus.server.handlers" level="ERROR" />
+	<logger name="io.sinistral.proteus.services" level="ERROR" />
+	<logger name="io.sinistral.proteus.modules" level="ERROR" />
+	 
+	<logger name="com.relayrides" level="ERROR" />
+	<logger name="org.apache.activemq" level="ERROR" />
+	<logger name="org.apache.camel" level="ERROR" />
+	<logger name="org.apache.activemq" level="ERROR" />
+	<logger name="sun.net" level="ERROR" />
+	<logger name="org.springsource" level="ERROR" />
+	<logger name="com.sun.jersey" level="ERROR" />
+   
+ 
+	<logger name="org.xnio.nio" level="ERROR" />
+	<logger name="io.undertow" level="ERROR" />
+
+ 
+ 	<logger name="org.reflections" level="OFF" />
+	<logger name="org.elasticsearch" level="ERROR" />
+	<logger name="org.ajave.ebean" level="ERROR" />
+
+	<logger name="org.avaje.ebean.SQL" level="ERROR" />
+	<logger name="org.avaje.ebean.SUM" level="ERROR" />
+	<logger name="org.avaje.ebean.TXN" level="ERROR" />
+	<logger name="com.avaje.ebeaninternal" level="ERROR" />
+	<logger name="org.avaje.ebean.cache.BEAN" level="ERROR" />
+	
+	<logger name="io.swagger.converter" level="ERROR" />
+   	<logger name="io.swagger.jackson" level="ERROR" />
+ 
+ 
+	<logger name="com.avaje.ebean.config.PropertyMapLoader" level="ERROR" />
+	<logger name="com.avaje.ebeaninternal.server.core.XmlConfigLoader" level="ERROR" />
+	<logger name="com.avaje.ebeaninternal.server.lib.BackgroundThread" level="ERROR" />
+	 
+	<logger name="com.gargoylesoftware.htmlunit.javascript" level="OFF" />
+	<logger name="swagger" level="ERROR" />
+	<logger name="com.zaxxer.hikari" level="ERROR" />
+	<logger name="com.zaxxer.hikari.pool" level="ERROR" />
+	<logger name="javax.management" level="ERROR" />
+	<logger name="javax.management.mbeanserver" level="OFF" />
+  	<logger name="java.jmx" level="ERROR" />
+
+	<logger name="net.sf.ehcache" level="ERROR" />
+
+	<logger name="org.apache.http" level="ERROR" />
+	<logger name="com.amazonaws" level="ERROR" />
+	<logger name="org.apache.http.wire" level="ERROR" />
+	
+	<logger name="com.wordnik" level="OFF" />
+
+	<logger name="javax.mail" level="ERROR" />
+	<logger name="com.squareup.okhttp" level="WARN" />
+
+	<logger name="org.hibernate.validator" level="ERROR" />
+	<logger name="org.xnio.nio" level="ERROR" />
+
+   
+	<logger name="org.apache.camel" level="ERROR" />
+	<logger name="org.apache.activemq" level="ERROR" />
+	<logger name="sun.net" level="ERROR" />
+	<logger name="org.springsource" level="ERROR" />
+	<logger name="com.sun.jersey" level="ERROR" />
+	<logger name="akka.event.EventStream" level="ERROR" />
+	<logger name="akka.event.slf4j" level="ERROR" />
+	<logger name="com.googlecode.mp4parser" level="ERROR" />
+	<logger name="com.googlecode.mp4parser.util" level="ERROR" />
+
+ 	<logger name="org.elasticsearch.plugins" level="ERROR" />
+ 
+ 	<logger name="org.apache.commons.logging.impl.Jdk14Logger" level="ERROR" />
+ 	<logger name="org.zeroturnaround.exec.ProcessExecutor" level="ERROR" />
+	<logger name="org.zeroturnaround.exec" level="ERROR" />
+	 
+<!-- 	 	<logger name="com.datastax.driver.core.QueryLogger.NORMAL" level="trace" />
+ -->	 
+	  
+	<logger name="org.apache.kafka.clients.NetworkClient" level="ERROR" />
+	<logger name="org.apache.kafka.clients.producer" level="ERROR" />
+	 
+      
+       	<logger name="java.util.logging.Logger" level="ERROR" />
+     	<logger name="com.google.inject.internal" level="ERROR" />
+	<logger name="com.google.inject" level="ERROR" />  
+      	<logger name="com.datastax" level="ERROR" />
+     
+  <root level="OFF">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

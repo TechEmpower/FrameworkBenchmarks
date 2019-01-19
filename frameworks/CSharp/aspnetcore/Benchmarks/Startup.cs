@@ -11,10 +11,11 @@ using Benchmarks.Data;
 using Benchmarks.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.PlatformAbstractions;
+using MySql.Data.MySqlClient;
 using Npgsql;
 
 namespace Benchmarks
@@ -25,11 +26,12 @@ namespace Benchmarks
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
-                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
-                .AddCommandLine(Program.Args)
+                .SetBasePath(hostingEnv.ContentRootPath)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{hostingEnv.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
+                .AddEnvironmentVariables()
+                .AddCommandLine(Program.Args)
+                ;
 
             Configuration = builder.Build();
 
@@ -50,24 +52,29 @@ namespace Benchmarks
 
             // Common DB services
             services.AddSingleton<IRandom, DefaultRandom>();
-            services.AddSingleton<ApplicationDbSeeder>();
-            services.AddEntityFrameworkSqlServer()
-                .AddDbContext<ApplicationDbContext>();
-            
-            if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
-            {
-                services.AddSingleton<DbProviderFactory>((provider) => {
-                    var settings = provider.GetRequiredService<IOptions<AppSettings>>().Value;
+            services.AddEntityFrameworkSqlServer();
 
-                    if (settings.Database == DatabaseServer.PostgreSql)
-                    {
-                        return NpgsqlFactory.Instance;
-                    }
-                    else
-                    {
-                        return SqlClientFactory.Instance;
-                    }
-                });
+            var appSettings = Configuration.Get<AppSettings>();
+            Console.WriteLine($"Database: {appSettings.Database}");
+
+            if (appSettings.Database == DatabaseServer.PostgreSql)
+            {
+                if (Scenarios.Any("Ef"))
+                {
+                    services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(appSettings.ConnectionString));
+                }
+                
+                if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
+                {
+                    services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
+                }
+            }
+            else if (appSettings.Database == DatabaseServer.MySql)
+            {
+                if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
+                {
+                    services.AddSingleton<DbProviderFactory>(MySqlClientFactory.Instance);
+                }
             }
 
             if (Scenarios.Any("Ef"))
@@ -85,6 +92,11 @@ namespace Benchmarks
                 services.AddScoped<DapperDb>();
             }
 
+            if (Scenarios.Any("Update"))
+            {
+                BatchUpdateString.Initalize();
+            }
+
             if (Scenarios.Any("Fortunes"))
             {
                 var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
@@ -99,8 +111,8 @@ namespace Benchmarks
             {
                 var mvcBuilder = services
                     .AddMvcCore()
-                    //.AddApplicationPart(typeof(Startup).GetTypeInfo().Assembly)
-                    .AddControllersAsServices();
+                    .SetCompatibilityVersion(CompatibilityVersion.Latest)
+                    ;
 
                 if (Scenarios.MvcJson || Scenarios.Any("MvcDbSingle") || Scenarios.Any("MvcDbMulti"))
                 {
@@ -116,7 +128,7 @@ namespace Benchmarks
             }
         }
 
-        public void Configure(IApplicationBuilder app, ApplicationDbSeeder dbSeeder, ApplicationDbContext dbContext)
+        public void Configure(IApplicationBuilder app)
         {
             if (Scenarios.Plaintext)
             {
@@ -126,6 +138,32 @@ namespace Benchmarks
             if (Scenarios.Json)
             {
                 app.UseJson();
+            }
+
+            if (Scenarios.Utf8Json)
+            {
+                app.UseUtf8Json();
+            }
+
+            if (Scenarios.SpanJson)
+            {
+                app.UseSpanJson();
+            }
+
+            // Fortunes endpoints
+            if (Scenarios.DbFortunesRaw)
+            {
+                app.UseFortunesRaw();
+            }
+
+            if (Scenarios.DbFortunesDapper)
+            {
+                app.UseFortunesDapper();
+            }
+
+            if (Scenarios.DbFortunesEf)
+            {
+                app.UseFortunesEf();
             }
 
             // Single query endpoints
@@ -176,32 +214,6 @@ namespace Benchmarks
                 app.UseMultipleUpdatesEf();
             }
 
-            // Fortunes endpoints
-            if (Scenarios.DbFortunesRaw)
-            {
-                app.UseFortunesRaw();
-            }
-
-            if (Scenarios.DbFortunesDapper)
-            {
-                app.UseFortunesDapper();
-            }
-
-            if (Scenarios.DbFortunesEf)
-            {
-                app.UseFortunesEf();
-            }
-
-            if (Scenarios.Any("Db"))
-            {
-                dbContext.Database.EnsureCreated();
-
-                if (!dbSeeder.Seed())
-                {
-                    Environment.Exit(1);
-                }
-            }
-
             if (Scenarios.Any("Mvc"))
             {
                 app.UseMvc();
@@ -211,8 +223,6 @@ namespace Benchmarks
             {
                 app.UseStaticFiles();
             }
-
-            app.RunDebugInfoPage();
         }
     }
 }

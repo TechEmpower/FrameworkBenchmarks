@@ -15,12 +15,12 @@ The tests will be run with:
 * [Ruby 2.4](http://www.ruby-lang.org)
 * [JRuby 9.1](http://jruby.org)
 * [Rubinius 3](https://rubinius.com)\*
-* [Puma 3.6](http://puma.io)
-* [Passenger 5.1](https://www.phusionpassenger.com)
-* [Unicorn 5.2](https://bogomips.org/unicorn/)
+* [Puma 3](http://puma.io)
+* [Passenger 5](https://www.phusionpassenger.com)
+* [Unicorn 5](https://bogomips.org/unicorn/)
 * [TorqueBox 4.0](http://torquebox.org)
-* [Rack 2.0](http://rack.rubyforge.org)
-* [Sequel 4.43](http://sequel.jeremyevans.net)
+* [Rack 2](http://rack.rubyforge.org)
+* [Sequel 5](http://sequel.jeremyevans.net)
 * [MySQL 5.5](https://www.mysql.com)
 * [Postgres 9.3](https://www.postgresql.org)
 

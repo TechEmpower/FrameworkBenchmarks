@@ -1,5 +1,7 @@
-gunicorn==19.4.5
+Cython==0.27.3
+falcon==1.4.1
+greenlet==0.4.14
+gunicorn==19.9.0
 meinheld==0.6.1
-Cython==0.23.4
-falcon==0.3.0
-greenlet==0.4.9
+python-mimeparse==1.6.0
+six==1.11.0

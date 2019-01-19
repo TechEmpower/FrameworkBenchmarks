@@ -1,8 +1,7 @@
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.twitter.finagle.{Service, SimpleFilter, Http}
-import com.twitter.finagle.stats.NullStatsReceiver
-import com.twitter.finagle.tracing.NullTracer
+import com.twitter.finagle.stack.nilStack
 import com.twitter.finagle.http.{Request, Response, HttpMuxer}
 import com.twitter.util.{Await, Future}
 import com.twitter.io.Buf
@@ -17,35 +16,35 @@ object Main extends App {
     .withHandler("/json", Service.mk { req: Request =>
       val rep = Response()
       rep.content = Buf.ByteArray.Owned(mapper.writeValueAsBytes(Map("message" -> "Hello, World!")))
-      rep.contentType = "application/json"
+      rep.headerMap.setUnsafe("Content-Type", "application/json")
 
       Future.value(rep)
     })
     .withHandler("/plaintext", Service.mk { req: Request => 
       val rep = Response()
       rep.content = helloWorld
-      rep.contentType = "text/plain"
+      rep.headerMap.setUnsafe("Content-Type", "text/plain")
 
       Future.value(rep)
     })
 
-  val serverAndDate: SimpleFilter[Request, Response] = new SimpleFilter[Request, Response] {
+  val serverAndDate: SimpleFilter[Request, Response] =
+    new SimpleFilter[Request, Response] with (Response => Response) {
 
-    private[this] val addServerAndDate: Response => Response = { rep =>
-        rep.headerMap.set("Server", "Finagle")
-        rep.headerMap.set("Date", currentTime())
+    def apply(rep: Response): Response = {
+      rep.headerMap.setUnsafe("Server", "Finagle")
+      rep.headerMap.setUnsafe("Date", currentTime())
 
-        rep
+      rep
     }
 
     def apply(req: Request, s: Service[Request, Response]): Future[Response] =
-      s(req).map(addServerAndDate)
+      s(req).map(this)
   }
 
   Await.ready(Http.server
     .withCompressionLevel(0)
-    .withStatsReceiver(NullStatsReceiver)
-    .withTracer(NullTracer)
+    .withStack(nilStack[Request, Response])
     .serve(":8080", serverAndDate.andThen(muxer))
   )
 }

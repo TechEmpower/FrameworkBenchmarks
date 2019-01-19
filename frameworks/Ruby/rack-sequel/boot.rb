@@ -1,11 +1,23 @@
 # frozen_string_literal: true
-require 'bundler'
+require 'bundler/setup'
 require 'time'
 
 MAX_PK = 10_000
 QUERIES_MIN = 1
 QUERIES_MAX = 500
 SEQUEL_NO_ASSOCIATIONS = true
+
+SERVER_STRING =
+  if defined?(PhusionPassenger)
+    [
+      PhusionPassenger::SharedConstants::SERVER_TOKEN_NAME,
+      PhusionPassenger::VERSION_STRING
+    ].join('/').freeze
+  elsif defined?(Puma)
+    Puma::Const::PUMA_SERVER_STRING
+  elsif defined?(Unicorn)
+    Unicorn::HttpParser::DEFAULTS['SERVER_SOFTWARE']
+  end
 
 Bundler.require(:default) # Load core modules
 
@@ -21,29 +33,26 @@ def connect(dbtype)
 
   # Determine threading/thread pool size and timeout
   if defined?(JRUBY_VERSION)
-    opts[:max_connections] = Integer(ENV.fetch('MAX_CONCURRENCY'))
+    opts[:max_connections] = (2 * Math.log(Integer(ENV.fetch('MAX_CONCURRENCY')))).floor
     opts[:pool_timeout] = 10
-  elsif defined?(Puma)
-    opts[:max_connections] = Puma.cli_config.options.fetch(:max_threads)
+  elsif defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
+    opts[:max_connections] = (2 * Math.log(threads)).floor
     opts[:pool_timeout] = 10
   else
     Sequel.single_threaded = true
   end
 
   Sequel.connect \
-    '%<adapter>s://%<host>s/%<database>s?user=%<user>s&password=%<password>s' % {
+    '%{adapter}://%{host}/%{database}?user=%{user}&password=%{password}' % {
       :adapter=>adapters.fetch(dbtype).fetch(defined?(JRUBY_VERSION) ? :jruby : :mri),
-      :host=>ENV.fetch('DBHOST', '127.0.0.1'),
+      :host=>'tfb-database',
       :database=>'hello_world',
       :user=>'benchmarkdbuser',
       :password=>'benchmarkdbpass'
     }, opts
 end
 
-DB = connect(ENV.fetch('DBTYPE').to_sym).tap do |db|
-  db.extension(:freeze_datasets)
-  db.freeze
-end
+DB = connect ENV.fetch('DBTYPE').to_sym
 
 # Define ORM models
 class World < Sequel::Model(:World)
@@ -55,14 +64,5 @@ class Fortune < Sequel::Model(:Fortune)
   unrestrict_primary_key
 end
 
-SERVER_STRING =
-  if defined?(PhusionPassenger)
-    [
-      PhusionPassenger::SharedConstants::SERVER_TOKEN_NAME,
-      PhusionPassenger::VERSION_STRING
-    ].join('/').freeze
-  elsif defined?(Puma)
-    Puma::Const::PUMA_SERVER_STRING
-  elsif defined?(Unicorn)
-    Unicorn::HttpParser::DEFAULTS['SERVER_SOFTWARE']
-  end
+[World, Fortune].each(&:freeze)
+DB.freeze

@@ -1,0 +1,23 @@
+{
+  "framework": "may-minihttp",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "may-minihttp",
+        "language": "Rust",
+        "orm": "raw",
+        "platform": "Rust",
+        "webserver": "may-minihttp",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "may-minihttp"
+      }
+    }
+  ]
+}

@@ -23,16 +23,21 @@ namespace EvHttpSharpBenchmark
 		private static void Handler(EventHttpRequest req)
 		{
 			var headers = new Dictionary<string, string>();
-			var resp = "Hello, World!";
-
-			if (!req.Uri.Contains("plaintext"))
+			headers["Server"] = "evhttp-sharp";
+			string responseText;
+			if (req.Uri.Contains("plaintext"))
 			{
+				headers["Content-Type"] = "text/plain";
+				responseText = "Hello, World!";
+			}
+			else
+			{
+				headers["Content-Type"] = "application/json";
 				var sw = new StringWriter();
 				Serializer.Serialize(sw, new {message = "Hello, World!"});
-				resp = sw.ToString();
-				headers["Content-Type"] = "application/json";
+				responseText = sw.ToString();
 			}
-			req.Respond (HttpStatusCode.OK, headers, Encoding.UTF8.GetBytes (resp));
+			req.Respond (HttpStatusCode.OK, headers, Encoding.UTF8.GetBytes (responseText));
 		}
 	}
 }

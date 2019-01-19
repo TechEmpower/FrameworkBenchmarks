@@ -18,11 +18,14 @@
 */
 
 #include <assert.h>
+#include <ctype.h>
 #include <h2o.h>
-#include <postgresql/libpq-fe.h>
+#include <mustache.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <mustache.h>
+#include <stdlib.h>
+#include <postgresql/libpq-fe.h>
 
 #include "database.h"
 #include "error.h"
@@ -44,6 +47,7 @@ typedef struct {
 } iovec_list_t;
 
 typedef struct {
+	PGresult *data;
 	const fortune_t *fortune_iter;
 	list_t *iovec_list;
 	iovec_list_t *iovec_list_iter;
@@ -51,6 +55,7 @@ typedef struct {
 	list_t *result;
 	size_t content_length;
 	size_t num_result;
+	bool cleanup;
 	db_query_param_t param;
 	h2o_generator_t generator;
 } fortune_ctx_t;
@@ -59,7 +64,8 @@ static uintmax_t add_iovec(mustache_api_t *api,
                            void *userdata,
                            const char *buffer,
                            uintmax_t buffer_size);
-static void cleanup_fortunes(void *data);
+static void cleanup_fortunes(fortune_ctx_t *fortune_ctx);
+static void cleanup_request(void *data);
 static int compare_fortunes(const list_t *x, const list_t *y);
 static void complete_fortunes(struct st_h2o_generator_t *self, h2o_req_t *req);
 static list_t *get_sorted_sublist(list_t *head);
@@ -84,47 +90,40 @@ static uintmax_t add_iovec(mustache_api_t *api,
 
 	fortune_ctx_t * const fortune_ctx = userdata;
 	iovec_list_t *iovec_list = fortune_ctx->iovec_list_iter;
-	uintmax_t ret = 1;
 
 	if (iovec_list->iovcnt >= iovec_list->max_iovcnt) {
 		const size_t sz = offsetof(iovec_list_t, iov) + MAX_IOVEC * sizeof(h2o_iovec_t);
 
 		iovec_list = h2o_mem_alloc_pool(&fortune_ctx->req->pool, sz);
-
-		if (iovec_list) {
-			memset(iovec_list, 0, offsetof(iovec_list_t, iov));
-			iovec_list->max_iovcnt = MAX_IOVEC;
-			fortune_ctx->iovec_list_iter->l.next = &iovec_list->l;
-			fortune_ctx->iovec_list_iter = iovec_list;
-		}
-		else
-			ret = 0;
+		memset(iovec_list, 0, offsetof(iovec_list_t, iov));
+		iovec_list->max_iovcnt = MAX_IOVEC;
+		fortune_ctx->iovec_list_iter->l.next = &iovec_list->l;
+		fortune_ctx->iovec_list_iter = iovec_list;
 	}
 
-	if (ret) {
-		memset(iovec_list->iov + iovec_list->iovcnt, 0, sizeof(*iovec_list->iov));
-		iovec_list->iov[iovec_list->iovcnt].base = (char *) buffer;
-		iovec_list->iov[iovec_list->iovcnt++].len = buffer_size;
-		fortune_ctx->content_length += buffer_size;
-	}
-
-	return ret;
+	memset(iovec_list->iov + iovec_list->iovcnt, 0, sizeof(*iovec_list->iov));
+	iovec_list->iov[iovec_list->iovcnt].base = (char *) buffer;
+	iovec_list->iov[iovec_list->iovcnt++].len = buffer_size;
+	fortune_ctx->content_length += buffer_size;
+	return 1;
 }
 
-static void cleanup_fortunes(void *data)
+static void cleanup_fortunes(fortune_ctx_t *fortune_ctx)
 {
-	fortune_ctx_t * const fortune_ctx = data;
-	const list_t *iter = fortune_ctx->result;
+	if (fortune_ctx->data)
+		PQclear(fortune_ctx->data);
 
-	if (iter)
-		do {
-			const fortune_t * const fortune = H2O_STRUCT_FROM_MEMBER(fortune_t, l, iter);
+	free(fortune_ctx);
+}
 
-			if (fortune->data)
-				PQclear(fortune->data);
+static void cleanup_request(void *data)
+{
+	fortune_ctx_t * const fortune_ctx = *(fortune_ctx_t **) data;
 
-			iter = iter->next;
-		} while (iter);
+	if (fortune_ctx->cleanup)
+		cleanup_fortunes(fortune_ctx);
+	else
+		fortune_ctx->cleanup = true;
 }
 
 static int compare_fortunes(const list_t *x, const list_t *y)
@@ -142,15 +141,18 @@ static int compare_fortunes(const list_t *x, const list_t *y)
 
 static void complete_fortunes(struct st_h2o_generator_t *self, h2o_req_t *req)
 {
-	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t,
-	                                                           generator,
-	                                                           self);
+	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t, generator, self);
 	iovec_list_t * const iovec_list = H2O_STRUCT_FROM_MEMBER(iovec_list_t,
 	                                                         l,
 	                                                         fortune_ctx->iovec_list);
 
 	fortune_ctx->iovec_list = iovec_list->l.next;
-	h2o_send(req, iovec_list->iov, iovec_list->iovcnt, !fortune_ctx->iovec_list);
+
+	const h2o_send_state_t state = fortune_ctx->iovec_list ?
+	                               H2O_SEND_STATE_IN_PROGRESS :
+	                               H2O_SEND_STATE_FINAL;
+
+	h2o_send(req, iovec_list->iov, iovec_list->iovcnt, state);
 }
 
 static list_t *get_sorted_sublist(list_t *head)
@@ -201,60 +203,51 @@ static list_t *merge_lists(list_t *head1, list_t *head2)
 
 static void on_fortune_error(db_query_param_t *param, const char *error_string)
 {
-	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t,
-	                                                           param,
-	                                                           param);
+	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t, param, param);
 
-	send_error(BAD_GATEWAY, error_string, fortune_ctx->req);
+	if (fortune_ctx->cleanup)
+		cleanup_fortunes(fortune_ctx);
+	else {
+		fortune_ctx->cleanup = true;
+		send_error(BAD_GATEWAY, error_string, fortune_ctx->req);
+	}
 }
 
 static result_return_t on_fortune_result(db_query_param_t *param, PGresult *result)
 {
-	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t,
-	                                                           param,
-	                                                           param);
-	int ret = DONE;
-	const ExecStatusType status = PQresultStatus(result);
+	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t, param, param);
+	const bool cleanup = fortune_ctx->cleanup;
 
-	if (status == PGRES_TUPLES_OK) {
+	fortune_ctx->cleanup = true;
+	fortune_ctx->data = result;
+
+	if (cleanup)
+		cleanup_fortunes(fortune_ctx);
+	else if (PQresultStatus(result) == PGRES_TUPLES_OK) {
+		assert(PQnfields(result) == 2);
+
 		const size_t num_rows = PQntuples(result);
-
-		ret = SUCCESS;
 
 		for (size_t i = 0; i < num_rows; i++) {
 			fortune_t * const fortune = h2o_mem_alloc_pool(&fortune_ctx->req->pool,
 			                                               sizeof(*fortune));
+			char * const id = PQgetvalue(result, i, 0);
+			char * const message = PQgetvalue(result, i, 1);
+			const size_t id_len = PQgetlength(result, i, 0);
+			const size_t message_len = PQgetlength(result, i, 1);
 
-			if (fortune) {
-				memset(fortune, 0, sizeof(*fortune));
-				fortune->id.base = PQgetvalue(result, i, 0);
-				fortune->id.len = PQgetlength(result, i, 0);
-				fortune->message = h2o_htmlescape(&fortune_ctx->req->pool,
-				                                  PQgetvalue(result, i, 1),
-				                                  PQgetlength(result, i, 1));
-				fortune->l.next = fortune_ctx->result;
-				fortune_ctx->result = &fortune->l;
-				fortune_ctx->num_result++;
-
-				if (!i)
-					fortune->data = result;
-			}
-			else {
-				send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, fortune_ctx->req);
-				ret = DONE;
-
-				if (!i)
-					PQclear(result);
-
-				break;
-			}
+			assert(id && id_len && isdigit(*id) && message);
+			memset(fortune, 0, sizeof(*fortune));
+			fortune->id.base = id;
+			fortune->id.len = id_len;
+			fortune->message = h2o_htmlescape(&fortune_ctx->req->pool,
+			                                  message,
+			                                  message_len);
+			fortune->l.next = fortune_ctx->result;
+			fortune_ctx->result = &fortune->l;
+			fortune_ctx->num_result++;
 		}
-	}
-	else if (result) {
-		PQclear(result);
-		send_error(BAD_GATEWAY, PQresultErrorMessage(result), fortune_ctx->req);
-	}
-	else {
+
 		mustache_api_t api = {.sectget = on_fortune_section,
 		                      .varget = on_fortune_variable,
 		                      .write = add_iovec};
@@ -263,8 +256,7 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 		                                                      fortune_ctx->req->conn->ctx);
 		const size_t iovcnt = MIN(MAX_IOVEC, fortune_ctx->num_result * 5 + 2);
 		const size_t sz = offsetof(iovec_list_t, iov) + iovcnt * sizeof(h2o_iovec_t);
-		char _Alignas(iovec_list_t) mem[sz];
-		iovec_list_t * const restrict iovec_list = (iovec_list_t *) mem;
+		iovec_list_t * const iovec_list = h2o_mem_alloc_pool(&fortune_ctx->req->pool, sz);
 
 		memset(iovec_list, 0, offsetof(iovec_list_t, iov));
 		iovec_list->max_iovcnt = iovcnt;
@@ -275,16 +267,22 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 			fortune_ctx->iovec_list = iovec_list->l.next;
 			set_default_response_param(HTML, fortune_ctx->content_length, fortune_ctx->req);
 			h2o_start_response(fortune_ctx->req, &fortune_ctx->generator);
-			h2o_send(fortune_ctx->req,
-			         iovec_list->iov,
-			         iovec_list->iovcnt,
-			         !fortune_ctx->iovec_list);
+
+			const h2o_send_state_t state = fortune_ctx->iovec_list ?
+			                               H2O_SEND_STATE_IN_PROGRESS :
+			                               H2O_SEND_STATE_FINAL;
+
+			h2o_send(fortune_ctx->req, iovec_list->iov, iovec_list->iovcnt, state);
 		}
 		else
-			send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, fortune_ctx->req);
+			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, fortune_ctx->req);
+	}
+	else {
+		LIBRARY_ERROR("PQresultStatus", PQresultErrorMessage(result));
+		send_error(BAD_GATEWAY, DB_ERROR, fortune_ctx->req);
 	}
 
-	return ret;
+	return DONE;
 }
 
 static uintmax_t on_fortune_section(mustache_api_t *api,
@@ -315,11 +313,14 @@ static uintmax_t on_fortune_section(mustache_api_t *api,
 
 static void on_fortune_timeout(db_query_param_t *param)
 {
-	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t,
-	                                                           param,
-	                                                           param);
+	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t, param, param);
 
-	send_error(GATEWAY_TIMEOUT, DB_TIMEOUT_ERROR, fortune_ctx->req);
+	if (fortune_ctx->cleanup)
+		cleanup_fortunes(fortune_ctx);
+	else {
+		fortune_ctx->cleanup = true;
+		send_error(GATEWAY_TIMEOUT, DB_TIMEOUT_ERROR, fortune_ctx->req);
+	}
 }
 
 static uintmax_t on_fortune_variable(mustache_api_t *api,
@@ -371,38 +372,35 @@ int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req)
 	thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
 	                                                      event_loop.h2o_ctx,
 	                                                      req->conn->ctx);
-	fortune_ctx_t * const fortune_ctx = h2o_mem_alloc_shared(&req->pool,
-	                                                         sizeof(*fortune_ctx),
-	                                                         cleanup_fortunes);
+	fortune_ctx_t * const fortune_ctx = calloc(1, sizeof(*fortune_ctx));
 
 	if (fortune_ctx) {
 		fortune_t * const fortune = h2o_mem_alloc_pool(&req->pool, sizeof(*fortune));
+		fortune_ctx_t ** const p = h2o_mem_alloc_shared(&req->pool, sizeof(*p), cleanup_request);
 
-		if (fortune) {
-			memset(fortune, 0, sizeof(*fortune));
-			fortune->id.base = NEW_FORTUNE_ID;
-			fortune->id.len = sizeof(NEW_FORTUNE_ID) - 1;
-			fortune->message.base = NEW_FORTUNE_MESSAGE;
-			fortune->message.len = sizeof(NEW_FORTUNE_MESSAGE) - 1;
-			memset(fortune_ctx, 0, sizeof(*fortune_ctx));
-			fortune_ctx->generator.proceed = complete_fortunes;
-			fortune_ctx->num_result = 1;
-			fortune_ctx->param.command = FORTUNE_TABLE_NAME;
-			fortune_ctx->param.on_error = on_fortune_error;
-			fortune_ctx->param.on_result = on_fortune_result;
-			fortune_ctx->param.on_timeout = on_fortune_timeout;
-			fortune_ctx->param.flags = IS_PREPARED;
-			fortune_ctx->req = req;
-			fortune_ctx->result = &fortune->l;
+		*p = fortune_ctx;
+		memset(fortune, 0, sizeof(*fortune));
+		fortune->id.base = NEW_FORTUNE_ID;
+		fortune->id.len = sizeof(NEW_FORTUNE_ID) - 1;
+		fortune->message.base = NEW_FORTUNE_MESSAGE;
+		fortune->message.len = sizeof(NEW_FORTUNE_MESSAGE) - 1;
+		fortune_ctx->generator.proceed = complete_fortunes;
+		fortune_ctx->num_result = 1;
+		fortune_ctx->param.command = FORTUNE_TABLE_NAME;
+		fortune_ctx->param.on_error = on_fortune_error;
+		fortune_ctx->param.on_result = on_fortune_result;
+		fortune_ctx->param.on_timeout = on_fortune_timeout;
+		fortune_ctx->param.flags = IS_PREPARED;
+		fortune_ctx->req = req;
+		fortune_ctx->result = &fortune->l;
 
-			if (execute_query(ctx, &fortune_ctx->param))
-				send_service_unavailable_error(DB_REQ_ERROR, req);
+		if (execute_query(ctx, &fortune_ctx->param)) {
+			fortune_ctx->cleanup = true;
+			send_service_unavailable_error(DB_REQ_ERROR, req);
 		}
-		else
-			send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
 	}
 	else
-		send_error(INTERNAL_SERVER_ERROR, MEM_ALLOC_ERR_MSG, req);
+		send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 
 	return 0;
 }

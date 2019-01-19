@@ -12,4 +12,4 @@ config {"production", "development"}, ->
     database "hello_world"
     user "benchmarkdbuser"
     password "benchmarkdbpass"
-    host "DBHOSTNAME"
+    host DBHOSTNAME

@@ -29,12 +29,7 @@ class HelloWorld < Sinatra::Base
 
     # Return a random number between 1 and MAX_PK
     def rand1
-      Random.rand(MAX_PK).succ
-    end
-
-    # Return an array of `n' unique random numbers between 1 and MAX_PK
-    def randn(n)
-      (1..MAX_PK).to_a.shuffle!.take(n)
+      rand(MAX_PK).succ
     end
   end
 
@@ -53,19 +48,22 @@ class HelloWorld < Sinatra::Base
 
   # Test type 2: Single database query
   get '/db' do
-    world = ActiveRecord::Base.connection_pool.with_connection do
-      World.find(rand1)
-    end
+    world =
+      ActiveRecord::Base.connection_pool.with_connection do
+        World.find(rand1).attributes
+      end
 
-    json world.attributes
+    json world
   end
 
   # Test type 3: Multiple database queries
   get '/queries' do
-    worlds = ActiveRecord::Base.connection_pool.with_connection do
-      # Benchmark requirements explicitly forbid a WHERE..IN here, so be good
-      randn(bounded_queries).map! { |id| World.find(id) }
-    end
+    worlds =
+      ActiveRecord::Base.connection_pool.with_connection do
+        Array.new(bounded_queries) do
+          World.find(rand1)
+        end
+      end
 
     json worlds.map!(&:attributes)
   end
@@ -73,8 +71,8 @@ class HelloWorld < Sinatra::Base
   # Test type 4: Fortunes
   get '/fortunes' do
     @fortunes = ActiveRecord::Base.connection_pool.with_connection do
-      Fortune.all.to_a
-    end
+      Fortune.all
+    end.to_a
     @fortunes << Fortune.new(
       :id=>0,
       :message=>'Additional fortune added at request time.'
@@ -86,18 +84,14 @@ class HelloWorld < Sinatra::Base
 
   # Test type 5: Database updates
   get '/updates' do
-    worlds = ActiveRecord::Base.connection_pool.with_connection do |conn|
-      # Benchmark requirements explicitly forbid a WHERE..IN here, transactions
-      # are optional, batch updates are allowed (but each transaction can only
-      # read and write a single record?), so... be good
-      randn(bounded_queries).map! do |id|
-        conn.transaction do
-          world = World.lock.find(id)
+    worlds =
+      ActiveRecord::Base.connection_pool.with_connection do
+        Array.new(bounded_queries) do
+          world = World.find(rand1)
           world.update(:randomnumber=>rand1)
           world
         end
       end
-    end
 
     json worlds.map!(&:attributes)
   end

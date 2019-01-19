@@ -1,40 +1,37 @@
 import com.twitter.io.Buf
-import com.twitter.finagle.http.Response
 import com.twitter.finagle.Http
-import com.twitter.finagle.stats.NullStatsReceiver
-import com.twitter.finagle.tracing.NullTracer
+import com.twitter.finagle.http.{Request, Response}
+import com.twitter.finagle.Service
+import com.twitter.finagle.stack.nilStack
 import com.twitter.util.Await
 
+import cats.effect.IO
 import io.circe.Json
 import io.finch._
 import io.finch.circe._
 
-object Main extends App {
+object Main extends App with Endpoint.Module[IO] {
 
   val helloWorld: Buf = Buf.Utf8("Hello, World!")
 
-  val json: Endpoint[Json] = get("json") {
+  val json: Endpoint[IO, Json] = get("json") {
     Ok(Json.obj("message" -> Json.fromString("Hello, World!")))
-      .withHeader("Server" -> "Finch")
-      .withHeader("Date" -> currentTime())
   }
 
-  // Downgrade a text/plain endpoint to `Endpoint[Response]` as per
-  // https://github.com/finagle/finch/blob/master/docs/cookbook.md#serving-multiple-content-types
-  val plaintext: Endpoint[Response] = get("plaintext") {
-    val rep = Response()
-    rep.content = helloWorld
-    rep.contentType = "text/plain"
-    rep.headerMap.set("Server", "Finch")
-    rep.headerMap.set("Date", currentTime())
-
-    rep
+  val plaintext: Endpoint[IO, Buf] = get("plaintext") {
+    Ok(helloWorld)
   }
 
-  Await.ready(Http.server
-    .withCompressionLevel(0)
-    .withStatsReceiver(NullStatsReceiver)
-    .withTracer(NullTracer)
-    .serve(":9000", (json :+: plaintext).toServiceAs[Application.Json])
+  val service: Service[Request, Response] =
+    Bootstrap.configure(includeDateHeader = true, includeServerHeader = true)
+      .serve[Application.Json](json)
+      .serve[Text.Plain](plaintext)
+      .toService
+
+  Await.ready(
+    Http.server
+      .withCompressionLevel(0)
+      .withStack(nilStack[Request, Response])
+      .serve(":9000", service)
   )
 }

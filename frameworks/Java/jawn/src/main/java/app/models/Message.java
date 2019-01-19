@@ -2,8 +2,8 @@ package app.models;
 
 public class Message {
 
-    public String message;
-    public Message(String m) {
+    public final String message;
+    public Message(final String m) {
         message = m;
     }
 }

@@ -1,0 +1,4 @@
+project=hello_world
+architecture=container
+test=minitest
+template=erb

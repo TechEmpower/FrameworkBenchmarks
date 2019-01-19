@@ -1,40 +1,39 @@
 
-buildscript {
-    repositories {
-        jcenter ()
-    }
-
-    dependencies {
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    }
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.3.11"
 }
 
-apply from: "$gradleScripts/kotlin.gradle"
-apply from: "$gradleScripts/service.gradle"
-apply plugin: 'war'
+apply(from: "$gradleScripts/kotlin.gradle")
+apply(from: "$gradleScripts/service.gradle")
 
-mainClassName = "co.there4.hexagon.BenchmarkKt"
-applicationDefaultJvmArgs = [
-    '-Xms64M',
-    '-Xmx2G',
-    '-XX:+UseNUMA',
-    '-XX:+UseParallelGC',
-    '-XX:+AggressiveOpts'
-]
+apply(plugin: "war")
+
+defaultTasks("installDist")
+
+mainClassName = "com.hexagonkt.BenchmarkKt"
+applicationDefaultJvmArgs = [ "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts" ]
 
 war {
     archiveName = "ROOT.war"
 }
 
-install.dependsOn 'war'
+installDist.dependsOn("war")
 
 dependencies {
-    compile ("co.there4:hexagon:$hexagonVersion")
-    compile ("com.mitchellbosecke:pebble:$pebbleVersion")
+    compile("com.hexagonkt:store_mongodb:$hexagonVersion")
+    compile("com.hexagonkt:http_server_jetty:$hexagonVersion")
+    compile("com.hexagonkt:templates_pebble:$hexagonVersion")
+
+    compile("com.zaxxer:HikariCP:$hikariVersion")
+    compile("org.postgresql:postgresql:$postgresqlVersion")
 
     // providedCompile excludes the dependency only in the WAR, not in the distribution
-    providedCompile ("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
+    providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
 
-    testCompile ("co.there4:hexagon:$hexagonVersion:test")
+    testCompile("com.hexagonkt:port_http_client:$hexagonVersion")
+    testCompile("org.testng:testng:$testngVersion")
+}
+
+test {
+    useTestNG()
 }

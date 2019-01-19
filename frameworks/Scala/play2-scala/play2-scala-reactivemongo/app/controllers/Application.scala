@@ -1,25 +1,21 @@
 package controllers
 
 import java.util.concurrent.ThreadLocalRandom
-import javax.inject.{Singleton, Inject}
+import scala.concurrent.{Future, ExecutionContext}
 
 import play.api.libs.json.{JsObject, Json, JsValue}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc._
+import play.mvc.Http
+
 import reactivemongo.api.ReadPreference
-
-import scala.concurrent.Future
-
-import play.api.mvc.{ Action, Controller }
-
+import reactivemongo.play.json.collection.JSONCollection
 import play.modules.reactivemongo.{
-MongoController, ReactiveMongoApi, ReactiveMongoComponents
+  ReactiveMongoApi, ReactiveMongoComponents, MongoController
 }
 import play.modules.reactivemongo.json._
-import play.modules.reactivemongo.json.collection.JSONCollection
 
-@Singleton
-class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi)
-  extends Controller with MongoController with ReactiveMongoComponents {
+class Application (val controllerComponents: ControllerComponents, reactiveMongoApi: ReactiveMongoApi)(implicit ec: ExecutionContext)
+  extends BaseController {
 
   private def worldCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("world")
   private def fortuneCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("fortune")
@@ -49,56 +45,35 @@ class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi)
     futureFortunes
   }
 
-  def updateWorlds(queries: Int): Future[Seq[Option[JsObject]]] = {
-    val futureWorlds: Future[Seq[Option[JsObject]]] = getRandomWorlds(queries)
-    val futureNewWorlds: Future[Seq[Option[JsObject]]] = futureWorlds.map( worlds => {
-      worlds.map(worldOption => {
-        worldOption.map(world => {
-          val newWorld = world ++ Json.obj("randomNumber" -> getNextRandom)
-          worldCollection.update(world, newWorld)
-          newWorld
-        })
-      })
-    })
-    futureNewWorlds
+  def updateWorlds(queries: Int): Future[Seq[JsObject]] = {
+    getRandomWorlds(queries)
+      .map(_.flatten)
+      .map(_.map(oldWorld => {
+        val newWorld = oldWorld ++ Json.obj("randomNumber" -> getNextRandom)
+        worldCollection.update(oldWorld, newWorld).map(result => newWorld)
+      }))
+      .map(Future.sequence(_))
+      .flatten
   }
 
   def getNextRandom: Int = {
     ThreadLocalRandom.current().nextInt(TestDatabaseRows) + 1
   }
 
-  // Test seems picky about headers.  Doesn't like character set being there for JSON.  Always wants Server header set.
-  // There is a Filter which adds the Server header for all types.  Below I set Content-Type as needed to get rid of
-  // warnings.
-
-  // Easy ones
-  case class HelloWorld(message: String)
-
-  def getJsonMessage = Action {
-    val helloWorld = HelloWorld(message = "Hello, World!")
-    Ok(Json.toJson(helloWorld)(Json.writes[HelloWorld])).withHeaders(CONTENT_TYPE -> "application/json")
-  }
-
-  val plaintext = Action {
-    // default headers are correct according to docs: charset included.
-    // BUT the test harness has a WARN state and says we don't need it.
-    Ok("Hello, World!").withHeaders(CONTENT_TYPE -> "text/plain")
-  }
-
   // Semi-Common code between Scala database code
 
   protected val TestDatabaseRows = 10000
 
-  def doDb = Action.async {
+  def db = Action.async {
     getRandomWorld.map { worlds =>
-      Ok(Json.toJson(worlds.head)).withHeaders(CONTENT_TYPE -> "application/json")
+      Ok(Json.toJson(worlds.head))
     }
   }
 
   def queries(countString: String) = Action.async {
     val n = parseCount(countString)
     getRandomWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds)).withHeaders(CONTENT_TYPE -> "application/json")
+      Ok(Json.toJson(worlds))
     }
   }
 
@@ -112,14 +87,14 @@ class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi)
 
       val sorted = appendedFortunes.sortBy(byMessage(_))
 
-      Ok(views.html.fortune(sorted)).withHeaders(CONTENT_TYPE -> "text/html")
+      Ok(views.html.fortune(sorted))
     }
   }
 
   def update(queries: String) = Action.async {
     val n = parseCount(queries)
     updateWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds)).withHeaders(CONTENT_TYPE -> "application/json")
+      Ok(Json.toJson(worlds))
     }
   }
 

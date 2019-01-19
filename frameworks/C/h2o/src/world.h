@@ -23,6 +23,7 @@
 
 #include <h2o.h>
 
+int cached_queries(struct st_h2o_handler_t *self, h2o_req_t *req);
 int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req);
 int single_query(struct st_h2o_handler_t *self, h2o_req_t *req);
 int updates(struct st_h2o_handler_t *self, h2o_req_t *req);

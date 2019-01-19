@@ -1,0 +1,43 @@
+{
+  "framework": "collie",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8085,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "Collie",
+      "language": "D",
+      "flavor": "DLang2",
+      "orm": "Raw",
+      "platform": "Collie",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Collie",
+      "notes": "",
+      "versus": "Collie"
+  },
+    "ldc": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8085,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "Collie",
+      "language": "D",
+      "flavor": "DLang2",
+      "orm": "Raw",
+      "platform": "Collie",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Collie",
+      "notes": "",
+      "versus": "Collie"
+    }
+  }]
+}

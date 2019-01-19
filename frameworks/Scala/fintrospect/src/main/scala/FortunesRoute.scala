@@ -29,7 +29,7 @@ object FortunesRoute {
 
     val service = new RenderView(Html.ResponseBuilder, CachingClasspath()).andThen(
       Service.mk {
-        r: Request =>
+        _: Request =>
           statement().map(toFortunes).map(f => {
             val sortedFortunes = (Fortune(0, "Additional fortune added at request time.") +: f).sortBy(_.message)
             FortunesList(sortedFortunes)

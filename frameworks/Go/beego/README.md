@@ -8,7 +8,7 @@ This is the Beego portion of a [benchmarking test suite](../) comparing a variet
 
 ## Versions
 
-* [Go 1.1](http://golang.org/)
+* [Go 1.8](https://golang.org/)
 * [Beego](https://github.com/astaxie/beego/)
 
 ## Test URLs

@@ -2,11 +2,10 @@
   "framework": "jetty",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "approach": "Stripped",
+      "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
       "framework": "None",
@@ -18,7 +17,26 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "jetty",
-      "notes": "Jetty 9.3 with Handler",
+      "notes": "Jetty 9.4 with Handler",
+      "versus": "servlet"
+    },
+    "servlet": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Jetty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "jetty",
+      "notes": "Jetty 9.4 with ServletContext",
       "versus": "servlet"
     }
   }]

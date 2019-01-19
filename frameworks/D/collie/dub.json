@@ -1,0 +1,10 @@
+{
+	"name": "http",
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2016, dsby",
+	"authors": ["dsby"],
+	"targetType": "executable",
+	"dependencies": {
+            "collie" : "~>0.10.3"
+	}
+}

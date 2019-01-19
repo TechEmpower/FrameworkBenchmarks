@@ -2,11 +2,12 @@
   "framework": "tornado",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "plaintext_url": "/plaintext",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -19,14 +20,38 @@
       "webserver": "Tornado",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Tornado-raw",
-      "notes": "CPython 2.7",
-      "versus": ""
+      "display_name": "Tornado",
+      "notes": "",
+      "versus": "tornado"
+    },
+    "pypy2": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "plaintext_url": "/plaintext",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MongoDB",
+      "framework": "None",
+      "language": "Python",
+      "flavor": "PyPy2",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "Tornado",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Tornado",
+      "notes": "",
+      "versus": "tornado"
     },
     "postgresql-raw": {
-      "setup_file": "setup_pg",
-      "db_url": "/dbraw",
-      "query_url": "/queriesraw?queries=",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -39,16 +64,17 @@
       "webserver": "Tornado",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Tornado-raw",
-      "notes": "CPython 2.7",
-      "versus": ""
+      "display_name": "Tornado",
+      "notes": "",
+      "versus": "tornado"
     },
     "py3": {
-      "setup_file": "setup_py3",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "plaintext_url": "/plaintext",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -61,9 +87,9 @@
       "webserver": "Tornado",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Tornado-raw",
-      "notes": "CPython 3.4",
-      "versus": ""
+      "display_name": "Tornado",
+      "notes": "",
+      "versus": "tornado"
     }
   }]
 }

@@ -8,23 +8,31 @@ use utf8;
 
 module 'JSON::XS';
 
-my $mongo   = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-my $mdb     = $mongo->get_database('hello_world');
-my $world   = $mdb->get_collection('World');
-my $fortune = $mdb->get_collection('Fortune');
+my $mongo;
+my $mdb;
+my $world;
+my $fortune;
+my @sth;
+my $dbh;
 
-my $dbh = DBI->connect(
-    "dbi:mysql:database=hello_world;host=localhost;port=3306",
-    'benchmarkdbuser',
-    'benchmarkdbpass',
-    { RaiseError => 0, PrintError => 0, mysql_enable_utf8 => 1 }
-);
-
-my @sth = map { $dbh->prepare($_) } (
-    "SELECT * FROM World WHERE id = ?",
-    "SELECT * FROM Fortune",
-    "UPDATE World SET randomNumber = ? WHERE id = ?",
-);
+if ($ENV{MONGO}) {
+    $mongo   = MongoDB::MongoClient->new( host => 'tfb-database', port => 27017 );
+    $mdb     = $mongo->get_database('hello_world');
+    $world   = $mdb->get_collection('world');
+    $fortune = $mdb->get_collection('fortune');
+} else {
+    $dbh = DBI->connect(
+        "dbi:mysql:database=hello_world;host=tfb-database;port=3306",
+        'benchmarkdbuser',
+        'benchmarkdbpass',
+        { RaiseError => 0, PrintError => 0, mysql_enable_utf8 => 1 }
+    );
+    @sth = map { $dbh->prepare($_) } (
+        "SELECT * FROM World WHERE id = ?",
+        "SELECT * FROM Fortune",
+        "UPDATE World SET randomNumber = ? WHERE id = ?",
+    );
+}
 
 get '/json' => sub {
     { message => 'Hello, World!' };

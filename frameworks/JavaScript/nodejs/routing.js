@@ -1,76 +1,41 @@
 // Intialized database connections, one for each db config
 // * Mongoose is a popular Node/MongoDB driver
 // * Sequelize is a popular Node/SQL driver
-var MongodbRawHandler = require('./handlers/mongodb-raw');
-var MySQLRawHandler = require('./handlers/mysql-raw');
-var MongooseHandler = require('./handlers/mongoose');
-var SequelizeHandler = require('./handlers/sequelize');
-var SequelizePgHandler = require('./handlers/sequelize-postgres');
 
-var h = require('./helper');
+const Handler = require(`./handlers/${process.env.NODE_HANDLER}`);
+const h = require('./helper');
 
-module.exports.BasicHandler = (function() {
-  var self = {}
+module.exports.BasicHandler = ((() => {
+  const self = {};
 
   self.routes = {
     '/json':               h.responses.jsonSerialization,
     '/plaintext':          h.responses.plaintext,
+    '/db':        Handler.SingleQuery,
+    '/fortunes':  Handler.Fortunes,
+  };
 
-    '/mongoose/db':        MongooseHandler.SingleQuery,
-    '/mongoose/fortunes':  MongooseHandler.Fortunes,
+  self.has = (path) => self.routes[path];
 
-    '/mongodb/db':         MongodbRawHandler.SingleQuery,
-    '/mongodb/fortunes':   MongodbRawHandler.Fortunes,
-
-    '/sequelize/db':       SequelizeHandler.SingleQuery,
-    '/sequelize/fortunes': SequelizeHandler.Fortunes,
-
-    '/mysql/db':           MySQLRawHandler.SingleQuery,
-    '/mysql/fortunes':     MySQLRawHandler.Fortunes,
-
-    '/sequelize-pg/db':       SequelizePgHandler.SingleQuery,
-    '/sequelize-pg/fortunes': SequelizePgHandler.Fortunes
-  }
-
-  self.has = function(path) {
-    return self.routes[path];
-  }
-
-  self.handle = function(path, req, res) {
-    return self.routes[path](req, res);
-  }
+  self.handle = (path, req, res) => self.routes[path](req, res);
 
   return self;
-}());
+})());
 
-module.exports.QueryHandler = (function () {
-  var self = {}
+module.exports.QueryHandler = ((() => {
+  const self = {};
 
   self.routes = {
-    '/mongoose/queries':  MongooseHandler.MultipleQueries,
-    '/mongoose/updates':  MongooseHandler.Updates,
+    '/queries':     Handler.MultipleQueries,
+    '/updates':     Handler.Updates,
+    '/cached' :     Handler.CachedQueries,
+  };
 
-    '/mongodb/queries':   MongodbRawHandler.MultipleQueries,
-    '/mongodb/updates':   MongodbRawHandler.Updates,
+  self.has = (path) => self.routes[path];
 
-    '/sequelize/queries': SequelizeHandler.MultipleQueries,
-    '/sequelize/updates': SequelizeHandler.Updates,
-
-    '/mysql/queries':     MySQLRawHandler.MultipleQueries,
-    '/mysql/updates':     MySQLRawHandler.Updates,
-
-    '/sequelize-pg/queries': SequelizePgHandler.MultipleQueries,
-    '/sequelize-pg/updates': SequelizePgHandler.Updates
-  }
-
-  self.has = function(path) {
-    return self.routes[path];
-  }
-
-  self.handle = function(path, queries, req, res) {
-    return self.routes[path](queries, req, res);
-  }
+  self.handle = (path, queries, req, res) =>
+    self.routes[path](queries, req, res);
 
   return self;
-}());
+})());
 

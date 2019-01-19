@@ -3,6 +3,7 @@ extern crate persistent;
 #[macro_use] extern crate router;
 extern crate serde;
 extern crate serde_json;
+#[macro_use] extern crate serde_derive;
 extern crate hyper;
 extern crate rand;
 extern crate r2d2;
@@ -21,7 +22,20 @@ use r2d2_postgres::{PostgresConnectionManager, TlsMode};
 use persistent::{Read};
 use r2d2::Pool;
 
-include!(concat!(env!("OUT_DIR"),"/main_types.rs"));
+#[derive(Serialize, Deserialize)]
+struct Message {
+    message: String,
+}
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Clone)]
+struct DatabaseRow {
+    id: i32,
+    randomNumber: i32
+}
+
+struct CachedRows;
+impl Key for CachedRows { type Value = Vec<DatabaseRow>; }
 
 pub type PostgresPool = Pool<PostgresConnectionManager>;
 
@@ -38,13 +52,9 @@ struct FortuneRow {
 }
 
 fn main() {
-    let dbhost = match option_env!("DBHOST") {
-        Some(it) => it,
-        _ => "localhost"
-    };
     let r2d2_config = r2d2::Config::default();
     let pg_conn_manager = PostgresConnectionManager::new(
-        format!("postgres://benchmarkdbuser:benchmarkdbpass@{dbhost}/hello_world", dbhost=dbhost),
+        "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world",
         TlsMode::None).unwrap();
     let pool = r2d2::Pool::new(r2d2_config, pg_conn_manager).unwrap();
     let template = mustache::compile_str("<!DOCTYPE html>
@@ -54,17 +64,33 @@ fn main() {
     {{#.}} <tr><td>{{id}}</td><td>{{message}}</td></tr> 
     {{/.}} 
     </table> </body> </html>").unwrap();
+
+    let mut cached_rows: Vec<DatabaseRow> = Vec::with_capacity(10000);
+    let conn = pool.get().unwrap();
+
+    for num in 1..10000 {
+        let rows = &conn.query("SELECT id, randomnumber FROM World WHERE id = $1",&[&num]).unwrap();
+        let row = rows.get(0);
+        cached_rows.push(DatabaseRow {
+            id: row.get(0),
+            randomNumber: row.get(1)
+        });
+    }
+
     let app = router!(
             json: get "/json" => json_handler,
             single_db_query: get "/db" => single_db_query_handler,
             plaintext: get "/plaintext" => plaintext_handler,
             queries: get "/queries" => queries_handler,
+            cachedworlds: get "/cached-worlds" => cached_queries_handler,
             fortune: get "/fortune" => fortune_handler,
             updates: get "/updates" => updates_handler
         );
     let mut middleware = Chain::new(app);
     middleware.link(Read::<DbPool>::both(pool));
     middleware.link(Read::<FortuneTemplate>::both(template));
+    middleware.link(Read::<CachedRows>::both(cached_rows));
+
     println!("Starting server...");
     Iron::new(middleware).http("0.0.0.0:8080").unwrap();
 }
@@ -129,6 +155,39 @@ fn queries_handler(req: &mut Request) -> IronResult<Response> {
     Ok(
         Response::with((
             status::Ok, 
+            serde_json::to_string(&res).unwrap(),
+            server,
+            content_type
+    )))
+}
+
+fn cached_queries_handler(req: &mut Request) -> IronResult<Response> {
+    let content_type = Header(ContentType::json());
+    let server = Header(Server("Iron".to_owned()));
+    let cached_rows = req.get::<Read<CachedRows>>().unwrap().to_owned();
+    let query = req.url.query().unwrap();
+    let param = match get_param(query, "queries") {
+        Some(n) => match n.parse::<usize>() {
+            Ok(m) => match m {
+                e @ 1...500 => e,
+                e if e > 500 => 500,
+                _ => 1
+            },
+            _ => 1
+        },
+        _ => 1
+    };
+
+    let mut res: Vec<DatabaseRow> = Vec::with_capacity(param);
+    for _ in 0..param {
+        let mut rng = rand::thread_rng();
+        let between = Range::new(1,10000);
+        let num = between.ind_sample(&mut rng);
+        res.push(cached_rows[num].to_owned())
+    };
+    Ok(
+        Response::with((
+            status::Ok,
             serde_json::to_string(&res).unwrap(),
             server,
             content_type

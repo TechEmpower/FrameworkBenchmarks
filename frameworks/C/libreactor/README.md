@@ -1,8 +1,3 @@
-# libreactor_techempower
+# libreactor
 
-Techempower benchmark of libreactor
-
-## Requirements
-
-GCC, Git, Automake
-
+Benchmarks for the [libreactor](https://github.com/fredrikwidlund/libreactor) library.

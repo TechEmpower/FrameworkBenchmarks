@@ -3,7 +3,6 @@
   "tests": [
     {
       "default": {
-        "setup_file": "run_mri_puma",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -26,7 +25,6 @@
         "notes": ""
       },
       "postgres": {
-        "setup_file": "run_mri_puma",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -49,7 +47,6 @@
         "notes": ""
       },
       "passenger-mri": {
-        "setup_file": "run_mri_passenger",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -64,7 +61,7 @@
         "language": "Ruby",
         "orm": "Full",
         "platform": "Rack",
-        "webserver": "Passenger Standalone",
+        "webserver": "Passenger",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "sinatra-passenger-mri",
@@ -72,7 +69,6 @@
         "notes": ""
       },
       "postgres-passenger-mri": {
-        "setup_file": "run_mri_passenger",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -87,7 +83,7 @@
         "language": "Ruby",
         "orm": "Full",
         "platform": "Rack",
-        "webserver": "Passenger Standalone",
+        "webserver": "Passenger",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "sinatra-postgres-passenger-mri",
@@ -95,7 +91,6 @@
         "notes": ""
       },
       "unicorn-mri": {
-        "setup_file": "run_mri_unicorn",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -118,7 +113,6 @@
         "notes": ""
       },
       "postgres-unicorn-mri": {
-        "setup_file": "run_mri_unicorn",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",

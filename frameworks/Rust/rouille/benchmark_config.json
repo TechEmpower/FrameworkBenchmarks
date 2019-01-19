@@ -1,0 +1,21 @@
+{
+  "framework": "rouille",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "rouille",
+      "language": "Rust",
+      "orm": "raw",
+      "platform": "Rust",
+      "webserver": "rouille",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rouille"
+    }
+  }]
+}

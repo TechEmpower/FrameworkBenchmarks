@@ -4,6 +4,7 @@ import common.Message;
 import org.rapidoid.buffer.Buf;
 import org.rapidoid.http.AbstractHttpServer;
 import org.rapidoid.http.HttpStatus;
+import org.rapidoid.http.HttpUtils;
 import org.rapidoid.http.MediaType;
 import org.rapidoid.net.abstracts.Channel;
 import org.rapidoid.net.impl.RapidoidHelper;
@@ -28,7 +29,7 @@ public class PlaintextAndJsonServer extends AbstractHttpServer {
 				return ok(ctx, data.isKeepAlive.value, HELLO_WORLD, MediaType.TEXT_PLAIN);
 
 			} else if (matches(buf, data.path, URI_JSON)) {
-				return serializeToJson(ctx, data.isKeepAlive.value, new Message("Hello, World!"));
+				return serializeToJson(HttpUtils.noReq(), ctx, data.isKeepAlive.value, new Message("Hello, World!"));
 			}
 		}
 

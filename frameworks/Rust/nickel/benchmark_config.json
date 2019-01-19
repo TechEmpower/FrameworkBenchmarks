@@ -2,7 +2,6 @@
   "framework": "nickel",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -10,7 +9,7 @@
       "classification": "Micro",
       "database": "None",
       "framework": "nickel",
-      "language": "rust",
+      "language": "Rust",
       "orm": "raw",
       "platform": "Rust",
       "webserver": "hyper",

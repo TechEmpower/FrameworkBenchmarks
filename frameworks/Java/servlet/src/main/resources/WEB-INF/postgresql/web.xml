@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	version="2.4">
+	<servlet>
+		<servlet-name>db</servlet-name>
+		<servlet-class>hello.DbSQLServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>db</servlet-name>
+		<url-pattern>/db</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>queries</servlet-name>
+		<servlet-class>hello.QueriesSQLServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>queries</servlet-name>
+		<url-pattern>/queries</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>postgres-update</servlet-name>
+		<servlet-class>hello.PostgresUpdateServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>postgres-update</servlet-name>
+		<url-pattern>/update</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>postgres-fortunes</servlet-name>
+		<servlet-class>hello.FortunesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>postgres-fortunes</servlet-name>
+		<url-pattern>/fortunes</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>postgresql-cache2k</servlet-name>
+		<servlet-class>hello.Cache2kPostgresServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>postgresql-cache2k</servlet-name>
+		<url-pattern>/cached-worlds</url-pattern>
+	</servlet-mapping>
+	<resource-env-ref>
+		<resource-env-ref-name>jdbc/hello_world</resource-env-ref-name>
+		<resource-env-ref-type>javax.sql.DataSource</resource-env-ref-type>
+	</resource-env-ref>
+</web-app>

@@ -8,7 +8,7 @@ This includes tests for plaintext and json serialization.
 
 **Language**
 
-* C# 6.0
+* C# 7.0
 
 **Platforms**
 
@@ -16,8 +16,8 @@ This includes tests for plaintext and json serialization.
 
 **Web Servers**
 
-* [Kestrel](https://github.com/aspnet/kestrelHttpServer)
-* WebListener
+* [Kestrel](https://github.com/aspnet/KestrelHttpServer)
+* [HttpSys](https://github.com/aspnet/HttpSysServer)
 
 **Web Stack**
 
@@ -30,6 +30,8 @@ This includes tests for plaintext and json serialization.
 * [Plaintext MVC](Benchmarks/Controllers/HomeController.cs): "/mvc/plaintext"
 * [JSON Serialization](Benchmarks/Middleware/JsonMiddleware.cs): "/json"
 * [JSON Serialization MVC](Benchmarks/Controllers/HomeController.cs): "/mvc/json"
+* [JSON Serialization Utf8Json](Benchmarks/Middleware/Utf8JsonMiddleware.cs): "/utf8json"
+* [JSON Serialization SpanJson](Benchmarks/Middleware/SpanJsonMiddleware.cs): "/spanjson"
 * [Single Query Raw](Benchmarks/Middleware/SingleQueryRawMiddleware.cs): "/db/raw"
 * [Single Query EF](Benchmarks/Middleware/SingleQueryEfMiddleware.cs): "/db/ef"
 * [Single Query Dapper](Benchmarks/Middleware/SingleQueryDapperMiddleware.cs): "/db/dapper"

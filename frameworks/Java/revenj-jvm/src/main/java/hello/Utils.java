@@ -1,24 +1,25 @@
 package hello;
 
+import com.dslplatform.json.JsonWriter;
+
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 abstract class Utils {
 
-	private static final ThreadLocal<Context> threadContext = new ThreadLocal<Context>() {
-		@Override
-		protected Context initialValue() {
-			return new Context();
-		}
-	};
+	private static final ThreadLocal<Context> threadContext = ThreadLocal.withInitial(Context::new);
+	private static final ThreadLocal<JsonWriter> threadJson = ThreadLocal.withInitial(JsonWriter::new);
 
-	static Context getContext() throws IOException {
-		Context ctx = threadContext.get();
-		ctx.json.reset();
-		return ctx;
+	static Context getContext() {
+		return threadContext.get();
 	}
 
-	public static int parseBoundParam(HttpServletRequest request) {
+	static JsonWriter getJson() {
+		JsonWriter json = threadJson.get();
+		json.reset();
+		return json;
+	}
+
+	static int parseBoundParam(HttpServletRequest request) {
 		int count = 1;
 		try {
 			count = Integer.parseInt(request.getParameter("queries"));

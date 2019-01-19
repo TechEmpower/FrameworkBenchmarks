@@ -1,4 +1,4 @@
-mysqlclient==1.3.7
-gunicorn==19.4.5
+mysqlclient==1.3.12
+gunicorn==19.7.1
 meinheld==0.6.1
-greenlet==0.4.9
+greenlet==0.4.14

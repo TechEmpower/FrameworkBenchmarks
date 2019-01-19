@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.jooby</groupId>
     <artifactId>jooby-project</artifactId>
-    <version>0.16.0</version>
+    <version>1.4.0</version>
   </parent>
 
   <artifactId>jooby</artifactId>
@@ -17,35 +17,44 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>0.16.0</jooby.version>
+    <jooby.version>1.4.0</jooby.version>
+    <postgresql.version>42.2.5</postgresql.version>
+    <rocker.touchFile>/dev/null</rocker.touchFile>
 
     <!-- Startup class -->
     <application.class>com.techempower.App</application.class>
   </properties>
 
   <dependencies>
-    <!-- Jooby -->
-    <dependency>
-      <groupId>org.jooby</groupId>
-      <artifactId>jooby</artifactId>
-    </dependency>
-
     <!-- jackson -->
     <dependency>
       <groupId>org.jooby</groupId>
       <artifactId>jooby-jackson</artifactId>
     </dependency>
 
-    <!-- jdbi -->
+    <!-- jdbc -->
     <dependency>
       <groupId>org.jooby</groupId>
-      <artifactId>jooby-jdbi</artifactId>
+      <artifactId>jooby-jdbc</artifactId>
     </dependency>
 
     <!-- mySQL -->
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+
+    <!-- postgresql -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql.version}</version>
+    </dependency>
+
+    <!-- rocker -->
+    <dependency>
+      <groupId>org.jooby</groupId>
+      <artifactId>jooby-rocker</artifactId>
     </dependency>
 
     <!-- Server -->
@@ -97,6 +106,37 @@
         <artifactId>maven-shade-plugin</artifactId>
       </plugin>
     </plugins>
+    <!-- rocker m2e -->
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>com.fizzed</groupId>
+                    <artifactId>rocker-maven-plugin</artifactId>
+                    <versionRange>[${rocker.version},)</versionRange>
+                    <goals>
+                      <goal>generate</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <execute>
+                      <runOnIncremental>true</runOnIncremental>
+                    </execute>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
 </project>

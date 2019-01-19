@@ -1,12 +1,11 @@
 package app.controllers;
 
-import net.javapla.jawn.core.Controller;
-import net.javapla.jawn.core.Param;
+import com.google.inject.Inject;
+
 import app.db.DbManager;
 import app.helpers.Helper;
-import app.models.World;
-
-import com.google.inject.Inject;
+import net.javapla.jawn.core.Controller;
+import net.javapla.jawn.core.Param;
 
 public class DbController extends Controller {
 
@@ -15,26 +14,21 @@ public class DbController extends Controller {
     
     // /db
     public void index() {
-        respond().json(db.getWorld(Helper.getRandomNumber()));
+        respond().json(db.getWorld(Helper.getRandomNumber())).addHeader("Server", "jawn");
     }
     
     // /queries?queries=
     public void getQueries() {
         int param = parseQueryParam();
-        
-        respond().json(db.getWorlds(param));
+
+        respond().json(db.getWorlds(param)).addHeader("Server", "jawn");
     }
     
     // /updates?queries=
     public void getUpdates() {
         int param = parseQueryParam();
-        
-        World[] worlds = db.getWorlds(param);
-        for (int i = 0; i < param; i++) {
-            worlds[i].randomNumber = Helper.getRandomNumber();
-        }
-        db.updateWorlds(worlds);
-        respond().json(worlds);
+
+        respond().json(db.getAndUpdateWorlds(param)).addHeader("Server", "jawn");
     }
     
     private int parseQueryParam() {

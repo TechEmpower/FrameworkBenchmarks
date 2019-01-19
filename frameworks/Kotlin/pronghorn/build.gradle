@@ -1,0 +1,52 @@
+group 'pronghorn'
+version '0.1.0'
+
+buildscript {
+    ext {
+        pronghornVersion = '0.1.3'
+        kotlinVersion = '1.2.31'
+    }
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+mainClassName = "pronghorn.TestServerKt"
+
+applicationDefaultJvmArgs = ['-server', '-XX:+AggressiveOpts']
+
+repositories {
+    mavenCentral()
+}
+
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+
+    compile 'com.jsoniter:jsoniter:0.9.18' // json encoding library
+    compile 'org.javassist:javassist:3.22.0-GA' // needed for faster json encoding mode
+    compile 'org.mongodb:mongodb-driver-async:3.5.0' // async MongoDB driver
+    compile 'com.github.httl:httl:1.0.11' // simple template engine
+
+    compile "tech.pronghorn:server:$pronghornVersion"
+    compile "tech.pronghorn:plugin-collections-jctools:$pronghornVersion"
+    compile "tech.pronghorn:plugin-hashing-openhft:$pronghornVersion"
+    compile "tech.pronghorn:plugin-logging-slf4j:$pronghornVersion"
+    compile "tech.pronghorn:mongodb-driver-stream:$pronghornVersion"
+}

@@ -4,7 +4,9 @@
 class HelloWorld
   DEFAULT_HEADERS = {}.tap do |h|
     h['Server'] = SERVER_STRING if SERVER_STRING
-  end.freeze
+
+    h.freeze
+  end
 
   def bounded_queries(env)
     params = Rack::Utils.parse_query(env['QUERY_STRING'])
@@ -17,22 +19,22 @@ class HelloWorld
 
   # Return a random number between 1 and MAX_PK
   def rand1
-    Random.rand(MAX_PK).succ
+    rand(MAX_PK).succ
   end
 
-  # Return an array of `n' unique random numbers between 1 and MAX_PK
-  def randn(n)
-    (1..MAX_PK).to_a.shuffle!.take(n)
-  end
+  WORLD_BY_ID = World.naked.where(:id=>:$id).prepare(:first, :world_by_id)
+  WORLD_UPDATE = World.where(:id=>:$id).prepare(:update, :world_update, :randomnumber=>:$randomnumber)
 
   def db
-    World.with_pk(rand1).values
+    WORLD_BY_ID.(:id=>rand1)
   end
 
   def queries(env)
-    # Benchmark requirements explicitly forbid a WHERE..IN here, so be good
-    randn(bounded_queries(env))
-      .map! { |id| World.with_pk(id).values }
+    DB.synchronize do
+      Array.new(bounded_queries(env)) do
+        WORLD_BY_ID.(:id=>rand1)
+      end
+    end
   end
 
   def fortunes
@@ -43,7 +45,7 @@ class HelloWorld
     )
     fortunes.sort_by!(&:message)
 
-    html = <<~'HTML'
+    html = String.new(<<~'HTML')
       <!DOCTYPE html>
       <html>
       <head>
@@ -60,15 +62,15 @@ class HelloWorld
     HTML
 
     fortunes.each do |fortune|
-      html += <<~"HTML"
+      html << <<~"HTML"
       <tr>
-        <td>#{Rack::Utils.escape_html(fortune.id)}</td>
+        <td>#{fortune.id}</td>
         <td>#{Rack::Utils.escape_html(fortune.message)}</td>
       </tr>
       HTML
     end
 
-    html += <<~'HTML'
+    html << <<~'HTML'
       </table>
 
       </body>
@@ -76,17 +78,11 @@ class HelloWorld
     HTML
   end
 
-  WORLD_BY_ID_FOR_UPDATE = World.naked.for_update.where(:id=>:$id).prepare(:first, :world_by_id_for_update)
-  WORLD_UPDATE = World.where(:id=>:$id).prepare(:update, :world_update, :randomnumber=>:$randomnumber)
-
   def updates(env)
-    # Benchmark requirements explicitly forbid a WHERE..IN here, transactions
-    # are optional, batch updates are allowed (but each transaction can only
-    # read and write a single record?), so... be good
-    randn(bounded_queries(env)).map! do |id|
-      DB.transaction do
-        world = WORLD_BY_ID_FOR_UPDATE.(:id=>id)
-        WORLD_UPDATE.(:id=>id, :randomnumber=>(world[:randomnumber] = rand1))
+    DB.synchronize do
+      Array.new(bounded_queries(env)) do
+        world = WORLD_BY_ID.(:id=>rand1)
+        WORLD_UPDATE.(:id=>world[:id], :randomnumber=>(world[:randomnumber] = rand1))
         world
       end
     end
@@ -115,11 +111,13 @@ class HelloWorld
         ['text/plain', 'Hello, World!']
       end
 
-    return 200,
+    [
+      200,
       DEFAULT_HEADERS.merge(
         'Content-Type'=>content_type,
         'Date'=>Time.now.httpdate
       ),
       body
+    ]
   end
 end

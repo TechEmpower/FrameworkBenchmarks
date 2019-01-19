@@ -1,0 +1,5 @@
+singletons:
+ - com.networknt.handler.HandlerProvider:
+   - com.networknt.techempower.PathHandlerProvider
+ - com.networknt.server.StartupHookProvider:
+   - com.networknt.techempower.db.postgres.PostgresStartupHookProvider

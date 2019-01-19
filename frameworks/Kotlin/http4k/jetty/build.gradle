@@ -1,0 +1,15 @@
+dependencies {
+    compile project(":core")
+    compile "org.http4k:http4k-server-jetty:$http4k_version"
+}
+
+apply plugin: 'application'
+mainClassName = "Http4kJettyServerKt"
+apply plugin: 'com.github.johnrengelman.shadow'
+
+shadowJar {
+    baseName = "http4k-$project.name-benchmark"
+    classifier = null
+    version = null
+    mergeServiceFiles()
+}

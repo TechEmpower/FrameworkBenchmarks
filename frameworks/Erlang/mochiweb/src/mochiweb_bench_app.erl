@@ -7,7 +7,8 @@ start() ->
     application:ensure_all_started(mochiweb_bench).
 
 start(_Type, _StartArgs) ->
-    {ok, Port} = application:get_env(mochiweb_bench, http_port),
+    store:init(),
+    Port = 8080,
     mochiweb_bench_sup:start_link([{port, Port}]).
 
 stop(_State) ->

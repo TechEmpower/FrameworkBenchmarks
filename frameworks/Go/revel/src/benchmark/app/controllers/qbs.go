@@ -11,16 +11,13 @@ import (
 func (c App) QbsDb(queries int) revel.Result {
 	qbs, _ := qbs.GetQbs()
 	defer qbs.Close()
-
-	if queries <= 1 {
-		var w World
-		w.Id = uint16(rand.Intn(WorldRowCount) + 1)
-		err := qbs.Find(&w)
-		if err != nil {
-			revel.ERROR.Fatalf("Error scanning world row: %v", err)
-		}
-		return c.RenderJson(w)
-	}
+        _, foundQuery := c.Params.Values["queries"]
+        if queries>500 {
+             queries = 500
+        }
+        if queries == 0 {
+          queries = 1
+        }
 
 	ww := make([]World, queries)
 	for i := 0; i < queries; i++ {
@@ -29,25 +26,22 @@ func (c App) QbsDb(queries int) revel.Result {
 			revel.ERROR.Fatalf("Error scanning world row: %v", err)
 		}
 	}
-	return c.RenderJson(ww)
+        if !foundQuery {
+            return c.RenderJSON(ww[0])
+        }
+        return c.RenderJSON(ww)
 }
 
 func (c App) QbsUpdate(queries int) revel.Result {
 	qbs, _ := qbs.GetQbs()
 	defer qbs.Close()
-
-	if queries <= 1 {
-		var w World
-		w.Id = uint16(rand.Intn(WorldRowCount) + 1)
-		if err := qbs.Find(&w); err != nil {
-			revel.ERROR.Fatalf("Error scanning world row: %v", err)
-		}
-		w.RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
-		if _, err := qbs.Save(&w); err != nil {
-			revel.ERROR.Fatalf("Error updating world row: %v", err)
-		}
-		return c.RenderJson(&w)
-	}
+        _, foundQuery := c.Params.Values["queries"]
+        if queries>500 {
+             queries = 500
+        }
+        if queries == 0 {
+          queries = 1
+        }
 
 	ww := make([]World, queries)
 	for i := 0; i < queries; i++ {
@@ -60,7 +54,10 @@ func (c App) QbsUpdate(queries int) revel.Result {
 			revel.ERROR.Fatalf("Error scanning world row: %v", err)
 		}
 	}
-	return c.RenderJson(ww)
+        if !foundQuery {
+            return c.RenderJSON(ww[0])
+        }
+        return c.RenderJSON(ww)
 }
 
 func (c App) QbsFortune() revel.Result {
@@ -72,6 +69,6 @@ func (c App) QbsFortune() revel.Result {
 	fortunes = append(fortunes,
 		&Fortune{Message: "Additional fortune added at request time."})
 	sort.Sort(ByMessage{fortunes})
-	c.RenderArgs["fortunes"] = fortunes
+	c.ViewArgs["fortunes"] = fortunes
 	return c.RenderTemplate("App/Fortune.html")
 }

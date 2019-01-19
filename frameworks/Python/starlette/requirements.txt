@@ -1,0 +1,6 @@
+asyncpg==0.16.0
+gunicorn==19.9.0
+starlette==0.3.0
+jinja2==2.10
+ujson==1.35
+uvicorn==0.3.3

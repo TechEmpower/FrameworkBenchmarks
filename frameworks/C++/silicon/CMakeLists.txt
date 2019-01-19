@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 
 project(silicon)
 
-include_directories($ENV{IROOT}/include $ENV{MICROHTTPD_HOME}/include)
+include_directories(/include $ENV{MICROHTTPD_HOME}/include)
 
-link_directories($ENV{IROOT}/lib $ENV{MICROHTTPD_HOME}/lib)
+link_directories(/lib $ENV{MICROHTTPD_HOME}/lib)
 
 add_definitions(-std=c++14 -ftemplate-depth=1024 -DNDEBUG -O3)
 
@@ -16,4 +16,4 @@ set_target_properties(silicon_epoll_mysql PROPERTIES COMPILE_FLAGS "-DTFB_USE_EP
 target_link_libraries(silicon_epoll_mysql microhttpd mysqlclient)
 
 add_executable(silicon_lwan_mysql techempower_lwan.cc)
-target_link_libraries(silicon_lwan_mysql mysqlclient lwan curl z pthread dl luajit-5.1)
+target_link_libraries(silicon_lwan_mysql mysqlclient lwan ubsan curl z pthread dl luajit-5.1)

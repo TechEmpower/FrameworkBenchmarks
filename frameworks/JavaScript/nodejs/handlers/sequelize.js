@@ -1,65 +1,70 @@
-var h = require('../helper');
-var Promise = require('bluebird');
+const h = require('../helper');
 
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: '127.0.0.1',
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
+  host: 'tfb-database',
   dialect: 'mysql',
   logging: false
 });
 
-var Worlds = sequelize.define('World', {
-  id:           { type: 'Sequelize.INTEGER' },
+const Worlds = sequelize.define('World', {
+  id: {
+    type: 'Sequelize.INTEGER',
+    primaryKey: true
+  },
   randomNumber: { type: 'Sequelize.INTEGER' }
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
-var Fortunes = sequelize.define('Fortune', {
-  id:      { type: 'Sequelize.INTEGER' },
+const Fortunes = sequelize.define('Fortune', {
+  id: {
+    type: 'Sequelize.INTEGER',
+    primaryKey: true
+  },
   message: { type: 'Sequelize.STRING' }
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
-var randomWorldPromise = function() {
+const randomWorldPromise = () => {
   return Worlds.findOne({
     where: { id: h.randomTfbNumber() }
-  }).then(function (results) {
+  }).then((results) => {
     return results;
-  }).catch(function (err) {
+  }).catch((err) => {
     process.exit(1);
   });
-}
+};
 
 module.exports = {
 
-  SingleQuery: function (req, res) {
-    randomWorldPromise().then(function (world) {
+  SingleQuery: (req, res) => {
+    randomWorldPromise().then((world) => {
       h.addTfbHeaders(res, 'json');
       res.end(JSON.stringify(world));
     });
   },
 
-  MultipleQueries: function (queries, req, res) {
-    var worldPromises = [];
+  MultipleQueries: (queries, req, res) => {
+    const worldPromises = [];
 
-    for (var i = 0; i < queries; i++) {
+    for (let i = 0; i < queries; i++) {
       worldPromises.push(randomWorldPromise());
-    } 
+    }
 
-    Promise.all(worldPromises).then(function (worlds) {
+    Promise.all(worldPromises).then((worlds) => {
       h.addTfbHeaders(res, 'json');
       res.end(JSON.stringify(worlds));
     });
   },
 
-  Fortunes: function (req, res) {
-    Fortunes.findAll().then(function (fortunes) {
-      fortunes.push(h.ADDITIONAL_FORTUNE);
-      fortunes.sort(function (a, b) {
+  Fortunes: (req, res) => {
+    Fortunes.findAll().then((fortunes) => {
+      fortunes.push(h.additionalFortune());
+      fortunes.sort((a, b) => {
         return a.message.localeCompare(b.message);
       });
 
@@ -67,44 +72,42 @@ module.exports = {
       res.end(h.fortunesTemplate({
         fortunes: fortunes
       }));
-    }).catch(function (err) {
+    }).catch((err) => {
       console.log(err.stack);
       process.exit(1);
     });
   },
 
-  Updates: function (queries, req, res) {
-    var worldPromises = [];
+  Updates: (queries, req, res) => {
+    const worldPromises = [];
 
-    for (var i = 0; i < queries; i++) {
+    for (let i = 0; i < queries; i++) {
       worldPromises.push(randomWorldPromise());
     }
 
-    var worldUpdate = function(world) {
+    const worldUpdate = (world) => {
       world.randomNumber = h.randomTfbNumber();
 
       return Worlds.update({
         randomNumber: world.randomNumber
       },
-      {
-        where: { id: world.id }
-      }).then(function (results) {
-        return world;
-      }).catch(function (err) {
-        process.exit(1);
-      });
-    }
+        {
+          where: { id: world.id }
+        }).then((results) => {
+          return world;
+        }).catch((err) => {
+          process.exit(1);
+        });
+    };
 
-    Promise.all(worldPromises).then(function (worlds) {
-      var updates = worlds.map(function (e) {
-        return worldUpdate(e);
-      });
+    Promise.all(worldPromises).then((worlds) => {
+      const updates = worlds.map((e) => worldUpdate(e));
 
-      Promise.all(updates).then(function (updated) {
+      Promise.all(updates).then((updated) => {
         h.addTfbHeaders(res, 'json');
         res.end(JSON.stringify(updated));
       });
     });
   }
 
-}
+};

@@ -2,13 +2,13 @@
   "framework": "h2o",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
+      "cached_query_url": "/cached-worlds?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
