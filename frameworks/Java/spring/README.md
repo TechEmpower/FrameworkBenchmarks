@@ -32,8 +32,8 @@ Tomcat use a fixed thread pool that can grow up to 200 threads.
 
 ## Versions
 
-* [Java OpenJDK 10](http://openjdk.java.net/)
-* [Spring boot 2.0.3](https://spring.io/projects/spring-boot)
+* [Java OpenJDK 11](http://openjdk.java.net/)
+* [Spring boot 2.1.2](https://spring.io/projects/spring-boot)
 
 ## Test URLs
 
