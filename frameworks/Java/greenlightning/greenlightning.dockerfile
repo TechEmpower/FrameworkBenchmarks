@@ -12,4 +12,4 @@ RUN mvn clean install -q
 FROM azul/zulu-openjdk-alpine:11.0.1
 WORKDIR /greenlightning
 COPY --from=maven /greenlightning/target/greenlightning-test.jar app.jar
-CMD ["java", "-server", "-Xmx18g", "-XX:+UseNUMA", "-jar", "app.jar"]
+CMD ["java", "-server", "-Xmx24g", "-XX:+UseNUMA", "-jar", "app.jar"]
