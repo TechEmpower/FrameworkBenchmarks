@@ -15,7 +15,7 @@ WORKDIR /php
 RUN sed -i "s|listen = /run/php/php7.3-fpm.sock|listen = 127.0.0.1:9001|g" /etc/php/7.3/fpm/php-fpm.conf
 RUN sed -i "s|server unix:/var/run/php/php7.3-fpm.sock;|server 127.0.0.1:9001;|g" deploy/nginx7.conf
 
-RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
+#RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
 
 RUN chmod -R 777 /php
 
