@@ -4,8 +4,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
-RUN apt-get update -yqq  > /dev/null
-RUN apt-get install -yqq wget git unzip libxml2-dev cmake make \
+RUN apt-get update -yqq > /dev/null && \
+    apt-get install -yqq wget git unzip libxml2-dev cmake make \
                     zlibc zlib1g zlib1g-dev libpcre3 libpcre3-dev libargon2-0-dev libsodium-dev \
                     php7.3 php7.3-common php7.3-dev libphp7.3-embed php7.3-mysql nginx > /dev/null
 
