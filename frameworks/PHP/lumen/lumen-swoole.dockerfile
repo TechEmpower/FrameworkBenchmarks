@@ -25,8 +25,8 @@ RUN chmod -R 777 /lumen
 # An additional benefit of this method is that the correct version of composer will be used for the environment and version of the php system in the docker image
 RUN deploy/swoole/install-composer.sh
 
-RUN apt-get update -yqq  > /dev/null
-RUN apt-get install -yqq git unzip > /dev/null
+RUN apt-get update -yqq > /dev/null && \
+    apt-get install -yqq git unzip > /dev/null
 COPY deploy/swoole/composer* ./
 RUN php composer.phar install -a --no-dev --quiet
 
