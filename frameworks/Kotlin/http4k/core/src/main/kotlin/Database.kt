@@ -14,6 +14,7 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 import javax.sql.DataSource
 
+
 interface Database {
     fun findWorld(): JsonNode?
     fun findWorlds(count: Int): List<JsonNode>
@@ -23,28 +24,26 @@ interface Database {
 
 class PostgresDatabase private constructor(private val dataSource: DataSource) : Database {
 
-    override fun findWorld() = findWorlds(1).first()
+    override fun findWorld() = withConnection {
+        findWorld(randomWorld())
+    }
 
     override fun findWorlds(count: Int) = withConnection {
-        findWorlds(count,
-                { getInt("randomNumber") },
-                { id, rn -> obj("id" to number(id), "randomNumber" to number(rn)) })
+        (1..count).mapNotNull { findWorld(randomWorld()) }
     }
 
     override fun updateWorlds(count: Int) = withConnection {
-        withConnection {
-            val worlds = findWorlds(count, { randomWorld() }, { id, rn -> id to rn })
-
-            withStatement("UPDATE world SET randomNumber = ? WHERE id = ?") {
-                worlds.forEach { (id: Int, rn: Int) ->
-                    setInt(1, rn)
-                    setInt(2, id)
-                    executeUpdate()
-                }
-            }
-
-            worlds.map { obj("id" to number(it.first), "randomNumber" to number(it.second)) }
+        (1..count).mapNotNull {
+            val id = randomWorld()
+            updateWorld(id)
+            findWorld(id)
         }
+    }
+
+    private fun Connection.updateWorld(id: Int) = withStatement("UPDATE world SET randomNumber = ? WHERE id = ?") {
+        setInt(1, randomWorld())
+        setInt(2, id)
+        executeUpdate()
     }
 
     override fun fortunes() = withConnection {
@@ -85,14 +84,12 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
 
     private fun <T> Connection.withStatement(stmt: String, fn: PreparedStatement.() -> T): T = prepareStatement(stmt).use(fn)
 
-    private fun <T> Connection.findWorlds(count: Int, randomNumberFn: ResultSet.() -> Int, transform: (Int, Int) -> T) =
+    private fun Connection.findWorld(id: Int) =
             withStatement("SELECT * FROM world WHERE id = ?") {
-                (1..count).map {
-                    setInt(1, it)
-                    executeQuery().toResultsList {
-                        transform(getInt("id"), randomNumberFn())
-                    }.first()
-                }
+                setInt(1, id)
+                executeQuery().toResultsList {
+                    obj("id" to number(getInt("id")), "randomNumber" to number(getInt("randomNumber")))
+                }.firstOrNull()
             }
 
     private fun <T> ResultSet.toResultsList(fn: ResultSet.() -> T): List<T> =
@@ -150,20 +147,20 @@ class ReactivePostgresDatabase private constructor(private val db: PgPool) : Dat
     override fun updateWorlds(count: Int): List<JsonNode> {
         val deferred = CompletableFuture<List<JsonNode>>()
         val worlds = mutableListOf<Tuple>()
-        (1..count).forEach {
-            db.preparedQuery("SELECT id from WORLD where id=$1", Tuple.of(randomWorld())) { ar ->
-                with(ar.result().first()) {
-                    worlds.add(Tuple.of(getInteger(0), randomWorld()))
+            (1..count).forEach {
+                db.preparedQuery("SELECT id from WORLD where id=$1", Tuple.of(randomWorld())) { ar ->
+                    with(ar.result().first()) {
+                        worlds.add(Tuple.of(getInteger(0), randomWorld()))
 
-                    if (worlds.size == count) {
-                        db.preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", worlds) {
-                            deferred.complete(worlds.map {
-                                obj("id" to number(it.getInteger(0)), "randomNumber" to number(it.getInteger(1)))
-                            })
+                        if (worlds.size == count) {
+                            db.preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", worlds) {
+                                deferred.complete(worlds.map {
+                                    obj("id" to number(it.getInteger(0)), "randomNumber" to number(it.getInteger(1)))
+                                })
+                            }
                         }
                     }
                 }
-            }
         }
         return deferred.get()
     }
