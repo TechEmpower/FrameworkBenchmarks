@@ -12,7 +12,8 @@
 (def app
   (ring/ring-handler
     (ring/router ["/json" json-handler])
-    (ring/create-default-handler)))
+    (ring/create-default-handler)
+    {:inject-match? false, :inject-router? false}))
 
 (defn -main [& _]
   (web/run

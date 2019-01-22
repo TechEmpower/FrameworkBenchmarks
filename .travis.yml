@@ -127,4 +127,4 @@ script:
   # run-ci.py runs the diffing to see if travis needs to test this framework. Ideally/eventually,
   # we'd like to try and do the diffing before travis_clean & setup.
   # This will run the tests exactly as you would in your own vm:
-  - if [ "$RUN_TESTS" ]; then docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS; else echo 'Skipping test verification.'; fi
+  - if [ "$RUN_TESTS" ]; then docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS --benchmark-env travis; else echo 'Skipping test verification.'; fi

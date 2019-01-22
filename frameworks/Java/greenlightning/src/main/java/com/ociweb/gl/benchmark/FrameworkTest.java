@@ -59,7 +59,7 @@ public class FrameworkTest implements GreenApp {
     	//this server works best with  -XX:+UseNUMA    	
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    	//default port for test 
-    		 7,       	//default concurrency per track
+    		 13,       	//default concurrency per track
     		 2*(1<<14), //request queue length 
     		 1<<22,     //default total size of network buffer used by blocks
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
@@ -97,7 +97,7 @@ public class FrameworkTest implements GreenApp {
     	this.jsonMaxResponseSize = 1<<8;
 
     	this.maxQueueOut = 64;
-    	this.maxConnectionBits = 13;
+    	this.maxConnectionBits = 9;
     	this.maxRequestSize = 1<<9;
     	    	
     	if (!"127.0.0.1".equals(System.getProperty("host",null))) { 

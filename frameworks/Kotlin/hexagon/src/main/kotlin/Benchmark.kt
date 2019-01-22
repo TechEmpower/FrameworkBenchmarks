@@ -74,7 +74,7 @@ internal val benchmarkServer: Server by lazy { Server(engine, router, SettingsMa
 private fun returnWorlds(worldsList: List<World>): List<Map<Any?, Any?>> =
     worldsList.map { it.convertToMap() - "_id" }
 
-private fun Call.getWorldsCount() = request[QUERIES_PARAM]?.toIntOrNull().let {
+private fun Call.getWorldsCount() = request.singleParameters[QUERIES_PARAM]?.toIntOrNull().let {
     when {
         it == null -> 1
         it < 1 -> 1
