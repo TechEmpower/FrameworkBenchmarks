@@ -11,7 +11,6 @@ import com.ociweb.pronghorn.pipe.ObjectPipe;
 
 import io.reactiverse.pgclient.PgIterator;
 import io.reactiverse.pgclient.PgPool;
-import io.reactiverse.pgclient.PgRowSet;
 import io.reactiverse.pgclient.Tuple;
 
 public class ProcessQuery {
@@ -77,11 +76,10 @@ public class ProcessQuery {
 		
 	private void sendQueries(PgPool p, int queries, long con, long seq) {
 		int q = queries;
-		
 		while (--q >= 0) {
 			
 				final ResultObject target = DBRestInFlight.headObject();
-				
+			
 				assert(null!=target && -1==target.getStatus()) : "found status "+target.getStatus()+" on query "+q+" of "+queries ; //must block that this has been consumed?? should head/tail rsolve.
 								
 				target.setConnectionId(con);
@@ -92,14 +90,14 @@ public class ProcessQuery {
 			
 				p.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
 						if (r.succeeded()) {
-
-							PgIterator resultSet = r.result().iterator();
-							Tuple row = resultSet.next();			        
 							
-							target.setId(row.getInteger(0));
-							target.setResult(row.getInteger(1));					
+							PgIterator resultSet = r.result().iterator();
+					        Tuple row = resultSet.next();			        
+					        
+					        target.setId(row.getInteger(0));
+					        target.setResult(row.getInteger(1));					
 							target.setStatus(200);
-
+							
 						} else {
 							System.out.println("fail: "+r.cause().getLocalizedMessage());
 							target.setStatus(500); 
