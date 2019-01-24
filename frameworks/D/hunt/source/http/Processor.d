@@ -7,7 +7,7 @@ import core.stdc.stdlib;
 import core.thread, core.atomic;
 import http.Parser;
 
-import hunt.datetime;
+import hunt.util.DateTime;
 import hunt.logging;
 import hunt.io;
 

@@ -12,7 +12,7 @@ import std.getopt;
 import std.stdio;
 
 import hunt.io;
-import hunt.util.memory : totalCPUs;
+import hunt.system.Memory : totalCPUs;
 import http.Processor;
 import http.Server;
 import DemoProcessor;

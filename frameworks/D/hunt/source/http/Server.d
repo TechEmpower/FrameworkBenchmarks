@@ -1,10 +1,10 @@
 module http.Server;
 
-import hunt.datetime;
 import hunt.event;
 import hunt.io;
 import hunt.logging;
-import hunt.util.memory : totalCPUs;
+import hunt.system.Memory : totalCPUs;
+import hunt.util.DateTime;
 
 import std.array;
 import std.conv;

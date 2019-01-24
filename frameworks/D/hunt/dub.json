@@ -10,7 +10,8 @@
 	"libs-posix": [ "http_parser" ],
 	"lflags-posix": ["-Lhttp-parser/"],
 	"dependencies": {
-		"hunt": "~>1.0.0-rc.5",
+		"hunt": "~>1.0.0",
+		"hunt-database": "~>1.0.5",
 		"std_data_json": "~>0.18.2"
 	}
 }

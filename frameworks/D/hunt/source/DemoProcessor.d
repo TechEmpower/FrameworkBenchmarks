@@ -19,6 +19,24 @@ class DemoProcessor : HttpProcessor {
             JSONValue js = JSONValue(["message" : JSONValue("Hello, World!")]);
             respondWith(js.toJSON(), 200, HttpHeader("Content-Type", "application/json"));
             break;
+        
+        case "/db":
+            break;
+        
+        case "/fortunes":
+            break;
+        
+        case "/updates":
+            break;
+        
+        case "/db_postgres":
+            break;
+        
+        case "/fortunes_postgres":
+            break;
+        
+        case "/updates_postgres":
+            break;
 
         default:
             respondWith("The accessable path are: /plaintext and /json", 404);
