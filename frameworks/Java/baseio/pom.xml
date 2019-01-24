@@ -19,14 +19,14 @@
 		<dependency>
 			<groupId>com.firenio</groupId>
 			<artifactId>baseio-all</artifactId>
-			<version>3.2.9-BETA-4</version>
+			<version>3.2.9.beta5</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.51</version>
-		</dependency>
+        <dependency>
+            <groupId>com.jsoniter</groupId>
+            <artifactId>jsoniter</artifactId>
+            <version>0.9.23</version>
+        </dependency>
 
 	</dependencies>
 
