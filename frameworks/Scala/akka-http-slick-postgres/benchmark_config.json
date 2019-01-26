@@ -1,0 +1,26 @@
+{
+  "framework": "akka-http-slick-postgres",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "akka-http-slick-postgres",
+        "language": "Scala",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Akka",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "akka-http-slick-postgres",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
