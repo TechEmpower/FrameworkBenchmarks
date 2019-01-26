@@ -1,41 +1,43 @@
-# Pull base image
-FROM openjdk:13-alpine
+FROM alpine:3.8
 
-# Env variables
+RUN \
+  apk add --no-cache --update bash wget
+
+RUN \
+  mkdir /opt && wget -qO- https://download.java.net/java/early_access/alpine/27/binaries/openjdk-11+27_linux-x64-musl_bin.tar.gz | tar xz -C /opt
+
+ENV JAVA_HOME /opt/jdk-11/bin
 ENV SCALA_VERSION 2.12.8
 ENV SBT_VERSION 1.2.8
 
-# Install Scala
-## Piping curl directly in tar
 RUN \
-  curl -fsL https://downloads.typesafe.com/scala/$SCALA_VERSION/scala-$SCALA_VERSION.tgz | tar xfz - -C /root/ && \
-  echo >> /root/.bashrc && \
-  echo "export PATH=~/scala-$SCALA_VERSION/bin:$PATH" >> /root/.bashrc
+  mkdir -p /usr/local/sbt && \
+  wget -qO - --no-check-certificate "https://github.com/sbt/sbt/releases/download/v$SBT_VERSION/sbt-$SBT_VERSION.tgz" | tar xz -C /usr/local/sbt --strip-components=1
 
-# Install sbt
+ENV SBT_HOME /usr/local/sbt
+ENV PATH ${PATH}:${JAVA_HOME}/bin:${SBT_HOME}/bin
+
 RUN \
-  curl -L -o sbt-$SBT_VERSION.deb https://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb && \
-  dpkg -i sbt-$SBT_VERSION.deb && \
-  rm sbt-$SBT_VERSION.deb && \
-  apt-get update && \
-  apt-get install sbt && \
   sbt sbtVersion && \
-  mkdir project && \
-  echo "scalaVersion := \"${SCALA_VERSION}\"" > build.sbt && \
-  echo "sbt.version=${SBT_VERSION}" > project/build.properties && \
-  echo "case object Temp" > Temp.scala && \
-  sbt compile && \
-  rm -r project && rm build.sbt && rm Temp.scala && rm -r target
+  rm -rf project & rm -rf target
 
+RUN \
+  wget -qO - --no-check-certificate "https://downloads.typesafe.com/scala/$SCALA_VERSION/scala-$SCALA_VERSION.tgz" | tar xfz - -C /root/ && \
+  echo >> /root/.bashrc && \
+  echo "export PATH=~/scala-$SCALA_VERSION/bin:$PATH" >> /root/.bashrc && \
+  apk del wget
 
 WORKDIR /akka-http-slick-postgres
 
 COPY project project
 COPY src src
-COPY build.sbt build.sbt
-COPY .sbtopts .sbtopts
-COPY .scalafmt.conf .scalafmt.conf
+COPY build.sbt .sbtopts .scalafmt.conf ./
 
-RUN sbt -batch clean compile stage
+RUN \
+  hostname && \
+  pwd && \
+  ls -la && \
+  sbt sbtVersion && \
+  sbt -batch clean compile stage
 
 CMD ["target/universal/stage/bin/akka-slick-benchmark", "-Dakka.http.benchmark.postgres.dbhost=tfb-database", "-J-d64", "-J-server", "-J-Xms1g", "-J-Xmx1g", "-J-XX:UseG1GC", "-J-XX:ParallelGCThreads=3", "-J-XX:MetaspaceSize=192M", "-J-XX:MaxMetaspaceSize=192M", "-J-XX:+UseStringDeduplication"]
