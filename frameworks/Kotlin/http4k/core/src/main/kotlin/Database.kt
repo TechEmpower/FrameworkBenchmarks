@@ -94,6 +94,7 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
         withStatement("SELECT * FROM world WHERE id = ?") {
             setInt(1, id)
             with(executeQuery()) {
+                next()
                 obj("id" to number(getInt("id")), "randomNumber" to number(getInt("randomNumber")))
             }
         }
