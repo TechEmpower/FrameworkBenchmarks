@@ -7,7 +7,7 @@ ENV LHT_HOME /libhttpserver
 WORKDIR ${LHT_HOME}
 
 ENV LIBMICROHTTPD_VERSION 0.9.59
-ENV LIBHTTPSERVER_VERSION 0.16.0
+ENV LIBHTTPSERVER_VERSION 0.17.5
 
 RUN curl https://s3.amazonaws.com/libhttpserver/libmicrohttpd_releases/libmicrohttpd-${LIBMICROHTTPD_VERSION}.tar.gz -o libmicrohttpd-${LIBMICROHTTPD_VERSION}.tar.gz
 RUN tar -xvzf libmicrohttpd-${LIBMICROHTTPD_VERSION}.tar.gz
