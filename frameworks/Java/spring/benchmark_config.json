@@ -20,9 +20,30 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "spring",
+      "display_name": "spring-jdbc",
       "notes": "",
       "versus": ""
+    },
+    "mongo": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "mongodb",
+      "framework": "spring",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Full",
+      "platform": "Tomcat",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "spring-mongo",
+      "notes": "",
+      "versus": "spring"
     }
   }]
 }

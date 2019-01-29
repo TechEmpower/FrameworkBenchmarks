@@ -1,4 +1,4 @@
-package hello;
+package hello.controller;
 
 import static java.util.Comparator.comparing;
 
@@ -6,10 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+
+import hello.model.Fortune;
+import hello.model.World;
+import hello.repository.DbRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public final class HelloController {
 
   @Autowired
-  JdbcTemplate jdbcTemplate;
+  private DbRepository dbRepository;
 
   @RequestMapping("/plaintext")
   @ResponseBody
@@ -36,6 +37,7 @@ public final class HelloController {
 
   @RequestMapping("/db")
   @ResponseBody
+
   World db() {
     return randomWorld();
   }
@@ -54,11 +56,7 @@ public final class HelloController {
     var worlds = new World[parseQueryCount(queries)];
     Arrays.setAll(worlds, i -> randomWorld());
     for (var world : worlds) {
-      world.randomNumber = randomWorldNumber();
-      jdbcTemplate.update(
-          "UPDATE world SET randomnumber = ? WHERE id = ?",
-          world.randomNumber,
-          world.id);
+      dbRepository.findAndUpdateWorld(world.id, randomWorldNumber());
     }
     return worlds;
   }
@@ -66,10 +64,7 @@ public final class HelloController {
   @RequestMapping("/fortunes")
   @ModelAttribute("fortunes")
   List<Fortune> fortunes() {
-    var fortunes =
-        jdbcTemplate.query(
-            "SELECT * FROM fortune",
-            (rs, rn) -> new Fortune(rs.getInt("id"), rs.getString("message")));
+    var fortunes = dbRepository.fortunes();
 
     fortunes.add(new Fortune(0, "Additional fortune added at request time."));
     fortunes.sort(comparing(fortune -> fortune.message));
@@ -77,10 +72,7 @@ public final class HelloController {
   }
 
   private World randomWorld() {
-    return jdbcTemplate.queryForObject(
-        "SELECT * FROM world WHERE id = ?",
-        (rs, rn) -> new World(rs.getInt("id"), rs.getInt("randomnumber")),
-        randomWorldNumber());
+    return dbRepository.getWorld(randomWorldNumber());
   }
 
   private static int randomWorldNumber() {
@@ -100,23 +92,4 @@ public final class HelloController {
     return Math.min(500, Math.max(1, parsedValue));
   }
 
-  public static final class Fortune {
-    public int id;
-    public String message;
-
-    public Fortune(int id, String message) {
-      this.id = id;
-      this.message = message;
-    }
-  }
-
-  public static final class World {
-    public int id;
-    public int randomNumber;
-
-    public World(int id, int randomNumber) {
-      this.id = id;
-      this.randomNumber = randomNumber;
-    }
-  }
 }
