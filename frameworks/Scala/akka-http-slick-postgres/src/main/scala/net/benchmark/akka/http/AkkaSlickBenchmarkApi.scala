@@ -22,7 +22,7 @@ class AkkaSlickBenchmarkApi(dbLoader: DatabaseRepositoryLoader, materializer: Ac
   implicit val system: ActorSystem = context.system
 
   private val qd = context.system.dispatchers.lookup("akka-slick-benchmark.api.queries-dispatcher")
-  private val ud = context.system.dispatchers.lookup("akka-slick-benchmark.api.update-dispatcher")
+  private val ud = context.system.dispatchers.lookup("akka-slick-benchmark.api.updates-dispatcher")
   private val dd = context.system.dispatchers.lookup("akka-slick-benchmark.api.db-dispatcher")
   private val fd = context.system.dispatchers.lookup("akka-slick-benchmark.api.fortunes-dispatcher")
 

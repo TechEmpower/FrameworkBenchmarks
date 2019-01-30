@@ -8,11 +8,11 @@ object WorldTable {
 
 }
 
-class WorldTable(tag: Tag) extends Table[World](tag, Some("hello_world"), "World") {
+class WorldTable(tag: Tag) extends Table[World](tag, "World") {
 
   def id = column[Int]("id", O.PrimaryKey)
 
-  def randomNumber = column[Int]("randomNumber")
+  def randomNumber = column[Int]("randomnumber")
 
   def * = (id, randomNumber) <> (World.tupled, World.unapply)
 }

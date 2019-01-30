@@ -34,7 +34,7 @@ lazy val akkaSlickBenchmark =
 lazy val library =
   new {
     object Version {
-      val akka              = "2.5.19"
+      val akka              = "2.5.20"
       val akkaHttp          = "10.1.7"
       val akkaHttpCirce     = "1.23.0"
       val logback           = "1.2.3"

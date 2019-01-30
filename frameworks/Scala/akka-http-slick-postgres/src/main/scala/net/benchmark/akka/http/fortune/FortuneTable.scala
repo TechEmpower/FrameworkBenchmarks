@@ -8,7 +8,7 @@ object FortuneTable {
 
 }
 
-class FortuneTable(tag: Tag) extends Table[Fortune](tag, Some("hello_world"), "Fortune") {
+class FortuneTable(tag: Tag) extends Table[Fortune](tag, "Fortune") {
 
   def id = column[Int]("id", O.PrimaryKey)
 
