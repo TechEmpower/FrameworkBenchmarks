@@ -8,8 +8,10 @@ WORKDIR /hunt
 RUN git clone https://github.com/nodejs/http-parser.git && \
     cd http-parser && \
     make package
-    
+
+RUN apt update -yqq && apt install -yqq libpq-dev
+
 RUN dub upgrade --verbose
-RUN dub build -f --arch=x86_64 --build=release --compiler=ldc2
+RUN dub build -f --arch=x86_64 --build=release --compiler=ldc2 -c=lite
 
 CMD ["./hunt-minihttp"]

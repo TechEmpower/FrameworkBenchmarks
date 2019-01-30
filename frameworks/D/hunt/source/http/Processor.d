@@ -41,6 +41,7 @@ private:
 	HttpRequest request;
 	State state;
 	bool serving;
+	
 public:
 	TcpStream client;
 

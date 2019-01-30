@@ -2,7 +2,7 @@ module http.Server;
 
 import hunt.event;
 import hunt.io;
-import hunt.logging;
+import hunt.logging.ConsoleLogger;
 import hunt.system.Memory : totalCPUs;
 import hunt.util.DateTime;
 

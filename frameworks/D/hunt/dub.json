@@ -4,14 +4,26 @@
 	"authors": [
 		"Putao"
 	],
-	"description": "A simple http server powered by Hunt.",
-	"copyright": "Copyright © 2017-2018, HuntLabs.cn",
+	"description": "A mini http server powered by Hunt.",
+    "copyright": "Copyright (C) 2017-2019, HuntLabs",
+    "homepage": "https://www.huntlabs.net/",
 	"license": "Apache-2.0",
 	"libs-posix": [ "http_parser" ],
 	"lflags-posix": ["-Lhttp-parser/"],
 	"dependencies": {
-		"hunt": "~>1.0.0",
-		"hunt-database": "~>1.0.5",
-		"std_data_json": "~>0.18.2"
-	}
+		"hunt": "~>1.1.0",
+		"hunt-database": "~>1.1.1"
+	},
+	"configurations": [
+		{
+			"name": "lite"
+		},
+		{
+			"name": "postgresql",
+			"versions": ["POSTGRESQL"],
+			"subConfigurations": {
+				"hunt-database": "postgresql"
+			}
+		}
+	]
 }
