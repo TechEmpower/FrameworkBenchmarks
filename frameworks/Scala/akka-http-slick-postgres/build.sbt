@@ -20,7 +20,6 @@ lazy val akkaSlickBenchmark =
         library.akkaTestkit        % Test,
         library.akkaHttpTestkit    % Test,
         library.akkaStreamTestkit  % Test,
-        library.decline,
         library.logbackClassic,
         library.postgresql,
         library.scalaCheck         % Test,
@@ -38,7 +37,6 @@ lazy val library =
       val akka              = "2.5.19"
       val akkaHttp          = "10.1.7"
       val akkaHttpCirce     = "1.23.0"
-      val decline           = "0.5.1"
       val logback           = "1.2.3"
       val postgresql        = "42.2.5"
       val scalaCheck        = "1.14.0"
@@ -54,7 +52,6 @@ lazy val library =
     val akkaStream          = "com.typesafe.akka"            %% "akka-stream"                 % Version.akka
     val akkaStreamTestkit   = "com.typesafe.akka"            %% "akka-stream-testkit"         % Version.akka
     val akkaTestkit         = "com.typesafe.akka"            %% "akka-testkit"                % Version.akka
-    val decline             = "com.monovore"                 %% "decline"                     % Version.decline
     val logbackClassic      = "ch.qos.logback"               %  "logback-classic"             % Version.logback
     val postgresql          = "org.postgresql"               %  "postgresql"                  % Version.postgresql
     val scalaCheck          = "org.scalacheck"               %% "scalacheck"                  % Version.scalaCheck
