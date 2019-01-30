@@ -1,13 +1,12 @@
 package net.benchmark.akka.http
 
 import akka.actor._
-import akka.dispatch.MessageDispatcher
 import akka.http.scaladsl.Http
+import akka.pattern.pipe
 import akka.stream.ActorMaterializer
 import com.typesafe.config.Config
 import net.benchmark.akka.http.AkkaSlickBenchmarkApi.ApiMessages
 import net.benchmark.akka.http.db.DatabaseRepositoryLoader
-import akka.pattern.pipe
 
 import scala.util.Failure
 
@@ -21,8 +20,11 @@ class AkkaSlickBenchmarkApi(dbLoader: DatabaseRepositoryLoader, materializer: Ac
 
   implicit val mat: ActorMaterializer = materializer
   implicit val system: ActorSystem = context.system
-  val routingDispatcher: MessageDispatcher =
-    context.system.dispatchers.lookup("akka-slick-benchmark.api.routing-dispatcher")
+
+  private val qd = context.system.dispatchers.lookup("akka-slick-benchmark.api.queries-dispatcher")
+  private val ud = context.system.dispatchers.lookup("akka-slick-benchmark.api.update-dispatcher")
+  private val dd = context.system.dispatchers.lookup("akka-slick-benchmark.api.db-dispatcher")
+  private val fd = context.system.dispatchers.lookup("akka-slick-benchmark.api.fortunes-dispatcher")
 
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
   override def receive: Receive = {
@@ -34,7 +36,7 @@ class AkkaSlickBenchmarkApi(dbLoader: DatabaseRepositoryLoader, materializer: Ac
     case ApiMessages.StartApi =>
       log.info("Received StartApi command from {}.", sender().path)
       import context.dispatcher
-      val _ = Http(system).bindAndHandle(GlobalRoutes.routes(dbLoader)(routingDispatcher), address, port).pipeTo(self)
+      val _ = Http(system).bindAndHandle(GlobalRoutes.routes(dbLoader, qd, ud, dd, fd), address, port).pipeTo(self)
       context.become(running(sender()))
 
     case Terminated(ref) =>

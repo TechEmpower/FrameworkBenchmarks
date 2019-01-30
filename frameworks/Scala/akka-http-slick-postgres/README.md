@@ -50,44 +50,44 @@ Thanks and Cheers!
 
 ### Test Type Implementation Source Code
 
-* [JSON](Relative/Path/To/Your/Source/File)
-* [PLAINTEXT](Relative/Path/To/Your/Source/File)
-* [DB](Relative/Path/To/Your/Source/File)
-* [QUERY](Relative/Path/To/Your/Source/File)
-* [CACHED QUERY](Relative/Path/To/Your/Source/File)
-* [UPDATE](Relative/Path/To/Your/Source/File)
-* [FORTUNES](Relative/Path/To/Your/Source/File)
+* [JSON](src/main/scala/net/benchmark/akka/http/world/JsonRoute.scala)
+* [PLAINTEXT](src/main/scala/net/benchmark/akka/http/world/PlainTextRoute.scala)
+* [DB](src/main/scala/net/benchmark/akka/http/world/DbRoute.scala)
+* [QUERY](src/main/scala/net/benchmark/akka/http/world/QueriesRoute.scala)
+* [UPDATE](src/main/scala/net/benchmark/akka/http/world/UpdateRoute.scala)
+* [FORTUNES](src/main/scala/net/benchmark/akka/http/fortune/FortuneRoutes.scala)
 
 ## Important Libraries
 The tests were run with:
-* [Software](https://www.example1.com/)
-* [Example](http://www.example2.com/)
+* [Akka HTTP](https://doc.akka.io/docs/akka-http/current/)
+* [Akka Streams](https://doc.akka.io/docs/akka/current/stream/)
+* [Akka](https://doc.akka.io/docs/akka/current/actors.html)
 
 ## Test URLs
 ### JSON
 
-http://localhost:8080/json
+http://localhost:9339/json
 
 ### PLAINTEXT
 
-http://localhost:8080/plaintext
+http://localhost:9339/plaintext
 
 ### DB
 
-http://localhost:8080/db
+http://localhost:9339/db
 
 ### QUERY
 
-http://localhost:8080/query?queries=
+http://localhost:9339/query?queries=
 
 ### CACHED QUERY
 
-http://localhost:8080/cached_query?queries=
+http://localhost:9339/cached_query?queries=
 
 ### UPDATE
 
-http://localhost:8080/update?queries=
+http://localhost:9339/update?queries=
 
 ### FORTUNES
 
-http://localhost:8080/fortunes
+http://localhost:9339/fortunes

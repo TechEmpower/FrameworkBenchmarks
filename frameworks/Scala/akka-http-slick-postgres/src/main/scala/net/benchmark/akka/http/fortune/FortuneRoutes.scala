@@ -1,26 +1,25 @@
-package net.benchmark.akka.http.world
-import akka.http.scaladsl.server.Directives.{pathEnd, post}
+package net.benchmark.akka.http.fortune
+
+import akka.http.scaladsl.common.{EntityStreamingSupport, JsonEntityStreamingSupport}
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import net.benchmark.akka.http.fortune.FortuneRepository
+import akka.stream.scaladsl.Source
+import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContextExecutor
 
-class FortuneRoutes(fr: FortuneRepository, ec: ExecutionContext) {
+class FortuneRoutes(fr: FortuneRepository, fd: ExecutionContextExecutor) {
 
-  implicit private val routesExecutionContext: ExecutionContext = ec
+  implicit private val jss: JsonEntityStreamingSupport =
+    EntityStreamingSupport.json().withParallelMarshalling(5, unordered = false)
 
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
-  def fortuneRoutes(): Route = {
-    pathEnd {
-      post {
-        createFortune()
+  def routes(): Route = {
+    path("fortunes") {
+      withExecutionContext(fd) {
+        complete(Source.fromPublisher(fr.all()))
       }
     }
-  }
-
-  def createFortune(): Route = {
-    // fr.create(entity))
-    ???
   }
 
 }

@@ -1,25 +1,21 @@
 package net.benchmark.akka.http.world
-import akka.http.scaladsl.server.Directives.{pathEnd, post}
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContextExecutor
 
-class WorldRoutes(wr: WorldRepository, ec: ExecutionContext) {
+class WorldRoutes(wr: WorldRepository,
+                  qd: ExecutionContextExecutor,
+                  ud: ExecutionContextExecutor,
+                  dd: ExecutionContextExecutor) {
 
-  implicit private val routesExecutionContext: ExecutionContext = ec
+  private val qr = new QueriesRoute(wr, qd).route()
+  private val ur = new UpdateRoute(wr, ud).route()
+  private val dr = new DbRoute(wr, dd).route()
 
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
-  def worldRoutes(): Route = {
-    pathEnd {
-      post {
-        createWorld()
-      }
-    }
-  }
-
-  def createWorld(): Route = {
-    // wr.create(entity))
-    ???
+  def routes(): Route = {
+    qr ~ ur ~ dr ~ JsonRoute.route ~ PlainTextRoute.route
   }
 
 }
