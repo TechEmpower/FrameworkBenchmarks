@@ -21,7 +21,7 @@
     <appender-ref ref="STDOUT" />
   </appender>
 
-  <logger name="akka" level="DEBUG" additivity="false">
+  <logger name="akka" level="WARN" additivity="false">
     <appender-ref ref="ASYNC_AKKA"/>
   </logger>
 
@@ -29,7 +29,7 @@
 
   <logger name="slick" level="ERROR"/>
 
-  <logger name="net.benchmark" level="ERROR"/>
+  <logger name="net.benchmark" level="INFO"/>
 
   <root level="ERROR">
     <appender-ref ref="ASYNC"/>

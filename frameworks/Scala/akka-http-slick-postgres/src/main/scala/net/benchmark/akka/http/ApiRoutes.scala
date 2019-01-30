@@ -1,5 +1,6 @@
 package net.benchmark.akka.http
 
+import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{ExceptionHandler, RejectionHandler, Route}
@@ -10,16 +11,16 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.ExecutionContextExecutor
 
-object GlobalRoutes {
-  final val REALM = "Authorization"
+object ApiRoutes {
 
-  val log: Logger = LoggerFactory.getLogger(getClass)
+  private val log: Logger = LoggerFactory.getLogger(getClass)
 
   def routes(dbLoader: DatabaseRepositoryLoader,
+             sd: ExecutionContextExecutor,
              qd: ExecutionContextExecutor,
              ud: ExecutionContextExecutor,
              dd: ExecutionContextExecutor,
-             fd: ExecutionContextExecutor): Route =
+             fd: ExecutionContextExecutor)(implicit system: ActorSystem): Route =
     handleRejections(RejectionHandler.default) {
       val eh: ExceptionHandler = ExceptionHandler {
         case ex @ (_: Exception) =>
@@ -27,8 +28,8 @@ object GlobalRoutes {
           complete(StatusCodes.InternalServerError)
       }
 
-      val worldRoutes = new WorldRoutes(dbLoader.loadWorldRepository(), qd, ud, dd)
-      val fortuneRoutes = new FortuneRoutes(dbLoader.loadFortuneRepository(), fd)
+      val worldRoutes = new WorldRoutes(dbLoader.loadWorldRepository(), sd, qd, ud, dd)
+      val fortuneRoutes = new FortuneRoutes(dbLoader.loadFortuneRepository(), sd, fd)
 
       handleExceptions(eh) {
         get {

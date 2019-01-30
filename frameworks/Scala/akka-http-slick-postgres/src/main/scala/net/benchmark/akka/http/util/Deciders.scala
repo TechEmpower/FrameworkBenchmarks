@@ -1,5 +1,4 @@
-package net.benchmark.akka.http
-
+package net.benchmark.akka.http.util
 import akka.actor.ActorSystem
 import akka.event.Logging
 import akka.stream.{ActorAttributes, ActorMaterializerSettings, Attributes, Supervision}

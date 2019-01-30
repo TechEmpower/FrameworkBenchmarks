@@ -24,6 +24,7 @@ lazy val akkaSlickBenchmark =
         library.postgresql,
         library.scalaCheck         % Test,
         library.scalaTest          % Test,
+        library.scalateCore,
         library.slick,
         library.slickPgCore,
         library.slickHikariCP,
@@ -41,6 +42,7 @@ lazy val library =
       val postgresql        = "42.2.5"
       val scalaCheck        = "1.14.0"
       val scalaTest         = "3.0.5"
+      val scalate           = "1.8.0"
       val slick             = "3.2.3"
       val slickPg           = "0.17.0"
     }
@@ -56,6 +58,7 @@ lazy val library =
     val postgresql          = "org.postgresql"               %  "postgresql"                  % Version.postgresql
     val scalaCheck          = "org.scalacheck"               %% "scalacheck"                  % Version.scalaCheck
     val scalaTest           = "org.scalatest"                %% "scalatest"                   % Version.scalaTest
+    val scalateCore         = "org.scalatra.scalate"         %% "scalate-core"                % Version.scalate
     val slick               = "com.typesafe.slick"           %% "slick"                       % Version.slick
     val slickHikariCP       = "com.typesafe.slick"           %% "slick-hikaricp"              % Version.slick
     val slickPgCore         = "com.github.tminglei"          %% "slick-pg"                    % Version.slickPg
@@ -71,7 +74,7 @@ lazy val commonSettings =
   Seq(
     organization := "net.benchmark.akka.http",
     organizationName := "Akka",
-    scalaVersion := "2.12.8",
+    scalaVersion := "2.12.4",
     scalacOptions ++= Seq(
       "-deprecation",
       "-encoding",

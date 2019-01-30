@@ -2,7 +2,7 @@ package net.benchmark.akka.http
 import akka.actor.{ActorRef, ActorSystem, Terminated}
 import akka.stream.ActorMaterializer
 import com.typesafe.config.Config
-import net.benchmark.akka.http.AkkaSlickBenchmarkApi.ApiMessages
+import net.benchmark.akka.http.ApiSupervisor.ApiMessages
 import net.benchmark.akka.http.db.{
   CustomPostgresProfile,
   DatabaseConfiguration,
@@ -27,7 +27,7 @@ object Main {
     val dbConfig: DatabaseConfig[CustomPostgresProfile] = DatabaseConfiguration.getDefaultDatabaseConfiguration(config)
     val dbLoader: DatabaseRepositoryLoader = new DatabaseRepositoryLoaderModule(dbConfig)
 
-    val api: ActorRef = system.actorOf(AkkaSlickBenchmarkApi.props(dbLoader, mat))
+    val api: ActorRef = system.actorOf(ApiSupervisor.props(dbLoader, mat))
 
     api ! ApiMessages.StartApi
 

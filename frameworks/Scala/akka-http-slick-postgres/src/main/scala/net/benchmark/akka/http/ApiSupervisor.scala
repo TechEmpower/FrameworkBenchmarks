@@ -5,12 +5,14 @@ import akka.http.scaladsl.Http
 import akka.pattern.pipe
 import akka.stream.ActorMaterializer
 import com.typesafe.config.Config
-import net.benchmark.akka.http.AkkaSlickBenchmarkApi.ApiMessages
+import net.benchmark.akka.http.ApiSupervisor.ApiMessages
 import net.benchmark.akka.http.db.DatabaseRepositoryLoader
+import net.benchmark.akka.http.util.SameThreadDirectExecutor
 
+import scala.concurrent.ExecutionContext
 import scala.util.Failure
 
-class AkkaSlickBenchmarkApi(dbLoader: DatabaseRepositoryLoader, materializer: ActorMaterializer)
+class ApiSupervisor(dbLoader: DatabaseRepositoryLoader, materializer: ActorMaterializer)
     extends Actor
     with ActorLogging {
 
@@ -21,10 +23,11 @@ class AkkaSlickBenchmarkApi(dbLoader: DatabaseRepositoryLoader, materializer: Ac
   implicit val mat: ActorMaterializer = materializer
   implicit val system: ActorSystem = context.system
 
-  private val qd = context.system.dispatchers.lookup("akka-slick-benchmark.api.queries-dispatcher")
-  private val ud = context.system.dispatchers.lookup("akka-slick-benchmark.api.updates-dispatcher")
-  private val dd = context.system.dispatchers.lookup("akka-slick-benchmark.api.db-dispatcher")
-  private val fd = context.system.dispatchers.lookup("akka-slick-benchmark.api.fortunes-dispatcher")
+  private val sd = ExecutionContext.fromExecutor(new SameThreadDirectExecutor())
+  private val qd = context.system.dispatchers.lookup("akka-slick-benchmark.queries-dispatcher")
+  private val ud = context.system.dispatchers.lookup("akka-slick-benchmark.updates-dispatcher")
+  private val dd = context.system.dispatchers.lookup("akka-slick-benchmark.db-dispatcher")
+  private val fd = context.system.dispatchers.lookup("akka-slick-benchmark.fortunes-dispatcher")
 
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
   override def receive: Receive = {
@@ -35,8 +38,11 @@ class AkkaSlickBenchmarkApi(dbLoader: DatabaseRepositoryLoader, materializer: Ac
 
     case ApiMessages.StartApi =>
       log.info("Received StartApi command from {}.", sender().path)
+
       import context.dispatcher
-      val _ = Http(system).bindAndHandle(GlobalRoutes.routes(dbLoader, qd, ud, dd, fd), address, port).pipeTo(self)
+
+      val _ = Http(system).bindAndHandle(ApiRoutes.routes(dbLoader, sd, qd, ud, dd, fd), address, port).pipeTo(self)
+
       context.become(running(sender()))
 
     case Terminated(ref) =>
@@ -60,12 +66,12 @@ class AkkaSlickBenchmarkApi(dbLoader: DatabaseRepositoryLoader, materializer: Ac
 
 }
 
-object AkkaSlickBenchmarkApi {
+object ApiSupervisor {
 
-  final val Name: String = "ApiSupervisor"
+  final val Name: String = "ApiSupervisorActor"
 
   def props(dbLoader: DatabaseRepositoryLoader, materializer: ActorMaterializer): Props =
-    Props(new AkkaSlickBenchmarkApi(dbLoader, materializer))
+    Props(new ApiSupervisor(dbLoader, materializer))
 
   /**
     * A sealed trait for the messages of the actor.

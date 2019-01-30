@@ -1,7 +1,4 @@
-FROM hseeberger/scala-sbt:11.0.1_2.12.8_1.2.7
-
-ENV SCALA_VERSION 2.12.8
-ENV SBT_VERSION 1.2.7
+FROM hseeberger/scala-sbt:8u151-2.12.4-1.1.1
 
 WORKDIR /akka-http-slick-postgres
 

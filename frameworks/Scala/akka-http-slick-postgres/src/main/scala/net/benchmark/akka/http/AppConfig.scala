@@ -2,7 +2,7 @@ package net.benchmark.akka.http
 
 import com.typesafe.config.{Config, ConfigFactory}
 
-object AkkaSlickBenchmarkConfig {
+object AppConfig {
 
   val config: Config = ConfigFactory.load()
 
