@@ -10,15 +10,19 @@ import http.HttpURI;
 import http.UrlEncoded;
 import hunt.logging.ConsoleLogger: trace, warning, tracef;
 
+import std.algorithm;
+import std.array;
 import std.exception;
 import std.random;
+import std.string;
 
 
 version(POSTGRESQL) {
-__gshared Database dbConnection;
+    __gshared Database dbConnection;
 }
 
 enum HttpHeader textHeader = HttpHeader("Content-Type", "text/plain");
+enum HttpHeader htmlHeader = HttpHeader("Content-Type", "text/html");
 enum HttpHeader jsonHeader = HttpHeader("Content-Type", "application/json");
 
 
@@ -75,6 +79,10 @@ version(POSTGRESQL) {
 
             respondMultipleQuery(number);
             break;
+            
+        case "/fortunes":
+            respondFortunes();
+            break;
         
         case "/updates":
             UrlEncoded queriesMap = new UrlEncoded();
@@ -102,8 +110,6 @@ version(POSTGRESQL) {
             }
             respondUpdates(number);
             break;
-        // case "/fortunes":
-        //     break;
         
         default:
             respondWith404();
@@ -166,6 +172,43 @@ version(POSTGRESQL) {
         respondWith(js.toJSON(), 200, jsonHeader);
     }
 
+    private void respondFortunes() {
+        FortuneModel[] data;
+		immutable query = "SELECT id, message::text FROM Fortune";
+        Statement statement = dbConnection.prepare(query);
+        ResultSet rs = statement.query();
+		data = rs.map!(f => FortuneModel(f[0].to!int, f[1])).array;
+		data ~= FortuneModel(0, "Additional fortune added at request time.");
+		data.sort!((a, b) => a.message < b.message);
+        // trace(data);
+
+        respondWith(randerFortunes(data), 200, htmlHeader);
+    }
+
+    static string randerFortunes(FortuneModel[] data) {
+        Appender!string sb;
+        sb.put(`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Fortunes</title>
+</head>
+<body>
+<table>
+<tr><th>id</th><th>message</th></tr>`);
+
+        foreach(FortuneModel f; data) {
+            string message = replace(f.message, ">", "&gt;");
+            message = replace(message, "<", "&lt;");
+            message = replace(message, "\"", "&quot;");
+            sb.put(format("<tr><td>%d</td><td>%s</td></tr>\n", f.id, message));
+        } 
+
+        sb.put("</table>\n</body>\n</html>");
+
+        return sb.data;
+    }
+
     private void respondUpdates(int queries) {
         if(queries<1)
             queries = 1;
@@ -196,4 +239,10 @@ version(POSTGRESQL) {
         respondWith(js.toJSON(), 200, jsonHeader);
     }
 }    
+}
+
+
+struct FortuneModel {
+	int id;
+	string message;
 }
