@@ -19,6 +19,6 @@ object DatabaseConfiguration {
 
   // Load the database configuration from the default path.
   val getDefaultDatabaseConfiguration: Config => DatabaseConfig[CustomPostgresProfile] = getDatabaseConfiguration(
-    "akka-slick-benchmark.database")
+    "akka-http-slick-postgres.database")
 
 }

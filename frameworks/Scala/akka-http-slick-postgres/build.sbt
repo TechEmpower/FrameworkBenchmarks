@@ -1,4 +1,4 @@
-lazy val akkaSlickBenchmark =
+lazy val akkaHttpSlickPostgres =
   project
     .in(file("."))
     .enablePlugins(
@@ -10,7 +10,7 @@ lazy val akkaSlickBenchmark =
     )
     .settings(settings)
     .settings(
-      name := "akka-slick-benchmark",
+      name := "akka-http-slick-postgres",
       mainClass in Compile := Some("net.benchmark.akka.http.Main"),
       libraryDependencies ++= Seq(
         library.akkaSlf4j,

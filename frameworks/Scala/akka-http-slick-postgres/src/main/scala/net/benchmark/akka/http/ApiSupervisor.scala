@@ -17,17 +17,17 @@ class ApiSupervisor(dbLoader: DatabaseRepositoryLoader, materializer: ActorMater
     with ActorLogging {
 
   private val config: Config = context.system.settings.config
-  private val port: Int = config.getInt("akka-slick-benchmark.api.port")
-  private val address: String = config.getString("akka-slick-benchmark.api.address")
+  private val port: Int = config.getInt("akka-http-slick-postgres.api.port")
+  private val address: String = config.getString("akka-http-slick-postgres.api.address")
 
   implicit val mat: ActorMaterializer = materializer
   implicit val system: ActorSystem = context.system
 
   private val sd = ExecutionContext.fromExecutor(new SameThreadDirectExecutor())
-  private val qd = context.system.dispatchers.lookup("akka-slick-benchmark.queries-dispatcher")
-  private val ud = context.system.dispatchers.lookup("akka-slick-benchmark.updates-dispatcher")
-  private val dd = context.system.dispatchers.lookup("akka-slick-benchmark.db-dispatcher")
-  private val fd = context.system.dispatchers.lookup("akka-slick-benchmark.fortunes-dispatcher")
+  private val qd = context.system.dispatchers.lookup("akka-http-slick-postgres.queries-dispatcher")
+  private val ud = context.system.dispatchers.lookup("akka-http-slick-postgres.updates-dispatcher")
+  private val dd = context.system.dispatchers.lookup("akka-http-slick-postgres.db-dispatcher")
+  private val fd = context.system.dispatchers.lookup("akka-http-slick-postgres.fortunes-dispatcher")
 
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
   override def receive: Receive = {

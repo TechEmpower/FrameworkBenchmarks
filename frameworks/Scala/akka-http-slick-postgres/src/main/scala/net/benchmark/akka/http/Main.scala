@@ -32,7 +32,7 @@ object Main {
     api ! ApiMessages.StartApi
 
     val finish: Future[Terminated] = system.whenTerminated
-    finish.onComplete(_ => log.info("akka-slick-benchmark app terminated!"))(
+    finish.onComplete(_ => log.info("akka-http-slick-postgres app terminated!"))(
       ExecutionContext.fromExecutorService(java.util.concurrent.Executors.newFixedThreadPool(1)))
   }
 
