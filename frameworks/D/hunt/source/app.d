@@ -29,12 +29,12 @@ void main(string[] args) {
 version(POSTGRESQL) {
 	debug {
 		dbConnection = new Database("postgresql://benchmarkdbuser:benchmarkdbpass@10.1.11.44:5432/hello_world?charset=utf-8");
-		dbConnection.getOption().setMinimumConnection(128);
+		dbConnection.getOption().setMinimumConnection(64);
 	} else {
 		dbConnection = new Database("postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?charset=utf-8");
-		dbConnection.getOption().setMinimumConnection(256);
+		dbConnection.getOption().setMinimumConnection(64);
 	}
-		dbConnection.getOption().setMaximumConnection(256);
+		dbConnection.getOption().setMaximumConnection(64);
 }
 	HttpServer httpServer = new HttpServer("0.0.0.0", port, totalCPUs-1);
 	httpServer.onProcessorCreate(delegate HttpProcessor (TcpStream client) {
