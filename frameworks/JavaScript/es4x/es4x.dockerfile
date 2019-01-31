@@ -1,4 +1,4 @@
-FROM oracle/graalvm-ce:1.0.0-rc10
+FROM oracle/graalvm-ce:1.0.0-rc11
 # Set working dir
 RUN mkdir /app
 WORKDIR /app
@@ -7,8 +7,6 @@ COPY ./ /app
 
 # Get dependencies
 RUN npm --unsafe-perm install
-# Generate a runtime blog
-RUN npm run package
 
 CMD java \
     -server                                           \
@@ -22,5 +20,5 @@ CMD java \
     -Dvertx.threadChecks=false                        \
     -Dvertx.disableContextTimings=true                \
     -Dvertx.disableTCCL=true                          \
-    -jar target/dist/es4x-0.0.1.jar                   \
+    -jar node_modules/.bin/benchmark.jar              \
     --instances `grep --count ^processor /proc/cpuinfo`
