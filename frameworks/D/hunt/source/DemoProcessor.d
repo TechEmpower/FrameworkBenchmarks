@@ -160,16 +160,15 @@ class DemoProcessor : HttpProcessor {
             else if (queries > 500)
                 queries = 500;
 
-            JSONValue[] arr;
+            JSONValue[] arr = new JSONValue[queries];
             for (int i = 0; i < queries; i++) {
                 immutable id = uniform(1, 10000);
                 immutable query = "SELECT randomNumber FROM world WHERE id = " ~ id.to!string;
-                Statement statement = dbConnection.prepare(query);
-                ResultSet rs = statement.query();
-                arr ~= JSONValue(["id" : JSONValue(id), "randomNumber"
+                auto rs = dbConnection.query(query);
+
+                arr[i] = JSONValue(["id" : JSONValue(id), "randomNumber"
                         : JSONValue(to!int(rs.front()[0]))]);
             }
-
             JSONValue js = JSONValue(arr);
             respondWith(js.toJSON(), 200, jsonHeader);
         }
@@ -217,7 +216,7 @@ class DemoProcessor : HttpProcessor {
             else if (queries > 500)
                 queries = 500;
 
-            JSONValue[] arr;
+            JSONValue[] arr = new JSONValue[queries];
             for (int i = 0; i < queries; i++) {
                 immutable id = uniform(1, 10000);
                 immutable idString = id.to!string;
@@ -233,7 +232,7 @@ class DemoProcessor : HttpProcessor {
                 int r = dbConnection.execute(updateSql);
                 // debug tracef("r=%d", r);
 
-                arr ~= JSONValue(["id" : JSONValue(id), "randomNumber" : JSONValue(randomNumber)]);
+                arr[i] = JSONValue(["id" : JSONValue(id), "randomNumber" : JSONValue(randomNumber)]);
             }
 
             JSONValue js = JSONValue(arr);

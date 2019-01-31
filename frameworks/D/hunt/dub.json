@@ -12,7 +12,8 @@
 	"lflags-posix": ["-Lhttp-parser/"],
 	"dependencies": {
 		"hunt": "~>1.1.0",
-		"hunt-database": "~>1.1.1"
+		"hunt-database": "~>1.1.1",
+		"std_data_json": "~>0.18.2"
 	},
 	"configurations": [
 		{
