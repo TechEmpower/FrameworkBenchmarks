@@ -1,4 +1,4 @@
-FROM hseeberger/scala-sbt:8u181_2.12.7_1.2.3
+FROM hseeberger/scala-sbt:8u181_2.12.8_1.2.8
 WORKDIR /play2
 COPY play2-java-ebean-hikaricp .
 
