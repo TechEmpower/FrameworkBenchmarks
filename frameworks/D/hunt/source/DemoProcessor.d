@@ -20,9 +20,9 @@ version (POSTGRESQL) {
     __gshared Database dbConnection;
 }
 
-enum HttpHeader textHeader = HttpHeader("Content-Type", "text/plain");
-enum HttpHeader htmlHeader = HttpHeader("Content-Type", "text/html");
-enum HttpHeader jsonHeader = HttpHeader("Content-Type", "application/json");
+enum HttpHeader textHeader = HttpHeader("Content-Type", "text/plain; charset=UTF-8");
+enum HttpHeader htmlHeader = HttpHeader("Content-Type", "text/html; charset=UTF-8");
+enum HttpHeader jsonHeader = HttpHeader("Content-Type", "application/json; charset=UTF-8");
 
 class DemoProcessor : HttpProcessor {
     this(TcpStream client) {
@@ -164,7 +164,7 @@ class DemoProcessor : HttpProcessor {
             for (int i = 0; i < queries; i++) {
                 immutable id = uniform(1, 10000);
                 immutable query = "SELECT randomNumber FROM world WHERE id = " ~ id.to!string;
-                auto rs = dbConnection.query(query);
+                ResultSet rs = dbConnection.query(query);
 
                 arr[i] = JSONValue(["id" : JSONValue(id), "randomNumber"
                         : JSONValue(to!int(rs.front()[0]))]);
@@ -176,8 +176,7 @@ class DemoProcessor : HttpProcessor {
         private void respondFortunes() {
             FortuneModel[] data;
             immutable query = "SELECT id, message::text FROM Fortune";
-            Statement statement = dbConnection.prepare(query);
-            ResultSet rs = statement.query();
+            ResultSet rs = dbConnection.query(query);
             data = rs.map!(f => FortuneModel(f[0].to!int, f[1])).array;
             data ~= FortuneModel(0, "Additional fortune added at request time.");
             data.sort!((a, b) => a.message < b.message);
@@ -190,22 +189,24 @@ class DemoProcessor : HttpProcessor {
             Appender!string sb;
             sb.put(`<!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<title>Fortunes</title>
-</head>
-<body>
-<table>
-<tr><th>id</th><th>message</th></tr>`);
+	<head>
+		<title>Fortunes</title>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<th>id</th><th>message</th>
+			</tr>
+`);
 
             foreach (FortuneModel f; data) {
                 string message = replace(f.message, ">", "&gt;");
                 message = replace(message, "<", "&lt;");
                 message = replace(message, "\"", "&quot;");
-                sb.put(format("<tr><td>%d</td><td>%s</td></tr>\n", f.id, message));
+                sb.put(format("			<tr>\n				<td>%d</td><td>%s</td>\n			</tr>\n", f.id, message));
             }
 
-            sb.put("</table>\n</body>\n</html>");
+            sb.put("		</table>\n	</body>\n</html>");
 
             return sb.data;
         }
@@ -221,8 +222,7 @@ class DemoProcessor : HttpProcessor {
                 immutable id = uniform(1, 10000);
                 immutable idString = id.to!string;
                 immutable query = "SELECT randomNumber FROM world WHERE id = " ~ idString;
-                Statement statement = dbConnection.prepare(query);
-                ResultSet rs = statement.query();
+                ResultSet rs = dbConnection.query(query);
                 int randomNumber = to!int(rs.front()[0]);
                 debug tracef("id=%d, randomNumber=%d", id, randomNumber);
 
