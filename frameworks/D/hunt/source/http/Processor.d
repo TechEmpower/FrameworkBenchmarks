@@ -158,8 +158,13 @@ public:
 	final int onMessageComplete(Parser* parser) {
 		import std.stdio;
 
-		if (state == State.done)
-			onComplete(request);
+		if (state == State.done) {
+			try {
+				onComplete(request);
+			} catch(Exception ex) {
+				respondWith(ex.msg, 500);
+			}
+		}
 		if (!parser.shouldKeepAlive)
 			serving = false;
 		return 0;

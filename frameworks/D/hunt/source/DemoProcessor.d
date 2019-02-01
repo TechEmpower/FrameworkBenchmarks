@@ -174,10 +174,9 @@ class DemoProcessor : HttpProcessor {
         }
 
         private void respondFortunes() {
-            FortuneModel[] data;
             immutable query = "SELECT id, message::text FROM Fortune";
             ResultSet rs = dbConnection.query(query);
-            data = rs.map!(f => FortuneModel(f[0].to!int, f[1])).array;
+            FortuneModel[] data = rs.map!(f => FortuneModel(f["id"].to!int, f["message"])).array;
             data ~= FortuneModel(0, "Additional fortune added at request time.");
             data.sort!((a, b) => a.message < b.message);
             // trace(data);
