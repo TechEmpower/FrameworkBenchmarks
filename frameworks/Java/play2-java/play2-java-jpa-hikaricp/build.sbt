@@ -13,4 +13,4 @@ libraryDependencies ++= Seq(
   "org.hibernate" % "hibernate-core" % "5.4.1.Final"
 )
 
-PlayKeys.externalizeResources := false
+PlayKeys.externalizeResourcesExcludes += baseDirectory.value / "conf" / "META-INF" / "persistence.xml"
