@@ -10,7 +10,7 @@ libraryDependencies ++= Seq(
   guice,
   javaJpa,
   "mysql" % "mysql-connector-java" % "5.1.47",
-  "org.hibernate" % "hibernate-core" % "5.2.12.Final"
+  "org.hibernate" % "hibernate-core" % "5.4.1.Final"
 )
 
 PlayKeys.externalizeResources := false
