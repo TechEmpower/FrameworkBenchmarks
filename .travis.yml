@@ -95,7 +95,7 @@ env:
      - "TESTLANG=Nim"
      - "TESTLANG=Perl"
      - 'TESTDIR="PHP/php"'
-     - 'TESTDIR="PHP/cakephp PHP/clancats PHP/codeigniter PHP/cygnite PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/laravel PHP/limonade PHP/lithium PHP/lumen PHP/phpixie PHP/phreeze PHP/silex PHP/slim PHP/symfony PHP/yii2 PHP/zend"'
+     - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/cygnite PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/laravel PHP/limonade PHP/lithium PHP/lumen PHP/phpixie PHP/phreeze PHP/slim PHP/symfony PHP/yii2 PHP/zend"'
      - 'TESTDIR="PHP/amp PHP/hamlet PHP/hhvm PHP/peachpie PHP/swoole PHP/workerman PHP/phalcon"'
      - "TESTLANG=Python"
      - "TESTLANG=Ruby"

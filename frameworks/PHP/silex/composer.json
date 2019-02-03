@@ -1,6 +1,0 @@
-{
-    "require": {
-        "silex/silex": "2.2.0",
-        "doctrine/dbal": "2.6.2"
-    }
-}

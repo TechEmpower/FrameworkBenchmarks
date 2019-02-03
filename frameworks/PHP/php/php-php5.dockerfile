@@ -15,7 +15,7 @@ RUN sed -i "s|listen = /run/php/php7.3-fpm.sock|listen = /run/php/php5.6-fpm.soc
 ADD ./ /php
 WORKDIR /php
 
-#RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/5.6/fpm/php-fpm.conf ; fi;
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/5.6/fpm/php-fpm.conf ; fi;
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 

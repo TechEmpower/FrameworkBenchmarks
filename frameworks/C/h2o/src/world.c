@@ -624,11 +624,13 @@ static void process_result(PGresult *result, query_result_t *out)
 
 static int serialize_item(uint32_t id, uint32_t random_number, yajl_gen gen)
 {
+	char buf[32];
+
 	CHECK_YAJL_STATUS(yajl_gen_map_open, gen);
 	CHECK_YAJL_STATUS(yajl_gen_string, gen, YAJL_STRLIT(ID_KEY));
-	CHECK_YAJL_STATUS(yajl_gen_integer, gen, id);
+	CHECK_YAJL_STATUS(gen_integer, id, buf, sizeof(buf), gen);
 	CHECK_YAJL_STATUS(yajl_gen_string, gen, YAJL_STRLIT(RANDOM_NUM_KEY));
-	CHECK_YAJL_STATUS(yajl_gen_integer, gen, random_number);
+	CHECK_YAJL_STATUS(gen_integer, random_number, buf, sizeof(buf), gen);
 	CHECK_YAJL_STATUS(yajl_gen_map_close, gen);
 	return EXIT_SUCCESS;
 error_yajl:
