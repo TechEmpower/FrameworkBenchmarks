@@ -9,10 +9,11 @@ import net.benchmark.akka.http.db.{
   DatabaseRepositoryLoader,
   DatabaseRepositoryLoaderModule
 }
+import net.benchmark.akka.http.util.SameThreadDirectExecutor
 import org.slf4j.{Logger, LoggerFactory}
 import slick.basic.DatabaseConfig
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 object Main {
 
@@ -33,7 +34,7 @@ object Main {
 
     val finish: Future[Terminated] = system.whenTerminated
     finish.onComplete(_ => log.info("akka-http-slick-postgres app terminated!"))(
-      ExecutionContext.fromExecutorService(java.util.concurrent.Executors.newFixedThreadPool(1)))
+      SameThreadDirectExecutor.executionContext())
   }
 
 }

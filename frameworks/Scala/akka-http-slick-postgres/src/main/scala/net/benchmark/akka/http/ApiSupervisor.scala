@@ -9,7 +9,6 @@ import net.benchmark.akka.http.ApiSupervisor.ApiMessages
 import net.benchmark.akka.http.db.DatabaseRepositoryLoader
 import net.benchmark.akka.http.util.SameThreadDirectExecutor
 
-import scala.concurrent.ExecutionContext
 import scala.util.Failure
 
 class ApiSupervisor(dbLoader: DatabaseRepositoryLoader, materializer: ActorMaterializer)
@@ -23,11 +22,11 @@ class ApiSupervisor(dbLoader: DatabaseRepositoryLoader, materializer: ActorMater
   implicit val mat: ActorMaterializer = materializer
   implicit val system: ActorSystem = context.system
 
-  private val sd = ExecutionContext.fromExecutor(new SameThreadDirectExecutor())
-  private val qd = context.system.dispatchers.lookup("akka-http-slick-postgres.queries-dispatcher")
-  private val ud = context.system.dispatchers.lookup("akka-http-slick-postgres.updates-dispatcher")
-  private val dd = context.system.dispatchers.lookup("akka-http-slick-postgres.db-dispatcher")
-  private val fd = context.system.dispatchers.lookup("akka-http-slick-postgres.fortunes-dispatcher")
+  private val sd = SameThreadDirectExecutor.executionContext()
+  private val qd = context.system.dispatchers.lookup(AppConfig.Queries.routeDispatcherConfigPath)
+  private val ud = context.system.dispatchers.lookup(AppConfig.Updates.routeDispatcherConfigPath)
+  private val dd = context.system.dispatchers.lookup(AppConfig.Db.routeDispatcherConfigPath)
+  private val fd = context.system.dispatchers.lookup(AppConfig.Fortunes.routeDispatcherConfigPath)
 
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
   override def receive: Receive = {

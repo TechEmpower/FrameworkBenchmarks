@@ -16,7 +16,7 @@ import slick.basic.DatabasePublisher
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-class FortuneRoutes(fr: FortuneRepository, sd: ExecutionContextExecutor, fd: ExecutionContextExecutor)(
+class FortuneRoute(fr: FortuneRepository, sd: ExecutionContextExecutor, fd: ExecutionContextExecutor)(
     implicit val system: ActorSystem) {
 
   private val te = new TemplateEngine()
@@ -39,7 +39,7 @@ class FortuneRoutes(fr: FortuneRepository, sd: ExecutionContextExecutor, fd: Exe
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
-  def routes(): Route = {
+  def route(): Route = {
     path("fortunes") {
       withExecutionContext(fd) {
         complete(

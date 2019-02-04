@@ -5,7 +5,7 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{ExceptionHandler, RejectionHandler, Route}
 import net.benchmark.akka.http.db.DatabaseRepositoryLoader
-import net.benchmark.akka.http.fortune.FortuneRoutes
+import net.benchmark.akka.http.fortune.FortuneRoute
 import net.benchmark.akka.http.world.WorldRoutes
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -29,12 +29,12 @@ object ApiRoutes {
       }
 
       val worldRoutes = new WorldRoutes(dbLoader.loadWorldRepository(), sd, qd, ud, dd)
-      val fortuneRoutes = new FortuneRoutes(dbLoader.loadFortuneRepository(), sd, fd)
+      val fortuneRoutes = new FortuneRoute(dbLoader.loadFortuneRepository(), sd, fd)
 
       handleExceptions(eh) {
         get {
           worldRoutes.routes() ~
-          fortuneRoutes.routes()
+          fortuneRoutes.route()
         }
       }
     }
