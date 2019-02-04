@@ -13,7 +13,7 @@ RUN \
   ls -la project && \
   sbt sbtVersion
 
-COPY akka-http/build.sbt akka-http/.sbtopts akka-http/.scalafmt.conf ./
+COPY akka-http/build.sbt akka-http/.sbtopts ./
 
 RUN sbt update
 
