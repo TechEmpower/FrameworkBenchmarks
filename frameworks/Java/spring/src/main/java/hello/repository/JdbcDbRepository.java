@@ -38,8 +38,7 @@ public class JdbcDbRepository implements DbRepository {
     }
 
     @Override
-    public World findAndUpdateWorld(int id, int randomNumber) {
-        World world = getWorld(id);
+    public World updateWorld(World world, int randomNumber) {
         world.randomnumber = randomNumber;
         return updateWorld(world);
     }

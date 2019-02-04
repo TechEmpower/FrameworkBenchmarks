@@ -8,7 +8,7 @@ import java.util.List;
 public interface DbRepository {
     World getWorld(int id);
 
-    World findAndUpdateWorld(int id, int randomNumber);
+    World updateWorld(World world, int randomNumber);
 
     List<Fortune> fortunes();
 }

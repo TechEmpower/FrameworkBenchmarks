@@ -56,7 +56,7 @@ public final class HelloController {
     var worlds = new World[parseQueryCount(queries)];
     Arrays.setAll(worlds, i -> randomWorld());
     for (var world : worlds) {
-      dbRepository.findAndUpdateWorld(world.id, randomWorldNumber());
+      dbRepository.updateWorld(world, randomWorldNumber());
     }
     return worlds;
   }

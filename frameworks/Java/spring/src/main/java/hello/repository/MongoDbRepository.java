@@ -10,11 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
-import static org.springframework.data.mongodb.core.query.Update.update;
-
 @Component
 @Profile("mongo")
 public class MongoDbRepository implements DbRepository {
@@ -34,12 +29,9 @@ public class MongoDbRepository implements DbRepository {
 
 
     @Override
-    public World findAndUpdateWorld(int id, int randomNumber) {
-        return mongoTemplate.findAndModify(
-                query(where("id").is(id)),
-                update("randomNumber", randomNumber),
-                options().returnNew(true),
-                World.class);
+    public World updateWorld(World world, int randomNumber) {
+        world.randomnumber = randomNumber;
+        return mongoTemplate.save(world);
     }
 
     @Override
