@@ -17,7 +17,7 @@ COPY akka-http-slick-postgres/build.sbt akka-http-slick-postgres/.sbtopts akka-h
 
 RUN sbt update
 
-COPY src src
+COPY akka-http-slick-postgres/src src
 
 RUN sbt clean compile stage
 

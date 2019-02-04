@@ -1,6 +1,7 @@
 {
   "framework": "akka-http",
-  "tests": [{
+  "tests": [
+    {
       "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
@@ -21,10 +22,8 @@
         "database_os": "Linux",
         "display_name": "akka-http",
         "notes": ""
-    }
-  },
-    {
-      "akka-http-slick-postgres": {
+      },
+      "slick-postgres": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "db_url": "/db",
@@ -47,5 +46,6 @@
         "notes": "Applied libraries are Akka HTTP, Akka Streams, Circe, Cats, Slick, Scalate.",
         "versus": "akka-http"
       }
-    }]
+    }
+  ]
 }
