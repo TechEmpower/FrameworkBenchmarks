@@ -3,8 +3,8 @@ FROM hseeberger/scala-sbt:8u151-2.12.4-1.1.1
 WORKDIR /akka-http-slick-postgres
 
 RUN mkdir project
-COPY project/build.properties project/
-COPY project/plugins.sbt project/
+COPY akka-http-slick-postgres/project/build.properties project/
+COPY akka-http-slick-postgres/project/plugins.sbt project/
 
 RUN \
   which sbt && \
@@ -13,7 +13,7 @@ RUN \
   ls -la project && \
   sbt sbtVersion
 
-COPY build.sbt .sbtopts .scalafmt.conf ./
+COPY akka-http-slick-postgres/build.sbt akka-http-slick-postgres/.sbtopts akka-http-slick-postgres/.scalafmt.conf ./
 
 RUN sbt update
 
