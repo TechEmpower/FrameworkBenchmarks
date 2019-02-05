@@ -25,7 +25,7 @@ public class VoovanTFB {
 	webServerConfig.getModuleonfigs().clear();
 	webServerConfig.getRouterConfigs().clear();
         WebServer webServer = WebServer.newInstance(webServerConfig);
-        Logger.setEnable(false);
+        Logger.setEnable(true);
 
         //性能测试路由
         webServer.get("/plaintext", new HttpRouter() {
