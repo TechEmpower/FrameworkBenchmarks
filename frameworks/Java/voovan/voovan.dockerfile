@@ -2,6 +2,7 @@ FROM maven:3.5.3-jdk-11-slim as maven
 WORKDIR /voovan
 COPY pom.xml pom.xml
 COPY src src
+COPY config config
 RUN mvn package
 
 FROM openjdk:11-jdk-slim
