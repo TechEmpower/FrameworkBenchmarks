@@ -17,7 +17,7 @@ public class PoolManager {
 		
 	public PgPool pool() {
 		if (null==pool) {
-			pool = PgClient.pool(options);
+			pool = PgClient.pool(options);			
 		}
 		lastUsed = System.nanoTime();
 		return pool;

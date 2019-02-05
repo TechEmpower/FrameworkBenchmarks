@@ -172,6 +172,29 @@
       "display_name": "PHP-raw",
       "notes": "",
       "versus": "php-php5"
+    },
+    "pools": {
+      "json_url": "/json.php",
+      "plaintext_url": "/plaintext.php",
+      "db_url": "/dbraw.php",
+      "query_url": "/dbraw.php?queries=",
+      "fortune_url": "/fortune.php",
+      "update_url": "/updateraw.php?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "PHP",
+      "notes": "With php-fpm pools",
+      "versus": "php"
     }
   }]
 }
