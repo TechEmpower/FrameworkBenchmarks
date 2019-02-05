@@ -17,14 +17,13 @@ public class VoovanTFB {
 
     public static void main(String[] args) {
         WebServerConfig webServerConfig = WebContext.getWebServerConfig();
-		webServerConfig.setGzip(false);
-		webServerConfig.setAccessLog(false);
-		webServerConfig.setKeepAliveTimeout(20000);
-		webServerConfig.setHost("0.0.0.0");
-		webServerConfig.setPort(8080);
-		webServerConfig.setCache(true);
-		webServerConfig.getModuleonfigs().clear();
-		webServerConfig.getRouterConfigs().clear();
+	webServerConfig.setGzip(false);
+	webServerConfig.setAccessLog(false);
+	webServerConfig.setKeepAliveTimeout(20000);
+	webServerConfig.setHost("0.0.0.0");
+	webServerConfig.setPort(8080);
+	webServerConfig.getModuleonfigs().clear();
+	webServerConfig.getRouterConfigs().clear();
         WebServer webServer = WebServer.newInstance(webServerConfig);
         Logger.setEnable(false);
 
