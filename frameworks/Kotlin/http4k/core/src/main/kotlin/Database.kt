@@ -9,13 +9,12 @@ import org.http4k.format.Jackson.number
 import org.http4k.format.Jackson.obj
 import java.sql.Connection
 import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.util.*
+import java.util.Random
 import java.util.concurrent.CompletableFuture
 import javax.sql.DataSource
 
 interface Database {
-    fun findWorld(): JsonNode?
+    fun findWorld(): JsonNode
     fun findWorlds(count: Int): List<JsonNode>
     fun updateWorlds(count: Int): List<JsonNode>
     fun fortunes(): List<Fortune>
@@ -23,32 +22,38 @@ interface Database {
 
 class PostgresDatabase private constructor(private val dataSource: DataSource) : Database {
 
-    override fun findWorld() = findWorlds(1).first()
+    override fun findWorld() = withConnection {
+        findWorld(randomWorld())
+    }
 
     override fun findWorlds(count: Int) = withConnection {
-        findWorlds(count,
-                { getInt("randomNumber") },
-                { id, rn -> obj("id" to number(id), "randomNumber" to number(rn)) })
+        (1..count).map { findWorld(randomWorld()) }
     }
 
     override fun updateWorlds(count: Int) = withConnection {
-        withConnection {
-            val worlds = findWorlds(count, { randomWorld() }, { id, rn -> id to rn })
-
-            withStatement("UPDATE world SET randomNumber = ? WHERE id = ?") {
-                worlds.forEach { (id: Int, rn: Int) ->
-                    setInt(1, rn)
-                    setInt(2, id)
-                    executeUpdate()
-                }
-            }
-
-            worlds.map { obj("id" to number(it.first), "randomNumber" to number(it.second)) }
+        (1..count).map {
+            val id = randomWorld()
+            updateWorld(id)
+            findWorld(id)
         }
     }
 
+    private fun Connection.updateWorld(id: Int) = withStatement("UPDATE world SET randomNumber = ? WHERE id = ?") {
+        setInt(1, randomWorld())
+        setInt(2, id)
+        executeUpdate()
+    }
+
     override fun fortunes() = withConnection {
-        val original = withStatement("select * from fortune") { executeQuery().toResultsList { Fortune(getInt(1), getString(2)) } }
+        val original = withStatement("select * from fortune") {
+            with(executeQuery()) {
+                mutableListOf<Fortune>().apply {
+                    while (next()) {
+                        add(Fortune(getInt(1), getString(2)))
+                    }
+                }
+            }
+        }
         (original + Fortune(0, "Additional fortune added at request time.")).sortedBy { it.message }
     }
 
@@ -58,51 +63,41 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
                 username = "benchmarkdbuser"
                 password = "benchmarkdbpass"
                 jdbcUrl = "jdbc:postgresql://$host:5432/hello_world?" +
-                        "useSSL=false&" +
-                        "jdbcCompliantTruncation=false&" +
-                        "elideSetAutoCommits=true&" +
-                        "useLocalSessionState=true&" +
-                        "cachePrepStmts=true&" +
-                        "cacheCallableStmts=true&" +
-                        "alwaysSendSetIsolation=false&" +
-                        "prepStmtCacheSize=4096&" +
-                        "cacheServerConfiguration=true&" +
-                        "prepStmtCacheSqlLimit=2048&" +
-                        "traceProtocol=false&" +
-                        "useUnbufferedInput=false&" +
-                        "useReadAheadInput=false&" +
-                        "maintainTimeStats=false&" +
-                        "useServerPrepStmts=true&" +
-                        "cacheRSMetadata=true"
-                maximumPoolSize = 100
+                    "useSSL=false&" +
+                    "jdbcCompliantTruncation=false&" +
+                    "elideSetAutoCommits=true&" +
+                    "useLocalSessionState=true&" +
+                    "cachePrepStmts=true&" +
+                    "cacheCallableStmts=true&" +
+                    "alwaysSendSetIsolation=false&" +
+                    "prepStmtCacheSize=4096&" +
+                    "cacheServerConfiguration=true&" +
+                    "prepStmtCacheSqlLimit=2048&" +
+                    "traceProtocol=false&" +
+                    "useUnbufferedInput=false&" +
+                    "useReadAheadInput=false&" +
+                    "maintainTimeStats=false&" +
+                    "useServerPrepStmts=true&" +
+                    "cacheRSMetadata=true"
+                maximumPoolSize = Runtime.getRuntime().availableProcessors() * 2
                 HikariDataSource(this)
             }
             return PostgresDatabase(dataSource)
         }
     }
 
-    private fun <T> withConnection(fn: Connection.() -> T): T = dataSource.connection.use(fn)
+    private inline fun <T> withConnection(fn: Connection.() -> T): T = dataSource.connection.use(fn)
 
-    private fun <T> Connection.withStatement(stmt: String, fn: PreparedStatement.() -> T): T = prepareStatement(stmt).use(fn)
+    private inline fun <T> Connection.withStatement(stmt: String, fn: PreparedStatement.() -> T): T = prepareStatement(stmt).use(fn)
 
-    private fun <T> Connection.findWorlds(count: Int, randomNumberFn: ResultSet.() -> Int, transform: (Int, Int) -> T) =
-            withStatement("SELECT * FROM world WHERE id = ?") {
-                (1..count).map {
-                    setInt(1, it)
-                    executeQuery().toResultsList {
-                        transform(getInt("id"), randomNumberFn())
-                    }.first()
-                }
+    private fun Connection.findWorld(id: Int) =
+        withStatement("SELECT * FROM world WHERE id = ?") {
+            setInt(1, id)
+            with(executeQuery()) {
+                next()
+                obj("id" to number(getInt("id")), "randomNumber" to number(getInt("randomNumber")))
             }
-
-    private fun <T> ResultSet.toResultsList(fn: ResultSet.() -> T): List<T> =
-            use {
-                mutableListOf<T>().apply {
-                    while (next()) {
-                        add(fn(this@toResultsList))
-                    }
-                }
-            }
+        }
 }
 
 class ReactivePostgresDatabase private constructor(private val db: PgPool) : Database {
@@ -114,15 +109,15 @@ class ReactivePostgresDatabase private constructor(private val db: PgPool) : Dat
                 port = 5432
                 user = "benchmarkdbuser"
                 password = "benchmarkdbpass"
-                maxSize = 100
+                maxSize = Runtime.getRuntime().availableProcessors() * 2
                 cachePreparedStatements = true
             }
             return ReactivePostgresDatabase(pool(PgPoolOptions(options)))
         }
     }
 
-    override fun findWorld(): JsonNode? {
-        val deferred = CompletableFuture<JsonNode?>()
+    override fun findWorld(): JsonNode {
+        val deferred = CompletableFuture<JsonNode>()
         db.preparedQuery("SELECT id, randomnumber from WORLD where id=$1", Tuple.of(randomWorld())) {
             with(it.result().first()) {
                 deferred.complete(obj("id" to number(getInteger(0)), "randomNumber" to number(getInteger(1))))

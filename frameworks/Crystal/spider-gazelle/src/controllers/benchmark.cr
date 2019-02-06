@@ -68,6 +68,6 @@ class Benchmark < Application
 
     # by default this would have been returned as text/html
     response.content_type = FORTUNE_CTYPE
-    render html: Kilt.render("src/views/fortunes.ecr")
+    render template: "fortunes.ecr"
   end
 end
