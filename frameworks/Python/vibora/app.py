@@ -36,10 +36,9 @@ async def fetchWorld():
     res = cur.fetchone()
     return res
 
-async def updateWorld():
-    select_rand = randint(1, 10000)
+async def updateWorld(world_id):
     new_num_rand = randint(1, 10000)
-    cur.execute(WRITE_ROW_SQL.format(new_num_rand, select_rand))
+    cur.execute(WRITE_ROW_SQL.format(new_num_rand, world_id))
     res = cur.fetchone()
     return res
 
@@ -53,8 +52,9 @@ async def fetchMultipleWorlds(total):
 async def updateMultipleWorlds(total):
     worlds = []
     for x in range(total):
-        res = await updateWorld()
-        worlds.append({'id': res[0], 'randomNumber': res[1]})
+        res = await fetchWorld()
+        updated = await updateWorld(res[0])
+        worlds.append({'id': updated[0], 'randomNumber': updated[1]})
     return worlds
 
 async def fetchFortunes():
