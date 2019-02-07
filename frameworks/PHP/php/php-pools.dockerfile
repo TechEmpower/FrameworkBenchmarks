@@ -13,7 +13,7 @@ ADD ./ /php
 WORKDIR /php
 
 COPY deploy/conf/php-fpm-pools.conf /etc/php/7.3/fpm/php-fpm.conf
-RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 512|pm.max_children = 256|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 256|pm.max_children = 128|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
 
 RUN chmod -R 777 /php
 
