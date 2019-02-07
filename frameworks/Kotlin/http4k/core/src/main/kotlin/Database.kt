@@ -23,11 +23,11 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
     }
 
     override fun findWorlds(count: Int) = withConnection {
-        (1..count).mapNotNull { findWorld(randomWorld()) }
+        (1..count).map { findWorld(randomWorld()) }
     }
 
     override fun updateWorlds(count: Int) = withConnection {
-        (1..count).mapNotNull {
+        (1..count).map {
             val id = randomWorld()
             updateWorld(id)
             findWorld(id)
