@@ -36,7 +36,6 @@ let numGenerator = LinearCongruntialGenerator()
 func fetchFromFortune() -> [[String: String]] {
 
     var arrOfFortunes = [[String: String]]()
-    
     let querySuccess = mysql.query(statement: "SELECT id, message FROM fortune")
 
     guard querySuccess else {
@@ -50,7 +49,6 @@ func fetchFromFortune() -> [[String: String]] {
     let results = mysql.storeResults()!
 
     results.forEachRow { row in
-
         if let id = row[0], let message = row[1] {
             
             let resObj = ["id": String(describing: id), "message": message]
@@ -106,39 +104,32 @@ func updateOneFromWorld() -> [String: Any] {
 
     var returnObj = [String: Any]()
     var errorObject = [String: Any]()
+    let worldToUpdate = fetchFromWorld(id: nil)
+    let id: String = worldToUpdate["id"] as! String 
+    let newRandom = numGenerator.random() % 10000
 
-    let rand = numGenerator.random() % 10000
-    let rand2 = numGenerator.random() % 10000
-
-    let querySuccess = mysql.query(statement: "UPDATE World SET randomNumber = \(rand) WHERE id = \(rand2)")
+    let querySuccess = mysql.query(statement: "UPDATE World SET randomNumber = \(newRandom) WHERE id = \(id)")
 
     guard querySuccess else {
-
         errorObject["id"] = "Failed to execute query"
-
         return errorObject
     }
  
     if let results = mysql.storeResults() {
 
         results.forEachRow { row in
-
             if let id = row[0], let randomNumber = row[1] {
-
                 returnObj["id"] = id
                 returnObj["randomNumber"] = randomNumber
             } else {
-
                 returnObj["id"] = "No return value"
                 returnObj["randomNumber"] = "what happened?"
             }
         }
-
         return returnObj
     } else {
-
-        returnObj["id"] = rand2
-        returnObj["randomNumber"] = rand
+        returnObj["id"] = id
+        returnObj["randomNumber"] = newRandom
         return returnObj
     }
 }
