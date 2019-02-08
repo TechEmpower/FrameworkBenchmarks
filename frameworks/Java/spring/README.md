@@ -2,9 +2,15 @@
 
 This is the Spring MVC portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-An embedded tomcat is used for the web server, with nearly everything configured with default settings. The only thing changed is Hikari can use up to (2 * cores count) connections (the default is 10). See [About-Pool-Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)
+An embedded tomcat is used for the web server, with nearly everything configured with default settings.
+The only thing changed is Hikari can use up to (2 * cores count) connections (the default is 10).
+See [About-Pool-Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)
 
 Tomcat use a fixed thread pool that can grow up to 200 threads.
+
+There are two implementations :
+* For postgresql access, JdbcTemplate is used. See [JdbcDbRepository](src/main/java/hello/JdbcDbRepository.java).
+* For mongoDB access, MongoTemplate is used. See [MongoDbRepository](src/main/java/hello/MongoDbRepository.java).
 
 ### Plaintext Test
 
