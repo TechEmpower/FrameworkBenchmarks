@@ -84,6 +84,7 @@ env:
      - "TESTDIR=Java/undertow"
      - "TESTDIR=Java/undertow-jersey"
      - "TESTDIR=Java/vertx"
+     - "TESTDIR=Java/voovan"
      - "TESTDIR=Java/vertx-web"
      - "TESTDIR=Java/wicket"
      - "TESTDIR=Java/wildfly-ee"
@@ -95,7 +96,7 @@ env:
      - "TESTLANG=Nim"
      - "TESTLANG=Perl"
      - 'TESTDIR="PHP/php"'
-     - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/laravel PHP/limonade PHP/lithium PHP/lumen PHP/phpixie PHP/phreeze PHP/slim PHP/symfony PHP/yii2 PHP/zend"'
+     - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/laravel PHP/limonade PHP/lithium PHP/lumen PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend"'
      - 'TESTDIR="PHP/amp PHP/hamlet PHP/hhvm PHP/peachpie PHP/swoole PHP/workerman PHP/phalcon"'
      - "TESTLANG=Python"
      - "TESTLANG=Ruby"
