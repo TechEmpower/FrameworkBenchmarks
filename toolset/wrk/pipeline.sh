@@ -27,9 +27,6 @@ echo " Concurrency: $c for $name"
 echo " wrk -H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-alive' --latency -d $duration -c $c --timeout 8 -t $(($c>$max_threads?$max_threads:$c)) $url -s pipeline.lua -- $pipeline"
 echo "---------------------------------------------------------"
 echo ""
-STARTTIME=$(date +"%s")
-wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $c --timeout 8 -t "$(($c>$max_threads?$max_threads:$c))" $url -s pipeline.lua -- $pipeline
-echo "STARTTIME $STARTTIME"
-echo "ENDTIME $(date +"%s")"
+((/usr/bin/time --format="STARTTIME 0\nENDTIME %e" wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $c --timeout 8 -t "$(($c>$max_threads?$max_threads:$c))" $url -s pipeline.lua -- $pipeline ) 2>&1 )
 sleep 2
 done
