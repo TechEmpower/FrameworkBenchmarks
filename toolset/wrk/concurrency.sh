@@ -27,6 +27,11 @@ echo " Concurrency: $c for $name"
 echo " wrk -H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-alive' --latency -d $duration -c $c --timeout 8 -t $(($c>$max_threads?$max_threads:$c)) \"$url\""
 echo "---------------------------------------------------------"
 echo ""
-((/usr/bin/time --format="STARTTIME 0\nENDTIME %e" wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $c --timeout 8 -t "$(($c>$max_threads?$max_threads:$c))" $url ) 2>&1 )
+STARTTIME=$(date +"%s")
+/usr/bin/time -o elapsed --format="%e" wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $c --timeout 8 -t "$(($c>$max_threads?$max_threads:$c))" $url
+ENDTIME=$(cat elapsed)
+ENDTIME=$(echo "$ENDTIME + $STARTTIME" | bc)
+echo "STARTTIME $STARTTIME"
+echo "ENDTIME $ENDTIME"
 sleep 2
 done

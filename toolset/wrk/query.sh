@@ -27,6 +27,11 @@ echo " Queries: $c for $name"
 echo " wrk -H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-alive' --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads \"$url$c\""
 echo "---------------------------------------------------------"
 echo ""
-((/usr/bin/time --format="STARTTIME 0\nENDTIME %e" wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads "$url$c" ) 2>&1 )
+STARTTIME=$(date +"%s")
+/usr/bin/time -o elapsed --format="STARTTIME 0\nENDTIME %e" wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads "$url$c"
+ENDTIME=$(cat elapsed)
+ENDTIME=$(echo "$ENDTIME + $STARTTIME" | bc)
+echo "STARTTIME $STARTTIME"
+echo "ENDTIME $ENDTIME"
 sleep 2
 done
