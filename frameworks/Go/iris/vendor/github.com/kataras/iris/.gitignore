@@ -1,0 +1,4 @@
+.vscode
+_authortools
+/_examples/**/node_modules
+.directory

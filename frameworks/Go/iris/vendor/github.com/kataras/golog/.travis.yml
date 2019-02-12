@@ -1,0 +1,23 @@
+language: go
+os:
+  - linux
+#  - osx
+go:
+  - "go1.9"
+  - "go1.10"
+go_import_path: github.com/kataras/golog
+install:
+  - go get ./...
+script:
+  - go test -v -cover ./...
+after_script:
+  # examples
+  - cd ./_examples
+  - go get ./...
+  - go test -v -cover ./...
+  - cd ../
+  # benchmarks
+  - cd ./_benchmarks
+  - go get ./...
+  - go test -run=XXX -bench=. -benchtime=5s
+  - cd ../

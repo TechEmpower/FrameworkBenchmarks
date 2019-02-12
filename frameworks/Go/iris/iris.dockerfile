@@ -1,14 +1,14 @@
-FROM golang:1.10.1
+FROM golang:latest
 
-COPY ./ /iris
-WORKDIR /iris
+WORKDIR /go/src/app
 
-RUN mkdir bin
-ENV GOPATH /iris
-ENV PATH ${GOPATH}/bin:${PATH}
+# ENV GO111MODULE=on
+COPY vendor ./vendor
+# COPY go.mod .
+# COPY go.sum .
+# RUN go mod download
+COPY src/. .
 
-RUN rm -rf ./pkg/*
-RUN go get github.com/kataras/iris
-RUN go get github.com/lib/pq
+RUN go build -ldflags="-s -w" -o app .
 
-CMD go run main.go
+CMD ./app
