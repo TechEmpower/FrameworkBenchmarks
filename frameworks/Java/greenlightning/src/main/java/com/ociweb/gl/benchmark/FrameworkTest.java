@@ -53,7 +53,7 @@ public class FrameworkTest implements GreenApp {
 	public static String connectionUser =     "postgres";
 	public static String connectionPassword = "postgres";
 		
-	static final int c = 250;       //needed to reach 16K simultainious calls
+	static final int c = 63;//125;//250 goal,       //needed to reach 16K simultainious calls
 
 	
     public FrameworkTest() {
@@ -64,9 +64,9 @@ public class FrameworkTest implements GreenApp {
     	
     	//this server works best with  -XX:+UseNUMA    	
     	this(System.getProperty("host","0.0.0.0"), 
-    		 8080,    	//default port for test 
-    		 c,       //needed to reach 16K simultainious calls
-    		 c*2,     //(router to module) //TODO: do we have a minimum in place here?
+    		 8080,    	//default port for test
+    		 c,//250 goal,       //needed to reach 16K simultainious calls
+    		 (c*2)*4,// c*2,     //1<<14 (router to module) //TODO: do we have a minimum in place here?
     		 1<<11,     //default total size of network buffer used by blocks
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
@@ -97,8 +97,8 @@ public class FrameworkTest implements GreenApp {
     	this.telemetryPort = telemetryPort;
     	this.pipelineBits = 14;//max concurrent in flight database requests 1<<pipelineBits
     	            
-    	this.dbCallMaxResponseCount = c*2;
-    	this.jsonMaxResponseCount = c*2;
+    	this.dbCallMaxResponseCount = c*2;//1<<6;
+    	this.jsonMaxResponseCount = c*2;//1<<14;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<8;
@@ -156,15 +156,16 @@ public class FrameworkTest implements GreenApp {
     
 	@Override
     public void declareConfiguration(GreenFramework framework) {
-		
-		framework.setDefaultRate(120_000);
-		
+		framework.setDefaultRate(90_000L);	//if smaller than Elap time may spike CPU.		
+	
 		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
     			 .setHost(host)
     			 .setMaxConnectionBits(maxConnectionBits) //8K max client connections.
     			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)
-    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
+    			 
+    			 //keep the outgoing pipe count small...
+    			 .setConcurrentChannelsPerEncryptUnit(Math.max(4, concurrentWritesPerChannel/10))
     			 
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
     			 .setMaxRequestSize(maxRequestSize)
