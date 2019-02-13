@@ -1,3 +1,0 @@
-*.go linguist-language=Go
-vendor/* linguist-vendored
-_examples/* linguist-documentation

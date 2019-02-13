@@ -2,11 +2,8 @@ FROM golang:latest
 
 WORKDIR /go/src/app
 
-# ENV GO111MODULE=on
-COPY vendor ./vendor
-# COPY go.mod .
-# COPY go.sum .
-# RUN go mod download
+RUN go get github.com/kataras/iris
+RUN go get github.com/lib/pq
 COPY src/. .
 
 RUN go build -ldflags="-s -w" -o app .

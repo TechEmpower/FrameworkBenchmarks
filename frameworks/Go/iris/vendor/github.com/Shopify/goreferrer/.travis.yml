@@ -1,9 +1,0 @@
-language: go
-go: 1.2
-
-script:
- - go get github.com/stretchr/testify
- - go test -v
-notifications:
-  flowdock:
-    secure: "RkB6iKg5+MUp1XXop60ZYqH/5/ZETI9Z6AFNbbWijs5kP0bCRUU6hgCD53aueiwrgLftVAMPeO+eWtnRKOiiGJ8n7hHJAWHcdl2AyVJLrOP4c6/7dd9dKH5U2s+VZkqeiF4m973ZBd7YV14T0N31UQu73UWUU95LIEt+wrkwz04="
