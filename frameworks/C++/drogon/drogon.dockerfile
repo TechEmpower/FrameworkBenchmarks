@@ -32,8 +32,9 @@ WORKDIR $IROOT
 
 RUN git clone https://github.com/an-tao/drogon
 
-
 WORKDIR $DROGON_ROOT
+
+RUN git checkout 8829203d0458145a93efae68aa856367e5a5757d
 
 RUN ./build.sh
 
