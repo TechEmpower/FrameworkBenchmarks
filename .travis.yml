@@ -23,6 +23,7 @@ env:
      - "TESTDIR=C++/treefrog"
      - "TESTDIR=C++/ulib"
      - "TESTDIR=C++/wt"
+     - "TESTDIR=C++/drogon"
      - "TESTLANG=Clojure"
      - "TESTLANG=Crystal"
      - "TESTLANG=D"
