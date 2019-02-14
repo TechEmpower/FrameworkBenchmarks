@@ -43,8 +43,8 @@ lazy val library =
       val scalaCheck        = "1.14.0"
       val scalaTest         = "3.0.5"
       val scalate           = "1.8.0"
-      val slick             = "3.2.3"
-      val slickPg           = "0.17.0"
+      val slick             = "3.3.0"
+      val slickPg           = "0.17.2"
     }
 
     val akkaSlf4j           = "com.typesafe.akka"            %% "akka-slf4j"                  % Version.akka
@@ -74,7 +74,7 @@ lazy val commonSettings =
   Seq(
     organization := "net.benchmark.akka.http",
     organizationName := "Akka",
-    scalaVersion := "2.12.4",
+    scalaVersion := "2.12.6",
     scalacOptions ++= Seq(
       "-deprecation",
       "-encoding",
