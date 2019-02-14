@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
+	"net"
 	"runtime"
 	"time"
 
 	"github.com/kataras/iris"
-
-	"database/sql"
 
 	_ "github.com/lib/pq"
 
@@ -16,22 +16,36 @@ import (
 )
 
 func main() {
+	// init flags
+	bindHost := flag.String("bind", ":8080", "set bind host")
+	prefork := flag.Bool("prefork", false, "use prefork")
+	child := flag.Bool("child", false, "is child proc")
+	dbConnectionString := flag.String("db_connection_string",
+		"host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world sslmode=disable",
+		"Set bind host")
+	flag.Parse()
+
+	// check for prefork
+	var listener net.Listener
+	if *prefork {
+		listener = doPrefork(*child, *bindHost)
+	}
+
+	// init iris app
 	app := iris.New()
 	app.Use(recover.New())
-
 	app.RegisterView(iris.HTML("./templates", ".html"))
 
-	var err error
-	var db *sql.DB
-	if db, err = initDatabase("tfb-database",
-		"benchmarkdbuser",
-		"benchmarkdbpass",
-		"hello_world",
-		runtime.NumCPU()); err != nil {
+	// init database
+	db, err := initDatabase(
+		*dbConnectionString,
+		runtime.NumCPU())
+	if err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
 	defer db.Close()
 
+	// add handlers
 	app.Handle("GET", "/json", jsonHandler)
 	app.Handle("GET", "/plaintext", plaintextHandler)
 	app.Handle("GET", "/db", dbHandler)
@@ -46,5 +60,10 @@ func main() {
 		app.Shutdown(ctx)
 	})
 
-	app.Run(iris.Addr(":8080"), iris.WithoutServerError(iris.ErrServerClosed), iris.WithoutInterruptHandler)
+	// run iris app
+	if *prefork {
+		app.Run(iris.Listener(listener), iris.WithoutServerError(iris.ErrServerClosed), iris.WithoutInterruptHandler)
+	} else {
+		app.Run(iris.Addr(*bindHost), iris.WithoutServerError(iris.ErrServerClosed), iris.WithoutInterruptHandler)
+	}
 }
