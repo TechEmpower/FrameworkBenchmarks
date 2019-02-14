@@ -6,10 +6,9 @@ import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.Source
 import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._
 
-import scala.concurrent.ExecutionContextExecutor
 import scala.util.Try
 
-class QueriesRoute(wr: WorldRepository, qd: ExecutionContextExecutor) {
+class QueriesRoute(wr: WorldRepository) {
 
   implicit private val jss: JsonEntityStreamingSupport =
     EntityStreamingSupport.json().withParallelMarshalling(5, unordered = true)
@@ -24,19 +23,19 @@ class QueriesRoute(wr: WorldRepository, qd: ExecutionContextExecutor) {
   }
 
   private def source(n: Int): Source[World, NotUsed] = {
+    val t = if (1 <= n && n < 5) n else 5
+
     Source(1 to n)
       .map(rand)
-      .mapAsync(n)(i => wr.require(i))
+      .mapAsync(t)(i => wr.require(i))
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def route(): Route = {
     path("queries") {
-      withExecutionContext(qd) {
-        parameter('queries.?) { pn: Option[String] =>
-          complete {
-            source(parse(pn))
-          }
+      parameter('queries.?) { pn: Option[String] =>
+        complete {
+          source(parse(pn))
         }
       }
     }

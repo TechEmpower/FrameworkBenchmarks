@@ -16,8 +16,7 @@ import slick.basic.DatabasePublisher
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
-class FortuneRoute(fr: FortuneRepository, sd: ExecutionContextExecutor, fd: ExecutionContextExecutor)(
-    implicit val system: ActorSystem) {
+class FortuneRoute(fr: FortuneRepository, sd: ExecutionContextExecutor)(implicit val system: ActorSystem) {
 
   private val te = new TemplateEngine()
   private val fmat: ActorMaterializer = ActorMaterializer(Deciders.resumingMat("fmat"))
@@ -41,12 +40,10 @@ class FortuneRoute(fr: FortuneRepository, sd: ExecutionContextExecutor, fd: Exec
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def route(): Route = {
     path("fortunes") {
-      withExecutionContext(fd) {
-        complete(
-          source(fr.all())
-            .runWith(Sink.seq[Fortune])(fmat)
-            .flatMap(s => Future.successful(s.sortBy(_.message)))(sd))
-      }
+      complete(
+        source(fr.all())
+          .runWith(Sink.seq[Fortune])(fmat)
+          .flatMap(s => Future.successful(s.sortBy(_.message)))(sd))
     }
   }
 
