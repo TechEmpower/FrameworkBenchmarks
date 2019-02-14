@@ -1,4 +1,4 @@
-FROM golang:1.10.1
+FROM golang:1.11.5
 
 ADD ./ /go-std
 WORKDIR /go-std
@@ -9,4 +9,5 @@ ENV PATH ${GOPATH}/bin:${PATH}
 
 RUN apt update -yqq && apt install -yqq libsasl2-dev
 RUN go get gopkg.in/mgo.v2
-CMD go run hello_mongo.go
+RUN go build -o hello_mongo hello_mongo.go
+CMD ./hello_mongo
