@@ -33,6 +33,7 @@ func queriesHandler(ctx context.Context) {
 	}
 
 	results := make([]World, q)
+
 	for i := 0; i < q; i++ {
 		results[i] = getOneRandomWorld()
 	}
@@ -56,15 +57,12 @@ func updateHandler(db *sql.DB) func(ctx context.Context) {
 }
 
 func fortuneHandler(ctx context.Context) {
-	var err error
-	var rows *sql.Rows
-	rows, err = fortuneStmt.Query()
+	rows, err := fortuneStmt.Query()
 	if err != nil {
 		log.Fatalf("Can't query fortunes: %s\n", err)
 	}
 
 	var fortunes []Fortune
-
 	var fortune Fortune
 	for rows.Next() {
 		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {

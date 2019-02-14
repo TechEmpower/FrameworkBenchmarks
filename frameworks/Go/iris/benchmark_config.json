@@ -23,6 +23,29 @@
       "display_name": "Iris",
       "notes": "",
       "versus": "go"
+    },
+    "prefork": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "fortune_url": "/fortune",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "None",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Iris",
+      "notes": "",
+      "versus": "go"
     }
   }]
 }
