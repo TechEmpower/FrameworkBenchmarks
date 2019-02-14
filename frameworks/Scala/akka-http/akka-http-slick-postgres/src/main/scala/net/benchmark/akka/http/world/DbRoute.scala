@@ -1,4 +1,8 @@
 package net.benchmark.akka.http.world
+import akka.http.scaladsl.server.Directives.{complete, path, withExecutionContext}
+import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._
+
+import scala.concurrent.ExecutionContextExecutor
 
 class DbRoute(wr: WorldRepository, dd: ExecutionContextExecutor) {
 
@@ -8,7 +12,9 @@ class DbRoute(wr: WorldRepository, dd: ExecutionContextExecutor) {
 
   def route() = {
     path("db") {
-      complete(wr.require(rand()))
+      withExecutionContext(dd) {
+        complete(wr.require(rand()))
+      }
     }
   }
 

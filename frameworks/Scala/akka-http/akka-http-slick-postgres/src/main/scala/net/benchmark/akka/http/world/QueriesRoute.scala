@@ -1,4 +1,13 @@
 package net.benchmark.akka.http.world
+import akka.NotUsed
+import akka.http.scaladsl.common.{EntityStreamingSupport, JsonEntityStreamingSupport}
+import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
+import akka.stream.scaladsl.Source
+import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._
+
+import scala.concurrent.ExecutionContextExecutor
+import scala.util.Try
 
 class QueriesRoute(wr: WorldRepository, qd: ExecutionContextExecutor) {
 
@@ -23,9 +32,11 @@ class QueriesRoute(wr: WorldRepository, qd: ExecutionContextExecutor) {
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def route(): Route = {
     path("queries") {
-      parameter('queries.?) { pn: Option[String] =>
-        complete {
-          source(parse(pn))
+      withExecutionContext(qd) {
+        parameter('queries.?) { pn: Option[String] =>
+          complete {
+            source(parse(pn))
+          }
         }
       }
     }

@@ -1,8 +1,14 @@
 package net.benchmark.akka.http.world
+import akka.NotUsed
+import akka.http.scaladsl.common.{EntityStreamingSupport, JsonEntityStreamingSupport}
+import akka.http.scaladsl.server.Directives._
+import akka.stream.scaladsl.Source
+import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._
 
-class UpdateRoute(wr: WorldRepository,
-                  ud: ExecutionContextExecutor,
-                  sd: ExecutionContextExecutor) {
+import scala.concurrent.ExecutionContextExecutor
+import scala.util.Try
+
+class UpdateRoute(wr: WorldRepository, ud: ExecutionContextExecutor, sd: ExecutionContextExecutor) {
 
   implicit private val jss: JsonEntityStreamingSupport =
     EntityStreamingSupport.json().withParallelMarshalling(5, unordered = true)
@@ -32,8 +38,10 @@ class UpdateRoute(wr: WorldRepository,
 
   def route() = {
     path("updates") {
-      parameter('queries.?) { pn =>
-        complete(source(parse(pn)))
+      withExecutionContext(ud) {
+        parameter('queries.?) { pn =>
+          complete(source(parse(pn)))
+        }
       }
     }
   }
