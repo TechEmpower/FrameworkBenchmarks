@@ -1,14 +1,11 @@
-FROM golang:1.10.1
+FROM golang:1.11.5
 
-COPY ./ /iris
-WORKDIR /iris
+WORKDIR /go/src/app
 
-RUN mkdir bin
-ENV GOPATH /iris
-ENV PATH ${GOPATH}/bin:${PATH}
-
-RUN rm -rf ./pkg/*
 RUN go get github.com/kataras/iris
 RUN go get github.com/lib/pq
+COPY src/. .
 
-CMD go run main.go
+RUN go build -ldflags="-s -w" -o app .
+
+CMD ./app
