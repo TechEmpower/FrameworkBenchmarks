@@ -2,7 +2,7 @@
 #
 # BUILD
 #
-FROM gradle:5.0.0-jdk11 AS gradle_build
+FROM gradle:5.2.1-jdk11 AS gradle_build
 USER root
 WORKDIR /hexagon
 

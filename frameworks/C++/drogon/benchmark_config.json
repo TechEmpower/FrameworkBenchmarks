@@ -1,0 +1,26 @@
+{
+  "framework": "drogon",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "drogon",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "drogon",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
