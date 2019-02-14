@@ -1,4 +1,4 @@
-FROM golang:1.10.1
+FROM golang:1.11.5
 
 ADD ./ /go-std
 WORKDIR /go-std
@@ -8,4 +8,5 @@ ENV GOPATH /go-std
 ENV PATH ${GOPATH}/bin:${PATH}
 
 RUN go get github.com/lib/pq
-CMD go run hello_postgres.go
+RUN go build -o hello_postgres hello_postgres.go
+CMD ./hello_postgres
