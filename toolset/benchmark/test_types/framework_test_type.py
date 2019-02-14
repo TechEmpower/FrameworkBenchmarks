@@ -208,6 +208,17 @@ class FrameworkTestType:
                 log("ERROR: Unable to load current MongoDB World table.",
                     color=Fore.RED)
                 log(tb)
+        elif database_name == "db4j":
+            try:
+                url = 'http://tfb-server:8080/all'
+                headers, body = self.request_headers_and_body(url)
+                result = json.loads(body)
+                results_json.append(result)
+            except Exception:
+                tb = traceback.format_exc()
+                log("ERROR: Unable to load current db4j World table.",
+                    color=Fore.RED)
+                log(tb)
         else:
             raise ValueError(
                 "Database: {!s} does not exist".format(database_name))
