@@ -8,12 +8,9 @@
 $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
     PDO::ATTR_PERSISTENT => true
 ));
-
-// Define query
-$statement = $pdo->query( 'SELECT id, message FROM Fortune' );
   
-// Store result in array.
-$arr = $statement->fetchAll(PDO::FETCH_KEY_PAIR); 
+// Define query and store result in array.
+$arr = $pdo->query( 'SELECT id, message FROM Fortune' )->fetchAll(PDO::FETCH_KEY_PAIR); 
 $arr[0] = 'Additional fortune added at request time.';
 
 asort($arr);

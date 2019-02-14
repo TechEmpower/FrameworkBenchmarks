@@ -23,6 +23,7 @@ env:
      - "TESTDIR=C++/treefrog"
      - "TESTDIR=C++/ulib"
      - "TESTDIR=C++/wt"
+     - "TESTDIR=C++/drogon"
      - "TESTLANG=Clojure"
      - "TESTLANG=Crystal"
      - "TESTLANG=D"
@@ -84,6 +85,7 @@ env:
      - "TESTDIR=Java/undertow"
      - "TESTDIR=Java/undertow-jersey"
      - "TESTDIR=Java/vertx"
+     - "TESTDIR=Java/voovan"
      - "TESTDIR=Java/vertx-web"
      - "TESTDIR=Java/wicket"
      - "TESTDIR=Java/wildfly-ee"
@@ -95,7 +97,7 @@ env:
      - "TESTLANG=Nim"
      - "TESTLANG=Perl"
      - 'TESTDIR="PHP/php"'
-     - 'TESTDIR="PHP/cakephp PHP/clancats PHP/codeigniter PHP/cygnite PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/laravel PHP/limonade PHP/lithium PHP/lumen PHP/phpixie PHP/phreeze PHP/silex PHP/slim PHP/symfony PHP/yii2 PHP/zend"'
+     - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/laravel PHP/limonade PHP/lithium PHP/lumen PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend"'
      - 'TESTDIR="PHP/amp PHP/hamlet PHP/hhvm PHP/peachpie PHP/swoole PHP/workerman PHP/phalcon"'
      - "TESTLANG=Python"
      - "TESTLANG=Ruby"
@@ -127,4 +129,4 @@ script:
   # run-ci.py runs the diffing to see if travis needs to test this framework. Ideally/eventually,
   # we'd like to try and do the diffing before travis_clean & setup.
   # This will run the tests exactly as you would in your own vm:
-  - if [ "$RUN_TESTS" ]; then docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS; else echo 'Skipping test verification.'; fi
+  - if [ "$RUN_TESTS" ]; then docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS --benchmark-env travis; else echo 'Skipping test verification.'; fi

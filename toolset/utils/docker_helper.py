@@ -39,7 +39,11 @@ class DockerHelper:
                     tag=tag,
                     forcerm=True,
                     timeout=3600,
-                    pull=True)
+                    pull=True,
+                    buildargs=({
+                      'BENCHMARK_ENV': self.benchmarker.config.benchmark_env
+                    })
+                )
                 buffer = ""
                 for token in output:
                     if token.startswith('{"stream":'):

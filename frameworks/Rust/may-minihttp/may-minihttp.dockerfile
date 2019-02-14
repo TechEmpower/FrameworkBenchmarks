@@ -1,4 +1,4 @@
-FROM rust:1.29.1
+FROM rust:1.32.0
 
 ADD ./ /may
 WORKDIR /may
