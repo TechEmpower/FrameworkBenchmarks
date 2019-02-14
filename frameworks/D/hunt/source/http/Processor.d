@@ -59,9 +59,11 @@ public:
 			parser.execute(data);
 		})
 		.onClosed(() {
-			notifyClientClosed();
+			// notifyClientClosed();
 		})
-		.onError((string msg) { warning("Error: ", msg); })
+		.onError((string msg) { 
+			debug warning("Error: ", msg); 
+		})
 		.start();
 	}
 
