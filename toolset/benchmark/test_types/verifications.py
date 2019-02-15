@@ -2,7 +2,7 @@ import json
 import re
 import traceback
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from toolset.utils.output_helper import log
 
 
@@ -66,6 +66,13 @@ def verify_headers(headers, url, should_be='json'):
                 'warn',
                 'Invalid Date header, found \"%s\", did not match \"%s\".'
                 % (date, expected_date_format), url))
+
+        now = datetime.now()
+        if now - timedelta(seconds=15) >= datetime.strptime(date, '%a, %d %b %Y %H:%M:%S %Z'):
+            problems.append((
+                'warn',
+                'Invalid Date header, the date on the request \"%s\" was too old".'
+                % (date), url))
 
     content_type = headers.get('Content-Type')
     if content_type is not None:
