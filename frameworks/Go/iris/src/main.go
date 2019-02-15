@@ -52,6 +52,7 @@ func main() {
 	app.Handle("GET", "/queries", queriesHandler)
 	app.Handle("GET", "/update", updateHandler(db))
 	app.Handle("GET", "/fortune", fortuneHandler)
+	app.Handle("GET", "/fortune-quick", fortuneQuickHandler)
 
 	iris.RegisterOnInterrupt(func() {
 		timeout := 10 * time.Second

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/templates"
 	"database/sql"
 	"log"
 	"sort"
@@ -81,4 +82,30 @@ func fortuneHandler(ctx context.Context) {
 	ctx.View("fortunes.html", struct {
 		Fortunes []Fortune
 	}{fortunes})
+}
+
+func fortuneQuickHandler(ctx context.Context) {
+	rows, err := fortuneStmt.Query()
+	if err != nil {
+		log.Fatalf("Can't query fortunes: %s\n", err)
+	}
+
+	var fortunes []templates.Fortune
+	var fortune templates.Fortune
+	for rows.Next() {
+		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
+			log.Fatalf("Can't scan fortune: %s\n", err)
+		}
+		fortunes = append(fortunes, fortune)
+	}
+	rows.Close()
+	fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
+
+	sort.Slice(fortunes, func(i, j int) bool {
+		return fortunes[i].Message < fortunes[j].Message
+	})
+
+	ctx.Header("Server", "Iris")
+	ctx.ContentType("text/html; charset=utf-8")
+	templates.WriteFortunePage(ctx.ResponseWriter(), fortunes)
 }
