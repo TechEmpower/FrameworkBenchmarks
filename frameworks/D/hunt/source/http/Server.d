@@ -30,6 +30,7 @@ abstract class AbstractTcpServer {
 	this(Address address, int thread = (totalCPUs - 1)) {
 		this._address = address;
 		_tcpStreamoption = TcpStreamOption.createOption();
+		_tcpStreamoption.bufferSize = 1024*2;
 		_group = new EventLoopGroup(cast(uint) thread);
 	}
 
@@ -40,13 +41,12 @@ abstract class AbstractTcpServer {
 	void start() {
 		if (_isStarted)
 			return;
-		debug trace("start to listen:");
 		_isStarted = true;
 
 		Socket server = new TcpSocket();
 		server.setOption(SocketOptionLevel.SOCKET, SocketOption.REUSEADDR, true);
 		server.bind(new InternetAddress("0.0.0.0", 8080));
-		server.listen(1000);
+		server.listen(8192);
 
 		debug trace("Launching server");
 
