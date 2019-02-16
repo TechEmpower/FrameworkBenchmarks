@@ -7,7 +7,11 @@ import (
 	"html/template"
 	"log"
 	"math/rand"
+	"net"
 	"net/http"
+	"os"
+	"os/exec"
+	"runtime"
 	"sort"
 	"strconv"
 
@@ -71,6 +75,9 @@ var (
 	fortuneSelectPrepared *sql.Stmt
 )
 
+var prefork = flag.Bool("prefork", false, "use prefork")
+var child = flag.Bool("child", false, "is child proc")
+
 func initDB() {
 	var err error
 	db, err = sql.Open("postgres", connectionString)
@@ -95,7 +102,13 @@ func initDB() {
 }
 
 func main() {
+	var listener net.Listener
 	flag.Parse()
+	if !*prefork {
+		runtime.GOMAXPROCS(runtime.NumCPU())
+	} else {
+		listener = doPrefork()
+	}
 
 	initDB()
 
@@ -104,7 +117,53 @@ func main() {
 	http.HandleFunc("/fortune", fortuneHandler)
 	http.HandleFunc("/update", updateHandler)
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	if !*prefork {
+		http.ListenAndServe(":8080", nil)
+	} else {
+		http.Serve(listener, nil)
+	}
+}
+
+func doPrefork() net.Listener {
+	var listener net.Listener
+	if !*child {
+		addr, err := net.ResolveTCPAddr("tcp", ":8080")
+		if err != nil {
+			log.Fatal(err)
+		}
+		tcplistener, err := net.ListenTCP("tcp", addr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fl, err := tcplistener.File()
+		if err != nil {
+			log.Fatal(err)
+		}
+		children := make([]*exec.Cmd, runtime.NumCPU()/2)
+		for i := range children {
+			children[i] = exec.Command(os.Args[0], "-prefork", "-child")
+			children[i].Stdout = os.Stdout
+			children[i].Stderr = os.Stderr
+			children[i].ExtraFiles = []*os.File{fl}
+			err = children[i].Start()
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		for _, ch := range children {
+			if err := ch.Wait(); err != nil {
+				log.Print(err)
+			}
+		}
+		os.Exit(0)
+	} else {
+		var err error
+		listener, err = net.FileListener(os.NewFile(3, ""))
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	return listener
 }
 
 func getQueriesParam(r *http.Request) int {
@@ -192,8 +251,28 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatalf("Error scanning world row: %v", err)
 		}
 		world[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
-		if _, err := worldUpdatePrepared.Exec(world[i].RandomNumber, world[i].Id); err != nil {
-			log.Fatalf("Error updating world row: %v", err)
+	}
+
+	if len(world) > 0 {
+		// against deadlocks
+		sort.Slice(world, func(i, j int) bool {
+			return world[i].Id < world[j].Id
+		})
+
+		tx, err := db.Begin()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for i := 0; i < n; i++ {
+			if _, err := tx.Stmt(worldUpdatePrepared).Exec(world[i].RandomNumber, world[i].Id); err != nil {
+				log.Printf("Error updating world row: %v\n", err)
+				tx.Rollback()
+			}
+		}
+
+		if err := tx.Commit(); err != nil {
+			log.Fatal(err)
 		}
 	}
 
