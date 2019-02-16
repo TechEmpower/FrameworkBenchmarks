@@ -221,22 +221,6 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Test 4: Fortunes
-func fortuneQuickHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Header().Set("Server", "Go")
-	f := make(Fortunes, 16)
-	if err := fortunes.Find(nil).All(&f); err == nil {
-		f = append(f, Fortune{Message: "Additional fortune added at request time."})
-		sort.Sort(ByMessage{f})
-		if err := tmpl.Execute(w, f); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-	} else {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-}
-
 // Test 5: Database updates
 func updateHandler(w http.ResponseWriter, r *http.Request) {
 	n := getQueriesParam(r)

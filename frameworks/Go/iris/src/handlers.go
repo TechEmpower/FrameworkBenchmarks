@@ -63,7 +63,7 @@ func fortuneHandler(ctx context.Context) {
 		log.Fatalf("Can't query fortunes: %s\n", err)
 	}
 
-	var fortunes []Fortune
+	fortunes := make([]Fortune, 0, 16)
 	var fortune Fortune
 	for rows.Next() {
 		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
@@ -90,7 +90,7 @@ func fortuneQuickHandler(ctx context.Context) {
 		log.Fatalf("Can't query fortunes: %s\n", err)
 	}
 
-	var fortunes []templates.Fortune
+	fortunes := make([]templates.Fortune, 0, 16)
 	var fortune templates.Fortune
 	for rows.Next() {
 		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {

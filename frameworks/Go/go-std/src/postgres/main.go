@@ -14,6 +14,7 @@ import (
 	"runtime"
 	"sort"
 	"strconv"
+	"templates"
 
 	_ "github.com/lib/pq"
 )
@@ -115,6 +116,7 @@ func main() {
 	http.HandleFunc("/db", dbHandler)
 	http.HandleFunc("/queries", queriesHandler)
 	http.HandleFunc("/fortune", fortuneHandler)
+	http.HandleFunc("/fortune-quick", fortuneQuickHandler)
 	http.HandleFunc("/update", updateHandler)
 
 	if !*prefork {
@@ -218,7 +220,14 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	fortunes := fetchFortunes(rows)
+	fortunes := make(Fortunes, 0, 16)
+	for rows.Next() {
+		fortune := Fortune{}
+		if err := rows.Scan(&fortune.Id, &fortune.Message); err != nil {
+			log.Fatalf("Error scanning fortune row: %s", err.Error())
+		}
+		fortunes = append(fortunes, &fortune)
+	}
 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
 
 	sort.Sort(ByMessage{fortunes})
@@ -229,16 +238,31 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func fetchFortunes(rows *sql.Rows) Fortunes {
-	fortunes := make(Fortunes, 0, 16)
+// Test 4: Fortunes
+func fortuneQuickHandler(w http.ResponseWriter, r *http.Request) {
+	rows, err := fortuneSelectPrepared.Query()
+	if err != nil {
+		log.Fatalf("Error preparing statement: %v", err)
+	}
+	defer rows.Close()
+
+	fortunes := make([]templates.Fortune, 0, 16)
 	for rows.Next() { // Fetch rows
-		fortune := Fortune{}
-		if err := rows.Scan(&fortune.Id, &fortune.Message); err != nil {
+		fortune := templates.Fortune{}
+		if err := rows.Scan(&fortune.ID, &fortune.Message); err != nil {
 			log.Fatalf("Error scanning fortune row: %s", err.Error())
 		}
-		fortunes = append(fortunes, &fortune)
+		fortunes = append(fortunes, fortune)
 	}
-	return fortunes
+	fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
+
+	sort.Slice(fortunes, func(i, j int) bool {
+		return fortunes[i].Message < fortunes[j].Message
+	})
+
+	w.Header().Set("Server", "Go")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	templates.WriteFortunePage(w, fortunes)
 }
 
 // Test 5: Database updates
