@@ -8,10 +8,9 @@ import (
 	"runtime"
 	"time"
 
+	"iris/src/storage"
+
 	"github.com/kataras/iris"
-
-	_ "github.com/lib/pq"
-
 	"github.com/kataras/iris/middleware/recover"
 )
 
@@ -37,9 +36,9 @@ func main() {
 	app.RegisterView(iris.HTML("./templates", ".html"))
 
 	// init database
-	db, err := initDatabase(
+	db, err := storage.NewPqDB(
 		*dbConnectionString,
-		runtime.NumCPU())
+		runtime.NumCPU()*4)
 	if err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
@@ -48,11 +47,11 @@ func main() {
 	// add handlers
 	app.Handle("GET", "/json", jsonHandler)
 	app.Handle("GET", "/plaintext", plaintextHandler)
-	app.Handle("GET", "/db", dbHandler)
-	app.Handle("GET", "/queries", queriesHandler)
+	app.Handle("GET", "/db", dbHandler(db))
+	app.Handle("GET", "/queries", queriesHandler(db))
 	app.Handle("GET", "/update", updateHandler(db))
-	app.Handle("GET", "/fortune", fortuneHandler)
-	app.Handle("GET", "/fortune-quick", fortuneQuickHandler)
+	app.Handle("GET", "/fortune", fortuneHandler(db))
+	app.Handle("GET", "/fortune-quick", fortuneQuickHandler(db))
 
 	iris.RegisterOnInterrupt(func() {
 		timeout := 10 * time.Second

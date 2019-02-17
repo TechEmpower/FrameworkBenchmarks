@@ -1,11 +1,13 @@
 package main
 
 import (
-	"app/templates"
-	"database/sql"
 	"log"
 	"sort"
 	"strconv"
+
+	"iris/src/templates"
+
+	"iris/src/storage"
 
 	"github.com/kataras/iris/context"
 )
@@ -20,30 +22,19 @@ func plaintextHandler(ctx context.Context) {
 	ctx.Text("Hello, World!")
 }
 
-func dbHandler(ctx context.Context) {
-	ctx.Header("Server", "Iris")
-	ctx.JSON(getOneRandomWorld())
+func dbHandler(db storage.DB) func(ctx context.Context) {
+	return func(ctx context.Context) {
+		world, err := db.GetOneRandomWorld()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		ctx.Header("Server", "Iris")
+		ctx.JSON(world)
+	}
 }
 
-func queriesHandler(ctx context.Context) {
-	q, err := strconv.Atoi(ctx.URLParam("queries"))
-	if err != nil || q < 1 {
-		q = 1
-	} else if q > 500 {
-		q = 500
-	}
-
-	results := make([]World, q)
-
-	for i := 0; i < q; i++ {
-		results[i] = getOneRandomWorld()
-	}
-
-	ctx.Header("Server", "Iris")
-	ctx.JSON(results)
-}
-
-func updateHandler(db *sql.DB) func(ctx context.Context) {
+func queriesHandler(db storage.DB) func(ctx context.Context) {
 	return func(ctx context.Context) {
 		q, err := strconv.Atoi(ctx.URLParam("queries"))
 		if err != nil || q < 1 {
@@ -52,60 +43,72 @@ func updateHandler(db *sql.DB) func(ctx context.Context) {
 			q = 500
 		}
 
+		results := make([]storage.World, q)
+
+		for i := 0; i < q; i++ {
+			results[i], err = db.GetOneRandomWorld()
+			if err != nil {
+				log.Println(err)
+			}
+		}
+
 		ctx.Header("Server", "Iris")
-		ctx.JSON(updateRandomWorlds(db, q))
+		ctx.JSON(results)
 	}
 }
 
-func fortuneHandler(ctx context.Context) {
-	rows, err := fortuneStmt.Query()
-	if err != nil {
-		log.Fatalf("Can't query fortunes: %s\n", err)
-	}
-
-	fortunes := make([]Fortune, 0, 16)
-	var fortune Fortune
-	for rows.Next() {
-		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
-			log.Fatalf("Can't scan fortune: %s\n", err)
+func updateHandler(db storage.DB) func(ctx context.Context) {
+	return func(ctx context.Context) {
+		q, err := strconv.Atoi(ctx.URLParam("queries"))
+		if err != nil || q < 1 {
+			q = 1
+		} else if q > 500 {
+			q = 500
 		}
-		fortunes = append(fortunes, fortune)
+
+		worlds, err := db.UpdateRandomWorlds(q)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		ctx.Header("Server", "Iris")
+		ctx.JSON(worlds)
 	}
-	rows.Close()
-	fortunes = append(fortunes, Fortune{Message: "Additional fortune added at request time."})
-
-	sort.Slice(fortunes, func(i, j int) bool {
-		return fortunes[i].Message < fortunes[j].Message
-	})
-
-	ctx.Header("Server", "Iris")
-	ctx.View("fortunes.html", struct {
-		Fortunes []Fortune
-	}{fortunes})
 }
 
-func fortuneQuickHandler(ctx context.Context) {
-	rows, err := fortuneStmt.Query()
-	if err != nil {
-		log.Fatalf("Can't query fortunes: %s\n", err)
-	}
-
-	fortunes := make([]templates.Fortune, 0, 16)
-	var fortune templates.Fortune
-	for rows.Next() {
-		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
-			log.Fatalf("Can't scan fortune: %s\n", err)
+func fortuneHandler(db storage.DB) func(ctx context.Context) {
+	return func(ctx context.Context) {
+		fortunes, err := db.GetFortunes()
+		if err != nil {
+			log.Fatal(err)
 		}
-		fortunes = append(fortunes, fortune)
+		fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
+
+		sort.Slice(fortunes, func(i, j int) bool {
+			return fortunes[i].Message < fortunes[j].Message
+		})
+
+		ctx.Header("Server", "Iris")
+		ctx.View("fortunes.html", struct {
+			Fortunes []templates.Fortune
+		}{fortunes})
 	}
-	rows.Close()
-	fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
+}
 
-	sort.Slice(fortunes, func(i, j int) bool {
-		return fortunes[i].Message < fortunes[j].Message
-	})
+func fortuneQuickHandler(db storage.DB) func(ctx context.Context) {
+	return func(ctx context.Context) {
+		fortunes, err := db.GetFortunes()
+		if err != nil {
+			log.Fatal(err)
+		}
+		fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
 
-	ctx.Header("Server", "Iris")
-	ctx.ContentType("text/html; charset=utf-8")
-	templates.WriteFortunePage(ctx.ResponseWriter(), fortunes)
+		sort.Slice(fortunes, func(i, j int) bool {
+			return fortunes[i].Message < fortunes[j].Message
+		})
+
+		ctx.Header("Server", "Iris")
+		ctx.ContentType("text/html; charset=utf-8")
+		templates.WriteFortunePage(ctx.ResponseWriter(), fortunes)
+	}
 }
