@@ -1,6 +1,6 @@
 asyncpg==0.18.2
 gunicorn==19.9.0
-fastapi==0.1.12
+fastapi==0.5.0
 jinja2==2.10
 ujson==1.35
 uvicorn==0.3.23
