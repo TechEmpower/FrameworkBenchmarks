@@ -120,7 +120,6 @@ func main() {
 
 	initDB()
 
-	http.HandleFunc("/json", jsonHandler)
 	http.HandleFunc("/db", dbHandler)
 	http.HandleFunc("/dbInterpolate", dbInterpolateHandler)
 	http.HandleFunc("/queries", queriesHandler)
@@ -129,7 +128,6 @@ func main() {
 	http.HandleFunc("/fortuneInterpolate", fortuneInterpolateHandler)
 	http.HandleFunc("/update", updateHandler)
 	http.HandleFunc("/updateInterpolate", updateInterpolateHandler)
-	http.HandleFunc("/plaintext", plaintextHandler)
 	if !*prefork {
 		http.ListenAndServe(":8080", nil)
 	} else {
@@ -137,21 +135,18 @@ func main() {
 	}
 }
 
-func doPrefork() (listener net.Listener) {
-	var err error
-	var fl *os.File
-	var tcplistener *net.TCPListener
+func doPrefork() net.Listener {
+	var listener net.Listener
 	if !*child {
-		var addr *net.TCPAddr
-		addr, err = net.ResolveTCPAddr("tcp", ":8080")
+		addr, err := net.ResolveTCPAddr("tcp", ":8080")
 		if err != nil {
 			log.Fatal(err)
 		}
-		tcplistener, err = net.ListenTCP("tcp", addr)
+		tcplistener, err := net.ListenTCP("tcp", addr)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fl, err = tcplistener.File()
+		fl, err := tcplistener.File()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -167,19 +162,17 @@ func doPrefork() (listener net.Listener) {
 			}
 		}
 		for _, ch := range children {
-			var err error = ch.Wait()
-			if err != nil {
+			if err := ch.Wait(); err != nil {
 				log.Print(err)
 			}
 		}
 		os.Exit(0)
 	} else {
-		fl = os.NewFile(3, "")
-		listener, err = net.FileListener(fl)
+		var err error
+		listener, err = net.FileListener(os.NewFile(3, ""))
 		if err != nil {
 			log.Fatal(err)
 		}
-		runtime.GOMAXPROCS(2)
 	}
 	return listener
 }

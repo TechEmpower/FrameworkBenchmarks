@@ -11,4 +11,4 @@ COPY src/. .
 RUN qtc
 RUN go build -ldflags="-s -w" -o app .
 
-CMD ./app
+CMD ./app -prefork

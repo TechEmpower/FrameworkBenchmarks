@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/templates"
 	"database/sql"
 	"log"
 	"sort"
@@ -33,6 +34,7 @@ func queriesHandler(ctx context.Context) {
 	}
 
 	results := make([]World, q)
+
 	for i := 0; i < q; i++ {
 		results[i] = getOneRandomWorld()
 	}
@@ -56,15 +58,12 @@ func updateHandler(db *sql.DB) func(ctx context.Context) {
 }
 
 func fortuneHandler(ctx context.Context) {
-	var err error
-	var rows *sql.Rows
-	rows, err = fortuneStmt.Query()
+	rows, err := fortuneStmt.Query()
 	if err != nil {
 		log.Fatalf("Can't query fortunes: %s\n", err)
 	}
 
-	var fortunes []Fortune
-
+	fortunes := make([]Fortune, 0, 16)
 	var fortune Fortune
 	for rows.Next() {
 		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
@@ -83,4 +82,30 @@ func fortuneHandler(ctx context.Context) {
 	ctx.View("fortunes.html", struct {
 		Fortunes []Fortune
 	}{fortunes})
+}
+
+func fortuneQuickHandler(ctx context.Context) {
+	rows, err := fortuneStmt.Query()
+	if err != nil {
+		log.Fatalf("Can't query fortunes: %s\n", err)
+	}
+
+	fortunes := make([]templates.Fortune, 0, 16)
+	var fortune templates.Fortune
+	for rows.Next() {
+		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
+			log.Fatalf("Can't scan fortune: %s\n", err)
+		}
+		fortunes = append(fortunes, fortune)
+	}
+	rows.Close()
+	fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
+
+	sort.Slice(fortunes, func(i, j int) bool {
+		return fortunes[i].Message < fortunes[j].Message
+	})
+
+	ctx.Header("Server", "Iris")
+	ctx.ContentType("text/html; charset=utf-8")
+	templates.WriteFortunePage(ctx.ResponseWriter(), fortunes)
 }
