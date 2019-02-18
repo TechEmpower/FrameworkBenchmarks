@@ -81,7 +81,7 @@
       "notes": "mongodb implementation for go net/http",
       "versus": "go"
     },
-    "pg": {
+    "pq": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortune",
@@ -102,7 +102,7 @@
       "notes": "",
       "versus": "go"
     },
-    "pg-quicktemplate": {
+    "pq-quicktemplate": {
       "fortune_url": "/fortune-quick",
       "port": 8080,
       "approach": "Realistic",
@@ -120,7 +120,7 @@
       "notes": "",
       "versus": "go"
     },
-    "pg-prefork": {
+    "pq-prefork": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortune",
@@ -141,7 +141,7 @@
       "notes": "",
       "versus": "go"
     },
-    "pg-prefork-quicktemplate": {
+    "pq-prefork-quicktemplate": {
       "fortune_url": "/fortune-quick",
       "port": 8080,
       "approach": "Realistic",
