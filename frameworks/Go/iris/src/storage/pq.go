@@ -29,24 +29,14 @@ func (psql *PQ) Connect(dbConnectionString string, maxConnectionsInPool int) err
 		return err
 	}
 
-	if err = psql.db.Ping(); err != nil {
+	err = psql.db.Ping()
+	if err != nil {
 		return err
 	}
 
-	return psql.Config(maxConnectionsInPool)
-}
-
-// Close connect to db
-func (psql *PQ) Close() {
-	psql.db.Close()
-}
-
-// Config makes some
-func (psql *PQ) Config(maxConnectionsInPool int) error {
 	psql.db.SetMaxOpenConns(maxConnectionsInPool)
 	psql.db.SetMaxIdleConns(maxConnectionsInPool)
 
-	var err error
 	if psql.selectStmt, err = psql.mustPrepare(selectQueryStr); err != nil {
 		return err
 	}
@@ -58,6 +48,11 @@ func (psql *PQ) Config(maxConnectionsInPool int) error {
 	}
 
 	return nil
+}
+
+// Close connect to db
+func (psql *PQ) Close() {
+	psql.db.Close()
 }
 
 // GetOneRandomWorld return one random World struct
@@ -135,13 +130,11 @@ func (psql PQ) mustPrepare(query string) (*sql.Stmt, error) {
 	return stmt, nil
 }
 
-// NewPqDB creates new connect to postgres db
+// NewPqDB creates new connection to postgres db with pq driver
 func NewPqDB(dbConnectionString string, maxConnectionsInPool int) (DB, error) {
-	var psql *PQ
-
+	var psql PQ
 	if err := psql.Connect(dbConnectionString, maxConnectionsInPool); err != nil {
 		return nil, err
 	}
-
-	return psql, nil
+	return &psql, nil
 }

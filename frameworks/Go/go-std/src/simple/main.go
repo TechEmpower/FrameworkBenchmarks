@@ -62,7 +62,7 @@ func doPrefork() net.Listener {
 		}
 		children := make([]*exec.Cmd, runtime.NumCPU()/2)
 		for i := range children {
-			children[i] = exec.Command(os.Args[0], "-prefork", "-child")
+			children[i] = exec.Command(os.Args[0], append(os.Args[1:], "-child")...)
 			children[i].Stdout = os.Stdout
 			children[i].Stderr = os.Stderr
 			children[i].ExtraFiles = []*os.File{fl}

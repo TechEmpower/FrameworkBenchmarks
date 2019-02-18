@@ -19,6 +19,7 @@ func main() {
 	bindHost := flag.String("bind", ":8080", "set bind host")
 	prefork := flag.Bool("prefork", false, "use prefork")
 	child := flag.Bool("child", false, "is child proc")
+	dbDriver := flag.String("db", "none", "db connection driver [values: pq || pgx || none]")
 	dbConnectionString := flag.String("db_connection_string",
 		"host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world sslmode=disable",
 		"Set bind host")
@@ -33,25 +34,44 @@ func main() {
 	// init iris app
 	app := iris.New()
 	app.Use(recover.New())
-	app.RegisterView(iris.HTML("./templates", ".html"))
 
-	// init database
-	db, err := storage.NewPqDB(
-		*dbConnectionString,
-		runtime.NumCPU()*4)
-	if err != nil {
-		log.Fatalf("Error opening database: %s", err)
+	// init database with appropriate driver
+	var err error
+	var db storage.DB
+	if *dbDriver == "pq" {
+		db, err = storage.NewPqDB(
+			*dbConnectionString,
+			runtime.NumCPU()*4)
+		if err != nil {
+			log.Fatalf("Error opening pq database: %s", err)
+		}
+		defer db.Close()
+	} else if *dbDriver == "pgx" {
+		db, err = storage.NewPgxDB(
+			*dbConnectionString,
+			runtime.NumCPU()*4)
+		if err != nil {
+			log.Fatalf("Error opening pgx database: %s", err)
+		}
+		defer db.Close()
+	} else if *dbDriver == "none" {
+		db = nil
+	} else {
+		log.Fatal("Can't recognize DB connector type")
 	}
-	defer db.Close()
 
 	// add handlers
 	app.Handle("GET", "/json", jsonHandler)
 	app.Handle("GET", "/plaintext", plaintextHandler)
-	app.Handle("GET", "/db", dbHandler(db))
-	app.Handle("GET", "/queries", queriesHandler(db))
-	app.Handle("GET", "/update", updateHandler(db))
-	app.Handle("GET", "/fortune", fortuneHandler(db))
-	app.Handle("GET", "/fortune-quick", fortuneQuickHandler(db))
+	if db != nil {
+		app.Handle("GET", "/db", dbHandler(db))
+		app.Handle("GET", "/queries", queriesHandler(db))
+		app.Handle("GET", "/update", updateHandler(db))
+
+		app.RegisterView(iris.HTML("./templates", ".html"))
+		app.Handle("GET", "/fortune", fortuneHandler(db))
+		app.Handle("GET", "/fortune-quick", fortuneQuickHandler(db))
+	}
 
 	iris.RegisterOnInterrupt(func() {
 		timeout := 10 * time.Second
