@@ -46,6 +46,7 @@ func doPrefork(child bool, toBind string) net.Listener {
 		if err != nil {
 			log.Fatal(err)
 		}
+		runtime.GOMAXPROCS(runtime.NumCPU() / 2)
 	}
 	return listener
 }

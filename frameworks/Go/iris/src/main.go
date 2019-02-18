@@ -29,6 +29,8 @@ func main() {
 	var listener net.Listener
 	if *prefork {
 		listener = doPrefork(*child, *bindHost)
+	} else {
+		runtime.GOMAXPROCS(runtime.NumCPU())
 	}
 
 	// init iris app

@@ -151,6 +151,7 @@ func doPrefork() net.Listener {
 		if err != nil {
 			log.Fatal(err)
 		}
+		runtime.GOMAXPROCS(runtime.NumCPU() / 2)
 	}
 	return listener
 }
