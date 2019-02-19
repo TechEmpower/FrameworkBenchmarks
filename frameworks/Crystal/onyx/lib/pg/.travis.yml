@@ -1,0 +1,33 @@
+dist: trusty
+
+sudo: required
+
+services:
+  - postgresql
+
+language: crystal
+
+crystal:
+  - latest
+
+env:
+  - TRAVIS_POSTGRESQL_VERSION=9.6
+  - TRAVIS_POSTGRESQL_VERSION=9.5
+  - TRAVIS_POSTGRESQL_VERSION=9.4
+  - TRAVIS_POSTGRESQL_VERSION=9.3
+  - TRAVIS_POSTGRESQL_VERSION=9.2
+
+before_install:
+  - sudo service postgresql stop
+  - sudo service postgresql start $TRAVIS_POSTGRESQL_VERSION
+  - sh .travis/setup.sh
+  - createdb crystal
+  - touch spec/.run_auth_specs 
+  - export DATABASE_URL=postgres://postgres@/crystal
+
+notifications:
+  email: false
+
+script:
+  - crystal tool format --check
+  - crystal spec

@@ -1,0 +1,7 @@
+.crystal
+.shards
+shard.lock
+lib
+tmp
+test*.cr
+spec/.run_auth_specs

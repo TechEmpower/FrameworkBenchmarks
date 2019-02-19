@@ -1,0 +1,20 @@
+name: onyx-rest
+version: 0.6.0
+
+authors:
+  - Vlad Faust <mail@vladfaust.com>
+
+crystal: 0.27.2
+
+license: MIT
+
+dependencies:
+  onyx-http:
+    github: onyxframework/http
+    version: ~> 0.1.0
+  callbacks:
+    github: vladfaust/callbacks.cr
+    version: ~> 0.2.0
+  http-params-serializable:
+    github: vladfaust/http-params-serializable
+    version: ~> 0.3.0

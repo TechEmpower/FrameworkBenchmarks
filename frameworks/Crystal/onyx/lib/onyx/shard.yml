@@ -1,0 +1,25 @@
+name: onyx
+version: 0.1.0
+
+authors:
+  - Vlad Faust <mail@vladfaust.com>
+
+crystal: 0.27.2
+
+license: MIT
+
+dependencies:
+  dotenv:
+    github: gdotdesign/cr-dotenv
+    version: ~> 0.1.0
+
+development_dependencies:
+  onyx-http:
+    github: onyxframework/http
+    version: ~> 0.1.0
+  onyx-rest:
+    github: onyxframework/rest
+    version: ~> 0.6.0
+  onyx-sql:
+    github: onyxframework/sql
+    version: ~> 0.6.0

@@ -1,0 +1,42 @@
+language: crystal
+services:
+  - postgresql
+cache:
+  directories:
+    - lib
+jobs:
+  include:
+    - stage: Install shards
+      script: shards install
+    - stage: Run tests
+    - name: Run Crystal specs
+      script:
+        - crystal spec
+    - name: Run PostgreSQL specs
+      env:
+        - POSTGRESQL_URL=postgres://postgres@localhost:5432/test
+      before_script:
+        - psql -c 'create database test;' -U postgres
+        - psql $POSTGRESQL_URL < db_spec/pg/migration.sql
+      script:
+        - shards install
+        - env POSTGRESQL_URL=$POSTGRESQL_URL crystal spec db_spec/pg
+    - name: Run SQLite3 specs
+      env: $SQLITE3_URL=sqlite3://./test.sqlite3
+      before_script:
+        - sqlite3 ./test.sqlite3 < db_spec/sqlite3/migration.sql
+      script:
+        - env SQLITE3_URL=$SQLITE3_URL crystal spec db_spec/sqlite3
+    - stage: Deploy
+      script:
+        - crystal docs
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        keep_history: true
+        github_token: $GITHUB_TOKEN
+        on:
+          branch: master
+        local_dir: docs
+addons:
+  postgresql: "9.5"

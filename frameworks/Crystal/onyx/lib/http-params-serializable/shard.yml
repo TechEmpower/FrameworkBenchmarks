@@ -1,0 +1,9 @@
+name: http-params-serializable
+version: 0.3.0
+
+authors:
+  - Vlad Faust <mail@vladfaust.com>
+
+crystal: 0.27.0
+
+license: MIT

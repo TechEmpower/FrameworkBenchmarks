@@ -1,0 +1,9 @@
+name: callbacks
+version: 0.2.0
+
+authors:
+  - Vlad Faust <mail@vladfaust.com>
+
+crystal: 0.27.2
+
+license: MIT

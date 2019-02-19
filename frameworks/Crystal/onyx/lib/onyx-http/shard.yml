@@ -1,0 +1,17 @@
+name: onyx-http
+version: 0.1.0
+
+authors:
+  - Vlad Faust <mail@vladfaust.com>
+
+crystal: 0.27.0
+
+license: MIT
+
+dependencies:
+  radix:
+    github: luislavena/radix
+    version: ~> 0.3.8
+  time_format:
+    github: vladfaust/time_format.cr
+    version: ~> 0.1.0
