@@ -23,10 +23,6 @@ class ApiSupervisor(dbLoader: DatabaseRepositoryLoader, materializer: ActorMater
   implicit val system: ActorSystem = context.system
 
   private val sd = SameThreadDirectExecutor.executionContext()
-  private val qd = context.system.dispatchers.lookup(AppConfig.Queries.routeDispatcherConfigPath)
-  private val ud = context.system.dispatchers.lookup(AppConfig.Updates.routeDispatcherConfigPath)
-  private val dd = context.system.dispatchers.lookup(AppConfig.Db.routeDispatcherConfigPath)
-  private val fd = context.system.dispatchers.lookup(AppConfig.Fortunes.routeDispatcherConfigPath)
 
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
   override def receive: Receive = {
@@ -40,7 +36,7 @@ class ApiSupervisor(dbLoader: DatabaseRepositoryLoader, materializer: ActorMater
 
       import context.dispatcher
 
-      val _ = Http(system).bindAndHandle(ApiRoutes.routes(dbLoader, sd, qd, ud, dd, fd), address, port).pipeTo(self)
+      val _ = Http(system).bindAndHandle(ApiRoutes.routes(dbLoader, sd), address, port).pipeTo(self)
 
       context.become(running(sender()))
 

@@ -16,9 +16,12 @@ CMD java \
     -Dvertx.threadChecks=false                        \
     -Dvertx.disableContextTimings=true                \
     -Dvertx.disableTCCL=true                          \
+    -Dvertx.disableHttpHeadersValidation=true         \
     -jar                                              \
-    target/vertx-web-benchmark-3.5.4-fat.jar          \
+    target/vertx-web-benchmark-3.6.3-fat.jar          \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`           \
     --conf                                            \
-    src/main/conf/config.json
+    src/main/conf/config.json                         \
+    --options                                         \
+    src/main/conf/vertx.json

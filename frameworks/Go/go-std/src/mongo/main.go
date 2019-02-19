@@ -2,14 +2,19 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"html/template"
 	"log"
 	"math/rand"
+	"net"
 	"net/http"
+	"os"
+	"os/exec"
+	"runtime"
 	"sort"
 	"strconv"
 
-	"gopkg.in/mgo.v2"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -76,7 +81,18 @@ func (s ByMessage) Less(i, j int) bool {
 	return s.Fortunes[i].Message < s.Fortunes[j].Message
 }
 
+var prefork = flag.Bool("prefork", false, "use prefork")
+var child = flag.Bool("child", false, "is child proc")
+
 func main() {
+	var listener net.Listener
+	flag.Parse()
+	if !*prefork {
+		runtime.GOMAXPROCS(runtime.NumCPU())
+	} else {
+		listener = doPrefork()
+	}
+
 	session, err := mgo.Dial(connectionString)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
@@ -89,7 +105,54 @@ func main() {
 	http.HandleFunc("/fortune", fortuneHandler)
 	http.HandleFunc("/queries", queriesHandler)
 	http.HandleFunc("/update", updateHandler)
-	http.ListenAndServe(":8080", nil)
+
+	if !*prefork {
+		http.ListenAndServe(":8080", nil)
+	} else {
+		http.Serve(listener, nil)
+	}
+}
+
+func doPrefork() net.Listener {
+	var listener net.Listener
+	if !*child {
+		addr, err := net.ResolveTCPAddr("tcp", ":8080")
+		if err != nil {
+			log.Fatal(err)
+		}
+		tcplistener, err := net.ListenTCP("tcp", addr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fl, err := tcplistener.File()
+		if err != nil {
+			log.Fatal(err)
+		}
+		children := make([]*exec.Cmd, runtime.NumCPU()/2)
+		for i := range children {
+			children[i] = exec.Command(os.Args[0], "-prefork", "-child")
+			children[i].Stdout = os.Stdout
+			children[i].Stderr = os.Stderr
+			children[i].ExtraFiles = []*os.File{fl}
+			err = children[i].Start()
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		for _, ch := range children {
+			if err := ch.Wait(); err != nil {
+				log.Print(err)
+			}
+		}
+		os.Exit(0)
+	} else {
+		var err error
+		listener, err = net.FileListener(os.NewFile(3, ""))
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	return listener
 }
 
 // Helper for random numbers
@@ -105,7 +168,7 @@ func dbHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Error finding world with id: %s", err.Error())
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Server", "go-mongodb")
+	w.Header().Set("Server", "Go")
 	json.NewEncoder(w).Encode(&world)
 }
 
@@ -138,14 +201,14 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Server", "go-mongodb")
+	w.Header().Set("Server", "Go")
 	json.NewEncoder(w).Encode(world)
 }
 
 // Test 4: Fortunes
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Header().Set("Server", "go-mongodb")
+	w.Header().Set("Server", "Go")
 	f := make(Fortunes, 16)
 	if err := fortunes.Find(nil).All(&f); err == nil {
 		f = append(f, Fortune{Message: "Additional fortune added at request time."})

@@ -47,8 +47,8 @@ private val engine by lazy {
 private val router: Router by lazy {
     Router {
         before {
-            response.addHeader("Server", "Servlet/3.1")
-            response.addHeader("Transfer-Encoding", "chunked")
+            response.setHeader("Server", "Servlet/3.1")
+            response.setHeader("Transfer-Encoding", "chunked")
         }
 
         get("/plaintext") { ok(TEXT_MESSAGE, "text/plain") }
@@ -74,7 +74,7 @@ internal val benchmarkServer: Server by lazy { Server(engine, router, SettingsMa
 private fun returnWorlds(worldsList: List<World>): List<Map<Any?, Any?>> =
     worldsList.map { it.convertToMap() - "_id" }
 
-private fun Call.getWorldsCount() = request.singleParameters[QUERIES_PARAM]?.toIntOrNull().let {
+private fun Call.getWorldsCount() = parameters[QUERIES_PARAM]?.firstOrNull()?.toIntOrNull().let {
     when {
         it == null -> 1
         it < 1 -> 1

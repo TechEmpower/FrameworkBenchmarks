@@ -16,11 +16,7 @@ object ApiRoutes {
   private val log: Logger = LoggerFactory.getLogger(getClass)
 
   def routes(dbLoader: DatabaseRepositoryLoader,
-             sd: ExecutionContextExecutor,
-             qd: ExecutionContextExecutor,
-             ud: ExecutionContextExecutor,
-             dd: ExecutionContextExecutor,
-             fd: ExecutionContextExecutor)(implicit system: ActorSystem): Route =
+             sd: ExecutionContextExecutor)(implicit system: ActorSystem): Route =
     handleRejections(RejectionHandler.default) {
       val eh: ExceptionHandler = ExceptionHandler {
         case ex @ (_: Exception) =>
@@ -28,8 +24,8 @@ object ApiRoutes {
           complete(StatusCodes.InternalServerError)
       }
 
-      val worldRoutes = new WorldRoutes(dbLoader.loadWorldRepository(), sd, qd, ud, dd)
-      val fortuneRoutes = new FortuneRoute(dbLoader.loadFortuneRepository(), sd, fd)
+      val worldRoutes = new WorldRoutes(dbLoader.loadWorldRepository(), sd)
+      val fortuneRoutes = new FortuneRoute(dbLoader.loadFortuneRepository(), sd)
 
       handleExceptions(eh) {
         get {

@@ -332,9 +332,6 @@ int main(int argc, char *argv[])
 			setup_process();
 			start_threads(global_data.global_thread_data);
 			initialize_thread_context(global_data.global_thread_data, true, &ctx);
-			// This is just an optimization, so that the application does not try to
-			// establish database connections in the middle of servicing requests.
-			connect_to_database(&ctx);
 			event_loop(&ctx);
 			// Even though this is global data, we need to close
 			// it before the associated event loop is cleaned up.

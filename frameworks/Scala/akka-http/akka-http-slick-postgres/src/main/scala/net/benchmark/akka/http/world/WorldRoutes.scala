@@ -5,14 +5,11 @@ import akka.http.scaladsl.server.Route
 import scala.concurrent.ExecutionContextExecutor
 
 class WorldRoutes(wr: WorldRepository,
-                  sd: ExecutionContextExecutor,
-                  qd: ExecutionContextExecutor,
-                  ud: ExecutionContextExecutor,
-                  dd: ExecutionContextExecutor) {
+                  sd: ExecutionContextExecutor) {
 
-  private val qr = new QueriesRoute(wr, qd).route()
-  private val ur = new UpdateRoute(wr, ud, sd).route()
-  private val dr = new DbRoute(wr, dd).route()
+  private val qr = new QueriesRoute(wr).route()
+  private val ur = new UpdateRoute(wr, sd).route()
+  private val dr = new DbRoute(wr).route()
 
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def routes(): Route = {

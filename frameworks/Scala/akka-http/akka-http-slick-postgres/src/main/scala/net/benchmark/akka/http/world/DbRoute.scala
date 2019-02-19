@@ -1,10 +1,8 @@
 package net.benchmark.akka.http.world
-import akka.http.scaladsl.server.Directives.{complete, path, withExecutionContext}
+import akka.http.scaladsl.server.Directives.{complete, path}
 import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._
 
-import scala.concurrent.ExecutionContextExecutor
-
-class DbRoute(wr: WorldRepository, dd: ExecutionContextExecutor) {
+class DbRoute(wr: WorldRepository) {
 
   private def rand(): Int = {
     java.util.concurrent.ThreadLocalRandom.current().nextInt(10000) + 1
@@ -12,9 +10,7 @@ class DbRoute(wr: WorldRepository, dd: ExecutionContextExecutor) {
 
   def route() = {
     path("db") {
-      withExecutionContext(dd) {
-        complete(wr.require(rand()))
-      }
+      complete(wr.require(rand()))
     }
   }
 
