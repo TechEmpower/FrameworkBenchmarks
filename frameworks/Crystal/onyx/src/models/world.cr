@@ -6,6 +6,6 @@ class World
 
   schema world do
     pkey id : Int32
-    type randomNumber : Int32
+    type randomnumber : Int32
   end
 end
