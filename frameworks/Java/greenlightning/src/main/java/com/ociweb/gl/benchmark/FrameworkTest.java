@@ -53,6 +53,7 @@ public class FrameworkTest implements GreenApp {
 	public static String connectionUser =     "postgres";
 	public static String connectionPassword = "postgres";
 	
+	//TODO: why is this multiplied by 2, remove this odd behavior and adjust the numbers...
 	static final int c = 274;// to reach 16K simultainious calls
     //NOTE: plaintext is run with 16K connections but JSON test is only 512 (optimize for 512)
 	
@@ -66,7 +67,7 @@ public class FrameworkTest implements GreenApp {
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    	//default port for test 
     		 c,//250 goal,       //needed to reach 16K simultainious calls
-    		 c*4,// c*2,     //1<<14 (router to module) //TODO: do we have a minimum in place here?
+    		 c*4,// c*2,     //1<<14 (router to module) 
     		 1<<11,     //default total size of network buffer used by blocks
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
