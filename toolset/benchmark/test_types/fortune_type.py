@@ -37,7 +37,7 @@ class FortuneTestType(FrameworkTestType):
         (valid, diff) = parser.isValidFortune(self.name, body)
 
         if valid:
-            problems += verify_headers(headers, url, should_be='html')
+            problems += verify_headers(self.request_headers_and_body, headers, url, should_be='html')
 
             if len(problems) == 0:
                 return [('pass', '', url)]
