@@ -62,7 +62,6 @@ const (
 	worldUpdate      = "UPDATE World SET randomNumber = $1 WHERE id = $2"
 	fortuneSelect    = "SELECT id, message FROM Fortune"
 	worldRowCount    = 10000
-	maxConnections   = 256
 )
 
 var (
@@ -74,6 +73,7 @@ var (
 	worldSelectPrepared   *sql.Stmt
 	worldUpdatePrepared   *sql.Stmt
 	fortuneSelectPrepared *sql.Stmt
+	maxConnections        = runtime.NumCPU()
 )
 
 var prefork = flag.Bool("prefork", false, "use prefork")
@@ -141,7 +141,7 @@ func doPrefork() net.Listener {
 		if err != nil {
 			log.Fatal(err)
 		}
-		children := make([]*exec.Cmd, runtime.NumCPU()/2)
+		children := make([]*exec.Cmd, runtime.NumCPU())
 		for i := range children {
 			children[i] = exec.Command(os.Args[0], append(os.Args[1:], "-child")...)
 			children[i].Stdout = os.Stdout
@@ -164,7 +164,8 @@ func doPrefork() net.Listener {
 		if err != nil {
 			log.Fatal(err)
 		}
-		runtime.GOMAXPROCS(runtime.NumCPU() / 2)
+		// runtime.GOMAXPROCS(runtime.NumCPU() / 2)
+		runtime.GOMAXPROCS(1)
 	}
 	return listener
 }

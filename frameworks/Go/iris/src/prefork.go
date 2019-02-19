@@ -23,7 +23,7 @@ func doPrefork(child bool, toBind string) net.Listener {
 		if err != nil {
 			log.Fatal(err)
 		}
-		children := make([]*exec.Cmd, runtime.NumCPU()/2)
+		children := make([]*exec.Cmd, runtime.NumCPU())
 		for i := range children {
 			log.Println(append(os.Args[1:], "-child"))
 			children[i] = exec.Command(os.Args[0], append(os.Args[1:], "-child")...)
@@ -46,7 +46,7 @@ func doPrefork(child bool, toBind string) net.Listener {
 		if err != nil {
 			log.Fatal(err)
 		}
-		runtime.GOMAXPROCS(runtime.NumCPU() / 2)
+		runtime.GOMAXPROCS(1)
 	}
 	return listener
 }

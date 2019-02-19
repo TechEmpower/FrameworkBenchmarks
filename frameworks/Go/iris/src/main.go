@@ -43,7 +43,7 @@ func main() {
 	if *dbDriver == "pq" {
 		db, err = storage.NewPqDB(
 			*dbConnectionString,
-			runtime.NumCPU()*4)
+			runtime.NumCPU())
 		if err != nil {
 			log.Fatalf("Error opening pq database: %s", err)
 		}
@@ -51,7 +51,7 @@ func main() {
 	} else if *dbDriver == "pgx" {
 		db, err = storage.NewPgxDB(
 			*dbConnectionString,
-			runtime.NumCPU()*4)
+			runtime.NumCPU())
 		if err != nil {
 			log.Fatalf("Error opening pgx database: %s", err)
 		}
