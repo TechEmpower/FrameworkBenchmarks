@@ -2,7 +2,8 @@ name: onyx
 version: 0.1.0
 
 authors:
-  - CaDs
+  - Vlad Faust
+  - Carlos Donderis
 
 dependencies:
   http-params-serializable:
