@@ -4,7 +4,7 @@ This is the [Onyx](https://github.com/onyxframework/) test of the Framework Benc
 
 The framework consists of multiple components:
 
-- Onyx::HTTP 2 is a collection of HTTP handlers, which essentialy are building blocks for your web application
+[Onyx::HTTP](https://github.com/onyxframework/http) is a collection of HTTP handlers, which essentially are building blocks for your web application
 - Onyx::REST 2 is a REST layer on top of Onyx::HTTP which implements splitting business and rendering logic into Actions and Views, inspired by Hanami
 - Onyx::SQL 5 is a database-agnostic SQL ORM
 
