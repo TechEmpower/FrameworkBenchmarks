@@ -48,6 +48,7 @@ class DBTestType(FrameworkTestType):
                     url))
                 return problems
 
+        # Verify response content
         problems += verify_randomnumber_object(response, url)
         problems += verify_headers(self.request_headers_and_body, headers, url, should_be='json')
 

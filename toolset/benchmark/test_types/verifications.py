@@ -2,7 +2,7 @@ import json
 import re
 import traceback
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from toolset.utils.output_helper import log
 from time import sleep
 
