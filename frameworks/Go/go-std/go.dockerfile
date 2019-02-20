@@ -1,11 +1,14 @@
 FROM golang:1.11.5
 
-ADD ./src/simple/ /go-std
+ENV GO111MODULE on
 WORKDIR /go-std
 
-RUN mkdir bin
-ENV GOPATH /go-std
-ENV PATH ${GOPATH}/bin:${PATH}
+COPY ./src /go-std
 
-RUN go build -o hello .
-CMD ./hello
+RUN go get github.com/valyala/quicktemplate/qtc
+RUN go mod download
+
+RUN go generate ./templates
+RUN go build -ldflags="-s -w" -o app .
+
+CMD ./app

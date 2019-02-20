@@ -38,34 +38,16 @@ func main() {
 	app.Use(recover.New())
 
 	// init database with appropriate driver
-	var err error
-	var db storage.DB
-	if *dbDriver == "pq" {
-		db, err = storage.NewPqDB(
-			*dbConnectionString,
-			runtime.NumCPU())
-		if err != nil {
-			log.Fatalf("Error opening pq database: %s", err)
-		}
-		defer db.Close()
-	} else if *dbDriver == "pgx" {
-		db, err = storage.NewPgxDB(
-			*dbConnectionString,
-			runtime.NumCPU())
-		if err != nil {
-			log.Fatalf("Error opening pgx database: %s", err)
-		}
-		defer db.Close()
-	} else if *dbDriver == "none" {
-		db = nil
-	} else {
-		log.Fatal("Can't recognize DB connector type")
+	db, err := storage.InitDB(*dbDriver, *dbConnectionString)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// add handlers
 	app.Handle("GET", "/json", jsonHandler)
 	app.Handle("GET", "/plaintext", plaintextHandler)
 	if db != nil {
+		defer db.Close()
 		app.Handle("GET", "/db", dbHandler(db))
 		app.Handle("GET", "/queries", queriesHandler(db))
 		app.Handle("GET", "/update", updateHandler(db))

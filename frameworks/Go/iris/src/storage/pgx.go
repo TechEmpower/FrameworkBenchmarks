@@ -67,7 +67,7 @@ func (psql *PGX) Close() {
 func (psql PGX) GetOneRandomWorld() (World, error) {
 	var w World
 	var err error
-	queryID := rand.Intn(10000) + 1
+	queryID := rand.Intn(worldsCount) + 1
 	if err := psql.db.QueryRow("selectStmt", queryID).Scan(&w.ID, &w.RandomNumber); err != nil {
 		err = fmt.Errorf("error scanning world row with ID %d: %s", queryID, err)
 	}
@@ -93,7 +93,7 @@ func (psql PGX) UpdateRandomWorlds(queries int) ([]World, error) {
 		}
 
 		for _, selectedWorld := range selectedWorlds {
-			selectedWorld.RandomNumber = rand.Intn(10000) + 1
+			selectedWorld.RandomNumber = rand.Intn(worldsCount) + 1
 			if _, err := tx.Exec("updateStmt", selectedWorld.RandomNumber, selectedWorld.ID); err != nil {
 				log.Printf("Can't update row ID %d with number %d: %s", selectedWorld.ID, selectedWorld.RandomNumber, err)
 				tx.Rollback()

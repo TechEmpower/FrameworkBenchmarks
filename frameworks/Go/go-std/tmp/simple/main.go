@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"log"
 	"net"
@@ -87,18 +86,4 @@ func doPrefork() net.Listener {
 
 	}
 	return listener
-}
-
-// Test 1: JSON serialization
-func jsonHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Server", "Go")
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(&Message{helloWorldString})
-}
-
-// Test 6: Plaintext
-func plaintextHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Server", "Go")
-	w.Header().Set("Content-Type", "text/plain")
-	w.Write(helloWorldBytes)
 }

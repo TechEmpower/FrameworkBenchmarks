@@ -7,7 +7,7 @@ import (
 	"math/rand"
 	"sort"
 
-	"iris/src/templates"
+	"go-std/src/templates"
 
 	_ "github.com/lib/pq" // postgresql import
 )

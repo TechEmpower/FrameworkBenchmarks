@@ -1,18 +1,14 @@
 FROM golang:1.11.5
 
-ADD ./src/postgres/ /go-std
-ADD ./src/templates/ /go-std/src/templates
+ENV GO111MODULE on
 WORKDIR /go-std
 
-RUN mkdir bin
-ENV GOPATH /go-std
-ENV PATH ${GOPATH}/bin:${PATH}
+COPY ./src /go-std
 
-RUN go get github.com/lib/pq
-RUN go get github.com/valyala/quicktemplate
-RUN go get -u github.com/valyala/quicktemplate/qtc
+RUN go get github.com/valyala/quicktemplate/qtc
+RUN go mod download
 
-RUN qtc -file src/templates/fortunes.qtpl
-RUN go build -o hello_postgres .
+RUN go generate ./templates
+RUN go build -ldflags="-s -w" -o app .
 
-CMD ./hello_postgres
+CMD ./app -db pq

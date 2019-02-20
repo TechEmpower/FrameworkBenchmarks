@@ -1,49 +1,58 @@
 package storage
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"math/rand"
 	"sort"
 
-	"iris/src/templates"
+	"go-std/src/templates"
 
-	_ "github.com/lib/pq" // postgresql import
+	"github.com/jackc/pgx"
 )
 
-// PQ struct
-type PQ struct {
-	db *sql.DB
+// PGX struct
+type PGX struct {
+	db *pgx.ConnPool
 	// prepare statements
-	selectStmt  *sql.Stmt
-	updateStmt  *sql.Stmt
-	fortuneStmt *sql.Stmt
+	selectStmt  *pgx.PreparedStatement
+	updateStmt  *pgx.PreparedStatement
+	fortuneStmt *pgx.PreparedStatement
 }
 
 // Connect create connection and ping db
-func (psql *PQ) Connect(dbConnectionString string, maxConnectionsInPool int) error {
+func (psql *PGX) Connect(dbConnectionString string, maxConnectionsInPool int) error {
+	var parsedConfig pgx.ConnConfig
 	var err error
-	psql.db, err = sql.Open("postgres", dbConnectionString)
+	parsedConfig, err = pgx.ParseConnectionString(dbConnectionString)
 	if err != nil {
 		return err
 	}
 
-	err = psql.db.Ping()
+	var config pgx.ConnPoolConfig
+	config.User = parsedConfig.User
+	config.Host = parsedConfig.Host
+	config.Password = parsedConfig.Password
+	config.Database = parsedConfig.Database
+
+	config.MaxConnections = maxConnectionsInPool
+
+	config.AfterConnect = func(conn *pgx.Conn) error {
+		var err error
+		if psql.selectStmt, err = mustPrepare(conn, "selectStmt", selectQueryStr); err != nil {
+			return err
+		}
+		if psql.updateStmt, err = mustPrepare(conn, "updateStmt", updateQueryStr); err != nil {
+			return err
+		}
+		if psql.fortuneStmt, err = mustPrepare(conn, "fortuneStmt", fortuneQueryStr); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	psql.db, err = pgx.NewConnPool(config)
 	if err != nil {
-		return err
-	}
-
-	psql.db.SetMaxOpenConns(maxConnectionsInPool)
-	psql.db.SetMaxIdleConns(maxConnectionsInPool)
-
-	if psql.selectStmt, err = psql.mustPrepare(selectQueryStr); err != nil {
-		return err
-	}
-	if psql.fortuneStmt, err = psql.mustPrepare(fortuneQueryStr); err != nil {
-		return err
-	}
-	if psql.updateStmt, err = psql.mustPrepare(updateQueryStr); err != nil {
 		return err
 	}
 
@@ -51,23 +60,23 @@ func (psql *PQ) Connect(dbConnectionString string, maxConnectionsInPool int) err
 }
 
 // Close connect to db
-func (psql *PQ) Close() {
+func (psql *PGX) Close() {
 	psql.db.Close()
 }
 
 // GetOneRandomWorld return one random World struct
-func (psql PQ) GetOneRandomWorld() (World, error) {
+func (psql PGX) GetOneRandomWorld() (World, error) {
 	var w World
 	var err error
 	queryID := rand.Intn(worldsCount) + 1
-	if err := psql.selectStmt.QueryRow(queryID).Scan(&w.ID, &w.RandomNumber); err != nil {
+	if err := psql.db.QueryRow("selectStmt", queryID).Scan(&w.ID, &w.RandomNumber); err != nil {
 		err = fmt.Errorf("error scanning world row with ID %d: %s", queryID, err)
 	}
 	return w, err
 }
 
 // UpdateRandomWorlds updates some number of worlds entries, passed as arg
-func (psql PQ) UpdateRandomWorlds(queries int) ([]World, error) {
+func (psql PGX) UpdateRandomWorlds(queries int) ([]World, error) {
 	selectedWorlds := make([]World, queries)
 	for i := 0; i < queries; i++ {
 		selectedWorlds[i], _ = psql.GetOneRandomWorld()
@@ -86,7 +95,7 @@ func (psql PQ) UpdateRandomWorlds(queries int) ([]World, error) {
 
 		for _, selectedWorld := range selectedWorlds {
 			selectedWorld.RandomNumber = rand.Intn(worldsCount) + 1
-			if _, err := tx.Stmt(psql.updateStmt).Exec(selectedWorld.RandomNumber, selectedWorld.ID); err != nil {
+			if _, err := tx.Exec("updateStmt", selectedWorld.RandomNumber, selectedWorld.ID); err != nil {
 				log.Printf("Can't update row ID %d with number %d: %s", selectedWorld.ID, selectedWorld.RandomNumber, err)
 				tx.Rollback()
 			}
@@ -102,8 +111,8 @@ func (psql PQ) UpdateRandomWorlds(queries int) ([]World, error) {
 }
 
 // GetFortunes selects all fortunes from table
-func (psql PQ) GetFortunes() ([]templates.Fortune, error) {
-	rows, err := psql.fortuneStmt.Query()
+func (psql PGX) GetFortunes() ([]templates.Fortune, error) {
+	rows, err := psql.db.Query("fortuneStmt")
 	defer rows.Close()
 	if err != nil {
 		return nil, fmt.Errorf("can't query fortunes: %s", err)
@@ -121,8 +130,8 @@ func (psql PQ) GetFortunes() ([]templates.Fortune, error) {
 	return fortunes, nil
 }
 
-func (psql PQ) mustPrepare(query string) (*sql.Stmt, error) {
-	stmt, err := psql.db.Prepare(query)
+func mustPrepare(db *pgx.Conn, name, query string) (*pgx.PreparedStatement, error) {
+	stmt, err := db.Prepare(name, query)
 	if err != nil {
 		log.Printf("Error when preparing statement %q: %s\n", query, err)
 		return nil, err
@@ -130,9 +139,9 @@ func (psql PQ) mustPrepare(query string) (*sql.Stmt, error) {
 	return stmt, nil
 }
 
-// NewPqDB creates new connection to postgres db with pq driver
-func NewPqDB(dbConnectionString string, maxConnectionsInPool int) (DB, error) {
-	var psql PQ
+// NewPgxDB creates new connection to postgres db with pgx driver
+func NewPgxDB(dbConnectionString string, maxConnectionsInPool int) (DB, error) {
+	var psql PGX
 	if err := psql.Connect(dbConnectionString, maxConnectionsInPool); err != nil {
 		return nil, err
 	}
