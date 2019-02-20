@@ -9,7 +9,7 @@ ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/he
 ENV TEST_HOST tfb-server
 
 RUN shards install
-RUN crystal build --no-debug src/server_postgres.cr
+RUN crystal build --release --no-debug src/server_postgres.cr
 
 EXPOSE 8080
 CMD bash run.sh
