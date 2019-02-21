@@ -1,24 +1,41 @@
-require "http-params-serializable"
-require "onyx-http"
+require "pg"
 require "json"
-require "./models/*"
+require "onyx/rest"
+require "onyx-sql"
+
 
 BENCH_DB = DB.open(ENV["DATABASE_URL"])
 
 class CONTENT
-  ID_MAX = 10_000
   JSON  = "application/json"
   PLAIN = "text/plain"
 end
 
-struct QueriesParams
-  include HTTP::Params::Serializable
-  getter queries : Int32
+# Models
+class World
+  include Onyx::SQL::Model
+
+  schema world do
+    pkey id : Int32
+    type randomnumber : Int32
+  end
+end
+
+class Fortune
+  include Onyx::SQL::Model
+
+  schema fortune do
+    pkey id : Int32
+    type message : String
+  end
+end
+
+def random_id
+  Random.rand(10_000).succ
 end
 
 def get_world
-  id = Random.rand(CONTENT::ID_MAX).succ
-  rs = BENCH_DB.query("SELECT * FROM world WHERE id = $1", id)
+  rs = BENCH_DB.query("SELECT * FROM world WHERE id = $1", random_id)
   world = World.from_rs(rs).first
 end
 
@@ -27,31 +44,30 @@ def set_world(world)
   world
 end
 
+struct QueriesParams
+  include HTTP::Params::Serializable
+  getter queries : Int32
+end
+
 def sanitized_query_count(env)
   query = env.request.query
   queries = (query ? QueriesParams.from_query(query).queries.to_i : 1) rescue 1
   queries.clamp(1..500)
 end
 
-router = Onyx::HTTP::Router.new do
+Onyx.draw do
   get "/json" do |env|
-    env.response.headers["Server"] = "Onyx"
-    env.response.headers["Date"] = HTTP.format_time(Time.now)
     env.response.content_type = CONTENT::JSON
     env.response << { message: "Hello, World!" }.to_json
   end
 
   get "/db" do |env|
-    env.response.headers["Server"] = "Onyx"
-    env.response.headers["Date"] = HTTP.format_time(Time.now)
     env.response.content_type = CONTENT::JSON
     world = get_world
     env.response << { id: world.id, randomnumber: world.randomnumber }.to_json
   end
 
   get "/queries" do |env|
-    env.response.headers["Server"] = "Onyx"
-    env.response.headers["Date"] = HTTP.format_time(Time.now)
     env.response.content_type = CONTENT::JSON
     results = (1..sanitized_query_count(env)).map do
       world = get_world
@@ -61,16 +77,13 @@ router = Onyx::HTTP::Router.new do
   end
 
   get "/updates" do |env|
-    env.response.headers["Server"] = "Onyx"
-    env.response.headers["Date"] = HTTP.format_time(Time.now)
     env.response.content_type = CONTENT::JSON
     updated = (1..sanitized_query_count(env)).map do
-      random_number = Random.rand(CONTENT::ID_MAX).succ
-
+      random_number = random_id
       world = get_world
       changeset = world.changeset
-
       changeset.update(randomnumber: random_number)
+
       BENCH_DB.exec(*world.update(changeset).build(true))
       { id: world.id, randomnumber: random_number }
     end
@@ -78,16 +91,23 @@ router = Onyx::HTTP::Router.new do
   end
 
   get "/plaintext" do |env|
-    env.response.headers["Server"] = "Onyx"
-    env.response.headers["Date"] = HTTP.format_time(Time.now)
     env.response.content_type = CONTENT::PLAIN
     env.response << "Hello, World!"
   end
-end # router
-logger = Onyx::HTTP::Logger.new
-request_id = Onyx::HTTP::RequestID.new
-response_time = Onyx::HTTP::ResponseTime.new
+end
 
-server = Onyx::HTTP::Server.new(response_time, request_id, logger, router)
-server.bind_tcp(ENV["TEST_HOST"], 8080, true)
-server.listen
+class CustomHandler
+  include HTTP::Handler
+
+  def call(context)
+    context.response.headers["Server"] = "Onyx"
+    context.response.headers["Date"] = HTTP.format_time(Time.now)
+    call_next(context)
+  end
+end
+
+Onyx.listen(ENV["TEST_HOST"], 8080) do
+  handlers.insert(2, CustomHandler.new)
+end
+
+

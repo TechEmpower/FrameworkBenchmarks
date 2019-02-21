@@ -6,15 +6,12 @@ authors:
   - Carlos Donderis
 
 dependencies:
-  http-params-serializable:
-    github: vladfaust/http-params-serializable
-    version: ~> 0.3.0
   onyx:
     github: onyxframework/onyx
     version: ~> 0.1.0
-  onyx-http:
-    github: onyxframework/http
-    version: ~> 0.1.0
+  onyx-rest:
+    github: onyxframework/rest
+    version: ~> 0.6.1
   onyx-sql:
     github: onyxframework/sql
     version: ~> 0.6.0
