@@ -39,11 +39,6 @@ def get_world
   world = World.from_rs(rs).first
 end
 
-def set_world(world)
-  BENCH_DB.exec("UPDATE world SET randomnumber = $1 WHERE id = $2", world[:randomnumber], world[:id])
-  world
-end
-
 struct QueriesParams
   include HTTP::Params::Serializable
   getter queries : Int32
