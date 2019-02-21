@@ -200,27 +200,6 @@
       "display_name": "Go",
       "notes": "",
       "versus": "go"
-    },
-    "my-interpolate": {
-      "db_url": "/dbInterpolate",
-      "query_url": "/queriesInterpolate?queries=",
-      "fortune_url": "/fortuneInterpolate",
-      "update_url": "/updateInterpolate?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "MySQL",
-      "framework": "None",
-      "language": "Go",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "None",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "Go-interpolate",
-      "notes": "",
-      "versus": "go"
     }
   }]
 }

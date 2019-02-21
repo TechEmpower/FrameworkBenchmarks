@@ -18,7 +18,7 @@ func main() {
 	dbDriver := flag.String("db", "none", "db connection driver [values: pq || pgx || none]")
 	dbConnectionString := flag.String("db_connection_string",
 		"host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world sslmode=disable",
-		"Set bind host")
+		"db connection string")
 	flag.Parse()
 
 	// check for prefork
