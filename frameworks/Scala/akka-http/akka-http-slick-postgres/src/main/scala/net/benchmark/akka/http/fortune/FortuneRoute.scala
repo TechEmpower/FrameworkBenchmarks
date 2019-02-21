@@ -14,23 +14,32 @@ import net.benchmark.akka.http.util.Deciders
 import org.fusesource.scalate.TemplateEngine
 import slick.basic.DatabasePublisher
 
-import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
-class FortuneRoute(fr: FortuneRepository, sd: ExecutionContextExecutor, fd: ExecutionContextExecutor)(
-    implicit val system: ActorSystem) {
+object FortuneRoute {
+
+  private val ec1 = ExecutionContext.fromExecutorService(java.util.concurrent.Executors.newFixedThreadPool(7))
 
   private val te = new TemplateEngine()
-  private val fmat: ActorMaterializer = ActorMaterializer(Deciders.resumingMat("fmat"))
 
-  private implicit lazy val fm: ToEntityMarshaller[Seq[Fortune]] = {
-    val fortunesTemplate = te.load("/templates/fortunes.mustache")
+  private val fortunesTemplate = FortuneRoute.te.load("/templates/fortunes.mustache")
+
+  private val fm: ToEntityMarshaller[Seq[Fortune]] = {
     Marshaller.opaque { fortunes =>
       HttpEntity(
         contentType = `text/html`.withCharset(`UTF-8`),
-        string = te.layout("", fortunesTemplate, Map("fortunes" -> fortunes))
+        string = FortuneRoute.te.layout("", fortunesTemplate, Map("fortunes" -> fortunes))
       )
     }
   }
+
+}
+
+class FortuneRoute(fr: FortuneRepository, sd: ExecutionContextExecutor)(implicit val system: ActorSystem) {
+
+  private val fmat: ActorMaterializer = ActorMaterializer(Deciders.resumingMat("fmat"))
+
+  private implicit val fmar = FortuneRoute.fm
 
   private def source(p: DatabasePublisher[Fortune]): Source[Fortune, NotUsed] = {
     Source
@@ -41,12 +50,10 @@ class FortuneRoute(fr: FortuneRepository, sd: ExecutionContextExecutor, fd: Exec
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def route(): Route = {
     path("fortunes") {
-      withExecutionContext(fd) {
-        complete(
-          source(fr.all())
-            .runWith(Sink.seq[Fortune])(fmat)
-            .flatMap(s => Future.successful(s.sortBy(_.message)))(sd))
-      }
+      complete(
+        source(fr.all())
+          .runWith(Sink.seq[Fortune])(fmat)
+          .flatMap(s => Future.successful(s.sortBy(_.message)))(FortuneRoute.ec1))
     }
   }
 

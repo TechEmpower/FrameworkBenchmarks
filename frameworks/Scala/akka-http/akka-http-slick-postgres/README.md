@@ -25,28 +25,28 @@ The tests were run with:
 
 ### JSON
 
-http://localhost:9339/json
+http://localhost:9000/json
 
 ### PLAINTEXT
 
-http://localhost:9339/plaintext
+http://localhost:9000/plaintext
 
 ### DB
 
-http://localhost:9339/db
+http://localhost:9000/db
 
 ### QUERY
 
-http://localhost:9339/query?queries=
+http://localhost:9000/query?queries=
 
 ### CACHED QUERY
 
-http://localhost:9339/cached_query?queries=
+http://localhost:9000/cached_query?queries=
 
 ### UPDATE
 
-http://localhost:9339/update?queries=
+http://localhost:9000/update?queries=
 
 ### FORTUNES
 
-http://localhost:9339/fortunes
+http://localhost:9000/fortunes

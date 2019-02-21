@@ -2,10 +2,15 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"math/rand"
 	"sort"
+)
+
+const (
+	selectQueryStr  = "SELECT id, randomNumber FROM World WHERE id = $1"
+	updateQueryStr  = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+	fortuneQueryStr = "SELECT id, message FROM Fortune"
 )
 
 var (
@@ -66,17 +71,10 @@ func mustPrepare(db *sql.DB, query string) (*sql.Stmt, error) {
 	return stmt, nil
 }
 
-func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, maxConnectionsInPool int) (*sql.DB, error) {
+func initDatabase(dbConnectionString string, maxConnectionsInPool int) (*sql.DB, error) {
 	var err error
 	var db *sql.DB
-	db, err = sql.Open("postgres",
-		fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
-			dbHost,
-			dbUser,
-			dbPass,
-			dbName,
-		),
-	)
+	db, err = sql.Open("postgres", dbConnectionString)
 	if err != nil {
 		return nil, err
 	}
@@ -89,13 +87,13 @@ func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, ma
 	db.SetMaxOpenConns(maxConnectionsInPool)
 	db.SetMaxIdleConns(maxConnectionsInPool)
 
-	if selectStmt, err = mustPrepare(db, "SELECT id, randomNumber FROM World WHERE id = $1"); err != nil {
+	if selectStmt, err = mustPrepare(db, selectQueryStr); err != nil {
 		return nil, err
 	}
-	if fortuneStmt, err = mustPrepare(db, "SELECT id, message FROM Fortune"); err != nil {
+	if fortuneStmt, err = mustPrepare(db, fortuneQueryStr); err != nil {
 		return nil, err
 	}
-	if updateStmt, err = mustPrepare(db, "UPDATE World SET randomNumber = $1 WHERE id = $2"); err != nil {
+	if updateStmt, err = mustPrepare(db, updateQueryStr); err != nil {
 		return nil, err
 	}
 
