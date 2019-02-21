@@ -30,6 +30,7 @@ class Fortune
   end
 end
 
+# Helper methods
 def random_id
   Random.rand(10_000).succ
 end
@@ -52,18 +53,15 @@ end
 
 Onyx.draw do
   get "/json" do |env|
-    env.response.content_type = CONTENT::JSON
     env.response << { message: "Hello, World!" }.to_json
   end
 
   get "/db" do |env|
-    env.response.content_type = CONTENT::JSON
     world = get_world
     env.response << { id: world.id, randomnumber: world.randomnumber }.to_json
   end
 
   get "/queries" do |env|
-    env.response.content_type = CONTENT::JSON
     results = (1..sanitized_query_count(env)).map do
       world = get_world
       { id: world.id, randomnumber: world.randomnumber }
@@ -72,7 +70,6 @@ Onyx.draw do
   end
 
   get "/updates" do |env|
-    env.response.content_type = CONTENT::JSON
     updated = (1..sanitized_query_count(env)).map do
       random_number = random_id
       world = get_world
@@ -97,6 +94,7 @@ class CustomHandler
   def call(context)
     context.response.headers["Server"] = "Onyx"
     context.response.headers["Date"] = HTTP.format_time(Time.now)
+    context.response.content_type = CONTENT::JSON
     call_next(context)
   end
 end
