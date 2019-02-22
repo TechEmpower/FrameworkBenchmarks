@@ -37,13 +37,13 @@ func (mysql *MySQL) Connect(dbConnectionString string, maxConnectionsInPool int)
 	mysql.db.SetMaxOpenConns(maxConnectionsInPool)
 	mysql.db.SetMaxIdleConns(maxConnectionsInPool)
 
-	if mysql.selectStmt, err = mysql.mustPrepare(selectQueryStr); err != nil {
+	if mysql.selectStmt, err = mysql.mustPrepare(selectQueryStrMySQL); err != nil {
 		return err
 	}
-	if mysql.fortuneStmt, err = mysql.mustPrepare(fortuneQueryStr); err != nil {
+	if mysql.fortuneStmt, err = mysql.mustPrepare(fortuneQueryStrMySQL); err != nil {
 		return err
 	}
-	if mysql.updateStmt, err = mysql.mustPrepare(updateQueryStr); err != nil {
+	if mysql.updateStmt, err = mysql.mustPrepare(updateQueryStrMySQL); err != nil {
 		return err
 	}
 

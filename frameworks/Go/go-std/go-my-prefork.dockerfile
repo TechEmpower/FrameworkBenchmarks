@@ -1,12 +1,14 @@
 FROM golang:1.11.5
 
-ADD ./src/mysql/ /go-std
+ENV GO111MODULE on
 WORKDIR /go-std
 
-RUN mkdir bin
-ENV GOPATH /go-std
-ENV PATH ${GOPATH}/bin:${PATH}
+COPY ./src /go-std
 
-RUN go get github.com/go-sql-driver/mysql
-RUN go build -o hello_mysql .
-CMD ./hello_mysql -prefork
+RUN go get github.com/valyala/quicktemplate/qtc
+RUN go mod download
+
+RUN go generate ./templates
+RUN go build -ldflags="-s -w" -o app .
+
+CMD ./app -db mysql -prefork -db_connection_string "benchmarkdbuser:benchmarkdbpass@tcp(tfb-database:3306)/hello_world?interpolateParams=true"

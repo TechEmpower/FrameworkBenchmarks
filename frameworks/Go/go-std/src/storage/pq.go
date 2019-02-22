@@ -37,13 +37,13 @@ func (psql *PQ) Connect(dbConnectionString string, maxConnectionsInPool int) err
 	psql.db.SetMaxOpenConns(maxConnectionsInPool)
 	psql.db.SetMaxIdleConns(maxConnectionsInPool)
 
-	if psql.selectStmt, err = psql.mustPrepare(selectQueryStr); err != nil {
+	if psql.selectStmt, err = psql.mustPrepare(selectQueryStrPostgre); err != nil {
 		return err
 	}
-	if psql.fortuneStmt, err = psql.mustPrepare(fortuneQueryStr); err != nil {
+	if psql.fortuneStmt, err = psql.mustPrepare(fortuneQueryStrPostgre); err != nil {
 		return err
 	}
-	if psql.updateStmt, err = psql.mustPrepare(updateQueryStr); err != nil {
+	if psql.updateStmt, err = psql.mustPrepare(updateQueryStrPostgre); err != nil {
 		return err
 	}
 

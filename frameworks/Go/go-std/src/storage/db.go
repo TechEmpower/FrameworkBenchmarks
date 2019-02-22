@@ -9,9 +9,15 @@ import (
 )
 
 const (
-	selectQueryStr  = "SELECT id, randomNumber FROM World WHERE id = $1"
-	updateQueryStr  = "UPDATE World SET randomNumber = $1 WHERE id = $2"
-	fortuneQueryStr = "SELECT id, message FROM Fortune"
+	selectQueryStrPostgre  = "SELECT id, randomNumber FROM World WHERE id = $1"
+	updateQueryStrPostgre  = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+	fortuneQueryStrPostgre = "SELECT id, message FROM Fortune"
+)
+
+const (
+	selectQueryStrMySQL  = "SELECT id, randomNumber FROM World WHERE id = ?"
+	updateQueryStrMySQL  = "UPDATE World SET randomNumber = ? WHERE id = ?"
+	fortuneQueryStrMySQL = "SELECT id, message FROM Fortune"
 )
 
 var (
@@ -43,6 +49,13 @@ func InitDB(dbDriver, dbConnectionString string) (DB, error) {
 			runtime.NumCPU())
 		if err != nil {
 			return nil, fmt.Errorf("Error opening pgx database: %s", err)
+		}
+	} else if dbDriver == "mysql" {
+		db, err = NewMySQLDB(
+			dbConnectionString,
+			runtime.NumCPU())
+		if err != nil {
+			return nil, fmt.Errorf("Error opening mysql database: %s", err)
 		}
 	} else if dbDriver == "none" {
 		db = nil

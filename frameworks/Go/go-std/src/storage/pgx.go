@@ -39,13 +39,13 @@ func (psql *PGX) Connect(dbConnectionString string, maxConnectionsInPool int) er
 
 	config.AfterConnect = func(conn *pgx.Conn) error {
 		var err error
-		if psql.selectStmt, err = mustPrepare(conn, "selectStmt", selectQueryStr); err != nil {
+		if psql.selectStmt, err = mustPrepare(conn, "selectStmt", selectQueryStrPostgre); err != nil {
 			return err
 		}
-		if psql.updateStmt, err = mustPrepare(conn, "updateStmt", updateQueryStr); err != nil {
+		if psql.updateStmt, err = mustPrepare(conn, "updateStmt", updateQueryStrPostgre); err != nil {
 			return err
 		}
-		if psql.fortuneStmt, err = mustPrepare(conn, "fortuneStmt", fortuneQueryStr); err != nil {
+		if psql.fortuneStmt, err = mustPrepare(conn, "fortuneStmt", fortuneQueryStrPostgre); err != nil {
 			return err
 		}
 		return nil
