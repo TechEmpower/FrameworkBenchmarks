@@ -57,7 +57,7 @@ func InitDB(dbDriver, dbConnectionString string) (DB, error) {
 		if err != nil {
 			return nil, fmt.Errorf("Error opening mysql database: %s", err)
 		}
-	} else if dbDriver == "mongo" {
+	} else if dbDriver == "mgo" {
 		db, err = NewMongoDB(
 			dbConnectionString,
 			runtime.NumCPU())

@@ -29,15 +29,15 @@ func queriesParam(r *http.Request) int {
 	return q
 }
 
-// Test 1: JSON serialization
-func jsonHandler(w http.ResponseWriter, r *http.Request) {
+// JSONHandler . Test 1: JSON serialization
+func JSONHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Server", "Go")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(&Message{"Hello, World!"})
 }
 
-// Test 2: Single database query
-func dbHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
+// DBHandler . Test 2: Single database query
+func DBHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		world, err := db.GetOneRandomWorld()
 		if err != nil {
@@ -51,8 +51,8 @@ func dbHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Test 3: Multiple database queries
-func queriesHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
+// QueriesHandler . Test 3: Multiple database queries
+func QueriesHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		q := queriesParam(r)
 		results := make([]storage.World, q)
@@ -71,8 +71,8 @@ func queriesHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-// Test 4: Fortunes
-func fortuneHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
+// FortuneHandler . Test 4: Fortunes
+func FortuneHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fortunes, err := db.GetFortunes()
 		if err != nil {
@@ -93,8 +93,8 @@ func fortuneHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-// Test 4: Fortunes
-func fortuneQuickHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
+// FortuneQuickHandler . Test 4: Fortunes
+func FortuneQuickHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fortunes, err := db.GetFortunes()
 		if err != nil {
@@ -113,8 +113,8 @@ func fortuneQuickHandler(db storage.DB) func(w http.ResponseWriter, r *http.Requ
 	}
 }
 
-// Test 5: Database updates
-func updateHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
+// UpdateHandler . Test 5: Database updates
+func UpdateHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		q := queriesParam(r)
 
@@ -130,8 +130,8 @@ func updateHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Test 6: Plaintext
-func plaintextHandler(w http.ResponseWriter, r *http.Request) {
+// PlaintextHandler . Test 6: Plaintext
+func PlaintextHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Server", "Go")
 	w.Header().Set("Content-Type", "text/plain")
 	w.Write([]byte("Hello, World!"))

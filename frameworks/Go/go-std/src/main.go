@@ -17,7 +17,7 @@ func main() {
 	prefork := flag.Bool("prefork", false, "use prefork")
 	easyjson := flag.Bool("easyjson", false, "use easyjson")
 	child := flag.Bool("child", false, "is child proc")
-	dbDriver := flag.String("db", "none", "db connection driver [values: pq || pgx || none]")
+	dbDriver := flag.String("db", "none", "db connection driver [values: pq || pgx || mysql || mgo || none]")
 	dbConnectionString := flag.String("db_connection_string",
 		"host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world sslmode=disable",
 		"db connection string")
@@ -38,29 +38,28 @@ func main() {
 	}
 
 	// init handlers
-	http.HandleFunc("/plaintext", handlers.plaintextHandler)
+	http.HandleFunc("/plaintext", handlers.PlaintextHandler)
 	if *easyjson {
-		http.HandleFunc("/json", handlers.jsonHandlerEasyJSON)
+		http.HandleFunc("/json", handlers.JSONHandlerEasyJSON)
 	} else {
-		http.HandleFunc("/json", handlers.jsonHandler)
+		http.HandleFunc("/json", handlers.JSONHandler)
 	}
 	if db != nil {
 		defer db.Close()
+		http.HandleFunc("/fortune", handlers.FortuneHandler(db))
+		http.HandleFunc("/fortune-quick", handlers.FortuneQuickHandler(db))
 		if *easyjson {
-			http.HandleFunc("/db", handlers.dbHandlerEasyJSON(db))
-			http.HandleFunc("/queries", handlers.queriesHandlerEasyJSON(db))
-			http.HandleFunc("/fortune", handlers.fortuneHandlerEasyJSON(db))
-			http.HandleFunc("/fortune-quick", handlers.fortuneQuickHandlerEasyJSON(db))
-			http.HandleFunc("/update", handlers.updateHandlerEasyJSON(db))
+			http.HandleFunc("/db", handlers.DBHandlerEasyJSON(db))
+			http.HandleFunc("/queries", handlers.QueriesHandlerEasyJSON(db))
+			http.HandleFunc("/update", handlers.UpdateHandlerEasyJSON(db))
 		} else {
-			http.HandleFunc("/db", handlers.dbHandler(db))
-			http.HandleFunc("/queries", handlers.queriesHandler(db))
-			http.HandleFunc("/fortune", handlers.fortuneHandler(db))
-			http.HandleFunc("/fortune-quick", handlers.fortuneQuickHandler(db))
-			http.HandleFunc("/update", handlers.updateHandler(db))
+			http.HandleFunc("/db", handlers.DBHandler(db))
+			http.HandleFunc("/queries", handlers.QueriesHandler(db))
+			http.HandleFunc("/update", handlers.UpdateHandler(db))
 		}
 	}
 
+	// start server
 	if *prefork {
 		http.Serve(listener, nil)
 	} else {
