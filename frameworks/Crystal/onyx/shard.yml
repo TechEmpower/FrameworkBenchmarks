@@ -5,18 +5,20 @@ authors:
   - Vlad Faust
   - Carlos Donderis
 
+crystal: 0.27.2
+
+license: MIT
+
 dependencies:
   onyx:
     github: onyxframework/onyx
-    version: ~> 0.1.0
+    version: ~> 0.1.2
   onyx-rest:
     github: onyxframework/rest
-    version: ~> 0.6.1
+    version: ~> 0.6.2
   onyx-sql:
     github: onyxframework/sql
-    version: ~> 0.6.0
+    version: ~> 0.6.2
   pg:
     github: will/crystal-pg
-    version: "~> 0.5"
-
-license: MIT
+    version: ~> 0.15.0
