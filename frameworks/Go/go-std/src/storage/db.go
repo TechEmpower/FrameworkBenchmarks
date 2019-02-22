@@ -41,14 +41,14 @@ func InitDB(dbDriver, dbConnectionString string) (DB, error) {
 			dbConnectionString,
 			runtime.NumCPU())
 		if err != nil {
-			return nil, fmt.Errorf("Error opening pq database: %s", err)
+			return nil, fmt.Errorf("Error opening postgresql database with pq driver: %s", err)
 		}
 	} else if dbDriver == "pgx" {
 		db, err = NewPgxDB(
 			dbConnectionString,
 			runtime.NumCPU())
 		if err != nil {
-			return nil, fmt.Errorf("Error opening pgx database: %s", err)
+			return nil, fmt.Errorf("Error opening postgresql database with pgx driver: %s", err)
 		}
 	} else if dbDriver == "mysql" {
 		db, err = NewMySQLDB(
@@ -56,6 +56,13 @@ func InitDB(dbDriver, dbConnectionString string) (DB, error) {
 			runtime.NumCPU())
 		if err != nil {
 			return nil, fmt.Errorf("Error opening mysql database: %s", err)
+		}
+	} else if dbDriver == "mongo" {
+		db, err = NewMongoDB(
+			dbConnectionString,
+			runtime.NumCPU())
+		if err != nil {
+			return nil, fmt.Errorf("Error opening mongo database with mgo driver: %s", err)
 		}
 	} else if dbDriver == "none" {
 		db = nil

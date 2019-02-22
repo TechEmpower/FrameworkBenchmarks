@@ -1,11 +1,9 @@
-package main
+package handlers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
-	"runtime"
 	"sort"
 	"strconv"
 
@@ -13,18 +11,13 @@ import (
 	"go-std/src/templates"
 )
 
-var (
-	// Database
-	worldSelectPrepared   *sql.Stmt
-	worldUpdatePrepared   *sql.Stmt
-	fortuneSelectPrepared *sql.Stmt
-	maxConnections        = runtime.NumCPU()
-)
-
-// Message struct
-type Message struct {
-	Message string `json:"message"`
-}
+// var (
+// 	// Database
+// 	worldSelectPrepared   *sql.Stmt
+// 	worldUpdatePrepared   *sql.Stmt
+// 	fortuneSelectPrepared *sql.Stmt
+// 	maxConnections        = runtime.NumCPU()
+// )
 
 func queriesParam(r *http.Request) int {
 	q, err := strconv.Atoi(r.URL.Query().Get("queries"))
@@ -133,8 +126,7 @@ func updateHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 
 		w.Header().Set("Server", "Go")
 		w.Header().Set("Content-Type", "application/json")
-		encoder := json.NewEncoder(w)
-		encoder.Encode(worlds)
+		json.NewEncoder(w).Encode(worlds)
 	}
 }
 

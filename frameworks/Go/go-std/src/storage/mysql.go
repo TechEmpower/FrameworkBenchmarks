@@ -60,7 +60,7 @@ func (mysql MySQL) GetOneRandomWorld() (World, error) {
 	var w World
 	var err error
 	queryID := rand.Intn(worldsCount) + 1
-	if err := mysql.selectStmt.QueryRow(queryID).Scan(&w.ID, &w.RandomNumber); err != nil {
+	if err = mysql.selectStmt.QueryRow(queryID).Scan(&w.ID, &w.RandomNumber); err != nil {
 		err = fmt.Errorf("error scanning world row with ID %d: %s", queryID, err)
 	}
 	return w, err
@@ -138,3 +138,68 @@ func NewMySQLDB(dbConnectionString string, maxConnectionsInPool int) (DB, error)
 	}
 	return &mysql, nil
 }
+
+// func dbInterpolateHandler(w http.ResponseWriter, r *http.Request) {
+// 	var world World
+// 	err := db.QueryRow(worldSelect, rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
+// 	if err != nil {
+// 		log.Fatalf("Error scanning world row: %s", err.Error())
+// 	}
+
+// 	w.Header().Set("Server", "Go")
+// 	w.Header().Set("Content-Type", "application/json")
+// 	json.NewEncoder(w).Encode(&world)
+// }
+
+// func queriesInterpolateHandler(w http.ResponseWriter, r *http.Request) {
+// 	n := getQueriesParam(r)
+
+// 	world := make([]World, n)
+// 	for i := 0; i < n; i++ {
+// 		err := db.QueryRow(worldSelect, rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber)
+// 		if err != nil {
+// 			log.Fatalf("Error scanning world row: %v", err)
+// 		}
+// 	}
+
+// 	w.Header().Set("Server", "Go")
+// 	w.Header().Set("Content-Type", "application/json")
+// 	json.NewEncoder(w).Encode(world)
+// }
+
+// func fortuneInterpolateHandler(w http.ResponseWriter, r *http.Request) {
+// 	rows, err := db.Query(fortuneSelect)
+// 	if err != nil {
+// 		log.Fatalf("Error preparing statement: %v", err)
+// 	}
+
+// 	fortunes := fetchFortunes(rows)
+// 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
+
+// 	sort.Sort(ByMessage{fortunes})
+// 	w.Header().Set("Server", "Go")
+// 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+// 	if err := tmpl.Execute(w, fortunes); err != nil {
+// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+// 	}
+// }
+
+// func updateInterpolateHandler(w http.ResponseWriter, r *http.Request) {
+// 	n := getQueriesParam(r)
+
+// 	world := make([]World, n)
+// 	for i := 0; i < n; i++ {
+// 		if err := db.QueryRow(worldSelect, rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
+// 			log.Fatalf("Error scanning world row: %v", err)
+// 		}
+// 		world[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
+// 		if _, err := db.Exec(worldUpdate, world[i].RandomNumber, world[i].Id); err != nil {
+// 			log.Fatalf("Error updating world row: %v", err)
+// 		}
+// 	}
+
+// 	w.Header().Set("Server", "Go")
+// 	w.Header().Set("Content-Type", "application/json")
+// 	encoder := json.NewEncoder(w)
+// 	encoder.Encode(world)
+// }
