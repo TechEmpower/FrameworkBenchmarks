@@ -4,6 +4,23 @@
     "default": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "None",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Iris",
+      "notes": "",
+      "versus": "go"
+    },
+    "pq": {
       "fortune_url": "/fortune",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -24,9 +41,7 @@
       "notes": "",
       "versus": "go"
     },
-    "prefork": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
+    "pq-prefork": {
       "fortune_url": "/fortune",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -47,7 +62,7 @@
       "notes": "",
       "versus": "go"
     },
-    "quicktemplate": {
+    "pq-quicktemplate": {
       "fortune_url": "/fortune-quick",
       "port": 8080,
       "approach": "Realistic",
@@ -65,8 +80,50 @@
       "notes": "",
       "versus": "go"
     },
-    "quicktemplate-prefork": {
+    "pq-quicktemplate-prefork": {
       "fortune_url": "/fortune-quick",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "None",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Iris",
+      "notes": "",
+      "versus": "go"
+    },
+    "pgx": {
+      "fortune_url": "/fortune",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "None",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Iris",
+      "notes": "",
+      "versus": "go"
+    },
+    "pgx-prefork": {
+      "fortune_url": "/fortune",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",

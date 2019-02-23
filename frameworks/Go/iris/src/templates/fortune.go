@@ -1,4 +1,6 @@
-package main
+package templates
+
+//go:generate qtc
 
 // Fortune struct
 type Fortune struct {

@@ -1,4 +1,4 @@
-package main
+package storage
 
 // World struct
 type World struct {

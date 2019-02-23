@@ -23,9 +23,10 @@ func doPrefork(child bool, toBind string) net.Listener {
 		if err != nil {
 			log.Fatal(err)
 		}
-		children := make([]*exec.Cmd, runtime.NumCPU()/2)
+		children := make([]*exec.Cmd, runtime.NumCPU())
 		for i := range children {
-			children[i] = exec.Command(os.Args[0], "-prefork", "-child")
+			log.Println(append(os.Args[1:], "-child"))
+			children[i] = exec.Command(os.Args[0], append(os.Args[1:], "-child")...)
 			children[i].Stdout = os.Stdout
 			children[i].Stderr = os.Stderr
 			children[i].ExtraFiles = []*os.File{fl}
@@ -45,6 +46,7 @@ func doPrefork(child bool, toBind string) net.Listener {
 		if err != nil {
 			log.Fatal(err)
 		}
+		runtime.GOMAXPROCS(1)
 	}
 	return listener
 }
