@@ -18,7 +18,7 @@ const (
 </tr>
 {{range .}}
 <tr>
-<td>{{.Id}}</td>
+<td>{{.ID}}</td>
 <td>{{.Message}}</td>
 </tr>
 {{end}}
