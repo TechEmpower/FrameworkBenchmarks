@@ -1,0 +1,46 @@
+version: 1.0
+shards:
+  callbacks:
+    github: vladfaust/callbacks.cr
+    version: 0.2.0
+
+  db:
+    github: crystal-lang/crystal-db
+    version: 0.5.1
+
+  dotenv:
+    github: gdotdesign/cr-dotenv
+    version: 0.1.0
+
+  http-params-serializable:
+    github: vladfaust/http-params-serializable
+    version: 0.3.0
+
+  onyx:
+    github: onyxframework/onyx
+    version: 0.1.2
+
+  onyx-http:
+    github: onyxframework/http
+    version: 0.1.1
+
+  onyx-rest:
+    github: onyxframework/rest
+    version: 0.6.3
+
+  onyx-sql:
+    github: onyxframework/sql
+    version: 0.6.2
+
+  pg:
+    github: will/crystal-pg
+    version: 0.15.0
+
+  radix:
+    github: luislavena/radix
+    version: 0.3.9
+
+  time_format:
+    github: vladfaust/time_format.cr
+    version: 0.1.1
+

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 	"log"
+	"net"
 	"runtime"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -24,6 +25,9 @@ var (
 )
 
 func main() {
+	bindHost := flag.String("bind", ":8080", "set bind host")
+	prefork := flag.Bool("prefork", false, "use prefork")
+	child := flag.Bool("child", false, "is child proc")
 	flag.Parse()
 
 	var err error
@@ -46,7 +50,14 @@ func main() {
 		Handler: mainHandler,
 		Name:    "go",
 	}
-	ln := common.GetListener()
+
+	var ln net.Listener
+	if *prefork {
+		ln = common.DoPrefork(*child, *bindHost)
+	} else {
+		ln = common.GetListener(*bindHost)
+	}
+
 	if err = s.Serve(ln); err != nil {
 		log.Fatalf("Error when serving incoming connections: %s", err)
 	}
