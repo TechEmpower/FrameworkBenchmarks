@@ -77,7 +77,6 @@ func (mongo Mongo) GetFortunes() ([]templates.Fortune, error) {
 	if err := mongo.fortunes.Find(nil).All(&fortunes); err != nil {
 		return nil, err
 	}
-	fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
 
 	return fortunes, nil
 }
