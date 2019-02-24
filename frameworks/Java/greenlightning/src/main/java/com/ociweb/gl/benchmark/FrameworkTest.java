@@ -53,10 +53,8 @@ public class FrameworkTest implements GreenApp {
 	public static String connectionUser =     "postgres";
 	public static String connectionPassword = "postgres";
 	
-	//TODO: why is this multiplied by 2, remove this odd behavior and adjust the numbers...
-	static final int c = 274;// to reach 16K simultainious calls
-    //NOTE: plaintext is run with 16K connections but JSON test is only 512 (optimize for 512)
-	
+	static final int c = 1120;// to reach 16K simultainious calls
+
     public FrameworkTest() {
     	    	
     	// use this in commit messages to narrow travis testing to just this project
@@ -67,8 +65,8 @@ public class FrameworkTest implements GreenApp {
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    	//default port for test 
     		 c,//250 goal,       //needed to reach 16K simultainious calls
-    		 c*4,// c*2,     //1<<14 (router to module) 
-    		 1<<11,     //default total size of network buffer used by blocks
+    		 c*4,// c*2,     //1<<14 (router to module)
+    		 1<<11,     //default total size of network buffer used by blocks 
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
@@ -104,7 +102,7 @@ public class FrameworkTest implements GreenApp {
     	this.jsonMaxResponseSize = 1<<8;
 
     	this.maxQueueOut = 4;    	
-    	this.maxConnectionBits = 15; //32K connections, default is larger but this is all we need
+    	this.maxConnectionBits = 14; //16K connections, for test plus overhead
     	
     	this.maxRequestSize = 1<<9;
     	    	
@@ -156,17 +154,17 @@ public class FrameworkTest implements GreenApp {
     
 	@Override
     public void declareConfiguration(GreenFramework framework) {
-		framework.setDefaultRate(90_000L);	//if smaller than Elap time may spike CPU.		
+		
+		framework.setDefaultRate(50_000L);			
 	
 		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
     			 .setHost(host)
-    			 .setMaxConnectionBits(maxConnectionBits) //8K max client connections.
+    			 .setMaxConnectionBits(maxConnectionBits)
     			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)
-    			 
-    			 //keep the outgoing pipe count smaller for less scan time...
-    			 .setConcurrentChannelsPerEncryptUnit(Math.max(4, concurrentWritesPerChannel/2))
-    					 
+    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
+    			 .disableEPoll()
+ 						 
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
     			 .setMaxRequestSize(maxRequestSize)
     	
