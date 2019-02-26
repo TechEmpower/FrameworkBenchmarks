@@ -105,27 +105,11 @@
     //simple_controllers_map:Configuring mapping from path to simple controller
     "simple_controllers_map": [
       {
-        "path": "/plaintext",
-        "controller": "PlaintextCtrl",
+        "path": "/db",
+        "controller": "DbCtrlRaw",
         "http_methods": [
           "get"
         ]
-      },
-      {
-        "path": "/json",
-        "controller": "JsonCtrl",
-        "http_methods": [
-          "get"
-        ],
-        "filters": []
-      },
-      {
-        "path": "/db",
-        "controller": "DbCtrl",
-        "http_methods": [
-          "get"
-        ],
-        "filters": []
       }
     ],
     //idle_connection_timeout: defaults to 60 seconds, the lifetime 
