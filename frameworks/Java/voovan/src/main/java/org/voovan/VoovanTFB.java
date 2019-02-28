@@ -46,7 +46,7 @@ public class VoovanTFB {
 		webServer.get("/json", new HttpRouter() {
 			public void process(HttpRequest req, HttpResponse resp) throws Exception {
 				resp.header().put("Content-Type", "application/json");
-				resp.write(JSON.toJSON(MAP));
+				resp.write(JSON.toJSON(MAP, false, false));
 			}
 		});
 

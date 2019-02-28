@@ -2,7 +2,7 @@ name := "play2-java-jpa-hikaricp"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayMinimalJava, PlayNettyServer)
+lazy val root = (project in file(".")).enablePlugins(PlayMinimalJava, PlayNettyServer).disablePlugins(PlayFilters)
 
 scalaVersion := "2.12.8"
 

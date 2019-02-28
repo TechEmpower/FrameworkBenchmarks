@@ -59,6 +59,7 @@ env:
      - "TESTDIR=Java/jetty"
      - "TESTDIR=Java/jlhttp"
      - "TESTDIR=Java/jooby"
+     - "TESTDIR=Java/jooby2"
      - "TESTDIR=Java/light-java"
      - "TESTDIR=Java/micronaut"
      - "TESTDIR=Java/minijax"
