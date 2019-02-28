@@ -36,11 +36,11 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 		processQuery.tickEvent();
 		//removes DB pool if it is not longer in use
 		pm.clean();
-		
+			
 		
 	}
 	
-	public boolean restFortuneRequest(HTTPRequestReader request) {
+	public boolean restFortuneRequest(HTTPRequestReader request) {		
 		return processFortune.restFortuneRequest(request);
 	}
 	
