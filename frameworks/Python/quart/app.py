@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
 import random
+import os
 
 import asyncpg
 from quart import Quart, jsonify, make_response, request, render_template
 
 app = Quart(__name__)
 
+GET_WORLD = "select randomnumber from world where id = $1"
+UPDATE_WORLD = "update world set randomNumber = $2 where id = $1"
 
-@app.before_serving
+
+@app.before_first_request
 async def connect_to_db():
     app.db = await asyncpg.create_pool(
-        "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world"
+        user=os.getenv("PGUSER", "benchmarkdbuser"),
+        password=os.getenv("PGPASS", "benchmarkdbpass"),
+        database="hello_world",
+        host="tfb-database",
+        port=5432,
     )
 
 
@@ -27,16 +35,12 @@ async def plaintext():
     return response
 
 
-async def get_random_world(conn):
-    key = random.randint(1, 10000)
-    row = await conn.fetchrow("select * from world where id = $1", key)
-    return {"id": row[0], "randomNumber": row[1]}
-
-
 @app.route("/db")
 async def db():
     async with app.db.acquire() as conn:
-        return jsonify(await get_random_world(conn))
+        key = random.randint(1, 10000)
+        number = await conn.fetchval(GET_WORLD, key)
+        return jsonify({"id": key, "randomNumber": number})
 
 
 def get_query_count(args):
@@ -59,36 +63,42 @@ def get_query_count(args):
 async def queries():
     queries = get_query_count(request.args)
 
+    worlds = []
     async with app.db.acquire() as conn:
-        return jsonify([await get_random_world(conn) for _ in range(queries)])
+        pst = await conn.prepare(GET_WORLD)
+        for _ in range(queries):
+            key = random.randint(1, 10000)
+            number = await pst.fetchval(key)
+            worlds.append({"id": key, "randomNumber": number})
+
+    return jsonify(worlds)
 
 
 @app.route("/updates")
 async def updates():
     queries = get_query_count(request.args)
 
-    worlds = []
+    new_worlds = []
     async with app.db.acquire() as conn, conn.transaction():
-        for _ in range(queries):
-            world = await get_random_world(conn)
-            new_number = random.randint(1, 10000)
-            await conn.execute(
-                "update world set randomNumber = $2 where id = $1",
-                world["id"],
-                new_number,
-            )
-            world["randomNumber"] = new_number
-            worlds.append(world)
+        pst = await conn.prepare(GET_WORLD)
 
-    return jsonify(worlds)
+        for _ in range(queries):
+            key = random.randint(1, 10000)
+            old_number = await pst.fetchval(key)
+            new_number = random.randint(1, 10000)
+            new_worlds.append((key, new_number))
+
+        await conn.executemany(UPDATE_WORLD, new_worlds)
+
+    return jsonify(
+        [{"id": key, "randomNumber": new_number} for key, new_number in new_worlds]
+    )
 
 
 @app.route("/fortunes")
 async def fortunes():
-    async with app.db.acquire() as conn, conn.transaction():
-        rows = [
-            (f["id"], f["message"]) async for f in conn.cursor("select * from fortune")
-        ]
+    async with app.db.acquire() as conn:
+        rows = await conn.fetch("select * from fortune")
     rows.append((0, "Additional fortune added at request time."))
     rows.sort(key=lambda row: row[1])
 
