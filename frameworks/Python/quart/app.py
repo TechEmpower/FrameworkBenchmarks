@@ -9,12 +9,8 @@ app = Quart(__name__)
 
 @app.before_serving
 async def connect_to_db():
-    app.db = await asyncpg.connect(
+    app.db = await asyncpg.create_pool(
         "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world"
-    )
-    app.get_world = await app.db.prepare("select * from world where id = $1")
-    app.update_world = await app.db.prepare(
-        "update world set randomNumber = $2 where id = $1"
     )
 
 
@@ -31,15 +27,16 @@ async def plaintext():
     return response
 
 
-async def get_random_world():
+async def get_random_world(conn):
     key = random.randint(1, 10000)
-    row = await app.get_world.fetchrow(key)
+    row = await conn.fetchrow("select * from world where id = $1", key)
     return {"id": row[0], "randomNumber": row[1]}
 
 
 @app.route("/db")
 async def db():
-    return jsonify(await get_random_world())
+    async with app.db.acquire() as conn:
+        return jsonify(await get_random_world(conn))
 
 
 def get_query_count(args):
@@ -62,8 +59,8 @@ def get_query_count(args):
 async def queries():
     queries = get_query_count(request.args)
 
-    async with app.db.transaction():
-        return jsonify([await get_random_world() for _ in range(queries)])
+    async with app.db.acquire() as conn:
+        return jsonify([await get_random_world(conn) for _ in range(queries)])
 
 
 @app.route("/updates")
@@ -71,11 +68,15 @@ async def updates():
     queries = get_query_count(request.args)
 
     worlds = []
-    async with app.db.transaction():
+    async with app.db.acquire() as conn, conn.transaction():
         for _ in range(queries):
-            world = await get_random_world()
+            world = await get_random_world(conn)
             new_number = random.randint(1, 10000)
-            await app.update_world.fetch(world["id"], new_number)
+            await conn.execute(
+                "update world set randomNumber = $2 where id = $1",
+                world["id"],
+                new_number,
+            )
             world["randomNumber"] = new_number
             worlds.append(world)
 
@@ -84,10 +85,9 @@ async def updates():
 
 @app.route("/fortunes")
 async def fortunes():
-    async with app.db.transaction():
+    async with app.db.acquire() as conn, conn.transaction():
         rows = [
-            (f["id"], f["message"])
-            async for f in app.db.cursor("select * from fortune")
+            (f["id"], f["message"]) async for f in conn.cursor("select * from fortune")
         ]
     rows.append((0, "Additional fortune added at request time."))
     rows.sort(key=lambda row: row[1])
