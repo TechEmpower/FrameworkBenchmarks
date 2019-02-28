@@ -23,6 +23,7 @@ public class Bootstrap {
     public static void main(String[] args) {
         System.setProperty("smart-socket.server.pageSize", (16 * 1024 * 1024) + "");
         System.setProperty("smart-socket.session.writeChunkSize", (1024 * 8) + "");
+//        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack","32");
         HttpMessageProcessor processor = new HttpMessageProcessor(System.getProperty("webapps.dir", "./"));
         processor.route("/plaintext", new HttpHandle() {
 
