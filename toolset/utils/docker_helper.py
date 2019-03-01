@@ -14,7 +14,7 @@ from toolset.utils.database_helper import test_database
 from psutil import virtual_memory
 
 # total memory limit allocated for the test container
-mem_limit = virtual_memory().total * .95
+mem_limit = int(round(virtual_memory().total * .95))
 
 class DockerHelper:
     def __init__(self, benchmarker=None):
