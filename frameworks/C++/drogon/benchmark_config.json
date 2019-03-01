@@ -6,6 +6,8 @@
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -24,6 +26,8 @@
       },
       "raw": {
         "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",

@@ -8,6 +8,10 @@ This is the [Drogon](https://github.com/an-tao/drogon) portion of a [benchmarkin
 * [PLAINTEXT](drogon_benchmark/controllers/PlaintextCtrl.cc)
 * [Single Database Query](drogon_benchmark/controllers/DbCtrl.cc)
 * [Single Database Query Without ORM](drogon_benchmark/controllers/DbCtrlRaw.cc)
+* [Fortune ORM](drogon_benchmark/controllers/FortuneCtrl.cc)
+* [Fortune Without ORM](drogon_benchmark/controllers/FortuneCtrlRaw.cc)
+* [Multiple Database Queries ORM](drogon_benchmark/controllers/QueriesCtrl.cc)
+* [Multiple Database Queries Without ORM](drogon_benchmark/controllers/QueriesCtrlRaw.cc)
 
 ## Test URLs
 ### JSON
@@ -22,3 +26,11 @@ http://localhost:8080/plaintext
 ### Single Database Query
 
 http://localhost:8080/db
+
+### Fortune
+
+http://localhost:8080/fortunes
+
+### Multiple Database Queries
+
+http://localhost:8080/queries

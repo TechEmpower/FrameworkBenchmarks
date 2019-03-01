@@ -110,6 +110,20 @@
         "http_methods": [
           "get"
         ]
+      },
+      {
+        "path": "/fortunes",
+        "controller": "FortuneCtrlRaw",
+        "http_methods": [
+          "get"
+        ]
+      },
+      {
+        "path": "/queries",
+        "controller": "QueriesCtrlRaw",
+        "http_methods": [
+          "get"
+        ]
       }
     ],
     //idle_connection_timeout: defaults to 60 seconds, the lifetime 

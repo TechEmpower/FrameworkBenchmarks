@@ -2,12 +2,12 @@
     //rdbms:server type, postgreSQL 
     "rdbms":"postgreSQL",
     //host:server address,localhost by default;
-    "host":"127.0.0.1",
+    "host":"tfb-database",
     //port:server port, 5432 by default;
     "port":5432,
     //dbname:Database name;
     "dbname":"hello_world",
     "user":"benchmarkdbuser",
     "passwd":"benchmarkdbpass",
-    "tables":["world"]
+    "tables":["world","fortune"]
 }
