@@ -1,4 +1,4 @@
-FROM golang:1.10.1
+FROM golang:1.11.5
 
 ADD ./ /fasthttp
 WORKDIR /fasthttp

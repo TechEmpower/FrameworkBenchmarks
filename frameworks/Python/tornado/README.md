@@ -13,7 +13,8 @@ the [Python README](../).
 * CPython 2, 3 and PyPy
 * [Tornado](https://www.tornadoweb.com/)
 * [Mongodb](https://www.mongodb.org/) with [motor](http://motor.readthedocs.org/en/stable/)
-* [PostgreSQL](http://www.postgresql.org/) with [momoko](http://momoko.61924.nl/en/latest/)
+* [PostgreSQL](http://www.postgresql.org/) with [momoko](http://momoko.61924.nl/en/latest/) and [asyncpg](https://github.com/MagicStack/asyncpg)
+* [uvloop](https://github.com/MagicStack/uvloop)
 
 ## Get Help
 

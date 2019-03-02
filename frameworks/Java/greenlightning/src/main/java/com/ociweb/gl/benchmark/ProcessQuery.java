@@ -37,7 +37,7 @@ public class ProcessQuery {
 		//for DBRest
 		{
 			ResultObject temp = DBRestInFlight.tailObject();
-			while (isReadyDBRest(temp)) {			
+			while (isReadyDBRest(temp)) {
 				if (consumeResultObjectDBRest(temp)) {
 					temp = DBRestInFlight.tailObject();
 				} else {
@@ -116,6 +116,7 @@ public class ProcessQuery {
 	public boolean singleRestRequest(HTTPRequestReader request) { 
 
 		final ResultObject target = DBRestInFlight.headObject();
+
 		if (null!=target && -1==target.getStatus()) {
 			target.setConnectionId(request.getConnectionId());
 			target.setSequenceId(request.getSequenceCode());
@@ -138,8 +139,7 @@ public class ProcessQuery {
 						target.setStatus(500);
 					}				
 				});
-
-			
+	   			
 			DBRestInFlight.moveHeadForward(); //always move to ensure this can be read.
 			return true;
 		} else {

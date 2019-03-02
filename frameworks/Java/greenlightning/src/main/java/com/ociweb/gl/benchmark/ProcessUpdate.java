@@ -72,7 +72,7 @@ public class ProcessUpdate {
 						worldObject.setGroupSize(queries);
 						
 						worldObject.setId(randomValue());
-												
+											 	
 						pm.pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(worldObject.getId()), r -> {
 								if (r.succeeded()) {
 																		
@@ -86,8 +86,7 @@ public class ProcessUpdate {
 							        
 							        ///////////////////////////////////
 							        //set the new random value in this object
-							        worldObject.setResult(randomValue());
-							        							       
+							        worldObject.setResult(randomValue());			       
 							        
 							        pm.pool().preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
 							        			Tuple.of(worldObject.getResult(), worldObject.getId()), ar -> {							        	
