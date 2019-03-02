@@ -42,5 +42,4 @@ WORKDIR $TEST_PATH
 
 RUN cmake ..
 RUN make
-CMD ./drogon_benchmark config.json
-
+CMD ./drogon_benchmark config-raw.json
