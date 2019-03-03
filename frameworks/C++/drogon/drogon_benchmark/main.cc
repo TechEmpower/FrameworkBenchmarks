@@ -1,12 +1,14 @@
 #include <drogon/drogon.h>
-int main() {
-    //Set HTTP listener address and port
-    //app().setLogPath("./");
-    //Print logs to standard output
-    drogon::app().setLogLevel(trantor::Logger::WARN);
-    drogon::app().addListener("0.0.0.0", 8080);
-    drogon::app().setThreadNum(std::thread::hardware_concurrency());
-    //app().enableRunAsDaemon();
+#include <iostream>
+
+int main(int argc, char const *argv[])
+{
+    if(argc<2)
+    {
+        std::cout << "please input the config file name" << std::endl;
+        return -1;
+    }
+    drogon::app().loadConfigFile(argv[1]);
     drogon::app().run();
     return 0;
 }
