@@ -8,9 +8,9 @@ SERV_THREADS=$(( $MAX_THREADS - $WRIT_THREADS ))
 
 cd $IROOT
 
-wget -q https://github.com/sumeetchhetri/ffead-cpp/archive/master.zip
-unzip master.zip
-mv ffead-cpp-master ffead-cpp-src
+wget -q https://github.com/sumeetchhetri/ffead-cpp/archive/v2.2.zip
+unzip v2.2.zip
+mv ffead-cpp-2.2 ffead-cpp-src
 cd ffead-cpp-src/
 
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
