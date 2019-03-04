@@ -13,7 +13,6 @@
 		<java.version>11</java.version>
 		<version.compiler.plugin>3.8.0</version.compiler.plugin>
 		<version.war.plugin>3.2.2</version.war.plugin>
-		<version.wildfly>15.0.0.Final</version.wildfly>
 		<version.javaee.api>8.0</version.javaee.api>
 	</properties>
 
