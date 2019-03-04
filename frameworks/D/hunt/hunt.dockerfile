@@ -1,4 +1,4 @@
-FROM dlanguage/ldc:1.7.0
+FROM dlangchina/dlang-dmd:latest
 
 RUN apt update -yqq && apt install -yqq git make libpq-dev
 
