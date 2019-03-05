@@ -149,8 +149,7 @@ class DemoProcessor : HttpProcessor {
         private void respondSingleQuery() {
             int id = uniform(1, 10000);
             string query = "SELECT randomNumber FROM world WHERE id = " ~ id.to!string;
-            Statement statement = dbConnection.prepare(query);
-            ResultSet rs = statement.query();
+            ResultSet rs = dbConnection.query(query);
 
             JSONValue js = JSONValue(["id" : JSONValue(id), "randomNumber"
                     : JSONValue(to!int(rs.front()[0]))]);
