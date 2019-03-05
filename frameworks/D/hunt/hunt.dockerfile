@@ -1,6 +1,6 @@
 FROM dlangchina/dlang-dmd:latest
 
-RUN apt update -yqq && apt install -yqq git make libpq-dev
+RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/*
 
 ADD ./ /hunt
 WORKDIR /hunt
