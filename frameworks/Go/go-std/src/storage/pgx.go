@@ -79,7 +79,7 @@ func (psql PGX) GetOneRandomWorld() (World, error) {
 func (psql PGX) GetOneRandomWorldPool(w *World) error {
 	var err error
 	queryID := rand.Intn(worldsCount) + 1
-	if err = psql.db.QueryRow("selectStmt", queryID).Scan(w.ID, w.RandomNumber); err != nil {
+	if err = psql.db.QueryRow("selectStmt", queryID).Scan(&w.ID, &w.RandomNumber); err != nil {
 		err = fmt.Errorf("error scanning world row with ID %d: %s", queryID, err)
 	}
 	return err

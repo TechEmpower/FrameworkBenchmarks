@@ -23,28 +23,40 @@ func queriesParam(r *http.Request) int {
 
 // JSONHandler . Test 1: JSON serialization
 func JSONHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Server", "Go")
-	w.Header().Set("Content-Type", "application/json")
 	m := MessagePool.Get().(*Message)
 	m.Message = "Hello, World!"
+	w.Header().Set("Server", "Go")
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(m)
 	MessagePool.Put(m)
 }
 
+// // DBHandler . Test 2: Single database query
+// func DBHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
+// 	return func(w http.ResponseWriter, r *http.Request) {
+// 		world := storage.WorldPool.Get().(*storage.World)
+// 		if err := db.GetOneRandomWorldPool(world); err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 			return
+// 		}
+// 		w.Header().Set("Server", "Go")
+// 		w.Header().Set("Content-Type", "application/json")
+// 		json.NewEncoder(w).Encode(world)
+// 		storage.WorldPool.Put(world)
+// 	}
+// }
+
 // DBHandler . Test 2: Single database query
 func DBHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		world := storage.WorldPool.Get().(*storage.World)
-
-		if err := db.GetOneRandomWorldPool(world); err != nil {
+		world, err := db.GetOneRandomWorld()
+		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
 		w.Header().Set("Server", "Go")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(world)
-		storage.WorldPool.Put(world)
 	}
 }
 

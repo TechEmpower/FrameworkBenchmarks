@@ -19,8 +19,6 @@ func initSyncPools() {
 func main() {
 	initSyncPools()
 
-	log.Println("START")
-
 	// init flags
 	bindHost := flag.String("bind", ":8080", "set bind host")
 	prefork := flag.Bool("prefork", false, "use prefork")
