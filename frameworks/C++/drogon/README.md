@@ -12,6 +12,9 @@ This is the [Drogon](https://github.com/an-tao/drogon) portion of a [benchmarkin
 * [Fortune Without ORM](drogon_benchmark/controllers/FortuneCtrlRaw.cc)
 * [Multiple Database Queries ORM](drogon_benchmark/controllers/QueriesCtrl.cc)
 * [Multiple Database Queries Without ORM](drogon_benchmark/controllers/QueriesCtrlRaw.cc)
+* [Database Updates ORM](drogon_benchmark/controllers/UpdatesCtrl.cc)
+* [Database Updates Without ORM](drogon_benchmark/controllers/UpdatesCtrlRaw.cc)
+
 
 ## Test URLs
 ### JSON
@@ -34,3 +37,7 @@ http://localhost:8080/fortunes
 ### Multiple Database Queries
 
 http://localhost:8080/queries
+
+### Database Updates
+
+http://localhost:8080/updates
