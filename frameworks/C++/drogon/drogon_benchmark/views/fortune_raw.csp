@@ -1,0 +1,15 @@
+<%c++
+auto &rows=@@.get<std::vector<std::pair<int,std::string>>>("rows");
+%>
+<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body>
+<table>
+<tr><th>id</th><th>message</th></tr>
+<%c++for(auto &row:rows){%>
+<tr><td>{%row.first%}</td><td>{%HttpViewData::htmlTranslate(row.second)%}</td></tr>
+<%c++}%>
+</table>
+</body>
+</html>

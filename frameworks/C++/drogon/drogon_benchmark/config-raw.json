@@ -105,38 +105,22 @@
     //simple_controllers_map:Configuring mapping from path to simple controller
     "simple_controllers_map": [
       {
-        "path": "/plaintext",
-        "controller": "PlaintextCtrl",
+        "path": "/db",
+        "controller": "DbCtrlRaw",
         "http_methods": [
           "get"
         ]
       },
       {
-        "path": "/json",
-        "controller": "JsonCtrl",
-        "http_methods": [
-          "get"
-        ],
-        "filters": []
-      },
-      {
-        "path": "/db",
-        "controller": "DbCtrl",
-        "http_methods": [
-          "get"
-        ],
-        "filters": []
-      },
-      {
         "path": "/fortunes",
-        "controller": "FortuneCtrl",
+        "controller": "FortuneCtrlRaw",
         "http_methods": [
           "get"
         ]
       },
       {
         "path": "/queries",
-        "controller": "QueriesCtrl",
+        "controller": "QueriesCtrlRaw",
         "http_methods": [
           "get"
         ]

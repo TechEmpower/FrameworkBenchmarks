@@ -119,7 +119,7 @@ before_script:
   # to determine if the suite should be installed and the current $TESTDIR test should run.
   - export RUN_TESTS=`./toolset/travis/travis_diff.py | tee /dev/tty | grep -oP "travis-run-tests \K(.*)"`
 
-  - if [ "$RUN_TESTS" ]; then docker pull techempower/tfb; fi
+  - if [ "$RUN_TESTS" ]; then docker build -t techempower/tfb - < ./Dockerfile; fi
 
   # Stop services that would claim ports we may need
   - sudo service mysql stop
