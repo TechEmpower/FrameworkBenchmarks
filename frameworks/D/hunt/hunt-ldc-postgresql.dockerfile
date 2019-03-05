@@ -3,7 +3,7 @@ FROM dlangchina/dlang-ldc:latest
 ADD ./ /hunt
 WORKDIR /hunt
 
-RUN apt update -y && apt install -y --no-install-recommends git make libpq-dev && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/*
+RUN apt update -y && apt install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/*
 
 RUN git clone https://github.com/nodejs/http-parser.git && \
     cd http-parser && \
