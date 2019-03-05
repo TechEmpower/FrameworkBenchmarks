@@ -27,6 +27,7 @@ var (
 // DB is interface for
 type DB interface {
 	GetOneRandomWorld() (World, error)
+	GetOneRandomWorldPool(*World) error
 	UpdateRandomWorlds(queries int) ([]World, error)
 	GetFortunes() ([]templates.Fortune, error)
 	Close()
@@ -36,34 +37,35 @@ type DB interface {
 func InitDB(dbDriver, dbConnectionString string) (DB, error) {
 	var err error
 	var db DB
-	if dbDriver == "pq" {
-		db, err = NewPqDB(
-			dbConnectionString,
-			runtime.NumCPU())
-		if err != nil {
-			return nil, fmt.Errorf("Error opening postgresql database with pq driver: %s", err)
-		}
-	} else if dbDriver == "pgx" {
+
+	if dbDriver == "pgx" {
 		db, err = NewPgxDB(
 			dbConnectionString,
 			runtime.NumCPU())
 		if err != nil {
 			return nil, fmt.Errorf("Error opening postgresql database with pgx driver: %s", err)
 		}
-	} else if dbDriver == "mysql" {
-		db, err = NewMySQLDB(
-			dbConnectionString,
-			runtime.NumCPU())
-		if err != nil {
-			return nil, fmt.Errorf("Error opening mysql database: %s", err)
-		}
-	} else if dbDriver == "mgo" {
-		db, err = NewMongoDB(
-			dbConnectionString,
-			runtime.NumCPU())
-		if err != nil {
-			return nil, fmt.Errorf("Error opening mongo database with mgo driver: %s", err)
-		}
+		// } else if dbDriver == "pq" {
+		// 	db, err = NewPqDB(
+		// 		dbConnectionString,
+		// 		runtime.NumCPU())
+		// 	if err != nil {
+		// 		return nil, fmt.Errorf("Error opening postgresql database with pq driver: %s", err)
+		// 	}
+		// } else if dbDriver == "mysql" {
+		// 	db, err = NewMySQLDB(
+		// 		dbConnectionString,
+		// 		runtime.NumCPU())
+		// 	if err != nil {
+		// 		return nil, fmt.Errorf("Error opening mysql database: %s", err)
+		// 	}
+		// } else if dbDriver == "mgo" {
+		// 	db, err = NewMongoDB(
+		// 		dbConnectionString,
+		// 		runtime.NumCPU())
+		// 	if err != nil {
+		// 		return nil, fmt.Errorf("Error opening mongo database with mgo driver: %s", err)
+		// 	}
 	} else if dbDriver == "none" {
 		db = nil
 	} else {

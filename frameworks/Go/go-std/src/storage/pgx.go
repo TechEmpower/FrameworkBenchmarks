@@ -66,8 +66,8 @@ func (psql *PGX) Close() {
 
 // GetOneRandomWorld return one random World struct
 func (psql PGX) GetOneRandomWorld() (World, error) {
-	var w World
 	var err error
+	var w World
 	queryID := rand.Intn(worldsCount) + 1
 	if err = psql.db.QueryRow("selectStmt", queryID).Scan(&w.ID, &w.RandomNumber); err != nil {
 		err = fmt.Errorf("error scanning world row with ID %d: %s", queryID, err)
@@ -75,11 +75,23 @@ func (psql PGX) GetOneRandomWorld() (World, error) {
 	return w, err
 }
 
+// GetOneRandomWorldPool return one random World struct
+func (psql PGX) GetOneRandomWorldPool(w *World) error {
+	var err error
+	queryID := rand.Intn(worldsCount) + 1
+	if err = psql.db.QueryRow("selectStmt", queryID).Scan(w.ID, w.RandomNumber); err != nil {
+		err = fmt.Errorf("error scanning world row with ID %d: %s", queryID, err)
+	}
+	return err
+}
+
 // UpdateRandomWorlds updates some number of worlds entries, passed as arg
 func (psql PGX) UpdateRandomWorlds(queries int) ([]World, error) {
 	selectedWorlds := make([]World, queries)
 	for i := 0; i < queries; i++ {
+		// selectedWorlds[i] = WorldPool.Get().(*World)
 		selectedWorlds[i], _ = psql.GetOneRandomWorld()
+		// WorldPool.Put(selectedWorlds[i])
 	}
 
 	if len(selectedWorlds) > 0 {
