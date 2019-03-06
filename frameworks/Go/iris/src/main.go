@@ -8,10 +8,9 @@ import (
 	"runtime"
 	"time"
 
+	"iris/src/storage"
+
 	"github.com/kataras/iris"
-
-	_ "github.com/lib/pq"
-
 	"github.com/kataras/iris/middleware/recover"
 )
 
@@ -20,6 +19,7 @@ func main() {
 	bindHost := flag.String("bind", ":8080", "set bind host")
 	prefork := flag.Bool("prefork", false, "use prefork")
 	child := flag.Bool("child", false, "is child proc")
+	dbDriver := flag.String("db", "none", "db connection driver [values: pq || pgx || none]")
 	dbConnectionString := flag.String("db_connection_string",
 		"host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world sslmode=disable",
 		"Set bind host")
@@ -29,30 +29,33 @@ func main() {
 	var listener net.Listener
 	if *prefork {
 		listener = doPrefork(*child, *bindHost)
+	} else {
+		runtime.GOMAXPROCS(runtime.NumCPU())
 	}
 
 	// init iris app
 	app := iris.New()
 	app.Use(recover.New())
-	app.RegisterView(iris.HTML("./templates", ".html"))
 
-	// init database
-	db, err := initDatabase(
-		*dbConnectionString,
-		runtime.NumCPU())
+	// init database with appropriate driver
+	db, err := storage.InitDB(*dbDriver, *dbConnectionString)
 	if err != nil {
-		log.Fatalf("Error opening database: %s", err)
+		log.Fatal(err)
 	}
-	defer db.Close()
 
 	// add handlers
 	app.Handle("GET", "/json", jsonHandler)
 	app.Handle("GET", "/plaintext", plaintextHandler)
-	app.Handle("GET", "/db", dbHandler)
-	app.Handle("GET", "/queries", queriesHandler)
-	app.Handle("GET", "/update", updateHandler(db))
-	app.Handle("GET", "/fortune", fortuneHandler)
-	app.Handle("GET", "/fortune-quick", fortuneQuickHandler)
+	if db != nil {
+		defer db.Close()
+		app.Handle("GET", "/db", dbHandler(db))
+		app.Handle("GET", "/queries", queriesHandler(db))
+		app.Handle("GET", "/update", updateHandler(db))
+
+		app.RegisterView(iris.HTML("./templates", ".html"))
+		app.Handle("GET", "/fortune", fortuneHandler(db))
+		app.Handle("GET", "/fortune-quick", fortuneQuickHandler(db))
+	}
 
 	iris.RegisterOnInterrupt(func() {
 		timeout := 10 * time.Second
