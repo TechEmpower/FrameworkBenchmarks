@@ -172,22 +172,23 @@ func (psql PGX) GetFortunes() ([]templates.Fortune, error) {
 }
 
 // GetFortunesPool selects all fortunes from table
-func (psql PGX) GetFortunesPool(fts []templates.Fortune) error {
+func (psql PGX) GetFortunesPool() ([]templates.Fortune, error) {
 	rows, err := psql.db.Query("fortuneStmt")
 	defer rows.Close()
 	if err != nil {
-		return fmt.Errorf("can't query fortunes: %s", err)
+		return nil, fmt.Errorf("can't query fortunes: %s", err)
 	}
 
+	fortunes := templates.FortunesPool.Get().([]templates.Fortune)
 	var fortune templates.Fortune
 	for rows.Next() {
 		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
 			log.Printf("Can't scan fortune: %s\n", err)
 		}
-		fts = append(fts, fortune)
+		fortunes = append(fortunes, fortune)
 	}
 
-	return nil
+	return fortunes, nil
 }
 
 func mustPrepare(db *pgx.Conn, name, query string) (*pgx.PreparedStatement, error) {

@@ -31,7 +31,7 @@ type DB interface {
 	UpdateWorlds([]World, int) error
 	UpdateWorldsPool([]World, int) error
 	GetFortunes() ([]templates.Fortune, error)
-	GetFortunesPool([]templates.Fortune) error
+	GetFortunesPool() ([]templates.Fortune, error)
 	Close()
 }
 

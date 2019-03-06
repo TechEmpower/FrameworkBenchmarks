@@ -7,10 +7,10 @@ import (
 	"sort"
 	"strconv"
 
+	"github.com/valyala/bytebufferpool"
+
 	"go-std/src/storage"
 	"go-std/src/templates"
-
-	"github.com/valyala/bytebufferpool"
 )
 
 func queriesParam(r *http.Request) int {
@@ -91,13 +91,11 @@ func QueriesHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-// FortuneHandler . Test 4: Fortunes
+// // FortuneHandler . Test 4: Fortunes
 func FortuneHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fortunes := templates.FortunesPool.Get().([]templates.Fortune)
-		var err error
-
-		if err = db.GetFortunesPool(fortunes); err != nil {
+		fortunes, err := db.GetFortunesPool()
+		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -139,10 +137,30 @@ func FortuneHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) 
 // 	}
 // }
 
+// // FortuneQuickHandler . Test 4: Fortunes
+// func FortuneQuickHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
+// 	return func(w http.ResponseWriter, r *http.Request) {
+// 		fortunes, err := db.GetFortunes()
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 			return
+// 		}
+// 		fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
+
+// 		sort.Slice(fortunes, func(i, j int) bool {
+// 			return fortunes[i].Message < fortunes[j].Message
+// 		})
+
+// 		w.Header().Set("Server", "Go")
+// 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+// 		templates.WriteFortunePage(w, fortunes)
+// 	}
+// }
+
 // FortuneQuickHandler . Test 4: Fortunes
 func FortuneQuickHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fortunes, err := db.GetFortunes()
+		fortunes, err := db.GetFortunesPool()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -156,6 +174,8 @@ func FortuneQuickHandler(db storage.DB) func(w http.ResponseWriter, r *http.Requ
 		w.Header().Set("Server", "Go")
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		templates.WriteFortunePage(w, fortunes)
+		fortunes = fortunes[:0]
+		templates.FortunesPool.Put(fortunes)
 	}
 }
 
