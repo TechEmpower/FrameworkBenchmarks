@@ -20,7 +20,7 @@ const (
 	fortuneQueryStrMySQL = "SELECT id, message FROM Fortune"
 )
 
-var (
+const (
 	worldsCount = 10000
 )
 
@@ -28,8 +28,10 @@ var (
 type DB interface {
 	GetOneRandomWorld() (World, error)
 	GetOneRandomWorldPool(*World) error
-	UpdateRandomWorlds(queries int) ([]World, error)
+	UpdateWorlds([]World, int) error
+	UpdateWorldsPool([]World, int) error
 	GetFortunes() ([]templates.Fortune, error)
+	GetFortunesPool([]templates.Fortune) error
 	Close()
 }
 

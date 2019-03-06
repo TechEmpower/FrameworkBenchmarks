@@ -9,11 +9,14 @@ import (
 
 	"go-std/src/handlers"
 	"go-std/src/storage"
+	"go-std/src/templates"
 )
 
 func initSyncPools() {
 	handlers.InitMessagePool()
 	storage.InitWorldPool()
+	storage.InitWorldsPool()
+	templates.InitFortunesPool()
 }
 
 func main() {

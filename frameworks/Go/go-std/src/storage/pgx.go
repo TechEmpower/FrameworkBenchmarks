@@ -85,15 +85,8 @@ func (psql PGX) GetOneRandomWorldPool(w *World) error {
 	return err
 }
 
-// UpdateRandomWorlds updates some number of worlds entries, passed as arg
-func (psql PGX) UpdateRandomWorlds(queries int) ([]World, error) {
-	selectedWorlds := make([]World, queries)
-	for i := 0; i < queries; i++ {
-		// selectedWorlds[i] = WorldPool.Get().(*World)
-		selectedWorlds[i], _ = psql.GetOneRandomWorld()
-		// WorldPool.Put(selectedWorlds[i])
-	}
-
+// UpdateWorlds updates some number of worlds entries, passed as arg
+func (psql PGX) UpdateWorlds(selectedWorlds []World, queries int) error {
 	if len(selectedWorlds) > 0 {
 		// against deadlocks
 		sort.Slice(selectedWorlds, func(i, j int) bool {
@@ -102,7 +95,7 @@ func (psql PGX) UpdateRandomWorlds(queries int) ([]World, error) {
 
 		tx, err := psql.db.Begin()
 		if err != nil {
-			return selectedWorlds, err
+			return err
 		}
 
 		for _, selectedWorld := range selectedWorlds {
@@ -115,11 +108,47 @@ func (psql PGX) UpdateRandomWorlds(queries int) ([]World, error) {
 
 		if err := tx.Commit(); err != nil {
 			tx.Rollback()
-			return selectedWorlds, err
+			return err
 		}
 	}
 
-	return selectedWorlds, nil
+	return nil
+}
+
+// UpdateWorldsPool updates some number of worlds entries, passed as arg
+func (psql PGX) UpdateWorldsPool(selectedWorlds []World, queries int) error {
+	// against deadlocks
+	sort.Slice(selectedWorlds, func(i, j int) bool {
+		return selectedWorlds[i].ID < selectedWorlds[j].ID
+	})
+
+	tx, err := psql.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	for _, selectedWorld := range selectedWorlds {
+		selectedWorld.RandomNumber = rand.Intn(worldsCount) + 1
+		if _, err := tx.Exec("updateStmt", selectedWorld.RandomNumber, selectedWorld.ID); err != nil {
+			log.Printf("Can't update row ID %d with number %d: %s", selectedWorld.ID, selectedWorld.RandomNumber, err)
+			tx.Rollback()
+		}
+	}
+
+	// for i := 0; i < queries; i++ {
+	// 	selectedWorlds[i].RandomNumber = rand.Intn(worldsCount) + 1
+	// 	if _, err := tx.Exec("updateStmt", selectedWorlds[i].RandomNumber, selectedWorlds[i].ID); err != nil {
+	// 		log.Printf("Can't update row ID %d with number %d: %s", selectedWorlds[i].ID, selectedWorlds[i].RandomNumber, err)
+	// 		tx.Rollback()
+	// 	}
+	// }
+
+	if err := tx.Commit(); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
 }
 
 // GetFortunes selects all fortunes from table
@@ -140,6 +169,25 @@ func (psql PGX) GetFortunes() ([]templates.Fortune, error) {
 	}
 
 	return fortunes, nil
+}
+
+// GetFortunesPool selects all fortunes from table
+func (psql PGX) GetFortunesPool(fts []templates.Fortune) error {
+	rows, err := psql.db.Query("fortuneStmt")
+	defer rows.Close()
+	if err != nil {
+		return fmt.Errorf("can't query fortunes: %s", err)
+	}
+
+	var fortune templates.Fortune
+	for rows.Next() {
+		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
+			log.Printf("Can't scan fortune: %s\n", err)
+		}
+		fts = append(fts, fortune)
+	}
+
+	return nil
 }
 
 func mustPrepare(db *pgx.Conn, name, query string) (*pgx.PreparedStatement, error) {

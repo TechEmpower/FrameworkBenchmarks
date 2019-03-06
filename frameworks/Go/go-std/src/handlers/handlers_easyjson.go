@@ -18,48 +18,88 @@ func JSONHandlerEasyJSON(w http.ResponseWriter, r *http.Request) {
 // DBHandlerEasyJSON . Test 2: Single database query
 func DBHandlerEasyJSON(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		world, err := db.GetOneRandomWorld()
-		if err != nil {
+		world := storage.WorldPool.Get().(*storage.World)
+		if err := db.GetOneRandomWorldPool(world); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
 		w.Header().Set("Server", "Go")
-		easyjson.MarshalToHTTPResponseWriter(&world, w)
+		easyjson.MarshalToHTTPResponseWriter(world, w)
+		storage.WorldPool.Put(world)
 	}
 }
+
+// // QueriesHandlerEasyJSON . Test 3: Multiple database queries
+// func QueriesHandlerEasyJSON(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
+// 	return func(w http.ResponseWriter, r *http.Request) {
+// 		q := queriesParam(r)
+// 		worlds := make([]storage.World, q)
+// 		var err error
+// 		for i := 0; i < q; i++ {
+// 			worlds[i], err = db.GetOneRandomWorld()
+// 			if err != nil {
+// 				log.Println(err)
+// 			}
+// 		}
+// 		w.Header().Set("Server", "Go")
+// 		easyjson.MarshalToHTTPResponseWriter(storage.Worlds(worlds), w)
+// 	}
+// }
 
 // QueriesHandlerEasyJSON . Test 3: Multiple database queries
 func QueriesHandlerEasyJSON(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		q := queriesParam(r)
-		worlds := make([]storage.World, q)
+		queries := queriesParam(r)
+		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
 
 		var err error
-		for i := 0; i < q; i++ {
-			worlds[i], err = db.GetOneRandomWorld()
-			if err != nil {
+		for i := 0; i < queries; i++ {
+			if err = db.GetOneRandomWorldPool(&worlds[i]); err != nil {
 				log.Println(err)
 			}
 		}
 
 		w.Header().Set("Server", "Go")
 		easyjson.MarshalToHTTPResponseWriter(storage.Worlds(worlds), w)
+		worlds = worlds[:0]
+		storage.WorldsPool.Put(worlds)
 	}
 }
+
+// // UpdateHandlerEasyJSON . Test 5: Database updates
+// func UpdateHandlerEasyJSON(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
+// 	return func(w http.ResponseWriter, r *http.Request) {
+// 		q := queriesParam(r)
+// 		worlds := make([]storage.World, q)
+// 		for i := 0; i < q; i++ {
+// 			worlds[i], _ = db.GetOneRandomWorld()
+// 		}
+// 		if err := db.UpdateWorlds(worlds, q); err != nil {
+// 			log.Println(err)
+// 			return
+// 		}
+// 		w.Header().Set("Server", "Go")
+// 		easyjson.MarshalToHTTPResponseWriter(storage.Worlds(worlds), w)
+// 	}
+// }
 
 // UpdateHandlerEasyJSON . Test 5: Database updates
 func UpdateHandlerEasyJSON(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		q := queriesParam(r)
+		queries := queriesParam(r)
+		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
 
-		worlds, err := db.UpdateRandomWorlds(q)
-		if err != nil {
+		for i := 0; i < queries; i++ {
+			worlds[i], _ = db.GetOneRandomWorld()
+		}
+		if err := db.UpdateWorldsPool(worlds, queries); err != nil {
 			log.Println(err)
 			return
 		}
 
 		w.Header().Set("Server", "Go")
 		easyjson.MarshalToHTTPResponseWriter(storage.Worlds(worlds), w)
+		worlds = worlds[:0]
+		storage.WorldsPool.Put(worlds)
 	}
 }
