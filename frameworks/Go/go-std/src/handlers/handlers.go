@@ -91,7 +91,7 @@ func QueriesHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-// // FortuneHandler . Test 4: Fortunes
+// FortuneHandler . Test 4: Fortunes
 func FortuneHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fortunes, err := db.GetFortunesPool()

@@ -7,6 +7,7 @@ type Message struct {
 	Message string `json:"message"`
 }
 
+// MessagePool *sync.Pool
 var MessagePool *sync.Pool
 
 // InitMessagePool ()
