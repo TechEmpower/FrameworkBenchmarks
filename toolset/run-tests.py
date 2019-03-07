@@ -182,10 +182,6 @@ def main(argv=None):
         nargs='+',
         default=[1, 10, 20, 50, 100],
         help='List of cached query levels to benchmark')
-    parser.add_argument(
-        '--benchmark-env',
-        default='none',
-        help='Hostname/IP for database server')
 
     # Network options
     parser.add_argument(
