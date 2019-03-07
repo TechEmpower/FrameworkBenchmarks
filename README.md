@@ -1,6 +1,6 @@
+# Welcome to [TechEmpower Framework Benchmarks (TFB)](http://www.techempower.com/benchmarks/)
 
-# Welcome to [TechEmpower Framework Benchmarks (TFB)](http://www.techempower.com/benchmarks/) 
-[![Build Status](https://travis-ci.org/TechEmpower/FrameworkBenchmarks.svg?branch=master)](https://travis-ci.org/TechEmpower/FrameworkBenchmarks) 
+[![Build Status](https://travis-ci.org/TechEmpower/FrameworkBenchmarks.svg?branch=master)](https://travis-ci.org/TechEmpower/FrameworkBenchmarks)
 [![Documentation Status](https://readthedocs.org/projects/frameworkbenchmarks/badge/?version=latest)](https://readthedocs.org/projects/frameworkbenchmarks/?badge=latest)
 [![Issue Stats](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks/badge/issue?style=flat)](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks)
 [![Issue Stats](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks/badge/pr?style=flat)](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks)
@@ -39,15 +39,15 @@ The command looks like this: `docker run -it --rm --network tfb -v /var/run/dock
 - The second `-v` mounts the FrameworkBenchmarks source directory as a volume to share with the container so that rebuilding the toolset image is unnecessary and any changes you make on the host system are available in the running toolset container.
 - `techempower/tfb` is the name of toolset container to run
 
-#### A note on Windows:
+#### A note on Windows
 
 - Docker expects Linux-style paths. If you cloned on your `C:\` drive, then `[ABS PATH TO THIS DIR]` would be `/c/FrameworkBenchmarks`.
 - [Docker for Windows](https://www.docker.com/docker-windows) understands `/var/run/docker.sock` even though that is not a valid path on Windows, but only when using Linux containers (it doesn't work with Windows containers and LCOW). [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_windows/) **may** not understand `/var/run/docker.sock`, even when using Linux containers - use at your own risk.
 
 ## Quick Start Guide (Vagrant)
 
-Get started developing quickly by utilizing vagrant with TFB. [Git](https://git-scm.com), 
-[Virtualbox](https://www.virtualbox.org/) and [vagrant](https://www.vagrantup.com/) are 
+Get started developing quickly by utilizing vagrant with TFB. [Git](https://git-scm.com),
+[Virtualbox](https://www.virtualbox.org/) and [vagrant](https://www.vagrantup.com/) are
 required.
 
 1. Clone TFB.
@@ -67,7 +67,6 @@ required.
         $ vagrant ssh
         $ tfb --mode verify --test gemini
 
-
 ## Add a New Test
 
 Either on your computer, or once you open an SSH connection to your vagrant box, start the new test initialization wizard.
@@ -76,18 +75,20 @@ Either on your computer, or once you open an SSH connection to your vagrant box,
 
 This will walk you through the entire process of creating a new test to include in the suite.
 
-
 ## Resources
 
-#### Official Documentation
+### Official Documentation
+
 Our official documentation can be found at 
 [frameworkbenchmarks.readthedocs.org](https://frameworkbenchmarks.readthedocs.org/). 
 If you find any errors or areas for improvement within the docs, feel free to either submit a [pull request](https://github.com/TechEmpower/TFB-Documentation/pulls) or [issue](https://github.com/TechEmpower/TFB-Documentation/issues) at the [documentation repository](https://github.com/TechEmpower/TFB-Documentation).
 
-#### Live Results
+### Live Results
+
 Results of continuous benchmarking runs are available in real time [here](https://tfb-status.techempower.com/).
 
-#### Data Visualization
+### Data Visualization
+
 If you have a `results.json` file that you would like to visualize, you can [do that here](https://www.techempower.com/benchmarks/#section=test). You can also attach a `runid` parameter to that url where `runid` is a run listed on [tfb-status](https://tfb-status.techempower.com) like so: https://www.techempower.com/benchmarks/#section=test&runid=fd07b64e-47ce-411e-8b9b-b13368e988c6
 
 ## Contributing
