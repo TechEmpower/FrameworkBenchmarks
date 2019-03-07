@@ -90,8 +90,6 @@ func main() {
 		// t.Write(resp)
 		// out = resp.Bytes()
 
-		log.Println(action)
-
 		// process the pipeline
 		var req request
 		for {

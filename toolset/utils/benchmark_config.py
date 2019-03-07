@@ -43,7 +43,6 @@ class BenchmarkConfig:
         self.cached_query_levels = args.cached_query_levels
         self.pipeline_concurrency_levels = args.pipeline_concurrency_levels
         self.query_levels = args.query_levels
-        self.benchmark_env = args.benchmark_env
         self.parse = args.parse
         self.results_environment = args.results_environment
         self.results_name = args.results_name

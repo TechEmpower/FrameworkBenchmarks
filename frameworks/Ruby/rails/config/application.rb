@@ -27,6 +27,6 @@ module Hello
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    config.action_dispatch.default_headers.merge!('Date' => Time.now.httpdate, 'Server' => 'WebServer')
+    config.action_dispatch.default_headers.merge!('Server' => 'WebServer')
   end
 end
