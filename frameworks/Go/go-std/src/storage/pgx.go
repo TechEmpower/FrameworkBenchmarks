@@ -65,18 +65,7 @@ func (psql *PGX) Close() {
 }
 
 // GetOneRandomWorld return one random World struct
-func (psql PGX) GetOneRandomWorld() (World, error) {
-	var err error
-	var w World
-	queryID := rand.Intn(worldsCount) + 1
-	if err = psql.db.QueryRow("selectStmt", queryID).Scan(&w.ID, &w.RandomNumber); err != nil {
-		err = fmt.Errorf("error scanning world row with ID %d: %s", queryID, err)
-	}
-	return w, err
-}
-
-// GetOneRandomWorldPool return one random World struct
-func (psql PGX) GetOneRandomWorldPool(w *World) error {
+func (psql PGX) GetOneRandomWorld(w *World) error {
 	var err error
 	queryID := rand.Intn(worldsCount) + 1
 	if err = psql.db.QueryRow("selectStmt", queryID).Scan(&w.ID, &w.RandomNumber); err != nil {
@@ -87,36 +76,6 @@ func (psql PGX) GetOneRandomWorldPool(w *World) error {
 
 // UpdateWorlds updates some number of worlds entries, passed as arg
 func (psql PGX) UpdateWorlds(selectedWorlds []World, queries int) error {
-	if len(selectedWorlds) > 0 {
-		// against deadlocks
-		sort.Slice(selectedWorlds, func(i, j int) bool {
-			return selectedWorlds[i].ID < selectedWorlds[j].ID
-		})
-
-		tx, err := psql.db.Begin()
-		if err != nil {
-			return err
-		}
-
-		for _, selectedWorld := range selectedWorlds {
-			selectedWorld.RandomNumber = rand.Intn(worldsCount) + 1
-			if _, err := tx.Exec("updateStmt", selectedWorld.RandomNumber, selectedWorld.ID); err != nil {
-				log.Printf("Can't update row ID %d with number %d: %s", selectedWorld.ID, selectedWorld.RandomNumber, err)
-				tx.Rollback()
-			}
-		}
-
-		if err := tx.Commit(); err != nil {
-			tx.Rollback()
-			return err
-		}
-	}
-
-	return nil
-}
-
-// UpdateWorldsPool updates some number of worlds entries, passed as arg
-func (psql PGX) UpdateWorldsPool(selectedWorlds []World, queries int) error {
 	// against deadlocks
 	sort.Slice(selectedWorlds, func(i, j int) bool {
 		return selectedWorlds[i].ID < selectedWorlds[j].ID

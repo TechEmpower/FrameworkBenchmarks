@@ -11,6 +11,7 @@ type World struct {
 //easyjson:json
 type Worlds []World
 
+// WorldPool *sync.Pool
 var WorldPool *sync.Pool
 
 // InitWorldPool ()

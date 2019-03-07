@@ -30,3 +30,5 @@ github.com/valyala/quicktemplate v1.0.2 h1:ZeVRKan1W/25u5f9ilDo5HWtdxD+QxR10WrZw
 github.com/valyala/quicktemplate v1.0.2/go.mod h1:KZAB+RlYlfNtBUGQMzIrnE8uuNgD2SbUn5CpZyod0sk=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 h1:qIbj1fsPNlZgppZ+VLlY7N33q108Sa+fhmuc+sWQYwY=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/mgo.v2 v2.0.0-20180705113604-9856a29383ce h1:xcEWjVhvbDy+nHP67nPDDpbYrY+ILlfndk4bRioVHaU=
+gopkg.in/mgo.v2 v2.0.0-20180705113604-9856a29383ce/go.mod h1:yeKp02qBN3iKW1OzL3MGk2IdtZzaj7SFntXj72NppTA=

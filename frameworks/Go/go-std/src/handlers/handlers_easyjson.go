@@ -19,7 +19,7 @@ func JSONHandlerEasyJSON(w http.ResponseWriter, r *http.Request) {
 func DBHandlerEasyJSON(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		world := storage.WorldPool.Get().(*storage.World)
-		if err := db.GetOneRandomWorldPool(world); err != nil {
+		if err := db.GetOneRandomWorld(world); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -54,7 +54,7 @@ func QueriesHandlerEasyJSON(db storage.DB) func(w http.ResponseWriter, r *http.R
 
 		var err error
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorldPool(&worlds[i]); err != nil {
+			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
 				log.Println(err)
 			}
 		}
@@ -90,9 +90,9 @@ func UpdateHandlerEasyJSON(db storage.DB) func(w http.ResponseWriter, r *http.Re
 		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
 
 		for i := 0; i < queries; i++ {
-			worlds[i], _ = db.GetOneRandomWorld()
+			_ = db.GetOneRandomWorld(&worlds[i])
 		}
-		if err := db.UpdateWorldsPool(worlds, queries); err != nil {
+		if err := db.UpdateWorlds(worlds, queries); err != nil {
 			log.Println(err)
 			return
 		}
