@@ -101,7 +101,8 @@ env:
      - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/laravel PHP/limonade PHP/lithium PHP/lumen PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend"'
      - 'TESTDIR="PHP/amp PHP/hamlet PHP/hhvm PHP/peachpie PHP/swoole PHP/workerman PHP/phalcon"'
      - "TESTLANG=Python"
-     - "TESTLANG=Ruby"
+     - 'TESTDIR="Ruby/grape Ruby/h2o_mruby Ruby/hanami Ruby/padrino Ruby/rack Ruby/rack-sequel"'
+     - 'TESTDIR="Ruby/rails Ruby/roda-sequel Ruby/sinatra Ruby/sinatra-sequel"'
      - 'TESTDIR="Rust/actix Rust/gotham Rust/hyper Rust/iron Rust/saphir"'
      - 'TESTDIR="Rust/may-minihttp Rust/nickel Rust/rocket"'
      - 'TESTDIR="Rust/rouille Rust/thruster Rust/tokio-minihttp"'
