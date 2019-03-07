@@ -20,15 +20,18 @@ const (
 	fortuneQueryStrMySQL = "SELECT id, message FROM Fortune"
 )
 
-var (
+const (
 	worldsCount = 10000
 )
 
 // DB is interface for
 type DB interface {
-	GetOneRandomWorld() (World, error)
-	UpdateRandomWorlds(queries int) ([]World, error)
+	// GetOneRandomWorld() (World, error)
+	GetOneRandomWorld(*World) error
+	// UpdateWorlds([]World, int) error
+	UpdateWorlds([]World, int) error
 	GetFortunes() ([]templates.Fortune, error)
+	GetFortunesPool() ([]templates.Fortune, error)
 	Close()
 }
 
@@ -36,14 +39,8 @@ type DB interface {
 func InitDB(dbDriver, dbConnectionString string) (DB, error) {
 	var err error
 	var db DB
-	if dbDriver == "pq" {
-		db, err = NewPqDB(
-			dbConnectionString,
-			runtime.NumCPU())
-		if err != nil {
-			return nil, fmt.Errorf("Error opening postgresql database with pq driver: %s", err)
-		}
-	} else if dbDriver == "pgx" {
+
+	if dbDriver == "pgx" {
 		db, err = NewPgxDB(
 			dbConnectionString,
 			runtime.NumCPU())
@@ -64,6 +61,13 @@ func InitDB(dbDriver, dbConnectionString string) (DB, error) {
 		if err != nil {
 			return nil, fmt.Errorf("Error opening mongo database with mgo driver: %s", err)
 		}
+		// } else if dbDriver == "pq" {
+		// 	db, err = NewPqDB(
+		// 		dbConnectionString,
+		// 		runtime.NumCPU())
+		// 	if err != nil {
+		// 		return nil, fmt.Errorf("Error opening postgresql database with pq driver: %s", err)
+		// 	}
 	} else if dbDriver == "none" {
 		db = nil
 	} else {

@@ -33,7 +33,7 @@ func main() {
 	flag.StringVar(&unixsocket, "unixsocket", "", "unix socket")
 	flag.IntVar(&port, "port", 8080, "server port")
 	flag.BoolVar(&stdlib, "stdlib", false, "use stdlib")
-	flag.IntVar(&loops, "loops", 0, "num loops")
+	flag.IntVar(&loops, "loops", -1, "num loops")
 	flag.Parse()
 
 	res = "Hello, World!"

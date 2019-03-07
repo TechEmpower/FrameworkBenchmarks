@@ -7,17 +7,11 @@ import (
 	"sort"
 	"strconv"
 
+	"github.com/valyala/bytebufferpool"
+
 	"go-std/src/storage"
 	"go-std/src/templates"
 )
-
-// var (
-// 	// Database
-// 	worldSelectPrepared   *sql.Stmt
-// 	worldUpdatePrepared   *sql.Stmt
-// 	fortuneSelectPrepared *sql.Stmt
-// 	maxConnections        = runtime.NumCPU()
-// )
 
 func queriesParam(r *http.Request) int {
 	q, err := strconv.Atoi(r.URL.Query().Get("queries"))
@@ -31,43 +25,52 @@ func queriesParam(r *http.Request) int {
 
 // JSONHandler . Test 1: JSON serialization
 func JSONHandler(w http.ResponseWriter, r *http.Request) {
+	m := MessagePool.Get().(*Message)
+	m.Message = "Hello, World!"
 	w.Header().Set("Server", "Go")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(&Message{"Hello, World!"})
+	json.NewEncoder(w).Encode(m)
+	MessagePool.Put(m)
 }
 
 // DBHandler . Test 2: Single database query
 func DBHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		world, err := db.GetOneRandomWorld()
-		if err != nil {
+		world := storage.WorldPool.Get().(*storage.World)
+
+		if err := db.GetOneRandomWorld(world); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		w.Header().Set("Server", "Go")
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(&world)
+		json.NewEncoder(w).Encode(world)
+		storage.WorldPool.Put(world)
 	}
 }
 
 // QueriesHandler . Test 3: Multiple database queries
 func QueriesHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		q := queriesParam(r)
-		results := make([]storage.World, q)
+		queries := queriesParam(r)
+
+		// worlds := make([]storage.World, queries)
+		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
 
 		var err error
-		for i := 0; i < q; i++ {
-			results[i], err = db.GetOneRandomWorld()
-			if err != nil {
+		for i := 0; i < queries; i++ {
+			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
 				log.Println(err)
 			}
 		}
 
 		w.Header().Set("Server", "Go")
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(results)
+		json.NewEncoder(w).Encode(worlds)
+
+		worlds = worlds[:0]
+		storage.WorldsPool.Put(worlds)
 	}
 }
 
@@ -93,6 +96,30 @@ func FortuneHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
+// FortuneHandlerPool . Test 4: Fortunes
+func FortuneHandlerPool(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fortunes, err := db.GetFortunesPool()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
+
+		sort.Slice(fortunes, func(i, j int) bool {
+			return fortunes[i].Message < fortunes[j].Message
+		})
+
+		w.Header().Set("Server", "Go")
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		if err = templates.FortuneTemplate.Execute(w, fortunes); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		fortunes = fortunes[:0]
+		templates.FortunesPool.Put(fortunes)
+	}
+}
+
 // FortuneQuickHandler . Test 4: Fortunes
 func FortuneQuickHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -113,13 +140,46 @@ func FortuneQuickHandler(db storage.DB) func(w http.ResponseWriter, r *http.Requ
 	}
 }
 
+// FortuneQuickHandlerPool . Test 4: Fortunes
+func FortuneQuickHandlerPool(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fortunes, err := db.GetFortunesPool()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
+
+		sort.Slice(fortunes, func(i, j int) bool {
+			return fortunes[i].Message < fortunes[j].Message
+		})
+
+		w.Header().Set("Server", "Go")
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		templates.WriteFortunePage(w, fortunes)
+
+		fortunes = fortunes[:0]
+		templates.FortunesPool.Put(fortunes)
+	}
+}
+
 // UpdateHandler . Test 5: Database updates
 func UpdateHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		q := queriesParam(r)
+		queries := queriesParam(r)
+		var err error
 
-		worlds, err := db.UpdateRandomWorlds(q)
-		if err != nil {
+		// worlds := make([]storage.World, queries)
+		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
+
+		// for _, world := range worlds {
+		for i := 0; i < queries; i++ {
+			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
+				log.Println(err)
+			}
+		}
+
+		if err = db.UpdateWorlds(worlds, queries); err != nil {
 			log.Println(err)
 			return
 		}
@@ -127,6 +187,9 @@ func UpdateHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Server", "Go")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(worlds)
+
+		worlds = worlds[:0]
+		storage.WorldsPool.Put(worlds)
 	}
 }
 
@@ -134,5 +197,9 @@ func UpdateHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 func PlaintextHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Server", "Go")
 	w.Header().Set("Content-Type", "text/plain")
-	w.Write([]byte("Hello, World!"))
+	b := bytebufferpool.Get()
+	b.SetString("Hello, World!")
+	w.Write(b.Bytes())
+	b.Reset()
+	bytebufferpool.Put(b)
 }
