@@ -75,7 +75,7 @@ func (psql PGX) GetOneRandomWorld(w *World) error {
 }
 
 // UpdateWorlds updates some number of worlds entries, passed as arg
-func (psql PGX) UpdateWorlds(selectedWorlds []World, queries int) error {
+func (psql PGX) UpdateWorlds(selectedWorlds []World) error {
 	// against deadlocks
 	sort.Slice(selectedWorlds, func(i, j int) bool {
 		return selectedWorlds[i].ID < selectedWorlds[j].ID

@@ -28,8 +28,7 @@ const (
 type DB interface {
 	// GetOneRandomWorld() (World, error)
 	GetOneRandomWorld(*World) error
-	// UpdateWorlds([]World, int) error
-	UpdateWorlds([]World, int) error
+	UpdateWorlds([]World) error
 	GetFortunes() ([]templates.Fortune, error)
 	GetFortunesPool() ([]templates.Fortune, error)
 	Close()

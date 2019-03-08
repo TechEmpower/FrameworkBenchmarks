@@ -50,7 +50,7 @@ func (mongo Mongo) GetOneRandomWorld(w *World) error {
 }
 
 // UpdateRandomWorlds updates some number of worlds entries, passed as arg
-func (mongo Mongo) UpdateWorlds(selectedWorlds []World, queries int) error {
+func (mongo Mongo) UpdateWorlds(selectedWorlds []World) error {
 	for _, selectedWorld := range selectedWorlds {
 		selectedWorld.RandomNumber = rand.Intn(worldsCount) + 1
 		if err := mongo.worlds.Update(
