@@ -10,9 +10,9 @@ If you're new to the project, welcome! Please feel free to ask questions [here](
 This project provides representative performance measures across a wide field of web application frameworks. With much help from the community, coverage is quite broad and we are happy to broaden it further with contributions. The project presently includes frameworks on many languages including `Go`, `Python`, `Java`, `Ruby`, `PHP`, `C#`, `Clojure`, `Groovy`, `Dart`, `JavaScript`, `Erlang`, `Haskell`, `Scala`, `Perl`, `Lua`, `C`, and others.  The current tests exercise plaintext responses, JSON seralization, database reads and writes via the object-relational mapper (ORM), collections, sorting, server-side templates, and XSS counter-measures. Future tests will exercise other components and greater computation.
 
 [Read more and see the results of our tests on cloud and physical hardware](http://www.techempower.com/benchmarks/). For descriptions of the test types that we run, see the 
-[test requirements section](https://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/).
+[test requirements section](https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview).
 
-If you find yourself in a directory or file that you're not sure what the purpose is, checkout our [file structure](http://frameworkbenchmarks.readthedocs.org/en/latest/Codebase/#file-structure) in our documentation, which will briefly explain the use of relevant directories and files.
+If you find yourself in a directory or file that you're not sure what the purpose is, checkout our [file structure](https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Codebase-File-Structure) in our documentation, which will briefly explain the use of relevant directories and files.
 
 ## Quick Start Guide
 
@@ -79,9 +79,8 @@ This will walk you through the entire process of creating a new test to include 
 
 ### Official Documentation
 
-Our official documentation can be found at 
-[frameworkbenchmarks.readthedocs.org](https://frameworkbenchmarks.readthedocs.org/). 
-If you find any errors or areas for improvement within the docs, feel free to either submit a [pull request](https://github.com/TechEmpower/TFB-Documentation/pulls) or [issue](https://github.com/TechEmpower/TFB-Documentation/issues) at the [documentation repository](https://github.com/TechEmpower/TFB-Documentation).
+Our official documentation can be found in the [wiki](https://github.com/TechEmpower/FrameworkBenchmarks/wiki). 
+If you find any errors or areas for improvement within the docs, feel free to open an issue in this repo.
 
 ### Live Results
 
@@ -93,6 +92,6 @@ If you have a `results.json` file that you would like to visualize, you can [do 
 
 ## Contributing
 
-The community has consistently helped in making these tests better, and we welcome any and all changes. Reviewing our contribution practices and guidelines will help to keep us all on the same page. The [contribution guide](https://frameworkbenchmarks.readthedocs.org/en/latest/Development/Contributing-Guide/) can be found in the [TFB documentation](https://frameworkbenchmarks.readthedocs.org/).
+The community has consistently helped in making these tests better, and we welcome any and all changes. Reviewing our contribution practices and guidelines will help to keep us all on the same page. The [contribution guide](https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Development-Contributing-Guide) can be found in the [TFB documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki).
 
 Join in the conversation on our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/framework-benchmarks), on [Twitter](https://twitter.com/tfbenchmarks), or chat with us on [Freenode](https://webchat.freenode.net/) at `#techempower-fwbm`. 

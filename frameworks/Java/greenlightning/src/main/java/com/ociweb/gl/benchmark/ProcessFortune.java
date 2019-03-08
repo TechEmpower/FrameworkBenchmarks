@@ -30,8 +30,8 @@ public class ProcessFortune {
 		
 		//for fortune
 		{
-			FortunesObject temp = fortuneInFlight.tailObject();
-			while (isReadyFortune(temp)) {			
+			FortunesObject temp;
+			while (isReadyFortune(temp = fortuneInFlight.tailObject())) {			
 				if (consumeResultObjectFortune(temp)) {
 					temp = fortuneInFlight.tailObject();
 				} else {
