@@ -2,7 +2,7 @@
 
 This is the go portion of a [benchmarking test suite](https://www.techempower.com/benchmarks/) comparing a variety of web development platforms.
 
-"Golang standard library. For database tests Postgres was used."
+"Golang standard library. For database tests PostgreSQL, MySQL and MongoDB were used."
 
 ## Test URLs
 

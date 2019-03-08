@@ -11,6 +11,10 @@ from colorama import Fore, Style
 from toolset.utils.output_helper import log
 from toolset.utils.database_helper import test_database
 
+from psutil import virtual_memory
+
+# total memory limit allocated for the test container
+mem_limit = int(round(virtual_memory().total * .95))
 
 class DockerHelper:
     def __init__(self, benchmarker=None):
@@ -41,7 +45,7 @@ class DockerHelper:
                     timeout=3600,
                     pull=True,
                     buildargs=({
-                      'BENCHMARK_ENV': self.benchmarker.config.benchmark_env
+                      'BENCHMARK_ENV': self.benchmarker.config.results_environment
                     })
                 )
                 buffer = ""
@@ -189,6 +193,7 @@ class DockerHelper:
                 extra_hosts=extra_hosts,
                 privileged=True,
                 ulimits=ulimit,
+                mem_limit=mem_limit,
                 sysctls=sysctl,
                 remove=True,
                 log_config={'type': None})

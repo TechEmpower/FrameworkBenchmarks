@@ -1,0 +1,53 @@
+{
+  "framework": "quart",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Quart",
+        "language": "Python",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "Hypercorn",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Quart",
+        "notes": "",
+        "versus": "None"
+      },
+      "uvicorn": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Quart",
+        "language": "Python",
+        "flavor": "Uvicorn",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "Uvicorn",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Quart",
+        "notes": "",
+        "versus": "uvicorn"
+      }
+    }
+  ]
+}
