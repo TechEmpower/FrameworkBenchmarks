@@ -1,7 +1,7 @@
 FROM maven:3.5.3-jdk-10-slim as maven
 WORKDIR /grizzly-jersey
-COPY pom.xml pom.xml
-COPY src src
+COPY pom-jersey.xml pom.xml
+COPY src-jersey src
 RUN mvn package -q
 
 FROM openjdk:10-jre-slim

@@ -52,7 +52,6 @@ env:
     - "TESTDIR=Java/gemini"
     - "TESTDIR=Java/greenlightning"
     - "TESTDIR=Java/grizzly"
-    - "TESTDIR=Java/grizzly-jersey"
     - "TESTDIR=Java/helidon"
     - "TESTDIR=Java/httpserver"
     - "TESTDIR=Java/jawn"
