@@ -36,7 +36,6 @@ env:
     - 'TESTDIR="GO/evio GO/fasthttp GO/go-std GO/iris"'
     - "TESTLANG=Groovy"
     - "TESTDIR=Haskell/snap"
-    - "TESTDIR=Haskell/wai"
     - "TESTDIR=Haskell/yesod"
     - "TESTDIR=Haskell/servant"
     - "TESTDIR=Haskell/spock"
