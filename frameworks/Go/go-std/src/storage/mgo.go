@@ -40,23 +40,17 @@ func (mongo *Mongo) Close() {
 }
 
 // GetOneRandomWorld return one random World struct
-func (mongo Mongo) GetOneRandomWorld() (World, error) {
-	var w World
+func (mongo Mongo) GetOneRandomWorld(w *World) error {
 	var err error
 	queryID := rand.Intn(worldsCount) + 1
 	if err = mongo.worlds.Find(bson.M{"_id": queryID}).One(&w); err != nil {
 		err = fmt.Errorf("error finding world with ID %d: %s", queryID, err)
 	}
-	return w, err
+	return err
 }
 
 // UpdateRandomWorlds updates some number of worlds entries, passed as arg
-func (mongo Mongo) UpdateRandomWorlds(queries int) ([]World, error) {
-	selectedWorlds := make([]World, queries)
-	for i := 0; i < queries; i++ {
-		selectedWorlds[i], _ = mongo.GetOneRandomWorld()
-	}
-
+func (mongo Mongo) UpdateWorlds(selectedWorlds []World) error {
 	for _, selectedWorld := range selectedWorlds {
 		selectedWorld.RandomNumber = rand.Intn(worldsCount) + 1
 		if err := mongo.worlds.Update(
@@ -67,12 +61,23 @@ func (mongo Mongo) UpdateRandomWorlds(queries int) ([]World, error) {
 		}
 	}
 
-	return selectedWorlds, nil
+	return nil
 }
 
 // GetFortunes finds all fortunes from table
 func (mongo Mongo) GetFortunes() ([]templates.Fortune, error) {
 	fortunes := make([]templates.Fortune, 0, 16)
+
+	if err := mongo.fortunes.Find(nil).All(&fortunes); err != nil {
+		return nil, err
+	}
+
+	return fortunes, nil
+}
+
+// GetFortunesPool finds all fortunes from table
+func (mongo Mongo) GetFortunesPool() ([]templates.Fortune, error) {
+	fortunes := templates.FortunesPool.Get().([]templates.Fortune)
 
 	if err := mongo.fortunes.Find(nil).All(&fortunes); err != nil {
 		return nil, err

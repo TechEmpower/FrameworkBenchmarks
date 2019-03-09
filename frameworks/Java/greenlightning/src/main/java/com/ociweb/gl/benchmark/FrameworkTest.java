@@ -12,11 +12,10 @@ import com.ociweb.gl.api.GreenCommandChannel;
  */
 import com.ociweb.gl.api.GreenFramework;
 import com.ociweb.gl.api.GreenRuntime;
-import com.ociweb.pronghorn.network.ServerSocketWriterStage;
 
 import io.reactiverse.pgclient.PgClient;
+import io.reactiverse.pgclient.PgPool;
 import io.reactiverse.pgclient.PgPoolOptions;
-import io.vertx.core.VertxOptions;
 
 public class FrameworkTest implements GreenApp {
 
@@ -53,7 +52,8 @@ public class FrameworkTest implements GreenApp {
 	public static String connectionUser =     "postgres";
 	public static String connectionPassword = "postgres";
 	
-	static final int c = 1120;// to reach 16K simultainious calls
+	//TODO: add utility to compute this based on need.
+	static final int c = 592; // to reach 16K simultainious calls
 
     public FrameworkTest() {
     	    	
@@ -64,8 +64,8 @@ public class FrameworkTest implements GreenApp {
     	//this server works best with  -XX:+UseNUMA    	
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    	//default port for test 
-    		 c,//250 goal,       //needed to reach 16K simultainious calls
-    		 c*4,// c*2,     //1<<14 (router to module)
+    		 c,         //pipes per track
+    		 c*4,       //(router to module)
     		 1<<11,     //default total size of network buffer used by blocks 
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
@@ -85,6 +85,7 @@ public class FrameworkTest implements GreenApp {
     		             String dbUser,
     		             String dbPass) {
     	
+    	
     	this.connectionsPerTrack = 2;
     	this.connectionPort = 5432;
     	this.bindPort = port;
@@ -93,7 +94,7 @@ public class FrameworkTest implements GreenApp {
     	this.queueLengthOfPendingRequests = queueLengthOfPendingRequests;
     	this.minMemoryOfInputPipes = minMemoryOfInputPipes;
     	this.telemetryPort = telemetryPort;
-    	this.pipelineBits = 14;//max concurrent in flight database requests 1<<pipelineBits
+    	this.pipelineBits = 15;//max concurrent in flight database requests 1<<pipelineBits
     	            
     	this.dbCallMaxResponseCount = c*2;//1<<6;
     	this.jsonMaxResponseCount = c*2;//1<<14;
@@ -101,7 +102,7 @@ public class FrameworkTest implements GreenApp {
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<8;
 
-    	this.maxQueueOut = 4;    	
+    	this.maxQueueOut = 4;   	
     	this.maxConnectionBits = 14; //16K connections, for test plus overhead
     	
     	this.maxRequestSize = 1<<9;
@@ -138,12 +139,30 @@ public class FrameworkTest implements GreenApp {
 
     		///early check to know if we have a database or not,
 	    	///this helps testing to know which tests should be run on different boxes.
-	    	PgClient.pool(options).getConnection(a->{
+	    	PgPool pool = PgClient.pool(options);
+			pool.getConnection(a->{
 	    		foundDB.set(a.succeeded());
 	    		if (null!=a.result()) {
 	    			a.result().close();
 	    		}
 	    	});
+			pool.close();
+	    	
+//	    	pool.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(1), r -> {
+//				if (r.succeeded()) {
+//
+//					PgIterator resultSet = r.result().iterator();
+//					Tuple row = resultSet.next();			        
+//					System.out.println("successfull query");
+//
+//				} else {
+//					System.out.println("fail: "+r.cause().getLocalizedMessage());
+//					 
+//				}		
+//				
+//			});	
+	    	
+	    	
     	} catch (Throwable t) {
     		//t.printStackTrace();
     		System.out.println("No database in use");
@@ -155,14 +174,17 @@ public class FrameworkTest implements GreenApp {
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		framework.setDefaultRate(50_000L);			
+		framework.setDefaultRate(60_000L);			
 	
 		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
     			 .setHost(host)
     			 .setMaxConnectionBits(maxConnectionBits)
-    			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)
-    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
+    			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)                //16K   14 bits
+    	
+    			 //TODO: not sure this is optimal..
+    			 .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/4))  //4K    
+    		//	 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
     			 .disableEPoll()
  						 
     			 .setMaxQueueIn(queueLengthOfPendingRequests)

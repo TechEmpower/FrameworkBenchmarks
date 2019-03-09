@@ -9,9 +9,19 @@ import (
 
 	"go-std/src/handlers"
 	"go-std/src/storage"
+	"go-std/src/templates"
 )
 
+func initSyncPools() {
+	handlers.InitMessagePool()
+	storage.InitWorldPool()
+	storage.InitWorldsPool()
+	templates.InitFortunesPool()
+}
+
 func main() {
+	initSyncPools()
+
 	// init flags
 	bindHost := flag.String("bind", ":8080", "set bind host")
 	prefork := flag.Bool("prefork", false, "use prefork")
@@ -46,8 +56,10 @@ func main() {
 	}
 	if db != nil {
 		defer db.Close()
-		http.HandleFunc("/fortune", handlers.FortuneHandler(db))
-		http.HandleFunc("/fortune-quick", handlers.FortuneQuickHandler(db))
+		// http.HandleFunc("/fortune", handlers.FortuneHandler(db))
+		http.HandleFunc("/fortune", handlers.FortuneHandlerPool(db))
+		// http.HandleFunc("/fortune-quick", handlers.FortuneQuickHandler(db))
+		http.HandleFunc("/fortune-quick", handlers.FortuneQuickHandlerPool(db))
 		if *easyjson {
 			http.HandleFunc("/db", handlers.DBHandlerEasyJSON(db))
 			http.HandleFunc("/queries", handlers.QueriesHandlerEasyJSON(db))
@@ -55,7 +67,7 @@ func main() {
 		} else {
 			http.HandleFunc("/db", handlers.DBHandler(db))
 			http.HandleFunc("/queries", handlers.QueriesHandler(db))
-			http.HandleFunc("/update", handlers.UpdateHandler(db))
+			http.HandleFunc("/update", handlers.UpdateHandlerChan(db))
 		}
 	}
 
