@@ -7,6 +7,6 @@ ADD ./ /servant
 WORKDIR /servant
 
 RUN stack --allow-different-user setup
-RUN stack --allow-different-user build
+RUN stack --allow-different-user build --pedantic
 
 CMD stack --allow-different-user exec servant-exe -- tfb-database +RTS -A32m -N$(nproc)
