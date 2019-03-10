@@ -14,7 +14,7 @@ import qualified Data.ByteString            as BS
 import           Data.ByteString.Lazy
 import qualified Data.ByteString.Lazy.Char8 as LBSC
 import           Data.Functor.Contravariant (contramap)
-import           Data.Either                (fromRight)
+import           Data.Either                (fromRight, partitionEithers)
 import           Data.Int                   (Int32)
 import           Data.List                  (sortOn)
 import           Data.Maybe                 (maybe)
@@ -131,10 +131,18 @@ singleDb pool gen = do
 -- * Test 3: Multiple database query
 
 multipleDb :: Pool -> GenIO -> Maybe QueryId -> Handler [World]
-multipleDb pool gen mQueryId = replicateM count_ $ singleDb pool gen
+multipleDb pool gen mQueryId = do
+  results <- getResults
+  let (errs, oks) = partitionEithers results
+  case errs of
+    [] -> return oks
+    _ -> throwError err500 { errBody = LBSC.pack . show $ errs }
   where
     c = maybe 1 unQueryId mQueryId
     count_ = max 1 (min c 500)
+    getResults = replicateM count_ . liftIO . use pool $ do
+      v <- liftIO $ uniformR (1, 10000) gen
+      statement v selectSingle
 {-# INLINE multipleDb #-}
 
 
@@ -145,7 +153,7 @@ selectFortunes = HasqlStatement.Statement q encoder decoder True
   where
    q = "SELECT * FROM Fortune"
    encoder = HasqlEnc.unit
-   -- TODO: investigate whether 'rowsList' is worth the more expensive 'cons'.
+   -- TODO: investigate whether 'rowList' is worth the more expensive 'cons'.
    decoder = HasqlDec.rowList $ Fortune <$> intValDec <*> HasqlDec.column HasqlDec.text
 {-# INLINE selectFortunes #-}
 
@@ -171,23 +179,30 @@ fortunes pool = do
 
 -- * Test 5: Updates
 
-updateSingle :: HasqlStatement.Statement (Int32, Int32) World
+updateSingle :: HasqlStatement.Statement (Int32, Int32) ()
 updateSingle = HasqlStatement.Statement q encoder decoder True
   where
     q = "UPDATE World SET randomNumber = $1 WHERE id = $2"
     encoder = contramap fst intValEnc <> contramap snd intValEnc
-    decoder = HasqlDec.singleRow $ World <$> intValDec <*> intValDec
+    decoder = HasqlDec.unit
 {-# INLINE updateSingle #-}
 
 updates :: Pool -> GenIO -> Maybe QueryId -> Handler [World]
-updates pool gen mQueryId = replicateM count_ $ do
-  res <- singleDb pool gen
-  v <- liftIO $ uniformR (1, 10000) gen
-  _ <- liftIO $ use pool (statement (wId res, v) updateSingle)
-  return $ res { wRandomNumber = v }
+updates pool gen mQueryId = do
+  results <- getResults
+  let (errs, oks) = partitionEithers results
+  case errs of
+    [] -> return oks
+    _ -> throwError err500 { errBody = LBSC.pack . show $ errs }
   where
     c = maybe 1 unQueryId mQueryId
     count_ = max 1 (min c 500)
+    getResults = replicateM count_ . liftIO . use pool $ do
+      v1 <- liftIO $ uniformR (1, 10000) gen
+      res <- statement v1 selectSingle
+      v2 <- liftIO $ uniformR (1, 10000) gen
+      _ <- statement (wId res, v2) updateSingle
+      return $ res { wRandomNumber = v2 }
 {-# INLINE updates #-}
 
 -- * Test 6: Plaintext endpoint
