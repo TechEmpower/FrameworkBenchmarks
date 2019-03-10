@@ -62,7 +62,7 @@ run port dbSettings = do
     Warp.run port $ serve api $ server pool gen
   where
     halfSecond = 0.5
-    settings = (30, halfSecond, dbSettings)
+    settings = (512, halfSecond, dbSettings)
 
 newtype QueryId = QueryId { unQueryId :: Int }
 instance FromHttpApiData QueryId where
