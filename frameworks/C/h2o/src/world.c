@@ -39,10 +39,14 @@
 #include "utility.h"
 #include "world.h"
 
+#define DO_CLEANUP 4
+#define DO_UPDATE 1
 #define ID_KEY "id"
+#define IS_COMPLETED 8
 #define MAX_QUERIES 500
 #define QUERIES_PARAMETER "queries="
 #define RANDOM_NUM_KEY "randomNumber"
+#define USE_CACHE 2
 
 typedef struct multiple_query_ctx_t multiple_query_ctx_t;
 typedef struct update_ctx_t update_ctx_t;
@@ -79,9 +83,7 @@ struct multiple_query_ctx_t {
 	size_t num_query;
 	size_t num_query_in_progress;
 	size_t num_result;
-	bool cleanup;
-	bool do_update;
-	bool use_cache;
+	uint_fast32_t flags;
 	query_result_t res[];
 };
 
@@ -125,12 +127,14 @@ static void cleanup_multiple_query_request(void *data)
 {
 	multiple_query_ctx_t * const query_ctx = *(multiple_query_ctx_t **) data;
 
-	if (query_ctx->cleanup) {
+	query_ctx->flags |= IS_COMPLETED;
+
+	if (query_ctx->flags & DO_CLEANUP) {
 		if (!query_ctx->num_query_in_progress)
 			cleanup_multiple_query(query_ctx);
 	}
 	else
-		query_ctx->cleanup = true;
+		query_ctx->flags |= DO_CLEANUP;
 }
 
 static void cleanup_single_query(single_query_ctx_t *query_ctx)
@@ -160,10 +164,10 @@ static void complete_multiple_query(multiple_query_ctx_t *query_ctx)
 {
 	assert(query_ctx->num_result == query_ctx->num_query);
 
-	if (query_ctx->do_update)
+	if (query_ctx->flags & DO_UPDATE)
 		do_updates(query_ctx);
 	else {
-		query_ctx->cleanup = true;
+		query_ctx->flags |= DO_CLEANUP;
 		query_ctx->gen = get_json_generator(&query_ctx->ctx->json_generator,
 		                                    &query_ctx->ctx->json_generator_num);
 
@@ -216,12 +220,14 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 		query_ctx->ctx = ctx;
 		query_ctx->num_query = num_query;
 		query_ctx->req = req;
-		query_ctx->do_update = do_update;
-		query_ctx->use_cache = use_cache;
 		query_ctx->query_param = (query_param_t *) ((char *) query_ctx + base_size);
 		initialize_ids(num_query, query_ctx->res, &ctx->random_seed);
 
+		if (do_update)
+			query_ctx->flags |= DO_UPDATE;
+
 		if (use_cache) {
+			query_ctx->flags |= USE_CACHE;
 			fetch_from_cache(h2o_now(ctx->event_loop.h2o_ctx.loop),
 			                 &ctx->global_data->world_cache,
 			                 query_ctx);
@@ -256,7 +262,7 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 
 			if (execute_query(ctx, &query_ctx->query_param[i].param)) {
 				query_ctx->num_query_in_progress = i;
-				query_ctx->cleanup = true;
+				query_ctx->flags |= DO_CLEANUP;
 				send_service_unavailable_error(DB_REQ_ERROR, req);
 				return 0;
 			}
@@ -318,7 +324,7 @@ static void do_updates(multiple_query_ctx_t *query_ctx)
 		goto error;
 
 	if (execute_query(query_ctx->ctx, &query_ctx->query_param->param)) {
-		query_ctx->cleanup = true;
+		query_ctx->flags |= DO_CLEANUP;
 		send_service_unavailable_error(DB_REQ_ERROR, query_ctx->req);
 	}
 	else
@@ -326,7 +332,7 @@ static void do_updates(multiple_query_ctx_t *query_ctx)
 
 	return;
 error:
-	query_ctx->cleanup = true;
+	query_ctx->flags |= DO_CLEANUP;
 	LIBRARY_ERROR("snprintf", "Truncated output.");
 	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
 }
@@ -397,12 +403,12 @@ static void on_multiple_query_error(db_query_param_t *param, const char *error_s
 
 	query_ctx->num_query_in_progress--;
 
-	if (query_ctx->cleanup) {
-		if (!query_ctx->num_query_in_progress)
+	if (query_ctx->flags & DO_CLEANUP) {
+		if (!query_ctx->num_query_in_progress && query_ctx->flags & IS_COMPLETED)
 			cleanup_multiple_query(query_ctx);
 	}
 	else {
-		query_ctx->cleanup = true;
+		query_ctx->flags |= DO_CLEANUP;
 		send_error(BAD_GATEWAY, error_string, query_ctx->req);
 	}
 }
@@ -414,14 +420,14 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 
 	query_ctx->num_query_in_progress--;
 
-	if (query_ctx->cleanup) {
-		if (!query_ctx->num_query_in_progress)
+	if (query_ctx->flags & DO_CLEANUP) {
+		if (!query_ctx->num_query_in_progress && query_ctx->flags & IS_COMPLETED)
 			cleanup_multiple_query(query_ctx);
 	}
 	else if (PQresultStatus(result) == PGRES_TUPLES_OK) {
 		process_result(result, query_ctx->res + query_ctx->num_result);
 
-		if (query_ctx->use_cache) {
+		if (query_ctx->flags & USE_CACHE) {
 			query_result_t * const r = malloc(sizeof(*r));
 
 			if (r) {
@@ -446,7 +452,7 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 			query_param->id = htonl(query_ctx->res[idx].id);
 
 			if (execute_query(query_ctx->ctx, &query_param->param)) {
-				query_ctx->cleanup = true;
+				query_ctx->flags |= DO_CLEANUP;
 				send_service_unavailable_error(DB_REQ_ERROR, query_ctx->req);
 			}
 			else
@@ -456,7 +462,7 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 			complete_multiple_query(query_ctx);
 	}
 	else {
-		query_ctx->cleanup = true;
+		query_ctx->flags |= DO_CLEANUP;
 		LIBRARY_ERROR("PQresultStatus", PQresultErrorMessage(result));
 		send_error(BAD_GATEWAY, DB_ERROR, query_ctx->req);
 	}
@@ -472,12 +478,12 @@ static void on_multiple_query_timeout(db_query_param_t *param)
 
 	query_ctx->num_query_in_progress--;
 
-	if (query_ctx->cleanup) {
-		if (!query_ctx->num_query_in_progress)
+	if (query_ctx->flags & DO_CLEANUP) {
+		if (!query_ctx->num_query_in_progress && query_ctx->flags & IS_COMPLETED)
 			cleanup_multiple_query(query_ctx);
 	}
 	else {
-		query_ctx->cleanup = true;
+		query_ctx->flags |= DO_CLEANUP;
 		send_error(GATEWAY_TIMEOUT, DB_TIMEOUT_ERROR, query_ctx->req);
 	}
 }
@@ -561,9 +567,9 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 {
 	query_param_t * const query_param = H2O_STRUCT_FROM_MEMBER(query_param_t, param, param);
 	multiple_query_ctx_t * const query_ctx = query_param->ctx;
-	const bool cleanup = query_ctx->cleanup;
+	const bool cleanup = query_ctx->flags & DO_CLEANUP;
 
-	query_ctx->cleanup = true;
+	query_ctx->flags |= DO_CLEANUP;
 	query_ctx->num_query_in_progress--;
 
 	if (cleanup)

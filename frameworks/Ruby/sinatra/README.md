@@ -2,7 +2,7 @@
 
 The information below contains information specific to the Sinatra benchmarking
 test. For further guidance, review the
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).  Also
+[documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki).  Also
 note the additional information provided in the [Ruby README](../).
 
 This is the Ruby Sinatra portion of a [benchmarking test suite](../../)

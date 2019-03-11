@@ -67,7 +67,7 @@ func main() {
 		} else {
 			http.HandleFunc("/db", handlers.DBHandler(db))
 			http.HandleFunc("/queries", handlers.QueriesHandler(db))
-			http.HandleFunc("/update", handlers.UpdateHandler(db))
+			http.HandleFunc("/update", handlers.UpdateHandlerChan(db))
 		}
 	}
 

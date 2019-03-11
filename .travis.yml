@@ -36,7 +36,6 @@ env:
     - 'TESTDIR="Go/evio Go/fasthttp Go/go-std Go/iris Go/atreugo"'
     - "TESTLANG=Groovy"
     - "TESTDIR=Haskell/snap"
-    - "TESTDIR=Haskell/wai"
     - "TESTDIR=Haskell/yesod"
     - "TESTDIR=Haskell/servant"
     - "TESTDIR=Haskell/spock"
@@ -53,7 +52,6 @@ env:
     - "TESTDIR=Java/gemini"
     - "TESTDIR=Java/greenlightning"
     - "TESTDIR=Java/grizzly"
-    - "TESTDIR=Java/grizzly-jersey"
     - "TESTDIR=Java/helidon"
     - "TESTDIR=Java/httpserver"
     - "TESTDIR=Java/jawn"
@@ -102,12 +100,17 @@ env:
     - 'TESTDIR="PHP/php"'
     - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/laravel PHP/limonade PHP/lithium PHP/lumen PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend"'
     - 'TESTDIR="PHP/amp PHP/hamlet PHP/hhvm PHP/peachpie PHP/swoole PHP/workerman PHP/phalcon"'
-    - "TESTLANG=Python"
-    - "TESTLANG=Ruby"
+    - 'TESTDIR="Python/aiohttp Python/api_hour Python/blacksheep Python/bottle Python/cherrypy Python/django Python/eve Python/falcon Python/fastapi Python/flask"'
+    - 'TESTDIR="Python/hug Python/japronto Python/klein Python/morepath Python/pyramid Python/quart Python/responder Python/sanic Python/spyne Python/starlette"'
+    - 'TESTDIR="Python/tornado Python/turbogears Python/uvicorn Python/uwsgi Python/vibora Python/web2py Python/webware Python/weppy Python/wsgi"'
+    - 'TESTDIR="Ruby/grape Ruby/h2o_mruby Ruby/hanami Ruby/padrino Ruby/rack Ruby/rack-sequel"'
+    - 'TESTDIR="Ruby/rails Ruby/roda-sequel Ruby/sinatra Ruby/sinatra-sequel"'
     - 'TESTDIR="Rust/actix Rust/gotham Rust/hyper Rust/iron Rust/saphir"'
     - 'TESTDIR="Rust/may-minihttp Rust/nickel Rust/rocket"'
     - 'TESTDIR="Rust/rouille Rust/thruster Rust/tokio-minihttp"'
-    - "TESTLANG=Scala"
+    - 'TESTDIR="Scala/akka-http Scala/blaze Scala/cask Scala/colossus Scala/finagle"'
+    - 'TESTDIR="Scala/finatra Scala/finch Scala/http4s"'
+    - 'TESTDIR="Scala/play2-scala Scala/youi"'
     - "TESTLANG=Swift"
     - "TESTLANG=TypeScript"
     - "TESTLANG=Ur"

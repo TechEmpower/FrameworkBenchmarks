@@ -2,7 +2,7 @@
 
 The information below contains information specific to C#. 
 For further guidance, review the 
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
+[documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki).
 
 ## Infrastructure Software Versions
 
