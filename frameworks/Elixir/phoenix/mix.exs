@@ -25,12 +25,13 @@ defmodule Hello.Mixfile do
   #
   # Type `mix help deps` for examples and options
   defp deps do
-    [{:phoenix, "~> 1.3.2"},
-     {:phoenix_ecto, "~> 3.3"},
-     {:postgrex, ">= 0.0.0"},
-     {:cowboy, "~> 1.0"},
-     {:jason, "~> 1.0"},
-     {:phoenix_html, "~> 2.11"},
-     {:phoenix_live_reload, "~> 1.1", only: :dev}]
+    [{:phoenix, "1.3.2"},
+     {:phoenix_ecto, "3.3.0"},
+     {:postgrex, "0.13.3"},
+     {:cowboy, "1.0.0"},
+     {:plug_cowboy, "1.0.0"},
+     {:jason, "1.0.0"},
+     {:phoenix_html, "2.11.0"},
+     {:phoenix_live_reload, "1.1.0", only: :dev}]
   end
 end

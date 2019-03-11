@@ -36,8 +36,8 @@ public class ProcessQuery {
 	public void tickEvent() { 
 		//for DBRest
 		{
-			ResultObject temp = DBRestInFlight.tailObject();
-			while (isReadyDBRest(temp)) {
+			ResultObject temp;
+			while (isReadyDBRest(temp = DBRestInFlight.tailObject())) {
 				if (consumeResultObjectDBRest(temp)) {
 					temp = DBRestInFlight.tailObject();
 				} else {

@@ -45,7 +45,7 @@ class DockerHelper:
                     timeout=3600,
                     pull=True,
                     buildargs=({
-                      'BENCHMARK_ENV': self.benchmarker.config.benchmark_env
+                      'BENCHMARK_ENV': self.benchmarker.config.results_environment
                     })
                 )
                 buffer = ""

@@ -140,6 +140,13 @@
         "http_methods": [
           "get"
         ]
+      },
+      {
+        "path": "/updates",
+        "controller": "UpdatesCtrl",
+        "http_methods": [
+          "get"
+        ]
       }
     ],
     //idle_connection_timeout: defaults to 60 seconds, the lifetime 

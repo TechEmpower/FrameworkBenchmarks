@@ -1,6 +1,6 @@
-FROM dlanguage/ldc:1.7.0
+FROM dlangchina/dlang-ldc:latest
 
-RUN apt update -yqq && apt install -yqq git make libpq-dev
+RUN apt update -y && apt install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/*
 
 ADD ./ /hunt
 WORKDIR /hunt
