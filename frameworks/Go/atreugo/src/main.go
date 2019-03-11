@@ -3,37 +3,58 @@ package main
 import (
 	"flag"
 	"log"
+	"net"
+	"runtime"
 
-	"github.com/savsgio/atreugo/v7"
+	"atreugo/src/handlers"
+	"atreugo/src/storage"
+	"atreugo/src/templates"
+
+	"github.com/savsgio/atreugo"
 )
 
+func initPools() {
+	handlers.InitMessagePool()
+	templates.InitFortunesPool()
+	storage.InitWorldPool()
+	storage.InitWorldsPool()
+}
+
 func main() {
+	initPools()
+
 	// init flags
-	bindPort := flag.Int("bind", 8080, "set bind port")
-	// prefork := flag.Bool("prefork", false, "use prefork")
-	// easyjson := flag.Bool("easyjson", false, "use easyjson")
-	// child := flag.Bool("child", false, "is child proc")
-	// dbDriver := flag.String("db", "none", "db connection driver [values: pq || pgx || mysql || mgo || none]")
+	bindHost := flag.String("bind", ":8080", "set bind host")
+	prefork := flag.Bool("prefork", false, "use prefork")
+	child := flag.Bool("child", false, "is child proc")
+	// dbDriver := flag.String("db", "none", "db connection driver [values: pgx || none]")
 	// dbConnectionString := flag.String("db_connection_string",
 	// 	"host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world sslmode=disable",
 	// 	"db connection string")
 	flag.Parse()
 
 	server := atreugo.New(&atreugo.Config{
-		Host:     "0.0.0.0",
-		Port:     *bindPort,
 		Compress: false,
 	})
 
-	server.Path("GET", "/plaintext", func(ctx *atreugo.RequestCtx) error {
-		ctx.SetContentType("text/plain")
-		_, err := ctx.WriteString("Hello, World!")
-		return err
-	})
+	// init handlers
+	server.Path("GET", "/plaintext", handlers.PlaintextHandler)
+	server.Path("GET", "/json", handlers.JSONHandlerEasyJSON)
 
-	server.Path("GET", "/json", func(ctx *atreugo.RequestCtx) error {
-		return ctx.JSONResponse(atreugo.JSON{"Message": "Hello, World!"})
-	})
+	var err error
+	var listener net.Listener
+	if *prefork {
+		listener, err = doPrefork(*child, *bindHost)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		listener, err = net.Listen("tcp4", *bindHost)
+		if err != nil {
+			log.Fatal(err)
+		}
+		runtime.GOMAXPROCS(runtime.NumCPU())
+	}
 
-	log.Fatal(server.ListenAndServe())
+	log.Fatal(server.Serve(listener))
 }
