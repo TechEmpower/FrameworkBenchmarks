@@ -232,7 +232,7 @@ class DatabasePool
 
     function put($db)
     {
-        $this->pool->push($db);
+        $this->pool->enqueue($db);
         $this->pool_count++;
     }
 
@@ -240,9 +240,9 @@ class DatabasePool
     {
         if ($this->pool_count > 0) {
             $this->pool_count--;
-            return $this->pool->pop();
+            return $this->pool->dequeue();
         }
-
+        
         // No idle connection, time to create a new connection
         if ($server_type === 'mysql') {
             $db = new Swoole\Coroutine\Mysql;

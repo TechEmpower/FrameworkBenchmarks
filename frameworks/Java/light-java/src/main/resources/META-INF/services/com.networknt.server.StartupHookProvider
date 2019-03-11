@@ -1,7 +1,0 @@
-# This is the place to plugin your startup hooks to initialize Spring application context,
-# set up db connection pools and allocate resources.
-
-# init mysql connection pool
-# com.networknt.techempower.db.mysql.MysqlStartupHookProvider
-# init postgres connection pool
-com.networknt.techempower.db.postgres.PostgresStartupHookProvider

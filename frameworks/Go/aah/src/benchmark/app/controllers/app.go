@@ -5,7 +5,7 @@ import (
 
 	"benchmark/app/models"
 
-	"aahframework.org/aah.v0"
+	"aahframe.work"
 )
 
 const helloWorldString = "Hello, World!"
@@ -113,7 +113,7 @@ func (c *AppController) getCount() int {
 	return cnt
 }
 
-func (c *AppController) handleResult(worlds *[]models.World, err error) {
+func (c *AppController) handleResult(worlds []models.World, err error) {
 	if err != nil {
 		c.Reply().InternalServerError().Text(err.Error())
 		return

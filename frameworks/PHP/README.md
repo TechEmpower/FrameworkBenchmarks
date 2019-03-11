@@ -1,5 +1,7 @@
 # PHP Frameworks
 
+[![php logo](https://avatars1.githubusercontent.com/u/25158?s=200&v=4)](https://php.net)
+
 The information below contains information specific to PHP. 
 For further guidance, review the 
 [documentation](https://frameworkbenchmarks.readthedocs.io/en/latest/).
@@ -8,8 +10,7 @@ For further guidance, review the
 
 ### PHP Versions
 
-[PHP 7.2.2](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/php/php7.sh),
-[PHP 5.6.33](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/php/php5.sh) and [HHVM 3.24](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/setup/linux/languages/hhvm.sh).
+[PHP 7.3.\*, PHP 5.6.*](http://php.net/) and [HHVM 3.30](https://hhvm.com/).
 
 ## Adding New PHP-based Frameworks
 

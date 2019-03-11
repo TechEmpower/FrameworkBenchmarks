@@ -6,7 +6,9 @@ using System.Net;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.Internal;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace PlatformBenchmarks
 {
@@ -46,6 +48,24 @@ namespace PlatformBenchmarks
                     if (theadCount.HasValue)
                     {
                         options.IOQueueCount = theadCount.Value;
+                    }
+                });
+            }
+            else if (string.Equals(webHost, "LinuxTransport", StringComparison.OrdinalIgnoreCase))
+            {
+                builder.ConfigureServices(services =>
+                {
+                    services.Configure<KestrelServerOptions>(options =>
+                    {
+                        // Run callbacks on the transport thread
+                        options.ApplicationSchedulingMode = SchedulingMode.Inline;
+                    });
+                })
+                .UseLinuxTransport(options =>
+                {
+                    if (theadCount.HasValue)
+                    {
+                        options.ThreadCount = theadCount.Value;
                     }
                 });
             }

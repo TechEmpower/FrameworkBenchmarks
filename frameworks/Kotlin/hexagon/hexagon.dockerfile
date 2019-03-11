@@ -1,10 +1,24 @@
-FROM gradle:4.7.0-jdk10
+
+#
+# BUILD
+#
+FROM gradle:5.2.1-jdk11 AS gradle_build
 USER root
 WORKDIR /hexagon
+
 COPY src src
 COPY build.gradle build.gradle
 COPY gradle.properties gradle.properties
 RUN gradle --quiet --exclude-task test
+
+#
+# RUNTIME
+#
+FROM openjdk:11
 ENV DBSTORE mongodb
+ENV MONGODB_DB_HOST tfb-database
 ENV WEBENGINE jetty
-CMD ["build/install/hexagon/bin/hexagon"]
+ENV PROJECT hexagon
+
+COPY --from=gradle_build /hexagon/build/install/$PROJECT /opt/$PROJECT
+ENTRYPOINT /opt/$PROJECT/bin/$PROJECT

@@ -7,12 +7,12 @@
             <th>message</th>
         </tr>
 
-        @fortunes.sortBy(_.message).map { case Fortune(id, message) =>
+        @fortunes.sortBy(_.message).map { case Fortune(id, message) => {
             <tr>
                 <td>@id</td>
                 <td>@message</td>
             </tr>
-        }
+        }}
 
     </table>
 }

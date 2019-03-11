@@ -461,12 +461,6 @@ error:
 	error_notification(ctx, false, DB_ERROR);
 }
 
-void connect_to_database(thread_context_t *ctx)
-{
-	for (size_t i = ctx->config->max_db_conn_num - ctx->db_state.db_conn_num; i > 0; i--)
-		start_database_connect(ctx, NULL);
-}
-
 int execute_query(thread_context_t *ctx, db_query_param_t *param)
 {
 	int ret = EXIT_FAILURE;

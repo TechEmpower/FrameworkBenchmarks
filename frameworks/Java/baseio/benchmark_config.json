@@ -2,7 +2,7 @@
   "framework": "baseio",
   "tests": [{
       "default": {
-      	"json_url": "/json",
+        "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
@@ -19,6 +19,25 @@
         "display_name": "baseio",
         "notes": "",
         "versus": "baseio"
+      },
+      "http-lite": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "baseio",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "baseio-http-lite",
+        "notes": "",
+        "versus": "baseio-http-lite"
       }
     }
   ]

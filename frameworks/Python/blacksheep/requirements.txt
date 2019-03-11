@@ -1,0 +1,9 @@
+asyncpg==0.18.3
+blacksheep==0.0.7
+cchardet==2.1.4
+certifi==2018.11.29
+httptools==0.0.11
+Jinja2==2.10
+MarkupSafe==1.1.0
+ujson==1.35
+uvloop==0.12.1

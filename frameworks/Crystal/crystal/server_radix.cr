@@ -89,7 +89,7 @@ tree.add "/queries", queries_handler
 tree.add "/fortunes", fortunes_handler
 tree.add "/updates", updates_handler
 
-APPDB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world")
+APPDB = DB.open(ENV["DATABASE_URL"])
 ID_MAXIMUM = 10_000
 
 server = HTTP::Server.new do |context|

@@ -1,8 +1,7 @@
-#![feature(plugin, custom_derive)]
-#![plugin(rocket_codegen)]
+#![feature(proc_macro_hygiene, decl_macro)]
 
 extern crate rand;
-extern crate rocket;
+#[macro_use] extern crate rocket;
 extern crate rocket_contrib;
 #[macro_use] extern crate diesel;
 #[macro_use] extern crate serde_derive;
@@ -10,17 +9,12 @@ extern crate rocket_contrib;
 use diesel::prelude::*;
 use diesel::result::Error;
 use rand::Rng;
-use rocket_contrib::Json;
-use rocket_contrib::Template;
+use rocket_contrib::json::Json;
+use rocket_contrib::templates::Template;
 
 mod db;
 mod models;
 mod schema;
-
-#[derive(FromForm)]
-struct QueryString {
-    q: u16,
-}
 
 fn random_number() -> i32 {
     rand::thread_rng().gen_range(1, 10_001)
@@ -53,16 +47,20 @@ fn db(conn: db::DbConn) -> Json<models::World> {
 
 #[get("/queries")]
 fn queries_empty(conn: db::DbConn) -> Json<Vec<models::World>> {
-    queries(conn, QueryString { q: 1 })
+    queries(conn, 1)
 }
 
-#[get("/queries?<qs>")]
-fn queries(conn: db::DbConn, qs: QueryString) -> Json<Vec<models::World>> {
+#[get("/queries?<q>")]
+fn queries(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
     use schema::world::dsl::*;
 
-    let mut q = qs.q;
-    if q == 0 { q = 1 }
-    if q > 500 { q = 500; }
+    let q = if q == 0 {
+        1
+    } else if q > 500 {
+        500
+    } else {
+        q
+    };
 
     let mut results = Vec::with_capacity(q as usize);
 
@@ -97,16 +95,20 @@ fn fortunes(conn: db::DbConn) -> Template {
 
 #[get("/updates")]
 fn updates_empty(conn: db::DbConn) -> Json<Vec<models::World>> {
-    updates(conn, QueryString { q: 1 })
+    updates(conn, 1)
 }
 
-#[get("/updates?<qs>")]
-fn updates(conn: db::DbConn, qs: QueryString) -> Json<Vec<models::World>> {
+#[get("/updates?<q>")]
+fn updates(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
     use schema::world::dsl::*;
 
-    let mut q = qs.q;
-    if q == 0 { q = 1 }
-    if q > 500 { q = 500; }
+    let q = if q == 0 {
+        1
+    } else if q > 500 {
+        500
+    } else {
+        q
+    };
 
     let mut results = Vec::with_capacity(q as usize);
 

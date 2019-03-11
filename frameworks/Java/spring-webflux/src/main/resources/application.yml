@@ -1,14 +1,10 @@
 ---
 spring:
-  profiles: jdbc
+  profiles: postgres
   datasource:
-    url: jdbc:postgresql://tfb-database:5432/hello_world
-    username: benchmarkdbuser
-    password: benchmarkdbpass
----
-
-spring:
-  profiles: pgclient
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
+    username: ${database.username}
+    password: ${database.password}
 
 database:
   name: hello_world
@@ -16,11 +12,27 @@ database:
   port: 5432
   username: benchmarkdbuser
   password: benchmarkdbpass
----
 
+---
+spring:
+  profiles: jdbc
+
+---
+spring:
+  profiles: pgclient
+
+---
+spring:
+  profiles: rxjdbc
+
+---
+spring:
+  profiles: r2dbc
+
+---
 spring:
   profiles: mongo
 
 database:
-  url: mongodb://tfb-database:27017
+  url: mongodb://tfb-database:27017/?waitQueueMultiple=200
   name: hello_world

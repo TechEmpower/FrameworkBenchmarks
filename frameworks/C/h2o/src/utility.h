@@ -22,12 +22,12 @@
 #define UTILITY_H_
 
 #include <h2o.h>
+#include <mustache.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <h2o/cache.h>
 #include <openssl/ssl.h>
-#include <stdbool.h>
 #include <yajl/yajl_gen.h>
-#include <mustache.h>
 
 #include "cache.h"
 #include "list.h"
@@ -82,6 +82,7 @@ typedef struct {
 } json_generator_t;
 
 void free_json_generator(json_generator_t *gen, list_t **pool, size_t *gen_num, size_t max_gen);
+yajl_gen_status gen_integer(int64_t number, char *buf, size_t len, yajl_gen gen);
 json_generator_t *get_json_generator(list_t **pool, size_t *gen_num);
 uint32_t get_random_number(uint32_t max_rand, unsigned int *seed);
 bool is_power_of_2(size_t x);

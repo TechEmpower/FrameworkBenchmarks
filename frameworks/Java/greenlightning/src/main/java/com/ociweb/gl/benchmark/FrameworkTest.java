@@ -3,6 +3,7 @@ package com.ociweb.gl.benchmark;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.ociweb.gl.api.GreenApp;
+import com.ociweb.gl.api.GreenCommandChannel;
 /**
  * ************************************************************************
  * For greenlightning support, training or feature reqeusts please contact:
@@ -11,15 +12,10 @@ import com.ociweb.gl.api.GreenApp;
  */
 import com.ociweb.gl.api.GreenFramework;
 import com.ociweb.gl.api.GreenRuntime;
-import com.ociweb.gl.api.HTTPResponseService;
-import com.ociweb.pronghorn.network.ServerSocketReaderStage;
-import com.ociweb.pronghorn.network.ServerSocketWriterStage;
-import com.ociweb.pronghorn.network.http.HTTP1xRouterStage;
-import com.ociweb.pronghorn.pipe.ObjectPipe;
 
 import io.reactiverse.pgclient.PgClient;
+import io.reactiverse.pgclient.PgPool;
 import io.reactiverse.pgclient.PgPoolOptions;
-import io.reactiverse.reactivex.pgclient.PgConnection;
 
 public class FrameworkTest implements GreenApp {
 
@@ -32,36 +28,51 @@ public class FrameworkTest implements GreenApp {
     private int queueLengthOfPendingRequests;
     private int telemetryPort;//for monitoring
     private int minMemoryOfInputPipes;
-    private int maxResponseSize;
-	private	int maxResponseCount = 1<<8;
+    private int dbCallMaxResponseSize;
+	private	final int dbCallMaxResponseCount;
     private int pipelineBits;
-	
-    private final PgPoolOptions options;
     
-	public static int connectionsPerTrack =   2;
-	public static int connectionPort =        5432;
+    private final int jsonMaxResponseCount;
+    private final int jsonMaxResponseSize;
+    
+    private PgPoolOptions options;
+    
+    
+    private int maxQueueOut;
+    private int maxConnectionBits;
+    private int maxRequestSize;
+    
+    private int connectionsPerTrack;
+    private int connectionPort;
+	
+	
 	public AtomicBoolean foundDB = new AtomicBoolean(false);
 	public static String connectionHost =     "localhost";
 	public static String connectionDB =       "testdb";
 	public static String connectionUser =     "postgres";
 	public static String connectionPassword = "postgres";
-			    
+	
+	//TODO: add utility to compute this based on need.
+	static final int c = 592; // to reach 16K simultainious calls
+
     public FrameworkTest() {
+    	    	
     	// use this in commit messages to narrow travis testing to just this project
-    	// [ci fw-only Java/greenlightning]
+    	// rebase before using this:  [ci fw-only Java/greenlightning]
+    	
     	
     	//this server works best with  -XX:+UseNUMA    	
     	this(System.getProperty("host","0.0.0.0"), 
-    		 8080,    //default port for test 
-    		 10,      //default concurrency, 10 to support 280 channels on 14 core boxes
-    		 8*1024, //default max rest requests allowed to queue in wait
-    		 1<<21,   //default network buffer per input socket connection
+    		 8080,    	//default port for test 
+    		 c,         //pipes per track
+    		 c*4,       //(router to module)
+    		 1<<11,     //default total size of network buffer used by blocks 
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
     		 "benchmarkdbuser",
     		 "benchmarkdbpass"
-    		 );    	
+    		 );
     }   
         
     public FrameworkTest(String host, int port, 
@@ -74,15 +85,28 @@ public class FrameworkTest implements GreenApp {
     		             String dbUser,
     		             String dbPass) {
     	
+    	
+    	this.connectionsPerTrack = 2;
+    	this.connectionPort = 5432;
     	this.bindPort = port;
     	this.host = host;
     	this.concurrentWritesPerChannel = concurrentWritesPerChannel;
     	this.queueLengthOfPendingRequests = queueLengthOfPendingRequests;
     	this.minMemoryOfInputPipes = minMemoryOfInputPipes;
     	this.telemetryPort = telemetryPort;
-    	this.maxResponseSize = 20_000; //for 500 mult db call in JSON format
-    	this.pipelineBits = 19;
+    	this.pipelineBits = 15;//max concurrent in flight database requests 1<<pipelineBits
+    	            
+    	this.dbCallMaxResponseCount = c*2;//1<<6;
+    	this.jsonMaxResponseCount = c*2;//1<<14;
     	
+    	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
+    	this.jsonMaxResponseSize = 1<<8;
+
+    	this.maxQueueOut = 4;   	
+    	this.maxConnectionBits = 14; //16K connections, for test plus overhead
+    	
+    	this.maxRequestSize = 1<<9;
+    	    	
     	if (!"127.0.0.1".equals(System.getProperty("host",null))) { 
     		    		
 	    	if (null!=dbHost) {
@@ -99,26 +123,48 @@ public class FrameworkTest implements GreenApp {
 	    	}    	
     	}
     	
-	    	options = new PgPoolOptions()
-	    			.setPort(connectionPort)
-	    			.setPipeliningLimit(1<<pipelineBits)
-	    			.setTcpFastOpen(true)
-	    			.setHost(connectionHost)
-	    			.setDatabase(connectionDB)
-	    			.setUser(connectionUser)
-	    			.setPassword(connectionPassword)
-	    			.setCachePreparedStatements(true)
-	    			.setMaxSize(connectionsPerTrack);	    	
 	    		
     	try {
-	    	///early check to know if we have a database or not,
+    		options = new PgPoolOptions()
+    				.setPort(connectionPort)
+    				.setPipeliningLimit(1<<pipelineBits)
+    				.setTcpFastOpen(true)
+    				.setHost(connectionHost)
+    				.setDatabase(connectionDB)
+    				.setUser(connectionUser)
+    				.setIdleTimeout(20)
+    				.setPassword(connectionPassword)
+    				.setCachePreparedStatements(true)
+    				.setMaxSize(connectionsPerTrack);	    	
+
+    		///early check to know if we have a database or not,
 	    	///this helps testing to know which tests should be run on different boxes.
-	    	PgClient.pool(options).getConnection(a->{
+	    	PgPool pool = PgClient.pool(options);
+			pool.getConnection(a->{
 	    		foundDB.set(a.succeeded());
-	    		a.result().close();
+	    		if (null!=a.result()) {
+	    			a.result().close();
+	    		}
 	    	});
+			pool.close();
+	    	
+//	    	pool.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(1), r -> {
+//				if (r.succeeded()) {
+//
+//					PgIterator resultSet = r.result().iterator();
+//					Tuple row = resultSet.next();			        
+//					System.out.println("successfull query");
+//
+//				} else {
+//					System.out.println("fail: "+r.cause().getLocalizedMessage());
+//					 
+//				}		
+//				
+//			});	
+	    	
+	    	
     	} catch (Throwable t) {
-    		t.printStackTrace();
+    		//t.printStackTrace();
     		System.out.println("No database in use");
     	}
     	
@@ -128,14 +174,25 @@ public class FrameworkTest implements GreenApp {
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		//for 14 cores this is expected to use less than 16G
+		framework.setDefaultRate(60_000L);			
+	
+		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
     			 .setHost(host)
-    			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)
-    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
+    			 .setMaxConnectionBits(maxConnectionBits)
+    			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)                //16K   14 bits
+    	
+    			 //TODO: not sure this is optimal..
+    			 .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/4))  //4K    
+    		//	 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
+    			 .disableEPoll()
+ 						 
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
+    			 .setMaxRequestSize(maxRequestSize)
+    	
     			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
-    			 .setMaxResponseSize(maxResponseSize) //big enough for large mult db response
+    			 .setMaxQueueOut(maxQueueOut)
+    			 .setMaxResponseSize(dbCallMaxResponseSize) //big enough for large mult db response
     	         .useInsecureServer(); //turn off TLS
 
 		framework.defineRoute()
@@ -176,42 +233,43 @@ public class FrameworkTest implements GreenApp {
 		
 		if (telemetryPort>0) {
 			framework.enableTelemetry(host,telemetryPort);
+		} else {
+			framework.enableTelemetryLogging();
 		}
-		
-		
-		ServerSocketWriterStage.lowLatency = false; //turn on high volume mode, less concerned about low latency. 
-	
+				
+		framework.setTimerPulseRate(60 * 1000);//1x per minute
     }
+
 
 	public void parallelBehavior(GreenRuntime runtime) {
 
-		SimpleRest restTest = new SimpleRest(runtime);
-		
+
+		SimpleRest restTest = new SimpleRest(runtime, jsonMaxResponseCount, jsonMaxResponseSize);		
 		runtime.registerListener("Simple", restTest)
 		       .includeRoutes(Struct.PLAINTEXT_ROUTE, restTest::plainRestRequest)
 		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);
 		 
 
-		DBRest dbRestInstance = new DBRest(runtime, options, pipelineBits, maxResponseCount, maxResponseSize);
-		runtime.registerListener("DBRest", dbRestInstance)
+		DBRest dbRestInstance = new DBRest(runtime, options, pipelineBits, dbCallMaxResponseCount, dbCallMaxResponseSize);
+		runtime.registerListener("DBReadWrite", dbRestInstance)
 				.includeRoutes(Struct.DB_SINGLE_ROUTE, dbRestInstance::singleRestRequest)
 				.includeRoutes(Struct.DB_MULTI_ROUTE_TEXT, dbRestInstance::multiRestRequest)		
-		        .includeRoutes(Struct.DB_MULTI_ROUTE_INT, dbRestInstance::multiRestRequest);
-
-		
-		DBUpdate dbUpdateInstance = new DBUpdate(runtime, options, pipelineBits, maxResponseCount, maxResponseSize);
-		runtime.registerListener("DBUpdate", dbUpdateInstance)
-		        .includeRoutes(Struct.UPDATES_ROUTE_TEXT, dbUpdateInstance::updateRestRequest)
-		        .includeRoutes(Struct.UPDATES_ROUTE_INT,  dbUpdateInstance::updateRestRequest);
-		
-		FortuneRest fortuneInstance = new FortuneRest(runtime, options, pipelineBits, maxResponseCount, maxResponseSize);
-		runtime.registerListener("Fortune", fortuneInstance)
-		        .includeRoutes(Struct.FORTUNES_ROUTE, fortuneInstance::restRequest);	
+		        .includeRoutes(Struct.DB_MULTI_ROUTE_INT, dbRestInstance::multiRestRequest)
+				.includeRoutes(Struct.UPDATES_ROUTE_TEXT, dbRestInstance::updateRestRequest)
+				.includeRoutes(Struct.UPDATES_ROUTE_INT,  dbRestInstance::updateRestRequest)
+		        .includeRoutes(Struct.FORTUNES_ROUTE, dbRestInstance::restFortuneRequest);	
 		
 	}
 	 
     @Override
-    public void declareBehavior(GreenRuntime runtime) { 
+    public void declareBehavior(GreenRuntime runtime) {
+    	
+    	//log the telemetry snapshot upon every pulse
+    	final GreenCommandChannel cmd = runtime.newCommandChannel();    	
+    	runtime.addTimePulseListener("log",(t,i)->{
+    		cmd.logTelemetrySnapshot();
+    	});
+    	
     }
   
 }

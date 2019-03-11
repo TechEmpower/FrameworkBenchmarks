@@ -10,7 +10,7 @@ World::World()
 }
 
 World::World(const World &other)
-    : TAbstractModel(), d(new WorldObject(*other.d))
+    : TAbstractModel(), d(other.d)
 { }
 
 World::World(const WorldObject &object)

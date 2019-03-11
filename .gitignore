@@ -95,3 +95,7 @@ dependency-reduced-pom.xml
 .dart_tool/
 *.packages
 pubspec.lock
+
+# Gradle
+.gradle/
+build/

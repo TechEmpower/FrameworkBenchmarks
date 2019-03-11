@@ -90,7 +90,6 @@ typedef struct {
 	h2o_timeout_t h2o_timeout;
 } db_state_t;
 
-void connect_to_database(thread_context_t *ctx);
 int execute_query(thread_context_t *ctx, db_query_param_t *param);
 void free_database_state(h2o_loop_t *loop, db_state_t *db_state);
 void initialize_database_state(h2o_loop_t *loop, db_state_t *db_state);

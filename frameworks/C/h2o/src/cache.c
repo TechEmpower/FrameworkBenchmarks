@@ -22,12 +22,16 @@
 #include <h2o/cache.h>
 
 #include "cache.h"
+#include "error.h"
 #include "utility.h"
 
-static h2o_cache_t *get_cache(cache_t *cache, h2o_cache_hashcode_t keyhash)
+// Increasing the number of caches by the following factor reduces contention; must be a power of 2.
+#define CONCURRENCY_FACTOR 4
+
+static size_t get_index(size_t n, h2o_cache_hashcode_t keyhash)
 {
-	assert(is_power_of_2(cache->cache_num));
-	return cache->cache[keyhash & (cache->cache_num - 1)];
+	assert(is_power_of_2(n));
+	return keyhash & (n - 1);
 }
 
 int cache_create(size_t concurrency,
@@ -36,62 +40,104 @@ int cache_create(size_t concurrency,
                  void (*destroy_cb)(h2o_iovec_t value),
                  cache_t *cache)
 {
-	int ret = EXIT_SUCCESS;
-
 	memset(cache, 0, sizeof(*cache));
+	assert(is_power_of_2(CONCURRENCY_FACTOR));
 	// Rounding up to a power of 2 simplifies the calculations a little bit, and, as any increase in
 	// the number of caches, potentially reduces thread contention.
-	cache->cache_num = round_up_to_power_of_2(concurrency);
+	cache->cache_num = CONCURRENCY_FACTOR * round_up_to_power_of_2(concurrency);
 	cache->cache_num = MAX(cache->cache_num, 1);
 	capacity = (capacity + cache->cache_num - 1) / cache->cache_num;
+
+	pthread_mutexattr_t attr;
+
+	if (pthread_mutexattr_init(&attr))
+		return EXIT_FAILURE;
+
+	if (pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ADAPTIVE_NP))
+		goto error;
+
 	cache->cache = malloc(cache->cache_num * sizeof(*cache->cache));
 
-	if (cache->cache)
-		for (size_t i = 0; i < cache->cache_num; i++) {
-			cache->cache[i] = h2o_cache_create(H2O_CACHE_FLAG_MULTITHREADED,
-			                                   capacity,
-			                                   duration,
-			                                   destroy_cb);
+	if (!cache->cache)
+		goto error;
 
-			if (!cache->cache[i]) {
-				cache->cache_num = i;
-				cache_destroy(cache);
-				cache->cache = NULL;
-				ret = EXIT_FAILURE;
-				break;
-			}
+	cache->cache_lock = malloc(cache->cache_num * sizeof(*cache->cache_lock));
+
+	if (!cache->cache_lock)
+		goto error_malloc;
+
+	for (size_t i = 0; i < cache->cache_num; i++) {
+		cache->cache[i] = h2o_cache_create(0, capacity, duration, destroy_cb);
+
+		if (!cache->cache[i] || pthread_mutex_init(cache->cache_lock + i, &attr)) {
+			if (cache->cache[i])
+				h2o_cache_destroy(cache->cache[i]);
+
+			cache->cache_num = i;
+			cache_destroy(cache);
+			goto error;
 		}
-	else
-		ret = EXIT_FAILURE;
+	}
 
-	return ret;
+	pthread_mutexattr_destroy(&attr);
+	return EXIT_SUCCESS;
+error_malloc:
+	free(cache->cache);
+error:
+	pthread_mutexattr_destroy(&attr);
+	return EXIT_FAILURE;
 }
 
 void cache_destroy(cache_t *cache)
 {
 	if (cache->cache) {
-		for (size_t i = 0; i < cache->cache_num; i++)
+		assert(cache->cache_lock);
+
+		for (size_t i = 0; i < cache->cache_num; i++) {
 			h2o_cache_destroy(cache->cache[i]);
+			pthread_mutex_destroy(cache->cache_lock + i);
+		}
 
 		free(cache->cache);
+		free(cache->cache_lock);
+		cache->cache = NULL;
+		cache->cache_lock = NULL;
 	}
+	else
+		assert(!cache->cache_lock);
 }
 
 h2o_cache_ref_t *cache_fetch(cache_t *cache, uint64_t now, h2o_iovec_t key)
 {
 	const h2o_cache_hashcode_t keyhash = h2o_cache_calchash(key.base, key.len);
+	const size_t idx = get_index(cache->cache_num, keyhash);
+	pthread_mutex_t * const mutex = cache->cache_lock + idx;
 
-	return h2o_cache_fetch(get_cache(cache, keyhash), now, key, keyhash);
+	CHECK_ERROR(pthread_mutex_lock, mutex);
+
+	h2o_cache_ref_t * const ret = h2o_cache_fetch(cache->cache[idx], now, key, keyhash);
+
+	CHECK_ERROR(pthread_mutex_unlock, mutex);
+	return ret;
 }
 
 void cache_release(cache_t *cache, h2o_cache_ref_t *ref)
 {
-	h2o_cache_release(get_cache(cache, h2o_cache_calchash(ref->key.base, ref->key.len)), ref);
+	const size_t idx = get_index(cache->cache_num, h2o_cache_calchash(ref->key.base, ref->key.len));
+
+	h2o_cache_release(cache->cache[idx], ref);
 }
 
 int cache_set(uint64_t now, h2o_iovec_t key, h2o_iovec_t value, cache_t *cache)
 {
 	const h2o_cache_hashcode_t keyhash = h2o_cache_calchash(key.base, key.len);
+	const size_t idx = get_index(cache->cache_num, keyhash);
+	pthread_mutex_t * const mutex = cache->cache_lock + idx;
 
-	return h2o_cache_set(get_cache(cache, keyhash), now, key, keyhash, value);
+	CHECK_ERROR(pthread_mutex_lock, mutex);
+
+	const int ret = h2o_cache_set(cache->cache[idx], now, key, keyhash, value);
+
+	CHECK_ERROR(pthread_mutex_unlock, mutex);
+	return ret;
 }
