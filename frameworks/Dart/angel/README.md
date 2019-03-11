@@ -6,8 +6,8 @@ a full-featured framework for Dart, to the
 ## Versions
 The `pubspec.lock` file is included; so that dependencies are kept consistent between deployments.
 The tests included in this benchmark are a demonstration of:
-* [Dart SDK version 2.0.0](http://www.dartlang.org/)
-* [Angel Framework version `^2.0.0-alpha`](https://pub.dartlang.org/packages/angel_framework/versions/2.0.0-alpha.1)
+* [Dart SDK version 2.2.0](http://www.dartlang.org/)
+* [Angel Framework version `^2.0.0-alpha.22`](https://pub.dartlang.org/packages/angel_framework/versions/2.0.0-alpha.22)
 
 ## Test URLs
 ### JSON
