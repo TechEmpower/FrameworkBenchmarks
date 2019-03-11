@@ -100,28 +100,3 @@ If your framework uses SQLAlchemy, Flask may be enough to know performance of SQ
 ### Interpreter
 
 Consider Python 3 first. -- Python 3 is mainstream for web development.
-
-### Server
-
-Try Gunicorn + Meinheld first. All WSGI apps in this benchmark uses it. You can compare
-your framework performance with others.
-
-### Files you should provide
-
-You can see Flask's files to know how to write new test.
-
-`requirements.txt` is standard way to define depending libraries.
-
-`install.sh` is executed before running test.  You should create virtualenv on `$TROOT/py2`
-(or py3 for Python 3 and pypy for PyPy).  Then `$TROOT/py2/bin/pip install -r requirements.txt`.
-virtualenv is installed on Python 2 and PyPy.  Use `$IROOT/py3/bin/python3 -m venv $TROOT/py3`
-for Python 3.
-
-You can set environment variables within `install.sh` or within `setup.sh`.
-
-`bechmark_config` is json file to define test.
-See [here](https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Codebase-Framework-Files#benchmark-config-file).
-
-`setup_py2.sh` is used to run test on Python 2.  `gunicorn_conf.py` is configuration for gunicorn.
-`setup_py2.sh` and `gunicorn_conf.py` are written as generic as possible.
-You may be able to use it with changing wsgi callable.  (`$PY2_GUNICORN wsgimodule:callable -c gunicorn_conf.py`)
