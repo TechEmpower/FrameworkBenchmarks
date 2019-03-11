@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2018 Anton Valentinov Kirilov
+ Copyright (c) 2019 Anton Valentinov Kirilov
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,28 +17,12 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CACHE_H_
+#ifndef JSON_SERIALIZER_H_
 
-#define CACHE_H_
+#define JSON_SERIALIZER_H_
 
-#include <pthread.h>
-#include <stdint.h>
-#include <h2o/cache.h>
+#include <h2o.h>
 
-typedef struct {
-	h2o_cache_t **cache;
-	pthread_mutex_t *cache_lock;
-	size_t cache_num;
-} cache_t;
+int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req);
 
-int cache_create(size_t concurrency,
-                 size_t capacity,
-                 uint64_t duration,
-                 void (*destroy_cb)(h2o_iovec_t value),
-                 cache_t *cache);
-void cache_destroy(cache_t *cache);
-h2o_cache_ref_t *cache_fetch(cache_t *cache, uint64_t now, h2o_iovec_t key);
-void cache_release(cache_t *cache, h2o_cache_ref_t *ref);
-int cache_set(uint64_t now, h2o_iovec_t key, h2o_iovec_t value, cache_t *cache);
-
-#endif // CACHE_H_
+#endif // JSON_SERIALIZER_H_

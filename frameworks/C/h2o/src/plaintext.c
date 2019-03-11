@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2018 Anton Valentinov Kirilov
+ Copyright (c) 2019 Anton Valentinov Kirilov
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,28 +17,23 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CACHE_H_
+#include <h2o.h>
+#include <string.h>
 
-#define CACHE_H_
+#include "plaintext.h"
+#include "request_handler.h"
+#include "utility.h"
 
-#include <pthread.h>
-#include <stdint.h>
-#include <h2o/cache.h>
+int plaintext(struct st_h2o_handler_t *self, h2o_req_t *req)
+{
+	IGNORE_FUNCTION_PARAMETER(self);
 
-typedef struct {
-	h2o_cache_t **cache;
-	pthread_mutex_t *cache_lock;
-	size_t cache_num;
-} cache_t;
+	h2o_generator_t generator;
+	h2o_iovec_t body = {.base = HELLO_RESPONSE, .len = sizeof(HELLO_RESPONSE) - 1};
 
-int cache_create(size_t concurrency,
-                 size_t capacity,
-                 uint64_t duration,
-                 void (*destroy_cb)(h2o_iovec_t value),
-                 cache_t *cache);
-void cache_destroy(cache_t *cache);
-h2o_cache_ref_t *cache_fetch(cache_t *cache, uint64_t now, h2o_iovec_t key);
-void cache_release(cache_t *cache, h2o_cache_ref_t *ref);
-int cache_set(uint64_t now, h2o_iovec_t key, h2o_iovec_t value, cache_t *cache);
-
-#endif // CACHE_H_
+	memset(&generator, 0, sizeof(generator));
+	set_default_response_param(PLAIN, sizeof(HELLO_RESPONSE) - 1, req);
+	h2o_start_response(req, &generator);
+	h2o_send(req, &body, 1, H2O_SEND_STATE_FINAL);
+	return 0;
+}

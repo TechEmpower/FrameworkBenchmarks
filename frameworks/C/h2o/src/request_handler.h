@@ -17,13 +17,12 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef REQUEST_H_
+#ifndef REQUEST_HANDLER_H_
 
-#define REQUEST_H_
+#define REQUEST_HANDLER_H_
 
 #include <h2o.h>
 #include <stdbool.h>
-#include <yajl/yajl_gen.h>
 
 #include "utility.h"
 
@@ -55,4 +54,4 @@ void set_default_response_param(content_type_t content_type,
                                 size_t content_length,
                                 h2o_req_t *req);
 
-#endif // REQUEST_H_
+#endif // REQUEST_HANDLER_H_
