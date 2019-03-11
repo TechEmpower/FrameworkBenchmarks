@@ -68,7 +68,7 @@ if (cluster.isMaster) {
   app.set('views', __dirname + '/views');
 
   // Routes
-  app.get('/mysql-orm', async (req, res) => {
+  app.get('/mysql-orm-query', async (req, res) => {
     const results = [],
       queries = Math.min(parseInt(req.query.queries) || 1, 500);
 
@@ -83,7 +83,19 @@ if (cluster.isMaster) {
     }
 
     res.setHeader("Content-Type", "application/json");
-    res.send(results.length > 1 ? results : results[0]);
+    res.send(results);
+  });
+
+  app.get('/mysql-orm', async (req, res) => {
+    const world = await World.findOne({
+      where: {
+        id: Math.floor(Math.random() * 10000) + 1
+      }
+    }
+    );
+
+    res.setHeader("Content-Type", "application/json");
+    res.send(world)
   });
 
   app.get('/mysql-orm-fortune', (req, res) => {

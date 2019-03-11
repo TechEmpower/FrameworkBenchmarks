@@ -1,27 +1,20 @@
-FROM golang:1.10.1
+FROM golang:1.11.4
 
-RUN apt update -yqq && apt install unzip
+RUN apt-get update -yqq
 
 ADD ./ /aah
 WORKDIR /aah
 
-RUN mkdir bin
 ENV GOPATH /aah
 ENV PATH ${GOPATH}/bin:${PATH}
+ENV GO111MODULE on
 
-RUN curl -sL -o install_glide.sh https://glide.sh/get
-RUN sh install_glide.sh
+RUN curl -sL https://aahframework.org/install-cli | bash -s v0.13.3
 
-WORKDIR src/benchmark
-RUN glide -v
-RUN glide install
+WORKDIR /aah/src/benchmark
 
-RUN curl -sL -o /tmp/aah-linux-amd64.zip  https://cdn.aahframework.org/releases/cli/0.12.1/aah-linux-amd64.zip
-RUN unzip -q /tmp/aah-linux-amd64.zip -d ${GOPATH}/bin/
-
-RUN aah -v
-RUN aah -y migrate code
+RUN aah --version
 RUN mkdir -p views/common
-RUN aah build -s
+RUN aah build --single
 
-CMD build/bin/benchmark -profile bm_postgresql
+CMD build/bin/benchmark run --envprofile bm_postgresql

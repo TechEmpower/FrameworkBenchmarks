@@ -7,4 +7,4 @@ COPY ktor-asyncdb/gradlew gradlew
 COPY ktor-asyncdb/settings.gradle settings.gradle
 COPY ktor-asyncdb/src src
 RUN /app/gradlew --no-daemon shadowJar
-CMD ["java", "-server", "-jar", "/app/build/libs/bench.jar", "reactive-pg"]
+CMD ["java", "-server", "-XX:+UseParallelGC", "-Xms2G","-Xmx2G", "-jar", "/app/build/libs/bench.jar", "reactive-pg"]

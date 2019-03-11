@@ -54,15 +54,13 @@ func fetchFromWorld(id: String?) -> [String:Any] {
 func updateOneFromWorld() -> [String: Any] {
 
     var returnObj = [String: Any]()
+    let worldToUpdate = fetchFromWorld(id: nil)
     let rand = numGenerator.random() % 10000 + 1
-    let rand2 = numGenerator.random() % 10000 + 1
+    let id: String = worldToUpdate["id"] as! String
 
-    let _ = p.exec(statement: "UPDATE world SET randomNumber = \(rand) WHERE id = \(rand2)")
+    let _ = p.exec(statement: "UPDATE world SET randomNumber = \(rand) WHERE id = \(id)")
 
-    // let checkIfCorrect = fetchFromWorld(id: String(describing: rand2))
-
-    //The exec statement for update doesn't return the updated values. I used to checkIfCorrect variable to confirm that the updates were taking place.
-    returnObj["id"] = rand2
+    returnObj["id"] = id
     returnObj["randomNumber"] = rand
 
     return returnObj

@@ -25,6 +25,7 @@ namespace PlatformBenchmarks
             Console.WriteLine(BenchmarkApplication.Paths.Fortunes);
             Console.WriteLine(BenchmarkApplication.Paths.SingleQuery);
             Console.WriteLine(BenchmarkApplication.Paths.Updates);
+            Console.WriteLine(BenchmarkApplication.Paths.MultipleQueries);
             DateHeader.SyncDateTimer();
             BatchUpdateString.Initalize();
 

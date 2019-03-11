@@ -6,8 +6,8 @@ development platforms. The test utilizes Hexagon routes, serialization and datab
 
 ## Tests
 
-* [Hexagon Web](/src/main/kotlin/Benchmark.kt)
-* [Hexagon Storage](/src/main/kotlin/BenchmarkStorage.kt)
+* [Hexagon Web](/src/main/kotlin/com/hexagonkt/Benchmark.kt)
+* [Hexagon Storage](/src/main/kotlin/com/hexagonkt/BenchmarkStorage.kt)
 
 ## Infrastructure Software Versions
 
@@ -39,9 +39,3 @@ and `${TEMPLATE_ENGINE}` with: `pebble`
 * Fortunes: http://localhost:8080/${DB_ENGINE}/${TEMPLATE_ENGINE}/fortunes
 * Database updates: http://localhost:8080/${DB_ENGINE}/update
 * Database queries: http://localhost:8080/${DB_ENGINE}/query
-
-## Run inside vagrant
-
-Follow instructions at: https://github.com/TechEmpower/FrameworkBenchmarks#quick-start-guide-vagrant
-
-And run: `rm -rf ~/FrameworkBenchmarks/results` to clear tests results.

@@ -46,9 +46,6 @@ static void *run_thread(void *arg)
 
 	initialize_thread_context(arg, false, &ctx);
 	set_thread_memory_allocation_policy(ctx.config->thread_num);
-	// This is just an optimization, so that the application does not try to
-	// establish database connections in the middle of servicing requests.
-	connect_to_database(&ctx);
 	event_loop(&ctx);
 	free_thread_context(&ctx);
 	pthread_exit(NULL);

@@ -2,15 +2,15 @@ package common
 
 import (
 	"encoding/json"
-	"flag"
 	"log"
 	"math/rand"
 	"net"
 	"sort"
 	"sync"
 
-	"github.com/valyala/fasthttp"
 	"templates"
+
+	"github.com/valyala/fasthttp"
 )
 
 const worldRowCount = 10000
@@ -24,13 +24,19 @@ type World struct {
 	RandomNumber int32 `json:"randomNumber"`
 }
 
-var listenAddr = flag.String("listenAddr", ":8080", "Address to listen to")
+type Worlds []World
 
 func JSONHandler(ctx *fasthttp.RequestCtx) {
 	r := jsonResponsePool.Get().(*JSONResponse)
+	defer jsonResponsePool.Put(r)
 	r.Message = "Hello, World!"
-	JSONMarshal(ctx, r)
-	jsonResponsePool.Put(r)
+	rb, err := r.MarshalJSON()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	ctx.SetContentType("application/json")
+	ctx.Write(rb)
 }
 
 var jsonResponsePool = &sync.Pool{
@@ -65,8 +71,8 @@ func GetQueriesCount(ctx *fasthttp.RequestCtx) int {
 	return n
 }
 
-func GetListener() net.Listener {
-	ln, err := net.Listen("tcp4", *listenAddr)
+func GetListener(listenAddr string) net.Listener {
+	ln, err := net.Listen("tcp4", listenAddr)
 	if err != nil {
 		log.Fatal(err)
 	}

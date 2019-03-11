@@ -17,78 +17,18 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <assert.h>
 #include <h2o.h>
-#include <stdalign.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <string.h>
 #include <yajl/yajl_gen.h>
 
-#include "error.h"
 #include "fortune.h"
+#include "json_serializer.h"
+#include "plaintext.h"
 #include "request_handler.h"
 #include "thread.h"
 #include "utility.h"
 #include "world.h"
-
-#define HELLO_RESPONSE "Hello, World!"
-
-static int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req);
-static int plaintext(struct st_h2o_handler_t *self, h2o_req_t *req);
-static const char *status_code_to_string(http_status_code_t status_code);
-
-static int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req)
-{
-	IGNORE_FUNCTION_PARAMETER(self);
-
-	thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
-	                                                      event_loop.h2o_ctx,
-	                                                      req->conn->ctx);
-	json_generator_t * const gen = get_json_generator(&ctx->json_generator,
-	                                                  &ctx->json_generator_num);
-	// volatile is used to ensure that the object is instantiated every time
-	// the function is called.
-	const volatile struct {
-		const char *message;
-	} object = {HELLO_RESPONSE};
-
-	if (gen) {
-		CHECK_YAJL_STATUS(yajl_gen_map_open, gen->gen);
-		CHECK_YAJL_STATUS(yajl_gen_string, gen->gen, YAJL_STRLIT("message"));
-		CHECK_YAJL_STATUS(yajl_gen_string,
-		                  gen->gen,
-		                  (const unsigned char *) object.message,
-		                  strlen(object.message));
-		CHECK_YAJL_STATUS(yajl_gen_map_close, gen->gen);
-
-		// The response is small enough, so that it is simpler to copy it
-		// instead of doing a delayed deallocation of the JSON generator.
-		if (!send_json_response(gen, true, req))
-			return 0;
-
-error_yajl:
-		// If there is a problem with the generator, don't reuse it.
-		free_json_generator(gen, NULL, NULL, 0);
-	}
-
-	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
-	return 0;
-}
-
-static int plaintext(struct st_h2o_handler_t *self, h2o_req_t *req)
-{
-	IGNORE_FUNCTION_PARAMETER(self);
-
-	h2o_generator_t generator;
-	h2o_iovec_t body = {.base = HELLO_RESPONSE, .len = sizeof(HELLO_RESPONSE) - 1};
-
-	memset(&generator, 0, sizeof(generator));
-	set_default_response_param(PLAIN, sizeof(HELLO_RESPONSE) - 1, req);
-	h2o_start_response(req, &generator);
-	h2o_send(req, &body, 1, H2O_SEND_STATE_FINAL);
-	return 0;
-}
 
 static const char *status_code_to_string(http_status_code_t status_code)
 {
