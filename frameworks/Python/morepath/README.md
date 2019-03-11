@@ -1,7 +1,7 @@
 # [Morepath](http://morepath.readthedocs.io/) Benchmark Test
 
 The information below is specific to Morepath. For further guidance,
-review the [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
+review the [documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki).
 Also note that there is additional information that's provided in
 the [Python README](../).
 
