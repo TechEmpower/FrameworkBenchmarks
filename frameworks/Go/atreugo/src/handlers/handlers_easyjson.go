@@ -9,11 +9,11 @@ func JSONHandlerEasyJSON(ctx *atreugo.RequestCtx) error {
 	message := MessagePool.Get().(*Message)
 	ctx.SetContentType("application/json")
 	message.Message = "Hello, World!"
-	message_bytes, err := message.MarshalJSON()
+	messageBytes, err := message.MarshalJSON()
 	if err != nil {
 		return err
 	}
-	_, err = ctx.Write(message_bytes)
+	_, err = ctx.Write(messageBytes)
 	MessagePool.Put(message)
 	return err
 }
