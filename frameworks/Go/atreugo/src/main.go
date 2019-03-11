@@ -27,12 +27,19 @@ func main() {
 	bindHost := flag.String("bind", ":8080", "set bind host")
 	prefork := flag.Bool("prefork", false, "use prefork")
 	child := flag.Bool("child", false, "is child proc")
-	// dbDriver := flag.String("db", "none", "db connection driver [values: pgx || none]")
-	// dbConnectionString := flag.String("db_connection_string",
-	// 	"host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world sslmode=disable",
-	// 	"db connection string")
+	dbDriver := flag.String("db", "none", "db connection driver [values: pgx || none]")
+	dbConnectionString := flag.String("db_connection_string",
+		"host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world sslmode=disable",
+		"db connection string")
 	flag.Parse()
 
+	// init database with appropriate driver
+	db, err := storage.InitDB(*dbDriver, *dbConnectionString)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// init atreugo server
 	server := atreugo.New(&atreugo.Config{
 		Compress: false,
 	})
@@ -40,8 +47,15 @@ func main() {
 	// init handlers
 	server.Path("GET", "/plaintext", handlers.PlaintextHandler)
 	server.Path("GET", "/json", handlers.JSONHandlerEasyJSON)
-
-	var err error
+	if db != nil {
+		defer db.Close()
+		server.Path("GET", "/fortune", handlers.FortuneHandlerPool(db))
+		server.Path("GET", "/fortune-quick", handlers.FortuneQuickHandlerPool(db))
+		server.Path("GET", "/db", handlers.DBHandlerEasyJSON(db))
+		server.Path("GET", "/queries", handlers.QueriesHandlerEasyJSON(db))
+		server.Path("GET", "/update", handlers.UpdateHandlerEasyJSON(db))
+	}
+	// check for prefork
 	var listener net.Listener
 	if *prefork {
 		listener, err = doPrefork(*child, *bindHost)

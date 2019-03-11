@@ -2,7 +2,7 @@
 
 This is the go portion of a [benchmarking test suite](https://www.techempower.com/benchmarks/) comparing a variety of web development platforms.
 
-"Atreugo is a fast http package for Go."
+"Atreugo is a micro-framework to make simple the use of routing and middlewares in fasthttp."
 
 ## Test URLs
 
