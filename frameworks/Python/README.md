@@ -2,7 +2,7 @@
 
 The information below contains information specific to Python. 
 For further guidance, review the 
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
+[documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki).
 
 ## Infrastructure Software Versions
 
@@ -120,7 +120,7 @@ for Python 3.
 You can set environment variables within `install.sh` or within `setup.sh`.
 
 `bechmark_config` is json file to define test.
-See [here](http://frameworkbenchmarks.readthedocs.org/en/latest/Codebase/Framework-Files/#benchmark-config-file).
+See [here](https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Codebase-Framework-Files#benchmark-config-file).
 
 `setup_py2.sh` is used to run test on Python 2.  `gunicorn_conf.py` is configuration for gunicorn.
 `setup_py2.sh` and `gunicorn_conf.py` are written as generic as possible.

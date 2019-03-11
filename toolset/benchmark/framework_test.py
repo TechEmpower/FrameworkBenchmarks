@@ -149,7 +149,7 @@ class FrameworkTest:
                     result == 'pass' for (result, reason, url) in results)
 
                 def output_result(result, reason, url):
-                    specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
+                    specific_rules_url = "https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#specific-test-requirements"
                     color = Fore.GREEN
                     if result.upper() == "WARN":
                         color = Fore.YELLOW
