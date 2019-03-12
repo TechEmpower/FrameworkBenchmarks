@@ -1,4 +1,4 @@
-# [go-std](https://github.com/kataras/iris) (GoLang) Benchmarking Test
+# [go-std](GoLang) Benchmarking Test
 
 This is the go portion of a [benchmarking test suite](https://www.techempower.com/benchmarks/) comparing a variety of web development platforms.
 
