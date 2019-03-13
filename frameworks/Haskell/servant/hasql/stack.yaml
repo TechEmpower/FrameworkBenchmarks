@@ -2,5 +2,6 @@ resolver: lts-13.10
 packages:
 - '.'
 
-flags: {}
-extra-package-dbs: []
+# the following flags are meant for use with ../servant-mysql-haskell.dockerfile
+compiler: ghc-8.6.3 # this MUST match the resolver's GHC; minor hack to ensure GHC isn't downloaded into sandbox.
+allow-different-user: true # carryover from hasql sibling test dir
