@@ -4,7 +4,7 @@ import (
 	"atreugo/src/storage"
 	"log"
 
-	"github.com/savsgio/atreugo"
+	"github.com/savsgio/atreugo/v7"
 )
 
 // JSONHandlerEasyJSON . Test 1: JSON serialization
