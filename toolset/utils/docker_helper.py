@@ -28,7 +28,7 @@ class DockerHelper:
             base_url=self.benchmarker.config.database_docker_host)
 
     def __build(self, base_url, path, build_log_file, log_prefix, dockerfile,
-                tag):
+                tag, buildargs={}):
         '''
         Builds docker containers using docker-py low-level api
         '''
@@ -44,9 +44,7 @@ class DockerHelper:
                     forcerm=True,
                     timeout=3600,
                     pull=True,
-                    buildargs=({
-                      'BENCHMARK_ENV': self.benchmarker.config.results_environment
-                    })
+                    buildargs=buildargs
                 )
                 buffer = ""
                 for token in output:
@@ -117,7 +115,12 @@ class DockerHelper:
         log_prefix = "%s: " % test.name
 
         # Build the test image
-        test_docker_file = "%s.dockerfile" % test.name
+        test_docker_file = '%s.dockerfile' % test.name
+        if hasattr(test, 'dockerfile'):
+            test_docker_file = test.dockerfile
+        test_database = ''
+        if hasattr(test, 'database'):
+            test_database = test.database
         build_log_file = build_log_dir
         if build_log_dir is not os.devnull:
             build_log_file = os.path.join(
@@ -131,8 +134,13 @@ class DockerHelper:
                 log_prefix=log_prefix,
                 path=test.directory,
                 dockerfile=test_docker_file,
-                tag="techempower/tfb.test.%s" % test_docker_file.replace(
-                    ".dockerfile", ""))
+                buildargs=({
+                    'BENCHMARK_ENV':
+                        self.benchmarker.config.results_environment,
+                    'TFB_TEST_NAME': test.name,
+                    'TFB_TEST_DATABASE': test_database
+                }),
+                tag="techempower/tfb.test.%s" % test.name)
         except Exception:
             return 1
 
@@ -182,9 +190,14 @@ class DockerHelper:
                 'soft': 99
             }]
 
+            docker_cmd = ''
+            if hasattr(test, 'docker_cmd'):
+                docker_cmd = test.docker_cmd
+
             container = self.server.containers.run(
                 "techempower/tfb.test.%s" % test.name,
                 name=name,
+                command=docker_cmd,
                 network=self.benchmarker.config.network,
                 network_mode=self.benchmarker.config.network_mode,
                 stderr=True,

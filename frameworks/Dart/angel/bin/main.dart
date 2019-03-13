@@ -2,11 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 import 'package:angel_framework/angel_framework.dart';
+import 'package:angel_framework/http.dart';
 import 'package:args/args.dart';
 import 'package:dart_angel_benchmark/dart_angel_benchmark.dart'
     as dart_angel_benchmark;
+import 'main.reflectable.dart';
 
 main(List<String> args) async {
+  initializeReflectable();
   var argParser = ArgParser()
     ..addOption('type',
         abbr: 't', allowed: ['mongo', 'postgres'], defaultsTo: 'mongo');
