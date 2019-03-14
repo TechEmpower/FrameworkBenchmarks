@@ -2,7 +2,7 @@
 
 The information below contains information specific to Nancy on Mono and CoreCLR. 
 For further guidance, review the 
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
+[documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki). 
 Also note the additional information provided in the [CSharp README](../).
 
 This is the Nancy on Mono and CoreCLR portion of a [benchmarking test suite](../../) 

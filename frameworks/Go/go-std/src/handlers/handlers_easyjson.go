@@ -92,7 +92,7 @@ func UpdateHandlerEasyJSON(db storage.DB) func(w http.ResponseWriter, r *http.Re
 		for i := 0; i < queries; i++ {
 			_ = db.GetOneRandomWorld(&worlds[i])
 		}
-		if err := db.UpdateWorlds(worlds, queries); err != nil {
+		if err := db.UpdateWorlds(worlds); err != nil {
 			log.Println(err)
 			return
 		}

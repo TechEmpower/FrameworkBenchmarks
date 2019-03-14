@@ -86,7 +86,13 @@ func mainHandler(ctx *fasthttp.RequestCtx) {
 func dbHandler(ctx *fasthttp.RequestCtx) {
 	var w common.World
 	fetchRandomWorld(&w)
-	common.JSONMarshal(ctx, &w)
+	wb, err := w.MarshalJSON()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	ctx.SetContentType("application/json")
+	ctx.Write(wb)
 }
 
 func queriesHandler(ctx *fasthttp.RequestCtx) {
@@ -95,7 +101,13 @@ func queriesHandler(ctx *fasthttp.RequestCtx) {
 	for i := 0; i < n; i++ {
 		fetchRandomWorld(&worlds[i])
 	}
-	common.JSONMarshal(ctx, worlds)
+	wb, err := common.Worlds(worlds).MarshalJSON()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	ctx.SetContentType("application/json")
+	ctx.Write(wb)
 }
 
 func fortuneHandler(ctx *fasthttp.RequestCtx) {
@@ -149,7 +161,13 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 		log.Fatalf("Error when commiting world rows: %s", err)
 	}
 
-	common.JSONMarshal(ctx, worlds)
+	wb, err := common.Worlds(worlds).MarshalJSON()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	ctx.SetContentType("application/json")
+	ctx.Write(wb)
 }
 
 func fetchRandomWorld(w *common.World) {

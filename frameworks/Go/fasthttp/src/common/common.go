@@ -24,11 +24,19 @@ type World struct {
 	RandomNumber int32 `json:"randomNumber"`
 }
 
+type Worlds []World
+
 func JSONHandler(ctx *fasthttp.RequestCtx) {
 	r := jsonResponsePool.Get().(*JSONResponse)
+	defer jsonResponsePool.Put(r)
 	r.Message = "Hello, World!"
-	JSONMarshal(ctx, r)
-	jsonResponsePool.Put(r)
+	rb, err := r.MarshalJSON()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	ctx.SetContentType("application/json")
+	ctx.Write(rb)
 }
 
 var jsonResponsePool = &sync.Pool{

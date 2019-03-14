@@ -66,7 +66,7 @@ func (mysql MySQL) GetOneRandomWorld(w *World) error {
 }
 
 // UpdateWorlds updates some number of worlds entries, passed as arg
-func (mysql MySQL) UpdateWorlds(selectedWorlds []World, queries int) error {
+func (mysql MySQL) UpdateWorlds(selectedWorlds []World) error {
 	// against deadlocks
 	sort.Slice(selectedWorlds, func(i, j int) bool {
 		return selectedWorlds[i].ID < selectedWorlds[j].ID

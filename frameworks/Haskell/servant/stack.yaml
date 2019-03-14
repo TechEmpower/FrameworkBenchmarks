@@ -1,9 +1,6 @@
-resolver: lts-6.5
+resolver: lts-13.10
 packages:
 - '.'
-
-extra-deps:
-- hasql-pool-0.4.1
 
 flags: {}
 extra-package-dbs: []

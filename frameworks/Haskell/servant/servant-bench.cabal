@@ -19,21 +19,21 @@ library
   exposed-modules:     ServantBench
   -- other-modules:
   -- other-extensions:
-  build-depends:       base >=4.8 && <4.9
-                     , servant == 0.7.*
-                     , servant-server == 0.7.*
-                     , servant-lucid == 0.7.*
+  build-depends:       base >=4.8
+                     , servant >= 0.7
+                     , servant-server >= 0.7
+                     , servant-lucid >= 0.7
                      , lucid
-                     , aeson == 0.11.*
-                     , hasql == 0.19.*
-                     , hasql-pool == 0.4.*
-                     , bytestring == 0.10.6.*
-                     , mwc-random == 0.13.*
-                     , warp == 3.2.*
+                     , aeson >= 0.11
+                     , hasql >= 0.19
+                     , hasql-pool >= 0.4
+                     , bytestring >= 0.10.6
+                     , mwc-random >= 0.13
+                     , warp >= 3.2
                      , transformers
-                     , text == 1.2.*
-                     , contravariant == 1.4.*
-                     , http-media == 0.6.*
+                     , text >= 1.2
+                     , contravariant >= 1.4
+                     , http-media >= 0.6
   hs-source-dirs:      src
   default-language:    Haskell2010
 
