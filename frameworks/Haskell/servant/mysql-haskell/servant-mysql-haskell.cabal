@@ -4,7 +4,6 @@ version:             0.1.0.0
 -- description:
 homepage:            https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Haskell/servant/mysql-haskell
 license:             BSD3
-license-file:        LICENSE
 author:              Naushadh
 maintainer:          naushadh@protonmail.com
 copyright:           2019 Naushadh
