@@ -99,3 +99,6 @@ pubspec.lock
 # Gradle
 .gradle/
 build/
+
+# haskell
+.stack-work
