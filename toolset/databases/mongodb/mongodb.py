@@ -4,7 +4,7 @@ import traceback
 from colorama import Fore
 from toolset.utils.output_helper import log
 
-class Mongodb:
+class Database:
     description = "A popular document-store database"
 
     @staticmethod
