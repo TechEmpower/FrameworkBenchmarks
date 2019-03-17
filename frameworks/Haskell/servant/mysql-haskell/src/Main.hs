@@ -28,7 +28,7 @@ import qualified Data.Pool                  as Pool
 import qualified Database.MySQL.Base        as MySQL
 import qualified System.IO.Streams          as Streams
 import qualified Html
-import           Html ((#))
+import           Html ((#), type (#), type (>))
 import qualified Network.Wai.Handler.Warp   as Warp
 import           Network.HTTP.Media         ((//), (/:))
 import           Servant
@@ -218,8 +218,6 @@ selectFortunes conn = do
     _ -> Left err
 {-# INLINE selectFortunes #-}
 
-type (>) a b = a Html.> b
-type (#) a b = a Html.# b
 type FortunesHtml
   = (('Html.DOCTYPE Html.> ())
   # ('Html.Html

@@ -32,7 +32,7 @@ import           Hasql.Pool                 (Pool, acquire, release, use)
 import qualified Hasql.Statement            as HasqlStatement
 import           Hasql.Session              (statement)
 import qualified Html
-import           Html ((#))
+import           Html ((#), type (#), type (>))
 import qualified Network.Wai.Handler.Warp   as Warp
 import           Network.HTTP.Media         ((//), (/:))
 import           Servant
@@ -164,8 +164,6 @@ multipleDb pool gen mQueryId = do
 
 -- * Test 4: Fortunes
 
-type (>) a b = a Html.> b
-type (#) a b = a Html.# b
 type FortunesHtml
   = (('Html.DOCTYPE Html.> ())
   # ('Html.Html
