@@ -4,6 +4,8 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeOperators         #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE UndecidableInstances  #-}
 
 module Main (main) where
 
@@ -25,21 +27,22 @@ import           GHC.Generics               (Generic)
 import qualified Data.Pool                  as Pool
 import qualified Database.MySQL.Base        as MySQL
 import qualified System.IO.Streams          as Streams
-import qualified Lucid
+import qualified Html
+import           Html ((#))
 import qualified Network.Wai.Handler.Warp   as Warp
-import           Network.HTTP.Media         ((//))
+import           Network.HTTP.Media         ((//), (/:))
 import           Servant
-import           Servant.HTML.Lucid         (HTML)
 import           System.Random.MWC          (GenIO, createSystemRandom,
                                              uniformR)
 import qualified GHC.Conc
 import           System.Environment (getArgs)
+import qualified Data.List.NonEmpty as NE
 
 type API =
        "json" :> Get '[JSON] Aeson.Value
   :<|> "db" :> Get '[JSON] World
   :<|> "queries" :> QueryParam "queries" Count :> Get '[JSON] [World]
-  :<|> "fortune" :> Get '[HTML] (Lucid.Html ())
+  :<|> "fortune" :> Get '[HTML] FortunesHtml
   :<|> "updates" :> QueryParam "queries" Count :> Get '[JSON] [World]
   :<|> "plaintext" :> Get '[Plain] LBS.ByteString
 
@@ -130,6 +133,17 @@ instance Accept Plain where contentType _ = "text" // "plain"
 instance MimeRender Plain LBS.ByteString where
   mimeRender _ = id
   {-# INLINE mimeRender #-}
+  
+-- * HTML
+-- TODO: package the following block of code into a library akin to 'servant-lucid'
+
+data HTML
+instance Accept HTML where
+    contentTypes _ =
+      "text" // "html" /: ("charset", "utf-8") NE.:|
+      ["text" // "html"]
+instance Html.Document a => MimeRender HTML a where
+    mimeRender _ = Html.renderByteString
 
 ------------------------------------------------------------------------------
 
@@ -204,23 +218,51 @@ selectFortunes conn = do
     _ -> Left err
 {-# INLINE selectFortunes #-}
 
-fortunes :: DbPool -> Handler (Lucid.Html ())
+type (>) a b = a Html.> b
+type (#) a b = a Html.# b
+type FortunesHtml
+  = (('Html.DOCTYPE Html.> ())
+  # ('Html.Html
+    > (('Html.Head > ('Html.Title > Html.Raw Text))
+      # ('Html.Body
+        > ('Html.Table
+          > (
+              ('Html.Tr
+              > ( ('Html.Th > Html.Raw Text)
+                # ('Html.Th > Html.Raw Text)
+                )
+              )
+            # ['Html.Tr
+              > ( ('Html.Td > Int)
+                # ('Html.Td > Text)
+                )
+              ]
+            )
+          )
+        )
+      )
+    )
+  )
+
+fortunes :: DbPool -> Handler FortunesHtml
 fortunes pool = do
   r <- liftIO $ Pool.withResource pool selectFortunes
   case r of
     Left e -> throwError err500 { errBody = LBS.fromStrict . TextEnc.encodeUtf8 . Text.pack . show $ e }
     Right fs -> return $ do
       let new = Fortune 0 "Additional fortune added at request time."
-      Lucid.doctypehtml_ $ do
-        Lucid.head_ $ Lucid.title_ "Fortunes"
-        Lucid.body_ $ do
-          Lucid.table_ $ do
-            Lucid.tr_ $ do
-              Lucid.th_ "id"
-              Lucid.th_ "message"
-            mapM_ (\f -> Lucid.tr_ $ do
-              Lucid.td_ (Lucid.toHtml . show $ fId f)
-              Lucid.td_ (Lucid.toHtml $ fMessage f)) (sortOn fMessage (new : fs))
+      let header = Html.tr_ $ Html.th_ (Html.Raw "id") # Html.th_ (Html.Raw "message")
+      let mkRow f = Html.tr_ $ Html.td_ (fromIntegral $ fId f) # Html.td_ (fMessage f)
+      let rows = fmap mkRow $ sortOn fMessage (new : fs)
+      Html.doctype_ #
+        Html.html_ (
+          Html.head_ (
+            Html.title_ (Html.Raw "Fortunes")
+          ) #
+          Html.body_ ( Html.table_ $
+            header # rows
+          )
+        )
 {-# INLINE fortunes #-}
 
 -- * Test 5: Updates
