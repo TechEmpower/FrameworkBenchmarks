@@ -65,8 +65,8 @@ public class FrameworkTest implements GreenApp {
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    	//default port for test 
     		 c,         //pipes per track
-    		 c*4,       //(router to module)
-    		 1<<11,     //default total size of network buffer used by blocks 
+    		 c*16,       //(router to module)
+    		 1<<12,     //default total size of network buffer used by blocks 
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
@@ -96,13 +96,13 @@ public class FrameworkTest implements GreenApp {
     	this.telemetryPort = telemetryPort;
     	this.pipelineBits = 15;//max concurrent in flight database requests 1<<pipelineBits
     	            
-    	this.dbCallMaxResponseCount = c*2;//1<<6;
-    	this.jsonMaxResponseCount = c*2;//1<<14;
+    	this.dbCallMaxResponseCount = c;
+    	this.jsonMaxResponseCount = c*32;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<8;
 
-    	this.maxQueueOut = 4;   	
+    	this.maxQueueOut = 8;   	
     	this.maxConnectionBits = 14; //16K connections, for test plus overhead
     	
     	this.maxRequestSize = 1<<9;
