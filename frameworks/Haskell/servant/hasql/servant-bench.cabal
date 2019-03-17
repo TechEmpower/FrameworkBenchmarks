@@ -22,8 +22,7 @@ library
   build-depends:       base >=4.8
                      , servant >= 0.7
                      , servant-server >= 0.7
-                     , servant-lucid >= 0.7
-                     , lucid
+                     , type-of-html
                      , aeson >= 0.11
                      , hasql >= 0.19
                      , hasql-pool >= 0.4
