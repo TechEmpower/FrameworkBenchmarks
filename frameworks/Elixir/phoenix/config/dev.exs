@@ -23,7 +23,6 @@ config :hello, Hello.Endpoint,
   ]
 
 config :hello, Hello.Repo,
-  adapter: Ecto.Adapters.Postgres,
   username: "benchmarkdbuser",
   password: "benchmarkdbpass",
   database: "hello_world",
