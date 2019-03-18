@@ -238,8 +238,7 @@ public class FrameworkTest implements GreenApp {
 		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);		 
 
 		DBRest dbRestInstance = new DBRest(runtime, options, pipelineBits, 
-				                           dbCallMaxResponseCount, dbCallMaxResponseSize,
-				                           1, 10000);		
+				                           dbCallMaxResponseCount, dbCallMaxResponseSize);		
 		
 		runtime.registerListener("DBReadWrite", dbRestInstance)
 				.includeRoutes(Struct.DB_SINGLE_ROUTE, dbRestInstance::singleRestRequest)
