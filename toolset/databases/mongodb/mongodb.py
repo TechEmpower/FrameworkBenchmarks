@@ -5,7 +5,6 @@ from colorama import Fore
 from toolset.utils.output_helper import log
 
 class Database:
-    description = "A popular document-store database"
 
     @staticmethod
     def get_current_world_table(config):

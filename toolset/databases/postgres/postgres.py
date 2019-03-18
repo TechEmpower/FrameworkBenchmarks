@@ -5,8 +5,7 @@ import traceback
 from colorama import Fore
 from toolset.utils.output_helper import log
 
-class Postgres:
-    description = "An advanced SQL database with a larger feature set than MySQL"
+class Database:
 
     @staticmethod
     def get_current_world_table(config):

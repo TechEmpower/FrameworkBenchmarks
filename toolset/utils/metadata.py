@@ -12,7 +12,7 @@ class Metadata:
 
     supported_dbs = []
     for name in databases:
-        supported_dbs.append((name, databases[name].description))
+        supported_dbs.append((name, '...'))
 
     def __init__(self, benchmarker=None):
         self.benchmarker = benchmarker

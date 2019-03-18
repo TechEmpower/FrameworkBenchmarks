@@ -6,7 +6,6 @@ from colorama import Fore
 from toolset.utils.output_helper import log
 
 class Database:
-    description = "One of the most popular databases around the web and in TFB"
 
     @staticmethod
     def get_current_world_table(config):

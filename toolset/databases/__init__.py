@@ -11,6 +11,8 @@ db_folders = glob("/FrameworkBenchmarks/toolset/databases/*/")
 # Loads all the databases from the folders in this directory
 # and checks to see if they've implemented the required methods
 for folder in db_folders:
+    # regex that grabs the characters between "toolset/database/"
+    # and the final "/" in the db folder string to get the db name
     db_name = re.findall(r'.+\/(.+)\/$', folder, re.M)[0]
     db = imp.load_source("Database", "%s%s.py" % (folder, db_name))
 
