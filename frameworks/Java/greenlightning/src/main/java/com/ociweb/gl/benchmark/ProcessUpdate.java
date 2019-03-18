@@ -105,12 +105,18 @@ public class ProcessUpdate {
 								
 								if (0 == outstanding.decrementAndGet()) {
 									//call update for all the query updates...
-																	
+																		
 									List<Tuple> args = new ArrayList<Tuple>();
 									toUpdate.forEach(w-> {										
-										args.add(Tuple.of(worldObject.getResult(), worldObject.getId()));										
+										args.add(Tuple.of(w.getResult(), w.getId()));										
+									});
+									Collections.sort(args, (a,b) -> {
+										return Integer.compare( ((Tuple)a).getInteger(0),
+														        ((Tuple)b).getInteger(0));
+									
 									});
 									
+									System.out.println("call for update to "+args.size());
 							        pm.pool().preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
 							        		args, ar -> {	
 							        			
@@ -127,6 +133,7 @@ public class ProcessUpdate {
 										toUpdate.forEach(w->{
 											w.setStatus(status);
 										});
+										System.out.println("finished update for "+toUpdate.size()+" status "+status);
 										
 							        });
 								}
