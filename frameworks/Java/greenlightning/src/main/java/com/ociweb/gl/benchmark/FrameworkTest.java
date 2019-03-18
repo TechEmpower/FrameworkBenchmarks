@@ -147,22 +147,7 @@ public class FrameworkTest implements GreenApp {
 	    		}
 	    	});
 			pool.close();
-	    	
-//	    	pool.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(1), r -> {
-//				if (r.succeeded()) {
-//
-//					PgIterator resultSet = r.result().iterator();
-//					Tuple row = resultSet.next();			        
-//					System.out.println("successfull query");
-//
-//				} else {
-//					System.out.println("fail: "+r.cause().getLocalizedMessage());
-//					 
-//				}		
-//				
-//			});	
-	    	
-	    	
+
     	} catch (Throwable t) {
     		//t.printStackTrace();
     		System.out.println("No database in use");
@@ -182,9 +167,10 @@ public class FrameworkTest implements GreenApp {
     			 .setMaxConnectionBits(maxConnectionBits)
     			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)                //16K   14 bits
     	
-    			 //TODO: not sure this is optimal..
+    			 //NOTE: not sure this is optimal yet ...
     			 .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/4))  //4K    
     		//	 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
+    			 
     			 .disableEPoll()
  						 
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
@@ -244,13 +230,17 @@ public class FrameworkTest implements GreenApp {
 	public void parallelBehavior(GreenRuntime runtime) {
 
 
+		
+		
 		SimpleRest restTest = new SimpleRest(runtime, jsonMaxResponseCount, jsonMaxResponseSize);		
 		runtime.registerListener("Simple", restTest)
 		       .includeRoutes(Struct.PLAINTEXT_ROUTE, restTest::plainRestRequest)
-		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);
-		 
+		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);		 
 
-		DBRest dbRestInstance = new DBRest(runtime, options, pipelineBits, dbCallMaxResponseCount, dbCallMaxResponseSize);
+		DBRest dbRestInstance = new DBRest(runtime, options, pipelineBits, 
+				                           dbCallMaxResponseCount, dbCallMaxResponseSize,
+				                           1, 10000);		
+		
 		runtime.registerListener("DBReadWrite", dbRestInstance)
 				.includeRoutes(Struct.DB_SINGLE_ROUTE, dbRestInstance::singleRestRequest)
 				.includeRoutes(Struct.DB_MULTI_ROUTE_TEXT, dbRestInstance::multiRestRequest)		

@@ -16,7 +16,8 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 	private final ProcessQuery processQuery;
 	private final transient PoolManager pm;
 	
-	public DBRest(GreenRuntime runtime, PgPoolOptions options, int pipelineBits, int maxResponseCount, int maxResponseSize) {
+	public DBRest(GreenRuntime runtime, PgPoolOptions options, int pipelineBits, 
+			      int maxResponseCount, int maxResponseSize, int updateStart, int updateLimit) {
 		
 		pm = new PoolManager(options);
 		
@@ -26,7 +27,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 				                maxResponseCount, 
 				                maxResponseSize);
 		
-		processUpdate = new ProcessUpdate(pipelineBits, service, pm);
+		processUpdate = new ProcessUpdate(pipelineBits, service, pm);		
 		processFortune = new ProcessFortune(pipelineBits, service, pm);
 		processQuery = new ProcessQuery(pipelineBits, service, pm);
 		
