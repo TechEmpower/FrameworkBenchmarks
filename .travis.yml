@@ -31,8 +31,8 @@ env:
     - "TESTLANG=Elixir"
     - "TESTLANG=Erlang"
     - "TESTLANG=FSharp"
-    - 'TESTDIR="Go/aah Go/chi Go/falcore Go/gin Go/goji Go/kami Go/martini Go/revel Go/webgo"'
-    - 'TESTDIR="Go/beego Go/echo"'
+    - 'TESTDIR="Go/chi Go/gin Go/goji Go/aah Go/beego Go/echo"'
+    - 'TESTDIR="Go/falcore Go/kami Go/martini Go/revel Go/webgo"'
     - 'TESTDIR="Go/evio Go/fasthttp Go/go-std Go/iris Go/atreugo Go/gramework"'
     - "TESTLANG=Groovy"
     - "TESTDIR=Haskell/snap"
