@@ -1,9 +1,6 @@
 # Welcome to [TechEmpower Framework Benchmarks (TFB)](http://www.techempower.com/benchmarks/)
 
 [![Build Status](https://travis-ci.org/TechEmpower/FrameworkBenchmarks.svg?branch=master)](https://travis-ci.org/TechEmpower/FrameworkBenchmarks)
-[![Documentation Status](https://readthedocs.org/projects/frameworkbenchmarks/badge/?version=latest)](https://readthedocs.org/projects/frameworkbenchmarks/?badge=latest)
-[![Issue Stats](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks/badge/issue?style=flat)](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks)
-[![Issue Stats](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks/badge/pr?style=flat)](http://www.issuestats.com/github/TechEmpower/FrameworkBenchmarks)
 
 If you're new to the project, welcome! Please feel free to ask questions [here](https://github.com/TechEmpower/FrameworkBenchmarks/issues/2978). We encourage new frameworks and contributors to ask questions. We're here to help!
 
