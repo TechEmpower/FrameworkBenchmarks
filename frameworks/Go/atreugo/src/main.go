@@ -10,7 +10,7 @@ import (
 	"atreugo/src/storage"
 	"atreugo/src/templates"
 
-	"github.com/savsgio/atreugo"
+	"github.com/savsgio/atreugo/v7"
 )
 
 func initPools() {
