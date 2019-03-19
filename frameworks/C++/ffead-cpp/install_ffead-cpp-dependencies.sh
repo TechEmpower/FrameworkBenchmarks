@@ -3,7 +3,7 @@
 cd $IROOT
 
 apt update -yqq
-apt install -yqq unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev apache2 apache2-dev libapr1-dev libaprutil1-dev memcached libmemcached-dev redis-server libssl-dev zlib1g-dev
+apt install -yqq autoconf-archive unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev apache2 apache2-dev libapr1-dev libaprutil1-dev memcached libmemcached-dev redis-server libssl-dev zlib1g-dev cmake make
 
 service apache2 stop
 service memcached stop
@@ -22,7 +22,7 @@ mysql-connector-odbc-5.3.11-linux-ubuntu16.04-x86-64bit/bin/myodbc-installer -d 
 wget -q https://github.com/mongodb/mongo-c-driver/releases/download/1.4.0/mongo-c-driver-1.4.0.tar.gz
 tar xf mongo-c-driver-1.4.0.tar.gz
 cd mongo-c-driver-1.4.0/ && \
-    ./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup && \
+    ./configure --disable-automatic-init-and-cleanup && \
     make && make install
 
 
@@ -30,5 +30,5 @@ wget https://github.com/redis/hiredis/archive/v0.13.3.tar.gz
 tar xvf v0.13.3.tar.gz
 cd hiredis-0.13.3/
 make
-PREFIX=${IROOT}/ make install
+PREFIX=/usr make install
 	
