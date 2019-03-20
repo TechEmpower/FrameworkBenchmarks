@@ -17,4 +17,4 @@ RUN aah --version
 RUN mkdir -p views/common
 RUN aah build --single
 
-CMD build/bin/benchmark run --envprofile bm_default
+CMD build/bin/benchmark run --envprofile bm_mysql
