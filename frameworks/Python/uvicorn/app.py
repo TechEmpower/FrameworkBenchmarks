@@ -113,7 +113,7 @@ async def multiple_database_queries(scope, receive, send):
     """
     Test type 3: Multiple database queries
     """
-    num_queries = get_num_queries(self.scope)
+    num_queries = get_num_queries(scope)
     row_ids = [randint(1, 10000) for _ in range(num_queries)]
     worlds = []
 
@@ -156,11 +156,11 @@ async def fortunes(scope, receive, send):
     })
 
 
-async def database_updates(self, receive, send):
+async def database_updates(scope, receive, send):
     """
     Test type 5: Database updates
     """
-    num_queries = get_num_queries(self.scope)
+    num_queries = get_num_queries(scope)
     updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
@@ -182,7 +182,7 @@ async def database_updates(self, receive, send):
     })
 
 
-async def plaintext(self, receive, send):
+async def plaintext(scope, receive, send):
     """
     Test type 6: Plaintext
     """
