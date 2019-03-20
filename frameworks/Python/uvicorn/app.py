@@ -75,175 +75,147 @@ def get_num_queries(scope):
     return query_count
 
 
-class JSONSerialization:
+async def json_serialization(scope, receive, send):
     """
     Test type 1: JSON Serialization
     """
-    def __init__(self, scope):
-        pass
-
-    async def __call__(self, receive, send):
-        content = json_dumps({'message': 'Hello, world!'}).encode('utf-8')
-        await send(JSON_RESPONSE)
-        await send({
-            'type': 'http.response.body',
-            'body': content,
-            'more_body': False
-        })
+    content = json_dumps({'message': 'Hello, world!'}).encode('utf-8')
+    await send(JSON_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
+    })
 
 
-class SingleDatabaseQuery:
+async def single_database_query(scope, receive, send):
     """
     Test type 2: Single database object
     """
-    def __init__(self, scope):
-        pass
+    row_id = randint(1, 10000)
+    connection = await pool.acquire()
+    try:
+        number = await connection.fetchval(READ_ROW_SQL, row_id)
+        world = {'id': row_id, 'randomNumber': number}
+    finally:
+        await pool.release(connection)
 
-    async def __call__(self, receive, send):
-        row_id = randint(1, 10000)
-        connection = await pool.acquire()
-        try:
-            number = await connection.fetchval(READ_ROW_SQL, row_id)
-            world = {'id': row_id, 'randomNumber': number}
-        finally:
-            await pool.release(connection)
-
-        content = json_dumps(world).encode('utf-8')
-        await send(JSON_RESPONSE)
-        await send({
-            'type': 'http.response.body',
-            'body': content,
-            'more_body': False
-        })
+    content = json_dumps(world).encode('utf-8')
+    await send(JSON_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
+    })
 
 
-
-class MultipleDatabaseQueries:
+async def multiple_database_queries(scope, receive, send):
     """
     Test type 3: Multiple database queries
     """
-    def __init__(self, scope):
-        self.scope = scope
+    num_queries = get_num_queries(self.scope)
+    row_ids = [randint(1, 10000) for _ in range(num_queries)]
+    worlds = []
 
-    async def __call__(self, receive, send):
-        num_queries = get_num_queries(self.scope)
-        row_ids = [randint(1, 10000) for _ in range(num_queries)]
-        worlds = []
+    connection = await pool.acquire()
+    try:
+        statement = await connection.prepare(READ_ROW_SQL)
+        for row_id in row_ids:
+            number = await statement.fetchval(row_id)
+            worlds.append({'id': row_id, 'randomNumber': number})
+    finally:
+        await pool.release(connection)
 
-        connection = await pool.acquire()
-        try:
-            statement = await connection.prepare(READ_ROW_SQL)
-            for row_id in row_ids:
-                number = await statement.fetchval(row_id)
-                worlds.append({'id': row_id, 'randomNumber': number})
-        finally:
-            await pool.release(connection)
-
-        content = json_dumps(worlds).encode('utf-8')
-        await send(JSON_RESPONSE)
-        await send({
-            'type': 'http.response.body',
-            'body': content,
-            'more_body': False
-        })
+    content = json_dumps(worlds).encode('utf-8')
+    await send(JSON_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
+    })
 
 
-class Fortunes:
+async def fortunes(scope, receive, send):
     """
     Test type 4: Fortunes
     """
-    def __init__(self, scope):
-        pass
+    connection = await pool.acquire()
+    try:
+        fortunes = await connection.fetch('SELECT * FROM Fortune')
+    finally:
+        await pool.release(connection)
 
-    async def __call__(self, receive, send):
-        connection = await pool.acquire()
-        try:
-            fortunes = await connection.fetch('SELECT * FROM Fortune')
-        finally:
-            await pool.release(connection)
-
-        fortunes.append(ADDITIONAL_ROW)
-        fortunes.sort(key=key)
-        content = template.render(fortunes=fortunes).encode('utf-8')
-        await send(HTML_RESPONSE)
-        await send({
-            'type': 'http.response.body',
-            'body': content,
-            'more_body': False
-        })
+    fortunes.append(ADDITIONAL_ROW)
+    fortunes.sort(key=key)
+    content = template.render(fortunes=fortunes).encode('utf-8')
+    await send(HTML_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
+    })
 
 
-class DatabaseUpdates:
+async def database_updates(self, receive, send):
     """
     Test type 5: Database updates
     """
-    def __init__(self, scope):
-        self.scope = scope
+    num_queries = get_num_queries(self.scope)
+    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
-    async def __call__(self, receive, send):
-        num_queries = get_num_queries(self.scope)
-        updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
-        worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
+    connection = await pool.acquire()
+    try:
+        statement = await connection.prepare(READ_ROW_SQL)
+        for row_id, _ in updates:
+            await statement.fetchval(row_id)
+        await connection.executemany(WRITE_ROW_SQL, updates)
+    finally:
+        await pool.release(connection)
 
-        connection = await pool.acquire()
-        try:
-            statement = await connection.prepare(READ_ROW_SQL)
-            for row_id, _ in updates:
-                await statement.fetchval(row_id)
-            await connection.executemany(WRITE_ROW_SQL, updates)
-        finally:
-            await pool.release(connection)
-
-        content = json_dumps(worlds).encode('utf-8')
-        await send(JSON_RESPONSE)
-        await send({
-            'type': 'http.response.body',
-            'body': content,
-            'more_body': False
-        })
+    content = json_dumps(worlds).encode('utf-8')
+    await send(JSON_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
+    })
 
 
-class Plaintext:
+async def plaintext(self, receive, send):
     """
     Test type 6: Plaintext
     """
-    def __init__(self, scope):
-        pass
-
-    async def __call__(self, receive, send):
-        content = b'Hello, world!'
-        await send(PLAINTEXT_RESPONSE)
-        await send({
-            'type': 'http.response.body',
-            'body': content,
-            'more_body': False
-        })
+    content = b'Hello, world!'
+    await send(PLAINTEXT_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
+    })
 
 
-class Handle404:
-    def __init__(self, scope):
-        pass
-
-    async def __call__(self, receive, send):
-        content = b'Not found'
-        await send(PLAINTEXT_RESPONSE)
-        await send({
-            'type': 'http.response.body',
-            'body': content,
-            'more_body': False
-        })
+async def handle_404(scope, receive, send):
+    content = b'Not found'
+    await send(PLAINTEXT_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
+    })
 
 
 routes = {
-    '/json': JSONSerialization,
-    '/db': SingleDatabaseQuery,
-    '/queries': MultipleDatabaseQueries,
-    '/fortunes': Fortunes,
-    '/updates': DatabaseUpdates,
-    '/plaintext': Plaintext,
+    '/json': json_serialization,
+    '/db': single_database_query,
+    '/queries': multiple_database_queries,
+    '/fortunes': fortunes,
+    '/updates': database_updates,
+    '/plaintext': plaintext,
 }
 
 
-def main(scope):
+async def main(scope, receive, send):
     path = scope['path']
-    return routes.get(path, Handle404)(scope)
+    handler = routes.get(path, handle_404)
+    await handler(scope, receive, send)
