@@ -5,6 +5,7 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/fasthttp/router v0.3.3 h1:pbXxvJqqb4PeNIIS//DwOtimK9hYchl33eoVgeIMNM8=
 github.com/fasthttp/router v0.3.3/go.mod h1:lCf2TfRIzs3lgcFUGQah09Wu5BiEHcBPl3vm9QiXNTo=
 github.com/francoispqt/gojay v0.0.0-20190317155732-64fc2cdddab0 h1:RkFZ/6Hc9fBqO3eSAmlLdBfQc4sEHSOg4P/zQRhJQcE=
+github.com/francoispqt/gojay v0.0.0-20190317155732-64fc2cdddab0/go.mod h1:H8Wgri1Asi1VevY3ySdpIK5+KCpqzToVswNq8g2xZj4=
 github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 h1:vr3AYkKovP8uR8AvSGGUK1IDqRa5lAAvEkZG1LKaCRc=
 github.com/jackc/fake v0.0.0-20150926172116-812a484cc733/go.mod h1:WrMFNQdiFJ80sQsxDoMokWK1W5TQtxBFNpzWTD84ibQ=
 github.com/jackc/pgx v3.3.0+incompatible h1:Wa90/+qsITBAPkAZjiByeIGHFcj3Ztu+VzrrIpHjL90=

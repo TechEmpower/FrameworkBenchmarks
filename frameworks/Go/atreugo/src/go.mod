@@ -2,6 +2,7 @@ module atreugo/src
 
 require (
 	github.com/cockroachdb/apd v1.1.0 // indirect
+	github.com/francoispqt/gojay v0.0.0-20190317155732-64fc2cdddab0
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgx v3.3.0+incompatible
 	github.com/kr/pretty v0.1.0 // indirect

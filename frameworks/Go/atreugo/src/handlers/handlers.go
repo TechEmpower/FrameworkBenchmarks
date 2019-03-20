@@ -7,7 +7,7 @@ import (
 
 	"atreugo/src/storage"
 	"atreugo/src/templates"
-	"github.com/francoispqt/gojay"
+
 	"github.com/savsgio/atreugo/v7"
 )
 
@@ -25,20 +25,14 @@ func queriesParam(ctx *atreugo.RequestCtx) int {
 func JSONHandler(ctx *atreugo.RequestCtx) error {
 	message := MessagePool.Get().(*Message)
 	message.Message = "Hello, World!"
-	ctx.SetContentType("application/json")
-	// messageBytes, err := json.Marshal(message)
-	// if err != nil {
-	// 	return err
-	// }
-	// _, err = ctx.Write(messageBytes)
 
-	messageBytes, err := gojay.Marshal(message)
+	ctx.SetContentType("application/json")
+
+	messageBytes, err := json.Marshal(message)
 	if err != nil {
 		return err
 	}
 	_, err = ctx.Write(messageBytes)
-
-	// _ = gojay.NewEncoder(w).Encode(message)
 
 	MessagePool.Put(message)
 	return err
@@ -54,6 +48,7 @@ func DBHandler(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 		}
 
 		ctx.SetContentType("application/json")
+
 		worldBytes, err := json.Marshal(world)
 		if err != nil {
 			return err
@@ -61,7 +56,6 @@ func DBHandler(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 		_, err = ctx.Write(worldBytes)
 
 		storage.WorldPool.Put(world)
-
 		return err
 	}
 }
@@ -71,7 +65,6 @@ func QueriesHandler(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
 
-		// worlds := make([]storage.World, queries)
 		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
 
 		var err error
@@ -187,10 +180,8 @@ func UpdateHandler(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
 		var err error
 
-		// worlds := make([]storage.World, queries)
 		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
 
-		// for _, world := range worlds {
 		for i := 0; i < queries; i++ {
 			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
 				log.Println(err)
