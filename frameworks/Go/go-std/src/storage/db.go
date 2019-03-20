@@ -26,7 +26,6 @@ const (
 
 // DB is interface for
 type DB interface {
-	// GetOneRandomWorld() (World, error)
 	GetOneRandomWorld(*World) error
 	UpdateWorlds([]World) error
 	GetFortunes() ([]templates.Fortune, error)
