@@ -5,6 +5,11 @@
 # is restricted to this project.
 use Mix.Config
 
+config :phoenix, :json_library, Jason
+
+config :hello,
+  ecto_repos: [Hello.Repo]
+
 # Configures the endpoint
 config :hello, Hello.Endpoint,
   url: [host: "localhost"],
@@ -21,4 +26,4 @@ config :logger, :console,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"
