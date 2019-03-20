@@ -7,7 +7,7 @@ import (
 
 	"atreugo/src/storage"
 	"atreugo/src/templates"
-
+	"github.com/francoispqt/gojay"
 	"github.com/savsgio/atreugo/v7"
 )
 
@@ -26,11 +26,20 @@ func JSONHandler(ctx *atreugo.RequestCtx) error {
 	message := MessagePool.Get().(*Message)
 	message.Message = "Hello, World!"
 	ctx.SetContentType("application/json")
-	messageBytes, err := json.Marshal(message)
+	// messageBytes, err := json.Marshal(message)
+	// if err != nil {
+	// 	return err
+	// }
+	// _, err = ctx.Write(messageBytes)
+
+	messageBytes, err := gojay.Marshal(message)
 	if err != nil {
 		return err
 	}
 	_, err = ctx.Write(messageBytes)
+
+	// _ = gojay.NewEncoder(w).Encode(message)
+
 	MessagePool.Put(message)
 	return err
 }
