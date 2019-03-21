@@ -116,7 +116,6 @@ public class ProcessUpdate {
 									
 									});
 									
-									System.out.println("call for update to "+args.size());
 							        pm.pool().preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
 							        		args, ar -> {	
 							        			
@@ -133,8 +132,7 @@ public class ProcessUpdate {
 										toUpdate.forEach(w->{
 											w.setStatus(status);
 										});
-										System.out.println("finished update for "+toUpdate.size()+" status "+status);
-										
+	
 							        });
 								}
 							});	
