@@ -86,7 +86,7 @@ public class FrameworkTest implements GreenApp {
     		             String dbPass) {
     	
     	
-    	this.connectionsPerTrack = 2;
+    	this.connectionsPerTrack = 8;
     	this.connectionPort = 5432;
     	this.bindPort = port;
     	this.host = host;
