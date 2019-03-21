@@ -44,8 +44,7 @@ func QueriesHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
 
-		// worlds := make([]storage.World, queries)
-		worlds := storage.WorldsPool.Get().(storage.Worlds)[:queries]
+		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
 
 		var err error
 		for i := 0; i < queries; i++ {
@@ -55,7 +54,7 @@ func QueriesHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 		}
 
 		ctx.SetContentType("application/json")
-		err = gojay.NewEncoder(ctx).EncodeArray(worlds)
+		err = gojay.NewEncoder(ctx).EncodeArray(storage.Worlds(worlds))
 
 		worlds = worlds[:0]
 		storage.WorldsPool.Put(worlds)
@@ -70,7 +69,7 @@ func UpdateHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
 		var err error
 
-		worlds := storage.WorldsPool.Get().(storage.Worlds)[:queries]
+		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
 
 		for i := 0; i < queries; i++ {
 			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
@@ -83,7 +82,7 @@ func UpdateHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 		}
 
 		ctx.SetContentType("application/json")
-		err = gojay.NewEncoder(ctx).EncodeArray(worlds)
+		err = gojay.NewEncoder(ctx).EncodeArray(storage.Worlds(worlds))
 
 		worlds = worlds[:0]
 		storage.WorldsPool.Put(worlds)
