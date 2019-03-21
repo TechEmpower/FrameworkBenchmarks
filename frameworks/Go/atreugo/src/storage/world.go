@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/francoispqt/gojay"
+	"github.com/tidwall/sjson"
 )
 
 //easyjson:json
@@ -24,6 +25,12 @@ func (w *World) IsNil() bool {
 	return w == nil
 }
 
+// MarshalSJSON marshals the object as json
+func (w World) MarshalSJSON() ([]byte, error) {
+	data, _ := sjson.SetBytesOptions([]byte(`{"id": 0, "randomNumber": 0}`), "id", w.ID, &sjson.Options{Optimistic: true})
+	return sjson.SetBytesOptions(data, "randomNumber", w.RandomNumber, &sjson.Options{Optimistic: true, ReplaceInPlace: true})
+}
+
 //easyjson:json
 type Worlds []World
 
@@ -37,6 +44,17 @@ func (ws Worlds) MarshalJSONArray(enc *gojay.Encoder) {
 // IsNil returns true if the object is nil
 func (ws Worlds) IsNil() bool {
 	return ws == nil
+}
+
+// MarshalSJSON marshals the object as json
+func (ws Worlds) MarshalSJSON() ([]byte, error) {
+	jsonResult := []byte(`[]`)
+
+	for _, w := range ws {
+		jsonResult, _ = sjson.SetBytesOptions(jsonResult, "-1", &w, &sjson.Options{Optimistic: true, ReplaceInPlace: true})
+	}
+
+	return jsonResult, nil
 }
 
 // WorldPool *sync.Pool

@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/francoispqt/gojay"
+	"github.com/tidwall/sjson"
 )
 
 // Message struct
@@ -19,6 +20,12 @@ func (m *Message) MarshalJSONObject(dec *gojay.Encoder) {
 // IsNil returns true if the object is nil
 func (m *Message) IsNil() bool {
 	return m == nil
+}
+
+// MarshalSJSON marshals the object as json
+func (m Message) MarshalSJSON() ([]byte, error) {
+	return sjson.SetBytesOptions([]byte(`{"message": ""}`), "message", m.Message, &sjson.Options{Optimistic: true})
+	// &sjson.Options{Optimistic: true}
 }
 
 // MessagePool *sync.Pool
