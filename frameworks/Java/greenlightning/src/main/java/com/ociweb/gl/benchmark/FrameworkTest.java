@@ -159,7 +159,7 @@ public class FrameworkTest implements GreenApp {
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		framework.setDefaultRate(60_000L);			
+		framework.setDefaultRate(64_000L);			
 	
 		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
@@ -168,8 +168,8 @@ public class FrameworkTest implements GreenApp {
     			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)                //16K   14 bits
     	
     			 //NOTE: not sure this is optimal yet ...
-    			 .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/4))  //4K    
-    		//	 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
+    			// .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/2))  //8K    
+    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
     			 
     			 .disableEPoll()
  						 
@@ -229,9 +229,6 @@ public class FrameworkTest implements GreenApp {
 
 	public void parallelBehavior(GreenRuntime runtime) {
 
-
-		
-		
 		SimpleRest restTest = new SimpleRest(runtime, jsonMaxResponseCount, jsonMaxResponseSize);		
 		runtime.registerListener("Simple", restTest)
 		       .includeRoutes(Struct.PLAINTEXT_ROUTE, restTest::plainRestRequest)
