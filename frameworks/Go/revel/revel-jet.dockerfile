@@ -1,4 +1,4 @@
-FROM golang:1.10.1
+FROM golang:1.12
 
 ADD ./ /revel
 WORKDIR /revel
