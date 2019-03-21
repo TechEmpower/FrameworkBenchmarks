@@ -62,12 +62,16 @@ func main() {
 		dbHandler = handlers.DBHandlerGoJay(db)
 		queriesHandler = handlers.QueriesHandlerGoJay(db)
 		updateHandler = handlers.UpdateHandlerGoJay(db)
+	case "sjson":
+		jsonHandler = handlers.JSONHandlerSJson
+		dbHandler = handlers.DBHandlerSJson(db)
+		queriesHandler = handlers.QueriesHandlerSJson(db)
+		updateHandler = handlers.UpdateHandlerSJson(db)
 	default:
 		jsonHandler = handlers.JSONHandler
 		dbHandler = handlers.DBHandler(db)
 		queriesHandler = handlers.QueriesHandler(db)
 		updateHandler = handlers.UpdateHandler(db)
-
 	}
 
 	// init atreugo server
