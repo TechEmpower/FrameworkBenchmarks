@@ -68,14 +68,14 @@ fi
 
 if [ $1 = "apache" ]
 then
-	sed -i 's|<pool-size>20</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark/config/sdorm.xml
+	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark/config/sdorm.xml
 	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark/config/cache.xml
 	apachectl -D FOREGROUND
 fi
 
 if [ $1 = "nginx" ]
 then
-	sed -i 's|<pool-size>20</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark/config/sdorm.xml
+	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark/config/sdorm.xml
 	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark/config/cache.xml
 	nginx -g 'daemon off;'
 fi

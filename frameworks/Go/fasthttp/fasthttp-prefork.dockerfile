@@ -1,4 +1,4 @@
-FROM golang:1.11.5
+FROM golang:1.12
 
 ADD ./ /fasthttp
 WORKDIR /fasthttp
@@ -15,6 +15,7 @@ RUN go get -u github.com/mailru/easyjson/...
 
 RUN rm -f ./server-mysql
 RUN go generate templates
+# RUN easyjson -all src/common/common.go
 RUN go build -gcflags='-l=4' server-mysql
 
 CMD ./server-mysql -prefork

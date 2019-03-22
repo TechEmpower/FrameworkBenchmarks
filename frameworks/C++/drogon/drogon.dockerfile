@@ -34,7 +34,7 @@ RUN git clone https://github.com/an-tao/drogon
 
 WORKDIR $DROGON_ROOT
 
-RUN git checkout 8829203d0458145a93efae68aa856367e5a5757d
+RUN git checkout 1e1bcbf781d9e2cf3a9d4110ef6fc6875c41a1bd
 
 RUN ./build.sh
 
@@ -42,7 +42,5 @@ WORKDIR $TEST_PATH
 
 RUN cmake ..
 RUN make
-CMD ./drogon_benchmark
-
-
+CMD ./drogon_benchmark config.json
 

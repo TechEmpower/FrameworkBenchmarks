@@ -21,27 +21,6 @@
       "display_name": "codeigniter",
       "notes": "",
       "versus": "php"
-    },
-    "hhvm": {
-      "json_url": "/index.php/bench/json",
-      "db_url": "/index.php/bench/db",
-      "query_url": "/index.php/bench/db/",
-      "fortune_url": "/index.php/bench/fortunes",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "MySQL",
-      "framework": "codeigniter",
-      "language": "PHP",
-      "flavor": "HHVM",
-      "orm": "Raw",
-      "platform": "None",
-      "webserver": "nginx",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "codeigniter_hhvm",
-      "notes": "",
-      "versus": "php"
     }
   }]
 }

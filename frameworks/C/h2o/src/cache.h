@@ -21,6 +21,8 @@
 
 #define CACHE_H_
 
+#include <pthread.h>
+#include <stdint.h>
 #include <h2o/cache.h>
 
 typedef struct {

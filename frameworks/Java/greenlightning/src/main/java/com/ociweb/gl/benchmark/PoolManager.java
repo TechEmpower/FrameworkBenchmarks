@@ -16,24 +16,27 @@ public class PoolManager {
 	}
 		
 	public PgPool pool() {
-		if (null==pool) {
+		if (null==pool) {			
 			pool = PgClient.pool(options);			
 		}
 		lastUsed = System.nanoTime();
 		return pool;
 	}
 	
-	public void clean() {
+	public boolean clean() {
 		//close pool if it has not been used for a while
 		//this gives back some memory and thread resources
 		if (null!=pool) {
-						
 			long duration = System.nanoTime()-lastUsed;
-			if (duration > 60_000_000_000L) {//60 seconds
+			if (duration > 40_000_000_000L) {//40 seconds			
 				pool.close();
-				pool = null;
+				
+				pool = null;	
+				return true;
 			}
+			//System.out.println("clean :"+duration);
 		}
+		return false;
 	}
 	
 }

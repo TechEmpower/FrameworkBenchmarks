@@ -44,6 +44,7 @@ link_libraries(${UUID_LIBRARIES})
 #OpenSSL
 find_package (OpenSSL)
 if(OpenSSL_FOUND)
+    include_directories(${OPENSSL_INCLUDE_DIR})
     link_libraries(${OPENSSL_LIBRARIES})
 endif()
 
@@ -59,6 +60,27 @@ include_directories(${PostgreSQL_INCLUDE_DIR})
 link_libraries(${PostgreSQL_LIBRARIES})
 endif()
 
+#Find mysql, only mariadb client liberary is supported
+find_package(MySQL)
+if(MYSQL_FOUND)
+    message(STATUS "inc:" ${MYSQL_INCLUDE_DIR})
+    message(STATUS "libs:" ${MYSQL_CLIENT_LIBS})
+    message(STATUS "version:" ${MYSQL_VERSION_STRING})
+    if(MYSQL_VERSION_STRING STREQUAL "")
+        message(STATUS "The mysql in your system is not the mariadb, so we can't use it in drogon")
+    else()
+        message(STATUS "Ok! We find the mariadb!")
+        include_directories(${MYSQL_INCLUDE_DIR})
+        link_libraries(${MYSQL_CLIENT_LIBS})
+    endif()
+endif()
+
+#Find sqlite3.
+find_package (SQLite3)
+if (SQLITE3_FOUND)
+  include_directories(${SQLITE3_INCLUDE_DIRS})
+  link_libraries(${SQLITE3_LIBRARIES})
+endif()
 
 AUX_SOURCE_DIRECTORY(./ SRC_DIR)
 AUX_SOURCE_DIRECTORY(controllers CTL_SRC)
@@ -82,3 +104,7 @@ endforeach()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(drogon_benchmark ${SRC_DIR} ${CTL_SRC} ${FILTER_SRC} ${VIEWSRC} ${MODEL_SRC})
+
+add_custom_command(TARGET drogon_benchmark POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                   ${CMAKE_SOURCE_DIR}/*.json $<TARGET_FILE_DIR:drogon_benchmark>)
