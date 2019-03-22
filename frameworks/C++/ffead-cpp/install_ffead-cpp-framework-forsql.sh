@@ -8,7 +8,7 @@ SERV_THREADS=$(( $MAX_THREADS - $WRIT_THREADS ))
 
 cd $IROOT
 
-wget https://github.com/efficient/libcuckoo/archive/master.zip
+wget -q https://github.com/efficient/libcuckoo/archive/master.zip
 unzip master.zip
 rm -f master.zip
 cd libcuckoo-master

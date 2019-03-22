@@ -114,22 +114,29 @@ void TeBkRestController::updateCache() {
 	CacheInterface* cchi = CacheManager::getImpl();
 	DataSourceInterface* sqli = DataSourceManager::getImpl();
 
+	FileBasedLock fl("/tmp/cache.lock");
 	try {
-		std::string tbName = "world";
-		sqli->startSession(&tbName);
-		for (int c = 1; c <= 10000; ++c) {
-			GenericObject id;
-			id << c;
-			TeBkWorld w = sqli->get<TeBkWorld>(id);
-			cchi->setO(CastUtil::lexical_cast<std::string>(c), w);
+		fl.lock();
+		try {
+			std::string tbName = "world";
+			sqli->startSession(&tbName);
+			std::vector<TeBkWorld> wlist = sqli->getAll<TeBkWorld>();
+			sqli->endSession();
+			for (int c = 0; c < (int)wlist.size(); ++c) {
+				TeBkWorld& w = wlist.at(c);
+				cchi->setO(CastUtil::lexical_cast<std::string>(w.getId()), w);
+			}
+			delete sqli;
+			delete cchi;
+		} catch(const std::exception& e) {
+			delete sqli;
+			delete cchi;
+			throw e;
 		}
-		sqli->endSession();
-		delete sqli;
-		delete cchi;
+		fl.unlock();
 	} catch(const std::exception& e) {
-		delete sqli;
-		delete cchi;
-		throw e;
+		//In case of apache/nginx the other child processes need to wait for the cache to be primed
+		//Thread::sSleep(10);
 	}
 }
 
@@ -160,3 +167,4 @@ std::vector<TeBkWorld> TeBkRestController::cachedWorlds(std::string count) {
 		throw e;
 	}
 }
+
