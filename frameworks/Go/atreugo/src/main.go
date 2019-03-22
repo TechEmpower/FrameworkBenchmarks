@@ -6,11 +6,11 @@ import (
 	"net"
 	"runtime"
 
+	"github.com/savsgio/atreugo/v7"
+
 	"atreugo/src/handlers"
 	"atreugo/src/storage"
 	"atreugo/src/templates"
-
-	"github.com/savsgio/atreugo/v7"
 )
 
 func initPools() {
