@@ -19,3 +19,4 @@ RUN go generate templates
 RUN go build -gcflags='-l=4' server-mysql
 
 CMD ./server-mysql
+
