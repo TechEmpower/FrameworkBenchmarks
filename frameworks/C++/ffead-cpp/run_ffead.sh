@@ -19,6 +19,7 @@ service redis-server stop
 service apache2 stop
 service memcached stop
 
+rm -f /tmp/cache.lock
 rm -f web/te-benchmark/config/cache.xml
 
 if [ $2 = "redis" ]

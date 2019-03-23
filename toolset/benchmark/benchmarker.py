@@ -155,8 +155,8 @@ class Benchmarker:
                     break
                 time.sleep(1)
 
-            if hasattr(test, 'wait_before_listen_on_port') and isinstance(test.wait_before_listen_on_port, numbers.Integral) and test.wait_before_listen_on_port > 0:
-                time.sleep(test.wait_before_listen_on_port)
+            if hasattr(test, 'wait_before_sending_requests') and isinstance(test.wait_before_sending_requests, numbers.Integral) and test.wait_before_sending_requests > 0:
+                time.sleep(test.wait_before_sending_requests)
 
             if not accepting_requests:
                 self.docker_helper.stop([container, database_container])

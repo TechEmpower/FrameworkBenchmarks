@@ -234,7 +234,7 @@
 			"display_name": "ffead-cpp-nginx-mongo-redis",
 			"notes": "",
 			"versus": "",
-			"wait_before_listen_on_port": 10
+			"wait_before_sending_requests": 10
 		},
 		"apache-redis": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -253,7 +253,7 @@
 			"display_name": "ffead-cpp-apache-mongo-redis",
 			"notes": "",
 			"versus": "",
-			"wait_before_listen_on_port": 10
+			"wait_before_sending_requests": 10
 		},
 		"memcached": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -290,7 +290,7 @@
 			"display_name": "ffead-cpp-nginx-mongo-memcached",
 			"notes": "",
 			"versus": "",
-			"wait_before_listen_on_port": 10
+			"wait_before_sending_requests": 10
 		},
 		"apache-memcached": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -309,7 +309,7 @@
 			"display_name": "ffead-cpp-apache-mongo-memcached",
 			"notes": "",
 			"versus": "",
-			"wait_before_listen_on_port": 10
+			"wait_before_sending_requests": 10
 		}
 	}]
 }
