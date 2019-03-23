@@ -20,5 +20,5 @@ main = do
     Lib.configUser    = "benchmarkdbuser",
     Lib.configPass    = "benchmarkdbpass",
     Lib.configStripes = numCaps,
-    Lib.configPoolSize= 1
+    Lib.configPoolSize= 512
   }

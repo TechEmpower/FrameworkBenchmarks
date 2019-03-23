@@ -14,7 +14,7 @@ module Lib.Db (
 import qualified Lib.Types as Types
 import qualified Data.Either as Either
 import qualified System.IO.Error as Error
-import           Control.Monad (replicateM)
+import           Control.Monad (replicateM, forM)
 
 import qualified Data.Pool as Pool
 import           Data.ByteString (ByteString)
@@ -132,9 +132,11 @@ updateWorlds _ [] = pure . pure $ mempty
 updateWorlds conn wsUpdates = do
   let ws = fmap updateW wsUpdates
   let qs = fmap mkQ ws
-  PG.sendBatchAndSync conn qs
-  eRowsMany <- replicateM (length qs) $ PG.readNextData conn
-  _ <- PG.waitReadyForQuery conn
+  eRowsMany <- forM qs $ \q -> do
+    PG.sendBatchAndSync conn [q]
+    eRows <- PG.readNextData conn
+    _ <- PG.waitReadyForQuery conn
+    return eRows
   let (errs, _) = Either.partitionEithers eRowsMany
   return $ case errs of
     [] -> pure ws
