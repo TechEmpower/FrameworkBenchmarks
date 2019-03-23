@@ -215,7 +215,8 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-mongo-redis",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"wait_before_sending_requests": 10
 		},
 		"nginx-redis": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -271,7 +272,8 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-mongo-memcached",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"wait_before_sending_requests": 10
 		},
 		"nginx-memcached": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
