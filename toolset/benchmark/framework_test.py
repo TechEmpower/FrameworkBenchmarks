@@ -2,8 +2,6 @@ import os
 import traceback
 from requests import ConnectionError, Timeout
 
-from toolset.utils.output_helper import Logger
-
 # Cross-platform colored text
 from colorama import Fore, Style
 
@@ -32,7 +30,7 @@ class FrameworkTest:
         self.notes = ""
         self.port = ""
         self.versus = ""
-        self.log = Logger().log
+        self.log = benchmarker.log
 
         self.__dict__.update(args)
 
