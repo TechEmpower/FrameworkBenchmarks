@@ -42,9 +42,15 @@ func main() {
 	}
 
 	// init database with appropriate driver
-	db, err := storage.InitDB(*dbDriver, *dbConnectionString)
+	db, err := storage.InitDB(*dbDriver, *dbConnectionString, runtime.NumCPU()*4)
 	if err != nil {
 		log.Fatal(err)
+	}
+	if *child {
+		db, err = storage.InitDB(*dbDriver, *dbConnectionString, runtime.NumCPU())
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	// init handlers

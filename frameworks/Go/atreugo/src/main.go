@@ -6,11 +6,11 @@ import (
 	"net"
 	"runtime"
 
+	"github.com/savsgio/atreugo/v7"
+
 	"atreugo/src/handlers"
 	"atreugo/src/storage"
 	"atreugo/src/templates"
-
-	"github.com/savsgio/atreugo/v7"
 )
 
 func initPools() {
@@ -27,6 +27,7 @@ func main() {
 	bindHost := flag.String("bind", ":8080", "set bind host")
 	prefork := flag.Bool("prefork", false, "use prefork")
 	child := flag.Bool("child", false, "is child proc")
+	jsonEncoder := flag.String("json_encoder", "none", "json encoder: none|easyjson|gojay|sjson")
 	dbDriver := flag.String("db", "none", "db connection driver [values: pgx || none]")
 	dbConnectionString := flag.String("db_connection_string",
 		"host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world sslmode=disable",
@@ -34,9 +35,43 @@ func main() {
 	flag.Parse()
 
 	// init database with appropriate driver
-	db, err := storage.InitDB(*dbDriver, *dbConnectionString)
+	db, err := storage.InitDB(*dbDriver, *dbConnectionString, runtime.NumCPU()*4)
 	if err != nil {
 		log.Fatal(err)
+	}
+	if *child {
+		db, err = storage.InitDB(*dbDriver, *dbConnectionString, runtime.NumCPU())
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	// init json encoders
+	var jsonHandler func(ctx *atreugo.RequestCtx) error
+	var dbHandler func(ctx *atreugo.RequestCtx) error
+	var queriesHandler func(ctx *atreugo.RequestCtx) error
+	var updateHandler func(ctx *atreugo.RequestCtx) error
+	switch *jsonEncoder {
+	case "easyjson":
+		jsonHandler = handlers.JSONHandlerEasyJSON
+		dbHandler = handlers.DBHandlerEasyJSON(db)
+		queriesHandler = handlers.QueriesHandlerEasyJSON(db)
+		updateHandler = handlers.UpdateHandlerEasyJSON(db)
+	case "gojay":
+		jsonHandler = handlers.JSONHandlerGoJay
+		dbHandler = handlers.DBHandlerGoJay(db)
+		queriesHandler = handlers.QueriesHandlerGoJay(db)
+		updateHandler = handlers.UpdateHandlerGoJay(db)
+	case "sjson":
+		jsonHandler = handlers.JSONHandlerSJson
+		dbHandler = handlers.DBHandlerSJson(db)
+		queriesHandler = handlers.QueriesHandlerSJson(db)
+		updateHandler = handlers.UpdateHandlerSJson(db)
+	default:
+		jsonHandler = handlers.JSONHandler
+		dbHandler = handlers.DBHandler(db)
+		queriesHandler = handlers.QueriesHandler(db)
+		updateHandler = handlers.UpdateHandler(db)
 	}
 
 	// init atreugo server
@@ -46,15 +81,16 @@ func main() {
 
 	// init handlers
 	server.Path("GET", "/plaintext", handlers.PlaintextHandler)
-	server.Path("GET", "/json", handlers.JSONHandlerEasyJSON)
+	server.Path("GET", "/json", jsonHandler)
 	if db != nil {
 		defer db.Close()
 		server.Path("GET", "/fortune", handlers.FortuneHandlerPool(db))
 		server.Path("GET", "/fortune-quick", handlers.FortuneQuickHandlerPool(db))
-		server.Path("GET", "/db", handlers.DBHandlerEasyJSON(db))
-		server.Path("GET", "/queries", handlers.QueriesHandlerEasyJSON(db))
-		server.Path("GET", "/update", handlers.UpdateHandlerEasyJSON(db))
+		server.Path("GET", "/db", dbHandler)
+		server.Path("GET", "/queries", queriesHandler)
+		server.Path("GET", "/update", updateHandler)
 	}
+
 	// check for prefork
 	var listener net.Listener
 	if *prefork {
