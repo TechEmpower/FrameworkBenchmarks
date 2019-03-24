@@ -14,14 +14,15 @@
       "database": "Postgres",
       "framework": "Servant",
       "language": "Haskell",
-      "flavor": "GHC710",
+      "flavor": "GHC863",
       "orm": "Raw",
       "platform": "Wai",
       "webserver": "Warp",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "servant+hasql",
-      "notes": "Uses libpq system dependency."
+      "notes": "Uses libpq system dependency.",
+      "dockerfile": "servant.dockerfile"
     },
     "mysql-haskell": {
       "json_url": "/json",
@@ -43,7 +44,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "servant+mysql-haskell",
-      "notes": "Pure Haskell."
+      "notes": "Pure Haskell.",
+      "dockerfile": "servant.dockerfile"
     }
   }]
 }
