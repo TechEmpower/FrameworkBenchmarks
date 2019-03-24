@@ -1,6 +1,7 @@
 resolver: lts-13.13
 
 packages:
+- ./warp-hasql
 - ./warp-postgres-wire
 
 extra-deps:
