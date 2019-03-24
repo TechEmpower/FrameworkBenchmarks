@@ -67,6 +67,9 @@ class TimeLogger:
     def mark_build_start(self):
         self.build_start = time.time()
 
+    def time_since_start(self):
+        return time.time() - self.build_start
+
     def log_build_end(self, log_prefix, file):
         total = int(time.time() - self.build_start)
         self.build_total = self.build_total + total

@@ -1,6 +1,6 @@
 # Amp Framework Benchmarking Test
 
-This is the Amp Framework portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the [Amp Framework](https://github.com/amphp/amp) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ### JSON Encoding Test
 

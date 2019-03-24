@@ -16,13 +16,18 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 	private final ProcessQuery processQuery;
 	private final transient PoolManager pm;
 	
-	public DBRest(GreenRuntime runtime, PgPoolOptions options, int pipelineBits, int maxResponseCount, int maxResponseSize) {
+	public DBRest(GreenRuntime runtime, PgPoolOptions options, int pipelineBits, 
+			      int maxResponseCount, int maxResponseSize) {
 		
 		pm = new PoolManager(options);
 		
-		HTTPResponseService service = runtime.newCommandChannel().newHTTPResponseService(maxResponseCount, maxResponseSize);
-
-		processUpdate = new ProcessUpdate(pipelineBits, service, pm);
+		maxResponseCount = Math.max(maxResponseCount, ((1<<pipelineBits)/20));//match response count to expected db calls
+		
+		HTTPResponseService service = runtime.newCommandChannel().newHTTPResponseService(
+				                maxResponseCount, 
+				                maxResponseSize);
+		
+		processUpdate = new ProcessUpdate(pipelineBits, service, pm);		
 		processFortune = new ProcessFortune(pipelineBits, service, pm);
 		processQuery = new ProcessQuery(pipelineBits, service, pm);
 		
