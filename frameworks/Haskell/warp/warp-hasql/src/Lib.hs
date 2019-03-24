@@ -32,9 +32,8 @@ main dbConfig = do
   dbPool <- Db.mkPool dbConfig
   putStrLn "Initializing PRNG seed..."
   gen <- MWC.create
-  putStrLn "Binding to port 7041..."
+  putStrLn "Warp core online: using hasql"
   Warp.run 7041 $ app gen dbPool
-  putStrLn "Warp core online"
 
 -- router
 app :: MWC.GenIO -> Db.Pool -> Wai.Application

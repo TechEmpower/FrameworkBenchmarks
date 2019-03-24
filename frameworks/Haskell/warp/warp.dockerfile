@@ -14,7 +14,7 @@ RUN stack install --dependencies-only
 ADD ./warp-postgres-wire/ ./warp-postgres-wire
 ADD ./warp-hasql/ ./warp-hasql
 RUN stack build --pedantic --copy-bins
-RUN ln -s ~/.local/bin/warp-hasql ~/.local/bin/warp
+RUN ln -s ~/.local/bin/warp-postgres-wire ~/.local/bin/warp
 
 ARG TFB_TEST_NAME
 ENV TFB_TEST_NAME=${TFB_TEST_NAME}
