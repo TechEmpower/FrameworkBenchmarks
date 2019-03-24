@@ -60,6 +60,7 @@ server pool gen =
 
 run :: Warp.Port -> MySQL.ConnectInfo -> IO ()
 run port dbSettings = do
+  putStrLn "Launching servant mysql-hasql"
   gen <- createSystemRandom
   numCaps <- GHC.Conc.getNumCapabilities
   let mkPool = Pool.createPool (MySQL.connect dbSettings) MySQL.close numCaps 10 512

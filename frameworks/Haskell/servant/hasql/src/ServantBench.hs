@@ -14,7 +14,7 @@ import           Control.Monad              (replicateM)
 import           Control.Monad.IO.Class     (liftIO)
 import           Data.Aeson                 hiding (json)
 import qualified Data.ByteString            as BS
-import           Data.ByteString.Lazy
+import           Data.ByteString.Lazy       (ByteString)
 import qualified Data.ByteString.Lazy.Char8 as LBSC
 import           Data.Functor.Contravariant (contramap)
 import           Data.Either                (fromRight, partitionEithers)
@@ -62,6 +62,7 @@ server pool gen =
 
 run :: Warp.Port -> BS.ByteString -> IO ()
 run port dbSettings = do
+  putStrLn "Launching servant hasql"
   gen <- createSystemRandom
   bracket (acquire settings) release $ \pool ->
     Warp.run port $ serve api $ server pool gen
