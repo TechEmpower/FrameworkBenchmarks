@@ -4,7 +4,7 @@ version: 1.0.0
 dependencies:
   action-controller:
     github: spider-gazelle/action-controller
-    version: "~> 1.1"
+    version: "~> 1.4"
 
   granite:
     github: amberframework/granite

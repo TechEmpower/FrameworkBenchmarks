@@ -4,16 +4,16 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
-RUN apt-get update -yqq  > /dev/null
-RUN apt-get install -yqq wget git unzip libxml2-dev cmake make \
+RUN apt-get update -yqq > /dev/null && \
+    apt-get install -yqq wget git unzip libxml2-dev cmake make \
                     zlibc zlib1g zlib1g-dev libpcre3 libpcre3-dev libargon2-0-dev libsodium-dev \
-                    php7.2 php7.2-common php7.2-dev libphp7.2-embed php7.2-mysql nginx > /dev/null
+                    php7.3 php7.3-common php7.3-dev libphp7.3-embed php7.3-mysql nginx > /dev/null
 
 ADD ./ ./
 
-ENV NGINX_VERSION=1.14.2
+ENV NGINX_VERSION=1.15.8
 
-RUN git clone -b v0.0.14 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
+RUN git clone -b v0.0.16 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 
 RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxf nginx-${NGINX_VERSION}.tar.gz && \

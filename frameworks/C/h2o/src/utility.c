@@ -18,9 +18,11 @@
 */
 
 #include <assert.h>
+#include <inttypes.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <yajl/yajl_gen.h>
 
@@ -44,6 +46,52 @@ void free_json_generator(json_generator_t *gen, list_t **pool, size_t *gen_num, 
 			free(gen);
 		}
 	}
+}
+
+yajl_gen_status gen_integer(int64_t number, char *buf, size_t len, yajl_gen gen)
+{
+	if (!len)
+		return yajl_gen_invalid_number;
+	else if (number == INT64_MIN) {
+		const size_t l = snprintf(buf, len, "%" PRId64, number);
+
+		if (l >= len)
+			return yajl_gen_invalid_number;
+
+		len = l;
+	}
+	else {
+		char *iter = buf + len;
+		const bool negative = number < 0;
+
+		if (negative) {
+			number = -number;
+			buf++;
+		}
+
+		do {
+			if (--iter > buf) {
+				*iter = '0' + number % 10;
+				number /= 10;
+			}
+			else if (number < 10) {
+				*iter = '0' + number;
+				number = 0;
+			}
+			else
+				return yajl_gen_invalid_number;
+		} while (number);
+
+		if (negative) {
+			*--iter = '-';
+			buf--;
+		}
+
+		len = buf + len - iter;
+		buf = iter;
+	}
+
+	return yajl_gen_number(gen, buf, len);
 }
 
 json_generator_t *get_json_generator(list_t **pool, size_t *gen_num)

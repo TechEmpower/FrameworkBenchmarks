@@ -14,9 +14,12 @@ public class SimpleRest implements RestMethodListener {
 	private final HTTPResponseService responseService;
 	
 	public SimpleRest(GreenRuntime runtime, int maxResponseCount, int maxResponseSize) {
-		responseService = runtime.newCommandChannel().newHTTPResponseService(maxResponseCount, maxResponseSize);		
+		responseService = runtime
+				.newCommandChannel()
+				.newHTTPResponseService(maxResponseCount, maxResponseSize);		
 	}
 	
+
 	public boolean jsonRestRequest(HTTPRequestReader request) {
 	
 		//this check is to postpone the work if the network has become saturated

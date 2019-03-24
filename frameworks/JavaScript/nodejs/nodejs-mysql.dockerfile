@@ -4,6 +4,6 @@ COPY ./ ./
 
 RUN npm install
 
-ENV NODE_HANDLER mysql-raw
+ENV NODE_HANDLER sequelize 
 
 CMD ["node", "app.js"]

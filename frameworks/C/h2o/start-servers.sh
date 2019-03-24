@@ -18,7 +18,7 @@ if [[ "$CPU_COUNT" -gt 16 ]]; then
 else
 	echo "Running h2o_app in the cloud environment."
 	USE_PROCESSES=false
-	DB_CONN=8
+	DB_CONN=5
 fi
 
 build_h2o_app()

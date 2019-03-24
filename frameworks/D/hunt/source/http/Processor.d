@@ -7,7 +7,7 @@ import core.stdc.stdlib;
 import core.thread, core.atomic;
 import http.Parser;
 
-import hunt.datetime;
+import hunt.util.DateTime;
 import hunt.logging;
 import hunt.io;
 
@@ -41,6 +41,7 @@ private:
 	HttpRequest request;
 	State state;
 	bool serving;
+	
 public:
 	TcpStream client;
 
@@ -58,9 +59,11 @@ public:
 			parser.execute(data);
 		})
 		.onClosed(() {
-			notifyClientClosed();
+			// notifyClientClosed();
 		})
-		.onError((string msg) { warning("Error: ", msg); })
+		.onError((string msg) { 
+			debug warning("Error: ", msg); 
+		})
 		.start();
 	}
 
@@ -157,8 +160,13 @@ public:
 	final int onMessageComplete(Parser* parser) {
 		import std.stdio;
 
-		if (state == State.done)
-			onComplete(request);
+		if (state == State.done) {
+			try {
+				onComplete(request);
+			} catch(Exception ex) {
+				respondWith(ex.msg, 500);
+			}
+		}
 		if (!parser.shouldKeepAlive)
 			serving = false;
 		return 0;

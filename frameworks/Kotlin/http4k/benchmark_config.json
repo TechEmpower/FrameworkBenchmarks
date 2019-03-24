@@ -86,7 +86,7 @@
         "notes": "",
         "versus": "servlet"
       },
-      "sunhttp": {
+      "ktorcio": {
         "orm": "Raw",
         "database_os": "Linux",
         "db_url": "/db",
@@ -101,11 +101,11 @@
         "classification": "Micro",
         "framework": "http4k",
         "language": "Kotlin",
-        "platform": "sun-http",
+        "platform": "ktorcio",
         "webserver": "None",
         "os": "Linux",
         "notes": "",
-        "versus": "servlet"
+        "versus": "ktor-cio"
       }
     }
   ]
